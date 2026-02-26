@@ -1,0 +1,11 @@
+name = "saasmaker-api"
+main = "src/index.ts"
+compatibility_date = "2026-02-22"
+compatibility_flags = ["nodejs_compat"]
+
+[observability]
+enabled = true
+
+[[r2_buckets]]
+binding = "FEEDBACK_IMAGES"
+bucket_name = "saasmaker-feedback-images"

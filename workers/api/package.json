@@ -1,0 +1,20 @@
+{
+  "name": "@saasmaker/api",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "dependencies": {
+    "@saasmaker/shared-types": "workspace:*",
+    "@saasmaker/db": "workspace:*",
+    "hono": "^4.7.2",
+    "arctic": "^3.5.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250224.0",
+    "wrangler": "^4.0.0",
+    "typescript": "^5.9.3"
+  }
+}
