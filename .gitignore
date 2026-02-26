@@ -4,4 +4,5 @@ dist/
 .wrangler/
 .env
 .env.local
+.dev.vars
 *.tsbuildinfo
