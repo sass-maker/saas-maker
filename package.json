@@ -11,5 +11,8 @@
     "build:dashboard": "pnpm -F @saasmaker/dashboard build",
     "build:widget": "pnpm -F @saasmaker/feedback build",
     "test": "vitest run"
+  },
+  "devDependencies": {
+    "vitest": "^4.0.18"
   }
 }
