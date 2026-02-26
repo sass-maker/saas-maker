@@ -1,0 +1,15 @@
+{
+  "name": "saas-maker",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev:api": "pnpm -F @saasmaker/api dev",
+    "dev:dashboard": "pnpm -F @saasmaker/dashboard dev",
+    "build:types": "pnpm -F @saasmaker/shared-types build",
+    "build:db": "pnpm -F @saasmaker/db build",
+    "build:api": "pnpm -F @saasmaker/api build",
+    "build:dashboard": "pnpm -F @saasmaker/dashboard build",
+    "build:widget": "pnpm -F @saasmaker/feedback build",
+    "test": "vitest run"
+  }
+}
