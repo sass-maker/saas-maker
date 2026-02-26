@@ -3,4 +3,5 @@ export const TABLES = {
   projects: 'projects',
   feedback: 'feedback',
   upvotes: 'upvotes',
+  sessions: 'sessions',
 } as const;

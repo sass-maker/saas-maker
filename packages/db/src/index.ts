@@ -37,4 +37,9 @@ export interface FeedbackDatabase {
   addUpvote(input: { id: string; feedback_id: string; user_id: string }): Promise<UpvoteRecord>;
   removeUpvote(feedbackId: string, userId: string): Promise<boolean>;
   hasUpvoted(feedbackId: string, userId: string): Promise<boolean>;
+
+  // Sessions
+  createSession(input: { token_hash: string; user_id: string; expires_at: string }): Promise<void>;
+  getSessionByTokenHash(tokenHash: string): Promise<{ user_id: string; expires_at: string } | null>;
+  deleteSession(tokenHash: string): Promise<void>;
 }

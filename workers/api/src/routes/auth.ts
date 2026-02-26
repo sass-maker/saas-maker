@@ -2,11 +2,21 @@ import { Hono } from 'hono';
 import { getCookie, setCookie, deleteCookie } from 'hono/cookie';
 import { Google } from 'arctic';
 import { Bindings, Variables } from '../types';
+import { getDb } from '../db';
 
 const auth = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
 function getGoogleClient(env: Bindings) {
   return new Google(env.GOOGLE_CLIENT_ID, env.GOOGLE_CLIENT_SECRET, env.GOOGLE_OAUTH_REDIRECT_URI);
+}
+
+async function hashToken(token: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(token);
+  const hash = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(hash))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
 }
 
 auth.get('/google', async (c) => {
@@ -42,8 +52,22 @@ auth.get('/google/callback', async (c) => {
   });
   const googleUser = (await userRes.json()) as { id: string; email: string; name: string; picture: string };
 
-  // TODO: Upsert user in DB, create session — will be wired in DB integration task
+  const db = getDb(c.env.DATABASE_URL);
+
+  // Upsert user
+  const user = await db.upsertUser({
+    id: crypto.randomUUID(),
+    email: googleUser.email,
+    name: googleUser.name || null,
+    avatar_url: googleUser.picture || null,
+  });
+
+  // Create session — store hash in DB, raw token in cookie
   const sessionToken = crypto.randomUUID();
+  const tokenHash = await hashToken(sessionToken);
+  const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(); // 30 days
+
+  await db.createSession({ token_hash: tokenHash, user_id: user.id, expires_at: expiresAt });
 
   setCookie(c, 'sm_session', sessionToken, {
     httpOnly: true,
@@ -59,11 +83,23 @@ auth.get('/google/callback', async (c) => {
 auth.get('/session', async (c) => {
   const session = getCookie(c, 'sm_session');
   if (!session) return c.json({ authenticated: false }, 401);
-  // TODO: Look up session in DB
-  return c.json({ authenticated: true });
+
+  const db = getDb(c.env.DATABASE_URL);
+  const tokenHash = await hashToken(session);
+  const sess = await db.getSessionByTokenHash(tokenHash);
+  if (!sess) return c.json({ authenticated: false }, 401);
+
+  const user = await db.getUserById(sess.user_id);
+  return c.json({ authenticated: true, user });
 });
 
 auth.post('/logout', async (c) => {
+  const session = getCookie(c, 'sm_session');
+  if (session) {
+    const db = getDb(c.env.DATABASE_URL);
+    const tokenHash = await hashToken(session);
+    await db.deleteSession(tokenHash);
+  }
   deleteCookie(c, 'sm_session');
   return c.json({ ok: true });
 });
