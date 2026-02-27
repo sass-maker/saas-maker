@@ -6,10 +6,7 @@ import app from '../../workers/api/src/index';
 // touching the DB, so no real connection is needed.
 export function request(path: string, init?: RequestInit) {
   return app.request(path, init, {
-    GOOGLE_CLIENT_ID: 'test',
-    GOOGLE_CLIENT_SECRET: 'test',
-    GOOGLE_OAUTH_REDIRECT_URI: 'http://localhost/callback',
-    SESSION_SECRET: 'test-secret',
+    AUTH_SECRET: 'test-auth-secret-at-least-32-chars-long',
     APP_BASE_URL: 'http://localhost:3000',
     CORS_ORIGIN: '*',
     DATABASE_URL: 'postgresql://localhost:26257/test',

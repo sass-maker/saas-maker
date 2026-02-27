@@ -6,38 +6,28 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { CreateProjectDialog } from "@/components/create-project-dialog";
-import { FolderOpen } from "lucide-react";
+import { FolderOpen, AlertCircle } from "lucide-react";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
+import { apiFetch, getServerToken } from "@/lib/api";
+import type { ProjectRecord } from "@/components/feedback-types";
 
-// Mock data until API is wired up
-const MOCK_PROJECTS = [
-  {
-    id: "1",
-    name: "Acme SaaS",
-    slug: "acme-saas",
-    api_key: "pk_live_abc123",
-    owner_id: "user-1",
-    created_at: "2026-02-20T10:00:00Z",
-  },
-  {
-    id: "2",
-    name: "Widget Pro",
-    slug: "widget-pro",
-    api_key: "pk_live_def456",
-    owner_id: "user-1",
-    created_at: "2026-02-18T08:00:00Z",
-  },
-  {
-    id: "3",
-    name: "Data Dashboard",
-    slug: "data-dashboard",
-    api_key: "pk_live_ghi789",
-    owner_id: "user-1",
-    created_at: "2026-02-15T15:00:00Z",
-  },
-];
+export const dynamic = "force-dynamic";
 
-export default function ProjectsPage() {
-  const projects = MOCK_PROJECTS;
+export default async function ProjectsPage() {
+  const session = await auth();
+  if (!session?.user) redirect("/login");
+
+  const token = await getServerToken();
+  let projects: ProjectRecord[] = [];
+  let error: string | null = null;
+
+  try {
+    const res = await apiFetch("/v1/projects", {}, token);
+    projects = res.data ?? [];
+  } catch (e) {
+    error = e instanceof Error ? e.message : "Failed to load projects";
+  }
 
   return (
     <div className="space-y-6">
@@ -51,13 +41,27 @@ export default function ProjectsPage() {
         <CreateProjectDialog />
       </div>
 
-      {projects.length === 0 ? (
-        <Card className="flex flex-col items-center justify-center py-16">
-          <FolderOpen className="h-12 w-12 text-muted-foreground mb-4" />
-          <CardHeader className="text-center">
+      {error ? (
+        <Card className="border-destructive/50">
+          <CardHeader className="flex flex-row items-center gap-3">
+            <AlertCircle className="h-5 w-5 text-destructive shrink-0" />
+            <div>
+              <CardTitle className="text-base text-destructive">
+                Failed to load projects
+              </CardTitle>
+              <CardDescription className="mt-1 text-xs font-mono break-all">
+                {error}
+              </CardDescription>
+            </div>
+          </CardHeader>
+        </Card>
+      ) : projects.length === 0 ? (
+        <Card className="py-16">
+          <CardHeader className="flex flex-col items-center text-center">
+            <FolderOpen className="h-12 w-12 text-muted-foreground mb-4" />
             <CardTitle>No projects yet</CardTitle>
-            <CardDescription>
-              Create your first project to start collecting feedback.
+            <CardDescription className="mt-2 max-w-sm">
+              Create your first project to start collecting feedback from your users.
             </CardDescription>
           </CardHeader>
         </Card>

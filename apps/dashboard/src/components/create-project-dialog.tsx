@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -16,7 +17,15 @@ import { Label } from "@/components/ui/label";
 import { Plus } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 
+async function getToken(): Promise<string> {
+  const res = await fetch("/api/token");
+  if (!res.ok) throw new Error("Failed to get auth token");
+  const data = await res.json();
+  return data.token;
+}
+
 export function CreateProjectDialog() {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
@@ -30,14 +39,20 @@ export function CreateProjectDialog() {
     setError(null);
 
     try {
-      await apiFetch("/api/projects", {
-        method: "POST",
-        body: JSON.stringify({ name: name.trim() }),
-      });
+      const token = await getToken();
+      const project = await apiFetch(
+        "/v1/projects",
+        { method: "POST", body: JSON.stringify({ name: name.trim() }) },
+        token
+      );
       setOpen(false);
       setName("");
-      // Refresh the page to show the new project
-      window.location.reload();
+      // Navigate to the new project or refresh the list
+      if (project?.slug) {
+        router.push(`/projects/${project.slug}`);
+      } else {
+        router.refresh();
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to create project");
     } finally {

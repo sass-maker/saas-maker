@@ -54,9 +54,9 @@ feedback.post('/', requireApiKey, async (c) => {
   return c.json(record, 201);
 });
 
-// List feedback (public, API key auth)
-feedback.get('/', requireApiKey, async (c) => {
-  const projectId = c.get('projectId')!;
+// List feedback by slug (public, no auth)
+feedback.get('/by-project/:slug', async (c) => {
+  const slug = c.req.param('slug');
   const type = c.req.query('type') as FeedbackType | undefined;
   const status = c.req.query('status') as FeedbackStatus | undefined;
   const sort = (c.req.query('sort') || 'newest') as 'newest' | 'upvotes';
@@ -66,9 +66,12 @@ feedback.get('/', requireApiKey, async (c) => {
   if (status && !VALID_STATUSES.includes(status)) return c.json({ error: 'Invalid status filter' }, 400);
 
   const db = getDb(c.env.DATABASE_URL);
-  const result = await db.listFeedback(projectId, { type, status, sort, page, limit: PAGE_SIZE });
+  const project = await db.getProjectBySlug(slug);
+  if (!project) return c.json({ error: 'Project not found' }, 404);
 
-  return c.json({ data: result.data, total: result.total, page, limit: PAGE_SIZE });
+  const result = await db.listFeedback(project.id, { type, status, sort, page, limit: PAGE_SIZE });
+
+  return c.json({ data: result.data, total: result.total, page, limit: PAGE_SIZE, project: { name: project.name, slug: project.slug } });
 });
 
 // Upvote (requires Google OAuth session)
@@ -100,27 +103,6 @@ feedback.delete('/:id/upvote', requireSession, async (c) => {
   if (!removed) return c.json({ error: 'Upvote not found' }, 404);
 
   return c.json({ ok: true });
-});
-
-// Dashboard inbox
-feedback.get('/inbox/:projectId', requireSession, async (c) => {
-  const userId = c.get('userId')!;
-  const projectId = c.req.param('projectId');
-  const type = c.req.query('type') as FeedbackType | undefined;
-  const status = c.req.query('status') as FeedbackStatus | undefined;
-  const sort = (c.req.query('sort') || 'newest') as 'newest' | 'upvotes';
-  const page = parseInt(c.req.query('page') || '1', 10);
-
-  const db = getDb(c.env.DATABASE_URL);
-
-  // Verify ownership
-  const project = await db.getProjectById(projectId);
-  if (!project) return c.json({ error: 'Project not found' }, 404);
-  if (project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
-
-  const result = await db.listFeedback(projectId, { type, status, sort, page, limit: PAGE_SIZE });
-
-  return c.json({ data: result.data, total: result.total, page, limit: PAGE_SIZE });
 });
 
 // Update feedback status (dashboard)

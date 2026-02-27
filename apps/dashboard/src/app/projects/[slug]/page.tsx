@@ -5,25 +5,35 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Settings } from "lucide-react";
 import { InboxContent } from "./inbox-content";
 import { CopyButton } from "@/components/copy-button";
+import { auth } from "@/lib/auth";
+import { redirect, notFound } from "next/navigation";
+import { apiFetch, getServerToken } from "@/lib/api";
+import type { ProjectRecord } from "@/components/feedback-types";
 
-// Mock project data — will be fetched from API later
-const MOCK_PROJECT = {
-  id: "1",
-  name: "Acme SaaS",
-  slug: "acme-saas",
-  api_key: "pk_live_abc123def456ghi789",
-  owner_id: "user-1",
-  created_at: "2026-02-20T10:00:00Z",
-};
+export const dynamic = "force-dynamic";
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
 export default async function ProjectInboxPage({ params }: Props) {
+  const session = await auth();
+  if (!session?.user) redirect("/login");
+
   const { slug } = await params;
-  // TODO: Fetch project by slug from API
-  const project = { ...MOCK_PROJECT, slug };
+  const token = await getServerToken();
+
+  let project: ProjectRecord | undefined;
+
+  try {
+    const res = await apiFetch("/v1/projects", {}, token);
+    const projects: ProjectRecord[] = res.data ?? [];
+    project = projects.find((p) => p.slug === slug);
+  } catch {
+    // Auth failed — fall through to notFound
+  }
+
+  if (!project) notFound();
 
   return (
     <div className="space-y-6">
@@ -65,7 +75,7 @@ import { FeedbackWidget } from '@saasmaker/feedback'
 
       {/* Filters + Table */}
       <Suspense fallback={<div className="text-muted-foreground">Loading...</div>}>
-        <InboxContent />
+        <InboxContent slug={project.slug} />
       </Suspense>
     </div>
   );

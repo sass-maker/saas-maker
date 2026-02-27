@@ -21,7 +21,6 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
   triggerText = DEFAULT_TRIGGER_TEXT,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<'submit' | 'browse'>('submit');
 
   const api = useMemo(
     () => createApiClient(projectId, apiBaseUrl),
@@ -52,8 +51,6 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
       <Modal
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
         api={api}
         userEmail={userEmail}
         userName={userName}

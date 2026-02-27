@@ -9,8 +9,8 @@
   "dependencies": {
     "@saasmaker/db": "workspace:*",
     "@saasmaker/shared-types": "workspace:*",
-    "arctic": "^3.5.0",
     "hono": "^4.7.2",
+    "jose": "^6.1.3",
     "postgres": "^3.4.8"
   },
   "devDependencies": {

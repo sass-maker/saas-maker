@@ -1,10 +1,7 @@
 import { Context } from 'hono';
 
 export type Bindings = {
-  GOOGLE_CLIENT_ID: string;
-  GOOGLE_CLIENT_SECRET: string;
-  GOOGLE_OAUTH_REDIRECT_URI: string;
-  SESSION_SECRET: string;
+  AUTH_SECRET: string;
   APP_BASE_URL: string;
   CORS_ORIGIN: string;
   DATABASE_URL: string;

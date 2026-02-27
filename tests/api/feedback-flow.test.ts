@@ -4,7 +4,7 @@ import { request } from './helpers';
 // ---------------------------------------------------------------------------
 // These tests exercise auth guards and input validation using Hono's built-in
 // app.request() helper. Middleware rejects requests that are missing headers
-// or session cookies BEFORE any database call, so these run without a live
+// or Bearer tokens BEFORE any database call, so these run without a live
 // CockroachDB instance.
 // ---------------------------------------------------------------------------
 
@@ -40,14 +40,14 @@ describe('Feedback list validation', () => {
 });
 
 describe('Upvote requires auth', () => {
-  it('POST /v1/feedback/123/upvote without session cookie returns 401', async () => {
+  it('POST /v1/feedback/123/upvote without Bearer token returns 401', async () => {
     const res = await request('/v1/feedback/123/upvote', { method: 'POST' });
     expect(res.status).toBe(401);
     const body = await res.json();
     expect(body.error).toBe('Unauthorized');
   });
 
-  it('DELETE /v1/feedback/123/upvote without session cookie returns 401', async () => {
+  it('DELETE /v1/feedback/123/upvote without Bearer token returns 401', async () => {
     const res = await request('/v1/feedback/123/upvote', { method: 'DELETE' });
     expect(res.status).toBe(401);
     const body = await res.json();
@@ -56,14 +56,14 @@ describe('Upvote requires auth', () => {
 });
 
 describe('Project routes require auth', () => {
-  it('GET /v1/projects without session returns 401', async () => {
+  it('GET /v1/projects without auth returns 401', async () => {
     const res = await request('/v1/projects');
     expect(res.status).toBe(401);
     const body = await res.json();
     expect(body.error).toBe('Unauthorized');
   });
 
-  it('POST /v1/projects without session returns 401', async () => {
+  it('POST /v1/projects without auth returns 401', async () => {
     const res = await request('/v1/projects', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -74,7 +74,7 @@ describe('Project routes require auth', () => {
     expect(body.error).toBe('Unauthorized');
   });
 
-  it('PATCH /v1/projects/123 without session returns 401', async () => {
+  it('PATCH /v1/projects/123 without auth returns 401', async () => {
     const res = await request('/v1/projects/123', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
@@ -85,7 +85,7 @@ describe('Project routes require auth', () => {
     expect(body.error).toBe('Unauthorized');
   });
 
-  it('DELETE /v1/projects/123 without session returns 401', async () => {
+  it('DELETE /v1/projects/123 without auth returns 401', async () => {
     const res = await request('/v1/projects/123', { method: 'DELETE' });
     expect(res.status).toBe(401);
     const body = await res.json();
@@ -94,14 +94,14 @@ describe('Project routes require auth', () => {
 });
 
 describe('Dashboard feedback routes require auth', () => {
-  it('GET /v1/feedback/inbox/123 without session returns 401', async () => {
+  it('GET /v1/feedback/inbox/123 without auth returns 401', async () => {
     const res = await request('/v1/feedback/inbox/123');
     expect(res.status).toBe(401);
     const body = await res.json();
     expect(body.error).toBe('Unauthorized');
   });
 
-  it('PATCH /v1/feedback/123 without session returns 401', async () => {
+  it('PATCH /v1/feedback/123 without auth returns 401', async () => {
     const res = await request('/v1/feedback/123', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
@@ -112,7 +112,7 @@ describe('Dashboard feedback routes require auth', () => {
     expect(body.error).toBe('Unauthorized');
   });
 
-  it('DELETE /v1/feedback/123 without session returns 401', async () => {
+  it('DELETE /v1/feedback/123 without auth returns 401', async () => {
     const res = await request('/v1/feedback/123', { method: 'DELETE' });
     expect(res.status).toBe(401);
     const body = await res.json();
@@ -130,23 +130,18 @@ describe('Upload validation', () => {
 });
 
 describe('Auth endpoints', () => {
-  it('GET /v1/auth/session without cookie returns 401', async () => {
+  it('GET /v1/auth/session without Bearer token returns 401', async () => {
     const res = await request('/v1/auth/session');
     expect(res.status).toBe(401);
     const body = await res.json();
     expect(body.authenticated).toBe(false);
   });
 
-  it('POST /v1/auth/logout returns ok and clears cookie', async () => {
+  it('POST /v1/auth/logout returns ok (no-op)', async () => {
     const res = await request('/v1/auth/logout', { method: 'POST' });
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body).toEqual({ ok: true });
-
-    // Verify the Set-Cookie header clears sm_session
-    const setCookie = res.headers.get('set-cookie');
-    expect(setCookie).toBeTruthy();
-    expect(setCookie).toContain('sm_session=');
   });
 });
 

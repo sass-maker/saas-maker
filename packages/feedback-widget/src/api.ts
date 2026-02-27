@@ -47,24 +47,6 @@ export function createApiClient(projectId: string, apiBaseUrl?: string) {
       if (!res.ok) throw new Error(await res.text());
       return res.json();
     },
-
-    async upvote(feedbackId: string): Promise<Response> {
-      return fetch(`${base}/v1/feedback/${feedbackId}/upvote`, {
-        method: 'POST',
-        credentials: 'include',
-      });
-    },
-
-    async removeUpvote(feedbackId: string): Promise<Response> {
-      return fetch(`${base}/v1/feedback/${feedbackId}/upvote`, {
-        method: 'DELETE',
-        credentials: 'include',
-      });
-    },
-
-    getAuthUrl(): string {
-      return `${base}/v1/auth/google`;
-    },
   };
 }
 

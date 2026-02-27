@@ -38,11 +38,15 @@ interface FeedbackDetailProps {
   item: FeedbackRecord | null;
   open: boolean;
   onClose: () => void;
+  onStatusChange?: (id: string, status: FeedbackStatus) => Promise<void>;
+  onDelete?: (id: string) => Promise<void>;
 }
 
-export function FeedbackDetail({ item, open, onClose }: FeedbackDetailProps) {
+export function FeedbackDetail({ item, open, onClose, onStatusChange, onDelete }: FeedbackDetailProps) {
   const [status, setStatus] = useState<FeedbackStatus>(item?.status ?? "new");
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [updating, setUpdating] = useState(false);
 
   // Sync status when item changes
   if (item && item.status !== status && !open) {
@@ -53,13 +57,28 @@ export function FeedbackDetail({ item, open, onClose }: FeedbackDetailProps) {
 
   const typeStyle = TYPE_STYLES[item.type] ?? { label: item.type, variant: "outline" as const };
 
-  function handleStatusChange(value: string) {
-    setStatus(value as FeedbackStatus);
-    // TODO: Call API to update status
+  async function handleStatusChange(value: string) {
+    const newStatus = value as FeedbackStatus;
+    setStatus(newStatus);
+    if (onStatusChange && item) {
+      setUpdating(true);
+      try {
+        await onStatusChange(item.id, newStatus);
+      } finally {
+        setUpdating(false);
+      }
+    }
   }
 
-  function handleDelete() {
-    // TODO: Call API to delete feedback
+  async function handleDelete() {
+    if (onDelete && item) {
+      setDeleting(true);
+      try {
+        await onDelete(item.id);
+      } finally {
+        setDeleting(false);
+      }
+    }
     setConfirmDelete(false);
     onClose();
   }
@@ -131,7 +150,7 @@ export function FeedbackDetail({ item, open, onClose }: FeedbackDetailProps) {
             {/* Status */}
             <div className="space-y-2">
               <h4 className="text-sm font-medium text-muted-foreground">Status</h4>
-              <Select value={status} onValueChange={handleStatusChange}>
+              <Select value={status} onValueChange={handleStatusChange} disabled={updating}>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue />
                 </SelectTrigger>
@@ -174,8 +193,8 @@ export function FeedbackDetail({ item, open, onClose }: FeedbackDetailProps) {
             <Button variant="outline" onClick={() => setConfirmDelete(false)}>
               Cancel
             </Button>
-            <Button variant="destructive" onClick={handleDelete}>
-              Delete
+            <Button variant="destructive" onClick={handleDelete} disabled={deleting}>
+              {deleting ? "Deleting..." : "Delete"}
             </Button>
           </DialogFooter>
         </DialogContent>

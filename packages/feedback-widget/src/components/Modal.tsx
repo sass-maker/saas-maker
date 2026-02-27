@@ -2,13 +2,10 @@ import React, { useCallback, useEffect, useRef } from 'react';
 import type { FeedbackType } from '@saasmaker/shared-types';
 import type { ApiClient } from '../api';
 import { SubmitForm } from './SubmitForm';
-import { BrowseList } from './BrowseList';
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-  activeTab: 'submit' | 'browse';
-  onTabChange: (tab: 'submit' | 'browse') => void;
   api: ApiClient;
   userEmail?: string;
   userName?: string;
@@ -35,8 +32,6 @@ const CloseIcon: React.FC = () => (
 export const Modal: React.FC<ModalProps> = ({
   isOpen,
   onClose,
-  activeTab,
-  onTabChange,
   api,
   userEmail,
   userName,
@@ -90,51 +85,15 @@ export const Modal: React.FC<ModalProps> = ({
           </button>
         </div>
 
-        {/* Tabs */}
-        <div className="smw-tabs">
-          <button
-            type="button"
-            className={`smw-tab ${activeTab === 'submit' ? 'smw-tab--active' : ''}`}
-            style={
-              activeTab === 'submit'
-                ? ({ '--smw-accent': accentColor } as React.CSSProperties)
-                : undefined
-            }
-            onClick={() => onTabChange('submit')}
-          >
-            Submit
-          </button>
-          <button
-            type="button"
-            className={`smw-tab ${activeTab === 'browse' ? 'smw-tab--active' : ''}`}
-            style={
-              activeTab === 'browse'
-                ? ({ '--smw-accent': accentColor } as React.CSSProperties)
-                : undefined
-            }
-            onClick={() => onTabChange('browse')}
-          >
-            Browse
-          </button>
-        </div>
-
         {/* Body */}
         <div className="smw-modal__body">
-          {activeTab === 'submit' ? (
-            <SubmitForm
-              api={api}
-              userEmail={userEmail}
-              userName={userName}
-              types={types}
-              accentColor={accentColor}
-            />
-          ) : (
-            <BrowseList
-              api={api}
-              types={types}
-              accentColor={accentColor}
-            />
-          )}
+          <SubmitForm
+            api={api}
+            userEmail={userEmail}
+            userName={userName}
+            types={types}
+            accentColor={accentColor}
+          />
         </div>
       </div>
     </div>

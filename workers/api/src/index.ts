@@ -9,8 +9,16 @@ import { upload } from './routes/upload';
 const app = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
 app.use('*', async (c, next) => {
+  const allowed = c.env.CORS_ORIGIN
+    ? c.env.CORS_ORIGIN.split(',').map((s: string) => s.trim())
+    : [];
   const corsMiddleware = cors({
-    origin: c.env.CORS_ORIGIN || '*',
+    origin: (origin) => {
+      if (!origin) return '*';
+      if (allowed.length === 0) return '*';
+      if (allowed.includes(origin)) return origin;
+      return '';
+    },
     allowMethods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
     allowHeaders: ['Content-Type', 'X-Project-Key', 'Authorization'],
     credentials: true,

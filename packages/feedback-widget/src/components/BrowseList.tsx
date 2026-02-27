@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import type { FeedbackRecord, FeedbackType } from '@saasmaker/shared-types';
 import type { ApiClient } from '../api';
 
@@ -54,8 +54,6 @@ export const BrowseList: React.FC<BrowseListProps> = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<FeedbackType | 'all'>('all');
-  const [upvotingIds, setUpvotingIds] = useState<Set<string>>(new Set());
-  const authWindowRef = useRef<Window | null>(null);
 
   const fetchFeedback = useCallback(async () => {
     setLoading(true);
@@ -75,59 +73,6 @@ export const BrowseList: React.FC<BrowseListProps> = ({
   useEffect(() => {
     fetchFeedback();
   }, [fetchFeedback]);
-
-  const handleUpvote = useCallback(
-    async (feedbackId: string) => {
-      if (upvotingIds.has(feedbackId)) return;
-
-      setUpvotingIds((prev) => new Set(prev).add(feedbackId));
-      try {
-        const res = await api.upvote(feedbackId);
-
-        if (res.status === 401) {
-          // Open OAuth popup
-          const authUrl = api.getAuthUrl();
-          const popup = window.open(
-            authUrl,
-            'saasmaker-auth',
-            'width=500,height=600,popup=yes',
-          );
-          authWindowRef.current = popup;
-
-          // Wait for popup to close, then retry
-          await new Promise<void>((resolve) => {
-            const interval = setInterval(() => {
-              if (!popup || popup.closed) {
-                clearInterval(interval);
-                resolve();
-              }
-            }, 500);
-          });
-
-          // Retry upvote after auth
-          await api.upvote(feedbackId);
-        }
-
-        // Optimistically update the count
-        setItems((prev) =>
-          prev.map((item) =>
-            item.id === feedbackId
-              ? { ...item, upvote_count: item.upvote_count + 1 }
-              : item,
-          ),
-        );
-      } catch {
-        // Silently fail on upvote errors
-      } finally {
-        setUpvotingIds((prev) => {
-          const next = new Set(prev);
-          next.delete(feedbackId);
-          return next;
-        });
-      }
-    },
-    [api, upvotingIds],
-  );
 
   const truncate = (text: string, maxLen: number) =>
     text.length > maxLen ? text.slice(0, maxLen) + '...' : text;
@@ -181,19 +126,16 @@ export const BrowseList: React.FC<BrowseListProps> = ({
         ) : (
           items.map((item) => (
             <div key={item.id} className="smw-browse-item">
-              <button
-                type="button"
-                className="smw-browse-item__upvote"
+              <div
+                className="smw-browse-item__upvote smw-browse-item__upvote--readonly"
                 style={{ '--smw-accent': accentColor } as React.CSSProperties}
-                onClick={() => handleUpvote(item.id)}
-                disabled={upvotingIds.has(item.id)}
-                aria-label={`Upvote: ${item.upvote_count}`}
+                title="Sign in on the dashboard to upvote"
               >
                 <UpvoteIcon />
                 <span className="smw-browse-item__count">
                   {item.upvote_count}
                 </span>
-              </button>
+              </div>
               <div className="smw-browse-item__content">
                 <span className={`smw-badge smw-badge--${item.type}`}>
                   {TYPE_LABELS[item.type]}

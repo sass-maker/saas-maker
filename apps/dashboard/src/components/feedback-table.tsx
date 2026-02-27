@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { FeedbackDetail } from "@/components/feedback-detail";
-import type { FeedbackRecord } from "./feedback-types";
+import type { FeedbackRecord, FeedbackStatus } from "./feedback-types";
 
 const TYPE_STYLES: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
   bug: { label: "Bug", variant: "destructive" },
@@ -28,9 +28,11 @@ const STATUS_STYLES: Record<string, { label: string; variant: "default" | "secon
 
 interface FeedbackTableProps {
   feedback: FeedbackRecord[];
+  onStatusChange?: (id: string, status: FeedbackStatus) => Promise<void>;
+  onDelete?: (id: string) => Promise<void>;
 }
 
-export function FeedbackTable({ feedback }: FeedbackTableProps) {
+export function FeedbackTable({ feedback, onStatusChange, onDelete }: FeedbackTableProps) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selected = feedback.find((f) => f.id === selectedId) ?? null;
 
@@ -95,6 +97,11 @@ export function FeedbackTable({ feedback }: FeedbackTableProps) {
         item={selected}
         open={selectedId !== null}
         onClose={() => setSelectedId(null)}
+        onStatusChange={onStatusChange}
+        onDelete={async (id) => {
+          if (onDelete) await onDelete(id);
+          setSelectedId(null);
+        }}
       />
     </>
   );
