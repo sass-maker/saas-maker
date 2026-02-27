@@ -1,5 +1,7 @@
 -- Vector memory service tables
 
+ALTER TABLE projects ADD COLUMN IF NOT EXISTS embedding_model TEXT;
+
 CREATE TABLE IF NOT EXISTS indexes (
   id TEXT PRIMARY KEY,
   project_id TEXT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
@@ -22,7 +24,7 @@ CREATE TABLE IF NOT EXISTS chunks (
   document_id TEXT NOT NULL REFERENCES documents(id) ON DELETE CASCADE,
   index_id TEXT NOT NULL REFERENCES indexes(id) ON DELETE CASCADE,
   content TEXT NOT NULL,
-  embedding VECTOR(1536) NOT NULL,
+  embedding VECTOR NOT NULL,
   chunk_index INT NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );

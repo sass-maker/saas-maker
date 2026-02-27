@@ -4,3 +4,6 @@ CORS_ORIGIN=http://localhost:3000
 DATABASE_URL=postgresql://root@localhost:26257/saasmaker
 RESEND_API_KEY=
 NOTIFICATION_FROM_EMAIL=noreply@saasmaker.dev
+FREE_AI_BASE_URL=
+FREE_AI_API_KEY=
+FREE_AI_EMBEDDING_MODEL=voyage-3.5-lite

@@ -14,5 +14,7 @@ export function request(path: string, init?: RequestInit) {
     RESEND_API_KEY: 'test',
     NOTIFICATION_FROM_EMAIL: 'test@test.com',
     FREE_AI_BASE_URL: 'http://localhost:8787',
+    FREE_AI_API_KEY: 'test-api-key',
+    FREE_AI_EMBEDDING_MODEL: 'voyage-3.5-lite',
   });
 }

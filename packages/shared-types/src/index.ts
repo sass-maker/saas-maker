@@ -17,6 +17,7 @@ export interface ProjectRecord {
   slug: string;
   api_key: string;
   owner_id: string;
+  embedding_model: string | null;
   created_at: string;
 }
 

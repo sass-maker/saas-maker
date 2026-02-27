@@ -82,8 +82,13 @@ export function createDatabase(databaseUrl: string): FeedbackDatabase {
     },
 
     async updateProject(id, input) {
-      if (input.name !== undefined) {
-        const [row] = await sql`UPDATE projects SET name = ${input.name} WHERE id = ${id} RETURNING *`;
+      const sets = [];
+      if (input.name !== undefined) sets.push(sql`name = ${input.name}`);
+      if (input.embedding_model !== undefined) sets.push(sql`embedding_model = ${input.embedding_model}`);
+
+      if (sets.length > 0) {
+        const setClause = sets.reduce((acc, s, i) => i === 0 ? s : sql`${acc}, ${s}`);
+        const [row] = await sql`UPDATE projects SET ${setClause} WHERE id = ${id} RETURNING *`;
         return (row as ProjectRecord) || null;
       }
       const [row] = await sql`SELECT * FROM projects WHERE id = ${id}`;

@@ -9,6 +9,8 @@ export type Bindings = {
   RESEND_API_KEY: string;
   NOTIFICATION_FROM_EMAIL: string;
   FREE_AI_BASE_URL: string;
+  FREE_AI_API_KEY: string;
+  FREE_AI_EMBEDDING_MODEL: string;
 };
 
 export type Variables = {
