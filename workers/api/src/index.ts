@@ -5,6 +5,7 @@ import { auth } from './routes/auth';
 import { projects } from './routes/projects';
 import { feedback } from './routes/feedback';
 import { upload } from './routes/upload';
+import { indexes } from './routes/indexes';
 
 const app = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
@@ -37,5 +38,6 @@ app.route('/v1/auth', auth);
 app.route('/v1/projects', projects);
 app.route('/v1/feedback', feedback);
 app.route('/v1/upload', upload);
+app.route('/v1/indexes', indexes);
 
 export default app;

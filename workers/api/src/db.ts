@@ -5,6 +5,8 @@ import type {
   ProjectRecord,
   UserRecord,
   UpvoteRecord,
+  IndexRecord,
+  DocumentRecord,
 } from '@saasmaker/shared-types';
 
 export function createDatabase(databaseUrl: string): FeedbackDatabase {
@@ -165,6 +167,111 @@ export function createDatabase(databaseUrl: string): FeedbackDatabase {
     async hasUpvoted(feedbackId, userId) {
       const [row] = await sql`SELECT 1 FROM upvotes WHERE feedback_id = ${feedbackId} AND user_id = ${userId}`;
       return !!row;
+    },
+
+    // --- Vector Memory: Indexes ---
+    async createIndex(input) {
+      const [row] = await sql`
+        INSERT INTO indexes (id, project_id, name, external_id)
+        VALUES (${input.id}, ${input.project_id}, ${input.name}, ${input.external_id})
+        RETURNING *
+      `;
+      return row as IndexRecord;
+    },
+
+    async getIndexById(id) {
+      const [row] = await sql`SELECT * FROM indexes WHERE id = ${id}`;
+      return (row as IndexRecord) || null;
+    },
+
+    async listIndexesByProject(projectId) {
+      const rows = await sql`
+        SELECT i.*, COALESCE(d.cnt, 0)::int AS document_count
+        FROM indexes i
+        LEFT JOIN (SELECT index_id, COUNT(*) AS cnt FROM documents GROUP BY index_id) d
+          ON d.index_id = i.id
+        WHERE i.project_id = ${projectId}
+        ORDER BY i.created_at DESC
+      `;
+      return rows as unknown as (IndexRecord & { document_count: number })[];
+    },
+
+    async deleteIndex(id) {
+      const result = await sql`DELETE FROM indexes WHERE id = ${id}`;
+      return result.count > 0;
+    },
+
+    // --- Vector Memory: Documents ---
+    async createDocument(input) {
+      const [row] = await sql`
+        INSERT INTO documents (id, index_id, content, metadata)
+        VALUES (${input.id}, ${input.index_id}, ${input.content}, ${JSON.stringify(input.metadata)})
+        RETURNING *
+      `;
+      return row as DocumentRecord;
+    },
+
+    async getDocumentById(id) {
+      const [row] = await sql`SELECT * FROM documents WHERE id = ${id}`;
+      return (row as DocumentRecord) || null;
+    },
+
+    async listDocumentsByIndex(indexId, page, limit) {
+      const offset = (page - 1) * limit;
+      const [countResult] = await sql`SELECT COUNT(*)::int AS total FROM documents WHERE index_id = ${indexId}`;
+      const rows = await sql`
+        SELECT * FROM documents WHERE index_id = ${indexId}
+        ORDER BY created_at DESC
+        LIMIT ${limit} OFFSET ${offset}
+      `;
+      return { data: rows as unknown as DocumentRecord[], total: countResult.total };
+    },
+
+    async deleteDocument(id) {
+      const result = await sql`DELETE FROM documents WHERE id = ${id}`;
+      return result.count > 0;
+    },
+
+    // --- Vector Memory: Chunks ---
+    async createChunks(chunks) {
+      if (chunks.length === 0) return 0;
+      const values = chunks.map(c => ({
+        id: c.id,
+        document_id: c.document_id,
+        index_id: c.index_id,
+        content: c.content,
+        embedding: `[${c.embedding.join(',')}]`,
+        chunk_index: c.chunk_index,
+      }));
+      await sql`
+        INSERT INTO chunks ${sql(values, 'id', 'document_id', 'index_id', 'content', 'embedding', 'chunk_index')}
+      `;
+      return chunks.length;
+    },
+
+    async searchChunks(indexId, queryEmbedding, topK) {
+      const embeddingStr = `[${queryEmbedding.join(',')}]`;
+      const rows = await sql`
+        SELECT c.document_id, c.content, d.metadata,
+               (c.embedding <=> ${embeddingStr}::vector) AS distance
+        FROM chunks c
+        JOIN documents d ON d.id = c.document_id
+        WHERE c.index_id = ${indexId}
+        ORDER BY c.embedding <=> ${embeddingStr}::vector
+        LIMIT ${topK}
+      `;
+      return (rows as unknown as { document_id: string; content: string; metadata: Record<string, unknown>; distance: number }[])
+        .map(r => ({
+          document_id: r.document_id,
+          content: r.content,
+          score: 1 - Number(r.distance),
+          metadata: r.metadata,
+        }));
+    },
+
+    async deleteChunksByDocument(documentId) {
+      const result = await sql`DELETE FROM chunks WHERE document_id = ${documentId}`;
+      return result.count > 0;
     },
   };
 }
