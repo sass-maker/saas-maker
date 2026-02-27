@@ -4,6 +4,8 @@ import {
   ProjectRecord,
   UserRecord,
   UpvoteRecord,
+  IndexRecord,
+  DocumentRecord,
 } from '@saasmaker/shared-types';
 
 export { TABLES } from './schema';
@@ -42,4 +44,21 @@ export interface FeedbackDatabase {
   createSession(input: { token_hash: string; user_id: string; expires_at: string }): Promise<void>;
   getSessionByTokenHash(tokenHash: string): Promise<{ user_id: string; expires_at: string } | null>;
   deleteSession(tokenHash: string): Promise<void>;
+
+  // Vector Memory - Indexes
+  createIndex(input: { id: string; project_id: string; name: string; external_id: string | null }): Promise<IndexRecord>;
+  getIndexById(id: string): Promise<IndexRecord | null>;
+  listIndexesByProject(projectId: string): Promise<(IndexRecord & { document_count: number })[]>;
+  deleteIndex(id: string): Promise<boolean>;
+
+  // Vector Memory - Documents
+  createDocument(input: { id: string; index_id: string; content: string; metadata: Record<string, unknown> }): Promise<DocumentRecord>;
+  getDocumentById(id: string): Promise<DocumentRecord | null>;
+  listDocumentsByIndex(indexId: string, page: number, limit: number): Promise<{ data: DocumentRecord[]; total: number }>;
+  deleteDocument(id: string): Promise<boolean>;
+
+  // Vector Memory - Chunks
+  createChunks(chunks: { id: string; document_id: string; index_id: string; content: string; embedding: number[]; chunk_index: number }[]): Promise<number>;
+  searchChunks(indexId: string, queryEmbedding: number[], topK: number): Promise<{ document_id: string; content: string; score: number; metadata: Record<string, unknown> }[]>;
+  deleteChunksByDocument(documentId: string): Promise<boolean>;
 }

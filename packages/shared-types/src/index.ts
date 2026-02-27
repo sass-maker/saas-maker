@@ -74,6 +74,55 @@ export interface PaginatedResponse<T> {
   limit: number;
 }
 
+// --- Vector Memory Service ---
+
+export interface IndexRecord {
+  id: string;
+  project_id: string;
+  name: string;
+  external_id: string | null;
+  created_at: string;
+}
+
+export interface DocumentRecord {
+  id: string;
+  index_id: string;
+  content: string;
+  metadata: Record<string, unknown>;
+  created_at: string;
+}
+
+export interface ChunkRecord {
+  id: string;
+  document_id: string;
+  index_id: string;
+  content: string;
+  chunk_index: number;
+  created_at: string;
+}
+
+export interface CreateIndexRequest {
+  name: string;
+  external_id?: string;
+}
+
+export interface IngestDocumentRequest {
+  content: string;
+  metadata?: Record<string, unknown>;
+}
+
+export interface SearchRequest {
+  query: string;
+  top_k?: number;
+}
+
+export interface SearchResult {
+  document_id: string;
+  chunk_content: string;
+  score: number;
+  metadata: Record<string, unknown>;
+}
+
 // --- Widget Props ---
 export interface FeedbackWidgetProps {
   projectId: string;

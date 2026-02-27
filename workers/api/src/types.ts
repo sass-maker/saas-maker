@@ -8,6 +8,7 @@ export type Bindings = {
   FEEDBACK_IMAGES: R2Bucket;
   RESEND_API_KEY: string;
   NOTIFICATION_FROM_EMAIL: string;
+  FREE_AI_BASE_URL: string;
 };
 
 export type Variables = {

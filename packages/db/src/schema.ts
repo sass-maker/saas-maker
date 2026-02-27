@@ -4,4 +4,7 @@ export const TABLES = {
   feedback: 'feedback',
   upvotes: 'upvotes',
   sessions: 'sessions',
+  indexes: 'indexes',
+  documents: 'documents',
+  chunks: 'chunks',
 } as const;

@@ -13,5 +13,6 @@ export function request(path: string, init?: RequestInit) {
     FEEDBACK_IMAGES: {} as any,
     RESEND_API_KEY: 'test',
     NOTIFICATION_FROM_EMAIL: 'test@test.com',
+    FREE_AI_BASE_URL: 'http://localhost:8787',
   });
 }
