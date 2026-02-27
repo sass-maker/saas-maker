@@ -168,7 +168,13 @@ indexes.post('/:indexId/search', async (c) => {
   const [queryEmbedding] = await getEmbeddings(c.env.FREE_AI_BASE_URL, [body.query]);
 
   // Search
-  const results = await db.searchChunks(indexId, queryEmbedding, topK);
+  const raw = await db.searchChunks(indexId, queryEmbedding, topK);
+  const results = raw.map(r => ({
+    document_id: r.document_id,
+    chunk_content: r.content,
+    score: r.score,
+    metadata: r.metadata,
+  }));
 
   return c.json({ results });
 });
