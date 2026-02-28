@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
 import { apiFetch, getServerToken } from "@/lib/api";
 import type { ProjectRecord } from "@saasmaker/shared-types";
+import { PageHeader } from "@/components/page-header";
 import { SettingsForm } from "./settings-form";
 
 interface Props {
@@ -27,5 +28,10 @@ export default async function SettingsPage({ params }: Props) {
 
   if (!project) notFound();
 
-  return <SettingsForm project={project} />;
+  return (
+    <div className="space-y-6">
+      <PageHeader title="Settings" description={project.name} />
+      <SettingsForm project={project} />
+    </div>
+  );
 }

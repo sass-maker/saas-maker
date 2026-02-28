@@ -22,8 +22,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { CopyButton } from "@/components/copy-button";
-import { ArrowLeft, Save, Trash2 } from "lucide-react";
-import Link from "next/link";
+import { Save, Trash2 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import type { ProjectRecord } from "@saasmaker/shared-types";
 
@@ -82,19 +81,6 @@ export function SettingsForm({ project }: SettingsFormProps) {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <Link href={`/projects/${project.slug}`}>
-          <Button variant="ghost" size="icon">
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-        </Link>
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Settings</h1>
-          <p className="text-muted-foreground">{project.name}</p>
-        </div>
-      </div>
-
       {/* Project Name */}
       <Card>
         <CardHeader>
