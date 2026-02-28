@@ -1,15 +1,42 @@
-import { Hono } from 'hono';
+import { Hono, type Context } from 'hono';
 import { Bindings, Variables } from '../types';
-import { requireApiKey, requireSession } from '../middleware/auth';
-import { SubmitFeedbackRequest, FeedbackType, FeedbackStatus } from '@saasmaker/shared-types';
+import { decryptAuthJsJwe, requireApiKey, requireSession } from '../middleware/auth';
+import {
+  SubmitFeedbackRequest,
+  FeedbackType,
+  FeedbackStatus,
+  FeatureRequestStatus,
+  AnyFeedbackStatus,
+  FeedbackRecord,
+} from '@saasmaker/shared-types';
 import { getDb } from '../db';
 import { sendNewFeedbackEmail } from '../email';
 
 const feedback = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
 const VALID_TYPES: FeedbackType[] = ['bug', 'feature', 'feedback'];
-const VALID_STATUSES: FeedbackStatus[] = ['new', 'in_progress', 'done', 'dismissed'];
+const VALID_DEFAULT_STATUSES: FeedbackStatus[] = ['new', 'in_progress', 'done', 'dismissed'];
+const VALID_FEATURE_STATUSES: FeatureRequestStatus[] = ['planned', 'in_progress', 'shipped', 'cancelled'];
+const VALID_FILTER_STATUSES: AnyFeedbackStatus[] = ['new', 'in_progress', 'done', 'dismissed', 'planned', 'shipped', 'cancelled'];
 const PAGE_SIZE = 20;
+
+function canUseStatus(type: FeedbackType, status: AnyFeedbackStatus): boolean {
+  if (type === 'feature') return VALID_FEATURE_STATUSES.includes(status as FeatureRequestStatus);
+  return VALID_DEFAULT_STATUSES.includes(status as FeedbackStatus);
+}
+
+function isValidFilterStatus(status: string): status is AnyFeedbackStatus {
+  return VALID_FILTER_STATUSES.includes(status as AnyFeedbackStatus);
+}
+
+async function getOptionalUserId(c: Context<{ Bindings: Bindings; Variables: Variables }>) {
+  const authHeader = c.req.header('Authorization');
+  if (!authHeader?.startsWith('Bearer ')) return undefined;
+  const token = authHeader.slice(7);
+  const payload = await decryptAuthJsJwe(token, c.env.AUTH_SECRET);
+  if (!payload?.sub) return undefined;
+  return payload.sub;
+}
 
 // Submit feedback (public, API key auth)
 feedback.post('/', requireApiKey, async (c) => {
@@ -27,6 +54,7 @@ feedback.post('/', requireApiKey, async (c) => {
     id: crypto.randomUUID(),
     project_id: projectId,
     type: body.type,
+    status: body.type === 'feature' ? 'planned' : 'new',
     title: body.title.trim(),
     description: body.description.trim(),
     image_url: body.image_url || null,
@@ -39,37 +67,130 @@ feedback.post('/', requireApiKey, async (c) => {
   if (project) {
     const owner = await db.getUserById(project.owner_id);
     if (owner) {
-      sendNewFeedbackEmail(c.env.RESEND_API_KEY, c.env.NOTIFICATION_FROM_EMAIL, {
-        to: owner.email,
-        projectName: project.name,
-        feedbackTitle: record.title,
-        feedbackType: record.type,
-        feedbackDescription: record.description,
-        submitterEmail: record.submitter_email,
-        dashboardUrl: `${c.env.APP_BASE_URL}/projects/${project.slug}`,
-      });
+      c.executionCtx.waitUntil(
+        sendNewFeedbackEmail(c.env.RESEND_API_KEY, c.env.NOTIFICATION_FROM_EMAIL, {
+          to: owner.email,
+          projectName: project.name,
+          feedbackTitle: record.title,
+          feedbackType: record.type,
+          feedbackDescription: record.description,
+          submitterEmail: record.submitter_email,
+          dashboardUrl: `${c.env.APP_BASE_URL}/projects/${project.slug}`,
+        }).catch((err) => {
+          console.error('sendNewFeedbackEmail failed', err);
+        })
+      );
     }
   }
 
   return c.json(record, 201);
 });
 
-// List feedback by slug (public, no auth)
-feedback.get('/by-project/:slug', async (c) => {
-  const slug = c.req.param('slug');
+// List feedback for the authenticated project (API key auth)
+feedback.get('/', requireApiKey, async (c) => {
+  const projectId = c.get('projectId')!;
   const type = c.req.query('type') as FeedbackType | undefined;
-  const status = c.req.query('status') as FeedbackStatus | undefined;
+  const status = c.req.query('status') as AnyFeedbackStatus | undefined;
   const sort = (c.req.query('sort') || 'newest') as 'newest' | 'upvotes';
   const page = parseInt(c.req.query('page') || '1', 10);
 
   if (type && !VALID_TYPES.includes(type)) return c.json({ error: 'Invalid type filter' }, 400);
-  if (status && !VALID_STATUSES.includes(status)) return c.json({ error: 'Invalid status filter' }, 400);
+  if (status && !isValidFilterStatus(status)) return c.json({ error: 'Invalid status filter' }, 400);
+
+  const db = getDb(c.env.DATABASE_URL);
+  const result = await db.listFeedback(projectId, { type, status, sort, page, limit: PAGE_SIZE });
+
+  return c.json({ data: result.data, total: result.total, page, limit: PAGE_SIZE });
+});
+
+// Dashboard inbox - list feedback for a project (session auth)
+feedback.get('/inbox/:projectId', requireSession, async (c) => {
+  const userId = c.get('userId')!;
+  const projectId = c.req.param('projectId');
+  const type = c.req.query('type') as FeedbackType | undefined;
+  const status = c.req.query('status') as AnyFeedbackStatus | undefined;
+  const sort = (c.req.query('sort') || 'newest') as 'newest' | 'upvotes';
+  const page = parseInt(c.req.query('page') || '1', 10);
+
+  if (type && !VALID_TYPES.includes(type)) return c.json({ error: 'Invalid type filter' }, 400);
+  if (status && !isValidFilterStatus(status)) return c.json({ error: 'Invalid status filter' }, 400);
+
+  const db = getDb(c.env.DATABASE_URL);
+
+  // Verify ownership
+  const project = await db.getProjectById(projectId);
+  if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
+
+  const result = await db.listFeedback(projectId, { type, status, sort, page, limit: PAGE_SIZE }, userId);
+
+  return c.json({ data: result.data, total: result.total, page, limit: PAGE_SIZE });
+});
+
+// All feature requests across all user's projects (session auth)
+feedback.get('/board', requireSession, async (c) => {
+  const userId = c.get('userId')!;
+  const sort = (c.req.query('sort') || 'upvotes') as 'newest' | 'upvotes';
+  const status = c.req.query('status') as string | undefined;
+  const db = getDb(c.env.DATABASE_URL);
+
+  // Get all projects owned by user
+  const projects = await db.listProjectsByOwner(userId);
+  if (projects.length === 0) return c.json({ data: [], total: 0 });
+
+  const projectIds = projects.map((p) => p.id);
+
+  // Query feedback across all projects
+  const allFeedback: Array<FeedbackRecord & { project_name: string; project_slug: string }> = [];
+  for (const pid of projectIds) {
+    const result = await db.listFeedback(
+      pid,
+      {
+        type: 'feature',
+        status: status && status !== 'all' ? (status as AnyFeedbackStatus) : undefined,
+        sort,
+        page: 1,
+        limit: 100,
+      },
+      userId,
+    );
+    const proj = projects.find((p) => p.id === pid)!;
+    for (const item of result.data) {
+      allFeedback.push({ ...item, project_name: proj.name, project_slug: proj.slug });
+    }
+  }
+
+  // Sort merged results
+  if (sort === 'upvotes') {
+    allFeedback.sort(
+      (a, b) =>
+        b.upvote_count - b.downvote_count - (a.upvote_count - a.downvote_count),
+    );
+  } else {
+    allFeedback.sort(
+      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+    );
+  }
+
+  return c.json({ data: allFeedback, total: allFeedback.length });
+});
+
+// List feedback by slug (public, no auth)
+feedback.get('/by-project/:slug', async (c) => {
+  const slug = c.req.param('slug');
+  const type = c.req.query('type') as FeedbackType | undefined;
+  const status = c.req.query('status') as AnyFeedbackStatus | undefined;
+  const sort = (c.req.query('sort') || 'newest') as 'newest' | 'upvotes';
+  const page = parseInt(c.req.query('page') || '1', 10);
+
+  if (type && !VALID_TYPES.includes(type)) return c.json({ error: 'Invalid type filter' }, 400);
+  if (status && !isValidFilterStatus(status)) return c.json({ error: 'Invalid status filter' }, 400);
 
   const db = getDb(c.env.DATABASE_URL);
   const project = await db.getProjectBySlug(slug);
   if (!project) return c.json({ error: 'Project not found' }, 404);
 
-  const result = await db.listFeedback(project.id, { type, status, sort, page, limit: PAGE_SIZE });
+  const viewerId = await getOptionalUserId(c);
+  const result = await db.listFeedback(project.id, { type, status, sort, page, limit: PAGE_SIZE }, viewerId);
 
   return c.json({ data: result.data, total: result.total, page, limit: PAGE_SIZE, project: { name: project.name, slug: project.slug } });
 });
@@ -80,17 +201,17 @@ feedback.post('/:id/upvote', requireSession, async (c) => {
   const userId = c.get('userId')!;
 
   const db = getDb(c.env.DATABASE_URL);
+  const existing = await db.getFeedbackById(feedbackId);
+  if (!existing) return c.json({ error: 'Feedback not found' }, 404);
 
-  const already = await db.hasUpvoted(feedbackId, userId);
-  if (already) return c.json({ error: 'Already upvoted' }, 409);
-
-  await db.addUpvote({
+  await db.setVote({
     id: crypto.randomUUID(),
     feedback_id: feedbackId,
     user_id: userId,
+    vote: 1,
   });
 
-  return c.json({ ok: true }, 201);
+  return c.json({ ok: true });
 });
 
 // Remove upvote
@@ -99,8 +220,43 @@ feedback.delete('/:id/upvote', requireSession, async (c) => {
   const userId = c.get('userId')!;
 
   const db = getDb(c.env.DATABASE_URL);
-  const removed = await db.removeUpvote(feedbackId, userId);
-  if (!removed) return c.json({ error: 'Upvote not found' }, 404);
+  const currentVote = await db.getUserVote(feedbackId, userId);
+  if (currentVote !== 'up') return c.json({ error: 'Upvote not found' }, 404);
+
+  await db.removeVote(feedbackId, userId);
+
+  return c.json({ ok: true });
+});
+
+// Downvote (requires Google OAuth session)
+feedback.post('/:id/downvote', requireSession, async (c) => {
+  const feedbackId = c.req.param('id');
+  const userId = c.get('userId')!;
+
+  const db = getDb(c.env.DATABASE_URL);
+  const existing = await db.getFeedbackById(feedbackId);
+  if (!existing) return c.json({ error: 'Feedback not found' }, 404);
+
+  await db.setVote({
+    id: crypto.randomUUID(),
+    feedback_id: feedbackId,
+    user_id: userId,
+    vote: -1,
+  });
+
+  return c.json({ ok: true });
+});
+
+// Remove downvote
+feedback.delete('/:id/downvote', requireSession, async (c) => {
+  const feedbackId = c.req.param('id');
+  const userId = c.get('userId')!;
+
+  const db = getDb(c.env.DATABASE_URL);
+  const currentVote = await db.getUserVote(feedbackId, userId);
+  if (currentVote !== 'down') return c.json({ error: 'Downvote not found' }, 404);
+
+  await db.removeVote(feedbackId, userId);
 
   return c.json({ ok: true });
 });
@@ -109,14 +265,17 @@ feedback.delete('/:id/upvote', requireSession, async (c) => {
 feedback.patch('/:id', requireSession, async (c) => {
   const userId = c.get('userId')!;
   const feedbackId = c.req.param('id');
-  const body = (await c.req.json()) as { status: FeedbackStatus };
-  if (!VALID_STATUSES.includes(body.status)) return c.json({ error: 'Invalid status' }, 400);
+  const body = (await c.req.json()) as { status: AnyFeedbackStatus };
+  if (!body.status || !isValidFilterStatus(body.status)) return c.json({ error: 'Invalid status' }, 400);
 
   const db = getDb(c.env.DATABASE_URL);
 
   // Verify ownership: feedback -> project -> owner
   const existing = await db.getFeedbackById(feedbackId);
   if (!existing) return c.json({ error: 'Feedback not found' }, 404);
+  if (!canUseStatus(existing.type, body.status)) {
+    return c.json({ error: 'Invalid status for feedback type' }, 400);
+  }
 
   const project = await db.getProjectById(existing.project_id);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
