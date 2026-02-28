@@ -1,10 +1,8 @@
-import Link from "next/link";
 import { Suspense } from "react";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Settings } from "lucide-react";
 import { InboxContent } from "./inbox-content";
 import { CopyButton } from "@/components/copy-button";
+import { PageHeader } from "@/components/page-header";
 import { auth } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
 import { apiFetch, getServerToken } from "@/lib/api";
@@ -38,18 +36,7 @@ export default async function ProjectInboxPage({ params }: Props) {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">{project.name}</h1>
-          <p className="text-muted-foreground">Feedback inbox</p>
-        </div>
-        <Link href={`/projects/${project.slug}/settings`}>
-          <Button variant="outline" size="sm" className="gap-2">
-            <Settings className="h-4 w-4" />
-            Settings
-          </Button>
-        </Link>
-      </div>
+      <PageHeader title={project.name} description="Feedback inbox" />
 
       {/* API Key + SDK snippet */}
       <Card>

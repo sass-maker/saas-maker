@@ -6,6 +6,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { CreateProjectDialog } from "@/components/create-project-dialog";
+import { PageHeader } from "@/components/page-header";
+import { EmptyState } from "@/components/empty-state";
 import { FolderOpen, AlertCircle } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
@@ -31,15 +33,11 @@ export default async function ProjectsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Projects</h1>
-          <p className="text-muted-foreground">
-            Manage your projects and collect feedback.
-          </p>
-        </div>
-        <CreateProjectDialog />
-      </div>
+      <PageHeader
+        title="Projects"
+        description="Manage your projects and collect feedback."
+        action={<CreateProjectDialog />}
+      />
 
       {error ? (
         <Card className="border-destructive/50">
@@ -56,15 +54,11 @@ export default async function ProjectsPage() {
           </CardHeader>
         </Card>
       ) : projects.length === 0 ? (
-        <Card className="py-16">
-          <CardHeader className="flex flex-col items-center text-center">
-            <FolderOpen className="h-12 w-12 text-muted-foreground mb-4" />
-            <CardTitle>No projects yet</CardTitle>
-            <CardDescription className="mt-2 max-w-sm">
-              Create your first project to start collecting feedback from your users.
-            </CardDescription>
-          </CardHeader>
-        </Card>
+        <EmptyState
+          icon={FolderOpen}
+          title="No projects yet"
+          description="Create your first project to start collecting feedback from your users."
+        />
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {projects.map((project) => (
