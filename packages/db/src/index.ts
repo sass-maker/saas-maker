@@ -9,6 +9,8 @@ import {
   WaitlistEntryRecord,
   EventRecord,
   AnalyticsOverview,
+  ShortLinkRecord,
+  ShortLinkStats,
 } from '@saasmaker/shared-types';
 
 export { TABLES } from './schema';
@@ -84,4 +86,14 @@ export interface FeedbackDatabase {
   getCountryBreakdown(projectId: string, since: Date, limit: number): Promise<{ country: string; count: number }[]>;
   getDeviceBreakdown(projectId: string, since: Date): Promise<{ device: string; count: number }[]>;
   getCustomEventCounts(projectId: string, since: Date, limit: number): Promise<{ name: string; count: number }[]>;
+
+  // Short Links
+  createShortLink(input: { id: string; project_id: string; slug: string; destination: string; title: string | null; expires_at: string | null }): Promise<ShortLinkRecord>;
+  getShortLinkBySlug(slug: string): Promise<ShortLinkRecord | null>;
+  getShortLinkById(id: string): Promise<ShortLinkRecord | null>;
+  listShortLinks(projectId: string, page: number, limit: number): Promise<{ data: ShortLinkRecord[]; total: number }>;
+  updateShortLink(id: string, input: { destination?: string; title?: string; expires_at?: string | null }): Promise<ShortLinkRecord | null>;
+  deleteShortLink(id: string): Promise<boolean>;
+  incrementLinkClickCount(id: string): Promise<void>;
+  getShortLinkStats(linkId: string, projectId: string): Promise<ShortLinkStats>;
 }

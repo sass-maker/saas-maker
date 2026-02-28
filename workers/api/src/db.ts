@@ -9,6 +9,7 @@ import type {
   DocumentRecord,
   WaitlistEntryRecord,
   EventRecord,
+  ShortLinkRecord,
 } from '@saasmaker/shared-types';
 
 export function createDatabase(databaseUrl: string): FeedbackDatabase {
@@ -399,6 +400,104 @@ export function createDatabase(databaseUrl: string): FeedbackDatabase {
         GROUP BY name ORDER BY count DESC LIMIT ${limit}
       `;
       return rows as unknown as { name: string; count: number }[];
+    },
+
+    // --- Short Links ---
+    async createShortLink(input) {
+      const [row] = await sql`
+        INSERT INTO short_links (id, project_id, slug, destination, title, expires_at)
+        VALUES (${input.id}, ${input.project_id}, ${input.slug}, ${input.destination}, ${input.title}, ${input.expires_at})
+        RETURNING *
+      `;
+      return row as ShortLinkRecord;
+    },
+
+    async getShortLinkBySlug(slug) {
+      const [row] = await sql`SELECT * FROM short_links WHERE slug = ${slug}`;
+      return (row as ShortLinkRecord) || null;
+    },
+
+    async getShortLinkById(id) {
+      const [row] = await sql`SELECT * FROM short_links WHERE id = ${id}`;
+      return (row as ShortLinkRecord) || null;
+    },
+
+    async listShortLinks(projectId, page, limit) {
+      const offset = (page - 1) * limit;
+      const [countResult] = await sql`
+        SELECT COUNT(*)::int AS total FROM short_links WHERE project_id = ${projectId}
+      `;
+      const rows = await sql`
+        SELECT * FROM short_links WHERE project_id = ${projectId}
+        ORDER BY created_at DESC
+        LIMIT ${limit} OFFSET ${offset}
+      `;
+      return { data: rows as unknown as ShortLinkRecord[], total: countResult.total };
+    },
+
+    async updateShortLink(id, input) {
+      const sets = [];
+      if (input.destination !== undefined) sets.push(sql`destination = ${input.destination}`);
+      if (input.title !== undefined) sets.push(sql`title = ${input.title}`);
+      if (input.expires_at !== undefined) sets.push(sql`expires_at = ${input.expires_at}`);
+      sets.push(sql`updated_at = NOW()`);
+
+      const setClause = sets.reduce((acc, s, i) => i === 0 ? s : sql`${acc}, ${s}`);
+      const [row] = await sql`UPDATE short_links SET ${setClause} WHERE id = ${id} RETURNING *`;
+      return (row as ShortLinkRecord) || null;
+    },
+
+    async deleteShortLink(id) {
+      const result = await sql`DELETE FROM short_links WHERE id = ${id}`;
+      return result.count > 0;
+    },
+
+    async incrementLinkClickCount(id) {
+      await sql`UPDATE short_links SET click_count = click_count + 1 WHERE id = ${id}`;
+    },
+
+    async getShortLinkStats(linkId, projectId) {
+      const [link] = await sql`SELECT slug FROM short_links WHERE id = ${linkId}`;
+      const slug = link?.slug || '';
+
+      const [totalRow] = await sql`
+        SELECT COUNT(*)::int AS total FROM events
+        WHERE project_id = ${projectId} AND name = 'link_click' AND properties->>'link_id' = ${linkId}
+      `;
+
+      const byCountry = await sql`
+        SELECT country, COUNT(*)::int AS count FROM events
+        WHERE project_id = ${projectId} AND name = 'link_click' AND properties->>'link_id' = ${linkId} AND country IS NOT NULL
+        GROUP BY country ORDER BY count DESC
+      `;
+
+      const byDevice = await sql`
+        SELECT device, COUNT(*)::int AS count FROM events
+        WHERE project_id = ${projectId} AND name = 'link_click' AND properties->>'link_id' = ${linkId} AND device IS NOT NULL
+        GROUP BY device ORDER BY count DESC
+      `;
+
+      const byReferrer = await sql`
+        SELECT referrer, COUNT(*)::int AS count FROM events
+        WHERE project_id = ${projectId} AND name = 'link_click' AND properties->>'link_id' = ${linkId} AND referrer IS NOT NULL AND referrer != ''
+        GROUP BY referrer ORDER BY count DESC
+      `;
+
+      const overTime = await sql`
+        SELECT created_at::date::text AS date, COUNT(*)::int AS count FROM events
+        WHERE project_id = ${projectId} AND name = 'link_click' AND properties->>'link_id' = ${linkId}
+        GROUP BY created_at::date ORDER BY date
+      `;
+
+      return {
+        link_id: linkId,
+        slug,
+        total_clicks: totalRow.total,
+        clicks_by_country: byCountry as unknown as { country: string; count: number }[],
+        clicks_by_device: byDevice as unknown as { device: string; count: number }[],
+        clicks_by_referrer: byReferrer as unknown as { referrer: string; count: number }[],
+        clicks_over_time: overTime as unknown as { date: string; count: number }[],
+      };
     },
   };
 }

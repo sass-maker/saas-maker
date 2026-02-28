@@ -9,4 +9,5 @@ export const TABLES = {
   chunks: 'chunks',
   waitlist_entries: 'waitlist_entries',
   events: 'events',
+  short_links: 'short_links',
 } as const;
