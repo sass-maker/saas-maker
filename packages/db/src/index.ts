@@ -6,6 +6,7 @@ import {
   UpvoteRecord,
   IndexRecord,
   DocumentRecord,
+  WaitlistEntryRecord,
 } from '@saasmaker/shared-types';
 
 export { TABLES } from './schema';
@@ -61,4 +62,10 @@ export interface FeedbackDatabase {
   createChunks(chunks: { id: string; document_id: string; index_id: string; content: string; embedding: number[]; chunk_index: number }[]): Promise<number>;
   searchChunks(indexId: string, queryEmbedding: number[], topK: number): Promise<{ document_id: string; content: string; score: number; metadata: Record<string, unknown> }[]>;
   deleteChunksByDocument(documentId: string): Promise<boolean>;
+
+  // Waitlist
+  createWaitlistEntry(input: { id: string; project_id: string; email: string; name: string | null }): Promise<WaitlistEntryRecord>;
+  getWaitlistCount(projectId: string): Promise<number>;
+  listWaitlistEntries(projectId: string, page: number, limit: number): Promise<{ data: WaitlistEntryRecord[]; total: number }>;
+  deleteWaitlistEntry(id: string): Promise<boolean>;
 }

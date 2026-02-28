@@ -7,6 +7,7 @@ import type {
   UpvoteRecord,
   IndexRecord,
   DocumentRecord,
+  WaitlistEntryRecord,
 } from '@saasmaker/shared-types';
 
 export function createDatabase(databaseUrl: string): FeedbackDatabase {
@@ -276,6 +277,45 @@ export function createDatabase(databaseUrl: string): FeedbackDatabase {
 
     async deleteChunksByDocument(documentId) {
       const result = await sql`DELETE FROM chunks WHERE document_id = ${documentId}`;
+      return result.count > 0;
+    },
+
+    // --- Waitlist ---
+    async createWaitlistEntry(input) {
+      const [posRow] = await sql`
+        SELECT COALESCE(MAX(position), 0) + 1 AS next_pos
+        FROM waitlist_entries WHERE project_id = ${input.project_id}
+      `;
+      const [row] = await sql`
+        INSERT INTO waitlist_entries (id, project_id, email, name, position)
+        VALUES (${input.id}, ${input.project_id}, ${input.email}, ${input.name}, ${posRow.next_pos})
+        RETURNING *
+      `;
+      return row as WaitlistEntryRecord;
+    },
+
+    async getWaitlistCount(projectId) {
+      const [row] = await sql`
+        SELECT COUNT(*)::int AS total FROM waitlist_entries WHERE project_id = ${projectId}
+      `;
+      return row.total;
+    },
+
+    async listWaitlistEntries(projectId, page, limit) {
+      const offset = (page - 1) * limit;
+      const [countResult] = await sql`
+        SELECT COUNT(*)::int AS total FROM waitlist_entries WHERE project_id = ${projectId}
+      `;
+      const rows = await sql`
+        SELECT * FROM waitlist_entries WHERE project_id = ${projectId}
+        ORDER BY position ASC
+        LIMIT ${limit} OFFSET ${offset}
+      `;
+      return { data: rows as unknown as WaitlistEntryRecord[], total: countResult.total };
+    },
+
+    async deleteWaitlistEntry(id) {
+      const result = await sql`DELETE FROM waitlist_entries WHERE id = ${id}`;
       return result.count > 0;
     },
   };
