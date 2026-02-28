@@ -26,7 +26,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { ThumbsUp, Trash2 } from "lucide-react";
-import type { FeedbackRecord, FeedbackStatus } from "./feedback-types";
+import type { FeedbackRecord, FeedbackStatus } from "@saasmaker/shared-types";
 
 const TYPE_STYLES: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
   bug: { label: "Bug", variant: "destructive" },

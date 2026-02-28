@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { FilterBar } from "@/components/filter-bar";
 import { FeedbackTable } from "@/components/feedback-table";
-import type { FeedbackRecord, FeedbackStatus } from "@/components/feedback-types";
+import type { FeedbackRecord, FeedbackStatus } from "@saasmaker/shared-types";
 import { apiFetch } from "@/lib/api";
 // apiFetch still used for auth'd writes (status change, delete)
 

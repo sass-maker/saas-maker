@@ -25,7 +25,7 @@ import { CopyButton } from "@/components/copy-button";
 import { ArrowLeft, Save, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { apiFetch } from "@/lib/api";
-import type { ProjectRecord } from "@/components/feedback-types";
+import type { ProjectRecord } from "@saasmaker/shared-types";
 
 async function getToken(): Promise<string> {
   const res = await fetch("/api/token");

@@ -27,7 +27,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { ArrowDownUp, ThumbsUp, MessageSquare } from "lucide-react";
-import type { FeedbackRecord } from "@/components/feedback-types";
+import type { FeedbackRecord } from "@saasmaker/shared-types";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8787";
 
