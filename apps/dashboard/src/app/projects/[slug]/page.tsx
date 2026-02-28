@@ -1,14 +1,17 @@
 import { Suspense } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { InboxContent } from "./inbox-content";
-import { CopyButton } from "@/components/copy-button";
 import { PageHeader } from "@/components/page-header";
+import { StatCard } from "@/components/stat-card";
+import { CopyButton } from "@/components/copy-button";
+import { MessageSquare, Lightbulb, Bug, ExternalLink } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
 import { apiFetch, getServerToken } from "@/lib/api";
-import type { ProjectRecord } from "@saasmaker/shared-types";
+import type { ProjectRecord, FeedbackRecord } from "@saasmaker/shared-types";
 
 export const dynamic = "force-dynamic";
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -33,32 +36,44 @@ export default async function ProjectInboxPage({ params }: Props) {
 
   if (!project) notFound();
 
+  let total = 0;
+  let features = 0;
+  let bugs = 0;
+
+  try {
+    const res = await apiFetch(
+      `/v1/feedback?project_id=${project.id}`,
+      {},
+      token
+    );
+    const items: FeedbackRecord[] = res.data ?? [];
+    total = res.total ?? items.length;
+    features = items.filter((i) => i.type === "feature").length;
+    bugs = items.filter((i) => i.type === "bug").length;
+  } catch {
+    // Feedback fetch failed — show zeros
+  }
+
+  const publicBoardUrl = `${SITE_URL}/f/${project.slug}`;
+
   return (
     <div className="space-y-6">
-      {/* Header */}
       <PageHeader title={project.name} description="Feedback inbox" />
 
-      {/* API Key + SDK snippet */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-sm font-medium">Quick Setup</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="flex items-center gap-2">
-            <code className="flex-1 rounded bg-muted px-3 py-2 text-sm font-mono">
-              {project.api_key}
-            </code>
-            <CopyButton value={project.api_key} />
-          </div>
-          <pre className="rounded bg-muted p-3 text-xs font-mono overflow-x-auto">
-{`npm install @saasmaker/feedback
+      {/* Stats */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <StatCard title="Total Feedback" value={total} icon={MessageSquare} />
+        <StatCard title="Feature Requests" value={features} icon={Lightbulb} />
+        <StatCard title="Bug Reports" value={bugs} icon={Bug} />
+      </div>
 
-import { FeedbackWidget } from '@saasmaker/feedback'
-
-<FeedbackWidget projectId="${project.api_key}" />`}
-          </pre>
-        </CardContent>
-      </Card>
+      {/* Public board link */}
+      <div className="flex items-center gap-2 rounded-md border px-3 py-2">
+        <ExternalLink className="h-4 w-4 text-muted-foreground shrink-0" />
+        <span className="text-sm text-muted-foreground">Public board:</span>
+        <code className="flex-1 text-sm font-mono truncate">{publicBoardUrl}</code>
+        <CopyButton value={publicBoardUrl} />
+      </div>
 
       {/* Filters + Table */}
       <Suspense fallback={<div className="text-muted-foreground">Loading...</div>}>

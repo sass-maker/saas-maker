@@ -1,16 +1,10 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import type { FeedbackRecord, FeatureRequestStatus } from "@saasmaker/shared-types";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -18,56 +12,92 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
 import {
   Sheet,
+  SheetBody,
   SheetContent,
   SheetDescription,
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { ArrowDownUp, ThumbsUp, MessageSquare } from "lucide-react";
-import type { FeedbackRecord } from "@saasmaker/shared-types";
+import {
+  ArrowDownUp,
+  ChevronDown,
+  ChevronUp,
+  LayoutGrid,
+  MessageSquare,
+} from "lucide-react";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8787";
 
-const TYPE_STYLES: Record<
-  string,
-  { label: string; variant: "default" | "secondary" | "destructive" | "outline" }
-> = {
-  bug: { label: "Bug", variant: "destructive" },
-  feature: { label: "Feature", variant: "default" },
-  feedback: { label: "Feedback", variant: "secondary" },
-};
+type BoardStatus = FeatureRequestStatus;
 
-const STATUS_STYLES: Record<
-  string,
-  { label: string; variant: "default" | "secondary" | "destructive" | "outline" }
-> = {
-  new: { label: "New", variant: "default" },
-  in_progress: { label: "In Progress", variant: "secondary" },
-  done: { label: "Done", variant: "outline" },
-  dismissed: { label: "Dismissed", variant: "outline" },
-};
+const STATUS_COLUMNS: Array<{
+  value: BoardStatus;
+  label: string;
+  variant: "default" | "secondary" | "destructive" | "outline";
+}> = [
+  { value: "planned", label: "Planned", variant: "default" },
+  { value: "in_progress", label: "In Progress", variant: "secondary" },
+  { value: "shipped", label: "Shipped", variant: "secondary" },
+  { value: "cancelled", label: "Cancelled", variant: "destructive" },
+];
+
+const STATUS_STYLE_MAP = Object.fromEntries(
+  STATUS_COLUMNS.map((column) => [column.value, column])
+) as Record<BoardStatus, (typeof STATUS_COLUMNS)[number]>;
 
 interface Props {
   slug: string;
+}
+
+async function getClientToken(): Promise<string | null> {
+  try {
+    const res = await fetch("/api/token");
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.token as string;
+  } catch {
+    return null;
+  }
+}
+
+function withVote(item: FeedbackRecord, vote: "up" | "down" | null): FeedbackRecord {
+  const prev = item.viewer_vote ?? null;
+  let up = item.upvote_count;
+  let down = item.downvote_count;
+
+  if (prev === "up") up = Math.max(up - 1, 0);
+  if (prev === "down") down = Math.max(down - 1, 0);
+  if (vote === "up") up += 1;
+  if (vote === "down") down += 1;
+
+  return {
+    ...item,
+    upvote_count: up,
+    downvote_count: down,
+    viewer_vote: vote,
+  };
 }
 
 export function PublicFeedbackContent({ slug }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const typeFilter = searchParams.get("type") ?? "all";
   const statusFilter = searchParams.get("status") ?? "all";
-  const sort = searchParams.get("sort") ?? "newest";
+  const sort = searchParams.get("sort") ?? "upvotes";
 
   const [feedback, setFeedback] = useState<FeedbackRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(null);
+  const [canManage, setCanManage] = useState(false);
+  const [votePendingId, setVotePendingId] = useState<string | null>(null);
+  const [statusPendingId, setStatusPendingId] = useState<string | null>(null);
 
-  const selected = feedback.find((f) => f.id === selectedId) ?? null;
+  const selected = feedback.find((item) => item.id === selectedId) ?? null;
 
   const updateParam = useCallback(
     (key: string, value: string) => {
@@ -79,61 +109,202 @@ export function PublicFeedbackContent({ slug }: Props) {
     [router, searchParams]
   );
 
-  const fetchFeedback = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const params = new URLSearchParams();
-      if (typeFilter !== "all") params.set("type", typeFilter);
-      if (statusFilter !== "all") params.set("status", statusFilter);
-      params.set("sort", sort === "upvotes" ? "upvotes" : "newest");
+  const checkOwnerAccess = useCallback(
+    async (activeToken: string | null) => {
+      if (!activeToken) {
+        setCanManage(false);
+        return;
+      }
 
-      const qs = params.toString();
-      const res = await fetch(
-        `${API_BASE}/v1/feedback/by-project/${slug}${qs ? `?${qs}` : ""}`
-      );
-      if (!res.ok) throw new Error("Failed to load feedback");
-      const data = await res.json();
-      setFeedback(data.data ?? []);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load feedback");
-    } finally {
-      setLoading(false);
-    }
-  }, [slug, typeFilter, statusFilter, sort]);
+      try {
+        const res = await fetch(`${API_BASE}/v1/projects`, {
+          headers: { Authorization: `Bearer ${activeToken}` },
+        });
+        if (!res.ok) {
+          setCanManage(false);
+          return;
+        }
+        const data = await res.json();
+        const projects = (data.data ?? []) as Array<{ slug: string }>;
+        setCanManage(projects.some((project) => project.slug === slug));
+      } catch {
+        setCanManage(false);
+      }
+    },
+    [slug]
+  );
+
+  const fetchFeedback = useCallback(
+    async (activeToken: string | null) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const params = new URLSearchParams();
+        params.set("type", "feature");
+        if (statusFilter !== "all") params.set("status", statusFilter);
+        params.set("sort", sort === "newest" ? "newest" : "upvotes");
+
+        const res = await fetch(
+          `${API_BASE}/v1/feedback/by-project/${slug}?${params.toString()}`,
+          {
+            headers: activeToken
+              ? { Authorization: `Bearer ${activeToken}` }
+              : undefined,
+          }
+        );
+        if (!res.ok) throw new Error("Failed to load feature requests");
+
+        const data = await res.json();
+        const rows = (data.data ?? []) as FeedbackRecord[];
+        setFeedback(rows);
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "Failed to load feature requests"
+        );
+      } finally {
+        setLoading(false);
+      }
+    },
+    [slug, statusFilter, sort]
+  );
 
   useEffect(() => {
-    fetchFeedback();
-  }, [fetchFeedback]);
+    let cancelled = false;
+
+    async function bootstrap() {
+      const nextToken = await getClientToken();
+      if (cancelled) return;
+      setToken(nextToken);
+      await Promise.all([
+        checkOwnerAccess(nextToken),
+        fetchFeedback(nextToken),
+      ]);
+    }
+
+    bootstrap();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [checkOwnerAccess, fetchFeedback]);
+
+  const grouped = useMemo(() => {
+    const buckets: Record<BoardStatus, FeedbackRecord[]> = {
+      planned: [],
+      in_progress: [],
+      shipped: [],
+      cancelled: [],
+    };
+
+    for (const item of feedback) {
+      const normalized =
+        item.status === "planned" ||
+        item.status === "in_progress" ||
+        item.status === "shipped" ||
+        item.status === "cancelled"
+          ? item.status
+          : "planned";
+      buckets[normalized].push(item);
+    }
+
+    return buckets;
+  }, [feedback]);
+
+  const handleVote = useCallback(
+    async (item: FeedbackRecord, target: "up" | "down") => {
+      setActionError(null);
+      if (!token) {
+        setActionError("Sign in to vote on feature requests.");
+        return;
+      }
+
+      const currentVote = item.viewer_vote ?? null;
+      const nextVote = currentVote === target ? null : target;
+
+      const endpoint =
+        target === "up"
+          ? `/v1/feedback/${item.id}/upvote`
+          : `/v1/feedback/${item.id}/downvote`;
+      const method = nextVote === null ? "DELETE" : "POST";
+
+      setVotePendingId(item.id);
+      try {
+        const res = await fetch(`${API_BASE}${endpoint}`, {
+          method,
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}));
+          throw new Error(body.error || "Voting failed");
+        }
+
+        setFeedback((prev) =>
+          prev.map((candidate) =>
+            candidate.id === item.id ? withVote(candidate, nextVote) : candidate
+          )
+        );
+      } catch (err) {
+        setActionError(err instanceof Error ? err.message : "Voting failed");
+      } finally {
+        setVotePendingId(null);
+      }
+    },
+    [token]
+  );
+
+  const handleStatusChange = useCallback(
+    async (item: FeedbackRecord, nextStatus: BoardStatus) => {
+      if (!canManage || !token || item.status === nextStatus) return;
+      setActionError(null);
+      setStatusPendingId(item.id);
+
+      try {
+        const res = await fetch(`${API_BASE}/v1/feedback/${item.id}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ status: nextStatus }),
+        });
+
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}));
+          throw new Error(body.error || "Failed to update status");
+        }
+
+        setFeedback((prev) =>
+          prev.map((candidate) =>
+            candidate.id === item.id
+              ? { ...candidate, status: nextStatus }
+              : candidate
+          )
+        );
+      } catch (err) {
+        setActionError(
+          err instanceof Error ? err.message : "Failed to update status"
+        );
+      } finally {
+        setStatusPendingId(null);
+      }
+    },
+    [canManage, token]
+  );
 
   return (
     <div className="space-y-4">
-      {/* Filters */}
       <div className="flex flex-wrap items-center gap-3">
-        <Select value={typeFilter} onValueChange={(v) => updateParam("type", v)}>
-          <SelectTrigger className="w-[140px]">
-            <SelectValue placeholder="Type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Types</SelectItem>
-            <SelectItem value="bug">Bug</SelectItem>
-            <SelectItem value="feature">Feature</SelectItem>
-            <SelectItem value="feedback">Feedback</SelectItem>
-          </SelectContent>
-        </Select>
-
-        <Select
-          value={statusFilter}
-          onValueChange={(v) => updateParam("status", v)}
-        >
-          <SelectTrigger className="w-[160px]">
+        <Select value={statusFilter} onValueChange={(v) => updateParam("status", v)}>
+          <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Statuses</SelectItem>
-            <SelectItem value="new">New</SelectItem>
-            <SelectItem value="in_progress">In Progress</SelectItem>
-            <SelectItem value="done">Done</SelectItem>
+            <SelectItem value="all">All Columns</SelectItem>
+            {STATUS_COLUMNS.map((column) => (
+              <SelectItem key={column.value} value={column.value}>
+                {column.label}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
 
@@ -146,126 +317,195 @@ export function PublicFeedbackContent({ slug }: Props) {
           className="gap-2"
         >
           <ArrowDownUp className="h-4 w-4" />
-          {sort === "newest" ? "Newest" : "Most Upvoted"}
+          {sort === "newest" ? "Newest" : "Most Voted"}
         </Button>
+
+        <Badge variant="outline" className="gap-2">
+          <LayoutGrid className="h-3.5 w-3.5" />
+          Public Kanban
+        </Badge>
       </div>
 
-      {/* Content */}
+      {canManage && (
+        <p className="text-sm text-muted-foreground">
+          Owner mode enabled. You can update request status directly from each card.
+        </p>
+      )}
+
+      {actionError && (
+        <p className="text-sm text-destructive">{actionError}</p>
+      )}
+
       {loading ? (
-        <div className="rounded-md border">
-          {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="border-b p-3 flex gap-4 items-center">
-              <div className="h-5 w-16 animate-pulse rounded-full bg-muted" />
-              <div className="h-4 w-48 animate-pulse rounded bg-muted flex-1" />
-              <div className="h-4 w-8 animate-pulse rounded bg-muted" />
-              <div className="h-5 w-20 animate-pulse rounded-full bg-muted" />
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {STATUS_COLUMNS.map((column) => (
+            <div key={column.value} className="rounded-md border p-3 space-y-3">
+              <div className="h-5 w-28 animate-pulse rounded bg-muted" />
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="rounded-md border p-3 space-y-2">
+                  <div className="h-4 w-3/4 animate-pulse rounded bg-muted" />
+                  <div className="h-3 w-full animate-pulse rounded bg-muted" />
+                  <div className="h-3 w-2/3 animate-pulse rounded bg-muted" />
+                </div>
+              ))}
             </div>
           ))}
         </div>
       ) : error ? (
         <div className="text-destructive text-center py-8">{error}</div>
+      ) : feedback.length === 0 ? (
+        <div className="rounded-md border py-12 text-center text-muted-foreground">
+          <MessageSquare className="mx-auto h-8 w-8 mb-2" />
+          No feature requests yet.
+        </div>
       ) : (
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[100px]">Type</TableHead>
-                <TableHead>Title</TableHead>
-                <TableHead className="w-[80px] text-center">Upvotes</TableHead>
-                <TableHead className="w-[120px]">Status</TableHead>
-                <TableHead className="hidden md:table-cell w-[120px]">
-                  Date
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {feedback.length === 0 ? (
-                <TableRow>
-                  <TableCell
-                    colSpan={5}
-                    className="h-32 text-center text-muted-foreground"
-                  >
-                    <div className="flex flex-col items-center gap-2">
-                      <MessageSquare className="h-8 w-8" />
-                      <p>No feedback yet. Be the first to share!</p>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ) : (
-                feedback.map((item) => {
-                  const typeStyle = TYPE_STYLES[item.type] ?? {
-                    label: item.type,
-                    variant: "outline" as const,
-                  };
-                  const statusStyle = STATUS_STYLES[item.status] ?? {
-                    label: item.status,
-                    variant: "outline" as const,
-                  };
-                  return (
-                    <TableRow
-                      key={item.id}
-                      className="cursor-pointer"
-                      onClick={() => setSelectedId(item.id)}
-                    >
-                      <TableCell>
-                        <Badge variant={typeStyle.variant}>
-                          {typeStyle.label}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="font-medium">{item.title}</TableCell>
-                      <TableCell className="text-center">
-                        {item.upvote_count}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={statusStyle.variant}>
-                          {statusStyle.label}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell text-muted-foreground">
-                        {new Date(item.created_at).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                        })}
-                      </TableCell>
-                    </TableRow>
-                  );
-                })
-              )}
-            </TableBody>
-          </Table>
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {STATUS_COLUMNS.map((column) => {
+            if (statusFilter !== "all" && statusFilter !== column.value) {
+              return null;
+            }
+
+            const cards = grouped[column.value];
+            return (
+              <div key={column.value} className="rounded-md border bg-card">
+                <div className="flex items-center justify-between border-b px-3 py-2">
+                  <Badge variant={column.variant}>{column.label}</Badge>
+                  <span className="text-xs text-muted-foreground">{cards.length}</span>
+                </div>
+
+                <div className="space-y-3 p-3">
+                  {cards.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">No requests</p>
+                  ) : (
+                    cards.map((item) => (
+                      <div
+                        key={item.id}
+                        className="rounded-md border p-3 space-y-3 cursor-pointer hover:bg-muted/30"
+                        onClick={() => setSelectedId(item.id)}
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <h3 className="text-sm font-medium leading-snug">{item.title}</h3>
+                          <div className="flex items-center gap-1">
+                            <Button
+                              type="button"
+                              variant={item.viewer_vote === "up" ? "default" : "outline"}
+                              size="icon"
+                              className="h-7 w-7"
+                              disabled={votePendingId === item.id}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleVote(item, "up");
+                              }}
+                              title="Upvote"
+                            >
+                              <ChevronUp className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              type="button"
+                              variant={item.viewer_vote === "down" ? "destructive" : "outline"}
+                              size="icon"
+                              className="h-7 w-7"
+                              disabled={votePendingId === item.id}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleVote(item, "down");
+                              }}
+                              title="Downvote"
+                            >
+                              <ChevronDown className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+
+                        <p className="text-xs text-muted-foreground line-clamp-2">
+                          {item.description}
+                        </p>
+
+                        <div className="flex items-center justify-between text-xs text-muted-foreground">
+                          <span>▲ {item.upvote_count}</span>
+                          <span>▼ {item.downvote_count}</span>
+                          <span>Score {item.upvote_count - item.downvote_count}</span>
+                        </div>
+
+                        {canManage && (
+                          <div onClick={(e) => e.stopPropagation()}>
+                            <Select
+                              value={
+                                item.status === "planned" ||
+                                item.status === "in_progress" ||
+                                item.status === "shipped" ||
+                                item.status === "cancelled"
+                                  ? item.status
+                                  : "planned"
+                              }
+                              onValueChange={(value) =>
+                                handleStatusChange(item, value as BoardStatus)
+                              }
+                              disabled={statusPendingId === item.id}
+                            >
+                              <SelectTrigger className="h-8 text-xs">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {STATUS_COLUMNS.map((statusOption) => (
+                                  <SelectItem
+                                    key={statusOption.value}
+                                    value={statusOption.value}
+                                  >
+                                    {statusOption.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        )}
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
 
-      {/* Detail sheet (read-only) */}
       <Sheet
         open={selectedId !== null}
-        onOpenChange={(v) => !v && setSelectedId(null)}
+        onOpenChange={(open) => !open && setSelectedId(null)}
       >
-        <SheetContent className="w-full sm:max-w-lg overflow-y-auto">
+        <SheetContent className="w-full sm:max-w-lg">
           {selected && (
             <>
               <SheetHeader>
                 <div className="flex items-center gap-2">
+                  <Badge variant="default">Feature</Badge>
                   <Badge
                     variant={
-                      (TYPE_STYLES[selected.type]?.variant as "default") ??
-                      "outline"
+                      STATUS_STYLE_MAP[
+                        (selected.status === "planned" ||
+                        selected.status === "in_progress" ||
+                        selected.status === "shipped" ||
+                        selected.status === "cancelled"
+                          ? selected.status
+                          : "planned") as BoardStatus
+                      ].variant
                     }
                   >
-                    {TYPE_STYLES[selected.type]?.label ?? selected.type}
-                  </Badge>
-                  <Badge
-                    variant={
-                      (STATUS_STYLES[selected.status]?.variant as "default") ??
-                      "outline"
+                    {
+                      STATUS_STYLE_MAP[
+                        (selected.status === "planned" ||
+                        selected.status === "in_progress" ||
+                        selected.status === "shipped" ||
+                        selected.status === "cancelled"
+                          ? selected.status
+                          : "planned") as BoardStatus
+                      ].label
                     }
-                  >
-                    {STATUS_STYLES[selected.status]?.label ?? selected.status}
                   </Badge>
                 </div>
                 <SheetTitle className="text-left">{selected.title}</SheetTitle>
                 <SheetDescription className="text-left">
-                  Submitted{" "}
+                  Submitted {" "}
                   {new Date(selected.created_at).toLocaleDateString("en-US", {
                     month: "long",
                     day: "numeric",
@@ -274,7 +514,7 @@ export function PublicFeedbackContent({ slug }: Props) {
                 </SheetDescription>
               </SheetHeader>
 
-              <div className="mt-6 space-y-6">
+              <SheetBody className="space-y-6">
                 <div className="space-y-2">
                   <h4 className="text-sm font-medium text-muted-foreground">
                     Description
@@ -297,14 +537,12 @@ export function PublicFeedbackContent({ slug }: Props) {
                   </div>
                 )}
 
-                <div className="flex items-center gap-2 text-sm">
-                  <ThumbsUp className="h-4 w-4 text-muted-foreground" />
-                  <span>
-                    {selected.upvote_count} upvote
-                    {selected.upvote_count !== 1 ? "s" : ""}
-                  </span>
+                <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                  <span>▲ {selected.upvote_count}</span>
+                  <span>▼ {selected.downvote_count}</span>
+                  <span>Score {selected.upvote_count - selected.downvote_count}</span>
                 </div>
-              </div>
+              </SheetBody>
             </>
           )}
         </SheetContent>

@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import {
   BarChart3,
   FolderOpen,
-  Lightbulb,
   MessageSquare,
   Settings,
   Users,
@@ -22,9 +21,7 @@ const projectNavItems = [
 export function SidebarNav() {
   const pathname = usePathname();
   const slugMatch = pathname.match(/\/projects\/([^/]+)/);
-  const rawSlug = slugMatch?.[1];
-  // "feedback" is a top-level route, not a project slug
-  const slug = rawSlug === "feedback" ? undefined : rawSlug;
+  const slug = slugMatch?.[1];
 
   return (
     <nav className="flex flex-col gap-1">
@@ -40,20 +37,6 @@ export function SidebarNav() {
       >
         <FolderOpen className="h-4 w-4" />
         Projects
-      </Link>
-
-      {/* Feature Requests - always visible */}
-      <Link
-        href="/projects/feedback"
-        className={cn(
-          "flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
-          pathname === "/projects/feedback"
-            ? "bg-muted text-foreground"
-            : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-        )}
-      >
-        <Lightbulb className="h-4 w-4" />
-        Feature Requests
       </Link>
 
       {/* Project-level nav items - shown when a project slug is present */}

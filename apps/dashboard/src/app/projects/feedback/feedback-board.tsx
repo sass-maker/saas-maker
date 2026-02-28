@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/select";
 import {
   Sheet,
+  SheetBody,
   SheetContent,
   SheetDescription,
   SheetHeader,
@@ -433,7 +434,7 @@ export function FeedbackBoard() {
         open={selectedId !== null}
         onOpenChange={(open) => !open && setSelectedId(null)}
       >
-        <SheetContent className="w-full sm:max-w-lg overflow-y-auto">
+        <SheetContent className="w-full sm:max-w-lg">
           {selected && (
             <>
               <SheetHeader>
@@ -475,7 +476,7 @@ export function FeedbackBoard() {
                 </SheetDescription>
               </SheetHeader>
 
-              <div className="mt-6 space-y-6">
+              <SheetBody className="space-y-6">
                 <div className="space-y-2">
                   <h4 className="text-sm font-medium text-muted-foreground">
                     Description
@@ -503,7 +504,7 @@ export function FeedbackBoard() {
                   <span>&#9660; {selected.downvote_count}</span>
                   <span>Score {selected.upvote_count - selected.downvote_count}</span>
                 </div>
-              </div>
+              </SheetBody>
             </>
           )}
         </SheetContent>

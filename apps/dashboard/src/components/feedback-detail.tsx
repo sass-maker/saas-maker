@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/select";
 import {
   Sheet,
+  SheetBody,
   SheetContent,
   SheetDescription,
   SheetHeader,
@@ -26,7 +27,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { ThumbsUp, Trash2 } from "lucide-react";
-import type { FeedbackRecord, FeedbackStatus } from "@saasmaker/shared-types";
+import type {
+  FeedbackRecord,
+  AnyFeedbackStatus,
+  FeedbackStatus,
+  FeatureRequestStatus,
+} from "@saasmaker/shared-types";
 
 const TYPE_STYLES: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
   bug: { label: "Bug", variant: "destructive" },
@@ -38,12 +44,12 @@ interface FeedbackDetailProps {
   item: FeedbackRecord | null;
   open: boolean;
   onClose: () => void;
-  onStatusChange?: (id: string, status: FeedbackStatus) => Promise<void>;
+  onStatusChange?: (item: FeedbackRecord, status: AnyFeedbackStatus) => Promise<void>;
   onDelete?: (id: string) => Promise<void>;
 }
 
 export function FeedbackDetail({ item, open, onClose, onStatusChange, onDelete }: FeedbackDetailProps) {
-  const [status, setStatus] = useState<FeedbackStatus>(item?.status ?? "new");
+  const [status, setStatus] = useState<AnyFeedbackStatus>(item?.status ?? "new");
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [updating, setUpdating] = useState(false);
@@ -54,16 +60,34 @@ export function FeedbackDetail({ item, open, onClose, onStatusChange, onDelete }
   }
 
   if (!item) return null;
+  const currentItem = item;
 
-  const typeStyle = TYPE_STYLES[item.type] ?? { label: item.type, variant: "outline" as const };
+  const typeStyle = TYPE_STYLES[currentItem.type] ?? { label: currentItem.type, variant: "outline" as const };
+  const statusOptions: Array<{ value: AnyFeedbackStatus; label: string }> =
+    currentItem.type === "feature"
+      ? [
+          { value: "planned", label: "Planned" },
+          { value: "in_progress", label: "In Progress" },
+          { value: "shipped", label: "Shipped" },
+          { value: "cancelled", label: "Cancelled" },
+        ]
+      : [
+          { value: "new", label: "New" },
+          { value: "in_progress", label: "In Progress" },
+          { value: "done", label: "Done" },
+          { value: "dismissed", label: "Dismissed" },
+        ];
 
   async function handleStatusChange(value: string) {
-    const newStatus = value as FeedbackStatus;
+    const newStatus =
+      currentItem.type === "feature"
+        ? (value as FeatureRequestStatus)
+        : (value as FeedbackStatus);
     setStatus(newStatus);
-    if (onStatusChange && item) {
+    if (onStatusChange) {
       setUpdating(true);
       try {
-        await onStatusChange(item.id, newStatus);
+        await onStatusChange(currentItem, newStatus);
       } finally {
         setUpdating(false);
       }
@@ -71,10 +95,10 @@ export function FeedbackDetail({ item, open, onClose, onStatusChange, onDelete }
   }
 
   async function handleDelete() {
-    if (onDelete && item) {
+    if (onDelete) {
       setDeleting(true);
       try {
-        await onDelete(item.id);
+        await onDelete(currentItem.id);
       } finally {
         setDeleting(false);
       }
@@ -86,7 +110,7 @@ export function FeedbackDetail({ item, open, onClose, onStatusChange, onDelete }
   return (
     <>
       <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
-        <SheetContent className="w-full sm:max-w-lg overflow-y-auto">
+        <SheetContent className="w-full sm:max-w-lg">
           <SheetHeader>
             <div className="flex items-center gap-2">
               <Badge variant={typeStyle.variant}>{typeStyle.label}</Badge>
@@ -97,7 +121,7 @@ export function FeedbackDetail({ item, open, onClose, onStatusChange, onDelete }
             </SheetDescription>
           </SheetHeader>
 
-          <div className="mt-6 space-y-6">
+          <SheetBody className="space-y-6">
             {/* Description */}
             <div className="space-y-2">
               <h4 className="text-sm font-medium text-muted-foreground">Description</h4>
@@ -122,6 +146,7 @@ export function FeedbackDetail({ item, open, onClose, onStatusChange, onDelete }
             <div className="flex items-center gap-2 text-sm">
               <ThumbsUp className="h-4 w-4 text-muted-foreground" />
               <span>{item.upvote_count} upvote{item.upvote_count !== 1 ? "s" : ""}</span>
+              <span className="text-muted-foreground">• {item.downvote_count} downvote{item.downvote_count !== 1 ? "s" : ""}</span>
             </div>
 
             {/* Submitter info */}
@@ -155,10 +180,11 @@ export function FeedbackDetail({ item, open, onClose, onStatusChange, onDelete }
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="new">New</SelectItem>
-                  <SelectItem value="in_progress">In Progress</SelectItem>
-                  <SelectItem value="done">Done</SelectItem>
-                  <SelectItem value="dismissed">Dismissed</SelectItem>
+                  {statusOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -175,7 +201,7 @@ export function FeedbackDetail({ item, open, onClose, onStatusChange, onDelete }
                 Delete Feedback
               </Button>
             </div>
-          </div>
+          </SheetBody>
         </SheetContent>
       </Sheet>
 

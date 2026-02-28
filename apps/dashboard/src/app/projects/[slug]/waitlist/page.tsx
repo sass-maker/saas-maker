@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -12,7 +12,7 @@ import { StatCard } from "@/components/stat-card";
 import { EmptyState } from "@/components/empty-state";
 import { CopyButton } from "@/components/copy-button";
 import { WaitlistActions } from "./waitlist-actions";
-import { Users } from "lucide-react";
+import { Users, ExternalLink } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
 import { apiFetch, getServerToken } from "@/lib/api";
@@ -58,11 +58,8 @@ export default async function WaitlistPage({ params }: Props) {
     // Waitlist fetch failed — show empty state
   }
 
-  const snippet = `<script defer src="https://cdn.saasmaker.dev/a.js" data-project="${project.api_key}"></script>
-
-// Or use the API directly:
-// POST /v1/waitlist with X-Project-Key header
-// Body: { "email": "user@example.com", "name": "Optional Name" }`;
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const publicWaitlistUrl = `${SITE_URL}/w/${project.slug}`;
 
   return (
     <div className="space-y-6">
@@ -75,23 +72,13 @@ export default async function WaitlistPage({ params }: Props) {
         <StatCard title="Total Signups" value={total} icon={Users} />
       </div>
 
-      {/* Quick Setup */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-sm font-medium">Quick Setup</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="flex items-center gap-2">
-            <code className="flex-1 rounded bg-muted px-3 py-2 text-sm font-mono">
-              {project.api_key}
-            </code>
-            <CopyButton value={project.api_key} />
-          </div>
-          <pre className="rounded bg-muted p-3 text-xs font-mono overflow-x-auto whitespace-pre-wrap">
-            {snippet}
-          </pre>
-        </CardContent>
-      </Card>
+      {/* Public waitlist link */}
+      <div className="flex items-center gap-2 rounded-md border px-3 py-2">
+        <ExternalLink className="h-4 w-4 text-muted-foreground shrink-0" />
+        <span className="text-sm text-muted-foreground">Public page:</span>
+        <code className="flex-1 text-sm font-mono truncate">{publicWaitlistUrl}</code>
+        <CopyButton value={publicWaitlistUrl} />
+      </div>
 
       {entries.length > 0 ? (
         <Card>
