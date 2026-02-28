@@ -105,6 +105,7 @@ export interface ChunkRecord {
 export interface CreateIndexRequest {
   name: string;
   external_id?: string;
+  embedding_model?: string;
 }
 
 export interface IngestDocumentRequest {
@@ -122,6 +123,59 @@ export interface SearchResult {
   chunk_content: string;
   score: number;
   metadata: Record<string, unknown>;
+}
+
+// --- Waitlist Service ---
+
+export interface WaitlistEntryRecord {
+  id: string;
+  project_id: string;
+  email: string;
+  name: string | null;
+  position: number;
+  created_at: string;
+}
+
+export interface WaitlistSignupRequest {
+  email: string;
+  name?: string;
+}
+
+// --- Analytics Service ---
+
+export interface EventRecord {
+  id: string;
+  project_id: string;
+  name: string;
+  url: string | null;
+  referrer: string | null;
+  utm_source: string | null;
+  utm_medium: string | null;
+  utm_campaign: string | null;
+  country: string | null;
+  device: string | null;
+  browser: string | null;
+  screen_width: number | null;
+  properties: Record<string, unknown>;
+  created_at: string;
+}
+
+export interface TrackEventRequest {
+  name?: string;
+  url?: string;
+  referrer?: string;
+  utm_source?: string;
+  utm_medium?: string;
+  utm_campaign?: string;
+  screen_width?: number;
+  properties?: Record<string, unknown>;
+}
+
+export interface AnalyticsOverview {
+  page_views: number;
+  unique_visitors: number;
+  top_page: string | null;
+  top_referrer: string | null;
 }
 
 // --- Widget Props ---

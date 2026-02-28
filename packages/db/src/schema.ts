@@ -7,4 +7,6 @@ export const TABLES = {
   indexes: 'indexes',
   documents: 'documents',
   chunks: 'chunks',
+  waitlist_entries: 'waitlist_entries',
+  events: 'events',
 } as const;
