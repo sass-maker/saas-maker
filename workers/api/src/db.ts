@@ -8,6 +8,7 @@ import type {
   IndexRecord,
   DocumentRecord,
   WaitlistEntryRecord,
+  EventRecord,
 } from '@saasmaker/shared-types';
 
 export function createDatabase(databaseUrl: string): FeedbackDatabase {
@@ -317,6 +318,87 @@ export function createDatabase(databaseUrl: string): FeedbackDatabase {
     async deleteWaitlistEntry(id) {
       const result = await sql`DELETE FROM waitlist_entries WHERE id = ${id}`;
       return result.count > 0;
+    },
+
+    // --- Analytics ---
+    async createEvent(input) {
+      const [row] = await sql`
+        INSERT INTO events (id, project_id, name, url, referrer, utm_source, utm_medium, utm_campaign, country, device, browser, screen_width, properties)
+        VALUES (${input.id}, ${input.project_id}, ${input.name}, ${input.url}, ${input.referrer}, ${input.utm_source}, ${input.utm_medium}, ${input.utm_campaign}, ${input.country}, ${input.device}, ${input.browser}, ${input.screen_width}, ${JSON.stringify(input.properties)})
+        RETURNING *
+      `;
+      return row as EventRecord;
+    },
+
+    async getAnalyticsOverview(projectId, since) {
+      const [row] = await sql`
+        SELECT
+          COUNT(*)::int AS page_views,
+          COUNT(DISTINCT (created_at::date || '|' || COALESCE(country,'') || '|' || COALESCE(device,'') || '|' || COALESCE(browser,'')))::int AS unique_visitors
+        FROM events
+        WHERE project_id = ${projectId} AND name = 'page_view' AND created_at >= ${since}
+      `;
+      const [topPage] = await sql`
+        SELECT url, COUNT(*)::int AS cnt FROM events
+        WHERE project_id = ${projectId} AND name = 'page_view' AND created_at >= ${since} AND url IS NOT NULL
+        GROUP BY url ORDER BY cnt DESC LIMIT 1
+      `;
+      const [topRef] = await sql`
+        SELECT referrer, COUNT(*)::int AS cnt FROM events
+        WHERE project_id = ${projectId} AND name = 'page_view' AND created_at >= ${since} AND referrer IS NOT NULL AND referrer != ''
+        GROUP BY referrer ORDER BY cnt DESC LIMIT 1
+      `;
+      return {
+        page_views: row.page_views,
+        unique_visitors: row.unique_visitors,
+        top_page: topPage?.url || null,
+        top_referrer: topRef?.referrer || null,
+      };
+    },
+
+    async getTopPages(projectId, since, limit) {
+      const rows = await sql`
+        SELECT url, COUNT(*)::int AS views FROM events
+        WHERE project_id = ${projectId} AND name = 'page_view' AND created_at >= ${since} AND url IS NOT NULL
+        GROUP BY url ORDER BY views DESC LIMIT ${limit}
+      `;
+      return rows as unknown as { url: string; views: number }[];
+    },
+
+    async getTopReferrers(projectId, since, limit) {
+      const rows = await sql`
+        SELECT referrer, COUNT(*)::int AS count FROM events
+        WHERE project_id = ${projectId} AND name = 'page_view' AND created_at >= ${since} AND referrer IS NOT NULL AND referrer != ''
+        GROUP BY referrer ORDER BY count DESC LIMIT ${limit}
+      `;
+      return rows as unknown as { referrer: string; count: number }[];
+    },
+
+    async getCountryBreakdown(projectId, since, limit) {
+      const rows = await sql`
+        SELECT country, COUNT(*)::int AS count FROM events
+        WHERE project_id = ${projectId} AND created_at >= ${since} AND country IS NOT NULL
+        GROUP BY country ORDER BY count DESC LIMIT ${limit}
+      `;
+      return rows as unknown as { country: string; count: number }[];
+    },
+
+    async getDeviceBreakdown(projectId, since) {
+      const rows = await sql`
+        SELECT device, COUNT(*)::int AS count FROM events
+        WHERE project_id = ${projectId} AND created_at >= ${since} AND device IS NOT NULL
+        GROUP BY device ORDER BY count DESC
+      `;
+      return rows as unknown as { device: string; count: number }[];
+    },
+
+    async getCustomEventCounts(projectId, since, limit) {
+      const rows = await sql`
+        SELECT name, COUNT(*)::int AS count FROM events
+        WHERE project_id = ${projectId} AND created_at >= ${since} AND name != 'page_view'
+        GROUP BY name ORDER BY count DESC LIMIT ${limit}
+      `;
+      return rows as unknown as { name: string; count: number }[];
     },
   };
 }

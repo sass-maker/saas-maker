@@ -7,6 +7,8 @@ import {
   IndexRecord,
   DocumentRecord,
   WaitlistEntryRecord,
+  EventRecord,
+  AnalyticsOverview,
 } from '@saasmaker/shared-types';
 
 export { TABLES } from './schema';
@@ -68,4 +70,18 @@ export interface FeedbackDatabase {
   getWaitlistCount(projectId: string): Promise<number>;
   listWaitlistEntries(projectId: string, page: number, limit: number): Promise<{ data: WaitlistEntryRecord[]; total: number }>;
   deleteWaitlistEntry(id: string): Promise<boolean>;
+
+  // Analytics
+  createEvent(input: {
+    id: string; project_id: string; name: string; url: string | null;
+    referrer: string | null; utm_source: string | null; utm_medium: string | null;
+    utm_campaign: string | null; country: string | null; device: string | null;
+    browser: string | null; screen_width: number | null; properties: Record<string, unknown>;
+  }): Promise<EventRecord>;
+  getAnalyticsOverview(projectId: string, since: Date): Promise<AnalyticsOverview>;
+  getTopPages(projectId: string, since: Date, limit: number): Promise<{ url: string; views: number }[]>;
+  getTopReferrers(projectId: string, since: Date, limit: number): Promise<{ referrer: string; count: number }[]>;
+  getCountryBreakdown(projectId: string, since: Date, limit: number): Promise<{ country: string; count: number }[]>;
+  getDeviceBreakdown(projectId: string, since: Date): Promise<{ device: string; count: number }[]>;
+  getCustomEventCounts(projectId: string, since: Date, limit: number): Promise<{ name: string; count: number }[]>;
 }
