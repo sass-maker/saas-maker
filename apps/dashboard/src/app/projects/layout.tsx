@@ -8,6 +8,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LogOut, User } from "lucide-react";
+import { SidebarNav } from "@/components/sidebar-nav";
+import { MobileNav } from "@/components/mobile-nav";
 
 export default async function ProjectsLayout({
   children,
@@ -17,26 +19,26 @@ export default async function ProjectsLayout({
   const session = await auth();
 
   return (
-    <div className="min-h-screen bg-muted/40">
-      <header className="sticky top-0 z-50 border-b bg-background">
-        <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-6">
-            <Link href="/projects" className="text-lg font-bold">
-              SaaS Maker
-            </Link>
-            <nav className="hidden sm:flex items-center gap-4">
-              <Link
-                href="/projects"
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Projects
-              </Link>
-            </nav>
-          </div>
+    <div className="min-h-screen flex">
+      {/* Sidebar - hidden on mobile */}
+      <aside className="hidden md:flex w-64 flex-col border-r bg-background">
+        {/* Logo */}
+        <div className="p-4 border-b">
+          <Link href="/projects" className="text-lg font-bold">
+            SaaS Maker
+          </Link>
+        </div>
 
+        {/* Navigation */}
+        <div className="flex-1 overflow-y-auto p-3">
+          <SidebarNav />
+        </div>
+
+        {/* User menu at bottom */}
+        <div className="border-t p-3">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="gap-2">
+              <Button variant="ghost" className="w-full justify-start gap-2">
                 {session?.user?.image ? (
                   <img
                     src={session.user.image}
@@ -46,14 +48,17 @@ export default async function ProjectsLayout({
                 ) : (
                   <User className="h-4 w-4" />
                 )}
-                <span className="hidden sm:inline text-sm">
+                <span className="truncate text-sm">
                   {session?.user?.name ?? "Account"}
                 </span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="start" className="w-56">
               {session?.user?.email && (
-                <DropdownMenuItem disabled className="text-xs text-muted-foreground">
+                <DropdownMenuItem
+                  disabled
+                  className="text-xs text-muted-foreground"
+                >
                   {session.user.email}
                 </DropdownMenuItem>
               )}
@@ -64,7 +69,10 @@ export default async function ProjectsLayout({
                     await signOut({ redirectTo: "/login" });
                   }}
                 >
-                  <button type="submit" className="flex w-full items-center gap-2">
+                  <button
+                    type="submit"
+                    className="flex w-full items-center gap-2"
+                  >
                     <LogOut className="h-4 w-4" />
                     Sign out
                   </button>
@@ -73,10 +81,23 @@ export default async function ProjectsLayout({
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-      </header>
+      </aside>
 
-      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        {children}
+      {/* Main content */}
+      <main className="flex-1 overflow-y-auto">
+        {/* Mobile header - only shows on small screens */}
+        <header className="md:hidden sticky top-0 z-50 border-b bg-background px-4 h-14 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <MobileNav />
+            <Link href="/projects" className="text-lg font-bold">
+              SaaS Maker
+            </Link>
+          </div>
+        </header>
+
+        <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
+          {children}
+        </div>
       </main>
     </div>
   );
