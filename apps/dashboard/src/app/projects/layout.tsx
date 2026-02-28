@@ -10,6 +10,7 @@ import {
 import { LogOut, User } from "lucide-react";
 import { SidebarNav } from "@/components/sidebar-nav";
 import { MobileNav } from "@/components/mobile-nav";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export default async function ProjectsLayout({
   children,
@@ -23,10 +24,11 @@ export default async function ProjectsLayout({
       {/* Sidebar - hidden on mobile */}
       <aside className="hidden md:flex w-64 flex-col border-r bg-background">
         {/* Logo */}
-        <div className="p-4 border-b">
+        <div className="p-4 border-b flex items-center justify-between">
           <Link href="/projects" className="text-lg font-bold">
             SaaS Maker
           </Link>
+          <ThemeToggle />
         </div>
 
         {/* Navigation */}
@@ -93,6 +95,7 @@ export default async function ProjectsLayout({
               SaaS Maker
             </Link>
           </div>
+          <ThemeToggle />
         </header>
 
         <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
