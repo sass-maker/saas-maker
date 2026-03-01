@@ -31,3 +31,18 @@ export async function getServerToken(): Promise<string | undefined> {
     cookieStore.get("authjs.session-token")?.value
   );
 }
+
+/**
+ * Resolve a project by slug (single API call instead of fetching all projects).
+ * Server-side only.
+ */
+export async function getProjectBySlug(
+  slug: string,
+  token?: string
+): Promise<import("@saas-maker/shared-types").ProjectRecord | null> {
+  try {
+    return await apiFetch(`/v1/projects/by-slug/${slug}`, {}, token);
+  } catch {
+    return null;
+  }
+}

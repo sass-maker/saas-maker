@@ -4,8 +4,7 @@ import { TableSkeleton } from "@/components/table-skeleton";
 import { AnalyticsContent } from "./analytics-content";
 import { auth } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
-import { apiFetch, getServerToken } from "@/lib/api";
-import type { ProjectRecord } from "@saas-maker/shared-types";
+import { getServerToken, getProjectBySlug } from "@/lib/api";
 
 export const dynamic = "force-dynamic";
 
@@ -20,13 +19,7 @@ export default async function AnalyticsPage({ params }: Props) {
   const { slug } = await params;
   const token = await getServerToken();
 
-  let project: ProjectRecord | undefined;
-  try {
-    const res = await apiFetch("/v1/projects", {}, token);
-    const projects: ProjectRecord[] = res.data ?? [];
-    project = projects.find((p) => p.slug === slug);
-  } catch {}
-
+  const project = await getProjectBySlug(slug, token);
   if (!project) notFound();
 
   return (

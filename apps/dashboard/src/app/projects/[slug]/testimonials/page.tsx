@@ -15,9 +15,8 @@ import { TestimonialActions } from "./testimonial-actions";
 import { Star, Clock, Check, BarChart3 } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
-import { apiFetch, getServerToken } from "@/lib/api";
+import { apiFetch, getServerToken, getProjectBySlug } from "@/lib/api";
 import type {
-  ProjectRecord,
   TestimonialRecord,
   TestimonialStatus,
 } from "@saas-maker/shared-types";
@@ -61,16 +60,7 @@ export default async function TestimonialsPage({ params }: Props) {
   const { slug } = await params;
   const token = await getServerToken();
 
-  let project: ProjectRecord | undefined;
-
-  try {
-    const res = await apiFetch("/v1/projects", {}, token);
-    const projects: ProjectRecord[] = res.data ?? [];
-    project = projects.find((p) => p.slug === slug);
-  } catch {
-    // Auth failed
-  }
-
+  const project = await getProjectBySlug(slug, token);
   if (!project) notFound();
 
   let testimonials: TestimonialRecord[] = [];

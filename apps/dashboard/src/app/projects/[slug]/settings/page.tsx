@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
-import { apiFetch, getServerToken } from "@/lib/api";
+import { apiFetch, getServerToken, getProjectBySlug } from "@/lib/api";
 import type { ProjectRecord } from "@saas-maker/shared-types";
 import { PageHeader } from "@/components/page-header";
 import { SettingsForm } from "./settings-form";
@@ -27,16 +27,7 @@ export default async function SettingsPage({ params }: Props) {
   const { slug } = await params;
   const token = await getServerToken();
 
-  let project: ProjectRecord | undefined;
-
-  try {
-    const res = await apiFetch("/v1/projects", {}, token);
-    const projects: ProjectRecord[] = res.data ?? [];
-    project = projects.find((p) => p.slug === slug);
-  } catch {
-    notFound();
-  }
-
+  const project = await getProjectBySlug(slug, token);
   if (!project) notFound();
 
   // Fetch feature counts in parallel

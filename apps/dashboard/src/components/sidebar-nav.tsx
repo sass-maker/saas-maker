@@ -19,7 +19,7 @@ const projectNavItems = [
   { label: "Inbox", href: "", icon: MessageSquare },
   { label: "Testimonials", href: "/testimonials", icon: Star },
   { label: "Waitlist", href: "/waitlist", icon: Users },
-  { label: "Links", href: "/links", icon: Link2 },
+  // { label: "Links", href: "/links", icon: Link2 },
   { label: "Changelog", href: "/changelog", icon: Megaphone },
   { label: "Indexes", href: "/indexes", icon: Database },
   { label: "Analytics", href: "/analytics", icon: BarChart3 },

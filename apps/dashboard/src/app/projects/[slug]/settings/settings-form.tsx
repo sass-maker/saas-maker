@@ -56,7 +56,7 @@ const features = [
   { key: "feedback" as const, label: "Feedback", icon: MessageSquare, pkg: "@saas-maker/feedback-widget" },
   { key: "waitlist" as const, label: "Waitlist", icon: Users, pkg: "@saas-maker/waitlist-widget" },
   { key: "testimonials" as const, label: "Testimonials", icon: Star, pkg: "@saas-maker/testimonials-widget" },
-  { key: "links" as const, label: "Short Links", icon: Link2, pkg: null },
+  // { key: "links" as const, label: "Short Links", icon: Link2, pkg: null },
   { key: "indexes" as const, label: "Vector Memory", icon: Database, pkg: null },
   { key: "changelog" as const, label: "Changelog", icon: Megaphone, pkg: "@saas-maker/changelog-widget" },
 ];

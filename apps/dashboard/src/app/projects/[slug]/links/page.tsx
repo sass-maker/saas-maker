@@ -14,8 +14,8 @@ import { CopyButton } from "@/components/copy-button";
 import { Link2, MousePointerClick } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
-import { apiFetch, getServerToken } from "@/lib/api";
-import type { ProjectRecord, ShortLinkRecord } from "@saas-maker/shared-types";
+import { apiFetch, getServerToken, getProjectBySlug } from "@/lib/api";
+import type { ShortLinkRecord } from "@saas-maker/shared-types";
 
 export const dynamic = "force-dynamic";
 
@@ -30,16 +30,7 @@ export default async function LinksPage({ params }: Props) {
   const { slug } = await params;
   const token = await getServerToken();
 
-  let project: ProjectRecord | undefined;
-
-  try {
-    const res = await apiFetch("/v1/projects", {}, token);
-    const projects: ProjectRecord[] = res.data ?? [];
-    project = projects.find((p) => p.slug === slug);
-  } catch {
-    // Auth failed — fall through to notFound
-  }
-
+  const project = await getProjectBySlug(slug, token);
   if (!project) notFound();
 
   let links: ShortLinkRecord[] = [];

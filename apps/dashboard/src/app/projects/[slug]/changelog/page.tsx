@@ -15,9 +15,8 @@ import { ChangelogActions } from "./changelog-actions";
 import { Megaphone, FileText, Eye, EyeOff } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
-import { apiFetch, getServerToken } from "@/lib/api";
+import { apiFetch, getServerToken, getProjectBySlug } from "@/lib/api";
 import type {
-  ProjectRecord,
   ChangelogEntryRecord,
   ChangelogEntryType,
 } from "@saas-maker/shared-types";
@@ -45,16 +44,7 @@ export default async function ChangelogPage({ params }: Props) {
   const { slug } = await params;
   const token = await getServerToken();
 
-  let project: ProjectRecord | undefined;
-
-  try {
-    const res = await apiFetch("/v1/projects", {}, token);
-    const projects: ProjectRecord[] = res.data ?? [];
-    project = projects.find((p) => p.slug === slug);
-  } catch {
-    // Auth failed
-  }
-
+  const project = await getProjectBySlug(slug, token);
   if (!project) notFound();
 
   let entries: ChangelogEntryRecord[] = [];

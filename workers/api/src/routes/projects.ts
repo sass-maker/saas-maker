@@ -48,6 +48,15 @@ projects.post('/', async (c) => {
   return c.json(project, 201);
 });
 
+projects.get('/by-slug/:slug', async (c) => {
+  const userId = c.get('userId')!;
+  const slug = c.req.param('slug');
+  const db = getDb(c.env.DATABASE_URL);
+  const project = await db.getProjectBySlug(slug);
+  if (!project || project.owner_id !== userId) return c.json({ error: 'Not found' }, 404);
+  return c.json(project);
+});
+
 projects.patch('/:id', async (c) => {
   const userId = c.get('userId')!;
   const projectId = c.req.param('id');
