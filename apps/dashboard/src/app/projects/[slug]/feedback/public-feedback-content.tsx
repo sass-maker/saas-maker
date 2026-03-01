@@ -214,7 +214,7 @@ export function PublicFeedbackContent({ slug }: Props) {
     async (item: FeedbackRecord, target: "up" | "down") => {
       setActionError(null);
       if (!token) {
-        setActionError("Sign in to vote on feature requests.");
+        setActionError("Please sign in using the button in the header to vote.");
         return;
       }
 

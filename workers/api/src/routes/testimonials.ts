@@ -20,7 +20,7 @@ testimonials.post('/', requireApiKey, async (c) => {
   if (!body.content?.trim()) return c.json({ error: 'Content is required' }, 400);
   if (!body.rating || body.rating < 1 || body.rating > 5) return c.json({ error: 'Rating must be 1-5' }, 400);
 
-  const db = getDb(c.env.DATABASE_URL);
+  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
   const entry = await db.createTestimonial({
     id: crypto.randomUUID(),
     project_id: projectId,
@@ -42,7 +42,7 @@ testimonials.get('/', requireApiKey, async (c) => {
   const projectId = c.get('projectId')!;
   const limit = parseInt(c.req.query('limit') || '50', 10);
   const sort = (c.req.query('sort') || 'newest') as 'newest' | 'rating';
-  const db = getDb(c.env.DATABASE_URL);
+  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
   const data = await db.listApprovedTestimonials(projectId, limit, sort);
   return c.json({ data });
 });
@@ -54,7 +54,7 @@ testimonials.get('/all', requireSession, async (c) => {
   if (!projectId) return c.json({ error: 'project_id query param is required' }, 400);
 
   const page = parseInt(c.req.query('page') || '1', 10);
-  const db = getDb(c.env.DATABASE_URL);
+  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
 
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
@@ -71,7 +71,7 @@ testimonials.patch('/:id', requireSession, async (c) => {
   const projectId = c.req.query('project_id');
   if (!projectId) return c.json({ error: 'project_id query param is required' }, 400);
 
-  const db = getDb(c.env.DATABASE_URL);
+  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
@@ -92,7 +92,7 @@ testimonials.delete('/:id', requireSession, async (c) => {
   const projectId = c.req.query('project_id');
   if (!projectId) return c.json({ error: 'project_id query param is required' }, 400);
 
-  const db = getDb(c.env.DATABASE_URL);
+  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 

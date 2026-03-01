@@ -26,7 +26,7 @@ function slugify(name: string): string {
 
 projects.get('/', async (c) => {
   const userId = c.get('userId')!;
-  const db = getDb(c.env.DATABASE_URL);
+  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
   const data = await db.listProjectsByOwner(userId);
   return c.json({ data });
 });
@@ -36,7 +36,7 @@ projects.post('/', async (c) => {
   const body = (await c.req.json()) as { name: string };
   if (!body.name?.trim()) return c.json({ error: 'Project name is required' }, 400);
 
-  const db = getDb(c.env.DATABASE_URL);
+  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
   const project = await db.createProject({
     id: crypto.randomUUID(),
     name: body.name.trim(),
@@ -51,7 +51,7 @@ projects.post('/', async (c) => {
 projects.get('/by-slug/:slug', async (c) => {
   const userId = c.get('userId')!;
   const slug = c.req.param('slug');
-  const db = getDb(c.env.DATABASE_URL);
+  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
   const project = await db.getProjectBySlug(slug);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Not found' }, 404);
   return c.json(project);
@@ -62,7 +62,7 @@ projects.patch('/:id', async (c) => {
   const projectId = c.req.param('id');
   const body = (await c.req.json()) as { name?: string };
 
-  const db = getDb(c.env.DATABASE_URL);
+  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
 
   // Verify ownership
   const existing = await db.getProjectById(projectId);
@@ -77,7 +77,7 @@ projects.delete('/:id', async (c) => {
   const userId = c.get('userId')!;
   const projectId = c.req.param('id');
 
-  const db = getDb(c.env.DATABASE_URL);
+  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
 
   // Verify ownership
   const existing = await db.getProjectById(projectId);

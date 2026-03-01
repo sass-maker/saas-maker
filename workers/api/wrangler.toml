@@ -9,3 +9,7 @@ enabled = true
 [[r2_buckets]]
 binding = "FEEDBACK_IMAGES"
 bucket_name = "saasmaker-feedback-images"
+
+[[hyperdrive]]
+binding = "HYPERDRIVE"
+id = "8fb9b798a1804fa9bcd87c219f547656"

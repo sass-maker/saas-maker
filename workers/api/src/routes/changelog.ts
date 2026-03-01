@@ -13,7 +13,7 @@ const VALID_TYPES = ['feature', 'improvement', 'fix', 'breaking'];
 changelog.get('/', requireApiKey, async (c) => {
   const projectId = c.get('projectId')!;
   const limit = parseInt(c.req.query('limit') || '50', 10);
-  const db = getDb(c.env.DATABASE_URL);
+  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
   const data = await db.listPublishedChangelog(projectId, limit);
   return c.json({ data });
 });
@@ -24,7 +24,7 @@ changelog.get('/dashboard/:projectId', requireSession, async (c) => {
   const projectId = c.req.param('projectId');
   const page = parseInt(c.req.query('page') || '1', 10);
 
-  const db = getDb(c.env.DATABASE_URL);
+  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
@@ -38,7 +38,7 @@ changelog.post('/dashboard/:projectId', requireSession, async (c) => {
   const userId = c.get('userId')!;
   const projectId = c.req.param('projectId');
 
-  const db = getDb(c.env.DATABASE_URL);
+  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
@@ -71,7 +71,7 @@ changelog.patch('/dashboard/:projectId/:id', requireSession, async (c) => {
   const projectId = c.req.param('projectId');
   const entryId = c.req.param('id');
 
-  const db = getDb(c.env.DATABASE_URL);
+  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
@@ -99,7 +99,7 @@ changelog.delete('/dashboard/:projectId/:id', requireSession, async (c) => {
   const projectId = c.req.param('projectId');
   const entryId = c.req.param('id');
 
-  const db = getDb(c.env.DATABASE_URL);
+  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 

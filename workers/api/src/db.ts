@@ -816,8 +816,8 @@ export function createDatabase(databaseUrl: string): FeedbackDatabase {
   };
 }
 
-export function getDb(databaseUrl: string): FeedbackDatabase {
-  // Cloudflare Workers can throw cross-request I/O errors when a shared DB
-  // client/socket is reused across requests in the same isolate.
-  return createDatabase(databaseUrl);
+export function getDb(databaseUrl: string, hyperdrive?: Hyperdrive): FeedbackDatabase {
+  // Use Hyperdrive connection string if available (pooled, ~100ms vs ~6s cold start)
+  const url = hyperdrive?.connectionString ?? databaseUrl;
+  return createDatabase(url);
 }

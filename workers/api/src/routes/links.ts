@@ -22,7 +22,7 @@ const URL_RE = /^https?:\/\/.+/;
 
 export async function handleRedirect(c: any) {
   const slug = c.req.param('slug');
-  const db = getDb(c.env.DATABASE_URL);
+  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
   const link = await db.getShortLinkBySlug(slug);
 
   if (!link) return c.json({ error: 'Not found' }, 404);
@@ -75,7 +75,7 @@ links.post('/', requireApiKey, async (c) => {
     return c.json({ error: 'slug must be alphanumeric (hyphens/underscores allowed)' }, 400);
   }
 
-  const db = getDb(c.env.DATABASE_URL);
+  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
 
   try {
     const link = await db.createShortLink({
@@ -99,7 +99,7 @@ links.post('/', requireApiKey, async (c) => {
 links.get('/', requireApiKey, async (c) => {
   const projectId = c.get('projectId')!;
   const page = parseInt(c.req.query('page') || '1', 10);
-  const db = getDb(c.env.DATABASE_URL);
+  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
   const result = await db.listShortLinks(projectId, page, PAGE_SIZE);
   return c.json({ data: result.data, total: result.total, page, limit: PAGE_SIZE });
 });
@@ -112,7 +112,7 @@ links.get('/dashboard/:projectId', requireSession, async (c) => {
   const projectId = c.req.param('projectId');
   const page = parseInt(c.req.query('page') || '1', 10);
 
-  const db = getDb(c.env.DATABASE_URL);
+  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
@@ -126,7 +126,7 @@ links.get('/dashboard/:projectId/stats/:id', requireSession, async (c) => {
   const projectId = c.req.param('projectId');
   const linkId = c.req.param('id');
 
-  const db = getDb(c.env.DATABASE_URL);
+  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
@@ -139,7 +139,7 @@ links.get('/dashboard/:projectId/stats/:id', requireSession, async (c) => {
 // Get single link
 links.get('/:id', requireApiKey, async (c) => {
   const linkId = c.req.param('id');
-  const db = getDb(c.env.DATABASE_URL);
+  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
   const link = await db.getShortLinkById(linkId);
   if (!link) return c.json({ error: 'Not found' }, 404);
   return c.json(link);
@@ -154,7 +154,7 @@ links.patch('/:id', requireApiKey, async (c) => {
     return c.json({ error: 'destination must be a valid URL' }, 400);
   }
 
-  const db = getDb(c.env.DATABASE_URL);
+  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
   const updated = await db.updateShortLink(linkId, {
     destination: body.destination?.trim(),
     title: body.title?.trim(),
@@ -167,7 +167,7 @@ links.patch('/:id', requireApiKey, async (c) => {
 // Delete link
 links.delete('/:id', requireApiKey, async (c) => {
   const linkId = c.req.param('id');
-  const db = getDb(c.env.DATABASE_URL);
+  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
   const deleted = await db.deleteShortLink(linkId);
   if (!deleted) return c.json({ error: 'Not found' }, 404);
   return c.json({ ok: true });
