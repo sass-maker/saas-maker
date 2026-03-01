@@ -22,7 +22,17 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { CopyButton } from "@/components/copy-button";
-import { Save, Trash2 } from "lucide-react";
+import {
+  Save,
+  Trash2,
+  MessageSquare,
+  Users,
+  Star,
+  Link2,
+  Database,
+  Megaphone,
+} from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { apiFetch } from "@/lib/api";
 import type { ProjectRecord } from "@saas-maker/shared-types";
 
@@ -33,11 +43,30 @@ async function getToken(): Promise<string> {
   return data.token;
 }
 
-interface SettingsFormProps {
-  project: ProjectRecord;
+interface FeatureCounts {
+  feedback: number;
+  waitlist: number;
+  testimonials: number;
+  links: number;
+  indexes: number;
+  changelog: number;
 }
 
-export function SettingsForm({ project }: SettingsFormProps) {
+const features = [
+  { key: "feedback" as const, label: "Feedback", icon: MessageSquare, pkg: "@saas-maker/feedback-widget" },
+  { key: "waitlist" as const, label: "Waitlist", icon: Users, pkg: "@saas-maker/waitlist-widget" },
+  { key: "testimonials" as const, label: "Testimonials", icon: Star, pkg: "@saas-maker/testimonials-widget" },
+  { key: "links" as const, label: "Short Links", icon: Link2, pkg: null },
+  { key: "indexes" as const, label: "Vector Memory", icon: Database, pkg: null },
+  { key: "changelog" as const, label: "Changelog", icon: Megaphone, pkg: "@saas-maker/changelog-widget" },
+];
+
+interface SettingsFormProps {
+  project: ProjectRecord;
+  featureCounts?: FeatureCounts;
+}
+
+export function SettingsForm({ project, featureCounts }: SettingsFormProps) {
   const router = useRouter();
 
   const [name, setName] = useState(project.name);
@@ -132,6 +161,45 @@ export function SettingsForm({ project }: SettingsFormProps) {
           </div>
         </CardContent>
       </Card>
+
+      {/* Enabled Features */}
+      {featureCounts && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Features</CardTitle>
+            <CardDescription>
+              Services enabled for this project.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {features.map((f) => {
+                const count = featureCounts[f.key];
+                const active = count > 0;
+                return (
+                  <div
+                    key={f.key}
+                    className="flex items-center gap-3 rounded-lg border p-3"
+                  >
+                    <f.icon className={`h-5 w-5 shrink-0 ${active ? "text-foreground" : "text-muted-foreground/40"}`} />
+                    <div className="flex-1 min-w-0">
+                      <p className={`text-sm font-medium ${active ? "" : "text-muted-foreground"}`}>
+                        {f.label}
+                      </p>
+                      {f.pkg && (
+                        <p className="text-xs text-muted-foreground truncate">{f.pkg}</p>
+                      )}
+                    </div>
+                    <Badge variant={active ? "default" : "secondary"} className="shrink-0">
+                      {count}
+                    </Badge>
+                  </div>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* SDK Installation */}
       <Card>
