@@ -9,7 +9,7 @@ export async function apiFetch<T = any>(path: string, init?: RequestInit): Promi
     ...init,
     headers: {
       'Content-Type': 'application/json',
-      'X-Project-Key': apiKey,
+      'Authorization': `Bearer ${apiKey}`,
       ...init?.headers,
     },
   });

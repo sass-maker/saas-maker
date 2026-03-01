@@ -703,6 +703,40 @@ export function createDatabase(databaseUrl: string): FeedbackDatabase {
       const [row] = await sql`SELECT * FROM testimonials WHERE id = ${id}`;
       return (row as TestimonialRecord) || null;
     },
+
+    // --- CLI Auth ---
+    async createCliAuthCode(code: string) {
+      await sql`
+        INSERT INTO cli_auth_codes (code, expires_at)
+        VALUES (${code}, now() + interval '10 minutes')
+      `;
+    },
+
+    async getCliAuthCode(code: string) {
+      const [row] = await sql`SELECT * FROM cli_auth_codes WHERE code = ${code}`;
+      return row as { code: string; user_id: string | null; status: string; token: string | null; expires_at: string } | undefined;
+    },
+
+    async approveCliAuthCode(code: string, userId: string, token: string) {
+      await sql`
+        UPDATE cli_auth_codes
+        SET status = 'approved', user_id = ${userId}, token = ${token}
+        WHERE code = ${code}
+      `;
+    },
+
+    async deleteCliAuthCode(code: string) {
+      await sql`DELETE FROM cli_auth_codes WHERE code = ${code}`;
+    },
+
+    async createCliToken(token: string, userId: string) {
+      await sql`INSERT INTO cli_tokens (token, user_id) VALUES (${token}, ${userId})`;
+    },
+
+    async getCliTokenUser(token: string) {
+      const [row] = await sql`SELECT user_id FROM cli_tokens WHERE token = ${token}`;
+      return row as { user_id: string } | undefined;
+    },
   };
 }
 

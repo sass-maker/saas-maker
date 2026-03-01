@@ -10,6 +10,7 @@ import { waitlist } from './routes/waitlist';
 import { analytics } from './routes/analytics';
 import { links, handleRedirect } from './routes/links';
 import { testimonials } from './routes/testimonials';
+import { cliAuth } from './routes/cli-auth';
 
 const app = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
@@ -49,5 +50,6 @@ app.route('/v1/waitlist', waitlist);
 app.route('/v1/analytics', analytics);
 app.route('/v1/links', links);
 app.route('/v1/testimonials', testimonials);
+app.route('/v1/cli', cliAuth);
 
 export default app;

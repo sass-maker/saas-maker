@@ -60,13 +60,23 @@ export const requireSession = createMiddleware<{ Bindings: Bindings; Variables: 
     }
 
     const token = authHeader.slice(7);
+    const db = getDb(c.env.DATABASE_URL);
+
+    // Try CLI token first (sm_ prefix)
+    if (token.startsWith('sm_')) {
+      const cliToken = await db.getCliTokenUser(token);
+      if (!cliToken) return c.json({ error: 'Unauthorized' }, 401);
+      c.set('userId', cliToken.user_id);
+      return next();
+    }
+
+    // Fall back to AuthJS JWE session token
     const payload = await decryptAuthJsJwe(token, c.env.AUTH_SECRET);
     if (!payload) {
       return c.json({ error: 'Unauthorized' }, 401);
     }
 
     // Upsert user so we always have a local record
-    const db = getDb(c.env.DATABASE_URL);
     const user = await db.upsertUser({
       id: payload.sub,
       email: payload.email,
