@@ -91,6 +91,12 @@ export class KnowledgeBaseService {
     );
   }
 
+  /** List documents in an index (GET /v1/indexes/:indexId/documents). */
+  listDocuments(indexId: string, page?: number): Promise<{ data: Array<{ id: string; index_id: string; content: string; metadata: Record<string, unknown>; created_at: string }>; total: number; page: number; limit: number }> {
+    const params = page ? `?page=${page}` : '';
+    return this.http.request('GET', `/v1/indexes/${encodeURIComponent(indexId)}/documents${params}`);
+  }
+
   /** Delete an entire index (DELETE /v1/indexes/:indexId). */
   deleteIndex(indexId: string): Promise<OkResponse> {
     return this.http.request<OkResponse>(
