@@ -9,10 +9,12 @@ interface Props {
 }
 
 export default async function CliAuthPage({ searchParams }: Props) {
-  const session = await auth();
-  if (!session?.user) redirect(`/login?callbackUrl=${encodeURIComponent("/cli/auth")}`);
-
   const { code } = await searchParams;
+  const session = await auth();
+  if (!session?.user) {
+    const callbackUrl = code ? `/cli/auth?code=${code}` : "/cli/auth";
+    redirect(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted/40">
