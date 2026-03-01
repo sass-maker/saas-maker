@@ -58,9 +58,12 @@ export function FilterBar() {
         <SelectContent>
           <SelectItem value="all">All Statuses</SelectItem>
           <SelectItem value="new">New</SelectItem>
+          <SelectItem value="planned">Planned</SelectItem>
           <SelectItem value="in_progress">In Progress</SelectItem>
           <SelectItem value="done">Done</SelectItem>
           <SelectItem value="dismissed">Dismissed</SelectItem>
+          <SelectItem value="shipped">Shipped</SelectItem>
+          <SelectItem value="cancelled">Cancelled</SelectItem>
         </SelectContent>
       </Select>
 

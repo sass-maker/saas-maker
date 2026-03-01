@@ -4,6 +4,7 @@ import {
   ProjectRecord,
   UserRecord,
   UpvoteRecord,
+  FeedbackVote,
   IndexRecord,
   DocumentRecord,
   WaitlistEntryRecord,
@@ -32,18 +33,21 @@ export interface FeedbackDatabase {
   // Feedback
   createFeedback(input: {
     id: string; project_id: string; type: string; title: string;
+    status?: string;
     description: string; image_url: string | null;
     submitter_email: string; submitter_name: string | null;
   }): Promise<FeedbackRecord>;
   getFeedbackById(id: string): Promise<FeedbackRecord | null>;
-  listFeedback(projectId: string, query: FeedbackListQuery): Promise<{ data: FeedbackRecord[]; total: number }>;
+  listFeedback(projectId: string, query: FeedbackListQuery, userId?: string): Promise<{ data: FeedbackRecord[]; total: number }>;
   updateFeedbackStatus(id: string, status: string): Promise<FeedbackRecord | null>;
   deleteFeedback(id: string): Promise<boolean>;
 
-  // Upvotes
-  addUpvote(input: { id: string; feedback_id: string; user_id: string }): Promise<UpvoteRecord>;
-  removeUpvote(feedbackId: string, userId: string): Promise<boolean>;
+  // Votes
+  setVote(input: { id: string; feedback_id: string; user_id: string; vote: 1 | -1 }): Promise<UpvoteRecord>;
+  removeVote(feedbackId: string, userId: string): Promise<boolean>;
   hasUpvoted(feedbackId: string, userId: string): Promise<boolean>;
+  hasDownvoted(feedbackId: string, userId: string): Promise<boolean>;
+  getUserVote(feedbackId: string, userId: string): Promise<FeedbackVote>;
 
   // Sessions
   createSession(input: { token_hash: string; user_id: string; expires_at: string }): Promise<void>;

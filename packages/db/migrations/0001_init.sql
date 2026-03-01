@@ -21,13 +21,24 @@ CREATE TABLE IF NOT EXISTS feedback (
   id TEXT PRIMARY KEY,
   project_id TEXT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
   type TEXT NOT NULL CHECK (type IN ('bug', 'feature', 'feedback')),
-  status TEXT NOT NULL DEFAULT 'new' CHECK (status IN ('new', 'in_progress', 'done', 'dismissed')),
+  status TEXT NOT NULL DEFAULT 'new' CHECK (
+    status IN (
+      'new',
+      'in_progress',
+      'done',
+      'dismissed',
+      'planned',
+      'shipped',
+      'cancelled'
+    )
+  ),
   title TEXT NOT NULL,
   description TEXT NOT NULL,
   image_url TEXT,
   submitter_email TEXT NOT NULL,
   submitter_name TEXT,
   upvote_count INT NOT NULL DEFAULT 0,
+  downvote_count INT NOT NULL DEFAULT 0,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
@@ -35,6 +46,7 @@ CREATE TABLE IF NOT EXISTS upvotes (
   id TEXT PRIMARY KEY,
   feedback_id TEXT NOT NULL REFERENCES feedback(id) ON DELETE CASCADE,
   user_id TEXT NOT NULL REFERENCES users(id),
+  vote SMALLINT NOT NULL DEFAULT 1 CHECK (vote IN (1, -1)),
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   UNIQUE (feedback_id, user_id)
 );

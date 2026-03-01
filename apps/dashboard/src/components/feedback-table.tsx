@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { FeedbackDetail } from "@/components/feedback-detail";
-import type { FeedbackRecord, FeedbackStatus } from "@saasmaker/shared-types";
+import type { FeedbackRecord, AnyFeedbackStatus } from "@saasmaker/shared-types";
 
 const TYPE_STYLES: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
   bug: { label: "Bug", variant: "destructive" },
@@ -24,11 +24,14 @@ const STATUS_STYLES: Record<string, { label: string; variant: "default" | "secon
   in_progress: { label: "In Progress", variant: "secondary" },
   done: { label: "Done", variant: "outline" },
   dismissed: { label: "Dismissed", variant: "outline" },
+  planned: { label: "Planned", variant: "default" },
+  shipped: { label: "Shipped", variant: "secondary" },
+  cancelled: { label: "Cancelled", variant: "destructive" },
 };
 
 interface FeedbackTableProps {
   feedback: FeedbackRecord[];
-  onStatusChange?: (id: string, status: FeedbackStatus) => Promise<void>;
+  onStatusChange?: (item: FeedbackRecord, status: AnyFeedbackStatus) => Promise<void>;
   onDelete?: (id: string) => Promise<void>;
 }
 
@@ -45,7 +48,7 @@ export function FeedbackTable({ feedback, onStatusChange, onDelete }: FeedbackTa
               <TableHead className="w-[100px]">Type</TableHead>
               <TableHead>Title</TableHead>
               <TableHead className="hidden sm:table-cell">Submitter</TableHead>
-              <TableHead className="w-[80px] text-center">Upvotes</TableHead>
+              <TableHead className="w-[150px] text-center">Votes</TableHead>
               <TableHead className="w-[120px]">Status</TableHead>
               <TableHead className="hidden md:table-cell w-[120px]">Date</TableHead>
             </TableRow>
@@ -75,7 +78,9 @@ export function FeedbackTable({ feedback, onStatusChange, onDelete }: FeedbackTa
                     <TableCell className="hidden sm:table-cell text-muted-foreground">
                       {item.submitter_email}
                     </TableCell>
-                    <TableCell className="text-center">{item.upvote_count}</TableCell>
+                    <TableCell className="text-center text-xs text-muted-foreground">
+                      ▲ {item.upvote_count} / ▼ {item.downvote_count}
+                    </TableCell>
                     <TableCell>
                       <Badge variant={statusStyle.variant}>{statusStyle.label}</Badge>
                     </TableCell>

@@ -8,28 +8,70 @@ import type { CreateIndexRequest, IngestDocumentRequest, SearchRequest } from '@
 
 const indexes = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
-indexes.use('*', requireApiKey);
-
 const MAX_CONTENT_SIZE = 100 * 1024; // 100KB
 const DEFAULT_TOP_K = 5;
 const MAX_TOP_K = 20;
 const PAGE_SIZE = 20;
 
-/** Get the embedding model for a project, locking it on first use. */
+/** Supported embedding models and their dimensions. */
+const SUPPORTED_MODELS: Record<string, { provider: string; dimensions: number; description: string }> = {
+  // Voyage AI — v4 series
+  'voyage-4-large': { provider: 'voyage', dimensions: 1024, description: 'Best quality, multilingual (1024d)' },
+  'voyage-4': { provider: 'voyage', dimensions: 1024, description: 'General purpose (1024d)' },
+  'voyage-4-lite': { provider: 'voyage', dimensions: 1024, description: 'Fast and cheap (1024d)' },
+  // Voyage AI — specialized
+  'voyage-code-3': { provider: 'voyage', dimensions: 1024, description: 'Code-optimized (1024d)' },
+  'voyage-finance-2': { provider: 'voyage', dimensions: 1024, description: 'Finance domain (1024d)' },
+  'voyage-law-2': { provider: 'voyage', dimensions: 1024, description: 'Legal domain (1024d)' },
+  // Google Gemini
+  'gemini-embedding-001': { provider: 'gemini', dimensions: 3072, description: 'Best quality, 100+ languages (3072d)' },
+  // Cloudflare Workers AI
+  '@cf/baai/bge-base-en-v1.5': { provider: 'cloudflare', dimensions: 768, description: 'Fast English (768d, free)' },
+  '@cf/baai/bge-large-en-v1.5': { provider: 'cloudflare', dimensions: 1024, description: 'Quality English (1024d, free)' },
+  '@cf/baai/bge-m3': { provider: 'cloudflare', dimensions: 1024, description: 'Multilingual, 100+ languages (1024d, free)' },
+};
+
+/** List available embedding models (no auth required). */
+indexes.get('/models', (c) => {
+  const models = Object.entries(SUPPORTED_MODELS).map(([id, meta]) => ({
+    id,
+    provider: meta.provider,
+    dimensions: meta.dimensions,
+    description: meta.description,
+  }));
+  return c.json({ models });
+});
+
+// All routes below require API key
+indexes.use('*', requireApiKey);
+
+/**
+ * Get the embedding model for a project.
+ * If the project has no model yet, `requestedModel` must be provided (first use).
+ * Returns the locked model string or null if no model and none requested.
+ */
 async function getProjectModel(
   projectId: string,
-  defaultModel: string,
-  databaseUrl: string
-): Promise<string> {
+  databaseUrl: string,
+  requestedModel?: string
+): Promise<{ model: string } | { error: string; status: number }> {
   const db = getDb(databaseUrl);
   const project = await db.getProjectById(projectId);
-  if (!project) throw new Error('Project not found');
+  if (!project) return { error: 'Project not found', status: 404 };
 
-  if (project.embedding_model) return project.embedding_model;
+  if (project.embedding_model) return { model: project.embedding_model };
 
-  // First vector operation — lock the model
-  await db.updateProject(projectId, { embedding_model: defaultModel });
-  return defaultModel;
+  // First vector operation — need a model from the user
+  if (!requestedModel) {
+    return { error: 'Project has no embedding model set. Provide embedding_model in your first index creation request.', status: 400 };
+  }
+
+  if (!SUPPORTED_MODELS[requestedModel]) {
+    return { error: `Unsupported model: ${requestedModel}. Use GET /v1/indexes/models for available models.`, status: 400 };
+  }
+
+  await db.updateProject(projectId, { embedding_model: requestedModel });
+  return { model: requestedModel };
 }
 
 // --- Index CRUD ---
@@ -39,6 +81,15 @@ indexes.post('/', async (c) => {
   const body = (await c.req.json()) as CreateIndexRequest;
 
   if (!body.name?.trim()) return c.json({ error: 'Index name is required' }, 400);
+
+  // Validate embedding_model if provided
+  if (body.embedding_model && !SUPPORTED_MODELS[body.embedding_model]) {
+    return c.json({ error: `Unsupported model: ${body.embedding_model}. Use GET /v1/indexes/models for available models.` }, 400);
+  }
+
+  // Lock the model on first vector use (or validate it's already set)
+  const result = await getProjectModel(projectId, c.env.DATABASE_URL, body.embedding_model);
+  if ('error' in result) return c.json({ error: result.error }, result.status as any);
 
   const db = getDb(c.env.DATABASE_URL);
 
@@ -94,8 +145,10 @@ indexes.post('/:indexId/documents', async (c) => {
   if (!index) return c.json({ error: 'Index not found' }, 404);
   if (index.project_id !== projectId) return c.json({ error: 'Forbidden' }, 403);
 
-  // Lock embedding model on first use
-  const model = await getProjectModel(projectId, c.env.FREE_AI_EMBEDDING_MODEL || 'voyage-3.5-lite', c.env.DATABASE_URL);
+  // Get the project's locked embedding model
+  const modelResult = await getProjectModel(projectId, c.env.DATABASE_URL);
+  if ('error' in modelResult) return c.json({ error: modelResult.error }, modelResult.status as any);
+  const model = modelResult.model;
 
   // Create document record
   const docId = crypto.randomUUID();
@@ -197,7 +250,9 @@ indexes.post('/:indexId/search', async (c) => {
   if (index.project_id !== projectId) return c.json({ error: 'Forbidden' }, 403);
 
   // Use the project's locked model
-  const model = await getProjectModel(projectId, c.env.FREE_AI_EMBEDDING_MODEL || 'voyage-3.5-lite', c.env.DATABASE_URL);
+  const modelResult = await getProjectModel(projectId, c.env.DATABASE_URL);
+  if ('error' in modelResult) return c.json({ error: modelResult.error }, modelResult.status as any);
+  const model = modelResult.model;
 
   try {
     const [queryEmbedding] = await getEmbeddings({

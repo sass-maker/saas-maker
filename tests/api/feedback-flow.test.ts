@@ -53,6 +53,20 @@ describe('Upvote requires auth', () => {
     const body = await res.json();
     expect(body.error).toBe('Unauthorized');
   });
+
+  it('POST /v1/feedback/123/downvote without Bearer token returns 401', async () => {
+    const res = await request('/v1/feedback/123/downvote', { method: 'POST' });
+    expect(res.status).toBe(401);
+    const body = await res.json();
+    expect(body.error).toBe('Unauthorized');
+  });
+
+  it('DELETE /v1/feedback/123/downvote without Bearer token returns 401', async () => {
+    const res = await request('/v1/feedback/123/downvote', { method: 'DELETE' });
+    expect(res.status).toBe(401);
+    const body = await res.json();
+    expect(body.error).toBe('Unauthorized');
+  });
 });
 
 describe('Project routes require auth', () => {

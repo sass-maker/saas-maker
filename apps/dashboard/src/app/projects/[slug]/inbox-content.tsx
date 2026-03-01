@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { FilterBar } from "@/components/filter-bar";
 import { FeedbackTable } from "@/components/feedback-table";
-import type { FeedbackRecord, FeedbackStatus } from "@saasmaker/shared-types";
+import type { FeedbackRecord, AnyFeedbackStatus } from "@saasmaker/shared-types";
 import { apiFetch } from "@/lib/api";
 // apiFetch still used for auth'd writes (status change, delete)
 
@@ -57,15 +57,15 @@ export function InboxContent({ slug }: InboxContentProps) {
     fetchFeedback();
   }, [fetchFeedback]);
 
-  async function handleStatusChange(id: string, status: FeedbackStatus) {
+  async function handleStatusChange(item: FeedbackRecord, status: AnyFeedbackStatus) {
     const token = await getToken();
     const updated: FeedbackRecord = await apiFetch(
-      `/v1/feedback/${id}`,
+      `/v1/feedback/${item.id}`,
       { method: "PATCH", body: JSON.stringify({ status }) },
       token
     );
     setFeedback((prev) =>
-      prev.map((f) => (f.id === id ? { ...f, ...updated } : f))
+      prev.map((f) => (f.id === item.id ? { ...f, ...updated } : f))
     );
   }
 

@@ -29,7 +29,7 @@ export default async function PublicFeedbackPage({ params }: Props) {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">{projectName}</h1>
-        <p className="text-muted-foreground">Public feedback board</p>
+        <p className="text-muted-foreground">Public feature request board</p>
       </div>
       <PublicFeedbackContent slug={slug} />
     </div>
