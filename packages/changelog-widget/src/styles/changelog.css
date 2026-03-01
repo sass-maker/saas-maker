@@ -1,0 +1,210 @@
+/* SaaS-Maker Changelog Widget Styles */
+
+[data-saasmaker-changelog].smw-cl--light {
+  --smw-cl-bg: #ffffff;
+  --smw-cl-text: #1a1a2e;
+  --smw-cl-text-secondary: #6b7280;
+  --smw-cl-border: #e5e7eb;
+  --smw-cl-card-bg: #ffffff;
+  --smw-cl-line: #e5e7eb;
+  --smw-cl-dot: #d1d5db;
+}
+
+[data-saasmaker-changelog].smw-cl--dark {
+  --smw-cl-bg: #1e1e2e;
+  --smw-cl-text: #e4e4ef;
+  --smw-cl-text-secondary: #a0a0b8;
+  --smw-cl-border: #363649;
+  --smw-cl-card-bg: #262637;
+  --smw-cl-line: #363649;
+  --smw-cl-dot: #404055;
+}
+
+[data-saasmaker-changelog].smw-cl--auto {
+  --smw-cl-bg: #ffffff;
+  --smw-cl-text: #1a1a2e;
+  --smw-cl-text-secondary: #6b7280;
+  --smw-cl-border: #e5e7eb;
+  --smw-cl-card-bg: #ffffff;
+  --smw-cl-line: #e5e7eb;
+  --smw-cl-dot: #d1d5db;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-saasmaker-changelog].smw-cl--auto {
+    --smw-cl-bg: #1e1e2e;
+    --smw-cl-text: #e4e4ef;
+    --smw-cl-text-secondary: #a0a0b8;
+    --smw-cl-border: #363649;
+    --smw-cl-card-bg: #262637;
+    --smw-cl-line: #363649;
+    --smw-cl-dot: #404055;
+  }
+}
+
+[data-saasmaker-changelog] {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: var(--smw-cl-text);
+}
+
+/* Timeline layout */
+.smw-cl-timeline {
+  position: relative;
+  padding-left: 28px;
+}
+
+.smw-cl-timeline::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 8px;
+  bottom: 0;
+  width: 2px;
+  background: var(--smw-cl-line);
+}
+
+/* Timeline entry */
+.smw-cl-entry {
+  position: relative;
+  padding-bottom: 32px;
+}
+
+.smw-cl-entry:last-child {
+  padding-bottom: 0;
+}
+
+.smw-cl-dot {
+  position: absolute;
+  left: -24px;
+  top: 6px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--smw-cl-dot);
+  border: 2px solid var(--smw-cl-card-bg);
+  z-index: 1;
+}
+
+.smw-cl-dot--feature { background: #3b82f6; }
+.smw-cl-dot--improvement { background: #22c55e; }
+.smw-cl-dot--fix { background: #eab308; }
+.smw-cl-dot--breaking { background: #ef4444; }
+
+/* Date */
+.smw-cl-date {
+  font-size: 13px;
+  color: var(--smw-cl-text-secondary);
+  margin-bottom: 6px;
+}
+
+/* Badges row */
+.smw-cl-badges {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.smw-cl-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.smw-cl-badge--version {
+  background: var(--smw-cl-border);
+  color: var(--smw-cl-text);
+}
+
+.smw-cl-badge--feature {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.smw-cl-badge--improvement {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.smw-cl-badge--fix {
+  background: #fef9c3;
+  color: #a16207;
+}
+
+.smw-cl-badge--breaking {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-saasmaker-changelog].smw-cl--auto .smw-cl-badge--feature {
+    background: #1e3a5f;
+    color: #93c5fd;
+  }
+  [data-saasmaker-changelog].smw-cl--auto .smw-cl-badge--improvement {
+    background: #14532d;
+    color: #86efac;
+  }
+  [data-saasmaker-changelog].smw-cl--auto .smw-cl-badge--fix {
+    background: #422006;
+    color: #fde047;
+  }
+  [data-saasmaker-changelog].smw-cl--auto .smw-cl-badge--breaking {
+    background: #450a0a;
+    color: #fca5a5;
+  }
+  [data-saasmaker-changelog].smw-cl--auto .smw-cl-badge--version {
+    background: #363649;
+    color: #a0a0b8;
+  }
+}
+
+[data-saasmaker-changelog].smw-cl--dark .smw-cl-badge--feature {
+  background: #1e3a5f;
+  color: #93c5fd;
+}
+[data-saasmaker-changelog].smw-cl--dark .smw-cl-badge--improvement {
+  background: #14532d;
+  color: #86efac;
+}
+[data-saasmaker-changelog].smw-cl--dark .smw-cl-badge--fix {
+  background: #422006;
+  color: #fde047;
+}
+[data-saasmaker-changelog].smw-cl--dark .smw-cl-badge--breaking {
+  background: #450a0a;
+  color: #fca5a5;
+}
+[data-saasmaker-changelog].smw-cl--dark .smw-cl-badge--version {
+  background: #363649;
+  color: #a0a0b8;
+}
+
+/* Title */
+.smw-cl-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 6px;
+  line-height: 1.4;
+}
+
+/* Content */
+.smw-cl-content {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--smw-cl-text-secondary);
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+/* Empty state */
+.smw-cl-empty {
+  text-align: center;
+  padding: 32px;
+  color: var(--smw-cl-text-secondary);
+  font-size: 14px;
+}

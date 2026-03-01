@@ -300,3 +300,45 @@ export interface TestimonialWallProps {
   layout?: 'masonry' | 'grid' | 'list';
   maxItems?: number;
 }
+
+// --- Changelog Service ---
+
+export type ChangelogEntryType = 'feature' | 'improvement' | 'fix' | 'breaking';
+
+export interface ChangelogEntryRecord {
+  id: string;
+  project_id: string;
+  title: string;
+  content: string;
+  version: string | null;
+  type: ChangelogEntryType;
+  published: boolean;
+  published_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CreateChangelogEntryRequest {
+  title: string;
+  content: string;
+  version?: string;
+  type?: ChangelogEntryType;
+  published?: boolean;
+}
+
+export interface UpdateChangelogEntryRequest {
+  title?: string;
+  content?: string;
+  version?: string;
+  type?: ChangelogEntryType;
+  published?: boolean;
+}
+
+// --- Changelog Widget Props ---
+
+export interface ChangelogTimelineProps {
+  projectId: string;
+  apiBaseUrl?: string;
+  theme?: 'light' | 'dark' | 'auto';
+  maxItems?: number;
+}

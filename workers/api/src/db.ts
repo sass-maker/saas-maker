@@ -12,6 +12,7 @@ import type {
   EventRecord,
   ShortLinkRecord,
   TestimonialRecord,
+  ChangelogEntryRecord,
 } from '@saas-maker/shared-types';
 
 function parseViewerVote(value: unknown): FeedbackVote {
@@ -736,6 +737,81 @@ export function createDatabase(databaseUrl: string): FeedbackDatabase {
     async getCliTokenUser(token: string) {
       const [row] = await sql`SELECT user_id FROM cli_tokens WHERE token = ${token}`;
       return row as { user_id: string } | undefined;
+    },
+
+    // --- Changelog ---
+    async createChangelogEntry(input) {
+      const [row] = await sql`
+        INSERT INTO changelog_entries (id, project_id, title, content, version, type, published, published_at)
+        VALUES (${input.id}, ${input.project_id}, ${input.title}, ${input.content}, ${input.version}, ${input.type}, ${input.published}, ${input.published_at})
+        RETURNING *
+      `;
+      return row as ChangelogEntryRecord;
+    },
+
+    async updateChangelogEntry(id, input) {
+      const sets = [];
+      if (input.title !== undefined) sets.push(sql`title = ${input.title}`);
+      if (input.content !== undefined) sets.push(sql`content = ${input.content}`);
+      if (input.version !== undefined) sets.push(sql`version = ${input.version}`);
+      if (input.type !== undefined) sets.push(sql`type = ${input.type}`);
+      if (input.published !== undefined) {
+        sets.push(sql`published = ${input.published}`);
+        if (input.published) {
+          sets.push(sql`published_at = COALESCE(published_at, NOW())`);
+        } else {
+          sets.push(sql`published_at = NULL`);
+        }
+      }
+      sets.push(sql`updated_at = NOW()`);
+
+      const setClause = sets.reduce((acc, s, i) => i === 0 ? s : sql`${acc}, ${s}`);
+      const [row] = await sql`UPDATE changelog_entries SET ${setClause} WHERE id = ${id} RETURNING *`;
+      return (row as ChangelogEntryRecord) || null;
+    },
+
+    async deleteChangelogEntry(id) {
+      const result = await sql`DELETE FROM changelog_entries WHERE id = ${id}`;
+      return result.count > 0;
+    },
+
+    async getChangelogEntryById(id) {
+      const [row] = await sql`SELECT * FROM changelog_entries WHERE id = ${id}`;
+      return (row as ChangelogEntryRecord) || null;
+    },
+
+    async listChangelogEntries(projectId, page, limit) {
+      const offset = (page - 1) * limit;
+      const [countResult] = await sql`
+        SELECT COUNT(*)::int AS total FROM changelog_entries WHERE project_id = ${projectId}
+      `;
+      const rows = await sql`
+        SELECT * FROM changelog_entries WHERE project_id = ${projectId}
+        ORDER BY created_at DESC
+        LIMIT ${limit} OFFSET ${offset}
+      `;
+      return { data: rows as unknown as ChangelogEntryRecord[], total: countResult.total };
+    },
+
+    async listPublishedChangelog(projectId, limit) {
+      const rows = await sql`
+        SELECT * FROM changelog_entries
+        WHERE project_id = ${projectId} AND published = true
+        ORDER BY published_at DESC
+        LIMIT ${limit}
+      `;
+      return rows as unknown as ChangelogEntryRecord[];
+    },
+
+    async getChangelogStats(projectId) {
+      const [row] = await sql`
+        SELECT
+          COUNT(*)::int AS total,
+          COUNT(*) FILTER (WHERE published = true)::int AS published,
+          COUNT(*) FILTER (WHERE published = false)::int AS drafts
+        FROM changelog_entries WHERE project_id = ${projectId}
+      `;
+      return row as { total: number; published: number; drafts: number };
     },
   };
 }

@@ -12,6 +12,7 @@ import {
   AnalyticsOverview,
   ShortLinkRecord,
   ShortLinkStats,
+  ChangelogEntryRecord,
 } from '@saas-maker/shared-types';
 
 export { TABLES } from './schema';
@@ -100,4 +101,20 @@ export interface FeedbackDatabase {
   deleteShortLink(id: string): Promise<boolean>;
   incrementLinkClickCount(id: string): Promise<void>;
   getShortLinkStats(linkId: string, projectId: string): Promise<ShortLinkStats>;
+
+  // Changelog
+  createChangelogEntry(input: {
+    id: string; project_id: string; title: string; content: string;
+    version: string | null; type: string; published: boolean;
+    published_at: string | null;
+  }): Promise<ChangelogEntryRecord>;
+  updateChangelogEntry(id: string, input: {
+    title?: string; content?: string; version?: string;
+    type?: string; published?: boolean;
+  }): Promise<ChangelogEntryRecord | null>;
+  deleteChangelogEntry(id: string): Promise<boolean>;
+  getChangelogEntryById(id: string): Promise<ChangelogEntryRecord | null>;
+  listChangelogEntries(projectId: string, page: number, limit: number): Promise<{ data: ChangelogEntryRecord[]; total: number }>;
+  listPublishedChangelog(projectId: string, limit: number): Promise<ChangelogEntryRecord[]>;
+  getChangelogStats(projectId: string): Promise<{ total: number; published: number; drafts: number }>;
 }
