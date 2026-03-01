@@ -1,0 +1,1019 @@
+# SaaS Maker
+
+> Drop-in backend services for SaaS apps. Plug in production-ready feedback, waitlist, testimonials, changelog, knowledge base, and analytics without building them from scratch.
+
+## Overview
+
+SaaS Maker is a backend-as-a-service for SaaS applications. It provides six core services accessible via a REST API, JavaScript SDK, CLI, and embeddable React widgets.
+
+- **API**: Cloudflare Workers (globally distributed, low latency)
+- **Database**: CockroachDB (distributed SQL)
+- **Dashboard**: https://saasmaker.vercel.app (Next.js)
+- **Docs**: https://saasmaker.vercel.app/docs
+
+### Services
+
+| Service                        | What it does                                                        |
+| ------------------------------ | ------------------------------------------------------------------- |
+| Feedback & Feature Requests    | Collect bugs, feature requests, and feedback with voting            |
+| Waitlist                       | Capture pre-launch signups with automatic welcome emails            |
+| Testimonials                   | Collect, moderate, and display customer testimonials                |
+| Changelog                      | Publish product updates with categories and drafts                  |
+| Knowledge Base (Vector Search) | Vector search / RAG-powered document search with auto-chunking     |
+| Analytics                      | Track page views and custom events (privacy-friendly, no cookies)  |
+
+---
+
+## Quick Start
+
+1. Create an account at https://saasmaker.vercel.app (Google OAuth)
+2. Create a project and copy your API key (starts with `pk_`) from **Settings**
+3. Use the REST API or SDK
+
+```bash
+npm install @saas-maker/sdk
+```
+
+```typescript
+import { SaaSMakerClient } from '@saas-maker/sdk';
+
+const client = new SaaSMakerClient({
+  apiKey: 'pk_your_api_key',
+  baseUrl: 'https://saasmaker-api.sarthakagrawal927.workers.dev',
+});
+```
+
+---
+
+## API Conventions
+
+### Base URL
+
+```
+https://saasmaker-api.sarthakagrawal927.workers.dev
+```
+
+All endpoints are prefixed with `/v1/`.
+
+### Authentication
+
+Two methods are supported depending on the context:
+
+**API Key** -- for SDK calls, widgets, and public-facing endpoints.
+Pass in the `X-Project-Key` header:
+
+```
+X-Project-Key: pk_abc123
+```
+
+**Session Token** -- for dashboard operations, CLI, and admin actions.
+Pass in the `Authorization` header:
+
+```
+Authorization: Bearer <token>
+```
+
+| Action                              | Auth Method   |
+| ----------------------------------- | ------------- |
+| Submit feedback from your app       | API Key       |
+| Join a waitlist                     | API Key       |
+| Submit a testimonial                | API Key       |
+| Read published changelog            | API Key       |
+| Search knowledge base               | API Key       |
+| Track analytics events              | API Key       |
+| Update feedback status              | Session Token |
+| View analytics dashboard            | Session Token |
+| Manage testimonials (approve/reject) | Session Token |
+| Create changelog entries            | Session Token |
+
+### Request Format
+
+All request bodies must be JSON with `Content-Type: application/json`.
+
+### Response Format
+
+Successful list responses:
+
+```json
+{ "data": [...], "total": 42, "page": 1, "limit": 20 }
+```
+
+Successful single-resource operations:
+
+```json
+{ "ok": true }
+```
+
+### Error Format
+
+Errors return JSON with an `error` field and an appropriate HTTP status code:
+
+```json
+{ "error": "Title is required" }
+```
+
+| Code  | Meaning                              |
+| ----- | ------------------------------------ |
+| `400` | Bad request (missing/invalid fields) |
+| `403` | Forbidden (not the project owner)    |
+| `404` | Resource not found                   |
+| `409` | Conflict (duplicate entry)           |
+| `413` | Payload too large                    |
+
+### CORS
+
+The API allows cross-origin requests from any origin. Browser-based SDK and widget calls work without proxy configuration.
+
+### Health Check
+
+```
+GET /health
+```
+
+Returns `{ "ok": true }`. No authentication required.
+
+---
+
+## Feedback & Feature Requests
+
+Collect structured feedback from users. Supports bugs, feature requests, and general feedback with upvote/downvote voting on feature requests.
+
+### Feedback Types
+
+- `bug` -- something is broken
+- `feature` -- a new feature request
+- `feedback` -- general feedback
+
+### Status Workflow
+
+Bugs and feedback: `new` -> `in_progress` -> `done` / `dismissed`
+Feature requests: `planned` -> `in_progress` -> `shipped` / `cancelled`
+
+### Public Board
+
+Every project gets a public feedback board at:
+
+```
+https://saasmaker.vercel.app/f/[project-slug]
+```
+
+### Endpoints
+
+#### Submit feedback
+
+```
+POST /v1/feedback
+Auth: API Key
+```
+
+| Field             | Type   | Required | Description              |
+| ----------------- | ------ | -------- | ------------------------ |
+| `title`           | string | Yes      | Feedback title           |
+| `description`     | string | No       | Detailed description     |
+| `type`            | string | Yes      | `bug`, `feature`, or `feedback` |
+| `submitter_email` | string | No       | Submitter's email        |
+
+```bash
+curl -X POST https://saasmaker-api.sarthakagrawal927.workers.dev/v1/feedback \
+  -H "Content-Type: application/json" \
+  -H "X-Project-Key: pk_abc123" \
+  -d '{
+    "title": "Add dark mode",
+    "description": "Would love a dark mode option",
+    "type": "feature",
+    "submitter_email": "user@example.com"
+  }'
+```
+
+#### List feedback by project slug
+
+```
+GET /v1/feedback/by-project/:slug
+Auth: None (public)
+```
+
+```bash
+curl https://saasmaker-api.sarthakagrawal927.workers.dev/v1/feedback/by-project/my-app
+```
+
+#### Upvote feedback
+
+```
+POST /v1/feedback/:id/upvote
+Auth: Session Token
+```
+
+#### Downvote feedback
+
+```
+POST /v1/feedback/:id/downvote
+Auth: Session Token
+```
+
+#### Update feedback status
+
+```
+PATCH /v1/feedback/:id
+Auth: Session Token (project owner only)
+```
+
+| Field    | Type   | Required | Description                |
+| -------- | ------ | -------- | -------------------------- |
+| `status` | string | Yes      | New status (see workflow)  |
+
+```bash
+curl -X PATCH https://saasmaker-api.sarthakagrawal927.workers.dev/v1/feedback/123 \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{ "status": "in_progress" }'
+```
+
+#### Delete feedback
+
+```
+DELETE /v1/feedback/:id
+Auth: Session Token (project owner only)
+```
+
+---
+
+## Waitlist
+
+Capture pre-launch signups. When someone joins, a welcome email is sent automatically via Resend.
+
+### Endpoints
+
+#### Join waitlist
+
+```
+POST /v1/waitlist
+Auth: API Key
+```
+
+| Field             | Type   | Required | Description        |
+| ----------------- | ------ | -------- | ------------------ |
+| `email`           | string | Yes      | Email address      |
+| `name`            | string | No       | Full name          |
+| `referral_source` | string | No       | How they found you |
+
+```bash
+curl -X POST https://saasmaker-api.sarthakagrawal927.workers.dev/v1/waitlist \
+  -H "Content-Type: application/json" \
+  -H "X-Project-Key: pk_abc123" \
+  -d '{
+    "email": "user@example.com",
+    "name": "Jane Doe",
+    "referral_source": "twitter"
+  }'
+```
+
+#### List waitlist entries
+
+```
+GET /v1/waitlist?project_id=...
+Auth: Session Token
+```
+
+Returns all waitlist entries for the project, sorted by signup date.
+
+```bash
+curl https://saasmaker-api.sarthakagrawal927.workers.dev/v1/waitlist?project_id=proj_123 \
+  -H "Authorization: Bearer <token>"
+```
+
+---
+
+## Testimonials
+
+Collect testimonials from customers and display approved ones. Submissions start as `pending` and can be approved or rejected in the dashboard.
+
+### Public Submission Page
+
+Every project gets a public testimonial submission page at:
+
+```
+https://saasmaker.vercel.app/t/[project-slug]
+```
+
+### Endpoints
+
+#### Submit testimonial (with API key)
+
+```
+POST /v1/testimonials
+Auth: API Key
+```
+
+| Field          | Type   | Required | Description         |
+| -------------- | ------ | -------- | ------------------- |
+| `author_name`  | string | Yes      | Name of the person  |
+| `author_email` | string | Yes      | Email address       |
+| `content`      | string | Yes      | Testimonial text    |
+| `rating`       | number | Yes      | Rating from 1 to 5  |
+| `author_title` | string | No       | Job title or role   |
+| `tweet_url`    | string | No       | Link to a tweet     |
+
+```bash
+curl -X POST https://saasmaker-api.sarthakagrawal927.workers.dev/v1/testimonials \
+  -H "Content-Type: application/json" \
+  -H "X-Project-Key: pk_abc123" \
+  -d '{
+    "author_name": "Jane Doe",
+    "author_email": "jane@example.com",
+    "content": "SaaS Maker saved us weeks of development time.",
+    "rating": 5,
+    "author_title": "CTO at Acme",
+    "tweet_url": "https://twitter.com/jane/status/123"
+  }'
+```
+
+#### Submit testimonial by slug (public)
+
+```
+POST /v1/testimonials/by-project/:slug
+Auth: None (public)
+```
+
+Same body as above. Use for public submission forms where no API key is available.
+
+#### List approved testimonials
+
+```
+GET /v1/testimonials
+Auth: API Key
+```
+
+Returns only approved testimonials. Use to display testimonials on your site.
+
+#### List all testimonials with stats
+
+```
+GET /v1/testimonials/all?project_id=...
+Auth: Session Token
+```
+
+Returns all testimonials (pending, approved, rejected) with aggregate stats. Used by the dashboard.
+
+#### Update testimonial status
+
+```
+PATCH /v1/testimonials/:id?project_id=...
+Auth: Session Token
+```
+
+| Field    | Type   | Required | Description                              |
+| -------- | ------ | -------- | ---------------------------------------- |
+| `status` | string | Yes      | `approved`, `rejected`, or `pending`     |
+
+```bash
+curl -X PATCH "https://saasmaker-api.sarthakagrawal927.workers.dev/v1/testimonials/456?project_id=proj_123" \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{ "status": "approved" }'
+```
+
+#### Delete testimonial
+
+```
+DELETE /v1/testimonials/:id?project_id=...
+Auth: Session Token
+```
+
+---
+
+## Changelog
+
+Publish product updates with categories and draft support. Only published entries are visible to users.
+
+### Entry Types
+
+- `feature` -- new functionality
+- `improvement` -- enhancement to existing features
+- `fix` -- bug fix
+- `breaking` -- breaking change
+
+### Endpoints
+
+#### List published entries
+
+```
+GET /v1/changelog
+Auth: API Key
+```
+
+Returns published changelog entries sorted by date (newest first).
+
+```bash
+curl https://saasmaker-api.sarthakagrawal927.workers.dev/v1/changelog \
+  -H "X-Project-Key: pk_abc123"
+```
+
+#### Create entry
+
+```
+POST /v1/changelog/dashboard/:projectId
+Auth: Session Token
+```
+
+| Field       | Type    | Required | Description                             |
+| ----------- | ------- | -------- | --------------------------------------- |
+| `title`     | string  | Yes      | Entry title                             |
+| `content`   | string  | Yes      | Entry body                              |
+| `type`      | string  | Yes      | `feature`, `improvement`, `fix`, `breaking` |
+| `published` | boolean | No       | Publish immediately (default false)     |
+
+```bash
+curl -X POST https://saasmaker-api.sarthakagrawal927.workers.dev/v1/changelog/dashboard/proj_123 \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Dark mode support",
+    "content": "You can now switch to dark mode in Settings.",
+    "type": "feature",
+    "published": true
+  }'
+```
+
+#### Update entry
+
+```
+PATCH /v1/changelog/dashboard/:projectId/:id
+Auth: Session Token
+```
+
+```bash
+curl -X PATCH https://saasmaker-api.sarthakagrawal927.workers.dev/v1/changelog/dashboard/proj_123/456 \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{ "published": true }'
+```
+
+#### Delete entry
+
+```
+DELETE /v1/changelog/dashboard/:projectId/:id
+Auth: Session Token
+```
+
+---
+
+## Knowledge Base (Vector Search)
+
+Upload documents and search them with natural language queries. Content is automatically chunked, embedded, and stored for fast vector similarity search.
+
+### How It Works
+
+1. Create an index to organize documents by topic
+2. Upload documents -- content is automatically chunked and embedded
+3. Search with natural language queries to find relevant chunks
+
+### Embedding Models
+
+Each project is locked to a single embedding model after its first index creation.
+
+| Model                        | Provider    | Dimensions | Notes                      |
+| ---------------------------- | ----------- | ---------- | -------------------------- |
+| `voyage-4-large`             | Voyage AI   | 1024       | Best quality, multilingual |
+| `voyage-4`                   | Voyage AI   | 1024       | General purpose            |
+| `voyage-4-lite`              | Voyage AI   | 1024       | Fast and cheap             |
+| `voyage-code-3`              | Voyage AI   | 1024       | Code-optimized             |
+| `gemini-embedding-001`       | Google      | 3072       | 100+ languages             |
+| `@cf/baai/bge-base-en-v1.5`  | Cloudflare  | 768        | Fast English (free)        |
+| `@cf/baai/bge-large-en-v1.5` | Cloudflare  | 1024       | Quality English (free)     |
+| `@cf/baai/bge-m3`            | Cloudflare  | 1024       | Multilingual (free)        |
+
+### Endpoints
+
+#### List available models
+
+```
+GET /v1/indexes/models
+Auth: None
+```
+
+#### Create an index
+
+```
+POST /v1/indexes
+Auth: API Key
+```
+
+| Field             | Type   | Required      | Description                                      |
+| ----------------- | ------ | ------------- | ------------------------------------------------ |
+| `name`            | string | Yes           | Index name (unique per project)                  |
+| `embedding_model` | string | On first use  | Required on first index creation to lock model   |
+| `external_id`     | string | No            | Optional external identifier                     |
+
+```bash
+curl -X POST https://saasmaker-api.sarthakagrawal927.workers.dev/v1/indexes \
+  -H "Content-Type: application/json" \
+  -H "X-Project-Key: pk_abc123" \
+  -d '{
+    "name": "help-docs",
+    "embedding_model": "@cf/baai/bge-base-en-v1.5"
+  }'
+```
+
+#### List indexes
+
+```
+GET /v1/indexes
+Auth: API Key
+```
+
+#### Upload a document
+
+```
+POST /v1/indexes/:indexId/documents
+Auth: API Key
+```
+
+| Field      | Type   | Required | Description                    |
+| ---------- | ------ | -------- | ------------------------------ |
+| `content`  | string | Yes      | Document text (max 100KB)      |
+| `metadata` | object | No       | Arbitrary key-value metadata   |
+
+```bash
+curl -X POST https://saasmaker-api.sarthakagrawal927.workers.dev/v1/indexes/idx_123/documents \
+  -H "Content-Type: application/json" \
+  -H "X-Project-Key: pk_abc123" \
+  -d '{
+    "content": "SaaS Maker is a backend-as-a-service platform for SaaS apps...",
+    "metadata": { "source": "docs", "page": "intro" }
+  }'
+```
+
+Response:
+
+```json
+{
+  "id": "doc_abc",
+  "index_id": "idx_123",
+  "chunks_created": 4,
+  "created_at": "2025-01-01T00:00:00Z"
+}
+```
+
+#### List documents
+
+```
+GET /v1/indexes/:indexId/documents?page=1
+Auth: API Key
+```
+
+#### Search
+
+```
+POST /v1/indexes/:indexId/search
+Auth: API Key
+```
+
+| Field   | Type   | Required | Description                          |
+| ------- | ------ | -------- | ------------------------------------ |
+| `query` | string | Yes      | Natural language search query        |
+| `top_k` | number | No       | Number of results (default 5, max 20)|
+
+```bash
+curl -X POST https://saasmaker-api.sarthakagrawal927.workers.dev/v1/indexes/idx_123/search \
+  -H "Content-Type: application/json" \
+  -H "X-Project-Key: pk_abc123" \
+  -d '{
+    "query": "how do I collect feedback?",
+    "top_k": 5
+  }'
+```
+
+Response:
+
+```json
+{
+  "results": [
+    {
+      "document_id": "doc_abc",
+      "chunk_content": "Use the feedback endpoint to collect bugs and feature requests...",
+      "score": 0.92,
+      "metadata": { "source": "docs", "page": "feedback" }
+    }
+  ]
+}
+```
+
+#### Delete a document
+
+```
+DELETE /v1/indexes/:indexId/documents/:docId
+Auth: API Key
+```
+
+Deleting a document also deletes all its chunks.
+
+#### Delete an index
+
+```
+DELETE /v1/indexes/:indexId
+Auth: API Key
+```
+
+---
+
+## Analytics
+
+Lightweight, privacy-friendly analytics. Track page views and custom events without cookies. Includes automatic UTM parameter capture, device/browser detection, and country-level geo data.
+
+### Tracking Script
+
+Add this to your site for automatic page view tracking (including SPA navigation):
+
+```html
+<script
+  defer
+  data-project="pk_your_api_key"
+  data-api="https://saasmaker-api.sarthakagrawal927.workers.dev"
+  src="https://unpkg.com/@saas-maker/analytics-sdk/dist/index.global.js"
+></script>
+```
+
+The script automatically:
+- Tracks initial page views
+- Handles SPA navigation (pushState / replaceState / popstate)
+- Captures UTM parameters from the URL
+- Respects `Do Not Track` browser setting
+- Sends screen width, referrer, and user agent
+
+### Custom Events (via script)
+
+```javascript
+// Track a custom event
+sm('signup_completed');
+
+// Track with properties
+sm('plan_upgraded', { plan: 'pro', value: 49 });
+```
+
+Queue events before the script loads:
+
+```javascript
+window.sm = window.sm || { q: [] };
+sm.q.push(['button_clicked', { id: 'cta-hero' }]);
+```
+
+### Endpoints
+
+#### Track an event
+
+```
+POST /v1/analytics/events
+Auth: API Key
+```
+
+| Field          | Type   | Required | Description                         |
+| -------------- | ------ | -------- | ----------------------------------- |
+| `name`         | string | No       | Event name (defaults to `page_view`)|
+| `url`          | string | No       | Page URL                            |
+| `referrer`     | string | No       | Referrer URL                        |
+| `utm_source`   | string | No       | UTM source                          |
+| `utm_medium`   | string | No       | UTM medium                          |
+| `utm_campaign` | string | No       | UTM campaign                        |
+| `screen_width` | number | No       | Viewport width                      |
+| `properties`   | object | No       | Custom event properties             |
+
+```bash
+curl -X POST https://saasmaker-api.sarthakagrawal927.workers.dev/v1/analytics/events \
+  -H "Content-Type: application/json" \
+  -H "X-Project-Key: pk_abc123" \
+  -d '{
+    "name": "page_view",
+    "url": "https://myapp.com/pricing",
+    "referrer": "https://google.com",
+    "utm_source": "google",
+    "utm_medium": "cpc",
+    "screen_width": 1440,
+    "properties": { "variant": "B" }
+  }'
+```
+
+#### Dashboard overview
+
+```
+GET /v1/analytics/overview?project_id=...&period=30d
+Auth: Session Token
+```
+
+Returns page views, unique visitors, top page, and top referrer.
+Period options: `7d`, `30d` (default), `90d`
+
+#### Top pages
+
+```
+GET /v1/analytics/pages?project_id=...&period=30d
+Auth: Session Token
+```
+
+#### Top referrers
+
+```
+GET /v1/analytics/referrers?project_id=...&period=30d
+Auth: Session Token
+```
+
+#### Country breakdown
+
+```
+GET /v1/analytics/countries?project_id=...&period=30d
+Auth: Session Token
+```
+
+#### Device breakdown
+
+```
+GET /v1/analytics/devices?project_id=...&period=30d
+Auth: Session Token
+```
+
+#### Custom event counts
+
+```
+GET /v1/analytics/events?project_id=...&period=30d
+Auth: Session Token
+```
+
+---
+
+## JavaScript SDK
+
+### Installation
+
+```bash
+npm install @saas-maker/sdk
+```
+
+### Setup
+
+```typescript
+import { SaaSMakerClient } from '@saas-maker/sdk';
+
+const client = new SaaSMakerClient({
+  apiKey: 'pk_your_api_key',
+  baseUrl: 'https://saasmaker-api.sarthakagrawal927.workers.dev',
+});
+```
+
+### Feedback
+
+```typescript
+// Submit feedback
+await client.feedback.submit({
+  title: 'Add dark mode',
+  description: 'Would love a dark mode option',
+  type: 'feature',
+  submitter_email: 'user@example.com',
+});
+
+// List feedback
+const { data, total } = await client.feedback.list({
+  type: 'feature',
+  sort: 'upvotes',
+  page: 1,
+});
+```
+
+### Waitlist
+
+```typescript
+const entry = await client.waitlist.signup({
+  email: 'user@example.com',
+  name: 'Jane Doe',
+});
+console.log(`Position: #${entry.position}`);
+```
+
+### Testimonials
+
+```typescript
+// Submit a testimonial
+await client.testimonials.submit({
+  author_name: 'Jane Doe',
+  author_email: 'jane@example.com',
+  content: 'SaaS Maker saved us weeks.',
+  rating: 5,
+  author_title: 'CTO at Acme',
+});
+
+// List approved testimonials
+const testimonials = await client.testimonials.list();
+```
+
+### Changelog
+
+```typescript
+const entries = await client.changelog.list();
+```
+
+### Knowledge Base
+
+```typescript
+// Create an index
+const index = await client.indexes.create({
+  name: 'help-docs',
+  embedding_model: '@cf/baai/bge-base-en-v1.5',
+});
+
+// Upload a document
+await client.indexes.ingest(index.id, {
+  content: 'Your document text here...',
+  metadata: { source: 'docs' },
+});
+
+// Search
+const { results } = await client.indexes.search(index.id, {
+  query: 'how do I get started?',
+  top_k: 5,
+});
+```
+
+### Analytics
+
+```typescript
+await client.analytics.track({
+  name: 'page_view',
+  url: 'https://myapp.com/pricing',
+});
+```
+
+### Error Handling
+
+All methods throw on non-2xx responses. Errors include the `message` field from the API:
+
+```typescript
+try {
+  await client.feedback.submit({ ... });
+} catch (err) {
+  console.error(err.message); // "Title is required"
+}
+```
+
+---
+
+## CLI
+
+### Installation
+
+```bash
+npm install -g @saas-maker/cli
+```
+
+### Commands
+
+| Command              | Description                                              |
+| -------------------- | -------------------------------------------------------- |
+| `saasmaker login`    | Authenticate with Google OAuth (opens browser)           |
+| `saasmaker whoami`   | Show the currently authenticated user                    |
+| `saasmaker projects list`   | List all your projects                            |
+| `saasmaker projects create` | Create a new project interactively               |
+| `saasmaker init`     | Link current directory to a project (creates `.saasmaker.json`) |
+| `saasmaker keys`     | Show the API key for the linked project                  |
+| `saasmaker status`   | Show stats for the linked project                        |
+
+---
+
+## Widgets
+
+Embeddable React components for feedback, testimonials, and changelog.
+
+### Feedback Widget
+
+```bash
+npm install @saas-maker/feedback-widget
+```
+
+```tsx
+import { FeedbackWidget } from '@saas-maker/feedback-widget';
+
+<FeedbackWidget
+  projectId="pk_your_api_key"
+  apiBaseUrl="https://saasmaker-api.sarthakagrawal927.workers.dev"
+/>
+```
+
+| Prop           | Type                           | Default          | Description                   |
+| -------------- | ------------------------------ | ---------------- | ----------------------------- |
+| `projectId`    | string                         | --               | Project API key (required)    |
+| `apiBaseUrl`   | string                         | --               | API base URL (required)       |
+| `userEmail`    | string                         | --               | Pre-fill submitter email      |
+| `userName`     | string                         | --               | Pre-fill submitter name       |
+| `types`        | FeedbackType[]                 | all three types  | Which types to show           |
+| `position`     | `bottom-right` / `bottom-left` | `bottom-right`   | Trigger button position       |
+| `theme`        | `light` / `dark` / `auto`      | `auto`           | Color theme                   |
+| `accentColor`  | string                         | `#1464ff`        | Brand accent color            |
+| `triggerText`  | string                         | `Feedback`       | Text on trigger button        |
+
+### Testimonial Widgets
+
+```bash
+npm install @saas-maker/testimonials-widget
+```
+
+**TestimonialWall** -- display approved testimonials:
+
+```tsx
+import { TestimonialWall } from '@saas-maker/testimonials-widget';
+
+<TestimonialWall
+  projectId="pk_your_api_key"
+  apiBaseUrl="https://saasmaker-api.sarthakagrawal927.workers.dev"
+/>
+```
+
+| Prop          | Type                      | Default    | Description               |
+| ------------- | ------------------------- | ---------- | ------------------------- |
+| `projectId`   | string                    | --         | Project API key (required)|
+| `apiBaseUrl`  | string                    | --         | API base URL (required)   |
+| `theme`       | `light` / `dark` / `auto` | `auto`     | Color theme               |
+| `accentColor` | string                    | `#1464ff`  | Brand accent color        |
+| `layout`      | `masonry` / `grid` / `list` | `grid`   | Card layout style         |
+| `maxItems`    | number                    | --         | Max testimonials shown    |
+
+**TestimonialForm** -- collect new testimonials:
+
+```tsx
+import { TestimonialForm } from '@saas-maker/testimonials-widget';
+
+<TestimonialForm
+  projectId="pk_your_api_key"
+  apiBaseUrl="https://saasmaker-api.sarthakagrawal927.workers.dev"
+/>
+```
+
+| Prop              | Type                      | Default                 | Description                |
+| ----------------- | ------------------------- | ----------------------- | -------------------------- |
+| `projectId`       | string                    | --                      | Project API key (required) |
+| `apiBaseUrl`      | string                    | --                      | API base URL (required)    |
+| `theme`           | `light` / `dark` / `auto` | `auto`                  | Color theme                |
+| `accentColor`     | string                    | `#1464ff`               | Brand accent color         |
+| `placeholder`     | string                    | `Share your experience...` | Textarea placeholder    |
+| `buttonText`      | string                    | `Submit Testimonial`    | Submit button label        |
+| `showImageUpload` | boolean                   | `true`                  | Show image attachment      |
+| `showTweetUrl`    | boolean                   | `false`                 | Show tweet URL field       |
+
+### Changelog Widget
+
+```bash
+npm install @saas-maker/changelog-widget
+```
+
+```tsx
+import { ChangelogTimeline } from '@saas-maker/changelog-widget';
+
+<ChangelogTimeline
+  projectId="pk_your_api_key"
+  apiBaseUrl="https://saasmaker-api.sarthakagrawal927.workers.dev"
+/>
+```
+
+| Prop         | Type                      | Default | Description               |
+| ------------ | ------------------------- | ------- | ------------------------- |
+| `projectId`  | string                    | --      | Project API key (required)|
+| `apiBaseUrl` | string                    | --      | API base URL (required)   |
+| `theme`      | `light` / `dark` / `auto` | `auto`  | Color theme               |
+| `maxItems`   | number                    | --      | Max entries shown         |
+
+---
+
+## Endpoint Summary
+
+| Method   | Path                                         | Auth          | Service       |
+| -------- | -------------------------------------------- | ------------- | ------------- |
+| GET      | `/health`                                    | None          | System        |
+| POST     | `/v1/feedback`                               | API Key       | Feedback      |
+| GET      | `/v1/feedback/by-project/:slug`              | None          | Feedback      |
+| POST     | `/v1/feedback/:id/upvote`                    | Session Token | Feedback      |
+| POST     | `/v1/feedback/:id/downvote`                  | Session Token | Feedback      |
+| PATCH    | `/v1/feedback/:id`                           | Session Token | Feedback      |
+| DELETE   | `/v1/feedback/:id`                           | Session Token | Feedback      |
+| POST     | `/v1/waitlist`                               | API Key       | Waitlist      |
+| GET      | `/v1/waitlist?project_id=...`                | Session Token | Waitlist      |
+| POST     | `/v1/testimonials`                           | API Key       | Testimonials  |
+| POST     | `/v1/testimonials/by-project/:slug`          | None          | Testimonials  |
+| GET      | `/v1/testimonials`                           | API Key       | Testimonials  |
+| GET      | `/v1/testimonials/all?project_id=...`        | Session Token | Testimonials  |
+| PATCH    | `/v1/testimonials/:id?project_id=...`        | Session Token | Testimonials  |
+| DELETE   | `/v1/testimonials/:id?project_id=...`        | Session Token | Testimonials  |
+| GET      | `/v1/changelog`                              | API Key       | Changelog     |
+| POST     | `/v1/changelog/dashboard/:projectId`         | Session Token | Changelog     |
+| PATCH    | `/v1/changelog/dashboard/:projectId/:id`     | Session Token | Changelog     |
+| DELETE   | `/v1/changelog/dashboard/:projectId/:id`     | Session Token | Changelog     |
+| GET      | `/v1/indexes/models`                         | None          | Knowledge Base|
+| POST     | `/v1/indexes`                                | API Key       | Knowledge Base|
+| GET      | `/v1/indexes`                                | API Key       | Knowledge Base|
+| POST     | `/v1/indexes/:indexId/documents`             | API Key       | Knowledge Base|
+| GET      | `/v1/indexes/:indexId/documents?page=1`      | API Key       | Knowledge Base|
+| POST     | `/v1/indexes/:indexId/search`                | API Key       | Knowledge Base|
+| DELETE   | `/v1/indexes/:indexId/documents/:docId`      | API Key       | Knowledge Base|
+| DELETE   | `/v1/indexes/:indexId`                       | API Key       | Knowledge Base|
+| POST     | `/v1/analytics/events`                       | API Key       | Analytics     |
+| GET      | `/v1/analytics/overview?project_id=...`      | Session Token | Analytics     |
+| GET      | `/v1/analytics/pages?project_id=...`         | Session Token | Analytics     |
+| GET      | `/v1/analytics/referrers?project_id=...`     | Session Token | Analytics     |
+| GET      | `/v1/analytics/countries?project_id=...`     | Session Token | Analytics     |
+| GET      | `/v1/analytics/devices?project_id=...`       | Session Token | Analytics     |
+| GET      | `/v1/analytics/events?project_id=...`        | Session Token | Analytics     |
