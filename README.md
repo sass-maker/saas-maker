@@ -1,91 +1,109 @@
-# SaaS Maker — Feedback Module
+# SaaS Maker
 
-Embeddable feedback collection system: React widget SDK + Cloudflare Workers API + Next.js dashboard.
+Open-source backend toolkit for SaaS products. Drop-in feedback collection, waitlists, analytics, and vector memory — all behind a single API key.
+
+## Features
+
+- **Feedback Widget** — Embeddable React component for bugs, feature requests, and general feedback with image uploads and voting
+- **Waitlist** — Email collection with position tracking and signup counts
+- **Analytics** — Privacy-friendly page view and custom event tracking (no cookies)
+- **Vector Memory** — Semantic search with pluggable embedding models (Voyage AI, Gemini, Cloudflare Workers AI)
+- **Public Feedback Board** — Hosted kanban board for feature requests at `/f/{slug}`
 
 ## Quick Start
 
-### Prerequisites
-- Node.js 22+
-- pnpm 10+
-- CockroachDB (local or cloud)
-- Google OAuth credentials
-- Resend API key (optional, for email notifications)
+### 1. Install the feedback widget
 
-### Setup
-
-1. Install dependencies:
-   ```bash
-   pnpm install
-   ```
-
-2. Set up the database:
-   ```bash
-   cockroach sql --insecure < packages/db/migrations/0001_init.sql
-   cockroach sql --insecure < packages/db/migrations/0002_sessions.sql
-   ```
-
-3. Configure the API worker:
-   ```bash
-   cp workers/api/.dev.vars.example workers/api/.dev.vars
-   # Edit .dev.vars with your credentials
-   ```
-
-4. Configure the dashboard:
-   ```bash
-   cp apps/dashboard/.env.local.example apps/dashboard/.env.local
-   # Edit .env.local with your credentials
-   ```
-
-5. Build shared packages:
-   ```bash
-   pnpm build:types && pnpm build:db
-   ```
-
-6. Start development:
-   ```bash
-   # Terminal 1: API
-   pnpm dev:api
-
-   # Terminal 2: Dashboard
-   pnpm dev:dashboard
-   ```
-
-### Widget Usage
+```bash
+npm install @saasmaker/feedback
+```
 
 ```tsx
 import { FeedbackWidget } from '@saasmaker/feedback'
 
-<FeedbackWidget projectId="your-project-id" />
+<FeedbackWidget projectId="pk_your_api_key" />
 ```
 
-### Deploy
+### 2. Add analytics tracking
 
-**API (Cloudflare Workers):**
+```html
+<script defer src="https://unpkg.com/@saasmaker/analytics-sdk" data-project="pk_your_api_key"></script>
+```
+
+### 3. Add a waitlist form
+
 ```bash
-cd workers/api
-wrangler secret put GOOGLE_CLIENT_ID
-wrangler secret put GOOGLE_CLIENT_SECRET
-wrangler secret put SESSION_SECRET
-wrangler secret put DATABASE_URL
-wrangler secret put RESEND_API_KEY
-wrangler deploy
+npm install @saasmaker/waitlist
 ```
 
-**Dashboard (Vercel):**
+```tsx
+import { WaitlistForm } from '@saasmaker/waitlist'
+
+<WaitlistForm projectId="pk_your_api_key" />
+```
+
+### 4. Use the CLI
+
 ```bash
-cd apps/dashboard
-vercel
+npx @saasmaker/cli login
+npx @saasmaker/cli init
+npx @saasmaker/cli status
 ```
 
-### Project Structure
+## Packages
+
+| Package | Description |
+|---------|-------------|
+| [`@saasmaker/feedback`](packages/feedback-widget/) | React feedback widget |
+| [`@saasmaker/waitlist`](packages/waitlist-widget/) | React waitlist form |
+| [`@saasmaker/analytics-sdk`](packages/analytics-sdk/) | Analytics tracking script |
+| [`@saasmaker/cli`](packages/cli/) | Project management CLI |
+| [`@saasmaker/shared-types`](packages/shared-types/) | Shared TypeScript types |
+| [`@saasmaker/db`](packages/db/) | Database layer |
+
+## Monorepo Structure
 
 ```
-saas-maker/
-├── apps/dashboard/           # Next.js 15 dashboard
-├── packages/
-│   ├── shared-types/         # TypeScript types
-│   ├── db/                   # DB schema + interface
-│   └── feedback-widget/      # React SDK
-├── workers/api/              # Cloudflare Workers + Hono
-└── tests/                    # Integration tests
+apps/dashboard/       # Next.js admin dashboard
+workers/api/          # Cloudflare Workers API (Hono)
+packages/
+  shared-types/       # TypeScript type definitions
+  db/                 # Database queries + migrations
+  feedback-widget/    # React feedback component
+  waitlist-widget/    # React waitlist component
+  analytics-sdk/      # Analytics tracking script
+  cli/                # CLI tool
 ```
+
+## Self-Hosting
+
+### Prerequisites
+- Node.js 22+, pnpm 10+
+- CockroachDB (local or cloud)
+- Google OAuth credentials
+
+### Setup
+
+```bash
+pnpm install
+cockroach sql --insecure < packages/db/migrations/0001_init.sql
+cp workers/api/.dev.vars.example workers/api/.dev.vars
+cp apps/dashboard/.env.local.example apps/dashboard/.env.local
+pnpm build:types && pnpm build:db
+```
+
+### Development
+
+```bash
+# Terminal 1: API
+pnpm dev:api
+
+# Terminal 2: Dashboard
+pnpm dev:dashboard
+```
+
+## API Authentication
+
+- **SDK/Widget endpoints** — `X-Project-Key` header with your project API key
+- **Dashboard endpoints** — Bearer token (session auth via Auth.js)
+- **Public endpoints** — No auth required (e.g., public feedback board)
