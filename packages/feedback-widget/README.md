@@ -1,19 +1,19 @@
-# @saasmaker/feedback
+# @saas-maker/feedback
 
 Drop-in React feedback widget for collecting bugs, feature requests, and general feedback.
 
 ## Install
 
 ```bash
-npm install @saasmaker/feedback
+npm install @saas-maker/feedback
 # or
-pnpm add @saasmaker/feedback
+pnpm add @saas-maker/feedback
 ```
 
 ## Quick Start
 
 ```tsx
-import { FeedbackWidget } from '@saasmaker/feedback'
+import { FeedbackWidget } from '@saas-maker/feedback'
 
 function App() {
   return (

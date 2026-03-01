@@ -8,7 +8,7 @@ import {
   FeatureRequestStatus,
   AnyFeedbackStatus,
   FeedbackRecord,
-} from '@saasmaker/shared-types';
+} from '@saas-maker/shared-types';
 import { getDb } from '../db';
 import { sendNewFeedbackEmail } from '../email';
 

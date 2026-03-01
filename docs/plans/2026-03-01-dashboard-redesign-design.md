@@ -63,7 +63,7 @@ Replace the current top-nav (`projects/layout.tsx`) with a collapsible sidebar l
 ### New Dependencies
 
 - `recharts` — chart library
-- `@saasmaker/shared-types` — wire up workspace dependency (delete `feedback-types.ts`)
+- `@saas-maker/shared-types` — wire up workspace dependency (delete `feedback-types.ts`)
 
 ### New shadcn Components to Install
 
@@ -119,7 +119,7 @@ An AI agent creating a new service page only needs:
 
 ### Wire Up Shared Types
 
-Add `"@saasmaker/shared-types": "workspace:*"` to dashboard `package.json`. Delete `src/components/feedback-types.ts` and replace all imports with `@saasmaker/shared-types`.
+Add `"@saas-maker/shared-types": "workspace:*"` to dashboard `package.json`. Delete `src/components/feedback-types.ts` and replace all imports with `@saas-maker/shared-types`.
 
 ---
 

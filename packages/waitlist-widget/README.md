@@ -1,19 +1,19 @@
-# @saasmaker/waitlist
+# @saas-maker/waitlist
 
 Drop-in React waitlist signup form with position tracking and count display.
 
 ## Install
 
 ```bash
-npm install @saasmaker/waitlist
+npm install @saas-maker/waitlist
 # or
-pnpm add @saasmaker/waitlist
+pnpm add @saas-maker/waitlist
 ```
 
 ## Quick Start
 
 ```tsx
-import { WaitlistForm } from '@saasmaker/waitlist'
+import { WaitlistForm } from '@saas-maker/waitlist'
 
 function App() {
   return (

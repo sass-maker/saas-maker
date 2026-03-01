@@ -15,11 +15,11 @@ Open-source backend toolkit for SaaS products. Drop-in feedback collection, wait
 ### 1. Install the feedback widget
 
 ```bash
-npm install @saasmaker/feedback
+npm install @saas-maker/feedback
 ```
 
 ```tsx
-import { FeedbackWidget } from '@saasmaker/feedback'
+import { FeedbackWidget } from '@saas-maker/feedback'
 
 <FeedbackWidget projectId="pk_your_api_key" />
 ```
@@ -27,17 +27,17 @@ import { FeedbackWidget } from '@saasmaker/feedback'
 ### 2. Add analytics tracking
 
 ```html
-<script defer src="https://unpkg.com/@saasmaker/analytics-sdk" data-project="pk_your_api_key"></script>
+<script defer src="https://unpkg.com/@saas-maker/analytics-sdk" data-project="pk_your_api_key"></script>
 ```
 
 ### 3. Add a waitlist form
 
 ```bash
-npm install @saasmaker/waitlist
+npm install @saas-maker/waitlist
 ```
 
 ```tsx
-import { WaitlistForm } from '@saasmaker/waitlist'
+import { WaitlistForm } from '@saas-maker/waitlist'
 
 <WaitlistForm projectId="pk_your_api_key" />
 ```
@@ -45,21 +45,21 @@ import { WaitlistForm } from '@saasmaker/waitlist'
 ### 4. Use the CLI
 
 ```bash
-npx @saasmaker/cli login
-npx @saasmaker/cli init
-npx @saasmaker/cli status
+npx @saas-maker/cli login
+npx @saas-maker/cli init
+npx @saas-maker/cli status
 ```
 
 ## Packages
 
 | Package | Description |
 |---------|-------------|
-| [`@saasmaker/feedback`](packages/feedback-widget/) | React feedback widget |
-| [`@saasmaker/waitlist`](packages/waitlist-widget/) | React waitlist form |
-| [`@saasmaker/analytics-sdk`](packages/analytics-sdk/) | Analytics tracking script |
-| [`@saasmaker/cli`](packages/cli/) | Project management CLI |
-| [`@saasmaker/shared-types`](packages/shared-types/) | Shared TypeScript types |
-| [`@saasmaker/db`](packages/db/) | Database layer |
+| [`@saas-maker/feedback`](packages/feedback-widget/) | React feedback widget |
+| [`@saas-maker/waitlist`](packages/waitlist-widget/) | React waitlist form |
+| [`@saas-maker/analytics-sdk`](packages/analytics-sdk/) | Analytics tracking script |
+| [`@saas-maker/cli`](packages/cli/) | Project management CLI |
+| [`@saas-maker/shared-types`](packages/shared-types/) | Shared TypeScript types |
+| [`@saas-maker/db`](packages/db/) | Database layer |
 
 ## Monorepo Structure
 

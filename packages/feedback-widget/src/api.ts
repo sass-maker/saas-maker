@@ -1,4 +1,4 @@
-import type { SubmitFeedbackRequest, FeedbackRecord, PaginatedResponse } from '@saasmaker/shared-types';
+import type { SubmitFeedbackRequest, FeedbackRecord, PaginatedResponse } from '@saas-maker/shared-types';
 
 const DEFAULT_API_BASE = 'https://api.saasmaker.dev';
 

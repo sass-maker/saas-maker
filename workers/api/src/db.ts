@@ -1,5 +1,5 @@
 import postgres from 'postgres';
-import type { FeedbackDatabase } from '@saasmaker/db';
+import type { FeedbackDatabase } from '@saas-maker/db';
 import type {
   FeedbackRecord,
   FeedbackVote,
@@ -12,7 +12,7 @@ import type {
   EventRecord,
   ShortLinkRecord,
   TestimonialRecord,
-} from '@saasmaker/shared-types';
+} from '@saas-maker/shared-types';
 
 function parseViewerVote(value: unknown): FeedbackVote {
   if (value === 1 || value === '1') return 'up';

@@ -24,7 +24,7 @@ import {
 import { CopyButton } from "@/components/copy-button";
 import { Save, Trash2 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
-import type { ProjectRecord } from "@saasmaker/shared-types";
+import type { ProjectRecord } from "@saas-maker/shared-types";
 
 async function getToken(): Promise<string> {
   const res = await fetch("/api/token");
@@ -144,15 +144,15 @@ export function SettingsForm({ project }: SettingsFormProps) {
         <CardContent>
           <div className="relative">
             <pre className="rounded-lg bg-muted p-4 text-sm font-mono overflow-x-auto leading-relaxed">
-              <code>{`npm install @saasmaker/feedback
+              <code>{`npm install @saas-maker/feedback
 
-import { FeedbackWidget } from '@saasmaker/feedback'
+import { FeedbackWidget } from '@saas-maker/feedback'
 
 <FeedbackWidget projectId="${project.api_key}" />`}</code>
             </pre>
             <div className="absolute top-2 right-2">
               <CopyButton
-                value={`npm install @saasmaker/feedback\n\nimport { FeedbackWidget } from '@saasmaker/feedback'\n\n<FeedbackWidget projectId="${project.api_key}" />`}
+                value={`npm install @saas-maker/feedback\n\nimport { FeedbackWidget } from '@saas-maker/feedback'\n\n<FeedbackWidget projectId="${project.api_key}" />`}
               />
             </div>
           </div>

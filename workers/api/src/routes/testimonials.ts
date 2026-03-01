@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { Bindings, Variables } from '../types';
 import { requireApiKey, requireSession } from '../middleware/auth';
 import { getDb } from '../db';
-import type { SubmitTestimonialRequest } from '@saasmaker/shared-types';
+import type { SubmitTestimonialRequest } from '@saas-maker/shared-types';
 
 const testimonials = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 

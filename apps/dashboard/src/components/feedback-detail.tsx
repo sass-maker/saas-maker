@@ -32,7 +32,7 @@ import type {
   AnyFeedbackStatus,
   FeedbackStatus,
   FeatureRequestStatus,
-} from "@saasmaker/shared-types";
+} from "@saas-maker/shared-types";
 
 const TYPE_STYLES: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
   bug: { label: "Bug", variant: "destructive" },

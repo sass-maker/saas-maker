@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Check, X, Trash2, Loader2 } from "lucide-react";
 import { apiFetchClient, getClientToken } from "@/lib/api-client";
-import type { TestimonialStatus } from "@saasmaker/shared-types";
+import type { TestimonialStatus } from "@saas-maker/shared-types";
 
 interface TestimonialActionsProps {
   testimonialId: string;

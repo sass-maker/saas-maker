@@ -1,5 +1,5 @@
 import React, { useMemo, useRef, useState } from 'react';
-import type { TestimonialFormProps } from '@saasmaker/shared-types';
+import type { TestimonialFormProps } from '@saas-maker/shared-types';
 import { createApiClient } from './api';
 import './styles/testimonials.css';
 

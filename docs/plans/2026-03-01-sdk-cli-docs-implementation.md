@@ -34,7 +34,7 @@ export interface WaitlistFormProps {
 
 **Step 2: Build shared-types**
 
-Run: `pnpm -F @saasmaker/shared-types build`
+Run: `pnpm -F @saas-maker/shared-types build`
 Expected: Clean build, no errors.
 
 **Step 3: Commit**
@@ -59,7 +59,7 @@ Copy the pattern from `packages/feedback-widget/package.json` exactly, changing 
 
 ```json
 {
-  "name": "@saasmaker/waitlist",
+  "name": "@saas-maker/waitlist",
   "version": "0.1.0",
   "private": true,
   "main": "dist/index.js",
@@ -69,7 +69,7 @@ Copy the pattern from `packages/feedback-widget/package.json` exactly, changing 
     "build": "tsup src/index.ts --format esm,cjs --dts --external react --external react-dom"
   },
   "dependencies": {
-    "@saasmaker/shared-types": "workspace:*"
+    "@saas-maker/shared-types": "workspace:*"
   },
   "peerDependencies": {
     "react": ">=18",
@@ -104,7 +104,7 @@ Copy the pattern from `packages/feedback-widget/package.json` exactly, changing 
 
 ```typescript
 export { WaitlistForm } from './WaitlistForm';
-export type { WaitlistFormProps } from '@saasmaker/shared-types';
+export type { WaitlistFormProps } from '@saas-maker/shared-types';
 ```
 
 **Step 4: Install deps**
@@ -337,7 +337,7 @@ git commit -m "feat: add waitlist widget CSS styles"
 
 ```tsx
 import React, { useEffect, useMemo, useState } from 'react';
-import type { WaitlistFormProps } from '@saasmaker/shared-types';
+import type { WaitlistFormProps } from '@saas-maker/shared-types';
 import { createApiClient } from './api';
 import './styles/waitlist.css';
 
@@ -452,7 +452,7 @@ export const WaitlistForm: React.FC<WaitlistFormProps> = ({
 
 **Step 2: Build the package**
 
-Run: `pnpm -F @saasmaker/waitlist build`
+Run: `pnpm -F @saas-maker/waitlist build`
 Expected: Clean build.
 
 **Step 3: Commit**
@@ -475,7 +475,7 @@ git commit -m "feat: add WaitlistForm React component"
 
 ```json
 {
-  "name": "@saasmaker/cli",
+  "name": "@saas-maker/cli",
   "version": "0.1.0",
   "private": true,
   "bin": {
@@ -532,7 +532,7 @@ Run: `pnpm install` (from repo root)
 
 **Step 5: Verify stub runs**
 
-Run: `pnpm -F @saasmaker/cli dev -- --help`
+Run: `pnpm -F @saas-maker/cli dev -- --help`
 Expected: Shows help text with "SaaS Maker CLI".
 
 **Step 6: Commit**
@@ -784,7 +784,7 @@ program.parse();
 
 **Step 5: Verify**
 
-Run: `pnpm -F @saasmaker/cli dev -- whoami`
+Run: `pnpm -F @saas-maker/cli dev -- whoami`
 Expected: "Not logged in" error message.
 
 **Step 6: Commit**
@@ -1021,7 +1021,7 @@ program.command('status').description('Show project stats').action(statusCommand
 
 **Step 4: Build CLI**
 
-Run: `pnpm -F @saasmaker/cli build`
+Run: `pnpm -F @saas-maker/cli build`
 Expected: Clean build.
 
 **Step 5: Commit**
@@ -1058,11 +1058,11 @@ Open-source backend toolkit for SaaS products. Drop-in feedback collection, wait
 ### 1. Install the feedback widget
 
 ```bash
-npm install @saasmaker/feedback
+npm install @saas-maker/feedback
 ```
 
 ```tsx
-import { FeedbackWidget } from '@saasmaker/feedback'
+import { FeedbackWidget } from '@saas-maker/feedback'
 
 <FeedbackWidget projectId="pk_your_api_key" />
 ```
@@ -1070,17 +1070,17 @@ import { FeedbackWidget } from '@saasmaker/feedback'
 ### 2. Add analytics tracking
 
 ```html
-<script defer src="https://unpkg.com/@saasmaker/analytics-sdk" data-project="pk_your_api_key"></script>
+<script defer src="https://unpkg.com/@saas-maker/analytics-sdk" data-project="pk_your_api_key"></script>
 ```
 
 ### 3. Add a waitlist form
 
 ```bash
-npm install @saasmaker/waitlist
+npm install @saas-maker/waitlist
 ```
 
 ```tsx
-import { WaitlistForm } from '@saasmaker/waitlist'
+import { WaitlistForm } from '@saas-maker/waitlist'
 
 <WaitlistForm projectId="pk_your_api_key" />
 ```
@@ -1088,21 +1088,21 @@ import { WaitlistForm } from '@saasmaker/waitlist'
 ### 4. Use the CLI
 
 ```bash
-npx @saasmaker/cli login
-npx @saasmaker/cli init
-npx @saasmaker/cli status
+npx @saas-maker/cli login
+npx @saas-maker/cli init
+npx @saas-maker/cli status
 ```
 
 ## Packages
 
 | Package | Description |
 |---------|-------------|
-| [`@saasmaker/feedback`](packages/feedback-widget/) | React feedback widget |
-| [`@saasmaker/waitlist`](packages/waitlist-widget/) | React waitlist form |
-| [`@saasmaker/analytics-sdk`](packages/analytics-sdk/) | Analytics tracking script |
-| [`@saasmaker/cli`](packages/cli/) | Project management CLI |
-| [`@saasmaker/shared-types`](packages/shared-types/) | Shared TypeScript types |
-| [`@saasmaker/db`](packages/db/) | Database layer |
+| [`@saas-maker/feedback`](packages/feedback-widget/) | React feedback widget |
+| [`@saas-maker/waitlist`](packages/waitlist-widget/) | React waitlist form |
+| [`@saas-maker/analytics-sdk`](packages/analytics-sdk/) | Analytics tracking script |
+| [`@saas-maker/cli`](packages/cli/) | Project management CLI |
+| [`@saas-maker/shared-types`](packages/shared-types/) | Shared TypeScript types |
+| [`@saas-maker/db`](packages/db/) | Database layer |
 
 ## Monorepo Structure
 
@@ -1142,22 +1142,22 @@ git commit -m "docs: add root README"
 **Step 1: Write the README**
 
 ```markdown
-# @saasmaker/feedback
+# @saas-maker/feedback
 
 Drop-in React feedback widget for collecting bugs, feature requests, and general feedback.
 
 ## Install
 
 ```bash
-npm install @saasmaker/feedback
+npm install @saas-maker/feedback
 # or
-pnpm add @saasmaker/feedback
+pnpm add @saas-maker/feedback
 ```
 
 ## Quick Start
 
 ```tsx
-import { FeedbackWidget } from '@saasmaker/feedback'
+import { FeedbackWidget } from '@saas-maker/feedback'
 
 function App() {
   return (
@@ -1232,7 +1232,7 @@ git commit -m "docs: add feedback widget README"
 **Step 1: Write the README**
 
 ```markdown
-# @saasmaker/analytics-sdk
+# @saas-maker/analytics-sdk
 
 Privacy-friendly analytics tracking. No cookies, respects Do Not Track.
 
@@ -1241,13 +1241,13 @@ Privacy-friendly analytics tracking. No cookies, respects Do Not Track.
 ### Script tag (recommended)
 
 ```html
-<script defer src="https://unpkg.com/@saasmaker/analytics-sdk" data-project="pk_your_api_key"></script>
+<script defer src="https://unpkg.com/@saas-maker/analytics-sdk" data-project="pk_your_api_key"></script>
 ```
 
 ### npm
 
 ```bash
-npm install @saasmaker/analytics-sdk
+npm install @saas-maker/analytics-sdk
 ```
 
 ## Features
@@ -1277,7 +1277,7 @@ Calls before the script loads are buffered automatically:
   window.sm = window.sm || function() { sm.q = sm.q || []; sm.q.push(arguments); };
   sm('early_event', { source: 'header' });
 </script>
-<script defer src="https://unpkg.com/@saasmaker/analytics-sdk" data-project="pk_xxx"></script>
+<script defer src="https://unpkg.com/@saas-maker/analytics-sdk" data-project="pk_xxx"></script>
 ```
 
 ## Configuration
@@ -1319,22 +1319,22 @@ git commit -m "docs: add analytics SDK README"
 **Step 1: Write waitlist-widget README**
 
 ```markdown
-# @saasmaker/waitlist
+# @saas-maker/waitlist
 
 Drop-in React waitlist signup form with position tracking and count display.
 
 ## Install
 
 ```bash
-npm install @saasmaker/waitlist
+npm install @saas-maker/waitlist
 # or
-pnpm add @saasmaker/waitlist
+pnpm add @saas-maker/waitlist
 ```
 
 ## Quick Start
 
 ```tsx
-import { WaitlistForm } from '@saasmaker/waitlist'
+import { WaitlistForm } from '@saas-maker/waitlist'
 
 function App() {
   return (
@@ -1393,16 +1393,16 @@ function App() {
 **Step 2: Write CLI README**
 
 ```markdown
-# @saasmaker/cli
+# @saas-maker/cli
 
 Command-line tool for managing SaaS Maker projects.
 
 ## Install
 
 ```bash
-npm install -g @saasmaker/cli
+npm install -g @saas-maker/cli
 # or use directly with npx
-npx @saasmaker/cli
+npx @saas-maker/cli
 ```
 
 ## Setup
@@ -1487,19 +1487,19 @@ git commit -m "docs: add waitlist widget and CLI READMEs"
 
 **Step 1: Build shared-types**
 
-Run: `pnpm -F @saasmaker/shared-types build`
+Run: `pnpm -F @saas-maker/shared-types build`
 
 **Step 2: Build waitlist widget**
 
-Run: `pnpm -F @saasmaker/waitlist build`
+Run: `pnpm -F @saas-maker/waitlist build`
 
 **Step 3: Build CLI**
 
-Run: `pnpm -F @saasmaker/cli build`
+Run: `pnpm -F @saas-maker/cli build`
 
 **Step 4: Build feedback widget**
 
-Run: `pnpm -F @saasmaker/feedback build`
+Run: `pnpm -F @saas-maker/feedback build`
 
 **Step 5: Run all tests**
 
@@ -1508,7 +1508,7 @@ Expected: All tests pass.
 
 **Step 6: Build dashboard**
 
-Run: `pnpm -F @saasmaker/dashboard build`
+Run: `pnpm -F @saas-maker/dashboard build`
 Expected: Clean build.
 
 **Step 7: Final commit if any fixups needed**

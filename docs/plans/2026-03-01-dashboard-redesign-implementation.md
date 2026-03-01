@@ -340,7 +340,7 @@ import { Bindings, Variables } from '../types';
 import { requireApiKey, requireSession } from '../middleware/auth';
 import { getDb } from '../db';
 import { parseDevice, parseBrowser } from '../ua';
-import type { CreateShortLinkRequest, UpdateShortLinkRequest } from '@saasmaker/shared-types';
+import type { CreateShortLinkRequest, UpdateShortLinkRequest } from '@saas-maker/shared-types';
 
 const links = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
@@ -580,7 +580,7 @@ No commit needed — migration is a DB operation.
 
 In `apps/dashboard/package.json`, add to `dependencies`:
 ```json
-"@saasmaker/shared-types": "workspace:*"
+"@saas-maker/shared-types": "workspace:*"
 ```
 
 Run: `cd /Users/sarthakagrawal/Desktop/saas-maker && pnpm install`
@@ -634,11 +634,11 @@ export async function getClientToken(): Promise<string> {
 
 **Step 3: Replace feedback-types imports**
 
-Find all files importing from `@/components/feedback-types` and change to `@saasmaker/shared-types`:
-- `apps/dashboard/src/app/projects/page.tsx` — `import type { ProjectRecord } from '@saasmaker/shared-types';`
+Find all files importing from `@/components/feedback-types` and change to `@saas-maker/shared-types`:
+- `apps/dashboard/src/app/projects/page.tsx` — `import type { ProjectRecord } from '@saas-maker/shared-types';`
 - `apps/dashboard/src/app/projects/[slug]/page.tsx` — same
-- `apps/dashboard/src/app/projects/[slug]/inbox-content.tsx` — `import type { FeedbackRecord, FeedbackStatus } from '@saasmaker/shared-types';`
-- `apps/dashboard/src/app/projects/[slug]/settings/settings-form.tsx` — `import type { ProjectRecord } from '@saasmaker/shared-types';`
+- `apps/dashboard/src/app/projects/[slug]/inbox-content.tsx` — `import type { FeedbackRecord, FeedbackStatus } from '@saas-maker/shared-types';`
+- `apps/dashboard/src/app/projects/[slug]/settings/settings-form.tsx` — `import type { ProjectRecord } from '@saas-maker/shared-types';`
 - `apps/dashboard/src/components/feedback-table.tsx` — check and update
 - `apps/dashboard/src/components/feedback-detail.tsx` — check and update
 - `apps/dashboard/src/components/filter-bar.tsx` — check and update

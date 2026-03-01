@@ -14,7 +14,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { getClientToken, apiFetchClient } from "@/lib/api-client";
-import type { AnalyticsOverview } from "@saasmaker/shared-types";
+import type { AnalyticsOverview } from "@saas-maker/shared-types";
 
 type Period = "7d" | "30d" | "90d";
 

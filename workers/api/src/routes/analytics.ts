@@ -3,7 +3,7 @@ import { Bindings, Variables } from '../types';
 import { requireApiKey, requireSession } from '../middleware/auth';
 import { getDb } from '../db';
 import { parseDevice, parseBrowser } from '../ua';
-import type { TrackEventRequest } from '@saasmaker/shared-types';
+import type { TrackEventRequest } from '@saas-maker/shared-types';
 
 const analytics = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 

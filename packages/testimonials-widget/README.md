@@ -1,11 +1,11 @@
-# @saasmaker/testimonials
+# @saas-maker/testimonials
 
 Embeddable React components for collecting and displaying testimonials with star ratings, images, and tweet embeds.
 
 ## Install
 
 ```bash
-npm install @saasmaker/testimonials
+npm install @saas-maker/testimonials
 ```
 
 ## Components
@@ -13,7 +13,7 @@ npm install @saasmaker/testimonials
 ### TestimonialForm — Collect testimonials
 
 ```tsx
-import { TestimonialForm } from '@saasmaker/testimonials'
+import { TestimonialForm } from '@saas-maker/testimonials'
 
 <TestimonialForm projectId="pk_your_api_key" />
 ```
@@ -21,7 +21,7 @@ import { TestimonialForm } from '@saasmaker/testimonials'
 ### TestimonialWall — Display approved testimonials
 
 ```tsx
-import { TestimonialWall } from '@saasmaker/testimonials'
+import { TestimonialWall } from '@saas-maker/testimonials'
 
 <TestimonialWall projectId="pk_your_api_key" layout="masonry" />
 ```

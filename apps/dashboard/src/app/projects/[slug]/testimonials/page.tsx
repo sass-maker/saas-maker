@@ -20,7 +20,7 @@ import type {
   ProjectRecord,
   TestimonialRecord,
   TestimonialStatus,
-} from "@saasmaker/shared-types";
+} from "@saas-maker/shared-types";
 
 export const dynamic = "force-dynamic";
 

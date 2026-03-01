@@ -35,13 +35,13 @@ Edit `package.json`:
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev:api": "pnpm -F @saasmaker/api dev",
-    "dev:dashboard": "pnpm -F @saasmaker/dashboard dev",
-    "build:types": "pnpm -F @saasmaker/shared-types build",
-    "build:db": "pnpm -F @saasmaker/db build",
-    "build:api": "pnpm -F @saasmaker/api build",
-    "build:dashboard": "pnpm -F @saasmaker/dashboard build",
-    "build:widget": "pnpm -F @saasmaker/feedback build",
+    "dev:api": "pnpm -F @saas-maker/api dev",
+    "dev:dashboard": "pnpm -F @saas-maker/dashboard dev",
+    "build:types": "pnpm -F @saas-maker/shared-types build",
+    "build:db": "pnpm -F @saas-maker/db build",
+    "build:api": "pnpm -F @saas-maker/api build",
+    "build:dashboard": "pnpm -F @saas-maker/dashboard build",
+    "build:widget": "pnpm -F @saas-maker/feedback build",
     "test": "vitest run"
   }
 }
@@ -113,7 +113,7 @@ git add -A && git commit -m "scaffold: pnpm monorepo with workspace config"
 
 ```json
 {
-  "name": "@saasmaker/shared-types",
+  "name": "@saas-maker/shared-types",
   "version": "0.1.0",
   "private": true,
   "main": "dist/index.js",
@@ -265,7 +265,7 @@ git add packages/shared-types && git commit -m "feat: add shared-types package w
 
 ```json
 {
-  "name": "@saasmaker/db",
+  "name": "@saas-maker/db",
   "version": "0.1.0",
   "private": true,
   "main": "dist/index.js",
@@ -274,7 +274,7 @@ git add packages/shared-types && git commit -m "feat: add shared-types package w
     "build": "tsc"
   },
   "dependencies": {
-    "@saasmaker/shared-types": "workspace:*"
+    "@saas-maker/shared-types": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.9.3"
@@ -368,7 +368,7 @@ import {
   ProjectRecord,
   UserRecord,
   UpvoteRecord,
-} from '@saasmaker/shared-types';
+} from '@saas-maker/shared-types';
 
 export { TABLES } from './schema';
 
@@ -431,7 +431,7 @@ git add packages/db && git commit -m "feat: add db package with schema migration
 
 ```json
 {
-  "name": "@saasmaker/api",
+  "name": "@saas-maker/api",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -440,8 +440,8 @@ git add packages/db && git commit -m "feat: add db package with schema migration
     "deploy": "wrangler deploy"
   },
   "dependencies": {
-    "@saasmaker/shared-types": "workspace:*",
-    "@saasmaker/db": "workspace:*",
+    "@saas-maker/shared-types": "workspace:*",
+    "@saas-maker/db": "workspace:*",
     "hono": "^4.7.2"
   },
   "devDependencies": {
@@ -574,7 +574,7 @@ git add workers/api && git commit -m "feat: scaffold workers API with Hono, CORS
 Arctic is a lightweight OAuth library that works on edge runtimes (CF Workers). Auth.js is for the Next.js dashboard; the Workers API handles its own OAuth flow for the widget upvote auth.
 
 ```bash
-cd /Users/sarthakagrawal/Desktop/saas-maker && pnpm -F @saasmaker/api add arctic
+cd /Users/sarthakagrawal/Desktop/saas-maker && pnpm -F @saas-maker/api add arctic
 ```
 
 **Step 2: Write auth routes**
@@ -835,7 +835,7 @@ git add -A && git commit -m "feat: add project CRUD routes with auth middleware"
 import { Hono } from 'hono';
 import { Bindings, Variables } from '../types';
 import { requireApiKey, requireSession } from '../middleware/auth';
-import { SubmitFeedbackRequest, FeedbackType, FeedbackStatus } from '@saasmaker/shared-types';
+import { SubmitFeedbackRequest, FeedbackType, FeedbackStatus } from '@saas-maker/shared-types';
 
 const feedback = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
@@ -1126,14 +1126,14 @@ git add -A && git commit -m "feat: add email notification helper via Resend"
 Cloudflare Workers support `pg` via `nodejs_compat`. Use `@neondatabase/serverless` or `postgres` (both work on edge). Since CockroachDB is Postgres-compatible:
 
 ```bash
-pnpm -F @saasmaker/api add postgres
+pnpm -F @saas-maker/api add postgres
 ```
 
 **Step 2: Write db.ts — implement FeedbackDatabase interface**
 
 `workers/api/src/db.ts`:
 
-Implement the full `FeedbackDatabase` interface from `@saasmaker/db` using the `postgres` client. Each method maps to a SQL query against CockroachDB. Key patterns:
+Implement the full `FeedbackDatabase` interface from `@saas-maker/db` using the `postgres` client. Each method maps to a SQL query against CockroachDB. Key patterns:
 
 - Use parameterized queries for all user input
 - `listFeedback` builds WHERE clauses dynamically based on filters
@@ -1189,7 +1189,7 @@ pnpm create next-app dashboard --typescript --tailwind --app --src-dir=false --i
 
 ```json
 {
-  "name": "@saasmaker/dashboard",
+  "name": "@saas-maker/dashboard",
   ...
 }
 ```
@@ -1228,7 +1228,7 @@ git add -A && git commit -m "feat: scaffold Next.js dashboard with shadcn/ui + T
 **Step 1: Install Auth.js**
 
 ```bash
-pnpm -F @saasmaker/dashboard add next-auth@beta
+pnpm -F @saas-maker/dashboard add next-auth@beta
 ```
 
 **Step 2: Create auth config**
@@ -1434,7 +1434,7 @@ git add -A && git commit -m "feat: add project settings page"
 
 ```json
 {
-  "name": "@saasmaker/feedback",
+  "name": "@saas-maker/feedback",
   "version": "0.1.0",
   "private": true,
   "main": "dist/index.js",
@@ -1443,7 +1443,7 @@ git add -A && git commit -m "feat: add project settings page"
     "build": "tsup src/index.ts --format esm,cjs --dts --external react"
   },
   "dependencies": {
-    "@saasmaker/shared-types": "workspace:*"
+    "@saas-maker/shared-types": "workspace:*"
   },
   "peerDependencies": {
     "react": ">=18",
@@ -1539,7 +1539,7 @@ Uses CSS modules for scoped styling. No Tailwind.
 
 ```typescript
 export { FeedbackWidget } from './FeedbackWidget';
-export type { FeedbackWidgetProps } from '@saasmaker/shared-types';
+export type { FeedbackWidgetProps } from '@saas-maker/shared-types';
 ```
 
 **Step 5: Build and verify**
@@ -1645,7 +1645,7 @@ wrangler secret put RESEND_API_KEY
 **Step 3: Deploy worker**
 
 ```bash
-pnpm -F @saasmaker/api deploy
+pnpm -F @saas-maker/api deploy
 ```
 
 **Step 4: Deploy dashboard to Vercel**

@@ -7,10 +7,10 @@ Add a testimonials service to saas-maker: embeddable SDK widget for collecting a
 ## Package
 
 - Location: `packages/testimonials-widget/`
-- Published name: `@saasmaker/testimonials`
-- Build: tsup (ESM + CJS + DTS), same pattern as `@saasmaker/feedback`
+- Published name: `@saas-maker/testimonials`
+- Build: tsup (ESM + CJS + DTS), same pattern as `@saas-maker/feedback`
 - Peer deps: `react >= 18`, `react-dom >= 18`
-- Workspace dep: `@saasmaker/shared-types`
+- Workspace dep: `@saas-maker/shared-types`
 
 ## Data Model
 

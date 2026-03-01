@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import type { FeedbackRecord, FeatureRequestStatus } from "@saasmaker/shared-types";
+import type { FeedbackRecord, FeatureRequestStatus } from "@saas-maker/shared-types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {

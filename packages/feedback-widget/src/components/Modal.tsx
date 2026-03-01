@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef } from 'react';
-import type { FeedbackType } from '@saasmaker/shared-types';
+import type { FeedbackType } from '@saas-maker/shared-types';
 import type { ApiClient } from '../api';
 import { SubmitForm } from './SubmitForm';
 

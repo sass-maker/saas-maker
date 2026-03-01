@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { Bindings, Variables } from '../types';
 import { requireApiKey, requireSession } from '../middleware/auth';
 import { getDb } from '../db';
-import type { WaitlistSignupRequest } from '@saasmaker/shared-types';
+import type { WaitlistSignupRequest } from '@saas-maker/shared-types';
 
 const waitlist = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 

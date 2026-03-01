@@ -4,7 +4,7 @@
 
 **Goal:** Add testimonials collection and display — DB, API, dashboard page, and embeddable SDK widget.
 
-**Architecture:** New `testimonials` table, Hono API routes with API key + session auth, dashboard moderation page, `@saasmaker/testimonials` React package with TestimonialForm and TestimonialWall components.
+**Architecture:** New `testimonials` table, Hono API routes with API key + session auth, dashboard moderation page, `@saas-maker/testimonials` React package with TestimonialForm and TestimonialWall components.
 
 **Tech Stack:** React 19, tsup, Hono, postgres, TypeScript
 

@@ -16,7 +16,7 @@ import { Users, ExternalLink } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
 import { apiFetch, getServerToken } from "@/lib/api";
-import type { ProjectRecord, WaitlistEntryRecord } from "@saasmaker/shared-types";
+import type { ProjectRecord, WaitlistEntryRecord } from "@saas-maker/shared-types";
 
 export const dynamic = "force-dynamic";
 

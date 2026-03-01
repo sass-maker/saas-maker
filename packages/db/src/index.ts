@@ -12,7 +12,7 @@ import {
   AnalyticsOverview,
   ShortLinkRecord,
   ShortLinkStats,
-} from '@saasmaker/shared-types';
+} from '@saas-maker/shared-types';
 
 export { TABLES } from './schema';
 

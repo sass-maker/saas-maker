@@ -1,14 +1,14 @@
 {
-  "name": "@saasmaker/dashboard",
+  "name": "@saas-maker/dashboard",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "pnpm -F @saasmaker/shared-types build && next build --webpack",
+    "build": "pnpm -F @saas-maker/shared-types build && next build --webpack",
     "start": "next start"
   },
   "dependencies": {
-    "@saasmaker/shared-types": "workspace:*",
+    "@saas-maker/shared-types": "workspace:*",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.575.0",

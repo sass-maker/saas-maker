@@ -341,7 +341,7 @@ import { Bindings, Variables } from '../types';
 import { requireApiKey } from '../middleware/auth';
 import { requireSession } from '../middleware/auth';
 import { getDb } from '../db';
-import type { WaitlistSignupRequest } from '@saasmaker/shared-types';
+import type { WaitlistSignupRequest } from '@saas-maker/shared-types';
 
 const waitlist = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
@@ -536,7 +536,7 @@ import { Bindings, Variables } from '../types';
 import { requireApiKey, requireSession } from '../middleware/auth';
 import { getDb } from '../db';
 import { parseDevice, parseBrowser } from '../ua';
-import type { TrackEventRequest } from '@saasmaker/shared-types';
+import type { TrackEventRequest } from '@saas-maker/shared-types';
 
 const analytics = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
@@ -817,7 +817,7 @@ git commit -m "test: add UA parser and analytics auth tests"
 
 ```json
 {
-  "name": "@saasmaker/analytics-sdk",
+  "name": "@saas-maker/analytics-sdk",
   "version": "0.1.0",
   "private": true,
   "main": "dist/index.js",
@@ -869,7 +869,7 @@ export default defineConfig({
 **Step 4: Create src/index.ts**
 
 ```typescript
-// @saasmaker/analytics-sdk — ~4kb tracking script
+// @saas-maker/analytics-sdk — ~4kb tracking script
 // Usage: <script defer src="https://cdn.saasmaker.dev/a.js" data-project="pk_xxx"></script>
 
 (function () {
@@ -981,8 +981,8 @@ export default defineConfig({
 **Step 5: Install dependencies and build**
 
 ```bash
-pnpm --filter @saasmaker/analytics-sdk install
-pnpm --filter @saasmaker/analytics-sdk run build
+pnpm --filter @saas-maker/analytics-sdk install
+pnpm --filter @saas-maker/analytics-sdk run build
 ```
 
 **Step 6: Commit**
@@ -1029,7 +1029,7 @@ Expected: All tests pass (existing + new waitlist + analytics + UA parser tests)
 **Step 2: Verify types build**
 
 ```bash
-pnpm --filter @saasmaker/shared-types exec tsc --noEmit
+pnpm --filter @saas-maker/shared-types exec tsc --noEmit
 ```
 
 **Step 3: Commit any remaining changes**

@@ -4,7 +4,7 @@ import { requireApiKey } from '../middleware/auth';
 import { getDb } from '../db';
 import { chunkText } from '../chunker';
 import { getEmbeddings, EmbeddingError } from '../embeddings';
-import type { CreateIndexRequest, IngestDocumentRequest, SearchRequest } from '@saasmaker/shared-types';
+import type { CreateIndexRequest, IngestDocumentRequest, SearchRequest } from '@saas-maker/shared-types';
 
 const indexes = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 

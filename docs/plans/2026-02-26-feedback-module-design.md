@@ -125,10 +125,10 @@ POST   /v1/auth/logout              — Clear session
 
 ## Widget SDK
 
-**Package:** `@saasmaker/feedback` (monorepo package, not published to npm in v1)
+**Package:** `@saas-maker/feedback` (monorepo package, not published to npm in v1)
 
 ```tsx
-import { FeedbackWidget } from '@saasmaker/feedback'
+import { FeedbackWidget } from '@saas-maker/feedback'
 
 // Minimal
 <FeedbackWidget projectId="abc123" />

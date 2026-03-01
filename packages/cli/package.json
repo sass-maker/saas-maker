@@ -1,7 +1,8 @@
 {
-  "name": "@saasmaker/cli",
+  "name": "@saas-maker/cli",
   "version": "0.1.0",
-  "private": true,
+  "publishConfig": { "access": "public" },
+  "files": ["dist"],
   "type": "module",
   "bin": {
     "saasmaker": "./dist/index.js"

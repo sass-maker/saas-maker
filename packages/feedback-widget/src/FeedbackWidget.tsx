@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import type { FeedbackWidgetProps } from '@saasmaker/shared-types';
+import type { FeedbackWidgetProps } from '@saas-maker/shared-types';
 import { createApiClient } from './api';
 import { TriggerButton } from './components/TriggerButton';
 import { Modal } from './components/Modal';

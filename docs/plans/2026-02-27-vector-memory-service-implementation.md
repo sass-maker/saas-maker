@@ -72,7 +72,7 @@ export interface SearchResult {
 
 **Step 2: Build shared-types**
 
-Run: `pnpm -F @saasmaker/shared-types build`
+Run: `pnpm -F @saas-maker/shared-types build`
 Expected: Build succeeds
 
 **Step 3: Commit**
@@ -172,7 +172,7 @@ import {
   IndexRecord,
   DocumentRecord,
   ChunkRecord,
-} from '@saasmaker/shared-types';
+} from '@saas-maker/shared-types';
 ```
 
 Add to the `FeedbackDatabase` interface (before the closing `}`):
@@ -198,7 +198,7 @@ Add to the `FeedbackDatabase` interface (before the closing `}`):
 
 **Step 3: Build db package**
 
-Run: `pnpm -F @saasmaker/db build`
+Run: `pnpm -F @saas-maker/db build`
 Expected: Build succeeds
 
 **Step 4: Commit**
@@ -334,12 +334,12 @@ import type {
   IndexRecord,
   DocumentRecord,
   ChunkRecord,
-} from '@saasmaker/shared-types';
+} from '@saas-maker/shared-types';
 ```
 
 **Step 2: Build API to verify compilation**
 
-Run: `pnpm -F @saasmaker/api build`
+Run: `pnpm -F @saas-maker/api build`
 Expected: Build succeeds (or `wrangler deploy --dry-run` succeeds)
 
 **Step 3: Commit**
@@ -670,7 +670,7 @@ import { requireApiKey } from '../middleware/auth';
 import { getDb } from '../db';
 import { chunkText } from '../chunker';
 import { getEmbeddings } from '../embeddings';
-import type { CreateIndexRequest, IngestDocumentRequest, SearchRequest } from '@saasmaker/shared-types';
+import type { CreateIndexRequest, IngestDocumentRequest, SearchRequest } from '@saas-maker/shared-types';
 
 const indexes = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 

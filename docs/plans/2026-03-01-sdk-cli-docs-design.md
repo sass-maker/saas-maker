@@ -10,15 +10,15 @@ Three additions to complete saas-maker's developer experience:
 
 ---
 
-## 1. Waitlist SDK — `@saasmaker/waitlist`
+## 1. Waitlist SDK — `@saas-maker/waitlist`
 
 ### Package
 
 - Location: `packages/waitlist-widget/`
-- Published name: `@saasmaker/waitlist`
-- Build: tsup (ESM + CJS + DTS), same pattern as `@saasmaker/feedback`
+- Published name: `@saas-maker/waitlist`
+- Build: tsup (ESM + CJS + DTS), same pattern as `@saas-maker/feedback`
 - Peer deps: `react >= 18`, `react-dom >= 18`
-- Workspace dep: `@saasmaker/shared-types`
+- Workspace dep: `@saas-maker/shared-types`
 
 ### Component: `<WaitlistForm />`
 
@@ -59,7 +59,7 @@ export interface WaitlistFormProps {
 ### Usage
 
 ```tsx
-import { WaitlistForm } from '@saasmaker/waitlist'
+import { WaitlistForm } from '@saas-maker/waitlist'
 
 <WaitlistForm
   projectId="pk_xxx"
@@ -69,12 +69,12 @@ import { WaitlistForm } from '@saasmaker/waitlist'
 
 ---
 
-## 2. CLI — `@saasmaker/cli`
+## 2. CLI — `@saas-maker/cli`
 
 ### Package
 
 - Location: `packages/cli/`
-- Published name: `@saasmaker/cli`
+- Published name: `@saas-maker/cli`
 - Bin name: `saasmaker`
 - Dependencies: `commander`, `chalk`, `ora`
 - No workspace deps needed (talks to API directly via fetch)

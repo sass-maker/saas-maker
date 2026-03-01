@@ -1,5 +1,5 @@
 {
-  "name": "@saasmaker/api",
+  "name": "@saas-maker/api",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -7,8 +7,8 @@
     "deploy": "wrangler deploy"
   },
   "dependencies": {
-    "@saasmaker/db": "workspace:*",
-    "@saasmaker/shared-types": "workspace:*",
+    "@saas-maker/db": "workspace:*",
+    "@saas-maker/shared-types": "workspace:*",
     "hono": "^4.7.2",
     "jose": "^6.1.3",
     "postgres": "^3.4.8"

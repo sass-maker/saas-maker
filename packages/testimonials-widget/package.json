@@ -1,7 +1,8 @@
 {
-  "name": "@saasmaker/testimonials",
+  "name": "@saas-maker/testimonials",
   "version": "0.1.0",
-  "private": true,
+  "publishConfig": { "access": "public" },
+  "files": ["dist"],
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -9,7 +10,7 @@
     "build": "tsup src/index.ts --format esm,cjs --dts --external react --external react-dom"
   },
   "dependencies": {
-    "@saasmaker/shared-types": "workspace:*"
+    "@saas-maker/shared-types": "workspace:*"
   },
   "peerDependencies": {
     "react": ">=18",

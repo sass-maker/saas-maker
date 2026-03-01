@@ -1,13 +1,13 @@
-# @saasmaker/cli
+# @saas-maker/cli
 
 Command-line tool for managing SaaS Maker projects.
 
 ## Install
 
 ```bash
-npm install -g @saasmaker/cli
+npm install -g @saas-maker/cli
 # or use directly with npx
-npx @saasmaker/cli
+npx @saas-maker/cli
 ```
 
 ## Setup

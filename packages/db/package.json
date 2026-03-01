@@ -1,5 +1,5 @@
 {
-  "name": "@saasmaker/db",
+  "name": "@saas-maker/db",
   "version": "0.1.0",
   "private": true,
   "main": "dist/index.js",
@@ -8,7 +8,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@saasmaker/shared-types": "workspace:*"
+    "@saas-maker/shared-types": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.9.3"

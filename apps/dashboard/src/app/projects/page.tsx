@@ -12,7 +12,7 @@ import { FolderOpen, AlertCircle } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { apiFetch, getServerToken } from "@/lib/api";
-import type { ProjectRecord } from "@saasmaker/shared-types";
+import type { ProjectRecord } from "@saas-maker/shared-types";
 
 export const dynamic = "force-dynamic";
 

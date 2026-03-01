@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import type { FeedbackRecord, FeedbackType } from '@saasmaker/shared-types';
+import type { FeedbackRecord, FeedbackType } from '@saas-maker/shared-types';
 import type { ApiClient } from '../api';
 
 interface BrowseListProps {

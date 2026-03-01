@@ -14,7 +14,7 @@ importers:
 
   apps/dashboard:
     dependencies:
-      '@saasmaker/shared-types':
+      '@saas-maker/shared-types':
         specifier: workspace:*
         version: link:../../packages/shared-types
       class-variance-authority:
@@ -112,7 +112,7 @@ importers:
 
   packages/db:
     dependencies:
-      '@saasmaker/shared-types':
+      '@saas-maker/shared-types':
         specifier: workspace:*
         version: link:../shared-types
     devDependencies:
@@ -122,7 +122,7 @@ importers:
 
   packages/feedback-widget:
     dependencies:
-      '@saasmaker/shared-types':
+      '@saas-maker/shared-types':
         specifier: workspace:*
         version: link:../shared-types
     devDependencies:
@@ -153,7 +153,7 @@ importers:
 
   packages/testimonials-widget:
     dependencies:
-      '@saasmaker/shared-types':
+      '@saas-maker/shared-types':
         specifier: workspace:*
         version: link:../shared-types
     devDependencies:
@@ -178,7 +178,7 @@ importers:
 
   packages/waitlist-widget:
     dependencies:
-      '@saasmaker/shared-types':
+      '@saas-maker/shared-types':
         specifier: workspace:*
         version: link:../shared-types
     devDependencies:
@@ -203,10 +203,10 @@ importers:
 
   workers/api:
     dependencies:
-      '@saasmaker/db':
+      '@saas-maker/db':
         specifier: workspace:*
         version: link:../../packages/db
-      '@saasmaker/shared-types':
+      '@saas-maker/shared-types':
         specifier: workspace:*
         version: link:../../packages/shared-types
       hono:

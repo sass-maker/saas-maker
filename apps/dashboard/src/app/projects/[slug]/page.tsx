@@ -7,7 +7,7 @@ import { MessageSquare, Lightbulb, Bug, ExternalLink } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
 import { apiFetch, getServerToken } from "@/lib/api";
-import type { ProjectRecord, FeedbackRecord } from "@saasmaker/shared-types";
+import type { ProjectRecord, FeedbackRecord } from "@saas-maker/shared-types";
 
 export const dynamic = "force-dynamic";
 

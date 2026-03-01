@@ -1,4 +1,4 @@
-# @saasmaker/analytics-sdk
+# @saas-maker/analytics-sdk
 
 Privacy-friendly analytics tracking. No cookies, respects Do Not Track.
 
@@ -7,13 +7,13 @@ Privacy-friendly analytics tracking. No cookies, respects Do Not Track.
 ### Script tag (recommended)
 
 ```html
-<script defer src="https://unpkg.com/@saasmaker/analytics-sdk" data-project="pk_your_api_key"></script>
+<script defer src="https://unpkg.com/@saas-maker/analytics-sdk" data-project="pk_your_api_key"></script>
 ```
 
 ### npm
 
 ```bash
-npm install @saasmaker/analytics-sdk
+npm install @saas-maker/analytics-sdk
 ```
 
 ## Features
@@ -43,7 +43,7 @@ Calls before the script loads are buffered automatically:
   window.sm = window.sm || function() { sm.q = sm.q || []; sm.q.push(arguments); };
   sm('early_event', { source: 'header' });
 </script>
-<script defer src="https://unpkg.com/@saasmaker/analytics-sdk" data-project="pk_xxx"></script>
+<script defer src="https://unpkg.com/@saas-maker/analytics-sdk" data-project="pk_xxx"></script>
 ```
 
 ## Configuration
