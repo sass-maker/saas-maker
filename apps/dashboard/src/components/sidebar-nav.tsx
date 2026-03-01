@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   BarChart3,
+  Database,
   FolderOpen,
   Link2,
   MessageSquare,
@@ -18,6 +19,7 @@ const projectNavItems = [
   { label: "Testimonials", href: "/testimonials", icon: Star },
   { label: "Waitlist", href: "/waitlist", icon: Users },
   { label: "Links", href: "/links", icon: Link2 },
+  { label: "Indexes", href: "/indexes", icon: Database },
   { label: "Analytics", href: "/analytics", icon: BarChart3 },
   { label: "Settings", href: "/settings", icon: Settings },
 ];
@@ -60,6 +62,7 @@ export function SidebarNav() {
               <li key={item.label}>
                 <Link
                   href={href}
+                  prefetch={false}
                   className={cn(
                     "flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors",
                     isActive

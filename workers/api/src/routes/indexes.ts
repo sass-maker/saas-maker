@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { Bindings, Variables } from '../types';
-import { requireApiKey } from '../middleware/auth';
+import { requireApiKey, requireSession } from '../middleware/auth';
 import { getDb } from '../db';
 import { chunkText } from '../chunker';
 import { getEmbeddings, EmbeddingError } from '../embeddings';
@@ -40,6 +40,40 @@ indexes.get('/models', (c) => {
     description: meta.description,
   }));
   return c.json({ models });
+});
+
+// --- Dashboard routes (session auth) - MUST be before wildcard requireApiKey ---
+
+// Dashboard list indexes
+indexes.get('/dashboard/:projectId', requireSession, async (c) => {
+  const userId = c.get('userId')!;
+  const projectId = c.req.param('projectId');
+
+  const db = getDb(c.env.DATABASE_URL);
+  const project = await db.getProjectById(projectId);
+  if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
+
+  const data = await db.listIndexesByProject(projectId);
+  return c.json({ data });
+});
+
+// Dashboard list documents in an index
+indexes.get('/dashboard/:projectId/:indexId/documents', requireSession, async (c) => {
+  const userId = c.get('userId')!;
+  const projectId = c.req.param('projectId');
+  const indexId = c.req.param('indexId');
+  const page = parseInt(c.req.query('page') || '1', 10);
+
+  const db = getDb(c.env.DATABASE_URL);
+  const project = await db.getProjectById(projectId);
+  if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
+
+  const index = await db.getIndexById(indexId);
+  if (!index) return c.json({ error: 'Index not found' }, 404);
+  if (index.project_id !== projectId) return c.json({ error: 'Forbidden' }, 403);
+
+  const result = await db.listDocumentsByIndex(indexId, page, PAGE_SIZE);
+  return c.json({ data: result.data, total: result.total, page, limit: PAGE_SIZE });
 });
 
 // All routes below require API key
