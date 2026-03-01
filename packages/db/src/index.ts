@@ -13,6 +13,7 @@ import {
   ShortLinkRecord,
   ShortLinkStats,
   ChangelogEntryRecord,
+  TestimonialRecord,
 } from '@saas-maker/shared-types';
 
 export { TABLES } from './schema';
@@ -117,4 +118,25 @@ export interface FeedbackDatabase {
   listChangelogEntries(projectId: string, page: number, limit: number): Promise<{ data: ChangelogEntryRecord[]; total: number }>;
   listPublishedChangelog(projectId: string, limit: number): Promise<ChangelogEntryRecord[]>;
   getChangelogStats(projectId: string): Promise<{ total: number; published: number; drafts: number }>;
+
+  // Testimonials
+  createTestimonial(input: {
+    id: string; project_id: string; author_name: string; author_email: string;
+    author_avatar_url: string | null; author_title: string | null;
+    content: string; rating: number; image_url: string | null; tweet_url: string | null;
+  }): Promise<TestimonialRecord>;
+  listApprovedTestimonials(projectId: string, limit?: number, sort?: 'newest' | 'rating'): Promise<TestimonialRecord[]>;
+  listAllTestimonials(projectId: string, page: number, limit: number): Promise<{ data: TestimonialRecord[]; total: number }>;
+  getTestimonialStats(projectId: string): Promise<{ total: number; pending: number; approved: number; avg_rating: number }>;
+  updateTestimonialStatus(id: string, status: string): Promise<TestimonialRecord | null>;
+  deleteTestimonial(id: string): Promise<boolean>;
+  getTestimonialById(id: string): Promise<TestimonialRecord | null>;
+
+  // CLI Auth
+  createCliAuthCode(code: string): Promise<void>;
+  getCliAuthCode(code: string): Promise<{ code: string; user_id: string | null; status: string; token: string | null; expires_at: string } | undefined>;
+  approveCliAuthCode(code: string, userId: string, token: string): Promise<void>;
+  deleteCliAuthCode(code: string): Promise<void>;
+  createCliToken(token: string, userId: string): Promise<void>;
+  getCliTokenUser(token: string): Promise<{ user_id: string } | undefined>;
 }
