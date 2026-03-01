@@ -4,10 +4,9 @@ import { PageHeader } from "@/components/page-header";
 import { StatCard } from "@/components/stat-card";
 import { CopyButton } from "@/components/copy-button";
 import { MessageSquare, Lightbulb, Bug, ExternalLink } from "lucide-react";
-import { auth } from "@/lib/auth";
-import { redirect, notFound } from "next/navigation";
-import { apiFetch, getServerToken } from "@/lib/api";
-import type { ProjectRecord, FeedbackRecord } from "@saas-maker/shared-types";
+import { apiFetch } from "@/lib/api";
+import { getAuthenticatedProject } from "./get-project";
+import type { FeedbackRecord } from "@saas-maker/shared-types";
 
 export const dynamic = "force-dynamic";
 
@@ -18,23 +17,8 @@ interface Props {
 }
 
 export default async function ProjectInboxPage({ params }: Props) {
-  const session = await auth();
-  if (!session?.user) redirect("/login");
-
   const { slug } = await params;
-  const token = await getServerToken();
-
-  let project: ProjectRecord | undefined;
-
-  try {
-    const res = await apiFetch("/v1/projects", {}, token);
-    const projects: ProjectRecord[] = res.data ?? [];
-    project = projects.find((p) => p.slug === slug);
-  } catch {
-    // Auth failed — fall through to notFound
-  }
-
-  if (!project) notFound();
+  const { project, token } = await getAuthenticatedProject(slug);
 
   let total = 0;
   let features = 0;

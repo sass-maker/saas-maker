@@ -1,9 +1,7 @@
-import { auth } from "@/lib/auth";
-import { redirect, notFound } from "next/navigation";
-import { apiFetch, getServerToken, getProjectBySlug } from "@/lib/api";
-import type { ProjectRecord } from "@saas-maker/shared-types";
+import { apiFetch } from "@/lib/api";
 import { PageHeader } from "@/components/page-header";
 import { SettingsForm } from "./settings-form";
+import { getAuthenticatedProject } from "../get-project";
 
 export const dynamic = "force-dynamic";
 
@@ -21,14 +19,8 @@ interface FeatureCounts {
 }
 
 export default async function SettingsPage({ params }: Props) {
-  const session = await auth();
-  if (!session?.user) redirect("/login");
-
   const { slug } = await params;
-  const token = await getServerToken();
-
-  const project = await getProjectBySlug(slug, token);
-  if (!project) notFound();
+  const { project, token } = await getAuthenticatedProject(slug);
 
   // Fetch feature counts in parallel
   const counts: FeatureCounts = {

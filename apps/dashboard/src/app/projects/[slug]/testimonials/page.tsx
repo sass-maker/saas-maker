@@ -13,9 +13,8 @@ import { StatCard } from "@/components/stat-card";
 import { EmptyState } from "@/components/empty-state";
 import { TestimonialActions } from "./testimonial-actions";
 import { Star, Clock, Check, BarChart3 } from "lucide-react";
-import { auth } from "@/lib/auth";
-import { redirect, notFound } from "next/navigation";
-import { apiFetch, getServerToken, getProjectBySlug } from "@/lib/api";
+import { apiFetch } from "@/lib/api";
+import { getAuthenticatedProject } from "../get-project";
 import type {
   TestimonialRecord,
   TestimonialStatus,
@@ -54,14 +53,8 @@ function StarRating({ rating }: { rating: number }) {
 }
 
 export default async function TestimonialsPage({ params }: Props) {
-  const session = await auth();
-  if (!session?.user) redirect("/login");
-
   const { slug } = await params;
-  const token = await getServerToken();
-
-  const project = await getProjectBySlug(slug, token);
-  if (!project) notFound();
+  const { project, token } = await getAuthenticatedProject(slug);
 
   let testimonials: TestimonialRecord[] = [];
   let total = 0;

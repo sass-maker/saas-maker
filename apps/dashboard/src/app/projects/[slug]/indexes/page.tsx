@@ -11,9 +11,8 @@ import { PageHeader } from "@/components/page-header";
 import { StatCard } from "@/components/stat-card";
 import { EmptyState } from "@/components/empty-state";
 import { Database, FileText, Cpu } from "lucide-react";
-import { auth } from "@/lib/auth";
-import { redirect, notFound } from "next/navigation";
-import { apiFetch, getServerToken, getProjectBySlug } from "@/lib/api";
+import { apiFetch } from "@/lib/api";
+import { getAuthenticatedProject } from "../get-project";
 import type { IndexRecord } from "@saas-maker/shared-types";
 
 export const dynamic = "force-dynamic";
@@ -23,14 +22,8 @@ interface Props {
 }
 
 export default async function IndexesPage({ params }: Props) {
-  const session = await auth();
-  if (!session?.user) redirect("/login");
-
   const { slug } = await params;
-  const token = await getServerToken();
-
-  const project = await getProjectBySlug(slug, token);
-  if (!project) notFound();
+  const { project, token } = await getAuthenticatedProject(slug);
 
   let indexes: (IndexRecord & { document_count: number })[] = [];
 

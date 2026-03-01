@@ -12,9 +12,8 @@ import { StatCard } from "@/components/stat-card";
 import { EmptyState } from "@/components/empty-state";
 import { CopyButton } from "@/components/copy-button";
 import { Link2, MousePointerClick } from "lucide-react";
-import { auth } from "@/lib/auth";
-import { redirect, notFound } from "next/navigation";
-import { apiFetch, getServerToken, getProjectBySlug } from "@/lib/api";
+import { apiFetch } from "@/lib/api";
+import { getAuthenticatedProject } from "../get-project";
 import type { ShortLinkRecord } from "@saas-maker/shared-types";
 
 export const dynamic = "force-dynamic";
@@ -24,14 +23,8 @@ interface Props {
 }
 
 export default async function LinksPage({ params }: Props) {
-  const session = await auth();
-  if (!session?.user) redirect("/login");
-
   const { slug } = await params;
-  const token = await getServerToken();
-
-  const project = await getProjectBySlug(slug, token);
-  if (!project) notFound();
+  const { project, token } = await getAuthenticatedProject(slug);
 
   let links: ShortLinkRecord[] = [];
   let total = 0;

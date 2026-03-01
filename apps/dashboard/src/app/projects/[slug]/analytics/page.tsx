@@ -2,9 +2,7 @@ import { Suspense } from "react";
 import { PageHeader } from "@/components/page-header";
 import { TableSkeleton } from "@/components/table-skeleton";
 import { AnalyticsContent } from "./analytics-content";
-import { auth } from "@/lib/auth";
-import { redirect, notFound } from "next/navigation";
-import { getServerToken, getProjectBySlug } from "@/lib/api";
+import { getAuthenticatedProject } from "../get-project";
 
 export const dynamic = "force-dynamic";
 
@@ -13,14 +11,8 @@ interface Props {
 }
 
 export default async function AnalyticsPage({ params }: Props) {
-  const session = await auth();
-  if (!session?.user) redirect("/login");
-
   const { slug } = await params;
-  const token = await getServerToken();
-
-  const project = await getProjectBySlug(slug, token);
-  if (!project) notFound();
+  const { project } = await getAuthenticatedProject(slug);
 
   return (
     <div className="space-y-6">

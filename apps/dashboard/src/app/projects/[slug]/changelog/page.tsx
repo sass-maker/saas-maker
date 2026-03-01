@@ -13,9 +13,8 @@ import { StatCard } from "@/components/stat-card";
 import { EmptyState } from "@/components/empty-state";
 import { ChangelogActions } from "./changelog-actions";
 import { Megaphone, FileText, Eye, EyeOff } from "lucide-react";
-import { auth } from "@/lib/auth";
-import { redirect, notFound } from "next/navigation";
-import { apiFetch, getServerToken, getProjectBySlug } from "@/lib/api";
+import { apiFetch } from "@/lib/api";
+import { getAuthenticatedProject } from "../get-project";
 import type {
   ChangelogEntryRecord,
   ChangelogEntryType,
@@ -38,14 +37,8 @@ const typeBadge: Record<
 };
 
 export default async function ChangelogPage({ params }: Props) {
-  const session = await auth();
-  if (!session?.user) redirect("/login");
-
   const { slug } = await params;
-  const token = await getServerToken();
-
-  const project = await getProjectBySlug(slug, token);
-  if (!project) notFound();
+  const { project, token } = await getAuthenticatedProject(slug);
 
   let entries: ChangelogEntryRecord[] = [];
   let total = 0;

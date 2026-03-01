@@ -37,6 +37,46 @@ testimonials.post('/', requireApiKey, async (c) => {
   return c.json({ id: entry.id, status: entry.status, created_at: entry.created_at }, 201);
 });
 
+// Public: submit testimonial by project slug (no auth — for /t/[slug] page)
+testimonials.post('/by-project/:slug', async (c) => {
+  const slug = c.req.param('slug');
+  const body = (await c.req.json()) as SubmitTestimonialRequest;
+
+  if (!body.author_name?.trim()) return c.json({ error: 'Name is required' }, 400);
+  if (!body.author_email?.trim()) return c.json({ error: 'Email is required' }, 400);
+  if (!EMAIL_RE.test(body.author_email.trim())) return c.json({ error: 'Invalid email format' }, 400);
+  if (!body.content?.trim()) return c.json({ error: 'Content is required' }, 400);
+  if (!body.rating || body.rating < 1 || body.rating > 5) return c.json({ error: 'Rating must be 1-5' }, 400);
+
+  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const project = await db.getProjectBySlug(slug);
+  if (!project) return c.json({ error: 'Project not found' }, 404);
+
+  const entry = await db.createTestimonial({
+    id: crypto.randomUUID(),
+    project_id: project.id,
+    author_name: body.author_name.trim(),
+    author_email: body.author_email.trim().toLowerCase(),
+    author_avatar_url: body.author_avatar_url?.trim() || null,
+    author_title: body.author_title?.trim() || null,
+    content: body.content.trim(),
+    rating: body.rating,
+    image_url: body.image_url || null,
+    tweet_url: body.tweet_url?.trim() || null,
+  });
+
+  return c.json({ id: entry.id, status: entry.status, created_at: entry.created_at }, 201);
+});
+
+// Public: get project info by slug (for /t/[slug] page header)
+testimonials.get('/by-project/:slug', async (c) => {
+  const slug = c.req.param('slug');
+  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const project = await db.getProjectBySlug(slug);
+  if (!project) return c.json({ error: 'Project not found' }, 404);
+  return c.json({ project: { name: project.name, slug: project.slug } });
+});
+
 // Public: list approved testimonials (API key — for wall widget)
 testimonials.get('/', requireApiKey, async (c) => {
   const projectId = c.get('projectId')!;

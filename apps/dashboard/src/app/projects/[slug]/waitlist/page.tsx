@@ -13,9 +13,8 @@ import { EmptyState } from "@/components/empty-state";
 import { CopyButton } from "@/components/copy-button";
 import { WaitlistActions } from "./waitlist-actions";
 import { Users, ExternalLink } from "lucide-react";
-import { auth } from "@/lib/auth";
-import { redirect, notFound } from "next/navigation";
-import { apiFetch, getServerToken, getProjectBySlug } from "@/lib/api";
+import { apiFetch } from "@/lib/api";
+import { getAuthenticatedProject } from "../get-project";
 import type { WaitlistEntryRecord } from "@saas-maker/shared-types";
 
 export const dynamic = "force-dynamic";
@@ -25,14 +24,8 @@ interface Props {
 }
 
 export default async function WaitlistPage({ params }: Props) {
-  const session = await auth();
-  if (!session?.user) redirect("/login");
-
   const { slug } = await params;
-  const token = await getServerToken();
-
-  const project = await getProjectBySlug(slug, token);
-  if (!project) notFound();
+  const { project, token } = await getAuthenticatedProject(slug);
 
   let entries: WaitlistEntryRecord[] = [];
   let total = 0;
