@@ -244,3 +244,59 @@ export interface WaitlistFormProps {
   placeholder?: string;
   buttonText?: string;
 }
+
+// --- Testimonials Service ---
+
+export type TestimonialStatus = 'pending' | 'approved' | 'rejected';
+
+export interface TestimonialRecord {
+  id: string;
+  project_id: string;
+  status: TestimonialStatus;
+  author_name: string;
+  author_email: string;
+  author_avatar_url: string | null;
+  author_title: string | null;
+  content: string;
+  rating: number;
+  image_url: string | null;
+  tweet_url: string | null;
+  created_at: string;
+}
+
+export interface SubmitTestimonialRequest {
+  author_name: string;
+  author_email: string;
+  author_avatar_url?: string;
+  author_title?: string;
+  content: string;
+  rating: number;
+  image_url?: string;
+  tweet_url?: string;
+}
+
+export interface UpdateTestimonialStatusRequest {
+  status: TestimonialStatus;
+}
+
+// --- Testimonials Widget Props ---
+
+export interface TestimonialFormProps {
+  projectId: string;
+  apiBaseUrl?: string;
+  theme?: 'light' | 'dark' | 'auto';
+  accentColor?: string;
+  placeholder?: string;
+  buttonText?: string;
+  showImageUpload?: boolean;
+  showTweetUrl?: boolean;
+}
+
+export interface TestimonialWallProps {
+  projectId: string;
+  apiBaseUrl?: string;
+  theme?: 'light' | 'dark' | 'auto';
+  accentColor?: string;
+  layout?: 'masonry' | 'grid' | 'list';
+  maxItems?: number;
+}

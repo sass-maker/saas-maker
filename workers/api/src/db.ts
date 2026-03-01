@@ -2,6 +2,7 @@ import postgres from 'postgres';
 import type { FeedbackDatabase } from '@saasmaker/db';
 import type {
   FeedbackRecord,
+  FeedbackVote,
   ProjectRecord,
   UserRecord,
   UpvoteRecord,
@@ -10,7 +11,21 @@ import type {
   WaitlistEntryRecord,
   EventRecord,
   ShortLinkRecord,
+  TestimonialRecord,
 } from '@saasmaker/shared-types';
+
+function parseViewerVote(value: unknown): FeedbackVote {
+  if (value === 1 || value === '1') return 'up';
+  if (value === -1 || value === '-1') return 'down';
+  return null;
+}
+
+function toFeedbackRecord(row: Record<string, unknown>): FeedbackRecord {
+  return {
+    ...(row as unknown as FeedbackRecord),
+    viewer_vote: parseViewerVote(row.viewer_vote),
+  };
+}
 
 export function createDatabase(databaseUrl: string): FeedbackDatabase {
   const sql = postgres(databaseUrl, { ssl: 'require' });
@@ -106,26 +121,36 @@ export function createDatabase(databaseUrl: string): FeedbackDatabase {
     // --- Feedback ---
     async createFeedback(input) {
       const [row] = await sql`
-        INSERT INTO feedback (id, project_id, type, title, description, image_url, submitter_email, submitter_name)
-        VALUES (${input.id}, ${input.project_id}, ${input.type}, ${input.title}, ${input.description}, ${input.image_url}, ${input.submitter_email}, ${input.submitter_name})
-        RETURNING *
+        INSERT INTO feedback (id, project_id, type, status, title, description, image_url, submitter_email, submitter_name)
+        VALUES (
+          ${input.id},
+          ${input.project_id},
+          ${input.type},
+          ${input.status ?? (input.type === 'feature' ? 'planned' : 'new')},
+          ${input.title},
+          ${input.description},
+          ${input.image_url},
+          ${input.submitter_email},
+          ${input.submitter_name}
+        )
+        RETURNING *, NULL::smallint AS viewer_vote
       `;
-      return row as FeedbackRecord;
+      return toFeedbackRecord(row as unknown as Record<string, unknown>);
     },
 
     async getFeedbackById(id) {
-      const [row] = await sql`SELECT * FROM feedback WHERE id = ${id}`;
-      return (row as FeedbackRecord) || null;
+      const [row] = await sql`SELECT *, NULL::smallint AS viewer_vote FROM feedback WHERE id = ${id}`;
+      return row ? toFeedbackRecord(row as unknown as Record<string, unknown>) : null;
     },
 
-    async listFeedback(projectId, query) {
+    async listFeedback(projectId, query, userId) {
       const { type, status, sort = 'newest', page = 1, limit = 20 } = query;
       const offset = (page - 1) * limit;
 
       // Build WHERE conditions
-      const conditions = [sql`project_id = ${projectId}`];
-      if (type) conditions.push(sql`type = ${type}`);
-      if (status) conditions.push(sql`status = ${status}`);
+      const conditions = [sql`f.project_id = ${projectId}`];
+      if (type) conditions.push(sql`f.type = ${type}`);
+      if (status) conditions.push(sql`f.status = ${status}`);
 
       const where = conditions.reduce((acc, cond, i) =>
         i === 0 ? cond : sql`${acc} AND ${cond}`
@@ -133,18 +158,41 @@ export function createDatabase(databaseUrl: string): FeedbackDatabase {
 
       const orderBy =
         sort === 'upvotes'
-          ? sql`upvote_count DESC, created_at DESC`
-          : sql`created_at DESC`;
+          ? sql`f.upvote_count DESC, f.created_at DESC`
+          : sql`f.created_at DESC`;
 
-      const [countResult] = await sql`SELECT COUNT(*)::int as total FROM feedback WHERE ${where}`;
-      const rows = await sql`SELECT * FROM feedback WHERE ${where} ORDER BY ${orderBy} LIMIT ${limit} OFFSET ${offset}`;
+      const [countResult] = await sql`SELECT COUNT(*)::int as total FROM feedback f WHERE ${where}`;
+      const rows = userId
+        ? await sql`
+            SELECT f.*, v.vote AS viewer_vote
+            FROM feedback f
+            LEFT JOIN upvotes v ON v.feedback_id = f.id AND v.user_id = ${userId}
+            WHERE ${where}
+            ORDER BY ${orderBy}
+            LIMIT ${limit} OFFSET ${offset}
+          `
+        : await sql`
+            SELECT f.*, NULL::smallint AS viewer_vote
+            FROM feedback f
+            WHERE ${where}
+            ORDER BY ${orderBy}
+            LIMIT ${limit} OFFSET ${offset}
+          `;
 
-      return { data: rows as unknown as FeedbackRecord[], total: countResult.total };
+      return {
+        data: (rows as unknown as Record<string, unknown>[]).map(toFeedbackRecord),
+        total: countResult.total,
+      };
     },
 
     async updateFeedbackStatus(id, status) {
-      const [row] = await sql`UPDATE feedback SET status = ${status} WHERE id = ${id} RETURNING *`;
-      return (row as FeedbackRecord) || null;
+      const [row] = await sql`
+        UPDATE feedback
+        SET status = ${status}
+        WHERE id = ${id}
+        RETURNING *, NULL::smallint AS viewer_vote
+      `;
+      return row ? toFeedbackRecord(row as unknown as Record<string, unknown>) : null;
     },
 
     async deleteFeedback(id) {
@@ -152,29 +200,111 @@ export function createDatabase(databaseUrl: string): FeedbackDatabase {
       return result.count > 0;
     },
 
-    // --- Upvotes ---
-    async addUpvote(input) {
-      const [row] = await sql`
-        INSERT INTO upvotes (id, feedback_id, user_id)
-        VALUES (${input.id}, ${input.feedback_id}, ${input.user_id})
+    // --- Votes ---
+    async setVote(input) {
+      const [existing] = await sql`
+        SELECT *
+        FROM upvotes
+        WHERE feedback_id = ${input.feedback_id} AND user_id = ${input.user_id}
+      `;
+
+      if (!existing) {
+        const [inserted] = await sql`
+          INSERT INTO upvotes (id, feedback_id, user_id, vote)
+          VALUES (${input.id}, ${input.feedback_id}, ${input.user_id}, ${input.vote})
+          RETURNING *
+        `;
+        if (input.vote === 1) {
+          await sql`UPDATE feedback SET upvote_count = upvote_count + 1 WHERE id = ${input.feedback_id}`;
+        } else {
+          await sql`UPDATE feedback SET downvote_count = downvote_count + 1 WHERE id = ${input.feedback_id}`;
+        }
+        return inserted as UpvoteRecord;
+      }
+
+      const existingVote = Number(existing.vote) as 1 | -1;
+      if (existingVote === input.vote) {
+        return existing as UpvoteRecord;
+      }
+
+      const [updated] = await sql`
+        UPDATE upvotes
+        SET vote = ${input.vote}
+        WHERE id = ${existing.id}
         RETURNING *
       `;
-      await sql`UPDATE feedback SET upvote_count = upvote_count + 1 WHERE id = ${input.feedback_id}`;
-      return row as UpvoteRecord;
+
+      if (existingVote === 1 && input.vote === -1) {
+        await sql`
+          UPDATE feedback
+          SET upvote_count = GREATEST(upvote_count - 1, 0),
+              downvote_count = downvote_count + 1
+          WHERE id = ${input.feedback_id}
+        `;
+      } else if (existingVote === -1 && input.vote === 1) {
+        await sql`
+          UPDATE feedback
+          SET downvote_count = GREATEST(downvote_count - 1, 0),
+              upvote_count = upvote_count + 1
+          WHERE id = ${input.feedback_id}
+        `;
+      }
+
+      return updated as UpvoteRecord;
     },
 
-    async removeUpvote(feedbackId, userId) {
-      const result = await sql`DELETE FROM upvotes WHERE feedback_id = ${feedbackId} AND user_id = ${userId}`;
-      if (result.count > 0) {
-        await sql`UPDATE feedback SET upvote_count = GREATEST(upvote_count - 1, 0) WHERE id = ${feedbackId}`;
-        return true;
+    async removeVote(feedbackId, userId) {
+      const [existing] = await sql`
+        SELECT *
+        FROM upvotes
+        WHERE feedback_id = ${feedbackId} AND user_id = ${userId}
+      `;
+      if (!existing) return false;
+
+      await sql`DELETE FROM upvotes WHERE id = ${existing.id}`;
+
+      if (Number(existing.vote) === 1) {
+        await sql`
+          UPDATE feedback
+          SET upvote_count = GREATEST(upvote_count - 1, 0)
+          WHERE id = ${feedbackId}
+        `;
+      } else {
+        await sql`
+          UPDATE feedback
+          SET downvote_count = GREATEST(downvote_count - 1, 0)
+          WHERE id = ${feedbackId}
+        `;
       }
-      return false;
+
+      return true;
     },
 
     async hasUpvoted(feedbackId, userId) {
-      const [row] = await sql`SELECT 1 FROM upvotes WHERE feedback_id = ${feedbackId} AND user_id = ${userId}`;
+      const [row] = await sql`
+        SELECT 1
+        FROM upvotes
+        WHERE feedback_id = ${feedbackId} AND user_id = ${userId} AND vote = 1
+      `;
       return !!row;
+    },
+
+    async hasDownvoted(feedbackId, userId) {
+      const [row] = await sql`
+        SELECT 1
+        FROM upvotes
+        WHERE feedback_id = ${feedbackId} AND user_id = ${userId} AND vote = -1
+      `;
+      return !!row;
+    },
+
+    async getUserVote(feedbackId, userId) {
+      const [row] = await sql`
+        SELECT vote
+        FROM upvotes
+        WHERE feedback_id = ${feedbackId} AND user_id = ${userId}
+      `;
+      return parseViewerVote(row?.vote);
     },
 
     // --- Vector Memory: Indexes ---
@@ -499,12 +629,85 @@ export function createDatabase(databaseUrl: string): FeedbackDatabase {
         clicks_over_time: overTime as unknown as { date: string; count: number }[],
       };
     },
+
+    // --- Testimonials ---
+    async createTestimonial(input: {
+      id: string;
+      project_id: string;
+      author_name: string;
+      author_email: string;
+      author_avatar_url: string | null;
+      author_title: string | null;
+      content: string;
+      rating: number;
+      image_url: string | null;
+      tweet_url: string | null;
+    }) {
+      const [row] = await sql`
+        INSERT INTO testimonials (id, project_id, author_name, author_email, author_avatar_url, author_title, content, rating, image_url, tweet_url)
+        VALUES (${input.id}, ${input.project_id}, ${input.author_name}, ${input.author_email}, ${input.author_avatar_url}, ${input.author_title}, ${input.content}, ${input.rating}, ${input.image_url}, ${input.tweet_url})
+        RETURNING *
+      `;
+      return row as TestimonialRecord;
+    },
+
+    async listApprovedTestimonials(projectId: string, limit = 50, sort: 'newest' | 'rating' = 'newest') {
+      const orderClause = sort === 'rating' ? sql`rating DESC, created_at DESC` : sql`created_at DESC`;
+      const rows = await sql`
+        SELECT * FROM testimonials
+        WHERE project_id = ${projectId} AND status = 'approved'
+        ORDER BY ${orderClause}
+        LIMIT ${limit}
+      `;
+      return rows as unknown as TestimonialRecord[];
+    },
+
+    async listAllTestimonials(projectId: string, page: number, limit: number) {
+      const offset = (page - 1) * limit;
+      const [countResult] = await sql`
+        SELECT COUNT(*)::int AS total FROM testimonials WHERE project_id = ${projectId}
+      `;
+      const rows = await sql`
+        SELECT * FROM testimonials WHERE project_id = ${projectId}
+        ORDER BY created_at DESC
+        LIMIT ${limit} OFFSET ${offset}
+      `;
+      return { data: rows as unknown as TestimonialRecord[], total: countResult.total };
+    },
+
+    async getTestimonialStats(projectId: string) {
+      const [row] = await sql`
+        SELECT
+          COUNT(*)::int AS total,
+          COUNT(*) FILTER (WHERE status = 'pending')::int AS pending,
+          COUNT(*) FILTER (WHERE status = 'approved')::int AS approved,
+          COALESCE(AVG(rating) FILTER (WHERE status = 'approved'), 0)::float AS avg_rating
+        FROM testimonials WHERE project_id = ${projectId}
+      `;
+      return row as { total: number; pending: number; approved: number; avg_rating: number };
+    },
+
+    async updateTestimonialStatus(id: string, status: string) {
+      const [row] = await sql`
+        UPDATE testimonials SET status = ${status} WHERE id = ${id} RETURNING *
+      `;
+      return (row as TestimonialRecord) || null;
+    },
+
+    async deleteTestimonial(id: string) {
+      const result = await sql`DELETE FROM testimonials WHERE id = ${id}`;
+      return result.count > 0;
+    },
+
+    async getTestimonialById(id: string) {
+      const [row] = await sql`SELECT * FROM testimonials WHERE id = ${id}`;
+      return (row as TestimonialRecord) || null;
+    },
   };
 }
 
-let _db: FeedbackDatabase | null = null;
-
 export function getDb(databaseUrl: string): FeedbackDatabase {
-  if (!_db) _db = createDatabase(databaseUrl);
-  return _db;
+  // Cloudflare Workers can throw cross-request I/O errors when a shared DB
+  // client/socket is reused across requests in the same isolate.
+  return createDatabase(databaseUrl);
 }

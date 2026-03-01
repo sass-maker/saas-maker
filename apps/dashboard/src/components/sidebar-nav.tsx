@@ -5,15 +5,19 @@ import { usePathname } from "next/navigation";
 import {
   BarChart3,
   FolderOpen,
+  Link2,
   MessageSquare,
   Settings,
+  Star,
   Users,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const projectNavItems = [
   { label: "Inbox", href: "", icon: MessageSquare },
+  { label: "Testimonials", href: "/testimonials", icon: Star },
   { label: "Waitlist", href: "/waitlist", icon: Users },
+  { label: "Links", href: "/links", icon: Link2 },
   { label: "Analytics", href: "/analytics", icon: BarChart3 },
   { label: "Settings", href: "/settings", icon: Settings },
 ];
