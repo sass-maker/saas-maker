@@ -4,9 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   BarChart3,
-  Database,
+  Brain,
   FolderOpen,
-  Link2,
   Megaphone,
   MessageSquare,
   Settings,
@@ -16,12 +15,11 @@ import {
 import { cn } from "@/lib/utils";
 
 const projectNavItems = [
-  { label: "Inbox", href: "", icon: MessageSquare },
+  { label: "Feedback", href: "", icon: MessageSquare },
   { label: "Testimonials", href: "/testimonials", icon: Star },
   { label: "Waitlist", href: "/waitlist", icon: Users },
-  // { label: "Links", href: "/links", icon: Link2 },
   { label: "Changelog", href: "/changelog", icon: Megaphone },
-  { label: "Indexes", href: "/indexes", icon: Database },
+  { label: "Knowledge Base", href: "/indexes", icon: Brain },
   { label: "Analytics", href: "/analytics", icon: BarChart3 },
   { label: "Settings", href: "/settings", icon: Settings },
 ];

@@ -28,8 +28,8 @@ function toFeedbackRecord(row: Record<string, unknown>): FeedbackRecord {
   };
 }
 
-export function createDatabase(databaseUrl: string): FeedbackDatabase {
-  const sql = postgres(databaseUrl, { ssl: 'require' });
+export function createDatabase(databaseUrl: string, useSSL = true): FeedbackDatabase {
+  const sql = postgres(databaseUrl, { ssl: useSSL ? 'require' : false });
 
   return {
     // --- Users ---
@@ -817,7 +817,9 @@ export function createDatabase(databaseUrl: string): FeedbackDatabase {
 }
 
 export function getDb(databaseUrl: string, hyperdrive?: Hyperdrive): FeedbackDatabase {
-  // Use Hyperdrive connection string if available (pooled, ~100ms vs ~6s cold start)
-  const url = hyperdrive?.connectionString ?? databaseUrl;
-  return createDatabase(url);
+  // Hyperdrive proxies the connection locally — no SSL needed (Hyperdrive handles TLS to origin)
+  if (hyperdrive) {
+    return createDatabase(hyperdrive.connectionString, false);
+  }
+  return createDatabase(databaseUrl, true);
 }
