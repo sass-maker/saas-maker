@@ -28,7 +28,7 @@ Users can upvote or downvote feature requests. Vote counts are returned with eac
 Every project gets a public feedback board at:
 
 ```
-https://saasmaker.vercel.app/f/[project-slug]
+https://app.sassmaker.com/f/[project-slug]
 ```
 
 Share this link with your users so they can browse and vote on existing feedback.
@@ -44,7 +44,7 @@ POST /v1/feedback
 **Auth:** API Key
 
 ```bash
-curl -X POST https://saasmaker-api.sarthakagrawal927.workers.dev/v1/feedback \
+curl -X POST https://api.sassmaker.com/v1/feedback \
   -H "Content-Type: application/json" \
   -H "X-Project-Key: pk_abc123" \
   -d '{
@@ -64,7 +64,7 @@ GET /v1/feedback/by-project/:slug
 **Auth:** None (public)
 
 ```bash
-curl https://saasmaker-api.sarthakagrawal927.workers.dev/v1/feedback/by-project/my-app
+curl https://api.sassmaker.com/v1/feedback/by-project/my-app
 ```
 
 ### Upvote
@@ -92,7 +92,7 @@ PATCH /v1/feedback/:id
 **Auth:** Session Token (project owner only)
 
 ```bash
-curl -X PATCH https://saasmaker-api.sarthakagrawal927.workers.dev/v1/feedback/123 \
+curl -X PATCH https://api.sassmaker.com/v1/feedback/123 \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{ "status": "in_progress" }'

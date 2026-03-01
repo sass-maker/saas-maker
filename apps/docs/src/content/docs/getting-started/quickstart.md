@@ -5,7 +5,7 @@ description: Get up and running with SaaS Maker in under 5 minutes.
 
 ## 1. Sign up
 
-Create an account at [saasmaker.vercel.app](https://saasmaker.vercel.app). Sign in with Google.
+Create an account at [app.sassmaker.com](https://app.sassmaker.com). Sign in with Google.
 
 ## 2. Create a project
 
@@ -24,7 +24,7 @@ import { SaaSMakerClient } from '@saas-maker/sdk';
 
 const client = new SaaSMakerClient({
   apiKey: 'pk_your_api_key',
-  baseUrl: 'https://saasmaker-api.sarthakagrawal927.workers.dev',
+  baseUrl: 'https://api.sassmaker.com',
 });
 
 // Submit feedback
@@ -39,7 +39,7 @@ await client.feedback.submit({
 Or use `curl` directly:
 
 ```bash
-curl -X POST https://saasmaker-api.sarthakagrawal927.workers.dev/v1/feedback \
+curl -X POST https://api.sassmaker.com/v1/feedback \
   -H "Content-Type: application/json" \
   -H "X-Project-Key: pk_your_api_key" \
   -d '{

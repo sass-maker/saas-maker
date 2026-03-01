@@ -45,7 +45,7 @@ POST /v1/indexes
 **Auth:** API Key
 
 ```bash
-curl -X POST https://saasmaker-api.sarthakagrawal927.workers.dev/v1/indexes \
+curl -X POST https://api.sassmaker.com/v1/indexes \
   -H "Content-Type: application/json" \
   -H "X-Project-Key: pk_abc123" \
   -d '{
@@ -77,7 +77,7 @@ POST /v1/indexes/:indexId/documents
 **Auth:** API Key
 
 ```bash
-curl -X POST https://saasmaker-api.sarthakagrawal927.workers.dev/v1/indexes/idx_123/documents \
+curl -X POST https://api.sassmaker.com/v1/indexes/idx_123/documents \
   -H "Content-Type: application/json" \
   -H "X-Project-Key: pk_abc123" \
   -d '{
@@ -119,7 +119,7 @@ POST /v1/indexes/:indexId/search
 **Auth:** API Key
 
 ```bash
-curl -X POST https://saasmaker-api.sarthakagrawal927.workers.dev/v1/indexes/idx_123/search \
+curl -X POST https://api.sassmaker.com/v1/indexes/idx_123/search \
   -H "Content-Type: application/json" \
   -H "X-Project-Key: pk_abc123" \
   -d '{

@@ -20,7 +20,7 @@ function WhatsNew() {
   return (
     <ChangelogTimeline
       projectId="pk_your_api_key"
-      apiBaseUrl="https://saasmaker-api.sarthakagrawal927.workers.dev"
+      apiBaseUrl="https://api.sassmaker.com"
     />
   );
 }
@@ -53,7 +53,7 @@ The widget supports light, dark, and auto themes:
 ```tsx
 <ChangelogTimeline
   projectId="pk_your_api_key"
-  apiBaseUrl="https://saasmaker-api.sarthakagrawal927.workers.dev"
+  apiBaseUrl="https://api.sassmaker.com"
   theme="dark"
   maxItems={10}
 />

@@ -18,7 +18,7 @@ import { SaaSMakerClient } from '@saas-maker/sdk';
 
 const client = new SaaSMakerClient({
   apiKey: 'pk_your_api_key',
-  baseUrl: 'https://saasmaker-api.sarthakagrawal927.workers.dev',
+  baseUrl: 'https://api.sassmaker.com',
 });
 ```
 

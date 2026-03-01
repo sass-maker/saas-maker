@@ -10,7 +10,7 @@ Collect testimonials from your customers and display approved ones on your site.
 Every project gets a public testimonial submission page at:
 
 ```
-https://saasmaker.vercel.app/t/[project-slug]
+https://app.sassmaker.com/t/[project-slug]
 ```
 
 Share this link in email campaigns, onboarding flows, or support follow-ups to collect testimonials effortlessly.
@@ -26,7 +26,7 @@ POST /v1/testimonials
 **Auth:** API Key
 
 ```bash
-curl -X POST https://saasmaker-api.sarthakagrawal927.workers.dev/v1/testimonials \
+curl -X POST https://api.sassmaker.com/v1/testimonials \
   -H "Content-Type: application/json" \
   -H "X-Project-Key: pk_abc123" \
   -d '{
@@ -87,7 +87,7 @@ PATCH /v1/testimonials/:id?project_id=...
 **Auth:** Session Token
 
 ```bash
-curl -X PATCH "https://saasmaker-api.sarthakagrawal927.workers.dev/v1/testimonials/456?project_id=proj_123" \
+curl -X PATCH "https://api.sassmaker.com/v1/testimonials/456?project_id=proj_123" \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{ "status": "approved" }'

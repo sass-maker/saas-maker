@@ -12,7 +12,7 @@ Use API keys for SDK calls, widget integrations, and public-facing endpoints.
 Pass your project API key in the `X-Project-Key` header:
 
 ```bash
-curl https://saasmaker-api.sarthakagrawal927.workers.dev/v1/feedback \
+curl https://api.sassmaker.com/v1/feedback \
   -H "X-Project-Key: pk_abc123"
 ```
 
@@ -27,7 +27,7 @@ Use session tokens for dashboard operations and the CLI. These are issued via Go
 Pass the token in the `Authorization` header:
 
 ```bash
-curl https://saasmaker-api.sarthakagrawal927.workers.dev/v1/feedback/123 \
+curl https://api.sassmaker.com/v1/feedback/123 \
   -X PATCH \
   -H "Authorization: Bearer eyJhbGciOiJS..." \
   -H "Content-Type: application/json" \

@@ -25,7 +25,7 @@ const FILE_ORDER = [
 ];
 
 const HEADER =
-  "# SaaS Maker API Documentation\n\n> Drop-in backend services for SaaS apps. Base URL: https://saasmaker-api.sarthakagrawal927.workers.dev\n\n";
+  "# SaaS Maker API Documentation\n\n> Drop-in backend services for SaaS apps. Base URL: https://api.sassmaker.com\n\n";
 
 function stripFrontmatter(content) {
   // Remove YAML frontmatter delimited by --- at start of file

@@ -19,7 +19,7 @@ Add this script tag to your site for automatic page view tracking:
 <script
   defer
   data-project="pk_your_api_key"
-  data-api="https://saasmaker-api.sarthakagrawal927.workers.dev"
+  data-api="https://api.sassmaker.com"
   src="https://unpkg.com/@saas-maker/analytics-sdk/dist/index.global.js"
 ></script>
 ```
@@ -61,7 +61,7 @@ POST /v1/analytics/events
 **Auth:** API Key
 
 ```bash
-curl -X POST https://saasmaker-api.sarthakagrawal927.workers.dev/v1/analytics/events \
+curl -X POST https://api.sassmaker.com/v1/analytics/events \
   -H "Content-Type: application/json" \
   -H "X-Project-Key: pk_abc123" \
   -d '{

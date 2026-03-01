@@ -23,7 +23,7 @@ POST /v1/waitlist
 **Auth:** API Key
 
 ```bash
-curl -X POST https://saasmaker-api.sarthakagrawal927.workers.dev/v1/waitlist \
+curl -X POST https://api.sassmaker.com/v1/waitlist \
   -H "Content-Type: application/json" \
   -H "X-Project-Key: pk_abc123" \
   -d '{
@@ -48,7 +48,7 @@ GET /v1/waitlist?project_id=...
 **Auth:** Session Token
 
 ```bash
-curl https://saasmaker-api.sarthakagrawal927.workers.dev/v1/waitlist?project_id=proj_123 \
+curl https://api.sassmaker.com/v1/waitlist?project_id=proj_123 \
   -H "Authorization: Bearer <token>"
 ```
 

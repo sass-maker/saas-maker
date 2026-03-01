@@ -6,7 +6,7 @@ description: Base URL, authentication, error format, and general conventions for
 ## Base URL
 
 ```
-https://saasmaker-api.sarthakagrawal927.workers.dev
+https://api.sassmaker.com
 ```
 
 All endpoints are prefixed with `/v1/`.

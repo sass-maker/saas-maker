@@ -3,7 +3,7 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 
 export default defineConfig({
-	site: 'https://saasmaker-docs.vercel.app',
+	site: 'https://docs.sassmaker.com',
 	integrations: [
 		starlight({
 			title: 'SaaS Maker',

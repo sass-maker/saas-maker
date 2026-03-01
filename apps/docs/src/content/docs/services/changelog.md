@@ -27,7 +27,7 @@ GET /v1/changelog
 **Auth:** API Key
 
 ```bash
-curl https://saasmaker-api.sarthakagrawal927.workers.dev/v1/changelog \
+curl https://api.sassmaker.com/v1/changelog \
   -H "X-Project-Key: pk_abc123"
 ```
 
@@ -42,7 +42,7 @@ POST /v1/changelog/dashboard/:projectId
 **Auth:** Session Token
 
 ```bash
-curl -X POST https://saasmaker-api.sarthakagrawal927.workers.dev/v1/changelog/dashboard/proj_123 \
+curl -X POST https://api.sassmaker.com/v1/changelog/dashboard/proj_123 \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{
@@ -62,7 +62,7 @@ PATCH /v1/changelog/dashboard/:projectId/:id
 **Auth:** Session Token
 
 ```bash
-curl -X PATCH https://saasmaker-api.sarthakagrawal927.workers.dev/v1/changelog/dashboard/proj_123/456 \
+curl -X PATCH https://api.sassmaker.com/v1/changelog/dashboard/proj_123/456 \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{ "published": true }'

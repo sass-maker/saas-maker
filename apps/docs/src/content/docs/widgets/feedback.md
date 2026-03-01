@@ -20,7 +20,7 @@ function App() {
   return (
     <FeedbackWidget
       projectId="pk_your_api_key"
-      apiBaseUrl="https://saasmaker-api.sarthakagrawal927.workers.dev"
+      apiBaseUrl="https://api.sassmaker.com"
     />
   );
 }
@@ -49,7 +49,7 @@ If your users are already signed in, pass their email and name to skip those fie
 ```tsx
 <FeedbackWidget
   projectId="pk_your_api_key"
-  apiBaseUrl="https://saasmaker-api.sarthakagrawal927.workers.dev"
+  apiBaseUrl="https://api.sassmaker.com"
   userEmail={currentUser.email}
   userName={currentUser.name}
 />
@@ -62,7 +62,7 @@ The widget supports light, dark, and auto themes. The `auto` theme follows the u
 ```tsx
 <FeedbackWidget
   projectId="pk_your_api_key"
-  apiBaseUrl="https://saasmaker-api.sarthakagrawal927.workers.dev"
+  apiBaseUrl="https://api.sassmaker.com"
   theme="dark"
   accentColor="#ff6b00"
 />

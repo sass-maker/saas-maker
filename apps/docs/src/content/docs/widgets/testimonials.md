@@ -22,7 +22,7 @@ function LandingPage() {
   return (
     <TestimonialWall
       projectId="pk_your_api_key"
-      apiBaseUrl="https://saasmaker-api.sarthakagrawal927.workers.dev"
+      apiBaseUrl="https://api.sassmaker.com"
     />
   );
 }
@@ -52,7 +52,7 @@ function CollectPage() {
   return (
     <TestimonialForm
       projectId="pk_your_api_key"
-      apiBaseUrl="https://saasmaker-api.sarthakagrawal927.workers.dev"
+      apiBaseUrl="https://api.sassmaker.com"
     />
   );
 }
@@ -78,7 +78,7 @@ The form collects name, email, title/company, star rating, testimonial text, and
 You can also share the built-in submission page with your users:
 
 ```
-https://saasmaker.vercel.app/t/[project-slug]
+https://app.sassmaker.com/t/[project-slug]
 ```
 
 This is useful for email campaigns and onboarding flows where embedding a React component is not practical.
