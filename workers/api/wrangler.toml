@@ -2,6 +2,7 @@ name = "saasmaker-api"
 main = "src/index.ts"
 compatibility_date = "2026-02-22"
 compatibility_flags = ["nodejs_compat"]
+workers_dev = true
 
 [observability]
 enabled = true
@@ -13,3 +14,8 @@ bucket_name = "saasmaker-feedback-images"
 [[hyperdrive]]
 binding = "HYPERDRIVE"
 id = "8fb9b798a1804fa9bcd87c219f547656"
+
+# Custom domain — requires sassmaker.com on Cloudflare DNS
+[[routes]]
+pattern = "api.sassmaker.com"
+custom_domain = true

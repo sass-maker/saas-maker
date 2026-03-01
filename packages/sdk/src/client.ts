@@ -21,7 +21,7 @@ export class SaaSMakerClient {
 
   constructor(config: SaaSMakerConfig) {
     const http = new HttpClient(
-      config.baseUrl || 'https://saasmaker-api.sarthakagrawal927.workers.dev',
+      config.baseUrl || 'https://api.sassmaker.com',
       config.apiKey,
     );
 
