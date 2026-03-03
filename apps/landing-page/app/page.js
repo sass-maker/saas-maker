@@ -1,7 +1,9 @@
 'use client';
 import { useEffect, useRef } from 'react';
 
-const DASHBOARD_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL || '/login';
+const DASHBOARD_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL || 'https://app.sassmaker.com';
+const DOCS_URL = 'https://docs.sassmaker.com';
+const GITHUB_URL = 'https://github.com/sarthakagrawal927/saas-maker';
 
 function useFadeIn() {
   const ref = useRef(null);
@@ -196,6 +198,37 @@ function AnalyticsMockup() {
   );
 }
 
+function DevCodeMockup() {
+  return (
+    <div className="feature-row-mock" style={{ fontFamily: 'monospace', fontSize: '0.72rem', lineHeight: 1.7 }}>
+      <div className="wl-header">
+        <span className="wl-title">terminal</span>
+        <span className="wl-badge" style={{ background: 'rgba(34,197,94,0.12)', color: '#4ade80', border: '1px solid rgba(34,197,94,0.25)' }}>TypeScript</span>
+      </div>
+      <div className="mock-body" style={{ padding: '1rem' }}>
+        <div style={{ color: '#6b7280', marginBottom: '0.75rem' }}># install</div>
+        <div style={{ marginBottom: '1.25rem' }}>
+          <span style={{ color: '#a78bfa' }}>$</span>
+          <span style={{ color: '#e2e8f0' }}> npm install </span>
+          <span style={{ color: '#4ade80' }}>@saas-maker/sdk</span>
+        </div>
+        <div style={{ color: '#6b7280', marginBottom: '0.75rem' }}># integrate in seconds</div>
+        <div style={{ color: '#94a3b8' }}>
+          <div><span style={{ color: '#60a5fa' }}>import</span> {'{ SaaSMakerClient }'} <span style={{ color: '#60a5fa' }}>from</span> <span style={{ color: '#4ade80' }}>'@saas-maker/sdk'</span></div>
+          <div style={{ marginTop: '0.5rem' }}><span style={{ color: '#60a5fa' }}>const</span> <span style={{ color: '#e2e8f0' }}>client</span> = <span style={{ color: '#60a5fa' }}>new</span> <span style={{ color: '#fbbf24' }}>SaaSMakerClient</span>{'({'}</div>
+          <div style={{ paddingLeft: '1.25rem' }}><span style={{ color: '#fca5a5' }}>apiKey</span>: <span style={{ color: '#4ade80' }}>'your-api-key'</span></div>
+          <div>{'})'}</div>
+          <div style={{ marginTop: '0.5rem' }}><span style={{ color: '#60a5fa' }}>await</span> client.<span style={{ color: '#fbbf24' }}>feedback</span>.<span style={{ color: '#60a5fa' }}>submit</span>{'({'}</div>
+          <div style={{ paddingLeft: '1.25rem' }}><span style={{ color: '#fca5a5' }}>title</span>: <span style={{ color: '#4ade80' }}>'Dark mode'</span>,</div>
+          <div style={{ paddingLeft: '1.25rem' }}><span style={{ color: '#fca5a5' }}>type</span>: <span style={{ color: '#4ade80' }}>'feature'</span>,</div>
+          <div style={{ paddingLeft: '1.25rem' }}><span style={{ color: '#fca5a5' }}>description</span>: <span style={{ color: '#4ade80' }}>'Add dark theme'</span></div>
+          <div>{'})'}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function HeroDashMockup() {
   return (
     <div className="hero-mock">
@@ -250,6 +283,7 @@ export default function LandingPage() {
   const feedbackRef = useFadeIn();
   const changelogRef = useFadeIn();
   const analyticsRef = useFadeIn();
+  const devRef = useFadeIn();
   const moreRef = useFadeIn();
 
   return (
@@ -262,7 +296,7 @@ export default function LandingPage() {
         <div className="nav-links">
           <a href="#features">Features</a>
           <a href="#pricing">Pricing</a>
-          <a href="#docs">Docs</a>
+          <a href={DOCS_URL} target="_blank" rel="noopener noreferrer">Docs</a>
         </div>
         <div className="nav-actions">
           <a href={DASHBOARD_URL} className="btn btn-ghost">Log In</a>
@@ -405,6 +439,38 @@ export default function LandingPage() {
           </div>
           <AnalyticsMockup />
         </div>
+
+        {/* Developer / SDK */}
+        <div className="feature-row fade-up" ref={devRef}>
+          <DevCodeMockup />
+          <div className="feature-row-text">
+            <div className="feature-row-title">
+              <div className="feature-row-icon" style={{ background: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.2)' }}>⚡</div>
+              Built for developers
+            </div>
+            <p className="feature-row-body">
+              Every service is available via REST API or the official TypeScript SDK. Ship in minutes, not days — with full type safety and Cloudflare edge performance globally.
+            </p>
+            <ul className="feature-row-checks">
+              <li>TypeScript SDK with full type coverage</li>
+              <li>REST API — use any language or framework</li>
+              <li>Runs on Cloudflare Workers — sub-50ms globally</li>
+            </ul>
+            <a href={DOCS_URL} className="btn btn-ghost" target="_blank" rel="noopener noreferrer">Read the Docs</a>
+          </div>
+        </div>
+      </section>
+
+      <hr className="divider" />
+
+      {/* Early access / pricing waitlist */}
+      <section className="section" id="pricing" style={{ textAlign: 'center' }}>
+        <div className="section-header">
+          <div className="section-label">Pricing</div>
+          <h2>Free while in beta.<br /><span>Pricing coming soon.</span></h2>
+          <p>Get full access to every feature today — no credit card required. Early users get locked-in pricing when we launch paid plans.</p>
+          <a href={DASHBOARD_URL} className="btn btn-primary btn-lg" style={{ marginTop: '1.5rem', display: 'inline-block' }}>Get Early Access — It's Free</a>
+        </div>
       </section>
 
       <hr className="divider" />
@@ -441,10 +507,9 @@ export default function LandingPage() {
         </div>
         <span className="footer-copy">© 2026 SaaS Maker. All rights reserved.</span>
         <div className="footer-links">
-          <a href="#">Twitter</a>
-          <a href="#">GitHub</a>
-          <a href="#" id="docs">Docs</a>
-          <a href="#" id="pricing">Pricing</a>
+          <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href={DOCS_URL} target="_blank" rel="noopener noreferrer">Docs</a>
+          <a href="#pricing">Pricing</a>
         </div>
       </footer>
     </>
