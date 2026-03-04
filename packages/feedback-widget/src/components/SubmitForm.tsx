@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import type { FeedbackType, SubmitFeedbackRequest } from '@saas-maker/shared-types';
+import type { FeedbackType, SubmitFeedbackRequest } from '../types';
 import type { ApiClient } from '../api';
 import { ImageUpload } from './ImageUpload';
 
