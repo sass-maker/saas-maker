@@ -8,3 +8,4 @@ export type { TestimonialRecord, SubmitTestimonialData, TestimonialListResponse,
 export type { ChangelogEntry, ChangelogListResponse } from './services/changelog';
 export type { IndexRecord, CreateIndexOptions, UploadDocumentData, UploadDocumentResponse, SearchResult, SearchResponse } from './services/knowledge-base';
 export type { TrackEventData, TrackEventResponse } from './services/analytics';
+export type { FormRecord, FormQuestion, FormListResponse, FormBySlugResponse, FormSubmissionData, FormSubmissionResponse, FormListOptions } from './services/forms';

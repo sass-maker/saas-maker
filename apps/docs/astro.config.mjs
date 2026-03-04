@@ -27,6 +27,7 @@ export default defineConfig({
 						{ label: 'Feedback & Feature Requests', slug: 'services/feedback' },
 						{ label: 'Waitlist', slug: 'services/waitlist' },
 						{ label: 'Testimonials', slug: 'services/testimonials' },
+						{ label: 'Forms & Surveys', slug: 'services/forms' },
 						{ label: 'Changelog', slug: 'services/changelog' },
 						{ label: 'Knowledge Base (Vector)', slug: 'services/knowledge-base' },
 						{ label: 'Analytics', slug: 'services/analytics' },
@@ -45,6 +46,7 @@ export default defineConfig({
 						{ label: 'Feedback Widget', slug: 'widgets/feedback' },
 						{ label: 'Testimonial Wall', slug: 'widgets/testimonials' },
 						{ label: 'Changelog Timeline', slug: 'widgets/changelog' },
+						{ label: 'Survey Widget', slug: 'widgets/survey' },
 					],
 				},
 				{

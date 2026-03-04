@@ -5,6 +5,7 @@ import { TestimonialService } from './services/testimonials';
 import { ChangelogService } from './services/changelog';
 import { KnowledgeBaseService } from './services/knowledge-base';
 import { AnalyticsService } from './services/analytics';
+import { FormService } from './services/forms';
 
 export interface SaaSMakerConfig {
   apiKey: string;
@@ -18,6 +19,7 @@ export class SaaSMakerClient {
   readonly changelog: ChangelogService;
   readonly knowledgeBase: KnowledgeBaseService;
   readonly analytics: AnalyticsService;
+  readonly forms: FormService;
 
   constructor(config: SaaSMakerConfig) {
     const http = new HttpClient(
@@ -31,5 +33,6 @@ export class SaaSMakerClient {
     this.changelog = new ChangelogService(http);
     this.knowledgeBase = new KnowledgeBaseService(http);
     this.analytics = new AnalyticsService(http);
+    this.forms = new FormService(http);
   }
 }

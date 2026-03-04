@@ -12,6 +12,7 @@ import { links, handleRedirect } from './routes/links';
 import { testimonials } from './routes/testimonials';
 import { changelog } from './routes/changelog';
 import { cliAuth } from './routes/cli-auth';
+import { forms } from './routes/forms';
 
 const app = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
@@ -53,5 +54,6 @@ app.route('/v1/links', links);
 app.route('/v1/testimonials', testimonials);
 app.route('/v1/changelog', changelog);
 app.route('/v1/cli', cliAuth);
+app.route('/v1/forms', forms);
 
 export default app;

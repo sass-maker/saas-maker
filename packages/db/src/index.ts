@@ -14,6 +14,10 @@ import {
   ShortLinkStats,
   ChangelogEntryRecord,
   TestimonialRecord,
+  FormRecord,
+  FormQuestionRecord,
+  FormResponseRecord,
+  FormAnswerRecord,
 } from '@saas-maker/shared-types';
 
 export { TABLES } from './schema';
@@ -131,6 +135,69 @@ export interface FeedbackDatabase {
   updateTestimonialStatus(id: string, status: string): Promise<TestimonialRecord | null>;
   deleteTestimonial(id: string): Promise<boolean>;
   getTestimonialById(id: string): Promise<TestimonialRecord | null>;
+
+  // Forms
+  createForm(input: {
+    id: string;
+    project_id: string;
+    title: string;
+    slug: string;
+    description: string | null;
+    status: string;
+    theme: Record<string, unknown>;
+    settings: Record<string, unknown>;
+  }): Promise<FormRecord>;
+  getFormById(id: string): Promise<FormRecord | null>;
+  getFormBySlug(projectId: string, slug: string): Promise<FormRecord | null>;
+  getPublishedFormBySlug(slug: string): Promise<(FormRecord & { project_api_key: string }) | null>;
+  listForms(projectId: string, page: number, limit: number): Promise<{ data: FormRecord[]; total: number }>;
+  updateForm(id: string, input: Partial<{
+    title: string;
+    slug: string;
+    description: string | null;
+    status: string;
+    theme: Record<string, unknown>;
+    settings: Record<string, unknown>;
+  }>): Promise<FormRecord | null>;
+  deleteForm(id: string): Promise<boolean>;
+  getFormStats(projectId: string): Promise<{ total_forms: number; total_responses: number }>;
+
+  // Form Questions
+  upsertFormQuestions(formId: string, questions: Array<{
+    id: string;
+    type: string;
+    label: string;
+    description: string | null;
+    required: boolean;
+    options: Record<string, unknown>;
+    order_index: number;
+  }>): Promise<FormQuestionRecord[]>;
+  listFormQuestions(formId: string): Promise<FormQuestionRecord[]>;
+  updateFormQuestion(id: string, input: Partial<{
+    type: string;
+    label: string;
+    description: string | null;
+    required: boolean;
+    options: Record<string, unknown>;
+    order_index: number;
+  }>): Promise<FormQuestionRecord | null>;
+  deleteFormQuestion(id: string): Promise<boolean>;
+
+  // Form Responses
+  createFormResponse(input: {
+    id: string;
+    form_id: string;
+  }): Promise<FormResponseRecord>;
+  createFormAnswers(answers: Array<{
+    id: string;
+    response_id: string;
+    question_id: string;
+    value: string | null;
+  }>): Promise<FormAnswerRecord[]>;
+  listFormResponses(formId: string, page: number, limit: number): Promise<{ data: (FormResponseRecord & { answers: FormAnswerRecord[] })[]; total: number }>;
+  deleteFormResponse(id: string): Promise<boolean>;
+  getFormResponseCount(formId: string): Promise<number>;
+  getFormAnswersByQuestionId(questionId: string): Promise<FormAnswerRecord[]>;
 
   // CLI Auth
   createCliAuthCode(code: string): Promise<void>;

@@ -10,4 +10,8 @@ export const TABLES = {
   waitlist_entries: 'waitlist_entries',
   events: 'events',
   short_links: 'short_links',
+  forms: 'forms',
+  form_questions: 'form_questions',
+  form_responses: 'form_responses',
+  form_answers: 'form_answers',
 } as const;

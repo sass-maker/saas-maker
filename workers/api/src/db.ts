@@ -13,6 +13,10 @@ import type {
   ShortLinkRecord,
   TestimonialRecord,
   ChangelogEntryRecord,
+  FormRecord,
+  FormQuestionRecord,
+  FormResponseRecord,
+  FormAnswerRecord,
 } from '@saas-maker/shared-types';
 
 function parseViewerVote(value: unknown): FeedbackVote {
@@ -703,6 +707,197 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
     async getTestimonialById(id: string) {
       const [row] = await sql`SELECT * FROM testimonials WHERE id = ${id}`;
       return (row as TestimonialRecord) || null;
+    },
+
+    // --- Forms ---
+
+    async createForm(input) {
+      const [row] = await sql`
+        INSERT INTO forms (id, project_id, title, slug, description, status, theme, settings)
+        VALUES (${input.id}, ${input.project_id}, ${input.title}, ${input.slug}, ${input.description}, ${input.status}, ${JSON.stringify(input.theme)}, ${JSON.stringify(input.settings)})
+        RETURNING *
+      `;
+      return row as FormRecord;
+    },
+
+    async getFormById(id) {
+      const [row] = await sql`SELECT * FROM forms WHERE id = ${id}`;
+      return (row as FormRecord) || null;
+    },
+
+    async getFormBySlug(projectId, slug) {
+      const [row] = await sql`SELECT * FROM forms WHERE project_id = ${projectId} AND slug = ${slug}`;
+      return (row as FormRecord) || null;
+    },
+
+    async getPublishedFormBySlug(slug) {
+      const [row] = await sql`
+        SELECT f.*, p.api_key AS project_api_key
+        FROM forms f
+        JOIN projects p ON f.project_id = p.id
+        WHERE f.slug = ${slug} AND f.status = 'published'
+      `;
+      return (row as (FormRecord & { project_api_key: string })) || null;
+    },
+
+    async listForms(projectId, page, limit) {
+      const offset = (page - 1) * limit;
+      const [countResult] = await sql`
+        SELECT COUNT(*)::int AS total FROM forms WHERE project_id = ${projectId}
+      `;
+      const rows = await sql`
+        SELECT * FROM forms WHERE project_id = ${projectId}
+        ORDER BY created_at DESC
+        LIMIT ${limit} OFFSET ${offset}
+      `;
+      return { data: rows as unknown as FormRecord[], total: countResult.total };
+    },
+
+    async updateForm(id, input) {
+      const sets: string[] = [];
+      const values: (string | null | boolean)[] = [];
+      if (input.title !== undefined) { sets.push('title'); values.push(input.title); }
+      if (input.slug !== undefined) { sets.push('slug'); values.push(input.slug); }
+      if (input.description !== undefined) { sets.push('description'); values.push(input.description); }
+      if (input.status !== undefined) { sets.push('status'); values.push(input.status); }
+      if (input.theme !== undefined) { sets.push('theme'); values.push(JSON.stringify(input.theme)); }
+      if (input.settings !== undefined) { sets.push('settings'); values.push(JSON.stringify(input.settings)); }
+      if (sets.length === 0) return null;
+      const setClauses = sets.map((col, i) => `${col} = $${i + 2}`).join(', ');
+      const result = await sql.unsafe(
+        `UPDATE forms SET ${setClauses}, updated_at = now() WHERE id = $1 RETURNING *`,
+        [id, ...values]
+      );
+      return (result[0] as unknown as FormRecord) || null;
+    },
+
+    async deleteForm(id) {
+      const result = await sql`DELETE FROM forms WHERE id = ${id}`;
+      return result.count > 0;
+    },
+
+    async getFormStats(projectId) {
+      const [result] = await sql`
+        SELECT
+          (SELECT COUNT(*)::int FROM forms WHERE project_id = ${projectId}) AS total_forms,
+          (SELECT COUNT(*)::int FROM form_responses fr JOIN forms f ON fr.form_id = f.id WHERE f.project_id = ${projectId}) AS total_responses
+      `;
+      return { total_forms: result.total_forms, total_responses: result.total_responses };
+    },
+
+    // --- Form Questions ---
+
+    async upsertFormQuestions(formId, questions) {
+      const questionIds = questions.filter(q => q.id).map(q => q.id);
+      if (questionIds.length > 0) {
+        await sql`DELETE FROM form_questions WHERE form_id = ${formId} AND id NOT IN ${sql(questionIds)}`;
+      } else {
+        await sql`DELETE FROM form_questions WHERE form_id = ${formId}`;
+      }
+      const results: FormQuestionRecord[] = [];
+      for (const q of questions) {
+        const [row] = await sql`
+          INSERT INTO form_questions (id, form_id, type, label, description, required, options, order_index)
+          VALUES (${q.id}, ${formId}, ${q.type}, ${q.label}, ${q.description}, ${q.required}, ${JSON.stringify(q.options)}, ${q.order_index})
+          ON CONFLICT (id) DO UPDATE SET
+            type = EXCLUDED.type,
+            label = EXCLUDED.label,
+            description = EXCLUDED.description,
+            required = EXCLUDED.required,
+            options = EXCLUDED.options,
+            order_index = EXCLUDED.order_index
+          RETURNING *
+        `;
+        results.push(row as FormQuestionRecord);
+      }
+      return results;
+    },
+
+    async listFormQuestions(formId) {
+      const rows = await sql`SELECT * FROM form_questions WHERE form_id = ${formId} ORDER BY order_index ASC`;
+      return rows as unknown as FormQuestionRecord[];
+    },
+
+    async updateFormQuestion(id, input) {
+      const sets: string[] = [];
+      const values: (string | number | null | boolean)[] = [];
+      if (input.type !== undefined) { sets.push('type'); values.push(input.type); }
+      if (input.label !== undefined) { sets.push('label'); values.push(input.label); }
+      if (input.description !== undefined) { sets.push('description'); values.push(input.description); }
+      if (input.required !== undefined) { sets.push('required'); values.push(input.required); }
+      if (input.options !== undefined) { sets.push('options'); values.push(JSON.stringify(input.options)); }
+      if (input.order_index !== undefined) { sets.push('order_index'); values.push(input.order_index); }
+      if (sets.length === 0) return null;
+      const setClauses = sets.map((col, i) => `${col} = $${i + 2}`).join(', ');
+      const result = await sql.unsafe(
+        `UPDATE form_questions SET ${setClauses} WHERE id = $1 RETURNING *`,
+        [id, ...values]
+      );
+      return (result[0] as unknown as FormQuestionRecord) || null;
+    },
+
+    async deleteFormQuestion(id) {
+      const result = await sql`DELETE FROM form_questions WHERE id = ${id}`;
+      return result.count > 0;
+    },
+
+    // --- Form Responses ---
+
+    async createFormResponse(input) {
+      const [row] = await sql`
+        INSERT INTO form_responses (id, form_id)
+        VALUES (${input.id}, ${input.form_id})
+        RETURNING *
+      `;
+      return row as FormResponseRecord;
+    },
+
+    async createFormAnswers(answers) {
+      const results: FormAnswerRecord[] = [];
+      for (const a of answers) {
+        const [row] = await sql`
+          INSERT INTO form_answers (id, response_id, question_id, value)
+          VALUES (${a.id}, ${a.response_id}, ${a.question_id}, ${a.value})
+          RETURNING *
+        `;
+        results.push(row as FormAnswerRecord);
+      }
+      return results;
+    },
+
+    async listFormResponses(formId, page, limit) {
+      const offset = (page - 1) * limit;
+      const [countResult] = await sql`
+        SELECT COUNT(*)::int AS total FROM form_responses WHERE form_id = ${formId}
+      `;
+      const responses = await sql`
+        SELECT * FROM form_responses WHERE form_id = ${formId}
+        ORDER BY submitted_at DESC
+        LIMIT ${limit} OFFSET ${offset}
+      `;
+      const data = [];
+      for (const r of responses) {
+        const answers = await sql`
+          SELECT * FROM form_answers WHERE response_id = ${r.id}
+        `;
+        data.push({ ...r, answers: answers as unknown as FormAnswerRecord[] });
+      }
+      return { data: data as (FormResponseRecord & { answers: FormAnswerRecord[] })[], total: countResult.total };
+    },
+
+    async deleteFormResponse(id) {
+      const result = await sql`DELETE FROM form_responses WHERE id = ${id}`;
+      return result.count > 0;
+    },
+
+    async getFormResponseCount(formId) {
+      const [result] = await sql`SELECT COUNT(*)::int AS total FROM form_responses WHERE form_id = ${formId}`;
+      return result.total;
+    },
+
+    async getFormAnswersByQuestionId(questionId) {
+      const rows = await sql`SELECT * FROM form_answers WHERE question_id = ${questionId}`;
+      return rows as unknown as FormAnswerRecord[];
     },
 
     // --- CLI Auth ---

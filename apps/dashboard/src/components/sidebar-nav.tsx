@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import {
   BarChart3,
   Brain,
+  ClipboardList,
   FolderOpen,
   Megaphone,
   MessageSquare,
@@ -20,6 +21,7 @@ const projectNavItems = [
   { label: "Waitlist", href: "/waitlist", icon: Users },
   { label: "Changelog", href: "/changelog", icon: Megaphone },
   { label: "Knowledge Base", href: "/indexes", icon: Brain },
+  { label: "Forms", href: "/forms", icon: ClipboardList },
   { label: "Analytics", href: "/analytics", icon: BarChart3 },
   { label: "Settings", href: "/settings", icon: Settings },
 ];

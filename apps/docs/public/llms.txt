@@ -1,6 +1,6 @@
 # SaaS Maker API Documentation
 
-> Drop-in backend services for SaaS apps. Base URL: https://saasmaker-api.sarthakagrawal927.workers.dev
+> Drop-in backend services for SaaS apps. Base URL: https://api.sassmaker.com
 
 SaaS Maker is a drop-in backend-as-a-service for SaaS apps. Instead of building common SaaS features from scratch, plug in SaaS Maker and get production-ready services in minutes.
 
@@ -17,7 +17,7 @@ SaaS Maker is a drop-in backend-as-a-service for SaaS apps. Instead of building 
 
 ## How it works
 
-1. **Create a project** in the [dashboard](https://saasmaker.vercel.app)
+1. **Create a project** in the [dashboard](https://app.sassmaker.com)
 2. **Get your API key** from project Settings
 3. **Use the REST API or SDK** to integrate services into your app
 
@@ -30,7 +30,7 @@ import { SaaSMakerClient } from '@saas-maker/sdk';
 
 const client = new SaaSMakerClient({
   apiKey: 'pk_your_api_key',
-  baseUrl: 'https://saasmaker-api.sarthakagrawal927.workers.dev',
+  baseUrl: 'https://api.sassmaker.com',
 });
 ```
 
@@ -45,7 +45,7 @@ const client = new SaaSMakerClient({
 
 ## 1. Sign up
 
-Create an account at [saasmaker.vercel.app](https://saasmaker.vercel.app). Sign in with Google.
+Create an account at [app.sassmaker.com](https://app.sassmaker.com). Sign in with Google.
 
 ## 2. Create a project
 
@@ -64,7 +64,7 @@ import { SaaSMakerClient } from '@saas-maker/sdk';
 
 const client = new SaaSMakerClient({
   apiKey: 'pk_your_api_key',
-  baseUrl: 'https://saasmaker-api.sarthakagrawal927.workers.dev',
+  baseUrl: 'https://api.sassmaker.com',
 });
 
 // Submit feedback
@@ -79,7 +79,7 @@ await client.feedback.submit({
 Or use `curl` directly:
 
 ```bash
-curl -X POST https://saasmaker-api.sarthakagrawal927.workers.dev/v1/feedback \
+curl -X POST https://api.sassmaker.com/v1/feedback \
   -H "Content-Type: application/json" \
   -H "X-Project-Key: pk_your_api_key" \
   -d '{
@@ -116,7 +116,7 @@ Use API keys for SDK calls, widget integrations, and public-facing endpoints.
 Pass your project API key in the `X-Project-Key` header:
 
 ```bash
-curl https://saasmaker-api.sarthakagrawal927.workers.dev/v1/feedback \
+curl https://api.sassmaker.com/v1/feedback \
   -H "X-Project-Key: pk_abc123"
 ```
 
@@ -131,7 +131,7 @@ Use session tokens for dashboard operations and the CLI. These are issued via Go
 Pass the token in the `Authorization` header:
 
 ```bash
-curl https://saasmaker-api.sarthakagrawal927.workers.dev/v1/feedback/123 \
+curl https://api.sassmaker.com/v1/feedback/123 \
   -X PATCH \
   -H "Authorization: Bearer eyJhbGciOiJS..." \
   -H "Content-Type: application/json" \
@@ -160,7 +160,7 @@ curl https://saasmaker-api.sarthakagrawal927.workers.dev/v1/feedback/123 \
 ## Base URL
 
 ```
-https://saasmaker-api.sarthakagrawal927.workers.dev
+https://api.sassmaker.com
 ```
 
 All endpoints are prefixed with `/v1/`.
@@ -264,7 +264,7 @@ Users can upvote or downvote feature requests. Vote counts are returned with eac
 Every project gets a public feedback board at:
 
 ```
-https://saasmaker.vercel.app/f/[project-slug]
+https://app.sassmaker.com/f/[project-slug]
 ```
 
 Share this link with your users so they can browse and vote on existing feedback.
@@ -280,7 +280,7 @@ POST /v1/feedback
 **Auth:** API Key
 
 ```bash
-curl -X POST https://saasmaker-api.sarthakagrawal927.workers.dev/v1/feedback \
+curl -X POST https://api.sassmaker.com/v1/feedback \
   -H "Content-Type: application/json" \
   -H "X-Project-Key: pk_abc123" \
   -d '{
@@ -300,7 +300,7 @@ GET /v1/feedback/by-project/:slug
 **Auth:** None (public)
 
 ```bash
-curl https://saasmaker-api.sarthakagrawal927.workers.dev/v1/feedback/by-project/my-app
+curl https://api.sassmaker.com/v1/feedback/by-project/my-app
 ```
 
 ### Upvote
@@ -328,7 +328,7 @@ PATCH /v1/feedback/:id
 **Auth:** Session Token (project owner only)
 
 ```bash
-curl -X PATCH https://saasmaker-api.sarthakagrawal927.workers.dev/v1/feedback/123 \
+curl -X PATCH https://api.sassmaker.com/v1/feedback/123 \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{ "status": "in_progress" }'
@@ -364,7 +364,7 @@ POST /v1/waitlist
 **Auth:** API Key
 
 ```bash
-curl -X POST https://saasmaker-api.sarthakagrawal927.workers.dev/v1/waitlist \
+curl -X POST https://api.sassmaker.com/v1/waitlist \
   -H "Content-Type: application/json" \
   -H "X-Project-Key: pk_abc123" \
   -d '{
@@ -389,7 +389,7 @@ GET /v1/waitlist?project_id=...
 **Auth:** Session Token
 
 ```bash
-curl https://saasmaker-api.sarthakagrawal927.workers.dev/v1/waitlist?project_id=proj_123 \
+curl https://api.sassmaker.com/v1/waitlist?project_id=proj_123 \
   -H "Authorization: Bearer <token>"
 ```
 
@@ -404,7 +404,7 @@ Collect testimonials from your customers and display approved ones on your site.
 Every project gets a public testimonial submission page at:
 
 ```
-https://saasmaker.vercel.app/t/[project-slug]
+https://app.sassmaker.com/t/[project-slug]
 ```
 
 Share this link in email campaigns, onboarding flows, or support follow-ups to collect testimonials effortlessly.
@@ -420,7 +420,7 @@ POST /v1/testimonials
 **Auth:** API Key
 
 ```bash
-curl -X POST https://saasmaker-api.sarthakagrawal927.workers.dev/v1/testimonials \
+curl -X POST https://api.sassmaker.com/v1/testimonials \
   -H "Content-Type: application/json" \
   -H "X-Project-Key: pk_abc123" \
   -d '{
@@ -481,7 +481,7 @@ PATCH /v1/testimonials/:id?project_id=...
 **Auth:** Session Token
 
 ```bash
-curl -X PATCH "https://saasmaker-api.sarthakagrawal927.workers.dev/v1/testimonials/456?project_id=proj_123" \
+curl -X PATCH "https://api.sassmaker.com/v1/testimonials/456?project_id=proj_123" \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{ "status": "approved" }'
@@ -494,6 +494,387 @@ DELETE /v1/testimonials/:id?project_id=...
 ```
 
 **Auth:** Session Token
+
+---
+
+Build multi-question forms and surveys with 15 question types, collect responses via API or hosted page, and view per-question analytics in the dashboard.
+
+## Question types
+
+| Type | Description |
+|------|-------------|
+| `short_text` | Single-line text input |
+| `long_text` | Multi-line textarea |
+| `multiple_choice` | Radio buttons — pick one option |
+| `checkboxes` | Check multiple options |
+| `dropdown` | Select from a dropdown list |
+| `yes_no` | Boolean yes/no toggle |
+| `rating` | Star rating (e.g. 1–5) |
+| `nps` | Net Promoter Score (0–10) |
+| `opinion_scale` | Numeric scale (e.g. 1–10) |
+| `email` | Email address input |
+| `number` | Numeric input |
+| `date` | Date picker |
+| `phone` | Phone number input |
+| `url` | URL input |
+| `file_upload` | File attachment |
+
+## Public submission page
+
+Every published form gets a hosted survey page at:
+
+```
+https://app.sassmaker.com/s/[form-slug]
+```
+
+Share this link in emails, onboarding flows, or embed it in an iframe. No API key required.
+
+## API endpoints
+
+### Get published form by slug (API key)
+
+```
+GET /v1/forms/by-slug/:slug
+```
+
+**Auth:** API Key
+
+```bash
+curl https://api.sassmaker.com/v1/forms/by-slug/customer-survey \
+  -H "X-Project-Key: pk_abc123"
+```
+
+**Response fields:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Form ID |
+| `title` | string | Form title |
+| `slug` | string | URL-friendly slug |
+| `description` | string | Form description |
+| `status` | string | Always `published` for this endpoint |
+| `questions` | array | Ordered list of questions |
+
+Each question object:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Question ID |
+| `type` | string | One of the 15 question types |
+| `label` | string | Question text |
+| `description` | string | Optional helper text |
+| `required` | boolean | Whether an answer is required |
+| `options` | object | Type-specific config (e.g. choices for multiple_choice) |
+| `order_index` | number | Display order |
+
+### Submit response (API key)
+
+```
+POST /v1/forms/:formId/submit
+```
+
+**Auth:** API Key
+
+```bash
+curl -X POST https://api.sassmaker.com/v1/forms/abc-form-id/submit \
+  -H "Content-Type: application/json" \
+  -H "X-Project-Key: pk_abc123" \
+  -d '{
+    "answers": [
+      { "question_id": "q1", "value": "Very satisfied" },
+      { "question_id": "q2", "value": "9" }
+    ]
+  }'
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `answers` | array | Yes | Array of answer objects |
+| `answers[].question_id` | string | Yes | ID of the question being answered |
+| `answers[].value` | string | Yes | The answer value |
+
+Returns `201` with the created response and answers.
+
+### Get published form by slug (public, no auth)
+
+```
+GET /v1/forms/public/:slug
+```
+
+**Auth:** None
+
+```bash
+curl https://api.sassmaker.com/v1/forms/public/customer-survey
+```
+
+Same response shape as the API key variant. Used by the hosted survey page.
+
+### Submit response by slug (public, no auth)
+
+```
+POST /v1/forms/public/:slug/submit
+```
+
+**Auth:** None
+
+```bash
+curl -X POST https://api.sassmaker.com/v1/forms/public/customer-survey/submit \
+  -H "Content-Type: application/json" \
+  -d '{
+    "answers": [
+      { "question_id": "q1", "value": "Very satisfied" },
+      { "question_id": "q2", "value": "9" }
+    ]
+  }'
+```
+
+Same body as the API key submit endpoint. Used by the hosted survey page.
+
+### Create form (dashboard)
+
+```
+POST /v1/forms/dashboard/:projectId
+```
+
+**Auth:** Session Token
+
+```bash
+curl -X POST https://api.sassmaker.com/v1/forms/dashboard/proj_123 \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Customer Survey",
+    "slug": "customer-survey",
+    "description": "Help us improve our product",
+    "status": "draft",
+    "questions": [
+      {
+        "type": "rating",
+        "label": "How satisfied are you?",
+        "required": true,
+        "options": {}
+      },
+      {
+        "type": "long_text",
+        "label": "Any additional feedback?",
+        "required": false,
+        "options": {}
+      }
+    ]
+  }'
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `title` | string | Yes | Form title |
+| `slug` | string | Yes | URL-friendly slug (unique per project) |
+| `description` | string | No | Form description |
+| `status` | string | No | `draft`, `published`, or `closed` (default: `draft`) |
+| `theme` | object | No | Theme configuration |
+| `settings` | object | No | Form settings |
+| `questions` | array | No | Inline question creation (see question fields below) |
+
+Question fields:
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `type` | string | Yes | One of the 15 question types |
+| `label` | string | Yes | Question text |
+| `description` | string | No | Helper text |
+| `required` | boolean | No | Default `false` |
+| `options` | object | No | Type-specific config (e.g. `{ "choices": ["A", "B"] }`) |
+| `order_index` | number | No | Display order (defaults to array index) |
+
+Returns `201` with the created form and questions.
+
+### List forms (dashboard)
+
+```
+GET /v1/forms/dashboard/:projectId?page=1
+```
+
+**Auth:** Session Token
+
+```bash
+curl https://api.sassmaker.com/v1/forms/dashboard/proj_123 \
+  -H "Authorization: Bearer <token>"
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `data` | array | List of forms |
+| `total` | number | Total form count |
+| `page` | number | Current page |
+| `limit` | number | Page size (50) |
+| `stats` | object | Aggregate form stats |
+
+### Get form (dashboard)
+
+```
+GET /v1/forms/dashboard/:projectId/:formId
+```
+
+**Auth:** Session Token
+
+```bash
+curl https://api.sassmaker.com/v1/forms/dashboard/proj_123/form_456 \
+  -H "Authorization: Bearer <token>"
+```
+
+Returns the form with questions and `response_count`.
+
+### Update form (dashboard)
+
+```
+PATCH /v1/forms/dashboard/:projectId/:formId
+```
+
+**Auth:** Session Token
+
+```bash
+curl -X PATCH https://api.sassmaker.com/v1/forms/dashboard/proj_123/form_456 \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Updated Survey",
+    "status": "published"
+  }'
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `title` | string | New title |
+| `slug` | string | New slug (must be unique in project) |
+| `description` | string | New description |
+| `status` | string | `draft`, `published`, or `closed` |
+| `theme` | object | Theme configuration |
+| `settings` | object | Form settings |
+
+### Delete form (dashboard)
+
+```
+DELETE /v1/forms/dashboard/:projectId/:formId
+```
+
+**Auth:** Session Token
+
+```bash
+curl -X DELETE https://api.sassmaker.com/v1/forms/dashboard/proj_123/form_456 \
+  -H "Authorization: Bearer <token>"
+```
+
+Returns `{ "ok": true }`.
+
+### Bulk upsert questions (dashboard)
+
+```
+POST /v1/forms/dashboard/:projectId/:formId/questions
+```
+
+**Auth:** Session Token
+
+```bash
+curl -X POST https://api.sassmaker.com/v1/forms/dashboard/proj_123/form_456/questions \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "questions": [
+      {
+        "type": "nps",
+        "label": "How likely are you to recommend us?",
+        "required": true,
+        "options": {},
+        "order_index": 0
+      },
+      {
+        "type": "long_text",
+        "label": "What could we improve?",
+        "required": false,
+        "options": {},
+        "order_index": 1
+      }
+    ]
+  }'
+```
+
+Send the full list of questions. Existing questions with matching IDs are updated; new ones are created. Pass `id` on a question to update it; omit `id` to create a new one.
+
+### List responses (dashboard)
+
+```
+GET /v1/forms/dashboard/:projectId/:formId/responses?page=1
+```
+
+**Auth:** Session Token
+
+```bash
+curl https://api.sassmaker.com/v1/forms/dashboard/proj_123/form_456/responses \
+  -H "Authorization: Bearer <token>"
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `data` | array | List of responses with answers |
+| `total` | number | Total response count |
+| `page` | number | Current page |
+| `limit` | number | Page size (50) |
+
+### Analytics (dashboard)
+
+```
+GET /v1/forms/dashboard/:projectId/:formId/analytics
+```
+
+**Auth:** Session Token
+
+```bash
+curl https://api.sassmaker.com/v1/forms/dashboard/proj_123/form_456/analytics \
+  -H "Authorization: Bearer <token>"
+```
+
+Returns per-question analytics:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `form_id` | string | Form ID |
+| `total_responses` | number | Total response count |
+| `questions` | array | Per-question analytics |
+
+Each question analytics object:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `question_id` | string | Question ID |
+| `label` | string | Question text |
+| `type` | string | Question type |
+| `total_answers` | number | Number of non-empty answers |
+| `summary` | object | Type-dependent summary (see below) |
+
+Summary varies by question type:
+
+- **Choice types** (`multiple_choice`, `checkboxes`, `dropdown`, `yes_no`): `{ distribution: { "Option A": 5, "Option B": 3 } }`
+- **Numeric types** (`rating`, `nps`, `opinion_scale`, `number`): `{ average: 8.5, distribution: { "9": 3, "8": 2 } }`
+- **Text types** (`short_text`, `long_text`, `email`, etc.): `{ latest_answers: ["answer1", "answer2", ...] }` (up to 10)
+
+## SDK usage
+
+```javascript
+const client = new SaaSMakerClient({ apiKey: 'pk_...' });
+
+// List forms
+const forms = await client.forms.list();
+
+// Get form by slug
+const form = await client.forms.getBySlug('my-survey');
+
+// Submit response
+await client.forms.submit(formId, {
+  answers: [
+    { question_id: 'q1', value: 'Very satisfied' },
+    { question_id: 'q2', value: '9' },
+  ]
+});
+```
 
 ---
 
@@ -521,7 +902,7 @@ GET /v1/changelog
 **Auth:** API Key
 
 ```bash
-curl https://saasmaker-api.sarthakagrawal927.workers.dev/v1/changelog \
+curl https://api.sassmaker.com/v1/changelog \
   -H "X-Project-Key: pk_abc123"
 ```
 
@@ -536,7 +917,7 @@ POST /v1/changelog/dashboard/:projectId
 **Auth:** Session Token
 
 ```bash
-curl -X POST https://saasmaker-api.sarthakagrawal927.workers.dev/v1/changelog/dashboard/proj_123 \
+curl -X POST https://api.sassmaker.com/v1/changelog/dashboard/proj_123 \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{
@@ -556,7 +937,7 @@ PATCH /v1/changelog/dashboard/:projectId/:id
 **Auth:** Session Token
 
 ```bash
-curl -X PATCH https://saasmaker-api.sarthakagrawal927.workers.dev/v1/changelog/dashboard/proj_123/456 \
+curl -X PATCH https://api.sassmaker.com/v1/changelog/dashboard/proj_123/456 \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{ "published": true }'
@@ -614,7 +995,7 @@ POST /v1/indexes
 **Auth:** API Key
 
 ```bash
-curl -X POST https://saasmaker-api.sarthakagrawal927.workers.dev/v1/indexes \
+curl -X POST https://api.sassmaker.com/v1/indexes \
   -H "Content-Type: application/json" \
   -H "X-Project-Key: pk_abc123" \
   -d '{
@@ -646,7 +1027,7 @@ POST /v1/indexes/:indexId/documents
 **Auth:** API Key
 
 ```bash
-curl -X POST https://saasmaker-api.sarthakagrawal927.workers.dev/v1/indexes/idx_123/documents \
+curl -X POST https://api.sassmaker.com/v1/indexes/idx_123/documents \
   -H "Content-Type: application/json" \
   -H "X-Project-Key: pk_abc123" \
   -d '{
@@ -688,7 +1069,7 @@ POST /v1/indexes/:indexId/search
 **Auth:** API Key
 
 ```bash
-curl -X POST https://saasmaker-api.sarthakagrawal927.workers.dev/v1/indexes/idx_123/search \
+curl -X POST https://api.sassmaker.com/v1/indexes/idx_123/search \
   -H "Content-Type: application/json" \
   -H "X-Project-Key: pk_abc123" \
   -d '{
@@ -753,7 +1134,7 @@ Add this script tag to your site for automatic page view tracking:
 <script
   defer
   data-project="pk_your_api_key"
-  data-api="https://saasmaker-api.sarthakagrawal927.workers.dev"
+  data-api="https://api.sassmaker.com"
   src="https://unpkg.com/@saas-maker/analytics-sdk/dist/index.global.js"
 ></script>
 ```
@@ -795,7 +1176,7 @@ POST /v1/analytics/events
 **Auth:** API Key
 
 ```bash
-curl -X POST https://saasmaker-api.sarthakagrawal927.workers.dev/v1/analytics/events \
+curl -X POST https://api.sassmaker.com/v1/analytics/events \
   -H "Content-Type: application/json" \
   -H "X-Project-Key: pk_abc123" \
   -d '{
@@ -889,7 +1270,7 @@ import { SaaSMakerClient } from '@saas-maker/sdk';
 
 const client = new SaaSMakerClient({
   apiKey: 'pk_your_api_key',
-  baseUrl: 'https://saasmaker-api.sarthakagrawal927.workers.dev',
+  baseUrl: 'https://api.sassmaker.com',
 });
 ```
 
@@ -1086,7 +1467,7 @@ function App() {
   return (
     <FeedbackWidget
       projectId="pk_your_api_key"
-      apiBaseUrl="https://saasmaker-api.sarthakagrawal927.workers.dev"
+      apiBaseUrl="https://api.sassmaker.com"
     />
   );
 }
@@ -1115,7 +1496,7 @@ If your users are already signed in, pass their email and name to skip those fie
 ```tsx
 <FeedbackWidget
   projectId="pk_your_api_key"
-  apiBaseUrl="https://saasmaker-api.sarthakagrawal927.workers.dev"
+  apiBaseUrl="https://api.sassmaker.com"
   userEmail={currentUser.email}
   userName={currentUser.name}
 />
@@ -1128,7 +1509,7 @@ The widget supports light, dark, and auto themes. The `auto` theme follows the u
 ```tsx
 <FeedbackWidget
   projectId="pk_your_api_key"
-  apiBaseUrl="https://saasmaker-api.sarthakagrawal927.workers.dev"
+  apiBaseUrl="https://api.sassmaker.com"
   theme="dark"
   accentColor="#ff6b00"
 />
@@ -1155,7 +1536,7 @@ function LandingPage() {
   return (
     <TestimonialWall
       projectId="pk_your_api_key"
-      apiBaseUrl="https://saasmaker-api.sarthakagrawal927.workers.dev"
+      apiBaseUrl="https://api.sassmaker.com"
     />
   );
 }
@@ -1185,7 +1566,7 @@ function CollectPage() {
   return (
     <TestimonialForm
       projectId="pk_your_api_key"
-      apiBaseUrl="https://saasmaker-api.sarthakagrawal927.workers.dev"
+      apiBaseUrl="https://api.sassmaker.com"
     />
   );
 }
@@ -1211,7 +1592,7 @@ The form collects name, email, title/company, star rating, testimonial text, and
 You can also share the built-in submission page with your users:
 
 ```
-https://saasmaker.vercel.app/t/[project-slug]
+https://app.sassmaker.com/t/[project-slug]
 ```
 
 This is useful for email campaigns and onboarding flows where embedding a React component is not practical.
@@ -1235,7 +1616,7 @@ function WhatsNew() {
   return (
     <ChangelogTimeline
       projectId="pk_your_api_key"
-      apiBaseUrl="https://saasmaker-api.sarthakagrawal927.workers.dev"
+      apiBaseUrl="https://api.sassmaker.com"
     />
   );
 }
@@ -1268,8 +1649,69 @@ The widget supports light, dark, and auto themes:
 ```tsx
 <ChangelogTimeline
   projectId="pk_your_api_key"
-  apiBaseUrl="https://saasmaker-api.sarthakagrawal927.workers.dev"
+  apiBaseUrl="https://api.sassmaker.com"
   theme="dark"
   maxItems={10}
 />
 ```
+
+---
+
+Drop-in React component that renders a published form or survey inside your app. Handles fetching questions, rendering inputs, validation, and submission.
+
+## Installation
+
+```bash
+npm install @saas-maker/survey
+```
+
+## Usage
+
+```tsx
+import { SurveyWidget } from '@saas-maker/survey';
+
+function App() {
+  return (
+    <SurveyWidget
+      projectId="pk_your_api_key"
+      formSlug="customer-survey"
+    />
+  );
+}
+```
+
+The widget fetches the form by slug, renders each question with the appropriate input type, validates required fields, and submits the response to the API.
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `projectId` | `string` | -- | Your project API key (required) |
+| `formSlug` | `string` | -- | Slug of the published form (required) |
+| `theme` | `'light' \| 'dark' \| 'auto'` | `'auto'` | Color theme |
+| `accentColor` | `string` | `'#1464ff'` | Brand accent color |
+| `onComplete` | `(response) => void` | -- | Callback after successful submission |
+
+## Theming
+
+The widget supports light, dark, and auto themes. The `auto` theme follows the user's system preference. You can also set a custom accent color:
+
+```tsx
+<SurveyWidget
+  projectId="pk_your_api_key"
+  formSlug="customer-survey"
+  theme="dark"
+  accentColor="#ff6b00"
+  onComplete={(res) => console.log('Submitted', res)}
+/>
+```
+
+## Hosted survey page
+
+If embedding a React component is not practical, you can share the built-in hosted survey page:
+
+```
+https://app.sassmaker.com/s/[form-slug]
+```
+
+This is useful for email campaigns, QR codes, and onboarding flows. No authentication or API key is required — the page uses the public submission endpoint.

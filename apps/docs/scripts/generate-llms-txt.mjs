@@ -14,6 +14,7 @@ const FILE_ORDER = [
   "services/feedback.md",
   "services/waitlist.md",
   "services/testimonials.md",
+  "services/forms.md",
   "services/changelog.md",
   "services/knowledge-base.md",
   "services/analytics.md",
@@ -22,6 +23,7 @@ const FILE_ORDER = [
   "widgets/feedback.md",
   "widgets/testimonials.md",
   "widgets/changelog.md",
+  "widgets/survey.md",
 ];
 
 const HEADER =
