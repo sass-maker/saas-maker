@@ -25,6 +25,7 @@ app.use('*', async (c, next) => {
       if (!origin) return '*';
       if (allowed.length === 0) return '*';
       if (allowed.includes(origin)) return origin;
+      if (/^http:\/\/localhost(:\d+)?$/.test(origin)) return origin;
       return '';
     },
     allowMethods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],

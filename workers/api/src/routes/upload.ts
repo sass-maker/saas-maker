@@ -22,7 +22,7 @@ upload.post('/', requireApiKey, async (c) => {
     httpMetadata: { contentType: file.type },
   });
 
-  const imageUrl = `https://images.saasmaker.dev/${key}`;
+  const imageUrl = `https://images.sassmaker.com/${key}`;
   return c.json({ url: imageUrl }, 201);
 });
 
