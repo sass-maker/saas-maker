@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import type { TestimonialWallProps } from '@saas-maker/shared-types';
+import type { TestimonialWallProps } from './types';
 import { createApiClient, TestimonialData } from './api';
 import './styles/testimonials.css';
 

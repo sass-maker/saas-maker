@@ -9,7 +9,7 @@
   const projectKey = scriptEl.getAttribute('data-project');
   if (!projectKey) return;
 
-  const apiBase = scriptEl.getAttribute('data-api') || 'https://api.saasmaker.dev';
+  const apiBase = scriptEl.getAttribute('data-api') || 'https://api.sassmaker.com';
 
   // Respect Do Not Track
   if (navigator.doNotTrack === '1') return;

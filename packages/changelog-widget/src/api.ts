@@ -1,4 +1,4 @@
-const DEFAULT_API_BASE = 'https://api.saasmaker.dev';
+const DEFAULT_API_BASE = 'https://api.sassmaker.com';
 
 export interface ChangelogEntryData {
   id: string;

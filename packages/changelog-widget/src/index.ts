@@ -1,2 +1,2 @@
 export { ChangelogTimeline } from './ChangelogTimeline';
-export type { ChangelogTimelineProps } from '@saas-maker/shared-types';
+export type { ChangelogTimelineProps } from './types';

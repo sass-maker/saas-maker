@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import type { ChangelogTimelineProps } from '@saas-maker/shared-types';
+import type { ChangelogTimelineProps } from './types';
 import { createApiClient, ChangelogEntryData } from './api';
 import './styles/changelog.css';
 
