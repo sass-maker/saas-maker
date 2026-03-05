@@ -455,3 +455,66 @@ export interface SurveyWidgetProps {
   accentColor?: string;
   onComplete?: (response: FormResponseRecord) => void;
 }
+
+// ── AI Gateway ────────────────────────────────────────────────────────────────
+
+export interface AIProviderConfig {
+  ai_base_url: string | null;
+  ai_api_key: string | null;
+  ai_model: string | null;
+}
+
+export interface UpdateAIConfigRequest {
+  ai_base_url: string;
+  ai_api_key: string;
+  ai_model: string;
+}
+
+export interface AIRequestRecord {
+  id: string;
+  project_id: string;
+  endpoint: string;
+  model: string;
+  status: 'success' | 'error' | 'timeout';
+  latency_ms: number | null;
+  input_tokens: number | null;
+  output_tokens: number | null;
+  error_message: string | null;
+  created_at: string;
+}
+
+export interface AIUsageStats {
+  total_requests: number;
+  success_count: number;
+  error_count: number;
+  avg_latency_ms: number | null;
+  total_input_tokens: number;
+  total_output_tokens: number;
+}
+
+export interface AIChatCompletionRequest {
+  messages: Array<{ role: string; content: string }>;
+  model?: string;
+  stream?: boolean;
+  temperature?: number;
+  max_tokens?: number;
+}
+
+export interface AIEmbeddingRequest {
+  input: string | string[];
+  model?: string;
+}
+
+export interface AIRagRequest {
+  index_id: string;
+  query: string;
+  system_prompt?: string;
+  top_k?: number;
+  stream?: boolean;
+}
+
+export interface AIRagResponse {
+  response: string;
+  sources: Array<{ document_id: string; chunk_content: string; score: number }>;
+  usage: { input_tokens: number; output_tokens: number };
+}
