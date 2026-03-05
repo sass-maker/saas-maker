@@ -1008,6 +1008,48 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
       `;
       return row as { total: number; published: number; drafts: number };
     },
+
+    // ── AI Gateway ──────────────────────────────────────────────────────────
+
+    async getProjectAIConfig(projectId: string): Promise<{ ai_base_url: string | null; ai_api_key: string | null; ai_model: string | null }> {
+      const result = await sql`SELECT ai_base_url, ai_api_key, ai_model FROM projects WHERE id = ${projectId}`;
+      const row = result[0];
+      if (!row) throw new Error('Project not found');
+      return { ai_base_url: row.ai_base_url, ai_api_key: row.ai_api_key, ai_model: row.ai_model };
+    },
+
+    async updateProjectAIConfig(projectId: string, config: { ai_base_url: string; ai_api_key: string; ai_model: string }): Promise<void> {
+      await sql`UPDATE projects SET ai_base_url = ${config.ai_base_url}, ai_api_key = ${config.ai_api_key}, ai_model = ${config.ai_model}, updated_at = now() WHERE id = ${projectId}`;
+    },
+
+    async deleteProjectAIConfig(projectId: string): Promise<void> {
+      await sql`UPDATE projects SET ai_base_url = NULL, ai_api_key = NULL, ai_model = NULL, updated_at = now() WHERE id = ${projectId}`;
+    },
+
+    async logAIRequest(params: {
+      id: string;
+      projectId: string;
+      endpoint: string;
+      model: string;
+      status: 'success' | 'error' | 'timeout';
+      latencyMs: number | null;
+      inputTokens: number | null;
+      outputTokens: number | null;
+      errorMessage: string | null;
+    }): Promise<void> {
+      await sql`INSERT INTO ai_requests (id, project_id, endpoint, model, status, latency_ms, input_tokens, output_tokens, error_message) VALUES (${params.id}, ${params.projectId}, ${params.endpoint}, ${params.model}, ${params.status}, ${params.latencyMs}, ${params.inputTokens}, ${params.outputTokens}, ${params.errorMessage})`;
+    },
+
+    async getAIUsageStats(projectId: string, daysBack: number = 30): Promise<{ total_requests: number; success_count: number; error_count: number; avg_latency_ms: number | null; total_input_tokens: number; total_output_tokens: number }> {
+      const result = await sql`SELECT COUNT(*)::int AS total_requests, COUNT(*) FILTER (WHERE status = 'success')::int AS success_count, COUNT(*) FILTER (WHERE status = 'error')::int AS error_count, AVG(latency_ms)::int AS avg_latency_ms, COALESCE(SUM(input_tokens), 0)::int AS total_input_tokens, COALESCE(SUM(output_tokens), 0)::int AS total_output_tokens FROM ai_requests WHERE project_id = ${projectId} AND created_at > now() - make_interval(days => ${daysBack})`;
+      return result[0] as any;
+    },
+
+    async listAIRequests(projectId: string, limit: number = 50, offset: number = 0): Promise<{ data: any[]; total: number }> {
+      const countResult = await sql`SELECT COUNT(*)::int AS total FROM ai_requests WHERE project_id = ${projectId}`;
+      const result = await sql`SELECT * FROM ai_requests WHERE project_id = ${projectId} ORDER BY created_at DESC LIMIT ${limit} OFFSET ${offset}`;
+      return { data: result as unknown as any[], total: countResult[0].total };
+    },
   };
 }
 
