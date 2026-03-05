@@ -199,6 +199,18 @@ export interface FeedbackDatabase {
   getFormResponseCount(formId: string): Promise<number>;
   getFormAnswersByQuestionId(questionId: string): Promise<FormAnswerRecord[]>;
 
+  // AI Gateway
+  getProjectAIConfig(projectId: string): Promise<{ ai_base_url: string | null; ai_api_key: string | null; ai_model: string | null }>;
+  updateProjectAIConfig(projectId: string, config: { ai_base_url: string; ai_api_key: string; ai_model: string }): Promise<void>;
+  deleteProjectAIConfig(projectId: string): Promise<void>;
+  logAIRequest(params: {
+    id: string; projectId: string; endpoint: string; model: string;
+    status: 'success' | 'error' | 'timeout'; latencyMs: number | null;
+    inputTokens: number | null; outputTokens: number | null; errorMessage: string | null;
+  }): Promise<void>;
+  getAIUsageStats(projectId: string, daysBack?: number): Promise<{ total_requests: number; success_count: number; error_count: number; avg_latency_ms: number | null; total_input_tokens: number; total_output_tokens: number }>;
+  listAIRequests(projectId: string, limit?: number, offset?: number): Promise<{ data: any[]; total: number }>;
+
   // CLI Auth
   createCliAuthCode(code: string): Promise<void>;
   getCliAuthCode(code: string): Promise<{ code: string; user_id: string | null; status: string; token: string | null; expires_at: string } | undefined>;
