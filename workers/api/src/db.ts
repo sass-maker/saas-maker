@@ -921,11 +921,11 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
     },
 
     async updateProjectAIConfig(projectId: string, config: { ai_base_url: string; ai_api_key: string; ai_model: string }): Promise<void> {
-      await sql`UPDATE projects SET ai_base_url = ${config.ai_base_url}, ai_api_key = ${config.ai_api_key}, ai_model = ${config.ai_model}, updated_at = now() WHERE id = ${projectId}`;
+      await sql`UPDATE projects SET ai_base_url = ${config.ai_base_url}, ai_api_key = ${config.ai_api_key}, ai_model = ${config.ai_model} WHERE id = ${projectId}`;
     },
 
     async deleteProjectAIConfig(projectId: string): Promise<void> {
-      await sql`UPDATE projects SET ai_base_url = NULL, ai_api_key = NULL, ai_model = NULL, updated_at = now() WHERE id = ${projectId}`;
+      await sql`UPDATE projects SET ai_base_url = NULL, ai_api_key = NULL, ai_model = NULL WHERE id = ${projectId}`;
     },
 
     async logAIRequest(params: {
