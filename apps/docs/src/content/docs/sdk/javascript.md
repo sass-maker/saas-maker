@@ -108,6 +108,25 @@ await client.analytics.track({
 });
 ```
 
+## AI Gateway
+
+```typescript
+// Chat completion
+const response = await client.ai.chat({
+  messages: [{ role: 'user', content: 'What is SaaS Maker?' }],
+});
+
+// Embeddings
+const embeddings = await client.ai.embed('What is SaaS Maker?');
+
+// RAG (retrieval-augmented generation)
+const answer = await client.ai.rag({
+  query: 'How do I collect feedback?',
+  index_id: 'idx_123',
+  top_k: 5,
+});
+```
+
 ## Error handling
 
 All methods throw on non-2xx responses. Errors include the `message` field from the API:

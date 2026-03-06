@@ -82,3 +82,4 @@ The API runs on Cloudflare Workers with no hard rate limits currently enforced. 
 | Changelog | `/v1/changelog` | [Changelog](/services/changelog) |
 | Knowledge Base | `/v1/indexes` | [Knowledge Base](/services/knowledge-base) |
 | Analytics | `/v1/analytics` | [Analytics](/services/analytics) |
+| AI Gateway | `/v1/ai` | [AI Gateway](/services/ai-gateway) |

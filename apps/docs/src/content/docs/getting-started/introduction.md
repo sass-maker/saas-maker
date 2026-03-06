@@ -15,6 +15,7 @@ SaaS Maker is a drop-in backend-as-a-service for SaaS apps. Instead of building 
 | **Changelog** | Publish product updates with categories and drafts |
 | **Knowledge Base** | Vector search / RAG-powered document search |
 | **Analytics** | Track page views and custom events |
+| **AI Gateway** | Proxy LLM calls, embeddings, and RAG pipelines with usage tracking |
 
 ## How it works
 
