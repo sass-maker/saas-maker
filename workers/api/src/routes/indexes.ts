@@ -76,6 +76,48 @@ indexes.get('/dashboard/:projectId/:indexId/documents', requireSession, async (c
   return c.json({ data: result.data, total: result.total, page, limit: PAGE_SIZE });
 });
 
+// Dashboard: create index (session auth — project owner)
+indexes.post('/dashboard/:projectId', requireSession, async (c) => {
+  const userId = c.get('userId')!;
+  const projectId = c.req.param('projectId');
+
+  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const project = await db.getProjectById(projectId);
+  if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
+
+  const body = (await c.req.json()) as CreateIndexRequest;
+
+  if (!body.name?.trim()) return c.json({ error: 'Index name is required' }, 400);
+
+  if (!project.embedding_model && !body.embedding_model) {
+    return c.json({ error: 'Project has no embedding model. Provide embedding_model.' }, 400);
+  }
+
+  if (body.embedding_model) {
+    if (!SUPPORTED_MODELS[body.embedding_model]) {
+      return c.json({ error: `Unsupported model: ${body.embedding_model}` }, 400);
+    }
+    if (!project.embedding_model) {
+      await db.updateProject(projectId, { embedding_model: body.embedding_model });
+    }
+  }
+
+  try {
+    const record = await db.createIndex({
+      id: crypto.randomUUID(),
+      project_id: projectId,
+      name: body.name.trim(),
+      external_id: body.external_id?.trim() || null,
+    });
+    return c.json(record, 201);
+  } catch (e: any) {
+    if (e.message?.includes('duplicate') || e.code === '23505') {
+      return c.json({ error: 'Index name already exists in this project' }, 409);
+    }
+    throw e;
+  }
+});
+
 // All routes below require API key
 indexes.use('*', requireApiKey);
 

@@ -22,7 +22,7 @@ export default async function ProjectsLayout({
   return (
     <div className="min-h-screen flex">
       {/* Sidebar - hidden on mobile */}
-      <aside className="hidden md:flex w-64 flex-col border-r bg-background">
+      <aside className="hidden md:flex w-64 flex-col border-r bg-background h-screen sticky top-0">
         {/* Logo */}
         <div className="p-4 border-b flex items-center justify-between">
           <Link href="/projects" className="text-lg font-bold">

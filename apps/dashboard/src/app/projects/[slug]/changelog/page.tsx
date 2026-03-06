@@ -12,6 +12,7 @@ import { PageHeader } from "@/components/page-header";
 import { StatCard } from "@/components/stat-card";
 import { EmptyState } from "@/components/empty-state";
 import { ChangelogActions } from "./changelog-actions";
+import { CreateChangelogDialog } from "./create-changelog-dialog";
 import { Megaphone, FileText, Eye, EyeOff } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { getAuthenticatedProject } from "../get-project";
@@ -62,6 +63,7 @@ export default async function ChangelogPage({ params }: Props) {
       <PageHeader
         title="Changelog"
         description={`${total} total entr${total !== 1 ? "ies" : "y"}`}
+        action={<CreateChangelogDialog projectId={project.id} />}
       />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

@@ -12,6 +12,7 @@ import { PageHeader } from "@/components/page-header";
 import { StatCard } from "@/components/stat-card";
 import { EmptyState } from "@/components/empty-state";
 import { TestimonialActions } from "./testimonial-actions";
+import { CreateTestimonialDialog } from "./create-testimonial-dialog";
 import { Star, Clock, Check, BarChart3 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { getAuthenticatedProject } from "../get-project";
@@ -78,6 +79,7 @@ export default async function TestimonialsPage({ params }: Props) {
       <PageHeader
         title="Testimonials"
         description={`${total} total testimonial${total !== 1 ? "s" : ""}`}
+        action={<CreateTestimonialDialog projectId={project.id} />}
       />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

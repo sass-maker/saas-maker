@@ -13,6 +13,7 @@ import { EmptyState } from "@/components/empty-state";
 import { Database, FileText, Cpu } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { getAuthenticatedProject } from "../get-project";
+import { CreateIndexDialog } from "./create-index-dialog";
 import type { IndexRecord } from "@saas-maker/shared-types";
 
 export const dynamic = "force-dynamic";
@@ -45,6 +46,7 @@ export default async function IndexesPage({ params }: Props) {
       <PageHeader
         title="Indexes"
         description={`${indexes.length} total index${indexes.length !== 1 ? "es" : ""}`}
+        action={<CreateIndexDialog projectId={project.id} embeddingModel={project.embedding_model} />}
       />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

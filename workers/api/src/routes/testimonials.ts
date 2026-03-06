@@ -104,6 +104,38 @@ testimonials.get('/all', requireSession, async (c) => {
   return c.json({ data: result.data, total: result.total, page, limit: PAGE_SIZE, stats });
 });
 
+// Dashboard: create testimonial (session auth — project owner)
+testimonials.post('/dashboard/:projectId', requireSession, async (c) => {
+  const userId = c.get('userId')!;
+  const projectId = c.req.param('projectId');
+
+  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const project = await db.getProjectById(projectId);
+  if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
+
+  const body = (await c.req.json()) as SubmitTestimonialRequest;
+
+  if (!body.author_name?.trim()) return c.json({ error: 'Name is required' }, 400);
+  if (!body.author_email?.trim()) return c.json({ error: 'Email is required' }, 400);
+  if (!body.content?.trim()) return c.json({ error: 'Content is required' }, 400);
+  if (!body.rating || body.rating < 1 || body.rating > 5) return c.json({ error: 'Rating must be 1-5' }, 400);
+
+  const entry = await db.createTestimonial({
+    id: crypto.randomUUID(),
+    project_id: projectId,
+    author_name: body.author_name.trim(),
+    author_email: body.author_email.trim().toLowerCase(),
+    author_avatar_url: body.author_avatar_url?.trim() || null,
+    author_title: body.author_title?.trim() || null,
+    content: body.content.trim(),
+    rating: body.rating,
+    image_url: body.image_url || null,
+    tweet_url: body.tweet_url?.trim() || null,
+  });
+
+  return c.json(entry, 201);
+});
+
 // Dashboard: update testimonial status (session auth)
 testimonials.patch('/:id', requireSession, async (c) => {
   const userId = c.get('userId')!;
