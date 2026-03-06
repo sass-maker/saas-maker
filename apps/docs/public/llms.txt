@@ -2,6 +2,59 @@
 
 > Drop-in backend services for SaaS apps. Base URL: https://api.sassmaker.com
 
+SaaS Maker uses two authentication methods depending on the context.
+
+## API Key
+
+Use API keys for SDK calls, widget integrations, and public-facing endpoints.
+
+Pass your project API key in the `X-Project-Key` header:
+
+```bash
+curl https://api.sassmaker.com/v1/feedback \
+  -H "X-Project-Key: pk_abc123"
+```
+
+API keys start with `pk_` and are scoped to a single project. Get yours from **Project Settings** in the dashboard.
+
+**Use for:** SDK, widgets, public endpoints (submitting feedback, joining waitlist, viewing testimonials).
+
+## Session Token
+
+Use session tokens for dashboard operations and the CLI. These are issued via Google OAuth through Auth.js.
+
+Pass the token in the `Authorization` header:
+
+```bash
+curl https://api.sassmaker.com/v1/feedback/123 \
+  -X PATCH \
+  -H "Authorization: Bearer eyJhbGciOiJS..." \
+  -H "Content-Type: application/json" \
+  -d '{ "status": "in_progress" }'
+```
+
+**Use for:** Dashboard, CLI, admin operations (updating statuses, deleting entries, viewing analytics).
+
+## When to use which
+
+| Action | Auth method |
+|--------|------------|
+| Submit feedback from your app | API Key |
+| Join a waitlist | API Key |
+| Submit a testimonial | API Key |
+| Read published changelog | API Key |
+| Search knowledge base | API Key |
+| AI chat/embeddings/RAG | API Key |
+| Track analytics events | API Key |
+| Update feedback status | Session Token |
+| View analytics dashboard | Session Token |
+| Manage testimonials (approve/reject) | Session Token |
+| Create changelog entries | Session Token |
+| Configure AI provider | Session Token |
+| View AI usage/logs | Session Token |
+
+---
+
 SaaS Maker is a drop-in backend-as-a-service for SaaS apps. Instead of building common SaaS features from scratch, plug in SaaS Maker and get production-ready services in minutes.
 
 ## Services
@@ -124,59 +177,6 @@ curl -X POST https://api.sassmaker.com/v1/feedback \
 
 ---
 
-SaaS Maker uses two authentication methods depending on the context.
-
-## API Key
-
-Use API keys for SDK calls, widget integrations, and public-facing endpoints.
-
-Pass your project API key in the `X-Project-Key` header:
-
-```bash
-curl https://api.sassmaker.com/v1/feedback \
-  -H "X-Project-Key: pk_abc123"
-```
-
-API keys start with `pk_` and are scoped to a single project. Get yours from **Project Settings** in the dashboard.
-
-**Use for:** SDK, widgets, public endpoints (submitting feedback, joining waitlist, viewing testimonials).
-
-## Session Token
-
-Use session tokens for dashboard operations and the CLI. These are issued via Google OAuth through Auth.js.
-
-Pass the token in the `Authorization` header:
-
-```bash
-curl https://api.sassmaker.com/v1/feedback/123 \
-  -X PATCH \
-  -H "Authorization: Bearer eyJhbGciOiJS..." \
-  -H "Content-Type: application/json" \
-  -d '{ "status": "in_progress" }'
-```
-
-**Use for:** Dashboard, CLI, admin operations (updating statuses, deleting entries, viewing analytics).
-
-## When to use which
-
-| Action | Auth method |
-|--------|------------|
-| Submit feedback from your app | API Key |
-| Join a waitlist | API Key |
-| Submit a testimonial | API Key |
-| Read published changelog | API Key |
-| Search knowledge base | API Key |
-| AI chat/embeddings/RAG | API Key |
-| Track analytics events | API Key |
-| Update feedback status | Session Token |
-| View analytics dashboard | Session Token |
-| Manage testimonials (approve/reject) | Session Token |
-| Create changelog entries | Session Token |
-| Configure AI provider | Session Token |
-| View AI usage/logs | Session Token |
-
----
-
 ## Base URL
 
 ```
@@ -257,6 +257,546 @@ The API runs on Cloudflare Workers with no hard rate limits currently enforced. 
 | Knowledge Base | `/v1/indexes` | [Knowledge Base](/services/knowledge-base) |
 | Analytics | `/v1/analytics` | [Analytics](/services/analytics) |
 | AI Gateway | `/v1/ai` | [AI Gateway](/services/ai-gateway) |
+
+---
+
+The AI Gateway lets you route LLM requests through SaaS Maker with usage tracking, logging, and built-in RAG support.
+
+## Quick Start
+
+No configuration needed — the free tier works out of the box. Just pass your project API key:
+
+```bash
+curl -X POST https://api.sassmaker.com/v1/ai/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "X-Project-Key: pk_your_api_key" \
+  -d '{
+    "messages": [{"role": "user", "content": "Hello"}]
+  }'
+```
+
+The free tier routes to open-source models (Llama, Gemini Flash, Mistral) automatically. To use your own provider (OpenAI, Anthropic, etc.), see [Configuration](#configuration) below.
+
+## Endpoints Summary
+
+All endpoints use **API Key** auth via `X-Project-Key` header.
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `POST` | `/v1/ai/chat/completions` | Chat completion (proxied to provider) |
+| `POST` | `/v1/ai/embeddings` | Generate embeddings |
+| `POST` | `/v1/ai/rag` | RAG: search + chat in one call |
+
+## Chat Completions
+
+```
+POST /v1/ai/chat/completions
+```
+
+```bash
+curl -X POST https://api.sassmaker.com/v1/ai/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "X-Project-Key: pk_your_api_key" \
+  -d '{
+    "messages": [
+      {"role": "system", "content": "You are a helpful assistant."},
+      {"role": "user", "content": "What is SaaS Maker?"}
+    ],
+    "stream": false
+  }'
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `messages` | array | Yes | OpenAI-format message array (`role` + `content`) |
+| `model` | string | No | Override the default model |
+| `stream` | boolean | No | Enable SSE streaming (default false) |
+| `temperature` | number | No | Sampling temperature (0–2) |
+| `max_tokens` | number | No | Max tokens to generate |
+
+**Response** (OpenAI-compatible):
+
+```json
+{
+  "id": "chatcmpl-abc123",
+  "choices": [
+    {
+      "message": {
+        "role": "assistant",
+        "content": "SaaS Maker is a backend-as-a-service platform..."
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 25,
+    "completion_tokens": 42,
+    "total_tokens": 67
+  }
+}
+```
+
+**Error responses:**
+
+| Status | Body | Meaning |
+|--------|------|---------|
+| `400` | `{"error": "AI not configured for this project"}` | No custom config set AND free tier unavailable |
+| `400` | `{"error": "messages array is required"}` | Missing messages field |
+| `502` | `{"error": "Provider error: ..."}` | Upstream provider failed |
+
+## Embeddings
+
+```
+POST /v1/ai/embeddings
+```
+
+```bash
+curl -X POST https://api.sassmaker.com/v1/ai/embeddings \
+  -H "Content-Type: application/json" \
+  -H "X-Project-Key: pk_your_api_key" \
+  -d '{
+    "input": "What is SaaS Maker?",
+    "model": "text-embedding-3-small"
+  }'
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `input` | string or string[] | Yes | Text(s) to embed |
+| `model` | string | No | Override the default model |
+
+## RAG (Retrieval-Augmented Generation)
+
+RAG combines Knowledge Base vector search with a chat completion in a single call. **Prerequisite:** you must have a Knowledge Base index with documents already ingested (see the [end-to-end example](#end-to-end-rag-example) below).
+
+```
+POST /v1/ai/rag
+```
+
+```bash
+curl -X POST https://api.sassmaker.com/v1/ai/rag \
+  -H "Content-Type: application/json" \
+  -H "X-Project-Key: pk_your_api_key" \
+  -d '{
+    "query": "How do I collect feedback?",
+    "index_id": "your-index-id",
+    "top_k": 5
+  }'
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `query` | string | Yes | Natural language question |
+| `index_id` | string | Yes | Knowledge Base index ID (from `POST /v1/indexes`) |
+| `top_k` | number | No | Number of chunks to retrieve (default 5) |
+| `system_prompt` | string | No | Custom system prompt |
+| `stream` | boolean | No | Enable SSE streaming (default false) |
+
+**Response:**
+
+```json
+{
+  "response": "You can collect feedback by integrating the feedback widget...",
+  "sources": [
+    {
+      "document_id": "doc_abc",
+      "chunk_content": "Use the feedback endpoint to collect bugs...",
+      "score": 0.92
+    }
+  ],
+  "usage": {
+    "input_tokens": 150,
+    "output_tokens": 80
+  }
+}
+```
+
+**What happens under the hood:**
+
+1. Your query is embedded using the project's configured embedding model
+2. Top-K chunks are retrieved from the Knowledge Base index via vector similarity
+3. Retrieved chunks are injected as context into a chat completion call
+4. The LLM response is returned along with the source chunks
+
+**Error responses:**
+
+| Status | Body | Meaning |
+|--------|------|---------|
+| `400` | `{"error": "AI not configured for this project"}` | No AI config and no free tier |
+| `400` | `{"error": "index_id and query are required"}` | Missing required fields |
+| `404` | `{"error": "Index not found"}` | Invalid `index_id` |
+
+## End-to-End RAG Example
+
+Here's the complete flow to build a RAG-powered Q&A bot from scratch. All steps use the same `X-Project-Key`.
+
+### Step 1: Create a Knowledge Base index
+
+```bash
+curl -X POST https://api.sassmaker.com/v1/indexes \
+  -H "Content-Type: application/json" \
+  -H "X-Project-Key: pk_your_api_key" \
+  -d '{
+    "name": "help-docs",
+    "embedding_model": "gemini-embedding-001"
+  }'
+```
+
+Save the `id` from the response — you'll need it as `index_id`.
+
+### Step 2: Ingest documents
+
+```bash
+curl -X POST https://api.sassmaker.com/v1/indexes/YOUR_INDEX_ID/documents \
+  -H "Content-Type: application/json" \
+  -H "X-Project-Key: pk_your_api_key" \
+  -d '{
+    "content": "SaaS Maker is a backend-as-a-service platform. It provides feedback collection, waitlists, testimonials, changelogs, analytics, knowledge base, and AI gateway services.",
+    "metadata": {"source": "docs", "page": "intro"}
+  }'
+```
+
+Repeat for each document. Content is automatically chunked and embedded.
+
+### Step 3: Ask questions with RAG
+
+```bash
+curl -X POST https://api.sassmaker.com/v1/ai/rag \
+  -H "Content-Type: application/json" \
+  -H "X-Project-Key: pk_your_api_key" \
+  -d '{
+    "query": "What services does SaaS Maker provide?",
+    "index_id": "YOUR_INDEX_ID",
+    "top_k": 3
+  }'
+```
+
+The response includes the AI-generated answer and the source chunks it used.
+
+## Configuration
+
+By default, the free tier is used — no setup needed. To use your own provider:
+
+### Set custom provider (Dashboard or API)
+
+Config endpoints require a **session token** (not API key) because they contain sensitive credentials.
+
+```
+PUT /v1/ai/config/:projectId
+```
+
+```bash
+curl -X PUT https://api.sassmaker.com/v1/ai/config/YOUR_PROJECT_ID \
+  -H "Authorization: Bearer SESSION_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "ai_base_url": "https://api.openai.com/v1",
+    "ai_api_key": "sk-...",
+    "ai_model": "gpt-4o"
+  }'
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `ai_base_url` | string | Yes | Provider base URL (must be OpenAI-compatible) |
+| `ai_api_key` | string | Yes | Provider API key |
+| `ai_model` | string | Yes | Default model name |
+
+### Get current config
+
+```
+GET /v1/ai/config/:projectId
+```
+
+**Auth:** Session token. Returns config with the API key masked.
+
+### Reset to free tier
+
+```
+DELETE /v1/ai/config/:projectId
+```
+
+**Auth:** Session token. Removes custom config; the project falls back to free tier.
+
+## Free Tier Models
+
+When no custom provider is configured, requests are routed through the free AI gateway which automatically selects from:
+
+**Chat models:**
+
+| Model | Provider |
+|-------|----------|
+| `@cf/meta/llama-3.1-8b-instruct` | Cloudflare Workers AI |
+| `@cf/mistral/mistral-7b-instruct-v0.1` | Cloudflare Workers AI |
+| `llama-3.1-8b-instant` | Groq |
+| `llama-3.3-70b-versatile` | Groq |
+| `gemini-2.0-flash-lite` | Google Gemini |
+| `gemini-2.0-flash` | Google Gemini |
+
+**Embedding models:**
+
+| Model | Provider |
+|-------|----------|
+| `gemini-embedding-001` | Google Gemini |
+| `voyage-3.5-lite` | Voyage AI |
+| `@cf/baai/bge-base-en-v1.5` | Cloudflare Workers AI |
+
+The free tier uses health-aware routing — if one provider is down, requests are automatically routed to the next available model.
+
+## Usage & Logs
+
+These endpoints require a **session token** (dashboard auth).
+
+### Usage stats
+
+```
+GET /v1/ai/usage/:projectId?days=30
+```
+
+Returns: `total_requests`, `success_count`, `error_count`, `avg_latency_ms`, `total_input_tokens`, `total_output_tokens`.
+
+### Request logs
+
+```
+GET /v1/ai/requests/:projectId?limit=50&offset=0
+```
+
+Returns individual request logs with endpoint, model, status, latency, and token counts.
+
+## SDK Usage
+
+```typescript
+import { SaaSMakerClient } from '@saas-maker/sdk';
+
+const client = new SaaSMakerClient({ apiKey: 'pk_your_api_key' });
+
+// Chat completion
+const chat = await client.ai.chat({
+  messages: [{ role: 'user', content: 'What is SaaS Maker?' }],
+});
+
+// Embeddings
+const embeddings = await client.ai.embed('What is SaaS Maker?');
+
+// RAG (requires a Knowledge Base index with documents)
+const answer = await client.ai.rag({
+  query: 'How do I collect feedback?',
+  index_id: 'your-index-id',
+  top_k: 5,
+});
+```
+
+---
+
+Lightweight, privacy-friendly analytics for your SaaS. Track page views and custom events without cookies. Includes automatic UTM parameter capture, device/browser detection, and country-level geo data.
+
+## How it works
+
+1. Add the analytics script to your site or call the API directly
+2. Page views are tracked automatically (including SPA navigation)
+3. View dashboards with top pages, referrers, countries, and devices
+
+## Tracking script
+
+Add this script tag to your site for automatic page view tracking:
+
+```html
+<script
+  defer
+  data-project="pk_your_api_key"
+  data-api="https://api.sassmaker.com"
+  src="https://unpkg.com/@saas-maker/analytics-sdk/dist/index.global.js"
+></script>
+```
+
+The script automatically:
+- Tracks initial page views
+- Handles SPA navigation (pushState / replaceState / popstate)
+- Captures UTM parameters from the URL
+- Respects `Do Not Track` browser setting
+- Sends screen width, referrer, and user agent
+
+### Custom events
+
+After the script loads, use the global `sm` function:
+
+```javascript
+// Track a custom event
+sm('signup_completed');
+
+// Track with properties
+sm('plan_upgraded', { plan: 'pro', value: 49 });
+```
+
+You can also queue events before the script loads:
+
+```javascript
+window.sm = window.sm || { q: [] };
+sm.q.push(['button_clicked', { id: 'cta-hero' }]);
+```
+
+## API endpoints
+
+### Track an event
+
+```
+POST /v1/analytics/events
+```
+
+**Auth:** API Key
+
+```bash
+curl -X POST https://api.sassmaker.com/v1/analytics/events \
+  -H "Content-Type: application/json" \
+  -H "X-Project-Key: pk_abc123" \
+  -d '{
+    "name": "page_view",
+    "url": "https://myapp.com/pricing",
+    "referrer": "https://google.com",
+    "utm_source": "google",
+    "utm_medium": "cpc",
+    "screen_width": 1440,
+    "properties": { "variant": "B" }
+  }'
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `name` | string | No | Event name (defaults to `page_view`) |
+| `url` | string | No | Page URL |
+| `referrer` | string | No | Referrer URL |
+| `utm_source` | string | No | UTM source |
+| `utm_medium` | string | No | UTM medium |
+| `utm_campaign` | string | No | UTM campaign |
+| `screen_width` | number | No | Viewport width |
+| `properties` | object | No | Custom event properties |
+
+### Dashboard overview
+
+```
+GET /v1/analytics/overview?project_id=...&period=30d
+```
+
+**Auth:** Session Token
+
+Returns page views, unique visitors, top page, and top referrer.
+
+**Period options:** `7d`, `30d` (default), `90d`
+
+### Top pages
+
+```
+GET /v1/analytics/pages?project_id=...&period=30d
+```
+
+**Auth:** Session Token
+
+### Top referrers
+
+```
+GET /v1/analytics/referrers?project_id=...&period=30d
+```
+
+**Auth:** Session Token
+
+### Country breakdown
+
+```
+GET /v1/analytics/countries?project_id=...&period=30d
+```
+
+**Auth:** Session Token
+
+### Device breakdown
+
+```
+GET /v1/analytics/devices?project_id=...&period=30d
+```
+
+**Auth:** Session Token
+
+### Custom event counts
+
+```
+GET /v1/analytics/events?project_id=...&period=30d
+```
+
+**Auth:** Session Token
+
+---
+
+Keep your users informed about product updates. Create changelog entries with categories, and publish them when ready.
+
+## Entry types
+
+- `feature` — new functionality
+- `improvement` — enhancement to existing features
+- `fix` — bug fix
+- `breaking` — breaking change
+
+## Draft support
+
+Entries can be saved as drafts and published later. Only published entries are visible to users via the public API or widgets.
+
+## API endpoints
+
+### List published entries
+
+```
+GET /v1/changelog
+```
+
+**Auth:** API Key
+
+```bash
+curl https://api.sassmaker.com/v1/changelog \
+  -H "X-Project-Key: pk_abc123"
+```
+
+Returns published changelog entries sorted by date (newest first).
+
+### Create entry
+
+```
+POST /v1/changelog/dashboard/:projectId
+```
+
+**Auth:** Session Token
+
+```bash
+curl -X POST https://api.sassmaker.com/v1/changelog/dashboard/proj_123 \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Dark mode support",
+    "content": "You can now switch to dark mode in Settings.",
+    "type": "feature",
+    "published": true
+  }'
+```
+
+### Update entry
+
+```
+PATCH /v1/changelog/dashboard/:projectId/:id
+```
+
+**Auth:** Session Token
+
+```bash
+curl -X PATCH https://api.sassmaker.com/v1/changelog/dashboard/proj_123/456 \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{ "published": true }'
+```
+
+### Delete entry
+
+```
+DELETE /v1/changelog/dashboard/:projectId/:id
+```
+
+**Auth:** Session Token
 
 ---
 
@@ -362,159 +902,6 @@ DELETE /v1/feedback/:id
 ```
 
 **Auth:** Session Token (project owner only)
-
----
-
-Build a waitlist for your product before launch. When someone joins, SaaS Maker automatically sends a welcome email via Resend.
-
-## How it works
-
-1. Add the waitlist endpoint or widget to your landing page
-2. Users submit their email (and optionally their name and referral source)
-3. A welcome email is sent automatically
-4. View and manage entries in the dashboard
-
-## API endpoints
-
-### Join waitlist
-
-```
-POST /v1/waitlist
-```
-
-**Auth:** API Key
-
-```bash
-curl -X POST https://api.sassmaker.com/v1/waitlist \
-  -H "Content-Type: application/json" \
-  -H "X-Project-Key: pk_abc123" \
-  -d '{
-    "email": "user@example.com",
-    "name": "Jane Doe",
-    "referral_source": "twitter"
-  }'
-```
-
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `email` | string | Yes | Email address |
-| `name` | string | No | Full name |
-| `referral_source` | string | No | How they found you |
-
-### List waitlist entries
-
-```
-GET /v1/waitlist?project_id=...
-```
-
-**Auth:** Session Token
-
-```bash
-curl https://api.sassmaker.com/v1/waitlist?project_id=proj_123 \
-  -H "Authorization: Bearer <token>"
-```
-
-Returns all waitlist entries for the project, sorted by signup date.
-
----
-
-Collect testimonials from your customers and display approved ones on your site. Submissions start as `pending` and can be approved or rejected in the dashboard.
-
-## Public submission page
-
-Every project gets a public testimonial submission page at:
-
-```
-https://app.sassmaker.com/t/[project-slug]
-```
-
-Share this link in email campaigns, onboarding flows, or support follow-ups to collect testimonials effortlessly.
-
-## API endpoints
-
-### Submit testimonial (with API key)
-
-```
-POST /v1/testimonials
-```
-
-**Auth:** API Key
-
-```bash
-curl -X POST https://api.sassmaker.com/v1/testimonials \
-  -H "Content-Type: application/json" \
-  -H "X-Project-Key: pk_abc123" \
-  -d '{
-    "author_name": "Jane Doe",
-    "author_email": "jane@example.com",
-    "content": "SaaS Maker saved us weeks of development time.",
-    "rating": 5,
-    "author_title": "CTO at Acme",
-    "tweet_url": "https://twitter.com/jane/status/123"
-  }'
-```
-
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `author_name` | string | Yes | Name of the person |
-| `author_email` | string | Yes | Email address |
-| `content` | string | Yes | Testimonial text |
-| `rating` | number | Yes | Rating from 1 to 5 |
-| `author_title` | string | No | Job title or role |
-| `tweet_url` | string | No | Link to a tweet |
-
-### Submit testimonial by slug (public)
-
-```
-POST /v1/testimonials/by-project/:slug
-```
-
-**Auth:** None (public)
-
-Same body as above. Use this for public submission forms where no API key is available.
-
-### List approved testimonials
-
-```
-GET /v1/testimonials
-```
-
-**Auth:** API Key
-
-Returns only approved testimonials. Use this to display testimonials on your site.
-
-### List all testimonials with stats
-
-```
-GET /v1/testimonials/all?project_id=...
-```
-
-**Auth:** Session Token
-
-Returns all testimonials (pending, approved, rejected) with aggregate stats. Used by the dashboard.
-
-### Update testimonial status
-
-```
-PATCH /v1/testimonials/:id?project_id=...
-```
-
-**Auth:** Session Token
-
-```bash
-curl -X PATCH "https://api.sassmaker.com/v1/testimonials/456?project_id=proj_123" \
-  -H "Authorization: Bearer <token>" \
-  -H "Content-Type: application/json" \
-  -d '{ "status": "approved" }'
-```
-
-### Delete testimonial
-
-```
-DELETE /v1/testimonials/:id?project_id=...
-```
-
-**Auth:** Session Token
 
 ---
 
@@ -899,81 +1286,6 @@ await client.forms.submit(formId, {
 
 ---
 
-Keep your users informed about product updates. Create changelog entries with categories, and publish them when ready.
-
-## Entry types
-
-- `feature` — new functionality
-- `improvement` — enhancement to existing features
-- `fix` — bug fix
-- `breaking` — breaking change
-
-## Draft support
-
-Entries can be saved as drafts and published later. Only published entries are visible to users via the public API or widgets.
-
-## API endpoints
-
-### List published entries
-
-```
-GET /v1/changelog
-```
-
-**Auth:** API Key
-
-```bash
-curl https://api.sassmaker.com/v1/changelog \
-  -H "X-Project-Key: pk_abc123"
-```
-
-Returns published changelog entries sorted by date (newest first).
-
-### Create entry
-
-```
-POST /v1/changelog/dashboard/:projectId
-```
-
-**Auth:** Session Token
-
-```bash
-curl -X POST https://api.sassmaker.com/v1/changelog/dashboard/proj_123 \
-  -H "Authorization: Bearer <token>" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "title": "Dark mode support",
-    "content": "You can now switch to dark mode in Settings.",
-    "type": "feature",
-    "published": true
-  }'
-```
-
-### Update entry
-
-```
-PATCH /v1/changelog/dashboard/:projectId/:id
-```
-
-**Auth:** Session Token
-
-```bash
-curl -X PATCH https://api.sassmaker.com/v1/changelog/dashboard/proj_123/456 \
-  -H "Authorization: Bearer <token>" \
-  -H "Content-Type: application/json" \
-  -d '{ "published": true }'
-```
-
-### Delete entry
-
-```
-DELETE /v1/changelog/dashboard/:projectId/:id
-```
-
-**Auth:** Session Token
-
----
-
 Upload documents and search them with natural language queries. SaaS Maker automatically chunks your content, generates embeddings, and stores them for fast vector similarity search.
 
 ## How it works
@@ -1139,467 +1451,260 @@ DELETE /v1/indexes/:indexId
 
 ---
 
-Lightweight, privacy-friendly analytics for your SaaS. Track page views and custom events without cookies. Includes automatic UTM parameter capture, device/browser detection, and country-level geo data.
+Collect testimonials from your customers and display approved ones on your site. Submissions start as `pending` and can be approved or rejected in the dashboard.
 
-## How it works
+## Public submission page
 
-1. Add the analytics script to your site or call the API directly
-2. Page views are tracked automatically (including SPA navigation)
-3. View dashboards with top pages, referrers, countries, and devices
+Every project gets a public testimonial submission page at:
 
-## Tracking script
-
-Add this script tag to your site for automatic page view tracking:
-
-```html
-<script
-  defer
-  data-project="pk_your_api_key"
-  data-api="https://api.sassmaker.com"
-  src="https://unpkg.com/@saas-maker/analytics-sdk/dist/index.global.js"
-></script>
+```
+https://app.sassmaker.com/t/[project-slug]
 ```
 
-The script automatically:
-- Tracks initial page views
-- Handles SPA navigation (pushState / replaceState / popstate)
-- Captures UTM parameters from the URL
-- Respects `Do Not Track` browser setting
-- Sends screen width, referrer, and user agent
-
-### Custom events
-
-After the script loads, use the global `sm` function:
-
-```javascript
-// Track a custom event
-sm('signup_completed');
-
-// Track with properties
-sm('plan_upgraded', { plan: 'pro', value: 49 });
-```
-
-You can also queue events before the script loads:
-
-```javascript
-window.sm = window.sm || { q: [] };
-sm.q.push(['button_clicked', { id: 'cta-hero' }]);
-```
+Share this link in email campaigns, onboarding flows, or support follow-ups to collect testimonials effortlessly.
 
 ## API endpoints
 
-### Track an event
+### Submit testimonial (with API key)
 
 ```
-POST /v1/analytics/events
+POST /v1/testimonials
 ```
 
 **Auth:** API Key
 
 ```bash
-curl -X POST https://api.sassmaker.com/v1/analytics/events \
+curl -X POST https://api.sassmaker.com/v1/testimonials \
   -H "Content-Type: application/json" \
   -H "X-Project-Key: pk_abc123" \
   -d '{
-    "name": "page_view",
-    "url": "https://myapp.com/pricing",
-    "referrer": "https://google.com",
-    "utm_source": "google",
-    "utm_medium": "cpc",
-    "screen_width": 1440,
-    "properties": { "variant": "B" }
+    "author_name": "Jane Doe",
+    "author_email": "jane@example.com",
+    "content": "SaaS Maker saved us weeks of development time.",
+    "rating": 5,
+    "author_title": "CTO at Acme",
+    "tweet_url": "https://twitter.com/jane/status/123"
   }'
 ```
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `name` | string | No | Event name (defaults to `page_view`) |
-| `url` | string | No | Page URL |
-| `referrer` | string | No | Referrer URL |
-| `utm_source` | string | No | UTM source |
-| `utm_medium` | string | No | UTM medium |
-| `utm_campaign` | string | No | UTM campaign |
-| `screen_width` | number | No | Viewport width |
-| `properties` | object | No | Custom event properties |
+| `author_name` | string | Yes | Name of the person |
+| `author_email` | string | Yes | Email address |
+| `content` | string | Yes | Testimonial text |
+| `rating` | number | Yes | Rating from 1 to 5 |
+| `author_title` | string | No | Job title or role |
+| `tweet_url` | string | No | Link to a tweet |
 
-### Dashboard overview
+### Submit testimonial by slug (public)
 
 ```
-GET /v1/analytics/overview?project_id=...&period=30d
+POST /v1/testimonials/by-project/:slug
 ```
 
-**Auth:** Session Token
+**Auth:** None (public)
 
-Returns page views, unique visitors, top page, and top referrer.
+Same body as above. Use this for public submission forms where no API key is available.
 
-**Period options:** `7d`, `30d` (default), `90d`
-
-### Top pages
+### List approved testimonials
 
 ```
-GET /v1/analytics/pages?project_id=...&period=30d
+GET /v1/testimonials
 ```
 
-**Auth:** Session Token
+**Auth:** API Key
 
-### Top referrers
+Returns only approved testimonials. Use this to display testimonials on your site.
+
+### List all testimonials with stats
 
 ```
-GET /v1/analytics/referrers?project_id=...&period=30d
+GET /v1/testimonials/all?project_id=...
 ```
 
 **Auth:** Session Token
 
-### Country breakdown
+Returns all testimonials (pending, approved, rejected) with aggregate stats. Used by the dashboard.
+
+### Update testimonial status
 
 ```
-GET /v1/analytics/countries?project_id=...&period=30d
-```
-
-**Auth:** Session Token
-
-### Device breakdown
-
-```
-GET /v1/analytics/devices?project_id=...&period=30d
+PATCH /v1/testimonials/:id?project_id=...
 ```
 
 **Auth:** Session Token
 
-### Custom event counts
+```bash
+curl -X PATCH "https://api.sassmaker.com/v1/testimonials/456?project_id=proj_123" \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{ "status": "approved" }'
+```
+
+### Delete testimonial
 
 ```
-GET /v1/analytics/events?project_id=...&period=30d
+DELETE /v1/testimonials/:id?project_id=...
 ```
 
 **Auth:** Session Token
 
 ---
 
-The AI Gateway lets you route LLM requests through SaaS Maker with usage tracking, logging, and built-in RAG support.
+Build a waitlist for your product before launch. When someone joins, SaaS Maker automatically sends a welcome email via Resend.
+
+## How it works
+
+1. Add the waitlist endpoint or widget to your landing page
+2. Users submit their email (and optionally their name and referral source)
+3. A welcome email is sent automatically
+4. View and manage entries in the dashboard
+
+## API endpoints
+
+### Join waitlist
+
+```
+POST /v1/waitlist
+```
+
+**Auth:** API Key
+
+```bash
+curl -X POST https://api.sassmaker.com/v1/waitlist \
+  -H "Content-Type: application/json" \
+  -H "X-Project-Key: pk_abc123" \
+  -d '{
+    "email": "user@example.com",
+    "name": "Jane Doe",
+    "referral_source": "twitter"
+  }'
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `email` | string | Yes | Email address |
+| `name` | string | No | Full name |
+| `referral_source` | string | No | How they found you |
+
+### List waitlist entries
+
+```
+GET /v1/waitlist?project_id=...
+```
+
+**Auth:** Session Token
+
+```bash
+curl https://api.sassmaker.com/v1/waitlist?project_id=proj_123 \
+  -H "Authorization: Bearer <token>"
+```
+
+Returns all waitlist entries for the project, sorted by signup date.
+
+---
+
+The SaaS Maker CLI is intentionally API-first:
+
+- Keep command surface small
+- Use `saasmaker api` for all backend capabilities
+- Avoid feature-specific CLI code for each new API route
+
+## Installation
+
+```bash
+npm install -g @saas-maker/cli
+```
 
 ## Quick Start
 
-No configuration needed — the free tier works out of the box. Just pass your project API key:
+```bash
+saasmaker login
+saasmaker init
+saasmaker doctor
+```
+
+## Core Commands
+
+- `login` — browser OAuth auth
+- `init` — link local directory to a project
+- `whoami` / `keys` — inspect auth + linked context
+- `projects list|create` — project management
+- `status` — feature status snapshot
+- `doctor` — configuration/auth diagnostics
+- `examples` — copy-paste API-first recipes
+- `completions` — shell autocompletion scripts
+- `api` — universal endpoint access
+
+## Universal API Command
 
 ```bash
-curl -X POST https://api.sassmaker.com/v1/ai/chat/completions \
-  -H "Content-Type: application/json" \
-  -H "X-Project-Key: pk_your_api_key" \
-  -d '{
-    "messages": [{"role": "user", "content": "Hello"}]
-  }'
+saasmaker api <method> <path> [options]
 ```
 
-The free tier routes to open-source models (Llama, Gemini Flash, Mistral) automatically. To use your own provider (OpenAI, Anthropic, etc.), see [Configuration](#configuration) below.
+### Auth options
 
-## Endpoints Summary
+- `--auth session` → Bearer token
+- `--auth project` → `X-Project-Key`
+- `--auth auto` (default) → use available context
+- `--auth none`
 
-All endpoints use **API Key** auth via `X-Project-Key` header.
+### Request options
 
-| Method | Path | Description |
-|--------|------|-------------|
-| `POST` | `/v1/ai/chat/completions` | Chat completion (proxied to provider) |
-| `POST` | `/v1/ai/embeddings` | Generate embeddings |
-| `POST` | `/v1/ai/rag` | RAG: search + chat in one call |
+- `--body '{...json...}'`
+- `--body-file ./payload.json`
+- `--query key=value` (repeatable)
+- `--header key=value` (repeatable)
+- `--token` / `--project-key` overrides
 
-## Chat Completions
+### Output options
 
-```
-POST /v1/ai/chat/completions
-```
+- `--output json|table`
+- `--select field1,field2`
+- `--quiet`
+- `--raw`
+
+## OpenAPI Validation
+
+`saasmaker api` validates method/path against OpenAPI by default.
+
+- Skip validation only when needed: `--no-validate`
+- Generated spec paths:
+  - `packages/cli/src/openapi.json` (CLI enforcement source)
+  - `docs/openapi/openapi.json` (repo artifact)
+  - `apps/docs/public/openapi.json` (published docs artifact)
+- Regenerate spec:
 
 ```bash
-curl -X POST https://api.sassmaker.com/v1/ai/chat/completions \
-  -H "Content-Type: application/json" \
-  -H "X-Project-Key: pk_your_api_key" \
-  -d '{
-    "messages": [
-      {"role": "system", "content": "You are a helpful assistant."},
-      {"role": "user", "content": "What is SaaS Maker?"}
-    ],
-    "stream": false
-  }'
+pnpm generate:openapi
 ```
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `messages` | array | Yes | OpenAI-format message array (`role` + `content`) |
-| `model` | string | No | Override the default model |
-| `stream` | boolean | No | Enable SSE streaming (default false) |
-| `temperature` | number | No | Sampling temperature (0–2) |
-| `max_tokens` | number | No | Max tokens to generate |
-
-**Response** (OpenAI-compatible):
-
-```json
-{
-  "id": "chatcmpl-abc123",
-  "choices": [
-    {
-      "message": {
-        "role": "assistant",
-        "content": "SaaS Maker is a backend-as-a-service platform..."
-      },
-      "finish_reason": "stop"
-    }
-  ],
-  "usage": {
-    "prompt_tokens": 25,
-    "completion_tokens": 42,
-    "total_tokens": 67
-  }
-}
-```
-
-**Error responses:**
-
-| Status | Body | Meaning |
-|--------|------|---------|
-| `400` | `{"error": "AI not configured for this project"}` | No custom config set AND free tier unavailable |
-| `400` | `{"error": "messages array is required"}` | Missing messages field |
-| `502` | `{"error": "Provider error: ..."}` | Upstream provider failed |
-
-## Embeddings
-
-```
-POST /v1/ai/embeddings
-```
+## Recipes
 
 ```bash
-curl -X POST https://api.sassmaker.com/v1/ai/embeddings \
-  -H "Content-Type: application/json" \
-  -H "X-Project-Key: pk_your_api_key" \
-  -d '{
-    "input": "What is SaaS Maker?",
-    "model": "text-embedding-3-small"
-  }'
-```
+# Health check
+saasmaker api GET /health --auth none
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `input` | string or string[] | Yes | Text(s) to embed |
-| `model` | string | No | Override the default model |
+# Session route
+saasmaker api GET /v1/projects --auth session --output table
 
-## RAG (Retrieval-Augmented Generation)
+# Project-key route
+saasmaker api GET /v1/feedback --auth project --query type=feature --output table
 
-RAG combines Knowledge Base vector search with a chat completion in a single call. **Prerequisite:** you must have a Knowledge Base index with documents already ingested (see the [end-to-end example](#end-to-end-rag-example) below).
+# Create feedback
+saasmaker api POST /v1/feedback --auth project \
+  --body '{"title":"Bug","description":"Broken CTA","submitter_email":"me@example.com","type":"bug"}'
 
-```
-POST /v1/ai/rag
-```
+# Create short link
+saasmaker api POST /v1/links --auth project \
+  --body '{"destination":"https://example.com","title":"Homepage"}'
 
-```bash
-curl -X POST https://api.sassmaker.com/v1/ai/rag \
-  -H "Content-Type: application/json" \
-  -H "X-Project-Key: pk_your_api_key" \
-  -d '{
-    "query": "How do I collect feedback?",
-    "index_id": "your-index-id",
-    "top_k": 5
-  }'
-```
+# Dashboard forms
+saasmaker api GET /v1/forms/dashboard/<projectId> --auth session --output table
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `query` | string | Yes | Natural language question |
-| `index_id` | string | Yes | Knowledge Base index ID (from `POST /v1/indexes`) |
-| `top_k` | number | No | Number of chunks to retrieve (default 5) |
-| `system_prompt` | string | No | Custom system prompt |
-| `stream` | boolean | No | Enable SSE streaming (default false) |
-
-**Response:**
-
-```json
-{
-  "response": "You can collect feedback by integrating the feedback widget...",
-  "sources": [
-    {
-      "document_id": "doc_abc",
-      "chunk_content": "Use the feedback endpoint to collect bugs...",
-      "score": 0.92
-    }
-  ],
-  "usage": {
-    "input_tokens": 150,
-    "output_tokens": 80
-  }
-}
-```
-
-**What happens under the hood:**
-
-1. Your query is embedded using the project's configured embedding model
-2. Top-K chunks are retrieved from the Knowledge Base index via vector similarity
-3. Retrieved chunks are injected as context into a chat completion call
-4. The LLM response is returned along with the source chunks
-
-**Error responses:**
-
-| Status | Body | Meaning |
-|--------|------|---------|
-| `400` | `{"error": "AI not configured for this project"}` | No AI config and no free tier |
-| `400` | `{"error": "index_id and query are required"}` | Missing required fields |
-| `404` | `{"error": "Index not found"}` | Invalid `index_id` |
-
-## End-to-End RAG Example
-
-Here's the complete flow to build a RAG-powered Q&A bot from scratch. All steps use the same `X-Project-Key`.
-
-### Step 1: Create a Knowledge Base index
-
-```bash
-curl -X POST https://api.sassmaker.com/v1/indexes \
-  -H "Content-Type: application/json" \
-  -H "X-Project-Key: pk_your_api_key" \
-  -d '{
-    "name": "help-docs",
-    "embedding_model": "gemini-embedding-001"
-  }'
-```
-
-Save the `id` from the response — you'll need it as `index_id`.
-
-### Step 2: Ingest documents
-
-```bash
-curl -X POST https://api.sassmaker.com/v1/indexes/YOUR_INDEX_ID/documents \
-  -H "Content-Type: application/json" \
-  -H "X-Project-Key: pk_your_api_key" \
-  -d '{
-    "content": "SaaS Maker is a backend-as-a-service platform. It provides feedback collection, waitlists, testimonials, changelogs, analytics, knowledge base, and AI gateway services.",
-    "metadata": {"source": "docs", "page": "intro"}
-  }'
-```
-
-Repeat for each document. Content is automatically chunked and embedded.
-
-### Step 3: Ask questions with RAG
-
-```bash
-curl -X POST https://api.sassmaker.com/v1/ai/rag \
-  -H "Content-Type: application/json" \
-  -H "X-Project-Key: pk_your_api_key" \
-  -d '{
-    "query": "What services does SaaS Maker provide?",
-    "index_id": "YOUR_INDEX_ID",
-    "top_k": 3
-  }'
-```
-
-The response includes the AI-generated answer and the source chunks it used.
-
-## Configuration
-
-By default, the free tier is used — no setup needed. To use your own provider:
-
-### Set custom provider (Dashboard or API)
-
-Config endpoints require a **session token** (not API key) because they contain sensitive credentials.
-
-```
-PUT /v1/ai/config/:projectId
-```
-
-```bash
-curl -X PUT https://api.sassmaker.com/v1/ai/config/YOUR_PROJECT_ID \
-  -H "Authorization: Bearer SESSION_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "ai_base_url": "https://api.openai.com/v1",
-    "ai_api_key": "sk-...",
-    "ai_model": "gpt-4o"
-  }'
-```
-
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `ai_base_url` | string | Yes | Provider base URL (must be OpenAI-compatible) |
-| `ai_api_key` | string | Yes | Provider API key |
-| `ai_model` | string | Yes | Default model name |
-
-### Get current config
-
-```
-GET /v1/ai/config/:projectId
-```
-
-**Auth:** Session token. Returns config with the API key masked.
-
-### Reset to free tier
-
-```
-DELETE /v1/ai/config/:projectId
-```
-
-**Auth:** Session token. Removes custom config; the project falls back to free tier.
-
-## Free Tier Models
-
-When no custom provider is configured, requests are routed through the free AI gateway which automatically selects from:
-
-**Chat models:**
-
-| Model | Provider |
-|-------|----------|
-| `@cf/meta/llama-3.1-8b-instruct` | Cloudflare Workers AI |
-| `@cf/mistral/mistral-7b-instruct-v0.1` | Cloudflare Workers AI |
-| `llama-3.1-8b-instant` | Groq |
-| `llama-3.3-70b-versatile` | Groq |
-| `gemini-2.0-flash-lite` | Google Gemini |
-| `gemini-2.0-flash` | Google Gemini |
-
-**Embedding models:**
-
-| Model | Provider |
-|-------|----------|
-| `gemini-embedding-001` | Google Gemini |
-| `voyage-3.5-lite` | Voyage AI |
-| `@cf/baai/bge-base-en-v1.5` | Cloudflare Workers AI |
-
-The free tier uses health-aware routing — if one provider is down, requests are automatically routed to the next available model.
-
-## Usage & Logs
-
-These endpoints require a **session token** (dashboard auth).
-
-### Usage stats
-
-```
-GET /v1/ai/usage/:projectId?days=30
-```
-
-Returns: `total_requests`, `success_count`, `error_count`, `avg_latency_ms`, `total_input_tokens`, `total_output_tokens`.
-
-### Request logs
-
-```
-GET /v1/ai/requests/:projectId?limit=50&offset=0
-```
-
-Returns individual request logs with endpoint, model, status, latency, and token counts.
-
-## SDK Usage
-
-```typescript
-import { SaaSMakerClient } from '@saas-maker/sdk';
-
-const client = new SaaSMakerClient({ apiKey: 'pk_your_api_key' });
-
-// Chat completion
-const chat = await client.ai.chat({
-  messages: [{ role: 'user', content: 'What is SaaS Maker?' }],
-});
-
-// Embeddings
-const embeddings = await client.ai.embed('What is SaaS Maker?');
-
-// RAG (requires a Knowledge Base index with documents)
-const answer = await client.ai.rag({
-  query: 'How do I collect feedback?',
-  index_id: 'your-index-id',
-  top_k: 5,
-});
+# Approve testimonial
+saasmaker api PATCH /v1/testimonials/<testimonialId> --auth session \
+  --query project_id=<projectId> --body '{"status":"approved"}'
 ```
 
 ---
@@ -1742,107 +1847,60 @@ try {
 
 ---
 
-The SaaS Maker CLI is intentionally API-first:
-
-- Keep command surface small
-- Use `saasmaker api` for all backend capabilities
-- Avoid feature-specific CLI code for each new API route
+A React component that renders your published changelog entries as a vertical timeline. Entries are fetched automatically from the API.
 
 ## Installation
 
 ```bash
-npm install -g @saas-maker/cli
+npm install @saas-maker/changelog-widget
 ```
 
-## Quick Start
+## Usage
 
-```bash
-saasmaker login
-saasmaker init
-saasmaker doctor
+```tsx
+import { ChangelogTimeline } from '@saas-maker/changelog-widget';
+
+function WhatsNew() {
+  return (
+    <ChangelogTimeline
+      projectId="pk_your_api_key"
+      apiBaseUrl="https://api.sassmaker.com"
+    />
+  );
+}
 ```
 
-## Core Commands
+## Props
 
-- `login` — browser OAuth auth
-- `init` — link local directory to a project
-- `whoami` / `keys` — inspect auth + linked context
-- `projects list|create` — project management
-- `status` — feature status snapshot
-- `doctor` — configuration/auth diagnostics
-- `examples` — copy-paste API-first recipes
-- `completions` — shell autocompletion scripts
-- `api` — universal endpoint access
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `projectId` | `string` | -- | Your project API key (required) |
+| `apiBaseUrl` | `string` | -- | API base URL (required) |
+| `theme` | `'light' \| 'dark' \| 'auto'` | `'auto'` | Color theme |
+| `maxItems` | `number` | -- | Limit the number of entries shown |
 
-## Universal API Command
+## What it renders
 
-```bash
-saasmaker api <method> <path> [options]
-```
+Each timeline entry displays:
 
-### Auth options
+- **Date** -- formatted publish date
+- **Version badge** -- shown if a version string is set (e.g., `v1.2.0`)
+- **Type badge** -- color-coded by entry type (`feature`, `improvement`, `fix`, `breaking`)
+- **Title and content** -- the changelog entry body
 
-- `--auth session` → Bearer token
-- `--auth project` → `X-Project-Key`
-- `--auth auto` (default) → use available context
-- `--auth none`
+Entries are sorted newest-first and only published entries are shown.
 
-### Request options
+## Theming
 
-- `--body '{...json...}'`
-- `--body-file ./payload.json`
-- `--query key=value` (repeatable)
-- `--header key=value` (repeatable)
-- `--token` / `--project-key` overrides
+The widget supports light, dark, and auto themes:
 
-### Output options
-
-- `--output json|table`
-- `--select field1,field2`
-- `--quiet`
-- `--raw`
-
-## OpenAPI Validation
-
-`saasmaker api` validates method/path against OpenAPI by default.
-
-- Skip validation only when needed: `--no-validate`
-- Generated spec paths:
-  - `packages/cli/src/openapi.json` (CLI enforcement source)
-  - `docs/openapi/openapi.json` (repo artifact)
-  - `apps/docs/public/openapi.json` (published docs artifact)
-- Regenerate spec:
-
-```bash
-pnpm generate:openapi
-```
-
-## Recipes
-
-```bash
-# Health check
-saasmaker api GET /health --auth none
-
-# Session route
-saasmaker api GET /v1/projects --auth session --output table
-
-# Project-key route
-saasmaker api GET /v1/feedback --auth project --query type=feature --output table
-
-# Create feedback
-saasmaker api POST /v1/feedback --auth project \
-  --body '{"title":"Bug","description":"Broken CTA","submitter_email":"me@example.com","type":"bug"}'
-
-# Create short link
-saasmaker api POST /v1/links --auth project \
-  --body '{"destination":"https://example.com","title":"Homepage"}'
-
-# Dashboard forms
-saasmaker api GET /v1/forms/dashboard/<projectId> --auth session --output table
-
-# Approve testimonial
-saasmaker api PATCH /v1/testimonials/<testimonialId> --auth session \
-  --query project_id=<projectId> --body '{"status":"approved"}'
+```tsx
+<ChangelogTimeline
+  projectId="pk_your_api_key"
+  apiBaseUrl="https://api.sassmaker.com"
+  theme="dark"
+  maxItems={10}
+/>
 ```
 
 ---
@@ -1911,6 +1969,67 @@ The widget supports light, dark, and auto themes. The `auto` theme follows the u
   accentColor="#ff6b00"
 />
 ```
+
+---
+
+Drop-in React component that renders a published form or survey inside your app. Handles fetching questions, rendering inputs, validation, and submission.
+
+## Installation
+
+```bash
+npm install @saas-maker/survey
+```
+
+## Usage
+
+```tsx
+import { SurveyWidget } from '@saas-maker/survey';
+
+function App() {
+  return (
+    <SurveyWidget
+      projectId="pk_your_api_key"
+      formSlug="customer-survey"
+    />
+  );
+}
+```
+
+The widget fetches the form by slug, renders each question with the appropriate input type, validates required fields, and submits the response to the API.
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `projectId` | `string` | -- | Your project API key (required) |
+| `formSlug` | `string` | -- | Slug of the published form (required) |
+| `theme` | `'light' \| 'dark' \| 'auto'` | `'auto'` | Color theme |
+| `accentColor` | `string` | `'#1464ff'` | Brand accent color |
+| `onComplete` | `(response) => void` | -- | Callback after successful submission |
+
+## Theming
+
+The widget supports light, dark, and auto themes. The `auto` theme follows the user's system preference. You can also set a custom accent color:
+
+```tsx
+<SurveyWidget
+  projectId="pk_your_api_key"
+  formSlug="customer-survey"
+  theme="dark"
+  accentColor="#ff6b00"
+  onComplete={(res) => console.log('Submitted', res)}
+/>
+```
+
+## Hosted survey page
+
+If embedding a React component is not practical, you can share the built-in hosted survey page:
+
+```
+https://app.sassmaker.com/s/[form-slug]
+```
+
+This is useful for email campaigns, QR codes, and onboarding flows. No authentication or API key is required — the page uses the public submission endpoint.
 
 ---
 
@@ -1996,119 +2115,25 @@ This is useful for email campaigns and onboarding flows where embedding a React 
 
 ---
 
-A React component that renders your published changelog entries as a vertical timeline. Entries are fetched automatically from the API.
+import { Card, CardGrid } from '@astrojs/starlight/components';
 
-## Installation
-
-```bash
-npm install @saas-maker/changelog-widget
-```
-
-## Usage
-
-```tsx
-import { ChangelogTimeline } from '@saas-maker/changelog-widget';
-
-function WhatsNew() {
-  return (
-    <ChangelogTimeline
-      projectId="pk_your_api_key"
-      apiBaseUrl="https://api.sassmaker.com"
-    />
-  );
-}
-```
-
-## Props
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `projectId` | `string` | -- | Your project API key (required) |
-| `apiBaseUrl` | `string` | -- | API base URL (required) |
-| `theme` | `'light' \| 'dark' \| 'auto'` | `'auto'` | Color theme |
-| `maxItems` | `number` | -- | Limit the number of entries shown |
-
-## What it renders
-
-Each timeline entry displays:
-
-- **Date** -- formatted publish date
-- **Version badge** -- shown if a version string is set (e.g., `v1.2.0`)
-- **Type badge** -- color-coded by entry type (`feature`, `improvement`, `fix`, `breaking`)
-- **Title and content** -- the changelog entry body
-
-Entries are sorted newest-first and only published entries are shown.
-
-## Theming
-
-The widget supports light, dark, and auto themes:
-
-```tsx
-<ChangelogTimeline
-  projectId="pk_your_api_key"
-  apiBaseUrl="https://api.sassmaker.com"
-  theme="dark"
-  maxItems={10}
-/>
-```
-
----
-
-Drop-in React component that renders a published form or survey inside your app. Handles fetching questions, rendering inputs, validation, and submission.
-
-## Installation
-
-```bash
-npm install @saas-maker/survey
-```
-
-## Usage
-
-```tsx
-import { SurveyWidget } from '@saas-maker/survey';
-
-function App() {
-  return (
-    <SurveyWidget
-      projectId="pk_your_api_key"
-      formSlug="customer-survey"
-    />
-  );
-}
-```
-
-The widget fetches the form by slug, renders each question with the appropriate input type, validates required fields, and submits the response to the API.
-
-## Props
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `projectId` | `string` | -- | Your project API key (required) |
-| `formSlug` | `string` | -- | Slug of the published form (required) |
-| `theme` | `'light' \| 'dark' \| 'auto'` | `'auto'` | Color theme |
-| `accentColor` | `string` | `'#1464ff'` | Brand accent color |
-| `onComplete` | `(response) => void` | -- | Callback after successful submission |
-
-## Theming
-
-The widget supports light, dark, and auto themes. The `auto` theme follows the user's system preference. You can also set a custom accent color:
-
-```tsx
-<SurveyWidget
-  projectId="pk_your_api_key"
-  formSlug="customer-survey"
-  theme="dark"
-  accentColor="#ff6b00"
-  onComplete={(res) => console.log('Submitted', res)}
-/>
-```
-
-## Hosted survey page
-
-If embedding a React component is not practical, you can share the built-in hosted survey page:
-
-```
-https://app.sassmaker.com/s/[form-slug]
-```
-
-This is useful for email campaigns, QR codes, and onboarding flows. No authentication or API key is required — the page uses the public submission endpoint.
+<CardGrid stagger>
+  <Card title="Feedback & Voting" icon="comment">
+    Collect bugs, feature requests, and feedback with public voting boards.
+  </Card>
+  <Card title="Waitlist" icon="list-format">
+    Pre-launch email collection with automatic welcome emails.
+  </Card>
+  <Card title="Testimonials" icon="star">
+    Collect and display customer testimonials with approval workflow.
+  </Card>
+  <Card title="Changelog" icon="rocket">
+    Publish product updates with embeddable timeline widget.
+  </Card>
+  <Card title="Knowledge Base" icon="magnifier">
+    Vector search and RAG — upload docs, search semantically.
+  </Card>
+  <Card title="Analytics" icon="bars">
+    Track page views and custom events.
+  </Card>
+</CardGrid>
