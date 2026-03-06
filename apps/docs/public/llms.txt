@@ -14,28 +14,26 @@ SaaS Maker is a drop-in backend-as-a-service for SaaS apps. Instead of building 
 | **Changelog** | Publish product updates with categories and drafts |
 | **Knowledge Base** | Vector search / RAG-powered document search |
 | **Analytics** | Track page views and custom events |
+| **AI Gateway** | Proxy LLM calls, embeddings, and RAG pipelines with usage tracking |
 
 ## How it works
 
-1. **Create a project** in the [dashboard](https://app.sassmaker.com)
-2. **Get your API key** from project Settings
-3. **Use the REST API or SDK** to integrate services into your app
+1. **Install the CLI** and log in
+2. **Create a project** and link it to your app directory
+3. **Use the REST API, SDK, or widgets** to integrate services
 
 ```bash
-npm install @saas-maker/sdk
+npm install -g @saas-maker/cli
+saasmaker login
+saasmaker projects create
+saasmaker init
 ```
 
-```typescript
-import { SaaSMakerClient } from '@saas-maker/sdk';
-
-const client = new SaaSMakerClient({
-  apiKey: 'pk_your_api_key',
-  baseUrl: 'https://api.sassmaker.com',
-});
-```
+Or manage projects from the [dashboard](https://app.sassmaker.com) if you prefer a UI.
 
 ## Architecture
 
+- **CLI** — Create and manage projects from your terminal
 - **API** — Cloudflare Workers (globally distributed, low latency)
 - **Database** — CockroachDB (distributed SQL)
 - **Widgets** — Embeddable React components for feedback, testimonials, and changelog
@@ -43,21 +41,49 @@ const client = new SaaSMakerClient({
 
 ---
 
-## 1. Sign up
+## 1. Install the CLI
 
-Create an account at [app.sassmaker.com](https://app.sassmaker.com). Sign in with Google.
+```bash
+npm install -g @saas-maker/cli
+```
 
-## 2. Create a project
+## 2. Log in
 
-From the dashboard, create a new project. Give it a name and slug. Then go to **Settings** and copy your API key (starts with `pk_`).
+```bash
+saasmaker login
+```
 
-## 3. Install the SDK
+Opens your browser for Google OAuth. Your session token is saved to `~/.saasmaker/config.json`.
+
+## 3. Create a project
+
+```bash
+saasmaker projects create
+```
+
+Follow the prompt to name your project. This generates a unique API key (starts with `pk_`).
+
+## 4. Link your app directory
+
+```bash
+cd ~/my-app
+saasmaker init
+```
+
+Select your project from the list. This creates a `.saasmaker.json` config in your project root.
+
+## 5. Check your setup
+
+```bash
+saasmaker keys     # show your API key
+saasmaker status   # show project stats
+```
+
+## 6. Integrate the SDK
 
 ```bash
 npm install @saas-maker/sdk
 ```
-
-## 4. Collect your first feedback
 
 ```typescript
 import { SaaSMakerClient } from '@saas-maker/sdk';
@@ -67,7 +93,6 @@ const client = new SaaSMakerClient({
   baseUrl: 'https://api.sassmaker.com',
 });
 
-// Submit feedback
 await client.feedback.submit({
   title: 'Add dark mode',
   description: 'Would love a dark mode option',
@@ -90,17 +115,9 @@ curl -X POST https://api.sassmaker.com/v1/feedback \
   }'
 ```
 
-## 5. Use the CLI (optional)
-
-```bash
-npm install -g @saas-maker/cli
-saasmaker login
-```
-
-The CLI opens your browser for Google OAuth. Once authenticated, you can manage projects and services from the terminal.
-
 ## Next steps
 
+- [CLI reference](/sdk/cli) — all CLI commands
 - [Authentication](/getting-started/authentication) — understand API keys vs session tokens
 - [Feedback](/services/feedback) — full feedback API reference
 - [JavaScript SDK](/sdk/javascript) — all available SDK methods
@@ -236,6 +253,7 @@ The API runs on Cloudflare Workers with no hard rate limits currently enforced. 
 | Changelog | `/v1/changelog` | [Changelog](/services/changelog) |
 | Knowledge Base | `/v1/indexes` | [Knowledge Base](/services/knowledge-base) |
 | Analytics | `/v1/analytics` | [Analytics](/services/analytics) |
+| AI Gateway | `/v1/ai` | [AI Gateway](/services/ai-gateway) |
 
 ---
 
@@ -1255,6 +1273,204 @@ GET /v1/analytics/events?project_id=...&period=30d
 
 ---
 
+The AI Gateway lets you route LLM requests through SaaS Maker with usage tracking, logging, and built-in RAG support. Bring your own provider (OpenAI, Anthropic, etc.) or use the free tier.
+
+## How it works
+
+1. **Configure your AI provider** — set base URL, API key, and default model per project
+2. **Call the proxy endpoints** — chat completions, embeddings, or RAG
+3. **View usage** — token counts, latency, and request logs in the dashboard
+
+## Configuration
+
+Configure AI settings per project via the dashboard or API. If no project-level config is set, the free tier (GPT-4o-mini) is used automatically.
+
+### Get config
+
+```
+GET /v1/ai/config/:projectId
+```
+
+**Auth:** Session token
+
+### Set config
+
+```
+PUT /v1/ai/config/:projectId
+```
+
+**Auth:** Session token
+
+```bash
+curl -X PUT https://api.sassmaker.com/v1/ai/config/PROJECT_ID \
+  -H "Authorization: Bearer SESSION_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "ai_base_url": "https://api.openai.com/v1",
+    "ai_api_key": "sk-...",
+    "ai_model": "gpt-4o"
+  }'
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `ai_base_url` | string | Yes | Provider base URL (OpenAI-compatible) |
+| `ai_api_key` | string | Yes | Provider API key |
+| `ai_model` | string | Yes | Default model |
+
+### Delete config
+
+```
+DELETE /v1/ai/config/:projectId
+```
+
+**Auth:** Session token
+
+Removes custom config. The project falls back to the free tier.
+
+## Chat Completions
+
+Proxy chat requests to your configured provider.
+
+```
+POST /v1/ai/chat/completions
+```
+
+**Auth:** API Key
+
+```bash
+curl -X POST https://api.sassmaker.com/v1/ai/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "X-Project-Key: pk_your_api_key" \
+  -d '{
+    "messages": [
+      { "role": "user", "content": "What is SaaS Maker?" }
+    ],
+    "stream": false
+  }'
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `messages` | array | Yes | OpenAI-format message array |
+| `model` | string | No | Override the default model |
+| `stream` | boolean | No | Enable SSE streaming (default false) |
+| `temperature` | number | No | Sampling temperature |
+| `max_tokens` | number | No | Max tokens to generate |
+
+Returns the provider's response directly (OpenAI-compatible format).
+
+## Embeddings
+
+Generate embeddings via your configured provider.
+
+```
+POST /v1/ai/embeddings
+```
+
+**Auth:** API Key
+
+```bash
+curl -X POST https://api.sassmaker.com/v1/ai/embeddings \
+  -H "Content-Type: application/json" \
+  -H "X-Project-Key: pk_your_api_key" \
+  -d '{
+    "input": "What is SaaS Maker?",
+    "model": "text-embedding-3-small"
+  }'
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `input` | string | Yes | Text to embed |
+| `model` | string | No | Override the default model |
+
+## RAG (Retrieval-Augmented Generation)
+
+Combines vector search with chat completion in a single call. Embeds your query, searches a knowledge base index, and generates a response grounded in the retrieved context.
+
+```
+POST /v1/ai/rag
+```
+
+**Auth:** API Key
+
+```bash
+curl -X POST https://api.sassmaker.com/v1/ai/rag \
+  -H "Content-Type: application/json" \
+  -H "X-Project-Key: pk_your_api_key" \
+  -d '{
+    "query": "How do I collect feedback?",
+    "index_id": "idx_123",
+    "top_k": 5
+  }'
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `query` | string | Yes | Natural language question |
+| `index_id` | string | Yes | Knowledge base index to search |
+| `top_k` | number | No | Number of chunks to retrieve (default 5) |
+| `system_prompt` | string | No | Custom system prompt |
+| `stream` | boolean | No | Enable SSE streaming (default false) |
+
+**What happens under the hood:**
+
+1. Query is embedded using your configured provider
+2. Top-K chunks are retrieved from the index via vector similarity
+3. Chunks are injected as context into a chat completion call
+4. Response is returned (optionally streamed)
+
+## Usage & Logs
+
+### Usage stats
+
+```
+GET /v1/ai/usage/:projectId?days=30
+```
+
+**Auth:** Session token
+
+Returns aggregated stats: total requests, success/error counts, average latency, total input/output tokens.
+
+### Request logs
+
+```
+GET /v1/ai/requests/:projectId?limit=50&offset=0
+```
+
+**Auth:** Session token
+
+Returns individual request logs with endpoint, model, status, latency, and token counts.
+
+## SDK Usage
+
+```typescript
+import { SaaSMakerClient } from '@saas-maker/sdk';
+
+const client = new SaaSMakerClient({
+  apiKey: 'pk_your_api_key',
+  baseUrl: 'https://api.sassmaker.com',
+});
+
+// Chat completion
+const response = await client.ai.chat({
+  messages: [{ role: 'user', content: 'What is SaaS Maker?' }],
+});
+
+// Embeddings
+const embeddings = await client.ai.embed('What is SaaS Maker?');
+
+// RAG
+const answer = await client.ai.rag({
+  query: 'How do I collect feedback?',
+  index_id: 'idx_123',
+  top_k: 5,
+});
+```
+
+---
+
 The JavaScript SDK provides a typed client for all SaaS Maker API endpoints.
 
 ## Installation
@@ -1360,6 +1576,25 @@ await client.analytics.track({
 });
 ```
 
+## AI Gateway
+
+```typescript
+// Chat completion
+const response = await client.ai.chat({
+  messages: [{ role: 'user', content: 'What is SaaS Maker?' }],
+});
+
+// Embeddings
+const embeddings = await client.ai.embed('What is SaaS Maker?');
+
+// RAG (retrieval-augmented generation)
+const answer = await client.ai.rag({
+  query: 'How do I collect feedback?',
+  index_id: 'idx_123',
+  top_k: 5,
+});
+```
+
 ## Error handling
 
 All methods throw on non-2xx responses. Errors include the `message` field from the API:
@@ -1374,7 +1609,11 @@ try {
 
 ---
 
-The SaaS Maker CLI lets you manage projects, view API keys, and check service stats from the terminal.
+The SaaS Maker CLI is intentionally API-first:
+
+- Keep command surface small
+- Use `saasmaker api` for all backend capabilities
+- Avoid feature-specific CLI code for each new API route
 
 ## Installation
 
@@ -1382,70 +1621,95 @@ The SaaS Maker CLI lets you manage projects, view API keys, and check service st
 npm install -g @saas-maker/cli
 ```
 
-## Authentication
+## Quick Start
 
 ```bash
 saasmaker login
-```
-
-Opens your browser for Google OAuth. Once authenticated, the session token is saved locally.
-
-## Commands
-
-### `login`
-
-Authenticate with Google OAuth. Opens a browser window for sign-in.
-
-```bash
-saasmaker login
-```
-
-### `whoami`
-
-Show the currently authenticated user.
-
-```bash
-saasmaker whoami
-```
-
-### `projects list`
-
-List all your projects.
-
-```bash
-saasmaker projects list
-```
-
-### `projects create`
-
-Create a new project interactively.
-
-```bash
-saasmaker projects create
-```
-
-### `init`
-
-Link the current directory to a SaaS Maker project. Creates a `.saasmaker.json` config file.
-
-```bash
 saasmaker init
+saasmaker doctor
 ```
 
-### `keys`
+## Core Commands
 
-Show the API key for the linked project.
+- `login` — browser OAuth auth
+- `init` — link local directory to a project
+- `whoami` / `keys` — inspect auth + linked context
+- `projects list|create` — project management
+- `status` — feature status snapshot
+- `doctor` — configuration/auth diagnostics
+- `examples` — copy-paste API-first recipes
+- `completions` — shell autocompletion scripts
+- `api` — universal endpoint access
+
+## Universal API Command
 
 ```bash
-saasmaker keys
+saasmaker api <method> <path> [options]
 ```
 
-### `status`
+### Auth options
 
-Show stats for the linked project (feedback count, waitlist entries, etc.).
+- `--auth session` → Bearer token
+- `--auth project` → `X-Project-Key`
+- `--auth auto` (default) → use available context
+- `--auth none`
+
+### Request options
+
+- `--body '{...json...}'`
+- `--body-file ./payload.json`
+- `--query key=value` (repeatable)
+- `--header key=value` (repeatable)
+- `--token` / `--project-key` overrides
+
+### Output options
+
+- `--output json|table`
+- `--select field1,field2`
+- `--quiet`
+- `--raw`
+
+## OpenAPI Validation
+
+`saasmaker api` validates method/path against OpenAPI by default.
+
+- Skip validation only when needed: `--no-validate`
+- Generated spec paths:
+  - `packages/cli/src/openapi.json` (CLI enforcement source)
+  - `docs/openapi/openapi.json` (repo artifact)
+  - `apps/docs/public/openapi.json` (published docs artifact)
+- Regenerate spec:
 
 ```bash
-saasmaker status
+pnpm generate:openapi
+```
+
+## Recipes
+
+```bash
+# Health check
+saasmaker api GET /health --auth none
+
+# Session route
+saasmaker api GET /v1/projects --auth session --output table
+
+# Project-key route
+saasmaker api GET /v1/feedback --auth project --query type=feature --output table
+
+# Create feedback
+saasmaker api POST /v1/feedback --auth project \
+  --body '{"title":"Bug","description":"Broken CTA","submitter_email":"me@example.com","type":"bug"}'
+
+# Create short link
+saasmaker api POST /v1/links --auth project \
+  --body '{"destination":"https://example.com","title":"Homepage"}'
+
+# Dashboard forms
+saasmaker api GET /v1/forms/dashboard/<projectId> --auth session --output table
+
+# Approve testimonial
+saasmaker api PATCH /v1/testimonials/<testimonialId> --auth session \
+  --query project_id=<projectId> --body '{"status":"approved"}'
 ```
 
 ---

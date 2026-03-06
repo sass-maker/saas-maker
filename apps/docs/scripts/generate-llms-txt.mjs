@@ -18,6 +18,7 @@ const FILE_ORDER = [
   "services/changelog.md",
   "services/knowledge-base.md",
   "services/analytics.md",
+  "services/ai-gateway.md",
   "sdk/javascript.md",
   "sdk/cli.md",
   "widgets/feedback.md",
