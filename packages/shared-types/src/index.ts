@@ -184,43 +184,6 @@ export interface AnalyticsOverview {
   top_referrer: string | null;
 }
 
-// --- Short Links Service ---
-
-export interface ShortLinkRecord {
-  id: string;
-  project_id: string;
-  slug: string;
-  destination: string;
-  title: string | null;
-  expires_at: string | null;
-  click_count: number;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface CreateShortLinkRequest {
-  destination: string;
-  slug?: string;
-  title?: string;
-  expires_at?: string;
-}
-
-export interface UpdateShortLinkRequest {
-  destination?: string;
-  title?: string;
-  expires_at?: string | null;
-}
-
-export interface ShortLinkStats {
-  link_id: string;
-  slug: string;
-  total_clicks: number;
-  clicks_by_country: { country: string; count: number }[];
-  clicks_by_device: { device: string; count: number }[];
-  clicks_by_referrer: { referrer: string; count: number }[];
-  clicks_over_time: { date: string; count: number }[];
-}
-
 // --- Widget Props ---
 export interface FeedbackWidgetProps {
   projectId: string;

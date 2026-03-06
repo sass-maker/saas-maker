@@ -10,7 +10,7 @@ import type {
   DocumentRecord,
   WaitlistEntryRecord,
   EventRecord,
-  ShortLinkRecord,
+
   TestimonialRecord,
   ChangelogEntryRecord,
   FormRecord,
@@ -171,7 +171,7 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
         ? await sql`
             SELECT f.*, v.vote AS viewer_vote
             FROM feedback f
-            LEFT JOIN upvotes v ON v.feedback_id = f.id AND v.user_id = ${userId}
+            LEFT JOIN feedback_votes v ON v.feedback_id = f.id AND v.user_id = ${userId}
             WHERE ${where}
             ORDER BY ${orderBy}
             LIMIT ${limit} OFFSET ${offset}
@@ -209,13 +209,13 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
     async setVote(input) {
       const [existing] = await sql`
         SELECT *
-        FROM upvotes
+        FROM feedback_votes
         WHERE feedback_id = ${input.feedback_id} AND user_id = ${input.user_id}
       `;
 
       if (!existing) {
         const [inserted] = await sql`
-          INSERT INTO upvotes (id, feedback_id, user_id, vote)
+          INSERT INTO feedback_votes (id, feedback_id, user_id, vote)
           VALUES (${input.id}, ${input.feedback_id}, ${input.user_id}, ${input.vote})
           RETURNING *
         `;
@@ -233,7 +233,7 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
       }
 
       const [updated] = await sql`
-        UPDATE upvotes
+        UPDATE feedback_votes
         SET vote = ${input.vote}
         WHERE id = ${existing.id}
         RETURNING *
@@ -261,12 +261,12 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
     async removeVote(feedbackId, userId) {
       const [existing] = await sql`
         SELECT *
-        FROM upvotes
+        FROM feedback_votes
         WHERE feedback_id = ${feedbackId} AND user_id = ${userId}
       `;
       if (!existing) return false;
 
-      await sql`DELETE FROM upvotes WHERE id = ${existing.id}`;
+      await sql`DELETE FROM feedback_votes WHERE id = ${existing.id}`;
 
       if (Number(existing.vote) === 1) {
         await sql`
@@ -288,7 +288,7 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
     async hasUpvoted(feedbackId, userId) {
       const [row] = await sql`
         SELECT 1
-        FROM upvotes
+        FROM feedback_votes
         WHERE feedback_id = ${feedbackId} AND user_id = ${userId} AND vote = 1
       `;
       return !!row;
@@ -297,7 +297,7 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
     async hasDownvoted(feedbackId, userId) {
       const [row] = await sql`
         SELECT 1
-        FROM upvotes
+        FROM feedback_votes
         WHERE feedback_id = ${feedbackId} AND user_id = ${userId} AND vote = -1
       `;
       return !!row;
@@ -306,7 +306,7 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
     async getUserVote(feedbackId, userId) {
       const [row] = await sql`
         SELECT vote
-        FROM upvotes
+        FROM feedback_votes
         WHERE feedback_id = ${feedbackId} AND user_id = ${userId}
       `;
       return parseViewerVote(row?.vote);
@@ -315,7 +315,7 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
     // --- Vector Memory: Indexes ---
     async createIndex(input) {
       const [row] = await sql`
-        INSERT INTO indexes (id, project_id, name, external_id)
+        INSERT INTO knowledge_indexes (id, project_id, name, external_id)
         VALUES (${input.id}, ${input.project_id}, ${input.name}, ${input.external_id})
         RETURNING *
       `;
@@ -323,14 +323,14 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
     },
 
     async getIndexById(id) {
-      const [row] = await sql`SELECT * FROM indexes WHERE id = ${id}`;
+      const [row] = await sql`SELECT * FROM knowledge_indexes WHERE id = ${id}`;
       return (row as IndexRecord) || null;
     },
 
     async listIndexesByProject(projectId) {
       const rows = await sql`
         SELECT i.*, COALESCE(d.cnt, 0)::int AS document_count
-        FROM indexes i
+        FROM knowledge_indexes i
         LEFT JOIN (SELECT index_id, COUNT(*) AS cnt FROM documents GROUP BY index_id) d
           ON d.index_id = i.id
         WHERE i.project_id = ${projectId}
@@ -340,7 +340,7 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
     },
 
     async deleteIndex(id) {
-      const result = await sql`DELETE FROM indexes WHERE id = ${id}`;
+      const result = await sql`DELETE FROM knowledge_indexes WHERE id = ${id}`;
       return result.count > 0;
     },
 
@@ -387,7 +387,7 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
         chunk_index: c.chunk_index,
       }));
       await sql`
-        INSERT INTO chunks ${sql(values, 'id', 'document_id', 'index_id', 'content', 'embedding', 'chunk_index')}
+        INSERT INTO document_chunks ${sql(values, 'id', 'document_id', 'index_id', 'content', 'embedding', 'chunk_index')}
       `;
       return chunks.length;
     },
@@ -397,7 +397,7 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
       const rows = await sql`
         SELECT c.document_id, c.content, d.metadata,
                (c.embedding <=> ${embeddingStr}::vector) AS distance
-        FROM chunks c
+        FROM document_chunks c
         JOIN documents d ON d.id = c.document_id
         WHERE c.index_id = ${indexId}
         ORDER BY c.embedding <=> ${embeddingStr}::vector
@@ -413,7 +413,7 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
     },
 
     async deleteChunksByDocument(documentId) {
-      const result = await sql`DELETE FROM chunks WHERE document_id = ${documentId}`;
+      const result = await sql`DELETE FROM document_chunks WHERE document_id = ${documentId}`;
       return result.count > 0;
     },
 
@@ -459,7 +459,7 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
     // --- Analytics ---
     async createEvent(input) {
       const [row] = await sql`
-        INSERT INTO events (id, project_id, name, url, referrer, utm_source, utm_medium, utm_campaign, country, device, browser, screen_width, properties)
+        INSERT INTO analytics_events (id, project_id, name, url, referrer, utm_source, utm_medium, utm_campaign, country, device, browser, screen_width, properties)
         VALUES (${input.id}, ${input.project_id}, ${input.name}, ${input.url}, ${input.referrer}, ${input.utm_source}, ${input.utm_medium}, ${input.utm_campaign}, ${input.country}, ${input.device}, ${input.browser}, ${input.screen_width}, ${JSON.stringify(input.properties)})
         RETURNING *
       `;
@@ -471,16 +471,16 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
         SELECT
           COUNT(*)::int AS page_views,
           COUNT(DISTINCT (created_at::date || '|' || COALESCE(country,'') || '|' || COALESCE(device,'') || '|' || COALESCE(browser,'')))::int AS unique_visitors
-        FROM events
+        FROM analytics_events
         WHERE project_id = ${projectId} AND name = 'page_view' AND created_at >= ${since}
       `;
       const [topPage] = await sql`
-        SELECT url, COUNT(*)::int AS cnt FROM events
+        SELECT url, COUNT(*)::int AS cnt FROM analytics_events
         WHERE project_id = ${projectId} AND name = 'page_view' AND created_at >= ${since} AND url IS NOT NULL
         GROUP BY url ORDER BY cnt DESC LIMIT 1
       `;
       const [topRef] = await sql`
-        SELECT referrer, COUNT(*)::int AS cnt FROM events
+        SELECT referrer, COUNT(*)::int AS cnt FROM analytics_events
         WHERE project_id = ${projectId} AND name = 'page_view' AND created_at >= ${since} AND referrer IS NOT NULL AND referrer != ''
         GROUP BY referrer ORDER BY cnt DESC LIMIT 1
       `;
@@ -494,7 +494,7 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
 
     async getTopPages(projectId, since, limit) {
       const rows = await sql`
-        SELECT url, COUNT(*)::int AS views FROM events
+        SELECT url, COUNT(*)::int AS views FROM analytics_events
         WHERE project_id = ${projectId} AND name = 'page_view' AND created_at >= ${since} AND url IS NOT NULL
         GROUP BY url ORDER BY views DESC LIMIT ${limit}
       `;
@@ -503,7 +503,7 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
 
     async getTopReferrers(projectId, since, limit) {
       const rows = await sql`
-        SELECT referrer, COUNT(*)::int AS count FROM events
+        SELECT referrer, COUNT(*)::int AS count FROM analytics_events
         WHERE project_id = ${projectId} AND name = 'page_view' AND created_at >= ${since} AND referrer IS NOT NULL AND referrer != ''
         GROUP BY referrer ORDER BY count DESC LIMIT ${limit}
       `;
@@ -512,7 +512,7 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
 
     async getCountryBreakdown(projectId, since, limit) {
       const rows = await sql`
-        SELECT country, COUNT(*)::int AS count FROM events
+        SELECT country, COUNT(*)::int AS count FROM analytics_events
         WHERE project_id = ${projectId} AND created_at >= ${since} AND country IS NOT NULL
         GROUP BY country ORDER BY count DESC LIMIT ${limit}
       `;
@@ -521,7 +521,7 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
 
     async getDeviceBreakdown(projectId, since) {
       const rows = await sql`
-        SELECT device, COUNT(*)::int AS count FROM events
+        SELECT device, COUNT(*)::int AS count FROM analytics_events
         WHERE project_id = ${projectId} AND created_at >= ${since} AND device IS NOT NULL
         GROUP BY device ORDER BY count DESC
       `;
@@ -530,109 +530,11 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
 
     async getCustomEventCounts(projectId, since, limit) {
       const rows = await sql`
-        SELECT name, COUNT(*)::int AS count FROM events
+        SELECT name, COUNT(*)::int AS count FROM analytics_events
         WHERE project_id = ${projectId} AND created_at >= ${since} AND name != 'page_view'
         GROUP BY name ORDER BY count DESC LIMIT ${limit}
       `;
       return rows as unknown as { name: string; count: number }[];
-    },
-
-    // --- Short Links ---
-    async createShortLink(input) {
-      const [row] = await sql`
-        INSERT INTO short_links (id, project_id, slug, destination, title, expires_at)
-        VALUES (${input.id}, ${input.project_id}, ${input.slug}, ${input.destination}, ${input.title}, ${input.expires_at})
-        RETURNING *
-      `;
-      return row as ShortLinkRecord;
-    },
-
-    async getShortLinkBySlug(slug) {
-      const [row] = await sql`SELECT * FROM short_links WHERE slug = ${slug}`;
-      return (row as ShortLinkRecord) || null;
-    },
-
-    async getShortLinkById(id) {
-      const [row] = await sql`SELECT * FROM short_links WHERE id = ${id}`;
-      return (row as ShortLinkRecord) || null;
-    },
-
-    async listShortLinks(projectId, page, limit) {
-      const offset = (page - 1) * limit;
-      const [countResult] = await sql`
-        SELECT COUNT(*)::int AS total FROM short_links WHERE project_id = ${projectId}
-      `;
-      const rows = await sql`
-        SELECT * FROM short_links WHERE project_id = ${projectId}
-        ORDER BY created_at DESC
-        LIMIT ${limit} OFFSET ${offset}
-      `;
-      return { data: rows as unknown as ShortLinkRecord[], total: countResult.total };
-    },
-
-    async updateShortLink(id, input) {
-      const sets = [];
-      if (input.destination !== undefined) sets.push(sql`destination = ${input.destination}`);
-      if (input.title !== undefined) sets.push(sql`title = ${input.title}`);
-      if (input.expires_at !== undefined) sets.push(sql`expires_at = ${input.expires_at}`);
-      sets.push(sql`updated_at = NOW()`);
-
-      const setClause = sets.reduce((acc, s, i) => i === 0 ? s : sql`${acc}, ${s}`);
-      const [row] = await sql`UPDATE short_links SET ${setClause} WHERE id = ${id} RETURNING *`;
-      return (row as ShortLinkRecord) || null;
-    },
-
-    async deleteShortLink(id) {
-      const result = await sql`DELETE FROM short_links WHERE id = ${id}`;
-      return result.count > 0;
-    },
-
-    async incrementLinkClickCount(id) {
-      await sql`UPDATE short_links SET click_count = click_count + 1 WHERE id = ${id}`;
-    },
-
-    async getShortLinkStats(linkId, projectId) {
-      const [link] = await sql`SELECT slug FROM short_links WHERE id = ${linkId}`;
-      const slug = link?.slug || '';
-
-      const [totalRow] = await sql`
-        SELECT COUNT(*)::int AS total FROM events
-        WHERE project_id = ${projectId} AND name = 'link_click' AND properties->>'link_id' = ${linkId}
-      `;
-
-      const byCountry = await sql`
-        SELECT country, COUNT(*)::int AS count FROM events
-        WHERE project_id = ${projectId} AND name = 'link_click' AND properties->>'link_id' = ${linkId} AND country IS NOT NULL
-        GROUP BY country ORDER BY count DESC
-      `;
-
-      const byDevice = await sql`
-        SELECT device, COUNT(*)::int AS count FROM events
-        WHERE project_id = ${projectId} AND name = 'link_click' AND properties->>'link_id' = ${linkId} AND device IS NOT NULL
-        GROUP BY device ORDER BY count DESC
-      `;
-
-      const byReferrer = await sql`
-        SELECT referrer, COUNT(*)::int AS count FROM events
-        WHERE project_id = ${projectId} AND name = 'link_click' AND properties->>'link_id' = ${linkId} AND referrer IS NOT NULL AND referrer != ''
-        GROUP BY referrer ORDER BY count DESC
-      `;
-
-      const overTime = await sql`
-        SELECT created_at::date::text AS date, COUNT(*)::int AS count FROM events
-        WHERE project_id = ${projectId} AND name = 'link_click' AND properties->>'link_id' = ${linkId}
-        GROUP BY created_at::date ORDER BY date
-      `;
-
-      return {
-        link_id: linkId,
-        slug,
-        total_clicks: totalRow.total,
-        clicks_by_country: byCountry as unknown as { country: string; count: number }[],
-        clicks_by_device: byDevice as unknown as { device: string; count: number }[],
-        clicks_by_referrer: byReferrer as unknown as { referrer: string; count: number }[],
-        clicks_over_time: overTime as unknown as { date: string; count: number }[],
-      };
     },
 
     // --- Testimonials ---
