@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import type { FeedbackRecord, FeatureRequestStatus } from "@saas-maker/shared-types";
+import type { FeedbackRecord } from "@saas-maker/shared-types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -29,7 +29,7 @@ import {
 } from "lucide-react";
 import { getClientToken, apiFetchClient } from "@/lib/api-client";
 
-type BoardStatus = FeatureRequestStatus;
+type BoardStatus = 'planned' | 'in_progress' | 'shipped' | 'cancelled';
 
 type BoardFeedbackRecord = FeedbackRecord & {
   project_name: string;

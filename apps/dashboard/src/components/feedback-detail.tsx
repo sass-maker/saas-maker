@@ -31,7 +31,6 @@ import type {
   FeedbackRecord,
   AnyFeedbackStatus,
   FeedbackStatus,
-  FeatureRequestStatus,
 } from "@saas-maker/shared-types";
 
 const TYPE_STYLES: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
@@ -63,26 +62,14 @@ export function FeedbackDetail({ item, open, onClose, onStatusChange, onDelete }
   const currentItem = item;
 
   const typeStyle = TYPE_STYLES[currentItem.type] ?? { label: currentItem.type, variant: "outline" as const };
-  const statusOptions: Array<{ value: AnyFeedbackStatus; label: string }> =
-    currentItem.type === "feature"
-      ? [
-          { value: "planned", label: "Planned" },
-          { value: "in_progress", label: "In Progress" },
-          { value: "shipped", label: "Shipped" },
-          { value: "cancelled", label: "Cancelled" },
-        ]
-      : [
-          { value: "new", label: "New" },
-          { value: "in_progress", label: "In Progress" },
-          { value: "done", label: "Done" },
-          { value: "dismissed", label: "Dismissed" },
-        ];
+  const statusOptions: Array<{ value: AnyFeedbackStatus; label: string }> = [
+    { value: "new", label: "New" },
+    { value: "dismissed", label: "Dismissed" },
+    { value: "on_roadmap", label: "On Roadmap" },
+  ];
 
   async function handleStatusChange(value: string) {
-    const newStatus =
-      currentItem.type === "feature"
-        ? (value as FeatureRequestStatus)
-        : (value as FeedbackStatus);
+    const newStatus = value as FeedbackStatus;
     setStatus(newStatus);
     if (onStatusChange) {
       setUpdating(true);

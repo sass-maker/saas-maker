@@ -21,12 +21,8 @@ const TYPE_STYLES: Record<string, { label: string; variant: "default" | "seconda
 
 const STATUS_STYLES: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
   new: { label: "New", variant: "default" },
-  in_progress: { label: "In Progress", variant: "secondary" },
-  done: { label: "Done", variant: "outline" },
   dismissed: { label: "Dismissed", variant: "outline" },
-  planned: { label: "Planned", variant: "default" },
-  shipped: { label: "Shipped", variant: "secondary" },
-  cancelled: { label: "Cancelled", variant: "destructive" },
+  on_roadmap: { label: "On Roadmap", variant: "secondary" },
 };
 
 interface FeedbackTableProps {

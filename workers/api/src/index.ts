@@ -8,12 +8,14 @@ import { upload } from './routes/upload';
 import { indexes } from './routes/indexes';
 import { waitlist } from './routes/waitlist';
 import { analytics } from './routes/analytics';
+import { links, handleRedirect } from './routes/links';
 
 import { testimonials } from './routes/testimonials';
 import { changelog } from './routes/changelog';
 import { cliAuth } from './routes/cli-auth';
 import { forms } from './routes/forms';
 import { aiGateway } from './routes/ai-gateway';
+import { roadmap } from './routes/roadmap';
 
 const app = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
@@ -42,6 +44,7 @@ app.use('*', async (c, next) => {
 });
 
 app.get('/health', (c) => c.json({ status: 'ok' }));
+app.get('/r/:slug', handleRedirect);
 
 
 app.route('/v1/auth', auth);
@@ -51,11 +54,13 @@ app.route('/v1/upload', upload);
 app.route('/v1/indexes', indexes);
 app.route('/v1/waitlist', waitlist);
 app.route('/v1/analytics', analytics);
+app.route('/v1/links', links);
 
 app.route('/v1/testimonials', testimonials);
 app.route('/v1/changelog', changelog);
 app.route('/v1/cli', cliAuth);
 app.route('/v1/forms', forms);
 app.route('/v1/ai', aiGateway);
+app.route('/v1/roadmap', roadmap);
 
 export default app;

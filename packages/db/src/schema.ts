@@ -18,4 +18,6 @@ export const TABLES = {
   cli_auth_codes: 'cli_auth_codes',
   cli_tokens: 'cli_tokens',
   ai_requests: 'ai_requests',
+  roadmap_items: 'roadmap_items',
+  roadmap_votes: 'roadmap_votes',
 } as const;

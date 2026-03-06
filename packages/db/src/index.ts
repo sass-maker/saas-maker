@@ -207,4 +207,25 @@ export interface FeedbackDatabase {
   deleteCliAuthCode(code: string): Promise<void>;
   createCliToken(token: string, userId: string): Promise<void>;
   getCliTokenUser(token: string): Promise<{ user_id: string } | undefined>;
+
+  // Roadmap
+  createRoadmapItem(input: {
+    id: string; project_id: string; feedback_id: string | null;
+    title: string; description: string | null; column: string;
+    position: number; public: boolean;
+  }): Promise<import('@saas-maker/shared-types').RoadmapItemRecord>;
+  getRoadmapItemById(id: string): Promise<import('@saas-maker/shared-types').RoadmapItemRecord | null>;
+  listRoadmapItems(projectId: string, publicOnly?: boolean): Promise<import('@saas-maker/shared-types').RoadmapItemRecord[]>;
+  updateRoadmapItem(id: string, input: {
+    title?: string; description?: string; column?: string;
+    position?: number; public?: boolean;
+  }): Promise<import('@saas-maker/shared-types').RoadmapItemRecord | null>;
+  deleteRoadmapItem(id: string): Promise<boolean>;
+  batchUpdateRoadmapPositions(items: { id: string; column: string; position: number }[]): Promise<void>;
+  getNextRoadmapPosition(projectId: string, column: string): Promise<number>;
+
+  // Roadmap Votes
+  setRoadmapVote(input: { id: string; roadmap_item_id: string; user_identifier: string; vote: 1 | -1 }): Promise<void>;
+  removeRoadmapVote(roadmapItemId: string, userIdentifier: string): Promise<boolean>;
+  getRoadmapVote(roadmapItemId: string, userIdentifier: string): Promise<1 | -1 | null>;
 }

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import type { FeedbackRecord, FeatureRequestStatus } from "@saas-maker/shared-types";
+import type { FeedbackRecord } from "@saas-maker/shared-types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -30,7 +30,7 @@ import {
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8787";
 
-type BoardStatus = FeatureRequestStatus;
+type BoardStatus = 'planned' | 'in_progress' | 'shipped' | 'cancelled';
 
 const STATUS_COLUMNS: Array<{
   value: BoardStatus;

@@ -3,9 +3,8 @@ import { HttpClient } from '../http';
 // ---- Types ----
 
 export type FeedbackType = 'bug' | 'feature' | 'feedback';
-export type FeedbackStatus = 'new' | 'in_progress' | 'done' | 'dismissed';
-export type FeatureRequestStatus = 'planned' | 'in_progress' | 'shipped' | 'cancelled';
-export type AnyFeedbackStatus = FeedbackStatus | FeatureRequestStatus;
+export type FeedbackStatus = 'new' | 'dismissed' | 'on_roadmap';
+export type AnyFeedbackStatus = FeedbackStatus;
 
 export interface SubmitFeedbackData {
   type: FeedbackType;

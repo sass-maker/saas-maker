@@ -17,6 +17,7 @@ import type {
   FormQuestionRecord,
   FormResponseRecord,
   FormAnswerRecord,
+  RoadmapItemRecord,
 } from '@saas-maker/shared-types';
 
 function parseViewerVote(value: unknown): FeedbackVote {
@@ -131,7 +132,7 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
           ${input.id},
           ${input.project_id},
           ${input.type},
-          ${input.status ?? (input.type === 'feature' ? 'planned' : 'new')},
+          ${input.status ?? 'new'},
           ${input.title},
           ${input.description},
           ${input.image_url},
@@ -951,6 +952,127 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
       const countResult = await sql`SELECT COUNT(*)::int AS total FROM ai_requests WHERE project_id = ${projectId}`;
       const result = await sql`SELECT * FROM ai_requests WHERE project_id = ${projectId} ORDER BY created_at DESC LIMIT ${limit} OFFSET ${offset}`;
       return { data: result as unknown as any[], total: countResult[0].total };
+    },
+
+    // --- Roadmap ---
+    async createRoadmapItem(input) {
+      const [row] = await sql`
+        INSERT INTO roadmap_items (id, project_id, feedback_id, title, description, "column", position, public)
+        VALUES (${input.id}, ${input.project_id}, ${input.feedback_id}, ${input.title}, ${input.description}, ${input.column}, ${input.position}, ${input.public})
+        RETURNING *
+      `;
+      return row as RoadmapItemRecord;
+    },
+
+    async getRoadmapItemById(id) {
+      const [row] = await sql`SELECT * FROM roadmap_items WHERE id = ${id}`;
+      return (row as RoadmapItemRecord) || null;
+    },
+
+    async listRoadmapItems(projectId, publicOnly = false) {
+      if (publicOnly) {
+        const rows = await sql`
+          SELECT * FROM roadmap_items
+          WHERE project_id = ${projectId} AND public = true
+          ORDER BY "column", position
+        `;
+        return rows as unknown as RoadmapItemRecord[];
+      }
+      const rows = await sql`
+        SELECT * FROM roadmap_items
+        WHERE project_id = ${projectId}
+        ORDER BY "column", position
+      `;
+      return rows as unknown as RoadmapItemRecord[];
+    },
+
+    async updateRoadmapItem(id, input) {
+      const sets = [];
+      if (input.title !== undefined) sets.push(sql`title = ${input.title}`);
+      if (input.description !== undefined) sets.push(sql`description = ${input.description}`);
+      if (input.column !== undefined) sets.push(sql`"column" = ${input.column}`);
+      if (input.position !== undefined) sets.push(sql`position = ${input.position}`);
+      if (input.public !== undefined) sets.push(sql`public = ${input.public}`);
+      sets.push(sql`updated_at = NOW()`);
+
+      const setClause = sets.reduce((acc, s, i) => i === 0 ? s : sql`${acc}, ${s}`);
+      const [row] = await sql`UPDATE roadmap_items SET ${setClause} WHERE id = ${id} RETURNING *`;
+      return (row as RoadmapItemRecord) || null;
+    },
+
+    async deleteRoadmapItem(id) {
+      const result = await sql`DELETE FROM roadmap_items WHERE id = ${id}`;
+      return result.count > 0;
+    },
+
+    async batchUpdateRoadmapPositions(items) {
+      for (const item of items) {
+        await sql`
+          UPDATE roadmap_items
+          SET "column" = ${item.column}, position = ${item.position}, updated_at = NOW()
+          WHERE id = ${item.id}
+        `;
+      }
+    },
+
+    async getNextRoadmapPosition(projectId, column) {
+      const [row] = await sql`
+        SELECT COALESCE(MAX(position), -1) + 1 AS next_pos
+        FROM roadmap_items
+        WHERE project_id = ${projectId} AND "column" = ${column}
+      `;
+      return (row as any).next_pos as number;
+    },
+
+    // --- Roadmap Votes ---
+    async setRoadmapVote(input) {
+      await sql`
+        INSERT INTO roadmap_votes (id, roadmap_item_id, user_identifier, vote)
+        VALUES (${input.id}, ${input.roadmap_item_id}, ${input.user_identifier}, ${input.vote})
+        ON CONFLICT (roadmap_item_id, user_identifier) DO UPDATE SET vote = ${input.vote}
+      `;
+      // Update counts
+      const [counts] = await sql`
+        SELECT
+          COALESCE(SUM(CASE WHEN vote = 1 THEN 1 ELSE 0 END), 0) AS up,
+          COALESCE(SUM(CASE WHEN vote = -1 THEN 1 ELSE 0 END), 0) AS down
+        FROM roadmap_votes WHERE roadmap_item_id = ${input.roadmap_item_id}
+      `;
+      await sql`
+        UPDATE roadmap_items
+        SET upvote_count = ${(counts as any).up}, downvote_count = ${(counts as any).down}
+        WHERE id = ${input.roadmap_item_id}
+      `;
+    },
+
+    async removeRoadmapVote(roadmapItemId, userIdentifier) {
+      const result = await sql`
+        DELETE FROM roadmap_votes
+        WHERE roadmap_item_id = ${roadmapItemId} AND user_identifier = ${userIdentifier}
+      `;
+      if (result.count > 0) {
+        const [counts] = await sql`
+          SELECT
+            COALESCE(SUM(CASE WHEN vote = 1 THEN 1 ELSE 0 END), 0) AS up,
+            COALESCE(SUM(CASE WHEN vote = -1 THEN 1 ELSE 0 END), 0) AS down
+          FROM roadmap_votes WHERE roadmap_item_id = ${roadmapItemId}
+        `;
+        await sql`
+          UPDATE roadmap_items
+          SET upvote_count = ${(counts as any).up}, downvote_count = ${(counts as any).down}
+          WHERE id = ${roadmapItemId}
+        `;
+      }
+      return result.count > 0;
+    },
+
+    async getRoadmapVote(roadmapItemId, userIdentifier) {
+      const [row] = await sql`
+        SELECT vote FROM roadmap_votes
+        WHERE roadmap_item_id = ${roadmapItemId} AND user_identifier = ${userIdentifier}
+      `;
+      if (!row) return null;
+      return (row as any).vote === 1 ? 1 : -1;
     },
   };
 }

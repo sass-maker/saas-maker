@@ -1,8 +1,7 @@
 // --- Enums / Unions ---
 export type FeedbackType = 'bug' | 'feature' | 'feedback';
-export type FeedbackStatus = 'new' | 'in_progress' | 'done' | 'dismissed';
-export type FeatureRequestStatus = 'planned' | 'in_progress' | 'shipped' | 'cancelled';
-export type AnyFeedbackStatus = FeedbackStatus | FeatureRequestStatus;
+export type FeedbackStatus = 'new' | 'dismissed' | 'on_roadmap';
+export type AnyFeedbackStatus = FeedbackStatus;
 export type FeedbackVote = 'up' | 'down' | null;
 
 // --- Records (DB row shapes) ---
@@ -480,4 +479,50 @@ export interface AIRagResponse {
   response: string;
   sources: Array<{ document_id: string; chunk_content: string; score: number }>;
   usage: { input_tokens: number; output_tokens: number };
+}
+
+// --- Roadmap ---
+
+export type RoadmapColumn = 'backlog' | 'planned' | 'in_progress' | 'done';
+
+export interface RoadmapItemRecord {
+  id: string;
+  project_id: string;
+  feedback_id: string | null;
+  title: string;
+  description: string | null;
+  column: RoadmapColumn;
+  position: number;
+  public: boolean;
+  upvote_count: number;
+  downvote_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface RoadmapVoteRecord {
+  id: string;
+  roadmap_item_id: string;
+  user_identifier: string;
+  vote: 1 | -1;
+  created_at: string;
+}
+
+export interface CreateRoadmapItemRequest {
+  title: string;
+  description?: string;
+  column?: RoadmapColumn;
+  public?: boolean;
+}
+
+export interface UpdateRoadmapItemRequest {
+  title?: string;
+  description?: string;
+  column?: RoadmapColumn;
+  position?: number;
+  public?: boolean;
+}
+
+export interface ReorderRoadmapRequest {
+  items: { id: string; column: RoadmapColumn; position: number }[];
 }

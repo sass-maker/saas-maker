@@ -5,7 +5,6 @@ import {
   SubmitFeedbackRequest,
   FeedbackType,
   FeedbackStatus,
-  FeatureRequestStatus,
   AnyFeedbackStatus,
   FeedbackRecord,
 } from '@saas-maker/shared-types';
@@ -15,18 +14,11 @@ import { sendNewFeedbackEmail } from '../email';
 const feedback = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
 const VALID_TYPES: FeedbackType[] = ['bug', 'feature', 'feedback'];
-const VALID_DEFAULT_STATUSES: FeedbackStatus[] = ['new', 'in_progress', 'done', 'dismissed'];
-const VALID_FEATURE_STATUSES: FeatureRequestStatus[] = ['planned', 'in_progress', 'shipped', 'cancelled'];
-const VALID_FILTER_STATUSES: AnyFeedbackStatus[] = ['new', 'in_progress', 'done', 'dismissed', 'planned', 'shipped', 'cancelled'];
+const VALID_STATUSES: FeedbackStatus[] = ['new', 'dismissed', 'on_roadmap'];
 const PAGE_SIZE = 20;
 
-function canUseStatus(type: FeedbackType, status: AnyFeedbackStatus): boolean {
-  if (type === 'feature') return VALID_FEATURE_STATUSES.includes(status as FeatureRequestStatus);
-  return VALID_DEFAULT_STATUSES.includes(status as FeedbackStatus);
-}
-
-function isValidFilterStatus(status: string): status is AnyFeedbackStatus {
-  return VALID_FILTER_STATUSES.includes(status as AnyFeedbackStatus);
+function isValidStatus(status: string): status is FeedbackStatus {
+  return VALID_STATUSES.includes(status as FeedbackStatus);
 }
 
 async function getOptionalUserId(c: Context<{ Bindings: Bindings; Variables: Variables }>) {
@@ -54,7 +46,7 @@ feedback.post('/', requireApiKey, async (c) => {
     id: crypto.randomUUID(),
     project_id: projectId,
     type: body.type,
-    status: body.type === 'feature' ? 'planned' : 'new',
+    status: 'new',
     title: body.title.trim(),
     description: body.description.trim(),
     image_url: body.image_url || null,
@@ -95,7 +87,7 @@ feedback.get('/', requireApiKey, async (c) => {
   const page = parseInt(c.req.query('page') || '1', 10);
 
   if (type && !VALID_TYPES.includes(type)) return c.json({ error: 'Invalid type filter' }, 400);
-  if (status && !isValidFilterStatus(status)) return c.json({ error: 'Invalid status filter' }, 400);
+  if (status && !isValidStatus(status)) return c.json({ error: 'Invalid status filter' }, 400);
 
   const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
   const result = await db.listFeedback(projectId, { type, status, sort, page, limit: PAGE_SIZE });
@@ -113,7 +105,7 @@ feedback.get('/inbox/:projectId', requireSession, async (c) => {
   const page = parseInt(c.req.query('page') || '1', 10);
 
   if (type && !VALID_TYPES.includes(type)) return c.json({ error: 'Invalid type filter' }, 400);
-  if (status && !isValidFilterStatus(status)) return c.json({ error: 'Invalid status filter' }, 400);
+  if (status && !isValidStatus(status)) return c.json({ error: 'Invalid status filter' }, 400);
 
   const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
 
@@ -183,7 +175,7 @@ feedback.get('/by-project/:slug', async (c) => {
   const page = parseInt(c.req.query('page') || '1', 10);
 
   if (type && !VALID_TYPES.includes(type)) return c.json({ error: 'Invalid type filter' }, 400);
-  if (status && !isValidFilterStatus(status)) return c.json({ error: 'Invalid status filter' }, 400);
+  if (status && !isValidStatus(status)) return c.json({ error: 'Invalid status filter' }, 400);
 
   const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
   const project = await db.getProjectBySlug(slug);
@@ -266,16 +258,13 @@ feedback.patch('/:id', requireSession, async (c) => {
   const userId = c.get('userId')!;
   const feedbackId = c.req.param('id');
   const body = (await c.req.json()) as { status: AnyFeedbackStatus };
-  if (!body.status || !isValidFilterStatus(body.status)) return c.json({ error: 'Invalid status' }, 400);
+  if (!body.status || !isValidStatus(body.status)) return c.json({ error: 'Invalid status' }, 400);
 
   const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
 
   // Verify ownership: feedback -> project -> owner
   const existing = await db.getFeedbackById(feedbackId);
   if (!existing) return c.json({ error: 'Feedback not found' }, 404);
-  if (!canUseStatus(existing.type, body.status)) {
-    return c.json({ error: 'Invalid status for feedback type' }, 400);
-  }
 
   const project = await db.getProjectById(existing.project_id);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
