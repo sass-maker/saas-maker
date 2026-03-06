@@ -1,18 +1,23 @@
 ---
 title: Waitlist
-description: Collect pre-launch signups and automatically send welcome emails.
+description: Collect pre-launch signups with automatic position tracking.
 ---
 
-Build a waitlist for your product before launch. When someone joins, SaaS Maker automatically sends a welcome email via Resend.
+Build a waitlist for your product. Users sign up with their email, get assigned a position, and you can manage entries from the dashboard.
 
-## How it works
+## Quick Start
 
-1. Add the waitlist endpoint or widget to your landing page
-2. Users submit their email (and optionally their name and referral source)
-3. A welcome email is sent automatically
-4. View and manage entries in the dashboard
+```bash
+curl -X POST https://api.sassmaker.com/v1/waitlist \
+  -H "Content-Type: application/json" \
+  -H "X-Project-Key: pk_your_api_key" \
+  -d '{
+    "email": "user@example.com",
+    "name": "Jane Doe"
+  }'
+```
 
-## API endpoints
+## API Endpoints
 
 ### Join waitlist
 
@@ -25,11 +30,10 @@ POST /v1/waitlist
 ```bash
 curl -X POST https://api.sassmaker.com/v1/waitlist \
   -H "Content-Type: application/json" \
-  -H "X-Project-Key: pk_abc123" \
+  -H "X-Project-Key: pk_your_api_key" \
   -d '{
     "email": "user@example.com",
-    "name": "Jane Doe",
-    "referral_source": "twitter"
+    "name": "Jane Doe"
   }'
 ```
 
@@ -37,19 +41,111 @@ curl -X POST https://api.sassmaker.com/v1/waitlist \
 |-------|------|----------|-------------|
 | `email` | string | Yes | Email address |
 | `name` | string | No | Full name |
-| `referral_source` | string | No | How they found you |
+
+**Response (201):**
+
+```json
+{
+  "id": "abc-123",
+  "email": "user@example.com",
+  "name": "Jane Doe",
+  "position": 42,
+  "created_at": "2025-01-01T00:00:00Z"
+}
+```
+
+**Errors:**
+
+| Status | Message | Cause |
+|--------|---------|-------|
+| `400` | `"email is required"` | Missing or invalid email |
+| `409` | `"Email already on waitlist"` | Duplicate signup |
+
+### Get waitlist count
+
+```
+GET /v1/waitlist/count
+```
+
+**Auth:** API Key
+
+```bash
+curl https://api.sassmaker.com/v1/waitlist/count \
+  -H "X-Project-Key: pk_your_api_key"
+```
+
+**Response (200):**
+
+```json
+{ "count": 142 }
+```
+
+Use this to display "142 people on the waitlist" on your landing page.
 
 ### List waitlist entries
 
 ```
-GET /v1/waitlist?project_id=...
+GET /v1/waitlist?project_id=PROJECT_ID&page=1
 ```
 
 **Auth:** Session Token
 
 ```bash
-curl https://api.sassmaker.com/v1/waitlist?project_id=proj_123 \
-  -H "Authorization: Bearer <token>"
+curl "https://api.sassmaker.com/v1/waitlist?project_id=proj_123&page=1" \
+  -H "Authorization: Bearer SESSION_TOKEN"
 ```
 
-Returns all waitlist entries for the project, sorted by signup date.
+**Response (200):**
+
+```json
+{
+  "data": [
+    { "id": "abc-123", "email": "user@example.com", "name": "Jane Doe", "position": 1, "created_at": "..." }
+  ],
+  "total": 142,
+  "page": 1,
+  "limit": 50
+}
+```
+
+**Errors:**
+
+| Status | Message | Cause |
+|--------|---------|-------|
+| `400` | `"project_id is required"` | Missing project_id query param |
+| `403` | `"Forbidden"` | Not the project owner |
+
+### Delete waitlist entry
+
+```
+DELETE /v1/waitlist/:id?project_id=PROJECT_ID
+```
+
+**Auth:** Session Token
+
+**Response (200):** `{ "ok": true }`
+
+**Errors:**
+
+| Status | Message | Cause |
+|--------|---------|-------|
+| `403` | `"Forbidden"` | Not the project owner |
+| `404` | `"Not found"` | Entry doesn't exist |
+
+## SDK Usage
+
+```typescript
+import { SaaSMakerClient } from '@saas-maker/sdk';
+
+const client = new SaaSMakerClient({ apiKey: 'pk_your_api_key' });
+
+// Add to waitlist
+const entry = await client.waitlist.join({
+  email: 'user@example.com',
+  name: 'Jane Doe',
+});
+console.log(`Position: ${entry.position}`);
+
+// Get count
+const { count } = await client.waitlist.count();
+```

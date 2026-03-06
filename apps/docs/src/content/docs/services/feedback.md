@@ -3,27 +3,41 @@ title: Feedback & Feature Requests
 description: Collect bugs, feature requests, and feedback from your users with voting support.
 ---
 
-Collect structured feedback from your users. Supports bugs, feature requests, and general feedback with upvote/downvote voting on feature requests.
+Collect structured feedback from your users. Supports bugs, feature requests, and general feedback with upvote/downvote voting.
 
-## Feedback types
+## Quick Start
 
-- `bug` — something is broken
-- `feature` — a new feature request
-- `feedback` — general feedback
+```bash
+curl -X POST https://api.sassmaker.com/v1/feedback \
+  -H "Content-Type: application/json" \
+  -H "X-Project-Key: pk_your_api_key" \
+  -d '{
+    "title": "Add dark mode",
+    "description": "Would love a dark mode option for the dashboard",
+    "type": "feature",
+    "submitter_email": "user@example.com"
+  }'
+```
 
-## Status workflow
+## Feedback Types
 
-**Bugs and feedback:**
-`new` → `in_progress` → `done` / `dismissed`
+| Type | Description |
+|------|-------------|
+| `bug` | Something is broken |
+| `feature` | A new feature request |
+| `feedback` | General feedback |
 
-**Feature requests:**
-`planned` → `in_progress` → `shipped` / `cancelled`
+## Status Workflow
+
+**Bugs and feedback:** `new` → `in_progress` → `done` / `dismissed`
+
+**Feature requests:** `planned` → `in_progress` → `shipped` / `cancelled`
 
 ## Voting
 
-Users can upvote or downvote feature requests. Vote counts are returned with each feedback entry, helping you prioritize what to build next.
+Users can upvote or downvote entries. Vote counts (`upvote_count`, `downvote_count`) are returned with each feedback entry, helping you prioritize what to build.
 
-## Public board
+## Public Board
 
 Every project gets a public feedback board at:
 
@@ -31,9 +45,9 @@ Every project gets a public feedback board at:
 https://app.sassmaker.com/f/[project-slug]
 ```
 
-Share this link with your users so they can browse and vote on existing feedback.
+Users can browse and vote on existing feedback without needing an API key.
 
-## API endpoints
+## API Endpoints
 
 ### Submit feedback
 
@@ -46,42 +60,126 @@ POST /v1/feedback
 ```bash
 curl -X POST https://api.sassmaker.com/v1/feedback \
   -H "Content-Type: application/json" \
-  -H "X-Project-Key: pk_abc123" \
+  -H "X-Project-Key: pk_your_api_key" \
   -d '{
     "title": "Add dark mode",
     "description": "Would love a dark mode option",
     "type": "feature",
-    "submitter_email": "user@example.com"
+    "submitter_email": "user@example.com",
+    "submitter_name": "Jane Doe"
   }'
 ```
 
-### List feedback by project slug
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `title` | string | Yes | Short summary |
+| `description` | string | Yes | Detailed description |
+| `type` | string | Yes | `bug`, `feature`, or `feedback` |
+| `submitter_email` | string | Yes | Email of the person submitting |
+| `submitter_name` | string | No | Name of the person submitting |
+| `image_url` | string | No | Screenshot or attachment URL |
+
+**Response (201):**
+
+```json
+{
+  "id": "abc-123",
+  "project_id": "proj_456",
+  "type": "feature",
+  "status": "planned",
+  "title": "Add dark mode",
+  "description": "Would love a dark mode option",
+  "submitter_email": "user@example.com",
+  "submitter_name": "Jane Doe",
+  "image_url": null,
+  "upvote_count": 0,
+  "downvote_count": 0,
+  "created_at": "2025-01-01T00:00:00Z"
+}
+```
+
+**Errors:**
+
+| Status | Message | Cause |
+|--------|---------|-------|
+| `400` | `"title is required"` | Missing title field |
+| `400` | `"Invalid type"` | Type is not `bug`, `feature`, or `feedback` |
+
+### List feedback
+
+```
+GET /v1/feedback
+```
+
+**Auth:** API Key
+
+```bash
+curl "https://api.sassmaker.com/v1/feedback?type=feature&sort=upvotes&page=1" \
+  -H "X-Project-Key: pk_your_api_key"
+```
+
+| Param | Type | Default | Description |
+|-------|------|---------|-------------|
+| `type` | string | all | Filter by `bug`, `feature`, or `feedback` |
+| `status` | string | all | Filter by status |
+| `sort` | string | `newest` | `newest` or `upvotes` |
+| `page` | number | 1 | Page number (20 items per page) |
+
+**Response (200):**
+
+```json
+{
+  "data": [{ "id": "...", "title": "...", "upvote_count": 5, ... }],
+  "total": 42,
+  "page": 1,
+  "limit": 20
+}
+```
+
+### List feedback by project slug (public)
 
 ```
 GET /v1/feedback/by-project/:slug
 ```
 
-**Auth:** None (public)
+**Auth:** None (public endpoint)
 
 ```bash
-curl https://api.sassmaker.com/v1/feedback/by-project/my-app
+curl "https://api.sassmaker.com/v1/feedback/by-project/my-app?sort=upvotes"
 ```
 
-### Upvote
+Same query params as above. Response includes project info:
+
+```json
+{
+  "data": [...],
+  "total": 42,
+  "page": 1,
+  "limit": 20,
+  "project": { "name": "My App", "slug": "my-app" }
+}
+```
+
+**Errors:**
+
+| Status | Message | Cause |
+|--------|---------|-------|
+| `404` | `"Project not found"` | Invalid slug |
+
+### Upvote / Downvote
 
 ```
 POST /v1/feedback/:id/upvote
-```
-
-**Auth:** Session Token
-
-### Downvote
-
-```
 POST /v1/feedback/:id/downvote
+DELETE /v1/feedback/:id/upvote
+DELETE /v1/feedback/:id/downvote
 ```
 
 **Auth:** Session Token
+
+POST adds a vote, DELETE removes it. Each user can have one vote per feedback entry.
+
+**Response (200):** `{ "ok": true }`
 
 ### Update status
 
@@ -92,11 +190,19 @@ PATCH /v1/feedback/:id
 **Auth:** Session Token (project owner only)
 
 ```bash
-curl -X PATCH https://api.sassmaker.com/v1/feedback/123 \
-  -H "Authorization: Bearer <token>" \
+curl -X PATCH https://api.sassmaker.com/v1/feedback/abc-123 \
+  -H "Authorization: Bearer SESSION_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{ "status": "in_progress" }'
 ```
+
+**Errors:**
+
+| Status | Message | Cause |
+|--------|---------|-------|
+| `400` | `"Invalid status"` | Status not valid for this feedback type |
+| `403` | `"Forbidden"` | Not the project owner |
+| `404` | `"Not found"` | Feedback entry doesn't exist |
 
 ### Delete feedback
 
@@ -105,3 +211,27 @@ DELETE /v1/feedback/:id
 ```
 
 **Auth:** Session Token (project owner only)
+
+**Response (200):** `{ "ok": true }`
+
+## SDK Usage
+
+```typescript
+import { SaaSMakerClient } from '@saas-maker/sdk';
+
+const client = new SaaSMakerClient({ apiKey: 'pk_your_api_key' });
+
+// Submit feedback
+await client.feedback.submit({
+  title: 'Add dark mode',
+  description: 'Would love a dark mode option',
+  type: 'feature',
+  submitter_email: 'user@example.com',
+});
+
+// List feedback
+const { data, total } = await client.feedback.list({
+  type: 'feature',
+  sort: 'upvotes',
+});
+```

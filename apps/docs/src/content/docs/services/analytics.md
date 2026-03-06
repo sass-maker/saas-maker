@@ -5,15 +5,9 @@ description: Track page views, custom events, and visitor metrics with a lightwe
 
 Lightweight, privacy-friendly analytics for your SaaS. Track page views and custom events without cookies. Includes automatic UTM parameter capture, device/browser detection, and country-level geo data.
 
-## How it works
+## Quick Start
 
-1. Add the analytics script to your site or call the API directly
-2. Page views are tracked automatically (including SPA navigation)
-3. View dashboards with top pages, referrers, countries, and devices
-
-## Tracking script
-
-Add this script tag to your site for automatic page view tracking:
+Add the tracking script to your site:
 
 ```html
 <script
@@ -24,6 +18,20 @@ Add this script tag to your site for automatic page view tracking:
 ></script>
 ```
 
+Or track events via the API:
+
+```bash
+curl -X POST https://api.sassmaker.com/v1/analytics/events \
+  -H "Content-Type: application/json" \
+  -H "X-Project-Key: pk_your_api_key" \
+  -d '{
+    "name": "page_view",
+    "url": "https://myapp.com/pricing"
+  }'
+```
+
+## Tracking Script
+
 The script automatically:
 - Tracks initial page views
 - Handles SPA navigation (pushState / replaceState / popstate)
@@ -31,7 +39,7 @@ The script automatically:
 - Respects `Do Not Track` browser setting
 - Sends screen width, referrer, and user agent
 
-### Custom events
+### Custom Events
 
 After the script loads, use the global `sm` function:
 
@@ -43,14 +51,14 @@ sm('signup_completed');
 sm('plan_upgraded', { plan: 'pro', value: 49 });
 ```
 
-You can also queue events before the script loads:
+Queue events before the script loads:
 
 ```javascript
 window.sm = window.sm || { q: [] };
 sm.q.push(['button_clicked', { id: 'cta-hero' }]);
 ```
 
-## API endpoints
+## API Endpoints
 
 ### Track an event
 
@@ -63,13 +71,14 @@ POST /v1/analytics/events
 ```bash
 curl -X POST https://api.sassmaker.com/v1/analytics/events \
   -H "Content-Type: application/json" \
-  -H "X-Project-Key: pk_abc123" \
+  -H "X-Project-Key: pk_your_api_key" \
   -d '{
     "name": "page_view",
     "url": "https://myapp.com/pricing",
     "referrer": "https://google.com",
     "utm_source": "google",
     "utm_medium": "cpc",
+    "utm_campaign": "spring-sale",
     "screen_width": 1440,
     "properties": { "variant": "B" }
   }'
@@ -83,57 +92,162 @@ curl -X POST https://api.sassmaker.com/v1/analytics/events \
 | `utm_source` | string | No | UTM source |
 | `utm_medium` | string | No | UTM medium |
 | `utm_campaign` | string | No | UTM campaign |
-| `screen_width` | number | No | Viewport width |
-| `properties` | object | No | Custom event properties |
+| `screen_width` | number | No | Viewport width in pixels |
+| `properties` | object | No | Arbitrary key-value properties |
+
+**Response (201):** `{ "ok": true }`
+
+Country, device, and browser are detected automatically from request headers — you don't need to send them.
 
 ### Dashboard overview
 
 ```
-GET /v1/analytics/overview?project_id=...&period=30d
+GET /v1/analytics/overview?project_id=PROJECT_ID&period=30d
 ```
 
 **Auth:** Session Token
 
-Returns page views, unique visitors, top page, and top referrer.
+```bash
+curl "https://api.sassmaker.com/v1/analytics/overview?project_id=proj_123&period=30d" \
+  -H "Authorization: Bearer SESSION_TOKEN"
+```
 
-**Period options:** `7d`, `30d` (default), `90d`
+| Param | Type | Default | Description |
+|-------|------|---------|-------------|
+| `project_id` | string | — | Required. Project ID |
+| `period` | string | `30d` | `7d`, `30d`, or `90d` |
+
+**Response (200):**
+
+```json
+{
+  "page_views": 1250,
+  "unique_visitors": 430,
+  "top_page": "/pricing",
+  "top_referrer": "https://google.com"
+}
+```
+
+**Errors:**
+
+| Status | Message | Cause |
+|--------|---------|-------|
+| `400` | `"project_id is required"` | Missing project_id |
+| `403` | `"Forbidden"` | Not the project owner |
 
 ### Top pages
 
 ```
-GET /v1/analytics/pages?project_id=...&period=30d
+GET /v1/analytics/pages?project_id=PROJECT_ID&period=30d
 ```
 
 **Auth:** Session Token
+
+**Response (200):**
+
+```json
+{
+  "data": [
+    { "url": "/pricing", "views": 340 },
+    { "url": "/features", "views": 210 }
+  ]
+}
+```
 
 ### Top referrers
 
 ```
-GET /v1/analytics/referrers?project_id=...&period=30d
+GET /v1/analytics/referrers?project_id=PROJECT_ID&period=30d
 ```
 
 **Auth:** Session Token
+
+**Response (200):**
+
+```json
+{
+  "data": [
+    { "referrer": "https://google.com", "count": 150 },
+    { "referrer": "https://twitter.com", "count": 80 }
+  ]
+}
+```
 
 ### Country breakdown
 
 ```
-GET /v1/analytics/countries?project_id=...&period=30d
+GET /v1/analytics/countries?project_id=PROJECT_ID&period=30d
 ```
 
 **Auth:** Session Token
+
+**Response (200):**
+
+```json
+{
+  "data": [
+    { "country": "US", "count": 500 },
+    { "country": "GB", "count": 120 }
+  ]
+}
+```
 
 ### Device breakdown
 
 ```
-GET /v1/analytics/devices?project_id=...&period=30d
+GET /v1/analytics/devices?project_id=PROJECT_ID&period=30d
 ```
 
 **Auth:** Session Token
+
+**Response (200):**
+
+```json
+{
+  "data": [
+    { "device": "desktop", "count": 800 },
+    { "device": "mobile", "count": 350 }
+  ]
+}
+```
 
 ### Custom event counts
 
 ```
-GET /v1/analytics/events?project_id=...&period=30d
+GET /v1/analytics/events?project_id=PROJECT_ID&period=30d
 ```
 
 **Auth:** Session Token
+
+Returns counts for all non-`page_view` events.
+
+**Response (200):**
+
+```json
+{
+  "data": [
+    { "name": "signup_completed", "count": 45 },
+    { "name": "plan_upgraded", "count": 12 }
+  ]
+}
+```
+
+## SDK Usage
+
+```typescript
+import { SaaSMakerClient } from '@saas-maker/sdk';
+
+const client = new SaaSMakerClient({ apiKey: 'pk_your_api_key' });
+
+// Track a page view
+await client.analytics.track({
+  name: 'page_view',
+  url: 'https://myapp.com/pricing',
+});
+
+// Track a custom event with properties
+await client.analytics.track({
+  name: 'plan_upgraded',
+  properties: { plan: 'pro', value: 49 },
+});
+```

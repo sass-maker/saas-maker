@@ -590,15 +590,9 @@ const answer = await client.ai.rag({
 
 Lightweight, privacy-friendly analytics for your SaaS. Track page views and custom events without cookies. Includes automatic UTM parameter capture, device/browser detection, and country-level geo data.
 
-## How it works
+## Quick Start
 
-1. Add the analytics script to your site or call the API directly
-2. Page views are tracked automatically (including SPA navigation)
-3. View dashboards with top pages, referrers, countries, and devices
-
-## Tracking script
-
-Add this script tag to your site for automatic page view tracking:
+Add the tracking script to your site:
 
 ```html
 <script
@@ -609,6 +603,20 @@ Add this script tag to your site for automatic page view tracking:
 ></script>
 ```
 
+Or track events via the API:
+
+```bash
+curl -X POST https://api.sassmaker.com/v1/analytics/events \
+  -H "Content-Type: application/json" \
+  -H "X-Project-Key: pk_your_api_key" \
+  -d '{
+    "name": "page_view",
+    "url": "https://myapp.com/pricing"
+  }'
+```
+
+## Tracking Script
+
 The script automatically:
 - Tracks initial page views
 - Handles SPA navigation (pushState / replaceState / popstate)
@@ -616,7 +624,7 @@ The script automatically:
 - Respects `Do Not Track` browser setting
 - Sends screen width, referrer, and user agent
 
-### Custom events
+### Custom Events
 
 After the script loads, use the global `sm` function:
 
@@ -628,14 +636,14 @@ sm('signup_completed');
 sm('plan_upgraded', { plan: 'pro', value: 49 });
 ```
 
-You can also queue events before the script loads:
+Queue events before the script loads:
 
 ```javascript
 window.sm = window.sm || { q: [] };
 sm.q.push(['button_clicked', { id: 'cta-hero' }]);
 ```
 
-## API endpoints
+## API Endpoints
 
 ### Track an event
 
@@ -648,13 +656,14 @@ POST /v1/analytics/events
 ```bash
 curl -X POST https://api.sassmaker.com/v1/analytics/events \
   -H "Content-Type: application/json" \
-  -H "X-Project-Key: pk_abc123" \
+  -H "X-Project-Key: pk_your_api_key" \
   -d '{
     "name": "page_view",
     "url": "https://myapp.com/pricing",
     "referrer": "https://google.com",
     "utm_source": "google",
     "utm_medium": "cpc",
+    "utm_campaign": "spring-sale",
     "screen_width": 1440,
     "properties": { "variant": "B" }
   }'
@@ -668,92 +677,254 @@ curl -X POST https://api.sassmaker.com/v1/analytics/events \
 | `utm_source` | string | No | UTM source |
 | `utm_medium` | string | No | UTM medium |
 | `utm_campaign` | string | No | UTM campaign |
-| `screen_width` | number | No | Viewport width |
-| `properties` | object | No | Custom event properties |
+| `screen_width` | number | No | Viewport width in pixels |
+| `properties` | object | No | Arbitrary key-value properties |
+
+**Response (201):** `{ "ok": true }`
+
+Country, device, and browser are detected automatically from request headers — you don't need to send them.
 
 ### Dashboard overview
 
 ```
-GET /v1/analytics/overview?project_id=...&period=30d
+GET /v1/analytics/overview?project_id=PROJECT_ID&period=30d
 ```
 
 **Auth:** Session Token
 
-Returns page views, unique visitors, top page, and top referrer.
+```bash
+curl "https://api.sassmaker.com/v1/analytics/overview?project_id=proj_123&period=30d" \
+  -H "Authorization: Bearer SESSION_TOKEN"
+```
 
-**Period options:** `7d`, `30d` (default), `90d`
+| Param | Type | Default | Description |
+|-------|------|---------|-------------|
+| `project_id` | string | — | Required. Project ID |
+| `period` | string | `30d` | `7d`, `30d`, or `90d` |
+
+**Response (200):**
+
+```json
+{
+  "page_views": 1250,
+  "unique_visitors": 430,
+  "top_page": "/pricing",
+  "top_referrer": "https://google.com"
+}
+```
+
+**Errors:**
+
+| Status | Message | Cause |
+|--------|---------|-------|
+| `400` | `"project_id is required"` | Missing project_id |
+| `403` | `"Forbidden"` | Not the project owner |
 
 ### Top pages
 
 ```
-GET /v1/analytics/pages?project_id=...&period=30d
+GET /v1/analytics/pages?project_id=PROJECT_ID&period=30d
 ```
 
 **Auth:** Session Token
+
+**Response (200):**
+
+```json
+{
+  "data": [
+    { "url": "/pricing", "views": 340 },
+    { "url": "/features", "views": 210 }
+  ]
+}
+```
 
 ### Top referrers
 
 ```
-GET /v1/analytics/referrers?project_id=...&period=30d
+GET /v1/analytics/referrers?project_id=PROJECT_ID&period=30d
 ```
 
 **Auth:** Session Token
+
+**Response (200):**
+
+```json
+{
+  "data": [
+    { "referrer": "https://google.com", "count": 150 },
+    { "referrer": "https://twitter.com", "count": 80 }
+  ]
+}
+```
 
 ### Country breakdown
 
 ```
-GET /v1/analytics/countries?project_id=...&period=30d
+GET /v1/analytics/countries?project_id=PROJECT_ID&period=30d
 ```
 
 **Auth:** Session Token
+
+**Response (200):**
+
+```json
+{
+  "data": [
+    { "country": "US", "count": 500 },
+    { "country": "GB", "count": 120 }
+  ]
+}
+```
 
 ### Device breakdown
 
 ```
-GET /v1/analytics/devices?project_id=...&period=30d
+GET /v1/analytics/devices?project_id=PROJECT_ID&period=30d
 ```
 
 **Auth:** Session Token
+
+**Response (200):**
+
+```json
+{
+  "data": [
+    { "device": "desktop", "count": 800 },
+    { "device": "mobile", "count": 350 }
+  ]
+}
+```
 
 ### Custom event counts
 
 ```
-GET /v1/analytics/events?project_id=...&period=30d
+GET /v1/analytics/events?project_id=PROJECT_ID&period=30d
 ```
 
 **Auth:** Session Token
 
+Returns counts for all non-`page_view` events.
+
+**Response (200):**
+
+```json
+{
+  "data": [
+    { "name": "signup_completed", "count": 45 },
+    { "name": "plan_upgraded", "count": 12 }
+  ]
+}
+```
+
+## SDK Usage
+
+```typescript
+import { SaaSMakerClient } from '@saas-maker/sdk';
+
+const client = new SaaSMakerClient({ apiKey: 'pk_your_api_key' });
+
+// Track a page view
+await client.analytics.track({
+  name: 'page_view',
+  url: 'https://myapp.com/pricing',
+});
+
+// Track a custom event with properties
+await client.analytics.track({
+  name: 'plan_upgraded',
+  properties: { plan: 'pro', value: 49 },
+});
+```
+
 ---
 
-Keep your users informed about product updates. Create changelog entries with categories, and publish them when ready.
+Keep your users informed about product updates. Create changelog entries with categories, save as drafts, and publish when ready.
 
-## Entry types
+## Quick Start
 
-- `feature` — new functionality
-- `improvement` — enhancement to existing features
-- `fix` — bug fix
-- `breaking` — breaking change
+Fetch published entries (for displaying on your site):
 
-## Draft support
+```bash
+curl https://api.sassmaker.com/v1/changelog \
+  -H "X-Project-Key: pk_your_api_key"
+```
 
-Entries can be saved as drafts and published later. Only published entries are visible to users via the public API or widgets.
+## Entry Types
 
-## API endpoints
+| Type | Description |
+|------|-------------|
+| `feature` | New functionality |
+| `improvement` | Enhancement to existing features |
+| `fix` | Bug fix |
+| `breaking` | Breaking change |
+
+## Draft Support
+
+Entries can be saved as drafts (`published: false`) and published later. Only published entries are visible via the public API or widgets.
+
+## API Endpoints
 
 ### List published entries
 
 ```
-GET /v1/changelog
+GET /v1/changelog?limit=50
 ```
 
 **Auth:** API Key
 
 ```bash
-curl https://api.sassmaker.com/v1/changelog \
-  -H "X-Project-Key: pk_abc123"
+curl "https://api.sassmaker.com/v1/changelog?limit=10" \
+  -H "X-Project-Key: pk_your_api_key"
 ```
 
-Returns published changelog entries sorted by date (newest first).
+**Response (200):**
+
+```json
+{
+  "data": [
+    {
+      "id": "abc-123",
+      "title": "Dark mode support",
+      "content": "You can now switch to dark mode in Settings.",
+      "version": "1.2.0",
+      "type": "feature",
+      "published": true,
+      "published_at": "2025-01-15T00:00:00Z",
+      "created_at": "2025-01-14T00:00:00Z",
+      "updated_at": "2025-01-15T00:00:00Z"
+    }
+  ]
+}
+```
+
+Returns only published entries, sorted by date (newest first). Use this to display changelogs on your site.
+
+### List all entries (dashboard)
+
+```
+GET /v1/changelog/dashboard/:projectId?page=1
+```
+
+**Auth:** Session Token
+
+Returns all entries (drafts + published) with stats.
+
+**Response (200):**
+
+```json
+{
+  "data": [...],
+  "total": 15,
+  "page": 1,
+  "limit": 50,
+  "stats": {
+    "total": 15,
+    "published": 12,
+    "drafts": 3
+  }
+}
+```
 
 ### Create entry
 
@@ -765,15 +936,35 @@ POST /v1/changelog/dashboard/:projectId
 
 ```bash
 curl -X POST https://api.sassmaker.com/v1/changelog/dashboard/proj_123 \
-  -H "Authorization: Bearer <token>" \
+  -H "Authorization: Bearer SESSION_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
     "title": "Dark mode support",
     "content": "You can now switch to dark mode in Settings.",
     "type": "feature",
+    "version": "1.2.0",
     "published": true
   }'
 ```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `title` | string | Yes | Entry title |
+| `content` | string | Yes | Entry body (supports markdown) |
+| `type` | string | No | `feature`, `improvement`, `fix`, or `breaking` (default: `improvement`) |
+| `version` | string | No | Version tag (e.g. `1.2.0`) |
+| `published` | boolean | No | Publish immediately (default: false = draft) |
+
+**Response (201):** Full changelog entry object.
+
+**Errors:**
+
+| Status | Message | Cause |
+|--------|---------|-------|
+| `400` | `"title is required"` | Missing title |
+| `400` | `"content is required"` | Missing content |
+| `400` | `"Invalid type"` | Type not one of the valid values |
+| `403` | `"Forbidden"` | Not the project owner |
 
 ### Update entry
 
@@ -784,11 +975,20 @@ PATCH /v1/changelog/dashboard/:projectId/:id
 **Auth:** Session Token
 
 ```bash
-curl -X PATCH https://api.sassmaker.com/v1/changelog/dashboard/proj_123/456 \
-  -H "Authorization: Bearer <token>" \
+curl -X PATCH https://api.sassmaker.com/v1/changelog/dashboard/proj_123/abc-123 \
+  -H "Authorization: Bearer SESSION_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{ "published": true }'
 ```
+
+All fields are optional. Setting `published: true` automatically sets `published_at`.
+
+**Errors:**
+
+| Status | Message | Cause |
+|--------|---------|-------|
+| `403` | `"Forbidden"` | Not the project owner |
+| `404` | `"Not found"` | Entry doesn't exist |
 
 ### Delete entry
 
@@ -798,29 +998,56 @@ DELETE /v1/changelog/dashboard/:projectId/:id
 
 **Auth:** Session Token
 
+**Response (200):** `{ "ok": true }`
+
+## SDK Usage
+
+```typescript
+import { SaaSMakerClient } from '@saas-maker/sdk';
+
+const client = new SaaSMakerClient({ apiKey: 'pk_your_api_key' });
+
+// List published entries
+const { data } = await client.changelog.list({ limit: 10 });
+```
+
 ---
 
-Collect structured feedback from your users. Supports bugs, feature requests, and general feedback with upvote/downvote voting on feature requests.
+Collect structured feedback from your users. Supports bugs, feature requests, and general feedback with upvote/downvote voting.
 
-## Feedback types
+## Quick Start
 
-- `bug` — something is broken
-- `feature` — a new feature request
-- `feedback` — general feedback
+```bash
+curl -X POST https://api.sassmaker.com/v1/feedback \
+  -H "Content-Type: application/json" \
+  -H "X-Project-Key: pk_your_api_key" \
+  -d '{
+    "title": "Add dark mode",
+    "description": "Would love a dark mode option for the dashboard",
+    "type": "feature",
+    "submitter_email": "user@example.com"
+  }'
+```
 
-## Status workflow
+## Feedback Types
 
-**Bugs and feedback:**
-`new` → `in_progress` → `done` / `dismissed`
+| Type | Description |
+|------|-------------|
+| `bug` | Something is broken |
+| `feature` | A new feature request |
+| `feedback` | General feedback |
 
-**Feature requests:**
-`planned` → `in_progress` → `shipped` / `cancelled`
+## Status Workflow
+
+**Bugs and feedback:** `new` → `in_progress` → `done` / `dismissed`
+
+**Feature requests:** `planned` → `in_progress` → `shipped` / `cancelled`
 
 ## Voting
 
-Users can upvote or downvote feature requests. Vote counts are returned with each feedback entry, helping you prioritize what to build next.
+Users can upvote or downvote entries. Vote counts (`upvote_count`, `downvote_count`) are returned with each feedback entry, helping you prioritize what to build.
 
-## Public board
+## Public Board
 
 Every project gets a public feedback board at:
 
@@ -828,9 +1055,9 @@ Every project gets a public feedback board at:
 https://app.sassmaker.com/f/[project-slug]
 ```
 
-Share this link with your users so they can browse and vote on existing feedback.
+Users can browse and vote on existing feedback without needing an API key.
 
-## API endpoints
+## API Endpoints
 
 ### Submit feedback
 
@@ -843,42 +1070,126 @@ POST /v1/feedback
 ```bash
 curl -X POST https://api.sassmaker.com/v1/feedback \
   -H "Content-Type: application/json" \
-  -H "X-Project-Key: pk_abc123" \
+  -H "X-Project-Key: pk_your_api_key" \
   -d '{
     "title": "Add dark mode",
     "description": "Would love a dark mode option",
     "type": "feature",
-    "submitter_email": "user@example.com"
+    "submitter_email": "user@example.com",
+    "submitter_name": "Jane Doe"
   }'
 ```
 
-### List feedback by project slug
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `title` | string | Yes | Short summary |
+| `description` | string | Yes | Detailed description |
+| `type` | string | Yes | `bug`, `feature`, or `feedback` |
+| `submitter_email` | string | Yes | Email of the person submitting |
+| `submitter_name` | string | No | Name of the person submitting |
+| `image_url` | string | No | Screenshot or attachment URL |
+
+**Response (201):**
+
+```json
+{
+  "id": "abc-123",
+  "project_id": "proj_456",
+  "type": "feature",
+  "status": "planned",
+  "title": "Add dark mode",
+  "description": "Would love a dark mode option",
+  "submitter_email": "user@example.com",
+  "submitter_name": "Jane Doe",
+  "image_url": null,
+  "upvote_count": 0,
+  "downvote_count": 0,
+  "created_at": "2025-01-01T00:00:00Z"
+}
+```
+
+**Errors:**
+
+| Status | Message | Cause |
+|--------|---------|-------|
+| `400` | `"title is required"` | Missing title field |
+| `400` | `"Invalid type"` | Type is not `bug`, `feature`, or `feedback` |
+
+### List feedback
+
+```
+GET /v1/feedback
+```
+
+**Auth:** API Key
+
+```bash
+curl "https://api.sassmaker.com/v1/feedback?type=feature&sort=upvotes&page=1" \
+  -H "X-Project-Key: pk_your_api_key"
+```
+
+| Param | Type | Default | Description |
+|-------|------|---------|-------------|
+| `type` | string | all | Filter by `bug`, `feature`, or `feedback` |
+| `status` | string | all | Filter by status |
+| `sort` | string | `newest` | `newest` or `upvotes` |
+| `page` | number | 1 | Page number (20 items per page) |
+
+**Response (200):**
+
+```json
+{
+  "data": [{ "id": "...", "title": "...", "upvote_count": 5, ... }],
+  "total": 42,
+  "page": 1,
+  "limit": 20
+}
+```
+
+### List feedback by project slug (public)
 
 ```
 GET /v1/feedback/by-project/:slug
 ```
 
-**Auth:** None (public)
+**Auth:** None (public endpoint)
 
 ```bash
-curl https://api.sassmaker.com/v1/feedback/by-project/my-app
+curl "https://api.sassmaker.com/v1/feedback/by-project/my-app?sort=upvotes"
 ```
 
-### Upvote
+Same query params as above. Response includes project info:
+
+```json
+{
+  "data": [...],
+  "total": 42,
+  "page": 1,
+  "limit": 20,
+  "project": { "name": "My App", "slug": "my-app" }
+}
+```
+
+**Errors:**
+
+| Status | Message | Cause |
+|--------|---------|-------|
+| `404` | `"Project not found"` | Invalid slug |
+
+### Upvote / Downvote
 
 ```
 POST /v1/feedback/:id/upvote
-```
-
-**Auth:** Session Token
-
-### Downvote
-
-```
 POST /v1/feedback/:id/downvote
+DELETE /v1/feedback/:id/upvote
+DELETE /v1/feedback/:id/downvote
 ```
 
 **Auth:** Session Token
+
+POST adds a vote, DELETE removes it. Each user can have one vote per feedback entry.
+
+**Response (200):** `{ "ok": true }`
 
 ### Update status
 
@@ -889,11 +1200,19 @@ PATCH /v1/feedback/:id
 **Auth:** Session Token (project owner only)
 
 ```bash
-curl -X PATCH https://api.sassmaker.com/v1/feedback/123 \
-  -H "Authorization: Bearer <token>" \
+curl -X PATCH https://api.sassmaker.com/v1/feedback/abc-123 \
+  -H "Authorization: Bearer SESSION_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{ "status": "in_progress" }'
 ```
+
+**Errors:**
+
+| Status | Message | Cause |
+|--------|---------|-------|
+| `400` | `"Invalid status"` | Status not valid for this feedback type |
+| `403` | `"Forbidden"` | Not the project owner |
+| `404` | `"Not found"` | Feedback entry doesn't exist |
 
 ### Delete feedback
 
@@ -902,6 +1221,30 @@ DELETE /v1/feedback/:id
 ```
 
 **Auth:** Session Token (project owner only)
+
+**Response (200):** `{ "ok": true }`
+
+## SDK Usage
+
+```typescript
+import { SaaSMakerClient } from '@saas-maker/sdk';
+
+const client = new SaaSMakerClient({ apiKey: 'pk_your_api_key' });
+
+// Submit feedback
+await client.feedback.submit({
+  title: 'Add dark mode',
+  description: 'Would love a dark mode option',
+  type: 'feature',
+  submitter_email: 'user@example.com',
+});
+
+// List feedback
+const { data, total } = await client.feedback.list({
+  type: 'feature',
+  sort: 'upvotes',
+});
+```
 
 ---
 
@@ -1453,7 +1796,27 @@ DELETE /v1/indexes/:indexId
 
 Collect testimonials from your customers and display approved ones on your site. Submissions start as `pending` and can be approved or rejected in the dashboard.
 
-## Public submission page
+## Quick Start
+
+```bash
+curl -X POST https://api.sassmaker.com/v1/testimonials \
+  -H "Content-Type: application/json" \
+  -H "X-Project-Key: pk_your_api_key" \
+  -d '{
+    "author_name": "Jane Doe",
+    "author_email": "jane@example.com",
+    "content": "SaaS Maker saved us weeks of development time.",
+    "rating": 5
+  }'
+```
+
+## Status Workflow
+
+`pending` → `approved` / `rejected`
+
+New submissions are always `pending`. Approve or reject from the dashboard or API.
+
+## Public Submission Page
 
 Every project gets a public testimonial submission page at:
 
@@ -1461,11 +1824,11 @@ Every project gets a public testimonial submission page at:
 https://app.sassmaker.com/t/[project-slug]
 ```
 
-Share this link in email campaigns, onboarding flows, or support follow-ups to collect testimonials effortlessly.
+Share this in email campaigns, onboarding flows, or support follow-ups.
 
-## API endpoints
+## API Endpoints
 
-### Submit testimonial (with API key)
+### Submit testimonial
 
 ```
 POST /v1/testimonials
@@ -1476,7 +1839,7 @@ POST /v1/testimonials
 ```bash
 curl -X POST https://api.sassmaker.com/v1/testimonials \
   -H "Content-Type: application/json" \
-  -H "X-Project-Key: pk_abc123" \
+  -H "X-Project-Key: pk_your_api_key" \
   -d '{
     "author_name": "Jane Doe",
     "author_email": "jane@example.com",
@@ -1494,9 +1857,29 @@ curl -X POST https://api.sassmaker.com/v1/testimonials \
 | `content` | string | Yes | Testimonial text |
 | `rating` | number | Yes | Rating from 1 to 5 |
 | `author_title` | string | No | Job title or role |
-| `tweet_url` | string | No | Link to a tweet |
+| `author_avatar_url` | string | No | Avatar image URL |
+| `image_url` | string | No | Attached image URL |
+| `tweet_url` | string | No | Link to original tweet |
 
-### Submit testimonial by slug (public)
+**Response (201):**
+
+```json
+{
+  "id": "abc-123",
+  "status": "pending",
+  "created_at": "2025-01-01T00:00:00Z"
+}
+```
+
+**Errors:**
+
+| Status | Message | Cause |
+|--------|---------|-------|
+| `400` | `"author_name is required"` | Missing required field |
+| `400` | `"Invalid email"` | Malformed email address |
+| `400` | `"rating must be between 1 and 5"` | Invalid rating |
+
+### Submit by project slug (public)
 
 ```
 POST /v1/testimonials/by-project/:slug
@@ -1504,63 +1887,160 @@ POST /v1/testimonials/by-project/:slug
 
 **Auth:** None (public)
 
-Same body as above. Use this for public submission forms where no API key is available.
+Same body as above. Use this for public forms where no API key is available.
+
+**Errors:**
+
+| Status | Message | Cause |
+|--------|---------|-------|
+| `404` | `"Project not found"` | Invalid slug |
+
+### Get project info by slug (public)
+
+```
+GET /v1/testimonials/by-project/:slug
+```
+
+**Auth:** None (public)
+
+Returns project name and slug for rendering the submission form.
 
 ### List approved testimonials
 
 ```
-GET /v1/testimonials
+GET /v1/testimonials?limit=50&sort=newest
 ```
 
 **Auth:** API Key
 
-Returns only approved testimonials. Use this to display testimonials on your site.
+```bash
+curl "https://api.sassmaker.com/v1/testimonials?sort=rating&limit=10" \
+  -H "X-Project-Key: pk_your_api_key"
+```
 
-### List all testimonials with stats
+| Param | Type | Default | Description |
+|-------|------|---------|-------------|
+| `limit` | number | 50 | Max testimonials to return |
+| `sort` | string | `newest` | `newest` or `rating` |
+
+**Response (200):**
+
+```json
+{
+  "data": [
+    {
+      "id": "abc-123",
+      "author_name": "Jane Doe",
+      "author_title": "CTO at Acme",
+      "content": "SaaS Maker saved us weeks...",
+      "rating": 5,
+      "status": "approved",
+      "created_at": "2025-01-01T00:00:00Z"
+    }
+  ]
+}
+```
+
+Only returns `approved` testimonials. Use this to display on your site.
+
+### List all testimonials (dashboard)
 
 ```
-GET /v1/testimonials/all?project_id=...
+GET /v1/testimonials/all?project_id=PROJECT_ID&page=1
 ```
 
 **Auth:** Session Token
 
-Returns all testimonials (pending, approved, rejected) with aggregate stats. Used by the dashboard.
+Returns all testimonials (pending, approved, rejected) with stats.
 
-### Update testimonial status
+**Response (200):**
+
+```json
+{
+  "data": [...],
+  "total": 25,
+  "page": 1,
+  "limit": 50,
+  "stats": {
+    "total": 25,
+    "pending": 3,
+    "approved": 20,
+    "avg_rating": 4.6
+  }
+}
+```
+
+### Update status (approve/reject)
 
 ```
-PATCH /v1/testimonials/:id?project_id=...
+PATCH /v1/testimonials/:id?project_id=PROJECT_ID
 ```
 
 **Auth:** Session Token
 
 ```bash
-curl -X PATCH "https://api.sassmaker.com/v1/testimonials/456?project_id=proj_123" \
-  -H "Authorization: Bearer <token>" \
+curl -X PATCH "https://api.sassmaker.com/v1/testimonials/abc-123?project_id=proj_456" \
+  -H "Authorization: Bearer SESSION_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{ "status": "approved" }'
 ```
 
+Valid statuses: `pending`, `approved`, `rejected`.
+
+**Errors:**
+
+| Status | Message | Cause |
+|--------|---------|-------|
+| `400` | `"Invalid status"` | Not a valid status value |
+| `403` | `"Forbidden"` | Not the project owner |
+| `404` | `"Not found"` | Testimonial doesn't exist |
+
 ### Delete testimonial
 
 ```
-DELETE /v1/testimonials/:id?project_id=...
+DELETE /v1/testimonials/:id?project_id=PROJECT_ID
 ```
 
 **Auth:** Session Token
 
+**Response (200):** `{ "ok": true }`
+
+## SDK Usage
+
+```typescript
+import { SaaSMakerClient } from '@saas-maker/sdk';
+
+const client = new SaaSMakerClient({ apiKey: 'pk_your_api_key' });
+
+// Submit a testimonial
+await client.testimonials.submit({
+  author_name: 'Jane Doe',
+  author_email: 'jane@example.com',
+  content: 'Amazing product!',
+  rating: 5,
+});
+
+// List approved testimonials
+const { data } = await client.testimonials.list({ sort: 'rating' });
+```
+
 ---
 
-Build a waitlist for your product before launch. When someone joins, SaaS Maker automatically sends a welcome email via Resend.
+Build a waitlist for your product. Users sign up with their email, get assigned a position, and you can manage entries from the dashboard.
 
-## How it works
+## Quick Start
 
-1. Add the waitlist endpoint or widget to your landing page
-2. Users submit their email (and optionally their name and referral source)
-3. A welcome email is sent automatically
-4. View and manage entries in the dashboard
+```bash
+curl -X POST https://api.sassmaker.com/v1/waitlist \
+  -H "Content-Type: application/json" \
+  -H "X-Project-Key: pk_your_api_key" \
+  -d '{
+    "email": "user@example.com",
+    "name": "Jane Doe"
+  }'
+```
 
-## API endpoints
+## API Endpoints
 
 ### Join waitlist
 
@@ -1573,11 +2053,10 @@ POST /v1/waitlist
 ```bash
 curl -X POST https://api.sassmaker.com/v1/waitlist \
   -H "Content-Type: application/json" \
-  -H "X-Project-Key: pk_abc123" \
+  -H "X-Project-Key: pk_your_api_key" \
   -d '{
     "email": "user@example.com",
-    "name": "Jane Doe",
-    "referral_source": "twitter"
+    "name": "Jane Doe"
   }'
 ```
 
@@ -1585,22 +2064,114 @@ curl -X POST https://api.sassmaker.com/v1/waitlist \
 |-------|------|----------|-------------|
 | `email` | string | Yes | Email address |
 | `name` | string | No | Full name |
-| `referral_source` | string | No | How they found you |
+
+**Response (201):**
+
+```json
+{
+  "id": "abc-123",
+  "email": "user@example.com",
+  "name": "Jane Doe",
+  "position": 42,
+  "created_at": "2025-01-01T00:00:00Z"
+}
+```
+
+**Errors:**
+
+| Status | Message | Cause |
+|--------|---------|-------|
+| `400` | `"email is required"` | Missing or invalid email |
+| `409` | `"Email already on waitlist"` | Duplicate signup |
+
+### Get waitlist count
+
+```
+GET /v1/waitlist/count
+```
+
+**Auth:** API Key
+
+```bash
+curl https://api.sassmaker.com/v1/waitlist/count \
+  -H "X-Project-Key: pk_your_api_key"
+```
+
+**Response (200):**
+
+```json
+{ "count": 142 }
+```
+
+Use this to display "142 people on the waitlist" on your landing page.
 
 ### List waitlist entries
 
 ```
-GET /v1/waitlist?project_id=...
+GET /v1/waitlist?project_id=PROJECT_ID&page=1
 ```
 
 **Auth:** Session Token
 
 ```bash
-curl https://api.sassmaker.com/v1/waitlist?project_id=proj_123 \
-  -H "Authorization: Bearer <token>"
+curl "https://api.sassmaker.com/v1/waitlist?project_id=proj_123&page=1" \
+  -H "Authorization: Bearer SESSION_TOKEN"
 ```
 
-Returns all waitlist entries for the project, sorted by signup date.
+**Response (200):**
+
+```json
+{
+  "data": [
+    { "id": "abc-123", "email": "user@example.com", "name": "Jane Doe", "position": 1, "created_at": "..." }
+  ],
+  "total": 142,
+  "page": 1,
+  "limit": 50
+}
+```
+
+**Errors:**
+
+| Status | Message | Cause |
+|--------|---------|-------|
+| `400` | `"project_id is required"` | Missing project_id query param |
+| `403` | `"Forbidden"` | Not the project owner |
+
+### Delete waitlist entry
+
+```
+DELETE /v1/waitlist/:id?project_id=PROJECT_ID
+```
+
+**Auth:** Session Token
+
+**Response (200):** `{ "ok": true }`
+
+**Errors:**
+
+| Status | Message | Cause |
+|--------|---------|-------|
+| `403` | `"Forbidden"` | Not the project owner |
+| `404` | `"Not found"` | Entry doesn't exist |
+
+## SDK Usage
+
+```typescript
+import { SaaSMakerClient } from '@saas-maker/sdk';
+
+const client = new SaaSMakerClient({ apiKey: 'pk_your_api_key' });
+
+// Add to waitlist
+const entry = await client.waitlist.join({
+  email: 'user@example.com',
+  name: 'Jane Doe',
+});
+console.log(`Position: ${entry.position}`);
+
+// Get count
+const { count } = await client.waitlist.count();
+```
 
 ---
 
