@@ -1,8 +1,8 @@
 -- Roadmap items
 CREATE TABLE IF NOT EXISTS roadmap_items (
-  id UUID PRIMARY KEY,
-  project_id UUID NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-  feedback_id UUID REFERENCES feedback(id) ON DELETE SET NULL,
+  id TEXT PRIMARY KEY,
+  project_id TEXT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  feedback_id TEXT REFERENCES feedback(id) ON DELETE SET NULL,
   title TEXT NOT NULL,
   description TEXT,
   "column" TEXT NOT NULL DEFAULT 'backlog',
@@ -20,8 +20,8 @@ CREATE INDEX idx_roadmap_items_feedback ON roadmap_items(feedback_id);
 
 -- Roadmap votes
 CREATE TABLE IF NOT EXISTS roadmap_votes (
-  id UUID PRIMARY KEY,
-  roadmap_item_id UUID NOT NULL REFERENCES roadmap_items(id) ON DELETE CASCADE,
+  id TEXT PRIMARY KEY,
+  roadmap_item_id TEXT NOT NULL REFERENCES roadmap_items(id) ON DELETE CASCADE,
   user_identifier TEXT NOT NULL,
   vote SMALLINT NOT NULL CHECK (vote IN (1, -1)),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
