@@ -18,25 +18,22 @@ SaaS Maker is a drop-in backend-as-a-service for SaaS apps. Instead of building 
 
 ## How it works
 
-1. **Create a project** in the [dashboard](https://app.sassmaker.com)
-2. **Get your API key** from project Settings
-3. **Use the REST API or SDK** to integrate services into your app
+1. **Install the CLI** and log in
+2. **Create a project** and link it to your app directory
+3. **Use the REST API, SDK, or widgets** to integrate services
 
 ```bash
-npm install @saas-maker/sdk
+npm install -g @saas-maker/cli
+saasmaker login
+saasmaker projects create
+saasmaker init
 ```
 
-```typescript
-import { SaaSMakerClient } from '@saas-maker/sdk';
-
-const client = new SaaSMakerClient({
-  apiKey: 'pk_your_api_key',
-  baseUrl: 'https://api.sassmaker.com',
-});
-```
+Or manage projects from the [dashboard](https://app.sassmaker.com) if you prefer a UI.
 
 ## Architecture
 
+- **CLI** — Create and manage projects from your terminal
 - **API** — Cloudflare Workers (globally distributed, low latency)
 - **Database** — CockroachDB (distributed SQL)
 - **Widgets** — Embeddable React components for feedback, testimonials, and changelog

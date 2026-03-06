@@ -3,21 +3,49 @@ title: Quickstart
 description: Get up and running with SaaS Maker in under 5 minutes.
 ---
 
-## 1. Sign up
+## 1. Install the CLI
 
-Create an account at [app.sassmaker.com](https://app.sassmaker.com). Sign in with Google.
+```bash
+npm install -g @saas-maker/cli
+```
 
-## 2. Create a project
+## 2. Log in
 
-From the dashboard, create a new project. Give it a name and slug. Then go to **Settings** and copy your API key (starts with `pk_`).
+```bash
+saasmaker login
+```
 
-## 3. Install the SDK
+Opens your browser for Google OAuth. Your session token is saved to `~/.saasmaker/config.json`.
+
+## 3. Create a project
+
+```bash
+saasmaker projects create
+```
+
+Follow the prompt to name your project. This generates a unique API key (starts with `pk_`).
+
+## 4. Link your app directory
+
+```bash
+cd ~/my-app
+saasmaker init
+```
+
+Select your project from the list. This creates a `.saasmaker.json` config in your project root.
+
+## 5. Check your setup
+
+```bash
+saasmaker keys     # show your API key
+saasmaker status   # show project stats
+```
+
+## 6. Integrate the SDK
 
 ```bash
 npm install @saas-maker/sdk
 ```
-
-## 4. Collect your first feedback
 
 ```typescript
 import { SaaSMakerClient } from '@saas-maker/sdk';
@@ -27,7 +55,6 @@ const client = new SaaSMakerClient({
   baseUrl: 'https://api.sassmaker.com',
 });
 
-// Submit feedback
 await client.feedback.submit({
   title: 'Add dark mode',
   description: 'Would love a dark mode option',
@@ -50,17 +77,9 @@ curl -X POST https://api.sassmaker.com/v1/feedback \
   }'
 ```
 
-## 5. Use the CLI (optional)
-
-```bash
-npm install -g @saas-maker/cli
-saasmaker login
-```
-
-The CLI opens your browser for Google OAuth. Once authenticated, you can manage projects and services from the terminal.
-
 ## Next steps
 
+- [CLI reference](/sdk/cli) — all CLI commands
 - [Authentication](/getting-started/authentication) — understand API keys vs session tokens
 - [Feedback](/services/feedback) — full feedback API reference
 - [JavaScript SDK](/sdk/javascript) — all available SDK methods
