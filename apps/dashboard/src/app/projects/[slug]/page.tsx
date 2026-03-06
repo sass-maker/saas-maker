@@ -61,7 +61,7 @@ export default async function ProjectInboxPage({ params }: Props) {
 
       {/* Filters + Table */}
       <Suspense fallback={<div className="text-muted-foreground">Loading...</div>}>
-        <InboxContent slug={project.slug} />
+        <InboxContent slug={project.slug} projectId={project.id} />
       </Suspense>
     </div>
   );

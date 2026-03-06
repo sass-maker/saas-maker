@@ -9,6 +9,7 @@ import {
   ChevronDown,
   ClipboardList,
   FolderOpen,
+  Map,
   Megaphone,
   MessageSquare,
   Settings,
@@ -33,6 +34,7 @@ interface Project {
 
 const projectNavItems = [
   { label: "Feedback", href: "", icon: MessageSquare },
+  { label: "Roadmap", href: "/roadmap", icon: Map },
   { label: "Testimonials", href: "/testimonials", icon: Star },
   { label: "Waitlist", href: "/waitlist", icon: Users },
   { label: "Changelog", href: "/changelog", icon: Megaphone },

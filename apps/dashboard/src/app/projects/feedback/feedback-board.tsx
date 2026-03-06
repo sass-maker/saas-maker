@@ -29,7 +29,7 @@ import {
 } from "lucide-react";
 import { getClientToken, apiFetchClient } from "@/lib/api-client";
 
-type BoardStatus = 'planned' | 'in_progress' | 'shipped' | 'cancelled';
+type BoardStatus = 'new' | 'dismissed' | 'on_roadmap';
 
 type BoardFeedbackRecord = FeedbackRecord & {
   project_name: string;
@@ -41,10 +41,9 @@ const STATUS_COLUMNS: Array<{
   label: string;
   variant: "default" | "secondary" | "destructive" | "outline";
 }> = [
-  { value: "planned", label: "Planned", variant: "default" },
-  { value: "in_progress", label: "In Progress", variant: "secondary" },
-  { value: "shipped", label: "Shipped", variant: "secondary" },
-  { value: "cancelled", label: "Cancelled", variant: "destructive" },
+  { value: "new", label: "New", variant: "default" },
+  { value: "on_roadmap", label: "On Roadmap", variant: "secondary" },
+  { value: "dismissed", label: "Dismissed", variant: "destructive" },
 ];
 
 const STATUS_STYLE_MAP = Object.fromEntries(
@@ -150,20 +149,18 @@ export function FeedbackBoard() {
 
   const grouped = useMemo(() => {
     const buckets: Record<BoardStatus, BoardFeedbackRecord[]> = {
-      planned: [],
-      in_progress: [],
-      shipped: [],
-      cancelled: [],
+      new: [],
+      on_roadmap: [],
+      dismissed: [],
     };
 
     for (const item of feedback) {
       const normalized =
-        item.status === "planned" ||
-        item.status === "in_progress" ||
-        item.status === "shipped" ||
-        item.status === "cancelled"
+        item.status === "new" ||
+        item.status === "dismissed" ||
+        item.status === "on_roadmap"
           ? item.status
-          : "planned";
+          : "new";
       buckets[normalized].push(item);
     }
 
@@ -393,12 +390,11 @@ export function FeedbackBoard() {
                         <div onClick={(e) => e.stopPropagation()}>
                           <Select
                             value={
-                              item.status === "planned" ||
-                              item.status === "in_progress" ||
-                              item.status === "shipped" ||
-                              item.status === "cancelled"
+                              item.status === "new" ||
+                              item.status === "dismissed" ||
+                              item.status === "on_roadmap"
                                 ? item.status
-                                : "planned"
+                                : "new"
                             }
                             onValueChange={(value) =>
                               handleStatusChange(item, value as BoardStatus)
@@ -443,23 +439,21 @@ export function FeedbackBoard() {
                   <Badge
                     variant={
                       STATUS_STYLE_MAP[
-                        (selected.status === "planned" ||
-                        selected.status === "in_progress" ||
-                        selected.status === "shipped" ||
-                        selected.status === "cancelled"
+                        (selected.status === "new" ||
+                        selected.status === "dismissed" ||
+                        selected.status === "on_roadmap"
                           ? selected.status
-                          : "planned") as BoardStatus
+                          : "new") as BoardStatus
                       ].variant
                     }
                   >
                     {
                       STATUS_STYLE_MAP[
-                        (selected.status === "planned" ||
-                        selected.status === "in_progress" ||
-                        selected.status === "shipped" ||
-                        selected.status === "cancelled"
+                        (selected.status === "new" ||
+                        selected.status === "dismissed" ||
+                        selected.status === "on_roadmap"
                           ? selected.status
-                          : "planned") as BoardStatus
+                          : "new") as BoardStatus
                       ].label
                     }
                   </Badge>

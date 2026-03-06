@@ -12,6 +12,7 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8787";
 
 interface InboxContentProps {
   slug: string;
+  projectId: string;
 }
 
 async function getToken(): Promise<string> {
@@ -21,7 +22,7 @@ async function getToken(): Promise<string> {
   return data.token;
 }
 
-export function InboxContent({ slug }: InboxContentProps) {
+export function InboxContent({ slug, projectId }: InboxContentProps) {
   const searchParams = useSearchParams();
 
   const typeFilter = searchParams.get("type") ?? "all";
@@ -75,6 +76,18 @@ export function InboxContent({ slug }: InboxContentProps) {
     setFeedback((prev) => prev.filter((f) => f.id !== id));
   }
 
+  async function handleMoveToRoadmap(item: FeedbackRecord) {
+    const token = await getToken();
+    const res = await fetch(`${API_BASE}/v1/roadmap/dashboard/${projectId}/from-feedback/${item.id}`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!res.ok) throw new Error("Failed to move to roadmap");
+    setFeedback((prev) =>
+      prev.map((f) => (f.id === item.id ? { ...f, status: "on_roadmap" as AnyFeedbackStatus } : f))
+    );
+  }
+
   if (loading) {
     return (
       <div className="space-y-4">
@@ -110,6 +123,7 @@ export function InboxContent({ slug }: InboxContentProps) {
         feedback={feedback}
         onStatusChange={handleStatusChange}
         onDelete={handleDelete}
+        onMoveToRoadmap={handleMoveToRoadmap}
       />
     </div>
   );
