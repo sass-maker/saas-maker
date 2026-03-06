@@ -45,8 +45,11 @@ curl https://api.sassmaker.com/v1/feedback/123 \
 | Submit a testimonial | API Key |
 | Read published changelog | API Key |
 | Search knowledge base | API Key |
+| AI chat/embeddings/RAG | API Key |
 | Track analytics events | API Key |
 | Update feedback status | Session Token |
 | View analytics dashboard | Session Token |
 | Manage testimonials (approve/reject) | Session Token |
 | Create changelog entries | Session Token |
+| Configure AI provider | Session Token |
+| View AI usage/logs | Session Token |
