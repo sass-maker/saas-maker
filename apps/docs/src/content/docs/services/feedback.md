@@ -29,9 +29,15 @@ curl -X POST https://api.sassmaker.com/v1/feedback \
 
 ## Status Workflow
 
-**Bugs and feedback:** `new` → `in_progress` → `done` / `dismissed`
+All feedback types share three statuses:
 
-**Feature requests:** `planned` → `in_progress` → `shipped` / `cancelled`
+| Status | Description |
+|--------|-------------|
+| `new` | Just submitted (default) |
+| `dismissed` | Won't act on this |
+| `on_roadmap` | Promoted to the [Roadmap](/services/roadmap) |
+
+Use the "Move to Roadmap" action in the dashboard to promote feedback. This creates a roadmap item and sets the status to `on_roadmap`.
 
 ## Voting
 
@@ -86,7 +92,7 @@ curl -X POST https://api.sassmaker.com/v1/feedback \
   "id": "abc-123",
   "project_id": "proj_456",
   "type": "feature",
-  "status": "planned",
+  "status": "new",
   "title": "Add dark mode",
   "description": "Would love a dark mode option",
   "submitter_email": "user@example.com",
@@ -193,14 +199,14 @@ PATCH /v1/feedback/:id
 curl -X PATCH https://api.sassmaker.com/v1/feedback/abc-123 \
   -H "Authorization: Bearer SESSION_TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{ "status": "in_progress" }'
+  -d '{ "status": "dismissed" }'
 ```
 
 **Errors:**
 
 | Status | Message | Cause |
 |--------|---------|-------|
-| `400` | `"Invalid status"` | Status not valid for this feedback type |
+| `400` | `"Invalid status"` | Status not `new`, `dismissed`, or `on_roadmap` |
 | `403` | `"Forbidden"` | Not the project owner |
 | `404` | `"Not found"` | Feedback entry doesn't exist |
 

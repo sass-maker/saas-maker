@@ -25,6 +25,7 @@ export default defineConfig({
 					label: 'Services',
 					items: [
 						{ label: 'Feedback & Feature Requests', slug: 'services/feedback' },
+					{ label: 'Roadmap', slug: 'services/roadmap' },
 						{ label: 'Waitlist', slug: 'services/waitlist' },
 						{ label: 'Testimonials', slug: 'services/testimonials' },
 						{ label: 'Forms & Surveys', slug: 'services/forms' },
