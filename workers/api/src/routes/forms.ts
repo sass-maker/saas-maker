@@ -186,6 +186,20 @@ forms.get('/dashboard/:projectId', requireSession, async (c) => {
   return c.json({ data: result.data, total: result.total, page, limit: PAGE_SIZE, stats });
 });
 
+// GET /dashboard/:projectId/check-slug/:slug — check slug availability
+forms.get('/dashboard/:projectId/check-slug/:slug', requireSession, async (c) => {
+  const userId = c.get('userId')!;
+  const projectId = c.req.param('projectId');
+  const slug = c.req.param('slug');
+
+  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const project = await db.getProjectById(projectId);
+  if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
+
+  const existing = await db.getFormBySlug(projectId, slug);
+  return c.json({ available: !existing });
+});
+
 // POST /dashboard/:projectId — create form (accepts optional questions array)
 forms.post('/dashboard/:projectId', requireSession, async (c) => {
   const userId = c.get('userId')!;

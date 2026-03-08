@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,7 +13,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { Loader2 } from "lucide-react";
+import { Loader2, Check, X } from "lucide-react";
 import { apiFetchClient, getClientToken } from "@/lib/api-client";
 
 interface CreateFormProps {
@@ -36,6 +36,40 @@ export function CreateForm({ projectId, projectSlug }: CreateFormProps) {
   const [description, setDescription] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [slugAvailable, setSlugAvailable] = useState<boolean | null>(null);
+  const [checkingSlug, setCheckingSlug] = useState(false);
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+  const checkSlugAvailability = useCallback(async (slugToCheck: string) => {
+    if (!slugToCheck.trim()) {
+      setSlugAvailable(null);
+      setCheckingSlug(false);
+      return;
+    }
+    setCheckingSlug(true);
+    try {
+      const token = await getClientToken();
+      const res = await apiFetchClient<{ available: boolean }>(
+        `/v1/forms/dashboard/${projectId}/check-slug/${slugToCheck}`,
+        token
+      );
+      setSlugAvailable(res.available);
+    } catch {
+      setSlugAvailable(null);
+    } finally {
+      setCheckingSlug(false);
+    }
+  }, [projectId]);
+
+  useEffect(() => {
+    clearTimeout(debounceRef.current);
+    setSlugAvailable(null);
+    if (slug.trim()) {
+      setCheckingSlug(true);
+      debounceRef.current = setTimeout(() => checkSlugAvailability(slug), 400);
+    }
+    return () => clearTimeout(debounceRef.current);
+  }, [slug, checkSlugAvailability]);
 
   function handleTitleChange(value: string) {
     setTitle(value);
@@ -51,7 +85,7 @@ export function CreateForm({ projectId, projectSlug }: CreateFormProps) {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!title.trim() || !slug.trim()) return;
+    if (!title.trim() || !slug.trim() || slugAvailable === false) return;
 
     setSubmitting(true);
     setError(null);
@@ -98,18 +132,35 @@ export function CreateForm({ projectId, projectSlug }: CreateFormProps) {
 
           <div className="space-y-2">
             <Label htmlFor="slug">URL Slug</Label>
-            <Input
-              id="slug"
-              placeholder="e.g. feature-request"
-              value={slug}
-              onChange={(e) => handleSlugChange(e.target.value)}
-              required
-              disabled={submitting}
-              className="font-mono"
-            />
-            <p className="text-xs text-muted-foreground">
-              Auto-generated from the title. You can edit it manually.
-            </p>
+            <div className="relative">
+              <Input
+                id="slug"
+                placeholder="e.g. feature-request"
+                value={slug}
+                onChange={(e) => handleSlugChange(e.target.value)}
+                required
+                disabled={submitting}
+                className={`font-mono pr-8 ${slugAvailable === false ? "border-destructive" : slugAvailable === true ? "border-green-500" : ""}`}
+              />
+              {slug.trim() && (
+                <div className="absolute right-2 top-1/2 -translate-y-1/2">
+                  {checkingSlug ? (
+                    <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                  ) : slugAvailable === true ? (
+                    <Check className="h-4 w-4 text-green-500" />
+                  ) : slugAvailable === false ? (
+                    <X className="h-4 w-4 text-destructive" />
+                  ) : null}
+                </div>
+              )}
+            </div>
+            {slugAvailable === false ? (
+              <p className="text-xs text-destructive">This slug is already taken. Choose a different one.</p>
+            ) : (
+              <p className="text-xs text-muted-foreground">
+                Auto-generated from the title. You can edit it manually.
+              </p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -132,7 +183,7 @@ export function CreateForm({ projectId, projectSlug }: CreateFormProps) {
           )}
 
           <div className="flex items-center gap-3 pt-2">
-            <Button type="submit" disabled={submitting || !title.trim() || !slug.trim()}>
+            <Button type="submit" disabled={submitting || !title.trim() || !slug.trim() || slugAvailable === false || checkingSlug}>
               {submitting && <Loader2 className="animate-spin" />}
               Create Form
             </Button>
