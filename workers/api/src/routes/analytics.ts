@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { Bindings, Variables } from '../types';
-import { requireApiKey, requireSession } from '../middleware/auth';
+import { requireApiKey, requireApiKeyOrSession, requireSession } from '../middleware/auth';
 import { getDb } from '../db';
 import { parseDevice, parseBrowser, isBot, parseOS, extractPathname, computeSessionId } from '../ua';
 import type { TrackEventRequest } from '@saas-maker/shared-types';
@@ -150,14 +150,19 @@ analytics.get('/events', requireSession, async (c) => {
 
 // --- New dashboard & detail routes ---
 
-analytics.get('/dashboard', requireSession, async (c) => {
-  const userId = c.get('userId')!;
-  const projectId = c.req.query('project_id');
-  if (!projectId) return c.json({ error: 'project_id is required' }, 400);
-
+analytics.get('/dashboard', requireApiKeyOrSession, async (c) => {
   const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
-  const project = await db.getProjectById(projectId);
-  if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
+  let projectId = c.get('projectId');
+
+  if (!projectId) {
+    // Session path — require project_id query param + ownership check
+    const userId = c.get('userId')!;
+    projectId = c.req.query('project_id');
+    if (!projectId) return c.json({ error: 'project_id is required' }, 400);
+
+    const project = await db.getProjectById(projectId);
+    if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
+  }
 
   const period = c.req.query('period') || '30d';
   const since = parsePeriod(period);

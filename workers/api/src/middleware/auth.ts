@@ -89,6 +89,51 @@ export const requireSession = createMiddleware<{ Bindings: Bindings; Variables: 
   }
 );
 
+export const requireApiKeyOrSession = createMiddleware<{ Bindings: Bindings; Variables: Variables }>(
+  async (c, next) => {
+    const apiKey = c.req.header('X-Project-Key');
+    if (apiKey) {
+      const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+      const project = await db.getProjectByApiKey(apiKey);
+      if (!project) return c.json({ error: 'Invalid API key' }, 401);
+      c.set('projectId', project.id);
+      c.set('project', project);
+      return next();
+    }
+
+    // Fall back to session auth (same logic as requireSession)
+    const authHeader = c.req.header('Authorization');
+    if (!authHeader?.startsWith('Bearer ')) {
+      return c.json({ error: 'Unauthorized' }, 401);
+    }
+
+    const token = authHeader.slice(7);
+    const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+
+    if (token.startsWith('sm_')) {
+      const cliToken = await db.getCliTokenUser(token);
+      if (!cliToken) return c.json({ error: 'Unauthorized' }, 401);
+      c.set('userId', cliToken.user_id);
+      return next();
+    }
+
+    const payload = await decryptAuthJsJwe(token, c.env.AUTH_SECRET);
+    if (!payload) {
+      return c.json({ error: 'Unauthorized' }, 401);
+    }
+
+    const user = await db.upsertUser({
+      id: payload.sub,
+      email: payload.email,
+      name: payload.name || null,
+      avatar_url: payload.picture || null,
+    });
+
+    c.set('userId', user.id);
+    await next();
+  }
+);
+
 export const requireApiKey = createMiddleware<{ Bindings: Bindings; Variables: Variables }>(
   async (c, next) => {
     const apiKey = c.req.header('X-Project-Key');
