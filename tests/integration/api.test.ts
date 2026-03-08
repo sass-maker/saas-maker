@@ -182,6 +182,49 @@ describe('knowledge base', () => {
   });
 });
 
+// ─── Forms ────────────────────────────────────────────────────────────────
+
+describe('forms', () => {
+  it('lists forms for the project', async () => {
+    const res = await client.forms.list();
+    expect(Array.isArray(res.data)).toBe(true);
+    expect(typeof res.total).toBe('number');
+  });
+});
+
+// ─── AI Gateway ───────────────────────────────────────────────────────────
+
+describe('ai gateway', () => {
+  it.skipIf(!HAS_AI)('sends a chat completion', async () => {
+    const res = await client.ai.chat({
+      messages: [{ role: 'user', content: 'Say "hello" and nothing else.' }],
+    });
+    expect(res.choices).toBeTruthy();
+    expect(res.choices[0].message.content).toBeTruthy();
+  });
+
+  it.skipIf(!HAS_AI)('generates embeddings', async () => {
+    const res = await client.ai.embed('test embedding');
+    expect(res.data).toBeTruthy();
+    expect(res.data[0].embedding.length).toBeGreaterThan(0);
+  });
+});
+
+// ─── Testimonials (by slug) ───────────────────────────────────────────────
+
+describe('testimonials by slug', () => {
+  it.skipIf(!PROJECT_SLUG)('submits a testimonial by project slug', async () => {
+    const res = await client.testimonials.submitBySlug(PROJECT_SLUG, {
+      author_name: 'Slug Test User',
+      author_email: 'slug-test@sassmaker.com',
+      content: 'Integration test via slug.',
+      rating: 4,
+    });
+    expect(res.id).toBeTruthy();
+    expect(res.status).toBe('pending');
+  });
+});
+
 // ─── Auth errors ───────────────────────────────────────────────────────────
 
 describe('auth', () => {
