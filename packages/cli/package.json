@@ -1,8 +1,12 @@
 {
   "name": "@saas-maker/cli",
   "version": "0.1.0",
-  "publishConfig": { "access": "public" },
-  "files": ["dist"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist"
+  ],
   "type": "module",
   "bin": {
     "saasmaker": "./dist/index.js"
@@ -17,6 +21,7 @@
     "ora": "^8.2.0"
   },
   "devDependencies": {
+    "@types/node": "^20.19.34",
     "tsup": "^8.0.0",
     "tsx": "^4.19.0",
     "typescript": "^5.9.3"

@@ -56,7 +56,7 @@ export function validateApiOperation(methodInput: string, pathInput: string): Va
     return { ok: false, message: `Path "${path}" is not in OpenAPI spec.${suggestions}` };
   }
 
-  const operation = spec.paths[matchedTemplate] as Record<string, unknown>;
+  const operation = (spec.paths as Record<string, Record<string, unknown>>)[matchedTemplate];
   if (!(method in operation)) {
     const methods = Object.keys(operation).map((m) => m.toUpperCase()).join(', ');
     return {
