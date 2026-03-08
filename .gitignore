@@ -7,3 +7,15 @@ dist/
 .dev.vars
 *.tsbuildinfo
 .vercel
+
+# Build artifacts
+apps/landing-page/out/
+
+# Local tooling
+.claude/
+.playwright-mcp/
+.metadata_never_index
+
+# Misc
+*.png
+project-idea-dump.md
