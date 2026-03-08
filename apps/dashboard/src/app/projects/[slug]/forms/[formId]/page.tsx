@@ -22,8 +22,9 @@ export default async function FormBuilderPage({ params }: Props) {
       {},
       token
     );
-    form = res.form;
-    questions = res.questions ?? [];
+    const d = res.data;
+    questions = d.questions ?? [];
+    form = d;
   } catch {
     // Fetch failed
   }
