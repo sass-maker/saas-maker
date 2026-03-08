@@ -60,7 +60,11 @@ projects.get('/by-slug/:slug', async (c) => {
 projects.patch('/:id', async (c) => {
   const userId = c.get('userId')!;
   const projectId = c.req.param('id');
-  const body = (await c.req.json()) as { name?: string };
+  const body = (await c.req.json()) as {
+    name?: string;
+    rate_limit_rpm?: number;
+    rate_limit_enabled?: boolean;
+  };
 
   const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
 
@@ -69,8 +73,47 @@ projects.patch('/:id', async (c) => {
   if (!existing) return c.json({ error: 'Project not found' }, 404);
   if (existing.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
-  const updated = await db.updateProject(projectId, { name: body.name });
+  // Validate rate_limit_rpm
+  if (body.rate_limit_rpm !== undefined) {
+    if (typeof body.rate_limit_rpm !== 'number' || body.rate_limit_rpm < 1 || body.rate_limit_rpm > 10000) {
+      return c.json({ error: 'rate_limit_rpm must be a number between 1 and 10000' }, 400);
+    }
+  }
+
+  // Validate rate_limit_enabled
+  if (body.rate_limit_enabled !== undefined && typeof body.rate_limit_enabled !== 'boolean') {
+    return c.json({ error: 'rate_limit_enabled must be a boolean' }, 400);
+  }
+
+  const updated = await db.updateProject(projectId, {
+    name: body.name,
+    rate_limit_rpm: body.rate_limit_rpm,
+    rate_limit_enabled: body.rate_limit_enabled,
+  });
   return c.json(updated);
+});
+
+// GET /:id/readme (session auth, ownership check)
+projects.get('/:id/readme', async (c) => {
+  const userId = c.get('userId')!;
+  const projectId = c.req.param('id');
+  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const project = await db.getProjectById(projectId);
+  if (!project || project.owner_id !== userId) return c.json({ error: 'Not found' }, 404);
+  return c.json({ readme: project.readme || '' });
+});
+
+// PUT /:id/readme (session auth, ownership check)
+projects.put('/:id/readme', async (c) => {
+  const userId = c.get('userId')!;
+  const projectId = c.req.param('id');
+  const body = await c.req.json() as { content: string };
+  if (typeof body.content !== 'string') return c.json({ error: 'content is required' }, 400);
+  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const project = await db.getProjectById(projectId);
+  if (!project || project.owner_id !== userId) return c.json({ error: 'Not found' }, 404);
+  await db.updateProject(projectId, { readme: body.content });
+  return c.json({ ok: true });
 });
 
 projects.delete('/:id', async (c) => {

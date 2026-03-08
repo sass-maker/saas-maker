@@ -99,6 +99,7 @@ export const requireApiKey = createMiddleware<{ Bindings: Bindings; Variables: V
     if (!project) return c.json({ error: 'Invalid API key' }, 401);
 
     c.set('projectId', project.id);
+    c.set('project', project);
     await next();
   }
 );

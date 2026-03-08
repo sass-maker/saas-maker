@@ -109,6 +109,9 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
       const sets = [];
       if (input.name !== undefined) sets.push(sql`name = ${input.name}`);
       if (input.embedding_model !== undefined) sets.push(sql`embedding_model = ${input.embedding_model}`);
+      if (input.rate_limit_rpm !== undefined) sets.push(sql`rate_limit_rpm = ${input.rate_limit_rpm}`);
+      if (input.rate_limit_enabled !== undefined) sets.push(sql`rate_limit_enabled = ${input.rate_limit_enabled}`);
+      if (input.readme !== undefined) sets.push(sql`readme = ${input.readme}`);
 
       if (sets.length > 0) {
         const setClause = sets.reduce((acc, s, i) => i === 0 ? s : sql`${acc}, ${s}`);

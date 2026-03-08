@@ -18,6 +18,7 @@ export type Variables = {
   requestId: string;
   userId?: string;
   projectId?: string;
+  project?: any;
 };
 
 export type AppContext = Context<{ Bindings: Bindings; Variables: Variables }>;

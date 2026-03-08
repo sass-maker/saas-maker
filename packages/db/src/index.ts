@@ -32,7 +32,7 @@ export interface FeedbackDatabase {
   getProjectByApiKey(apiKey: string): Promise<ProjectRecord | null>;
   getProjectById(id: string): Promise<ProjectRecord | null>;
   listProjectsByOwner(ownerId: string): Promise<ProjectRecord[]>;
-  updateProject(id: string, input: Partial<Pick<ProjectRecord, 'name' | 'embedding_model'>>): Promise<ProjectRecord | null>;
+  updateProject(id: string, input: Partial<Pick<ProjectRecord, 'name' | 'embedding_model' | 'rate_limit_rpm' | 'rate_limit_enabled' | 'readme'>>): Promise<ProjectRecord | null>;
   deleteProject(id: string): Promise<boolean>;
 
   // Feedback

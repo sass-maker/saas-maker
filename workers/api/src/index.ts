@@ -15,6 +15,9 @@ import { cliAuth } from './routes/cli-auth';
 import { forms } from './routes/forms';
 import { aiGateway } from './routes/ai-gateway';
 import { roadmap } from './routes/roadmap';
+import { requireApiKey } from './middleware/auth';
+import { rateLimit } from './middleware/rate-limit';
+import { getDb } from './db';
 
 const app = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
@@ -45,7 +48,28 @@ app.use('*', async (c, next) => {
   await next();
 });
 
+// Rate limiting (no-op when projectId is not set, i.e. non-API-key routes)
+app.use('*', rateLimit);
+
 app.get('/health', (c) => c.json({ status: 'ok' }));
+
+// API-key project readme routes (for SDK access)
+app.get('/v1/projects/readme', requireApiKey, async (c) => {
+  const projectId = c.get('projectId')!;
+  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const project = await db.getProjectById(projectId);
+  if (!project) return c.json({ error: 'Not found' }, 404);
+  return c.json({ readme: project.readme || '' });
+});
+
+app.put('/v1/projects/readme', requireApiKey, async (c) => {
+  const projectId = c.get('projectId')!;
+  const body = await c.req.json() as { content: string };
+  if (typeof body.content !== 'string') return c.json({ error: 'content is required' }, 400);
+  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  await db.updateProject(projectId, { readme: body.content });
+  return c.json({ ok: true });
+});
 
 app.route('/v1/auth', auth);
 app.route('/v1/projects', projects);
