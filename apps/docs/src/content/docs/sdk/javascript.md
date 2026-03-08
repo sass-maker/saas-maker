@@ -45,12 +45,13 @@ const { data, total } = await client.feedback.list({
 
 ```typescript
 // Add to waitlist
-const entry = await client.waitlist.signup({
+const entry = await client.waitlist.join({
   email: 'user@example.com',
   name: 'Jane Doe',
 });
 
-console.log(`Position: #${entry.position}`);
+// Get total count
+const { count } = await client.waitlist.getCount();
 ```
 
 ## Testimonials
@@ -108,6 +109,46 @@ await client.analytics.track({
 });
 ```
 
+## Forms
+
+```typescript
+// Get a public form by slug
+const form = await client.forms.getPublic('my-form-slug');
+
+// Submit a form response
+await client.forms.submitPublic('my-form-slug', {
+  answers: { field_1: 'value', field_2: 42 },
+});
+
+// List forms (API key auth)
+const forms = await client.forms.getBySlug('my-form-slug');
+```
+
+## Roadmap
+
+```typescript
+// List public roadmap items
+const items = await client.roadmap.listPublic('my-project-slug');
+
+// Vote on a roadmap item
+await client.roadmap.vote('my-project-slug', 'item_123', {
+  user_identifier: 'user@example.com',
+});
+
+// Remove a vote
+await client.roadmap.removeVote('my-project-slug', 'item_123', 'user@example.com');
+```
+
+## Projects
+
+```typescript
+// Get project README (API key auth)
+const { readme } = await client.projects.getReadme();
+
+// Update project README
+await client.projects.updateReadme('# My Project\n\nWelcome!');
+```
+
 ## AI Gateway
 
 ```typescript
@@ -124,6 +165,19 @@ const answer = await client.ai.rag({
   query: 'How do I collect feedback?',
   index_id: 'idx_123',
   top_k: 5,
+});
+
+// Streaming (chat)
+const stream = await client.ai.chatStream({
+  messages: [{ role: 'user', content: 'Explain SaaS Maker' }],
+});
+const reader = stream.body!.getReader();
+// Read SSE chunks from the reader
+
+// Streaming (RAG)
+const ragStream = await client.ai.ragStream({
+  query: 'How do I collect feedback?',
+  index_id: 'idx_123',
 });
 ```
 

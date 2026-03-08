@@ -463,8 +463,8 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
     // --- Analytics ---
     async createEvent(input) {
       const [row] = await sql`
-        INSERT INTO analytics_events (id, project_id, name, url, referrer, utm_source, utm_medium, utm_campaign, country, device, browser, screen_width, properties)
-        VALUES (${input.id}, ${input.project_id}, ${input.name}, ${input.url}, ${input.referrer}, ${input.utm_source}, ${input.utm_medium}, ${input.utm_campaign}, ${input.country}, ${input.device}, ${input.browser}, ${input.screen_width}, ${JSON.stringify(input.properties)})
+        INSERT INTO analytics_events (id, project_id, name, url, referrer, utm_source, utm_medium, utm_campaign, country, device, browser, screen_width, properties, os, is_bot, session_id, pathname)
+        VALUES (${input.id}, ${input.project_id}, ${input.name}, ${input.url}, ${input.referrer}, ${input.utm_source}, ${input.utm_medium}, ${input.utm_campaign}, ${input.country}, ${input.device}, ${input.browser}, ${input.screen_width}, ${JSON.stringify(input.properties)}, ${input.os}, ${input.is_bot}, ${input.session_id}, ${input.pathname})
         RETURNING *
       `;
       return row as EventRecord;
@@ -539,6 +539,240 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
         GROUP BY name ORDER BY count DESC LIMIT ${limit}
       `;
       return rows as unknown as { name: string; count: number }[];
+    },
+
+    async getAnalyticsDashboard(projectId, since, includeBots, isToday) {
+      const botFilter = includeBots ? sql`` : sql`AND is_bot = false`;
+      const timeBucket = isToday
+        ? sql`DATE_TRUNC('hour', created_at)`
+        : sql`DATE_TRUNC('day', created_at)`;
+
+      const [
+        summaryRows,
+        timeseriesRows,
+        pagesRows,
+        referrersRows,
+        countriesRows,
+        devicesRows,
+        browsersRows,
+        osRows,
+        eventsRows,
+        botStatsRows,
+        botTotalRow,
+      ] = await Promise.all([
+        // Summary
+        sql`
+          SELECT
+            COALESCE(SUM(session_pages), 0)::int AS page_views,
+            COUNT(*)::int AS unique_visitors,
+            COALESCE(
+              ROUND(
+                COUNT(*) FILTER (WHERE session_pages = 1)::numeric * 100.0
+                / NULLIF(COUNT(*), 0),
+                1
+              ), 0
+            )::float AS bounce_rate,
+            COALESCE(ROUND(AVG(session_pages)::numeric, 1), 0)::float AS avg_session_pages
+          FROM (
+            SELECT session_id, COUNT(*)::int AS session_pages
+            FROM analytics_events
+            WHERE project_id = ${projectId} AND name = 'page_view' AND created_at >= ${since} ${botFilter}
+            GROUP BY session_id
+          ) sessions
+        `,
+        // Timeseries
+        sql`
+          SELECT
+            ${timeBucket} AS date,
+            COUNT(*)::int AS views,
+            COUNT(DISTINCT session_id)::int AS visitors
+          FROM analytics_events
+          WHERE project_id = ${projectId} AND name = 'page_view' AND created_at >= ${since} ${botFilter}
+          GROUP BY 1
+          ORDER BY 1
+        `,
+        // Pages
+        sql`
+          SELECT pathname, COUNT(*)::int AS views FROM analytics_events
+          WHERE project_id = ${projectId} AND name = 'page_view' AND created_at >= ${since} AND pathname IS NOT NULL ${botFilter}
+          GROUP BY pathname ORDER BY views DESC LIMIT 10
+        `,
+        // Referrers
+        sql`
+          SELECT referrer, COUNT(*)::int AS count FROM analytics_events
+          WHERE project_id = ${projectId} AND name = 'page_view' AND created_at >= ${since} AND referrer IS NOT NULL AND referrer != '' ${botFilter}
+          GROUP BY referrer ORDER BY count DESC LIMIT 10
+        `,
+        // Countries
+        sql`
+          SELECT country, COUNT(*)::int AS count FROM analytics_events
+          WHERE project_id = ${projectId} AND created_at >= ${since} AND country IS NOT NULL ${botFilter}
+          GROUP BY country ORDER BY count DESC LIMIT 10
+        `,
+        // Devices
+        sql`
+          SELECT device, COUNT(*)::int AS count FROM analytics_events
+          WHERE project_id = ${projectId} AND created_at >= ${since} AND device IS NOT NULL ${botFilter}
+          GROUP BY device ORDER BY count DESC LIMIT 10
+        `,
+        // Browsers
+        sql`
+          SELECT browser, COUNT(*)::int AS count FROM analytics_events
+          WHERE project_id = ${projectId} AND created_at >= ${since} AND browser IS NOT NULL ${botFilter}
+          GROUP BY browser ORDER BY count DESC LIMIT 10
+        `,
+        // OS
+        sql`
+          SELECT os, COUNT(*)::int AS count FROM analytics_events
+          WHERE project_id = ${projectId} AND created_at >= ${since} AND os IS NOT NULL ${botFilter}
+          GROUP BY os ORDER BY count DESC LIMIT 10
+        `,
+        // Custom events
+        sql`
+          SELECT name, COUNT(*)::int AS count FROM analytics_events
+          WHERE project_id = ${projectId} AND created_at >= ${since} AND name != 'page_view' ${botFilter}
+          GROUP BY name ORDER BY count DESC LIMIT 10
+        `,
+        // Bot stats (always full data, ignore includeBots)
+        sql`
+          SELECT browser AS name, COUNT(*)::int AS count FROM analytics_events
+          WHERE project_id = ${projectId} AND created_at >= ${since} AND is_bot = true
+          GROUP BY browser ORDER BY count DESC LIMIT 10
+        `,
+        // Bot total for percentage
+        sql`
+          SELECT
+            COUNT(*) FILTER (WHERE is_bot = true)::int AS bot_count,
+            COUNT(*)::int AS total
+          FROM analytics_events
+          WHERE project_id = ${projectId} AND created_at >= ${since}
+        `,
+      ]);
+
+      const summary = summaryRows[0] || { page_views: 0, unique_visitors: 0, bounce_rate: 0, avg_session_pages: 0 };
+      const botTotal = botTotalRow[0] || { bot_count: 0, total: 0 };
+
+      return {
+        summary: {
+          page_views: summary.page_views as number,
+          unique_visitors: summary.unique_visitors as number,
+          bounce_rate: summary.bounce_rate as number,
+          avg_session_pages: summary.avg_session_pages as number,
+          bot_count: botTotal.bot_count as number,
+          bot_percentage: botTotal.total > 0
+            ? Math.round((botTotal.bot_count as number) / (botTotal.total as number) * 1000) / 10
+            : 0,
+        },
+        timeseries: timeseriesRows as unknown as { date: string; views: number; visitors: number }[],
+        pages: pagesRows as unknown as { pathname: string; views: number }[],
+        referrers: referrersRows as unknown as { referrer: string; count: number }[],
+        countries: countriesRows as unknown as { country: string; count: number }[],
+        devices: devicesRows as unknown as { device: string; count: number }[],
+        browsers: browsersRows as unknown as { browser: string; count: number }[],
+        os: osRows as unknown as { os: string; count: number }[],
+        events: eventsRows as unknown as { name: string; count: number }[],
+        bots: botStatsRows as unknown as { name: string; count: number }[],
+      };
+    },
+
+    async getAnalyticsDetail(projectId, since, includeBots, section, limit, offset) {
+      const botFilter = includeBots ? sql`` : sql`AND is_bot = false`;
+
+      type QueryResult = { data: any[]; total: number };
+
+      const buildQuery = async (
+        selectExpr: ReturnType<typeof sql>,
+        whereExtra: ReturnType<typeof sql>,
+        groupBy: ReturnType<typeof sql>,
+        orderBy: ReturnType<typeof sql>,
+        useBotFilter: boolean,
+      ): Promise<QueryResult> => {
+        const bf = useBotFilter ? botFilter : sql``;
+        const [countResult] = await sql`
+          SELECT COUNT(*)::int AS total FROM (
+            SELECT 1 FROM analytics_events
+            WHERE project_id = ${projectId} AND created_at >= ${since} ${whereExtra} ${bf}
+            GROUP BY ${groupBy}
+          ) sub
+        `;
+        const rows = await sql`
+          SELECT ${selectExpr} FROM analytics_events
+          WHERE project_id = ${projectId} AND created_at >= ${since} ${whereExtra} ${bf}
+          GROUP BY ${groupBy}
+          ORDER BY ${orderBy}
+          LIMIT ${limit} OFFSET ${offset}
+        `;
+        return { data: rows as unknown as any[], total: countResult.total };
+      };
+
+      switch (section) {
+        case 'pages':
+          return buildQuery(
+            sql`pathname, COUNT(*)::int AS views`,
+            sql`AND name = 'page_view' AND pathname IS NOT NULL`,
+            sql`pathname`,
+            sql`views DESC`,
+            true,
+          );
+        case 'referrers':
+          return buildQuery(
+            sql`referrer, COUNT(*)::int AS count`,
+            sql`AND name = 'page_view' AND referrer IS NOT NULL AND referrer != ''`,
+            sql`referrer`,
+            sql`count DESC`,
+            true,
+          );
+        case 'countries':
+          return buildQuery(
+            sql`country, COUNT(*)::int AS count`,
+            sql`AND country IS NOT NULL`,
+            sql`country`,
+            sql`count DESC`,
+            true,
+          );
+        case 'devices':
+          return buildQuery(
+            sql`device, COUNT(*)::int AS count`,
+            sql`AND device IS NOT NULL`,
+            sql`device`,
+            sql`count DESC`,
+            true,
+          );
+        case 'browsers':
+          return buildQuery(
+            sql`browser, COUNT(*)::int AS count`,
+            sql`AND browser IS NOT NULL`,
+            sql`browser`,
+            sql`count DESC`,
+            true,
+          );
+        case 'os':
+          return buildQuery(
+            sql`os, COUNT(*)::int AS count`,
+            sql`AND os IS NOT NULL`,
+            sql`os`,
+            sql`count DESC`,
+            true,
+          );
+        case 'events':
+          return buildQuery(
+            sql`name, COUNT(*)::int AS count`,
+            sql`AND name != 'page_view'`,
+            sql`name`,
+            sql`count DESC`,
+            true,
+          );
+        case 'bots':
+          return buildQuery(
+            sql`browser AS name, COUNT(*)::int AS count`,
+            sql`AND is_bot = true`,
+            sql`browser`,
+            sql`count DESC`,
+            false,
+          );
+        default:
+          return { data: [], total: 0 };
+      }
     },
 
     // --- Testimonials ---
@@ -947,7 +1181,7 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
     },
 
     async getAIUsageStats(projectId: string, daysBack: number = 30): Promise<{ total_requests: number; success_count: number; error_count: number; avg_latency_ms: number | null; total_input_tokens: number; total_output_tokens: number }> {
-      const result = await sql`SELECT COUNT(*)::int AS total_requests, COUNT(*) FILTER (WHERE status = 'success')::int AS success_count, COUNT(*) FILTER (WHERE status = 'error')::int AS error_count, AVG(latency_ms)::int AS avg_latency_ms, COALESCE(SUM(input_tokens), 0)::int AS total_input_tokens, COALESCE(SUM(output_tokens), 0)::int AS total_output_tokens FROM ai_requests WHERE project_id = ${projectId} AND created_at > now() - make_interval(days => ${daysBack})`;
+      const result = await sql`SELECT COUNT(*)::int AS total_requests, COUNT(*) FILTER (WHERE status = 'success')::int AS success_count, COUNT(*) FILTER (WHERE status = 'error')::int AS error_count, AVG(latency_ms)::int AS avg_latency_ms, COALESCE(SUM(input_tokens), 0)::int AS total_input_tokens, COALESCE(SUM(output_tokens), 0)::int AS total_output_tokens FROM ai_requests WHERE project_id = ${projectId} AND created_at > now() - (${daysBack} || ' days')::interval`;
       return result[0] as any;
     },
 

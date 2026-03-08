@@ -1,40 +1,60 @@
 import { describe, it, expect } from 'vitest';
-import { parseDevice, parseBrowser } from '../../workers/api/src/ua';
+import { parseDevice, parseBrowser, parseOS, isBot, extractPathname, computeSessionId } from '../../workers/api/src/ua';
 
-describe('parseDevice', () => {
-  it('detects mobile', () => {
-    expect(parseDevice('Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X)')).toBe('mobile');
-    expect(parseDevice('Mozilla/5.0 (Linux; Android 13)')).toBe('mobile');
+describe('isBot', () => {
+  it('detects Googlebot', () => {
+    expect(isBot('Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)')).toBe(true);
   });
-
-  it('detects tablet', () => {
-    expect(parseDevice('Mozilla/5.0 (iPad; CPU OS 16_0 like Mac OS X)')).toBe('tablet');
+  it('detects GPTBot', () => {
+    expect(isBot('Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; GPTBot/1.0)')).toBe(true);
   });
-
-  it('defaults to desktop', () => {
-    expect(parseDevice('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)')).toBe('desktop');
-    expect(parseDevice('')).toBe('desktop');
+  it('detects ClaudeBot', () => {
+    expect(isBot('ClaudeBot/1.0')).toBe(true);
+  });
+  it('detects generic crawler', () => {
+    expect(isBot('my-custom-crawler/1.0')).toBe(true);
+  });
+  it('detects HeadlessChrome', () => {
+    expect(isBot('Mozilla/5.0 HeadlessChrome/90.0')).toBe(true);
+  });
+  it('returns false for Chrome desktop', () => {
+    expect(isBot('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')).toBe(false);
+  });
+  it('returns false for Safari mobile', () => {
+    expect(isBot('Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15')).toBe(false);
+  });
+  it('returns false for empty UA', () => {
+    expect(isBot('')).toBe(false);
   });
 });
 
-describe('parseBrowser', () => {
-  it('detects Chrome', () => {
-    expect(parseBrowser('Mozilla/5.0 Chrome/120.0.0.0 Safari/537.36')).toBe('Chrome');
-  });
+describe('parseOS', () => {
+  it('detects macOS', () => expect(parseOS('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)')).toBe('macOS'));
+  it('detects Windows', () => expect(parseOS('Mozilla/5.0 (Windows NT 10.0; Win64; x64)')).toBe('Windows'));
+  it('detects Linux', () => expect(parseOS('Mozilla/5.0 (X11; Linux x86_64)')).toBe('Linux'));
+  it('detects iOS', () => expect(parseOS('Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)')).toBe('iOS'));
+  it('detects Android', () => expect(parseOS('Mozilla/5.0 (Linux; Android 14; Pixel 8)')).toBe('Android'));
+  it('detects ChromeOS', () => expect(parseOS('Mozilla/5.0 (X11; CrOS x86_64 14541.0.0)')).toBe('ChromeOS'));
+  it('returns Other for unknown', () => expect(parseOS('curl/7.64.1')).toBe('Other'));
+});
 
-  it('detects Safari', () => {
-    expect(parseBrowser('Mozilla/5.0 (Macintosh) AppleWebKit/605.1.15 Safari/605.1.15')).toBe('Safari');
-  });
+describe('extractPathname', () => {
+  it('extracts from full URL', () => expect(extractPathname('https://example.com/pricing?ref=google')).toBe('/pricing'));
+  it('strips query from path', () => expect(extractPathname('/about?foo=bar')).toBe('/about'));
+  it('strips hash', () => expect(extractPathname('/docs#section')).toBe('/docs'));
+  it('returns null for null', () => expect(extractPathname(null)).toBeNull());
+  it('returns null for empty', () => expect(extractPathname('')).toBeNull());
+});
 
-  it('detects Firefox', () => {
-    expect(parseBrowser('Mozilla/5.0 (X11; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0')).toBe('Firefox');
+describe('computeSessionId', () => {
+  it('returns consistent hash', () => {
+    const a = computeSessionId('2026-03-08', 'US', 'desktop', 'Chrome');
+    const b = computeSessionId('2026-03-08', 'US', 'desktop', 'Chrome');
+    expect(a).toBe(b);
   });
-
-  it('detects Edge over Chrome', () => {
-    expect(parseBrowser('Mozilla/5.0 Chrome/120.0.0.0 Safari/537.36 Edg/120.0')).toBe('Edge');
-  });
-
-  it('returns Other for unknown', () => {
-    expect(parseBrowser('curl/7.88.1')).toBe('Other');
+  it('returns different hash for different inputs', () => {
+    const a = computeSessionId('2026-03-08', 'US', 'desktop', 'Chrome');
+    const b = computeSessionId('2026-03-08', 'UK', 'mobile', 'Safari');
+    expect(a).not.toBe(b);
   });
 });

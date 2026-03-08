@@ -58,7 +58,7 @@ export function CreateForm({ projectId, projectSlug }: CreateFormProps) {
 
     try {
       const token = await getClientToken();
-      const result = await apiFetchClient<{ form: { id: string } }>(
+      const result = await apiFetchClient<{ data: { id: string } }>(
         `/v1/forms/dashboard/${projectId}`,
         token,
         {
@@ -66,7 +66,7 @@ export function CreateForm({ projectId, projectSlug }: CreateFormProps) {
           body: JSON.stringify({ title: title.trim(), slug, description: description.trim() || undefined }),
         }
       );
-      router.push(`/projects/${projectSlug}/forms/${result.form.id}`);
+      router.push(`/projects/${projectSlug}/forms/${result.data.id}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to create form");
       setSubmitting(false);

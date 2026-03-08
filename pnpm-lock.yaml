@@ -23,6 +23,9 @@ importers:
       '@dnd-kit/utilities':
         specifier: ^3.2.2
         version: 3.2.2(react@19.2.3)
+      '@saas-maker/sdk':
+        specifier: ^0.2.0
+        version: 0.2.0
       '@saas-maker/shared-types':
         specifier: workspace:*
         version: link:../../packages/shared-types
@@ -102,6 +105,9 @@ importers:
 
   apps/landing-page:
     dependencies:
+      '@saas-maker/sdk':
+        specifier: ^0.2.0
+        version: 0.2.0
       next:
         specifier: ^15.5.6
         version: 15.5.12(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -2162,6 +2168,9 @@ packages:
     resolution: {integrity: sha512-2HRCml6OztYXyJXAvdDXPKcawukWY2GpR5/nxKp4iBgiO3wcoEGkAaqctIbZcNB6KlUQBIqt8VYkNSj2397EfA==}
     cpu: [x64]
     os: [win32]
+
+  '@saas-maker/sdk@0.2.0':
+    resolution: {integrity: sha512-lkb/0WGZzLuYwz6pt9i594YorORrW9FUObZxg9ell8gKz0IQA71d+bYSNgSfnQ42kU4BmKXO5UUf9lNW+O9g4g==}
 
   '@sec-ant/readable-stream@0.4.1':
     resolution: {integrity: sha512-831qok9r2t8AlxLko40y2ebgSDhenenCatLVeW/uBtnHPyhHOvG0C7TvfgecV+wHzIm5KUICgzmVpWS+IMEAeg==}
@@ -7010,6 +7019,8 @@ snapshots:
 
   '@rollup/rollup-win32-x64-msvc@4.59.0':
     optional: true
+
+  '@saas-maker/sdk@0.2.0': {}
 
   '@sec-ant/readable-stream@0.4.1': {}
 

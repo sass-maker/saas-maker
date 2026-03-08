@@ -10,6 +10,8 @@ import {
   WaitlistEntryRecord,
   EventRecord,
   AnalyticsOverview,
+  AnalyticsDashboard,
+  AnalyticsDetailResult,
 
   ChangelogEntryRecord,
   TestimonialRecord,
@@ -88,6 +90,7 @@ export interface FeedbackDatabase {
     referrer: string | null; utm_source: string | null; utm_medium: string | null;
     utm_campaign: string | null; country: string | null; device: string | null;
     browser: string | null; screen_width: number | null; properties: Record<string, unknown>;
+    os: string | null; is_bot: boolean; session_id: string | null; pathname: string | null;
   }): Promise<EventRecord>;
   getAnalyticsOverview(projectId: string, since: Date): Promise<AnalyticsOverview>;
   getTopPages(projectId: string, since: Date, limit: number): Promise<{ url: string; views: number }[]>;
@@ -95,6 +98,8 @@ export interface FeedbackDatabase {
   getCountryBreakdown(projectId: string, since: Date, limit: number): Promise<{ country: string; count: number }[]>;
   getDeviceBreakdown(projectId: string, since: Date): Promise<{ device: string; count: number }[]>;
   getCustomEventCounts(projectId: string, since: Date, limit: number): Promise<{ name: string; count: number }[]>;
+  getAnalyticsDashboard(projectId: string, since: Date, includeBots: boolean, isToday: boolean): Promise<AnalyticsDashboard>;
+  getAnalyticsDetail(projectId: string, since: Date, includeBots: boolean, section: string, limit: number, offset: number): Promise<AnalyticsDetailResult>;
 
   // Changelog
   createChangelogEntry(input: {

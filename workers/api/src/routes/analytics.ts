@@ -2,18 +2,27 @@ import { Hono } from 'hono';
 import { Bindings, Variables } from '../types';
 import { requireApiKey, requireSession } from '../middleware/auth';
 import { getDb } from '../db';
-import { parseDevice, parseBrowser } from '../ua';
+import { parseDevice, parseBrowser, isBot, parseOS, extractPathname, computeSessionId } from '../ua';
 import type { TrackEventRequest } from '@saas-maker/shared-types';
 
 const analytics = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
 const DEFAULT_LIMIT = 10;
 
+const VALID_DETAIL_SECTIONS = ['pages', 'referrers', 'countries', 'devices', 'browsers', 'os', 'events', 'bots'] as const;
+type DetailSection = (typeof VALID_DETAIL_SECTIONS)[number];
+
 function parsePeriod(period?: string): Date {
   const now = new Date();
   switch (period) {
+    case 'today': {
+      const start = new Date(now);
+      start.setHours(0, 0, 0, 0);
+      return start;
+    }
     case '7d': return new Date(now.getTime() - 7 * 86400000);
     case '90d': return new Date(now.getTime() - 90 * 86400000);
+    case 'all': return new Date('2020-01-01T00:00:00Z');
     default: return new Date(now.getTime() - 30 * 86400000);
   }
 }
@@ -26,6 +35,8 @@ analytics.post('/events', requireApiKey, async (c) => {
 
   const ua = c.req.header('User-Agent') || '';
   const country = c.req.header('CF-IPCountry') || null;
+  const device = parseDevice(ua);
+  const browser = parseBrowser(ua);
 
   const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
   await db.createEvent({
@@ -38,10 +49,14 @@ analytics.post('/events', requireApiKey, async (c) => {
     utm_medium: body.utm_medium || null,
     utm_campaign: body.utm_campaign || null,
     country,
-    device: parseDevice(ua),
-    browser: parseBrowser(ua),
+    device,
+    browser,
     screen_width: body.screen_width || null,
     properties: body.properties || {},
+    os: parseOS(ua),
+    is_bot: isBot(ua),
+    pathname: extractPathname(body.url),
+    session_id: computeSessionId(new Date().toISOString().slice(0, 10), country, device, browser),
   });
 
   return c.json({ ok: true }, 201);
@@ -131,6 +146,49 @@ analytics.get('/events', requireSession, async (c) => {
   const since = parsePeriod(c.req.query('period') || undefined);
   const data = await db.getCustomEventCounts(projectId, since, DEFAULT_LIMIT);
   return c.json({ data });
+});
+
+// --- New dashboard & detail routes ---
+
+analytics.get('/dashboard', requireSession, async (c) => {
+  const userId = c.get('userId')!;
+  const projectId = c.req.query('project_id');
+  if (!projectId) return c.json({ error: 'project_id is required' }, 400);
+
+  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const project = await db.getProjectById(projectId);
+  if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
+
+  const period = c.req.query('period') || '30d';
+  const since = parsePeriod(period);
+  const includeBots = c.req.query('include_bots') === 'true';
+  const isToday = period === 'today';
+
+  const dashboard = await db.getAnalyticsDashboard(projectId, since, includeBots, isToday);
+  return c.json(dashboard);
+});
+
+analytics.get('/detail/:section', requireSession, async (c) => {
+  const userId = c.get('userId')!;
+  const projectId = c.req.query('project_id');
+  if (!projectId) return c.json({ error: 'project_id is required' }, 400);
+
+  const section = c.req.param('section') as DetailSection;
+  if (!VALID_DETAIL_SECTIONS.includes(section)) {
+    return c.json({ error: `Invalid section. Must be one of: ${VALID_DETAIL_SECTIONS.join(', ')}` }, 400);
+  }
+
+  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const project = await db.getProjectById(projectId);
+  if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
+
+  const since = parsePeriod(c.req.query('period') || undefined);
+  const includeBots = c.req.query('include_bots') === 'true';
+  const limit = parseInt(c.req.query('limit') || '50', 10);
+  const offset = parseInt(c.req.query('offset') || '0', 10);
+
+  const result = await db.getAnalyticsDetail(projectId, since, includeBots, section, limit, offset);
+  return c.json(result);
 });
 
 export { analytics };

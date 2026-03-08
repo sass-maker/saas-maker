@@ -1,4 +1,6 @@
 import { createInterface } from 'node:readline/promises';
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 import ora from 'ora';
 import { getResponseError, requestApi } from '../lib/request.js';
 import { saveLocalConfig, hasLocalConfig } from '../lib/config.js';
@@ -57,7 +59,43 @@ export async function initCommand(): Promise<void> {
     const project = projects[idx];
     saveLocalConfig({ slug: project.slug, projectId: project.id, projectKey: project.api_key });
     log.success(`Linked to "${project.name}" — wrote .saasmaker.json`);
+
+    // Scaffold dependabot config for automatic SDK updates
+    scaffoldDependabot();
+
+    // Print next steps
+    console.log('\n📋 Next steps:');
+    console.log(`  1. Add your API key to .env.local:`);
+    console.log(`     NEXT_PUBLIC_SAASMAKER_API_KEY=${project.api_key}`);
+    console.log(`     (or VITE_SAASMAKER_API_KEY= for Vite projects)`);
+    console.log(`  2. Install the SDK: pnpm add @saas-maker/sdk`);
+    console.log(`  3. See integration guide: https://docs.sassmaker.com/getting-started/integration`);
   } finally {
     rl.close();
   }
+}
+
+const DEPENDABOT_CONFIG = `version: 2
+updates:
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+    allow:
+      - dependency-name: "@saas-maker/sdk"
+    commit-message:
+      prefix: "deps"
+    open-pull-requests-limit: 1
+`;
+
+function scaffoldDependabot(): void {
+  const dir = join(process.cwd(), '.github');
+  const file = join(dir, 'dependabot.yml');
+
+  if (existsSync(file)) return;
+
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(file, DEPENDABOT_CONFIG, 'utf-8');
+  log.success('Created .github/dependabot.yml — SDK updates will be auto-PRed weekly');
 }
