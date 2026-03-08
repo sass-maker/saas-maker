@@ -9,6 +9,7 @@
     "build:db": "pnpm -F @saas-maker/db build",
     "build:api": "pnpm -F @saas-maker/api build",
     "build:dashboard": "pnpm -F @saas-maker/dashboard build",
+    "build:analytics-ui": "pnpm -F @saas-maker/analytics-ui build",
     "build:widget": "pnpm -F @saas-maker/feedback build",
     "build:landing": "pnpm -F @saas-maker/landing-page build",
     "build:docs": "pnpm -F @saas-maker/docs build",
