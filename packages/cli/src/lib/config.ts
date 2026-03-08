@@ -6,14 +6,15 @@ const GLOBAL_DIR = join(homedir(), '.saasmaker');
 const GLOBAL_CONFIG = join(GLOBAL_DIR, 'config.json');
 const LOCAL_CONFIG = '.saasmaker.json';
 
-interface GlobalConfig {
+export interface GlobalConfig {
   apiKey?: string;
   apiBaseUrl?: string;
 }
 
-interface LocalConfig {
-  projectId: string;
+export interface LocalConfig {
   slug: string;
+  projectId?: string;
+  projectKey?: string;
 }
 
 export function getGlobalConfig(): GlobalConfig {
@@ -51,4 +52,21 @@ export function getApiBase(): string {
 
 export function hasLocalConfig(): boolean {
   return existsSync(LOCAL_CONFIG);
+}
+
+function isProjectKey(value: string): boolean {
+  return value.startsWith('pk_');
+}
+
+export function getLocalProjectKey(local: LocalConfig | null = getLocalConfig()): string | null {
+  if (!local) return null;
+  if (local.projectKey) return local.projectKey;
+  if (local.projectId && isProjectKey(local.projectId)) return local.projectId;
+  return null;
+}
+
+export function getLocalProjectId(local: LocalConfig | null = getLocalConfig()): string | null {
+  if (!local) return null;
+  if (local.projectId && !isProjectKey(local.projectId)) return local.projectId;
+  return null;
 }

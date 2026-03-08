@@ -1,7 +1,8 @@
 import { createInterface } from 'node:readline/promises';
 import ora from 'ora';
-import { apiFetch } from '../lib/api.js';
-import { log, table } from '../lib/ui.js';
+import { printOutput, type OutputFormat } from '../lib/output.js';
+import { getResponseError, requestApi } from '../lib/request.js';
+import { log } from '../lib/ui.js';
 
 interface Project {
   id: string;
@@ -11,53 +12,83 @@ interface Project {
   created_at: string;
 }
 
-export async function projectsListCommand(): Promise<void> {
-  const spinner = ora('Loading projects...').start();
+interface ProjectsListOptions {
+  output?: OutputFormat;
+  select?: string;
+  quiet?: boolean;
+  raw?: boolean;
+}
+
+interface ProjectsCreateOptions {
+  name?: string;
+  output?: OutputFormat;
+  raw?: boolean;
+}
+
+export async function projectsListCommand(options: ProjectsListOptions = {}): Promise<void> {
+  const spinner = options.quiet ? null : ora('Loading projects...').start();
 
   try {
-    const res = await apiFetch<{ data: Project[] }>('/v1/projects');
-    spinner.stop();
+    const res = await requestApi<{ data: Project[] }>({ path: '/v1/projects', auth: 'session' });
+    spinner?.stop();
 
-    const projects = res.data ?? [];
-    if (projects.length === 0) {
-      log.info('No projects yet. Run `saasmaker projects create` to create one.');
+    if (!res.ok) {
+      log.error(getResponseError(res));
+      process.exitCode = 1;
       return;
     }
 
-    table([
-      ['NAME', 'SLUG', 'CREATED'],
-      ...projects.map((p) => [
-        p.name,
-        p.slug,
-        new Date(p.created_at).toLocaleDateString(),
-      ]),
-    ]);
+    const projects = res.data?.data ?? [];
+    if (projects.length === 0) {
+      if (!options.quiet) log.info('No projects yet. Run `saasmaker projects create` to create one.');
+      return;
+    }
+
+    printOutput(projects, {
+      output: options.output ?? 'table',
+      select: options.select,
+      raw: options.raw,
+      defaultColumns: ['name', 'slug', 'created_at', 'id'],
+    });
   } catch (err) {
-    spinner.stop();
+    spinner?.stop();
     log.error(err instanceof Error ? err.message : 'Failed to list projects');
   }
 }
 
-export async function projectsCreateCommand(): Promise<void> {
+export async function projectsCreateCommand(options: ProjectsCreateOptions = {}): Promise<void> {
   const rl = createInterface({ input: process.stdin, output: process.stdout });
 
   try {
-    const name = await rl.question('Project name: ');
-    if (!name.trim()) {
+    const inputName = options.name ?? await rl.question('Project name: ');
+    const name = inputName.trim();
+    if (!name) {
       log.error('Project name cannot be empty.');
       return;
     }
 
     const spinner = ora('Creating project...').start();
-
     try {
-      const project = await apiFetch<Project>('/v1/projects', {
+      const res = await requestApi<Project>({
+        path: '/v1/projects',
         method: 'POST',
-        body: JSON.stringify({ name: name.trim() }),
+        auth: 'session',
+        body: { name },
       });
       spinner.stop();
+
+      if (!res.ok || !res.data) {
+        log.error(getResponseError(res));
+        process.exitCode = 1;
+        return;
+      }
+
+      const project = res.data;
       log.success(`Created "${project.name}" (${project.slug})`);
-      log.dim(`  API Key: ${project.api_key}`);
+      printOutput(project, {
+        output: options.output ?? 'json',
+        raw: options.raw,
+      });
     } catch (err) {
       spinner.stop();
       log.error(err instanceof Error ? err.message : 'Failed to create project');

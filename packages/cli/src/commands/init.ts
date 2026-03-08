@@ -1,6 +1,6 @@
 import { createInterface } from 'node:readline/promises';
 import ora from 'ora';
-import { apiFetch } from '../lib/api.js';
+import { getResponseError, requestApi } from '../lib/request.js';
 import { saveLocalConfig, hasLocalConfig } from '../lib/config.js';
 import { log } from '../lib/ui.js';
 
@@ -21,8 +21,13 @@ export async function initCommand(): Promise<void> {
   let projects: Project[];
 
   try {
-    const res = await apiFetch<{ data: Project[] }>('/v1/projects');
-    projects = res.data ?? [];
+    const res = await requestApi<{ data: Project[] }>({ path: '/v1/projects', auth: 'session' });
+    if (!res.ok) {
+      spinner.stop();
+      log.error(getResponseError(res));
+      return;
+    }
+    projects = res.data?.data ?? [];
     spinner.stop();
   } catch (err) {
     spinner.stop();
@@ -50,7 +55,7 @@ export async function initCommand(): Promise<void> {
     }
 
     const project = projects[idx];
-    saveLocalConfig({ projectId: project.api_key, slug: project.slug });
+    saveLocalConfig({ slug: project.slug, projectId: project.id, projectKey: project.api_key });
     log.success(`Linked to "${project.name}" — wrote .saasmaker.json`);
   } finally {
     rl.close();

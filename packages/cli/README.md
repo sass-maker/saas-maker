@@ -1,79 +1,132 @@
 # @saas-maker/cli
 
-Command-line tool for managing SaaS Maker projects.
+API-first CLI for SaaS Maker.
+
+The CLI is intentionally minimal: a few core utility commands plus a universal `saasmaker api` executor so new backend features do not require new CLI code.
 
 ## Install
 
 ```bash
 npm install -g @saas-maker/cli
-# or use directly with npx
+# or use directly:
 npx @saas-maker/cli
 ```
 
-## Setup
+## Quick Start
 
 ```bash
-# Save your API key
 saasmaker login
-
-# Link a project to the current directory
 saasmaker init
+saasmaker doctor
 ```
 
-## Commands
+## Core Commands
 
-### `saasmaker login`
+- `saasmaker login` — browser OAuth login
+- `saasmaker init` — link current directory to a project
+- `saasmaker whoami` — show token + linked project context
+- `saasmaker keys` — show session token + linked project key
+- `saasmaker projects list|create` — project management
+- `saasmaker status` — feature health/count snapshot
+- `saasmaker doctor` — configuration + auth diagnostics
+- `saasmaker examples` — copy-paste command recipes
+- `saasmaker completions [bash|zsh|fish]` — shell completion script
+- `saasmaker api <method> <path>` — universal API access
 
-Prompts for your API key and saves it to `~/.saasmaker/config.json`.
+## Universal API Command
 
-### `saasmaker whoami`
+```bash
+saasmaker api <method> <path> [options]
+```
 
-Shows current authentication status and linked project.
+### Auth Modes
 
-### `saasmaker init`
+- `--auth session` uses `Authorization: Bearer <token>` from `login`
+- `--auth project` uses `X-Project-Key` from linked `.saasmaker.json`
+- `--auth auto` (default) attaches whichever auth context is available
+- `--auth none` sends no auth
 
-Lists your projects and writes a `.saasmaker.json` file to the current directory, linking it to the selected project.
+### Output / Scripting
 
-### `saasmaker projects list`
+- `--output json|table`
+- `--select field1,field2` (supports dotted paths)
+- `--quiet` (suppresses request/status logs)
+- `--raw` (compact JSON for scripts)
 
-Lists all projects with name, slug, and creation date.
+### Request Options
 
-### `saasmaker projects create`
+- `--body '{...json...}'`
+- `--body-file ./payload.json`
+- `--query key=value` (repeatable)
+- `--header key=value` (repeatable)
+- `--token <token>` / `--project-key <key>` override stored credentials
 
-Prompts for a project name and creates a new project.
+## OpenAPI Enforcement
 
-### `saasmaker status`
+`saasmaker api` validates method/path against OpenAPI by default.
 
-Shows stats for the linked project (feedback count, waitlist signups).
+- Bypass for experimental routes: `--no-validate`
+- Spec source used by CLI: `packages/cli/src/openapi.json`
+- Published docs artifact: `apps/docs/public/openapi.json`
+- Regenerate from route files:
 
-### `saasmaker keys`
+```bash
+pnpm generate:openapi
+```
 
-Displays the API key for the current project.
+This also updates `docs/openapi/openapi.json`.
+
+## API-First Recipes
+
+```bash
+# Health
+saasmaker api GET /health --auth none
+
+# Session-auth route: projects
+saasmaker api GET /v1/projects --auth session --output table
+
+# Project-auth route: list feedback
+saasmaker api GET /v1/feedback --auth project --query type=feature --output table
+
+# Create feedback
+saasmaker api POST /v1/feedback --auth project \
+  --body '{"title":"Bug","description":"Broken CTA","submitter_email":"me@example.com","type":"bug"}'
+
+# Create short link
+saasmaker api POST /v1/links --auth project \
+  --body '{"destination":"https://example.com","title":"Homepage"}'
+
+# Dashboard forms (session route)
+saasmaker api GET /v1/forms/dashboard/<projectId> --auth session --output table
+
+# Approve testimonial (session route)
+saasmaker api PATCH /v1/testimonials/<testimonialId> --auth session \
+  --query project_id=<projectId> --body '{"status":"approved"}'
+```
 
 ## Configuration
 
-### Global config (`~/.saasmaker/config.json`)
+### Global config: `~/.saasmaker/config.json`
 
 ```json
 {
-  "apiKey": "pk_...",
+  "apiKey": "sm_...",
   "apiBaseUrl": "https://api.saasmaker.dev"
 }
 ```
 
-### Project config (`.saasmaker.json`)
-
-Created by `saasmaker init` in your project directory:
+### Project config: `.saasmaker.json`
 
 ```json
 {
-  "projectId": "pk_...",
-  "slug": "my-app"
+  "slug": "my-app",
+  "projectId": "uuid-project-id",
+  "projectKey": "pk_..."
 }
 ```
 
-### Environment variables
+Backward compatibility: older `.saasmaker.json` files that stored only `projectId` as a `pk_...` key are still supported.
 
-| Variable | Description |
-|----------|-------------|
-| `SAASMAKER_API_URL` | Override the API base URL |
+### Environment variable
+
+- `SAASMAKER_API_URL` — override API base URL

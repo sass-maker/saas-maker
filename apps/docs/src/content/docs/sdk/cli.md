@@ -1,9 +1,13 @@
 ---
 title: CLI
-description: Manage SaaS Maker projects from the terminal.
+description: API-first SaaS Maker CLI with OpenAPI-enforced route access.
 ---
 
-The SaaS Maker CLI lets you manage projects, view API keys, and check service stats from the terminal.
+The SaaS Maker CLI is intentionally API-first:
+
+- Keep command surface small
+- Use `saasmaker api` for all backend capabilities
+- Avoid feature-specific CLI code for each new API route
 
 ## Installation
 
@@ -11,68 +15,93 @@ The SaaS Maker CLI lets you manage projects, view API keys, and check service st
 npm install -g @saas-maker/cli
 ```
 
-## Authentication
+## Quick Start
 
 ```bash
 saasmaker login
-```
-
-Opens your browser for Google OAuth. Once authenticated, the session token is saved locally.
-
-## Commands
-
-### `login`
-
-Authenticate with Google OAuth. Opens a browser window for sign-in.
-
-```bash
-saasmaker login
-```
-
-### `whoami`
-
-Show the currently authenticated user.
-
-```bash
-saasmaker whoami
-```
-
-### `projects list`
-
-List all your projects.
-
-```bash
-saasmaker projects list
-```
-
-### `projects create`
-
-Create a new project interactively.
-
-```bash
-saasmaker projects create
-```
-
-### `init`
-
-Link the current directory to a SaaS Maker project. Creates a `.saasmaker.json` config file.
-
-```bash
 saasmaker init
+saasmaker doctor
 ```
 
-### `keys`
+## Core Commands
 
-Show the API key for the linked project.
+- `login` — browser OAuth auth
+- `init` — link local directory to a project
+- `whoami` / `keys` — inspect auth + linked context
+- `projects list|create` — project management
+- `status` — feature status snapshot
+- `doctor` — configuration/auth diagnostics
+- `examples` — copy-paste API-first recipes
+- `completions` — shell autocompletion scripts
+- `api` — universal endpoint access
+
+## Universal API Command
 
 ```bash
-saasmaker keys
+saasmaker api <method> <path> [options]
 ```
 
-### `status`
+### Auth options
 
-Show stats for the linked project (feedback count, waitlist entries, etc.).
+- `--auth session` → Bearer token
+- `--auth project` → `X-Project-Key`
+- `--auth auto` (default) → use available context
+- `--auth none`
+
+### Request options
+
+- `--body '{...json...}'`
+- `--body-file ./payload.json`
+- `--query key=value` (repeatable)
+- `--header key=value` (repeatable)
+- `--token` / `--project-key` overrides
+
+### Output options
+
+- `--output json|table`
+- `--select field1,field2`
+- `--quiet`
+- `--raw`
+
+## OpenAPI Validation
+
+`saasmaker api` validates method/path against OpenAPI by default.
+
+- Skip validation only when needed: `--no-validate`
+- Generated spec paths:
+  - `packages/cli/src/openapi.json` (CLI enforcement source)
+  - `docs/openapi/openapi.json` (repo artifact)
+  - `apps/docs/public/openapi.json` (published docs artifact)
+- Regenerate spec:
 
 ```bash
-saasmaker status
+pnpm generate:openapi
+```
+
+## Recipes
+
+```bash
+# Health check
+saasmaker api GET /health --auth none
+
+# Session route
+saasmaker api GET /v1/projects --auth session --output table
+
+# Project-key route
+saasmaker api GET /v1/feedback --auth project --query type=feature --output table
+
+# Create feedback
+saasmaker api POST /v1/feedback --auth project \
+  --body '{"title":"Bug","description":"Broken CTA","submitter_email":"me@example.com","type":"bug"}'
+
+# Create short link
+saasmaker api POST /v1/links --auth project \
+  --body '{"destination":"https://example.com","title":"Homepage"}'
+
+# Dashboard forms
+saasmaker api GET /v1/forms/dashboard/<projectId> --auth session --output table
+
+# Approve testimonial
+saasmaker api PATCH /v1/testimonials/<testimonialId> --auth session \
+  --query project_id=<projectId> --body '{"status":"approved"}'
 ```

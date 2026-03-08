@@ -12,6 +12,8 @@
     "build:widget": "pnpm -F @saas-maker/feedback build",
     "build:landing": "pnpm -F @saas-maker/landing-page build",
     "build:docs": "pnpm -F @saas-maker/docs build",
+    "generate:openapi": "node scripts/generate-openapi.mjs",
+    "check:openapi": "pnpm generate:openapi && git diff --exit-code -- packages/cli/src/openapi.json docs/openapi/openapi.json apps/docs/public/openapi.json",
     "test": "vitest run",
     "test:integration": "vitest run --config vitest.integration.config.ts"
   },
