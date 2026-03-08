@@ -102,6 +102,26 @@ pnpm dev:api
 pnpm dev:dashboard
 ```
 
+## Deployment (Source of Truth)
+
+| Component | Platform | Project Name | Domain | Config File |
+|-----------|----------|-------------|--------|-------------|
+| **Dashboard** | Vercel | `saasmaker-dashboard` | app.sassmaker.com | `apps/dashboard/.vercel/project.json` |
+| **Landing Page** | Cloudflare Pages | `saasmaker-landing` | sassmaker.com | `apps/landing-page/` (static export) |
+| **API** | Cloudflare Workers | `saasmaker-api` | api.sassmaker.com | `workers/api/wrangler.toml` |
+| **Database** | CockroachDB | (managed) | — | via Hyperdrive binding |
+| **Storage** | Cloudflare R2 | `saasmaker-feedback-images` | — | R2 bucket binding |
+
+### Vercel Project Linkage
+
+Only the dashboard is on Vercel. Root `.vercel/project.json` points to `saasmaker-dashboard`.
+
+### Not Deployed (yet)
+
+- `apps/docs/` — Astro Starlight docs site (not currently hosted)
+
+> **Note:** The `saasmaker-dashboard` Vercel project is **not** shared with code-reviewer. Each project has its own dedicated Vercel project ID.
+
 ## API Authentication
 
 - **SDK/Widget endpoints** — `X-Project-Key` header with your project API key
