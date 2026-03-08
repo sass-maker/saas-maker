@@ -87,7 +87,6 @@ export async function statusCommand(options: StatusOptions = {}): Promise<void> 
     const [
       feedbackRes,
       waitlistRes,
-      linksRes,
       indexesRes,
       testimonialsPublicRes,
       changelogPublicRes,
@@ -97,7 +96,6 @@ export async function statusCommand(options: StatusOptions = {}): Promise<void> 
     ] = await Promise.all([
       requestApi({ path: '/v1/feedback', auth: 'project', projectKey }),
       requestApi({ path: '/v1/waitlist/count', auth: 'project', projectKey }),
-      requestApi({ path: '/v1/links', auth: 'project', projectKey }),
       requestApi({ path: '/v1/indexes', auth: 'project', projectKey }),
       requestApi({ path: '/v1/testimonials', auth: 'project', projectKey }),
       requestApi({ path: '/v1/changelog', auth: 'project', projectKey }),
@@ -118,7 +116,6 @@ export async function statusCommand(options: StatusOptions = {}): Promise<void> 
     const features: FeatureStatus[] = [
       asFeature('Feedback', feedbackRes, 'project', countFromList(feedbackRes)),
       asFeature('Waitlist', waitlistRes, 'project', countFromSingleNumber(waitlistRes, 'count')),
-      asFeature('Links', linksRes, 'project', countFromList(linksRes)),
       asFeature('Indexes', indexesRes, 'project', countFromList(indexesRes)),
       testimonialsSessionRes.ok
         ? asFeature('Testimonials', testimonialsSessionRes, 'session', countFromList(testimonialsSessionRes))

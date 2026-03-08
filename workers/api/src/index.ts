@@ -24,10 +24,13 @@ app.use('*', async (c, next) => {
     : [];
   const corsMiddleware = cors({
     origin: (origin) => {
+      // Allow same-origin requests (no Origin header)
       if (!origin) return '*';
-      if (allowed.length === 0) return '*';
-      if (allowed.includes(origin)) return origin;
+      // Always allow localhost for development
       if (/^http:\/\/localhost(:\d+)?$/.test(origin)) return origin;
+      // Check against configured origins
+      if (allowed.length > 0 && allowed.includes(origin)) return origin;
+      // Deny if no match
       return '';
     },
     allowMethods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
