@@ -232,6 +232,98 @@ Returns counts for all non-`page_view` events.
 }
 ```
 
+### Full dashboard
+
+```
+GET /v1/analytics/dashboard?period=30d
+```
+
+**Auth:** API Key or Session Token
+
+Returns all analytics data in a single call — summary stats, timeseries, and top-10 breakdowns for pages, referrers, countries, devices, browsers, OS, custom events, and bots.
+
+```bash
+curl "https://api.sassmaker.com/v1/analytics/dashboard?period=30d" \
+  -H "X-Project-Key: pk_your_api_key"
+```
+
+| Param | Type | Default | Description |
+|-------|------|---------|-------------|
+| `project_id` | string | — | Required when using Session Token auth. Not needed with API Key. |
+| `period` | string | `30d` | `today`, `7d`, `30d`, `90d`, or `all` |
+| `include_bots` | string | `false` | `true` to include bot traffic |
+
+**Response (200):**
+
+```json
+{
+  "summary": {
+    "page_views": 1250,
+    "unique_visitors": 430,
+    "bounce_rate": 42,
+    "avg_session_pages": 2.3,
+    "bot_count": 85,
+    "bot_percentage": 6.4
+  },
+  "timeseries": [
+    { "date": "2026-03-01", "views": 45, "visitors": 20 }
+  ],
+  "pages": [{ "pathname": "/pricing", "views": 340 }],
+  "referrers": [{ "referrer": "https://google.com", "count": 150 }],
+  "countries": [{ "country": "US", "count": 500 }],
+  "devices": [{ "device": "desktop", "count": 800 }],
+  "browsers": [{ "browser": "Chrome", "count": 600 }],
+  "os": [{ "os": "macOS", "count": 400 }],
+  "events": [{ "name": "signup_completed", "count": 45 }],
+  "bots": [{ "name": "Googlebot", "count": 30 }]
+}
+```
+
+When `period` is `today`, timeseries is bucketed hourly. All other periods use daily buckets.
+
+### Detail breakdown (paginated)
+
+```
+GET /v1/analytics/detail/:section?project_id=PROJECT_ID&period=30d&limit=50&offset=0
+```
+
+**Auth:** Session Token
+
+Returns paginated data for a specific breakdown section.
+
+| Param | Type | Default | Description |
+|-------|------|---------|-------------|
+| `section` | string | — | One of: `pages`, `referrers`, `countries`, `devices`, `browsers`, `os`, `events`, `bots` |
+| `project_id` | string | — | Required. Project ID |
+| `period` | string | `30d` | Time period |
+| `include_bots` | string | `false` | Include bot traffic |
+| `limit` | number | `50` | Items per page |
+| `offset` | number | `0` | Pagination offset |
+
+**Response (200):**
+
+```json
+{
+  "data": [
+    { "pathname": "/pricing", "views": 340 },
+    { "pathname": "/features", "views": 210 }
+  ],
+  "total": 156
+}
+```
+
+## Embeddable Dashboard
+
+Use the `@saas-maker/analytics-ui` package to embed a full analytics dashboard in any React app:
+
+```tsx
+import { AnalyticsDashboard } from '@saas-maker/analytics-ui';
+
+<AnalyticsDashboard apiKey="pk_your_api_key" />
+```
+
+See the [Analytics Dashboard widget docs](/widgets/analytics/) for installation and configuration.
+
 ## SDK Usage
 
 ```typescript
