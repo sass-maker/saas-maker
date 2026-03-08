@@ -15,6 +15,10 @@ export interface WaitlistSignupResponse {
   created_at: string;
 }
 
+export interface WaitlistCountResponse {
+  count: number;
+}
+
 // ---- Service ----
 
 export class WaitlistService {
@@ -23,5 +27,10 @@ export class WaitlistService {
   /** Join the waitlist (POST /v1/waitlist). */
   join(data: WaitlistSignupData): Promise<WaitlistSignupResponse> {
     return this.http.request<WaitlistSignupResponse>('POST', '/v1/waitlist', data);
+  }
+
+  /** Get waitlist count (GET /v1/waitlist/count). */
+  getCount(): Promise<WaitlistCountResponse> {
+    return this.http.request<WaitlistCountResponse>('GET', '/v1/waitlist/count');
   }
 }

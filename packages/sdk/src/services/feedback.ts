@@ -55,6 +55,17 @@ export class FeedbackService {
     return this.http.request<FeedbackRecord>('POST', '/v1/feedback', data);
   }
 
+  /** List feedback for the current project (GET /v1/feedback). */
+  list(options?: FeedbackListOptions): Promise<FeedbackListResponse> {
+    const params = new URLSearchParams();
+    if (options?.type) params.set('type', options.type);
+    if (options?.status) params.set('status', options.status);
+    if (options?.sort) params.set('sort', options.sort);
+    if (options?.page) params.set('page', String(options.page));
+    const qs = params.toString();
+    return this.http.request<FeedbackListResponse>('GET', `/v1/feedback${qs ? `?${qs}` : ''}`);
+  }
+
   /** List feedback by project slug (GET /v1/feedback/by-project/:slug). */
   listByProject(slug: string, options?: FeedbackListOptions): Promise<FeedbackListResponse> {
     const params = new URLSearchParams();

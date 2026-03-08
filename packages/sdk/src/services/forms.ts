@@ -2,10 +2,12 @@ import { HttpClient } from '../http';
 
 // ---- Types ----
 
+export type FormQuestionType = 'short_text' | 'long_text' | 'multiple_choice' | 'checkboxes' | 'dropdown' | 'yes_no' | 'rating' | 'nps' | 'opinion_scale' | 'email' | 'number' | 'date' | 'phone' | 'url' | 'file_upload';
+
 export interface FormQuestion {
   id: string;
   label: string;
-  type: 'text' | 'email' | 'textarea' | 'select' | 'radio' | 'checkbox';
+  type: FormQuestionType;
   required: boolean;
   options?: string[];
   placeholder?: string;
@@ -70,11 +72,28 @@ export class FormService {
     );
   }
 
+  /** Get a public form by slug (GET /v1/forms/public/:slug). */
+  getPublic(slug: string): Promise<FormBySlugResponse> {
+    return this.http.request<FormBySlugResponse>(
+      'GET',
+      `/v1/forms/public/${encodeURIComponent(slug)}`,
+    );
+  }
+
   /** Submit a form (POST /v1/forms/:formId/submit). */
   submit(formId: string, data: FormSubmissionData): Promise<FormSubmissionResponse> {
     return this.http.request<FormSubmissionResponse>(
       'POST',
       `/v1/forms/${encodeURIComponent(formId)}/submit`,
+      data,
+    );
+  }
+
+  /** Submit a public form by slug (POST /v1/forms/public/:slug/submit). */
+  submitPublic(slug: string, data: FormSubmissionData): Promise<FormSubmissionResponse> {
+    return this.http.request<FormSubmissionResponse>(
+      'POST',
+      `/v1/forms/public/${encodeURIComponent(slug)}/submit`,
       data,
     );
   }

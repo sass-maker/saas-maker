@@ -7,6 +7,8 @@ import { KnowledgeBaseService } from './services/knowledge-base';
 import { AnalyticsService } from './services/analytics';
 import { FormService } from './services/forms';
 import { AIGatewayService } from './services/ai-gateway';
+import { RoadmapService } from './services/roadmap';
+import { ProjectService } from './services/projects';
 
 export interface SaaSMakerConfig {
   apiKey: string;
@@ -22,6 +24,8 @@ export class SaaSMakerClient {
   readonly analytics: AnalyticsService;
   readonly forms: FormService;
   readonly ai: AIGatewayService;
+  readonly roadmap: RoadmapService;
+  readonly projects: ProjectService;
 
   constructor(config: SaaSMakerConfig) {
     const http = new HttpClient(
@@ -37,5 +41,7 @@ export class SaaSMakerClient {
     this.analytics = new AnalyticsService(http);
     this.forms = new FormService(http);
     this.ai = new AIGatewayService(http);
+    this.roadmap = new RoadmapService(http);
+    this.projects = new ProjectService(http);
   }
 }

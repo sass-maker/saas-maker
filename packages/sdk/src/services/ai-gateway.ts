@@ -35,6 +35,11 @@ export class AIGatewayService {
     return this.http.request<any>('POST', '/v1/ai/chat/completions', options);
   }
 
+  /** Streaming chat completion (POST /v1/ai/chat/completions with stream: true). */
+  chatStream(options: Omit<AIChatOptions, 'stream'>): Promise<Response> {
+    return this.http.requestRaw('POST', '/v1/ai/chat/completions', { ...options, stream: true });
+  }
+
   /** Proxy embedding to configured provider (POST /v1/ai/embeddings). */
   embed(input: string | string[], model?: string): Promise<any> {
     return this.http.request<any>('POST', '/v1/ai/embeddings', { input, model });
@@ -43,5 +48,10 @@ export class AIGatewayService {
   /** RAG-enhanced chat (POST /v1/ai/rag). */
   rag(options: AIRagOptions): Promise<AIRagResponse> {
     return this.http.request<AIRagResponse>('POST', '/v1/ai/rag', options);
+  }
+
+  /** Streaming RAG-enhanced chat (POST /v1/ai/rag with stream: true). */
+  ragStream(options: Omit<AIRagOptions, 'stream'>): Promise<Response> {
+    return this.http.requestRaw('POST', '/v1/ai/rag', { ...options, stream: true });
   }
 }
