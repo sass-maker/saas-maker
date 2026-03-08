@@ -3,6 +3,7 @@ import { Bindings, Variables } from '../types';
 import { requireSession, requireApiKey } from '../middleware/auth';
 import { getDb } from '../db';
 import { chatCompletion, embeddings, parseUsage, LLMConfig } from '../llm';
+import { getEmbeddings } from '../embeddings';
 
 const aiGateway = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
@@ -252,15 +253,26 @@ aiGateway.post('/rag', requireApiKey, async (c) => {
 
   const topK = body.top_k ?? 5;
 
-  // 1. Embed the query
-  const embeddingResponse = await embeddings(config, body.query);
-  if (!embeddingResponse.ok) {
+  // 1. Embed the query — use project's embedding model via AI binding
+  const project = await db.getProjectById(projectId);
+  const embeddingModel = project?.embedding_model;
+  if (!embeddingModel) {
+    return c.json({ error: 'No embedding model configured for this project' }, 400);
+  }
+
+  let queryEmbedding: number[];
+  try {
+    const [emb] = await getEmbeddings({
+      baseUrl: c.env.FREE_AI_BASE_URL,
+      apiKey: c.env.FREE_AI_API_KEY,
+      model: embeddingModel,
+      projectId,
+      ai: c.env.AI,
+    }, [body.query]);
+    queryEmbedding = emb;
+  } catch (e) {
     return c.json({ error: 'Failed to generate query embedding' }, 502);
   }
-  const embeddingData = (await embeddingResponse.json()) as {
-    data: { embedding: number[] }[];
-  };
-  const queryEmbedding = embeddingData.data[0].embedding;
 
   // 2. Vector search
   const chunks = await db.searchChunks(body.index_id, queryEmbedding, topK);

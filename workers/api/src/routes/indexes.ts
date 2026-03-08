@@ -245,6 +245,7 @@ indexes.post('/:indexId/documents', async (c) => {
         apiKey: c.env.FREE_AI_API_KEY,
         model,
         projectId,
+        ai: c.env.AI,
       }, textChunks);
 
       const chunkRecords = textChunks.map((text, i) => ({
@@ -336,6 +337,7 @@ indexes.post('/:indexId/search', async (c) => {
       apiKey: c.env.FREE_AI_API_KEY,
       model,
       projectId,
+      ai: c.env.AI,
     }, [body.query]);
 
     const raw = await db.searchChunks(indexId, queryEmbedding, topK);
