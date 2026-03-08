@@ -1,8 +1,6 @@
-import { Suspense } from "react";
 import { PageHeader } from "@/components/page-header";
-import { TableSkeleton } from "@/components/table-skeleton";
-import { AnalyticsContent } from "./analytics-content";
 import { getAuthenticatedProject } from "../get-project";
+import { AnalyticsWrapper } from "./analytics-wrapper";
 
 export const dynamic = "force-dynamic";
 
@@ -20,9 +18,7 @@ export default async function AnalyticsPage({ params }: Props) {
         title="Analytics"
         description="Privacy-friendly page views and custom event tracking."
       />
-      <Suspense fallback={<TableSkeleton rows={6} columns={3} />}>
-        <AnalyticsContent projectId={project.id} />
-      </Suspense>
+      <AnalyticsWrapper apiKey={project.api_key} />
     </div>
   );
 }
