@@ -23,18 +23,30 @@ import { getDb } from './db';
 const app = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
 app.use('*', async (c, next) => {
+  const origin = c.req.header('Origin') || '';
+  const path = c.req.path;
+
+  // Public API routes (API-key auth, called from any user's site) — allow all origins
+  const isPublicApi = /^\/v1\/(analytics|feedback|waitlist|testimonials|changelog|forms|roadmap|directory|ai|indexes)/.test(path);
+
+  if (isPublicApi) {
+    const openCors = cors({
+      origin: origin || '*',
+      allowMethods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+      allowHeaders: ['Content-Type', 'X-Project-Key'],
+    });
+    return openCors(c, next);
+  }
+
+  // Dashboard/auth routes — restricted origins
   const allowed = c.env.CORS_ORIGIN
     ? c.env.CORS_ORIGIN.split(',').map((s: string) => s.trim())
     : [];
   const corsMiddleware = cors({
-    origin: (origin) => {
-      // Allow same-origin requests (no Origin header)
-      if (!origin) return '*';
-      // Always allow localhost for development
-      if (/^http:\/\/localhost(:\d+)?$/.test(origin)) return origin;
-      // Check against configured origins
-      if (allowed.length > 0 && allowed.includes(origin)) return origin;
-      // Deny if no match
+    origin: (o) => {
+      if (!o) return '*';
+      if (/^http:\/\/localhost(:\d+)?$/.test(o)) return o;
+      if (allowed.length > 0 && allowed.includes(o)) return o;
       return '';
     },
     allowMethods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
