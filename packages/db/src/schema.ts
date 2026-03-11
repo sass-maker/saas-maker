@@ -20,4 +20,5 @@ export const TABLES = {
   ai_requests: 'ai_requests',
   roadmap_items: 'roadmap_items',
   roadmap_votes: 'roadmap_votes',
+  directory_listings: 'directory_listings',
 } as const;

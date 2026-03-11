@@ -9,6 +9,8 @@ import { FormService } from './services/forms';
 import { AIGatewayService } from './services/ai-gateway';
 import { RoadmapService } from './services/roadmap';
 import { ProjectService } from './services/projects';
+import { ChatbotService } from './services/chatbot';
+import { DirectoryService } from './services/directory';
 
 export interface SaaSMakerConfig {
   apiKey: string;
@@ -26,6 +28,8 @@ export class SaaSMakerClient {
   readonly ai: AIGatewayService;
   readonly roadmap: RoadmapService;
   readonly projects: ProjectService;
+  readonly chatbot: ChatbotService;
+  readonly directory: DirectoryService;
 
   constructor(config: SaaSMakerConfig) {
     const http = new HttpClient(
@@ -43,5 +47,7 @@ export class SaaSMakerClient {
     this.ai = new AIGatewayService(http);
     this.roadmap = new RoadmapService(http);
     this.projects = new ProjectService(http);
+    this.chatbot = new ChatbotService(http);
+    this.directory = new DirectoryService(http);
   }
 }

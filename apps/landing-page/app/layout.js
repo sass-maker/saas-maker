@@ -1,14 +1,74 @@
 import { SaasMakerAnalytics } from './SaasMakerAnalytics';
 import './globals.css';
 
+const SITE_URL = 'https://sassmaker.com';
+
 export const metadata = {
-  title: 'SaaS Maker — Everything you need to launch & grow your SaaS',
-  description: 'Waitlist, testimonials, feedback, changelog, analytics and more — plug-and-play tools for every stage of your product.',
+  title: {
+    default: 'SaaS Maker — Everything you need to launch & grow your SaaS',
+    template: '%s | SaaS Maker',
+  },
+  description: 'Waitlist, testimonials, feedback, changelog, analytics, forms, roadmap, AI gateway and more — plug-and-play backend tools for every stage of your SaaS product.',
+  metadataBase: new URL(SITE_URL),
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: SITE_URL,
+    siteName: 'SaaS Maker',
+    title: 'SaaS Maker — Everything you need to launch & grow your SaaS',
+    description: 'Waitlist, testimonials, feedback, changelog, analytics, forms, roadmap, AI gateway and more — plug-and-play backend tools for every stage of your SaaS product.',
+    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'SaaS Maker — Drop-in backend services for SaaS apps' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'SaaS Maker — Everything you need to launch & grow your SaaS',
+    description: 'Plug-and-play backend tools for every stage of your SaaS product.',
+    images: ['/og.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
+  keywords: ['saas', 'saas maker', 'sassmaker', 'backend as a service', 'feedback widget', 'waitlist', 'changelog', 'analytics', 'testimonials', 'roadmap', 'indie hacker', 'saas tools'],
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'SoftwareApplication',
+              name: 'SaaS Maker',
+              url: SITE_URL,
+              applicationCategory: 'DeveloperApplication',
+              operatingSystem: 'Web',
+              description: 'Drop-in backend services for SaaS apps — feedback, waitlist, testimonials, changelog, analytics, forms, roadmap, AI gateway and more.',
+              offers: {
+                '@type': 'Offer',
+                price: '0',
+                priceCurrency: 'USD',
+              },
+              author: {
+                '@type': 'Person',
+                name: 'Sarthak Agrawal',
+                url: 'https://github.com/sarthakagrawal927',
+              },
+            }),
+          }}
+        />
+      </head>
       <body>
         <SaasMakerAnalytics />
         {children}

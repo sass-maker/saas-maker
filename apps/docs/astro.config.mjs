@@ -34,6 +34,7 @@ export default defineConfig({
 						{ label: 'Knowledge Base (Vector)', slug: 'services/knowledge-base' },
 						{ label: 'Analytics', slug: 'services/analytics' },
 					{ label: 'AI Gateway', slug: 'services/ai-gateway' },
+					{ label: 'Directory', slug: 'services/directory' },
 					],
 				},
 				{
@@ -51,6 +52,7 @@ export default defineConfig({
 						{ label: 'Changelog Timeline', slug: 'widgets/changelog' },
 						{ label: 'Survey Widget', slug: 'widgets/survey' },
 					{ label: 'Analytics Dashboard', slug: 'widgets/analytics' },
+				{ label: 'Badge', slug: 'widgets/badge' },
 					],
 				},
 				{

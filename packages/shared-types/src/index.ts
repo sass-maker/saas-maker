@@ -515,6 +515,44 @@ export interface AIRagResponse {
   usage: { input_tokens: number; output_tokens: number };
 }
 
+// --- Directory ---
+
+export type DirectoryListingStatus = 'pending' | 'approved' | 'rejected';
+
+export interface DirectoryListingRecord {
+  id: string;
+  name: string;
+  tagline: string;
+  url: string;
+  description: string | null;
+  logo_url: string | null;
+  screenshot_url: string | null;
+  twitter_url: string | null;
+  project_id: string | null;
+  badge_verified: boolean;
+  status: DirectoryListingStatus;
+  tags: string[];
+  created_at: string;
+}
+
+export interface CreateDirectoryListingRequest {
+  name: string;
+  tagline: string;
+  url: string;
+  description?: string;
+  logo_url?: string;
+  screenshot_url?: string;
+  twitter_url?: string;
+  tags?: string[];
+}
+
+export interface DirectoryListQuery {
+  page?: number;
+  limit?: number;
+  tag?: string;
+  search?: string;
+}
+
 // --- Roadmap ---
 
 export type RoadmapColumn = 'backlog' | 'planned' | 'in_progress' | 'done';

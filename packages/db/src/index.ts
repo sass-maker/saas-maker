@@ -233,4 +233,16 @@ export interface FeedbackDatabase {
   setRoadmapVote(input: { id: string; roadmap_item_id: string; user_identifier: string; vote: 1 | -1 }): Promise<void>;
   removeRoadmapVote(roadmapItemId: string, userIdentifier: string): Promise<boolean>;
   getRoadmapVote(roadmapItemId: string, userIdentifier: string): Promise<1 | -1 | null>;
+
+  // Directory
+  createDirectoryListing(input: {
+    id: string; name: string; tagline: string; url: string;
+    description: string | null; logo_url: string | null;
+    screenshot_url: string | null; twitter_url: string | null;
+    project_id: string | null; tags: string[];
+  }): Promise<import('@saas-maker/shared-types').DirectoryListingRecord>;
+  listDirectoryListings(page: number, limit: number, tag?: string, search?: string, status?: import('@saas-maker/shared-types').DirectoryListingStatus): Promise<{ data: import('@saas-maker/shared-types').DirectoryListingRecord[]; total: number }>;
+  getDirectoryListingById(id: string): Promise<import('@saas-maker/shared-types').DirectoryListingRecord | null>;
+  getDirectoryListingByProjectId(projectId: string): Promise<import('@saas-maker/shared-types').DirectoryListingRecord | null>;
+  updateDirectoryListingBadgeVerified(id: string, verified: boolean): Promise<void>;
 }

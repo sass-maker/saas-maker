@@ -1311,6 +1311,41 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
       if (!row) return null;
       return (row as any).vote === 1 ? 1 : -1;
     },
+
+    // --- Directory ---
+    async createDirectoryListing(input) {
+      const [row] = await sql`
+        INSERT INTO directory_listings (id, name, tagline, url, description, logo_url, screenshot_url, twitter_url, project_id, tags)
+        VALUES (${input.id}, ${input.name}, ${input.tagline}, ${input.url}, ${input.description}, ${input.logo_url}, ${input.screenshot_url}, ${input.twitter_url}, ${input.project_id}, ${sql.array(input.tags)})
+        RETURNING *
+      `;
+      return row as any;
+    },
+
+    async listDirectoryListings(page, limit, tag?, search?, status = 'approved' as any) {
+      const offset = (page - 1) * limit;
+      const conditions = [sql`status = ${status}`];
+      if (tag) conditions.push(sql`${tag} = ANY(tags)`);
+      if (search) conditions.push(sql`(name ILIKE ${'%' + search + '%'} OR tagline ILIKE ${'%' + search + '%'})`);
+      const where = conditions.reduce((acc, c, i) => i === 0 ? c : sql`${acc} AND ${c}`);
+      const rows = await sql`SELECT * FROM directory_listings WHERE ${where} ORDER BY created_at DESC LIMIT ${limit} OFFSET ${offset}`;
+      const [{ count }] = await sql`SELECT COUNT(*)::int AS count FROM directory_listings WHERE ${where}`;
+      return { data: rows as any[], total: count as number };
+    },
+
+    async getDirectoryListingById(id) {
+      const [row] = await sql`SELECT * FROM directory_listings WHERE id = ${id}`;
+      return (row as any) || null;
+    },
+
+    async getDirectoryListingByProjectId(projectId) {
+      const [row] = await sql`SELECT * FROM directory_listings WHERE project_id = ${projectId} LIMIT 1`;
+      return (row as any) || null;
+    },
+
+    async updateDirectoryListingBadgeVerified(id, verified) {
+      await sql`UPDATE directory_listings SET badge_verified = ${verified} WHERE id = ${id}`;
+    },
   };
 }
 

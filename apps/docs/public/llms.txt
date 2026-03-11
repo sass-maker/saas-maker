@@ -996,6 +996,98 @@ Returns counts for all non-`page_view` events.
 }
 ```
 
+### Full dashboard
+
+```
+GET /v1/analytics/dashboard?period=30d
+```
+
+**Auth:** API Key or Session Token
+
+Returns all analytics data in a single call — summary stats, timeseries, and top-10 breakdowns for pages, referrers, countries, devices, browsers, OS, custom events, and bots.
+
+```bash
+curl "https://api.sassmaker.com/v1/analytics/dashboard?period=30d" \
+  -H "X-Project-Key: pk_your_api_key"
+```
+
+| Param | Type | Default | Description |
+|-------|------|---------|-------------|
+| `project_id` | string | — | Required when using Session Token auth. Not needed with API Key. |
+| `period` | string | `30d` | `today`, `7d`, `30d`, `90d`, or `all` |
+| `include_bots` | string | `false` | `true` to include bot traffic |
+
+**Response (200):**
+
+```json
+{
+  "summary": {
+    "page_views": 1250,
+    "unique_visitors": 430,
+    "bounce_rate": 42,
+    "avg_session_pages": 2.3,
+    "bot_count": 85,
+    "bot_percentage": 6.4
+  },
+  "timeseries": [
+    { "date": "2026-03-01", "views": 45, "visitors": 20 }
+  ],
+  "pages": [{ "pathname": "/pricing", "views": 340 }],
+  "referrers": [{ "referrer": "https://google.com", "count": 150 }],
+  "countries": [{ "country": "US", "count": 500 }],
+  "devices": [{ "device": "desktop", "count": 800 }],
+  "browsers": [{ "browser": "Chrome", "count": 600 }],
+  "os": [{ "os": "macOS", "count": 400 }],
+  "events": [{ "name": "signup_completed", "count": 45 }],
+  "bots": [{ "name": "Googlebot", "count": 30 }]
+}
+```
+
+When `period` is `today`, timeseries is bucketed hourly. All other periods use daily buckets.
+
+### Detail breakdown (paginated)
+
+```
+GET /v1/analytics/detail/:section?project_id=PROJECT_ID&period=30d&limit=50&offset=0
+```
+
+**Auth:** Session Token
+
+Returns paginated data for a specific breakdown section.
+
+| Param | Type | Default | Description |
+|-------|------|---------|-------------|
+| `section` | string | — | One of: `pages`, `referrers`, `countries`, `devices`, `browsers`, `os`, `events`, `bots` |
+| `project_id` | string | — | Required. Project ID |
+| `period` | string | `30d` | Time period |
+| `include_bots` | string | `false` | Include bot traffic |
+| `limit` | number | `50` | Items per page |
+| `offset` | number | `0` | Pagination offset |
+
+**Response (200):**
+
+```json
+{
+  "data": [
+    { "pathname": "/pricing", "views": 340 },
+    { "pathname": "/features", "views": 210 }
+  ],
+  "total": 156
+}
+```
+
+## Embeddable Dashboard
+
+Use the `@saas-maker/analytics-ui` package to embed a full analytics dashboard in any React app:
+
+```tsx
+import { AnalyticsDashboard } from '@saas-maker/analytics-ui';
+
+<AnalyticsDashboard apiKey="pk_your_api_key" />
+```
+
+See the [Analytics Dashboard widget docs](/widgets/analytics/) for installation and configuration.
+
 ## SDK Usage
 
 ```typescript
@@ -1188,6 +1280,196 @@ const client = new SaaSMakerClient({ apiKey: 'pk_your_api_key' });
 
 // List published entries
 const { data } = await client.changelog.list({ limit: 10 });
+```
+
+---
+
+A public directory of products built with SaasMaker. Users can browse approved listings, filter by tag, search, and submit their own products for review.
+
+## Quick Start
+
+Fetch approved directory listings:
+
+```bash
+curl https://api.sassmaker.com/v1/directory
+```
+
+## How it works
+
+1. A user submits their product via the public form or the API
+2. Submissions start with `pending` status
+3. Once approved, the listing appears in the public directory
+4. Projects can optionally verify badge placement on their site for a "verified" checkmark
+
+## API Endpoints
+
+### List approved listings
+
+```
+GET /v1/directory
+```
+
+**Auth:** None (public endpoint)
+
+Returns paginated approved listings with optional tag and search filters.
+
+```bash
+curl "https://api.sassmaker.com/v1/directory?page=1&tag=saas&search=analytics"
+```
+
+| Param | Type | Default | Description |
+|-------|------|---------|-------------|
+| `page` | number | `1` | Page number |
+| `tag` | string | — | Filter by tag (e.g. `saas`, `ai`, `devtools`) |
+| `search` | string | — | Search by name or tagline (case-insensitive) |
+
+**Response (200):**
+
+```json
+{
+  "data": [
+    {
+      "id": "abc-123",
+      "name": "Acme Analytics",
+      "tagline": "Real-time analytics for indie hackers",
+      "url": "https://acme.com",
+      "description": null,
+      "logo_url": "https://acme.com/logo.png",
+      "screenshot_url": null,
+      "twitter_url": null,
+      "project_id": null,
+      "badge_verified": false,
+      "status": "approved",
+      "tags": ["analytics", "saas"],
+      "created_at": "2026-03-01T00:00:00Z"
+    }
+  ],
+  "total": 42,
+  "page": 1,
+  "limit": 24
+}
+```
+
+### Submit a listing
+
+```
+POST /v1/directory
+```
+
+**Auth:** None (public endpoint)
+
+Submit a product for review. Listings start as `pending`.
+
+```bash
+curl -X POST https://api.sassmaker.com/v1/directory \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Acme",
+    "tagline": "The fastest way to ship SaaS",
+    "url": "https://acme.com",
+    "tags": ["saas", "devtools"]
+  }'
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `name` | string | Yes | Product name |
+| `tagline` | string | Yes | Short description (max 120 chars) |
+| `url` | string | Yes | Product URL (must start with `http://` or `https://`) |
+| `description` | string | No | Longer description |
+| `logo_url` | string | No | URL to product logo |
+| `screenshot_url` | string | No | URL to product screenshot |
+| `twitter_url` | string | No | Twitter/X profile URL |
+| `tags` | string[] | No | Up to 5 tags (lowercased automatically) |
+
+**Response (201):** Full listing object.
+
+**Errors:**
+
+| Status | Message | Cause |
+|--------|---------|-------|
+| `400` | `"name is required"` | Missing name |
+| `400` | `"tagline is required"` | Missing tagline |
+| `400` | `"url is required"` | Missing URL |
+| `400` | `"Invalid URL"` | URL doesn't match `https?://` pattern |
+| `400` | `"tagline must be 120 characters or fewer"` | Tagline too long |
+
+### Claim a listing (project-linked)
+
+```
+POST /v1/directory/claim
+```
+
+**Auth:** API Key
+
+Submit a listing linked to your project. This enables badge verification. Each project can have at most one directory listing.
+
+```bash
+curl -X POST https://api.sassmaker.com/v1/directory/claim \
+  -H "X-Project-Key: pk_your_api_key" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Acme",
+    "tagline": "The fastest way to ship SaaS",
+    "url": "https://acme.com"
+  }'
+```
+
+**Response (201):** Full listing object with `project_id` set.
+
+**Errors:**
+
+| Status | Message | Cause |
+|--------|---------|-------|
+| `409` | `"Project already has a directory listing"` | Project already claimed a listing |
+
+### Verify badge
+
+```
+POST /v1/directory/verify-badge
+```
+
+**Auth:** API Key
+
+Checks whether the "Built with SaasMaker" badge is present on the listing's URL. If found, the listing's `badge_verified` flag is set to `true`.
+
+```bash
+curl -X POST https://api.sassmaker.com/v1/directory/verify-badge \
+  -H "X-Project-Key: pk_your_api_key"
+```
+
+The endpoint fetches the listing URL and searches the HTML for a link containing `sassmaker.com/made-with`.
+
+**Response (200):**
+
+```json
+{
+  "verified": true,
+  "listing_id": "abc-123"
+}
+```
+
+**Errors:**
+
+| Status | Message | Cause |
+|--------|---------|-------|
+| `404` | `"No directory listing found for this project"` | Project has no listing — call `/claim` first |
+| `422` | `"Could not reach the URL"` | URL is unreachable or timed out (8s limit) |
+
+## Badge Widget
+
+Add the "Built with SaasMaker" badge to your site to get verified. See the [Badge Widget docs](/widgets/badge/) for React and HTML options.
+
+## SDK Usage
+
+```typescript
+// Submit a listing
+const listing = await client.directory.submit({
+  name: 'Acme',
+  tagline: 'The fastest way to ship SaaS',
+  url: 'https://acme.com',
+  tags: ['saas'],
+});
 ```
 
 ---
@@ -2738,12 +3020,10 @@ const { data, total } = await client.feedback.list({
 
 ```typescript
 // Add to waitlist
-const entry = await client.waitlist.signup({
+const entry = await client.waitlist.join({
   email: 'user@example.com',
   name: 'Jane Doe',
 });
-
-console.log(`Position: #${entry.position}`);
 
 // Get total count
 const { count } = await client.waitlist.getCount();
@@ -2886,6 +3166,185 @@ try {
 } catch (err) {
   console.error(err.message); // "Title is required"
 }
+```
+
+---
+
+Drop-in React component that renders a complete analytics dashboard — page views, visitors, bounce rate, top pages, referrers, countries, devices, browsers, and custom events. No Tailwind or external CSS required.
+
+## Installation
+
+```bash
+npm install @saas-maker/analytics-ui
+```
+
+Peer dependencies: `react` and `react-dom` (v18+).
+
+## Usage
+
+```tsx
+import { AnalyticsDashboard } from '@saas-maker/analytics-ui';
+
+function App() {
+  return <AnalyticsDashboard apiKey="pk_your_api_key" />;
+}
+```
+
+The component fetches data from the SaaS Maker API using your project API key and renders the full dashboard inline.
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `apiKey` | `string` | — | Your project API key (required) |
+| `period` | `'today' \| '7d' \| '30d' \| '90d' \| 'all'` | `'30d'` | Initial time period |
+| `theme` | `'light' \| 'dark'` | `'dark'` | Color theme |
+| `apiBaseUrl` | `string` | `'https://api.sassmaker.com'` | API base URL (for self-hosted) |
+
+## What it renders
+
+1. **Period selector** — toggle between Today, 7D, 30D, 90D, and All time
+2. **Timeseries chart** — page views and visitors over time (area chart)
+3. **Summary cards** — page views, unique visitors, bounce rate, pages per session
+4. **Breakdown panels** — top pages, top referrers, countries, devices, browsers, operating systems
+5. **Custom events** — event counts (only shown when events exist)
+
+## Theming
+
+The component supports dark and light themes. All styles are inline — no CSS imports or Tailwind configuration needed.
+
+```tsx
+{/* Dark theme (default) */}
+<AnalyticsDashboard apiKey="pk_your_api_key" theme="dark" />
+
+{/* Light theme */}
+<AnalyticsDashboard apiKey="pk_your_api_key" theme="light" />
+```
+
+## Next.js App Router
+
+The component uses React hooks (client-side only). In Next.js App Router, wrap it in a client component:
+
+```tsx
+// analytics-dashboard.tsx
+'use client';
+
+import { AnalyticsDashboard } from '@saas-maker/analytics-ui';
+
+export function AnalyticsDashboardWrapper({ apiKey }: { apiKey: string }) {
+  return <AnalyticsDashboard apiKey={apiKey} />;
+}
+```
+
+```tsx
+// page.tsx (server component)
+import { AnalyticsDashboardWrapper } from './analytics-dashboard';
+
+export default function Page() {
+  return <AnalyticsDashboardWrapper apiKey="pk_your_api_key" />;
+}
+```
+
+## TypeScript
+
+The package exports all types:
+
+```typescript
+import type {
+  AnalyticsDashboardProps,
+  Period,
+  DashboardData,
+  DashboardSummary,
+} from '@saas-maker/analytics-ui';
+```
+
+---
+
+A small badge component that links back to the SaasMaker directory. Adding it to your site enables badge verification — verified listings get a green checkmark in the directory.
+
+## Installation
+
+```bash
+npm install @saas-maker/badge
+```
+
+Peer dependencies: `react` and `react-dom` (v18+).
+
+## Usage
+
+```tsx
+import { SaasMakerBadge } from '@saas-maker/badge';
+
+function Footer() {
+  return <SaasMakerBadge variant="flat" theme="auto" />;
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'flat' \| 'outlined' \| 'small'` | `'flat'` | Badge style |
+| `theme` | `'light' \| 'dark' \| 'auto'` | `'auto'` | Color theme (`auto` uses `prefers-color-scheme`) |
+| `href` | `string` | `'https://sassmaker.com/made-with'` | Link target |
+
+## Variants
+
+- **Flat** — light background with border, shows "Built with SaasMaker" text
+- **Outlined** — transparent background with border, shows text
+- **Small** — icon-only, no text label
+
+## HTML (non-React)
+
+Use the `getBadgeHtml` helper to generate a standalone HTML snippet:
+
+```typescript
+import { getBadgeHtml } from '@saas-maker/badge';
+
+const html = getBadgeHtml({ variant: 'flat', theme: 'light' });
+// Returns an <a> tag with inline styles — paste into any HTML page
+```
+
+Or use this HTML directly:
+
+```html
+<a href="https://sassmaker.com/made-with" target="_blank"
+   style="display:inline-flex;align-items:center;gap:6px;padding:5px 10px;
+          background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;
+          text-decoration:none;font-family:sans-serif;font-size:12px;
+          font-weight:500;color:#475569;">
+  Built with SaasMaker
+</a>
+```
+
+## Badge Verification
+
+Once you've added the badge to your site:
+
+1. Claim your listing via `POST /v1/directory/claim` using your API key
+2. Call `POST /v1/directory/verify-badge` — the API fetches your URL and checks for a link containing `sassmaker.com/made-with`
+3. If found, your listing gets a verified checkmark in the directory
+
+See the [Directory service docs](/services/directory/) for full API details.
+
+## Theming
+
+All styles are handled via CSS classes. The `auto` theme uses `prefers-color-scheme` to match the user's system preference.
+
+```tsx
+{/* Matches system dark/light mode */}
+<SaasMakerBadge variant="flat" theme="auto" />
+
+{/* Force dark theme */}
+<SaasMakerBadge variant="outlined" theme="dark" />
+```
+
+## TypeScript
+
+The package exports all types:
+
+```typescript
+import type { BadgeProps, BadgeVariant, BadgeTheme } from '@saas-maker/badge';
 ```
 
 ---

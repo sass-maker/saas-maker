@@ -297,6 +297,7 @@ export default function LandingPage() {
           <a href="#features">Features</a>
           <a href="#pricing">Pricing</a>
           <a href={DOCS_URL} target="_blank" rel="noopener noreferrer">Docs</a>
+          <a href="/made-with">Directory</a>
         </div>
         <div className="nav-actions">
           <a href={DASHBOARD_URL} className="btn btn-ghost">Log In</a>

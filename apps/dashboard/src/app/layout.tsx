@@ -15,8 +15,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SaaS Maker",
-  description: "Manage feedback for your SaaS products",
+  title: {
+    default: "SaaS Maker Dashboard",
+    template: "%s | SaaS Maker",
+  },
+  description: "Manage your SaaS backend — feedback, waitlist, analytics, changelog, testimonials, roadmap and more.",
+  metadataBase: new URL("https://app.sassmaker.com"),
+  robots: { index: false, follow: false },
 };
 
 export default function RootLayout({

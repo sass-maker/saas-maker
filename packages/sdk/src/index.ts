@@ -12,3 +12,5 @@ export type { FormRecord, FormQuestion, FormQuestionType, FormListResponse, Form
 export type { AIChatMessage, AIChatOptions, AIRagOptions, AIRagResponse } from './services/ai-gateway';
 export type { RoadmapItem, RoadmapListResponse } from './services/roadmap';
 export type { ProjectReadmeResponse } from './services/projects';
+export type { ChatMessage, ChatbotConfig, ChatbotResponse } from './services/chatbot';
+export type { DirectoryListing, DirectoryListResponse, DirectoryListOptions, SubmitDirectoryListingData, BadgeVerifyResponse } from './services/directory';
