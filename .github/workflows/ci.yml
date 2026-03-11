@@ -23,6 +23,7 @@ jobs:
       - run: pnpm build:types
       - run: pnpm build:db
       - run: pnpm build:widget
+      - run: pnpm build:analytics-ui
       - run: cd workers/api && npx tsc --noEmit
       - run: pnpm build:dashboard
       - run: pnpm test
