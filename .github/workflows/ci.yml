@@ -108,12 +108,7 @@ jobs:
           registry-url: https://registry.npmjs.org
       - run: pnpm install
       - name: Build all packages
-        run: |
-          pnpm build:types
-          pnpm build:db
-          pnpm build:widget
-          pnpm build:analytics-ui
-          pnpm build:badge
+        run: pnpm -r --filter './packages/*' build
       - name: Publish packages with bumped versions
         run: |
           for dir in packages/*/; do
@@ -130,7 +125,6 @@ jobs:
             if [ "$local_version" != "$npm_version" ]; then
               echo "Publishing $name@$local_version (npm has $npm_version)"
               cd "$dir"
-              pnpm build 2>/dev/null || true
               npm publish --access public
               cd "$GITHUB_WORKSPACE"
             else
