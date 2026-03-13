@@ -32,7 +32,7 @@ Dashboard defaults to excluding bots. Toggle to include.
 **Two dashboard endpoints replace the current 6:**
 
 #### `GET /v1/analytics/dashboard`
-Single request returns full dashboard. Params: `project_id`, `period` (today/7d/30d/90d/all), `include_bots` (default false).
+Single request returns full dashboard. Auth: session Bearer token or API key (X-Project-Key). Params: `project_id` (query, required for session auth; inferred from key for API key auth), `period` (today/7d/30d/90d/all), `include_bots` (default false).
 
 Response:
 ```json

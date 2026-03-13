@@ -75,19 +75,22 @@ CREATE TABLE form_answers (
 
 ### Dashboard (session auth via Bearer token)
 
+All dashboard routes are scoped under `/v1/forms/dashboard/:projectId`. Responses use `{ data: ... }` wrapper.
+
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| POST | `/v1/forms` | Create form |
-| GET | `/v1/forms` | List forms for project |
-| GET | `/v1/forms/:formId` | Get form + questions |
-| PUT | `/v1/forms/:formId` | Update form metadata/status |
-| DELETE | `/v1/forms/:formId` | Delete form + cascading data |
-| POST | `/v1/forms/:formId/questions` | Bulk upsert/reorder questions |
-| PUT | `/v1/forms/:formId/questions/:questionId` | Update question |
-| DELETE | `/v1/forms/:formId/questions/:questionId` | Delete question |
-| GET | `/v1/forms/:formId/responses` | List responses (paginated) |
-| GET | `/v1/forms/:formId/analytics` | Per-question summary analytics |
-| DELETE | `/v1/forms/:formId/responses/:responseId` | Delete response |
+| POST | `/v1/forms/dashboard/:projectId` | Create form (201, `{ data: { ...form, questions } }`) |
+| GET | `/v1/forms/dashboard/:projectId` | List forms (`{ data, total, page, limit, stats }`) |
+| GET | `/v1/forms/dashboard/:projectId/:formId` | Get form + questions + response_count |
+| PATCH | `/v1/forms/dashboard/:projectId/:formId` | Update form metadata/status |
+| DELETE | `/v1/forms/dashboard/:projectId/:formId` | Delete form + cascading data |
+| GET | `/v1/forms/dashboard/:projectId/check-slug/:slug` | Check slug availability (`{ available: bool }`) |
+| POST | `/v1/forms/dashboard/:projectId/:formId/questions` | Bulk upsert/reorder questions |
+| PATCH | `/v1/forms/dashboard/:projectId/:formId/questions/:questionId` | Update question |
+| DELETE | `/v1/forms/dashboard/:projectId/:formId/questions/:questionId` | Delete question |
+| GET | `/v1/forms/dashboard/:projectId/:formId/responses` | List responses (paginated) |
+| GET | `/v1/forms/dashboard/:projectId/:formId/analytics` | Per-question summary analytics |
+| DELETE | `/v1/forms/dashboard/:projectId/:formId/responses/:responseId` | Delete response |
 
 ### Public (API key auth via X-Project-Key)
 
