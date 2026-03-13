@@ -17,9 +17,11 @@
     "generate:openapi": "node scripts/generate-openapi.mjs",
     "check:openapi": "pnpm generate:openapi && git diff --exit-code -- packages/cli/src/openapi.json docs/openapi/openapi.json apps/docs/public/openapi.json",
     "test": "vitest run",
-    "test:integration": "vitest run --config vitest.integration.config.ts"
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "test:e2e": "playwright test tests/e2e/api/"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "vitest": "^4.0.18"
   }
 }
