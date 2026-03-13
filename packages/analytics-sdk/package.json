@@ -1,10 +1,14 @@
 {
   "name": "@saas-maker/analytics-sdk",
-  "version": "0.2.0",
-  "publishConfig": { "access": "public" },
+  "version": "0.2.1",
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup"
   },

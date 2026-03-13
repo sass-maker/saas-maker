@@ -1,9 +1,13 @@
 {
   "name": "@saas-maker/survey",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Embeddable survey widget for SaaS Maker",
-  "publishConfig": { "access": "public" },
-  "files": ["dist"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist"
+  ],
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",

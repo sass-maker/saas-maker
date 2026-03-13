@@ -1,8 +1,12 @@
 {
   "name": "@saas-maker/changelog-widget",
-  "version": "0.2.0",
-  "publishConfig": { "access": "public" },
-  "files": ["dist"],
+  "version": "0.2.1",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist"
+  ],
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",

@@ -1,8 +1,12 @@
 {
   "name": "@saas-maker/waitlist",
-  "version": "0.1.0",
-  "publishConfig": { "access": "public" },
-  "files": ["dist"],
+  "version": "0.1.1",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist"
+  ],
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",

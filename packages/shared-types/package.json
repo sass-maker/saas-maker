@@ -1,8 +1,12 @@
 {
   "name": "@saas-maker/shared-types",
-  "version": "0.1.0",
-  "publishConfig": { "access": "public" },
-  "files": ["dist"],
+  "version": "0.1.1",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist"
+  ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
