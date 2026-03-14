@@ -126,7 +126,7 @@ feedback.get('/board', requireSession, async (c) => {
   const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
 
   // Get all projects owned by user
-  const projects = await db.listProjectsByOwner(userId);
+  const projects = await db.listProjectsByOwner(userId, 'dashboard');
   if (projects.length === 0) return c.json({ data: [], total: 0 });
 
   const projectIds = projects.map((p) => p.id);

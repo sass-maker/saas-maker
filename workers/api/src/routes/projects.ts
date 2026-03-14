@@ -26,15 +26,23 @@ function slugify(name: string): string {
 
 projects.get('/', async (c) => {
   const userId = c.get('userId')!;
+  const source = c.req.query('source') || 'dashboard';
   const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
-  const data = await db.listProjectsByOwner(userId);
+  const data = await db.listProjectsByOwner(userId, source);
   return c.json({ data });
 });
 
+const VALID_SOURCES = ['dashboard', 'linkchat'];
+
 projects.post('/', async (c) => {
   const userId = c.get('userId')!;
-  const body = (await c.req.json()) as { name: string };
+  const body = (await c.req.json()) as { name: string; source?: string };
   if (!body.name?.trim()) return c.json({ error: 'Project name is required' }, 400);
+
+  const source = body.source || 'dashboard';
+  if (!VALID_SOURCES.includes(source)) {
+    return c.json({ error: `Invalid source. Must be one of: ${VALID_SOURCES.join(', ')}` }, 400);
+  }
 
   const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
   const project = await db.createProject({
@@ -43,6 +51,7 @@ projects.post('/', async (c) => {
     slug: slugify(body.name) + '-' + Date.now().toString(36),
     api_key: generateApiKey(),
     owner_id: userId,
+    source,
   });
 
   return c.json(project, 201);
