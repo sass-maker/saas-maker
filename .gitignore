@@ -16,6 +16,9 @@ apps/landing-page/out/
 .playwright-mcp/
 .metadata_never_index
 
+# Test artifacts
+test-results/
+
 # Misc
 *.png
 project-idea-dump.md
