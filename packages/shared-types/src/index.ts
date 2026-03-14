@@ -23,6 +23,7 @@ export interface ProjectRecord {
   rate_limit_rpm: number;
   rate_limit_enabled: boolean;
   readme: string | null;
+  source: 'dashboard' | 'linkchat' | string;
   created_at: string;
 }
 
@@ -53,6 +54,7 @@ export interface UpvoteRecord {
 // --- API Request / Response ---
 export interface CreateProjectRequest {
   name: string;
+  source?: string;
 }
 
 export interface SubmitFeedbackRequest {
