@@ -1284,6 +1284,121 @@ const { data } = await client.changelog.list({ limit: 10 });
 
 ---
 
+Build conversational AI chatbots powered by RAG (Retrieval-Augmented Generation). The chatbot service combines the AI Gateway with Knowledge Base to create assistants that answer questions using your own data.
+
+## How It Works
+
+The chatbot is a **client-side SDK service** that manages conversation state and calls the RAG endpoint under the hood. Each message:
+
+1. Adds the user message to conversation history
+2. Queries your knowledge base for relevant context
+3. Sends the context + conversation history to the LLM
+4. Returns the assistant response with source citations
+
+## Quick Start
+
+```typescript
+import { SaaSMakerClient } from '@saas-maker/sdk';
+
+const client = new SaaSMakerClient({ apiKey: 'pk_your_api_key' });
+
+// Create a conversation
+const conversationId = client.chatbot.createConversation();
+
+// Send a message
+const response = await client.chatbot.send(conversationId, 'How do I reset my password?', {
+  indexId: 'your-knowledge-base-index-id',
+  systemPrompt: 'You are a helpful support agent for Acme Corp.',
+});
+
+console.log(response.message.content);
+// "To reset your password, go to Settings > Security > Reset Password..."
+
+console.log(response.sources);
+// [{ document_id: "...", chunk_content: "...", score: 0.92 }]
+```
+
+## Configuration
+
+```typescript
+interface ChatbotConfig {
+  /** Knowledge base index ID to ground answers in (required). */
+  indexId: string;
+  /** Custom system prompt for the chatbot personality. */
+  systemPrompt?: string;
+  /** Number of knowledge base chunks to retrieve per query (default: 5). */
+  topK?: number;
+  /** Max conversation messages to send as context (default: 20). */
+  maxHistory?: number;
+}
+```
+
+## Streaming Responses
+
+```typescript
+const { stream, done } = await client.chatbot.sendStream(
+  conversationId,
+  'Explain your pricing plans',
+  { indexId: 'your-index-id' }
+);
+
+// Read the stream
+const reader = stream.getReader();
+while (true) {
+  const { done: streamDone, value } = await reader.read();
+  if (streamDone) break;
+  process.stdout.write(value); // Print chunks as they arrive
+}
+
+// Get the final response (includes sources)
+const finalResponse = await done;
+```
+
+## Conversation Management
+
+```typescript
+// Create with a custom ID (e.g., user session)
+const id = client.chatbot.createConversation('user-123-session');
+
+// Get conversation history
+const history = client.chatbot.getHistory(id);
+
+// Clear history (keep conversation ID)
+client.chatbot.clearHistory(id);
+
+// Delete conversation entirely
+client.chatbot.deleteConversation(id);
+
+// List all active conversations
+const conversations = client.chatbot.listConversations();
+```
+
+## Persisting Conversations
+
+The chatbot stores conversations in memory. To persist across page reloads or server restarts:
+
+```typescript
+// Export to save
+const messages = client.chatbot.exportHistory(conversationId);
+localStorage.setItem('chat-history', JSON.stringify(messages));
+
+// Import to restore
+const saved = JSON.parse(localStorage.getItem('chat-history') || '[]');
+client.chatbot.importHistory(conversationId, saved);
+```
+
+## Prerequisites
+
+Before using the chatbot, you need:
+
+1. **AI Gateway configured** — Set up an AI provider in your project's AI settings
+2. **Knowledge Base index** — Create an index and upload documents via the Knowledge Base service
+3. **API key** — Your project's `pk_` API key
+
+See [AI Gateway](/services/ai-gateway) and [Knowledge Base](/services/knowledge-base) for setup instructions.
+
+---
+
 A public directory of products built with SaasMaker. Users can browse approved listings, filter by tag, search, and submit their own products for review.
 
 ## Quick Start
@@ -2258,6 +2373,88 @@ DELETE /v1/indexes/:indexId
 ```
 
 **Auth:** API Key
+
+---
+
+Projects are the top-level container in SaaS Maker. Each project has its own API key, settings, and features (feedback, forms, analytics, etc.).
+
+## Project README
+
+Each project has an optional markdown README accessible via API. Use it to store project documentation, setup instructions, or notes that AI agents can read.
+
+### Get README (API Key)
+
+```bash
+curl https://api.sassmaker.com/v1/projects/readme \
+  -H "X-Project-Key: pk_your_api_key"
+```
+
+### Update README (API Key)
+
+```bash
+curl -X PUT https://api.sassmaker.com/v1/projects/readme \
+  -H "Content-Type: application/json" \
+  -H "X-Project-Key: pk_your_api_key" \
+  -d '{ "content": "# My Project\n\nSetup instructions here..." }'
+```
+
+### SDK Usage
+
+```typescript
+import { SaaSMakerClient } from '@saas-maker/sdk';
+
+const client = new SaaSMakerClient({ apiKey: 'pk_your_api_key' });
+
+// Read
+const { readme } = await client.projects.getReadme();
+
+// Write
+await client.projects.updateReadme('# My Project\n\nUpdated docs.');
+```
+
+## Dashboard Endpoints (Session Auth)
+
+These require a session Bearer token (used by the dashboard UI):
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/v1/projects` | List all projects |
+| POST | `/v1/projects` | Create a project |
+| GET | `/v1/projects/by-slug/:slug` | Get project by slug |
+| PATCH | `/v1/projects/:id` | Update project (name, rate limits) |
+| DELETE | `/v1/projects/:id` | Delete project |
+| GET | `/v1/projects/:id/readme` | Get README |
+| PUT | `/v1/projects/:id/readme` | Update README |
+
+## Rate Limiting
+
+Each project has configurable rate limiting for API-key-authenticated requests:
+
+- `rate_limit_rpm` — Requests per minute (default: 60)
+- `rate_limit_enabled` — Enable/disable rate limiting (default: true)
+
+Configure via the dashboard settings page or the PATCH endpoint:
+
+```bash
+curl -X PATCH https://api.sassmaker.com/v1/projects/:id \
+  -H "Authorization: Bearer your_session_token" \
+  -H "Content-Type: application/json" \
+  -d '{ "rate_limit_rpm": 120 }'
+```
+
+Rate-limited responses return `429 Too Many Requests` with headers:
+- `X-RateLimit-Limit` — Configured RPM
+- `X-RateLimit-Remaining` — Requests remaining in window
+- `Retry-After` — Seconds until window resets
+
+## CLI
+
+```bash
+saasmaker projects list
+saasmaker projects create --name "My App"
+saasmaker projects update --id <id> --name "New Name"
+saasmaker projects delete --id <id> --force
+```
 
 ---
 
@@ -3614,6 +3811,62 @@ https://app.sassmaker.com/t/[project-slug]
 ```
 
 This is useful for email campaigns and onboarding flows where embedding a React component is not practical.
+
+---
+
+Drop-in React component for collecting waitlist signups. Works with the Waitlist service API.
+
+## Installation
+
+```bash
+npm install @saas-maker/waitlist
+```
+
+## Usage
+
+```tsx
+import { WaitlistWidget } from '@saas-maker/waitlist';
+
+function App() {
+  return (
+    <WaitlistWidget
+      projectId="pk_your_api_key"
+      apiBaseUrl="https://api.sassmaker.com"
+    />
+  );
+}
+```
+
+## API
+
+The widget calls these endpoints:
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/v1/waitlist` | Sign up (email required) |
+| GET | `/v1/waitlist/count` | Get total signups |
+
+## SDK Alternative
+
+```typescript
+import { SaaSMakerClient } from '@saas-maker/sdk';
+
+const client = new SaaSMakerClient({ apiKey: 'pk_your_api_key' });
+
+// Add to waitlist
+await client.waitlist.join({ email: 'user@example.com' });
+
+// Get count
+const { count } = await client.waitlist.getCount();
+```
+
+## CLI
+
+```bash
+saasmaker waitlist list
+saasmaker waitlist count
+saasmaker waitlist delete <id>
+```
 
 ---
 
