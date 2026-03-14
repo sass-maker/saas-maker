@@ -29,11 +29,11 @@ export interface FeedbackDatabase {
   getUserById(id: string): Promise<UserRecord | null>;
 
   // Projects
-  createProject(input: { id: string; name: string; slug: string; api_key: string; owner_id: string }): Promise<ProjectRecord>;
+  createProject(input: { id: string; name: string; slug: string; api_key: string; owner_id: string; source?: string }): Promise<ProjectRecord>;
   getProjectBySlug(slug: string): Promise<ProjectRecord | null>;
   getProjectByApiKey(apiKey: string): Promise<ProjectRecord | null>;
   getProjectById(id: string): Promise<ProjectRecord | null>;
-  listProjectsByOwner(ownerId: string): Promise<ProjectRecord[]>;
+  listProjectsByOwner(ownerId: string, source?: string): Promise<ProjectRecord[]>;
   updateProject(id: string, input: Partial<Pick<ProjectRecord, 'name' | 'embedding_model' | 'rate_limit_rpm' | 'rate_limit_enabled' | 'readme'>>): Promise<ProjectRecord | null>;
   deleteProject(id: string): Promise<boolean>;
 

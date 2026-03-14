@@ -77,9 +77,10 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
 
     // --- Projects ---
     async createProject(input) {
+      const source = input.source || 'dashboard';
       const [row] = await sql`
-        INSERT INTO projects (id, name, slug, api_key, owner_id)
-        VALUES (${input.id}, ${input.name}, ${input.slug}, ${input.api_key}, ${input.owner_id})
+        INSERT INTO projects (id, name, slug, api_key, owner_id, source)
+        VALUES (${input.id}, ${input.name}, ${input.slug}, ${input.api_key}, ${input.owner_id}, ${source})
         RETURNING *
       `;
       return row as ProjectRecord;
@@ -100,8 +101,13 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
       return (row as ProjectRecord) || null;
     },
 
-    async listProjectsByOwner(ownerId) {
-      const rows = await sql`SELECT * FROM projects WHERE owner_id = ${ownerId} ORDER BY created_at DESC`;
+    async listProjectsByOwner(ownerId, source) {
+      if (source === 'all') {
+        const rows = await sql`SELECT * FROM projects WHERE owner_id = ${ownerId} ORDER BY created_at DESC`;
+        return rows as unknown as ProjectRecord[];
+      }
+      const filterSource = source || 'dashboard';
+      const rows = await sql`SELECT * FROM projects WHERE owner_id = ${ownerId} AND source = ${filterSource} ORDER BY created_at DESC`;
       return rows as unknown as ProjectRecord[];
     },
 
