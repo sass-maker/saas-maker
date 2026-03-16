@@ -14,9 +14,10 @@ binding = "AI"
 binding = "FEEDBACK_IMAGES"
 bucket_name = "saasmaker-feedback-images"
 
-[[hyperdrive]]
-binding = "HYPERDRIVE"
-id = "8fb9b798a1804fa9bcd87c219f547656"
+[[d1_databases]]
+binding = "DB"
+database_name = "saasmaker-db"
+database_id = "4fe6cffc-593a-4540-9577-1c33e8c64491"
 
 # Custom domain — requires sassmaker.com on Cloudflare DNS
 [[routes]]

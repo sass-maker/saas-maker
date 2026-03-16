@@ -17,7 +17,7 @@ waitlist.post('/', requireApiKey, async (c) => {
   if (!body.email?.trim()) return c.json({ error: 'Email is required' }, 400);
   if (!EMAIL_RE.test(body.email.trim())) return c.json({ error: 'Invalid email format' }, 400);
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
 
   try {
     const entry = await db.createWaitlistEntry({
@@ -38,7 +38,7 @@ waitlist.post('/', requireApiKey, async (c) => {
 // Public: count (API key)
 waitlist.get('/count', requireApiKey, async (c) => {
   const projectId = c.get('projectId')!;
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const count = await db.getWaitlistCount(projectId);
   return c.json({ count });
 });
@@ -50,7 +50,7 @@ waitlist.get('/', requireSession, async (c) => {
   if (!projectId) return c.json({ error: 'project_id query param is required' }, 400);
 
   const page = parseInt(c.req.query('page') || '1', 10);
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
 
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
@@ -63,7 +63,7 @@ waitlist.get('/', requireSession, async (c) => {
 waitlist.delete('/:id', requireSession, async (c) => {
   const userId = c.get('userId')!;
   const entryId = c.req.param('id');
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
 
   const projectId = c.req.query('project_id');
   if (!projectId) return c.json({ error: 'project_id query param is required' }, 400);

@@ -11,7 +11,7 @@ const VALID_COLUMNS: RoadmapColumn[] = ['backlog', 'planned', 'in_progress', 'do
 // Public: list public roadmap items by project slug
 roadmap.get('/public/:slug', async (c) => {
   const slug = c.req.param('slug');
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectBySlug(slug);
   if (!project) return c.json({ error: 'Project not found' }, 404);
 
@@ -28,7 +28,7 @@ roadmap.post('/public/:slug/:id/vote', async (c) => {
   if (!body.user_identifier?.trim()) return c.json({ error: 'user_identifier is required' }, 400);
   if (![1, -1].includes(body.vote)) return c.json({ error: 'vote must be 1 or -1' }, 400);
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectBySlug(slug);
   if (!project) return c.json({ error: 'Project not found' }, 404);
 
@@ -55,7 +55,7 @@ roadmap.delete('/public/:slug/:id/vote', async (c) => {
 
   if (!userIdentifier) return c.json({ error: 'user_identifier query param is required' }, 400);
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectBySlug(slug);
   if (!project) return c.json({ error: 'Project not found' }, 404);
 
@@ -70,7 +70,7 @@ roadmap.get('/dashboard/:projectId', requireSession, async (c) => {
   const userId = c.get('userId')!;
   const projectId = c.req.param('projectId');
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
@@ -83,7 +83,7 @@ roadmap.post('/dashboard/:projectId', requireSession, async (c) => {
   const userId = c.get('userId')!;
   const projectId = c.req.param('projectId');
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
@@ -115,7 +115,7 @@ roadmap.post('/dashboard/:projectId/from-feedback/:feedbackId', requireSession, 
   const projectId = c.req.param('projectId');
   const feedbackId = c.req.param('feedbackId');
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
@@ -147,7 +147,7 @@ roadmap.patch('/dashboard/:projectId/:id', requireSession, async (c) => {
   const projectId = c.req.param('projectId');
   const itemId = c.req.param('id');
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
@@ -177,7 +177,7 @@ roadmap.delete('/dashboard/:projectId/:id', requireSession, async (c) => {
   const projectId = c.req.param('projectId');
   const itemId = c.req.param('id');
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
@@ -193,7 +193,7 @@ roadmap.post('/dashboard/:projectId/reorder', requireSession, async (c) => {
   const userId = c.get('userId')!;
   const projectId = c.req.param('projectId');
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 

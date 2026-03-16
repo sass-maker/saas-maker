@@ -17,7 +17,7 @@ auth.get('/session', async (c) => {
     return c.json({ authenticated: false }, 401);
   }
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const user = await db.upsertUser({
     id: payload.sub,
     email: payload.email,

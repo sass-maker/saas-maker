@@ -4,8 +4,7 @@ export type Bindings = {
   AUTH_SECRET: string;
   APP_BASE_URL: string;
   CORS_ORIGIN: string;
-  DATABASE_URL: string;
-  HYPERDRIVE: Hyperdrive;
+  DB: D1Database;
   FEEDBACK_IMAGES: R2Bucket;
   RESEND_API_KEY: string;
   NOTIFICATION_FROM_EMAIL: string;

@@ -40,7 +40,7 @@ feedback.post('/', requireApiKey, async (c) => {
   if (!body.submitter_email?.trim()) return c.json({ error: 'Email is required' }, 400);
   if (!VALID_TYPES.includes(body.type)) return c.json({ error: 'Invalid type' }, 400);
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
 
   const record = await db.createFeedback({
     id: crypto.randomUUID(),
@@ -89,7 +89,7 @@ feedback.get('/', requireApiKey, async (c) => {
   if (type && !VALID_TYPES.includes(type)) return c.json({ error: 'Invalid type filter' }, 400);
   if (status && !isValidStatus(status)) return c.json({ error: 'Invalid status filter' }, 400);
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const result = await db.listFeedback(projectId, { type, status, sort, page, limit: PAGE_SIZE });
 
   return c.json({ data: result.data, total: result.total, page, limit: PAGE_SIZE });
@@ -107,7 +107,7 @@ feedback.get('/inbox/:projectId', requireSession, async (c) => {
   if (type && !VALID_TYPES.includes(type)) return c.json({ error: 'Invalid type filter' }, 400);
   if (status && !isValidStatus(status)) return c.json({ error: 'Invalid status filter' }, 400);
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
 
   // Verify ownership
   const project = await db.getProjectById(projectId);
@@ -123,7 +123,7 @@ feedback.get('/board', requireSession, async (c) => {
   const userId = c.get('userId')!;
   const sort = (c.req.query('sort') || 'upvotes') as 'newest' | 'upvotes';
   const status = c.req.query('status') as string | undefined;
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
 
   // Get all projects owned by user
   const projects = await db.listProjectsByOwner(userId, 'dashboard');
@@ -177,7 +177,7 @@ feedback.get('/by-project/:slug', async (c) => {
   if (type && !VALID_TYPES.includes(type)) return c.json({ error: 'Invalid type filter' }, 400);
   if (status && !isValidStatus(status)) return c.json({ error: 'Invalid status filter' }, 400);
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectBySlug(slug);
   if (!project) return c.json({ error: 'Project not found' }, 404);
 
@@ -192,7 +192,7 @@ feedback.post('/:id/upvote', requireSession, async (c) => {
   const feedbackId = c.req.param('id');
   const userId = c.get('userId')!;
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const existing = await db.getFeedbackById(feedbackId);
   if (!existing) return c.json({ error: 'Feedback not found' }, 404);
 
@@ -211,7 +211,7 @@ feedback.delete('/:id/upvote', requireSession, async (c) => {
   const feedbackId = c.req.param('id');
   const userId = c.get('userId')!;
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const currentVote = await db.getUserVote(feedbackId, userId);
   if (currentVote !== 'up') return c.json({ error: 'Upvote not found' }, 404);
 
@@ -225,7 +225,7 @@ feedback.post('/:id/downvote', requireSession, async (c) => {
   const feedbackId = c.req.param('id');
   const userId = c.get('userId')!;
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const existing = await db.getFeedbackById(feedbackId);
   if (!existing) return c.json({ error: 'Feedback not found' }, 404);
 
@@ -244,7 +244,7 @@ feedback.delete('/:id/downvote', requireSession, async (c) => {
   const feedbackId = c.req.param('id');
   const userId = c.get('userId')!;
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const currentVote = await db.getUserVote(feedbackId, userId);
   if (currentVote !== 'down') return c.json({ error: 'Downvote not found' }, 404);
 
@@ -260,7 +260,7 @@ feedback.patch('/:id', requireSession, async (c) => {
   const body = (await c.req.json()) as { status: AnyFeedbackStatus };
   if (!body.status || !isValidStatus(body.status)) return c.json({ error: 'Invalid status' }, 400);
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
 
   // Verify ownership: feedback -> project -> owner
   const existing = await db.getFeedbackById(feedbackId);
@@ -278,7 +278,7 @@ feedback.delete('/:id', requireSession, async (c) => {
   const userId = c.get('userId')!;
   const feedbackId = c.req.param('id');
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
 
   // Verify ownership: feedback -> project -> owner
   const existing = await db.getFeedbackById(feedbackId);

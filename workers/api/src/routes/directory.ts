@@ -14,7 +14,7 @@ directory.get('/', async (c) => {
   const page = Math.max(1, parseInt(c.req.query('page') || '1', 10));
   const tag = c.req.query('tag') || undefined;
   const search = c.req.query('search') || undefined;
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const result = await db.listDirectoryListings(page, PAGE_SIZE, tag, search);
   return c.json({ data: result.data, total: result.total, page, limit: PAGE_SIZE });
 });
@@ -29,7 +29,7 @@ directory.post('/', async (c) => {
   if (!URL_RE.test(body.url.trim())) return c.json({ error: 'Invalid URL' }, 400);
   if (body.tagline.length > 120) return c.json({ error: 'tagline must be 120 characters or fewer' }, 400);
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const listing = await db.createDirectoryListing({
     id: crypto.randomUUID(),
     name: body.name.trim(),
@@ -55,7 +55,7 @@ directory.post('/claim', requireApiKey, async (c) => {
   if (!body.url?.trim()) return c.json({ error: 'url is required' }, 400);
   if (!URL_RE.test(body.url.trim())) return c.json({ error: 'Invalid URL' }, 400);
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
 
   // Check if project already has a listing
   const existing = await db.getDirectoryListingByProjectId(projectId);
@@ -79,7 +79,7 @@ directory.post('/claim', requireApiKey, async (c) => {
 // Authenticated: verify badge is present on the project's site
 directory.post('/verify-badge', requireApiKey, async (c) => {
   const projectId = c.get('projectId')!;
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
 
   const listing = await db.getDirectoryListingByProjectId(projectId);
   if (!listing) return c.json({ error: 'No directory listing found for this project' }, 404);

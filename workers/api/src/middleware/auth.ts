@@ -60,7 +60,7 @@ export const requireSession = createMiddleware<{ Bindings: Bindings; Variables: 
     }
 
     const token = authHeader.slice(7);
-    const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+    const db = getDb(c.env.DB);
 
     // Try CLI token first (sm_ prefix)
     if (token.startsWith('sm_')) {
@@ -93,7 +93,7 @@ export const requireApiKeyOrSession = createMiddleware<{ Bindings: Bindings; Var
   async (c, next) => {
     const apiKey = c.req.header('X-Project-Key');
     if (apiKey) {
-      const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+      const db = getDb(c.env.DB);
       const project = await db.getProjectByApiKey(apiKey);
       if (!project) return c.json({ error: 'Invalid API key' }, 401);
       c.set('projectId', project.id);
@@ -108,7 +108,7 @@ export const requireApiKeyOrSession = createMiddleware<{ Bindings: Bindings; Var
     }
 
     const token = authHeader.slice(7);
-    const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+    const db = getDb(c.env.DB);
 
     if (token.startsWith('sm_')) {
       const cliToken = await db.getCliTokenUser(token);
@@ -139,7 +139,7 @@ export const requireApiKey = createMiddleware<{ Bindings: Bindings; Variables: V
     const apiKey = c.req.header('X-Project-Key');
     if (!apiKey) return c.json({ error: 'Missing X-Project-Key header' }, 401);
 
-    const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+    const db = getDb(c.env.DB);
     const project = await db.getProjectByApiKey(apiKey);
     if (!project) return c.json({ error: 'Invalid API key' }, 401);
 

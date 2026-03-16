@@ -41,7 +41,7 @@ aiGateway.get('/config/:projectId', requireSession, async (c) => {
   const userId = c.get('userId')!;
   const projectId = c.req.param('projectId');
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
 
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
@@ -59,7 +59,7 @@ aiGateway.put('/config/:projectId', requireSession, async (c) => {
   const userId = c.get('userId')!;
   const projectId = c.req.param('projectId');
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
 
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
@@ -87,7 +87,7 @@ aiGateway.delete('/config/:projectId', requireSession, async (c) => {
   const userId = c.get('userId')!;
   const projectId = c.req.param('projectId');
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
 
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
@@ -104,7 +104,7 @@ aiGateway.get('/usage/:projectId', requireSession, async (c) => {
   const projectId = c.req.param('projectId');
   const days = parseInt(c.req.query('days') || '30', 10);
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
 
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
@@ -119,7 +119,7 @@ aiGateway.get('/requests/:projectId', requireSession, async (c) => {
   const limit = parseInt(c.req.query('limit') || '50', 10);
   const offset = parseInt(c.req.query('offset') || '0', 10);
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
 
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
@@ -132,7 +132,7 @@ aiGateway.get('/requests/:projectId', requireSession, async (c) => {
 
 aiGateway.post('/chat/completions', requireApiKey, async (c) => {
   const projectId = c.get('projectId')!;
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
 
   const projectConfig = await db.getProjectAIConfig(projectId);
   const config = resolveConfig(projectConfig, c.env);
@@ -193,7 +193,7 @@ aiGateway.post('/chat/completions', requireApiKey, async (c) => {
 
 aiGateway.post('/embeddings', requireApiKey, async (c) => {
   const projectId = c.get('projectId')!;
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
 
   const projectConfig = await db.getProjectAIConfig(projectId);
   const config = resolveConfig(projectConfig, c.env);
@@ -234,7 +234,7 @@ aiGateway.post('/embeddings', requireApiKey, async (c) => {
 
 aiGateway.post('/rag', requireApiKey, async (c) => {
   const projectId = c.get('projectId')!;
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
 
   const projectConfig = await db.getProjectAIConfig(projectId);
   const config = resolveConfig(projectConfig, c.env);

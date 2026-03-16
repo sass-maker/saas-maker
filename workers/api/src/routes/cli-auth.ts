@@ -8,7 +8,7 @@ const cliAuth = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 // Step 1: CLI requests a code (no auth)
 cliAuth.post('/code', async (c) => {
   const code = crypto.randomUUID().replace(/-/g, '').slice(0, 16);
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   await db.createCliAuthCode(code);
 
   const dashboardUrl = c.env.APP_BASE_URL || 'http://localhost:3000';
@@ -25,7 +25,7 @@ cliAuth.post('/approve', requireSession, async (c) => {
   const { code } = await c.req.json();
   if (!code) return c.json({ error: 'code is required' }, 400);
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const entry = await db.getCliAuthCode(code);
   if (!entry || entry.status !== 'pending') {
     return c.json({ error: 'Invalid or expired code' }, 400);
@@ -47,7 +47,7 @@ cliAuth.get('/poll', async (c) => {
   const code = c.req.query('code');
   if (!code) return c.json({ error: 'code is required' }, 400);
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const entry = await db.getCliAuthCode(code);
   if (!entry) return c.json({ error: 'Invalid code' }, 404);
 

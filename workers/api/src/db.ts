@@ -1,4 +1,3 @@
-import postgres from 'postgres';
 import type { FeedbackDatabase } from '@saas-maker/db';
 import type {
   FeedbackRecord,
@@ -33,128 +32,135 @@ function toFeedbackRecord(row: Record<string, unknown>): FeedbackRecord {
   };
 }
 
-export function createDatabase(databaseUrl: string, useSSL = true): FeedbackDatabase {
-  const sql = postgres(databaseUrl, { ssl: useSSL ? 'require' : false });
+function cosineSimilarity(a: number[], b: number[]): number {
+  let dot = 0;
+  let magA = 0;
+  let magB = 0;
+  for (let i = 0; i < a.length; i++) {
+    dot += a[i] * b[i];
+    magA += a[i] * a[i];
+    magB += b[i] * b[i];
+  }
+  const denom = Math.sqrt(magA) * Math.sqrt(magB);
+  return denom === 0 ? 0 : dot / denom;
+}
 
+export function getDb(d1: D1Database): FeedbackDatabase {
   return {
     // --- Users ---
     async upsertUser(input) {
-      const [row] = await sql`
-        INSERT INTO users (id, email, name, avatar_url)
-        VALUES (${input.id}, ${input.email}, ${input.name}, ${input.avatar_url})
-        ON CONFLICT (email) DO UPDATE SET
-          name = EXCLUDED.name,
-          avatar_url = EXCLUDED.avatar_url
-        RETURNING *
-      `;
-      return row as UserRecord;
+      await d1.prepare(
+        `INSERT INTO users (id, email, name, avatar_url)
+         VALUES (?, ?, ?, ?)
+         ON CONFLICT (email) DO UPDATE SET
+           name = EXCLUDED.name,
+           avatar_url = EXCLUDED.avatar_url`
+      ).bind(input.id, input.email, input.name, input.avatar_url).run();
+      const row = await d1.prepare(`SELECT * FROM users WHERE id = ?`).bind(input.id).first();
+      return row as unknown as UserRecord;
     },
 
     async getUserById(id) {
-      const [row] = await sql`SELECT * FROM users WHERE id = ${id}`;
-      return (row as UserRecord) || null;
+      const row = await d1.prepare(`SELECT * FROM users WHERE id = ?`).bind(id).first();
+      return (row as unknown as UserRecord) || null;
     },
 
     // --- Sessions ---
     async createSession(input) {
-      await sql`
-        INSERT INTO sessions (token_hash, user_id, expires_at)
-        VALUES (${input.token_hash}, ${input.user_id}, ${input.expires_at})
-      `;
+      await d1.prepare(
+        `INSERT INTO sessions (token_hash, user_id, expires_at)
+         VALUES (?, ?, ?)`
+      ).bind(input.token_hash, input.user_id, input.expires_at).run();
     },
 
     async getSessionByTokenHash(tokenHash) {
-      const [row] = await sql`
-        SELECT user_id, expires_at FROM sessions
-        WHERE token_hash = ${tokenHash} AND expires_at > NOW()
-      `;
+      const row = await d1.prepare(
+        `SELECT user_id, expires_at FROM sessions
+         WHERE token_hash = ? AND expires_at > datetime('now')`
+      ).bind(tokenHash).first();
       return row ? { user_id: row.user_id as string, expires_at: row.expires_at as string } : null;
     },
 
     async deleteSession(tokenHash) {
-      await sql`DELETE FROM sessions WHERE token_hash = ${tokenHash}`;
+      await d1.prepare(`DELETE FROM sessions WHERE token_hash = ?`).bind(tokenHash).run();
     },
 
     // --- Projects ---
     async createProject(input) {
       const source = input.source || 'dashboard';
-      const [row] = await sql`
-        INSERT INTO projects (id, name, slug, api_key, owner_id, source)
-        VALUES (${input.id}, ${input.name}, ${input.slug}, ${input.api_key}, ${input.owner_id}, ${source})
-        RETURNING *
-      `;
-      return row as ProjectRecord;
+      await d1.prepare(
+        `INSERT INTO projects (id, name, slug, api_key, owner_id, source)
+         VALUES (?, ?, ?, ?, ?, ?)`
+      ).bind(input.id, input.name, input.slug, input.api_key, input.owner_id, source).run();
+      const row = await d1.prepare(`SELECT * FROM projects WHERE id = ?`).bind(input.id).first();
+      return row as unknown as ProjectRecord;
     },
 
     async getProjectBySlug(slug) {
-      const [row] = await sql`SELECT * FROM projects WHERE slug = ${slug}`;
-      return (row as ProjectRecord) || null;
+      const row = await d1.prepare(`SELECT * FROM projects WHERE slug = ?`).bind(slug).first();
+      return (row as unknown as ProjectRecord) || null;
     },
 
     async getProjectByApiKey(apiKey) {
-      const [row] = await sql`SELECT * FROM projects WHERE api_key = ${apiKey}`;
-      return (row as ProjectRecord) || null;
+      const row = await d1.prepare(`SELECT * FROM projects WHERE api_key = ?`).bind(apiKey).first();
+      return (row as unknown as ProjectRecord) || null;
     },
 
     async getProjectById(id) {
-      const [row] = await sql`SELECT * FROM projects WHERE id = ${id}`;
-      return (row as ProjectRecord) || null;
+      const row = await d1.prepare(`SELECT * FROM projects WHERE id = ?`).bind(id).first();
+      return (row as unknown as ProjectRecord) || null;
     },
 
     async listProjectsByOwner(ownerId, source) {
       if (source === 'all') {
-        const rows = await sql`SELECT * FROM projects WHERE owner_id = ${ownerId} ORDER BY created_at DESC`;
-        return rows as unknown as ProjectRecord[];
+        const { results } = await d1.prepare(
+          `SELECT * FROM projects WHERE owner_id = ? ORDER BY created_at DESC`
+        ).bind(ownerId).all();
+        return results as unknown as ProjectRecord[];
       }
       const filterSource = source || 'dashboard';
-      const rows = await sql`SELECT * FROM projects WHERE owner_id = ${ownerId} AND source = ${filterSource} ORDER BY created_at DESC`;
-      return rows as unknown as ProjectRecord[];
+      const { results } = await d1.prepare(
+        `SELECT * FROM projects WHERE owner_id = ? AND source = ? ORDER BY created_at DESC`
+      ).bind(ownerId, filterSource).all();
+      return results as unknown as ProjectRecord[];
     },
 
     async updateProject(id, input) {
-      const sets = [];
-      if (input.name !== undefined) sets.push(sql`name = ${input.name}`);
-      if (input.embedding_model !== undefined) sets.push(sql`embedding_model = ${input.embedding_model}`);
-      if (input.rate_limit_rpm !== undefined) sets.push(sql`rate_limit_rpm = ${input.rate_limit_rpm}`);
-      if (input.rate_limit_enabled !== undefined) sets.push(sql`rate_limit_enabled = ${input.rate_limit_enabled}`);
-      if (input.readme !== undefined) sets.push(sql`readme = ${input.readme}`);
+      const sets: string[] = [];
+      const values: unknown[] = [];
+      if (input.name !== undefined) { sets.push('name = ?'); values.push(input.name); }
+      if (input.embedding_model !== undefined) { sets.push('embedding_model = ?'); values.push(input.embedding_model); }
+      if (input.rate_limit_rpm !== undefined) { sets.push('rate_limit_rpm = ?'); values.push(input.rate_limit_rpm); }
+      if (input.rate_limit_enabled !== undefined) { sets.push('rate_limit_enabled = ?'); values.push(input.rate_limit_enabled ? 1 : 0); }
+      if (input.readme !== undefined) { sets.push('readme = ?'); values.push(input.readme); }
 
       if (sets.length > 0) {
-        const setClause = sets.reduce((acc, s, i) => i === 0 ? s : sql`${acc}, ${s}`);
-        const [row] = await sql`UPDATE projects SET ${setClause} WHERE id = ${id} RETURNING *`;
-        return (row as ProjectRecord) || null;
+        const sql = `UPDATE projects SET ${sets.join(', ')} WHERE id = ?`;
+        values.push(id);
+        await d1.prepare(sql).bind(...values).run();
       }
-      const [row] = await sql`SELECT * FROM projects WHERE id = ${id}`;
-      return (row as ProjectRecord) || null;
+      const row = await d1.prepare(`SELECT * FROM projects WHERE id = ?`).bind(id).first();
+      return (row as unknown as ProjectRecord) || null;
     },
 
     async deleteProject(id) {
-      const result = await sql`DELETE FROM projects WHERE id = ${id}`;
-      return result.count > 0;
+      const { meta } = await d1.prepare(`DELETE FROM projects WHERE id = ?`).bind(id).run();
+      return (meta.changes ?? 0) > 0;
     },
 
     // --- Feedback ---
     async createFeedback(input) {
-      const [row] = await sql`
-        INSERT INTO feedback (id, project_id, type, status, title, description, image_url, submitter_email, submitter_name)
-        VALUES (
-          ${input.id},
-          ${input.project_id},
-          ${input.type},
-          ${input.status ?? 'new'},
-          ${input.title},
-          ${input.description},
-          ${input.image_url},
-          ${input.submitter_email},
-          ${input.submitter_name}
-        )
-        RETURNING *, NULL::smallint AS viewer_vote
-      `;
+      const status = input.status ?? 'new';
+      await d1.prepare(
+        `INSERT INTO feedback (id, project_id, type, status, title, description, image_url, submitter_email, submitter_name)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
+      ).bind(input.id, input.project_id, input.type, status, input.title, input.description, input.image_url, input.submitter_email, input.submitter_name).run();
+      const row = await d1.prepare(`SELECT *, NULL AS viewer_vote FROM feedback WHERE id = ?`).bind(input.id).first();
       return toFeedbackRecord(row as unknown as Record<string, unknown>);
     },
 
     async getFeedbackById(id) {
-      const [row] = await sql`SELECT *, NULL::smallint AS viewer_vote FROM feedback WHERE id = ${id}`;
+      const row = await d1.prepare(`SELECT *, NULL AS viewer_vote FROM feedback WHERE id = ?`).bind(id).first();
       return row ? toFeedbackRecord(row as unknown as Record<string, unknown>) : null;
     },
 
@@ -162,510 +168,501 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
       const { type, status, sort = 'newest', page = 1, limit = 20 } = query;
       const offset = (page - 1) * limit;
 
-      // Build WHERE conditions
-      const conditions = [sql`f.project_id = ${projectId}`];
-      if (type) conditions.push(sql`f.type = ${type}`);
-      if (status) conditions.push(sql`f.status = ${status}`);
+      const conditions: string[] = ['f.project_id = ?'];
+      const whereBinds: unknown[] = [projectId];
+      if (type) { conditions.push('f.type = ?'); whereBinds.push(type); }
+      if (status) { conditions.push('f.status = ?'); whereBinds.push(status); }
 
-      const where = conditions.reduce((acc, cond, i) =>
-        i === 0 ? cond : sql`${acc} AND ${cond}`
-      );
+      const where = conditions.join(' AND ');
 
-      const orderBy =
-        sort === 'upvotes'
-          ? sql`f.upvote_count DESC, f.created_at DESC`
-          : sql`f.created_at DESC`;
+      const orderBy = sort === 'upvotes'
+        ? 'f.upvote_count DESC, f.created_at DESC'
+        : 'f.created_at DESC';
 
-      const [countResult] = await sql`SELECT COUNT(*)::int as total FROM feedback f WHERE ${where}`;
-      const rows = userId
-        ? await sql`
-            SELECT f.*, v.vote AS viewer_vote
-            FROM feedback f
-            LEFT JOIN feedback_votes v ON v.feedback_id = f.id AND v.user_id = ${userId}
-            WHERE ${where}
-            ORDER BY ${orderBy}
-            LIMIT ${limit} OFFSET ${offset}
-          `
-        : await sql`
-            SELECT f.*, NULL::smallint AS viewer_vote
-            FROM feedback f
-            WHERE ${where}
-            ORDER BY ${orderBy}
-            LIMIT ${limit} OFFSET ${offset}
-          `;
+      // Count
+      const countRow = await d1.prepare(
+        `SELECT COUNT(*) AS total FROM feedback f WHERE ${where}`
+      ).bind(...whereBinds).first();
+      const total = (countRow?.total as number) || 0;
+
+      // Data
+      let rows: unknown[];
+      if (userId) {
+        // In the SQL, the ? for user_id in the LEFT JOIN ON clause comes BEFORE
+        // the ? placeholders in the WHERE clause. Bind order must match.
+        const sql = `SELECT f.*, v.vote AS viewer_vote
+           FROM feedback f
+           LEFT JOIN feedback_votes v ON v.feedback_id = f.id AND v.user_id = ?
+           WHERE ${where}
+           ORDER BY ${orderBy}
+           LIMIT ? OFFSET ?`;
+        const { results } = await d1.prepare(sql).bind(userId, ...whereBinds, limit, offset).all();
+        rows = results;
+      } else {
+        const { results } = await d1.prepare(
+          `SELECT f.*, NULL AS viewer_vote
+           FROM feedback f
+           WHERE ${where}
+           ORDER BY ${orderBy}
+           LIMIT ? OFFSET ?`
+        ).bind(...whereBinds, limit, offset).all();
+        rows = results;
+      }
 
       return {
-        data: (rows as unknown as Record<string, unknown>[]).map(toFeedbackRecord),
-        total: countResult.total,
+        data: (rows as Record<string, unknown>[]).map(toFeedbackRecord),
+        total,
       };
     },
 
     async updateFeedbackStatus(id, status) {
-      const [row] = await sql`
-        UPDATE feedback
-        SET status = ${status}
-        WHERE id = ${id}
-        RETURNING *, NULL::smallint AS viewer_vote
-      `;
+      await d1.prepare(
+        `UPDATE feedback SET status = ? WHERE id = ?`
+      ).bind(status, id).run();
+      const row = await d1.prepare(`SELECT *, NULL AS viewer_vote FROM feedback WHERE id = ?`).bind(id).first();
       return row ? toFeedbackRecord(row as unknown as Record<string, unknown>) : null;
     },
 
     async deleteFeedback(id) {
-      const result = await sql`DELETE FROM feedback WHERE id = ${id}`;
-      return result.count > 0;
+      const { meta } = await d1.prepare(`DELETE FROM feedback WHERE id = ?`).bind(id).run();
+      return (meta.changes ?? 0) > 0;
     },
 
     // --- Votes ---
     async setVote(input) {
-      const [existing] = await sql`
-        SELECT *
-        FROM feedback_votes
-        WHERE feedback_id = ${input.feedback_id} AND user_id = ${input.user_id}
-      `;
+      const existing = await d1.prepare(
+        `SELECT * FROM feedback_votes WHERE feedback_id = ? AND user_id = ?`
+      ).bind(input.feedback_id, input.user_id).first();
 
       if (!existing) {
-        const [inserted] = await sql`
-          INSERT INTO feedback_votes (id, feedback_id, user_id, vote)
-          VALUES (${input.id}, ${input.feedback_id}, ${input.user_id}, ${input.vote})
-          RETURNING *
-        `;
+        await d1.prepare(
+          `INSERT INTO feedback_votes (id, feedback_id, user_id, vote) VALUES (?, ?, ?, ?)`
+        ).bind(input.id, input.feedback_id, input.user_id, input.vote).run();
         if (input.vote === 1) {
-          await sql`UPDATE feedback SET upvote_count = upvote_count + 1 WHERE id = ${input.feedback_id}`;
+          await d1.prepare(`UPDATE feedback SET upvote_count = upvote_count + 1 WHERE id = ?`).bind(input.feedback_id).run();
         } else {
-          await sql`UPDATE feedback SET downvote_count = downvote_count + 1 WHERE id = ${input.feedback_id}`;
+          await d1.prepare(`UPDATE feedback SET downvote_count = downvote_count + 1 WHERE id = ?`).bind(input.feedback_id).run();
         }
-        return inserted as UpvoteRecord;
+        const inserted = await d1.prepare(`SELECT * FROM feedback_votes WHERE id = ?`).bind(input.id).first();
+        return inserted as unknown as UpvoteRecord;
       }
 
       const existingVote = Number(existing.vote) as 1 | -1;
       if (existingVote === input.vote) {
-        return existing as UpvoteRecord;
+        return existing as unknown as UpvoteRecord;
       }
 
-      const [updated] = await sql`
-        UPDATE feedback_votes
-        SET vote = ${input.vote}
-        WHERE id = ${existing.id}
-        RETURNING *
-      `;
+      await d1.prepare(
+        `UPDATE feedback_votes SET vote = ? WHERE id = ?`
+      ).bind(input.vote, existing.id).run();
 
       if (existingVote === 1 && input.vote === -1) {
-        await sql`
-          UPDATE feedback
-          SET upvote_count = GREATEST(upvote_count - 1, 0),
-              downvote_count = downvote_count + 1
-          WHERE id = ${input.feedback_id}
-        `;
+        await d1.prepare(
+          `UPDATE feedback SET upvote_count = MAX(upvote_count - 1, 0), downvote_count = downvote_count + 1 WHERE id = ?`
+        ).bind(input.feedback_id).run();
       } else if (existingVote === -1 && input.vote === 1) {
-        await sql`
-          UPDATE feedback
-          SET downvote_count = GREATEST(downvote_count - 1, 0),
-              upvote_count = upvote_count + 1
-          WHERE id = ${input.feedback_id}
-        `;
+        await d1.prepare(
+          `UPDATE feedback SET downvote_count = MAX(downvote_count - 1, 0), upvote_count = upvote_count + 1 WHERE id = ?`
+        ).bind(input.feedback_id).run();
       }
 
-      return updated as UpvoteRecord;
+      const updated = await d1.prepare(`SELECT * FROM feedback_votes WHERE id = ?`).bind(existing.id).first();
+      return updated as unknown as UpvoteRecord;
     },
 
     async removeVote(feedbackId, userId) {
-      const [existing] = await sql`
-        SELECT *
-        FROM feedback_votes
-        WHERE feedback_id = ${feedbackId} AND user_id = ${userId}
-      `;
+      const existing = await d1.prepare(
+        `SELECT * FROM feedback_votes WHERE feedback_id = ? AND user_id = ?`
+      ).bind(feedbackId, userId).first();
       if (!existing) return false;
 
-      await sql`DELETE FROM feedback_votes WHERE id = ${existing.id}`;
+      await d1.prepare(`DELETE FROM feedback_votes WHERE id = ?`).bind(existing.id).run();
 
       if (Number(existing.vote) === 1) {
-        await sql`
-          UPDATE feedback
-          SET upvote_count = GREATEST(upvote_count - 1, 0)
-          WHERE id = ${feedbackId}
-        `;
+        await d1.prepare(
+          `UPDATE feedback SET upvote_count = MAX(upvote_count - 1, 0) WHERE id = ?`
+        ).bind(feedbackId).run();
       } else {
-        await sql`
-          UPDATE feedback
-          SET downvote_count = GREATEST(downvote_count - 1, 0)
-          WHERE id = ${feedbackId}
-        `;
+        await d1.prepare(
+          `UPDATE feedback SET downvote_count = MAX(downvote_count - 1, 0) WHERE id = ?`
+        ).bind(feedbackId).run();
       }
 
       return true;
     },
 
     async hasUpvoted(feedbackId, userId) {
-      const [row] = await sql`
-        SELECT 1
-        FROM feedback_votes
-        WHERE feedback_id = ${feedbackId} AND user_id = ${userId} AND vote = 1
-      `;
+      const row = await d1.prepare(
+        `SELECT 1 FROM feedback_votes WHERE feedback_id = ? AND user_id = ? AND vote = 1`
+      ).bind(feedbackId, userId).first();
       return !!row;
     },
 
     async hasDownvoted(feedbackId, userId) {
-      const [row] = await sql`
-        SELECT 1
-        FROM feedback_votes
-        WHERE feedback_id = ${feedbackId} AND user_id = ${userId} AND vote = -1
-      `;
+      const row = await d1.prepare(
+        `SELECT 1 FROM feedback_votes WHERE feedback_id = ? AND user_id = ? AND vote = -1`
+      ).bind(feedbackId, userId).first();
       return !!row;
     },
 
     async getUserVote(feedbackId, userId) {
-      const [row] = await sql`
-        SELECT vote
-        FROM feedback_votes
-        WHERE feedback_id = ${feedbackId} AND user_id = ${userId}
-      `;
+      const row = await d1.prepare(
+        `SELECT vote FROM feedback_votes WHERE feedback_id = ? AND user_id = ?`
+      ).bind(feedbackId, userId).first();
       return parseViewerVote(row?.vote);
     },
 
     // --- Vector Memory: Indexes ---
     async createIndex(input) {
-      const [row] = await sql`
-        INSERT INTO knowledge_indexes (id, project_id, name, external_id)
-        VALUES (${input.id}, ${input.project_id}, ${input.name}, ${input.external_id})
-        RETURNING *
-      `;
-      return row as IndexRecord;
+      await d1.prepare(
+        `INSERT INTO knowledge_indexes (id, project_id, name, external_id) VALUES (?, ?, ?, ?)`
+      ).bind(input.id, input.project_id, input.name, input.external_id).run();
+      const row = await d1.prepare(`SELECT * FROM knowledge_indexes WHERE id = ?`).bind(input.id).first();
+      return row as unknown as IndexRecord;
     },
 
     async getIndexById(id) {
-      const [row] = await sql`SELECT * FROM knowledge_indexes WHERE id = ${id}`;
-      return (row as IndexRecord) || null;
+      const row = await d1.prepare(`SELECT * FROM knowledge_indexes WHERE id = ?`).bind(id).first();
+      return (row as unknown as IndexRecord) || null;
     },
 
     async listIndexesByProject(projectId) {
-      const rows = await sql`
-        SELECT i.*, COALESCE(d.cnt, 0)::int AS document_count
-        FROM knowledge_indexes i
-        LEFT JOIN (SELECT index_id, COUNT(*) AS cnt FROM documents GROUP BY index_id) d
-          ON d.index_id = i.id
-        WHERE i.project_id = ${projectId}
-        ORDER BY i.created_at DESC
-      `;
-      return rows as unknown as (IndexRecord & { document_count: number })[];
+      const { results } = await d1.prepare(
+        `SELECT i.*, COALESCE(d.cnt, 0) AS document_count
+         FROM knowledge_indexes i
+         LEFT JOIN (SELECT index_id, COUNT(*) AS cnt FROM documents GROUP BY index_id) d
+           ON d.index_id = i.id
+         WHERE i.project_id = ?
+         ORDER BY i.created_at DESC`
+      ).bind(projectId).all();
+      return results as unknown as (IndexRecord & { document_count: number })[];
     },
 
     async deleteIndex(id) {
-      const result = await sql`DELETE FROM knowledge_indexes WHERE id = ${id}`;
-      return result.count > 0;
+      const { meta } = await d1.prepare(`DELETE FROM knowledge_indexes WHERE id = ?`).bind(id).run();
+      return (meta.changes ?? 0) > 0;
     },
 
     // --- Vector Memory: Documents ---
     async createDocument(input) {
-      const [row] = await sql`
-        INSERT INTO documents (id, index_id, content, metadata)
-        VALUES (${input.id}, ${input.index_id}, ${input.content}, ${JSON.stringify(input.metadata)})
-        RETURNING *
-      `;
-      return row as DocumentRecord;
+      await d1.prepare(
+        `INSERT INTO documents (id, index_id, content, metadata) VALUES (?, ?, ?, ?)`
+      ).bind(input.id, input.index_id, input.content, JSON.stringify(input.metadata)).run();
+      const row = await d1.prepare(`SELECT * FROM documents WHERE id = ?`).bind(input.id).first();
+      return row as unknown as DocumentRecord;
     },
 
     async getDocumentById(id) {
-      const [row] = await sql`SELECT * FROM documents WHERE id = ${id}`;
-      return (row as DocumentRecord) || null;
+      const row = await d1.prepare(`SELECT * FROM documents WHERE id = ?`).bind(id).first();
+      return (row as unknown as DocumentRecord) || null;
     },
 
     async listDocumentsByIndex(indexId, page, limit) {
       const offset = (page - 1) * limit;
-      const [countResult] = await sql`SELECT COUNT(*)::int AS total FROM documents WHERE index_id = ${indexId}`;
-      const rows = await sql`
-        SELECT * FROM documents WHERE index_id = ${indexId}
-        ORDER BY created_at DESC
-        LIMIT ${limit} OFFSET ${offset}
-      `;
-      return { data: rows as unknown as DocumentRecord[], total: countResult.total };
+      const countRow = await d1.prepare(
+        `SELECT COUNT(*) AS total FROM documents WHERE index_id = ?`
+      ).bind(indexId).first();
+      const { results } = await d1.prepare(
+        `SELECT * FROM documents WHERE index_id = ? ORDER BY created_at DESC LIMIT ? OFFSET ?`
+      ).bind(indexId, limit, offset).all();
+      return { data: results as unknown as DocumentRecord[], total: (countRow?.total as number) || 0 };
     },
 
     async deleteDocument(id) {
-      const result = await sql`DELETE FROM documents WHERE id = ${id}`;
-      return result.count > 0;
+      const { meta } = await d1.prepare(`DELETE FROM documents WHERE id = ?`).bind(id).run();
+      return (meta.changes ?? 0) > 0;
     },
 
     // --- Vector Memory: Chunks ---
     async createChunks(chunks) {
       if (chunks.length === 0) return 0;
-      const values = chunks.map(c => ({
-        id: c.id,
-        document_id: c.document_id,
-        index_id: c.index_id,
-        content: c.content,
-        embedding: `[${c.embedding.join(',')}]`,
-        chunk_index: c.chunk_index,
-      }));
-      await sql`
-        INSERT INTO document_chunks ${sql(values, 'id', 'document_id', 'index_id', 'content', 'embedding', 'chunk_index')}
-      `;
+      const stmts = chunks.map(c =>
+        d1.prepare(
+          `INSERT INTO document_chunks (id, document_id, index_id, content, embedding, chunk_index) VALUES (?, ?, ?, ?, ?, ?)`
+        ).bind(c.id, c.document_id, c.index_id, c.content, JSON.stringify(c.embedding), c.chunk_index)
+      );
+      await d1.batch(stmts);
       return chunks.length;
     },
 
     async searchChunks(indexId, queryEmbedding, topK) {
-      const embeddingStr = `[${queryEmbedding.join(',')}]`;
-      const rows = await sql`
-        SELECT c.document_id, c.content, d.metadata,
-               (c.embedding <=> ${embeddingStr}::vector) AS distance
-        FROM document_chunks c
-        JOIN documents d ON d.id = c.document_id
-        WHERE c.index_id = ${indexId}
-        ORDER BY c.embedding <=> ${embeddingStr}::vector
-        LIMIT ${topK}
-      `;
-      return (rows as unknown as { document_id: string; content: string; metadata: Record<string, unknown>; distance: number }[])
-        .map(r => ({
-          document_id: r.document_id,
-          content: r.content,
-          score: 1 - Number(r.distance),
-          metadata: r.metadata,
-        }));
+      const { results: chunkRows } = await d1.prepare(
+        `SELECT c.document_id, c.content, c.embedding, d.metadata
+         FROM document_chunks c
+         JOIN documents d ON d.id = c.document_id
+         WHERE c.index_id = ?`
+      ).bind(indexId).all();
+
+      const scored = chunkRows.map(row => {
+        const storedEmbedding: number[] = JSON.parse(row.embedding as string);
+        const score = cosineSimilarity(queryEmbedding, storedEmbedding);
+        const metadata = typeof row.metadata === 'string' ? JSON.parse(row.metadata) : (row.metadata || {});
+        return {
+          document_id: row.document_id as string,
+          content: row.content as string,
+          score,
+          metadata: metadata as Record<string, unknown>,
+        };
+      });
+
+      scored.sort((a, b) => b.score - a.score);
+      return scored.slice(0, topK);
     },
 
     async deleteChunksByDocument(documentId) {
-      const result = await sql`DELETE FROM document_chunks WHERE document_id = ${documentId}`;
-      return result.count > 0;
+      const { meta } = await d1.prepare(`DELETE FROM document_chunks WHERE document_id = ?`).bind(documentId).run();
+      return (meta.changes ?? 0) > 0;
     },
 
     // --- Waitlist ---
     async createWaitlistEntry(input) {
-      const [posRow] = await sql`
-        SELECT COALESCE(MAX(position), 0) + 1 AS next_pos
-        FROM waitlist_entries WHERE project_id = ${input.project_id}
-      `;
-      const [row] = await sql`
-        INSERT INTO waitlist_entries (id, project_id, email, name, position)
-        VALUES (${input.id}, ${input.project_id}, ${input.email}, ${input.name}, ${posRow.next_pos})
-        RETURNING *
-      `;
-      return row as WaitlistEntryRecord;
+      const posRow = await d1.prepare(
+        `SELECT COALESCE(MAX(position), 0) + 1 AS next_pos FROM waitlist_entries WHERE project_id = ?`
+      ).bind(input.project_id).first();
+      const nextPos = (posRow?.next_pos as number) || 1;
+      await d1.prepare(
+        `INSERT INTO waitlist_entries (id, project_id, email, name, position) VALUES (?, ?, ?, ?, ?)`
+      ).bind(input.id, input.project_id, input.email, input.name, nextPos).run();
+      const row = await d1.prepare(`SELECT * FROM waitlist_entries WHERE id = ?`).bind(input.id).first();
+      return row as unknown as WaitlistEntryRecord;
     },
 
     async getWaitlistCount(projectId) {
-      const [row] = await sql`
-        SELECT COUNT(*)::int AS total FROM waitlist_entries WHERE project_id = ${projectId}
-      `;
-      return row.total;
+      const row = await d1.prepare(
+        `SELECT COUNT(*) AS total FROM waitlist_entries WHERE project_id = ?`
+      ).bind(projectId).first();
+      return (row?.total as number) || 0;
     },
 
     async listWaitlistEntries(projectId, page, limit) {
       const offset = (page - 1) * limit;
-      const [countResult] = await sql`
-        SELECT COUNT(*)::int AS total FROM waitlist_entries WHERE project_id = ${projectId}
-      `;
-      const rows = await sql`
-        SELECT * FROM waitlist_entries WHERE project_id = ${projectId}
-        ORDER BY position ASC
-        LIMIT ${limit} OFFSET ${offset}
-      `;
-      return { data: rows as unknown as WaitlistEntryRecord[], total: countResult.total };
+      const countRow = await d1.prepare(
+        `SELECT COUNT(*) AS total FROM waitlist_entries WHERE project_id = ?`
+      ).bind(projectId).first();
+      const { results } = await d1.prepare(
+        `SELECT * FROM waitlist_entries WHERE project_id = ? ORDER BY position ASC LIMIT ? OFFSET ?`
+      ).bind(projectId, limit, offset).all();
+      return { data: results as unknown as WaitlistEntryRecord[], total: (countRow?.total as number) || 0 };
     },
 
     async deleteWaitlistEntry(id) {
-      const result = await sql`DELETE FROM waitlist_entries WHERE id = ${id}`;
-      return result.count > 0;
+      const { meta } = await d1.prepare(`DELETE FROM waitlist_entries WHERE id = ?`).bind(id).run();
+      return (meta.changes ?? 0) > 0;
     },
 
     // --- Analytics ---
     async createEvent(input) {
-      const [row] = await sql`
-        INSERT INTO analytics_events (id, project_id, name, url, referrer, utm_source, utm_medium, utm_campaign, country, device, browser, screen_width, properties, os, is_bot, session_id, pathname)
-        VALUES (${input.id}, ${input.project_id}, ${input.name}, ${input.url}, ${input.referrer}, ${input.utm_source}, ${input.utm_medium}, ${input.utm_campaign}, ${input.country}, ${input.device}, ${input.browser}, ${input.screen_width}, ${JSON.stringify(input.properties)}, ${input.os}, ${input.is_bot}, ${input.session_id}, ${input.pathname})
-        RETURNING *
-      `;
-      return row as EventRecord;
+      const isBotInt = input.is_bot ? 1 : 0;
+      await d1.prepare(
+        `INSERT INTO analytics_events (id, project_id, name, url, referrer, utm_source, utm_medium, utm_campaign, country, device, browser, screen_width, properties, os, is_bot, session_id, pathname)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+      ).bind(
+        input.id, input.project_id, input.name, input.url, input.referrer,
+        input.utm_source, input.utm_medium, input.utm_campaign, input.country,
+        input.device, input.browser, input.screen_width, JSON.stringify(input.properties),
+        input.os, isBotInt, input.session_id, input.pathname
+      ).run();
+      const row = await d1.prepare(`SELECT * FROM analytics_events WHERE id = ?`).bind(input.id).first();
+      return row as unknown as EventRecord;
     },
 
     async getAnalyticsOverview(projectId, since) {
-      const [row] = await sql`
-        SELECT
-          COUNT(*)::int AS page_views,
-          COUNT(DISTINCT (created_at::date || '|' || COALESCE(country,'') || '|' || COALESCE(device,'') || '|' || COALESCE(browser,'')))::int AS unique_visitors
-        FROM analytics_events
-        WHERE project_id = ${projectId} AND name = 'page_view' AND created_at >= ${since}
-      `;
-      const [topPage] = await sql`
-        SELECT url, COUNT(*)::int AS cnt FROM analytics_events
-        WHERE project_id = ${projectId} AND name = 'page_view' AND created_at >= ${since} AND url IS NOT NULL
-        GROUP BY url ORDER BY cnt DESC LIMIT 1
-      `;
-      const [topRef] = await sql`
-        SELECT referrer, COUNT(*)::int AS cnt FROM analytics_events
-        WHERE project_id = ${projectId} AND name = 'page_view' AND created_at >= ${since} AND referrer IS NOT NULL AND referrer != ''
-        GROUP BY referrer ORDER BY cnt DESC LIMIT 1
-      `;
+      const sinceStr = since.toISOString();
+      const row = await d1.prepare(
+        `SELECT
+           COUNT(*) AS page_views,
+           COUNT(DISTINCT (date(created_at) || '|' || COALESCE(country,'') || '|' || COALESCE(device,'') || '|' || COALESCE(browser,''))) AS unique_visitors
+         FROM analytics_events
+         WHERE project_id = ? AND name = 'page_view' AND created_at >= ?`
+      ).bind(projectId, sinceStr).first();
+      const topPage = await d1.prepare(
+        `SELECT url, COUNT(*) AS cnt FROM analytics_events
+         WHERE project_id = ? AND name = 'page_view' AND created_at >= ? AND url IS NOT NULL
+         GROUP BY url ORDER BY cnt DESC LIMIT 1`
+      ).bind(projectId, sinceStr).first();
+      const topRef = await d1.prepare(
+        `SELECT referrer, COUNT(*) AS cnt FROM analytics_events
+         WHERE project_id = ? AND name = 'page_view' AND created_at >= ? AND referrer IS NOT NULL AND referrer != ''
+         GROUP BY referrer ORDER BY cnt DESC LIMIT 1`
+      ).bind(projectId, sinceStr).first();
       return {
-        page_views: row.page_views,
-        unique_visitors: row.unique_visitors,
-        top_page: topPage?.url || null,
-        top_referrer: topRef?.referrer || null,
+        page_views: (row?.page_views as number) || 0,
+        unique_visitors: (row?.unique_visitors as number) || 0,
+        top_page: (topPage?.url as string) || null,
+        top_referrer: (topRef?.referrer as string) || null,
       };
     },
 
     async getTopPages(projectId, since, limit) {
-      const rows = await sql`
-        SELECT url, COUNT(*)::int AS views FROM analytics_events
-        WHERE project_id = ${projectId} AND name = 'page_view' AND created_at >= ${since} AND url IS NOT NULL
-        GROUP BY url ORDER BY views DESC LIMIT ${limit}
-      `;
-      return rows as unknown as { url: string; views: number }[];
+      const sinceStr = since.toISOString();
+      const { results } = await d1.prepare(
+        `SELECT url, COUNT(*) AS views FROM analytics_events
+         WHERE project_id = ? AND name = 'page_view' AND created_at >= ? AND url IS NOT NULL
+         GROUP BY url ORDER BY views DESC LIMIT ?`
+      ).bind(projectId, sinceStr, limit).all();
+      return results as unknown as { url: string; views: number }[];
     },
 
     async getTopReferrers(projectId, since, limit) {
-      const rows = await sql`
-        SELECT referrer, COUNT(*)::int AS count FROM analytics_events
-        WHERE project_id = ${projectId} AND name = 'page_view' AND created_at >= ${since} AND referrer IS NOT NULL AND referrer != ''
-        GROUP BY referrer ORDER BY count DESC LIMIT ${limit}
-      `;
-      return rows as unknown as { referrer: string; count: number }[];
+      const sinceStr = since.toISOString();
+      const { results } = await d1.prepare(
+        `SELECT referrer, COUNT(*) AS count FROM analytics_events
+         WHERE project_id = ? AND name = 'page_view' AND created_at >= ? AND referrer IS NOT NULL AND referrer != ''
+         GROUP BY referrer ORDER BY count DESC LIMIT ?`
+      ).bind(projectId, sinceStr, limit).all();
+      return results as unknown as { referrer: string; count: number }[];
     },
 
     async getCountryBreakdown(projectId, since, limit) {
-      const rows = await sql`
-        SELECT country, COUNT(*)::int AS count FROM analytics_events
-        WHERE project_id = ${projectId} AND created_at >= ${since} AND country IS NOT NULL
-        GROUP BY country ORDER BY count DESC LIMIT ${limit}
-      `;
-      return rows as unknown as { country: string; count: number }[];
+      const sinceStr = since.toISOString();
+      const { results } = await d1.prepare(
+        `SELECT country, COUNT(*) AS count FROM analytics_events
+         WHERE project_id = ? AND created_at >= ? AND country IS NOT NULL
+         GROUP BY country ORDER BY count DESC LIMIT ?`
+      ).bind(projectId, sinceStr, limit).all();
+      return results as unknown as { country: string; count: number }[];
     },
 
     async getDeviceBreakdown(projectId, since) {
-      const rows = await sql`
-        SELECT device, COUNT(*)::int AS count FROM analytics_events
-        WHERE project_id = ${projectId} AND created_at >= ${since} AND device IS NOT NULL
-        GROUP BY device ORDER BY count DESC
-      `;
-      return rows as unknown as { device: string; count: number }[];
+      const sinceStr = since.toISOString();
+      const { results } = await d1.prepare(
+        `SELECT device, COUNT(*) AS count FROM analytics_events
+         WHERE project_id = ? AND created_at >= ? AND device IS NOT NULL
+         GROUP BY device ORDER BY count DESC`
+      ).bind(projectId, sinceStr).all();
+      return results as unknown as { device: string; count: number }[];
     },
 
     async getCustomEventCounts(projectId, since, limit) {
-      const rows = await sql`
-        SELECT name, COUNT(*)::int AS count FROM analytics_events
-        WHERE project_id = ${projectId} AND created_at >= ${since} AND name != 'page_view'
-        GROUP BY name ORDER BY count DESC LIMIT ${limit}
-      `;
-      return rows as unknown as { name: string; count: number }[];
+      const sinceStr = since.toISOString();
+      const { results } = await d1.prepare(
+        `SELECT name, COUNT(*) AS count FROM analytics_events
+         WHERE project_id = ? AND created_at >= ? AND name != 'page_view'
+         GROUP BY name ORDER BY count DESC LIMIT ?`
+      ).bind(projectId, sinceStr, limit).all();
+      return results as unknown as { name: string; count: number }[];
     },
 
     async getAnalyticsDashboard(projectId, since, includeBots, isToday) {
-      const botFilter = includeBots ? sql`` : sql`AND is_bot = false`;
+      const sinceStr = since.toISOString();
+      const botClause = includeBots ? '' : 'AND is_bot = 0';
       const timeBucket = isToday
-        ? sql`DATE_TRUNC('hour', created_at)`
-        : sql`DATE_TRUNC('day', created_at)`;
+        ? `strftime('%Y-%m-%dT%H:00:00', created_at)`
+        : `strftime('%Y-%m-%d', created_at)`;
 
       const [
-        summaryRows,
-        timeseriesRows,
-        pagesRows,
-        referrersRows,
-        countriesRows,
-        devicesRows,
-        browsersRows,
-        osRows,
-        eventsRows,
-        botStatsRows,
+        summaryRow,
+        { results: timeseriesRows },
+        { results: pagesRows },
+        { results: referrersRows },
+        { results: countriesRows },
+        { results: devicesRows },
+        { results: browsersRows },
+        { results: osRows },
+        { results: eventsRows },
+        { results: botStatsRows },
         botTotalRow,
       ] = await Promise.all([
         // Summary
-        sql`
-          SELECT
-            COALESCE(SUM(session_pages), 0)::int AS page_views,
-            COUNT(*)::int AS unique_visitors,
-            COALESCE(
-              ROUND(
-                COUNT(*) FILTER (WHERE session_pages = 1)::numeric * 100.0
-                / NULLIF(COUNT(*), 0),
-                1
-              ), 0
-            )::float AS bounce_rate,
-            COALESCE(ROUND(AVG(session_pages)::numeric, 1), 0)::float AS avg_session_pages
-          FROM (
-            SELECT session_id, COUNT(*)::int AS session_pages
-            FROM analytics_events
-            WHERE project_id = ${projectId} AND name = 'page_view' AND created_at >= ${since} ${botFilter}
-            GROUP BY session_id
-          ) sessions
-        `,
+        d1.prepare(
+          `SELECT
+             COALESCE(SUM(session_pages), 0) AS page_views,
+             COUNT(*) AS unique_visitors,
+             COALESCE(
+               ROUND(
+                 CAST(SUM(CASE WHEN session_pages = 1 THEN 1 ELSE 0 END) AS REAL) * 100.0
+                 / MAX(COUNT(*), 1),
+                 1
+               ), 0
+             ) AS bounce_rate,
+             COALESCE(ROUND(AVG(session_pages), 1), 0) AS avg_session_pages
+           FROM (
+             SELECT session_id, COUNT(*) AS session_pages
+             FROM analytics_events
+             WHERE project_id = ? AND name = 'page_view' AND created_at >= ? ${botClause}
+             GROUP BY session_id
+           ) sessions`
+        ).bind(projectId, sinceStr).first(),
         // Timeseries
-        sql`
-          SELECT
-            ${timeBucket} AS date,
-            COUNT(*)::int AS views,
-            COUNT(DISTINCT session_id)::int AS visitors
-          FROM analytics_events
-          WHERE project_id = ${projectId} AND name = 'page_view' AND created_at >= ${since} ${botFilter}
-          GROUP BY 1
-          ORDER BY 1
-        `,
+        d1.prepare(
+          `SELECT
+             ${timeBucket} AS date,
+             COUNT(*) AS views,
+             COUNT(DISTINCT session_id) AS visitors
+           FROM analytics_events
+           WHERE project_id = ? AND name = 'page_view' AND created_at >= ? ${botClause}
+           GROUP BY 1
+           ORDER BY 1`
+        ).bind(projectId, sinceStr).all(),
         // Pages
-        sql`
-          SELECT pathname, COUNT(*)::int AS views FROM analytics_events
-          WHERE project_id = ${projectId} AND name = 'page_view' AND created_at >= ${since} AND pathname IS NOT NULL ${botFilter}
-          GROUP BY pathname ORDER BY views DESC LIMIT 10
-        `,
+        d1.prepare(
+          `SELECT pathname, COUNT(*) AS views FROM analytics_events
+           WHERE project_id = ? AND name = 'page_view' AND created_at >= ? AND pathname IS NOT NULL ${botClause}
+           GROUP BY pathname ORDER BY views DESC LIMIT 10`
+        ).bind(projectId, sinceStr).all(),
         // Referrers
-        sql`
-          SELECT referrer, COUNT(*)::int AS count FROM analytics_events
-          WHERE project_id = ${projectId} AND name = 'page_view' AND created_at >= ${since} AND referrer IS NOT NULL AND referrer != '' ${botFilter}
-          GROUP BY referrer ORDER BY count DESC LIMIT 10
-        `,
+        d1.prepare(
+          `SELECT referrer, COUNT(*) AS count FROM analytics_events
+           WHERE project_id = ? AND name = 'page_view' AND created_at >= ? AND referrer IS NOT NULL AND referrer != '' ${botClause}
+           GROUP BY referrer ORDER BY count DESC LIMIT 10`
+        ).bind(projectId, sinceStr).all(),
         // Countries
-        sql`
-          SELECT country, COUNT(*)::int AS count FROM analytics_events
-          WHERE project_id = ${projectId} AND created_at >= ${since} AND country IS NOT NULL ${botFilter}
-          GROUP BY country ORDER BY count DESC LIMIT 10
-        `,
+        d1.prepare(
+          `SELECT country, COUNT(*) AS count FROM analytics_events
+           WHERE project_id = ? AND created_at >= ? AND country IS NOT NULL ${botClause}
+           GROUP BY country ORDER BY count DESC LIMIT 10`
+        ).bind(projectId, sinceStr).all(),
         // Devices
-        sql`
-          SELECT device, COUNT(*)::int AS count FROM analytics_events
-          WHERE project_id = ${projectId} AND created_at >= ${since} AND device IS NOT NULL ${botFilter}
-          GROUP BY device ORDER BY count DESC LIMIT 10
-        `,
+        d1.prepare(
+          `SELECT device, COUNT(*) AS count FROM analytics_events
+           WHERE project_id = ? AND created_at >= ? AND device IS NOT NULL ${botClause}
+           GROUP BY device ORDER BY count DESC LIMIT 10`
+        ).bind(projectId, sinceStr).all(),
         // Browsers
-        sql`
-          SELECT browser, COUNT(*)::int AS count FROM analytics_events
-          WHERE project_id = ${projectId} AND created_at >= ${since} AND browser IS NOT NULL ${botFilter}
-          GROUP BY browser ORDER BY count DESC LIMIT 10
-        `,
+        d1.prepare(
+          `SELECT browser, COUNT(*) AS count FROM analytics_events
+           WHERE project_id = ? AND created_at >= ? AND browser IS NOT NULL ${botClause}
+           GROUP BY browser ORDER BY count DESC LIMIT 10`
+        ).bind(projectId, sinceStr).all(),
         // OS
-        sql`
-          SELECT os, COUNT(*)::int AS count FROM analytics_events
-          WHERE project_id = ${projectId} AND created_at >= ${since} AND os IS NOT NULL ${botFilter}
-          GROUP BY os ORDER BY count DESC LIMIT 10
-        `,
+        d1.prepare(
+          `SELECT os, COUNT(*) AS count FROM analytics_events
+           WHERE project_id = ? AND created_at >= ? AND os IS NOT NULL ${botClause}
+           GROUP BY os ORDER BY count DESC LIMIT 10`
+        ).bind(projectId, sinceStr).all(),
         // Custom events
-        sql`
-          SELECT name, COUNT(*)::int AS count FROM analytics_events
-          WHERE project_id = ${projectId} AND created_at >= ${since} AND name != 'page_view' ${botFilter}
-          GROUP BY name ORDER BY count DESC LIMIT 10
-        `,
+        d1.prepare(
+          `SELECT name, COUNT(*) AS count FROM analytics_events
+           WHERE project_id = ? AND created_at >= ? AND name != 'page_view' ${botClause}
+           GROUP BY name ORDER BY count DESC LIMIT 10`
+        ).bind(projectId, sinceStr).all(),
         // Bot stats (always full data, ignore includeBots)
-        sql`
-          SELECT browser AS name, COUNT(*)::int AS count FROM analytics_events
-          WHERE project_id = ${projectId} AND created_at >= ${since} AND is_bot = true
-          GROUP BY browser ORDER BY count DESC LIMIT 10
-        `,
+        d1.prepare(
+          `SELECT browser AS name, COUNT(*) AS count FROM analytics_events
+           WHERE project_id = ? AND created_at >= ? AND is_bot = 1
+           GROUP BY browser ORDER BY count DESC LIMIT 10`
+        ).bind(projectId, sinceStr).all(),
         // Bot total for percentage
-        sql`
-          SELECT
-            COUNT(*) FILTER (WHERE is_bot = true)::int AS bot_count,
-            COUNT(*)::int AS total
-          FROM analytics_events
-          WHERE project_id = ${projectId} AND created_at >= ${since}
-        `,
+        d1.prepare(
+          `SELECT
+             SUM(CASE WHEN is_bot = 1 THEN 1 ELSE 0 END) AS bot_count,
+             COUNT(*) AS total
+           FROM analytics_events
+           WHERE project_id = ? AND created_at >= ?`
+        ).bind(projectId, sinceStr).first(),
       ]);
 
-      const summary = summaryRows[0] || { page_views: 0, unique_visitors: 0, bounce_rate: 0, avg_session_pages: 0 };
-      const botTotal = botTotalRow[0] || { bot_count: 0, total: 0 };
+      const summary = summaryRow || { page_views: 0, unique_visitors: 0, bounce_rate: 0, avg_session_pages: 0 };
+      const botTotal = botTotalRow || { bot_count: 0, total: 0 };
 
       return {
         summary: {
-          page_views: summary.page_views as number,
-          unique_visitors: summary.unique_visitors as number,
-          bounce_rate: summary.bounce_rate as number,
-          avg_session_pages: summary.avg_session_pages as number,
-          bot_count: botTotal.bot_count as number,
-          bot_percentage: botTotal.total > 0
+          page_views: (summary.page_views as number) || 0,
+          unique_visitors: (summary.unique_visitors as number) || 0,
+          bounce_rate: (summary.bounce_rate as number) || 0,
+          avg_session_pages: (summary.avg_session_pages as number) || 0,
+          bot_count: (botTotal.bot_count as number) || 0,
+          bot_percentage: (botTotal.total as number) > 0
             ? Math.round((botTotal.bot_count as number) / (botTotal.total as number) * 1000) / 10
             : 0,
         },
@@ -682,98 +679,99 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
     },
 
     async getAnalyticsDetail(projectId, since, includeBots, section, limit, offset) {
-      const botFilter = includeBots ? sql`` : sql`AND is_bot = false`;
+      const sinceStr = since.toISOString();
+      const botClause = includeBots ? '' : 'AND is_bot = 0';
 
       type QueryResult = { data: any[]; total: number };
 
       const buildQuery = async (
-        selectExpr: ReturnType<typeof sql>,
-        whereExtra: ReturnType<typeof sql>,
-        groupBy: ReturnType<typeof sql>,
-        orderBy: ReturnType<typeof sql>,
+        selectExpr: string,
+        whereExtra: string,
+        groupByCol: string,
+        orderByExpr: string,
         useBotFilter: boolean,
       ): Promise<QueryResult> => {
-        const bf = useBotFilter ? botFilter : sql``;
-        const [countResult] = await sql`
-          SELECT COUNT(*)::int AS total FROM (
-            SELECT 1 FROM analytics_events
-            WHERE project_id = ${projectId} AND created_at >= ${since} ${whereExtra} ${bf}
-            GROUP BY ${groupBy}
-          ) sub
-        `;
-        const rows = await sql`
-          SELECT ${selectExpr} FROM analytics_events
-          WHERE project_id = ${projectId} AND created_at >= ${since} ${whereExtra} ${bf}
-          GROUP BY ${groupBy}
-          ORDER BY ${orderBy}
-          LIMIT ${limit} OFFSET ${offset}
-        `;
-        return { data: rows as unknown as any[], total: countResult.total };
+        const bf = useBotFilter ? botClause : '';
+        const countRow = await d1.prepare(
+          `SELECT COUNT(*) AS total FROM (
+             SELECT 1 FROM analytics_events
+             WHERE project_id = ? AND created_at >= ? ${whereExtra} ${bf}
+             GROUP BY ${groupByCol}
+           ) sub`
+        ).bind(projectId, sinceStr).first();
+        const { results } = await d1.prepare(
+          `SELECT ${selectExpr} FROM analytics_events
+           WHERE project_id = ? AND created_at >= ? ${whereExtra} ${bf}
+           GROUP BY ${groupByCol}
+           ORDER BY ${orderByExpr}
+           LIMIT ? OFFSET ?`
+        ).bind(projectId, sinceStr, limit, offset).all();
+        return { data: results as unknown as any[], total: (countRow?.total as number) || 0 };
       };
 
       switch (section) {
         case 'pages':
           return buildQuery(
-            sql`pathname, COUNT(*)::int AS views`,
-            sql`AND name = 'page_view' AND pathname IS NOT NULL`,
-            sql`pathname`,
-            sql`views DESC`,
+            'pathname, COUNT(*) AS views',
+            "AND name = 'page_view' AND pathname IS NOT NULL",
+            'pathname',
+            'views DESC',
             true,
           );
         case 'referrers':
           return buildQuery(
-            sql`referrer, COUNT(*)::int AS count`,
-            sql`AND name = 'page_view' AND referrer IS NOT NULL AND referrer != ''`,
-            sql`referrer`,
-            sql`count DESC`,
+            'referrer, COUNT(*) AS count',
+            "AND name = 'page_view' AND referrer IS NOT NULL AND referrer != ''",
+            'referrer',
+            'count DESC',
             true,
           );
         case 'countries':
           return buildQuery(
-            sql`country, COUNT(*)::int AS count`,
-            sql`AND country IS NOT NULL`,
-            sql`country`,
-            sql`count DESC`,
+            'country, COUNT(*) AS count',
+            'AND country IS NOT NULL',
+            'country',
+            'count DESC',
             true,
           );
         case 'devices':
           return buildQuery(
-            sql`device, COUNT(*)::int AS count`,
-            sql`AND device IS NOT NULL`,
-            sql`device`,
-            sql`count DESC`,
+            'device, COUNT(*) AS count',
+            'AND device IS NOT NULL',
+            'device',
+            'count DESC',
             true,
           );
         case 'browsers':
           return buildQuery(
-            sql`browser, COUNT(*)::int AS count`,
-            sql`AND browser IS NOT NULL`,
-            sql`browser`,
-            sql`count DESC`,
+            'browser, COUNT(*) AS count',
+            'AND browser IS NOT NULL',
+            'browser',
+            'count DESC',
             true,
           );
         case 'os':
           return buildQuery(
-            sql`os, COUNT(*)::int AS count`,
-            sql`AND os IS NOT NULL`,
-            sql`os`,
-            sql`count DESC`,
+            'os, COUNT(*) AS count',
+            'AND os IS NOT NULL',
+            'os',
+            'count DESC',
             true,
           );
         case 'events':
           return buildQuery(
-            sql`name, COUNT(*)::int AS count`,
-            sql`AND name != 'page_view'`,
-            sql`name`,
-            sql`count DESC`,
+            'name, COUNT(*) AS count',
+            "AND name != 'page_view'",
+            'name',
+            'count DESC',
             true,
           );
         case 'bots':
           return buildQuery(
-            sql`browser AS name, COUNT(*)::int AS count`,
-            sql`AND is_bot = true`,
-            sql`browser`,
-            sql`count DESC`,
+            'browser AS name, COUNT(*) AS count',
+            'AND is_bot = 1',
+            'browser',
+            'count DESC',
             false,
           );
         default:
@@ -794,141 +792,152 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
       image_url: string | null;
       tweet_url: string | null;
     }) {
-      const [row] = await sql`
-        INSERT INTO testimonials (id, project_id, author_name, author_email, author_avatar_url, author_title, content, rating, image_url, tweet_url)
-        VALUES (${input.id}, ${input.project_id}, ${input.author_name}, ${input.author_email}, ${input.author_avatar_url}, ${input.author_title}, ${input.content}, ${input.rating}, ${input.image_url}, ${input.tweet_url})
-        RETURNING *
-      `;
-      return row as TestimonialRecord;
+      await d1.prepare(
+        `INSERT INTO testimonials (id, project_id, author_name, author_email, author_avatar_url, author_title, content, rating, image_url, tweet_url)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+      ).bind(input.id, input.project_id, input.author_name, input.author_email, input.author_avatar_url, input.author_title, input.content, input.rating, input.image_url, input.tweet_url).run();
+      const row = await d1.prepare(`SELECT * FROM testimonials WHERE id = ?`).bind(input.id).first();
+      return row as unknown as TestimonialRecord;
     },
 
     async listApprovedTestimonials(projectId: string, limit = 50, sort: 'newest' | 'rating' = 'newest') {
-      const orderClause = sort === 'rating' ? sql`rating DESC, created_at DESC` : sql`created_at DESC`;
-      const rows = await sql`
-        SELECT * FROM testimonials
-        WHERE project_id = ${projectId} AND status = 'approved'
-        ORDER BY ${orderClause}
-        LIMIT ${limit}
-      `;
-      return rows as unknown as TestimonialRecord[];
+      const orderClause = sort === 'rating' ? 'rating DESC, created_at DESC' : 'created_at DESC';
+      const { results } = await d1.prepare(
+        `SELECT * FROM testimonials
+         WHERE project_id = ? AND status = 'approved'
+         ORDER BY ${orderClause}
+         LIMIT ?`
+      ).bind(projectId, limit).all();
+      return results as unknown as TestimonialRecord[];
     },
 
     async listAllTestimonials(projectId: string, page: number, limit: number) {
       const offset = (page - 1) * limit;
-      const [countResult] = await sql`
-        SELECT COUNT(*)::int AS total FROM testimonials WHERE project_id = ${projectId}
-      `;
-      const rows = await sql`
-        SELECT * FROM testimonials WHERE project_id = ${projectId}
-        ORDER BY created_at DESC
-        LIMIT ${limit} OFFSET ${offset}
-      `;
-      return { data: rows as unknown as TestimonialRecord[], total: countResult.total };
+      const countRow = await d1.prepare(
+        `SELECT COUNT(*) AS total FROM testimonials WHERE project_id = ?`
+      ).bind(projectId).first();
+      const { results } = await d1.prepare(
+        `SELECT * FROM testimonials WHERE project_id = ?
+         ORDER BY created_at DESC
+         LIMIT ? OFFSET ?`
+      ).bind(projectId, limit, offset).all();
+      return { data: results as unknown as TestimonialRecord[], total: (countRow?.total as number) || 0 };
     },
 
     async getTestimonialStats(projectId: string) {
-      const [row] = await sql`
-        SELECT
-          COUNT(*)::int AS total,
-          COUNT(*) FILTER (WHERE status = 'pending')::int AS pending,
-          COUNT(*) FILTER (WHERE status = 'approved')::int AS approved,
-          COALESCE(AVG(rating) FILTER (WHERE status = 'approved'), 0)::float AS avg_rating
-        FROM testimonials WHERE project_id = ${projectId}
-      `;
-      return row as { total: number; pending: number; approved: number; avg_rating: number };
+      const row = await d1.prepare(
+        `SELECT
+           COUNT(*) AS total,
+           SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) AS pending,
+           SUM(CASE WHEN status = 'approved' THEN 1 ELSE 0 END) AS approved,
+           COALESCE(AVG(CASE WHEN status = 'approved' THEN rating ELSE NULL END), 0) AS avg_rating
+         FROM testimonials WHERE project_id = ?`
+      ).bind(projectId).first();
+      return {
+        total: (row?.total as number) || 0,
+        pending: (row?.pending as number) || 0,
+        approved: (row?.approved as number) || 0,
+        avg_rating: (row?.avg_rating as number) || 0,
+      };
     },
 
     async updateTestimonialStatus(id: string, status: string) {
-      const [row] = await sql`
-        UPDATE testimonials SET status = ${status} WHERE id = ${id} RETURNING *
-      `;
-      return (row as TestimonialRecord) || null;
+      await d1.prepare(
+        `UPDATE testimonials SET status = ? WHERE id = ?`
+      ).bind(status, id).run();
+      const row = await d1.prepare(`SELECT * FROM testimonials WHERE id = ?`).bind(id).first();
+      return (row as unknown as TestimonialRecord) || null;
     },
 
     async deleteTestimonial(id: string) {
-      const result = await sql`DELETE FROM testimonials WHERE id = ${id}`;
-      return result.count > 0;
+      const { meta } = await d1.prepare(`DELETE FROM testimonials WHERE id = ?`).bind(id).run();
+      return (meta.changes ?? 0) > 0;
     },
 
     async getTestimonialById(id: string) {
-      const [row] = await sql`SELECT * FROM testimonials WHERE id = ${id}`;
-      return (row as TestimonialRecord) || null;
+      const row = await d1.prepare(`SELECT * FROM testimonials WHERE id = ?`).bind(id).first();
+      return (row as unknown as TestimonialRecord) || null;
     },
 
     // --- Forms ---
 
     async createForm(input) {
-      const [row] = await sql`
-        INSERT INTO forms (id, project_id, title, slug, description, status, theme, settings)
-        VALUES (${input.id}, ${input.project_id}, ${input.title}, ${input.slug}, ${input.description}, ${input.status}, ${JSON.stringify(input.theme)}, ${JSON.stringify(input.settings)})
-        RETURNING *
-      `;
-      return row as FormRecord;
+      await d1.prepare(
+        `INSERT INTO forms (id, project_id, title, slug, description, status, theme, settings)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+      ).bind(input.id, input.project_id, input.title, input.slug, input.description, input.status, JSON.stringify(input.theme), JSON.stringify(input.settings)).run();
+      const row = await d1.prepare(`SELECT * FROM forms WHERE id = ?`).bind(input.id).first();
+      return row as unknown as FormRecord;
     },
 
     async getFormById(id) {
-      const [row] = await sql`SELECT * FROM forms WHERE id = ${id}`;
-      return (row as FormRecord) || null;
+      const row = await d1.prepare(`SELECT * FROM forms WHERE id = ?`).bind(id).first();
+      return (row as unknown as FormRecord) || null;
     },
 
     async getFormBySlug(projectId, slug) {
-      const [row] = await sql`SELECT * FROM forms WHERE project_id = ${projectId} AND slug = ${slug}`;
-      return (row as FormRecord) || null;
+      const row = await d1.prepare(
+        `SELECT * FROM forms WHERE project_id = ? AND slug = ?`
+      ).bind(projectId, slug).first();
+      return (row as unknown as FormRecord) || null;
     },
 
     async getPublishedFormBySlug(slug) {
-      const [row] = await sql`
-        SELECT f.*, p.api_key AS project_api_key
-        FROM forms f
-        JOIN projects p ON f.project_id = p.id
-        WHERE f.slug = ${slug} AND f.status = 'published'
-      `;
-      return (row as (FormRecord & { project_api_key: string })) || null;
+      const row = await d1.prepare(
+        `SELECT f.*, p.api_key AS project_api_key
+         FROM forms f
+         JOIN projects p ON f.project_id = p.id
+         WHERE f.slug = ? AND f.status = 'published'`
+      ).bind(slug).first();
+      return (row as unknown as (FormRecord & { project_api_key: string })) || null;
     },
 
     async listForms(projectId, page, limit) {
       const offset = (page - 1) * limit;
-      const [countResult] = await sql`
-        SELECT COUNT(*)::int AS total FROM forms WHERE project_id = ${projectId}
-      `;
-      const rows = await sql`
-        SELECT * FROM forms WHERE project_id = ${projectId}
-        ORDER BY created_at DESC
-        LIMIT ${limit} OFFSET ${offset}
-      `;
-      return { data: rows as unknown as FormRecord[], total: countResult.total };
+      const countRow = await d1.prepare(
+        `SELECT COUNT(*) AS total FROM forms WHERE project_id = ?`
+      ).bind(projectId).first();
+      const { results } = await d1.prepare(
+        `SELECT * FROM forms WHERE project_id = ?
+         ORDER BY created_at DESC
+         LIMIT ? OFFSET ?`
+      ).bind(projectId, limit, offset).all();
+      return { data: results as unknown as FormRecord[], total: (countRow?.total as number) || 0 };
     },
 
     async updateForm(id, input) {
       const sets: string[] = [];
-      const values: (string | null | boolean)[] = [];
-      if (input.title !== undefined) { sets.push('title'); values.push(input.title); }
-      if (input.slug !== undefined) { sets.push('slug'); values.push(input.slug); }
-      if (input.description !== undefined) { sets.push('description'); values.push(input.description); }
-      if (input.status !== undefined) { sets.push('status'); values.push(input.status); }
-      if (input.theme !== undefined) { sets.push('theme'); values.push(JSON.stringify(input.theme)); }
-      if (input.settings !== undefined) { sets.push('settings'); values.push(JSON.stringify(input.settings)); }
+      const values: unknown[] = [];
+      if (input.title !== undefined) { sets.push('title = ?'); values.push(input.title); }
+      if (input.slug !== undefined) { sets.push('slug = ?'); values.push(input.slug); }
+      if (input.description !== undefined) { sets.push('description = ?'); values.push(input.description); }
+      if (input.status !== undefined) { sets.push('status = ?'); values.push(input.status); }
+      if (input.theme !== undefined) { sets.push('theme = ?'); values.push(JSON.stringify(input.theme)); }
+      if (input.settings !== undefined) { sets.push('settings = ?'); values.push(JSON.stringify(input.settings)); }
       if (sets.length === 0) return null;
-      const setClauses = sets.map((col, i) => `${col} = $${i + 2}`).join(', ');
-      const result = await sql.unsafe(
-        `UPDATE forms SET ${setClauses}, updated_at = now() WHERE id = $1 RETURNING *`,
-        [id, ...values]
-      );
-      return (result[0] as unknown as FormRecord) || null;
+      sets.push("updated_at = datetime('now')");
+      const sql = `UPDATE forms SET ${sets.join(', ')} WHERE id = ?`;
+      values.push(id);
+      await d1.prepare(sql).bind(...values).run();
+      const row = await d1.prepare(`SELECT * FROM forms WHERE id = ?`).bind(id).first();
+      return (row as unknown as FormRecord) || null;
     },
 
     async deleteForm(id) {
-      const result = await sql`DELETE FROM forms WHERE id = ${id}`;
-      return result.count > 0;
+      const { meta } = await d1.prepare(`DELETE FROM forms WHERE id = ?`).bind(id).run();
+      return (meta.changes ?? 0) > 0;
     },
 
     async getFormStats(projectId) {
-      const [result] = await sql`
-        SELECT
-          (SELECT COUNT(*)::int FROM forms WHERE project_id = ${projectId}) AS total_forms,
-          (SELECT COUNT(*)::int FROM form_responses fr JOIN forms f ON fr.form_id = f.id WHERE f.project_id = ${projectId}) AS total_responses
-      `;
-      return { total_forms: result.total_forms, total_responses: result.total_responses };
+      const row = await d1.prepare(
+        `SELECT
+           (SELECT COUNT(*) FROM forms WHERE project_id = ?) AS total_forms,
+           (SELECT COUNT(*) FROM form_responses fr JOIN forms f ON fr.form_id = f.id WHERE f.project_id = ?) AS total_responses`
+      ).bind(projectId, projectId).first();
+      return {
+        total_forms: (row?.total_forms as number) || 0,
+        total_responses: (row?.total_responses as number) || 0,
+      };
     },
 
     // --- Form Questions ---
@@ -936,240 +945,260 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
     async upsertFormQuestions(formId, questions) {
       const questionIds = questions.filter(q => q.id).map(q => q.id);
       if (questionIds.length > 0) {
-        await sql`DELETE FROM form_questions WHERE form_id = ${formId} AND id NOT IN ${sql(questionIds)}`;
+        const placeholders = questionIds.map(() => '?').join(', ');
+        await d1.prepare(
+          `DELETE FROM form_questions WHERE form_id = ? AND id NOT IN (${placeholders})`
+        ).bind(formId, ...questionIds).run();
       } else {
-        await sql`DELETE FROM form_questions WHERE form_id = ${formId}`;
+        await d1.prepare(`DELETE FROM form_questions WHERE form_id = ?`).bind(formId).run();
       }
       const results: FormQuestionRecord[] = [];
       for (const q of questions) {
-        const [row] = await sql`
-          INSERT INTO form_questions (id, form_id, type, label, description, required, options, order_index)
-          VALUES (${q.id}, ${formId}, ${q.type}, ${q.label}, ${q.description}, ${q.required}, ${JSON.stringify(q.options)}, ${q.order_index})
-          ON CONFLICT (id) DO UPDATE SET
-            type = EXCLUDED.type,
-            label = EXCLUDED.label,
-            description = EXCLUDED.description,
-            required = EXCLUDED.required,
-            options = EXCLUDED.options,
-            order_index = EXCLUDED.order_index
-          RETURNING *
-        `;
-        results.push(row as FormQuestionRecord);
+        await d1.prepare(
+          `INSERT INTO form_questions (id, form_id, type, label, description, required, options, order_index)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+           ON CONFLICT (id) DO UPDATE SET
+             type = EXCLUDED.type,
+             label = EXCLUDED.label,
+             description = EXCLUDED.description,
+             required = EXCLUDED.required,
+             options = EXCLUDED.options,
+             order_index = EXCLUDED.order_index`
+        ).bind(q.id, formId, q.type, q.label, q.description, q.required ? 1 : 0, JSON.stringify(q.options), q.order_index).run();
+        const row = await d1.prepare(`SELECT * FROM form_questions WHERE id = ?`).bind(q.id).first();
+        results.push(row as unknown as FormQuestionRecord);
       }
       return results;
     },
 
     async listFormQuestions(formId) {
-      const rows = await sql`SELECT * FROM form_questions WHERE form_id = ${formId} ORDER BY order_index ASC`;
-      return rows as unknown as FormQuestionRecord[];
+      const { results } = await d1.prepare(
+        `SELECT * FROM form_questions WHERE form_id = ? ORDER BY order_index ASC`
+      ).bind(formId).all();
+      return results as unknown as FormQuestionRecord[];
     },
 
     async updateFormQuestion(id, input) {
       const sets: string[] = [];
-      const values: (string | number | null | boolean)[] = [];
-      if (input.type !== undefined) { sets.push('type'); values.push(input.type); }
-      if (input.label !== undefined) { sets.push('label'); values.push(input.label); }
-      if (input.description !== undefined) { sets.push('description'); values.push(input.description); }
-      if (input.required !== undefined) { sets.push('required'); values.push(input.required); }
-      if (input.options !== undefined) { sets.push('options'); values.push(JSON.stringify(input.options)); }
-      if (input.order_index !== undefined) { sets.push('order_index'); values.push(input.order_index); }
+      const values: unknown[] = [];
+      if (input.type !== undefined) { sets.push('type = ?'); values.push(input.type); }
+      if (input.label !== undefined) { sets.push('label = ?'); values.push(input.label); }
+      if (input.description !== undefined) { sets.push('description = ?'); values.push(input.description); }
+      if (input.required !== undefined) { sets.push('required = ?'); values.push(input.required ? 1 : 0); }
+      if (input.options !== undefined) { sets.push('options = ?'); values.push(JSON.stringify(input.options)); }
+      if (input.order_index !== undefined) { sets.push('order_index = ?'); values.push(input.order_index); }
       if (sets.length === 0) return null;
-      const setClauses = sets.map((col, i) => `${col} = $${i + 2}`).join(', ');
-      const result = await sql.unsafe(
-        `UPDATE form_questions SET ${setClauses} WHERE id = $1 RETURNING *`,
-        [id, ...values]
-      );
-      return (result[0] as unknown as FormQuestionRecord) || null;
+      const sql = `UPDATE form_questions SET ${sets.join(', ')} WHERE id = ?`;
+      values.push(id);
+      await d1.prepare(sql).bind(...values).run();
+      const row = await d1.prepare(`SELECT * FROM form_questions WHERE id = ?`).bind(id).first();
+      return (row as unknown as FormQuestionRecord) || null;
     },
 
     async deleteFormQuestion(id) {
-      const result = await sql`DELETE FROM form_questions WHERE id = ${id}`;
-      return result.count > 0;
+      const { meta } = await d1.prepare(`DELETE FROM form_questions WHERE id = ?`).bind(id).run();
+      return (meta.changes ?? 0) > 0;
     },
 
     // --- Form Responses ---
 
     async createFormResponse(input) {
-      const [row] = await sql`
-        INSERT INTO form_responses (id, form_id)
-        VALUES (${input.id}, ${input.form_id})
-        RETURNING *
-      `;
-      return row as FormResponseRecord;
+      await d1.prepare(
+        `INSERT INTO form_responses (id, form_id) VALUES (?, ?)`
+      ).bind(input.id, input.form_id).run();
+      const row = await d1.prepare(`SELECT * FROM form_responses WHERE id = ?`).bind(input.id).first();
+      return row as unknown as FormResponseRecord;
     },
 
     async createFormAnswers(answers) {
       const results: FormAnswerRecord[] = [];
       for (const a of answers) {
-        const [row] = await sql`
-          INSERT INTO form_answers (id, response_id, question_id, value)
-          VALUES (${a.id}, ${a.response_id}, ${a.question_id}, ${a.value})
-          RETURNING *
-        `;
-        results.push(row as FormAnswerRecord);
+        await d1.prepare(
+          `INSERT INTO form_answers (id, response_id, question_id, value) VALUES (?, ?, ?, ?)`
+        ).bind(a.id, a.response_id, a.question_id, a.value).run();
+        const row = await d1.prepare(`SELECT * FROM form_answers WHERE id = ?`).bind(a.id).first();
+        results.push(row as unknown as FormAnswerRecord);
       }
       return results;
     },
 
     async listFormResponses(formId, page, limit) {
       const offset = (page - 1) * limit;
-      const [countResult] = await sql`
-        SELECT COUNT(*)::int AS total FROM form_responses WHERE form_id = ${formId}
-      `;
-      const responses = await sql`
-        SELECT * FROM form_responses WHERE form_id = ${formId}
-        ORDER BY submitted_at DESC
-        LIMIT ${limit} OFFSET ${offset}
-      `;
+      const countRow = await d1.prepare(
+        `SELECT COUNT(*) AS total FROM form_responses WHERE form_id = ?`
+      ).bind(formId).first();
+      const { results: responses } = await d1.prepare(
+        `SELECT * FROM form_responses WHERE form_id = ?
+         ORDER BY submitted_at DESC
+         LIMIT ? OFFSET ?`
+      ).bind(formId, limit, offset).all();
       const data = [];
       for (const r of responses) {
-        const answers = await sql`
-          SELECT * FROM form_answers WHERE response_id = ${r.id}
-        `;
+        const { results: answers } = await d1.prepare(
+          `SELECT * FROM form_answers WHERE response_id = ?`
+        ).bind(r.id).all();
         data.push({ ...r, answers: answers as unknown as FormAnswerRecord[] });
       }
-      return { data: data as (FormResponseRecord & { answers: FormAnswerRecord[] })[], total: countResult.total };
+      return {
+        data: data as (FormResponseRecord & { answers: FormAnswerRecord[] })[],
+        total: (countRow?.total as number) || 0,
+      };
     },
 
     async deleteFormResponse(id) {
-      const result = await sql`DELETE FROM form_responses WHERE id = ${id}`;
-      return result.count > 0;
+      const { meta } = await d1.prepare(`DELETE FROM form_responses WHERE id = ?`).bind(id).run();
+      return (meta.changes ?? 0) > 0;
     },
 
     async getFormResponseCount(formId) {
-      const [result] = await sql`SELECT COUNT(*)::int AS total FROM form_responses WHERE form_id = ${formId}`;
-      return result.total;
+      const row = await d1.prepare(
+        `SELECT COUNT(*) AS total FROM form_responses WHERE form_id = ?`
+      ).bind(formId).first();
+      return (row?.total as number) || 0;
     },
 
     async getFormAnswersByQuestionId(questionId) {
-      const rows = await sql`SELECT * FROM form_answers WHERE question_id = ${questionId}`;
-      return rows as unknown as FormAnswerRecord[];
+      const { results } = await d1.prepare(
+        `SELECT * FROM form_answers WHERE question_id = ?`
+      ).bind(questionId).all();
+      return results as unknown as FormAnswerRecord[];
     },
 
     // --- CLI Auth ---
     async createCliAuthCode(code: string) {
-      await sql`
-        INSERT INTO cli_auth_codes (code, expires_at)
-        VALUES (${code}, now() + interval '10 minutes')
-      `;
+      await d1.prepare(
+        `INSERT INTO cli_auth_codes (code, expires_at) VALUES (?, datetime('now', '+10 minutes'))`
+      ).bind(code).run();
     },
 
     async getCliAuthCode(code: string) {
-      const [row] = await sql`SELECT * FROM cli_auth_codes WHERE code = ${code}`;
-      return row as { code: string; user_id: string | null; status: string; token: string | null; expires_at: string } | undefined;
+      const row = await d1.prepare(`SELECT * FROM cli_auth_codes WHERE code = ?`).bind(code).first();
+      return row as unknown as { code: string; user_id: string | null; status: string; token: string | null; expires_at: string } | undefined;
     },
 
     async approveCliAuthCode(code: string, userId: string, token: string) {
-      await sql`
-        UPDATE cli_auth_codes
-        SET status = 'approved', user_id = ${userId}, token = ${token}
-        WHERE code = ${code}
-      `;
+      await d1.prepare(
+        `UPDATE cli_auth_codes SET status = 'approved', user_id = ?, token = ? WHERE code = ?`
+      ).bind(userId, token, code).run();
     },
 
     async deleteCliAuthCode(code: string) {
-      await sql`DELETE FROM cli_auth_codes WHERE code = ${code}`;
+      await d1.prepare(`DELETE FROM cli_auth_codes WHERE code = ?`).bind(code).run();
     },
 
     async createCliToken(token: string, userId: string) {
-      await sql`INSERT INTO cli_tokens (token, user_id) VALUES (${token}, ${userId})`;
+      await d1.prepare(`INSERT INTO cli_tokens (token, user_id) VALUES (?, ?)`).bind(token, userId).run();
     },
 
     async getCliTokenUser(token: string) {
-      const [row] = await sql`SELECT user_id FROM cli_tokens WHERE token = ${token}`;
-      return row as { user_id: string } | undefined;
+      const row = await d1.prepare(`SELECT user_id FROM cli_tokens WHERE token = ?`).bind(token).first();
+      return row as unknown as { user_id: string } | undefined;
     },
 
     // --- Changelog ---
     async createChangelogEntry(input) {
-      const [row] = await sql`
-        INSERT INTO changelog_entries (id, project_id, title, content, version, type, published, published_at)
-        VALUES (${input.id}, ${input.project_id}, ${input.title}, ${input.content}, ${input.version}, ${input.type}, ${input.published}, ${input.published_at})
-        RETURNING *
-      `;
-      return row as ChangelogEntryRecord;
+      const publishedInt = input.published ? 1 : 0;
+      await d1.prepare(
+        `INSERT INTO changelog_entries (id, project_id, title, content, version, type, published, published_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+      ).bind(input.id, input.project_id, input.title, input.content, input.version, input.type, publishedInt, input.published_at).run();
+      const row = await d1.prepare(`SELECT * FROM changelog_entries WHERE id = ?`).bind(input.id).first();
+      return row as unknown as ChangelogEntryRecord;
     },
 
     async updateChangelogEntry(id, input) {
-      const sets = [];
-      if (input.title !== undefined) sets.push(sql`title = ${input.title}`);
-      if (input.content !== undefined) sets.push(sql`content = ${input.content}`);
-      if (input.version !== undefined) sets.push(sql`version = ${input.version}`);
-      if (input.type !== undefined) sets.push(sql`type = ${input.type}`);
+      const sets: string[] = [];
+      const values: unknown[] = [];
+      if (input.title !== undefined) { sets.push('title = ?'); values.push(input.title); }
+      if (input.content !== undefined) { sets.push('content = ?'); values.push(input.content); }
+      if (input.version !== undefined) { sets.push('version = ?'); values.push(input.version); }
+      if (input.type !== undefined) { sets.push('type = ?'); values.push(input.type); }
       if (input.published !== undefined) {
-        sets.push(sql`published = ${input.published}`);
+        sets.push('published = ?');
+        values.push(input.published ? 1 : 0);
         if (input.published) {
-          sets.push(sql`published_at = COALESCE(published_at, NOW())`);
+          sets.push("published_at = COALESCE(published_at, datetime('now'))");
         } else {
-          sets.push(sql`published_at = NULL`);
+          sets.push('published_at = NULL');
         }
       }
-      sets.push(sql`updated_at = NOW()`);
+      sets.push("updated_at = datetime('now')");
 
-      const setClause = sets.reduce((acc, s, i) => i === 0 ? s : sql`${acc}, ${s}`);
-      const [row] = await sql`UPDATE changelog_entries SET ${setClause} WHERE id = ${id} RETURNING *`;
-      return (row as ChangelogEntryRecord) || null;
+      const sql = `UPDATE changelog_entries SET ${sets.join(', ')} WHERE id = ?`;
+      values.push(id);
+      await d1.prepare(sql).bind(...values).run();
+      const row = await d1.prepare(`SELECT * FROM changelog_entries WHERE id = ?`).bind(id).first();
+      return (row as unknown as ChangelogEntryRecord) || null;
     },
 
     async deleteChangelogEntry(id) {
-      const result = await sql`DELETE FROM changelog_entries WHERE id = ${id}`;
-      return result.count > 0;
+      const { meta } = await d1.prepare(`DELETE FROM changelog_entries WHERE id = ?`).bind(id).run();
+      return (meta.changes ?? 0) > 0;
     },
 
     async getChangelogEntryById(id) {
-      const [row] = await sql`SELECT * FROM changelog_entries WHERE id = ${id}`;
-      return (row as ChangelogEntryRecord) || null;
+      const row = await d1.prepare(`SELECT * FROM changelog_entries WHERE id = ?`).bind(id).first();
+      return (row as unknown as ChangelogEntryRecord) || null;
     },
 
     async listChangelogEntries(projectId, page, limit) {
       const offset = (page - 1) * limit;
-      const [countResult] = await sql`
-        SELECT COUNT(*)::int AS total FROM changelog_entries WHERE project_id = ${projectId}
-      `;
-      const rows = await sql`
-        SELECT * FROM changelog_entries WHERE project_id = ${projectId}
-        ORDER BY created_at DESC
-        LIMIT ${limit} OFFSET ${offset}
-      `;
-      return { data: rows as unknown as ChangelogEntryRecord[], total: countResult.total };
+      const countRow = await d1.prepare(
+        `SELECT COUNT(*) AS total FROM changelog_entries WHERE project_id = ?`
+      ).bind(projectId).first();
+      const { results } = await d1.prepare(
+        `SELECT * FROM changelog_entries WHERE project_id = ?
+         ORDER BY created_at DESC
+         LIMIT ? OFFSET ?`
+      ).bind(projectId, limit, offset).all();
+      return { data: results as unknown as ChangelogEntryRecord[], total: (countRow?.total as number) || 0 };
     },
 
     async listPublishedChangelog(projectId, limit) {
-      const rows = await sql`
-        SELECT * FROM changelog_entries
-        WHERE project_id = ${projectId} AND published = true
-        ORDER BY published_at DESC
-        LIMIT ${limit}
-      `;
-      return rows as unknown as ChangelogEntryRecord[];
+      const { results } = await d1.prepare(
+        `SELECT * FROM changelog_entries
+         WHERE project_id = ? AND published = 1
+         ORDER BY published_at DESC
+         LIMIT ?`
+      ).bind(projectId, limit).all();
+      return results as unknown as ChangelogEntryRecord[];
     },
 
     async getChangelogStats(projectId) {
-      const [row] = await sql`
-        SELECT
-          COUNT(*)::int AS total,
-          COUNT(*) FILTER (WHERE published = true)::int AS published,
-          COUNT(*) FILTER (WHERE published = false)::int AS drafts
-        FROM changelog_entries WHERE project_id = ${projectId}
-      `;
-      return row as { total: number; published: number; drafts: number };
+      const row = await d1.prepare(
+        `SELECT
+           COUNT(*) AS total,
+           SUM(CASE WHEN published = 1 THEN 1 ELSE 0 END) AS published,
+           SUM(CASE WHEN published = 0 THEN 1 ELSE 0 END) AS drafts
+         FROM changelog_entries WHERE project_id = ?`
+      ).bind(projectId).first();
+      return {
+        total: (row?.total as number) || 0,
+        published: (row?.published as number) || 0,
+        drafts: (row?.drafts as number) || 0,
+      };
     },
 
-    // ── AI Gateway ──────────────────────────────────────────────────────────
+    // --- AI Gateway ---
 
     async getProjectAIConfig(projectId: string): Promise<{ ai_base_url: string | null; ai_api_key: string | null; ai_model: string | null }> {
-      const result = await sql`SELECT ai_base_url, ai_api_key, ai_model FROM projects WHERE id = ${projectId}`;
-      const row = result[0];
+      const row = await d1.prepare(
+        `SELECT ai_base_url, ai_api_key, ai_model FROM projects WHERE id = ?`
+      ).bind(projectId).first();
       if (!row) throw new Error('Project not found');
-      return { ai_base_url: row.ai_base_url, ai_api_key: row.ai_api_key, ai_model: row.ai_model };
+      return { ai_base_url: row.ai_base_url as string | null, ai_api_key: row.ai_api_key as string | null, ai_model: row.ai_model as string | null };
     },
 
     async updateProjectAIConfig(projectId: string, config: { ai_base_url: string; ai_api_key: string; ai_model: string }): Promise<void> {
-      await sql`UPDATE projects SET ai_base_url = ${config.ai_base_url}, ai_api_key = ${config.ai_api_key}, ai_model = ${config.ai_model} WHERE id = ${projectId}`;
+      await d1.prepare(
+        `UPDATE projects SET ai_base_url = ?, ai_api_key = ?, ai_model = ? WHERE id = ?`
+      ).bind(config.ai_base_url, config.ai_api_key, config.ai_model, projectId).run();
     },
 
     async deleteProjectAIConfig(projectId: string): Promise<void> {
-      await sql`UPDATE projects SET ai_base_url = NULL, ai_api_key = NULL, ai_model = NULL WHERE id = ${projectId}`;
+      await d1.prepare(
+        `UPDATE projects SET ai_base_url = NULL, ai_api_key = NULL, ai_model = NULL WHERE id = ?`
+      ).bind(projectId).run();
     },
 
     async logAIRequest(params: {
@@ -1183,182 +1212,217 @@ export function createDatabase(databaseUrl: string, useSSL = true): FeedbackData
       outputTokens: number | null;
       errorMessage: string | null;
     }): Promise<void> {
-      await sql`INSERT INTO ai_requests (id, project_id, endpoint, model, status, latency_ms, input_tokens, output_tokens, error_message) VALUES (${params.id}, ${params.projectId}, ${params.endpoint}, ${params.model}, ${params.status}, ${params.latencyMs}, ${params.inputTokens}, ${params.outputTokens}, ${params.errorMessage})`;
+      await d1.prepare(
+        `INSERT INTO ai_requests (id, project_id, endpoint, model, status, latency_ms, input_tokens, output_tokens, error_message)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
+      ).bind(params.id, params.projectId, params.endpoint, params.model, params.status, params.latencyMs, params.inputTokens, params.outputTokens, params.errorMessage).run();
     },
 
     async getAIUsageStats(projectId: string, daysBack: number = 30): Promise<{ total_requests: number; success_count: number; error_count: number; avg_latency_ms: number | null; total_input_tokens: number; total_output_tokens: number }> {
-      const result = await sql`SELECT COUNT(*)::int AS total_requests, COUNT(*) FILTER (WHERE status = 'success')::int AS success_count, COUNT(*) FILTER (WHERE status = 'error')::int AS error_count, AVG(latency_ms)::int AS avg_latency_ms, COALESCE(SUM(input_tokens), 0)::int AS total_input_tokens, COALESCE(SUM(output_tokens), 0)::int AS total_output_tokens FROM ai_requests WHERE project_id = ${projectId} AND created_at > now() - (${daysBack} || ' days')::interval`;
-      return result[0] as any;
+      const sinceDate = new Date(Date.now() - daysBack * 86400000).toISOString();
+      const row = await d1.prepare(
+        `SELECT
+           COUNT(*) AS total_requests,
+           SUM(CASE WHEN status = 'success' THEN 1 ELSE 0 END) AS success_count,
+           SUM(CASE WHEN status = 'error' THEN 1 ELSE 0 END) AS error_count,
+           AVG(latency_ms) AS avg_latency_ms,
+           COALESCE(SUM(input_tokens), 0) AS total_input_tokens,
+           COALESCE(SUM(output_tokens), 0) AS total_output_tokens
+         FROM ai_requests
+         WHERE project_id = ? AND created_at > ?`
+      ).bind(projectId, sinceDate).first();
+      return {
+        total_requests: (row?.total_requests as number) || 0,
+        success_count: (row?.success_count as number) || 0,
+        error_count: (row?.error_count as number) || 0,
+        avg_latency_ms: row?.avg_latency_ms != null ? Math.round(row.avg_latency_ms as number) : null,
+        total_input_tokens: (row?.total_input_tokens as number) || 0,
+        total_output_tokens: (row?.total_output_tokens as number) || 0,
+      };
     },
 
     async listAIRequests(projectId: string, limit: number = 50, offset: number = 0): Promise<{ data: any[]; total: number }> {
-      const countResult = await sql`SELECT COUNT(*)::int AS total FROM ai_requests WHERE project_id = ${projectId}`;
-      const result = await sql`SELECT * FROM ai_requests WHERE project_id = ${projectId} ORDER BY created_at DESC LIMIT ${limit} OFFSET ${offset}`;
-      return { data: result as unknown as any[], total: countResult[0].total };
+      const countRow = await d1.prepare(
+        `SELECT COUNT(*) AS total FROM ai_requests WHERE project_id = ?`
+      ).bind(projectId).first();
+      const { results } = await d1.prepare(
+        `SELECT * FROM ai_requests WHERE project_id = ? ORDER BY created_at DESC LIMIT ? OFFSET ?`
+      ).bind(projectId, limit, offset).all();
+      return { data: results as unknown as any[], total: (countRow?.total as number) || 0 };
     },
 
     // --- Roadmap ---
     async createRoadmapItem(input) {
-      const [row] = await sql`
-        INSERT INTO roadmap_items (id, project_id, feedback_id, title, description, "column", position, public)
-        VALUES (${input.id}, ${input.project_id}, ${input.feedback_id}, ${input.title}, ${input.description}, ${input.column}, ${input.position}, ${input.public})
-        RETURNING *
-      `;
-      return row as RoadmapItemRecord;
+      const publicInt = input.public ? 1 : 0;
+      await d1.prepare(
+        `INSERT INTO roadmap_items (id, project_id, feedback_id, title, description, "column", position, public)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+      ).bind(input.id, input.project_id, input.feedback_id, input.title, input.description, input.column, input.position, publicInt).run();
+      const row = await d1.prepare(`SELECT * FROM roadmap_items WHERE id = ?`).bind(input.id).first();
+      return row as unknown as RoadmapItemRecord;
     },
 
     async getRoadmapItemById(id) {
-      const [row] = await sql`SELECT * FROM roadmap_items WHERE id = ${id}`;
-      return (row as RoadmapItemRecord) || null;
+      const row = await d1.prepare(`SELECT * FROM roadmap_items WHERE id = ?`).bind(id).first();
+      return (row as unknown as RoadmapItemRecord) || null;
     },
 
     async listRoadmapItems(projectId, publicOnly = false) {
       if (publicOnly) {
-        const rows = await sql`
-          SELECT * FROM roadmap_items
-          WHERE project_id = ${projectId} AND public = true
-          ORDER BY "column", position
-        `;
-        return rows as unknown as RoadmapItemRecord[];
+        const { results } = await d1.prepare(
+          `SELECT * FROM roadmap_items
+           WHERE project_id = ? AND public = 1
+           ORDER BY "column", position`
+        ).bind(projectId).all();
+        return results as unknown as RoadmapItemRecord[];
       }
-      const rows = await sql`
-        SELECT * FROM roadmap_items
-        WHERE project_id = ${projectId}
-        ORDER BY "column", position
-      `;
-      return rows as unknown as RoadmapItemRecord[];
+      const { results } = await d1.prepare(
+        `SELECT * FROM roadmap_items
+         WHERE project_id = ?
+         ORDER BY "column", position`
+      ).bind(projectId).all();
+      return results as unknown as RoadmapItemRecord[];
     },
 
     async updateRoadmapItem(id, input) {
-      const sets = [];
-      if (input.title !== undefined) sets.push(sql`title = ${input.title}`);
-      if (input.description !== undefined) sets.push(sql`description = ${input.description}`);
-      if (input.column !== undefined) sets.push(sql`"column" = ${input.column}`);
-      if (input.position !== undefined) sets.push(sql`position = ${input.position}`);
-      if (input.public !== undefined) sets.push(sql`public = ${input.public}`);
-      sets.push(sql`updated_at = NOW()`);
+      const sets: string[] = [];
+      const values: unknown[] = [];
+      if (input.title !== undefined) { sets.push('title = ?'); values.push(input.title); }
+      if (input.description !== undefined) { sets.push('description = ?'); values.push(input.description); }
+      if (input.column !== undefined) { sets.push('"column" = ?'); values.push(input.column); }
+      if (input.position !== undefined) { sets.push('position = ?'); values.push(input.position); }
+      if (input.public !== undefined) { sets.push('public = ?'); values.push(input.public ? 1 : 0); }
+      sets.push("updated_at = datetime('now')");
 
-      const setClause = sets.reduce((acc, s, i) => i === 0 ? s : sql`${acc}, ${s}`);
-      const [row] = await sql`UPDATE roadmap_items SET ${setClause} WHERE id = ${id} RETURNING *`;
-      return (row as RoadmapItemRecord) || null;
+      const sql = `UPDATE roadmap_items SET ${sets.join(', ')} WHERE id = ?`;
+      values.push(id);
+      await d1.prepare(sql).bind(...values).run();
+      const row = await d1.prepare(`SELECT * FROM roadmap_items WHERE id = ?`).bind(id).first();
+      return (row as unknown as RoadmapItemRecord) || null;
     },
 
     async deleteRoadmapItem(id) {
-      const result = await sql`DELETE FROM roadmap_items WHERE id = ${id}`;
-      return result.count > 0;
+      const { meta } = await d1.prepare(`DELETE FROM roadmap_items WHERE id = ?`).bind(id).run();
+      return (meta.changes ?? 0) > 0;
     },
 
     async batchUpdateRoadmapPositions(items) {
-      for (const item of items) {
-        await sql`
-          UPDATE roadmap_items
-          SET "column" = ${item.column}, position = ${item.position}, updated_at = NOW()
-          WHERE id = ${item.id}
-        `;
+      const stmts = items.map(item =>
+        d1.prepare(
+          `UPDATE roadmap_items SET "column" = ?, position = ?, updated_at = datetime('now') WHERE id = ?`
+        ).bind(item.column, item.position, item.id)
+      );
+      if (stmts.length > 0) {
+        await d1.batch(stmts);
       }
     },
 
     async getNextRoadmapPosition(projectId, column) {
-      const [row] = await sql`
-        SELECT COALESCE(MAX(position), -1) + 1 AS next_pos
-        FROM roadmap_items
-        WHERE project_id = ${projectId} AND "column" = ${column}
-      `;
+      const row = await d1.prepare(
+        `SELECT COALESCE(MAX(position), -1) + 1 AS next_pos
+         FROM roadmap_items
+         WHERE project_id = ? AND "column" = ?`
+      ).bind(projectId, column).first();
       return (row as any).next_pos as number;
     },
 
     // --- Roadmap Votes ---
     async setRoadmapVote(input) {
-      await sql`
-        INSERT INTO roadmap_votes (id, roadmap_item_id, user_identifier, vote)
-        VALUES (${input.id}, ${input.roadmap_item_id}, ${input.user_identifier}, ${input.vote})
-        ON CONFLICT (roadmap_item_id, user_identifier) DO UPDATE SET vote = ${input.vote}
-      `;
-      // Update counts
-      const [counts] = await sql`
-        SELECT
-          COALESCE(SUM(CASE WHEN vote = 1 THEN 1 ELSE 0 END), 0) AS up,
-          COALESCE(SUM(CASE WHEN vote = -1 THEN 1 ELSE 0 END), 0) AS down
-        FROM roadmap_votes WHERE roadmap_item_id = ${input.roadmap_item_id}
-      `;
-      await sql`
-        UPDATE roadmap_items
-        SET upvote_count = ${(counts as any).up}, downvote_count = ${(counts as any).down}
-        WHERE id = ${input.roadmap_item_id}
-      `;
+      await d1.prepare(
+        `INSERT INTO roadmap_votes (id, roadmap_item_id, user_identifier, vote)
+         VALUES (?, ?, ?, ?)
+         ON CONFLICT (roadmap_item_id, user_identifier) DO UPDATE SET vote = ?`
+      ).bind(input.id, input.roadmap_item_id, input.user_identifier, input.vote, input.vote).run();
+      const counts = await d1.prepare(
+        `SELECT
+           COALESCE(SUM(CASE WHEN vote = 1 THEN 1 ELSE 0 END), 0) AS up,
+           COALESCE(SUM(CASE WHEN vote = -1 THEN 1 ELSE 0 END), 0) AS down
+         FROM roadmap_votes WHERE roadmap_item_id = ?`
+      ).bind(input.roadmap_item_id).first();
+      await d1.prepare(
+        `UPDATE roadmap_items SET upvote_count = ?, downvote_count = ? WHERE id = ?`
+      ).bind((counts as any).up, (counts as any).down, input.roadmap_item_id).run();
     },
 
     async removeRoadmapVote(roadmapItemId, userIdentifier) {
-      const result = await sql`
-        DELETE FROM roadmap_votes
-        WHERE roadmap_item_id = ${roadmapItemId} AND user_identifier = ${userIdentifier}
-      `;
-      if (result.count > 0) {
-        const [counts] = await sql`
-          SELECT
-            COALESCE(SUM(CASE WHEN vote = 1 THEN 1 ELSE 0 END), 0) AS up,
-            COALESCE(SUM(CASE WHEN vote = -1 THEN 1 ELSE 0 END), 0) AS down
-          FROM roadmap_votes WHERE roadmap_item_id = ${roadmapItemId}
-        `;
-        await sql`
-          UPDATE roadmap_items
-          SET upvote_count = ${(counts as any).up}, downvote_count = ${(counts as any).down}
-          WHERE id = ${roadmapItemId}
-        `;
+      const { meta } = await d1.prepare(
+        `DELETE FROM roadmap_votes WHERE roadmap_item_id = ? AND user_identifier = ?`
+      ).bind(roadmapItemId, userIdentifier).run();
+      if ((meta.changes ?? 0) > 0) {
+        const counts = await d1.prepare(
+          `SELECT
+             COALESCE(SUM(CASE WHEN vote = 1 THEN 1 ELSE 0 END), 0) AS up,
+             COALESCE(SUM(CASE WHEN vote = -1 THEN 1 ELSE 0 END), 0) AS down
+           FROM roadmap_votes WHERE roadmap_item_id = ?`
+        ).bind(roadmapItemId).first();
+        await d1.prepare(
+          `UPDATE roadmap_items SET upvote_count = ?, downvote_count = ? WHERE id = ?`
+        ).bind((counts as any).up, (counts as any).down, roadmapItemId).run();
       }
-      return result.count > 0;
+      return (meta.changes ?? 0) > 0;
     },
 
     async getRoadmapVote(roadmapItemId, userIdentifier) {
-      const [row] = await sql`
-        SELECT vote FROM roadmap_votes
-        WHERE roadmap_item_id = ${roadmapItemId} AND user_identifier = ${userIdentifier}
-      `;
+      const row = await d1.prepare(
+        `SELECT vote FROM roadmap_votes WHERE roadmap_item_id = ? AND user_identifier = ?`
+      ).bind(roadmapItemId, userIdentifier).first();
       if (!row) return null;
       return (row as any).vote === 1 ? 1 : -1;
     },
 
     // --- Directory ---
     async createDirectoryListing(input) {
-      const [row] = await sql`
-        INSERT INTO directory_listings (id, name, tagline, url, description, logo_url, screenshot_url, twitter_url, project_id, tags)
-        VALUES (${input.id}, ${input.name}, ${input.tagline}, ${input.url}, ${input.description}, ${input.logo_url}, ${input.screenshot_url}, ${input.twitter_url}, ${input.project_id}, ${sql.array(input.tags)})
-        RETURNING *
-      `;
+      await d1.prepare(
+        `INSERT INTO directory_listings (id, name, tagline, url, description, logo_url, screenshot_url, twitter_url, project_id, tags)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+      ).bind(input.id, input.name, input.tagline, input.url, input.description, input.logo_url, input.screenshot_url, input.twitter_url, input.project_id, JSON.stringify(input.tags)).run();
+      const row = await d1.prepare(`SELECT * FROM directory_listings WHERE id = ?`).bind(input.id).first();
       return row as any;
     },
 
     async listDirectoryListings(page, limit, tag?, search?, status = 'approved' as any) {
       const offset = (page - 1) * limit;
-      const conditions = [sql`status = ${status}`];
-      if (tag) conditions.push(sql`${tag} = ANY(tags)`);
-      if (search) conditions.push(sql`(name ILIKE ${'%' + search + '%'} OR tagline ILIKE ${'%' + search + '%'})`);
-      const where = conditions.reduce((acc, c, i) => i === 0 ? c : sql`${acc} AND ${c}`);
-      const rows = await sql`SELECT * FROM directory_listings WHERE ${where} ORDER BY created_at DESC LIMIT ${limit} OFFSET ${offset}`;
-      const [{ count }] = await sql`SELECT COUNT(*)::int AS count FROM directory_listings WHERE ${where}`;
-      return { data: rows as any[], total: count as number };
+      const conditions: string[] = ['status = ?'];
+      const bindValues: unknown[] = [status];
+
+      if (tag) {
+        conditions.push(`tags LIKE '%"' || ? || '"%'`);
+        bindValues.push(tag);
+      }
+      if (search) {
+        conditions.push(`(name LIKE ? OR tagline LIKE ?)`);
+        bindValues.push(`%${search}%`, `%${search}%`);
+      }
+
+      const where = conditions.join(' AND ');
+
+      const { results } = await d1.prepare(
+        `SELECT * FROM directory_listings WHERE ${where} ORDER BY created_at DESC LIMIT ? OFFSET ?`
+      ).bind(...bindValues, limit, offset).all();
+
+      const countRow = await d1.prepare(
+        `SELECT COUNT(*) AS count FROM directory_listings WHERE ${where}`
+      ).bind(...bindValues).first();
+
+      return { data: results as any[], total: (countRow?.count as number) || 0 };
     },
 
     async getDirectoryListingById(id) {
-      const [row] = await sql`SELECT * FROM directory_listings WHERE id = ${id}`;
+      const row = await d1.prepare(`SELECT * FROM directory_listings WHERE id = ?`).bind(id).first();
       return (row as any) || null;
     },
 
     async getDirectoryListingByProjectId(projectId) {
-      const [row] = await sql`SELECT * FROM directory_listings WHERE project_id = ${projectId} LIMIT 1`;
+      const row = await d1.prepare(
+        `SELECT * FROM directory_listings WHERE project_id = ? LIMIT 1`
+      ).bind(projectId).first();
       return (row as any) || null;
     },
 
     async updateDirectoryListingBadgeVerified(id, verified) {
-      await sql`UPDATE directory_listings SET badge_verified = ${verified} WHERE id = ${id}`;
+      await d1.prepare(
+        `UPDATE directory_listings SET badge_verified = ? WHERE id = ?`
+      ).bind(verified ? 1 : 0, id).run();
     },
   };
-}
-
-export function getDb(databaseUrl: string, hyperdrive?: Hyperdrive): FeedbackDatabase {
-  // Hyperdrive proxies the connection locally — no SSL needed (Hyperdrive handles TLS to origin)
-  if (hyperdrive) {
-    return createDatabase(hyperdrive.connectionString, false);
-  }
-  return createDatabase(databaseUrl, true);
 }

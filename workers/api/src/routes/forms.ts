@@ -45,7 +45,7 @@ forms.get('/by-slug/:slug', requireApiKey, async (c) => {
   const projectId = c.get('projectId')!;
   const slug = c.req.param('slug');
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const form = await db.getFormBySlug(projectId, slug);
   if (!form || form.status !== 'published') return c.json({ error: 'Form not found' }, 404);
 
@@ -62,7 +62,7 @@ forms.post('/:formId/submit', requireApiKey, async (c) => {
     return c.json({ error: 'Answers array is required' }, 400);
   }
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const form = await db.getFormById(formId);
   if (!form || form.status !== 'published') return c.json({ error: 'Form not found or not accepting responses' }, 404);
 
@@ -111,7 +111,7 @@ forms.post('/:formId/submit', requireApiKey, async (c) => {
 forms.get('/public/:slug', async (c) => {
   const slug = c.req.param('slug');
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const form = await db.getPublishedFormBySlug(slug);
   if (!form) return c.json({ error: 'Form not found' }, 404);
 
@@ -130,7 +130,7 @@ forms.post('/public/:slug/submit', async (c) => {
     return c.json({ error: 'Answers array is required' }, 400);
   }
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const form = await db.getPublishedFormBySlug(slug);
   if (!form) return c.json({ error: 'Form not found or not accepting responses' }, 404);
 
@@ -177,7 +177,7 @@ forms.get('/dashboard/:projectId', requireSession, async (c) => {
   const projectId = c.req.param('projectId');
   const page = parseInt(c.req.query('page') || '1', 10);
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
@@ -192,7 +192,7 @@ forms.get('/dashboard/:projectId/check-slug/:slug', requireSession, async (c) =>
   const projectId = c.req.param('projectId');
   const slug = c.req.param('slug');
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
@@ -205,7 +205,7 @@ forms.post('/dashboard/:projectId', requireSession, async (c) => {
   const userId = c.get('userId')!;
   const projectId = c.req.param('projectId');
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
@@ -267,7 +267,7 @@ forms.get('/dashboard/:projectId/:formId', requireSession, async (c) => {
   const projectId = c.req.param('projectId');
   const formId = c.req.param('formId');
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
@@ -286,7 +286,7 @@ forms.patch('/dashboard/:projectId/:formId', requireSession, async (c) => {
   const projectId = c.req.param('projectId');
   const formId = c.req.param('formId');
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
@@ -324,7 +324,7 @@ forms.delete('/dashboard/:projectId/:formId', requireSession, async (c) => {
   const projectId = c.req.param('projectId');
   const formId = c.req.param('formId');
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
@@ -342,7 +342,7 @@ forms.post('/dashboard/:projectId/:formId/questions', requireSession, async (c) 
   const projectId = c.req.param('projectId');
   const formId = c.req.param('formId');
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
@@ -386,7 +386,7 @@ forms.patch('/dashboard/:projectId/:formId/questions/:questionId', requireSessio
   const formId = c.req.param('formId');
   const questionId = c.req.param('questionId');
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
@@ -419,7 +419,7 @@ forms.delete('/dashboard/:projectId/:formId/questions/:questionId', requireSessi
   const formId = c.req.param('formId');
   const questionId = c.req.param('questionId');
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
@@ -438,7 +438,7 @@ forms.get('/dashboard/:projectId/:formId/responses', requireSession, async (c) =
   const formId = c.req.param('formId');
   const page = parseInt(c.req.query('page') || '1', 10);
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
@@ -456,7 +456,7 @@ forms.delete('/dashboard/:projectId/:formId/responses/:responseId', requireSessi
   const formId = c.req.param('formId');
   const responseId = c.req.param('responseId');
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
@@ -474,7 +474,7 @@ forms.get('/dashboard/:projectId/:formId/analytics', requireSession, async (c) =
   const projectId = c.req.param('projectId');
   const formId = c.req.param('formId');
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 

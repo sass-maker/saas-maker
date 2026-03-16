@@ -46,7 +46,7 @@ app.get('/health', (c) => c.json({ status: 'ok' }));
 // API-key project readme routes (for SDK access)
 app.get('/v1/projects/readme', requireApiKey, async (c) => {
   const projectId = c.get('projectId')!;
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectById(projectId);
   if (!project) return c.json({ error: 'Not found' }, 404);
   return c.json({ readme: project.readme || '' });
@@ -56,7 +56,7 @@ app.put('/v1/projects/readme', requireApiKey, async (c) => {
   const projectId = c.get('projectId')!;
   const body = await c.req.json() as { content: string };
   if (typeof body.content !== 'string') return c.json({ error: 'content is required' }, 400);
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   await db.updateProject(projectId, { readme: body.content });
   return c.json({ ok: true });
 });

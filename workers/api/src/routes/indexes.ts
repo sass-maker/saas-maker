@@ -49,7 +49,7 @@ indexes.get('/dashboard/:projectId', requireSession, async (c) => {
   const userId = c.get('userId')!;
   const projectId = c.req.param('projectId');
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
@@ -64,7 +64,7 @@ indexes.get('/dashboard/:projectId/:indexId/documents', requireSession, async (c
   const indexId = c.req.param('indexId');
   const page = parseInt(c.req.query('page') || '1', 10);
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
@@ -81,7 +81,7 @@ indexes.post('/dashboard/:projectId', requireSession, async (c) => {
   const userId = c.get('userId')!;
   const projectId = c.req.param('projectId');
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
@@ -128,10 +128,10 @@ indexes.use('*', requireApiKey);
  */
 async function getProjectModel(
   projectId: string,
-  databaseUrl: string,
+  d1: D1Database,
   requestedModel?: string
 ): Promise<{ model: string } | { error: string; status: number }> {
-  const db = getDb(databaseUrl);
+  const db = getDb(d1);
   const project = await db.getProjectById(projectId);
   if (!project) return { error: 'Project not found', status: 404 };
 
@@ -164,10 +164,10 @@ indexes.post('/', async (c) => {
   }
 
   // Lock the model on first vector use (or validate it's already set)
-  const result = await getProjectModel(projectId, c.env.DATABASE_URL, body.embedding_model);
+  const result = await getProjectModel(projectId, c.env.DB, body.embedding_model);
   if ('error' in result) return c.json({ error: result.error }, result.status as any);
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
 
   try {
     const record = await db.createIndex({
@@ -187,7 +187,7 @@ indexes.post('/', async (c) => {
 
 indexes.get('/', async (c) => {
   const projectId = c.get('projectId')!;
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const data = await db.listIndexesByProject(projectId);
   return c.json({ data });
 });
@@ -195,7 +195,7 @@ indexes.get('/', async (c) => {
 indexes.delete('/:indexId', async (c) => {
   const projectId = c.get('projectId')!;
   const indexId = c.req.param('indexId');
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
 
   const existing = await db.getIndexById(indexId);
   if (!existing) return c.json({ error: 'Index not found' }, 404);
@@ -215,14 +215,14 @@ indexes.post('/:indexId/documents', async (c) => {
   if (!body.content?.trim()) return c.json({ error: 'Content is required' }, 400);
   if (body.content.length > MAX_CONTENT_SIZE) return c.json({ error: 'Content too large. Max 100KB' }, 413);
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
 
   const index = await db.getIndexById(indexId);
   if (!index) return c.json({ error: 'Index not found' }, 404);
   if (index.project_id !== projectId) return c.json({ error: 'Forbidden' }, 403);
 
   // Get the project's locked embedding model
-  const modelResult = await getProjectModel(projectId, c.env.DATABASE_URL);
+  const modelResult = await getProjectModel(projectId, c.env.DB);
   if ('error' in modelResult) return c.json({ error: modelResult.error }, modelResult.status as any);
   const model = modelResult.model;
 
@@ -281,7 +281,7 @@ indexes.get('/:indexId/documents', async (c) => {
   const indexId = c.req.param('indexId');
   const page = parseInt(c.req.query('page') || '1', 10);
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
 
   const index = await db.getIndexById(indexId);
   if (!index) return c.json({ error: 'Index not found' }, 404);
@@ -296,7 +296,7 @@ indexes.delete('/:indexId/documents/:docId', async (c) => {
   const indexId = c.req.param('indexId');
   const docId = c.req.param('docId');
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
 
   const index = await db.getIndexById(indexId);
   if (!index) return c.json({ error: 'Index not found' }, 404);
@@ -320,14 +320,14 @@ indexes.post('/:indexId/search', async (c) => {
 
   const topK = Math.min(body.top_k || DEFAULT_TOP_K, MAX_TOP_K);
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
 
   const index = await db.getIndexById(indexId);
   if (!index) return c.json({ error: 'Index not found' }, 404);
   if (index.project_id !== projectId) return c.json({ error: 'Forbidden' }, 403);
 
   // Use the project's locked model
-  const modelResult = await getProjectModel(projectId, c.env.DATABASE_URL);
+  const modelResult = await getProjectModel(projectId, c.env.DB);
   if ('error' in modelResult) return c.json({ error: modelResult.error }, modelResult.status as any);
   const model = modelResult.model;
 

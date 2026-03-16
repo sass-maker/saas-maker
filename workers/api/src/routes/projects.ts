@@ -27,7 +27,7 @@ function slugify(name: string): string {
 projects.get('/', async (c) => {
   const userId = c.get('userId')!;
   const source = c.req.query('source') || 'dashboard';
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const data = await db.listProjectsByOwner(userId, source);
   return c.json({ data });
 });
@@ -44,7 +44,7 @@ projects.post('/', async (c) => {
     return c.json({ error: `Invalid source. Must be one of: ${VALID_SOURCES.join(', ')}` }, 400);
   }
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.createProject({
     id: crypto.randomUUID(),
     name: body.name.trim(),
@@ -60,7 +60,7 @@ projects.post('/', async (c) => {
 projects.get('/by-slug/:slug', async (c) => {
   const userId = c.get('userId')!;
   const slug = c.req.param('slug');
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectBySlug(slug);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Not found' }, 404);
   return c.json(project);
@@ -75,7 +75,7 @@ projects.patch('/:id', async (c) => {
     rate_limit_enabled?: boolean;
   };
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
 
   // Verify ownership
   const existing = await db.getProjectById(projectId);
@@ -106,7 +106,7 @@ projects.patch('/:id', async (c) => {
 projects.get('/:id/readme', async (c) => {
   const userId = c.get('userId')!;
   const projectId = c.req.param('id');
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Not found' }, 404);
   return c.json({ readme: project.readme || '' });
@@ -118,7 +118,7 @@ projects.put('/:id/readme', async (c) => {
   const projectId = c.req.param('id');
   const body = await c.req.json() as { content: string };
   if (typeof body.content !== 'string') return c.json({ error: 'content is required' }, 400);
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Not found' }, 404);
   await db.updateProject(projectId, { readme: body.content });
@@ -129,7 +129,7 @@ projects.delete('/:id', async (c) => {
   const userId = c.get('userId')!;
   const projectId = c.req.param('id');
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
 
   // Verify ownership
   const existing = await db.getProjectById(projectId);

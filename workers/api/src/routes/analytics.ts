@@ -38,7 +38,7 @@ analytics.post('/events', requireApiKey, async (c) => {
   const device = parseDevice(ua);
   const browser = parseBrowser(ua);
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   await db.createEvent({
     id: crypto.randomUUID(),
     project_id: projectId,
@@ -69,7 +69,7 @@ analytics.get('/overview', requireSession, async (c) => {
   const projectId = c.req.query('project_id');
   if (!projectId) return c.json({ error: 'project_id is required' }, 400);
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
@@ -83,7 +83,7 @@ analytics.get('/pages', requireSession, async (c) => {
   const projectId = c.req.query('project_id');
   if (!projectId) return c.json({ error: 'project_id is required' }, 400);
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
@@ -97,7 +97,7 @@ analytics.get('/referrers', requireSession, async (c) => {
   const projectId = c.req.query('project_id');
   if (!projectId) return c.json({ error: 'project_id is required' }, 400);
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
@@ -111,7 +111,7 @@ analytics.get('/countries', requireSession, async (c) => {
   const projectId = c.req.query('project_id');
   if (!projectId) return c.json({ error: 'project_id is required' }, 400);
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
@@ -125,7 +125,7 @@ analytics.get('/devices', requireSession, async (c) => {
   const projectId = c.req.query('project_id');
   if (!projectId) return c.json({ error: 'project_id is required' }, 400);
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
@@ -139,7 +139,7 @@ analytics.get('/events', requireSession, async (c) => {
   const projectId = c.req.query('project_id');
   if (!projectId) return c.json({ error: 'project_id is required' }, 400);
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
@@ -151,7 +151,7 @@ analytics.get('/events', requireSession, async (c) => {
 // --- New dashboard & detail routes ---
 
 analytics.get('/dashboard', requireApiKeyOrSession, async (c) => {
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   let projectId = c.get('projectId');
 
   if (!projectId) {
@@ -183,7 +183,7 @@ analytics.get('/detail/:section', requireSession, async (c) => {
     return c.json({ error: `Invalid section. Must be one of: ${VALID_DETAIL_SECTIONS.join(', ')}` }, 400);
   }
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 

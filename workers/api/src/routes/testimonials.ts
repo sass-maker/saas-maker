@@ -20,7 +20,7 @@ testimonials.post('/', requireApiKey, async (c) => {
   if (!body.content?.trim()) return c.json({ error: 'Content is required' }, 400);
   if (!body.rating || body.rating < 1 || body.rating > 5) return c.json({ error: 'Rating must be 1-5' }, 400);
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const entry = await db.createTestimonial({
     id: crypto.randomUUID(),
     project_id: projectId,
@@ -48,7 +48,7 @@ testimonials.post('/by-project/:slug', async (c) => {
   if (!body.content?.trim()) return c.json({ error: 'Content is required' }, 400);
   if (!body.rating || body.rating < 1 || body.rating > 5) return c.json({ error: 'Rating must be 1-5' }, 400);
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectBySlug(slug);
   if (!project) return c.json({ error: 'Project not found' }, 404);
 
@@ -71,7 +71,7 @@ testimonials.post('/by-project/:slug', async (c) => {
 // Public: get project info by slug (for /t/[slug] page header)
 testimonials.get('/by-project/:slug', async (c) => {
   const slug = c.req.param('slug');
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectBySlug(slug);
   if (!project) return c.json({ error: 'Project not found' }, 404);
   return c.json({ project: { name: project.name, slug: project.slug } });
@@ -82,7 +82,7 @@ testimonials.get('/', requireApiKey, async (c) => {
   const projectId = c.get('projectId')!;
   const limit = parseInt(c.req.query('limit') || '50', 10);
   const sort = (c.req.query('sort') || 'newest') as 'newest' | 'rating';
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const data = await db.listApprovedTestimonials(projectId, limit, sort);
   return c.json({ data });
 });
@@ -94,7 +94,7 @@ testimonials.get('/all', requireSession, async (c) => {
   if (!projectId) return c.json({ error: 'project_id query param is required' }, 400);
 
   const page = parseInt(c.req.query('page') || '1', 10);
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
 
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
@@ -109,7 +109,7 @@ testimonials.post('/dashboard/:projectId', requireSession, async (c) => {
   const userId = c.get('userId')!;
   const projectId = c.req.param('projectId');
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
@@ -143,7 +143,7 @@ testimonials.patch('/:id', requireSession, async (c) => {
   const projectId = c.req.query('project_id');
   if (!projectId) return c.json({ error: 'project_id query param is required' }, 400);
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
@@ -164,7 +164,7 @@ testimonials.delete('/:id', requireSession, async (c) => {
   const projectId = c.req.query('project_id');
   if (!projectId) return c.json({ error: 'project_id query param is required' }, 400);
 
-  const db = getDb(c.env.DATABASE_URL, c.env.HYPERDRIVE);
+  const db = getDb(c.env.DB);
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
