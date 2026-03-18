@@ -600,3 +600,99 @@ export interface UpdateRoadmapItemRequest {
 export interface ReorderRoadmapRequest {
   items: { id: string; column: RoadmapColumn; position: number }[];
 }
+
+// ── AI Mention Check ─────────────────────────────────────────────────────────
+
+export type AIMentionPlatform = 'openai' | 'anthropic' | 'google' | 'perplexity';
+export type AIMentionSentiment = 'positive' | 'neutral' | 'negative';
+
+export interface AIMentionCompetitor {
+  name: string;
+  url?: string;
+}
+
+export interface AIMentionConfigRecord {
+  id: string;
+  project_id: string;
+  brand_name: string;
+  brand_aliases: string[];
+  brand_url: string | null;
+  competitors: AIMentionCompetitor[];
+  platforms: AIMentionPlatform[];
+  has_openai_key: boolean;
+  has_anthropic_key: boolean;
+  has_google_key: boolean;
+  has_perplexity_key: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface AIMentionPromptRecord {
+  id: string;
+  project_id: string;
+  prompt_text: string;
+  category: string | null;
+  created_at: string;
+}
+
+export interface AIMentionCheckRecord {
+  id: string;
+  project_id: string;
+  status: 'running' | 'completed' | 'failed';
+  total_queries: number;
+  completed_queries: number;
+  brand_mention_rate: number | null;
+  summary: string | null;
+  created_at: string;
+  completed_at: string | null;
+}
+
+export interface AIMentionCompetitorResult {
+  name: string;
+  mentioned: boolean;
+  position: number | null;
+}
+
+export interface AIMentionResultRecord {
+  id: string;
+  check_id: string;
+  project_id: string;
+  prompt_id: string;
+  platform: AIMentionPlatform;
+  model: string;
+  response_text: string;
+  brand_mentioned: boolean;
+  brand_sentiment: AIMentionSentiment | null;
+  brand_position: number | null;
+  competitors_mentioned: AIMentionCompetitorResult[];
+  citations: string[];
+  brand_cited: boolean;
+  latency_ms: number | null;
+  created_at: string;
+}
+
+export interface CreateAIMentionConfigRequest {
+  brand_name: string;
+  brand_aliases?: string[];
+  brand_url?: string;
+  competitors?: AIMentionCompetitor[];
+  platforms?: AIMentionPlatform[];
+  openai_api_key?: string;
+  anthropic_api_key?: string;
+  google_api_key?: string;
+  perplexity_api_key?: string;
+}
+
+export interface UpdateAIMentionConfigRequest extends Partial<CreateAIMentionConfigRequest> {}
+
+export interface CreateAIMentionPromptRequest {
+  prompt_text: string;
+  category?: string;
+}
+
+export interface AIMentionCheckDashboard {
+  config: AIMentionConfigRecord | null;
+  prompts: AIMentionPromptRecord[];
+  recent_checks: AIMentionCheckRecord[];
+  latest_results: AIMentionResultRecord[];
+}

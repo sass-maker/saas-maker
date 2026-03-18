@@ -14,3 +14,5 @@ export type { RoadmapItem, RoadmapListResponse } from './services/roadmap';
 export type { ProjectReadmeResponse } from './services/projects';
 export type { ChatMessage, ChatbotConfig, ChatbotResponse } from './services/chatbot';
 export type { DirectoryListing, DirectoryListResponse, DirectoryListOptions, SubmitDirectoryListingData, BadgeVerifyResponse } from './services/directory';
+export { AIMentionService } from './services/ai-mention';
+export type { AIMentionConfig, AIMentionPrompt, AIMentionCheck, AIMentionResult, AIMentionDashboard, SaveAIMentionConfigData, AddAIMentionPromptData } from './services/ai-mention';

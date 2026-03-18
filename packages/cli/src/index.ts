@@ -10,6 +10,7 @@ import { testimonialsListCommand, testimonialsUpdateCommand, testimonialsDeleteC
 import { analyticsDashboardCommand, analyticsDetailCommand } from './commands/analytics.js';
 import { formsListCommand, formsCreateCommand, formsGetCommand, formsDeleteCommand, formsResponsesCommand, formsAnalyticsCommand } from './commands/forms.js';
 import { waitlistListCommand, waitlistCountCommand, waitlistDeleteCommand } from './commands/waitlist.js';
+import { aiMentionConfigCommand, aiMentionPromptsCommand, aiMentionPromptsAddCommand, aiMentionCheckCommand, aiMentionHistoryCommand } from './commands/ai-mention.js';
 import { initCommand } from './commands/init.js';
 import { statusCommand } from './commands/status.js';
 import { apiCommand } from './commands/api.js';
@@ -269,6 +270,46 @@ waitlist
   .command('delete <id>')
   .description('Delete a waitlist entry')
   .action(waitlistDeleteCommand);
+
+// --- AI Mention ---
+const aiMentionCmd = program.command('ai-mention').description('AI mention check');
+aiMentionCmd
+  .command('config')
+  .description('Show AI mention config')
+  .option('--project <id>', 'Project ID (or use saasmaker init)')
+  .option('--output <format>', 'table | json', 'json')
+  .option('--raw', 'Print compact JSON')
+  .action(aiMentionConfigCommand);
+aiMentionCmd
+  .command('prompts')
+  .description('List saved prompts')
+  .option('--project <id>', 'Project ID (or use saasmaker init)')
+  .option('--output <format>', 'table | json', 'table')
+  .option('--raw', 'Print compact JSON')
+  .action(aiMentionPromptsCommand);
+aiMentionCmd
+  .command('prompts-add')
+  .description('Add a prompt')
+  .option('--project <id>', 'Project ID (or use saasmaker init)')
+  .option('--text <text>', 'Prompt text (skip prompt)')
+  .option('--category <category>', 'Prompt category')
+  .option('--output <format>', 'table | json', 'json')
+  .option('--raw', 'Print compact JSON')
+  .action(aiMentionPromptsAddCommand);
+aiMentionCmd
+  .command('check')
+  .description('Run an AI mention check')
+  .option('--project <id>', 'Project ID (or use saasmaker init)')
+  .option('--output <format>', 'table | json', 'table')
+  .option('--raw', 'Print compact JSON')
+  .action(aiMentionCheckCommand);
+aiMentionCmd
+  .command('history')
+  .description('List past checks')
+  .option('--project <id>', 'Project ID (or use saasmaker init)')
+  .option('--output <format>', 'table | json', 'table')
+  .option('--raw', 'Print compact JSON')
+  .action(aiMentionHistoryCommand);
 
 // --- Utility ---
 program.command('init').description('Link a project to this directory').action(initCommand);

@@ -245,4 +245,34 @@ export interface FeedbackDatabase {
   getDirectoryListingById(id: string): Promise<import('@saas-maker/shared-types').DirectoryListingRecord | null>;
   getDirectoryListingByProjectId(projectId: string): Promise<import('@saas-maker/shared-types').DirectoryListingRecord | null>;
   updateDirectoryListingBadgeVerified(id: string, verified: boolean): Promise<void>;
+
+  // AI Mention Check
+  upsertAIMentionConfig(input: {
+    id: string; project_id: string; brand_name: string;
+    brand_aliases: string; brand_url: string | null;
+    competitors: string; platforms: string;
+    openai_api_key: string | null; anthropic_api_key: string | null;
+    google_api_key: string | null; perplexity_api_key: string | null;
+  }): Promise<any>;
+  getAIMentionConfig(projectId: string): Promise<any | null>;
+  deleteAIMentionConfig(projectId: string): Promise<boolean>;
+
+  createAIMentionPrompt(input: { id: string; project_id: string; prompt_text: string; category: string | null }): Promise<any>;
+  listAIMentionPrompts(projectId: string): Promise<any[]>;
+  deleteAIMentionPrompt(id: string): Promise<boolean>;
+  countAIMentionPrompts(projectId: string): Promise<number>;
+
+  createAIMentionCheck(input: { id: string; project_id: string; total_queries: number }): Promise<any>;
+  updateAIMentionCheck(id: string, input: { status?: string; completed_queries?: number; brand_mention_rate?: number | null; summary?: string | null; completed_at?: string | null }): Promise<any | null>;
+  listAIMentionChecks(projectId: string, limit?: number): Promise<any[]>;
+  getAIMentionCheckById(id: string): Promise<any | null>;
+
+  createAIMentionResult(input: {
+    id: string; check_id: string; project_id: string; prompt_id: string;
+    platform: string; model: string; response_text: string;
+    brand_mentioned: boolean; brand_sentiment: string | null;
+    brand_position: number | null; competitors_mentioned: string;
+    citations: string; brand_cited: boolean; latency_ms: number | null;
+  }): Promise<void>;
+  listAIMentionResults(checkId: string): Promise<any[]>;
 }

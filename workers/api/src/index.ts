@@ -16,6 +16,7 @@ import { forms } from './routes/forms';
 import { aiGateway } from './routes/ai-gateway';
 import { roadmap } from './routes/roadmap';
 import { directory } from './routes/directory';
+import { aiMention } from './routes/ai-mention';
 import { requireApiKey } from './middleware/auth';
 import { rateLimit } from './middleware/rate-limit';
 import { getDb } from './db';
@@ -75,5 +76,6 @@ app.route('/v1/forms', forms);
 app.route('/v1/ai', aiGateway);
 app.route('/v1/roadmap', roadmap);
 app.route('/v1/directory', directory);
+app.route('/v1/ai-mention', aiMention);
 
 export default app;

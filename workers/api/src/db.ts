@@ -1424,5 +1424,123 @@ export function getDb(d1: D1Database): FeedbackDatabase {
         `UPDATE directory_listings SET badge_verified = ? WHERE id = ?`
       ).bind(verified ? 1 : 0, id).run();
     },
+
+    // --- AI Mention Check ---
+    async upsertAIMentionConfig(input) {
+      await d1.prepare(
+        `INSERT INTO ai_mention_configs (id, project_id, brand_name, brand_aliases, brand_url, competitors, platforms, openai_api_key, anthropic_api_key, google_api_key, perplexity_api_key)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+         ON CONFLICT (project_id) DO UPDATE SET
+           brand_name = EXCLUDED.brand_name,
+           brand_aliases = EXCLUDED.brand_aliases,
+           brand_url = EXCLUDED.brand_url,
+           competitors = EXCLUDED.competitors,
+           platforms = EXCLUDED.platforms,
+           openai_api_key = COALESCE(EXCLUDED.openai_api_key, ai_mention_configs.openai_api_key),
+           anthropic_api_key = COALESCE(EXCLUDED.anthropic_api_key, ai_mention_configs.anthropic_api_key),
+           google_api_key = COALESCE(EXCLUDED.google_api_key, ai_mention_configs.google_api_key),
+           perplexity_api_key = COALESCE(EXCLUDED.perplexity_api_key, ai_mention_configs.perplexity_api_key),
+           updated_at = datetime('now')`
+      ).bind(
+        input.id, input.project_id, input.brand_name, input.brand_aliases,
+        input.brand_url, input.competitors, input.platforms,
+        input.openai_api_key, input.anthropic_api_key, input.google_api_key, input.perplexity_api_key
+      ).run();
+      const row = await d1.prepare(`SELECT * FROM ai_mention_configs WHERE project_id = ?`).bind(input.project_id).first();
+      return row as any;
+    },
+
+    async getAIMentionConfig(projectId) {
+      const row = await d1.prepare(`SELECT * FROM ai_mention_configs WHERE project_id = ?`).bind(projectId).first();
+      return (row as any) || null;
+    },
+
+    async deleteAIMentionConfig(projectId) {
+      const { meta } = await d1.prepare(`DELETE FROM ai_mention_configs WHERE project_id = ?`).bind(projectId).run();
+      return (meta.changes ?? 0) > 0;
+    },
+
+    async createAIMentionPrompt(input) {
+      await d1.prepare(
+        `INSERT INTO ai_mention_prompts (id, project_id, prompt_text, category) VALUES (?, ?, ?, ?)`
+      ).bind(input.id, input.project_id, input.prompt_text, input.category).run();
+      const row = await d1.prepare(`SELECT * FROM ai_mention_prompts WHERE id = ?`).bind(input.id).first();
+      return row as any;
+    },
+
+    async listAIMentionPrompts(projectId) {
+      const { results } = await d1.prepare(
+        `SELECT * FROM ai_mention_prompts WHERE project_id = ? ORDER BY created_at ASC`
+      ).bind(projectId).all();
+      return results as any[];
+    },
+
+    async deleteAIMentionPrompt(id) {
+      const { meta } = await d1.prepare(`DELETE FROM ai_mention_prompts WHERE id = ?`).bind(id).run();
+      return (meta.changes ?? 0) > 0;
+    },
+
+    async countAIMentionPrompts(projectId) {
+      const row = await d1.prepare(
+        `SELECT COUNT(*) AS total FROM ai_mention_prompts WHERE project_id = ?`
+      ).bind(projectId).first();
+      return (row?.total as number) || 0;
+    },
+
+    async createAIMentionCheck(input) {
+      await d1.prepare(
+        `INSERT INTO ai_mention_checks (id, project_id, total_queries) VALUES (?, ?, ?)`
+      ).bind(input.id, input.project_id, input.total_queries).run();
+      const row = await d1.prepare(`SELECT * FROM ai_mention_checks WHERE id = ?`).bind(input.id).first();
+      return row as any;
+    },
+
+    async updateAIMentionCheck(id, input) {
+      const sets: string[] = [];
+      const values: unknown[] = [];
+      if (input.status !== undefined) { sets.push('status = ?'); values.push(input.status); }
+      if (input.completed_queries !== undefined) { sets.push('completed_queries = ?'); values.push(input.completed_queries); }
+      if (input.brand_mention_rate !== undefined) { sets.push('brand_mention_rate = ?'); values.push(input.brand_mention_rate); }
+      if (input.summary !== undefined) { sets.push('summary = ?'); values.push(input.summary); }
+      if (input.completed_at !== undefined) { sets.push('completed_at = ?'); values.push(input.completed_at); }
+      if (sets.length === 0) return null;
+      const sql = `UPDATE ai_mention_checks SET ${sets.join(', ')} WHERE id = ?`;
+      values.push(id);
+      await d1.prepare(sql).bind(...values).run();
+      const row = await d1.prepare(`SELECT * FROM ai_mention_checks WHERE id = ?`).bind(id).first();
+      return (row as any) || null;
+    },
+
+    async listAIMentionChecks(projectId, limit = 10) {
+      const { results } = await d1.prepare(
+        `SELECT * FROM ai_mention_checks WHERE project_id = ? ORDER BY created_at DESC LIMIT ?`
+      ).bind(projectId, limit).all();
+      return results as any[];
+    },
+
+    async getAIMentionCheckById(id) {
+      const row = await d1.prepare(`SELECT * FROM ai_mention_checks WHERE id = ?`).bind(id).first();
+      return (row as any) || null;
+    },
+
+    async createAIMentionResult(input) {
+      await d1.prepare(
+        `INSERT INTO ai_mention_results (id, check_id, project_id, prompt_id, platform, model, response_text, brand_mentioned, brand_sentiment, brand_position, competitors_mentioned, citations, brand_cited, latency_ms)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+      ).bind(
+        input.id, input.check_id, input.project_id, input.prompt_id,
+        input.platform, input.model, input.response_text,
+        input.brand_mentioned ? 1 : 0, input.brand_sentiment, input.brand_position,
+        input.competitors_mentioned, input.citations,
+        input.brand_cited ? 1 : 0, input.latency_ms
+      ).run();
+    },
+
+    async listAIMentionResults(checkId) {
+      const { results } = await d1.prepare(
+        `SELECT * FROM ai_mention_results WHERE check_id = ? ORDER BY created_at ASC`
+      ).bind(checkId).all();
+      return results as any[];
+    },
   };
 }

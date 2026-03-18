@@ -11,6 +11,7 @@ import { RoadmapService } from './services/roadmap';
 import { ProjectService } from './services/projects';
 import { ChatbotService } from './services/chatbot';
 import { DirectoryService } from './services/directory';
+import { AIMentionService } from './services/ai-mention';
 
 export interface SaaSMakerConfig {
   apiKey: string;
@@ -30,6 +31,7 @@ export class SaaSMakerClient {
   readonly projects: ProjectService;
   readonly chatbot: ChatbotService;
   readonly directory: DirectoryService;
+  readonly aiMention: AIMentionService;
 
   constructor(config: SaaSMakerConfig) {
     const http = new HttpClient(
@@ -49,5 +51,6 @@ export class SaaSMakerClient {
     this.projects = new ProjectService(http);
     this.chatbot = new ChatbotService(http);
     this.directory = new DirectoryService(http);
+    this.aiMention = new AIMentionService(http);
   }
 }
