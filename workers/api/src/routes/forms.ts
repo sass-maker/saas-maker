@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { Bindings, Variables } from '../types';
 import { requireApiKey, requireSession } from '../middleware/auth';
+import { ipRateLimit } from '../middleware/ip-rate-limit';
 import { getDb } from '../db';
 import type {
   CreateFormRequest,
@@ -122,7 +123,7 @@ forms.get('/public/:slug', async (c) => {
 });
 
 // POST /public/:slug/submit — submit response by slug
-forms.post('/public/:slug/submit', async (c) => {
+forms.post('/public/:slug/submit', ipRateLimit('forms:public-submit', 10), async (c) => {
   const slug = c.req.param('slug');
   const body = (await c.req.json()) as SubmitFormResponseRequest;
 

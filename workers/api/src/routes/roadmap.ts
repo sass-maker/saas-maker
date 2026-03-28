@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { Bindings, Variables } from '../types';
 import { requireSession } from '../middleware/auth';
+import { ipRateLimit } from '../middleware/ip-rate-limit';
 import { getDb } from '../db';
 import type { CreateRoadmapItemRequest, UpdateRoadmapItemRequest, ReorderRoadmapRequest, RoadmapColumn } from '@saas-maker/shared-types';
 
@@ -20,12 +21,13 @@ roadmap.get('/public/:slug', async (c) => {
 });
 
 // Public: vote on a roadmap item
-roadmap.post('/public/:slug/:id/vote', async (c) => {
+roadmap.post('/public/:slug/:id/vote', ipRateLimit('roadmap:vote', 20), async (c) => {
   const slug = c.req.param('slug');
   const itemId = c.req.param('id');
   const body = await c.req.json();
 
-  if (!body.user_identifier?.trim()) return c.json({ error: 'user_identifier is required' }, 400);
+  const identifier = typeof body.user_identifier === 'string' ? body.user_identifier.trim() : '';
+  if (!identifier) return c.json({ error: 'user_identifier is required' }, 400);
   if (![1, -1].includes(body.vote)) return c.json({ error: 'vote must be 1 or -1' }, 400);
 
   const db = getDb(c.env.DB);
@@ -40,7 +42,7 @@ roadmap.post('/public/:slug/:id/vote', async (c) => {
   await db.setRoadmapVote({
     id: crypto.randomUUID(),
     roadmap_item_id: itemId,
-    user_identifier: body.user_identifier.trim(),
+    user_identifier: identifier,
     vote: body.vote,
   });
 

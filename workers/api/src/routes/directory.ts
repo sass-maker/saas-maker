@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { Bindings, Variables } from '../types';
 import { requireApiKey } from '../middleware/auth';
+import { ipRateLimit } from '../middleware/ip-rate-limit';
 import { getDb } from '../db';
 import type { CreateDirectoryListingRequest } from '@saas-maker/shared-types';
 
@@ -20,8 +21,11 @@ directory.get('/', async (c) => {
 });
 
 // Public: submit a listing (no auth needed)
-directory.post('/', async (c) => {
-  const body = (await c.req.json()) as CreateDirectoryListingRequest;
+directory.post('/', ipRateLimit('directory:submit', 5), async (c) => {
+  const body = (await c.req.json()) as CreateDirectoryListingRequest & { website?: string };
+
+  // Honeypot: hidden field that bots fill out
+  if (body.website) return c.json({ error: 'Submission rejected' }, 400);
 
   if (!body.name?.trim()) return c.json({ error: 'name is required' }, 400);
   if (!body.tagline?.trim()) return c.json({ error: 'tagline is required' }, 400);
