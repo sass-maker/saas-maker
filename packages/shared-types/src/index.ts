@@ -1,6 +1,6 @@
 // --- Enums / Unions ---
 export type FeedbackType = 'bug' | 'feature' | 'feedback';
-export type FeedbackStatus = 'new' | 'dismissed' | 'on_roadmap';
+export type FeedbackStatus = 'new' | 'in_progress' | 'done' | 'dismissed' | 'planned' | 'shipped' | 'cancelled' | 'on_roadmap';
 export type AnyFeedbackStatus = FeedbackStatus;
 export type FeedbackVote = 'up' | 'down' | null;
 

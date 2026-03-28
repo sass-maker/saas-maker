@@ -14,8 +14,16 @@ import { sendNewFeedbackEmail } from '../email';
 const feedback = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
 const VALID_TYPES: FeedbackType[] = ['bug', 'feature', 'feedback'];
-const VALID_STATUSES: FeedbackStatus[] = ['new', 'dismissed', 'on_roadmap'];
+const VALID_STATUSES: FeedbackStatus[] = ['new', 'in_progress', 'done', 'dismissed', 'planned', 'shipped', 'cancelled', 'on_roadmap'];
 const PAGE_SIZE = 20;
+
+function scheduleBackgroundTask(c: Context<{ Bindings: Bindings; Variables: Variables }>, task: Promise<unknown>) {
+  try {
+    c.executionCtx.waitUntil(task);
+  } catch {
+    void task;
+  }
+}
 
 function isValidStatus(status: string): status is FeedbackStatus {
   return VALID_STATUSES.includes(status as FeedbackStatus);
@@ -59,7 +67,8 @@ feedback.post('/', requireApiKey, async (c) => {
   if (project) {
     const owner = await db.getUserById(project.owner_id);
     if (owner) {
-      c.executionCtx.waitUntil(
+      scheduleBackgroundTask(
+        c,
         sendNewFeedbackEmail(c.env.RESEND_API_KEY, c.env.NOTIFICATION_FROM_EMAIL, {
           to: owner.email,
           projectName: project.name,
