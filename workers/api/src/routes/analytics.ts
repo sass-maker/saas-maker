@@ -35,8 +35,20 @@ analytics.post('/events', requireApiKey, async (c) => {
 
   const ua = c.req.header('User-Agent') || '';
   const country = c.req.header('CF-IPCountry') || null;
+  const ip = c.req.header('CF-Connecting-IP') || c.req.header('X-Forwarded-For')?.split(',')[0]?.trim() || null;
   const device = parseDevice(ua);
   const browser = parseBrowser(ua);
+
+  // Privacy-preserving IP hash for session differentiation (not stored raw)
+  let ipHash: string | null = null;
+  if (ip) {
+    let h = 0;
+    for (let i = 0; i < ip.length; i++) {
+      h = ((h << 5) - h) + ip.charCodeAt(i);
+      h |= 0;
+    }
+    ipHash = h.toString(36);
+  }
 
   const db = getDb(c.env.DB);
   await db.createEvent({
@@ -56,7 +68,7 @@ analytics.post('/events', requireApiKey, async (c) => {
     os: parseOS(ua),
     is_bot: isBot(ua),
     pathname: extractPathname(body.url),
-    session_id: computeSessionId(new Date().toISOString().slice(0, 10), country, device, browser),
+    session_id: computeSessionId(new Date().toISOString().slice(0, 10), country, device, browser, ipHash),
   });
 
   return c.json({ ok: true }, 201);

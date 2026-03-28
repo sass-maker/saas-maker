@@ -42,8 +42,8 @@ export function extractPathname(url: string | null | undefined): string | null {
   }
 }
 
-export function computeSessionId(date: string, country: string | null, device: string | null, browser: string | null): string {
-  const raw = `${date}|${country || ''}|${device || ''}|${browser || ''}`;
+export function computeSessionId(date: string, country: string | null, device: string | null, browser: string | null, ipHash: string | null = null): string {
+  const raw = `${date}|${country || ''}|${device || ''}|${browser || ''}|${ipHash || ''}`;
   let hash = 0;
   for (let i = 0; i < raw.length; i++) {
     const chr = raw.charCodeAt(i);
