@@ -23,6 +23,11 @@ import { getDb } from './db';
 
 const app = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
+app.onError((err, c) => {
+  console.error(`[${c.get('requestId') || 'unknown'}] Unhandled error:`, err.message, err.stack);
+  return c.json({ error: 'Internal server error' }, 500);
+});
+
 app.use('*', async (c, next) => {
   const origin = c.req.header('Origin') || '';
   const corsMiddleware = cors({
