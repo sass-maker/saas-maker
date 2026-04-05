@@ -1,5 +1,6 @@
 import type { FeedbackDatabase } from '@saas-maker/db';
 import type {
+  AIRequestRecord,
   FeedbackRecord,
   FeedbackVote,
   ProjectRecord,
@@ -17,6 +18,7 @@ import type {
   FormResponseRecord,
   FormAnswerRecord,
   RoadmapItemRecord,
+  AIMentionConfigDbRecord,
   AIMentionConfigRecord,
   AIMentionPromptRecord,
   AIMentionCheckRecord,
@@ -1467,12 +1469,12 @@ export function getDb(d1: D1Database): FeedbackDatabase {
         input.openai_api_key, input.anthropic_api_key, input.google_api_key, input.perplexity_api_key
       ).run();
       const row = await d1.prepare(`SELECT * FROM ai_mention_configs WHERE project_id = ?`).bind(input.project_id).first();
-      return row as unknown as AIMentionConfigRecord;
+      return row as unknown as AIMentionConfigDbRecord;
     },
 
     async getAIMentionConfig(projectId) {
       const row = await d1.prepare(`SELECT * FROM ai_mention_configs WHERE project_id = ?`).bind(projectId).first();
-      return (row as unknown as AIMentionConfigRecord) || null;
+      return (row as unknown as AIMentionConfigDbRecord) || null;
     },
 
     async deleteAIMentionConfig(projectId) {

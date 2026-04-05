@@ -203,7 +203,7 @@ export interface FeedbackDatabase {
     inputTokens: number | null; outputTokens: number | null; errorMessage: string | null;
   }): Promise<void>;
   getAIUsageStats(projectId: string, daysBack?: number): Promise<{ total_requests: number; success_count: number; error_count: number; avg_latency_ms: number | null; total_input_tokens: number; total_output_tokens: number }>;
-  listAIRequests(projectId: string, limit?: number, offset?: number): Promise<{ data: any[]; total: number }>;
+  listAIRequests(projectId: string, limit?: number, offset?: number): Promise<{ data: import('@saas-maker/shared-types').AIRequestRecord[]; total: number }>;
 
   // CLI Auth
   createCliAuthCode(code: string): Promise<void>;
@@ -253,8 +253,8 @@ export interface FeedbackDatabase {
     competitors: string; platforms: string;
     openai_api_key: string | null; anthropic_api_key: string | null;
     google_api_key: string | null; perplexity_api_key: string | null;
-  }): Promise<import('@saas-maker/shared-types').AIMentionConfigRecord>;
-  getAIMentionConfig(projectId: string): Promise<import('@saas-maker/shared-types').AIMentionConfigRecord | null>;
+  }): Promise<import('@saas-maker/shared-types').AIMentionConfigDbRecord>;
+  getAIMentionConfig(projectId: string): Promise<import('@saas-maker/shared-types').AIMentionConfigDbRecord | null>;
   deleteAIMentionConfig(projectId: string): Promise<boolean>;
 
   createAIMentionPrompt(input: { id: string; project_id: string; prompt_text: string; category: string | null }): Promise<import('@saas-maker/shared-types').AIMentionPromptRecord>;
