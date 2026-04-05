@@ -95,51 +95,51 @@ export class AIMentionService {
 
   /** Get AI mention config for a project */
   getConfig(projectId: string): Promise<AIMentionConfig | null> {
-    return this.http.request<AIMentionConfig | null>('GET', `/v1/ai-mention/config/${encodeURIComponent(projectId)}`);
+    return this.http.request<AIMentionConfig | null>('GET', `/v1/ai-mention/config/${encodeURIComponent(projectId)}`, undefined, { auth: 'session' });
   }
 
   /** Create or update AI mention config */
   saveConfig(projectId: string, data: SaveAIMentionConfigData): Promise<AIMentionConfig> {
-    return this.http.request<AIMentionConfig>('POST', `/v1/ai-mention/config/${encodeURIComponent(projectId)}`, data);
+    return this.http.request<AIMentionConfig>('POST', `/v1/ai-mention/config/${encodeURIComponent(projectId)}`, data, { auth: 'session' });
   }
 
   /** Delete AI mention config */
   deleteConfig(projectId: string): Promise<{ ok: boolean }> {
-    return this.http.request<{ ok: boolean }>('DELETE', `/v1/ai-mention/config/${encodeURIComponent(projectId)}`);
+    return this.http.request<{ ok: boolean }>('DELETE', `/v1/ai-mention/config/${encodeURIComponent(projectId)}`, undefined, { auth: 'session' });
   }
 
   /** List saved prompts */
   listPrompts(projectId: string): Promise<AIMentionPrompt[]> {
-    return this.http.request<AIMentionPrompt[]>('GET', `/v1/ai-mention/prompts/${encodeURIComponent(projectId)}`);
+    return this.http.request<AIMentionPrompt[]>('GET', `/v1/ai-mention/prompts/${encodeURIComponent(projectId)}`, undefined, { auth: 'session' });
   }
 
   /** Add a prompt */
   addPrompt(projectId: string, data: AddAIMentionPromptData): Promise<AIMentionPrompt> {
-    return this.http.request<AIMentionPrompt>('POST', `/v1/ai-mention/prompts/${encodeURIComponent(projectId)}`, data);
+    return this.http.request<AIMentionPrompt>('POST', `/v1/ai-mention/prompts/${encodeURIComponent(projectId)}`, data, { auth: 'session' });
   }
 
   /** Delete a prompt */
   deletePrompt(projectId: string, promptId: string): Promise<{ ok: boolean }> {
-    return this.http.request<{ ok: boolean }>('DELETE', `/v1/ai-mention/prompts/${encodeURIComponent(projectId)}/${encodeURIComponent(promptId)}`);
+    return this.http.request<{ ok: boolean }>('DELETE', `/v1/ai-mention/prompts/${encodeURIComponent(projectId)}/${encodeURIComponent(promptId)}`, undefined, { auth: 'session' });
   }
 
   /** Trigger a check run */
   runCheck(projectId: string): Promise<AIMentionCheck> {
-    return this.http.request<AIMentionCheck>('POST', `/v1/ai-mention/check/${encodeURIComponent(projectId)}`);
+    return this.http.request<AIMentionCheck>('POST', `/v1/ai-mention/check/${encodeURIComponent(projectId)}`, undefined, { auth: 'session' });
   }
 
   /** List past checks */
   listChecks(projectId: string): Promise<AIMentionCheck[]> {
-    return this.http.request<AIMentionCheck[]>('GET', `/v1/ai-mention/checks/${encodeURIComponent(projectId)}`);
+    return this.http.request<AIMentionCheck[]>('GET', `/v1/ai-mention/checks/${encodeURIComponent(projectId)}`, undefined, { auth: 'session' });
   }
 
   /** Get check details with results */
   getCheck(projectId: string, checkId: string): Promise<AIMentionCheck & { results: AIMentionResult[] }> {
-    return this.http.request<AIMentionCheck & { results: AIMentionResult[] }>('GET', `/v1/ai-mention/checks/${encodeURIComponent(projectId)}/${encodeURIComponent(checkId)}`);
+    return this.http.request<AIMentionCheck & { results: AIMentionResult[] }>('GET', `/v1/ai-mention/checks/${encodeURIComponent(projectId)}/${encodeURIComponent(checkId)}`, undefined, { auth: 'session' });
   }
 
   /** Get full dashboard data */
   getDashboard(projectId: string): Promise<AIMentionDashboard> {
-    return this.http.request<AIMentionDashboard>('GET', `/v1/ai-mention/dashboard/${encodeURIComponent(projectId)}`);
+    return this.http.request<AIMentionDashboard>('GET', `/v1/ai-mention/dashboard/${encodeURIComponent(projectId)}`, undefined, { auth: 'session' });
   }
 }

@@ -54,6 +54,16 @@ const EXAMPLES: ExampleRow[] = [
     description: 'List forms via dashboard session route',
   },
   {
+    category: 'AI Mention',
+    command: 'saasmaker api POST /v1/ai-mention/check/<projectId> --auth session',
+    description: 'Start an AI mention check run',
+  },
+  {
+    category: 'AI Mention',
+    command: 'saasmaker ai-mention history --project <projectId> --output table',
+    description: 'Review recent AI mention checks',
+  },
+  {
     category: 'Links',
     command: 'saasmaker api POST /v1/links --auth project --body \'{"destination":"https://example.com","title":"Homepage"}\'',
     description: 'Create a short link',

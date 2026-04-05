@@ -29,6 +29,7 @@ saasmaker doctor
 - `init` — link local directory to a project
 - `whoami` / `keys` — inspect auth + linked context
 - `projects list|create` — project management
+- `ai-mention config|prompts|prompts-add|check|history` — AI mention monitoring
 - `status` — feature status snapshot
 - `doctor` — configuration/auth diagnostics
 - `examples` — copy-paste API-first recipes
@@ -100,6 +101,16 @@ saasmaker api POST /v1/links --auth project \
 
 # Dashboard forms
 saasmaker api GET /v1/forms/dashboard/<projectId> --auth session --output table
+
+# Save AI mention config (session route)
+saasmaker api POST /v1/ai-mention/config/<projectId> --auth session \
+  --body '{"brand_name":"Acme","platforms":["openai"],"openai_api_key":"sk-..."}'
+
+# Run an AI mention check
+saasmaker api POST /v1/ai-mention/check/<projectId> --auth session
+
+# Dedicated helper command
+saasmaker ai-mention history --project <projectId> --output table
 
 # Approve testimonial
 saasmaker api PATCH /v1/testimonials/<testimonialId> --auth session \

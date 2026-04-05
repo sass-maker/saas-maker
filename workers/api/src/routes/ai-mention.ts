@@ -17,6 +17,14 @@ const VALID_PLATFORMS: AIMentionPlatform[] = ['openai', 'anthropic', 'google', '
 const MAX_PROMPTS = 20;
 const MAX_COMPETITORS = 5;
 
+function scheduleBackgroundTask(c: any, task: Promise<unknown>) {
+  try {
+    c.executionCtx.waitUntil(task);
+  } catch {
+    void task;
+  }
+}
+
 function toConfigRecord(row: any): AIMentionConfigRecord {
   return {
     id: row.id,
@@ -184,7 +192,8 @@ aiMention.post('/check/:projectId', async (c) => {
   });
 
   // Run check in background
-  c.executionCtx.waitUntil(
+  scheduleBackgroundTask(
+    c,
     runMentionCheck(result.db, config, prompts, checkId, projectId)
       .catch((err) => console.error('AI mention check failed:', err))
   );

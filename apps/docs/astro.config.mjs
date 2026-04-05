@@ -34,6 +34,7 @@ export default defineConfig({
 						{ label: 'Knowledge Base (Vector)', slug: 'services/knowledge-base' },
 						{ label: 'Analytics', slug: 'services/analytics' },
 						{ label: 'AI Gateway', slug: 'services/ai-gateway' },
+						{ label: 'AI Mention Check', slug: 'services/ai-mention' },
 						{ label: 'Chatbot', slug: 'services/chatbot' },
 						{ label: 'Projects & README', slug: 'services/projects' },
 						{ label: 'Directory', slug: 'services/directory' },
