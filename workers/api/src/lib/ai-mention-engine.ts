@@ -1,4 +1,9 @@
-import type { AIMentionPlatform, AIMentionCompetitor, AIMentionSentiment } from '@saas-maker/shared-types';
+import type {
+  AIMentionCompetitor,
+  AIMentionConfigDbRecord,
+  AIMentionPlatform,
+  AIMentionSentiment,
+} from '@saas-maker/shared-types';
 
 interface PlatformResponse {
   responseText: string;
@@ -171,24 +176,12 @@ export function analyzeResponse(
   return { brand_mentioned, brand_sentiment, brand_position, competitors_mentioned, citations, brand_cited };
 }
 
-interface ConfigRow {
-  openai_api_key: string | null;
-  anthropic_api_key: string | null;
-  google_api_key: string | null;
-  perplexity_api_key: string | null;
-  brand_name: string;
-  brand_aliases: string;
-  brand_url: string | null;
-  competitors: string;
-  platforms: string;
-}
-
 interface PromptRow {
   id: string;
   prompt_text: string;
 }
 
-function getApiKey(config: ConfigRow, platform: AIMentionPlatform): string | null {
+function getApiKey(config: AIMentionConfigDbRecord, platform: AIMentionPlatform): string | null {
   const keyMap: Record<AIMentionPlatform, string | null> = {
     openai: config.openai_api_key,
     anthropic: config.anthropic_api_key,
@@ -200,7 +193,7 @@ function getApiKey(config: ConfigRow, platform: AIMentionPlatform): string | nul
 
 export async function runMentionCheck(
   db: any,
-  config: ConfigRow,
+  config: AIMentionConfigDbRecord,
   prompts: PromptRow[],
   checkId: string,
   projectId: string

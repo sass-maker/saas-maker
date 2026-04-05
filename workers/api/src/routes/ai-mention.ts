@@ -4,6 +4,7 @@ import { requireSession } from '../middleware/auth';
 import { getDb } from '../db';
 import { runMentionCheck } from '../lib/ai-mention-engine';
 import type {
+  AIMentionConfigDbRecord,
   AIMentionConfigRecord,
   AIMentionResultRecord,
   AIMentionPlatform,
@@ -17,7 +18,15 @@ const VALID_PLATFORMS: AIMentionPlatform[] = ['openai', 'anthropic', 'google', '
 const MAX_PROMPTS = 20;
 const MAX_COMPETITORS = 5;
 
-function toConfigRecord(row: any): AIMentionConfigRecord {
+function scheduleBackgroundTask(c: any, task: Promise<unknown>) {
+  try {
+    c.executionCtx.waitUntil(task);
+  } catch {
+    void task;
+  }
+}
+
+function toConfigRecord(row: AIMentionConfigDbRecord): AIMentionConfigRecord {
   return {
     id: row.id,
     project_id: row.project_id,
@@ -161,7 +170,7 @@ aiMention.post('/check/:projectId', async (c) => {
   const prompts = await result.db.listAIMentionPrompts(projectId);
   if (prompts.length === 0) return c.json({ error: 'Add at least one prompt' }, 400);
 
-  const platforms: AIMentionPlatform[] = JSON.parse(config.platforms);
+  const platforms = JSON.parse(config.platforms) as AIMentionPlatform[];
   const activePlatforms = platforms.filter((p: AIMentionPlatform) => {
     const keyMap: Record<AIMentionPlatform, string | null> = {
       openai: config.openai_api_key,
@@ -184,7 +193,8 @@ aiMention.post('/check/:projectId', async (c) => {
   });
 
   // Run check in background
-  c.executionCtx.waitUntil(
+  scheduleBackgroundTask(
+    c,
     runMentionCheck(result.db, config, prompts, checkId, projectId)
       .catch((err) => console.error('AI mention check failed:', err))
   );

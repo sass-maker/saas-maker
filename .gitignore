@@ -16,6 +16,7 @@ apps/landing-page/out/
 .claude/
 .playwright-mcp/
 .metadata_never_index
+.cache_ggshield
 
 # Test artifacts
 test-results/

@@ -1,5 +1,6 @@
 import type { FeedbackDatabase } from '@saas-maker/db';
 import type {
+  AIRequestRecord,
   FeedbackRecord,
   FeedbackVote,
   ProjectRecord,
@@ -17,6 +18,11 @@ import type {
   FormResponseRecord,
   FormAnswerRecord,
   RoadmapItemRecord,
+  AIMentionConfigDbRecord,
+  AIMentionConfigRecord,
+  AIMentionPromptRecord,
+  AIMentionCheckRecord,
+  AIMentionResultRecord,
 } from '@saas-maker/shared-types';
 
 function parseViewerVote(value: unknown): FeedbackVote {
@@ -25,9 +31,23 @@ function parseViewerVote(value: unknown): FeedbackVote {
   return null;
 }
 
+/**
+ * Helper to cast D1 rows to specific types.
+ * Since D1 returns generic objects, this provides a single point of casting
+ * to avoid spreading 'as any' or 'as unknown as' throughout the logic.
+ */
+function mapRow<T>(row: Record<string, unknown> | null | undefined): T | null {
+  if (!row) return null;
+  return row as T;
+}
+
+function mapRows<T>(results: Record<string, unknown>[]): T[] {
+  return results as T[];
+}
+
 function toFeedbackRecord(row: Record<string, unknown>): FeedbackRecord {
   return {
-    ...(row as unknown as FeedbackRecord),
+    ...mapRow<FeedbackRecord>(row)!,
     viewer_vote: parseViewerVote(row.viewer_vote),
   };
 }
@@ -57,12 +77,12 @@ export function getDb(d1: D1Database): FeedbackDatabase {
            avatar_url = EXCLUDED.avatar_url`
       ).bind(input.id, input.email, input.name, input.avatar_url).run();
       const row = await d1.prepare(`SELECT * FROM users WHERE id = ?`).bind(input.id).first();
-      return row as unknown as UserRecord;
+      return mapRow<UserRecord>(row)!;
     },
 
     async getUserById(id) {
       const row = await d1.prepare(`SELECT * FROM users WHERE id = ?`).bind(id).first();
-      return (row as unknown as UserRecord) || null;
+      return mapRow<UserRecord>(row);
     },
 
     // --- Sessions ---
@@ -93,22 +113,22 @@ export function getDb(d1: D1Database): FeedbackDatabase {
          VALUES (?, ?, ?, ?, ?, ?)`
       ).bind(input.id, input.name, input.slug, input.api_key, input.owner_id, source).run();
       const row = await d1.prepare(`SELECT * FROM projects WHERE id = ?`).bind(input.id).first();
-      return row as unknown as ProjectRecord;
+      return mapRow<ProjectRecord>(row)!;
     },
 
     async getProjectBySlug(slug) {
       const row = await d1.prepare(`SELECT * FROM projects WHERE slug = ?`).bind(slug).first();
-      return (row as unknown as ProjectRecord) || null;
+      return mapRow<ProjectRecord>(row);
     },
 
     async getProjectByApiKey(apiKey) {
       const row = await d1.prepare(`SELECT * FROM projects WHERE api_key = ?`).bind(apiKey).first();
-      return (row as unknown as ProjectRecord) || null;
+      return mapRow<ProjectRecord>(row);
     },
 
     async getProjectById(id) {
       const row = await d1.prepare(`SELECT * FROM projects WHERE id = ?`).bind(id).first();
-      return (row as unknown as ProjectRecord) || null;
+      return mapRow<ProjectRecord>(row);
     },
 
     async listProjectsByOwner(ownerId, source) {
@@ -116,13 +136,13 @@ export function getDb(d1: D1Database): FeedbackDatabase {
         const { results } = await d1.prepare(
           `SELECT * FROM projects WHERE owner_id = ? ORDER BY created_at DESC`
         ).bind(ownerId).all();
-        return results as unknown as ProjectRecord[];
+        return mapRows<ProjectRecord>(results);
       }
       const filterSource = source || 'dashboard';
       const { results } = await d1.prepare(
         `SELECT * FROM projects WHERE owner_id = ? AND source = ? ORDER BY created_at DESC`
       ).bind(ownerId, filterSource).all();
-      return results as unknown as ProjectRecord[];
+      return mapRows<ProjectRecord>(results);
     },
 
     async updateProject(id, input) {
@@ -140,7 +160,7 @@ export function getDb(d1: D1Database): FeedbackDatabase {
         await d1.prepare(sql).bind(...values).run();
       }
       const row = await d1.prepare(`SELECT * FROM projects WHERE id = ?`).bind(id).first();
-      return (row as unknown as ProjectRecord) || null;
+      return mapRow<ProjectRecord>(row);
     },
 
     async deleteProject(id) {
@@ -966,7 +986,7 @@ export function getDb(d1: D1Database): FeedbackDatabase {
              order_index = EXCLUDED.order_index`
         ).bind(q.id, formId, q.type, q.label, q.description, q.required ? 1 : 0, JSON.stringify(q.options), q.order_index).run();
         const row = await d1.prepare(`SELECT * FROM form_questions WHERE id = ?`).bind(q.id).first();
-        results.push(row as unknown as FormQuestionRecord);
+        results.push(mapRow<FormQuestionRecord>(row)!);
       }
       return results;
     },
@@ -975,7 +995,7 @@ export function getDb(d1: D1Database): FeedbackDatabase {
       const { results } = await d1.prepare(
         `SELECT * FROM form_questions WHERE form_id = ? ORDER BY order_index ASC`
       ).bind(formId).all();
-      return results as unknown as FormQuestionRecord[];
+      return mapRows<FormQuestionRecord>(results);
     },
 
     async updateFormQuestion(id, input) {
@@ -992,7 +1012,7 @@ export function getDb(d1: D1Database): FeedbackDatabase {
       values.push(id);
       await d1.prepare(sql).bind(...values).run();
       const row = await d1.prepare(`SELECT * FROM form_questions WHERE id = ?`).bind(id).first();
-      return (row as unknown as FormQuestionRecord) || null;
+      return mapRow<FormQuestionRecord>(row);
     },
 
     async deleteFormQuestion(id) {
@@ -1007,7 +1027,7 @@ export function getDb(d1: D1Database): FeedbackDatabase {
         `INSERT INTO form_responses (id, form_id) VALUES (?, ?)`
       ).bind(input.id, input.form_id).run();
       const row = await d1.prepare(`SELECT * FROM form_responses WHERE id = ?`).bind(input.id).first();
-      return row as unknown as FormResponseRecord;
+      return mapRow<FormResponseRecord>(row)!;
     },
 
     async createFormAnswers(answers) {
@@ -1017,7 +1037,7 @@ export function getDb(d1: D1Database): FeedbackDatabase {
           `INSERT INTO form_answers (id, response_id, question_id, value) VALUES (?, ?, ?, ?)`
         ).bind(a.id, a.response_id, a.question_id, a.value).run();
         const row = await d1.prepare(`SELECT * FROM form_answers WHERE id = ?`).bind(a.id).first();
-        results.push(row as unknown as FormAnswerRecord);
+        results.push(mapRow<FormAnswerRecord>(row)!);
       }
       return results;
     },
@@ -1032,15 +1052,15 @@ export function getDb(d1: D1Database): FeedbackDatabase {
          ORDER BY submitted_at DESC
          LIMIT ? OFFSET ?`
       ).bind(formId, limit, offset).all();
-      const data = [];
+      const data: (FormResponseRecord & { answers: FormAnswerRecord[] })[] = [];
       for (const r of responses) {
         const { results: answers } = await d1.prepare(
           `SELECT * FROM form_answers WHERE response_id = ?`
         ).bind(r.id).all();
-        data.push({ ...r, answers: answers as unknown as FormAnswerRecord[] });
+        data.push({ ...mapRow<FormResponseRecord>(r)!, answers: mapRows<FormAnswerRecord>(answers) });
       }
       return {
-        data: data as (FormResponseRecord & { answers: FormAnswerRecord[] })[],
+        data,
         total: (countRow?.total as number) || 0,
       };
     },
@@ -1061,7 +1081,7 @@ export function getDb(d1: D1Database): FeedbackDatabase {
       const { results } = await d1.prepare(
         `SELECT * FROM form_answers WHERE question_id = ?`
       ).bind(questionId).all();
-      return results as unknown as FormAnswerRecord[];
+      return mapRows<FormAnswerRecord>(results);
     },
 
     // --- CLI Auth ---
@@ -1073,7 +1093,7 @@ export function getDb(d1: D1Database): FeedbackDatabase {
 
     async getCliAuthCode(code: string) {
       const row = await d1.prepare(`SELECT * FROM cli_auth_codes WHERE code = ?`).bind(code).first();
-      return row as unknown as { code: string; user_id: string | null; status: string; token: string | null; expires_at: string } | undefined;
+      return mapRow<{ code: string; user_id: string | null; status: string; token: string | null; expires_at: string }>(row) || undefined;
     },
 
     async approveCliAuthCode(code: string, userId: string, token: string) {
@@ -1241,14 +1261,14 @@ export function getDb(d1: D1Database): FeedbackDatabase {
       };
     },
 
-    async listAIRequests(projectId: string, limit: number = 50, offset: number = 0): Promise<{ data: any[]; total: number }> {
+    async listAIRequests(projectId: string, limit: number = 50, offset: number = 0): Promise<{ data: AIRequestRecord[]; total: number }> {
       const countRow = await d1.prepare(
         `SELECT COUNT(*) AS total FROM ai_requests WHERE project_id = ?`
       ).bind(projectId).first();
       const { results } = await d1.prepare(
         `SELECT * FROM ai_requests WHERE project_id = ? ORDER BY created_at DESC LIMIT ? OFFSET ?`
       ).bind(projectId, limit, offset).all();
-      return { data: results as unknown as any[], total: (countRow?.total as number) || 0 };
+      return { data: results as unknown as AIRequestRecord[], total: (countRow?.total as number) || 0 };
     },
 
     // --- Roadmap ---
@@ -1323,7 +1343,7 @@ export function getDb(d1: D1Database): FeedbackDatabase {
          FROM roadmap_items
          WHERE project_id = ? AND "column" = ?`
       ).bind(projectId, column).first();
-      return (row as any).next_pos as number;
+      return (row as unknown as { next_pos: number }).next_pos as number;
     },
 
     // --- Roadmap Votes ---
@@ -1339,9 +1359,10 @@ export function getDb(d1: D1Database): FeedbackDatabase {
            COALESCE(SUM(CASE WHEN vote = -1 THEN 1 ELSE 0 END), 0) AS down
          FROM roadmap_votes WHERE roadmap_item_id = ?`
       ).bind(input.roadmap_item_id).first();
+      const castCounts = counts as unknown as { up: number; down: number };
       await d1.prepare(
         `UPDATE roadmap_items SET upvote_count = ?, downvote_count = ? WHERE id = ?`
-      ).bind((counts as any).up, (counts as any).down, input.roadmap_item_id).run();
+      ).bind(castCounts.up, castCounts.down, input.roadmap_item_id).run();
     },
 
     async removeRoadmapVote(roadmapItemId, userIdentifier) {
@@ -1355,9 +1376,10 @@ export function getDb(d1: D1Database): FeedbackDatabase {
              COALESCE(SUM(CASE WHEN vote = -1 THEN 1 ELSE 0 END), 0) AS down
            FROM roadmap_votes WHERE roadmap_item_id = ?`
         ).bind(roadmapItemId).first();
+        const castCounts = counts as unknown as { up: number; down: number };
         await d1.prepare(
           `UPDATE roadmap_items SET upvote_count = ?, downvote_count = ? WHERE id = ?`
-        ).bind((counts as any).up, (counts as any).down, roadmapItemId).run();
+        ).bind(castCounts.up, castCounts.down, roadmapItemId).run();
       }
       return (meta.changes ?? 0) > 0;
     },
@@ -1367,7 +1389,7 @@ export function getDb(d1: D1Database): FeedbackDatabase {
         `SELECT vote FROM roadmap_votes WHERE roadmap_item_id = ? AND user_identifier = ?`
       ).bind(roadmapItemId, userIdentifier).first();
       if (!row) return null;
-      return (row as any).vote === 1 ? 1 : -1;
+      return (row as unknown as { vote: number }).vote === 1 ? 1 : -1;
     },
 
     // --- Directory ---
@@ -1380,7 +1402,7 @@ export function getDb(d1: D1Database): FeedbackDatabase {
       return row as any;
     },
 
-    async listDirectoryListings(page, limit, tag?, search?, status = 'approved' as any) {
+    async listDirectoryListings(page, limit, tag?, search?, status: import('@saas-maker/shared-types').DirectoryListingStatus = 'approved') {
       const offset = (page - 1) * limit;
       const conditions: string[] = ['status = ?'];
       const bindValues: unknown[] = [status];
@@ -1404,19 +1426,19 @@ export function getDb(d1: D1Database): FeedbackDatabase {
         `SELECT COUNT(*) AS count FROM directory_listings WHERE ${where}`
       ).bind(...bindValues).first();
 
-      return { data: results as any[], total: (countRow?.count as number) || 0 };
+      return { data: mapRows<import('@saas-maker/shared-types').DirectoryListingRecord>(results), total: (countRow?.count as number) || 0 };
     },
 
     async getDirectoryListingById(id) {
       const row = await d1.prepare(`SELECT * FROM directory_listings WHERE id = ?`).bind(id).first();
-      return (row as any) || null;
+      return mapRow<import('@saas-maker/shared-types').DirectoryListingRecord>(row);
     },
 
     async getDirectoryListingByProjectId(projectId) {
       const row = await d1.prepare(
         `SELECT * FROM directory_listings WHERE project_id = ? LIMIT 1`
       ).bind(projectId).first();
-      return (row as any) || null;
+      return mapRow<import('@saas-maker/shared-types').DirectoryListingRecord>(row);
     },
 
     async updateDirectoryListingBadgeVerified(id, verified) {
@@ -1447,12 +1469,12 @@ export function getDb(d1: D1Database): FeedbackDatabase {
         input.openai_api_key, input.anthropic_api_key, input.google_api_key, input.perplexity_api_key
       ).run();
       const row = await d1.prepare(`SELECT * FROM ai_mention_configs WHERE project_id = ?`).bind(input.project_id).first();
-      return row as any;
+      return row as unknown as AIMentionConfigDbRecord;
     },
 
     async getAIMentionConfig(projectId) {
       const row = await d1.prepare(`SELECT * FROM ai_mention_configs WHERE project_id = ?`).bind(projectId).first();
-      return (row as any) || null;
+      return (row as unknown as AIMentionConfigDbRecord) || null;
     },
 
     async deleteAIMentionConfig(projectId) {
@@ -1465,14 +1487,14 @@ export function getDb(d1: D1Database): FeedbackDatabase {
         `INSERT INTO ai_mention_prompts (id, project_id, prompt_text, category) VALUES (?, ?, ?, ?)`
       ).bind(input.id, input.project_id, input.prompt_text, input.category).run();
       const row = await d1.prepare(`SELECT * FROM ai_mention_prompts WHERE id = ?`).bind(input.id).first();
-      return row as any;
+      return row as unknown as AIMentionPromptRecord;
     },
 
     async listAIMentionPrompts(projectId) {
       const { results } = await d1.prepare(
         `SELECT * FROM ai_mention_prompts WHERE project_id = ? ORDER BY created_at ASC`
       ).bind(projectId).all();
-      return results as any[];
+      return results as unknown as AIMentionPromptRecord[];
     },
 
     async deleteAIMentionPrompt(id) {
@@ -1492,7 +1514,7 @@ export function getDb(d1: D1Database): FeedbackDatabase {
         `INSERT INTO ai_mention_checks (id, project_id, total_queries) VALUES (?, ?, ?)`
       ).bind(input.id, input.project_id, input.total_queries).run();
       const row = await d1.prepare(`SELECT * FROM ai_mention_checks WHERE id = ?`).bind(input.id).first();
-      return row as any;
+      return row as unknown as AIMentionCheckRecord;
     },
 
     async updateAIMentionCheck(id, input) {
@@ -1508,19 +1530,19 @@ export function getDb(d1: D1Database): FeedbackDatabase {
       values.push(id);
       await d1.prepare(sql).bind(...values).run();
       const row = await d1.prepare(`SELECT * FROM ai_mention_checks WHERE id = ?`).bind(id).first();
-      return (row as any) || null;
+      return (row as unknown as AIMentionCheckRecord) || null;
     },
 
     async listAIMentionChecks(projectId, limit = 10) {
       const { results } = await d1.prepare(
         `SELECT * FROM ai_mention_checks WHERE project_id = ? ORDER BY created_at DESC LIMIT ?`
       ).bind(projectId, limit).all();
-      return results as any[];
+      return results as unknown as AIMentionCheckRecord[];
     },
 
     async getAIMentionCheckById(id) {
       const row = await d1.prepare(`SELECT * FROM ai_mention_checks WHERE id = ?`).bind(id).first();
-      return (row as any) || null;
+      return (row as unknown as AIMentionCheckRecord) || null;
     },
 
     async createAIMentionResult(input) {
@@ -1540,7 +1562,7 @@ export function getDb(d1: D1Database): FeedbackDatabase {
       const { results } = await d1.prepare(
         `SELECT * FROM ai_mention_results WHERE check_id = ? ORDER BY created_at ASC`
       ).bind(checkId).all();
-      return results as any[];
+      return results as unknown as AIMentionResultRecord[];
     },
   };
 }

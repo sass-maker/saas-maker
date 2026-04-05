@@ -5,19 +5,49 @@ export class SaaSMakerError extends Error {
   }
 }
 
+export type AuthMode = 'project' | 'session' | 'none';
+
+interface RequestOptions {
+  auth?: AuthMode;
+}
+
 export class HttpClient {
   constructor(
     private baseUrl: string,
-    private apiKey: string,
+    private apiKey?: string,
+    private sessionToken?: string,
   ) {}
 
-  async request<T>(method: string, path: string, body?: unknown): Promise<T> {
+  private buildHeaders(auth: AuthMode = 'project'): Record<string, string> {
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+
+    if (auth === 'project') {
+      if (!this.apiKey) {
+        throw new SaaSMakerError(
+          'Project API key is required for project-authenticated endpoints',
+          401,
+        );
+      }
+      headers['X-Project-Key'] = this.apiKey;
+    } else if (auth === 'session') {
+      if (!this.sessionToken) {
+        throw new SaaSMakerError(
+          'Session token is required for session-authenticated endpoints',
+          401,
+        );
+      }
+      headers.Authorization = `Bearer ${this.sessionToken}`;
+    }
+
+    return headers;
+  }
+
+  async request<T>(method: string, path: string, body?: unknown, options: RequestOptions = {}): Promise<T> {
     const res = await fetch(`${this.baseUrl}${path}`, {
       method,
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Project-Key': this.apiKey,
-      },
+      headers: this.buildHeaders(options.auth),
       body: body ? JSON.stringify(body) : undefined,
     });
 
@@ -32,13 +62,10 @@ export class HttpClient {
     return res.json() as Promise<T>;
   }
 
-  async requestRaw(method: string, path: string, body?: unknown): Promise<Response> {
+  async requestRaw(method: string, path: string, body?: unknown, options: RequestOptions = {}): Promise<Response> {
     const res = await fetch(`${this.baseUrl}${path}`, {
       method,
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Project-Key': this.apiKey,
-      },
+      headers: this.buildHeaders(options.auth),
       body: body ? JSON.stringify(body) : undefined,
     });
 

@@ -611,6 +611,23 @@ export interface AIMentionCompetitor {
   url?: string;
 }
 
+// Internal DB row shape used by the worker before the route sanitizes secrets.
+export interface AIMentionConfigDbRecord {
+  id: string;
+  project_id: string;
+  brand_name: string;
+  brand_aliases: string;
+  brand_url: string | null;
+  competitors: string;
+  platforms: string;
+  openai_api_key: string | null;
+  anthropic_api_key: string | null;
+  google_api_key: string | null;
+  perplexity_api_key: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface AIMentionConfigRecord {
   id: string;
   project_id: string;

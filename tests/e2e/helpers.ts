@@ -1,7 +1,18 @@
-export const API_BASE = 'https://api.sassmaker.com';
-export const CLI_TOKEN = 'sm_your_cli_token';
-export const PROJECT_ID = '8ca6d8d2-2b77-45d9-beb0-9c33c531b4d4';
-export const API_KEY = 'pk_your_project_key';
+function requireEnv(name: string): string {
+  const value = process.env[name]?.trim();
+  if (!value) {
+    throw new Error(
+      `Missing required env var ${name} for Playwright e2e API tests.`
+    );
+  }
+  return value;
+}
+
+export const API_BASE =
+  process.env.SAASMAKER_E2E_API_BASE?.trim() || 'https://api.sassmaker.com';
+export const CLI_TOKEN = requireEnv('SAASMAKER_E2E_CLI_TOKEN');
+export const PROJECT_ID = requireEnv('SAASMAKER_E2E_PROJECT_ID');
+export const API_KEY = requireEnv('SAASMAKER_E2E_PROJECT_API_KEY');
 
 /** Headers for dashboard routes that require session auth (CLI token). */
 export function authHeaders() {

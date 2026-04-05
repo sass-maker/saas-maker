@@ -14,7 +14,8 @@ import { DirectoryService } from './services/directory';
 import { AIMentionService } from './services/ai-mention';
 
 export interface SaaSMakerConfig {
-  apiKey: string;
+  apiKey?: string;
+  sessionToken?: string;
   baseUrl?: string;
 }
 
@@ -34,9 +35,14 @@ export class SaaSMakerClient {
   readonly aiMention: AIMentionService;
 
   constructor(config: SaaSMakerConfig) {
+    if (!config.apiKey && !config.sessionToken) {
+      throw new Error('Provide at least one of apiKey or sessionToken.');
+    }
+
     const http = new HttpClient(
       config.baseUrl || 'https://api.sassmaker.com',
       config.apiKey,
+      config.sessionToken,
     );
 
     this.feedback = new FeedbackService(http);

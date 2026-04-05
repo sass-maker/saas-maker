@@ -25,6 +25,130 @@
         }
       }
     },
+    "/v1/ai-mention/check/{projectId}": {
+      "post": {
+        "tags": [
+          "ai-mention"
+        ],
+        "summary": "POST /v1/ai-mention/check/{projectId}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/ai-mention/checks/{projectId}": {
+      "get": {
+        "tags": [
+          "ai-mention"
+        ],
+        "summary": "GET /v1/ai-mention/checks/{projectId}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/ai-mention/checks/{projectId}/{checkId}": {
+      "get": {
+        "tags": [
+          "ai-mention"
+        ],
+        "summary": "GET /v1/ai-mention/checks/{projectId}/{checkId}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/ai-mention/config/{projectId}": {
+      "get": {
+        "tags": [
+          "ai-mention"
+        ],
+        "summary": "GET /v1/ai-mention/config/{projectId}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ai-mention"
+        ],
+        "summary": "POST /v1/ai-mention/config/{projectId}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ai-mention"
+        ],
+        "summary": "DELETE /v1/ai-mention/config/{projectId}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/ai-mention/dashboard/{projectId}": {
+      "get": {
+        "tags": [
+          "ai-mention"
+        ],
+        "summary": "GET /v1/ai-mention/dashboard/{projectId}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/ai-mention/prompts/{projectId}": {
+      "get": {
+        "tags": [
+          "ai-mention"
+        ],
+        "summary": "GET /v1/ai-mention/prompts/{projectId}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ai-mention"
+        ],
+        "summary": "POST /v1/ai-mention/prompts/{projectId}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/ai-mention/prompts/{projectId}/{id}": {
+      "delete": {
+        "tags": [
+          "ai-mention"
+        ],
+        "summary": "DELETE /v1/ai-mention/prompts/{projectId}/{id}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/v1/ai/chat/completions": {
       "post": {
         "tags": [

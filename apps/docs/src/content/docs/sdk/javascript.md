@@ -22,6 +22,15 @@ const client = new SaaSMakerClient({
 });
 ```
 
+For dashboard-only SDK surfaces such as `aiMention`, also pass a `sessionToken`:
+
+```typescript
+const dashboardClient = new SaaSMakerClient({
+  sessionToken: 'sm_your_session_token',
+  baseUrl: 'https://api.sassmaker.com',
+});
+```
+
 ## Feedback
 
 ```typescript
@@ -179,6 +188,29 @@ const ragStream = await client.ai.ragStream({
   query: 'How do I collect feedback?',
   index_id: 'idx_123',
 });
+```
+
+## AI Mention Check
+
+```typescript
+const dashboardClient = new SaaSMakerClient({
+  sessionToken: 'sm_your_session_token',
+  baseUrl: 'https://api.sassmaker.com',
+});
+
+await dashboardClient.aiMention.saveConfig('proj_123', {
+  brand_name: 'Acme',
+  platforms: ['openai'],
+  openai_api_key: 'sk-...',
+});
+
+await dashboardClient.aiMention.addPrompt('proj_123', {
+  prompt_text: 'What is the best AI customer support tool?',
+  category: 'support',
+});
+
+const check = await dashboardClient.aiMention.runCheck('proj_123');
+const details = await dashboardClient.aiMention.getCheck('proj_123', check.id);
 ```
 
 ## Error handling
