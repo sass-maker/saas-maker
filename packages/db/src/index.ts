@@ -253,19 +253,19 @@ export interface FeedbackDatabase {
     competitors: string; platforms: string;
     openai_api_key: string | null; anthropic_api_key: string | null;
     google_api_key: string | null; perplexity_api_key: string | null;
-  }): Promise<any>;
-  getAIMentionConfig(projectId: string): Promise<any | null>;
+  }): Promise<import('@saas-maker/shared-types').AIMentionConfigRecord>;
+  getAIMentionConfig(projectId: string): Promise<import('@saas-maker/shared-types').AIMentionConfigRecord | null>;
   deleteAIMentionConfig(projectId: string): Promise<boolean>;
 
-  createAIMentionPrompt(input: { id: string; project_id: string; prompt_text: string; category: string | null }): Promise<any>;
-  listAIMentionPrompts(projectId: string): Promise<any[]>;
+  createAIMentionPrompt(input: { id: string; project_id: string; prompt_text: string; category: string | null }): Promise<import('@saas-maker/shared-types').AIMentionPromptRecord>;
+  listAIMentionPrompts(projectId: string): Promise<import('@saas-maker/shared-types').AIMentionPromptRecord[]>;
   deleteAIMentionPrompt(id: string): Promise<boolean>;
   countAIMentionPrompts(projectId: string): Promise<number>;
 
-  createAIMentionCheck(input: { id: string; project_id: string; total_queries: number }): Promise<any>;
-  updateAIMentionCheck(id: string, input: { status?: string; completed_queries?: number; brand_mention_rate?: number | null; summary?: string | null; completed_at?: string | null }): Promise<any | null>;
-  listAIMentionChecks(projectId: string, limit?: number): Promise<any[]>;
-  getAIMentionCheckById(id: string): Promise<any | null>;
+  createAIMentionCheck(input: { id: string; project_id: string; total_queries: number }): Promise<import('@saas-maker/shared-types').AIMentionCheckRecord>;
+  updateAIMentionCheck(id: string, input: { status?: string; completed_queries?: number; brand_mention_rate?: number | null; summary?: string | null; completed_at?: string | null }): Promise<import('@saas-maker/shared-types').AIMentionCheckRecord | null>;
+  listAIMentionChecks(projectId: string, limit?: number): Promise<import('@saas-maker/shared-types').AIMentionCheckRecord[]>;
+  getAIMentionCheckById(id: string): Promise<import('@saas-maker/shared-types').AIMentionCheckRecord | null>;
 
   createAIMentionResult(input: {
     id: string; check_id: string; project_id: string; prompt_id: string;
@@ -274,5 +274,5 @@ export interface FeedbackDatabase {
     brand_position: number | null; competitors_mentioned: string;
     citations: string; brand_cited: boolean; latency_ms: number | null;
   }): Promise<void>;
-  listAIMentionResults(checkId: string): Promise<any[]>;
+  listAIMentionResults(checkId: string): Promise<import('@saas-maker/shared-types').AIMentionResultRecord[]>;
 }
