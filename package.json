@@ -18,10 +18,12 @@
     "check:openapi": "pnpm generate:openapi && git diff --exit-code -- packages/cli/src/openapi.json docs/openapi/openapi.json apps/docs/public/openapi.json",
     "test": "vitest run",
     "test:integration": "vitest run --config vitest.integration.config.ts",
-    "test:e2e": "playwright test tests/e2e/api/"
+    "test:e2e": "playwright test tests/e2e/api/",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@playwright/test": "^1.58.2",
+    "husky": "^9.1.7",
     "vitest": "^4.0.18",
     "wrangler": "^4.69.0"
   }
