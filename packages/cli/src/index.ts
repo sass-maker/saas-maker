@@ -12,6 +12,7 @@ import { formsListCommand, formsCreateCommand, formsGetCommand, formsDeleteComma
 import { waitlistListCommand, waitlistCountCommand, waitlistDeleteCommand } from './commands/waitlist.js';
 import { aiMentionConfigCommand, aiMentionPromptsCommand, aiMentionPromptsAddCommand, aiMentionCheckCommand, aiMentionHistoryCommand } from './commands/ai-mention.js';
 import { initCommand } from './commands/init.js';
+import { forgeCommand } from './commands/forge.js';
 import { statusCommand } from './commands/status.js';
 import { apiCommand } from './commands/api.js';
 import { doctorCommand } from './commands/doctor.js';
@@ -74,6 +75,12 @@ program.command('ai').description('Manage the AI block').action(aiMentionConfigC
 
 // --- Forge & Commander Utils ---
 program.command('init').description('Forge a Foundry link in this directory').action(initCommand);
+program
+  .command('forge')
+  .description('Forge a new Foundry-compliant project from scratch')
+  .option('--name <name>', 'Project name')
+  .option('--type <type>', 'next | vite | node')
+  .action(forgeCommand);
 program
   .command('status')
   .description('Show fleet-wide project stats')

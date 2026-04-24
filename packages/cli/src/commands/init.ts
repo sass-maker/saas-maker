@@ -1,10 +1,11 @@
 import { createInterface } from 'node:readline/promises';
-import { existsSync, mkdirSync, writeFileSync, readFileSync } from 'node:fs';
+import { existsSync, writeFileSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import ora from 'ora';
 import { getResponseError, requestApi } from '../lib/request.js';
-import { saveLocalConfig, hasLocalConfig } from '../lib/config.js';
+import { saveLocalConfig } from '../lib/config.js';
 import { log } from '../lib/ui.js';
+import { detectProjectType, applyStandard, scaffoldRenovate } from '../lib/forge.js';
 
 interface Project {
   id: string;
@@ -39,7 +40,7 @@ export async function initCommand(): Promise<void> {
   }
 
   if (projects.length === 0) {
-    log.info('No fleet projects found. Run `foundry projects create` first.');
+    log.info('No fleet projects found. Run `foundry fleet create` first.');
     return;
   }
 
@@ -84,46 +85,4 @@ export async function initCommand(): Promise<void> {
   } finally {
     rl.close();
   }
-}
-
-export function detectProjectType(): 'next' | 'vite' | 'node' {
-  const pkgPath = join(process.cwd(), 'package.json');
-  if (!existsSync(pkgPath)) return 'node';
-  
-  const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
-  const deps = { ...pkg.dependencies, ...pkg.devDependencies };
-  
-  if (deps.next) return 'next';
-  if (deps.vite) return 'vite';
-  return 'node';
-}
-
-export function applyStandard(type: 'next' | 'vite' | 'node'): void {
-  // 1. ESLint
-  const eslintConfig = `import config from "@saas-maker/eslint-config/${type === 'node' ? '' : type}";\nexport default config;`;
-  writeFileSync(join(process.cwd(), 'eslint.config.js'), eslintConfig);
-  log.success('✓ Applied Foundry ESLint config');
-
-  // 2. TSConfig
-  const tsConfig = { extends: `@saas-maker/tsconfig/${type}.json` };
-  writeFileSync(join(process.cwd(), 'tsconfig.json'), JSON.stringify(tsConfig, null, 2));
-  log.success('✓ Applied Foundry TSConfig');
-
-  // 3. Prettier
-  const pkgPath = join(process.cwd(), 'package.json');
-  const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
-  pkg.prettier = "@saas-maker/prettier-config";
-  writeFileSync(pkgPath, JSON.stringify(pkg, null, 2));
-  log.success('✓ Linked Foundry Prettier config');
-}
-
-function scaffoldRenovate(): void {
-  const file = join(process.cwd(), 'renovate.json');
-  if (existsSync(file)) return;
-
-  const config = {
-    extends: ["github>sarthakagrawal927/foundry-renovate-config"]
-  };
-  writeFileSync(file, JSON.stringify(config, null, 2));
-  log.success('✓ Created renovate.json');
 }

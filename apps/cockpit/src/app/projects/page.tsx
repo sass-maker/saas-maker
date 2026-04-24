@@ -8,7 +8,8 @@ import {
 import { CreateProjectDialog } from "@/components/create-project-dialog";
 import { PageHeader } from "@/components/page-header";
 import { EmptyState } from "@/components/empty-state";
-import { FolderOpen, AlertCircle } from "lucide-react";
+import { FleetMonitor } from "@/components/fleet-monitor";
+import { FolderOpen, AlertCircle, Cloud } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { apiFetch, getServerToken } from "@/lib/api";
@@ -38,6 +39,13 @@ export default async function ProjectsPage() {
         description="Monitor and manage your project fleet."
         action={<CreateProjectDialog />}
       />
+
+      <FleetMonitor />
+
+      <div className="flex items-center gap-2 pt-8">
+        <Cloud className="h-5 w-5 text-muted-foreground" />
+        <h2 className="text-lg font-semibold tracking-tight">Cloud Blocks</h2>
+      </div>
 
       {error ? (
         <Card className="border-destructive/50">

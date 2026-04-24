@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { detectProjectType, applyStandard } from '../init';
+import { detectProjectType, applyStandard } from '../../lib/forge';
 import fs from 'node:fs';
 import path from 'node:path';
 
