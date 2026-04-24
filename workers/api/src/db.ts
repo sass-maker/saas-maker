@@ -86,7 +86,9 @@ export function getDb(d1: D1Database): FeedbackDatabase {
            name = EXCLUDED.name,
            avatar_url = EXCLUDED.avatar_url`
       ).bind(input.id, input.email, input.name, input.avatar_url).run();
-      const row = await d1.prepare(`SELECT * FROM users WHERE id = ?`).bind(input.id).first();
+      // Fetch by id first; fall back to email in case of conflict with a different id
+      const row = await d1.prepare(`SELECT * FROM users WHERE id = ?`).bind(input.id).first()
+        ?? await d1.prepare(`SELECT * FROM users WHERE email = ?`).bind(input.email).first();
       return mapRow<UserRecord>(row)!;
     },
 
