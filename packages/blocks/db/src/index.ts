@@ -1,3 +1,5 @@
+export { FoundryError } from '@saas-maker/ops';
+
 import {
   FeedbackRecord,
   FeedbackListQuery,
@@ -280,6 +282,10 @@ export interface FeedbackDatabase {
   getStandards(ownerId: string, type: string): Promise<StandardsRow | null>;
   upsertStandards(ownerId: string, type: string, eslintRules: object, tsconfigOptions: object, prettierOptions: object): Promise<StandardsRow>;
   getAllStandardsByOwner(ownerId: string): Promise<StandardsRow[]>;
+
+  // Fleet Metadata
+  upsertFleetMetadata(ownerId: string, project: Omit<FleetMetadataRow, 'id' | 'owner_id'>): Promise<void>;
+  getFleetMetadata(ownerId: string): Promise<FleetMetadataRow[]>;
 }
 
 export interface StandardsRow {
@@ -290,4 +296,20 @@ export interface StandardsRow {
   tsconfig_options: string; // JSON string
   prettier_options: string; // JSON string
   updated_at: string;
+}
+
+export interface FleetMetadataRow {
+  id: string;
+  owner_id: string;
+  slug: string;
+  name: string;
+  framework: string;
+  framework_version: string | null;
+  db: string;
+  auth: string;
+  deploy: string;
+  test_frameworks: string;
+  saasmaker_count: number;
+  foundry_linked: number;
+  last_scanned: string;
 }

@@ -11,6 +11,7 @@ import {
   Eye,
   FolderOpen,
   LayoutDashboard,
+  LayoutList,
   Map,
   Megaphone,
   MessageSquare,
@@ -99,15 +100,15 @@ export function SidebarNav() {
       </Link>
 
       <Link
-        href="/projects"
+        href="/fleet"
         className={cn(
           "flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
-          slug
+          pathname === "/fleet"
             ? "bg-muted text-foreground"
             : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
         )}
       >
-        <FolderOpen className="h-4 w-4" />
+        <LayoutList className="h-4 w-4" />
         Fleet
       </Link>
 

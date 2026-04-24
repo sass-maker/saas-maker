@@ -35,6 +35,22 @@ export interface StandardsRow {
   updated_at: string;
 }
 
+export interface FleetMetadataRow {
+  id: string;
+  owner_id: string;
+  slug: string;
+  name: string;
+  framework: string;
+  framework_version: string | null;
+  db: string;
+  auth: string;
+  deploy: string;
+  test_frameworks: string;
+  saasmaker_count: number;
+  foundry_linked: number;
+  last_scanned: string;
+}
+
 function parseViewerVote(value: unknown): FeedbackVote {
   if (value === 1 || value === '1') return 'up';
   if (value === -1 || value === '-1') return 'down';
@@ -1613,6 +1629,34 @@ export function getDb(d1: D1Database): FeedbackDatabase {
         `SELECT * FROM standards WHERE owner_id = ? ORDER BY type ASC`
       ).bind(ownerId).all();
       return mapRows<StandardsRow>(results);
+    },
+
+    // --- Fleet Metadata ---
+    async upsertFleetMetadata(ownerId: string, project: Omit<FleetMetadataRow, 'id' | 'owner_id'>): Promise<void> {
+      await d1.prepare(`
+        INSERT INTO fleet_metadata (id, owner_id, slug, name, framework, framework_version, db, auth, deploy, test_frameworks, saasmaker_count, foundry_linked, last_scanned)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
+        ON CONFLICT (owner_id, slug) DO UPDATE SET
+          name = EXCLUDED.name, framework = EXCLUDED.framework,
+          framework_version = EXCLUDED.framework_version, db = EXCLUDED.db,
+          auth = EXCLUDED.auth, deploy = EXCLUDED.deploy,
+          test_frameworks = EXCLUDED.test_frameworks,
+          saasmaker_count = EXCLUDED.saasmaker_count,
+          foundry_linked = EXCLUDED.foundry_linked,
+          last_scanned = datetime('now')
+      `).bind(
+        crypto.randomUUID(), ownerId, project.slug, project.name,
+        project.framework, project.framework_version ?? null,
+        project.db, project.auth, project.deploy,
+        project.test_frameworks, project.saasmaker_count, project.foundry_linked ? 1 : 0
+      ).run();
+    },
+
+    async getFleetMetadata(ownerId: string): Promise<FleetMetadataRow[]> {
+      const results = await d1.prepare(
+        `SELECT * FROM fleet_metadata WHERE owner_id = ? ORDER BY name ASC`
+      ).bind(ownerId).all();
+      return mapRows<FleetMetadataRow>(results);
     },
   };
 }

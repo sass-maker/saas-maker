@@ -18,6 +18,7 @@ import { roadmap } from './routes/roadmap';
 import { directory } from './routes/directory';
 import { aiMention } from './routes/ai-mention';
 import { standards } from './routes/standards';
+import { fleetMetadata } from './routes/fleet-metadata';
 import { requireApiKey } from './middleware/auth';
 import { rateLimit } from './middleware/rate-limit';
 import { getDb } from './db';
@@ -92,5 +93,6 @@ app.route('/v1/roadmap', roadmap);
 app.route('/v1/directory', directory);
 app.route('/v1/ai-mention', aiMention);
 app.route('/v1/standards', standards);
+app.route('/v1/fleet/metadata', fleetMetadata);
 
 export default app;
