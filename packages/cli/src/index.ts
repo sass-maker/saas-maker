@@ -3,6 +3,7 @@ import { loginCommand } from './commands/login.js';
 import { whoamiCommand } from './commands/whoami.js';
 import { keysCommand } from './commands/keys.js';
 import { projectsListCommand, projectsCreateCommand, projectsDeleteCommand, projectsUpdateCommand } from './commands/projects.js';
+import { fleetListCommand, fleetRunCommand, fleetUpgradeCommand } from './commands/fleet.js';
 import { feedbackListCommand, feedbackUpdateCommand, feedbackDeleteCommand } from './commands/feedback.js';
 import { roadmapListCommand, roadmapCreateCommand, roadmapUpdateCommand, roadmapDeleteCommand } from './commands/roadmap.js';
 import { changelogListCommand, changelogCreateCommand, changelogUpdateCommand, changelogDeleteCommand } from './commands/changelog.js';
@@ -32,36 +33,15 @@ program.command('whoami').description('Show current auth status').action(whoamiC
 program.command('keys').description('Show API keys for the linked block').action(keysCommand);
 
 // --- Fleet Management ---
-const projects = program.command('fleet').description('Manage your project fleet');
-projects
-  .command('list')
-  .description('List all projects in your fleet')
-  .option('--output <format>', 'table | json', 'table')
-  .option('--select <fields>', 'Comma-separated fields')
-  .option('--quiet', 'Reduce non-data logs')
-  .option('--raw', 'Print compact JSON')
-  .action(projectsListCommand);
-projects
-  .command('create')
-  .description('Forge a new fleet project')
-  .option('--name <name>', 'Project name (skip prompt)')
-  .option('--output <format>', 'table | json', 'json')
-  .option('--raw', 'Print compact JSON')
-  .action(projectsCreateCommand);
-projects
-  .command('delete')
-  .description('Retire a project from the fleet')
-  .option('--id <id>', 'Project ID (skip prompt)')
-  .option('--force', 'Skip confirmation')
-  .action(projectsDeleteCommand);
-projects
-  .command('update')
-  .description('Update project metadata')
-  .option('--id <id>', 'Project ID (skip prompt)')
-  .option('--name <name>', 'New project name')
-  .option('--output <format>', 'table | json', 'json')
-  .option('--raw', 'Print compact JSON')
-  .action(projectsUpdateCommand);
+const fleet = program.command('fleet').description('Manage your project fleet');
+fleet.command('list').description('List all projects in your fleet').action(fleetListCommand);
+fleet
+  .command('run <command>')
+  .description('Run a shell command across the entire fleet')
+  .option('--type <type>', 'next | vite | node')
+  .option('--parallel', 'Run concurrently despite failures')
+  .action(fleetRunCommand);
+fleet.command('upgrade').description('Upgrade all projects to Foundry Standards').action(fleetUpgradeCommand);
 
 // --- Blocks & Widgets ---
 program.command('feedback').description('Manage the Feedback block').action(feedbackListCommand);
@@ -81,6 +61,7 @@ program
   .option('--name <name>', 'Project name')
   .option('--type <type>', 'next | vite | node')
   .action(forgeCommand);
+
 program
   .command('status')
   .description('Show fleet-wide project stats')
