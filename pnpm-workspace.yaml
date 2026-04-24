@@ -4,6 +4,5 @@ packages:
   - 'packages/widgets/*'
   - 'packages/cli'
   - 'apps/*'
-  - 'archive/apps/*'
-  - 'archive/packages/*'
+  - 'workers/*'
 

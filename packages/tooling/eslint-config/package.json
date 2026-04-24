@@ -1,0 +1,21 @@
+{
+  "name": "@saas-maker/eslint-config",
+  "version": "1.0.0",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./next": "./next.js",
+    "./vite": "./vite.js",
+    "./astro": "./astro.js"
+  },
+  "peerDependencies": {
+    "eslint": ">=9.0.0"
+  },
+  "dependencies": {
+    "@eslint/js": "^9.17.0",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "eslint-plugin-react-refresh": "^0.4.16",
+    "typescript-eslint": "^8.18.1",
+    "globals": "^15.14.0"
+  }
+}
