@@ -13,6 +13,16 @@ interface FleetProject {
   type: 'next' | 'vite' | 'node';
   isLegacy: boolean;
   lastModified: string;
+  compliance: {
+    score: number;
+    total: number;
+    checks: {
+      config: boolean;
+      eslint: boolean;
+      tsconfig: boolean;
+      prettier: boolean;
+    }
+  }
 }
 
 export function FleetMonitor() {
@@ -36,8 +46,8 @@ export function FleetMonitor() {
     scanFleet();
   }, []);
 
-  if (loading) return null; // Silently load in background
-  if (error) return null; // Don't show if scan fails (likely not running locally)
+  if (loading) return null;
+  if (error) return null;
 
   return (
     <div className="space-y-4">
@@ -52,7 +62,7 @@ export function FleetMonitor() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {fleet.map((project) => (
           <Card key={project.path} className="group transition-all hover:border-primary/50">
-            <CardHeader className="p-4">
+            <CardHeader className="p-4 pb-3">
               <div className="flex items-start justify-between">
                 <div>
                   <CardTitle className="text-base font-bold">{project.name}</CardTitle>
@@ -66,29 +76,31 @@ export function FleetMonitor() {
               </div>
             </CardHeader>
             <CardContent className="px-4 pb-4 pt-0">
-              <div className="flex items-center gap-2 text-xs">
-                {project.isLegacy ? (
-                  <>
-                    <AlertTriangle className="h-3.5 w-3.5 text-warning" />
-                    <span className="text-muted-foreground">Legacy Standard</span>
-                  </>
-                ) : (
-                  <>
-                    <CheckCircle2 className="h-3.5 w-3.5 text-success" />
-                    <span className="text-muted-foreground">Foundry Compliant</span>
-                  </>
-                )}
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">Standard Compliance</span>
+                  <span className="text-[10px] font-mono">{project.compliance.score}/{project.compliance.total}</span>
+                </div>
+                <div className="flex gap-1">
+                  {Object.entries(project.compliance.checks).map(([key, val]) => (
+                    <div 
+                      key={key} 
+                      className={`h-1.5 flex-1 rounded-full ${val ? 'bg-success' : 'bg-muted'}`}
+                      title={`${key}: ${val ? 'Pass' : 'Fail'}`}
+                    />
+                  ))}
+                </div>
               </div>
               
-              <div className="mt-4 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="mt-4 flex items-center justify-between">
                  <span className="text-[10px] text-muted-foreground">
-                   Modified {new Date(project.lastModified).toLocaleDateString()}
+                   {project.isLegacy ? "Legacy Config" : "Foundry Standard"}
                  </span>
                  <Link 
                    href={`/projects/${project.slug}`}
-                   className="text-xs font-medium text-primary flex items-center gap-1"
+                   className="text-xs font-medium text-primary flex items-center gap-1 group-hover:translate-x-1 transition-transform"
                  >
-                   Manage <ArrowRight className="h-3 w-3" />
+                   Open <ArrowRight className="h-3 w-3" />
                  </Link>
               </div>
             </CardContent>
