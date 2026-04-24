@@ -1,0 +1,6 @@
+{
+  "name": "@saas-maker/tsconfig",
+  "version": "1.0.0",
+  "publishConfig": { "access": "public" },
+  "files": ["base.json", "next.json", "vite.json", "node.json"]
+}
