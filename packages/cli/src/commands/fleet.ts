@@ -5,6 +5,9 @@ import { getLocalFleet } from '../lib/fleet.js';
 import { log } from '../lib/ui.js';
 import { auditProject } from '../lib/auditor.js';
 import { printOutput } from '../lib/output.js';
+import { applyStandard, scaffoldRenovate, detectProjectType } from '../lib/forge.js';
+import { existsSync, renameSync } from 'node:fs';
+import { join } from 'node:path';
 
 interface FleetRunOptions {
   type?: 'next' | 'vite' | 'node';
@@ -13,11 +16,7 @@ interface FleetRunOptions {
 
 export async function fleetListCommand(): Promise<void> {
   const fleet = getLocalFleet();
-  if (fleet.length === 0) {
-    log.info('No fleet projects detected in parent directory.');
-    return;
-  }
-
+  if (fleet.length === 0) { log.info('No fleet projects detected.'); return; }
   console.log(chalk.bold(`\n Detected ${fleet.length} projects in your fleet:`));
   fleet.forEach(p => {
     const status = p.isFoundry ? chalk.green('✓ Foundry') : chalk.yellow('! Legacy');
@@ -40,7 +39,7 @@ export async function fleetRunCommand(command: string, options: FleetRunOptions 
       spinner.succeed(`[${project.slug}] Success`);
     } catch (err) {
       spinner.fail(`[${project.slug}] Failed`);
-      if (!options.parallel) { log.error('Execution halted. Use --parallel to continue on failures.'); return; }
+      if (!options.parallel) { log.error('Execution halted.'); return; }
     }
   }
   log.success('\nFleet-wide execution complete.');
@@ -51,27 +50,51 @@ export async function fleetAuditCommand(): Promise<void> {
   if (fleet.length === 0) { log.info('No projects to audit.'); return; }
 
   log.info(`Auditing ${fleet.length} projects for Foundry compliance...\n`);
-  
   const fleetResults: any[] = [];
   
   for (const project of fleet) {
     const audit = auditProject(project.path);
     const passCount = audit.filter(a => a.status === 'pass').length;
-    const score = `${passCount}/${audit.length}`;
-    
     fleetResults.push({
       project: project.name,
       slug: project.slug,
-      score,
+      score: `${passCount}/${audit.length}`,
       status: passCount === audit.length ? chalk.green('PASS') : passCount > 0 ? chalk.yellow('WARN') : chalk.red('FAIL'),
       type: project.type,
     });
   }
 
-  printOutput(fleetResults, {
-    output: 'table',
-    defaultColumns: ['project', 'slug', 'type', 'score', 'status']
-  });
+  printOutput(fleetResults, { output: 'table', defaultColumns: ['project', 'slug', 'type', 'score', 'status'] });
+}
+
+export async function fleetFixCommand(): Promise<void> {
+  const fleet = getLocalFleet();
+  if (fleet.length === 0) { log.info('No projects to fix.'); return; }
+
+  log.info(`Applying Foundry Standards to ${fleet.length} projects...\n`);
+
+  for (const project of fleet) {
+    const spinner = ora(`[${project.slug}] Fixing...`).start();
+    try {
+      // 1. Migrate legacy config
+      const legacyPath = join(project.path, '.saasmaker.json');
+      const foundryPath = join(project.path, 'foundry.json');
+      if (existsSync(legacyPath) && !existsSync(foundryPath)) {
+        renameSync(legacyPath, foundryPath);
+      }
+
+      // 2. Re-apply standards
+      const type = detectProjectType(project.path);
+      applyStandard(type, project.path);
+      scaffoldRenovate(project.path);
+      
+      spinner.succeed(`[${project.slug}] Compliant`);
+    } catch (err) {
+      spinner.fail(`[${project.slug}] Fix failed: ${err instanceof Error ? err.message : String(err)}`);
+    }
+  }
+
+  log.success('\nFleet-wide fix complete. Run `fnd fleet upgrade` to ensure latest versions are installed.');
 }
 
 export async function fleetUpgradeCommand(): Promise<void> {
