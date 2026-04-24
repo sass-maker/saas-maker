@@ -3,7 +3,7 @@ title: AI Gateway
 description: Proxy LLM calls, generate embeddings, and build RAG pipelines through a unified API.
 ---
 
-The AI Gateway lets you route LLM requests through SaaS Maker with usage tracking, logging, and built-in RAG support.
+The AI Gateway lets you route LLM requests through Foundry with usage tracking, logging, and built-in RAG support.
 
 ## Quick Start
 
@@ -43,7 +43,7 @@ curl -X POST https://api.sassmaker.com/v1/ai/chat/completions \
   -d '{
     "messages": [
       {"role": "system", "content": "You are a helpful assistant."},
-      {"role": "user", "content": "What is SaaS Maker?"}
+      {"role": "user", "content": "What is Foundry?"}
     ],
     "stream": false
   }'
@@ -66,7 +66,7 @@ curl -X POST https://api.sassmaker.com/v1/ai/chat/completions \
     {
       "message": {
         "role": "assistant",
-        "content": "SaaS Maker is a backend-as-a-service platform..."
+        "content": "Foundry is a backend-as-a-service platform..."
       },
       "finish_reason": "stop"
     }
@@ -98,7 +98,7 @@ curl -X POST https://api.sassmaker.com/v1/ai/embeddings \
   -H "Content-Type: application/json" \
   -H "X-Project-Key: pk_your_api_key" \
   -d '{
-    "input": "What is SaaS Maker?",
+    "input": "What is Foundry?",
     "model": "text-embedding-3-small"
   }'
 ```
@@ -194,7 +194,7 @@ curl -X POST https://api.sassmaker.com/v1/indexes/YOUR_INDEX_ID/documents \
   -H "Content-Type: application/json" \
   -H "X-Project-Key: pk_your_api_key" \
   -d '{
-    "content": "SaaS Maker is a backend-as-a-service platform. It provides feedback collection, waitlists, testimonials, changelogs, analytics, knowledge base, and AI gateway services.",
+    "content": "Foundry is a backend-as-a-service platform. It provides feedback collection, waitlists, testimonials, changelogs, analytics, knowledge base, and AI gateway services.",
     "metadata": {"source": "docs", "page": "intro"}
   }'
 ```
@@ -208,7 +208,7 @@ curl -X POST https://api.sassmaker.com/v1/ai/rag \
   -H "Content-Type: application/json" \
   -H "X-Project-Key: pk_your_api_key" \
   -d '{
-    "query": "What services does SaaS Maker provide?",
+    "query": "What services does Foundry provide?",
     "index_id": "YOUR_INDEX_ID",
     "top_k": 3
   }'
@@ -309,17 +309,17 @@ Returns individual request logs with endpoint, model, status, latency, and token
 ## SDK Usage
 
 ```typescript
-import { SaaSMakerClient } from '@saas-maker/sdk';
+import { SaaSMakerClient } from '@foundry/sdk';
 
 const client = new SaaSMakerClient({ apiKey: 'pk_your_api_key' });
 
 // Chat completion
 const chat = await client.ai.chat({
-  messages: [{ role: 'user', content: 'What is SaaS Maker?' }],
+  messages: [{ role: 'user', content: 'What is Foundry?' }],
 });
 
 // Embeddings
-const embeddings = await client.ai.embed('What is SaaS Maker?');
+const embeddings = await client.ai.embed('What is Foundry?');
 
 // RAG (requires a Knowledge Base index with documents)
 const answer = await client.ai.rag({

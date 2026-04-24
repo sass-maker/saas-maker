@@ -8,7 +8,7 @@ Two React components for testimonials: a display wall for your marketing pages a
 ## Installation
 
 ```bash
-npm install @saas-maker/testimonials-widget
+npm install @foundry/testimonials-widget
 ```
 
 ## TestimonialWall
@@ -16,7 +16,7 @@ npm install @saas-maker/testimonials-widget
 Displays approved testimonials in a grid, masonry, or list layout. Automatically fetches from the API.
 
 ```tsx
-import { TestimonialWall } from '@saas-maker/testimonials-widget';
+import { TestimonialWall } from '@foundry/testimonials-widget';
 
 function LandingPage() {
   return (
@@ -46,7 +46,7 @@ Each card shows the author name, title, star rating, testimonial text, optional 
 Embeddable form for collecting new testimonials. Submissions go through the approval flow (pending until you approve in the dashboard).
 
 ```tsx
-import { TestimonialForm } from '@saas-maker/testimonials-widget';
+import { TestimonialForm } from '@foundry/testimonials-widget';
 
 function CollectPage() {
   return (

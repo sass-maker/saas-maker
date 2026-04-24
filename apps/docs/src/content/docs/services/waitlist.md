@@ -135,7 +135,7 @@ DELETE /v1/waitlist/:id?project_id=PROJECT_ID
 ## SDK Usage
 
 ```typescript
-import { SaaSMakerClient } from '@saas-maker/sdk';
+import { SaaSMakerClient } from '@foundry/sdk';
 
 const client = new SaaSMakerClient({ apiKey: 'pk_your_api_key' });
 

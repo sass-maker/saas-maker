@@ -1,9 +1,9 @@
 ---
 title: Authentication
-description: How to authenticate with the SaaS Maker API using API keys or session tokens.
+description: How to authenticate with the Foundry API using API keys or session tokens.
 ---
 
-SaaS Maker uses two authentication methods depending on the context.
+Foundry uses two authentication methods depending on the context.
 
 ## API Key
 

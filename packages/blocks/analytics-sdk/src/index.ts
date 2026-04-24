@@ -1,104 +1,89 @@
-(function () {
-  const API_PATH = '/v1/analytics/events';
+import posthog from 'posthog-js';
 
-  // Find our script tag and read config
-  const scripts = document.querySelectorAll('script[data-project]');
-  const scriptEl = scripts[scripts.length - 1] as HTMLScriptElement | undefined;
-  if (!scriptEl) return;
+export interface AnalyticsConfig {
+  apiKey: string;
+  apiHost?: string;
+  debug?: boolean;
+  persistence?: 'localStorage' | 'sessionStorage' | 'cookie' | 'memory';
+  capturePageview?: boolean;
+}
 
-  const projectKey = scriptEl.getAttribute('data-project');
-  if (!projectKey) return;
+export class FoundryAnalytics {
+  private static instance: FoundryAnalytics;
+  private initialized = false;
 
-  const apiBase = scriptEl.getAttribute('data-api') || 'https://api.sassmaker.com';
+  constructor(config: AnalyticsConfig) {
+    if (typeof window !== 'undefined' && !this.initialized) {
+      posthog.init(config.apiKey, {
+        api_host: config.apiHost || 'https://us.i.posthog.com',
+        loaded: (ph) => {
+          if (config.debug) ph.debug();
+        },
+        persistence: config.persistence || 'localStorage',
+        autocapture: true,
+        capture_pageview: config.capturePageview ?? true,
+      });
 
-  // Respect Do Not Track
-  if (navigator.doNotTrack === '1') return;
+      // Add Foundry standard properties to every event
+      posthog.register({
+        foundry_standard: true,
+        foundry_sdk: 'analytics-sdk',
+        foundry_version: '1.0.0',
+      });
 
-  // --- Queue (for calls before script load) ---
-  type QueueItem = [string, Record<string, unknown>?];
+      this.initialized = true;
+    }
+  }
+
+  static init(config: AnalyticsConfig): FoundryAnalytics {
+    if (!FoundryAnalytics.instance) {
+      FoundryAnalytics.instance = new FoundryAnalytics(config);
+    }
+    return FoundryAnalytics.instance;
+  }
+
+  track(name: string, properties?: Record<string, any>) {
+    posthog.capture(name, properties);
+  }
+
+  identify(distinctId: string, properties?: Record<string, any>) {
+    posthog.identify(distinctId, properties);
+  }
+
+  alias(alias: string, distinctId: string) {
+    posthog.alias(alias, distinctId);
+  }
+
+  reset() {
+    posthog.reset();
+  }
+}
+
+// Backward compatibility for the <script> tag users
+if (typeof window !== 'undefined') {
   const win = window as any;
-  const queue: QueueItem[] = win.sm?.q || [];
+  const scripts = document.querySelectorAll('script[data-ph-key]');
+  const scriptEl = scripts[scripts.length - 1] as HTMLScriptElement | undefined;
 
-  // --- Send event ---
-  function send(name: string, props?: Record<string, unknown>) {
-    const payload: Record<string, unknown> = {
-      name,
-      url: location.href,
-      referrer: document.referrer || undefined,
-      screen_width: window.innerWidth,
-    };
+  if (scriptEl) {
+    const apiKey = scriptEl.getAttribute('data-ph-key');
+    const apiHost = scriptEl.getAttribute('data-ph-host') || undefined;
 
-    // Extract UTM params
-    const params = new URLSearchParams(location.search);
-    const utm_source = params.get('utm_source');
-    const utm_medium = params.get('utm_medium');
-    const utm_campaign = params.get('utm_campaign');
-    if (utm_source) payload.utm_source = utm_source;
-    if (utm_medium) payload.utm_medium = utm_medium;
-    if (utm_campaign) payload.utm_campaign = utm_campaign;
-
-    if (props && Object.keys(props).length > 0) {
-      payload.properties = props;
+    if (apiKey) {
+      FoundryAnalytics.init({
+        apiKey,
+        apiHost,
+        debug: scriptEl.getAttribute('data-debug') === 'true',
+      });
     }
-
-    // Clean undefineds
-    for (const key of Object.keys(payload)) {
-      if (payload[key] === undefined) delete payload[key];
-    }
-
-    const body = JSON.stringify(payload);
-    const endpoint = apiBase + API_PATH;
-
-    fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Project-Key': projectKey!,
-      },
-      body,
-      keepalive: true,
-    }).catch(() => {});
   }
 
-  // --- Public API ---
-  function track(name: string, properties?: Record<string, unknown>) {
-    send(name, properties);
-  }
-
-  // Expose globally
-  win.sm = track;
-  win.sm.track = track;
-
-  // Flush queue
-  for (const [name, props] of queue) {
-    track(name, props);
-  }
-
-  // --- Auto page view ---
-  let lastUrl = '';
-
-  function pageView() {
-    if (location.href === lastUrl) return;
-    lastUrl = location.href;
-    send('page_view');
-  }
-
-  // Initial page view
-  pageView();
-
-  // SPA support: patch pushState/replaceState
-  const origPush = history.pushState;
-  const origReplace = history.replaceState;
-
-  history.pushState = function (...args) {
-    origPush.apply(this, args);
-    pageView();
+  // Define global sm object
+  win.sm = {
+    track: (name: string, props?: Record<string, any>) => posthog.capture(name, props),
+    identify: (id: string, props?: Record<string, any>) => posthog.identify(id, props),
+    init: (config: AnalyticsConfig) => FoundryAnalytics.init(config),
   };
+}
 
-  history.replaceState = function (...args) {
-    origReplace.apply(this, args);
-    pageView();
-  };
-
-  window.addEventListener('popstate', pageView);
-})();
+export default FoundryAnalytics;

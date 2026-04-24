@@ -34,8 +34,8 @@ export default async function ProjectsPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Projects"
-        description="Manage your projects and collect feedback."
+        title="Fleet"
+        description="Monitor and manage your project fleet."
         action={<CreateProjectDialog />}
       />
 
@@ -45,7 +45,7 @@ export default async function ProjectsPage() {
             <AlertCircle className="h-5 w-5 text-destructive shrink-0" />
             <div>
               <CardTitle className="text-base text-destructive">
-                Failed to load projects
+                Failed to load fleet
               </CardTitle>
               <CardDescription className="mt-1 text-xs font-mono break-all">
                 {error}
@@ -56,8 +56,8 @@ export default async function ProjectsPage() {
       ) : projects.length === 0 ? (
         <EmptyState
           icon={FolderOpen}
-          title="No projects yet"
-          description="Create your first project to start collecting feedback from your users."
+          title="No fleet projects yet"
+          description="Initialize your first project to start monitoring it in your cockpit."
         />
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

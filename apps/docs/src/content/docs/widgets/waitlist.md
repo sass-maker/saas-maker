@@ -8,13 +8,13 @@ Drop-in React component for collecting waitlist signups. Works with the Waitlist
 ## Installation
 
 ```bash
-npm install @saas-maker/waitlist
+npm install @foundry/waitlist
 ```
 
 ## Usage
 
 ```tsx
-import { WaitlistWidget } from '@saas-maker/waitlist';
+import { WaitlistWidget } from '@foundry/waitlist';
 
 function App() {
   return (
@@ -38,7 +38,7 @@ The widget calls these endpoints:
 ## SDK Alternative
 
 ```typescript
-import { SaaSMakerClient } from '@saas-maker/sdk';
+import { SaaSMakerClient } from '@foundry/sdk';
 
 const client = new SaaSMakerClient({ apiKey: 'pk_your_api_key' });
 

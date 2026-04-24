@@ -3,7 +3,7 @@ title: Projects & README
 description: Manage project settings and project README content via the API.
 ---
 
-Projects are the top-level container in SaaS Maker. Each project has its own API key, settings, and features (feedback, forms, analytics, etc.).
+Projects are the top-level container in Foundry. Each project has its own API key, settings, and features (feedback, forms, analytics, etc.).
 
 ## Project README
 
@@ -28,7 +28,7 @@ curl -X PUT https://api.sassmaker.com/v1/projects/readme \
 ### SDK Usage
 
 ```typescript
-import { SaaSMakerClient } from '@saas-maker/sdk';
+import { SaaSMakerClient } from '@foundry/sdk';
 
 const client = new SaaSMakerClient({ apiKey: 'pk_your_api_key' });
 

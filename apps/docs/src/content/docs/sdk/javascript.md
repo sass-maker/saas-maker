@@ -1,20 +1,20 @@
 ---
 title: JavaScript SDK
-description: Use the SaaS Maker JavaScript SDK to integrate services into your app.
+description: Use the Foundry JavaScript SDK to integrate services into your app.
 ---
 
-The JavaScript SDK provides a typed client for all SaaS Maker API endpoints.
+The JavaScript SDK provides a typed client for all Foundry API endpoints.
 
 ## Installation
 
 ```bash
-npm install @saas-maker/sdk
+npm install @foundry/sdk
 ```
 
 ## Setup
 
 ```typescript
-import { SaaSMakerClient } from '@saas-maker/sdk';
+import { SaaSMakerClient } from '@foundry/sdk';
 
 const client = new SaaSMakerClient({
   apiKey: 'pk_your_api_key',
@@ -70,7 +70,7 @@ const { count } = await client.waitlist.getCount();
 await client.testimonials.submit({
   author_name: 'Jane Doe',
   author_email: 'jane@example.com',
-  content: 'SaaS Maker saved us weeks.',
+  content: 'Foundry saved us weeks.',
   rating: 5,
   author_title: 'CTO at Acme',
 });
@@ -163,11 +163,11 @@ await client.projects.updateReadme('# My Project\n\nWelcome!');
 ```typescript
 // Chat completion
 const response = await client.ai.chat({
-  messages: [{ role: 'user', content: 'What is SaaS Maker?' }],
+  messages: [{ role: 'user', content: 'What is Foundry?' }],
 });
 
 // Embeddings
-const embeddings = await client.ai.embed('What is SaaS Maker?');
+const embeddings = await client.ai.embed('What is Foundry?');
 
 // RAG (retrieval-augmented generation)
 const answer = await client.ai.rag({
@@ -178,7 +178,7 @@ const answer = await client.ai.rag({
 
 // Streaming (chat)
 const stream = await client.ai.chatStream({
-  messages: [{ role: 'user', content: 'Explain SaaS Maker' }],
+  messages: [{ role: 'user', content: 'Explain Foundry' }],
 });
 const reader = stream.body!.getReader();
 // Read SSE chunks from the reader

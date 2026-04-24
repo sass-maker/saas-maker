@@ -16,11 +16,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "SaaS Maker Dashboard",
-    template: "%s | SaaS Maker",
+    default: "Foundry Cockpit",
+    template: "%s | Foundry",
   },
-  description: "Manage your SaaS backend — feedback, waitlist, analytics, changelog, testimonials, roadmap and more.",
-  metadataBase: new URL("https://app.sassmaker.com"),
+  description: "Monitor and manage your project fleet — AI, analytics, changelog, testimonials, roadmap and more.",
+  metadataBase: new URL("https://app.saasmaker.dev"),
   robots: { index: false, follow: false },
 };
 

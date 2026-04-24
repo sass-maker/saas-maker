@@ -1,9 +1,9 @@
 ---
 title: CLI
-description: API-first SaaS Maker CLI with OpenAPI-enforced route access.
+description: API-first Foundry CLI with OpenAPI-enforced route access.
 ---
 
-The SaaS Maker CLI is intentionally API-first:
+The Foundry CLI is intentionally API-first:
 
 - Keep command surface small
 - Use `saasmaker api` for all backend capabilities
@@ -12,7 +12,7 @@ The SaaS Maker CLI is intentionally API-first:
 ## Installation
 
 ```bash
-npm install -g @saas-maker/cli
+npm install -g @foundry/cli
 ```
 
 ## Quick Start

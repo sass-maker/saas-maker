@@ -8,13 +8,13 @@ Drop-in React component that renders a published form or survey inside your app.
 ## Installation
 
 ```bash
-npm install @saas-maker/survey
+npm install @foundry/survey
 ```
 
 ## Usage
 
 ```tsx
-import { SurveyWidget } from '@saas-maker/survey';
+import { SurveyWidget } from '@foundry/survey';
 
 function App() {
   return (

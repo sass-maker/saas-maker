@@ -1,129 +1,71 @@
-# SaaS Maker
+# Foundry ⚒️
 
-Open-source backend toolkit for SaaS products. Drop-in feedback collection, waitlists, analytics, and vector memory — all behind a single API key.
+**The Open Source Foundry for Project Fleets.**
 
-## Features
+Foundry is a comprehensive toolkit designed for developers who manage multiple JavaScript/TypeScript projects. It provides a "Gold Standard" for configurations, a modular library of "Blocks," and a "Commander" CLI to eliminate configuration drift and accelerate development.
 
-- **Feedback Widget** — Embeddable React component for bugs, feature requests, and general feedback with image uploads and voting
-- **Waitlist** — Email collection with position tracking and signup counts
-- **Analytics** — Privacy-friendly page view and custom event tracking (no cookies)
-- **Vector Memory** — Semantic search with pluggable embedding models (Voyage AI, Gemini, Cloudflare Workers AI)
-- **Public Feedback Board** — Hosted kanban board for feature requests at `/f/{slug}`
+---
 
-## Quick Start
+## 🏛️ The Four Pillars
 
-### 1. Install the feedback widget
+### 1. The Standard (Tooling)
+Standardize your entire fleet with versioned, shared configurations.
+*   **`@saas-maker/eslint-config`**: Unified rules for Next.js, Vite, and Node.
+*   **`@saas-maker/tsconfig`**: Strict, optimized TypeScript bases.
+*   **`@saas-maker/prettier-config`**: Consistent formatting for the whole team.
+*   **`@saas-maker/dev-config`**: Automated Husky hooks for linting and safety.
 
-```bash
-npm install @saas-maker/feedback
-```
+### 2. The Blocks (Common Logic)
+High-quality, modular packages that any project can opt into.
+*   **`@saas-maker/ai`**: Unified LLM provider integration.
+*   **`@saas-maker/analytics-sdk`**: Lightweight PostHog wrapper.
+*   **`@saas-maker/db`**: Database utilities for Cloudflare D1/Turso.
+*   **`@saas-maker/sdk`**: The core API client for Foundry services.
 
-```tsx
-import { FeedbackWidget } from '@saas-maker/feedback'
+### 3. The Widgets (UI Components)
+Ready-to-drop UI components for common product needs.
+*   **Feedback & Roadmap**: Let users vote on features.
+*   **Changelog**: Keep your users informed.
+*   **Testimonials & Waitlist**: Capture and show user love.
 
-<FeedbackWidget projectId="pk_your_api_key" />
-```
+### 4. The Commander & Forge (CLI)
+Automate your workflow.
+*   **Commander**: Run fleet-wide audits, linting, and upgrades.
+*   **Forge**: Scaffold new Foundry-compliant projects in seconds.
 
-### 2. Add analytics tracking
+---
 
-```html
-<script defer src="https://unpkg.com/@saas-maker/analytics-sdk" data-project="pk_your_api_key"></script>
-```
+## 🚀 Quick Start
 
-### 3. Add a waitlist form
+1. **Install the CLI**:
+   ```bash
+   pnpm add -g @saas-maker/cli
+   ```
 
-```bash
-npm install @saas-maker/waitlist
-```
+2. **Initialize a Project**:
+   ```bash
+   foundry init
+   ```
 
-```tsx
-import { WaitlistForm } from '@saas-maker/waitlist'
+3. **Open the Cockpit**:
+   Launch the local dashboard to monitor your fleet.
+   ```bash
+   pnpm cockpit dev
+   ```
 
-<WaitlistForm projectId="pk_your_api_key" />
-```
+---
 
-### 4. Use the CLI
+## 📂 Repository Structure
 
-```bash
-npx @saas-maker/cli login
-npx @saas-maker/cli init
-npx @saas-maker/cli status
-```
+*   `packages/tooling/`: Standardized configurations.
+*   `packages/blocks/`: Modular logic packages.
+*   `packages/widgets/`: UI component blocks.
+*   `apps/cockpit/`: The Fleet Management Dashboard.
+*   `apps/showcase/`: The Foundry Manual and public showcase.
+*   `apps/docs/`: Detailed technical reference.
 
-## Packages
+---
 
-| Package | Description |
-|---------|-------------|
-| [`@saas-maker/feedback`](packages/feedback-widget/) | React feedback widget |
-| [`@saas-maker/waitlist`](packages/waitlist-widget/) | React waitlist form |
-| [`@saas-maker/analytics-sdk`](packages/analytics-sdk/) | Analytics tracking script |
-| [`@saas-maker/cli`](packages/cli/) | Project management CLI |
-| [`@saas-maker/shared-types`](packages/shared-types/) | Shared TypeScript types |
-| [`@saas-maker/db`](packages/db/) | Database layer |
+## ⚖️ License
 
-## Monorepo Structure
-
-```
-apps/dashboard/       # Next.js admin dashboard
-workers/api/          # Cloudflare Workers API (Hono)
-packages/
-  shared-types/       # TypeScript type definitions
-  db/                 # Database queries + migrations
-  feedback-widget/    # React feedback component
-  waitlist-widget/    # React waitlist component
-  analytics-sdk/      # Analytics tracking script
-  cli/                # CLI tool
-```
-
-## Self-Hosting
-
-### Prerequisites
-- Node.js 22+, pnpm 10+
-- CockroachDB (local or cloud)
-- Google OAuth credentials
-
-### Setup
-
-```bash
-pnpm install
-cockroach sql --insecure < packages/db/migrations/0001_init.sql
-cp workers/api/.dev.vars.example workers/api/.dev.vars
-cp apps/dashboard/.env.local.example apps/dashboard/.env.local
-pnpm build:types && pnpm build:db
-```
-
-### Development
-
-```bash
-# Terminal 1: API
-pnpm dev:api
-
-# Terminal 2: Dashboard
-pnpm dev:dashboard
-```
-
-## Deployment (Source of Truth)
-
-| Component | Platform | Project Name | Domain | Config File |
-|-----------|----------|-------------|--------|-------------|
-| **Dashboard** | Vercel | `saasmaker-dashboard` | app.sassmaker.com | `apps/dashboard/.vercel/project.json` |
-| **Landing Page** | Cloudflare Pages | `saasmaker-landing` | sassmaker.com | `apps/landing-page/` (static export) |
-| **API** | Cloudflare Workers | `saasmaker-api` | api.sassmaker.com | `workers/api/wrangler.toml` |
-| **Database** | CockroachDB | (managed) | — | via Hyperdrive binding |
-| **Storage** | Cloudflare R2 | `saasmaker-feedback-images` | — | R2 bucket binding |
-
-### Vercel Project Linkage
-
-Only the dashboard is on Vercel. Root `.vercel/project.json` points to `saasmaker-dashboard`.
-
-### Not Deployed (yet)
-
-- `apps/docs/` — Astro Starlight docs site (not currently hosted)
-
-> **Note:** The `saasmaker-dashboard` Vercel project is **not** shared with code-reviewer. Each project has its own dedicated Vercel project ID.
-
-## API Authentication
-
-- **SDK/Widget endpoints** — `X-Project-Key` header with your project API key
-- **Dashboard endpoints** — Bearer token (session auth via Auth.js)
-- **Public endpoints** — No auth required (e.g., public feedback board)
+Open source under the MIT License.

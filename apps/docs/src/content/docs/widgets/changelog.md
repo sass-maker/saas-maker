@@ -8,13 +8,13 @@ A React component that renders your published changelog entries as a vertical ti
 ## Installation
 
 ```bash
-npm install @saas-maker/changelog-widget
+npm install @foundry/changelog-widget
 ```
 
 ## Usage
 
 ```tsx
-import { ChangelogTimeline } from '@saas-maker/changelog-widget';
+import { ChangelogTimeline } from '@foundry/changelog-widget';
 
 function WhatsNew() {
   return (

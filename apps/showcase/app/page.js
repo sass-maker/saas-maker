@@ -290,18 +290,18 @@ export default function LandingPage() {
     <>
       <nav className="nav">
         <div className="nav-logo">
-          <div className="nav-logo-icon">SM</div>
-          SaaS Maker
+          <div className="nav-logo-icon">F</div>
+          Foundry
         </div>
         <div className="nav-links">
-          <a href="#features">Features</a>
-          <a href="#pricing">Pricing</a>
-          <a href={DOCS_URL} target="_blank" rel="noopener noreferrer">Docs</a>
-          <a href="/made-with">Directory</a>
+          <a href="#standard">The Standard</a>
+          <a href="#blocks">The Blocks</a>
+          <a href={DOCS_URL} target="_blank" rel="noopener noreferrer">The Manual</a>
+          <a href="/made-with">Showcase</a>
         </div>
         <div className="nav-actions">
-          <a href={DASHBOARD_URL} className="btn btn-ghost">Log In</a>
-          <a href={DASHBOARD_URL} className="btn btn-primary">Get Started</a>
+          <a href={DASHBOARD_URL} className="btn btn-ghost">Cockpit</a>
+          <a href={DASHBOARD_URL} className="btn btn-primary">Join the Fleet</a>
         </div>
       </nav>
 
@@ -310,13 +310,13 @@ export default function LandingPage() {
         <div>
           <div className="hero-badge">
             <span className="hero-badge-dot" />
-            Now in public beta
+            Forge your next idea
           </div>
-          <h1>Everything you need to<br /><span className="hero-highlight">launch & grow your SaaS</span></h1>
-          <p>Waitlist, testimonials, feedback boards, changelog, analytics, and more — plug-and-play tools that take minutes to add to any product.</p>
+          <h1>Standardize your<br /><span className="hero-highlight">entire project fleet</span></h1>
+          <p>The Open Source Foundry for developers who build at scale. Shared standards, modular blocks, and a unified cockpit for all your repositories.</p>
           <div className="hero-actions">
-            <a href={DASHBOARD_URL} className="btn btn-primary btn-lg">Get Started for Free</a>
-            <a href="#features" className="btn btn-secondary btn-lg">See all features</a>
+            <a href={DASHBOARD_URL} className="btn btn-primary btn-lg">Open the Cockpit</a>
+            <a href="#standard" className="btn btn-secondary btn-lg">See the Standard</a>
           </div>
           <div className="trust-bar">
             <span className="trust-label">Used by builders at</span>
@@ -334,29 +334,29 @@ export default function LandingPage() {
       <hr className="divider" />
 
       {/* Features section */}
-      <section className="section" id="features">
+      <section className="section" id="standard">
         <div className="section-header fade-up" ref={featuresHeaderRef}>
-          <div className="section-label">Features Overview</div>
-          <h2>Everything you need for<br /><span>better user engagement</span></h2>
-          <p>From capturing early interest to keeping users in the loop — we've got your entire product lifecycle covered.</p>
+          <div className="section-label">Foundation</div>
+          <h2>One Standard for all<br /><span>your repositories</span></h2>
+          <p>Eliminate configuration drift with shared, versioned standards for ESLint, TypeScript, and Prettier.</p>
         </div>
 
-        {/* Waitlist */}
+        {/* The Standard */}
         <div className="feature-row fade-up" ref={waitlistRef}>
           <div className="feature-row-text">
             <div className="feature-row-title">
-              <div className="feature-row-icon" style={{ background: 'rgba(59,130,246,0.12)', border: '1px solid rgba(59,130,246,0.2)' }}>📋</div>
-              Waitlist
+              <div className="feature-row-icon" style={{ background: 'rgba(59,130,246,0.12)', border: '1px solid rgba(59,130,246,0.2)' }}>📏</div>
+              The Standard
             </div>
             <p className="feature-row-body">
-              Capture early interest before you launch. Embed a beautiful waitlist form in seconds and watch signups roll in — with real-time counts and subscriber management built in.
+              Consistent code quality across 1 or 100 projects. Our shared configs are battle-tested and ready to drop into any Next.js, Vite, or Node.js environment.
             </p>
             <ul className="feature-row-checks">
-              <li>Embeddable form with real-time counter</li>
-              <li>Email confirmation & double opt-in</li>
-              <li>CSV export and subscriber management</li>
+              <li>Unified ESLint & Prettier rules</li>
+              <li>Strict TypeScript base configs</li>
+              <li>Automated Git hooks via Dev-Config</li>
             </ul>
-            <a href={DASHBOARD_URL} className="btn btn-ghost">Learn about Waitlist</a>
+            <a href={DOCS_URL} className="btn btn-ghost">View the Specs</a>
           </div>
           <WaitlistMockup />
         </div>
@@ -464,33 +464,21 @@ export default function LandingPage() {
 
       <hr className="divider" />
 
-      {/* Early access / pricing waitlist */}
-      <section className="section" id="pricing" style={{ textAlign: 'center' }}>
-        <div className="section-header">
-          <div className="section-label">Pricing</div>
-          <h2>Free while in beta.<br /><span>Pricing coming soon.</span></h2>
-          <p>Get full access to every feature today — no credit card required. Early users get locked-in pricing when we launch paid plans.</p>
-          <a href={DASHBOARD_URL} className="btn btn-primary btn-lg" style={{ marginTop: '1.5rem', display: 'inline-block' }}>Get Early Access — It's Free</a>
-        </div>
-      </section>
-
-      <hr className="divider" />
-
       {/* More features grid */}
-      <section className="section">
+      <section className="section" id="blocks">
         <div className="section-header fade-up" ref={moreRef}>
-          <div className="section-label">And more</div>
-          <h2>Everything else you need</h2>
-          <p>SaaS Maker is a complete toolkit — not a collection of half-baked features.</p>
+          <div className="section-label">Toolkit</div>
+          <h2>A complete library of<br /><span>modular Foundry blocks</span></h2>
+          <p>The Foundry is a complete toolkit — high-quality, plug-and-play modules for every project.</p>
         </div>
         <div className="feature-grid">
           {[
-            { icon: '🔗', bg: 'rgba(59,130,246,0.12)', title: 'URL Shortener', body: 'Create branded short links for campaigns, referrals, and affiliate tracking. Full analytics included.' },
-            { icon: '🔐', bg: 'rgba(34,197,94,0.1)', title: 'Auth & Users', body: 'Drop-in authentication with Google, GitHub, and magic links. User management out of the box.' },
-            { icon: '📦', bg: 'rgba(124,58,237,0.1)', title: 'Projects', body: 'Manage multiple products or clients from a single workspace with role-based access control.' },
-            { icon: '🤖', bg: 'rgba(249,115,22,0.1)', title: 'AI Summaries', body: 'Get daily AI-powered digests of your feedback and testimonials. Spot trends before they become problems.' },
-            { icon: '📬', bg: 'rgba(250,204,21,0.08)', title: 'Email Broadcasts', body: 'Send updates, release notes, or waitlist announcements to your subscribers directly from the dashboard.' },
-            { icon: '🌐', bg: 'rgba(59,130,246,0.08)', title: 'Public Pages', body: 'Every feature comes with a shareable public page — roadmap, testimonials wall, changelog — no dev needed.' },
+            { icon: '🤖', bg: 'rgba(249,115,22,0.1)', title: 'AI Block', body: 'Unified provider integration for OpenAI, Anthropic, and Gemini. Stream-ready and type-safe.' },
+            { icon: '📊', bg: 'rgba(59,130,246,0.12)', title: 'Analytics Block', body: 'Lightweight PostHog wrapper to standardize tracking across your entire fleet.' },
+            { icon: '📦', bg: 'rgba(124,58,237,0.1)', title: 'DB Block', body: 'Drizzle-powered database utilities for Cloudflare D1 and Turso.' },
+            { icon: '📡', bg: 'rgba(34,197,94,0.1)', title: 'Widgets', body: 'Ready-to-drop UI components for feedback, changelogs, and roadmaps.' },
+            { icon: '⚡', bg: 'rgba(250,204,21,0.08)', title: 'The Commander', body: 'A CLI to manage your fleet—lint, audit, and upgrade every repo at once.' },
+            { icon: '🌐', bg: 'rgba(59,130,246,0.08)', title: 'The Forge', body: 'Scaffold new Foundry-compliant projects in seconds with pre-baked standards.' },
           ].map(f => (
             <div key={f.title} className="feature-card">
               <div className="feature-icon" style={{ background: f.bg }}>{f.icon}</div>
@@ -503,14 +491,14 @@ export default function LandingPage() {
 
       <footer className="footer">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <div className="nav-logo-icon" style={{ width: 22, height: 22, fontSize: '0.55rem' }}>SM</div>
-          <span style={{ fontSize: '0.875rem', fontWeight: 600 }}>SaaS Maker</span>
+          <div className="nav-logo-icon" style={{ width: 22, height: 22, fontSize: '0.55rem' }}>F</div>
+          <span style={{ fontSize: '0.875rem', fontWeight: 600 }}>Foundry</span>
         </div>
-        <span className="footer-copy">© 2026 SaaS Maker. All rights reserved.</span>
+        <span className="footer-copy">© 2026 The Foundry. Open source under MIT.</span>
         <div className="footer-links">
           <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">GitHub</a>
-          <a href={DOCS_URL} target="_blank" rel="noopener noreferrer">Docs</a>
-          <a href="#pricing">Pricing</a>
+          <a href={DOCS_URL} target="_blank" rel="noopener noreferrer">The Manual</a>
+          <a href="/made-with">Showcase</a>
         </div>
       </footer>
     </>

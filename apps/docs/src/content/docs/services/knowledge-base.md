@@ -3,7 +3,7 @@ title: Knowledge Base (Vector Search)
 description: Build a semantic search / RAG-powered knowledge base with automatic chunking and embedding.
 ---
 
-Upload documents and search them with natural language queries. SaaS Maker automatically chunks your content, generates embeddings, and stores them for fast vector similarity search.
+Upload documents and search them with natural language queries. Foundry automatically chunks your content, generates embeddings, and stores them for fast vector similarity search.
 
 ## How it works
 
@@ -81,7 +81,7 @@ curl -X POST https://api.sassmaker.com/v1/indexes/idx_123/documents \
   -H "Content-Type: application/json" \
   -H "X-Project-Key: pk_abc123" \
   -d '{
-    "content": "SaaS Maker is a backend-as-a-service platform for SaaS apps...",
+    "content": "Foundry is a backend-as-a-service platform for SaaS apps...",
     "metadata": { "source": "docs", "page": "intro" }
   }'
 ```

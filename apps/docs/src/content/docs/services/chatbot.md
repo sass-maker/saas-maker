@@ -17,7 +17,7 @@ The chatbot is a **client-side SDK service** that manages conversation state and
 ## Quick Start
 
 ```typescript
-import { SaaSMakerClient } from '@saas-maker/sdk';
+import { SaaSMakerClient } from '@foundry/sdk';
 
 const client = new SaaSMakerClient({ apiKey: 'pk_your_api_key' });
 

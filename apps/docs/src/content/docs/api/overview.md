@@ -1,6 +1,6 @@
 ---
 title: API Overview
-description: Base URL, authentication, error format, and general conventions for the SaaS Maker REST API.
+description: Base URL, authentication, error format, and general conventions for the Foundry REST API.
 ---
 
 ## Base URL

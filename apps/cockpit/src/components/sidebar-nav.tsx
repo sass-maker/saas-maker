@@ -93,7 +93,7 @@ export function SidebarNav() {
         )}
       >
         <FolderOpen className="h-4 w-4" />
-        Projects
+        Fleet
       </Link>
 
       {slug && currentProject && (
@@ -149,7 +149,7 @@ export function SidebarNav() {
 
       {!slug && (
         <p className="mt-4 px-2 text-xs text-muted-foreground">
-          Select a project to see navigation
+          Select a fleet project to see navigation
         </p>
       )}
     </nav>

@@ -14,7 +14,7 @@ curl -X POST https://api.sassmaker.com/v1/testimonials \
   -d '{
     "author_name": "Jane Doe",
     "author_email": "jane@example.com",
-    "content": "SaaS Maker saved us weeks of development time.",
+    "content": "Foundry saved us weeks of development time.",
     "rating": 5
   }'
 ```
@@ -52,7 +52,7 @@ curl -X POST https://api.sassmaker.com/v1/testimonials \
   -d '{
     "author_name": "Jane Doe",
     "author_email": "jane@example.com",
-    "content": "SaaS Maker saved us weeks of development time.",
+    "content": "Foundry saved us weeks of development time.",
     "rating": 5,
     "author_title": "CTO at Acme",
     "tweet_url": "https://twitter.com/jane/status/123"
@@ -141,7 +141,7 @@ curl "https://api.sassmaker.com/v1/testimonials?sort=rating&limit=10" \
       "id": "abc-123",
       "author_name": "Jane Doe",
       "author_title": "CTO at Acme",
-      "content": "SaaS Maker saved us weeks...",
+      "content": "Foundry saved us weeks...",
       "rating": 5,
       "status": "approved",
       "created_at": "2025-01-01T00:00:00Z"
@@ -217,7 +217,7 @@ DELETE /v1/testimonials/:id?project_id=PROJECT_ID
 ## SDK Usage
 
 ```typescript
-import { SaaSMakerClient } from '@saas-maker/sdk';
+import { SaaSMakerClient } from '@foundry/sdk';
 
 const client = new SaaSMakerClient({ apiKey: 'pk_your_api_key' });
 

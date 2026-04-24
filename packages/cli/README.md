@@ -1,6 +1,6 @@
 # @saas-maker/cli
 
-API-first CLI for SaaS Maker.
+API-first CLI for Foundry.
 
 The CLI is intentionally minimal: a few core utility commands plus a universal `saasmaker api` executor so new backend features do not require new CLI code.
 

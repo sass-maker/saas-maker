@@ -1,15 +1,15 @@
 ---
 title: Integration Guide
-description: Step-by-step guide to integrate SaaS Maker into your Next.js or Vite project.
+description: Step-by-step guide to integrate Foundry into your Next.js or Vite project.
 ---
 
-Add SaaS Maker to any JavaScript project in under 5 minutes. This guide covers analytics, feedback, and automatic SDK updates.
+Add Foundry to any JavaScript project in under 5 minutes. This guide covers analytics, feedback, and automatic SDK updates.
 
 ## Install the SDK
 
 ```bash
-pnpm add @saas-maker/sdk
-# or: npm install @saas-maker/sdk
+pnpm add @foundry/sdk
+# or: npm install @foundry/sdk
 ```
 
 ## Create your API key
@@ -31,7 +31,7 @@ NEXT_PUBLIC_SAASMAKER_API_KEY=pk_your_key_here
 
 ```typescript
 // src/lib/saasmaker.ts
-import { SaaSMakerClient } from '@saas-maker/sdk';
+import { SaaSMakerClient } from '@foundry/sdk';
 
 export const saasmaker = new SaaSMakerClient({
   apiKey: process.env.NEXT_PUBLIC_SAASMAKER_API_KEY!,
@@ -91,7 +91,7 @@ VITE_SAASMAKER_API_KEY=pk_your_key_here
 
 ```typescript
 // src/lib/saasmaker.ts
-import { SaaSMakerClient } from '@saas-maker/sdk';
+import { SaaSMakerClient } from '@foundry/sdk';
 
 export const saasmaker = new SaaSMakerClient({
   apiKey: import.meta.env.VITE_SAASMAKER_API_KEY,
@@ -153,7 +153,7 @@ updates:
       interval: weekly
       day: monday
     allow:
-      - dependency-name: "@saas-maker/sdk"
+      - dependency-name: "@foundry/sdk"
     commit-message:
       prefix: "deps"
     open-pull-requests-limit: 1
@@ -166,8 +166,8 @@ This checks for SDK updates every Monday and opens a PR if a new version is avai
 You can also initialize a project via the CLI:
 
 ```bash
-npx @saas-maker/cli login
-npx @saas-maker/cli init
+npx @foundry/cli login
+npx @foundry/cli init
 ```
 
 This creates a `.saasmaker.json` file linking your directory to a project. See the [CLI docs](/sdk/cli) for more.

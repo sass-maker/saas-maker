@@ -1,6 +1,6 @@
 # Docs App
 
-Astro Starlight docs for SaaS Maker.
+Astro Starlight docs for Foundry.
 
 ## Commands
 

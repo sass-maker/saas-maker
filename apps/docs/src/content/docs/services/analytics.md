@@ -14,7 +14,7 @@ Add the tracking script to your site:
   defer
   data-project="pk_your_api_key"
   data-api="https://api.sassmaker.com"
-  src="https://unpkg.com/@saas-maker/analytics-sdk/dist/index.global.js"
+  src="https://unpkg.com/@foundry/analytics-sdk/dist/index.global.js"
 ></script>
 ```
 
@@ -314,10 +314,10 @@ Returns paginated data for a specific breakdown section.
 
 ## Embeddable Dashboard
 
-Use the `@saas-maker/analytics-ui` package to embed a full analytics dashboard in any React app:
+Use the `@foundry/analytics-ui` package to embed a full analytics dashboard in any React app:
 
 ```tsx
-import { AnalyticsDashboard } from '@saas-maker/analytics-ui';
+import { AnalyticsDashboard } from '@foundry/analytics-ui';
 
 <AnalyticsDashboard apiKey="pk_your_api_key" />
 ```
@@ -327,7 +327,7 @@ See the [Analytics Dashboard widget docs](/widgets/analytics/) for installation 
 ## SDK Usage
 
 ```typescript
-import { SaaSMakerClient } from '@saas-maker/sdk';
+import { SaaSMakerClient } from '@foundry/sdk';
 
 const client = new SaaSMakerClient({ apiKey: 'pk_your_api_key' });
 
