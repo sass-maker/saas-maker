@@ -21,7 +21,7 @@ importers:
         specifier: ^4.85.0
         version: 4.85.0(@cloudflare/workers-types@4.20260424.1)
 
-  apps/dashboard:
+  apps/cockpit:
     dependencies:
       '@dnd-kit/core':
         specifier: ^6.3.1
@@ -34,13 +34,13 @@ importers:
         version: 3.2.2(react@19.2.3)
       '@saas-maker/analytics-ui':
         specifier: workspace:*
-        version: link:../../packages/analytics-ui
+        version: link:../../packages/blocks/analytics-ui
       '@saas-maker/sdk':
         specifier: ^0.2.0
         version: 0.2.0
       '@saas-maker/shared-types':
         specifier: workspace:*
-        version: link:../../packages/shared-types
+        version: link:../../packages/blocks/shared-types
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -112,7 +112,7 @@ importers:
         specifier: ^0.34.2
         version: 0.34.5
 
-  apps/landing-page:
+  apps/showcase:
     dependencies:
       '@saas-maker/sdk':
         specifier: ^0.2.0
@@ -131,7 +131,7 @@ importers:
         specifier: ^1.58.2
         version: 1.59.1
 
-  packages/ai:
+  packages/blocks/ai:
     devDependencies:
       '@ai-sdk/openai-compatible':
         specifier: ^2.0.0
@@ -173,7 +173,7 @@ importers:
         specifier: ^4.0.18
         version: 4.1.5(@opentelemetry/api@1.9.0)(@types/node@25.6.0)(happy-dom@20.9.0)(jsdom@29.0.2(@noble/hashes@1.8.0))(msw@2.13.6(@types/node@25.6.0)(typescript@5.9.3))(vite@7.3.2(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(tsx@4.21.0))
 
-  packages/analytics-sdk:
+  packages/blocks/analytics-sdk:
     devDependencies:
       tsup:
         specifier: ^8.0.0
@@ -182,7 +182,7 @@ importers:
         specifier: ^5.0.0
         version: 5.9.3
 
-  packages/analytics-ui:
+  packages/blocks/analytics-ui:
     dependencies:
       recharts:
         specifier: ^3.7.0
@@ -207,44 +207,27 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  packages/badge-widget:
+  packages/blocks/db:
+    dependencies:
+      '@saas-maker/shared-types':
+        specifier: workspace:*
+        version: link:../shared-types
     devDependencies:
-      '@types/react':
-        specifier: ^19.1.0
-        version: 19.2.14
-      '@types/react-dom':
-        specifier: ^19.1.0
-        version: 19.2.3(@types/react@19.2.14)
-      react:
-        specifier: ^19.1.0
-        version: 19.2.3
-      react-dom:
-        specifier: ^19.1.0
-        version: 19.2.3(react@19.2.3)
-      tsup:
-        specifier: ^8.0.0
-        version: 8.5.1(jiti@2.6.1)(postcss@8.5.10)(tsx@4.21.0)(typescript@5.9.3)
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
 
-  packages/changelog-widget:
+  packages/blocks/sdk:
     devDependencies:
-      '@types/react':
-        specifier: ^19.1.0
-        version: 19.2.14
-      '@types/react-dom':
-        specifier: ^19.1.0
-        version: 19.2.3(@types/react@19.2.14)
-      react:
-        specifier: ^19.1.0
-        version: 19.2.3
-      react-dom:
-        specifier: ^19.1.0
-        version: 19.2.3(react@19.2.3)
       tsup:
         specifier: ^8.0.0
         version: 8.5.1(jiti@2.6.1)(postcss@8.5.10)(tsx@4.21.0)(typescript@5.9.3)
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+
+  packages/blocks/shared-types:
+    devDependencies:
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -274,17 +257,119 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  packages/db:
+  packages/widgets/badge-widget:
+    devDependencies:
+      '@types/react':
+        specifier: ^19.1.0
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: ^19.1.0
+        version: 19.2.3(@types/react@19.2.14)
+      react:
+        specifier: ^19.1.0
+        version: 19.2.3
+      react-dom:
+        specifier: ^19.1.0
+        version: 19.2.3(react@19.2.3)
+      tsup:
+        specifier: ^8.0.0
+        version: 8.5.1(jiti@2.6.1)(postcss@8.5.10)(tsx@4.21.0)(typescript@5.9.3)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/widgets/changelog-widget:
+    devDependencies:
+      '@types/react':
+        specifier: ^19.1.0
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: ^19.1.0
+        version: 19.2.3(@types/react@19.2.14)
+      react:
+        specifier: ^19.1.0
+        version: 19.2.3
+      react-dom:
+        specifier: ^19.1.0
+        version: 19.2.3(react@19.2.3)
+      tsup:
+        specifier: ^8.0.0
+        version: 8.5.1(jiti@2.6.1)(postcss@8.5.10)(tsx@4.21.0)(typescript@5.9.3)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/widgets/feedback-widget:
+    devDependencies:
+      '@types/react':
+        specifier: ^19.1.0
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: ^19.1.0
+        version: 19.2.3(@types/react@19.2.14)
+      react:
+        specifier: ^19.1.0
+        version: 19.2.3
+      react-dom:
+        specifier: ^19.1.0
+        version: 19.2.3(react@19.2.3)
+      tsup:
+        specifier: ^8.0.0
+        version: 8.5.1(jiti@2.6.1)(postcss@8.5.10)(tsx@4.21.0)(typescript@5.9.3)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/widgets/survey-widget:
+    devDependencies:
+      '@saas-maker/shared-types':
+        specifier: workspace:*
+        version: link:../../blocks/shared-types
+      '@types/react':
+        specifier: ^19.1.0
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: ^19.1.0
+        version: 19.2.3(@types/react@19.2.14)
+      react:
+        specifier: ^19.1.0
+        version: 19.2.3
+      react-dom:
+        specifier: ^19.1.0
+        version: 19.2.3(react@19.2.3)
+      tsup:
+        specifier: ^8.0.0
+        version: 8.5.1(jiti@2.6.1)(postcss@8.5.10)(tsx@4.21.0)(typescript@5.9.3)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/widgets/testimonials-widget:
+    devDependencies:
+      '@types/react':
+        specifier: ^19.1.0
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: ^19.1.0
+        version: 19.2.3(@types/react@19.2.14)
+      react:
+        specifier: ^19.1.0
+        version: 19.2.3
+      react-dom:
+        specifier: ^19.1.0
+        version: 19.2.3(react@19.2.3)
+      tsup:
+        specifier: ^8.0.0
+        version: 8.5.1(jiti@2.6.1)(postcss@8.5.10)(tsx@4.21.0)(typescript@5.9.3)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/widgets/waitlist-widget:
     dependencies:
       '@saas-maker/shared-types':
         specifier: workspace:*
-        version: link:../shared-types
-    devDependencies:
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-
-  packages/feedback-widget:
+        version: link:../../blocks/shared-types
     devDependencies:
       '@types/react':
         specifier: ^19.1.0
@@ -304,116 +389,6 @@ importers:
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
-
-  packages/sdk:
-    devDependencies:
-      tsup:
-        specifier: ^8.0.0
-        version: 8.5.1(jiti@2.6.1)(postcss@8.5.10)(tsx@4.21.0)(typescript@5.9.3)
-      typescript:
-        specifier: ^5.0.0
-        version: 5.9.3
-
-  packages/shared-types:
-    devDependencies:
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-
-  packages/survey-widget:
-    devDependencies:
-      '@saas-maker/shared-types':
-        specifier: workspace:*
-        version: link:../shared-types
-      '@types/react':
-        specifier: ^19.1.0
-        version: 19.2.14
-      '@types/react-dom':
-        specifier: ^19.1.0
-        version: 19.2.3(@types/react@19.2.14)
-      react:
-        specifier: ^19.1.0
-        version: 19.2.3
-      react-dom:
-        specifier: ^19.1.0
-        version: 19.2.3(react@19.2.3)
-      tsup:
-        specifier: ^8.0.0
-        version: 8.5.1(jiti@2.6.1)(postcss@8.5.10)(tsx@4.21.0)(typescript@5.9.3)
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-
-  packages/testimonials-widget:
-    devDependencies:
-      '@types/react':
-        specifier: ^19.1.0
-        version: 19.2.14
-      '@types/react-dom':
-        specifier: ^19.1.0
-        version: 19.2.3(@types/react@19.2.14)
-      react:
-        specifier: ^19.1.0
-        version: 19.2.3
-      react-dom:
-        specifier: ^19.1.0
-        version: 19.2.3(react@19.2.3)
-      tsup:
-        specifier: ^8.0.0
-        version: 8.5.1(jiti@2.6.1)(postcss@8.5.10)(tsx@4.21.0)(typescript@5.9.3)
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-
-  packages/waitlist-widget:
-    dependencies:
-      '@saas-maker/shared-types':
-        specifier: workspace:*
-        version: link:../shared-types
-    devDependencies:
-      '@types/react':
-        specifier: ^19.1.0
-        version: 19.2.14
-      '@types/react-dom':
-        specifier: ^19.1.0
-        version: 19.2.3(@types/react@19.2.14)
-      react:
-        specifier: ^19.1.0
-        version: 19.2.3
-      react-dom:
-        specifier: ^19.1.0
-        version: 19.2.3(react@19.2.3)
-      tsup:
-        specifier: ^8.0.0
-        version: 8.5.1(jiti@2.6.1)(postcss@8.5.10)(tsx@4.21.0)(typescript@5.9.3)
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-
-  workers/api:
-    dependencies:
-      '@saas-maker/db':
-        specifier: workspace:*
-        version: link:../../packages/db
-      '@saas-maker/shared-types':
-        specifier: workspace:*
-        version: link:../../packages/shared-types
-      hono:
-        specifier: ^4.7.2
-        version: 4.12.15
-      jose:
-        specifier: ^6.1.3
-        version: 6.2.2
-    devDependencies:
-      '@cloudflare/workers-types':
-        specifier: ^4.20250224.0
-        version: 4.20260424.1
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-      wrangler:
-        specifier: ^4.0.0
-        version: 4.85.0(@cloudflare/workers-types@4.20260424.1)
 
 packages:
 
@@ -6297,7 +6272,8 @@ snapshots:
   '@cloudflare/workerd-windows-64@1.20260424.1':
     optional: true
 
-  '@cloudflare/workers-types@4.20260424.1': {}
+  '@cloudflare/workers-types@4.20260424.1':
+    optional: true
 
   '@cspotcode/source-map-support@0.8.1':
     dependencies:

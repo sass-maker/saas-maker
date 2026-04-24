@@ -1,4 +1,9 @@
 packages:
-  - "apps/*"
-  - "packages/*"
-  - "workers/*"
+  - 'packages/tooling/*'
+  - 'packages/blocks/*'
+  - 'packages/widgets/*'
+  - 'packages/cli'
+  - 'apps/*'
+  - 'archive/apps/*'
+  - 'archive/packages/*'
+
