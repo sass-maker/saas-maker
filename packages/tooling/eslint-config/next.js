@@ -1,4 +1,4 @@
-import base from "./index.js";
+import getConfig from "./index.js";
 import { FlatCompat } from "@eslint/eslintrc";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -11,7 +11,7 @@ const compat = new FlatCompat({
 });
 
 export default [
-  ...base,
+  ...(await getConfig('next')),
   ...compat.extends("next/core-web-vitals"),
   ...compat.extends("next/typescript"),
 ];

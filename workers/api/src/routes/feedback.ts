@@ -14,7 +14,7 @@ import { sendNewFeedbackEmail } from '../email';
 const feedback = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
 const VALID_TYPES: FeedbackType[] = ['bug', 'feature', 'feedback'];
-const VALID_STATUSES: FeedbackStatus[] = ['new', 'in_progress', 'done', 'dismissed', 'planned', 'shipped', 'cancelled', 'on_roadmap'];
+const VALID_STATUSES: FeedbackStatus[] = ['new', 'acknowledged', 'investigating', 'planned', 'in_progress', 'resolved', 'dismissed', 'on_roadmap'];
 const PAGE_SIZE = 20;
 
 function scheduleBackgroundTask(c: Context<{ Bindings: Bindings; Variables: Variables }>, task: Promise<unknown>) {

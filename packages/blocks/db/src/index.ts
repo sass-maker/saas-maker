@@ -275,4 +275,19 @@ export interface FeedbackDatabase {
     citations: string; brand_cited: boolean; latency_ms: number | null;
   }): Promise<void>;
   listAIMentionResults(checkId: string): Promise<import('@saas-maker/shared-types').AIMentionResultRecord[]>;
+
+  // Standards
+  getStandards(ownerId: string, type: string): Promise<StandardsRow | null>;
+  upsertStandards(ownerId: string, type: string, eslintRules: object, tsconfigOptions: object, prettierOptions: object): Promise<StandardsRow>;
+  getAllStandardsByOwner(ownerId: string): Promise<StandardsRow[]>;
+}
+
+export interface StandardsRow {
+  id: string;
+  owner_id: string;
+  type: 'next' | 'vite' | 'node';
+  eslint_rules: string; // JSON string
+  tsconfig_options: string; // JSON string
+  prettier_options: string; // JSON string
+  updated_at: string;
 }

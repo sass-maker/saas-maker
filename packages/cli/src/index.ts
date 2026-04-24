@@ -19,6 +19,7 @@ import { apiCommand } from './commands/api.js';
 import { doctorCommand } from './commands/doctor.js';
 import { completionsCommand } from './commands/completions.js';
 import { examplesCommand } from './commands/examples.js';
+import { syncCommand } from './commands/sync.js';
 
 const program = new Command();
 
@@ -98,6 +99,8 @@ program
   .option('--select <fields>', 'Comma-separated fields')
   .option('--raw', 'Print compact JSON')
   .action(examplesCommand);
+
+program.command('sync').description('Pull latest Foundry Standards from cockpit').action(syncCommand);
 
 program
   .command('completions [shell]')

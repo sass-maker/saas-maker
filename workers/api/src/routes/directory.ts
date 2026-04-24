@@ -21,7 +21,7 @@ directory.get('/', async (c) => {
 });
 
 // Public: submit a listing (no auth needed)
-directory.post('/', ipRateLimit('directory:submit', 5), async (c) => {
+directory.post('/', ipRateLimit('directory:submit', 3), async (c) => {
   const body = (await c.req.json()) as CreateDirectoryListingRequest & { website?: string };
 
   // Honeypot: hidden field that bots fill out

@@ -25,6 +25,16 @@ import type {
   AIMentionResultRecord,
 } from '@saas-maker/shared-types';
 
+export interface StandardsRow {
+  id: string;
+  owner_id: string;
+  type: 'next' | 'vite' | 'node';
+  eslint_rules: string; // JSON string
+  tsconfig_options: string; // JSON string
+  prettier_options: string; // JSON string
+  updated_at: string;
+}
+
 function parseViewerVote(value: unknown): FeedbackVote {
   if (value === 1 || value === '1') return 'up';
   if (value === -1 || value === '-1') return 'down';
@@ -1563,6 +1573,44 @@ export function getDb(d1: D1Database): FeedbackDatabase {
         `SELECT * FROM ai_mention_results WHERE check_id = ? ORDER BY created_at ASC`
       ).bind(checkId).all();
       return results as unknown as AIMentionResultRecord[];
+    },
+
+    // --- Standards ---
+    async getStandards(ownerId: string, type: string): Promise<StandardsRow | null> {
+      const row = await d1.prepare(
+        `SELECT * FROM standards WHERE owner_id = ? AND type = ?`
+      ).bind(ownerId, type).first();
+      return mapRow<StandardsRow>(row);
+    },
+
+    async upsertStandards(
+      ownerId: string,
+      type: string,
+      eslintRules: object,
+      tsconfigOptions: object,
+      prettierOptions: object,
+    ): Promise<StandardsRow> {
+      const id = crypto.randomUUID();
+      await d1.prepare(
+        `INSERT INTO standards (id, owner_id, type, eslint_rules, tsconfig_options, prettier_options, updated_at)
+         VALUES (?, ?, ?, ?, ?, ?, datetime('now'))
+         ON CONFLICT (owner_id, type) DO UPDATE SET
+           eslint_rules = EXCLUDED.eslint_rules,
+           tsconfig_options = EXCLUDED.tsconfig_options,
+           prettier_options = EXCLUDED.prettier_options,
+           updated_at = datetime('now')`
+      ).bind(id, ownerId, type, JSON.stringify(eslintRules), JSON.stringify(tsconfigOptions), JSON.stringify(prettierOptions)).run();
+      const row = await d1.prepare(
+        `SELECT * FROM standards WHERE owner_id = ? AND type = ?`
+      ).bind(ownerId, type).first();
+      return mapRow<StandardsRow>(row)!;
+    },
+
+    async getAllStandardsByOwner(ownerId: string): Promise<StandardsRow[]> {
+      const { results } = await d1.prepare(
+        `SELECT * FROM standards WHERE owner_id = ? ORDER BY type ASC`
+      ).bind(ownerId).all();
+      return mapRows<StandardsRow>(results);
     },
   };
 }

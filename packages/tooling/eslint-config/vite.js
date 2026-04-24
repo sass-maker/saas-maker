@@ -1,7 +1,7 @@
-import base from "./index.js";
+import getConfig from "./index.js";
 
 export default [
-  ...base,
+  ...(await getConfig('vite')),
   {
     rules: {
       "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],

@@ -1,12 +1,23 @@
 {
   "name": "@saas-maker/eslint-config",
-  "version": "1.0.0",
+  "version": "1.0.1",
+  "type": "module",
   "main": "index.js",
   "exports": {
     ".": "./index.js",
     "./next": "./next.js",
     "./vite": "./vite.js",
     "./astro": "./astro.js"
+  },
+  "files": [
+    "index.js",
+    "fetch.js",
+    "next.js",
+    "vite.js",
+    "astro.js"
+  ],
+  "publishConfig": {
+    "access": "public"
   },
   "peerDependencies": {
     "eslint": ">=9.0.0"

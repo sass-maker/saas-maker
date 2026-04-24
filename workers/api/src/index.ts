@@ -17,6 +17,7 @@ import { aiGateway } from './routes/ai-gateway';
 import { roadmap } from './routes/roadmap';
 import { directory } from './routes/directory';
 import { aiMention } from './routes/ai-mention';
+import { standards } from './routes/standards';
 import { requireApiKey } from './middleware/auth';
 import { rateLimit } from './middleware/rate-limit';
 import { getDb } from './db';
@@ -28,11 +29,19 @@ app.onError((err, c) => {
   return c.json({ error: 'Internal server error' }, 500);
 });
 
+const ALLOWED_ORIGINS = new Set([
+  'https://app.sassmaker.com',
+  'https://sassmaker.com',
+  'http://localhost:3000',
+  'http://localhost:3001',
+]);
+
 app.use('*', async (c, next) => {
   const origin = c.req.header('Origin') || '';
+  const allowedOrigin = ALLOWED_ORIGINS.has(origin) ? origin : 'https://app.sassmaker.com';
   const corsMiddleware = cors({
-    origin: origin || '*',
-    allowMethods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+    origin: allowedOrigin,
+    allowMethods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
     allowHeaders: ['Content-Type', 'X-Project-Key', 'Authorization'],
     credentials: true,
   });
@@ -82,5 +91,6 @@ app.route('/v1/ai', aiGateway);
 app.route('/v1/roadmap', roadmap);
 app.route('/v1/directory', directory);
 app.route('/v1/ai-mention', aiMention);
+app.route('/v1/standards', standards);
 
 export default app;

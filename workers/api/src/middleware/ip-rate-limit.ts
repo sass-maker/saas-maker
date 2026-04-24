@@ -1,4 +1,5 @@
 import { createMiddleware } from 'hono/factory';
+import type { Context } from 'hono';
 import { Bindings, Variables } from '../types';
 
 type HonoEnv = { Bindings: Bindings; Variables: Variables };
@@ -27,6 +28,32 @@ export function ipRateLimit(routeKey: string, maxPerHour: number) {
 
     const ip = getClientIp(c);
     const key = `${routeKey}:${ip}`;
+    const now = Date.now();
+
+    let window = windows.get(key);
+    if (!window || now >= window.resetAt) {
+      window = { count: 0, resetAt: now + 3_600_000 }; // 1 hour
+      windows.set(key, window);
+    }
+
+    window.count++;
+
+    if (window.count > maxPerHour) {
+      const retryAfter = Math.ceil((window.resetAt - now) / 1000);
+      c.header('Retry-After', String(retryAfter));
+      return c.json({ error: 'Too many requests' }, 429);
+    }
+
+    return next();
+  });
+}
+
+export function ipRateLimitDynamic(keyFn: (c: Context<HonoEnv>) => string, maxPerHour: number) {
+  return createMiddleware<HonoEnv>(async (c, next) => {
+    cleanup();
+
+    const ip = getClientIp(c);
+    const key = `${keyFn(c)}:${ip}`;
     const now = Date.now();
 
     let window = windows.get(key);
