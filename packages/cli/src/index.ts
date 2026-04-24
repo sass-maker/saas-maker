@@ -61,7 +61,11 @@ program.command('waitlist').description('Manage the Waitlist block').action(wait
 program.command('ai').description('Manage the AI block').action(aiMentionConfigCommand);
 
 // --- Forge & Commander Utils ---
-program.command('init').description('Forge a Foundry link in this directory').action(initCommand);
+program
+  .command('init')
+  .description('Forge a Foundry link in this directory')
+  .option('--offline', 'Apply standards locally without linking to fleet (use when auth is unavailable)')
+  .action((opts) => initCommand({ offline: opts.offline }));
 program
   .command('forge')
   .description('Forge a new Foundry-compliant project from scratch')

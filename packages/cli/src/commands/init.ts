@@ -14,10 +14,47 @@ interface Project {
   api_key: string;
 }
 
-export async function initCommand(): Promise<void> {
+function applyOfflineFoundry(name: string): void {
+  const type = detectProjectType();
+  const configName = 'foundry.json';
+
+  const config = {
+    name,
+    type,
+    linked: false,
+    standards: { eslint: true, tsconfig: true, prettier: true, renovate: true },
+  };
+  writeFileSync(join(process.cwd(), configName), JSON.stringify(config, null, 2));
+  log.success(`Created ${configName} (offline — not linked to fleet yet)`);
+
+  log.info(`Detected ${type} project. Applying Foundry Standards...`);
+  applyStandard(type);
+  scaffoldRenovate();
+
+  console.log('\n✓ Foundry Standards applied:');
+  console.log('  eslint.config.js, tsconfig.json, .prettierrc, renovate.json');
+  console.log('\nNext:');
+  console.log('  pnpm add -D @saas-maker/eslint-config @saas-maker/tsconfig @saas-maker/prettier-config');
+  console.log('  fnd login   ← then re-run fnd init to link to fleet');
+}
+
+export async function initCommand(options: { offline?: boolean } = {}): Promise<void> {
   const configName = 'foundry.json';
   if (existsSync(join(process.cwd(), configName))) {
     log.info(`${configName} already exists in this directory.`);
+    return;
+  }
+
+  // Derive project name from package.json if present
+  let pkgName = 'my-project';
+  const pkgPath = join(process.cwd(), 'package.json');
+  if (existsSync(pkgPath)) {
+    try { pkgName = JSON.parse(readFileSync(pkgPath, 'utf-8')).name ?? pkgName; } catch {}
+  }
+
+  // --offline: skip API, apply standards locally, skip fleet link
+  if (options.offline) {
+    applyOfflineFoundry(pkgName);
     return;
   }
 
@@ -28,14 +65,17 @@ export async function initCommand(): Promise<void> {
     const res = await requestApi<{ data: Project[] }>({ path: '/v1/projects', auth: 'session' });
     if (!res.ok) {
       spinner.stop();
-      log.error(getResponseError(res));
+      log.warn(`Could not reach fleet API (${getResponseError(res)}). Falling back to offline mode.`);
+      log.info('Run `fnd login` to re-authenticate, then `fnd init` to link to fleet.');
+      applyOfflineFoundry(pkgName);
       return;
     }
     projects = res.data?.data ?? [];
     spinner.stop();
   } catch (err) {
     spinner.stop();
-    log.error(err instanceof Error ? err.message : 'Failed to load projects');
+    log.warn(`Network error: ${err instanceof Error ? err.message : 'Unknown'}. Falling back to offline mode.`);
+    applyOfflineFoundry(pkgName);
     return;
   }
 
@@ -60,27 +100,26 @@ export async function initCommand(): Promise<void> {
 
     const project = projects[idx];
     saveLocalConfig({ slug: project.slug, projectId: project.id, projectKey: project.api_key });
-    
-    // Rename old config if it exists
-    if (existsSync(join(process.cwd(), '.saasmaker.json'))) {
-      const old = readFileSync(join(process.cwd(), '.saasmaker.json'), 'utf-8');
-      writeFileSync(join(process.cwd(), configName), old);
-      log.info('Migrated .saasmaker.json to foundry.json');
-    }
+
+    // Migrate legacy config if present
+    const legacyPath = join(process.cwd(), '.saasmaker.json');
+    const foundryConfig = existsSync(legacyPath)
+      ? readFileSync(legacyPath, 'utf-8')
+      : JSON.stringify({ name: project.name, slug: project.slug, type: detectProjectType(), linked: true }, null, 2);
+    writeFileSync(join(process.cwd(), configName), foundryConfig);
+    if (existsSync(legacyPath)) log.info('Migrated .saasmaker.json → foundry.json');
 
     log.success(`Linked to "${project.name}" — wrote ${configName}`);
 
-    // FOUNDRY FORGE: Apply Standards
     const type = detectProjectType();
     log.info(`Detected ${type} project. Applying Foundry Standards...`);
-    
     applyStandard(type);
     scaffoldRenovate();
 
-    // Print next steps
-    console.log('\n🚀 Foundry Forge complete:');
-    console.log(`  1. Install standards: pnpm add -D @saas-maker/tooling @saas-maker/eslint-config @saas-maker/tsconfig @saas-maker/prettier-config`);
-    console.log(`  2. Set API Key in .env.local:`);
+    console.log('\n✓ Foundry Forge complete:');
+    console.log('  1. Install standards:');
+    console.log('     pnpm add -D @saas-maker/eslint-config @saas-maker/tsconfig @saas-maker/prettier-config');
+    console.log(`  2. Add to .env.local:`);
     console.log(`     NEXT_PUBLIC_FOUNDRY_KEY=${project.api_key}`);
   } finally {
     rl.close();

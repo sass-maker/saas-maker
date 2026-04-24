@@ -497,6 +497,77 @@ Start with active + clean projects first:
 
 ---
 
+## Future Package: `@foundry/email`
+
+**Location**: `saas-maker/packages/email/` (future)
+
+**Purpose**: Standardised transactional email across all projects. Currently each project either has no email or wires Resend/SendGrid independently with duplicated templates and config.
+
+### What it solves
+- `resume-tailor` — sends job application emails (no shared template)
+- `significanthobbies` — digest/notification emails
+- `mentionpilot` — mention alert emails
+- `truehire` — candidate notification emails
+- `saas-maker` — team/account emails
+
+All currently handle email differently or not at all.
+
+### Planned API
+```ts
+import { email } from '@foundry/email';
+
+// Simple transactional
+await email.send({
+  to: 'user@example.com',
+  subject: 'Welcome',
+  template: 'welcome',        // resolves to packages/email/templates/welcome.tsx
+  data: { name: 'Sarthak' },
+});
+
+// With foundry tracing (auto-wired when @foundry/ops is present)
+await email.send({ ... });   // auto-traced: foundry:email:send
+```
+
+### Package structure (planned)
+```
+packages/email/
+  package.json
+  src/
+    index.ts          ← email.send(), email.batch(), email.preview()
+    providers/
+      resend.ts       ← primary (Resend API)
+      smtp.ts         ← fallback (nodemailer for self-hosted)
+    templates/
+      welcome.tsx     ← React Email components
+      digest.tsx
+      alert.tsx
+    render.ts         ← React Email → HTML/text
+```
+
+### Provider config (per project .env)
+```
+FOUNDRY_EMAIL_PROVIDER=resend       # or smtp
+RESEND_API_KEY=re_...
+FOUNDRY_EMAIL_FROM=noreply@yourdomain.com
+```
+
+### Integration with @foundry/ops
+When `@foundry/ops` is installed, every `email.send()` call is auto-traced:
+- timing
+- delivery status
+- bounce/error rate visible in Cockpit
+
+### Per-project usage (zero config beyond env vars)
+```ts
+import { email } from '@foundry/email';
+// That's it — provider, from-address, and tracing are auto-configured
+```
+
+### Priority
+Build after `@foundry/ops` — needs the trace wrapper for observability.
+
+---
+
 ## What NOT to do
 
 - **Don't create a root monorepo** at `~/Desktop/` — 22 separate git repos is fine, shared packages are the right layer
