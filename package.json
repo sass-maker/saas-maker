@@ -19,6 +19,7 @@
     "test": "vitest run",
     "test:integration": "vitest run --config vitest.integration.config.ts",
     "test:e2e": "playwright test tests/e2e/api/",
+    "lint": "pnpm -r lint",
     "prepare": "husky"
   },
   "devDependencies": {
