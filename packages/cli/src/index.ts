@@ -11,9 +11,9 @@ import { roadmapListCommand, roadmapCreateCommand, roadmapUpdateCommand, roadmap
 import { changelogListCommand, changelogCreateCommand, changelogUpdateCommand, changelogDeleteCommand } from './commands/changelog.js';
 import { testimonialsListCommand, testimonialsUpdateCommand, testimonialsDeleteCommand } from './commands/testimonials.js';
 import { analyticsDashboardCommand, analyticsDetailCommand, analyticsSetupCommand } from './commands/analytics.js';
-import { formsListCommand, formsCreateCommand, formsGetCommand, formsDeleteCommand, formsResponsesCommand, formsAnalyticsCommand } from './commands/forms.js';
+// import { formsListCommand, formsCreateCommand, formsGetCommand, formsDeleteCommand, formsResponsesCommand, formsAnalyticsCommand } from './commands/forms.js'; // Removed — forms removed from active product
 import { waitlistListCommand, waitlistCountCommand, waitlistDeleteCommand } from './commands/waitlist.js';
-import { aiMentionConfigCommand, aiMentionPromptsCommand, aiMentionPromptsAddCommand, aiMentionCheckCommand, aiMentionHistoryCommand } from './commands/ai-mention.js';
+// import { aiMentionConfigCommand, aiMentionPromptsCommand, aiMentionPromptsAddCommand, aiMentionCheckCommand, aiMentionHistoryCommand } from './commands/ai-mention.js'; // Removed — see mentionpilot project
 import { initCommand } from './commands/init.js';
 import { forgeCommand } from './commands/forge.js';
 import { statusCommand } from './commands/status.js';
@@ -61,9 +61,9 @@ analytics.command('dashboard').description('View analytics dashboard').action(an
 analytics.command('setup').description('Automate PostHog integration').action(analyticsSetupCommand);
 analytics.command('detail <section>').description('Drill down into analytics').action(analyticsDetailCommand);
 
-program.command('forms').description('Manage the Forms block').action(formsListCommand);
+// program.command('forms').description('Manage the Forms block').action(formsListCommand); // Removed — forms removed from active product
 program.command('waitlist').description('Manage the Waitlist block').action(waitlistListCommand);
-program.command('ai').description('Manage the AI block').action(aiMentionConfigCommand);
+// program.command('ai').description('Manage the AI block').action(aiMentionConfigCommand); // Removed — use free-ai project
 
 // --- Forge & Commander Utils ---
 program

@@ -43,10 +43,10 @@ const projectNavItems = [
   { label: "Testimonials", href: "/testimonials", icon: Star },
   { label: "Waitlist", href: "/waitlist", icon: Users },
   { label: "Changelog", href: "/changelog", icon: Megaphone },
-  { label: "Knowledge Base", href: "/indexes", icon: Brain },
+  // { label: "Knowledge Base", href: "/indexes", icon: Brain }, // Removed — knowledge base removed from active product
   // { label: "AI Gateway", href: "/ai", icon: Zap }, // Removed — use free-ai project
   // { label: "AI Mention Check", href: "/ai-mention", icon: Eye }, // Removed — moved to mentionpilot
-  { label: "Forms", href: "/forms", icon: ClipboardList },
+  // { label: "Forms", href: "/forms", icon: ClipboardList }, // Removed — forms removed from active product
   { label: "Analytics", href: "/analytics", icon: BarChart3 },
   { label: "Settings", href: "/settings", icon: Settings },
 ];

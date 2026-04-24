@@ -5,14 +5,14 @@ import { auth } from './routes/auth';
 import { projects } from './routes/projects';
 import { feedback } from './routes/feedback';
 import { upload } from './routes/upload';
-import { indexes } from './routes/indexes';
+// import { indexes } from './routes/indexes'; // Removed — knowledge base / vector search removed from active product
 import { waitlist } from './routes/waitlist';
 import { analytics } from './routes/analytics';
 
 import { testimonials } from './routes/testimonials';
 import { changelog } from './routes/changelog';
 import { cliAuth } from './routes/cli-auth';
-import { forms } from './routes/forms';
+// import { forms } from './routes/forms'; // Removed — forms removed from active product
 // import { aiGateway } from './routes/ai-gateway'; // Removed from active product — use free-ai project instead
 import { roadmap } from './routes/roadmap';
 // import { directory } from './routes/directory'; // Removed from active product — directory moved away
@@ -82,13 +82,13 @@ app.route('/v1/auth', auth);
 app.route('/v1/projects', projects);
 app.route('/v1/feedback', feedback);
 app.route('/v1/upload', upload);
-app.route('/v1/indexes', indexes);
+// app.route('/v1/indexes', indexes); // Removed — knowledge base / vector search removed from active product
 app.route('/v1/waitlist', waitlist);
 app.route('/v1/analytics', analytics);
 app.route('/v1/testimonials', testimonials);
 app.route('/v1/changelog', changelog);
 app.route('/v1/cli', cliAuth);
-app.route('/v1/forms', forms);
+// app.route('/v1/forms', forms); // Removed — forms removed from active product
 // app.route('/v1/ai', aiGateway); // Removed from active product — use free-ai project instead
 app.route('/v1/roadmap', roadmap);
 // app.route('/v1/directory', directory); // Removed from active product — directory moved away
