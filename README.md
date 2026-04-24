@@ -22,6 +22,8 @@ High-quality, modular packages that any project can opt into.
 *   **`@saas-maker/db`**: Database utilities for Cloudflare D1/Turso.
 *   **`@saas-maker/sdk`**: The core API client for Foundry services.
 
+> **🚧 Upcoming (The Operational Layer)**: We are currently building `@foundry/ops` (unified telemetry/errors) and `@foundry/rate-limit` (KV/Redis shielding) to provide fleet-wide operational consistency.
+
 ### 3. The Widgets (UI Components)
 Ready-to-drop UI components for common product needs.
 *   **Feedback & Roadmap**: Let users vote on features.
