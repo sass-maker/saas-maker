@@ -35,6 +35,14 @@ export interface StandardsRow {
   updated_at: string;
 }
 
+export interface TaskRow {
+  id: string; owner_id: string; project_slug: string | null;
+  title: string; description: string | null;
+  status: 'todo' | 'in_progress' | 'done';
+  priority: 'low' | 'medium' | 'high';
+  created_at: string; updated_at: string;
+}
+
 export interface FleetMetadataRow {
   id: string;
   owner_id: string;
@@ -1657,6 +1665,55 @@ export function getDb(d1: D1Database): FeedbackDatabase {
         `SELECT * FROM fleet_metadata WHERE owner_id = ? ORDER BY name ASC`
       ).bind(ownerId).all();
       return mapRows<FleetMetadataRow>(results);
+    },
+
+    // --- Tasks ---
+    async createTask(ownerId: string, input: { title: string; description?: string; project_slug?: string; priority?: string }): Promise<TaskRow> {
+      const id = crypto.randomUUID();
+      const priority = input.priority ?? 'medium';
+      await d1.prepare(
+        `INSERT INTO tasks (id, owner_id, project_slug, title, description, priority)
+         VALUES (?, ?, ?, ?, ?, ?)`
+      ).bind(id, ownerId, input.project_slug ?? null, input.title, input.description ?? null, priority).run();
+      const row = await d1.prepare(`SELECT * FROM tasks WHERE id = ?`).bind(id).first();
+      return row as unknown as TaskRow;
+    },
+
+    async listTasks(ownerId: string, status?: string): Promise<TaskRow[]> {
+      if (status) {
+        const { results } = await d1.prepare(
+          `SELECT * FROM tasks WHERE owner_id = ? AND status = ? ORDER BY created_at DESC`
+        ).bind(ownerId, status).all();
+        return results as unknown as TaskRow[];
+      }
+      const { results } = await d1.prepare(
+        `SELECT * FROM tasks WHERE owner_id = ? ORDER BY created_at DESC`
+      ).bind(ownerId).all();
+      return results as unknown as TaskRow[];
+    },
+
+    async updateTask(id: string, ownerId: string, input: Partial<{ title: string; description: string; status: string; priority: string; project_slug: string }>): Promise<TaskRow | null> {
+      const sets: string[] = [];
+      const values: unknown[] = [];
+      if (input.title !== undefined) { sets.push('title = ?'); values.push(input.title); }
+      if (input.description !== undefined) { sets.push('description = ?'); values.push(input.description); }
+      if (input.status !== undefined) { sets.push('status = ?'); values.push(input.status); }
+      if (input.priority !== undefined) { sets.push('priority = ?'); values.push(input.priority); }
+      if (input.project_slug !== undefined) { sets.push('project_slug = ?'); values.push(input.project_slug); }
+      if (sets.length === 0) return null;
+      sets.push("updated_at = datetime('now')");
+      const sql = `UPDATE tasks SET ${sets.join(', ')} WHERE id = ? AND owner_id = ?`;
+      values.push(id, ownerId);
+      await d1.prepare(sql).bind(...values).run();
+      const row = await d1.prepare(`SELECT * FROM tasks WHERE id = ?`).bind(id).first();
+      return (row as unknown as TaskRow) || null;
+    },
+
+    async deleteTask(id: string, ownerId: string): Promise<boolean> {
+      const { meta } = await d1.prepare(
+        `DELETE FROM tasks WHERE id = ? AND owner_id = ?`
+      ).bind(id, ownerId).run();
+      return (meta.changes ?? 0) > 0;
     },
   };
 }

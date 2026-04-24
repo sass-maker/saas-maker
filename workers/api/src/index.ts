@@ -13,12 +13,13 @@ import { testimonials } from './routes/testimonials';
 import { changelog } from './routes/changelog';
 import { cliAuth } from './routes/cli-auth';
 import { forms } from './routes/forms';
-import { aiGateway } from './routes/ai-gateway';
+// import { aiGateway } from './routes/ai-gateway'; // Removed from active product — use free-ai project instead
 import { roadmap } from './routes/roadmap';
-import { directory } from './routes/directory';
-import { aiMention } from './routes/ai-mention';
+// import { directory } from './routes/directory'; // Removed from active product — directory moved away
+// import { aiMention } from './routes/ai-mention'; // Removed from active product — see mentionpilot for AI mention monitoring
 import { standards } from './routes/standards';
 import { fleetMetadata } from './routes/fleet-metadata';
+import { tasks } from './routes/tasks';
 import { requireApiKey } from './middleware/auth';
 import { rateLimit } from './middleware/rate-limit';
 import { getDb } from './db';
@@ -88,11 +89,12 @@ app.route('/v1/testimonials', testimonials);
 app.route('/v1/changelog', changelog);
 app.route('/v1/cli', cliAuth);
 app.route('/v1/forms', forms);
-app.route('/v1/ai', aiGateway);
+// app.route('/v1/ai', aiGateway); // Removed from active product — use free-ai project instead
 app.route('/v1/roadmap', roadmap);
-app.route('/v1/directory', directory);
-app.route('/v1/ai-mention', aiMention);
+// app.route('/v1/directory', directory); // Removed from active product — directory moved away
+// app.route('/v1/ai-mention', aiMention); // Removed from active product — see mentionpilot for AI mention monitoring
 app.route('/v1/standards', standards);
 app.route('/v1/fleet/metadata', fleetMetadata);
+app.route('/v1/tasks', tasks);
 
 export default app;

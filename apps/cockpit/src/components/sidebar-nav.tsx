@@ -12,6 +12,7 @@ import {
   FolderOpen,
   LayoutDashboard,
   LayoutList,
+  ListTodo,
   Map,
   Megaphone,
   MessageSquare,
@@ -43,8 +44,8 @@ const projectNavItems = [
   { label: "Waitlist", href: "/waitlist", icon: Users },
   { label: "Changelog", href: "/changelog", icon: Megaphone },
   { label: "Knowledge Base", href: "/indexes", icon: Brain },
-  { label: "AI Gateway", href: "/ai", icon: Zap },
-  { label: "AI Mention Check", href: "/ai-mention", icon: Eye },
+  // { label: "AI Gateway", href: "/ai", icon: Zap }, // Removed — use free-ai project
+  // { label: "AI Mention Check", href: "/ai-mention", icon: Eye }, // Removed — moved to mentionpilot
   { label: "Forms", href: "/forms", icon: ClipboardList },
   { label: "Analytics", href: "/analytics", icon: BarChart3 },
   { label: "Settings", href: "/settings", icon: Settings },
@@ -123,6 +124,19 @@ export function SidebarNav() {
       >
         <ShieldCheck className="h-4 w-4" />
         Standards
+      </Link>
+
+      <Link
+        href="/tasks"
+        className={cn(
+          "flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
+          pathname === "/tasks"
+            ? "bg-muted text-foreground"
+            : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+        )}
+      >
+        <ListTodo className="h-4 w-4" />
+        Tasks
       </Link>
 
       {slug && currentProject && (
