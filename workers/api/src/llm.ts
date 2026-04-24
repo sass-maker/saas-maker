@@ -28,6 +28,7 @@ export async function chatCompletion(options: ChatOptions): Promise<Response> {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${config.apiKey}`,
+      'x-gateway-project-id': 'saas-maker',
     },
     body: JSON.stringify(body),
   });
@@ -39,6 +40,7 @@ export async function embeddings(config: LLMConfig, input: string | string[], mo
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${config.apiKey}`,
+      'x-gateway-project-id': 'saas-maker',
     },
     body: JSON.stringify({ model: model || config.model, input }),
   });
