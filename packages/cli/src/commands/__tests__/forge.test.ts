@@ -1,42 +1,64 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { applyStandard } from '../../lib/forge';
+import { forgeCommand } from '../forge';
 import fs from 'node:fs';
 import path from 'node:path';
 
 vi.mock('node:fs');
-vi.mock('../../lib/ui', () => ({
+vi.mock('../lib/ui', () => ({
   log: {
     success: vi.fn(),
     info: vi.fn(),
     error: vi.fn(),
   },
 }));
+vi.mock('../lib/request', () => ({
+  requestApi: vi.fn().mockResolvedValue({
+    ok: true,
+    data: { id: '123', name: 'Test Project', slug: 'test-project', api_key: 'pk_123' }
+  }),
+  getResponseError: vi.fn(),
+}));
 
-describe('Forge Scaffolding', () => {
+vi.mock('node:readline/promises', () => ({
+  createInterface: vi.fn().mockReturnValue({
+    question: vi.fn()
+      .mockResolvedValueOnce('My Project')
+      .mockResolvedValueOnce('next'),
+    close: vi.fn(),
+  }),
+}));
+
+vi.mock('../lib/config', () => ({
+  getApiKey: vi.fn().mockReturnValue('fake-token'),
+  getApiBase: vi.fn().mockReturnValue('https://api.fake.com'),
+  saveLocalConfig: vi.fn(),
+  hasLocalConfig: vi.fn().mockReturnValue(false),
+}));
+
+describe('Forge Scaffolding with Templates', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it('should apply standards to a specific target directory', () => {
+  it('should create project and copy template files', async () => {
     const writeSpy = vi.spyOn(fs, 'writeFileSync');
-    const targetDir = '/tmp/new-project';
+    const mkdirSpy = vi.spyOn(fs, 'mkdirSync');
     
-    // Mock package.json existence
-    vi.spyOn(fs, 'existsSync').mockReturnValue(true);
-    vi.spyOn(fs, 'readFileSync').mockReturnValue(JSON.stringify({ name: 'test-app' }));
-    
-    applyStandard('vite', targetDir);
-    
-    // Check ESLint
+    // Mock template directory contents
+    vi.spyOn(fs, 'statSync').mockReturnValue({ isDirectory: () => true } as any);
+    vi.spyOn(fs, 'readdirSync').mockReturnValue(['package.json.tmpl', 'tsconfig.json'] as any);
+    vi.spyOn(fs, 'readFileSync').mockImplementation((p: any) => {
+      if (p.includes('package.json.tmpl')) return '{"name": "{{name}}"}';
+      if (p.includes('tsconfig.json')) return '{"extends": "base"}';
+      return '';
+    });
+
+    await forgeCommand({ name: 'My Project', type: 'next' });
+
+    // Check template substitution
     expect(writeSpy).toHaveBeenCalledWith(
-      path.join(targetDir, 'eslint.config.js'),
-      expect.stringContaining('@saas-maker/eslint-config/vite')
-    );
-    
-    // Check TSConfig
-    expect(writeSpy).toHaveBeenCalledWith(
-      path.join(targetDir, 'tsconfig.json'),
-      expect.stringContaining('@saas-maker/tsconfig/vite.json')
+      expect.stringContaining('package.json'),
+      expect.stringContaining('my-project')
     );
   });
 });

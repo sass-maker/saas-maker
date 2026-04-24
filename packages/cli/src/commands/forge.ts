@@ -1,11 +1,13 @@
 import { createInterface } from 'node:readline/promises';
-import { mkdirSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { mkdirSync, writeFileSync, readFileSync, readdirSync, copyFileSync, statSync } from 'node:fs';
+import { join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import ora from 'ora';
 import { getResponseError, requestApi } from '../lib/request.js';
-import { saveLocalConfig } from '../lib/config.js';
 import { log } from '../lib/ui.js';
-import { applyStandard, scaffoldRenovate } from '../lib/forge.js';
+import { scaffoldRenovate } from '../lib/forge.js';
+
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
 interface Project {
   id: string;
@@ -19,6 +21,20 @@ interface ForgeOptions {
   type?: 'next' | 'vite' | 'node';
 }
 
+function copyRecursive(src: string, dest: string, vars: Record<string, string>) {
+  if (statSync(src).isDirectory()) {
+    if (!existsSync(dest)) mkdirSync(dest, { recursive: true });
+    readdirSync(src).forEach(child => copyRecursive(join(src, child), join(dest, child), vars));
+  } else {
+    let content = readFileSync(src, 'utf-8');
+    Object.entries(vars).forEach(([key, val]) => {
+      content = content.replace(new RegExp(`{{${key}}}`, 'g'), val);
+    });
+    const finalDest = dest.replace('.tmpl', '');
+    writeFileSync(finalDest, content);
+  }
+}
+
 export async function forgeCommand(options: ForgeOptions = {}): Promise<void> {
   const rl = createInterface({ input: process.stdin, output: process.stdout });
 
@@ -30,7 +46,8 @@ export async function forgeCommand(options: ForgeOptions = {}): Promise<void> {
       return;
     }
 
-    const type = (options.type ?? (await rl.question('Project type (next | vite | node) [node]: ')).trim() || 'node') as 'next' | 'vite' | 'node';
+    const typeInput = options.type ?? (await rl.question('Project type (next | vite | node) [node]: ')).trim();
+    const type = (typeInput || 'node') as 'next' | 'vite' | 'node';
 
     // 1. Create in Cockpit
     const spinner = ora('Creating project in cockpit...').start();
@@ -49,27 +66,16 @@ export async function forgeCommand(options: ForgeOptions = {}): Promise<void> {
     const project = res.data;
     spinner.succeed(`Created "${project.name}" in cockpit.`);
 
-    // 2. Scaffold Local Directory
+    // 2. Scaffold from Template
     const targetDir = join(process.cwd(), project.slug);
-    spinner.start(`Forging project directory at ./${project.slug}...`);
+    const templateDir = resolve(__dirname, '../../templates', type);
+
+    spinner.start(`Forging ${type} project at ./${project.slug}...`);
     
     mkdirSync(targetDir, { recursive: true });
     
-    // Initial package.json
-    const pkg = {
-      name: project.slug,
-      version: '0.1.0',
-      private: true,
-      type: 'module',
-      scripts: {
-        "dev": type === 'next' ? "next dev" : type === 'vite' ? "vite" : "node src/index.js",
-        "build": type === 'next' ? "next build" : type === 'vite' ? "tsc && vite build" : "tsc",
-        "lint": "eslint ."
-      },
-      dependencies: type === 'next' ? { "next": "latest", "react": "latest", "react-dom": "latest" } : type === 'vite' ? { "vite": "latest" } : {}
-    };
-    
-    writeFileSync(join(targetDir, 'package.json'), JSON.stringify(pkg, null, 2));
+    // Copy template files
+    copyRecursive(templateDir, targetDir, { name: project.slug });
     
     // Create foundry.json
     writeFileSync(join(targetDir, 'foundry.json'), JSON.stringify({
@@ -78,8 +84,6 @@ export async function forgeCommand(options: ForgeOptions = {}): Promise<void> {
       projectKey: project.api_key
     }, null, 2));
 
-    // Apply standards
-    applyStandard(type, targetDir);
     scaffoldRenovate(targetDir);
 
     spinner.succeed('Project forged successfully!');
@@ -88,7 +92,7 @@ export async function forgeCommand(options: ForgeOptions = {}): Promise<void> {
     console.log(`🚀 Next steps:`);
     console.log(`  1. cd ${project.slug}`);
     console.log(`  2. pnpm install`);
-    console.log(`  3. foundry login (if not already logged in)`);
+    console.log(`  3. fnd login (if not already logged in)`);
   } catch (err) {
     log.error(err instanceof Error ? err.message : 'Forge failed');
   } finally {

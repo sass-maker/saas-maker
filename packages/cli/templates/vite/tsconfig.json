@@ -1,0 +1,3 @@
+{
+  "extends": "@saas-maker/tsconfig/vite.json"
+}
