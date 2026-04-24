@@ -3,60 +3,51 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 
 export default defineConfig({
-	site: 'https://docs.sassmaker.com',
+	site: 'https://docs.foundry.dev',
 	integrations: [
 		starlight({
-			title: 'SaaS Maker',
-			description: 'Drop-in backend services for SaaS apps — feedback, waitlist, testimonials, changelog, and more.',
+			title: 'Foundry Manual',
+			description: 'The Open Source Foundry for Project Fleets — Standardize, Forge, and Command your repositories.',
 			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/sarthakagrawal927/saas-maker' }],
 			editLink: {
 				baseUrl: 'https://github.com/sarthakagrawal927/saas-maker/edit/main/apps/docs/',
 			},
 			sidebar: [
 				{
-					label: 'Getting Started',
+					label: 'Foundry Core',
 					items: [
 						{ label: 'Introduction', slug: 'getting-started/introduction' },
 						{ label: 'Quickstart', slug: 'getting-started/quickstart' },
-						{ label: 'Authentication', slug: 'getting-started/authentication' },
-						{ label: 'Integration Guide', slug: 'getting-started/integration' },
+						{ label: 'The Standard', slug: 'getting-started/standard' },
+						{ label: 'Foundry CLI', slug: 'sdk/cli' },
 					],
 				},
 				{
-					label: 'Services',
+					label: 'The Blocks',
 					items: [
-						{ label: 'Feedback & Feature Requests', slug: 'services/feedback' },
-						{ label: 'Roadmap', slug: 'services/roadmap' },
-						{ label: 'Waitlist', slug: 'services/waitlist' },
-						{ label: 'Testimonials', slug: 'services/testimonials' },
-						{ label: 'Forms & Surveys', slug: 'services/forms' },
-						{ label: 'Changelog', slug: 'services/changelog' },
-						{ label: 'Knowledge Base (Vector)', slug: 'services/knowledge-base' },
-						{ label: 'Analytics', slug: 'services/analytics' },
-						{ label: 'AI Gateway', slug: 'services/ai-gateway' },
-						{ label: 'AI Mention Check', slug: 'services/ai-mention' },
-						{ label: 'Chatbot', slug: 'services/chatbot' },
-						{ label: 'Projects & README', slug: 'services/projects' },
-						{ label: 'Directory', slug: 'services/directory' },
-					],
-				},
-				{
-					label: 'SDK & CLI',
-					items: [
+						{ label: 'AI block', slug: 'services/ai-gateway' },
+						{ label: 'Analytics block', slug: 'services/analytics' },
+						{ label: 'DB block', slug: 'services/knowledge-base' },
 						{ label: 'JavaScript SDK', slug: 'sdk/javascript' },
-						{ label: 'CLI', slug: 'sdk/cli' },
 					],
 				},
 				{
-					label: 'Widgets',
+					label: 'The Widgets',
 					items: [
-						{ label: 'Feedback Widget', slug: 'widgets/feedback' },
-						{ label: 'Testimonial Wall', slug: 'widgets/testimonials' },
+						{ label: 'Feedback & Roadmap', slug: 'widgets/feedback' },
+						{ label: 'Testimonials Wall', slug: 'widgets/testimonials' },
 						{ label: 'Changelog Timeline', slug: 'widgets/changelog' },
-						{ label: 'Survey Widget', slug: 'widgets/survey' },
-						{ label: 'Waitlist Widget', slug: 'widgets/waitlist' },
-						{ label: 'Analytics Dashboard', slug: 'widgets/analytics' },
-						{ label: 'Badge', slug: 'widgets/badge' },
+						{ label: 'Survey & Forms', slug: 'widgets/survey' },
+						{ label: 'Waitlist Form', slug: 'widgets/waitlist' },
+						{ label: 'Analytics UI', slug: 'widgets/analytics' },
+					],
+				},
+				{
+					label: 'Fleet Management',
+					items: [
+						{ label: 'The Cockpit', slug: 'services/projects' },
+						{ label: 'Fleet Audit & Fix', slug: 'sdk/cli' },
+						{ label: 'Forge Scaffolding', slug: 'sdk/cli' },
 					],
 				},
 				{

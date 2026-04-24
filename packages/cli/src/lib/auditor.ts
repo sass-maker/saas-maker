@@ -1,5 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { execSync } from 'node:child_process';
 
 export interface AuditResult {
   check: string;
@@ -57,7 +58,18 @@ export function auditProject(cwd: string = process.cwd()): AuditResult[] {
     results.push({ check: 'Prettier Standard', status: 'warn', detail: 'Custom prettier or missing link' });
   }
 
-  // 5. Check Governance
+  // 5. Code Health (Fallow)
+  try {
+    // Check if fallow is available
+    const hasFallow = execSync('command -v fallow', { encoding: 'utf-8' }).trim();
+    if (hasFallow) {
+      results.push({ check: 'Fallow Engine', status: 'pass', detail: 'Dead-code engine active' });
+    }
+  } catch {
+    results.push({ check: 'Fallow Engine', status: 'warn', detail: 'Fallow not installed globally' });
+  }
+
+  // 6. Check Governance (Renovate)
   if (existsSync(join(cwd, 'renovate.json'))) {
     results.push({ check: 'Hygiene', status: 'pass', detail: 'Renovate configured' });
   } else {
