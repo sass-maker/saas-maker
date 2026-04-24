@@ -45,3 +45,24 @@ export function scaffoldRenovate(cwd: string = process.cwd()): void {
   writeFileSync(file, JSON.stringify(config, null, 2));
   log.success('✓ Created renovate.json');
 }
+
+export function scaffoldWeeklyCi(cwd: string = process.cwd()): void {
+  const workflowDir = join(cwd, '.github', 'workflows');
+  const file = join(workflowDir, 'weekly.yml');
+  if (existsSync(file)) return;
+
+  mkdirSync(workflowDir, { recursive: true });
+
+  const workflow = `name: Weekly Quality Check
+on:
+  schedule:
+    - cron: '0 9 * * 1'  # Every Monday 9am UTC
+  workflow_dispatch:     # Manual trigger anytime
+
+jobs:
+  foundry-weekly:
+    uses: sarthakagrawal927/saas-maker/.github/workflows/foundry-weekly.yml@main
+`;
+  writeFileSync(file, workflow);
+  log.success('✓ Created .github/workflows/weekly.yml');
+}

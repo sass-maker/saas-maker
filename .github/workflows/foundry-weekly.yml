@@ -1,0 +1,88 @@
+name: Foundry Weekly Quality Check (reusable)
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        type: string
+        default: '20'
+      run-knip:
+        type: boolean
+        default: true
+      run-fallow:
+        type: boolean
+        default: true
+      run-audit:
+        type: boolean
+        default: true
+
+jobs:
+  quality:
+    name: Weekly Quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # needed for fallow --changed-since
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      # --- Build -------------------------------------------------------
+      - name: Build
+        run: pnpm build --if-present
+        continue-on-error: false
+
+      # --- TypeScript strict check ------------------------------------
+      - name: Typecheck
+        run: pnpm exec tsc --noEmit 2>/dev/null || pnpm typecheck --if-present
+        continue-on-error: true
+
+      # --- Tests -------------------------------------------------------
+      - name: Unit + integration tests
+        run: pnpm test --if-present --reporter=github
+        continue-on-error: true
+
+      # --- Dead code (knip) -------------------------------------------
+      - name: Dead code — knip
+        if: inputs.run-knip
+        run: |
+          pnpm add -D knip --ignore-scripts 2>/dev/null || true
+          pnpm exec knip --reporter=compact --no-exit-code
+        continue-on-error: true
+
+      # --- Duplicate code (fallow) ------------------------------------
+      - name: Duplicate code — fallow
+        if: inputs.run-fallow
+        run: |
+          npm install -g fallow 2>/dev/null || true
+          fallow dupes --mode mild --skip-local || true
+        continue-on-error: true
+
+      # --- Complexity (fallow health) ---------------------------------
+      - name: Complexity — fallow health
+        if: inputs.run-fallow
+        run: fallow health --score --top 10 || true
+        continue-on-error: true
+
+      # --- Dependency audit -------------------------------------------
+      - name: Dependency audit
+        if: inputs.run-audit
+        run: pnpm audit --prod
+        continue-on-error: true
+
+      # --- Summary ----------------------------------------------------
+      - name: Quality summary
+        if: always()
+        run: |
+          echo "## Weekly Quality Report" >> $GITHUB_STEP_SUMMARY
+          echo "Run \`fnd audit\` locally for full Foundry compliance check." >> $GITHUB_STEP_SUMMARY

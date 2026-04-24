@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import os from 'node:os';
 
 export interface FleetProject {
   name: string;
@@ -11,10 +12,7 @@ export interface FleetProject {
 
 export function getLocalFleet(): FleetProject[] {
   try {
-    // Navigate from saas-maker/packages/cli/src/lib to ~/Desktop
-    // process.cwd() is usually the project root when running via fnd
-    const rootPath = process.cwd();
-    const desktopPath = path.resolve(rootPath, '..');
+    const desktopPath = path.join(os.homedir(), 'Desktop');
 
     const entries = fs.readdirSync(desktopPath, { withFileTypes: true });
     const fleet: FleetProject[] = [];

@@ -5,7 +5,7 @@ import ora from 'ora';
 import { getResponseError, requestApi } from '../lib/request.js';
 import { saveLocalConfig } from '../lib/config.js';
 import { log } from '../lib/ui.js';
-import { detectProjectType, applyStandard, scaffoldRenovate } from '../lib/forge.js';
+import { detectProjectType, applyStandard, scaffoldRenovate, scaffoldWeeklyCi } from '../lib/forge.js';
 
 interface Project {
   id: string;
@@ -30,6 +30,7 @@ function applyOfflineFoundry(name: string): void {
   log.info(`Detected ${type} project. Applying Foundry Standards...`);
   applyStandard(type);
   scaffoldRenovate();
+  scaffoldWeeklyCi();
 
   console.log('\n✓ Foundry Standards applied:');
   console.log('  eslint.config.js, tsconfig.json, .prettierrc, renovate.json');
@@ -115,6 +116,7 @@ export async function initCommand(options: { offline?: boolean } = {}): Promise<
     log.info(`Detected ${type} project. Applying Foundry Standards...`);
     applyStandard(type);
     scaffoldRenovate();
+    scaffoldWeeklyCi();
 
     console.log('\n✓ Foundry Forge complete:');
     console.log('  1. Install standards:');
