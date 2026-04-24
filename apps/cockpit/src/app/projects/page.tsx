@@ -74,14 +74,7 @@ export default async function ProjectsPage() {
               <Card className="transition-colors hover:border-foreground/20 hover:bg-muted/50">
                 <CardHeader>
                   <CardTitle className="text-lg">{project.name}</CardTitle>
-                  <CardDescription>
-                    Created{" "}
-                    {new Date(project.created_at).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    })}
-                  </CardDescription>
+                  <CardDescription>{project.slug}</CardDescription>
                 </CardHeader>
               </Card>
             </Link>
