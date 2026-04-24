@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Laptop, AlertTriangle, CheckCircle2, ArrowRight } from "lucide-react";
+import { Laptop, AlertTriangle, CheckCircle2, ArrowRight, ShieldCheck, Zap } from "lucide-react";
 import Link from "next/link";
 
 interface FleetProject {
@@ -25,8 +25,15 @@ interface FleetProject {
   }
 }
 
+interface FleetHealth {
+  percentage: number;
+  compliant: number;
+  legacy: number;
+}
+
 export function FleetMonitor() {
   const [fleet, setFleet] = useState<FleetProject[]>([]);
+  const [health, setHealth] = useState<FleetHealth | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -37,6 +44,7 @@ export function FleetMonitor() {
         if (!res.ok) throw new Error("Failed to scan local fleet");
         const data = await res.json();
         setFleet(data.fleet || []);
+        setHealth(data.health);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Scanner unavailable");
       } finally {
@@ -50,62 +58,97 @@ export function FleetMonitor() {
   if (error) return null;
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-2">
-        <Laptop className="h-5 w-5 text-muted-foreground" />
-        <h2 className="text-lg font-semibold tracking-tight">Local Fleet</h2>
-        <Badge variant="outline" className="ml-auto font-mono text-[10px]">
-          {fleet.length} detected
-        </Badge>
-      </div>
-
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {fleet.map((project) => (
-          <Card key={project.path} className="group transition-all hover:border-primary/50">
-            <CardHeader className="p-4 pb-3">
-              <div className="flex items-start justify-between">
-                <div>
-                  <CardTitle className="text-base font-bold">{project.name}</CardTitle>
-                  <CardDescription className="text-[10px] font-mono truncate max-w-[180px]">
-                    {project.slug}
-                  </CardDescription>
-                </div>
-                <Badge variant={project.isLegacy ? "warning" : "secondary"} className="capitalize">
-                  {project.type}
-                </Badge>
+    <div className="space-y-6">
+      {/* Fleet Health Summary */}
+      {health && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Card className="bg-primary/5 border-primary/20">
+            <CardHeader className="p-4 flex flex-row items-center justify-between space-y-0">
+              <div className="space-y-1">
+                <CardTitle className="text-xs font-bold uppercase tracking-wider text-primary/70">Compliance Rate</CardTitle>
+                <div className="text-2xl font-bold">{health.percentage}%</div>
               </div>
+              <ShieldCheck className="h-5 w-5 text-primary/40" />
             </CardHeader>
-            <CardContent className="px-4 pb-4 pt-0">
-              <div className="flex flex-col gap-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">Standard Compliance</span>
-                  <span className="text-[10px] font-mono">{project.compliance.score}/{project.compliance.total}</span>
-                </div>
-                <div className="flex gap-1">
-                  {Object.entries(project.compliance.checks).map(([key, val]) => (
-                    <div 
-                      key={key} 
-                      className={`h-1.5 flex-1 rounded-full ${val ? 'bg-success' : 'bg-muted'}`}
-                      title={`${key}: ${val ? 'Pass' : 'Fail'}`}
-                    />
-                  ))}
-                </div>
-              </div>
-              
-              <div className="mt-4 flex items-center justify-between">
-                 <span className="text-[10px] text-muted-foreground">
-                   {project.isLegacy ? "Legacy Config" : "Foundry Standard"}
-                 </span>
-                 <Link 
-                   href={`/projects/${project.slug}`}
-                   className="text-xs font-medium text-primary flex items-center gap-1 group-hover:translate-x-1 transition-transform"
-                 >
-                   Open <ArrowRight className="h-3 w-3" />
-                 </Link>
-              </div>
-            </CardContent>
           </Card>
-        ))}
+          <Card className="bg-green-500/5 border-green-500/20">
+            <CardHeader className="p-4 flex flex-row items-center justify-between space-y-0">
+              <div className="space-y-1">
+                <CardTitle className="text-xs font-bold uppercase tracking-wider text-green-600/70">Fully Compliant</CardTitle>
+                <div className="text-2xl font-bold">{health.compliant}</div>
+              </div>
+              <CheckCircle2 className="h-5 w-5 text-green-500/40" />
+            </CardHeader>
+          </Card>
+          <Card className="bg-yellow-500/5 border-yellow-500/20">
+            <CardHeader className="p-4 flex flex-row items-center justify-between space-y-0">
+              <div className="space-y-1">
+                <CardTitle className="text-xs font-bold uppercase tracking-wider text-yellow-600/70">Legacy Fleet</CardTitle>
+                <div className="text-2xl font-bold">{health.legacy}</div>
+              </div>
+              <AlertTriangle className="h-5 w-5 text-yellow-500/40" />
+            </CardHeader>
+          </Card>
+        </div>
+      )}
+
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <Laptop className="h-5 w-5 text-muted-foreground" />
+          <h2 className="text-lg font-semibold tracking-tight">Local Fleet</h2>
+          <Badge variant="outline" className="ml-auto font-mono text-[10px]">
+            {fleet.length} detected
+          </Badge>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {fleet.map((project) => (
+            <Card key={project.path} className="group transition-all hover:border-primary/50">
+              <CardHeader className="p-4 pb-3">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <CardTitle className="text-base font-bold">{project.name}</CardTitle>
+                    <CardDescription className="text-[10px] font-mono truncate max-w-[180px]">
+                      {project.slug}
+                    </CardDescription>
+                  </div>
+                  <Badge variant={project.isLegacy ? "secondary" : "default"} className="capitalize text-[10px] px-1.5 py-0">
+                    {project.type}
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="px-4 pb-4 pt-0">
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">Standard</span>
+                    <span className="text-[10px] font-mono">{project.compliance.score}/{project.compliance.total}</span>
+                  </div>
+                  <div className="flex gap-1">
+                    {Object.entries(project.compliance.checks).map(([key, val]) => (
+                      <div 
+                        key={key} 
+                        className={`h-1.5 flex-1 rounded-full ${val ? 'bg-green-500' : 'bg-muted'}`}
+                        title={`${key}: ${val ? 'Pass' : 'Fail'}`}
+                      />
+                    ))}
+                  </div>
+                </div>
+                
+                <div className="mt-4 flex items-center justify-between">
+                   <span className="text-[10px] text-muted-foreground">
+                     {project.isLegacy ? "Legacy Config" : "Foundry Standard"}
+                   </span>
+                   <Link 
+                     href={`/projects/${project.slug}`}
+                     className="text-xs font-medium text-primary flex items-center gap-1 group-hover:translate-x-1 transition-transform"
+                   >
+                     Open <ArrowRight className="h-3 w-3" />
+                   </Link>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
     </div>
   );

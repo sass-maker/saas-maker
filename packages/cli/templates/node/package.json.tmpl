@@ -1,0 +1,27 @@
+{
+  "name": "{{name}}",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "test": "vitest run"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@saas-maker/eslint-config": "latest",
+    "@saas-maker/tsconfig": "latest",
+    "@saas-maker/prettier-config": "latest",
+    "@saas-maker/dev-config": "latest",
+    "@cloudflare/workers-types": "latest",
+    "eslint": "latest",
+    "prettier": "latest",
+    "typescript": "latest",
+    "vitest": "latest",
+    "wrangler": "latest"
+  },
+  "prettier": "@saas-maker/prettier-config"
+}

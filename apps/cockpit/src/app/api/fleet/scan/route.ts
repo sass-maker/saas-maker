@@ -71,9 +71,18 @@ export async function GET() {
       }
     }
 
+    const sortedFleet = projects.sort((a, b) => b.lastModified.getTime() - a.lastModified.getTime());
+    const totalScore = projects.reduce((acc, p) => acc + p.compliance.score, 0);
+    const maxScore = projects.length * 4; // 4 checks per project
+
     return NextResponse.json({ 
-      fleet: projects.sort((a, b) => b.lastModified.getTime() - a.lastModified.getTime()),
-      count: projects.length 
+      fleet: sortedFleet,
+      count: projects.length,
+      health: {
+        percentage: maxScore > 0 ? Math.round((totalScore / maxScore) * 100) : 0,
+        compliant: projects.filter(p => p.compliance.score === p.compliance.total).length,
+        legacy: projects.filter(p => p.isLegacy).length
+      }
     });
   } catch (err) {
     return NextResponse.json({ error: 'Failed to scan fleet', detail: String(err) }, { status: 500 });
