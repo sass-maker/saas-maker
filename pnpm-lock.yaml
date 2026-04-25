@@ -518,6 +518,9 @@ importers:
       '@saas-maker/foundry-shield':
         specifier: workspace:*
         version: link:../../packages/blocks/foundry-shield
+      '@saas-maker/ops':
+        specifier: workspace:*
+        version: link:../../packages/blocks/ops
       '@saas-maker/shared-types':
         specifier: workspace:*
         version: link:../../packages/blocks/shared-types
