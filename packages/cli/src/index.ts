@@ -10,7 +10,7 @@ import { feedbackListCommand, feedbackUpdateCommand, feedbackDeleteCommand } fro
 import { roadmapListCommand, roadmapCreateCommand, roadmapUpdateCommand, roadmapDeleteCommand } from './commands/roadmap.js';
 import { changelogListCommand, changelogCreateCommand, changelogUpdateCommand, changelogDeleteCommand } from './commands/changelog.js';
 import { testimonialsListCommand, testimonialsUpdateCommand, testimonialsDeleteCommand } from './commands/testimonials.js';
-import { analyticsDashboardCommand, analyticsDetailCommand, analyticsSetupCommand } from './commands/analytics.js';
+import { analyticsDashboardCommand, analyticsDetailCommand, analyticsSetupCommand, analyticsForgeDashboardCommand } from './commands/analytics.js';
 import { formsListCommand, formsCreateCommand, formsGetCommand, formsDeleteCommand, formsResponsesCommand, formsAnalyticsCommand } from './commands/forms.js';
 import { waitlistListCommand, waitlistCountCommand, waitlistDeleteCommand } from './commands/waitlist.js';
 import { aiMentionConfigCommand, aiMentionPromptsCommand, aiMentionPromptsAddCommand, aiMentionCheckCommand, aiMentionHistoryCommand } from './commands/ai-mention.js';
