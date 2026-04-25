@@ -3,7 +3,7 @@ import { loginCommand } from './commands/login.js';
 import { whoamiCommand } from './commands/whoami.js';
 import { keysCommand } from './commands/keys.js';
 import { projectsListCommand, projectsCreateCommand, projectsDeleteCommand, projectsUpdateCommand } from './commands/projects.js';
-import { fleetListCommand, fleetRunCommand, fleetUpgradeCommand, fleetAuditCommand, fleetFixCommand } from './commands/fleet.js';
+import { fleetListCommand, fleetRunCommand, fleetUpgradeCommand, fleetAuditCommand, fleetFixCommand, fleetHealthCommand } from './commands/fleet.js';
 import { fleetDashboardCommand } from './commands/fleet-dashboard.js';
 import { fleetScanCommand } from './commands/fleet-scan.js';
 import { feedbackListCommand, feedbackUpdateCommand, feedbackDeleteCommand } from './commands/feedback.js';
@@ -49,6 +49,7 @@ fleet.command('fix').description('Auto-fix compliance issues across the fleet').
 fleet.command('upgrade').description('Upgrade all projects to Foundry Standards').action(fleetUpgradeCommand);
 fleet.command('dashboard').description('Show tooling matrix across all fleet projects').action(fleetDashboardCommand);
 fleet.command('scan').description('Detect tooling and sync to Foundry cockpit').action(fleetScanCommand);
+fleet.command('health').description('Show request/error/latency health across the fleet via PostHog (last 24h)').action(fleetHealthCommand);
 
 // --- Blocks & Widgets ---
 program.command('feedback').description('Manage the Feedback block').action(feedbackListCommand);
