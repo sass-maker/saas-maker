@@ -1,4 +1,4 @@
-import { execSync } from 'node:child_process';
+import { execSync, spawn } from 'node:child_process';
 import ora from 'ora';
 import chalk from 'chalk';
 import { getLocalFleet } from '../lib/fleet.js';
@@ -19,10 +19,10 @@ export async function fleetListCommand(): Promise<void> {
   const fleet = getLocalFleet();
   if (fleet.length === 0) { log.info('No fleet projects detected.'); return; }
 
-  // Load project descriptions from manifest
   let manifest: Record<string, string> = {};
   try {
-    const manifestPath = resolve(process.cwd().split('saas-maker')[0], 'saas-maker', 'foundry.projects.json');
+    const rootPath = resolve(process.cwd().split('saas-maker')[0], 'saas-maker');
+    const manifestPath = join(rootPath, 'foundry.projects.json');
     if (existsSync(manifestPath)) {
       manifest = JSON.parse(readFileSync(manifestPath, 'utf-8'));
     }
@@ -108,12 +108,9 @@ export async function fleetFixCommand(): Promise<void> {
   log.success('\nFleet-wide fix complete. Run `fnd fleet upgrade` to ensure latest versions are installed.');
 }
 
-/**
- * Syncpack-based version management for the entire fleet.
- */
 export async function fleetVersionsCommand(action: 'list' | 'fix' | 'check'): Promise<void> {
   const rootPath = resolve(process.cwd().split('Fleet')[0], 'Fleet');
-  const configPath = resolve(__dirname, '../../syncpack.config.cjs');
+  const configPath = join(rootPath, 'saas-maker', 'packages', 'cli', 'syncpack.config.cjs');
   const bin = 'npx syncpack';
 
   const commands = {
@@ -132,9 +129,70 @@ export async function fleetVersionsCommand(action: 'list' | 'fix' | 'check'): Pr
   }
 }
 
+/**
+ * Dispatches an AI agent swarm to apply a specific skill/protocol across the entire fleet.
+ */
+export async function fleetApplySkillCommand(skillName: string): Promise<void> {
+  const fleet = getLocalFleet();
+  const rootPath = resolve(process.cwd().split('saas-maker')[0], 'saas-maker');
+  const skillPath = join(rootPath, 'skills', `${skillName}.md`);
+
+  if (!existsSync(skillPath)) {
+    log.error(`Skill protocol not found: ${skillName}. Check saas-maker/skills/`);
+    return;
+  }
+
+  const skillContent = readFileSync(skillPath, 'utf-8');
+  log.info(`🚀 Dispatching Agent Swarm to apply protocol: ${chalk.bold(skillName)}\n`);
+
+  for (const project of fleet) {
+    const spinner = ora(`[${project.slug}] Agent working...`).start();
+
+    const prompt = `
+[FACTORY SWARM DIRECTIVE]
+Project: ${project.slug}
+Protocol: ${skillName}
+
+You are an automated Foundry Factory Agent. Your mission is to apply the following architectural protocol to this repository.
+
+PROTOCOL SPECIFICATION:
+${skillContent}
+
+MISSION:
+1. Audit the current state.
+2. Apply the protocol strictly.
+3. Verify with 'fnd audit'.
+4. Commit with 'chore(foundry): swarm-applied ${skillName}'.
+`;
+
+    try {
+      const agent = spawn('gemini', ['--prompt', prompt], {
+        cwd: project.path,
+        stdio: 'ignore',
+        env: { ...process.env, FORCE_COLOR: 'true' }
+      });
+
+      await new Promise<void>((resolve) => {
+        agent.on('close', (code) => {
+          if (code === 0) {
+            spinner.succeed(`[${project.slug}] Applied ${skillName}`);
+          } else {
+            spinner.fail(`[${project.slug}] Agent failed (Code: ${code})`);
+          }
+          resolve();
+        });
+      });
+    } catch (err) {
+      spinner.fail(`[${project.slug}] Dispatch failed`);
+    }
+  }
+
+  log.success('\nFleet-wide refactor swarm complete.');
+}
+
 export async function fleetSecretsSyncCommand(): Promise<void> {
   const fleet = getLocalFleet();
-  if (fleet.length === 0) { log.info('No projects to sync.'); return; }
+  if (fleet.length === 0) { log.info('No fleet projects detected.'); return; }
 
   const spinner = ora('Fetching fleet secrets from Cockpit...').start();
   let secrets: any[] = [];
