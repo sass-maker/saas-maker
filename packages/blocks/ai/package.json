@@ -29,6 +29,11 @@
     "test": "vitest run",
     "test:watch": "vitest"
   },
+  "dependencies": {
+    "@saas-maker/ops": "workspace:*" ,
+    "@ai-sdk/openai-compatible": "2.0.41",
+    "ai": "6.0.168"
+  },
   "peerDependencies": {
     "@ai-sdk/openai-compatible": "2.0.41",
     "ai": "6.0.168",

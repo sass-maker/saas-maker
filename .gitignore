@@ -27,3 +27,4 @@ cockroach-sql-*/
 # Misc
 *.png
 project-idea-dump.md
+.fallow/

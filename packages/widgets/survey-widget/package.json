@@ -20,7 +20,7 @@
     "react-dom": "19.2.5"
   },
   "devDependencies": {
-    "@saas-maker/shared-types": "0.1.1",
+    "@saas-maker/shared-types": "workspace:*" ,
     "@types/react": "19",
     "@types/react-dom": "19",
     "react": "19.2.5",

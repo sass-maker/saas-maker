@@ -32,8 +32,8 @@
     "react-dom": "19.2.5"
   },
   "devDependencies": {
-    "@saas-maker/eslint-config": "workspace:*",
-    "@saas-maker/tsconfig": "workspace:*",
+    "@saas-maker/eslint-config": "workspace:*" ,
+    "@saas-maker/tsconfig": "workspace:*" ,
     "@storybook/addon-essentials": "8.5.8",
     "@storybook/addon-interactions": "8.5.8",
     "@storybook/addon-links": "8.5.8",

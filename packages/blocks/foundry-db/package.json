@@ -23,7 +23,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@saas-maker/ops": "1.0.0"
+    "@saas-maker/ops": "workspace:*" 
   },
   "peerDependencies": {
     "drizzle-orm": "0.45.2",

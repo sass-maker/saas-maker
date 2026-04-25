@@ -1,3 +1,4 @@
+import { trace, FoundryError } from '@saas-maker/ops';
 import type { AIConfig } from './types';
 
 export interface ChatMessage {
@@ -16,7 +17,6 @@ export interface ChatCompletionOptions {
 
 /**
  * Build the full chat completions URL from a base endpoint.
- * Handles: /v1, /v1/chat/completions, bare URLs.
  */
 export function buildChatUrl(endpointUrl: string): string {
   const base = endpointUrl.trim().replace(/\/+$/, '');
@@ -27,8 +27,7 @@ export function buildChatUrl(endpointUrl: string): string {
 
 /**
  * Raw fetch to an OpenAI-compatible chat completions endpoint.
- * Works in any runtime (Node, Workers, browser). Returns the raw Response
- * so callers can handle streaming or JSON parsing as needed.
+ * Automatically traced via @saas-maker/ops.
  */
 export async function fetchChatCompletion(
   options: ChatCompletionOptions,
@@ -42,31 +41,43 @@ export async function fetchChatCompletion(
     headers: extraHeaders = {},
   } = options;
 
-  const url = buildChatUrl(config.endpointUrl);
+  return trace(`ai:completion:${config.model}`, async () => {
+    const url = buildChatUrl(config.endpointUrl);
 
-  const allMessages: ChatMessage[] = [];
-  if (systemPrompt) allMessages.push({ role: 'system', content: systemPrompt });
-  allMessages.push(...messages);
+    const allMessages: ChatMessage[] = [];
+    if (systemPrompt) allMessages.push({ role: 'system', content: systemPrompt });
+    allMessages.push(...messages);
 
-  return fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${config.apiKey}`,
-      ...extraHeaders,
-    },
-    body: JSON.stringify({
-      model: config.model,
-      messages: allMessages,
-      max_tokens: maxTokens,
-      stream,
-    }),
-  });
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${config.apiKey}`,
+        ...extraHeaders,
+      },
+      body: JSON.stringify({
+        model: config.model,
+        messages: allMessages,
+        max_tokens: maxTokens,
+        stream,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new FoundryError(`AI Provider Error: ${response.statusText}`, {
+        code: 'AI_PROVIDER_ERROR',
+        severity: 'error',
+        context: { status: response.status, errorText, model: config.model },
+      });
+    }
+
+    return response;
+  }, { context: { model: config.model } });
 }
 
 /**
  * Parse an SSE stream from an OpenAI-compatible endpoint.
- * Yields content delta strings. Works with any ReadableStream.
  */
 export async function* parseSSEStream(
   response: Response,
