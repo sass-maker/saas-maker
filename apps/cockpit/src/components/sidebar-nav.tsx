@@ -9,7 +9,9 @@ import {
   ChevronDown,
   ClipboardList,
   Eye,
+  FileJson,
   FolderOpen,
+  KeyRound,
   LayoutDashboard,
   LayoutList,
   ListTodo,
@@ -137,6 +139,36 @@ export function SidebarNav() {
       >
         <ListTodo className="h-4 w-4" />
         Tasks
+      </Link>
+
+      <div className="mt-4 px-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50">
+        Control Plane
+      </div>
+
+      <Link
+        href="/secrets"
+        className={cn(
+          "flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
+          pathname === "/secrets"
+            ? "bg-muted text-foreground"
+            : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+        )}
+      >
+        <KeyRound className="h-4 w-4" />
+        Secrets
+      </Link>
+
+      <Link
+        href="/manifest"
+        className={cn(
+          "flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
+          pathname === "/manifest"
+            ? "bg-muted text-foreground"
+            : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+        )}
+      >
+        <FileJson className="h-4 w-4" />
+        Manifest
       </Link>
 
       {slug && currentProject && (

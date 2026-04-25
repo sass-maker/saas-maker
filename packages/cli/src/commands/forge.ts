@@ -86,6 +86,19 @@ export async function forgeCommand(options: ForgeOptions = {}): Promise<void> {
 
     scaffoldRenovate(targetDir);
 
+    // 3. Register in Global Manifest
+    try {
+      const manifestPath = resolve(__dirname, '../../../../foundry.projects.json');
+      if (existsSync(manifestPath)) {
+        const manifest = JSON.parse(readFileSync(manifestPath, 'utf-8'));
+        manifest[project.slug] = `Newly forged ${type} project.`;
+        writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
+        log.success('✓ Registered in Foundry Manifest');
+      }
+    } catch (e) {
+      log.warn('Failed to update manifest, please add manually.');
+    }
+
     spinner.succeed('Project forged successfully!');
 
     console.log(`\n📂 Created project at ./${project.slug}`);
