@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { Bindings, Variables } from '../types';
 import { requireApiKey, requireSession } from '../middleware/auth';
-import { ipRateLimitDynamic } from '../middleware/ip-rate-limit';
+import { d1RateLimitDynamic } from '../middleware/rate-limit.js';
 import { getDb } from '../db';
 import type { SubmitTestimonialRequest } from '@saas-maker/shared-types';
 
@@ -39,7 +39,7 @@ testimonials.post('/', requireApiKey, async (c) => {
 });
 
 // Public: submit testimonial by project slug (no auth — for /t/[slug] page)
-testimonials.post('/by-project/:slug', ipRateLimitDynamic((c) => `testimonials:public-submit:${c.req.param('slug')}`, 5), async (c) => {
+testimonials.post('/by-project/:slug', d1RateLimitDynamic((c) => `testimonials:public-submit:${c.req.param('slug')}`, 5), async (c) => {
   const slug = c.req.param('slug');
   const body = (await c.req.json()) as SubmitTestimonialRequest;
 

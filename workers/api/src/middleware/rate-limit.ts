@@ -1,6 +1,6 @@
 import { createMiddleware } from 'hono/factory';
 import { d1Shield } from '@saas-maker/foundry-shield';
-import { Bindings, Variables } from '../types';
+import { Bindings, Variables, AppContext } from '../types';
 
 // Add D1 shield for unauthenticated endpoints (more reliable than in-memory)
 export const d1RateLimit = (key: string, maxPerMinute = 10) =>
@@ -9,7 +9,21 @@ export const d1RateLimit = (key: string, maxPerMinute = 10) =>
     const shield = d1Shield(c.env.DB, { max: maxPerMinute, windowMs: 60_000, keyPrefix: key });
     try {
       await shield.assert(`${key}:${ip}`);
-    } catch (err: any) {
+    } catch {
+      return c.json({ error: 'Too many requests' }, 429);
+    }
+    await next();
+  });
+
+// Slug-scoped D1 shield — key derived from the request context
+export const d1RateLimitDynamic = (keyFn: (c: AppContext) => string, maxPerHour = 10) =>
+  createMiddleware<{ Bindings: Bindings; Variables: Variables }>(async (c, next) => {
+    const ip = c.req.header('CF-Connecting-IP') ?? c.req.header('X-Forwarded-For') ?? 'unknown';
+    const key = keyFn(c);
+    const shield = d1Shield(c.env.DB, { max: maxPerHour, windowMs: 60 * 60 * 1000, keyPrefix: 'shield' });
+    try {
+      await shield.assert(`${key}:${ip}`);
+    } catch {
       return c.json({ error: 'Too many requests' }, 429);
     }
     await next();

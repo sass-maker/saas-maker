@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { Bindings, Variables } from '../types';
 import { requireApiKey } from '../middleware/auth';
-import { ipRateLimit } from '../middleware/ip-rate-limit';
+import { d1RateLimit } from '../middleware/rate-limit.js';
 import { getDb } from '../db';
 import type { CreateDirectoryListingRequest } from '@saas-maker/shared-types';
 
@@ -21,7 +21,7 @@ directory.get('/', async (c) => {
 });
 
 // Public: submit a listing (no auth needed)
-directory.post('/', ipRateLimit('directory:submit', 3), async (c) => {
+directory.post('/', d1RateLimit('directory:submit', 3), async (c) => {
   const body = (await c.req.json()) as CreateDirectoryListingRequest & { website?: string };
 
   // Honeypot: hidden field that bots fill out

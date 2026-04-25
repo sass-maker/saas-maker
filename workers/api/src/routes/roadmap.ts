@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { Bindings, Variables } from '../types';
 import { requireSession } from '../middleware/auth';
-import { ipRateLimitDynamic } from '../middleware/ip-rate-limit';
+import { d1RateLimitDynamic } from '../middleware/rate-limit.js';
 import { getDb } from '../db';
 import type { CreateRoadmapItemRequest, UpdateRoadmapItemRequest, ReorderRoadmapRequest, RoadmapColumn } from '@saas-maker/shared-types';
 
@@ -21,7 +21,7 @@ roadmap.get('/public/:slug', async (c) => {
 });
 
 // Public: vote on a roadmap item
-roadmap.post('/public/:slug/:id/vote', ipRateLimitDynamic((c) => `roadmap:vote:${c.req.param('slug')}`, 20), async (c) => {
+roadmap.post('/public/:slug/:id/vote', d1RateLimitDynamic((c) => `roadmap:vote:${c.req.param('slug')}`, 20), async (c) => {
   const slug = c.req.param('slug');
   const itemId = c.req.param('id');
   const body = await c.req.json();
