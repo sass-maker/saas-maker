@@ -1,8 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { 
+  Card, 
+  CardHeader, 
+  CardTitle, 
+  CardDescription, 
+  CardContent,
+  Badge 
+} from "@saas-maker/ui";
 import { Laptop, AlertTriangle, CheckCircle2, ArrowRight, ShieldCheck, Zap, Activity } from "lucide-react";
 import Link from "next/link";
 

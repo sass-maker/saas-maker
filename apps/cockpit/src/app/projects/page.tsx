@@ -4,7 +4,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@saas-maker/ui";
 import { CreateProjectDialog } from "@/components/create-project-dialog";
 import { PageHeader } from "@/components/page-header";
 import { FleetMonitor } from "@/components/fleet-monitor";

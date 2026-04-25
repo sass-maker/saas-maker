@@ -17,43 +17,45 @@ function scanDir(dirPath: string, depth = 0): FleetProject[] {
     const fleet: FleetProject[] = [];
 
     for (const entry of entries) {
-      if (entry.isDirectory()) {
-        // Skip hidden folders and common noise
-        if (entry.name.startsWith('.') || ['node_modules', 'dist', 'out', 'build'].includes(entry.name)) continue;
+      if (entry.isDirectory() || entry.isSymbolicLink()) {
+        const name = entry.name;
         
-        // IMPORTANT: Skip the factory itself to keep the audit clean
-        if (entry.name === 'saas-maker') continue;
+        if (name.startsWith('.') || 
+            name.startsWith('_') || 
+            ['node_modules', 'dist', 'out', 'build', 'reference', 'Archived',
+              'vaulthealth', 'dev_learning', 'port-whisperer'
+            ].includes(name)) continue;
+        
+        if (name === 'saas-maker' || name === 'Fleet') continue;
 
-        const projectPath = path.join(dirPath, entry.name);
+        // Resolve real path to handle symlinks correctly
+        const rawPath = path.join(dirPath, name);
+        const projectPath = fs.realpathSync(rawPath);
+        
         const foundryConfig = path.join(projectPath, 'foundry.json');
-        const legacyConfig = path.join(projectPath, '.saasmaker.json');
         const pkgPath = path.join(projectPath, 'package.json');
 
-        const isFoundry = fs.existsSync(foundryConfig) || fs.existsSync(legacyConfig);
+        const isFoundry = fs.existsSync(foundryConfig);
         const hasPkg = fs.existsSync(pkgPath);
 
-        if (isFoundry || hasPkg) {
+        if (isFoundry || (hasPkg && depth === 0)) {
           let pkg: any = {};
           if (hasPkg) {
-            try {
-              pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
-            } catch {}
+            try { pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8')); } catch {}
           }
 
           fleet.push({
-            name: pkg.name || entry.name,
+            name: pkg.name || name,
             path: projectPath,
-            slug: entry.name,
+            slug: name,
             type: pkg.dependencies?.next ? 'next' : pkg.dependencies?.vite ? 'vite' : 'node',
-            isFoundry: fs.existsSync(foundryConfig),
+            isFoundry,
           });
+          
+          if (name !== 'agentMode') continue;
         }
         
-        // Always deep scan for monorepos, but stop if we already found a project at this level
-        // (unless it's a known monorepo folder like 'agentMode')
-        if (!isFoundry || entry.name === 'agentMode') {
-          fleet.push(...scanDir(projectPath, depth + 1));
-        }
+        fleet.push(...scanDir(projectPath, depth + 1));
       }
     }
     return fleet;
@@ -63,19 +65,20 @@ function scanDir(dirPath: string, depth = 0): FleetProject[] {
 }
 
 export function getLocalFleet(): FleetProject[] {
+  // We now strictly scan the Fleet folder as the source of truth
   const rootPath = process.cwd();
-  // Assume root is ~/Desktop/saas-maker/... so parent is ~/Desktop
-  // This logic works regardless of where the CLI is called from within saas-maker
   const desktopPath = rootPath.includes('saas-maker') 
     ? path.resolve(rootPath.split('saas-maker')[0])
     : path.resolve(rootPath, '..');
   
-  const rawFleet = scanDir(desktopPath);
+  const fleetPath = path.join(desktopPath, 'Fleet');
+  if (!fs.existsSync(fleetPath)) return [];
+
+  const rawFleet = scanDir(fleetPath);
   const seen = new Set<string>();
   
-  // Filter out the saas-maker internal packages that might have been caught
   return rawFleet.filter(p => {
-    if (seen.has(p.path) || p.path.includes('saas-maker/packages') || p.path.includes('saas-maker/apps')) return false;
+    if (seen.has(p.path)) return false;
     seen.add(p.path);
     return true;
   });
