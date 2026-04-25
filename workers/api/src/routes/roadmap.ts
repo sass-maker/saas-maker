@@ -68,6 +68,38 @@ roadmap.delete('/public/:slug/:id/vote', async (c) => {
 // --- Dashboard routes (session auth) ---
 
 // List all roadmap items (including private)
+// Public: submit an idea (goes to backlog, not public until approved)
+roadmap.post('/public/:slug/submit', d1RateLimitDynamic((c) => `roadmap:submit:${c.req.param('slug')}`, 5), async (c) => {
+  const slug = c.req.param('slug');
+  const body = await c.req.json();
+
+  const title = typeof body.title === 'string' ? body.title.trim() : '';
+  const description = typeof body.description === 'string' ? body.description.trim() : '';
+  const email = typeof body.email === 'string' ? body.email.trim() : '';
+
+  if (!title || title.length === 0) return c.json({ error: 'title is required' }, 400);
+  if (!email || email.length === 0) return c.json({ error: 'email is required' }, 400);
+
+  const db = getDb(c.env.DB);
+  const project = await db.getProjectBySlug(slug);
+  if (!project) return c.json({ error: 'Project not found' }, 404);
+
+  const position = await db.getNextRoadmapPosition(project.id, 'backlog');
+
+  const item = await db.createRoadmapItem({
+    id: crypto.randomUUID(),
+    project_id: project.id,
+    feedback_id: null,
+    title,
+    description: description || null,
+    column: 'backlog',
+    position,
+    public: false, // pending approval by project owner
+  });
+
+  return c.json({ ok: true, id: item.id }, 201);
+});
+
 roadmap.get('/dashboard/:projectId', requireSession, async (c) => {
   const userId = c.get('userId')!;
   const projectId = c.req.param('projectId');
