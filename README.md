@@ -48,7 +48,14 @@ The brain of the factory.
    fnd forge --name my-new-app --type next
    ```
 
-3. **Audit the Fleet**:
+3. **Link the Agent Hook**:
+   Connect your global agent harness (e.g. Claude Code) to the Foundry Factory.
+   ```bash
+   # Add this to your shell profile or .claude/hooks
+   source /Users/sarthakagrawal/Desktop/saas-maker/scripts/foundry-agent-hook.sh
+   ```
+
+4. **Audit the Fleet**:
    ```bash
    fnd fleet audit
    ```
