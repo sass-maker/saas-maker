@@ -10,7 +10,7 @@ import {
 } from '@saas-maker/shared-types';
 import { getDb } from '../db';
 import { sendNewFeedbackEmail } from '../email';
-import { trace } from '@saas-maker/ops';
+import { trace, capture } from '@saas-maker/ops';
 
 const feedback = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
@@ -84,6 +84,8 @@ feedback.post('/', requireApiKey, async (c) => {
       );
     }
   }
+
+  capture({ distinctId: record.submitter_email, event: 'feedback_submitted', properties: { feedback_id: record.id, project_id: projectId, type: record.type, title: record.title } });
 
   return c.json(record, 201);
 });
@@ -281,6 +283,7 @@ feedback.patch('/:id', requireSession, async (c) => {
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
   const updated = await db.updateFeedbackStatus(feedbackId, body.status);
+  capture({ distinctId: userId, event: 'feedback_status_updated', properties: { feedback_id: feedbackId, status: body.status, project_id: existing.project_id } });
   return c.json(updated);
 });
 
@@ -299,6 +302,7 @@ feedback.delete('/:id', requireSession, async (c) => {
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
   await db.deleteFeedback(feedbackId);
+  capture({ distinctId: userId, event: 'feedback_deleted', properties: { feedback_id: feedbackId, project_id: existing.project_id, type: existing.type } });
   return c.json({ ok: true });
 });
 

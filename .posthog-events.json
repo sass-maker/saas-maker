@@ -1,0 +1,62 @@
+[
+  {
+    "event": "user_signed_in",
+    "description": "Fired when a user authenticates via the /auth/session endpoint. Also triggers an identify call to set user properties.",
+    "file": "workers/api/src/routes/auth.ts"
+  },
+  {
+    "event": "project_created",
+    "description": "Fired when a user creates a new SaaS project.",
+    "file": "workers/api/src/routes/projects.ts"
+  },
+  {
+    "event": "project_updated",
+    "description": "Fired when a project's settings (name, rate limit) are updated.",
+    "file": "workers/api/src/routes/projects.ts"
+  },
+  {
+    "event": "project_deleted",
+    "description": "Fired when a project is permanently deleted.",
+    "file": "workers/api/src/routes/projects.ts"
+  },
+  {
+    "event": "feedback_submitted",
+    "description": "Fired when end-user feedback (bug/feature/feedback) is submitted to a project via the SDK.",
+    "file": "workers/api/src/routes/feedback.ts"
+  },
+  {
+    "event": "feedback_status_updated",
+    "description": "Fired when a project owner updates the status of a feedback item.",
+    "file": "workers/api/src/routes/feedback.ts"
+  },
+  {
+    "event": "feedback_deleted",
+    "description": "Fired when a project owner deletes a feedback item.",
+    "file": "workers/api/src/routes/feedback.ts"
+  },
+  {
+    "event": "waitlist_signup",
+    "description": "Fired when an end-user signs up to a project's waitlist.",
+    "file": "workers/api/src/routes/waitlist.ts"
+  },
+  {
+    "event": "testimonial_submitted",
+    "description": "Fired when an end-user submits a testimonial for a project (both via API key and public slug).",
+    "file": "workers/api/src/routes/testimonials.ts"
+  },
+  {
+    "event": "task_created",
+    "description": "Fired when a user creates a new task.",
+    "file": "workers/api/src/routes/tasks.ts"
+  },
+  {
+    "event": "task_status_updated",
+    "description": "Fired when a task's status is changed.",
+    "file": "workers/api/src/routes/tasks.ts"
+  },
+  {
+    "event": "task_deleted",
+    "description": "Fired when a task is deleted.",
+    "file": "workers/api/src/routes/tasks.ts"
+  }
+]

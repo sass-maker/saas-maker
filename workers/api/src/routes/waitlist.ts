@@ -3,6 +3,7 @@ import { Bindings, Variables } from '../types';
 import { requireApiKey, requireSession } from '../middleware/auth';
 import { getDb } from '../db';
 import type { WaitlistSignupRequest } from '@saas-maker/shared-types';
+import { capture } from '@saas-maker/ops';
 
 const waitlist = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
@@ -26,6 +27,7 @@ waitlist.post('/', requireApiKey, async (c) => {
       email: body.email.trim().toLowerCase(),
       name: body.name?.trim() || null,
     });
+    capture({ distinctId: entry.email, event: 'waitlist_signup', properties: { project_id: projectId, position: entry.position, name: entry.name ?? undefined } });
     return c.json({ id: entry.id, email: entry.email, name: entry.name, position: entry.position, created_at: entry.created_at }, 201);
   } catch (e: any) {
     if (e.message?.includes('duplicate') || e.code === '23505') {

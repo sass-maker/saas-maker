@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { Bindings, Variables } from '../types';
 import { requireSession } from '../middleware/auth';
 import { getDb } from '../db';
+import { capture } from '@saas-maker/ops';
 
 const tasks = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
@@ -33,6 +34,7 @@ tasks.post('/', requireSession, async (c) => {
     project_slug: body.project_slug,
     priority: body.priority,
   });
+  capture({ distinctId: userId, event: 'task_created', properties: { task_id: task.id, priority: task.priority ?? undefined, project_slug: body.project_slug ?? undefined } });
   return c.json({ data: task }, 201);
 });
 
@@ -50,6 +52,7 @@ tasks.patch('/:id', requireSession, async (c) => {
   const db = getDb(c.env.DB);
   const task = await db.updateTask(id, userId, body);
   if (!task) return c.json({ error: 'Task not found' }, 404);
+  if (body.status) capture({ distinctId: userId, event: 'task_status_updated', properties: { task_id: id, status: body.status } });
   return c.json({ data: task });
 });
 
@@ -60,6 +63,7 @@ tasks.delete('/:id', requireSession, async (c) => {
   const db = getDb(c.env.DB);
   const ok = await db.deleteTask(id, userId);
   if (!ok) return c.json({ error: 'Task not found' }, 404);
+  capture({ distinctId: userId, event: 'task_deleted', properties: { task_id: id } });
   return c.json({ ok: true });
 });
 

@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { Bindings, Variables } from '../types';
 import { decryptAuthJsJwe } from '../middleware/auth';
 import { getDb } from '../db';
+import { capture, identify } from '@saas-maker/ops';
 
 const auth = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
@@ -24,6 +25,12 @@ auth.get('/session', async (c) => {
     name: payload.name || null,
     avatar_url: payload.picture || null,
   });
+
+  identify({
+    distinctId: user.id,
+    properties: { email: user.email, name: user.name ?? undefined },
+  });
+  capture({ distinctId: user.id, event: 'user_signed_in', properties: { email: user.email } });
 
   return c.json({ authenticated: true, user });
 });

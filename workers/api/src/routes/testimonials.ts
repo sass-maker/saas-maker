@@ -4,6 +4,7 @@ import { requireApiKey, requireSession } from '../middleware/auth';
 import { d1RateLimitDynamic } from '../middleware/rate-limit.js';
 import { getDb } from '../db';
 import type { SubmitTestimonialRequest } from '@saas-maker/shared-types';
+import { capture } from '@saas-maker/ops';
 
 const testimonials = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
@@ -35,6 +36,7 @@ testimonials.post('/', requireApiKey, async (c) => {
     tweet_url: body.tweet_url?.trim() || null,
   });
 
+  capture({ distinctId: entry.author_email, event: 'testimonial_submitted', properties: { testimonial_id: entry.id, project_id: projectId, rating: entry.rating } });
   return c.json({ id: entry.id, status: entry.status, created_at: entry.created_at }, 201);
 });
 
@@ -66,6 +68,7 @@ testimonials.post('/by-project/:slug', d1RateLimitDynamic((c) => `testimonials:p
     tweet_url: body.tweet_url?.trim() || null,
   });
 
+  capture({ distinctId: entry.author_email, event: 'testimonial_submitted', properties: { testimonial_id: entry.id, project_id: project.id, rating: entry.rating, via: 'public_slug' } });
   return c.json({ id: entry.id, status: entry.status, created_at: entry.created_at }, 201);
 });
 

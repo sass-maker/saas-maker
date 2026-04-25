@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { Bindings, Variables } from './types';
-import { configurePostHog } from '@saas-maker/ops';
+import { configurePostHog, capture, flushPostHog } from '@saas-maker/ops';
 import { auth } from './routes/auth';
 import { projects } from './routes/projects';
 import { feedback } from './routes/feedback';
@@ -29,6 +29,19 @@ const app = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
 app.onError((err, c) => {
   console.error(`[${c.get('requestId') || 'unknown'}] Unhandled error:`, err.message, err.stack);
+  const userId = c.get('userId');
+  capture({
+    distinctId: userId ?? 'anonymous',
+    event: '$exception',
+    properties: {
+      $exception_message: err.message,
+      $exception_type: err.name,
+      $exception_stack_trace_raw: err.stack,
+      request_path: c.req.path,
+      request_method: c.req.method,
+      request_id: c.get('requestId'),
+    },
+  });
   return c.json({ error: 'Internal server error' }, 500);
 });
 
@@ -59,10 +72,14 @@ app.use('*', async (c, next) => {
 let posthogConfigured = false;
 app.use('*', async (c, next) => {
   if (!posthogConfigured && c.env.POSTHOG_API_KEY) {
-    configurePostHog(c.env.POSTHOG_API_KEY, 'https://eu.i.posthog.com');
+    configurePostHog(c.env.POSTHOG_API_KEY, 'https://us.i.posthog.com');
     posthogConfigured = true;
   }
   await next();
+  // Keep CF Worker alive until PostHog requests complete
+  if (c.env.POSTHOG_API_KEY) {
+    c.executionCtx.waitUntil(flushPostHog());
+  }
 });
 
 // Rate limiting (no-op when projectId is not set, i.e. non-API-key routes)

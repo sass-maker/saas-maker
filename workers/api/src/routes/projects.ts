@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { Bindings, Variables } from '../types';
 import { requireSession } from '../middleware/auth';
 import { getDb } from '../db';
-import { trace } from '@saas-maker/ops';
+import { trace, capture } from '@saas-maker/ops';
 
 const projects = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 projects.use('*', requireSession);
@@ -55,6 +55,8 @@ projects.post('/', async (c) => {
     source,
   });
 
+  capture({ distinctId: userId, event: 'project_created', properties: { project_id: project.id, project_name: project.name, source } });
+
   return c.json(project, 201);
 });
 
@@ -100,6 +102,7 @@ projects.patch('/:id', async (c) => {
     rate_limit_rpm: body.rate_limit_rpm,
     rate_limit_enabled: body.rate_limit_enabled,
   });
+  capture({ distinctId: userId, event: 'project_updated', properties: { project_id: projectId } });
   return c.json(updated);
 });
 
@@ -138,6 +141,7 @@ projects.delete('/:id', async (c) => {
   if (existing.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
   await db.deleteProject(projectId);
+  capture({ distinctId: userId, event: 'project_deleted', properties: { project_id: projectId, project_name: existing.name } });
   return c.json({ ok: true });
 });
 
