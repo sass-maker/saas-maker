@@ -7,7 +7,7 @@ import { auditProject } from '../lib/auditor.js';
 import { printOutput } from '../lib/output.js';
 import { applyStandard, scaffoldRenovate, detectProjectType, scaffoldCI } from '../lib/forge.js';
 import { existsSync, renameSync, readFileSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import { requestApi, getResponseError } from '../lib/request.js';
 
 interface FleetRunOptions {
@@ -97,6 +97,29 @@ export async function fleetFixCommand(): Promise<void> {
   log.success('\nFleet-wide fix complete. Run `fnd fleet upgrade` to ensure latest versions are installed.');
 }
 
+/**
+ * Syncpack-based version management for the entire fleet.
+ */
+export async function fleetVersionsCommand(action: 'list' | 'fix' | 'check'): Promise<void> {
+  const rootPath = resolve(process.cwd().split('Fleet')[0], 'Fleet');
+  const bin = 'npx syncpack';
+
+  const commands = {
+    list: 'list',
+    fix: 'fix',
+    check: 'lint'
+  };
+
+  const spinner = ora(`Running syncpack ${action}...`).start();
+  try {
+    execSync(`${bin} ${commands[action]}`, { cwd: rootPath, stdio: 'inherit' });
+    spinner.succeed('Fleet version audit complete.');
+  } catch (err) {
+    spinner.fail('Version inconsistencies detected in the fleet.');
+    if (action === 'check') process.exitCode = 1;
+  }
+}
+
 export async function fleetSecretsSyncCommand(): Promise<void> {
   const fleet = getLocalFleet();
   if (fleet.length === 0) { log.info('No projects to sync.'); return; }
@@ -130,10 +153,8 @@ export async function fleetSecretsSyncCommand(): Promise<void> {
         currentContent = readFileSync(envPath, 'utf-8');
       }
 
-      // Filter secrets for this project (Global OR Project-Specific)
-      // Note: project_id check would require knowing the project's cloud ID from foundry.json
-      let projectConfig: any = {};
       const foundryPath = join(project.path, 'foundry.json');
+      let projectConfig: any = {};
       if (existsSync(foundryPath)) {
         projectConfig = JSON.parse(readFileSync(foundryPath, 'utf-8'));
       }

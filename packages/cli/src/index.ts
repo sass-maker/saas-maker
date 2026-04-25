@@ -3,7 +3,7 @@ import { loginCommand } from './commands/login.js';
 import { whoamiCommand } from './commands/whoami.js';
 import { keysCommand } from './commands/keys.js';
 import { projectsListCommand, projectsCreateCommand, projectsDeleteCommand, projectsUpdateCommand } from './commands/projects.js';
-import { fleetListCommand, fleetRunCommand, fleetUpgradeCommand, fleetAuditCommand, fleetFixCommand, fleetSecretsSyncCommand } from './commands/fleet.js';
+import { fleetListCommand, fleetRunCommand, fleetUpgradeCommand, fleetAuditCommand, fleetFixCommand, fleetSecretsSyncCommand, fleetVersionsCommand } from './commands/fleet.js';
 import { feedbackListCommand, feedbackUpdateCommand, feedbackDeleteCommand } from './commands/feedback.js';
 import { roadmapListCommand, roadmapCreateCommand, roadmapUpdateCommand, roadmapDeleteCommand } from './commands/roadmap.js';
 import { changelogListCommand, changelogCreateCommand, changelogUpdateCommand, changelogDeleteCommand } from './commands/changelog.js';
@@ -45,6 +45,11 @@ fleet.command('audit').description('Audit all fleet projects for Foundry complia
 fleet.command('fix').description('Auto-fix compliance issues across the fleet').action(fleetFixCommand);
 fleet.command('secrets-sync').description('Synchronize shared environment variables').action(fleetSecretsSyncCommand);
 fleet.command('upgrade').description('Upgrade all projects to Foundry Standards').action(fleetUpgradeCommand);
+
+const versions = fleet.command('versions').description('Manage dependency versions across the fleet');
+versions.command('list').description('List all dependency versions').action(() => fleetVersionsCommand('list'));
+versions.command('fix').description('Fix version mismatches').action(() => fleetVersionsCommand('fix'));
+versions.command('check').description('Check for version mismatches').action(() => fleetVersionsCommand('check'));
 
 // --- Blocks & Widgets ---
 program.command('feedback').description('Manage the Feedback block').action(feedbackListCommand);

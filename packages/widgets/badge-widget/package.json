@@ -14,15 +14,15 @@
     "build": "tsup src/index.ts --format esm,cjs --dts --external react --external react-dom"
   },
   "peerDependencies": {
-    "react": ">=18",
-    "react-dom": ">=18"
+    "react": "19.2.5",
+    "react-dom": "19.2.5"
   },
   "devDependencies": {
-    "@types/react": "^19.1.0",
-    "@types/react-dom": "^19.1.0",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "tsup": "^8.0.0",
-    "typescript": "^5.9.3"
+    "@types/react": "19",
+    "@types/react-dom": "19",
+    "react": "19.2.5",
+    "react-dom": "19.2.5",
+    "tsup": "8.0.0",
+    "typescript": "6.0.3"
   }
 }

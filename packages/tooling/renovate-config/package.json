@@ -1,6 +1,10 @@
 {
   "name": "@saas-maker/renovate-config",
   "version": "1.0.0",
-  "publishConfig": { "access": "public" },
-  "files": ["default.json"]
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "default.json"
+  ]
 }

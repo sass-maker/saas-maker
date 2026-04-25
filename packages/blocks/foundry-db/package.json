@@ -6,30 +6,40 @@
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "exports": {
-    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.mjs", "require": "./dist/index.js" }
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts",
     "dev": "tsup src/index.ts --format esm,cjs --dts --watch"
   },
-  "publishConfig": { "access": "public" },
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
-    "@saas-maker/ops": "^0.1.0"
+    "@saas-maker/ops": "1.0.0"
   },
   "peerDependencies": {
-    "drizzle-orm": ">=0.30.0",
-    "@libsql/client": ">=0.6.0"
+    "drizzle-orm": "0.45.2",
+    "@libsql/client": "0.17.3"
   },
   "peerDependenciesMeta": {
-    "@libsql/client": { "optional": true }
+    "@libsql/client": {
+      "optional": true
+    }
   },
   "devDependencies": {
-    "tsup": "^8.0.0",
-    "typescript": "^5.9.0",
-    "drizzle-orm": "^0.45.0",
-    "@libsql/client": "^0.14.0",
-    "@types/node": "^22.0.0",
-    "@cloudflare/workers-types": "^4.0.0"
+    "tsup": "8.0.0",
+    "typescript": "6.0.3",
+    "drizzle-orm": "0.45.2",
+    "@libsql/client": "0.17.3",
+    "@types/node": "25.6.0",
+    "@cloudflare/workers-types": "4.20260424.1"
   }
 }

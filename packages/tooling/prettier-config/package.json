@@ -2,6 +2,10 @@
   "name": "@saas-maker/prettier-config",
   "version": "1.0.0",
   "main": "index.json",
-  "files": ["index.json"],
-  "publishConfig": { "access": "public" }
+  "files": [
+    "index.json"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }
