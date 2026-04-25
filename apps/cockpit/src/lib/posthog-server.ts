@@ -134,8 +134,46 @@ export async function getFleetLatency(): Promise<FoundryLatencyMetric[]> {
       p95_duration_ms: Math.round(row[3] || 0),
       count: row[4] || 0,
     }));
-  } catch (err) {
-    console.error("Failed to fetch fleet latency:", err);
-    return [];
+/**
+ * Fetches operational metrics for a specific project.
+ */
+export async function getProjectOperationalState(projectId: string) {
+  if (!POSTHOG_API_KEY || !POSTHOG_PROJECT_ID) return null;
+
+  const url = `${POSTHOG_HOST}/api/projects/${POSTHOG_PROJECT_ID}/query/`;
+
+  const query = {
+    query: {
+      kind: "HogQLQuery",
+      query: `
+        SELECT
+          countIf(event = 'foundry_error') AS error_count,
+          avgIf(properties.traceDuration, event = 'foundry_trace') AS avg_latency,
+          max(timestamp) AS last_event_at
+        FROM events
+        WHERE properties.foundry_project_id = '${projectId}' AND timestamp >= now() - INTERVAL 1 DAY
+      `
+    }
+  };
+
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${POSTHOG_API_KEY}`, "Content-Type": "application/json" },
+      body: JSON.stringify(query),
+    });
+
+    if (!res.ok) return null;
+    const data = await res.json();
+    const row = data.results?.[0] || [0, 0, null];
+
+    return {
+      errorCount: row[0],
+      avgLatency: Math.round(row[1] || 0),
+      lastEventAt: row[2],
+      isOnline: row[2] ? (Date.now() - new Date(row[2]).getTime()) < 300000 : false, // Online if event in last 5 mins
+    };
+  } catch {
+    return null;
   }
 }
