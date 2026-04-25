@@ -4,8 +4,13 @@ compatibility_flags = ["nodejs_compat"]
 main = ".open-next/worker.js"
 assets = { directory = ".open-next/assets", binding = "ASSETS" }
 
+routes = [
+  { pattern = "app.sassmaker.com/*", zone_name = "sassmaker.com" }
+]
+
 [vars]
-NEXTAUTH_URL = "https://saasmaker-dashboard.sarthakagrawal927.workers.dev"
+NEXTAUTH_URL = "https://app.sassmaker.com"
+AUTH_URL = "https://app.sassmaker.com"
 NODE_ENV = "production"
 
 [[d1_databases]]
