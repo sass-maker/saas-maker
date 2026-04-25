@@ -46,23 +46,21 @@ export function scaffoldRenovate(cwd: string = process.cwd()): void {
   log.success('✓ Created renovate.json');
 }
 
-export function scaffoldWeeklyCi(cwd: string = process.cwd()): void {
-  const workflowDir = join(cwd, '.github', 'workflows');
-  const file = join(workflowDir, 'weekly.yml');
-  if (existsSync(file)) return;
+export function scaffoldCI(cwd: string = process.cwd()): void {
+  const ciDir = join(cwd, '.github', 'workflows');
+  if (!existsSync(ciDir)) mkdirSync(ciDir, { recursive: true });
 
-  mkdirSync(workflowDir, { recursive: true });
-
-  const workflow = `name: Weekly Quality Check
+  const ciConfig = `name: CI
 on:
-  schedule:
-    - cron: '0 9 * * 1'  # Every Monday 9am UTC
-  workflow_dispatch:     # Manual trigger anytime
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
 
 jobs:
-  foundry-weekly:
-    uses: sarthakagrawal927/saas-maker/.github/workflows/foundry-weekly.yml@main
+  foundry-ci:
+    uses: sarthakagrawal927/saas-maker/.github/workflows/foundry-ci.yml@main
 `;
-  writeFileSync(file, workflow);
-  log.success('✓ Created .github/workflows/weekly.yml');
+  writeFileSync(join(ciDir, 'ci.yml'), ciConfig);
+  log.success('✓ Linked to Global Foundry CI');
 }

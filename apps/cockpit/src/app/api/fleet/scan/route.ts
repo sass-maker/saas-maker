@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import fs from 'node:fs';
 import path from 'node:path';
+import { execSync } from 'node:child_process';
 
 export async function GET() {
   if (process.env.NODE_ENV === 'production' && !process.env.ALLOW_FLEET_SCAN) {
@@ -15,44 +16,46 @@ export async function GET() {
     const entries = fs.readdirSync(desktopPath, { withFileTypes: true });
     const projects = [];
 
+    // Check if fallow is available globally
+    let hasFallow = false;
+    try {
+      execSync('command -v fallow', { encoding: 'utf-8', stdio: 'pipe' });
+      hasFallow = true;
+    } catch {}
+
     for (const entry of entries) {
       if (entry.isDirectory()) {
+        if (entry.name.startsWith('.') || entry.name === 'node_modules' || entry.name === 'saas-maker') continue;
+
         const projectPath = path.join(desktopPath, entry.name);
         const foundryConfig = path.join(projectPath, 'foundry.json');
         const legacyConfig = path.join(projectPath, '.saasmaker.json');
         const pkgPath = path.join(projectPath, 'package.json');
-        const eslintPath = path.join(projectPath, 'eslint.config.js');
-        const tsPath = path.join(projectPath, 'tsconfig.json');
 
-        const isFoundry = fs.existsSync(foundryConfig) || fs.existsSync(legacyConfig);
-        
-        if (isFoundry) {
+        if (fs.existsSync(foundryConfig) || fs.existsSync(legacyConfig)) {
           let pkg: any = {};
           if (fs.existsSync(pkgPath)) {
+            try { pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8')); } catch {}
+          }
+
+          const checks = {
+            config: fs.existsSync(foundryConfig),
+            eslint: fs.existsSync(path.join(projectPath, 'eslint.config.js')),
+            tsconfig: fs.existsSync(path.join(projectPath, 'tsconfig.json')),
+            prettier: pkg.prettier === '@saas-maker/prettier-config',
+            ci: fs.existsSync(path.join(projectPath, '.github/workflows/ci.yml')),
+            health: false
+          };
+
+          // Quick Code Health Check (Fallow)
+          if (hasFallow) {
             try {
-              pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
+              execSync('fallow check --quiet', { cwd: projectPath, encoding: 'utf-8', stdio: 'pipe' });
+              checks.health = true;
             } catch {}
           }
 
-          // Calculate Compliance Score
-          let score = 0;
-          const checks = {
-            config: fs.existsSync(foundryConfig),
-            eslint: false,
-            tsconfig: false,
-            prettier: pkg.prettier === '@saas-maker/prettier-config',
-          };
-
-          if (fs.existsSync(eslintPath)) {
-            const content = fs.readFileSync(eslintPath, 'utf-8');
-            checks.eslint = content.includes('@saas-maker/eslint-config');
-          }
-          if (fs.existsSync(tsPath)) {
-            const content = fs.readFileSync(tsPath, 'utf-8');
-            checks.tsconfig = content.includes('@saas-maker/tsconfig');
-          }
-
-          score = Object.values(checks).filter(Boolean).length;
+          const score = Object.values(checks).filter(Boolean).length;
 
           projects.push({
             name: pkg.name || entry.name,
@@ -73,7 +76,7 @@ export async function GET() {
 
     const sortedFleet = projects.sort((a, b) => b.lastModified.getTime() - a.lastModified.getTime());
     const totalScore = projects.reduce((acc, p) => acc + p.compliance.score, 0);
-    const maxScore = projects.length * 4; // 4 checks per project
+    const maxScore = projects.length * 6; // 6 checks now
 
     return NextResponse.json({ 
       fleet: sortedFleet,

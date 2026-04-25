@@ -5,115 +5,9 @@ import { getLocalFleet } from '../lib/fleet.js';
 import { log } from '../lib/ui.js';
 import { auditProject } from '../lib/auditor.js';
 import { printOutput } from '../lib/output.js';
-import { applyStandard, scaffoldRenovate, detectProjectType } from '../lib/forge.js';
-import { existsSync, renameSync } from 'node:fs';
+import { applyStandard, scaffoldRenovate, detectProjectType, scaffoldCI } from '../lib/forge.js';
+import { existsSync, renameSync, appendFileSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-
-// ── Fleet Health (PostHog) ─────────────────────────────────────────────────────
-
-interface PostHogEvent {
-  properties?: Record<string, unknown>;
-  timestamp?: string;
-}
-
-interface ProjectHealth {
-  project: string;
-  requests: number;
-  errors: number;
-  totalDurationMs: number;
-}
-
-async function queryPostHogTraces(apiKey: string, projectId: string): Promise<PostHogEvent[]> {
-  const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-  const url = `https://us.i.posthog.com/api/projects/${projectId}/events/?limit=500&event=foundry_trace&after=${encodeURIComponent(since)}`;
-
-  const res = await fetch(url, {
-    headers: { Authorization: `Bearer ${apiKey}` },
-  });
-
-  if (!res.ok) {
-    throw new Error(`PostHog API error ${res.status}: ${await res.text()}`);
-  }
-
-  const data = (await res.json()) as { results?: PostHogEvent[] };
-  return data.results ?? [];
-}
-
-export async function fleetHealthCommand(): Promise<void> {
-  const apiKey = process.env.POSTHOG_PERSONAL_API_KEY;
-  const projectId = process.env.POSTHOG_PROJECT_ID;
-
-  if (!apiKey || !projectId) {
-    log.error(
-      'Missing POSTHOG_PERSONAL_API_KEY or POSTHOG_PROJECT_ID env vars.\n' +
-      '  Set them in your shell profile or .env file.'
-    );
-    process.exit(1);
-  }
-
-  const spinner = ora('Fetching fleet health from PostHog...').start();
-
-  let events: PostHogEvent[];
-  try {
-    events = await queryPostHogTraces(apiKey, projectId);
-    spinner.stop();
-  } catch (err) {
-    spinner.fail(`Failed: ${err instanceof Error ? err.message : String(err)}`);
-    process.exit(1);
-  }
-
-  // Aggregate by project
-  const byProject = new Map<string, ProjectHealth>();
-
-  for (const evt of events) {
-    const props = evt.properties ?? {};
-    const project = String(props.project ?? props.distinct_id ?? 'unknown');
-    const isError = props.outcome === 'error';
-    const durationMs = Number(props.duration_ms ?? props.durationMs ?? 0);
-
-    const existing = byProject.get(project) ?? {
-      project,
-      requests: 0,
-      errors: 0,
-      totalDurationMs: 0,
-    };
-
-    existing.requests += 1;
-    if (isError) existing.errors += 1;
-    existing.totalDurationMs += durationMs;
-
-    byProject.set(project, existing);
-  }
-
-  if (byProject.size === 0) {
-    console.log(chalk.dim('\nNo foundry_trace events found in the last 24h.\n'));
-    return;
-  }
-
-  const rows = Array.from(byProject.values()).sort((a, b) => b.requests - a.requests);
-
-  // Column widths
-  const nameWidth = Math.max(16, ...rows.map((r) => r.project.length));
-
-  console.log(chalk.bold('\nFLEET HEALTH — last 24h'));
-  console.log(chalk.dim('━'.repeat(nameWidth + 42)));
-
-  for (const row of rows) {
-    const avgMs = row.requests > 0 ? Math.round(row.totalDurationMs / row.requests) : 0;
-    const errColor = row.errors > 0 ? chalk.red : chalk.green;
-    console.log(
-      chalk.cyan(row.project.padEnd(nameWidth)) +
-      '  ' +
-      String(row.requests).padStart(5) + ' requests' +
-      '  ' +
-      errColor(String(row.errors).padStart(2) + ' errors') +
-      '  ' +
-      chalk.dim('avg ' + String(avgMs) + 'ms')
-    );
-  }
-
-  console.log('');
-}
 
 interface FleetRunOptions {
   type?: 'next' | 'vite' | 'node';
@@ -193,6 +87,7 @@ export async function fleetFixCommand(): Promise<void> {
       const type = detectProjectType(project.path);
       applyStandard(type, project.path);
       scaffoldRenovate(project.path);
+      scaffoldCI(project.path);
       
       spinner.succeed(`[${project.slug}] Compliant`);
     } catch (err) {
@@ -201,6 +96,51 @@ export async function fleetFixCommand(): Promise<void> {
   }
 
   log.success('\nFleet-wide fix complete. Run `fnd fleet upgrade` to ensure latest versions are installed.');
+}
+
+export async function fleetSecretsSyncCommand(): Promise<void> {
+  const fleet = getLocalFleet();
+  if (fleet.length === 0) { log.info('No projects to sync.'); return; }
+
+  log.info(`Synchronizing Foundry Secrets across ${fleet.length} projects...\n`);
+
+  // These are the "Gold Standard" secrets that every Foundry project should have
+  const commonSecrets = {
+    FOUNDRY_API_URL: 'https://api.foundry.dev',
+    NEXT_PUBLIC_SAASMAKER_API_KEY: 'shared_key_placeholder',
+  };
+
+  for (const project of fleet) {
+    const spinner = ora(`[${project.slug}] Syncing .env.local...`).start();
+    try {
+      const envPath = join(project.path, '.env.local');
+      let currentContent = '';
+      if (existsSync(envPath)) {
+        currentContent = readFileSync(envPath, 'utf-8');
+      }
+
+      let newContent = currentContent;
+      let addedCount = 0;
+
+      Object.entries(commonSecrets).forEach(([key, val]) => {
+        if (!currentContent.includes(`${key}=`)) {
+          newContent += `\n${key}="${val}"`;
+          addedCount++;
+        }
+      });
+
+      if (addedCount > 0) {
+        writeFileSync(envPath, newContent);
+        spinner.succeed(`[${project.slug}] Added ${addedCount} secrets`);
+      } else {
+        spinner.info(`[${project.slug}] Up to date`);
+      }
+    } catch (err) {
+      spinner.fail(`[${project.slug}] Sync failed`);
+    }
+  }
+
+  log.success('\nFleet-wide secret synchronization complete.');
 }
 
 export async function fleetUpgradeCommand(): Promise<void> {

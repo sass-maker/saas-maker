@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Laptop, AlertTriangle, CheckCircle2, ArrowRight, ShieldCheck, Zap } from "lucide-react";
+import { Laptop, AlertTriangle, CheckCircle2, ArrowRight, ShieldCheck, Zap, Activity } from "lucide-react";
 import Link from "next/link";
 
 interface FleetProject {
@@ -21,6 +21,8 @@ interface FleetProject {
       eslint: boolean;
       tsconfig: boolean;
       prettier: boolean;
+      ci: boolean;
+      health: boolean;
     }
   }
 }
@@ -83,7 +85,7 @@ export function FleetMonitor() {
           <Card className="bg-yellow-500/5 border-yellow-500/20">
             <CardHeader className="p-4 flex flex-row items-center justify-between space-y-0">
               <div className="space-y-1">
-                <CardTitle className="text-xs font-bold uppercase tracking-wider text-yellow-600/70">Legacy Fleet</CardTitle>
+                <CardTitle className="text-xs font-bold uppercase tracking-wider text-yellow-600/70">Legacy Units</CardTitle>
                 <div className="text-2xl font-bold">{health.legacy}</div>
               </div>
               <AlertTriangle className="h-5 w-5 text-yellow-500/40" />
@@ -94,10 +96,10 @@ export function FleetMonitor() {
 
       <div className="space-y-4">
         <div className="flex items-center gap-2">
-          <Laptop className="h-5 w-5 text-muted-foreground" />
-          <h2 className="text-lg font-semibold tracking-tight">Local Fleet</h2>
+          <Activity className="h-5 w-5 text-muted-foreground" />
+          <h2 className="text-lg font-semibold tracking-tight">Active Units</h2>
           <Badge variant="outline" className="ml-auto font-mono text-[10px]">
-            {fleet.length} detected
+            {fleet.length} units detected
           </Badge>
         </div>
 
@@ -106,13 +108,13 @@ export function FleetMonitor() {
             <Card key={project.path} className="group transition-all hover:border-primary/50">
               <CardHeader className="p-4 pb-3">
                 <div className="flex items-start justify-between">
-                  <div>
-                    <CardTitle className="text-base font-bold">{project.name}</CardTitle>
-                    <CardDescription className="text-[10px] font-mono truncate max-w-[180px]">
+                  <div className="min-w-0 flex-1">
+                    <CardTitle className="text-sm font-bold truncate leading-tight">{project.name}</CardTitle>
+                    <CardDescription className="text-[10px] font-mono truncate opacity-60">
                       {project.slug}
                     </CardDescription>
                   </div>
-                  <Badge variant={project.isLegacy ? "secondary" : "default"} className="capitalize text-[10px] px-1.5 py-0">
+                  <Badge variant={project.isLegacy ? "secondary" : "default"} className="capitalize text-[9px] px-1.5 py-0 shrink-0 ml-2">
                     {project.type}
                   </Badge>
                 </div>
@@ -120,14 +122,14 @@ export function FleetMonitor() {
               <CardContent className="px-4 pb-4 pt-0">
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">Standard</span>
+                    <span className="text-[9px] text-muted-foreground uppercase tracking-wider font-bold">Factory Score</span>
                     <span className="text-[10px] font-mono">{project.compliance.score}/{project.compliance.total}</span>
                   </div>
-                  <div className="flex gap-1">
+                  <div className="flex gap-0.5">
                     {Object.entries(project.compliance.checks).map(([key, val]) => (
                       <div 
                         key={key} 
-                        className={`h-1.5 flex-1 rounded-full ${val ? 'bg-green-500' : 'bg-muted'}`}
+                        className={`h-1 flex-1 rounded-full ${val ? 'bg-green-500' : 'bg-muted'}`}
                         title={`${key}: ${val ? 'Pass' : 'Fail'}`}
                       />
                     ))}
@@ -135,14 +137,19 @@ export function FleetMonitor() {
                 </div>
                 
                 <div className="mt-4 flex items-center justify-between">
-                   <span className="text-[10px] text-muted-foreground">
-                     {project.isLegacy ? "Legacy Config" : "Foundry Standard"}
+                   <span className="text-[9px] text-muted-foreground flex items-center gap-1">
+                     {project.isLegacy ? (
+                       <Zap className="h-2.5 w-2.5 text-yellow-500" />
+                     ) : (
+                       <ShieldCheck className="h-2.5 w-2.5 text-green-500" />
+                     )}
+                     {project.isLegacy ? "Legacy" : "Standard"}
                    </span>
                    <Link 
                      href={`/projects/${project.slug}`}
-                     className="text-xs font-medium text-primary flex items-center gap-1 group-hover:translate-x-1 transition-transform"
+                     className="text-[11px] font-bold text-primary flex items-center gap-1 group-hover:translate-x-1 transition-transform"
                    >
-                     Open <ArrowRight className="h-3 w-3" />
+                     Inspect <ArrowRight className="h-3 w-3" />
                    </Link>
                 </div>
               </CardContent>

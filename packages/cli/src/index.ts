@@ -3,17 +3,15 @@ import { loginCommand } from './commands/login.js';
 import { whoamiCommand } from './commands/whoami.js';
 import { keysCommand } from './commands/keys.js';
 import { projectsListCommand, projectsCreateCommand, projectsDeleteCommand, projectsUpdateCommand } from './commands/projects.js';
-import { fleetListCommand, fleetRunCommand, fleetUpgradeCommand, fleetAuditCommand, fleetFixCommand, fleetHealthCommand } from './commands/fleet.js';
-import { fleetDashboardCommand } from './commands/fleet-dashboard.js';
-import { fleetScanCommand } from './commands/fleet-scan.js';
+import { fleetListCommand, fleetRunCommand, fleetUpgradeCommand, fleetAuditCommand, fleetFixCommand, fleetSecretsSyncCommand } from './commands/fleet.js';
 import { feedbackListCommand, feedbackUpdateCommand, feedbackDeleteCommand } from './commands/feedback.js';
 import { roadmapListCommand, roadmapCreateCommand, roadmapUpdateCommand, roadmapDeleteCommand } from './commands/roadmap.js';
-import { changelogListCommand, changelogCreateCommand, changelogAutoCreateCommand, changelogUpdateCommand, changelogDeleteCommand } from './commands/changelog.js';
+import { changelogListCommand, changelogCreateCommand, changelogUpdateCommand, changelogDeleteCommand } from './commands/changelog.js';
 import { testimonialsListCommand, testimonialsUpdateCommand, testimonialsDeleteCommand } from './commands/testimonials.js';
 import { analyticsDashboardCommand, analyticsDetailCommand, analyticsSetupCommand } from './commands/analytics.js';
-// import { formsListCommand, formsCreateCommand, formsGetCommand, formsDeleteCommand, formsResponsesCommand, formsAnalyticsCommand } from './commands/forms.js'; // Removed — forms removed from active product
+import { formsListCommand, formsCreateCommand, formsGetCommand, formsDeleteCommand, formsResponsesCommand, formsAnalyticsCommand } from './commands/forms.js';
 import { waitlistListCommand, waitlistCountCommand, waitlistDeleteCommand } from './commands/waitlist.js';
-// import { aiMentionConfigCommand, aiMentionPromptsCommand, aiMentionPromptsAddCommand, aiMentionCheckCommand, aiMentionHistoryCommand } from './commands/ai-mention.js'; // Removed — see mentionpilot project
+import { aiMentionConfigCommand, aiMentionPromptsCommand, aiMentionPromptsAddCommand, aiMentionCheckCommand, aiMentionHistoryCommand } from './commands/ai-mention.js';
 import { initCommand } from './commands/init.js';
 import { forgeCommand } from './commands/forge.js';
 import { statusCommand } from './commands/status.js';
@@ -21,7 +19,6 @@ import { apiCommand } from './commands/api.js';
 import { doctorCommand } from './commands/doctor.js';
 import { completionsCommand } from './commands/completions.js';
 import { examplesCommand } from './commands/examples.js';
-import { syncCommand } from './commands/sync.js';
 
 const program = new Command();
 
@@ -46,23 +43,13 @@ fleet
   .action(fleetRunCommand);
 fleet.command('audit').description('Audit all fleet projects for Foundry compliance').action(fleetAuditCommand);
 fleet.command('fix').description('Auto-fix compliance issues across the fleet').action(fleetFixCommand);
+fleet.command('secrets-sync').description('Synchronize shared environment variables').action(fleetSecretsSyncCommand);
 fleet.command('upgrade').description('Upgrade all projects to Foundry Standards').action(fleetUpgradeCommand);
-fleet.command('dashboard').description('Show tooling matrix across all fleet projects').action(fleetDashboardCommand);
-fleet.command('scan').description('Detect tooling and sync to Foundry cockpit').action(fleetScanCommand);
-fleet.command('health').description('Show request/error/latency health across the fleet via PostHog (last 24h)').action(fleetHealthCommand);
 
 // --- Blocks & Widgets ---
 program.command('feedback').description('Manage the Feedback block').action(feedbackListCommand);
 program.command('roadmap').description('Manage the Roadmap block').action(roadmapListCommand);
-const changelog = program.command('changelog').description('Manage the Changelog block').action(changelogListCommand);
-changelog
-  .command('create')
-  .description('Create a changelog entry (auto-reads git context, safe for CI)')
-  .option('--title <title>', 'Entry title (defaults to vVERSION)')
-  .option('--version <version>', 'Version string (defaults to latest git tag or short SHA)')
-  .option('--message <message>', 'Entry content (defaults to last commit subject)')
-  .option('--project <id>', 'Project ID (overrides local config)')
-  .action((opts) => changelogAutoCreateCommand({ title: opts.title, version: opts.version, message: opts.message, project: opts.project }));
+program.command('changelog').description('Manage the Changelog block').action(changelogListCommand);
 program.command('testimonials').description('Manage the Testimonials block').action(testimonialsListCommand);
 
 const analytics = program.command('analytics').description('Manage the Analytics block');
@@ -70,16 +57,12 @@ analytics.command('dashboard').description('View analytics dashboard').action(an
 analytics.command('setup').description('Automate PostHog integration').action(analyticsSetupCommand);
 analytics.command('detail <section>').description('Drill down into analytics').action(analyticsDetailCommand);
 
-// program.command('forms').description('Manage the Forms block').action(formsListCommand); // Removed — forms removed from active product
+program.command('forms').description('Manage the Forms block').action(formsListCommand);
 program.command('waitlist').description('Manage the Waitlist block').action(waitlistListCommand);
-// program.command('ai').description('Manage the AI block').action(aiMentionConfigCommand); // Removed — use free-ai project
+program.command('ai').description('Manage the AI block').action(aiMentionConfigCommand);
 
 // --- Forge & Commander Utils ---
-program
-  .command('init')
-  .description('Forge a Foundry link in this directory')
-  .option('--offline', 'Apply standards locally without linking to fleet (use when auth is unavailable)')
-  .action((opts) => initCommand({ offline: opts.offline }));
+program.command('init').description('Forge a Foundry link in this directory').action(initCommand);
 program
   .command('forge')
   .description('Forge a new Foundry-compliant project from scratch')
@@ -112,8 +95,6 @@ program
   .option('--select <fields>', 'Comma-separated fields')
   .option('--raw', 'Print compact JSON')
   .action(examplesCommand);
-
-program.command('sync').description('Pull latest Foundry Standards from cockpit').action(syncCommand);
 
 program
   .command('completions [shell]')

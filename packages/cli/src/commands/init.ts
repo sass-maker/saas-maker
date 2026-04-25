@@ -5,7 +5,7 @@ import ora from 'ora';
 import { getResponseError, requestApi } from '../lib/request.js';
 import { saveLocalConfig } from '../lib/config.js';
 import { log } from '../lib/ui.js';
-import { detectProjectType, applyStandard, scaffoldRenovate, scaffoldWeeklyCi } from '../lib/forge.js';
+import { detectProjectType, applyStandard, scaffoldRenovate, scaffoldCI } from '../lib/forge.js';
 
 interface Project {
   id: string;
