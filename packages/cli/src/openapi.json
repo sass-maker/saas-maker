@@ -675,6 +675,30 @@
         }
       }
     },
+    "/v1/fleet/metadata": {
+      "get": {
+        "tags": [
+          "fleet"
+        ],
+        "summary": "GET /v1/fleet/metadata",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "fleet"
+        ],
+        "summary": "POST /v1/fleet/metadata",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/v1/forms/by-slug/{slug}": {
       "get": {
         "tags": [
@@ -1225,6 +1249,91 @@
           "roadmap"
         ],
         "summary": "DELETE /v1/roadmap/public/{slug}/{id}/vote",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/standards": {
+      "get": {
+        "tags": [
+          "standards"
+        ],
+        "summary": "GET /v1/standards",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/standards/{type}": {
+      "get": {
+        "tags": [
+          "standards"
+        ],
+        "summary": "GET /v1/standards/{type}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "standards"
+        ],
+        "summary": "PUT /v1/standards/{type}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/tasks": {
+      "get": {
+        "tags": [
+          "tasks"
+        ],
+        "summary": "GET /v1/tasks",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "tasks"
+        ],
+        "summary": "POST /v1/tasks",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/tasks/{id}": {
+      "patch": {
+        "tags": [
+          "tasks"
+        ],
+        "summary": "PATCH /v1/tasks/{id}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "tasks"
+        ],
+        "summary": "DELETE /v1/tasks/{id}",
         "responses": {
           "200": {
             "description": "Success"
