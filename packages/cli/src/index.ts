@@ -3,7 +3,7 @@ import { loginCommand } from './commands/login.js';
 import { whoamiCommand } from './commands/whoami.js';
 import { keysCommand } from './commands/keys.js';
 import { projectsListCommand, projectsCreateCommand, projectsDeleteCommand, projectsUpdateCommand } from './commands/projects.js';
-import { fleetListCommand, fleetRunCommand, fleetUpgradeCommand, fleetAuditCommand, fleetFixCommand, fleetSecretsSyncCommand, fleetVersionsCommand, fleetApplySkillCommand } from './commands/fleet.js';
+import { fleetListCommand, fleetRunCommand, fleetUpgradeCommand, fleetAuditCommand, fleetFixCommand, fleetSecretsSyncCommand, fleetVersionsCommand, fleetApplySkillCommand, fleetProvisionCommand } from './commands/fleet.js';
 import { fleetSuperviseCommand } from './commands/supervise.js';
 import { fleetCleanCommand } from './commands/clean.js';
 import { feedbackListCommand, feedbackUpdateCommand, feedbackDeleteCommand } from './commands/feedback.js';
@@ -45,6 +45,7 @@ fleet
   .action(fleetRunCommand);
 fleet.command('audit').description('Audit all fleet projects for Foundry compliance').action(fleetAuditCommand);
 fleet.command('fix').description('Auto-fix compliance issues across the fleet').action(fleetFixCommand);
+fleet.command('provision').description('Recreate the entire fleet on this machine').action(fleetProvisionCommand);
 fleet.command('apply <skill>').description('Dispatch an agent swarm to apply a protocol').action(fleetApplySkillCommand);
 fleet.command('supervise')
   .description('Run the autonomous maintenance daemon')
@@ -106,15 +107,8 @@ program
   .option('--raw', 'Print compact JSON')
   .action(doctorCommand);
 
-program
-  .command('examples').description('Show practical command examples').action(examplesCommand);
-
-program
-  .command('completions [shell]').description('Print shell completion script').action(completionsCommand);
-
-program
-  .command('api <method> <path>')
-  .description('Call any API route')
-  .action(apiCommand);
+program.command('examples').description('Show practical command examples').action(examplesCommand);
+program.command('completions [shell]').description('Print shell completion script').action(completionsCommand);
+program.command('api <method> <path>').description('Call any API route').action(apiCommand);
 
 program.parse();

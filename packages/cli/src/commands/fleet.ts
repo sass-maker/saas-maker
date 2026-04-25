@@ -266,6 +266,65 @@ export async function fleetSecretsSyncCommand(): Promise<void> {
   log.success('\nFleet-wide secret synchronization complete.');
 }
 
+/**
+ * Recreates the entire project fleet on a new machine.
+ */
+export async function fleetProvisionCommand(): Promise<void> {
+  const rootPath = process.cwd().includes('Fleet') 
+    ? process.cwd().split('Fleet')[0] + 'Fleet'
+    : join(process.env.HOME || '', 'Desktop', 'Fleet');
+
+  if (!existsSync(rootPath)) {
+    mkdirSync(rootPath, { recursive: true });
+    log.info(`Created Factory Floor at: ${rootPath}`);
+  }
+
+  // Load blueprint from manifest
+  let manifest: Record<string, { desc: string, url: string }> = {};
+  try {
+    const manifestPath = join(process.cwd().split('saas-maker')[0], 'saas-maker', 'foundry.projects.json');
+    if (existsSync(manifestPath)) {
+      manifest = JSON.parse(readFileSync(manifestPath, 'utf-8'));
+    }
+  } catch (err) {
+    log.error('Manifest not found. Ensure you are inside saas-maker.');
+    return;
+  }
+
+  const projects = Object.entries(manifest);
+  log.info(`🏭 Provisioning ${projects.length} units to the Factory Floor...\n`);
+
+  for (const [slug, meta] of projects) {
+    const projectPath = join(rootPath, slug);
+    
+    if (existsSync(projectPath)) {
+      log.info(`${chalk.gray('SKIP')} ${slug} (already exists)`);
+      continue;
+    }
+
+    const spinner = ora(`Cloning ${slug}...`).start();
+    try {
+      execSync(`git clone ${meta.url} ${slug}`, { cwd: rootPath, stdio: 'ignore' });
+      spinner.succeed(`Cloned ${slug}`);
+    } catch (err) {
+      spinner.fail(`Failed to clone ${slug}`);
+      continue;
+    }
+  }
+
+  log.info('\n🛠️  Applying Industrial Standards and Syncing Secrets...');
+  
+  // Now that everything is cloned, we run our existing fleet-wide tools
+  try {
+    await fleetFixCommand();
+    await fleetSecretsSyncCommand();
+  } catch (err) {
+    log.warn('Standardization sweep partially failed, run fnd fleet fix manually.');
+  }
+
+  log.success('\n✨ Factory Floor is fully provisioned and ready for work.');
+}
+
 export async function fleetUpgradeCommand(): Promise<void> {
   const command = 'pnpm add -D @saas-maker/tooling @saas-maker/eslint-config @saas-maker/tsconfig @saas-maker/prettier-config @saas-maker/dev-config';
   return fleetRunCommand(command, { parallel: true });

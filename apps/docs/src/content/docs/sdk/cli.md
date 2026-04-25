@@ -1,118 +1,55 @@
 ---
-title: CLI
-description: API-first Foundry CLI with OpenAPI-enforced route access.
+title: Foundry CLI (fnd)
+description: The unified command-line interface for the project fleet.
 ---
 
-The Foundry CLI is intentionally API-first:
+The Foundry CLI (`fnd` or `foundry`) is the primary orchestration tool for the Software Factory. It allows you to manage, audit, and evolve your entire project fleet from a single interface.
 
-- Keep command surface small
-- Use `saasmaker api` for all backend capabilities
-- Avoid feature-specific CLI code for each new API route
-
-## Installation
+## 🛠️ Installation
 
 ```bash
-npm install -g @foundry/cli
+pnpm add -g @saas-maker/cli
 ```
 
-## Quick Start
+## 🏗️ The Forge (Scaffolding)
+
+Start a new project that is 100% Foundry-compliant from day one.
 
 ```bash
-saasmaker login
-saasmaker init
-saasmaker doctor
+fnd forge --name <project-slug> --type [next|vite|node]
 ```
+- **What it does**: Creates a project directory, initializes `package.json`, links Gold Standards, sets up the Operational Layer (`ops`, `db`, `shield`), and writes an `AGENTS.md` foreman file.
 
-## Core Commands
+## 🚢 Fleet Commander (Orchestration)
 
-- `login` — browser OAuth auth
-- `init` — link local directory to a project
-- `whoami` / `keys` — inspect auth + linked context
-- `projects list|create` — project management
-- `ai-mention config|prompts|prompts-add|check|history` — AI mention monitoring
-- `status` — feature status snapshot
-- `doctor` — configuration/auth diagnostics
-- `examples` — copy-paste API-first recipes
-- `completions` — shell autocompletion scripts
-- `api` — universal endpoint access
+Commands that operate across your entire `~/Desktop/Fleet` folder.
 
-## Universal API Command
+| Command | Purpose |
+|---------|---------|
+| `fnd fleet list` | Show all projects, statuses, and mission statements. |
+| `fnd fleet audit` | Deep health check (Standard drift + Code Health via Fallow). |
+| `fnd fleet fix` | Automatically correct standard drift and deploy CI/CD. |
+| `fnd fleet run "<cmd>"` | Execute any shell command across all projects in parallel. |
+| `fnd fleet versions [list|fix]` | Eliminate dependency drift across the whole fleet. |
+| `fnd fleet secrets-sync` | Push shared environment variables to all `.env.local` files. |
+| `fnd fleet clean [--deep]` | Reclaim gigabytes of storage by purging build caches and Rust targets. |
+
+## 🤖 Autonomous Maintenance
+
+Run the factory on auto-pilot.
 
 ```bash
-saasmaker api <method> <path> [options]
+fnd fleet supervise
 ```
+- **The Daemon**: Watches your Cockpit's Global Error Feed.
+- **Auto-Fix**: When an error is detected, it automatically dispatches an AI agent to the failing project to debug and commit a fix using your specific `skills/` protocols.
 
-### Auth options
+## 🧬 Evolutionary Refactoring
 
-- `--auth session` → Bearer token
-- `--auth project` → `X-Project-Key`
-- `--auth auto` (default) → use available context
-- `--auth none`
-
-### Request options
-
-- `--body '{...json...}'`
-- `--body-file ./payload.json`
-- `--query key=value` (repeatable)
-- `--header key=value` (repeatable)
-- `--token` / `--project-key` overrides
-
-### Output options
-
-- `--output json|table`
-- `--select field1,field2`
-- `--quiet`
-- `--raw`
-
-## OpenAPI Validation
-
-`saasmaker api` validates method/path against OpenAPI by default.
-
-- Skip validation only when needed: `--no-validate`
-- Generated spec paths:
-  - `packages/cli/src/openapi.json` (CLI enforcement source)
-  - `docs/openapi/openapi.json` (repo artifact)
-  - `apps/docs/public/openapi.json` (published docs artifact)
-- Regenerate spec:
+Mass-apply architectural changes to the entire fleet.
 
 ```bash
-pnpm generate:openapi
+fnd fleet apply <skill-name>
 ```
-
-## Recipes
-
-```bash
-# Health check
-saasmaker api GET /health --auth none
-
-# Session route
-saasmaker api GET /v1/projects --auth session --output table
-
-# Project-key route
-saasmaker api GET /v1/feedback --auth project --query type=feature --output table
-
-# Create feedback
-saasmaker api POST /v1/feedback --auth project \
-  --body '{"title":"Bug","description":"Broken CTA","submitter_email":"me@example.com","type":"bug"}'
-
-# Create short link
-saasmaker api POST /v1/links --auth project \
-  --body '{"destination":"https://example.com","title":"Homepage"}'
-
-# Dashboard forms
-saasmaker api GET /v1/forms/dashboard/<projectId> --auth session --output table
-
-# Save AI mention config (session route)
-saasmaker api POST /v1/ai-mention/config/<projectId> --auth session \
-  --body '{"brand_name":"Acme","platforms":["openai"],"openai_api_key":"sk-..."}'
-
-# Run an AI mention check
-saasmaker api POST /v1/ai-mention/check/<projectId> --auth session
-
-# Dedicated helper command
-saasmaker ai-mention history --project <projectId> --output table
-
-# Approve testimonial
-saasmaker api PATCH /v1/testimonials/<testimonialId> --auth session \
-  --query project_id=<projectId> --body '{"status":"approved"}'
-```
+- **Example**: `fnd fleet apply protocol-migration`
+- Dispatches a swarm of agents to update every repo based on a protocol in your `skills/` registry.
