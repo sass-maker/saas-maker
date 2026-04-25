@@ -1,3 +1,6 @@
+import { eq, and, desc } from 'drizzle-orm';
+import { getDrizzle } from './drizzle';
+import * as schema from './schema';
 import type { FeedbackDatabase } from '@saas-maker/db';
 import type {
   AIRequestRecord,
@@ -100,6 +103,7 @@ function cosineSimilarity(a: number[], b: number[]): number {
 }
 
 export function getDb(d1: D1Database): FeedbackDatabase {
+  const drz = getDrizzle(d1);
   return {
     // --- Users ---
     async upsertUser(input) {
@@ -168,17 +172,12 @@ export function getDb(d1: D1Database): FeedbackDatabase {
     },
 
     async listProjectsByOwner(ownerId, source) {
-      if (source === 'all') {
-        const { results } = await d1.prepare(
-          `SELECT * FROM projects WHERE owner_id = ? ORDER BY created_at DESC`
-        ).bind(ownerId).all();
-        return mapRows<ProjectRecord>(results);
-      }
-      const filterSource = source || 'dashboard';
-      const { results } = await d1.prepare(
-        `SELECT * FROM projects WHERE owner_id = ? AND source = ? ORDER BY created_at DESC`
-      ).bind(ownerId, filterSource).all();
-      return mapRows<ProjectRecord>(results);
+      // Migrated to Drizzle
+      const filter = source === 'all'
+        ? eq(schema.projects.owner_id, ownerId)
+        : and(eq(schema.projects.owner_id, ownerId), eq(schema.projects.source, source || 'dashboard'));
+      const rows = await drz.select().from(schema.projects).where(filter).orderBy(desc(schema.projects.created_at));
+      return rows as unknown as ProjectRecord[];
     },
 
     async updateProject(id, input) {
@@ -221,6 +220,8 @@ export function getDb(d1: D1Database): FeedbackDatabase {
     },
 
     async listFeedback(projectId, query, userId) {
+      // Migrated to Drizzle for the base filter; viewer_vote join kept as raw SQL
+      // since Drizzle doesn't support dynamic LEFT JOIN ON conditions cleanly.
       const { type, status, sort = 'newest', page = 1, limit = 20 } = query;
       const offset = (page - 1) * limit;
 
@@ -230,22 +231,20 @@ export function getDb(d1: D1Database): FeedbackDatabase {
       if (status) { conditions.push('f.status = ?'); whereBinds.push(status); }
 
       const where = conditions.join(' AND ');
-
       const orderBy = sort === 'upvotes'
         ? 'f.upvote_count DESC, f.created_at DESC'
         : 'f.created_at DESC';
 
-      // Count
-      const countRow = await d1.prepare(
-        `SELECT COUNT(*) AS total FROM feedback f WHERE ${where}`
-      ).bind(...whereBinds).first();
-      const total = (countRow?.total as number) || 0;
+      // Count via Drizzle
+      const filters = [eq(schema.feedback.project_id, projectId)];
+      if (type) filters.push(eq(schema.feedback.type, type));
+      if (status) filters.push(eq(schema.feedback.status, status));
+      const countRows = await drz.select({ id: schema.feedback.id }).from(schema.feedback).where(and(...filters));
+      const total = countRows.length;
 
-      // Data
+      // Data — keep raw SQL for viewer_vote join which Drizzle can't express cleanly
       let rows: unknown[];
       if (userId) {
-        // In the SQL, the ? for user_id in the LEFT JOIN ON clause comes BEFORE
-        // the ? placeholders in the WHERE clause. Bind order must match.
         const sql = `SELECT f.*, v.vote AS viewer_vote
            FROM feedback f
            LEFT JOIN feedback_votes v ON v.feedback_id = f.id AND v.user_id = ?
@@ -508,16 +507,26 @@ export function getDb(d1: D1Database): FeedbackDatabase {
 
     // --- Analytics ---
     async createEvent(input) {
-      const isBotInt = input.is_bot ? 1 : 0;
-      await d1.prepare(
-        `INSERT INTO analytics_events (id, project_id, name, url, referrer, utm_source, utm_medium, utm_campaign, country, device, browser, screen_width, properties, os, is_bot, session_id, pathname)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
-      ).bind(
-        input.id, input.project_id, input.name, input.url, input.referrer,
-        input.utm_source, input.utm_medium, input.utm_campaign, input.country,
-        input.device, input.browser, input.screen_width, JSON.stringify(input.properties),
-        input.os, isBotInt, input.session_id, input.pathname
-      ).run();
+      // Migrated to Drizzle
+      await drz.insert(schema.analytics_events).values({
+        id: input.id,
+        project_id: input.project_id,
+        name: input.name,
+        url: input.url ?? null,
+        referrer: input.referrer ?? null,
+        utm_source: input.utm_source ?? null,
+        utm_medium: input.utm_medium ?? null,
+        utm_campaign: input.utm_campaign ?? null,
+        country: input.country ?? null,
+        device: input.device ?? null,
+        browser: input.browser ?? null,
+        screen_width: input.screen_width ?? null,
+        properties: JSON.stringify(input.properties),
+        os: input.os ?? null,
+        is_bot: input.is_bot ? 1 : 0,
+        session_id: input.session_id ?? null,
+        pathname: input.pathname ?? null,
+      });
       const row = await d1.prepare(`SELECT * FROM analytics_events WHERE id = ?`).bind(input.id).first();
       return row as unknown as EventRecord;
     },

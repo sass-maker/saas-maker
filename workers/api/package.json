@@ -12,11 +12,13 @@
     "@saas-maker/foundry-shield": "workspace:*",
     "@saas-maker/ops": "workspace:*",
     "@saas-maker/shared-types": "workspace:*",
+    "drizzle-orm": "^0.45.2",
     "hono": "^4.7.2",
     "jose": "^6.1.3"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250224.0",
+    "drizzle-kit": "^0.31.10",
     "typescript": "^5.9.3",
     "wrangler": "^4.0.0"
   }
