@@ -5,11 +5,11 @@ import { fileURLToPath } from "node:url";
 const projectRoot = dirname(fileURLToPath(import.meta.url));
 
 const nextConfig: NextConfig = {
-  /* config options here */
   reactCompiler: true,
   turbopack: {
     root: projectRoot,
   },
+  images: { unoptimized: true },
 };
 
 export default nextConfig;
