@@ -111,24 +111,28 @@ jobs:
         run: pnpm -r --filter './packages/*' build
       - name: Publish packages with bumped versions
         run: |
-          for dir in packages/*/; do
-            pkg_json="$dir/package.json"
+          # Scan all package subdirectories recursively
+          find packages -name "package.json" -not -path "*/node_modules/*" -not -path "*/dist/*" | while read pkg_json; do
+            dir=$(dirname "$pkg_json")
             [ -f "$pkg_json" ] || continue
 
-            is_private=$(node -p "require('./$pkg_json').private || false")
+            is_private=$(node -p "try{require('./$pkg_json').private||false}catch(e){true}")
             [ "$is_private" = "true" ] && continue
 
-            name=$(node -p "require('./$pkg_json').name")
-            local_version=$(node -p "require('./$pkg_json').version")
+            name=$(node -p "try{require('./$pkg_json').name}catch(e){''}")
+            [ -z "$name" ] || [[ "$name" == *"undefined"* ]] && continue
+
+            local_version=$(node -p "try{require('./$pkg_json').version}catch(e){'0.0.0'}")
             npm_version=$(npm view "$name" version 2>/dev/null || echo "0.0.0")
 
             if [ "$local_version" != "$npm_version" ]; then
               echo "Publishing $name@$local_version (npm has $npm_version)"
               cd "$dir"
+              pnpm build 2>/dev/null || true
               npm publish --access public
               cd "$GITHUB_WORKSPACE"
             else
-              echo "Skipping $name@$local_version (already published)"
+              echo "Skipping $name@$local_version (already at latest)"
             fi
           done
         env:
