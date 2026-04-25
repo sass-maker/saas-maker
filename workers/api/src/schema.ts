@@ -61,3 +61,13 @@ export const analytics_events = sqliteTable('analytics_events', {
   pathname: text('pathname'),
   created_at: text('created_at').notNull().default(sql`(datetime('now'))`),
 });
+
+export const foundry_secrets = sqliteTable('foundry_secrets', {
+  id: text('id').primaryKey(),
+  project_id: text('project_id'), // Null for global secrets
+  key: text('key').notNull(),
+  value: text('value').notNull(),
+  is_encrypted: integer('is_encrypted').notNull().default(1),
+  created_at: text('created_at').notNull().default(sql`(datetime('now'))`),
+  updated_at: text('updated_at').notNull().default(sql`(datetime('now'))`),
+});

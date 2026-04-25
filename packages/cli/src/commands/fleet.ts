@@ -6,8 +6,9 @@ import { log } from '../lib/ui.js';
 import { auditProject } from '../lib/auditor.js';
 import { printOutput } from '../lib/output.js';
 import { applyStandard, scaffoldRenovate, detectProjectType, scaffoldCI } from '../lib/forge.js';
-import { existsSync, renameSync, appendFileSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, renameSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { requestApi, getResponseError } from '../lib/request.js';
 
 interface FleetRunOptions {
   type?: 'next' | 'vite' | 'node';
@@ -76,14 +77,12 @@ export async function fleetFixCommand(): Promise<void> {
   for (const project of fleet) {
     const spinner = ora(`[${project.slug}] Fixing...`).start();
     try {
-      // 1. Migrate legacy config
       const legacyPath = join(project.path, '.saasmaker.json');
       const foundryPath = join(project.path, 'foundry.json');
       if (existsSync(legacyPath) && !existsSync(foundryPath)) {
         renameSync(legacyPath, foundryPath);
       }
 
-      // 2. Re-apply standards
       const type = detectProjectType(project.path);
       applyStandard(type, project.path);
       scaffoldRenovate(project.path);
@@ -102,16 +101,28 @@ export async function fleetSecretsSyncCommand(): Promise<void> {
   const fleet = getLocalFleet();
   if (fleet.length === 0) { log.info('No projects to sync.'); return; }
 
-  log.info(`Synchronizing Foundry Secrets across ${fleet.length} projects...\n`);
+  const spinner = ora('Fetching fleet secrets from Cockpit...').start();
+  let secrets: any[] = [];
 
-  // These are the "Gold Standard" secrets that every Foundry project should have
-  const commonSecrets = {
-    FOUNDRY_API_URL: 'https://api.foundry.dev',
-    NEXT_PUBLIC_SAASMAKER_API_KEY: 'shared_key_placeholder',
-  };
+  try {
+    const res = await requestApi<{ data: any[] }>({ path: '/v1/secrets', auth: 'session' });
+    if (!res.ok) {
+      spinner.stop();
+      log.error(getResponseError(res));
+      return;
+    }
+    secrets = res.data?.data || [];
+    spinner.succeed(`Fetched ${secrets.length} secrets from Cockpit.`);
+  } catch (err) {
+    spinner.stop();
+    log.error('Failed to fetch secrets');
+    return;
+  }
+
+  log.info(`Synchronizing across ${fleet.length} projects...\n`);
 
   for (const project of fleet) {
-    const spinner = ora(`[${project.slug}] Syncing .env.local...`).start();
+    const projectSpinner = ora(`[${project.slug}] Syncing .env.local...`).start();
     try {
       const envPath = join(project.path, '.env.local');
       let currentContent = '';
@@ -119,24 +130,45 @@ export async function fleetSecretsSyncCommand(): Promise<void> {
         currentContent = readFileSync(envPath, 'utf-8');
       }
 
+      // Filter secrets for this project (Global OR Project-Specific)
+      // Note: project_id check would require knowing the project's cloud ID from foundry.json
+      let projectConfig: any = {};
+      const foundryPath = join(project.path, 'foundry.json');
+      if (existsSync(foundryPath)) {
+        projectConfig = JSON.parse(readFileSync(foundryPath, 'utf-8'));
+      }
+
+      const relevantSecrets = secrets.filter(s => 
+        !s.project_id || s.project_id === projectConfig.projectId
+      );
+
       let newContent = currentContent;
       let addedCount = 0;
+      let updatedCount = 0;
 
-      Object.entries(commonSecrets).forEach(([key, val]) => {
-        if (!currentContent.includes(`${key}=`)) {
-          newContent += `\n${key}="${val}"`;
+      relevantSecrets.forEach(s => {
+        const line = `${s.key}="${s.value}"`;
+        const regex = new RegExp(`^${s.key}=.*`, 'm');
+
+        if (currentContent.match(regex)) {
+          if (!currentContent.includes(line)) {
+            newContent = newContent.replace(regex, line);
+            updatedCount++;
+          }
+        } else {
+          newContent += `\n${line}`;
           addedCount++;
         }
       });
 
-      if (addedCount > 0) {
-        writeFileSync(envPath, newContent);
-        spinner.succeed(`[${project.slug}] Added ${addedCount} secrets`);
+      if (addedCount > 0 || updatedCount > 0) {
+        writeFileSync(envPath, newContent.trim() + '\n');
+        projectSpinner.succeed(`[${project.slug}] +${addedCount} / ~${updatedCount} secrets`);
       } else {
-        spinner.info(`[${project.slug}] Up to date`);
+        projectSpinner.info(`[${project.slug}] Up to date`);
       }
     } catch (err) {
-      spinner.fail(`[${project.slug}] Sync failed`);
+      projectSpinner.fail(`[${project.slug}] Sync failed`);
     }
   }
 
