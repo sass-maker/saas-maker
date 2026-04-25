@@ -11,6 +11,7 @@ import { FleetMonitor } from "@/components/fleet-monitor";
 import { OnboardingFlow } from "@/components/onboarding/OnboardingFlow";
 import { AlertCircle, Cloud } from "lucide-react";
 import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { apiFetch, getServerToken } from "@/lib/api";
 import type { ProjectRecord } from "@saas-maker/shared-types";
@@ -18,7 +19,7 @@ import type { ProjectRecord } from "@saas-maker/shared-types";
 export const dynamic = "force-dynamic";
 
 export default async function ProjectsPage() {
-  const session = await auth();
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user) redirect("/login");
 
   const token = await getServerToken();

@@ -1,0 +1,35 @@
+import { initOpsMonitoring, trace } from "@saas-maker/ops";
+import { createFoundryDb } from "@saas-maker/db";
+import { FoundryShield, MemoryStore } from "@saas-maker/foundry-shield";
+
+/**
+ * Foundry Operational Layer
+ * Unified entry point for data, protection, and monitoring.
+ */
+
+// 1. Initialize Monitoring
+if (typeof window !== 'undefined') {
+  initOpsMonitoring({
+    apiKey: process.env.NEXT_PUBLIC_POSTHOG_KEY!,
+    projectId: "{{name}}",
+  });
+}
+
+// 2. Initialize Database (Environment Aware)
+export const db = createFoundryDb({
+  projectName: "{{name}}",
+  // If in Node/Vite (local dev)
+  url: process.env.DATABASE_URL,
+  authToken: process.env.DATABASE_AUTH_TOKEN,
+});
+
+// 3. Initialize Shield (Rate Limiter)
+export const shield = new FoundryShield({
+  projectName: "{{name}}",
+  limit: 100,
+  windowMs: 60 * 1000, // 1 minute
+  store: new MemoryStore(), // Switch to D1Store(env.DB) in production
+});
+
+// 4. Export tracing utility
+export const fnd = { trace, shield, db };

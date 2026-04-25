@@ -20,16 +20,14 @@ export async function apiFetch(
 }
 
 /**
- * Get the auth token from cookies (server-side only).
- * Import `cookies` from `next/headers` before calling this.
+ * Get the auth session token (server-side only).
+ * Uses better-auth session token for API calls.
  */
 export async function getServerToken(): Promise<string | undefined> {
-  const { cookies } = await import("next/headers");
-  const cookieStore = await cookies();
-  return (
-    cookieStore.get("__Secure-authjs.session-token")?.value ??
-    cookieStore.get("authjs.session-token")?.value
-  );
+  const { auth } = await import("./auth");
+  const { headers } = await import("next/headers");
+  const session = await auth.api.getSession({ headers: await headers() });
+  return session?.session?.token;
 }
 
 /**

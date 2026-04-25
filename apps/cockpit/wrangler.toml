@@ -9,7 +9,6 @@ routes = [
 ]
 
 [vars]
-NEXTAUTH_URL = "https://app.sassmaker.com"
 AUTH_URL = "https://app.sassmaker.com"
 NODE_ENV = "production"
 

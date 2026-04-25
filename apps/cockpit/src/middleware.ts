@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export default auth((req) => {
+export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // Public feedback pages don't require auth
@@ -10,11 +10,12 @@ export default auth((req) => {
   }
 
   // All other /projects routes require auth
-  if (!req.auth) {
+  const session = await auth.api.getSession({ headers: req.headers });
+  if (!session?.user) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
   return NextResponse.next();
-});
+}
 
 export const config = { matcher: ["/projects/:path*"] };

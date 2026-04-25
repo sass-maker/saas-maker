@@ -1,4 +1,5 @@
 import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { CliAuthApproval } from "./cli-auth-approval";
 
@@ -10,7 +11,7 @@ interface Props {
 
 export default async function CliAuthPage({ searchParams }: Props) {
   const { code } = await searchParams;
-  const session = await auth();
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user) {
     const callbackUrl = code ? `/cli/auth?code=${code}` : "/cli/auth";
     redirect(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);

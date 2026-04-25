@@ -1,0 +1,27 @@
+import { trace } from "@saas-maker/ops";
+import { createFoundryDb } from "@saas-maker/db";
+import { FoundryShield, MemoryStore } from "@saas-maker/foundry-shield";
+
+/**
+ * Foundry Operational Layer (Node/Worker)
+ */
+
+export function createFoundry(env: any) {
+  // 1. Initialize Database
+  const db = createFoundryDb({
+    projectName: "{{name}}",
+    d1: env.DB, // Cloudflare D1
+    url: env.DATABASE_URL, // Turso
+    authToken: env.DATABASE_AUTH_TOKEN,
+  });
+
+  // 2. Initialize Shield
+  const shield = new FoundryShield({
+    projectName: "{{name}}",
+    limit: 1000,
+    windowMs: 60 * 1000,
+    store: new MemoryStore(), // Or D1Store(env.DB)
+  });
+
+  return { trace, shield, db };
+}
