@@ -3,7 +3,7 @@ import { loginCommand } from './commands/login.js';
 import { whoamiCommand } from './commands/whoami.js';
 import { keysCommand } from './commands/keys.js';
 import { projectsListCommand, projectsCreateCommand, projectsDeleteCommand, projectsUpdateCommand } from './commands/projects.js';
-import { fleetListCommand, fleetRunCommand, fleetUpgradeCommand, fleetAuditCommand, fleetFixCommand, fleetSecretsSyncCommand, fleetVersionsCommand, fleetApplySkillCommand, fleetProvisionCommand } from './commands/fleet.js';
+import { fleetListCommand, fleetRunCommand, fleetUpgradeCommand, fleetAuditCommand, fleetFixCommand, fleetSecretsSyncCommand, fleetVersionsCommand, fleetApplySkillCommand, fleetProvisionCommand, fleetSearchCommand } from './commands/fleet.js';
 import { fleetSuperviseCommand } from './commands/supervise.js';
 import { fleetCleanCommand } from './commands/clean.js';
 import { feedbackListCommand, feedbackUpdateCommand, feedbackDeleteCommand } from './commands/feedback.js';
@@ -43,6 +43,7 @@ fleet
   .option('--type <type>', 'next | vite | node')
   .option('--parallel', 'Run concurrently despite failures')
   .action(fleetRunCommand);
+fleet.command('search <pattern>').description('Search for a pattern across the entire fleet').action(fleetSearchCommand);
 fleet.command('audit').description('Audit all fleet projects for Foundry compliance').action(fleetAuditCommand);
 fleet.command('fix').description('Auto-fix compliance issues across the fleet').action(fleetFixCommand);
 fleet.command('provision').description('Recreate the entire fleet on this machine').action(fleetProvisionCommand);
