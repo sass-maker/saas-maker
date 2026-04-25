@@ -71,3 +71,14 @@ export const foundry_secrets = sqliteTable('foundry_secrets', {
   created_at: text('created_at').notNull().default(sql`(datetime('now'))`),
   updated_at: text('updated_at').notNull().default(sql`(datetime('now'))`),
 });
+
+export const foundry_jobs = sqliteTable('foundry_jobs', {
+  id: text('id').primaryKey(),
+  project_id: text('project_id').notNull(),
+  type: text('type').notNull(), // 'debug', 'migration', 'forge'
+  status: text('status').notNull(), // 'pending', 'running', 'completed', 'failed'
+  message: text('message'),
+  logs: text('logs').default(''),
+  created_at: text('created_at').notNull().default(sql`(datetime('now'))`),
+  updated_at: text('updated_at').notNull().default(sql`(datetime('now'))`),
+});

@@ -15,6 +15,7 @@ import { testimonials } from './routes/testimonials';
 import { changelog } from './routes/changelog';
 import { cliAuth } from './routes/cli-auth';
 import { secrets } from './routes/secrets';
+import { jobs } from './routes/jobs';
 // import { forms } from './routes/forms'; // Removed — forms removed from active product
 // import { aiGateway } from './routes/ai-gateway'; // Removed from active product — use free-ai project instead
 import { roadmap } from './routes/roadmap';
@@ -148,6 +149,7 @@ app.route('/v1/roadmap', roadmap);
 app.route('/v1/standards', standards);
 app.route('/v1/fleet/metadata', fleetMetadata);
 app.route('/v1/secrets', secrets);
+app.route('/v1/jobs', jobs);
 app.route('/v1/tasks', tasks);
 
 export default app;
