@@ -71,6 +71,7 @@ program.command('testimonials').description('Manage the Testimonials block').act
 const analytics = program.command('analytics').description('Manage the Analytics block');
 analytics.command('dashboard').description('View analytics dashboard').action(analyticsDashboardCommand);
 analytics.command('setup').description('Automate PostHog integration').action(analyticsSetupCommand);
+analytics.command('forge-dashboard').description('Provision the Mission Control dashboard in PostHog').action(analyticsForgeDashboardCommand);
 analytics.command('detail <section>').description('Drill down into analytics').action(analyticsDetailCommand);
 
 program.command('forms').description('Manage the Forms block').action(formsListCommand);

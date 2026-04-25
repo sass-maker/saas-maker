@@ -1,7 +1,7 @@
 import ora from 'ora';
 import chalk from 'chalk';
 import { createInterface } from 'node:readline/promises';
-import { appendFileSync } from 'node:fs';
+import { appendFileSync, existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { printOutput, type OutputFormat } from '../lib/output.js';
 import { getResponseError, requestApi } from '../lib/request.js';
@@ -35,29 +35,103 @@ export async function analyticsSetupCommand(): Promise<void> {
 
   try {
     console.log(chalk.bold('\n📊 Foundry Analytics Setup (PostHog)'));
-    const apiKey = await rl.question('Enter your PostHog API Key: ');
+    const apiKey = await rl.question('Enter your PostHog Personal API Key: ');
+    const apiProject = await rl.question('Enter your PostHog Project ID: ');
     const apiHost = (await rl.question('Enter your PostHog Host [https://us.i.posthog.com]: ')).trim() || 'https://us.i.posthog.com';
 
-    if (!apiKey) {
-      log.error('API Key is required.');
+    if (!apiKey || !apiProject) {
+      log.error('API Key and Project ID are required.');
       return;
     }
 
     const envPath = join(process.cwd(), '.env.local');
-    const envEntry = `\n# Foundry Analytics\nNEXT_PUBLIC_POSTHOG_KEY="${apiKey}"\nNEXT_PUBLIC_POSTHOG_HOST="${apiHost}"\n`;
+    const envEntry = `\n# Foundry Analytics (Control Plane)\nPOSTHOG_PERSONAL_API_KEY="${apiKey}"\nPOSTHOG_PROJECT_ID="${apiProject}"\nPOSTHOG_HOST="${apiHost}"\n`;
 
     appendFileSync(envPath, envEntry);
     log.success(`✓ Updated ${envPath}`);
 
-    console.log('\n🚀 Next Steps:');
-    console.log(`  1. Install SDK: ${chalk.cyan('pnpm add @saas-maker/analytics-sdk')}`);
-    console.log(`  2. Add logic to your root layout:`);
-    console.log(chalk.gray('     import { FoundryAnalytics } from "@saas-maker/analytics-sdk";'));
-    console.log(chalk.gray('     FoundryAnalytics.init({ apiKey: process.env.NEXT_PUBLIC_POSTHOG_KEY! });'));
+    console.log('\n🚀 Next Step:');
+    console.log(`  Run ${chalk.cyan('fnd analytics forge-dashboard')} to create your Mission Control.`);
   } catch (err) {
     log.error('Failed to setup analytics');
   } finally {
     rl.close();
+  }
+}
+
+export async function analyticsForgeDashboardCommand(): Promise<void> {
+  // We need to pull keys from the .env.local of the cockpit
+  const saasMakerPath = process.cwd().includes('saas-maker') ? process.cwd().split('saas-maker')[0] + 'saas-maker' : process.cwd();
+  const envPath = join(saasMakerPath, 'apps', 'cockpit', '.env.local');
+  
+  let apiKey = process.env.POSTHOG_PERSONAL_API_KEY;
+  let projectId = process.env.POSTHOG_PROJECT_ID;
+  let host = process.env.POSTHOG_HOST || 'https://us.i.posthog.com';
+
+  if (!apiKey && existsSync(envPath)) {
+    const envContent = readFileSync(envPath, 'utf-8');
+    apiKey = envContent.match(/POSTHOG_PERSONAL_API_KEY="?([^"\n]+)"?/)?.[1];
+    projectId = envContent.match(/POSTHOG_PROJECT_ID="?([^"\n]+)"?/)?.[1];
+  }
+
+  if (!apiKey || !projectId) {
+    log.error('PostHog credentials missing. Run `fnd analytics setup` inside apps/cockpit first.');
+    return;
+  }
+
+  const spinner = ora('Forging Foundry Mission Control dashboard in PostHog...').start();
+
+  try {
+    // 1. Create Dashboard
+    const dbRes = await fetch(`${host}/api/projects/${projectId}/dashboards/`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: "Foundry Fleet Mission Control", description: "Standardized observability for the project fleet." })
+    });
+
+    if (!dbRes.ok) throw new Error(`Dashboard failed: ${await dbRes.text()}`);
+    const dashboard = await dbRes.json();
+    const dashboardId = dashboard.id;
+
+    spinner.text = 'Creating fleet insights...';
+
+    // 2. Create Fleet Error Insight (HogQL)
+    await fetch(`${host}/api/projects/${projectId}/insights/`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: "Fleet Error Volume (24h)",
+        dashboards: [dashboardId],
+        query: {
+          kind: "EventsQuery",
+          select: ["count()", "properties.foundry_project_id"],
+          where: ["event == 'foundry_error'"],
+          groupBy: ["properties.foundry_project_id"]
+        }
+      })
+    });
+
+    // 3. Create Latency Heatmap Insight (HogQL)
+    await fetch(`${host}/api/projects/${projectId}/insights/`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: "Fleet Latency Heatmap",
+        dashboards: [dashboardId],
+        query: {
+          kind: "EventsQuery",
+          select: ["avg(properties.traceDuration)", "properties.foundry_project_id"],
+          where: ["event == 'foundry_trace'"],
+          groupBy: ["properties.foundry_project_id"]
+        }
+      })
+    });
+
+    spinner.succeed(`Foundry Mission Control created! ID: ${dashboardId}`);
+    console.log(chalk.gray(`\nView it at: ${host}/dashboard/${dashboardId}`));
+
+  } catch (err) {
+    spinner.fail(`Forge failed: ${err instanceof Error ? err.message : String(err)}`);
   }
 }
 
