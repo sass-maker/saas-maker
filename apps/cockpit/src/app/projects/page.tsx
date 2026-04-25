@@ -10,6 +10,7 @@ import { PageHeader } from "@/components/page-header";
 import { FleetMonitor } from "@/components/fleet-monitor";
 import { ErrorFeed } from "@/components/error-feed";
 import { LatencyMap } from "@/components/latency-map";
+import { CIStatusMap } from "@/components/ci-status-map";
 import { OnboardingFlow } from "@/components/onboarding/OnboardingFlow";
 import { AlertCircle, Cloud } from "lucide-react";
 import { auth } from "@/lib/auth";
@@ -49,6 +50,8 @@ export default async function ProjectsPage() {
         <ErrorFeed />
         <LatencyMap />
       </div>
+
+      <CIStatusMap />
 
       <div className="flex items-center gap-2 pt-8">
         <Cloud className="h-5 w-5 text-muted-foreground" />
