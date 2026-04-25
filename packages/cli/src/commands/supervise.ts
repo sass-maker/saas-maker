@@ -17,6 +17,8 @@ interface FoundryErrorEvent {
   stack?: string;
 }
 
+// In a real scenario, this state might be saved to disk (.foundry/supervisor_state.json)
+// to remember the last handled error across restarts.
 let lastProcessedTimestamp = new Date().toISOString();
 
 export async function fleetSuperviseCommand(): Promise<void> {
@@ -70,7 +72,7 @@ async function checkErrorFeed(fleet: any[]) {
           "*", "event", "timestamp", "properties.message", "properties.severity", "properties.foundry_project_id", "properties.$exception_stack"
         ],
         where: [`event == 'foundry_error'`, `timestamp > '${lastProcessedTimestamp}'`],
-        orderBy: ["timestamp ASC"],
+        orderBy: ["timestamp ASC"], // Process oldest first
         limit: 5,
       }
     };
@@ -127,6 +129,7 @@ async function dispatchAgent(error: FoundryErrorEvent, fleet: any[]) {
 
   console.log(chalk.yellow(`Dispatching Autonomous Agent to ./${targetProject.slug}...`));
 
+  // Construct the prompt using the Debugging Protocol
   const prompt = `
 CRITICAL INCIDENT REPORT for project: ${targetProject.slug}
 
@@ -148,6 +151,7 @@ YOUR MISSION:
 4. Commit the fix with the prefix 'fix(foundry): auto-resolved ${error.message}'.
 `;
 
+  // Write prompt to a temporary file to avoid shell escaping issues
   const promptFile = join(process.cwd(), '.fallow', `incident-${error.id}.txt`);
   if (!existsSync(join(process.cwd(), '.fallow'))) {
     execSync('mkdir -p .fallow');
@@ -155,8 +159,11 @@ YOUR MISSION:
   writeFileSync(promptFile, prompt);
 
   try {
+    // We launch the agent harness (Assuming Gemini CLI is available, or fallback to Claude)
+    // For this environment, we will use `gemini` as the agent CLI
     console.log(chalk.cyan(`> gemini --prompt-file ${promptFile}`));
     
+    // Spawn the agent process interactively so the user can see it work
     const agentProcess = spawn('gemini', ['--prompt', prompt], {
       cwd: targetProject.path,
       stdio: 'inherit',
