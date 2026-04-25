@@ -52,9 +52,18 @@ const ALLOWED_ORIGINS = new Set([
   'http://localhost:3001',
 ]);
 
+function isAllowedOrigin(origin: string): boolean {
+  if (ALLOWED_ORIGINS.has(origin)) return true;
+  // Allow all sarthakagrawal927 CF Workers and Pages deployments
+  if (origin.endsWith('.sarthakagrawal927.workers.dev')) return true;
+  if (origin.endsWith('.pages.dev')) return true;
+  if (origin.endsWith('.sassmaker.com')) return true;
+  return false;
+}
+
 app.use('*', async (c, next) => {
   const origin = c.req.header('Origin') || '';
-  const allowedOrigin = ALLOWED_ORIGINS.has(origin) ? origin : 'https://app.sassmaker.com';
+  const allowedOrigin = isAllowedOrigin(origin) ? origin : 'https://app.sassmaker.com';
   const corsMiddleware = cors({
     origin: allowedOrigin,
     allowMethods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
