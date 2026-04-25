@@ -8,7 +8,7 @@ import { fleetDashboardCommand } from './commands/fleet-dashboard.js';
 import { fleetScanCommand } from './commands/fleet-scan.js';
 import { feedbackListCommand, feedbackUpdateCommand, feedbackDeleteCommand } from './commands/feedback.js';
 import { roadmapListCommand, roadmapCreateCommand, roadmapUpdateCommand, roadmapDeleteCommand } from './commands/roadmap.js';
-import { changelogListCommand, changelogCreateCommand, changelogUpdateCommand, changelogDeleteCommand } from './commands/changelog.js';
+import { changelogListCommand, changelogCreateCommand, changelogAutoCreateCommand, changelogUpdateCommand, changelogDeleteCommand } from './commands/changelog.js';
 import { testimonialsListCommand, testimonialsUpdateCommand, testimonialsDeleteCommand } from './commands/testimonials.js';
 import { analyticsDashboardCommand, analyticsDetailCommand, analyticsSetupCommand } from './commands/analytics.js';
 // import { formsListCommand, formsCreateCommand, formsGetCommand, formsDeleteCommand, formsResponsesCommand, formsAnalyticsCommand } from './commands/forms.js'; // Removed — forms removed from active product
@@ -54,7 +54,15 @@ fleet.command('health').description('Show request/error/latency health across th
 // --- Blocks & Widgets ---
 program.command('feedback').description('Manage the Feedback block').action(feedbackListCommand);
 program.command('roadmap').description('Manage the Roadmap block').action(roadmapListCommand);
-program.command('changelog').description('Manage the Changelog block').action(changelogListCommand);
+const changelog = program.command('changelog').description('Manage the Changelog block').action(changelogListCommand);
+changelog
+  .command('create')
+  .description('Create a changelog entry (auto-reads git context, safe for CI)')
+  .option('--title <title>', 'Entry title (defaults to vVERSION)')
+  .option('--version <version>', 'Version string (defaults to latest git tag or short SHA)')
+  .option('--message <message>', 'Entry content (defaults to last commit subject)')
+  .option('--project <id>', 'Project ID (overrides local config)')
+  .action((opts) => changelogAutoCreateCommand({ title: opts.title, version: opts.version, message: opts.message, project: opts.project }));
 program.command('testimonials').description('Manage the Testimonials block').action(testimonialsListCommand);
 
 const analytics = program.command('analytics').description('Manage the Analytics block');

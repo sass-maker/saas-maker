@@ -137,6 +137,10 @@ jobs:
 
       # ── PR PHASE (open PR if auto-fix changed anything) ─────────────
 
+      - name: Auto-create changelog entry
+        run: fnd changelog create --version "${{ github.sha }}" --message "Weekly auto-deploy"
+        continue-on-error: true
+
       - name: Open auto-fix PR if changes exist
         env:
           GH_TOKEN: ${{ github.token }}

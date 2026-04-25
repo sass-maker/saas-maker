@@ -7,9 +7,9 @@ import {
 } from "@/components/ui/card";
 import { CreateProjectDialog } from "@/components/create-project-dialog";
 import { PageHeader } from "@/components/page-header";
-import { EmptyState } from "@/components/empty-state";
 import { FleetMonitor } from "@/components/fleet-monitor";
-import { FolderOpen, AlertCircle, Cloud } from "lucide-react";
+import { OnboardingFlow } from "@/components/onboarding/OnboardingFlow";
+import { AlertCircle, Cloud } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { apiFetch, getServerToken } from "@/lib/api";
@@ -62,11 +62,7 @@ export default async function ProjectsPage() {
           </CardHeader>
         </Card>
       ) : projects.length === 0 ? (
-        <EmptyState
-          icon={FolderOpen}
-          title="No fleet projects yet"
-          description="Initialize your first project to start monitoring it in your cockpit."
-        />
+        <OnboardingFlow />
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {projects.map((project) => (

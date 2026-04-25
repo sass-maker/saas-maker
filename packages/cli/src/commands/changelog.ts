@@ -109,6 +109,43 @@ export async function changelogUpdateCommand(id: string, options: ChangelogUpdat
   }
 }
 
+// CI-friendly: no interactive prompts. Reads git context automatically.
+export async function changelogAutoCreateCommand(options: {
+  title?: string;
+  version?: string;
+  message?: string;
+  project?: string;
+} = {}): Promise<void> {
+  const projectId = resolveProjectId(options.project);
+  if (!projectId) { log.error('No project ID. Pass --project <id> or run `saasmaker init`.'); process.exitCode = 1; return; }
+
+  const { execSync } = await import('node:child_process');
+  const lastCommit = execSync('git log -1 --format="%s"', { cwd: process.cwd() }).toString().trim();
+  const currentVersion = options.version || (() => {
+    try { return execSync('git describe --tags --abbrev=0', { cwd: process.cwd(), stdio: ['pipe', 'pipe', 'pipe'] }).toString().trim(); }
+    catch { return execSync('git rev-parse --short HEAD', { cwd: process.cwd() }).toString().trim(); }
+  })();
+
+  const title = options.title || `v${currentVersion}`;
+  const content = options.message || lastCommit;
+
+  const spinner = ora(`Creating changelog entry: ${title}`).start();
+  try {
+    const res = await requestApi<{ data: unknown }>({
+      path: `/v1/changelog/dashboard/${projectId}`,
+      method: 'POST', auth: 'session',
+      body: { title, content: content || undefined, status: 'published' },
+    });
+    spinner.stop();
+    if (!res.ok) { log.error(getResponseError(res)); process.exitCode = 1; return; }
+    log.success(`Changelog entry created: "${title}"`);
+  } catch (err) {
+    spinner.stop();
+    log.error(err instanceof Error ? err.message : 'Failed to create changelog entry');
+    process.exitCode = 1;
+  }
+}
+
 export async function changelogDeleteCommand(id: string, options: { project?: string } = {}): Promise<void> {
   const projectId = resolveProjectId(options.project);
   if (!projectId) { log.error('No project ID. Pass --project <id> or run `saasmaker init`.'); process.exitCode = 1; return; }
