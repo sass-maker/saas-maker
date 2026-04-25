@@ -1,39 +1,38 @@
 # Foundry ⚒️
 
-**The Open Source Foundry for Project Fleets.**
+**The Industrial Software Factory for Project Fleets.**
 
-Foundry is a comprehensive toolkit designed for developers who manage multiple JavaScript/TypeScript projects. It provides a "Gold Standard" for configurations, a modular library of "Blocks," and a "Commander" CLI to eliminate configuration drift and accelerate development.
+Foundry is a high-leverage engineering system designed for developers and AI agents to manage multiple JavaScript/TypeScript projects at scale. It moves beyond "Tooling" into "Industrialization," providing a standardized factory floor, automated assembly lines, and a registry of operational protocols (Skills) for autonomous fleet management.
 
 ---
 
-## 🏛️ The Four Pillars
+## 🏛️ The Five Pillars
 
 ### 1. The Standard (Tooling)
 Standardize your entire fleet with versioned, shared configurations.
 *   **`@saas-maker/eslint-config`**: Unified rules for Next.js, Vite, and Node.
 *   **`@saas-maker/tsconfig`**: Strict, optimized TypeScript bases.
-*   **`@saas-maker/prettier-config`**: Consistent formatting for the whole team.
-*   **`@saas-maker/dev-config`**: Automated Husky hooks for linting and safety.
 
-### 2. The Blocks (Common Logic)
-High-quality, modular packages that any project can opt into.
-*   **`@saas-maker/ai`**: Unified LLM provider integration.
-*   **`@saas-maker/analytics-sdk`**: Lightweight PostHog wrapper.
-*   **`@saas-maker/db`**: Database utilities for Cloudflare D1/Turso.
-*   **`@saas-maker/sdk`**: The core API client for Foundry services.
+### 2. The Blocks (Shared Logic)
+Headless capabilities that every project needs, optimized for Edge and Node.
+*   **`@saas-maker/ops`**: Unified error handling and tracing.
+*   **`@saas-maker/db`**: Environment-aware SQLite factory (D1/Turso).
+*   **`@saas-maker/foundry-shield`**: Sliding-window rate limiting.
 
-> **🚧 Upcoming (The Operational Layer)**: We are currently building `@foundry/ops` (unified telemetry/errors) and `@foundry/rate-limit` (KV/Redis shielding) to provide fleet-wide operational consistency.
+### 3. The Commander (CLI)
+Automate your assembly line.
+*   `fnd fleet run`: Parallel command execution across 22+ repos.
+*   `fnd fleet audit`: Deep health checks (dead code, drift, debt).
+*   `fnd fleet fix`: Automated correction of fleet-wide issues.
 
-### 3. The Widgets (UI Components)
-Ready-to-drop UI components for common product needs.
-*   **Feedback & Roadmap**: Let users vote on features.
-*   **Changelog**: Keep your users informed.
-*   **Testimonials & Waitlist**: Capture and show user love.
+### 4. The Forge (Scaffolding)
+Blueprint-based project creation.
+*   `fnd forge`: Start "Foundry Compliant" projects in 5 seconds.
+*   **Agent-Native**: Every project is born with an `AGENTS.md` foreman.
 
-### 4. The Commander & Forge (CLI)
-Automate your workflow.
-*   **Commander**: Run fleet-wide audits, linting, and upgrades.
-*   **Forge**: Scaffold new Foundry-compliant projects in seconds.
+### 5. The Registry (Agent Skills)
+The brain of the factory.
+*   **`skills/`**: Standardized Markdown protocols that teach AI agents how to migrate, debug, and expand the fleet autonomously.
 
 ---
 
@@ -44,27 +43,26 @@ Automate your workflow.
    pnpm add -g @saas-maker/cli
    ```
 
-2. **Initialize a Project**:
+2. **Forge a Project**:
    ```bash
-   foundry init
+   fnd forge --name my-new-app --type next
    ```
 
-3. **Open the Cockpit**:
-   Launch the local dashboard to monitor your fleet.
+3. **Audit the Fleet**:
    ```bash
-   pnpm cockpit dev
+   fnd fleet audit
    ```
 
 ---
 
 ## 📂 Repository Structure
 
-*   `packages/tooling/`: Standardized configurations.
-*   `packages/blocks/`: Modular logic packages.
-*   `packages/widgets/`: UI component blocks.
-*   `apps/cockpit/`: The Fleet Management Dashboard.
-*   `apps/showcase/`: The Foundry Manual and public showcase.
-*   `apps/docs/`: Detailed technical reference.
+*   `packages/tooling/`: Gold Standard configurations.
+*   `packages/blocks/`: Operational Layer logic.
+*   `packages/widgets/`: Modular UI blocks.
+*   `skills/`: Agentic Operational Protocols.
+*   `apps/cockpit/`: The Mission Control Dashboard.
+*   `apps/showcase/`: The Factory Manual.
 
 ---
 

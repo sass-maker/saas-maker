@@ -58,15 +58,21 @@ export function auditProject(cwd: string = process.cwd()): AuditResult[] {
     results.push({ check: 'Prettier Standard', status: 'warn', detail: 'Custom prettier or missing link' });
   }
 
-  // 5. Code Health (Fallow)
+  // 5. Code Health (Fallow Deep Audit)
   try {
-    // Check if fallow is available
-    const hasFallow = execSync('command -v fallow', { encoding: 'utf-8' }).trim();
+    const hasFallow = execSync('command -v fallow', { encoding: 'utf-8', stdio: 'pipe' }).trim();
     if (hasFallow) {
-      results.push({ check: 'Fallow Engine', status: 'pass', detail: 'Dead-code engine active' });
+      try {
+        // Attempt a quick fallow check. If fallow returns non-zero, there are issues.
+        // We use --quiet to suppress output and just rely on exit code.
+        execSync('fallow check --quiet', { cwd, encoding: 'utf-8', stdio: 'pipe' });
+        results.push({ check: 'Code Health', status: 'pass', detail: 'Zero dead code detected' });
+      } catch (fallowErr) {
+        results.push({ check: 'Code Health', status: 'warn', detail: 'Fallow detected unused code/duplication' });
+      }
     }
   } catch {
-    results.push({ check: 'Fallow Engine', status: 'warn', detail: 'Fallow not installed globally' });
+    results.push({ check: 'Code Health', status: 'warn', detail: 'Fallow engine not installed locally/globally' });
   }
 
   // 6. Check Governance (Renovate)
