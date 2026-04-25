@@ -1,16 +1,24 @@
 {
   "name": "@saas-maker/db",
-  "version": "0.1.1",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsc"
+    "build": "tsup",
+    "test": "vitest run"
   },
   "dependencies": {
     "@saas-maker/ops": "workspace:*",
-    "@saas-maker/shared-types": "^0.1.1"
+    "drizzle-orm": "^0.39.1",
+    "@libsql/client": "^0.14.0"
   },
   "devDependencies": {
-    "typescript": "^5.9.3"
+    "@saas-maker/tsconfig": "workspace:*",
+    "@cloudflare/workers-types": "^4.20241230.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.5"
   }
 }

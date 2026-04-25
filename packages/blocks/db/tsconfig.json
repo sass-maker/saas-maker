@@ -1,8 +1,7 @@
 {
-  "extends": "../../../tsconfig.base.json",
+  "extends": "@saas-maker/tsconfig/base.json",
   "compilerOptions": {
-    "outDir": "dist",
-    "rootDir": "src"
+    "outDir": "./dist"
   },
   "include": ["src"]
 }

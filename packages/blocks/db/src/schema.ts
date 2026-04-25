@@ -1,24 +1,29 @@
-export const TABLES = {
-  users: 'users',
-  projects: 'projects',
-  feedback: 'feedback',
-  feedback_votes: 'feedback_votes',
-  sessions: 'sessions',
-  knowledge_indexes: 'knowledge_indexes',
-  documents: 'documents',
-  document_chunks: 'document_chunks',
-  waitlist_entries: 'waitlist_entries',
-  analytics_events: 'analytics_events',
-  forms: 'forms',
-  form_questions: 'form_questions',
-  form_responses: 'form_responses',
-  form_answers: 'form_answers',
-  testimonials: 'testimonials',
-  changelog_entries: 'changelog_entries',
-  cli_auth_codes: 'cli_auth_codes',
-  cli_tokens: 'cli_tokens',
-  ai_requests: 'ai_requests',
-  roadmap_items: 'roadmap_items',
-  roadmap_votes: 'roadmap_votes',
-  directory_listings: 'directory_listings',
-} as const;
+import { integer, text } from "drizzle-orm/sqlite-core";
+
+/**
+ * Standard ID column using a generated string (e.g. cuid or uuid)
+ */
+export const idColumn = {
+  id: text("id").primaryKey().notNull(),
+};
+
+/**
+ * Standard lifecycle timestamps for any table
+ */
+export const lifecycleColumns = {
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .notNull()
+    .$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: "timestamp" })
+    .notNull()
+    .$defaultFn(() => new Date()),
+  deletedAt: integer("deleted_at", { mode: "timestamp" }),
+};
+
+/**
+ * Standard audit columns for tracking which user/system performed an action
+ */
+export const auditColumns = {
+  createdBy: text("created_by"),
+  updatedBy: text("updated_by"),
+};
