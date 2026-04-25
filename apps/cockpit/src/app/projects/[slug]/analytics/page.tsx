@@ -18,7 +18,7 @@ export default async function AnalyticsPage({ params }: Props) {
         title="Analytics"
         description="Privacy-friendly page views and custom event tracking."
       />
-      <AnalyticsWrapper apiKey={project.api_key} />
+      <AnalyticsWrapper apiKey={project.api_key} projectId={project.id} />
     </div>
   );
 }

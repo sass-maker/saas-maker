@@ -187,6 +187,20 @@ analytics.get('/dashboard', requireApiKeyOrSession, async (c) => {
   return c.json(dashboard);
 });
 
+analytics.get('/recent', requireSession, async (c) => {
+  const userId = c.get('userId')!;
+  const projectId = c.req.query('project_id');
+  if (!projectId) return c.json({ error: 'project_id is required' }, 400);
+
+  const db = getDb(c.env.DB);
+  const project = await db.getProjectById(projectId);
+  if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
+
+  const limit = Math.min(parseInt(c.req.query('limit') || '20', 10), 100);
+  const data = await db.getRecentEvents(projectId, limit);
+  return c.json({ data });
+});
+
 analytics.get('/detail/:section', requireSession, async (c) => {
   const userId = c.get('userId')!;
   const projectId = c.req.query('project_id');

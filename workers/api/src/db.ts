@@ -835,6 +835,16 @@ export function getDb(d1: D1Database): FeedbackDatabase {
       }
     },
 
+    async getRecentEvents(projectId: string, limit = 20) {
+      const { results } = await d1.prepare(
+        `SELECT id, name, url, created_at FROM analytics_events
+         WHERE project_id = ? AND is_bot = 0
+         ORDER BY created_at DESC
+         LIMIT ?`
+      ).bind(projectId, limit).all();
+      return results as unknown as { id: string; name: string; url: string | null; created_at: string }[];
+    },
+
     // --- Testimonials ---
     async createTestimonial(input: {
       id: string;
