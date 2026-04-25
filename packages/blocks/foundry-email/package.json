@@ -6,13 +6,13 @@
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "exports": {
-    ".": { "import": "./dist/index.mjs", "require": "./dist/index.js", "types": "./dist/index.d.ts" }
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.mjs", "require": "./dist/index.js" }
   },
   "files": ["dist"],
   "scripts": { "build": "tsup src/index.ts --format esm,cjs --dts" },
   "publishConfig": { "access": "public" },
   "dependencies": {
-    "@saas-maker/ops": "^0.1.1",
+    "@saas-maker/ops": "workspace:*",
     "nodemailer": "^6.9.0"
   },
   "devDependencies": {

@@ -110,14 +110,14 @@ async function sendOne(options: SendOptions): Promise<SendResult> {
   };
 
   return trace(
-    'email:send',
+    `email:send:${project}`,
     async () => {
       if (config.provider === 'resend') {
         return sendViaResend({ apiKey: config.apiKey, from: config.from }, params);
       }
       return sendViaSmtp(config, params);
     },
-    { project, meta: { to: Array.isArray(options.to) ? options.to[0] : options.to } }
+    { context: { to: Array.isArray(options.to) ? options.to[0] : options.to } }
   );
 }
 
