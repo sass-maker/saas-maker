@@ -1,5 +1,5 @@
 {
-  "name": "@saas-maker/foundry-email",
+  "name": "@saas-maker/email",
   "version": "0.1.0",
   "description": "Foundry email — lightweight email sending with Resend/SMTP and auto-tracing via @saas-maker/ops",
   "main": "dist/index.js",

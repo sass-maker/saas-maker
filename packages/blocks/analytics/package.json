@@ -1,5 +1,5 @@
 {
-  "name": "@saas-maker/analytics-sdk",
+  "name": "@saas-maker/analytics",
   "version": "0.2.1",
   "publishConfig": {
     "access": "public"
