@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
 import { apiFetchAuthed } from '@/lib/api-client';
 import { FleetMatrix } from '@/components/fleet/FleetMatrix';
 
@@ -59,7 +60,7 @@ async function fetchPostHogErrors(): Promise<PostHogError[]> {
 }
 
 export default async function FleetPage() {
-  const session = await auth();
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user) redirect('/login');
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

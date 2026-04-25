@@ -1,12 +1,13 @@
 import { redirect } from 'next/navigation';
 import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
 import { apiFetchAuthed } from '@/lib/api-client';
 import { TaskBoard } from '@/components/tasks/TaskBoard';
 
 export const dynamic = 'force-dynamic';
 
 export default async function TasksPage() {
-  const session = await auth();
+  const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user) redirect('/login');
 
   let tasks: any[] = [];

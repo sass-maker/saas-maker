@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { getFleetErrors } from "@/lib/posthog-server";
+import { getFleetLatency } from "@/lib/posthog-server";
 
 export async function GET(req: Request) {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -9,15 +9,12 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { searchParams } = new URL(req.url);
-  const limit = parseInt(searchParams.get("limit") || "20");
-
   try {
-    const errors = await getFleetErrors(limit);
-    return NextResponse.json({ errors });
+    const latency = await getFleetLatency();
+    return NextResponse.json({ latency });
   } catch (err) {
     return NextResponse.json(
-      { error: "Failed to fetch error feed", detail: String(err) },
+      { error: "Failed to fetch latency map", detail: String(err) },
       { status: 500 }
     );
   }
