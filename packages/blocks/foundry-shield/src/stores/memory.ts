@@ -1,23 +1,36 @@
 export interface RateLimitStore {
-  increment(key: string, windowMs: number): Promise<number>;
-  reset(key: string): Promise<void>;
+  /**
+   * Increments the count for a key and returns the current value.
+   * @param key The unique key to rate limit (e.g. user-ip)
+   * @param windowMs The sliding window size in milliseconds
+   */
+  increment(key: string, windowMs: number): Promise<{ count: number; reset: number }>;
 }
 
 export class MemoryStore implements RateLimitStore {
-  private windows = new Map<string, { count: number; resetAt: number }>();
+  private cache = new Map<string, { count: number; expires: number }>();
 
-  async increment(key: string, windowMs: number): Promise<number> {
+  async increment(key: string, windowMs: number): Promise<{ count: number; reset: number }> {
     const now = Date.now();
-    const existing = this.windows.get(key);
-    if (!existing || now >= existing.resetAt) {
-      this.windows.set(key, { count: 1, resetAt: now + windowMs });
-      return 1;
+    const entry = this.cache.get(key);
+
+    if (!entry || now > entry.expires) {
+      const newEntry = { count: 1, expires: now + windowMs };
+      this.cache.set(key, newEntry);
+      return { count: 1, reset: newEntry.expires };
     }
-    existing.count++;
-    return existing.count;
+
+    entry.count += 1;
+    return { count: entry.count, reset: entry.expires };
   }
 
-  async reset(key: string): Promise<void> {
-    this.windows.delete(key);
+  /**
+   * Cleanup expired entries to prevent memory leaks
+   */
+  prune() {
+    const now = Date.now();
+    for (const [key, entry] of this.cache.entries()) {
+      if (now > entry.expires) this.cache.delete(key);
+    }
   }
 }

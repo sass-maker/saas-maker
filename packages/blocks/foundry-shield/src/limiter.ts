@@ -1,75 +1,54 @@
-import { FoundryErrors } from '@saas-maker/ops';
-import { MemoryStore } from './stores/memory.js';
-import { D1Store } from './stores/d1.js';
-import type { RateLimitStore } from './stores/memory.js';
+import { trace, FoundryError } from "@saas-maker/ops";
+import type { RateLimitStore } from "./stores/memory.js";
 
-export interface ShieldConfig {
+export interface LimiterConfig {
   store: RateLimitStore;
-  windowMs?: number;    // default: 60_000 (1 minute)
-  max?: number;         // default: 60 requests per window
-  keyPrefix?: string;
-  project?: string;
-}
-
-export interface ShieldResult {
-  allowed: boolean;
-  count: number;
-  remaining: number;
+  /**
+   * Maximum requests per window
+   */
   limit: number;
+  /**
+   * Window size in milliseconds
+   */
+  windowMs: number;
+  /**
+   * Optional project name for tracing
+   */
+  projectName?: string;
 }
 
-export class Shield {
-  private store: RateLimitStore;
-  private windowMs: number;
-  private max: number;
-  private keyPrefix: string;
+export class FoundryShield {
+  constructor(private config: LimiterConfig) {}
 
-  constructor(config: ShieldConfig) {
-    this.store = config.store;
-    this.windowMs = config.windowMs ?? 60_000;
-    this.max = config.max ?? 60;
-    this.keyPrefix = config.keyPrefix ?? 'shield';
+  /**
+   * Checks if a key should be rate limited.
+   * Automatically traces the event using @saas-maker/ops.
+   */
+  async check(key: string): Promise<{ success: boolean; remaining: number; reset: number }> {
+    return trace(`shield:check:${this.config.projectName || 'unnamed'}`, async () => {
+      const { count, reset } = await this.config.store.increment(key, this.config.windowMs);
+      const remaining = Math.max(0, this.config.limit - count);
+      const success = count <= this.config.limit;
+
+      if (!success) {
+        console.warn(`[Shield] Rate limit exceeded for key: ${key}`);
+      }
+
+      return { success, remaining, reset };
+    });
   }
 
   /**
-   * Check if a key is within rate limit.
-   * Returns result — caller decides whether to block.
+   * Guard function that throws a FoundryError if rate limit is exceeded.
    */
-  async check(identifier: string): Promise<ShieldResult> {
-    const key = `${this.keyPrefix}:${identifier}`;
-    const count = await this.store.increment(key, this.windowMs);
-    return {
-      allowed: count <= this.max,
-      count,
-      remaining: Math.max(0, this.max - count),
-      limit: this.max,
-    };
-  }
-
-  /**
-   * Assert rate limit — throws FoundryError.rateLimit() if exceeded.
-   */
-  async assert(identifier: string): Promise<void> {
-    const result = await this.check(identifier);
-    if (!result.allowed) {
-      throw FoundryErrors.rateLimit(
-        `Rate limit exceeded: ${result.count}/${result.limit} requests in window`,
-        { identifier, count: result.count, limit: result.limit }
-      );
+  async guard(key: string): Promise<void> {
+    const { success, reset } = await this.check(key);
+    if (!success) {
+      throw new FoundryError("Too many requests", {
+        code: "RATE_LIMIT_EXCEEDED",
+        severity: "warn",
+        context: { key, resetAt: new Date(reset).toISOString() },
+      });
     }
   }
-
-  async reset(identifier: string): Promise<void> {
-    await this.store.reset(`${this.keyPrefix}:${identifier}`);
-  }
-}
-
-/** Convenience: create a Shield with memory store */
-export function memoryShield(config?: Partial<ShieldConfig>): Shield {
-  return new Shield({ store: new MemoryStore(), ...config });
-}
-
-/** Convenience: create a Shield with D1 store */
-export function d1Shield(d1: any, config?: Partial<ShieldConfig>): Shield {
-  return new Shield({ store: new D1Store(d1), ...config });
 }

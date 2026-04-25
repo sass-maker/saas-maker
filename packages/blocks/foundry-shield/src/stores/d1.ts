@@ -1,32 +1,36 @@
-import type { RateLimitStore } from './memory.js';
+import type { RateLimitStore } from "./memory.js";
 
+/**
+ * Cloudflare D1 Store for persistent, distributed rate limiting.
+ * Requires a table named 'foundry_rate_limits' with schema:
+ * CREATE TABLE foundry_rate_limits (key TEXT PRIMARY KEY, count INTEGER, expires INTEGER);
+ */
 export class D1Store implements RateLimitStore {
-  constructor(private d1: { prepare: (sql: string) => any }) {}
+  constructor(private d1: any) {}
 
-  async increment(key: string, windowMs: number): Promise<number> {
-    const windowSec = Math.ceil(windowMs / 1000);
-    const now = Math.floor(Date.now() / 1000);
-    const windowStart = now - windowSec;
+  async increment(key: string, windowMs: number): Promise<{ count: number; reset: number }> {
+    const now = Date.now();
+    const expires = now + windowMs;
 
-    // Clean old entries
-    await this.d1.prepare(
-      `DELETE FROM shield_requests WHERE key = ? AND ts < ?`
-    ).bind(key, windowStart).run();
+    try {
+      // 1. Try to insert or update existing record
+      // We use a transaction to ensure atomicity
+      const res = await this.d1.prepare(`
+        INSERT INTO foundry_rate_limits (key, count, expires)
+        VALUES (?, 1, ?)
+        ON CONFLICT(key) DO UPDATE SET
+          count = CASE WHEN expires < ? THEN 1 ELSE count + 1 END,
+          expires = CASE WHEN expires < ? THEN ? ELSE expires END
+        RETURNING count, expires
+      `).bind(key, expires, now, now, expires).first();
 
-    // Insert this request
-    await this.d1.prepare(
-      `INSERT INTO shield_requests (key, ts) VALUES (?, ?)`
-    ).bind(key, now).run();
-
-    // Count in window
-    const row = await this.d1.prepare(
-      `SELECT COUNT(*) as count FROM shield_requests WHERE key = ? AND ts >= ?`
-    ).bind(key, windowStart).first();
-
-    return (row as any)?.count ?? 1;
-  }
-
-  async reset(key: string): Promise<void> {
-    await this.d1.prepare(`DELETE FROM shield_requests WHERE key = ?`).bind(key).run();
+      return {
+        count: res.count,
+        reset: res.expires
+      };
+    } catch (err) {
+      console.error("[Shield D1] Failed to increment, failing open.", err);
+      return { count: 0, reset: expires };
+    }
   }
 }
