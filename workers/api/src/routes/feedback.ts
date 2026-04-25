@@ -9,7 +9,7 @@ import {
   FeedbackRecord,
 } from '@saas-maker/shared-types';
 import { getDb } from '../db';
-import { sendNewFeedbackEmail } from '../email';
+import { email } from '@saas-maker/foundry-email';
 import { trace, capture } from '@saas-maker/ops';
 
 const feedback = new Hono<{ Bindings: Bindings; Variables: Variables }>();
@@ -67,20 +67,22 @@ feedback.post('/', requireApiKey, async (c) => {
   const project = await db.getProjectById(projectId);
   if (project) {
     const owner = await db.getUserById(project.owner_id);
-    if (owner) {
+    if (owner?.email) {
       scheduleBackgroundTask(
         c,
-        sendNewFeedbackEmail(c.env.RESEND_API_KEY, c.env.NOTIFICATION_FROM_EMAIL, {
+        email.send({
           to: owner.email,
-          projectName: project.name,
-          feedbackTitle: record.title,
-          feedbackType: record.type,
-          feedbackDescription: record.description,
-          submitterEmail: record.submitter_email,
-          dashboardUrl: `${c.env.APP_BASE_URL}/projects/${project.slug}`,
-        }).catch((err) => {
-          console.error('sendNewFeedbackEmail failed', err);
-        })
+          subject: `New ${record.type} on ${project.name}`,
+          template: `New {{type}} submission on {{projectName}}\n\nFrom: {{submitter}}\nTitle: {{title}}\n{{description}}\n\nView in dashboard: {{dashboardUrl}}`,
+          data: {
+            projectName: project.name,
+            type: record.type,
+            title: record.title,
+            description: record.description,
+            submitter: record.submitter_name || record.submitter_email || 'Anonymous',
+            dashboardUrl: `https://app.sassmaker.com/projects/${project.slug}/feedback`,
+          },
+        }).catch(() => {})
       );
     }
   }

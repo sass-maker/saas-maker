@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { Bindings, Variables } from './types';
 import { configurePostHog, capture, flushPostHog } from '@saas-maker/ops';
+import { configureEmail } from '@saas-maker/foundry-email';
 import { auth } from './routes/auth';
 import { projects } from './routes/projects';
 import { feedback } from './routes/feedback';
@@ -89,6 +90,20 @@ app.use('*', async (c, next) => {
   if (c.env.POSTHOG_API_KEY) {
     c.executionCtx.waitUntil(flushPostHog());
   }
+});
+
+// Email config middleware
+let emailConfigured = false;
+app.use('*', async (c, next) => {
+  if (!emailConfigured && c.env.RESEND_API_KEY) {
+    configureEmail({
+      provider: 'resend',
+      apiKey: c.env.RESEND_API_KEY,
+      from: c.env.NOTIFICATION_FROM_EMAIL || 'notifications@sassmaker.com',
+    });
+    emailConfigured = true;
+  }
+  await next();
 });
 
 // Rate limiting (no-op when projectId is not set, i.e. non-API-key routes)

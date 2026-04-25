@@ -264,6 +264,28 @@ importers:
         specifier: ^5.9.0
         version: 5.9.3
 
+  packages/blocks/foundry-email:
+    dependencies:
+      '@saas-maker/ops':
+        specifier: ^0.1.1
+        version: 0.1.1
+      nodemailer:
+        specifier: ^6.9.0
+        version: 6.10.1
+    devDependencies:
+      '@types/node':
+        specifier: ^22.0.0
+        version: 22.19.17
+      '@types/nodemailer':
+        specifier: ^6.4.0
+        version: 6.4.23
+      tsup:
+        specifier: ^8.0.0
+        version: 8.5.1(jiti@2.6.1)(postcss@8.5.10)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3)
+      typescript:
+        specifier: ^5.9.0
+        version: 5.9.3
+
   packages/blocks/foundry-shield:
     dependencies:
       '@saas-maker/ops':
@@ -515,6 +537,9 @@ importers:
       '@saas-maker/db':
         specifier: workspace:*
         version: link:../../packages/blocks/db
+      '@saas-maker/foundry-email':
+        specifier: ^0.1.0
+        version: 0.1.0
       '@saas-maker/foundry-shield':
         specifier: workspace:*
         version: link:../../packages/blocks/foundry-shield
@@ -3366,8 +3391,14 @@ packages:
     peerDependencies:
       eslint: '>=9.0.0'
 
+  '@saas-maker/foundry-email@0.1.0':
+    resolution: {integrity: sha512-2OyKd4timeDGh64SUCDbf4NutdJDw6Ha8lbvswa7wYvwDSGbfJ9CCx9GG+6/Xx9YBwfBmi1WOwa5gkC9hhqC2g==}
+
   '@saas-maker/ops@0.1.0':
     resolution: {integrity: sha512-26rKANVoqxhVS12OGKoIpfFrRsaSHbptEcDXWoNkWBK/IKaRhmKdz8/bXI1iE6PBzuaOHD5psEgmlbpQnax5xg==}
+
+  '@saas-maker/ops@0.1.1':
+    resolution: {integrity: sha512-MdCt9Q6B5F6c/sGtjfbBD949vr64693j+oyM+umQAIo8ovAtVCqduvMo9N/BDkD4o1FYec8e05fUnmnXmQa0Vg==}
 
   '@saas-maker/prettier-config@1.0.0':
     resolution: {integrity: sha512-SIEj/4cwEOGnWj6aQzvIQh+BuHZ3DWo4YVYtplgpCIgP9IW01h+x+8Lh648L9boRfGwBDsJq5D0oHly7Ckmjqg==}
@@ -3847,6 +3878,9 @@ packages:
 
   '@types/node@25.6.0':
     resolution: {integrity: sha512-+qIYRKdNYJwY3vRCZMdJbPLJAtGjQBudzZzdzwQYkEPQd+PJGixUL5QfvCLDaULoLv+RhT3LDkwEfKaAkgSmNQ==}
+
+  '@types/nodemailer@6.4.23':
+    resolution: {integrity: sha512-aFV3/NsYFLSx9mbb5gtirBSXJnAlrusoKNuPbxsASWc7vrKLmIrTQRpdcxNcSFL3VW2A2XpeLEavwb2qMi6nlQ==}
 
   '@types/react-dom@19.2.3':
     resolution: {integrity: sha512-jp2L/eY6fn+KgVVQAOqYItbF0VY/YApe5Mz2F0aykSO8gx31bYCZyvSeYxCHKvzHG5eZjc+zyaS5BrBWya2+kQ==}
@@ -6400,6 +6434,10 @@ packages:
 
   node-releases@2.0.38:
     resolution: {integrity: sha512-3qT/88Y3FbH/Kx4szpQQ4HzUbVrHPKTLVpVocKiLfoYvw9XSGOX2FmD2d6DrXbVYyAQTF2HeF6My8jmzx7/CRw==}
+
+  nodemailer@6.10.1:
+    resolution: {integrity: sha512-Z+iLaBGVaSjbIzQ4pX6XV41HrooLsQ10ZWPUehGmuantvzWoDVBnmsdUcOIDM1t+yPor5pDhVlDESgOMEGxhHA==}
+    engines: {node: '>=6.0.0'}
 
   normalize-path@3.0.0:
     resolution: {integrity: sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==}
@@ -11085,7 +11123,14 @@ snapshots:
       - supports-color
       - typescript
 
+  '@saas-maker/foundry-email@0.1.0':
+    dependencies:
+      '@saas-maker/ops': 0.1.1
+      nodemailer: 6.10.1
+
   '@saas-maker/ops@0.1.0': {}
+
+  '@saas-maker/ops@0.1.1': {}
 
   '@saas-maker/prettier-config@1.0.0': {}
 
@@ -11676,6 +11721,10 @@ snapshots:
     dependencies:
       undici-types: 7.19.2
     optional: true
+
+  '@types/nodemailer@6.4.23':
+    dependencies:
+      '@types/node': 20.19.39
 
   '@types/react-dom@19.2.3(@types/react@19.2.14)':
     dependencies:
@@ -14875,6 +14924,8 @@ snapshots:
   node-mock-http@1.0.4: {}
 
   node-releases@2.0.38: {}
+
+  nodemailer@6.10.1: {}
 
   normalize-path@3.0.0: {}
 

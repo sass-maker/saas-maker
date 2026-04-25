@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@saas-maker/db": "workspace:*",
+    "@saas-maker/foundry-email": "^0.1.0",
     "@saas-maker/foundry-shield": "workspace:*",
     "@saas-maker/ops": "workspace:*",
     "@saas-maker/shared-types": "workspace:*",
