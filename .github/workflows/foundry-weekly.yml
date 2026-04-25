@@ -53,9 +53,44 @@ jobs:
           echo "no typecheck script"
         continue-on-error: true
 
-      - name: Tests
+      - name: Tests + coverage
         id: tests
-        run: pnpm test --if-present
+        run: |
+          # Install coverage provider if vitest is present
+          if pnpm exec vitest --version 2>/dev/null; then
+            pnpm add -D @vitest/coverage-v8 --ignore-scripts 2>/dev/null || true
+            pnpm exec vitest run \
+              --coverage \
+              --coverage.provider=v8 \
+              --coverage.reporter=json \
+              --coverage.reporter=text-summary \
+              --reporter=verbose \
+              2>&1 | tee test-output.txt || true
+          else
+            pnpm test --if-present 2>&1 | tee test-output.txt || true
+          fi
+        continue-on-error: true
+
+      - name: CRAP scores — fallow + coverage
+        id: crap
+        run: |
+          # Only runs if coverage JSON was generated
+          COVERAGE_FILE=""
+          for f in coverage/coverage-final.json coverage-final.json coverage/lcov.info; do
+            [ -f "$f" ] && COVERAGE_FILE="$f" && break
+          done
+
+          if [ -n "$COVERAGE_FILE" ]; then
+            echo "Coverage found at $COVERAGE_FILE"
+            fallow health \
+              --coverage "$COVERAGE_FILE" \
+              --score \
+              --top 20 \
+              --hotspots \
+              2>&1 | tee fallow-crap.txt
+          else
+            echo "No coverage file — run vitest with --coverage to enable CRAP scores" | tee fallow-crap.txt
+          fi
         continue-on-error: true
 
       - name: Dead code — knip
@@ -122,6 +157,13 @@ Auto-applied safe fixes: formatting + unused exports (knip).
 
 **Manual review needed for the rest:**
 
+<details><summary>CRAP scores (complex + uncovered functions)</summary>
+
+\`\`\`
+$(cat fallow-crap.txt 2>/dev/null | head -40)
+\`\`\`
+</details>
+
 <details><summary>Dead code (knip)</summary>
 
 \`\`\`
@@ -160,3 +202,51 @@ $(cat audit-report.txt 2>/dev/null | head -30)
           else
             echo "No auto-fixable issues found — no PR needed."
           fi
+
+  lighthouse:
+    name: Weekly Lighthouse
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Lighthouse CI
+        run: npm install -g @lhci/cli
+
+      - name: Run Lighthouse
+        if: env.DEPLOYMENT_URL != ''
+        env:
+          DEPLOYMENT_URL: ${{ vars.DEPLOYMENT_URL }}
+        run: |
+          lhci autorun \
+            --collect.url="$DEPLOYMENT_URL" \
+            --collect.numberOfRuns=3 \
+            --assert.preset=lighthouse:no-pwa \
+            --assert.assertions.categories:performance.minScore=0 \
+            --output=json \
+            --outputPath=./lighthouse-results.json || true
+
+          # Extract and print scores
+          if [ -f lighthouse-results.json ]; then
+            node -e "
+              const r = require('./lighthouse-results.json');
+              const c = r[0]?.categories || {};
+              console.log('## Lighthouse Scores');
+              Object.entries(c).forEach(([k,v]) => console.log(k+':', Math.round(v.score*100)));
+            " >> $GITHUB_STEP_SUMMARY 2>/dev/null || true
+          fi
+
+      - name: Upload Lighthouse report
+        if: env.DEPLOYMENT_URL != '' && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-report
+          path: lighthouse-results.json
+          retention-days: 30
+        env:
+          DEPLOYMENT_URL: ${{ vars.DEPLOYMENT_URL }}
+
+      - name: Skip notice
+        if: env.DEPLOYMENT_URL == ''
+        run: echo "Set DEPLOYMENT_URL in repo variables to enable Lighthouse CI"
+        env:
+          DEPLOYMENT_URL: ${{ vars.DEPLOYMENT_URL }}
