@@ -1,6 +1,6 @@
 {
   "name": "@saas-maker/survey",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Embeddable survey widget for SaaS Maker",
   "publishConfig": {
     "access": "public"
@@ -20,7 +20,7 @@
     "react-dom": ">=18"
   },
   "devDependencies": {
-    "@saas-maker/shared-types": "workspace:*",
+    "@saas-maker/shared-types": "^0.1.1",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
     "react": "^19.1.0",

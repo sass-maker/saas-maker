@@ -4,6 +4,7 @@ import { requireApiKey, requireApiKeyOrSession, requireSession } from '../middle
 import { getDb } from '../db';
 import { parseDevice, parseBrowser, isBot, parseOS, extractPathname, computeSessionId } from '../ua';
 import type { TrackEventRequest } from '@saas-maker/shared-types';
+import { trace } from '@saas-maker/ops';
 
 const analytics = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
@@ -51,7 +52,7 @@ analytics.post('/events', requireApiKey, async (c) => {
   }
 
   const db = getDb(c.env.DB);
-  await db.createEvent({
+  const event = {
     id: crypto.randomUUID(),
     project_id: projectId,
     name: body.name || 'page_view',
@@ -69,7 +70,8 @@ analytics.post('/events', requireApiKey, async (c) => {
     is_bot: isBot(ua),
     pathname: extractPathname(body.url),
     session_id: computeSessionId(new Date().toISOString().slice(0, 10), country, device, browser, ipHash),
-  });
+  };
+  await trace('db:trackEvent', () => db.createEvent(event), { project: 'saasmaker-api' });
 
   return c.json({ ok: true }, 201);
 });

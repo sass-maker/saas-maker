@@ -1,5 +1,19 @@
 import { createMiddleware } from 'hono/factory';
+import { d1Shield } from '@saas-maker/foundry-shield';
 import { Bindings, Variables } from '../types';
+
+// Add D1 shield for unauthenticated endpoints (more reliable than in-memory)
+export const d1RateLimit = (key: string, maxPerMinute = 10) =>
+  createMiddleware<{ Bindings: Bindings; Variables: Variables }>(async (c, next) => {
+    const ip = c.req.header('CF-Connecting-IP') ?? 'unknown';
+    const shield = d1Shield(c.env.DB, { max: maxPerMinute, windowMs: 60_000, keyPrefix: key });
+    try {
+      await shield.assert(`${key}:${ip}`);
+    } catch (err: any) {
+      return c.json({ error: 'Too many requests' }, 429);
+    }
+    await next();
+  });
 
 // In-memory sliding window: projectId -> { count, resetAt }
 const windows = new Map<string, { count: number; resetAt: number }>();

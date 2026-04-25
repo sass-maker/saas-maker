@@ -1,0 +1,16 @@
+{
+  "name": "@saas-maker/foundry-shield",
+  "version": "0.1.0",
+  "description": "Foundry rate limiting — sliding window with D1/memory backends",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": { "import": "./dist/index.mjs", "require": "./dist/index.js", "types": "./dist/index.d.ts" }
+  },
+  "files": ["dist"],
+  "scripts": { "build": "tsup src/index.ts --format esm,cjs --dts" },
+  "publishConfig": { "access": "public" },
+  "dependencies": { "@saas-maker/ops": "^0.1.0" },
+  "devDependencies": { "tsup": "^8.0.0", "typescript": "^5.9.0" }
+}

@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { Bindings, Variables } from '../types';
 import { requireSession } from '../middleware/auth';
 import { getDb } from '../db';
+import { trace } from '@saas-maker/ops';
 
 const projects = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 projects.use('*', requireSession);
@@ -28,7 +29,7 @@ projects.get('/', async (c) => {
   const userId = c.get('userId')!;
   const source = c.req.query('source') || 'dashboard';
   const db = getDb(c.env.DB);
-  const data = await db.listProjectsByOwner(userId, source);
+  const data = await trace('db:listProjects', () => db.listProjectsByOwner(userId, source), { project: 'saasmaker-api' });
   return c.json({ data });
 });
 

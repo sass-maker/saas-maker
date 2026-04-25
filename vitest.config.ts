@@ -6,4 +6,9 @@ export default defineConfig({
     exclude: ['tests/integration/**'],
     testTimeout: 15000,
   },
+coverage: {
+    provider: 'v8',
+    reporter: ['json', 'text-summary'],
+    exclude: ['node_modules', 'dist', '.next', 'coverage', '**/*.d.ts', '**/*.config.*', '**/test/**'],
+  },,
 });

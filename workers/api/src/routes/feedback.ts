@@ -10,6 +10,7 @@ import {
 } from '@saas-maker/shared-types';
 import { getDb } from '../db';
 import { sendNewFeedbackEmail } from '../email';
+import { trace } from '@saas-maker/ops';
 
 const feedback = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
@@ -99,7 +100,8 @@ feedback.get('/', requireApiKey, async (c) => {
   if (status && !isValidStatus(status)) return c.json({ error: 'Invalid status filter' }, 400);
 
   const db = getDb(c.env.DB);
-  const result = await db.listFeedback(projectId, { type, status, sort, page, limit: PAGE_SIZE });
+  const options = { type, status, sort, page, limit: PAGE_SIZE };
+  const result = await trace('db:listFeedback', () => db.listFeedback(projectId, options), { project: 'saasmaker-api' });
 
   return c.json({ data: result.data, total: result.total, page, limit: PAGE_SIZE });
 });

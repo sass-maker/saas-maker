@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { Bindings, Variables } from './types';
+import { configurePostHog } from '@saas-maker/ops';
 import { auth } from './routes/auth';
 import { projects } from './routes/projects';
 import { feedback } from './routes/feedback';
@@ -52,6 +53,15 @@ app.use('*', async (c, next) => {
 
 app.use('*', async (c, next) => {
   c.set('requestId', crypto.randomUUID());
+  await next();
+});
+
+let posthogConfigured = false;
+app.use('*', async (c, next) => {
+  if (!posthogConfigured && c.env.POSTHOG_API_KEY) {
+    configurePostHog(c.env.POSTHOG_API_KEY, 'https://eu.i.posthog.com');
+    posthogConfigured = true;
+  }
   await next();
 });
 
