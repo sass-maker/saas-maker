@@ -8,6 +8,7 @@ import {
 import { CreateProjectDialog } from "@/components/create-project-dialog";
 import { PageHeader } from "@/components/page-header";
 import { FleetMonitor } from "@/components/fleet-monitor";
+import { ErrorFeed } from "@/components/error-feed";
 import { OnboardingFlow } from "@/components/onboarding/OnboardingFlow";
 import { AlertCircle, Cloud } from "lucide-react";
 import { auth } from "@/lib/auth";
@@ -42,6 +43,16 @@ export default async function ProjectsPage() {
       />
 
       <FleetMonitor />
+
+      <div className="grid gap-6 md:grid-cols-2">
+        <ErrorFeed />
+        <div className="rounded-xl border border-dashed border-muted-foreground/20 bg-muted/5 flex items-center justify-center p-8 text-center">
+           <div className="space-y-1">
+             <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest">Fleet Latency Map</p>
+             <p className="text-[10px] text-muted-foreground/60 italic">Coming soon: Global performance heatmaps</p>
+           </div>
+        </div>
+      </div>
 
       <div className="flex items-center gap-2 pt-8">
         <Cloud className="h-5 w-5 text-muted-foreground" />
