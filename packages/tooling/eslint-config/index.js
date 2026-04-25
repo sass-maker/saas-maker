@@ -7,6 +7,7 @@ import simpleImportSort from "eslint-plugin-simple-import-sort";
 import importPlugin from "eslint-plugin-import";
 import promise from "eslint-plugin-promise";
 import prettier from "eslint-config-prettier";
+import fallow from "@saas-maker/eslint-plugin-fallow";
 import { fetchStandards } from "./fetch.js";
 
 export default async function getConfig(type = 'vite') {
@@ -35,11 +36,15 @@ export default async function getConfig(type = 'vite') {
         "react-refresh": reactRefresh,
         "simple-import-sort": simpleImportSort,
         import: importPlugin,
+        "@saas-maker/fallow": fallow,
       },
       rules: {
         ...reactHooks.configs.recommended.rules,
         "react-hooks/exhaustive-deps": "warn",
         "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
+
+        // --- Fallow Deep Audit ---
+        "@saas-maker/fallow/audit": "warn",
 
         // --- Foundry Gold Standard Rules ---
         "simple-import-sort/imports": "error",

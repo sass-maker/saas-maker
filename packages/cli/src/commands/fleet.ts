@@ -18,10 +18,21 @@ interface FleetRunOptions {
 export async function fleetListCommand(): Promise<void> {
   const fleet = getLocalFleet();
   if (fleet.length === 0) { log.info('No fleet projects detected.'); return; }
+
+  // Load project descriptions from manifest
+  let manifest: Record<string, string> = {};
+  try {
+    const manifestPath = resolve(process.cwd().split('saas-maker')[0], 'saas-maker', 'foundry.projects.json');
+    if (existsSync(manifestPath)) {
+      manifest = JSON.parse(readFileSync(manifestPath, 'utf-8'));
+    }
+  } catch {}
+
   console.log(chalk.bold(`\n Detected ${fleet.length} projects in your fleet:`));
   fleet.forEach(p => {
-    const status = p.isFoundry ? chalk.green('✓ Foundry') : chalk.yellow('! Legacy');
-    console.log(`  ${status} ${chalk.cyan(p.name)} (${p.type}) at ./${p.slug}`);
+    const status = p.isFoundry ? chalk.green('✓') : chalk.yellow('!');
+    const desc = manifest[p.slug] || manifest[p.name] || chalk.gray('No description available.');
+    console.log(`  ${status} ${chalk.cyan(p.name.padEnd(20))} ${chalk.gray('—')} ${desc}`);
   });
   console.log('');
 }
@@ -102,6 +113,7 @@ export async function fleetFixCommand(): Promise<void> {
  */
 export async function fleetVersionsCommand(action: 'list' | 'fix' | 'check'): Promise<void> {
   const rootPath = resolve(process.cwd().split('Fleet')[0], 'Fleet');
+  const configPath = resolve(__dirname, '../../syncpack.config.cjs');
   const bin = 'npx syncpack';
 
   const commands = {
@@ -112,7 +124,7 @@ export async function fleetVersionsCommand(action: 'list' | 'fix' | 'check'): Pr
 
   const spinner = ora(`Running syncpack ${action}...`).start();
   try {
-    execSync(`${bin} ${commands[action]}`, { cwd: rootPath, stdio: 'inherit' });
+    execSync(`${bin} ${commands[action]} --config ${configPath}`, { cwd: rootPath, stdio: 'inherit' });
     spinner.succeed('Fleet version audit complete.');
   } catch (err) {
     spinner.fail('Version inconsistencies detected in the fleet.');
