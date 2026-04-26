@@ -15,7 +15,7 @@ npm install -g @foundry/cli
 fnd login
 ```
 
-Opens your browser for Google OAuth. Your session token is saved to `~/.saasmaker/config.json`.
+Opens your browser for Google OAuth. Your session token is saved to `~/.foundry/config.json`.
 
 ## 3. Create a project
 
@@ -32,7 +32,7 @@ cd ~/my-app
 fnd init
 ```
 
-Select your project from the list. This creates a `.saasmaker.json` config in your project root.
+Select your project from the list. This creates a `foundry.json` config in your project root.
 
 ## 5. Check your setup
 

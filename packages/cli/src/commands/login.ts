@@ -59,7 +59,7 @@ export async function loginCommand(): Promise<void> {
         const config = getGlobalConfig();
         config.apiKey = data.token;
         saveGlobalConfig(config);
-        log.success('Logged in! Token saved to ~/.saasmaker/config.json');
+        log.success('Logged in! Token saved to ~/.foundry/config.json');
         return;
       }
 

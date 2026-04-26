@@ -46,7 +46,7 @@ fnd api <method> <path> [options]
 ### Auth Modes
 
 - `--auth session` uses `Authorization: Bearer <token>` from `login`
-- `--auth project` uses `X-Project-Key` from linked `.saasmaker.json`
+- `--auth project` uses `X-Project-Key` from linked `foundry.json`
 - `--auth auto` (default) attaches whichever auth context is available
 - `--auth none` sends no auth
 
@@ -110,7 +110,7 @@ fnd api PATCH /v1/testimonials/<testimonialId> --auth session \
 
 ## Configuration
 
-### Global config: `~/.saasmaker/config.json`
+### Global config: `~/.foundry/config.json`
 
 ```json
 {
@@ -119,7 +119,7 @@ fnd api PATCH /v1/testimonials/<testimonialId> --auth session \
 }
 ```
 
-### Project config: `.saasmaker.json`
+### Project config: `foundry.json`
 
 ```json
 {
@@ -129,8 +129,8 @@ fnd api PATCH /v1/testimonials/<testimonialId> --auth session \
 }
 ```
 
-Backward compatibility: older `.saasmaker.json` files that stored only `projectId` as a `pk_...` key are still supported.
+Backward compatibility: older `foundry.json` files that stored only `projectId` as a `pk_...` key are still supported.
 
 ### Environment variable
 
-- `SAASMAKER_API_URL` — override API base URL
+- `FND_API_URL` — override API base URL

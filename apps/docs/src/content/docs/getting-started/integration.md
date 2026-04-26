@@ -170,7 +170,7 @@ npx @foundry/cli login
 npx @foundry/cli init
 ```
 
-This creates a `.saasmaker.json` file linking your directory to a project. See the [CLI docs](/sdk/cli) for more.
+This creates a `foundry.json` file linking your directory to a project. See the [CLI docs](/sdk/cli) for more.
 
 ## What's next?
 

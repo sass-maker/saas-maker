@@ -22,7 +22,7 @@ export function auditProject(cwd: string = process.cwd()): AuditResult[] {
   if (existsSync(join(cwd, 'foundry.json'))) {
     results.push({ check: 'Foundry Config', status: 'pass', detail: 'foundry.json present' });
   } else if (existsSync(join(cwd, '.saasmaker.json'))) {
-    results.push({ check: 'Foundry Config', status: 'warn', detail: 'Using legacy .saasmaker.json' });
+    results.push({ check: 'Foundry Config', status: 'warn', detail: 'Legacy .saasmaker.json — run `fnd init` to migrate' });
   } else {
     results.push({ check: 'Foundry Config', status: 'fail', detail: 'Missing foundry.json' });
   }

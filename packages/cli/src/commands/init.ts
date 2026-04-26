@@ -14,9 +14,11 @@ interface Project {
   api_key: string;
 }
 
+const FOUNDRY_CONFIG = 'foundry.json';
+const LEGACY_CONFIG = '.saasmaker.json';
+
 function applyOfflineFoundry(name: string): void {
   const type = detectProjectType();
-  const configName = 'foundry.json';
 
   const config = {
     name,
@@ -24,13 +26,13 @@ function applyOfflineFoundry(name: string): void {
     linked: false,
     standards: { eslint: true, tsconfig: true, prettier: true, renovate: true },
   };
-  writeFileSync(join(process.cwd(), configName), JSON.stringify(config, null, 2));
-  log.success(`Created ${configName} (offline — not linked to fleet yet)`);
+  writeFileSync(join(process.cwd(), FOUNDRY_CONFIG), JSON.stringify(config, null, 2) + '\n');
+  log.success(`Created ${FOUNDRY_CONFIG} (offline — not linked to fleet yet)`);
 
   log.info(`Detected ${type} project. Applying Foundry Standards...`);
   applyStandard(type);
   scaffoldRenovate();
-  scaffoldWeeklyCi();
+  scaffoldCI();
 
   console.log('\n✓ Foundry Standards applied:');
   console.log('  eslint.config.js, tsconfig.json, .prettierrc, renovate.json');
@@ -40,15 +42,25 @@ function applyOfflineFoundry(name: string): void {
 }
 
 export async function initCommand(options: { offline?: boolean } = {}): Promise<void> {
-  const configName = 'foundry.json';
-  if (existsSync(join(process.cwd(), configName))) {
-    log.info(`${configName} already exists in this directory.`);
+  const cwd = process.cwd();
+  const foundryPath = join(cwd, FOUNDRY_CONFIG);
+  const legacyPath = join(cwd, LEGACY_CONFIG);
+
+  // Auto-migrate legacy → canonical at the start of every init
+  if (!existsSync(foundryPath) && existsSync(legacyPath)) {
+    writeFileSync(foundryPath, readFileSync(legacyPath, 'utf-8'));
+    try { require('node:fs').unlinkSync(legacyPath); } catch { /* ignore */ }
+    log.info('Migrated .saasmaker.json → foundry.json');
+  }
+
+  if (existsSync(foundryPath)) {
+    log.info(`${FOUNDRY_CONFIG} already exists in this directory.`);
     return;
   }
 
   // Derive project name from package.json if present
   let pkgName = 'my-project';
-  const pkgPath = join(process.cwd(), 'package.json');
+  const pkgPath = join(cwd, 'package.json');
   if (existsSync(pkgPath)) {
     try { pkgName = JSON.parse(readFileSync(pkgPath, 'utf-8')).name ?? pkgName; } catch {}
   }
@@ -81,7 +93,7 @@ export async function initCommand(options: { offline?: boolean } = {}): Promise<
   }
 
   if (projects.length === 0) {
-    log.info('No fleet projects found. Run `foundry fleet create` first.');
+    log.info('No fleet projects found. Run `fnd projects create` first.');
     return;
   }
 
@@ -100,23 +112,34 @@ export async function initCommand(options: { offline?: boolean } = {}): Promise<
     }
 
     const project = projects[idx];
-    saveLocalConfig({ slug: project.slug, projectId: project.id, projectKey: project.api_key });
-
-    // Migrate legacy config if present
-    const legacyPath = join(process.cwd(), '.saasmaker.json');
-    const foundryConfig = existsSync(legacyPath)
-      ? readFileSync(legacyPath, 'utf-8')
-      : JSON.stringify({ name: project.name, slug: project.slug, type: detectProjectType(), linked: true }, null, 2);
-    writeFileSync(join(process.cwd(), configName), foundryConfig);
-    if (existsSync(legacyPath)) log.info('Migrated .saasmaker.json → foundry.json');
-
-    log.success(`Linked to "${project.name}" — wrote ${configName}`);
-
     const type = detectProjectType();
+
+    // Single canonical foundry.json with all data merged
+    const config = {
+      name: project.name,
+      slug: project.slug,
+      type,
+      linked: true,
+      projectId: project.id,
+      projectKey: project.api_key,
+      standards: { eslint: true, tsconfig: true, prettier: true, renovate: true },
+    };
+    writeFileSync(foundryPath, JSON.stringify(config, null, 2) + '\n');
+
+    // saveLocalConfig also persists the slug/projectId/projectKey shape
+    saveLocalConfig({
+      slug: project.slug,
+      projectId: project.id,
+      projectKey: project.api_key,
+      linked: true,
+    });
+
+    log.success(`Linked to "${project.name}" — wrote ${FOUNDRY_CONFIG}`);
+
     log.info(`Detected ${type} project. Applying Foundry Standards...`);
     applyStandard(type);
     scaffoldRenovate();
-    scaffoldWeeklyCi();
+    scaffoldCI();
 
     console.log('\n✓ Foundry Forge complete:');
     console.log('  1. Install standards:');

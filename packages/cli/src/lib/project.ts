@@ -19,7 +19,7 @@ export function requireLinkedProjectKey(): string {
   }
   const key = getLocalProjectKey(local);
   if (!key) {
-    throw new Error('No project key found in .saasmaker.json. Run `fnd init` again.');
+    throw new Error('No project key found in foundry.json. Run `fnd init` again.');
   }
   return key;
 }
