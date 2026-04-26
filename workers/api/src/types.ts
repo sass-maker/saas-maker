@@ -12,6 +12,8 @@ export type Bindings = {
   FREE_AI_API_KEY: string;
   AI?: { run: (model: string, input: Record<string, unknown>) => Promise<unknown> };
   POSTHOG_API_KEY?: string;
+  /** Set in prod to enable POST /v1/test/mint-session for e2e session minting. Unset = endpoint returns 404. */
+  FOUNDRY_E2E_SECRET?: string;
 };
 
 export type Variables = {
