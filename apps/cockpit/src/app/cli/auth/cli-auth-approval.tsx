@@ -28,7 +28,7 @@ export function CliAuthApproval({ code, userEmail }: Props) {
           <Terminal className="mx-auto h-10 w-10 text-muted-foreground mb-2" />
           <CardTitle>Invalid Request</CardTitle>
           <CardDescription>
-            No authorization code provided. Run <code className="text-xs bg-muted px-1 py-0.5 rounded">saasmaker login</code> from your terminal.
+            No authorization code provided. Run <code className="text-xs bg-muted px-1 py-0.5 rounded">fnd login</code> from your terminal.
           </CardDescription>
         </CardHeader>
       </Card>

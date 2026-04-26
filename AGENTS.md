@@ -54,8 +54,8 @@ node scripts/generate-openapi.mjs   # Regenerate OpenAPI spec (updates 3 files)
 ```
 
 ## Architecture notes
-- **API-first philosophy**: `saasmaker api` is the primary interface for all backend features. Do not add feature-specific CLI commands unless there is clear repeated workflow value.
-- **REQUIRED WORKFLOW when API routes change**: (1) run `generate-openapi.mjs` — updates `packages/cli/src/openapi.json`, `docs/openapi/openapi.json`, `apps/docs/public/openapi.json`; (2) update `packages/cli/README.md` and `apps/docs/src/content/docs/sdk/cli.md`; (3) add `saasmaker examples` entry if user-facing.
+- **API-first philosophy**: `fnd api` is the primary interface for all backend features. Do not add feature-specific CLI commands unless there is clear repeated workflow value.
+- **REQUIRED WORKFLOW when API routes change**: (1) run `generate-openapi.mjs` — updates `packages/cli/src/openapi.json`, `docs/openapi/openapi.json`, `apps/docs/public/openapi.json`; (2) update `packages/cli/README.md` and `apps/docs/src/content/docs/sdk/cli.md`; (3) add `fnd examples` entry if user-facing.
 - **CLI validates all commands against OpenAPI** by default. Use `--no-validate` only for temporary experimentation.
 - **Standards API**: `GET/PUT /v1/standards/:type` — remote config for fleet management.
 - **Testing standard**:
