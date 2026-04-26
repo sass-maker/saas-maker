@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PublicFeedbackContent } from "@/app/projects/[slug]/feedback/public-feedback-content";
+import { PublicFeedbackContent } from "@/app/(app)/projects/[slug]/feedback/public-feedback-content";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { PublicAuthButtons } from "@/components/public-auth-buttons";

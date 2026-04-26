@@ -52,6 +52,31 @@ export async function decryptAuthJsJwe(
   return null;
 }
 
+async function resolveBetterAuthSession(c: { env: Bindings }, token: string): Promise<string | null> {
+  // Better-auth stores opaque tokens in the `session` table joined to `user`
+  const row = await c.env.DB.prepare(
+    `SELECT s.userId, s.expiresAt, u.email, u.name, u.image
+     FROM session s
+     JOIN user u ON u.id = s.userId
+     WHERE s.token = ?`
+  ).bind(token).first<{ userId: string; expiresAt: string | number; email: string; name: string | null; image: string | null }>();
+  if (!row) return null;
+  // expiresAt is a unix-timestamp (better-auth sqlite mode: 'timestamp' = seconds)
+  const expiresMs = typeof row.expiresAt === 'number' ? row.expiresAt * 1000 : Date.parse(String(row.expiresAt));
+  if (Number.isFinite(expiresMs) && expiresMs < Date.now()) return null;
+
+  // Mirror into the existing `users` table so the rest of the API (which keys
+  // off `users.id`) keeps working.
+  const db = getDb(c.env.DB);
+  const user = await db.upsertUser({
+    id: row.userId,
+    email: row.email,
+    name: row.name,
+    avatar_url: row.image,
+  });
+  return user.id;
+}
+
 export const requireSession = createMiddleware<{ Bindings: Bindings; Variables: Variables }>(
   async (c, next) => {
     const authHeader = c.req.header('Authorization');
@@ -62,7 +87,7 @@ export const requireSession = createMiddleware<{ Bindings: Bindings; Variables: 
     const token = authHeader.slice(7);
     const db = getDb(c.env.DB);
 
-    // Try CLI token first (sm_ prefix)
+    // 1. CLI token (sm_ prefix)
     if (token.startsWith('sm_')) {
       const cliToken = await db.getCliTokenUser(token);
       if (!cliToken) return c.json({ error: 'Unauthorized' }, 401);
@@ -70,13 +95,19 @@ export const requireSession = createMiddleware<{ Bindings: Bindings; Variables: 
       return next();
     }
 
-    // Fall back to AuthJS JWE session token
+    // 2. Better-auth opaque session token (cockpit)
+    const baUserId = await resolveBetterAuthSession(c, token);
+    if (baUserId) {
+      c.set('userId', baUserId);
+      return next();
+    }
+
+    // 3. Legacy AuthJS JWE session token
     const payload = await decryptAuthJsJwe(token, c.env.AUTH_SECRET);
     if (!payload) {
       return c.json({ error: 'Unauthorized' }, 401);
     }
 
-    // Upsert user so we always have a local record
     const user = await db.upsertUser({
       id: payload.sub,
       email: payload.email,
@@ -114,6 +145,12 @@ export const requireApiKeyOrSession = createMiddleware<{ Bindings: Bindings; Var
       const cliToken = await db.getCliTokenUser(token);
       if (!cliToken) return c.json({ error: 'Unauthorized' }, 401);
       c.set('userId', cliToken.user_id);
+      return next();
+    }
+
+    const baUserId = await resolveBetterAuthSession(c, token);
+    if (baUserId) {
+      c.set('userId', baUserId);
       return next();
     }
 

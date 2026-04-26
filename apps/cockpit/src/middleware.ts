@@ -18,4 +18,15 @@ export async function middleware(req: NextRequest) {
   return NextResponse.next();
 }
 
-export const config = { matcher: ["/projects/:path*"] };
+export const config = {
+  matcher: [
+    "/projects/:path*",
+    "/tasks/:path*",
+    "/secrets/:path*",
+    "/manifest/:path*",
+    "/jobs/:path*",
+    "/fleet/:path*",
+    "/standards/:path*",
+    "/roadmap/:path*",
+  ],
+};

@@ -8,13 +8,15 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { User } from "lucide-react";
+import { LogOut, User } from "lucide-react";
 import { SidebarNav } from "@/components/sidebar-nav";
 import { MobileNav } from "@/components/mobile-nav";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { SignOutButton } from "@/components/sign-out-button";
 
-export default async function StandardsLayout({
+export const dynamic = "force-dynamic";
+
+export default async function AppLayout({
   children,
 }: {
   children: React.ReactNode;
