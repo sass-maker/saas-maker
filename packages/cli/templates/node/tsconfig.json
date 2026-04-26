@@ -1,3 +1,6 @@
 {
-  "extends": "@saas-maker/tsconfig/node.json"
+  "extends": "@saas-maker/tsconfig/node.json",
+  "compilerOptions": {
+    "ignoreDeprecations": "6.0"
+  }
 }
