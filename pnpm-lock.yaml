@@ -519,6 +519,25 @@ importers:
 
   packages/tooling/renovate-config: {}
 
+  packages/tooling/tailwind-preset:
+    dependencies:
+      tailwindcss:
+        specifier: '>=3 <5'
+        version: 4.2.4
+    devDependencies:
+      '@saas-maker/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      tsup:
+        specifier: 8.0.0
+        version: 8.0.0(postcss@8.5.10)(typescript@6.0.3)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: 4.1.5
+        version: 4.1.5(@opentelemetry/api@1.9.0)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.5)(happy-dom@20.9.0)(jsdom@29.0.2(@noble/hashes@2.2.0))(msw@2.13.6(@types/node@25.6.0)(typescript@6.0.3))(vite@7.3.2(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.16.9)(tsx@4.21.0)(yaml@2.8.3))
+
   packages/tooling/tsconfig: {}
 
   packages/tooling/wrangler-preset:

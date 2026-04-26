@@ -1,0 +1,45 @@
+{
+  "name": "@saas-maker/tailwind-preset",
+  "version": "0.1.0",
+  "description": "Foundry brand tokens — Tailwind v4 @theme + v3 JS preset.",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist",
+    "theme.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./theme.css": "./theme.css",
+    "./tokens": {
+      "types": "./dist/tokens.d.ts",
+      "import": "./dist/tokens.mjs",
+      "require": "./dist/tokens.js"
+    }
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "tailwindcss": ">=3 <5"
+  },
+  "peerDependenciesMeta": {
+    "tailwindcss": { "optional": true }
+  },
+  "devDependencies": {
+    "@saas-maker/tsconfig": "workspace:*",
+    "tsup": "8.0.0",
+    "typescript": "6.0.3",
+    "vitest": "4.1.5"
+  }
+}
