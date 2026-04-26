@@ -222,7 +222,7 @@ npx @foundry/cli login
 npx @foundry/cli init
 ```
 
-This creates a `.saasmaker.json` file linking your directory to a project. See the [CLI docs](/sdk/cli) for more.
+This creates a `foundry.json` file linking your directory to a project. See the [CLI docs](/sdk/cli) for more.
 
 ## What's next?
 
@@ -278,15 +278,15 @@ npm install -g @foundry/cli
 ## 2. Log in
 
 ```bash
-saasmaker login
+fnd login
 ```
 
-Opens your browser for Google OAuth. Your session token is saved to `~/.saasmaker/config.json`.
+Opens your browser for Google OAuth. Your session token is saved to `~/.foundry/config.json`.
 
 ## 3. Create a project
 
 ```bash
-saasmaker projects create
+fnd projects create
 ```
 
 Follow the prompt to name your project. This generates a unique API key (starts with `pk_`).
@@ -295,16 +295,16 @@ Follow the prompt to name your project. This generates a unique API key (starts 
 
 ```bash
 cd ~/my-app
-saasmaker init
+fnd init
 ```
 
-Select your project from the list. This creates a `.saasmaker.json` config in your project root.
+Select your project from the list. This creates a `foundry.json` config in your project root.
 
 ## 5. Check your setup
 
 ```bash
-saasmaker keys     # show your API key
-saasmaker status   # show project stats
+fnd keys     # show your API key
+fnd status   # show project stats
 ```
 
 ## 6. Integrate the SDK
@@ -1334,10 +1334,10 @@ Rate-limited responses return `429 Too Many Requests` with headers:
 ## CLI
 
 ```bash
-saasmaker projects list
-saasmaker projects create --name "My App"
-saasmaker projects update --id <id> --name "New Name"
-saasmaker projects delete --id <id> --force
+fnd projects list
+fnd projects create --name "My App"
+fnd projects update --id <id> --name "New Name"
+fnd projects delete --id <id> --force
 ```
 
 ---
@@ -2564,9 +2564,9 @@ const { count } = await client.waitlist.getCount();
 ## CLI
 
 ```bash
-saasmaker waitlist list
-saasmaker waitlist count
-saasmaker waitlist delete <id>
+fnd waitlist list
+fnd waitlist count
+fnd waitlist delete <id>
 ```
 
 ---

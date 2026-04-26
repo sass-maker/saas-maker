@@ -66,6 +66,13 @@ versions.command('list').description('List all dependency versions').action(() =
 versions.command('fix').description('Fix version mismatches').action(() => fleetVersionsCommand('fix'));
 versions.command('check').description('Check for version mismatches').action(() => fleetVersionsCommand('check'));
 
+// --- Projects ---
+const projects = program.command('projects').description('Manage projects');
+projects.command('list').description('List your projects').action(projectsListCommand);
+projects.command('create').description('Create a new project').option('--name <name>', 'Project name').action(projectsCreateCommand);
+projects.command('delete').description('Delete a project').option('--id <id>', 'Project id').option('--force', 'Skip confirmation').action(projectsDeleteCommand);
+projects.command('update').description('Update a project').option('--id <id>', 'Project id').option('--name <name>', 'New name').action(projectsUpdateCommand);
+
 // --- Blocks & Widgets ---
 program.command('feedback').description('Manage the Feedback block').action(feedbackListCommand);
 program.command('roadmap').description('Manage the Roadmap block').action(roadmapListCommand);
