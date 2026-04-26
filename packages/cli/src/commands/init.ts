@@ -5,7 +5,7 @@ import ora from 'ora';
 import { getResponseError, requestApi } from '../lib/request.js';
 import { saveLocalConfig } from '../lib/config.js';
 import { log } from '../lib/ui.js';
-import { detectProjectType, applyStandard, scaffoldRenovate, scaffoldCI } from '../lib/forge.js';
+import { detectProjectType, applyStandard, scaffoldRenovate, scaffoldCI, scaffoldHusky } from '../lib/forge.js';
 
 interface Project {
   id: string;
@@ -33,6 +33,7 @@ function applyOfflineFoundry(name: string): void {
   applyStandard(type);
   scaffoldRenovate();
   scaffoldCI();
+  scaffoldHusky();
 
   console.log('\n✓ Foundry Standards applied:');
   console.log('  eslint.config.js, tsconfig.json, .prettierrc, renovate.json');

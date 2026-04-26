@@ -5,7 +5,7 @@ import { getLocalFleet } from '../lib/fleet.js';
 import { log } from '../lib/ui.js';
 import { auditProject } from '../lib/auditor.js';
 import { printOutput } from '../lib/output.js';
-import { applyStandard, scaffoldRenovate, detectProjectType, scaffoldCI } from '../lib/forge.js';
+import { applyStandard, scaffoldRenovate, detectProjectType, scaffoldCI, scaffoldHusky, type RemoteStandards } from '../lib/forge.js';
 import { existsSync, renameSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { requestApi, getResponseError } from '../lib/request.js';
@@ -80,11 +80,24 @@ export async function fleetAuditCommand(): Promise<void> {
   printOutput(fleetResults, { output: 'table', defaultColumns: ['project', 'slug', 'type', 'score', 'status'] });
 }
 
+async function fetchRemoteStandards(type: 'next' | 'vite' | 'node'): Promise<RemoteStandards | null> {
+  try {
+    const res = await requestApi<RemoteStandards>({ path: `/v1/standards/${type}`, auth: 'session' });
+    if (!res.ok || !res.data) return null;
+    return res.data;
+  } catch {
+    return null;
+  }
+}
+
 export async function fleetFixCommand(): Promise<void> {
   const fleet = getLocalFleet();
   if (fleet.length === 0) { log.info('No projects to fix.'); return; }
 
   log.info(`Applying Foundry Standards to ${fleet.length} projects...\n`);
+
+  // Fetch remote standards once per type, then reuse across projects of that type
+  const remoteCache: Record<string, RemoteStandards | null> = {};
 
   for (const project of fleet) {
     const spinner = ora(`[${project.slug}] Fixing...`).start();
@@ -96,11 +109,15 @@ export async function fleetFixCommand(): Promise<void> {
       }
 
       const type = detectProjectType(project.path);
-      applyStandard(type, project.path);
+      if (!(type in remoteCache)) remoteCache[type] = await fetchRemoteStandards(type);
+      const remote = remoteCache[type] ?? undefined;
+
+      applyStandard(type, project.path, remote);
       scaffoldRenovate(project.path);
       scaffoldCI(project.path);
-      
-      spinner.succeed(`[${project.slug}] Compliant`);
+      scaffoldHusky(project.path);
+
+      spinner.succeed(`[${project.slug}] Compliant${remote ? ' (remote standards applied)' : ''}`);
     } catch (err) {
       spinner.fail(`[${project.slug}] Fix failed: ${err instanceof Error ? err.message : String(err)}`);
     }
