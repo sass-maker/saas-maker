@@ -66,5 +66,6 @@ node scripts/generate-openapi.mjs   # Regenerate OpenAPI spec (updates 3 files)
 - **Pre-push gate**: lint, fleet-wide `tsc --noEmit`, vitest run, secret scan. Defined in `.husky/pre-push`.
 - **Post-deploy gate**: `pnpm smoke` (or implicit via `pnpm -F @saas-maker/{api,dashboard} run deploy`) hits prod; failure = bad release. Source: `scripts/smoke-prod.mjs`.
 - **Cockpit/API auth bridge**: cockpit signs in via better-auth (`apps/cockpit/src/lib/auth.ts` + `auth-schema.ts`); workers/api `requireSession` resolves opaque tokens against the shared D1 `session` table before falling back to legacy AuthJS JWE.
+- **Testing backlog**: living list of uncovered surfaces at `docs/testing-backlog.md`. Triage rule: only test what burned us before or what's on the daily critical path. Refresh after every regression.
 
 ## Active context
