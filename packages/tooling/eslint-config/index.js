@@ -7,12 +7,36 @@ import simpleImportSort from "eslint-plugin-simple-import-sort";
 import importPlugin from "eslint-plugin-import";
 import promise from "eslint-plugin-promise";
 import prettier from "eslint-config-prettier";
-import fallow from "@saas-maker/eslint-plugin-fallow";
 import { fetchStandards } from "./fetch.js";
+
+let fallow = null;
+try {
+  fallow = (await import("@saas-maker/eslint-plugin-fallow")).default;
+} catch {
+  // Optional internal plugin — skip when unavailable (standalone repos).
+}
 
 export default async function getConfig(type = 'vite') {
   const standards = await fetchStandards(type);
   const remoteRules = standards?.eslint_rules ?? {};
+
+  const isNext = type === 'next';
+
+  const plugins = {
+    "simple-import-sort": simpleImportSort,
+    import: importPlugin,
+  };
+  if (fallow) plugins["@saas-maker/fallow"] = fallow;
+  if (!isNext) {
+    plugins["react-hooks"] = reactHooks;
+    plugins["react-refresh"] = reactRefresh;
+  }
+
+  const reactRules = isNext ? {} : {
+    ...reactHooks.configs.recommended.rules,
+    "react-hooks/exhaustive-deps": "warn",
+    "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
+  };
 
   return tseslint.config(
     { ignores: ["dist", ".next", "build", ".wrangler", "node_modules", "out"] },
@@ -31,20 +55,11 @@ export default async function getConfig(type = 'vite') {
           ...globals.es2021,
         },
       },
-      plugins: {
-        "react-hooks": reactHooks,
-        "react-refresh": reactRefresh,
-        "simple-import-sort": simpleImportSort,
-        import: importPlugin,
-        "@saas-maker/fallow": fallow,
-      },
+      plugins,
       rules: {
-        ...reactHooks.configs.recommended.rules,
-        "react-hooks/exhaustive-deps": "warn",
-        "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
+        ...reactRules,
 
-        // --- Fallow Deep Audit ---
-        "@saas-maker/fallow/audit": "warn",
+        ...(fallow ? { "@saas-maker/fallow/audit": "warn" } : {}),
 
         // --- Foundry Gold Standard Rules ---
         "simple-import-sort/imports": "error",

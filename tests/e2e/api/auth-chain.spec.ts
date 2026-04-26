@@ -64,4 +64,37 @@ test.describe('Auth chain', () => {
     const html = await res.text();
     expect(html).not.toContain('localhost:8787');
   });
+
+  // Auth-gated routes redirect unauthenticated → /login
+  for (const route of [
+    '/projects/test-project',
+    '/projects/test-project/settings',
+    '/secrets',
+    '/tasks',
+    '/jobs',
+    '/manifest',
+    '/fleet',
+    '/standards',
+    '/cli/auth',
+    '/cli/auth?code=PLACEHOLDER',
+  ]) {
+    test(`Cockpit ${route} redirects unauthenticated to /login`, async ({ request }) => {
+      const res = await request.get(`${APP_BASE}${route}`, { maxRedirects: 0 });
+      expect([301, 302, 307, 308]).toContain(res.status());
+      expect(res.headers()['location'] ?? '').toContain('/login');
+    });
+  }
+
+  // Public-bypass routes (per middleware) render 200 directly
+  for (const route of [
+    '/projects/test-project/feedback',
+    '/f/test-project',
+    '/t/test-project',
+  ]) {
+    test(`Cockpit ${route} renders publicly (no auth required)`, async ({ request }) => {
+      const res = await request.get(`${APP_BASE}${route}`, { maxRedirects: 0 });
+      // 200 if project exists, 404 if not — both prove the route is public.
+      expect([200, 404]).toContain(res.status());
+    });
+  }
 });

@@ -1,6 +1,6 @@
 {
   "name": "@saas-maker/eslint-config",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "type": "module",
   "main": "index.js",
   "exports": {
@@ -20,7 +20,11 @@
     "access": "public"
   },
   "peerDependencies": {
-    "eslint": "10.2.1"
+    "eslint": "10.2.1",
+    "eslint-config-next": ">=15.0.0"
+  },
+  "peerDependenciesMeta": {
+    "eslint-config-next": { "optional": true }
   },
   "dependencies": {
     "@eslint/js": "10.0.1",
