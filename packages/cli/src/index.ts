@@ -6,6 +6,8 @@ import { projectsListCommand, projectsCreateCommand, projectsDeleteCommand, proj
 import { fleetListCommand, fleetRunCommand, fleetUpgradeCommand, fleetAuditCommand, fleetFixCommand, fleetSecretsSyncCommand, fleetVersionsCommand, fleetApplySkillCommand, fleetProvisionCommand, fleetSearchCommand } from './commands/fleet.js';
 import { fleetSuperviseCommand } from './commands/supervise.js';
 import { fleetCleanCommand } from './commands/clean.js';
+import { fleetScanCommand } from './commands/fleet-scan.js';
+import { fleetDashboardCommand } from './commands/fleet-dashboard.js';
 import { feedbackListCommand, feedbackUpdateCommand, feedbackDeleteCommand } from './commands/feedback.js';
 import { roadmapListCommand, roadmapCreateCommand, roadmapUpdateCommand, roadmapDeleteCommand } from './commands/roadmap.js';
 import { changelogListCommand, changelogCreateCommand, changelogUpdateCommand, changelogDeleteCommand } from './commands/changelog.js';
@@ -34,6 +36,8 @@ program.command('keys').description('Show API keys for the linked block').action
 // --- Fleet Management ---
 const fleet = program.command('fleet').description('Manage your project fleet');
 fleet.command('list').description('List all projects in your fleet').action(fleetListCommand);
+fleet.command('scan').description('Scan local fleet and upload tooling metadata to Foundry').action(fleetScanCommand);
+fleet.command('dashboard').description('Print fleet tooling matrix locally').action(fleetDashboardCommand);
 fleet
   .command('run <command>')
   .description('Run a shell command across the entire fleet')

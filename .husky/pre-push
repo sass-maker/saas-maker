@@ -1,12 +1,25 @@
 #!/bin/sh
 set -e
 
-# Lint (fast — Biome or ESLint, whatever is configured)
+echo "🛡️  Foundry pre-push gate"
+
+# 1. Lint
 if grep -q '"lint"' package.json 2>/dev/null; then
+  echo "→ lint"
   pnpm run lint --if-present || { echo "lint failed — fix before pushing" >&2; exit 1; }
 fi
 
-# Secret scan — abort if tokens/keys found in tracked files
+# 2. Typecheck (fleet-wide)
+echo "→ typecheck"
+pnpm -r --if-present typecheck \
+  || { echo "typecheck failed — fix before pushing" >&2; exit 1; }
+
+# 3. Tests
+echo "→ test"
+pnpm test || { echo "tests failed — push aborted" >&2; exit 1; }
+
+# 4. Secret scan
+echo "→ secret scan"
 SECRETS=$(git ls-files -z 2>/dev/null \
   | xargs -0 grep -lE \
     'sk-(proj-|ant-)?[A-Za-z0-9_-]{20,}|AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{36}|gho_[A-Za-z0-9]{36}|AIzaSy[A-Za-z0-9_-]{33}|xoxb-[A-Za-z0-9-]+|-----BEGIN (RSA |EC )?PRIVATE KEY-----' 2>/dev/null \
@@ -17,3 +30,5 @@ if [ -n "$SECRETS" ]; then
   printf '  %s\n' $SECRETS >&2
   exit 1
 fi
+
+echo "✓ all gates passed"

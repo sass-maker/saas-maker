@@ -16,13 +16,14 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --dts"
+    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "typecheck": "tsc --noEmit"
   },
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
-    "@saas-maker/ops": "workspace:*" ,
+    "@saas-maker/ops": "workspace:*",
     "nodemailer": "6.9.0"
   },
   "devDependencies": {

@@ -4,14 +4,15 @@
   "private": true,
   "scripts": {
     "dev": "wrangler dev",
-    "deploy": "wrangler deploy"
+    "deploy": "wrangler deploy && node ../../scripts/smoke-prod.mjs",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@saas-maker/db": "workspace:*",
     "@saas-maker/email": "workspace:*",
     "@saas-maker/shield": "workspace:*",
     "@saas-maker/ops": "workspace:*",
-    "@saas-maker/shared-types": "workspace:*" ,
+    "@saas-maker/shared-types": "workspace:*",
     "drizzle-orm": "0.45.2",
     "hono": "4.12.15",
     "jose": "6.2.2"

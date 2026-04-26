@@ -14,7 +14,8 @@
   "scripts": {
     "test": "vitest run",
     "build": "tsup",
-    "dev": "tsx src/index.ts"
+    "dev": "tsx src/index.ts",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "chalk": "5.6.2",

@@ -6,7 +6,7 @@ import { log } from '../lib/ui.js';
 import { auditProject } from '../lib/auditor.js';
 import { printOutput } from '../lib/output.js';
 import { applyStandard, scaffoldRenovate, detectProjectType, scaffoldCI, scaffoldHusky, type RemoteStandards } from '../lib/forge.js';
-import { existsSync, renameSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, renameSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { requestApi, getResponseError } from '../lib/request.js';
 

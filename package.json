@@ -20,6 +20,8 @@
     "test:integration": "vitest run --config vitest.integration.config.ts",
     "test:e2e": "playwright test tests/e2e/api/",
     "lint": "pnpm -r --if-present lint",
+    "typecheck": "pnpm -r --if-present typecheck",
+    "smoke": "node scripts/smoke-prod.mjs",
     "prepare": "husky"
   },
   "devDependencies": {

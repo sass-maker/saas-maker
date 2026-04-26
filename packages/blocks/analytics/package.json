@@ -10,7 +10,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup"
+    "build": "tsup",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "tsup": "8.0.0",

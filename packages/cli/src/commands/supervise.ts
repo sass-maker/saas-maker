@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import { getLocalFleet } from '../lib/fleet.js';
 import { log } from '../lib/ui.js';
 import { requestApi } from '../lib/request.js';
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 
 interface FoundryErrorEvent {
   id: string;

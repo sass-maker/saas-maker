@@ -7,9 +7,10 @@
     "build": "pnpm -F @saas-maker/shared-types build && next build --webpack",
     "build:next": "next build",
     "cf:build": "opennextjs-cloudflare build",
-    "deploy": "pnpm cf:build && wrangler deploy",
+    "deploy": "pnpm cf:build && wrangler deploy && node ../../scripts/smoke-prod.mjs",
     "preview": "wrangler pages dev",
-    "start": "next start"
+    "start": "next start",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@dnd-kit/core": "6.3.1",

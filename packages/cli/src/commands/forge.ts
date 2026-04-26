@@ -1,5 +1,5 @@
 import { createInterface } from 'node:readline/promises';
-import { mkdirSync, writeFileSync, readFileSync, readdirSync, copyFileSync, statSync } from 'node:fs';
+import { existsSync, mkdirSync, writeFileSync, readFileSync, readdirSync, copyFileSync, statSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import ora from 'ora';

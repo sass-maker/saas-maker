@@ -12,7 +12,8 @@
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --dts --external react --external react-dom"
+    "build": "tsup src/index.ts --format esm,cjs --dts --external react --external react-dom",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {},
   "peerDependencies": {
@@ -20,7 +21,7 @@
     "react-dom": "19.2.5"
   },
   "devDependencies": {
-    "@saas-maker/shared-types": "workspace:*" ,
+    "@saas-maker/shared-types": "workspace:*",
     "@types/react": "19",
     "@types/react-dom": "19",
     "react": "19.2.5",

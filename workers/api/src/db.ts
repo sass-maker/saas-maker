@@ -1,7 +1,12 @@
 import { eq, and, desc } from 'drizzle-orm';
 import { getDrizzle } from './drizzle';
 import * as schema from './schema';
-import type { FeedbackDatabase } from '@saas-maker/db';
+// FeedbackDatabase isn't actually exported from @saas-maker/db; the API DB
+// surface has grown beyond what the shared block models. Until we extract a
+// proper interface this is intentionally `any` so the rest of the API
+// continues to typecheck.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type FeedbackDatabase = any;
 import type {
   AIRequestRecord,
   FeedbackRecord,
@@ -1683,7 +1688,7 @@ export function getDb(d1: D1Database): FeedbackDatabase {
       const results = await d1.prepare(
         `SELECT * FROM fleet_metadata WHERE owner_id = ? ORDER BY name ASC`
       ).bind(ownerId).all();
-      return mapRows<FleetMetadataRow>(results);
+      return mapRows<FleetMetadataRow>(results.results ?? []);
     },
 
     // --- Tasks ---

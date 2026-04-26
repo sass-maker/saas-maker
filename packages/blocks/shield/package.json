@@ -6,13 +6,14 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsup"
+    "build": "tsup",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@saas-maker/ops": "workspace:*" 
+    "@saas-maker/ops": "workspace:*"
   },
   "devDependencies": {
-    "@saas-maker/tsconfig": "workspace:*" ,
+    "@saas-maker/tsconfig": "workspace:*",
     "@cloudflare/workers-types": "4.20260424.1",
     "tsup": "8.0.0",
     "typescript": "6.0.3"
