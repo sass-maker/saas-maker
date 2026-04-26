@@ -25,7 +25,7 @@ function resolveProjectId(option?: string): string | null {
 
 export async function testimonialsListCommand(options: TestimonialsListOptions = {}): Promise<void> {
   const projectId = resolveProjectId(options.project);
-  if (!projectId) { log.error('No project ID. Pass --project <id> or run `saasmaker init`.'); process.exitCode = 1; return; }
+  if (!projectId) { log.error('No project ID. Pass --project <id> or run `fnd init`.'); process.exitCode = 1; return; }
 
   const spinner = options.quiet ? null : ora('Loading testimonials...').start();
   try {

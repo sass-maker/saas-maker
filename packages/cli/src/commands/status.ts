@@ -62,13 +62,13 @@ function asFeature(
 export async function statusCommand(options: StatusOptions = {}): Promise<void> {
   const local = getLocalConfig();
   if (!local) {
-    log.error('No project linked. Run `saasmaker init` first.');
+    log.error('No project linked. Run `fnd init` first.');
     return;
   }
 
   const projectKey = getLocalProjectKey(local);
   if (!projectKey) {
-    log.error('No linked project key found. Run `saasmaker init` again.');
+    log.error('No linked project key found. Run `fnd init` again.');
     return;
   }
 

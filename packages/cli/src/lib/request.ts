@@ -51,12 +51,12 @@ function resolveAuthHeaders(options: RequestApiOptions): Record<string, string> 
 
   if (mode === 'none') return headers;
   if (mode === 'session') {
-    if (!token) throw new Error('No session token found. Run `saasmaker login` first.');
+    if (!token) throw new Error('No session token found. Run `fnd login` first.');
     headers.Authorization = `Bearer ${token}`;
     return headers;
   }
   if (mode === 'project') {
-    if (!projectKey) throw new Error('No project key found. Run `saasmaker init` first or pass --project-key.');
+    if (!projectKey) throw new Error('No project key found. Run `fnd init` first or pass --project-key.');
     headers['X-Project-Key'] = projectKey;
     return headers;
   }
@@ -64,7 +64,7 @@ function resolveAuthHeaders(options: RequestApiOptions): Record<string, string> 
   if (token) headers.Authorization = `Bearer ${token}`;
   if (projectKey) headers['X-Project-Key'] = projectKey;
   if (!token && !projectKey) {
-    throw new Error('No auth context found. Run `saasmaker login` and/or `saasmaker init`.');
+    throw new Error('No auth context found. Run `fnd login` and/or `fnd init`.');
   }
   return headers;
 }

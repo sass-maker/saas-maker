@@ -52,7 +52,7 @@ export async function projectsListCommand(options: ProjectsListOptions = {}): Pr
 
     const projects = res.data?.data ?? [];
     if (projects.length === 0) {
-      if (!options.quiet) log.info('No projects yet. Run `saasmaker projects create` to create one.');
+      if (!options.quiet) log.info('No projects yet. Run `fnd projects create` to create one.');
       return;
     }
 

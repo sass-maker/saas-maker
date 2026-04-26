@@ -15,52 +15,52 @@ interface ExamplesOptions {
 const EXAMPLES: ExampleRow[] = [
   {
     category: 'Setup',
-    command: 'saasmaker doctor',
+    command: 'fnd doctor',
     description: 'Validate auth, project link, and API connectivity',
   },
   {
     category: 'Setup',
-    command: 'saasmaker login && saasmaker init',
+    command: 'fnd login && fnd init',
     description: 'Authenticate and link current directory to a project',
   },
   {
     category: 'Projects',
-    command: 'saasmaker projects list --output table',
+    command: 'fnd projects list --output table',
     description: 'List your projects in table format',
   },
   {
     category: 'Status',
-    command: 'saasmaker status --output json --raw',
+    command: 'fnd status --output json --raw',
     description: 'Machine-readable project feature status',
   },
   {
     category: 'Projects',
-    command: 'saasmaker api GET /v1/projects --auth session',
+    command: 'fnd api GET /v1/projects --auth session',
     description: 'List projects via session auth',
   },
   {
     category: 'Feedback',
-    command: 'saasmaker api GET /v1/feedback --auth project --query type=feature --output table',
+    command: 'fnd api GET /v1/feedback --auth project --query type=feature --output table',
     description: 'List feature feedback using project key',
   },
   {
     category: 'Feedback',
-    command: 'saasmaker api POST /v1/feedback --auth project --body \'{"title":"Bug","description":"Broken CTA","submitter_email":"me@example.com","type":"bug"}\'',
+    command: 'fnd api POST /v1/feedback --auth project --body \'{"title":"Bug","description":"Broken CTA","submitter_email":"me@example.com","type":"bug"}\'',
     description: 'Create a feedback item',
   },
   {
     category: 'Roadmap',
-    command: 'saasmaker api GET /v1/roadmap/by-project/<slug> --auth project --output table',
+    command: 'fnd api GET /v1/roadmap/by-project/<slug> --auth project --output table',
     description: 'List public roadmap items for a project',
   },
   {
     category: 'Testimonials',
-    command: 'saasmaker api GET /v1/testimonials --auth project --output table',
+    command: 'fnd api GET /v1/testimonials --auth project --output table',
     description: 'List approved testimonials for the linked project',
   },
   {
     category: 'Raw API',
-    command: 'saasmaker api GET /v1/projects --auth session',
+    command: 'fnd api GET /v1/projects --auth session',
     description: 'Call any endpoint directly',
   },
 ];

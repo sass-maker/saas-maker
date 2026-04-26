@@ -38,7 +38,7 @@ function resolveProjectId(option?: string): string | null {
 
 export async function changelogListCommand(options: ChangelogListOptions = {}): Promise<void> {
   const projectId = resolveProjectId(options.project);
-  if (!projectId) { log.error('No project ID. Pass --project <id> or run `saasmaker init`.'); process.exitCode = 1; return; }
+  if (!projectId) { log.error('No project ID. Pass --project <id> or run `fnd init`.'); process.exitCode = 1; return; }
 
   const spinner = options.quiet ? null : ora('Loading changelog...').start();
   try {
@@ -57,7 +57,7 @@ export async function changelogListCommand(options: ChangelogListOptions = {}): 
 
 export async function changelogCreateCommand(options: ChangelogCreateOptions = {}): Promise<void> {
   const projectId = resolveProjectId(options.project);
-  if (!projectId) { log.error('No project ID. Pass --project <id> or run `saasmaker init`.'); process.exitCode = 1; return; }
+  if (!projectId) { log.error('No project ID. Pass --project <id> or run `fnd init`.'); process.exitCode = 1; return; }
 
   const rl = createInterface({ input: process.stdin, output: process.stdout });
   try {
@@ -88,7 +88,7 @@ export async function changelogCreateCommand(options: ChangelogCreateOptions = {
 
 export async function changelogUpdateCommand(id: string, options: ChangelogUpdateOptions = {}): Promise<void> {
   const projectId = resolveProjectId(options.project);
-  if (!projectId) { log.error('No project ID. Pass --project <id> or run `saasmaker init`.'); process.exitCode = 1; return; }
+  if (!projectId) { log.error('No project ID. Pass --project <id> or run `fnd init`.'); process.exitCode = 1; return; }
 
   const body: Record<string, string> = {};
   if (options.title) body.title = options.title;
@@ -117,7 +117,7 @@ export async function changelogAutoCreateCommand(options: {
   project?: string;
 } = {}): Promise<void> {
   const projectId = resolveProjectId(options.project);
-  if (!projectId) { log.error('No project ID. Pass --project <id> or run `saasmaker init`.'); process.exitCode = 1; return; }
+  if (!projectId) { log.error('No project ID. Pass --project <id> or run `fnd init`.'); process.exitCode = 1; return; }
 
   const { execSync } = await import('node:child_process');
   const lastCommit = execSync('git log -1 --format="%s"', { cwd: process.cwd() }).toString().trim();
@@ -148,7 +148,7 @@ export async function changelogAutoCreateCommand(options: {
 
 export async function changelogDeleteCommand(id: string, options: { project?: string } = {}): Promise<void> {
   const projectId = resolveProjectId(options.project);
-  if (!projectId) { log.error('No project ID. Pass --project <id> or run `saasmaker init`.'); process.exitCode = 1; return; }
+  if (!projectId) { log.error('No project ID. Pass --project <id> or run `fnd init`.'); process.exitCode = 1; return; }
 
   const spinner = ora('Deleting changelog entry...').start();
   try {

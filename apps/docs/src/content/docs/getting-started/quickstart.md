@@ -12,7 +12,7 @@ npm install -g @foundry/cli
 ## 2. Log in
 
 ```bash
-saasmaker login
+fnd login
 ```
 
 Opens your browser for Google OAuth. Your session token is saved to `~/.saasmaker/config.json`.
@@ -20,7 +20,7 @@ Opens your browser for Google OAuth. Your session token is saved to `~/.saasmake
 ## 3. Create a project
 
 ```bash
-saasmaker projects create
+fnd projects create
 ```
 
 Follow the prompt to name your project. This generates a unique API key (starts with `pk_`).
@@ -29,7 +29,7 @@ Follow the prompt to name your project. This generates a unique API key (starts 
 
 ```bash
 cd ~/my-app
-saasmaker init
+fnd init
 ```
 
 Select your project from the list. This creates a `.saasmaker.json` config in your project root.
@@ -37,8 +37,8 @@ Select your project from the list. This creates a `.saasmaker.json` config in yo
 ## 5. Check your setup
 
 ```bash
-saasmaker keys     # show your API key
-saasmaker status   # show project stats
+fnd keys     # show your API key
+fnd status   # show project stats
 ```
 
 ## 6. Integrate the SDK

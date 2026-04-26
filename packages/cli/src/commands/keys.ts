@@ -6,7 +6,7 @@ export function keysCommand(): void {
   const apiKey = getApiKey();
 
   if (!apiKey) {
-    log.error('Not logged in. Run `saasmaker login` first.');
+    log.error('Not logged in. Run `fnd login` first.');
     return;
   }
 

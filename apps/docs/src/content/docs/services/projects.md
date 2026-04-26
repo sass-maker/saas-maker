@@ -77,8 +77,8 @@ Rate-limited responses return `429 Too Many Requests` with headers:
 ## CLI
 
 ```bash
-saasmaker projects list
-saasmaker projects create --name "My App"
-saasmaker projects update --id <id> --name "New Name"
-saasmaker projects delete --id <id> --force
+fnd projects list
+fnd projects create --name "My App"
+fnd projects update --id <id> --name "New Name"
+fnd projects delete --id <id> --force
 ```

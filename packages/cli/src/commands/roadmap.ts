@@ -38,7 +38,7 @@ function resolveProjectId(option?: string): string | null {
 
 export async function roadmapListCommand(options: RoadmapListOptions = {}): Promise<void> {
   const projectId = resolveProjectId(options.project);
-  if (!projectId) { log.error('No project ID. Pass --project <id> or run `saasmaker init`.'); process.exitCode = 1; return; }
+  if (!projectId) { log.error('No project ID. Pass --project <id> or run `fnd init`.'); process.exitCode = 1; return; }
 
   const spinner = options.quiet ? null : ora('Loading roadmap...').start();
   try {
@@ -57,7 +57,7 @@ export async function roadmapListCommand(options: RoadmapListOptions = {}): Prom
 
 export async function roadmapCreateCommand(options: RoadmapCreateOptions = {}): Promise<void> {
   const projectId = resolveProjectId(options.project);
-  if (!projectId) { log.error('No project ID. Pass --project <id> or run `saasmaker init`.'); process.exitCode = 1; return; }
+  if (!projectId) { log.error('No project ID. Pass --project <id> or run `fnd init`.'); process.exitCode = 1; return; }
 
   const rl = createInterface({ input: process.stdin, output: process.stdout });
   try {
@@ -88,7 +88,7 @@ export async function roadmapCreateCommand(options: RoadmapCreateOptions = {}): 
 
 export async function roadmapUpdateCommand(id: string, options: RoadmapUpdateOptions = {}): Promise<void> {
   const projectId = resolveProjectId(options.project);
-  if (!projectId) { log.error('No project ID. Pass --project <id> or run `saasmaker init`.'); process.exitCode = 1; return; }
+  if (!projectId) { log.error('No project ID. Pass --project <id> or run `fnd init`.'); process.exitCode = 1; return; }
 
   const body: Record<string, string> = {};
   if (options.title) body.title = options.title;
@@ -111,7 +111,7 @@ export async function roadmapUpdateCommand(id: string, options: RoadmapUpdateOpt
 
 export async function roadmapDeleteCommand(id: string, options: { project?: string } = {}): Promise<void> {
   const projectId = resolveProjectId(options.project);
-  if (!projectId) { log.error('No project ID. Pass --project <id> or run `saasmaker init`.'); process.exitCode = 1; return; }
+  if (!projectId) { log.error('No project ID. Pass --project <id> or run `fnd init`.'); process.exitCode = 1; return; }
 
   const spinner = ora('Deleting roadmap item...').start();
   try {

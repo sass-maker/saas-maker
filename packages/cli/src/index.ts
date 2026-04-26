@@ -23,8 +23,7 @@ import { examplesCommand } from './commands/examples.js';
 const program = new Command();
 
 program
-  .name('foundry')
-  .alias('fnd')
+  .name('fnd')
   .description('Foundry CLI — manage your project fleet and standards')
   .version('1.0.0');
 

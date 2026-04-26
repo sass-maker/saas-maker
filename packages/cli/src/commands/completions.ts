@@ -22,8 +22,8 @@ function detectShell(): string {
 
 function bashCompletionScript(): string {
   const root = ROOT_COMMANDS.join(' ');
-  return `# saasmaker bash completion
-_saasmaker_complete() {
+  return `# fnd bash completion
+_fnd_complete() {
   local cur prev cmd
   cur="\${COMP_WORDS[COMP_CWORD]}"
   prev="\${COMP_WORDS[COMP_CWORD-1]}"
@@ -44,13 +44,13 @@ _saasmaker_complete() {
       ;;
   esac
 }
-complete -F _saasmaker_complete saasmaker
+complete -F _fnd_complete fnd
 `;
 }
 
 function zshCompletionScript(): string {
-  return `#compdef saasmaker
-_saasmaker_complete() {
+  return `#compdef fnd
+_fnd_complete() {
   local -a commands
   commands=(
     "login"
@@ -76,15 +76,15 @@ _saasmaker_complete() {
     api) _values 'methods' GET POST PUT PATCH DELETE ;;
   esac
 }
-compdef _saasmaker_complete saasmaker
+compdef _fnd_complete fnd
 `;
 }
 
 function fishCompletionScript(): string {
-  return `# saasmaker fish completion
-complete -c saasmaker -f -a "login whoami keys projects init status doctor completions examples api help"
-complete -c saasmaker -n "__fish_seen_subcommand_from projects" -a "list create"
-complete -c saasmaker -n "__fish_seen_subcommand_from api" -a "GET POST PUT PATCH DELETE"
+  return `# fnd fish completion
+complete -c fnd -f -a "login whoami keys projects init status doctor completions examples api help"
+complete -c fnd -n "__fish_seen_subcommand_from projects" -a "list create"
+complete -c fnd -n "__fish_seen_subcommand_from api" -a "GET POST PUT PATCH DELETE"
 `;
 }
 

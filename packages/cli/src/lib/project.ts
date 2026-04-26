@@ -15,11 +15,11 @@ interface ProjectRecord {
 export function requireLinkedProjectKey(): string {
   const local = getLocalConfig();
   if (!local) {
-    throw new Error('No project linked. Run `saasmaker init` first.');
+    throw new Error('No project linked. Run `fnd init` first.');
   }
   const key = getLocalProjectKey(local);
   if (!key) {
-    throw new Error('No project key found in .saasmaker.json. Run `saasmaker init` again.');
+    throw new Error('No project key found in .saasmaker.json. Run `fnd init` again.');
   }
   return key;
 }
@@ -27,7 +27,7 @@ export function requireLinkedProjectKey(): string {
 export async function requireLinkedProjectId(): Promise<string> {
   const local = getLocalConfig();
   if (!local) {
-    throw new Error('No project linked. Run `saasmaker init` first.');
+    throw new Error('No project linked. Run `fnd init` first.');
   }
 
   const localProjectId = getLocalProjectId(local);

@@ -7,7 +7,7 @@ export function whoamiCommand(): void {
   const base = getApiBase();
 
   if (!apiKey) {
-    log.error('Not logged in. Run `saasmaker login` first.');
+    log.error('Not logged in. Run `fnd login` first.');
     return;
   }
 
@@ -22,6 +22,6 @@ export function whoamiCommand(): void {
     if (projectKey) log.dim(`  Project Key: ${projectKey.slice(0, 8)}...${projectKey.slice(-4)}`);
     log.dim(`  Project Slug: ${local.slug}`);
   } else {
-    log.dim('  No project linked. Run `saasmaker init` in a project directory.');
+    log.dim('  No project linked. Run `fnd init` in a project directory.');
   }
 }

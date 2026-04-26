@@ -52,7 +52,7 @@ const { count } = await client.waitlist.getCount();
 ## CLI
 
 ```bash
-saasmaker waitlist list
-saasmaker waitlist count
-saasmaker waitlist delete <id>
+fnd waitlist list
+fnd waitlist count
+fnd waitlist delete <id>
 ```

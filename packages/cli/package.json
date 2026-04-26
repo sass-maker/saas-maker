@@ -9,7 +9,6 @@
   ],
   "type": "module",
   "bin": {
-    "foundry": "./dist/index.js",
     "fnd": "./dist/index.js"
   },
   "scripts": {

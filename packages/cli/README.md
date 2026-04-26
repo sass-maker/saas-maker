@@ -2,7 +2,7 @@
 
 API-first CLI for Foundry.
 
-The CLI is intentionally minimal: a few core utility commands plus a universal `saasmaker api` executor so new backend features do not require new CLI code.
+The CLI is intentionally minimal: a few core utility commands plus a universal `fnd api` executor so new backend features do not require new CLI code.
 
 ## Install
 
@@ -15,32 +15,32 @@ npx @saas-maker/cli
 ## Quick Start
 
 ```bash
-saasmaker login
-saasmaker init
-saasmaker doctor
+fnd login
+fnd init
+fnd doctor
 ```
 
 ## Core Commands
 
-- `saasmaker login` — browser OAuth login
-- `saasmaker init` — link current directory to a project
-- `saasmaker whoami` — show token + linked project context
-- `saasmaker keys` — show session token + linked project key
-- `saasmaker projects list|create` — project management
-- `saasmaker fleet list|run|search|audit|fix|provision|apply|supervise|clean|secrets-sync|upgrade|versions` — fleet automation
-- `saasmaker forge` — scaffold a new Foundry-compliant project
-- `saasmaker feedback|roadmap|changelog|testimonials|waitlist` — block management
-- `saasmaker analytics dashboard|setup|forge-dashboard|detail` — analytics block
-- `saasmaker status` — feature health/count snapshot
-- `saasmaker audit` (alias `doctor`) — Foundry compliance check
-- `saasmaker examples` — copy-paste command recipes
-- `saasmaker completions [bash|zsh|fish]` — shell completion script
-- `saasmaker api <method> <path>` — universal API access
+- `fnd login` — browser OAuth login
+- `fnd init` — link current directory to a project
+- `fnd whoami` — show token + linked project context
+- `fnd keys` — show session token + linked project key
+- `fnd projects list|create` — project management
+- `fnd fleet list|run|search|audit|fix|provision|apply|supervise|clean|secrets-sync|upgrade|versions` — fleet automation
+- `fnd forge` — scaffold a new Foundry-compliant project
+- `fnd feedback|roadmap|changelog|testimonials|waitlist` — block management
+- `fnd analytics dashboard|setup|forge-dashboard|detail` — analytics block
+- `fnd status` — feature health/count snapshot
+- `fnd audit` (alias `doctor`) — Foundry compliance check
+- `fnd examples` — copy-paste command recipes
+- `fnd completions [bash|zsh|fish]` — shell completion script
+- `fnd api <method> <path>` — universal API access
 
 ## Universal API Command
 
 ```bash
-saasmaker api <method> <path> [options]
+fnd api <method> <path> [options]
 ```
 
 ### Auth Modes
@@ -67,7 +67,7 @@ saasmaker api <method> <path> [options]
 
 ## OpenAPI Enforcement
 
-`saasmaker api` validates method/path against OpenAPI by default.
+`fnd api` validates method/path against OpenAPI by default.
 
 - Bypass for experimental routes: `--no-validate`
 - Spec source used by CLI: `packages/cli/src/openapi.json`
@@ -84,27 +84,27 @@ This also updates `docs/openapi/openapi.json`.
 
 ```bash
 # Health
-saasmaker api GET /health --auth none
+fnd api GET /health --auth none
 
 # Session-auth route: projects
-saasmaker api GET /v1/projects --auth session --output table
+fnd api GET /v1/projects --auth session --output table
 
 # Project-auth route: list feedback
-saasmaker api GET /v1/feedback --auth project --query type=feature --output table
+fnd api GET /v1/feedback --auth project --query type=feature --output table
 
 # Create feedback
-saasmaker api POST /v1/feedback --auth project \
+fnd api POST /v1/feedback --auth project \
   --body '{"title":"Bug","description":"Broken CTA","submitter_email":"me@example.com","type":"bug"}'
 
 # Public roadmap items by project slug
-saasmaker api GET /v1/roadmap/by-project/<slug> --auth project --output table
+fnd api GET /v1/roadmap/by-project/<slug> --auth project --output table
 
 # Vote on a roadmap item (public, rate-limited)
-saasmaker api POST /v1/roadmap/public/<slug>/<itemId>/vote --auth none \
+fnd api POST /v1/roadmap/public/<slug>/<itemId>/vote --auth none \
   --body '{"user_identifier":"voter@example.com"}'
 
 # Approve testimonial (session route)
-saasmaker api PATCH /v1/testimonials/<testimonialId> --auth session \
+fnd api PATCH /v1/testimonials/<testimonialId> --auth session \
   --query project_id=<projectId> --body '{"status":"approved"}'
 ```
 

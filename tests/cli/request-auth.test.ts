@@ -51,21 +51,21 @@ describe('requestApi auth modes', () => {
 
   it('throws in session mode without token', async () => {
     await expect(requestApi({ path: '/v1/projects', auth: 'session' })).rejects.toThrow(
-      'No session token found. Run `saasmaker login` first.'
+      'No session token found. Run `fnd login` first.'
     );
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it('throws in project mode without project key', async () => {
     await expect(requestApi({ path: '/v1/feedback', auth: 'project' })).rejects.toThrow(
-      'No project key found. Run `saasmaker init` first or pass --project-key.'
+      'No project key found. Run `fnd init` first or pass --project-key.'
     );
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it('throws in auto mode when no auth context exists', async () => {
     await expect(requestApi({ path: '/v1/projects', auth: 'auto' })).rejects.toThrow(
-      'No auth context found. Run `saasmaker login` and/or `saasmaker init`.'
+      'No auth context found. Run `fnd login` and/or `fnd init`.'
     );
     expect(fetchMock).not.toHaveBeenCalled();
   });
