@@ -130,7 +130,7 @@ git commit -m "feat: scaffold waitlist-widget package"
 Follow the exact pattern from `packages/feedback-widget/src/api.ts`:
 
 ```typescript
-const DEFAULT_API_BASE = 'https://api.saasmaker.dev';
+const DEFAULT_API_BASE = 'https://api.sassmaker.com';
 
 export function createApiClient(projectId: string, apiBaseUrl?: string) {
   const base = (apiBaseUrl || DEFAULT_API_BASE).replace(/\/$/, '');
@@ -604,7 +604,7 @@ export function getApiKey(): string | null {
 }
 
 export function getApiBase(): string {
-  return getGlobalConfig().apiBaseUrl ?? process.env.SAASMAKER_API_URL ?? 'https://api.saasmaker.dev';
+  return getGlobalConfig().apiBaseUrl ?? process.env.SAASMAKER_API_URL ?? 'https://api.sassmaker.com';
 }
 
 export function hasLocalConfig(): boolean {
@@ -1173,7 +1173,7 @@ This renders a floating button that opens a feedback modal.
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `projectId` | `string` | **required** | Your project API key (`pk_...`) |
-| `apiBaseUrl` | `string` | `https://api.saasmaker.dev` | API base URL |
+| `apiBaseUrl` | `string` | `https://api.sassmaker.com` | API base URL |
 | `userEmail` | `string` | — | Pre-fill submitter email |
 | `userName` | `string` | — | Pre-fill submitter name |
 | `types` | `FeedbackType[]` | `['bug', 'feature', 'feedback']` | Allowed feedback types |
@@ -1287,7 +1287,7 @@ Set attributes on the script tag:
 | Attribute | Default | Description |
 |-----------|---------|-------------|
 | `data-project` | **required** | Your project API key |
-| `data-api` | `https://api.saasmaker.dev` | API base URL |
+| `data-api` | `https://api.sassmaker.com` | API base URL |
 
 ## What gets tracked
 
@@ -1348,7 +1348,7 @@ function App() {
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `projectId` | `string` | **required** | Your project API key (`pk_...`) |
-| `apiBaseUrl` | `string` | `https://api.saasmaker.dev` | API base URL |
+| `apiBaseUrl` | `string` | `https://api.sassmaker.com` | API base URL |
 | `theme` | `'light' \| 'dark' \| 'auto'` | `'auto'` | Color theme |
 | `accentColor` | `string` | `#1464ff` | Primary accent color |
 | `showCount` | `boolean` | `true` | Show "N already signed up" |
@@ -1452,7 +1452,7 @@ Displays the API key for the current project.
 ```json
 {
   "apiKey": "pk_...",
-  "apiBaseUrl": "https://api.saasmaker.dev"
+  "apiBaseUrl": "https://api.sassmaker.com"
 }
 ```
 

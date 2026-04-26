@@ -3,7 +3,7 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 
 export default defineConfig({
-	site: 'https://docs.foundry.dev',
+	site: 'https://docs.sassmaker.com',
 	integrations: [
 		starlight({
 			title: 'Foundry Manual',
@@ -25,20 +25,20 @@ export default defineConfig({
 				{
 					label: 'The Blocks',
 					items: [
-						{ label: 'Analytics block', slug: 'services/analytics' },
-						{ label: 'Feedback block', slug: 'services/feedback' },
-						{ label: 'Roadmap block', slug: 'services/roadmap' },
-						{ label: 'Testimonials block', slug: 'services/testimonials' },
-						{ label: 'Changelog block', slug: 'services/changelog' },
-						{ label: 'Waitlist block', slug: 'services/waitlist' },
-						{ label: 'Projects block', slug: 'services/projects' },
+						{ label: 'Integration Overview', slug: 'getting-started/integration' },
+						{ label: 'Analytics', slug: 'services/analytics' },
+						{ label: 'Feedback', slug: 'services/feedback' },
+						{ label: 'Roadmap', slug: 'services/roadmap' },
+						{ label: 'Testimonials', slug: 'services/testimonials' },
+						{ label: 'Changelog', slug: 'services/changelog' },
+						{ label: 'Waitlist', slug: 'services/waitlist' },
 						{ label: 'JavaScript SDK', slug: 'sdk/javascript' },
 					],
 				},
 				{
 					label: 'The Widgets',
 					items: [
-						{ label: 'Feedback & Roadmap', slug: 'widgets/feedback' },
+						{ label: 'Feedback Widget', slug: 'widgets/feedback' },
 						{ label: 'Testimonials Wall', slug: 'widgets/testimonials' },
 						{ label: 'Changelog Timeline', slug: 'widgets/changelog' },
 						{ label: 'Waitlist Form', slug: 'widgets/waitlist' },
@@ -49,7 +49,7 @@ export default defineConfig({
 				{
 					label: 'Fleet Management',
 					items: [
-						{ label: 'The Cockpit', slug: 'services/projects' },
+						{ label: 'Cockpit Dashboard', slug: 'services/projects' },
 						{ label: 'Fleet Audit & Fix', slug: 'sdk/cli' },
 						{ label: 'Forge Scaffolding', slug: 'sdk/cli' },
 					],

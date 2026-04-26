@@ -1004,7 +1004,7 @@ upload.post('/', requireApiKey, async (c) => {
 
   // R2 public URL depends on your custom domain or R2 public access config
   // For now return the key; the dashboard/widget will construct the full URL
-  const imageUrl = `https://images.saasmaker.dev/${key}`;
+  const imageUrl = `https://images.sassmaker.com/${key}`;
 
   return c.json({ url: imageUrl }, 201);
 });
@@ -1463,7 +1463,7 @@ git add -A && git commit -m "feat: add project settings page"
 `packages/feedback-widget/src/api.ts`:
 
 ```typescript
-const DEFAULT_API_BASE = 'https://api.saasmaker.dev';
+const DEFAULT_API_BASE = 'https://api.sassmaker.com';
 
 export function createApiClient(projectId: string, apiBaseUrl?: string) {
   const base = apiBaseUrl || DEFAULT_API_BASE;

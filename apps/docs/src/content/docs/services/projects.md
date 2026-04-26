@@ -28,7 +28,7 @@ curl -X PUT https://api.sassmaker.com/v1/projects/readme \
 ### SDK Usage
 
 ```typescript
-import { SaaSMakerClient } from '@foundry/sdk';
+import { SaaSMakerClient } from '@saas-maker/sdk';
 
 const client = new SaaSMakerClient({ apiKey: 'pk_your_api_key' });
 

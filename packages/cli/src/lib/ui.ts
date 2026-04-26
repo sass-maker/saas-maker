@@ -1,11 +1,20 @@
 import chalk from 'chalk';
 
+let isVerbose = true;
+
+export function setVerbose(v: boolean) {
+  isVerbose = v;
+}
+
 export const log = {
   success: (msg: string) => console.log(chalk.green('✓'), msg),
   error: (msg: string) => console.error(chalk.red('✗'), msg),
   warn: (msg: string) => console.warn(chalk.yellow('⚠'), msg),
   info: (msg: string) => console.log(chalk.blue('ℹ'), msg),
   dim: (msg: string) => console.log(chalk.dim(msg)),
+  debug: (msg: string) => {
+    if (isVerbose) console.log(chalk.gray('debug:'), msg);
+  },
 };
 
 export function table(rows: string[][]): void {

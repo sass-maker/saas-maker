@@ -1,4 +1,4 @@
-const DEFAULT_API_BASE = 'https://api.saasmaker.dev';
+const DEFAULT_API_BASE = 'https://api.sassmaker.com';
 
 export function createApiClient(projectId: string, apiBaseUrl?: string) {
   const base = (apiBaseUrl || DEFAULT_API_BASE).replace(/\/$/, '');

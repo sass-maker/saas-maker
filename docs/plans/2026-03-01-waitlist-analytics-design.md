@@ -126,7 +126,7 @@ All session auth. Accept `?period=7d|30d|90d` (default 30d) and `?project_id=xxx
 Target: ~4kb minified. Single script tag setup:
 
 ```html
-<script defer src="https://cdn.saasmaker.dev/a.js" data-project="pk_xxx"></script>
+<script defer src="https://cdn.sassmaker.com/a.js" data-project="pk_xxx"></script>
 ```
 
 Optional custom events:

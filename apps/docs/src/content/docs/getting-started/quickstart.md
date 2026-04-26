@@ -6,7 +6,7 @@ description: Get up and running with Foundry in under 5 minutes.
 ## 1. Install the CLI
 
 ```bash
-npm install -g @foundry/cli
+npm install -g @saas-maker/cli
 ```
 
 ## 2. Log in
@@ -44,11 +44,11 @@ fnd status   # show project stats
 ## 6. Integrate the SDK
 
 ```bash
-npm install @foundry/sdk
+npm install @saas-maker/sdk
 ```
 
 ```typescript
-import { SaaSMakerClient } from '@foundry/sdk';
+import { SaaSMakerClient } from '@saas-maker/sdk';
 
 const client = new SaaSMakerClient({
   apiKey: 'pk_your_api_key',

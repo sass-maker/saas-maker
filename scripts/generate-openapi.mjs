@@ -117,7 +117,7 @@ function main() {
       'x-generator': 'scripts/generate-openapi.mjs',
     },
     servers: [
-      { url: 'https://api.saasmaker.dev' },
+      { url: 'https://api.sassmaker.com' },
     ],
     paths,
   };

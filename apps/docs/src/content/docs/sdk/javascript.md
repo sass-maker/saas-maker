@@ -8,13 +8,13 @@ The JavaScript SDK provides a typed client for all Foundry API endpoints.
 ## Installation
 
 ```bash
-npm install @foundry/sdk
+npm install @saas-maker/sdk
 ```
 
 ## Setup
 
 ```typescript
-import { SaaSMakerClient } from '@foundry/sdk';
+import { SaaSMakerClient } from '@saas-maker/sdk';
 
 const client = new SaaSMakerClient({
   apiKey: 'pk_your_api_key',

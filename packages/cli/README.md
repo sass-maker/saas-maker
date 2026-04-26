@@ -115,7 +115,7 @@ fnd api PATCH /v1/testimonials/<testimonialId> --auth session \
 ```json
 {
   "apiKey": "sm_...",
-  "apiBaseUrl": "https://api.saasmaker.dev"
+  "apiBaseUrl": "https://api.sassmaker.com"
 }
 ```
 

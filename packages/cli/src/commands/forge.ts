@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import ora from 'ora';
 import { getResponseError, requestApi } from '../lib/request.js';
 import { log } from '../lib/ui.js';
-import { scaffoldRenovate } from '../lib/forge.js';
+import { scaffoldRenovate, scaffoldCI, scaffoldHusky } from '../lib/forge.js';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
@@ -36,9 +36,22 @@ function copyRecursive(src: string, dest: string, vars: Record<string, string>) 
 }
 
 export async function forgeCommand(options: ForgeOptions = {}): Promise<void> {
+  // Early check for session token
+  try {
+    const token = await requestApi({ path: '/v1/auth/whoami', auth: 'session' });
+    if (!token.ok) {
+      log.error('Not logged in. Please run `fnd login` first.');
+      return;
+    }
+  } catch (e) {
+    log.error('Authentication check failed. Please ensure you are logged in.');
+    return;
+  }
+
   const rl = createInterface({ input: process.stdin, output: process.stdout });
 
   try {
+    log.info('Preparing to forge project...');
     const inputName = options.name ?? await rl.question('Project name: ');
     const name = inputName.trim();
     if (!name) {
@@ -51,6 +64,7 @@ export async function forgeCommand(options: ForgeOptions = {}): Promise<void> {
 
     // 1. Create in Cockpit
     const spinner = ora('Creating project in cockpit...').start();
+    log.debug('Requesting project creation...');
     const res = await requestApi<Project>({
       path: '/v1/projects',
       method: 'POST',
@@ -71,23 +85,35 @@ export async function forgeCommand(options: ForgeOptions = {}): Promise<void> {
     const templateDir = resolve(__dirname, '../../templates', type);
 
     spinner.start(`Forging ${type} project at ./${project.slug}...`);
+    log.debug(`Template dir: ${templateDir}`);
+    log.debug(`Target dir: ${targetDir}`);
     
     mkdirSync(targetDir, { recursive: true });
     
     // Copy template files
+    log.debug('Copying files...');
     copyRecursive(templateDir, targetDir, { name: project.slug });
     
     // Create foundry.json
+    log.debug('Writing foundry.json...');
     writeFileSync(join(targetDir, 'foundry.json'), JSON.stringify({
       slug: project.slug,
       projectId: project.id,
       projectKey: project.api_key
     }, null, 2));
 
+    log.debug('Scaffolding renovate...');
     scaffoldRenovate(targetDir);
+
+    log.debug('Scaffolding CI...');
+    scaffoldCI(targetDir);
+
+    log.debug('Scaffolding Husky...');
+    scaffoldHusky(targetDir);
 
     // 3. Register in Global Manifest
     try {
+      log.debug('Updating global manifest...');
       const manifestPath = resolve(__dirname, '../../../../foundry.projects.json');
       if (existsSync(manifestPath)) {
         const manifest = JSON.parse(readFileSync(manifestPath, 'utf-8'));

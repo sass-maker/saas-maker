@@ -870,7 +870,7 @@ export default defineConfig({
 
 ```typescript
 // @saas-maker/analytics-sdk — ~4kb tracking script
-// Usage: <script defer src="https://cdn.saasmaker.dev/a.js" data-project="pk_xxx"></script>
+// Usage: <script defer src="https://cdn.sassmaker.com/a.js" data-project="pk_xxx"></script>
 
 (function () {
   const API_PATH = '/v1/analytics/events';
@@ -883,7 +883,7 @@ export default defineConfig({
   const projectKey = scriptEl.getAttribute('data-project');
   if (!projectKey) return;
 
-  const apiBase = scriptEl.getAttribute('data-api') || 'https://api.saasmaker.dev';
+  const apiBase = scriptEl.getAttribute('data-api') || 'https://api.sassmaker.com';
 
   // Respect Do Not Track
   if (navigator.doNotTrack === '1') return;

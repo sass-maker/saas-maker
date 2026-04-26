@@ -21,15 +21,17 @@ workers/api/            # Hono CF Worker — core API
     routes/             # Route handlers by feature
     middleware/         # Auth + rate-limit
 apps/
-  web/                  # Next.js cockpit (app.sassmaker.com)
+  cockpit/              # Next.js cockpit (app.sassmaker.com)
   docs/                 # Astro docs site
+  showcase/             # Landing page + showcase
 packages/
   cli/                  # @saas-maker/cli — validates commands against OpenAPI
     src/openapi.json    # CLI enforcement source (auto-generated — do not edit manually)
     README.md           # CLI docs
   sdk/                  # @saas-maker/sdk — client library
-  ai/                   # @saas-maker/ai — AI helpers
-  badge-widget/         # Embeddable widgets
+  blocks/               # Headless backend logic (ops, db, etc.)
+  widgets/              # Embeddable widgets (badge, feedback, etc.)
+  tooling/              # Shared configurations (eslint, tsconfig)
 tests/
   api/                  # Vitest unit tests (mock DB)
     helpers.ts          # request() helper for Hono app

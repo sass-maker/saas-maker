@@ -27,7 +27,7 @@ function App() {
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `projectId` | `string` | **required** | Your project API key (`pk_...`) |
-| `apiBaseUrl` | `string` | `https://api.saasmaker.dev` | API base URL |
+| `apiBaseUrl` | `string` | `https://api.sassmaker.com` | API base URL |
 | `theme` | `'light' \| 'dark' \| 'auto'` | `'auto'` | Color theme |
 | `accentColor` | `string` | `#1464ff` | Primary accent color |
 | `showCount` | `boolean` | `true` | Show "N already signed up" |

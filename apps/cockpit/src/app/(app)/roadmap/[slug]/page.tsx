@@ -69,13 +69,14 @@ export default async function PublicRoadmapPage({ params }: Props) {
         <div className="mx-auto max-w-5xl px-6 flex items-center justify-center gap-1 text-xs text-neutral-600">
           <span>Powered by</span>
           <a
-            href="https://saasmaker.dev"
+            href="https://sassmaker.com"
             target="_blank"
             rel="noopener noreferrer"
             className="text-neutral-500 hover:text-neutral-300 transition-colors font-medium"
           >
             SAAS Maker
           </a>
+
         </div>
       </footer>
     </div>

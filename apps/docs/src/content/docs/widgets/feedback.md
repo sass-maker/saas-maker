@@ -8,13 +8,13 @@ Drop-in React component that adds a floating feedback button to your app. Users 
 ## Installation
 
 ```bash
-npm install @foundry/feedback-widget
+npm install @saas-maker/feedback
 ```
 
 ## Usage
 
 ```tsx
-import { FeedbackWidget } from '@foundry/feedback-widget';
+import { FeedbackWidget } from '@saas-maker/feedback';
 
 function App() {
   return (

@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     template: "%s | Foundry",
   },
   description: "Monitor and manage your project fleet — AI, analytics, changelog, testimonials, roadmap and more.",
-  metadataBase: new URL("https://app.saasmaker.dev"),
+  metadataBase: new URL("https://app.sassmaker.com"),
   robots: { index: false, follow: false },
 };
 

@@ -27,7 +27,7 @@ Props (add `WaitlistFormProps` to shared-types):
 ```typescript
 export interface WaitlistFormProps {
   projectId: string;
-  apiBaseUrl?: string;       // default: https://api.saasmaker.dev
+  apiBaseUrl?: string;       // default: https://api.sassmaker.com
   theme?: 'light' | 'dark' | 'auto';  // default: auto
   accentColor?: string;      // default: #1464ff
   showCount?: boolean;       // default: true — show "N people signed up"
@@ -106,7 +106,7 @@ saasmaker keys                  # Show API key for current project
 
 ### API Base
 
-- Default: `https://api.saasmaker.dev`
+- Default: `https://api.sassmaker.com`
 - Override: `SAASMAKER_API_URL` env var or `apiBaseUrl` in config
 
 ### Build

@@ -8,7 +8,7 @@ Drop-in React component that renders a complete analytics dashboard — page vie
 ## Installation
 
 ```bash
-npm install @foundry/analytics-ui
+npm install @saas-maker/analytics-ui
 ```
 
 Peer dependencies: `react` and `react-dom` (v18+).
@@ -16,7 +16,7 @@ Peer dependencies: `react` and `react-dom` (v18+).
 ## Usage
 
 ```tsx
-import { AnalyticsDashboard } from '@foundry/analytics-ui';
+import { AnalyticsDashboard } from '@saas-maker/analytics-ui';
 
 function App() {
   return <AnalyticsDashboard apiKey="pk_your_api_key" />;
@@ -62,7 +62,7 @@ The component uses React hooks (client-side only). In Next.js App Router, wrap i
 // analytics-dashboard.tsx
 'use client';
 
-import { AnalyticsDashboard } from '@foundry/analytics-ui';
+import { AnalyticsDashboard } from '@saas-maker/analytics-ui';
 
 export function AnalyticsDashboardWrapper({ apiKey }: { apiKey: string }) {
   return <AnalyticsDashboard apiKey={apiKey} />;
@@ -88,5 +88,5 @@ import type {
   Period,
   DashboardData,
   DashboardSummary,
-} from '@foundry/analytics-ui';
+} from '@saas-maker/analytics-ui';
 ```

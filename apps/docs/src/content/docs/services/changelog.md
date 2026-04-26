@@ -167,7 +167,7 @@ DELETE /v1/changelog/dashboard/:projectId/:id
 ## SDK Usage
 
 ```typescript
-import { SaaSMakerClient } from '@foundry/sdk';
+import { SaaSMakerClient } from '@saas-maker/sdk';
 
 const client = new SaaSMakerClient({ apiKey: 'pk_your_api_key' });
 

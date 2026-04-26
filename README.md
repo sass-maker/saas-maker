@@ -52,7 +52,7 @@ The brain of the factory.
    Connect your global agent harness (e.g. Claude Code) to the Foundry Factory.
    ```bash
    # Add this to your shell profile or .claude/hooks
-   source /Users/sarthakagrawal/Desktop/Fleet/saas-maker/scripts/foundry-agent-hook.sh
+   source ./scripts/foundry-agent-hook.sh
    ```
 
 4. **Audit the Fleet**:
@@ -68,8 +68,9 @@ The brain of the factory.
 *   `packages/blocks/`: Operational Layer logic.
 *   `packages/widgets/`: Modular UI blocks.
 *   `skills/`: Agentic Operational Protocols.
-*   `apps/cockpit/`: The Mission Control Dashboard.
-*   `apps/showcase/`: The Factory Manual.
+*   `apps/cockpit/`: The Mission Control Dashboard (Next.js).
+*   `apps/docs/`: The Factory Manual (Astro Starlight).
+*   `apps/showcase/`: The Production Landing Page & Widget Showcase (Next.js).
 
 ---
 

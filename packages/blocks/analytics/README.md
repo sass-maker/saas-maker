@@ -53,7 +53,7 @@ Set attributes on the script tag:
 | Attribute | Default | Description |
 |-----------|---------|-------------|
 | `data-project` | **required** | Your project API key |
-| `data-api` | `https://api.saasmaker.dev` | API base URL |
+| `data-api` | `https://api.sassmaker.com` | API base URL |
 
 ## What gets tracked
 

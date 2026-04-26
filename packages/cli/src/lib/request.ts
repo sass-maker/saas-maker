@@ -85,28 +85,45 @@ export async function requestApi<T = unknown>(options: RequestApiOptions): Promi
   };
   const body = resolveRequestBody(options, headers);
 
-  const res = await fetch(url, { method, headers, body });
-  const contentType = res.headers.get('content-type') ?? '';
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 30000);
 
-  if (contentType.includes('application/json')) {
-    const data = (await res.json().catch(() => undefined)) as T | undefined;
+  try {
+    const res = await fetch(url, {
+      method,
+      headers,
+      body,
+      signal: controller.signal
+    });
+    const contentType = res.headers.get('content-type') ?? '';
+
+    if (contentType.includes('application/json')) {
+      const data = (await res.json().catch(() => undefined)) as T | undefined;
+      return {
+        ok: res.ok,
+        status: res.status,
+        url,
+        data,
+        text: undefined,
+      };
+    }
+
+    const text = await res.text().catch(() => '');
     return {
       ok: res.ok,
       status: res.status,
       url,
-      data,
-      text: undefined,
+      data: undefined,
+      text: text || undefined,
     };
+  } catch (err) {
+    if (err instanceof Error && err.name === 'AbortError') {
+      throw new Error('API request timed out after 30 seconds');
+    }
+    throw err;
+  } finally {
+    clearTimeout(timeoutId);
   }
-
-  const text = await res.text().catch(() => '');
-  return {
-    ok: res.ok,
-    status: res.status,
-    url,
-    data: undefined,
-    text: text || undefined,
-  };
 }
 
 export function getResponseError(response: ApiResponse<unknown>): string {

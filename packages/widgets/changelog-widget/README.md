@@ -21,7 +21,7 @@ import { ChangelogTimeline } from '@saas-maker/changelog-widget'
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | projectId | string | required | Your project API key |
-| apiBaseUrl | string | https://api.saasmaker.dev | API base URL |
+| apiBaseUrl | string | https://api.sassmaker.com | API base URL |
 | theme | 'light' \| 'dark' \| 'auto' | 'auto' | Color theme |
 | maxItems | number | 50 | Max entries to display |
 

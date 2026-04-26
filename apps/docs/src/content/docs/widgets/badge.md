@@ -8,7 +8,7 @@ A small badge component that links back to SaasMaker. Drop it in your footer to 
 ## Installation
 
 ```bash
-npm install @foundry/badge
+npm install @saas-maker/badge
 ```
 
 Peer dependencies: `react` and `react-dom` (v18+).
@@ -16,7 +16,7 @@ Peer dependencies: `react` and `react-dom` (v18+).
 ## Usage
 
 ```tsx
-import { SaasMakerBadge } from '@foundry/badge';
+import { SaasMakerBadge } from '@saas-maker/badge';
 
 function Footer() {
   return <SaasMakerBadge variant="flat" theme="auto" />;
@@ -42,7 +42,7 @@ function Footer() {
 Use the `getBadgeHtml` helper to generate a standalone HTML snippet:
 
 ```typescript
-import { getBadgeHtml } from '@foundry/badge';
+import { getBadgeHtml } from '@saas-maker/badge';
 
 const html = getBadgeHtml({ variant: 'flat', theme: 'light' });
 // Returns an <a> tag with inline styles — paste into any HTML page
@@ -77,5 +77,5 @@ All styles are handled via CSS classes. The `auto` theme uses `prefers-color-sch
 The package exports all types:
 
 ```typescript
-import type { BadgeProps, BadgeVariant, BadgeTheme } from '@foundry/badge';
+import type { BadgeProps, BadgeVariant, BadgeTheme } from '@saas-maker/badge';
 ```

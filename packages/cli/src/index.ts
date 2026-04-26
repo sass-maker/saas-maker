@@ -21,13 +21,16 @@ import { apiCommand } from './commands/api.js';
 import { doctorCommand } from './commands/doctor.js';
 import { completionsCommand } from './commands/completions.js';
 import { examplesCommand } from './commands/examples.js';
+import { setVerbose } from './lib/ui.js';
 
 const program = new Command();
 
 program
   .name('fnd')
   .description('Foundry CLI — manage your project fleet and standards')
-  .version('1.0.0');
+  .version('1.0.0')
+  .option('-q, --quiet', 'Suppress debug logging', false)
+  .on('option:quiet', () => setVerbose(false));
 
 program.command('login').description('Login to the Foundry Cockpit').action(loginCommand);
 program.command('whoami').description('Show current auth status').action(whoamiCommand);

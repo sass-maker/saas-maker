@@ -29,7 +29,7 @@ This renders a floating button that opens a feedback modal.
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `projectId` | `string` | **required** | Your project API key (`pk_...`) |
-| `apiBaseUrl` | `string` | `https://api.saasmaker.dev` | API base URL |
+| `apiBaseUrl` | `string` | `https://api.sassmaker.com` | API base URL |
 | `userEmail` | `string` | — | Pre-fill submitter email |
 | `userName` | `string` | — | Pre-fill submitter name |
 | `types` | `FeedbackType[]` | `['bug', 'feature', 'feedback']` | Allowed feedback types |
