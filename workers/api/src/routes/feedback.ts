@@ -9,7 +9,7 @@ import {
   FeedbackRecord,
 } from '@saas-maker/shared-types';
 import { getDb } from '../db';
-import { email } from '@saas-maker/foundry-email';
+import { email } from '@saas-maker/email';
 import { trace, capture } from '@saas-maker/ops';
 
 const feedback = new Hono<{ Bindings: Bindings; Variables: Variables }>();

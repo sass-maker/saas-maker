@@ -1,8 +1,9 @@
 AUTH_SECRET=
 APP_BASE_URL=http://localhost:3000
 CORS_ORIGIN=http://localhost:3000
-DATABASE_URL=postgresql://root@localhost:26257/saasmaker
 RESEND_API_KEY=
-NOTIFICATION_FROM_EMAIL=noreply@saasmaker.dev
+NOTIFICATION_FROM_EMAIL=notifications@sassmaker.com
+POSTHOG_API_KEY=
+POSTHOG_HOST=https://us.i.posthog.com
 FREE_AI_BASE_URL=
 FREE_AI_API_KEY=

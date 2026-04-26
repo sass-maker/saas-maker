@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { HttpClient, SaaSMakerError } from '../../packages/sdk/src/http';
+import { HttpClient, SaaSMakerError } from '../../packages/blocks/sdk/src/http';
 
 const fetchMock = vi.fn();
 
@@ -43,9 +43,9 @@ describe('HttpClient auth modes', () => {
     );
 
     const http = new HttpClient('https://api.sassmaker.com', 'pk_test', 'sm_session_token');
-    await http.request('GET', '/v1/ai-mention/config/proj_123', undefined, { auth: 'session' });
+    await http.request('GET', '/v1/projects', undefined, { auth: 'session' });
 
-    expect(fetchMock).toHaveBeenCalledWith('https://api.sassmaker.com/v1/ai-mention/config/proj_123', {
+    expect(fetchMock).toHaveBeenCalledWith('https://api.sassmaker.com/v1/projects', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -59,7 +59,7 @@ describe('HttpClient auth modes', () => {
     const http = new HttpClient('https://api.sassmaker.com', 'pk_test');
 
     await expect(
-      http.request('GET', '/v1/ai-mention/config/proj_123', undefined, { auth: 'session' })
+      http.request('GET', '/v1/projects', undefined, { auth: 'session' })
     ).rejects.toMatchObject(
       new SaaSMakerError(
         'Session token is required for session-authenticated endpoints',

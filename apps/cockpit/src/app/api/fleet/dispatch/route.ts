@@ -3,8 +3,7 @@ import { auth } from "@/lib/auth";
 import { spawn } from "node:child_process";
 import path from "node:path";
 import fs from "node:fs";
-
-export const activeProcesses = new Map<string, any>();
+import { activeProcesses } from "@/lib/process-registry";
 
 export async function POST(req: Request) {
   const session = await auth.api.getSession({ headers: req.headers });

@@ -58,7 +58,7 @@ Common status codes:
 
 ## CORS
 
-The API allows cross-origin requests from any origin. Widgets and browser-based SDK calls work without proxy configuration.
+The API allows cross-origin requests from a fleet allowlist (sassmaker.com, app.sassmaker.com, *.pages.dev, *.workers.dev, localhost). Other origins fall back to `https://app.sassmaker.com`.
 
 ## Health check
 
@@ -66,20 +66,28 @@ The API allows cross-origin requests from any origin. Widgets and browser-based 
 GET /health
 ```
 
-Returns `{ "ok": true }` if the API is running. No authentication required.
+Returns `{ "status": "ok" }` if the API is running. No authentication required.
 
 ## Rate limits
 
-The API runs on Cloudflare Workers with no hard rate limits currently enforced. Abuse may result in throttling.
+- **API-key routes**: per-project sliding-window limit (`rate_limit_rpm`, default 60/min) enforced in-memory per Worker isolate.
+- **Public unauthenticated routes** (testimonials submit, roadmap submit/vote): D1-backed sliding-window limit per IP via `@saas-maker/shield`.
+
+Exceeding either limit returns HTTP `429`.
 
 ## Endpoints by service
 
 | Service | Prefix | Docs |
 |---------|--------|------|
+| Projects | `/v1/projects` | [Projects](/services/projects) |
 | Feedback | `/v1/feedback` | [Feedback](/services/feedback) |
+| Roadmap | `/v1/roadmap` | [Roadmap](/services/roadmap) |
 | Waitlist | `/v1/waitlist` | [Waitlist](/services/waitlist) |
 | Testimonials | `/v1/testimonials` | [Testimonials](/services/testimonials) |
 | Changelog | `/v1/changelog` | [Changelog](/services/changelog) |
-| Knowledge Base | `/v1/indexes` | [Knowledge Base](/services/knowledge-base) |
 | Analytics | `/v1/analytics` | [Analytics](/services/analytics) |
-| AI Gateway | `/v1/ai` | [AI Gateway](/services/ai-gateway) |
+| Standards | `/v1/standards` | Fleet standards (CLI-driven) |
+| Tasks | `/v1/tasks` | Cockpit tasks |
+| Jobs | `/v1/jobs` | Cockpit jobs |
+| Secrets | `/v1/secrets` | Project secrets |
+| Auth | `/v1/auth` / `/v1/cli` | Sessions and CLI auth |

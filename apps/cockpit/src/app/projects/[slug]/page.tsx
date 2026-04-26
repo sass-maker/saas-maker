@@ -102,15 +102,19 @@ export default async function ProjectStatusPage({ params }: Props) {
                     </Badge>
                     <span className="text-xs font-mono text-muted-foreground">{latestCI.workflowName}</span>
                   </div>
-                  <p className="text-[10px] text-muted-foreground italic">
-                    Updated {new Date(latestCI.updatedAt).toLocaleString()}
-                  </p>
+                  {latestCI.updatedAt && (
+                    <p className="text-[10px] text-muted-foreground italic">
+                      Updated {new Date(latestCI.updatedAt).toLocaleString()}
+                    </p>
+                  )}
                 </div>
-                <Button variant="outline" size="sm" className="h-8 text-[10px] gap-1" asChild>
-                  <a href={latestCI.url} target="_blank" rel="noreferrer">
-                    Action Logs <ExternalLink className="h-3 w-3" />
-                  </a>
-                </Button>
+                {latestCI.url && (
+                  <Button variant="outline" size="sm" className="h-8 text-[10px] gap-1" asChild>
+                    <a href={latestCI.url} target="_blank" rel="noreferrer">
+                      Action Logs <ExternalLink className="h-3 w-3" />
+                    </a>
+                  </Button>
+                )}
               </div>
             ) : (
               <div className="py-8 text-center text-xs text-muted-foreground italic">

@@ -1,11 +1,11 @@
 /**
- * @saas-maker/foundry-email
+ * @saas-maker/email
  *
  * Lightweight email sending with Resend/SMTP and auto-tracing via @saas-maker/ops.
  *
  * @example
  * ```ts
- * import { configureEmail, email } from '@saas-maker/foundry-email';
+ * import { configureEmail, email } from '@saas-maker/email';
  *
  * configureEmail({
  *   provider: 'resend',
@@ -57,7 +57,7 @@ export function configureEmail(config: EmailConfig): void {
 function getConfig(): EmailConfig {
   if (!_config) {
     throw new Error(
-      '@saas-maker/foundry-email: call configureEmail() before sending emails'
+      '@saas-maker/email: call configureEmail() before sending emails'
     );
   }
   return _config;

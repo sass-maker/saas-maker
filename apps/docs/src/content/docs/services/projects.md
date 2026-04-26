@@ -3,7 +3,7 @@ title: Projects & README
 description: Manage project settings and project README content via the API.
 ---
 
-Projects are the top-level container in Foundry. Each project has its own API key, settings, and features (feedback, forms, analytics, etc.).
+Projects are the top-level container in Foundry. Each project has its own API key, settings, and features (feedback, roadmap, testimonials, changelog, waitlist, analytics).
 
 ## Project README
 

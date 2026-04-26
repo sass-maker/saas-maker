@@ -4,7 +4,7 @@ import { requireApiKey, requireSession } from '../middleware/auth';
 import { getDb } from '../db';
 import type { WaitlistSignupRequest } from '@saas-maker/shared-types';
 import { capture } from '@saas-maker/ops';
-import { email } from '@saas-maker/foundry-email';
+import { email } from '@saas-maker/email';
 
 const waitlist = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 

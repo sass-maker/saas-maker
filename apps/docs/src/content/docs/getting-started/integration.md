@@ -177,5 +177,5 @@ This creates a `.saasmaker.json` file linking your directory to a project. See t
 - [Submit feedback](/sdk/javascript#feedback) from your app
 - [Collect waitlist signups](/sdk/javascript#waitlist)
 - [Display testimonials](/sdk/javascript#testimonials)
-- [Add AI chat](/sdk/javascript#ai-gateway) powered by RAG
+- [Publish a public roadmap](/sdk/javascript#roadmap)
 - [Track custom events](/sdk/javascript#analytics)

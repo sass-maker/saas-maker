@@ -22,7 +22,7 @@ const client = new SaaSMakerClient({
 });
 ```
 
-For dashboard-only SDK surfaces such as `aiMention`, also pass a `sessionToken`:
+For dashboard surfaces (admin operations), pass a `sessionToken` instead:
 
 ```typescript
 const dashboardClient = new SaaSMakerClient({
@@ -86,28 +86,6 @@ const testimonials = await client.testimonials.list();
 const entries = await client.changelog.list();
 ```
 
-## Knowledge Base
-
-```typescript
-// Create an index
-const index = await client.indexes.create({
-  name: 'help-docs',
-  embedding_model: '@cf/baai/bge-base-en-v1.5',
-});
-
-// Upload a document
-await client.indexes.ingest(index.id, {
-  content: 'Your document text here...',
-  metadata: { source: 'docs' },
-});
-
-// Search
-const { results } = await client.indexes.search(index.id, {
-  query: 'how do I get started?',
-  top_k: 5,
-});
-```
-
 ## Analytics
 
 ```typescript
@@ -116,21 +94,6 @@ await client.analytics.track({
   name: 'page_view',
   url: 'https://myapp.com/pricing',
 });
-```
-
-## Forms
-
-```typescript
-// Get a public form by slug
-const form = await client.forms.getPublic('my-form-slug');
-
-// Submit a form response
-await client.forms.submitPublic('my-form-slug', {
-  answers: { field_1: 'value', field_2: 42 },
-});
-
-// List forms (API key auth)
-const forms = await client.forms.getBySlug('my-form-slug');
 ```
 
 ## Roadmap
@@ -156,61 +119,6 @@ const { readme } = await client.projects.getReadme();
 
 // Update project README
 await client.projects.updateReadme('# My Project\n\nWelcome!');
-```
-
-## AI Gateway
-
-```typescript
-// Chat completion
-const response = await client.ai.chat({
-  messages: [{ role: 'user', content: 'What is Foundry?' }],
-});
-
-// Embeddings
-const embeddings = await client.ai.embed('What is Foundry?');
-
-// RAG (retrieval-augmented generation)
-const answer = await client.ai.rag({
-  query: 'How do I collect feedback?',
-  index_id: 'idx_123',
-  top_k: 5,
-});
-
-// Streaming (chat)
-const stream = await client.ai.chatStream({
-  messages: [{ role: 'user', content: 'Explain Foundry' }],
-});
-const reader = stream.body!.getReader();
-// Read SSE chunks from the reader
-
-// Streaming (RAG)
-const ragStream = await client.ai.ragStream({
-  query: 'How do I collect feedback?',
-  index_id: 'idx_123',
-});
-```
-
-## AI Mention Check
-
-```typescript
-const dashboardClient = new SaaSMakerClient({
-  sessionToken: 'sm_your_session_token',
-  baseUrl: 'https://api.sassmaker.com',
-});
-
-await dashboardClient.aiMention.saveConfig('proj_123', {
-  brand_name: 'Acme',
-  platforms: ['openai'],
-  openai_api_key: 'sk-...',
-});
-
-await dashboardClient.aiMention.addPrompt('proj_123', {
-  prompt_text: 'What is the best AI customer support tool?',
-  category: 'support',
-});
-
-const check = await dashboardClient.aiMention.runCheck('proj_123');
-const details = await dashboardClient.aiMention.getCheck('proj_123', check.id);
 ```
 
 ## Error handling

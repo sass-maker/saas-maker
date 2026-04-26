@@ -11,9 +11,7 @@ import { roadmapListCommand, roadmapCreateCommand, roadmapUpdateCommand, roadmap
 import { changelogListCommand, changelogCreateCommand, changelogUpdateCommand, changelogDeleteCommand } from './commands/changelog.js';
 import { testimonialsListCommand, testimonialsUpdateCommand, testimonialsDeleteCommand } from './commands/testimonials.js';
 import { analyticsDashboardCommand, analyticsDetailCommand, analyticsSetupCommand, analyticsForgeDashboardCommand } from './commands/analytics.js';
-import { formsListCommand, formsCreateCommand, formsGetCommand, formsDeleteCommand, formsResponsesCommand, formsAnalyticsCommand } from './commands/forms.js';
 import { waitlistListCommand, waitlistCountCommand, waitlistDeleteCommand } from './commands/waitlist.js';
-import { aiMentionConfigCommand, aiMentionPromptsCommand, aiMentionPromptsAddCommand, aiMentionCheckCommand, aiMentionHistoryCommand } from './commands/ai-mention.js';
 import { initCommand } from './commands/init.js';
 import { forgeCommand } from './commands/forge.js';
 import { statusCommand } from './commands/status.js';
@@ -77,9 +75,7 @@ analytics.command('setup').description('Automate PostHog integration').action(an
 analytics.command('forge-dashboard').description('Provision the Mission Control dashboard in PostHog').action(analyticsForgeDashboardCommand);
 analytics.command('detail <section>').description('Drill down into analytics').action(analyticsDetailCommand);
 
-program.command('forms').description('Manage the Forms block').action(formsListCommand);
 program.command('waitlist').description('Manage the Waitlist block').action(waitlistListCommand);
-program.command('ai').description('Manage the AI block').action(aiMentionConfigCommand);
 
 // --- Forge & Commander Utils ---
 program.command('init').description('Forge a Foundry link in this directory').action(initCommand);

@@ -52,7 +52,7 @@ The brain of the factory.
    Connect your global agent harness (e.g. Claude Code) to the Foundry Factory.
    ```bash
    # Add this to your shell profile or .claude/hooks
-   source /Users/sarthakagrawal/Desktop/saas-maker/scripts/foundry-agent-hook.sh
+   source /Users/sarthakagrawal/Desktop/Fleet/saas-maker/scripts/foundry-agent-hook.sh
    ```
 
 4. **Audit the Fleet**:

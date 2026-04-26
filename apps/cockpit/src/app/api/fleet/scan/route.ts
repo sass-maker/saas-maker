@@ -82,7 +82,7 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { manifest } = body;
-    if (!manifest) return NextResponse.json({ error: 'Manifest is required' }, 400);
+    if (!manifest) return NextResponse.json({ error: 'Manifest is required' }, { status: 400 });
 
     fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
     return NextResponse.json({ ok: true });

@@ -25,230 +25,6 @@
         }
       }
     },
-    "/v1/ai-mention/check/{projectId}": {
-      "post": {
-        "tags": [
-          "ai-mention"
-        ],
-        "summary": "POST /v1/ai-mention/check/{projectId}",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/ai-mention/checks/{projectId}": {
-      "get": {
-        "tags": [
-          "ai-mention"
-        ],
-        "summary": "GET /v1/ai-mention/checks/{projectId}",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/ai-mention/checks/{projectId}/{checkId}": {
-      "get": {
-        "tags": [
-          "ai-mention"
-        ],
-        "summary": "GET /v1/ai-mention/checks/{projectId}/{checkId}",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/ai-mention/config/{projectId}": {
-      "get": {
-        "tags": [
-          "ai-mention"
-        ],
-        "summary": "GET /v1/ai-mention/config/{projectId}",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "ai-mention"
-        ],
-        "summary": "POST /v1/ai-mention/config/{projectId}",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "ai-mention"
-        ],
-        "summary": "DELETE /v1/ai-mention/config/{projectId}",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/ai-mention/dashboard/{projectId}": {
-      "get": {
-        "tags": [
-          "ai-mention"
-        ],
-        "summary": "GET /v1/ai-mention/dashboard/{projectId}",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/ai-mention/prompts/{projectId}": {
-      "get": {
-        "tags": [
-          "ai-mention"
-        ],
-        "summary": "GET /v1/ai-mention/prompts/{projectId}",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "ai-mention"
-        ],
-        "summary": "POST /v1/ai-mention/prompts/{projectId}",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/ai-mention/prompts/{projectId}/{id}": {
-      "delete": {
-        "tags": [
-          "ai-mention"
-        ],
-        "summary": "DELETE /v1/ai-mention/prompts/{projectId}/{id}",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/ai/chat/completions": {
-      "post": {
-        "tags": [
-          "ai"
-        ],
-        "summary": "POST /v1/ai/chat/completions",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/ai/config/{projectId}": {
-      "get": {
-        "tags": [
-          "ai"
-        ],
-        "summary": "GET /v1/ai/config/{projectId}",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "ai"
-        ],
-        "summary": "PUT /v1/ai/config/{projectId}",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "ai"
-        ],
-        "summary": "DELETE /v1/ai/config/{projectId}",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/ai/embeddings": {
-      "post": {
-        "tags": [
-          "ai"
-        ],
-        "summary": "POST /v1/ai/embeddings",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/ai/rag": {
-      "post": {
-        "tags": [
-          "ai"
-        ],
-        "summary": "POST /v1/ai/rag",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/ai/requests/{projectId}": {
-      "get": {
-        "tags": [
-          "ai"
-        ],
-        "summary": "GET /v1/ai/requests/{projectId}",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/ai/usage/{projectId}": {
-      "get": {
-        "tags": [
-          "ai"
-        ],
-        "summary": "GET /v1/ai/usage/{projectId}",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
     "/v1/analytics/countries": {
       "get": {
         "tags": [
@@ -344,6 +120,19 @@
           "analytics"
         ],
         "summary": "GET /v1/analytics/pages",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/analytics/recent": {
+      "get": {
+        "tags": [
+          "analytics"
+        ],
+        "summary": "GET /v1/analytics/recent",
         "responses": {
           "200": {
             "description": "Success"
@@ -483,56 +272,6 @@
           "cli"
         ],
         "summary": "GET /v1/cli/poll",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/directory": {
-      "get": {
-        "tags": [
-          "directory"
-        ],
-        "summary": "GET /v1/directory",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "directory"
-        ],
-        "summary": "POST /v1/directory",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/directory/claim": {
-      "post": {
-        "tags": [
-          "directory"
-        ],
-        "summary": "POST /v1/directory/claim",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/directory/verify-badge": {
-      "post": {
-        "tags": [
-          "directory"
-        ],
-        "summary": "POST /v1/directory/verify-badge",
         "responses": {
           "200": {
             "description": "Success"
@@ -699,12 +438,12 @@
         }
       }
     },
-    "/v1/forms/by-slug/{slug}": {
+    "/v1/jobs": {
       "get": {
         "tags": [
-          "forms"
+          "jobs"
         ],
-        "summary": "GET /v1/forms/by-slug/{slug}",
+        "summary": "GET /v1/jobs",
         "responses": {
           "200": {
             "description": "Success"
@@ -712,323 +451,12 @@
         }
       }
     },
-    "/v1/forms/dashboard/{projectId}": {
-      "get": {
-        "tags": [
-          "forms"
-        ],
-        "summary": "GET /v1/forms/dashboard/{projectId}",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      },
+    "/v1/jobs/{id}/logs": {
       "post": {
         "tags": [
-          "forms"
+          "jobs"
         ],
-        "summary": "POST /v1/forms/dashboard/{projectId}",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/forms/dashboard/{projectId}/check-slug/{slug}": {
-      "get": {
-        "tags": [
-          "forms"
-        ],
-        "summary": "GET /v1/forms/dashboard/{projectId}/check-slug/{slug}",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/forms/dashboard/{projectId}/{formId}": {
-      "get": {
-        "tags": [
-          "forms"
-        ],
-        "summary": "GET /v1/forms/dashboard/{projectId}/{formId}",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      },
-      "patch": {
-        "tags": [
-          "forms"
-        ],
-        "summary": "PATCH /v1/forms/dashboard/{projectId}/{formId}",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "forms"
-        ],
-        "summary": "DELETE /v1/forms/dashboard/{projectId}/{formId}",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/forms/dashboard/{projectId}/{formId}/analytics": {
-      "get": {
-        "tags": [
-          "forms"
-        ],
-        "summary": "GET /v1/forms/dashboard/{projectId}/{formId}/analytics",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/forms/dashboard/{projectId}/{formId}/questions": {
-      "post": {
-        "tags": [
-          "forms"
-        ],
-        "summary": "POST /v1/forms/dashboard/{projectId}/{formId}/questions",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/forms/dashboard/{projectId}/{formId}/questions/{questionId}": {
-      "patch": {
-        "tags": [
-          "forms"
-        ],
-        "summary": "PATCH /v1/forms/dashboard/{projectId}/{formId}/questions/{questionId}",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "forms"
-        ],
-        "summary": "DELETE /v1/forms/dashboard/{projectId}/{formId}/questions/{questionId}",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/forms/dashboard/{projectId}/{formId}/responses": {
-      "get": {
-        "tags": [
-          "forms"
-        ],
-        "summary": "GET /v1/forms/dashboard/{projectId}/{formId}/responses",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/forms/dashboard/{projectId}/{formId}/responses/{responseId}": {
-      "delete": {
-        "tags": [
-          "forms"
-        ],
-        "summary": "DELETE /v1/forms/dashboard/{projectId}/{formId}/responses/{responseId}",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/forms/public/{slug}": {
-      "get": {
-        "tags": [
-          "forms"
-        ],
-        "summary": "GET /v1/forms/public/{slug}",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/forms/public/{slug}/submit": {
-      "post": {
-        "tags": [
-          "forms"
-        ],
-        "summary": "POST /v1/forms/public/{slug}/submit",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/forms/{formId}/submit": {
-      "post": {
-        "tags": [
-          "forms"
-        ],
-        "summary": "POST /v1/forms/{formId}/submit",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/indexes": {
-      "get": {
-        "tags": [
-          "indexes"
-        ],
-        "summary": "GET /v1/indexes",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "indexes"
-        ],
-        "summary": "POST /v1/indexes",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/indexes/dashboard/{projectId}": {
-      "get": {
-        "tags": [
-          "indexes"
-        ],
-        "summary": "GET /v1/indexes/dashboard/{projectId}",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "indexes"
-        ],
-        "summary": "POST /v1/indexes/dashboard/{projectId}",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/indexes/dashboard/{projectId}/{indexId}/documents": {
-      "get": {
-        "tags": [
-          "indexes"
-        ],
-        "summary": "GET /v1/indexes/dashboard/{projectId}/{indexId}/documents",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/indexes/models": {
-      "get": {
-        "tags": [
-          "indexes"
-        ],
-        "summary": "GET /v1/indexes/models",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/indexes/{indexId}": {
-      "delete": {
-        "tags": [
-          "indexes"
-        ],
-        "summary": "DELETE /v1/indexes/{indexId}",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/indexes/{indexId}/documents": {
-      "get": {
-        "tags": [
-          "indexes"
-        ],
-        "summary": "GET /v1/indexes/{indexId}/documents",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "indexes"
-        ],
-        "summary": "POST /v1/indexes/{indexId}/documents",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/indexes/{indexId}/documents/{docId}": {
-      "delete": {
-        "tags": [
-          "indexes"
-        ],
-        "summary": "DELETE /v1/indexes/{indexId}/documents/{docId}",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/indexes/{indexId}/search": {
-      "post": {
-        "tags": [
-          "indexes"
-        ],
-        "summary": "POST /v1/indexes/{indexId}/search",
+        "summary": "POST /v1/jobs/{id}/logs",
         "responses": {
           "200": {
             "description": "Success"
@@ -1232,6 +660,19 @@
         }
       }
     },
+    "/v1/roadmap/public/{slug}/submit": {
+      "post": {
+        "tags": [
+          "roadmap"
+        ],
+        "summary": "POST /v1/roadmap/public/{slug}/submit",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/v1/roadmap/public/{slug}/{id}/vote": {
       "post": {
         "tags": [
@@ -1249,6 +690,43 @@
           "roadmap"
         ],
         "summary": "DELETE /v1/roadmap/public/{slug}/{id}/vote",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/secrets": {
+      "get": {
+        "tags": [
+          "secrets"
+        ],
+        "summary": "GET /v1/secrets",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "secrets"
+        ],
+        "summary": "POST /v1/secrets",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/secrets/{id}": {
+      "delete": {
+        "tags": [
+          "secrets"
+        ],
+        "summary": "DELETE /v1/secrets/{id}",
         "responses": {
           "200": {
             "description": "Success"

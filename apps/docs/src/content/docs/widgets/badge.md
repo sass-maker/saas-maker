@@ -1,9 +1,9 @@
 ---
 title: Badge Widget
-description: Add a "Built with SaasMaker" badge to your site for directory verification.
+description: Add a "Built with SaasMaker" badge to your site.
 ---
 
-A small badge component that links back to the SaasMaker directory. Adding it to your site enables badge verification — verified listings get a green checkmark in the directory.
+A small badge component that links back to SaasMaker. Drop it in your footer to credit the toolkit.
 
 ## Installation
 
@@ -59,16 +59,6 @@ Or use this HTML directly:
   Built with SaasMaker
 </a>
 ```
-
-## Badge Verification
-
-Once you've added the badge to your site:
-
-1. Claim your listing via `POST /v1/directory/claim` using your API key
-2. Call `POST /v1/directory/verify-badge` — the API fetches your URL and checks for a link containing `sassmaker.com/made-with`
-3. If found, your listing gets a verified checkmark in the directory
-
-See the [Directory service docs](/services/directory/) for full API details.
 
 ## Theming
 

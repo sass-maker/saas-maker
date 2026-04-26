@@ -25,9 +25,13 @@ export default defineConfig({
 				{
 					label: 'The Blocks',
 					items: [
-						{ label: 'AI block', slug: 'services/ai-gateway' },
 						{ label: 'Analytics block', slug: 'services/analytics' },
-						{ label: 'DB block', slug: 'services/knowledge-base' },
+						{ label: 'Feedback block', slug: 'services/feedback' },
+						{ label: 'Roadmap block', slug: 'services/roadmap' },
+						{ label: 'Testimonials block', slug: 'services/testimonials' },
+						{ label: 'Changelog block', slug: 'services/changelog' },
+						{ label: 'Waitlist block', slug: 'services/waitlist' },
+						{ label: 'Projects block', slug: 'services/projects' },
 						{ label: 'JavaScript SDK', slug: 'sdk/javascript' },
 					],
 				},
@@ -37,9 +41,9 @@ export default defineConfig({
 						{ label: 'Feedback & Roadmap', slug: 'widgets/feedback' },
 						{ label: 'Testimonials Wall', slug: 'widgets/testimonials' },
 						{ label: 'Changelog Timeline', slug: 'widgets/changelog' },
-						{ label: 'Survey & Forms', slug: 'widgets/survey' },
 						{ label: 'Waitlist Form', slug: 'widgets/waitlist' },
 						{ label: 'Analytics UI', slug: 'widgets/analytics' },
+						{ label: 'Made-With Badge', slug: 'widgets/badge' },
 					],
 				},
 				{

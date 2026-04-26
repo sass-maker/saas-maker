@@ -3,11 +3,11 @@ import { getDb } from '../db';
 import { foundry_secrets } from '../schema';
 import { eq, and, isNull, or } from 'drizzle-orm';
 import { Bindings, Variables } from '../types';
-import { requireAuth } from '../middleware/auth';
+import { requireSession } from '../middleware/auth';
 
 export const secrets = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
-secrets.use('*', requireAuth);
+secrets.use('*', requireSession);
 
 /**
  * List all secrets accessible to the user.

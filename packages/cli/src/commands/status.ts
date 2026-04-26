@@ -87,16 +87,13 @@ export async function statusCommand(options: StatusOptions = {}): Promise<void> 
     const [
       feedbackRes,
       waitlistRes,
-      indexesRes,
       testimonialsPublicRes,
       changelogPublicRes,
       testimonialsSessionRes,
       changelogSessionRes,
-      formsSessionRes,
     ] = await Promise.all([
       requestApi({ path: '/v1/feedback', auth: 'project', projectKey }),
       requestApi({ path: '/v1/waitlist/count', auth: 'project', projectKey }),
-      requestApi({ path: '/v1/indexes', auth: 'project', projectKey }),
       requestApi({ path: '/v1/testimonials', auth: 'project', projectKey }),
       requestApi({ path: '/v1/changelog', auth: 'project', projectKey }),
       linkedProjectId
@@ -104,9 +101,6 @@ export async function statusCommand(options: StatusOptions = {}): Promise<void> 
         : Promise.resolve({ ok: false, status: 0, url: '', data: undefined, text: 'Session route unavailable' }),
       linkedProjectId
         ? requestApi({ path: `/v1/changelog/dashboard/${linkedProjectId}`, auth: 'session' })
-        : Promise.resolve({ ok: false, status: 0, url: '', data: undefined, text: 'Session route unavailable' }),
-      linkedProjectId
-        ? requestApi({ path: `/v1/forms/dashboard/${linkedProjectId}`, auth: 'session' })
         : Promise.resolve({ ok: false, status: 0, url: '', data: undefined, text: 'Session route unavailable' }),
     ]);
 
@@ -116,14 +110,12 @@ export async function statusCommand(options: StatusOptions = {}): Promise<void> 
     const features: FeatureStatus[] = [
       asFeature('Feedback', feedbackRes, 'project', countFromList(feedbackRes)),
       asFeature('Waitlist', waitlistRes, 'project', countFromSingleNumber(waitlistRes, 'count')),
-      asFeature('Indexes', indexesRes, 'project', countFromList(indexesRes)),
       testimonialsSessionRes.ok
         ? asFeature('Testimonials', testimonialsSessionRes, 'session', countFromList(testimonialsSessionRes))
         : asFeature('Testimonials', testimonialsPublicRes, 'fallback', countFromList(testimonialsPublicRes)),
       changelogSessionRes.ok
         ? asFeature('Changelog', changelogSessionRes, 'session', countFromList(changelogSessionRes))
         : asFeature('Changelog', changelogPublicRes, 'fallback', countFromList(changelogPublicRes)),
-      asFeature('Forms', formsSessionRes, 'session', countFromList(formsSessionRes)),
     ];
 
     const outputData = {

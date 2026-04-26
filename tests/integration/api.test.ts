@@ -1,18 +1,16 @@
 /**
  * Integration tests for SaaS Maker API.
  * Requires env vars:
- *   SAASMAKER_API_KEY   - project API key
- *   SAASMAKER_PROJECT_SLUG - project slug (for feedback list, optional)
- *   FREE_AI_BASE_URL    - embedding service URL (optional, for KB document/search tests)
+ *   SAASMAKER_API_KEY      - project API key
+ *   SAASMAKER_PROJECT_SLUG - project slug (for slug-scoped tests, optional)
  *
  * Run: SAASMAKER_API_KEY=xxx pnpm test:integration
  */
 import { describe, it, expect, beforeAll } from 'vitest';
-import { SaaSMakerClient } from '../../packages/sdk/src/index';
+import { SaaSMakerClient } from '../../packages/blocks/sdk/src/index';
 
 const API_KEY = process.env.SAASMAKER_API_KEY ?? '';
 const PROJECT_SLUG = process.env.SAASMAKER_PROJECT_SLUG ?? '';
-const HAS_AI = !!process.env.FREE_AI_BASE_URL;
 
 const client = new SaaSMakerClient({ apiKey: API_KEY });
 
@@ -125,92 +123,16 @@ describe('analytics', () => {
   });
 });
 
-// ─── Knowledge Base ────────────────────────────────────────────────────────
+// ─── Roadmap ───────────────────────────────────────────────────────────────
 
-describe('knowledge base', () => {
-  let indexId: string;
-  let docId: string;
-
-  it('creates an index', async () => {
-    const index = await client.knowledgeBase.createIndex(
-      `test-index-${Date.now()}`,
-      { embedding_model: '@cf/baai/bge-base-en-v1.5' },
-    );
-    expect(index.id).toBeTruthy();
-    expect(index.name).toContain('test-index');
-    indexId = index.id;
-  });
-
-  it('lists indexes and finds the new one', async () => {
-    const res = await client.knowledgeBase.listIndexes();
+describe('roadmap', () => {
+  it.skipIf(!PROJECT_SLUG)('lists public roadmap items', async () => {
+    const res = await client.roadmap.listPublic(PROJECT_SLUG);
     expect(Array.isArray(res.data)).toBe(true);
-    const found = res.data.find((i) => i.id === indexId);
-    expect(found).toBeTruthy();
-  });
-
-  it.skipIf(!HAS_AI)('uploads a document', async () => {
-    const res = await client.knowledgeBase.uploadDocument(indexId, {
-      content: 'SaaS Maker provides plug-and-play backend services for SaaS apps.',
-      metadata: { source: 'integration-test' },
-    });
-    expect(res.id).toBeTruthy();
-    docId = res.id;
-  });
-
-  it.skipIf(!HAS_AI)('lists documents in the index', async () => {
-    const res = await client.knowledgeBase.listDocuments(indexId);
-    expect(res.total).toBeGreaterThan(0);
-    const found = res.data.find((d) => d.id === docId);
-    expect(found).toBeTruthy();
-  });
-
-  it.skipIf(!HAS_AI)('searches the index', async () => {
-    const res = await client.knowledgeBase.search(indexId, 'backend services');
-    expect(Array.isArray(res.results)).toBe(true);
-    expect(res.results.length).toBeGreaterThan(0);
-    expect(res.results[0].chunk_content).toBeTruthy();
-  });
-
-  it.skipIf(!HAS_AI)('deletes the document', async () => {
-    const res = await client.knowledgeBase.deleteDocument(indexId, docId);
-    expect(res.ok).toBe(true);
-  });
-
-  it('deletes the index', async () => {
-    const res = await client.knowledgeBase.deleteIndex(indexId);
-    expect(res.ok).toBe(true);
   });
 });
 
-// ─── Forms ────────────────────────────────────────────────────────────────
-
-describe('forms', () => {
-  it('lists forms for the project', async () => {
-    const res = await client.forms.list();
-    expect(Array.isArray(res.data)).toBe(true);
-    expect(typeof res.total).toBe('number');
-  });
-});
-
-// ─── AI Gateway ───────────────────────────────────────────────────────────
-
-describe('ai gateway', () => {
-  it.skipIf(!HAS_AI)('sends a chat completion', async () => {
-    const res = await client.ai.chat({
-      messages: [{ role: 'user', content: 'Say "hello" and nothing else.' }],
-    });
-    expect(res.choices).toBeTruthy();
-    expect(res.choices[0].message.content).toBeTruthy();
-  });
-
-  it.skipIf(!HAS_AI)('generates embeddings', async () => {
-    const res = await client.ai.embed('test embedding');
-    expect(res.data).toBeTruthy();
-    expect(res.data[0].embedding.length).toBeGreaterThan(0);
-  });
-});
-
-// ─── Testimonials (by slug) ───────────────────────────────────────────────
+// ─── Testimonials (by slug) ────────────────────────────────────────────────
 
 describe('testimonials by slug', () => {
   it.skipIf(!PROJECT_SLUG)('submits a testimonial by project slug', async () => {

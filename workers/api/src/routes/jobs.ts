@@ -3,11 +3,11 @@ import { getDb } from '../db';
 import { foundry_jobs } from '../schema';
 import { eq, desc } from 'drizzle-orm';
 import { Bindings, Variables } from '../types';
-import { requireAuth } from '../middleware/auth';
+import { requireSession } from '../middleware/auth';
 
 export const jobs = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
-jobs.use('*', requireAuth);
+jobs.use('*', requireSession);
 
 /**
  * List recent agent jobs

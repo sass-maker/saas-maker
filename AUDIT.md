@@ -1,26 +1,32 @@
 # Security & Quality Audit
 
 Conducted: 2026-03-29
+Reviewed: 2026-04-26
 
 ---
 
 ## HIGH Severity
 
-- [ ] **No global error handler** — `workers/api/src/index.ts:81` — No `app.onError()` handler. Unhandled exceptions return stack traces to clients, leaking internals.
-- [ ] **POST /v1/directory — no spam protection** — `workers/api/src/routes/directory.ts:23` — Unauthenticated write endpoint with no rate limit or honeypot. Bots can flood the directory.
-- [ ] **POST /v1/forms/public/:slug/submit — no rate limit** — `workers/api/src/routes/forms.ts:125` — Unauthenticated form submission with no per-IP rate limiting.
-- [ ] **POST /v1/testimonials/by-project/:slug — no rate limit** — `workers/api/src/routes/testimonials.ts:41` — Unauthenticated testimonial submission with no per-IP rate limiting.
-- [ ] **POST /v1/roadmap/public/:slug/:id/vote — no rate limit, weak validation** — `workers/api/src/routes/roadmap.ts:23` — Unauthenticated vote endpoint. `user_identifier` accepts whitespace-only strings (`.trim()` check exists but no empty-after-trim validation on vote path). No per-IP rate limiting.
+- [x] **Global error handler** — `workers/api/src/index.ts:33` — `app.onError()` now captures unhandled exceptions to PostHog and returns generic 500. _Fixed 2026-04-26._
+- [x] **POST /v1/directory — spam protection** — Route removed from active product. _Fixed 2026-04-26._
+- [x] **POST /v1/forms/public/:slug/submit — rate limit** — Forms route removed from active product. _Fixed 2026-04-26._
+- [x] **POST /v1/testimonials/by-project/:slug — rate limit** — `workers/api/src/routes/testimonials.ts:44` — `d1RateLimitDynamic` (5 / hour / IP). _Fixed 2026-04-26._
+- [x] **POST /v1/roadmap/public/:slug/:id/vote — rate limit** — `workers/api/src/routes/roadmap.ts:24,72` — `d1RateLimitDynamic` (20 / hour / IP for vote, 5 for submit). _Fixed 2026-04-26._
 
 ## MEDIUM Severity
 
-- [ ] **12MB CockroachDB binary tracked in git** — `workers/api/cockroach-sql-v22.1.9.darwin-10.9-amd64/cockroach-sql` — 12MB binary bloating repo. Should be deleted and added to `.gitignore`.
-- [ ] **FeedbackStatus type too narrow** — `packages/shared-types/src/index.ts:3` — `FeedbackStatus = 'new' | 'dismissed' | 'on_roadmap'` but DB and routes use up to 8 values (`new`, `acknowledged`, `investigating`, `planned`, `in_progress`, `resolved`, `dismissed`, `on_roadmap`). `isValidStatus()` in `workers/api/src/routes/feedback.ts:28` only validates 3 values.
-- [ ] **Session ID not unique per IP** — `workers/api/src/ua.ts:45` — `computeSessionId()` hashes `date|country|device|browser`. Two users from the same country on the same browser/device/day get the same session ID, inflating unique-visitor counts. Needs IP hash in fingerprint.
+- [x] **CockroachDB binary in git** — Removed in commit `332c334` (sanitize repo). _Fixed._
+- [ ] **FeedbackStatus type too narrow** — `packages/blocks/shared-types/src/index.ts` — DB and routes use up to 8 values; type and `isValidStatus()` still need widening.
+- [ ] **Session ID not unique per IP** — `workers/api/src/ua.ts:45` — `computeSessionId()` hashes `date|country|device|browser`. Inflates unique-visitor counts. Add IP-hash component.
 
-## LOW Severity (additional audit findings)
+## LOW Severity
 
-- [ ] **CORS reflects any Origin** — `workers/api/src/index.ts:29` — `origin: origin || '*'` reflects whatever Origin the client sends, combined with `credentials: true`. This allows credentialed requests from any origin. Should allowlist production domains.
-- [ ] **Vector search loads all chunks into memory** — `workers/api/src/db.ts:388` — `searchChunks()` fetches ALL embeddings for an index into memory, then computes cosine similarity in JS. Large indexes will OOM the Worker (128MB limit). Acceptable for now with small datasets but a scaling risk.
-- [ ] **Rate limit state is per-isolate** — `workers/api/src/middleware/rate-limit.ts:5` — In-memory `Map` resets on every isolate recycle. Distributed rate limiting (e.g., via D1 or KV) would be more robust, but acceptable for current scale.
-- [ ] **No secrets in git** — Verified: no `.env`, credential, or key files are tracked. `.gitignore` covers `.env`, `.env.local`, `.dev.vars`.
+- [x] **CORS reflects any Origin** — `workers/api/src/index.ts:51-77` — Allowlist now enforced (`isAllowedOrigin`); falls back to `https://app.sassmaker.com`. _Fixed 2026-04-26._
+- [ ] **Vector search loads all chunks into memory** — `workers/api/src/db.ts:searchChunks` — Acceptable at current scale; migrate to Vectorize binding when growth warrants.
+- [ ] **Rate limit state per-isolate** — `workers/api/src/middleware/rate-limit.ts` — In-memory `Map` for API-key path. D1 shield used for unauth paths. Migrate API-key path to D1 when traffic spread across many isolates.
+- [x] **No secrets in git** — Re-verified 2026-04-26. `.dev.vars`, `.env*`, credentials covered by `.gitignore`.
+
+## Open Items (post-Foundry transition)
+
+- [ ] **Split `workers/api/src/db.ts`** (1738 LOC) — Single God file; refactor per domain (feedback / projects / analytics / etc).
+- [ ] **Migrate API-key rate limiter to D1 shield** — Distributed isolates currently leak rate-limit windows.

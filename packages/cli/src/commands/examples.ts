@@ -49,24 +49,14 @@ const EXAMPLES: ExampleRow[] = [
     description: 'Create a feedback item',
   },
   {
-    category: 'Forms',
-    command: 'saasmaker api GET /v1/forms/dashboard/<projectId> --auth session --output table',
-    description: 'List forms via dashboard session route',
+    category: 'Roadmap',
+    command: 'saasmaker api GET /v1/roadmap/by-project/<slug> --auth project --output table',
+    description: 'List public roadmap items for a project',
   },
   {
-    category: 'AI Mention',
-    command: 'saasmaker api POST /v1/ai-mention/check/<projectId> --auth session',
-    description: 'Start an AI mention check run',
-  },
-  {
-    category: 'AI Mention',
-    command: 'saasmaker ai-mention history --project <projectId> --output table',
-    description: 'Review recent AI mention checks',
-  },
-  {
-    category: 'Links',
-    command: 'saasmaker api POST /v1/links --auth project --body \'{"destination":"https://example.com","title":"Homepage"}\'',
-    description: 'Create a short link',
+    category: 'Testimonials',
+    command: 'saasmaker api GET /v1/testimonials --auth project --output table',
+    description: 'List approved testimonials for the linked project',
   },
   {
     category: 'Raw API',

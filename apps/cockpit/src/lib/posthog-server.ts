@@ -134,6 +134,11 @@ export async function getFleetLatency(): Promise<FoundryLatencyMetric[]> {
       p95_duration_ms: Math.round(row[3] || 0),
       count: row[4] || 0,
     }));
+  } catch {
+    return [];
+  }
+}
+
 /**
  * Fetches operational metrics for a specific project.
  */

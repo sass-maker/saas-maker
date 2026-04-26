@@ -27,9 +27,12 @@ saasmaker doctor
 - `saasmaker whoami` — show token + linked project context
 - `saasmaker keys` — show session token + linked project key
 - `saasmaker projects list|create` — project management
-- `saasmaker ai-mention config|prompts|prompts-add|check|history` — AI mention monitoring
+- `saasmaker fleet list|run|search|audit|fix|provision|apply|supervise|clean|secrets-sync|upgrade|versions` — fleet automation
+- `saasmaker forge` — scaffold a new Foundry-compliant project
+- `saasmaker feedback|roadmap|changelog|testimonials|waitlist` — block management
+- `saasmaker analytics dashboard|setup|forge-dashboard|detail` — analytics block
 - `saasmaker status` — feature health/count snapshot
-- `saasmaker doctor` — configuration + auth diagnostics
+- `saasmaker audit` (alias `doctor`) — Foundry compliance check
 - `saasmaker examples` — copy-paste command recipes
 - `saasmaker completions [bash|zsh|fish]` — shell completion script
 - `saasmaker api <method> <path>` — universal API access
@@ -93,23 +96,12 @@ saasmaker api GET /v1/feedback --auth project --query type=feature --output tabl
 saasmaker api POST /v1/feedback --auth project \
   --body '{"title":"Bug","description":"Broken CTA","submitter_email":"me@example.com","type":"bug"}'
 
-# Create short link
-saasmaker api POST /v1/links --auth project \
-  --body '{"destination":"https://example.com","title":"Homepage"}'
+# Public roadmap items by project slug
+saasmaker api GET /v1/roadmap/by-project/<slug> --auth project --output table
 
-# Dashboard forms (session route)
-saasmaker api GET /v1/forms/dashboard/<projectId> --auth session --output table
-
-# Save AI mention config (session route)
-saasmaker api POST /v1/ai-mention/config/<projectId> --auth session \
-  --body '{"brand_name":"Acme","platforms":["openai"],"openai_api_key":"sk-..."}'
-
-# Run an AI mention check
-saasmaker api POST /v1/ai-mention/check/<projectId> --auth session
-
-# Or use the dedicated helper commands
-saasmaker ai-mention prompts --project <projectId> --output table
-saasmaker ai-mention history --project <projectId> --output table
+# Vote on a roadmap item (public, rate-limited)
+saasmaker api POST /v1/roadmap/public/<slug>/<itemId>/vote --auth none \
+  --body '{"user_identifier":"voter@example.com"}'
 
 # Approve testimonial (session route)
 saasmaker api PATCH /v1/testimonials/<testimonialId> --auth session \

@@ -1,28 +1,37 @@
 import { createMiddleware } from 'hono/factory';
-import { d1Shield } from '@saas-maker/foundry-shield';
+import { FoundryShield, D1Store } from '@saas-maker/shield';
 import { Bindings, Variables, AppContext } from '../types';
 
-// Add D1 shield for unauthenticated endpoints (more reliable than in-memory)
+function buildShield(c: { env: Bindings }, max: number, windowMs: number, projectName: string) {
+  return new FoundryShield({
+    store: new D1Store(c.env.DB),
+    limit: max,
+    windowMs,
+    projectName,
+  });
+}
+
+// D1 shield for unauthenticated endpoints (distributed via D1).
 export const d1RateLimit = (key: string, maxPerMinute = 10) =>
   createMiddleware<{ Bindings: Bindings; Variables: Variables }>(async (c, next) => {
     const ip = c.req.header('CF-Connecting-IP') ?? 'unknown';
-    const shield = d1Shield(c.env.DB, { max: maxPerMinute, windowMs: 60_000, keyPrefix: key });
+    const shield = buildShield(c, maxPerMinute, 60_000, key);
     try {
-      await shield.assert(`${key}:${ip}`);
+      await shield.guard(`${key}:${ip}`);
     } catch {
       return c.json({ error: 'Too many requests' }, 429);
     }
     await next();
   });
 
-// Slug-scoped D1 shield — key derived from the request context
+// Slug-scoped D1 shield — key derived from the request context.
 export const d1RateLimitDynamic = (keyFn: (c: AppContext) => string, maxPerHour = 10) =>
   createMiddleware<{ Bindings: Bindings; Variables: Variables }>(async (c, next) => {
     const ip = c.req.header('CF-Connecting-IP') ?? c.req.header('X-Forwarded-For') ?? 'unknown';
     const key = keyFn(c);
-    const shield = d1Shield(c.env.DB, { max: maxPerHour, windowMs: 60 * 60 * 1000, keyPrefix: 'shield' });
+    const shield = buildShield(c, maxPerHour, 60 * 60 * 1000, 'shield');
     try {
-      await shield.assert(`${key}:${ip}`);
+      await shield.guard(`${key}:${ip}`);
     } catch {
       return c.json({ error: 'Too many requests' }, 429);
     }
@@ -35,20 +44,11 @@ const windows = new Map<string, { count: number; resetAt: number }>();
 export const rateLimit = createMiddleware<{ Bindings: Bindings; Variables: Variables }>(
   async (c, next) => {
     const projectId = c.get('projectId');
-    if (!projectId) {
-      // Not an API-key route — skip
-      return next();
-    }
+    if (!projectId) return next();
 
     const project = c.get('project');
-    if (!project) {
-      // No project cached (shouldn't happen after requireApiKey) — skip
-      return next();
-    }
-
-    if (!project.rate_limit_enabled) {
-      return next();
-    }
+    if (!project) return next();
+    if (!project.rate_limit_enabled) return next();
 
     const limit = project.rate_limit_rpm ?? 60;
     const now = Date.now();
