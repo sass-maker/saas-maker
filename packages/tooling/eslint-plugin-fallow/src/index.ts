@@ -13,8 +13,8 @@ const rule = {
   create(context: any) {
     return {
       Program() {
-        const filePath = context.getFilename();
-        const root = context.getCwd();
+        const filePath = context.filename;
+        const root = context.cwd;
 
         try {
           const output = execSync(`fallow audit --format json "${filePath}"`, {
