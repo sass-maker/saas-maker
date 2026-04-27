@@ -1,6 +1,6 @@
 {
   "name": "@saas-maker/test-config",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Foundry-standard Playwright + Vitest config factories with a11y + smoke baked in.",
   "publishConfig": {
     "access": "public"

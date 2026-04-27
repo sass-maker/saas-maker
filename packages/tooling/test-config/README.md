@@ -51,6 +51,32 @@ Defaults:
 - `testTimeout: 15_000`
 - v8 coverage with sensible excludes (off by default)
 
+### Plugins, aliases, and arbitrary `test.*` overrides
+
+`defineVitestConfig` is a passthrough of Vite's `UserConfig`. Any top-level
+Vite key (`plugins`, `resolve`, `define`, `server`, …) and any `test.*` field
+is shallow-merged on top of the foundry defaults — no escape hatch needed.
+
+```ts
+import { defineVitestConfig } from '@saas-maker/test-config/vitest';
+import react from '@vitejs/plugin-react';
+import path from 'node:path';
+
+export default defineVitestConfig({
+  environment: 'happy-dom',
+  plugins: [react()],
+  resolve: {
+    alias: { '@': path.resolve(__dirname, 'src') },
+  },
+  test: {
+    // Anything from Vitest's `test` block — merged with foundry defaults.
+    pool: 'forks',
+    sequence: { shuffle: true },
+    server: { deps: { inline: ['react-markdown'] } },
+  },
+});
+```
+
 ## a11y
 
 ```ts
