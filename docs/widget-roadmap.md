@@ -25,11 +25,11 @@ Granular widget approach: each widget = own published npm package. Apps install 
 
 | Package | What | Notes |
 |---|---|---|
-| `@saas-maker/login-modal` | Drop-in better-auth UI (Google + email) | Pairs with `@saas-maker/auth-preset` |
+| `@saas-maker/login-modal` | Drop-in better-auth UI (Google + email) | Each app owns its better-auth setup (see auth conventions doc) |
 | `@saas-maker/pricing-table` | Config-driven plans + Stripe checkout link | Stripe price IDs from env |
 | `@saas-maker/cmdk` | Cmd+K palette, project-wide search | Optional Fleet-wide search via api |
 | `@saas-maker/og-image` | OG image generator via Browser Rendering | $5 paid plan unlock |
-| `@saas-maker/account-menu` | User dropdown for better-auth | Pairs with auth-preset |
+| `@saas-maker/account-menu` | User dropdown for better-auth | Each app owns its better-auth setup |
 
 ## Tier 3 — specialty / vertical
 
@@ -61,6 +61,11 @@ Granular widget approach: each widget = own published npm package. Apps install 
   <Newsletter />
   ```
 - No per-repo wrappers ever again
+
+## Deferred / dropped
+
+- `@saas-maker/auth-preset` — **dropped** (was at `packages/blocks/auth-preset/`). Audit showed 0/9 Fleet apps could integrate: D1 was hardcoded but Fleet uses Turso, and the cookie-name change would have logged users out. Each app keeps owning its own better-auth setup.
+- **Future work — auth conventions doc:** instead of a shared preset, write a short doc in `docs/auth-conventions.md` capturing Fleet defaults: better-auth + Google provider, Turso adapter, cookie name + lifetime, session shape, refresh strategy, sign-out flow. Apps copy the snippets they need; no hard runtime dep.
 
 ## Decision pending
 
