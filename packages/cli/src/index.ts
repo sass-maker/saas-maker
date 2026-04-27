@@ -3,7 +3,7 @@ import { loginCommand } from './commands/login.js';
 import { whoamiCommand } from './commands/whoami.js';
 import { keysCommand } from './commands/keys.js';
 import { projectsListCommand, projectsCreateCommand, projectsDeleteCommand, projectsUpdateCommand } from './commands/projects.js';
-import { fleetListCommand, fleetRunCommand, fleetUpgradeCommand, fleetAuditCommand, fleetFixCommand, fleetSecretsSyncCommand, fleetVersionsCommand, fleetApplySkillCommand, fleetProvisionCommand, fleetSearchCommand } from './commands/fleet.js';
+import { fleetListCommand, fleetRunCommand, fleetUpgradeCommand, fleetAuditCommand, fleetFixCommand, fleetSecretsSyncCommand, fleetVersionsCommand, fleetApplySkillCommand, fleetProvisionCommand, fleetSearchCommand, fleetCheckDriftCommand } from './commands/fleet.js';
 import { fleetSuperviseCommand } from './commands/supervise.js';
 import { fleetCleanCommand } from './commands/clean.js';
 import { fleetScanCommand } from './commands/fleet-scan.js';
@@ -49,6 +49,12 @@ fleet
   .action(fleetRunCommand);
 fleet.command('search <pattern>').description('Search for a pattern across the entire fleet').action(fleetSearchCommand);
 fleet.command('audit').description('Audit all fleet projects for Foundry compliance').action(fleetAuditCommand);
+fleet
+  .command('check-drift')
+  .description('Audit registry projects against the foundry rules; --fix auto-applies known fixes')
+  .option('--output <format>', 'table | json', 'table')
+  .option('--fix', 'Auto-apply known fixes', false)
+  .action(fleetCheckDriftCommand);
 fleet.command('fix').description('Auto-fix compliance issues across the fleet').action(fleetFixCommand);
 fleet.command('provision').description('Recreate the entire fleet on this machine').action(fleetProvisionCommand);
 fleet.command('apply <skill>').description('Dispatch an agent swarm to apply a protocol').action(fleetApplySkillCommand);

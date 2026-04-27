@@ -1,0 +1,60 @@
+{
+  "name": "@saas-maker/posthog-client",
+  "version": "0.1.0",
+  "description": "Typed PostHog wrapper — React provider, hooks, and event registry for the Foundry stack.",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./server": {
+      "types": "./dist/server.d.ts",
+      "import": "./dist/server.mjs",
+      "require": "./dist/server.js"
+    },
+    "./schema": {
+      "types": "./dist/schema.d.ts",
+      "import": "./dist/schema.mjs",
+      "require": "./dist/schema.js"
+    }
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "posthog-js": "1.372.1",
+    "posthog-node": "5.10.1"
+  },
+  "peerDependencies": {
+    "react": "19.2.5",
+    "react-dom": "19.2.5"
+  },
+  "peerDependenciesMeta": {
+    "react": { "optional": true },
+    "react-dom": { "optional": true }
+  },
+  "devDependencies": {
+    "@saas-maker/tsconfig": "workspace:*",
+    "@testing-library/react": "16.3.2",
+    "@types/react": "19",
+    "@types/react-dom": "19",
+    "happy-dom": "20.9.0",
+    "react": "19.2.5",
+    "react-dom": "19.2.5",
+    "tsup": "8.0.0",
+    "typescript": "6.0.3",
+    "vitest": "4.1.5"
+  }
+}

@@ -1,0 +1,121 @@
+name: Foundry — Cloudflare Deploy
+
+# Reusable workflow. Pin via `@v1` from consuming repos:
+#   uses: sarthakagrawal927/saas-maker/.github/workflows/foundry-cf-deploy.yml@v1
+on:
+  workflow_call:
+    inputs:
+      worker_name:
+        description: Wrangler worker / pages project name (informational, used in logs).
+        required: true
+        type: string
+      wrangler_config_path:
+        description: Path to wrangler.toml or wrangler.jsonc relative to repo root.
+        required: false
+        type: string
+        default: wrangler.toml
+      working_directory:
+        description: Subdirectory to run pnpm + wrangler in (defaults to repo root).
+        required: false
+        type: string
+        default: '.'
+      node_version:
+        description: Node.js version.
+        required: false
+        type: string
+        default: '20'
+      pnpm_version:
+        description: pnpm version.
+        required: false
+        type: string
+        default: '10'
+      build_command:
+        description: Build command run before deploy. Set to empty string to skip.
+        required: false
+        type: string
+        default: 'pnpm build'
+      dry_run:
+        description: Run `wrangler deploy --dry-run` instead of a real deploy.
+        required: false
+        type: boolean
+        default: false
+      smoke_url:
+        description: HTTPS URL hit after deploy (expects 2xx). Empty = skip smoke.
+        required: false
+        type: string
+        default: ''
+      smoke_max_attempts:
+        description: How many times to retry the smoke check (5s between attempts).
+        required: false
+        type: number
+        default: 12
+    secrets:
+      CLOUDFLARE_API_TOKEN:
+        required: true
+      CLOUDFLARE_ACCOUNT_ID:
+        required: false
+
+jobs:
+  deploy:
+    name: Deploy ${{ inputs.worker_name }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ inputs.pnpm_version }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node_version }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: ${{ inputs.working_directory }}
+
+      - name: Build
+        if: inputs.build_command != ''
+        run: ${{ inputs.build_command }}
+        working-directory: ${{ inputs.working_directory }}
+
+      - name: Wrangler deploy
+        if: inputs.dry_run == false
+        run: pnpm exec wrangler deploy --config ${{ inputs.wrangler_config_path }}
+        working-directory: ${{ inputs.working_directory }}
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Wrangler dry-run
+        if: inputs.dry_run == true
+        run: pnpm exec wrangler deploy --config ${{ inputs.wrangler_config_path }} --dry-run
+        working-directory: ${{ inputs.working_directory }}
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Post-deploy smoke
+        if: inputs.smoke_url != '' && inputs.dry_run == false
+        shell: bash
+        run: |
+          set -eo pipefail
+          url="${{ inputs.smoke_url }}"
+          attempts=${{ inputs.smoke_max_attempts }}
+          for i in $(seq 1 $attempts); do
+            echo "[smoke $i/$attempts] curl -sSI $url"
+            status=$(curl -sSI -o /dev/null -w '%{http_code}' --max-time 15 "$url" || echo "000")
+            if [[ "$status" =~ ^2 ]]; then
+              echo "[smoke] OK ($status)"
+              exit 0
+            fi
+            echo "[smoke] got $status — retrying in 5s"
+            sleep 5
+          done
+          echo "::error::Smoke check failed for $url after $attempts attempts"
+          exit 1

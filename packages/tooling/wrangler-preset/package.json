@@ -1,0 +1,38 @@
+{
+  "name": "@saas-maker/wrangler-preset",
+  "version": "0.1.0",
+  "description": "Foundry-standard Wrangler config builder — sane defaults for Workers + Pages.",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./snippets": {
+      "types": "./dist/snippets.d.ts",
+      "import": "./dist/snippets.mjs",
+      "require": "./dist/snippets.js"
+    }
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@saas-maker/tsconfig": "workspace:*",
+    "@types/node": "25.6.0",
+    "tsup": "8.0.0",
+    "typescript": "6.0.3",
+    "vitest": "4.1.5"
+  }
+}

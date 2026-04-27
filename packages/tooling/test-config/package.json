@@ -1,0 +1,59 @@
+{
+  "name": "@saas-maker/test-config",
+  "version": "0.2.0",
+  "description": "Foundry-standard Playwright + Vitest config factories with a11y + smoke baked in.",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./playwright": {
+      "types": "./dist/playwright.d.ts",
+      "import": "./dist/playwright.mjs",
+      "require": "./dist/playwright.js"
+    },
+    "./vitest": {
+      "types": "./dist/vitest.d.ts",
+      "import": "./dist/vitest.mjs",
+      "require": "./dist/vitest.js"
+    },
+    "./a11y": {
+      "types": "./dist/a11y.d.ts",
+      "import": "./dist/a11y.mjs",
+      "require": "./dist/a11y.js"
+    }
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "@axe-core/playwright": ">=4",
+    "@playwright/test": ">=1",
+    "vitest": ">=2"
+  },
+  "peerDependenciesMeta": {
+    "@axe-core/playwright": { "optional": true },
+    "@playwright/test": { "optional": true },
+    "vitest": { "optional": true }
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.10.2",
+    "@playwright/test": "1.59.1",
+    "@saas-maker/tsconfig": "workspace:*",
+    "tsup": "8.0.0",
+    "typescript": "6.0.3",
+    "vitest": "4.1.5"
+  }
+}

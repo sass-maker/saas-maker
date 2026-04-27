@@ -7,7 +7,7 @@ import { auditProject } from '../lib/auditor.js';
 import { printOutput } from '../lib/output.js';
 import { applyStandard, scaffoldRenovate, detectProjectType, scaffoldCI, scaffoldHusky, type RemoteStandards } from '../lib/forge.js';
 import { existsSync, mkdirSync, renameSync, readFileSync, writeFileSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { requestApi, getResponseError } from '../lib/request.js';
 
 interface FleetRunOptions {
@@ -304,4 +304,117 @@ export async function fleetSecretsSyncCommand(): Promise<void> {
 export async function fleetUpgradeCommand(): Promise<void> {
   const command = 'pnpm add -D @saas-maker/tooling @saas-maker/eslint-config @saas-maker/tsconfig @saas-maker/prettier-config @saas-maker/dev-config';
   return fleetRunCommand(command, { parallel: true });
+}
+
+import { checkProjectDrift, applyDriftFixes, type DriftReport } from '../lib/drift.js';
+
+interface CheckDriftOptions {
+  output?: 'table' | 'json';
+  fix?: boolean;
+}
+
+/**
+ * `fnd fleet check-drift` — audits every Fleet project against Foundry rules.
+ *
+ * Reads foundry.projects.json (registry of all Fleet projects + paths) and walks
+ * the local Fleet directory. Resolves each registered slug to a path under
+ * ~/Desktop/Fleet (or wherever the parent saas-maker lives), runs the drift
+ * checker, and emits a table or JSON report. Exits with code 1 if any project
+ * has at least one failed check. Pass --fix to auto-apply known fixes.
+ */
+export async function fleetCheckDriftCommand(options: CheckDriftOptions = {}): Promise<void> {
+  const fleet = getLocalFleet();
+
+  // Read the registry to map slugs → metadata. Resolve relative to the
+  // currently-located saas-maker root.
+  const cwd = process.cwd();
+  const rootPath = cwd.includes('saas-maker')
+    ? resolve(cwd.split('saas-maker')[0]!, 'saas-maker')
+    : cwd;
+  const manifestPath = join(rootPath, 'foundry.projects.json');
+  let manifest: Record<string, { desc?: string; url?: string }> = {};
+  if (existsSync(manifestPath)) {
+    try {
+      manifest = JSON.parse(readFileSync(manifestPath, 'utf-8'));
+    } catch {
+      log.warn('foundry.projects.json present but unreadable — falling back to local fleet only.');
+    }
+  }
+
+  // Build the list of (slug, projectPath) we want to audit:
+  // - everything in the registry that exists locally
+  // - plus any locally-detected fleet entries not in the registry (best-effort)
+  const registrySlugs = Object.keys(manifest);
+  const fleetByPath = new Map(fleet.map((p) => [p.path, p]));
+  const targets: { name: string; path: string }[] = [];
+
+  for (const slug of registrySlugs) {
+    const guessPath = join(dirname(rootPath), slug);
+    if (existsSync(join(guessPath, 'package.json'))) {
+      targets.push({ name: slug, path: guessPath });
+    }
+  }
+  for (const project of fleet) {
+    if (!targets.find((t) => t.path === project.path)) {
+      targets.push({ name: project.name, path: project.path });
+    }
+  }
+  // Silence unused warning — fleetByPath kept for potential dedupe.
+  void fleetByPath;
+
+  if (targets.length === 0) {
+    log.info('No projects detected to audit.');
+    return;
+  }
+
+  log.info(`Checking drift for ${targets.length} projects...\n`);
+
+  const reports: DriftReport[] = [];
+  for (const t of targets) {
+    reports.push(checkProjectDrift(t.path, t.name));
+  }
+
+  if (options.fix) {
+    log.info('--fix enabled — applying known fixes\n');
+    for (const r of reports) {
+      const result = applyDriftFixes(r);
+      if (result.applied.length > 0) {
+        log.success(`[${r.project}] applied: ${result.applied.join(', ')}`);
+      }
+      if (result.skipped.length > 0) {
+        log.info(`[${r.project}] no auto-fix: ${result.skipped.join(', ')}`);
+      }
+    }
+    // Re-run after fixes to surface remaining drift
+    reports.length = 0;
+    for (const t of targets) reports.push(checkProjectDrift(t.path, t.name));
+  }
+
+  if (options.output === 'json') {
+    console.log(JSON.stringify(reports, null, 2));
+  } else {
+    const rows = reports.map((r) => ({
+      project: r.project,
+      score: `${r.passCount}/${r.totalCount}`,
+      failed: r.checks.filter((c) => c.status === 'fail').map((c) => c.id).join(',') || '—',
+      warned: r.checks.filter((c) => c.status === 'warn').map((c) => c.id).join(',') || '—',
+      status: r.checks.some((c) => c.status === 'fail')
+        ? chalk.red('FAIL')
+        : r.checks.some((c) => c.status === 'warn')
+          ? chalk.yellow('WARN')
+          : chalk.green('PASS'),
+    }));
+    printOutput(rows, {
+      output: 'table',
+      defaultColumns: ['project', 'score', 'failed', 'warned', 'status'],
+    });
+  }
+
+  const anyFailed = reports.some((r) => r.checks.some((c) => c.status === 'fail'));
+  if (anyFailed) {
+    log.error('\nDrift detected. Re-run with `--fix` to auto-apply known fixes.');
+    process.exitCode = 1;
+  } else {
+    log.success('\nNo drift detected.');
+  }
 }
