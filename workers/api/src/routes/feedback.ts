@@ -1,6 +1,6 @@
 import { Hono, type Context } from 'hono';
 import { Bindings, Variables } from '../types';
-import { decryptAuthJsJwe, requireApiKey, requireSession } from '../middleware/auth';
+import { resolveBearerUserId, requireApiKey, requireSession } from '../middleware/auth';
 import {
   SubmitFeedbackRequest,
   FeedbackType,
@@ -33,10 +33,8 @@ function isValidStatus(status: string): status is FeedbackStatus {
 async function getOptionalUserId(c: Context<{ Bindings: Bindings; Variables: Variables }>) {
   const authHeader = c.req.header('Authorization');
   if (!authHeader?.startsWith('Bearer ')) return undefined;
-  const token = authHeader.slice(7);
-  const payload = await decryptAuthJsJwe(token, c.env.AUTH_SECRET);
-  if (!payload?.sub) return undefined;
-  return payload.sub;
+  const userId = await resolveBearerUserId(c, authHeader.slice(7));
+  return userId ?? undefined;
 }
 
 // Submit feedback (public, API key auth)

@@ -6,7 +6,6 @@ import app from '../../workers/api/src/index';
 // touching the DB, so no real connection is needed.
 export function request(path: string, init?: RequestInit) {
   return app.request(path, init, {
-    AUTH_SECRET: 'test-auth-secret-at-least-32-chars-long',
     APP_BASE_URL: 'http://localhost:3000',
     CORS_ORIGIN: '*',
     DATABASE_URL: 'postgresql://localhost:26257/test',

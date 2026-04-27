@@ -1,7 +1,6 @@
 import { Context } from 'hono';
 
 export type Bindings = {
-  AUTH_SECRET: string;
   APP_BASE_URL: string;
   CORS_ORIGIN: string;
   DB: D1Database;

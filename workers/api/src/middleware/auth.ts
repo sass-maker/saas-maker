@@ -1,59 +1,15 @@
 import { createMiddleware } from 'hono/factory';
-import { jwtDecrypt } from 'jose';
 import { Bindings, Variables } from '../types';
 import { getDb } from '../db';
 
-async function deriveEncryptionKey(secret: string, salt: string): Promise<Uint8Array> {
-  const encoder = new TextEncoder();
-  const keyMaterial = await crypto.subtle.importKey(
-    'raw',
-    encoder.encode(secret),
-    { name: 'HKDF' },
-    false,
-    ['deriveBits']
-  );
-  // Auth.js uses A256CBC-HS512 (64 bytes) with salt = cookie name
-  const bits = await crypto.subtle.deriveBits(
-    {
-      name: 'HKDF',
-      hash: 'SHA-256',
-      salt: encoder.encode(salt),
-      info: encoder.encode(`Auth.js Generated Encryption Key (${salt})`),
-    },
-    keyMaterial,
-    512 // 64 bytes for A256CBC-HS512
-  );
-  return new Uint8Array(bits);
-}
-
-const COOKIE_NAMES = [
-  '__Secure-authjs.session-token',  // production (HTTPS)
-  'authjs.session-token',            // development (HTTP)
-];
-
-export async function decryptAuthJsJwe(
-  token: string,
-  secret: string
-): Promise<{ sub: string; email: string; name?: string; picture?: string } | null> {
-  for (const salt of COOKIE_NAMES) {
-    try {
-      const key = await deriveEncryptionKey(secret, salt);
-      const { payload } = await jwtDecrypt(token, key, {
-        clockTolerance: 15,
-        keyManagementAlgorithms: ['dir'],
-        contentEncryptionAlgorithms: ['A256CBC-HS512', 'A256GCM'],
-      });
-      if (!payload.sub || !payload.email) return null;
-      return payload as unknown as { sub: string; email: string; name?: string; picture?: string };
-    } catch {
-      continue;
-    }
-  }
-  return null;
-}
-
+/**
+ * Resolve a better-auth opaque session token (issued by the cockpit) against
+ * the shared D1 `session` table. Mirrors the user into the API's `users` table
+ * so downstream handlers can key off `users.id`.
+ *
+ * Returns the resolved user id, or null if the token is unknown / expired.
+ */
 async function resolveBetterAuthSession(c: { env: Bindings }, token: string): Promise<string | null> {
-  // Better-auth stores opaque tokens in the `session` table joined to `user`
   const row = await c.env.DB.prepare(
     `SELECT s.userId, s.expiresAt, u.email, u.name, u.image
      FROM session s
@@ -65,8 +21,6 @@ async function resolveBetterAuthSession(c: { env: Bindings }, token: string): Pr
   const expiresMs = typeof row.expiresAt === 'number' ? row.expiresAt * 1000 : Date.parse(String(row.expiresAt));
   if (Number.isFinite(expiresMs) && expiresMs < Date.now()) return null;
 
-  // Mirror into the existing `users` table so the rest of the API (which keys
-  // off `users.id`) keeps working.
   const db = getDb(c.env.DB);
   const user = await db.upsertUser({
     id: row.userId,
@@ -77,6 +31,19 @@ async function resolveBetterAuthSession(c: { env: Bindings }, token: string): Pr
   return user.id;
 }
 
+/**
+ * Resolve any Bearer token the API accepts to a user id, or null. Tries CLI
+ * tokens (`sm_` prefix) then better-auth opaque session tokens.
+ */
+export async function resolveBearerUserId(c: { env: Bindings }, token: string): Promise<string | null> {
+  if (token.startsWith('sm_')) {
+    const db = getDb(c.env.DB);
+    const cliToken = await db.getCliTokenUser(token);
+    return cliToken?.user_id ?? null;
+  }
+  return resolveBetterAuthSession(c, token);
+}
+
 export const requireSession = createMiddleware<{ Bindings: Bindings; Variables: Variables }>(
   async (c, next) => {
     const authHeader = c.req.header('Authorization');
@@ -84,38 +51,10 @@ export const requireSession = createMiddleware<{ Bindings: Bindings; Variables: 
       return c.json({ error: 'Unauthorized' }, 401);
     }
 
-    const token = authHeader.slice(7);
-    const db = getDb(c.env.DB);
+    const userId = await resolveBearerUserId(c, authHeader.slice(7));
+    if (!userId) return c.json({ error: 'Unauthorized' }, 401);
 
-    // 1. CLI token (sm_ prefix)
-    if (token.startsWith('sm_')) {
-      const cliToken = await db.getCliTokenUser(token);
-      if (!cliToken) return c.json({ error: 'Unauthorized' }, 401);
-      c.set('userId', cliToken.user_id);
-      return next();
-    }
-
-    // 2. Better-auth opaque session token (cockpit)
-    const baUserId = await resolveBetterAuthSession(c, token);
-    if (baUserId) {
-      c.set('userId', baUserId);
-      return next();
-    }
-
-    // 3. Legacy AuthJS JWE session token
-    const payload = await decryptAuthJsJwe(token, c.env.AUTH_SECRET);
-    if (!payload) {
-      return c.json({ error: 'Unauthorized' }, 401);
-    }
-
-    const user = await db.upsertUser({
-      id: payload.sub,
-      email: payload.email,
-      name: payload.name || null,
-      avatar_url: payload.picture || null,
-    });
-
-    c.set('userId', user.id);
+    c.set('userId', userId);
     await next();
   }
 );
@@ -132,41 +71,15 @@ export const requireApiKeyOrSession = createMiddleware<{ Bindings: Bindings; Var
       return next();
     }
 
-    // Fall back to session auth (same logic as requireSession)
     const authHeader = c.req.header('Authorization');
     if (!authHeader?.startsWith('Bearer ')) {
       return c.json({ error: 'Unauthorized' }, 401);
     }
 
-    const token = authHeader.slice(7);
-    const db = getDb(c.env.DB);
+    const userId = await resolveBearerUserId(c, authHeader.slice(7));
+    if (!userId) return c.json({ error: 'Unauthorized' }, 401);
 
-    if (token.startsWith('sm_')) {
-      const cliToken = await db.getCliTokenUser(token);
-      if (!cliToken) return c.json({ error: 'Unauthorized' }, 401);
-      c.set('userId', cliToken.user_id);
-      return next();
-    }
-
-    const baUserId = await resolveBetterAuthSession(c, token);
-    if (baUserId) {
-      c.set('userId', baUserId);
-      return next();
-    }
-
-    const payload = await decryptAuthJsJwe(token, c.env.AUTH_SECRET);
-    if (!payload) {
-      return c.json({ error: 'Unauthorized' }, 401);
-    }
-
-    const user = await db.upsertUser({
-      id: payload.sub,
-      email: payload.email,
-      name: payload.name || null,
-      avatar_url: payload.picture || null,
-    });
-
-    c.set('userId', user.id);
+    c.set('userId', userId);
     await next();
   }
 );

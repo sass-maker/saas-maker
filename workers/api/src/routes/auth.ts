@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { Bindings, Variables } from '../types';
-import { decryptAuthJsJwe } from '../middleware/auth';
+import { resolveBearerUserId } from '../middleware/auth';
 import { getDb } from '../db';
 import { capture, identify } from '@saas-maker/ops';
 
@@ -12,19 +12,12 @@ auth.get('/session', async (c) => {
     return c.json({ authenticated: false }, 401);
   }
 
-  const token = authHeader.slice(7);
-  const payload = await decryptAuthJsJwe(token, c.env.AUTH_SECRET);
-  if (!payload || !payload.sub || !payload.email) {
-    return c.json({ authenticated: false }, 401);
-  }
+  const userId = await resolveBearerUserId(c, authHeader.slice(7));
+  if (!userId) return c.json({ authenticated: false }, 401);
 
   const db = getDb(c.env.DB);
-  const user = await db.upsertUser({
-    id: payload.sub,
-    email: payload.email,
-    name: payload.name || null,
-    avatar_url: payload.picture || null,
-  });
+  const user = await db.getUserById(userId);
+  if (!user) return c.json({ authenticated: false }, 401);
 
   identify({
     distinctId: user.id,
@@ -36,7 +29,7 @@ auth.get('/session', async (c) => {
 });
 
 auth.post('/logout', async (c) => {
-  // Auth.js handles logout on the dashboard side.
+  // better-auth handles logout on the cockpit side via its own /api/auth route.
   // This endpoint is kept for compatibility but is a no-op.
   return c.json({ ok: true });
 });
