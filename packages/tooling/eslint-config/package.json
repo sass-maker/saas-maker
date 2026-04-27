@@ -1,6 +1,6 @@
 {
   "name": "@saas-maker/eslint-config",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "type": "module",
   "main": "index.js",
   "exports": {
@@ -24,11 +24,13 @@
     "eslint-config-next": ">=15.0.0"
   },
   "peerDependenciesMeta": {
-    "eslint-config-next": { "optional": true }
+    "eslint-config-next": {
+      "optional": true
+    }
   },
   "dependencies": {
     "@eslint/js": "10.0.1",
-    "@saas-maker/eslint-plugin-fallow": "workspace:*",
+    "@saas-maker/eslint-plugin-fallow": "^1.0.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-import": "2.32.0",
     "eslint-plugin-promise": "7.2.1",
