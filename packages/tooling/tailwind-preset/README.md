@@ -18,6 +18,31 @@ pnpm add -D @saas-maker/tailwind-preset
 
 That's it — `bg-primary`, `text-muted-foreground`, `border-border`, `shadow-foundry-md`, `dark:` variant, etc. are all live.
 
+### Overriding tokens for app brand
+
+Tokens are scoped inside `@layer base`, so apps can override any subset by
+declaring their own values in a `@layer base` block AFTER the import:
+
+```css
+@import "tailwindcss";
+@import "@saas-maker/tailwind-preset/theme.css";
+
+@layer base {
+  :root {
+    --primary: oklch(0.55 0.18 250);
+    --primary-foreground: oklch(1 0 0);
+    --radius: 0.5rem;
+  }
+  .dark {
+    --primary: oklch(0.75 0.15 250);
+  }
+}
+```
+
+Anything you don't override falls back to foundry defaults. Because both
+the preset's `:root` and your override live in `@layer base`, source order
+wins — your `@layer base` block must come after the preset import.
+
 ## Tailwind v3
 
 ```ts

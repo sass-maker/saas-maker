@@ -1,6 +1,6 @@
 {
   "name": "@saas-maker/tailwind-preset",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Foundry brand tokens — Tailwind v4 @theme + v3 JS preset.",
   "publishConfig": {
     "access": "public"
