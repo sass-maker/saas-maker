@@ -1,1 +1,0 @@
-export const FOUNDRY_COMPATIBILITY_DATE = '2025-04-01';
