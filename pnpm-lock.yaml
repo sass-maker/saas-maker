@@ -391,6 +391,83 @@ importers:
         specifier: 6.0.3
         version: 6.0.3
 
+  packages/blocks/views/capability-graph:
+    dependencies:
+      zod:
+        specifier: 4.1.13
+        version: 4.1.13
+    devDependencies:
+      '@saas-maker/tsconfig':
+        specifier: workspace:*
+        version: link:../../../tooling/tsconfig
+      tsup:
+        specifier: 8.0.0
+        version: 8.0.0(postcss@8.5.10)(typescript@6.0.3)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: 4.1.5
+        version: 4.1.5(@opentelemetry/api@1.9.0)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.5)(happy-dom@20.9.0)(jsdom@29.0.2(@noble/hashes@2.2.0))(msw@2.13.6(@types/node@25.6.0)(typescript@6.0.3))(vite@7.3.2(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.16.9)(tsx@4.21.0)(yaml@2.8.3))
+
+  packages/blocks/views/runtime:
+    dependencies:
+      '@saas-maker/capability-graph':
+        specifier: workspace:*
+        version: link:../capability-graph
+      class-variance-authority:
+        specifier: 0.7.1
+        version: 0.7.1
+      clsx:
+        specifier: 2.1.1
+        version: 2.1.1
+      lucide-react:
+        specifier: 1.11.0
+        version: 1.11.0(react@19.2.5)
+      tailwind-merge:
+        specifier: 3.5.0
+        version: 3.5.0
+      zod:
+        specifier: 4.1.13
+        version: 4.1.13
+    devDependencies:
+      '@saas-maker/tsconfig':
+        specifier: workspace:*
+        version: link:../../../tooling/tsconfig
+      '@saas-maker/ui':
+        specifier: workspace:*
+        version: link:../../../ui
+      '@testing-library/jest-dom':
+        specifier: 6.9.1
+        version: 6.9.1
+      '@testing-library/react':
+        specifier: 16.3.2
+        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      '@types/react':
+        specifier: '19'
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: '19'
+        version: 19.2.3(@types/react@19.2.14)
+      happy-dom:
+        specifier: 20.9.0
+        version: 20.9.0
+      react:
+        specifier: 19.2.5
+        version: 19.2.5
+      react-dom:
+        specifier: 19.2.5
+        version: 19.2.5(react@19.2.5)
+      tsup:
+        specifier: 8.0.0
+        version: 8.0.0(postcss@8.5.10)(typescript@6.0.3)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: 4.1.5
+        version: 4.1.5(@opentelemetry/api@1.9.0)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.5)(happy-dom@20.9.0)(jsdom@29.0.2(@noble/hashes@2.2.0))(msw@2.13.6(@types/node@25.6.0)(typescript@6.0.3))(vite@7.3.2(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.16.9)(tsx@4.21.0)(yaml@2.8.3))
+
   packages/cli:
     dependencies:
       chalk:
@@ -527,24 +604,6 @@ importers:
         version: 4.1.5(@opentelemetry/api@1.9.0)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.5)(happy-dom@20.9.0)(jsdom@29.0.2(@noble/hashes@2.2.0))(msw@2.13.6(@types/node@25.6.0)(typescript@6.0.3))(vite@7.3.2(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.16.9)(tsx@4.21.0)(yaml@2.8.3))
 
   packages/tooling/tsconfig: {}
-
-  packages/tooling/wrangler-preset:
-    devDependencies:
-      '@saas-maker/tsconfig':
-        specifier: workspace:*
-        version: link:../tsconfig
-      '@types/node':
-        specifier: 25.6.0
-        version: 25.6.0
-      tsup:
-        specifier: 8.0.0
-        version: 8.0.0(postcss@8.5.10)(typescript@6.0.3)
-      typescript:
-        specifier: 6.0.3
-        version: 6.0.3
-      vitest:
-        specifier: 4.1.5
-        version: 4.1.5(@opentelemetry/api@1.9.0)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.5)(happy-dom@20.9.0)(jsdom@29.0.2(@noble/hashes@2.2.0))(msw@2.13.6(@types/node@25.6.0)(typescript@6.0.3))(vite@7.3.2(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.16.9)(tsx@4.21.0)(yaml@2.8.3))
 
   packages/ui:
     dependencies:
@@ -9565,6 +9624,9 @@ packages:
   zod@3.25.76:
     resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
+  zod@4.1.13:
+    resolution: {integrity: sha512-AvvthqfqrAhNH9dnfmrfKzX5upOdjUVJYFqNSlkmGf64gRaTzlPwz99IHYnVs28qYAybvAlBV+H7pn0saFY4Ig==}
+
   zod@4.3.6:
     resolution: {integrity: sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg==}
 
@@ -15533,8 +15595,8 @@ snapshots:
       '@babel/parser': 7.29.2
       eslint: 10.2.1(jiti@2.6.1)
       hermes-parser: 0.25.1
-      zod: 4.3.6
-      zod-validation-error: 4.0.2(zod@4.3.6)
+      zod: 4.1.13
+      zod-validation-error: 4.0.2(zod@4.1.13)
     transitivePeerDependencies:
       - supports-color
 
@@ -19684,11 +19746,13 @@ snapshots:
     dependencies:
       zod: 3.25.76
 
-  zod-validation-error@4.0.2(zod@4.3.6):
+  zod-validation-error@4.0.2(zod@4.1.13):
     dependencies:
-      zod: 4.3.6
+      zod: 4.1.13
 
   zod@3.25.76: {}
+
+  zod@4.1.13: {}
 
   zod@4.3.6: {}
 
