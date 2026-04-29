@@ -34,6 +34,15 @@ Commands that operate across your entire `~/Desktop/Fleet` folder.
 | `fnd fleet secrets-sync` | Push shared environment variables to all `.env.local` files. |
 | `fnd fleet clean [--deep]` | Reclaim gigabytes of storage by purging build caches and Rust targets. |
 
+## 🧭 Project Metadata
+
+Use the universal API command for project notes and rate-limit changes.
+
+```bash
+fnd api PATCH /v1/projects/<projectId> --auth session \
+  --body '{"readme":"Dashboard notes for this project.","rate_limit_enabled":true,"rate_limit_rpm":100000}'
+```
+
 ## 🤖 Autonomous Maintenance
 
 Run the factory on auto-pilot.

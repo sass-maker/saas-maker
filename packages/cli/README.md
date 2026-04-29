@@ -89,6 +89,10 @@ fnd api GET /health --auth none
 # Session-auth route: projects
 fnd api GET /v1/projects --auth session --output table
 
+# Add dashboard notes and raise a project rate limit
+fnd api PATCH /v1/projects/<projectId> --auth session \
+  --body '{"readme":"Internal launch notes and owner context.","rate_limit_enabled":true,"rate_limit_rpm":100000}'
+
 # Project-auth route: list feedback
 fnd api GET /v1/feedback --auth project --query type=feature --output table
 

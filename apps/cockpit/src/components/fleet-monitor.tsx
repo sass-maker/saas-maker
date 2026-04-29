@@ -11,6 +11,8 @@ import {
 } from "@saas-maker/ui";
 import { Laptop, AlertTriangle, CheckCircle2, ArrowRight, ShieldCheck, Zap, Activity } from "lucide-react";
 import Link from "next/link";
+import { apiFetchClient, getClientToken } from "@/lib/api-client";
+import { visibleDashboardProjects } from "@/lib/dashboard-projects";
 
 interface FleetProject {
   name: string;
@@ -41,6 +43,7 @@ interface FleetHealth {
 
 export function FleetMonitor() {
   const [fleet, setFleet] = useState<FleetProject[]>([]);
+  const [registeredProjectSlugs, setRegisteredProjectSlugs] = useState<string[]>([]);
   const [health, setHealth] = useState<FleetHealth | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -48,11 +51,25 @@ export function FleetMonitor() {
   useEffect(() => {
     async function scanFleet() {
       try {
-        const res = await fetch("/api/fleet/scan");
+        const [res, token] = await Promise.all([
+          fetch("/api/fleet/scan"),
+          getClientToken().catch(() => null),
+        ]);
         if (!res.ok) throw new Error("Failed to scan local fleet");
         const data = await res.json();
-        setFleet(data.fleet || []);
+        const visibleFleet = visibleDashboardProjects((data.fleet || []) as FleetProject[]);
+        setFleet(visibleFleet);
         setHealth(data.health);
+
+        if (token) {
+          const projects = await apiFetchClient<{ data: Array<{ slug: string; name: string }> }>(
+            "/v1/projects",
+            token
+          );
+          setRegisteredProjectSlugs(
+            visibleDashboardProjects(projects.data ?? []).map((project) => project.slug)
+          );
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : "Scanner unavailable");
       } finally {
@@ -151,12 +168,18 @@ export function FleetMonitor() {
                      )}
                      {project.isLegacy ? "Legacy" : "Standard"}
                    </span>
-                   <Link 
-                     href={`/projects/${project.slug}`}
-                     className="text-[11px] font-bold text-primary flex items-center gap-1 group-hover:translate-x-1 transition-transform"
-                   >
-                     Inspect <ArrowRight className="h-3 w-3" />
-                   </Link>
+                   {registeredProjectSlugs.includes(project.slug) ? (
+                     <Link
+                       href={`/projects/${project.slug}`}
+                       className="text-[11px] font-bold text-primary flex items-center gap-1 group-hover:translate-x-1 transition-transform"
+                     >
+                       Inspect <ArrowRight className="h-3 w-3" />
+                     </Link>
+                   ) : (
+                     <span className="text-[11px] font-medium text-muted-foreground">
+                       Local only
+                     </span>
+                   )}
                 </div>
               </CardContent>
             </Card>

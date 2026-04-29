@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import fs from 'node:fs';
 import path from 'node:path';
 import { execSync } from 'node:child_process';
+import { isHiddenDashboardProject } from '@/lib/dashboard-projects';
 
 const cockpitPath = process.cwd();
 const rootPath = path.resolve(cockpitPath, '../..');
@@ -30,7 +31,12 @@ export async function GET() {
 
     for (const entry of entries) {
       if (entry.isDirectory()) {
-        if (entry.name.startsWith('.') || entry.name === 'node_modules' || entry.name === 'saas-maker') continue;
+        if (
+          entry.name.startsWith('.') ||
+          entry.name === 'node_modules' ||
+          entry.name === 'saas-maker' ||
+          isHiddenDashboardProject({ name: entry.name, slug: entry.name })
+        ) continue;
 
         const projectPath = path.join(desktopPath, entry.name);
         const foundryConfig = path.join(projectPath, 'foundry.json');
@@ -41,6 +47,8 @@ export async function GET() {
           if (fs.existsSync(pkgPath)) {
             try { pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8')); } catch {}
           }
+
+          if (isHiddenDashboardProject({ name: pkg.name || entry.name, slug: entry.name })) continue;
 
           const checks = {
             config: fs.existsSync(foundryConfig),

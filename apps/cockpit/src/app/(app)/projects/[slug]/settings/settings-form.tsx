@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
   DialogContent,
@@ -64,19 +65,44 @@ export function SettingsForm({ project, featureCounts }: SettingsFormProps) {
   const router = useRouter();
 
   const [name, setName] = useState(project.name);
+  const [notes, setNotes] = useState(project.readme ?? "");
+  const [rateLimitEnabled, setRateLimitEnabled] = useState(
+    Boolean(project.rate_limit_enabled)
+  );
+  const [rateLimitRpm, setRateLimitRpm] = useState(
+    String(project.rate_limit_rpm ?? 60)
+  );
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
   async function handleSave() {
+    const parsedRateLimit = Number(rateLimitRpm);
+    if (
+      !Number.isInteger(parsedRateLimit) ||
+      parsedRateLimit < 1 ||
+      parsedRateLimit > 1000000
+    ) {
+      setSaveError("Rate limit must be a whole number between 1 and 1,000,000.");
+      return;
+    }
+
     setSaving(true);
     setSaveError(null);
     try {
       const token = await getToken();
       await apiFetch(
         `/v1/projects/${project.id}`,
-        { method: "PATCH", body: JSON.stringify({ name: name.trim() }) },
+        {
+          method: "PATCH",
+          body: JSON.stringify({
+            name: name.trim(),
+            readme: notes.trim() || null,
+            rate_limit_enabled: rateLimitEnabled,
+            rate_limit_rpm: parsedRateLimit,
+          }),
+        },
         token
       );
       router.refresh();
@@ -86,6 +112,12 @@ export function SettingsForm({ project, featureCounts }: SettingsFormProps) {
       setSaving(false);
     }
   }
+
+  const hasChanges =
+    name !== project.name ||
+    notes !== (project.readme ?? "") ||
+    rateLimitEnabled !== Boolean(project.rate_limit_enabled) ||
+    rateLimitRpm !== String(project.rate_limit_rpm ?? 60);
 
   async function handleDelete() {
     setDeleting(true);
@@ -104,15 +136,15 @@ export function SettingsForm({ project, featureCounts }: SettingsFormProps) {
 
   return (
     <div className="space-y-6">
-      {/* Project Name */}
+      {/* Project Details */}
       <Card>
         <CardHeader>
-          <CardTitle>Project Name</CardTitle>
+          <CardTitle>Project Details</CardTitle>
           <CardDescription>
-            Update the display name for your project.
+            Update the display name and dashboard notes for your project.
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
           <div className="grid gap-2">
             <Label htmlFor="project-name">Name</Label>
             <Input
@@ -121,15 +153,94 @@ export function SettingsForm({ project, featureCounts }: SettingsFormProps) {
               onChange={(e) => setName(e.target.value)}
               placeholder="Project name"
             />
-            {saveError && (
-              <p className="text-sm text-destructive">{saveError}</p>
-            )}
           </div>
+          <div className="grid gap-2">
+            <Label htmlFor="project-notes">Notes</Label>
+            <Textarea
+              id="project-notes"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder="What this project does, current owner, next steps, or operational notes."
+              rows={5}
+            />
+            <p className="text-xs text-muted-foreground">
+              These notes show as the project description in the dashboard.
+            </p>
+          </div>
+          {saveError && (
+            <p className="text-sm text-destructive">{saveError}</p>
+          )}
         </CardContent>
         <CardFooter className="border-t px-6 py-4">
           <Button
             onClick={handleSave}
-            disabled={saving || name === project.name || !name.trim()}
+            disabled={saving || !hasChanges || !name.trim()}
+            className="gap-2"
+          >
+            <Save className="h-4 w-4" />
+            {saving ? "Saving..." : "Save Changes"}
+          </Button>
+        </CardFooter>
+      </Card>
+
+      {/* Rate Limit */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Rate Limit</CardTitle>
+          <CardDescription>
+            Increase or disable request limits for high-throughput projects.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid gap-2 sm:max-w-xs">
+            <Label htmlFor="rate-limit-rpm">Requests per minute</Label>
+            <Input
+              id="rate-limit-rpm"
+              type="number"
+              min={1}
+              max={1000000}
+              value={rateLimitRpm}
+              onChange={(e) => setRateLimitRpm(e.target.value)}
+            />
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setRateLimitEnabled(true);
+                setRateLimitRpm("100000");
+              }}
+            >
+              Set 100k rpm
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setRateLimitEnabled(false)}
+            >
+              Disable limiting
+            </Button>
+          </div>
+          <label className="flex items-center gap-2 text-sm">
+            <input
+              type="checkbox"
+              checked={rateLimitEnabled}
+              onChange={(e) => setRateLimitEnabled(e.target.checked)}
+              className="h-4 w-4 rounded border-input"
+            />
+            Enforce rate limit for this project
+          </label>
+          <p className="text-xs text-muted-foreground">
+            The API accepts up to 1,000,000 requests per minute per project.
+          </p>
+        </CardContent>
+        <CardFooter className="border-t px-6 py-4">
+          <Button
+            onClick={handleSave}
+            disabled={saving || !hasChanges || !name.trim()}
             className="gap-2"
           >
             <Save className="h-4 w-4" />

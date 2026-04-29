@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { apiFetchAuthed } from '@/lib/api-client';
+import { visibleDashboardProjects } from '@/lib/dashboard-projects';
 import { TaskBoard } from '@/components/tasks/TaskBoard';
 
 export const dynamic = 'force-dynamic';
@@ -22,7 +23,7 @@ export default async function TasksPage() {
 
   try {
     const res = await apiFetchAuthed<{ data: any[] }>('/v1/fleet/metadata');
-    projects = (res.data ?? []).map((p: any) => p.slug);
+    projects = visibleDashboardProjects(res.data ?? []).map((p: any) => p.slug);
   } catch {
     projects = [];
   }

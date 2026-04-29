@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { apiFetchClient, getClientToken } from "@/lib/api-client";
+import { visibleDashboardProjects } from "@/lib/dashboard-projects";
 
 interface Project {
   id: string;
@@ -67,7 +68,7 @@ export function SidebarNav() {
           "/v1/projects",
           token
         );
-        setProjects(res.data ?? []);
+        setProjects(visibleDashboardProjects(res.data ?? []));
       } catch {
         // Silently fail
       }

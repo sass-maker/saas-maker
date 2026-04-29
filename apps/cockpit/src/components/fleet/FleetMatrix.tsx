@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Search, CheckCircle2, XCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { visibleDashboardProjects } from '@/lib/dashboard-projects';
 
 interface Project {
   slug: string; name: string; framework: string; db: string;
@@ -39,7 +40,8 @@ function Pills({ value }: { value: string }) {
 
 export function FleetMatrix({ projects }: { projects: Project[] }) {
   const [search, setSearch] = useState('');
-  const filtered = projects.filter(p =>
+  const visibleProjects = visibleDashboardProjects(projects);
+  const filtered = visibleProjects.filter(p =>
     p.name.toLowerCase().includes(search.toLowerCase()) ||
     p.framework.toLowerCase().includes(search.toLowerCase())
   );
@@ -90,7 +92,7 @@ export function FleetMatrix({ projects }: { projects: Project[] }) {
         </table>
       </div>
       <p className="text-xs text-muted-foreground">
-        {filtered.length} of {projects.length} projects · Last scan: {projects[0]?.last_scanned ? new Date(projects[0].last_scanned).toLocaleDateString() : 'never'}
+        {filtered.length} of {visibleProjects.length} projects · Last scan: {visibleProjects[0]?.last_scanned ? new Date(visibleProjects[0].last_scanned).toLocaleDateString() : 'never'}
       </p>
     </div>
   );

@@ -1,6 +1,8 @@
 import Link from "next/link";
 import {
+  Badge,
   Card,
+  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -11,14 +13,34 @@ import { FleetMonitor } from "@/components/fleet-monitor";
 import { ErrorFeed } from "@/components/error-feed";
 import { LatencyMap } from "@/components/latency-map";
 import { OnboardingFlow } from "@/components/onboarding/OnboardingFlow";
-import { AlertCircle, Cloud } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { apiFetch, getServerToken } from "@/lib/api";
+import { visibleDashboardProjects } from "@/lib/dashboard-projects";
 import type { ProjectRecord } from "@saas-maker/shared-types";
+import {
+  ArrowRight,
+  Boxes,
+  CalendarDays,
+  Cloud,
+  Database,
+  Gauge,
+  KeyRound,
+  NotebookText,
+  Sparkles,
+  AlertCircle,
+} from "lucide-react";
 
 export const dynamic = "force-dynamic";
+
+function formatDate(date: string) {
+  return new Intl.DateTimeFormat("en", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(new Date(date));
+}
 
 export default async function ProjectsPage() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -30,7 +52,7 @@ export default async function ProjectsPage() {
 
   try {
     const res = await apiFetch("/v1/projects", {}, token);
-    projects = res.data ?? [];
+    projects = visibleDashboardProjects(res.data ?? []);
   } catch (e) {
     error = e instanceof Error ? e.message : "Failed to load projects";
   }
@@ -50,9 +72,23 @@ export default async function ProjectsPage() {
         <LatencyMap />
       </div>
 
-      <div className="flex items-center gap-2 pt-8">
-        <Cloud className="h-5 w-5 text-muted-foreground" />
-        <h2 className="text-lg font-semibold tracking-tight">Cloud Blocks</h2>
+      <div className="flex flex-col gap-3 pt-8 sm:flex-row sm:items-end sm:justify-between">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <Cloud className="h-5 w-5 text-muted-foreground" />
+            <h2 className="text-lg font-semibold tracking-tight">
+              Cloud Blocks
+            </h2>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Active API projects connected to this cockpit.
+          </p>
+        </div>
+        {!error && projects.length > 0 && (
+          <Badge variant="outline" className="font-mono text-[10px]">
+            {projects.length} {projects.length === 1 ? "project" : "projects"}
+          </Badge>
+        )}
       </div>
 
       {error ? (
@@ -72,14 +108,83 @@ export default async function ProjectsPage() {
       ) : projects.length === 0 ? (
         <OnboardingFlow />
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-3">
           {projects.map((project) => (
-            <Link key={project.id} href={`/projects/${project.slug}`}>
-              <Card className="transition-colors hover:border-foreground/20 hover:bg-muted/50">
-                <CardHeader>
-                  <CardTitle className="text-lg">{project.name}</CardTitle>
-                  <CardDescription>{project.slug}</CardDescription>
+            <Link
+              key={project.id}
+              href={`/projects/${project.slug}`}
+              className="group block"
+            >
+              <Card className="overflow-hidden py-0 transition-all hover:border-primary/40 hover:bg-muted/30 hover:shadow-md">
+                <CardHeader className="grid gap-4 p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border bg-muted/40 text-sm font-semibold uppercase text-muted-foreground">
+                      {project.name.slice(0, 2)}
+                    </div>
+                    <div className="min-w-0 space-y-1">
+                      <div className="flex min-w-0 flex-wrap items-center gap-2">
+                        <CardTitle className="truncate text-base">
+                          {project.name}
+                        </CardTitle>
+                        <Badge
+                          variant="outline"
+                          className="capitalize text-[10px]"
+                        >
+                          {project.source}
+                        </Badge>
+                      </div>
+                      <CardDescription className="flex items-center gap-1 font-mono text-xs">
+                        <Boxes className="h-3 w-3" />
+                        <span className="truncate">{project.slug}</span>
+                      </CardDescription>
+                      {project.readme && (
+                        <p className="line-clamp-2 text-sm text-muted-foreground">
+                          {project.readme}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between gap-3 sm:justify-end">
+                    <div className="text-right">
+                      <div className="text-xs font-medium">
+                        {project.rate_limit_enabled
+                          ? `${project.rate_limit_rpm} rpm`
+                          : "Unlimited"}
+                      </div>
+                      <div className="text-[11px] text-muted-foreground">
+                        API rate limit
+                      </div>
+                    </div>
+                    <ArrowRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-foreground" />
+                  </div>
                 </CardHeader>
+
+                <CardContent className="grid gap-2 border-t bg-muted/10 p-4 sm:grid-cols-2 lg:grid-cols-4">
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <CalendarDays className="h-3.5 w-3.5" />
+                    <span>Created {formatDate(project.created_at)}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <Database className="h-3.5 w-3.5" />
+                    <span>{project.embedding_model ?? "Default model"}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <NotebookText className="h-3.5 w-3.5" />
+                    <span>{project.readme ? "Readme added" : "No readme"}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    {project.rate_limit_enabled ? (
+                      <Gauge className="h-3.5 w-3.5" />
+                    ) : (
+                      <Sparkles className="h-3.5 w-3.5" />
+                    )}
+                    <span className="flex items-center gap-1">
+                      <KeyRound className="h-3 w-3" />
+                      Key issued
+                    </span>
+                  </div>
+                </CardContent>
               </Card>
             </Link>
           ))}

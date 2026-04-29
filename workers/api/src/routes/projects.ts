@@ -74,6 +74,7 @@ projects.patch('/:id', async (c) => {
   const projectId = c.req.param('id');
   const body = (await c.req.json()) as {
     name?: string;
+    readme?: string;
     rate_limit_rpm?: number;
     rate_limit_enabled?: boolean;
   };
@@ -87,8 +88,8 @@ projects.patch('/:id', async (c) => {
 
   // Validate rate_limit_rpm
   if (body.rate_limit_rpm !== undefined) {
-    if (typeof body.rate_limit_rpm !== 'number' || body.rate_limit_rpm < 1 || body.rate_limit_rpm > 10000) {
-      return c.json({ error: 'rate_limit_rpm must be a number between 1 and 10000' }, 400);
+    if (typeof body.rate_limit_rpm !== 'number' || body.rate_limit_rpm < 1 || body.rate_limit_rpm > 1000000) {
+      return c.json({ error: 'rate_limit_rpm must be a number between 1 and 1000000' }, 400);
     }
   }
 
@@ -99,6 +100,7 @@ projects.patch('/:id', async (c) => {
 
   const updated = await db.updateProject(projectId, {
     name: body.name,
+    readme: body.readme,
     rate_limit_rpm: body.rate_limit_rpm,
     rate_limit_enabled: body.rate_limit_enabled,
   });
