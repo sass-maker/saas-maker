@@ -29,7 +29,7 @@ projects.get('/', async (c) => {
   const userId = c.get('userId')!;
   const source = c.req.query('source') || 'dashboard';
   const db = getDb(c.env.DB);
-  const data = await trace('db:listProjects', () => db.listProjectsByOwner(userId, source), { project: 'saasmaker-api' });
+  const data = await trace('db:listProjects', () => db.listProjectsByOwner(userId, source));
   return c.json({ data });
 });
 

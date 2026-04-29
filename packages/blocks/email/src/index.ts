@@ -1,35 +1,45 @@
 /**
  * @saas-maker/email
  *
- * Lightweight email sending with Resend/SMTP and auto-tracing via @saas-maker/ops.
+ * Lightweight email sending with Cloudflare/Resend/SMTP and auto-tracing via @saas-maker/ops.
+ * Templates are React components rendered via @react-email/render.
  *
  * @example
- * ```ts
+ * ```tsx
  * import { configureEmail, email } from '@saas-maker/email';
+ * import { NewFeedbackEmail } from '@saas-maker/email/templates';
+ * import { renderEmail } from '@saas-maker/email';
+ * import * as React from 'react';
  *
  * configureEmail({
- *   provider: 'resend',
- *   apiKey: env.RESEND_API_KEY,
+ *   provider: 'cloudflare',
+ *   accountId: env.CF_ACCOUNT_ID,
+ *   apiToken: env.CF_EMAIL_API_TOKEN,
  *   from: 'noreply@yourdomain.com',
  * });
  *
- * await email.send({
- *   to: 'user@example.com',
- *   subject: 'Welcome!',
- *   template: 'Hello {{name}}, welcome to {{product}}!',
- *   data: { name: 'Sarthak', product: 'Resume Tailor' },
- * });
+ * const { html, text } = await renderEmail(
+ *   <NewFeedbackEmail projectName="Acme" feedbackTitle="Bug" ... />
+ * );
+ * await email.send({ to: 'user@example.com', subject: 'New feedback', html, text });
  * ```
  */
 
 import { trace } from '@saas-maker/ops';
+import { sendViaCloudflare } from './providers/cloudflare';
 import { sendViaResend } from './providers/resend';
 import { sendViaSmtp } from './providers/smtp';
-import { renderTemplate } from './render';
 
 // ── Config ────────────────────────────────────────────────────────────────────
 
-export type EmailProvider = 'resend' | 'smtp';
+export type EmailProvider = 'cloudflare' | 'resend' | 'smtp';
+
+export interface CloudflareEmailConfig {
+  provider: 'cloudflare';
+  accountId: string;
+  apiToken: string;
+  from: string;
+}
 
 export interface ResendEmailConfig {
   provider: 'resend';
@@ -46,7 +56,7 @@ export interface SmtpEmailConfig {
   from: string;
 }
 
-export type EmailConfig = ResendEmailConfig | SmtpEmailConfig;
+export type EmailConfig = CloudflareEmailConfig | ResendEmailConfig | SmtpEmailConfig;
 
 let _config: EmailConfig | null = null;
 
@@ -68,14 +78,8 @@ function getConfig(): EmailConfig {
 export interface SendOptions {
   to: string | string[];
   subject: string;
-  /** Raw HTML body. If template is provided, this is ignored. */
   html?: string;
-  /** Plain text body. */
   text?: string;
-  /** Template string with {{variable}} placeholders. Rendered with `data`. */
-  template?: string;
-  /** Data to interpolate into template. */
-  data?: Record<string, unknown>;
   replyTo?: string;
   cc?: string | string[];
   bcc?: string | string[];
@@ -94,15 +98,10 @@ async function sendOne(options: SendOptions): Promise<SendResult> {
   const config = getConfig();
   const project = options.project ?? 'email';
 
-  // Render template if provided
-  const html = options.template
-    ? renderTemplate(options.template, options.data ?? {})
-    : options.html;
-
   const params = {
     to: options.to,
     subject: options.subject,
-    html,
+    html: options.html,
     text: options.text,
     replyTo: options.replyTo,
     cc: options.cc,
@@ -112,6 +111,9 @@ async function sendOne(options: SendOptions): Promise<SendResult> {
   return trace(
     `email:send:${project}`,
     async () => {
+      if (config.provider === 'cloudflare') {
+        return sendViaCloudflare(config, params);
+      }
       if (config.provider === 'resend') {
         return sendViaResend({ apiKey: config.apiKey, from: config.from }, params);
       }
@@ -132,4 +134,8 @@ export const email = {
   batch: sendBatch,
 };
 
-export { renderTemplate } from './render';
+export { renderEmail } from './render';
+export { NewFeedbackEmail } from './templates/NewFeedback';
+export type { NewFeedbackEmailProps } from './templates/NewFeedback';
+export { WaitlistSignupEmail } from './templates/WaitlistSignup';
+export type { WaitlistSignupEmailProps } from './templates/WaitlistSignup';

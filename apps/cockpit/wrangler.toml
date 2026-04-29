@@ -8,6 +8,13 @@ routes = [
   { pattern = "app.sassmaker.com/*", zone_name = "sassmaker.com" }
 ]
 
+[observability]
+enabled = true
+head_sampling_rate = 0.1
+
+[limits]
+cpu_ms = 30000
+
 [vars]
 AUTH_URL = "https://app.sassmaker.com"
 NODE_ENV = "production"

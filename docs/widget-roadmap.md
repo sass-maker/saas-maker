@@ -65,6 +65,7 @@ Granular widget approach: each widget = own published npm package. Apps install 
 ## Deferred / dropped
 
 - `@saas-maker/auth-preset` — **dropped** (was at `packages/blocks/auth-preset/`). Audit showed 0/9 Fleet apps could integrate: D1 was hardcoded but Fleet uses Turso, and the cookie-name change would have logged users out. Each app keeps owning its own better-auth setup.
+- `@saas-maker/wrangler-preset` — **dropped** (was at `packages/tooling/wrangler-preset/`). Wrangler doesn't support `.config.ts` or `$extends`, preset was unbuilt + unpublished, missing critical bindings (limits, triggers, queues, DOs, vectorize, hyperdrive). Net abstraction cost > savings (each repo's wrangler config is mostly project-specific bindings). Future replacement: `fnd fleet check-drift` lint rule that flags stale compat_date / missing observability sampling / missing cpu_ms cap. Pure check, no import.
 - **Future work — auth conventions doc:** instead of a shared preset, write a short doc in `docs/auth-conventions.md` capturing Fleet defaults: better-auth + Google provider, Turso adapter, cookie name + lifetime, session shape, refresh strategy, sign-out flow. Apps copy the snippets they need; no hard runtime dep.
 
 ## Decision pending

@@ -9,8 +9,9 @@ import {
   FeedbackRecord,
 } from '@saas-maker/shared-types';
 import { getDb } from '../db';
-import { email } from '@saas-maker/email';
+import { email, renderEmail, NewFeedbackEmail } from '@saas-maker/email';
 import { trace, capture } from '@saas-maker/ops';
+import * as React from 'react';
 
 const feedback = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
@@ -68,19 +69,23 @@ feedback.post('/', requireApiKey, async (c) => {
     if (owner?.email) {
       scheduleBackgroundTask(
         c,
-        email.send({
-          to: owner.email,
-          subject: `New ${record.type} on ${project.name}`,
-          template: `New {{type}} submission on {{projectName}}\n\nFrom: {{submitter}}\nTitle: {{title}}\n{{description}}\n\nView in dashboard: {{dashboardUrl}}`,
-          data: {
+        renderEmail(
+          React.createElement(NewFeedbackEmail, {
             projectName: project.name,
-            type: record.type,
-            title: record.title,
-            description: record.description,
-            submitter: record.submitter_name || record.submitter_email || 'Anonymous',
+            feedbackTitle: record.title,
+            feedbackType: record.type,
+            feedbackDescription: record.description,
+            submitterEmail: record.submitter_name || record.submitter_email || 'Anonymous',
             dashboardUrl: `https://app.sassmaker.com/projects/${project.slug}/feedback`,
-          },
-        }).catch(() => {})
+          })
+        ).then(({ html, text }) =>
+          email.send({
+            to: owner.email,
+            subject: `New ${record.type} on ${project.name}`,
+            html,
+            text,
+          })
+        ).catch(() => {})
       );
     }
   }
@@ -103,7 +108,7 @@ feedback.get('/', requireApiKey, async (c) => {
 
   const db = getDb(c.env.DB);
   const options = { type, status, sort, page, limit: PAGE_SIZE };
-  const result = await trace('db:listFeedback', () => db.listFeedback(projectId, options), { project: 'saasmaker-api' }) as { data: FeedbackRecord[]; total: number };
+  const result = await trace('db:listFeedback', () => db.listFeedback(projectId, options)) as { data: FeedbackRecord[]; total: number };
 
   return c.json({ data: result.data, total: result.total, page, limit: PAGE_SIZE });
 });

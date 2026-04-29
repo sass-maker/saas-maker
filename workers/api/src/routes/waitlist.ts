@@ -4,7 +4,8 @@ import { requireApiKey, requireSession } from '../middleware/auth';
 import { getDb } from '../db';
 import type { WaitlistSignupRequest } from '@saas-maker/shared-types';
 import { capture } from '@saas-maker/ops';
-import { email } from '@saas-maker/email';
+import { email, renderEmail, WaitlistSignupEmail } from '@saas-maker/email';
+import * as React from 'react';
 
 const waitlist = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
@@ -35,18 +36,21 @@ waitlist.post('/', requireApiKey, async (c) => {
     if (project) {
       const owner = await db.getUserById(project.owner_id);
       if (owner?.email) {
-        email.send({
-          to: owner.email,
-          subject: `New waitlist signup for ${project.name}`,
-          template: `New {{type}} on {{projectName}}\n\nFrom: {{submitter}}\nTitle: {{title}}\n\nView in dashboard: {{dashboardUrl}}`,
-          data: {
+        renderEmail(
+          React.createElement(WaitlistSignupEmail, {
             projectName: project.name,
-            type: 'waitlist signup',
-            title: `New signup from ${entry.email}`,
-            submitter: entry.email,
+            signupEmail: entry.email,
+            signupName: entry.name ?? undefined,
             dashboardUrl: `https://app.sassmaker.com/projects/${project.slug}/waitlist`,
-          },
-        }).catch(() => {});
+          })
+        ).then(({ html, text }) =>
+          email.send({
+            to: owner.email,
+            subject: `New waitlist signup for ${project.name}`,
+            html,
+            text,
+          })
+        ).catch(() => {});
       }
     }
 

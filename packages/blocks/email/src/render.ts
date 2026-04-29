@@ -1,22 +1,12 @@
-/**
- * Simple {{variable}} template renderer.
- * No dependencies — just string interpolation.
- */
-export function renderTemplate(template: string, data: Record<string, unknown>): string {
-  return template.replace(/\{\{(\s*[\w.]+\s*)\}\}/g, (_match, key: string) => {
-    const trimmed = key.trim();
-    const value = trimmed.split('.').reduce<unknown>((obj, part) => {
-      if (obj && typeof obj === 'object') return (obj as Record<string, unknown>)[part];
-      return undefined;
-    }, data as unknown);
-    return value != null ? String(value) : '';
-  });
-}
+import { render } from '@react-email/render';
+import * as React from 'react';
 
-export function renderHtml(template: string, data: Record<string, unknown>): string {
-  return renderTemplate(template, data);
-}
-
-export function renderText(template: string, data: Record<string, unknown>): string {
-  return renderTemplate(template, data);
+export async function renderEmail(
+  component: React.ReactElement
+): Promise<{ html: string; text: string }> {
+  const [html, text] = await Promise.all([
+    render(component),
+    render(component, { plainText: true }),
+  ]);
+  return { html, text };
 }

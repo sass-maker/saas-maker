@@ -71,7 +71,7 @@ analytics.post('/events', requireApiKey, async (c) => {
     pathname: extractPathname(body.url),
     session_id: computeSessionId(new Date().toISOString().slice(0, 10), country, device, browser, ipHash),
   };
-  await trace('db:trackEvent', () => db.createEvent(event), { project: 'saasmaker-api' });
+  await trace('db:trackEvent', () => db.createEvent(event));
 
   return c.json({ ok: true }, 201);
 });
