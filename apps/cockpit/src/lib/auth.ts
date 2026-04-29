@@ -27,6 +27,9 @@ function getAuth() {
       },
     },
     trustedOrigins: ["https://app.sassmaker.com"],
+    rateLimit: {
+      enabled: false,
+    },
   });
   return _auth;
 }
