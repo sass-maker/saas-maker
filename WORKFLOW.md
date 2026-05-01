@@ -13,11 +13,19 @@ polling:
 workspace:
   root: .symphony/workspaces
 agent:
+  default: codex
+  command_templates:
+    codex: codex {prompt}
+    claude: claude -p {prompt}
+    gemini: gemini -p {prompt}
+  custom_command_placeholders:
+    - "{prompt}"
+    - "{promptFile}"
+    - "{workspace}"
+    - "{taskId}"
   max_concurrent_agents: 3
   max_turns: 8
   max_retry_backoff_ms: 300000
-codex:
-  command: codex
 ---
 
 # Foundry Symphony Workflow
@@ -39,3 +47,7 @@ For each task:
 7. Report changed files, verification evidence, and remaining risk.
 
 Completion means the task has enough evidence for a human to move it to `Done`.
+Symphony dispatch is agent-agnostic: use `pnpm symphony dispatch <id> --agent
+codex|claude|gemini`, or pass `--agent-command` with `{prompt}`,
+`{promptFile}`, `{workspace}`, and `{taskId}` placeholders for any other local
+agent CLI.

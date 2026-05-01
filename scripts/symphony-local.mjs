@@ -7,6 +7,11 @@ const DEFAULT_API_BASE = 'https://api.sassmaker.com';
 const STATUS_ORDER = ['todo', 'in_progress', 'done'];
 const LOCAL_STATE_DIR = path.join(process.cwd(), '.symphony');
 const LOCAL_TASK_CACHE = path.join(LOCAL_STATE_DIR, 'tasks.json');
+const AGENT_COMMANDS = {
+  codex: 'codex {prompt}',
+  claude: 'claude -p {prompt}',
+  gemini: 'gemini -p {prompt}',
+};
 
 function readJson(filePath) {
   try {
@@ -40,6 +45,8 @@ function parseArgs(argv) {
     priority: 'medium',
     status: null,
     noCache: false,
+    agent: process.env.SYMPHONY_AGENT || 'codex',
+    agentCommand: process.env.SYMPHONY_AGENT_COMMAND || null,
   };
 
   const commands = new Set(['list', 'pull', 'sync', 'create', 'claim', 'done', 'reopen', 'dispatch', 'delete']);
@@ -60,6 +67,8 @@ function parseArgs(argv) {
     else if (arg === '--project' || arg === '-p') args.project = argv[++i] ?? '';
     else if (arg === '--priority') args.priority = argv[++i] ?? 'medium';
     else if (arg === '--status') args.status = argv[++i] ?? null;
+    else if (arg === '--agent') args.agent = argv[++i] ?? 'codex';
+    else if (arg === '--agent-command') args.agentCommand = argv[++i] ?? null;
     else if (arg === '--help' || arg === '-h') {
       printHelp();
       process.exit(0);
@@ -73,6 +82,8 @@ function parseArgs(argv) {
   const globalConfig = getGlobalConfig();
   args.apiBase ||= globalConfig.apiBaseUrl || DEFAULT_API_BASE;
   args.token ||= globalConfig.apiKey;
+  args.agent ||= globalConfig.symphonyAgent || 'codex';
+  args.agentCommand ||= globalConfig.symphonyAgentCommand || null;
   return args;
 }
 
@@ -81,8 +92,10 @@ function printHelp() {
 
 Usage:
   pnpm symphony                         Pull production tasks and list by status
-  pnpm symphony --commands              Include isolated Codex commands
-  pnpm symphony dispatch ID             Print one task's Codex command
+  pnpm symphony --commands              Include isolated agent commands
+  pnpm symphony dispatch ID             Print one task's agent command
+  pnpm symphony dispatch ID --agent claude
+  pnpm symphony dispatch ID --agent-command 'my-agent run --prompt-file {promptFile}'
   pnpm symphony claim ID                Move a production task to in_progress
   pnpm symphony done ID                 Move a production task to done
   pnpm symphony reopen ID               Move a production task back to todo
@@ -96,6 +109,8 @@ Options:
   --description    Description for create
   --project SLUG   Project slug for create
   --priority VALUE low, medium, or high for create
+  --agent NAME     Agent profile for dispatch: codex, claude, gemini, or custom
+  --agent-command  Command template for custom agents; supports {prompt}, {promptFile}, {workspace}, {taskId}
   --json           Print raw task JSON
   --no-cache       Do not write the pulled board to .symphony/tasks.json
 `);
@@ -111,6 +126,24 @@ function homePath(value) {
 
 function workspaceKey(task) {
   return task.id.replace(/[^A-Za-z0-9._-]/g, '_');
+}
+
+function resolveAgentCommand(args) {
+  if (args.agentCommand) return args.agentCommand;
+  const command = AGENT_COMMANDS[args.agent];
+  if (!command) {
+    throw new Error(`Unknown agent "${args.agent}". Use --agent-command for custom agents.`);
+  }
+  return command;
+}
+
+function renderAgentCommand(template, task, prompt, workspacePath) {
+  const promptFile = `${workspacePath}/prompt.md`;
+  return template
+    .replaceAll('{prompt}', shellQuote(prompt))
+    .replaceAll('{promptFile}', shellQuote(promptFile))
+    .replaceAll('{workspace}', shellQuote(workspacePath))
+    .replaceAll('{taskId}', shellQuote(task.id));
 }
 
 function buildPrompt(task) {
@@ -136,14 +169,17 @@ Execution contract:
 `;
 }
 
-function buildCommand(task) {
+function buildCommand(task, args) {
   const project = task.project_slug ?? 'saas-maker';
   const workspacePath = `.symphony/workspaces/${workspaceKey(task)}`;
+  const prompt = buildPrompt(task);
+  const agentTemplate = resolveAgentCommand(args);
+  const agentCommand = renderAgentCommand(agentTemplate, task, prompt, workspacePath);
   return [
     `cd ${homePath(`Desktop/Fleet/${project}`)}`,
     `mkdir -p ${shellQuote(workspacePath)}`,
-    `cd ${shellQuote(workspacePath)}`,
-    `codex ${shellQuote(buildPrompt(task))}`,
+    `printf %s ${shellQuote(prompt)} > ${shellQuote(`${workspacePath}/prompt.md`)}`,
+    agentCommand,
   ].join(' && ');
 }
 
@@ -227,7 +263,7 @@ function printTasks(tasks, args) {
       const description = task.description ? ` — ${task.description.split('\n')[0]}` : '';
       console.log(`  - [${shortId(task.id)}] ${task.priority} ${project}: ${task.title}${description}`);
       if (args.commands) {
-        console.log(`    ${buildCommand(task)}`);
+        console.log(`    ${buildCommand(task, args)}`);
       }
     }
   }
@@ -239,7 +275,7 @@ async function runOnce(args) {
   if (args.dispatch || args.command === 'dispatch') {
     const id = args.dispatch ?? args.id;
     const task = findTask(tasks, id);
-    console.log(buildCommand(task));
+    console.log(buildCommand(task, args));
     return;
   }
 

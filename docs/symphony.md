@@ -28,6 +28,9 @@ Run the local task reader:
 pnpm symphony
 pnpm symphony --commands
 pnpm symphony dispatch <task-id-prefix>
+pnpm symphony dispatch <task-id-prefix> --agent claude
+pnpm symphony dispatch <task-id-prefix> --agent gemini
+pnpm symphony dispatch <task-id-prefix> --agent-command 'my-agent run --prompt-file {promptFile}'
 pnpm symphony claim <task-id-prefix>
 pnpm symphony done <task-id-prefix>
 pnpm symphony create "Task title" --description "Details" --project saas-maker --priority high
@@ -39,12 +42,20 @@ board grouped by status. Dashboard-created tasks appear locally on the next
 `pnpm symphony` run; local `claim`, `done`, `reopen`, `create`, and `delete`
 commands write back to production.
 
-The cockpit task board also has a Symphony dispatch action. It copies a Codex
-command that:
+The cockpit task board also has a Symphony dispatch action. Pick an agent before
+copying the command. Built-in profiles are `codex`, `claude`, and `gemini`; for
+any other agent, use a custom command template. Templates support:
+
+- `{prompt}` — inline shell-quoted task prompt.
+- `{promptFile}` — path to the generated prompt file.
+- `{workspace}` — task workspace path.
+- `{taskId}` — production task id.
+
+The copied command:
 
 1. Enters the task's project under `~/Desktop/Fleet`.
 2. Creates a deterministic `.symphony/workspaces/<task-id>` directory.
-3. Starts Codex with a task prompt built from the task row and `WORKFLOW.md`.
+3. Writes `prompt.md` and starts the selected local agent with the task prompt.
 4. Claims `todo` tasks by moving them to `in_progress`.
 
 This keeps the production dashboard and local CLI on the same task store. The

@@ -37,6 +37,13 @@ const PRIORITY_DOT: Record<TaskRow['priority'], string> = {
   low: 'bg-gray-500',
 };
 
+const AGENT_OPTIONS = [
+  { value: 'codex', label: 'Codex' },
+  { value: 'claude', label: 'Claude' },
+  { value: 'gemini', label: 'Gemini' },
+  { value: 'custom', label: 'Custom' },
+];
+
 function Toast({ message }: { message: string }) {
   return (
     <div className="fixed bottom-6 right-6 z-50 rounded-lg bg-foreground px-4 py-2.5 text-sm font-medium text-background shadow-lg animate-in fade-in slide-in-from-bottom-2">
@@ -74,6 +81,8 @@ export function TaskBoard({
   const [editTask, setEditTask] = useState<TaskRow | null>(null);
   const [form, setForm] = useState<TaskFormData>(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
+  const [agent, setAgent] = useState('codex');
+  const [agentCommand, setAgentCommand] = useState('');
 
   const showToast = useCallback((msg: string) => {
     setToast(msg);
@@ -167,7 +176,10 @@ export function TaskBoard({
   };
 
   const handleDispatch = async (task: TaskRow) => {
-    const command = buildSymphonyCommand(task);
+    const command = buildSymphonyCommand(task, {
+      agent: agent === 'custom' ? undefined : agent,
+      agentCommand: agent === 'custom' ? agentCommand : undefined,
+    });
     try {
       await navigator.clipboard.writeText(command);
       showToast('Symphony command copied — task claimed');
@@ -185,12 +197,32 @@ export function TaskBoard({
     <>
       <div className="flex justify-end">
         <div className="flex flex-col items-end gap-2">
-          <Button onClick={openCreate} size="sm">
-            <Plus className="h-4 w-4 mr-1.5" />
-            New Task
-          </Button>
+          <div className="flex flex-wrap items-center justify-end gap-2">
+            <Select value={agent} onValueChange={setAgent}>
+              <SelectTrigger className="h-9 w-[120px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {AGENT_OPTIONS.map(option => (
+                  <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {agent === 'custom' && (
+              <Input
+                value={agentCommand}
+                onChange={e => setAgentCommand(e.target.value)}
+                placeholder="agent --prompt-file {promptFile}"
+                className="h-9 w-[260px]"
+              />
+            )}
+            <Button onClick={openCreate} size="sm">
+              <Plus className="h-4 w-4 mr-1.5" />
+              New Task
+            </Button>
+          </div>
           <p className="max-w-lg text-right text-xs text-muted-foreground">
-            Production tasks are the shared source for the dashboard and pnpm symphony.
+            Production tasks are shared across the dashboard, pnpm symphony, and whichever local agent command you dispatch.
           </p>
         </div>
       </div>
