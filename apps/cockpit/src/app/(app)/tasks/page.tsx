@@ -4,12 +4,17 @@ import { headers } from 'next/headers';
 import { apiFetchAuthed } from '@/lib/api-client';
 import { visibleDashboardProjects } from '@/lib/dashboard-projects';
 import { TaskBoard } from '@/components/tasks/TaskBoard';
+import { isLocalAuthBypassEnabled } from '@/lib/local-auth';
 
 export const dynamic = 'force-dynamic';
 
 export default async function TasksPage() {
-  const session = await auth.api.getSession({ headers: await headers() });
-  if (!session?.user) redirect('/login');
+  const requestHeaders = await headers();
+  const isLocal = isLocalAuthBypassEnabled(requestHeaders.get('host'));
+  if (!isLocal) {
+    const session = await auth.api.getSession({ headers: requestHeaders });
+    if (!session?.user) redirect('/login');
+  }
 
   let tasks: any[] = [];
   let projects: any[] = [];

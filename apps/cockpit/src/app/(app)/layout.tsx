@@ -13,6 +13,7 @@ import { SidebarNav } from "@/components/sidebar-nav";
 import { MobileNav } from "@/components/mobile-nav";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { SignOutButton } from "@/components/sign-out-button";
+import { getLocalDevSession, isLocalAuthBypassEnabled } from "@/lib/local-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -21,7 +22,10 @@ export default async function AppLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const requestHeaders = await headers();
+  const session = isLocalAuthBypassEnabled(requestHeaders.get("host"))
+    ? getLocalDevSession()
+    : await auth.api.getSession({ headers: requestHeaders });
 
   return (
     <div className="min-h-screen flex">

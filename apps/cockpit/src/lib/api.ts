@@ -24,9 +24,15 @@ export async function apiFetch(
  * Uses better-auth session token for API calls.
  */
 export async function getServerToken(): Promise<string | undefined> {
-  const { auth } = await import("./auth");
+  const { getLocalSessionToken, isLocalAuthBypassEnabled } = await import("./local-auth");
   const { headers } = await import("next/headers");
-  const session = await auth.api.getSession({ headers: await headers() });
+  const requestHeaders = await headers();
+  if (isLocalAuthBypassEnabled(requestHeaders.get("host"))) {
+    return getLocalSessionToken();
+  }
+
+  const { auth } = await import("./auth");
+  const session = await auth.api.getSession({ headers: requestHeaders });
   return session?.session?.token;
 }
 

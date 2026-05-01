@@ -1,4 +1,5 @@
 import { auth } from "@/lib/auth";
+import { isLocalAuthBypassEnabled } from "@/lib/local-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function middleware(req: NextRequest) {
@@ -6,6 +7,10 @@ export async function middleware(req: NextRequest) {
 
   // Public feedback pages don't require auth
   if (pathname.match(/^\/projects\/[^/]+\/feedback/)) {
+    return NextResponse.next();
+  }
+
+  if (isLocalAuthBypassEnabled(req.headers.get("host"))) {
     return NextResponse.next();
   }
 
