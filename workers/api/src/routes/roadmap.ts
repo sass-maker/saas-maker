@@ -1,7 +1,6 @@
 import { Hono } from 'hono';
 import { Bindings, Variables } from '../types';
 import { requireSession } from '../middleware/auth';
-import { d1RateLimitDynamic } from '../middleware/rate-limit.js';
 import { getDb } from '../db';
 import type { CreateRoadmapItemRequest, UpdateRoadmapItemRequest, ReorderRoadmapRequest, RoadmapColumn } from '@saas-maker/shared-types';
 
@@ -21,7 +20,7 @@ roadmap.get('/public/:slug', async (c) => {
 });
 
 // Public: vote on a roadmap item
-roadmap.post('/public/:slug/:id/vote', d1RateLimitDynamic((c) => `roadmap:vote:${c.req.param('slug')}`, 20), async (c) => {
+roadmap.post('/public/:slug/:id/vote', async (c) => {
   const slug = c.req.param('slug');
   const itemId = c.req.param('id');
   const body = await c.req.json();
@@ -69,7 +68,7 @@ roadmap.delete('/public/:slug/:id/vote', async (c) => {
 
 // List all roadmap items (including private)
 // Public: submit an idea (goes to backlog, not public until approved)
-roadmap.post('/public/:slug/submit', d1RateLimitDynamic((c) => `roadmap:submit:${c.req.param('slug')}`, 5), async (c) => {
+roadmap.post('/public/:slug/submit', async (c) => {
   const slug = c.req.param('slug');
   const body = await c.req.json();
 

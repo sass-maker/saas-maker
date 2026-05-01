@@ -18,7 +18,7 @@ Start a new project that is 100% Foundry-compliant from day one.
 ```bash
 fnd forge --name <project-slug> --type [next|vite|node]
 ```
-- **What it does**: Creates a project directory, initializes `package.json`, links Gold Standards, sets up the Operational Layer (`ops`, `db`, `shield`), and writes an `AGENTS.md` foreman file.
+- **What it does**: Creates a project directory, initializes `package.json`, links Gold Standards, sets up the Operational Layer (`ops`, `db`), and writes an `AGENTS.md` foreman file.
 
 ## 🚢 Fleet Commander (Orchestration)
 
@@ -36,11 +36,11 @@ Commands that operate across your entire `~/Desktop/Fleet` folder.
 
 ## 🧭 Project Metadata
 
-Use the universal API command for project notes and rate-limit changes.
+Use the universal API command for project notes.
 
 ```bash
 fnd api PATCH /v1/projects/<projectId> --auth session \
-  --body '{"readme":"Dashboard notes for this project.","rate_limit_enabled":true,"rate_limit_rpm":100000}'
+  --body '{"readme":"Dashboard notes for this project."}'
 ```
 
 ## 🤖 Autonomous Maintenance

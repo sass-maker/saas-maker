@@ -89,9 +89,9 @@ fnd api GET /health --auth none
 # Session-auth route: projects
 fnd api GET /v1/projects --auth session --output table
 
-# Add dashboard notes and raise a project rate limit
+# Add dashboard notes
 fnd api PATCH /v1/projects/<projectId> --auth session \
-  --body '{"readme":"Internal launch notes and owner context.","rate_limit_enabled":true,"rate_limit_rpm":100000}'
+  --body '{"readme":"Internal launch notes and owner context."}'
 
 # Project-auth route: list feedback
 fnd api GET /v1/feedback --auth project --query type=feature --output table
@@ -103,7 +103,7 @@ fnd api POST /v1/feedback --auth project \
 # Public roadmap items by project slug
 fnd api GET /v1/roadmap/by-project/<slug> --auth project --output table
 
-# Vote on a roadmap item (public, rate-limited)
+# Vote on a roadmap item
 fnd api POST /v1/roadmap/public/<slug>/<itemId>/vote --auth none \
   --body '{"user_identifier":"voter@example.com"}'
 

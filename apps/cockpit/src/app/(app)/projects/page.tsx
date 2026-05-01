@@ -25,10 +25,8 @@ import {
   CalendarDays,
   Cloud,
   Database,
-  Gauge,
   KeyRound,
   NotebookText,
-  Sparkles,
   AlertCircle,
 } from "lucide-react";
 
@@ -147,14 +145,8 @@ export default async function ProjectsPage() {
 
                   <div className="flex items-center justify-between gap-3 sm:justify-end">
                     <div className="text-right">
-                      <div className="text-xs font-medium">
-                        {project.rate_limit_enabled
-                          ? `${project.rate_limit_rpm} rpm`
-                          : "Unlimited"}
-                      </div>
-                      <div className="text-[11px] text-muted-foreground">
-                        API rate limit
-                      </div>
+                      <div className="text-xs font-medium">API key</div>
+                      <div className="text-[11px] text-muted-foreground">Issued</div>
                     </div>
                     <ArrowRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-foreground" />
                   </div>
@@ -174,11 +166,6 @@ export default async function ProjectsPage() {
                     <span>{project.readme ? "Readme added" : "No readme"}</span>
                   </div>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    {project.rate_limit_enabled ? (
-                      <Gauge className="h-3.5 w-3.5" />
-                    ) : (
-                      <Sparkles className="h-3.5 w-3.5" />
-                    )}
                     <span className="flex items-center gap-1">
                       <KeyRound className="h-3 w-3" />
                       Key issued

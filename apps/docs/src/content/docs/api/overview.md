@@ -68,13 +68,6 @@ GET /health
 
 Returns `{ "status": "ok" }` if the API is running. No authentication required.
 
-## Rate limits
-
-- **API-key routes**: per-project sliding-window limit (`rate_limit_rpm`, default 60/min) enforced in-memory per Worker isolate.
-- **Public unauthenticated routes** (testimonials submit, roadmap submit/vote): D1-backed sliding-window limit per IP via `@saas-maker/shield`.
-
-Exceeding either limit returns HTTP `429`.
-
 ## Endpoints by service
 
 | Service | Prefix | Docs |

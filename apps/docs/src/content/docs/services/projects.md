@@ -48,31 +48,10 @@ These require a session Bearer token (used by the dashboard UI):
 | GET | `/v1/projects` | List all projects |
 | POST | `/v1/projects` | Create a project |
 | GET | `/v1/projects/by-slug/:slug` | Get project by slug |
-| PATCH | `/v1/projects/:id` | Update project (name, rate limits) |
+| PATCH | `/v1/projects/:id` | Update project name or notes |
 | DELETE | `/v1/projects/:id` | Delete project |
 | GET | `/v1/projects/:id/readme` | Get README |
 | PUT | `/v1/projects/:id/readme` | Update README |
-
-## Rate Limiting
-
-Each project has configurable rate limiting for API-key-authenticated requests:
-
-- `rate_limit_rpm` — Requests per minute (default: 60)
-- `rate_limit_enabled` — Enable/disable rate limiting (default: true)
-
-Configure via the dashboard settings page or the PATCH endpoint:
-
-```bash
-curl -X PATCH https://api.sassmaker.com/v1/projects/:id \
-  -H "Authorization: Bearer your_session_token" \
-  -H "Content-Type: application/json" \
-  -d '{ "rate_limit_rpm": 120 }'
-```
-
-Rate-limited responses return `429 Too Many Requests` with headers:
-- `X-RateLimit-Limit` — Configured RPM
-- `X-RateLimit-Remaining` — Requests remaining in window
-- `Retry-After` — Seconds until window resets
 
 ## CLI
 

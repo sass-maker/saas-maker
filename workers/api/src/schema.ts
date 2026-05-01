@@ -19,8 +19,6 @@ export const projects = sqliteTable('projects', {
   ai_base_url: text('ai_base_url'),
   ai_api_key: text('ai_api_key'),
   ai_model: text('ai_model'),
-  rate_limit_rpm: integer('rate_limit_rpm').notNull().default(60),
-  rate_limit_enabled: integer('rate_limit_enabled').notNull().default(1),
   readme: text('readme'),
   source: text('source').notNull().default('dashboard'),
   created_at: text('created_at').notNull().default(sql`(datetime('now'))`),

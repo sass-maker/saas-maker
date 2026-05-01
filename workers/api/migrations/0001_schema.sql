@@ -23,8 +23,6 @@ CREATE TABLE projects (
   ai_base_url TEXT,
   ai_api_key TEXT,
   ai_model TEXT,
-  rate_limit_rpm INTEGER NOT NULL DEFAULT 60,
-  rate_limit_enabled INTEGER NOT NULL DEFAULT 1,
   readme TEXT,
   source TEXT NOT NULL DEFAULT 'dashboard',
   created_at TEXT NOT NULL DEFAULT (datetime('now'))

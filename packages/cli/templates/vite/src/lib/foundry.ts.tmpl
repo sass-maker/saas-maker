@@ -1,6 +1,5 @@
 import { initOpsMonitoring, trace } from "@saas-maker/ops";
 import { createFoundryDb } from "@saas-maker/db";
-import { FoundryShield, MemoryStore } from "@saas-maker/shield";
 
 /**
  * Foundry Operational Layer (Vite/Browser)
@@ -19,12 +18,4 @@ export const db = createFoundryDb({
   authToken: import.meta.env.VITE_DATABASE_AUTH_TOKEN,
 });
 
-// 3. Initialize Shield (Memory Limiter)
-export const shield = new FoundryShield({
-  projectName: "{{name}}",
-  limit: 100,
-  windowMs: 60 * 1000,
-  store: new MemoryStore(),
-});
-
-export const fnd = { trace, shield, db };
+export const fnd = { trace, db };

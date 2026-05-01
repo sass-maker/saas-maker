@@ -20,7 +20,6 @@ import { fleetMetadata } from './routes/fleet-metadata';
 import { tasks } from './routes/tasks';
 import { test as testRoutes } from './routes/test';
 import { requireApiKey } from './middleware/auth';
-import { rateLimit } from './middleware/rate-limit';
 import { getDb } from './db';
 
 const app = new Hono<{ Bindings: Bindings; Variables: Variables }>();
@@ -102,9 +101,6 @@ app.use('*', async (c, next) => {
   }
   await next();
 });
-
-// Rate limiting (no-op when projectId is not set, i.e. non-API-key routes)
-app.use('*', rateLimit);
 
 app.get('/health', (c) => c.json({ status: 'ok' }));
 

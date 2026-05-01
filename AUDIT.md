@@ -15,9 +15,6 @@ Reviewed: 2026-04-26 (gate hardening pass)
 
 - [x] **Global error handler** — `workers/api/src/index.ts:33` — `app.onError()` now captures unhandled exceptions to PostHog and returns generic 500. _Fixed 2026-04-26._
 - [x] **POST /v1/directory — spam protection** — Route removed from active product. _Fixed 2026-04-26._
-- [x] **POST /v1/forms/public/:slug/submit — rate limit** — Forms route removed from active product. _Fixed 2026-04-26._
-- [x] **POST /v1/testimonials/by-project/:slug — rate limit** — `workers/api/src/routes/testimonials.ts:44` — `d1RateLimitDynamic` (5 / hour / IP). _Fixed 2026-04-26._
-- [x] **POST /v1/roadmap/public/:slug/:id/vote — rate limit** — `workers/api/src/routes/roadmap.ts:24,72` — `d1RateLimitDynamic` (20 / hour / IP for vote, 5 for submit). _Fixed 2026-04-26._
 
 ## MEDIUM Severity
 
@@ -29,10 +26,8 @@ Reviewed: 2026-04-26 (gate hardening pass)
 
 - [x] **CORS reflects any Origin** — `workers/api/src/index.ts:51-77` — Allowlist now enforced (`isAllowedOrigin`); falls back to `https://app.sassmaker.com`. _Fixed 2026-04-26._
 - [ ] **Vector search loads all chunks into memory** — `workers/api/src/db.ts:searchChunks` — Acceptable at current scale; migrate to Vectorize binding when growth warrants.
-- [ ] **Rate limit state per-isolate** — `workers/api/src/middleware/rate-limit.ts` — In-memory `Map` for API-key path. D1 shield used for unauth paths. Migrate API-key path to D1 when traffic spread across many isolates.
 - [x] **No secrets in git** — Re-verified 2026-04-26. `.dev.vars`, `.env*`, credentials covered by `.gitignore`.
 
 ## Open Items (post-Foundry transition)
 
 - [ ] **Split `workers/api/src/db.ts`** (1738 LOC) — Single God file; refactor per domain (feedback / projects / analytics / etc).
-- [ ] **Migrate API-key rate limiter to D1 shield** — Distributed isolates currently leak rate-limit windows.

@@ -372,25 +372,6 @@ importers:
         specifier: 6.0.3
         version: 6.0.3
 
-  packages/blocks/shield:
-    dependencies:
-      '@saas-maker/ops':
-        specifier: workspace:*
-        version: link:../ops
-    devDependencies:
-      '@cloudflare/workers-types':
-        specifier: 4.20260424.1
-        version: 4.20260424.1
-      '@saas-maker/tsconfig':
-        specifier: workspace:*
-        version: link:../../tooling/tsconfig
-      tsup:
-        specifier: 8.0.0
-        version: 8.0.0(postcss@8.5.10)(typescript@6.0.3)
-      typescript:
-        specifier: 6.0.3
-        version: 6.0.3
-
   packages/cli:
     dependencies:
       chalk:
@@ -766,9 +747,6 @@ importers:
       '@saas-maker/shared-types':
         specifier: workspace:*
         version: link:../../packages/blocks/shared-types
-      '@saas-maker/shield':
-        specifier: workspace:*
-        version: link:../../packages/blocks/shield
       drizzle-orm:
         specifier: 0.45.2
         version: 0.45.2(@cloudflare/workers-types@4.20260424.1)(@libsql/client@0.17.3)(@opentelemetry/api@1.9.0)(kysely@0.28.16)

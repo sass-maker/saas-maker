@@ -20,8 +20,6 @@ export interface ProjectRecord {
   api_key: string;
   owner_id: string;
   embedding_model: string | null;
-  rate_limit_rpm: number;
-  rate_limit_enabled: boolean;
   readme: string | null;
   source: 'dashboard' | 'linkchat' | string;
   created_at: string;

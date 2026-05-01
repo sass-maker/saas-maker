@@ -476,13 +476,6 @@ GET /health
 
 Returns `{ "status": "ok" }` if the API is running. No authentication required.
 
-## Rate limits
-
-- **API-key routes**: per-project sliding-window limit (`rate_limit_rpm`, default 60/min) enforced in-memory per Worker isolate.
-- **Public unauthenticated routes** (testimonials submit, roadmap submit/vote): D1-backed sliding-window limit per IP via `@saas-maker/shield`.
-
-Exceeding either limit returns HTTP `429`.
-
 ## Endpoints by service
 
 | Service | Prefix | Docs |
@@ -1305,31 +1298,10 @@ These require a session Bearer token (used by the dashboard UI):
 | GET | `/v1/projects` | List all projects |
 | POST | `/v1/projects` | Create a project |
 | GET | `/v1/projects/by-slug/:slug` | Get project by slug |
-| PATCH | `/v1/projects/:id` | Update project (name, rate limits) |
+| PATCH | `/v1/projects/:id` | Update project name or notes |
 | DELETE | `/v1/projects/:id` | Delete project |
 | GET | `/v1/projects/:id/readme` | Get README |
 | PUT | `/v1/projects/:id/readme` | Update README |
-
-## Rate Limiting
-
-Each project has configurable rate limiting for API-key-authenticated requests:
-
-- `rate_limit_rpm` — Requests per minute (default: 60)
-- `rate_limit_enabled` — Enable/disable rate limiting (default: true)
-
-Configure via the dashboard settings page or the PATCH endpoint:
-
-```bash
-curl -X PATCH https://api.sassmaker.com/v1/projects/:id \
-  -H "Authorization: Bearer your_session_token" \
-  -H "Content-Type: application/json" \
-  -d '{ "rate_limit_rpm": 120 }'
-```
-
-Rate-limited responses return `429 Too Many Requests` with headers:
-- `X-RateLimit-Limit` — Configured RPM
-- `X-RateLimit-Remaining` — Requests remaining in window
-- `Retry-After` — Seconds until window resets
 
 ## CLI
 
@@ -1969,7 +1941,7 @@ Start a new project that is 100% Foundry-compliant from day one.
 ```bash
 fnd forge --name <project-slug> --type [next|vite|node]
 ```
-- **What it does**: Creates a project directory, initializes `package.json`, links Gold Standards, sets up the Operational Layer (`ops`, `db`, `shield`), and writes an `AGENTS.md` foreman file.
+- **What it does**: Creates a project directory, initializes `package.json`, links Gold Standards, sets up the Operational Layer (`ops`, `db`), and writes an `AGENTS.md` foreman file.
 
 ## 🚢 Fleet Commander (Orchestration)
 

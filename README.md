@@ -17,7 +17,6 @@ Standardize your entire fleet with versioned, shared configurations.
 Headless capabilities that every project needs, optimized for Edge and Node.
 *   **`@saas-maker/ops`**: Unified error handling and tracing.
 *   **`@saas-maker/db`**: Environment-aware SQLite factory (D1/Turso).
-*   **`@saas-maker/foundry-shield`**: Sliding-window rate limiting.
 
 ### 3. The Commander (CLI)
 Automate your assembly line.

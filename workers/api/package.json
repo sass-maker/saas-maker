@@ -10,7 +10,6 @@
   "dependencies": {
     "@saas-maker/db": "workspace:*",
     "@saas-maker/email": "workspace:*",
-    "@saas-maker/shield": "workspace:*",
     "@saas-maker/ops": "workspace:*",
     "@saas-maker/shared-types": "workspace:*",
     "drizzle-orm": "0.45.2",

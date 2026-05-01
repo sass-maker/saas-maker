@@ -190,8 +190,6 @@ export function getDb(d1: D1Database): FeedbackDatabase {
       const values: unknown[] = [];
       if (input.name !== undefined) { sets.push('name = ?'); values.push(input.name); }
       if (input.embedding_model !== undefined) { sets.push('embedding_model = ?'); values.push(input.embedding_model); }
-      if (input.rate_limit_rpm !== undefined) { sets.push('rate_limit_rpm = ?'); values.push(input.rate_limit_rpm); }
-      if (input.rate_limit_enabled !== undefined) { sets.push('rate_limit_enabled = ?'); values.push(input.rate_limit_enabled ? 1 : 0); }
       if (input.readme !== undefined) { sets.push('readme = ?'); values.push(input.readme); }
 
       if (sets.length > 0) {

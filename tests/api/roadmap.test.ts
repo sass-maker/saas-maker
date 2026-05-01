@@ -32,15 +32,6 @@ vi.mock('../../workers/api/src/db', () => ({
   createDatabase: () => mockDb,
 }));
 
-vi.mock('@saas-maker/shield', () => ({
-  FoundryShield: class {
-    async check() { return { success: true, remaining: 999, reset: Date.now() + 60000 }; }
-    async guard() { return; }
-  },
-  D1Store: class { async increment() { return { count: 0, reset: Date.now() + 60000 }; } },
-  MemoryStore: class { async increment() { return { count: 0, reset: Date.now() + 60000 }; } },
-}));
-
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------

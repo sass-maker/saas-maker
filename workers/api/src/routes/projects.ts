@@ -75,8 +75,6 @@ projects.patch('/:id', async (c) => {
   const body = (await c.req.json()) as {
     name?: string;
     readme?: string;
-    rate_limit_rpm?: number;
-    rate_limit_enabled?: boolean;
   };
 
   const db = getDb(c.env.DB);
@@ -86,23 +84,9 @@ projects.patch('/:id', async (c) => {
   if (!existing) return c.json({ error: 'Project not found' }, 404);
   if (existing.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
-  // Validate rate_limit_rpm
-  if (body.rate_limit_rpm !== undefined) {
-    if (typeof body.rate_limit_rpm !== 'number' || body.rate_limit_rpm < 1 || body.rate_limit_rpm > 1000000) {
-      return c.json({ error: 'rate_limit_rpm must be a number between 1 and 1000000' }, 400);
-    }
-  }
-
-  // Validate rate_limit_enabled
-  if (body.rate_limit_enabled !== undefined && typeof body.rate_limit_enabled !== 'boolean') {
-    return c.json({ error: 'rate_limit_enabled must be a boolean' }, 400);
-  }
-
   const updated = await db.updateProject(projectId, {
     name: body.name,
     readme: body.readme,
-    rate_limit_rpm: body.rate_limit_rpm,
-    rate_limit_enabled: body.rate_limit_enabled,
   });
   capture({ distinctId: userId, event: 'project_updated', properties: { project_id: projectId } });
   return c.json(updated);
