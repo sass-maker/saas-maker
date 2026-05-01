@@ -49,7 +49,7 @@ function parseArgs(argv) {
     agentCommand: process.env.SYMPHONY_AGENT_COMMAND || null,
   };
 
-  const commands = new Set(['list', 'pull', 'sync', 'create', 'claim', 'done', 'reopen', 'dispatch', 'delete']);
+  const commands = new Set(['list', 'pull', 'sync', 'create', 'claim', 'done', 'reopen', 'dispatch', 'pick', 'delete']);
   if (argv[0] && !argv[0].startsWith('-') && commands.has(argv[0])) {
     args.command = argv.shift();
   }
@@ -96,6 +96,8 @@ Usage:
   pnpm symphony dispatch ID             Print one task's agent command
   pnpm symphony dispatch ID --agent claude
   pnpm symphony dispatch ID --agent-command 'my-agent run --prompt-file {promptFile}'
+  pnpm symphony pick --agent claude     Claim the next todo task and print its agent command
+  pnpm symphony pick --agent gemini     Claim the next todo task and print its agent command
   pnpm symphony claim ID                Move a production task to in_progress
   pnpm symphony done ID                 Move a production task to done
   pnpm symphony reopen ID               Move a production task back to todo
@@ -293,6 +295,29 @@ function findTask(tasks, id) {
   return task;
 }
 
+function taskRank(task) {
+  const priorityRank = { high: 0, medium: 1, low: 2 };
+  return priorityRank[task.priority] ?? priorityRank.medium;
+}
+
+function findNextTask(tasks, args) {
+  const status = args.status ?? 'todo';
+  const candidates = tasks
+    .filter((task) => task.status === status)
+    .filter((task) => !args.project || task.project_slug === args.project)
+    .sort((a, b) => {
+      const priorityDelta = taskRank(a) - taskRank(b);
+      if (priorityDelta !== 0) return priorityDelta;
+      return String(a.created_at ?? '').localeCompare(String(b.created_at ?? ''));
+    });
+
+  if (candidates.length === 0) {
+    const projectHint = args.project ? ` for project ${args.project}` : '';
+    throw new Error(`No ${status} tasks available${projectHint}.`);
+  }
+  return candidates[0];
+}
+
 async function updateTaskStatus(args, status) {
   const tasks = await fetchTasks(args);
   const task = findTask(tasks, args.id);
@@ -304,6 +329,23 @@ async function updateTaskStatus(args, status) {
   if (!args.json) console.log(`Updated ${shortId(task.id)} to ${status}: ${payload.data.title}`);
   if (args.json) console.log(JSON.stringify(payload.data, null, 2));
   return nextTasks;
+}
+
+async function pickTask(args) {
+  const tasks = await fetchTasks(args);
+  const task = findNextTask(tasks, args);
+  const payload = await apiRequest(args, `/v1/tasks/${task.id}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ status: 'in_progress' }),
+  });
+  const pickedTask = payload.data ?? { ...task, status: 'in_progress' };
+  await fetchTasks(args);
+  const command = buildCommand(pickedTask, args);
+  if (args.json) {
+    console.log(JSON.stringify({ task: pickedTask, command }, null, 2));
+    return;
+  }
+  console.log(command);
 }
 
 async function createTask(args) {
@@ -336,6 +378,7 @@ async function main() {
   else if (args.command === 'claim') await updateTaskStatus(args, 'in_progress');
   else if (args.command === 'done') await updateTaskStatus(args, 'done');
   else if (args.command === 'reopen') await updateTaskStatus(args, 'todo');
+  else if (args.command === 'pick') await pickTask(args);
   else if (args.command === 'delete') await deleteTask(args);
   else await runOnce(args);
 

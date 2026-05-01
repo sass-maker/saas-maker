@@ -31,6 +31,8 @@ pnpm symphony dispatch <task-id-prefix>
 pnpm symphony dispatch <task-id-prefix> --agent claude
 pnpm symphony dispatch <task-id-prefix> --agent gemini
 pnpm symphony dispatch <task-id-prefix> --agent-command 'my-agent run --prompt-file {promptFile}'
+pnpm symphony pick --agent claude
+pnpm symphony pick --agent gemini
 pnpm symphony claim <task-id-prefix>
 pnpm symphony done <task-id-prefix>
 pnpm symphony create "Task title" --description "Details" --project saas-maker --priority high
@@ -40,7 +42,9 @@ The runner reads your existing Foundry session from `~/.foundry/config.json`,
 loads production `/v1/tasks`, writes `.symphony/tasks.json`, and prints the
 board grouped by status. Dashboard-created tasks appear locally on the next
 `pnpm symphony` run; local `claim`, `done`, `reopen`, `create`, and `delete`
-commands write back to production.
+commands write back to production. `pick` chooses the highest-priority `todo`
+task, optionally filtered by `--project`, claims it in production, and prints
+the selected local agent command.
 
 The cockpit task board also has a Symphony dispatch action. Pick an agent before
 copying the command. Built-in profiles are `codex`, `claude`, and `gemini`; for

@@ -50,4 +50,6 @@ Completion means the task has enough evidence for a human to move it to `Done`.
 Symphony dispatch is agent-agnostic: use `pnpm symphony dispatch <id> --agent
 codex|claude|gemini`, or pass `--agent-command` with `{prompt}`,
 `{promptFile}`, `{workspace}`, and `{taskId}` placeholders for any other local
-agent CLI.
+agent CLI. Agents can also claim the next available production task locally with
+`pnpm symphony pick --agent codex|claude|gemini`; `pick` selects the highest
+priority `todo` task, moves it to `in_progress`, and prints the command to run.
