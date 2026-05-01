@@ -212,7 +212,7 @@ export function TaskBoard({
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {COLUMNS.map(col => (
-          <div key={col.key} className="flex flex-col gap-3">
+          <div key={col.key} className="flex min-h-0 flex-col gap-3">
             <div className="flex items-center justify-between px-1">
               <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                 {col.label}
@@ -221,7 +221,7 @@ export function TaskBoard({
                 {tasksByStatus(col.key).length}
               </span>
             </div>
-            <div className="flex flex-col gap-2 min-h-[4rem]">
+            <div className="flex max-h-[calc(100vh-17rem)] min-h-[4rem] flex-col gap-2 overflow-y-auto pr-1">
               {tasksByStatus(col.key).map(task => (
                 <TaskCard
                   key={task.id}
