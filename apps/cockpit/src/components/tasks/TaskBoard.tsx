@@ -190,7 +190,7 @@ export function TaskBoard({
             New Task
           </Button>
           <p className="max-w-lg text-right text-xs text-muted-foreground">
-            Tasks stay as the tracker. Symphony dispatch creates an isolated workspace command and claims the task.
+            Production tasks are the shared source for the dashboard and pnpm symphony.
           </p>
         </div>
       </div>

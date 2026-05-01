@@ -34,7 +34,7 @@ export default async function TasksPage() {
         <div>
           <h1 className="text-2xl font-bold text-white">Tasks</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Create tasks and dispatch them to an AI agent via clipboard.
+            Create production tasks, then pull and update them locally with pnpm symphony.
           </p>
         </div>
       </div>

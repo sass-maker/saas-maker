@@ -18,6 +18,7 @@ out/
 .playwright-mcp/
 .metadata_never_index
 .cache_ggshield
+.symphony/
 
 # Test artifacts
 test-results/

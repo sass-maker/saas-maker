@@ -1,6 +1,8 @@
 ---
 tracker:
   kind: foundry-tasks
+  source: https://api.sassmaker.com/v1/tasks
+  local_cache: .symphony/tasks.json
   active_states:
     - Todo
     - In Progress
@@ -20,8 +22,11 @@ codex:
 
 # Foundry Symphony Workflow
 
-Use the cockpit task list as the tracker. Do not create a separate issue system
-unless the task explicitly needs external project-management integration.
+Use the production cockpit task list as the tracker. `pnpm symphony` pulls the
+same production `/v1/tasks` data into `.symphony/tasks.json`; local task status
+changes must be pushed back through the API rather than edited only in the
+cache. Do not create a separate issue system unless the task explicitly needs
+external project-management integration.
 
 For each task:
 
