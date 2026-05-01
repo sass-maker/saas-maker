@@ -43,7 +43,7 @@ export default async function TasksPage() {
           </p>
         </div>
       </div>
-      <TaskBoard initialTasks={tasks} projectSlugs={projects} />
+      <TaskBoard initialTasks={tasks} projectSlugs={projects} isLocal={isLocal} />
     </div>
   );
 }

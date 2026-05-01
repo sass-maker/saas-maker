@@ -23,6 +23,7 @@
     "typecheck": "pnpm -r --if-present typecheck",
     "smoke": "node scripts/smoke-prod.mjs",
     "symphony": "node scripts/symphony-local.mjs",
+    "symphony:runner": "node scripts/symphony-runner.mjs",
     "prepare": "husky"
   },
   "devDependencies": {

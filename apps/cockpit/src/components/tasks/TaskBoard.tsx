@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { apiFetchClient, getClientToken } from '@/lib/api-client';
-import { buildSymphonyCommand } from '@/lib/symphony';
+import { buildSymphonyPrompt } from '@/lib/symphony';
 import { cn } from '@/lib/utils';
 
 export interface TaskRow {
@@ -71,9 +71,11 @@ const EMPTY_FORM: TaskFormData = {
 export function TaskBoard({
   initialTasks,
   projectSlugs,
+  isLocal,
 }: {
   initialTasks: TaskRow[];
   projectSlugs: string[];
+  isLocal: boolean;
 }) {
   const [tasks, setTasks] = useState<TaskRow[]>(initialTasks);
   const [toast, setToast] = useState<string | null>(null);
@@ -177,18 +179,34 @@ export function TaskBoard({
     task: TaskRow,
     options: { agent: string; agentCommand?: string },
   ) => {
-    const command = buildSymphonyCommand(task, {
+    const agentOptions = {
       agent: options.agent === 'custom' ? undefined : options.agent,
       agentCommand: options.agent === 'custom' ? options.agentCommand : undefined,
-    });
+    };
+
+    if (!isLocal) {
+      try {
+        await navigator.clipboard.writeText(buildSymphonyPrompt(task));
+        showToast('Prompt copied');
+      } catch {
+        showToast('Copy failed');
+      }
+      return;
+    }
+
     try {
-      await navigator.clipboard.writeText(command);
-      showToast('Symphony command copied — task claimed');
+      const res = await fetch('/api/tasks/run', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ task, ...agentOptions }),
+      });
+      if (!res.ok) throw new Error(await res.text());
+      showToast('Agent started');
       if (task.status === 'todo') {
         await handleStatusChange(task, 'in_progress');
       }
     } catch {
-      showToast('Copy failed');
+      showToast('Failed to start agent');
     }
   };
 
@@ -230,6 +248,7 @@ export function TaskBoard({
                   onDelete={handleDelete}
                   onDispatch={handleDispatch}
                   onStatusChange={handleStatusChange}
+                  isLocal={isLocal}
                 />
               ))}
               {tasksByStatus(col.key).length === 0 && (
@@ -345,12 +364,14 @@ function TaskCard({
   onDelete,
   onDispatch,
   onStatusChange,
+  isLocal,
 }: {
   task: TaskRow;
   onEdit: (t: TaskRow) => void;
   onDelete: (t: TaskRow) => void;
   onDispatch: (t: TaskRow, options: { agent: string; agentCommand?: string }) => void;
   onStatusChange: (t: TaskRow, s: TaskRow['status']) => void;
+  isLocal: boolean;
 }) {
   const [agent, setAgent] = useState('codex');
   const [agentCommand, setAgentCommand] = useState('');
@@ -432,7 +453,7 @@ function TaskCard({
             className="h-7 shrink-0 px-2 text-xs"
           >
             <Bot className="h-3.5 w-3.5" />
-            Run
+            {isLocal ? 'Run' : 'Copy prompt'}
           </Button>
         </div>
         {agent === 'custom' && (
