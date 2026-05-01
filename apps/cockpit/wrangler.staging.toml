@@ -1,0 +1,15 @@
+name = "saasmaker-dashboard-staging"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+main = ".open-next/worker.js"
+assets = { directory = ".open-next/assets", binding = "ASSETS" }
+workers_dev = true
+
+[vars]
+AUTH_URL = "https://app.sassmaker.com"
+NODE_ENV = "production"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "saasmaker-db"
+database_id = "4fe6cffc-593a-4540-9577-1c33e8c64491"

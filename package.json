@@ -22,6 +22,7 @@
     "lint": "pnpm -r --if-present lint",
     "typecheck": "pnpm -r --if-present typecheck",
     "smoke": "node scripts/smoke-prod.mjs",
+    "symphony": "node scripts/symphony-local.mjs",
     "prepare": "husky"
   },
   "devDependencies": {

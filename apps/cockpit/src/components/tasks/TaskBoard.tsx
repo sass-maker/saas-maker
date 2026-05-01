@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { apiFetchClient, getClientToken } from '@/lib/api-client';
+import { buildSymphonyCommand } from '@/lib/symphony';
 import { cn } from '@/lib/utils';
 
 export interface TaskRow {
@@ -165,12 +166,17 @@ export function TaskBoard({
     }
   };
 
-  const handleDispatch = (task: TaskRow) => {
-    const projectCtx = task.project_slug ? ` Context: working in the ${task.project_slug} project.` : '';
-    const prompt = `${task.title}${task.description ? ': ' + task.description : ''}${projectCtx}`;
-    navigator.clipboard.writeText(`claude "${prompt.replace(/"/g, '\\"')}"`)
-      .then(() => showToast('Copied to clipboard — paste in your terminal'))
-      .catch(() => showToast('Copy failed'));
+  const handleDispatch = async (task: TaskRow) => {
+    const command = buildSymphonyCommand(task);
+    try {
+      await navigator.clipboard.writeText(command);
+      showToast('Symphony command copied — task claimed');
+      if (task.status === 'todo') {
+        await handleStatusChange(task, 'in_progress');
+      }
+    } catch {
+      showToast('Copy failed');
+    }
   };
 
   const tasksByStatus = (status: TaskRow['status']) => tasks.filter(t => t.status === status);
@@ -178,10 +184,15 @@ export function TaskBoard({
   return (
     <>
       <div className="flex justify-end">
-        <Button onClick={openCreate} size="sm">
-          <Plus className="h-4 w-4 mr-1.5" />
-          New Task
-        </Button>
+        <div className="flex flex-col items-end gap-2">
+          <Button onClick={openCreate} size="sm">
+            <Plus className="h-4 w-4 mr-1.5" />
+            New Task
+          </Button>
+          <p className="max-w-lg text-right text-xs text-muted-foreground">
+            Tasks stay as the tracker. Symphony dispatch creates an isolated workspace command and claims the task.
+          </p>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -347,7 +358,7 @@ function TaskCard({
           <button
             onClick={() => onDispatch(task)}
             className="p-1 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
-            title="Dispatch to agent"
+            title="Dispatch with Symphony"
           >
             <Bot className="h-3.5 w-3.5" />
           </button>
