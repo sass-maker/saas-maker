@@ -47,6 +47,10 @@ commands write back to production. `pick` chooses the highest-priority `todo`
 task, optionally filtered by `--project`, claims it in production, and prints
 the selected local agent command.
 
+Local sync does not need a separate login on this machine as long as
+`~/.foundry/config.json` has `apiBaseUrl` and `apiKey`. Use `--token` only when
+you want to override that account for one command.
+
 The cockpit task board also has a Symphony dispatch action. Pick an agent before
 copying the command. Built-in profiles are `codex`, `claude`, and `gemini`, and
 they run with full local permissions by default:
@@ -61,6 +65,13 @@ templates to `~/.foundry/config.json`:
 ```json
 {
   "symphonyAgent": "codex",
+  "symphonyAgentEnv": {
+    "FOUNDRY_ACCOUNT": "sarthak"
+  },
+  "symphonyAgentEnvVars": [
+    "OPENAI_API_KEY",
+    "ANTHROPIC_API_KEY"
+  ],
   "symphonyAgentCommands": {
     "codex-work": "codex exec --profile work --dangerously-bypass-approvals-and-sandbox {prompt}",
     "codex-personal": "codex exec --profile personal --dangerously-bypass-approvals-and-sandbox {prompt}",

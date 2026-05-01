@@ -14,6 +14,9 @@ workspace:
   root: .symphony/workspaces
 agent:
   default: codex
+  env:
+    # Literal values can live in ~/.foundry/config.json symphonyAgentEnv.
+    # Secret shell variables can be forwarded with symphonyAgentEnvVars.
   command_templates:
     codex: codex exec --dangerously-bypass-approvals-and-sandbox {prompt}
     claude: claude --dangerously-skip-permissions -p {prompt}
@@ -49,9 +52,12 @@ For each task:
 Completion means the task has enough evidence for a human to move it to `Done`.
 Symphony dispatch is agent-agnostic: use `pnpm symphony dispatch <id> --agent
 codex|claude|gemini`, define named profiles in `~/.foundry/config.json`
-`symphonyAgentCommands`, or pass `--agent-command` with `{prompt}`,
+`symphonyAgentCommands`, add environment through `symphonyAgentEnv` or
+`symphonyAgentEnvVars`, or pass `--agent-command` with `{prompt}`,
 `{promptFile}`, `{workspace}`, and `{taskId}` placeholders for any other local
-agent CLI. Built-in Codex, Claude, and Gemini templates run with full local
-permissions. Agents can also claim the next available production task locally
-with `pnpm symphony pick --agent <profile>`; `pick` selects the highest priority
-`todo` task, moves it to `in_progress`, and prints the command to run.
+agent CLI. Local task sync uses `~/.foundry/config.json` for this account, so
+agents do not need a separate production auth flag on this machine. Built-in
+Codex, Claude, and Gemini templates run with full local permissions. Agents can
+also claim the next available production task locally with `pnpm symphony pick
+--agent <profile>`; `pick` selects the highest priority `todo` task, moves it
+to `in_progress`, and prints the command to run.

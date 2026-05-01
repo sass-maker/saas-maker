@@ -49,6 +49,22 @@ function resolveAgentCommands(globalConfig) {
   };
 }
 
+function resolveAgentEnv(globalConfig) {
+  return {
+    ...(globalConfig.symphonyAgentEnv ?? {}),
+    ...parseJsonEnv('SYMPHONY_AGENT_ENV'),
+  };
+}
+
+function resolveForwardedEnv(globalConfig) {
+  const configured = globalConfig.symphonyAgentEnvVars ?? [];
+  const fromEnv = (process.env.SYMPHONY_AGENT_ENV_VARS ?? '')
+    .split(',')
+    .map((name) => name.trim())
+    .filter(Boolean);
+  return [...configured, ...fromEnv];
+}
+
 function parseArgs(argv) {
   const globalConfig = getGlobalConfig();
   const args = {
@@ -69,6 +85,8 @@ function parseArgs(argv) {
     agent: process.env.SYMPHONY_AGENT || globalConfig.symphonyAgent || 'codex',
     agentCommand: process.env.SYMPHONY_AGENT_COMMAND || null,
     agentCommands: resolveAgentCommands(globalConfig),
+    agentEnv: resolveAgentEnv(globalConfig),
+    forwardedEnv: resolveForwardedEnv(globalConfig),
   };
 
   const commands = new Set(['list', 'pull', 'sync', 'create', 'claim', 'done', 'reopen', 'dispatch', 'pick', 'delete']);
@@ -137,6 +155,10 @@ Options:
   --json           Print raw task JSON
   --no-cache       Do not write the pulled board to .symphony/tasks.json
 
+Auth:
+  Local sync uses ~/.foundry/config.json automatically. You only need --token
+  if that file is missing or you want to override accounts.
+
 Profiles:
   Built-in commands run with full permissions:
     codex   codex exec --dangerously-bypass-approvals-and-sandbox {prompt}
@@ -148,11 +170,23 @@ Profiles:
       "codex-work": "codex exec --profile work --dangerously-bypass-approvals-and-sandbox {prompt}",
       "claude-max": "claude --settings ~/.claude/max.json --dangerously-skip-permissions -p {prompt}"
     }
+
+  Add environment for all generated agent commands:
+    "symphonyAgentEnv": { "FOUNDRY_ACCOUNT": "sarthak" },
+    "symphonyAgentEnvVars": ["OPENAI_API_KEY", "ANTHROPIC_API_KEY"]
 `);
 }
 
 function shellQuote(value) {
   return `'${String(value).replace(/'/g, `'\\''`)}'`;
+}
+
+function isValidEnvName(name) {
+  return /^[A-Za-z_][A-Za-z0-9_]*$/.test(name);
+}
+
+function shellVariableRef(name) {
+  return `"$${name}"`;
 }
 
 function homePath(value) {
@@ -179,6 +213,19 @@ function renderAgentCommand(template, task, prompt, workspacePath) {
     .replaceAll('{promptFile}', shellQuote(promptFile))
     .replaceAll('{workspace}', shellQuote(workspacePath))
     .replaceAll('{taskId}', shellQuote(task.id));
+}
+
+function renderEnvPrefix(args) {
+  const assignments = [];
+  for (const [key, value] of Object.entries(args.agentEnv ?? {})) {
+    if (!isValidEnvName(key)) throw new Error(`Invalid environment variable name: ${key}`);
+    assignments.push(`${key}=${shellQuote(value)}`);
+  }
+  for (const key of args.forwardedEnv ?? []) {
+    if (!isValidEnvName(key)) throw new Error(`Invalid environment variable name: ${key}`);
+    assignments.push(`${key}=${shellVariableRef(key)}`);
+  }
+  return assignments.length ? `env ${assignments.join(' ')} ` : '';
 }
 
 function buildPrompt(task) {
@@ -209,7 +256,7 @@ function buildCommand(task, args) {
   const workspacePath = `.symphony/workspaces/${workspaceKey(task)}`;
   const prompt = buildPrompt(task);
   const agentTemplate = resolveAgentCommand(args);
-  const agentCommand = renderAgentCommand(agentTemplate, task, prompt, workspacePath);
+  const agentCommand = `${renderEnvPrefix(args)}${renderAgentCommand(agentTemplate, task, prompt, workspacePath)}`;
   return [
     `cd ${homePath(`Desktop/Fleet/${project}`)}`,
     `mkdir -p ${shellQuote(workspacePath)}`,
