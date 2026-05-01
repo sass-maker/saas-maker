@@ -10,6 +10,8 @@ routes = [
 
 [vars]
 AUTH_URL = "https://app.sassmaker.com"
+NEXT_PUBLIC_API_URL = "https://api.sassmaker.com"
+NEXT_PUBLIC_SITE_URL = "https://app.sassmaker.com"
 NODE_ENV = "production"
 
 [[d1_databases]]
