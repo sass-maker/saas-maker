@@ -30,6 +30,7 @@ pnpm symphony --commands
 pnpm symphony dispatch <task-id-prefix>
 pnpm symphony dispatch <task-id-prefix> --agent claude
 pnpm symphony dispatch <task-id-prefix> --agent gemini
+pnpm symphony dispatch <task-id-prefix> --agent codex-work
 pnpm symphony dispatch <task-id-prefix> --agent-command 'my-agent run --prompt-file {promptFile}'
 pnpm symphony pick --agent claude
 pnpm symphony pick --agent gemini
@@ -47,8 +48,29 @@ task, optionally filtered by `--project`, claims it in production, and prints
 the selected local agent command.
 
 The cockpit task board also has a Symphony dispatch action. Pick an agent before
-copying the command. Built-in profiles are `codex`, `claude`, and `gemini`; for
-any other agent, use a custom command template. Templates support:
+copying the command. Built-in profiles are `codex`, `claude`, and `gemini`, and
+they run with full local permissions by default:
+
+- `codex` — `codex exec --dangerously-bypass-approvals-and-sandbox`.
+- `claude` — `claude --dangerously-skip-permissions`.
+- `gemini` — `gemini --yolo`.
+
+For multiple Codex, Claude, Gemini, or other local profiles, add named command
+templates to `~/.foundry/config.json`:
+
+```json
+{
+  "symphonyAgent": "codex",
+  "symphonyAgentCommands": {
+    "codex-work": "codex exec --profile work --dangerously-bypass-approvals-and-sandbox {prompt}",
+    "codex-personal": "codex exec --profile personal --dangerously-bypass-approvals-and-sandbox {prompt}",
+    "claude-max": "claude --settings ~/.claude/max.json --dangerously-skip-permissions -p {prompt}",
+    "gemini-pro": "gemini --yolo -m gemini-2.5-pro -p {prompt}"
+  }
+}
+```
+
+For one-off agents, use a custom command template. Templates support:
 
 - `{prompt}` — inline shell-quoted task prompt.
 - `{promptFile}` — path to the generated prompt file.

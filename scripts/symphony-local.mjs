@@ -7,10 +7,10 @@ const DEFAULT_API_BASE = 'https://api.sassmaker.com';
 const STATUS_ORDER = ['todo', 'in_progress', 'done'];
 const LOCAL_STATE_DIR = path.join(process.cwd(), '.symphony');
 const LOCAL_TASK_CACHE = path.join(LOCAL_STATE_DIR, 'tasks.json');
-const AGENT_COMMANDS = {
-  codex: 'codex {prompt}',
-  claude: 'claude -p {prompt}',
-  gemini: 'gemini -p {prompt}',
+const DEFAULT_AGENT_COMMANDS = {
+  codex: 'codex exec --dangerously-bypass-approvals-and-sandbox {prompt}',
+  claude: 'claude --dangerously-skip-permissions -p {prompt}',
+  gemini: 'gemini --yolo -p {prompt}',
 };
 
 function readJson(filePath) {
@@ -29,7 +29,28 @@ function getGlobalConfig() {
   );
 }
 
+function parseJsonEnv(name) {
+  const value = process.env[name];
+  if (!value) return {};
+  try {
+    const parsed = JSON.parse(value);
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+function resolveAgentCommands(globalConfig) {
+  return {
+    ...DEFAULT_AGENT_COMMANDS,
+    ...(globalConfig.symphonyAgentCommands ?? {}),
+    ...(globalConfig.symphonyAgentProfiles ?? {}),
+    ...parseJsonEnv('SYMPHONY_AGENT_COMMANDS'),
+  };
+}
+
 function parseArgs(argv) {
+  const globalConfig = getGlobalConfig();
   const args = {
     command: 'list',
     apiBase: process.env.FND_API_URL || process.env.SAASMAKER_API_URL,
@@ -45,8 +66,9 @@ function parseArgs(argv) {
     priority: 'medium',
     status: null,
     noCache: false,
-    agent: process.env.SYMPHONY_AGENT || 'codex',
+    agent: process.env.SYMPHONY_AGENT || globalConfig.symphonyAgent || 'codex',
     agentCommand: process.env.SYMPHONY_AGENT_COMMAND || null,
+    agentCommands: resolveAgentCommands(globalConfig),
   };
 
   const commands = new Set(['list', 'pull', 'sync', 'create', 'claim', 'done', 'reopen', 'dispatch', 'pick', 'delete']);
@@ -79,10 +101,8 @@ function parseArgs(argv) {
     }
   }
 
-  const globalConfig = getGlobalConfig();
   args.apiBase ||= globalConfig.apiBaseUrl || DEFAULT_API_BASE;
   args.token ||= globalConfig.apiKey;
-  args.agent ||= globalConfig.symphonyAgent || 'codex';
   args.agentCommand ||= globalConfig.symphonyAgentCommand || null;
   return args;
 }
@@ -95,6 +115,7 @@ Usage:
   pnpm symphony --commands              Include isolated agent commands
   pnpm symphony dispatch ID             Print one task's agent command
   pnpm symphony dispatch ID --agent claude
+  pnpm symphony dispatch ID --agent codex-work
   pnpm symphony dispatch ID --agent-command 'my-agent run --prompt-file {promptFile}'
   pnpm symphony pick --agent claude     Claim the next todo task and print its agent command
   pnpm symphony pick --agent gemini     Claim the next todo task and print its agent command
@@ -111,10 +132,22 @@ Options:
   --description    Description for create
   --project SLUG   Project slug for create
   --priority VALUE low, medium, or high for create
-  --agent NAME     Agent profile for dispatch: codex, claude, gemini, or custom
+  --agent NAME     Agent profile for dispatch: codex, claude, gemini, or a configured profile
   --agent-command  Command template for custom agents; supports {prompt}, {promptFile}, {workspace}, {taskId}
   --json           Print raw task JSON
   --no-cache       Do not write the pulled board to .symphony/tasks.json
+
+Profiles:
+  Built-in commands run with full permissions:
+    codex   codex exec --dangerously-bypass-approvals-and-sandbox {prompt}
+    claude  claude --dangerously-skip-permissions -p {prompt}
+    gemini  gemini --yolo -p {prompt}
+
+  Add more profiles in ~/.foundry/config.json:
+    "symphonyAgentCommands": {
+      "codex-work": "codex exec --profile work --dangerously-bypass-approvals-and-sandbox {prompt}",
+      "claude-max": "claude --settings ~/.claude/max.json --dangerously-skip-permissions -p {prompt}"
+    }
 `);
 }
 
@@ -132,9 +165,9 @@ function workspaceKey(task) {
 
 function resolveAgentCommand(args) {
   if (args.agentCommand) return args.agentCommand;
-  const command = AGENT_COMMANDS[args.agent];
+  const command = args.agentCommands[args.agent];
   if (!command) {
-    throw new Error(`Unknown agent "${args.agent}". Use --agent-command for custom agents.`);
+    throw new Error(`Unknown agent profile "${args.agent}". Use --agent-command or add it to symphonyAgentCommands in ~/.foundry/config.json.`);
   }
   return command;
 }

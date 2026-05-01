@@ -212,7 +212,7 @@ export function TaskBoard({
               <Input
                 value={agentCommand}
                 onChange={e => setAgentCommand(e.target.value)}
-                placeholder="agent --prompt-file {promptFile}"
+                placeholder="agent --full-access --prompt-file {promptFile}"
                 className="h-9 w-[260px]"
               />
             )}

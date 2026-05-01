@@ -13,9 +13,9 @@ type SymphonyAgentOptions = {
 };
 
 const AGENT_COMMANDS: Record<string, string> = {
-  codex: "codex {prompt}",
-  claude: "claude -p {prompt}",
-  gemini: "gemini -p {prompt}",
+  codex: "codex exec --dangerously-bypass-approvals-and-sandbox {prompt}",
+  claude: "claude --dangerously-skip-permissions -p {prompt}",
+  gemini: "gemini --yolo -p {prompt}",
 };
 
 function shellQuote(value: string) {
