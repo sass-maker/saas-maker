@@ -55,9 +55,9 @@ codex|claude|gemini`, define named profiles in `~/.foundry/config.json`
 `symphonyAgentCommands`, add environment through `symphonyAgentEnv` or
 `symphonyAgentEnvVars`, or pass `--agent-command` with `{prompt}`,
 `{promptFile}`, `{workspace}`, and `{taskId}` placeholders for any other local
-agent CLI. Local task sync uses `~/.foundry/config.json` for this account, so
-agents do not need a separate production auth flag on this machine. Built-in
-Codex, Claude, and Gemini templates run with full local permissions. Agents can
-also claim the next available production task locally with `pnpm symphony pick
---agent <profile>`; `pick` selects the highest priority `todo` task, moves it
-to `in_progress`, and prints the command to run.
+agent CLI. Local task sync must shell out through the Foundry CLI
+login/session path rather than accepting raw API keys. Built-in Codex, Claude,
+and Gemini templates run with full local
+permissions. Agents can also claim the next available production task locally
+with `pnpm symphony pick --agent <profile>`; `pick` selects the highest
+priority `todo` task, moves it to `in_progress`, and prints the command to run.

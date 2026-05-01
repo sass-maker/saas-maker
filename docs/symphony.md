@@ -47,9 +47,8 @@ commands write back to production. `pick` chooses the highest-priority `todo`
 task, optionally filtered by `--project`, claims it in production, and prints
 the selected local agent command.
 
-Local sync does not need a separate login on this machine as long as
-`~/.foundry/config.json` has `apiBaseUrl` and `apiKey`. Use `--token` only when
-you want to override that account for one command.
+Local sync shells out through the Foundry CLI. Run `fnd login` once for this
+machine/account; Symphony does not accept or pass API keys directly.
 
 The cockpit task board also has a Symphony dispatch action. Pick an agent before
 copying the command. Built-in profiles are `codex`, `claude`, and `gemini`, and
@@ -69,8 +68,8 @@ templates to `~/.foundry/config.json`:
     "FOUNDRY_ACCOUNT": "sarthak"
   },
   "symphonyAgentEnvVars": [
-    "OPENAI_API_KEY",
-    "ANTHROPIC_API_KEY"
+    "CLAUDE_CONFIG_DIR",
+    "CODEX_HOME"
   ],
   "symphonyAgentCommands": {
     "codex-work": "codex exec --profile work --dangerously-bypass-approvals-and-sandbox {prompt}",

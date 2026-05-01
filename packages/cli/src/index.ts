@@ -125,6 +125,21 @@ program
 
 program.command('examples').description('Show practical command examples').action(examplesCommand);
 program.command('completions [shell]').description('Print shell completion script').action(completionsCommand);
-program.command('api <method> <path>').description('Call any API route').action(apiCommand);
+program
+  .command('api <method> <path>')
+  .description('Call any API route')
+  .option('--auth <mode>', 'Auth mode: auto | session | project | none')
+  .option('--body <json>', 'JSON request body')
+  .option('--body-file <path>', 'Read JSON request body from a file')
+  .option('--query <key=value...>', 'Query parameter, repeatable')
+  .option('--header <key=value...>', 'Header, repeatable')
+  .option('--token <token>', 'Override stored session token')
+  .option('--project-key <key>', 'Override linked project key')
+  .option('--output <format>', 'Output format: table | json')
+  .option('--select <fields>', 'Comma-separated fields to print')
+  .option('--quiet', 'Suppress request/status logs')
+  .option('--raw', 'Print compact JSON')
+  .option('--no-validate', 'Bypass OpenAPI operation validation')
+  .action(apiCommand);
 
 program.parse();

@@ -2,11 +2,12 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { spawnSync } from 'node:child_process';
 
-const DEFAULT_API_BASE = 'https://api.sassmaker.com';
 const STATUS_ORDER = ['todo', 'in_progress', 'done'];
 const LOCAL_STATE_DIR = path.join(process.cwd(), '.symphony');
 const LOCAL_TASK_CACHE = path.join(LOCAL_STATE_DIR, 'tasks.json');
+const DEFAULT_CLI_COMMAND = 'pnpm --dir packages/cli exec tsx src/index.ts';
 const DEFAULT_AGENT_COMMANDS = {
   codex: 'codex exec --dangerously-bypass-approvals-and-sandbox {prompt}',
   claude: 'claude --dangerously-skip-permissions -p {prompt}',
@@ -27,6 +28,10 @@ function getGlobalConfig() {
     readJson(path.join(os.homedir(), '.saasmaker', 'config.json')) ??
     {}
   );
+}
+
+function splitCommand(value) {
+  return value.trim().split(/\s+/).filter(Boolean);
 }
 
 function parseJsonEnv(name) {
@@ -69,8 +74,8 @@ function parseArgs(argv) {
   const globalConfig = getGlobalConfig();
   const args = {
     command: 'list',
-    apiBase: process.env.FND_API_URL || process.env.SAASMAKER_API_URL,
-    token: process.env.FOUNDRY_SESSION_TOKEN || process.env.SAASMAKER_SESSION_TOKEN,
+    apiBase: process.env.FND_API_URL || process.env.SAASMAKER_API_URL || globalConfig.apiBaseUrl,
+    cliCommand: process.env.SYMPHONY_CLI_COMMAND || globalConfig.symphonyCliCommand || DEFAULT_CLI_COMMAND,
     json: false,
     commands: false,
     dispatch: null,
@@ -102,7 +107,7 @@ function parseArgs(argv) {
     else if (arg === '--no-cache') args.noCache = true;
     else if (arg === '--dispatch') args.dispatch = argv[++i] ?? null;
     else if (arg === '--api-base') args.apiBase = argv[++i];
-    else if (arg === '--token') args.token = argv[++i];
+    else if (arg === '--cli-command') args.cliCommand = argv[++i] ?? DEFAULT_CLI_COMMAND;
     else if (arg === '--description' || arg === '-d') args.description = argv[++i] ?? '';
     else if (arg === '--project' || arg === '-p') args.project = argv[++i] ?? '';
     else if (arg === '--priority') args.priority = argv[++i] ?? 'medium';
@@ -119,8 +124,6 @@ function parseArgs(argv) {
     }
   }
 
-  args.apiBase ||= globalConfig.apiBaseUrl || DEFAULT_API_BASE;
-  args.token ||= globalConfig.apiKey;
   args.agentCommand ||= globalConfig.symphonyAgentCommand || null;
   return args;
 }
@@ -145,8 +148,8 @@ Usage:
   pnpm symphony --watch                 Refresh the task list every 30s
 
 Options:
-  --api-base URL   API base URL, default from ~/.foundry/config.json or ${DEFAULT_API_BASE}
-  --token TOKEN    CLI/session token, default from ~/.foundry/config.json
+  --api-base URL   API base URL override passed to the Foundry CLI as FND_API_URL
+  --cli-command    Foundry CLI command, default: ${DEFAULT_CLI_COMMAND}
   --description    Description for create
   --project SLUG   Project slug for create
   --priority VALUE low, medium, or high for create
@@ -156,8 +159,8 @@ Options:
   --no-cache       Do not write the pulled board to .symphony/tasks.json
 
 Auth:
-  Local sync uses ~/.foundry/config.json automatically. You only need --token
-  if that file is missing or you want to override accounts.
+  Local sync shells out through the Foundry CLI, so use fnd login for this account.
+  Symphony does not accept or pass API keys directly.
 
 Profiles:
   Built-in commands run with full permissions:
@@ -173,7 +176,7 @@ Profiles:
 
   Add environment for all generated agent commands:
     "symphonyAgentEnv": { "FOUNDRY_ACCOUNT": "sarthak" },
-    "symphonyAgentEnvVars": ["OPENAI_API_KEY", "ANTHROPIC_API_KEY"]
+    "symphonyAgentEnvVars": ["CLAUDE_CONFIG_DIR", "CODEX_HOME"]
 `);
 }
 
@@ -228,6 +231,62 @@ function renderEnvPrefix(args) {
   return assignments.length ? `env ${assignments.join(' ')} ` : '';
 }
 
+function cliEnv(args) {
+  return {
+    ...process.env,
+    ...(args.apiBase ? { FND_API_URL: args.apiBase } : {}),
+  };
+}
+
+function runCliApi(args, method, pathName, options = {}) {
+  const cliParts = splitCommand(args.cliCommand);
+  if (cliParts.length === 0) throw new Error('No Foundry CLI command configured.');
+
+  const command = cliParts[0];
+  const commandArgs = [
+    ...cliParts.slice(1),
+    'api',
+    method,
+    pathName,
+    '--auth',
+    'session',
+    '--output',
+    'json',
+    '--raw',
+    '--quiet',
+    '--no-validate',
+  ];
+
+  if (options.body !== undefined) {
+    commandArgs.push('--body', JSON.stringify(options.body));
+  }
+
+  const result = spawnSync(command, commandArgs, {
+    cwd: process.cwd(),
+    env: cliEnv(args),
+    encoding: 'utf8',
+  });
+
+  if (result.error) throw result.error;
+  if (result.status !== 0) {
+    const output = [result.stderr, result.stdout].filter(Boolean).join('\n').trim();
+    throw new Error(output || `Foundry CLI failed with exit ${result.status}`);
+  }
+
+  const stdout = result.stdout.trim();
+  if (!stdout) return null;
+  const jsonLine = stdout
+    .split('\n')
+    .map((line) => line.trim())
+    .reverse()
+    .find((line) => line.startsWith('{') || line.startsWith('['));
+  try {
+    return JSON.parse(jsonLine ?? stdout);
+  } catch {
+    throw new Error(`Foundry CLI returned non-JSON output: ${stdout}`);
+  }
+}
+
 function buildPrompt(task) {
   const project = task.project_slug ?? 'saas-maker';
   return `You are running a Foundry Symphony task.
@@ -266,51 +325,23 @@ function buildCommand(task, args) {
 }
 
 async function fetchTasks(args) {
-  if (!args.token) {
-    throw new Error('No CLI/session token found. Run `fnd login`, or pass --token.');
-  }
-
-  const res = await fetch(`${args.apiBase.replace(/\/$/, '')}/v1/tasks`, {
-    headers: {
-      Authorization: `Bearer ${args.token}`,
-      'Content-Type': 'application/json',
-    },
-  });
-
-  if (!res.ok) {
-    throw new Error(`Failed to load tasks: HTTP ${res.status} ${await res.text()}`);
-  }
-
-  const payload = await res.json();
+  const payload = runCliApi(args, 'GET', '/v1/tasks');
   const tasks = payload.data ?? [];
   if (!args.noCache) writeTaskCache(tasks, args);
   return tasks;
 }
 
 async function apiRequest(args, pathName, init = {}) {
-  if (!args.token) {
-    throw new Error('No CLI/session token found. Run `fnd login`, or pass --token.');
-  }
-
-  const res = await fetch(`${args.apiBase.replace(/\/$/, '')}${pathName}`, {
-    ...init,
-    headers: {
-      Authorization: `Bearer ${args.token}`,
-      'Content-Type': 'application/json',
-      ...(init.headers ?? {}),
-    },
+  return runCliApi(args, init.method ?? 'GET', pathName, {
+    body: init.body ? JSON.parse(init.body) : undefined,
   });
-
-  if (!res.ok) {
-    throw new Error(`Production task sync failed: HTTP ${res.status} ${await res.text()}`);
-  }
-  return res.status === 204 ? null : res.json();
 }
 
 function writeTaskCache(tasks, args) {
   fs.mkdirSync(LOCAL_STATE_DIR, { recursive: true });
   fs.writeFileSync(LOCAL_TASK_CACHE, JSON.stringify({
-    apiBase: args.apiBase,
+    cliCommand: args.cliCommand,
+    apiBase: args.apiBase ?? null,
     syncedAt: new Date().toISOString(),
     tasks,
   }, null, 2));
@@ -328,7 +359,7 @@ function printTasks(tasks, args) {
 
   const timestamp = new Date().toLocaleString();
   console.log(`Foundry Symphony task list (${tasks.length})`);
-  console.log(`Source: ${args.apiBase.replace(/\/$/, '')}/v1/tasks`);
+  console.log(`Source: Foundry CLI (${args.cliCommand}) /v1/tasks`);
   if (!args.noCache) console.log(`Local cache: ${path.relative(process.cwd(), LOCAL_TASK_CACHE)}`);
   console.log(`Updated: ${timestamp}`);
 
