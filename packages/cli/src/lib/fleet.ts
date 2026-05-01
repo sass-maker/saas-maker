@@ -23,8 +23,7 @@ function scanDir(dirPath: string, depth = 0): FleetProject[] {
         if (name.startsWith('.') || 
             name.startsWith('_') || 
             ['node_modules', 'dist', 'out', 'build', 'reference', 'Archived',
-              'vaulthealth', 'dev_learning', 'port-whisperer', 'agentMode',
-              'mentionpilot', 'Fleet'
+              'vaulthealth', 'dev_learning', 'port-whisperer', 'Fleet'
             ].includes(name)) continue;
         
         if (name === 'saas-maker') continue;
@@ -52,7 +51,8 @@ function scanDir(dirPath: string, depth = 0): FleetProject[] {
             type: pkg.dependencies?.next ? 'next' : pkg.dependencies?.vite ? 'vite' : 'node',
             isFoundry,
           });
-          continue;
+          
+          if (name !== 'agentMode') continue;
         }
         
         fleet.push(...scanDir(projectPath, depth + 1));
