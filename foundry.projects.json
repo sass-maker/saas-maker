@@ -1,5 +1,4 @@
 {
-  "agentMode": { "desc": "AI agent data management platform.", "url": "https://github.com/sarthakagrawal927/agentMode.git" },
   "anime_list": { "desc": "MAL Explorer — Browse and manage your anime/manga lists.", "url": "https://github.com/sarthakagrawal927/anime_list.git" },
   "backpropagate": { "desc": "React + TypeScript + Vite project blueprint.", "url": "https://github.com/sarthakagrawal927/backpropagate.git" },
   "chess": { "desc": "Chess Coach — AI-powered chess analysis and training.", "url": "https://github.com/sarthakagrawal927/chess.git" },
@@ -11,7 +10,6 @@
   "linkchat": { "desc": "Real-time chat application built with Next.js.", "url": "https://github.com/sarthakagrawal927/linkchat.git" },
   "looptv": { "desc": "TV-like app for YouTube curated channels.", "url": "https://github.com/sarthakagrawal927/looptv.git" },
   "ludo-pass-play": { "desc": "Digital Ludo board game for local pass-and-play.", "url": "https://github.com/sarthakagrawal927/ludo-pass-play.git" },
-  "mentionpilot": { "desc": "Real-time mention tracking and alert system.", "url": "https://github.com/sarthakagrawal927/mentionpilot.git" },
   "open-historia": { "desc": "Interactive historical timeline and storytelling platform.", "url": "https://github.com/sarthakagrawal927/open-historia.git" },
   "personalsite": { "desc": "Personal blog and portfolio powered by Next.js.", "url": "https://github.com/sarthakagrawal927/personalsite.git" },
   "reader": { "desc": "Web Annotator — Document reading and annotation tool.", "url": "https://github.com/sarthakagrawal927/reader.git" },

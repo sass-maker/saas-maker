@@ -12,19 +12,25 @@ describe('Fleet Detection', () => {
 
   it('should detect foundry and legacy projects', () => {
     // Mock readdir to show 3 folders
-    vi.spyOn(fs, 'readdirSync').mockReturnValue([
-      { name: 'project-a', isDirectory: () => true },
-      { name: 'project-b', isDirectory: () => true },
-      { name: 'not-a-project', isDirectory: () => true },
-    ] as any);
+    vi.spyOn(fs, 'readdirSync').mockImplementation((p: any) => {
+      if (!String(p).endsWith('Fleet')) return [] as any;
+      return [
+        { name: 'project-a', isDirectory: () => true },
+        { name: 'project-b', isDirectory: () => true },
+        { name: 'not-a-project', isDirectory: () => true },
+      ] as any;
+    });
 
     // Mock existsSync
     vi.spyOn(fs, 'existsSync').mockImplementation((p: any) => {
+      if (String(p).endsWith('Fleet')) return true;
       if (p.includes('project-a/foundry.json')) return true;
       if (p.includes('project-b/.saasmaker.json')) return true;
       if (p.includes('project-b/package.json')) return true;
       return false;
     });
+
+    vi.spyOn(fs, 'realpathSync').mockImplementation((p: any) => String(p) as any);
 
     // Mock readFileSync
     vi.spyOn(fs, 'readFileSync').mockReturnValue(JSON.stringify({
