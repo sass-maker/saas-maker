@@ -81,8 +81,6 @@ export function TaskBoard({
   const [editTask, setEditTask] = useState<TaskRow | null>(null);
   const [form, setForm] = useState<TaskFormData>(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
-  const [agent, setAgent] = useState('codex');
-  const [agentCommand, setAgentCommand] = useState('');
 
   const showToast = useCallback((msg: string) => {
     setToast(msg);
@@ -175,10 +173,13 @@ export function TaskBoard({
     }
   };
 
-  const handleDispatch = async (task: TaskRow) => {
+  const handleDispatch = async (
+    task: TaskRow,
+    options: { agent: string; agentCommand?: string },
+  ) => {
     const command = buildSymphonyCommand(task, {
-      agent: agent === 'custom' ? undefined : agent,
-      agentCommand: agent === 'custom' ? agentCommand : undefined,
+      agent: options.agent === 'custom' ? undefined : options.agent,
+      agentCommand: options.agent === 'custom' ? options.agentCommand : undefined,
     });
     try {
       await navigator.clipboard.writeText(command);
@@ -198,24 +199,6 @@ export function TaskBoard({
       <div className="flex justify-end">
         <div className="flex flex-col items-end gap-2">
           <div className="flex flex-wrap items-center justify-end gap-2">
-            <Select value={agent} onValueChange={setAgent}>
-              <SelectTrigger className="h-9 w-[120px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {AGENT_OPTIONS.map(option => (
-                  <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {agent === 'custom' && (
-              <Input
-                value={agentCommand}
-                onChange={e => setAgentCommand(e.target.value)}
-                placeholder="agent --full-access --prompt-file {promptFile}"
-                className="h-9 w-[260px]"
-              />
-            )}
             <Button onClick={openCreate} size="sm">
               <Plus className="h-4 w-4 mr-1.5" />
               New Task
@@ -366,9 +349,16 @@ function TaskCard({
   task: TaskRow;
   onEdit: (t: TaskRow) => void;
   onDelete: (t: TaskRow) => void;
-  onDispatch: (t: TaskRow) => void;
+  onDispatch: (t: TaskRow, options: { agent: string; agentCommand?: string }) => void;
   onStatusChange: (t: TaskRow, s: TaskRow['status']) => void;
 }) {
+  const [agent, setAgent] = useState('codex');
+  const [agentCommand, setAgentCommand] = useState('');
+
+  const dispatchTask = () => {
+    onDispatch(task, { agent, agentCommand });
+  };
+
   return (
     <div className="bg-card border border-border rounded-lg p-3 flex flex-col gap-2 group">
       <div className="flex items-start justify-between gap-2">
@@ -386,13 +376,6 @@ function TaskCard({
             title="Edit"
           >
             <Pencil className="h-3.5 w-3.5" />
-          </button>
-          <button
-            onClick={() => onDispatch(task)}
-            className="p-1 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
-            title="Dispatch with Symphony"
-          >
-            <Bot className="h-3.5 w-3.5" />
           </button>
           <button
             onClick={() => onDelete(task)}
@@ -427,6 +410,39 @@ function TaskCard({
             <SelectItem value="done">Done</SelectItem>
           </SelectContent>
         </Select>
+      </div>
+
+      <div className="flex flex-col gap-1.5 border-t border-border/60 pt-2">
+        <div className="flex items-center gap-1.5">
+          <Select value={agent} onValueChange={setAgent}>
+            <SelectTrigger className="h-7 min-w-0 flex-1 px-2 text-xs">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {AGENT_OPTIONS.map(option => (
+                <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Button
+            type="button"
+            size="sm"
+            variant="secondary"
+            onClick={dispatchTask}
+            className="h-7 shrink-0 px-2 text-xs"
+          >
+            <Bot className="h-3.5 w-3.5" />
+            Run
+          </Button>
+        </div>
+        {agent === 'custom' && (
+          <Input
+            value={agentCommand}
+            onChange={e => setAgentCommand(e.target.value)}
+            placeholder="agent --full-access --prompt-file {promptFile}"
+            className="h-7 text-xs"
+          />
+        )}
       </div>
     </div>
   );
