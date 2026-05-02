@@ -1,23 +1,24 @@
 "use client";
-import React from "react";
-import { HeroHighlight, Highlight } from "@/components/ui/hero-highlight";
 import { motion } from "framer-motion";
-import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid";
-import { HoverEffect } from "@/components/ui/card-hover-effect";
-import { 
-  Rocket, 
-  Shield, 
-  Zap, 
-  Layout, 
-  BarChart, 
-  Globe, 
-  Github,
+import {
+  BarChart,
   ChevronRight,
   Code2,
+  Cpu,
+  Github,
+  Globe,
+  Layout,
+  Rocket,
+  Shield,
   Terminal,
-  Cpu
+  Zap,
 } from "lucide-react";
 import Link from "next/link";
+import React from "react";
+
+import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid";
+import { HoverEffect } from "@/components/ui/card-hover-effect";
+import { HeroHighlight, Highlight } from "@/components/ui/hero-highlight";
 
 export default function LandingPage() {
   return (
