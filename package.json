@@ -6,7 +6,7 @@
     "dev:api": "pnpm -F @saas-maker/api dev",
     "dev:cockpit": "pnpm -F @saas-maker/dashboard dev",
     "build:types": "pnpm -F @saas-maker/shared-types build",
-    "build:db": "pnpm -F @saas-maker/db build",
+    "build:db": "pnpm -F @saas-maker/ops build && pnpm -F @saas-maker/db build",
     "build:api": "pnpm -F @saas-maker/api build",
     "build:cockpit": "pnpm -F @saas-maker/dashboard build",
     "build:analytics-ui": "pnpm -F @saas-maker/analytics-ui build",
