@@ -2,6 +2,22 @@ import { createMiddleware } from 'hono/factory';
 import { Bindings, Variables } from '../types';
 import { getDb } from '../db';
 
+const DEFAULT_LOCAL_SESSION_TOKEN = 'local-dev-session';
+
+async function resolveLocalSession(c: { env: Bindings }, token: string): Promise<string | null> {
+  const expectedToken = c.env.SAASMAKER_LOCAL_SESSION_TOKEN || DEFAULT_LOCAL_SESSION_TOKEN;
+  if (c.env.LOCAL_AUTH_BYPASS !== 'true' || token !== expectedToken) return null;
+
+  const db = getDb(c.env.DB);
+  const user = await db.upsertUser({
+    id: 'local-dev',
+    email: 'local@saasmaker.dev',
+    name: 'Local Dev',
+    avatar_url: null,
+  });
+  return user.id;
+}
+
 /**
  * Resolve a better-auth opaque session token (issued by the cockpit) against
  * the shared D1 `session` table. Mirrors the user into the API's `users` table
@@ -36,6 +52,9 @@ async function resolveBetterAuthSession(c: { env: Bindings }, token: string): Pr
  * tokens (`sm_` prefix) then better-auth opaque session tokens.
  */
 export async function resolveBearerUserId(c: { env: Bindings }, token: string): Promise<string | null> {
+  const localUserId = await resolveLocalSession(c, token);
+  if (localUserId) return localUserId;
+
   if (token.startsWith('sm_')) {
     const db = getDb(c.env.DB);
     const cliToken = await db.getCliTokenUser(token);

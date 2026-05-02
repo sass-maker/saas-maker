@@ -7,6 +7,7 @@ import { spawnSync } from 'node:child_process';
 const STATUS_ORDER = ['todo', 'in_progress', 'done'];
 const LOCAL_STATE_DIR = path.join(process.cwd(), '.symphony');
 const LOCAL_TASK_CACHE = path.join(LOCAL_STATE_DIR, 'tasks.json');
+const LOCAL_MEMORY_FILE = path.join(LOCAL_STATE_DIR, 'memory.md');
 const DEFAULT_CLI_COMMAND = 'pnpm --dir packages/cli exec tsx src/index.ts';
 const DEFAULT_AGENT_COMMANDS = {
   codex: 'codex exec --dangerously-bypass-approvals-and-sandbox {prompt}',
@@ -87,6 +88,9 @@ function parseArgs(argv) {
     priority: 'medium',
     status: null,
     noCache: false,
+    memory: '',
+    memoryPush: false,
+    memoryPull: false,
     agent: process.env.SYMPHONY_AGENT || globalConfig.symphonyAgent || 'codex',
     agentCommand: process.env.SYMPHONY_AGENT_COMMAND || null,
     agentCommands: resolveAgentCommands(globalConfig),
@@ -94,7 +98,7 @@ function parseArgs(argv) {
     forwardedEnv: resolveForwardedEnv(globalConfig),
   };
 
-  const commands = new Set(['list', 'pull', 'sync', 'create', 'claim', 'done', 'reopen', 'dispatch', 'pick', 'delete']);
+  const commands = new Set(['list', 'pull', 'sync', 'create', 'claim', 'done', 'reopen', 'dispatch', 'pick', 'delete', 'memory']);
   if (argv[0] && !argv[0].startsWith('-') && commands.has(argv[0])) {
     args.command = argv.shift();
   }
@@ -105,6 +109,8 @@ function parseArgs(argv) {
     else if (arg === '--commands') args.commands = true;
     else if (arg === '--watch') args.watch = true;
     else if (arg === '--no-cache') args.noCache = true;
+    else if (arg === '--push') args.memoryPush = true;
+    else if (arg === '--pull') args.memoryPull = true;
     else if (arg === '--dispatch') args.dispatch = argv[++i] ?? null;
     else if (arg === '--api-base') args.apiBase = argv[++i];
     else if (arg === '--cli-command') args.cliCommand = argv[++i] ?? DEFAULT_CLI_COMMAND;
@@ -145,6 +151,9 @@ Usage:
   pnpm symphony reopen ID               Move a production task back to todo
   pnpm symphony create "Title"          Create a production task
   pnpm symphony delete ID               Delete a production task
+  pnpm symphony memory                  Show local Symphony operating memory
+  pnpm symphony memory --pull           Pull production memory into .symphony/memory.md
+  pnpm symphony memory --push           Push .symphony/memory.md to production
   pnpm symphony --watch                 Refresh the task list every 30s
 
 Options:
@@ -155,6 +164,8 @@ Options:
   --priority VALUE low, medium, or high for create
   --agent NAME     Agent profile for dispatch: codex, claude, gemini, or a configured profile
   --agent-command  Command template for custom agents; supports {prompt}, {promptFile}, {workspace}, {taskId}
+  --push           With memory: push .symphony/memory.md to production
+  --pull           With memory: pull production memory into .symphony/memory.md
   --json           Print raw task JSON
   --no-cache       Do not write the pulled board to .symphony/tasks.json
 
@@ -216,6 +227,25 @@ function renderAgentCommand(template, task, prompt, workspacePath) {
     .replaceAll('{promptFile}', shellQuote(promptFile))
     .replaceAll('{workspace}', shellQuote(workspacePath))
     .replaceAll('{taskId}', shellQuote(task.id));
+}
+
+function readLocalMemory() {
+  try {
+    return fs.readFileSync(LOCAL_MEMORY_FILE, 'utf8').trim();
+  } catch {
+    return '';
+  }
+}
+
+function writeLocalMemory(content) {
+  fs.mkdirSync(LOCAL_STATE_DIR, { recursive: true });
+  fs.writeFileSync(LOCAL_MEMORY_FILE, content);
+}
+
+function formatMemoryBlock(memory) {
+  const trimmed = memory?.trim();
+  if (!trimmed) return '';
+  return `\nSymphony operating memory:\n${trimmed}\n`;
 }
 
 function renderEnvPrefix(args) {
@@ -287,7 +317,7 @@ function runCliApi(args, method, pathName, options = {}) {
   }
 }
 
-function buildPrompt(task) {
+function buildPrompt(task, memory = '') {
   const project = task.project_slug ?? 'saas-maker';
   return `You are running a Foundry Symphony task.
 
@@ -299,6 +329,7 @@ Current status: ${task.status}
 
 Description:
 ${task.description?.trim() || 'No additional description provided.'}
+${formatMemoryBlock(memory)}
 
 Execution contract:
 - Treat the task row as the source of truth.
@@ -313,7 +344,7 @@ Execution contract:
 function buildCommand(task, args) {
   const project = task.project_slug ?? 'saas-maker';
   const workspacePath = `.symphony/workspaces/${workspaceKey(task)}`;
-  const prompt = buildPrompt(task);
+  const prompt = buildPrompt(task, args.memory);
   const agentTemplate = resolveAgentCommand(args);
   const agentCommand = `${renderEnvPrefix(args)}${renderAgentCommand(agentTemplate, task, prompt, workspacePath)}`;
   return [
@@ -335,6 +366,33 @@ async function apiRequest(args, pathName, init = {}) {
   return runCliApi(args, init.method ?? 'GET', pathName, {
     body: init.body ? JSON.parse(init.body) : undefined,
   });
+}
+
+async function fetchRemoteMemory(args) {
+  const payload = await apiRequest(args, '/v1/symphony/memory');
+  return payload.data?.content ?? '';
+}
+
+async function pushRemoteMemory(args, content) {
+  const payload = await apiRequest(args, '/v1/symphony/memory', {
+    method: 'PUT',
+    body: JSON.stringify({ content }),
+  });
+  return payload.data;
+}
+
+async function loadPromptMemory(args) {
+  const local = readLocalMemory();
+  try {
+    const remote = await fetchRemoteMemory(args);
+    if (remote.trim()) {
+      writeLocalMemory(remote);
+      return remote;
+    }
+  } catch {
+    // Dispatch should keep working offline or before the production migration is applied.
+  }
+  return local;
 }
 
 function writeTaskCache(tasks, args) {
@@ -384,6 +442,7 @@ function printTasks(tasks, args) {
 
 async function runOnce(args) {
   const tasks = await fetchTasks(args);
+  args.memory = await loadPromptMemory(args);
 
   if (args.dispatch || args.command === 'dispatch') {
     const id = args.dispatch ?? args.id;
@@ -444,6 +503,7 @@ async function updateTaskStatus(args, status) {
 
 async function pickTask(args) {
   const tasks = await fetchTasks(args);
+  args.memory = await loadPromptMemory(args);
   const task = findNextTask(tasks, args);
   const payload = await apiRequest(args, `/v1/tasks/${task.id}`, {
     method: 'PATCH',
@@ -483,9 +543,36 @@ async function deleteTask(args) {
   if (!args.json) console.log(`Deleted ${shortId(task.id)}: ${task.title}`);
 }
 
+async function manageMemory(args) {
+  if (args.memoryPush) {
+    const content = readLocalMemory();
+    const row = await pushRemoteMemory(args, content);
+    if (args.json) console.log(JSON.stringify(row, null, 2));
+    else console.log(`Pushed Symphony memory from ${path.relative(process.cwd(), LOCAL_MEMORY_FILE)}`);
+    return;
+  }
+
+  if (args.memoryPull) {
+    const content = await fetchRemoteMemory(args);
+    writeLocalMemory(content);
+    if (args.json) console.log(JSON.stringify({ content }, null, 2));
+    else console.log(`Pulled Symphony memory to ${path.relative(process.cwd(), LOCAL_MEMORY_FILE)}`);
+    return;
+  }
+
+  const content = readLocalMemory();
+  if (args.json) {
+    console.log(JSON.stringify({ path: LOCAL_MEMORY_FILE, content }, null, 2));
+    return;
+  }
+  console.log(`Symphony memory: ${path.relative(process.cwd(), LOCAL_MEMORY_FILE)}`);
+  console.log(content || '(empty)');
+}
+
 async function main() {
   const args = parseArgs(process.argv.slice(2));
-  if (args.command === 'create') await createTask(args);
+  if (args.command === 'memory') await manageMemory(args);
+  else if (args.command === 'create') await createTask(args);
   else if (args.command === 'claim') await updateTaskStatus(args, 'in_progress');
   else if (args.command === 'done') await updateTaskStatus(args, 'done');
   else if (args.command === 'reopen') await updateTaskStatus(args, 'todo');

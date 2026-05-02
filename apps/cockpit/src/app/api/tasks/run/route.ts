@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
-import { buildSymphonyCommand } from "@/lib/symphony";
+import { buildSymphonyCommand, chooseSymphonyAgent } from "@/lib/symphony";
 import { isLocalAuthBypassEnabled } from "@/lib/local-auth";
 
 export const dynamic = "force-dynamic";
@@ -27,12 +27,13 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { task, agent, agentCommand } = await req.json();
+    const { task, agent, agentCommand, memory, additionalInstructions } = await req.json();
     if (!task?.id || !task?.title) {
       return NextResponse.json({ error: "Task payload is required" }, { status: 400 });
     }
 
-    const command = buildSymphonyCommand(task, { agent, agentCommand });
+    const route = chooseSymphonyAgent(task, memory, additionalInstructions);
+    const command = buildSymphonyCommand(task, { agent: agent ?? route.agent, agentCommand, memory, additionalInstructions });
     try {
       const { spawn } = await import("node:child_process");
       const child = spawn(command, {
@@ -43,10 +44,10 @@ export async function POST(req: Request) {
       });
 
       child.unref();
-      return NextResponse.json({ ok: true, pid: child.pid });
+      return NextResponse.json({ ok: true, pid: child.pid, route });
     } catch {
       const result = await startWithSidecar(command, task.id);
-      return NextResponse.json(result);
+      return NextResponse.json({ ...result, route });
     }
   } catch (error) {
     return NextResponse.json(

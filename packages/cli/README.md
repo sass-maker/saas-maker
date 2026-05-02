@@ -93,6 +93,11 @@ fnd api GET /v1/projects --auth session --output table
 fnd api PATCH /v1/projects/<projectId> --auth session \
   --body '{"readme":"Internal launch notes and owner context."}'
 
+# Read and update Symphony operating memory
+fnd api GET /v1/symphony/memory --auth session
+fnd api PUT /v1/symphony/memory --auth session \
+  --body '{"content":"Prefer Gemini for bounded cheap asks. Keep CI fixes surgical."}'
+
 # Project-auth route: list feedback
 fnd api GET /v1/feedback --auth project --query type=feature --output table
 

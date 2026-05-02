@@ -43,6 +43,16 @@ fnd api PATCH /v1/projects/<projectId> --auth session \
   --body '{"readme":"Dashboard notes for this project."}'
 ```
 
+## 🎼 Symphony Memory
+
+Persist task-run instructions for local agents and copied prompts.
+
+```bash
+fnd api GET /v1/symphony/memory --auth session
+fnd api PUT /v1/symphony/memory --auth session \
+  --body '{"content":"Prefer Gemini for bounded cheap asks. Keep CI fixes surgical."}'
+```
+
 ## 🤖 Autonomous Maintenance
 
 Run the factory on auto-pilot.

@@ -6,12 +6,13 @@ import { capture } from '@saas-maker/ops';
 
 const tasks = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
-// GET /v1/tasks — list all tasks for user (optional ?status= filter)
+// GET /v1/tasks — list all tasks for user (optional ?status= and ?project_slug= filters)
 tasks.get('/', requireSession, async (c) => {
   const userId = c.get('userId')!;
   const status = c.req.query('status');
+  const projectSlug = c.req.query('project_slug');
   const db = getDb(c.env.DB);
-  const data = await db.listTasks(userId, status);
+  const data = await db.listTasks(userId, status, projectSlug);
   return c.json({ data });
 });
 
@@ -23,6 +24,8 @@ tasks.post('/', requireSession, async (c) => {
     description?: string;
     project_slug?: string;
     priority?: string;
+    task_type?: string;
+    size?: string;
   };
   if (!body.title || typeof body.title !== 'string' || !body.title.trim()) {
     return c.json({ error: 'title is required' }, 400);
@@ -33,8 +36,10 @@ tasks.post('/', requireSession, async (c) => {
     description: body.description,
     project_slug: body.project_slug,
     priority: body.priority,
+    task_type: body.task_type,
+    size: body.size,
   });
-  capture({ distinctId: userId, event: 'task_created', properties: { task_id: task.id, priority: task.priority ?? undefined, project_slug: body.project_slug ?? undefined } });
+  capture({ distinctId: userId, event: 'task_created', properties: { task_id: task.id, priority: task.priority ?? undefined, task_type: task.task_type ?? undefined, size: task.size ?? undefined, project_slug: body.project_slug ?? undefined } });
   return c.json({ data: task }, 201);
 });
 
@@ -48,6 +53,8 @@ tasks.patch('/:id', requireSession, async (c) => {
     status: string;
     priority: string;
     project_slug: string;
+    task_type: string;
+    size: string;
   }>;
   const db = getDb(c.env.DB);
   const task = await db.updateTask(id, userId, body);

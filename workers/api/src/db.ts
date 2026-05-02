@@ -48,7 +48,15 @@ export interface TaskRow {
   title: string; description: string | null;
   status: 'todo' | 'in_progress' | 'done';
   priority: 'low' | 'medium' | 'high';
+  task_type: 'feature' | 'bug' | 'chore' | 'docs' | 'research' | 'cleanup' | 'other';
+  size: 'xs' | 's' | 'm' | 'l' | 'xl';
   created_at: string; updated_at: string;
+}
+
+export interface SymphonyMemoryRow {
+  owner_id: string;
+  content: string;
+  updated_at: string;
 }
 
 export interface FleetMetadataRow {
@@ -1690,31 +1698,38 @@ export function getDb(d1: D1Database): FeedbackDatabase {
     },
 
     // --- Tasks ---
-    async createTask(ownerId: string, input: { title: string; description?: string; project_slug?: string; priority?: string }): Promise<TaskRow> {
+    async createTask(ownerId: string, input: { title: string; description?: string; project_slug?: string; priority?: string; task_type?: string; size?: string }): Promise<TaskRow> {
       const id = crypto.randomUUID();
       const priority = input.priority ?? 'medium';
+      const taskType = input.task_type ?? 'feature';
+      const size = input.size ?? 'm';
       await d1.prepare(
-        `INSERT INTO tasks (id, owner_id, project_slug, title, description, priority)
-         VALUES (?, ?, ?, ?, ?, ?)`
-      ).bind(id, ownerId, input.project_slug ?? null, input.title, input.description ?? null, priority).run();
+        `INSERT INTO tasks (id, owner_id, project_slug, title, description, priority, task_type, size)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+      ).bind(id, ownerId, input.project_slug ?? null, input.title, input.description ?? null, priority, taskType, size).run();
       const row = await d1.prepare(`SELECT * FROM tasks WHERE id = ?`).bind(id).first();
       return row as unknown as TaskRow;
     },
 
-    async listTasks(ownerId: string, status?: string): Promise<TaskRow[]> {
+    async listTasks(ownerId: string, status?: string, projectSlug?: string): Promise<TaskRow[]> {
+      const conditions = ['owner_id = ?'];
+      const values: unknown[] = [ownerId];
       if (status) {
-        const { results } = await d1.prepare(
-          `SELECT * FROM tasks WHERE owner_id = ? AND status = ? ORDER BY created_at DESC`
-        ).bind(ownerId, status).all();
-        return results as unknown as TaskRow[];
+        conditions.push('status = ?');
+        values.push(status);
       }
+      if (projectSlug) {
+        conditions.push('project_slug = ?');
+        values.push(projectSlug);
+      }
+
       const { results } = await d1.prepare(
-        `SELECT * FROM tasks WHERE owner_id = ? ORDER BY created_at DESC`
-      ).bind(ownerId).all();
+        `SELECT * FROM tasks WHERE ${conditions.join(' AND ')} ORDER BY created_at DESC`
+      ).bind(...values).all();
       return results as unknown as TaskRow[];
     },
 
-    async updateTask(id: string, ownerId: string, input: Partial<{ title: string; description: string; status: string; priority: string; project_slug: string }>): Promise<TaskRow | null> {
+    async updateTask(id: string, ownerId: string, input: Partial<{ title: string; description: string; status: string; priority: string; project_slug: string; task_type: string; size: string }>): Promise<TaskRow | null> {
       const sets: string[] = [];
       const values: unknown[] = [];
       if (input.title !== undefined) { sets.push('title = ?'); values.push(input.title); }
@@ -1722,6 +1737,8 @@ export function getDb(d1: D1Database): FeedbackDatabase {
       if (input.status !== undefined) { sets.push('status = ?'); values.push(input.status); }
       if (input.priority !== undefined) { sets.push('priority = ?'); values.push(input.priority); }
       if (input.project_slug !== undefined) { sets.push('project_slug = ?'); values.push(input.project_slug); }
+      if (input.task_type !== undefined) { sets.push('task_type = ?'); values.push(input.task_type); }
+      if (input.size !== undefined) { sets.push('size = ?'); values.push(input.size); }
       if (sets.length === 0) return null;
       sets.push("updated_at = datetime('now')");
       const sql = `UPDATE tasks SET ${sets.join(', ')} WHERE id = ? AND owner_id = ?`;
@@ -1736,6 +1753,28 @@ export function getDb(d1: D1Database): FeedbackDatabase {
         `DELETE FROM tasks WHERE id = ? AND owner_id = ?`
       ).bind(id, ownerId).run();
       return (meta.changes ?? 0) > 0;
+    },
+
+    // --- Symphony Memory ---
+    async getSymphonyMemory(ownerId: string): Promise<SymphonyMemoryRow | null> {
+      const row = await d1.prepare(
+        `SELECT owner_id, content, updated_at FROM symphony_memory WHERE owner_id = ?`
+      ).bind(ownerId).first();
+      return mapRow<SymphonyMemoryRow>(row);
+    },
+
+    async upsertSymphonyMemory(ownerId: string, content: string): Promise<SymphonyMemoryRow> {
+      await d1.prepare(
+        `INSERT INTO symphony_memory (owner_id, content, updated_at)
+         VALUES (?, ?, datetime('now'))
+         ON CONFLICT(owner_id) DO UPDATE SET
+           content = EXCLUDED.content,
+           updated_at = datetime('now')`
+      ).bind(ownerId, content).run();
+      const row = await d1.prepare(
+        `SELECT owner_id, content, updated_at FROM symphony_memory WHERE owner_id = ?`
+      ).bind(ownerId).first();
+      return mapRow<SymphonyMemoryRow>(row)!;
     },
   };
 }

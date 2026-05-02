@@ -1,0 +1,368 @@
+[
+  {
+    "project_slug": "anime_list",
+    "title": "Migrate Render backend routes to Cloudflare Workers with Hono",
+    "description": "Move Anime, auth, and watchlist routes from Express/API implementation to Cloudflare Workers + Hono as the serving shape. Source: /Users/sarthakagrawal/Desktop/Fleet/anime_list/docs/plans/2026-02-21-cf-workers-migration-design.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "anime_list",
+    "title": "Replace animeStore data layer with direct Turso queries",
+    "description": "Remove in-memory animeStore usage and route read paths to direct Turso access. Source: /Users/sarthakagrawal/Desktop/Fleet/anime_list/docs/plans/2026-02-21-cf-workers-migration-design.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "anime_list",
+    "title": "Switch auth/token verification to Workers-friendly primitives",
+    "description": "Replace google-auth-library + jsonwebtoken flow with raw Google tokeninfo fetch and jose for JWT verification in the Worker runtime. Source: /Users/sarthakagrawal/Desktop/Fleet/anime_list/docs/plans/2026-02-21-cf-workers-migration-design.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "anime_list",
+    "title": "Migrate scheduled work to Cloudflare Cron Triggers",
+    "description": "Replace node-cron jobs with Cloudflare Cron Triggers in the worker stack. Source: /Users/sarthakagrawal/Desktop/Fleet/anime_list/docs/plans/2026-02-21-cf-workers-migration-design.md",
+    "priority": "medium"
+  },
+  {
+    "project_slug": "everythingrated",
+    "title": "Implement v1 time-evolving ratings schema and migration",
+    "description": "Add item_versions, change ratings to append-only with versionId + supersededAt, and apply migration steps including indexes and backfills. Source: /Users/sarthakagrawal/Desktop/Fleet/everythingrated/plans/0001-time-evolving-ratings.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "everythingrated",
+    "title": "Replace upsert rating flow with supersede-then-insert semantics",
+    "description": "Update rate() to mark prior visitor/item/aspect row as superseded and insert a new history row. Source: /Users/sarthakagrawal/Desktop/Fleet/everythingrated/plans/0001-time-evolving-ratings.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "everythingrated",
+    "title": "Add windowed aggregate and sparkline queries for item pages",
+    "description": "Implement last_30d, last_90d, all_time aggregate queries and 12 weekly buckets for trend visualization. Source: /Users/sarthakagrawal/Desktop/Fleet/everythingrated/plans/0001-time-evolving-ratings.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "everythingrated",
+    "title": "Render trend UI on item pages",
+    "description": "Implement ItemPageData shape and add trend chart/sparkline, staleness badge behavior, and version-context display. Source: /Users/sarthakagrawal/Desktop/Fleet/everythingrated/plans/0001-time-evolving-ratings.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "everythingrated",
+    "title": "Backfill historical rating versioning",
+    "description": "Backfill item_versions and ratings.version_id, using nearest historical release at created_at with non-fatal tolerance for gaps. Source: /Users/sarthakagrawal/Desktop/Fleet/everythingrated/plans/0001-time-evolving-ratings.md",
+    "priority": "medium"
+  },
+  {
+    "project_slug": "high-signal",
+    "title": "Implement Cloudflare Access admin auth path",
+    "description": "Stand up CF Access policy/app settings and wire worker admin endpoints via CF_ACCESS_AUD and CF_ACCESS_TEAM_DOMAIN verification. Source: /Users/sarthakagrawal/Desktop/Fleet/high-signal/plans/0002-auth-hardening.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "high-signal",
+    "title": "Add CF Access JWT verification and same-origin admin proxy",
+    "description": "Implement cf-access helper and admin proxy route, then update /review to call same-origin admin APIs and drop token UI. Source: /Users/sarthakagrawal/Desktop/Fleet/high-signal/plans/0002-auth-hardening.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "high-signal",
+    "title": "Migrate app to unified High Signal product shell",
+    "description": "Reframe web into Mentions, Communities, and Markets areas while preserving existing Market Intelligence behavior. Source: /Users/sarthakagrawal/Desktop/Fleet/high-signal/plans/0004-platform-consolidation.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "high-signal",
+    "title": "Implement shared workspace/collection/event/signal schema foundation",
+    "description": "Add unified domain model pieces for product consolidation without breaking existing market routes. Source: /Users/sarthakagrawal/Desktop/Fleet/high-signal/plans/0004-platform-consolidation.md",
+    "priority": "medium"
+  },
+  {
+    "project_slug": "high-signal",
+    "title": "Build recurring queue/cron workflow for community digests",
+    "description": "Replace on-demand route-triggered digest execution with scheduled workflow. Source: /Users/sarthakagrawal/Desktop/Fleet/high-signal/plans/0005-legacy-extraction-ledger.md",
+    "priority": "medium"
+  },
+  {
+    "project_slug": "high-signal",
+    "title": "Finalize Clerk/server auth ownership enforcement",
+    "description": "Remove caller-provided owner query/header trust and enforce final Clerk/server boundary for resource ownership checks. Source: /Users/sarthakagrawal/Desktop/Fleet/high-signal/plans/0005-legacy-extraction-ledger.md",
+    "priority": "medium"
+  },
+  {
+    "project_slug": "linkchat",
+    "title": "Ship remaining SaaS Maker sync hardening",
+    "description": "Add smDocumentId, AI key API + auto-provision, AI key settings UI, info-block ingest/deletion sync, chat rate limiting, input validation, and Vercel deploy validation. Source: /Users/sarthakagrawal/Desktop/Fleet/linkchat/docs/plans/2026-03-08-linkchat-completion.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "linkchat",
+    "title": "Implement custom-domain feature end-to-end",
+    "description": "Add pageDomains schema, Vercel domain service wrapper, domain CRUD APIs, host-based resolution, and dashboard/domain verification flow plus tests. Source: /Users/sarthakagrawal/Desktop/Fleet/linkchat/docs/plans/2026-03-21-custom-domains-plan.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "linkchat",
+    "title": "Add multi-page profile navigation foundation",
+    "description": "Implement floating pill nav with sticky scroll behavior and theme-aware accent treatment across Profile, Encyclopedia, Roast, and Newspaper pages. Source: /Users/sarthakagrawal/Desktop/Fleet/linkchat/plans/multi-page-ui-design-2026-03-28.md",
+    "priority": "medium"
+  },
+  {
+    "project_slug": "linkchat",
+    "title": "Build page-visibility toggles and disabled-page 404 behavior",
+    "description": "Add owner dashboard controls for per-page enablement and ensure public resolution hides or guards disabled sections. Source: /Users/sarthakagrawal/Desktop/Fleet/linkchat/plans/multi-page-ui-design-2026-03-28.md",
+    "priority": "medium"
+  },
+  {
+    "project_slug": "linkchat",
+    "title": "Apply accessibility hardening for profile navigation",
+    "description": "Implement aria-label, aria-current, keyboard navigation, visible focus rings, and reduced-motion fallback. Source: /Users/sarthakagrawal/Desktop/Fleet/linkchat/plans/multi-page-ui-design-2026-03-28.md",
+    "priority": "medium"
+  },
+  {
+    "project_slug": "reader",
+    "title": "Finalize Vercel Blob and Google OAuth migration blockers",
+    "description": "Complete Vercel Blob setup and Google OAuth credential integration before Phase 1. Source: /Users/sarthakagrawal/Desktop/Fleet/reader/plans/migrate-off-firebase.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "reader",
+    "title": "Implement Turso migration foundation",
+    "description": "Add Drizzle/libSQL deps, schema/client files, migration config, and service-layer files with feature-flagged cutover. Source: /Users/sarthakagrawal/Desktop/Fleet/reader/plans/migrate-off-firebase.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "reader",
+    "title": "Complete Auth.js v5 swap and session migration",
+    "description": "Replace Firebase auth wiring with Auth.js v5 handlers, auth middleware, and session reads in API/auth helpers and UI providers. Source: /Users/sarthakagrawal/Desktop/Fleet/reader/plans/migrate-off-firebase.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "reader",
+    "title": "Execute storage migration to Vercel Blob API",
+    "description": "Replace Firebase/GCS upload and retrieval routes with Blob put() and blob URL flow. Source: /Users/sarthakagrawal/Desktop/Fleet/reader/plans/migrate-off-firebase.md",
+    "priority": "medium"
+  },
+  {
+    "project_slug": "reader",
+    "title": "Build Firestore-to-Turso migration script and run cutover",
+    "description": "Implement dry-run and real migration script, execute cutover, and smoke-test flow. Source: /Users/sarthakagrawal/Desktop/Fleet/reader/plans/migrate-off-firebase.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "reader",
+    "title": "Remove Firebase artifacts after successful cutover",
+    "description": "Delete Firebase client/service files and deployment/env artifacts after keepalive window. Source: /Users/sarthakagrawal/Desktop/Fleet/reader/plans/migrate-off-firebase.md",
+    "priority": "medium"
+  },
+  {
+    "project_slug": "resume-tailor",
+    "title": "Add token schema and migration",
+    "description": "Add token_balances, token_transactions, and payments tables, then run migration verification. Source: /Users/sarthakagrawal/Desktop/Fleet/resume-tailor/docs/superpowers/plans/2026-03-16-token-system-plan.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "resume-tailor",
+    "title": "Implement token server actions and tests",
+    "description": "Create token actions and tests for balance/init/debit/credit plus insufficient-token cases. Source: /Users/sarthakagrawal/Desktop/Fleet/resume-tailor/docs/superpowers/plans/2026-03-16-token-system-plan.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "resume-tailor",
+    "title": "Initialize token balance on sign-in",
+    "description": "Ensure new users get seed tokens during sign-in flow and build remains green. Source: /Users/sarthakagrawal/Desktop/Fleet/resume-tailor/docs/superpowers/plans/2026-03-16-token-system-plan.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "resume-tailor",
+    "title": "Wire Dodo Payments checkout and webhook",
+    "description": "Add dependency/env setup, create checkout route, and implement secure webhook handler for purchase completion. Source: /Users/sarthakagrawal/Desktop/Fleet/resume-tailor/docs/superpowers/plans/2026-03-16-token-system-plan.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "resume-tailor",
+    "title": "Switch AI provider to Gemini stack",
+    "description": "Move from OpenAI adapter to Google AI SDK and update provider config/types. Source: /Users/sarthakagrawal/Desktop/Fleet/resume-tailor/docs/superpowers/plans/2026-03-16-token-system-plan.md",
+    "priority": "medium"
+  },
+  {
+    "project_slug": "resume-tailor",
+    "title": "Add token gating across AI actions and UI",
+    "description": "Enforce token debit in tailor and cover-letter actions, and add token-aware UI behavior including insufficient balance handling. Source: /Users/sarthakagrawal/Desktop/Fleet/resume-tailor/docs/superpowers/plans/2026-03-16-token-system-plan.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "saas-maker",
+    "title": "Build Dynamic Workers MVP runner surface",
+    "description": "Add LOADER binding and fixed-snippet dynamic run route under API with persisted job status/log/result/error. Source: /Users/sarthakagrawal/Desktop/Fleet/saas-maker/docs/plans/2026-05-02-dynamic-workers-symphony.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "saas-maker",
+    "title": "Add Cloud Worker dispatch in cockpit",
+    "description": "Add task dispatch option and job status/log visibility in task terminal UI without breaking local runner flow. Source: /Users/sarthakagrawal/Desktop/Fleet/saas-maker/docs/plans/2026-05-02-dynamic-workers-symphony.md",
+    "priority": "medium"
+  },
+  {
+    "project_slug": "saas-maker",
+    "title": "Harden dynamic execution security and auditability",
+    "description": "Default-block outbound network, enforce narrow runtime API, validate generated code shape, and store source/result for audit trail. Source: /Users/sarthakagrawal/Desktop/Fleet/saas-maker/docs/plans/2026-05-02-dynamic-workers-symphony.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "saas-maker",
+    "title": "Add unit tests for dynamic run auth and validation flow",
+    "description": "Cover route auth, validation, status transitions, and outbound-block behavior. Source: /Users/sarthakagrawal/Desktop/Fleet/saas-maker/docs/plans/2026-05-02-dynamic-workers-symphony.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "significanthobbies",
+    "title": "Complete side-quests Mode A experience",
+    "description": "Render Mode A random quest on /side-quests and support Roll again behavior. Source: /Users/sarthakagrawal/Desktop/Fleet/significanthobbies/docs/plans/2026-03-06-side-quests-plan.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "significanthobbies",
+    "title": "Support quest filtering and shareability",
+    "description": "Implement Mode B filtered views, Mode C category-grouped view, and ?q= deep-link share load correctness. Source: /Users/sarthakagrawal/Desktop/Fleet/significanthobbies/docs/plans/2026-03-06-side-quests-plan.md",
+    "priority": "medium"
+  },
+  {
+    "project_slug": "significanthobbies",
+    "title": "Finish quest completion and motivation flow",
+    "description": "Ensure progress bar updates, badge toast on milestone, and post-completion save-progress prompt for guests. Source: /Users/sarthakagrawal/Desktop/Fleet/significanthobbies/docs/plans/2026-03-06-side-quests-plan.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "significanthobbies",
+    "title": "Finish journey artifacts and discoverability",
+    "description": "Publish and link /blog/side-quests, render timeline pins, and show badge collection on profiles. Source: /Users/sarthakagrawal/Desktop/Fleet/significanthobbies/docs/plans/2026-03-06-side-quests-plan.md",
+    "priority": "medium"
+  },
+  {
+    "project_slug": "significanthobbies",
+    "title": "Add Side Quests nav entry",
+    "description": "Add Side Quests link in global nav and verify end-to-end in final integration run. Source: /Users/sarthakagrawal/Desktop/Fleet/significanthobbies/docs/plans/2026-03-06-side-quests-plan.md",
+    "priority": "medium"
+  },
+  {
+    "project_slug": "starboard",
+    "title": "Add schema migration for list sharing and engagement tables",
+    "description": "Merge collections into user_lists, add public sharing fields, and create comments/likes tables and indexes. Source: /Users/sarthakagrawal/Desktop/Fleet/starboard/docs/plans/2026-03-01-explore-and-shareable-lists.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "starboard",
+    "title": "Build repo explore APIs with comments and likes",
+    "description": "Implement repo detail, comments, and likes APIs with auth-aware userLiked behavior and public fallback. Source: /Users/sarthakagrawal/Desktop/Fleet/starboard/docs/plans/2026-03-01-explore-and-shareable-lists.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "starboard",
+    "title": "Build explore frontend with comments and likes",
+    "description": "Add /explore/[repoId] page and hook for repo detail, comments, like toggle, and safe non-auth flows. Source: /Users/sarthakagrawal/Desktop/Fleet/starboard/docs/plans/2026-03-01-explore-and-shareable-lists.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "starboard",
+    "title": "Add shareable list API surface",
+    "description": "Add share fields, share toggling with slug generation, and public list lookup endpoint. Source: /Users/sarthakagrawal/Desktop/Fleet/starboard/docs/plans/2026-03-01-explore-and-shareable-lists.md",
+    "priority": "medium"
+  },
+  {
+    "project_slug": "starboard",
+    "title": "Migrate client filtering to server-side filtering",
+    "description": "Rewrite useStarredRepos and stars page/sidebar to use server facets, total, and pagination from API. Source: /Users/sarthakagrawal/Desktop/Fleet/starboard/docs/plans/2026-03-01-server-side-filtering.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "swe-interview-prep",
+    "title": "Create Library grid page",
+    "description": "Add repo card grid and route wiring for /library with filtering and search. Source: /Users/sarthakagrawal/Desktop/Fleet/swe-interview-prep/docs/plans/2026-02-17-library-implementation-plan.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "swe-interview-prep",
+    "title": "Build content readers and practice views",
+    "description": "Implement MarkdownViewer, SectionTree, ExerciseRunner, and RepoView with read/practice modes. Source: /Users/sarthakagrawal/Desktop/Fleet/swe-interview-prep/docs/plans/2026-02-17-library-implementation-plan.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "swe-interview-prep",
+    "title": "Define shared library types",
+    "description": "Add shared repo/section/exercise manifest contracts used end-to-end. Source: /Users/sarthakagrawal/Desktop/Fleet/swe-interview-prep/docs/plans/2026-02-17-library-implementation-plan.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "swe-interview-prep",
+    "title": "Add library build pipeline",
+    "description": "Create library config and fetch script, then wire fetch-library npm script. Source: /Users/sarthakagrawal/Desktop/Fleet/swe-interview-prep/docs/plans/2026-02-17-library-implementation-plan.md",
+    "priority": "medium"
+  },
+  {
+    "project_slug": "swe-interview-prep",
+    "title": "Build useLibrary data hook",
+    "description": "Add fetch, prefetch, and normalization flow for manifest plus lazy-loaded repo content. Source: /Users/sarthakagrawal/Desktop/Fleet/swe-interview-prep/docs/plans/2026-02-17-library-implementation-plan.md",
+    "priority": "medium"
+  },
+  {
+    "project_slug": "today-little-log",
+    "title": "Install and configure Better Auth",
+    "description": "Add dependency and establish authentication dependency baseline for migration. Source: /Users/sarthakagrawal/Desktop/Fleet/today-little-log/docs/plans/2026-02-27-better-auth-migration-plan.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "today-little-log",
+    "title": "Add Better Auth schema and tables",
+    "description": "Introduce user, session, account, and verification tables in Drizzle schema. Source: /Users/sarthakagrawal/Desktop/Fleet/today-little-log/docs/plans/2026-02-27-better-auth-migration-plan.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "today-little-log",
+    "title": "Replace auth server layer with Better Auth session validation",
+    "description": "Rewrite API auth helper to use better-auth session validation from cookies. Source: /Users/sarthakagrawal/Desktop/Fleet/today-little-log/docs/plans/2026-02-27-better-auth-migration-plan.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "today-little-log",
+    "title": "Add Better Auth catch-all route",
+    "description": "Implement api/auth/[...all].ts with toNodeHandler(auth). Source: /Users/sarthakagrawal/Desktop/Fleet/today-little-log/docs/plans/2026-02-27-better-auth-migration-plan.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "today-little-log",
+    "title": "Add auth client and session integration",
+    "description": "Add auth-client and rework client auth usage. Source: /Users/sarthakagrawal/Desktop/Fleet/today-little-log/docs/plans/2026-02-27-better-auth-migration-plan.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "truehire",
+    "title": "Implement GitHub OAuth and profile onboarding",
+    "description": "Ship candidate signup/onboarding flow on GitHub OAuth as the required MVP signal source. Source: /Users/sarthakagrawal/Desktop/Fleet/truehire/PRD.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "truehire",
+    "title": "Build GitHub ingest pipeline",
+    "description": "Fetch repos, commits, contributions, PR/release activity, and persist raw contribution data for scoring. Source: /Users/sarthakagrawal/Desktop/Fleet/truehire/PRD.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "truehire",
+    "title": "Ship public candidate profile page",
+    "description": "Implement truehire.dev/@username with score, top contributions, language/domain breakdown, and evidence rail. Source: /Users/sarthakagrawal/Desktop/Fleet/truehire/PRD.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "truehire",
+    "title": "Implement v0 score computation engine",
+    "description": "Implement depth/breadth/recognition/specialization weighted scoring and score transparency outputs. Source: /Users/sarthakagrawal/Desktop/Fleet/truehire/PRD.md",
+    "priority": "high"
+  },
+  {
+    "project_slug": "truehire",
+    "title": "Add scoring jobs and refresh cadence",
+    "description": "Implement initial ingest queue, weekly recompute, and on-demand user refresh with rate limiting. Source: /Users/sarthakagrawal/Desktop/Fleet/truehire/PRD.md",
+    "priority": "medium"
+  }
+]

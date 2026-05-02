@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { apiFetchAuthed } from '@/lib/api-client';
 import { visibleDashboardProjects } from '@/lib/dashboard-projects';
+import { getManifestProjectSlugs } from '@/lib/fleet-manifest';
 import { TaskBoard } from '@/components/tasks/TaskBoard';
 import { isLocalAuthBypassEnabled } from '@/lib/local-auth';
 
@@ -18,6 +19,8 @@ export default async function TasksPage() {
 
   let tasks: any[] = [];
   let projects: any[] = [];
+  let memory = '';
+  const manifestProjects = getManifestProjectSlugs();
 
   try {
     const res = await apiFetchAuthed<{ data: any[] }>('/v1/tasks');
@@ -33,6 +36,13 @@ export default async function TasksPage() {
     projects = [];
   }
 
+  try {
+    const res = await apiFetchAuthed<{ data: { content?: string } }>('/v1/symphony/memory');
+    memory = res.data?.content ?? '';
+  } catch {
+    memory = '';
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -43,7 +53,12 @@ export default async function TasksPage() {
           </p>
         </div>
       </div>
-      <TaskBoard initialTasks={tasks} projectSlugs={projects} isLocal={isLocal} />
+      <TaskBoard
+        initialTasks={tasks}
+        projectSlugs={Array.from(new Set([...manifestProjects, ...projects])).sort()}
+        initialMemory={memory}
+        isLocal={isLocal}
+      />
     </div>
   );
 }

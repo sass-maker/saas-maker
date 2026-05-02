@@ -80,3 +80,9 @@ export const foundry_jobs = sqliteTable('foundry_jobs', {
   created_at: text('created_at').notNull().default(sql`(datetime('now'))`),
   updated_at: text('updated_at').notNull().default(sql`(datetime('now'))`),
 });
+
+export const symphony_memory = sqliteTable('symphony_memory', {
+  owner_id: text('owner_id').primaryKey().references(() => users.id),
+  content: text('content').notNull().default(''),
+  updated_at: text('updated_at').notNull().default(sql`(datetime('now'))`),
+});

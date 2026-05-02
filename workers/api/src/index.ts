@@ -18,6 +18,7 @@ import { roadmap } from './routes/roadmap';
 import { standards } from './routes/standards';
 import { fleetMetadata } from './routes/fleet-metadata';
 import { tasks } from './routes/tasks';
+import { symphony } from './routes/symphony';
 import { test as testRoutes } from './routes/test';
 import { requireApiKey } from './middleware/auth';
 import { getDb } from './db';
@@ -137,6 +138,7 @@ app.route('/v1/fleet/metadata', fleetMetadata);
 app.route('/v1/secrets', secrets);
 app.route('/v1/jobs', jobs);
 app.route('/v1/tasks', tasks);
+app.route('/v1/symphony', symphony);
 app.route('/v1/test', testRoutes);
 
 export default app;

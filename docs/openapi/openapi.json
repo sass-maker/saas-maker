@@ -771,6 +771,30 @@
         }
       }
     },
+    "/v1/symphony/memory": {
+      "get": {
+        "tags": [
+          "symphony"
+        ],
+        "summary": "GET /v1/symphony/memory",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "symphony"
+        ],
+        "summary": "PUT /v1/symphony/memory",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/v1/tasks": {
       "get": {
         "tags": [
