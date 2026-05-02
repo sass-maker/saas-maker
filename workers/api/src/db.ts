@@ -59,6 +59,18 @@ export interface SymphonyMemoryRow {
   updated_at: string;
 }
 
+export interface SymphonyAuditLogRow {
+  id: string;
+  owner_id: string;
+  task_id: string | null;
+  action: string;
+  actor_source: string;
+  agent_profile: string | null;
+  project_slug: string | null;
+  metadata: string;
+  created_at: string;
+}
+
 export interface FleetMetadataRow {
   id: string;
   owner_id: string;
@@ -1753,6 +1765,50 @@ export function getDb(d1: D1Database): FeedbackDatabase {
         `DELETE FROM tasks WHERE id = ? AND owner_id = ?`
       ).bind(id, ownerId).run();
       return (meta.changes ?? 0) > 0;
+    },
+
+    async createSymphonyAuditEvent(ownerId: string, input: {
+      task_id?: string | null;
+      action: string;
+      actor_source?: string;
+      agent_profile?: string | null;
+      project_slug?: string | null;
+      metadata?: Record<string, unknown>;
+    }): Promise<SymphonyAuditLogRow> {
+      const id = crypto.randomUUID();
+      const metadata = JSON.stringify(input.metadata ?? {});
+      await d1.prepare(
+        `INSERT INTO symphony_audit_log (id, owner_id, task_id, action, actor_source, agent_profile, project_slug, metadata)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+      ).bind(
+        id,
+        ownerId,
+        input.task_id ?? null,
+        input.action,
+        input.actor_source ?? 'api',
+        input.agent_profile ?? null,
+        input.project_slug ?? null,
+        metadata,
+      ).run();
+      const row = await d1.prepare(
+        `SELECT * FROM symphony_audit_log WHERE id = ?`
+      ).bind(id).first();
+      return row as unknown as SymphonyAuditLogRow;
+    },
+
+    async listSymphonyAuditEvents(ownerId: string, input: { task_id?: string; limit?: number } = {}): Promise<SymphonyAuditLogRow[]> {
+      const limit = Math.min(Math.max(input.limit ?? 50, 1), 200);
+      const conditions = ['owner_id = ?'];
+      const values: unknown[] = [ownerId];
+      if (input.task_id) {
+        conditions.push('task_id = ?');
+        values.push(input.task_id);
+      }
+      values.push(limit);
+      const { results } = await d1.prepare(
+        `SELECT * FROM symphony_audit_log WHERE ${conditions.join(' AND ')} ORDER BY created_at DESC LIMIT ?`
+      ).bind(...values).all();
+      return results as unknown as SymphonyAuditLogRow[];
     },
 
     // --- Symphony Memory ---

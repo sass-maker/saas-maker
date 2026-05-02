@@ -53,6 +53,16 @@ fnd api PUT /v1/symphony/memory --auth session \
   --body '{"content":"Prefer Gemini for bounded cheap asks. Keep CI fixes surgical."}'
 ```
 
+## 🧾 Symphony Audit
+
+Inspect task lifecycle and local agent dispatch events.
+
+```bash
+fnd api GET /v1/symphony/audit --auth session --output table
+fnd api POST /v1/symphony/audit --auth session \
+  --body '{"action":"task_dispatched","actor_source":"local-cli","agent_profile":"gemini"}'
+```
+
 ## 🤖 Autonomous Maintenance
 
 Run the factory on auto-pilot.

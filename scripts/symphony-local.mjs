@@ -98,7 +98,7 @@ function parseArgs(argv) {
     forwardedEnv: resolveForwardedEnv(globalConfig),
   };
 
-  const commands = new Set(['list', 'pull', 'sync', 'create', 'claim', 'done', 'reopen', 'dispatch', 'pick', 'delete', 'memory']);
+  const commands = new Set(['list', 'pull', 'sync', 'create', 'claim', 'done', 'reopen', 'dispatch', 'pick', 'delete', 'memory', 'audit']);
   if (argv[0] && !argv[0].startsWith('-') && commands.has(argv[0])) {
     args.command = argv.shift();
   }
@@ -123,7 +123,7 @@ function parseArgs(argv) {
     else if (arg === '--help' || arg === '-h') {
       printHelp();
       process.exit(0);
-    } else if (!args.id && ['claim', 'done', 'reopen', 'dispatch', 'delete'].includes(args.command)) {
+    } else if (!args.id && ['claim', 'done', 'reopen', 'dispatch', 'delete', 'audit'].includes(args.command)) {
       args.id = arg;
     } else if (args.command === 'create') {
       args.title = args.title ? `${args.title} ${arg}` : arg;
@@ -151,6 +151,8 @@ Usage:
   pnpm symphony reopen ID               Move a production task back to todo
   pnpm symphony create "Title"          Create a production task
   pnpm symphony delete ID               Delete a production task
+  pnpm symphony audit                   Show recent Symphony audit events
+  pnpm symphony audit ID                Show audit events for one task
   pnpm symphony memory                  Show local Symphony operating memory
   pnpm symphony memory --pull           Pull production memory into .symphony/memory.md
   pnpm symphony memory --push           Push .symphony/memory.md to production
@@ -373,6 +375,28 @@ async function fetchRemoteMemory(args) {
   return payload.data?.content ?? '';
 }
 
+async function recordAudit(args, event) {
+  try {
+    await apiRequest(args, '/v1/symphony/audit', {
+      method: 'POST',
+      body: JSON.stringify(event),
+    });
+  } catch (error) {
+    if (process.env.SYMPHONY_AUDIT_DEBUG) {
+      console.error(`Failed to record Symphony audit event: ${error.message}`);
+    }
+  }
+}
+
+async function fetchAudit(args) {
+  const params = new URLSearchParams();
+  if (args.id) params.set('task_id', args.id);
+  params.set('limit', '50');
+  const suffix = params.toString() ? `?${params.toString()}` : '';
+  const payload = await apiRequest(args, `/v1/symphony/audit${suffix}`);
+  return payload.data ?? [];
+}
+
 async function pushRemoteMemory(args, content) {
   const payload = await apiRequest(args, '/v1/symphony/memory', {
     method: 'PUT',
@@ -447,6 +471,16 @@ async function runOnce(args) {
   if (args.dispatch || args.command === 'dispatch') {
     const id = args.dispatch ?? args.id;
     const task = findTask(tasks, id);
+    await recordAudit(args, {
+      task_id: task.id,
+      action: 'task_dispatched',
+      actor_source: 'local-cli',
+      agent_profile: args.agent,
+      project_slug: task.project_slug ?? null,
+      metadata: {
+        command_template: args.agentCommand ? 'custom' : args.agent,
+      },
+    });
     console.log(buildCommand(task, args));
     return;
   }
@@ -512,6 +546,16 @@ async function pickTask(args) {
   const pickedTask = payload.data ?? { ...task, status: 'in_progress' };
   await fetchTasks(args);
   const command = buildCommand(pickedTask, args);
+  await recordAudit(args, {
+    task_id: pickedTask.id,
+    action: 'task_picked',
+    actor_source: 'local-cli',
+    agent_profile: args.agent,
+    project_slug: pickedTask.project_slug ?? null,
+    metadata: {
+      command_template: args.agentCommand ? 'custom' : args.agent,
+    },
+  });
   if (args.json) {
     console.log(JSON.stringify({ task: pickedTask, command }, null, 2));
     return;
@@ -543,6 +587,23 @@ async function deleteTask(args) {
   if (!args.json) console.log(`Deleted ${shortId(task.id)}: ${task.title}`);
 }
 
+async function showAudit(args) {
+  const events = await fetchAudit(args);
+  if (args.json) {
+    console.log(JSON.stringify(events, null, 2));
+    return;
+  }
+  console.log(`Foundry Symphony audit log (${events.length})`);
+  for (const event of events) {
+    const created = event.created_at ?? '-';
+    const task = event.task_id ? shortId(event.task_id) : '--------';
+    const project = event.project_slug ?? '-';
+    const actor = event.actor_source ?? '-';
+    const agent = event.agent_profile ? ` ${event.agent_profile}` : '';
+    console.log(`  - ${created} [${task}] ${event.action} ${project} via ${actor}${agent}`);
+  }
+}
+
 async function manageMemory(args) {
   if (args.memoryPush) {
     const content = readLocalMemory();
@@ -572,6 +633,7 @@ async function manageMemory(args) {
 async function main() {
   const args = parseArgs(process.argv.slice(2));
   if (args.command === 'memory') await manageMemory(args);
+  else if (args.command === 'audit') await showAudit(args);
   else if (args.command === 'create') await createTask(args);
   else if (args.command === 'claim') await updateTaskStatus(args, 'in_progress');
   else if (args.command === 'done') await updateTaskStatus(args, 'done');

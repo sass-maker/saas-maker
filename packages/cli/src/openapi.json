@@ -771,6 +771,30 @@
         }
       }
     },
+    "/v1/symphony/audit": {
+      "get": {
+        "tags": [
+          "symphony"
+        ],
+        "summary": "GET /v1/symphony/audit",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "symphony"
+        ],
+        "summary": "POST /v1/symphony/audit",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/v1/symphony/memory": {
       "get": {
         "tags": [

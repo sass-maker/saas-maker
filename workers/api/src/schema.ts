@@ -86,3 +86,15 @@ export const symphony_memory = sqliteTable('symphony_memory', {
   content: text('content').notNull().default(''),
   updated_at: text('updated_at').notNull().default(sql`(datetime('now'))`),
 });
+
+export const symphony_audit_log = sqliteTable('symphony_audit_log', {
+  id: text('id').primaryKey(),
+  owner_id: text('owner_id').notNull().references(() => users.id),
+  task_id: text('task_id'),
+  action: text('action').notNull(),
+  actor_source: text('actor_source').notNull().default('api'),
+  agent_profile: text('agent_profile'),
+  project_slug: text('project_slug'),
+  metadata: text('metadata').notNull().default('{}'),
+  created_at: text('created_at').notNull().default(sql`(datetime('now'))`),
+});

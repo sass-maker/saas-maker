@@ -6,6 +6,21 @@ import { capture } from '@saas-maker/ops';
 
 const tasks = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
+async function recordAudit(db: ReturnType<typeof getDb>, ownerId: string, input: {
+  task_id?: string | null;
+  action: string;
+  actor_source?: string;
+  agent_profile?: string | null;
+  project_slug?: string | null;
+  metadata?: Record<string, unknown>;
+}) {
+  try {
+    await db.createSymphonyAuditEvent(ownerId, input);
+  } catch (error) {
+    console.warn('Failed to record Symphony audit event', error);
+  }
+}
+
 // GET /v1/tasks — list all tasks for user (optional ?status= and ?project_slug= filters)
 tasks.get('/', requireSession, async (c) => {
   const userId = c.get('userId')!;
@@ -39,6 +54,18 @@ tasks.post('/', requireSession, async (c) => {
     task_type: body.task_type,
     size: body.size,
   });
+  await recordAudit(db, userId, {
+    task_id: task.id,
+    action: 'task_created',
+    actor_source: 'api',
+    project_slug: task.project_slug,
+    metadata: {
+      title: task.title,
+      priority: task.priority,
+      task_type: task.task_type,
+      size: task.size,
+    },
+  });
   capture({ distinctId: userId, event: 'task_created', properties: { task_id: task.id, priority: task.priority ?? undefined, task_type: task.task_type ?? undefined, size: task.size ?? undefined, project_slug: body.project_slug ?? undefined } });
   return c.json({ data: task }, 201);
 });
@@ -59,6 +86,19 @@ tasks.patch('/:id', requireSession, async (c) => {
   const db = getDb(c.env.DB);
   const task = await db.updateTask(id, userId, body);
   if (!task) return c.json({ error: 'Task not found' }, 404);
+  await recordAudit(db, userId, {
+    task_id: task.id,
+    action: body.status ? 'task_status_updated' : 'task_updated',
+    actor_source: 'api',
+    project_slug: task.project_slug,
+    metadata: {
+      changed_fields: Object.keys(body),
+      status: body.status,
+      priority: body.priority,
+      task_type: body.task_type,
+      size: body.size,
+    },
+  });
   if (body.status) capture({ distinctId: userId, event: 'task_status_updated', properties: { task_id: id, status: body.status } });
   return c.json({ data: task });
 });
@@ -70,6 +110,11 @@ tasks.delete('/:id', requireSession, async (c) => {
   const db = getDb(c.env.DB);
   const ok = await db.deleteTask(id, userId);
   if (!ok) return c.json({ error: 'Task not found' }, 404);
+  await recordAudit(db, userId, {
+    task_id: id,
+    action: 'task_deleted',
+    actor_source: 'api',
+  });
   capture({ distinctId: userId, event: 'task_deleted', properties: { task_id: id } });
   return c.json({ ok: true });
 });
