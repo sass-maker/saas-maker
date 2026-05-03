@@ -1,15 +1,13 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { Bot, Clipboard, Columns3, ListTodo, Pencil, Plus, Save, Trash2, X } from 'lucide-react';
+import { Bot, ChevronDown, Clipboard, Pencil, Plus, Save, Trash2, X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { apiFetchClient, getClientToken } from '@/lib/api-client';
 import { buildSymphonyPrompt, chooseSymphonyAgent } from '@/lib/symphony';
@@ -24,21 +22,14 @@ export interface TaskRow {
   status: 'todo' | 'in_progress' | 'done';
   priority: 'low' | 'medium' | 'high';
   task_type: 'feature' | 'bug' | 'chore' | 'docs' | 'research' | 'cleanup' | 'other';
-  size: 'xs' | 's' | 'm' | 'l' | 'xl';
   created_at: string;
   updated_at: string;
 }
 
-const COLUMNS: { key: TaskRow['status']; label: string }[] = [
-  { key: 'todo', label: 'Todo' },
-  { key: 'in_progress', label: 'In Progress' },
-  { key: 'done', label: 'Done' },
-];
-
 const PRIORITY_DOT: Record<TaskRow['priority'], string> = {
   high: 'bg-red-500',
-  medium: 'bg-yellow-500',
-  low: 'bg-gray-500',
+  medium: 'bg-amber-500',
+  low: 'bg-muted-foreground/50',
 };
 
 const PRIORITY_LABEL: Record<TaskRow['priority'], string> = {
@@ -53,12 +44,6 @@ const PRIORITY_RANK: Record<TaskRow['priority'], number> = {
   low: 2,
 };
 
-const STATUS_LABEL: Record<TaskRow['status'], string> = {
-  todo: 'Todo',
-  in_progress: 'In Progress',
-  done: 'Done',
-};
-
 const TASK_TYPE_LABEL: Record<TaskRow['task_type'], string> = {
   feature: 'Feature',
   bug: 'Bug',
@@ -69,12 +54,16 @@ const TASK_TYPE_LABEL: Record<TaskRow['task_type'], string> = {
   other: 'Other',
 };
 
-const SIZE_LABEL: Record<TaskRow['size'], string> = {
-  xs: 'XS',
-  s: 'S',
-  m: 'M',
-  l: 'L',
-  xl: 'XL',
+const STATUS_LABEL: Record<TaskRow['status'], string> = {
+  todo: 'Todo',
+  in_progress: 'In Progress',
+  done: 'Done',
+};
+
+const STATUS_DOT_CLASS: Record<TaskRow['status'], string> = {
+  todo: 'border-muted-foreground/50 bg-transparent',
+  in_progress: 'border-blue-500 bg-blue-500/15',
+  done: 'border-emerald-500 bg-emerald-500/15',
 };
 
 function Toast({ message }: { message: string }) {
@@ -91,8 +80,6 @@ interface TaskFormData {
   project_slug: string;
   priority: string;
   task_type: string;
-  size: string;
-  status: string;
 }
 
 const EMPTY_FORM: TaskFormData = {
@@ -101,20 +88,11 @@ const EMPTY_FORM: TaskFormData = {
   project_slug: '',
   priority: 'medium',
   task_type: 'feature',
-  size: 'm',
-  status: 'todo',
 };
 
 const ALL_PROJECTS = '__all__';
 const UNASSIGNED_PROJECT = '__unassigned__';
 const ALL_PRIORITIES = '__all__';
-
-function formatTaskDate(value: string) {
-  return new Intl.DateTimeFormat('en', {
-    month: 'short',
-    day: 'numeric',
-  }).format(new Date(value));
-}
 
 function sortTasksByPriority(tasks: TaskRow[]) {
   return [...tasks].sort((a, b) => {
@@ -122,6 +100,10 @@ function sortTasksByPriority(tasks: TaskRow[]) {
     if (priorityDiff !== 0) return priorityDiff;
     return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
   });
+}
+
+function taskPreview(description: string | null) {
+  return description?.split(/\s+Source:\s+/)[0]?.trim() ?? '';
 }
 
 export function TaskBoard({
@@ -148,6 +130,7 @@ export function TaskBoard({
   const [savingMemory, setSavingMemory] = useState(false);
   const [projectFilter, setProjectFilter] = useState(ALL_PROJECTS);
   const [priorityFilter, setPriorityFilter] = useState(ALL_PRIORITIES);
+  const [showDone, setShowDone] = useState(false);
 
   const allProjectSlugs = Array.from(
     new Set([
@@ -162,7 +145,8 @@ export function TaskBoard({
         projectFilter === ALL_PROJECTS ||
         (projectFilter === UNASSIGNED_PROJECT ? !task.project_slug : task.project_slug === projectFilter);
       const matchesPriority = priorityFilter === ALL_PRIORITIES || task.priority === priorityFilter;
-      return matchesProject && matchesPriority;
+      const matchesStatus = showDone || task.status !== 'done';
+      return matchesProject && matchesPriority && matchesStatus;
     })
   );
 
@@ -185,8 +169,6 @@ export function TaskBoard({
       project_slug: task.project_slug ?? '',
       priority: task.priority,
       task_type: task.task_type ?? 'feature',
-      size: task.size ?? 'm',
-      status: task.status,
     });
     setModalOpen(true);
   };
@@ -211,8 +193,6 @@ export function TaskBoard({
             project_slug: form.project_slug || undefined,
             priority: form.priority,
             task_type: form.task_type,
-            size: form.size,
-            status: form.status,
           }),
         });
         setTasks(prev => prev.map(t => t.id === editTask.id ? res.data : t));
@@ -226,7 +206,6 @@ export function TaskBoard({
             project_slug: form.project_slug || undefined,
             priority: form.priority,
             task_type: form.task_type,
-            size: form.size,
           }),
         });
         setTasks(prev => [res.data, ...prev]);
@@ -296,20 +275,6 @@ export function TaskBoard({
     }
   };
 
-  const handleSizeChange = async (task: TaskRow, newSize: TaskRow['size']) => {
-    setTasks(prev => prev.map(t => t.id === task.id ? { ...t, size: newSize } : t));
-    try {
-      const token = await getClientToken();
-      await apiFetchClient(`/v1/tasks/${task.id}`, token, {
-        method: 'PATCH',
-        body: JSON.stringify({ size: newSize }),
-      });
-    } catch {
-      setTasks(prev => prev.map(t => t.id === task.id ? { ...t, size: task.size } : t));
-      showToast('Failed to update size');
-    }
-  };
-
   const handleMemorySave = async () => {
     setSavingMemory(true);
     try {
@@ -371,8 +336,6 @@ export function TaskBoard({
     }
   };
 
-  const tasksByStatus = (status: TaskRow['status']) => filteredTasks.filter(t => t.status === status);
-
   return (
     <>
       <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
@@ -414,6 +377,15 @@ export function TaskBoard({
             <Badge variant="outline" className="font-mono text-[10px]">
               {filteredTasks.length} / {tasks.length} tasks
             </Badge>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setShowDone(prev => !prev)}
+              className="h-9"
+            >
+              {showDone ? 'Hide done' : 'Show done'}
+            </Button>
           </div>
           <p className="max-w-2xl text-xs text-muted-foreground">
             Tasks sort by priority first, then latest update. Production tasks are shared across the dashboard, pnpm symphony, and whichever local agent command you dispatch.
@@ -429,6 +401,18 @@ export function TaskBoard({
           </div>
         </div>
       </div>
+
+      <TaskList
+        tasks={filteredTasks}
+        onEdit={openEdit}
+        onDelete={handleDelete}
+        onRun={handleDispatch}
+        onCustomizeRun={openRun}
+        onStatusChange={handleStatusChange}
+        onPriorityChange={handlePriorityChange}
+        onTypeChange={handleTypeChange}
+        isLocal={isLocal}
+      />
 
       <div className="rounded-lg border bg-card p-4">
         <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
@@ -451,66 +435,6 @@ export function TaskBoard({
           placeholder="Persistent operating preferences for Symphony agents..."
         />
       </div>
-
-      <Tabs defaultValue="board" className="gap-4">
-        <TabsList>
-          <TabsTrigger value="board" className="gap-2">
-            <Columns3 className="h-4 w-4" />
-            Board
-          </TabsTrigger>
-          <TabsTrigger value="list" className="gap-2">
-            <ListTodo className="h-4 w-4" />
-            List
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="board">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            {COLUMNS.map(col => (
-              <div key={col.key} className="flex min-h-0 flex-col gap-3">
-                <div className="flex items-center justify-between px-1">
-                  <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-                    {col.label}
-                  </span>
-                  <span className="text-xs text-muted-foreground">
-                    {tasksByStatus(col.key).length}
-                  </span>
-                </div>
-                <div className="flex max-h-[calc(100vh-20rem)] min-h-[4rem] flex-col gap-2 overflow-y-auto pr-1">
-                  {tasksByStatus(col.key).map(task => (
-                    <TaskCard
-                      key={task.id}
-                      task={task}
-                      onEdit={openEdit}
-                      onDelete={handleDelete}
-                      onDispatch={openRun}
-                      onStatusChange={handleStatusChange}
-                      isLocal={isLocal}
-                    />
-                  ))}
-                  {tasksByStatus(col.key).length === 0 && (
-                    <div className="rounded-lg border border-dashed border-border p-4 text-center text-xs text-muted-foreground">
-                      No tasks
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="list">
-          <TaskList
-            tasks={filteredTasks}
-            onEdit={openEdit}
-            onDelete={handleDelete}
-            onStatusChange={handleStatusChange}
-            onPriorityChange={handlePriorityChange}
-            onTypeChange={handleTypeChange}
-            onSizeChange={handleSizeChange}
-          />
-        </TabsContent>
-      </Tabs>
 
       <Dialog open={modalOpen} onOpenChange={setModalOpen}>
         <DialogContent className="w-[min(44rem,calc(100vw-2rem))] sm:max-w-2xl">
@@ -575,7 +499,7 @@ export function TaskBoard({
                 </Select>
               </div>
             </div>
-            <div className="grid gap-3 sm:grid-cols-2">
+            <div className="max-w-xs space-y-1.5">
               <div className="space-y-1.5">
                 <Label>Type</Label>
                 <Select
@@ -592,41 +516,7 @@ export function TaskBoard({
                   </SelectContent>
                 </Select>
               </div>
-              <div className="space-y-1.5">
-                <Label>Size</Label>
-                <Select
-                  value={form.size}
-                  onValueChange={v => setForm(f => ({ ...f, size: v }))}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.entries(SIZE_LABEL).map(([value, label]) => (
-                      <SelectItem key={value} value={value}>{label}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
             </div>
-            {editTask && (
-              <div className="max-w-xs space-y-1.5">
-                <Label>Status</Label>
-                <Select
-                  value={form.status}
-                  onValueChange={v => setForm(f => ({ ...f, status: v }))}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="todo">Todo</SelectItem>
-                    <SelectItem value="in_progress">In Progress</SelectItem>
-                    <SelectItem value="done">Done</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
             <div className="flex justify-end gap-2 pt-1">
               <Button type="button" variant="outline" onClick={() => setModalOpen(false)}>
                 Cancel
@@ -719,18 +609,22 @@ function TaskList({
   tasks,
   onEdit,
   onDelete,
+  onRun,
+  onCustomizeRun,
   onStatusChange,
   onPriorityChange,
   onTypeChange,
-  onSizeChange,
+  isLocal,
 }: {
   tasks: TaskRow[];
   onEdit: (t: TaskRow) => void;
   onDelete: (t: TaskRow) => void;
+  onRun: (t: TaskRow) => void;
+  onCustomizeRun: (t: TaskRow) => void;
   onStatusChange: (t: TaskRow, s: TaskRow['status']) => void;
   onPriorityChange: (t: TaskRow, p: TaskRow['priority']) => void;
   onTypeChange: (t: TaskRow, p: TaskRow['task_type']) => void;
-  onSizeChange: (t: TaskRow, p: TaskRow['size']) => void;
+  isLocal: boolean;
 }) {
   if (tasks.length === 0) {
     return (
@@ -741,228 +635,109 @@ function TaskList({
   }
 
   return (
-    <div className="overflow-hidden rounded-lg border bg-card">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Task</TableHead>
-            <TableHead>Project</TableHead>
-            <TableHead>Type</TableHead>
-            <TableHead>Size</TableHead>
-            <TableHead>Priority</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Updated</TableHead>
-            <TableHead className="w-20 text-right">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {tasks.map(task => (
-            <TableRow key={task.id}>
-              <TableCell className="max-w-[28rem]">
-                <div className="space-y-1">
-                  <div className="font-medium text-foreground">{task.title}</div>
-                  {task.description && (
-                    <div className="truncate text-xs text-muted-foreground">
-                      {task.description}
-                    </div>
-                  )}
-                </div>
-              </TableCell>
-              <TableCell>
-                {task.project_slug ? (
-                  <Badge variant="outline" className="text-xs">
-                    {task.project_slug}
-                  </Badge>
-                ) : (
-                  <span className="text-xs text-muted-foreground">Unassigned</span>
-                )}
-              </TableCell>
-              <TableCell>
-                <Select
-                  value={task.task_type}
-                  onValueChange={v => onTypeChange(task, v as TaskRow['task_type'])}
-                >
-                  <SelectTrigger className="h-8 w-28 text-xs">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
+    <div className="divide-y divide-border/35">
+      {tasks.map(task => {
+        const preview = taskPreview(task.description);
+        const metadataPillClass = 'inline-flex h-7 items-center rounded-full border border-border/60 bg-background/35 px-3 text-xs font-normal text-muted-foreground shadow-none';
+        const metadataSelectClass = cn(
+          metadataPillClass,
+          'cursor-pointer appearance-none py-0 pr-7 hover:border-border hover:bg-background/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/35'
+        );
+        return (
+          <article
+            key={task.id}
+            className="group grid min-h-[5rem] grid-cols-[2.25rem_minmax(0,1fr)_5.5rem] items-center gap-0 px-2 py-3 transition-colors hover:bg-muted/20 max-sm:grid-cols-[2rem_minmax(0,1fr)]"
+          >
+            <div className="flex items-center justify-center">
+              <span
+                className={cn('h-4 w-4 rounded-full border-2', STATUS_DOT_CLASS[task.status])}
+                title={STATUS_LABEL[task.status]}
+              />
+            </div>
+            <div className="min-w-0 px-2">
+              <div className="flex min-w-0 items-baseline gap-2">
+                <h3 className="truncate text-base font-medium leading-6 text-foreground">
+                  {task.title}
+                </h3>
+              </div>
+              {preview && (
+                <p className="max-w-2xl truncate text-sm leading-5 text-muted-foreground">
+                  {preview}
+                </p>
+              )}
+              <div className="mt-1 flex min-w-0 items-center gap-1 max-sm:hidden">
+                <span className={cn(metadataPillClass, 'max-w-32 hover:border-border hover:bg-background/70')}>
+                  <span className="truncate">{task.project_slug ?? 'Unassigned'}</span>
+                </span>
+                <span className="relative inline-flex">
+                  <select
+                    value={task.task_type}
+                    onChange={event => onTypeChange(task, event.target.value as TaskRow['task_type'])}
+                    className={cn(metadataSelectClass, 'w-[5.75rem]')}
+                    aria-label={`Type for ${task.title}`}
+                  >
                     {Object.entries(TASK_TYPE_LABEL).map(([value, label]) => (
-                      <SelectItem key={value} value={value}>{label}</SelectItem>
+                      <option key={value} value={value}>{label}</option>
                     ))}
-                  </SelectContent>
-                </Select>
-              </TableCell>
-              <TableCell>
-                <Select
-                  value={task.size}
-                  onValueChange={v => onSizeChange(task, v as TaskRow['size'])}
-                >
-                  <SelectTrigger className="h-8 w-20 text-xs">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.entries(SIZE_LABEL).map(([value, label]) => (
-                      <SelectItem key={value} value={value}>{label}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </TableCell>
-              <TableCell>
-                <Select
-                  value={task.priority}
-                  onValueChange={v => onPriorityChange(task, v as TaskRow['priority'])}
-                >
-                  <SelectTrigger className="h-8 w-28 text-xs">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
+                  </select>
+                  <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3 w-3 -translate-y-1/2 text-muted-foreground opacity-35" />
+                </span>
+                <span className="relative inline-flex">
+                  <span className={cn('pointer-events-none absolute left-3 top-1/2 z-10 h-2 w-2 -translate-y-1/2 rounded-full', PRIORITY_DOT[task.priority])} />
+                  <select
+                    value={task.priority}
+                    onChange={event => onPriorityChange(task, event.target.value as TaskRow['priority'])}
+                    className={cn(metadataSelectClass, 'w-[5.25rem] pl-7')}
+                    aria-label={`Priority for ${task.title}`}
+                  >
                     {(['high', 'medium', 'low'] as const).map(priority => (
-                      <SelectItem key={priority} value={priority}>
-                        <span className="inline-flex items-center gap-1.5">
-                          <span className={cn('h-2 w-2 rounded-full', PRIORITY_DOT[priority])} />
-                          {PRIORITY_LABEL[priority]}
-                        </span>
-                      </SelectItem>
+                      <option key={priority} value={priority}>{PRIORITY_LABEL[priority]}</option>
                     ))}
-                  </SelectContent>
-                </Select>
-              </TableCell>
-              <TableCell>
-                <Select
-                  value={task.status}
-                  onValueChange={v => onStatusChange(task, v as TaskRow['status'])}
+                  </select>
+                  <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3 w-3 -translate-y-1/2 text-muted-foreground opacity-35" />
+                </span>
+              </div>
+            </div>
+            <div className="flex min-w-0 items-center justify-end gap-1 max-sm:hidden">
+              {task.status === 'todo' && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => onRun(task)}
+                  onContextMenu={event => {
+                    event.preventDefault();
+                    onCustomizeRun(task);
+                  }}
+                  title="Right-click to customize instructions before running"
+                  className="h-8 rounded-full px-3 text-sm text-muted-foreground opacity-80 hover:text-foreground hover:opacity-100"
                 >
-                  <SelectTrigger className="h-8 w-32 text-xs">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="todo">Todo</SelectItem>
-                    <SelectItem value="in_progress">In Progress</SelectItem>
-                    <SelectItem value="done">Done</SelectItem>
-                  </SelectContent>
-                </Select>
-              </TableCell>
-              <TableCell className="text-xs text-muted-foreground">
-                {formatTaskDate(task.updated_at)}
-              </TableCell>
-              <TableCell>
-                <div className="flex justify-end gap-1">
-                  <Button type="button" variant="ghost" size="icon" onClick={() => onEdit(task)}>
-                    <Pencil className="h-3.5 w-3.5" />
-                  </Button>
-                  <Button type="button" variant="ghost" size="icon" onClick={() => onDelete(task)}>
-                    <Trash2 className="h-3.5 w-3.5" />
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
-  );
-}
-
-function TaskCard({
-  task,
-  onEdit,
-  onDelete,
-  onDispatch,
-  onStatusChange,
-  isLocal,
-}: {
-  task: TaskRow;
-  onEdit: (t: TaskRow) => void;
-  onDelete: (t: TaskRow) => void;
-  onDispatch: (t: TaskRow) => void;
-  onStatusChange: (t: TaskRow, s: TaskRow['status']) => void;
-  isLocal: boolean;
-}) {
-  const dispatchTask = () => {
-    onDispatch(task);
-  };
-  const isReadyToRun = task.status === 'todo';
-  const isRunning = task.status === 'in_progress';
-
-  return (
-    <div className="bg-card border border-border rounded-lg p-3 flex flex-col gap-2 group">
-      <div className="flex items-start justify-between gap-2">
-        <div className="flex items-center gap-1.5 min-w-0">
-          <span className="font-semibold text-sm leading-snug truncate">{task.title}</span>
-        </div>
-        <div className="flex items-center gap-0.5 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
-          <button
-            onClick={() => onEdit(task)}
-            className="p-1 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
-            title="Edit"
-          >
-            <Pencil className="h-3.5 w-3.5" />
-          </button>
-          <button
-            onClick={() => onDelete(task)}
-            className="p-1 rounded hover:bg-muted text-muted-foreground hover:text-red-400 transition-colors"
-            title="Delete"
-          >
-            <Trash2 className="h-3.5 w-3.5" />
-          </button>
-        </div>
-      </div>
-
-      {task.description && (
-        <p className="text-xs text-muted-foreground truncate">{task.description}</p>
-      )}
-
-      <div className="flex items-center gap-1.5 flex-wrap">
-        <Badge variant="outline" className="h-5 gap-1.5 px-1.5 py-0 text-xs">
-          <span
-            className={cn('h-2 w-2 rounded-full shrink-0', PRIORITY_DOT[task.priority])}
-            title={`Priority: ${task.priority}`}
-          />
-          {PRIORITY_LABEL[task.priority]}
-        </Badge>
-        {task.project_slug && (
-          <Badge variant="outline" className="text-xs px-1.5 py-0 h-5">
-            {task.project_slug}
-          </Badge>
-        )}
-        <Badge variant="outline" className="h-5 px-1.5 py-0 text-xs">
-          {TASK_TYPE_LABEL[task.task_type]}
-        </Badge>
-        <Badge variant="outline" className="h-5 px-1.5 py-0 text-xs">
-          {SIZE_LABEL[task.size]}
-        </Badge>
-        <Badge variant="secondary" className="h-5 px-1.5 py-0 text-xs">
-          {STATUS_LABEL[task.status]}
-        </Badge>
-      </div>
-
-      <div className="flex flex-col gap-1.5 border-t border-border/60 pt-2">
-        {isReadyToRun ? (
-          <Button
-            type="button"
-            size="sm"
-            variant="secondary"
-            onClick={dispatchTask}
-            className="h-7 w-fit px-2 text-xs"
-          >
-            <Bot className="h-3.5 w-3.5" />
-            {isLocal ? 'Run' : 'Copy prompt'}
-          </Button>
-        ) : isRunning ? (
-          <Button
-            type="button"
-            size="sm"
-            variant="outline"
-            onClick={() => onStatusChange(task, 'todo')}
-            className="h-7 w-fit px-2 text-xs"
-          >
-            <X className="h-3.5 w-3.5" />
-            Cancel
-          </Button>
-        ) : (
-          <span className="text-xs text-muted-foreground">Completed</span>
-        )}
-      </div>
+                  <Bot className="h-3.5 w-3.5" />
+                  {isLocal ? 'Run' : 'Copy prompt'}
+                </Button>
+              )}
+              {task.status === 'in_progress' && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onStatusChange(task, 'todo')}
+                  className="h-8 rounded-full px-3 text-sm"
+                >
+                  <X className="h-3.5 w-3.5" />
+                  Cancel
+                </Button>
+              )}
+              <Button type="button" variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground opacity-0 hover:text-foreground group-hover:opacity-100" onClick={() => onEdit(task)}>
+                <Pencil className="h-3.5 w-3.5" />
+              </Button>
+              <Button type="button" variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground opacity-0 hover:text-destructive group-hover:opacity-100" onClick={() => onDelete(task)}>
+                <Trash2 className="h-3.5 w-3.5" />
+              </Button>
+            </div>
+          </article>
+        );
+      })}
     </div>
   );
 }

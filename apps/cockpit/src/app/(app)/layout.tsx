@@ -1,19 +1,11 @@
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { LogOut, User } from "lucide-react";
 import { SidebarNav } from "@/components/sidebar-nav";
 import { MobileNav } from "@/components/mobile-nav";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { SignOutButton } from "@/components/sign-out-button";
 import { getLocalDevSession, isLocalAuthBypassEnabled } from "@/lib/local-auth";
+import { UserMenu } from "@/components/user-menu";
 
 export const dynamic = "force-dynamic";
 
@@ -46,37 +38,7 @@ export default async function AppLayout({
 
         {/* User menu at bottom */}
         <div className="border-t p-3">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="w-full justify-start gap-2">
-                {session?.user?.image ? (
-                  <img
-                    src={session.user.image}
-                    alt={session.user.name ?? "User"}
-                    className="h-6 w-6 rounded-full"
-                  />
-                ) : (
-                  <User className="h-4 w-4" />
-                )}
-                <span className="truncate text-sm">
-                  {session?.user?.name ?? "Account"}
-                </span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-56">
-              {session?.user?.email && (
-                <DropdownMenuItem
-                  disabled
-                  className="text-xs text-muted-foreground"
-                >
-                  {session.user.email}
-                </DropdownMenuItem>
-              )}
-              <DropdownMenuItem asChild>
-                <SignOutButton />
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <UserMenu user={session?.user ?? null} />
         </div>
       </aside>
 

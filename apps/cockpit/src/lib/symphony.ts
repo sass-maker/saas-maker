@@ -5,7 +5,6 @@ type SymphonyTask = {
   project_slug: string | null;
   priority: string;
   task_type?: string;
-  size?: string;
   status: string;
 };
 
@@ -29,6 +28,16 @@ const AGENT_LABELS: Record<SymphonyAgent, string> = {
   claude: "Claude",
   gemini: "Gemini",
 };
+
+export const DEFAULT_SYMPHONY_MEMORY = `Symphony behavior and routing policy:
+- Treat the task row as the source of truth.
+- Use the task project, priority, type, and custom run instructions when deciding how to execute.
+- Prefer Codex for implementation-heavy work, bugs, tests, and high-priority tasks.
+- Prefer Claude for cleanup, chore, deep refactor, architecture, and careful prose-heavy changes.
+- Prefer Gemini for broad research, docs synthesis, and cheap exploratory analysis.
+- Explicit run instructions or memory preferences mentioning Codex, Claude, or Gemini override the defaults.
+- Keep work scoped to the task, verify before completion, and report changed files, evidence, and remaining risk.
+- Two-step execution with a separate verifier is not enabled yet; consider it for high-risk complex tasks after the optional verifier-flow task is implemented.`;
 
 function normalizeAgent(value?: string | null): SymphonyAgent | null {
   const normalized = value?.trim().toLowerCase();
@@ -60,8 +69,7 @@ export function chooseSymphonyAgent(
 ): { agent: SymphonyAgent; label: string; reason: string } {
   const routingText = `${memory ?? ""}\n${additionalInstructions ?? ""}`.toLowerCase();
   const explicitAgent =
-    normalizeAgent(routingText.match(/\b(?:use|route to|agent|model)\s*[:=]?\s*(codex|claude|gemini)\b/)?.[1]) ??
-    normalizeAgent(routingText.match(/\b(codex|claude|gemini)\b/)?.[1]);
+    normalizeAgent(routingText.match(/\b(?:use|route to|agent|model)\s*[:=]?\s*(codex|claude|gemini)\b/)?.[1]);
 
   if (explicitAgent) {
     return {
@@ -79,11 +87,11 @@ export function chooseSymphonyAgent(
     };
   }
 
-  if (task.task_type === "bug" || task.size === "l" || task.size === "xl" || task.priority === "high") {
+  if (task.task_type === "bug" || task.priority === "high") {
     return {
       agent: "codex",
       label: AGENT_LABELS.codex,
-      reason: "High-priority, large, and bug-fix tasks default to Codex for code execution.",
+      reason: "High-priority and bug-fix tasks default to Codex for code execution.",
     };
   }
 
@@ -133,7 +141,6 @@ Title: ${task.title}
 Project: ${project}
 Priority: ${task.priority}
 Type: ${task.task_type ?? "feature"}
-Size: ${task.size ?? "m"}
 Current status: ${task.status}
 
 Description:
