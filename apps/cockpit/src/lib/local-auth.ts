@@ -16,8 +16,45 @@ export function isLocalAuthBypassEnabled(hostHeader: string | null | undefined):
   return isLocalHost(hostHeader) && process.env.DISABLE_LOCAL_AUTH_BYPASS !== "true";
 }
 
+type LocalCliConfig = {
+  apiKey?: string;
+  sessionToken?: string;
+  token?: string;
+};
+
+type BuiltinFs = {
+  readFileSync(path: string, encoding: "utf8"): string;
+};
+
+function readConfigToken(filePath: string): string | undefined {
+  try {
+    const getBuiltinModule = (
+      process as typeof process & {
+        getBuiltinModule?: (name: string) => unknown;
+      }
+    ).getBuiltinModule;
+    const fs = getBuiltinModule?.("fs") as BuiltinFs | undefined;
+    if (!fs) return undefined;
+
+    const config = JSON.parse(fs.readFileSync(filePath, "utf8")) as LocalCliConfig;
+    return config.apiKey || config.sessionToken || config.token;
+  } catch {
+    return undefined;
+  }
+}
+
 export function getLocalSessionToken(): string {
-  return process.env.SAASMAKER_LOCAL_SESSION_TOKEN || LOCAL_DEV_SESSION_TOKEN;
+  const home = process.env.HOME;
+  const configCandidates = home
+    ? [`${home}/.foundry/config.json`, `${home}/.saasmaker/config.json`]
+    : [];
+  const configuredToken =
+    process.env.SAASMAKER_LOCAL_SESSION_TOKEN ||
+    process.env.FOUNDRY_API_KEY ||
+    process.env.FOUNDRY_SESSION_TOKEN ||
+    configCandidates.map(readConfigToken).find(Boolean);
+
+  return configuredToken || LOCAL_DEV_SESSION_TOKEN;
 }
 
 export function getLocalDevSession() {
