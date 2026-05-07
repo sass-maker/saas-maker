@@ -2,6 +2,7 @@ import { FoundryError } from './error.js';
 
 export interface TraceOptions {
   silent?: boolean;
+  project?: string;
   context?: Record<string, any>;
 }
 

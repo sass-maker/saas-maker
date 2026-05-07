@@ -48,6 +48,7 @@ const projectNavItems = [
   { label: "Waitlist", href: "/waitlist", icon: Users },
   { label: "Changelog", href: "/changelog", icon: Megaphone },
   { label: "Analytics", href: "/analytics", icon: BarChart3 },
+  { label: "AI Gateway", href: "/ai", icon: Brain },
   { label: "Settings", href: "/settings", icon: Settings },
 ];
 

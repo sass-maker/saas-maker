@@ -20,6 +20,10 @@ export interface ProjectRecord {
   api_key: string;
   owner_id: string;
   embedding_model: string | null;
+  ai_base_url?: string | null;
+  ai_model?: string | null;
+  ai_api_key_configured?: boolean;
+  ai_api_key_preview?: string | null;
   readme: string | null;
   source: 'dashboard' | 'linkchat' | string;
   created_at: string;
@@ -456,13 +460,14 @@ export interface SurveyWidgetProps {
 
 export interface AIProviderConfig {
   ai_base_url: string | null;
-  ai_api_key: string | null;
   ai_model: string | null;
+  ai_api_key_configured: boolean;
+  ai_api_key_preview: string | null;
 }
 
 export interface UpdateAIConfigRequest {
   ai_base_url: string;
-  ai_api_key: string;
+  ai_api_key?: string | null;
   ai_model: string;
 }
 
@@ -486,6 +491,13 @@ export interface AIUsageStats {
   avg_latency_ms: number | null;
   total_input_tokens: number;
   total_output_tokens: number;
+}
+
+export interface AIRequestsResponse {
+  data: AIRequestRecord[];
+  total: number;
+  limit: number;
+  offset: number;
 }
 
 export interface AIChatCompletionRequest {

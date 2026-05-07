@@ -6,5 +6,14 @@ export type { WaitlistSignupData, WaitlistSignupResponse, WaitlistCountResponse 
 export type { TestimonialRecord, SubmitTestimonialData, TestimonialListResponse, TestimonialListOptions } from './services/testimonials';
 export type { ChangelogEntry, ChangelogListResponse } from './services/changelog';
 export type { TrackEventData, TrackEventResponse } from './services/analytics';
+export type {
+  AIChatCompletionRequest,
+  AIEmbeddingRequest,
+  AIProviderConfig,
+  AIRequestsResponse,
+  AIRequestRecord,
+  AIUsageStats,
+  UpdateAIConfigRequest,
+} from './services/ai';
 export type { RoadmapItem, RoadmapListResponse } from './services/roadmap';
 export type { ProjectReadmeResponse } from './services/projects';

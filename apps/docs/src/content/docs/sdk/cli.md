@@ -43,6 +43,20 @@ fnd api PATCH /v1/projects/<projectId> --auth session \
   --body '{"readme":"Dashboard notes for this project."}'
 ```
 
+## 🤖 AI Gateway
+
+Configure a project-owned OpenAI-compatible provider, then call the gateway with the project API key.
+
+```bash
+fnd api PUT /v1/ai/config --auth session --query project_id=<projectId> \
+  --body '{"ai_base_url":"https://api.openai.com/v1","ai_model":"gpt-4o-mini","ai_api_key":"sk-..."}'
+
+fnd api POST /v1/ai/chat/completions --auth project \
+  --body '{"messages":[{"role":"user","content":"Write release notes"}]}'
+
+fnd api GET /v1/ai/requests --auth session --query project_id=<projectId> --output table
+```
+
 ## 🎼 Symphony Memory
 
 Persist task-run instructions for local agents and copied prompts.

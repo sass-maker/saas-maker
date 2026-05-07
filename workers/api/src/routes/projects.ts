@@ -3,6 +3,8 @@ import { Bindings, Variables } from '../types';
 import { requireSession } from '../middleware/auth';
 import { getDb } from '../db';
 import { trace, capture } from '@saas-maker/ops';
+import { maskProviderKey } from '../ai-gateway';
+import type { ProjectRecord } from '@saas-maker/shared-types';
 
 const projects = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 projects.use('*', requireSession);
@@ -25,12 +27,31 @@ function slugify(name: string): string {
     .replace(/(^-|-$)/g, '');
 }
 
+type ProjectRow = ProjectRecord & {
+  ai_base_url?: string | null;
+  ai_api_key?: string | null;
+  ai_model?: string | null;
+};
+
+function toPublicProject(project: ProjectRow) {
+  const { ai_api_key, ...safeProject } = project;
+  return {
+    ...safeProject,
+    ai_api_key_configured: Boolean(ai_api_key),
+    ai_api_key_preview: maskProviderKey(ai_api_key),
+  };
+}
+
 projects.get('/', async (c) => {
   const userId = c.get('userId')!;
   const source = c.req.query('source') || 'dashboard';
   const db = getDb(c.env.DB);
-  const data = await trace('db:listProjects', () => db.listProjectsByOwner(userId, source), { project: 'saasmaker-api' });
-  return c.json({ data });
+  const data = await trace<ProjectRow[]>(
+    'db:listProjects',
+    () => db.listProjectsByOwner(userId, source) as Promise<ProjectRow[]>,
+    { project: 'saasmaker-api' },
+  );
+  return c.json({ data: data.map((project) => toPublicProject(project)) });
 });
 
 const VALID_SOURCES = ['dashboard', 'linkchat'];
@@ -57,7 +78,7 @@ projects.post('/', async (c) => {
 
   capture({ distinctId: userId, event: 'project_created', properties: { project_id: project.id, project_name: project.name, source } });
 
-  return c.json(project, 201);
+  return c.json(toPublicProject(project), 201);
 });
 
 projects.get('/by-slug/:slug', async (c) => {
@@ -66,7 +87,7 @@ projects.get('/by-slug/:slug', async (c) => {
   const db = getDb(c.env.DB);
   const project = await db.getProjectBySlug(slug);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Not found' }, 404);
-  return c.json(project);
+  return c.json(toPublicProject(project));
 });
 
 projects.patch('/:id', async (c) => {
@@ -89,7 +110,7 @@ projects.patch('/:id', async (c) => {
     readme: body.readme,
   });
   capture({ distinctId: userId, event: 'project_updated', properties: { project_id: projectId } });
-  return c.json(updated);
+  return c.json(toPublicProject(updated));
 });
 
 // GET /:id/readme (session auth, ownership check)

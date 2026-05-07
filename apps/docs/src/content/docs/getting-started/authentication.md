@@ -36,6 +36,8 @@ curl https://api.sassmaker.com/v1/feedback/123 \
 
 **Use for:** Dashboard, CLI, admin operations (updating statuses, deleting entries, viewing analytics).
 
+Provider keys saved for AI Gateway are write-only. Config reads return whether a key is configured and a masked preview, never the stored secret.
+
 ## When to use which
 
 | Action | Auth method |

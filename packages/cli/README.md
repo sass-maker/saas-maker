@@ -110,6 +110,18 @@ fnd api GET /v1/feedback --auth project --query type=feature --output table
 fnd api POST /v1/feedback --auth project \
   --body '{"title":"Bug","description":"Broken CTA","submitter_email":"me@example.com","type":"bug"}'
 
+# Configure BYOK AI provider (provider key is masked in reads)
+fnd api PUT /v1/ai/config --auth session --query project_id=<projectId> \
+  --body '{"ai_base_url":"https://api.openai.com/v1","ai_model":"gpt-4o-mini","ai_api_key":"sk-..."}'
+
+# Proxy a chat completion through the linked project
+fnd api POST /v1/ai/chat/completions --auth project \
+  --body '{"messages":[{"role":"user","content":"Write release notes"}]}'
+
+# Inspect AI usage and request logs
+fnd api GET /v1/ai/usage --auth session --query project_id=<projectId> --output table
+fnd api GET /v1/ai/requests --auth session --query project_id=<projectId> --output table
+
 # Public roadmap items by project slug
 fnd api GET /v1/roadmap/by-project/<slug> --auth project --output table
 

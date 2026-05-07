@@ -4,6 +4,7 @@ import { WaitlistService } from './services/waitlist';
 import { TestimonialService } from './services/testimonials';
 import { ChangelogService } from './services/changelog';
 import { AnalyticsService } from './services/analytics';
+import { AIService } from './services/ai';
 import { RoadmapService } from './services/roadmap';
 import { ProjectService } from './services/projects';
 
@@ -19,6 +20,7 @@ export class SaaSMakerClient {
   readonly testimonials: TestimonialService;
   readonly changelog: ChangelogService;
   readonly analytics: AnalyticsService;
+  readonly ai: AIService;
   readonly roadmap: RoadmapService;
   readonly projects: ProjectService;
 
@@ -38,6 +40,7 @@ export class SaaSMakerClient {
     this.testimonials = new TestimonialService(http);
     this.changelog = new ChangelogService(http);
     this.analytics = new AnalyticsService(http);
+    this.ai = new AIService(http);
     this.roadmap = new RoadmapService(http);
     this.projects = new ProjectService(http);
   }
