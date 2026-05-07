@@ -9,10 +9,11 @@ import {
   Button,
   Badge,
 } from "@saas-maker/ui";
-import { Plus, Search, Database, Trash2, ArrowLeft } from "lucide-react";
+import { Plus, Search, ArrowLeft } from "lucide-react";
 import { getAuthenticatedProject } from "../../get-project";
 import { apiFetchAuthed } from "@/lib/api-client";
 import Link from "next/link";
+import { AddDocumentForm, DeleteDocumentButton, KnowledgeSearchPanel } from "../knowledge-actions";
 
 interface DocumentRow {
   id: string;
@@ -62,9 +63,7 @@ async function DocumentsList({ indexId }: { indexId: string }) {
                   {new Date(doc.created_at).toLocaleDateString()}
                 </td>
                 <td className="px-3 py-2">
-                  <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10">
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+                  <DeleteDocumentButton documentId={doc.id} />
                 </td>
               </tr>
             ))}
@@ -119,20 +118,7 @@ export default async function IndexDetailPage({ params }: { params: Promise<{ sl
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex gap-2">
-              <div className="relative flex-1">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                <input 
-                  type="search" 
-                  placeholder="Type a natural language query..." 
-                  className="w-full bg-background rounded-md border border-input pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-                />
-              </div>
-              <Button size="sm">Search</Button>
-            </div>
-            <div className="text-xs text-muted-foreground italic border-t pt-4">
-              Search results will appear here after query...
-            </div>
+            <KnowledgeSearchPanel indexId={indexId} />
           </CardContent>
         </Card>
 
@@ -143,13 +129,7 @@ export default async function IndexDetailPage({ params }: { params: Promise<{ sl
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <textarea 
-              placeholder="Paste document content here..." 
-              className="w-full min-h-[100px] bg-background rounded-md border border-input p-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-            />
-            <div className="flex justify-end">
-              <Button size="sm" variant="secondary">Ingest Content</Button>
-            </div>
+            <AddDocumentForm indexId={indexId} />
           </CardContent>
         </Card>
       </div>

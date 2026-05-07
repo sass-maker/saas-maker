@@ -33,8 +33,16 @@ if [ -n "$SECRETS" ]; then
 fi
 `;
 
-  fs.writeFileSync(path.join(huskyDir, 'pre-push'), prePush, { mode: 0o755 });
-  console.log('✓ husky pre-push hook configured (light: lint + secret scan)');
+  const prePushPath = path.join(huskyDir, 'pre-push');
+  const currentPrePush = fs.existsSync(prePushPath)
+    ? fs.readFileSync(prePushPath, 'utf8')
+    : '';
+  if (!currentPrePush || currentPrePush === prePush) {
+    fs.writeFileSync(prePushPath, prePush, { mode: 0o755 });
+    console.log('✓ husky pre-push hook configured (light: lint + secret scan)');
+  } else {
+    console.log('✓ existing husky pre-push hook preserved');
+  }
 } catch (e) {
   // Non-fatal — hooks are nice-to-have, not required
   console.warn('dev-config: could not set up husky hooks:', e.message);

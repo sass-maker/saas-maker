@@ -7,12 +7,12 @@ import {
   CardDescription, 
   CardContent,
   Button,
-  Badge
 } from "@saas-maker/ui";
-import { Brain, Plus, Search, Database, FileText, Trash2 } from "lucide-react";
+import { Brain, Plus, Search, Database, FileText } from "lucide-react";
 import { getAuthenticatedProject } from "../get-project";
 import { apiFetchAuthed } from "@/lib/api-client";
 import Link from "next/link";
+import { CreateIndexForm } from "./knowledge-actions";
 
 interface IndexRow {
   id: string;
@@ -22,11 +22,7 @@ interface IndexRow {
   created_at: string;
 }
 
-async function IndexesList({ projectId, slug }: { projectId: string; slug: string }) {
-  const { data: indexes } = await apiFetchAuthed<{ data: IndexRow[] }>(
-    `/v1/knowledge/indexes?project_id=${projectId}`
-  );
-
+function IndexesList({ indexes, projectId, slug }: { indexes: IndexRow[]; projectId: string; slug: string }) {
   if (indexes.length === 0) {
     return (
       <Card className="border-dashed py-12">
@@ -40,9 +36,9 @@ async function IndexesList({ projectId, slug }: { projectId: string; slug: strin
               Create your first knowledge index to enable semantic search and RAG capabilities.
             </p>
           </div>
-          <Button size="sm" className="gap-2">
-            <Plus className="h-4 w-4" /> Create Index
-          </Button>
+          <div className="w-full max-w-2xl">
+            <CreateIndexForm projectId={projectId} />
+          </div>
         </CardContent>
       </Card>
     );
@@ -85,6 +81,10 @@ async function IndexesList({ projectId, slug }: { projectId: string; slug: strin
 export default async function KnowledgeBasePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const { project } = await getAuthenticatedProject(slug);
+  const { data: indexes } = await apiFetchAuthed<{ data: IndexRow[] }>(
+    `/v1/knowledge/indexes?project_id=${project.id}`
+  );
+  const documentCount = indexes.reduce((sum, index) => sum + index.document_count, 0);
 
   return (
     <div className="space-y-6">
@@ -93,17 +93,16 @@ export default async function KnowledgeBasePage({ params }: { params: Promise<{ 
           title="Knowledge Base" 
           description="Vector-based semantic search and RAG indexes." 
         />
-        <Button size="sm" className="gap-2">
-          <Plus className="h-4 w-4" /> New Index
-        </Button>
       </div>
+
+      <CreateIndexForm projectId={project.id} />
 
       <div className="grid gap-4 md:grid-cols-3 mb-6">
         <Card className="bg-primary/5 border-primary/20">
           <CardHeader className="p-4 flex flex-row items-center justify-between space-y-0">
             <div className="space-y-1">
               <p className="text-[10px] font-bold uppercase tracking-wider text-primary/70">Total Indexes</p>
-              <div className="text-2xl font-bold">...</div>
+              <div className="text-2xl font-bold">{indexes.length}</div>
             </div>
             <Brain className="h-5 w-5 text-primary/40" />
           </CardHeader>
@@ -112,7 +111,7 @@ export default async function KnowledgeBasePage({ params }: { params: Promise<{ 
           <CardHeader className="p-4 flex flex-row items-center justify-between space-y-0">
             <div className="space-y-1">
               <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Semantic Queries</p>
-              <div className="text-2xl font-bold">...</div>
+              <div className="text-2xl font-bold">{documentCount}</div>
             </div>
             <Search className="h-5 w-5 text-muted-foreground/40" />
           </CardHeader>
@@ -129,7 +128,7 @@ export default async function KnowledgeBasePage({ params }: { params: Promise<{ 
       </div>
 
       <Suspense fallback={<div>Loading indexes...</div>}>
-        <IndexesList projectId={project.id} slug={slug} />
+        <IndexesList indexes={indexes} projectId={project.id} slug={slug} />
       </Suspense>
     </div>
   );
