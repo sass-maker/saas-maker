@@ -1,0 +1,10 @@
+{
+  "extends": "@saas-maker/tsconfig/base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "jsx": "react-jsx",
+    "ignoreDeprecations": "6.0",
+    "noEmit": false
+  },
+  "include": ["src"]
+}

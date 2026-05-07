@@ -424,6 +424,83 @@ importers:
         specifier: 6.0.3
         version: 6.0.3
 
+  packages/blocks/views/capability-graph:
+    dependencies:
+      zod:
+        specifier: 4.3.6
+        version: 4.3.6
+    devDependencies:
+      '@saas-maker/tsconfig':
+        specifier: workspace:*
+        version: link:../../../tooling/tsconfig
+      tsup:
+        specifier: 8.0.0
+        version: 8.0.0(postcss@8.5.10)(typescript@6.0.3)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: 4.1.5
+        version: 4.1.5(@opentelemetry/api@1.9.0)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.5)(happy-dom@20.9.0)(jsdom@29.0.2(@noble/hashes@2.2.0))(msw@2.13.6(@types/node@25.6.0)(typescript@6.0.3))(vite@7.3.2(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.16.9)(tsx@4.21.0)(yaml@2.8.3))
+
+  packages/blocks/views/runtime:
+    dependencies:
+      '@saas-maker/capability-graph':
+        specifier: workspace:*
+        version: link:../capability-graph
+      class-variance-authority:
+        specifier: 0.7.1
+        version: 0.7.1
+      clsx:
+        specifier: 2.1.1
+        version: 2.1.1
+      lucide-react:
+        specifier: 1.11.0
+        version: 1.11.0(react@19.2.5)
+      tailwind-merge:
+        specifier: 3.5.0
+        version: 3.5.0
+      zod:
+        specifier: 4.3.6
+        version: 4.3.6
+    devDependencies:
+      '@saas-maker/tsconfig':
+        specifier: workspace:*
+        version: link:../../../tooling/tsconfig
+      '@saas-maker/ui':
+        specifier: workspace:*
+        version: link:../../../ui
+      '@testing-library/jest-dom':
+        specifier: 6.9.1
+        version: 6.9.1
+      '@testing-library/react':
+        specifier: 16.3.2
+        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      '@types/react':
+        specifier: '19'
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: '19'
+        version: 19.2.3(@types/react@19.2.14)
+      happy-dom:
+        specifier: 20.9.0
+        version: 20.9.0
+      react:
+        specifier: 19.2.5
+        version: 19.2.5
+      react-dom:
+        specifier: 19.2.5
+        version: 19.2.5(react@19.2.5)
+      tsup:
+        specifier: 8.0.0
+        version: 8.0.0(postcss@8.5.10)(typescript@6.0.3)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: 4.1.5
+        version: 4.1.5(@opentelemetry/api@1.9.0)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.5)(happy-dom@20.9.0)(jsdom@29.0.2(@noble/hashes@2.2.0))(msw@2.13.6(@types/node@25.6.0)(typescript@6.0.3))(vite@7.3.2(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.16.9)(tsx@4.21.0)(yaml@2.8.3))
+
   packages/cli:
     dependencies:
       chalk:
