@@ -5,6 +5,8 @@ import { requireApiKey, requireSession } from '../middleware/auth';
 import { getDb } from '../db';
 import {
   buildProviderEndpoint,
+  decryptProviderKey,
+  encryptProviderKey,
   extractUsageTokens,
   toPublicAIConfig,
   truncateProviderError,
@@ -70,6 +72,33 @@ function readProviderModel(config: StoredAIConfig, body: Record<string, unknown>
   return config.ai_model?.trim() || null;
 }
 
+async function readAIConfig(c: AppContext, db: ReturnType<typeof getDb>, projectId: string): Promise<StoredAIConfig> {
+  const config = await db.getProjectAIConfig(projectId) as StoredAIConfig;
+  return {
+    ...config,
+    ai_api_key: await decryptProviderKey(config.ai_api_key, c.env.AI_GATEWAY_KEY_SECRET),
+  };
+}
+
+async function enforceAIProxyRateLimit(c: AppContext, endpoint: ProxyEndpoint): Promise<Response | null> {
+  if (!c.env.RATE_LIMITER) return null;
+
+  const projectId = c.get('projectId')!;
+  const requestKey = c.req.header('X-Project-Key') || c.req.header('CF-Connecting-IP') || 'anonymous';
+  const key = `ai:${projectId}:${endpoint}:${requestKey}`;
+
+  try {
+    const { success } = await c.env.RATE_LIMITER.limit({ key });
+    if (!success) {
+      return c.json({ error: 'AI Gateway rate limit exceeded' }, 429);
+    }
+  } catch (err) {
+    console.error('AI Gateway rate limiter error:', err);
+  }
+
+  return null;
+}
+
 async function logAIRequest(
   db: ReturnType<typeof getDb>,
   params: {
@@ -107,8 +136,11 @@ function upstreamHeaders(contentType: string | null, stream = false): Headers {
 
 async function proxyAIRequest(c: AppContext, endpoint: ProxyEndpoint): Promise<Response> {
   const projectId = c.get('projectId')!;
+  const rateLimitResponse = await enforceAIProxyRateLimit(c, endpoint);
+  if (rateLimitResponse) return rateLimitResponse;
+
   const db = getDb(c.env.DB);
-  const config = await db.getProjectAIConfig(projectId) as StoredAIConfig;
+  const config = await readAIConfig(c, db, projectId);
 
   if (!config.ai_base_url || !config.ai_api_key || !config.ai_model) {
     return c.json({ error: 'AI provider is not configured for this project' }, 400);
@@ -219,7 +251,7 @@ ai.get('/config', requireSession, async (c) => {
   const owned = await requireOwnedProject(c, projectId);
   if ('response' in owned) return owned.response;
 
-  const config = await owned.db.getProjectAIConfig(projectId) as StoredAIConfig;
+  const config = await readAIConfig(c, owned.db, projectId);
   return c.json(toPublicAIConfig(config));
 });
 
@@ -259,10 +291,10 @@ ai.put('/config', requireSession, async (c) => {
   await owned.db.updateProjectAIConfig(projectId, {
     ai_base_url: body.ai_base_url.trim().replace(/\/+$/, ''),
     ai_model: body.ai_model.trim(),
-    ...(nextApiKey ? { ai_api_key: nextApiKey } : {}),
+    ...(nextApiKey ? { ai_api_key: await encryptProviderKey(nextApiKey, c.env.AI_GATEWAY_KEY_SECRET) } : {}),
   });
 
-  const config = await owned.db.getProjectAIConfig(projectId) as StoredAIConfig;
+  const config = await readAIConfig(c, owned.db, projectId);
   return c.json(toPublicAIConfig(config));
 });
 

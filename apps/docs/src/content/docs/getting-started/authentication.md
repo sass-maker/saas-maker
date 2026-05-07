@@ -36,7 +36,7 @@ curl https://api.sassmaker.com/v1/feedback/123 \
 
 **Use for:** Dashboard, CLI, admin operations (updating statuses, deleting entries, viewing analytics).
 
-Provider keys saved for AI Gateway are write-only. Config reads return whether a key is configured and a masked preview, never the stored secret.
+Provider keys saved for AI Gateway are write-only. Config reads return whether a key is configured and a masked preview, never the stored secret. Set the Worker secret `AI_GATEWAY_KEY_SECRET` to encrypt newly stored provider keys at rest; existing plaintext keys continue to work until they are rotated.
 
 ## When to use which
 

@@ -10,6 +10,8 @@ export type Bindings = {
   FREE_AI_BASE_URL: string;
   FREE_AI_API_KEY: string;
   AI?: { run: (model: string, input: Record<string, unknown>) => Promise<unknown> };
+  AI_GATEWAY_KEY_SECRET?: string;
+  RATE_LIMITER?: { limit: (input: { key: string }) => Promise<{ success: boolean }> };
   POSTHOG_API_KEY?: string;
   LOCAL_AUTH_BYPASS?: string;
   SAASMAKER_LOCAL_SESSION_TOKEN?: string;

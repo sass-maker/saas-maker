@@ -134,6 +134,49 @@ describe('AI Gateway config API', () => {
     const body = await res.json();
     expect(body).not.toHaveProperty('ai_api_key');
   });
+
+  it('encrypts newly stored provider keys when an encryption secret is configured', async () => {
+    mockDb.getProjectAIConfig
+      .mockResolvedValueOnce({
+        ai_base_url: 'https://api.openai.com/v1',
+        ai_api_key: 'sk-existing-key',
+        ai_model: 'gpt-4o-mini',
+      })
+      .mockImplementationOnce(async () => {
+        const stored = mockDb.updateProjectAIConfig.mock.calls.at(-1)?.[1].ai_api_key;
+        return {
+          ai_base_url: 'https://api.openai.com/v1',
+          ai_api_key: stored,
+          ai_model: 'gpt-4o-mini',
+        };
+      });
+
+    const res = await request(
+      '/v1/ai/config?project_id=proj-1',
+      {
+        method: 'PUT',
+        headers: {
+          Authorization: 'Bearer test-session',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ai_base_url: 'https://api.openai.com/v1',
+          ai_model: 'gpt-4o-mini',
+          ai_api_key: 'sk-new-provider-key',
+        }),
+      },
+      { AI_GATEWAY_KEY_SECRET: 'test-encryption-secret' },
+    );
+
+    expect(res.status).toBe(200);
+    const storedKey = mockDb.updateProjectAIConfig.mock.calls.at(-1)?.[1].ai_api_key;
+    expect(storedKey).toMatch(/^enc:v1:/);
+    expect(storedKey).not.toContain('sk-new-provider-key');
+    expect(await res.json()).toMatchObject({
+      ai_api_key_configured: true,
+      ai_api_key_preview: 'sk-n...-key',
+    });
+  });
 });
 
 describe('AI Gateway proxy API', () => {
@@ -205,6 +248,83 @@ describe('AI Gateway proxy API', () => {
       status: 'error',
       errorMessage: '{"error":"bad upstream key"}',
     }));
+
+    vi.unstubAllGlobals();
+  });
+
+  it('decrypts encrypted provider keys before proxying upstream requests', async () => {
+    const updateRes = await request(
+      '/v1/ai/config?project_id=proj-1',
+      {
+        method: 'PUT',
+        headers: {
+          Authorization: 'Bearer test-session',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ai_base_url: 'https://api.openai.com/v1',
+          ai_model: 'gpt-4o-mini',
+          ai_api_key: 'sk-encrypted-provider-key',
+        }),
+      },
+      { AI_GATEWAY_KEY_SECRET: 'proxy-secret' },
+    );
+    expect(updateRes.status).toBe(200);
+    const storedKey = mockDb.updateProjectAIConfig.mock.calls.at(-1)?.[1].ai_api_key;
+    mockDb.getProjectAIConfig.mockResolvedValue({
+      ai_base_url: 'https://api.openai.com/v1',
+      ai_api_key: storedKey,
+      ai_model: 'gpt-4o-mini',
+    });
+    const fetchMock = vi.fn().mockResolvedValue(
+      new Response(JSON.stringify({ data: [], usage: { prompt_tokens: 1 } }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      }),
+    );
+    vi.stubGlobal('fetch', fetchMock);
+
+    const res = await request(
+      '/v1/ai/embeddings',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Project-Key': 'pk_test' },
+        body: JSON.stringify({ input: 'docs' }),
+      },
+      { AI_GATEWAY_KEY_SECRET: 'proxy-secret' },
+    );
+
+    expect(res.status).toBe(200);
+    expect(fetchMock).toHaveBeenCalledWith(
+      'https://api.openai.com/v1/embeddings',
+      expect.objectContaining({
+        headers: expect.objectContaining({
+          Authorization: 'Bearer sk-encrypted-provider-key',
+        }),
+      }),
+    );
+
+    vi.unstubAllGlobals();
+  });
+
+  it('returns 429 before contacting the provider when the AI proxy quota is exhausted', async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+
+    const res = await request(
+      '/v1/ai/chat/completions',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Project-Key': 'pk_test' },
+        body: JSON.stringify({ messages: [{ role: 'user', content: 'Hi' }] }),
+      },
+      { RATE_LIMITER: { limit: vi.fn().mockResolvedValue({ success: false }) } },
+    );
+
+    expect(res.status).toBe(429);
+    expect(await res.json()).toEqual({ error: 'AI Gateway rate limit exceeded' });
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(mockDb.logAIRequest).not.toHaveBeenCalled();
 
     vi.unstubAllGlobals();
   });
