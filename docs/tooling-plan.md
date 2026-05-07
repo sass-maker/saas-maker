@@ -351,9 +351,8 @@ npm install -g fallow
     { "root": "./reader", "entry": ["src/app"] },
     { "root": "./reel-maker", "entry": ["src/index.ts"] },
     { "root": "./resume-tailor", "entry": ["src/app"] },
-    { "root": "./saas-maker", "entry": ["apps/dashboard/src/app"] },
-    { "root": "./significanthobbies", "entry": ["src/app"] },
-    { "root": "./starboard", "entry": ["src/app"] },
+    { "root": "./saas-maker", "entry": ["apps/cockpit/src/app"] },
+    { "root": "./significanthobbies", "entry": ["src/app"] },    { "root": "./starboard", "entry": ["src/app"] },
     { "root": "./swe-interview-prep", "entry": ["src/main.tsx"] },
     { "root": "./today-little-log", "entry": ["src/main.tsx"] },
     { "root": "./truehire", "entry": ["apps/web/src/app"] }

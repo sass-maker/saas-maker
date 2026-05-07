@@ -525,6 +525,117 @@
         }
       }
     },
+    "/v1/forms/by-slug/{slug}": {
+      "get": {
+        "tags": [
+          "forms"
+        ],
+        "summary": "GET /v1/forms/by-slug/{slug}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/forms/dashboard/{projectId}": {
+      "get": {
+        "tags": [
+          "forms"
+        ],
+        "summary": "GET /v1/forms/dashboard/{projectId}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "forms"
+        ],
+        "summary": "POST /v1/forms/dashboard/{projectId}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/forms/dashboard/{projectId}/{formId}": {
+      "get": {
+        "tags": [
+          "forms"
+        ],
+        "summary": "GET /v1/forms/dashboard/{projectId}/{formId}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "forms"
+        ],
+        "summary": "PATCH /v1/forms/dashboard/{projectId}/{formId}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "forms"
+        ],
+        "summary": "DELETE /v1/forms/dashboard/{projectId}/{formId}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/forms/dashboard/{projectId}/{formId}/questions": {
+      "post": {
+        "tags": [
+          "forms"
+        ],
+        "summary": "POST /v1/forms/dashboard/{projectId}/{formId}/questions",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/forms/dashboard/{projectId}/{formId}/responses": {
+      "get": {
+        "tags": [
+          "forms"
+        ],
+        "summary": "GET /v1/forms/dashboard/{projectId}/{formId}/responses",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/forms/{formId}/submit": {
+      "post": {
+        "tags": [
+          "forms"
+        ],
+        "summary": "POST /v1/forms/{formId}/submit",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/v1/jobs": {
       "get": {
         "tags": [
@@ -544,6 +655,93 @@
           "jobs"
         ],
         "summary": "POST /v1/jobs/{id}/logs",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/knowledge/documents/{id}": {
+      "delete": {
+        "tags": [
+          "knowledge"
+        ],
+        "summary": "DELETE /v1/knowledge/documents/{id}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/knowledge/indexes": {
+      "get": {
+        "tags": [
+          "knowledge"
+        ],
+        "summary": "GET /v1/knowledge/indexes",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "knowledge"
+        ],
+        "summary": "POST /v1/knowledge/indexes",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/knowledge/indexes/{id}": {
+      "delete": {
+        "tags": [
+          "knowledge"
+        ],
+        "summary": "DELETE /v1/knowledge/indexes/{id}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/knowledge/indexes/{id}/documents": {
+      "get": {
+        "tags": [
+          "knowledge"
+        ],
+        "summary": "GET /v1/knowledge/indexes/{id}/documents",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "knowledge"
+        ],
+        "summary": "POST /v1/knowledge/indexes/{id}/documents",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/knowledge/indexes/{id}/search": {
+      "post": {
+        "tags": [
+          "knowledge"
+        ],
+        "summary": "POST /v1/knowledge/indexes/{id}/search",
         "responses": {
           "200": {
             "description": "Success"

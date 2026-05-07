@@ -47,6 +47,7 @@ const projectNavItems = [
   { label: "Testimonials", href: "/testimonials", icon: Star },
   { label: "Waitlist", href: "/waitlist", icon: Users },
   { label: "Changelog", href: "/changelog", icon: Megaphone },
+  { label: "Knowledge Base", href: "/knowledge", icon: Brain },
   { label: "Analytics", href: "/analytics", icon: BarChart3 },
   { label: "AI Gateway", href: "/ai", icon: Brain },
   { label: "Settings", href: "/settings", icon: Settings },

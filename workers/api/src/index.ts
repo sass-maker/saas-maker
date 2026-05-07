@@ -20,8 +20,11 @@ import { standards } from './routes/standards';
 import { fleetMetadata } from './routes/fleet-metadata';
 import { tasks } from './routes/tasks';
 import { symphony } from './routes/symphony';
+import { knowledge } from './routes/knowledge';
+import { forms } from './routes/forms';
 import { test as testRoutes } from './routes/test';
 import { requireApiKey } from './middleware/auth';
+import { rateLimit } from './middleware/rate-limit';
 import { getDb } from './db';
 
 const app = new Hono<{ Bindings: Bindings; Variables: Variables }>();
@@ -106,6 +109,8 @@ app.use('*', async (c, next) => {
 
 app.get('/health', (c) => c.json({ status: 'ok' }));
 
+app.use('/v1/*', rateLimit({ limit: 100, period: 60 }));
+
 // API-key project readme routes (for SDK access)
 app.get('/v1/projects/readme', requireApiKey, async (c) => {
   const projectId = c.get('projectId')!;
@@ -141,6 +146,8 @@ app.route('/v1/secrets', secrets);
 app.route('/v1/jobs', jobs);
 app.route('/v1/tasks', tasks);
 app.route('/v1/symphony', symphony);
+app.route('/v1/knowledge', knowledge);
+app.route('/v1/forms', forms);
 app.route('/v1/test', testRoutes);
 
 export default app;
