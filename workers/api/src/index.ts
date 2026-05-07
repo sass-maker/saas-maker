@@ -109,7 +109,7 @@ app.use('*', async (c, next) => {
 
 app.get('/health', (c) => c.json({ status: 'ok' }));
 
-app.use('/v1/*', rateLimit({ limit: 100, period: 60 }));
+app.use('/v1/*', rateLimit({ limit: 100, period: 60, skipPrefixes: ['/v1/ai'] }));
 
 // API-key project readme routes (for SDK access)
 app.get('/v1/projects/readme', requireApiKey, async (c) => {
