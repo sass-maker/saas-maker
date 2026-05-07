@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "pnpm -F @saas-maker/shared-types build && next build --webpack",
+    "build": "pnpm -F @saas-maker/shared-types build && pnpm -F @saas-maker/sdk build && pnpm -F @saas-maker/ui build && pnpm -F @saas-maker/analytics-ui build && next build --webpack",
     "build:next": "next build",
     "cf:build": "opennextjs-cloudflare build",
     "deploy": "pnpm cf:build && wrangler deploy && node ../../scripts/smoke-prod.mjs",

@@ -8,6 +8,7 @@
     "dev:cockpit:local": "LOCAL_AUTH_BYPASS=true NEXT_PUBLIC_API_URL=https://api.sassmaker.com pnpm --dir apps/cockpit exec next dev --webpack --port 3001",
     "build:types": "pnpm -F @saas-maker/shared-types build",
     "build:db": "pnpm -F @saas-maker/ops build && pnpm -F @saas-maker/db build",
+    "build:email": "pnpm -F @saas-maker/ops build && pnpm -F @saas-maker/email build",
     "build:api": "pnpm -F @saas-maker/api build",
     "build:cockpit": "pnpm -F @saas-maker/dashboard build",
     "build:analytics-ui": "pnpm -F @saas-maker/analytics-ui build",

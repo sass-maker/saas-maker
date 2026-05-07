@@ -2,7 +2,26 @@ import { FoundryError } from './error.js';
 
 export interface TraceOptions {
   silent?: boolean;
+  project?: string;
   context?: Record<string, any>;
+}
+
+function traceContext(
+  name: string,
+  duration: number,
+  options: TraceOptions
+): Record<string, any> {
+  const context: Record<string, any> = {
+    ...options.context,
+    traceName: name,
+    traceDuration: duration,
+  };
+
+  if (options.project) {
+    context['project'] = options.project;
+  }
+
+  return context;
 }
 
 export async function trace<T>(
@@ -30,12 +49,12 @@ export async function trace<T>(
     }
 
     if (err instanceof FoundryError) {
-      err.context = { ...err.context, traceName: name, traceDuration: duration };
+      err.context = { ...err.context, ...traceContext(name, duration, options) };
       throw err;
     }
 
     throw new FoundryError(err instanceof Error ? err.message : String(err), {
-      context: { ...options.context, traceName: name, traceDuration: duration },
+      context: traceContext(name, duration, options),
     });
   }
 }

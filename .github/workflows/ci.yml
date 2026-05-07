@@ -22,10 +22,11 @@ jobs:
       - run: pnpm check:openapi
       - run: pnpm build:types
       - run: pnpm build:db
+      - run: pnpm build:email
       - run: pnpm build:widget
       - run: pnpm build:analytics-ui
-      - run: cd workers/api && npx tsc --noEmit
-      - run: pnpm build:dashboard
+      - run: pnpm -F @saas-maker/api typecheck
+      - run: pnpm build:cockpit
       - run: pnpm test
 
   deploy-api:
@@ -75,6 +76,8 @@ jobs:
       - run: pnpm build:types
         if: steps.changes.outputs.changed == 'true'
       - run: pnpm build:db
+        if: steps.changes.outputs.changed == 'true'
+      - run: pnpm build:email
         if: steps.changes.outputs.changed == 'true'
       - name: Deploy API to Cloudflare Workers
         if: steps.changes.outputs.changed == 'true'

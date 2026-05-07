@@ -60,8 +60,8 @@ Add Foundry to any JavaScript project in under 5 minutes. This guide covers anal
 ## Install the SDK
 
 ```bash
-pnpm add @foundry/sdk
-# or: npm install @foundry/sdk
+pnpm add @saas-maker/sdk
+# or: npm install @saas-maker/sdk
 ```
 
 ## Create your API key
@@ -83,7 +83,7 @@ NEXT_PUBLIC_SAASMAKER_API_KEY=pk_your_key_here
 
 ```typescript
 // src/lib/saasmaker.ts
-import { SaaSMakerClient } from '@foundry/sdk';
+import { SaaSMakerClient } from '@saas-maker/sdk';
 
 export const saasmaker = new SaaSMakerClient({
   apiKey: process.env.NEXT_PUBLIC_SAASMAKER_API_KEY!,
@@ -143,7 +143,7 @@ VITE_SAASMAKER_API_KEY=pk_your_key_here
 
 ```typescript
 // src/lib/saasmaker.ts
-import { SaaSMakerClient } from '@foundry/sdk';
+import { SaaSMakerClient } from '@saas-maker/sdk';
 
 export const saasmaker = new SaaSMakerClient({
   apiKey: import.meta.env.VITE_SAASMAKER_API_KEY,
@@ -205,7 +205,7 @@ updates:
       interval: weekly
       day: monday
     allow:
-      - dependency-name: "@foundry/sdk"
+      - dependency-name: "@saas-maker/sdk"
     commit-message:
       prefix: "deps"
     open-pull-requests-limit: 1
@@ -218,8 +218,8 @@ This checks for SDK updates every Monday and opens a PR if a new version is avai
 You can also initialize a project via the CLI:
 
 ```bash
-npx @foundry/cli login
-npx @foundry/cli init
+npx @saas-maker/cli login
+npx @saas-maker/cli init
 ```
 
 This creates a `foundry.json` file linking your directory to a project. See the [CLI docs](/sdk/cli) for more.
@@ -272,7 +272,7 @@ Foundry provides high-quality, pre-built modules that you can drop into any proj
 ## 1. Install the CLI
 
 ```bash
-npm install -g @foundry/cli
+npm install -g @saas-maker/cli
 ```
 
 ## 2. Log in
@@ -310,11 +310,11 @@ fnd status   # show project stats
 ## 6. Integrate the SDK
 
 ```bash
-npm install @foundry/sdk
+npm install @saas-maker/sdk
 ```
 
 ```typescript
-import { SaaSMakerClient } from '@foundry/sdk';
+import { SaaSMakerClient } from '@saas-maker/sdk';
 
 const client = new SaaSMakerClient({
   apiKey: 'pk_your_api_key',
@@ -506,7 +506,7 @@ Add the tracking script to your site:
   defer
   data-project="pk_your_api_key"
   data-api="https://api.sassmaker.com"
-  src="https://unpkg.com/@foundry/analytics-sdk/dist/index.global.js"
+  src="https://unpkg.com/@saas-maker/analytics/dist/index.global.js"
 ></script>
 ```
 
@@ -806,10 +806,10 @@ Returns paginated data for a specific breakdown section.
 
 ## Embeddable Dashboard
 
-Use the `@foundry/analytics-ui` package to embed a full analytics dashboard in any React app:
+Use the `@saas-maker/analytics-ui` package to embed a full analytics dashboard in any React app:
 
 ```tsx
-import { AnalyticsDashboard } from '@foundry/analytics-ui';
+import { AnalyticsDashboard } from '@saas-maker/analytics-ui';
 
 <AnalyticsDashboard apiKey="pk_your_api_key" />
 ```
@@ -819,7 +819,7 @@ See the [Analytics Dashboard widget docs](/widgets/analytics/) for installation 
 ## SDK Usage
 
 ```typescript
-import { SaaSMakerClient } from '@foundry/sdk';
+import { SaaSMakerClient } from '@saas-maker/sdk';
 
 const client = new SaaSMakerClient({ apiKey: 'pk_your_api_key' });
 
@@ -1002,7 +1002,7 @@ DELETE /v1/changelog/dashboard/:projectId/:id
 ## SDK Usage
 
 ```typescript
-import { SaaSMakerClient } from '@foundry/sdk';
+import { SaaSMakerClient } from '@saas-maker/sdk';
 
 const client = new SaaSMakerClient({ apiKey: 'pk_your_api_key' });
 
@@ -1232,7 +1232,7 @@ DELETE /v1/feedback/:id
 ## SDK Usage
 
 ```typescript
-import { SaaSMakerClient } from '@foundry/sdk';
+import { SaaSMakerClient } from '@saas-maker/sdk';
 
 const client = new SaaSMakerClient({ apiKey: 'pk_your_api_key' });
 
@@ -1278,7 +1278,7 @@ curl -X PUT https://api.sassmaker.com/v1/projects/readme \
 ### SDK Usage
 
 ```typescript
-import { SaaSMakerClient } from '@foundry/sdk';
+import { SaaSMakerClient } from '@saas-maker/sdk';
 
 const client = new SaaSMakerClient({ apiKey: 'pk_your_api_key' });
 
@@ -1759,7 +1759,7 @@ DELETE /v1/testimonials/:id?project_id=PROJECT_ID
 ## SDK Usage
 
 ```typescript
-import { SaaSMakerClient } from '@foundry/sdk';
+import { SaaSMakerClient } from '@saas-maker/sdk';
 
 const client = new SaaSMakerClient({ apiKey: 'pk_your_api_key' });
 
@@ -1909,7 +1909,7 @@ DELETE /v1/waitlist/:id?project_id=PROJECT_ID
 ## SDK Usage
 
 ```typescript
-import { SaaSMakerClient } from '@foundry/sdk';
+import { SaaSMakerClient } from '@saas-maker/sdk';
 
 const client = new SaaSMakerClient({ apiKey: 'pk_your_api_key' });
 
@@ -1957,6 +1957,35 @@ Commands that operate across your entire `~/Desktop/Fleet` folder.
 | `fnd fleet secrets-sync` | Push shared environment variables to all `.env.local` files. |
 | `fnd fleet clean [--deep]` | Reclaim gigabytes of storage by purging build caches and Rust targets. |
 
+## 🧭 Project Metadata
+
+Use the universal API command for project notes.
+
+```bash
+fnd api PATCH /v1/projects/<projectId> --auth session \
+  --body '{"readme":"Dashboard notes for this project."}'
+```
+
+## 🎼 Symphony Memory
+
+Persist task-run instructions for local agents and copied prompts.
+
+```bash
+fnd api GET /v1/symphony/memory --auth session
+fnd api PUT /v1/symphony/memory --auth session \
+  --body '{"content":"Prefer Gemini for bounded cheap asks. Keep CI fixes surgical."}'
+```
+
+## 🧾 Symphony Audit
+
+Inspect task lifecycle and local agent dispatch events.
+
+```bash
+fnd api GET /v1/symphony/audit --auth session --output table
+fnd api POST /v1/symphony/audit --auth session \
+  --body '{"action":"task_dispatched","actor_source":"local-cli","agent_profile":"gemini"}'
+```
+
 ## 🤖 Autonomous Maintenance
 
 Run the factory on auto-pilot.
@@ -1984,13 +2013,13 @@ The JavaScript SDK provides a typed client for all Foundry API endpoints.
 ## Installation
 
 ```bash
-npm install @foundry/sdk
+npm install @saas-maker/sdk
 ```
 
 ## Setup
 
 ```typescript
-import { SaaSMakerClient } from '@foundry/sdk';
+import { SaaSMakerClient } from '@saas-maker/sdk';
 
 const client = new SaaSMakerClient({
   apiKey: 'pk_your_api_key',
@@ -2116,7 +2145,7 @@ Drop-in React component that renders a complete analytics dashboard — page vie
 ## Installation
 
 ```bash
-npm install @foundry/analytics-ui
+npm install @saas-maker/analytics-ui
 ```
 
 Peer dependencies: `react` and `react-dom` (v18+).
@@ -2124,7 +2153,7 @@ Peer dependencies: `react` and `react-dom` (v18+).
 ## Usage
 
 ```tsx
-import { AnalyticsDashboard } from '@foundry/analytics-ui';
+import { AnalyticsDashboard } from '@saas-maker/analytics-ui';
 
 function App() {
   return <AnalyticsDashboard apiKey="pk_your_api_key" />;
@@ -2170,7 +2199,7 @@ The component uses React hooks (client-side only). In Next.js App Router, wrap i
 // analytics-dashboard.tsx
 'use client';
 
-import { AnalyticsDashboard } from '@foundry/analytics-ui';
+import { AnalyticsDashboard } from '@saas-maker/analytics-ui';
 
 export function AnalyticsDashboardWrapper({ apiKey }: { apiKey: string }) {
   return <AnalyticsDashboard apiKey={apiKey} />;
@@ -2196,7 +2225,7 @@ import type {
   Period,
   DashboardData,
   DashboardSummary,
-} from '@foundry/analytics-ui';
+} from '@saas-maker/analytics-ui';
 ```
 
 ---
@@ -2206,7 +2235,7 @@ A small badge component that links back to SaasMaker. Drop it in your footer to 
 ## Installation
 
 ```bash
-npm install @foundry/badge
+npm install @saas-maker/badge
 ```
 
 Peer dependencies: `react` and `react-dom` (v18+).
@@ -2214,7 +2243,7 @@ Peer dependencies: `react` and `react-dom` (v18+).
 ## Usage
 
 ```tsx
-import { SaasMakerBadge } from '@foundry/badge';
+import { SaasMakerBadge } from '@saas-maker/badge';
 
 function Footer() {
   return <SaasMakerBadge variant="flat" theme="auto" />;
@@ -2240,7 +2269,7 @@ function Footer() {
 Use the `getBadgeHtml` helper to generate a standalone HTML snippet:
 
 ```typescript
-import { getBadgeHtml } from '@foundry/badge';
+import { getBadgeHtml } from '@saas-maker/badge';
 
 const html = getBadgeHtml({ variant: 'flat', theme: 'light' });
 // Returns an <a> tag with inline styles — paste into any HTML page
@@ -2275,7 +2304,7 @@ All styles are handled via CSS classes. The `auto` theme uses `prefers-color-sch
 The package exports all types:
 
 ```typescript
-import type { BadgeProps, BadgeVariant, BadgeTheme } from '@foundry/badge';
+import type { BadgeProps, BadgeVariant, BadgeTheme } from '@saas-maker/badge';
 ```
 
 ---
@@ -2285,13 +2314,13 @@ A React component that renders your published changelog entries as a vertical ti
 ## Installation
 
 ```bash
-npm install @foundry/changelog-widget
+npm install @saas-maker/changelog-widget
 ```
 
 ## Usage
 
 ```tsx
-import { ChangelogTimeline } from '@foundry/changelog-widget';
+import { ChangelogTimeline } from '@saas-maker/changelog-widget';
 
 function WhatsNew() {
   return (
@@ -2343,13 +2372,13 @@ Drop-in React component that adds a floating feedback button to your app. Users 
 ## Installation
 
 ```bash
-npm install @foundry/feedback-widget
+npm install @saas-maker/feedback
 ```
 
 ## Usage
 
 ```tsx
-import { FeedbackWidget } from '@foundry/feedback-widget';
+import { FeedbackWidget } from '@saas-maker/feedback';
 
 function App() {
   return (
@@ -2410,7 +2439,7 @@ Two React components for testimonials: a display wall for your marketing pages a
 ## Installation
 
 ```bash
-npm install @foundry/testimonials-widget
+npm install @saas-maker/testimonials
 ```
 
 ## TestimonialWall
@@ -2418,7 +2447,7 @@ npm install @foundry/testimonials-widget
 Displays approved testimonials in a grid, masonry, or list layout. Automatically fetches from the API.
 
 ```tsx
-import { TestimonialWall } from '@foundry/testimonials-widget';
+import { TestimonialWall } from '@saas-maker/testimonials';
 
 function LandingPage() {
   return (
@@ -2448,7 +2477,7 @@ Each card shows the author name, title, star rating, testimonial text, optional 
 Embeddable form for collecting new testimonials. Submissions go through the approval flow (pending until you approve in the dashboard).
 
 ```tsx
-import { TestimonialForm } from '@foundry/testimonials-widget';
+import { TestimonialForm } from '@saas-maker/testimonials';
 
 function CollectPage() {
   return (
@@ -2492,13 +2521,13 @@ Drop-in React component for collecting waitlist signups. Works with the Waitlist
 ## Installation
 
 ```bash
-npm install @foundry/waitlist
+npm install @saas-maker/waitlist
 ```
 
 ## Usage
 
 ```tsx
-import { WaitlistWidget } from '@foundry/waitlist';
+import { WaitlistWidget } from '@saas-maker/waitlist';
 
 function App() {
   return (
@@ -2522,7 +2551,7 @@ The widget calls these endpoints:
 ## SDK Alternative
 
 ```typescript
-import { SaaSMakerClient } from '@foundry/sdk';
+import { SaaSMakerClient } from '@saas-maker/sdk';
 
 const client = new SaaSMakerClient({ apiKey: 'pk_your_api_key' });
 
