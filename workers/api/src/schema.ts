@@ -60,6 +60,19 @@ export const analytics_events = sqliteTable('analytics_events', {
   created_at: text('created_at').notNull().default(sql`(datetime('now'))`),
 });
 
+export const ai_requests = sqliteTable('ai_requests', {
+  id: text('id').primaryKey(),
+  project_id: text('project_id').notNull().references(() => projects.id),
+  endpoint: text('endpoint').notNull(),
+  model: text('model').notNull(),
+  status: text('status').notNull(),
+  latency_ms: integer('latency_ms'),
+  input_tokens: integer('input_tokens'),
+  output_tokens: integer('output_tokens'),
+  error_message: text('error_message'),
+  created_at: text('created_at').notNull().default(sql`(datetime('now'))`),
+});
+
 export const foundry_secrets = sqliteTable('foundry_secrets', {
   id: text('id').primaryKey(),
   project_id: text('project_id'), // Null for global secrets

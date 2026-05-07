@@ -1287,10 +1287,15 @@ export function getDb(d1: D1Database): FeedbackDatabase {
       return { ai_base_url: row.ai_base_url as string | null, ai_api_key: row.ai_api_key as string | null, ai_model: row.ai_model as string | null };
     },
 
-    async updateProjectAIConfig(projectId: string, config: { ai_base_url: string; ai_api_key: string; ai_model: string }): Promise<void> {
+    async updateProjectAIConfig(projectId: string, config: { ai_base_url: string; ai_api_key?: string; ai_model: string }): Promise<void> {
+      const existing = await d1.prepare(
+        `SELECT ai_api_key FROM projects WHERE id = ?`
+      ).bind(projectId).first();
+      if (!existing) throw new Error('Project not found');
+      const apiKey = config.ai_api_key ?? existing.ai_api_key;
       await d1.prepare(
         `UPDATE projects SET ai_base_url = ?, ai_api_key = ?, ai_model = ? WHERE id = ?`
-      ).bind(config.ai_base_url, config.ai_api_key, config.ai_model, projectId).run();
+      ).bind(config.ai_base_url, apiKey, config.ai_model, projectId).run();
     },
 
     async deleteProjectAIConfig(projectId: string): Promise<void> {

@@ -25,6 +25,93 @@
         }
       }
     },
+    "/v1/ai/chat/completions": {
+      "post": {
+        "tags": [
+          "ai"
+        ],
+        "summary": "POST /v1/ai/chat/completions",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/ai/config": {
+      "get": {
+        "tags": [
+          "ai"
+        ],
+        "summary": "GET /v1/ai/config",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "ai"
+        ],
+        "summary": "PUT /v1/ai/config",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ai"
+        ],
+        "summary": "DELETE /v1/ai/config",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/ai/embeddings": {
+      "post": {
+        "tags": [
+          "ai"
+        ],
+        "summary": "POST /v1/ai/embeddings",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/ai/requests": {
+      "get": {
+        "tags": [
+          "ai"
+        ],
+        "summary": "GET /v1/ai/requests",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/ai/usage": {
+      "get": {
+        "tags": [
+          "ai"
+        ],
+        "summary": "GET /v1/ai/usage",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/v1/analytics/countries": {
       "get": {
         "tags": [
