@@ -8,3 +8,5 @@ export type { ChangelogEntry, ChangelogListResponse } from './services/changelog
 export type { TrackEventData, TrackEventResponse } from './services/analytics';
 export type { RoadmapItem, RoadmapListResponse } from './services/roadmap';
 export type { ProjectReadmeResponse } from './services/projects';
+export type { KnowledgeService } from './services/knowledge';
+export type { FormsService, FormRecord, FormQuestionRecord, FormResponseRecord, FormQuestionType } from './services/forms';

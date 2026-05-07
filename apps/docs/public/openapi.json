@@ -464,6 +464,93 @@
         }
       }
     },
+    "/v1/knowledge/documents/{id}": {
+      "delete": {
+        "tags": [
+          "knowledge"
+        ],
+        "summary": "DELETE /v1/knowledge/documents/{id}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/knowledge/indexes": {
+      "get": {
+        "tags": [
+          "knowledge"
+        ],
+        "summary": "GET /v1/knowledge/indexes",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "knowledge"
+        ],
+        "summary": "POST /v1/knowledge/indexes",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/knowledge/indexes/{id}": {
+      "delete": {
+        "tags": [
+          "knowledge"
+        ],
+        "summary": "DELETE /v1/knowledge/indexes/{id}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/knowledge/indexes/{id}/documents": {
+      "get": {
+        "tags": [
+          "knowledge"
+        ],
+        "summary": "GET /v1/knowledge/indexes/{id}/documents",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "knowledge"
+        ],
+        "summary": "POST /v1/knowledge/indexes/{id}/documents",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/knowledge/indexes/{id}/search": {
+      "post": {
+        "tags": [
+          "knowledge"
+        ],
+        "summary": "POST /v1/knowledge/indexes/{id}/search",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/v1/projects": {
       "get": {
         "tags": [
