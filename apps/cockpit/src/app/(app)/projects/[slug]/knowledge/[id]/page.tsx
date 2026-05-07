@@ -1,21 +1,15 @@
 import { Suspense } from "react";
 import { PageHeader } from "@/components/page-header";
-import { 
-  Card, 
-  CardHeader, 
-  CardTitle, 
-  CardDescription, 
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
   CardContent,
   Button,
   Badge,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
 } from "@saas-maker/ui";
-import { Brain, Plus, Search, Database, FileText, Trash2, ArrowLeft } from "lucide-react";
+import { Plus, Search, Database, Trash2, ArrowLeft } from "lucide-react";
 import { getAuthenticatedProject } from "../../get-project";
 import { apiFetchAuthed } from "@/lib/api-client";
 import Link from "next/link";
@@ -35,14 +29,6 @@ interface IndexDetail {
 }
 
 async function DocumentsList({ indexId }: { indexId: string }) {
-  // We use project API key auth for document listing in the SDK, 
-  // but for the dashboard we might need a session-auth variant or use the SDK with session token.
-  // The API route I created uses `requireApiKey` for document listing.
-  // Wait, I should probably add a session-auth variant for the dashboard.
-  
-  // For now, let's assume I'll add a session-auth route or update the existing one.
-  // Actually, I'll update the API route to allow session auth too.
-  
   try {
     const { data: documents } = await apiFetchAuthed<{ data: DocumentRow[] }>(
       `/v1/knowledge/indexes/${indexId}/documents`
@@ -57,39 +43,37 @@ async function DocumentsList({ indexId }: { indexId: string }) {
     }
 
     return (
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Content Preview</TableHead>
-            <TableHead>Metadata</TableHead>
-            <TableHead>Created</TableHead>
-            <TableHead className="w-[100px]">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {documents.map((doc) => (
-            <TableRow key={doc.id}>
-              <TableCell className="max-w-md truncate font-medium">
-                {doc.content}
-              </TableCell>
-              <TableCell className="text-xs font-mono">
-                {JSON.stringify(doc.metadata)}
-              </TableCell>
-              <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
-                {new Date(doc.created_at).toLocaleDateString()}
-              </TableCell>
-              <TableCell>
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10">
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <div className="overflow-x-auto rounded-md border">
+        <table className="w-full text-sm">
+          <thead className="bg-muted/40">
+            <tr className="text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <th className="px-3 py-2">Content Preview</th>
+              <th className="px-3 py-2">Metadata</th>
+              <th className="px-3 py-2">Created</th>
+              <th className="px-3 py-2 w-[100px]">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {documents.map((doc) => (
+              <tr key={doc.id} className="border-t">
+                <td className="px-3 py-2 max-w-md truncate font-medium">{doc.content}</td>
+                <td className="px-3 py-2 text-xs font-mono">{JSON.stringify(doc.metadata)}</td>
+                <td className="px-3 py-2 text-xs text-muted-foreground whitespace-nowrap">
+                  {new Date(doc.created_at).toLocaleDateString()}
+                </td>
+                <td className="px-3 py-2">
+                  <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10">
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     );
-  } catch (err) {
-    return <div className="text-destructive p-4 border border-destructive/20 bg-destructive/5 rounded-md">Failed to load documents. Ensure the API supports session auth for this route.</div>;
+  } catch {
+    return <div className="text-destructive p-4 border border-destructive/20 bg-destructive/5 rounded-md">Failed to load documents.</div>;
   }
 }
 
@@ -97,8 +81,6 @@ export default async function IndexDetailPage({ params }: { params: Promise<{ sl
   const { slug, id: indexId } = await params;
   const { project } = await getAuthenticatedProject(slug);
 
-  // Fetch index details (using session auth)
-  // Wait, I didn't add a GET /indexes/:id route to knowledge.ts. I should.
   const { data: indexes } = await apiFetchAuthed<{ data: IndexDetail[] }>(
     `/v1/knowledge/indexes?project_id=${project.id}`
   );

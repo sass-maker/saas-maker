@@ -438,6 +438,117 @@
         }
       }
     },
+    "/v1/forms/by-slug/{slug}": {
+      "get": {
+        "tags": [
+          "forms"
+        ],
+        "summary": "GET /v1/forms/by-slug/{slug}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/forms/dashboard/{projectId}": {
+      "get": {
+        "tags": [
+          "forms"
+        ],
+        "summary": "GET /v1/forms/dashboard/{projectId}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "forms"
+        ],
+        "summary": "POST /v1/forms/dashboard/{projectId}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/forms/dashboard/{projectId}/{formId}": {
+      "get": {
+        "tags": [
+          "forms"
+        ],
+        "summary": "GET /v1/forms/dashboard/{projectId}/{formId}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "forms"
+        ],
+        "summary": "PATCH /v1/forms/dashboard/{projectId}/{formId}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "forms"
+        ],
+        "summary": "DELETE /v1/forms/dashboard/{projectId}/{formId}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/forms/dashboard/{projectId}/{formId}/questions": {
+      "post": {
+        "tags": [
+          "forms"
+        ],
+        "summary": "POST /v1/forms/dashboard/{projectId}/{formId}/questions",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/forms/dashboard/{projectId}/{formId}/responses": {
+      "get": {
+        "tags": [
+          "forms"
+        ],
+        "summary": "GET /v1/forms/dashboard/{projectId}/{formId}/responses",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/forms/{formId}/submit": {
+      "post": {
+        "tags": [
+          "forms"
+        ],
+        "summary": "POST /v1/forms/{formId}/submit",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/v1/jobs": {
       "get": {
         "tags": [
