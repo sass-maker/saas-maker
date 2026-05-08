@@ -22,7 +22,7 @@
     "test:integration": "vitest run --config vitest.integration.config.ts",
     "test:e2e": "playwright test tests/e2e/api/",
     "lint": "pnpm -r --if-present lint",
-    "typecheck": "pnpm -r --if-present typecheck",
+    "typecheck": "pnpm build:types && pnpm -r --if-present typecheck",
     "smoke": "node scripts/smoke-prod.mjs",
     "symphony": "node scripts/symphony-local.mjs",
     "symphony:runner": "node scripts/symphony-runner.mjs",
