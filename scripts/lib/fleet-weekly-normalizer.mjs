@@ -1,8 +1,4 @@
-const DEFAULT_REUSABLE_WORKFLOW =
-  'sarthakagrawal927/saas-maker/.github/workflows/foundry-weekly.yml@main';
-
 export function buildWeeklyWorkflow({
-  reusableWorkflow = DEFAULT_REUSABLE_WORKFLOW,
   nodeVersion = '22',
 } = {}) {
   return `name: Weekly Quality Check
@@ -12,10 +8,57 @@ on:
   workflow_dispatch:
 
 jobs:
-  foundry-weekly:
-    uses: ${reusableWorkflow}
-    with:
-      node-version: '${nodeVersion}'
+  quality:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '${nodeVersion}'
+
+      - uses: pnpm/action-setup@v4
+        if: hashFiles('pnpm-lock.yaml') != ''
+        with:
+          version: latest
+
+      - name: Install dependencies
+        run: |
+          if [ -f pnpm-lock.yaml ]; then
+            pnpm install --frozen-lockfile --ignore-scripts
+          elif [ -f package-lock.json ]; then
+            npm ci --ignore-scripts
+          elif [ -f yarn.lock ]; then
+            corepack enable
+            yarn install --immutable
+          else
+            npm install --ignore-scripts
+          fi
+
+      - name: Run available quality scripts
+        run: |
+          run_script() {
+            local script="$1"
+            if node -e "const s=require('./package.json').scripts||{}; process.exit(s[process.argv[1]]?0:1)" "$script"; then
+              if [ -f pnpm-lock.yaml ]; then
+                pnpm run "$script"
+              elif [ -f yarn.lock ]; then
+                yarn "$script"
+              else
+                npm run "$script"
+              fi
+            else
+              echo "No $script script"
+            fi
+          }
+
+          run_script lint
+          run_script typecheck
+          run_script test
+          run_script build
 `;
 }
 
@@ -69,5 +112,3 @@ export function summarizeNormalizationPlan(plan) {
   }
   return counts;
 }
-
-export { DEFAULT_REUSABLE_WORKFLOW };

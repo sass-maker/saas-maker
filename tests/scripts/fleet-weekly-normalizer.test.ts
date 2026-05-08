@@ -8,10 +8,12 @@ import {
 } from '../../scripts/lib/fleet-weekly-normalizer.mjs';
 
 describe('buildWeeklyWorkflow', () => {
-  it('builds the tiny reusable workflow caller', () => {
+  it('builds the self-contained weekly workflow', () => {
     const workflow = buildWeeklyWorkflow();
 
-    expect(workflow).toContain('uses: sarthakagrawal927/saas-maker/.github/workflows/foundry-weekly.yml@main');
+    expect(workflow).toContain('runs-on: ubuntu-latest');
+    expect(workflow).toContain('run_script lint');
+    expect(workflow).toContain('pnpm install --frozen-lockfile --ignore-scripts');
     expect(workflow).toContain("node-version: '22'");
   });
 
