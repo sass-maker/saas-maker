@@ -6,6 +6,12 @@ export type SymphonyTask = {
   priority: string;
   task_type?: string;
   status: string;
+  branch_name?: string | null;
+  pr_url?: string | null;
+  pr_status?: string | null;
+  commit_sha?: string | null;
+  deployment_url?: string | null;
+  deployment_status?: string | null;
 };
 
 type SymphonyAgentOptions = {
@@ -172,6 +178,10 @@ Project: ${project}
 Priority: ${task.priority}
 Type: ${task.task_type ?? "feature"}
 Current status: ${task.status}
+Branch: ${task.branch_name || "not linked"}
+Pull request: ${task.pr_url || "not linked"} (${task.pr_status || "none"})
+Commit: ${task.commit_sha || "not linked"}
+Deployment: ${task.deployment_url || "not linked"} (${task.deployment_status || "none"})
 
 Description:
 ${task.description?.trim() || "No additional description provided."}

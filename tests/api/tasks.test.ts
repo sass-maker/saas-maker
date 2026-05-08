@@ -60,6 +60,12 @@ beforeEach(() => {
     task_type: input.task_type ?? 'feature',
     size: input.size ?? 'm',
     dependencies: input.dependencies ?? [],
+    branch_name: input.branch_name ?? null,
+    pr_url: input.pr_url ?? null,
+    pr_status: input.pr_status ?? 'none',
+    commit_sha: input.commit_sha ?? null,
+    deployment_url: input.deployment_url ?? null,
+    deployment_status: input.deployment_status ?? 'none',
     created_at: '2026-05-02 00:00:00',
     updated_at: '2026-05-02 00:00:00',
   }));
@@ -75,6 +81,12 @@ beforeEach(() => {
     task_type: input.task_type ?? 'feature',
     size: input.size ?? 'm',
     dependencies: input.dependencies ?? [],
+    branch_name: input.branch_name ?? null,
+    pr_url: input.pr_url ?? null,
+    pr_status: input.pr_status ?? 'none',
+    commit_sha: input.commit_sha ?? null,
+    deployment_url: input.deployment_url ?? null,
+    deployment_status: input.deployment_status ?? 'none',
     created_at: '2026-05-02 00:00:00',
     updated_at: '2026-05-02 00:00:00',
   }));
@@ -220,6 +232,40 @@ describe('Tasks API', () => {
       task_id: 'task-1',
       action: 'task_status_updated',
       metadata: expect.objectContaining({ status: 'in_progress' }),
+    }));
+  });
+
+  it('PATCH /v1/tasks/:id stores task PR lifecycle metadata', async () => {
+    const res = await request('/v1/tasks/task-1', {
+      method: 'PATCH',
+      headers: { Authorization: 'Bearer test-session', 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        branch_name: 'codex/task-lifecycle',
+        pr_url: 'https://github.com/acme/app/pull/42',
+        pr_status: 'open',
+        commit_sha: 'abcdef1234567890',
+        deployment_url: 'https://preview.example.com',
+        deployment_status: 'pending',
+      }),
+    });
+
+    expect(res.status).toBe(200);
+    expect(mockDb.updateTask).toHaveBeenCalledWith('task-1', 'user-1', expect.objectContaining({
+      branch_name: 'codex/task-lifecycle',
+      pr_url: 'https://github.com/acme/app/pull/42',
+      pr_status: 'open',
+      commit_sha: 'abcdef1234567890',
+      deployment_url: 'https://preview.example.com',
+      deployment_status: 'pending',
+    }));
+    expect(mockDb.createSymphonyAuditEvent).toHaveBeenCalledWith('user-1', expect.objectContaining({
+      task_id: 'task-1',
+      action: 'task_updated',
+      metadata: expect.objectContaining({
+        changed_fields: expect.arrayContaining(['pr_url', 'deployment_status']),
+        pr_status: 'open',
+        deployment_status: 'pending',
+      }),
     }));
   });
 });

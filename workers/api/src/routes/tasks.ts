@@ -41,6 +41,19 @@ function normalizeDependencies(value: unknown): string[] | undefined {
   return Array.from(seen);
 }
 
+function optionalString(value: unknown): string | null | undefined {
+  if (value === undefined) return undefined;
+  if (value === null) return null;
+  return typeof value === 'string' && value.trim() ? value.trim() : null;
+}
+
+function enumValue<T extends string>(value: unknown, allowed: readonly T[]): T | undefined {
+  return typeof value === 'string' && allowed.includes(value as T) ? value as T : undefined;
+}
+
+const PR_STATUSES = ['none', 'draft', 'open', 'merged', 'closed'] as const;
+const DEPLOYMENT_STATUSES = ['none', 'pending', 'success', 'failed'] as const;
+
 // POST /v1/tasks — create task
 tasks.post('/', requireSession, async (c) => {
   const userId = c.get('userId')!;
@@ -52,10 +65,18 @@ tasks.post('/', requireSession, async (c) => {
     task_type?: string;
     size?: string;
     dependencies?: unknown;
+    branch_name?: unknown;
+    pr_url?: unknown;
+    pr_status?: unknown;
+    commit_sha?: unknown;
+    deployment_url?: unknown;
+    deployment_status?: unknown;
   };
   if (!body.title || typeof body.title !== 'string' || !body.title.trim()) {
     return c.json({ error: 'title is required' }, 400);
   }
+  const prStatus = enumValue(body.pr_status, PR_STATUSES);
+  const deploymentStatus = enumValue(body.deployment_status, DEPLOYMENT_STATUSES);
   const db = getDb(c.env.DB);
   const task = await db.createTask(userId, {
     title: body.title.trim(),
@@ -65,6 +86,12 @@ tasks.post('/', requireSession, async (c) => {
     task_type: body.task_type,
     size: body.size,
     dependencies: normalizeDependencies(body.dependencies),
+    branch_name: optionalString(body.branch_name),
+    pr_url: optionalString(body.pr_url),
+    pr_status: prStatus,
+    commit_sha: optionalString(body.commit_sha),
+    deployment_url: optionalString(body.deployment_url),
+    deployment_status: deploymentStatus,
   });
   await recordAudit(db, userId, {
     task_id: task.id,
@@ -76,6 +103,12 @@ tasks.post('/', requireSession, async (c) => {
       priority: task.priority,
       task_type: task.task_type,
       size: task.size,
+      branch_name: task.branch_name,
+      pr_url: task.pr_url,
+      pr_status: task.pr_status,
+      commit_sha: task.commit_sha,
+      deployment_url: task.deployment_url,
+      deployment_status: task.deployment_status,
     },
   });
   capture({ distinctId: userId, event: 'task_created', properties: { task_id: task.id, priority: task.priority ?? undefined, task_type: task.task_type ?? undefined, size: task.size ?? undefined, project_slug: body.project_slug ?? undefined } });
@@ -95,10 +128,27 @@ tasks.patch('/:id', requireSession, async (c) => {
     task_type: string;
     size: string;
     dependencies: unknown;
+    branch_name: unknown;
+    pr_url: unknown;
+    pr_status: unknown;
+    commit_sha: unknown;
+    deployment_url: unknown;
+    deployment_status: unknown;
   }>;
   const db = getDb(c.env.DB);
   const { dependencies: rawDependencies, ...rest } = body;
-  const updates: Record<string, unknown> = { ...rest };
+  const updates: Record<string, unknown> = {
+    ...rest,
+    branch_name: optionalString(body.branch_name),
+    pr_url: optionalString(body.pr_url),
+    pr_status: enumValue(body.pr_status, PR_STATUSES),
+    commit_sha: optionalString(body.commit_sha),
+    deployment_url: optionalString(body.deployment_url),
+    deployment_status: enumValue(body.deployment_status, DEPLOYMENT_STATUSES),
+  };
+  for (const key of Object.keys(updates)) {
+    if (updates[key] === undefined) delete updates[key];
+  }
   if ('dependencies' in body) {
     updates.dependencies = normalizeDependencies(rawDependencies);
   }
@@ -115,6 +165,12 @@ tasks.patch('/:id', requireSession, async (c) => {
       priority: body.priority,
       task_type: body.task_type,
       size: body.size,
+      branch_name: updates.branch_name,
+      pr_url: updates.pr_url,
+      pr_status: updates.pr_status,
+      commit_sha: updates.commit_sha,
+      deployment_url: updates.deployment_url,
+      deployment_status: updates.deployment_status,
     },
   });
   if (body.status) capture({ distinctId: userId, event: 'task_status_updated', properties: { task_id: id, status: body.status } });

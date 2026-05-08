@@ -51,6 +51,12 @@ export interface TaskRow {
   task_type: 'feature' | 'bug' | 'chore' | 'docs' | 'research' | 'cleanup' | 'other';
   size: 'xs' | 's' | 'm' | 'l' | 'xl';
   dependencies: string[];
+  branch_name: string | null;
+  pr_url: string | null;
+  pr_status: 'none' | 'draft' | 'open' | 'merged' | 'closed';
+  commit_sha: string | null;
+  deployment_url: string | null;
+  deployment_status: 'none' | 'pending' | 'success' | 'failed';
   created_at: string; updated_at: string;
 }
 
@@ -1762,16 +1768,35 @@ export function getDb(d1: D1Database): FeedbackDatabase {
     },
 
     // --- Tasks ---
-    async createTask(ownerId: string, input: { title: string; description?: string; project_slug?: string; priority?: string; task_type?: string; size?: string; dependencies?: string[] }): Promise<TaskRow> {
+    async createTask(ownerId: string, input: { title: string; description?: string; project_slug?: string; priority?: string; task_type?: string; size?: string; dependencies?: string[]; branch_name?: string | null; pr_url?: string | null; pr_status?: string; commit_sha?: string | null; deployment_url?: string | null; deployment_status?: string }): Promise<TaskRow> {
       const id = crypto.randomUUID();
       const priority = input.priority ?? 'medium';
       const taskType = input.task_type ?? 'feature';
       const size = input.size ?? 'm';
       const dependencies = sanitizeDependencyIds(input.dependencies);
       await d1.prepare(
-        `INSERT INTO tasks (id, owner_id, project_slug, title, description, priority, task_type, size, dependencies)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
-      ).bind(id, ownerId, input.project_slug ?? null, input.title, input.description ?? null, priority, taskType, size, JSON.stringify(dependencies)).run();
+        `INSERT INTO tasks (
+          id, owner_id, project_slug, title, description, priority, task_type, size, dependencies,
+          branch_name, pr_url, pr_status, commit_sha, deployment_url, deployment_status
+        )
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+      ).bind(
+        id,
+        ownerId,
+        input.project_slug ?? null,
+        input.title,
+        input.description ?? null,
+        priority,
+        taskType,
+        size,
+        JSON.stringify(dependencies),
+        input.branch_name ?? null,
+        input.pr_url ?? null,
+        input.pr_status ?? 'none',
+        input.commit_sha ?? null,
+        input.deployment_url ?? null,
+        input.deployment_status ?? 'none',
+      ).run();
       const row = await d1.prepare(`SELECT * FROM tasks WHERE id = ?`).bind(id).first();
       return hydrateTaskRow(row as Record<string, unknown> | null) as TaskRow;
     },
@@ -1794,7 +1819,7 @@ export function getDb(d1: D1Database): FeedbackDatabase {
       return (results ?? []).map((row) => hydrateTaskRow(row as Record<string, unknown>) as TaskRow);
     },
 
-    async updateTask(id: string, ownerId: string, input: Partial<{ title: string; description: string; status: string; priority: string; project_slug: string; task_type: string; size: string; dependencies: string[] }>): Promise<TaskRow | null> {
+    async updateTask(id: string, ownerId: string, input: Partial<{ title: string; description: string; status: string; priority: string; project_slug: string; task_type: string; size: string; dependencies: string[]; branch_name: string | null; pr_url: string | null; pr_status: string; commit_sha: string | null; deployment_url: string | null; deployment_status: string }>): Promise<TaskRow | null> {
       const sets: string[] = [];
       const values: unknown[] = [];
       if (input.title !== undefined) { sets.push('title = ?'); values.push(input.title); }
@@ -1804,6 +1829,12 @@ export function getDb(d1: D1Database): FeedbackDatabase {
       if (input.project_slug !== undefined) { sets.push('project_slug = ?'); values.push(input.project_slug); }
       if (input.task_type !== undefined) { sets.push('task_type = ?'); values.push(input.task_type); }
       if (input.size !== undefined) { sets.push('size = ?'); values.push(input.size); }
+      if (input.branch_name !== undefined) { sets.push('branch_name = ?'); values.push(input.branch_name); }
+      if (input.pr_url !== undefined) { sets.push('pr_url = ?'); values.push(input.pr_url); }
+      if (input.pr_status !== undefined) { sets.push('pr_status = ?'); values.push(input.pr_status); }
+      if (input.commit_sha !== undefined) { sets.push('commit_sha = ?'); values.push(input.commit_sha); }
+      if (input.deployment_url !== undefined) { sets.push('deployment_url = ?'); values.push(input.deployment_url); }
+      if (input.deployment_status !== undefined) { sets.push('deployment_status = ?'); values.push(input.deployment_status); }
       if (input.dependencies !== undefined) {
         sets.push('dependencies = ?');
         values.push(JSON.stringify(sanitizeDependencyIds(input.dependencies)));

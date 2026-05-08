@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { Bot, ChevronDown, Clipboard, Pencil, Plus, Save, Trash2, X } from 'lucide-react';
+import { Bot, ChevronDown, Clipboard, ExternalLink, GitBranch, Pencil, Plus, Save, Trash2, X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -23,6 +23,12 @@ export interface TaskRow {
   priority: 'low' | 'medium' | 'high';
   task_type: 'feature' | 'bug' | 'chore' | 'docs' | 'research' | 'cleanup' | 'other';
   dependencies?: string[];
+  branch_name: string | null;
+  pr_url: string | null;
+  pr_status: 'none' | 'draft' | 'open' | 'merged' | 'closed';
+  commit_sha: string | null;
+  deployment_url: string | null;
+  deployment_status: 'none' | 'pending' | 'success' | 'failed';
   created_at: string;
   updated_at: string;
 }
@@ -100,6 +106,32 @@ const STATUS_DOT_CLASS: Record<TaskRow['status'], string> = {
   done: 'border-emerald-500 bg-emerald-500/15',
 };
 
+const PR_STATUS_LABEL: Record<TaskRow['pr_status'], string> = {
+  none: 'No PR',
+  draft: 'Draft PR',
+  open: 'Open PR',
+  merged: 'Merged',
+  closed: 'Closed',
+};
+
+const DEPLOYMENT_STATUS_LABEL: Record<TaskRow['deployment_status'], string> = {
+  none: 'No deploy',
+  pending: 'Deploying',
+  success: 'Deployed',
+  failed: 'Deploy failed',
+};
+
+const LIFECYCLE_BADGE_CLASS: Record<TaskRow['pr_status'] | TaskRow['deployment_status'], string> = {
+  none: 'border-border/60 bg-background/35 text-muted-foreground',
+  draft: 'border-slate-500/40 bg-slate-500/10 text-slate-500 dark:text-slate-300',
+  open: 'border-blue-500/45 bg-blue-500/10 text-blue-600 dark:text-blue-300',
+  merged: 'border-violet-500/45 bg-violet-500/10 text-violet-600 dark:text-violet-300',
+  closed: 'border-zinc-500/45 bg-zinc-500/10 text-zinc-600 dark:text-zinc-300',
+  pending: 'border-amber-500/45 bg-amber-500/10 text-amber-600 dark:text-amber-300',
+  success: 'border-emerald-500/45 bg-emerald-500/10 text-emerald-600 dark:text-emerald-300',
+  failed: 'border-red-500/45 bg-red-500/10 text-red-600 dark:text-red-300',
+};
+
 function Toast({ message }: { message: string }) {
   return (
     <div className="fixed bottom-6 right-6 z-50 rounded-lg bg-foreground px-4 py-2.5 text-sm font-medium text-background shadow-lg animate-in fade-in slide-in-from-bottom-2">
@@ -114,6 +146,12 @@ interface TaskFormData {
   project_slug: string;
   priority: string;
   task_type: string;
+  branch_name: string;
+  pr_url: string;
+  pr_status: TaskRow['pr_status'];
+  commit_sha: string;
+  deployment_url: string;
+  deployment_status: TaskRow['deployment_status'];
 }
 
 const EMPTY_FORM: TaskFormData = {
@@ -122,6 +160,12 @@ const EMPTY_FORM: TaskFormData = {
   project_slug: '',
   priority: 'medium',
   task_type: 'feature',
+  branch_name: '',
+  pr_url: '',
+  pr_status: 'none',
+  commit_sha: '',
+  deployment_url: '',
+  deployment_status: 'none',
 };
 
 const ALL_PROJECTS = '__all__';
@@ -233,6 +277,12 @@ export function TaskBoard({
       project_slug: task.project_slug ?? '',
       priority: task.priority,
       task_type: task.task_type ?? 'feature',
+      branch_name: task.branch_name ?? '',
+      pr_url: task.pr_url ?? '',
+      pr_status: task.pr_status ?? 'none',
+      commit_sha: task.commit_sha ?? '',
+      deployment_url: task.deployment_url ?? '',
+      deployment_status: task.deployment_status ?? 'none',
     });
     setModalOpen(true);
   };
@@ -273,6 +323,12 @@ export function TaskBoard({
             project_slug: form.project_slug || undefined,
             priority: form.priority,
             task_type: form.task_type,
+            branch_name: form.branch_name || null,
+            pr_url: form.pr_url || null,
+            pr_status: form.pr_status,
+            commit_sha: form.commit_sha || null,
+            deployment_url: form.deployment_url || null,
+            deployment_status: form.deployment_status,
           }),
         });
         setTasks(prev => prev.map(t => t.id === editTask.id ? res.data : t));
@@ -286,6 +342,12 @@ export function TaskBoard({
             project_slug: form.project_slug || undefined,
             priority: form.priority,
             task_type: form.task_type,
+            branch_name: form.branch_name || null,
+            pr_url: form.pr_url || null,
+            pr_status: form.pr_status,
+            commit_sha: form.commit_sha || null,
+            deployment_url: form.deployment_url || null,
+            deployment_status: form.deployment_status,
           }),
         });
         setTasks(prev => [res.data, ...prev]);
@@ -699,6 +761,81 @@ export function TaskBoard({
                 </Select>
               </div>
             </div>
+            <div className="space-y-3 rounded-lg border bg-muted/20 p-3">
+              <div>
+                <h3 className="text-sm font-medium text-foreground">PR Lifecycle</h3>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div className="space-y-1.5">
+                  <Label htmlFor="branch-name">Branch</Label>
+                  <Input
+                    id="branch-name"
+                    value={form.branch_name}
+                    onChange={e => setForm(f => ({ ...f, branch_name: e.target.value }))}
+                    placeholder="codex/task-lifecycle"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="commit-sha">Commit</Label>
+                  <Input
+                    id="commit-sha"
+                    value={form.commit_sha}
+                    onChange={e => setForm(f => ({ ...f, commit_sha: e.target.value }))}
+                    placeholder="abcdef1"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="pr-url">PR URL</Label>
+                  <Input
+                    id="pr-url"
+                    value={form.pr_url}
+                    onChange={e => setForm(f => ({ ...f, pr_url: e.target.value }))}
+                    placeholder="https://github.com/org/repo/pull/123"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label>PR Status</Label>
+                  <Select
+                    value={form.pr_status}
+                    onValueChange={v => setForm(f => ({ ...f, pr_status: v as TaskRow['pr_status'] }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.entries(PR_STATUS_LABEL).map(([value, label]) => (
+                        <SelectItem key={value} value={value}>{label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="deployment-url">Deployment URL</Label>
+                  <Input
+                    id="deployment-url"
+                    value={form.deployment_url}
+                    onChange={e => setForm(f => ({ ...f, deployment_url: e.target.value }))}
+                    placeholder="https://example.com"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label>Deployment</Label>
+                  <Select
+                    value={form.deployment_status}
+                    onValueChange={v => setForm(f => ({ ...f, deployment_status: v as TaskRow['deployment_status'] }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.entries(DEPLOYMENT_STATUS_LABEL).map(([value, label]) => (
+                        <SelectItem key={value} value={value}>{label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </div>
             <div className="flex justify-end gap-2 pt-1">
               <Button type="button" variant="outline" onClick={() => setModalOpen(false)}>
                 Cancel
@@ -909,6 +1046,47 @@ function TaskList({
                   <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3 w-3 -translate-y-1/2 text-muted-foreground opacity-35" />
                 </span>
               </div>
+              {(task.branch_name || task.pr_url || task.commit_sha || task.deployment_url || task.pr_status !== 'none' || task.deployment_status !== 'none') && (
+                <div className="mt-1 flex min-w-0 flex-wrap items-center gap-1 text-[11px] leading-5 text-muted-foreground">
+                  {task.branch_name ? (
+                    <span className="inline-flex max-w-48 items-center gap-1 truncate rounded-full border border-border/60 bg-background/35 px-2 py-0.5 font-mono">
+                      <GitBranch className="h-3 w-3 shrink-0" />
+                      <span className="truncate">{task.branch_name}</span>
+                    </span>
+                  ) : null}
+                  <span className={cn('rounded-full border px-2 py-0.5', LIFECYCLE_BADGE_CLASS[task.pr_status])}>
+                    {PR_STATUS_LABEL[task.pr_status]}
+                  </span>
+                  {task.pr_url ? (
+                    <a
+                      href={task.pr_url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1 rounded-full border border-border/60 bg-background/35 px-2 py-0.5 text-foreground/80 hover:border-border hover:text-foreground"
+                    >
+                      PR <ExternalLink className="h-3 w-3" />
+                    </a>
+                  ) : null}
+                  {task.commit_sha ? (
+                    <span className="rounded-full border border-border/60 bg-background/35 px-2 py-0.5 font-mono">
+                      {task.commit_sha.slice(0, 7)}
+                    </span>
+                  ) : null}
+                  <span className={cn('rounded-full border px-2 py-0.5', LIFECYCLE_BADGE_CLASS[task.deployment_status])}>
+                    {DEPLOYMENT_STATUS_LABEL[task.deployment_status]}
+                  </span>
+                  {task.deployment_url ? (
+                    <a
+                      href={task.deployment_url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1 rounded-full border border-border/60 bg-background/35 px-2 py-0.5 text-foreground/80 hover:border-border hover:text-foreground"
+                    >
+                      Deploy <ExternalLink className="h-3 w-3" />
+                    </a>
+                  ) : null}
+                </div>
+              )}
               {latestRun && (
                 <div className="mt-1 flex min-w-0 flex-wrap items-center gap-1 text-[11px] leading-5 text-muted-foreground">
                   <span className="font-medium text-foreground/80">Last run</span>

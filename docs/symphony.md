@@ -47,6 +47,11 @@ commands write back to production. `pick` chooses the highest-priority `todo`
 task, optionally filtered by `--project`, claims it in production, and prints
 the selected local agent command.
 
+Tasks can also carry branch, commit, pull request, and deployment lifecycle
+fields. Cockpit shows those fields inline on each task so a task can move from
+local execution to PR review to deployed verification without losing the link
+between the work request and the shipped artifact.
+
 Local sync shells out through the Foundry CLI. Run `fnd login` once for this
 machine/account; Symphony does not accept or pass API keys directly.
 
