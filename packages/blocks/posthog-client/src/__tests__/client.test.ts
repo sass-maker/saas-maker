@@ -26,6 +26,7 @@ import {
   __resetForTests,
   getPostHog,
 } from '../client.js';
+import type { BaseEventMap } from '../types.js';
 
 beforeEach(() => {
   __resetForTests();
@@ -83,7 +84,7 @@ describe('track / identify / reset', () => {
   beforeEach(() => initPostHog({ apiKey: 'phc_test' }));
 
   it('forwards event + properties to posthog.capture', () => {
-    interface E {
+    interface E extends BaseEventMap {
       feedback_submitted: { project_id: string };
     }
     track<E>('feedback_submitted', { project_id: 'p1' });

@@ -24,6 +24,7 @@ import {
   flushServer,
   shutdownServer,
 } from '../server.js';
+import type { BaseEventMap } from '../types.js';
 
 beforeEach(async () => {
   await shutdownServer();
@@ -40,7 +41,7 @@ describe('server client', () => {
 
   it('trackServer forwards distinctId + event + properties', () => {
     createPostHogServer({ apiKey: 'phc_srv' });
-    interface E {
+    interface E extends BaseEventMap {
       project_created: { project_id: string };
     }
     trackServer<E>('project_created', {
