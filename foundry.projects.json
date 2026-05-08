@@ -8,7 +8,6 @@
   "linkchat": { "desc": "Real-time chat application built with Next.js.", "url": "https://github.com/sarthakagrawal927/linkchat.git" },
   "looptv": { "desc": "TV-like app for YouTube curated channels.", "url": "https://github.com/sarthakagrawal927/looptv.git" },
   "open-historia": { "desc": "Interactive historical timeline and storytelling platform.", "url": "https://github.com/sarthakagrawal927/open-historia.git" },
-  "personalsite": { "desc": "Personal blog and portfolio powered by Next.js.", "url": "https://github.com/sarthakagrawal927/personalsite.git" },
   "reader": { "desc": "Web Annotator — Document reading and annotation tool.", "url": "https://github.com/sarthakagrawal927/reader.git" },
   "resume-tailor": { "desc": "RolePatch — AI-powered resume tailoring system.", "url": "git@github.com:sarthakagrawal927/resume-tailor.git" },
   "saas-maker": { "desc": "Foundry — The Industrial Software Factory for Project Fleets.", "url": "https://github.com/sarthakagrawal927/saas-maker.git" },
