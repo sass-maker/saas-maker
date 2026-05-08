@@ -18,11 +18,15 @@ function commandTemplateLabel(agent, agentCommand) {
   return agent || 'codex';
 }
 
-function detectCostHint(agent, template) {
+export function detectCostHint(agent, template) {
   const haystack = `${agent ?? ''} ${template ?? ''}`.toLowerCase();
   return HIGH_COST_AGENT_HINTS.some((hint) => haystack.includes(hint))
-    ? 'high-cost agent profile detected - confirm task asked for it'
+    ? 'high-cost profile requested - verify task explicitly needs it'
     : 'cheap-default route';
+}
+
+function workspacePathForTask(task) {
+  return `.symphony/workspaces/${task.id.replace(/[^A-Za-z0-9._-]/g, '_')}`;
 }
 
 export function buildRunAuditEvent({
@@ -62,5 +66,47 @@ export function buildRunAuditEvent({
     agent_profile: agent ?? null,
     project_slug: task.project_slug ?? null,
     metadata,
+  };
+}
+
+export function buildRunLedgerRecord({
+  task,
+  agent,
+  agentCommand,
+  route,
+  pid,
+  terminalHint,
+  logHint,
+  tokenNote,
+  extra,
+} = {}) {
+  if (!task?.id) throw new Error('Symphony run ledger record needs a task with id');
+
+  const workspacePath = workspacePathForTask(task);
+  const template = commandTemplateLabel(agent, agentCommand);
+  const resolvedAgent = agent ?? route?.agent ?? null;
+  const costNote = detectCostHint(resolvedAgent, agentCommand || template);
+
+  return {
+    task_id: task.id,
+    project_slug: task.project_slug ?? null,
+    agent_profile: resolvedAgent,
+    model_profile: resolvedAgent,
+    command_template: template,
+    pid: typeof pid === 'number' && Number.isFinite(pid) ? pid : null,
+    status: 'started',
+    workspace_path: workspacePath,
+    prompt_path: `${workspacePath}/prompt.md`,
+    terminal_hint: terminalHint ?? 'local shell command',
+    log_hint: logHint ?? null,
+    cost_note: costNote,
+    token_note: tokenNote ?? null,
+    metadata: {
+      route_label: route?.label ?? null,
+      route_reason: route?.reason ?? null,
+      priority: task.priority ?? null,
+      task_type: task.task_type ?? null,
+      ...(extra && typeof extra === 'object' ? extra : {}),
+    },
   };
 }

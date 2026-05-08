@@ -1104,6 +1104,30 @@
         }
       }
     },
+    "/v1/symphony/runs": {
+      "get": {
+        "tags": [
+          "symphony"
+        ],
+        "summary": "GET /v1/symphony/runs",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "symphony"
+        ],
+        "summary": "POST /v1/symphony/runs",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/v1/tasks": {
       "get": {
         "tags": [

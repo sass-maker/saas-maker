@@ -5,6 +5,7 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { findNextTask, isTaskBlocked, sortTasksRunnableFirst, normalizeDependencies } from './symphony-tasks.mjs';
 import {
+  buildRunLedgerRecord,
   buildRunAuditEvent,
   DISPATCH_AUDIT_ACTION,
   PICK_AUDIT_ACTION,
@@ -86,6 +87,7 @@ function parseArgs(argv) {
     json: false,
     commands: false,
     dispatch: null,
+    ids: [],
     watch: false,
     id: null,
     title: null,
@@ -129,7 +131,10 @@ function parseArgs(argv) {
     else if (arg === '--help' || arg === '-h') {
       printHelp();
       process.exit(0);
-    } else if (!args.id && ['claim', 'done', 'reopen', 'dispatch', 'delete', 'audit'].includes(args.command)) {
+    } else if (args.command === 'dispatch') {
+      args.ids.push(arg);
+      args.id ||= arg;
+    } else if (!args.id && ['claim', 'done', 'reopen', 'delete', 'audit'].includes(args.command)) {
       args.id = arg;
     } else if (args.command === 'create') {
       args.title = args.title ? `${args.title} ${arg}` : arg;
@@ -147,6 +152,7 @@ Usage:
   pnpm symphony                         Pull production tasks and list by status
   pnpm symphony --commands              Include isolated agent commands
   pnpm symphony dispatch ID             Print one task's agent command
+  pnpm symphony dispatch ID ID ...      Print batch commands, routed at task level
   pnpm symphony dispatch ID --agent claude
   pnpm symphony dispatch ID --agent codex-work
   pnpm symphony dispatch ID --agent-command 'my-agent run --prompt-file {promptFile}'
@@ -394,6 +400,19 @@ async function recordAudit(args, event) {
   }
 }
 
+async function recordRun(args, record) {
+  try {
+    await apiRequest(args, '/v1/symphony/runs', {
+      method: 'POST',
+      body: JSON.stringify(record),
+    });
+  } catch (error) {
+    if (process.env.SYMPHONY_AUDIT_DEBUG) {
+      console.error(`Failed to record Symphony run ledger entry: ${error.message}`);
+    }
+  }
+}
+
 async function fetchAudit(args) {
   const params = new URLSearchParams();
   if (args.id) params.set('task_id', args.id);
@@ -480,17 +499,32 @@ async function runOnce(args) {
   args.memory = await loadPromptMemory(args);
 
   if (args.dispatch || args.command === 'dispatch') {
-    const id = args.dispatch ?? args.id;
-    const task = findTask(tasks, id);
-    await recordAudit(args, buildRunAuditEvent({
-      task,
-      action: DISPATCH_AUDIT_ACTION,
-      actorSource: 'local-cli',
-      agent: args.agent,
-      agentCommand: args.agentCommand,
-      note: 'CLI dispatch - printed shell command',
-    }));
-    console.log(buildCommand(task, args));
+    const ids = args.dispatch ? [args.dispatch] : args.ids;
+    if (ids.length === 0) throw new Error('Task id or id prefix is required.');
+    const batch = ids.map((id) => findTask(tasks, id));
+    for (const task of batch) assertDispatchable(task, tasks);
+    for (const task of batch) {
+      await recordRun(args, buildRunLedgerRecord({
+        task,
+        agent: args.agent,
+        agentCommand: args.agentCommand,
+        terminalHint: batch.length > 1 ? 'pnpm symphony batch dispatch printed command' : 'pnpm symphony dispatch printed command',
+      }));
+      await recordAudit(args, buildRunAuditEvent({
+        task,
+        action: DISPATCH_AUDIT_ACTION,
+        actorSource: 'local-cli',
+        agent: args.agent,
+        agentCommand: args.agentCommand,
+        note: batch.length > 1 ? 'CLI batch dispatch - printed shell command' : 'CLI dispatch - printed shell command',
+      }));
+    }
+    const commands = batch.map((task) => buildCommand(task, args));
+    if (args.json) {
+      console.log(JSON.stringify(batch.map((task, index) => ({ task, command: commands[index] })), null, 2));
+      return;
+    }
+    console.log(commands.join('\n\n'));
     return;
   }
 
@@ -506,6 +540,17 @@ function findTask(tasks, id) {
   ));
   if (!task) throw new Error(`Task not found for id prefix: ${id}`);
   return task;
+}
+
+function assertDispatchable(task, tasks) {
+  if (task.status === 'done') {
+    throw new Error(`Task ${shortId(task.id)} is done; reopen it before dispatch.`);
+  }
+  if (isTaskBlocked(task, tasks)) {
+    const deps = normalizeDependencies(task);
+    const suffix = deps.length ? ` Waiting on: ${deps.map((id) => shortId(id)).join(', ')}` : '';
+    throw new Error(`Task ${shortId(task.id)} is blocked by unfinished prerequisites.${suffix}`);
+  }
 }
 
 function pickNextTask(tasks, args) {
@@ -536,6 +581,12 @@ async function pickTask(args) {
   const pickedTask = payload.data ?? { ...task, status: 'in_progress' };
   await fetchTasks(args);
   const command = buildCommand(pickedTask, args);
+  await recordRun(args, buildRunLedgerRecord({
+    task: pickedTask,
+    agent: args.agent,
+    agentCommand: args.agentCommand,
+    terminalHint: 'pnpm symphony pick claimed task and printed command',
+  }));
   await recordAudit(args, buildRunAuditEvent({
     task: pickedTask,
     action: PICK_AUDIT_ACTION,

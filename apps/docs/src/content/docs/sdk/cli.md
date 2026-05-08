@@ -77,6 +77,16 @@ fnd api POST /v1/symphony/audit --auth session \
   --body '{"action":"task_dispatched","actor_source":"local-cli","agent_profile":"gemini"}'
 ```
 
+## 📒 Symphony Run Ledger
+
+Inspect durable local task-run start records with agent, pid, command template, and cost notes.
+
+```bash
+fnd api GET /v1/symphony/runs --auth session --output table
+fnd api POST /v1/symphony/runs --auth session \
+  --body '{"task_id":"<taskId>","command_template":"gemini","agent_profile":"gemini","cost_note":"cheap-default route"}'
+```
+
 ## 🤖 Autonomous Maintenance
 
 Run the factory on auto-pilot.

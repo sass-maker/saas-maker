@@ -7,6 +7,8 @@ const mockDb = vi.hoisted(() => ({
   deleteTask: vi.fn(),
   createSymphonyAuditEvent: vi.fn(),
   listSymphonyAuditEvents: vi.fn(),
+  createSymphonyRun: vi.fn(),
+  listSymphonyRuns: vi.fn(),
   getSymphonyMemory: vi.fn(),
   upsertSymphonyMemory: vi.fn(),
 }));
@@ -92,6 +94,29 @@ beforeEach(() => {
   }));
   mockDb.listSymphonyAuditEvents.mockReset();
   mockDb.listSymphonyAuditEvents.mockResolvedValue([]);
+  mockDb.createSymphonyRun.mockReset();
+  mockDb.createSymphonyRun.mockImplementation(async (owner_id: string, input: any) => ({
+    id: 'run-1',
+    owner_id,
+    task_id: input.task_id ?? null,
+    project_slug: input.project_slug ?? null,
+    agent_profile: input.agent_profile ?? null,
+    model_profile: input.model_profile ?? null,
+    command_template: input.command_template,
+    pid: input.pid ?? null,
+    status: input.status ?? 'started',
+    workspace_path: input.workspace_path ?? null,
+    prompt_path: input.prompt_path ?? null,
+    terminal_hint: input.terminal_hint ?? null,
+    log_hint: input.log_hint ?? null,
+    cost_note: input.cost_note ?? null,
+    token_note: input.token_note ?? null,
+    metadata: JSON.stringify(input.metadata ?? {}),
+    started_at: '2026-05-02 00:00:00',
+    created_at: '2026-05-02 00:00:00',
+  }));
+  mockDb.listSymphonyRuns.mockReset();
+  mockDb.listSymphonyRuns.mockResolvedValue([]);
   mockDb.getSymphonyMemory.mockReset();
   mockDb.getSymphonyMemory.mockResolvedValue(null);
   mockDb.upsertSymphonyMemory.mockReset();
@@ -264,5 +289,56 @@ describe('Symphony audit API', () => {
       actor_source: 'local-cli',
       agent_profile: 'claude',
     }));
+  });
+});
+
+describe('Symphony run ledger API', () => {
+  it('GET /v1/symphony/runs lists run records', async () => {
+    const res = await request('/v1/symphony/runs?task_id=task-1&limit=10', {
+      headers: { Authorization: 'Bearer test-session' },
+    });
+
+    expect(res.status).toBe(200);
+    expect(mockDb.listSymphonyRuns).toHaveBeenCalledWith('user-1', { task_id: 'task-1', limit: 10 });
+  });
+
+  it('POST /v1/symphony/runs records task start metadata', async () => {
+    const res = await request('/v1/symphony/runs', {
+      method: 'POST',
+      headers: { Authorization: 'Bearer test-session', 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        task_id: 'task-1',
+        project_slug: 'saas-maker',
+        agent_profile: 'codex',
+        model_profile: 'codex',
+        command_template: 'codex',
+        pid: 1234,
+        workspace_path: '.symphony/workspaces/task-1',
+        prompt_path: '.symphony/workspaces/task-1/prompt.md',
+        cost_note: 'cheap-default route',
+        metadata: { route_label: 'Codex' },
+      }),
+    });
+
+    expect(res.status).toBe(201);
+    expect(mockDb.createSymphonyRun).toHaveBeenCalledWith('user-1', expect.objectContaining({
+      task_id: 'task-1',
+      agent_profile: 'codex',
+      command_template: 'codex',
+      pid: 1234,
+      cost_note: 'cheap-default route',
+      metadata: { route_label: 'Codex' },
+    }));
+  });
+
+  it('POST /v1/symphony/runs requires a command template', async () => {
+    const res = await request('/v1/symphony/runs', {
+      method: 'POST',
+      headers: { Authorization: 'Bearer test-session', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ task_id: 'task-1' }),
+    });
+
+    expect(res.status).toBe(400);
+    expect(mockDb.createSymphonyRun).not.toHaveBeenCalled();
   });
 });

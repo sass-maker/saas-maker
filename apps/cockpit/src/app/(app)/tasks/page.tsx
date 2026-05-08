@@ -20,6 +20,7 @@ export default async function TasksPage() {
 
   let tasks: any[] = [];
   let projects: any[] = [];
+  let runs: any[] = [];
   let memory = '';
   const loadErrors: string[] = [];
   const manifestProjects = getManifestProjectSlugs();
@@ -38,6 +39,13 @@ export default async function TasksPage() {
   } catch (error) {
     loadErrors.push(`Projects failed to load: ${error instanceof Error ? error.message : 'Unknown error'}`);
     projects = [];
+  }
+
+  try {
+    const res = await apiFetchAuthed<{ data: any[] }>('/v1/symphony/runs?limit=200');
+    runs = res.data ?? [];
+  } catch {
+    runs = [];
   }
 
   try {
@@ -69,6 +77,7 @@ export default async function TasksPage() {
       ) : null}
       <TaskBoard
         initialTasks={tasks}
+        initialRuns={runs}
         projectSlugs={Array.from(new Set([...manifestProjects, ...projects])).sort()}
         initialMemory={memory}
         isLocal={isLocal}

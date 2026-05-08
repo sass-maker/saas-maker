@@ -128,3 +128,14 @@ Pure parsing/dedupe/payload helpers live in
 `scripts/lib/fleet-failure-importer.mjs` and are unit tested in
 `tests/scripts/fleet-failure-importer.test.ts`; tests never shell out to
 `gh`.
+
+## Fleet weekly workflow normalizer
+
+Use the normalizer before sweeping failures when the noisy surface is
+`.github/workflows/weekly.yml` drift. It checks each local fleet repo and only
+rewrites the caller workflow when `--write` is passed.
+
+```bash
+pnpm symphony:normalize-weekly --json
+pnpm symphony:normalize-weekly --write --project anime_list
+```

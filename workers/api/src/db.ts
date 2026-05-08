@@ -97,6 +97,27 @@ export interface SymphonyAuditLogRow {
   created_at: string;
 }
 
+export interface SymphonyRunRow {
+  id: string;
+  owner_id: string;
+  task_id: string | null;
+  project_slug: string | null;
+  agent_profile: string | null;
+  model_profile: string | null;
+  command_template: string;
+  pid: number | null;
+  status: string;
+  workspace_path: string | null;
+  prompt_path: string | null;
+  terminal_hint: string | null;
+  log_hint: string | null;
+  cost_note: string | null;
+  token_note: string | null;
+  metadata: string;
+  started_at: string;
+  created_at: string;
+}
+
 export interface FleetMetadataRow {
   id: string;
   owner_id: string;
@@ -1845,6 +1866,72 @@ export function getDb(d1: D1Database): FeedbackDatabase {
         `SELECT * FROM symphony_audit_log WHERE ${conditions.join(' AND ')} ORDER BY created_at DESC LIMIT ?`
       ).bind(...values).all();
       return results as unknown as SymphonyAuditLogRow[];
+    },
+
+    async createSymphonyRun(ownerId: string, input: {
+      task_id?: string | null;
+      project_slug?: string | null;
+      agent_profile?: string | null;
+      model_profile?: string | null;
+      command_template: string;
+      pid?: number | null;
+      status?: string;
+      workspace_path?: string | null;
+      prompt_path?: string | null;
+      terminal_hint?: string | null;
+      log_hint?: string | null;
+      cost_note?: string | null;
+      token_note?: string | null;
+      metadata?: Record<string, unknown>;
+      started_at?: string | null;
+    }): Promise<SymphonyRunRow> {
+      const id = crypto.randomUUID();
+      const metadata = JSON.stringify(input.metadata ?? {});
+      await d1.prepare(
+        `INSERT INTO symphony_runs (
+          id, owner_id, task_id, project_slug, agent_profile, model_profile,
+          command_template, pid, status, workspace_path, prompt_path,
+          terminal_hint, log_hint, cost_note, token_note, metadata, started_at
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, COALESCE(?, datetime('now')))`
+      ).bind(
+        id,
+        ownerId,
+        input.task_id ?? null,
+        input.project_slug ?? null,
+        input.agent_profile ?? null,
+        input.model_profile ?? null,
+        input.command_template,
+        input.pid ?? null,
+        input.status ?? 'started',
+        input.workspace_path ?? null,
+        input.prompt_path ?? null,
+        input.terminal_hint ?? null,
+        input.log_hint ?? null,
+        input.cost_note ?? null,
+        input.token_note ?? null,
+        metadata,
+        input.started_at ?? null,
+      ).run();
+      const row = await d1.prepare(
+        `SELECT * FROM symphony_runs WHERE id = ?`
+      ).bind(id).first();
+      return row as unknown as SymphonyRunRow;
+    },
+
+    async listSymphonyRuns(ownerId: string, input: { task_id?: string; limit?: number } = {}): Promise<SymphonyRunRow[]> {
+      const limit = Math.min(Math.max(input.limit ?? 50, 1), 200);
+      const conditions = ['owner_id = ?'];
+      const values: unknown[] = [ownerId];
+      if (input.task_id) {
+        conditions.push('task_id = ?');
+        values.push(input.task_id);
+      }
+      values.push(limit);
+      const { results } = await d1.prepare(
+        `SELECT * FROM symphony_runs WHERE ${conditions.join(' AND ')} ORDER BY started_at DESC, created_at DESC LIMIT ?`
+      ).bind(...values).all();
+      return results as unknown as SymphonyRunRow[];
     },
 
     // --- Symphony Memory ---

@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { apiFetchClient, getClientToken } from '@/lib/api-client';
-import { buildSymphonyPrompt, chooseSymphonyAgent } from '@/lib/symphony';
+import { buildSymphonyBatchPrompt, buildSymphonyPrompt, buildSymphonyRunRecord, chooseSymphonyAgent } from '@/lib/symphony';
 import { cn } from '@/lib/utils';
 
 export interface TaskRow {
@@ -25,6 +25,26 @@ export interface TaskRow {
   dependencies?: string[];
   created_at: string;
   updated_at: string;
+}
+
+export interface SymphonyRunRow {
+  id?: string;
+  task_id: string | null;
+  project_slug: string | null;
+  agent_profile: string | null;
+  model_profile: string | null;
+  command_template: string;
+  pid: number | null;
+  status: string;
+  workspace_path: string | null;
+  prompt_path: string | null;
+  terminal_hint: string | null;
+  log_hint: string | null;
+  cost_note: string | null;
+  token_note: string | null;
+  metadata?: string | Record<string, unknown>;
+  started_at: string;
+  created_at?: string;
 }
 
 function getDependencies(task: TaskRow): string[] {
@@ -120,18 +140,32 @@ function taskPreview(description: string | null) {
   return description?.split(/\s+Source:\s+/)[0]?.trim() ?? '';
 }
 
+function formatRunTime(value: string) {
+  const time = new Date(value).getTime();
+  if (!Number.isFinite(time)) return value;
+  return new Date(time).toLocaleString(undefined, {
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+}
+
 export function TaskBoard({
   initialTasks,
+  initialRuns,
   projectSlugs,
   initialMemory,
   isLocal,
 }: {
   initialTasks: TaskRow[];
+  initialRuns?: SymphonyRunRow[];
   projectSlugs: string[];
   initialMemory: string;
   isLocal: boolean;
 }) {
   const [tasks, setTasks] = useState<TaskRow[]>(initialTasks);
+  const [runs, setRuns] = useState<SymphonyRunRow[]>(initialRuns ?? []);
   const [memory, setMemory] = useState(initialMemory);
   const [toast, setToast] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -145,6 +179,7 @@ export function TaskBoard({
   const [projectFilter, setProjectFilter] = useState(ALL_PROJECTS);
   const [priorityFilter, setPriorityFilter] = useState(ALL_PRIORITIES);
   const [showDone, setShowDone] = useState(false);
+  const [selectedTaskIds, setSelectedTaskIds] = useState<string[]>([]);
 
   const allProjectSlugs = Array.from(
     new Set([
@@ -154,6 +189,12 @@ export function TaskBoard({
   ).sort((a, b) => a.localeCompare(b));
 
   const tasksById = new Map(tasks.map(task => [task.id, task]));
+  const latestRunByTaskId = new Map<string, SymphonyRunRow>();
+  for (const run of runs) {
+    if (run.task_id && !latestRunByTaskId.has(run.task_id)) {
+      latestRunByTaskId.set(run.task_id, run);
+    }
+  }
 
   const filteredTasks = sortTasksByPriority(
     tasks.filter(task => {
@@ -165,6 +206,13 @@ export function TaskBoard({
       return matchesProject && matchesPriority && matchesStatus;
     })
   ).sort((a, b) => Number(isTaskBlocked(a, tasksById)) - Number(isTaskBlocked(b, tasksById)));
+
+  const selectedTasks = selectedTaskIds
+    .map(id => tasksById.get(id))
+    .filter((task): task is TaskRow => Boolean(task));
+
+  const runnableSelectedTasks = selectedTasks.filter(task => task.status === 'todo' && !isTaskBlocked(task, tasksById));
+  const visibleRunnableTasks = filteredTasks.filter(task => task.status === 'todo' && !isTaskBlocked(task, tasksById));
 
   const showToast = useCallback((msg: string) => {
     setToast(msg);
@@ -192,6 +240,22 @@ export function TaskBoard({
   const openRun = (task: TaskRow) => {
     setRunTask(task);
     setRunInstructions('');
+  };
+
+  const toggleTaskSelection = (task: TaskRow, selected: boolean) => {
+    if (task.status !== 'todo' || isTaskBlocked(task, tasksById)) return;
+    setSelectedTaskIds(prev => {
+      if (selected) return prev.includes(task.id) ? prev : [...prev, task.id];
+      return prev.filter(id => id !== task.id);
+    });
+  };
+
+  const selectVisibleRunnableTasks = () => {
+    setSelectedTaskIds(visibleRunnableTasks.map(task => task.id));
+  };
+
+  const clearSelectedTasks = () => {
+    setSelectedTaskIds([]);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -332,8 +396,19 @@ export function TaskBoard({
         body: JSON.stringify({ task, memory, additionalInstructions }),
       });
       if (!res.ok) throw new Error(await res.text());
-      const result = await res.json() as { route?: { label?: string } };
+      const result = await res.json() as { route?: { agent?: string; label?: string }; runs?: Array<{ taskId: string; pid?: number; route?: { agent?: string } }> };
       showToast(`${result.route?.label ?? 'Agent'} started`);
+      const started = result.runs?.find(run => run.taskId === task.id);
+      setRuns(prev => [{
+        ...buildSymphonyRunRecord(task, {
+          agent: started?.route?.agent ?? result.route?.agent,
+          memory,
+          additionalInstructions,
+          pid: started?.pid,
+          terminalHint: 'cockpit local run',
+        }),
+        started_at: new Date().toISOString(),
+      }, ...prev]);
       setRunTask(null);
       setRunInstructions('');
       if (task.status === 'todo') {
@@ -341,6 +416,66 @@ export function TaskBoard({
       }
     } catch {
       showToast('Failed to start agent');
+    } finally {
+      setStartingRun(false);
+    }
+  };
+
+  const handleBatchDispatch = async () => {
+    if (runnableSelectedTasks.length === 0) {
+      showToast('Select runnable todo tasks first');
+      return;
+    }
+    if (runnableSelectedTasks.length !== selectedTasks.length) {
+      showToast('Blocked or non-todo tasks were skipped');
+    }
+
+    setStartingRun(true);
+    if (!isLocal) {
+      try {
+        await navigator.clipboard.writeText(buildSymphonyBatchPrompt(runnableSelectedTasks, { memory }));
+        showToast(`${runnableSelectedTasks.length} prompts copied`);
+      } catch {
+        showToast('Copy failed');
+      } finally {
+        setStartingRun(false);
+      }
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/tasks/run', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tasks: runnableSelectedTasks, memory }),
+      });
+      if (!res.ok) throw new Error(await res.text());
+      const result = await res.json() as { runs?: Array<{ taskId: string; pid?: number; route?: { agent?: string; label?: string } }> };
+      const labels = Array.from(new Set((result.runs ?? []).map(run => run.route?.label).filter(Boolean)));
+      showToast(`${runnableSelectedTasks.length} ${runnableSelectedTasks.length === 1 ? 'agent' : 'agents'} started${labels.length ? `: ${labels.join(', ')}` : ''}`);
+      setRuns(prev => [
+        ...runnableSelectedTasks.map(task => {
+          const started = result.runs?.find(run => run.taskId === task.id);
+          return {
+            ...buildSymphonyRunRecord(task, {
+              agent: started?.route?.agent,
+              memory,
+              pid: started?.pid,
+              terminalHint: 'cockpit batch local run',
+            }),
+            started_at: new Date().toISOString(),
+          };
+        }),
+        ...prev,
+      ]);
+      setTasks(prev => prev.map(task => (
+        runnableSelectedTasks.some(selected => selected.id === task.id)
+          ? { ...task, status: 'in_progress' }
+          : task
+      )));
+      setSelectedTaskIds([]);
+    } catch {
+      showToast('Failed to start selected agents');
     } finally {
       setStartingRun(false);
     }
@@ -422,9 +557,34 @@ export function TaskBoard({
         </div>
       </div>
 
+      <div className="flex flex-col gap-2 rounded-lg border bg-card p-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0">
+          <div className="text-sm font-medium text-foreground">
+            {runnableSelectedTasks.length} runnable selected
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Batch dispatch keeps routing per task and skips blocked or completed work.
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <Button type="button" variant="outline" size="sm" onClick={selectVisibleRunnableTasks} disabled={visibleRunnableTasks.length === 0}>
+            Select runnable
+          </Button>
+          <Button type="button" variant="ghost" size="sm" onClick={clearSelectedTasks} disabled={selectedTaskIds.length === 0}>
+            Clear
+          </Button>
+          <Button type="button" size="sm" onClick={handleBatchDispatch} disabled={startingRun || runnableSelectedTasks.length === 0}>
+            <Bot className="h-4 w-4" />
+            {startingRun ? 'Starting...' : isLocal ? 'Start Selected' : 'Copy Selected'}
+          </Button>
+        </div>
+      </div>
+
       <TaskList
         tasks={filteredTasks}
         tasksById={tasksById}
+        selectedTaskIds={selectedTaskIds}
+        onSelectionChange={toggleTaskSelection}
         onEdit={openEdit}
         onDelete={handleDelete}
         onRun={handleDispatch}
@@ -432,6 +592,7 @@ export function TaskBoard({
         onStatusChange={handleStatusChange}
         onPriorityChange={handlePriorityChange}
         onTypeChange={handleTypeChange}
+        latestRunByTaskId={latestRunByTaskId}
         isLocal={isLocal}
       />
 
@@ -629,6 +790,8 @@ export function TaskBoard({
 function TaskList({
   tasks,
   tasksById,
+  selectedTaskIds,
+  onSelectionChange,
   onEdit,
   onDelete,
   onRun,
@@ -636,10 +799,13 @@ function TaskList({
   onStatusChange,
   onPriorityChange,
   onTypeChange,
+  latestRunByTaskId,
   isLocal,
 }: {
   tasks: TaskRow[];
   tasksById: Map<string, TaskRow>;
+  selectedTaskIds: string[];
+  onSelectionChange: (t: TaskRow, selected: boolean) => void;
   onEdit: (t: TaskRow) => void;
   onDelete: (t: TaskRow) => void;
   onRun: (t: TaskRow) => void;
@@ -647,6 +813,7 @@ function TaskList({
   onStatusChange: (t: TaskRow, s: TaskRow['status']) => void;
   onPriorityChange: (t: TaskRow, p: TaskRow['priority']) => void;
   onTypeChange: (t: TaskRow, p: TaskRow['task_type']) => void;
+  latestRunByTaskId: Map<string, SymphonyRunRow>;
   isLocal: boolean;
 }) {
   if (tasks.length === 0) {
@@ -662,6 +829,7 @@ function TaskList({
       {tasks.map(task => {
         const preview = taskPreview(task.description);
         const blocked = isTaskBlocked(task, tasksById);
+        const latestRun = latestRunByTaskId.get(task.id);
         const metadataPillClass = 'inline-flex h-7 items-center rounded-full border border-border/60 bg-background/35 px-3 text-xs font-normal text-muted-foreground shadow-none';
         const metadataSelectClass = cn(
           metadataPillClass,
@@ -670,8 +838,19 @@ function TaskList({
         return (
           <article
             key={task.id}
-            className="group grid min-h-[5rem] grid-cols-[2.25rem_minmax(0,1fr)_5.5rem] items-center gap-0 px-2 py-3 transition-colors hover:bg-muted/20 max-sm:grid-cols-[2rem_minmax(0,1fr)]"
+            className="group grid min-h-[5rem] grid-cols-[2rem_2.25rem_minmax(0,1fr)_5.5rem] items-center gap-0 px-2 py-3 transition-colors hover:bg-muted/20 max-sm:grid-cols-[2rem_2rem_minmax(0,1fr)]"
           >
+            <div className="flex items-center justify-center">
+              <input
+                type="checkbox"
+                checked={selectedTaskIds.includes(task.id)}
+                disabled={task.status !== 'todo' || blocked}
+                onChange={event => onSelectionChange(task, event.target.checked)}
+                aria-label={`Select ${task.title} for batch dispatch`}
+                title={blocked ? 'Blocked by unfinished prerequisites' : task.status !== 'todo' ? 'Only todo tasks can be batch dispatched' : 'Select for batch dispatch'}
+                className="h-4 w-4 rounded border-border text-primary disabled:cursor-not-allowed disabled:opacity-35"
+              />
+            </div>
             <div className="flex items-center justify-center">
               <span
                 className={cn('h-4 w-4 rounded-full border-2', STATUS_DOT_CLASS[task.status])}
@@ -730,6 +909,26 @@ function TaskList({
                   <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3 w-3 -translate-y-1/2 text-muted-foreground opacity-35" />
                 </span>
               </div>
+              {latestRun && (
+                <div className="mt-1 flex min-w-0 flex-wrap items-center gap-1 text-[11px] leading-5 text-muted-foreground">
+                  <span className="font-medium text-foreground/80">Last run</span>
+                  <span>{formatRunTime(latestRun.started_at)}</span>
+                  <span>via {latestRun.agent_profile ?? latestRun.command_template}</span>
+                  {latestRun.pid ? <span>pid {latestRun.pid}</span> : null}
+                  {latestRun.cost_note ? (
+                    <span
+                      className={cn(
+                        'rounded-full border px-2 py-0.5',
+                        latestRun.cost_note.includes('high-cost')
+                          ? 'border-amber-500/50 bg-amber-500/10 text-amber-600 dark:text-amber-300'
+                          : 'border-emerald-500/40 bg-emerald-500/10 text-emerald-600 dark:text-emerald-300'
+                      )}
+                    >
+                      {latestRun.cost_note}
+                    </span>
+                  ) : null}
+                </div>
+              )}
             </div>
             <div className="flex min-w-0 items-center justify-end gap-1 max-sm:hidden">
               {task.status === 'todo' && (

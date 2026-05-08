@@ -111,3 +111,24 @@ export const symphony_audit_log = sqliteTable('symphony_audit_log', {
   metadata: text('metadata').notNull().default('{}'),
   created_at: text('created_at').notNull().default(sql`(datetime('now'))`),
 });
+
+export const symphony_runs = sqliteTable('symphony_runs', {
+  id: text('id').primaryKey(),
+  owner_id: text('owner_id').notNull().references(() => users.id),
+  task_id: text('task_id'),
+  project_slug: text('project_slug'),
+  agent_profile: text('agent_profile'),
+  model_profile: text('model_profile'),
+  command_template: text('command_template').notNull(),
+  pid: integer('pid'),
+  status: text('status').notNull().default('started'),
+  workspace_path: text('workspace_path'),
+  prompt_path: text('prompt_path'),
+  terminal_hint: text('terminal_hint'),
+  log_hint: text('log_hint'),
+  cost_note: text('cost_note'),
+  token_note: text('token_note'),
+  metadata: text('metadata').notNull().default('{}'),
+  started_at: text('started_at').notNull().default(sql`(datetime('now'))`),
+  created_at: text('created_at').notNull().default(sql`(datetime('now'))`),
+});
