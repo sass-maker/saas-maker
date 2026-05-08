@@ -20,10 +20,15 @@ jobs:
         with:
           node-version: '${nodeVersion}'
 
-      - uses: pnpm/action-setup@v4
+      - name: Prepare pnpm
         if: hashFiles('pnpm-lock.yaml') != ''
-        with:
-          version: latest
+        run: |
+          corepack enable
+          if node -e "const pm=require('./package.json').packageManager||''; process.exit(pm.startsWith('pnpm@')?0:1)"; then
+            corepack install
+          else
+            corepack prepare pnpm@10.32.1 --activate
+          fi
 
       - name: Install dependencies
         run: |

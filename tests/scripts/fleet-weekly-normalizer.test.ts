@@ -13,6 +13,7 @@ describe('buildWeeklyWorkflow', () => {
 
     expect(workflow).toContain('runs-on: ubuntu-latest');
     expect(workflow).toContain('run_script lint');
+    expect(workflow).toContain('corepack install');
     expect(workflow).toContain('pnpm install --frozen-lockfile --ignore-scripts');
     expect(workflow).toContain("node-version: '22'");
   });
