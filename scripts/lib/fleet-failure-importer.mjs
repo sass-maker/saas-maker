@@ -8,6 +8,9 @@
  */
 
 const TASK_TITLE_PREFIX = '[fleet-failure]';
+const DEFAULT_IGNORED_WORKFLOW_NAMES = new Set([
+  'Foundry Weekly Quality Check (reusable)',
+]);
 
 export const FAILURE_PRIORITY = {
   workflow: 'high',
@@ -107,6 +110,7 @@ export function buildCurrentFailuresFromRuns(project, runs) {
   if (!project || !Array.isArray(runs)) return [];
   const newestBySurface = new Map();
   for (const run of runs) {
+    if (isIgnoredWorkflowRun(run)) continue;
     const surface = runSurface(run);
     const existing = newestBySurface.get(surface);
     if (!existing || runTime(run) > runTime(existing)) {
@@ -117,6 +121,11 @@ export function buildCurrentFailuresFromRuns(project, runs) {
     .filter(isFailedRun)
     .map((run) => buildFailureFromRun(project, run))
     .filter(Boolean);
+}
+
+export function isIgnoredWorkflowRun(run) {
+  const names = [run?.workflowName, run?.name].filter(Boolean);
+  return names.some((name) => DEFAULT_IGNORED_WORKFLOW_NAMES.has(String(name)));
 }
 
 export function buildFailureFromDeployment(project, deployment) {

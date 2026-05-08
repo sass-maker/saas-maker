@@ -204,6 +204,26 @@ describe('buildCurrentFailuresFromRuns', () => {
     expect(failures.map((failure) => failure.surface)).toEqual(['workflow:CI', 'workflow:Deploy']);
     expect(failures[0].url).toBe('new-failure');
   });
+
+  it('ignores retired reusable Foundry workflow surfaces', () => {
+    const failures = buildCurrentFailuresFromRuns(project, [
+      {
+        name: 'Foundry Weekly Quality Check (reusable)',
+        workflowName: 'Foundry Weekly Quality Check (reusable)',
+        conclusion: 'failure',
+        createdAt: '2026-05-01T00:00:00Z',
+        url: 'stale-reusable-failure',
+      },
+      {
+        name: 'Weekly Quality Check',
+        conclusion: 'failure',
+        createdAt: '2026-05-02T00:00:00Z',
+        url: 'real-weekly-failure',
+      },
+    ]);
+
+    expect(failures.map((failure) => failure.surface)).toEqual(['workflow:Weekly Quality Check']);
+  });
 });
 
 describe('buildTaskPayload + buildTaskPayloads', () => {
