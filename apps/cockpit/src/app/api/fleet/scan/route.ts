@@ -3,6 +3,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execSync } from 'node:child_process';
 import { isHiddenDashboardProject } from '@/lib/dashboard-projects';
+import { buildFleetCommandCenter } from '@/lib/fleet-health';
+import type { FleetHealthProject } from '@/lib/fleet-health';
 
 const cockpitPath = process.cwd();
 const rootPath = path.resolve(cockpitPath, '../..');
@@ -63,12 +65,19 @@ export async function GET() {
             try { execSync('fallow check --quiet', { cwd: projectPath, stdio: 'pipe' }); checks.health = true; } catch {}
           }
 
+          const projectType: FleetHealthProject['type'] = pkg.dependencies?.next
+            ? 'next'
+            : pkg.dependencies?.vite
+              ? 'vite'
+              : 'node';
+
           projects.push({
             name: pkg.name || entry.name,
             description: manifest[entry.name] || manifest[pkg.name] || "",
             path: projectPath,
             slug: entry.name,
-            type: pkg.dependencies?.next ? 'next' : pkg.dependencies?.vite ? 'vite' : 'node',
+            type: projectType,
+            isLegacy: !checks.config || !checks.ci,
             compliance: { score: Object.values(checks).filter(Boolean).length, total: 6, checks },
             lastModified: fs.statSync(projectPath).mtime,
           });
@@ -76,9 +85,14 @@ export async function GET() {
       }
     }
 
+    const fleet = projects.sort((a, b) => b.lastModified.getTime() - a.lastModified.getTime());
+    const commandCenter = buildFleetCommandCenter(fleet);
+
     return NextResponse.json({ 
-      fleet: projects.sort((a, b) => b.lastModified.getTime() - a.lastModified.getTime()),
+      fleet,
       count: projects.length,
+      health: commandCenter.health,
+      commandCenter,
       manifest // Send full manifest for editing
     });
   } catch (err) {
