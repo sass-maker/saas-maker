@@ -22,8 +22,22 @@ export interface TaskRow {
   status: 'todo' | 'in_progress' | 'done';
   priority: 'low' | 'medium' | 'high';
   task_type: 'feature' | 'bug' | 'chore' | 'docs' | 'research' | 'cleanup' | 'other';
+  dependencies?: string[];
   created_at: string;
   updated_at: string;
+}
+
+function getDependencies(task: TaskRow): string[] {
+  return Array.isArray(task.dependencies) ? task.dependencies : [];
+}
+
+function isTaskBlocked(task: TaskRow, byId: Map<string, TaskRow>): boolean {
+  const deps = getDependencies(task);
+  if (deps.length === 0) return false;
+  return deps.some(id => {
+    const prereq = byId.get(id);
+    return !prereq || prereq.status !== 'done';
+  });
 }
 
 const PRIORITY_DOT: Record<TaskRow['priority'], string> = {
@@ -139,6 +153,8 @@ export function TaskBoard({
     ])
   ).sort((a, b) => a.localeCompare(b));
 
+  const tasksById = new Map(tasks.map(task => [task.id, task]));
+
   const filteredTasks = sortTasksByPriority(
     tasks.filter(task => {
       const matchesProject =
@@ -148,7 +164,7 @@ export function TaskBoard({
       const matchesStatus = showDone || task.status !== 'done';
       return matchesProject && matchesPriority && matchesStatus;
     })
-  );
+  ).sort((a, b) => Number(isTaskBlocked(a, tasksById)) - Number(isTaskBlocked(b, tasksById)));
 
   const showToast = useCallback((msg: string) => {
     setToast(msg);
@@ -292,6 +308,10 @@ export function TaskBoard({
   };
 
   const handleDispatch = async (task: TaskRow, additionalInstructions = '') => {
+    if (isTaskBlocked(task, tasksById)) {
+      showToast('Task is blocked by unfinished prerequisites');
+      return;
+    }
     setStartingRun(true);
     if (!isLocal) {
       try {
@@ -404,6 +424,7 @@ export function TaskBoard({
 
       <TaskList
         tasks={filteredTasks}
+        tasksById={tasksById}
         onEdit={openEdit}
         onDelete={handleDelete}
         onRun={handleDispatch}
@@ -607,6 +628,7 @@ export function TaskBoard({
 
 function TaskList({
   tasks,
+  tasksById,
   onEdit,
   onDelete,
   onRun,
@@ -617,6 +639,7 @@ function TaskList({
   isLocal,
 }: {
   tasks: TaskRow[];
+  tasksById: Map<string, TaskRow>;
   onEdit: (t: TaskRow) => void;
   onDelete: (t: TaskRow) => void;
   onRun: (t: TaskRow) => void;
@@ -638,6 +661,7 @@ function TaskList({
     <div className="divide-y divide-border/35">
       {tasks.map(task => {
         const preview = taskPreview(task.description);
+        const blocked = isTaskBlocked(task, tasksById);
         const metadataPillClass = 'inline-flex h-7 items-center rounded-full border border-border/60 bg-background/35 px-3 text-xs font-normal text-muted-foreground shadow-none';
         const metadataSelectClass = cn(
           metadataPillClass,
@@ -659,6 +683,15 @@ function TaskList({
                 <h3 className="truncate text-base font-medium leading-6 text-foreground">
                   {task.title}
                 </h3>
+                {blocked && (
+                  <Badge
+                    variant="outline"
+                    className="border-amber-500/50 bg-amber-500/10 text-[10px] font-medium uppercase tracking-wide text-amber-600 dark:text-amber-300"
+                    title={`Blocked by: ${getDependencies(task).join(', ')}`}
+                  >
+                    Blocked
+                  </Badge>
+                )}
               </div>
               {preview && (
                 <p className="max-w-2xl truncate text-sm leading-5 text-muted-foreground">
@@ -707,10 +740,11 @@ function TaskList({
                   onClick={() => onRun(task)}
                   onContextMenu={event => {
                     event.preventDefault();
-                    onCustomizeRun(task);
+                    if (!blocked) onCustomizeRun(task);
                   }}
-                  title="Right-click to customize instructions before running"
-                  className="h-8 rounded-full px-3 text-sm text-muted-foreground opacity-80 hover:text-foreground hover:opacity-100"
+                  disabled={blocked}
+                  title={blocked ? 'Blocked by unfinished prerequisites' : 'Right-click to customize instructions before running'}
+                  className="h-8 rounded-full px-3 text-sm text-muted-foreground opacity-80 hover:text-foreground hover:opacity-100 disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   <Bot className="h-3.5 w-3.5" />
                   {isLocal ? 'Run' : 'Copy prompt'}

@@ -57,6 +57,7 @@ beforeEach(() => {
     priority: input.priority ?? 'medium',
     task_type: input.task_type ?? 'feature',
     size: input.size ?? 'm',
+    dependencies: input.dependencies ?? [],
     created_at: '2026-05-02 00:00:00',
     updated_at: '2026-05-02 00:00:00',
   }));
@@ -71,6 +72,7 @@ beforeEach(() => {
     priority: input.priority ?? 'medium',
     task_type: input.task_type ?? 'feature',
     size: input.size ?? 'm',
+    dependencies: input.dependencies ?? [],
     created_at: '2026-05-02 00:00:00',
     updated_at: '2026-05-02 00:00:00',
   }));
@@ -124,6 +126,61 @@ describe('Tasks API', () => {
       actor_source: 'api',
       project_slug: 'saas-maker',
     }));
+  });
+
+  it('POST /v1/tasks accepts dependency ids', async () => {
+    const res = await request('/v1/tasks', {
+      method: 'POST',
+      headers: { Authorization: 'Bearer test-session', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title: 'Blocked task', dependencies: ['prereq-1', 'prereq-2', '', 'prereq-1'] }),
+    });
+
+    expect(res.status).toBe(201);
+    expect(mockDb.createTask).toHaveBeenCalledWith('user-1', expect.objectContaining({
+      title: 'Blocked task',
+      dependencies: ['prereq-1', 'prereq-2'],
+    }));
+    const body = await res.json() as { data: { dependencies: string[] } };
+    expect(body.data.dependencies).toEqual(['prereq-1', 'prereq-2']);
+  });
+
+  it('POST /v1/tasks omits dependencies when missing', async () => {
+    const res = await request('/v1/tasks', {
+      method: 'POST',
+      headers: { Authorization: 'Bearer test-session', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title: 'Plain task' }),
+    });
+
+    expect(res.status).toBe(201);
+    expect(mockDb.createTask).toHaveBeenCalledWith('user-1', expect.objectContaining({
+      title: 'Plain task',
+      dependencies: undefined,
+    }));
+  });
+
+  it('PATCH /v1/tasks/:id forwards dependencies when provided', async () => {
+    const res = await request('/v1/tasks/task-1', {
+      method: 'PATCH',
+      headers: { Authorization: 'Bearer test-session', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ dependencies: ['prereq-1'] }),
+    });
+
+    expect(res.status).toBe(200);
+    expect(mockDb.updateTask).toHaveBeenCalledWith('task-1', 'user-1', expect.objectContaining({
+      dependencies: ['prereq-1'],
+    }));
+  });
+
+  it('PATCH /v1/tasks/:id leaves dependencies untouched when omitted', async () => {
+    const res = await request('/v1/tasks/task-1', {
+      method: 'PATCH',
+      headers: { Authorization: 'Bearer test-session', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: 'done' }),
+    });
+
+    expect(res.status).toBe(200);
+    const lastCall = mockDb.updateTask.mock.calls.at(-1)![2] as Record<string, unknown>;
+    expect(lastCall).not.toHaveProperty('dependencies');
   });
 
   it('PATCH /v1/tasks/:id records status audit events', async () => {

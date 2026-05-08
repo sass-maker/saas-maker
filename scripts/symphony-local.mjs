@@ -3,6 +3,12 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { findNextTask, isTaskBlocked, sortTasksRunnableFirst, normalizeDependencies } from './symphony-tasks.mjs';
+import {
+  buildRunAuditEvent,
+  DISPATCH_AUDIT_ACTION,
+  PICK_AUDIT_ACTION,
+} from './lib/symphony-audit.mjs';
 
 const STATUS_ORDER = ['todo', 'in_progress', 'done'];
 const LOCAL_STATE_DIR = path.join(process.cwd(), '.symphony');
@@ -144,8 +150,8 @@ Usage:
   pnpm symphony dispatch ID --agent claude
   pnpm symphony dispatch ID --agent codex-work
   pnpm symphony dispatch ID --agent-command 'my-agent run --prompt-file {promptFile}'
-  pnpm symphony pick --agent claude     Claim the next todo task and print its agent command
-  pnpm symphony pick --agent gemini     Claim the next todo task and print its agent command
+  pnpm symphony pick --agent claude     Claim the next runnable todo task (skips tasks with unfinished prerequisites)
+  pnpm symphony pick --agent gemini     Claim the next runnable todo task (skips tasks with unfinished prerequisites)
   pnpm symphony claim ID                Move a production task to in_progress
   pnpm symphony done ID                 Move a production task to done
   pnpm symphony reopen ID               Move a production task back to todo
@@ -446,7 +452,7 @@ function printTasks(tasks, args) {
   console.log(`Updated: ${timestamp}`);
 
   for (const status of STATUS_ORDER) {
-    const bucket = tasks.filter((task) => task.status === status);
+    const bucket = sortTasksRunnableFirst(tasks.filter((task) => task.status === status));
     console.log(`\n${status.toUpperCase()} (${bucket.length})`);
     if (bucket.length === 0) {
       console.log('  - none');
@@ -456,7 +462,12 @@ function printTasks(tasks, args) {
     for (const task of bucket) {
       const project = task.project_slug ?? 'saas-maker';
       const description = task.description ? ` — ${task.description.split('\n')[0]}` : '';
-      console.log(`  - [${shortId(task.id)}] ${task.priority} ${project}: ${task.title}${description}`);
+      const blockedTag = task.blocked ? ' [BLOCKED]' : '';
+      console.log(`  - [${shortId(task.id)}] ${task.priority} ${project}: ${task.title}${blockedTag}${description}`);
+      if (task.blocked) {
+        const deps = normalizeDependencies(task);
+        if (deps.length) console.log(`    waiting on: ${deps.map((id) => shortId(id)).join(', ')}`);
+      }
       if (args.commands) {
         console.log(`    ${buildCommand(task, args)}`);
       }
@@ -471,16 +482,14 @@ async function runOnce(args) {
   if (args.dispatch || args.command === 'dispatch') {
     const id = args.dispatch ?? args.id;
     const task = findTask(tasks, id);
-    await recordAudit(args, {
-      task_id: task.id,
-      action: 'task_dispatched',
-      actor_source: 'local-cli',
-      agent_profile: args.agent,
-      project_slug: task.project_slug ?? null,
-      metadata: {
-        command_template: args.agentCommand ? 'custom' : args.agent,
-      },
-    });
+    await recordAudit(args, buildRunAuditEvent({
+      task,
+      action: DISPATCH_AUDIT_ACTION,
+      actorSource: 'local-cli',
+      agent: args.agent,
+      agentCommand: args.agentCommand,
+      note: 'CLI dispatch - printed shell command',
+    }));
     console.log(buildCommand(task, args));
     return;
   }
@@ -499,27 +508,8 @@ function findTask(tasks, id) {
   return task;
 }
 
-function taskRank(task) {
-  const priorityRank = { high: 0, medium: 1, low: 2 };
-  return priorityRank[task.priority] ?? priorityRank.medium;
-}
-
-function findNextTask(tasks, args) {
-  const status = args.status ?? 'todo';
-  const candidates = tasks
-    .filter((task) => task.status === status)
-    .filter((task) => !args.project || task.project_slug === args.project)
-    .sort((a, b) => {
-      const priorityDelta = taskRank(a) - taskRank(b);
-      if (priorityDelta !== 0) return priorityDelta;
-      return String(a.created_at ?? '').localeCompare(String(b.created_at ?? ''));
-    });
-
-  if (candidates.length === 0) {
-    const projectHint = args.project ? ` for project ${args.project}` : '';
-    throw new Error(`No ${status} tasks available${projectHint}.`);
-  }
-  return candidates[0];
+function pickNextTask(tasks, args) {
+  return findNextTask(tasks, { status: args.status ?? 'todo', project: args.project ?? null });
 }
 
 async function updateTaskStatus(args, status) {
@@ -538,7 +528,7 @@ async function updateTaskStatus(args, status) {
 async function pickTask(args) {
   const tasks = await fetchTasks(args);
   args.memory = await loadPromptMemory(args);
-  const task = findNextTask(tasks, args);
+  const task = pickNextTask(tasks, args);
   const payload = await apiRequest(args, `/v1/tasks/${task.id}`, {
     method: 'PATCH',
     body: JSON.stringify({ status: 'in_progress' }),
@@ -546,16 +536,14 @@ async function pickTask(args) {
   const pickedTask = payload.data ?? { ...task, status: 'in_progress' };
   await fetchTasks(args);
   const command = buildCommand(pickedTask, args);
-  await recordAudit(args, {
-    task_id: pickedTask.id,
-    action: 'task_picked',
-    actor_source: 'local-cli',
-    agent_profile: args.agent,
-    project_slug: pickedTask.project_slug ?? null,
-    metadata: {
-      command_template: args.agentCommand ? 'custom' : args.agent,
-    },
-  });
+  await recordAudit(args, buildRunAuditEvent({
+    task: pickedTask,
+    action: PICK_AUDIT_ACTION,
+    actorSource: 'local-cli',
+    agent: args.agent,
+    agentCommand: args.agentCommand,
+    note: 'CLI pick - claimed task and printed shell command',
+  }));
   if (args.json) {
     console.log(JSON.stringify({ task: pickedTask, command }, null, 2));
     return;

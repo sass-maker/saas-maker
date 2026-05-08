@@ -50,7 +50,33 @@ export interface TaskRow {
   priority: 'low' | 'medium' | 'high';
   task_type: 'feature' | 'bug' | 'chore' | 'docs' | 'research' | 'cleanup' | 'other';
   size: 'xs' | 's' | 'm' | 'l' | 'xl';
+  dependencies: string[];
   created_at: string; updated_at: string;
+}
+
+function parseTaskDependencies(raw: unknown): string[] {
+  if (Array.isArray(raw)) return raw.filter((id): id is string => typeof id === 'string');
+  if (typeof raw !== 'string' || !raw.trim()) return [];
+  try {
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed.filter((id): id is string => typeof id === 'string') : [];
+  } catch {
+    return [];
+  }
+}
+
+function hydrateTaskRow(row: Record<string, unknown> | null | undefined): TaskRow | null {
+  if (!row) return null;
+  return { ...row, dependencies: parseTaskDependencies(row.dependencies) } as TaskRow;
+}
+
+function sanitizeDependencyIds(input: unknown): string[] {
+  if (!Array.isArray(input)) return [];
+  const seen = new Set<string>();
+  for (const value of input) {
+    if (typeof value === 'string' && value.trim()) seen.add(value.trim());
+  }
+  return Array.from(seen);
 }
 
 export interface SymphonyMemoryRow {
@@ -1715,17 +1741,18 @@ export function getDb(d1: D1Database): FeedbackDatabase {
     },
 
     // --- Tasks ---
-    async createTask(ownerId: string, input: { title: string; description?: string; project_slug?: string; priority?: string; task_type?: string; size?: string }): Promise<TaskRow> {
+    async createTask(ownerId: string, input: { title: string; description?: string; project_slug?: string; priority?: string; task_type?: string; size?: string; dependencies?: string[] }): Promise<TaskRow> {
       const id = crypto.randomUUID();
       const priority = input.priority ?? 'medium';
       const taskType = input.task_type ?? 'feature';
       const size = input.size ?? 'm';
+      const dependencies = sanitizeDependencyIds(input.dependencies);
       await d1.prepare(
-        `INSERT INTO tasks (id, owner_id, project_slug, title, description, priority, task_type, size)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
-      ).bind(id, ownerId, input.project_slug ?? null, input.title, input.description ?? null, priority, taskType, size).run();
+        `INSERT INTO tasks (id, owner_id, project_slug, title, description, priority, task_type, size, dependencies)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
+      ).bind(id, ownerId, input.project_slug ?? null, input.title, input.description ?? null, priority, taskType, size, JSON.stringify(dependencies)).run();
       const row = await d1.prepare(`SELECT * FROM tasks WHERE id = ?`).bind(id).first();
-      return row as unknown as TaskRow;
+      return hydrateTaskRow(row as Record<string, unknown> | null) as TaskRow;
     },
 
     async listTasks(ownerId: string, status?: string, projectSlug?: string): Promise<TaskRow[]> {
@@ -1743,10 +1770,10 @@ export function getDb(d1: D1Database): FeedbackDatabase {
       const { results } = await d1.prepare(
         `SELECT * FROM tasks WHERE ${conditions.join(' AND ')} ORDER BY created_at DESC`
       ).bind(...values).all();
-      return results as unknown as TaskRow[];
+      return (results ?? []).map((row) => hydrateTaskRow(row as Record<string, unknown>) as TaskRow);
     },
 
-    async updateTask(id: string, ownerId: string, input: Partial<{ title: string; description: string; status: string; priority: string; project_slug: string; task_type: string; size: string }>): Promise<TaskRow | null> {
+    async updateTask(id: string, ownerId: string, input: Partial<{ title: string; description: string; status: string; priority: string; project_slug: string; task_type: string; size: string; dependencies: string[] }>): Promise<TaskRow | null> {
       const sets: string[] = [];
       const values: unknown[] = [];
       if (input.title !== undefined) { sets.push('title = ?'); values.push(input.title); }
@@ -1756,13 +1783,17 @@ export function getDb(d1: D1Database): FeedbackDatabase {
       if (input.project_slug !== undefined) { sets.push('project_slug = ?'); values.push(input.project_slug); }
       if (input.task_type !== undefined) { sets.push('task_type = ?'); values.push(input.task_type); }
       if (input.size !== undefined) { sets.push('size = ?'); values.push(input.size); }
+      if (input.dependencies !== undefined) {
+        sets.push('dependencies = ?');
+        values.push(JSON.stringify(sanitizeDependencyIds(input.dependencies)));
+      }
       if (sets.length === 0) return null;
       sets.push("updated_at = datetime('now')");
       const sql = `UPDATE tasks SET ${sets.join(', ')} WHERE id = ? AND owner_id = ?`;
       values.push(id, ownerId);
       await d1.prepare(sql).bind(...values).run();
       const row = await d1.prepare(`SELECT * FROM tasks WHERE id = ?`).bind(id).first();
-      return (row as unknown as TaskRow) || null;
+      return hydrateTaskRow(row as Record<string, unknown> | null);
     },
 
     async deleteTask(id: string, ownerId: string): Promise<boolean> {

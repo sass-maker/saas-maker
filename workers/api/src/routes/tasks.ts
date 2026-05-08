@@ -31,6 +31,16 @@ tasks.get('/', requireSession, async (c) => {
   return c.json({ data });
 });
 
+function normalizeDependencies(value: unknown): string[] | undefined {
+  if (value === undefined) return undefined;
+  if (!Array.isArray(value)) return [];
+  const seen = new Set<string>();
+  for (const entry of value) {
+    if (typeof entry === 'string' && entry.trim()) seen.add(entry.trim());
+  }
+  return Array.from(seen);
+}
+
 // POST /v1/tasks — create task
 tasks.post('/', requireSession, async (c) => {
   const userId = c.get('userId')!;
@@ -41,6 +51,7 @@ tasks.post('/', requireSession, async (c) => {
     priority?: string;
     task_type?: string;
     size?: string;
+    dependencies?: unknown;
   };
   if (!body.title || typeof body.title !== 'string' || !body.title.trim()) {
     return c.json({ error: 'title is required' }, 400);
@@ -53,6 +64,7 @@ tasks.post('/', requireSession, async (c) => {
     priority: body.priority,
     task_type: body.task_type,
     size: body.size,
+    dependencies: normalizeDependencies(body.dependencies),
   });
   await recordAudit(db, userId, {
     task_id: task.id,
@@ -82,9 +94,15 @@ tasks.patch('/:id', requireSession, async (c) => {
     project_slug: string;
     task_type: string;
     size: string;
+    dependencies: unknown;
   }>;
   const db = getDb(c.env.DB);
-  const task = await db.updateTask(id, userId, body);
+  const { dependencies: rawDependencies, ...rest } = body;
+  const updates: Record<string, unknown> = { ...rest };
+  if ('dependencies' in body) {
+    updates.dependencies = normalizeDependencies(rawDependencies);
+  }
+  const task = await db.updateTask(id, userId, updates);
   if (!task) return c.json({ error: 'Task not found' }, 404);
   await recordAudit(db, userId, {
     task_id: task.id,

@@ -97,3 +97,34 @@ The copied command:
 This keeps the production dashboard and local CLI on the same task store. The
 next step is a daemon that polls `/v1/tasks`, enforces concurrency from
 `WORKFLOW.md`, and writes run attempts to the existing jobs/activity surface.
+
+## Fleet failure importer
+
+`scripts/fleet-failure-import.mjs` turns recent fleet GitHub failures into
+Symphony tasks instead of relying on manual sweeps.
+
+```bash
+# Dry-run (default, never writes): scan first 5 projects, show payloads.
+node scripts/fleet-failure-import.mjs --dry-run --limit 5
+
+# Limit to one project, emit JSON for piping.
+node scripts/fleet-failure-import.mjs --project saas-maker --json
+
+# Include non-main branch failures only when deliberately needed.
+node scripts/fleet-failure-import.mjs --all-branches --json
+
+# Real write - upserts via scripts/symphony-local.mjs create.
+node scripts/fleet-failure-import.mjs --write
+```
+
+It reads `foundry.projects.json`, calls `gh run list --json ... --branch main`
+per repo by default, evaluates the newest run per workflow, keeps only surfaces
+whose current state is failing (`failure`, `timed_out`, `startup_failure`,
+`cancelled`), dedupes by `${project}::${surface}`, and builds task payloads
+with explicit acceptance criteria and run links. It dedupes against
+`.symphony/tasks.json` by exact title so re-runs stay idempotent.
+
+Pure parsing/dedupe/payload helpers live in
+`scripts/lib/fleet-failure-importer.mjs` and are unit tested in
+`tests/scripts/fleet-failure-importer.test.ts`; tests never shell out to
+`gh`.

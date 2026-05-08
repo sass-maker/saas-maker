@@ -26,6 +26,7 @@
     "smoke": "node scripts/smoke-prod.mjs",
     "symphony": "node scripts/symphony-local.mjs",
     "symphony:runner": "node scripts/symphony-runner.mjs",
+    "symphony:import-failures": "node scripts/fleet-failure-import.mjs",
     "prepare": "husky"
   },
   "devDependencies": {
