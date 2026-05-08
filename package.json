@@ -14,7 +14,7 @@
     "build:analytics-ui": "pnpm -F @saas-maker/analytics-ui build",
     "build:badge": "pnpm -F @saas-maker/badge build",
     "build:widget": "pnpm -F @saas-maker/feedback build",
-    "build:showcase": "pnpm -F @saas-maker/landing-page build",
+    "build:showcase": "pnpm -F @saas-maker/sdk build && pnpm -F @saas-maker/landing-page build",
     "build:docs": "pnpm -F @saas-maker/docs build",
     "generate:openapi": "node scripts/generate-openapi.mjs",
     "check:openapi": "pnpm generate:openapi && git diff --exit-code -- packages/cli/src/openapi.json docs/openapi/openapi.json apps/docs/public/openapi.json",
