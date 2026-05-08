@@ -4,6 +4,12 @@ Foundry Symphony is the task-backed orchestration layer for this repository.
 It follows the OpenAI Symphony shape, but uses the existing cockpit task list as
 the tracker instead of adding a separate issue board.
 
+Fleet-level operating instructions live in the local workspace at
+`../../docs/fleet-runbook.md`. The cross-system map lives in
+`../../docs/project-map.md`. On GitHub, those shared docs are in
+`sarthakagrawal927/fleet-workspace`. Keep this document focused on Symphony
+behavior inside SaaS Maker.
+
 ## Boundary
 
 - Production `/v1/tasks` is the source of truth for work.
