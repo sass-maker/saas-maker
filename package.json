@@ -22,7 +22,7 @@
     "test:integration": "vitest run --config vitest.integration.config.ts",
     "test:e2e": "playwright test tests/e2e/api/",
     "lint": "pnpm -r --if-present lint",
-    "typecheck": "pnpm build:types && pnpm -F @saas-maker/ops build && pnpm -F @saas-maker/sdk build && pnpm -F @saas-maker/analytics-ui build && pnpm -F @saas-maker/capability-graph build && pnpm -F @saas-maker/ui build && pnpm -r --if-present typecheck",
+    "typecheck": "pnpm build:types && pnpm -F @saas-maker/ops build && pnpm -F @saas-maker/sdk build && pnpm -F @saas-maker/analytics-ui build && pnpm -F @saas-maker/capability-graph build && pnpm -F @saas-maker/ui build && pnpm -F @saas-maker/email build && pnpm -r --if-present typecheck",
     "smoke": "node scripts/smoke-prod.mjs",
     "symphony": "node scripts/symphony-local.mjs",
     "symphony:runner": "node scripts/symphony-runner.mjs",
