@@ -1,11 +1,12 @@
 {
   "name": "@saas-maker/eslint-config",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "type": "module",
   "main": "index.js",
   "exports": {
     ".": "./index.js",
     "./next": "./next.js",
+    "./next-legacy": "./next-legacy.js",
     "./vite": "./vite.js",
     "./astro": "./astro.js"
   },
@@ -13,6 +14,7 @@
     "index.js",
     "fetch.js",
     "next.js",
+    "next-legacy.js",
     "vite.js",
     "astro.js"
   ],
@@ -20,7 +22,7 @@
     "access": "public"
   },
   "peerDependencies": {
-    "eslint": "10.2.1",
+    "eslint": ">=9 <10",
     "eslint-config-next": ">=15.0.0"
   },
   "peerDependenciesMeta": {
@@ -29,7 +31,7 @@
     }
   },
   "dependencies": {
-    "@eslint/js": "10.0.1",
+    "@eslint/js": "9.39.4",
     "@saas-maker/eslint-plugin-fallow": "^1.0.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-import": "2.32.0",

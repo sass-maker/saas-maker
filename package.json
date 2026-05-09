@@ -22,7 +22,7 @@
     "test:integration": "vitest run --config vitest.integration.config.ts",
     "test:e2e": "playwright test tests/e2e/api/",
     "lint": "pnpm -r --if-present lint",
-    "typecheck": "pnpm build:types && pnpm -F @saas-maker/ops build && pnpm -F @saas-maker/sdk build && pnpm -F @saas-maker/analytics-ui build && pnpm -F @saas-maker/capability-graph build && pnpm -F @saas-maker/ui build && pnpm -F @saas-maker/email build && pnpm -r --if-present typecheck",
+    "typecheck": "pnpm build:types && pnpm -F @saas-maker/ops build && pnpm -F @saas-maker/sdk build && pnpm -F @saas-maker/analytics-ui build && pnpm -F @saas-maker/ui build && pnpm -F @saas-maker/email build && pnpm -r --if-present typecheck",
     "smoke": "node scripts/smoke-prod.mjs",
     "symphony": "node scripts/symphony-local.mjs",
     "fleet:audit": "node scripts/fleet-audit.mjs",
@@ -32,12 +32,18 @@
     "prepare": "husky"
   },
   "devDependencies": {
+    "@eslint/js": "9.39.4",
     "@playwright/test": "1.59.1",
     "@saas-maker/eslint-config": "workspace:*",
     "@saas-maker/prettier-config": "workspace:*",
     "@saas-maker/tsconfig": "workspace:*",
+    "eslint": "9.39.4",
+    "eslint-config-next": "16.2.6",
     "husky": "9.1.7",
     "lighthouse": "^13.3.0",
+    "prettier": "3.8.3",
+    "prettier-plugin-tailwindcss": "0.8.0",
+    "typescript": "6.0.3",
     "vitest": "4.1.5",
     "wrangler": "4.85.0"
   },

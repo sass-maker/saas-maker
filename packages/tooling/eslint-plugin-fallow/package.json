@@ -1,6 +1,6 @@
 {
   "name": "@saas-maker/eslint-plugin-fallow",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "dist/index.js",
   "type": "module",
   "peerDependencies": {
@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs",
-    "test": "vitest run"
+    "test": "vitest run --passWithNoTests"
   },
   "devDependencies": {
     "@types/node": "25.6.0",

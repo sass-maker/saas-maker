@@ -133,7 +133,7 @@ All dashboard routes are scoped under `/v1/forms/dashboard/:projectId`. Response
 
 ## Survey Widget Package
 
-New package: `packages/survey-widget/` → `@saas-maker/survey`
+Retired package concept: `packages/survey-widget/` → `@saas-maker/survey`
 
 ```tsx
 <SurveyWidget

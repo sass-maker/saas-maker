@@ -1,11 +1,14 @@
 {
   "name": "@saas-maker/prettier-config",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.json",
   "files": [
     "index.json"
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "prettier-plugin-tailwindcss": "^0.8.0"
   }
 }

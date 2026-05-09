@@ -1,7 +1,6 @@
 packages:
   - 'packages/tooling/*'
   - 'packages/blocks/*'
-  - 'packages/blocks/views/*'
   - 'packages/widgets/*'
   - 'packages/cli'
   - 'packages/ui'
