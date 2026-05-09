@@ -1,6 +1,6 @@
 {
   "name": "@saas-maker/eslint-config",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "type": "module",
   "main": "index.js",
   "exports": {
@@ -8,6 +8,7 @@
     "./next": "./next.js",
     "./next-legacy": "./next-legacy.js",
     "./vite": "./vite.js",
+    "./vite-legacy": "./vite-legacy.js",
     "./astro": "./astro.js"
   },
   "files": [
@@ -16,6 +17,7 @@
     "next.js",
     "next-legacy.js",
     "vite.js",
+    "vite-legacy.js",
     "astro.js"
   ],
   "publishConfig": {
