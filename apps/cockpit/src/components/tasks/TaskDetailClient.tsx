@@ -2,12 +2,12 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { CheckCircle2, ExternalLink, MessageSquare } from 'lucide-react';
+import { Bot, CheckCircle2, ExternalLink, FileText, MessageSquare } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { apiFetchClient, getClientToken } from '@/lib/api-client';
-import type { TaskCommentRow, TaskRow } from './TaskBoard';
+import type { SymphonyRunRow, TaskCommentRow, TaskRow } from './TaskBoard';
 
 function formatTime(value: string) {
   const time = new Date(value).getTime();
@@ -30,15 +30,18 @@ function pillClass(value: string) {
 export function TaskDetailClient({
   initialTask,
   initialComments,
+  initialRuns,
 }: {
   initialTask: TaskRow;
   initialComments: TaskCommentRow[];
+  initialRuns: SymphonyRunRow[];
 }) {
   const [task, setTask] = useState(initialTask);
   const [comments, setComments] = useState(initialComments);
   const [commentText, setCommentText] = useState('');
   const [resolveWithComment, setResolveWithComment] = useState(initialTask.blocked_on_user);
   const [markDoneWithComment, setMarkDoneWithComment] = useState(false);
+  const [blockWithComment, setBlockWithComment] = useState(false);
   const [syncCommentToDescription, setSyncCommentToDescription] = useState(initialTask.blocked_on_user);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -76,6 +79,14 @@ export function TaskDetailClient({
       }
       if (marksDone) {
         setMarkDoneWithComment(false);
+      }
+      if (blockWithComment && !marksDone) {
+        const updated = await apiFetchClient<{ data: TaskRow }>(`/v1/tasks/${task.id}`, token, {
+          method: 'PATCH',
+          body: JSON.stringify({ blocked_on_user: true }),
+        });
+        setTask(updated.data);
+        setBlockWithComment(false);
       }
       if (syncCommentToDescription) {
         setSyncCommentToDescription(false);
@@ -133,6 +144,56 @@ export function TaskDetailClient({
             </a>
           ) : null}
         </div>
+      </section>
+
+      <section className="rounded-lg border bg-card p-4">
+        <div className="mb-4 flex items-center gap-2">
+          <Bot className="h-4 w-4 text-muted-foreground" />
+          <h2 className="text-sm font-semibold text-foreground">Agent Runs</h2>
+          <Badge variant="outline" className="font-mono text-[10px]">{initialRuns.length}</Badge>
+        </div>
+        {initialRuns.length === 0 ? (
+          <p className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">No agent runs recorded for this task.</p>
+        ) : (
+          <div className="space-y-2">
+            {initialRuns.map(run => {
+              const metadata = typeof run.metadata === 'string'
+                ? (() => { try { return JSON.parse(run.metadata || '{}') as Record<string, unknown>; } catch { return {}; } })()
+                : (run.metadata ?? {});
+              return (
+                <article key={run.id ?? `${run.task_id}-${run.started_at}`} className="rounded-lg border bg-muted/20 p-3">
+                  <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                    <span className="font-medium text-foreground">{run.agent_profile ?? run.command_template}</span>
+                    <Badge variant="outline" className={pillClass(run.status)}>{run.status}</Badge>
+                    <span>{formatTime(run.started_at)}</span>
+                    {run.pid ? <span>pid {run.pid}</span> : null}
+                  </div>
+                  {typeof metadata.route_reason === 'string' ? (
+                    <p className="mt-2 text-sm leading-5 text-muted-foreground">{metadata.route_reason}</p>
+                  ) : null}
+                  {typeof metadata.route_budget_note === 'string' ? (
+                    <p className="mt-1 text-xs leading-5 text-muted-foreground">{metadata.route_budget_note}</p>
+                  ) : null}
+                  <div className="mt-2 flex flex-wrap gap-2 text-xs text-muted-foreground">
+                    {run.prompt_path ? (
+                      <span className="inline-flex items-center gap-1 rounded-full border border-border/60 px-2 py-0.5 font-mono">
+                        <FileText className="h-3 w-3" />
+                        {run.prompt_path}
+                      </span>
+                    ) : null}
+                    {run.log_hint ? (
+                      <span className="inline-flex items-center gap-1 rounded-full border border-border/60 px-2 py-0.5 font-mono">
+                        <FileText className="h-3 w-3" />
+                        {run.log_hint}
+                      </span>
+                    ) : null}
+                    {run.cost_note ? <span className="rounded-full border border-border/60 px-2 py-0.5">{run.cost_note}</span> : null}
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        )}
       </section>
 
       <section className="rounded-lg border bg-card p-4">
@@ -196,6 +257,17 @@ export function TaskDetailClient({
                 className="h-4 w-4 rounded border-border text-primary"
               />
               Mark task done with this comment
+            </label>
+          ) : null}
+          {!task.blocked_on_user && task.status !== 'done' ? (
+            <label className="flex items-center gap-2 text-sm text-muted-foreground">
+              <input
+                type="checkbox"
+                checked={blockWithComment}
+                onChange={event => setBlockWithComment(event.target.checked)}
+                className="h-4 w-4 rounded border-border text-primary"
+              />
+              Block this task on me with this comment
             </label>
           ) : null}
           <label className="flex items-center gap-2 text-sm text-muted-foreground">

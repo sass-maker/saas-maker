@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
+import fs from "node:fs";
+import path from "node:path";
+import { randomUUID } from "node:crypto";
 import { apiFetchAuthed } from "@/lib/api-client";
-import { buildSymphonyBatchRuns, buildSymphonyRunRecord } from "@/lib/symphony";
+import { buildSymphonyBatchRuns, buildSymphonyRunRecord, type SymphonyAgentUsageSnapshot } from "@/lib/symphony";
 import { isLocalAuthBypassEnabled } from "@/lib/local-auth";
 
 export const dynamic = "force-dynamic";
@@ -23,8 +26,40 @@ async function startWithSidecar(command: string, taskId: string) {
   return res.json() as Promise<{ ok: boolean; pid?: number }>;
 }
 
+function wrapCommand(command: string, taskId: string, agent: string, runId: string) {
+  const scriptPath = path.join(process.cwd(), "scripts", "symphony-agent-exec.mjs");
+  const encoded = Buffer.from(command, "utf8").toString("base64");
+  return [
+    JSON.stringify(process.execPath),
+    JSON.stringify(scriptPath),
+    "--task-id",
+    JSON.stringify(taskId),
+    "--agent",
+    JSON.stringify(agent),
+    "--run-id",
+    JSON.stringify(runId),
+    "--command-base64",
+    JSON.stringify(encoded),
+  ].join(" ");
+}
+
+function runLogHint(taskId: string, runId: string) {
+  const safeTaskId = taskId.replace(/[^A-Za-z0-9._-]/g, "_");
+  const safeRunId = runId.replace(/[^A-Za-z0-9._-]/g, "_");
+  return `.symphony/runs/${safeTaskId}-${safeRunId}.log`;
+}
+
 function isBlockedTask(task: { blocked?: unknown }) {
   return task.blocked === true;
+}
+
+function readAgentUsage(): SymphonyAgentUsageSnapshot | null {
+  try {
+    const filePath = path.join(process.cwd(), ".symphony", "agent-usage.json");
+    return JSON.parse(fs.readFileSync(filePath, "utf8")) as SymphonyAgentUsageSnapshot;
+  } catch {
+    return null;
+  }
 }
 
 async function recordRun(task: RunTask | undefined, options: {
@@ -32,8 +67,10 @@ async function recordRun(task: RunTask | undefined, options: {
   agentCommand?: string;
   memory?: string;
   additionalInstructions?: string;
+  agentUsage?: SymphonyAgentUsageSnapshot | null;
   pid?: number;
   terminalHint: string;
+  logHint?: string;
 }) {
   if (!task) return;
   try {
@@ -64,13 +101,16 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Blocked and done tasks cannot be dispatched" }, { status: 400 });
     }
 
-    const runs = buildSymphonyBatchRuns(runTasks, { agent, agentCommand, memory, additionalInstructions });
+    const agentUsage = readAgentUsage();
+    const runs = buildSymphonyBatchRuns(runTasks, { agent, agentCommand, memory, additionalInstructions, agentUsage });
     const tasksById = new Map(runTasks.map(item => [item.id, item]));
     const started = [];
     try {
       const { spawn } = await import("node:child_process");
       for (const run of runs) {
-        const child = spawn(run.command, {
+        const runId = randomUUID();
+        const command = wrapCommand(run.command, run.taskId, run.route.agent, runId);
+        const child = spawn(command, {
           shell: true,
           detached: true,
           stdio: "ignore",
@@ -83,22 +123,28 @@ export async function POST(req: Request) {
           agentCommand,
           memory,
           additionalInstructions,
+          agentUsage,
           pid: child.pid,
           terminalHint: "cockpit local run spawned detached child process",
+          logHint: runLogHint(run.taskId, runId),
         });
         started.push({ taskId: run.taskId, pid: child.pid, route: run.route });
       }
       return NextResponse.json({ ok: true, pid: started[0]?.pid, route: started[0]?.route, runs: started });
     } catch {
       for (const run of runs) {
-        const result = await startWithSidecar(run.command, run.taskId);
+        const runId = randomUUID();
+        const command = wrapCommand(run.command, run.taskId, run.route.agent, runId);
+        const result = await startWithSidecar(command, run.taskId);
         await recordRun(tasksById.get(run.taskId), {
           agent: agent ?? run.route.agent,
           agentCommand,
           memory,
           additionalInstructions,
+          agentUsage,
           pid: result.pid,
           terminalHint: "cockpit local run delegated to sidecar runner",
+          logHint: runLogHint(run.taskId, runId),
         });
         started.push({ taskId: run.taskId, pid: result.pid, route: run.route });
       }

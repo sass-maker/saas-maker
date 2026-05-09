@@ -34,12 +34,14 @@ Run the local task reader:
 pnpm symphony
 pnpm symphony --commands
 pnpm symphony dispatch <task-id-prefix>
+pnpm symphony dispatch <task-id-prefix> --agent auto
 pnpm symphony dispatch <task-id-prefix> --agent claude
 pnpm symphony dispatch <task-id-prefix> --agent gemini
 pnpm symphony dispatch <task-id-prefix> --agent codex-work
 pnpm symphony dispatch <task-id-prefix> --agent-command 'my-agent run --prompt-file {promptFile}'
 pnpm symphony pick --agent claude
 pnpm symphony pick --agent gemini
+pnpm symphony:agent-usage --refresh
 pnpm symphony claim <task-id-prefix>
 pnpm symphony done <task-id-prefix>
 pnpm symphony create "Task title" --description "Details" --project saas-maker --priority high
@@ -70,13 +72,16 @@ handoff should also appear in the task list preview for shared visibility.
 Local sync shells out through the Foundry CLI. Run `fnd login` once for this
 machine/account; Symphony does not accept or pass API keys directly.
 
-The cockpit task board also has a Symphony dispatch action. Pick an agent before
-copying the command. Built-in profiles are `codex`, `claude`, and `gemini`, and
-they run with full local permissions by default:
+The cockpit task board also has a Symphony dispatch action. By default it uses
+auto routing: task metadata and `.symphony/agent-usage.json` decide whether the
+run goes to Codex, Claude, or Gemini. Built-in profiles are `auto`, `codex`,
+`claude`, and `gemini`; the concrete execution profiles run with full local
+permissions by default:
 
+- `auto` — choose `codex`, `claude`, or `gemini` from task shape plus recent usage.
 - `codex` — `codex exec --dangerously-bypass-approvals-and-sandbox`.
-- `claude` — `claude --dangerously-skip-permissions`.
-- `gemini` — `gemini --yolo`.
+- `claude` — `claude --dangerously-skip-permissions -p ... --output-format json --no-session-persistence`.
+- `gemini` — `gemini --yolo -p ... --output-format json --skip-trust`.
 
 For multiple Codex, Claude, Gemini, or other local profiles, add named command
 templates to `~/.foundry/config.json`:
@@ -99,6 +104,36 @@ templates to `~/.foundry/config.json`:
   }
 }
 ```
+
+## Agent Usage Sampling
+
+Symphony does not currently get a clean remaining-quota API from Claude or
+Gemini CLI. Instead, use a short-lived local cache built from low-risk probe
+runs and actual run output:
+
+```bash
+pnpm symphony:agent-usage
+pnpm symphony:agent-usage --refresh
+pnpm symphony:agent-usage --json
+```
+
+The sampler writes `.symphony/agent-usage.json`. Claude probes use
+`--permission-mode plan`, `--output-format json`, `--no-session-persistence`,
+and a small `--max-budget-usd`; Gemini probes use `--approval-mode plan`,
+`--output-format json`, and `--skip-trust`. The router should treat this as a
+freshness-based signal, not an exact quota API: refresh it before a batch, after
+a few delegated tasks, or whenever an agent returns a budget/rate-limit error.
+
+Local cockpit dispatch wraps each started command with
+`scripts/symphony-agent-exec.mjs`. The wrapper writes:
+
+- `.symphony/runs/<task-id>-<run-id>.log` — combined stdout/stderr.
+- `.symphony/runs/<task-id>-<run-id>.json` — exit status, output tails, parsed
+  CLI JSON, and parsed usage.
+
+When Claude or Gemini emits JSON usage, the wrapper updates
+`.symphony/agent-usage.json` so future auto routes learn from real task runs,
+not only probes. The run ledger stores the log path in `log_hint`.
 
 For one-off agents, use a custom command template. Templates support:
 

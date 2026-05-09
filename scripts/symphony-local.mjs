@@ -15,11 +15,12 @@ const STATUS_ORDER = ['todo', 'in_progress', 'done'];
 const LOCAL_STATE_DIR = path.join(process.cwd(), '.symphony');
 const LOCAL_TASK_CACHE = path.join(LOCAL_STATE_DIR, 'tasks.json');
 const LOCAL_MEMORY_FILE = path.join(LOCAL_STATE_DIR, 'memory.md');
+const LOCAL_AGENT_USAGE_CACHE = path.join(LOCAL_STATE_DIR, 'agent-usage.json');
 const DEFAULT_CLI_COMMAND = 'pnpm --dir packages/cli exec tsx src/index.ts';
 const DEFAULT_AGENT_COMMANDS = {
   codex: 'codex exec --dangerously-bypass-approvals-and-sandbox {prompt}',
-  claude: 'claude --dangerously-skip-permissions -p {prompt}',
-  gemini: 'gemini --yolo -p {prompt}',
+  claude: 'claude --dangerously-skip-permissions -p {prompt} --output-format json --no-session-persistence --max-budget-usd ${SYMPHONY_CLAUDE_TASK_BUDGET_USD:-2.00}',
+  gemini: 'gemini --yolo -p {prompt} --output-format json --skip-trust',
 };
 
 function readJson(filePath) {
@@ -99,7 +100,7 @@ function parseArgs(argv) {
     memory: '',
     memoryPush: false,
     memoryPull: false,
-    agent: process.env.SYMPHONY_AGENT || globalConfig.symphonyAgent || 'codex',
+    agent: process.env.SYMPHONY_AGENT || globalConfig.symphonyAgent || 'auto',
     agentCommand: process.env.SYMPHONY_AGENT_COMMAND || null,
     agentCommands: resolveAgentCommands(globalConfig),
     agentEnv: resolveAgentEnv(globalConfig),
@@ -126,7 +127,7 @@ function parseArgs(argv) {
     else if (arg === '--project' || arg === '-p') args.project = argv[++i] ?? '';
     else if (arg === '--priority') args.priority = argv[++i] ?? 'medium';
     else if (arg === '--status') args.status = argv[++i] ?? null;
-    else if (arg === '--agent') args.agent = argv[++i] ?? 'codex';
+    else if (arg === '--agent') args.agent = argv[++i] ?? 'auto';
     else if (arg === '--agent-command') args.agentCommand = argv[++i] ?? null;
     else if (arg === '--help' || arg === '-h') {
       printHelp();
@@ -176,7 +177,7 @@ Options:
   --description    Description for create
   --project SLUG   Project slug for create
   --priority VALUE low, medium, or high for create
-  --agent NAME     Agent profile for dispatch: codex, claude, gemini, or a configured profile
+  --agent NAME     Agent profile for dispatch: auto, codex, claude, gemini, or a configured profile
   --agent-command  Command template for custom agents; supports {prompt}, {promptFile}, {workspace}, {taskId}
   --push           With memory: push .symphony/memory.md to production
   --pull           With memory: pull production memory into .symphony/memory.md
@@ -189,6 +190,7 @@ Auth:
 
 Profiles:
   Built-in commands run with full permissions:
+    auto    Choose codex, claude, or gemini from task shape plus .symphony/agent-usage.json
     codex   codex exec --dangerously-bypass-approvals-and-sandbox {prompt}
     claude  claude --dangerously-skip-permissions -p {prompt}
     gemini  gemini --yolo -p {prompt}
@@ -227,11 +229,66 @@ function workspaceKey(task) {
 
 function resolveAgentCommand(args) {
   if (args.agentCommand) return args.agentCommand;
-  const command = args.agentCommands[args.agent];
+  const command = args.agentCommands[args.effectiveAgent ?? args.agent];
   if (!command) {
-    throw new Error(`Unknown agent profile "${args.agent}". Use --agent-command or add it to symphonyAgentCommands in ~/.foundry/config.json.`);
+    throw new Error(`Unknown agent profile "${args.effectiveAgent ?? args.agent}". Use --agent-command or add it to symphonyAgentCommands in ~/.foundry/config.json.`);
   }
   return command;
+}
+
+function readAgentUsage() {
+  return readJson(LOCAL_AGENT_USAGE_CACHE);
+}
+
+function isFresh(sampledAt) {
+  if (!sampledAt) return false;
+  return Date.now() - Date.parse(sampledAt) < 45 * 60 * 1000;
+}
+
+function agentHealthy(agent, usage) {
+  if (agent === 'codex') return true;
+  const sample = usage?.agents?.[agent];
+  if (!sample) return true;
+  return sample.available !== false && sample.ok !== false && isFresh(sample.sampled_at);
+}
+
+function taskRoutingText(task) {
+  return `${task.title ?? ''}\n${task.description ?? ''}\n${task.task_type ?? ''}`.toLowerCase();
+}
+
+function chooseAgent(task, args) {
+  if (args.agent && args.agent !== 'auto') return args.agent;
+  const usage = args.agentUsage ?? readAgentUsage();
+  const text = taskRoutingText(task);
+  let candidate = 'codex';
+  let reason = 'default route';
+
+  if (/(secret|credential|cloudflare|deploy|deployment|auth|oauth|migration|database|d1|production|prod)/.test(text)) {
+    candidate = 'codex';
+    reason = 'sensitive cloud/auth/deployment work stays with Codex';
+  } else if (task.task_type === 'bug' || task.priority === 'high') {
+    candidate = 'codex';
+    reason = 'bug/high-priority route';
+  } else if (
+    task.task_type === 'cleanup' ||
+    task.task_type === 'chore' ||
+    /(cleanup|clean up|refactor|polish|rename|organize|simplify|prose|wording)/.test(text)
+  ) {
+    candidate = 'claude';
+    reason = 'cleanup/refactor/prose route';
+  } else if (
+    task.task_type === 'research' ||
+    task.task_type === 'docs' ||
+    /(audit|research|summarize|inventory|review all|compare|docs|documentation|copy|content)/.test(text)
+  ) {
+    candidate = 'gemini';
+    reason = 'broad review/docs/synthesis route';
+  }
+
+  if (!agentHealthy(candidate, usage)) {
+    return { agent: 'codex', reason: `${candidate} matched but recent usage sample was unhealthy/stale` };
+  }
+  return { agent: candidate, reason };
 }
 
 function renderAgentCommand(template, task, prompt, workspacePath) {
@@ -359,12 +416,15 @@ function buildCommand(task, args) {
   const project = task.project_slug ?? 'saas-maker';
   const workspacePath = `.symphony/workspaces/${workspaceKey(task)}`;
   const prompt = buildPrompt(task, args.memory);
+  const route = chooseAgent(task, args);
+  args.effectiveAgent = route.agent;
   const agentTemplate = resolveAgentCommand(args);
   const agentCommand = `${renderEnvPrefix(args)}${renderAgentCommand(agentTemplate, task, prompt, workspacePath)}`;
   return [
     `cd ${homePath(`Desktop/Fleet/${project}`)}`,
     `mkdir -p ${shellQuote(workspacePath)}`,
     `printf %s ${shellQuote(prompt)} > ${shellQuote(`${workspacePath}/prompt.md`)}`,
+    `printf %s ${shellQuote(`Routed agent: ${route.agent}\nRouting reason: ${route.reason}\n`)} >> ${shellQuote(`${workspacePath}/route.md`)}`,
     agentCommand,
   ].join(' && ');
 }
@@ -505,9 +565,10 @@ async function runOnce(args) {
     const batch = ids.map((id) => findTask(tasks, id));
     for (const task of batch) assertDispatchable(task, tasks);
     for (const task of batch) {
+      const route = chooseAgent(task, args);
       await recordRun(args, buildRunLedgerRecord({
         task,
-        agent: args.agent,
+        agent: route.agent,
         agentCommand: args.agentCommand,
         terminalHint: batch.length > 1 ? 'pnpm symphony batch dispatch printed command' : 'pnpm symphony dispatch printed command',
       }));
@@ -515,9 +576,9 @@ async function runOnce(args) {
         task,
         action: DISPATCH_AUDIT_ACTION,
         actorSource: 'local-cli',
-        agent: args.agent,
+        agent: route.agent,
         agentCommand: args.agentCommand,
-        note: batch.length > 1 ? 'CLI batch dispatch - printed shell command' : 'CLI dispatch - printed shell command',
+        note: `${batch.length > 1 ? 'CLI batch dispatch' : 'CLI dispatch'} - printed shell command (${route.reason})`,
       }));
     }
     const commands = batch.map((task) => buildCommand(task, args));
@@ -585,10 +646,11 @@ async function pickTask(args) {
   });
   const pickedTask = payload.data ?? { ...task, status: 'in_progress' };
   await fetchTasks(args);
+  const route = chooseAgent(pickedTask, args);
   const command = buildCommand(pickedTask, args);
   await recordRun(args, buildRunLedgerRecord({
     task: pickedTask,
-    agent: args.agent,
+    agent: route.agent,
     agentCommand: args.agentCommand,
     terminalHint: 'pnpm symphony pick claimed task and printed command',
   }));
@@ -596,9 +658,9 @@ async function pickTask(args) {
     task: pickedTask,
     action: PICK_AUDIT_ACTION,
     actorSource: 'local-cli',
-    agent: args.agent,
+    agent: route.agent,
     agentCommand: args.agentCommand,
-    note: 'CLI pick - claimed task and printed shell command',
+    note: `CLI pick - claimed task and printed shell command (${route.reason})`,
   }));
   if (args.json) {
     console.log(JSON.stringify({ task: pickedTask, command }, null, 2));

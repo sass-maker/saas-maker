@@ -19,6 +19,7 @@ type SymphonyAgentOptions = {
   agentCommand?: string;
   memory?: string;
   additionalInstructions?: string;
+  agentUsage?: SymphonyAgentUsageSnapshot | null;
 };
 
 export type SymphonyAgent = "codex" | "claude" | "gemini";
@@ -27,6 +28,33 @@ export type SymphonyRoute = {
   agent: SymphonyAgent;
   label: string;
   reason: string;
+  budgetNote?: string;
+};
+
+type ClaudeUsage = {
+  ok?: boolean;
+  available?: boolean;
+  total_cost_usd?: number | null;
+  error?: string | null;
+  sampled_at?: string | null;
+};
+
+type GeminiUsage = {
+  ok?: boolean;
+  available?: boolean;
+  stats?: {
+    models?: Record<string, { tokens?: { total?: number } }>;
+  } | null;
+  error?: string | null;
+  sampled_at?: string | null;
+};
+
+export type SymphonyAgentUsageSnapshot = {
+  sampled_at?: string;
+  agents?: {
+    claude?: ClaudeUsage;
+    gemini?: GeminiUsage;
+  };
 };
 
 export type SymphonyRunSpec = {
@@ -38,8 +66,8 @@ export type SymphonyRunSpec = {
 
 const AGENT_COMMANDS: Record<string, string> = {
   codex: "codex exec --dangerously-bypass-approvals-and-sandbox {prompt}",
-  claude: "claude --dangerously-skip-permissions -p {prompt}",
-  gemini: "gemini --yolo -p {prompt}",
+  claude: "claude --dangerously-skip-permissions -p {prompt} --output-format json --no-session-persistence --max-budget-usd ${SYMPHONY_CLAUDE_TASK_BUDGET_USD:-2.00}",
+  gemini: "gemini --yolo -p {prompt} --output-format json --skip-trust",
 };
 
 const AGENT_LABELS: Record<SymphonyAgent, string> = {
@@ -58,6 +86,60 @@ export const DEFAULT_SYMPHONY_MEMORY = `Symphony behavior and routing policy:
 - Explicit run instructions or memory preferences mentioning Codex, Claude, or Gemini override the defaults.
 - Keep work scoped to the task, verify before completion, and report changed files, evidence, and remaining risk.
 - Two-step execution with a separate verifier is not enabled yet; consider it for high-risk complex tasks after the optional verifier-flow task is implemented.`;
+
+function taskText(task: SymphonyTask) {
+  return `${task.title ?? ""}\n${task.description ?? ""}\n${task.task_type ?? ""}`.toLowerCase();
+}
+
+function usageAgeMs(sampledAt?: string | null) {
+  if (!sampledAt) return Number.POSITIVE_INFINITY;
+  const parsed = Date.parse(sampledAt);
+  return Number.isFinite(parsed) ? Date.now() - parsed : Number.POSITIVE_INFINITY;
+}
+
+function isFresh(sampledAt?: string | null) {
+  return usageAgeMs(sampledAt) < 45 * 60 * 1000;
+}
+
+function geminiTokenTotal(usage?: GeminiUsage) {
+  const models = usage?.stats?.models ?? {};
+  return Object.values(models).reduce((sum, model) => sum + (model.tokens?.total ?? 0), 0);
+}
+
+function agentBudgetNote(agent: SymphonyAgent, usage?: SymphonyAgentUsageSnapshot | null) {
+  if (agent === "codex") return "Codex local coordinator route; external usage cache not required.";
+  const agentUsage = usage?.agents?.[agent];
+  if (!agentUsage) return "No recent usage sample; route chosen from task shape only.";
+  if (!isFresh(agentUsage.sampled_at)) return "Usage sample is stale; refresh before a larger batch.";
+  if (agent === "claude") {
+    const claudeUsage = agentUsage as ClaudeUsage;
+    const cost = typeof claudeUsage.total_cost_usd === "number" ? `last probe $${claudeUsage.total_cost_usd.toFixed(4)}` : "last probe cost unknown";
+    return `Fresh Claude sample: ${agentUsage.ok ? "available" : "warning"}, ${cost}.`;
+  }
+  const tokens = geminiTokenTotal(agentUsage as GeminiUsage);
+  return `Fresh Gemini sample: ${agentUsage.ok ? "available" : "warning"}, last probe ${tokens || "unknown"} tokens.`;
+}
+
+function isAgentHealthy(agent: SymphonyAgent, usage?: SymphonyAgentUsageSnapshot | null) {
+  if (agent === "codex") return true;
+  const agentUsage = usage?.agents?.[agent];
+  if (!agentUsage) return true;
+  return agentUsage.available !== false && agentUsage.ok !== false && isFresh(agentUsage.sampled_at);
+}
+
+function withBudget(route: Omit<SymphonyRoute, "budgetNote">, usage?: SymphonyAgentUsageSnapshot | null): SymphonyRoute {
+  if (isAgentHealthy(route.agent, usage)) {
+    return { ...route, budgetNote: agentBudgetNote(route.agent, usage) };
+  }
+
+  const fallback: SymphonyRoute = {
+    agent: "codex",
+    label: AGENT_LABELS.codex,
+    reason: `${route.label} matched the task, but recent usage/availability looked unhealthy, so Codex will coordinate this run.`,
+    budgetNote: agentBudgetNote("codex", usage),
+  };
+  return fallback;
+}
 
 function normalizeAgent(value?: string | null): SymphonyAgent | null {
   const normalized = value?.trim().toLowerCase();
@@ -83,12 +165,12 @@ export function getSymphonyWorkspacePath(task: SymphonyTask) {
 
 function resolveAgentCommand(options: SymphonyAgentOptions) {
   if (options.agentCommand?.trim()) return options.agentCommand.trim();
-  return AGENT_COMMANDS[options.agent || "codex"] || AGENT_COMMANDS.codex;
+  return AGENT_COMMANDS[options.agent || "auto"] || AGENT_COMMANDS.codex;
 }
 
 function commandTemplateLabel(agent?: string, agentCommand?: string) {
   if (agentCommand?.trim()) return "custom";
-  return agent || "codex";
+  return agent || "auto";
 }
 
 function detectCostHint(agent?: string | null, template?: string | null) {
@@ -102,48 +184,67 @@ export function chooseSymphonyAgent(
   task: SymphonyTask,
   memory?: string,
   additionalInstructions?: string,
+  agentUsage?: SymphonyAgentUsageSnapshot | null,
 ): SymphonyRoute {
   const routingText = `${memory ?? ""}\n${additionalInstructions ?? ""}`.toLowerCase();
   const explicitAgent =
     normalizeAgent(routingText.match(/\b(?:use|route to|agent|model)\s*[:=]?\s*(codex|claude|gemini)\b/)?.[1]);
 
   if (explicitAgent) {
-    return {
+    return withBudget({
       agent: explicitAgent,
       label: AGENT_LABELS[explicitAgent],
       reason: "Explicit agent preference found in Symphony memory or custom instructions.",
-    };
+    }, agentUsage);
   }
 
-  if (task.task_type === "research" || task.task_type === "docs") {
-    return {
-      agent: "gemini",
-      label: AGENT_LABELS.gemini,
-      reason: "Research/docs tasks default to Gemini for fast broad synthesis.",
-    };
+  const text = taskText(task);
+
+  if (/(secret|credential|cloudflare|deploy|deployment|auth|oauth|migration|database|d1|production|prod)/.test(text)) {
+    return withBudget({
+      agent: "codex",
+      label: AGENT_LABELS.codex,
+      reason: "Sensitive cloud/auth/deployment work stays with Codex for orchestration and final control.",
+    }, agentUsage);
   }
 
   if (task.task_type === "bug" || task.priority === "high") {
-    return {
+    return withBudget({
       agent: "codex",
       label: AGENT_LABELS.codex,
       reason: "High-priority and bug-fix tasks default to Codex for code execution.",
-    };
+    }, agentUsage);
   }
 
-  if (task.task_type === "cleanup" || task.task_type === "chore") {
-    return {
+  if (
+    task.task_type === "cleanup" ||
+    task.task_type === "chore" ||
+    /(cleanup|clean up|refactor|polish|rename|organize|simplify|prose|wording)/.test(text)
+  ) {
+    return withBudget({
       agent: "claude",
       label: AGENT_LABELS.claude,
-      reason: "Cleanup/chore tasks default to Claude for careful editing and prose-heavy changes.",
-    };
+      reason: "Cleanup, refactor, and prose-heavy tasks route to Claude when its recent usage sample is healthy.",
+    }, agentUsage);
   }
 
-  return {
+  if (
+    task.task_type === "research" ||
+    task.task_type === "docs" ||
+    /(audit|research|summarize|inventory|review all|compare|docs|documentation|copy|content)/.test(text)
+  ) {
+    return withBudget({
+      agent: "gemini",
+      label: AGENT_LABELS.gemini,
+      reason: "Broad review, docs, and synthesis tasks route to Gemini when its recent usage sample is healthy.",
+    }, agentUsage);
+  }
+
+  return withBudget({
     agent: "codex",
     label: AGENT_LABELS.codex,
     reason: "Default route when no stronger Symphony routing signal is present.",
-  };
+  }, agentUsage);
 }
 
 function renderAgentCommand(template: string, task: SymphonyTask, prompt: string, workspacePath: string) {
@@ -206,8 +307,17 @@ export function buildSymphonyRun(task: SymphonyTask, options: SymphonyAgentOptio
   const project = task.project_slug ?? "saas-maker";
   const workspacePath = getSymphonyWorkspacePath(task);
   const prompt = buildSymphonyPrompt(task, options.memory, options.additionalInstructions);
-  const route = chooseSymphonyAgent(task, options.memory, options.additionalInstructions);
-  const agentCommand = renderAgentCommand(resolveAgentCommand({ ...options, agent: options.agent ?? route.agent }), task, prompt, workspacePath);
+  const forcedAgent = normalizeAgent(options.agent);
+  const route = forcedAgent
+    ? {
+        agent: forcedAgent,
+        label: AGENT_LABELS[forcedAgent],
+        reason: "Agent profile was selected explicitly for this run.",
+        budgetNote: agentBudgetNote(forcedAgent, options.agentUsage),
+      }
+    : chooseSymphonyAgent(task, options.memory, options.additionalInstructions, options.agentUsage);
+  const commandAgent = forcedAgent ?? route.agent;
+  const agentCommand = renderAgentCommand(resolveAgentCommand({ ...options, agent: commandAgent }), task, prompt, workspacePath);
 
   const command = [
     `cd ${homePath(`Desktop/Fleet/${project}`)}`,
@@ -244,8 +354,9 @@ export function buildSymphonyRunRecord(
   task: SymphonyTask,
   options: SymphonyAgentOptions & { pid?: number; terminalHint?: string; logHint?: string; tokenNote?: string } = {},
 ) {
-  const route = chooseSymphonyAgent(task, options.memory, options.additionalInstructions);
-  const agent = options.agent ?? route.agent;
+  const route = chooseSymphonyAgent(task, options.memory, options.additionalInstructions, options.agentUsage);
+  const forcedAgent = normalizeAgent(options.agent);
+  const agent = forcedAgent ?? route.agent;
   const commandTemplate = commandTemplateLabel(agent, options.agentCommand);
   const workspacePath = getSymphonyWorkspacePath(task);
 
@@ -266,6 +377,7 @@ export function buildSymphonyRunRecord(
     metadata: {
       route_label: route.label,
       route_reason: route.reason,
+      route_budget_note: route.budgetNote ?? null,
       priority: task.priority,
       task_type: task.task_type ?? "feature",
     },

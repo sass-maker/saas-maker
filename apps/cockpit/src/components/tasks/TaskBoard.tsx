@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import { Bot, CheckCircle2, ChevronDown, Clipboard, ExternalLink, GitBranch, MessageSquare, Pencil, Plus, Save, Trash2, X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { apiFetchClient, getClientToken } from '@/lib/api-client';
-import { buildSymphonyBatchPrompt, buildSymphonyPrompt, buildSymphonyRunRecord, chooseSymphonyAgent } from '@/lib/symphony';
+import { buildSymphonyBatchPrompt, buildSymphonyPrompt, buildSymphonyRunRecord, chooseSymphonyAgent, type SymphonyAgentUsageSnapshot } from '@/lib/symphony';
 import { cn } from '@/lib/utils';
 
 export interface TaskRow {
@@ -245,6 +245,7 @@ export function TaskBoard({
   const [form, setForm] = useState<TaskFormData>(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
   const [savingMemory, setSavingMemory] = useState(false);
+  const [agentUsage, setAgentUsage] = useState<SymphonyAgentUsageSnapshot | null>(null);
   const [projectFilter, setProjectFilter] = useState(ALL_PROJECTS);
   const [priorityFilter, setPriorityFilter] = useState(ALL_PRIORITIES);
   const [showDone, setShowDone] = useState(false);
@@ -568,6 +569,7 @@ export function TaskBoard({
           agent: started?.route?.agent ?? result.route?.agent,
           memory,
           additionalInstructions,
+          agentUsage,
           pid: started?.pid,
           terminalHint: 'cockpit local run',
         }),
@@ -624,6 +626,7 @@ export function TaskBoard({
             ...buildSymphonyRunRecord(task, {
               agent: started?.route?.agent,
               memory,
+              agentUsage,
               pid: started?.pid,
               terminalHint: 'cockpit batch local run',
             }),
@@ -654,6 +657,22 @@ export function TaskBoard({
       showToast('Copy failed');
     }
   };
+
+  useEffect(() => {
+    if (!isLocal) return;
+    let cancelled = false;
+    fetch('/api/tasks/agent-usage')
+      .then(res => res.ok ? res.json() : null)
+      .then((payload: { data?: SymphonyAgentUsageSnapshot | null } | null) => {
+        if (!cancelled) setAgentUsage(payload?.data ?? null);
+      })
+      .catch(() => {
+        if (!cancelled) setAgentUsage(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [isLocal]);
 
   return (
     <>
@@ -993,16 +1012,21 @@ export function TaskBoard({
                       Routed agent
                     </div>
                     <div className="mt-1 text-sm font-semibold text-foreground">
-                      {chooseSymphonyAgent(runTask, memory, runInstructions).label}
+                      {chooseSymphonyAgent(runTask, memory, runInstructions, agentUsage).label}
                     </div>
                   </div>
                   <Badge variant="outline" className="text-xs">
-                    Auto from Symphony memory + task metadata
+                    Auto from task + usage cache
                   </Badge>
                 </div>
                 <p className="mt-2 text-xs text-muted-foreground">
-                  {chooseSymphonyAgent(runTask, memory, runInstructions).reason}
+                  {chooseSymphonyAgent(runTask, memory, runInstructions, agentUsage).reason}
                 </p>
+                {chooseSymphonyAgent(runTask, memory, runInstructions, agentUsage).budgetNote ? (
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {chooseSymphonyAgent(runTask, memory, runInstructions, agentUsage).budgetNote}
+                  </p>
+                ) : null}
               </div>
               <div className="space-y-1.5">
                 <Label>Symphony Instructions</Label>

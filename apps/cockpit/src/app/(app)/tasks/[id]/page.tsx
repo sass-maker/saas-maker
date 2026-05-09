@@ -4,7 +4,7 @@ import { headers } from 'next/headers';
 import { apiFetchAuthed } from '@/lib/api-client';
 import { isLocalAuthBypassEnabled } from '@/lib/local-auth';
 import { TaskDetailClient } from '@/components/tasks/TaskDetailClient';
-import type { TaskCommentRow, TaskRow } from '@/components/tasks/TaskBoard';
+import type { SymphonyRunRow, TaskCommentRow, TaskRow } from '@/components/tasks/TaskBoard';
 
 export const dynamic = 'force-dynamic';
 
@@ -23,6 +23,7 @@ export default async function TaskDetailPage({ params }: Props) {
   const { id } = await params;
   let task: TaskRow;
   let comments: TaskCommentRow[] = [];
+  let runs: SymphonyRunRow[] = [];
 
   try {
     const res = await apiFetchAuthed<{ data: TaskRow }>(`/v1/tasks/${id}`);
@@ -38,5 +39,12 @@ export default async function TaskDetailPage({ params }: Props) {
     comments = [];
   }
 
-  return <TaskDetailClient initialTask={task} initialComments={comments} />;
+  try {
+    const res = await apiFetchAuthed<{ data: SymphonyRunRow[] }>(`/v1/symphony/runs?task_id=${encodeURIComponent(id)}&limit=20`);
+    runs = res.data ?? [];
+  } catch {
+    runs = [];
+  }
+
+  return <TaskDetailClient initialTask={task} initialComments={comments} initialRuns={runs} />;
 }

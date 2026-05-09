@@ -3,6 +3,7 @@ import {
   buildSymphonyBatchPrompt,
   buildSymphonyBatchRuns,
   buildSymphonyPrompt,
+  chooseSymphonyAgent,
 } from '../apps/cockpit/src/lib/symphony';
 
 const baseTask = {
@@ -52,5 +53,63 @@ describe('cockpit Symphony helpers', () => {
     expect(prompt).toContain('Symphony operating memory:');
     expect(prompt).toContain('Task-specific instructions:');
     expect(prompt).toContain('Only touch the CLI surface.');
+  });
+
+  it('uses a healthy usage snapshot when routing broad review work', () => {
+    const route = chooseSymphonyAgent(
+      { ...baseTask, id: 'task-audit', title: 'Audit all project docs', task_type: 'research' },
+      '',
+      '',
+      {
+        sampled_at: new Date().toISOString(),
+        agents: {
+          gemini: {
+            ok: true,
+            available: true,
+            sampled_at: new Date().toISOString(),
+            stats: { models: { 'gemini-test': { tokens: { total: 10 } } } },
+          },
+        },
+      },
+    );
+
+    expect(route.agent).toBe('gemini');
+    expect(route.budgetNote).toContain('Fresh Gemini sample');
+  });
+
+  it('falls back to Codex when the matched external agent is unhealthy', () => {
+    const route = chooseSymphonyAgent(
+      { ...baseTask, id: 'task-docs', title: 'Audit all project docs', task_type: 'research' },
+      '',
+      '',
+      {
+        sampled_at: new Date().toISOString(),
+        agents: {
+          gemini: {
+            ok: false,
+            available: true,
+            sampled_at: new Date().toISOString(),
+            error: 'rate limited',
+          },
+        },
+      },
+    );
+
+    expect(route.agent).toBe('codex');
+    expect(route.reason).toContain('Gemini matched');
+  });
+
+  it('renders Claude and Gemini commands with structured output for usage capture', () => {
+    const claudeRun = buildSymphonyBatchRuns([
+      { ...baseTask, id: 'task-clean', title: 'Clean up docs', task_type: 'cleanup' },
+    ])[0];
+    const geminiRun = buildSymphonyBatchRuns([
+      { ...baseTask, id: 'task-audit', title: 'Audit docs', task_type: 'research' },
+    ])[0];
+
+    expect(claudeRun.command).toContain('--output-format json');
+    expect(claudeRun.command).toContain('--no-session-persistence');
+    expect(geminiRun.command).toContain('--output-format json');
+    expect(geminiRun.command).toContain('--skip-trust');
   });
 });
