@@ -1,6 +1,5 @@
 import { cache } from "react";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
+import { getDashboardSession } from "@/lib/server-session";
 import { redirect, notFound } from "next/navigation";
 import { getServerToken, getProjectBySlug } from "@/lib/api";
 import type { ProjectRecord } from "@saas-maker/shared-types";
@@ -12,7 +11,7 @@ import type { ProjectRecord } from "@saas-maker/shared-types";
  */
 export const getAuthenticatedProject = cache(
   async (slug: string): Promise<{ project: ProjectRecord; token: string }> => {
-    const session = await auth.api.getSession({ headers: await headers() });
+    const session = await getDashboardSession();
     if (!session?.user) redirect("/login");
 
     const token = await getServerToken();

@@ -4,6 +4,7 @@
   "email-manager": { "desc": "Unified email management and automation tool.", "url": "https://github.com/sarthakagrawal927/email-manager.git" },
   "everythingrated": { "desc": "Multi-axis ratings platform for rating things across aspect-specific directories.", "url": "https://github.com/sarthakagrawal927/everythingrated.git" },
   "free-ai": { "desc": "OpenAI-compatible API gateway for free LLM providers.", "url": "https://github.com/sarthakagrawal927/free-ai.git" },
+  "ai-game": { "desc": "Persistent AI world simulator — interactive RPG-style multi-agent game.", "url": "https://github.com/sarthakagrawal927/ai-game.git" },
   "high-signal": { "desc": "Public signal log for AI infrastructure and semiconductors.", "url": "https://github.com/sarthakagrawal927/high-signal.git" },
   "linkchat": { "desc": "Real-time chat application built with Next.js.", "url": "https://github.com/sarthakagrawal927/linkchat.git" },
   "looptv": { "desc": "TV-like app for YouTube curated channels.", "url": "https://github.com/sarthakagrawal927/looptv.git" },

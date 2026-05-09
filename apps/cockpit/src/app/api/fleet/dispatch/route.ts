@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { getDashboardSession } from "@/lib/server-session";
 import { spawn } from "node:child_process";
 import path from "node:path";
 import fs from "node:fs";
 import { activeProcesses } from "@/lib/process-registry";
 
 export async function POST(req: Request) {
-  const session = await auth.api.getSession({ headers: req.headers });
+  const session = await getDashboardSession(req.headers);
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }

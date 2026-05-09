@@ -13,8 +13,7 @@ import { FleetMonitor } from "@/components/fleet-monitor";
 import { ErrorFeed } from "@/components/error-feed";
 import { LatencyMap } from "@/components/latency-map";
 import { OnboardingFlow } from "@/components/onboarding/OnboardingFlow";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
+import { getDashboardSession } from "@/lib/server-session";
 import { redirect } from "next/navigation";
 import { apiFetch, getServerToken } from "@/lib/api";
 import { visibleDashboardProjects } from "@/lib/dashboard-projects";
@@ -41,7 +40,7 @@ function formatDate(date: string) {
 }
 
 export default async function ProjectsPage() {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getDashboardSession();
   if (!session?.user) redirect("/login");
 
   const token = await getServerToken();

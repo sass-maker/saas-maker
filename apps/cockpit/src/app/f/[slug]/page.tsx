@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { PublicFeedbackContent } from "@/app/(app)/projects/[slug]/feedback/public-feedback-content";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
+import { getDashboardSession } from "@/lib/server-session";
 import { PublicAuthButtons } from "@/components/public-auth-buttons";
 
 export const dynamic = "force-dynamic";
@@ -36,7 +35,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function PublicBoardPage({ params }: Props) {
   const { slug } = await params;
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getDashboardSession();
 
   let projectName = slug;
   try {

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { getDashboardSession } from "@/lib/server-session";
 import { activeProcesses } from "@/lib/process-registry";
 
 export const dynamic = "force-dynamic";
@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
  * SSE Route: Streams live stdout/stderr from a dispatched agent job.
  */
 export async function GET(req: Request, { params }: { params: Promise<{ jobId: string }> }) {
-  const session = await auth.api.getSession({ headers: req.headers });
+  const session = await getDashboardSession(req.headers);
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
