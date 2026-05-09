@@ -11,6 +11,7 @@ interface TaskFixture {
   priority: 'low' | 'medium' | 'high';
   project_slug?: string | null;
   dependencies?: string[];
+  blocked_on_user?: boolean;
   created_at?: string;
 }
 
@@ -20,6 +21,7 @@ const baseTask = (overrides: Partial<TaskFixture>): TaskFixture => ({
   priority: overrides.priority ?? 'medium',
   project_slug: overrides.project_slug ?? null,
   dependencies: overrides.dependencies ?? [],
+  blocked_on_user: overrides.blocked_on_user ?? false,
   created_at: overrides.created_at ?? '2026-05-01T00:00:00Z',
 });
 
@@ -44,6 +46,11 @@ describe('isTaskBlocked', () => {
   it('treats unknown prerequisites as blocked', () => {
     const b = baseTask({ id: 'b', dependencies: ['ghost'] });
     expect(isTaskBlocked(b, [b])).toBe(true);
+  });
+
+  it('treats tasks waiting on the user as blocked', () => {
+    const task = baseTask({ id: 'waiting', blocked_on_user: true });
+    expect(isTaskBlocked(task, [task])).toBe(true);
   });
 
   it('parses JSON-string dependencies for legacy rows', () => {
@@ -87,7 +94,7 @@ describe('findNextTask', () => {
 
   it('throws a helpful error when only blocked tasks remain', () => {
     const a = baseTask({ id: 'a', status: 'todo', priority: 'high', dependencies: ['ghost'] });
-    expect(() => findNextTask([a])).toThrow(/blocked by unfinished prerequisites/i);
+    expect(() => findNextTask([a])).toThrow(/blocked by prerequisites or user input/i);
   });
 
   it('honors project filter', () => {

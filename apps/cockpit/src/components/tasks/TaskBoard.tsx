@@ -1,13 +1,15 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { Bot, ChevronDown, Clipboard, ExternalLink, GitBranch, Pencil, Plus, Save, Trash2, X } from 'lucide-react';
+import Link from 'next/link';
+import { Bot, CheckCircle2, ChevronDown, Clipboard, ExternalLink, GitBranch, MessageSquare, Pencil, Plus, Save, Trash2, X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { apiFetchClient, getClientToken } from '@/lib/api-client';
 import { buildSymphonyBatchPrompt, buildSymphonyPrompt, buildSymphonyRunRecord, chooseSymphonyAgent } from '@/lib/symphony';
@@ -29,8 +31,20 @@ export interface TaskRow {
   commit_sha: string | null;
   deployment_url: string | null;
   deployment_status: 'none' | 'pending' | 'success' | 'failed';
+  blocked_on_user: boolean;
   created_at: string;
   updated_at: string;
+}
+
+export interface TaskCommentRow {
+  id: string;
+  owner_id: string;
+  task_id: string;
+  author_type: 'user' | 'agent';
+  body: string;
+  resolves_blocker: boolean;
+  marks_done: boolean;
+  created_at: string;
 }
 
 export interface SymphonyRunRow {
@@ -58,6 +72,7 @@ function getDependencies(task: TaskRow): string[] {
 }
 
 function isTaskBlocked(task: TaskRow, byId: Map<string, TaskRow>): boolean {
+  if (task.blocked_on_user) return true;
   const deps = getDependencies(task);
   if (deps.length === 0) return false;
   return deps.some(id => {
@@ -152,6 +167,7 @@ interface TaskFormData {
   commit_sha: string;
   deployment_url: string;
   deployment_status: TaskRow['deployment_status'];
+  blocked_on_user: boolean;
 }
 
 const EMPTY_FORM: TaskFormData = {
@@ -166,6 +182,7 @@ const EMPTY_FORM: TaskFormData = {
   commit_sha: '',
   deployment_url: '',
   deployment_status: 'none',
+  blocked_on_user: false,
 };
 
 const ALL_PROJECTS = '__all__';
@@ -216,6 +233,14 @@ export function TaskBoard({
   const [editTask, setEditTask] = useState<TaskRow | null>(null);
   const [runTask, setRunTask] = useState<TaskRow | null>(null);
   const [runInstructions, setRunInstructions] = useState('');
+  const [commentTask, setCommentTask] = useState<TaskRow | null>(null);
+  const [commentsByTaskId, setCommentsByTaskId] = useState<Record<string, TaskCommentRow[]>>({});
+  const [commentText, setCommentText] = useState('');
+  const [resolveWithComment, setResolveWithComment] = useState(true);
+  const [markDoneWithComment, setMarkDoneWithComment] = useState(false);
+  const [syncCommentToDescription, setSyncCommentToDescription] = useState(true);
+  const [loadingComments, setLoadingComments] = useState(false);
+  const [savingComment, setSavingComment] = useState(false);
   const [startingRun, setStartingRun] = useState(false);
   const [form, setForm] = useState<TaskFormData>(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
@@ -283,6 +308,7 @@ export function TaskBoard({
       commit_sha: task.commit_sha ?? '',
       deployment_url: task.deployment_url ?? '',
       deployment_status: task.deployment_status ?? 'none',
+      blocked_on_user: task.blocked_on_user,
     });
     setModalOpen(true);
   };
@@ -308,6 +334,80 @@ export function TaskBoard({
     setSelectedTaskIds([]);
   };
 
+  const openComments = async (task: TaskRow) => {
+    setCommentTask(task);
+    setCommentText('');
+    setResolveWithComment(task.blocked_on_user);
+    setMarkDoneWithComment(false);
+    setSyncCommentToDescription(task.blocked_on_user);
+    if (commentsByTaskId[task.id]) return;
+    setLoadingComments(true);
+    try {
+      const token = await getClientToken();
+      const res = await apiFetchClient<{ data: TaskCommentRow[] }>(`/v1/tasks/${task.id}/comments`, token);
+      setCommentsByTaskId(prev => ({ ...prev, [task.id]: res.data ?? [] }));
+    } catch {
+      showToast('Failed to load comments');
+    } finally {
+      setLoadingComments(false);
+    }
+  };
+
+  const handleAddComment = async () => {
+    if (!commentTask || !commentText.trim()) return;
+    const resolvesBlocker = Boolean(commentTask.blocked_on_user && resolveWithComment);
+    const marksDone = Boolean(commentTask.status !== 'done' && markDoneWithComment);
+    setSavingComment(true);
+    try {
+      const token = await getClientToken();
+      const res = await apiFetchClient<{ data: TaskCommentRow; task?: TaskRow | null }>(`/v1/tasks/${commentTask.id}/comments`, token, {
+        method: 'POST',
+        body: JSON.stringify({
+          body: commentText.trim(),
+          resolves_blocker: resolvesBlocker,
+          marks_done: marksDone,
+          sync_to_description: syncCommentToDescription,
+        }),
+      });
+      setCommentsByTaskId(prev => ({
+        ...prev,
+        [commentTask.id]: [...(prev[commentTask.id] ?? []), res.data],
+      }));
+      if (res.task) {
+        setTasks(prev => prev.map(task => task.id === res.task!.id ? res.task! : task));
+        setCommentTask(res.task);
+      } else if (resolvesBlocker || marksDone) {
+        setTasks(prev => prev.map(task => task.id === commentTask.id ? {
+          ...task,
+          status: marksDone ? 'done' : task.status,
+          blocked_on_user: false,
+          updated_at: new Date().toISOString(),
+        } : task));
+        setCommentTask(prev => prev ? {
+          ...prev,
+          status: marksDone ? 'done' : prev.status,
+          blocked_on_user: false,
+          updated_at: new Date().toISOString(),
+        } : prev);
+      }
+      if (resolvesBlocker) {
+        setResolveWithComment(false);
+      }
+      if (marksDone) {
+        setMarkDoneWithComment(false);
+      }
+      if (syncCommentToDescription) {
+        setSyncCommentToDescription(false);
+      }
+      setCommentText('');
+      showToast(marksDone ? 'Comment added and task marked done' : resolvesBlocker ? 'Comment added and blocker resolved' : 'Comment added');
+    } catch {
+      showToast('Failed to add comment');
+    } finally {
+      setSavingComment(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.title.trim()) return;
@@ -329,6 +429,7 @@ export function TaskBoard({
             commit_sha: form.commit_sha || null,
             deployment_url: form.deployment_url || null,
             deployment_status: form.deployment_status,
+            blocked_on_user: form.blocked_on_user,
           }),
         });
         setTasks(prev => prev.map(t => t.id === editTask.id ? res.data : t));
@@ -348,14 +449,15 @@ export function TaskBoard({
             commit_sha: form.commit_sha || null,
             deployment_url: form.deployment_url || null,
             deployment_status: form.deployment_status,
+            blocked_on_user: form.blocked_on_user,
           }),
         });
         setTasks(prev => [res.data, ...prev]);
         showToast('Task created');
       }
       setModalOpen(false);
-    } catch {
-      showToast('Failed to save task');
+    } catch (error) {
+      showToast(error instanceof Error ? `Failed to save task: ${error.message.slice(0, 120)}` : 'Failed to save task');
     } finally {
       setSaving(false);
     }
@@ -649,6 +751,7 @@ export function TaskBoard({
         onSelectionChange={toggleTaskSelection}
         onEdit={openEdit}
         onDelete={handleDelete}
+        onComments={openComments}
         onRun={handleDispatch}
         onCustomizeRun={openRun}
         onStatusChange={handleStatusChange}
@@ -762,6 +865,25 @@ export function TaskBoard({
               </div>
             </div>
             <div className="space-y-3 rounded-lg border bg-muted/20 p-3">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <Label htmlFor="blocked-on-user">Blocked on me</Label>
+                  <p className="text-xs text-muted-foreground">
+                    Mark when this task needs your answer or decision before an agent can proceed.
+                  </p>
+                </div>
+                <Switch
+                  id="blocked-on-user"
+                  checked={form.blocked_on_user}
+                  onCheckedChange={checked => setForm(f => ({
+                    ...f,
+                    blocked_on_user: checked,
+                    deployment_status: checked ? 'none' : f.deployment_status,
+                  }))}
+                />
+              </div>
+            </div>
+            <div className="space-y-3 rounded-lg border bg-muted/20 p-3">
               <div>
                 <h3 className="text-sm font-medium text-foreground">PR Lifecycle</h3>
               </div>
@@ -822,7 +944,11 @@ export function TaskBoard({
                   <Label>Deployment</Label>
                   <Select
                     value={form.deployment_status}
-                    onValueChange={v => setForm(f => ({ ...f, deployment_status: v as TaskRow['deployment_status'] }))}
+                    onValueChange={v => setForm(f => ({
+                      ...f,
+                      deployment_status: v as TaskRow['deployment_status'],
+                      blocked_on_user: v === 'none' ? f.blocked_on_user : false,
+                    }))}
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -919,6 +1045,120 @@ export function TaskBoard({
         </DialogContent>
       </Dialog>
 
+      <Dialog open={!!commentTask} onOpenChange={open => {
+        if (!open) {
+          setCommentTask(null);
+          setCommentText('');
+          setResolveWithComment(true);
+          setMarkDoneWithComment(false);
+          setSyncCommentToDescription(true);
+        }
+      }}>
+        <DialogContent className="w-[min(44rem,calc(100vw-2rem))] sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Task Comments</DialogTitle>
+          </DialogHeader>
+          {commentTask && (
+            <div className="mt-2 space-y-4">
+              <div className="rounded-lg border bg-muted/25 p-3">
+                <div className="text-sm font-medium text-foreground">{commentTask.title}</div>
+                <div className="mt-1 flex flex-wrap gap-1 text-xs text-muted-foreground">
+                  <span>{commentTask.project_slug ?? 'Unassigned'}</span>
+                  {commentTask.blocked_on_user ? (
+                    <Badge variant="outline" className="border-amber-500/50 bg-amber-500/10 text-amber-600 dark:text-amber-300">
+                      Blocked on me
+                    </Badge>
+                  ) : null}
+                </div>
+              </div>
+
+              <div className="max-h-72 space-y-2 overflow-y-auto rounded-lg border bg-background p-3">
+                {loadingComments ? (
+                  <p className="text-sm text-muted-foreground">Loading comments...</p>
+                ) : (commentsByTaskId[commentTask.id]?.length ?? 0) === 0 ? (
+                  <p className="text-sm text-muted-foreground">No comments yet.</p>
+                ) : (
+                  commentsByTaskId[commentTask.id]?.map(comment => (
+                    <div key={comment.id} className="rounded-lg border bg-muted/20 p-3">
+                      <div className="mb-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                        <span className="font-medium text-foreground">{comment.author_type === 'agent' ? 'Agent' : 'You'}</span>
+                        <span>{formatRunTime(comment.created_at)}</span>
+                        {comment.resolves_blocker ? (
+                          <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-300">
+                            <CheckCircle2 className="h-3 w-3" />
+                            resolved blocker
+                          </span>
+                        ) : null}
+                        {comment.marks_done ? (
+                          <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-300">
+                            <CheckCircle2 className="h-3 w-3" />
+                            marked done
+                          </span>
+                        ) : null}
+                      </div>
+                      <p className="whitespace-pre-wrap text-sm leading-5 text-foreground">{comment.body}</p>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="task-comment">Add comment</Label>
+                <Textarea
+                  id="task-comment"
+                  value={commentText}
+                  onChange={event => setCommentText(event.target.value)}
+                  rows={4}
+                  className="min-h-24 resize-y"
+                  placeholder="Add context, answer a blocker, or leave a note for the next agent..."
+                />
+                {commentTask.blocked_on_user ? (
+                  <label className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <input
+                      type="checkbox"
+                      checked={resolveWithComment}
+                      onChange={event => setResolveWithComment(event.target.checked)}
+                      className="h-4 w-4 rounded border-border text-primary"
+                    />
+                    Resolve “blocked on me” with this comment
+                  </label>
+                ) : null}
+                {commentTask.status !== 'done' ? (
+                  <label className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <input
+                      type="checkbox"
+                      checked={markDoneWithComment}
+                      onChange={event => setMarkDoneWithComment(event.target.checked)}
+                      className="h-4 w-4 rounded border-border text-primary"
+                    />
+                    Mark task done with this comment
+                  </label>
+                ) : null}
+                <label className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <input
+                    type="checkbox"
+                    checked={syncCommentToDescription}
+                    onChange={event => setSyncCommentToDescription(event.target.checked)}
+                    className="h-4 w-4 rounded border-border text-primary"
+                  />
+                  Add this comment to the task description
+                </label>
+              </div>
+
+              <div className="flex justify-end gap-2">
+                <Button type="button" variant="outline" onClick={() => setCommentTask(null)}>
+                  Close
+                </Button>
+                <Button type="button" onClick={handleAddComment} disabled={savingComment || !commentText.trim()}>
+                  <MessageSquare className="h-4 w-4" />
+                  {savingComment ? 'Adding...' : 'Add Comment'}
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
       {toast && <Toast message={toast} />}
     </>
   );
@@ -931,6 +1171,7 @@ function TaskList({
   onSelectionChange,
   onEdit,
   onDelete,
+  onComments,
   onRun,
   onCustomizeRun,
   onStatusChange,
@@ -945,6 +1186,7 @@ function TaskList({
   onSelectionChange: (t: TaskRow, selected: boolean) => void;
   onEdit: (t: TaskRow) => void;
   onDelete: (t: TaskRow) => void;
+  onComments: (t: TaskRow) => void;
   onRun: (t: TaskRow) => void;
   onCustomizeRun: (t: TaskRow) => void;
   onStatusChange: (t: TaskRow, s: TaskRow['status']) => void;
@@ -966,6 +1208,10 @@ function TaskList({
       {tasks.map(task => {
         const preview = taskPreview(task.description);
         const blocked = isTaskBlocked(task, tasksById);
+        const dependencyBlocked = getDependencies(task).some(id => {
+          const prereq = tasksById.get(id);
+          return !prereq || prereq.status !== 'done';
+        });
         const latestRun = latestRunByTaskId.get(task.id);
         const metadataPillClass = 'inline-flex h-7 items-center rounded-full border border-border/60 bg-background/35 px-3 text-xs font-normal text-muted-foreground shadow-none';
         const metadataSelectClass = cn(
@@ -997,9 +1243,20 @@ function TaskList({
             <div className="min-w-0 px-2">
               <div className="flex min-w-0 items-baseline gap-2">
                 <h3 className="truncate text-base font-medium leading-6 text-foreground">
-                  {task.title}
+                  <Link href={`/tasks/${task.id}`} className="hover:underline">
+                    {task.title}
+                  </Link>
                 </h3>
-                {blocked && (
+                {task.blocked_on_user && (
+                  <Badge
+                    variant="outline"
+                    className="border-amber-500/50 bg-amber-500/10 text-[10px] font-medium uppercase tracking-wide text-amber-600 dark:text-amber-300"
+                    title="Waiting for your answer or decision"
+                  >
+                    Blocked on me
+                  </Badge>
+                )}
+                {dependencyBlocked && (
                   <Badge
                     variant="outline"
                     className="border-amber-500/50 bg-amber-500/10 text-[10px] font-medium uppercase tracking-wide text-amber-600 dark:text-amber-300"
@@ -1141,6 +1398,16 @@ function TaskList({
               )}
               <Button type="button" variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground opacity-0 hover:text-foreground group-hover:opacity-100" onClick={() => onEdit(task)}>
                 <Pencil className="h-3.5 w-3.5" />
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-muted-foreground opacity-0 hover:text-foreground group-hover:opacity-100"
+                onClick={() => onComments(task)}
+                title="Comments"
+              >
+                <MessageSquare className="h-3.5 w-3.5" />
               </Button>
               <Button type="button" variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground opacity-0 hover:text-destructive group-hover:opacity-100" onClick={() => onDelete(task)}>
                 <Trash2 className="h-3.5 w-3.5" />

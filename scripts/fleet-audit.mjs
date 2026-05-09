@@ -44,6 +44,43 @@ const PROD_TARGETS = {
   ],
 };
 
+const FRONTEND_TARGETS = {
+  anime_list: [{ label: 'web', url: 'https://anime-list-9lk.pages.dev' }],
+  CodeVetter: [{ label: 'web', url: 'https://codevetter.com' }],
+  'email-manager': [{ label: 'web', url: 'https://email-manager.sarthakagrawal927.workers.dev' }],
+  everythingrated: [{ label: 'web', url: 'https://everythingrated.sarthakagrawal927.workers.dev' }],
+  'free-ai': [],
+  'ai-game': [],
+  'high-signal': [{ label: 'web', url: 'https://high-signal-web.sarthakagrawal927.workers.dev' }],
+  linkchat: [{ label: 'web', url: 'https://linkchat.sarthakagrawal927.workers.dev' }],
+  looptv: [{ label: 'web', url: 'https://looptv.pages.dev' }],
+  'open-historia': [{ label: 'web', url: 'https://open-historia.sarthakagrawal927.workers.dev' }],
+  reader: [{ label: 'web', url: 'https://reader.sarthakagrawal927.workers.dev' }],
+  'resume-tailor': [{ label: 'web', url: 'https://rolepatch.com' }],
+  'saas-maker': [
+    { label: 'cockpit', url: 'https://app.sassmaker.com' },
+    { label: 'home', url: 'https://sassmaker.com' },
+    { label: 'docs', url: 'https://docs.sassmaker.com' },
+  ],
+  significanthobbies: [{ label: 'web', url: 'https://significanthobbies.com' }],
+  starboard: [{ label: 'web', url: 'https://starboard.sarthakagrawal927.workers.dev' }],
+  'swe-interview-prep': [{ label: 'web', url: 'https://swe-interview-prep.pages.dev' }],
+  'today-little-log': [{ label: 'web', url: 'https://today-little-log.pages.dev' }],
+  truehire: [{ label: 'web', url: 'https://truehire.pages.dev' }],
+};
+
+const PERFORMANCE_BUDGETS = {
+  ttfbMs: 800,
+  totalMs: 3_000,
+  downloadBytes: 5 * 1024 * 1024,
+  lighthousePerformance: 70,
+  lighthouseAccessibility: 85,
+  lighthouseBestPractices: 85,
+  lighthouseSeo: 80,
+  lcpMs: 4_000,
+  cls: 0.1,
+};
+
 const LOCAL_CHECK_OVERRIDES = {
   CodeVetter: [
     ['pnpm', ['--dir', 'apps/desktop', 'run', '--if-present', 'build']],
@@ -61,6 +98,9 @@ function parseArgs(argv) {
     runSmoke: true,
     runGithub: true,
     runDirty: true,
+    runPerformance: false,
+    runLighthouse: false,
+    performanceSamples: 3,
     timeoutMs: DEFAULT_TIMEOUT_MS,
     jsonOnly: false,
     failOnFailure: false,
@@ -75,6 +115,14 @@ function parseArgs(argv) {
     else if (arg === '--skip-smoke') args.runSmoke = false;
     else if (arg === '--skip-github') args.runGithub = false;
     else if (arg === '--skip-dirty') args.runDirty = false;
+    else if (arg === '--performance') args.runPerformance = true;
+    else if (arg === '--lighthouse') {
+      args.runPerformance = true;
+      args.runLighthouse = true;
+    }
+    else if (arg === '--performance-samples') {
+      args.performanceSamples = Math.max(1, Number.parseInt(argv[++i] ?? '', 10) || args.performanceSamples);
+    }
     else if (arg === '--timeout-ms') args.timeoutMs = Number.parseInt(argv[++i] ?? '', 10) || DEFAULT_TIMEOUT_MS;
     else if (arg === '--json') args.jsonOnly = true;
     else if (arg === '--fail-on-failure') args.failOnFailure = true;
@@ -98,6 +146,10 @@ Options:
   --skip-smoke         Skip production URL smoke checks.
   --skip-github        Skip GitHub PR/workflow checks.
   --skip-dirty         Skip local git dirty checks.
+  --performance        Run frontend curl timing checks.
+  --lighthouse         Run frontend Lighthouse checks. Implies --performance.
+  --performance-samples N
+                       Number of curl timing samples per frontend URL.
   --timeout-ms N       Timeout per local script command.
   --json               Print JSON only.
   --fail-on-failure    Exit 1 when any project is classified as fail.
@@ -256,6 +308,169 @@ function smokeAudit(project) {
   return { ok: checks.every((check) => check.ok), checks };
 }
 
+function median(values) {
+  const sorted = values.filter((value) => Number.isFinite(value)).sort((a, b) => a - b);
+  if (sorted.length === 0) return null;
+  return sorted[Math.floor(sorted.length / 2)];
+}
+
+function secondsToMs(value) {
+  return Number.isFinite(value) ? Math.round(value * 1000) : null;
+}
+
+function budgetStatus(metric, value, budget, direction = 'max') {
+  if (!Number.isFinite(value)) return null;
+  const ok = direction === 'min' ? value >= budget : value <= budget;
+  return { metric, value, budget, ok };
+}
+
+function curlTiming(target) {
+  const format = [
+    '{',
+    '"httpCode":%{http_code},',
+    '"sizeDownload":%{size_download},',
+    '"timeNameLookup":%{time_namelookup},',
+    '"timeConnect":%{time_connect},',
+    '"timeAppConnect":%{time_appconnect},',
+    '"timeStartTransfer":%{time_starttransfer},',
+    '"timeTotal":%{time_total},',
+    '"urlEffective":"%{url_effective}"',
+    '}',
+  ].join('');
+  const result = run('curl', [
+    '-L',
+    '-s',
+    '-o',
+    '/dev/null',
+    '-w',
+    format,
+    '--connect-timeout',
+    '8',
+    '--max-time',
+    '30',
+    target.url,
+  ], { timeoutMs: 35_000 });
+  if (!result.ok) {
+    return { ok: false, error: result.stderr || result.error || 'curl failed' };
+  }
+  try {
+    const parsed = JSON.parse(result.stdout);
+    return {
+      ok: parsed.httpCode >= 200 && parsed.httpCode < 400,
+      httpCode: parsed.httpCode,
+      finalUrl: parsed.urlEffective,
+      sizeDownload: Math.round(parsed.sizeDownload),
+      timeNameLookupMs: secondsToMs(parsed.timeNameLookup),
+      timeConnectMs: secondsToMs(parsed.timeConnect),
+      timeTlsMs: secondsToMs(parsed.timeAppConnect),
+      ttfbMs: secondsToMs(parsed.timeStartTransfer),
+      totalMs: secondsToMs(parsed.timeTotal),
+      error: parsed.httpCode >= 200 && parsed.httpCode < 400 ? null : `Unexpected HTTP ${parsed.httpCode}`,
+    };
+  } catch {
+    return { ok: false, error: `Could not parse curl timing output: ${result.stdout}` };
+  }
+}
+
+function lighthouseAudit(target) {
+  const result = run('pnpm', [
+    'exec',
+    'lighthouse',
+    target.url,
+    '--quiet',
+    '--chrome-flags=--headless=new --no-sandbox',
+    '--output=json',
+    '--output-path=stdout',
+    '--only-categories=performance,accessibility,best-practices,seo',
+  ], { timeoutMs: 180_000 });
+  if (!result.ok) {
+    return {
+      ok: false,
+      error: result.stderr || result.error || 'lighthouse failed',
+      tail: `${result.stdout}\n${result.stderr}`.split(/\r?\n/).filter(Boolean).slice(-12),
+    };
+  }
+  try {
+    const parsed = JSON.parse(result.stdout);
+    const categories = parsed.categories ?? {};
+    const audits = parsed.audits ?? {};
+    const scores = {
+      performance: Math.round((categories.performance?.score ?? 0) * 100),
+      accessibility: Math.round((categories.accessibility?.score ?? 0) * 100),
+      bestPractices: Math.round((categories['best-practices']?.score ?? 0) * 100),
+      seo: Math.round((categories.seo?.score ?? 0) * 100),
+    };
+    const metrics = {
+      lcpMs: audits['largest-contentful-paint']?.numericValue
+        ? Math.round(audits['largest-contentful-paint'].numericValue)
+        : null,
+      cls: Number.isFinite(audits['cumulative-layout-shift']?.numericValue)
+        ? Number(audits['cumulative-layout-shift'].numericValue.toFixed(3))
+        : null,
+      totalBlockingTimeMs: audits['total-blocking-time']?.numericValue
+        ? Math.round(audits['total-blocking-time'].numericValue)
+        : null,
+    };
+    const budgets = [
+      budgetStatus('lighthousePerformance', scores.performance, PERFORMANCE_BUDGETS.lighthousePerformance, 'min'),
+      budgetStatus('lighthouseAccessibility', scores.accessibility, PERFORMANCE_BUDGETS.lighthouseAccessibility, 'min'),
+      budgetStatus('lighthouseBestPractices', scores.bestPractices, PERFORMANCE_BUDGETS.lighthouseBestPractices, 'min'),
+      budgetStatus('lighthouseSeo', scores.seo, PERFORMANCE_BUDGETS.lighthouseSeo, 'min'),
+      budgetStatus('lcpMs', metrics.lcpMs, PERFORMANCE_BUDGETS.lcpMs),
+      budgetStatus('cls', metrics.cls, PERFORMANCE_BUDGETS.cls),
+    ].filter(Boolean);
+    return {
+      ok: budgets.every((budget) => budget.ok),
+      scores,
+      metrics,
+      budgets,
+      error: null,
+    };
+  } catch {
+    return { ok: false, error: 'Could not parse Lighthouse JSON output' };
+  }
+}
+
+function performanceAudit(project, options) {
+  const targets = FRONTEND_TARGETS[project.slug] ?? [];
+  const checks = targets.map((target) => {
+    const samples = Array.from({ length: options.samples }, () => curlTiming(target));
+    const successfulSamples = samples.filter((sample) => sample.ok);
+    const summary = {
+      httpCode: successfulSamples.at(-1)?.httpCode ?? samples.at(-1)?.httpCode ?? null,
+      finalUrl: successfulSamples.at(-1)?.finalUrl ?? samples.at(-1)?.finalUrl ?? null,
+      sizeDownload: median(successfulSamples.map((sample) => sample.sizeDownload)),
+      dnsMs: median(successfulSamples.map((sample) => sample.timeNameLookupMs)),
+      connectMs: median(successfulSamples.map((sample) => sample.timeConnectMs)),
+      tlsMs: median(successfulSamples.map((sample) => sample.timeTlsMs)),
+      ttfbMs: median(successfulSamples.map((sample) => sample.ttfbMs)),
+      totalMs: median(successfulSamples.map((sample) => sample.totalMs)),
+    };
+    const budgets = [
+      budgetStatus('ttfbMs', summary.ttfbMs, PERFORMANCE_BUDGETS.ttfbMs),
+      budgetStatus('totalMs', summary.totalMs, PERFORMANCE_BUDGETS.totalMs),
+      budgetStatus('downloadBytes', summary.sizeDownload, PERFORMANCE_BUDGETS.downloadBytes),
+    ].filter(Boolean);
+    const lighthouse = options.lighthouse ? lighthouseAudit(target) : null;
+    const hardFailure = samples.every((sample) => !sample.ok) || lighthouse?.error;
+    return {
+      label: target.label,
+      url: target.url,
+      samples,
+      summary,
+      budgets,
+      lighthouse,
+      ok: !hardFailure && budgets.every((budget) => budget.ok) && (lighthouse ? lighthouse.ok : true),
+      hardFailure: Boolean(hardFailure),
+    };
+  });
+  return {
+    ok: checks.every((check) => check.ok),
+    hasHardFailure: checks.some((check) => check.hardFailure),
+    checks,
+  };
+}
+
 function availableLocalChecks(project) {
   if (LOCAL_CHECK_OVERRIDES[project.slug]) return LOCAL_CHECK_OVERRIDES[project.slug];
   const pkgPath = path.join(project.path, 'package.json');
@@ -291,8 +506,18 @@ function classify(projectAudit) {
   if (projectAudit.github?.failedWorkflows?.length) issues.push(`failed workflows (${projectAudit.github.failedWorkflows.length})`);
   if (projectAudit.smoke && !projectAudit.smoke.ok) issues.push('prod smoke failed');
   if (projectAudit.local && !projectAudit.local.ok) issues.push('local check failed');
+  if (projectAudit.performance && !projectAudit.performance.ok) {
+    issues.push(projectAudit.performance.hasHardFailure ? 'performance audit failed' : 'performance budget watch');
+  }
   if (issues.length === 0) return { status: 'ok', issues };
-  return { status: issues.some((issue) => !issue.startsWith('open PRs')) ? 'fail' : 'watch', issues };
+  return {
+    status: issues.some((issue) =>
+      !issue.startsWith('open PRs') && issue !== 'performance budget watch'
+    )
+      ? 'fail'
+      : 'watch',
+    issues,
+  };
 }
 
 function buildTaskSuggestions(projectAudit) {
@@ -324,6 +549,16 @@ function buildTaskSuggestions(projectAudit) {
       priority: 'medium',
       evidence: failedLocal.command,
     });
+  }
+  for (const check of projectAudit.performance?.checks ?? []) {
+    if (!check.ok) {
+      suggestions.push({
+        project: slug,
+        title: `[fleet-audit] ${slug}: ${check.label} performance needs review`,
+        priority: check.hardFailure ? 'high' : 'medium',
+        evidence: check.url,
+      });
+    }
   }
   return suggestions;
 }
@@ -365,6 +600,20 @@ function markdown(report) {
     if (project.local) {
       lines.push(`- Local: ${project.local.checks.map((check) => `${check.command} ${check.ok ? 'PASS' : 'FAIL'}`).join(', ') || 'no scripts'}`);
     }
+    if (project.performance) {
+      const perfLines = project.performance.checks.map((check) => {
+        const parts = [
+          `${check.label} ${check.ok ? 'PASS' : 'WATCH'}`,
+          `ttfb ${check.summary.ttfbMs ?? '?'}ms`,
+          `total ${check.summary.totalMs ?? '?'}ms`,
+        ];
+        if (check.lighthouse) {
+          parts.push(`LH perf ${check.lighthouse.scores?.performance ?? '?'}`);
+        }
+        return parts.join(' ');
+      });
+      lines.push(`- Performance: ${perfLines.join(', ') || 'no frontend targets'}`);
+    }
     if (project.dirty) {
       lines.push(`- Dirty files: ${project.dirty.entries.length}`);
     }
@@ -383,6 +632,12 @@ async function main() {
     if (args.runGithub) entry.github = githubAudit(project);
     if (args.runSmoke) entry.smoke = smokeAudit(project);
     if (args.runLocal) entry.local = localAudit(project, args.timeoutMs);
+    if (args.runPerformance) {
+      entry.performance = performanceAudit(project, {
+        samples: args.performanceSamples,
+        lighthouse: args.runLighthouse,
+      });
+    }
     Object.assign(entry, classify(entry));
     entry.taskSuggestions = buildTaskSuggestions(entry);
     audited.push(entry);

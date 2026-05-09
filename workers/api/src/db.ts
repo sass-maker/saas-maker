@@ -57,7 +57,19 @@ export interface TaskRow {
   commit_sha: string | null;
   deployment_url: string | null;
   deployment_status: 'none' | 'pending' | 'success' | 'failed';
+  blocked_on_user: boolean;
   created_at: string; updated_at: string;
+}
+
+export interface TaskCommentRow {
+  id: string;
+  owner_id: string;
+  task_id: string;
+  author_type: 'user' | 'agent';
+  body: string;
+  resolves_blocker: boolean;
+  marks_done: boolean;
+  created_at: string;
 }
 
 function parseTaskDependencies(raw: unknown): string[] {
@@ -73,7 +85,20 @@ function parseTaskDependencies(raw: unknown): string[] {
 
 function hydrateTaskRow(row: Record<string, unknown> | null | undefined): TaskRow | null {
   if (!row) return null;
-  return { ...row, dependencies: parseTaskDependencies(row.dependencies) } as TaskRow;
+  return {
+    ...row,
+    dependencies: parseTaskDependencies(row.dependencies),
+    blocked_on_user: row.blocked_on_user === true || row.blocked_on_user === 1,
+  } as TaskRow;
+}
+
+function hydrateTaskCommentRow(row: Record<string, unknown> | null | undefined): TaskCommentRow | null {
+  if (!row) return null;
+  return {
+    ...row,
+    resolves_blocker: row.resolves_blocker === true || row.resolves_blocker === 1,
+    marks_done: row.marks_done === true || row.marks_done === 1,
+  } as TaskCommentRow;
 }
 
 function sanitizeDependencyIds(input: unknown): string[] {
@@ -1768,7 +1793,7 @@ export function getDb(d1: D1Database): FeedbackDatabase {
     },
 
     // --- Tasks ---
-    async createTask(ownerId: string, input: { title: string; description?: string; project_slug?: string; priority?: string; task_type?: string; size?: string; dependencies?: string[]; branch_name?: string | null; pr_url?: string | null; pr_status?: string; commit_sha?: string | null; deployment_url?: string | null; deployment_status?: string }): Promise<TaskRow> {
+    async createTask(ownerId: string, input: { title: string; description?: string; project_slug?: string; priority?: string; task_type?: string; size?: string; dependencies?: string[]; branch_name?: string | null; pr_url?: string | null; pr_status?: string; commit_sha?: string | null; deployment_url?: string | null; deployment_status?: string; blocked_on_user?: boolean }): Promise<TaskRow> {
       const id = crypto.randomUUID();
       const priority = input.priority ?? 'medium';
       const taskType = input.task_type ?? 'feature';
@@ -1777,9 +1802,9 @@ export function getDb(d1: D1Database): FeedbackDatabase {
       await d1.prepare(
         `INSERT INTO tasks (
           id, owner_id, project_slug, title, description, priority, task_type, size, dependencies,
-          branch_name, pr_url, pr_status, commit_sha, deployment_url, deployment_status
+          branch_name, pr_url, pr_status, commit_sha, deployment_url, deployment_status, blocked_on_user
         )
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
       ).bind(
         id,
         ownerId,
@@ -1796,6 +1821,7 @@ export function getDb(d1: D1Database): FeedbackDatabase {
         input.commit_sha ?? null,
         input.deployment_url ?? null,
         input.deployment_status ?? 'none',
+        input.blocked_on_user ? 1 : 0,
       ).run();
       const row = await d1.prepare(`SELECT * FROM tasks WHERE id = ?`).bind(id).first();
       return hydrateTaskRow(row as Record<string, unknown> | null) as TaskRow;
@@ -1819,7 +1845,14 @@ export function getDb(d1: D1Database): FeedbackDatabase {
       return (results ?? []).map((row) => hydrateTaskRow(row as Record<string, unknown>) as TaskRow);
     },
 
-    async updateTask(id: string, ownerId: string, input: Partial<{ title: string; description: string; status: string; priority: string; project_slug: string; task_type: string; size: string; dependencies: string[]; branch_name: string | null; pr_url: string | null; pr_status: string; commit_sha: string | null; deployment_url: string | null; deployment_status: string }>): Promise<TaskRow | null> {
+    async getTask(id: string, ownerId: string): Promise<TaskRow | null> {
+      const row = await d1.prepare(
+        `SELECT * FROM tasks WHERE id = ? AND owner_id = ?`
+      ).bind(id, ownerId).first();
+      return hydrateTaskRow(row as Record<string, unknown> | null);
+    },
+
+    async updateTask(id: string, ownerId: string, input: Partial<{ title: string; description: string; status: string; priority: string; project_slug: string; task_type: string; size: string; dependencies: string[]; branch_name: string | null; pr_url: string | null; pr_status: string; commit_sha: string | null; deployment_url: string | null; deployment_status: string; blocked_on_user: boolean }>): Promise<TaskRow | null> {
       const sets: string[] = [];
       const values: unknown[] = [];
       if (input.title !== undefined) { sets.push('title = ?'); values.push(input.title); }
@@ -1835,6 +1868,7 @@ export function getDb(d1: D1Database): FeedbackDatabase {
       if (input.commit_sha !== undefined) { sets.push('commit_sha = ?'); values.push(input.commit_sha); }
       if (input.deployment_url !== undefined) { sets.push('deployment_url = ?'); values.push(input.deployment_url); }
       if (input.deployment_status !== undefined) { sets.push('deployment_status = ?'); values.push(input.deployment_status); }
+      if (input.blocked_on_user !== undefined) { sets.push('blocked_on_user = ?'); values.push(input.blocked_on_user ? 1 : 0); }
       if (input.dependencies !== undefined) {
         sets.push('dependencies = ?');
         values.push(JSON.stringify(sanitizeDependencyIds(input.dependencies)));
@@ -1853,6 +1887,53 @@ export function getDb(d1: D1Database): FeedbackDatabase {
         `DELETE FROM tasks WHERE id = ? AND owner_id = ?`
       ).bind(id, ownerId).run();
       return (meta.changes ?? 0) > 0;
+    },
+
+    async listTaskComments(ownerId: string, taskId: string): Promise<TaskCommentRow[]> {
+      const { results } = await d1.prepare(
+        `SELECT * FROM task_comments WHERE owner_id = ? AND task_id = ? ORDER BY created_at ASC`
+      ).bind(ownerId, taskId).all();
+      return (results ?? []).map((row) => hydrateTaskCommentRow(row as Record<string, unknown>) as TaskCommentRow);
+    },
+
+    async createTaskComment(ownerId: string, taskId: string, input: { body: string; author_type?: string; resolves_blocker?: boolean; marks_done?: boolean; sync_to_description?: boolean }): Promise<TaskCommentRow | null> {
+      const task = await d1.prepare(
+        `SELECT id FROM tasks WHERE id = ? AND owner_id = ?`
+      ).bind(taskId, ownerId).first();
+      if (!task) return null;
+
+      const id = crypto.randomUUID();
+      const authorType = input.author_type === 'agent' ? 'agent' : 'user';
+      const resolvesBlocker = input.resolves_blocker ? 1 : 0;
+      const marksDone = input.marks_done ? 1 : 0;
+      await d1.prepare(
+        `INSERT INTO task_comments (id, owner_id, task_id, author_type, body, resolves_blocker, marks_done)
+         VALUES (?, ?, ?, ?, ?, ?, ?)`
+      ).bind(id, ownerId, taskId, authorType, input.body, resolvesBlocker, marksDone).run();
+      if (resolvesBlocker) {
+        await d1.prepare(
+          `UPDATE tasks SET blocked_on_user = 0, updated_at = datetime('now') WHERE id = ? AND owner_id = ?`
+        ).bind(taskId, ownerId).run();
+      }
+      if (marksDone) {
+        await d1.prepare(
+          `UPDATE tasks SET status = 'done', blocked_on_user = 0, updated_at = datetime('now') WHERE id = ? AND owner_id = ?`
+        ).bind(taskId, ownerId).run();
+      }
+      if (input.sync_to_description) {
+        const descriptionNote = `Decision / Handoff\n${input.body}`;
+        await d1.prepare(
+          `UPDATE tasks
+           SET description = CASE
+             WHEN description IS NULL OR trim(description) = '' THEN ?
+             ELSE description || char(10) || char(10) || ?
+           END,
+           updated_at = datetime('now')
+           WHERE id = ? AND owner_id = ?`
+        ).bind(descriptionNote, descriptionNote, taskId, ownerId).run();
+      }
+      const row = await d1.prepare(`SELECT * FROM task_comments WHERE id = ?`).bind(id).first();
+      return hydrateTaskCommentRow(row as Record<string, unknown> | null);
     },
 
     async createSymphonyAuditEvent(ownerId: string, input: {

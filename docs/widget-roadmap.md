@@ -7,10 +7,11 @@ Granular widget approach: each widget = own published npm package. Apps install 
 | Package | What |
 |---|---|
 | `@saas-maker/feedback` | Bottom-corner bug/feature button |
-| `@saas-maker/changelog-widget` | Public release timeline |
+| `@saas-maker/progress` | Unified public shipped + now/next roadmap surface |
+| `@saas-maker/changelog-widget` | Legacy public release timeline |
 | `@saas-maker/testimonials` | Testimonial wall |
 
-**TODO:** republish with self-configure (read env, apply theme/position defaults) so per-repo wrapper components can be deleted Fleet-wide.
+**TODO:** migrate Fleet projects from ad hoc changelog wrappers to `@saas-maker/progress`, then keep `@saas-maker/changelog-widget` only for backwards compatibility.
 
 ## Tier 1 — every user-facing app (priority build order)
 

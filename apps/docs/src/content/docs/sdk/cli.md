@@ -57,6 +57,14 @@ fnd api POST /v1/ai/chat/completions --auth project \
 fnd api GET /v1/ai/requests --auth session --query project_id=<projectId> --output table
 ```
 
+## 📈 Public Progress
+
+Fetch the unified public progress feed for a project. It includes published changelog entries and public roadmap items.
+
+```bash
+fnd api GET /v1/progress/public/<slug> --auth none --query changelog_limit=10 --output json
+```
+
 ## 🎼 Symphony Memory
 
 Persist task-run instructions for local agents and copied prompts.

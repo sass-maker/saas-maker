@@ -21,6 +21,7 @@ export function normalizeDependencies(task) {
 }
 
 export function isTaskBlocked(task, tasks) {
+  if (task?.blocked_on_user) return true;
   const deps = normalizeDependencies(task);
   if (deps.length === 0) return false;
   const byId = tasks instanceof Map ? tasks : new Map(tasks.map((t) => [t.id, t]));
@@ -62,7 +63,7 @@ export function findNextTask(tasks, options = {}) {
   if (candidates.length === 0) {
     const projectHint = project ? ` for project ${project}` : '';
     const blockedCount = annotated.filter((task) => task.status === status && task.blocked).length;
-    const blockedHint = status === 'todo' && blockedCount > 0 ? ` (${blockedCount} blocked by unfinished prerequisites)` : '';
+    const blockedHint = status === 'todo' && blockedCount > 0 ? ` (${blockedCount} blocked by prerequisites or user input)` : '';
     throw new Error(`No runnable ${status} tasks available${projectHint}${blockedHint}.`);
   }
   return candidates[0];

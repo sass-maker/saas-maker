@@ -1,0 +1,234 @@
+[data-saasmaker-progress] {
+  --smp-bg: #ffffff;
+  --smp-card: #f8fafc;
+  --smp-border: #e2e8f0;
+  --smp-text: #0f172a;
+  --smp-muted: #64748b;
+  --smp-subtle: #94a3b8;
+  --smp-accent: #4f46e5;
+  --smp-green: #16a34a;
+  --smp-amber: #d97706;
+  --smp-blue: #2563eb;
+  color: var(--smp-text);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+[data-saasmaker-progress].smp--dark {
+  --smp-bg: #020617;
+  --smp-card: #0f172a;
+  --smp-border: #1e293b;
+  --smp-text: #f8fafc;
+  --smp-muted: #94a3b8;
+  --smp-subtle: #64748b;
+  --smp-accent: #818cf8;
+  --smp-green: #4ade80;
+  --smp-amber: #fbbf24;
+  --smp-blue: #60a5fa;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-saasmaker-progress].smp--auto {
+    --smp-bg: #020617;
+    --smp-card: #0f172a;
+    --smp-border: #1e293b;
+    --smp-text: #f8fafc;
+    --smp-muted: #94a3b8;
+    --smp-subtle: #64748b;
+    --smp-accent: #818cf8;
+    --smp-green: #4ade80;
+    --smp-amber: #fbbf24;
+    --smp-blue: #60a5fa;
+  }
+}
+
+[data-saasmaker-progress] .smp-header {
+  margin-bottom: 1rem;
+}
+
+[data-saasmaker-progress] .smp-header p,
+[data-saasmaker-progress] .smp-section-header h3 {
+  margin: 0;
+}
+
+[data-saasmaker-progress] .smp-header p {
+  color: var(--smp-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+[data-saasmaker-progress] .smp-header h3 {
+  margin: 0.25rem 0 0;
+  font-size: 1.375rem;
+  line-height: 1.2;
+}
+
+[data-saasmaker-progress] .smp-layout {
+  display: grid;
+  gap: 1rem;
+}
+
+[data-saasmaker-progress] .smp-section {
+  background: var(--smp-bg);
+  border: 1px solid var(--smp-border);
+  border-radius: 0.75rem;
+  padding: 1rem;
+}
+
+[data-saasmaker-progress] .smp-section-header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.875rem;
+}
+
+[data-saasmaker-progress] .smp-section-header h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+[data-saasmaker-progress] .smp-roadmap {
+  display: grid;
+  gap: 0.75rem;
+}
+
+@media (min-width: 720px) {
+  [data-saasmaker-progress] .smp-roadmap {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+[data-saasmaker-progress] .smp-roadmap-column {
+  background: var(--smp-card);
+  border: 1px solid var(--smp-border);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+}
+
+[data-saasmaker-progress] .smp-column-header {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: space-between;
+  margin-bottom: 0.625rem;
+}
+
+[data-saasmaker-progress] .smp-column-header h4 {
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+[data-saasmaker-progress] .smp-column-header span {
+  color: var(--smp-muted);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+}
+
+[data-saasmaker-progress] .smp-roadmap-items {
+  display: grid;
+  gap: 0.5rem;
+}
+
+[data-saasmaker-progress] .smp-roadmap-item {
+  align-items: start;
+  background: var(--smp-bg);
+  border: 1px solid var(--smp-border);
+  border-radius: 0.5rem;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: space-between;
+  padding: 0.625rem;
+}
+
+[data-saasmaker-progress] .smp-roadmap-item h5,
+[data-saasmaker-progress] .smp-changelog-item h4 {
+  font-size: 0.875rem;
+  line-height: 1.3;
+  margin: 0;
+}
+
+[data-saasmaker-progress] .smp-roadmap-item p,
+[data-saasmaker-progress] .smp-changelog-item p {
+  color: var(--smp-muted);
+  font-size: 0.8rem;
+  line-height: 1.45;
+  margin: 0.25rem 0 0;
+}
+
+[data-saasmaker-progress] .smp-votes {
+  color: var(--smp-accent);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+[data-saasmaker-progress] .smp-changelog {
+  border-left: 1px solid var(--smp-border);
+  display: grid;
+  gap: 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 1rem;
+}
+
+[data-saasmaker-progress] .smp-changelog-item {
+  position: relative;
+}
+
+[data-saasmaker-progress] .smp-changelog-item::before {
+  background: var(--smp-accent);
+  border: 2px solid var(--smp-bg);
+  border-radius: 999px;
+  content: "";
+  height: 0.55rem;
+  left: -1.3rem;
+  position: absolute;
+  top: 0.35rem;
+  width: 0.55rem;
+}
+
+[data-saasmaker-progress] .smp-changelog-meta {
+  align-items: center;
+  color: var(--smp-subtle);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 0.72rem;
+  gap: 0.4rem;
+  margin-bottom: 0.25rem;
+}
+
+[data-saasmaker-progress] .smp-badge,
+[data-saasmaker-progress] .smp-version {
+  border: 1px solid var(--smp-border);
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.125rem 0.4rem;
+  text-transform: capitalize;
+}
+
+[data-saasmaker-progress] .smp-badge--feature {
+  color: var(--smp-green);
+}
+
+[data-saasmaker-progress] .smp-badge--improvement {
+  color: var(--smp-blue);
+}
+
+[data-saasmaker-progress] .smp-badge--fix {
+  color: var(--smp-amber);
+}
+
+[data-saasmaker-progress] .smp-badge--breaking {
+  color: #ef4444;
+}
+
+[data-saasmaker-progress] .smp-empty {
+  color: var(--smp-muted);
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+[data-saasmaker-progress] .smp-empty--compact {
+  font-size: 0.78rem;
+}

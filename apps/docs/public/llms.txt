@@ -35,6 +35,8 @@ curl https://api.sassmaker.com/v1/feedback/123 \
 
 **Use for:** Dashboard, CLI, admin operations (updating statuses, deleting entries, viewing analytics).
 
+Provider keys saved for AI Gateway are write-only. Config reads return whether a key is configured and a masked preview, never the stored secret. Set the Worker secret `AI_GATEWAY_KEY_SECRET` to encrypt newly stored provider keys at rest; existing plaintext keys continue to work until they are rotated.
+
 ## When to use which
 
 | Action | Auth method |
@@ -234,38 +236,42 @@ This creates a `foundry.json` file linking your directory to a project. See the 
 
 ---
 
-Foundry is a comprehensive toolkit designed for developers who manage multiple JavaScript/TypeScript projects. It provides a "Gold Standard" for configurations, a modular library of "Blocks," and a "Commander" CLI to eliminate configuration drift and accelerate development across your entire project fleet.
+Foundry is the operating layer for a growing fleet of SaaS products. It gives every app the same source of truth for project metadata, tasks, comments, deployment state, product widgets, audit results, and agent handoffs.
 
-## The Four Pillars
+It is API-first on purpose: the cockpit is useful for humans, but the REST API, TypeScript SDK, and `fnd api` CLI are what make it easy for agents and scripts to keep the fleet current.
 
-| Pillar | Purpose | Key Components |
-|--------|---------|----------------|
-| **1. The Standard** | Fleet-wide Consistency | ESLint, TSConfig, Prettier, Dev-Config |
-| **2. The Blocks** | Modular Capabilities | AI, DB, SDK, Analytics, Widgets |
-| **3. The Commander** | Fleet Management | Fleet Audit, Global Linting, Mass Upgrades |
-| **4. The Forge** | Rapid Scaffolding | Template-based project initialization |
+## The Operating Loop
+
+| Layer | Purpose | Key Components |
+|-------|---------|----------------|
+| **Registry** | Know what exists | Project slugs, prod links, GitHub repos, notes, limits |
+| **Tasks** | Know what needs work | Comments, blockers, PR status, deploy state, agent handoffs |
+| **Widgets** | Add product surfaces fast | Feedback, changelog, testimonials, waitlist, analytics, badge |
+| **Audits** | Keep the fleet healthy | GitHub, Cloudflare, auth, smoke, performance checks |
+| **Standards** | Reduce drift | Shared configs, docs, CLI recipes, fleet guidance |
 
 ## Core Services
 
-Foundry provides high-quality, pre-built modules that you can drop into any project:
+Foundry provides high-quality modules you can drop into any product:
 
-- **The Standard**: Versioned configs for Next.js, Vite, and Node.
-- **The Blocks**: Unified AI providers, PostHog wrappers, and DB utilities.
-- **The Widgets**: Embeddable React components for Feedback, Changelogs, and Testimonials.
-- **The Engine**: A high-performance Cloudflare Worker backend powering all blocks.
+- **Project metadata**: production URLs, GitHub links, README summaries, rate limits, and operating notes.
+- **Symphony tasks**: durable task records with comments, blockers, branch/PR/deploy fields, and audit history.
+- **Widgets**: embeddable React components for feedback, changelogs, testimonials, waitlists, analytics, progress, and badges.
+- **Fleet audits**: repeatable checks across GitHub, Cloudflare, production smoke, auth, and performance.
+- **Free AI first**: gateway patterns that prefer free/local AI before paid providers.
 
 ## Architecture
 
-- **The Standard** — Versioned packages in `packages/tooling` used by all your repos.
-- **The Blocks** — Modular logic and UI packages in `packages/blocks` and `packages/widgets`.
-- **The Cockpit** — A Next.js dashboard to monitor your fleet's health and analytics.
-- **The CLI** — The unified interface for managing projects and standards.
+- **Workers API** — Hono on Cloudflare Workers, backed by D1.
+- **Cockpit** — Next.js dashboard for projects, tasks, analytics, and fleet state.
+- **Docs** — copy-paste recipes for API, CLI, SDK, and widgets.
+- **CLI** — the unified interface for agents and scripts.
 
 ## Next Steps
 
-1. **[Quickstart](/getting-started/quickstart)** — Get the Foundry running in 5 minutes.
-2. **[The Standard](/getting-started/standard)** — Learn about our linting and TS rules.
-3. **[The CLI](/sdk/cli)** — Explore the Commander and Forge tools.
+1. **[Quickstart](/getting-started/quickstart)** — Create a project and call the API.
+2. **[CLI](/sdk/cli)** — Manage projects, tasks, and fleet metadata from scripts.
+3. **[Widgets](/widgets/feedback)** — Add a product surface without building a backend.
 
 ---
 
@@ -483,6 +489,7 @@ Returns `{ "status": "ok" }` if the API is running. No authentication required.
 | Projects | `/v1/projects` | [Projects](/services/projects) |
 | Feedback | `/v1/feedback` | [Feedback](/services/feedback) |
 | Roadmap | `/v1/roadmap` | [Roadmap](/services/roadmap) |
+| Progress | `/v1/progress` | Public changelog + roadmap feed |
 | Waitlist | `/v1/waitlist` | [Waitlist](/services/waitlist) |
 | Testimonials | `/v1/testimonials` | [Testimonials](/services/testimonials) |
 | Changelog | `/v1/changelog` | [Changelog](/services/changelog) |
@@ -1966,6 +1973,28 @@ fnd api PATCH /v1/projects/<projectId> --auth session \
   --body '{"readme":"Dashboard notes for this project."}'
 ```
 
+## 🤖 AI Gateway
+
+Configure a project-owned OpenAI-compatible provider, then call the gateway with the project API key.
+
+```bash
+fnd api PUT /v1/ai/config --auth session --query project_id=<projectId> \
+  --body '{"ai_base_url":"https://api.openai.com/v1","ai_model":"gpt-4o-mini","ai_api_key":"sk-..."}'
+
+fnd api POST /v1/ai/chat/completions --auth project \
+  --body '{"messages":[{"role":"user","content":"Write release notes"}]}'
+
+fnd api GET /v1/ai/requests --auth session --query project_id=<projectId> --output table
+```
+
+## 📈 Public Progress
+
+Fetch the unified public progress feed for a project. It includes published changelog entries and public roadmap items.
+
+```bash
+fnd api GET /v1/progress/public/<slug> --auth none --query changelog_limit=10 --output json
+```
+
 ## 🎼 Symphony Memory
 
 Persist task-run instructions for local agents and copied prompts.
@@ -1984,6 +2013,16 @@ Inspect task lifecycle and local agent dispatch events.
 fnd api GET /v1/symphony/audit --auth session --output table
 fnd api POST /v1/symphony/audit --auth session \
   --body '{"action":"task_dispatched","actor_source":"local-cli","agent_profile":"gemini"}'
+```
+
+## 📒 Symphony Run Ledger
+
+Inspect durable local task-run start records with agent, pid, command template, and cost notes.
+
+```bash
+fnd api GET /v1/symphony/runs --auth session --output table
+fnd api POST /v1/symphony/runs --auth session \
+  --body '{"task_id":"<taskId>","command_template":"gemini","agent_profile":"gemini","cost_note":"cheap-default route"}'
 ```
 
 ## 🤖 Autonomous Maintenance
@@ -2434,6 +2473,53 @@ The widget supports light, dark, and auto themes. The `auto` theme follows the u
 
 ---
 
+The progress widget is the preferred public surface for product progress. It combines published changelog entries with public roadmap items, so users can see what shipped, what is in progress, and what is planned.
+
+## Installation
+
+```bash
+npm install @saas-maker/progress
+```
+
+## Usage
+
+```tsx
+import { ProgressWidget } from '@saas-maker/progress';
+import '@saas-maker/progress/dist/index.css';
+
+function ProductProgress() {
+  return (
+    <ProgressWidget
+      slug="my-project"
+      apiBaseUrl="https://api.sassmaker.com"
+      theme="auto"
+    />
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `slug` | `string` | -- | Public project slug |
+| `apiBaseUrl` | `string` | `https://api.sassmaker.com` | API base URL |
+| `theme` | `'light' \| 'dark' \| 'auto'` | `'auto'` | Color theme |
+| `maxChangelogItems` | `number` | -- | Limit shipped updates shown |
+| `showEmptyStates` | `boolean` | `true` | Show empty-state copy when a section has no data |
+
+## API
+
+The widget reads one public endpoint:
+
+```bash
+curl "https://api.sassmaker.com/v1/progress/public/my-project?changelog_limit=10"
+```
+
+The response includes project metadata, published changelog entries, and public roadmap items.
+
+---
+
 Two React components for testimonials: a display wall for your marketing pages and a submission form for collecting new testimonials.
 
 ## Installation
@@ -2575,22 +2661,22 @@ fnd waitlist delete <id>
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
 <CardGrid stagger>
-  <Card title="Feedback & Voting" icon="comment">
-    Collect bugs, feature requests, and feedback with public voting boards.
+  <Card title="Project Registry" icon="setting">
+    Track prod links, GitHub repos, local setup notes, rate limits, and fleet guidance.
   </Card>
-  <Card title="Waitlist" icon="list-format">
-    Pre-launch email collection with automatic welcome emails.
+  <Card title="Symphony Tasks" icon="document">
+    Manage tasks with comments, blockers, PR status, deploy state, and agent handoffs.
   </Card>
-  <Card title="Testimonials" icon="star">
-    Collect and display customer testimonials with approval workflow.
+  <Card title="Fleet Audits" icon="magnifier">
+    Check GitHub, Cloudflare, auth, production smoke, and performance on a cadence.
   </Card>
-  <Card title="Changelog" icon="rocket">
-    Publish product updates with embeddable timeline widget.
+  <Card title="Widgets" icon="rocket">
+    Embed feedback, changelog, testimonials, analytics, progress, waitlist, and badges.
   </Card>
-  <Card title="Knowledge Base" icon="magnifier">
-    Vector search and RAG — upload docs, search semantically.
+  <Card title="API + CLI" icon="terminal">
+    Use REST, TypeScript SDK, or `fnd api` so agents and scripts work from the same contract.
   </Card>
-  <Card title="Analytics" icon="bars">
-    Track page views and custom events.
+  <Card title="Free AI First" icon="star">
+    Route routine work through the free-ai gateway and document paid escalation when needed.
   </Card>
 </CardGrid>

@@ -58,6 +58,15 @@ fields. Cockpit shows those fields inline on each task so a task can move from
 local execution to PR review to deployed verification without losing the link
 between the work request and the shipped artifact.
 
+Tasks can be marked `blocked_on_user` when they need a decision, credential,
+answer, or review from Sarthak before an agent should run them. Cockpit treats
+those tasks as blocked for dispatch and batch runs. Add a task comment with
+`resolves_blocker` to clear the blocker while preserving the answer in the task
+history. If the comment is the final confirmation, add `marks_done` as well;
+the task moves to `done`, clears `blocked_on_user`, and keeps the confirmation
+attached to the task page. Add `sync_to_description` when the decision or
+handoff should also appear in the task list preview for shared visibility.
+
 Local sync shells out through the Foundry CLI. Run `fnd login` once for this
 machine/account; Symphony does not accept or pass API keys directly.
 

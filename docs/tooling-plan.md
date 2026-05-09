@@ -134,13 +134,12 @@ export default config;
 `agentMode` `anime_list` `email-manager` `linkchat` `looptv` `mentionpilot` `open-historia` `personalsite` `reader` `resume-tailor` `saas-maker` `significanthobbies` `starboard` `truehire`
 
 ### Projects using vite config
-`backpropagate` `chess` `CodeVetter` `ludo-pass-play` `swe-interview-prep` `today-little-log`
+`CodeVetter` `swe-interview-prep` `today-little-log`
 
 ### Projects using astro config
 `free-ai`
 
 ### Special cases
-- `reel-maker`: uses `@remotion/eslint-config-flat` — keep as-is, do not migrate
 - `assistant`: no eslint currently — add base config
 
 ---
@@ -337,19 +336,15 @@ npm install -g fallow
   "projects": [
     { "root": "./agentMode", "entry": ["web/src/app"] },
     { "root": "./anime_list", "entry": ["src/app"] },
-    { "root": "./backpropagate", "entry": ["src/main.tsx"] },
-    { "root": "./chess", "entry": ["src/main.tsx"] },
     { "root": "./CodeVetter", "entry": ["apps/desktop/src/main.tsx"] },
     { "root": "./email-manager", "entry": ["src/app"] },
     { "root": "./free-ai", "entry": ["src/pages"] },
     { "root": "./linkchat", "entry": ["src/app"] },
     { "root": "./looptv", "entry": ["src/app"] },
-    { "root": "./ludo-pass-play", "entry": ["src/main.tsx"] },
     { "root": "./mentionpilot", "entry": ["apps/web/src/app"] },
     { "root": "./open-historia", "entry": ["src/app"] },
     { "root": "./personalsite", "entry": ["pages"] },
     { "root": "./reader", "entry": ["src/app"] },
-    { "root": "./reel-maker", "entry": ["src/index.ts"] },
     { "root": "./resume-tailor", "entry": ["src/app"] },
     { "root": "./saas-maker", "entry": ["apps/cockpit/src/app"] },
     { "root": "./significanthobbies", "entry": ["src/app"] },    { "root": "./starboard", "entry": ["src/app"] },
@@ -489,7 +484,7 @@ pnpm add -D @saas-maker/dev-config @saas-maker/eslint-config @saas-maker/tsconfi
 
 ### Priority order for migration
 Start with active + clean projects first:
-1. `linkchat`, `starboard`, `looptv`, `ludo-pass-play` — simple Next/Vite, no monorepo complexity
+1. `linkchat`, `starboard`, `looptv` — simple Next/Vite, no monorepo complexity
 2. `significanthobbies`, `email-manager`, `open-historia`, `personalsite` — straightforward Next
 3. `mentionpilot`, `truehire`, `reader` — monorepos, slightly more involved
 4. `saas-maker` — last, it's the source of the packages

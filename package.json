@@ -33,10 +33,11 @@
   },
   "devDependencies": {
     "@playwright/test": "1.59.1",
-    "@saas-maker/eslint-config": "workspace:*" ,
-    "@saas-maker/prettier-config": "workspace:*" ,
-    "@saas-maker/tsconfig": "workspace:*" ,
+    "@saas-maker/eslint-config": "workspace:*",
+    "@saas-maker/prettier-config": "workspace:*",
+    "@saas-maker/tsconfig": "workspace:*",
     "husky": "9.1.7",
+    "lighthouse": "^13.3.0",
     "vitest": "4.1.5",
     "wrangler": "4.85.0"
   },

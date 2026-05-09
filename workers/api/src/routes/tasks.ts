@@ -31,6 +31,16 @@ tasks.get('/', requireSession, async (c) => {
   return c.json({ data });
 });
 
+// GET /v1/tasks/:id — get one task
+tasks.get('/:id', requireSession, async (c) => {
+  const userId = c.get('userId')!;
+  const id = c.req.param('id');
+  const db = getDb(c.env.DB);
+  const task = await db.getTask(id, userId);
+  if (!task) return c.json({ error: 'Task not found' }, 404);
+  return c.json({ data: task });
+});
+
 function normalizeDependencies(value: unknown): string[] | undefined {
   if (value === undefined) return undefined;
   if (!Array.isArray(value)) return [];
@@ -53,6 +63,20 @@ function enumValue<T extends string>(value: unknown, allowed: readonly T[]): T |
 
 const PR_STATUSES = ['none', 'draft', 'open', 'merged', 'closed'] as const;
 const DEPLOYMENT_STATUSES = ['none', 'pending', 'success', 'failed'] as const;
+const COMMENT_AUTHOR_TYPES = ['user', 'agent'] as const;
+
+function normalizeBlockedDeployment(input: {
+  blocked_on_user?: boolean;
+  deployment_status?: typeof DEPLOYMENT_STATUSES[number];
+}) {
+  if (input.blocked_on_user === true) {
+    input.deployment_status = 'none';
+  }
+  if (input.deployment_status && input.deployment_status !== 'none') {
+    input.blocked_on_user = false;
+  }
+  return input;
+}
 
 // POST /v1/tasks — create task
 tasks.post('/', requireSession, async (c) => {
@@ -71,12 +95,17 @@ tasks.post('/', requireSession, async (c) => {
     commit_sha?: unknown;
     deployment_url?: unknown;
     deployment_status?: unknown;
+    blocked_on_user?: unknown;
   };
   if (!body.title || typeof body.title !== 'string' || !body.title.trim()) {
     return c.json({ error: 'title is required' }, 400);
   }
   const prStatus = enumValue(body.pr_status, PR_STATUSES);
   const deploymentStatus = enumValue(body.deployment_status, DEPLOYMENT_STATUSES);
+  const state = normalizeBlockedDeployment({
+    deployment_status: deploymentStatus,
+    blocked_on_user: body.blocked_on_user === true,
+  });
   const db = getDb(c.env.DB);
   const task = await db.createTask(userId, {
     title: body.title.trim(),
@@ -91,7 +120,8 @@ tasks.post('/', requireSession, async (c) => {
     pr_status: prStatus,
     commit_sha: optionalString(body.commit_sha),
     deployment_url: optionalString(body.deployment_url),
-    deployment_status: deploymentStatus,
+    deployment_status: state.deployment_status,
+    blocked_on_user: state.blocked_on_user,
   });
   await recordAudit(db, userId, {
     task_id: task.id,
@@ -109,6 +139,7 @@ tasks.post('/', requireSession, async (c) => {
       commit_sha: task.commit_sha,
       deployment_url: task.deployment_url,
       deployment_status: task.deployment_status,
+      blocked_on_user: task.blocked_on_user,
     },
   });
   capture({ distinctId: userId, event: 'task_created', properties: { task_id: task.id, priority: task.priority ?? undefined, task_type: task.task_type ?? undefined, size: task.size ?? undefined, project_slug: body.project_slug ?? undefined } });
@@ -134,9 +165,14 @@ tasks.patch('/:id', requireSession, async (c) => {
     commit_sha: unknown;
     deployment_url: unknown;
     deployment_status: unknown;
+    blocked_on_user: boolean;
   }>;
   const db = getDb(c.env.DB);
   const { dependencies: rawDependencies, ...rest } = body;
+  const state = normalizeBlockedDeployment({
+    deployment_status: enumValue(body.deployment_status, DEPLOYMENT_STATUSES),
+    blocked_on_user: body.blocked_on_user,
+  });
   const updates: Record<string, unknown> = {
     ...rest,
     branch_name: optionalString(body.branch_name),
@@ -144,7 +180,8 @@ tasks.patch('/:id', requireSession, async (c) => {
     pr_status: enumValue(body.pr_status, PR_STATUSES),
     commit_sha: optionalString(body.commit_sha),
     deployment_url: optionalString(body.deployment_url),
-    deployment_status: enumValue(body.deployment_status, DEPLOYMENT_STATUSES),
+    deployment_status: state.deployment_status,
+    blocked_on_user: state.blocked_on_user,
   };
   for (const key of Object.keys(updates)) {
     if (updates[key] === undefined) delete updates[key];
@@ -171,10 +208,60 @@ tasks.patch('/:id', requireSession, async (c) => {
       commit_sha: updates.commit_sha,
       deployment_url: updates.deployment_url,
       deployment_status: updates.deployment_status,
+      blocked_on_user: updates.blocked_on_user,
     },
   });
   if (body.status) capture({ distinctId: userId, event: 'task_status_updated', properties: { task_id: id, status: body.status } });
   return c.json({ data: task });
+});
+
+// GET /v1/tasks/:id/comments — list comments for one task
+tasks.get('/:id/comments', requireSession, async (c) => {
+  const userId = c.get('userId')!;
+  const id = c.req.param('id');
+  const db = getDb(c.env.DB);
+  const data = await db.listTaskComments(userId, id);
+  return c.json({ data });
+});
+
+// POST /v1/tasks/:id/comments — add a comment, optionally resolving a user blocker
+tasks.post('/:id/comments', requireSession, async (c) => {
+  const userId = c.get('userId')!;
+  const id = c.req.param('id');
+  const body = await c.req.json() as {
+    body?: unknown;
+    author_type?: unknown;
+    resolves_blocker?: unknown;
+    marks_done?: unknown;
+    sync_to_description?: unknown;
+  };
+  if (typeof body.body !== 'string' || !body.body.trim()) {
+    return c.json({ error: 'body is required' }, 400);
+  }
+
+  const db = getDb(c.env.DB);
+  const comment = await db.createTaskComment(userId, id, {
+    body: body.body.trim(),
+    author_type: enumValue(body.author_type, COMMENT_AUTHOR_TYPES),
+    resolves_blocker: body.resolves_blocker === true,
+    marks_done: body.marks_done === true,
+    sync_to_description: body.sync_to_description === true,
+  });
+  if (!comment) return c.json({ error: 'Task not found' }, 404);
+  const task = comment.resolves_blocker || comment.marks_done || body.sync_to_description === true ? await db.getTask(id, userId) : null;
+
+  await recordAudit(db, userId, {
+    task_id: id,
+    action: comment.marks_done ? 'task_comment_marked_done' : comment.resolves_blocker ? 'task_comment_resolved_blocker' : 'task_comment_created',
+    actor_source: 'api',
+    metadata: {
+      author_type: comment.author_type,
+      resolves_blocker: comment.resolves_blocker,
+      marks_done: comment.marks_done,
+      sync_to_description: body.sync_to_description === true,
+    },
+  });
+  return c.json({ data: comment, task }, 201);
 });
 
 // DELETE /v1/tasks/:id — delete task

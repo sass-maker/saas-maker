@@ -81,6 +81,8 @@ node scripts/generate-openapi.mjs   # Regenerate OpenAPI spec (updates 3 files)
 
 ### Using SaaS Maker
 - Treat SaaS Maker as the system of record for project metadata, feedback, tasks, analytics, testimonials, changelog, and fleet visibility.
+- Treat the Cockpit Progress Board as the source of truth for public product progress; keep it separate from Cockpit Tasks.
+- Agents must confirm intended public progress changes with the user before creating, editing, or deleting Progress Board items.
 - Prefer API-first workflows through `fnd api`, the SDK, or widgets instead of one-off scripts when interacting with SaaS Maker features.
 - Keep this agent file aligned with the project record when operating rules, integrations, or deployment conventions change.
 

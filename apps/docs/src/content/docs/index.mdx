@@ -1,9 +1,9 @@
 ---
 title: Foundry Docs
-description: Drop-in backend services for SaaS apps — feedback, waitlist, testimonials, changelog, and more.
+description: API-first operating layer for a fleet of SaaS products, agents, widgets, tasks, and deploy checks.
 template: splash
 hero:
-  tagline: Add feedback, waitlist, testimonials, changelog, knowledge base, and analytics to your app in minutes.
+  tagline: Keep every product, task, deploy, widget, and agent handoff moving from one cockpit.
   actions:
     - text: Get Started
       link: /getting-started/introduction/
@@ -17,22 +17,22 @@ hero:
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
 <CardGrid stagger>
-  <Card title="Feedback & Voting" icon="comment">
-    Collect bugs, feature requests, and feedback with public voting boards.
+  <Card title="Project Registry" icon="setting">
+    Track prod links, GitHub repos, local setup notes, rate limits, and fleet guidance.
   </Card>
-  <Card title="Waitlist" icon="list-format">
-    Pre-launch email collection with automatic welcome emails.
+  <Card title="Symphony Tasks" icon="document">
+    Manage tasks with comments, blockers, PR status, deploy state, and agent handoffs.
   </Card>
-  <Card title="Testimonials" icon="star">
-    Collect and display customer testimonials with approval workflow.
+  <Card title="Fleet Audits" icon="magnifier">
+    Check GitHub, Cloudflare, auth, production smoke, and performance on a cadence.
   </Card>
-  <Card title="Changelog" icon="rocket">
-    Publish product updates with embeddable timeline widget.
+  <Card title="Widgets" icon="rocket">
+    Embed feedback, changelog, testimonials, analytics, progress, waitlist, and badges.
   </Card>
-  <Card title="Knowledge Base" icon="magnifier">
-    Vector search and RAG — upload docs, search semantically.
+  <Card title="API + CLI" icon="terminal">
+    Use REST, TypeScript SDK, or `fnd api` so agents and scripts work from the same contract.
   </Card>
-  <Card title="Analytics" icon="bars">
-    Track page views and custom events.
+  <Card title="Free AI First" icon="star">
+    Route routine work through the free-ai gateway and document paid escalation when needed.
   </Card>
 </CardGrid>

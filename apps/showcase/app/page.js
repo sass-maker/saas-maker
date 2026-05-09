@@ -310,21 +310,21 @@ export default function LandingPage() {
         <div>
           <div className="hero-badge">
             <span className="hero-badge-dot" />
-            Forge your next idea
+            Fleet OS for solo builders
           </div>
-          <h1>Standardize your<br /><span className="hero-highlight">entire project fleet</span></h1>
-          <p>The Open Source Foundry for developers who build at scale. Shared standards, modular blocks, and a unified cockpit for all your repositories.</p>
+          <h1>Run every product from<br /><span className="hero-highlight">one operational cockpit</span></h1>
+          <p>Foundry is the API-first layer for your fleet: project metadata, feedback, changelogs, tasks, audits, widgets, and standards that stay aligned as your apps multiply.</p>
           <div className="hero-actions">
-            <a href={DASHBOARD_URL} className="btn btn-primary btn-lg">Open the Cockpit</a>
-            <a href="#standard" className="btn btn-secondary btn-lg">See the Standard</a>
+            <a href={DASHBOARD_URL} className="btn btn-primary btn-lg">Open Cockpit</a>
+            <a href={DOCS_URL} className="btn btn-secondary btn-lg" target="_blank" rel="noopener noreferrer">Read Docs</a>
           </div>
           <div className="trust-bar">
-            <span className="trust-label">Used by builders at</span>
+            <span className="trust-label">Built for</span>
             <div className="trust-logos">
-              <span className="trust-logo">ACME</span>
-              <span className="trust-logo">Launchpad</span>
-              <span className="trust-logo">NovaSaaS</span>
-              <span className="trust-logo">Streamline</span>
+              <span className="trust-logo">Cloudflare</span>
+              <span className="trust-logo">Next.js</span>
+              <span className="trust-logo">Workers</span>
+              <span className="trust-logo">API-first</span>
             </div>
           </div>
         </div>
@@ -336,9 +336,9 @@ export default function LandingPage() {
       {/* Features section */}
       <section className="section" id="standard">
         <div className="section-header fade-up" ref={featuresHeaderRef}>
-          <div className="section-label">Foundation</div>
-          <h2>One Standard for all<br /><span>your repositories</span></h2>
-          <p>Eliminate configuration drift with shared, versioned standards for ESLint, TypeScript, and Prettier.</p>
+          <div className="section-label">Control plane</div>
+          <h2>One system of record for<br /><span>every product you ship</span></h2>
+          <p>Stop treating each app as a separate island. Foundry gives every project the same metadata, operational tasks, product feedback, and health checks.</p>
         </div>
 
         {/* The Standard */}
@@ -346,17 +346,17 @@ export default function LandingPage() {
           <div className="feature-row-text">
             <div className="feature-row-title">
               <div className="feature-row-icon" style={{ background: 'rgba(59,130,246,0.12)', border: '1px solid rgba(59,130,246,0.2)' }}>📏</div>
-              The Standard
+              Project Registry
             </div>
             <p className="feature-row-body">
-              Consistent code quality across 1 or 100 projects. Our shared configs are battle-tested and ready to drop into any Next.js, Vite, or Node.js environment.
+              Keep production URLs, GitHub links, owners, limits, notes, and local guidance attached to the project instead of scattered across tabs and memory.
             </p>
             <ul className="feature-row-checks">
-              <li>Unified ESLint & Prettier rules</li>
-              <li>Strict TypeScript base configs</li>
-              <li>Automated Git hooks via Dev-Config</li>
+              <li>Fleet metadata API and cockpit dashboard</li>
+              <li>Local agent guidance mirrored into repos</li>
+              <li>Deployment links and health state in one place</li>
             </ul>
-            <a href={DOCS_URL} className="btn btn-ghost">View the Specs</a>
+            <a href={DOCS_URL} className="btn btn-ghost">View Registry Docs</a>
           </div>
           <WaitlistMockup />
         </div>
@@ -370,7 +370,7 @@ export default function LandingPage() {
               Testimonials
             </div>
             <p className="feature-row-body">
-              Turn happy customers into your best marketing. Collect, manage, and embed verified testimonials anywhere on your site — as a wall of love, carousel, or inline quote.
+              Capture proof while the product is still moving. Collect, approve, and embed testimonials without building another mini-backend.
             </p>
             <ul className="feature-row-checks">
               <li>Collect via shareable form or API</li>
@@ -389,7 +389,7 @@ export default function LandingPage() {
               Feedback & Voting
             </div>
             <p className="feature-row-body">
-              Stop guessing what to build next. Give users a public feedback board where they can submit ideas, upvote priorities, and track your roadmap — all without leaving your product.
+              Turn product feedback into durable work. Users can submit issues and requests; you can promote them into tasks without losing context.
             </p>
             <ul className="feature-row-checks">
               <li>Public or private feedback boards</li>
@@ -410,7 +410,7 @@ export default function LandingPage() {
               Changelog
             </div>
             <p className="feature-row-body">
-              Keep users informed and reduce churn by shipping visible progress. Write release notes once and publish them to your website, in-app widget, and email list simultaneously.
+              Publish visible progress from the same place you track the work. Ship updates to your app, docs, and widgets without rebuilding a changelog system per project.
             </p>
             <ul className="feature-row-checks">
               <li>In-app widget with unread badge</li>
@@ -429,7 +429,7 @@ export default function LandingPage() {
               Analytics
             </div>
             <p className="feature-row-body">
-              Gain insights across all your tools in one place. Track waitlist growth, feedback trends, testimonial conversion, and changelog engagement — no extra integrations needed.
+              See which projects are alive, deployed, failing, or drifting. Fleet audits, smoke checks, and performance snapshots turn maintenance into a routine.
             </p>
             <ul className="feature-row-checks">
               <li>Unified dashboard across all features</li>
@@ -450,7 +450,7 @@ export default function LandingPage() {
               Built for developers
             </div>
             <p className="feature-row-body">
-              Every service is available via REST API or the official TypeScript SDK. Ship in minutes, not days — with full type safety and Cloudflare edge performance globally.
+              Every surface is available through REST, CLI, or SDK. Agents and scripts can inspect, update, and comment on the same records the cockpit shows.
             </p>
             <ul className="feature-row-checks">
               <li>TypeScript SDK with full type coverage</li>
@@ -467,18 +467,18 @@ export default function LandingPage() {
       {/* More features grid */}
       <section className="section" id="blocks">
         <div className="section-header fade-up" ref={moreRef}>
-          <div className="section-label">Toolkit</div>
-          <h2>A complete library of<br /><span>modular Foundry blocks</span></h2>
-          <p>The Foundry is a complete toolkit — high-quality, plug-and-play modules for every project.</p>
+          <div className="section-label">Building blocks</div>
+          <h2>Composable services for<br /><span>shipping faster without drift</span></h2>
+          <p>Use the blocks independently or as a fleet-wide operating system. Everything is designed to be scriptable, auditable, and easy for agents to operate.</p>
         </div>
         <div className="feature-grid">
           {[
-            { icon: '🤖', bg: 'rgba(249,115,22,0.1)', title: 'AI Block', body: 'Unified provider integration for OpenAI, Anthropic, and Gemini. Stream-ready and type-safe.' },
-            { icon: '📊', bg: 'rgba(59,130,246,0.12)', title: 'Analytics Block', body: 'Lightweight PostHog wrapper to standardize tracking across your entire fleet.' },
-            { icon: '📦', bg: 'rgba(124,58,237,0.1)', title: 'DB Block', body: 'Drizzle-powered database utilities for Cloudflare D1 and Turso.' },
-            { icon: '📡', bg: 'rgba(34,197,94,0.1)', title: 'Widgets', body: 'Ready-to-drop UI components for feedback, changelogs, and roadmaps.' },
-            { icon: '⚡', bg: 'rgba(250,204,21,0.08)', title: 'The Commander', body: 'A CLI to manage your fleet—lint, audit, and upgrade every repo at once.' },
-            { icon: '🌐', bg: 'rgba(59,130,246,0.08)', title: 'The Forge', body: 'Scaffold new Foundry-compliant projects in seconds with pre-baked standards.' },
+            { icon: '🤖', bg: 'rgba(249,115,22,0.1)', title: 'Free AI gateway', body: 'Route routine AI work through free/local providers first, with paid escalation kept explicit.' },
+            { icon: '📊', bg: 'rgba(59,130,246,0.12)', title: 'Fleet audits', body: 'GitHub, deployment, auth, smoke, and performance checks on a repeatable cadence.' },
+            { icon: '📦', bg: 'rgba(124,58,237,0.1)', title: 'Project metadata', body: 'README, rate limits, guidance, links, and ownership stored behind one API.' },
+            { icon: '📡', bg: 'rgba(34,197,94,0.1)', title: 'Widgets', body: 'Feedback, changelog, testimonials, badge, analytics, and progress widgets.' },
+            { icon: '⚡', bg: 'rgba(250,204,21,0.08)', title: 'Symphony tasks', body: 'Durable tasks with comments, blockers, PR/deploy state, and agent handoff history.' },
+            { icon: '🌐', bg: 'rgba(59,130,246,0.08)', title: 'Cloudflare core', body: 'Workers API, D1, Wrangler automation, and deploy-aware smoke checks.' },
           ].map(f => (
             <div key={f.title} className="feature-card">
               <div className="feature-icon" style={{ background: f.bg }}>{f.icon}</div>

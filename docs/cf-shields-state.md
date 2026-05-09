@@ -64,8 +64,6 @@ Pages config (`pages_build_output_dir`) does **not** support `[limits]` or `[[un
 - saas-maker-docs (Pages)
 - codevetter (Pages)
 - personalsite (Pages)
-- chess (Pages)
-- backpropagate (Pages)
 
 Each Pages project gets free-tier Cloudflare DDoS by default. To layer additional rate limiting, attach a custom domain → zone-level WAF rule (see below).
 

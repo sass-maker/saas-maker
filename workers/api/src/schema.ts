@@ -132,3 +132,14 @@ export const symphony_runs = sqliteTable('symphony_runs', {
   started_at: text('started_at').notNull().default(sql`(datetime('now'))`),
   created_at: text('created_at').notNull().default(sql`(datetime('now'))`),
 });
+
+export const task_comments = sqliteTable('task_comments', {
+  id: text('id').primaryKey(),
+  owner_id: text('owner_id').notNull().references(() => users.id),
+  task_id: text('task_id').notNull(),
+  author_type: text('author_type').notNull().default('user'),
+  body: text('body').notNull(),
+  resolves_blocker: integer('resolves_blocker').notNull().default(0),
+  marks_done: integer('marks_done').notNull().default(0),
+  created_at: text('created_at').notNull().default(sql`(datetime('now'))`),
+});

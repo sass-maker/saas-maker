@@ -31,19 +31,6 @@
 4. **[MED/M] Move from Turso to D1** — user policy preference (Turso or D1 — both fine, but D1 saves an external dep). 14.8k rows + watchlists fit D1 trivially.
 5. **[LOW/S] Container for yt-dlp-style scraping** if expanding beyond Jikan — currently runs in GH Actions, no need yet.
 
-## backpropagate
-**Stack today:** Vite + React SPA, Cloudflare Pages. No backend. Pure static.
-**Migrations:**
-1. **[LOW/S] Turnstile** if any contact form is added — currently no public input. Skip.
-   *No migration warranted today — pure static demo.*
-
-## chess
-**Stack today:** Vite + React SPA on Vercel + Express CLI bridge (`server/index.mjs`) + serverless `api/coach.ts` proxy + Stockfish WASM. Multi-provider AI (Anthropic/OpenAI/Google/DeepSeek). NOT on Cloudflare today.
-**Migrations:**
-1. **[HIGH/M] Move to Workers + Workers AI** — current: Vercel for `api/coach.ts` proxying paid AI APIs. Target: Worker calling Workers AI (Llama 3.3 70B) for coaching → free up to 10k neurons/day, removes Vercel hop. Files: `api/coach.ts` → new Worker.
-2. **[MED/S] Durable Objects for game session state** — current: localStorage only, no shared/multiplayer. Target: optional cloud-save via DO per gameId (now feasible on Paid). Files: new DO class.
-3. **[LOW/S] R2 for PGN export storage** if game-history feature added.
-
 ## clash-royale-meta
 **Stack today:** Next.js 16 on Workers + static deck data. No DB, no auth. Zero traffic in 30d.
 **Migrations:**

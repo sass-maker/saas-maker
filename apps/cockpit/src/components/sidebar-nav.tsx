@@ -43,6 +43,7 @@ interface Project {
 
 const projectNavItems = [
   { label: "Feedback", href: "", icon: MessageSquare },
+  { label: "Progress", href: "/progress", icon: ClipboardList },
   { label: "Roadmap", href: "/roadmap", icon: Map },
   { label: "Testimonials", href: "/testimonials", icon: Star },
   { label: "Waitlist", href: "/waitlist", icon: Users },

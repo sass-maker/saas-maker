@@ -44,7 +44,8 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
-        <script
+        <template
+          id="saas-maker-structured-data-template"
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({

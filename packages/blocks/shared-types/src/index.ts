@@ -343,6 +343,27 @@ export interface ChangelogTimelineProps {
   maxItems?: number;
 }
 
+// --- Progress Service / Widget ---
+
+export interface PublicProgressProject {
+  name: string;
+  slug: string;
+}
+
+export interface PublicProgressResponse {
+  project: PublicProgressProject;
+  changelog: ChangelogEntryRecord[];
+  roadmap: RoadmapItemRecord[];
+}
+
+export interface ProgressWidgetProps {
+  slug: string;
+  apiBaseUrl?: string;
+  theme?: 'light' | 'dark' | 'auto';
+  maxChangelogItems?: number;
+  showEmptyStates?: boolean;
+}
+
 // --- Forms / Surveys ---
 
 export type FormQuestionType =

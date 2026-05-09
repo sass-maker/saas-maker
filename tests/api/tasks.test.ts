@@ -2,9 +2,12 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mockDb = vi.hoisted(() => ({
   listTasks: vi.fn(),
+  getTask: vi.fn(),
   createTask: vi.fn(),
   updateTask: vi.fn(),
   deleteTask: vi.fn(),
+  listTaskComments: vi.fn(),
+  createTaskComment: vi.fn(),
   createSymphonyAuditEvent: vi.fn(),
   listSymphonyAuditEvents: vi.fn(),
   createSymphonyRun: vi.fn(),
@@ -48,6 +51,28 @@ import { request } from './helpers';
 beforeEach(() => {
   mockDb.listTasks.mockReset();
   mockDb.listTasks.mockResolvedValue([]);
+  mockDb.getTask.mockReset();
+  mockDb.getTask.mockImplementation(async (id: string, ownerId: string) => ({
+    id,
+    owner_id: ownerId,
+    project_slug: 'saas-maker',
+    title: 'Task',
+    description: null,
+    status: 'todo',
+    priority: 'medium',
+    task_type: 'feature',
+    size: 'm',
+    dependencies: [],
+    branch_name: null,
+    pr_url: null,
+    pr_status: 'none',
+    commit_sha: null,
+    deployment_url: null,
+    deployment_status: 'none',
+    blocked_on_user: false,
+    created_at: '2026-05-02 00:00:00',
+    updated_at: '2026-05-02 00:00:00',
+  }));
   mockDb.createTask.mockReset();
   mockDb.createTask.mockImplementation(async (_ownerId: string, input: any) => ({
     id: 'task-1',
@@ -66,6 +91,7 @@ beforeEach(() => {
     commit_sha: input.commit_sha ?? null,
     deployment_url: input.deployment_url ?? null,
     deployment_status: input.deployment_status ?? 'none',
+    blocked_on_user: input.blocked_on_user ?? false,
     created_at: '2026-05-02 00:00:00',
     updated_at: '2026-05-02 00:00:00',
   }));
@@ -87,11 +113,25 @@ beforeEach(() => {
     commit_sha: input.commit_sha ?? null,
     deployment_url: input.deployment_url ?? null,
     deployment_status: input.deployment_status ?? 'none',
+    blocked_on_user: input.blocked_on_user ?? false,
     created_at: '2026-05-02 00:00:00',
     updated_at: '2026-05-02 00:00:00',
   }));
   mockDb.deleteTask.mockReset();
   mockDb.deleteTask.mockResolvedValue(true);
+  mockDb.listTaskComments.mockReset();
+  mockDb.listTaskComments.mockResolvedValue([]);
+  mockDb.createTaskComment.mockReset();
+  mockDb.createTaskComment.mockImplementation(async (owner_id: string, task_id: string, input: any) => ({
+    id: 'comment-1',
+    owner_id,
+    task_id,
+    author_type: input.author_type ?? 'user',
+    body: input.body,
+    resolves_blocker: input.resolves_blocker ?? false,
+    marks_done: input.marks_done ?? false,
+    created_at: '2026-05-02 00:00:00',
+  }));
   mockDb.createSymphonyAuditEvent.mockReset();
   mockDb.createSymphonyAuditEvent.mockImplementation(async (owner_id: string, input: any) => ({
     id: 'audit-1',
@@ -147,6 +187,16 @@ describe('Tasks API', () => {
 
     expect(res.status).toBe(200);
     expect(mockDb.listTasks).toHaveBeenCalledWith('user-1', 'todo', 'free-ai');
+  });
+
+  it('GET /v1/tasks/:id returns one task', async () => {
+    const res = await request('/v1/tasks/task-1', {
+      headers: { Authorization: 'Bearer test-session' },
+    });
+
+    expect(res.status).toBe(200);
+    expect(mockDb.getTask).toHaveBeenCalledWith('task-1', 'user-1');
+    await expect(res.json()).resolves.toMatchObject({ data: { id: 'task-1' } });
   });
 
   it('POST /v1/tasks records an audit event', async () => {
@@ -267,6 +317,181 @@ describe('Tasks API', () => {
         deployment_status: 'pending',
       }),
     }));
+  });
+
+  it('PATCH /v1/tasks/:id can mark a task blocked on the user', async () => {
+    const res = await request('/v1/tasks/task-1', {
+      method: 'PATCH',
+      headers: { Authorization: 'Bearer test-session', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ blocked_on_user: true }),
+    });
+
+    expect(res.status).toBe(200);
+    expect(mockDb.updateTask).toHaveBeenCalledWith('task-1', 'user-1', expect.objectContaining({
+      blocked_on_user: true,
+      deployment_status: 'none',
+    }));
+  });
+
+  it('PATCH /v1/tasks/:id unblocks a task when deployment starts', async () => {
+    const res = await request('/v1/tasks/task-1', {
+      method: 'PATCH',
+      headers: { Authorization: 'Bearer test-session', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ deployment_status: 'pending' }),
+    });
+
+    expect(res.status).toBe(200);
+    expect(mockDb.updateTask).toHaveBeenCalledWith('task-1', 'user-1', expect.objectContaining({
+      blocked_on_user: false,
+      deployment_status: 'pending',
+    }));
+  });
+
+  it('GET /v1/tasks/:id/comments lists task comments', async () => {
+    mockDb.listTaskComments.mockResolvedValueOnce([{ id: 'comment-1', task_id: 'task-1', owner_id: 'user-1', author_type: 'user', body: 'Ship it', resolves_blocker: false, marks_done: false, created_at: '2026-05-02 00:00:00' }]);
+
+    const res = await request('/v1/tasks/task-1/comments', {
+      headers: { Authorization: 'Bearer test-session' },
+    });
+
+    expect(res.status).toBe(200);
+    expect(mockDb.listTaskComments).toHaveBeenCalledWith('user-1', 'task-1');
+    await expect(res.json()).resolves.toMatchObject({ data: [{ body: 'Ship it' }] });
+  });
+
+  it('POST /v1/tasks/:id/comments can resolve a user blocker', async () => {
+    mockDb.getTask.mockResolvedValueOnce({
+      id: 'task-1',
+      owner_id: 'user-1',
+      project_slug: 'saas-maker',
+      title: 'Task',
+      description: null,
+      status: 'todo',
+      priority: 'medium',
+      task_type: 'feature',
+      size: 'm',
+      dependencies: [],
+      branch_name: null,
+      pr_url: null,
+      pr_status: 'none',
+      commit_sha: null,
+      deployment_url: null,
+      deployment_status: 'none',
+      blocked_on_user: false,
+      created_at: '2026-05-02 00:00:00',
+      updated_at: '2026-05-02 00:00:01',
+    });
+
+    const res = await request('/v1/tasks/task-1/comments', {
+      method: 'POST',
+      headers: { Authorization: 'Bearer test-session', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ body: 'Answered: use Google OAuth only.', resolves_blocker: true }),
+    });
+
+    expect(res.status).toBe(201);
+    expect(mockDb.createTaskComment).toHaveBeenCalledWith('user-1', 'task-1', expect.objectContaining({
+      body: 'Answered: use Google OAuth only.',
+      resolves_blocker: true,
+    }));
+    expect(mockDb.createSymphonyAuditEvent).toHaveBeenCalledWith('user-1', expect.objectContaining({
+      task_id: 'task-1',
+      action: 'task_comment_resolved_blocker',
+    }));
+    await expect(res.json()).resolves.toMatchObject({
+      data: { resolves_blocker: true },
+      task: { id: 'task-1', blocked_on_user: false },
+    });
+  });
+
+  it('POST /v1/tasks/:id/comments can mark a task done', async () => {
+    mockDb.getTask.mockResolvedValueOnce({
+      id: 'task-1',
+      owner_id: 'user-1',
+      project_slug: 'saas-maker',
+      title: 'Task',
+      description: null,
+      status: 'done',
+      priority: 'medium',
+      task_type: 'feature',
+      size: 'm',
+      dependencies: [],
+      branch_name: null,
+      pr_url: null,
+      pr_status: 'none',
+      commit_sha: null,
+      deployment_url: null,
+      deployment_status: 'none',
+      blocked_on_user: false,
+      created_at: '2026-05-02 00:00:00',
+      updated_at: '2026-05-02 00:00:01',
+    });
+
+    const res = await request('/v1/tasks/task-1/comments', {
+      method: 'POST',
+      headers: { Authorization: 'Bearer test-session', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ body: 'Confirmed this is done.', marks_done: true }),
+    });
+
+    expect(res.status).toBe(201);
+    expect(mockDb.createTaskComment).toHaveBeenCalledWith('user-1', 'task-1', expect.objectContaining({
+      body: 'Confirmed this is done.',
+      marks_done: true,
+    }));
+    expect(mockDb.createSymphonyAuditEvent).toHaveBeenCalledWith('user-1', expect.objectContaining({
+      task_id: 'task-1',
+      action: 'task_comment_marked_done',
+    }));
+    await expect(res.json()).resolves.toMatchObject({
+      data: { marks_done: true },
+      task: { id: 'task-1', status: 'done', blocked_on_user: false },
+    });
+  });
+
+  it('POST /v1/tasks/:id/comments can sync a handoff into the task description', async () => {
+    mockDb.getTask.mockResolvedValueOnce({
+      id: 'task-1',
+      owner_id: 'user-1',
+      project_slug: 'saas-maker',
+      title: 'Task',
+      description: 'Existing details\n\nDecision / Handoff\nUse GitHub OAuth.',
+      status: 'todo',
+      priority: 'medium',
+      task_type: 'feature',
+      size: 'm',
+      dependencies: [],
+      branch_name: null,
+      pr_url: null,
+      pr_status: 'none',
+      commit_sha: null,
+      deployment_url: null,
+      deployment_status: 'none',
+      blocked_on_user: false,
+      created_at: '2026-05-02 00:00:00',
+      updated_at: '2026-05-02 00:00:01',
+    });
+
+    const res = await request('/v1/tasks/task-1/comments', {
+      method: 'POST',
+      headers: { Authorization: 'Bearer test-session', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ body: 'Use GitHub OAuth.', sync_to_description: true }),
+    });
+
+    expect(res.status).toBe(201);
+    expect(mockDb.createTaskComment).toHaveBeenCalledWith('user-1', 'task-1', expect.objectContaining({
+      body: 'Use GitHub OAuth.',
+      sync_to_description: true,
+    }));
+    expect(mockDb.createSymphonyAuditEvent).toHaveBeenCalledWith('user-1', expect.objectContaining({
+      task_id: 'task-1',
+      action: 'task_comment_created',
+      metadata: expect.objectContaining({ sync_to_description: true }),
+    }));
+    await expect(res.json()).resolves.toMatchObject({
+      task: {
+        id: 'task-1',
+        description: expect.stringContaining('Decision / Handoff'),
+      },
+    });
   });
 });
 

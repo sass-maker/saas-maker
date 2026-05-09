@@ -130,6 +130,9 @@ fnd api GET /v1/ai/requests --auth session --query project_id=<projectId> --outp
 # Public roadmap items by project slug
 fnd api GET /v1/roadmap/by-project/<slug> --auth project --output table
 
+# Public progress feed: shipped changelog + public roadmap
+fnd api GET /v1/progress/public/<slug> --auth none --query changelog_limit=10 --output json
+
 # Vote on a roadmap item
 fnd api POST /v1/roadmap/public/<slug>/<itemId>/vote --auth none \
   --body '{"user_identifier":"voter@example.com"}'

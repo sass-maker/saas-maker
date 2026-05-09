@@ -749,6 +749,19 @@
         }
       }
     },
+    "/v1/progress/public/{slug}": {
+      "get": {
+        "tags": [
+          "progress"
+        ],
+        "summary": "GET /v1/progress/public/{slug}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/v1/projects": {
       "get": {
         "tags": [
@@ -1153,6 +1166,17 @@
       }
     },
     "/v1/tasks/{id}": {
+      "get": {
+        "tags": [
+          "tasks"
+        ],
+        "summary": "GET /v1/tasks/{id}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
       "patch": {
         "tags": [
           "tasks"
@@ -1169,6 +1193,30 @@
           "tasks"
         ],
         "summary": "DELETE /v1/tasks/{id}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/tasks/{id}/comments": {
+      "get": {
+        "tags": [
+          "tasks"
+        ],
+        "summary": "GET /v1/tasks/{id}/comments",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "tasks"
+        ],
+        "summary": "POST /v1/tasks/{id}/comments",
         "responses": {
           "200": {
             "description": "Success"
