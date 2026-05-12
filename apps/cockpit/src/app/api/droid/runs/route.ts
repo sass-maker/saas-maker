@@ -58,6 +58,7 @@ export async function POST(req: Request) {
     branch?: unknown;
     cwd?: unknown;
     destroy_after_run?: unknown;
+    wait_for_completion?: unknown;
   } | null;
 
   const mode = body?.mode === "native" || body?.mode === "claude_code" || body?.mode === "opencode" || body?.mode === "kilo" || body?.mode === "aider" ? body.mode : "command";
@@ -92,6 +93,7 @@ export async function POST(req: Request) {
     pr_base_branch: typeof body.pr_base_branch === "string" && body.pr_base_branch.trim() ? body.pr_base_branch.trim() : undefined,
     cwd: typeof body.cwd === "string" && body.cwd.trim() ? body.cwd.trim() : undefined,
     destroy_after_run: body.destroy_after_run !== false,
+    wait_for_completion: body.wait_for_completion === true,
   };
 
   const response = await fetch(`${DROID_API_URL}/v0/runs`, {

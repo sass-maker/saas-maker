@@ -157,7 +157,7 @@ export const sandboxExecutor: RunExecutor = {
   },
   async cancel(input): Promise<void> {
     const sandbox = getDroidSandbox(input.env.Sandbox, input.sandboxId);
-    await captureGitPatch({
+    const capturePromise = captureGitPatch({
       env: input.env,
       runId: input.runId,
       sandboxId: input.sandboxId,
@@ -179,6 +179,19 @@ export const sandboxExecutor: RunExecutor = {
       message: error instanceof Error ? error.message : 'Patch capture during cancel failed.',
       exit_code: 1,
     }));
+    const captureTimedOut = await Promise.race([
+      capturePromise.then(() => false),
+      new Promise<boolean>((resolve) => setTimeout(() => resolve(true), 8000)),
+    ]);
+    if (captureTimedOut) {
+      capturePromise.catch(() => undefined);
+      await input.recordEvent({
+        type: 'patch_capture_skipped',
+        source: 'sandbox',
+        message: 'Patch capture timed out during cancel; destroying sandbox.',
+        exit_code: 124,
+      });
+    }
     await input.recordEvent({ type: 'sandbox_destroy', message: `Destroying sandbox ${input.sandboxId}` });
     await sandbox.destroy();
   },
@@ -203,27 +216,25 @@ async function prepareSandboxWorkspace(
   const startedAt = Date.now();
   await input.recordEvent({
     type: 'sandbox_ready_start',
-    command: `sandbox.mkdir ${path}`,
+    command: `mkdir -p ${path}`,
     metadata: { path },
   });
-  try {
-    await sandbox.mkdir(path, { recursive: true });
-    const durationMs = Date.now() - startedAt;
+  const result = await sandboxExecWithWorkerTimeout(
+    sandbox,
+    `mkdir -p ${quote(dirname(path))} && touch ${quote(path)}`,
+    { timeout: 30000 },
+    45000
+  );
+  const durationMs = Date.now() - startedAt;
+  if (result.success) {
     await input.recordEvent({
       type: 'sandbox_ready_finish',
-      command: `sandbox.mkdir ${path}`,
+      command: `mkdir -p ${path}`,
       exit_code: 0,
       metadata: { path, duration_ms: durationMs },
     });
-    return { stdout: '', stderr: '', exitCode: 0, success: true };
-  } catch (error) {
-    return {
-      stdout: '',
-      stderr: error instanceof Error ? error.message : String(error),
-      exitCode: 1,
-      success: false,
-    };
   }
+  return result;
 }
 
 async function runAgent(
