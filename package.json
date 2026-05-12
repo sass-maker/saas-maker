@@ -5,7 +5,8 @@
   "scripts": {
     "dev:api": "pnpm -F @saas-maker/api dev",
     "dev:cockpit": "pnpm -F @saas-maker/dashboard dev",
-    "dev:cockpit:local": "LOCAL_AUTH_BYPASS=true NEXT_PUBLIC_API_URL=https://api.sassmaker.com pnpm --dir apps/cockpit exec next dev --webpack --port 3001",
+    "dev:cockpit:local": "node scripts/dev-cockpit-local.mjs",
+    "dev:cockpit:prod": "LOCAL_AUTH_BYPASS=true NEXT_PUBLIC_API_URL=https://api.sassmaker.com pnpm --dir apps/cockpit exec next dev --webpack --port 3001",
     "build:types": "pnpm -F @saas-maker/shared-types build",
     "build:db": "pnpm -F @saas-maker/ops build && pnpm -F @saas-maker/db build",
     "build:email": "pnpm -F @saas-maker/ops build && pnpm -F @saas-maker/email build",
@@ -26,6 +27,7 @@
     "smoke": "node scripts/smoke-prod.mjs",
     "symphony": "node scripts/symphony-local.mjs",
     "symphony:agent-usage": "node scripts/symphony-agent-usage.mjs",
+    "droid:local": "node scripts/droid-headless-local.mjs",
     "fleet:audit": "node scripts/fleet-audit.mjs",
     "symphony:runner": "node scripts/symphony-runner.mjs",
     "symphony:import-failures": "node scripts/fleet-failure-import.mjs",

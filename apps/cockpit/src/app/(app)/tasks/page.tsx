@@ -3,7 +3,7 @@ import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { apiFetchAuthed } from '@/lib/api-client';
 import { visibleDashboardProjects } from '@/lib/dashboard-projects';
-import { getManifestProjectSlugs } from '@/lib/fleet-manifest';
+import { getManifestProjectRepos, getManifestProjectSlugs } from '@/lib/fleet-manifest';
 import { TaskBoard } from '@/components/tasks/TaskBoard';
 import { isLocalAuthBypassEnabled } from '@/lib/local-auth';
 import { DEFAULT_SYMPHONY_MEMORY } from '@/lib/symphony';
@@ -79,6 +79,7 @@ export default async function TasksPage() {
         initialTasks={tasks}
         initialRuns={runs}
         projectSlugs={Array.from(new Set([...manifestProjects, ...projects])).sort()}
+        projectRepos={getManifestProjectRepos()}
         initialMemory={memory}
         isLocal={isLocal}
       />

@@ -133,6 +133,51 @@ export const symphony_runs = sqliteTable('symphony_runs', {
   created_at: text('created_at').notNull().default(sql`(datetime('now'))`),
 });
 
+export const droid_runs = sqliteTable('droid_runs', {
+  id: text('id').primaryKey(),
+  task_id: text('task_id'),
+  project_slug: text('project_slug'),
+  repo_url: text('repo_url'),
+  branch: text('branch'),
+  command: text('command').notNull(),
+  cwd: text('cwd'),
+  sandbox_id: text('sandbox_id').notNull(),
+  status: text('status').notNull().default('queued'),
+  exit_code: integer('exit_code'),
+  duration_ms: integer('duration_ms'),
+  summary: text('summary'),
+  error_message: text('error_message'),
+  created_at: text('created_at').notNull().default(sql`(datetime('now'))`),
+  started_at: text('started_at'),
+  finished_at: text('finished_at'),
+});
+
+export const droid_run_events = sqliteTable('droid_run_events', {
+  id: text('id').primaryKey(),
+  run_id: text('run_id').notNull().references(() => droid_runs.id),
+  type: text('type').notNull(),
+  actor: text('actor').notNull().default('droid'),
+  source: text('source').notNull().default('worker'),
+  message: text('message'),
+  command: text('command'),
+  cwd: text('cwd'),
+  exit_code: integer('exit_code'),
+  stdout: text('stdout'),
+  stderr: text('stderr'),
+  metadata: text('metadata').notNull().default('{}'),
+  created_at: text('created_at').notNull().default(sql`(datetime('now'))`),
+});
+
+export const droid_run_artifacts = sqliteTable('droid_run_artifacts', {
+  id: text('id').primaryKey(),
+  run_id: text('run_id').notNull().references(() => droid_runs.id),
+  type: text('type').notNull(),
+  name: text('name').notNull(),
+  uri: text('uri').notNull(),
+  metadata: text('metadata').notNull().default('{}'),
+  created_at: text('created_at').notNull().default(sql`(datetime('now'))`),
+});
+
 export const task_comments = sqliteTable('task_comments', {
   id: text('id').primaryKey(),
   owner_id: text('owner_id').notNull().references(() => users.id),

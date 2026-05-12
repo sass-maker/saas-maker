@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
-import { Bot, CheckCircle2, ChevronDown, Clipboard, ExternalLink, GitBranch, MessageSquare, Pencil, Plus, Save, Trash2, X } from 'lucide-react';
+import { Bot, CheckCircle2, ChevronDown, Clipboard, ExternalLink, FileText, GitBranch, MessageSquare, Pencil, Play, Plus, Save, Terminal, Trash2, X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -66,6 +66,53 @@ export interface SymphonyRunRow {
   started_at: string;
   created_at?: string;
 }
+
+interface DroidRunRow {
+  id: string;
+  task_id: string | null;
+  project_slug: string | null;
+  repo_url: string | null;
+  branch: string | null;
+  command: string;
+  cwd: string | null;
+  sandbox_id: string;
+  status: 'queued' | 'running' | 'completed' | 'failed';
+  exit_code: number | null;
+  duration_ms: number | null;
+  summary: string | null;
+  error_message: string | null;
+  created_at: string;
+  started_at: string | null;
+  finished_at: string | null;
+}
+
+interface DroidRunEvent {
+  id: string;
+  run_id: string;
+  type: string;
+  actor: string;
+  source: string;
+  message: string | null;
+  command: string | null;
+  cwd: string | null;
+  exit_code: number | null;
+  stdout: string | null;
+  stderr: string | null;
+  metadata: string;
+  created_at: string;
+}
+
+interface DroidRunArtifact {
+  id: string;
+  run_id: string;
+  type: string;
+  name: string;
+  uri: string;
+  metadata: string;
+  created_at: string;
+}
+
+type DroidMode = 'command' | 'native' | 'claude_code' | 'opencode' | 'kilo' | 'aider';
 
 function getDependencies(task: TaskRow): string[] {
   return Array.isArray(task.dependencies) ? task.dependencies : [];
@@ -212,16 +259,27 @@ function formatRunTime(value: string) {
   });
 }
 
+function parseDroidMetadata(value: string): Record<string, unknown> {
+  try {
+    const parsed = JSON.parse(value) as unknown;
+    return parsed && typeof parsed === 'object' ? parsed as Record<string, unknown> : {};
+  } catch {
+    return {};
+  }
+}
+
 export function TaskBoard({
   initialTasks,
   initialRuns,
   projectSlugs,
+  projectRepos,
   initialMemory,
   isLocal,
 }: {
   initialTasks: TaskRow[];
   initialRuns?: SymphonyRunRow[];
   projectSlugs: string[];
+  projectRepos?: Record<string, string>;
   initialMemory: string;
   isLocal: boolean;
 }) {
@@ -233,6 +291,20 @@ export function TaskBoard({
   const [editTask, setEditTask] = useState<TaskRow | null>(null);
   const [runTask, setRunTask] = useState<TaskRow | null>(null);
   const [runInstructions, setRunInstructions] = useState('');
+  const [droidTask, setDroidTask] = useState<TaskRow | null>(null);
+  const [droidMode, setDroidMode] = useState<DroidMode>('native');
+  const [droidCommand, setDroidCommand] = useState('pwd && ls -1');
+  const [droidPrompt, setDroidPrompt] = useState('');
+  const [droidMaxTurns, setDroidMaxTurns] = useState('25');
+  const [droidCreatePr, setDroidCreatePr] = useState(true);
+  const [droidRepoUrl, setDroidRepoUrl] = useState('');
+  const [droidBranch, setDroidBranch] = useState('');
+  const [droidCwd, setDroidCwd] = useState('');
+  const [startingDroidRun, setStartingDroidRun] = useState(false);
+  const [loadingDroidLogsTaskId, setLoadingDroidLogsTaskId] = useState<string | null>(null);
+  const [droidRun, setDroidRun] = useState<DroidRunRow | null>(null);
+  const [droidEvents, setDroidEvents] = useState<DroidRunEvent[]>([]);
+  const [droidArtifacts, setDroidArtifacts] = useState<DroidRunArtifact[]>([]);
   const [commentTask, setCommentTask] = useState<TaskRow | null>(null);
   const [commentsByTaskId, setCommentsByTaskId] = useState<Record<string, TaskCommentRow[]>>({});
   const [commentText, setCommentText] = useState('');
@@ -317,6 +389,73 @@ export function TaskBoard({
   const openRun = (task: TaskRow) => {
     setRunTask(task);
     setRunInstructions('');
+  };
+
+  const openDroidRun = (task: TaskRow) => {
+    setDroidTask(task);
+    setDroidMode('native');
+    setDroidCommand(task.project_slug ? 'pwd && ls -1' : 'pwd && echo droid-ok');
+    setDroidPrompt(`Work on this task and report what you changed or found.\n\nTask: ${task.title}\n\n${task.description ?? ''}`.trim());
+    setDroidMaxTurns('25');
+    setDroidCreatePr(true);
+    setDroidRepoUrl(task.project_slug ? projectRepos?.[task.project_slug] ?? '' : '');
+    setDroidBranch(task.branch_name ?? '');
+    setDroidCwd('');
+    setDroidRun(null);
+    setDroidEvents([]);
+    setDroidArtifacts([]);
+  };
+
+  const loadDroidRunDetails = useCallback(async (runId: string) => {
+    const runRes = await fetch(`/api/droid/runs/${runId}`);
+    const runPayload = await runRes.json() as { data?: DroidRunRow };
+    if (runPayload.data) setDroidRun(runPayload.data);
+    const eventsRes = await fetch(`/api/droid/runs/${runId}/events`);
+    const eventsPayload = await eventsRes.json() as { data?: DroidRunEvent[] };
+    setDroidEvents(eventsPayload.data ?? []);
+    const artifactsRes = await fetch(`/api/droid/runs/${runId}/artifacts`);
+    const artifactsPayload = await artifactsRes.json() as { data?: DroidRunArtifact[] };
+    setDroidArtifacts(artifactsPayload.data ?? []);
+  }, []);
+
+  useEffect(() => {
+    if (!droidRun || (droidRun.status !== 'queued' && droidRun.status !== 'running')) return;
+    const interval = window.setInterval(() => {
+      void loadDroidRunDetails(droidRun.id);
+    }, 5000);
+    return () => window.clearInterval(interval);
+  }, [droidRun, loadDroidRunDetails]);
+
+  const openDroidLogs = async (task: TaskRow) => {
+    setLoadingDroidLogsTaskId(task.id);
+    setDroidTask(task);
+    setDroidMode('native');
+    setDroidCommand(task.project_slug ? 'pwd && ls -1' : 'pwd && echo droid-ok');
+    setDroidPrompt(`Work on this task and report what you changed or found.\n\nTask: ${task.title}\n\n${task.description ?? ''}`.trim());
+    setDroidMaxTurns('25');
+    setDroidCreatePr(true);
+    setDroidRepoUrl(task.project_slug ? projectRepos?.[task.project_slug] ?? '' : '');
+    setDroidBranch(task.branch_name ?? '');
+    setDroidCwd('');
+    setDroidRun(null);
+    setDroidEvents([]);
+    setDroidArtifacts([]);
+    try {
+      const runsRes = await fetch(`/api/droid/runs?task_id=${encodeURIComponent(task.id)}&limit=1`);
+      const runsPayload = await runsRes.json() as { data?: DroidRunRow[]; error?: string };
+      if (!runsRes.ok) throw new Error(runsPayload.error || 'Failed to load Droid runs');
+      const latestRun = runsPayload.data?.[0];
+      if (!latestRun) {
+        showToast('No Droid logs for this task yet');
+        return;
+      }
+      setDroidRun(latestRun);
+      await loadDroidRunDetails(latestRun.id);
+    } catch (error) {
+      showToast(error instanceof Error ? `Logs failed: ${error.message.slice(0, 120)}` : 'Logs failed');
+    } finally {
+      setLoadingDroidLogsTaskId(null);
+    }
   };
 
   const toggleTaskSelection = (task: TaskRow, selected: boolean) => {
@@ -587,6 +726,68 @@ export function TaskBoard({
     }
   };
 
+  const handleDroidRun = async () => {
+    if (!droidTask) return;
+    if (droidMode === 'command' && !droidCommand.trim()) return;
+    if (droidMode !== 'command' && !droidPrompt.trim()) return;
+    setStartingDroidRun(true);
+    setDroidRun(null);
+    setDroidEvents([]);
+    setDroidArtifacts([]);
+    try {
+      const res = await fetch('/api/droid/runs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          task: droidTask,
+          mode: droidMode,
+          command: droidMode === 'command' ? droidCommand.trim() : undefined,
+          prompt: droidMode !== 'command' ? droidPrompt.trim() : undefined,
+          max_turns: droidMode === 'claude_code' || droidMode === 'native' ? Number(droidMaxTurns) : undefined,
+          timeout_seconds: droidMode !== 'command' ? 900 : undefined,
+          create_pr: droidCreatePr,
+          pr_title: droidTask ? `Droid: ${droidTask.title}` : undefined,
+          repo_url: droidRepoUrl.trim() || undefined,
+          branch: droidBranch.trim() || undefined,
+          cwd: droidCwd.trim() || undefined,
+        }),
+      });
+      const payload = await res.json() as { data?: DroidRunRow; error?: string };
+      if (!res.ok || !payload.data) throw new Error(payload.error || 'Droid run failed');
+      setDroidRun(payload.data);
+      await loadDroidRunDetails(payload.data.id);
+      showToast(`Droid ${payload.data.status}`);
+      if (droidTask.status === 'todo') {
+        await handleStatusChange(droidTask, 'in_progress');
+      }
+    } catch (error) {
+      showToast(error instanceof Error ? `Droid failed: ${error.message.slice(0, 120)}` : 'Droid failed');
+    } finally {
+      setStartingDroidRun(false);
+    }
+  };
+
+  const handleDroidReconcile = async () => {
+    if (!droidRun) return;
+    setStartingDroidRun(true);
+    try {
+      const res = await fetch(`/api/droid/runs/${droidRun.id}/reconcile`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({}),
+      });
+      const payload = await res.json() as { data?: DroidRunRow; error?: string };
+      if (!res.ok || !payload.data) throw new Error(payload.error || 'Droid reconcile failed');
+      setDroidRun(payload.data);
+      await loadDroidRunDetails(payload.data.id);
+      showToast('Droid reconcile queued');
+    } catch (error) {
+      showToast(error instanceof Error ? `Reconcile failed: ${error.message.slice(0, 120)}` : 'Reconcile failed');
+    } finally {
+      setStartingDroidRun(false);
+    }
+  };
+
   const handleBatchDispatch = async () => {
     if (runnableSelectedTasks.length === 0) {
       showToast('Select runnable todo tasks first');
@@ -773,10 +974,13 @@ export function TaskBoard({
         onComments={openComments}
         onRun={handleDispatch}
         onCustomizeRun={openRun}
+        onDroidRun={openDroidRun}
+        onDroidLogs={openDroidLogs}
         onStatusChange={handleStatusChange}
         onPriorityChange={handlePriorityChange}
         onTypeChange={handleTypeChange}
         latestRunByTaskId={latestRunByTaskId}
+        loadingDroidLogsTaskId={loadingDroidLogsTaskId}
         isLocal={isLocal}
       />
 
@@ -1069,6 +1273,242 @@ export function TaskBoard({
         </DialogContent>
       </Dialog>
 
+      <Dialog open={!!droidTask} onOpenChange={open => {
+        if (!open) {
+          setDroidTask(null);
+          setDroidMode('native');
+          setDroidCommand('pwd && ls -1');
+          setDroidPrompt('');
+          setDroidMaxTurns('25');
+          setDroidCreatePr(true);
+          setDroidRepoUrl('');
+          setDroidBranch('');
+          setDroidCwd('');
+          setDroidRun(null);
+          setDroidEvents([]);
+          setDroidArtifacts([]);
+        }
+      }}>
+        <DialogContent className="w-[min(56rem,calc(100vw-2rem))] sm:max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>Droid</DialogTitle>
+          </DialogHeader>
+          {droidTask && (
+            <div className="mt-2 grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,0.85fr)]">
+              <div className="space-y-4">
+                <div className="rounded-lg border bg-muted/25 p-3">
+                  <div className="text-sm font-medium text-foreground">{droidTask.title}</div>
+                  <div className="mt-1 flex flex-wrap gap-1 text-xs text-muted-foreground">
+                    <span>{droidTask.project_slug ?? 'Unassigned'}</span>
+                    {droidRepoUrl ? <span className="font-mono">{droidRepoUrl}</span> : <span>No repo selected</span>}
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label>Mode</Label>
+                  <Select value={droidMode} onValueChange={value => setDroidMode(value as DroidMode)}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="native">Native Droid via DeepSeek</SelectItem>
+                      <SelectItem value="aider">Aider via DeepSeek</SelectItem>
+                      <SelectItem value="kilo">Kilo via DeepSeek</SelectItem>
+                      <SelectItem value="opencode">OpenCode via DeepSeek</SelectItem>
+                      <SelectItem value="command">Command</SelectItem>
+                      <SelectItem value="claude_code">Claude Code via DeepSeek</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {droidMode === 'command' ? (
+                  <div className="space-y-1.5">
+                    <Label htmlFor="droid-command">Command</Label>
+                    <Textarea
+                      id="droid-command"
+                      value={droidCommand}
+                      onChange={event => setDroidCommand(event.target.value)}
+                      rows={5}
+                      className="min-h-28 resize-y font-mono text-xs"
+                      placeholder="pnpm test"
+                    />
+                  </div>
+                ) : (
+                  <div className="space-y-1.5">
+                    <Label htmlFor="droid-prompt">Prompt</Label>
+                    <Textarea
+                      id="droid-prompt"
+                      value={droidPrompt}
+                      onChange={event => setDroidPrompt(event.target.value)}
+                      rows={8}
+                      className="min-h-40 resize-y"
+                      placeholder="Ask Droid to inspect or change the repo..."
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Uses {droidMode === 'native' ? 'Droid native tools' : droidMode === 'aider' ? 'Aider' : droidMode === 'kilo' ? 'Kilo' : droidMode === 'opencode' ? 'OpenCode' : 'Claude Code'} pointed at DeepSeek. Requires the Droid Worker secret `DROID_DEEPSEEK_API_KEY`.
+                    </p>
+                  </div>
+                )}
+
+                {droidMode === 'claude_code' || droidMode === 'native' ? (
+                  <div className="max-w-40 space-y-1.5">
+                    <Label htmlFor="droid-max-turns">Max turns</Label>
+                    <Input
+                      id="droid-max-turns"
+                      value={droidMaxTurns}
+                      onChange={event => setDroidMaxTurns(event.target.value)}
+                      inputMode="numeric"
+                    />
+                  </div>
+                ) : null}
+
+                <div className="flex items-center justify-between gap-3 rounded-lg border bg-muted/20 p-3">
+                  <div>
+                    <Label htmlFor="droid-create-pr">Draft PR</Label>
+                    <p className="text-xs text-muted-foreground">
+                      Push changed Droid runs to a GitHub branch and open a draft PR.
+                    </p>
+                  </div>
+                  <Switch id="droid-create-pr" checked={droidCreatePr} onCheckedChange={setDroidCreatePr} />
+                </div>
+
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div className="space-y-1.5">
+                    <Label htmlFor="droid-repo">Repo URL</Label>
+                    <Input
+                      id="droid-repo"
+                      value={droidRepoUrl}
+                      onChange={event => setDroidRepoUrl(event.target.value)}
+                      placeholder="https://github.com/org/repo.git"
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Private GitHub repos require `DROID_GITHUB_TOKEN` on the Droid Worker.
+                    </p>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="droid-branch">Branch</Label>
+                    <Input
+                      id="droid-branch"
+                      value={droidBranch}
+                      onChange={event => setDroidBranch(event.target.value)}
+                      placeholder="main"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label htmlFor="droid-cwd">Working directory</Label>
+                  <Input
+                    id="droid-cwd"
+                    value={droidCwd}
+                    onChange={event => setDroidCwd(event.target.value)}
+                    placeholder="packages/cli"
+                  />
+                </div>
+
+                <div className="flex flex-wrap justify-end gap-2">
+                  <Button type="button" variant="outline" onClick={() => setDroidTask(null)}>
+                    Close
+                  </Button>
+                  <Button type="button" onClick={handleDroidRun} disabled={startingDroidRun || (droidMode === 'command' ? !droidCommand.trim() : !droidPrompt.trim())}>
+                    <Play className="h-4 w-4" />
+                    {startingDroidRun ? 'Running...' : droidMode === 'command' ? 'Run in Droid' : 'Ask Droid'}
+                  </Button>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <div className="rounded-lg border bg-muted/20 p-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <h3 className="text-sm font-semibold text-foreground">Result</h3>
+                    {droidRun ? (
+                      <div className="flex items-center gap-2">
+                        {(droidRun.status === 'queued' || droidRun.status === 'running') ? (
+                          <Button type="button" size="sm" variant="outline" onClick={handleDroidReconcile} disabled={startingDroidRun}>
+                            Reconcile
+                          </Button>
+                        ) : null}
+                        <Badge variant="outline" className={cn(
+                          droidRun.status === 'completed'
+                            ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-600 dark:text-emerald-300'
+                            : droidRun.status === 'failed'
+                              ? 'border-red-500/45 bg-red-500/10 text-red-600 dark:text-red-300'
+                              : 'border-amber-500/45 bg-amber-500/10 text-amber-600 dark:text-amber-300'
+                        )}>
+                          {droidRun.status}
+                        </Badge>
+                      </div>
+                    ) : null}
+                  </div>
+                  {droidRun ? (
+                    <div className="mt-2 space-y-1 text-xs text-muted-foreground">
+                      <div><span className="text-foreground">Run:</span> <span className="font-mono">{droidRun.id}</span></div>
+                      <div><span className="text-foreground">Exit:</span> {droidRun.exit_code ?? 'pending'}</div>
+                      <div><span className="text-foreground">Duration:</span> {droidRun.duration_ms ? `${Math.round(droidRun.duration_ms / 1000)}s` : 'pending'}</div>
+                      {droidRun.summary ? <p className="pt-1 text-sm text-foreground">{droidRun.summary}</p> : null}
+                      {droidRun.error_message ? <p className="pt-1 text-sm text-red-500">{droidRun.error_message}</p> : null}
+                    </div>
+                  ) : (
+                    <p className="mt-2 text-sm text-muted-foreground">Run a command to see the audit trail.</p>
+                  )}
+                </div>
+
+                {droidArtifacts.length > 0 ? (
+                  <div className="rounded-lg border bg-muted/15 p-3">
+                    <h3 className="text-sm font-semibold text-foreground">Artifacts</h3>
+                    <div className="mt-2 space-y-2">
+                      {droidArtifacts.map(artifact => {
+                        const metadata = parseDroidMetadata(artifact.metadata);
+                        const stat = typeof metadata.stat === 'string' ? metadata.stat.trim().split('\n')[0] : '';
+                        const patchBytes = typeof metadata.patch_bytes === 'number' ? metadata.patch_bytes : null;
+                        return (
+                          <div key={artifact.id} className="rounded-md border bg-background p-2 text-xs">
+                            <div className="flex flex-wrap items-center justify-between gap-2">
+                              <span className="font-medium text-foreground">{artifact.name}</span>
+                              <Badge variant="outline" className="border-blue-500/40 bg-blue-500/10 text-blue-600 dark:text-blue-300">
+                                {artifact.type}
+                              </Badge>
+                            </div>
+                            {stat ? <p className="mt-1 text-muted-foreground">{stat}</p> : null}
+                            {patchBytes !== null ? <p className="mt-1 text-muted-foreground">{patchBytes.toLocaleString()} bytes captured in audit log</p> : null}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ) : null}
+
+                <div className="max-h-[26rem] overflow-y-auto rounded-lg border bg-background p-3">
+                  {droidEvents.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">No Droid events yet.</p>
+                  ) : (
+                    <div className="space-y-2">
+                      {droidEvents.map(event => (
+                        <article key={event.id} className="rounded-md border bg-muted/20 p-2">
+                          <div className="flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
+                            <span className="font-medium text-foreground">{event.type}</span>
+                            <span>{formatRunTime(event.created_at)}</span>
+                            {event.exit_code !== null ? <span>exit {event.exit_code}</span> : null}
+                          </div>
+                          {event.command ? <div className="mt-1 break-all font-mono text-xs text-foreground">{event.command}</div> : null}
+                          {event.cwd ? <div className="mt-1 break-all font-mono text-[11px] text-muted-foreground">{event.cwd}</div> : null}
+                          {event.message ? <p className="mt-1 text-xs text-muted-foreground">{event.message}</p> : null}
+                          {event.stdout || event.stderr ? (
+                            <pre className="mt-2 max-h-32 overflow-auto whitespace-pre-wrap rounded bg-black/75 p-2 text-[11px] leading-5 text-zinc-100">
+                              {event.stdout || event.stderr}
+                            </pre>
+                          ) : null}
+                        </article>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
       <Dialog open={!!commentTask} onOpenChange={open => {
         if (!open) {
           setCommentTask(null);
@@ -1198,10 +1638,13 @@ function TaskList({
   onComments,
   onRun,
   onCustomizeRun,
+  onDroidRun,
+  onDroidLogs,
   onStatusChange,
   onPriorityChange,
   onTypeChange,
   latestRunByTaskId,
+  loadingDroidLogsTaskId,
   isLocal,
 }: {
   tasks: TaskRow[];
@@ -1213,10 +1656,13 @@ function TaskList({
   onComments: (t: TaskRow) => void;
   onRun: (t: TaskRow) => void;
   onCustomizeRun: (t: TaskRow) => void;
+  onDroidRun: (t: TaskRow) => void;
+  onDroidLogs: (t: TaskRow) => void;
   onStatusChange: (t: TaskRow, s: TaskRow['status']) => void;
   onPriorityChange: (t: TaskRow, p: TaskRow['priority']) => void;
   onTypeChange: (t: TaskRow, p: TaskRow['task_type']) => void;
   latestRunByTaskId: Map<string, SymphonyRunRow>;
+  loadingDroidLogsTaskId: string | null;
   isLocal: boolean;
 }) {
   if (tasks.length === 0) {
@@ -1245,7 +1691,7 @@ function TaskList({
         return (
           <article
             key={task.id}
-            className="group grid min-h-[5rem] grid-cols-[2rem_2.25rem_minmax(0,1fr)_5.5rem] items-center gap-0 px-2 py-3 transition-colors hover:bg-muted/20 max-sm:grid-cols-[2rem_2rem_minmax(0,1fr)]"
+            className="group grid min-h-[5rem] grid-cols-[2rem_2.25rem_minmax(0,1fr)_auto] items-center gap-0 px-2 py-3 transition-colors hover:bg-muted/20 max-sm:grid-cols-[2rem_2rem_minmax(0,1fr)]"
           >
             <div className="flex items-center justify-center">
               <input
@@ -1390,6 +1836,32 @@ function TaskList({
               )}
             </div>
             <div className="flex min-w-0 items-center justify-end gap-1 max-sm:hidden">
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => onDroidLogs(task)}
+                disabled={loadingDroidLogsTaskId === task.id}
+                title="View Droid audit logs"
+                className="h-8 rounded-full px-3 text-sm text-muted-foreground opacity-80 hover:text-foreground hover:opacity-100 disabled:cursor-wait disabled:opacity-50"
+              >
+                <FileText className="h-3.5 w-3.5" />
+                {loadingDroidLogsTaskId === task.id ? 'Loading' : 'Logs'}
+              </Button>
+              {task.status !== 'done' && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => onDroidRun(task)}
+                  disabled={blocked}
+                  title={blocked ? 'Blocked by unfinished prerequisites' : 'Run a command in a Cloudflare Droid sandbox'}
+                  className="h-8 rounded-full px-3 text-sm text-muted-foreground opacity-80 hover:text-foreground hover:opacity-100 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  <Terminal className="h-3.5 w-3.5" />
+                  Droid
+                </Button>
+              )}
               {task.status === 'todo' && (
                 <Button
                   type="button"

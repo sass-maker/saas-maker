@@ -1,6 +1,7 @@
 const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1", "::1"]);
 
 export const LOCAL_DEV_SESSION_TOKEN = "local-dev-session";
+export const LOCAL_ACCESS_COOKIE = "saasmaker_local_access";
 
 export function isLocalHost(hostHeader: string | null | undefined): boolean {
   if (!hostHeader) return false;
@@ -16,6 +17,14 @@ export function isLocalAuthBypassEnabled(hostHeader: string | null | undefined):
   return isLocalHost(hostHeader) && process.env.DISABLE_LOCAL_AUTH_BYPASS !== "true";
 }
 
+export function getLocalProtectionToken(): string | undefined {
+  return process.env.SAASMAKER_LOCAL_ACCESS_TOKEN || process.env.LOCAL_ACCESS_TOKEN;
+}
+
+export function isLocalProtectionEnabled(): boolean {
+  return Boolean(getLocalProtectionToken());
+}
+
 type LocalCliConfig = {
   apiKey?: string;
   sessionToken?: string;
@@ -28,12 +37,16 @@ type BuiltinFs = {
 
 function readConfigToken(filePath: string): string | undefined {
   try {
+    const runtimeProcess = process as typeof process & {
+      getBuiltinModule?: (name: string) => unknown;
+    };
     const getBuiltinModule = (
       process as typeof process & {
         getBuiltinModule?: (name: string) => unknown;
       }
     ).getBuiltinModule;
-    const fs = getBuiltinModule?.("fs") as BuiltinFs | undefined;
+    const fs = (getBuiltinModule?.("fs") ??
+      (runtimeProcess.versions?.node ? eval("require")("node:fs") : undefined)) as BuiltinFs | undefined;
     if (!fs) return undefined;
 
     const config = JSON.parse(fs.readFileSync(filePath, "utf8")) as LocalCliConfig;
