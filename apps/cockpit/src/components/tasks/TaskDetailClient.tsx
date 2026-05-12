@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Bot, CheckCircle2, ExternalLink, FileText, MessageSquare } from 'lucide-react';
+import { Activity, Bot, CheckCircle2, ExternalLink, FileText, MessageSquare } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -18,6 +18,28 @@ function formatTime(value: string) {
     hour: 'numeric',
     minute: '2-digit',
   });
+}
+
+function parseMetadata(value: string | Record<string, unknown> | null | undefined): Record<string, unknown> {
+  if (!value) return {};
+  if (typeof value !== 'string') return value;
+  try {
+    const parsed = JSON.parse(value || '{}');
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+function metadataPreview(metadata: Record<string, unknown>) {
+  const entries = Object.entries(metadata).filter(([, value]) => value !== null && value !== undefined && value !== '');
+  if (entries.length === 0) return null;
+  return entries
+    .slice(0, 4)
+    .map(([key, value]) => {
+      const text = typeof value === 'string' ? value : JSON.stringify(value);
+      return key + ': ' + (text.length > 72 ? text.slice(0, 69) + '...' : text);
+    });
 }
 
 function pillClass(value: string) {
@@ -45,6 +67,36 @@ export function TaskDetailClient({
   const [syncCommentToDescription, setSyncCommentToDescription] = useState(initialTask.blocked_on_user);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [auditEvents, setAuditEvents] = useState<SymphonyAuditEventRow[]>([]);
+  const [auditLoading, setAuditLoading] = useState(true);
+  const [auditError, setAuditError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadAuditEvents() {
+      setAuditLoading(true);
+      setAuditError(null);
+      try {
+        const token = await getClientToken();
+        const res = await apiFetchClient<{ data: SymphonyAuditEventRow[] }>(
+          '/v1/symphony/audit?task_id=' + encodeURIComponent(task.id) + '&limit=50',
+          token,
+        );
+        if (!cancelled) setAuditEvents(res.data ?? []);
+      } catch (err) {
+        if (!cancelled) setAuditError(err instanceof Error ? err.message : 'Failed to load audit events');
+      } finally {
+        if (!cancelled) setAuditLoading(false);
+      }
+    }
+
+    void loadAuditEvents();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [task.id]);
 
   const addComment = async () => {
     if (!commentText.trim()) return;
@@ -189,6 +241,51 @@ export function TaskDetailClient({
                     ) : null}
                     {run.cost_note ? <span className="rounded-full border border-border/60 px-2 py-0.5">{run.cost_note}</span> : null}
                   </div>
+                </article>
+              );
+            })}
+          </div>
+        )}
+      </section>
+
+      <section className="rounded-lg border bg-card p-4">
+        <div className="mb-4 flex items-center gap-2">
+          <Activity className="h-4 w-4 text-muted-foreground" />
+          <h2 className="text-sm font-semibold text-foreground">Audit Log</h2>
+          <Badge variant="outline" className="font-mono text-[10px]">{auditEvents.length}</Badge>
+        </div>
+        {auditLoading ? (
+          <div className="space-y-2">
+            <div className="h-14 animate-pulse rounded-lg bg-muted/40" />
+            <div className="h-14 animate-pulse rounded-lg bg-muted/25" />
+          </div>
+        ) : auditError ? (
+          <p className="rounded-lg border border-red-900/50 bg-red-950/20 p-4 text-sm text-red-300">{auditError}</p>
+        ) : auditEvents.length === 0 ? (
+          <p className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">No audit events recorded for this task.</p>
+        ) : (
+          <div className="space-y-2">
+            {auditEvents.map(event => {
+              const metadata = parseMetadata(event.metadata);
+              const metadataItems = metadataPreview(metadata);
+              return (
+                <article key={event.id} className="rounded-lg border bg-muted/20 p-3">
+                  <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                    <span className="font-medium text-foreground">{event.action}</span>
+                    <Badge variant="outline" className={pillClass(event.actor_source)}>{event.actor_source}</Badge>
+                    {event.agent_profile ? <span>{event.agent_profile}</span> : null}
+                    {event.project_slug ? <span>{event.project_slug}</span> : null}
+                    <span>{formatTime(event.created_at)}</span>
+                  </div>
+                  {metadataItems ? (
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {metadataItems.map(item => (
+                        <span key={item} className="rounded-full border border-border/60 px-2 py-0.5 font-mono text-[10px] text-muted-foreground">
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                  ) : null}
                 </article>
               );
             })}
