@@ -4,7 +4,7 @@ import { headers } from 'next/headers';
 import { apiFetchAuthed } from '@/lib/api-client';
 import { isLocalAuthBypassEnabled } from '@/lib/local-auth';
 import { TaskDetailClient } from '@/components/tasks/TaskDetailClient';
-import type { SymphonyRunRow, TaskCommentRow, TaskRow } from '@/components/tasks/TaskBoard';
+import type { SymphonyAuditLogRow, SymphonyRunRow, TaskCommentRow, TaskRow } from '@/components/tasks/TaskBoard';
 
 export const dynamic = 'force-dynamic';
 

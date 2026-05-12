@@ -67,6 +67,18 @@ export interface SymphonyRunRow {
   created_at?: string;
 }
 
+export interface SymphonyAuditLogRow {
+  id: string;
+  owner_id: string;
+  task_id: string | null;
+  action: string;
+  actor_source: string;
+  agent_profile: string | null;
+  project_slug: string | null;
+  metadata: string;
+  created_at: string;
+}
+
 function getDependencies(task: TaskRow): string[] {
   return Array.isArray(task.dependencies) ? task.dependencies : [];
 }
