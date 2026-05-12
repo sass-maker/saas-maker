@@ -9,6 +9,17 @@ import { Textarea } from '@/components/ui/textarea';
 import { apiFetchClient, getClientToken } from '@/lib/api-client';
 import type { SymphonyRunRow, TaskCommentRow, TaskRow } from './TaskBoard';
 
+interface SymphonyAuditEventRow {
+  id: string;
+  task_id: string | null;
+  action: string;
+  actor_source: string;
+  agent_profile: string | null;
+  project_slug: string | null;
+  metadata: string | Record<string, unknown>;
+  created_at: string;
+}
+
 function formatTime(value: string) {
   const time = new Date(value).getTime();
   if (!Number.isFinite(time)) return value;
