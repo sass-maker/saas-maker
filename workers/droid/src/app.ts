@@ -37,64 +37,6 @@ export function createApp(executor: RunExecutor) {
     await next();
   });
 
-  app.get('/v0/debug/sandbox', async (c) => {
-    const { getSandbox } = await import('@cloudflare/sandbox');
-    const sandboxId = c.req.query('id')?.trim() || 'debug-fixed';
-    const sandbox = getSandbox(c.env.Sandbox, sandboxId, {
-      keepAlive: true,
-      containerTimeouts: {
-        instanceGetTimeoutMS: 180000,
-        portReadyTimeoutMS: 240000,
-        waitIntervalMS: 1000,
-      },
-    });
-    const startedAt = Date.now();
-    const steps: Array<Record<string, unknown>> = [];
-
-    async function step<T>(name: string, action: () => Promise<T>): Promise<T> {
-      const stepStartedAt = Date.now();
-      try {
-        const result = await action();
-        steps.push({ name, ok: true, duration_ms: Date.now() - stepStartedAt, result: summarizeDebugResult(result) });
-        return result;
-      } catch (error) {
-        steps.push({
-          name,
-          ok: false,
-          duration_ms: Date.now() - stepStartedAt,
-          error: error instanceof Error ? error.message : String(error),
-        });
-        throw error;
-      }
-    }
-
-    try {
-      await step('mkdir', () => sandbox.mkdir('/workspace/debug', { recursive: true }));
-      await step('writeFile', () => sandbox.writeFile('/workspace/debug/hello.txt', 'hello sandbox'));
-      const file = await step('readFile', () => sandbox.readFile('/workspace/debug/hello.txt'));
-      const exec = await step('exec', () => sandbox.exec('echo sandbox-exec-ok', { timeout: 30000 }));
-      if (c.req.query('destroy') === 'true') {
-        await step('destroy', () => sandbox.destroy());
-      }
-      return c.json({
-        ok: true,
-        sandbox_id: sandboxId,
-        duration_ms: Date.now() - startedAt,
-        file_content: file.content,
-        exec,
-        steps,
-      });
-    } catch (error) {
-      return c.json({
-        ok: false,
-        sandbox_id: sandboxId,
-        duration_ms: Date.now() - startedAt,
-        error: error instanceof Error ? error.message : String(error),
-        steps,
-      }, 500);
-    }
-  });
-
   app.post('/v0/runs', async (c) => {
     const body = await c.req.json().catch(() => null) as RunRequest | null;
     const validation = validateRunRequest(body);
@@ -483,19 +425,8 @@ function validateRunRequest(body: RunRequest | null): { ok: true } | { ok: false
   return { ok: true };
 }
 
-function summarizeDebugResult(result: unknown): unknown {
-  if (!result || typeof result !== 'object') return result;
-  const record = result as Record<string, unknown>;
-  return {
-    ...record,
-    stdout: typeof record.stdout === 'string' ? record.stdout.slice(0, 500) : record.stdout,
-    stderr: typeof record.stderr === 'string' ? record.stderr.slice(0, 500) : record.stderr,
-    content: typeof record.content === 'string' ? record.content.slice(0, 500) : record.content,
-  };
-}
-
 function normalizeMode(value: unknown): RunMode {
-  if (value === 'native' || value === 'claude_code' || value === 'opencode' || value === 'kilo' || value === 'aider') return value;
+  if (value === 'native') return value;
   return 'command';
 }
 

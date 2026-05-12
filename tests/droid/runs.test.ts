@@ -39,7 +39,7 @@ describe('droid runs', () => {
 
     const response = await app.request('/v0/runs', {
       method: 'POST',
-      body: JSON.stringify({ mode: 'opencode', provider: 'deepseek' }),
+      body: JSON.stringify({ mode: 'native', provider: 'deepseek' }),
       headers: {
         'Authorization': 'Bearer test-token',
         'Content-Type': 'application/json',
@@ -223,7 +223,7 @@ describe('droid runs', () => {
 
     const createResponse = await app.request('/v0/runs', {
       method: 'POST',
-      body: JSON.stringify({ mode: 'opencode', provider: 'deepseek', prompt: 'make the change', create_pr: true }),
+      body: JSON.stringify({ mode: 'native', provider: 'deepseek', prompt: 'make the change', create_pr: true }),
       headers: {
         'Authorization': 'Bearer test-token',
         'Content-Type': 'application/json',

@@ -8,7 +8,7 @@ export interface Env {
   Sandbox: DurableObjectNamespace<Sandbox>;
 }
 
-export type RunMode = 'command' | 'native' | 'claude_code' | 'opencode' | 'kilo' | 'aider';
+export type RunMode = 'command' | 'native';
 
 export interface RunRequest {
   mode?: RunMode;

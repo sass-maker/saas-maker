@@ -1,5 +1,5 @@
 import { auth } from "@/lib/auth";
-import { LOCAL_ACCESS_COOKIE, getLocalProtectionToken, isLocalAuthBypassEnabled, isLocalHost } from "@/lib/local-auth";
+import { LOCAL_ACCESS_COOKIE, getLocalProtectionToken, isLocalAuthBypassEnabled, isLocalHost } from "@/lib/local-auth-edge";
 import { NextRequest, NextResponse } from "next/server";
 
 function authorizeProtectedLocal(req: NextRequest) {

@@ -1,25 +1,14 @@
 import { NextResponse } from "next/server";
-import { headers } from "next/headers";
-import { auth } from "@/lib/auth";
-import { isLocalAuthBypassEnabled } from "@/lib/local-auth";
 import { getManifestProjectRepos } from "@/lib/fleet-manifest";
+import { DROID_API_URL, droidApiUrl, droidJsonResponse, requireDroidAccess } from "@/app/api/droid/_lib";
 
 export const dynamic = "force-dynamic";
-
-const DROID_API_URL = process.env.DROID_API_URL || "https://saasmaker-droid.sarthakagrawal927.workers.dev";
 
 type DroidRunTask = {
   id?: string;
   project_slug?: string | null;
   branch_name?: string | null;
 };
-
-async function assertAuthorized() {
-  const requestHeaders = await headers();
-  if (isLocalAuthBypassEnabled(requestHeaders.get("host"))) return true;
-  const session = await auth.api.getSession({ headers: requestHeaders });
-  return Boolean(session?.user);
-}
 
 function resolveRepoUrl(input: { repo_url?: unknown; task?: DroidRunTask; projectSlug?: string | null }) {
   if (typeof input.repo_url === "string" && input.repo_url.trim()) {
@@ -31,14 +20,8 @@ function resolveRepoUrl(input: { repo_url?: unknown; task?: DroidRunTask; projec
 }
 
 export async function POST(req: Request) {
-  if (!(await assertAuthorized())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  const token = process.env.DROID_INTERNAL_TOKEN;
-  if (!token) {
-    return NextResponse.json({ error: "DROID_INTERNAL_TOKEN is not configured" }, { status: 500 });
-  }
+  const denied = await requireDroidAccess();
+  if (denied) return denied;
 
   const body = await req.json().catch(() => null) as {
     task?: DroidRunTask;
@@ -61,7 +44,7 @@ export async function POST(req: Request) {
     wait_for_completion?: unknown;
   } | null;
 
-  const mode = body?.mode === "native" || body?.mode === "claude_code" || body?.mode === "opencode" || body?.mode === "kilo" || body?.mode === "aider" ? body.mode : "command";
+  const mode = body?.mode === "native" ? body.mode : "command";
   if (!body || (mode === "command" && (typeof body.command !== "string" || !body.command.trim()))) {
     return NextResponse.json({ error: "command is required" }, { status: 400 });
   }
@@ -96,35 +79,15 @@ export async function POST(req: Request) {
     wait_for_completion: body.wait_for_completion === true,
   };
 
-  const response = await fetch(`${DROID_API_URL}/v0/runs`, {
+  return droidJsonResponse(droidApiUrl("/v0/runs"), {
     method: "POST",
-    headers: {
-      "Authorization": `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
     body: JSON.stringify(payload),
   });
-
-  const text = await response.text();
-  let data: unknown;
-  try {
-    data = JSON.parse(text);
-  } catch {
-    data = { error: text };
-  }
-
-  return NextResponse.json(data, { status: response.status });
 }
 
 export async function GET(req: Request) {
-  if (!(await assertAuthorized())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  const token = process.env.DROID_INTERNAL_TOKEN;
-  if (!token) {
-    return NextResponse.json({ error: "DROID_INTERNAL_TOKEN is not configured" }, { status: 500 });
-  }
+  const denied = await requireDroidAccess();
+  if (denied) return denied;
 
   const incoming = new URL(req.url);
   const upstream = new URL(`${DROID_API_URL}/v0/runs`);
@@ -133,17 +96,5 @@ export async function GET(req: Request) {
     if (value) upstream.searchParams.set(key, value);
   }
 
-  const response = await fetch(upstream, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-
-  const text = await response.text();
-  let data: unknown;
-  try {
-    data = JSON.parse(text);
-  } catch {
-    data = { error: text };
-  }
-
-  return NextResponse.json(data, { status: response.status });
+  return droidJsonResponse(upstream);
 }
