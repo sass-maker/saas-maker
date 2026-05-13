@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
-import { createRun, createRunArtifact, createRunEvent, finishRun, getLatestRunEvent, getLatestRunRequest, getRun, getRunStats, listRunArtifacts, listRunEvents, listRuns, markRunStarted } from './db';
+import { createRun, createRunArtifact, createRunEvent, finishRun, getActiveRunForQueue, getLatestRunEvent, getLatestRunRequest, getRun, getRunStats, listRunArtifacts, listRunEvents, listRuns, markRunStarted } from './db';
 import type { CommandResult, Env, RunExecutionInput, RunExecutor, RunMode, RunRequest } from './types';
 
 const DEFAULT_TIMEOUT_SECONDS = 900;
@@ -65,6 +65,40 @@ export function createApp(executor: RunExecutor) {
       sandboxId,
     });
 
+    await createRunEvent(c.env, runId, {
+      type: 'run_request',
+      message: 'Stored Droid run request for reconcile/resume.',
+      command,
+      metadata: buildRunRequestMetadata(body, {
+        mode,
+        command,
+        repoUrl: body?.repo_url?.trim(),
+        branch: body?.branch?.trim(),
+        timeoutSeconds: normalizeTimeoutSeconds(body?.timeout_seconds) ?? DEFAULT_TIMEOUT_SECONDS,
+      }),
+    });
+
+    const activeRun = await getActiveRunForQueue(c.env, {
+      repoUrl: body?.repo_url?.trim(),
+      projectSlug: body?.project_slug?.trim(),
+      excludeRunId: runId,
+    });
+    if (activeRun) {
+      await createRunEvent(c.env, runId, {
+        type: 'run_queued',
+        message: 'Droid run queued because another run is already active for this repository/project.',
+        command,
+        metadata: {
+          active_run_id: activeRun.id,
+          active_sandbox_id: activeRun.sandbox_id,
+          repo_url: body?.repo_url?.trim() ?? null,
+          project_slug: body?.project_slug?.trim() ?? null,
+        },
+      });
+      const queuedRun = await getRun(c.env, runId);
+      return c.json({ data: queuedRun ?? run, queued_after: activeRun.id }, 202);
+    }
+
     await markRunStarted(c.env, runId);
     await createRunEvent(c.env, runId, {
       type: 'run_started',
@@ -80,18 +114,6 @@ export function createApp(executor: RunExecutor) {
         sandbox_id: sandboxId,
         timeout_seconds: normalizeTimeoutSeconds(body?.timeout_seconds) ?? DEFAULT_TIMEOUT_SECONDS,
       },
-    });
-    await createRunEvent(c.env, runId, {
-      type: 'run_request',
-      message: 'Stored Droid run request for reconcile/resume.',
-      command,
-      metadata: buildRunRequestMetadata(body, {
-        mode,
-        command,
-        repoUrl: body?.repo_url?.trim(),
-        branch: body?.branch?.trim(),
-        timeoutSeconds: normalizeTimeoutSeconds(body?.timeout_seconds) ?? DEFAULT_TIMEOUT_SECONDS,
-      }),
     });
 
     const runInput = {

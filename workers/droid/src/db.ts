@@ -52,6 +52,32 @@ export async function listRuns(env: Env, input: { taskId?: string; projectSlug?:
   return (rows.results ?? []) as unknown as RunRecord[];
 }
 
+export async function getActiveRunForQueue(env: Env, input: {
+  repoUrl?: string;
+  projectSlug?: string;
+  excludeRunId?: string;
+}): Promise<RunRecord | null> {
+  if (input.repoUrl) {
+    const row = await env.DB.prepare(
+      `SELECT * FROM droid_runs
+       WHERE repo_url = ? AND status = 'running' AND id != ?
+       ORDER BY started_at ASC
+       LIMIT 1`
+    ).bind(input.repoUrl, input.excludeRunId ?? '').first();
+    return row ? row as unknown as RunRecord : null;
+  }
+  if (input.projectSlug) {
+    const row = await env.DB.prepare(
+      `SELECT * FROM droid_runs
+       WHERE project_slug = ? AND status = 'running' AND id != ?
+       ORDER BY started_at ASC
+       LIMIT 1`
+    ).bind(input.projectSlug, input.excludeRunId ?? '').first();
+    return row ? row as unknown as RunRecord : null;
+  }
+  return null;
+}
+
 export async function getRunStats(env: Env, input: { projectSlug?: string; limit?: number }): Promise<RunStats> {
   const limit = Math.min(Math.max(input.limit ?? 10, 1), 25);
   const byStatus: RunStats['by_status'] = {

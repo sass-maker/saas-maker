@@ -100,8 +100,8 @@ describe('droid runs', () => {
     expect(eventsResponse.status).toBe(200);
     const eventsPayload = await eventsResponse.json() as { data: Array<{ type: string; stdout: string | null }> };
     expect(eventsPayload.data.map((event) => event.type)).toEqual([
-      'run_started',
       'run_request',
+      'run_started',
       'command_start',
       'command_finish',
       'run_finished',
@@ -236,6 +236,60 @@ describe('droid runs', () => {
     });
   });
 
+  it('queues same-repo runs when another run is active', async () => {
+    let executeCalls = 0;
+    const app = createApp({
+      async execute() {
+        executeCalls += 1;
+        return new Promise(() => undefined);
+      },
+    });
+    const env = createEnv();
+    const headers = {
+      'Authorization': 'Bearer test-token',
+      'Content-Type': 'application/json',
+    };
+
+    const firstResponse = await app.request('/v0/runs', {
+      method: 'POST',
+      body: JSON.stringify({
+        project_slug: 'saas-maker',
+        repo_url: 'https://github.com/example/repo.git',
+        command: 'first',
+      }),
+      headers,
+    }, env);
+    expect(firstResponse.status).toBe(202);
+    const firstPayload = await firstResponse.json() as { data: { id: string; status: string } };
+    expect(firstPayload.data.status).toBe('running');
+
+    const secondResponse = await app.request('/v0/runs', {
+      method: 'POST',
+      body: JSON.stringify({
+        project_slug: 'saas-maker',
+        repo_url: 'https://github.com/example/repo.git',
+        command: 'second',
+        wait_for_completion: true,
+      }),
+      headers,
+    }, env);
+
+    expect(secondResponse.status).toBe(202);
+    const secondPayload = await secondResponse.json() as { data: { id: string; status: string }; queued_after: string };
+    expect(secondPayload.data.status).toBe('queued');
+    expect(secondPayload.queued_after).toBe(firstPayload.data.id);
+    expect(executeCalls).toBe(1);
+
+    const eventsResponse = await app.request(`/v0/runs/${secondPayload.data.id}/events`, {
+      headers: { Authorization: 'Bearer test-token' },
+    }, env);
+    const eventsPayload = await eventsResponse.json() as { data: Array<{ type: string }> };
+    expect(eventsPayload.data.map((event) => event.type)).toEqual([
+      'run_request',
+      'run_queued',
+    ]);
+  });
+
   it('starts runs asynchronously by default', async () => {
     const app = createApp({
       async execute() {
@@ -342,8 +396,8 @@ describe('droid runs', () => {
       }, env);
       const eventsPayload = await eventsResponse.json() as { data: Array<{ type: string }> };
       expect(eventsPayload.data.map((event) => event.type)).toEqual([
-        'run_started',
         'run_request',
+        'run_started',
         'agent_process_start',
         'run_timeout',
         'sandbox_destroy',
@@ -536,6 +590,15 @@ class FakeStatement {
     if (this.sql.includes('SELECT * FROM droid_run_events WHERE run_id = ?')) {
       const [runId] = this.params;
       return this.db.events.filter((item) => item.run_id === runId).at(-1) ?? null;
+    }
+    if (this.sql.includes('FROM droid_runs') && this.sql.includes("status = 'running'") && this.sql.includes('id != ?')) {
+      const [queueValue, excludeRunId] = this.params;
+      const key = this.sql.includes('repo_url = ?') ? 'repo_url' : 'project_slug';
+      return Array.from(this.db.runs.values()).find((run) => (
+        run[key] === queueValue &&
+        run.status === 'running' &&
+        run.id !== excludeRunId
+      )) ?? null;
     }
     if (this.sql.includes('SELECT * FROM droid_runs WHERE id = ?')) {
       return this.db.runs.get(String(this.params[0])) ?? null;
