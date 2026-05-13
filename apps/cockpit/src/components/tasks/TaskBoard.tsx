@@ -758,6 +758,29 @@ export function TaskBoard({
     }
   };
 
+  const handleDroidCancel = async () => {
+    if (!droidRun) return;
+    setStartingDroidRun(true);
+    setDroidError(null);
+    try {
+      const res = await fetch(`/api/droid/runs/${droidRun.id}/cancel`, {
+        method: 'POST',
+      });
+      const payload = await res.json() as { data?: DroidRunRow; error?: string };
+      if (!res.ok || !payload.data) throw new Error(payload.error || 'Droid cancel failed');
+      setDroidRun(payload.data);
+      await loadDroidRunDetails(payload.data.id);
+      await loadDroidStats(payload.data.project_slug);
+      showToast('Droid run cancelled');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Droid cancel failed';
+      setDroidError(message);
+      showToast(`Cancel failed: ${message.slice(0, 120)}`);
+    } finally {
+      setStartingDroidRun(false);
+    }
+  };
+
   const handleBatchDispatch = async () => {
     if (runnableSelectedTasks.length === 0) {
       showToast('Select runnable todo tasks first');
@@ -1269,6 +1292,7 @@ export function TaskBoard({
         onCwdChange={setDroidCwd}
         onRun={handleDroidRun}
         onReconcile={handleDroidReconcile}
+        onCancel={handleDroidCancel}
         onClose={() => {
           setDroidTask(null);
           setDroidMode('native');

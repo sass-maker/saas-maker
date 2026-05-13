@@ -1,6 +1,6 @@
 'use client';
 
-import { Play } from 'lucide-react';
+import { Play, Square } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -93,6 +93,7 @@ interface DroidDialogProps {
   onCwdChange: (value: string) => void;
   onRun: () => void;
   onReconcile: () => void;
+  onCancel: () => void;
   onClose: () => void;
 }
 
@@ -122,6 +123,7 @@ export function DroidDialog({
   onCwdChange,
   onRun,
   onReconcile,
+  onCancel,
   onClose,
 }: DroidDialogProps) {
   return (
@@ -255,7 +257,7 @@ export function DroidDialog({
             <div className="space-y-3">
               <DroidStats stats={stats} />
               <DroidError error={error} />
-              <DroidResult run={run} running={running} onReconcile={onReconcile} />
+              <DroidResult run={run} running={running} onReconcile={onReconcile} onCancel={onCancel} />
               <DroidArtifacts artifacts={artifacts} />
               <DroidEvents events={events} />
             </div>
@@ -304,15 +306,32 @@ function DroidStats({ stats }: { stats: DroidRunStats | null }) {
   );
 }
 
-function DroidResult({ run, running, onReconcile }: { run: DroidRunRow | null; running: boolean; onReconcile: () => void }) {
+function DroidResult({
+  run,
+  running,
+  onReconcile,
+  onCancel,
+}: {
+  run: DroidRunRow | null;
+  running: boolean;
+  onReconcile: () => void;
+  onCancel: () => void;
+}) {
   const reconcileLabel = run?.status === 'queued' ? 'Start queued' : 'Check run';
+  const canControl = run?.status === 'queued' || run?.status === 'running';
   return (
     <div className="rounded-lg border bg-muted/20 p-3">
       <div className="flex items-center justify-between gap-2">
         <h3 className="text-sm font-semibold text-foreground">Result</h3>
         {run ? (
           <div className="flex items-center gap-2">
-            {(run.status === 'queued' || run.status === 'running') ? (
+            {canControl ? (
+              <Button type="button" size="sm" variant="ghost" onClick={onCancel} disabled={running}>
+                <Square className="h-3.5 w-3.5" />
+                Cancel
+              </Button>
+            ) : null}
+            {canControl ? (
               <Button type="button" size="sm" variant="outline" onClick={onReconcile} disabled={running}>
                 {reconcileLabel}
               </Button>
