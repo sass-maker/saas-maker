@@ -236,8 +236,68 @@ export function createApp(executor: RunExecutor) {
     if (run.status === 'completed' || run.status === 'failed') {
       return c.json({ data: run, reconciled: false });
     }
-    if (!executor.reconcile) return c.json({ error: 'Run reconciliation is not supported' }, 501);
     const incoming = await c.req.json().catch(() => null) as { wait_for_completion?: boolean; force?: boolean } | null;
+    const request = await getLatestRunRequest(c.env, run.id);
+    if (run.status === 'queued') {
+      const queuedInput = executionInputFromRun(run, request);
+      const activeRun = await getActiveRunForQueue(c.env, {
+        repoUrl: queuedInput.repoUrl,
+        projectSlug: run.project_slug ?? undefined,
+        excludeRunId: run.id,
+      });
+      if (!incoming?.force && activeRun) {
+        return c.json({
+          error: 'Run is queued behind an active Droid run.',
+          active_run_id: activeRun.id,
+        }, 409);
+      }
+
+      await createRunEvent(c.env, run.id, {
+        type: 'run_dequeued',
+        message: 'Queued Droid run dequeued for execution.',
+        command: queuedInput.command,
+        metadata: {
+          forced: incoming?.force === true,
+          previous_status: run.status,
+        },
+      });
+      await markRunStarted(c.env, run.id);
+      await createRunEvent(c.env, run.id, {
+        type: 'run_started',
+        message: 'Droid run started',
+        command: queuedInput.command,
+        metadata: {
+          mode: queuedInput.mode,
+          provider: queuedInput.provider ?? null,
+          task_id: run.task_id,
+          project_slug: run.project_slug,
+          repo_url: queuedInput.repoUrl ?? null,
+          branch: queuedInput.branch ?? null,
+          sandbox_id: run.sandbox_id,
+          timeout_seconds: queuedInput.timeoutSeconds,
+          dequeued: true,
+        },
+      });
+      const queuedPromise = executeRun(c.env, executor, {
+        ...queuedInput,
+        startedAt: Date.now(),
+      });
+
+      if (incoming?.wait_for_completion === true) {
+        await queuedPromise;
+      } else {
+        try {
+          c.executionCtx.waitUntil(queuedPromise);
+        } catch {
+          void queuedPromise;
+        }
+      }
+
+      const updatedRun = await getRun(c.env, run.id);
+      return c.json({ data: updatedRun ?? run, dequeued: true }, incoming?.wait_for_completion === true ? 200 : 202);
+    }
+
+    if (!executor.reconcile) return c.json({ error: 'Run reconciliation is not supported' }, 501);
     const latestEvent = await getLatestRunEvent(c.env, run.id);
     if (!incoming?.force && latestEvent && !isStaleEvent(latestEvent.created_at, RECONCILE_STALE_AFTER_MS)) {
       return c.json({
@@ -251,7 +311,6 @@ export function createApp(executor: RunExecutor) {
       message: 'Droid reconcile requested.',
       metadata: { sandbox_id: run.sandbox_id, status: run.status },
     });
-    const request = await getLatestRunRequest(c.env, run.id);
     const startedAt = Date.now();
     const reconcilePromise = executeRun(c.env, executor, {
       ...executionInputFromRun(run, request),

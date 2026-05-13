@@ -290,6 +290,79 @@ describe('droid runs', () => {
     ]);
   });
 
+  it('dequeues a queued same-repo run after the active run finishes', async () => {
+    let releaseFirst: (() => void) | undefined;
+    const executeCommands: string[] = [];
+    const app = createApp({
+      async execute(input) {
+        executeCommands.push(input.command);
+        if (input.command === 'first') {
+          await new Promise<void>((resolve) => {
+            releaseFirst = resolve;
+          });
+        }
+        return { stdout: `${input.command}\n`, stderr: '', exitCode: 0, success: true };
+      },
+    });
+    const env = createEnv();
+    const headers = {
+      'Authorization': 'Bearer test-token',
+      'Content-Type': 'application/json',
+    };
+
+    const firstResponsePromise = app.request('/v0/runs', {
+      method: 'POST',
+      body: JSON.stringify({
+        project_slug: 'saas-maker',
+        repo_url: 'https://github.com/example/repo.git',
+        command: 'first',
+        wait_for_completion: true,
+      }),
+      headers,
+    }, env);
+    while (!releaseFirst) await Promise.resolve();
+
+    const queuedResponse = await app.request('/v0/runs', {
+      method: 'POST',
+      body: JSON.stringify({
+        project_slug: 'saas-maker',
+        repo_url: 'https://github.com/example/repo.git',
+        command: 'second',
+      }),
+      headers,
+    }, env);
+    const queuedPayload = await queuedResponse.json() as { data: { id: string; status: string } };
+    expect(queuedPayload.data.status).toBe('queued');
+
+    releaseFirst();
+    await firstResponsePromise;
+
+    const dequeueResponse = await app.request(`/v0/runs/${queuedPayload.data.id}/reconcile`, {
+      method: 'POST',
+      body: JSON.stringify({ wait_for_completion: true }),
+      headers,
+    }, env);
+
+    expect(dequeueResponse.status).toBe(200);
+    const dequeuePayload = await dequeueResponse.json() as { data: { status: string; exit_code: number }; dequeued: boolean };
+    expect(dequeuePayload.dequeued).toBe(true);
+    expect(dequeuePayload.data.status).toBe('completed');
+    expect(dequeuePayload.data.exit_code).toBe(0);
+    expect(executeCommands).toEqual(['first', 'second']);
+
+    const eventsResponse = await app.request(`/v0/runs/${queuedPayload.data.id}/events`, {
+      headers: { Authorization: 'Bearer test-token' },
+    }, env);
+    const eventsPayload = await eventsResponse.json() as { data: Array<{ type: string }> };
+    expect(eventsPayload.data.map((event) => event.type)).toEqual([
+      'run_request',
+      'run_queued',
+      'run_dequeued',
+      'run_started',
+      'run_finished',
+    ]);
+  });
+
   it('starts runs asynchronously by default', async () => {
     const app = createApp({
       async execute() {
