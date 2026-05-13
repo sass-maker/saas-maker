@@ -134,7 +134,7 @@ jobs:
         if: steps.changes.outputs.changed == 'true'
       - name: Deploy Droid to Cloudflare Workers
         if: steps.changes.outputs.changed == 'true'
-        run: pnpm -F @saas-maker/droid deploy
+        run: pnpm -F @saas-maker/droid run deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -185,7 +185,7 @@ jobs:
         if: steps.changes.outputs.changed == 'true'
       - name: Deploy cockpit to Cloudflare Workers
         if: steps.changes.outputs.changed == 'true'
-        run: pnpm -F @saas-maker/dashboard deploy
+        run: pnpm -F @saas-maker/dashboard run deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
