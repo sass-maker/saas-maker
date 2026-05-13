@@ -184,6 +184,58 @@ describe('droid runs', () => {
     });
   });
 
+  it('reports run stats for cockpit health views', async () => {
+    const app = createApp({
+      async execute(input) {
+        if (input.command === 'hang') return new Promise(() => undefined);
+        if (input.command === 'fail') return { stdout: '', stderr: 'nope', exitCode: 1, success: false };
+        return { stdout: 'ok\n', stderr: '', exitCode: 0, success: true };
+      },
+    });
+    const env = createEnv();
+    const headers = {
+      'Authorization': 'Bearer test-token',
+      'Content-Type': 'application/json',
+    };
+
+    await app.request('/v0/runs', {
+      method: 'POST',
+      body: JSON.stringify({ project_slug: 'saas-maker', command: 'pass', wait_for_completion: true }),
+      headers,
+    }, env);
+    await app.request('/v0/runs', {
+      method: 'POST',
+      body: JSON.stringify({ project_slug: 'saas-maker', command: 'fail', wait_for_completion: true }),
+      headers,
+    }, env);
+    await app.request('/v0/runs', {
+      method: 'POST',
+      body: JSON.stringify({ project_slug: 'saas-maker', command: 'hang' }),
+      headers,
+    }, env);
+
+    const response = await app.request('/v0/stats?project_slug=saas-maker&limit=2', {
+      headers: { Authorization: 'Bearer test-token' },
+    }, env);
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toMatchObject({
+      data: {
+        total: 3,
+        by_status: {
+          queued: 0,
+          running: 1,
+          completed: 1,
+          failed: 1,
+        },
+        stale_running: 1,
+        recent: expect.arrayContaining([
+          expect.objectContaining({ project_slug: 'saas-maker' }),
+        ]),
+      },
+    });
+  });
+
   it('starts runs asynchronously by default', async () => {
     const app = createApp({
       async execute() {
@@ -453,6 +505,27 @@ class FakeStatement {
   }
 
   async first() {
+    if (this.sql.includes('SELECT AVG(duration_ms) AS avg_duration_ms FROM droid_runs')) {
+      const projectSlug = this.params.length > 0 ? this.params[0] : undefined;
+      const durations = Array.from(this.db.runs.values())
+        .filter((run) => projectSlug === undefined || run.project_slug === projectSlug)
+        .map((run) => run.duration_ms)
+        .filter((duration): duration is number => typeof duration === 'number');
+      return {
+        avg_duration_ms: durations.length === 0
+          ? null
+          : durations.reduce((sum, duration) => sum + duration, 0) / durations.length,
+      };
+    }
+    if (this.sql.includes('SELECT COUNT(*) AS count FROM droid_runs')) {
+      const projectSlug = this.params.length > 0 ? this.params[0] : undefined;
+      return {
+        count: Array.from(this.db.runs.values())
+          .filter((run) => projectSlug === undefined || run.project_slug === projectSlug)
+          .filter((run) => run.status === 'running' && run.started_at)
+          .length,
+      };
+    }
     if (this.sql.includes("FROM droid_run_events") && this.sql.includes("type = 'run_request'")) {
       const [runId] = this.params;
       const event = this.db.events
@@ -471,6 +544,18 @@ class FakeStatement {
   }
 
   async all() {
+    if (this.sql.includes('SELECT status, COUNT(*) AS count FROM droid_runs')) {
+      const projectSlug = this.params.length > 0 ? this.params[0] : undefined;
+      const counts = new Map<string, number>();
+      for (const run of this.db.runs.values()) {
+        if (projectSlug !== undefined && run.project_slug !== projectSlug) continue;
+        const status = String(run.status);
+        counts.set(status, (counts.get(status) ?? 0) + 1);
+      }
+      return {
+        results: Array.from(counts.entries()).map(([status, count]) => ({ status, count })),
+      };
+    }
     if (this.sql.includes('SELECT * FROM droid_runs WHERE task_id = ?')) {
       const [taskId, limit] = this.params;
       return {

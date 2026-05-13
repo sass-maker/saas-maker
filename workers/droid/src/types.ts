@@ -75,6 +75,14 @@ export interface RunArtifactRecord {
   created_at: string;
 }
 
+export interface RunStats {
+  total: number;
+  by_status: Record<RunRecord['status'], number>;
+  avg_duration_ms: number | null;
+  stale_running: number;
+  recent: RunRecord[];
+}
+
 export interface CommandResult {
   stdout: string;
   stderr: string;

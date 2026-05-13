@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
-import { createRun, createRunArtifact, createRunEvent, finishRun, getLatestRunEvent, getLatestRunRequest, getRun, listRunArtifacts, listRunEvents, listRuns, markRunStarted } from './db';
+import { createRun, createRunArtifact, createRunEvent, finishRun, getLatestRunEvent, getLatestRunRequest, getRun, getRunStats, listRunArtifacts, listRunEvents, listRuns, markRunStarted } from './db';
 import type { CommandResult, Env, RunExecutionInput, RunExecutor, RunMode, RunRequest } from './types';
 
 const DEFAULT_TIMEOUT_SECONDS = 900;
@@ -142,6 +142,14 @@ export function createApp(executor: RunExecutor) {
       limit: normalizeLimit(c.req.query('limit')),
     });
     return c.json({ data: runs });
+  });
+
+  app.get('/v0/stats', async (c) => {
+    const stats = await getRunStats(c.env, {
+      projectSlug: c.req.query('project_slug')?.trim(),
+      limit: normalizeLimit(c.req.query('limit')),
+    });
+    return c.json({ data: stats });
   });
 
   app.get('/v0/runs/:id/events', async (c) => {

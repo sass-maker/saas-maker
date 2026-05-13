@@ -1,4 +1,4 @@
-import type { Env, RunArtifactInput, RunArtifactRecord, RunEventInput, RunRecord, RunEventRecord } from './types';
+import type { Env, RunArtifactInput, RunArtifactRecord, RunEventInput, RunRecord, RunEventRecord, RunStats } from './types';
 
 export async function createRun(env: Env, input: {
   id: string;
@@ -50,6 +50,45 @@ export async function listRuns(env: Env, input: { taskId?: string; projectSlug?:
     `SELECT * FROM droid_runs ORDER BY created_at DESC LIMIT ?`
   ).bind(limit).all();
   return (rows.results ?? []) as unknown as RunRecord[];
+}
+
+export async function getRunStats(env: Env, input: { projectSlug?: string; limit?: number }): Promise<RunStats> {
+  const limit = Math.min(Math.max(input.limit ?? 10, 1), 25);
+  const byStatus: RunStats['by_status'] = {
+    queued: 0,
+    running: 0,
+    completed: 0,
+    failed: 0,
+  };
+  const where = input.projectSlug ? 'WHERE project_slug = ?' : '';
+  const statusRows = await env.DB.prepare(
+    `SELECT status, COUNT(*) AS count FROM droid_runs ${where} GROUP BY status`
+  ).bind(...(input.projectSlug ? [input.projectSlug] : [])).all<{ status: RunRecord['status']; count: number }>();
+  for (const row of statusRows.results ?? []) {
+    if (row.status in byStatus) byStatus[row.status] = Number(row.count) || 0;
+  }
+
+  const avgWhere = input.projectSlug ? 'WHERE project_slug = ? AND duration_ms IS NOT NULL' : 'WHERE duration_ms IS NOT NULL';
+  const avgRow = await env.DB.prepare(
+    `SELECT AVG(duration_ms) AS avg_duration_ms FROM droid_runs ${avgWhere}`
+  ).bind(...(input.projectSlug ? [input.projectSlug] : [])).first<{ avg_duration_ms: number | null }>();
+  const staleWhere = input.projectSlug
+    ? `WHERE project_slug = ? AND status = 'running' AND started_at IS NOT NULL AND datetime(started_at, '+15 minutes') < datetime('now')`
+    : `WHERE status = 'running' AND started_at IS NOT NULL AND datetime(started_at, '+15 minutes') < datetime('now')`;
+  const staleRow = await env.DB.prepare(
+    `SELECT COUNT(*) AS count FROM droid_runs ${staleWhere}`
+  ).bind(...(input.projectSlug ? [input.projectSlug] : [])).first<{ count: number }>();
+  const recent = await listRuns(env, { projectSlug: input.projectSlug, limit });
+
+  return {
+    total: byStatus.queued + byStatus.running + byStatus.completed + byStatus.failed,
+    by_status: byStatus,
+    avg_duration_ms: avgRow?.avg_duration_ms === null || avgRow?.avg_duration_ms === undefined
+      ? null
+      : Math.round(Number(avgRow.avg_duration_ms)),
+    stale_running: Number(staleRow?.count ?? 0),
+    recent,
+  };
 }
 
 export async function listRunEvents(env: Env, runId: string): Promise<RunEventRecord[]> {
