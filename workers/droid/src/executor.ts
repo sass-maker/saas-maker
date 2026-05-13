@@ -274,9 +274,10 @@ async function runNativeAgent(
   const model = 'deepseek-reasoner';
   const maxTurns = input.maxTurns ?? 20;
   const transcript: string[] = [];
+  const taskContext = await hydrateNativeTaskContext(input, sandbox, cwd);
   const messages: NativeChatMessage[] = [
     { role: 'system', content: buildNativeSystemPrompt(cwd) },
-    { role: 'user', content: input.prompt ?? '' },
+    { role: 'user', content: buildNativeUserPrompt(input.prompt ?? '', taskContext) },
   ];
 
   await input.recordEvent({
@@ -355,7 +356,70 @@ function buildNativeSystemPrompt(cwd: string): string {
     '{"action":"final","summary":"what changed and what was verified"}',
     'Use relative paths only. Read files before editing unless the task is explicitly to create a new file.',
     'Prefer small diffs. Run the smallest useful check before final when possible.',
+    'Use the provided repository context as orientation, but verify details by reading files before editing.',
   ].join('\n');
+}
+
+function buildNativeUserPrompt(prompt: string, taskContext: string): string {
+  return [
+    taskContext ? `Repository context:\n${taskContext}` : '',
+    `Task:\n${prompt}`,
+  ].filter(Boolean).join('\n\n');
+}
+
+async function hydrateNativeTaskContext(
+  input: Parameters<RunExecutor['execute']>[0],
+  sandbox: Awaited<ReturnType<typeof getSandbox>>,
+  cwd: string
+): Promise<string> {
+  const script = [
+    `cd ${quote(cwd)}`,
+    'root="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"',
+    'echo "cwd: $(pwd)"',
+    'echo "root: $root"',
+    'echo',
+    'echo "### Git status"',
+    'git -C "$root" status --short 2>/dev/null | head -120 || true',
+    'echo',
+    'echo "### Top-level files"',
+    'find "$root" -maxdepth 2 -mindepth 1 \\( -path "$root/.git" -o -path "$root/node_modules" -o -path "$root/.next" -o -path "$root/dist" \\) -prune -o -print 2>/dev/null | sed "s#^$root/##" | head -160',
+    'if test -f "$root/AGENTS.md"; then echo; echo "### AGENTS.md"; sed -n "1,220p" "$root/AGENTS.md"; fi',
+    'if test -f "$root/package.json"; then echo; echo "### package.json scripts"; node -e "const fs=require(\'fs\'); const pkg=JSON.parse(fs.readFileSync(process.argv[1],\'utf8\')); console.log(JSON.stringify(pkg.scripts||{}, null, 2));" "$root/package.json" 2>/dev/null || sed -n "1,120p" "$root/package.json"; fi',
+  ].join('\n');
+  const result = await sandboxExecWithWorkerTimeout(
+    sandbox,
+    `bash -lc ${quote(script)}`,
+    { timeout: 30000 },
+    40000
+  );
+  if (!result.success) {
+    await input.recordEvent({
+      type: 'context_hydration_failed',
+      actor: 'native',
+      source: 'sandbox',
+      command: 'Droid context hydration',
+      cwd,
+      exit_code: result.exitCode,
+      stdout: result.stdout,
+      stderr: result.stderr,
+    });
+    return '';
+  }
+
+  const context = truncateForModel(result.stdout, 20000);
+  await input.recordEvent({
+    type: 'context_hydrated',
+    actor: 'native',
+    source: 'sandbox',
+    command: 'Droid context hydration',
+    cwd,
+    stdout: context,
+    metadata: {
+      bytes: result.stdout.length,
+      truncated: result.stdout.length > 20000,
+    },
+  });
+  return context;
 }
 
 async function requestNativeAgentAction(
