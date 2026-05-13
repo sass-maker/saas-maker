@@ -1,0 +1,43 @@
+{
+  "name": "saasmaker-droid",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-02-22",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "vars": {
+    "DROID_DEEPSEEK_MODEL": "deepseek-v4-pro",
+    "DROID_DEEPSEEK_REVIEW_MODEL": "deepseek-chat"
+  },
+  "observability": {
+    "enabled": true
+  },
+  "containers": [
+    {
+      "class_name": "Sandbox",
+      "image": "./Dockerfile",
+      "instance_type": "basic",
+      "max_instances": 3
+    }
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "class_name": "Sandbox",
+        "name": "Sandbox"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["Sandbox"]
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "saasmaker-db",
+      "database_id": "4fe6cffc-593a-4540-9577-1c33e8c64491"
+    }
+  ]
+}
