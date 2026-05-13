@@ -72,12 +72,12 @@ export const sandboxExecutor: RunExecutor = {
     const cwd = resolveWorkspaceCwd(workspace, input.cwd);
     if (input.mode !== 'command') {
       const result = await runAgent(input, sandbox, cwd);
-      await finalizeWorkspacePatch(input, sandbox, workspace, hydration, result);
+      const finalResult = await finalizeWorkspacePatch(input, sandbox, workspace, hydration, result);
       if (input.destroyAfterRun) {
         await input.recordEvent({ type: 'sandbox_destroy', message: `Destroying sandbox ${input.sandboxId}` });
         await sandbox.destroy();
       }
-      return result;
+      return finalResult;
     }
 
     await input.recordEvent({ type: 'command_start', command: input.command, cwd });
@@ -91,14 +91,14 @@ export const sandboxExecutor: RunExecutor = {
       stderr: result.stderr,
     });
 
-    await finalizeWorkspacePatch(input, sandbox, workspace, hydration, result);
+    const finalResult = await finalizeWorkspacePatch(input, sandbox, workspace, hydration, result);
 
     if (input.destroyAfterRun) {
       await input.recordEvent({ type: 'sandbox_destroy', message: `Destroying sandbox ${input.sandboxId}` });
       await sandbox.destroy();
     }
 
-    return result;
+    return finalResult;
   },
   async reconcile(input): Promise<CommandResult> {
     const sandbox = getDroidSandbox(input.env.Sandbox, input.sandboxId);
@@ -810,7 +810,7 @@ async function createDraftPullRequest(
   workspace: string,
   hydration: RepoHydration,
   patch: { patchBytes: number; status: string; stat: string }
-): Promise<void> {
+): Promise<boolean> {
   if (!input.env.DROID_GITHUB_TOKEN || !hydration.repo) {
     await input.recordEvent({
       type: 'pr_skipped',
@@ -818,7 +818,7 @@ async function createDraftPullRequest(
       message: 'DROID_GITHUB_TOKEN or GitHub repo metadata is not configured.',
       metadata: { github_token: Boolean(input.env.DROID_GITHUB_TOKEN), repo_url: input.repoUrl ?? null, method: hydration.method },
     });
-    return;
+    return false;
   }
 
   const repo = hydration.repo;
@@ -861,7 +861,7 @@ async function createDraftPullRequest(
         message: 'No changed files were found for PR creation.',
         metadata: { repo, base_branch: baseBranch, head_branch: branchName },
       });
-      return;
+      return false;
     }
 
     const commit = await githubRequest<{ sha: string }>(input, `/repos/${repo}/git/commits`, {
@@ -912,6 +912,7 @@ async function createDraftPullRequest(
       uri: pr.html_url,
       metadata: { repo, base_branch: baseBranch, head_branch: branchName, title, pr_number: pr.number },
     });
+    return true;
   } catch (error) {
     await input.recordEvent({
       type: 'pr_failed',
@@ -927,6 +928,7 @@ async function createDraftPullRequest(
         title,
       },
     });
+    return false;
   }
 }
 
@@ -950,7 +952,15 @@ async function finalizeWorkspacePatch(
     };
   }
 
-  await createDraftPullRequestWithTimeout(input, sandbox, workspace, hydration, patch);
+  const prCreated = await createDraftPullRequestWithTimeout(input, sandbox, workspace, hydration, patch);
+  if (!prCreated) {
+    return {
+      stdout: result.stdout,
+      stderr: appendTail(result.stderr, 'Droid could not create the requested pull request.'),
+      exitCode: result.success ? 78 : result.exitCode,
+      success: false,
+    };
+  }
   return result;
 }
 
@@ -1139,18 +1149,18 @@ async function createDraftPullRequestWithTimeout(
   workspace: string,
   hydration: RepoHydration,
   patch: { patchBytes: number; status: string; stat: string }
-): Promise<void> {
+): Promise<boolean> {
   const timeoutMs = 60000;
   let timedOut = false;
   const prPromise = createDraftPullRequest(input, sandbox, workspace, hydration, patch);
-  const timeoutPromise = new Promise<void>((resolve) => {
+  const timeoutPromise = new Promise<false>((resolve) => {
     setTimeout(() => {
       timedOut = true;
-      resolve();
+      resolve(false);
     }, timeoutMs);
   });
-  await Promise.race([prPromise, timeoutPromise]);
-  if (!timedOut) return;
+  const result = await Promise.race([prPromise, timeoutPromise]);
+  if (!timedOut) return result;
   prPromise.catch(() => undefined);
   await input.recordEvent({
     type: 'pr_failed',
@@ -1165,6 +1175,7 @@ async function createDraftPullRequestWithTimeout(
       timeout_ms: timeoutMs,
     },
   });
+  return false;
 }
 
 function parseGitHubRepo(repoUrl: string): string | null {
