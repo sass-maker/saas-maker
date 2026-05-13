@@ -50,6 +50,8 @@ export function createApp(executor: RunExecutor) {
     const sandboxId = `droid-${runId}`;
     const startedAt = Date.now();
     const mode = normalizeMode(body?.mode);
+    const environmentValidation = validateRunEnvironment(c.env, body, mode);
+    if (!environmentValidation.ok) return c.json({ error: environmentValidation.error }, 503);
     const command = mode !== 'command'
       ? buildAgentLedgerCommand(mode, body?.prompt?.trim() ?? '')
       : body!.command!.trim();
@@ -670,6 +672,16 @@ function validateRunRequest(body: RunRequest | null): { ok: true } | { ok: false
   }
   if (body.pr_base_branch !== undefined && typeof body.pr_base_branch !== 'string') {
     return { ok: false, error: 'pr_base_branch must be a string' };
+  }
+  return { ok: true };
+}
+
+function validateRunEnvironment(env: Env, body: RunRequest | null, mode: RunMode): { ok: true } | { ok: false; error: string } {
+  if (mode === 'native' && !env.DROID_DEEPSEEK_API_KEY?.trim()) {
+    return { ok: false, error: 'DROID_DEEPSEEK_API_KEY is required for native Droid runs' };
+  }
+  if (body?.create_pr === true && !env.DROID_GITHUB_TOKEN?.trim()) {
+    return { ok: false, error: 'DROID_GITHUB_TOKEN is required when create_pr is true' };
   }
   return { ok: true };
 }

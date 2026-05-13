@@ -81,6 +81,7 @@ interface DroidDialogProps {
   events: DroidRunEvent[];
   artifacts: DroidRunArtifact[];
   stats: DroidRunStats | null;
+  error: string | null;
   running: boolean;
   onModeChange: (mode: DroidMode) => void;
   onCommandChange: (value: string) => void;
@@ -109,6 +110,7 @@ export function DroidDialog({
   events,
   artifacts,
   stats,
+  error,
   running,
   onModeChange,
   onCommandChange,
@@ -252,6 +254,7 @@ export function DroidDialog({
 
             <div className="space-y-3">
               <DroidStats stats={stats} />
+              <DroidError error={error} />
               <DroidResult run={run} running={running} onReconcile={onReconcile} />
               <DroidArtifacts artifacts={artifacts} />
               <DroidEvents events={events} />
@@ -263,10 +266,20 @@ export function DroidDialog({
   );
 }
 
+function DroidError({ error }: { error: string | null }) {
+  if (!error) return null;
+  return (
+    <div className="rounded-lg border border-red-500/40 bg-red-500/10 p-3 text-sm text-red-600 dark:text-red-300">
+      {error}
+    </div>
+  );
+}
+
 function DroidStats({ stats }: { stats: DroidRunStats | null }) {
   if (!stats) return null;
   const items = [
     ['Total', stats.total],
+    ['Queued', stats.by_status.queued],
     ['Running', stats.by_status.running],
     ['Failed', stats.by_status.failed],
     ['Stale', stats.stale_running],
@@ -279,7 +292,7 @@ function DroidStats({ stats }: { stats: DroidRunStats | null }) {
           <span className="text-xs text-muted-foreground">avg {Math.round(stats.avg_duration_ms / 1000)}s</span>
         ) : null}
       </div>
-      <div className="mt-2 grid grid-cols-4 gap-2">
+      <div className="mt-2 grid grid-cols-5 gap-2">
         {items.map(([label, value]) => (
           <div key={label} className="rounded-md border bg-background px-2 py-1.5 text-center">
             <div className="text-sm font-semibold text-foreground">{value}</div>
@@ -292,6 +305,7 @@ function DroidStats({ stats }: { stats: DroidRunStats | null }) {
 }
 
 function DroidResult({ run, running, onReconcile }: { run: DroidRunRow | null; running: boolean; onReconcile: () => void }) {
+  const reconcileLabel = run?.status === 'queued' ? 'Start queued' : 'Check run';
   return (
     <div className="rounded-lg border bg-muted/20 p-3">
       <div className="flex items-center justify-between gap-2">
@@ -300,7 +314,7 @@ function DroidResult({ run, running, onReconcile }: { run: DroidRunRow | null; r
           <div className="flex items-center gap-2">
             {(run.status === 'queued' || run.status === 'running') ? (
               <Button type="button" size="sm" variant="outline" onClick={onReconcile} disabled={running}>
-                Reconcile
+                {reconcileLabel}
               </Button>
             ) : null}
             <Badge variant="outline" className={cn(

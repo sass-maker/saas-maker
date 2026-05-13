@@ -50,6 +50,42 @@ describe('droid runs', () => {
     await expect(response.json()).resolves.toEqual({ error: 'prompt is required' });
   });
 
+  it('fails native runs before creating a run when DeepSeek is not configured', async () => {
+    const app = createApp(fakeExecutor());
+    const env = createEnv({ DROID_DEEPSEEK_API_KEY: undefined });
+
+    const response = await app.request('/v0/runs', {
+      method: 'POST',
+      body: JSON.stringify({ mode: 'native', provider: 'deepseek', prompt: 'inspect the repo' }),
+      headers: {
+        'Authorization': 'Bearer test-token',
+        'Content-Type': 'application/json',
+      },
+    }, env);
+
+    expect(response.status).toBe(503);
+    await expect(response.json()).resolves.toEqual({ error: 'DROID_DEEPSEEK_API_KEY is required for native Droid runs' });
+    expect((env.DB as unknown as FakeD1).runs.size).toBe(0);
+  });
+
+  it('fails PR runs before creating a run when GitHub is not configured', async () => {
+    const app = createApp(fakeExecutor());
+    const env = createEnv({ DROID_GITHUB_TOKEN: undefined });
+
+    const response = await app.request('/v0/runs', {
+      method: 'POST',
+      body: JSON.stringify({ command: 'echo ok', create_pr: true }),
+      headers: {
+        'Authorization': 'Bearer test-token',
+        'Content-Type': 'application/json',
+      },
+    }, env);
+
+    expect(response.status).toBe(503);
+    await expect(response.json()).resolves.toEqual({ error: 'DROID_GITHUB_TOKEN is required when create_pr is true' });
+    expect((env.DB as unknown as FakeD1).runs.size).toBe(0);
+  });
+
   it('accepts native Droid runs', async () => {
     const app = createApp(fakeExecutor());
     const env = createEnv();
@@ -495,11 +531,14 @@ function fakeExecutor(): RunExecutor {
   };
 }
 
-function createEnv(): Env {
+function createEnv(overrides: Partial<Env> = {}): Env {
   return {
     DROID_INTERNAL_TOKEN: 'test-token',
+    DROID_DEEPSEEK_API_KEY: 'test-deepseek-key',
+    DROID_GITHUB_TOKEN: 'test-github-token',
     DB: new FakeD1() as unknown as D1Database,
     Sandbox: {} as DurableObjectNamespace,
+    ...overrides,
   };
 }
 

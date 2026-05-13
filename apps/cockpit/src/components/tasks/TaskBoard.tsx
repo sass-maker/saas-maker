@@ -251,6 +251,7 @@ export function TaskBoard({
   const [droidEvents, setDroidEvents] = useState<DroidRunEvent[]>([]);
   const [droidArtifacts, setDroidArtifacts] = useState<DroidRunArtifact[]>([]);
   const [droidStats, setDroidStats] = useState<DroidRunStats | null>(null);
+  const [droidError, setDroidError] = useState<string | null>(null);
   const [commentTask, setCommentTask] = useState<TaskRow | null>(null);
   const [commentsByTaskId, setCommentsByTaskId] = useState<Record<string, TaskCommentRow[]>>({});
   const [commentText, setCommentText] = useState('');
@@ -351,6 +352,7 @@ export function TaskBoard({
     setDroidEvents([]);
     setDroidArtifacts([]);
     setDroidStats(null);
+    setDroidError(null);
     void loadDroidStats(task.project_slug);
   };
 
@@ -397,6 +399,7 @@ export function TaskBoard({
     setDroidEvents([]);
     setDroidArtifacts([]);
     setDroidStats(null);
+    setDroidError(null);
     void loadDroidStats(task.project_slug);
     try {
       const runsRes = await fetch(`/api/droid/runs?task_id=${encodeURIComponent(task.id)}&limit=1`);
@@ -693,6 +696,7 @@ export function TaskBoard({
     setDroidEvents([]);
     setDroidArtifacts([]);
     setDroidStats(null);
+    setDroidError(null);
     try {
       const res = await fetch('/api/droid/runs', {
         method: 'POST',
@@ -721,7 +725,9 @@ export function TaskBoard({
         await handleStatusChange(droidTask, 'in_progress');
       }
     } catch (error) {
-      showToast(error instanceof Error ? `Droid failed: ${error.message.slice(0, 120)}` : 'Droid failed');
+      const message = error instanceof Error ? error.message : 'Droid failed';
+      setDroidError(message);
+      showToast(`Droid failed: ${message.slice(0, 120)}`);
     } finally {
       setStartingDroidRun(false);
     }
@@ -730,6 +736,7 @@ export function TaskBoard({
   const handleDroidReconcile = async () => {
     if (!droidRun) return;
     setStartingDroidRun(true);
+    setDroidError(null);
     try {
       const res = await fetch(`/api/droid/runs/${droidRun.id}/reconcile`, {
         method: 'POST',
@@ -743,7 +750,9 @@ export function TaskBoard({
       await loadDroidStats(payload.data.project_slug);
       showToast('Droid reconcile queued');
     } catch (error) {
-      showToast(error instanceof Error ? `Reconcile failed: ${error.message.slice(0, 120)}` : 'Reconcile failed');
+      const message = error instanceof Error ? error.message : 'Reconcile failed';
+      setDroidError(message);
+      showToast(`Reconcile failed: ${message.slice(0, 120)}`);
     } finally {
       setStartingDroidRun(false);
     }
@@ -1248,6 +1257,7 @@ export function TaskBoard({
         events={droidEvents}
         artifacts={droidArtifacts}
         stats={droidStats}
+        error={droidError}
         running={startingDroidRun}
         onModeChange={setDroidMode}
         onCommandChange={setDroidCommand}
@@ -1273,6 +1283,7 @@ export function TaskBoard({
           setDroidEvents([]);
           setDroidArtifacts([]);
           setDroidStats(null);
+          setDroidError(null);
         }}
       />
 
