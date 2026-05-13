@@ -3,6 +3,10 @@ import { cors } from 'hono/cors';
 import { createRun, createRunArtifact, createRunEvent, finishRun, getLatestRunEvent, getLatestRunRequest, getRun, listRunArtifacts, listRunEvents, listRuns, markRunStarted } from './db';
 import type { CommandResult, Env, RunExecutionInput, RunExecutor, RunMode, RunRequest } from './types';
 
+const DEFAULT_TIMEOUT_SECONDS = 900;
+const DEFAULT_RECONCILE_TIMEOUT_SECONDS = 240;
+const RECONCILE_STALE_AFTER_MS = 6 * 60 * 1000;
+
 type Variables = {
   requestId: string;
 };
@@ -74,6 +78,7 @@ export function createApp(executor: RunExecutor) {
         repo_url: body?.repo_url ?? null,
         branch: body?.branch ?? null,
         sandbox_id: sandboxId,
+        timeout_seconds: normalizeTimeoutSeconds(body?.timeout_seconds) ?? DEFAULT_TIMEOUT_SECONDS,
       },
     });
     await createRunEvent(c.env, runId, {
@@ -85,7 +90,7 @@ export function createApp(executor: RunExecutor) {
         command,
         repoUrl: body?.repo_url?.trim(),
         branch: body?.branch?.trim(),
-        timeoutSeconds: normalizeTimeoutSeconds(body?.timeout_seconds) ?? 900,
+        timeoutSeconds: normalizeTimeoutSeconds(body?.timeout_seconds) ?? DEFAULT_TIMEOUT_SECONDS,
       }),
     });
 
@@ -100,7 +105,7 @@ export function createApp(executor: RunExecutor) {
       prompt: body?.prompt?.trim(),
       provider: body?.provider,
       maxTurns: normalizeMaxTurns(body?.max_turns),
-      timeoutSeconds: normalizeTimeoutSeconds(body?.timeout_seconds) ?? 900,
+      timeoutSeconds: normalizeTimeoutSeconds(body?.timeout_seconds) ?? DEFAULT_TIMEOUT_SECONDS,
       createPr: body?.create_pr === true,
       prTitle: body?.pr_title?.trim(),
       prBody: body?.pr_body?.trim(),
@@ -204,7 +209,7 @@ export function createApp(executor: RunExecutor) {
     if (!executor.reconcile) return c.json({ error: 'Run reconciliation is not supported' }, 501);
     const incoming = await c.req.json().catch(() => null) as { wait_for_completion?: boolean; force?: boolean } | null;
     const latestEvent = await getLatestRunEvent(c.env, run.id);
-    if (!incoming?.force && latestEvent && !isStaleEvent(latestEvent.created_at, 6 * 60 * 1000)) {
+    if (!incoming?.force && latestEvent && !isStaleEvent(latestEvent.created_at, RECONCILE_STALE_AFTER_MS)) {
       return c.json({
         error: 'Run still appears active; reconcile is only allowed after 6 minutes of no events unless force is true.',
         latest_event_at: latestEvent.created_at,
@@ -289,9 +294,10 @@ async function executeRun(env: Env, executor: RunExecutor, input: {
       recordEvent: (event) => createRunEvent(env, input.runId, event),
       recordArtifact: (artifact) => createRunArtifact(env, input.runId, artifact),
     };
-    const result = input.reconcile && executor.reconcile
-      ? await executor.reconcile(executionInput)
-      : await executor.execute(executionInput);
+    const operation = input.reconcile && executor.reconcile
+      ? executor.reconcile(executionInput)
+      : executor.execute(executionInput);
+    const result = await runWithTimeout(operation, input.timeoutSeconds * 1000);
 
     const durationMs = Date.now() - input.startedAt;
     const status = result.success ? 'completed' : 'failed';
@@ -312,6 +318,10 @@ async function executeRun(env: Env, executor: RunExecutor, input: {
       metadata: { duration_ms: durationMs, status },
     });
   } catch (error) {
+    if (error instanceof RunTimeoutError) {
+      await handleRunTimeout(env, executor, input, error);
+      return;
+    }
     const durationMs = Date.now() - input.startedAt;
     const message = error instanceof Error ? error.message : 'Droid run failed.';
     await finishRun(env, input.runId, {
@@ -328,6 +338,76 @@ async function executeRun(env: Env, executor: RunExecutor, input: {
       metadata: { duration_ms: durationMs },
     });
   }
+}
+
+async function runWithTimeout<T>(operation: Promise<T>, timeoutMs: number): Promise<T> {
+  let timeout: ReturnType<typeof setTimeout> | undefined;
+  operation.catch(() => undefined);
+  const watchdog = new Promise<never>((_, reject) => {
+    timeout = setTimeout(() => reject(new RunTimeoutError(timeoutMs)), timeoutMs);
+  });
+  try {
+    return await Promise.race([operation, watchdog]);
+  } finally {
+    if (timeout) clearTimeout(timeout);
+  }
+}
+
+class RunTimeoutError extends Error {
+  constructor(readonly timeoutMs: number) {
+    super(`Droid run timed out after ${Math.round(timeoutMs / 1000)} seconds.`);
+  }
+}
+
+async function handleRunTimeout(env: Env, executor: RunExecutor, input: {
+  runId: string;
+  sandboxId: string;
+  startedAt: number;
+  timeoutSeconds: number;
+}, error: RunTimeoutError): Promise<void> {
+  const durationMs = Date.now() - input.startedAt;
+  await createRunEvent(env, input.runId, {
+    type: 'run_timeout',
+    message: error.message,
+    exit_code: 124,
+    metadata: {
+      duration_ms: durationMs,
+      sandbox_id: input.sandboxId,
+      timeout_seconds: input.timeoutSeconds,
+    },
+  });
+
+  if (executor.cancel) {
+    try {
+      await executor.cancel({
+        env,
+        runId: input.runId,
+        sandboxId: input.sandboxId,
+        recordEvent: (event) => createRunEvent(env, input.runId, event),
+        recordArtifact: (artifact) => createRunArtifact(env, input.runId, artifact),
+      });
+    } catch (cancelError) {
+      await createRunEvent(env, input.runId, {
+        type: 'run_timeout_cancel_failed',
+        message: cancelError instanceof Error ? cancelError.message : 'Timed out sandbox cleanup failed.',
+        metadata: { sandbox_id: input.sandboxId },
+      });
+    }
+  }
+
+  await finishRun(env, input.runId, {
+    status: 'failed',
+    exitCode: 124,
+    durationMs,
+    summary: error.message,
+    errorMessage: error.message,
+  });
+  await createRunEvent(env, input.runId, {
+    type: 'run_finished',
+    message: error.message,
+    exit_code: 124,
+    metadata: { duration_ms: durationMs, status: 'failed', reason: 'timeout' },
+  });
 }
 
 function buildRunRequestMetadata(body: RunRequest | null, normalized: {
@@ -359,7 +439,7 @@ function buildRunRequestMetadata(body: RunRequest | null, normalized: {
 
 function executionInputFromRun(run: Awaited<ReturnType<typeof getRun>> & {}, request: Record<string, unknown> | null) {
   const mode = normalizeMode(request?.mode);
-  const timeoutSeconds = normalizeTimeoutSeconds(request?.timeout_seconds) ?? 240;
+  const timeoutSeconds = normalizeTimeoutSeconds(request?.timeout_seconds) ?? DEFAULT_RECONCILE_TIMEOUT_SECONDS;
   return {
     runId: run.id,
     sandboxId: run.sandbox_id,

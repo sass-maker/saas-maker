@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { createApp } from '../../workers/droid/src/app';
 import type { Env, RunExecutor } from '../../workers/droid/src/types';
 
@@ -244,6 +244,62 @@ describe('droid runs', () => {
     const reconcilePayload = await reconcileResponse.json() as { data: { status: string; summary: string } };
     expect(reconcilePayload.data.status).toBe('completed');
     expect(reconcilePayload.data.summary).toBe('Command completed with exit code 0.');
+  });
+
+  it('fails and cancels runs that exceed the hard Droid timeout', async () => {
+    vi.useFakeTimers();
+    const cancelCalls: string[] = [];
+    const app = createApp({
+      async execute(input) {
+        await input.recordEvent({ type: 'agent_process_start', command: input.command });
+        return new Promise(() => undefined);
+      },
+      async cancel(input) {
+        cancelCalls.push(input.sandboxId);
+        await input.recordEvent({
+          type: 'sandbox_destroy',
+          message: `Destroyed ${input.sandboxId}`,
+          metadata: { sandbox_id: input.sandboxId },
+        });
+      },
+    });
+    const env = createEnv();
+
+    try {
+      const responsePromise = app.request('/v0/runs', {
+        method: 'POST',
+        body: JSON.stringify({ command: 'sleep forever', timeout_seconds: 60, wait_for_completion: true }),
+        headers: {
+          'Authorization': 'Bearer test-token',
+          'Content-Type': 'application/json',
+        },
+      }, env);
+
+      await vi.advanceTimersByTimeAsync(60_001);
+      const response = await responsePromise;
+
+      expect(response.status).toBe(201);
+      const payload = await response.json() as { data: { id: string; status: string; exit_code: number; error_message: string } };
+      expect(payload.data.status).toBe('failed');
+      expect(payload.data.exit_code).toBe(124);
+      expect(payload.data.error_message).toBe('Droid run timed out after 60 seconds.');
+      expect(cancelCalls).toHaveLength(1);
+
+      const eventsResponse = await app.request(`/v0/runs/${payload.data.id}/events`, {
+        headers: { Authorization: 'Bearer test-token' },
+      }, env);
+      const eventsPayload = await eventsResponse.json() as { data: Array<{ type: string }> };
+      expect(eventsPayload.data.map((event) => event.type)).toEqual([
+        'run_started',
+        'run_request',
+        'agent_process_start',
+        'run_timeout',
+        'sandbox_destroy',
+        'run_finished',
+      ]);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });
 
