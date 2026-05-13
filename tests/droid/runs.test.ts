@@ -290,7 +290,7 @@ describe('droid runs', () => {
     ]);
   });
 
-  it('dequeues a queued same-repo run after the active run finishes', async () => {
+  it('auto-dequeues a queued same-repo run after the active run finishes', async () => {
     let releaseFirst: (() => void) | undefined;
     const executeCommands: string[] = [];
     const app = createApp({
@@ -336,18 +336,14 @@ describe('droid runs', () => {
 
     releaseFirst();
     await firstResponsePromise;
+    for (let i = 0; i < 5 && executeCommands.length < 2; i += 1) await Promise.resolve();
 
-    const dequeueResponse = await app.request(`/v0/runs/${queuedPayload.data.id}/reconcile`, {
-      method: 'POST',
-      body: JSON.stringify({ wait_for_completion: true }),
-      headers,
+    const dequeuedResponse = await app.request(`/v0/runs/${queuedPayload.data.id}`, {
+      headers: { Authorization: 'Bearer test-token' },
     }, env);
-
-    expect(dequeueResponse.status).toBe(200);
-    const dequeuePayload = await dequeueResponse.json() as { data: { status: string; exit_code: number }; dequeued: boolean };
-    expect(dequeuePayload.dequeued).toBe(true);
-    expect(dequeuePayload.data.status).toBe('completed');
-    expect(dequeuePayload.data.exit_code).toBe(0);
+    const dequeuedPayload = await dequeuedResponse.json() as { data: { status: string; exit_code: number } };
+    expect(dequeuedPayload.data.status).toBe('completed');
+    expect(dequeuedPayload.data.exit_code).toBe(0);
     expect(executeCommands).toEqual(['first', 'second']);
 
     const eventsResponse = await app.request(`/v0/runs/${queuedPayload.data.id}/events`, {
@@ -664,12 +660,13 @@ class FakeStatement {
       const [runId] = this.params;
       return this.db.events.filter((item) => item.run_id === runId).at(-1) ?? null;
     }
-    if (this.sql.includes('FROM droid_runs') && this.sql.includes("status = 'running'") && this.sql.includes('id != ?')) {
+    if (this.sql.includes('FROM droid_runs') && this.sql.includes('id != ?') && (this.sql.includes("status = 'running'") || this.sql.includes("status = 'queued'"))) {
       const [queueValue, excludeRunId] = this.params;
       const key = this.sql.includes('repo_url = ?') ? 'repo_url' : 'project_slug';
+      const status = this.sql.includes("status = 'queued'") ? 'queued' : 'running';
       return Array.from(this.db.runs.values()).find((run) => (
         run[key] === queueValue &&
-        run.status === 'running' &&
+        run.status === status &&
         run.id !== excludeRunId
       )) ?? null;
     }

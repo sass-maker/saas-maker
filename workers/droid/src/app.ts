@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
-import { createRun, createRunArtifact, createRunEvent, finishRun, getActiveRunForQueue, getLatestRunEvent, getLatestRunRequest, getRun, getRunStats, listRunArtifacts, listRunEvents, listRuns, markRunStarted } from './db';
+import { createRun, createRunArtifact, createRunEvent, finishRun, getActiveRunForQueue, getLatestRunEvent, getLatestRunRequest, getNextQueuedRunForQueue, getRun, getRunStats, listRunArtifacts, listRunEvents, listRuns, markRunStarted } from './db';
 import type { CommandResult, Env, RunExecutionInput, RunExecutor, RunMode, RunRequest } from './types';
 
 const DEFAULT_TIMEOUT_SECONDS = 900;
@@ -134,6 +134,7 @@ export function createApp(executor: RunExecutor) {
       prBaseBranch: body?.pr_base_branch?.trim(),
       cwd: body?.cwd?.trim(),
       destroyAfterRun: body?.destroy_after_run !== false,
+      waitUntil: (promise: Promise<void>) => scheduleBackground(c, promise),
     };
     const runPromise = executeRun(c.env, executor, runInput);
 
@@ -281,6 +282,7 @@ export function createApp(executor: RunExecutor) {
       const queuedPromise = executeRun(c.env, executor, {
         ...queuedInput,
         startedAt: Date.now(),
+        waitUntil: (promise: Promise<void>) => scheduleBackground(c, promise),
       });
 
       if (incoming?.wait_for_completion === true) {
@@ -316,6 +318,7 @@ export function createApp(executor: RunExecutor) {
       ...executionInputFromRun(run, request),
       startedAt,
       reconcile: true,
+      waitUntil: (promise: Promise<void>) => scheduleBackground(c, promise),
     });
 
     if (incoming?.wait_for_completion === true) {
@@ -333,6 +336,14 @@ export function createApp(executor: RunExecutor) {
   });
 
   return app;
+}
+
+function scheduleBackground(c: { executionCtx: { waitUntil: (promise: Promise<unknown>) => void } }, promise: Promise<void>) {
+  try {
+    c.executionCtx.waitUntil(promise);
+  } catch {
+    void promise;
+  }
 }
 
 function isStaleEvent(createdAt: string, thresholdMs: number): boolean {
@@ -360,6 +371,7 @@ async function executeRun(env: Env, executor: RunExecutor, input: {
   cwd?: string;
   destroyAfterRun: boolean;
   reconcile?: boolean;
+  waitUntil?: (promise: Promise<void>) => void;
 }): Promise<void> {
   try {
     const executionInput: RunExecutionInput = {
@@ -426,7 +438,75 @@ async function executeRun(env: Env, executor: RunExecutor, input: {
       exit_code: 1,
       metadata: { duration_ms: durationMs },
     });
+  } finally {
+    const nextPromise = dispatchNextQueuedRun(env, executor, input).catch((error) => createRunEvent(env, input.runId, {
+      type: 'queue_dispatch_failed',
+      message: error instanceof Error ? error.message : 'Droid queue dispatch failed.',
+      metadata: { run_id: input.runId },
+    }));
+    if (input.waitUntil) {
+      input.waitUntil(nextPromise);
+    } else {
+      void nextPromise;
+    }
   }
+}
+
+async function dispatchNextQueuedRun(env: Env, executor: RunExecutor, input: {
+  runId: string;
+  repoUrl?: string;
+  waitUntil?: (promise: Promise<void>) => void;
+}): Promise<void> {
+  const finishedRun = await getRun(env, input.runId);
+  if (!finishedRun) return;
+  const nextRun = await getNextQueuedRunForQueue(env, {
+    repoUrl: finishedRun.repo_url ?? input.repoUrl,
+    projectSlug: finishedRun.project_slug,
+    excludeRunId: finishedRun.id,
+  });
+  if (!nextRun) return;
+
+  const request = await getLatestRunRequest(env, nextRun.id);
+  const queuedInput = executionInputFromRun(nextRun, request);
+  const activeRun = await getActiveRunForQueue(env, {
+    repoUrl: queuedInput.repoUrl,
+    projectSlug: nextRun.project_slug ?? undefined,
+    excludeRunId: nextRun.id,
+  });
+  if (activeRun) return;
+
+  await createRunEvent(env, nextRun.id, {
+    type: 'run_dequeued',
+    message: 'Queued Droid run dequeued after the previous run finished.',
+    command: queuedInput.command,
+    metadata: {
+      auto: true,
+      previous_run_id: finishedRun.id,
+    },
+  });
+  await markRunStarted(env, nextRun.id);
+  await createRunEvent(env, nextRun.id, {
+    type: 'run_started',
+    message: 'Droid run started',
+    command: queuedInput.command,
+    metadata: {
+      mode: queuedInput.mode,
+      provider: queuedInput.provider ?? null,
+      task_id: nextRun.task_id,
+      project_slug: nextRun.project_slug,
+      repo_url: queuedInput.repoUrl ?? null,
+      branch: queuedInput.branch ?? null,
+      sandbox_id: nextRun.sandbox_id,
+      timeout_seconds: queuedInput.timeoutSeconds,
+      dequeued: true,
+      auto: true,
+    },
+  });
+  await executeRun(env, executor, {
+    ...queuedInput,
+    startedAt: Date.now(),
+    waitUntil: input.waitUntil,
+  });
 }
 
 async function runWithTimeout<T>(operation: Promise<T>, timeoutMs: number): Promise<T> {
