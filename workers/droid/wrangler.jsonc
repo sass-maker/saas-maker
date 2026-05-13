@@ -4,6 +4,10 @@
   "compatibility_date": "2026-02-22",
   "compatibility_flags": ["nodejs_compat"],
   "workers_dev": true,
+  "vars": {
+    "DROID_DEEPSEEK_MODEL": "deepseek-v4-pro",
+    "DROID_DEEPSEEK_REVIEW_MODEL": "deepseek-chat"
+  },
   "observability": {
     "enabled": true
   },

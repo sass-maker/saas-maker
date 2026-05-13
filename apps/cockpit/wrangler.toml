@@ -12,6 +12,7 @@ routes = [
 AUTH_URL = "https://app.sassmaker.com"
 NEXT_PUBLIC_API_URL = "https://api.sassmaker.com"
 NEXT_PUBLIC_SITE_URL = "https://app.sassmaker.com"
+DROID_API_URL = "https://saasmaker-droid.sarthakagrawal927.workers.dev"
 NODE_ENV = "production"
 
 [[d1_databases]]
