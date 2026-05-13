@@ -108,6 +108,7 @@ Use Claude Code as the first agent shell, with DeepSeek as the Anthropic-compati
 
 - install `@anthropic-ai/claude-code` in the Droid image
 - store the DeepSeek key as `DROID_DEEPSEEK_API_KEY`
+- default the native Droid model to `deepseek-v4-pro`; override with `DROID_DEEPSEEK_MODEL` and `DROID_DEEPSEEK_REVIEW_MODEL`
 - inject DeepSeek env vars only at runtime, never in the image or run logs
 - run Claude Code headlessly with `claude -p <prompt>`
 - keep command mode as the fallback path when no model key is configured

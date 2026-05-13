@@ -4,6 +4,8 @@ export interface Env {
   DB: D1Database;
   DROID_INTERNAL_TOKEN: string;
   DROID_DEEPSEEK_API_KEY?: string;
+  DROID_DEEPSEEK_MODEL?: string;
+  DROID_DEEPSEEK_REVIEW_MODEL?: string;
   DROID_GITHUB_TOKEN?: string;
   Sandbox: DurableObjectNamespace<Sandbox>;
 }

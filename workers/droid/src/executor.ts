@@ -33,6 +33,9 @@ type NativeToolResult = {
   exitCode?: number;
 };
 
+const DEFAULT_NATIVE_MODEL = 'deepseek-v4-pro';
+const DEFAULT_REVIEW_MODEL = 'deepseek-chat';
+
 export const sandboxExecutor: RunExecutor = {
   async execute(input): Promise<CommandResult> {
     const sandbox = getDroidSandbox(input.env.Sandbox, input.sandboxId);
@@ -263,6 +266,10 @@ async function requireDeepSeekKey(input: Parameters<RunExecutor['execute']>[0]):
   return result;
 }
 
+function resolveDeepSeekModel(value: string | undefined, fallback: string): string {
+  return value?.trim() || fallback;
+}
+
 async function runNativeAgent(
   input: Parameters<RunExecutor['execute']>[0],
   sandbox: Awaited<ReturnType<typeof getSandbox>>,
@@ -271,7 +278,7 @@ async function runNativeAgent(
   const missingKey = await requireDeepSeekKey(input);
   if (missingKey) return missingKey;
 
-  const model = 'deepseek-reasoner';
+  const model = resolveDeepSeekModel(input.env.DROID_DEEPSEEK_MODEL, DEFAULT_NATIVE_MODEL);
   const maxTurns = input.maxTurns ?? 20;
   const transcript: string[] = [];
   const taskContext = await hydrateNativeTaskContext(input, sandbox, cwd);
@@ -1032,7 +1039,7 @@ async function requestPatchReview(
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'deepseek-chat',
+        model: resolveDeepSeekModel(input.env.DROID_DEEPSEEK_REVIEW_MODEL, DEFAULT_REVIEW_MODEL),
         temperature: 0,
         response_format: { type: 'json_object' },
         messages: [
