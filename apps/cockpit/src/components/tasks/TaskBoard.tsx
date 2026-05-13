@@ -14,7 +14,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { apiFetchClient, getClientToken } from '@/lib/api-client';
 import { buildSymphonyBatchPrompt, buildSymphonyPrompt, buildSymphonyRunRecord, chooseSymphonyAgent, type SymphonyAgentUsageSnapshot } from '@/lib/symphony';
 import { cn } from '@/lib/utils';
-import { DroidDialog, type DroidMode, type DroidRunArtifact, type DroidRunEvent, type DroidRunRow } from './DroidDialog';
+import { DroidDialog, type DroidMode, type DroidRunArtifact, type DroidRunEvent, type DroidRunRow, type DroidRunStats } from './DroidDialog';
 
 export interface TaskRow {
   id: string;
@@ -250,6 +250,7 @@ export function TaskBoard({
   const [droidRun, setDroidRun] = useState<DroidRunRow | null>(null);
   const [droidEvents, setDroidEvents] = useState<DroidRunEvent[]>([]);
   const [droidArtifacts, setDroidArtifacts] = useState<DroidRunArtifact[]>([]);
+  const [droidStats, setDroidStats] = useState<DroidRunStats | null>(null);
   const [commentTask, setCommentTask] = useState<TaskRow | null>(null);
   const [commentsByTaskId, setCommentsByTaskId] = useState<Record<string, TaskCommentRow[]>>({});
   const [commentText, setCommentText] = useState('');
@@ -349,6 +350,8 @@ export function TaskBoard({
     setDroidRun(null);
     setDroidEvents([]);
     setDroidArtifacts([]);
+    setDroidStats(null);
+    void loadDroidStats(task.project_slug);
   };
 
   const loadDroidRunDetails = useCallback(async (runId: string) => {
@@ -361,6 +364,14 @@ export function TaskBoard({
     const artifactsRes = await fetch(`/api/droid/runs/${runId}/artifacts`);
     const artifactsPayload = await artifactsRes.json() as { data?: DroidRunArtifact[] };
     setDroidArtifacts(artifactsPayload.data ?? []);
+  }, []);
+
+  const loadDroidStats = useCallback(async (projectSlug?: string | null) => {
+    const params = new URLSearchParams({ limit: '4' });
+    if (projectSlug) params.set('project_slug', projectSlug);
+    const statsRes = await fetch(`/api/droid/stats?${params.toString()}`);
+    const statsPayload = await statsRes.json() as { data?: DroidRunStats };
+    setDroidStats(statsPayload.data ?? null);
   }, []);
 
   useEffect(() => {
@@ -385,6 +396,8 @@ export function TaskBoard({
     setDroidRun(null);
     setDroidEvents([]);
     setDroidArtifacts([]);
+    setDroidStats(null);
+    void loadDroidStats(task.project_slug);
     try {
       const runsRes = await fetch(`/api/droid/runs?task_id=${encodeURIComponent(task.id)}&limit=1`);
       const runsPayload = await runsRes.json() as { data?: DroidRunRow[]; error?: string };
@@ -679,6 +692,7 @@ export function TaskBoard({
     setDroidRun(null);
     setDroidEvents([]);
     setDroidArtifacts([]);
+    setDroidStats(null);
     try {
       const res = await fetch('/api/droid/runs', {
         method: 'POST',
@@ -701,6 +715,7 @@ export function TaskBoard({
       if (!res.ok || !payload.data) throw new Error(payload.error || 'Droid run failed');
       setDroidRun(payload.data);
       await loadDroidRunDetails(payload.data.id);
+      await loadDroidStats(droidTask.project_slug);
       showToast(`Droid ${payload.data.status}`);
       if (droidTask.status === 'todo') {
         await handleStatusChange(droidTask, 'in_progress');
@@ -725,6 +740,7 @@ export function TaskBoard({
       if (!res.ok || !payload.data) throw new Error(payload.error || 'Droid reconcile failed');
       setDroidRun(payload.data);
       await loadDroidRunDetails(payload.data.id);
+      await loadDroidStats(payload.data.project_slug);
       showToast('Droid reconcile queued');
     } catch (error) {
       showToast(error instanceof Error ? `Reconcile failed: ${error.message.slice(0, 120)}` : 'Reconcile failed');
@@ -1231,6 +1247,7 @@ export function TaskBoard({
         run={droidRun}
         events={droidEvents}
         artifacts={droidArtifacts}
+        stats={droidStats}
         running={startingDroidRun}
         onModeChange={setDroidMode}
         onCommandChange={setDroidCommand}
@@ -1255,6 +1272,7 @@ export function TaskBoard({
           setDroidRun(null);
           setDroidEvents([]);
           setDroidArtifacts([]);
+          setDroidStats(null);
         }}
       />
 

@@ -57,6 +57,14 @@ export interface DroidRunArtifact {
   created_at: string;
 }
 
+export interface DroidRunStats {
+  total: number;
+  by_status: Record<DroidRunRow['status'], number>;
+  avg_duration_ms: number | null;
+  stale_running: number;
+  recent: DroidRunRow[];
+}
+
 export type DroidMode = 'command' | 'native';
 
 interface DroidDialogProps {
@@ -72,6 +80,7 @@ interface DroidDialogProps {
   run: DroidRunRow | null;
   events: DroidRunEvent[];
   artifacts: DroidRunArtifact[];
+  stats: DroidRunStats | null;
   running: boolean;
   onModeChange: (mode: DroidMode) => void;
   onCommandChange: (value: string) => void;
@@ -99,6 +108,7 @@ export function DroidDialog({
   run,
   events,
   artifacts,
+  stats,
   running,
   onModeChange,
   onCommandChange,
@@ -241,6 +251,7 @@ export function DroidDialog({
             </div>
 
             <div className="space-y-3">
+              <DroidStats stats={stats} />
               <DroidResult run={run} running={running} onReconcile={onReconcile} />
               <DroidArtifacts artifacts={artifacts} />
               <DroidEvents events={events} />
@@ -249,6 +260,34 @@ export function DroidDialog({
         )}
       </DialogContent>
     </Dialog>
+  );
+}
+
+function DroidStats({ stats }: { stats: DroidRunStats | null }) {
+  if (!stats) return null;
+  const items = [
+    ['Total', stats.total],
+    ['Running', stats.by_status.running],
+    ['Failed', stats.by_status.failed],
+    ['Stale', stats.stale_running],
+  ] as const;
+  return (
+    <div className="rounded-lg border bg-muted/20 p-3">
+      <div className="flex items-center justify-between gap-2">
+        <h3 className="text-sm font-semibold text-foreground">Health</h3>
+        {stats.avg_duration_ms !== null ? (
+          <span className="text-xs text-muted-foreground">avg {Math.round(stats.avg_duration_ms / 1000)}s</span>
+        ) : null}
+      </div>
+      <div className="mt-2 grid grid-cols-4 gap-2">
+        {items.map(([label, value]) => (
+          <div key={label} className="rounded-md border bg-background px-2 py-1.5 text-center">
+            <div className="text-sm font-semibold text-foreground">{value}</div>
+            <div className="text-[10px] uppercase text-muted-foreground">{label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
