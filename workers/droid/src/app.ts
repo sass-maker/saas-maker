@@ -365,7 +365,7 @@ export function createApp(executor: RunExecutor) {
     }
 
     if (!executor.reconcile) return c.json({ error: 'Run reconciliation is not supported' }, 501);
-    const latestEvent = await getLatestRunEvent(c.env, run.id);
+    const latestEvent = await getLatestRunActivity(c.env, run.id);
     if (
       !incoming?.force &&
       latestEvent &&
@@ -376,6 +376,7 @@ export function createApp(executor: RunExecutor) {
           error:
             'Run still appears active; reconcile is only allowed after 6 minutes of no events unless force is true.',
           latest_event_at: latestEvent.created_at,
+          latest_event_source: latestEvent.source,
         },
         409
       );
@@ -425,10 +426,43 @@ function scheduleBackground(
   }
 }
 
+async function getLatestRunActivity(
+  env: Env,
+  runId: string
+): Promise<{ created_at: string; source: 'd1' | 'run_room' } | null> {
+  const candidates: Array<{ created_at: string; source: 'd1' | 'run_room'; parsed: number }> = [];
+  const latestEvent = await getLatestRunEvent(env, runId);
+  const latestEventTime = latestEvent ? parseRunTimestamp(latestEvent.created_at) : Number.NaN;
+  if (latestEvent && Number.isFinite(latestEventTime)) {
+    candidates.push({ created_at: latestEvent.created_at, source: 'd1', parsed: latestEventTime });
+  }
+
+  const roomStatus = await getRunRoomStatus(env, runId);
+  const roomEventTime = roomStatus?.last_event_at
+    ? parseRunTimestamp(roomStatus.last_event_at)
+    : Number.NaN;
+  if (roomStatus?.last_event_at && Number.isFinite(roomEventTime)) {
+    candidates.push({
+      created_at: roomStatus.last_event_at,
+      source: 'run_room',
+      parsed: roomEventTime,
+    });
+  }
+
+  candidates.sort((left, right) => right.parsed - left.parsed);
+  const latest = candidates[0];
+  return latest ? { created_at: latest.created_at, source: latest.source } : null;
+}
+
 function isStaleEvent(createdAt: string, thresholdMs: number): boolean {
-  const parsed = Date.parse(`${createdAt.replace(' ', 'T')}Z`);
+  const parsed = parseRunTimestamp(createdAt);
   if (!Number.isFinite(parsed)) return false;
   return Date.now() - parsed >= thresholdMs;
+}
+
+function parseRunTimestamp(value: string): number {
+  if (value.includes('T')) return Date.parse(value);
+  return Date.parse(`${value.replace(' ', 'T')}Z`);
 }
 
 async function createRunEvent(env: Env, runId: string, input: RunEventInput): Promise<void> {
