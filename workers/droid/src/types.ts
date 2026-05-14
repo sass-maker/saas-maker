@@ -88,6 +88,8 @@ export interface RunStats {
   by_status: Record<RunRecord['status'], number>;
   avg_duration_ms: number | null;
   stale_running: number;
+  idle_running: number;
+  estimated_compute_seconds: number;
   recent: RunRecord[];
 }
 

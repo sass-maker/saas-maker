@@ -63,6 +63,8 @@ export interface DroidRunStats {
   by_status: Record<DroidRunRow['status'], number>;
   avg_duration_ms: number | null;
   stale_running: number;
+  idle_running?: number;
+  estimated_compute_seconds?: number;
   recent: DroidRunRow[];
 }
 
@@ -339,6 +341,7 @@ function DroidStats({ stats }: { stats: DroidRunStats | null }) {
     ['Queued', stats.by_status.queued],
     ['Running', stats.by_status.running],
     ['Failed', stats.by_status.failed],
+    ['Idle', stats.idle_running ?? 0],
     ['Stale', stats.stale_running],
   ] as const;
   return (
@@ -349,7 +352,7 @@ function DroidStats({ stats }: { stats: DroidRunStats | null }) {
           <span className="text-xs text-muted-foreground">avg {Math.round(stats.avg_duration_ms / 1000)}s</span>
         ) : null}
       </div>
-      <div className="mt-2 grid grid-cols-5 gap-2">
+      <div className="mt-2 grid grid-cols-6 gap-2">
         {items.map(([label, value]) => (
           <div key={label} className="rounded-md border bg-background px-2 py-1.5 text-center">
             <div className="text-sm font-semibold text-foreground">{value}</div>
@@ -357,6 +360,11 @@ function DroidStats({ stats }: { stats: DroidRunStats | null }) {
           </div>
         ))}
       </div>
+      {stats.estimated_compute_seconds ? (
+        <p className="mt-2 text-[11px] text-muted-foreground">
+          approx {Math.round(stats.estimated_compute_seconds / 60)}m sandbox runtime tracked
+        </p>
+      ) : null}
     </div>
   );
 }
@@ -438,6 +446,11 @@ function DroidResult({
                 ) : null}
               </div>
               {finalReport.summary ? <p className="text-xs text-foreground">{finalReport.summary}</p> : null}
+              {finalReport.prBranch ? (
+                <div className="break-all text-[11px] text-muted-foreground">
+                  <span className="text-foreground">Branch:</span> {finalReport.prBranch}
+                </div>
+              ) : null}
               {finalReport.filesChanged.length > 0 ? (
                 <div className="text-[11px] text-muted-foreground">
                   <span className="text-foreground">Files:</span> {finalReport.filesChanged.slice(0, 4).join(', ')}
@@ -447,6 +460,11 @@ function DroidResult({
               {finalReport.checksRun.length > 0 ? (
                 <div className="text-[11px] text-muted-foreground">
                   <span className="text-foreground">Checks:</span> {finalReport.checksRun.join(', ')}
+                </div>
+              ) : null}
+              {finalReport.nextAction ? (
+                <div className="text-[11px] text-muted-foreground">
+                  <span className="text-foreground">Next:</span> {finalReport.nextAction}
                 </div>
               ) : null}
             </div>
@@ -580,6 +598,8 @@ function getFinalReport(events: DroidRunEvent[]) {
   return {
     summary: stringFromUnknown(metadata.summary) || finalEvent.message || finalEvent.stdout || '',
     prUrl: stringFromUnknown(metadata.pr_url),
+    prBranch: stringFromUnknown(metadata.pr_branch),
+    nextAction: stringFromUnknown(metadata.next_action),
     filesChanged: stringArrayFromUnknown(metadata.files_changed),
     checksRun: stringArrayFromUnknown(metadata.checks_run),
   };

@@ -543,6 +543,8 @@ describe('droid runs', () => {
           failed: 1,
         },
         stale_running: 1,
+        idle_running: 1,
+        estimated_compute_seconds: expect.any(Number),
         recent: expect.arrayContaining([expect.objectContaining({ project_slug: 'saas-maker' })]),
       },
     });
@@ -590,6 +592,7 @@ describe('droid runs', () => {
         data: {
           by_status: { running: 1 },
           stale_running: 0,
+          idle_running: 0,
         },
       });
     } finally {
@@ -851,6 +854,51 @@ describe('droid runs', () => {
         data: Array<{ type: string }>;
       };
       expect(firstEventsPayload.data.map((event) => event.type)).toContain('run_marked_stale');
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('reaps stale running runs in batches', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-05-14T12:00:00.000Z'));
+    const app = createApp({
+      async execute() {
+        return new Promise(() => undefined);
+      },
+    });
+    const env = createEnv();
+    const headers = {
+      Authorization: 'Bearer test-token',
+      'Content-Type': 'application/json',
+    };
+
+    try {
+      const runResponse = await app.request(
+        '/v0/runs',
+        {
+          method: 'POST',
+          body: JSON.stringify({ project_slug: 'saas-maker', command: 'hang' }),
+          headers,
+        },
+        env
+      );
+      const runPayload = (await runResponse.json()) as { data: { id: string } };
+      const response = await app.request(
+        '/v0/runs/reap-stale',
+        {
+          method: 'POST',
+          body: JSON.stringify({ project_slug: 'saas-maker', wait_for_dispatch: true }),
+          headers,
+        },
+        env
+      );
+
+      expect(response.status).toBe(200);
+      await expect(response.json()).resolves.toMatchObject({
+        data: { reaped: 1, run_ids: [runPayload.data.id] },
+      });
+      expect((env.DB as unknown as FakeD1).runs.get(runPayload.data.id)?.status).toBe('failed');
     } finally {
       vi.useRealTimers();
     }
@@ -1306,6 +1354,14 @@ class FakeStatement {
           .filter((run) => isStaleFakeRun(this.db, run)).length,
       };
     }
+    if (this.sql.includes('SELECT COALESCE(SUM(duration_ms), 0) AS total_duration_ms FROM droid_runs')) {
+      const projectSlug = this.params.length > 0 ? this.params[0] : undefined;
+      return {
+        total_duration_ms: Array.from(this.db.runs.values())
+          .filter((run) => projectSlug === undefined || run.project_slug === projectSlug)
+          .reduce((sum, run) => sum + (typeof run.duration_ms === 'number' ? run.duration_ms : 0), 0),
+      };
+    }
     if (this.sql.includes('FROM droid_run_events') && this.sql.includes("type = 'run_request'")) {
       const [runId] = this.params;
       const event = this.db.events
@@ -1356,6 +1412,22 @@ class FakeStatement {
         results: Array.from(this.db.runs.values())
           .filter((run) => run.task_id === taskId)
           .slice(0, Number(limit)),
+      };
+    }
+    if (
+      this.sql.includes('SELECT * FROM droid_runs') &&
+      this.sql.includes("status = 'running'") &&
+      this.sql.includes("'+15 minutes'")
+    ) {
+      const hasProjectFilter = this.sql.includes('project_slug = ?');
+      const projectSlug = hasProjectFilter ? this.params[0] : undefined;
+      const limit = Number(hasProjectFilter ? this.params[1] : this.params[0]);
+      return {
+        results: Array.from(this.db.runs.values())
+          .filter((run) => projectSlug === undefined || run.project_slug === projectSlug)
+          .filter((run) => run.status === 'running' && run.started_at)
+          .filter((run) => isStaleFakeRun(this.db, run))
+          .slice(0, limit),
       };
     }
     if (this.sql.includes('SELECT * FROM droid_runs WHERE project_slug = ?')) {

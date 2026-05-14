@@ -50,4 +50,16 @@ Droid stores:
 - command, agent, queue, acceptance, PR gate, and final report events in `droid_run_events`
 - patch and acceptance references in `droid_run_artifacts`
 
-The final report event is machine-readable and includes `summary`, `files_changed`, `checks_run`, `pr_url`, `blockers`, and `risks`.
+The final report event is machine-readable and includes `summary`, `files_changed`, `checks_run`, `pr_url`, `pr_branch`, `next_action`, `blockers`, and `risks`.
+
+## Task Feedback
+
+When `DROID_SAASMAKER_TOKEN` is configured, Droid can write back to the task:
+
+- block actions add an agent comment and set `blocked_on_user`
+- final reports add a concise run summary comment
+- draft PR creation updates `pr_url`, `pr_status`, and `branch_name`
+
+## Reliability
+
+Droid exposes `POST /v0/runs/reap-stale` for cron/manual cleanup. It finds running jobs with no activity for 15 minutes, marks them failed, cancels the sandbox when possible, and releases the next queued run for that repo/project.

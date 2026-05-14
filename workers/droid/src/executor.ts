@@ -21,6 +21,9 @@ type RepoHydration = {
 type PrCreationResult = {
   created: boolean;
   url?: string;
+  branch?: string;
+  number?: number;
+  headSha?: string;
 };
 
 type NativeAgentAction =
@@ -661,23 +664,11 @@ async function markTaskBlocked(
     return false;
   }
 
-  const token = input.env.DROID_SAASMAKER_TOKEN?.trim();
-  if (!token) {
-    await input.recordEvent({
-      type: 'task_blocked_callback_skipped',
-      actor: 'droid',
-      source: 'worker',
-      message: 'DROID_SAASMAKER_TOKEN is not configured.',
-      metadata: { task_id: input.taskId, reason: action.reason, question: action.question },
-    });
+  const client = await getTaskCallbackClient(input, 'task_blocked_callback_skipped');
+  if (!client) {
     return false;
   }
 
-  const apiUrl = (input.env.SAASMAKER_API_URL?.trim() || 'https://api.sassmaker.com').replace(
-    /\/+$/,
-    ''
-  );
-  const taskPath = `/v1/tasks/${encodeURIComponent(input.taskId)}`;
   const commentBody = [
     'Droid is blocked and needs user input.',
     '',
@@ -693,36 +684,8 @@ async function markTaskBlocked(
     .join('\n');
 
   try {
-    const commentResponse = await fetch(`${apiUrl}${taskPath}/comments`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        body: commentBody,
-        author_type: 'agent',
-      }),
-    });
-    if (!commentResponse.ok) {
-      const text = await commentResponse.text();
-      throw new Error(`comment failed with HTTP ${commentResponse.status}: ${text.slice(0, 300)}`);
-    }
-
-    const patchResponse = await fetch(`${apiUrl}${taskPath}`, {
-      method: 'PATCH',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ blocked_on_user: true }),
-    });
-    if (!patchResponse.ok) {
-      const text = await patchResponse.text();
-      throw new Error(
-        `block update failed with HTTP ${patchResponse.status}: ${text.slice(0, 300)}`
-      );
-    }
+    await postTaskComment(client, commentBody);
+    await patchTask(client, { blocked_on_user: true });
 
     await input.recordEvent({
       type: 'task_blocked_callback_succeeded',
@@ -741,6 +704,65 @@ async function markTaskBlocked(
       metadata: { task_id: input.taskId, reason: action.reason, question: action.question },
     });
     return false;
+  }
+}
+
+type TaskCallbackClient = {
+  apiUrl: string;
+  token: string;
+  taskId: string;
+};
+
+async function getTaskCallbackClient(
+  input: Parameters<RunExecutor['execute']>[0],
+  skippedEventType: string
+): Promise<TaskCallbackClient | null> {
+  if (!input.taskId) return null;
+  const token = input.env.DROID_SAASMAKER_TOKEN?.trim();
+  if (!token) {
+    await input.recordEvent({
+      type: skippedEventType,
+      actor: 'droid',
+      source: 'worker',
+      message: 'DROID_SAASMAKER_TOKEN is not configured.',
+      metadata: { task_id: input.taskId },
+    });
+    return null;
+  }
+  return {
+    apiUrl: (input.env.SAASMAKER_API_URL?.trim() || 'https://api.sassmaker.com').replace(/\/+$/, ''),
+    token,
+    taskId: input.taskId,
+  };
+}
+
+async function postTaskComment(client: TaskCallbackClient, body: string): Promise<void> {
+  const response = await fetch(`${client.apiUrl}/v1/tasks/${encodeURIComponent(client.taskId)}/comments`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${client.token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ body, author_type: 'agent' }),
+  });
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`comment failed with HTTP ${response.status}: ${text.slice(0, 300)}`);
+  }
+}
+
+async function patchTask(client: TaskCallbackClient, body: Record<string, unknown>): Promise<void> {
+  const response = await fetch(`${client.apiUrl}/v1/tasks/${encodeURIComponent(client.taskId)}`, {
+    method: 'PATCH',
+    headers: {
+      Authorization: `Bearer ${client.token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`task update failed with HTTP ${response.status}: ${text.slice(0, 300)}`);
   }
 }
 
@@ -1184,7 +1206,7 @@ async function createDraftPullRequest(
         pr_number: pr.number,
       },
     });
-    return { created: true, url: pr.html_url };
+    return { created: true, url: pr.html_url, branch: branchName, number: pr.number, headSha: commit.sha };
   } catch (error) {
     await input.recordEvent({
       type: 'pr_failed',
@@ -1218,13 +1240,13 @@ async function finalizeWorkspacePatch(
   if (!input.createPr) {
     const accepted = await runConfiguredAcceptance(input, sandbox, workspace);
     if (!accepted.success) {
-      await recordStructuredFinal(input, accepted, finalEvidence, null, {
-        summary: accepted.stderr || 'Droid acceptance command failed.',
-        risks: [accepted.stderr || 'Droid acceptance command failed.'],
-      });
+    await recordStructuredFinal(input, accepted, finalEvidence, null, null, {
+      summary: accepted.stderr || 'Droid acceptance command failed.',
+      risks: [accepted.stderr || 'Droid acceptance command failed.'],
+    });
       return accepted;
     }
-    await recordStructuredFinal(input, result, finalEvidence, null);
+    await recordStructuredFinal(input, result, finalEvidence, null, null);
     return result;
   }
 
@@ -1261,7 +1283,7 @@ async function finalizeWorkspacePatch(
         files_changed: evidence.filesChanged,
       },
     });
-    await recordStructuredFinal(input, result, finalEvidence, null, { summary, risks: [summary] });
+    await recordStructuredFinal(input, result, finalEvidence, null, null, { summary, risks: [summary] });
     return {
       stdout: result.stdout,
       stderr: appendTail(result.stderr, summary),
@@ -1272,7 +1294,7 @@ async function finalizeWorkspacePatch(
 
   const review = await reviewPatchForPr(input, sandbox, workspace, patch, evidence);
   if (!review.approved) {
-    await recordStructuredFinal(input, result, finalEvidence, null, {
+    await recordStructuredFinal(input, result, finalEvidence, null, null, {
       summary: review.summary || 'Droid patch review rejected PR creation.',
       risks: review.summary ? [review.summary] : [],
     });
@@ -1307,7 +1329,7 @@ async function finalizeWorkspacePatch(
         checks_run: finalEvidence.checkCommands,
       },
     });
-    await recordStructuredFinal(input, accepted, finalEvidence, null, {
+    await recordStructuredFinal(input, accepted, finalEvidence, null, null, {
       summary,
       risks: [summary],
     });
@@ -1323,7 +1345,7 @@ async function finalizeWorkspacePatch(
   );
   if (!pr.created) {
     const summary = 'Droid could not create the requested pull request.';
-    await recordStructuredFinal(input, result, finalEvidence, null, { summary, risks: [summary] });
+    await recordStructuredFinal(input, result, finalEvidence, null, null, { summary, risks: [summary] });
     return {
       stdout: result.stdout,
       stderr: appendTail(result.stderr, summary),
@@ -1344,9 +1366,29 @@ async function finalizeWorkspacePatch(
       files_changed: evidence.filesChanged,
       checks_run: finalEvidence.checkCommands,
       pr_url: pr.url ?? null,
+      pr_branch: pr.branch ?? null,
+      pr_number: pr.number ?? null,
+      head_sha: pr.headSha ?? null,
     },
   });
-  await recordStructuredFinal(input, result, finalEvidence, pr.url ?? null);
+  await input.recordEvent({
+    type: 'pr_followup_plan',
+    actor: 'droid',
+    source: 'worker',
+    command: 'Droid PR follow-up',
+    cwd: workspace,
+    message: 'Droid opened a draft PR. If CI fails, rerun Droid on the same task with the PR context to repair the branch.',
+    metadata: {
+      pr_url: pr.url ?? null,
+      pr_branch: pr.branch ?? null,
+      pr_number: pr.number ?? null,
+      head_sha: pr.headSha ?? null,
+      next_action: 'Watch PR checks; if they fail, rerun Droid with this run id and PR URL.',
+    },
+  });
+  await recordStructuredFinal(input, result, finalEvidence, pr.url ?? null, pr.branch ?? null, {
+    nextAction: 'Review the draft PR and let Droid rerun if CI reports failures.',
+  });
   return result;
 }
 
@@ -1398,13 +1440,21 @@ async function recordStructuredFinal(
   result: CommandResult,
   evidence: PrGateEvidence,
   prUrl: string | null,
-  override: { summary?: string; blockers?: string[]; risks?: string[] } = {}
+  prBranch: string | null,
+  override: { summary?: string; blockers?: string[]; risks?: string[]; nextAction?: string } = {}
 ): Promise<void> {
   const summary =
     override.summary ??
     (result.success
       ? `Droid run completed with exit code ${result.exitCode}.`
       : `Droid run failed with exit code ${result.exitCode}.`);
+  const nextAction =
+    override.nextAction ??
+    (prUrl
+      ? 'Review the draft PR and let Droid rerun if CI reports failures.'
+      : result.success
+        ? 'Review the run output.'
+        : 'Inspect the Droid events and rerun after fixing the blocker.');
   await input.recordEvent({
     type: 'final_output',
     actor: 'droid',
@@ -1416,10 +1466,95 @@ async function recordStructuredFinal(
       filesChanged: evidence.filesChanged,
       checksRun: evidence.checkCommands,
       prUrl,
+      prBranch,
+      nextAction,
       blockers: override.blockers,
       risks: override.risks,
     }),
   });
+  await syncTaskFromFinalReport(input, {
+    summary,
+    filesChanged: evidence.filesChanged,
+    checksRun: evidence.checkCommands,
+    prUrl,
+    prBranch,
+    nextAction,
+    success: result.success,
+    exitCode: result.exitCode,
+    blockers: override.blockers ?? [],
+    risks: override.risks ?? [],
+  });
+}
+
+async function syncTaskFromFinalReport(
+  input: Parameters<RunExecutor['execute']>[0],
+  report: {
+    summary: string;
+    filesChanged: string[];
+    checksRun: string[];
+    prUrl: string | null;
+    prBranch: string | null;
+    nextAction: string;
+    success: boolean;
+    exitCode: number;
+    blockers: string[];
+    risks: string[];
+  }
+): Promise<void> {
+  const client = await getTaskCallbackClient(input, 'task_final_callback_skipped');
+  if (!client) return;
+
+  const comment = [
+    report.prUrl ? 'Droid opened a draft PR.' : report.success ? 'Droid finished the run.' : 'Droid finished with a failure.',
+    '',
+    `Summary: ${report.summary}`,
+    report.prUrl ? `PR: ${report.prUrl}` : '',
+    report.prBranch ? `Branch: ${report.prBranch}` : '',
+    report.filesChanged.length ? `Files: ${report.filesChanged.slice(0, 8).join(', ')}${report.filesChanged.length > 8 ? ` +${report.filesChanged.length - 8}` : ''}` : '',
+    report.checksRun.length ? `Checks: ${report.checksRun.join(', ')}` : '',
+    report.risks.length ? `Risks: ${report.risks.join('; ')}` : '',
+    report.blockers.length ? `Blockers: ${report.blockers.join('; ')}` : '',
+    `Exit: ${report.exitCode}`,
+    `Run: ${input.runId}`,
+    `Next: ${report.nextAction}`,
+  ]
+    .filter(Boolean)
+    .join('\n');
+
+  try {
+    await postTaskComment(client, comment);
+    if (report.prUrl) {
+      await patchTask(client, {
+        pr_url: report.prUrl,
+        pr_status: 'draft',
+        branch_name: report.prBranch,
+        blocked_on_user: false,
+      });
+    }
+    await input.recordEvent({
+      type: 'task_final_callback_succeeded',
+      actor: 'droid',
+      source: 'saas-maker-api',
+      message: 'Droid posted the final run summary back to the task.',
+      metadata: {
+        task_id: input.taskId ?? null,
+        pr_url: report.prUrl,
+        pr_branch: report.prBranch,
+      },
+    });
+  } catch (error) {
+    await input.recordEvent({
+      type: 'task_final_callback_failed',
+      actor: 'droid',
+      source: 'saas-maker-api',
+      message: error instanceof Error ? error.message : 'Failed to sync final run summary to task.',
+      metadata: {
+        task_id: input.taskId ?? null,
+        pr_url: report.prUrl,
+        pr_branch: report.prBranch,
+      },
+    });
+  }
 }
 
 async function reviewPatchForPr(

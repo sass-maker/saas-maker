@@ -11,6 +11,8 @@ export async function GET(req: Request) {
         by_status: { queued: 0, running: 0, completed: 0, failed: 0 },
         avg_duration_ms: null,
         stale_running: 0,
+        idle_running: 0,
+        estimated_compute_seconds: 0,
         recent: [],
       },
       error: "DROID_INTERNAL_TOKEN is not configured; Droid stats are hidden in local dev.",
