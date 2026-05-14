@@ -3,7 +3,7 @@ import { cors } from 'hono/cors';
 import {
   createRun,
   createRunArtifact,
-  createRunEvent,
+  createRunEvent as createRunEventInDb,
   finishRun,
   getActiveRunForQueue,
   getLatestRunEvent,
@@ -16,9 +16,11 @@ import {
   listRuns,
   markRunStarted,
 } from './db';
+import { fetchRunRoom, getRunRoomStatus, recordRunRoomEvent } from './run-room-client';
 import type {
   CommandResult,
   Env,
+  RunEventInput,
   RunExecutionInput,
   RunExecutor,
   RunMode,
@@ -216,6 +218,22 @@ export function createApp(executor: RunExecutor) {
     return c.json({ data: events });
   });
 
+  app.get('/v0/runs/:id/live', async (c) => {
+    const run = await getRun(c.env, c.req.param('id'));
+    if (!run) return c.json({ error: 'Run not found' }, 404);
+    const response = fetchRunRoom(c.env, run.id, c.req.raw);
+    if (!response) return c.json({ error: 'Droid run rooms are not configured' }, 501);
+    return response;
+  });
+
+  app.get('/v0/runs/:id/live-status', async (c) => {
+    const run = await getRun(c.env, c.req.param('id'));
+    if (!run) return c.json({ error: 'Run not found' }, 404);
+    const status = await getRunRoomStatus(c.env, run.id);
+    if (!status) return c.json({ error: 'Droid run rooms are not configured' }, 501);
+    return c.json({ data: status });
+  });
+
   app.get('/v0/runs/:id/artifacts', async (c) => {
     const run = await getRun(c.env, c.req.param('id'));
     if (!run) return c.json({ error: 'Run not found' }, 404);
@@ -411,6 +429,15 @@ function isStaleEvent(createdAt: string, thresholdMs: number): boolean {
   const parsed = Date.parse(`${createdAt.replace(' ', 'T')}Z`);
   if (!Number.isFinite(parsed)) return false;
   return Date.now() - parsed >= thresholdMs;
+}
+
+async function createRunEvent(env: Env, runId: string, input: RunEventInput): Promise<void> {
+  await createRunEventInDb(env, runId, input);
+  try {
+    await recordRunRoomEvent(env, runId, input);
+  } catch (error) {
+    console.warn('Failed to record Droid run room event', error);
+  }
 }
 
 async function executeRun(

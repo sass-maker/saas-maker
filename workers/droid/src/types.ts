@@ -10,6 +10,7 @@ export interface Env {
   DROID_SAASMAKER_TOKEN?: string;
   SAASMAKER_API_URL?: string;
   Sandbox: DurableObjectNamespace<Sandbox>;
+  DROID_RUN_ROOMS?: DurableObjectNamespace;
 }
 
 export type RunMode = 'command' | 'native';
