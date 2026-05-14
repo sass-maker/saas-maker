@@ -664,6 +664,58 @@ describe('droid runs', () => {
     expect(reconcilePayload.data.summary).toBe('Command completed with exit code 0.');
   });
 
+  it('uses live run room activity to guard reconcile', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-05-14T12:00:00.000Z'));
+    const rooms = new FakeRunRoomNamespace({ createdAt: () => new Date().toISOString() });
+    const app = createApp({
+      async execute(input) {
+        await input.recordEvent({ type: 'agent_process_start', command: input.command });
+        return new Promise(() => undefined);
+      },
+      async reconcile() {
+        return { stdout: 'reconciled', stderr: '', exitCode: 0, success: true };
+      },
+    });
+    const env = createEnv({ DROID_RUN_ROOMS: rooms as unknown as DurableObjectNamespace });
+
+    try {
+      const createResponse = await app.request(
+        '/v0/runs',
+        {
+          method: 'POST',
+          body: JSON.stringify({ command: 'sleep forever' }),
+          headers: {
+            Authorization: 'Bearer test-token',
+            'Content-Type': 'application/json',
+          },
+        },
+        env
+      );
+      const createPayload = (await createResponse.json()) as { data: { id: string } };
+
+      const reconcileResponse = await app.request(
+        `/v0/runs/${createPayload.data.id}/reconcile`,
+        {
+          method: 'POST',
+          body: JSON.stringify({ wait_for_completion: true }),
+          headers: {
+            Authorization: 'Bearer test-token',
+            'Content-Type': 'application/json',
+          },
+        },
+        env
+      );
+
+      expect(reconcileResponse.status).toBe(409);
+      await expect(reconcileResponse.json()).resolves.toMatchObject({
+        latest_event_source: 'run_room',
+      });
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it('fails and cancels runs that exceed the hard Droid timeout', async () => {
     vi.useFakeTimers();
     const cancelCalls: string[] = [];
@@ -780,10 +832,12 @@ class FakeD1 {
 class FakeRunRoomNamespace {
   private rooms = new Map<string, FakeRunRoom>();
 
+  constructor(private options: { createdAt?: (index: number) => string } = {}) {}
+
   getByName(name: string) {
     let room = this.rooms.get(name);
     if (!room) {
-      room = new FakeRunRoom(name);
+      room = new FakeRunRoom(name, this.options);
       this.rooms.set(name, room);
     }
     return room;
@@ -793,14 +847,18 @@ class FakeRunRoomNamespace {
 class FakeRunRoom {
   private events: Array<Record<string, unknown>> = [];
 
-  constructor(private runId: string) {}
+  constructor(
+    private runId: string,
+    private options: { createdAt?: (index: number) => string } = {}
+  ) {}
 
   async recordEvent(input: { runId: string; event: { type: string } & Record<string, unknown> }) {
+    const index = this.events.length;
     const event = {
-      id: `event-${this.events.length}`,
+      id: `event-${index}`,
       run_id: input.runId,
       ...input.event,
-      created_at: `2026-05-11T00:00:0${this.events.length}.000Z`,
+      created_at: this.options.createdAt?.(index) ?? `2026-05-11T00:00:0${index}.000Z`,
     };
     this.events.push(event);
     return event;
