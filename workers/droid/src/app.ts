@@ -11,6 +11,7 @@ import {
   getNextQueuedRunForQueue,
   getRun,
   getRunStats,
+  listStaleRunningRuns,
   listRunArtifacts,
   listRunEvents,
   listRuns,
@@ -25,6 +26,7 @@ import type {
   RunExecutor,
   RunMode,
   RunProvider,
+  RunRecord,
   RunRequest,
 } from './types';
 
@@ -214,6 +216,26 @@ export function createApp(executor: RunExecutor) {
     return c.json({ data: stats });
   });
 
+  app.post('/v0/runs/reap-stale', async (c) => {
+    const incoming = (await c.req.json().catch(() => null)) as {
+      project_slug?: string;
+      limit?: number;
+      wait_for_dispatch?: boolean;
+    } | null;
+    const staleRuns = await listStaleRunningRuns(c.env, {
+      projectSlug: incoming?.project_slug?.trim(),
+      limit: normalizeLimit(incoming?.limit),
+    });
+    for (const staleRun of staleRuns) {
+      await markStaleRunAndReleaseQueue(c.env, executor, staleRun, {
+        forced: false,
+        waitForDispatch: incoming?.wait_for_dispatch === true,
+        waitUntil: (promise) => scheduleBackground(c, promise),
+      });
+    }
+    return c.json({ data: { reaped: staleRuns.length, run_ids: staleRuns.map((run) => run.id) } });
+  });
+
   app.get('/v0/runs/:id/events', async (c) => {
     const run = await getRun(c.env, c.req.param('id'));
     if (!run) return c.json({ error: 'Run not found' }, 404);
@@ -321,60 +343,12 @@ export function createApp(executor: RunExecutor) {
       );
     }
 
-    await createRunEvent(c.env, run.id, {
-      type: 'run_marked_stale',
-      message: 'Droid run marked stale after no recent activity.',
-      exit_code: 124,
-      metadata: {
-        sandbox_id: run.sandbox_id,
-        latest_event_at: latestActivity?.created_at ?? null,
-        latest_event_source: latestActivity?.source ?? null,
-        forced: incoming?.force === true,
-      },
+    await markStaleRunAndReleaseQueue(c.env, executor, run, {
+      forced: incoming?.force === true,
+      latestActivity,
+      waitForDispatch: incoming?.wait_for_dispatch === true,
+      waitUntil: (promise) => scheduleBackground(c, promise),
     });
-    await finishRun(c.env, run.id, {
-      status: 'failed',
-      exitCode: 124,
-      durationMs: durationSince(run.started_at),
-      summary: 'Droid run marked stale after no recent activity.',
-      errorMessage: 'Droid run marked stale after no recent activity.',
-    });
-
-    if (executor.cancel) {
-      const cancelPromise = executor
-        .cancel({
-          env: c.env,
-          runId: run.id,
-          sandboxId: run.sandbox_id,
-          recordEvent: (event) => createRunEvent(c.env, run.id, event),
-          recordArtifact: (artifact) => createRunArtifact(c.env, run.id, artifact),
-        })
-        .catch((error) =>
-          createRunEvent(c.env, run.id, {
-            type: 'sandbox_destroy_failed',
-            message: error instanceof Error ? error.message : 'Sandbox destroy failed.',
-            metadata: { sandbox_id: run.sandbox_id, during_stale_recovery: true },
-          })
-        );
-      scheduleBackground(c, cancelPromise);
-    }
-
-    const dispatchPromise = dispatchNextQueuedRun(c.env, executor, {
-      runId: run.id,
-      repoUrl: run.repo_url ?? undefined,
-      waitUntil: (promise: Promise<void>) => scheduleBackground(c, promise),
-    }).catch((error) =>
-      createRunEvent(c.env, run.id, {
-        type: 'queue_dispatch_failed',
-        message: error instanceof Error ? error.message : 'Droid queue dispatch failed.',
-        metadata: { run_id: run.id, during_stale_recovery: true },
-      })
-    );
-    if (incoming?.wait_for_dispatch === true) {
-      await dispatchPromise;
-    } else {
-      scheduleBackground(c, dispatchPromise);
-    }
 
     const updatedRun = await getRun(c.env, run.id);
     return c.json({ data: updatedRun ?? run, marked_stale: true });
@@ -799,6 +773,73 @@ function truncateSummary(value: string): string {
   return value.length > 220 ? `${value.slice(0, 217)}...` : value;
 }
 
+async function markStaleRunAndReleaseQueue(
+  env: Env,
+  executor: RunExecutor,
+  run: RunRecord,
+  input: {
+    forced: boolean;
+    latestActivity?: { created_at?: string; source?: string } | null;
+    waitForDispatch: boolean;
+    waitUntil: (promise: Promise<void>) => void;
+  }
+): Promise<void> {
+  await createRunEvent(env, run.id, {
+    type: 'run_marked_stale',
+    message: 'Droid run marked stale after no recent activity.',
+    exit_code: 124,
+    metadata: {
+      sandbox_id: run.sandbox_id,
+      latest_event_at: input.latestActivity?.created_at ?? null,
+      latest_event_source: input.latestActivity?.source ?? null,
+      forced: input.forced,
+    },
+  });
+  await finishRun(env, run.id, {
+    status: 'failed',
+    exitCode: 124,
+    durationMs: durationSince(run.started_at),
+    summary: 'Droid run marked stale after no recent activity.',
+    errorMessage: 'Droid run marked stale after no recent activity.',
+  });
+
+  if (executor.cancel) {
+    const cancelPromise = executor
+      .cancel({
+        env,
+        runId: run.id,
+        sandboxId: run.sandbox_id,
+        recordEvent: (event) => createRunEvent(env, run.id, event),
+        recordArtifact: (artifact) => createRunArtifact(env, run.id, artifact),
+      })
+      .catch((error) =>
+        createRunEvent(env, run.id, {
+          type: 'sandbox_destroy_failed',
+          message: error instanceof Error ? error.message : 'Sandbox destroy failed.',
+          metadata: { sandbox_id: run.sandbox_id, during_stale_recovery: true },
+        })
+      );
+    input.waitUntil(cancelPromise);
+  }
+
+  const dispatchPromise = dispatchNextQueuedRun(env, executor, {
+    runId: run.id,
+    repoUrl: run.repo_url ?? undefined,
+    waitUntil: input.waitUntil,
+  }).catch((error) =>
+    createRunEvent(env, run.id, {
+      type: 'queue_dispatch_failed',
+      message: error instanceof Error ? error.message : 'Droid queue dispatch failed.',
+      metadata: { run_id: run.id, during_stale_recovery: true },
+    })
+  );
+  if (input.waitForDispatch) {
+    await dispatchPromise;
+  } else {
+    input.waitUntil(dispatchPromise);
+  }
+}
+
 async function handleRunTimeout(
   env: Env,
   executor: RunExecutor,
@@ -1024,7 +1065,8 @@ function normalizeAcceptanceTimeoutSeconds(value: unknown): number | undefined {
 }
 
 function normalizeLimit(value: unknown): number | undefined {
-  if (typeof value !== 'string' || !value.trim()) return undefined;
+  if (typeof value !== 'string' && typeof value !== 'number') return undefined;
+  if (typeof value === 'string' && !value.trim()) return undefined;
   const parsed = Number(value);
   if (!Number.isInteger(parsed)) return undefined;
   if (parsed < 1) return 1;

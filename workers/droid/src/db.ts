@@ -138,6 +138,24 @@ export async function getRunStats(env: Env, input: { projectSlug?: string; limit
   const staleRow = await env.DB.prepare(
     `SELECT COUNT(*) AS count FROM droid_runs ${staleWhere}`
   ).bind(...(input.projectSlug ? [input.projectSlug] : [])).first<{ count: number }>();
+  const idleWhere = input.projectSlug
+    ? `WHERE project_slug = ? AND status = 'running' AND started_at IS NOT NULL
+       AND datetime(
+         COALESCE((SELECT MAX(created_at) FROM droid_run_events WHERE run_id = droid_runs.id), started_at),
+         '+6 minutes'
+       ) < datetime('now')`
+    : `WHERE status = 'running' AND started_at IS NOT NULL
+       AND datetime(
+         COALESCE((SELECT MAX(created_at) FROM droid_run_events WHERE run_id = droid_runs.id), started_at),
+         '+6 minutes'
+       ) < datetime('now')`;
+  const idleRow = await env.DB.prepare(
+    `SELECT COUNT(*) AS count FROM droid_runs ${idleWhere}`
+  ).bind(...(input.projectSlug ? [input.projectSlug] : [])).first<{ count: number }>();
+  const durationWhere = input.projectSlug ? 'WHERE project_slug = ?' : '';
+  const durationRow = await env.DB.prepare(
+    `SELECT COALESCE(SUM(duration_ms), 0) AS total_duration_ms FROM droid_runs ${durationWhere}`
+  ).bind(...(input.projectSlug ? [input.projectSlug] : [])).first<{ total_duration_ms: number }>();
   const recent = await listRuns(env, { projectSlug: input.projectSlug, limit });
 
   return {
@@ -147,8 +165,28 @@ export async function getRunStats(env: Env, input: { projectSlug?: string; limit
       ? null
       : Math.round(Number(avgRow.avg_duration_ms)),
     stale_running: Number(staleRow?.count ?? 0),
+    idle_running: Number(idleRow?.count ?? 0),
+    estimated_compute_seconds: Math.round(Number(durationRow?.total_duration_ms ?? 0) / 1000),
     recent,
   };
+}
+
+export async function listStaleRunningRuns(env: Env, input: { projectSlug?: string; limit?: number }): Promise<RunRecord[]> {
+  const limit = Math.min(Math.max(input.limit ?? 5, 1), 25);
+  const where = input.projectSlug
+    ? `project_slug = ? AND status = 'running' AND started_at IS NOT NULL`
+    : `status = 'running' AND started_at IS NOT NULL`;
+  const rows = await env.DB.prepare(
+    `SELECT * FROM droid_runs
+     WHERE ${where}
+       AND datetime(
+         COALESCE((SELECT MAX(created_at) FROM droid_run_events WHERE run_id = droid_runs.id), started_at),
+         '+15 minutes'
+       ) < datetime('now')
+     ORDER BY started_at ASC
+     LIMIT ?`
+  ).bind(...(input.projectSlug ? [input.projectSlug, limit] : [limit])).all();
+  return (rows.results ?? []) as unknown as RunRecord[];
 }
 
 export async function listRunEvents(env: Env, runId: string): Promise<RunEventRecord[]> {

@@ -198,6 +198,20 @@ const DEFAULT_ACCEPTANCE_BY_PROJECT: Record<string, string[]> = {
   ],
 };
 
+function buildDroidPrompt(task: TaskRow, acceptanceCommand?: string): string {
+  return [
+    'You own this task end to end. Make the smallest complete code change, verify it, and prepare a draft PR when useful.',
+    '',
+    `Task: ${task.title}`,
+    task.description ? `\nDetails:\n${task.description}` : '',
+    acceptanceCommand ? `\nAcceptance command to run before PR:\n${acceptanceCommand}` : '',
+    '',
+    'When blocked, return a block action with the exact user question. When done, summarize changed files, checks run, risks, and next action.',
+  ]
+    .filter(Boolean)
+    .join('\n');
+}
+
 function sortTasksByPriority(tasks: TaskRow[]) {
   return [...tasks].sort((a, b) => {
     const priorityDiff = PRIORITY_RANK[a.priority] - PRIORITY_RANK[b.priority];
@@ -378,7 +392,7 @@ export function TaskBoard({
     setDroidTask(task);
     setDroidMode('native');
     setDroidCommand(task.project_slug ? 'pwd && ls -1' : 'pwd && echo droid-ok');
-    setDroidPrompt(`Work on this task and report what you changed or found.\n\nTask: ${task.title}\n\n${task.description ?? ''}`.trim());
+    setDroidPrompt(buildDroidPrompt(task, acceptance.explicit));
     setDroidMaxTurns('25');
     setDroidCreatePr(true);
     setDroidAcceptanceSuggestions(acceptance.suggestions);
@@ -428,7 +442,7 @@ export function TaskBoard({
     setDroidTask(task);
     setDroidMode('native');
     setDroidCommand(task.project_slug ? 'pwd && ls -1' : 'pwd && echo droid-ok');
-    setDroidPrompt(`Work on this task and report what you changed or found.\n\nTask: ${task.title}\n\n${task.description ?? ''}`.trim());
+    setDroidPrompt(buildDroidPrompt(task, acceptance.explicit));
     setDroidMaxTurns('25');
     setDroidCreatePr(true);
     setDroidAcceptanceSuggestions(acceptance.suggestions);

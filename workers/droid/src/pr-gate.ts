@@ -44,6 +44,8 @@ export function buildFinalReport(input: {
   filesChanged: string[];
   checksRun: string[];
   prUrl?: string | null;
+  prBranch?: string | null;
+  nextAction?: string | null;
   blockers?: string[];
   risks?: string[];
 }) {
@@ -52,6 +54,8 @@ export function buildFinalReport(input: {
     files_changed: input.filesChanged,
     checks_run: input.checksRun,
     pr_url: input.prUrl ?? null,
+    pr_branch: input.prBranch ?? null,
+    next_action: input.nextAction ?? null,
     blockers: input.blockers ?? [],
     risks: input.risks ?? [],
   };

@@ -44,12 +44,16 @@ describe('droid pr gate helpers', () => {
         filesChanged: ['apps/cockpit/a.tsx'],
         checksRun: ['git diff --check -- .'],
         prUrl: 'https://github.com/example/repo/pull/1',
+        prBranch: 'droid/run-123',
+        nextAction: 'Review the draft PR.',
       })
     ).toMatchObject({
       summary: 'Changed audit log UI.',
       files_changed: ['apps/cockpit/a.tsx'],
       checks_run: ['git diff --check -- .'],
       pr_url: 'https://github.com/example/repo/pull/1',
+      pr_branch: 'droid/run-123',
+      next_action: 'Review the draft PR.',
       blockers: [],
       risks: [],
     });
