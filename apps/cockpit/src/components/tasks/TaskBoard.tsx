@@ -242,6 +242,7 @@ export function TaskBoard({
   const [droidPrompt, setDroidPrompt] = useState('');
   const [droidMaxTurns, setDroidMaxTurns] = useState('25');
   const [droidCreatePr, setDroidCreatePr] = useState(true);
+  const [droidAcceptanceCommand, setDroidAcceptanceCommand] = useState('');
   const [droidRepoUrl, setDroidRepoUrl] = useState('');
   const [droidBranch, setDroidBranch] = useState('');
   const [droidCwd, setDroidCwd] = useState('');
@@ -345,6 +346,7 @@ export function TaskBoard({
     setDroidPrompt(`Work on this task and report what you changed or found.\n\nTask: ${task.title}\n\n${task.description ?? ''}`.trim());
     setDroidMaxTurns('25');
     setDroidCreatePr(true);
+    setDroidAcceptanceCommand('');
     setDroidRepoUrl(task.project_slug ? projectRepos?.[task.project_slug] ?? '' : '');
     setDroidBranch(task.branch_name ?? '');
     setDroidCwd('');
@@ -392,6 +394,7 @@ export function TaskBoard({
     setDroidPrompt(`Work on this task and report what you changed or found.\n\nTask: ${task.title}\n\n${task.description ?? ''}`.trim());
     setDroidMaxTurns('25');
     setDroidCreatePr(true);
+    setDroidAcceptanceCommand('');
     setDroidRepoUrl(task.project_slug ? projectRepos?.[task.project_slug] ?? '' : '');
     setDroidBranch(task.branch_name ?? '');
     setDroidCwd('');
@@ -710,6 +713,7 @@ export function TaskBoard({
           timeout_seconds: droidMode !== 'command' ? 900 : undefined,
           create_pr: droidCreatePr,
           pr_title: droidTask ? `Droid: ${droidTask.title}` : undefined,
+          acceptance_command: droidAcceptanceCommand.trim() || undefined,
           repo_url: droidRepoUrl.trim() || undefined,
           branch: droidBranch.trim() || undefined,
           cwd: droidCwd.trim() || undefined,
@@ -1298,6 +1302,7 @@ export function TaskBoard({
         prompt={droidPrompt}
         maxTurns={droidMaxTurns}
         createPr={droidCreatePr}
+        acceptanceCommand={droidAcceptanceCommand}
         repoUrl={droidRepoUrl}
         branch={droidBranch}
         cwd={droidCwd}
@@ -1312,6 +1317,7 @@ export function TaskBoard({
         onPromptChange={setDroidPrompt}
         onMaxTurnsChange={setDroidMaxTurns}
         onCreatePrChange={setDroidCreatePr}
+        onAcceptanceCommandChange={setDroidAcceptanceCommand}
         onRepoUrlChange={setDroidRepoUrl}
         onBranchChange={setDroidBranch}
         onCwdChange={setDroidCwd}
@@ -1326,6 +1332,7 @@ export function TaskBoard({
           setDroidPrompt('');
           setDroidMaxTurns('25');
           setDroidCreatePr(true);
+          setDroidAcceptanceCommand('');
           setDroidRepoUrl('');
           setDroidBranch('');
           setDroidCwd('');

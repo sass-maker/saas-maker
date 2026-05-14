@@ -166,6 +166,8 @@ export function createApp(executor: RunExecutor) {
       prTitle: body?.pr_title?.trim(),
       prBody: body?.pr_body?.trim(),
       prBaseBranch: body?.pr_base_branch?.trim(),
+      acceptanceCommand: body?.acceptance_command?.trim(),
+      acceptanceTimeoutSeconds: normalizeAcceptanceTimeoutSeconds(body?.acceptance_timeout_seconds),
       cwd: body?.cwd?.trim(),
       destroyAfterRun: body?.destroy_after_run !== false,
       waitUntil: (promise: Promise<void>) => scheduleBackground(c, promise),
@@ -602,6 +604,8 @@ async function executeRun(
     prTitle?: string;
     prBody?: string;
     prBaseBranch?: string;
+    acceptanceCommand?: string;
+    acceptanceTimeoutSeconds?: number;
     cwd?: string;
     destroyAfterRun: boolean;
     reconcile?: boolean;
@@ -627,6 +631,8 @@ async function executeRun(
       prTitle: input.prTitle,
       prBody: input.prBody,
       prBaseBranch: input.prBaseBranch,
+      acceptanceCommand: input.acceptanceCommand,
+      acceptanceTimeoutSeconds: input.acceptanceTimeoutSeconds,
       cwd: input.cwd,
       destroyAfterRun: input.destroyAfterRun,
       recordEvent: (event) => createRunEvent(env, input.runId, event),
@@ -854,6 +860,8 @@ function buildRunRequestMetadata(
     pr_title: body?.pr_title ?? null,
     pr_body: body?.pr_body ?? null,
     pr_base_branch: body?.pr_base_branch ?? null,
+    acceptance_command: body?.acceptance_command ?? null,
+    acceptance_timeout_seconds: body?.acceptance_timeout_seconds ?? null,
     cwd: body?.cwd ?? null,
     destroy_after_run: body?.destroy_after_run !== false,
   };
@@ -883,6 +891,8 @@ function executionInputFromRun(
     prTitle: stringFromUnknown(request?.pr_title),
     prBody: stringFromUnknown(request?.pr_body),
     prBaseBranch: stringFromUnknown(request?.pr_base_branch),
+    acceptanceCommand: stringFromUnknown(request?.acceptance_command),
+    acceptanceTimeoutSeconds: normalizeAcceptanceTimeoutSeconds(request?.acceptance_timeout_seconds),
     cwd: stringFromUnknown(request?.cwd) ?? run.cwd ?? undefined,
     destroyAfterRun: request?.destroy_after_run !== false,
   };
@@ -933,6 +943,15 @@ function validateRunRequest(body: RunRequest | null): { ok: true } | { ok: false
   if (body.pr_base_branch !== undefined && typeof body.pr_base_branch !== 'string') {
     return { ok: false, error: 'pr_base_branch must be a string' };
   }
+  if (body.acceptance_command !== undefined && typeof body.acceptance_command !== 'string') {
+    return { ok: false, error: 'acceptance_command must be a string' };
+  }
+  if (
+    body.acceptance_timeout_seconds !== undefined &&
+    normalizeAcceptanceTimeoutSeconds(body.acceptance_timeout_seconds) === undefined
+  ) {
+    return { ok: false, error: 'acceptance_timeout_seconds must be between 30 and 900' };
+  }
   return { ok: true };
 }
 
@@ -972,6 +991,14 @@ function normalizeTimeoutSeconds(value: unknown): number | undefined {
   if (typeof value !== 'number' || !Number.isInteger(value)) return undefined;
   if (value < 60) return 60;
   if (value > 1800) return 1800;
+  return value;
+}
+
+function normalizeAcceptanceTimeoutSeconds(value: unknown): number | undefined {
+  if (value === undefined) return undefined;
+  if (typeof value !== 'number' || !Number.isInteger(value)) return undefined;
+  if (value < 30) return 30;
+  if (value > 900) return 900;
   return value;
 }
 
