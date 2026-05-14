@@ -7,11 +7,15 @@ describe('droid runs', () => {
     const app = createApp(fakeExecutor());
     const env = createEnv();
 
-    const response = await app.request('/v0/runs', {
-      method: 'POST',
-      body: JSON.stringify({ command: 'echo ok' }),
-      headers: { 'Content-Type': 'application/json' },
-    }, env);
+    const response = await app.request(
+      '/v0/runs',
+      {
+        method: 'POST',
+        body: JSON.stringify({ command: 'echo ok' }),
+        headers: { 'Content-Type': 'application/json' },
+      },
+      env
+    );
 
     expect(response.status).toBe(401);
   });
@@ -20,14 +24,18 @@ describe('droid runs', () => {
     const app = createApp(fakeExecutor());
     const env = createEnv();
 
-    const response = await app.request('/v0/runs', {
-      method: 'POST',
-      body: JSON.stringify({ repo_url: 'ftp://example.test/repo.git' }),
-      headers: {
-        'Authorization': 'Bearer test-token',
-        'Content-Type': 'application/json',
+    const response = await app.request(
+      '/v0/runs',
+      {
+        method: 'POST',
+        body: JSON.stringify({ repo_url: 'ftp://example.test/repo.git' }),
+        headers: {
+          Authorization: 'Bearer test-token',
+          'Content-Type': 'application/json',
+        },
       },
-    }, env);
+      env
+    );
 
     expect(response.status).toBe(400);
     await expect(response.json()).resolves.toEqual({ error: 'command is required' });
@@ -37,14 +45,18 @@ describe('droid runs', () => {
     const app = createApp(fakeExecutor());
     const env = createEnv();
 
-    const response = await app.request('/v0/runs', {
-      method: 'POST',
-      body: JSON.stringify({ mode: 'native', provider: 'deepseek' }),
-      headers: {
-        'Authorization': 'Bearer test-token',
-        'Content-Type': 'application/json',
+    const response = await app.request(
+      '/v0/runs',
+      {
+        method: 'POST',
+        body: JSON.stringify({ mode: 'native', provider: 'deepseek' }),
+        headers: {
+          Authorization: 'Bearer test-token',
+          'Content-Type': 'application/json',
+        },
       },
-    }, env);
+      env
+    );
 
     expect(response.status).toBe(400);
     await expect(response.json()).resolves.toEqual({ error: 'prompt is required' });
@@ -54,17 +66,23 @@ describe('droid runs', () => {
     const app = createApp(fakeExecutor());
     const env = createEnv({ DROID_DEEPSEEK_API_KEY: undefined });
 
-    const response = await app.request('/v0/runs', {
-      method: 'POST',
-      body: JSON.stringify({ mode: 'native', provider: 'deepseek', prompt: 'inspect the repo' }),
-      headers: {
-        'Authorization': 'Bearer test-token',
-        'Content-Type': 'application/json',
+    const response = await app.request(
+      '/v0/runs',
+      {
+        method: 'POST',
+        body: JSON.stringify({ mode: 'native', provider: 'deepseek', prompt: 'inspect the repo' }),
+        headers: {
+          Authorization: 'Bearer test-token',
+          'Content-Type': 'application/json',
+        },
       },
-    }, env);
+      env
+    );
 
     expect(response.status).toBe(503);
-    await expect(response.json()).resolves.toEqual({ error: 'DROID_DEEPSEEK_API_KEY is required for native Droid runs' });
+    await expect(response.json()).resolves.toEqual({
+      error: 'DROID_DEEPSEEK_API_KEY is required for native Droid runs',
+    });
     expect((env.DB as unknown as FakeD1).runs.size).toBe(0);
   });
 
@@ -72,17 +90,23 @@ describe('droid runs', () => {
     const app = createApp(fakeExecutor());
     const env = createEnv({ DROID_GITHUB_TOKEN: undefined });
 
-    const response = await app.request('/v0/runs', {
-      method: 'POST',
-      body: JSON.stringify({ command: 'echo ok', create_pr: true }),
-      headers: {
-        'Authorization': 'Bearer test-token',
-        'Content-Type': 'application/json',
+    const response = await app.request(
+      '/v0/runs',
+      {
+        method: 'POST',
+        body: JSON.stringify({ command: 'echo ok', create_pr: true }),
+        headers: {
+          Authorization: 'Bearer test-token',
+          'Content-Type': 'application/json',
+        },
       },
-    }, env);
+      env
+    );
 
     expect(response.status).toBe(503);
-    await expect(response.json()).resolves.toEqual({ error: 'DROID_GITHUB_TOKEN is required when create_pr is true' });
+    await expect(response.json()).resolves.toEqual({
+      error: 'DROID_GITHUB_TOKEN is required when create_pr is true',
+    });
     expect((env.DB as unknown as FakeD1).runs.size).toBe(0);
   });
 
@@ -90,17 +114,27 @@ describe('droid runs', () => {
     const app = createApp(fakeExecutor());
     const env = createEnv();
 
-    const response = await app.request('/v0/runs', {
-      method: 'POST',
-      body: JSON.stringify({ mode: 'native', provider: 'deepseek', prompt: 'inspect the repo', max_turns: 3, wait_for_completion: true }),
-      headers: {
-        'Authorization': 'Bearer test-token',
-        'Content-Type': 'application/json',
+    const response = await app.request(
+      '/v0/runs',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          mode: 'native',
+          provider: 'deepseek',
+          prompt: 'inspect the repo',
+          max_turns: 3,
+          wait_for_completion: true,
+        }),
+        headers: {
+          Authorization: 'Bearer test-token',
+          'Content-Type': 'application/json',
+        },
       },
-    }, env);
+      env
+    );
 
     expect(response.status).toBe(201);
-    const payload = await response.json() as { data: { command: string; status: string } };
+    const payload = (await response.json()) as { data: { command: string; status: string } };
     expect(payload.data.command).toBe('native: inspect the repo');
     expect(payload.data.status).toBe('completed');
   });
@@ -109,32 +143,44 @@ describe('droid runs', () => {
     const app = createApp(fakeExecutor());
     const env = createEnv();
 
-    const response = await app.request('/v0/runs', {
-      method: 'POST',
-      body: JSON.stringify({
-        task_id: 'task-1',
-        project_slug: 'saas-maker',
-        repo_url: 'https://github.com/example/repo.git',
-        branch: 'main',
-        command: 'echo ok',
-        wait_for_completion: true,
-      }),
-      headers: {
-        'Authorization': 'Bearer test-token',
-        'Content-Type': 'application/json',
+    const response = await app.request(
+      '/v0/runs',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          task_id: 'task-1',
+          project_slug: 'saas-maker',
+          repo_url: 'https://github.com/example/repo.git',
+          branch: 'main',
+          command: 'echo ok',
+          wait_for_completion: true,
+        }),
+        headers: {
+          Authorization: 'Bearer test-token',
+          'Content-Type': 'application/json',
+        },
       },
-    }, env);
+      env
+    );
 
     expect(response.status).toBe(201);
-    const payload = await response.json() as { data: { id: string; status: string; exit_code: number } };
+    const payload = (await response.json()) as {
+      data: { id: string; status: string; exit_code: number };
+    };
     expect(payload.data.status).toBe('completed');
     expect(payload.data.exit_code).toBe(0);
 
-    const eventsResponse = await app.request(`/v0/runs/${payload.data.id}/events`, {
-      headers: { Authorization: 'Bearer test-token' },
-    }, env);
+    const eventsResponse = await app.request(
+      `/v0/runs/${payload.data.id}/events`,
+      {
+        headers: { Authorization: 'Bearer test-token' },
+      },
+      env
+    );
     expect(eventsResponse.status).toBe(200);
-    const eventsPayload = await eventsResponse.json() as { data: Array<{ type: string; stdout: string | null }> };
+    const eventsPayload = (await eventsResponse.json()) as {
+      data: Array<{ type: string; stdout: string | null }>;
+    };
     expect(eventsPayload.data.map((event) => event.type)).toEqual([
       'run_request',
       'run_started',
@@ -143,6 +189,38 @@ describe('droid runs', () => {
       'run_finished',
     ]);
     expect(eventsPayload.data[3].stdout).toBe('ok\n');
+  });
+
+  it('passes task metadata through to the executor', async () => {
+    const seen: Array<{ taskId?: string; projectSlug?: string }> = [];
+    const app = createApp({
+      async execute(input) {
+        seen.push({ taskId: input.taskId, projectSlug: input.projectSlug });
+        return { stdout: 'ok\n', stderr: '', exitCode: 0, success: true };
+      },
+    });
+    const env = createEnv();
+
+    const response = await app.request(
+      '/v0/runs',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          task_id: 'task-blockable',
+          project_slug: 'saas-maker',
+          command: 'echo ok',
+          wait_for_completion: true,
+        }),
+        headers: {
+          Authorization: 'Bearer test-token',
+          'Content-Type': 'application/json',
+        },
+      },
+      env
+    );
+
+    expect(response.status).toBe(201);
+    expect(seen).toEqual([{ taskId: 'task-blockable', projectSlug: 'saas-maker' }]);
   });
 
   it('lists run artifacts', async () => {
@@ -159,19 +237,27 @@ describe('droid runs', () => {
     });
     const env = createEnv();
 
-    const response = await app.request('/v0/runs', {
-      method: 'POST',
-      body: JSON.stringify({ command: 'echo ok', wait_for_completion: true }),
-      headers: {
-        'Authorization': 'Bearer test-token',
-        'Content-Type': 'application/json',
+    const response = await app.request(
+      '/v0/runs',
+      {
+        method: 'POST',
+        body: JSON.stringify({ command: 'echo ok', wait_for_completion: true }),
+        headers: {
+          Authorization: 'Bearer test-token',
+          'Content-Type': 'application/json',
+        },
       },
-    }, env);
-    const payload = await response.json() as { data: { id: string } };
+      env
+    );
+    const payload = (await response.json()) as { data: { id: string } };
 
-    const artifactsResponse = await app.request(`/v0/runs/${payload.data.id}/artifacts`, {
-      headers: { Authorization: 'Bearer test-token' },
-    }, env);
+    const artifactsResponse = await app.request(
+      `/v0/runs/${payload.data.id}/artifacts`,
+      {
+        headers: { Authorization: 'Bearer test-token' },
+      },
+      env
+    );
 
     expect(artifactsResponse.status).toBe(200);
     await expect(artifactsResponse.json()).resolves.toMatchObject({
@@ -189,24 +275,32 @@ describe('droid runs', () => {
     const app = createApp(fakeExecutor());
     const env = createEnv();
 
-    const response = await app.request('/v0/runs', {
-      method: 'POST',
-      body: JSON.stringify({
-        task_id: 'task-logs',
-        project_slug: 'saas-maker',
-        command: 'echo ok',
-        wait_for_completion: true,
-      }),
-      headers: {
-        'Authorization': 'Bearer test-token',
-        'Content-Type': 'application/json',
+    const response = await app.request(
+      '/v0/runs',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          task_id: 'task-logs',
+          project_slug: 'saas-maker',
+          command: 'echo ok',
+          wait_for_completion: true,
+        }),
+        headers: {
+          Authorization: 'Bearer test-token',
+          'Content-Type': 'application/json',
+        },
       },
-    }, env);
+      env
+    );
     expect(response.status).toBe(201);
 
-    const listResponse = await app.request('/v0/runs?task_id=task-logs&limit=1', {
-      headers: { Authorization: 'Bearer test-token' },
-    }, env);
+    const listResponse = await app.request(
+      '/v0/runs?task_id=task-logs&limit=1',
+      {
+        headers: { Authorization: 'Bearer test-token' },
+      },
+      env
+    );
 
     expect(listResponse.status).toBe(200);
     await expect(listResponse.json()).resolves.toMatchObject({
@@ -224,35 +318,60 @@ describe('droid runs', () => {
     const app = createApp({
       async execute(input) {
         if (input.command === 'hang') return new Promise(() => undefined);
-        if (input.command === 'fail') return { stdout: '', stderr: 'nope', exitCode: 1, success: false };
+        if (input.command === 'fail')
+          return { stdout: '', stderr: 'nope', exitCode: 1, success: false };
         return { stdout: 'ok\n', stderr: '', exitCode: 0, success: true };
       },
     });
     const env = createEnv();
     const headers = {
-      'Authorization': 'Bearer test-token',
+      Authorization: 'Bearer test-token',
       'Content-Type': 'application/json',
     };
 
-    await app.request('/v0/runs', {
-      method: 'POST',
-      body: JSON.stringify({ project_slug: 'saas-maker', command: 'pass', wait_for_completion: true }),
-      headers,
-    }, env);
-    await app.request('/v0/runs', {
-      method: 'POST',
-      body: JSON.stringify({ project_slug: 'saas-maker', command: 'fail', wait_for_completion: true }),
-      headers,
-    }, env);
-    await app.request('/v0/runs', {
-      method: 'POST',
-      body: JSON.stringify({ project_slug: 'saas-maker', command: 'hang' }),
-      headers,
-    }, env);
+    await app.request(
+      '/v0/runs',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          project_slug: 'saas-maker',
+          command: 'pass',
+          wait_for_completion: true,
+        }),
+        headers,
+      },
+      env
+    );
+    await app.request(
+      '/v0/runs',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          project_slug: 'saas-maker',
+          command: 'fail',
+          wait_for_completion: true,
+        }),
+        headers,
+      },
+      env
+    );
+    await app.request(
+      '/v0/runs',
+      {
+        method: 'POST',
+        body: JSON.stringify({ project_slug: 'saas-maker', command: 'hang' }),
+        headers,
+      },
+      env
+    );
 
-    const response = await app.request('/v0/stats?project_slug=saas-maker&limit=2', {
-      headers: { Authorization: 'Bearer test-token' },
-    }, env);
+    const response = await app.request(
+      '/v0/stats?project_slug=saas-maker&limit=2',
+      {
+        headers: { Authorization: 'Bearer test-token' },
+      },
+      env
+    );
 
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toMatchObject({
@@ -265,9 +384,7 @@ describe('droid runs', () => {
           failed: 1,
         },
         stale_running: 1,
-        recent: expect.arrayContaining([
-          expect.objectContaining({ project_slug: 'saas-maker' }),
-        ]),
+        recent: expect.arrayContaining([expect.objectContaining({ project_slug: 'saas-maker' })]),
       },
     });
   });
@@ -282,48 +399,60 @@ describe('droid runs', () => {
     });
     const env = createEnv();
     const headers = {
-      'Authorization': 'Bearer test-token',
+      Authorization: 'Bearer test-token',
       'Content-Type': 'application/json',
     };
 
-    const firstResponse = await app.request('/v0/runs', {
-      method: 'POST',
-      body: JSON.stringify({
-        project_slug: 'saas-maker',
-        repo_url: 'https://github.com/example/repo.git',
-        command: 'first',
-      }),
-      headers,
-    }, env);
+    const firstResponse = await app.request(
+      '/v0/runs',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          project_slug: 'saas-maker',
+          repo_url: 'https://github.com/example/repo.git',
+          command: 'first',
+        }),
+        headers,
+      },
+      env
+    );
     expect(firstResponse.status).toBe(202);
-    const firstPayload = await firstResponse.json() as { data: { id: string; status: string } };
+    const firstPayload = (await firstResponse.json()) as { data: { id: string; status: string } };
     expect(firstPayload.data.status).toBe('running');
 
-    const secondResponse = await app.request('/v0/runs', {
-      method: 'POST',
-      body: JSON.stringify({
-        project_slug: 'saas-maker',
-        repo_url: 'https://github.com/example/repo.git',
-        command: 'second',
-        wait_for_completion: true,
-      }),
-      headers,
-    }, env);
+    const secondResponse = await app.request(
+      '/v0/runs',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          project_slug: 'saas-maker',
+          repo_url: 'https://github.com/example/repo.git',
+          command: 'second',
+          wait_for_completion: true,
+        }),
+        headers,
+      },
+      env
+    );
 
     expect(secondResponse.status).toBe(202);
-    const secondPayload = await secondResponse.json() as { data: { id: string; status: string }; queued_after: string };
+    const secondPayload = (await secondResponse.json()) as {
+      data: { id: string; status: string };
+      queued_after: string;
+    };
     expect(secondPayload.data.status).toBe('queued');
     expect(secondPayload.queued_after).toBe(firstPayload.data.id);
     expect(executeCalls).toBe(1);
 
-    const eventsResponse = await app.request(`/v0/runs/${secondPayload.data.id}/events`, {
-      headers: { Authorization: 'Bearer test-token' },
-    }, env);
-    const eventsPayload = await eventsResponse.json() as { data: Array<{ type: string }> };
-    expect(eventsPayload.data.map((event) => event.type)).toEqual([
-      'run_request',
-      'run_queued',
-    ]);
+    const eventsResponse = await app.request(
+      `/v0/runs/${secondPayload.data.id}/events`,
+      {
+        headers: { Authorization: 'Bearer test-token' },
+      },
+      env
+    );
+    const eventsPayload = (await eventsResponse.json()) as { data: Array<{ type: string }> };
+    expect(eventsPayload.data.map((event) => event.type)).toEqual(['run_request', 'run_queued']);
   });
 
   it('auto-dequeues a queued same-repo run after the active run finishes', async () => {
@@ -342,50 +471,68 @@ describe('droid runs', () => {
     });
     const env = createEnv();
     const headers = {
-      'Authorization': 'Bearer test-token',
+      Authorization: 'Bearer test-token',
       'Content-Type': 'application/json',
     };
 
-    const firstResponsePromise = app.request('/v0/runs', {
-      method: 'POST',
-      body: JSON.stringify({
-        project_slug: 'saas-maker',
-        repo_url: 'https://github.com/example/repo.git',
-        command: 'first',
-        wait_for_completion: true,
-      }),
-      headers,
-    }, env);
+    const firstResponsePromise = app.request(
+      '/v0/runs',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          project_slug: 'saas-maker',
+          repo_url: 'https://github.com/example/repo.git',
+          command: 'first',
+          wait_for_completion: true,
+        }),
+        headers,
+      },
+      env
+    );
     while (!releaseFirst) await Promise.resolve();
 
-    const queuedResponse = await app.request('/v0/runs', {
-      method: 'POST',
-      body: JSON.stringify({
-        project_slug: 'saas-maker',
-        repo_url: 'https://github.com/example/repo.git',
-        command: 'second',
-      }),
-      headers,
-    }, env);
-    const queuedPayload = await queuedResponse.json() as { data: { id: string; status: string } };
+    const queuedResponse = await app.request(
+      '/v0/runs',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          project_slug: 'saas-maker',
+          repo_url: 'https://github.com/example/repo.git',
+          command: 'second',
+        }),
+        headers,
+      },
+      env
+    );
+    const queuedPayload = (await queuedResponse.json()) as { data: { id: string; status: string } };
     expect(queuedPayload.data.status).toBe('queued');
 
     releaseFirst();
     await firstResponsePromise;
     for (let i = 0; i < 5 && executeCommands.length < 2; i += 1) await Promise.resolve();
 
-    const dequeuedResponse = await app.request(`/v0/runs/${queuedPayload.data.id}`, {
-      headers: { Authorization: 'Bearer test-token' },
-    }, env);
-    const dequeuedPayload = await dequeuedResponse.json() as { data: { status: string; exit_code: number } };
+    const dequeuedResponse = await app.request(
+      `/v0/runs/${queuedPayload.data.id}`,
+      {
+        headers: { Authorization: 'Bearer test-token' },
+      },
+      env
+    );
+    const dequeuedPayload = (await dequeuedResponse.json()) as {
+      data: { status: string; exit_code: number };
+    };
     expect(dequeuedPayload.data.status).toBe('completed');
     expect(dequeuedPayload.data.exit_code).toBe(0);
     expect(executeCommands).toEqual(['first', 'second']);
 
-    const eventsResponse = await app.request(`/v0/runs/${queuedPayload.data.id}/events`, {
-      headers: { Authorization: 'Bearer test-token' },
-    }, env);
-    const eventsPayload = await eventsResponse.json() as { data: Array<{ type: string }> };
+    const eventsResponse = await app.request(
+      `/v0/runs/${queuedPayload.data.id}/events`,
+      {
+        headers: { Authorization: 'Bearer test-token' },
+      },
+      env
+    );
+    const eventsPayload = (await eventsResponse.json()) as { data: Array<{ type: string }> };
     expect(eventsPayload.data.map((event) => event.type)).toEqual([
       'run_request',
       'run_queued',
@@ -404,17 +551,21 @@ describe('droid runs', () => {
     });
     const env = createEnv();
 
-    const response = await app.request('/v0/runs', {
-      method: 'POST',
-      body: JSON.stringify({ command: 'echo ok' }),
-      headers: {
-        'Authorization': 'Bearer test-token',
-        'Content-Type': 'application/json',
+    const response = await app.request(
+      '/v0/runs',
+      {
+        method: 'POST',
+        body: JSON.stringify({ command: 'echo ok' }),
+        headers: {
+          Authorization: 'Bearer test-token',
+          'Content-Type': 'application/json',
+        },
       },
-    }, env);
+      env
+    );
 
     expect(response.status).toBe(202);
-    const payload = await response.json() as { data: { status: string } };
+    const payload = (await response.json()) as { data: { status: string } };
     expect(payload.data.status).toBe('running');
   });
 
@@ -432,27 +583,42 @@ describe('droid runs', () => {
     });
     const env = createEnv();
 
-    const createResponse = await app.request('/v0/runs', {
-      method: 'POST',
-      body: JSON.stringify({ mode: 'native', provider: 'deepseek', prompt: 'make the change', create_pr: true }),
-      headers: {
-        'Authorization': 'Bearer test-token',
-        'Content-Type': 'application/json',
+    const createResponse = await app.request(
+      '/v0/runs',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          mode: 'native',
+          provider: 'deepseek',
+          prompt: 'make the change',
+          create_pr: true,
+        }),
+        headers: {
+          Authorization: 'Bearer test-token',
+          'Content-Type': 'application/json',
+        },
       },
-    }, env);
-    const createPayload = await createResponse.json() as { data: { id: string } };
+      env
+    );
+    const createPayload = (await createResponse.json()) as { data: { id: string } };
 
-    const reconcileResponse = await app.request(`/v0/runs/${createPayload.data.id}/reconcile`, {
-      method: 'POST',
-      body: JSON.stringify({ wait_for_completion: true }),
-      headers: {
-        'Authorization': 'Bearer test-token',
-        'Content-Type': 'application/json',
+    const reconcileResponse = await app.request(
+      `/v0/runs/${createPayload.data.id}/reconcile`,
+      {
+        method: 'POST',
+        body: JSON.stringify({ wait_for_completion: true }),
+        headers: {
+          Authorization: 'Bearer test-token',
+          'Content-Type': 'application/json',
+        },
       },
-    }, env);
+      env
+    );
 
     expect(reconcileResponse.status).toBe(200);
-    const reconcilePayload = await reconcileResponse.json() as { data: { status: string; summary: string } };
+    const reconcilePayload = (await reconcileResponse.json()) as {
+      data: { status: string; summary: string };
+    };
     expect(reconcilePayload.data.status).toBe('completed');
     expect(reconcilePayload.data.summary).toBe('Command completed with exit code 0.');
   });
@@ -477,29 +643,43 @@ describe('droid runs', () => {
     const env = createEnv();
 
     try {
-      const responsePromise = app.request('/v0/runs', {
-        method: 'POST',
-        body: JSON.stringify({ command: 'sleep forever', timeout_seconds: 60, wait_for_completion: true }),
-        headers: {
-          'Authorization': 'Bearer test-token',
-          'Content-Type': 'application/json',
+      const responsePromise = app.request(
+        '/v0/runs',
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            command: 'sleep forever',
+            timeout_seconds: 60,
+            wait_for_completion: true,
+          }),
+          headers: {
+            Authorization: 'Bearer test-token',
+            'Content-Type': 'application/json',
+          },
         },
-      }, env);
+        env
+      );
 
       await vi.advanceTimersByTimeAsync(60_001);
       const response = await responsePromise;
 
       expect(response.status).toBe(201);
-      const payload = await response.json() as { data: { id: string; status: string; exit_code: number; error_message: string } };
+      const payload = (await response.json()) as {
+        data: { id: string; status: string; exit_code: number; error_message: string };
+      };
       expect(payload.data.status).toBe('failed');
       expect(payload.data.exit_code).toBe(124);
       expect(payload.data.error_message).toBe('Droid run timed out after 60 seconds.');
       expect(cancelCalls).toHaveLength(1);
 
-      const eventsResponse = await app.request(`/v0/runs/${payload.data.id}/events`, {
-        headers: { Authorization: 'Bearer test-token' },
-      }, env);
-      const eventsPayload = await eventsResponse.json() as { data: Array<{ type: string }> };
+      const eventsResponse = await app.request(
+        `/v0/runs/${payload.data.id}/events`,
+        {
+          headers: { Authorization: 'Bearer test-token' },
+        },
+        env
+      );
+      const eventsPayload = (await eventsResponse.json()) as { data: Array<{ type: string }> };
       expect(eventsPayload.data.map((event) => event.type)).toEqual([
         'run_request',
         'run_started',
@@ -517,7 +697,11 @@ describe('droid runs', () => {
 function fakeExecutor(): RunExecutor {
   return {
     async execute(input) {
-      await input.recordEvent({ type: 'command_start', command: input.command, cwd: '/workspace/repo' });
+      await input.recordEvent({
+        type: 'command_start',
+        command: input.command,
+        cwd: '/workspace/repo',
+      });
       await input.recordEvent({
         type: 'command_finish',
         command: input.command,
@@ -555,7 +739,10 @@ class FakeD1 {
 class FakeStatement {
   private params: unknown[] = [];
 
-  constructor(private db: FakeD1, private sql: string) {}
+  constructor(
+    private db: FakeD1,
+    private sql: string
+  ) {}
 
   bind(...params: unknown[]) {
     this.params = params;
@@ -564,16 +751,7 @@ class FakeStatement {
 
   async run() {
     if (this.sql.includes('INSERT INTO droid_runs')) {
-      const [
-        id,
-        task_id,
-        project_slug,
-        repo_url,
-        branch,
-        command,
-        cwd,
-        sandbox_id,
-      ] = this.params;
+      const [id, task_id, project_slug, repo_url, branch, command, cwd, sandbox_id] = this.params;
       this.db.runs.set(String(id), {
         id,
         task_id,
@@ -596,7 +774,10 @@ class FakeStatement {
 
     if (this.sql.includes("SET status = 'running'")) {
       const id = String(this.params[0]);
-      Object.assign(this.db.runs.get(id)!, { status: 'running', started_at: '2026-05-11 00:00:01' });
+      Object.assign(this.db.runs.get(id)!, {
+        status: 'running',
+        started_at: '2026-05-11 00:00:01',
+      });
     }
 
     if (this.sql.includes('SET status = ?, exit_code = ?')) {
@@ -644,14 +825,7 @@ class FakeStatement {
     }
 
     if (this.sql.includes('INSERT INTO droid_run_artifacts')) {
-      const [
-        id,
-        run_id,
-        type,
-        name,
-        uri,
-        metadata,
-      ] = this.params;
+      const [id, run_id, type, name, uri, metadata] = this.params;
       this.db.artifacts.push({
         id,
         run_id,
@@ -674,9 +848,10 @@ class FakeStatement {
         .map((run) => run.duration_ms)
         .filter((duration): duration is number => typeof duration === 'number');
       return {
-        avg_duration_ms: durations.length === 0
-          ? null
-          : durations.reduce((sum, duration) => sum + duration, 0) / durations.length,
+        avg_duration_ms:
+          durations.length === 0
+            ? null
+            : durations.reduce((sum, duration) => sum + duration, 0) / durations.length,
       };
     }
     if (this.sql.includes('SELECT COUNT(*) AS count FROM droid_runs')) {
@@ -684,11 +859,10 @@ class FakeStatement {
       return {
         count: Array.from(this.db.runs.values())
           .filter((run) => projectSlug === undefined || run.project_slug === projectSlug)
-          .filter((run) => run.status === 'running' && run.started_at)
-          .length,
+          .filter((run) => run.status === 'running' && run.started_at).length,
       };
     }
-    if (this.sql.includes("FROM droid_run_events") && this.sql.includes("type = 'run_request'")) {
+    if (this.sql.includes('FROM droid_run_events') && this.sql.includes("type = 'run_request'")) {
       const [runId] = this.params;
       const event = this.db.events
         .filter((item) => item.run_id === runId && item.type === 'run_request')
@@ -699,15 +873,19 @@ class FakeStatement {
       const [runId] = this.params;
       return this.db.events.filter((item) => item.run_id === runId).at(-1) ?? null;
     }
-    if (this.sql.includes('FROM droid_runs') && this.sql.includes('id != ?') && (this.sql.includes("status = 'running'") || this.sql.includes("status = 'queued'"))) {
+    if (
+      this.sql.includes('FROM droid_runs') &&
+      this.sql.includes('id != ?') &&
+      (this.sql.includes("status = 'running'") || this.sql.includes("status = 'queued'"))
+    ) {
       const [queueValue, excludeRunId] = this.params;
       const key = this.sql.includes('repo_url = ?') ? 'repo_url' : 'project_slug';
       const status = this.sql.includes("status = 'queued'") ? 'queued' : 'running';
-      return Array.from(this.db.runs.values()).find((run) => (
-        run[key] === queueValue &&
-        run.status === status &&
-        run.id !== excludeRunId
-      )) ?? null;
+      return (
+        Array.from(this.db.runs.values()).find(
+          (run) => run[key] === queueValue && run.status === status && run.id !== excludeRunId
+        ) ?? null
+      );
     }
     if (this.sql.includes('SELECT * FROM droid_runs WHERE id = ?')) {
       return this.db.runs.get(String(this.params[0])) ?? null;
@@ -752,7 +930,9 @@ class FakeStatement {
       return { results: this.db.events.filter((event) => event.run_id === this.params[0]) };
     }
     if (this.sql.includes('SELECT * FROM droid_run_artifacts WHERE run_id = ?')) {
-      return { results: this.db.artifacts.filter((artifact) => artifact.run_id === this.params[0]) };
+      return {
+        results: this.db.artifacts.filter((artifact) => artifact.run_id === this.params[0]),
+      };
     }
     return { results: [] };
   }

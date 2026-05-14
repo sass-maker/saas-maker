@@ -2,6 +2,7 @@
   "name": "foundry",
   "version": "1.0.0",
   "private": true,
+  "license": "MIT",
   "scripts": {
     "dev:api": "pnpm -F @saas-maker/api dev",
     "dev:cockpit": "pnpm -F @saas-maker/dashboard dev",

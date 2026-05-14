@@ -1,7 +1,29 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
-import { createRun, createRunArtifact, createRunEvent, finishRun, getActiveRunForQueue, getLatestRunEvent, getLatestRunRequest, getNextQueuedRunForQueue, getRun, getRunStats, listRunArtifacts, listRunEvents, listRuns, markRunStarted } from './db';
-import type { CommandResult, Env, RunExecutionInput, RunExecutor, RunMode, RunRequest } from './types';
+import {
+  createRun,
+  createRunArtifact,
+  createRunEvent,
+  finishRun,
+  getActiveRunForQueue,
+  getLatestRunEvent,
+  getLatestRunRequest,
+  getNextQueuedRunForQueue,
+  getRun,
+  getRunStats,
+  listRunArtifacts,
+  listRunEvents,
+  listRuns,
+  markRunStarted,
+} from './db';
+import type {
+  CommandResult,
+  Env,
+  RunExecutionInput,
+  RunExecutor,
+  RunMode,
+  RunRequest,
+} from './types';
 
 const DEFAULT_TIMEOUT_SECONDS = 900;
 const DEFAULT_RECONCILE_TIMEOUT_SECONDS = 240;
@@ -14,11 +36,14 @@ type Variables = {
 export function createApp(executor: RunExecutor) {
   const app = new Hono<{ Bindings: Env; Variables: Variables }>();
 
-  app.use('*', cors({
-    origin: '*',
-    allowHeaders: ['Authorization', 'Content-Type'],
-    allowMethods: ['GET', 'POST', 'OPTIONS'],
-  }));
+  app.use(
+    '*',
+    cors({
+      origin: '*',
+      allowHeaders: ['Authorization', 'Content-Type'],
+      allowMethods: ['GET', 'POST', 'OPTIONS'],
+    })
+  );
 
   app.use('*', async (c, next) => {
     c.set('requestId', crypto.randomUUID());
@@ -42,7 +67,7 @@ export function createApp(executor: RunExecutor) {
   });
 
   app.post('/v0/runs', async (c) => {
-    const body = await c.req.json().catch(() => null) as RunRequest | null;
+    const body = (await c.req.json().catch(() => null)) as RunRequest | null;
     const validation = validateRunRequest(body);
     if (!validation.ok) return c.json({ error: validation.error }, 400);
 
@@ -52,9 +77,10 @@ export function createApp(executor: RunExecutor) {
     const mode = normalizeMode(body?.mode);
     const environmentValidation = validateRunEnvironment(c.env, body, mode);
     if (!environmentValidation.ok) return c.json({ error: environmentValidation.error }, 503);
-    const command = mode !== 'command'
-      ? buildAgentLedgerCommand(mode, body?.prompt?.trim() ?? '')
-      : body!.command!.trim();
+    const command =
+      mode !== 'command'
+        ? buildAgentLedgerCommand(mode, body?.prompt?.trim() ?? '')
+        : body!.command!.trim();
 
     const run = await createRun(c.env, {
       id: runId,
@@ -88,7 +114,8 @@ export function createApp(executor: RunExecutor) {
     if (activeRun) {
       await createRunEvent(c.env, runId, {
         type: 'run_queued',
-        message: 'Droid run queued because another run is already active for this repository/project.',
+        message:
+          'Droid run queued because another run is already active for this repository/project.',
         command,
         metadata: {
           active_run_id: activeRun.id,
@@ -122,6 +149,8 @@ export function createApp(executor: RunExecutor) {
       runId,
       sandboxId,
       startedAt,
+      taskId: body?.task_id?.trim(),
+      projectSlug: body?.project_slug?.trim(),
       repoUrl: body?.repo_url?.trim(),
       branch: body?.branch?.trim(),
       command,
@@ -151,7 +180,10 @@ export function createApp(executor: RunExecutor) {
     }
 
     const updatedRun = await getRun(c.env, runId);
-    return c.json({ data: updatedRun ?? run }, updatedRun ? (body?.wait_for_completion === true ? 201 : 202) : 500);
+    return c.json(
+      { data: updatedRun ?? run },
+      updatedRun ? (body?.wait_for_completion === true ? 201 : 202) : 500
+    );
   });
 
   app.get('/v0/runs/:id', async (c) => {
@@ -200,17 +232,21 @@ export function createApp(executor: RunExecutor) {
       metadata: { sandbox_id: run.sandbox_id },
     });
     if (!executor.cancel) return c.json({ error: 'Run cancellation is not supported' }, 501);
-    const cancelPromise = executor.cancel({
-      env: c.env,
-      runId: run.id,
-      sandboxId: run.sandbox_id,
-      recordEvent: (event) => createRunEvent(c.env, run.id, event),
-      recordArtifact: (artifact) => createRunArtifact(c.env, run.id, artifact),
-    }).catch((error) => createRunEvent(c.env, run.id, {
-      type: 'sandbox_destroy_failed',
-      message: error instanceof Error ? error.message : 'Sandbox destroy failed.',
-      metadata: { sandbox_id: run.sandbox_id },
-    }));
+    const cancelPromise = executor
+      .cancel({
+        env: c.env,
+        runId: run.id,
+        sandboxId: run.sandbox_id,
+        recordEvent: (event) => createRunEvent(c.env, run.id, event),
+        recordArtifact: (artifact) => createRunArtifact(c.env, run.id, artifact),
+      })
+      .catch((error) =>
+        createRunEvent(c.env, run.id, {
+          type: 'sandbox_destroy_failed',
+          message: error instanceof Error ? error.message : 'Sandbox destroy failed.',
+          metadata: { sandbox_id: run.sandbox_id },
+        })
+      );
     try {
       c.executionCtx.waitUntil(cancelPromise);
     } catch {
@@ -239,7 +275,10 @@ export function createApp(executor: RunExecutor) {
     if (run.status === 'completed' || run.status === 'failed') {
       return c.json({ data: run, reconciled: false });
     }
-    const incoming = await c.req.json().catch(() => null) as { wait_for_completion?: boolean; force?: boolean } | null;
+    const incoming = (await c.req.json().catch(() => null)) as {
+      wait_for_completion?: boolean;
+      force?: boolean;
+    } | null;
     const request = await getLatestRunRequest(c.env, run.id);
     if (run.status === 'queued') {
       const queuedInput = executionInputFromRun(run, request);
@@ -249,10 +288,13 @@ export function createApp(executor: RunExecutor) {
         excludeRunId: run.id,
       });
       if (!incoming?.force && activeRun) {
-        return c.json({
-          error: 'Run is queued behind an active Droid run.',
-          active_run_id: activeRun.id,
-        }, 409);
+        return c.json(
+          {
+            error: 'Run is queued behind an active Droid run.',
+            active_run_id: activeRun.id,
+          },
+          409
+        );
       }
 
       await createRunEvent(c.env, run.id, {
@@ -298,16 +340,27 @@ export function createApp(executor: RunExecutor) {
       }
 
       const updatedRun = await getRun(c.env, run.id);
-      return c.json({ data: updatedRun ?? run, dequeued: true }, incoming?.wait_for_completion === true ? 200 : 202);
+      return c.json(
+        { data: updatedRun ?? run, dequeued: true },
+        incoming?.wait_for_completion === true ? 200 : 202
+      );
     }
 
     if (!executor.reconcile) return c.json({ error: 'Run reconciliation is not supported' }, 501);
     const latestEvent = await getLatestRunEvent(c.env, run.id);
-    if (!incoming?.force && latestEvent && !isStaleEvent(latestEvent.created_at, RECONCILE_STALE_AFTER_MS)) {
-      return c.json({
-        error: 'Run still appears active; reconcile is only allowed after 6 minutes of no events unless force is true.',
-        latest_event_at: latestEvent.created_at,
-      }, 409);
+    if (
+      !incoming?.force &&
+      latestEvent &&
+      !isStaleEvent(latestEvent.created_at, RECONCILE_STALE_AFTER_MS)
+    ) {
+      return c.json(
+        {
+          error:
+            'Run still appears active; reconcile is only allowed after 6 minutes of no events unless force is true.',
+          latest_event_at: latestEvent.created_at,
+        },
+        409
+      );
     }
 
     await createRunEvent(c.env, run.id, {
@@ -334,13 +387,19 @@ export function createApp(executor: RunExecutor) {
     }
 
     const updatedRun = await getRun(c.env, run.id);
-    return c.json({ data: updatedRun ?? run, reconciled: true }, incoming?.wait_for_completion === true ? 200 : 202);
+    return c.json(
+      { data: updatedRun ?? run, reconciled: true },
+      incoming?.wait_for_completion === true ? 200 : 202
+    );
   });
 
   return app;
 }
 
-function scheduleBackground(c: { executionCtx: { waitUntil: (promise: Promise<unknown>) => void } }, promise: Promise<void>) {
+function scheduleBackground(
+  c: { executionCtx: { waitUntil: (promise: Promise<unknown>) => void } },
+  promise: Promise<void>
+) {
   try {
     c.executionCtx.waitUntil(promise);
   } catch {
@@ -354,32 +413,40 @@ function isStaleEvent(createdAt: string, thresholdMs: number): boolean {
   return Date.now() - parsed >= thresholdMs;
 }
 
-async function executeRun(env: Env, executor: RunExecutor, input: {
-  runId: string;
-  sandboxId: string;
-  startedAt: number;
-  repoUrl?: string;
-  branch?: string;
-  command: string;
-  mode: RunMode;
-  prompt?: string;
-  provider?: 'deepseek';
-  maxTurns?: number;
-  timeoutSeconds: number;
-  createPr: boolean;
-  prTitle?: string;
-  prBody?: string;
-  prBaseBranch?: string;
-  cwd?: string;
-  destroyAfterRun: boolean;
-  reconcile?: boolean;
-  waitUntil?: (promise: Promise<void>) => void;
-}): Promise<void> {
+async function executeRun(
+  env: Env,
+  executor: RunExecutor,
+  input: {
+    runId: string;
+    sandboxId: string;
+    startedAt: number;
+    taskId?: string;
+    projectSlug?: string;
+    repoUrl?: string;
+    branch?: string;
+    command: string;
+    mode: RunMode;
+    prompt?: string;
+    provider?: 'deepseek';
+    maxTurns?: number;
+    timeoutSeconds: number;
+    createPr: boolean;
+    prTitle?: string;
+    prBody?: string;
+    prBaseBranch?: string;
+    cwd?: string;
+    destroyAfterRun: boolean;
+    reconcile?: boolean;
+    waitUntil?: (promise: Promise<void>) => void;
+  }
+): Promise<void> {
   try {
     const executionInput: RunExecutionInput = {
       env,
       runId: input.runId,
       sandboxId: input.sandboxId,
+      taskId: input.taskId,
+      projectSlug: input.projectSlug,
       repoUrl: input.repoUrl,
       branch: input.branch,
       command: input.command,
@@ -397,9 +464,10 @@ async function executeRun(env: Env, executor: RunExecutor, input: {
       recordEvent: (event) => createRunEvent(env, input.runId, event),
       recordArtifact: (artifact) => createRunArtifact(env, input.runId, artifact),
     };
-    const operation = input.reconcile && executor.reconcile
-      ? executor.reconcile(executionInput)
-      : executor.execute(executionInput);
+    const operation =
+      input.reconcile && executor.reconcile
+        ? executor.reconcile(executionInput)
+        : executor.execute(executionInput);
     const result = await runWithTimeout(operation, input.timeoutSeconds * 1000);
 
     const durationMs = Date.now() - input.startedAt;
@@ -441,11 +509,13 @@ async function executeRun(env: Env, executor: RunExecutor, input: {
       metadata: { duration_ms: durationMs },
     });
   } finally {
-    const nextPromise = dispatchNextQueuedRun(env, executor, input).catch((error) => createRunEvent(env, input.runId, {
-      type: 'queue_dispatch_failed',
-      message: error instanceof Error ? error.message : 'Droid queue dispatch failed.',
-      metadata: { run_id: input.runId },
-    }));
+    const nextPromise = dispatchNextQueuedRun(env, executor, input).catch((error) =>
+      createRunEvent(env, input.runId, {
+        type: 'queue_dispatch_failed',
+        message: error instanceof Error ? error.message : 'Droid queue dispatch failed.',
+        metadata: { run_id: input.runId },
+      })
+    );
     if (input.waitUntil) {
       input.waitUntil(nextPromise);
     } else {
@@ -454,11 +524,15 @@ async function executeRun(env: Env, executor: RunExecutor, input: {
   }
 }
 
-async function dispatchNextQueuedRun(env: Env, executor: RunExecutor, input: {
-  runId: string;
-  repoUrl?: string;
-  waitUntil?: (promise: Promise<void>) => void;
-}): Promise<void> {
+async function dispatchNextQueuedRun(
+  env: Env,
+  executor: RunExecutor,
+  input: {
+    runId: string;
+    repoUrl?: string;
+    waitUntil?: (promise: Promise<void>) => void;
+  }
+): Promise<void> {
   const finishedRun = await getRun(env, input.runId);
   if (!finishedRun) return;
   const nextRun = await getNextQueuedRunForQueue(env, {
@@ -530,12 +604,17 @@ class RunTimeoutError extends Error {
   }
 }
 
-async function handleRunTimeout(env: Env, executor: RunExecutor, input: {
-  runId: string;
-  sandboxId: string;
-  startedAt: number;
-  timeoutSeconds: number;
-}, error: RunTimeoutError): Promise<void> {
+async function handleRunTimeout(
+  env: Env,
+  executor: RunExecutor,
+  input: {
+    runId: string;
+    sandboxId: string;
+    startedAt: number;
+    timeoutSeconds: number;
+  },
+  error: RunTimeoutError
+): Promise<void> {
   const durationMs = Date.now() - input.startedAt;
   await createRunEvent(env, input.runId, {
     type: 'run_timeout',
@@ -560,7 +639,8 @@ async function handleRunTimeout(env: Env, executor: RunExecutor, input: {
     } catch (cancelError) {
       await createRunEvent(env, input.runId, {
         type: 'run_timeout_cancel_failed',
-        message: cancelError instanceof Error ? cancelError.message : 'Timed out sandbox cleanup failed.',
+        message:
+          cancelError instanceof Error ? cancelError.message : 'Timed out sandbox cleanup failed.',
         metadata: { sandbox_id: input.sandboxId },
       });
     }
@@ -581,13 +661,16 @@ async function handleRunTimeout(env: Env, executor: RunExecutor, input: {
   });
 }
 
-function buildRunRequestMetadata(body: RunRequest | null, normalized: {
-  mode: RunMode;
-  command: string;
-  repoUrl?: string;
-  branch?: string;
-  timeoutSeconds: number;
-}): Record<string, unknown> {
+function buildRunRequestMetadata(
+  body: RunRequest | null,
+  normalized: {
+    mode: RunMode;
+    command: string;
+    repoUrl?: string;
+    branch?: string;
+    timeoutSeconds: number;
+  }
+): Record<string, unknown> {
   return {
     mode: normalized.mode,
     provider: body?.provider ?? null,
@@ -608,18 +691,24 @@ function buildRunRequestMetadata(body: RunRequest | null, normalized: {
   };
 }
 
-function executionInputFromRun(run: Awaited<ReturnType<typeof getRun>> & {}, request: Record<string, unknown> | null) {
+function executionInputFromRun(
+  run: Awaited<ReturnType<typeof getRun>> & {},
+  request: Record<string, unknown> | null
+) {
   const mode = normalizeMode(request?.mode);
-  const timeoutSeconds = normalizeTimeoutSeconds(request?.timeout_seconds) ?? DEFAULT_RECONCILE_TIMEOUT_SECONDS;
+  const timeoutSeconds =
+    normalizeTimeoutSeconds(request?.timeout_seconds) ?? DEFAULT_RECONCILE_TIMEOUT_SECONDS;
   return {
     runId: run.id,
     sandboxId: run.sandbox_id,
+    taskId: run.task_id ?? undefined,
+    projectSlug: run.project_slug ?? undefined,
     repoUrl: stringFromUnknown(request?.repo_url) ?? run.repo_url ?? undefined,
     branch: stringFromUnknown(request?.branch) ?? run.branch ?? undefined,
     command: stringFromUnknown(request?.command) ?? run.command,
     mode,
     prompt: stringFromUnknown(request?.prompt),
-    provider: request?.provider === 'deepseek' ? 'deepseek' as const : undefined,
+    provider: request?.provider === 'deepseek' ? ('deepseek' as const) : undefined,
     maxTurns: normalizeMaxTurns(request?.max_turns),
     timeoutSeconds,
     createPr: request?.create_pr === true,
@@ -661,7 +750,10 @@ function validateRunRequest(body: RunRequest | null): { ok: true } | { ok: false
   if (body.max_turns !== undefined && normalizeMaxTurns(body.max_turns) === undefined) {
     return { ok: false, error: 'max_turns must be between 1 and 50' };
   }
-  if (body.timeout_seconds !== undefined && normalizeTimeoutSeconds(body.timeout_seconds) === undefined) {
+  if (
+    body.timeout_seconds !== undefined &&
+    normalizeTimeoutSeconds(body.timeout_seconds) === undefined
+  ) {
     return { ok: false, error: 'timeout_seconds must be between 60 and 1800' };
   }
   if (body.pr_title !== undefined && typeof body.pr_title !== 'string') {
@@ -676,7 +768,11 @@ function validateRunRequest(body: RunRequest | null): { ok: true } | { ok: false
   return { ok: true };
 }
 
-function validateRunEnvironment(env: Env, body: RunRequest | null, mode: RunMode): { ok: true } | { ok: false; error: string } {
+function validateRunEnvironment(
+  env: Env,
+  body: RunRequest | null,
+  mode: RunMode
+): { ok: true } | { ok: false; error: string } {
   if (mode === 'native' && !env.DROID_DEEPSEEK_API_KEY?.trim()) {
     return { ok: false, error: 'DROID_DEEPSEEK_API_KEY is required for native Droid runs' };
   }
