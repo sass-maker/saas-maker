@@ -13,6 +13,7 @@ workspace, use:
 - `../../docs/project-map.md` for how SaaS Maker, Symphony, GitHub, local
   agents, and deployment targets connect.
 - `docs/symphony.md` for SaaS Maker-specific Symphony command details.
+- `docs/droid.md` for Droid sandbox runner quickstart and API fields.
 
 On GitHub, the shared Fleet docs live in
 `sarthakagrawal927/fleet-workspace`.
