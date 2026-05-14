@@ -7,6 +7,8 @@ export interface Env {
   DROID_DEEPSEEK_MODEL?: string;
   DROID_DEEPSEEK_REVIEW_MODEL?: string;
   DROID_GITHUB_TOKEN?: string;
+  DROID_SAASMAKER_TOKEN?: string;
+  SAASMAKER_API_URL?: string;
   Sandbox: DurableObjectNamespace<Sandbox>;
 }
 
@@ -96,6 +98,8 @@ export interface RunExecutionInput {
   env: Env;
   runId: string;
   sandboxId: string;
+  taskId?: string;
+  projectSlug?: string;
   repoUrl?: string;
   branch?: string;
   command: string;

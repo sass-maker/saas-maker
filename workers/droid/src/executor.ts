@@ -20,6 +20,7 @@ type NativeAgentAction =
   | { action: 'read'; path: string; start_line?: number; end_line?: number }
   | { action: 'write'; path: string; content: string }
   | { action: 'command'; command: string; timeout_seconds?: number }
+  | { action: 'block'; reason: string; question: string; summary?: string }
   | { action: 'final'; summary: string };
 
 type NativeChatMessage = {
@@ -54,7 +55,10 @@ export const sandboxExecutor: RunExecutor = {
         stderr: ready.stderr,
       });
       if (input.destroyAfterRun) {
-        await input.recordEvent({ type: 'sandbox_destroy', message: `Destroying sandbox ${input.sandboxId}` });
+        await input.recordEvent({
+          type: 'sandbox_destroy',
+          message: `Destroying sandbox ${input.sandboxId}`,
+        });
         await sandbox.destroy();
       }
       return ready;
@@ -72,16 +76,27 @@ export const sandboxExecutor: RunExecutor = {
     const cwd = resolveWorkspaceCwd(workspace, input.cwd);
     if (input.mode !== 'command') {
       const result = await runAgent(input, sandbox, cwd);
-      const finalResult = await finalizeWorkspacePatch(input, sandbox, workspace, hydration, result);
+      const finalResult = await finalizeWorkspacePatch(
+        input,
+        sandbox,
+        workspace,
+        hydration,
+        result
+      );
       if (input.destroyAfterRun) {
-        await input.recordEvent({ type: 'sandbox_destroy', message: `Destroying sandbox ${input.sandboxId}` });
+        await input.recordEvent({
+          type: 'sandbox_destroy',
+          message: `Destroying sandbox ${input.sandboxId}`,
+        });
         await sandbox.destroy();
       }
       return finalResult;
     }
 
     await input.recordEvent({ type: 'command_start', command: input.command, cwd });
-    const result = await sandbox.exec(`cd ${quote(cwd)} && ${input.command}`, { timeout: input.timeoutSeconds * 1000 });
+    const result = await sandbox.exec(`cd ${quote(cwd)} && ${input.command}`, {
+      timeout: input.timeoutSeconds * 1000,
+    });
     await input.recordEvent({
       type: 'command_finish',
       command: input.command,
@@ -94,7 +109,10 @@ export const sandboxExecutor: RunExecutor = {
     const finalResult = await finalizeWorkspacePatch(input, sandbox, workspace, hydration, result);
 
     if (input.destroyAfterRun) {
-      await input.recordEvent({ type: 'sandbox_destroy', message: `Destroying sandbox ${input.sandboxId}` });
+      await input.recordEvent({
+        type: 'sandbox_destroy',
+        message: `Destroying sandbox ${input.sandboxId}`,
+      });
       await sandbox.destroy();
     }
 
@@ -137,7 +155,10 @@ export const sandboxExecutor: RunExecutor = {
         exit_code: missing.exitCode,
       });
       if (input.destroyAfterRun) {
-        await input.recordEvent({ type: 'sandbox_destroy', message: `Destroying sandbox ${input.sandboxId}` });
+        await input.recordEvent({
+          type: 'sandbox_destroy',
+          message: `Destroying sandbox ${input.sandboxId}`,
+        });
         await sandbox.destroy();
       }
       return missing;
@@ -146,12 +167,17 @@ export const sandboxExecutor: RunExecutor = {
     const hydration = await resolveHydrationForExistingWorkspace(input, sandbox, workspace);
     const finalResult = await finalizeWorkspacePatch(input, sandbox, workspace, hydration, result);
     if (input.destroyAfterRun) {
-      await input.recordEvent({ type: 'sandbox_destroy', message: `Destroying sandbox ${input.sandboxId}` });
+      await input.recordEvent({
+        type: 'sandbox_destroy',
+        message: `Destroying sandbox ${input.sandboxId}`,
+      });
       await sandbox.destroy();
     }
     await input.recordEvent({
       type: 'reconcile_finish',
-      message: finalResult.success ? 'Droid reconcile finished.' : 'Droid reconcile found unresolved work.',
+      message: finalResult.success
+        ? 'Droid reconcile finished.'
+        : 'Droid reconcile found unresolved work.',
       command: 'droid reconcile',
       cwd: workspace,
       exit_code: finalResult.exitCode,
@@ -160,28 +186,35 @@ export const sandboxExecutor: RunExecutor = {
   },
   async cancel(input): Promise<void> {
     const sandbox = getDroidSandbox(input.env.Sandbox, input.sandboxId);
-    const capturePromise = captureGitPatch({
-      env: input.env,
-      runId: input.runId,
-      sandboxId: input.sandboxId,
-      command: 'cancel',
-      mode: 'command',
-      timeoutSeconds: 60,
-      createPr: false,
-      destroyAfterRun: true,
-      recordEvent: input.recordEvent,
-      recordArtifact: input.recordArtifact,
-    }, sandbox, '/workspace/repo', {
-      stdout: '',
-      stderr: 'Run cancelled.',
-      exitCode: 130,
-      success: false,
-    }).catch((error) => input.recordEvent({
-      type: 'patch_capture_failed',
-      source: 'sandbox',
-      message: error instanceof Error ? error.message : 'Patch capture during cancel failed.',
-      exit_code: 1,
-    }));
+    const capturePromise = captureGitPatch(
+      {
+        env: input.env,
+        runId: input.runId,
+        sandboxId: input.sandboxId,
+        command: 'cancel',
+        mode: 'command',
+        timeoutSeconds: 60,
+        createPr: false,
+        destroyAfterRun: true,
+        recordEvent: input.recordEvent,
+        recordArtifact: input.recordArtifact,
+      },
+      sandbox,
+      '/workspace/repo',
+      {
+        stdout: '',
+        stderr: 'Run cancelled.',
+        exitCode: 130,
+        success: false,
+      }
+    ).catch((error) =>
+      input.recordEvent({
+        type: 'patch_capture_failed',
+        source: 'sandbox',
+        message: error instanceof Error ? error.message : 'Patch capture during cancel failed.',
+        exit_code: 1,
+      })
+    );
     const captureTimedOut = await Promise.race([
       capturePromise.then(() => false),
       new Promise<boolean>((resolve) => setTimeout(() => resolve(true), 8000)),
@@ -195,12 +228,18 @@ export const sandboxExecutor: RunExecutor = {
         exit_code: 124,
       });
     }
-    await input.recordEvent({ type: 'sandbox_destroy', message: `Destroying sandbox ${input.sandboxId}` });
+    await input.recordEvent({
+      type: 'sandbox_destroy',
+      message: `Destroying sandbox ${input.sandboxId}`,
+    });
     await sandbox.destroy();
   },
 };
 
-function getDroidSandbox(ns: Parameters<typeof getSandbox>[0], sandboxId: string): ReturnType<typeof getSandbox> {
+function getDroidSandbox(
+  ns: Parameters<typeof getSandbox>[0],
+  sandboxId: string
+): ReturnType<typeof getSandbox> {
   return getSandbox(ns, sandboxId, {
     keepAlive: true,
     containerTimeouts: {
@@ -248,7 +287,9 @@ async function runAgent(
   return runNativeAgent(input, sandbox, cwd);
 }
 
-async function requireDeepSeekKey(input: Parameters<RunExecutor['execute']>[0]): Promise<CommandResult | null> {
+async function requireDeepSeekKey(
+  input: Parameters<RunExecutor['execute']>[0]
+): Promise<CommandResult | null> {
   if (input.env.DROID_DEEPSEEK_API_KEY) return null;
   const result = {
     stdout: '',
@@ -293,7 +334,12 @@ async function runNativeAgent(
     source: 'deepseek',
     command: 'droid native tool loop',
     cwd,
-    metadata: { provider: input.provider ?? 'deepseek', model, max_turns: maxTurns, timeout_seconds: input.timeoutSeconds },
+    metadata: {
+      provider: input.provider ?? 'deepseek',
+      model,
+      max_turns: maxTurns,
+      timeout_seconds: input.timeoutSeconds,
+    },
   });
 
   for (let turn = 1; turn <= maxTurns; turn += 1) {
@@ -317,9 +363,47 @@ async function runNativeAgent(
         cwd,
         exit_code: 0,
         stdout: action.summary,
-        metadata: { provider: input.provider ?? 'deepseek', model, max_turns: maxTurns, turns: turn },
+        metadata: {
+          provider: input.provider ?? 'deepseek',
+          model,
+          max_turns: maxTurns,
+          turns: turn,
+        },
       });
-      return { stdout: `${transcript.join('\n')}\n\n${action.summary}\n`, stderr: '', exitCode: 0, success: true };
+      return {
+        stdout: `${transcript.join('\n')}\n\n${action.summary}\n`,
+        stderr: '',
+        exitCode: 0,
+        success: true,
+      };
+    }
+
+    if (action.action === 'block') {
+      const blocked = await markTaskBlocked(input, action, transcript);
+      const stderr = blocked
+        ? `Droid blocked the task: ${action.reason}`
+        : `Droid needs user input but could not update the task: ${action.reason}`;
+      await input.recordEvent({
+        type: 'agent_blocked',
+        actor: 'native',
+        source: 'deepseek',
+        command: 'droid native tool loop',
+        cwd,
+        exit_code: 75,
+        stderr,
+        metadata: {
+          reason: action.reason,
+          question: action.question,
+          task_id: input.taskId ?? null,
+          callback_updated: blocked,
+        },
+      });
+      return {
+        stdout: `${transcript.join('\n')}\n\n${action.summary ?? action.reason}\nQuestion: ${action.question}\n`,
+        stderr,
+        exitCode: 75,
+        success: false,
+      };
     }
 
     const toolResult = await executeNativeTool(input, sandbox, cwd, action);
@@ -360,18 +444,19 @@ function buildNativeSystemPrompt(cwd: string): string {
     '{"action":"read","path":"relative/file.ts","start_line":1,"end_line":160}',
     '{"action":"write","path":"relative/file.ts","content":"full file contents"}',
     '{"action":"command","command":"pnpm test","timeout_seconds":120}',
+    '{"action":"block","reason":"what is blocking you","question":"specific question for the user","summary":"optional current state"}',
     '{"action":"final","summary":"what changed and what was verified"}',
     'Use relative paths only. Read files before editing unless the task is explicitly to create a new file.',
     'Prefer small diffs. Run the smallest useful check before final when possible.',
+    'Use block only when you need a user decision, credential, review, or deploy permission.',
     'Use the provided repository context as orientation, but verify details by reading files before editing.',
   ].join('\n');
 }
 
 function buildNativeUserPrompt(prompt: string, taskContext: string): string {
-  return [
-    taskContext ? `Repository context:\n${taskContext}` : '',
-    `Task:\n${prompt}`,
-  ].filter(Boolean).join('\n\n');
+  return [taskContext ? `Repository context:\n${taskContext}` : '', `Task:\n${prompt}`]
+    .filter(Boolean)
+    .join('\n\n');
 }
 
 async function hydrateNativeTaskContext(
@@ -457,7 +542,7 @@ async function requestNativeAgentActionOnce(
       method: 'POST',
       signal: controller.signal,
       headers: {
-        'Authorization': `Bearer ${input.env.DROID_DEEPSEEK_API_KEY}`,
+        Authorization: `Bearer ${input.env.DROID_DEEPSEEK_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -476,10 +561,14 @@ async function requestNativeAgentActionOnce(
 
   if (!response.ok) {
     const text = await response.text();
-    throw new Error(`DeepSeek API ${response.status} ${response.statusText}: ${text.slice(0, 500)}`);
+    throw new Error(
+      `DeepSeek API ${response.status} ${response.statusText}: ${text.slice(0, 500)}`
+    );
   }
 
-  const payload = await response.json() as { choices?: Array<{ message?: { content?: string } }> };
+  const payload = (await response.json()) as {
+    choices?: Array<{ message?: { content?: string } }>;
+  };
   const content = payload.choices?.[0]?.message?.content;
   if (!content) throw new Error('DeepSeek response did not include message content');
   return parseNativeAction(content);
@@ -499,11 +588,31 @@ function parseNativeAction(content: string): NativeAgentAction {
       end_line: numberOrUndefined(parsed.end_line),
     };
   }
-  if (parsed.action === 'write' && typeof parsed.path === 'string' && typeof parsed.content === 'string') {
+  if (
+    parsed.action === 'write' &&
+    typeof parsed.path === 'string' &&
+    typeof parsed.content === 'string'
+  ) {
     return { action: 'write', path: parsed.path, content: parsed.content };
   }
   if (parsed.action === 'command' && typeof parsed.command === 'string') {
-    return { action: 'command', command: parsed.command, timeout_seconds: numberOrUndefined(parsed.timeout_seconds) };
+    return {
+      action: 'command',
+      command: parsed.command,
+      timeout_seconds: numberOrUndefined(parsed.timeout_seconds),
+    };
+  }
+  if (
+    parsed.action === 'block' &&
+    typeof parsed.reason === 'string' &&
+    typeof parsed.question === 'string'
+  ) {
+    return {
+      action: 'block',
+      reason: parsed.reason,
+      question: parsed.question,
+      summary: stringOrUndefined(parsed.summary),
+    };
   }
   if (parsed.action === 'final' && typeof parsed.summary === 'string') {
     return { action: 'final', summary: parsed.summary };
@@ -515,7 +624,7 @@ async function executeNativeTool(
   input: Parameters<RunExecutor['execute']>[0],
   sandbox: Awaited<ReturnType<typeof getSandbox>>,
   cwd: string,
-  action: Exclude<NativeAgentAction, { action: 'final' }>
+  action: Exclude<NativeAgentAction, { action: 'final' } | { action: 'block' }>
 ): Promise<NativeToolResult> {
   try {
     if (action.action === 'list') return nativeList(input, sandbox, cwd, action.path);
@@ -524,6 +633,105 @@ async function executeNativeTool(
     return nativeCommand(input, sandbox, cwd, action);
   } catch (error) {
     return { ok: false, output: error instanceof Error ? error.message : String(error) };
+  }
+}
+
+async function markTaskBlocked(
+  input: Parameters<RunExecutor['execute']>[0],
+  action: Extract<NativeAgentAction, { action: 'block' }>,
+  transcript: string[]
+): Promise<boolean> {
+  if (!input.taskId) {
+    await input.recordEvent({
+      type: 'task_blocked_callback_skipped',
+      actor: 'droid',
+      source: 'worker',
+      message: 'Droid wanted to block the task, but no task_id was attached to the run.',
+      metadata: { reason: action.reason, question: action.question },
+    });
+    return false;
+  }
+
+  const token = input.env.DROID_SAASMAKER_TOKEN?.trim();
+  if (!token) {
+    await input.recordEvent({
+      type: 'task_blocked_callback_skipped',
+      actor: 'droid',
+      source: 'worker',
+      message: 'DROID_SAASMAKER_TOKEN is not configured.',
+      metadata: { task_id: input.taskId, reason: action.reason, question: action.question },
+    });
+    return false;
+  }
+
+  const apiUrl = (input.env.SAASMAKER_API_URL?.trim() || 'https://api.sassmaker.com').replace(
+    /\/+$/,
+    ''
+  );
+  const taskPath = `/v1/tasks/${encodeURIComponent(input.taskId)}`;
+  const commentBody = [
+    'Droid is blocked and needs user input.',
+    '',
+    `Reason: ${action.reason}`,
+    `Question: ${action.question}`,
+    action.summary ? `Summary: ${action.summary}` : '',
+    '',
+    `Run: ${input.runId}`,
+    `Project: ${input.projectSlug ?? 'unknown'}`,
+    `Recent action: ${transcript.at(-1) ?? 'none'}`,
+  ]
+    .filter(Boolean)
+    .join('\n');
+
+  try {
+    const commentResponse = await fetch(`${apiUrl}${taskPath}/comments`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        body: commentBody,
+        author_type: 'agent',
+      }),
+    });
+    if (!commentResponse.ok) {
+      const text = await commentResponse.text();
+      throw new Error(`comment failed with HTTP ${commentResponse.status}: ${text.slice(0, 300)}`);
+    }
+
+    const patchResponse = await fetch(`${apiUrl}${taskPath}`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ blocked_on_user: true }),
+    });
+    if (!patchResponse.ok) {
+      const text = await patchResponse.text();
+      throw new Error(
+        `block update failed with HTTP ${patchResponse.status}: ${text.slice(0, 300)}`
+      );
+    }
+
+    await input.recordEvent({
+      type: 'task_blocked_callback_succeeded',
+      actor: 'droid',
+      source: 'saas-maker-api',
+      message: 'Droid posted an agent comment and marked the task blocked.',
+      metadata: { task_id: input.taskId, reason: action.reason, question: action.question },
+    });
+    return true;
+  } catch (error) {
+    await input.recordEvent({
+      type: 'task_blocked_callback_failed',
+      actor: 'droid',
+      source: 'saas-maker-api',
+      message: error instanceof Error ? error.message : 'Failed to mark task blocked.',
+      metadata: { task_id: input.taskId, reason: action.reason, question: action.question },
+    });
+    return false;
   }
 }
 
@@ -620,7 +828,11 @@ async function nativeWrite(
     exit_code: 0,
     metadata: { path: action.path, bytes: new TextEncoder().encode(action.content).length },
   });
-  return { ok: true, output: `wrote ${action.path} (${new TextEncoder().encode(action.content).length} bytes)`, exitCode: 0 };
+  return {
+    ok: true,
+    output: `wrote ${action.path} (${new TextEncoder().encode(action.content).length} bytes)`,
+    exitCode: 0,
+  };
 }
 
 async function nativeCommand(
@@ -629,7 +841,10 @@ async function nativeCommand(
   cwd: string,
   action: Extract<NativeAgentAction, { action: 'command' }>
 ): Promise<NativeToolResult> {
-  const timeoutSeconds = Math.min(Math.max(action.timeout_seconds ?? 120, 5), Math.min(input.timeoutSeconds, 300));
+  const timeoutSeconds = Math.min(
+    Math.max(action.timeout_seconds ?? 120, 5),
+    Math.min(input.timeoutSeconds, 300)
+  );
   await input.recordEvent({
     type: 'command_start',
     actor: 'native',
@@ -638,9 +853,12 @@ async function nativeCommand(
     cwd,
     metadata: { timeout_seconds: timeoutSeconds },
   });
-  const result = await sandbox.exec(`cd ${quote(cwd)} && timeout ${timeoutSeconds}s bash -lc ${quote(action.command)}`, {
-    timeout: (timeoutSeconds + 15) * 1000,
-  });
+  const result = await sandbox.exec(
+    `cd ${quote(cwd)} && timeout ${timeoutSeconds}s bash -lc ${quote(action.command)}`,
+    {
+      timeout: (timeoutSeconds + 15) * 1000,
+    }
+  );
   await input.recordEvent({
     type: 'command_finish',
     actor: 'native',
@@ -654,7 +872,10 @@ async function nativeCommand(
   });
   return {
     ok: result.success,
-    output: truncateForModel([result.stdout, result.stderr ? `stderr:\n${result.stderr}` : ''].filter(Boolean).join('\n'), 12000),
+    output: truncateForModel(
+      [result.stdout, result.stderr ? `stderr:\n${result.stderr}` : ''].filter(Boolean).join('\n'),
+      12000
+    ),
     exitCode: result.exitCode,
   };
 }
@@ -672,7 +893,10 @@ async function hydrateRepository(
   try {
     const repoInfo = await githubRequest<{ default_branch: string }>(input, `/repos/${repo}`);
     const baseBranch = input.branch || repoInfo.default_branch || 'main';
-    const baseRef = await githubRequest<{ object: { sha: string } }>(input, `/repos/${repo}/git/ref/heads/${encodePath(baseBranch)}`);
+    const baseRef = await githubRequest<{ object: { sha: string } }>(
+      input,
+      `/repos/${repo}/git/ref/heads/${encodePath(baseBranch)}`
+    );
     const tarballUrl = `https://api.github.com/repos/${repo}/tarball/${encodeURIComponent(baseBranch)}`;
     const script = [
       'set -euo pipefail',
@@ -696,7 +920,12 @@ async function hydrateRepository(
       type: 'command_start',
       command: 'github tarball hydrate',
       cwd: '/workspace',
-      metadata: { repo, branch: baseBranch, github_token: Boolean(input.env.DROID_GITHUB_TOKEN), method: 'github_tarball' },
+      metadata: {
+        repo,
+        branch: baseBranch,
+        github_token: Boolean(input.env.DROID_GITHUB_TOKEN),
+        method: 'github_tarball',
+      },
     });
     const result = await sandbox.exec(`bash -lc ${quote(script)}`, {
       timeout: 180000,
@@ -753,18 +982,21 @@ async function hydrateWithGitClone(
   const branchArgs = input.branch ? ` --branch ${quote(input.branch)}` : '';
   const repoArg = gitAuth.cloneRepoArg ?? quote(input.repoUrl ?? '');
   const gitClone = `${gitAuth.prefix}git clone --depth 1${branchArgs} ${repoArg} ${quote(workspace)}`;
-  const result = await sandbox.exec([
-    `rm -rf ${quote(workspace)}`,
-    'code=1',
-    'for attempt in 1 2; do',
-    `  timeout 120s bash -lc ${quote(gitClone)}`,
-    '  code=$?',
-    '  [ "$code" -eq 0 ] && break',
-    '  echo "git clone attempt ${attempt} failed with exit ${code}" >&2',
-    '  sleep $((attempt * 3))',
-    'done',
-    '[ "$code" -eq 0 ] || exit "$code"',
-  ].join('\n'), { timeout: 150000 });
+  const result = await sandbox.exec(
+    [
+      `rm -rf ${quote(workspace)}`,
+      'code=1',
+      'for attempt in 1 2; do',
+      `  timeout 120s bash -lc ${quote(gitClone)}`,
+      '  code=$?',
+      '  [ "$code" -eq 0 ] && break',
+      '  echo "git clone attempt ${attempt} failed with exit ${code}" >&2',
+      '  sleep $((attempt * 3))',
+      'done',
+      '[ "$code" -eq 0 ] || exit "$code"',
+    ].join('\n'),
+    { timeout: 150000 }
+  );
   await input.recordEvent({
     type: 'command_finish',
     command: 'git clone',
@@ -785,18 +1017,27 @@ async function configureGitAuth(
     return { prefix: 'GIT_TERMINAL_PROMPT=0 ', githubToken: false };
   }
 
-  const authedRepoUrl = input.repoUrl.replace('https://github.com/', `https://x-access-token:${input.env.DROID_GITHUB_TOKEN}@github.com/`);
+  const authedRepoUrl = input.repoUrl.replace(
+    'https://github.com/',
+    `https://x-access-token:${input.env.DROID_GITHUB_TOKEN}@github.com/`
+  );
   await sandbox.writeFile('/tmp/droid-github-repo-url', authedRepoUrl);
   await sandbox.writeFile('/tmp/droid-github-token', input.env.DROID_GITHUB_TOKEN);
-  await sandbox.writeFile('/tmp/droid-git-askpass', [
-    '#!/bin/sh',
-    'case "$1" in',
-    '  *Username*) echo x-access-token ;;',
-    '  *Password*) cat /tmp/droid-github-token ;;',
-    '  *) echo "" ;;',
-    'esac',
-  ].join('\n'));
-  await sandbox.exec('chmod 700 /tmp/droid-git-askpass && chmod 600 /tmp/droid-github-token /tmp/droid-github-repo-url', { timeout: 30000 });
+  await sandbox.writeFile(
+    '/tmp/droid-git-askpass',
+    [
+      '#!/bin/sh',
+      'case "$1" in',
+      '  *Username*) echo x-access-token ;;',
+      '  *Password*) cat /tmp/droid-github-token ;;',
+      '  *) echo "" ;;',
+      'esac',
+    ].join('\n')
+  );
+  await sandbox.exec(
+    'chmod 700 /tmp/droid-git-askpass && chmod 600 /tmp/droid-github-token /tmp/droid-github-repo-url',
+    { timeout: 30000 }
+  );
   return {
     prefix: 'GIT_TERMINAL_PROMPT=0 GIT_ASKPASS=/tmp/droid-git-askpass ',
     githubToken: true,
@@ -816,7 +1057,11 @@ async function createDraftPullRequest(
       type: 'pr_skipped',
       source: 'github',
       message: 'DROID_GITHUB_TOKEN or GitHub repo metadata is not configured.',
-      metadata: { github_token: Boolean(input.env.DROID_GITHUB_TOKEN), repo_url: input.repoUrl ?? null, method: hydration.method },
+      metadata: {
+        github_token: Boolean(input.env.DROID_GITHUB_TOKEN),
+        repo_url: input.repoUrl ?? null,
+        method: hydration.method,
+      },
     });
     return false;
   }
@@ -825,14 +1070,16 @@ async function createDraftPullRequest(
   const baseBranch = input.prBaseBranch || hydration.baseBranch || input.branch || 'main';
   const branchName = `droid/${sanitizeBranchPart(input.runId).slice(0, 12)}`;
   const title = input.prTitle || `Droid run ${input.runId.slice(0, 8)}`;
-  const body = input.prBody || [
-    `Droid run: ${input.runId}`,
-    '',
-    'Captured changes:',
-    '```',
-    patch.stat.trim() || patch.status.trim() || 'No diff stat available.',
-    '```',
-  ].join('\n');
+  const body =
+    input.prBody ||
+    [
+      `Droid run: ${input.runId}`,
+      '',
+      'Captured changes:',
+      '```',
+      patch.stat.trim() || patch.status.trim() || 'No diff stat available.',
+      '```',
+    ].join('\n');
 
   await input.recordEvent({
     type: 'pr_start',
@@ -851,8 +1098,14 @@ async function createDraftPullRequest(
   try {
     const baseRef = hydration.baseSha
       ? { object: { sha: hydration.baseSha } }
-      : await githubRequest<{ object: { sha: string } }>(input, `/repos/${repo}/git/ref/heads/${encodePath(baseBranch)}`);
-    const baseCommit = await githubRequest<{ tree: { sha: string } }>(input, `/repos/${repo}/git/commits/${baseRef.object.sha}`);
+      : await githubRequest<{ object: { sha: string } }>(
+          input,
+          `/repos/${repo}/git/ref/heads/${encodePath(baseBranch)}`
+        );
+    const baseCommit = await githubRequest<{ tree: { sha: string } }>(
+      input,
+      `/repos/${repo}/git/commits/${baseRef.object.sha}`
+    );
     const tree = await collectChangedTree(input, sandbox, workspace, repo, baseCommit.tree.sha);
     if (tree.entryCount === 0) {
       await input.recordEvent({
@@ -879,16 +1132,20 @@ async function createDraftPullRequest(
         sha: commit.sha,
       }),
     });
-    const pr = await githubRequest<{ html_url: string; number: number }>(input, `/repos/${repo}/pulls`, {
-      method: 'POST',
-      body: JSON.stringify({
-        title,
-        body,
-        head: branchName,
-        base: baseBranch,
-        draft: true,
-      }),
-    });
+    const pr = await githubRequest<{ html_url: string; number: number }>(
+      input,
+      `/repos/${repo}/pulls`,
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          title,
+          body,
+          head: branchName,
+          base: baseBranch,
+          draft: true,
+        }),
+      }
+    );
 
     await input.recordEvent({
       type: 'pr_created',
@@ -910,7 +1167,13 @@ async function createDraftPullRequest(
       type: 'pull_request',
       name: 'GitHub draft PR',
       uri: pr.html_url,
-      metadata: { repo, base_branch: baseBranch, head_branch: branchName, title, pr_number: pr.number },
+      metadata: {
+        repo,
+        base_branch: baseBranch,
+        head_branch: branchName,
+        title,
+        pr_number: pr.number,
+      },
     });
     return true;
   } catch (error) {
@@ -946,13 +1209,22 @@ async function finalizeWorkspacePatch(
   if (!review.approved) {
     return {
       stdout: result.stdout,
-      stderr: appendTail(result.stderr, review.summary || 'Droid patch review rejected PR creation.'),
+      stderr: appendTail(
+        result.stderr,
+        review.summary || 'Droid patch review rejected PR creation.'
+      ),
       exitCode: result.success ? 78 : result.exitCode,
       success: false,
     };
   }
 
-  const prCreated = await createDraftPullRequestWithTimeout(input, sandbox, workspace, hydration, patch);
+  const prCreated = await createDraftPullRequestWithTimeout(
+    input,
+    sandbox,
+    workspace,
+    hydration,
+    patch
+  );
   if (!prCreated) {
     return {
       stdout: result.stdout,
@@ -1000,7 +1272,8 @@ async function reviewPatchForPr(
       source: 'git',
       command: 'git diff --check -- .',
       cwd: workspace,
-      message: 'Patch passed local review. DeepSeek review skipped because no API key is configured.',
+      message:
+        'Patch passed local review. DeepSeek review skipped because no API key is configured.',
       metadata: { patch_bytes: patch.patchBytes, review: 'local_only' },
     });
     return { approved: true, summary: 'Patch passed local review.' };
@@ -1045,7 +1318,7 @@ async function requestPatchReview(
       method: 'POST',
       signal: controller.signal,
       headers: {
-        'Authorization': `Bearer ${input.env.DROID_DEEPSEEK_API_KEY}`,
+        Authorization: `Bearer ${input.env.DROID_DEEPSEEK_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -1085,7 +1358,9 @@ async function requestPatchReview(
       const text = await response.text();
       throw new Error(`DeepSeek review API ${response.status}: ${text.slice(0, 500)}`);
     }
-    const payload = await response.json() as { choices?: Array<{ message?: { content?: string } }> };
+    const payload = (await response.json()) as {
+      choices?: Array<{ message?: { content?: string } }>;
+    };
     const content = payload.choices?.[0]?.message?.content;
     if (!content) throw new Error('DeepSeek review response did not include content.');
     const parsed = parseReviewJson(content);
@@ -1107,14 +1382,34 @@ async function requestPatchReview(
   }
 }
 
-function parseReviewJson(content: string): { approved: boolean; summary: string; concerns: string[] } {
-  const jsonText = content.trim().startsWith('{') ? content.trim() : content.match(/\{[\s\S]*\}/)?.[0];
-  if (!jsonText) return { approved: false, summary: 'Patch review returned non-JSON output.', concerns: [content.slice(0, 300)] };
-  const parsed = JSON.parse(jsonText) as { decision?: unknown; summary?: unknown; concerns?: unknown };
-  const concerns = Array.isArray(parsed.concerns) ? parsed.concerns.filter((item): item is string => typeof item === 'string') : [];
+function parseReviewJson(content: string): {
+  approved: boolean;
+  summary: string;
+  concerns: string[];
+} {
+  const jsonText = content.trim().startsWith('{')
+    ? content.trim()
+    : content.match(/\{[\s\S]*\}/)?.[0];
+  if (!jsonText)
+    return {
+      approved: false,
+      summary: 'Patch review returned non-JSON output.',
+      concerns: [content.slice(0, 300)],
+    };
+  const parsed = JSON.parse(jsonText) as {
+    decision?: unknown;
+    summary?: unknown;
+    concerns?: unknown;
+  };
+  const concerns = Array.isArray(parsed.concerns)
+    ? parsed.concerns.filter((item): item is string => typeof item === 'string')
+    : [];
   return {
     approved: parsed.decision === 'approve',
-    summary: typeof parsed.summary === 'string' ? parsed.summary : String(parsed.decision ?? 'No review summary.'),
+    summary:
+      typeof parsed.summary === 'string'
+        ? parsed.summary
+        : String(parsed.decision ?? 'No review summary.'),
     concerns,
   };
 }
@@ -1125,7 +1420,8 @@ async function resolveHydrationForExistingWorkspace(
   workspace: string
 ): Promise<RepoHydration> {
   const repo = parseGitHubRepo(input.repoUrl ?? '');
-  const branch = input.prBaseBranch || input.branch || await currentGitBranch(sandbox, workspace) || 'main';
+  const branch =
+    input.prBaseBranch || input.branch || (await currentGitBranch(sandbox, workspace)) || 'main';
   if (!repo) return { method: 'git_clone', baseBranch: branch };
   return { method: 'github_tarball', repo, baseBranch: branch };
 }
@@ -1190,14 +1486,22 @@ async function collectChangedTree(
   repo: string,
   baseTreeSha: string
 ): Promise<{ sha: string; entryCount: number }> {
-  const changed = await sandbox.exec(`git -C ${quote(workspace)} diff --name-only --diff-filter=ACMRT HEAD -- .`, { timeout: 30000 });
-  const deleted = await sandbox.exec(`git -C ${quote(workspace)} diff --name-only --diff-filter=D HEAD -- .`, { timeout: 30000 });
+  const changed = await sandbox.exec(
+    `git -C ${quote(workspace)} diff --name-only --diff-filter=ACMRT HEAD -- .`,
+    { timeout: 30000 }
+  );
+  const deleted = await sandbox.exec(
+    `git -C ${quote(workspace)} diff --name-only --diff-filter=D HEAD -- .`,
+    { timeout: 30000 }
+  );
   const changedPaths = uniqueLines(changed.stdout);
   const deletedPaths = uniqueLines(deleted.stdout);
   const entries: Array<{ path: string; mode: '100644'; type: 'blob'; sha: string | null }> = [];
 
   for (const path of changedPaths) {
-    const content = await sandbox.exec(`base64 -w0 ${quote(`${workspace}/${path}`)}`, { timeout: 30000 });
+    const content = await sandbox.exec(`base64 -w0 ${quote(`${workspace}/${path}`)}`, {
+      timeout: 30000,
+    });
     if (!content.success) continue;
     const blob = await githubRequest<{ sha: string }>(input, `/repos/${repo}/git/blobs`, {
       method: 'POST',
@@ -1241,8 +1545,8 @@ async function githubRequest<T>(
       ...init,
       signal: controller.signal,
       headers: {
-        'Accept': 'application/vnd.github+json',
-        'Authorization': `Bearer ${input.env.DROID_GITHUB_TOKEN}`,
+        Accept: 'application/vnd.github+json',
+        Authorization: `Bearer ${input.env.DROID_GITHUB_TOKEN}`,
         'Content-Type': 'application/json',
         'User-Agent': 'saas-maker-droid',
         'X-GitHub-Api-Version': '2022-11-28',
@@ -1265,7 +1569,14 @@ async function githubRequest<T>(
 }
 
 function uniqueLines(value: string): string[] {
-  return Array.from(new Set(value.split('\n').map((line) => line.trim()).filter(Boolean)));
+  return Array.from(
+    new Set(
+      value
+        .split('\n')
+        .map((line) => line.trim())
+        .filter(Boolean)
+    )
+  );
 }
 
 function encodePath(value: string): string {
@@ -1273,7 +1584,12 @@ function encodePath(value: string): string {
 }
 
 function sanitizeBranchPart(value: string): string {
-  return value.toLowerCase().replace(/[^a-z0-9._/-]+/g, '-').replace(/^[-/.]+|[-/.]+$/g, '') || 'run';
+  return (
+    value
+      .toLowerCase()
+      .replace(/[^a-z0-9._/-]+/g, '-')
+      .replace(/^[-/.]+|[-/.]+$/g, '') || 'run'
+  );
 }
 
 async function sandboxExecWithWorkerTimeout(
@@ -1289,12 +1605,16 @@ async function sandboxExecWithWorkerTimeout(
     return await Promise.race([
       execPromise,
       new Promise<CommandResult>((resolve) => {
-        timeout = setTimeout(() => resolve({
-          stdout: '',
-          stderr: `Sandbox exec Worker watchdog timed out after ${timeoutMs}ms.`,
-          exitCode: 124,
-          success: false,
-        }), timeoutMs);
+        timeout = setTimeout(
+          () =>
+            resolve({
+              stdout: '',
+              stderr: `Sandbox exec Worker watchdog timed out after ${timeoutMs}ms.`,
+              exitCode: 124,
+              success: false,
+            }),
+          timeoutMs
+        );
       }),
     ]);
   } finally {
@@ -1337,15 +1657,30 @@ function summarizeNativeAction(action: NativeAgentAction): string {
   if (action.action === 'read') return `read ${action.path}`;
   if (action.action === 'write') return `write ${action.path}`;
   if (action.action === 'command') return `command ${action.command}`;
+  if (action.action === 'block') return `block ${action.reason.slice(0, 120)}`;
   return `final ${action.summary.slice(0, 120)}`;
 }
 
 function scrubNativeAction(action: NativeAgentAction, turn: number): Record<string, unknown> {
   if (action.action === 'write') {
-    return { turn, action: action.action, path: action.path, bytes: new TextEncoder().encode(action.content).length };
+    return {
+      turn,
+      action: action.action,
+      path: action.path,
+      bytes: new TextEncoder().encode(action.content).length,
+    };
   }
   if (action.action === 'final') {
     return { turn, action: action.action, summary: action.summary.slice(0, 500) };
+  }
+  if (action.action === 'block') {
+    return {
+      turn,
+      action: action.action,
+      reason: action.reason.slice(0, 500),
+      question: action.question.slice(0, 500),
+      summary: action.summary?.slice(0, 500) ?? null,
+    };
   }
   return { turn, ...action };
 }
@@ -1365,7 +1700,10 @@ function quote(value: string): string {
 
 function resolveWorkspaceCwd(workspace: string, cwd: string | undefined): string {
   if (!cwd || cwd === '.') return workspace;
-  const normalized = cwd.replace(/^\/+/, '').split('/').filter((part) => part && part !== '.');
+  const normalized = cwd
+    .replace(/^\/+/, '')
+    .split('/')
+    .filter((part) => part && part !== '.');
   if (normalized.includes('..')) return workspace;
   return `${workspace}/${normalized.join('/')}`;
 }

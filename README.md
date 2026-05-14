@@ -1,78 +1,74 @@
-# Foundry ⚒️
+# SaaS Maker
 
-**The Industrial Software Factory for Project Fleets.**
+SaaS Maker is a TypeScript monorepo for building and operating small SaaS products across a project fleet. It includes a Cloudflare Workers API, a Next.js cockpit, embeddable widgets, shared backend blocks, documentation, and an experimental autonomous runner called Droid.
 
-Foundry is a high-leverage engineering system designed for developers and AI agents to manage multiple JavaScript/TypeScript projects at scale. It moves beyond "Tooling" into "Industrialization," providing a standardized factory floor, automated assembly lines, and a registry of operational protocols (Skills) for autonomous fleet management.
+The repo is public, but parts of the deployment are still personal/internal. Treat this as an active product workspace rather than a polished framework release.
 
----
+## What Is Inside
 
-## 🏛️ The Five Pillars
+- `workers/api` - Hono API on Cloudflare Workers with D1 and Drizzle.
+- `workers/droid` - Experimental Cloudflare Sandbox runner for task execution and PR creation.
+- `apps/cockpit` - Next.js dashboard for projects, tasks, fleet state, and Droid runs.
+- `apps/docs` - Astro/Starlight docs site.
+- `apps/showcase` - Widget and product showcase.
+- `packages/cli` - `fnd` CLI backed by the generated OpenAPI spec.
+- `packages/blocks` - Shared backend and operational packages.
+- `packages/widgets` - Embeddable feedback, changelog, progress, testimonials, waitlist, and badge widgets.
+- `packages/tooling` - Shared TypeScript, ESLint, Prettier, test, Renovate, and Tailwind config.
 
-### 1. The Standard (Tooling)
-Standardize your entire fleet with versioned, shared configurations.
-*   **`@saas-maker/eslint-config`**: Unified rules for Next.js, Vite, and Node.
-*   **`@saas-maker/tsconfig`**: Strict, optimized TypeScript bases.
+## Current Status
 
-### 2. The Blocks (Shared Logic)
-Headless capabilities that every project needs, optimized for Edge and Node.
-*   **`@saas-maker/ops`**: Unified error handling and tracing.
-*   **`@saas-maker/db`**: Environment-aware SQLite factory (D1/Turso).
+- API, cockpit, docs, widgets, and CLI are actively developed.
+- Droid v1 can run sandboxed tasks and create draft PRs, but it is still experimental.
+- Public docs are being cleaned up as the repository becomes more open-source friendly.
 
-### 3. The Commander (CLI)
-Automate your assembly line.
-*   `fnd fleet run`: Parallel command execution across 22+ repos.
-*   `fnd fleet audit`: Deep health checks (dead code, drift, debt).
-*   `fnd fleet fix`: Automated correction of fleet-wide issues.
+## Quick Start
 
-### 4. The Forge (Scaffolding)
-Blueprint-based project creation.
-*   `fnd forge`: Start "Foundry Compliant" projects in 5 seconds.
-*   **Agent-Native**: Every project is born with an `AGENTS.md` foreman.
+```bash
+pnpm install
+pnpm test
+pnpm typecheck
+```
 
-### 5. The Registry (Agent Skills)
-The brain of the factory.
-*   **`skills/`**: Standardized Markdown protocols that teach AI agents how to migrate, debug, and expand the fleet autonomously.
+Run the main apps locally:
 
----
+```bash
+pnpm dev:api
+pnpm dev:cockpit
+pnpm dev:cockpit:local
+```
 
-## 🚀 Quick Start
+Useful checks:
 
-1. **Install the CLI**:
-   ```bash
-   pnpm add -g @saas-maker/cli
-   ```
+```bash
+pnpm lint
+pnpm smoke
+pnpm check:openapi
+```
 
-2. **Forge a Project**:
-   ```bash
-   fnd forge --name my-new-app --type next
-   ```
+Some commands require Cloudflare, GitHub, or SaaS Maker production credentials. Do not commit secrets or local environment files.
 
-3. **Link the Agent Hook**:
-   Connect your global agent harness (e.g. Claude Code) to the Foundry Factory.
-   ```bash
-   # Add this to your shell profile or .claude/hooks
-   source ./scripts/foundry-agent-hook.sh
-   ```
+## API And CLI
 
-4. **Audit the Fleet**:
-   ```bash
-   fnd fleet audit
-   ```
+SaaS Maker is API-first. When API routes change, regenerate and check the OpenAPI artifacts:
 
----
+```bash
+pnpm generate:openapi
+pnpm check:openapi
+```
 
-## 📂 Repository Structure
+The CLI validates commands against the generated OpenAPI spec. Prefer `fnd api` and generated SDK flows over one-off scripts for product features.
 
-*   `packages/tooling/`: Gold Standard configurations.
-*   `packages/blocks/`: Operational Layer logic.
-*   `packages/widgets/`: Modular UI blocks.
-*   `skills/`: Agentic Operational Protocols.
-*   `apps/cockpit/`: The Mission Control Dashboard (Next.js).
-*   `apps/docs/`: The Factory Manual (Astro Starlight).
-*   `apps/showcase/`: The Production Landing Page & Widget Showcase (Next.js).
+## Droid
 
----
+Droid is the autonomous task runner for SaaS Maker. It starts a Cloudflare Sandbox, hydrates a repo, runs a command or agent, captures logs and patches, and can raise a draft PR.
 
-## ⚖️ License
+See [docs/droid-roadmap.md](docs/droid-roadmap.md) for what is next before Droid should be treated as a hands-off production employee.
 
-Open source under the MIT License.
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). For security issues, use [SECURITY.md](SECURITY.md) instead of opening a public issue.
+
+## License
+
+MIT. See [LICENSE](LICENSE).

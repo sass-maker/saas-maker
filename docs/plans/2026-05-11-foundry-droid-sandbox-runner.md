@@ -135,10 +135,29 @@ These belong mostly in V2, after V0 proves execution and V1 makes the runner usa
 - **Blueprints:** workflow steps in code. Deterministic steps run git, lint, tests, CI, PR/deploy; agent steps handle ambiguous code changes.
 - **Tool registry:** SaaS Maker MCP/API tools for tasks, docs, project metadata, GitHub, CI, deploys, and logs. Expose only the tools needed for the task.
 - **Context preflight:** hydrate the prompt with task comments, linked docs, project metadata, `AGENTS.md`, recent failures, and relevant files before the agent starts.
+- **Task feedback loop:** let Droid post concise task comments and set `blocked_on_user` when it needs a decision, credential, review, or deploy approval.
 - **Fast local checks:** run the smallest lint/type/test checks before CI.
 - **Retry budget:** cap automated CI/test repair loops, then return to the user with a clear failure summary.
 - **Scoped rules:** apply repo/subdirectory-specific guidance, not one giant global prompt.
 - **Review gate:** PRs are human-reviewed by default; deploys require task-level permission.
+
+## Sandcastle Reference
+
+[Sandcastle](https://github.com/mattpocock/sandcastle) is relevant because it treats coding agents as orchestrated jobs with provider contracts, branch strategies, lifecycle hooks, completion signals, idle timeouts, and structured output.
+
+Borrow these ideas:
+
+- **Provider contracts:** separate agent providers from sandbox providers. Droid should eventually support native DeepSeek, OpenCode, Codebuff, Codex, Claude Code, local Mac runners, and Cloudflare Sandbox through the same runner contract.
+- **Streaming requirement:** every provider must emit line-by-line output or heartbeat events. This is the key fix for stuck headless CLIs.
+- **Named branches:** every PR-capable run should work on an explicit `droid/<run>` branch, not a vague working tree.
+- **Reusable phases:** implement, review, and fix can run in the same sandbox before PR creation.
+- **Lifecycle hooks:** setup, dependency install, and context hydration should be first-class steps, not hidden inside the prompt.
+- **Prompt templates:** task prompts should support safe variables such as source branch, target branch, task id, project slug, and acceptance criteria.
+- **Completion signal:** teach agents to emit an explicit done marker or structured final payload so the runner can stop early.
+- **Structured output:** require final JSON with summary, files changed, checks run, risks, and recommended next action.
+- **Cleanup policy:** preserve dirty workspaces after failure; destroy clean successful sandboxes.
+
+Do not adopt Sandcastle wholesale yet. Droid already has Cloudflare-specific queueing, audit events, PR creation, and task integration. The useful path is to steal the orchestration contracts and add a Cloudflare Sandbox provider later only if it reduces custom code.
 
 ## Version Split
 
