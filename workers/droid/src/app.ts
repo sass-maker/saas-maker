@@ -24,6 +24,7 @@ import type {
   RunExecutionInput,
   RunExecutor,
   RunMode,
+  RunProvider,
   RunRequest,
 } from './types';
 
@@ -594,7 +595,7 @@ async function executeRun(
     command: string;
     mode: RunMode;
     prompt?: string;
-    provider?: 'deepseek';
+    provider?: RunProvider;
     maxTurns?: number;
     timeoutSeconds: number;
     createPr: boolean;

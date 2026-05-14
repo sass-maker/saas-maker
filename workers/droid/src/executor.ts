@@ -1,6 +1,8 @@
 import { getSandbox } from '@cloudflare/sandbox';
 import type { CommandResult, RunExecutor } from './types';
 import { captureGitPatch } from './patch';
+import { buildFinalReport, collectPrGateEvidence, type PrGateEvidence } from './pr-gate';
+import { providerContractEvent, resolveProviderContract } from './provider';
 
 type GitAuth = {
   prefix: string;
@@ -13,6 +15,11 @@ type RepoHydration = {
   repo?: string;
   baseBranch?: string;
   baseSha?: string;
+};
+
+type PrCreationResult = {
+  created: boolean;
+  url?: string;
 };
 
 type NativeAgentAction =
@@ -44,6 +51,7 @@ export const sandboxExecutor: RunExecutor = {
     let hydration: RepoHydration = { method: 'empty' };
 
     await input.recordEvent({ type: 'sandbox_start', message: `Using sandbox ${input.sandboxId}` });
+    await input.recordEvent(providerContractEvent(resolveProviderContract(input)));
     const ready = await prepareSandboxWorkspace(input, sandbox, '/workspace/.droid-ready');
     if (!ready.success) {
       await input.recordEvent({
@@ -1051,7 +1059,7 @@ async function createDraftPullRequest(
   workspace: string,
   hydration: RepoHydration,
   patch: { patchBytes: number; status: string; stat: string }
-): Promise<boolean> {
+): Promise<PrCreationResult> {
   if (!input.env.DROID_GITHUB_TOKEN || !hydration.repo) {
     await input.recordEvent({
       type: 'pr_skipped',
@@ -1063,7 +1071,7 @@ async function createDraftPullRequest(
         method: hydration.method,
       },
     });
-    return false;
+    return { created: false };
   }
 
   const repo = hydration.repo;
@@ -1114,7 +1122,7 @@ async function createDraftPullRequest(
         message: 'No changed files were found for PR creation.',
         metadata: { repo, base_branch: baseBranch, head_branch: branchName },
       });
-      return false;
+      return { created: false };
     }
 
     const commit = await githubRequest<{ sha: string }>(input, `/repos/${repo}/git/commits`, {
@@ -1175,7 +1183,7 @@ async function createDraftPullRequest(
         pr_number: pr.number,
       },
     });
-    return true;
+    return { created: true, url: pr.html_url };
   } catch (error) {
     await input.recordEvent({
       type: 'pr_failed',
@@ -1191,7 +1199,7 @@ async function createDraftPullRequest(
         title,
       },
     });
-    return false;
+    return { created: false };
   }
 }
 
@@ -1203,10 +1211,61 @@ async function finalizeWorkspacePatch(
   result: CommandResult
 ): Promise<CommandResult> {
   const patch = await captureGitPatch(input, sandbox, workspace, result);
-  if (!patch.changed || !input.createPr) return result;
+  const evidence = collectPrGateEvidence(patch);
 
-  const review = await reviewPatchForPr(input, sandbox, workspace, patch);
+  if (!input.createPr) {
+    await recordStructuredFinal(input, result, evidence, null);
+    return result;
+  }
+
+  await input.recordEvent({
+    type: 'pr_gate_start',
+    actor: 'reviewer',
+    source: 'worker',
+    command: 'Droid PR gate',
+    cwd: workspace,
+    message: 'Checking whether Droid has enough evidence to open a draft PR.',
+    metadata: {
+      patch_changed: patch.changed,
+      patch_bytes: patch.patchBytes,
+      files_changed: evidence.filesChanged,
+      checks_run: evidence.checkCommands,
+    },
+  });
+
+  if (!patch.changed || !evidence.meaningful) {
+    const summary = patch.changed
+      ? 'Droid captured a patch, but it did not include a meaningful changed-file summary.'
+      : 'Droid did not produce repository changes, so no pull request was created.';
+    await input.recordEvent({
+      type: 'pr_gate_failed',
+      actor: 'reviewer',
+      source: 'worker',
+      command: 'Droid PR gate',
+      cwd: workspace,
+      exit_code: 78,
+      message: summary,
+      metadata: {
+        patch_changed: patch.changed,
+        patch_bytes: patch.patchBytes,
+        files_changed: evidence.filesChanged,
+      },
+    });
+    await recordStructuredFinal(input, result, evidence, null, { summary, risks: [summary] });
+    return {
+      stdout: result.stdout,
+      stderr: appendTail(result.stderr, summary),
+      exitCode: result.success ? 78 : result.exitCode,
+      success: false,
+    };
+  }
+
+  const review = await reviewPatchForPr(input, sandbox, workspace, patch, evidence);
   if (!review.approved) {
+    await recordStructuredFinal(input, result, evidence, null, {
+      summary: review.summary || 'Droid patch review rejected PR creation.',
+      risks: review.summary ? [review.summary] : [],
+    });
     return {
       stdout: result.stdout,
       stderr: appendTail(
@@ -1218,29 +1277,77 @@ async function finalizeWorkspacePatch(
     };
   }
 
-  const prCreated = await createDraftPullRequestWithTimeout(
+  const pr = await createDraftPullRequestWithTimeout(
     input,
     sandbox,
     workspace,
     hydration,
     patch
   );
-  if (!prCreated) {
+  if (!pr.created) {
+    const summary = 'Droid could not create the requested pull request.';
+    await recordStructuredFinal(input, result, evidence, null, { summary, risks: [summary] });
     return {
       stdout: result.stdout,
-      stderr: appendTail(result.stderr, 'Droid could not create the requested pull request.'),
+      stderr: appendTail(result.stderr, summary),
       exitCode: result.success ? 78 : result.exitCode,
       success: false,
     };
   }
+
+  await input.recordEvent({
+    type: 'pr_gate_passed',
+    actor: 'reviewer',
+    source: 'worker',
+    command: 'Droid PR gate',
+    cwd: workspace,
+    message: 'Droid PR gate passed and a draft PR was created.',
+    metadata: {
+      patch_bytes: patch.patchBytes,
+      files_changed: evidence.filesChanged,
+      checks_run: evidence.checkCommands,
+      pr_url: pr.url ?? null,
+    },
+  });
+  await recordStructuredFinal(input, result, evidence, pr.url ?? null);
   return result;
+}
+
+async function recordStructuredFinal(
+  input: Parameters<RunExecutor['execute']>[0],
+  result: CommandResult,
+  evidence: PrGateEvidence,
+  prUrl: string | null,
+  override: { summary?: string; blockers?: string[]; risks?: string[] } = {}
+): Promise<void> {
+  const summary =
+    override.summary ??
+    (result.success
+      ? `Droid run completed with exit code ${result.exitCode}.`
+      : `Droid run failed with exit code ${result.exitCode}.`);
+  await input.recordEvent({
+    type: 'final_output',
+    actor: 'droid',
+    source: 'worker',
+    message: summary,
+    exit_code: result.exitCode,
+    metadata: buildFinalReport({
+      summary,
+      filesChanged: evidence.filesChanged,
+      checksRun: evidence.checkCommands,
+      prUrl,
+      blockers: override.blockers,
+      risks: override.risks,
+    }),
+  });
 }
 
 async function reviewPatchForPr(
   input: Parameters<RunExecutor['execute']>[0],
   sandbox: Awaited<ReturnType<typeof getSandbox>>,
   workspace: string,
-  patch: { patchBytes: number; status: string; stat: string }
+  patch: { patchBytes: number; status: string; stat: string },
+  evidence: PrGateEvidence
 ): Promise<{ approved: boolean; summary: string }> {
   const diffCheck = await sandboxExecWithWorkerTimeout(
     sandbox,
@@ -1260,7 +1367,7 @@ async function reviewPatchForPr(
       stdout: diffCheck.stdout,
       stderr: diffCheck.stderr,
       message: summary,
-      metadata: { patch_bytes: patch.patchBytes },
+      metadata: { patch_bytes: patch.patchBytes, files_changed: evidence.filesChanged },
     });
     return { approved: false, summary };
   }
@@ -1274,7 +1381,11 @@ async function reviewPatchForPr(
       cwd: workspace,
       message:
         'Patch passed local review. DeepSeek review skipped because no API key is configured.',
-      metadata: { patch_bytes: patch.patchBytes, review: 'local_only' },
+      metadata: {
+        patch_bytes: patch.patchBytes,
+        files_changed: evidence.filesChanged,
+        review: 'local_only',
+      },
     });
     return { approved: true, summary: 'Patch passed local review.' };
   }
@@ -1300,6 +1411,7 @@ async function reviewPatchForPr(
     message: review.summary,
     metadata: {
       patch_bytes: patch.patchBytes,
+      files_changed: evidence.filesChanged,
       approved: review.approved,
       concerns: review.concerns,
     },
@@ -1445,14 +1557,14 @@ async function createDraftPullRequestWithTimeout(
   workspace: string,
   hydration: RepoHydration,
   patch: { patchBytes: number; status: string; stat: string }
-): Promise<boolean> {
+): Promise<PrCreationResult> {
   const timeoutMs = 60000;
   let timedOut = false;
   const prPromise = createDraftPullRequest(input, sandbox, workspace, hydration, patch);
-  const timeoutPromise = new Promise<false>((resolve) => {
+  const timeoutPromise = new Promise<PrCreationResult>((resolve) => {
     setTimeout(() => {
       timedOut = true;
-      resolve(false);
+      resolve({ created: false });
     }, timeoutMs);
   });
   const result = await Promise.race([prPromise, timeoutPromise]);
@@ -1471,7 +1583,7 @@ async function createDraftPullRequestWithTimeout(
       timeout_ms: timeoutMs,
     },
   });
-  return false;
+  return { created: false };
 }
 
 function parseGitHubRepo(repoUrl: string): string | null {
