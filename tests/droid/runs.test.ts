@@ -62,6 +62,107 @@ describe('droid runs', () => {
     await expect(response.json()).resolves.toEqual({ error: 'prompt is required' });
   });
 
+  it('validates acceptance settings before creating a ticket run', async () => {
+    const app = createApp(fakeExecutor());
+    const env = createEnv();
+    const headers = {
+      Authorization: 'Bearer test-token',
+      'Content-Type': 'application/json',
+    };
+
+    const badCommand = await app.request(
+      '/v0/runs',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          task_id: 'ticket-bad-acceptance-command',
+          command: 'echo ok',
+          acceptance_command: 123,
+        }),
+        headers,
+      },
+      env
+    );
+    expect(badCommand.status).toBe(400);
+    await expect(badCommand.json()).resolves.toEqual({
+      error: 'acceptance_command must be a string',
+    });
+
+    const badTimeout = await app.request(
+      '/v0/runs',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          task_id: 'ticket-bad-acceptance-timeout',
+          command: 'echo ok',
+          acceptance_command: 'pnpm test',
+          acceptance_timeout_seconds: 12.5,
+        }),
+        headers,
+      },
+      env
+    );
+    expect(badTimeout.status).toBe(400);
+    await expect(badTimeout.json()).resolves.toEqual({
+      error: 'acceptance_timeout_seconds must be between 30 and 900',
+    });
+    expect((env.DB as unknown as FakeD1).runs.size).toBe(0);
+  });
+
+  it('clamps ticket acceptance timeout settings into the supported range', async () => {
+    const seen: Array<{ taskId?: string; acceptanceTimeoutSeconds?: number }> = [];
+    const app = createApp({
+      async execute(input) {
+        seen.push({
+          taskId: input.taskId,
+          acceptanceTimeoutSeconds: input.acceptanceTimeoutSeconds,
+        });
+        return { stdout: 'ok\n', stderr: '', exitCode: 0, success: true };
+      },
+    });
+    const env = createEnv();
+    const headers = {
+      Authorization: 'Bearer test-token',
+      'Content-Type': 'application/json',
+    };
+
+    await app.request(
+      '/v0/runs',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          task_id: 'ticket-low-timeout',
+          command: 'echo ok',
+          acceptance_command: 'pnpm test',
+          acceptance_timeout_seconds: 5,
+          wait_for_completion: true,
+        }),
+        headers,
+      },
+      env
+    );
+    await app.request(
+      '/v0/runs',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          task_id: 'ticket-high-timeout',
+          command: 'echo ok',
+          acceptance_command: 'pnpm test',
+          acceptance_timeout_seconds: 1200,
+          wait_for_completion: true,
+        }),
+        headers,
+      },
+      env
+    );
+
+    expect(seen).toEqual([
+      { taskId: 'ticket-low-timeout', acceptanceTimeoutSeconds: 30 },
+      { taskId: 'ticket-high-timeout', acceptanceTimeoutSeconds: 900 },
+    ]);
+  });
+
   it('fails native runs before creating a run when DeepSeek is not configured', async () => {
     const app = createApp(fakeExecutor());
     const env = createEnv({ DROID_DEEPSEEK_API_KEY: undefined });
@@ -565,9 +666,11 @@ describe('droid runs', () => {
   it('auto-dequeues a queued same-repo run after the active run finishes', async () => {
     let releaseFirst: (() => void) | undefined;
     const executeCommands: string[] = [];
+    const acceptanceCommands: Array<string | undefined> = [];
     const app = createApp({
       async execute(input) {
         executeCommands.push(input.command);
+        acceptanceCommands.push(input.acceptanceCommand);
         if (input.command === 'first') {
           await new Promise<void>((resolve) => {
             releaseFirst = resolve;
@@ -603,9 +706,11 @@ describe('droid runs', () => {
       {
         method: 'POST',
         body: JSON.stringify({
+          task_id: 'ticket-queued-acceptance',
           project_slug: 'saas-maker',
           repo_url: 'https://github.com/example/repo.git',
           command: 'second',
+          acceptance_command: 'pnpm test -- ticket-queued-acceptance',
         }),
         headers,
       },
@@ -633,6 +738,7 @@ describe('droid runs', () => {
     expect(dequeuedPayload.data.status).toBe('completed');
     expect(dequeuedPayload.data.exit_code).toBe(0);
     expect(executeCommands).toEqual(['first', 'second']);
+    expect(acceptanceCommands).toEqual([undefined, 'pnpm test -- ticket-queued-acceptance']);
 
     const eventsResponse = await app.request(
       `/v0/runs/${queuedPayload.data.id}/events`,

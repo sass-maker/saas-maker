@@ -48,6 +48,34 @@ describe('droid acceptance command', () => {
     expect(result.summary).toBe('Acceptance command failed with exit code 1.');
     expect(events.map((event) => event.type)).toEqual(['acceptance_start', 'acceptance_failed']);
   });
+
+  it('clamps acceptance command timeouts to the worker limits', async () => {
+    const events: RunEventInput[] = [];
+    const artifacts: RunArtifactInput[] = [];
+    const exec = vi.fn(async () => ({ stdout: 'ok\n', stderr: '', exitCode: 0, success: true }));
+
+    await runAcceptanceCommand(
+      createInput(events, artifacts),
+      { exec },
+      '/workspace/repo',
+      'echo lower',
+      5
+    );
+    await runAcceptanceCommand(
+      createInput(events, artifacts),
+      { exec },
+      '/workspace/repo',
+      'echo upper',
+      1200
+    );
+
+    expect(exec).toHaveBeenNthCalledWith(1, "cd '/workspace/repo' && echo lower", {
+      timeout: 30000,
+    });
+    expect(exec).toHaveBeenNthCalledWith(2, "cd '/workspace/repo' && echo upper", {
+      timeout: 900000,
+    });
+  });
 });
 
 function createInput(
