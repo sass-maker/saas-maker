@@ -271,6 +271,45 @@ describe('droid runs', () => {
     });
   });
 
+  it('mirrors run events into the live run room when configured', async () => {
+    const rooms = new FakeRunRoomNamespace();
+    const app = createApp(fakeExecutor());
+    const env = createEnv({ DROID_RUN_ROOMS: rooms as unknown as DurableObjectNamespace });
+
+    const response = await app.request(
+      '/v0/runs',
+      {
+        method: 'POST',
+        body: JSON.stringify({ command: 'echo ok', wait_for_completion: true }),
+        headers: {
+          Authorization: 'Bearer test-token',
+          'Content-Type': 'application/json',
+        },
+      },
+      env
+    );
+    const payload = (await response.json()) as { data: { id: string } };
+
+    const statusResponse = await app.request(
+      `/v0/runs/${payload.data.id}/live-status`,
+      {
+        headers: { Authorization: 'Bearer test-token' },
+      },
+      env
+    );
+
+    expect(statusResponse.status).toBe(200);
+    await expect(statusResponse.json()).resolves.toMatchObject({
+      data: {
+        run_id: payload.data.id,
+        event_count: 5,
+        recent_events: expect.arrayContaining([
+          expect.objectContaining({ type: 'command_finish' }),
+        ]),
+      },
+    });
+  });
+
   it('lists recent runs by task id', async () => {
     const app = createApp(fakeExecutor());
     const env = createEnv();
@@ -509,7 +548,9 @@ describe('droid runs', () => {
 
     releaseFirst();
     await firstResponsePromise;
-    for (let i = 0; i < 5 && executeCommands.length < 2; i += 1) await Promise.resolve();
+    for (let i = 0; i < 25 && executeCommands.length < 2; i += 1) {
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    }
 
     const dequeuedResponse = await app.request(
       `/v0/runs/${queuedPayload.data.id}`,
@@ -733,6 +774,45 @@ class FakeD1 {
 
   prepare(sql: string) {
     return new FakeStatement(this, sql);
+  }
+}
+
+class FakeRunRoomNamespace {
+  private rooms = new Map<string, FakeRunRoom>();
+
+  getByName(name: string) {
+    let room = this.rooms.get(name);
+    if (!room) {
+      room = new FakeRunRoom(name);
+      this.rooms.set(name, room);
+    }
+    return room;
+  }
+}
+
+class FakeRunRoom {
+  private events: Array<Record<string, unknown>> = [];
+
+  constructor(private runId: string) {}
+
+  async recordEvent(input: { runId: string; event: { type: string } & Record<string, unknown> }) {
+    const event = {
+      id: `event-${this.events.length}`,
+      run_id: input.runId,
+      ...input.event,
+      created_at: `2026-05-11T00:00:0${this.events.length}.000Z`,
+    };
+    this.events.push(event);
+    return event;
+  }
+
+  async getStatus() {
+    return {
+      run_id: this.runId,
+      last_event_at: this.events.at(-1)?.created_at ?? null,
+      event_count: this.events.length,
+      recent_events: this.events,
+    };
   }
 }
 
