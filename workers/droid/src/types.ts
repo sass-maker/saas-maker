@@ -14,10 +14,11 @@ export interface Env {
 }
 
 export type RunMode = 'command' | 'native';
+export type RunProvider = 'deepseek';
 
 export interface RunRequest {
   mode?: RunMode;
-  provider?: 'deepseek';
+  provider?: RunProvider;
   task_id?: string;
   project_slug?: string;
   repo_url?: string;
@@ -106,7 +107,7 @@ export interface RunExecutionInput {
   command: string;
   mode: RunMode;
   prompt?: string;
-  provider?: 'deepseek';
+  provider?: RunProvider;
   maxTurns?: number;
   timeoutSeconds: number;
   createPr: boolean;
