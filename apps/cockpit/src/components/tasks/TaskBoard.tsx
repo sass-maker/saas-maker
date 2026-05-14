@@ -190,6 +190,14 @@ const ALL_PROJECTS = '__all__';
 const UNASSIGNED_PROJECT = '__unassigned__';
 const ALL_PRIORITIES = '__all__';
 
+const DEFAULT_ACCEPTANCE_BY_PROJECT: Record<string, string[]> = {
+  'saas-maker': [
+    'pnpm --filter ./apps/cockpit typecheck',
+    'pnpm vitest run tests/droid/runs.test.ts',
+    'pnpm test',
+  ],
+};
+
 function sortTasksByPriority(tasks: TaskRow[]) {
   return [...tasks].sort((a, b) => {
     const priorityDiff = PRIORITY_RANK[a.priority] - PRIORITY_RANK[b.priority];
@@ -200,6 +208,31 @@ function sortTasksByPriority(tasks: TaskRow[]) {
 
 function taskPreview(description: string | null) {
   return description?.split(/\s+Source:\s+/)[0]?.trim() ?? '';
+}
+
+function buildDroidAcceptanceSuggestions(task: TaskRow): { explicit?: string; suggestions: string[] } {
+  const explicit = extractAcceptanceCommand(task.description);
+  const projectCommands = task.project_slug ? DEFAULT_ACCEPTANCE_BY_PROJECT[task.project_slug] ?? [] : [];
+  const suggestions = uniqueStrings([
+    explicit,
+    ...projectCommands,
+    'pnpm test',
+    'pnpm typecheck',
+  ]).slice(0, 4);
+
+  return { explicit, suggestions };
+}
+
+function extractAcceptanceCommand(description: string | null): string | undefined {
+  if (!description) return undefined;
+  const fenced = description.match(/Acceptance command:\s*`([^`]+)`/i)?.[1]?.trim();
+  if (fenced) return fenced;
+  const line = description.match(/Acceptance command:\s*([^\n]+)/i)?.[1]?.trim();
+  return line || undefined;
+}
+
+function uniqueStrings(values: Array<string | undefined>) {
+  return Array.from(new Set(values.map(value => value?.trim()).filter((value): value is string => Boolean(value))));
 }
 
 function formatRunTime(value: string) {
@@ -243,6 +276,7 @@ export function TaskBoard({
   const [droidMaxTurns, setDroidMaxTurns] = useState('25');
   const [droidCreatePr, setDroidCreatePr] = useState(true);
   const [droidAcceptanceCommand, setDroidAcceptanceCommand] = useState('');
+  const [droidAcceptanceSuggestions, setDroidAcceptanceSuggestions] = useState<string[]>([]);
   const [droidRepoUrl, setDroidRepoUrl] = useState('');
   const [droidBranch, setDroidBranch] = useState('');
   const [droidCwd, setDroidCwd] = useState('');
@@ -340,13 +374,15 @@ export function TaskBoard({
   };
 
   const openDroidRun = (task: TaskRow) => {
+    const acceptance = buildDroidAcceptanceSuggestions(task);
     setDroidTask(task);
     setDroidMode('native');
     setDroidCommand(task.project_slug ? 'pwd && ls -1' : 'pwd && echo droid-ok');
     setDroidPrompt(`Work on this task and report what you changed or found.\n\nTask: ${task.title}\n\n${task.description ?? ''}`.trim());
     setDroidMaxTurns('25');
     setDroidCreatePr(true);
-    setDroidAcceptanceCommand('');
+    setDroidAcceptanceSuggestions(acceptance.suggestions);
+    setDroidAcceptanceCommand(acceptance.explicit ?? '');
     setDroidRepoUrl(task.project_slug ? projectRepos?.[task.project_slug] ?? '' : '');
     setDroidBranch(task.branch_name ?? '');
     setDroidCwd('');
@@ -387,6 +423,7 @@ export function TaskBoard({
   }, [droidRun, loadDroidRunDetails]);
 
   const openDroidLogs = async (task: TaskRow) => {
+    const acceptance = buildDroidAcceptanceSuggestions(task);
     setLoadingDroidLogsTaskId(task.id);
     setDroidTask(task);
     setDroidMode('native');
@@ -394,7 +431,8 @@ export function TaskBoard({
     setDroidPrompt(`Work on this task and report what you changed or found.\n\nTask: ${task.title}\n\n${task.description ?? ''}`.trim());
     setDroidMaxTurns('25');
     setDroidCreatePr(true);
-    setDroidAcceptanceCommand('');
+    setDroidAcceptanceSuggestions(acceptance.suggestions);
+    setDroidAcceptanceCommand(acceptance.explicit ?? '');
     setDroidRepoUrl(task.project_slug ? projectRepos?.[task.project_slug] ?? '' : '');
     setDroidBranch(task.branch_name ?? '');
     setDroidCwd('');
@@ -1303,6 +1341,7 @@ export function TaskBoard({
         maxTurns={droidMaxTurns}
         createPr={droidCreatePr}
         acceptanceCommand={droidAcceptanceCommand}
+        acceptanceSuggestions={droidAcceptanceSuggestions}
         repoUrl={droidRepoUrl}
         branch={droidBranch}
         cwd={droidCwd}

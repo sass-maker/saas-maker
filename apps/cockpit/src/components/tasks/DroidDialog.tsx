@@ -1,6 +1,7 @@
 'use client';
 
-import { Play, Square } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { AlertTriangle, CheckCircle2, Clipboard, ExternalLink, Play, Square, XCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -75,6 +76,7 @@ interface DroidDialogProps {
   maxTurns: string;
   createPr: boolean;
   acceptanceCommand: string;
+  acceptanceSuggestions: string[];
   repoUrl: string;
   branch: string;
   cwd: string;
@@ -108,6 +110,7 @@ export function DroidDialog({
   maxTurns,
   createPr,
   acceptanceCommand,
+  acceptanceSuggestions,
   repoUrl,
   branch,
   cwd,
@@ -132,6 +135,8 @@ export function DroidDialog({
   onMarkStale,
   onClose,
 }: DroidDialogProps) {
+  const acceptanceWarning = createPr && !acceptanceCommand.trim();
+
   return (
     <Dialog open={!!task} onOpenChange={open => {
       if (!open) onClose();
@@ -224,6 +229,28 @@ export function DroidDialog({
                   placeholder="pnpm test"
                   className="font-mono text-xs"
                 />
+                {acceptanceSuggestions.length > 0 ? (
+                  <div className="flex flex-wrap gap-1.5">
+                    {acceptanceSuggestions.map(suggestion => (
+                      <Button
+                        key={suggestion}
+                        type="button"
+                        size="sm"
+                        variant={acceptanceCommand === suggestion ? 'secondary' : 'outline'}
+                        className="h-auto min-h-7 max-w-full justify-start px-2 py-1 font-mono text-[11px]"
+                        onClick={() => onAcceptanceCommandChange(suggestion)}
+                      >
+                        <span className="truncate">{suggestion}</span>
+                      </Button>
+                    ))}
+                  </div>
+                ) : null}
+                {acceptanceWarning ? (
+                  <div className="flex items-start gap-2 rounded-md border border-amber-500/35 bg-amber-500/10 p-2 text-xs text-amber-700 dark:text-amber-200">
+                    <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                    <span>Droid can open a PR without this, but no acceptance check will guard it.</span>
+                  </div>
+                ) : null}
                 <p className="text-xs text-muted-foreground">
                   Optional. Droid runs this in the repo before opening a draft PR.
                 </p>
@@ -279,11 +306,13 @@ export function DroidDialog({
               <DroidError error={error} />
               <DroidResult
                 run={run}
+                events={events}
                 running={running}
                 onReconcile={onReconcile}
                 onCancel={onCancel}
                 onMarkStale={onMarkStale}
               />
+              <DroidAcceptance events={events} />
               <DroidArtifacts artifacts={artifacts} />
               <DroidEvents events={events} />
             </div>
@@ -334,17 +363,20 @@ function DroidStats({ stats }: { stats: DroidRunStats | null }) {
 
 function DroidResult({
   run,
+  events,
   running,
   onReconcile,
   onCancel,
   onMarkStale,
 }: {
   run: DroidRunRow | null;
+  events: DroidRunEvent[];
   running: boolean;
   onReconcile: () => void;
   onCancel: () => void;
   onMarkStale: () => void;
 }) {
+  const finalReport = useMemo(() => getFinalReport(events), [events]);
   const reconcileLabel = run?.status === 'queued' ? 'Start queued' : 'Check run';
   const canControl = run?.status === 'queued' || run?.status === 'running';
   const canMarkStale = run?.status === 'running';
@@ -389,10 +421,73 @@ function DroidResult({
           <div><span className="text-foreground">Duration:</span> {run.duration_ms ? `${Math.round(run.duration_ms / 1000)}s` : 'pending'}</div>
           {run.summary ? <p className="pt-1 text-sm text-foreground">{run.summary}</p> : null}
           {run.error_message ? <p className="pt-1 text-sm text-red-500">{run.error_message}</p> : null}
+          {finalReport ? (
+            <div className="mt-2 space-y-2 rounded-md border bg-background p-2">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <span className="text-xs font-medium text-foreground">Final report</span>
+                {finalReport.prUrl ? (
+                  <a
+                    href={finalReport.prUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1 text-xs font-medium text-blue-600 hover:underline dark:text-blue-300"
+                  >
+                    PR
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                ) : null}
+              </div>
+              {finalReport.summary ? <p className="text-xs text-foreground">{finalReport.summary}</p> : null}
+              {finalReport.filesChanged.length > 0 ? (
+                <div className="text-[11px] text-muted-foreground">
+                  <span className="text-foreground">Files:</span> {finalReport.filesChanged.slice(0, 4).join(', ')}
+                  {finalReport.filesChanged.length > 4 ? ` +${finalReport.filesChanged.length - 4}` : ''}
+                </div>
+              ) : null}
+              {finalReport.checksRun.length > 0 ? (
+                <div className="text-[11px] text-muted-foreground">
+                  <span className="text-foreground">Checks:</span> {finalReport.checksRun.join(', ')}
+                </div>
+              ) : null}
+            </div>
+          ) : null}
         </div>
       ) : (
         <p className="mt-2 text-sm text-muted-foreground">Run a command to see the audit trail.</p>
       )}
+    </div>
+  );
+}
+
+function DroidAcceptance({ events }: { events: DroidRunEvent[] }) {
+  const acceptance = useMemo(() => getLatestEvent(events, ['acceptance_passed', 'acceptance_failed']), [events]);
+  if (!acceptance) return null;
+  const passed = acceptance.type === 'acceptance_passed';
+  return (
+    <div className={cn(
+      'rounded-lg border p-3',
+      passed
+        ? 'border-emerald-500/35 bg-emerald-500/10'
+        : 'border-red-500/40 bg-red-500/10'
+    )}>
+      <div className="flex items-center justify-between gap-2">
+        <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
+          {passed ? <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-300" /> : <XCircle className="h-4 w-4 text-red-600 dark:text-red-300" />}
+          Acceptance
+        </h3>
+        <Badge variant="outline" className={passed
+          ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-200'
+          : 'border-red-500/40 bg-red-500/10 text-red-700 dark:text-red-200'
+        }>
+          {passed ? 'passed' : 'failed'}
+        </Badge>
+      </div>
+      <div className="mt-2 space-y-1 text-xs text-muted-foreground">
+        {acceptance.command ? <div className="break-all font-mono text-foreground">{acceptance.command}</div> : null}
+        {acceptance.cwd ? <div className="break-all font-mono text-[11px]">{acceptance.cwd}</div> : null}
+        {acceptance.message ? <p>{acceptance.message}</p> : null}
+        {acceptance.exit_code !== null ? <p>exit {acceptance.exit_code}</p> : null}
+      </div>
     </div>
   );
 }
@@ -426,8 +521,26 @@ function DroidArtifacts({ artifacts }: { artifacts: DroidRunArtifact[] }) {
 }
 
 function DroidEvents({ events }: { events: DroidRunEvent[] }) {
+  const [copied, setCopied] = useState(false);
+  const copyLogs = async () => {
+    try {
+      await navigator.clipboard.writeText(formatDroidEvents(events));
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1600);
+    } catch {
+      setCopied(false);
+    }
+  };
+
   return (
     <div className="max-h-[26rem] overflow-y-auto rounded-lg border bg-background p-3">
+      <div className="mb-2 flex items-center justify-between gap-2">
+        <h3 className="text-sm font-semibold text-foreground">Events</h3>
+        <Button type="button" size="sm" variant="outline" onClick={copyLogs} disabled={events.length === 0}>
+          <Clipboard className="h-3.5 w-3.5" />
+          {copied ? 'Copied' : 'Copy'}
+        </Button>
+      </div>
       {events.length === 0 ? (
         <p className="text-sm text-muted-foreground">No Droid events yet.</p>
       ) : (
@@ -453,6 +566,47 @@ function DroidEvents({ events }: { events: DroidRunEvent[] }) {
       )}
     </div>
   );
+}
+
+function getLatestEvent(events: DroidRunEvent[], types: string[]) {
+  const allowed = new Set(types);
+  return [...events].reverse().find(event => allowed.has(event.type)) ?? null;
+}
+
+function getFinalReport(events: DroidRunEvent[]) {
+  const finalEvent = getLatestEvent(events, ['final_output']);
+  if (!finalEvent) return null;
+  const metadata = parseDroidMetadata(finalEvent.metadata);
+  return {
+    summary: stringFromUnknown(metadata.summary) || finalEvent.message || finalEvent.stdout || '',
+    prUrl: stringFromUnknown(metadata.pr_url),
+    filesChanged: stringArrayFromUnknown(metadata.files_changed),
+    checksRun: stringArrayFromUnknown(metadata.checks_run),
+  };
+}
+
+function formatDroidEvents(events: DroidRunEvent[]) {
+  return events.map(event => {
+    const lines = [
+      `[${formatRunTime(event.created_at)}] ${event.type}`,
+      event.command ? `command: ${event.command}` : '',
+      event.cwd ? `cwd: ${event.cwd}` : '',
+      event.exit_code !== null ? `exit: ${event.exit_code}` : '',
+      event.message ? `message: ${event.message}` : '',
+      event.stdout ? `stdout:\n${event.stdout}` : '',
+      event.stderr ? `stderr:\n${event.stderr}` : '',
+    ].filter(Boolean);
+    return lines.join('\n');
+  }).join('\n\n');
+}
+
+function stringArrayFromUnknown(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  return value.filter((item): item is string => typeof item === 'string' && item.length > 0);
+}
+
+function stringFromUnknown(value: unknown): string {
+  return typeof value === 'string' ? value : '';
 }
 
 function formatRunTime(value: string) {

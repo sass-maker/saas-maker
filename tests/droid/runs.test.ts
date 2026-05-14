@@ -937,6 +937,38 @@ describe('droid runs', () => {
     expect(reconcilePayload.data.summary).toBe('Command completed with exit code 0.');
   });
 
+  it('stores the first useful failure line in failed run summaries', async () => {
+    const app = createApp({
+      async execute() {
+        return {
+          stdout: 'preflight started\n',
+          stderr: '\nError: package build failed\nmore details',
+          exitCode: 1,
+          success: false,
+        };
+      },
+    });
+    const env = createEnv();
+
+    const response = await app.request(
+      '/v0/runs',
+      {
+        method: 'POST',
+        body: JSON.stringify({ command: 'pnpm build', wait_for_completion: true }),
+        headers: {
+          Authorization: 'Bearer test-token',
+          'Content-Type': 'application/json',
+        },
+      },
+      env
+    );
+
+    expect(response.status).toBe(201);
+    const payload = (await response.json()) as { data: { status: string; summary: string } };
+    expect(payload.data.status).toBe('failed');
+    expect(payload.data.summary).toBe('Command failed with exit code 1: Error: package build failed');
+  });
+
   it('uses live run room activity to guard reconcile', async () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2026-05-14T12:00:00.000Z'));
