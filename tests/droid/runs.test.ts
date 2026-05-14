@@ -632,6 +632,105 @@ describe('droid runs', () => {
     ]);
   });
 
+  it('marks stale running runs failed and releases the repo queue', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-05-14T12:00:00.000Z'));
+    const executeCommands: string[] = [];
+    const app = createApp({
+      async execute(input) {
+        executeCommands.push(input.command);
+        if (input.command === 'first') return new Promise(() => undefined);
+        return { stdout: `${input.command}\n`, stderr: '', exitCode: 0, success: true };
+      },
+    });
+    const env = createEnv();
+    const headers = {
+      Authorization: 'Bearer test-token',
+      'Content-Type': 'application/json',
+    };
+
+    try {
+      const firstResponse = await app.request(
+        '/v0/runs',
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            project_slug: 'saas-maker',
+            repo_url: 'https://github.com/example/repo.git',
+            command: 'first',
+          }),
+          headers,
+        },
+        env
+      );
+      const firstPayload = (await firstResponse.json()) as { data: { id: string } };
+
+      const queuedResponse = await app.request(
+        '/v0/runs',
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            project_slug: 'saas-maker',
+            repo_url: 'https://github.com/example/repo.git',
+            command: 'second',
+          }),
+          headers,
+        },
+        env
+      );
+      const queuedPayload = (await queuedResponse.json()) as { data: { id: string } };
+
+      const staleResponse = await app.request(
+        `/v0/runs/${firstPayload.data.id}/mark-stale`,
+        {
+          method: 'POST',
+          body: JSON.stringify({ wait_for_dispatch: true }),
+          headers,
+        },
+        env
+      );
+
+      expect(staleResponse.status).toBe(200);
+      await expect(staleResponse.json()).resolves.toMatchObject({
+        data: {
+          status: 'failed',
+          exit_code: 124,
+          error_message: 'Droid run marked stale after no recent activity.',
+        },
+        marked_stale: true,
+      });
+
+      const queuedRunResponse = await app.request(
+        `/v0/runs/${queuedPayload.data.id}`,
+        {
+          headers: { Authorization: 'Bearer test-token' },
+        },
+        env
+      );
+      await expect(queuedRunResponse.json()).resolves.toMatchObject({
+        data: {
+          status: 'completed',
+          exit_code: 0,
+        },
+      });
+      expect(executeCommands).toEqual(['first', 'second']);
+
+      const firstEventsResponse = await app.request(
+        `/v0/runs/${firstPayload.data.id}/events`,
+        {
+          headers: { Authorization: 'Bearer test-token' },
+        },
+        env
+      );
+      const firstEventsPayload = (await firstEventsResponse.json()) as {
+        data: Array<{ type: string }>;
+      };
+      expect(firstEventsPayload.data.map((event) => event.type)).toContain('run_marked_stale');
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it('starts runs asynchronously by default', async () => {
     const app = createApp({
       async execute() {

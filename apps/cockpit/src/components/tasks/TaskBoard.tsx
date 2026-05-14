@@ -781,6 +781,31 @@ export function TaskBoard({
     }
   };
 
+  const handleDroidMarkStale = async () => {
+    if (!droidRun) return;
+    setStartingDroidRun(true);
+    setDroidError(null);
+    try {
+      const res = await fetch(`/api/droid/runs/${droidRun.id}/mark-stale`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ wait_for_dispatch: true }),
+      });
+      const payload = await res.json() as { data?: DroidRunRow; error?: string };
+      if (!res.ok || !payload.data) throw new Error(payload.error || 'Droid stale recovery failed');
+      setDroidRun(payload.data);
+      await loadDroidRunDetails(payload.data.id);
+      await loadDroidStats(payload.data.project_slug);
+      showToast('Droid stale run released');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Droid stale recovery failed';
+      setDroidError(message);
+      showToast(`Stale recovery failed: ${message.slice(0, 120)}`);
+    } finally {
+      setStartingDroidRun(false);
+    }
+  };
+
   const handleBatchDispatch = async () => {
     if (runnableSelectedTasks.length === 0) {
       showToast('Select runnable todo tasks first');
@@ -1293,6 +1318,7 @@ export function TaskBoard({
         onRun={handleDroidRun}
         onReconcile={handleDroidReconcile}
         onCancel={handleDroidCancel}
+        onMarkStale={handleDroidMarkStale}
         onClose={() => {
           setDroidTask(null);
           setDroidMode('native');

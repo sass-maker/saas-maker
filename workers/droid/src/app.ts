@@ -287,6 +287,96 @@ export function createApp(executor: RunExecutor) {
     return c.json({ data: updatedRun ?? run });
   });
 
+  app.post('/v0/runs/:id/mark-stale', async (c) => {
+    const run = await getRun(c.env, c.req.param('id'));
+    if (!run) return c.json({ error: 'Run not found' }, 404);
+    if (run.status === 'completed' || run.status === 'failed') {
+      return c.json({ data: run, marked_stale: false });
+    }
+    if (run.status !== 'running') {
+      return c.json({ error: 'Only running Droid runs can be marked stale.' }, 409);
+    }
+
+    const incoming = (await c.req.json().catch(() => null)) as {
+      force?: boolean;
+      wait_for_dispatch?: boolean;
+    } | null;
+    const latestActivity = await getLatestRunActivityWithStart(c.env, run);
+    if (
+      !incoming?.force &&
+      latestActivity &&
+      !isStaleEvent(latestActivity.created_at, RECONCILE_STALE_AFTER_MS)
+    ) {
+      return c.json(
+        {
+          error:
+            'Run still appears active; stale recovery is only allowed after 6 minutes of no activity unless force is true.',
+          latest_event_at: latestActivity.created_at,
+          latest_event_source: latestActivity.source,
+        },
+        409
+      );
+    }
+
+    await createRunEvent(c.env, run.id, {
+      type: 'run_marked_stale',
+      message: 'Droid run marked stale after no recent activity.',
+      exit_code: 124,
+      metadata: {
+        sandbox_id: run.sandbox_id,
+        latest_event_at: latestActivity?.created_at ?? null,
+        latest_event_source: latestActivity?.source ?? null,
+        forced: incoming?.force === true,
+      },
+    });
+    await finishRun(c.env, run.id, {
+      status: 'failed',
+      exitCode: 124,
+      durationMs: durationSince(run.started_at),
+      summary: 'Droid run marked stale after no recent activity.',
+      errorMessage: 'Droid run marked stale after no recent activity.',
+    });
+
+    if (executor.cancel) {
+      const cancelPromise = executor
+        .cancel({
+          env: c.env,
+          runId: run.id,
+          sandboxId: run.sandbox_id,
+          recordEvent: (event) => createRunEvent(c.env, run.id, event),
+          recordArtifact: (artifact) => createRunArtifact(c.env, run.id, artifact),
+        })
+        .catch((error) =>
+          createRunEvent(c.env, run.id, {
+            type: 'sandbox_destroy_failed',
+            message: error instanceof Error ? error.message : 'Sandbox destroy failed.',
+            metadata: { sandbox_id: run.sandbox_id, during_stale_recovery: true },
+          })
+        );
+      scheduleBackground(c, cancelPromise);
+    }
+
+    const dispatchPromise = dispatchNextQueuedRun(c.env, executor, {
+      runId: run.id,
+      repoUrl: run.repo_url ?? undefined,
+      waitUntil: (promise: Promise<void>) => scheduleBackground(c, promise),
+    }).catch((error) =>
+      createRunEvent(c.env, run.id, {
+        type: 'queue_dispatch_failed',
+        message: error instanceof Error ? error.message : 'Droid queue dispatch failed.',
+        metadata: { run_id: run.id, during_stale_recovery: true },
+      })
+    );
+    if (incoming?.wait_for_dispatch === true) {
+      await dispatchPromise;
+    } else {
+      scheduleBackground(c, dispatchPromise);
+    }
+
+    const updatedRun = await getRun(c.env, run.id);
+    return c.json({ data: updatedRun ?? run, marked_stale: true });
+  });
+
   app.post('/v0/runs/:id/reconcile', async (c) => {
     const run = await getRun(c.env, c.req.param('id'));
     if (!run) return c.json({ error: 'Run not found' }, 404);
@@ -454,10 +544,26 @@ async function getLatestRunActivity(
   return latest ? { created_at: latest.created_at, source: latest.source } : null;
 }
 
+async function getLatestRunActivityWithStart(
+  env: Env,
+  run: { id: string; started_at: string | null }
+): Promise<{ created_at: string; source: 'd1' | 'run_room' | 'started_at' } | null> {
+  const activity = await getLatestRunActivity(env, run.id);
+  if (activity) return activity;
+  return run.started_at ? { created_at: run.started_at, source: 'started_at' } : null;
+}
+
 function isStaleEvent(createdAt: string, thresholdMs: number): boolean {
   const parsed = parseRunTimestamp(createdAt);
   if (!Number.isFinite(parsed)) return false;
   return Date.now() - parsed >= thresholdMs;
+}
+
+function durationSince(createdAt: string | null): number {
+  if (!createdAt) return 0;
+  const parsed = parseRunTimestamp(createdAt);
+  if (!Number.isFinite(parsed)) return 0;
+  return Math.max(Date.now() - parsed, 0);
 }
 
 function parseRunTimestamp(value: string): number {

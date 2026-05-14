@@ -94,6 +94,7 @@ interface DroidDialogProps {
   onRun: () => void;
   onReconcile: () => void;
   onCancel: () => void;
+  onMarkStale: () => void;
   onClose: () => void;
 }
 
@@ -124,6 +125,7 @@ export function DroidDialog({
   onRun,
   onReconcile,
   onCancel,
+  onMarkStale,
   onClose,
 }: DroidDialogProps) {
   return (
@@ -257,7 +259,13 @@ export function DroidDialog({
             <div className="space-y-3">
               <DroidStats stats={stats} />
               <DroidError error={error} />
-              <DroidResult run={run} running={running} onReconcile={onReconcile} onCancel={onCancel} />
+              <DroidResult
+                run={run}
+                running={running}
+                onReconcile={onReconcile}
+                onCancel={onCancel}
+                onMarkStale={onMarkStale}
+              />
               <DroidArtifacts artifacts={artifacts} />
               <DroidEvents events={events} />
             </div>
@@ -311,14 +319,17 @@ function DroidResult({
   running,
   onReconcile,
   onCancel,
+  onMarkStale,
 }: {
   run: DroidRunRow | null;
   running: boolean;
   onReconcile: () => void;
   onCancel: () => void;
+  onMarkStale: () => void;
 }) {
   const reconcileLabel = run?.status === 'queued' ? 'Start queued' : 'Check run';
   const canControl = run?.status === 'queued' || run?.status === 'running';
+  const canMarkStale = run?.status === 'running';
   return (
     <div className="rounded-lg border bg-muted/20 p-3">
       <div className="flex items-center justify-between gap-2">
@@ -334,6 +345,11 @@ function DroidResult({
             {canControl ? (
               <Button type="button" size="sm" variant="outline" onClick={onReconcile} disabled={running}>
                 {reconcileLabel}
+              </Button>
+            ) : null}
+            {canMarkStale ? (
+              <Button type="button" size="sm" variant="outline" onClick={onMarkStale} disabled={running}>
+                Mark stale
               </Button>
             ) : null}
             <Badge variant="outline" className={cn(
