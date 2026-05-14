@@ -32,6 +32,8 @@ export interface RunRequest {
   pr_title?: string;
   pr_body?: string;
   pr_base_branch?: string;
+  acceptance_command?: string;
+  acceptance_timeout_seconds?: number;
   destroy_after_run?: boolean;
   wait_for_completion?: boolean;
 }
@@ -114,6 +116,8 @@ export interface RunExecutionInput {
   prTitle?: string;
   prBody?: string;
   prBaseBranch?: string;
+  acceptanceCommand?: string;
+  acceptanceTimeoutSeconds?: number;
   cwd?: string;
   destroyAfterRun: boolean;
   recordEvent: (event: RunEventInput) => Promise<void>;

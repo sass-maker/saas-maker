@@ -74,6 +74,7 @@ interface DroidDialogProps {
   prompt: string;
   maxTurns: string;
   createPr: boolean;
+  acceptanceCommand: string;
   repoUrl: string;
   branch: string;
   cwd: string;
@@ -88,6 +89,7 @@ interface DroidDialogProps {
   onPromptChange: (value: string) => void;
   onMaxTurnsChange: (value: string) => void;
   onCreatePrChange: (value: boolean) => void;
+  onAcceptanceCommandChange: (value: string) => void;
   onRepoUrlChange: (value: string) => void;
   onBranchChange: (value: string) => void;
   onCwdChange: (value: string) => void;
@@ -105,6 +107,7 @@ export function DroidDialog({
   prompt,
   maxTurns,
   createPr,
+  acceptanceCommand,
   repoUrl,
   branch,
   cwd,
@@ -119,6 +122,7 @@ export function DroidDialog({
   onPromptChange,
   onMaxTurnsChange,
   onCreatePrChange,
+  onAcceptanceCommandChange,
   onRepoUrlChange,
   onBranchChange,
   onCwdChange,
@@ -209,6 +213,20 @@ export function DroidDialog({
                   </p>
                 </div>
                 <Switch id="droid-create-pr" checked={createPr} onCheckedChange={onCreatePrChange} />
+              </div>
+
+              <div className="space-y-1.5">
+                <Label htmlFor="droid-acceptance">Acceptance command</Label>
+                <Input
+                  id="droid-acceptance"
+                  value={acceptanceCommand}
+                  onChange={event => onAcceptanceCommandChange(event.target.value)}
+                  placeholder="pnpm test"
+                  className="font-mono text-xs"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Optional. Droid runs this in the repo before opening a draft PR.
+                </p>
               </div>
 
               <div className="grid gap-3 sm:grid-cols-2">

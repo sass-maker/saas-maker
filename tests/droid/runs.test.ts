@@ -191,11 +191,21 @@ describe('droid runs', () => {
     expect(eventsPayload.data[3].stdout).toBe('ok\n');
   });
 
-  it('passes task metadata through to the executor', async () => {
-    const seen: Array<{ taskId?: string; projectSlug?: string }> = [];
+  it('passes task metadata and acceptance settings through to the executor', async () => {
+    const seen: Array<{
+      taskId?: string;
+      projectSlug?: string;
+      acceptanceCommand?: string;
+      acceptanceTimeoutSeconds?: number;
+    }> = [];
     const app = createApp({
       async execute(input) {
-        seen.push({ taskId: input.taskId, projectSlug: input.projectSlug });
+        seen.push({
+          taskId: input.taskId,
+          projectSlug: input.projectSlug,
+          acceptanceCommand: input.acceptanceCommand,
+          acceptanceTimeoutSeconds: input.acceptanceTimeoutSeconds,
+        });
         return { stdout: 'ok\n', stderr: '', exitCode: 0, success: true };
       },
     });
@@ -209,6 +219,8 @@ describe('droid runs', () => {
           task_id: 'task-blockable',
           project_slug: 'saas-maker',
           command: 'echo ok',
+          acceptance_command: 'pnpm test',
+          acceptance_timeout_seconds: 120,
           wait_for_completion: true,
         }),
         headers: {
@@ -220,7 +232,14 @@ describe('droid runs', () => {
     );
 
     expect(response.status).toBe(201);
-    expect(seen).toEqual([{ taskId: 'task-blockable', projectSlug: 'saas-maker' }]);
+    expect(seen).toEqual([
+      {
+        taskId: 'task-blockable',
+        projectSlug: 'saas-maker',
+        acceptanceCommand: 'pnpm test',
+        acceptanceTimeoutSeconds: 120,
+      },
+    ]);
   });
 
   it('lists run artifacts', async () => {

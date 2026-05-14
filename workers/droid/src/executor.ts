@@ -1,5 +1,6 @@
 import { getSandbox } from '@cloudflare/sandbox';
 import type { CommandResult, RunExecutor } from './types';
+import { runAcceptanceCommand } from './acceptance';
 import { captureGitPatch } from './patch';
 import { buildFinalReport, collectPrGateEvidence, type PrGateEvidence } from './pr-gate';
 import { providerContractEvent, resolveProviderContract } from './provider';
@@ -1212,9 +1213,18 @@ async function finalizeWorkspacePatch(
 ): Promise<CommandResult> {
   const patch = await captureGitPatch(input, sandbox, workspace, result);
   const evidence = collectPrGateEvidence(patch);
+  const finalEvidence = withAcceptanceCommand(evidence, input.acceptanceCommand);
 
   if (!input.createPr) {
-    await recordStructuredFinal(input, result, evidence, null);
+    const accepted = await runConfiguredAcceptance(input, sandbox, workspace);
+    if (!accepted.success) {
+      await recordStructuredFinal(input, accepted, finalEvidence, null, {
+        summary: accepted.stderr || 'Droid acceptance command failed.',
+        risks: [accepted.stderr || 'Droid acceptance command failed.'],
+      });
+      return accepted;
+    }
+    await recordStructuredFinal(input, result, finalEvidence, null);
     return result;
   }
 
@@ -1229,7 +1239,7 @@ async function finalizeWorkspacePatch(
       patch_changed: patch.changed,
       patch_bytes: patch.patchBytes,
       files_changed: evidence.filesChanged,
-      checks_run: evidence.checkCommands,
+      checks_run: finalEvidence.checkCommands,
     },
   });
 
@@ -1251,7 +1261,7 @@ async function finalizeWorkspacePatch(
         files_changed: evidence.filesChanged,
       },
     });
-    await recordStructuredFinal(input, result, evidence, null, { summary, risks: [summary] });
+    await recordStructuredFinal(input, result, finalEvidence, null, { summary, risks: [summary] });
     return {
       stdout: result.stdout,
       stderr: appendTail(result.stderr, summary),
@@ -1262,7 +1272,7 @@ async function finalizeWorkspacePatch(
 
   const review = await reviewPatchForPr(input, sandbox, workspace, patch, evidence);
   if (!review.approved) {
-    await recordStructuredFinal(input, result, evidence, null, {
+    await recordStructuredFinal(input, result, finalEvidence, null, {
       summary: review.summary || 'Droid patch review rejected PR creation.',
       risks: review.summary ? [review.summary] : [],
     });
@@ -1277,6 +1287,33 @@ async function finalizeWorkspacePatch(
     };
   }
 
+  const accepted = await runConfiguredAcceptance(input, sandbox, workspace);
+  if (!accepted.success) {
+    const summary = accepted.stderr || 'Droid acceptance command failed, so no pull request was created.';
+    await input.recordEvent({
+      type: 'pr_gate_failed',
+      actor: 'tester',
+      source: 'worker',
+      command: 'Droid acceptance gate',
+      cwd: resolveWorkspaceCwd(workspace, input.cwd),
+      exit_code: accepted.exitCode,
+      stdout: accepted.stdout,
+      stderr: accepted.stderr,
+      message: summary,
+      metadata: {
+        patch_changed: patch.changed,
+        patch_bytes: patch.patchBytes,
+        files_changed: evidence.filesChanged,
+        checks_run: finalEvidence.checkCommands,
+      },
+    });
+    await recordStructuredFinal(input, accepted, finalEvidence, null, {
+      summary,
+      risks: [summary],
+    });
+    return accepted;
+  }
+
   const pr = await createDraftPullRequestWithTimeout(
     input,
     sandbox,
@@ -1286,7 +1323,7 @@ async function finalizeWorkspacePatch(
   );
   if (!pr.created) {
     const summary = 'Droid could not create the requested pull request.';
-    await recordStructuredFinal(input, result, evidence, null, { summary, risks: [summary] });
+    await recordStructuredFinal(input, result, finalEvidence, null, { summary, risks: [summary] });
     return {
       stdout: result.stdout,
       stderr: appendTail(result.stderr, summary),
@@ -1305,12 +1342,55 @@ async function finalizeWorkspacePatch(
     metadata: {
       patch_bytes: patch.patchBytes,
       files_changed: evidence.filesChanged,
-      checks_run: evidence.checkCommands,
+      checks_run: finalEvidence.checkCommands,
       pr_url: pr.url ?? null,
     },
   });
-  await recordStructuredFinal(input, result, evidence, pr.url ?? null);
+  await recordStructuredFinal(input, result, finalEvidence, pr.url ?? null);
   return result;
+}
+
+async function runConfiguredAcceptance(
+  input: Parameters<RunExecutor['execute']>[0],
+  sandbox: Awaited<ReturnType<typeof getSandbox>>,
+  workspace: string
+): Promise<CommandResult> {
+  if (!input.acceptanceCommand) {
+    return { stdout: '', stderr: '', exitCode: 0, success: true };
+  }
+  const cwd = resolveWorkspaceCwd(workspace, input.cwd);
+  const result = await runAcceptanceCommand(
+    input,
+    sandbox,
+    cwd,
+    input.acceptanceCommand,
+    input.acceptanceTimeoutSeconds
+  );
+  if (result.passed) {
+    return {
+      stdout: result.stdout,
+      stderr: result.stderr,
+      exitCode: result.exitCode,
+      success: true,
+    };
+  }
+  return {
+    stdout: result.stdout,
+    stderr: appendTail(result.stderr, result.summary),
+    exitCode: result.exitCode || 78,
+    success: false,
+  };
+}
+
+function withAcceptanceCommand(
+  evidence: PrGateEvidence,
+  acceptanceCommand: string | undefined
+): PrGateEvidence {
+  if (!acceptanceCommand) return evidence;
+  return {
+    ...evidence,
+    checkCommands: [...evidence.checkCommands, acceptanceCommand],
+  };
 }
 
 async function recordStructuredFinal(

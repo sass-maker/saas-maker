@@ -37,6 +37,8 @@ export async function POST(req: Request) {
     pr_title?: unknown;
     pr_body?: unknown;
     pr_base_branch?: unknown;
+    acceptance_command?: unknown;
+    acceptance_timeout_seconds?: unknown;
     repo_url?: unknown;
     branch?: unknown;
     cwd?: unknown;
@@ -74,6 +76,8 @@ export async function POST(req: Request) {
     pr_title: typeof body.pr_title === "string" && body.pr_title.trim() ? body.pr_title.trim() : undefined,
     pr_body: typeof body.pr_body === "string" && body.pr_body.trim() ? body.pr_body.trim() : undefined,
     pr_base_branch: typeof body.pr_base_branch === "string" && body.pr_base_branch.trim() ? body.pr_base_branch.trim() : undefined,
+    acceptance_command: typeof body.acceptance_command === "string" && body.acceptance_command.trim() ? body.acceptance_command.trim() : undefined,
+    acceptance_timeout_seconds: typeof body.acceptance_timeout_seconds === "number" ? body.acceptance_timeout_seconds : undefined,
     cwd: typeof body.cwd === "string" && body.cwd.trim() ? body.cwd.trim() : undefined,
     destroy_after_run: body.destroy_after_run !== false,
     wait_for_completion: body.wait_for_completion === true,

@@ -24,7 +24,7 @@ Droid is usable as an experimental v1 runner: it can start a Cloudflare Sandbox,
    - Add a compact stats endpoint for Droid health.
 
 5. Better PR quality gate
-   - Require changed-file summary, patch review result, and test command output before PR creation.
+   - Require changed-file summary, patch review result, and optional acceptance command output before PR creation.
    - Keep PRs draft by default.
    - Add a clear failure summary when no meaningful diff is produced.
 
