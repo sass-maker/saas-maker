@@ -646,9 +646,7 @@ async function executeRun(
 
     const durationMs = Date.now() - input.startedAt;
     const status = result.success ? 'completed' : 'failed';
-    const summary = result.success
-      ? `Command completed with exit code ${result.exitCode}.`
-      : `Command failed with exit code ${result.exitCode}.`;
+    const summary = summarizeCommandResult(result);
     await finishRun(env, input.runId, {
       status,
       exitCode: result.exitCode,
@@ -776,6 +774,29 @@ class RunTimeoutError extends Error {
   constructor(readonly timeoutMs: number) {
     super(`Droid run timed out after ${Math.round(timeoutMs / 1000)} seconds.`);
   }
+}
+
+function summarizeCommandResult(result: CommandResult): string {
+  if (result.success) {
+    return `Command completed with exit code ${result.exitCode}.`;
+  }
+
+  const reason = firstUsefulLine(result.stderr) || firstUsefulLine(result.stdout);
+  if (!reason) {
+    return `Command failed with exit code ${result.exitCode}. Inspect the Droid events for the failing command.`;
+  }
+  return `Command failed with exit code ${result.exitCode}: ${truncateSummary(reason)}`;
+}
+
+function firstUsefulLine(value: string): string {
+  return value
+    .split('\n')
+    .map((line) => line.trim())
+    .find((line) => line.length > 0) ?? '';
+}
+
+function truncateSummary(value: string): string {
+  return value.length > 220 ? `${value.slice(0, 217)}...` : value;
 }
 
 async function handleRunTimeout(
