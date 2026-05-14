@@ -1,5 +1,9 @@
 # agents.md — saas-maker (The Foundry)
 
+## Shared Fleet Standard
+
+Also read and follow the shared fleet-level agent standard at `../AGENTS.md`. Treat this repository as owned product code: protect production stability, keep changes scoped, verify work, and record durable follow-up tasks when something remains incomplete or blocked.
+
 ## Purpose
 The Foundry platform — CLI, SDKs, widgets, CF Workers API, cockpit dashboard, and docs. API-first SaaS scaffolding with feedback, testimonials, task management, analytics, and more.
 
