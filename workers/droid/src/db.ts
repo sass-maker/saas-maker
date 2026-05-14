@@ -125,8 +125,16 @@ export async function getRunStats(env: Env, input: { projectSlug?: string; limit
     `SELECT AVG(duration_ms) AS avg_duration_ms FROM droid_runs ${avgWhere}`
   ).bind(...(input.projectSlug ? [input.projectSlug] : [])).first<{ avg_duration_ms: number | null }>();
   const staleWhere = input.projectSlug
-    ? `WHERE project_slug = ? AND status = 'running' AND started_at IS NOT NULL AND datetime(started_at, '+15 minutes') < datetime('now')`
-    : `WHERE status = 'running' AND started_at IS NOT NULL AND datetime(started_at, '+15 minutes') < datetime('now')`;
+    ? `WHERE project_slug = ? AND status = 'running' AND started_at IS NOT NULL
+       AND datetime(
+         COALESCE((SELECT MAX(created_at) FROM droid_run_events WHERE run_id = droid_runs.id), started_at),
+         '+15 minutes'
+       ) < datetime('now')`
+    : `WHERE status = 'running' AND started_at IS NOT NULL
+       AND datetime(
+         COALESCE((SELECT MAX(created_at) FROM droid_run_events WHERE run_id = droid_runs.id), started_at),
+         '+15 minutes'
+       ) < datetime('now')`;
   const staleRow = await env.DB.prepare(
     `SELECT COUNT(*) AS count FROM droid_runs ${staleWhere}`
   ).bind(...(input.projectSlug ? [input.projectSlug] : [])).first<{ count: number }>();

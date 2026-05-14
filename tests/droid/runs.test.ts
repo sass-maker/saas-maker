@@ -428,6 +428,55 @@ describe('droid runs', () => {
     });
   });
 
+  it('does not count active runs with fresh events as stale', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-05-14T12:00:00.000Z'));
+    const app = createApp({
+      async execute(input) {
+        await input.recordEvent({ type: 'agent_process_start', command: input.command });
+        return new Promise(() => undefined);
+      },
+    });
+    const env = createEnv();
+
+    try {
+      const runResponse = await app.request(
+        '/v0/runs',
+        {
+          method: 'POST',
+          body: JSON.stringify({ project_slug: 'saas-maker', command: 'hang' }),
+          headers: {
+            Authorization: 'Bearer test-token',
+            'Content-Type': 'application/json',
+          },
+        },
+        env
+      );
+      const runPayload = (await runResponse.json()) as { data: { id: string } };
+      const db = env.DB as unknown as FakeD1;
+      const latestEvent = db.events.filter((event) => event.run_id === runPayload.data.id).at(-1);
+      latestEvent!.created_at = '2026-05-14T11:59:00.000Z';
+
+      const statsResponse = await app.request(
+        '/v0/stats?project_slug=saas-maker',
+        {
+          headers: { Authorization: 'Bearer test-token' },
+        },
+        env
+      );
+
+      expect(statsResponse.status).toBe(200);
+      await expect(statsResponse.json()).resolves.toMatchObject({
+        data: {
+          by_status: { running: 1 },
+          stale_running: 0,
+        },
+      });
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it('queues same-repo runs when another run is active', async () => {
     let executeCalls = 0;
     const app = createApp({
@@ -997,7 +1046,8 @@ class FakeStatement {
       return {
         count: Array.from(this.db.runs.values())
           .filter((run) => projectSlug === undefined || run.project_slug === projectSlug)
-          .filter((run) => run.status === 'running' && run.started_at).length,
+          .filter((run) => run.status === 'running' && run.started_at)
+          .filter((run) => isStaleFakeRun(this.db, run)).length,
       };
     }
     if (this.sql.includes('FROM droid_run_events') && this.sql.includes("type = 'run_request'")) {
@@ -1074,4 +1124,19 @@ class FakeStatement {
     }
     return { results: [] };
   }
+}
+
+function isStaleFakeRun(db: FakeD1, run: Record<string, unknown>): boolean {
+  const runEvents = db.events.filter((event) => event.run_id === run.id);
+  const latestEventTime = Math.max(
+    ...runEvents.map((event) => parseFakeTimestamp(String(event.created_at)))
+  );
+  const startedAt = parseFakeTimestamp(String(run.started_at));
+  const latestActivity = Number.isFinite(latestEventTime) ? latestEventTime : startedAt;
+  return Date.now() - latestActivity >= 15 * 60 * 1000;
+}
+
+function parseFakeTimestamp(value: string): number {
+  if (value.includes('T')) return Date.parse(value);
+  return Date.parse(`${value.replace(' ', 'T')}Z`);
 }
