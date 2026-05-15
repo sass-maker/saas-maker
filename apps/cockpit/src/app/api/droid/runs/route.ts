@@ -39,6 +39,7 @@ export async function POST(req: Request) {
     pr_base_branch?: unknown;
     acceptance_command?: unknown;
     acceptance_timeout_seconds?: unknown;
+    browser_acceptance?: unknown;
     repo_url?: unknown;
     branch?: unknown;
     cwd?: unknown;
@@ -78,6 +79,7 @@ export async function POST(req: Request) {
     pr_base_branch: typeof body.pr_base_branch === "string" && body.pr_base_branch.trim() ? body.pr_base_branch.trim() : undefined,
     acceptance_command: typeof body.acceptance_command === "string" && body.acceptance_command.trim() ? body.acceptance_command.trim() : undefined,
     acceptance_timeout_seconds: typeof body.acceptance_timeout_seconds === "number" ? body.acceptance_timeout_seconds : undefined,
+    browser_acceptance: normalizeBrowserAcceptance(body.browser_acceptance),
     cwd: typeof body.cwd === "string" && body.cwd.trim() ? body.cwd.trim() : undefined,
     destroy_after_run: body.destroy_after_run !== false,
     wait_for_completion: body.wait_for_completion === true,
@@ -87,6 +89,25 @@ export async function POST(req: Request) {
     method: "POST",
     body: JSON.stringify(payload),
   });
+}
+
+function normalizeBrowserAcceptance(value: unknown) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return undefined;
+  const input = value as Record<string, unknown>;
+  const assertText = Array.isArray(input.assert_text)
+    ? input.assert_text.filter((item): item is string => typeof item === "string" && item.trim().length > 0).map(item => item.trim())
+    : undefined;
+  return {
+    enabled: input.enabled === true,
+    goal: typeof input.goal === "string" && input.goal.trim() ? input.goal.trim() : undefined,
+    url: typeof input.url === "string" && input.url.trim() ? input.url.trim() : undefined,
+    start_command: typeof input.start_command === "string" && input.start_command.trim() ? input.start_command.trim() : undefined,
+    port: typeof input.port === "number" ? input.port : undefined,
+    preview_hostname: typeof input.preview_hostname === "string" && input.preview_hostname.trim() ? input.preview_hostname.trim() : undefined,
+    assert_text: assertText?.length ? assertText : undefined,
+    timeout_seconds: typeof input.timeout_seconds === "number" ? input.timeout_seconds : undefined,
+    keep_open: input.keep_open === true,
+  };
 }
 
 export async function GET(req: Request) {

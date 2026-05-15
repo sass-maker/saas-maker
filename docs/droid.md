@@ -1,6 +1,6 @@
 # Droid
 
-Droid is the SaaS Maker task runner. From Cockpit Tasks, it can start a Cloudflare Sandbox, hydrate a repo, run command or native-agent work, record audit events, run an optional acceptance command, and open a draft PR.
+Droid is the SaaS Maker task runner. From Cockpit Tasks, it can start a Cloudflare Sandbox, hydrate a repo, run command or native-agent work, record audit events, run optional command/browser acceptance, and open a draft PR.
 
 ## Quick Start
 
@@ -8,7 +8,8 @@ Droid is the SaaS Maker task runner. From Cockpit Tasks, it can start a Cloudfla
 2. Click **Droid**.
 3. Confirm the repo URL, target branch, prompt, and optional working directory.
 4. Add an acceptance command such as `pnpm test` or choose a suggested one.
-5. Run Droid and watch the Result, Acceptance, Artifacts, and Events panels.
+5. Optionally enable Browser test to capture a Cloudflare Browser Run screenshot.
+6. Run Droid and watch the Result, Acceptance, Browser, Artifacts, and Events panels.
 
 Droid queues work by repo/project. If a run is already active for that repo, the next run waits instead of starting a parallel sandbox.
 
@@ -28,7 +29,14 @@ Cockpit calls the Droid Worker with:
   "create_pr": true,
   "pr_title": "Droid: task title",
   "acceptance_command": "pnpm test",
-  "acceptance_timeout_seconds": 300
+  "acceptance_timeout_seconds": 300,
+  "browser_acceptance": {
+    "enabled": true,
+    "goal": "Verify the task flow works in the UI",
+    "url": "https://preview.example.com/tasks",
+    "assert_text": ["Droid", "Events"],
+    "keep_open": true
+  }
 }
 ```
 
@@ -41,14 +49,19 @@ Key fields:
 - `create_pr`: when true, Droid requires a meaningful patch, review gate, acceptance pass if configured, and then opens a draft PR.
 - `acceptance_command`: optional command Droid runs before a draft PR is created.
 - `acceptance_timeout_seconds`: clamped to 30-900 seconds.
+- `browser_acceptance`: optional Cloudflare Browser Run check. Use `url` for an existing preview/deploy URL, or `start_command` + `port` + `preview_hostname` to start an app inside the sandbox and expose it.
+
+For a cheap smoke test against an existing public URL, run command mode with `command: "browser_acceptance"` and `browser_acceptance.url`. Droid skips sandbox startup for that case and only records Browser Run events/artifacts.
 
 ## Output
 
 Droid stores:
 
 - run status, exit code, duration, summary, and error message in `droid_runs`
-- command, agent, queue, acceptance, PR gate, and final report events in `droid_run_events`
-- patch and acceptance references in `droid_run_artifacts`
+- command, agent, queue, acceptance, browser, PR gate, and final report events in `droid_run_events`
+- patch, acceptance, and browser screenshot references in `droid_run_artifacts`
+
+Browser screenshots are stored as small JPEG data URIs for V0 visibility. If `keep_open` is true, the Browser Run session stays alive briefly so it can also be inspected from Cloudflare Browser Run Live Sessions.
 
 The final report event is machine-readable and includes `summary`, `files_changed`, `checks_run`, `pr_url`, `pr_branch`, `next_action`, `blockers`, and `risks`.
 

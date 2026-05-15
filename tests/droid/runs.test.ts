@@ -109,6 +109,77 @@ describe('droid runs', () => {
     expect((env.DB as unknown as FakeD1).runs.size).toBe(0);
   });
 
+  it('validates browser acceptance settings before creating a ticket run', async () => {
+    const app = createApp(fakeExecutor());
+    const env = createEnv();
+    const headers = {
+      Authorization: 'Bearer test-token',
+      'Content-Type': 'application/json',
+    };
+
+    const badUrl = await app.request(
+      '/v0/runs',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          command: 'echo ok',
+          browser_acceptance: { url: 'ftp://example.test' },
+        }),
+        headers,
+      },
+      env
+    );
+    expect(badUrl.status).toBe(400);
+    await expect(badUrl.json()).resolves.toEqual({
+      error: 'browser_acceptance.url must be an http or https URL',
+    });
+
+    const badText = await app.request(
+      '/v0/runs',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          command: 'echo ok',
+          browser_acceptance: { url: 'https://example.test', assert_text: ['ok', 42] },
+        }),
+        headers,
+      },
+      env
+    );
+    expect(badText.status).toBe(400);
+    await expect(badText.json()).resolves.toEqual({
+      error: 'browser_acceptance.assert_text must be an array of strings',
+    });
+    expect((env.DB as unknown as FakeD1).runs.size).toBe(0);
+  });
+
+  it('requires a Browser Run binding when browser acceptance is enabled', async () => {
+    const app = createApp(fakeExecutor());
+    const env = createEnv({ BROWSER: undefined });
+
+    const response = await app.request(
+      '/v0/runs',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          command: 'echo ok',
+          browser_acceptance: { url: 'https://example.test', assert_text: ['Example'] },
+        }),
+        headers: {
+          Authorization: 'Bearer test-token',
+          'Content-Type': 'application/json',
+        },
+      },
+      env
+    );
+
+    expect(response.status).toBe(503);
+    await expect(response.json()).resolves.toEqual({
+      error: 'BROWSER binding is required when browser_acceptance is enabled',
+    });
+    expect((env.DB as unknown as FakeD1).runs.size).toBe(0);
+  });
+
   it('clamps ticket acceptance timeout settings into the supported range', async () => {
     const seen: Array<{ taskId?: string; acceptanceTimeoutSeconds?: number }> = [];
     const app = createApp({
@@ -298,6 +369,8 @@ describe('droid runs', () => {
       projectSlug?: string;
       acceptanceCommand?: string;
       acceptanceTimeoutSeconds?: number;
+      browserGoal?: string;
+      browserAssertText?: string[];
     }> = [];
     const app = createApp({
       async execute(input) {
@@ -306,6 +379,8 @@ describe('droid runs', () => {
           projectSlug: input.projectSlug,
           acceptanceCommand: input.acceptanceCommand,
           acceptanceTimeoutSeconds: input.acceptanceTimeoutSeconds,
+          browserGoal: input.browserAcceptance?.goal,
+          browserAssertText: input.browserAcceptance?.assert_text,
         });
         return { stdout: 'ok\n', stderr: '', exitCode: 0, success: true };
       },
@@ -322,6 +397,12 @@ describe('droid runs', () => {
           command: 'echo ok',
           acceptance_command: 'pnpm test',
           acceptance_timeout_seconds: 120,
+          browser_acceptance: {
+            goal: 'Verify task UI',
+            url: 'https://example.test/tasks',
+            assert_text: ['Droid', 'Events'],
+            keep_open: true,
+          },
           wait_for_completion: true,
         }),
         headers: {
@@ -339,6 +420,8 @@ describe('droid runs', () => {
         projectSlug: 'saas-maker',
         acceptanceCommand: 'pnpm test',
         acceptanceTimeoutSeconds: 120,
+        browserGoal: 'Verify task UI',
+        browserAssertText: ['Droid', 'Events'],
       },
     ]);
   });
@@ -1166,6 +1249,7 @@ function createEnv(overrides: Partial<Env> = {}): Env {
     DROID_INTERNAL_TOKEN: 'test-token',
     DROID_DEEPSEEK_API_KEY: 'test-deepseek-key',
     DROID_GITHUB_TOKEN: 'test-github-token',
+    BROWSER: { fetch },
     DB: new FakeD1() as unknown as D1Database,
     Sandbox: {} as DurableObjectNamespace,
     ...overrides,

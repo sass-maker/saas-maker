@@ -100,6 +100,7 @@ function parseArgs(argv) {
     runDirty: true,
     runPerformance: false,
     runLighthouse: false,
+    autofix: false,
     performanceSamples: 3,
     timeoutMs: DEFAULT_TIMEOUT_MS,
     jsonOnly: false,
@@ -120,6 +121,7 @@ function parseArgs(argv) {
       args.runPerformance = true;
       args.runLighthouse = true;
     }
+    else if (arg === '--autofix') args.autofix = true;
     else if (arg === '--performance-samples') {
       args.performanceSamples = Math.max(1, Number.parseInt(argv[++i] ?? '', 10) || args.performanceSamples);
     }
@@ -148,6 +150,7 @@ Options:
   --skip-dirty         Skip local git dirty checks.
   --performance        Run frontend curl timing checks.
   --lighthouse         Run frontend Lighthouse checks. Implies --performance.
+  --autofix            Attempt safe local remediations (permissions-only) and retry once.
   --performance-samples N
                        Number of curl timing samples per frontend URL.
   --timeout-ms N       Timeout per local script command.
@@ -482,19 +485,69 @@ function availableLocalChecks(project) {
     .map((script) => ['pnpm', ['run', script]]);
 }
 
-function localAudit(project, timeoutMs) {
+function extractEpermPath(output) {
+  const text = String(output ?? '');
+  if (!text.includes('EPERM')) return null;
+  const match = text.match(/open '([^']+)'/) ?? text.match(/open \"([^\"]+)\"/);
+  return match?.[1] ?? null;
+}
+
+function isPathInside(childPath, parentPath) {
+  const rel = path.relative(parentPath, childPath);
+  return rel && !rel.startsWith('..') && !path.isAbsolute(rel);
+}
+
+function tryAutofixPermissions(projectPath, output) {
+  const failingPath = extractEpermPath(output);
+  if (!failingPath) return { attempted: false, notes: [] };
+  const absoluteFailingPath = path.resolve(failingPath);
+  const notes = [`EPERM at ${absoluteFailingPath}`];
+  if (!isPathInside(absoluteFailingPath, projectPath)) {
+    notes.push('Path is outside repo; skipping chmod');
+    return { attempted: false, notes };
+  }
+
+  const targets = [];
+  const failingDir = path.dirname(absoluteFailingPath);
+  targets.push(failingDir);
+  targets.push(absoluteFailingPath);
+
+  let attempted = false;
+  for (const target of targets) {
+    if (!fs.existsSync(target)) continue;
+    attempted = true;
+    const chmodResult = run('chmod', ['-R', 'u+rwX', target], { cwd: projectPath, timeoutMs: 30_000 });
+    if (!chmodResult.ok) notes.push(`chmod failed: ${chmodResult.error ?? chmodResult.status ?? 'unknown error'}`);
+  }
+
+  if (attempted) notes.push('Retried after chmod u+rwX');
+  return { attempted, notes };
+}
+
+function localAudit(project, timeoutMs, options = {}) {
   const commands = availableLocalChecks(project);
   const checks = [];
   for (const [command, args] of commands) {
     const result = run(command, args, { cwd: project.path, timeoutMs });
+    const combined = `${result.stdout}\n${result.stderr}`;
+    let retryResult = null;
+    let autofix = null;
+    if (!result.ok && options.autofix) {
+      autofix = tryAutofixPermissions(project.path, combined);
+      if (autofix.attempted) {
+        retryResult = run(command, args, { cwd: project.path, timeoutMs });
+      }
+    }
+    const finalResult = retryResult ?? result;
     checks.push({
-      command: result.command,
-      ok: result.ok,
-      status: result.status,
-      timedOut: result.timedOut,
-      tail: `${result.stdout}\n${result.stderr}`.split(/\r?\n/).filter(Boolean).slice(-12),
+      command: finalResult.command,
+      ok: finalResult.ok,
+      status: finalResult.status,
+      timedOut: finalResult.timedOut,
+      tail: `${finalResult.stdout}\n${finalResult.stderr}`.split(/\r?\n/).filter(Boolean).slice(-12),
+      autofix: autofix?.notes?.length ? { attempted: autofix.attempted, notes: autofix.notes } : null,
     });
-    if (!result.ok) break;
+    if (!finalResult.ok) break;
   }
   return { ok: checks.every((check) => check.ok), checks };
 }
@@ -512,7 +565,9 @@ function classify(projectAudit) {
   if (issues.length === 0) return { status: 'ok', issues };
   return {
     status: issues.some((issue) =>
-      !issue.startsWith('open PRs') && issue !== 'performance budget watch'
+      !issue.startsWith('open PRs') &&
+      !issue.startsWith('local dirty') &&
+      issue !== 'performance budget watch'
     )
       ? 'fail'
       : 'watch',
@@ -631,7 +686,7 @@ async function main() {
     if (args.runDirty) entry.dirty = dirtyAudit(project);
     if (args.runGithub) entry.github = githubAudit(project);
     if (args.runSmoke) entry.smoke = smokeAudit(project);
-    if (args.runLocal) entry.local = localAudit(project, args.timeoutMs);
+    if (args.runLocal) entry.local = localAudit(project, args.timeoutMs, { autofix: args.autofix });
     if (args.runPerformance) {
       entry.performance = performanceAudit(project, {
         samples: args.performanceSamples,

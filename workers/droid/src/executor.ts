@@ -1,6 +1,7 @@
 import { getSandbox } from '@cloudflare/sandbox';
 import type { CommandResult, RunExecutor } from './types';
 import { runAcceptanceCommand } from './acceptance';
+import { isBrowserAcceptanceEnabled, runBrowserAcceptance } from './browser-acceptance';
 import { captureGitPatch } from './patch';
 import { buildFinalReport, collectPrGateEvidence, type PrGateEvidence } from './pr-gate';
 import { providerContractEvent, resolveProviderContract } from './provider';
@@ -50,12 +51,37 @@ const DEFAULT_REVIEW_MODEL = 'deepseek-chat';
 
 export const sandboxExecutor: RunExecutor = {
   async execute(input): Promise<CommandResult> {
-    const sandbox = getDroidSandbox(input.env.Sandbox, input.sandboxId);
     const workspace = '/workspace/repo';
     let hydration: RepoHydration = { method: 'empty' };
 
-    await input.recordEvent({ type: 'sandbox_start', message: `Using sandbox ${input.sandboxId}` });
     await input.recordEvent(providerContractEvent(resolveProviderContract(input)));
+    if (canRunBrowserAcceptanceWithoutSandbox(input)) {
+      const browserResult = await runBrowserAcceptance(input, {}, workspace, input.browserAcceptance!);
+      await recordStructuredFinal(
+        input,
+        {
+          stdout: browserResult.stdout,
+          stderr: browserResult.stderr,
+          exitCode: browserResult.passed ? 0 : 78,
+          success: browserResult.passed,
+        },
+        withAcceptanceChecks(collectPrGateEvidence({ patchBytes: 0, status: '', stat: '' }), input),
+        null,
+        null,
+        {
+          summary: browserResult.summary,
+          risks: browserResult.passed ? [] : [browserResult.summary],
+        }
+      );
+      return {
+        stdout: browserResult.stdout,
+        stderr: browserResult.stderr,
+        exitCode: browserResult.passed ? 0 : 78,
+        success: browserResult.passed,
+      };
+    }
+    const sandbox = getDroidSandbox(input.env.Sandbox, input.sandboxId);
+    await input.recordEvent({ type: 'sandbox_start', message: `Using sandbox ${input.sandboxId}` });
     const ready = await prepareSandboxWorkspace(input, sandbox, '/workspace/.droid-ready');
     if (!ready.success) {
       await input.recordEvent({
@@ -260,6 +286,17 @@ function getDroidSandbox(
       waitIntervalMS: 1000,
     },
   });
+}
+
+function canRunBrowserAcceptanceWithoutSandbox(input: Parameters<RunExecutor['execute']>[0]): boolean {
+  return Boolean(
+    input.browserAcceptance?.url?.trim() &&
+      !input.browserAcceptance.start_command?.trim() &&
+      input.mode === 'command' &&
+      input.command === 'browser_acceptance' &&
+      !input.repoUrl &&
+      !input.createPr
+  );
 }
 
 async function prepareSandboxWorkspace(
@@ -1235,7 +1272,7 @@ async function finalizeWorkspacePatch(
 ): Promise<CommandResult> {
   const patch = await captureGitPatch(input, sandbox, workspace, result);
   const evidence = collectPrGateEvidence(patch);
-  const finalEvidence = withAcceptanceCommand(evidence, input.acceptanceCommand);
+  const finalEvidence = withAcceptanceChecks(evidence, input);
 
   if (!input.createPr) {
     const accepted = await runConfiguredAcceptance(input, sandbox, workspace);
@@ -1397,41 +1434,60 @@ async function runConfiguredAcceptance(
   sandbox: Awaited<ReturnType<typeof getSandbox>>,
   workspace: string
 ): Promise<CommandResult> {
-  if (!input.acceptanceCommand) {
+  if (!input.acceptanceCommand && !isBrowserAcceptanceEnabled(input.browserAcceptance)) {
     return { stdout: '', stderr: '', exitCode: 0, success: true };
   }
   const cwd = resolveWorkspaceCwd(workspace, input.cwd);
-  const result = await runAcceptanceCommand(
-    input,
-    sandbox,
-    cwd,
-    input.acceptanceCommand,
-    input.acceptanceTimeoutSeconds
-  );
-  if (result.passed) {
+  if (input.acceptanceCommand) {
+    const result = await runAcceptanceCommand(
+      input,
+      sandbox,
+      cwd,
+      input.acceptanceCommand,
+      input.acceptanceTimeoutSeconds
+    );
+    if (!result.passed) {
+      return {
+        stdout: result.stdout,
+        stderr: appendTail(result.stderr, result.summary),
+        exitCode: result.exitCode || 78,
+        success: false,
+      };
+    }
+  }
+  if (isBrowserAcceptanceEnabled(input.browserAcceptance)) {
+    const browserResult = await runBrowserAcceptance(input, sandbox, cwd, input.browserAcceptance);
+    if (!browserResult.passed) {
+      return {
+        stdout: browserResult.stdout,
+        stderr: appendTail(browserResult.stderr, browserResult.summary),
+        exitCode: 78,
+        success: false,
+      };
+    }
     return {
-      stdout: result.stdout,
-      stderr: result.stderr,
-      exitCode: result.exitCode,
+      stdout: browserResult.stdout,
+      stderr: browserResult.stderr,
+      exitCode: 0,
       success: true,
     };
   }
-  return {
-    stdout: result.stdout,
-    stderr: appendTail(result.stderr, result.summary),
-    exitCode: result.exitCode || 78,
-    success: false,
-  };
+  return { stdout: '', stderr: '', exitCode: 0, success: true };
 }
 
-function withAcceptanceCommand(
+function withAcceptanceChecks(
   evidence: PrGateEvidence,
-  acceptanceCommand: string | undefined
+  input: Parameters<RunExecutor['execute']>[0]
 ): PrGateEvidence {
-  if (!acceptanceCommand) return evidence;
+  const checks = [...evidence.checkCommands];
+  if (input.acceptanceCommand) checks.push(input.acceptanceCommand);
+  if (isBrowserAcceptanceEnabled(input.browserAcceptance)) {
+    const label = input.browserAcceptance.goal?.trim() || input.browserAcceptance.url?.trim() || 'browser acceptance';
+    checks.push(`browser: ${label}`);
+  }
   return {
     ...evidence,
-    checkCommands: [...evidence.checkCommands, acceptanceCommand],
+    checkCommands: checks,
   };
 }
 

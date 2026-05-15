@@ -1,5 +1,9 @@
 import type { Sandbox } from '@cloudflare/sandbox';
 
+export interface BrowserWorkerBinding {
+  fetch: typeof fetch;
+}
+
 export interface Env {
   DB: D1Database;
   DROID_INTERNAL_TOKEN: string;
@@ -8,13 +12,27 @@ export interface Env {
   DROID_DEEPSEEK_REVIEW_MODEL?: string;
   DROID_GITHUB_TOKEN?: string;
   DROID_SAASMAKER_TOKEN?: string;
+  DROID_BROWSER_PREVIEW_HOSTNAME?: string;
   SAASMAKER_API_URL?: string;
+  BROWSER?: BrowserWorkerBinding;
   Sandbox: DurableObjectNamespace<Sandbox>;
   DROID_RUN_ROOMS?: DurableObjectNamespace;
 }
 
 export type RunMode = 'command' | 'native';
 export type RunProvider = 'deepseek';
+
+export interface BrowserAcceptanceRequest {
+  enabled?: boolean;
+  goal?: string;
+  url?: string;
+  start_command?: string;
+  port?: number;
+  preview_hostname?: string;
+  assert_text?: string[];
+  timeout_seconds?: number;
+  keep_open?: boolean;
+}
 
 export interface RunRequest {
   mode?: RunMode;
@@ -34,6 +52,7 @@ export interface RunRequest {
   pr_base_branch?: string;
   acceptance_command?: string;
   acceptance_timeout_seconds?: number;
+  browser_acceptance?: BrowserAcceptanceRequest;
   destroy_after_run?: boolean;
   wait_for_completion?: boolean;
 }
@@ -120,6 +139,7 @@ export interface RunExecutionInput {
   prBaseBranch?: string;
   acceptanceCommand?: string;
   acceptanceTimeoutSeconds?: number;
+  browserAcceptance?: BrowserAcceptanceRequest;
   cwd?: string;
   destroyAfterRun: boolean;
   recordEvent: (event: RunEventInput) => Promise<void>;

@@ -291,6 +291,13 @@ export function TaskBoard({
   const [droidCreatePr, setDroidCreatePr] = useState(true);
   const [droidAcceptanceCommand, setDroidAcceptanceCommand] = useState('');
   const [droidAcceptanceSuggestions, setDroidAcceptanceSuggestions] = useState<string[]>([]);
+  const [droidBrowserAcceptanceEnabled, setDroidBrowserAcceptanceEnabled] = useState(false);
+  const [droidBrowserAcceptanceUrl, setDroidBrowserAcceptanceUrl] = useState('');
+  const [droidBrowserAcceptanceGoal, setDroidBrowserAcceptanceGoal] = useState('');
+  const [droidBrowserAcceptanceAssertText, setDroidBrowserAcceptanceAssertText] = useState('');
+  const [droidBrowserAcceptanceStartCommand, setDroidBrowserAcceptanceStartCommand] = useState('');
+  const [droidBrowserAcceptancePort, setDroidBrowserAcceptancePort] = useState('3000');
+  const [droidBrowserAcceptanceKeepOpen, setDroidBrowserAcceptanceKeepOpen] = useState(true);
   const [droidRepoUrl, setDroidRepoUrl] = useState('');
   const [droidBranch, setDroidBranch] = useState('');
   const [droidCwd, setDroidCwd] = useState('');
@@ -397,6 +404,13 @@ export function TaskBoard({
     setDroidCreatePr(true);
     setDroidAcceptanceSuggestions(acceptance.suggestions);
     setDroidAcceptanceCommand(acceptance.explicit ?? '');
+    setDroidBrowserAcceptanceEnabled(false);
+    setDroidBrowserAcceptanceUrl('');
+    setDroidBrowserAcceptanceGoal(`Verify ${task.title}`);
+    setDroidBrowserAcceptanceAssertText('');
+    setDroidBrowserAcceptanceStartCommand('');
+    setDroidBrowserAcceptancePort('3000');
+    setDroidBrowserAcceptanceKeepOpen(true);
     setDroidRepoUrl(task.project_slug ? projectRepos?.[task.project_slug] ?? '' : '');
     setDroidBranch(task.branch_name ?? '');
     setDroidCwd('');
@@ -447,6 +461,13 @@ export function TaskBoard({
     setDroidCreatePr(true);
     setDroidAcceptanceSuggestions(acceptance.suggestions);
     setDroidAcceptanceCommand(acceptance.explicit ?? '');
+    setDroidBrowserAcceptanceEnabled(false);
+    setDroidBrowserAcceptanceUrl('');
+    setDroidBrowserAcceptanceGoal(`Verify ${task.title}`);
+    setDroidBrowserAcceptanceAssertText('');
+    setDroidBrowserAcceptanceStartCommand('');
+    setDroidBrowserAcceptancePort('3000');
+    setDroidBrowserAcceptanceKeepOpen(true);
     setDroidRepoUrl(task.project_slug ? projectRepos?.[task.project_slug] ?? '' : '');
     setDroidBranch(task.branch_name ?? '');
     setDroidCwd('');
@@ -746,6 +767,10 @@ export function TaskBoard({
     if (!droidTask) return;
     if (droidMode === 'command' && !droidCommand.trim()) return;
     if (droidMode !== 'command' && !droidPrompt.trim()) return;
+    if (droidBrowserAcceptanceEnabled && !droidBrowserAcceptanceUrl.trim() && !droidBrowserAcceptanceStartCommand.trim()) {
+      showToast('Add a browser test URL or start command');
+      return;
+    }
     setStartingDroidRun(true);
     setDroidRun(null);
     setDroidEvents([]);
@@ -766,6 +791,19 @@ export function TaskBoard({
           create_pr: droidCreatePr,
           pr_title: droidTask ? `Droid: ${droidTask.title}` : undefined,
           acceptance_command: droidAcceptanceCommand.trim() || undefined,
+          browser_acceptance: droidBrowserAcceptanceEnabled ? {
+            enabled: true,
+            goal: droidBrowserAcceptanceGoal.trim() || undefined,
+            url: droidBrowserAcceptanceUrl.trim() || undefined,
+            start_command: droidBrowserAcceptanceStartCommand.trim() || undefined,
+            port: Number(droidBrowserAcceptancePort) || undefined,
+            assert_text: droidBrowserAcceptanceAssertText
+              .split(',')
+              .map(value => value.trim())
+              .filter(Boolean),
+            keep_open: droidBrowserAcceptanceKeepOpen,
+            timeout_seconds: 120,
+          } : undefined,
           repo_url: droidRepoUrl.trim() || undefined,
           branch: droidBranch.trim() || undefined,
           cwd: droidCwd.trim() || undefined,
@@ -1356,6 +1394,13 @@ export function TaskBoard({
         createPr={droidCreatePr}
         acceptanceCommand={droidAcceptanceCommand}
         acceptanceSuggestions={droidAcceptanceSuggestions}
+        browserAcceptanceEnabled={droidBrowserAcceptanceEnabled}
+        browserAcceptanceUrl={droidBrowserAcceptanceUrl}
+        browserAcceptanceGoal={droidBrowserAcceptanceGoal}
+        browserAcceptanceAssertText={droidBrowserAcceptanceAssertText}
+        browserAcceptanceStartCommand={droidBrowserAcceptanceStartCommand}
+        browserAcceptancePort={droidBrowserAcceptancePort}
+        browserAcceptanceKeepOpen={droidBrowserAcceptanceKeepOpen}
         repoUrl={droidRepoUrl}
         branch={droidBranch}
         cwd={droidCwd}
@@ -1371,6 +1416,13 @@ export function TaskBoard({
         onMaxTurnsChange={setDroidMaxTurns}
         onCreatePrChange={setDroidCreatePr}
         onAcceptanceCommandChange={setDroidAcceptanceCommand}
+        onBrowserAcceptanceEnabledChange={setDroidBrowserAcceptanceEnabled}
+        onBrowserAcceptanceUrlChange={setDroidBrowserAcceptanceUrl}
+        onBrowserAcceptanceGoalChange={setDroidBrowserAcceptanceGoal}
+        onBrowserAcceptanceAssertTextChange={setDroidBrowserAcceptanceAssertText}
+        onBrowserAcceptanceStartCommandChange={setDroidBrowserAcceptanceStartCommand}
+        onBrowserAcceptancePortChange={setDroidBrowserAcceptancePort}
+        onBrowserAcceptanceKeepOpenChange={setDroidBrowserAcceptanceKeepOpen}
         onRepoUrlChange={setDroidRepoUrl}
         onBranchChange={setDroidBranch}
         onCwdChange={setDroidCwd}
@@ -1386,6 +1438,13 @@ export function TaskBoard({
           setDroidMaxTurns('25');
           setDroidCreatePr(true);
           setDroidAcceptanceCommand('');
+          setDroidBrowserAcceptanceEnabled(false);
+          setDroidBrowserAcceptanceUrl('');
+          setDroidBrowserAcceptanceGoal('');
+          setDroidBrowserAcceptanceAssertText('');
+          setDroidBrowserAcceptanceStartCommand('');
+          setDroidBrowserAcceptancePort('3000');
+          setDroidBrowserAcceptanceKeepOpen(true);
           setDroidRepoUrl('');
           setDroidBranch('');
           setDroidCwd('');

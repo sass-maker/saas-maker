@@ -21,6 +21,7 @@ import { fetchRunRoom, getRunRoomStatus, recordRunRoomEvent } from './run-room-c
 import type {
   CommandResult,
   Env,
+  BrowserAcceptanceRequest,
   RunEventInput,
   RunExecutionInput,
   RunExecutor,
@@ -61,6 +62,15 @@ export function createApp(executor: RunExecutor) {
   });
 
   app.get('/health', (c) => c.json({ status: 'ok' }));
+
+  app.use('*', async (c, next) => {
+    if (isSandboxPreviewRequest(c.req.raw)) {
+      const { proxyToSandbox } = await import('@cloudflare/sandbox');
+      const proxyResponse = await proxyToSandbox(c.req.raw, c.env).catch(() => null);
+      if (proxyResponse) return proxyResponse;
+    }
+    await next();
+  });
 
   app.use('/v0/*', async (c, next) => {
     const expected = c.env.DROID_INTERNAL_TOKEN;
@@ -170,6 +180,7 @@ export function createApp(executor: RunExecutor) {
       prBaseBranch: body?.pr_base_branch?.trim(),
       acceptanceCommand: body?.acceptance_command?.trim(),
       acceptanceTimeoutSeconds: normalizeAcceptanceTimeoutSeconds(body?.acceptance_timeout_seconds),
+      browserAcceptance: normalizeBrowserAcceptance(body?.browser_acceptance),
       cwd: body?.cwd?.trim(),
       destroyAfterRun: body?.destroy_after_run !== false,
       waitUntil: (promise: Promise<void>) => scheduleBackground(c, promise),
@@ -580,6 +591,7 @@ async function executeRun(
     prBaseBranch?: string;
     acceptanceCommand?: string;
     acceptanceTimeoutSeconds?: number;
+    browserAcceptance?: BrowserAcceptanceRequest;
     cwd?: string;
     destroyAfterRun: boolean;
     reconcile?: boolean;
@@ -607,6 +619,7 @@ async function executeRun(
       prBaseBranch: input.prBaseBranch,
       acceptanceCommand: input.acceptanceCommand,
       acceptanceTimeoutSeconds: input.acceptanceTimeoutSeconds,
+      browserAcceptance: input.browserAcceptance,
       cwd: input.cwd,
       destroyAfterRun: input.destroyAfterRun,
       recordEvent: (event) => createRunEvent(env, input.runId, event),
@@ -924,6 +937,7 @@ function buildRunRequestMetadata(
     pr_base_branch: body?.pr_base_branch ?? null,
     acceptance_command: body?.acceptance_command ?? null,
     acceptance_timeout_seconds: body?.acceptance_timeout_seconds ?? null,
+    browser_acceptance: normalizeBrowserAcceptance(body?.browser_acceptance) ?? null,
     cwd: body?.cwd ?? null,
     destroy_after_run: body?.destroy_after_run !== false,
   };
@@ -955,6 +969,7 @@ function executionInputFromRun(
     prBaseBranch: stringFromUnknown(request?.pr_base_branch),
     acceptanceCommand: stringFromUnknown(request?.acceptance_command),
     acceptanceTimeoutSeconds: normalizeAcceptanceTimeoutSeconds(request?.acceptance_timeout_seconds),
+    browserAcceptance: normalizeBrowserAcceptance(request?.browser_acceptance),
     cwd: stringFromUnknown(request?.cwd) ?? run.cwd ?? undefined,
     destroyAfterRun: request?.destroy_after_run !== false,
   };
@@ -962,6 +977,11 @@ function executionInputFromRun(
 
 function stringFromUnknown(value: unknown): string | undefined {
   return typeof value === 'string' && value.trim() ? value.trim() : undefined;
+}
+
+function isSandboxPreviewRequest(request: Request): boolean {
+  const hostname = new URL(request.url).hostname;
+  return /^\d+-droid-[a-z0-9-]+-[a-z0-9_]+/i.test(hostname.split('.')[0] ?? '');
 }
 
 function validateRunRequest(body: RunRequest | null): { ok: true } | { ok: false; error: string } {
@@ -1014,6 +1034,8 @@ function validateRunRequest(body: RunRequest | null): { ok: true } | { ok: false
   ) {
     return { ok: false, error: 'acceptance_timeout_seconds must be between 30 and 900' };
   }
+  const browserValidation = validateBrowserAcceptance(body.browser_acceptance);
+  if (!browserValidation.ok) return browserValidation;
   return { ok: true };
 }
 
@@ -1027,6 +1049,9 @@ function validateRunEnvironment(
   }
   if (body?.create_pr === true && !env.DROID_GITHUB_TOKEN?.trim()) {
     return { ok: false, error: 'DROID_GITHUB_TOKEN is required when create_pr is true' };
+  }
+  if (isBrowserAcceptanceRequested(body?.browser_acceptance) && !env.BROWSER) {
+    return { ok: false, error: 'BROWSER binding is required when browser_acceptance is enabled' };
   }
   return { ok: true };
 }
@@ -1062,6 +1087,102 @@ function normalizeAcceptanceTimeoutSeconds(value: unknown): number | undefined {
   if (value < 30) return 30;
   if (value > 900) return 900;
   return value;
+}
+
+function validateBrowserAcceptance(
+  value: unknown
+): { ok: true } | { ok: false; error: string } {
+  if (value === undefined) return { ok: true };
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return { ok: false, error: 'browser_acceptance must be an object' };
+  }
+  const config = value as Record<string, unknown>;
+  if (config.enabled !== undefined && typeof config.enabled !== 'boolean') {
+    return { ok: false, error: 'browser_acceptance.enabled must be a boolean' };
+  }
+  if (config.goal !== undefined && typeof config.goal !== 'string') {
+    return { ok: false, error: 'browser_acceptance.goal must be a string' };
+  }
+  if (config.url !== undefined && typeof config.url !== 'string') {
+    return { ok: false, error: 'browser_acceptance.url must be a string' };
+  }
+  if (typeof config.url === 'string' && config.url.trim() && !isHttpUrl(config.url)) {
+    return { ok: false, error: 'browser_acceptance.url must be an http or https URL' };
+  }
+  if (config.start_command !== undefined && typeof config.start_command !== 'string') {
+    return { ok: false, error: 'browser_acceptance.start_command must be a string' };
+  }
+  if (config.port !== undefined && normalizeBrowserPort(config.port) === undefined) {
+    return { ok: false, error: 'browser_acceptance.port must be between 1024 and 65535' };
+  }
+  if (config.preview_hostname !== undefined && typeof config.preview_hostname !== 'string') {
+    return { ok: false, error: 'browser_acceptance.preview_hostname must be a string' };
+  }
+  if (
+    config.timeout_seconds !== undefined &&
+    normalizeBrowserTimeoutSeconds(config.timeout_seconds) === undefined
+  ) {
+    return { ok: false, error: 'browser_acceptance.timeout_seconds must be between 30 and 300' };
+  }
+  if (config.keep_open !== undefined && typeof config.keep_open !== 'boolean') {
+    return { ok: false, error: 'browser_acceptance.keep_open must be a boolean' };
+  }
+  if (
+    config.assert_text !== undefined &&
+    (!Array.isArray(config.assert_text) || config.assert_text.some((item) => typeof item !== 'string'))
+  ) {
+    return { ok: false, error: 'browser_acceptance.assert_text must be an array of strings' };
+  }
+  return { ok: true };
+}
+
+function normalizeBrowserAcceptance(value: unknown): BrowserAcceptanceRequest | undefined {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return undefined;
+  const config = value as Record<string, unknown>;
+  const assertText = Array.isArray(config.assert_text)
+    ? config.assert_text.filter((item): item is string => typeof item === 'string' && item.trim().length > 0).map((item) => item.trim())
+    : undefined;
+  return {
+    enabled: typeof config.enabled === 'boolean' ? config.enabled : undefined,
+    goal: stringFromUnknown(config.goal),
+    url: stringFromUnknown(config.url),
+    start_command: stringFromUnknown(config.start_command),
+    port: normalizeBrowserPort(config.port),
+    preview_hostname: stringFromUnknown(config.preview_hostname),
+    assert_text: assertText?.length ? assertText : undefined,
+    timeout_seconds: normalizeBrowserTimeoutSeconds(config.timeout_seconds),
+    keep_open: typeof config.keep_open === 'boolean' ? config.keep_open : undefined,
+  };
+}
+
+function isBrowserAcceptanceRequested(value: unknown): boolean {
+  const config = normalizeBrowserAcceptance(value);
+  if (!config || config.enabled === false) return false;
+  return Boolean(config.goal || config.url || config.start_command);
+}
+
+function normalizeBrowserTimeoutSeconds(value: unknown): number | undefined {
+  if (value === undefined) return undefined;
+  if (typeof value !== 'number' || !Number.isInteger(value)) return undefined;
+  if (value < 30) return 30;
+  if (value > 300) return 300;
+  return value;
+}
+
+function normalizeBrowserPort(value: unknown): number | undefined {
+  if (value === undefined) return undefined;
+  if (typeof value !== 'number' || !Number.isInteger(value)) return undefined;
+  if (value < 1024 || value > 65535) return undefined;
+  return value;
+}
+
+function isHttpUrl(value: string): boolean {
+  try {
+    const url = new URL(value);
+    return url.protocol === 'http:' || url.protocol === 'https:';
+  } catch {
+    return false;
+  }
 }
 
 function normalizeLimit(value: unknown): number | undefined {

@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { AlertTriangle, CheckCircle2, Clipboard, ExternalLink, Play, Square, XCircle } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, Clipboard, ExternalLink, Eye, Play, Square, XCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -79,6 +79,13 @@ interface DroidDialogProps {
   createPr: boolean;
   acceptanceCommand: string;
   acceptanceSuggestions: string[];
+  browserAcceptanceEnabled: boolean;
+  browserAcceptanceUrl: string;
+  browserAcceptanceGoal: string;
+  browserAcceptanceAssertText: string;
+  browserAcceptanceStartCommand: string;
+  browserAcceptancePort: string;
+  browserAcceptanceKeepOpen: boolean;
   repoUrl: string;
   branch: string;
   cwd: string;
@@ -94,6 +101,13 @@ interface DroidDialogProps {
   onMaxTurnsChange: (value: string) => void;
   onCreatePrChange: (value: boolean) => void;
   onAcceptanceCommandChange: (value: string) => void;
+  onBrowserAcceptanceEnabledChange: (value: boolean) => void;
+  onBrowserAcceptanceUrlChange: (value: string) => void;
+  onBrowserAcceptanceGoalChange: (value: string) => void;
+  onBrowserAcceptanceAssertTextChange: (value: string) => void;
+  onBrowserAcceptanceStartCommandChange: (value: string) => void;
+  onBrowserAcceptancePortChange: (value: string) => void;
+  onBrowserAcceptanceKeepOpenChange: (value: boolean) => void;
   onRepoUrlChange: (value: string) => void;
   onBranchChange: (value: string) => void;
   onCwdChange: (value: string) => void;
@@ -113,6 +127,13 @@ export function DroidDialog({
   createPr,
   acceptanceCommand,
   acceptanceSuggestions,
+  browserAcceptanceEnabled,
+  browserAcceptanceUrl,
+  browserAcceptanceGoal,
+  browserAcceptanceAssertText,
+  browserAcceptanceStartCommand,
+  browserAcceptancePort,
+  browserAcceptanceKeepOpen,
   repoUrl,
   branch,
   cwd,
@@ -128,6 +149,13 @@ export function DroidDialog({
   onMaxTurnsChange,
   onCreatePrChange,
   onAcceptanceCommandChange,
+  onBrowserAcceptanceEnabledChange,
+  onBrowserAcceptanceUrlChange,
+  onBrowserAcceptanceGoalChange,
+  onBrowserAcceptanceAssertTextChange,
+  onBrowserAcceptanceStartCommandChange,
+  onBrowserAcceptancePortChange,
+  onBrowserAcceptanceKeepOpenChange,
   onRepoUrlChange,
   onBranchChange,
   onCwdChange,
@@ -138,6 +166,7 @@ export function DroidDialog({
   onClose,
 }: DroidDialogProps) {
   const acceptanceWarning = createPr && !acceptanceCommand.trim();
+  const browserTargetMissing = browserAcceptanceEnabled && !browserAcceptanceUrl.trim() && !browserAcceptanceStartCommand.trim();
 
   return (
     <Dialog open={!!task} onOpenChange={open => {
@@ -258,6 +287,90 @@ export function DroidDialog({
                 </p>
               </div>
 
+              <div className="space-y-3 rounded-lg border bg-muted/20 p-3">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <Label htmlFor="droid-browser-acceptance">Browser test</Label>
+                    <p className="text-xs text-muted-foreground">
+                      Run a Cloudflare Browser Run check and capture a screenshot.
+                    </p>
+                  </div>
+                  <Switch
+                    id="droid-browser-acceptance"
+                    checked={browserAcceptanceEnabled}
+                    onCheckedChange={onBrowserAcceptanceEnabledChange}
+                  />
+                </div>
+                {browserAcceptanceEnabled ? (
+                  <div className="space-y-3">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="droid-browser-goal">Goal</Label>
+                      <Input
+                        id="droid-browser-goal"
+                        value={browserAcceptanceGoal}
+                        onChange={event => onBrowserAcceptanceGoalChange(event.target.value)}
+                        placeholder="Verify the Droid dialog shows acceptance, artifacts, and events"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="droid-browser-url">URL</Label>
+                      <Input
+                        id="droid-browser-url"
+                        value={browserAcceptanceUrl}
+                        onChange={event => onBrowserAcceptanceUrlChange(event.target.value)}
+                        placeholder="https://preview-or-deploy.example.com/tasks"
+                      />
+                    </div>
+                    <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_6rem]">
+                      <div className="space-y-1.5">
+                        <Label htmlFor="droid-browser-start">Start command</Label>
+                        <Input
+                          id="droid-browser-start"
+                          value={browserAcceptanceStartCommand}
+                          onChange={event => onBrowserAcceptanceStartCommandChange(event.target.value)}
+                          placeholder="pnpm dev --host 0.0.0.0 --port 3000"
+                          className="font-mono text-xs"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label htmlFor="droid-browser-port">Port</Label>
+                        <Input
+                          id="droid-browser-port"
+                          value={browserAcceptancePort}
+                          onChange={event => onBrowserAcceptancePortChange(event.target.value)}
+                          inputMode="numeric"
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="droid-browser-assert">Text to assert</Label>
+                      <Input
+                        id="droid-browser-assert"
+                        value={browserAcceptanceAssertText}
+                        onChange={event => onBrowserAcceptanceAssertTextChange(event.target.value)}
+                        placeholder="Droid,Acceptance,Events"
+                      />
+                    </div>
+                    <div className="flex items-center justify-between gap-3">
+                      <Label htmlFor="droid-browser-keep-open" className="text-xs text-muted-foreground">
+                        Keep live browser open briefly
+                      </Label>
+                      <Switch
+                        id="droid-browser-keep-open"
+                        checked={browserAcceptanceKeepOpen}
+                        onCheckedChange={onBrowserAcceptanceKeepOpenChange}
+                      />
+                    </div>
+                    {browserTargetMissing ? (
+                      <div className="flex items-start gap-2 rounded-md border border-amber-500/35 bg-amber-500/10 p-2 text-xs text-amber-700 dark:text-amber-200">
+                        <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                        <span>Add a URL or a start command before running browser acceptance.</span>
+                      </div>
+                    ) : null}
+                  </div>
+                ) : null}
+              </div>
+
               <div className="grid gap-3 sm:grid-cols-2">
                 <div className="space-y-1.5">
                   <Label htmlFor="droid-repo">Repo URL</Label>
@@ -296,7 +409,7 @@ export function DroidDialog({
                 <Button type="button" variant="outline" onClick={onClose}>
                   Close
                 </Button>
-                <Button type="button" onClick={onRun} disabled={running || (mode === 'command' ? !command.trim() : !prompt.trim())}>
+                <Button type="button" onClick={onRun} disabled={running || browserTargetMissing || (mode === 'command' ? !command.trim() : !prompt.trim())}>
                   <Play className="h-4 w-4" />
                   {running ? 'Running...' : mode === 'command' ? 'Run in Droid' : 'Ask Droid'}
                 </Button>
@@ -315,6 +428,7 @@ export function DroidDialog({
                 onMarkStale={onMarkStale}
               />
               <DroidAcceptance events={events} />
+              <DroidBrowserAcceptance events={events} artifacts={artifacts} />
               <DroidArtifacts artifacts={artifacts} />
               <DroidEvents events={events} />
             </div>
@@ -510,6 +624,55 @@ function DroidAcceptance({ events }: { events: DroidRunEvent[] }) {
   );
 }
 
+function DroidBrowserAcceptance({ events, artifacts }: { events: DroidRunEvent[]; artifacts: DroidRunArtifact[] }) {
+  const event = useMemo(() => getLatestEvent(events, ['browser_acceptance_passed', 'browser_acceptance_failed']), [events]);
+  const artifact = useMemo(() => [...artifacts].reverse().find(item => item.type === 'browser_acceptance') ?? null, [artifacts]);
+  if (!event && !artifact) return null;
+  const passed = event?.type === 'browser_acceptance_passed';
+  const metadata = parseDroidMetadata((artifact ?? event)?.metadata ?? '{}');
+  const screenshot = stringFromUnknown(metadata.screenshot_data_uri);
+  const url = stringFromUnknown(metadata.url);
+  const title = stringFromUnknown(metadata.title);
+  const sessionId = stringFromUnknown(metadata.session_id);
+  return (
+    <div className={cn(
+      'rounded-lg border p-3',
+      passed
+        ? 'border-emerald-500/35 bg-emerald-500/10'
+        : 'border-red-500/40 bg-red-500/10'
+    )}>
+      <div className="flex items-center justify-between gap-2">
+        <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
+          <Eye className={cn('h-4 w-4', passed ? 'text-emerald-600 dark:text-emerald-300' : 'text-red-600 dark:text-red-300')} />
+          Browser
+        </h3>
+        <Badge variant="outline" className={passed
+          ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-200'
+          : 'border-red-500/40 bg-red-500/10 text-red-700 dark:text-red-200'
+        }>
+          {passed ? 'passed' : 'failed'}
+        </Badge>
+      </div>
+      <div className="mt-2 space-y-1 text-xs text-muted-foreground">
+        {url ? (
+          <a href={url} target="_blank" rel="noreferrer" className="inline-flex max-w-full items-center gap-1 text-blue-600 hover:underline dark:text-blue-300">
+            <span className="truncate">{url}</span>
+            <ExternalLink className="h-3 w-3 shrink-0" />
+          </a>
+        ) : null}
+        {title ? <p><span className="text-foreground">Title:</span> {title}</p> : null}
+        {sessionId ? <p className="break-all font-mono text-[11px]">session {sessionId}</p> : null}
+        {event?.message ? <p>{event.message}</p> : null}
+      </div>
+      {screenshot ? (
+        <div className="mt-2 overflow-hidden rounded-md border bg-background">
+          <img src={screenshot} alt="Droid browser acceptance screenshot" className="h-auto w-full" />
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 function DroidArtifacts({ artifacts }: { artifacts: DroidRunArtifact[] }) {
   if (artifacts.length === 0) return null;
   return (
@@ -520,6 +683,7 @@ function DroidArtifacts({ artifacts }: { artifacts: DroidRunArtifact[] }) {
           const metadata = parseDroidMetadata(artifact.metadata);
           const stat = typeof metadata.stat === 'string' ? metadata.stat.trim().split('\n')[0] : '';
           const patchBytes = typeof metadata.patch_bytes === 'number' ? metadata.patch_bytes : null;
+          const screenshot = stringFromUnknown(metadata.screenshot_data_uri);
           return (
             <div key={artifact.id} className="rounded-md border bg-background p-2 text-xs">
               <div className="flex flex-wrap items-center justify-between gap-2">
@@ -530,6 +694,9 @@ function DroidArtifacts({ artifacts }: { artifacts: DroidRunArtifact[] }) {
               </div>
               {stat ? <p className="mt-1 text-muted-foreground">{stat}</p> : null}
               {patchBytes !== null ? <p className="mt-1 text-muted-foreground">{patchBytes.toLocaleString()} bytes captured in audit log</p> : null}
+              {screenshot ? (
+                <img src={screenshot} alt={artifact.name} className="mt-2 h-auto w-full rounded border" />
+              ) : null}
             </div>
           );
         })}
