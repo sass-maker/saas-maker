@@ -10,11 +10,11 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
         with:
           version: 10
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 22
           cache: pnpm
@@ -34,7 +34,7 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Check API deploy paths
@@ -62,11 +62,11 @@ jobs:
       - name: Skip API deploy
         if: steps.changes.outputs.changed != 'true'
         run: echo "No API-owned paths changed; skipping saasmaker-api deploy."
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
         if: steps.changes.outputs.changed == 'true'
         with:
           version: 10
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         if: steps.changes.outputs.changed == 'true'
         with:
           node-version: 22
@@ -93,7 +93,7 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Check Droid deploy paths
@@ -121,11 +121,11 @@ jobs:
       - name: Skip Droid deploy
         if: steps.changes.outputs.changed != 'true'
         run: echo "No Droid-owned paths changed; skipping saasmaker-droid deploy."
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
         if: steps.changes.outputs.changed == 'true'
         with:
           version: 10
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         if: steps.changes.outputs.changed == 'true'
         with:
           node-version: 22
@@ -144,7 +144,7 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Check cockpit deploy paths
@@ -172,11 +172,11 @@ jobs:
       - name: Skip cockpit deploy
         if: steps.changes.outputs.changed != 'true'
         run: echo "No cockpit-owned paths changed; skipping saasmaker-dashboard deploy."
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
         if: steps.changes.outputs.changed == 'true'
         with:
           version: 10
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         if: steps.changes.outputs.changed == 'true'
         with:
           node-version: 22
@@ -195,7 +195,7 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Check home deploy paths
@@ -223,11 +223,11 @@ jobs:
       - name: Skip home deploy
         if: steps.changes.outputs.changed != 'true'
         run: echo "No home-owned paths changed; skipping saas-maker-home deploy."
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
         if: steps.changes.outputs.changed == 'true'
         with:
           version: 10
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         if: steps.changes.outputs.changed == 'true'
         with:
           node-version: 22
@@ -248,7 +248,7 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Check docs deploy paths
@@ -276,11 +276,11 @@ jobs:
       - name: Skip docs deploy
         if: steps.changes.outputs.changed != 'true'
         run: echo "No docs-owned paths changed; skipping saas-maker-docs deploy."
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
         if: steps.changes.outputs.changed == 'true'
         with:
           version: 10
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         if: steps.changes.outputs.changed == 'true'
         with:
           node-version: 22
@@ -302,11 +302,11 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
         with:
           version: 10
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 22
           cache: pnpm
