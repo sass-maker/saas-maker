@@ -3,7 +3,15 @@ type ProjectIdentity = {
   slug?: string | null;
 };
 
-const HIDDEN_DASHBOARD_PROJECTS = new Set(["a", "port-whisperer"]);
+const HIDDEN_DASHBOARD_PROJECTS = new Set([
+  "a",
+  "clash-royale-meta",
+  "dev_learning",
+  "dev-learning",
+  "port-whisperer",
+  "personalsite",
+  "sarthak-blog",
+]);
 
 export function isHiddenDashboardProject(project: ProjectIdentity) {
   const name = project.name?.trim().toLowerCase();

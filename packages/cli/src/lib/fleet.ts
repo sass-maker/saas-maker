@@ -9,6 +9,37 @@ export interface FleetProject {
   isFoundry: boolean;
 }
 
+const IGNORED_PROJECT_DIRS = new Set([
+  'Archived',
+  'Fleet',
+  'back-propogate',
+  'chess',
+  'clash-royale-meta',
+  'dev_learning',
+  'dev-learning',
+  'ludo',
+  'node_modules',
+  'out',
+  'personalsite',
+  'port-whisperer',
+  'reference',
+  'reel-maker',
+  'sarthak-blog',
+  'vaulthealth',
+]);
+
+function findFleetRoot(rootPath: string) {
+  let cursor = path.resolve(rootPath);
+  while (true) {
+    if (path.basename(cursor).toLowerCase() === 'fleet') return cursor;
+    const parent = path.dirname(cursor);
+    if (parent === cursor) break;
+    cursor = parent;
+  }
+
+  return path.resolve(rootPath, '..');
+}
+
 function scanDir(dirPath: string, depth = 0): FleetProject[] {
   if (depth > 2) return [];
   
@@ -20,11 +51,11 @@ function scanDir(dirPath: string, depth = 0): FleetProject[] {
       if (entry.isDirectory() || entry.isSymbolicLink()) {
         const name = entry.name;
         
-        if (name.startsWith('.') || 
-            name.startsWith('_') || 
-            ['node_modules', 'dist', 'out', 'build', 'reference', 'Archived',
-              'vaulthealth', 'dev_learning', 'port-whisperer', 'Fleet'
-            ].includes(name)) continue;
+        if (name.startsWith('.') ||
+            name.startsWith('_') ||
+            name === 'dist' ||
+            name === 'build' ||
+            IGNORED_PROJECT_DIRS.has(name)) continue;
         
         if (name === 'saas-maker') continue;
 
@@ -66,12 +97,7 @@ function scanDir(dirPath: string, depth = 0): FleetProject[] {
 
 export function getLocalFleet(): FleetProject[] {
   const rootPath = process.cwd();
-  
-  // We are currently in ~/Desktop/Fleet/saas-maker/...
-  // We want to scan ~/Desktop/Fleet
-  const fleetPath = rootPath.includes('Fleet') 
-    ? rootPath.split('Fleet')[0] + 'Fleet'
-    : path.resolve(rootPath, '..');
+  const fleetPath = findFleetRoot(rootPath);
   
   if (!fs.existsSync(fleetPath)) return [];
 

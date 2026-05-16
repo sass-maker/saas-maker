@@ -11,6 +11,19 @@ export const dynamic = "force-dynamic";
 
 type RunTask = Parameters<typeof buildSymphonyRunRecord>[0];
 
+function repoRoot() {
+  let current = process.cwd();
+  for (let i = 0; i < 5; i += 1) {
+    if (fs.existsSync(path.join(current, "scripts", "symphony-agent-exec.mjs"))) {
+      return current;
+    }
+    const parent = path.dirname(current);
+    if (parent === current) break;
+    current = parent;
+  }
+  return path.resolve(process.cwd(), "../..");
+}
+
 async function startWithSidecar(command: string, taskId: string) {
   const runnerUrl = process.env.SYMPHONY_RUNNER_URL || "http://127.0.0.1:3011";
   const res = await fetch(`${runnerUrl}/run`, {
@@ -27,7 +40,7 @@ async function startWithSidecar(command: string, taskId: string) {
 }
 
 function wrapCommand(command: string, taskId: string, agent: string, runId: string) {
-  const scriptPath = path.join(process.cwd(), "scripts", "symphony-agent-exec.mjs");
+  const scriptPath = path.join(repoRoot(), "scripts", "symphony-agent-exec.mjs");
   const encoded = Buffer.from(command, "utf8").toString("base64");
   return [
     JSON.stringify(process.execPath),
@@ -55,7 +68,7 @@ function isBlockedTask(task: { blocked?: unknown }) {
 
 function readAgentUsage(): SymphonyAgentUsageSnapshot | null {
   try {
-    const filePath = path.join(process.cwd(), ".symphony", "agent-usage.json");
+    const filePath = path.join(repoRoot(), ".symphony", "agent-usage.json");
     return JSON.parse(fs.readFileSync(filePath, "utf8")) as SymphonyAgentUsageSnapshot;
   } catch {
     return null;
@@ -112,6 +125,7 @@ export async function POST(req: Request) {
         const command = wrapCommand(run.command, run.taskId, run.route.agent, runId);
         const child = spawn(command, {
           shell: true,
+          cwd: repoRoot(),
           detached: true,
           stdio: "ignore",
           env: { ...process.env, FORCE_COLOR: "true" },

@@ -5,6 +5,7 @@ import { spawnSync } from 'node:child_process';
 
 const STATE_DIR = path.join(process.cwd(), '.symphony');
 const CACHE_FILE = path.join(STATE_DIR, 'agent-usage.json');
+const PROVIDER_TELEMETRY_FILE = path.join(STATE_DIR, 'provider-telemetry.json');
 const DEFAULT_TTL_MS = 45 * 60 * 1000;
 const PROBE_PROMPT = 'Symphony routing usage probe. Do not edit files or run commands. Return only JSON: {"ok":true}.';
 
@@ -29,6 +30,7 @@ function parseArgs(argv) {
     claudeBudgetUsd: process.env.SYMPHONY_CLAUDE_PROBE_BUDGET_USD || '0.10',
     claudeModel: process.env.SYMPHONY_CLAUDE_PROBE_MODEL || 'haiku',
     geminiModel: process.env.SYMPHONY_GEMINI_PROBE_MODEL || '',
+    telemetryFile: process.env.SYMPHONY_PROVIDER_TELEMETRY_FILE || PROVIDER_TELEMETRY_FILE,
   };
 
   for (let i = 0; i < argv.length; i += 1) {
@@ -39,6 +41,7 @@ function parseArgs(argv) {
     else if (arg === '--claude-budget-usd') args.claudeBudgetUsd = argv[++i] || args.claudeBudgetUsd;
     else if (arg === '--claude-model') args.claudeModel = argv[++i] || args.claudeModel;
     else if (arg === '--gemini-model') args.geminiModel = argv[++i] || args.geminiModel;
+    else if (arg === '--telemetry-file') args.telemetryFile = path.resolve(argv[++i] || args.telemetryFile);
     else if (arg === '--help' || arg === '-h') {
       printHelp();
       process.exit(0);
@@ -62,6 +65,7 @@ Options:
   --claude-budget-usd VALUE Max Claude probe spend, default 0.10
   --claude-model VALUE      Requested Claude probe model, default haiku
   --gemini-model VALUE      Optional Gemini probe model
+  --telemetry-file VALUE    Optional provider telemetry JSON, default .symphony/provider-telemetry.json
   --json                    Print raw cache JSON
 `);
 }
@@ -113,10 +117,10 @@ function runProbe(agent, command, args) {
   };
 }
 
-function summarizeClaude(probe) {
+function summarizeClaude(probe, agent = 'claude') {
   const parsed = probe.parsed || {};
   return {
-    agent: 'claude',
+    agent,
     available: probe.available,
     ok: probe.ok && parsed.subtype !== 'error_max_budget_usd',
     status: parsed.subtype || (probe.ok ? 'success' : 'failed'),
@@ -144,9 +148,9 @@ function summarizeGemini(probe) {
   };
 }
 
-function sampleClaude(args) {
+function sampleClaude(args, agent = 'claude') {
   if (!commandExists('claude')) {
-    return { agent: 'claude', available: false, ok: false, status: 'missing', error: 'claude command not found', sampled_at: new Date().toISOString() };
+    return { agent, available: false, ok: false, status: 'missing', error: 'claude command not found', sampled_at: new Date().toISOString() };
   }
 
   const auth = spawnSync('claude', ['auth', 'status', '--json'], {
@@ -156,7 +160,7 @@ function sampleClaude(args) {
   });
   const authJson = firstJsonObject(auth.stdout);
   if (!authJson?.loggedIn) {
-    return { agent: 'claude', available: false, ok: false, status: 'unauthenticated', auth: authJson, error: auth.stderr?.trim() || null, sampled_at: new Date().toISOString() };
+    return { agent, available: false, ok: false, status: 'unauthenticated', auth: authJson, error: auth.stderr?.trim() || null, sampled_at: new Date().toISOString() };
   }
 
   const probe = runProbe('claude', 'claude', [
@@ -172,7 +176,7 @@ function sampleClaude(args) {
     args.claudeBudgetUsd,
     '--no-session-persistence',
   ]);
-  return { ...summarizeClaude(probe), auth: authJson };
+  return { ...summarizeClaude(probe, agent), auth: authJson };
 }
 
 function sampleGemini(args) {
@@ -204,7 +208,8 @@ function isFresh(cache, ttlMs) {
 function sample(args) {
   const sampledAt = new Date().toISOString();
   const agents = {
-    claude: sampleClaude(args),
+    claude: sampleClaude(args, 'claude'),
+    'claude-work': sampleClaude(args, 'claude-work'),
     gemini: sampleGemini(args),
   };
 
@@ -213,8 +218,30 @@ function sample(args) {
     ttl_ms: args.ttlMs,
     agents,
   };
-  writeJson(CACHE_FILE, cache);
-  return cache;
+  const merged = mergeProviderTelemetry(cache, args.telemetryFile);
+  writeJson(CACHE_FILE, merged);
+  return merged;
+}
+
+function mergeProviderTelemetry(cache, telemetryFile) {
+  const telemetry = readJson(telemetryFile);
+  if (!telemetry?.agents || typeof telemetry.agents !== 'object') return cache;
+  const merged = {
+    ...cache,
+    provider_telemetry_sampled_at: telemetry.sampled_at ?? null,
+    agents: { ...(cache.agents ?? {}) },
+  };
+
+  for (const [agent, agentTelemetry] of Object.entries(telemetry.agents)) {
+    merged.agents[agent] = {
+      agent,
+      available: true,
+      ok: true,
+      ...(merged.agents[agent] ?? {}),
+      provider_telemetry: agentTelemetry,
+    };
+  }
+  return merged;
 }
 
 function printSummary(cache) {
@@ -225,6 +252,12 @@ function printSummary(cache) {
     if (agent.stats?.models) {
       const totalTokens = Object.values(agent.stats.models).reduce((sum, model) => sum + (model.tokens?.total || 0), 0);
       details.push(`${totalTokens} tokens`);
+    }
+    if (agent.provider_telemetry?.worst_used_pct != null) {
+      details.push(`${Math.round(agent.provider_telemetry.worst_used_pct)}% used`);
+    }
+    if (agent.provider_telemetry?.headroom_pct != null) {
+      details.push(`${Math.round(agent.provider_telemetry.headroom_pct)}% headroom`);
     }
     if (agent.error) details.push(`error: ${agent.error}`);
     console.log(`- ${agent.agent}: ${agent.ok ? 'ok' : agent.available ? 'available with warning' : 'unavailable'}${details.length ? ` (${details.join(', ')})` : ''}`);

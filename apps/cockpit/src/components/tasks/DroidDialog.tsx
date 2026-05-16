@@ -799,7 +799,7 @@ function stringFromUnknown(value: unknown): string {
 function formatRunTime(value: string) {
   const time = new Date(value);
   if (!Number.isFinite(time.getTime())) return value;
-  return time.toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+  return time.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'UTC' });
 }
 
 function parseDroidMetadata(value: string): Record<string, unknown> {

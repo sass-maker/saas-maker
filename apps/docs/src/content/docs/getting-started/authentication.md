@@ -22,21 +22,26 @@ API keys start with `pk_` and are scoped to a single project. Get yours from **P
 
 ## Session Token
 
-Use session tokens for dashboard operations and the CLI. These are issued via Google OAuth through Auth.js.
+Use session tokens for dashboard operations and the CLI. The Cockpit issues opaque Bearer tokens through better-auth (Google OAuth); the Workers API validates them against the shared D1 `session` table.
 
 Pass the token in the `Authorization` header:
 
 ```bash
-curl https://api.sassmaker.com/v1/feedback/123 \
-  -X PATCH \
-  -H "Authorization: Bearer eyJhbGciOiJS..." \
+curl -X PATCH https://api.sassmaker.com/v1/feedback/abc-123 \
+  -H "Authorization: Bearer <session-token>" \
   -H "Content-Type: application/json" \
-  -d '{ "status": "in_progress" }'
+  -d '{ "status": "dismissed" }'
 ```
 
 **Use for:** Dashboard, CLI, admin operations (updating statuses, deleting entries, viewing analytics).
 
-Provider keys saved for AI Gateway are write-only. Config reads return whether a key is configured and a masked preview, never the stored secret. Set the Worker secret `AI_GATEWAY_KEY_SECRET` to encrypt newly stored provider keys at rest; existing plaintext keys continue to work until they are rotated.
+### CLI tokens
+
+`fnd login` stores its token in `~/.foundry/config.json` under `apiKey` (prefixed `sm_...`). The API accepts both shapes — the regular session cookie and the `sm_`-prefixed CLI token — through the same `Authorization: Bearer` header.
+
+## Provider key storage
+
+Provider keys saved for the AI Gateway are write-only. Config reads return whether a key is configured and a masked preview, never the stored secret. Set the Worker secret `AI_GATEWAY_KEY_SECRET` to encrypt newly stored provider keys at rest; existing plaintext keys continue to work until they are rotated.
 
 ## When to use which
 

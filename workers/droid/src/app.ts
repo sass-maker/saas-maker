@@ -9,6 +9,7 @@ import {
   getLatestRunEvent,
   getLatestRunRequest,
   getNextQueuedRunForQueue,
+  getRunningRunCount,
   getRun,
   getRunStats,
   listStaleRunningRuns,
@@ -34,6 +35,7 @@ import type {
 const DEFAULT_TIMEOUT_SECONDS = 900;
 const DEFAULT_RECONCILE_TIMEOUT_SECONDS = 240;
 const RECONCILE_STALE_AFTER_MS = 6 * 60 * 1000;
+const DEFAULT_MAX_RUNNING_RUNS = 3;
 
 type Variables = {
   requestId: string;
@@ -126,21 +128,26 @@ export function createApp(executor: RunExecutor) {
       projectSlug: body?.project_slug?.trim(),
       excludeRunId: runId,
     });
-    if (activeRun) {
+    const maxRunningRuns = normalizeMaxRunningRuns(c.env.DROID_MAX_RUNNING_RUNS);
+    const runningCount = await getRunningRunCount(c.env);
+    if (activeRun || runningCount >= maxRunningRuns) {
       await createRunEvent(c.env, runId, {
         type: 'run_queued',
-        message:
-          'Droid run queued because another run is already active for this repository/project.',
+        message: activeRun
+          ? 'Droid run queued because another run is already active for this repository/project.'
+          : 'Droid run queued because the global running-run limit is full.',
         command,
         metadata: {
-          active_run_id: activeRun.id,
-          active_sandbox_id: activeRun.sandbox_id,
+          active_run_id: activeRun?.id ?? null,
+          active_sandbox_id: activeRun?.sandbox_id ?? null,
+          running_count: runningCount,
+          max_running_runs: maxRunningRuns,
           repo_url: body?.repo_url?.trim() ?? null,
           project_slug: body?.project_slug?.trim() ?? null,
         },
       });
       const queuedRun = await getRun(c.env, runId);
-      return c.json({ data: queuedRun ?? run, queued_after: activeRun.id }, 202);
+      return c.json({ data: queuedRun ?? run, queued_after: activeRun?.id ?? 'global_limit' }, 202);
     }
 
     await markRunStarted(c.env, runId);
@@ -1192,5 +1199,15 @@ function normalizeLimit(value: unknown): number | undefined {
   if (!Number.isInteger(parsed)) return undefined;
   if (parsed < 1) return 1;
   if (parsed > 50) return 50;
+  return parsed;
+}
+
+function normalizeMaxRunningRuns(value: unknown): number {
+  if (typeof value !== 'string' && typeof value !== 'number') return DEFAULT_MAX_RUNNING_RUNS;
+  if (typeof value === 'string' && !value.trim()) return DEFAULT_MAX_RUNNING_RUNS;
+  const parsed = Number(value);
+  if (!Number.isInteger(parsed)) return DEFAULT_MAX_RUNNING_RUNS;
+  if (parsed < 1) return 1;
+  if (parsed > 20) return 20;
   return parsed;
 }

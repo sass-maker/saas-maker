@@ -54,7 +54,11 @@ export function OnboardingFlow() {
     }
   }
 
-  const widgetSnippet = `<script src="https://cdn.sassmaker.com/widget.js" data-key="${apiKey}"></script>`;
+  const widgetSnippet = [
+    '<script',
+    ` src="https://cdn.sassmaker.com/widget.js" data-key="${apiKey}"`,
+    '></script>',
+  ].join('');
 
   return (
     <div className="max-w-xl mx-auto space-y-6">

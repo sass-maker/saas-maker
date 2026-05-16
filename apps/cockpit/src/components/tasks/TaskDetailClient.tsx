@@ -12,11 +12,12 @@ import type { SymphonyRunRow, TaskCommentRow, TaskRow } from './TaskBoard';
 function formatTime(value: string) {
   const time = new Date(value).getTime();
   if (!Number.isFinite(time)) return value;
-  return new Date(time).toLocaleString(undefined, {
+  return new Date(time).toLocaleString('en-US', {
     month: 'short',
     day: 'numeric',
     hour: 'numeric',
     minute: '2-digit',
+    timeZone: 'UTC',
   });
 }
 

@@ -20,6 +20,7 @@ const DEFAULT_CLI_COMMAND = 'pnpm --dir packages/cli exec tsx src/index.ts';
 const DEFAULT_AGENT_COMMANDS = {
   codex: 'codex exec --dangerously-bypass-approvals-and-sandbox {prompt}',
   claude: 'claude --dangerously-skip-permissions -p {prompt} --output-format json --no-session-persistence --max-budget-usd ${SYMPHONY_CLAUDE_TASK_BUDGET_USD:-2.00}',
+  'claude-work': 'claude --dangerously-skip-permissions -p {prompt} --output-format json --no-session-persistence --max-budget-usd ${SYMPHONY_CLAUDE_WORK_TASK_BUDGET_USD:-4.00}',
   gemini: 'gemini --yolo -p {prompt} --output-format json --skip-trust',
 };
 
@@ -190,9 +191,11 @@ Auth:
 
 Profiles:
   Built-in commands run with full permissions:
-    auto    Choose codex, claude, or gemini from task shape plus .symphony/agent-usage.json
+    auto    Choose codex, claude, claude-work, or gemini from task shape plus .symphony/agent-usage.json
     codex   codex exec --dangerously-bypass-approvals-and-sandbox {prompt}
     claude  claude --dangerously-skip-permissions -p {prompt}
+    claude-work
+            claude --dangerously-skip-permissions -p {prompt} with a larger default task budget
     gemini  gemini --yolo -p {prompt}
 
   Add more profiles in ~/.foundry/config.json:
@@ -249,40 +252,69 @@ function agentHealthy(agent, usage) {
   if (agent === 'codex') return true;
   const sample = usage?.agents?.[agent];
   if (!sample) return true;
-  return sample.available !== false && sample.ok !== false && isFresh(sample.sampled_at);
+  return sample.available !== false && sample.ok !== false && isFresh(sample.sampled_at) && agentHeadroomPct(agent, usage) >= 8;
+}
+
+function firstHealthyAgent(candidates, usage) {
+  const healthy = candidates.filter((agent) => agentHealthy(agent, usage));
+  healthy.sort((a, b) => agentHeadroomPct(b, usage) - agentHeadroomPct(a, usage));
+  return healthy[0] ?? 'codex';
+}
+
+function agentHeadroomPct(agent, usage) {
+  const sample = usage?.agents?.[agent];
+  const telemetry = sample?.provider_telemetry;
+  if (typeof telemetry?.headroom_pct === 'number') return telemetry.headroom_pct;
+  if (typeof telemetry?.worst_used_pct === 'number') return Math.max(0, 100 - telemetry.worst_used_pct);
+  return agent === 'codex' ? 100 : 50;
 }
 
 function taskRoutingText(task) {
   return `${task.title ?? ''}\n${task.description ?? ''}\n${task.task_type ?? ''}`.toLowerCase();
 }
 
+function assignedAgent(task) {
+  const match = String(task.description ?? '').match(/Agent assignment:\s*([A-Za-z0-9_-]+)/i);
+  return match?.[1] ?? null;
+}
+
 function chooseAgent(task, args) {
-  if (args.agent && args.agent !== 'auto') return args.agent;
+  if (args.agent && args.agent !== 'auto') {
+    return { agent: args.agent, reason: 'agent forced by CLI option' };
+  }
   const usage = args.agentUsage ?? readAgentUsage();
   const text = taskRoutingText(task);
   let candidate = 'codex';
   let reason = 'default route';
+  const explicitAgent = assignedAgent(task);
+  const explicitlySensitive = /(set secret|add secret|write secret|rotate secret|production credential|deploy now|release now|migration)/.test(text);
 
-  if (/(secret|credential|cloudflare|deploy|deployment|auth|oauth|migration|database|d1|production|prod)/.test(text)) {
+  if (explicitAgent && !explicitlySensitive && agentHealthy(explicitAgent, usage)) {
+    candidate = explicitAgent;
+    reason = 'task description explicitly assigns agent';
+  } else if (/(secret|credential|oauth|migration|database|d1)/.test(text) || explicitlySensitive) {
     candidate = 'codex';
     reason = 'sensitive cloud/auth/deployment work stays with Codex';
-  } else if (task.task_type === 'bug' || task.priority === 'high') {
-    candidate = 'codex';
-    reason = 'bug/high-priority route';
+  } else if (/(ui|frontend|react|next|component|page|layout|design|polish|revamp|crash|runtime|bug|fix)/.test(text)) {
+    candidate = firstHealthyAgent(['claude-work', 'claude', 'gemini'], usage);
+    reason = 'implementation/UI/bug route';
   } else if (
     task.task_type === 'cleanup' ||
     task.task_type === 'chore' ||
     /(cleanup|clean up|refactor|polish|rename|organize|simplify|prose|wording)/.test(text)
   ) {
-    candidate = 'claude';
+    candidate = firstHealthyAgent(['claude', 'claude-work', 'gemini'], usage);
     reason = 'cleanup/refactor/prose route';
   } else if (
     task.task_type === 'research' ||
     task.task_type === 'docs' ||
     /(audit|research|summarize|inventory|review all|compare|docs|documentation|copy|content)/.test(text)
   ) {
-    candidate = 'gemini';
+    candidate = firstHealthyAgent(['gemini', 'claude', 'claude-work'], usage);
     reason = 'broad review/docs/synthesis route';
+  } else if (task.priority === 'high') {
+    candidate = firstHealthyAgent(['claude-work', 'gemini', 'claude'], usage);
+    reason = 'high-priority non-sensitive route';
   }
 
   if (!agentHealthy(candidate, usage)) {
@@ -421,7 +453,7 @@ function buildCommand(task, args) {
   const agentTemplate = resolveAgentCommand(args);
   const agentCommand = `${renderEnvPrefix(args)}${renderAgentCommand(agentTemplate, task, prompt, workspacePath)}`;
   return [
-    `cd ${homePath(`Desktop/Fleet/${project}`)}`,
+    `cd ${homePath(`Desktop/fleet/${project}`)}`,
     `mkdir -p ${shellQuote(workspacePath)}`,
     `printf %s ${shellQuote(prompt)} > ${shellQuote(`${workspacePath}/prompt.md`)}`,
     `printf %s ${shellQuote(`Routed agent: ${route.agent}\nRouting reason: ${route.reason}\n`)} >> ${shellQuote(`${workspacePath}/route.md`)}`,

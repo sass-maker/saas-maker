@@ -20,10 +20,10 @@ Opens your browser for Google OAuth. Your session token is saved to `~/.foundry/
 ## 3. Create a project
 
 ```bash
-fnd projects create
+fnd projects create --name "My App"
 ```
 
-Follow the prompt to name your project. This generates a unique API key (starts with `pk_`).
+This creates a project and prints its `id`, `slug`, and `project_key` (starts with `pk_`). Treat the `pk_` key as your public-facing API key — the SDK and widgets use it. Drop `--name` to be prompted interactively.
 
 ## 4. Link your app directory
 
@@ -32,13 +32,14 @@ cd ~/my-app
 fnd init
 ```
 
-Select your project from the list. This creates a `foundry.json` config in your project root.
+`fnd init` lists your projects, lets you pick one, and writes a `foundry.json` in the current directory linking the repo to the project.
 
 ## 5. Check your setup
 
 ```bash
-fnd keys     # show your API key
-fnd status   # show project stats
+fnd whoami   # show your session user and linked project
+fnd keys     # print the linked project key
+fnd doctor   # quick health + drift check
 ```
 
 ## 6. Integrate the SDK
@@ -80,6 +81,7 @@ curl -X POST https://api.sassmaker.com/v1/feedback \
 ## Next steps
 
 - [CLI reference](/sdk/cli) — all CLI commands
-- [Authentication](/getting-started/authentication) — understand API keys vs session tokens
-- [Feedback](/services/feedback) — full feedback API reference
-- [JavaScript SDK](/sdk/javascript) — all available SDK methods
+- [Authentication](/getting-started/authentication) — when to use the API key vs. session token
+- [API overview](/api/overview) — base URL, error envelope, pagination, status codes
+- [Integration guide](/getting-started/integration) — Next.js / Vite wiring
+- [Feedback](/services/feedback), [Analytics](/services/analytics), [Roadmap](/services/roadmap) — per-service references

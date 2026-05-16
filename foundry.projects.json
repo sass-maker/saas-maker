@@ -2,7 +2,6 @@
   "anime_list": { "desc": "MAL Explorer — Browse and manage your anime/manga lists.", "url": "https://github.com/sarthakagrawal927/anime_list.git" },
   "CodeVetter": { "desc": "AI code review platform — desktop-first, works offline.", "url": "git@github.com:sarthakagrawal927/CodeVetter.git" },
   "email-manager": { "desc": "Unified email management and automation tool.", "url": "https://github.com/sarthakagrawal927/email-manager.git" },
-  "everythingrated": { "desc": "Multi-axis ratings platform for rating things across aspect-specific directories.", "url": "https://github.com/sarthakagrawal927/everythingrated.git" },
   "free-ai": { "desc": "OpenAI-compatible API gateway for free LLM providers.", "url": "https://github.com/sarthakagrawal927/free-ai.git" },
   "ai-game": { "desc": "Persistent AI world simulator — interactive RPG-style multi-agent game.", "url": "https://github.com/sarthakagrawal927/ai-game.git" },
   "high-signal": { "desc": "Public signal log for AI infrastructure and semiconductors.", "url": "https://github.com/sarthakagrawal927/high-signal.git" },

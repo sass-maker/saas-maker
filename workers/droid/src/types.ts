@@ -10,6 +10,7 @@ export interface Env {
   DROID_DEEPSEEK_API_KEY?: string;
   DROID_DEEPSEEK_MODEL?: string;
   DROID_DEEPSEEK_REVIEW_MODEL?: string;
+  DROID_MAX_RUNNING_RUNS?: string;
   DROID_GITHUB_TOKEN?: string;
   DROID_SAASMAKER_TOKEN?: string;
   DROID_BROWSER_PREVIEW_HOSTNAME?: string;

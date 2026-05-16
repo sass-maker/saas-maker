@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
-import { Bot, CheckCircle2, ChevronDown, Clipboard, ExternalLink, FileText, GitBranch, MessageSquare, Pencil, Plus, Save, Terminal, Trash2, X } from 'lucide-react';
+import { Bot, CheckCircle2, ChevronDown, Clipboard, ExternalLink, FileText, GitBranch, MessageSquare, Pencil, Play, Plus, Save, Terminal, Trash2, X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -198,13 +198,34 @@ const DEFAULT_ACCEPTANCE_BY_PROJECT: Record<string, string[]> = {
   ],
 };
 
-function buildDroidPrompt(task: TaskRow, acceptanceCommand?: string): string {
+function formatDroidComments(comments: TaskCommentRow[]) {
+  return comments
+    .slice(-8)
+    .map(comment => [
+      `- ${comment.author_type} at ${comment.created_at}:`,
+      comment.body.trim().slice(0, 1200),
+    ].join(' '))
+    .join('\n');
+}
+
+function buildDroidPrompt(task: TaskRow, options: {
+  acceptanceCommand?: string;
+  comments?: TaskCommentRow[];
+  repoUrl?: string;
+  branch?: string;
+} = {}): string {
+  const commentBlock = options.comments?.length ? formatDroidComments(options.comments) : '';
   return [
     'You own this task end to end. Make the smallest complete code change, verify it, and prepare a draft PR when useful.',
     '',
     `Task: ${task.title}`,
+    `Task ID: ${task.id}`,
+    `Project: ${task.project_slug ?? 'unassigned'}`,
+    options.repoUrl ? `Repo: ${options.repoUrl}` : '',
+    options.branch ? `Branch: ${options.branch}` : '',
     task.description ? `\nDetails:\n${task.description}` : '',
-    acceptanceCommand ? `\nAcceptance command to run before PR:\n${acceptanceCommand}` : '',
+    commentBlock ? `\nRecent task comments:\n${commentBlock}` : '',
+    options.acceptanceCommand ? `\nAcceptance command to run before PR:\n${options.acceptanceCommand}` : '',
     '',
     'When blocked, return a block action with the exact user question. When done, summarize changed files, checks run, risks, and next action.',
   ]
@@ -252,11 +273,12 @@ function uniqueStrings(values: Array<string | undefined>) {
 function formatRunTime(value: string) {
   const time = new Date(value).getTime();
   if (!Number.isFinite(time)) return value;
-  return new Date(time).toLocaleString(undefined, {
+  return new Date(time).toLocaleString('en-US', {
     month: 'short',
     day: 'numeric',
     hour: 'numeric',
     minute: '2-digit',
+    timeZone: 'UTC',
   });
 }
 
@@ -396,10 +418,17 @@ export function TaskBoard({
 
   const openDroidRun = (task: TaskRow) => {
     const acceptance = buildDroidAcceptanceSuggestions(task);
+    const repoUrl = task.project_slug ? projectRepos?.[task.project_slug] ?? '' : '';
+    const branch = task.branch_name ?? '';
     setDroidTask(task);
     setDroidMode('native');
     setDroidCommand(task.project_slug ? 'pwd && ls -1' : 'pwd && echo droid-ok');
-    setDroidPrompt(buildDroidPrompt(task, acceptance.explicit));
+    setDroidPrompt(buildDroidPrompt(task, {
+      acceptanceCommand: acceptance.explicit,
+      comments: commentsByTaskId[task.id],
+      repoUrl,
+      branch,
+    }));
     setDroidMaxTurns('25');
     setDroidCreatePr(true);
     setDroidAcceptanceSuggestions(acceptance.suggestions);
@@ -411,8 +440,8 @@ export function TaskBoard({
     setDroidBrowserAcceptanceStartCommand('');
     setDroidBrowserAcceptancePort('3000');
     setDroidBrowserAcceptanceKeepOpen(true);
-    setDroidRepoUrl(task.project_slug ? projectRepos?.[task.project_slug] ?? '' : '');
-    setDroidBranch(task.branch_name ?? '');
+    setDroidRepoUrl(repoUrl);
+    setDroidBranch(branch);
     setDroidCwd('');
     setDroidRun(null);
     setDroidEvents([]);
@@ -452,11 +481,29 @@ export function TaskBoard({
 
   const openDroidLogs = async (task: TaskRow) => {
     const acceptance = buildDroidAcceptanceSuggestions(task);
+    const repoUrl = task.project_slug ? projectRepos?.[task.project_slug] ?? '' : '';
+    const branch = task.branch_name ?? '';
+    let comments = commentsByTaskId[task.id] ?? [];
+    if (!commentsByTaskId[task.id]) {
+      try {
+        const token = await getClientToken();
+        const res = await apiFetchClient<{ data: TaskCommentRow[] }>(`/v1/tasks/${task.id}/comments`, token);
+        comments = res.data ?? [];
+        setCommentsByTaskId(prev => ({ ...prev, [task.id]: comments }));
+      } catch {
+        comments = [];
+      }
+    }
     setLoadingDroidLogsTaskId(task.id);
     setDroidTask(task);
     setDroidMode('native');
     setDroidCommand(task.project_slug ? 'pwd && ls -1' : 'pwd && echo droid-ok');
-    setDroidPrompt(buildDroidPrompt(task, acceptance.explicit));
+    setDroidPrompt(buildDroidPrompt(task, {
+      acceptanceCommand: acceptance.explicit,
+      comments,
+      repoUrl,
+      branch,
+    }));
     setDroidMaxTurns('25');
     setDroidCreatePr(true);
     setDroidAcceptanceSuggestions(acceptance.suggestions);
@@ -468,8 +515,8 @@ export function TaskBoard({
     setDroidBrowserAcceptanceStartCommand('');
     setDroidBrowserAcceptancePort('3000');
     setDroidBrowserAcceptanceKeepOpen(true);
-    setDroidRepoUrl(task.project_slug ? projectRepos?.[task.project_slug] ?? '' : '');
-    setDroidBranch(task.branch_name ?? '');
+    setDroidRepoUrl(repoUrl);
+    setDroidBranch(branch);
     setDroidCwd('');
     setDroidRun(null);
     setDroidEvents([]);
@@ -1732,14 +1779,23 @@ function TaskList({
                     {PR_STATUS_LABEL[task.pr_status]}
                   </span>
                   {task.pr_url ? (
-                    <a
-                      href={task.pr_url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-1 rounded-full border border-border/60 bg-background/35 px-2 py-0.5 text-foreground/80 hover:border-border hover:text-foreground"
-                    >
-                      PR <ExternalLink className="h-3 w-3" />
-                    </a>
+                    <>
+                      <a
+                        href={task.pr_url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1 rounded-full border border-border/60 bg-background/35 px-2 py-0.5 text-foreground/80 hover:border-border hover:text-foreground"
+                      >
+                        PR <ExternalLink className="h-3 w-3" />
+                      </a>
+                      <a
+                        href={`codevetter://review?url=${encodeURIComponent(task.pr_url)}&taskId=${task.id}&project=${task.project_slug ?? ''}`}
+                        className="inline-flex items-center gap-1 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-2 py-0.5 text-emerald-600 hover:border-emerald-500/60 dark:text-emerald-300"
+                        title="Open in CodeVetter for AI review"
+                      >
+                        AI Review <Play className="h-3 w-3" />
+                      </a>
+                    </>
                   ) : null}
                   {task.commit_sha ? (
                     <span className="rounded-full border border-border/60 bg-background/35 px-2 py-0.5 font-mono">

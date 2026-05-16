@@ -11,7 +11,7 @@ Droid is the SaaS Maker task runner. From Cockpit Tasks, it can start a Cloudfla
 5. Optionally enable Browser test to capture a Cloudflare Browser Run screenshot.
 6. Run Droid and watch the Result, Acceptance, Browser, Artifacts, and Events panels.
 
-Droid queues work by repo/project. If a run is already active for that repo, the next run waits instead of starting a parallel sandbox.
+Droid queues work by repo/project. If a run is already active for that repo, the next run waits instead of starting a parallel sandbox. Different repos can run in parallel until the global `DROID_MAX_RUNNING_RUNS` cap is reached; the default cap is `3`.
 
 ## Run Request
 
@@ -51,6 +51,12 @@ Key fields:
 - `acceptance_timeout_seconds`: clamped to 30-900 seconds.
 - `browser_acceptance`: optional Cloudflare Browser Run check. Use `url` for an existing preview/deploy URL, or `start_command` + `port` + `preview_hostname` to start an app inside the sandbox and expose it.
 
+Droid native prompts are hydrated before the agent starts. The bundle includes
+the task id/title/description, project slug, repo URL, branch, recent task
+comments from Cockpit, git status, top-level repo files, `AGENTS.md`, and
+package scripts when present. This gives the agent enough context to continue a
+comment thread without stuffing raw logs or secrets into the prompt.
+
 For a cheap smoke test against an existing public URL, run command mode with `command: "browser_acceptance"` and `browser_acceptance.url`. Droid skips sandbox startup for that case and only records Browser Run events/artifacts.
 
 ## Output
@@ -76,3 +82,18 @@ When `DROID_SAASMAKER_TOKEN` is configured, Droid can write back to the task:
 ## Reliability
 
 Droid exposes `POST /v0/runs/reap-stale` for cron/manual cleanup. It finds running jobs with no activity for 15 minutes, marks them failed, cancels the sandbox when possible, and releases the next queued run for that repo/project.
+
+## Permissions And Audit
+
+Droid treats task runs as edit-and-PR capable by default, not deploy capable.
+The current permission model is:
+
+- `edit`: allowed inside the sandbox workspace for every run.
+- `shell`: allowed only through recorded Droid command/tool events.
+- `push` and `pr`: allowed only when `create_pr` is true, a meaningful diff is captured, and configured acceptance gates pass.
+- `deploy` and `release`: not executed by Droid. Create a task blocker or draft PR for user/Codex approval instead.
+
+Every command, provider choice, queue event, patch capture, acceptance result,
+browser check, PR attempt, and final report is written to Droid run tables.
+Task comments stay concise: final summaries, draft PR links, blockers, and exact
+questions only.

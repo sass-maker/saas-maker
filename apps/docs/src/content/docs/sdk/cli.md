@@ -1,116 +1,210 @@
 ---
 title: Foundry CLI (fnd)
-description: The unified command-line interface for the project fleet.
+description: Manage Foundry projects, tasks, and fleet operations from one CLI.
 ---
 
-The Foundry CLI (`fnd` or `foundry`) is the primary orchestration tool for the Software Factory. It allows you to manage, audit, and evolve your entire project fleet from a single interface.
+`fnd` (also installable as `foundry`) is the unified command-line interface for the Foundry platform. It is intentionally small: a few core utility commands plus a universal `fnd api <method> <path>` executor so new backend features do not require new CLI code.
 
-## 🛠️ Installation
-
-```bash
-pnpm add -g @saas-maker/cli
-```
-
-## 🏗️ The Forge (Scaffolding)
-
-Start a new project that is 100% Foundry-compliant from day one.
+## Install
 
 ```bash
-fnd forge --name <project-slug> --type [next|vite|node]
+npm install -g @saas-maker/cli
+# or one-shot:
+npx @saas-maker/cli --help
 ```
-- **What it does**: Creates a project directory, initializes `package.json`, links Gold Standards, sets up the Operational Layer (`ops`, `db`), and writes an `AGENTS.md` foreman file.
 
-## 🚢 Fleet Commander (Orchestration)
+## First run
 
-Commands that operate across your entire `~/Desktop/Fleet` folder.
+```bash
+fnd login    # browser OAuth → stores session in ~/.foundry/config.json
+fnd init     # link the current directory to a project (writes foundry.json)
+fnd doctor   # verify auth, linked project, and standards compliance
+```
+
+## Command index
 
 | Command | Purpose |
 |---------|---------|
-| `fnd fleet list` | Show all projects, statuses, and mission statements. |
-| `fnd fleet audit` | Deep health check (Standard drift + Code Health via Fallow). |
-| `fnd fleet fix` | Automatically correct standard drift and deploy CI/CD. |
-| `fnd fleet run "<cmd>"` | Execute any shell command across all projects in parallel. |
-| `fnd fleet versions [list|fix]` | Eliminate dependency drift across the whole fleet. |
-| `fnd fleet secrets-sync` | Push shared environment variables to all `.env.local` files. |
-| `fnd fleet clean [--deep]` | Reclaim gigabytes of storage by purging build caches and Rust targets. |
+| `fnd login` | Browser OAuth login. Stores a session token in `~/.foundry/config.json`. |
+| `fnd whoami` | Show the logged-in user and any linked project for this directory. |
+| `fnd keys` | Print the session token and the linked project key. |
+| `fnd init` | Link the current directory to a project (creates `foundry.json`). |
+| `fnd doctor` (alias `fnd audit`) | Check Foundry compliance and configuration drift. |
+| `fnd status` | Snapshot of feature counts and health for the linked project. |
+| `fnd projects list\|create\|update\|delete` | Project management. |
+| `fnd feedback`, `fnd roadmap`, `fnd changelog`, `fnd testimonials`, `fnd waitlist` | Per-service helpers. |
+| `fnd analytics dashboard\|setup\|detail` | Analytics shortcuts (wraps `/v1/analytics/*`). |
+| `fnd forge` | Scaffold a new Foundry-compliant project. |
+| `fnd fleet …` | Fleet-wide automation (see below). |
+| `fnd examples` | Print copy-paste API recipes. |
+| `fnd completions [bash\|zsh\|fish]` | Print a shell completion script. |
+| `fnd api <method> <path>` | Universal API client — covers everything else. |
 
-## 🧭 Project Metadata
+Run any command with `--help` for full flag documentation.
 
-Use the universal API command for project notes.
+## Universal API command
 
 ```bash
-fnd api PATCH /v1/projects/<projectId> --auth session \
-  --body '{"readme":"Dashboard notes for this project."}'
+fnd api <method> <path> [options]
 ```
 
-## 🤖 AI Gateway
+`fnd api` is the recommended way to use Foundry from scripts and agents. It validates the request against the bundled OpenAPI spec before sending.
 
-Configure a project-owned OpenAI-compatible provider, then call the gateway with the project API key.
+### Auth modes
+
+- `--auth session` — sends `Authorization: Bearer <token>` from `fnd login`.
+- `--auth project` — sends `X-Project-Key` from the linked `foundry.json`.
+- `--auth auto` (default) — uses whichever auth context is available.
+- `--auth none` — no auth (public endpoints).
+
+### Common flags
+
+| Flag | Effect |
+|------|--------|
+| `--body '<json>'` | Inline JSON body. |
+| `--body-file ./payload.json` | Read body from disk. |
+| `--query key=value` | Append a query param (repeatable). |
+| `--header key=value` | Add a request header (repeatable). |
+| `--output json\|table` | Pick output format. |
+| `--select field1,field2` | Project specific fields (supports dotted paths). |
+| `--raw` | Compact JSON, suitable for piping. |
+| `--quiet` | Suppress request/status logs. |
+| `--token <t>` / `--project-key <k>` | Override stored credentials. |
+| `--no-validate` | Skip OpenAPI enforcement (for experimental routes). |
+
+## Recipes
+
+### Health check
 
 ```bash
+fnd api GET /health --auth none
+```
+
+### Project metadata
+
+```bash
+# List projects you own
+fnd api GET /v1/projects --auth session --output table
+
+# Update the dashboard README / notes for a project
+fnd api PATCH /v1/projects/<projectId> --auth session \
+  --body '{"readme":"Internal launch notes and owner context."}'
+```
+
+### Tasks (Symphony)
+
+```bash
+# List your tasks, filter by project
+fnd api GET /v1/tasks --auth session --query project_slug=my-app --output table
+
+# Create a task
+fnd api POST /v1/tasks --auth session \
+  --body '{"title":"Ship invite flow","project_slug":"my-app","priority":"high"}'
+
+# Move a task forward
+fnd api PATCH /v1/tasks/<taskId> --auth session \
+  --body '{"status":"in_progress"}'
+
+# Add a comment
+fnd api POST /v1/tasks/<taskId>/comments --auth session \
+  --body '{"body":"PR opened — waiting on review.","author_type":"agent"}'
+```
+
+### Public progress feed
+
+```bash
+fnd api GET /v1/progress/public/<slug> --auth none --query changelog_limit=10
+```
+
+### Feedback (project key)
+
+```bash
+fnd api POST /v1/feedback --auth project \
+  --body '{"title":"Bug","description":"Broken CTA","submitter_email":"me@example.com","type":"bug"}'
+
+fnd api GET /v1/feedback --auth project --query type=feature --output table
+```
+
+### AI Gateway (BYOK)
+
+```bash
+# Configure provider for a project (key is masked on read)
 fnd api PUT /v1/ai/config --auth session --query project_id=<projectId> \
   --body '{"ai_base_url":"https://api.openai.com/v1","ai_model":"gpt-4o-mini","ai_api_key":"sk-..."}'
 
+# Proxy a chat completion through the linked project
 fnd api POST /v1/ai/chat/completions --auth project \
   --body '{"messages":[{"role":"user","content":"Write release notes"}]}'
 
-fnd api GET /v1/ai/requests --auth session --query project_id=<projectId> --output table
+# Inspect usage and request logs
+fnd api GET /v1/ai/usage --auth session --query project_id=<projectId> --output table
 ```
 
-## 📈 Public Progress
-
-Fetch the unified public progress feed for a project. It includes published changelog entries and public roadmap items.
-
-```bash
-fnd api GET /v1/progress/public/<slug> --auth none --query changelog_limit=10 --output json
-```
-
-## 🎼 Symphony Memory
-
-Persist task-run instructions for local agents and copied prompts.
+### Symphony memory, audit, and run ledger
 
 ```bash
 fnd api GET /v1/symphony/memory --auth session
 fnd api PUT /v1/symphony/memory --auth session \
   --body '{"content":"Prefer Gemini for bounded cheap asks. Keep CI fixes surgical."}'
-```
 
-## 🧾 Symphony Audit
-
-Inspect task lifecycle and local agent dispatch events.
-
-```bash
 fnd api GET /v1/symphony/audit --auth session --output table
-fnd api POST /v1/symphony/audit --auth session \
-  --body '{"action":"task_dispatched","actor_source":"local-cli","agent_profile":"gemini"}'
-```
-
-## 📒 Symphony Run Ledger
-
-Inspect durable local task-run start records with agent, pid, command template, and cost notes.
-
-```bash
 fnd api GET /v1/symphony/runs --auth session --output table
-fnd api POST /v1/symphony/runs --auth session \
-  --body '{"task_id":"<taskId>","command_template":"gemini","agent_profile":"gemini","cost_note":"cheap-default route"}'
 ```
 
-## 🤖 Autonomous Maintenance
+## Fleet automation
 
-Run the factory on auto-pilot.
+The `fnd fleet` commands operate across a fleet of repositories on disk (default: `~/Desktop/Fleet`). They are designed for the maintainer working many repos in parallel — most product users won't need them.
+
+| Command | What it does |
+|---------|--------------|
+| `fnd fleet list` | List discovered projects with status and slugs. |
+| `fnd fleet run "<cmd>"` | Run a shell command across every project. |
+| `fnd fleet audit` | Standards + code health pass. |
+| `fnd fleet fix` | Apply standards drift fixes automatically. |
+| `fnd fleet versions [list\|fix]` | Surface and resolve dependency-version drift. |
+| `fnd fleet secrets-sync` | Push shared env values to per-project `.env.local` files. |
+| `fnd fleet clean [--deep]` | Reclaim disk space by purging build caches. |
+| `fnd fleet provision` | Provision a project's cloud surfaces. |
+| `fnd fleet apply <skill>` | Run an evolutionary refactor across every repo. |
+| `fnd fleet supervise` | Watch the global error feed and dispatch fixes via agents. |
+
+## Configuration
+
+### `~/.foundry/config.json`
+
+Created by `fnd login`:
+
+```json
+{
+  "apiKey": "sm_...",
+  "apiBaseUrl": "https://api.sassmaker.com"
+}
+```
+
+### `foundry.json`
+
+Created by `fnd init` in each linked project:
+
+```json
+{
+  "slug": "my-app",
+  "projectId": "uuid-project-id",
+  "projectKey": "pk_..."
+}
+```
+
+Older `foundry.json` files that store only `projectId` as a `pk_...` key are still accepted.
+
+### Environment overrides
+
+- `FND_API_URL` — point the CLI at a different API base URL (useful for staging or local development).
+
+## OpenAPI enforcement
+
+`fnd api` validates method and path against the bundled OpenAPI spec by default. After changing or adding routes in `workers/api`, regenerate the spec so the CLI accepts the new endpoints:
 
 ```bash
-fnd fleet supervise
+pnpm generate:openapi
 ```
-- **The Daemon**: Watches your Cockpit's Global Error Feed.
-- **Auto-Fix**: When an error is detected, it automatically dispatches an AI agent to the failing project to debug and commit a fix using your specific `skills/` protocols.
 
-## 🧬 Evolutionary Refactoring
-
-Mass-apply architectural changes to the entire fleet.
-
-```bash
-fnd fleet apply <skill-name>
-```
-- **Example**: `fnd fleet apply protocol-migration`
-- Dispatches a swarm of agents to update every repo based on a protocol in your `skills/` registry.
+This refreshes `packages/cli/src/openapi.json`, `apps/docs/public/openapi.json`, and `docs/openapi/openapi.json`. To send a request that isn't in the spec yet, pass `--no-validate`.

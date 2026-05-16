@@ -78,6 +78,13 @@ export async function getActiveRunForQueue(env: Env, input: {
   return null;
 }
 
+export async function getRunningRunCount(env: Env): Promise<number> {
+  const row = await env.DB.prepare(
+    `SELECT COUNT(*) AS count FROM droid_runs WHERE status = 'running'`
+  ).first<{ count: number }>();
+  return Number(row?.count ?? 0);
+}
+
 export async function getNextQueuedRunForQueue(env: Env, input: {
   repoUrl?: string | null;
   projectSlug?: string | null;

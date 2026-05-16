@@ -77,9 +77,9 @@ export function getApiKey(): string | null {
 
 export function getApiBase(): string {
   return (
-    getGlobalConfig().apiBaseUrl
-    ?? process.env.FND_API_URL
+    process.env.FND_API_URL
     ?? process.env.SAASMAKER_API_URL
+    ?? getGlobalConfig().apiBaseUrl
     ?? 'https://api.sassmaker.com'
   );
 }

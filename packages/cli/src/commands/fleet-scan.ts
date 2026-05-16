@@ -16,7 +16,7 @@ export async function fleetScanCommand(): Promise<void> {
     method: 'POST',
     path: '/v1/fleet/metadata',
     auth: 'session',
-    body: { projects: tooling },
+    body: { projects: tooling, replace: true },
   });
 
   spinner.stop();

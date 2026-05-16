@@ -1,12 +1,5 @@
-"use client";
-
-if (typeof globalThis !== "undefined") {
-  const globalWithName = globalThis as typeof globalThis & {
-    __name?: <T>(target: T) => T;
-  };
-  globalWithName.__name ||= (target) => target;
-}
+const POLYFILL = "(function(){if(typeof globalThis!=='undefined'&&typeof globalThis.__name!=='function'){globalThis.__name=function(t){return t};}})();";
 
 export function GlobalNamePolyfill() {
-  return null;
+  return <script dangerouslySetInnerHTML={{ __html: POLYFILL }} />;
 }

@@ -1792,6 +1792,32 @@ export function getDb(d1: D1Database): FeedbackDatabase {
       return mapRows<FleetMetadataRow>(results.results ?? []);
     },
 
+    async deleteFleetMetadataBySlugs(ownerId: string, slugs: string[]): Promise<number> {
+      const uniqueSlugs = [...new Set(slugs.map((slug) => slug.trim()).filter(Boolean))];
+      if (uniqueSlugs.length === 0) return 0;
+      const placeholders = uniqueSlugs.map(() => '?').join(', ');
+      const result = await d1.prepare(
+        `DELETE FROM fleet_metadata WHERE owner_id = ? AND slug IN (${placeholders})`
+      ).bind(ownerId, ...uniqueSlugs).run();
+      return result.meta.changes ?? 0;
+    },
+
+    async deleteFleetMetadataExcept(ownerId: string, slugs: string[]): Promise<number> {
+      const uniqueSlugs = [...new Set(slugs.map((slug) => slug.trim()).filter(Boolean))];
+      if (uniqueSlugs.length === 0) {
+        const result = await d1.prepare(
+          `DELETE FROM fleet_metadata WHERE owner_id = ?`
+        ).bind(ownerId).run();
+        return result.meta.changes ?? 0;
+      }
+
+      const placeholders = uniqueSlugs.map(() => '?').join(', ');
+      const result = await d1.prepare(
+        `DELETE FROM fleet_metadata WHERE owner_id = ? AND slug NOT IN (${placeholders})`
+      ).bind(ownerId, ...uniqueSlugs).run();
+      return result.meta.changes ?? 0;
+    },
+
     // --- Tasks ---
     async createTask(ownerId: string, input: { title: string; description?: string; project_slug?: string; priority?: string; task_type?: string; size?: string; dependencies?: string[]; branch_name?: string | null; pr_url?: string | null; pr_status?: string; commit_sha?: string | null; deployment_url?: string | null; deployment_status?: string; blocked_on_user?: boolean }): Promise<TaskRow> {
       const id = crypto.randomUUID();

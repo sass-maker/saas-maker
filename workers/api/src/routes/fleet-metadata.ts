@@ -15,14 +15,17 @@ fleetMetadata.get('/', async (c) => {
 
 fleetMetadata.post('/', async (c) => {
   const userId = c.get('userId')!;
-  const body = await c.req.json() as { projects: any[] };
+  const body = await c.req.json() as {
+    projects: any[];
+    replace?: boolean;
+    retired_slugs?: string[];
+  };
   if (!Array.isArray(body?.projects)) return c.json({ error: 'projects array required' }, 400);
 
-  const db = getDb(c.env.DB);
-  await Promise.all(
-    body.projects.map(p => db.upsertFleetMetadata(userId, {
-      slug: String(p.slug || ''),
-      name: String(p.name || p.slug || ''),
+  const projects = body.projects
+    .map((p) => ({
+      slug: String(p.slug || '').trim(),
+      name: String(p.name || p.slug || '').trim(),
       framework: String(p.framework || '-'),
       framework_version: p.frameworkVersion || null,
       db: String(p.db || '-'),
@@ -33,8 +36,29 @@ fleetMetadata.post('/', async (c) => {
       foundry_linked: Boolean(p.foundryLinked),
       last_scanned: new Date().toISOString(),
     }))
+    .filter((p) => p.slug.length > 0);
+
+  const slugs = [...new Set(projects.map((p) => p.slug))];
+  if (projects.length !== body.projects.length) return c.json({ error: 'project slug required' }, 400);
+
+  const db = getDb(c.env.DB);
+  await Promise.all(
+    projects.map((p) => db.upsertFleetMetadata(userId, p))
   );
-  return c.json({ ok: true, count: body.projects.length });
+
+  let pruned = 0;
+  if (body.replace) {
+    pruned += await db.deleteFleetMetadataExcept(userId, slugs);
+  }
+
+  if (Array.isArray(body.retired_slugs) && body.retired_slugs.length > 0) {
+    const retiredSlugs = body.retired_slugs
+      .map((slug) => String(slug || '').trim())
+      .filter(Boolean);
+    pruned += await db.deleteFleetMetadataBySlugs(userId, retiredSlugs);
+  }
+
+  return c.json({ ok: true, count: projects.length, pruned });
 });
 
 export { fleetMetadata };

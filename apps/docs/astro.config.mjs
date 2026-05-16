@@ -32,6 +32,7 @@ export default defineConfig({
 						{ label: 'Testimonials', slug: 'services/testimonials' },
 						{ label: 'Changelog', slug: 'services/changelog' },
 						{ label: 'Waitlist', slug: 'services/waitlist' },
+						{ label: 'Tasks', slug: 'services/tasks' },
 						{ label: 'JavaScript SDK', slug: 'sdk/javascript' },
 					],
 				},
@@ -49,9 +50,10 @@ export default defineConfig({
 				{
 					label: 'Fleet Management',
 					items: [
-						{ label: 'Cockpit Dashboard', slug: 'services/projects' },
-						{ label: 'Fleet Audit & Fix', slug: 'sdk/cli' },
-						{ label: 'Forge Scaffolding', slug: 'sdk/cli' },
+						{ label: 'Projects API', slug: 'services/projects' },
+						{ label: 'Tasks', slug: 'services/tasks' },
+						{ label: 'Authentication', slug: 'getting-started/authentication' },
+						{ label: 'The Standard', slug: 'getting-started/standard' },
 					],
 				},
 				{

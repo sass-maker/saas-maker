@@ -26,35 +26,39 @@ All request bodies must be JSON with `Content-Type: application/json`.
 
 ## Response format
 
-All responses return JSON. Successful responses return the resource or a list:
+All responses return JSON. List endpoints return a paginated envelope:
 
 ```json
 { "data": [...], "total": 42, "page": 1, "limit": 20 }
 ```
 
-Or for single-resource operations:
+Single-resource creates and updates return the full record; mutations without a body return `{ "ok": true }`.
 
-```json
-{ "ok": true }
-```
+### Pagination
+
+List endpoints accept `page` (1-indexed) and, where supported, `limit`. Defaults are `page=1` and a per-endpoint `limit` (typically `20`–`50`). `total` is always returned so clients can compute the last page.
 
 ## Error format
 
 Errors return a JSON object with an `error` field and an appropriate HTTP status code:
 
 ```json
-{ "error": "Title is required" }
+{ "error": "title is required" }
 ```
-
-Common status codes:
 
 | Code | Meaning |
 |------|---------|
 | `400` | Bad request (missing or invalid fields) |
-| `403` | Forbidden (not the project owner) |
+| `401` | Unauthenticated (missing or invalid token / key) |
+| `403` | Forbidden (authenticated, but not the project owner) |
 | `404` | Resource not found |
 | `409` | Conflict (duplicate entry) |
 | `413` | Payload too large |
+| `429` | Rate-limited — see below |
+
+## Rate limiting
+
+Per-project rate limits are enforced on public endpoints. The default is configurable per project (`rate_limit_rpm` on the project record) and limits are reported back via standard headers when a request is throttled. When you hit the limit you'll get `429` with `{ "error": "Rate limit exceeded" }` — back off and retry.
 
 ## CORS
 
