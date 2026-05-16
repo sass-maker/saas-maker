@@ -15,6 +15,9 @@ const PROJECT_OVERRIDES = {
   'saas-maker': {
     runtimeDir: 'apps/cockpit',
   },
+  truehire: {
+    runtimeDir: 'apps/web',
+  },
 };
 
 export function extractRepoFromGitUrl(value) {

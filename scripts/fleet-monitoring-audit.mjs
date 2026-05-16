@@ -2,6 +2,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import { FLEET_HEALTH_CONTRACTS } from './lib/fleet-health-contracts.mjs';
+
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const FLEET_ROOT = path.resolve(ROOT, '..');
 
@@ -56,6 +58,21 @@ function readTextFiles(dir) {
 }
 
 function auditProject(project) {
+  const contract = FLEET_HEALTH_CONTRACTS[project.slug] ?? {};
+  if (!contract.prodUrl) {
+    return {
+      project: project.slug,
+      ok: true,
+      skipped: true,
+      checks: [
+        { name: 'posthog_dependency_or_init', ok: true },
+        { name: 'page_crash_capture', ok: true },
+        { name: 'auth_or_signup_failure_capture', ok: true },
+      ],
+      signals: {},
+    };
+  }
+  const requiresAuthCapture = contract.auth?.required === true;
   const files = readTextFiles(project.dir);
   let packageJson = {};
   try {
@@ -81,11 +98,12 @@ function auditProject(project) {
   const checks = [
     { name: 'posthog_dependency_or_init', ok: hasPostHogDependency || hasPostHogSource },
     { name: 'page_crash_capture', ok: hasPageCrashCapture },
-    { name: 'auth_or_signup_failure_capture', ok: hasAuthFailureCapture },
+    { name: 'auth_or_signup_failure_capture', ok: !requiresAuthCapture || hasAuthFailureCapture },
   ];
 
   return {
     project: project.slug,
+    requiresAuthCapture,
     ok: checks.every((check) => check.ok),
     checks,
     signals: {
