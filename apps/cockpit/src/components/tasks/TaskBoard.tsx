@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { apiFetchClient, getClientToken } from '@/lib/api-client';
+import { formatProjectLabel, sortProjectSlugs } from '@/lib/fleet-project-names';
 import { buildSymphonyBatchPrompt, buildSymphonyDoneCommand, buildSymphonyPrompt, buildSymphonyRunRecord, chooseSymphonyAgent, type SymphonyAgentUsageSnapshot } from '@/lib/symphony';
 import { cn } from '@/lib/utils';
 import { DroidDialog, type DroidMode, type DroidRunArtifact, type DroidRunEvent, type DroidRunRow, type DroidRunStats } from './DroidDialog';
@@ -350,12 +351,12 @@ export function TaskBoard({
   const [showDone, setShowDone] = useState(false);
   const [selectedTaskIds, setSelectedTaskIds] = useState<string[]>([]);
 
-  const allProjectSlugs = Array.from(
+  const allProjectSlugs = sortProjectSlugs(Array.from(
     new Set([
       ...projectSlugs,
       ...tasks.map(task => task.project_slug).filter((slug): slug is string => Boolean(slug)),
     ])
-  ).sort((a, b) => a.localeCompare(b));
+  ));
 
   const tasksById = new Map(tasks.map(task => [task.id, task]));
   const latestRunByTaskId = new Map<string, SymphonyRunRow>();
@@ -1053,7 +1054,7 @@ export function TaskBoard({
                   <SelectItem value={ALL_PROJECTS}>All projects</SelectItem>
                   <SelectItem value={UNASSIGNED_PROJECT}>Unassigned</SelectItem>
                   {allProjectSlugs.map(slug => (
-                    <SelectItem key={slug} value={slug}>{slug}</SelectItem>
+                    <SelectItem key={slug} value={slug}>{formatProjectLabel(slug)}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -1207,8 +1208,8 @@ export function TaskBoard({
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="__none__">None</SelectItem>
-                    {projectSlugs.map(slug => (
-                      <SelectItem key={slug} value={slug}>{slug}</SelectItem>
+                    {sortProjectSlugs(projectSlugs).map(slug => (
+                      <SelectItem key={slug} value={slug}>{formatProjectLabel(slug)}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -1523,7 +1524,7 @@ export function TaskBoard({
               <div className="rounded-lg border bg-muted/25 p-3">
                 <div className="text-sm font-medium text-foreground">{commentTask.title}</div>
                 <div className="mt-1 flex flex-wrap gap-1 text-xs text-muted-foreground">
-                  <span>{commentTask.project_slug ?? 'Unassigned'}</span>
+                  <span>{formatProjectLabel(commentTask.project_slug)}</span>
                   {commentTask.blocked_on_user ? (
                     <Badge variant="outline" className="border-amber-500/50 bg-amber-500/10 text-amber-600 dark:text-amber-300">
                       Needs decision
@@ -1739,7 +1740,7 @@ function TaskList({
               )}
               <div className="mt-1 flex min-w-0 items-center gap-1 max-sm:hidden">
                 <span className={cn(metadataPillClass, 'max-w-32 hover:border-border hover:bg-background/70')}>
-                  <span className="truncate">{task.project_slug ?? 'Unassigned'}</span>
+                  <span className="truncate">{formatProjectLabel(task.project_slug)}</span>
                 </span>
                 <span className="relative inline-flex">
                   <select

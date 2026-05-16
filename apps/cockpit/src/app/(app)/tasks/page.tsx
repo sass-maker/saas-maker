@@ -4,9 +4,11 @@ import { headers } from 'next/headers';
 import { apiFetchAuthed } from '@/lib/api-client';
 import { visibleDashboardProjects } from '@/lib/dashboard-projects';
 import { getManifestProjectRepos, getManifestProjectSlugs } from '@/lib/fleet-manifest';
+import { sortProjectSlugs } from '@/lib/fleet-project-names';
 import { TaskBoard } from '@/components/tasks/TaskBoard';
 import { isLocalAuthBypassEnabled } from '@/lib/local-auth';
 import { DEFAULT_SYMPHONY_MEMORY } from '@/lib/symphony';
+import { CheckCircle2, ListTodo, ShieldAlert } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -57,12 +59,45 @@ export default async function TasksPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-white">Tasks</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Create production tasks, then pull and update them locally with pnpm symphony.
-          </p>
+      <div className="border-b border-border/70 pb-5">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div className="min-w-0">
+            <div className="mb-2 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-300/80">
+              <ListTodo className="h-3.5 w-3.5" />
+              Symphony task control
+            </div>
+            <h1 className="text-3xl font-semibold tracking-tight text-foreground">Tasks</h1>
+            <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
+              Create production tasks, route them to agents, and pull them locally with pnpm symphony.
+            </p>
+          </div>
+          <div className="grid grid-cols-3 gap-2 text-xs sm:w-[25rem]">
+            <div className="rounded-md border border-border/70 bg-muted/20 px-3 py-2">
+              <div className="flex items-center gap-1.5 text-muted-foreground">
+                <ListTodo className="h-3.5 w-3.5" />
+                Total
+              </div>
+              <div className="mt-1 font-mono text-lg font-semibold text-foreground">{tasks.length}</div>
+            </div>
+            <div className="rounded-md border border-border/70 bg-muted/20 px-3 py-2">
+              <div className="flex items-center gap-1.5 text-muted-foreground">
+                <ShieldAlert className="h-3.5 w-3.5" />
+                Open
+              </div>
+              <div className="mt-1 font-mono text-lg font-semibold text-amber-300">
+                {tasks.filter(task => task.status !== 'done').length}
+              </div>
+            </div>
+            <div className="rounded-md border border-border/70 bg-muted/20 px-3 py-2">
+              <div className="flex items-center gap-1.5 text-muted-foreground">
+                <CheckCircle2 className="h-3.5 w-3.5" />
+                Done
+              </div>
+              <div className="mt-1 font-mono text-lg font-semibold text-emerald-300">
+                {tasks.filter(task => task.status === 'done').length}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       {loadErrors.length > 0 ? (
@@ -78,7 +113,7 @@ export default async function TasksPage() {
       <TaskBoard
         initialTasks={tasks}
         initialRuns={runs}
-        projectSlugs={Array.from(new Set([...manifestProjects, ...projects])).sort()}
+        projectSlugs={sortProjectSlugs(Array.from(new Set([...manifestProjects, ...projects])))}
         projectRepos={getManifestProjectRepos()}
         initialMemory={memory}
         isLocal={isLocal}

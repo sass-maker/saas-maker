@@ -123,4 +123,14 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  .dark body {
+    background-color: #07080a;
+    background-image:
+      radial-gradient(900px 520px at 8% -10%, rgba(56, 189, 248, 0.08), transparent 60%),
+      radial-gradient(900px 520px at 100% 12%, rgba(251, 191, 36, 0.045), transparent 62%),
+      linear-gradient(to right, rgba(125, 211, 252, 0.035) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(125, 211, 252, 0.035) 1px, transparent 1px);
+    background-size: auto, auto, 56px 56px, 56px 56px;
+  }
 }

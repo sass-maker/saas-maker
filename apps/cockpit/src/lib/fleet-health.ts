@@ -1,3 +1,5 @@
+import { getCanonicalProjectName } from "./fleet-project-names";
+
 export interface FleetComplianceChecks {
   config: boolean;
   eslint: boolean;
@@ -95,7 +97,7 @@ export function buildFleetCommandCenter(
 
     return {
       slug: project.slug,
-      name: project.name,
+      name: getCanonicalProjectName(project.slug, project.name),
       type: project.type,
       readiness,
       score: project.compliance.score,
@@ -139,6 +141,6 @@ function buildActionDigest(projects: FleetCommandProject[]) {
     .slice(0, 5)
     .map((project) => {
       const action = project.actions[0] ?? 'Inspect the project.';
-      return `${project.slug}: ${action}`;
+      return `${getCanonicalProjectName(project.slug, project.name)}: ${action}`;
     });
 }

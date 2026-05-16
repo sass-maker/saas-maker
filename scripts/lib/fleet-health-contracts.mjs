@@ -18,7 +18,7 @@ export const FLEET_HEALTH_CONTRACTS = {
     auth: { required: false },
     requiredEnv: { build: [], runtime: [] },
     deployTarget: 'Cloudflare Pages',
-    githubWorkflow: 'deploy-pages.yml',
+    githubWorkflow: 'deploy-landing.yml',
     smokeCommand: 'pnpm run fleet:prod-smoke --project CodeVetter',
   },
   'email-manager': {

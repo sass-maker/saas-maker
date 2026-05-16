@@ -1,30 +1,24 @@
+import {
+  getCanonicalProjectName,
+  isHiddenFleetProject,
+} from "./fleet-project-names";
+
 type ProjectIdentity = {
   name?: string | null;
   slug?: string | null;
 };
 
-const HIDDEN_DASHBOARD_PROJECTS = new Set([
-  "a",
-  "clash-royale-meta",
-  "dev_learning",
-  "dev-learning",
-  "port-whisperer",
-  "personalsite",
-  "sarthak-blog",
-]);
-
 export function isHiddenDashboardProject(project: ProjectIdentity) {
-  const name = project.name?.trim().toLowerCase();
-  const slug = project.slug?.trim().toLowerCase();
-
-  return (
-    (name !== undefined && HIDDEN_DASHBOARD_PROJECTS.has(name)) ||
-    (slug !== undefined && HIDDEN_DASHBOARD_PROJECTS.has(slug))
-  );
+  return isHiddenFleetProject(project);
 }
 
 export function visibleDashboardProjects<T extends ProjectIdentity>(
   projects: T[]
 ) {
-  return projects.filter((project) => !isHiddenDashboardProject(project));
+  return projects
+    .filter((project) => !isHiddenDashboardProject(project))
+    .map((project) => ({
+      ...project,
+      name: getCanonicalProjectName(project.slug, project.name),
+    }));
 }
