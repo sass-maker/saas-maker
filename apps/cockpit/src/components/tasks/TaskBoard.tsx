@@ -227,7 +227,7 @@ function buildDroidPrompt(task: TaskRow, options: {
     commentBlock ? `\nRecent task comments:\n${commentBlock}` : '',
     options.acceptanceCommand ? `\nAcceptance command to run before PR:\n${options.acceptanceCommand}` : '',
     '',
-    'When blocked, return a block action with the exact user question. When done, summarize changed files, checks run, risks, and next action.',
+    'When blocked, return a block action only for a concrete user decision or missing config, with the exact question. When done, summarize changed files, checks run, risks, and next action.',
   ]
     .filter(Boolean)
     .join('\n');
@@ -1249,9 +1249,9 @@ export function TaskBoard({
             <div className="space-y-3 rounded-lg border bg-muted/20 p-3">
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <Label htmlFor="blocked-on-user">Blocked on me</Label>
+                  <Label htmlFor="blocked-on-user">Needs decision</Label>
                   <p className="text-xs text-muted-foreground">
-                    Mark when this task needs your answer or decision before an agent can proceed.
+                    Mark only when this task needs a concrete decision or missing config before an agent can proceed.
                   </p>
                 </div>
                 <Switch
@@ -1524,7 +1524,7 @@ export function TaskBoard({
                   <span>{commentTask.project_slug ?? 'Unassigned'}</span>
                   {commentTask.blocked_on_user ? (
                     <Badge variant="outline" className="border-amber-500/50 bg-amber-500/10 text-amber-600 dark:text-amber-300">
-                      Blocked on me
+                      Needs decision
                     </Badge>
                   ) : null}
                 </div>
@@ -1578,7 +1578,7 @@ export function TaskBoard({
                       onChange={event => setResolveWithComment(event.target.checked)}
                       className="h-4 w-4 rounded border-border text-primary"
                     />
-                    Resolve “blocked on me” with this comment
+                    Resolve decision blocker with this comment
                   </label>
                 ) : null}
                 {commentTask.status !== 'done' ? (
@@ -1715,9 +1715,9 @@ function TaskList({
                   <Badge
                     variant="outline"
                     className="border-amber-500/50 bg-amber-500/10 text-[10px] font-medium uppercase tracking-wide text-amber-600 dark:text-amber-300"
-                    title="Waiting for your answer or decision"
+                    title="Waiting for a concrete decision or missing config"
                   >
-                    Blocked on me
+                    Needs decision
                   </Badge>
                 )}
                 {dependencyBlocked && (

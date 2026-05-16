@@ -63,7 +63,7 @@ export function findNextTask(tasks, options = {}) {
   if (candidates.length === 0) {
     const projectHint = project ? ` for project ${project}` : '';
     const blockedCount = annotated.filter((task) => task.status === status && task.blocked).length;
-    const blockedHint = status === 'todo' && blockedCount > 0 ? ` (${blockedCount} blocked by prerequisites or user input)` : '';
+    const blockedHint = status === 'todo' && blockedCount > 0 ? ` (${blockedCount} blocked by prerequisites or decision/config)` : '';
     throw new Error(`No runnable ${status} tasks available${projectHint}${blockedHint}.`);
   }
   return candidates[0];

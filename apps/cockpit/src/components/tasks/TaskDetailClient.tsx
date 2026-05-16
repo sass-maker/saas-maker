@@ -115,7 +115,7 @@ export function TaskDetailClient({
             {task.project_slug ? <Badge variant="outline">{task.project_slug}</Badge> : null}
             {task.blocked_on_user ? (
               <Badge variant="outline" className="border-amber-500/50 bg-amber-500/10 text-amber-600 dark:text-amber-300">
-                Blocked on me
+                Needs decision
               </Badge>
             ) : null}
           </div>
@@ -246,7 +246,7 @@ export function TaskDetailClient({
                 onChange={event => setResolveWithComment(event.target.checked)}
                 className="h-4 w-4 rounded border-border text-primary"
               />
-              Resolve “blocked on me” with this comment
+              Resolve decision blocker with this comment
             </label>
           ) : null}
           {task.status !== 'done' ? (
@@ -268,7 +268,7 @@ export function TaskDetailClient({
                 onChange={event => setBlockWithComment(event.target.checked)}
                 className="h-4 w-4 rounded border-border text-primary"
               />
-              Block this task on me with this comment
+              Mark as needing my decision with this comment
             </label>
           ) : null}
           <label className="flex items-center gap-2 text-sm text-muted-foreground">

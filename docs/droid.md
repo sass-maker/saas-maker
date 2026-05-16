@@ -75,7 +75,7 @@ The final report event is machine-readable and includes `summary`, `files_change
 
 When `DROID_SAASMAKER_TOKEN` is configured, Droid can write back to the task:
 
-- block actions add an agent comment and set `blocked_on_user`
+- block actions add an agent comment and set `blocked_on_user` only for a concrete user decision or missing config
 - final reports add a concise run summary comment
 - draft PR creation updates `pr_url`, `pr_status`, and `branch_name`
 
@@ -91,7 +91,7 @@ The current permission model is:
 - `edit`: allowed inside the sandbox workspace for every run.
 - `shell`: allowed only through recorded Droid command/tool events.
 - `push` and `pr`: allowed only when `create_pr` is true, a meaningful diff is captured, and configured acceptance gates pass.
-- `deploy` and `release`: not executed by Droid. Create a task blocker or draft PR for user/Codex approval instead.
+- `deploy` and `release`: not executed by Droid. Create a task blocker only when a concrete decision or missing config is required.
 
 Every command, provider choice, queue event, patch capture, acceptance result,
 browser check, PR attempt, and final report is written to Droid run tables.

@@ -577,7 +577,7 @@ function printTasks(tasks, args) {
       console.log(`  - [${shortId(task.id)}] ${task.priority} ${project}: ${task.title}${blockedTag}${description}`);
       if (task.blocked) {
         const deps = normalizeDependencies(task);
-        if (task.blocked_on_user) console.log('    waiting on: user input');
+        if (task.blocked_on_user) console.log('    waiting on: decision/config');
         if (deps.length) console.log(`    waiting on: ${deps.map((id) => shortId(id)).join(', ')}`);
       }
       if (args.commands) {
@@ -643,7 +643,7 @@ function assertDispatchable(task, tasks) {
   if (isTaskBlocked(task, tasks)) {
     const deps = normalizeDependencies(task);
     const blockers = [
-      task.blocked_on_user ? 'user input' : null,
+      task.blocked_on_user ? 'decision/config' : null,
       deps.length ? deps.map((id) => shortId(id)).join(', ') : null,
     ].filter(Boolean);
     const suffix = blockers.length ? ` Waiting on: ${blockers.join('; ')}` : '';

@@ -94,7 +94,7 @@ describe('findNextTask', () => {
 
   it('throws a helpful error when only blocked tasks remain', () => {
     const a = baseTask({ id: 'a', status: 'todo', priority: 'high', dependencies: ['ghost'] });
-    expect(() => findNextTask([a])).toThrow(/blocked by prerequisites or user input/i);
+    expect(() => findNextTask([a])).toThrow(/blocked by prerequisites or decision\/config/i);
   });
 
   it('honors project filter', () => {

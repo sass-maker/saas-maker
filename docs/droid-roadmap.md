@@ -35,7 +35,7 @@ Droid is usable as an experimental v1 runner: it can start a Cloudflare Sandbox,
 
 7. Task feedback loop
    - Let Droid post agent comments back to `/v1/tasks/:id/comments`.
-   - Let Droid mark a task `blocked_on_user` when it needs credentials, a product decision, a review, or permission to deploy.
+   - Let Droid mark a task `blocked_on_user` when it needs credentials, config, or a product decision.
    - Include the blocker reason, run id, last command, changed-file summary, and exact question for the user.
    - Use a scoped SaaS Maker service or CLI token stored as a Droid Worker secret.
    - Keep raw command logs in Droid run events; keep task comments concise.
@@ -69,7 +69,7 @@ Droid is usable as an experimental v1 runner: it can start a Cloudflare Sandbox,
 13. Production controls
 
 - Add task-level permissions for edit, push, PR, deploy, and release.
-- Require explicit approval for deploy/release tasks.
+- Require an explicit deploy/release decision when the task asks Droid to cross that boundary.
 - Add audit-log search and export.
 
 ## Sandcastle Ideas To Borrow
@@ -97,7 +97,7 @@ Droid becomes a hands-off production employee when it can:
 - run the smallest relevant checks
 - produce a draft PR with audit logs and test output
 - comment back on the task when it needs help
-- mark the task blocked when user input is required
+- mark the task blocked when a concrete decision or missing config is required
 - recover or fail clearly when stuck
 - avoid leaking secrets
 - show cost and runtime stats for the run
