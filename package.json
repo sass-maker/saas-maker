@@ -27,6 +27,8 @@
     "typecheck": "pnpm build:types && pnpm -F @saas-maker/ops build && pnpm -F @saas-maker/sdk build && pnpm -F @saas-maker/analytics-ui build && pnpm -F @saas-maker/ui build && pnpm -F @saas-maker/email build && pnpm -r --if-present typecheck",
     "smoke": "node scripts/smoke-prod.mjs",
     "fleet:prod-smoke": "node scripts/fleet-production-smoke.mjs",
+    "fleet:secret-audit": "node scripts/fleet-secret-audit.mjs",
+    "fleet:monitoring-audit": "node scripts/fleet-monitoring-audit.mjs",
     "symphony": "FND_API_URL=${FND_API_URL:-https://api.sassmaker.com} node scripts/symphony-local.mjs",
     "symphony:agent-usage": "node scripts/symphony-agent-usage.mjs",
     "droid:local": "node scripts/droid-headless-local.mjs",
