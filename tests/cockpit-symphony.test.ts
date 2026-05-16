@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   buildSymphonyBatchPrompt,
   buildSymphonyBatchRuns,
+  buildSymphonyDoneCommand,
   buildSymphonyPrompt,
   chooseSymphonyAgent,
 } from '../apps/cockpit/src/lib/symphony';
@@ -30,6 +31,8 @@ describe('cockpit Symphony helpers', () => {
     expect(prompt).toContain('Task ID: task-docs');
     expect(prompt).toContain('Routed agent: Codex');
     expect(prompt).toContain('Routed agent: Gemini');
+    expect(prompt).toContain('pnpm --dir ~/Desktop/fleet/saas-maker symphony done task-code');
+    expect(prompt).toContain('pnpm --dir ~/Desktop/fleet/saas-maker symphony done task-docs');
   });
 
   it('keeps batch routing task-level instead of reusing one agent for all tasks', () => {
@@ -53,6 +56,13 @@ describe('cockpit Symphony helpers', () => {
     expect(prompt).toContain('Symphony operating memory:');
     expect(prompt).toContain('Task-specific instructions:');
     expect(prompt).toContain('Only touch the CLI surface.');
+    expect(prompt).toContain('After verification, mark the task done with:');
+    expect(prompt).toContain('pnpm --dir ~/Desktop/fleet/saas-maker symphony done task-one');
+  });
+
+  it('builds a copyable done command for task handoff prompts', () => {
+    expect(buildSymphonyDoneCommand({ ...baseTask, id: 'task-finish', title: 'Finish me' }))
+      .toBe('pnpm --dir ~/Desktop/fleet/saas-maker symphony done task-finish');
   });
 
   it('uses a healthy usage snapshot when routing broad review work', () => {

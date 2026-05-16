@@ -422,6 +422,7 @@ function runCliApi(args, method, pathName, options = {}) {
 
 function buildPrompt(task, memory = '') {
   const project = task.project_slug ?? 'saas-maker';
+  const doneCommand = `pnpm --dir ~/Desktop/fleet/saas-maker symphony done ${task.id}`;
   return `You are running a Foundry Symphony task.
 
 Task ID: ${task.id}
@@ -440,7 +441,9 @@ Execution contract:
 - Use this repository's AGENTS.md and WORKFLOW.md as operating guidance.
 - Keep changes scoped to the task.
 - Verify before claiming completion.
-- When done, report changed files, evidence, and remaining risk so the task can be moved to Done.
+- When done, report changed files, evidence, and remaining risk.
+- After verification, mark the task done with:
+  ${doneCommand}
 `;
 }
 

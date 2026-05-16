@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { apiFetchClient, getClientToken } from '@/lib/api-client';
-import { buildSymphonyBatchPrompt, buildSymphonyPrompt, buildSymphonyRunRecord, chooseSymphonyAgent, type SymphonyAgentUsageSnapshot } from '@/lib/symphony';
+import { buildSymphonyBatchPrompt, buildSymphonyDoneCommand, buildSymphonyPrompt, buildSymphonyRunRecord, chooseSymphonyAgent, type SymphonyAgentUsageSnapshot } from '@/lib/symphony';
 import { cn } from '@/lib/utils';
 import { DroidDialog, type DroidMode, type DroidRunArtifact, type DroidRunEvent, type DroidRunRow, type DroidRunStats } from './DroidDialog';
 
@@ -215,6 +215,7 @@ function buildDroidPrompt(task: TaskRow, options: {
   branch?: string;
 } = {}): string {
   const commentBlock = options.comments?.length ? formatDroidComments(options.comments) : '';
+  const doneCommand = buildSymphonyDoneCommand(task);
   return [
     'You own this task end to end. Make the smallest complete code change, verify it, and prepare a draft PR when useful.',
     '',
@@ -226,6 +227,7 @@ function buildDroidPrompt(task: TaskRow, options: {
     task.description ? `\nDetails:\n${task.description}` : '',
     commentBlock ? `\nRecent task comments:\n${commentBlock}` : '',
     options.acceptanceCommand ? `\nAcceptance command to run before PR:\n${options.acceptanceCommand}` : '',
+    `\nAfter verification, mark this task done with:\n${doneCommand}`,
     '',
     'When blocked, return a block action only for a concrete user decision or missing config, with the exact question. When done, summarize changed files, checks run, risks, and next action.',
   ]
