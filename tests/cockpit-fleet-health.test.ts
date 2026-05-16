@@ -72,8 +72,8 @@ describe('cockpit fleet health command center', () => {
     });
     expect(commandCenter.projects[0].actions).toContain('Add the standard CI workflow.');
     expect(commandCenter.actionDigest).toEqual([
-      'missing-ci: Add the standard CI workflow.',
-      'local-only: Create or sync the project record.',
+      'Missing CI: Add the standard CI workflow.',
+      'Local Only: Create or sync the project record.',
     ]);
   });
 
