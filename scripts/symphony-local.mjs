@@ -96,6 +96,7 @@ function parseArgs(argv) {
     description: null,
     project: null,
     priority: 'medium',
+    taskType: null,
     status: null,
     noCache: false,
     memory: '',
@@ -108,7 +109,7 @@ function parseArgs(argv) {
     forwardedEnv: resolveForwardedEnv(globalConfig),
   };
 
-  const commands = new Set(['list', 'pull', 'sync', 'create', 'claim', 'done', 'reopen', 'dispatch', 'pick', 'delete', 'memory', 'audit']);
+  const commands = new Set(['list', 'pull', 'sync', 'create', 'claim', 'done', 'reopen', 'type', 'dispatch', 'pick', 'delete', 'memory', 'audit']);
   if (argv[0] && !argv[0].startsWith('-') && commands.has(argv[0])) {
     args.command = argv.shift();
   }
@@ -136,8 +137,10 @@ function parseArgs(argv) {
     } else if (args.command === 'dispatch') {
       args.ids.push(arg);
       args.id ||= arg;
-    } else if (!args.id && ['claim', 'done', 'reopen', 'delete', 'audit'].includes(args.command)) {
+    } else if (!args.id && ['claim', 'done', 'reopen', 'type', 'delete', 'audit'].includes(args.command)) {
       args.id = arg;
+    } else if (args.command === 'type' && !args.taskType) {
+      args.taskType = arg;
     } else if (args.command === 'create') {
       args.title = args.title ? `${args.title} ${arg}` : arg;
     }
@@ -163,6 +166,7 @@ Usage:
   pnpm symphony claim ID                Move a production task to in_progress
   pnpm symphony done ID                 Move a production task to done
   pnpm symphony reopen ID               Move a production task back to todo
+  pnpm symphony type ID bug             Set task type: feature, bug, chore, docs, research, cleanup, other
   pnpm symphony create "Title"          Create a production task
   pnpm symphony delete ID               Delete a production task
   pnpm symphony audit                   Show recent Symphony audit events
@@ -671,6 +675,22 @@ async function updateTaskStatus(args, status) {
   return nextTasks;
 }
 
+async function updateTaskType(args) {
+  const allowedTypes = new Set(['feature', 'bug', 'chore', 'docs', 'research', 'cleanup', 'other']);
+  if (!allowedTypes.has(args.taskType)) {
+    throw new Error(`Task type must be one of: ${Array.from(allowedTypes).join(', ')}`);
+  }
+  const tasks = await fetchTasks(args);
+  const task = findTask(tasks, args.id);
+  const payload = await apiRequest(args, `/v1/tasks/${task.id}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ task_type: args.taskType }),
+  });
+  await fetchTasks(args);
+  if (!args.json) console.log(`Updated ${shortId(task.id)} to ${args.taskType}: ${payload.data.title}`);
+  if (args.json) console.log(JSON.stringify(payload.data, null, 2));
+}
+
 async function pickTask(args) {
   const tasks = await fetchTasks(args);
   args.memory = await loadPromptMemory(args);
@@ -779,6 +799,7 @@ async function main() {
   else if (args.command === 'claim') await updateTaskStatus(args, 'in_progress');
   else if (args.command === 'done') await updateTaskStatus(args, 'done');
   else if (args.command === 'reopen') await updateTaskStatus(args, 'todo');
+  else if (args.command === 'type') await updateTaskType(args);
   else if (args.command === 'pick') await pickTask(args);
   else if (args.command === 'delete') await deleteTask(args);
   else await runOnce(args);
