@@ -6,6 +6,9 @@
 import posthogJs, { type PostHog } from 'posthog-js';
 import type { BaseEventMap, EventName, EventProps, PostHogClientConfig } from './types.js';
 
+const DEFAULT_POSTHOG_KEY = 'phc_qgiAarw4Co4pw9fz3Fxj4UJaHmqzFetqs4JrXhGc35Nd';
+const DEFAULT_POSTHOG_HOST = 'https://us.i.posthog.com';
+
 let _client: PostHog | null = null;
 let _initialized = false;
 
@@ -25,11 +28,11 @@ export function initPostHog(config: Partial<PostHogClientConfig> = {}): PostHog 
   if (_initialized && _client) return _client;
 
   const env = readEnv();
-  const apiKey = config.apiKey ?? env.apiKey;
+  const apiKey = config.apiKey ?? env.apiKey ?? DEFAULT_POSTHOG_KEY;
   if (!apiKey || config.disabled) return null;
 
   posthogJs.init(apiKey, {
-    api_host: config.host ?? env.host ?? 'https://us.i.posthog.com',
+    api_host: config.host ?? env.host ?? DEFAULT_POSTHOG_HOST,
     autocapture: config.autocapture ?? false,
     capture_pageview: 'history_change',
   });

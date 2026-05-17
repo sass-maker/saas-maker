@@ -68,9 +68,15 @@ describe('client.initPostHog', () => {
     expect(getPostHog()).toBeNull();
   });
 
-  it('does nothing without apiKey', () => {
+  it('uses the fleet key fallback without apiKey', () => {
     initPostHog({});
-    expect(initMock).not.toHaveBeenCalled();
+    expect(initMock).toHaveBeenCalledWith(
+      'phc_qgiAarw4Co4pw9fz3Fxj4UJaHmqzFetqs4JrXhGc35Nd',
+      expect.objectContaining({
+        api_host: 'https://us.i.posthog.com',
+        autocapture: false,
+      }),
+    );
   });
 
   it('only initializes once', () => {

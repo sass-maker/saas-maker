@@ -33,15 +33,18 @@ beforeEach(() => {
 });
 
 describe('monitoring helpers', () => {
-  it('no-ops safely when PostHog is not configured', () => {
+  it('installs safely with the fleet PostHog fallback', () => {
     expect(() => {
       installBrowserMonitoring();
       capturePageCrash(new Error('boom'), { projectSlug: 'reader' });
       captureAuthFailure({ projectSlug: 'reader', stage: 'signin', reason: 'missing provider' });
     }).not.toThrow();
 
-    expect(initMock).not.toHaveBeenCalled();
-    expect(captureMock).not.toHaveBeenCalled();
+    expect(initMock).toHaveBeenCalledWith(
+      'phc_qgiAarw4Co4pw9fz3Fxj4UJaHmqzFetqs4JrXhGc35Nd',
+      expect.objectContaining({ api_host: 'https://us.i.posthog.com' }),
+    );
+    expect(captureMock).toHaveBeenCalled();
   });
 
   it('captures manual page crashes with sanitized context', () => {
