@@ -24,7 +24,27 @@ const TARGETS = {
   'email-manager': [{ label: 'web', url: 'https://email-manager.sarthakagrawal927.workers.dev' }],
   'high-signal': [{ label: 'web', url: 'https://high-signal-web.sarthakagrawal927.workers.dev' }],
   linkchat: [{ label: 'web', url: 'https://linkchat.sarthakagrawal927.workers.dev' }],
-  looptv: [{ label: 'web', url: 'https://looptv.pages.dev' }],
+  looptv: [
+    {
+      label: 'web',
+      url: 'https://looptv.pages.dev',
+      expectText: ['1,173 videos'],
+      interactions: [
+        {
+          label: 'open-science-station',
+          role: 'link',
+          name: /^Science\b/i,
+          expectText: ['1,173 unwatched of 1,173'],
+        },
+        {
+          label: 'play-science-video',
+          role: 'button',
+          name: /^Play$/,
+          expectIframeIncludes: 'youtube.com/embed',
+        },
+      ],
+    },
+  ],
   'open-historia': [{ label: 'web', url: 'https://open-historia.sarthakagrawal927.workers.dev' }],
   reader: [{ label: 'web', url: 'https://reader.sarthakagrawal927.workers.dev' }],
   'resume-tailor': [{ label: 'web', url: 'https://rolepatch.com' }],
@@ -208,6 +228,15 @@ async function runPageProbe(browser, project, target, args, artifactDir) {
     if (includesPattern(bodyText)) {
       errors.push({ type: 'page-text', message: bodyText });
     }
+    for (const expected of target.expectText ?? []) {
+      if (!bodyText.includes(expected)) {
+        errors.push({
+          type: 'missing-text',
+          expected,
+          message: `Expected page text to include "${expected}"`,
+        });
+      }
+    }
 
     for (const interaction of target.interactions ?? []) {
       await runInteraction(page, interaction, errors);
@@ -245,6 +274,30 @@ async function runInteraction(page, interaction, errors) {
     await locator.click({ timeout: 8_000 });
     await page.waitForLoadState('networkidle', { timeout: 15_000 }).catch(() => {});
     await page.waitForTimeout(750);
+    const bodyText = normalizeError(await page.locator('body').innerText({ timeout: 5_000 }).catch(() => ''));
+    for (const expected of interaction.expectText ?? []) {
+      if (!bodyText.includes(expected)) {
+        errors.push({
+          type: 'interaction-missing-text',
+          label: interaction.label,
+          expected,
+          message: `Expected page text to include "${expected}"`,
+        });
+      }
+    }
+    if (interaction.expectIframeIncludes) {
+      const iframeSources = await page.locator('iframe').evaluateAll((nodes) =>
+        nodes.map((node) => node.getAttribute('src') ?? ''),
+      );
+      if (!iframeSources.some((source) => source.includes(interaction.expectIframeIncludes))) {
+        errors.push({
+          type: 'interaction-missing-iframe',
+          label: interaction.label,
+          expected: interaction.expectIframeIncludes,
+          message: `Expected iframe src to include "${interaction.expectIframeIncludes}"`,
+        });
+      }
+    }
   } catch (error) {
     errors.push({
       type: 'interaction',
