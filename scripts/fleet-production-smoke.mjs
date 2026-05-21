@@ -63,7 +63,7 @@ const TARGETS = {
   starboard: [{ label: 'web', url: 'https://starboard.sarthakagrawal927.workers.dev' }],
   'swe-interview-prep': [{ label: 'web', url: 'https://swe-interview-prep.pages.dev' }],
   'today-little-log': [{ label: 'web', url: 'https://today-little-log.pages.dev' }],
-  truehire: [{ label: 'web', url: 'https://truehire.pages.dev' }],
+  truehire: [{ label: 'web', url: 'https://truehire.sarthakagrawal927.workers.dev' }],
 };
 
 const AUTH_PROBES = {
