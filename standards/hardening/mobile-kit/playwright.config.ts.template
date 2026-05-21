@@ -1,0 +1,60 @@
+/**
+ * Playwright config — desktop + mobile-viewport projects.
+ *
+ * Drop this at the project root as `playwright.config.ts`. It adds a `mobile`
+ * project (iPhone 13 = 390px wide, the Wave 1 mobile target) alongside the
+ * `desktop` baseline so mobile regressions are caught in CI.
+ *
+ * This template assumes `@saas-maker/test-config` is available (the shared
+ * fleet test config). If a project does not use it, see the "standalone"
+ * variant in the comment block at the bottom.
+ *
+ * PLACEHOLDERS to fill in per project:
+ *  - `baseURL` / `webServer.command` / `webServer.url` — match the project's
+ *    dev server.
+ *  - `testDir` — where the e2e specs live.
+ */
+
+import { devices } from "@playwright/test";
+import { definePlaywrightConfig } from "@saas-maker/test-config/playwright";
+
+export default definePlaywrightConfig({
+  baseURL: "http://localhost:3000", // PLACEHOLDER: project dev URL.
+  testDir: "./e2e", // PLACEHOLDER: e2e spec directory.
+  webServer: {
+    command: "pnpm dev", // PLACEHOLDER: project dev command.
+    url: "http://localhost:3000",
+    reuseExistingServer: !process.env["CI"],
+  },
+  extend: {
+    projects: [
+      // Desktop baseline.
+      { name: "desktop", use: { ...devices["Desktop Chrome"] } },
+      // Mobile-viewport project — iPhone 13 is 390px wide, the Wave 1 target.
+      { name: "mobile", use: { ...devices["iPhone 13"] } },
+    ],
+  },
+});
+
+/*
+ * STANDALONE VARIANT — if the project does not use @saas-maker/test-config,
+ * use a plain Playwright config instead:
+ *
+ *   import { defineConfig, devices } from "@playwright/test";
+ *
+ *   export default defineConfig({
+ *     testDir: "./e2e",
+ *     use: { baseURL: "http://localhost:3000" },
+ *     webServer: {
+ *       command: "pnpm dev",
+ *       url: "http://localhost:3000",
+ *       reuseExistingServer: !process.env.CI,
+ *     },
+ *     projects: [
+ *       { name: "desktop", use: { ...devices["Desktop Chrome"] } },
+ *       { name: "mobile",  use: { ...devices["iPhone 13"] } },
+ *     ],
+ *   });
+ *
+ * Run only the mobile project:  pnpm exec playwright test --project=mobile
+ */
