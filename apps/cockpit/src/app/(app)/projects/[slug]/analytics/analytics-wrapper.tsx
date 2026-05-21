@@ -60,7 +60,7 @@ function RecentEventsFeed({ projectId }: { projectId: string }) {
 
   return (
     <div className="rounded-lg border border-border bg-card">
-      <div className="px-4 py-3 border-b border-border flex items-center justify-between">
+      <div className="px-4 py-3 border-b border-border flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
         <span className="text-sm font-medium text-foreground">Recent Events</span>
         <span className="text-xs text-muted-foreground">last 20 · auto-refreshes every 30s</span>
       </div>
