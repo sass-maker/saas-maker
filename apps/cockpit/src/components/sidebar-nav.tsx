@@ -93,7 +93,7 @@ export function SidebarNav() {
       <Link
         href="/projects"
         className={cn(
-          "flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
+          "flex min-h-11 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
           pathname === "/projects"
             ? "bg-muted text-foreground"
             : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
@@ -106,7 +106,7 @@ export function SidebarNav() {
       <Link
         href="/fleet"
         className={cn(
-          "flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
+          "flex min-h-11 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
           pathname === "/fleet"
             ? "bg-muted text-foreground"
             : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
@@ -119,7 +119,7 @@ export function SidebarNav() {
       <Link
         href="/standards"
         className={cn(
-          "flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
+          "flex min-h-11 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
           pathname === "/standards"
             ? "bg-muted text-foreground"
             : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
@@ -132,7 +132,7 @@ export function SidebarNav() {
       <Link
         href="/tasks"
         className={cn(
-          "flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
+          "flex min-h-11 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
           pathname === "/tasks"
             ? "bg-muted text-foreground"
             : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
@@ -149,7 +149,7 @@ export function SidebarNav() {
       <Link
         href="/secrets"
         className={cn(
-          "flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
+          "flex min-h-11 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
           pathname === "/secrets"
             ? "bg-muted text-foreground"
             : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
@@ -162,7 +162,7 @@ export function SidebarNav() {
       <Link
         href="/manifest"
         className={cn(
-          "flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
+          "flex min-h-11 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
           pathname === "/manifest"
             ? "bg-muted text-foreground"
             : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
@@ -175,7 +175,7 @@ export function SidebarNav() {
       <Link
         href="/jobs"
         className={cn(
-          "flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
+          "flex min-h-11 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
           pathname === "/jobs"
             ? "bg-muted text-foreground"
             : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
@@ -221,7 +221,7 @@ export function SidebarNav() {
                   href={href}
                   prefetch={false}
                   className={cn(
-                    "flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors",
+                    "flex min-h-11 items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors",
                     isActive
                       ? "bg-muted text-foreground font-medium"
                       : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"

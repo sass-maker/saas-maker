@@ -1,0 +1,32 @@
+/**
+ * 404 page — Next.js App Router.
+ *
+ * Drop this at `src/app/not-found.tsx`. Rendered for unmatched routes and any
+ * `notFound()` call. This is a Server Component — no "use client" needed.
+ *
+ * PLACEHOLDERS to fill in per project:
+ *  - Copy + class names — match the project's design system.
+ *  - The "Back home" target if `/` is not the right landing spot.
+ */
+
+import Link from "next/link";
+
+export default function NotFound() {
+  return (
+    <div className="flex min-h-[60vh] items-center justify-center p-8">
+      <div className="max-w-md text-center">
+        <p className="mb-2 text-sm font-medium opacity-50">404</p>
+        <h2 className="mb-3 text-2xl font-bold">Page not found</h2>
+        <p className="mb-6 text-sm opacity-70">
+          The page you&apos;re looking for doesn&apos;t exist or may have moved.
+        </p>
+        <Link
+          href="/"
+          className="inline-block rounded border px-4 py-2 hover:opacity-80"
+        >
+          Back home
+        </Link>
+      </div>
+    </div>
+  );
+}

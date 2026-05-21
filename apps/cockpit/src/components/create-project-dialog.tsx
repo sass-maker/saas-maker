@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Plus } from "lucide-react";
 import { apiFetch } from "@/lib/api";
+import { trackCoreAction } from "@/lib/analytics";
 
 async function getToken(): Promise<string> {
   const res = await fetch("/api/token");
@@ -45,6 +46,8 @@ export function CreateProjectDialog() {
         { method: "POST", body: JSON.stringify({ name: name.trim() }) },
         token
       );
+      // Core action: a project was created (also fires `activated` once).
+      trackCoreAction("project_created");
       setOpen(false);
       setName("");
       // Navigate to the new project or refresh the list

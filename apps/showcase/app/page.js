@@ -56,6 +56,9 @@ function WaitlistMockup() {
 }
 
 function TestimonialsMockup() {
+  // Illustrative UI preview of the testimonials widget — not real customer
+  // quotes. Content is intentionally generic placeholder copy describing how
+  // the widget renders, so the mockup never reads as a fabricated endorsement.
   return (
     <div className="feature-row-mock">
       <div className="wl-header">
@@ -66,21 +69,21 @@ function TestimonialsMockup() {
         {[
           {
             stars: '★★★★★',
-            text: '"SaaS Maker\'s waitlist tool helped us capture 3k signups before launch. The embed was live in 5 minutes."',
-            name: 'Alex Tran', role: 'Founder @ Launchpad', color: '#3b82f6', initials: 'AT', delay: '0s',
+            text: 'Approved customer testimonials render here, collected through your shareable form or the API.',
+            name: 'Customer name', role: 'Role · Company', color: '#3b82f6', initials: '◆', delay: '0s',
           },
           {
             stars: '★★★★★',
-            text: '"The feedback board alone replaced three different tools we were paying for separately."',
-            name: 'Priya Nair', role: 'CPO @ Streamline', color: '#7c3aed', initials: 'PN', delay: '0.15s',
+            text: 'Each card shows the rating, quote, and an optional verified badge once you approve it.',
+            name: 'Customer name', role: 'Role · Company', color: '#7c3aed', initials: '◆', delay: '0.15s',
           },
           {
             stars: '★★★★★',
-            text: '"Changelog keeps our users informed. Engagement went up 40% after we started posting updates."',
-            name: 'Marco Silva', role: 'CTO @ NovaSaaS', color: '#22c55e', initials: 'MS', delay: '0.3s',
+            text: 'Drop the one-line embed on any site — the widget stays in sync with the cockpit.',
+            name: 'Customer name', role: 'Role · Company', color: '#22c55e', initials: '◆', delay: '0.3s',
           },
-        ].map(t => (
-          <div key={t.name} className="testi-card" style={{ animationDelay: t.delay }}>
+        ].map((t, i) => (
+          <div key={i} className="testi-card" style={{ animationDelay: t.delay }}>
             <div className="testi-stars">{t.stars}</div>
             <div className="testi-text">{t.text}</div>
             <div className="testi-author">
@@ -455,7 +458,7 @@ export default function LandingPage() {
             <ul className="feature-row-checks">
               <li>TypeScript SDK with full type coverage</li>
               <li>REST API — use any language or framework</li>
-              <li>Runs on Cloudflare Workers — sub-50ms globally</li>
+              <li>Runs on Cloudflare Workers — deployed at the edge</li>
             </ul>
             <a href={DOCS_URL} className="btn btn-ghost" target="_blank" rel="noopener noreferrer">Read the Docs</a>
           </div>

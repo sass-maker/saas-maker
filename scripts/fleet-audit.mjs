@@ -162,6 +162,7 @@ function run(command, args, options = {}) {
     cwd: options.cwd ?? ROOT,
     encoding: 'utf8',
     timeout: options.timeoutMs ?? DEFAULT_TIMEOUT_MS,
+    maxBuffer: options.maxBuffer ?? 50 * 1024 * 1024,
     env: {
       ...process.env,
       CI: '1',
@@ -177,6 +178,33 @@ function run(command, args, options = {}) {
     stdout: result.stdout ?? '',
     stderr: result.stderr ?? '',
     error: result.error?.message ?? null,
+  };
+}
+
+function networkAudit() {
+  const result = run(
+    'curl',
+    [
+      '-L',
+      '-s',
+      '-o',
+      '/dev/null',
+      '-w',
+      '%{http_code}',
+      '--connect-timeout',
+      '3',
+      '--max-time',
+      '5',
+      'https://api.github.com',
+    ],
+    { timeoutMs: 8_000 }
+  );
+  const status = Number.parseInt(result.stdout.trim(), 10);
+  const ok = result.ok && Number.isFinite(status) && status !== 0;
+  return {
+    ok,
+    status: Number.isFinite(status) ? status : null,
+    error: ok ? null : result.stderr || result.error || `curl returned HTTP ${Number.isFinite(status) ? status : 'unknown'}`,
   };
 }
 
@@ -230,6 +258,16 @@ function latestByWorkflow(runs) {
 }
 
 function githubAudit(project) {
+  if (project.network && !project.network.ok) {
+    return {
+      ok: true,
+      skipped: true,
+      error: project.network.error ?? 'No network',
+      prs: [],
+      workflows: [],
+      failedWorkflows: [],
+    };
+  }
   if (!project.repo) {
     return { ok: false, error: 'No GitHub repo parsed from manifest URL', prs: [], workflows: [] };
   }
@@ -279,6 +317,21 @@ function dirtyAudit(project) {
 }
 
 function smokeAudit(project) {
+  if (project.network && !project.network.ok) {
+    return {
+      ok: true,
+      skipped: true,
+      checks: (PROD_TARGETS[project.slug] ?? []).map((target) => ({
+        label: target.label,
+        url: target.url,
+        finalUrl: null,
+        status: null,
+        expected: target.ok,
+        ok: true,
+        error: project.network.error ?? 'No network',
+      })),
+    };
+  }
   const targets = PROD_TARGETS[project.slug] ?? [];
   const checks = targets.map((target) => {
     const result = run('curl', [
@@ -433,6 +486,32 @@ function lighthouseAudit(target) {
 }
 
 function performanceAudit(project, options) {
+  if (project.network && !project.network.ok) {
+    return {
+      ok: true,
+      skipped: true,
+      hasHardFailure: false,
+      checks: (FRONTEND_TARGETS[project.slug] ?? []).map((target) => ({
+        label: target.label,
+        url: target.url,
+        samples: [],
+        summary: {
+          httpCode: null,
+          finalUrl: null,
+          sizeDownload: null,
+          dnsMs: null,
+          connectMs: null,
+          tlsMs: null,
+          ttfbMs: null,
+          totalMs: null,
+        },
+        budgets: [],
+        lighthouse: null,
+        ok: true,
+        hardFailure: false,
+      })),
+    };
+  }
   const targets = FRONTEND_TARGETS[project.slug] ?? [];
   const checks = targets.map((target) => {
     const samples = Array.from({ length: options.samples }, () => curlTiming(target));
@@ -621,6 +700,9 @@ function markdown(report) {
   lines.push(`# Fleet Audit`);
   lines.push('');
   lines.push(`Generated: ${report.generatedAt}`);
+  if (report.network) {
+    lines.push(`Network: ${report.network.ok ? `ok (${report.network.status})` : `offline (${report.network.status ?? '?'})`}`);
+  }
   lines.push(`Projects: ${report.projects.length}`);
   lines.push('');
   lines.push(`| Project | Status | Issues |`);
@@ -644,28 +726,39 @@ function markdown(report) {
     lines.push('');
     lines.push(`### ${project.slug}`);
     if (project.github) {
-      lines.push(`- PRs: ${project.github.prs.map((pr) => `#${pr.number} ${pr.title}`).join(', ') || 'none'}`);
-      lines.push(`- Failed workflows: ${project.github.failedWorkflows.map((run) => run.workflowName).join(', ') || 'none'}`);
+      if (project.github.skipped) {
+        lines.push(`- PRs: skipped (no network)`);
+        lines.push(`- Failed workflows: skipped (no network)`);
+      } else {
+        lines.push(`- PRs: ${project.github.prs.map((pr) => `#${pr.number} ${pr.title}`).join(', ') || 'none'}`);
+        lines.push(`- Failed workflows: ${project.github.failedWorkflows.map((run) => run.workflowName).join(', ') || 'none'}`);
+      }
     }
     if (project.smoke) {
-      lines.push(`- Smoke: ${project.smoke.checks.map((check) => `${check.label} ${check.status}${check.ok ? '' : ' FAIL'}`).join(', ') || 'no targets'}`);
+      if (project.smoke.skipped) lines.push(`- Smoke: skipped (no network)`);
+      else {
+        lines.push(`- Smoke: ${project.smoke.checks.map((check) => `${check.label} ${check.status}${check.ok ? '' : ' FAIL'}`).join(', ') || 'no targets'}`);
+      }
     }
     if (project.local) {
       lines.push(`- Local: ${project.local.checks.map((check) => `${check.command} ${check.ok ? 'PASS' : 'FAIL'}`).join(', ') || 'no scripts'}`);
     }
     if (project.performance) {
-      const perfLines = project.performance.checks.map((check) => {
-        const parts = [
-          `${check.label} ${check.ok ? 'PASS' : 'WATCH'}`,
-          `ttfb ${check.summary.ttfbMs ?? '?'}ms`,
-          `total ${check.summary.totalMs ?? '?'}ms`,
-        ];
-        if (check.lighthouse) {
-          parts.push(`LH perf ${check.lighthouse.scores?.performance ?? '?'}`);
-        }
-        return parts.join(' ');
-      });
-      lines.push(`- Performance: ${perfLines.join(', ') || 'no frontend targets'}`);
+      if (project.performance.skipped) lines.push(`- Performance: skipped (no network)`);
+      else {
+        const perfLines = project.performance.checks.map((check) => {
+          const parts = [
+            `${check.label} ${check.ok ? 'PASS' : 'WATCH'}`,
+            `ttfb ${check.summary.ttfbMs ?? '?'}ms`,
+            `total ${check.summary.totalMs ?? '?'}ms`,
+          ];
+          if (check.lighthouse) {
+            parts.push(`LH perf ${check.lighthouse.scores?.performance ?? '?'}`);
+          }
+          return parts.join(' ');
+        });
+        lines.push(`- Performance: ${perfLines.join(', ') || 'no frontend targets'}`);
+      }
     }
     if (project.dirty) {
       lines.push(`- Dirty files: ${project.dirty.entries.length}`);
@@ -677,16 +770,17 @@ function markdown(report) {
 
 async function main() {
   const args = parseArgs(process.argv.slice(2));
+  const network = networkAudit();
   const projects = loadProjects(args);
   const audited = [];
   for (const project of projects) {
-    const entry = { ...project };
+    const entry = { ...project, network };
     if (args.runDirty) entry.dirty = dirtyAudit(project);
-    if (args.runGithub) entry.github = githubAudit(project);
-    if (args.runSmoke) entry.smoke = smokeAudit(project);
+    if (args.runGithub) entry.github = githubAudit(entry);
+    if (args.runSmoke) entry.smoke = smokeAudit(entry);
     if (args.runLocal) entry.local = localAudit(project, args.timeoutMs, { autofix: args.autofix });
     if (args.runPerformance) {
-      entry.performance = performanceAudit(project, {
+      entry.performance = performanceAudit(entry, {
         samples: args.performanceSamples,
         lighthouse: args.runLighthouse,
       });
@@ -697,6 +791,7 @@ async function main() {
   }
   const report = {
     generatedAt: new Date().toISOString(),
+    network,
     projects: audited,
     taskSuggestions: audited.flatMap((project) => project.taskSuggestions),
   };

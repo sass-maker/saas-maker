@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
+import { trackCoreAction } from '@/lib/analytics';
 import { apiFetchClient, getClientToken } from '@/lib/api-client';
 import { formatProjectLabel, sortProjectSlugs } from '@/lib/fleet-project-names';
 import { buildSymphonyBatchPrompt, buildSymphonyDoneCommand, buildSymphonyPrompt, buildSymphonyRunRecord, chooseSymphonyAgent, type SymphonyAgentUsageSnapshot } from '@/lib/symphony';
@@ -680,6 +681,8 @@ export function TaskBoard({
           }),
         });
         setTasks(prev => [res.data, ...prev]);
+        // Core action: a task was created (also fires `activated` once).
+        trackCoreAction('task_created');
         showToast('Task created');
       }
       setModalOpen(false);
