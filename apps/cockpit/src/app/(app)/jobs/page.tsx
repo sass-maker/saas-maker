@@ -28,14 +28,22 @@ interface FoundryJob {
 export default function JobsPage() {
   const [jobs, setJobs] = useState<FoundryJob[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
 
   async function loadJobs() {
     try {
       const token = await getClientToken();
       const res = await apiFetchClient<{ data: FoundryJob[] }>("/v1/jobs", token);
       setJobs(res.data || []);
+      setLoadError(false);
     } catch (err) {
-      toast.error("Failed to load agent activity");
+      console.error("[jobs] failed to load agent activity", err);
+      // Only surface a toast on the first failure — background polling that
+      // fails transiently shouldn't spam the user.
+      setLoadError((prev) => {
+        if (!prev) toast.error("Failed to load agent activity");
+        return true;
+      });
     } finally {
       setLoading(false);
     }
@@ -57,6 +65,19 @@ export default function JobsPage() {
       <div className="grid gap-4">
         {loading ? (
           <div className="p-12 text-center animate-pulse text-muted-foreground">Loading activity log...</div>
+        ) : loadError && jobs.length === 0 ? (
+          <Card className="border-dashed border-red-500/30">
+            <CardContent className="flex flex-col items-center gap-3 p-12 text-center">
+              <XCircle className="h-6 w-6 text-red-500" />
+              <p className="text-sm text-muted-foreground">
+                Couldn&apos;t load agent activity. Check your connection and
+                try again.
+              </p>
+              <Button variant="outline" size="sm" onClick={() => { setLoading(true); loadJobs(); }}>
+                Retry
+              </Button>
+            </CardContent>
+          </Card>
         ) : jobs.length === 0 ? (
           <Card className="border-dashed">
             <CardContent className="p-12 text-center text-muted-foreground italic">

@@ -48,6 +48,9 @@ app.onError((err, c) => {
   return c.json({ error: 'Internal server error' }, 500);
 });
 
+// Structured JSON for unmatched routes (Hono's default is plain text).
+app.notFound((c) => c.json({ error: 'Not found' }, 404));
+
 const ALLOWED_ORIGINS = new Set([
   'https://app.sassmaker.com',
   'https://sassmaker.com',

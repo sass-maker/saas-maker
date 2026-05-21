@@ -63,6 +63,9 @@ export function createApp(executor: RunExecutor) {
     return c.json({ error: 'Internal server error' }, 500);
   });
 
+  // Structured JSON for unmatched routes (Hono's default is plain text).
+  app.notFound((c) => c.json({ error: 'Not found' }, 404));
+
   app.get('/health', (c) => c.json({ status: 'ok' }));
 
   app.use('*', async (c, next) => {
