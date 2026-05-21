@@ -13,7 +13,7 @@ The Foundry platform — CLI, SDKs, widgets, CF Workers API, cockpit dashboard, 
 - DB: Cloudflare D1 + Drizzle
 - Auth: better-auth (Google OAuth) — cockpit issues opaque session tokens that workers/api validates against the shared D1 `session` table
 - Testing: Vitest (unit), Playwright (e2e)
-- Deploy: Cloudflare Workers (API), Vercel (cockpit)
+- Deploy: Cloudflare Workers (API `saasmaker-api`, cockpit `saasmaker-dashboard` via @opennextjs/cloudflare, droid runner `saasmaker-droid`); Cloudflare Pages (docs `saas-maker-docs`, landing `saas-maker-home`)
 - Package manager: pnpm workspace
 
 ## Repo structure

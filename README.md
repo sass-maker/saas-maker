@@ -4,6 +4,31 @@ SaaS Maker is a TypeScript monorepo for building and operating small SaaS produc
 
 The repo is public, but parts of the deployment are still personal/internal. Treat this as an active product workspace rather than a polished framework release.
 
+## Deployment & External Services
+
+Everything is hosted on Cloudflare. Each deployable ships independently via GitHub Actions (`.github/workflows/ci.yml`) on push to `main`, gated by changed paths.
+
+| Deployable | Source | Host |
+|------------|--------|------|
+| API | `workers/api` | Cloudflare Worker `saasmaker-api` (Hono; route `api.sassmaker.com`) |
+| Cockpit dashboard | `apps/cockpit` | Cloudflare Worker `saasmaker-dashboard` via `@opennextjs/cloudflare` (route `app.sassmaker.com`) |
+| Droid runner | `workers/droid` | Cloudflare Worker `saasmaker-droid` (Containers + Durable Objects) |
+| Docs | `apps/docs` | Cloudflare Pages `saas-maker-docs` (Astro/Starlight; `docs.sassmaker.com`) |
+| Landing/home | `apps/showcase` | Cloudflare Pages `saas-maker-home` (`sassmaker.com`) |
+
+| Concern | Service |
+|---------|---------|
+| Hosting | Cloudflare Workers + Cloudflare Pages (see table above) |
+| Database | Cloudflare D1 (`saasmaker-db`) — shared by API, cockpit, and Droid; Drizzle ORM |
+| Auth | better-auth + Google OAuth (cockpit); API validates better-auth session tokens against the shared D1 `session` table |
+| File storage | Cloudflare R2 (`saasmaker-feedback-images`) |
+| AI | Cloudflare Workers AI binding; optional free-ai proxy (`FREE_AI_BASE_URL`); Droid uses DeepSeek models |
+| Email | Resend |
+| Analytics | PostHog |
+| CI/CD | GitHub Actions — build/test on every push/PR, auto-deploy each app to Cloudflare on push to `main` |
+
+Note: `apps/docs/vercel.json` is stale — docs deploy to Cloudflare Pages, not Vercel. It is a cleanup candidate.
+
 ## What Is Inside
 
 - `workers/api` - Hono API on Cloudflare Workers with D1 and Drizzle.
