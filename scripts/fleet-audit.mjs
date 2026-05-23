@@ -16,6 +16,7 @@ const PROD_TARGETS = {
   ],
   CodeVetter: [{ label: 'web', url: 'https://codevetter.com', ok: [200] }],
   'email-manager': [{ label: 'web', url: 'https://email-manager.sarthakagrawal927.workers.dev', ok: [200] }],
+  everythingrated: [{ label: 'web', url: 'https://everythingrated.sarthakagrawal927.workers.dev', ok: [200] }],
   'free-ai': [{ label: 'gateway', url: 'https://free-ai-gateway.sarthakagrawal927.workers.dev', ok: [200] }],
   'ai-game': [],
   'high-signal': [
@@ -47,6 +48,7 @@ const FRONTEND_TARGETS = {
   anime_list: [{ label: 'web', url: 'https://anime-list-9lk.pages.dev' }],
   CodeVetter: [{ label: 'web', url: 'https://codevetter.com' }],
   'email-manager': [{ label: 'web', url: 'https://email-manager.sarthakagrawal927.workers.dev' }],
+  everythingrated: [{ label: 'web', url: 'https://everythingrated.sarthakagrawal927.workers.dev' }],
   'free-ai': [],
   'ai-game': [],
   'high-signal': [{ label: 'web', url: 'https://high-signal-web.sarthakagrawal927.workers.dev' }],
