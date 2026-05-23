@@ -18,7 +18,7 @@ const PROD_TARGETS = {
   'email-manager': [{ label: 'web', url: 'https://email-manager.sarthakagrawal927.workers.dev', ok: [200] }],
   everythingrated: [{ label: 'web', url: 'https://everythingrated.sarthakagrawal927.workers.dev', ok: [200] }],
   'free-ai': [{ label: 'gateway', url: 'https://free-ai-gateway.sarthakagrawal927.workers.dev', ok: [200] }],
-  'ai-game': [],
+  'ai-game': [{ label: 'web', url: 'https://aliveville.com', ok: [200] }],
   'high-signal': [
     { label: 'web', url: 'https://high-signal-web.sarthakagrawal927.workers.dev', ok: [200] },
     { label: 'api', url: 'https://high-signal-api.sarthakagrawal927.workers.dev', ok: [200] },
@@ -50,7 +50,7 @@ const FRONTEND_TARGETS = {
   'email-manager': [{ label: 'web', url: 'https://email-manager.sarthakagrawal927.workers.dev' }],
   everythingrated: [{ label: 'web', url: 'https://everythingrated.sarthakagrawal927.workers.dev' }],
   'free-ai': [],
-  'ai-game': [],
+  'ai-game': [{ label: 'web', url: 'https://aliveville.com' }],
   'high-signal': [{ label: 'web', url: 'https://high-signal-web.sarthakagrawal927.workers.dev' }],
   linkchat: [{ label: 'web', url: 'https://linkchat.sarthakagrawal927.workers.dev' }],
   looptv: [{ label: 'web', url: 'https://looptv.pages.dev' }],
