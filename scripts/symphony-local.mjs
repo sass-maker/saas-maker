@@ -128,6 +128,7 @@ function parseArgs(argv) {
     else if (arg === '--description' || arg === '-d') args.description = argv[++i] ?? '';
     else if (arg === '--project' || arg === '-p') args.project = argv[++i] ?? '';
     else if (arg === '--priority') args.priority = argv[++i] ?? 'medium';
+    else if (arg === '--blocked-on-user') args.blockedOnUser = true;
     else if (arg === '--status') args.status = argv[++i] ?? null;
     else if (arg === '--agent') args.agent = argv[++i] ?? 'auto';
     else if (arg === '--agent-command') args.agentCommand = argv[++i] ?? null;
@@ -182,6 +183,7 @@ Options:
   --description    Description for create
   --project SLUG   Project slug for create
   --priority VALUE low, medium, or high for create
+  --blocked-on-user Mark created task as waiting on a user decision/config
   --agent NAME     Agent profile for dispatch: auto, codex, claude, gemini, or a configured profile
   --agent-command  Command template for custom agents; supports {prompt}, {promptFile}, {workspace}, {taskId}
   --push           With memory: push .symphony/memory.md to production
@@ -733,6 +735,7 @@ async function createTask(args) {
       description: args.description || undefined,
       project_slug: args.project || undefined,
       priority: args.priority || 'medium',
+      blocked_on_user: args.blockedOnUser === true,
     }),
   });
   await fetchTasks(args);

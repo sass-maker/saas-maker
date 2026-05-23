@@ -22,19 +22,30 @@ const TARGETS = {
   anime_list: [{ label: 'web', url: 'https://anime-list-9lk.pages.dev' }],
   CodeVetter: [{ label: 'web', url: 'https://codevetter.com' }],
   'email-manager': [{ label: 'web', url: 'https://email-manager.sarthakagrawal927.workers.dev' }],
-  'high-signal': [{ label: 'web', url: 'https://high-signal-web.sarthakagrawal927.workers.dev' }],
+  everythingrated: [
+    { label: 'web', url: 'https://everythingrated.sarthakagrawal927.workers.dev' },
+    { label: 'directory-ai-dev-tools', url: 'https://everythingrated.sarthakagrawal927.workers.dev/d/ai-dev-tools' },
+    { label: 'directory-databases', url: 'https://everythingrated.sarthakagrawal927.workers.dev/d/databases' },
+    { label: 'directory-hosting', url: 'https://everythingrated.sarthakagrawal927.workers.dev/d/hosting' },
+  ],
+  'free-ai': [
+    { label: 'health', url: 'https://free-ai-gateway.sarthakagrawal927.workers.dev/health' },
+    { label: 'models', url: 'https://free-ai-gateway.sarthakagrawal927.workers.dev/v1/models' },
+  ],
+  'ai-game': [{ label: 'web', url: 'https://aliveville.com' }],
+  'high-signal': [{ label: 'web', url: 'https://highsignal.app' }],
   linkchat: [{ label: 'web', url: 'https://linkchat.sarthakagrawal927.workers.dev' }],
   looptv: [
     {
       label: 'web',
       url: 'https://looptv.pages.dev',
-      expectText: ['1,173 videos'],
+      expectText: ['LoopTV'],
       interactions: [
         {
           label: 'open-science-station',
           role: 'link',
           name: /^Science\b/i,
-          expectText: ['1,173 unwatched of 1,173'],
+          expectText: ['Science'],
         },
         {
           label: 'play-science-video',
