@@ -109,6 +109,8 @@ export interface RunStats {
   avg_duration_ms: number | null;
   stale_running: number;
   idle_running: number;
+  idle_after_seconds: number;
+  stale_after_seconds: number;
   estimated_compute_seconds: number;
   recent: RunRecord[];
 }

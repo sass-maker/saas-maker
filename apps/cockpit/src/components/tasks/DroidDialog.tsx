@@ -64,6 +64,8 @@ export interface DroidRunStats {
   avg_duration_ms: number | null;
   stale_running: number;
   idle_running?: number;
+  idle_after_seconds?: number;
+  stale_after_seconds?: number;
   estimated_compute_seconds?: number;
   recent: DroidRunRow[];
 }
@@ -479,6 +481,9 @@ function DroidStats({ stats }: { stats: DroidRunStats | null }) {
           approx {Math.round(stats.estimated_compute_seconds / 60)}m sandbox runtime tracked
         </p>
       ) : null}
+      <p className="mt-2 text-[11px] text-muted-foreground">
+        idle after {formatDuration(stats.idle_after_seconds ?? 360)}; stale reap after {formatDuration(stats.stale_after_seconds ?? 900)}
+      </p>
     </div>
   );
 }
@@ -800,6 +805,12 @@ function formatRunTime(value: string) {
   const time = new Date(value);
   if (!Number.isFinite(time.getTime())) return value;
   return time.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'UTC' });
+}
+
+function formatDuration(seconds: number) {
+  if (seconds < 60) return `${seconds}s`;
+  const minutes = Math.round(seconds / 60);
+  return `${minutes}m`;
 }
 
 function parseDroidMetadata(value: string): Record<string, unknown> {

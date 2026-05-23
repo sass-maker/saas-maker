@@ -627,6 +627,8 @@ describe('droid runs', () => {
         },
         stale_running: 1,
         idle_running: 1,
+        idle_after_seconds: 360,
+        stale_after_seconds: 900,
         estimated_compute_seconds: expect.any(Number),
         recent: expect.arrayContaining([expect.objectContaining({ project_slug: 'saas-maker' })]),
       },

@@ -1,5 +1,8 @@
 import type { Env, RunArtifactInput, RunArtifactRecord, RunEventInput, RunRecord, RunEventRecord, RunStats } from './types';
 
+export const DROID_IDLE_AFTER_SECONDS = 6 * 60;
+export const DROID_STALE_AFTER_SECONDS = 15 * 60;
+
 export async function createRun(env: Env, input: {
   id: string;
   taskId?: string;
@@ -173,6 +176,8 @@ export async function getRunStats(env: Env, input: { projectSlug?: string; limit
       : Math.round(Number(avgRow.avg_duration_ms)),
     stale_running: Number(staleRow?.count ?? 0),
     idle_running: Number(idleRow?.count ?? 0),
+    idle_after_seconds: DROID_IDLE_AFTER_SECONDS,
+    stale_after_seconds: DROID_STALE_AFTER_SECONDS,
     estimated_compute_seconds: Math.round(Number(durationRow?.total_duration_ms ?? 0) / 1000),
     recent,
   };
