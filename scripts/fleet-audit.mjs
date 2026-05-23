@@ -20,7 +20,7 @@ const PROD_TARGETS = {
   'free-ai': [{ label: 'gateway', url: 'https://free-ai-gateway.sarthakagrawal927.workers.dev', ok: [200] }],
   'ai-game': [{ label: 'web', url: 'https://aliveville.com', ok: [200] }],
   'high-signal': [
-    { label: 'web', url: 'https://high-signal-web.sarthakagrawal927.workers.dev', ok: [200] },
+    { label: 'web', url: 'https://highsignal.app', ok: [200] },
     { label: 'api', url: 'https://high-signal-api.sarthakagrawal927.workers.dev', ok: [200] },
   ],
   linkchat: [{ label: 'web', url: 'https://linkchat.sarthakagrawal927.workers.dev', ok: [200] }],
@@ -38,10 +38,7 @@ const PROD_TARGETS = {
   starboard: [{ label: 'web', url: 'https://starboard.sarthakagrawal927.workers.dev', ok: [200] }],
   'swe-interview-prep': [{ label: 'web', url: 'https://swe-interview-prep.pages.dev', ok: [200] }],
   'today-little-log': [{ label: 'web', url: 'https://today-little-log.pages.dev', ok: [200] }],
-  truehire: [
-    { label: 'worker', url: 'https://truehire.sarthakagrawal927.workers.dev', ok: [200] },
-    { label: 'pages-redirect', url: 'https://truehire.pages.dev', ok: [200] },
-  ],
+  truehire: [{ label: 'worker', url: 'https://truehire.sarthakagrawal927.workers.dev', ok: [200] }],
 };
 
 const FRONTEND_TARGETS = {
@@ -51,7 +48,7 @@ const FRONTEND_TARGETS = {
   everythingrated: [{ label: 'web', url: 'https://everythingrated.sarthakagrawal927.workers.dev' }],
   'free-ai': [],
   'ai-game': [{ label: 'web', url: 'https://aliveville.com' }],
-  'high-signal': [{ label: 'web', url: 'https://high-signal-web.sarthakagrawal927.workers.dev' }],
+  'high-signal': [{ label: 'web', url: 'https://highsignal.app' }],
   linkchat: [{ label: 'web', url: 'https://linkchat.sarthakagrawal927.workers.dev' }],
   looptv: [{ label: 'web', url: 'https://looptv.pages.dev' }],
   'open-historia': [{ label: 'web', url: 'https://open-historia.sarthakagrawal927.workers.dev' }],
@@ -66,7 +63,7 @@ const FRONTEND_TARGETS = {
   starboard: [{ label: 'web', url: 'https://starboard.sarthakagrawal927.workers.dev' }],
   'swe-interview-prep': [{ label: 'web', url: 'https://swe-interview-prep.pages.dev' }],
   'today-little-log': [{ label: 'web', url: 'https://today-little-log.pages.dev' }],
-  truehire: [{ label: 'web', url: 'https://truehire.pages.dev' }],
+  truehire: [{ label: 'web', url: 'https://truehire.sarthakagrawal927.workers.dev' }],
 };
 
 const PERFORMANCE_BUDGETS = {

@@ -70,7 +70,7 @@ export const FLEET_HEALTH_CONTRACTS = {
   },
   'high-signal': {
     displayName: 'High Signal',
-    prodUrl: 'https://high-signal-web.sarthakagrawal927.workers.dev',
+    prodUrl: 'https://highsignal.app',
     expectedStatus: 200,
     criticalRoutes: ['/'],
     auth: { required: false },
