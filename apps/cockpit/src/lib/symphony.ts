@@ -22,7 +22,7 @@ type SymphonyAgentOptions = {
   agentUsage?: SymphonyAgentUsageSnapshot | null;
 };
 
-export type SymphonyAgent = "codex" | "claude" | "gemini";
+export type SymphonyAgent = "codex" | "claude" | "claude-work" | "gemini" | "cursor";
 
 export type SymphonyRoute = {
   agent: SymphonyAgent;
@@ -53,6 +53,7 @@ export type SymphonyAgentUsageSnapshot = {
   sampled_at?: string;
   agents?: {
     claude?: ClaudeUsage;
+    "claude-work"?: ClaudeUsage;
     gemini?: GeminiUsage;
   };
 };
@@ -67,13 +68,17 @@ export type SymphonyRunSpec = {
 const AGENT_COMMANDS: Record<string, string> = {
   codex: "codex exec --dangerously-bypass-approvals-and-sandbox {prompt}",
   claude: "claude --dangerously-skip-permissions -p {prompt} --output-format json --no-session-persistence --max-budget-usd ${SYMPHONY_CLAUDE_TASK_BUDGET_USD:-2.00}",
+  "claude-work": "claude --dangerously-skip-permissions -p {prompt} --output-format json --no-session-persistence --max-budget-usd ${SYMPHONY_CLAUDE_WORK_TASK_BUDGET_USD:-4.00}",
   gemini: "gemini --yolo -p {prompt} --output-format json --skip-trust",
+  cursor: "printf %s {prompt} | cursor --chat -",
 };
 
 const AGENT_LABELS: Record<SymphonyAgent, string> = {
   codex: "Codex",
   claude: "Claude",
+  "claude-work": "Claude Work",
   gemini: "Gemini",
+  cursor: "Cursor",
 };
 
 const HIGH_COST_AGENT_HINTS = ["opus", "gpt-4", "claude-3.7", "claude-4", "pro"];
@@ -108,13 +113,14 @@ function geminiTokenTotal(usage?: GeminiUsage) {
 
 function agentBudgetNote(agent: SymphonyAgent, usage?: SymphonyAgentUsageSnapshot | null) {
   if (agent === "codex") return "Codex local coordinator route; external usage cache not required.";
+  if (agent === "cursor") return "Cursor route opens the assigned task in Cursor chat.";
   const agentUsage = usage?.agents?.[agent];
   if (!agentUsage) return "No recent usage sample; route chosen from task shape only.";
   if (!isFresh(agentUsage.sampled_at)) return "Usage sample is stale; refresh before a larger batch.";
-  if (agent === "claude") {
+  if (agent === "claude" || agent === "claude-work") {
     const claudeUsage = agentUsage as ClaudeUsage;
     const cost = typeof claudeUsage.total_cost_usd === "number" ? `last probe $${claudeUsage.total_cost_usd.toFixed(4)}` : "last probe cost unknown";
-    return `Fresh Claude sample: ${agentUsage.ok ? "available" : "warning"}, ${cost}.`;
+    return `Fresh ${AGENT_LABELS[agent]} sample: ${agentUsage.ok ? "available" : "warning"}, ${cost}.`;
   }
   const tokens = geminiTokenTotal(agentUsage as GeminiUsage);
   return `Fresh Gemini sample: ${agentUsage.ok ? "available" : "warning"}, last probe ${tokens || "unknown"} tokens.`;
@@ -122,6 +128,7 @@ function agentBudgetNote(agent: SymphonyAgent, usage?: SymphonyAgentUsageSnapsho
 
 function isAgentHealthy(agent: SymphonyAgent, usage?: SymphonyAgentUsageSnapshot | null) {
   if (agent === "codex") return true;
+  if (agent === "cursor") return true;
   const agentUsage = usage?.agents?.[agent];
   if (!agentUsage) return true;
   return agentUsage.available !== false && agentUsage.ok !== false && isFresh(agentUsage.sampled_at);
@@ -143,8 +150,20 @@ function withBudget(route: Omit<SymphonyRoute, "budgetNote">, usage?: SymphonyAg
 
 function normalizeAgent(value?: string | null): SymphonyAgent | null {
   const normalized = value?.trim().toLowerCase();
-  if (normalized === "codex" || normalized === "claude" || normalized === "gemini") return normalized;
+  if (
+    normalized === "codex" ||
+    normalized === "claude" ||
+    normalized === "claude-work" ||
+    normalized === "gemini" ||
+    normalized === "cursor"
+  ) {
+    return normalized;
+  }
   return null;
+}
+
+function assignedAgent(task: SymphonyTask): SymphonyAgent | null {
+  return normalizeAgent(task.description?.match(/Agent assignment:\s*([A-Za-z0-9_-]+)/i)?.[1]);
 }
 
 function shellQuote(value: string) {
@@ -188,7 +207,7 @@ export function chooseSymphonyAgent(
 ): SymphonyRoute {
   const routingText = `${memory ?? ""}\n${additionalInstructions ?? ""}`.toLowerCase();
   const explicitAgent =
-    normalizeAgent(routingText.match(/\b(?:use|route to|agent|model)\s*[:=]?\s*(codex|claude|gemini)\b/)?.[1]);
+    normalizeAgent(routingText.match(/\b(?:use|route to|agent|model)\s*[:=]?\s*(codex|claude-work|claude|gemini|cursor)\b/)?.[1]);
 
   if (explicitAgent) {
     return withBudget({
@@ -199,8 +218,18 @@ export function chooseSymphonyAgent(
   }
 
   const text = taskText(task);
+  const explicitTaskAgent = assignedAgent(task);
+  const explicitlySensitive = /(set secret|add secret|write secret|rotate secret|production credential|deploy now|release now|migration)/.test(text);
 
-  if (/(secret|credential|cloudflare|deploy|deployment|auth|oauth|migration|database|d1|production|prod)/.test(text)) {
+  if (explicitTaskAgent && !explicitlySensitive) {
+    return withBudget({
+      agent: explicitTaskAgent,
+      label: AGENT_LABELS[explicitTaskAgent],
+      reason: "Task description explicitly assigns this agent.",
+    }, agentUsage);
+  }
+
+  if (/(secret|credential|cloudflare|deploy|deployment|auth|oauth|migration|database|d1|production|prod)/.test(text) || explicitlySensitive) {
     return withBudget({
       agent: "codex",
       label: AGENT_LABELS.codex,

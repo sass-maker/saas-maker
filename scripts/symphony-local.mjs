@@ -22,6 +22,7 @@ const DEFAULT_AGENT_COMMANDS = {
   claude: 'claude --dangerously-skip-permissions -p {prompt} --output-format json --no-session-persistence --max-budget-usd ${SYMPHONY_CLAUDE_TASK_BUDGET_USD:-2.00}',
   'claude-work': 'claude --dangerously-skip-permissions -p {prompt} --output-format json --no-session-persistence --max-budget-usd ${SYMPHONY_CLAUDE_WORK_TASK_BUDGET_USD:-4.00}',
   gemini: 'gemini --yolo -p {prompt} --output-format json --skip-trust',
+  cursor: 'printf %s {prompt} | cursor --chat -',
 };
 
 function readJson(filePath) {
@@ -184,7 +185,7 @@ Options:
   --project SLUG   Project slug for create
   --priority VALUE low, medium, or high for create
   --blocked-on-user Mark created task as waiting on a user decision/config
-  --agent NAME     Agent profile for dispatch: auto, codex, claude, gemini, or a configured profile
+  --agent NAME     Agent profile for dispatch: auto, codex, claude, claude-work, gemini, cursor, or a configured profile
   --agent-command  Command template for custom agents; supports {prompt}, {promptFile}, {workspace}, {taskId}
   --push           With memory: push .symphony/memory.md to production
   --pull           With memory: pull production memory into .symphony/memory.md
@@ -203,6 +204,7 @@ Profiles:
     claude-work
             claude --dangerously-skip-permissions -p {prompt} with a larger default task budget
     gemini  gemini --yolo -p {prompt}
+    cursor  printf prompt into Cursor chat
 
   Add more profiles in ~/.foundry/config.json:
     "symphonyAgentCommands": {
