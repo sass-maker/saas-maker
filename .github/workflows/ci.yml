@@ -161,7 +161,7 @@ jobs:
           changed=false
           while IFS= read -r path; do
             case "$path" in
-              apps/cockpit/*|apps/cockpit/**|packages/blocks/sdk/*|packages/blocks/sdk/**|packages/blocks/shared-types/*|packages/blocks/shared-types/**|packages/blocks/analytics-ui/*|packages/blocks/analytics-ui/**|packages/ui/*|packages/ui/**|package.json|pnpm-lock.yaml|pnpm-workspace.yaml|.github/workflows/ci.yml)
+              apps/cockpit/*|apps/cockpit/**|packages/blocks/sdk/*|packages/blocks/sdk/**|packages/blocks/shared-types/*|packages/blocks/shared-types/**|packages/blocks/posthog-client/*|packages/blocks/posthog-client/**|packages/ui/*|packages/ui/**|package.json|pnpm-lock.yaml|pnpm-workspace.yaml|.github/workflows/ci.yml)
                 changed=true
                 break
                 ;;

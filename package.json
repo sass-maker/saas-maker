@@ -14,6 +14,7 @@
     "build:api": "pnpm -F @saas-maker/api build",
     "build:cockpit": "pnpm -F @saas-maker/dashboard build",
     "build:widget": "pnpm -F @saas-maker/feedback build",
+    "build:analytics-ui": "pnpm -F @saas-maker/posthog-client build",
     "build:showcase": "pnpm -F @saas-maker/sdk build && pnpm -F @saas-maker/landing-page build",
     "build:docs": "pnpm -F @saas-maker/docs build",
     "generate:openapi": "node scripts/generate-openapi.mjs",

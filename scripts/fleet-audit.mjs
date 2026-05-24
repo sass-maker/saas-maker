@@ -85,6 +85,12 @@ const LOCAL_CHECK_OVERRIDES = {
   ],
 };
 
+const LOCAL_CHECK_ENV_OVERRIDES = {
+  'swe-interview-prep': {
+    VITE_GOOGLE_CLIENT_ID: 'ci-placeholder.apps.googleusercontent.com',
+  },
+};
+
 function parseArgs(argv) {
   const args = {
     manifest: DEFAULT_MANIFEST,
@@ -167,6 +173,7 @@ function run(command, args, options = {}) {
       CI: '1',
       NEXT_TELEMETRY_DISABLED: '1',
       HUSKY: '0',
+      ...(options.env ?? {}),
     },
   });
   return {
@@ -603,15 +610,16 @@ function tryAutofixPermissions(projectPath, output) {
 function localAudit(project, timeoutMs, options = {}) {
   const commands = availableLocalChecks(project);
   const checks = [];
+  const localEnv = LOCAL_CHECK_ENV_OVERRIDES[project.slug] ?? {};
   for (const [command, args] of commands) {
-    const result = run(command, args, { cwd: project.path, timeoutMs });
+    const result = run(command, args, { cwd: project.path, timeoutMs, env: localEnv });
     const combined = `${result.stdout}\n${result.stderr}`;
     let retryResult = null;
     let autofix = null;
     if (!result.ok && options.autofix) {
       autofix = tryAutofixPermissions(project.path, combined);
       if (autofix.attempted) {
-        retryResult = run(command, args, { cwd: project.path, timeoutMs });
+        retryResult = run(command, args, { cwd: project.path, timeoutMs, env: localEnv });
       }
     }
     const finalResult = retryResult ?? result;
