@@ -33,7 +33,7 @@ curl -X PATCH https://api.sassmaker.com/v1/feedback/abc-123 \
   -d '{ "status": "dismissed" }'
 ```
 
-**Use for:** Dashboard, CLI, admin operations (updating statuses, deleting entries, viewing analytics).
+**Use for:** Dashboard, CLI, and admin operations like updating statuses or deleting entries.
 
 ### CLI tokens
 
@@ -53,9 +53,7 @@ Provider keys saved for the AI Gateway are write-only. Config reads return wheth
 | Read published changelog | API Key |
 | Search knowledge base | API Key |
 | AI chat/embeddings/RAG | API Key |
-| Track analytics events | API Key |
 | Update feedback status | Session Token |
-| View analytics dashboard | Session Token |
 | Manage testimonials (approve/reject) | Session Token |
 | Create changelog entries | Session Token |
 | Configure AI provider | Session Token |

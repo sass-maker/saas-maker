@@ -165,13 +165,13 @@ function ChangelogMockup() {
   );
 }
 
-function AnalyticsMockup() {
+function FleetHealthMockup() {
   const barHeights = [30, 45, 38, 60, 52, 70, 48];
   return (
     <div className="feature-row-mock">
       <div className="an-header">
-        <span className="an-title">Analytics Dashboard</span>
-        <span className="an-period">Last 7 days</span>
+        <span className="an-title">Fleet Health</span>
+        <span className="an-period">Current</span>
       </div>
       <div className="an-body">
         <div className="an-stats">
@@ -179,7 +179,7 @@ function AnalyticsMockup() {
             { label: 'Waitlist Signups', value: '847', delta: '+12% vs last week', deltaColor: '#22c55e' },
             { label: 'Feedback Items', value: '134', delta: '+8% vs last week', deltaColor: '#22c55e' },
             { label: 'Testimonials', value: '29', delta: '+3 this week', deltaColor: '#60a5fa' },
-            { label: 'Changelog Views', value: '2.1k', delta: '+24% vs last week', deltaColor: '#22c55e' },
+            { label: 'Deploy Checks', value: '18', delta: '2 need review', deltaColor: '#f59e0b' },
           ].map(s => (
             <div key={s.label} className="an-stat">
               <div className="an-stat-label">{s.label}</div>
@@ -189,7 +189,7 @@ function AnalyticsMockup() {
           ))}
         </div>
         <div className="an-chart">
-          <div className="an-chart-label">Daily signups</div>
+          <div className="an-chart-label">Smoke check pass rate</div>
           <div className="an-bars">
             {barHeights.map((h, i) => (
               <div key={i} className="an-bar" style={{ height: h, background: `rgba(59,130,246,${0.3 + (h / 70) * 0.5})` }} />
@@ -285,7 +285,7 @@ export default function LandingPage() {
   const testiRef = useFadeIn();
   const feedbackRef = useFadeIn();
   const changelogRef = useFadeIn();
-  const analyticsRef = useFadeIn();
+  const fleetHealthRef = useFadeIn();
   const devRef = useFadeIn();
   const moreRef = useFadeIn();
 
@@ -424,24 +424,24 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* Analytics */}
-        <div className="feature-row fade-up" ref={analyticsRef}>
+        {/* Fleet Health */}
+        <div className="feature-row fade-up" ref={fleetHealthRef}>
           <div className="feature-row-text">
             <div className="feature-row-title">
               <div className="feature-row-icon" style={{ background: 'rgba(249,115,22,0.1)', border: '1px solid rgba(249,115,22,0.2)' }}>📊</div>
-              Analytics
+              Fleet Health
             </div>
             <p className="feature-row-body">
-              See which projects are alive, deployed, failing, or drifting. Fleet audits, smoke checks, and performance snapshots turn maintenance into a routine.
+              See which projects are alive, deployed, failing, or drifting. Fleet audits, smoke checks, and task signals turn maintenance into a routine.
             </p>
             <ul className="feature-row-checks">
-              <li>Unified dashboard across all features</li>
-              <li>Trend charts and week-over-week comparisons</li>
-              <li>Export data to CSV or connect via API</li>
+              <li>Project registry and drift checks</li>
+              <li>Smoke checks and deploy status</li>
+              <li>Task signals for follow-up work</li>
             </ul>
-            <a href={DASHBOARD_URL} className="btn btn-ghost">View Analytics</a>
+            <a href={DASHBOARD_URL} className="btn btn-ghost">View Fleet</a>
           </div>
-          <AnalyticsMockup />
+          <FleetHealthMockup />
         </div>
 
         {/* Developer / SDK */}

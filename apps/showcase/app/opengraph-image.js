@@ -69,7 +69,7 @@ export default function OpengraphImage() {
             maxWidth: '900px',
           }}
         >
-          Project registry, feedback, changelog, testimonials, analytics, and
+          Project registry, feedback, changelog, testimonials, tasks, and
           tasks — one API-first backend for your whole fleet.
         </div>
       </div>

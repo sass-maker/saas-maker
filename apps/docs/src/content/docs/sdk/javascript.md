@@ -86,16 +86,6 @@ const testimonials = await client.testimonials.list();
 const entries = await client.changelog.list();
 ```
 
-## Analytics
-
-```typescript
-// Track an event
-await client.analytics.track({
-  name: 'page_view',
-  url: 'https://myapp.com/pricing',
-});
-```
-
 ## Roadmap
 
 ```typescript

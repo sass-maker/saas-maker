@@ -6,7 +6,7 @@ import LoginPage from "./login/page";
 
 export const metadata: Metadata = {
   title: "SaaS Maker Cockpit",
-  description: "Sign in to manage SaaS Maker projects, fleet health, tasks, feedback, analytics, changelogs, testimonials, and roadmap work.",
+  description: "Sign in to manage SaaS Maker projects, fleet health, tasks, feedback, changelogs, testimonials, and roadmap work.",
   alternates: {
     canonical: "/",
   },

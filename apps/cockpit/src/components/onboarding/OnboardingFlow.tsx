@@ -167,7 +167,7 @@ export function OnboardingFlow() {
             </div>
             <CardTitle className="text-2xl">You&apos;re all set!</CardTitle>
             <CardDescription className="max-w-xs">
-              Your project is live. Head to the dashboard to see feedback, analytics, and more as they roll in.
+              Your project is live. Head to the dashboard to see feedback, changelogs, testimonials, and more as they roll in.
             </CardDescription>
           </CardHeader>
           <CardContent className="flex justify-center">
