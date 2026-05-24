@@ -24,7 +24,6 @@ jobs:
       - run: pnpm build:db
       - run: pnpm build:email
       - run: pnpm build:widget
-      - run: pnpm build:analytics-ui
       - run: pnpm -F @saas-maker/api typecheck
       - run: pnpm build:cockpit
       - run: pnpm test
@@ -162,7 +161,7 @@ jobs:
           changed=false
           while IFS= read -r path; do
             case "$path" in
-              apps/cockpit/*|apps/cockpit/**|packages/blocks/sdk/*|packages/blocks/sdk/**|packages/blocks/shared-types/*|packages/blocks/shared-types/**|packages/blocks/posthog-client/*|packages/blocks/posthog-client/**|packages/ui/*|packages/ui/**|package.json|pnpm-lock.yaml|pnpm-workspace.yaml|.github/workflows/ci.yml)
+              apps/cockpit/*|apps/cockpit/**|packages/blocks/sdk/*|packages/blocks/sdk/**|packages/blocks/shared-types/*|packages/blocks/shared-types/**|packages/blocks/ops/*|packages/blocks/ops/**|packages/ui/*|packages/ui/**|package.json|pnpm-lock.yaml|pnpm-workspace.yaml|.github/workflows/ci.yml)
                 changed=true
                 break
                 ;;
