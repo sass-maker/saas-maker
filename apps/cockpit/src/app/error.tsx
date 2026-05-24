@@ -12,7 +12,7 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Full detail goes to the console + analytics — never to the user.
+    // Full detail goes to the console + telemetry, never to the user.
     captureError(error, { scope: "root", digest: error.digest });
   }, [error]);
 

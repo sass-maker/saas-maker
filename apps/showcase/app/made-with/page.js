@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.sassmaker.com';
 const DIRECTORY_URL = `${API_BASE}/v1/directory`;
 
-const TAGS = ['analytics', 'devtools', 'productivity', 'saas', 'ai', 'marketing', 'finance', 'design'];
+const TAGS = ['devtools', 'productivity', 'saas', 'ai', 'marketing', 'finance', 'design'];
 
 function ProductCard({ listing }) {
   const initial = listing.name.charAt(0).toUpperCase();

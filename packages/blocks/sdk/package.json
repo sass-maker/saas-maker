@@ -1,7 +1,7 @@
 {
   "name": "@saas-maker/sdk",
   "version": "0.3.1",
-  "description": "Official SDK for SaaS Maker — drop-in backend services for SaaS apps. Feedback, waitlist, testimonials, changelog, analytics, roadmap, chatbot, AI gateway, and directory.",
+  "description": "Official SDK for SaaS Maker — drop-in backend services for SaaS apps. Feedback, waitlist, testimonials, changelog, roadmap, chatbot, AI gateway, and directory.",
   "keywords": [
     "saas",
     "saas-maker",
@@ -11,7 +11,6 @@
     "waitlist",
     "testimonials",
     "changelog",
-    "analytics",
     "roadmap",
     "chatbot",
     "ai-gateway",
