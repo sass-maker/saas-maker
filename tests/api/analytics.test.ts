@@ -13,35 +13,3 @@ describe('Analytics ingestion requires API key', () => {
     expect(body.error).toMatch(/X-Project-Key/i);
   });
 });
-
-describe('Analytics dashboard requires session', () => {
-  it('GET /v1/analytics/overview without Bearer returns 401', async () => {
-    const res = await request('/v1/analytics/overview');
-    expect(res.status).toBe(401);
-  });
-
-  it('GET /v1/analytics/pages without Bearer returns 401', async () => {
-    const res = await request('/v1/analytics/pages');
-    expect(res.status).toBe(401);
-  });
-
-  it('GET /v1/analytics/referrers without Bearer returns 401', async () => {
-    const res = await request('/v1/analytics/referrers');
-    expect(res.status).toBe(401);
-  });
-
-  it('GET /v1/analytics/countries without Bearer returns 401', async () => {
-    const res = await request('/v1/analytics/countries');
-    expect(res.status).toBe(401);
-  });
-
-  it('GET /v1/analytics/devices without Bearer returns 401', async () => {
-    const res = await request('/v1/analytics/devices');
-    expect(res.status).toBe(401);
-  });
-
-  it('GET /v1/analytics/events without Bearer returns 401', async () => {
-    const res = await request('/v1/analytics/events');
-    expect(res.status).toBe(401);
-  });
-});

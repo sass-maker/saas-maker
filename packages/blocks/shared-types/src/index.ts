@@ -187,40 +187,6 @@ export interface TrackEventRequest {
   properties?: Record<string, unknown>;
 }
 
-export interface AnalyticsOverview {
-  page_views: number;
-  unique_visitors: number;
-  top_page: string | null;
-  top_referrer: string | null;
-}
-
-export interface AnalyticsDashboardSummary {
-  page_views: number;
-  unique_visitors: number;
-  bounce_rate: number;
-  avg_session_pages: number;
-  bot_count: number;
-  bot_percentage: number;
-}
-
-export interface AnalyticsDashboard {
-  summary: AnalyticsDashboardSummary;
-  timeseries: { date: string; views: number; visitors: number }[];
-  pages: { pathname: string; views: number }[];
-  referrers: { referrer: string; count: number }[];
-  countries: { country: string; count: number }[];
-  devices: { device: string; count: number }[];
-  browsers: { browser: string; count: number }[];
-  os: { os: string; count: number }[];
-  events: { name: string; count: number }[];
-  bots: { name: string; count: number }[];
-}
-
-export interface AnalyticsDetailResult {
-  data: any[];
-  total: number;
-}
-
 // --- Widget Props ---
 export interface FeedbackWidgetProps {
   projectId: string;

@@ -112,127 +112,12 @@
         }
       }
     },
-    "/v1/analytics/countries": {
-      "get": {
-        "tags": [
-          "analytics"
-        ],
-        "summary": "GET /v1/analytics/countries",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/analytics/dashboard": {
-      "get": {
-        "tags": [
-          "analytics"
-        ],
-        "summary": "GET /v1/analytics/dashboard",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/analytics/detail/{section}": {
-      "get": {
-        "tags": [
-          "analytics"
-        ],
-        "summary": "GET /v1/analytics/detail/{section}",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/analytics/devices": {
-      "get": {
-        "tags": [
-          "analytics"
-        ],
-        "summary": "GET /v1/analytics/devices",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
     "/v1/analytics/events": {
-      "get": {
-        "tags": [
-          "analytics"
-        ],
-        "summary": "GET /v1/analytics/events",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      },
       "post": {
         "tags": [
           "analytics"
         ],
         "summary": "POST /v1/analytics/events",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/analytics/overview": {
-      "get": {
-        "tags": [
-          "analytics"
-        ],
-        "summary": "GET /v1/analytics/overview",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/analytics/pages": {
-      "get": {
-        "tags": [
-          "analytics"
-        ],
-        "summary": "GET /v1/analytics/pages",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/analytics/recent": {
-      "get": {
-        "tags": [
-          "analytics"
-        ],
-        "summary": "GET /v1/analytics/recent",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/v1/analytics/referrers": {
-      "get": {
-        "tags": [
-          "analytics"
-        ],
-        "summary": "GET /v1/analytics/referrers",
         "responses": {
           "200": {
             "description": "Success"
