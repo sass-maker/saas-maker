@@ -195,13 +195,13 @@
 7. **[LOW/S] Turnstile** on signup.
 
 ## saas-maker (Foundry)
-**Stack today:** Hono Worker (`saasmaker-api`) + D1 (`saasmaker-db`, 524KB, 3k reads/30d) + R2 (`saasmaker-feedback-images`, empty but 110 GET/30d) + Workers AI binding already declared + Next.js cockpit (`saasmaker-dashboard`) + showcase + analytics-ui. Uses Resend for email. Custom domain `api.sassmaker.com`.
+**Stack today:** Hono Worker (`saasmaker-api`) + D1 (`saasmaker-db`, 524KB, 3k reads/30d) + R2 (`saasmaker-feedback-images`, empty but 110 GET/30d) + Workers AI binding already declared + Next.js cockpit (`saasmaker-dashboard`) + showcase. Uses Resend for email. Custom domain `api.sassmaker.com`.
 **Migrations:**
 1. **[HIGH/M] Email Workers replace Resend** — current: Resend for notifications (paid above free tier). Target: Email Workers for transactional sends (free on Paid). Files: `packages/blocks/email/src/providers/resend.ts` → new `cf-email.ts` provider.
-2. **[HIGH/M] Workers AI for `@saas-maker/ai` block** — current: `@ai-sdk/openai-compatible` + `FREE_AI_BASE_URL` (relies on free-ai-gateway round-trip). Target: direct Workers AI binding for first-party calls; gateway-only for fleet projects that use the SDK. Saves a network hop on every internal call.
+2. **[HIGH/M] Workers AI for the API AI Gateway** — current: provider-compatible API + `FREE_AI_BASE_URL` for gateway routing. Target: direct Workers AI binding for first-party calls; gateway-only for fleet projects that use the SDK. Saves a network hop on every internal call.
 3. **[HIGH/M] Vectorize for cross-project feedback semantic search** — current: feedback widget collects text, no search. Target: embed feedback items → "show me feedback similar to this" across all 22 projects in the cockpit. Massive product moat.
 4. **[MED/M] Workflows for `fnd fleet audit` background runs** — current: CLI-only. Target: Worker + Workflow runs audit on cron, surfaces in cockpit.
-5. **[MED/M] Queues for analytics event ingestion** — current: PostHog ingest direct. Target: queue batch + flush — smoother PostHog cost curve.
+5. **[MED/M] Queues for ops telemetry** — current: PostHog ingest direct. Target: queue batch + flush — smoother PostHog cost curve.
 6. **[MED/S] Investigate the 110 GET / 70 HeadBucket on saasmaker-feedback-images bucket** — empty bucket but ops happening = either legitimate-but-broken (404 path) or stale code. Quick win to fix.
 7. **[LOW/S] Turnstile on cockpit login.**
 8. **[LOW/S] Browser Rendering** for showcase OG images.

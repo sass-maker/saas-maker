@@ -1,4 +1,3 @@
-import { SaasMakerAnalytics } from './SaasMakerAnalytics';
 import './globals.css';
 
 const SITE_URL = 'https://sassmaker.com';
@@ -71,7 +70,6 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body>
-        <SaasMakerAnalytics />
         {children}
       </body>
     </html>

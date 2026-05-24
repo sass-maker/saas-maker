@@ -17,7 +17,6 @@ import type {
   IndexRecord,
   DocumentRecord,
   WaitlistEntryRecord,
-  EventRecord,
 
   TestimonialRecord,
   ChangelogEntryRecord,
@@ -602,32 +601,6 @@ export function getDb(d1: D1Database): FeedbackDatabase {
       return (meta.changes ?? 0) > 0;
     },
 
-    // --- Analytics ---
-    async createEvent(input) {
-      // Migrated to Drizzle
-      await drz.insert(schema.analytics_events).values({
-        id: input.id,
-        project_id: input.project_id,
-        name: input.name,
-        url: input.url ?? null,
-        referrer: input.referrer ?? null,
-        utm_source: input.utm_source ?? null,
-        utm_medium: input.utm_medium ?? null,
-        utm_campaign: input.utm_campaign ?? null,
-        country: input.country ?? null,
-        device: input.device ?? null,
-        browser: input.browser ?? null,
-        screen_width: input.screen_width ?? null,
-        properties: JSON.stringify(input.properties),
-        os: input.os ?? null,
-        is_bot: input.is_bot ? 1 : 0,
-        session_id: input.session_id ?? null,
-        pathname: input.pathname ?? null,
-      });
-      const row = await d1.prepare(`SELECT * FROM analytics_events WHERE id = ?`).bind(input.id).first();
-      return row as unknown as EventRecord;
-    },
-
     // --- Testimonials ---
     async createTestimonial(input: {
       id: string;
@@ -1019,61 +992,6 @@ export function getDb(d1: D1Database): FeedbackDatabase {
       ).bind(roadmapItemId, userIdentifier).first();
       if (!row) return null;
       return (row as unknown as { vote: number }).vote === 1 ? 1 : -1;
-    },
-
-    // --- Directory ---
-    async createDirectoryListing(input) {
-      await d1.prepare(
-        `INSERT INTO directory_listings (id, name, tagline, url, description, logo_url, screenshot_url, twitter_url, project_id, tags)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
-      ).bind(input.id, input.name, input.tagline, input.url, input.description, input.logo_url, input.screenshot_url, input.twitter_url, input.project_id, JSON.stringify(input.tags)).run();
-      const row = await d1.prepare(`SELECT * FROM directory_listings WHERE id = ?`).bind(input.id).first();
-      return row as any;
-    },
-
-    async listDirectoryListings(page, limit, tag?, search?, status: import('@saas-maker/shared-types').DirectoryListingStatus = 'approved') {
-      const offset = (page - 1) * limit;
-      const conditions: string[] = ['status = ?'];
-      const bindValues: unknown[] = [status];
-
-      if (tag) {
-        conditions.push(`tags LIKE '%"' || ? || '"%'`);
-        bindValues.push(tag);
-      }
-      if (search) {
-        conditions.push(`(name LIKE ? OR tagline LIKE ?)`);
-        bindValues.push(`%${search}%`, `%${search}%`);
-      }
-
-      const where = conditions.join(' AND ');
-
-      const { results } = await d1.prepare(
-        `SELECT * FROM directory_listings WHERE ${where} ORDER BY created_at DESC LIMIT ? OFFSET ?`
-      ).bind(...bindValues, limit, offset).all();
-
-      const countRow = await d1.prepare(
-        `SELECT COUNT(*) AS count FROM directory_listings WHERE ${where}`
-      ).bind(...bindValues).first();
-
-      return { data: mapRows<import('@saas-maker/shared-types').DirectoryListingRecord>(results), total: (countRow?.count as number) || 0 };
-    },
-
-    async getDirectoryListingById(id) {
-      const row = await d1.prepare(`SELECT * FROM directory_listings WHERE id = ?`).bind(id).first();
-      return mapRow<import('@saas-maker/shared-types').DirectoryListingRecord>(row);
-    },
-
-    async getDirectoryListingByProjectId(projectId) {
-      const row = await d1.prepare(
-        `SELECT * FROM directory_listings WHERE project_id = ? LIMIT 1`
-      ).bind(projectId).first();
-      return mapRow<import('@saas-maker/shared-types').DirectoryListingRecord>(row);
-    },
-
-    async updateDirectoryListingBadgeVerified(id, verified) {
-      await d1.prepare(
-        `UPDATE directory_listings SET badge_verified = ? WHERE id = ?`
-      ).bind(verified ? 1 : 0, id).run();
     },
 
     // --- AI Mention Check ---

@@ -103,26 +103,6 @@ describe('changelog', () => {
   });
 });
 
-// ─── Analytics ─────────────────────────────────────────────────────────────
-
-describe('analytics', () => {
-  it('tracks a page view', async () => {
-    const res = await client.analytics.track({
-      name: 'page_view',
-      url: 'https://example.com/test',
-    });
-    expect(res.ok).toBe(true);
-  });
-
-  it('tracks a custom event', async () => {
-    const res = await client.analytics.track({
-      name: 'button_click',
-      properties: { button: 'get-started', source: 'integration-test' },
-    });
-    expect(res.ok).toBe(true);
-  });
-});
-
 // ─── Roadmap ───────────────────────────────────────────────────────────────
 
 describe('roadmap', () => {

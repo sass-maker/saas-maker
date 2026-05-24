@@ -1,7 +1,5 @@
 "use client";
 
-import { getSaasmaker } from "@/lib/saasmaker";
-
 type ErrorBoundaryScope =
   | "root"
   | "global"
@@ -25,10 +23,8 @@ function messageFrom(error: unknown) {
 
 /**
  * Records an error surfaced by a React error boundary (error.tsx /
- * global-error.tsx). Cockpit does not ship `@saas-maker/posthog-client`, so
- * this logs structured context to the console and best-effort-tracks an
- * `error_boundary` event via the SaaS Maker SDK. Never throws — safe to call
- * from inside an error boundary.
+ * global-error.tsx). Full detail stays in the console and never reaches the
+ * user-facing error view.
  */
 export function captureError(
   error: unknown,
@@ -43,20 +39,4 @@ export function captureError(
 
   // Full detail goes to the console — never to the user.
   console.error("[cockpit:error]", context, error);
-
-  try {
-    getSaasmaker().analytics.track({
-      name: "error_boundary",
-      url: route(),
-      properties: {
-        scope: context.scope,
-        source: context.source,
-        digest: context.digest,
-        message: messageFrom(error),
-      },
-    });
-  } catch {
-    // SDK not configured (missing api key) or boundary running — never let
-    // monitoring throw inside an error boundary.
-  }
 }

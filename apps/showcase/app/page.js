@@ -300,7 +300,6 @@ export default function LandingPage() {
           <a href="#standard">The Standard</a>
           <a href="#blocks">The Blocks</a>
           <a href={DOCS_URL} target="_blank" rel="noopener noreferrer">The Manual</a>
-          <a href="/made-with">Showcase</a>
         </div>
         <div className="nav-actions">
           <a href={DASHBOARD_URL} className="btn btn-ghost">Cockpit</a>
@@ -501,7 +500,6 @@ export default function LandingPage() {
         <div className="footer-links">
           <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">GitHub</a>
           <a href={DOCS_URL} target="_blank" rel="noopener noreferrer">The Manual</a>
-          <a href="/made-with">Showcase</a>
         </div>
       </footer>
     </>

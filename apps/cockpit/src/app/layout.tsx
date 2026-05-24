@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { GlobalNamePolyfill } from "@/components/GlobalNamePolyfill";
 import { ThemeProvider } from "@/components/theme-provider";
-import { SaasMakerAnalytics } from "@/components/SaasMakerAnalytics";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -36,7 +35,6 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <GlobalNamePolyfill />
-        <SaasMakerAnalytics />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

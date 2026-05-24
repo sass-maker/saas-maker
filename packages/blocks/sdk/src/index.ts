@@ -5,7 +5,6 @@ export type { FeedbackRecord, SubmitFeedbackData, FeedbackListResponse, Feedback
 export type { WaitlistSignupData, WaitlistSignupResponse, WaitlistCountResponse } from './services/waitlist';
 export type { TestimonialRecord, SubmitTestimonialData, TestimonialListResponse, TestimonialListOptions } from './services/testimonials';
 export type { ChangelogEntry, ChangelogListResponse } from './services/changelog';
-export type { TrackEventData, TrackEventResponse } from './services/analytics';
 export type {
   AIChatCompletionRequest,
   AIEmbeddingRequest,

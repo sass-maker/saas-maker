@@ -112,19 +112,6 @@
         }
       }
     },
-    "/v1/analytics/events": {
-      "post": {
-        "tags": [
-          "analytics"
-        ],
-        "summary": "POST /v1/analytics/events",
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
     "/v1/auth/logout": {
       "post": {
         "tags": [

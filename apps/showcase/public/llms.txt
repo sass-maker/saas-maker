@@ -13,8 +13,6 @@ SaaS Maker provides plug-and-play backend tools for every stage of your SaaS pro
 - Changelog: Versioned product updates
 - Knowledge Base: Vector-based RAG search for docs
 - AI Gateway: Proxied LLM requests with usage tracking
-- Directory: Public product showcase
-
 ## Links
 
 - Website: https://sassmaker.com

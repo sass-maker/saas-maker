@@ -39,27 +39,6 @@ export const feedback = sqliteTable('feedback', {
   created_at: text('created_at').notNull().default(sql`(datetime('now'))`),
 });
 
-export const analytics_events = sqliteTable('analytics_events', {
-  id: text('id').primaryKey(),
-  project_id: text('project_id').notNull().references(() => projects.id),
-  name: text('name').notNull().default('page_view'),
-  url: text('url'),
-  referrer: text('referrer'),
-  utm_source: text('utm_source'),
-  utm_medium: text('utm_medium'),
-  utm_campaign: text('utm_campaign'),
-  country: text('country'),
-  device: text('device'),
-  browser: text('browser'),
-  screen_width: integer('screen_width'),
-  properties: text('properties').default('{}'),
-  os: text('os'),
-  is_bot: integer('is_bot').notNull().default(0),
-  session_id: text('session_id'),
-  pathname: text('pathname'),
-  created_at: text('created_at').notNull().default(sql`(datetime('now'))`),
-});
-
 export const ai_requests = sqliteTable('ai_requests', {
   id: text('id').primaryKey(),
   project_id: text('project_id').notNull().references(() => projects.id),

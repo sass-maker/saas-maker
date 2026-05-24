@@ -1,10 +1,9 @@
 /**
  * Error-capture helper — the single sink every error boundary routes through.
  *
- * Drop this at `src/lib/capture-error.ts` (or fold it into an existing
- * monitoring module, e.g. `foundry-monitoring.ts`). It emits an
- * `error_captured` event to PostHog via `@saas-maker/posthog-client` so no
- * failure is silent.
+ * Drop this at `src/lib/capture-error.ts` or fold it into an existing
+ * monitoring module. It logs structured context without leaking details into
+ * the user-facing UI.
  *
  * Design rules:
  *  - `captureError` must NEVER throw — it runs inside error boundaries.
@@ -14,26 +13,11 @@
  *
  * PLACEHOLDERS to fill in per project:
  *  - `PROJECT_SLUG` — this project's slug (must match `foundry.projects.json`).
- *  - `POSTHOG_KEY` / `POSTHOG_HOST` — prefer env vars
- *    (`NEXT_PUBLIC_POSTHOG_KEY` / `NEXT_PUBLIC_POSTHOG_HOST`).
  *  - `ErrorBoundaryScope` — extend the union with this project's route trees.
  */
 
-import { initPostHog, track } from "@saas-maker/posthog-client";
-
-// PLACEHOLDER: this project's slug.
 const PROJECT_SLUG = "REPLACE_ME";
 
-// PLACEHOLDER: prefer env vars over hardcoded values.
-const POSTHOG_KEY =
-  process.env["NEXT_PUBLIC_POSTHOG_KEY"] ?? "phc_REPLACE_ME";
-const POSTHOG_HOST =
-  process.env["NEXT_PUBLIC_POSTHOG_HOST"] ?? "https://us.i.posthog.com";
-
-/**
- * Which route tree raised the error. Extend this union per project so each
- * boundary passes a meaningful, autocompleted scope.
- */
 export type ErrorBoundaryScope =
   | "root"
   | "global"
@@ -53,12 +37,6 @@ function messageFrom(error: unknown): string {
   return String(error);
 }
 
-/**
- * Emit an `error_captured` event for an error surfaced by a React error
- * boundary (`error.tsx` / `global-error.tsx` / `<ErrorBoundary>`).
- * Safe to call from the client — no-ops gracefully if PostHog is not ready,
- * and never throws.
- */
 export function captureError(
   error: unknown,
   options: {
@@ -67,56 +45,25 @@ export function captureError(
     source?: string;
   } = {},
 ): void {
-  try {
-    track("error_captured", {
-      project: PROJECT_SLUG,
-      route: route(),
-      scope: options.scope ?? "unknown",
-      digest: options.digest,
-      source: options.source ?? "error_boundary",
-      message: messageFrom(error),
-      stack: error instanceof Error ? error.stack : undefined,
-    });
-  } catch {
-    // Monitoring must never throw inside an error boundary.
-  }
+  console.error("[app:error]", {
+    project: PROJECT_SLUG,
+    route: route(),
+    scope: options.scope ?? "unknown",
+    digest: options.digest,
+    source: options.source ?? "error_boundary",
+    message: messageFrom(error),
+    stack: error instanceof Error ? error.stack : undefined,
+  });
 }
 
-/**
- * Emit a `page_crash` event for an error that escaped every React boundary —
- * a raw `window.onerror` or an unhandled promise rejection.
- */
-export function capturePageCrash(
-  error: unknown,
-  source: "window_error" | "unhandled_rejection",
-): void {
-  try {
-    track("page_crash", {
-      project: PROJECT_SLUG,
-      route: route(),
-      source,
-      message: messageFrom(error),
-      stack: error instanceof Error ? error.stack : undefined,
-    });
-  } catch {
-    // Best-effort only.
-  }
-}
-
-/**
- * Initialize PostHog and install global listeners for errors that escape
- * React. Call once from a top-level client component (e.g. a providers file).
- * Returns a cleanup function suitable for a `useEffect` teardown.
- */
 export function installBrowserMonitoring(): () => void {
   if (typeof window === "undefined") return () => {};
-  initPostHog({ apiKey: POSTHOG_KEY, host: POSTHOG_HOST });
 
   const onError = (event: ErrorEvent) => {
-    capturePageCrash(event.error ?? event.message, "window_error");
+    captureError(event.error ?? event.message, { source: "window_error" });
   };
   const onUnhandledRejection = (event: PromiseRejectionEvent) => {
-    capturePageCrash(event.reason, "unhandled_rejection");
+    captureError(event.reason, { source: "unhandled_rejection" });
   };
 
   window.addEventListener("error", onError);
