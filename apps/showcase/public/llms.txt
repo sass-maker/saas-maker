@@ -2,7 +2,7 @@
 
 > Drop-in backend services for SaaS apps — ship faster without building common infrastructure from scratch.
 
-SaaS Maker provides plug-and-play backend tools for every stage of your SaaS product. No need to build feedback systems, waitlists, analytics, or changelogs from scratch.
+SaaS Maker provides plug-and-play backend tools for every stage of your SaaS product. No need to build feedback systems, waitlists, testimonials, or changelogs from scratch.
 
 ## Services
 
@@ -10,12 +10,10 @@ SaaS Maker provides plug-and-play backend tools for every stage of your SaaS pro
 - Roadmap: Public Kanban board with upvoting and feedback promotion
 - Waitlist: Pre-launch email collection
 - Testimonials: Collect and display customer testimonials
-- Forms & Surveys: Custom form builder with submissions
 - Changelog: Versioned product updates
 - Knowledge Base: Vector-based RAG search for docs
-- Analytics: Privacy-friendly page views, visitors, referrers, devices, custom events
 - AI Gateway: Proxied LLM requests with usage tracking
-- Directory: Public product showcase with badge verification
+- Directory: Public product showcase
 
 ## Links
 
@@ -37,15 +35,12 @@ import { SaaSMakerClient } from '@saas-maker/sdk';
 
 const client = new SaaSMakerClient({ apiKey: 'pk_your_api_key' });
 
-// Track analytics
-await client.analytics.track({ name: 'page_view', pathname: '/pricing' });
-
 // Collect feedback
 await client.feedback.submit({ title: 'Add dark mode', type: 'feature_request' });
 
 // Chatbot with knowledge base
 const convo = client.chatbot.createConversation();
-const reply = await client.chatbot.send(convo, 'How do I set up analytics?', {
+const reply = await client.chatbot.send(convo, 'How do I publish a changelog?', {
   indexId: 'idx_docs',
 });
 ```
