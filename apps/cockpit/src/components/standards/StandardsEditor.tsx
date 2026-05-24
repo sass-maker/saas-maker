@@ -460,7 +460,7 @@ export function StandardsEditor({ initialConfig, fetchError }: StandardsEditorPr
     try {
       const token = await getToken();
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8787"}/v1/standards/${type}`,
+        `${process.env.NEXT_PUBLIC_API_URL || "https://api.sassmaker.com"}/v1/standards/${type}`,
         {
           method: "PUT",
           headers: {

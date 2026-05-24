@@ -8,7 +8,7 @@ import type { FeedbackRecord, AnyFeedbackStatus } from "@saas-maker/shared-types
 import { apiFetch } from "@/lib/api";
 // apiFetch still used for auth'd writes (status change, delete)
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8787";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://api.sassmaker.com";
 
 interface InboxContentProps {
   slug: string;

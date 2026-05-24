@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8787";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://api.sassmaker.com";
 
 interface Props {
   params: Promise<{ slug: string }>;

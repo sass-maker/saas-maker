@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Star, CheckCircle2, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8787";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://api.sassmaker.com";
 
 interface Props {
   slug: string;

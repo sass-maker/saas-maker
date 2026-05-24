@@ -50,7 +50,7 @@ const STATUS_STYLE_MAP = Object.fromEntries(
   STATUS_COLUMNS.map((column) => [column.value, column])
 ) as Record<BoardStatus, (typeof STATUS_COLUMNS)[number]>;
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8787";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://api.sassmaker.com";
 
 function withVote(item: BoardFeedbackRecord, vote: "up" | "down" | null): BoardFeedbackRecord {
   const prev = item.viewer_vote ?? null;

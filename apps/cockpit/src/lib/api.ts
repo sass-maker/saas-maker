@@ -1,8 +1,4 @@
-const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL ||
-  (process.env.NODE_ENV === "production"
-    ? "https://api.sassmaker.com"
-    : "http://localhost:8787");
+import { API_BASE } from "./api-base";
 
 export async function apiFetch(
   path: string,
@@ -15,10 +11,16 @@ export async function apiFetch(
   };
   if (token) headers["Authorization"] = `Bearer ${token}`;
 
-  const res = await fetch(`${API_BASE}${path}`, {
-    ...options,
-    headers,
-  });
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE}${path}`, {
+      ...options,
+      headers,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown fetch error";
+    throw new Error(`${message} (${API_BASE}${path})`);
+  }
   if (!res.ok) throw new Error(await res.text());
   return res.json();
 }

@@ -28,7 +28,7 @@ import {
   MessageSquare,
 } from "lucide-react";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8787";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://api.sassmaker.com";
 
 type BoardStatus = 'new' | 'dismissed' | 'on_roadmap';
 

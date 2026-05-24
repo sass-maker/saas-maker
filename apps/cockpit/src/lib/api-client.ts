@@ -1,36 +1,44 @@
-const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL ||
-  (process.env.NODE_ENV === "production"
-    ? "https://api.sassmaker.com"
-    : "http://localhost:8787");
+import { API_BASE } from "./api-base";
 
 /** Server-side fetch with session token auto-attached */
 export async function apiFetchAuthed<T>(path: string, init?: RequestInit): Promise<T> {
   const { getServerToken } = await import("./api");
   const token = await getServerToken();
 
-  const res = await fetch(`${API_BASE}${path}`, {
-    ...init,
-    headers: {
-      "Content-Type": "application/json",
-      ...(init?.headers as Record<string, string>),
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    },
-  });
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE}${path}`, {
+      ...init,
+      headers: {
+        "Content-Type": "application/json",
+        ...(init?.headers as Record<string, string>),
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown fetch error";
+    throw new Error(`${message} (${API_BASE}${path})`);
+  }
   if (!res.ok) throw new Error(await res.text());
   return res.json() as Promise<T>;
 }
 
 /** Client-side fetch — pass token from getClientToken() */
 export async function apiFetchClient<T>(path: string, token: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${API_BASE}${path}`, {
-    ...init,
-    headers: {
-      "Content-Type": "application/json",
-      ...(init?.headers as Record<string, string>),
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE}${path}`, {
+      ...init,
+      headers: {
+        "Content-Type": "application/json",
+        ...(init?.headers as Record<string, string>),
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown fetch error";
+    throw new Error(`${message} (${API_BASE}${path})`);
+  }
   if (!res.ok) throw new Error(await res.text());
   return res.json() as Promise<T>;
 }

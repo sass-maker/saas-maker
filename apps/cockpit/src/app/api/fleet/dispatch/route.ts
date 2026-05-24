@@ -25,7 +25,7 @@ export async function POST(req: Request) {
 
     // 1. Create Job Entry in DB (Cloud)
     // We use the internal API fetch to hit the workers/api
-    const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8787";
+    const apiBase = process.env.NEXT_PUBLIC_API_URL || "https://api.sassmaker.com";
     const foundryToken = process.env.SAASMAKER_API_KEY;
 
     // Fire and forget job creation
