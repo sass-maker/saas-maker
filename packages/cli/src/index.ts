@@ -12,7 +12,6 @@ import { feedbackListCommand, feedbackUpdateCommand, feedbackDeleteCommand } fro
 import { roadmapListCommand, roadmapCreateCommand, roadmapUpdateCommand, roadmapDeleteCommand } from './commands/roadmap.js';
 import { changelogListCommand, changelogCreateCommand, changelogUpdateCommand, changelogDeleteCommand } from './commands/changelog.js';
 import { testimonialsListCommand, testimonialsUpdateCommand, testimonialsDeleteCommand } from './commands/testimonials.js';
-import { analyticsDashboardCommand, analyticsDetailCommand, analyticsSetupCommand, analyticsForgeDashboardCommand } from './commands/analytics.js';
 import { waitlistListCommand, waitlistCountCommand, waitlistDeleteCommand } from './commands/waitlist.js';
 import { initCommand } from './commands/init.js';
 import { forgeCommand } from './commands/forge.js';
@@ -87,12 +86,6 @@ program.command('feedback').description('Manage the Feedback block').action(feed
 program.command('roadmap').description('Manage the Roadmap block').action(roadmapListCommand);
 program.command('changelog').description('Manage the Changelog block').action(changelogListCommand);
 program.command('testimonials').description('Manage the Testimonials block').action(testimonialsListCommand);
-
-const analytics = program.command('analytics').description('Manage the Analytics block');
-analytics.command('dashboard').description('View analytics dashboard').action(analyticsDashboardCommand);
-analytics.command('setup').description('Automate PostHog integration').action(analyticsSetupCommand);
-analytics.command('forge-dashboard').description('Provision the Mission Control dashboard in PostHog').action(analyticsForgeDashboardCommand);
-analytics.command('detail <section>').description('Drill down into analytics').action(analyticsDetailCommand);
 
 program.command('waitlist').description('Manage the Waitlist block').action(waitlistListCommand);
 

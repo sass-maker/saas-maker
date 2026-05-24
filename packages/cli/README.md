@@ -30,7 +30,6 @@ fnd doctor
 - `fnd fleet list|run|search|audit|fix|provision|apply|supervise|clean|secrets-sync|upgrade|versions` — fleet automation
 - `fnd forge` — scaffold a new Foundry-compliant project
 - `fnd feedback|roadmap|changelog|testimonials|waitlist` — block management
-- `fnd analytics dashboard|setup|forge-dashboard|detail` — analytics block
 - `fnd status` — feature health/count snapshot
 - `fnd audit` (alias `doctor`) — Foundry compliance check
 - `fnd examples` — copy-paste command recipes
