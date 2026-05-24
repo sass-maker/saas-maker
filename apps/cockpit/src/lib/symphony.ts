@@ -35,6 +35,10 @@ type ClaudeUsage = {
   ok?: boolean;
   available?: boolean;
   total_cost_usd?: number | null;
+  provider_telemetry?: {
+    headroom_pct?: number | null;
+    worst_used_pct?: number | null;
+  } | null;
   error?: string | null;
   sampled_at?: string | null;
 };
@@ -44,6 +48,10 @@ type GeminiUsage = {
   available?: boolean;
   stats?: {
     models?: Record<string, { tokens?: { total?: number } }>;
+  } | null;
+  provider_telemetry?: {
+    headroom_pct?: number | null;
+    worst_used_pct?: number | null;
   } | null;
   error?: string | null;
   sampled_at?: string | null;
@@ -68,7 +76,7 @@ export type SymphonyRunSpec = {
 const AGENT_COMMANDS: Record<string, string> = {
   codex: "codex exec --dangerously-bypass-approvals-and-sandbox {prompt}",
   claude: "claude --dangerously-skip-permissions -p {prompt} --output-format json --no-session-persistence --max-budget-usd ${SYMPHONY_CLAUDE_TASK_BUDGET_USD:-2.00}",
-  "claude-work": "claude --dangerously-skip-permissions -p {prompt} --output-format json --no-session-persistence --max-budget-usd ${SYMPHONY_CLAUDE_WORK_TASK_BUDGET_USD:-4.00}",
+  "claude-work": "CLAUDE_CONFIG_DIR=\"$HOME/.claude-work\" claude --dangerously-skip-permissions -p {prompt} --model ${SYMPHONY_CLAUDE_WORK_MODEL:-sonnet} --output-format json --no-session-persistence --max-budget-usd ${SYMPHONY_CLAUDE_WORK_TASK_BUDGET_USD:-2.00}",
   gemini: "npx -y @google/gemini-cli --model ${SYMPHONY_GEMINI_MODEL:-gemini-2.5-pro} --yolo -p {prompt} --output-format json --skip-trust",
   cursor: "agent --print --force --trust --output-format json {prompt}",
 };
@@ -82,11 +90,14 @@ const AGENT_LABELS: Record<SymphonyAgent, string> = {
 };
 
 const HIGH_COST_AGENT_HINTS = ["opus", "gpt-4", "claude-3.7", "claude-4", "pro"];
+const DEFAULT_AGENT_PRIORITY: SymphonyAgent[] = ["gemini", "codex", "claude", "claude-work", "cursor"];
+const CLAUDE_WORK_MIN_HEADROOM_PCT = 25;
 
 export const DEFAULT_SYMPHONY_MEMORY = `Symphony behavior and routing policy:
 - Treat the task row as the source of truth.
 - Use the task project, priority, type, and custom run instructions when deciding how to execute.
-- Prefer the cheapest capable route: Codex for implementation-heavy work, bugs, tests, and high-priority tasks; Gemini for broad research/docs synthesis; Claude only when cleanup, chore, deep refactor, architecture, or careful prose-heavy changes justify it.
+- Prefer agents in this order when the task is not sensitive: Gemini first; Codex or Claude second depending task shape; Claude Work third and only with enough headroom; Cursor fourth.
+- Keep sensitive cloud/auth/deployment/credential/migration work under Codex orchestration.
 - Avoid high-cost model/profile names such as Opus, Pro, GPT-4, Claude 3.7, or Claude 4 unless the task explicitly asks for that capability.
 - Explicit run instructions or memory preferences mentioning Codex, Claude, or Gemini override the defaults.
 - Keep work scoped to the task, verify before completion, and report changed files, evidence, and remaining risk.
@@ -131,7 +142,20 @@ function isAgentHealthy(agent: SymphonyAgent, usage?: SymphonyAgentUsageSnapshot
   if (agent === "cursor") return true;
   const agentUsage = usage?.agents?.[agent];
   if (!agentUsage) return true;
-  return agentUsage.available !== false && agentUsage.ok !== false && isFresh(agentUsage.sampled_at);
+  const minHeadroom = agent === "claude-work" ? CLAUDE_WORK_MIN_HEADROOM_PCT : 0;
+  return agentUsage.available !== false && agentUsage.ok !== false && isFresh(agentUsage.sampled_at) && agentHeadroomPct(agent, usage) >= minHeadroom;
+}
+
+function agentHeadroomPct(agent: SymphonyAgent, usage?: SymphonyAgentUsageSnapshot | null) {
+  if (agent === "codex" || agent === "cursor") return 100;
+  const telemetry = usage?.agents?.[agent]?.provider_telemetry;
+  if (typeof telemetry?.headroom_pct === "number") return telemetry.headroom_pct;
+  if (typeof telemetry?.worst_used_pct === "number") return Math.max(0, 100 - telemetry.worst_used_pct);
+  return 50;
+}
+
+function firstHealthyAgent(candidates: SymphonyAgent[], usage?: SymphonyAgentUsageSnapshot | null) {
+  return candidates.find(agent => isAgentHealthy(agent, usage)) ?? "codex";
 }
 
 function withBudget(route: Omit<SymphonyRoute, "budgetNote">, usage?: SymphonyAgentUsageSnapshot | null): SymphonyRoute {
@@ -238,10 +262,11 @@ export function chooseSymphonyAgent(
   }
 
   if (task.task_type === "bug" || task.priority === "high") {
+    const agent = firstHealthyAgent(["gemini", "codex", "claude", "claude-work", "cursor"], agentUsage);
     return withBudget({
-      agent: "codex",
-      label: AGENT_LABELS.codex,
-      reason: "High-priority and bug-fix tasks default to Codex for code execution.",
+      agent,
+      label: AGENT_LABELS[agent],
+      reason: "High-priority and bug-fix tasks use the configured agent priority order.",
     }, agentUsage);
   }
 
@@ -250,10 +275,11 @@ export function chooseSymphonyAgent(
     task.task_type === "chore" ||
     /(cleanup|clean up|refactor|polish|rename|organize|simplify|prose|wording)/.test(text)
   ) {
+    const agent = firstHealthyAgent(["gemini", "claude", "codex", "claude-work", "cursor"], agentUsage);
     return withBudget({
-      agent: "claude",
-      label: AGENT_LABELS.claude,
-      reason: "Cleanup, refactor, and prose-heavy tasks route to Claude when its recent usage sample is healthy.",
+      agent,
+      label: AGENT_LABELS[agent],
+      reason: "Cleanup, refactor, and prose-heavy tasks use Gemini first, then the Codex/Claude tier.",
     }, agentUsage);
   }
 
@@ -262,17 +288,19 @@ export function chooseSymphonyAgent(
     task.task_type === "docs" ||
     /(audit|research|summarize|inventory|review all|compare|docs|documentation|copy|content)/.test(text)
   ) {
+    const agent = firstHealthyAgent(["gemini", "claude", "codex", "claude-work", "cursor"], agentUsage);
     return withBudget({
-      agent: "gemini",
-      label: AGENT_LABELS.gemini,
-      reason: "Broad review, docs, and synthesis tasks route to Gemini when its recent usage sample is healthy.",
+      agent,
+      label: AGENT_LABELS[agent],
+      reason: "Broad review, docs, and synthesis tasks use Gemini first, then the Codex/Claude tier.",
     }, agentUsage);
   }
 
+  const agent = firstHealthyAgent(DEFAULT_AGENT_PRIORITY, agentUsage);
   return withBudget({
-    agent: "codex",
-    label: AGENT_LABELS.codex,
-    reason: "Default route when no stronger Symphony routing signal is present.",
+    agent,
+    label: AGENT_LABELS[agent],
+    reason: "Default route follows the configured agent priority order.",
   }, agentUsage);
 }
 

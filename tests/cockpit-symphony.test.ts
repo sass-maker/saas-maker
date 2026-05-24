@@ -29,7 +29,6 @@ describe('cockpit Symphony helpers', () => {
     expect(prompt).toContain('# Symphony batch item 2: task-docs');
     expect(prompt).toContain('Task ID: task-code');
     expect(prompt).toContain('Task ID: task-docs');
-    expect(prompt).toContain('Routed agent: Codex');
     expect(prompt).toContain('Routed agent: Gemini');
     expect(prompt).toContain('pnpm --dir ~/Desktop/fleet/saas-maker symphony done task-code');
     expect(prompt).toContain('pnpm --dir ~/Desktop/fleet/saas-maker symphony done task-docs');
@@ -41,7 +40,7 @@ describe('cockpit Symphony helpers', () => {
       { ...baseTask, id: 'task-cleanup', title: 'Clean up copy', task_type: 'cleanup' },
     ]);
 
-    expect(runs.map(run => run.route.agent)).toEqual(['codex', 'claude']);
+    expect(runs.map(run => run.route.agent)).toEqual(['gemini', 'gemini']);
     expect(runs[0].command).toContain('.symphony/workspaces/task-bug/prompt.md');
     expect(runs[1].command).toContain('.symphony/workspaces/task-cleanup/prompt.md');
   });
@@ -87,7 +86,7 @@ describe('cockpit Symphony helpers', () => {
     expect(route.budgetNote).toContain('Fresh Gemini sample');
   });
 
-  it('falls back to Codex when the matched external agent is unhealthy', () => {
+  it('falls back to the Codex/Claude tier when Gemini is unhealthy', () => {
     const route = chooseSymphonyAgent(
       { ...baseTask, id: 'task-docs', title: 'Audit all project docs', task_type: 'research' },
       '',
@@ -105,14 +104,55 @@ describe('cockpit Symphony helpers', () => {
       },
     );
 
+    expect(route.agent).toBe('claude');
+    expect(route.reason).toContain('Gemini first');
+  });
+
+  it('does not use Claude Work when its sampled headroom is too low', () => {
+    const sampled_at = new Date().toISOString();
+    const route = chooseSymphonyAgent(
+      {
+        ...baseTask,
+        id: 'task-work',
+        title: 'Refactor handoff',
+        task_type: 'cleanup',
+        description: 'Agent assignment: claude-work',
+      },
+      '',
+      '',
+      {
+        sampled_at,
+        agents: {
+          'claude-work': {
+            ok: true,
+            available: true,
+            sampled_at,
+            provider_telemetry: { headroom_pct: 10 },
+          },
+        },
+      },
+    );
+
     expect(route.agent).toBe('codex');
-    expect(route.reason).toContain('Gemini matched');
+    expect(route.reason).toContain('Claude Work matched');
   });
 
   it('renders Claude and Gemini commands with structured output for usage capture', () => {
     const claudeRun = buildSymphonyBatchRuns([
       { ...baseTask, id: 'task-clean', title: 'Clean up docs', task_type: 'cleanup' },
-    ])[0];
+    ], {
+      agentUsage: {
+        sampled_at: new Date().toISOString(),
+        agents: {
+          gemini: {
+            ok: false,
+            available: true,
+            sampled_at: new Date().toISOString(),
+            error: 'rate limited',
+          },
+        },
+      },
+    })[0];
     const geminiRun = buildSymphonyBatchRuns([
       { ...baseTask, id: 'task-audit', title: 'Audit docs', task_type: 'research' },
     ])[0];

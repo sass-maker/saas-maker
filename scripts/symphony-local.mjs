@@ -20,10 +20,13 @@ const DEFAULT_CLI_COMMAND = 'pnpm --dir packages/cli exec tsx src/index.ts';
 const DEFAULT_AGENT_COMMANDS = {
   codex: 'codex exec --dangerously-bypass-approvals-and-sandbox {prompt}',
   claude: 'claude --dangerously-skip-permissions -p {prompt} --output-format json --no-session-persistence --max-budget-usd ${SYMPHONY_CLAUDE_TASK_BUDGET_USD:-2.00}',
-  'claude-work': 'CLAUDE_CONFIG_DIR="$HOME/.claude-work" claude --dangerously-skip-permissions -p {prompt} --model ${SYMPHONY_CLAUDE_WORK_MODEL:-sonnet} --output-format json --no-session-persistence --max-budget-usd ${SYMPHONY_CLAUDE_WORK_TASK_BUDGET_USD:-4.00}',
+  'claude-work': 'CLAUDE_CONFIG_DIR="$HOME/.claude-work" claude --dangerously-skip-permissions -p {prompt} --model ${SYMPHONY_CLAUDE_WORK_MODEL:-sonnet} --output-format json --no-session-persistence --max-budget-usd ${SYMPHONY_CLAUDE_WORK_TASK_BUDGET_USD:-2.00}',
   gemini: 'npx -y @google/gemini-cli --model ${SYMPHONY_GEMINI_MODEL:-gemini-2.5-pro} --yolo -p {prompt} --output-format json --skip-trust',
   cursor: 'agent --print --force --trust --output-format json {prompt}',
 };
+
+const DEFAULT_AGENT_PRIORITY = ['gemini', 'codex', 'claude', 'claude-work', 'cursor'];
+const CLAUDE_WORK_MIN_HEADROOM_PCT = 25;
 
 function readJson(filePath) {
   try {
@@ -198,11 +201,11 @@ Auth:
 
 Profiles:
   Built-in commands run with full permissions:
-    auto    Choose codex, claude, claude-work, or gemini from task shape plus .symphony/agent-usage.json
+    auto    Prefer gemini first; codex/claude second by task shape; claude-work third with headroom; cursor fourth
     codex   codex exec --dangerously-bypass-approvals-and-sandbox {prompt}
     claude  claude --dangerously-skip-permissions -p {prompt}
     claude-work
-            CLAUDE_CONFIG_DIR="$HOME/.claude-work" claude --dangerously-skip-permissions -p {prompt} --model \${SYMPHONY_CLAUDE_WORK_MODEL:-sonnet} with a larger default task budget
+            CLAUDE_CONFIG_DIR="$HOME/.claude-work" claude --dangerously-skip-permissions -p {prompt} --model \${SYMPHONY_CLAUDE_WORK_MODEL:-sonnet} with a capped default task budget
     gemini  npx -y @google/gemini-cli --yolo -p {prompt}
     cursor  agent --print --force --trust {prompt}
 
@@ -258,15 +261,15 @@ function isFresh(sampledAt) {
 
 function agentHealthy(agent, usage) {
   if (agent === 'codex') return true;
+  if (agent === 'cursor') return true;
   const sample = usage?.agents?.[agent];
   if (!sample) return true;
-  return sample.available !== false && sample.ok !== false && isFresh(sample.sampled_at) && agentHeadroomPct(agent, usage) >= 8;
+  const minHeadroom = agent === 'claude-work' ? CLAUDE_WORK_MIN_HEADROOM_PCT : 8;
+  return sample.available !== false && sample.ok !== false && isFresh(sample.sampled_at) && agentHeadroomPct(agent, usage) >= minHeadroom;
 }
 
 function firstHealthyAgent(candidates, usage) {
-  const healthy = candidates.filter((agent) => agentHealthy(agent, usage));
-  healthy.sort((a, b) => agentHeadroomPct(b, usage) - agentHeadroomPct(a, usage));
-  return healthy[0] ?? 'codex';
+  return candidates.find((agent) => agentHealthy(agent, usage)) ?? 'codex';
 }
 
 function agentHeadroomPct(agent, usage) {
@@ -274,7 +277,8 @@ function agentHeadroomPct(agent, usage) {
   const telemetry = sample?.provider_telemetry;
   if (typeof telemetry?.headroom_pct === 'number') return telemetry.headroom_pct;
   if (typeof telemetry?.worst_used_pct === 'number') return Math.max(0, 100 - telemetry.worst_used_pct);
-  return agent === 'codex' ? 100 : 50;
+  if (agent === 'codex' || agent === 'cursor') return 100;
+  return 50;
 }
 
 function taskRoutingText(task) {
@@ -304,25 +308,28 @@ function chooseAgent(task, args) {
     candidate = 'codex';
     reason = 'sensitive cloud/auth/deployment work stays with Codex';
   } else if (/(ui|frontend|react|next|component|page|layout|design|polish|revamp|crash|runtime|bug|fix)/.test(text)) {
-    candidate = firstHealthyAgent(['claude-work', 'claude', 'gemini'], usage);
+    candidate = firstHealthyAgent(['gemini', 'codex', 'claude', 'claude-work', 'cursor'], usage);
     reason = 'implementation/UI/bug route';
   } else if (
     task.task_type === 'cleanup' ||
     task.task_type === 'chore' ||
     /(cleanup|clean up|refactor|polish|rename|organize|simplify|prose|wording)/.test(text)
   ) {
-    candidate = firstHealthyAgent(['claude', 'claude-work', 'gemini'], usage);
+    candidate = firstHealthyAgent(['gemini', 'claude', 'codex', 'claude-work', 'cursor'], usage);
     reason = 'cleanup/refactor/prose route';
   } else if (
     task.task_type === 'research' ||
     task.task_type === 'docs' ||
     /(audit|research|summarize|inventory|review all|compare|docs|documentation|copy|content)/.test(text)
   ) {
-    candidate = firstHealthyAgent(['gemini', 'claude', 'claude-work'], usage);
+    candidate = firstHealthyAgent(['gemini', 'claude', 'codex', 'claude-work', 'cursor'], usage);
     reason = 'broad review/docs/synthesis route';
   } else if (task.priority === 'high') {
-    candidate = firstHealthyAgent(['claude-work', 'gemini', 'claude'], usage);
+    candidate = firstHealthyAgent(['gemini', 'codex', 'claude', 'claude-work', 'cursor'], usage);
     reason = 'high-priority non-sensitive route';
+  } else {
+    candidate = firstHealthyAgent(DEFAULT_AGENT_PRIORITY, usage);
+    reason = 'default priority route';
   }
 
   if (!agentHealthy(candidate, usage)) {
