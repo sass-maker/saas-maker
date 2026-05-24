@@ -29,6 +29,8 @@ function parseArgs(argv) {
     ttlMs: Number(process.env.SYMPHONY_AGENT_USAGE_TTL_MS || DEFAULT_TTL_MS),
     claudeBudgetUsd: process.env.SYMPHONY_CLAUDE_PROBE_BUDGET_USD || '0.10',
     claudeModel: process.env.SYMPHONY_CLAUDE_PROBE_MODEL || 'haiku',
+    claudeWorkBudgetUsd: process.env.SYMPHONY_CLAUDE_WORK_PROBE_BUDGET_USD || '0.25',
+    claudeWorkModel: process.env.SYMPHONY_CLAUDE_WORK_PROBE_MODEL || 'sonnet',
     geminiModel: process.env.SYMPHONY_GEMINI_PROBE_MODEL || '',
     telemetryFile: process.env.SYMPHONY_PROVIDER_TELEMETRY_FILE || PROVIDER_TELEMETRY_FILE,
   };
@@ -40,6 +42,8 @@ function parseArgs(argv) {
     else if (arg === '--ttl-ms') args.ttlMs = Number(argv[++i] || DEFAULT_TTL_MS);
     else if (arg === '--claude-budget-usd') args.claudeBudgetUsd = argv[++i] || args.claudeBudgetUsd;
     else if (arg === '--claude-model') args.claudeModel = argv[++i] || args.claudeModel;
+    else if (arg === '--claude-work-budget-usd') args.claudeWorkBudgetUsd = argv[++i] || args.claudeWorkBudgetUsd;
+    else if (arg === '--claude-work-model') args.claudeWorkModel = argv[++i] || args.claudeWorkModel;
     else if (arg === '--gemini-model') args.geminiModel = argv[++i] || args.geminiModel;
     else if (arg === '--telemetry-file') args.telemetryFile = path.resolve(argv[++i] || args.telemetryFile);
     else if (arg === '--help' || arg === '-h') {
@@ -64,6 +68,8 @@ Options:
   --ttl-ms VALUE            Cache freshness window, default 45 minutes
   --claude-budget-usd VALUE Max Claude probe spend, default 0.10
   --claude-model VALUE      Requested Claude probe model, default haiku
+  --claude-work-budget-usd VALUE Max Claude Work probe spend, default 0.25
+  --claude-work-model VALUE Requested Claude Work probe model, default sonnet
   --gemini-model VALUE      Optional Gemini probe model
   --telemetry-file VALUE    Optional provider telemetry JSON, default .symphony/provider-telemetry.json
   --json                    Print raw cache JSON
@@ -94,12 +100,14 @@ function commandExists(command) {
 }
 
 function runProbe(agent, command, args) {
+  const env = { ...process.env, NO_COLOR: '1', TERM: process.env.TERM || 'dumb' };
+  if (agent === 'claude-work') env.CLAUDE_CONFIG_DIR = path.join(process.env.HOME || '', '.claude-work');
   const startedAt = new Date().toISOString();
   const result = spawnSync(command, args, {
     cwd: process.cwd(),
     encoding: 'utf8',
     timeout: 90_000,
-    env: { ...process.env, NO_COLOR: '1', TERM: process.env.TERM || 'dumb' },
+    env,
   });
   const completedAt = new Date().toISOString();
   const parsed = firstJsonObject(result.stdout);
@@ -153,27 +161,33 @@ function sampleClaude(args, agent = 'claude') {
     return { agent, available: false, ok: false, status: 'missing', error: 'claude command not found', sampled_at: new Date().toISOString() };
   }
 
+  const env = agent === 'claude-work'
+    ? { ...process.env, CLAUDE_CONFIG_DIR: path.join(process.env.HOME || '', '.claude-work') }
+    : process.env;
   const auth = spawnSync('claude', ['auth', 'status', '--json'], {
     cwd: process.cwd(),
     encoding: 'utf8',
     timeout: 30_000,
+    env,
   });
   const authJson = firstJsonObject(auth.stdout);
   if (!authJson?.loggedIn) {
     return { agent, available: false, ok: false, status: 'unauthenticated', auth: authJson, error: auth.stderr?.trim() || null, sampled_at: new Date().toISOString() };
   }
 
-  const probe = runProbe('claude', 'claude', [
+  const requestedModel = agent === 'claude-work' ? args.claudeWorkModel : args.claudeModel;
+  const maxBudgetUsd = agent === 'claude-work' ? args.claudeWorkBudgetUsd : args.claudeBudgetUsd;
+  const probe = runProbe(agent, 'claude', [
     '-p',
     PROBE_PROMPT,
     '--model',
-    args.claudeModel,
+    requestedModel,
     '--output-format',
     'json',
     '--permission-mode',
     'plan',
     '--max-budget-usd',
-    args.claudeBudgetUsd,
+    maxBudgetUsd,
     '--no-session-persistence',
   ]);
   return { ...summarizeClaude(probe, agent), auth: authJson };

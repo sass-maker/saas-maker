@@ -20,7 +20,7 @@ const DEFAULT_CLI_COMMAND = 'pnpm --dir packages/cli exec tsx src/index.ts';
 const DEFAULT_AGENT_COMMANDS = {
   codex: 'codex exec --dangerously-bypass-approvals-and-sandbox {prompt}',
   claude: 'claude --dangerously-skip-permissions -p {prompt} --output-format json --no-session-persistence --max-budget-usd ${SYMPHONY_CLAUDE_TASK_BUDGET_USD:-2.00}',
-  'claude-work': 'claude --dangerously-skip-permissions -p {prompt} --output-format json --no-session-persistence --max-budget-usd ${SYMPHONY_CLAUDE_WORK_TASK_BUDGET_USD:-4.00}',
+  'claude-work': 'CLAUDE_CONFIG_DIR="$HOME/.claude-work" claude --dangerously-skip-permissions -p {prompt} --model ${SYMPHONY_CLAUDE_WORK_MODEL:-sonnet} --output-format json --no-session-persistence --max-budget-usd ${SYMPHONY_CLAUDE_WORK_TASK_BUDGET_USD:-4.00}',
   gemini: 'npx -y @google/gemini-cli --model ${SYMPHONY_GEMINI_MODEL:-gemini-2.5-pro} --yolo -p {prompt} --output-format json --skip-trust',
   cursor: 'agent --print --force --trust --output-format json {prompt}',
 };
@@ -202,7 +202,7 @@ Profiles:
     codex   codex exec --dangerously-bypass-approvals-and-sandbox {prompt}
     claude  claude --dangerously-skip-permissions -p {prompt}
     claude-work
-            claude --dangerously-skip-permissions -p {prompt} with a larger default task budget
+            CLAUDE_CONFIG_DIR="$HOME/.claude-work" claude --dangerously-skip-permissions -p {prompt} --model \${SYMPHONY_CLAUDE_WORK_MODEL:-sonnet} with a larger default task budget
     gemini  npx -y @google/gemini-cli --yolo -p {prompt}
     cursor  agent --print --force --trust {prompt}
 
