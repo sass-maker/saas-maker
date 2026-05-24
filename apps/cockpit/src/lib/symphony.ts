@@ -69,8 +69,8 @@ const AGENT_COMMANDS: Record<string, string> = {
   codex: "codex exec --dangerously-bypass-approvals-and-sandbox {prompt}",
   claude: "claude --dangerously-skip-permissions -p {prompt} --output-format json --no-session-persistence --max-budget-usd ${SYMPHONY_CLAUDE_TASK_BUDGET_USD:-2.00}",
   "claude-work": "claude --dangerously-skip-permissions -p {prompt} --output-format json --no-session-persistence --max-budget-usd ${SYMPHONY_CLAUDE_WORK_TASK_BUDGET_USD:-4.00}",
-  gemini: "gemini --yolo -p {prompt} --output-format json --skip-trust",
-  cursor: "printf %s {prompt} | cursor --chat -",
+  gemini: "npx -y @google/gemini-cli --yolo -p {prompt} --output-format json --skip-trust",
+  cursor: "agent --print --force --trust --output-format json {prompt}",
 };
 
 const AGENT_LABELS: Record<SymphonyAgent, string> = {
@@ -113,7 +113,7 @@ function geminiTokenTotal(usage?: GeminiUsage) {
 
 function agentBudgetNote(agent: SymphonyAgent, usage?: SymphonyAgentUsageSnapshot | null) {
   if (agent === "codex") return "Codex local coordinator route; external usage cache not required.";
-  if (agent === "cursor") return "Cursor route opens the assigned task in Cursor chat.";
+  if (agent === "cursor") return "Cursor Agent route runs headless with write and shell access.";
   const agentUsage = usage?.agents?.[agent];
   if (!agentUsage) return "No recent usage sample; route chosen from task shape only.";
   if (!isFresh(agentUsage.sampled_at)) return "Usage sample is stale; refresh before a larger batch.";

@@ -21,8 +21,8 @@ const DEFAULT_AGENT_COMMANDS = {
   codex: 'codex exec --dangerously-bypass-approvals-and-sandbox {prompt}',
   claude: 'claude --dangerously-skip-permissions -p {prompt} --output-format json --no-session-persistence --max-budget-usd ${SYMPHONY_CLAUDE_TASK_BUDGET_USD:-2.00}',
   'claude-work': 'claude --dangerously-skip-permissions -p {prompt} --output-format json --no-session-persistence --max-budget-usd ${SYMPHONY_CLAUDE_WORK_TASK_BUDGET_USD:-4.00}',
-  gemini: 'gemini --yolo -p {prompt} --output-format json --skip-trust',
-  cursor: 'printf %s {prompt} | cursor --chat -',
+  gemini: 'npx -y @google/gemini-cli --yolo -p {prompt} --output-format json --skip-trust',
+  cursor: 'agent --print --force --trust --output-format json {prompt}',
 };
 
 function readJson(filePath) {
@@ -203,8 +203,8 @@ Profiles:
     claude  claude --dangerously-skip-permissions -p {prompt}
     claude-work
             claude --dangerously-skip-permissions -p {prompt} with a larger default task budget
-    gemini  gemini --yolo -p {prompt}
-    cursor  printf prompt into Cursor chat
+    gemini  npx -y @google/gemini-cli --yolo -p {prompt}
+    cursor  agent --print --force --trust {prompt}
 
   Add more profiles in ~/.foundry/config.json:
     "symphonyAgentCommands": {
