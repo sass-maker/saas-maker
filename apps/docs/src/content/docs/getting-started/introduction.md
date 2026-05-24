@@ -13,7 +13,7 @@ It is API-first on purpose: the cockpit is useful for humans, but the REST API, 
 |-------|---------|----------------|
 | **Registry** | Know what exists | Project slugs, prod links, GitHub repos, notes, limits |
 | **Tasks** | Know what needs work | Comments, blockers, PR status, deploy state, agent handoffs |
-| **Widgets** | Add product surfaces fast | Feedback, changelog, testimonials, waitlist, analytics, badge |
+| **Widgets** | Add product surfaces fast | Feedback, changelog, testimonials, waitlist |
 | **Audits** | Keep the fleet healthy | GitHub, Cloudflare, auth, smoke, performance checks |
 | **Standards** | Reduce drift | Shared configs, docs, CLI recipes, fleet guidance |
 
@@ -23,14 +23,14 @@ Foundry provides high-quality modules you can drop into any product:
 
 - **Project metadata**: production URLs, GitHub links, README summaries, rate limits, and operating notes.
 - **Symphony tasks**: durable task records with comments, blockers, branch/PR/deploy fields, and audit history.
-- **Widgets**: embeddable React components for feedback, changelogs, testimonials, waitlists, analytics, progress, and badges.
+- **Widgets**: embeddable React components for feedback, changelogs, testimonials, and waitlists.
 - **Fleet audits**: repeatable checks across GitHub, Cloudflare, production smoke, auth, and performance.
 - **Free AI first**: gateway patterns that prefer free/local AI before paid providers.
 
 ## Architecture
 
 - **Workers API** — Hono on Cloudflare Workers, backed by D1.
-- **Cockpit** — Next.js dashboard for projects, tasks, analytics, and fleet state.
+- **Cockpit** — Next.js dashboard for projects, tasks, and fleet state.
 - **Docs** — copy-paste recipes for API, CLI, SDK, and widgets.
 - **CLI** — the unified interface for agents and scripts.
 

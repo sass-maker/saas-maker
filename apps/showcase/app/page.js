@@ -479,7 +479,7 @@ export default function LandingPage() {
             { icon: '🤖', bg: 'rgba(249,115,22,0.1)', title: 'Free AI gateway', body: 'Route routine AI work through free/local providers first, with paid escalation kept explicit.' },
             { icon: '📊', bg: 'rgba(59,130,246,0.12)', title: 'Fleet audits', body: 'GitHub, deployment, auth, smoke, and performance checks on a repeatable cadence.' },
             { icon: '📦', bg: 'rgba(124,58,237,0.1)', title: 'Project metadata', body: 'README, rate limits, guidance, links, and ownership stored behind one API.' },
-            { icon: '📡', bg: 'rgba(34,197,94,0.1)', title: 'Widgets', body: 'Feedback, changelog, testimonials, badge, analytics, and progress widgets.' },
+            { icon: '📡', bg: 'rgba(34,197,94,0.1)', title: 'Widgets', body: 'Feedback, changelog, testimonials, and waitlist widgets.' },
             { icon: '⚡', bg: 'rgba(250,204,21,0.08)', title: 'Symphony tasks', body: 'Durable tasks with comments, blockers, PR/deploy state, and agent handoff history.' },
             { icon: '🌐', bg: 'rgba(59,130,246,0.08)', title: 'Cloudflare core', body: 'Workers API, D1, Wrangler automation, and deploy-aware smoke checks.' },
           ].map(f => (

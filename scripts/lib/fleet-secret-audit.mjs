@@ -20,6 +20,11 @@ const PROJECT_OVERRIDES = {
   },
 };
 
+const PUBLIC_GITHUB_CONFIG_NAMES = new Set([
+  'CF_ACCOUNT_ID',
+  'CLOUDFLARE_ACCOUNT_ID',
+]);
+
 export function extractRepoFromGitUrl(value) {
   if (typeof value !== 'string' || !value.trim()) return null;
   const trimmed = value.trim();
@@ -64,7 +69,7 @@ export function parseSecretNames(stdout) {
     .split(/\r?\n/)
     .map((line) => line.trim())
     .filter(Boolean)
-    .map((line) => line.match(/^([A-Z][A-Z0-9_]+)\b/)?.[1])
+    .map((line) => line.match(/^(?:-\s*)?([A-Z][A-Z0-9_]+)\b/)?.[1])
     .filter(Boolean)
     .sort();
 }
@@ -219,11 +224,15 @@ export function auditProjectSecretPlan(plan, { root, run = runCommand } = {}) {
       });
     } else {
       const result = run('gh', ['secret', 'list', '-R', plan.github.repo, '--json', 'name,updatedAt'], { cwd: root });
-      const present = result.ok ? parseSecretNames(result.stdout) : [];
+      const variableResult = run('gh', ['variable', 'list', '-R', plan.github.repo, '--json', 'name,updatedAt'], { cwd: root });
+      const presentSecrets = result.ok ? parseSecretNames(result.stdout) : [];
+      const presentVariables = variableResult.ok
+        ? parseSecretNames(variableResult.stdout).filter((name) => PUBLIC_GITHUB_CONFIG_NAMES.has(name))
+        : [];
       checks.push({
         platform: 'github-actions',
         target: plan.github.repo,
-        ...compareSecrets(plan.github.required, present),
+        ...compareSecrets(plan.github.required, [...presentSecrets, ...presentVariables]),
         error: result.ok ? null : normalizeCommandError(result),
       });
     }

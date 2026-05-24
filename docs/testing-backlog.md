@@ -80,8 +80,8 @@ critical path. Speculative coverage is yak shaving.
 - [ ] **Cockpit page renders for each authed surface**. Once the
   authed-render harness above lands, parameterize over: `/projects`,
   `/projects/<slug>`, `/projects/<slug>/{feedback,roadmap,
-  testimonials,changelog,waitlist,analytics,settings}`, `/secrets`,
-  `/tasks`, `/jobs`, `/manifest`, `/fleet`, `/standards`. Assert HTTP
+  testimonials,changelog,waitlist,settings}`,
+  `/tasks`, `/jobs`, `/fleet`, `/standards`. Assert HTTP
   200 + key element present.
 - [ ] **Public roadmap voting flow**. Submit + vote + remove vote +
   rate-limit boundary. End-to-end against prod with a throwaway

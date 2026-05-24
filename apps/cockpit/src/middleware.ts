@@ -66,8 +66,6 @@ export const config = {
     "/api/token",
     "/projects/:path*",
     "/tasks/:path*",
-    "/secrets/:path*",
-    "/manifest/:path*",
     "/jobs/:path*",
     "/fleet/:path*",
     "/standards/:path*",

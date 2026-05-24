@@ -79,13 +79,10 @@ Returns `{ "status": "ok" }` if the API is running. No authentication required.
 | Projects | `/v1/projects` | [Projects](/services/projects) |
 | Feedback | `/v1/feedback` | [Feedback](/services/feedback) |
 | Roadmap | `/v1/roadmap` | [Roadmap](/services/roadmap) |
-| Progress | `/v1/progress` | Public changelog + roadmap feed |
 | Waitlist | `/v1/waitlist` | [Waitlist](/services/waitlist) |
 | Testimonials | `/v1/testimonials` | [Testimonials](/services/testimonials) |
 | Changelog | `/v1/changelog` | [Changelog](/services/changelog) |
-| Analytics | `/v1/analytics` | [Analytics](/services/analytics) |
 | Standards | `/v1/standards` | Fleet standards (CLI-driven) |
 | Tasks | `/v1/tasks` | Cockpit tasks |
 | Jobs | `/v1/jobs` | Cockpit jobs |
-| Secrets | `/v1/secrets` | Project secrets |
 | Auth | `/v1/auth` / `/v1/cli` | Sessions and CLI auth |

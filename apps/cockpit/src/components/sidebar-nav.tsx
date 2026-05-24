@@ -4,15 +4,11 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  BarChart3,
   Bot,
   Brain,
   ChevronDown,
-  ClipboardList,
   Eye,
-  FileJson,
   FolderOpen,
-  KeyRound,
   LayoutDashboard,
   LayoutList,
   ListTodo,
@@ -43,13 +39,11 @@ interface Project {
 
 const projectNavItems = [
   { label: "Feedback", href: "", icon: MessageSquare },
-  { label: "Progress", href: "/progress", icon: ClipboardList },
   { label: "Roadmap", href: "/roadmap", icon: Map },
   { label: "Testimonials", href: "/testimonials", icon: Star },
   { label: "Waitlist", href: "/waitlist", icon: Users },
   { label: "Changelog", href: "/changelog", icon: Megaphone },
   { label: "Knowledge Base", href: "/knowledge", icon: Brain },
-  { label: "Analytics", href: "/analytics", icon: BarChart3 },
   { label: "AI Gateway", href: "/ai", icon: Brain },
   { label: "Settings", href: "/settings", icon: Settings },
 ];
@@ -145,32 +139,6 @@ export function SidebarNav() {
       <div className="mt-4 px-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50">
         Control Plane
       </div>
-
-      <Link
-        href="/secrets"
-        className={cn(
-          "flex min-h-11 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
-          pathname === "/secrets"
-            ? "bg-muted text-foreground"
-            : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-        )}
-      >
-        <KeyRound className="h-4 w-4" />
-        Secrets
-      </Link>
-
-      <Link
-        href="/manifest"
-        className={cn(
-          "flex min-h-11 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
-          pathname === "/manifest"
-            ? "bg-muted text-foreground"
-            : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-        )}
-      >
-        <FileJson className="h-4 w-4" />
-        Manifest
-      </Link>
 
       <Link
         href="/jobs"

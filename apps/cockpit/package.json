@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "pnpm -F @saas-maker/shared-types build && pnpm -F @saas-maker/sdk build && pnpm -F @saas-maker/ui build && pnpm -F @saas-maker/analytics-ui build && next build --webpack",
+    "build": "pnpm -F @saas-maker/shared-types build && pnpm -F @saas-maker/sdk build && pnpm -F @saas-maker/ui build && next build --webpack",
     "build:next": "next build",
     "cf:build": "opennextjs-cloudflare build",
     "deploy": "pnpm cf:build && wrangler deploy && node ../../scripts/smoke-prod.mjs",
@@ -16,7 +16,6 @@
     "@dnd-kit/core": "6.3.1",
     "@dnd-kit/sortable": "10.0.0",
     "@dnd-kit/utilities": "3.2.2",
-    "@saas-maker/analytics-ui": "workspace:*",
     "@saas-maker/sdk": "workspace:*",
     "@saas-maker/shared-types": "workspace:*",
     "@saas-maker/ui": "workspace:*",

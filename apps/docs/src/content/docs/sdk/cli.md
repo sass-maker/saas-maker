@@ -33,7 +33,6 @@ fnd doctor   # verify auth, linked project, and standards compliance
 | `fnd status` | Snapshot of feature counts and health for the linked project. |
 | `fnd projects list\|create\|update\|delete` | Project management. |
 | `fnd feedback`, `fnd roadmap`, `fnd changelog`, `fnd testimonials`, `fnd waitlist` | Per-service helpers. |
-| `fnd analytics dashboard\|setup\|detail` | Analytics shortcuts (wraps `/v1/analytics/*`). |
 | `fnd forge` | Scaffold a new Foundry-compliant project. |
 | `fnd fleet …` | Fleet-wide automation (see below). |
 | `fnd examples` | Print copy-paste API recipes. |
@@ -108,12 +107,6 @@ fnd api PATCH /v1/tasks/<taskId> --auth session \
 # Add a comment
 fnd api POST /v1/tasks/<taskId>/comments --auth session \
   --body '{"body":"PR opened — waiting on review.","author_type":"agent"}'
-```
-
-### Public progress feed
-
-```bash
-fnd api GET /v1/progress/public/<slug> --auth none --query changelog_limit=10
 ```
 
 ### Feedback (project key)

@@ -192,6 +192,17 @@ const ALL_PROJECTS = '__all__';
 const UNASSIGNED_PROJECT = '__unassigned__';
 const ALL_PRIORITIES = '__all__';
 
+type BlockerResolutionId = 'approve' | 'config' | 'keep_blocked' | 'not_needed';
+
+interface BlockerResolutionOption {
+  id: BlockerResolutionId;
+  label: string;
+  description: string;
+  resolvesBlocker: boolean;
+  marksDone: boolean;
+  body: (task: TaskRow) => string;
+}
+
 const DEFAULT_ACCEPTANCE_BY_PROJECT: Record<string, string[]> = {
   'saas-maker': [
     'pnpm --filter ./apps/cockpit typecheck',
@@ -247,6 +258,67 @@ function sortTasksByPriority(tasks: TaskRow[]) {
 
 function taskPreview(description: string | null) {
   return description?.split(/\s+Source:\s+/)[0]?.trim() ?? '';
+}
+
+function blockerResolutionOptions(): BlockerResolutionOption[] {
+  return [
+    {
+      id: 'approve',
+      label: 'Approve and unblock',
+      description: 'The agent can proceed using the task as written.',
+      resolvesBlocker: true,
+      marksDone: false,
+      body: task => [
+        'Approved and unblocked.',
+        '',
+        `Proceed with ${task.project_slug ? `${formatProjectLabel(task.project_slug)} ` : ''}task "${task.title}" using the existing acceptance criteria and repo conventions.`,
+      ].join('\n'),
+    },
+    {
+      id: 'config',
+      label: 'Config/access is ready',
+      description: 'Required token, account, deploy config, or external setting has been provided outside the task.',
+      resolvesBlocker: true,
+      marksDone: false,
+      body: task => [
+        'Required config/access is ready.',
+        '',
+        `Proceed with "${task.title}" and verify against the task acceptance criteria without exposing secrets in logs or comments.`,
+      ].join('\n'),
+    },
+    {
+      id: 'keep_blocked',
+      label: 'Keep blocked',
+      description: 'Add the missing decision/config instructions and move to the next blocker.',
+      resolvesBlocker: false,
+      marksDone: false,
+      body: task => [
+        'Keep this task blocked.',
+        '',
+        `The blocker for "${task.title}" still needs external action or a decision before an agent should proceed.`,
+      ].join('\n'),
+    },
+    {
+      id: 'not_needed',
+      label: 'No longer needed',
+      description: 'Close this task as done because it no longer needs action.',
+      resolvesBlocker: false,
+      marksDone: true,
+      body: task => [
+        'No longer needed.',
+        '',
+        `Closing "${task.title}" because the requested work is no longer required or has already been handled elsewhere.`,
+      ].join('\n'),
+    },
+  ];
+}
+
+function buildBlockerComment(task: TaskRow, option: BlockerResolutionOption, instructions: string) {
+  const trimmed = instructions.trim();
+  return [
+    option.body(task),
+    trimmed ? `Additional instructions:\n${trimmed}` : '',
+  ].filter(Boolean).join('\n\n');
 }
 
 function buildDroidAcceptanceSuggestions(task: TaskRow): { explicit?: string; suggestions: string[] } {
@@ -342,6 +414,12 @@ export function TaskBoard({
   const [syncCommentToDescription, setSyncCommentToDescription] = useState(true);
   const [loadingComments, setLoadingComments] = useState(false);
   const [savingComment, setSavingComment] = useState(false);
+  const [blockerFlowOpen, setBlockerFlowOpen] = useState(false);
+  const [blockerIndex, setBlockerIndex] = useState(0);
+  const [blockerSolution, setBlockerSolution] = useState<BlockerResolutionId>('approve');
+  const [blockerInstructions, setBlockerInstructions] = useState('');
+  const [loadingBlockerComments, setLoadingBlockerComments] = useState(false);
+  const [savingBlockerResolution, setSavingBlockerResolution] = useState(false);
   const [startingRun, setStartingRun] = useState(false);
   const [form, setForm] = useState<TaskFormData>(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
@@ -384,11 +462,51 @@ export function TaskBoard({
 
   const runnableSelectedTasks = selectedTasks.filter(task => task.status === 'todo' && !isTaskBlocked(task, tasksById));
   const visibleRunnableTasks = filteredTasks.filter(task => task.status === 'todo' && !isTaskBlocked(task, tasksById));
+  const blockedUserTasks = sortTasksByPriority(tasks.filter(task => task.status !== 'done' && task.blocked_on_user));
+  const currentBlockerTask = blockedUserTasks[blockerIndex] ?? null;
+  const currentBlockerComments = currentBlockerTask ? commentsByTaskId[currentBlockerTask.id] ?? [] : [];
+  const resolutionOptions = blockerResolutionOptions();
+  const selectedBlockerOption = resolutionOptions.find(option => option.id === blockerSolution) ?? resolutionOptions[0]!;
 
   const showToast = useCallback((msg: string) => {
     setToast(msg);
     setTimeout(() => setToast(null), 2500);
   }, []);
+
+  const loadCommentsForTask = useCallback(async (taskId: string, setLoadingState?: (loading: boolean) => void) => {
+    if (commentsByTaskId[taskId]) return commentsByTaskId[taskId];
+    setLoadingState?.(true);
+    try {
+      const token = await getClientToken();
+      const res = await apiFetchClient<{ data: TaskCommentRow[] }>(`/v1/tasks/${taskId}/comments`, token);
+      const comments = res.data ?? [];
+      setCommentsByTaskId(prev => ({ ...prev, [taskId]: comments }));
+      return comments;
+    } catch {
+      showToast('Failed to load comments');
+      return [];
+    } finally {
+      setLoadingState?.(false);
+    }
+  }, [commentsByTaskId, showToast]);
+
+  const openBlockerFlow = () => {
+    if (blockedUserTasks.length === 0) {
+      showToast('No decision blockers');
+      return;
+    }
+    setBlockerIndex(0);
+    setBlockerSolution('approve');
+    setBlockerInstructions('');
+    setBlockerFlowOpen(true);
+  };
+
+  useEffect(() => {
+    if (!blockerFlowOpen || !currentBlockerTask) return;
+    setBlockerSolution('approve');
+    setBlockerInstructions('');
+    void loadCommentsForTask(currentBlockerTask.id, setLoadingBlockerComments);
+  }, [blockerFlowOpen, currentBlockerTask?.id, loadCommentsForTask]);
 
   const openCreate = () => {
     setEditTask(null);
@@ -568,17 +686,7 @@ export function TaskBoard({
     setResolveWithComment(task.blocked_on_user);
     setMarkDoneWithComment(false);
     setSyncCommentToDescription(task.blocked_on_user);
-    if (commentsByTaskId[task.id]) return;
-    setLoadingComments(true);
-    try {
-      const token = await getClientToken();
-      const res = await apiFetchClient<{ data: TaskCommentRow[] }>(`/v1/tasks/${task.id}/comments`, token);
-      setCommentsByTaskId(prev => ({ ...prev, [task.id]: res.data ?? [] }));
-    } catch {
-      showToast('Failed to load comments');
-    } finally {
-      setLoadingComments(false);
-    }
+    await loadCommentsForTask(task.id, setLoadingComments);
   };
 
   const handleAddComment = async () => {
@@ -633,6 +741,62 @@ export function TaskBoard({
       showToast('Failed to add comment');
     } finally {
       setSavingComment(false);
+    }
+  };
+
+  const advanceBlockerFlow = (resolvedCurrent: boolean) => {
+    if (!resolvedCurrent) {
+      if (blockerIndex < blockedUserTasks.length - 1) {
+        setBlockerIndex(prev => prev + 1);
+      } else {
+        setBlockerFlowOpen(false);
+      }
+      return;
+    }
+
+    const remainingCount = Math.max(blockedUserTasks.length - 1, 0);
+    if (remainingCount === 0) {
+      setBlockerFlowOpen(false);
+      return;
+    }
+    setBlockerIndex(prev => Math.min(prev, remainingCount - 1));
+  };
+
+  const handleBlockerResolution = async () => {
+    if (!currentBlockerTask || !selectedBlockerOption) return;
+    const body = buildBlockerComment(currentBlockerTask, selectedBlockerOption, blockerInstructions);
+    setSavingBlockerResolution(true);
+    try {
+      const token = await getClientToken();
+      const res = await apiFetchClient<{ data: TaskCommentRow; task?: TaskRow | null }>(`/v1/tasks/${currentBlockerTask.id}/comments`, token, {
+        method: 'POST',
+        body: JSON.stringify({
+          body,
+          resolves_blocker: selectedBlockerOption.resolvesBlocker,
+          marks_done: selectedBlockerOption.marksDone,
+          sync_to_description: true,
+        }),
+      });
+      setCommentsByTaskId(prev => ({
+        ...prev,
+        [currentBlockerTask.id]: [...(prev[currentBlockerTask.id] ?? []), res.data],
+      }));
+      if (res.task) {
+        setTasks(prev => prev.map(task => task.id === res.task!.id ? res.task! : task));
+      } else if (selectedBlockerOption.resolvesBlocker || selectedBlockerOption.marksDone) {
+        setTasks(prev => prev.map(task => task.id === currentBlockerTask.id ? {
+          ...task,
+          status: selectedBlockerOption.marksDone ? 'done' : task.status,
+          blocked_on_user: false,
+          updated_at: new Date().toISOString(),
+        } : task));
+      }
+      showToast(selectedBlockerOption.marksDone ? 'Task closed' : selectedBlockerOption.resolvesBlocker ? 'Blocker resolved' : 'Blocker note saved');
+      advanceBlockerFlow(selectedBlockerOption.resolvesBlocker || selectedBlockerOption.marksDone);
+    } catch {
+      showToast('Failed to resolve blocker');
+    } finally {
+      setSavingBlockerResolution(false);
     }
   };
 
@@ -1098,6 +1262,21 @@ export function TaskBoard({
 
         <div className="flex flex-col items-start gap-2 lg:items-end">
           <div className="flex flex-wrap items-center gap-2 lg:justify-end">
+            <Button
+              type="button"
+              variant={blockedUserTasks.length > 0 ? 'default' : 'outline'}
+              size="sm"
+              onClick={openBlockerFlow}
+              disabled={blockedUserTasks.length === 0}
+            >
+              <CheckCircle2 className="h-4 w-4 mr-1.5" />
+              Resolve blockers
+              {blockedUserTasks.length > 0 ? (
+                <span className="ml-1 rounded-full bg-primary-foreground/20 px-1.5 text-xs">
+                  {blockedUserTasks.length}
+                </span>
+              ) : null}
+            </Button>
             <Button onClick={openCreate} size="sm">
               <Plus className="h-4 w-4 mr-1.5" />
               New Task
@@ -1509,6 +1688,215 @@ export function TaskBoard({
         }}
       />
 
+      <Dialog open={blockerFlowOpen} onOpenChange={open => {
+        setBlockerFlowOpen(open);
+        if (!open) {
+          setBlockerIndex(0);
+          setBlockerSolution('approve');
+          setBlockerInstructions('');
+        }
+      }}>
+        <DialogContent className="w-[min(68rem,calc(100vw-2rem))] sm:max-w-5xl">
+          <DialogHeader>
+            <DialogTitle>Resolve Blockers</DialogTitle>
+          </DialogHeader>
+          {currentBlockerTask ? (
+            <div className="mt-2 grid max-h-[calc(100vh-9rem)] gap-4 overflow-y-auto lg:grid-cols-[minmax(0,1fr)_minmax(20rem,0.75fr)]">
+              <div className="space-y-4">
+                <div className="rounded-lg border bg-muted/25 p-3">
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <div className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
+                        Blocker {Math.min(blockerIndex + 1, blockedUserTasks.length)} of {blockedUserTasks.length}
+                      </div>
+                      <h2 className="mt-1 text-base font-semibold text-foreground">{currentBlockerTask.title}</h2>
+                      <div className="mt-2 flex flex-wrap gap-1 text-xs text-muted-foreground">
+                        <Badge variant="outline">{formatProjectLabel(currentBlockerTask.project_slug)}</Badge>
+                        <Badge variant="outline">{PRIORITY_LABEL[currentBlockerTask.priority]}</Badge>
+                        <Badge variant="outline">{TASK_TYPE_LABEL[currentBlockerTask.task_type]}</Badge>
+                        <Badge variant="outline">{STATUS_LABEL[currentBlockerTask.status]}</Badge>
+                        <Badge variant="outline" className="border-amber-500/50 bg-amber-500/10 text-amber-600 dark:text-amber-300">
+                          Needs decision
+                        </Badge>
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setBlockerIndex(index => Math.max(index - 1, 0))}
+                        disabled={blockerIndex === 0 || savingBlockerResolution}
+                      >
+                        Previous
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setBlockerIndex(index => Math.min(index + 1, blockedUserTasks.length - 1))}
+                        disabled={blockerIndex >= blockedUserTasks.length - 1 || savingBlockerResolution}
+                      >
+                        Skip
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {currentBlockerTask.branch_name ? (
+                    <div className="rounded-lg border bg-background p-3">
+                      <div className="text-xs font-medium uppercase tracking-widest text-muted-foreground">Branch</div>
+                      <div className="mt-1 break-all font-mono text-xs text-foreground">{currentBlockerTask.branch_name}</div>
+                    </div>
+                  ) : null}
+                  {currentBlockerTask.commit_sha ? (
+                    <div className="rounded-lg border bg-background p-3">
+                      <div className="text-xs font-medium uppercase tracking-widest text-muted-foreground">Commit</div>
+                      <div className="mt-1 break-all font-mono text-xs text-foreground">{currentBlockerTask.commit_sha}</div>
+                    </div>
+                  ) : null}
+                  {currentBlockerTask.pr_url ? (
+                    <a
+                      href={currentBlockerTask.pr_url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="rounded-lg border bg-background p-3 text-sm hover:bg-muted/30"
+                    >
+                      <div className="text-xs font-medium uppercase tracking-widest text-muted-foreground">Pull Request</div>
+                      <div className="mt-1 inline-flex items-center gap-1 text-foreground">
+                        Open PR <ExternalLink className="h-3.5 w-3.5" />
+                      </div>
+                    </a>
+                  ) : null}
+                  {currentBlockerTask.deployment_url ? (
+                    <a
+                      href={currentBlockerTask.deployment_url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="rounded-lg border bg-background p-3 text-sm hover:bg-muted/30"
+                    >
+                      <div className="text-xs font-medium uppercase tracking-widest text-muted-foreground">Deployment</div>
+                      <div className="mt-1 inline-flex items-center gap-1 text-foreground">
+                        Open deploy <ExternalLink className="h-3.5 w-3.5" />
+                      </div>
+                    </a>
+                  ) : null}
+                  {currentBlockerTask.project_slug && projectRepos?.[currentBlockerTask.project_slug] ? (
+                    <a
+                      href={projectRepos[currentBlockerTask.project_slug]}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="rounded-lg border bg-background p-3 text-sm hover:bg-muted/30"
+                    >
+                      <div className="text-xs font-medium uppercase tracking-widest text-muted-foreground">Repository</div>
+                      <div className="mt-1 inline-flex items-center gap-1 text-foreground">
+                        {projectRepos[currentBlockerTask.project_slug]} <ExternalLink className="h-3.5 w-3.5" />
+                      </div>
+                    </a>
+                  ) : null}
+                </div>
+
+                <div className="rounded-lg border bg-background p-3">
+                  <div className="mb-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">Task details</div>
+                  <pre className="max-h-80 overflow-y-auto whitespace-pre-wrap break-words rounded-md bg-muted/25 p-3 text-xs leading-5 text-foreground [overflow-wrap:anywhere]">
+                    {currentBlockerTask.description || 'No description provided.'}
+                  </pre>
+                </div>
+
+                <div className="rounded-lg border bg-background p-3">
+                  <div className="mb-2 flex items-center justify-between gap-2">
+                    <div className="text-xs font-medium uppercase tracking-widest text-muted-foreground">Recent comments</div>
+                    {loadingBlockerComments ? <span className="text-xs text-muted-foreground">Loading...</span> : null}
+                  </div>
+                  <div className="max-h-64 space-y-3 overflow-y-auto pr-1">
+                    {currentBlockerComments.length === 0 && !loadingBlockerComments ? (
+                      <p className="text-sm text-muted-foreground">No comments yet.</p>
+                    ) : (
+                      currentBlockerComments.slice(-8).map(comment => (
+                        <div key={comment.id} className="min-w-0 overflow-hidden rounded-md border bg-muted/15 p-3">
+                          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs leading-5 text-muted-foreground">
+                            <span className="font-medium text-foreground">{comment.author_type === 'agent' ? 'Agent' : 'You'}</span>
+                            <span>{formatRunTime(comment.created_at)}</span>
+                            {comment.resolves_blocker ? <span className="text-emerald-600 dark:text-emerald-300">resolved blocker</span> : null}
+                            {comment.marks_done ? <span className="text-emerald-600 dark:text-emerald-300">marked done</span> : null}
+                          </div>
+                          <div className="mt-2 whitespace-pre-wrap break-words text-xs leading-5 text-foreground [overflow-wrap:anywhere]">{comment.body}</div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="rounded-lg border bg-card p-3">
+                  <div className="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">
+                    Suggested solutions
+                  </div>
+                  <div className="space-y-2">
+                    {resolutionOptions.map(option => (
+                      <button
+                        key={option.id}
+                        type="button"
+                        onClick={() => setBlockerSolution(option.id)}
+                        className={cn(
+                          'w-full rounded-lg border p-3 text-left transition-colors',
+                          blockerSolution === option.id
+                            ? 'border-primary bg-primary/10 text-foreground'
+                            : 'bg-background hover:bg-muted/35'
+                        )}
+                      >
+                        <div className="text-sm font-medium">{option.label}</div>
+                        <p className="mt-1 text-xs leading-5 text-muted-foreground">{option.description}</p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="rounded-lg border bg-card p-3">
+                  <Label htmlFor="blocker-instructions">Further instructions</Label>
+                  <Textarea
+                    id="blocker-instructions"
+                    value={blockerInstructions}
+                    onChange={event => setBlockerInstructions(event.target.value)}
+                    rows={8}
+                    className="mt-2 min-h-40 resize-y"
+                    placeholder="Add the concrete decision, credential status, Cloudflare setting, OAuth redirect, approval scope, or anything the next agent needs..."
+                  />
+                  <div className="mt-3 rounded-md border bg-background p-2">
+                    <div className="mb-1 text-xs font-medium uppercase tracking-widest text-muted-foreground">Comment preview</div>
+                    <pre className="max-h-48 whitespace-pre-wrap break-words text-xs leading-5 text-muted-foreground">
+                      {buildBlockerComment(currentBlockerTask, selectedBlockerOption, blockerInstructions)}
+                    </pre>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap justify-end gap-2">
+                  <Button type="button" variant="outline" onClick={() => setBlockerFlowOpen(false)} disabled={savingBlockerResolution}>
+                    Close
+                  </Button>
+                  <Button type="button" onClick={handleBlockerResolution} disabled={savingBlockerResolution}>
+                    <MessageSquare className="h-4 w-4" />
+                    {savingBlockerResolution
+                      ? 'Saving...'
+                      : selectedBlockerOption?.id === 'keep_blocked'
+                        ? 'Save and next'
+                        : blockerIndex >= blockedUserTasks.length - 1
+                          ? 'Apply'
+                          : 'Apply and next'}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="mt-2 rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">
+              No decision blockers left.
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
       <Dialog open={!!commentTask} onOpenChange={open => {
         if (!open) {
           setCommentTask(null);
@@ -1536,15 +1924,15 @@ export function TaskBoard({
                 </div>
               </div>
 
-              <div className="max-h-72 space-y-2 overflow-y-auto rounded-lg border bg-background p-3">
+              <div className="max-h-72 space-y-3 overflow-y-auto rounded-lg border bg-background p-3">
                 {loadingComments ? (
                   <p className="text-sm text-muted-foreground">Loading comments...</p>
                 ) : (commentsByTaskId[commentTask.id]?.length ?? 0) === 0 ? (
                   <p className="text-sm text-muted-foreground">No comments yet.</p>
                 ) : (
                   commentsByTaskId[commentTask.id]?.map(comment => (
-                    <div key={comment.id} className="rounded-lg border bg-muted/20 p-3">
-                      <div className="mb-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                    <div key={comment.id} className="min-w-0 overflow-hidden rounded-lg border bg-muted/20 p-3">
+                      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs leading-5 text-muted-foreground">
                         <span className="font-medium text-foreground">{comment.author_type === 'agent' ? 'Agent' : 'You'}</span>
                         <span>{formatRunTime(comment.created_at)}</span>
                         {comment.resolves_blocker ? (
@@ -1560,7 +1948,7 @@ export function TaskBoard({
                           </span>
                         ) : null}
                       </div>
-                      <p className="whitespace-pre-wrap text-sm leading-5 text-foreground">{comment.body}</p>
+                      <div className="mt-2 whitespace-pre-wrap break-words text-sm leading-6 text-foreground [overflow-wrap:anywhere]">{comment.body}</div>
                     </div>
                   ))
                 )}

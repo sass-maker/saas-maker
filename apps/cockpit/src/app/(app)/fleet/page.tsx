@@ -78,9 +78,9 @@ export default async function FleetPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Fleet Matrix</h1>
+          <h1 className="text-2xl font-bold text-white">Fleet Control</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Tooling overview across all your projects. Run <code className="bg-muted px-1 rounded text-xs">fnd fleet scan</code> to refresh.
+            LTS framework baselines, scan metadata, and the managed project list. Run <code className="bg-muted px-1 rounded text-xs">fnd fleet scan</code> to refresh.
           </p>
         </div>
       </div>

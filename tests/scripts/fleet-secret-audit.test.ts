@@ -20,6 +20,7 @@ describe('fleet secret audit helpers', () => {
   it('parses secret names from json and wrangler text output', () => {
     expect(parseSecretNames('[{"name":"AAA"},{"name":"BBB"}]')).toEqual(['AAA', 'BBB']);
     expect(parseSecretNames('The production environment has access to:\nAAA\nBBB\n')).toEqual(['AAA', 'BBB']);
+    expect(parseSecretNames('The production environment has access to:\n  - AAA: Value Encrypted\n')).toEqual(['AAA']);
   });
 
   it('compares required and present secret names without values', () => {

@@ -38,7 +38,7 @@ Note: `apps/docs/vercel.json` is stale — docs deploy to Cloudflare Pages, not 
 - `apps/showcase` - Widget and product showcase.
 - `packages/cli` - `fnd` CLI backed by the generated OpenAPI spec.
 - `packages/blocks` - Shared backend and operational packages.
-- `packages/widgets` - Embeddable feedback, changelog, progress, testimonials, waitlist, and badge widgets.
+- `packages/widgets` - Embeddable feedback, changelog, testimonials, and waitlist widgets.
 - `packages/tooling` - Shared TypeScript, ESLint, Prettier, test, Renovate, and Tailwind config.
 
 ## Current Status

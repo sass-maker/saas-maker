@@ -69,10 +69,8 @@ test.describe('Auth chain', () => {
   for (const route of [
     '/projects/test-project',
     '/projects/test-project/settings',
-    '/secrets',
     '/tasks',
     '/jobs',
-    '/manifest',
     '/fleet',
     '/standards',
     '/cli/auth',

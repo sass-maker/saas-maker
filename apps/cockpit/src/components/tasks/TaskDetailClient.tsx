@@ -204,12 +204,12 @@ export function TaskDetailClient({
           <Badge variant="outline" className="font-mono text-[10px]">{comments.length}</Badge>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-3">
           {comments.length === 0 ? (
             <p className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">No comments yet.</p>
           ) : comments.map(comment => (
-            <article key={comment.id} className="rounded-lg border bg-muted/20 p-3">
-              <div className="mb-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+            <article key={comment.id} className="min-w-0 overflow-hidden rounded-lg border bg-muted/20 p-3">
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs leading-5 text-muted-foreground">
                 <span className="font-medium text-foreground">{comment.author_type === 'agent' ? 'Agent' : 'You'}</span>
                 <span>{formatTime(comment.created_at)}</span>
                 {comment.resolves_blocker ? (
@@ -225,7 +225,7 @@ export function TaskDetailClient({
                   </span>
                 ) : null}
               </div>
-              <p className="whitespace-pre-wrap text-sm leading-5 text-foreground">{comment.body}</p>
+              <div className="mt-2 whitespace-pre-wrap break-words text-sm leading-6 text-foreground [overflow-wrap:anywhere]">{comment.body}</div>
             </article>
           ))}
         </div>

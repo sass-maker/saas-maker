@@ -84,4 +84,4 @@ curl -X POST https://api.sassmaker.com/v1/feedback \
 - [Authentication](/getting-started/authentication) — when to use the API key vs. session token
 - [API overview](/api/overview) — base URL, error envelope, pagination, status codes
 - [Integration guide](/getting-started/integration) — Next.js / Vite wiring
-- [Feedback](/services/feedback), [Analytics](/services/analytics), [Roadmap](/services/roadmap) — per-service references
+- [Feedback](/services/feedback), [Roadmap](/services/roadmap), [Testimonials](/services/testimonials) — per-service references

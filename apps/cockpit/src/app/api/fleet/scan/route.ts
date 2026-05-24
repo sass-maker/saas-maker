@@ -20,7 +20,7 @@ export async function GET() {
     const entries = fs.readdirSync(desktopPath, { withFileTypes: true });
     
     // Load Manifest
-    let manifest: Record<string, string> = {};
+    let manifest: Record<string, { desc?: string; url?: string; tier?: string }> = {};
     if (fs.existsSync(manifestPath)) {
       manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
     }
@@ -36,7 +36,7 @@ export async function GET() {
         if (
           entry.name.startsWith('.') ||
           entry.name === 'node_modules' ||
-          entry.name === 'saas-maker' ||
+          !(entry.name in manifest) ||
           isHiddenDashboardProject({ name: entry.name, slug: entry.name })
         ) continue;
 
@@ -73,7 +73,7 @@ export async function GET() {
 
           projects.push({
             name: pkg.name || entry.name,
-            description: manifest[entry.name] || manifest[pkg.name] || "",
+            description: manifest[entry.name]?.desc || "",
             path: projectPath,
             slug: entry.name,
             type: projectType,

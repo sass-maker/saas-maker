@@ -27,15 +27,24 @@ export function detectTooling(projectPath: string, slug: string): ProjectTooling
   }
 
   const deps = { ...pkg.dependencies, ...pkg.devDependencies };
+  const scripts = pkg.scripts ?? {};
+  const scriptText = Object.values(scripts).join(' ');
+  const majorVersion = (value: unknown) => {
+    if (typeof value !== 'string') return '';
+    return value.replace(/[\^~>=<]/g, '').split('.')[0];
+  };
 
   // Framework
   let framework = '-';
   let frameworkVersion = '';
-  if (deps.next) { framework = 'Next.js'; frameworkVersion = deps.next.replace(/[\^~]/g, '').split('.')[0]; }
-  else if (deps['@remotion/cli']) { framework = 'Remotion'; }
-  else if (deps.astro) { framework = 'Astro'; }
-  else if (deps.vite) { framework = 'Vite'; frameworkVersion = deps.vite.replace(/[\^~]/g, '').split('.')[0]; }
-  else if (existsSync(pkgPath)) framework = 'Node';
+  if (deps.next) { framework = 'Next.js'; frameworkVersion = majorVersion(deps.next); }
+  else if (deps['@remotion/cli']) { framework = 'Remotion'; frameworkVersion = majorVersion(deps['@remotion/cli']); }
+  else if (deps.astro) { framework = 'Astro'; frameworkVersion = majorVersion(deps.astro); }
+  else if (deps.vite) { framework = 'Vite'; frameworkVersion = majorVersion(deps.vite); }
+  else if (existsSync(pkgPath)) {
+    framework = 'Node';
+    frameworkVersion = majorVersion(pkg.engines?.node);
+  }
 
   // DB
   const dbParts: string[] = [];
@@ -55,15 +64,24 @@ export function detectTooling(projectPath: string, slug: string): ProjectTooling
 
   // Deploy
   const deployParts: string[] = [];
-  if (deps['wrangler'] || existsSync(join(projectPath, 'wrangler.toml'))) deployParts.push('CF');
-  if (existsSync(join(projectPath, 'vercel.json')) || Object.keys(deps).some(k => k.startsWith('@vercel/'))) deployParts.push('Vercel');
+  if (
+    deps['wrangler'] ||
+    existsSync(join(projectPath, 'wrangler.toml')) ||
+    existsSync(join(projectPath, 'wrangler.json')) ||
+    existsSync(join(projectPath, 'wrangler.jsonc')) ||
+    scriptText.includes('wrangler')
+  ) deployParts.push('CF');
   if (deps['@tauri-apps/cli']) deployParts.push('Tauri');
   const deploy = deployParts.join('+') || '?';
 
   // Tests
   const testParts: string[] = [];
   if (deps['vitest']) testParts.push('Vitest');
-  if (deps['@playwright/test']) testParts.push('PW');
+  if (
+    deps['@playwright/test'] ||
+    existsSync(join(projectPath, 'playwright.config.ts')) ||
+    existsSync(join(projectPath, 'playwright.config.js'))
+  ) testParts.push('PW');
   if (deps['jest']) testParts.push('Jest');
   const testFrameworks = testParts.join('+') || '-';
 

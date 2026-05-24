@@ -232,48 +232,8 @@ export default function MadeWithPage() {
         )}
 
         <div className="dir-badge-cta">
-          <h2>Add the badge to your site</h2>
-          <p>Get listed in the directory by adding the "Built with SaasMaker" badge.</p>
-          <div className="dir-badge-variants">
-            <div className="dir-badge-preview">
-              <a href="#" className="smb-preview smb-preview--flat">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <rect width="16" height="16" rx="3.5" fill="url(#pg1)" />
-                  <text x="8" y="11.5" textAnchor="middle" fill="white" fontSize="8" fontWeight="900" fontFamily="-apple-system,sans-serif">SM</text>
-                  <defs><linearGradient id="pg1" x1="0" y1="0" x2="16" y2="16"><stop stopColor="#3b82f6" /><stop offset="1" stopColor="#7c3aed" /></linearGradient></defs>
-                </svg>
-                <span>Built with SaasMaker</span>
-              </a>
-              <span className="dir-badge-label">Flat</span>
-            </div>
-            <div className="dir-badge-preview">
-              <a href="#" className="smb-preview smb-preview--outlined">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <rect width="16" height="16" rx="3.5" fill="url(#pg2)" />
-                  <text x="8" y="11.5" textAnchor="middle" fill="white" fontSize="8" fontWeight="900" fontFamily="-apple-system,sans-serif">SM</text>
-                  <defs><linearGradient id="pg2" x1="0" y1="0" x2="16" y2="16"><stop stopColor="#3b82f6" /><stop offset="1" stopColor="#7c3aed" /></linearGradient></defs>
-                </svg>
-                <span>Built with SaasMaker</span>
-              </a>
-              <span className="dir-badge-label">Outlined</span>
-            </div>
-          </div>
-          <div className="dir-code-block">
-            <p className="dir-code-label">React</p>
-            <pre><code>{`import { SaasMakerBadge } from '@saas-maker/badge'
-
-<SaasMakerBadge variant="flat" theme="auto" />`}</code></pre>
-          </div>
-          <div className="dir-code-block">
-            <p className="dir-code-label">HTML</p>
-            <pre><code>{`<a href="https://sassmaker.com/made-with" target="_blank"
-   style="display:inline-flex;align-items:center;gap:6px;padding:5px 10px;
-          background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;
-          text-decoration:none;font-family:sans-serif;font-size:12px;
-          font-weight:500;color:#475569;">
-  Built with SaasMaker
-</a>`}</code></pre>
-          </div>
+          <h2>Submit your product</h2>
+          <p>Share a product using Foundry so it can appear in the directory.</p>
           <button className="btn btn-primary btn-lg" onClick={() => setShowModal(true)}>
             Submit your product →
           </button>

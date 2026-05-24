@@ -26,7 +26,6 @@ export default defineConfig({
 					label: 'The Blocks',
 					items: [
 						{ label: 'Integration Overview', slug: 'getting-started/integration' },
-						{ label: 'Analytics', slug: 'services/analytics' },
 						{ label: 'Feedback', slug: 'services/feedback' },
 						{ label: 'Roadmap', slug: 'services/roadmap' },
 						{ label: 'Testimonials', slug: 'services/testimonials' },
@@ -43,8 +42,6 @@ export default defineConfig({
 						{ label: 'Testimonials Wall', slug: 'widgets/testimonials' },
 						{ label: 'Changelog Timeline', slug: 'widgets/changelog' },
 						{ label: 'Waitlist Form', slug: 'widgets/waitlist' },
-						{ label: 'Analytics UI', slug: 'widgets/analytics' },
-						{ label: 'Made-With Badge', slug: 'widgets/badge' },
 					],
 				},
 				{
