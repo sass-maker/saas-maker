@@ -69,7 +69,7 @@ const AGENT_COMMANDS: Record<string, string> = {
   codex: "codex exec --dangerously-bypass-approvals-and-sandbox {prompt}",
   claude: "claude --dangerously-skip-permissions -p {prompt} --output-format json --no-session-persistence --max-budget-usd ${SYMPHONY_CLAUDE_TASK_BUDGET_USD:-2.00}",
   "claude-work": "claude --dangerously-skip-permissions -p {prompt} --output-format json --no-session-persistence --max-budget-usd ${SYMPHONY_CLAUDE_WORK_TASK_BUDGET_USD:-4.00}",
-  gemini: "npx -y @google/gemini-cli --yolo -p {prompt} --output-format json --skip-trust",
+  gemini: "npx -y @google/gemini-cli --model ${SYMPHONY_GEMINI_MODEL:-gemini-2.5-pro} --yolo -p {prompt} --output-format json --skip-trust",
   cursor: "agent --print --force --trust --output-format json {prompt}",
 };
 
