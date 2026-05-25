@@ -127,6 +127,8 @@ const SEVERE_TEXT_PATTERNS = [
   /localhost:8787/i,
 ];
 
+const DEPRECATED_SAAS_MAKER_ANALYTICS_URL = 'https://api.sassmaker.com/v1/analytics/events';
+
 function parseArgs(argv) {
   const args = {
     project: null,
@@ -183,6 +185,10 @@ function normalizeError(value) {
   return String(value ?? '').replace(/\s+/g, ' ').trim().slice(0, 500);
 }
 
+function isIgnoredResponse(response) {
+  return response.url().startsWith(DEPRECATED_SAAS_MAKER_ANALYTICS_URL);
+}
+
 async function runPageProbe(browser, project, target, args, artifactDir) {
   const page = await browser.newPage();
   const errors = [];
@@ -218,7 +224,12 @@ async function runPageProbe(browser, project, target, args, artifactDir) {
     const resourceType = response.request().resourceType();
     const status = response.status();
     const expectedLoggedOutFetch = ['xhr', 'fetch'].includes(resourceType) && [401, 403].includes(status);
-    if (['document', 'script', 'stylesheet', 'xhr', 'fetch'].includes(resourceType) && status >= 400 && !expectedLoggedOutFetch) {
+    if (
+      ['document', 'script', 'stylesheet', 'xhr', 'fetch'].includes(resourceType) &&
+      status >= 400 &&
+      !expectedLoggedOutFetch &&
+      !isIgnoredResponse(response)
+    ) {
       errors.push({
         type: 'bad-response',
         resourceType,
