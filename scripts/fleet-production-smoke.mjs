@@ -136,6 +136,7 @@ function parseArgs(argv) {
     timeoutMs: 45_000,
     existingTasksFile: DEFAULT_EXISTING_TASKS,
     createTasks: false,
+    screenshotAll: false,
   };
 
   for (let i = 0; i < argv.length; i += 1) {
@@ -147,6 +148,7 @@ function parseArgs(argv) {
     else if (arg === '--fail-on-failure') args.failOnFailure = true;
     else if (arg === '--existing-tasks') args.existingTasksFile = path.resolve(argv[++i] ?? DEFAULT_EXISTING_TASKS);
     else if (arg === '--create-tasks') args.createTasks = true;
+    else if (arg === '--screenshot-all') args.screenshotAll = true;
     else if (arg === '--help' || arg === '-h') {
       printHelp();
       process.exit(0);
@@ -166,6 +168,7 @@ Options:
   --project SLUG        Probe one project.
   --timeout-ms N        Browser navigation timeout per page.
   --json                Print JSON only.
+  --screenshot-all      Capture screenshots for passing pages too.
   --fail-on-failure     Exit non-zero when any probe fails.
   --existing-tasks PATH Path to cached tasks.json for dedupe (default .symphony/tasks.json).
   --create-tasks        Upsert fresh suggestions via symphony-local CLI.
@@ -256,7 +259,7 @@ async function runPageProbe(browser, project, target, args, artifactDir) {
     errors.push({ type: 'navigation-exception', message: normalizeError(error.message) });
   }
 
-  if (errors.length > 0) {
+  if (args.screenshotAll || errors.length > 0) {
     const screenshot = path.join(artifactDir, `${project}-${target.label}.png`);
     await page.screenshot({ path: screenshot, fullPage: true }).catch(() => {});
     warnings.push(`screenshot: ${screenshot}`);
