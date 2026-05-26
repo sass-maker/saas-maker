@@ -140,6 +140,7 @@ function parseArgs(argv) {
     jsonOnly: false,
     failOnFailure: false,
     timeoutMs: 45_000,
+    concurrency: 6,
     existingTasksFile: DEFAULT_EXISTING_TASKS,
     createTasks: false,
     screenshotAll: false,
@@ -150,6 +151,7 @@ function parseArgs(argv) {
     if (arg === '--project') args.project = argv[++i] ?? null;
     else if (arg === '--output-dir') args.outputDir = path.resolve(argv[++i] ?? DEFAULT_OUTPUT_DIR);
     else if (arg === '--timeout-ms') args.timeoutMs = Number.parseInt(argv[++i] ?? '', 10) || args.timeoutMs;
+    else if (arg === '--concurrency') args.concurrency = Number.parseInt(argv[++i] ?? '', 10) || args.concurrency;
     else if (arg === '--json') args.jsonOnly = true;
     else if (arg === '--fail-on-failure') args.failOnFailure = true;
     else if (arg === '--existing-tasks') args.existingTasksFile = path.resolve(argv[++i] ?? DEFAULT_EXISTING_TASKS);
@@ -173,6 +175,7 @@ Usage:
 Options:
   --project SLUG        Probe one project.
   --timeout-ms N        Browser navigation timeout per page.
+  --concurrency N       Number of projects to probe in parallel (default 6).
   --json                Print JSON only.
   --screenshot-all      Capture screenshots for passing pages too.
   --fail-on-failure     Exit non-zero when any probe fails.
@@ -560,6 +563,20 @@ function upsertViaSymphony(payload) {
   return cli.status === 0;
 }
 
+async function mapLimit(items, limit, mapper) {
+  const results = new Array(items.length);
+  let nextIndex = 0;
+  const workers = Array.from({ length: Math.min(limit, items.length) }, async () => {
+    while (nextIndex < items.length) {
+      const currentIndex = nextIndex;
+      nextIndex += 1;
+      results[currentIndex] = await mapper(items[currentIndex], currentIndex);
+    }
+  });
+  await Promise.all(workers);
+  return results;
+}
+
 async function main() {
   const args = parseArgs(process.argv.slice(2));
   const projects = selectedProjects(args);
@@ -570,14 +587,17 @@ async function main() {
   const checks = [];
 
   try {
-    for (const project of projects) {
+    const projectChecks = await mapLimit(projects, Math.max(1, args.concurrency), async (project) => {
+      const checksForProject = [];
       for (const target of TARGETS[project]) {
-        checks.push(await runPageProbe(browser, project, target, args, artifactDir));
+        checksForProject.push(await runPageProbe(browser, project, target, args, artifactDir));
       }
       for (const probe of AUTH_PROBES[project] ?? []) {
-        checks.push(await runAuthProbe(project, probe, args.timeoutMs));
+        checksForProject.push(await runAuthProbe(project, probe, args.timeoutMs));
       }
-    }
+      return checksForProject;
+    });
+    checks.push(...projectChecks.flat());
   } finally {
     await browser.close();
   }
