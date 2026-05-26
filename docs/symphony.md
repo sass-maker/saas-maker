@@ -41,6 +41,7 @@ pnpm symphony dispatch <task-id-prefix> --agent codex-work
 pnpm symphony dispatch <task-id-prefix> --agent-command 'my-agent run --prompt-file {promptFile}'
 pnpm symphony pick --agent claude
 pnpm symphony pick --agent gemini
+pnpm symphony usage
 pnpm symphony:agent-usage --refresh
 pnpm symphony claim <task-id-prefix>
 pnpm symphony done <task-id-prefix>
@@ -81,6 +82,7 @@ permissions by default:
 - `auto` — choose `codex`, `claude`, or `gemini` from task shape plus recent usage.
 - `codex` — `codex exec --dangerously-bypass-approvals-and-sandbox`.
 - `claude` — `claude --dangerously-skip-permissions -p ... --output-format json --no-session-persistence`.
+- `claude-work` — `CLAUDE_CONFIG_DIR="$HOME/.claude-work" claude --dangerously-skip-permissions -p ... --model ${SYMPHONY_CLAUDE_WORK_MODEL:-sonnet} --output-format json --no-session-persistence`.
 - `gemini` — `gemini --yolo -p ... --output-format json --skip-trust`.
 
 For multiple Codex, Claude, Gemini, or other local profiles, add named command
@@ -123,6 +125,9 @@ and a small `--max-budget-usd`; Gemini probes use `--approval-mode plan`,
 `--output-format json`, and `--skip-trust`. The router should treat this as a
 freshness-based signal, not an exact quota API: refresh it before a batch, after
 a few delegated tasks, or whenever an agent returns a budget/rate-limit error.
+Task dispatches do not add a default Claude spend cap; use `pnpm symphony usage`
+or `pnpm symphony usage --refresh` to inspect current usage signals before
+routing larger batches.
 
 Local cockpit dispatch wraps each started command with
 `scripts/symphony-agent-exec.mjs`. The wrapper writes:
@@ -131,7 +136,7 @@ Local cockpit dispatch wraps each started command with
 - `.symphony/runs/<task-id>-<run-id>.json` — exit status, output tails, parsed
   CLI JSON, and parsed usage.
 
-When Claude or Gemini emits JSON usage, the wrapper updates
+When Claude, Claude Work, or Gemini emits JSON usage, the wrapper updates
 `.symphony/agent-usage.json` so future auto routes learn from real task runs,
 not only probes. The run ledger stores the log path in `log_hint`.
 

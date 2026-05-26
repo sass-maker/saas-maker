@@ -180,6 +180,18 @@ beforeEach(() => {
 });
 
 describe('Tasks API', () => {
+  it('GET /v1/tasks passes has_changelog through from db', async () => {
+    mockDb.listTasks.mockResolvedValueOnce([
+      { id: 'task-1', owner_id: 'user-1', project_slug: 'saas-maker', title: 'Feature', description: null, status: 'done', priority: 'medium', task_type: 'feature', size: 'm', dependencies: [], branch_name: null, pr_url: null, pr_status: 'none', commit_sha: null, deployment_url: null, deployment_status: 'none', blocked_on_user: false, has_changelog: true, created_at: '2026-05-26 00:00:00', updated_at: '2026-05-26 00:00:00' },
+      { id: 'task-2', owner_id: 'user-1', project_slug: 'saas-maker', title: 'Bug', description: null, status: 'done', priority: 'high', task_type: 'bug', size: 's', dependencies: [], branch_name: null, pr_url: null, pr_status: 'none', commit_sha: null, deployment_url: null, deployment_status: 'none', blocked_on_user: false, has_changelog: false, created_at: '2026-05-26 00:00:00', updated_at: '2026-05-26 00:00:00' },
+    ]);
+    const res = await request('/v1/tasks');
+    expect(res.status).toBe(200);
+    const json = await res.json() as { data: { id: string; has_changelog: boolean }[] };
+    expect(json.data[0].has_changelog).toBe(true);
+    expect(json.data[1].has_changelog).toBe(false);
+  });
+
   it('GET /v1/tasks forwards status and project filters', async () => {
     const res = await request('/v1/tasks?status=todo&project_slug=free-ai', {
       headers: { Authorization: 'Bearer test-session' },

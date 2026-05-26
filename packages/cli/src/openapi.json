@@ -199,6 +199,32 @@
         }
       }
     },
+    "/v1/changelog/fleet/daily": {
+      "get": {
+        "tags": [
+          "changelog"
+        ],
+        "summary": "GET /v1/changelog/fleet/daily",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/changelog/from-task": {
+      "post": {
+        "tags": [
+          "changelog"
+        ],
+        "summary": "POST /v1/changelog/from-task",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/v1/cli/approve": {
       "post": {
         "tags": [

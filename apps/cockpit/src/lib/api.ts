@@ -1,4 +1,4 @@
-import { API_BASE } from "./api-base";
+import { API_BASE, API_FALLBACK_BASES } from "./api-base";
 
 export async function apiFetch(
   path: string,
@@ -11,18 +11,27 @@ export async function apiFetch(
   };
   if (token) headers["Authorization"] = `Bearer ${token}`;
 
-  let res: Response;
-  try {
-    res = await fetch(`${API_BASE}${path}`, {
-      ...options,
-      headers,
-    });
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown fetch error";
-    throw new Error(`${message} (${API_BASE}${path})`);
+  let lastError: Error | null = null;
+  for (const base of API_FALLBACK_BASES) {
+    try {
+      const res = await fetch(`${base}${path}`, {
+        ...options,
+        headers,
+      });
+      if (res.ok) return res.json();
+      const body = await res.text();
+      const retriable = res.status === 530 || body.includes("error code: 1003");
+      if (!retriable || base === API_FALLBACK_BASES.at(-1)) {
+        throw new Error(body);
+      }
+      lastError = new Error(body);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Unknown fetch error";
+      lastError = new Error(`${message} (${base}${path})`);
+      if (base !== API_FALLBACK_BASES.at(-1)) continue;
+    }
   }
-  if (!res.ok) throw new Error(await res.text());
-  return res.json();
+  throw lastError ?? new Error(`Failed to fetch ${API_BASE}${path}`);
 }
 
 /**

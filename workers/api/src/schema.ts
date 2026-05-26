@@ -167,3 +167,13 @@ export const task_comments = sqliteTable('task_comments', {
   marks_done: integer('marks_done').notNull().default(0),
   created_at: text('created_at').notNull().default(sql`(datetime('now'))`),
 });
+
+export const changelog = sqliteTable('changelog', {
+  id: text('id').primaryKey(),
+  project_id: text('project_id').notNull().references(() => projects.id),
+  day: text('day').notNull(), // YYYY-MM-DD
+  summary: text('summary').notNull(),
+  author: text('author'),
+  source: text('source'), // e.g., 'claude-work', 'gemini-cli', 'manual'
+  created_at: text('created_at').notNull().default(sql`(datetime('now'))`),
+});

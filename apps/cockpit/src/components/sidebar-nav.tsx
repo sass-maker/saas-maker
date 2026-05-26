@@ -15,6 +15,7 @@ import {
   Map,
   Megaphone,
   MessageSquare,
+  ScrollText,
   Settings,
   ShieldCheck,
   Star,
@@ -134,6 +135,19 @@ export function SidebarNav() {
       >
         <ListTodo className="h-4 w-4" />
         Tasks
+      </Link>
+
+      <Link
+        href="/fleet/changelog"
+        className={cn(
+          "flex min-h-11 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
+          pathname.startsWith("/fleet/changelog")
+            ? "bg-muted text-foreground"
+            : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+        )}
+      >
+        <ScrollText className="h-4 w-4" />
+        Daily Log
       </Link>
 
       <div className="mt-4 px-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50">

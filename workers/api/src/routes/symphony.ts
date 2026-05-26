@@ -23,10 +23,23 @@ function optionalNumber(value: unknown): number | null {
   return typeof value === 'number' && Number.isFinite(value) ? value : null;
 }
 
+function isMissingSymphonyMemoryTable(error: unknown) {
+  const message = error instanceof Error ? error.message : String(error);
+  return message.includes('symphony_memory') && message.toLowerCase().includes('no such table');
+}
+
 symphony.get('/memory', requireSession, async (c) => {
   const userId = c.get('userId')!;
   const db = getDb(c.env.DB);
-  const row = await db.getSymphonyMemory(userId);
+  let row;
+  try {
+    row = await db.getSymphonyMemory(userId);
+  } catch (error) {
+    if (isMissingSymphonyMemoryTable(error)) {
+      return c.json({ error: 'Symphony memory storage is not migrated yet.' }, 503);
+    }
+    throw error;
+  }
   return c.json({
     data: row ?? {
       owner_id: userId,
@@ -47,7 +60,15 @@ symphony.put('/memory', requireSession, async (c) => {
   }
 
   const db = getDb(c.env.DB);
-  const data = await db.upsertSymphonyMemory(userId, body.content);
+  let data;
+  try {
+    data = await db.upsertSymphonyMemory(userId, body.content);
+  } catch (error) {
+    if (isMissingSymphonyMemoryTable(error)) {
+      return c.json({ error: 'Symphony memory storage is not migrated yet.' }, 503);
+    }
+    throw error;
+  }
   capture({ distinctId: userId, event: 'symphony_memory_updated' });
   return c.json({ data });
 });

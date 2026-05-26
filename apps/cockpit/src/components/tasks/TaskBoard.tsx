@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
-import { Bot, CheckCircle2, ChevronDown, Clipboard, ExternalLink, FileText, GitBranch, MessageSquare, Pencil, Play, Plus, Save, Terminal, Trash2, X } from 'lucide-react';
+import { Bot, CheckCircle2, ChevronDown, Clipboard, ExternalLink, FileText, GitBranch, MessageSquare, Pencil, Play, Plus, Save, Search, Terminal, Trash2, X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -34,6 +34,7 @@ export interface TaskRow {
   deployment_url: string | null;
   deployment_status: 'none' | 'pending' | 'success' | 'failed';
   blocked_on_user: boolean;
+  has_changelog?: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -67,6 +68,24 @@ export interface SymphonyRunRow {
   metadata?: string | Record<string, unknown>;
   started_at: string;
   created_at?: string;
+}
+
+
+async function taskBoardFetch<T>(path: string, isLocal: boolean, init?: RequestInit): Promise<T> {
+  if (isLocal) {
+    const token = await getClientToken();
+    return apiFetchClient<T>(path, token, init);
+  }
+  const cockpitPath = path.replace(/^\/v1/, '/api/cockpit');
+  const res = await fetch(cockpitPath, {
+    ...init,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(init?.headers ?? {}),
+    },
+  });
+  if (!res.ok) throw new Error((await res.text()) || `Request failed: ${res.status}`);
+  return res.json() as Promise<T>;
 }
 
 function getDependencies(task: TaskRow): string[] {
@@ -170,6 +189,7 @@ interface TaskFormData {
   deployment_url: string;
   deployment_status: TaskRow['deployment_status'];
   blocked_on_user: boolean;
+  dependencies: string[];
 }
 
 const EMPTY_FORM: TaskFormData = {
@@ -185,11 +205,40 @@ const EMPTY_FORM: TaskFormData = {
   deployment_url: '',
   deployment_status: 'none',
   blocked_on_user: false,
+  dependencies: [],
 };
 
 const ALL_PROJECTS = '__all__';
 const UNASSIGNED_PROJECT = '__unassigned__';
 const ALL_PRIORITIES = '__all__';
+const ALL_LANES = '__all__';
+
+type ProductLane = 'P0' | 'P1' | 'P2' | 'Core';
+
+const PRODUCT_LANE_ORDER: ProductLane[] = ['P0', 'P1', 'P2', 'Core'];
+
+const PRODUCT_LANE_LABEL: Record<ProductLane, string> = {
+  P0: 'P0 · Urgent product',
+  P1: 'P1 · Important product',
+  P2: 'P2 · Nice-to-have',
+  Core: 'Core · Platform & upkeep',
+};
+
+const PRODUCT_LANE_BADGE: Record<ProductLane, string> = {
+  P0: 'border-red-500/50 bg-red-500/10 text-red-600 dark:text-red-300',
+  P1: 'border-amber-500/50 bg-amber-500/10 text-amber-600 dark:text-amber-300',
+  P2: 'border-sky-500/50 bg-sky-500/10 text-sky-600 dark:text-sky-300',
+  Core: 'border-zinc-500/50 bg-zinc-500/10 text-zinc-600 dark:text-zinc-300',
+};
+
+const CORE_TASK_TYPES = new Set<TaskRow['task_type']>(['chore', 'cleanup', 'docs', 'research']);
+
+function getProductLane(task: TaskRow): ProductLane {
+  if (CORE_TASK_TYPES.has(task.task_type)) return 'Core';
+  if (task.priority === 'high') return 'P0';
+  if (task.priority === 'medium') return 'P1';
+  return 'P2';
+}
 
 type BlockerResolutionId = 'approve' | 'config' | 'keep_blocked' | 'not_needed';
 
@@ -421,11 +470,13 @@ export function TaskBoard({
   const [savingBlockerResolution, setSavingBlockerResolution] = useState(false);
   const [startingRun, setStartingRun] = useState(false);
   const [form, setForm] = useState<TaskFormData>(EMPTY_FORM);
+  const [relationshipSearch, setRelationshipSearch] = useState('');
   const [saving, setSaving] = useState(false);
   const [savingMemory, setSavingMemory] = useState(false);
   const [agentUsage, setAgentUsage] = useState<SymphonyAgentUsageSnapshot | null>(null);
   const [projectFilter, setProjectFilter] = useState(ALL_PROJECTS);
   const [priorityFilter, setPriorityFilter] = useState(ALL_PRIORITIES);
+  const [laneFilter, setLaneFilter] = useState<typeof ALL_LANES | ProductLane>(ALL_LANES);
   const [showDone, setShowDone] = useState(false);
   const [selectedTaskIds, setSelectedTaskIds] = useState<string[]>([]);
 
@@ -450,8 +501,9 @@ export function TaskBoard({
         projectFilter === ALL_PROJECTS ||
         (projectFilter === UNASSIGNED_PROJECT ? !task.project_slug : task.project_slug === projectFilter);
       const matchesPriority = priorityFilter === ALL_PRIORITIES || task.priority === priorityFilter;
+      const matchesLane = laneFilter === ALL_LANES || getProductLane(task) === laneFilter;
       const matchesStatus = showDone || task.status !== 'done';
-      return matchesProject && matchesPriority && matchesStatus;
+      return matchesProject && matchesPriority && matchesLane && matchesStatus;
     })
   ).sort((a, b) => Number(isTaskBlocked(a, tasksById)) - Number(isTaskBlocked(b, tasksById)));
 
@@ -476,8 +528,7 @@ export function TaskBoard({
     if (commentsByTaskId[taskId]) return commentsByTaskId[taskId];
     setLoadingState?.(true);
     try {
-      const token = await getClientToken();
-      const res = await apiFetchClient<{ data: TaskCommentRow[] }>(`/v1/tasks/${taskId}/comments`, token);
+      const res = await taskBoardFetch<{ data: TaskCommentRow[] }>(`/v1/tasks/${taskId}/comments`, isLocal);
       const comments = res.data ?? [];
       setCommentsByTaskId(prev => ({ ...prev, [taskId]: comments }));
       return comments;
@@ -510,6 +561,7 @@ export function TaskBoard({
   const openCreate = () => {
     setEditTask(null);
     setForm(EMPTY_FORM);
+    setRelationshipSearch('');
     setModalOpen(true);
   };
 
@@ -528,7 +580,9 @@ export function TaskBoard({
       deployment_url: task.deployment_url ?? '',
       deployment_status: task.deployment_status ?? 'none',
       blocked_on_user: task.blocked_on_user,
+      dependencies: getDependencies(task),
     });
+    setRelationshipSearch('');
     setModalOpen(true);
   };
 
@@ -607,8 +661,7 @@ export function TaskBoard({
     let comments = commentsByTaskId[task.id] ?? [];
     if (!commentsByTaskId[task.id]) {
       try {
-        const token = await getClientToken();
-        const res = await apiFetchClient<{ data: TaskCommentRow[] }>(`/v1/tasks/${task.id}/comments`, token);
+        const res = await taskBoardFetch<{ data: TaskCommentRow[] }>(`/v1/tasks/${task.id}/comments`, isLocal);
         comments = res.data ?? [];
         setCommentsByTaskId(prev => ({ ...prev, [task.id]: comments }));
       } catch {
@@ -694,8 +747,7 @@ export function TaskBoard({
     const marksDone = Boolean(commentTask.status !== 'done' && markDoneWithComment);
     setSavingComment(true);
     try {
-      const token = await getClientToken();
-      const res = await apiFetchClient<{ data: TaskCommentRow; task?: TaskRow | null }>(`/v1/tasks/${commentTask.id}/comments`, token, {
+      const res = await taskBoardFetch<{ data: TaskCommentRow; task?: TaskRow | null }>(`/v1/tasks/${commentTask.id}/comments`, isLocal, {
         method: 'POST',
         body: JSON.stringify({
           body: commentText.trim(),
@@ -766,8 +818,7 @@ export function TaskBoard({
     const body = buildBlockerComment(currentBlockerTask, selectedBlockerOption, blockerInstructions);
     setSavingBlockerResolution(true);
     try {
-      const token = await getClientToken();
-      const res = await apiFetchClient<{ data: TaskCommentRow; task?: TaskRow | null }>(`/v1/tasks/${currentBlockerTask.id}/comments`, token, {
+      const res = await taskBoardFetch<{ data: TaskCommentRow; task?: TaskRow | null }>(`/v1/tasks/${currentBlockerTask.id}/comments`, isLocal, {
         method: 'POST',
         body: JSON.stringify({
           body,
@@ -799,14 +850,39 @@ export function TaskBoard({
     }
   };
 
+  const relationshipQuery = relationshipSearch.trim().toLowerCase();
+  const relationshipCandidates = sortTasksByPriority(tasks.filter(task => (
+    task.id !== editTask?.id &&
+    task.status !== 'done' &&
+    (!form.project_slug || !task.project_slug || task.project_slug === form.project_slug)
+  )));
+  const visibleRelationshipCandidates = relationshipCandidates.filter(task => {
+    if (!relationshipQuery) return true;
+    return [
+      task.title,
+      task.description ?? '',
+      task.project_slug ?? '',
+      PRIORITY_LABEL[task.priority],
+      STATUS_LABEL[task.status],
+    ].join(' ').toLowerCase().includes(relationshipQuery);
+  }).slice(0, 40);
+
+  const toggleDependency = (taskId: string, checked: boolean) => {
+    setForm(prev => ({
+      ...prev,
+      dependencies: checked
+        ? Array.from(new Set([...prev.dependencies, taskId]))
+        : prev.dependencies.filter(id => id !== taskId),
+    }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.title.trim()) return;
     setSaving(true);
     try {
-      const token = await getClientToken();
       if (editTask) {
-        const res = await apiFetchClient<{ data: TaskRow }>(`/v1/tasks/${editTask.id}`, token, {
+        const res = await taskBoardFetch<{ data: TaskRow }>(`/v1/tasks/${editTask.id}`, isLocal, {
           method: 'PATCH',
           body: JSON.stringify({
             title: form.title.trim(),
@@ -821,12 +897,13 @@ export function TaskBoard({
             deployment_url: form.deployment_url || null,
             deployment_status: form.deployment_status,
             blocked_on_user: form.blocked_on_user,
+            dependencies: form.dependencies,
           }),
         });
         setTasks(prev => prev.map(t => t.id === editTask.id ? res.data : t));
         showToast('Task updated');
       } else {
-        const res = await apiFetchClient<{ data: TaskRow }>('/v1/tasks', token, {
+        const res = await taskBoardFetch<{ data: TaskRow }>('/v1/tasks', isLocal, {
           method: 'POST',
           body: JSON.stringify({
             title: form.title.trim(),
@@ -841,6 +918,7 @@ export function TaskBoard({
             deployment_url: form.deployment_url || null,
             deployment_status: form.deployment_status,
             blocked_on_user: form.blocked_on_user,
+            dependencies: form.dependencies,
           }),
         });
         setTasks(prev => [res.data, ...prev]);
@@ -857,8 +935,7 @@ export function TaskBoard({
   const handleDelete = async (task: TaskRow) => {
     if (!confirm(`Delete "${task.title}"?`)) return;
     try {
-      const token = await getClientToken();
-      await apiFetchClient(`/v1/tasks/${task.id}`, token, { method: 'DELETE' });
+      await taskBoardFetch(`/v1/tasks/${task.id}`, isLocal, { method: 'DELETE' });
       setTasks(prev => prev.filter(t => t.id !== task.id));
       showToast('Task deleted');
     } catch {
@@ -870,8 +947,7 @@ export function TaskBoard({
     // Optimistic update
     setTasks(prev => prev.map(t => t.id === task.id ? { ...t, status: newStatus } : t));
     try {
-      const token = await getClientToken();
-      await apiFetchClient(`/v1/tasks/${task.id}`, token, {
+      await taskBoardFetch(`/v1/tasks/${task.id}`, isLocal, {
         method: 'PATCH',
         body: JSON.stringify({ status: newStatus }),
       });
@@ -885,8 +961,7 @@ export function TaskBoard({
   const handlePriorityChange = async (task: TaskRow, newPriority: TaskRow['priority']) => {
     setTasks(prev => prev.map(t => t.id === task.id ? { ...t, priority: newPriority } : t));
     try {
-      const token = await getClientToken();
-      await apiFetchClient(`/v1/tasks/${task.id}`, token, {
+      await taskBoardFetch(`/v1/tasks/${task.id}`, isLocal, {
         method: 'PATCH',
         body: JSON.stringify({ priority: newPriority }),
       });
@@ -899,8 +974,7 @@ export function TaskBoard({
   const handleTypeChange = async (task: TaskRow, newType: TaskRow['task_type']) => {
     setTasks(prev => prev.map(t => t.id === task.id ? { ...t, task_type: newType } : t));
     try {
-      const token = await getClientToken();
-      await apiFetchClient(`/v1/tasks/${task.id}`, token, {
+      await taskBoardFetch(`/v1/tasks/${task.id}`, isLocal, {
         method: 'PATCH',
         body: JSON.stringify({ task_type: newType }),
       });
@@ -913,14 +987,14 @@ export function TaskBoard({
   const handleMemorySave = async () => {
     setSavingMemory(true);
     try {
-      const token = await getClientToken();
-      await apiFetchClient('/v1/symphony/memory', token, {
+      await taskBoardFetch('/v1/symphony/memory', isLocal, {
         method: 'PUT',
         body: JSON.stringify({ content: memory }),
       });
       showToast('Memory saved');
-    } catch {
-      showToast('Failed to save memory');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      showToast(`Failed to save memory: ${message.slice(0, 120)}`);
     } finally {
       setSavingMemory(false);
     }
@@ -1239,9 +1313,49 @@ export function TaskBoard({
                 </SelectContent>
               </Select>
             </div>
+            <div className="space-y-1">
+              <Label htmlFor="lane-filter" className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
+                Product lane
+              </Label>
+              <Select value={laneFilter} onValueChange={value => setLaneFilter(value as typeof ALL_LANES | ProductLane)}>
+                <SelectTrigger id="lane-filter" className="h-9 w-48">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={ALL_LANES}>All lanes</SelectItem>
+                  {PRODUCT_LANE_ORDER.map(lane => (
+                    <SelectItem key={lane} value={lane}>{PRODUCT_LANE_LABEL[lane]}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
             <Badge variant="outline" className="font-mono text-[10px]">
               {filteredTasks.length} / {tasks.length} tasks
             </Badge>
+            <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label="Filter by product lane">
+              {PRODUCT_LANE_ORDER.map(lane => {
+                const count = tasks.filter(task => (showDone || task.status !== 'done') && getProductLane(task) === lane).length;
+                const active = laneFilter === lane;
+                return (
+                  <button
+                    key={lane}
+                    type="button"
+                    onClick={() => setLaneFilter(prev => prev === lane ? ALL_LANES : lane)}
+                    className={cn(
+                      'inline-flex h-7 items-center gap-1.5 rounded-md border px-2 font-mono text-[10px] uppercase tracking-wider transition',
+                      PRODUCT_LANE_BADGE[lane],
+                      active ? 'ring-1 ring-foreground/40' : 'opacity-80 hover:opacity-100',
+                    )}
+                    aria-pressed={active}
+                  >
+                    <span>{lane}</span>
+                    <span className="rounded-full bg-background/40 px-1.5 text-[10px] font-semibold">
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
             <Button
               type="button"
               variant="outline"
@@ -1348,185 +1462,276 @@ export function TaskBoard({
       </div>
 
       <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-        <DialogContent className="w-[min(44rem,calc(100vw-2rem))] sm:max-w-2xl">
+        <DialogContent className="w-[min(68rem,calc(100vw-1rem))] max-h-[calc(100vh-1rem)] overflow-hidden p-0 sm:max-w-5xl">
           <DialogHeader>
-            <DialogTitle>{editTask ? 'Edit Task' : 'New Task'}</DialogTitle>
+            <div className="border-b px-5 py-4">
+              <DialogTitle>{editTask ? 'Edit Task' : 'New Task'}</DialogTitle>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Write the task like a Linear issue: clear outcome first, metadata second.
+              </p>
+            </div>
           </DialogHeader>
-          <form onSubmit={handleSubmit} className="mt-2 space-y-5">
-            <div className="space-y-1.5">
-              <Label htmlFor="title">Title *</Label>
-              <Input
-                id="title"
-                value={form.title}
-                onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
-                placeholder="Task title"
-                required
-                autoFocus
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="description">Description</Label>
-              <Textarea
-                id="description"
-                value={form.description}
-                onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
-                placeholder="Optional details..."
-                rows={7}
-                className="min-h-40 resize-y"
-              />
-            </div>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div className="space-y-1.5">
-                <Label>Project</Label>
-                <Select
-                  value={form.project_slug}
-                  onValueChange={v => setForm(f => ({ ...f, project_slug: v === '__none__' ? '' : v }))}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="None" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="__none__">None</SelectItem>
-                    {sortProjectSlugs(projectSlugs).map(slug => (
-                      <SelectItem key={slug} value={slug}>{formatProjectLabel(slug)}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-1.5">
-                <Label>Priority</Label>
-                <Select
-                  value={form.priority}
-                  onValueChange={v => setForm(f => ({ ...f, priority: v }))}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="low">Low</SelectItem>
-                    <SelectItem value="medium">Medium</SelectItem>
-                    <SelectItem value="high">High</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <div className="max-w-xs space-y-1.5">
-              <div className="space-y-1.5">
-                <Label>Type</Label>
-                <Select
-                  value={form.task_type}
-                  onValueChange={v => setForm(f => ({ ...f, task_type: v }))}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.entries(TASK_TYPE_LABEL).map(([value, label]) => (
-                      <SelectItem key={value} value={value}>{label}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <div className="space-y-3 rounded-lg border bg-muted/20 p-3">
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <Label htmlFor="blocked-on-user">Needs decision</Label>
-                  <p className="text-xs text-muted-foreground">
-                    Mark only when this task needs a concrete decision or missing config before an agent can proceed.
-                  </p>
-                </div>
-                <Switch
-                  id="blocked-on-user"
-                  checked={form.blocked_on_user}
-                  onCheckedChange={checked => setForm(f => ({
-                    ...f,
-                    blocked_on_user: checked,
-                    deployment_status: checked ? 'none' : f.deployment_status,
-                  }))}
-                />
-              </div>
-            </div>
-            <div className="space-y-3 rounded-lg border bg-muted/20 p-3">
-              <div>
-                <h3 className="text-sm font-medium text-foreground">PR Lifecycle</h3>
-              </div>
-              <div className="grid gap-3 sm:grid-cols-2">
+          <form onSubmit={handleSubmit} className="flex max-h-[calc(100vh-6rem)] flex-col">
+            <div className="grid min-h-0 flex-1 overflow-y-auto lg:grid-cols-[minmax(0,1fr)_19rem]">
+              <div className="space-y-5 px-5 py-4">
                 <div className="space-y-1.5">
-                  <Label htmlFor="branch-name">Branch</Label>
+                  <Label htmlFor="title" className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
+                    Title
+                  </Label>
                   <Input
-                    id="branch-name"
-                    value={form.branch_name}
-                    onChange={e => setForm(f => ({ ...f, branch_name: e.target.value }))}
-                    placeholder="codex/task-lifecycle"
+                    id="title"
+                    value={form.title}
+                    onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
+                    placeholder="What needs to happen?"
+                    required
+                    autoFocus
+                    className="h-12 rounded-lg bg-background px-3 text-lg font-semibold shadow-none"
+                  />
+                  <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
+                    <Badge variant="outline">{form.project_slug ? formatProjectLabel(form.project_slug) : 'No project'}</Badge>
+                    <Badge variant="outline">{PRIORITY_LABEL[form.priority as TaskRow['priority']] ?? form.priority}</Badge>
+                    <Badge variant="outline">{TASK_TYPE_LABEL[form.task_type as TaskRow['task_type']] ?? form.task_type}</Badge>
+                    {form.blocked_on_user ? (
+                      <Badge variant="outline" className="border-amber-500/50 bg-amber-500/10 text-amber-600 dark:text-amber-300">
+                        Needs decision
+                      </Badge>
+                    ) : null}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="description" className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
+                    Description
+                  </Label>
+                  <Textarea
+                    id="description"
+                    value={form.description}
+                    onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
+                    placeholder="What should change? Why now? What proves it is done?"
+                    rows={11}
+                    className="min-h-80 resize-y bg-background text-sm leading-6 shadow-none"
                   />
                 </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="commit-sha">Commit</Label>
-                  <Input
-                    id="commit-sha"
-                    value={form.commit_sha}
-                    onChange={e => setForm(f => ({ ...f, commit_sha: e.target.value }))}
-                    placeholder="abcdef1"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="pr-url">PR URL</Label>
-                  <Input
-                    id="pr-url"
-                    value={form.pr_url}
-                    onChange={e => setForm(f => ({ ...f, pr_url: e.target.value }))}
-                    placeholder="https://github.com/org/repo/pull/123"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <Label>PR Status</Label>
-                  <Select
-                    value={form.pr_status}
-                    onValueChange={v => setForm(f => ({ ...f, pr_status: v as TaskRow['pr_status'] }))}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Object.entries(PR_STATUS_LABEL).map(([value, label]) => (
-                        <SelectItem key={value} value={value}>{label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="deployment-url">Deployment URL</Label>
-                  <Input
-                    id="deployment-url"
-                    value={form.deployment_url}
-                    onChange={e => setForm(f => ({ ...f, deployment_url: e.target.value }))}
-                    placeholder="https://example.com"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <Label>Deployment</Label>
-                  <Select
-                    value={form.deployment_status}
-                    onValueChange={v => setForm(f => ({
-                      ...f,
-                      deployment_status: v as TaskRow['deployment_status'],
-                      blocked_on_user: v === 'none' ? f.blocked_on_user : false,
-                    }))}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Object.entries(DEPLOYMENT_STATUS_LABEL).map(([value, label]) => (
-                        <SelectItem key={value} value={value}>{label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
               </div>
+
+              <aside className="space-y-4 border-t bg-muted/10 px-5 py-4 lg:border-l lg:border-t-0">
+                <div className="space-y-3">
+                  <h3 className="text-xs font-medium uppercase tracking-widest text-muted-foreground">Properties</h3>
+                  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+                    <div className="space-y-1.5">
+                      <Label>Project</Label>
+                      <Select
+                        value={form.project_slug}
+                        onValueChange={v => setForm(f => ({ ...f, project_slug: v === '__none__' ? '' : v }))}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="None" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="__none__">None</SelectItem>
+                          {sortProjectSlugs(projectSlugs).map(slug => (
+                            <SelectItem key={slug} value={slug}>{formatProjectLabel(slug)}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label>Priority</Label>
+                      <Select
+                        value={form.priority}
+                        onValueChange={v => setForm(f => ({ ...f, priority: v }))}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="low">Low</SelectItem>
+                          <SelectItem value="medium">Medium</SelectItem>
+                          <SelectItem value="high">High</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label>Type</Label>
+                      <Select
+                        value={form.task_type}
+                        onValueChange={v => setForm(f => ({ ...f, task_type: v }))}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Object.entries(TASK_TYPE_LABEL).map(([value, label]) => (
+                            <SelectItem key={value} value={value}>{label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="rounded-lg border bg-background/50 p-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <Label htmlFor="blocked-on-user">Needs decision</Label>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        Use this only for missing approval, config, or product direction.
+                      </p>
+                    </div>
+                    <Switch
+                      id="blocked-on-user"
+                      checked={form.blocked_on_user}
+                      onCheckedChange={checked => setForm(f => ({
+                        ...f,
+                        blocked_on_user: checked,
+                        deployment_status: checked ? 'none' : f.deployment_status,
+                      }))}
+                    />
+                  </div>
+                </div>
+
+                <details className="group rounded-lg border bg-background/50">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-3 py-2.5 text-sm font-medium text-foreground">
+                    <span>Dependencies</span>
+                    <span className="flex items-center gap-2 text-xs font-normal text-muted-foreground">
+                      {form.dependencies.length > 0 ? `${form.dependencies.length} selected` : 'Optional'}
+                      <ChevronDown className="h-4 w-4 transition-transform group-open:rotate-180" />
+                    </span>
+                  </summary>
+                  <div className="border-t px-3 py-3">
+                    <p className="mb-2 text-xs text-muted-foreground">
+                      Only add a blocker when this task cannot run until another task is done.
+                    </p>
+                    <div className="relative">
+                      <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      <Input
+                        value={relationshipSearch}
+                        onChange={event => setRelationshipSearch(event.target.value)}
+                        placeholder="Search related tasks..."
+                        className="h-9 pl-9"
+                      />
+                    </div>
+                  </div>
+                  {relationshipCandidates.length > 0 ? (
+                    <div className="max-h-48 overflow-y-auto border-t">
+                      {visibleRelationshipCandidates.map(candidate => {
+                        const selected = form.dependencies.includes(candidate.id);
+                        return (
+                          <label
+                            key={candidate.id}
+                            className={cn(
+                              'flex cursor-pointer items-start gap-2 border-b px-3 py-2 text-xs last:border-b-0 hover:bg-muted/30',
+                              selected && 'bg-primary/5'
+                            )}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={selected}
+                              onChange={event => toggleDependency(candidate.id, event.target.checked)}
+                              className="mt-0.5 h-4 w-4 rounded border-border text-primary"
+                            />
+                            <span className="min-w-0 flex-1">
+                              <span className="line-clamp-1 font-medium text-foreground">{candidate.title}</span>
+                              <span className="mt-0.5 block truncate text-muted-foreground">
+                                {formatProjectLabel(candidate.project_slug)} · {PRIORITY_LABEL[candidate.priority]} · {STATUS_LABEL[candidate.status]}
+                              </span>
+                            </span>
+                          </label>
+                        );
+                      })}
+                      {visibleRelationshipCandidates.length === 0 ? (
+                        <div className="px-3 py-5 text-center text-xs text-muted-foreground">
+                          No tasks match “{relationshipSearch.trim()}”.
+                        </div>
+                      ) : null}
+                    </div>
+                  ) : (
+                    <p className="border-t px-3 py-5 text-center text-xs text-muted-foreground">
+                      No open tasks match this project.
+                    </p>
+                  )}
+                </details>
+
+                <div className="space-y-3">
+                  <h3 className="text-xs font-medium uppercase tracking-widest text-muted-foreground">Lifecycle</h3>
+                  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="branch-name">Branch</Label>
+                      <Input
+                        id="branch-name"
+                        value={form.branch_name}
+                        onChange={e => setForm(f => ({ ...f, branch_name: e.target.value }))}
+                        placeholder="codex/task-lifecycle"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="commit-sha">Commit</Label>
+                      <Input
+                        id="commit-sha"
+                        value={form.commit_sha}
+                        onChange={e => setForm(f => ({ ...f, commit_sha: e.target.value }))}
+                        placeholder="abcdef1"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="pr-url">PR URL</Label>
+                      <Input
+                        id="pr-url"
+                        value={form.pr_url}
+                        onChange={e => setForm(f => ({ ...f, pr_url: e.target.value }))}
+                        placeholder="https://github.com/org/repo/pull/123"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label>PR Status</Label>
+                      <Select
+                        value={form.pr_status}
+                        onValueChange={v => setForm(f => ({ ...f, pr_status: v as TaskRow['pr_status'] }))}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Object.entries(PR_STATUS_LABEL).map(([value, label]) => (
+                            <SelectItem key={value} value={value}>{label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="deployment-url">Deployment URL</Label>
+                      <Input
+                        id="deployment-url"
+                        value={form.deployment_url}
+                        onChange={e => setForm(f => ({ ...f, deployment_url: e.target.value }))}
+                        placeholder="https://example.com"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label>Deployment</Label>
+                      <Select
+                        value={form.deployment_status}
+                        onValueChange={v => setForm(f => ({
+                          ...f,
+                          deployment_status: v as TaskRow['deployment_status'],
+                          blocked_on_user: v === 'none' ? f.blocked_on_user : false,
+                        }))}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Object.entries(DEPLOYMENT_STATUS_LABEL).map(([value, label]) => (
+                            <SelectItem key={value} value={value}>{label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </div>
+              </aside>
             </div>
-            <div className="flex justify-end gap-2 pt-1">
+            <div className="flex justify-end gap-2 border-t bg-background px-5 py-3">
               <Button type="button" variant="outline" onClick={() => setModalOpen(false)}>
                 Cancel
               </Button>
@@ -2067,6 +2272,7 @@ function TaskList({
           const prereq = tasksById.get(id);
           return !prereq || prereq.status !== 'done';
         });
+        const dependencyTasks = getDependencies(task).map(id => tasksById.get(id)).filter((candidate): candidate is TaskRow => Boolean(candidate));
         const latestRun = latestRunByTaskId.get(task.id);
         const metadataPillClass = 'inline-flex h-7 items-center rounded-full border border-border/60 bg-background/35 px-3 text-xs font-normal text-muted-foreground shadow-none';
         const metadataSelectClass = cn(
@@ -2126,6 +2332,26 @@ function TaskList({
                   {preview}
                 </p>
               )}
+              {dependencyTasks.length > 0 && (
+                <div className="mt-1 flex min-w-0 flex-wrap items-center gap-1 text-[11px] leading-5 text-muted-foreground">
+                  <span className="font-medium text-foreground/80">Blocked by</span>
+                  {dependencyTasks.slice(0, 3).map(dependency => (
+                    <Link
+                      key={dependency.id}
+                      href={`/tasks/${dependency.id}`}
+                      className={cn(
+                        'inline-flex max-w-56 items-center gap-1 truncate rounded-full border px-2 py-0.5 hover:border-border hover:text-foreground',
+                        dependency.status === 'done'
+                          ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-600 dark:text-emerald-300'
+                          : 'border-amber-500/40 bg-amber-500/10 text-amber-600 dark:text-amber-300'
+                      )}
+                    >
+                      <span className="truncate">{dependency.title}</span>
+                    </Link>
+                  ))}
+                  {dependencyTasks.length > 3 ? <span>+{dependencyTasks.length - 3} more</span> : null}
+                </div>
+              )}
               <div className="mt-1 flex min-w-0 items-center gap-1 max-sm:hidden">
                 <span className={cn(metadataPillClass, 'max-w-32 hover:border-border hover:bg-background/70')}>
                   <span className="truncate">{formatProjectLabel(task.project_slug)}</span>
@@ -2158,7 +2384,7 @@ function TaskList({
                   <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3 w-3 -translate-y-1/2 text-muted-foreground opacity-35" />
                 </span>
               </div>
-              {(task.branch_name || task.pr_url || task.commit_sha || task.deployment_url || task.pr_status !== 'none' || task.deployment_status !== 'none') && (
+              {(task.status === 'done' || task.branch_name || task.pr_url || task.commit_sha || task.deployment_url || task.pr_status !== 'none' || task.deployment_status !== 'none') && (
                 <div className="mt-1 flex min-w-0 flex-wrap items-center gap-1 text-[11px] leading-5 text-muted-foreground">
                   {task.branch_name ? (
                     <span className="inline-flex max-w-48 items-center gap-1 truncate rounded-full border border-border/60 bg-background/35 px-2 py-0.5 font-mono">
@@ -2206,6 +2432,13 @@ function TaskList({
                       Deploy <ExternalLink className="h-3 w-3" />
                     </a>
                   ) : null}
+                  {task.status === 'done' && (
+                    task.has_changelog
+                      ? <span className="rounded-full border border-emerald-500/40 bg-emerald-500/10 px-2 py-0.5 text-emerald-600 dark:text-emerald-300">changelog</span>
+                      : (task.task_type === 'feature' || task.task_type === 'bug')
+                        ? <span className="rounded-full border border-amber-500/40 bg-amber-500/10 px-2 py-0.5 text-amber-600 dark:text-amber-300">no changelog</span>
+                        : null
+                  )}
                 </div>
               )}
               {latestRun && (

@@ -246,8 +246,23 @@ export interface ChangelogEntryRecord {
   type: ChangelogEntryType;
   published: boolean;
   published_at: string | null;
+  source: string | null;
+  task_id: string | null;
+  agent: string | null;
+  evidence: string | null;
   created_at: string;
   updated_at: string;
+}
+
+export interface FleetChangelogEntry extends ChangelogEntryRecord {
+  project_slug: string;
+  project_name: string;
+}
+
+export interface FleetChangelogDay {
+  date: string;
+  entries: FleetChangelogEntry[];
+  by_project: Record<string, FleetChangelogEntry[]>;
 }
 
 export interface CreateChangelogEntryRequest {
@@ -256,6 +271,10 @@ export interface CreateChangelogEntryRequest {
   version?: string;
   type?: ChangelogEntryType;
   published?: boolean;
+  source?: string;
+  task_id?: string;
+  agent?: string;
+  evidence?: string;
 }
 
 export interface UpdateChangelogEntryRequest {
@@ -264,6 +283,10 @@ export interface UpdateChangelogEntryRequest {
   version?: string;
   type?: ChangelogEntryType;
   published?: boolean;
+  source?: string;
+  task_id?: string;
+  agent?: string;
+  evidence?: string;
 }
 
 // --- Changelog Widget Props ---

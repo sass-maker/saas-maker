@@ -159,6 +159,7 @@ describe('cockpit Symphony helpers', () => {
 
     expect(claudeRun.command).toContain('--output-format json');
     expect(claudeRun.command).toContain('--no-session-persistence');
+    expect(claudeRun.command).not.toContain('--max-budget-usd');
     expect(geminiRun.command).toContain('--output-format json');
     expect(geminiRun.command).toContain('--skip-trust');
   });

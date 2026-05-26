@@ -9,6 +9,24 @@ import { Textarea } from '@/components/ui/textarea';
 import { apiFetchClient, getClientToken } from '@/lib/api-client';
 import type { SymphonyRunRow, TaskCommentRow, TaskRow } from './TaskBoard';
 
+
+async function taskDetailFetch<T>(path: string, isLocal: boolean, init?: RequestInit): Promise<T> {
+  if (isLocal) {
+    const token = await getClientToken();
+    return apiFetchClient<T>(path, token, init);
+  }
+  const cockpitPath = path.replace(/^\/v1/, '/api/cockpit');
+  const res = await fetch(cockpitPath, {
+    ...init,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(init?.headers ?? {}),
+    },
+  });
+  if (!res.ok) throw new Error((await res.text()) || `Request failed: ${res.status}`);
+  return res.json() as Promise<T>;
+}
+
 function formatTime(value: string) {
   const time = new Date(value).getTime();
   if (!Number.isFinite(time)) return value;
@@ -32,10 +50,12 @@ export function TaskDetailClient({
   initialTask,
   initialComments,
   initialRuns,
+  isLocal,
 }: {
   initialTask: TaskRow;
   initialComments: TaskCommentRow[];
   initialRuns: SymphonyRunRow[];
+  isLocal: boolean;
 }) {
   const [task, setTask] = useState(initialTask);
   const [comments, setComments] = useState(initialComments);
@@ -54,8 +74,7 @@ export function TaskDetailClient({
     setSaving(true);
     setError(null);
     try {
-      const token = await getClientToken();
-      const res = await apiFetchClient<{ data: TaskCommentRow; task?: TaskRow | null }>(`/v1/tasks/${task.id}/comments`, token, {
+      const res = await taskDetailFetch<{ data: TaskCommentRow; task?: TaskRow | null }>(`/v1/tasks/${task.id}/comments`, isLocal, {
         method: 'POST',
         body: JSON.stringify({
           body: commentText.trim(),
@@ -82,7 +101,7 @@ export function TaskDetailClient({
         setMarkDoneWithComment(false);
       }
       if (blockWithComment && !marksDone) {
-        const updated = await apiFetchClient<{ data: TaskRow }>(`/v1/tasks/${task.id}`, token, {
+        const updated = await taskDetailFetch<{ data: TaskRow }>(`/v1/tasks/${task.id}`, isLocal, {
           method: 'PATCH',
           body: JSON.stringify({ blocked_on_user: true }),
         });
@@ -118,6 +137,13 @@ export function TaskDetailClient({
                 Needs decision
               </Badge>
             ) : null}
+            {task.status === 'done' && (
+              task.has_changelog
+                ? <Badge variant="outline" className="border-emerald-500/45 bg-emerald-500/10 text-emerald-600 dark:text-emerald-300">Changelog</Badge>
+                : (task.task_type === 'feature' || task.task_type === 'bug')
+                  ? <Badge variant="outline" className="border-amber-500/45 bg-amber-500/10 text-amber-600 dark:text-amber-300">No changelog</Badge>
+                  : null
+            )}
           </div>
         </div>
       </div>

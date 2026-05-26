@@ -2,10 +2,10 @@ import { redirect } from 'next/navigation';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { apiFetchAuthed } from '@/lib/api-client';
-import { visibleDashboardProjects } from '@/lib/dashboard-projects';
 import { getManifestProjectRepos, getManifestProjectSlugs } from '@/lib/fleet-manifest';
 import { sortProjectSlugs } from '@/lib/fleet-project-names';
 import { TaskBoard } from '@/components/tasks/TaskBoard';
+import { ensureCockpitUser, getCockpitSymphonyMemory, getDefaultCockpitOwnerId, listCockpitProjectSlugs, listCockpitRuns, listCockpitTasks } from '@/lib/cockpit-tasks-store';
 import { isLocalAuthBypassEnabled } from '@/lib/local-auth';
 import { DEFAULT_SYMPHONY_MEMORY } from '@/lib/symphony';
 import { CheckCircle2, ListTodo, ShieldAlert } from 'lucide-react';
@@ -27,34 +27,50 @@ export default async function TasksPage() {
   const loadErrors: string[] = [];
   const manifestProjects = getManifestProjectSlugs();
 
-  try {
-    const res = await apiFetchAuthed<{ data: any[] }>('/v1/tasks');
-    tasks = res.data ?? [];
-  } catch (error) {
-    loadErrors.push(`Tasks failed to load: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    tasks = [];
-  }
+  if (isLocal) {
+    try {
+      const res = await apiFetchAuthed<{ data: any[] }>('/v1/tasks');
+      tasks = res.data ?? [];
+    } catch (error) {
+      loadErrors.push(`Tasks failed to load: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      tasks = [];
+    }
 
-  try {
-    const res = await apiFetchAuthed<{ data: any[] }>('/v1/fleet/metadata');
-    projects = visibleDashboardProjects(res.data ?? []).map((p: any) => p.slug);
-  } catch (error) {
-    loadErrors.push(`Projects failed to load: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    projects = [];
-  }
+    try {
+      const res = await apiFetchAuthed<{ data: any[] }>('/v1/fleet/metadata');
+      projects = (res.data ?? []).map((p: any) => p.slug).filter(Boolean);
+    } catch (error) {
+      loadErrors.push(`Projects failed to load: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      projects = [];
+    }
 
-  try {
-    const res = await apiFetchAuthed<{ data: any[] }>('/v1/symphony/runs?limit=200');
-    runs = res.data ?? [];
-  } catch {
-    runs = [];
-  }
+    try {
+      const res = await apiFetchAuthed<{ data: any[] }>('/v1/symphony/runs?limit=200');
+      runs = res.data ?? [];
+    } catch {
+      runs = [];
+    }
 
-  try {
-    const res = await apiFetchAuthed<{ data: { content?: string } }>('/v1/symphony/memory');
-    memory = res.data?.content?.trim() ? res.data.content : DEFAULT_SYMPHONY_MEMORY;
-  } catch {
-    memory = DEFAULT_SYMPHONY_MEMORY;
+    try {
+      const res = await apiFetchAuthed<{ data: { content?: string } }>('/v1/symphony/memory');
+      memory = res.data?.content?.trim() ? res.data.content : DEFAULT_SYMPHONY_MEMORY;
+    } catch {
+      memory = DEFAULT_SYMPHONY_MEMORY;
+    }
+  } else {
+    const session = await auth.api.getSession({ headers: requestHeaders });
+    try {
+      [tasks, projects, runs, memory] = await Promise.all([
+        listCockpitTasks(),
+        listCockpitProjectSlugs(),
+        listCockpitRuns(200),
+        (getDefaultCockpitOwnerId().then(ownerId => ownerId ?? ensureCockpitUser(session!.user))).then(ownerId =>
+          getCockpitSymphonyMemory(ownerId).then(content => content.trim() ? content : DEFAULT_SYMPHONY_MEMORY)
+        ),
+      ]);
+    } catch (error) {
+      loadErrors.push(`Cockpit D1 read failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   }
 
   return (

@@ -10,6 +10,11 @@ import {
   DISPATCH_AUDIT_ACTION,
   PICK_AUDIT_ACTION,
 } from './lib/symphony-audit.mjs';
+import {
+  buildTaskPassSummary,
+  findReadmeDuplicateTaskWarnings,
+  formatTaskPassSummary,
+} from './lib/symphony-reporting.mjs';
 
 const STATUS_ORDER = ['todo', 'in_progress', 'done'];
 const LOCAL_STATE_DIR = path.join(process.cwd(), '.symphony');
@@ -19,8 +24,8 @@ const LOCAL_AGENT_USAGE_CACHE = path.join(LOCAL_STATE_DIR, 'agent-usage.json');
 const DEFAULT_CLI_COMMAND = 'pnpm --dir packages/cli exec tsx src/index.ts';
 const DEFAULT_AGENT_COMMANDS = {
   codex: 'codex exec --dangerously-bypass-approvals-and-sandbox {prompt}',
-  claude: 'claude --dangerously-skip-permissions -p {prompt} --output-format json --no-session-persistence --max-budget-usd ${SYMPHONY_CLAUDE_TASK_BUDGET_USD:-2.00}',
-  'claude-work': 'CLAUDE_CONFIG_DIR="$HOME/.claude-work" claude --dangerously-skip-permissions -p {prompt} --model ${SYMPHONY_CLAUDE_WORK_MODEL:-sonnet} --output-format json --no-session-persistence --max-budget-usd ${SYMPHONY_CLAUDE_WORK_TASK_BUDGET_USD:-2.00}',
+  claude: 'claude --dangerously-skip-permissions -p {prompt} --output-format json --no-session-persistence',
+  'claude-work': 'CLAUDE_CONFIG_DIR="$HOME/.claude-work" claude --dangerously-skip-permissions -p {prompt} --model ${SYMPHONY_CLAUDE_WORK_MODEL:-sonnet} --output-format json --no-session-persistence',
   gemini: 'npx -y @google/gemini-cli --model ${SYMPHONY_GEMINI_MODEL:-gemini-2.5-pro} --yolo -p {prompt} --output-format json --skip-trust',
   cursor: 'agent --print --force --trust --output-format json {prompt}',
 };
@@ -103,6 +108,7 @@ function parseArgs(argv) {
     taskType: null,
     status: null,
     noCache: false,
+    since: null,
     memory: '',
     memoryPush: false,
     memoryPull: false,
@@ -111,9 +117,13 @@ function parseArgs(argv) {
     agentCommands: resolveAgentCommands(globalConfig),
     agentEnv: resolveAgentEnv(globalConfig),
     forwardedEnv: resolveForwardedEnv(globalConfig),
+    usageRefresh: false,
+    usageMaxAgeMinutes: null,
+    dryRun: false,
+    limit: null,
   };
 
-  const commands = new Set(['list', 'pull', 'sync', 'create', 'claim', 'done', 'reopen', 'type', 'dispatch', 'pick', 'delete', 'memory', 'audit']);
+  const commands = new Set(['list', 'pull', 'sync', 'create', 'claim', 'done', 'reopen', 'type', 'dispatch', 'pick', 'delete', 'memory', 'audit', 'summary', 'usage', 'backfill-changelog']);
   if (argv[0] && !argv[0].startsWith('-') && commands.has(argv[0])) {
     args.command = argv.shift();
   }
@@ -126,12 +136,17 @@ function parseArgs(argv) {
     else if (arg === '--no-cache') args.noCache = true;
     else if (arg === '--push') args.memoryPush = true;
     else if (arg === '--pull') args.memoryPull = true;
+    else if (arg === '--refresh') args.usageRefresh = true;
+    else if (arg === '--dry-run') args.dryRun = true;
+    else if (arg === '--max-age-minutes') args.usageMaxAgeMinutes = argv[++i] ?? null;
+    else if (arg === '--limit') args.limit = Number.parseInt(argv[++i] ?? '', 10);
     else if (arg === '--dispatch') args.dispatch = argv[++i] ?? null;
     else if (arg === '--api-base') args.apiBase = argv[++i];
     else if (arg === '--cli-command') args.cliCommand = argv[++i] ?? DEFAULT_CLI_COMMAND;
     else if (arg === '--description' || arg === '-d') args.description = argv[++i] ?? '';
     else if (arg === '--project' || arg === '-p') args.project = argv[++i] ?? '';
     else if (arg === '--priority') args.priority = argv[++i] ?? 'medium';
+    else if (arg === '--since') args.since = argv[++i] ?? null;
     else if (arg === '--blocked-on-user') args.blockedOnUser = true;
     else if (arg === '--status') args.status = argv[++i] ?? null;
     else if (arg === '--agent') args.agent = argv[++i] ?? 'auto';
@@ -169,17 +184,24 @@ Usage:
   pnpm symphony pick --agent claude     Claim the next runnable todo task (skips tasks with unfinished prerequisites)
   pnpm symphony pick --agent gemini     Claim the next runnable todo task (skips tasks with unfinished prerequisites)
   pnpm symphony claim ID                Move a production task to in_progress
-  pnpm symphony done ID                 Move a production task to done
+  pnpm symphony done ID                 Move a production task to done (auto-creates changelog draft for feature/bug tasks)
   pnpm symphony reopen ID               Move a production task back to todo
   pnpm symphony type ID bug             Set task type: feature, bug, chore, docs, research, cleanup, other
   pnpm symphony create "Title"          Create a production task
   pnpm symphony delete ID               Delete a production task
   pnpm symphony audit                   Show recent Symphony audit events
   pnpm symphony audit ID                Show audit events for one task
+  pnpm symphony summary                 Summarize task pass status and changelog coverage
+  pnpm symphony backfill-changelog      Create missing changelog drafts from old done feature/bug tasks
+  pnpm symphony backfill-changelog --dry-run
+  pnpm symphony usage                   Check cached/refreshable agent usage stats
   pnpm symphony memory                  Show local Symphony operating memory
   pnpm symphony memory --pull           Pull production memory into .symphony/memory.md
   pnpm symphony memory --push           Push .symphony/memory.md to production
   pnpm symphony --watch                 Refresh the task list every 30s
+
+After task batches:
+  Check the fleet changelog in Cockpit Daily Log, or run pnpm symphony list, to confirm done tasks produced the expected product log entries.
 
 Options:
   --api-base URL   API base URL override passed to the Foundry CLI as FND_API_URL
@@ -187,6 +209,11 @@ Options:
   --description    Description for create
   --project SLUG   Project slug for create
   --priority VALUE low, medium, or high for create
+  --since DATE      With summary: only include tasks updated on/after YYYY-MM-DD
+  --dry-run         With backfill-changelog: show what would be created
+  --limit N         With backfill-changelog: cap created entries
+  --refresh         With usage: force a fresh agent usage probe
+  --max-age-minutes With usage: accepted cache age before probing
   --blocked-on-user Mark created task as waiting on a user decision/config
   --agent NAME     Agent profile for dispatch: auto, codex, claude, claude-work, gemini, cursor, or a configured profile
   --agent-command  Command template for custom agents; supports {prompt}, {promptFile}, {workspace}, {taskId}
@@ -205,7 +232,7 @@ Profiles:
     codex   codex exec --dangerously-bypass-approvals-and-sandbox {prompt}
     claude  claude --dangerously-skip-permissions -p {prompt}
     claude-work
-            CLAUDE_CONFIG_DIR="$HOME/.claude-work" claude --dangerously-skip-permissions -p {prompt} --model \${SYMPHONY_CLAUDE_WORK_MODEL:-sonnet} with a capped default task budget
+            CLAUDE_CONFIG_DIR="$HOME/.claude-work" claude --dangerously-skip-permissions -p {prompt} --model \${SYMPHONY_CLAUDE_WORK_MODEL:-sonnet} with structured JSON output for usage capture
     gemini  npx -y @google/gemini-cli --yolo -p {prompt}
     cursor  agent --print --force --trust {prompt}
 
@@ -686,6 +713,105 @@ async function updateTaskStatus(args, status) {
   return nextTasks;
 }
 
+const PRODUCT_TASK_TYPES = new Set(['feature', 'bug']);
+
+async function doneTask(args) {
+  const tasks = await fetchTasks(args);
+  const task = findTask(tasks, args.id);
+  const payload = await apiRequest(args, `/v1/tasks/${task.id}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ status: 'done' }),
+  });
+  await fetchTasks(args);
+  if (!args.json) console.log(`Updated ${shortId(task.id)} to done: ${payload.data.title}`);
+  if (args.json) console.log(JSON.stringify(payload.data, null, 2));
+
+  if (!PRODUCT_TASK_TYPES.has(task.task_type)) return;
+
+  try {
+    const result = await apiRequest(args, '/v1/changelog/from-task', {
+      method: 'POST',
+      body: JSON.stringify({ task_id: task.id, source: 'symphony-cli' }),
+    });
+    if (!args.json) {
+      if (result?.skipped) {
+        if (result.reason === 'duplicate') console.log(`Changelog: draft already exists for this task`);
+        else console.log(`Changelog: skipped (${result.reason ?? 'unknown reason'})`);
+      } else if (result?.data) {
+        console.log(`Changelog draft created: "${task.title}" (publish in Cockpit when ready)`);
+      }
+    }
+  } catch (error) {
+    if (!args.json) console.log(`Changelog: skipped (${error instanceof Error ? error.message.slice(0, 120) : 'request failed'})`);
+  }
+}
+
+async function backfillChangelog(args) {
+  const tasks = await fetchTasks(args);
+  const candidates = tasks
+    .filter((task) => task.status === 'done')
+    .filter((task) => PRODUCT_TASK_TYPES.has(task.task_type))
+    .filter((task) => !task.has_changelog)
+    .filter((task) => task.project_slug)
+    .sort((a, b) => Date.parse(a.updated_at ?? a.created_at ?? '') - Date.parse(b.updated_at ?? b.created_at ?? ''));
+
+  const limit = Number.isFinite(args.limit) && args.limit > 0 ? args.limit : candidates.length;
+  const selected = candidates.slice(0, limit);
+
+  if (args.json && args.dryRun) {
+    console.log(JSON.stringify({ dry_run: true, total_candidates: candidates.length, selected }, null, 2));
+    return;
+  }
+
+  if (args.dryRun) {
+    console.log(`Changelog backfill dry run: ${candidates.length} missing product task changelogs`);
+    for (const task of selected) {
+      console.log(`  - [${shortId(task.id)}] ${task.project_slug}: ${task.title}`);
+    }
+    if (selected.length < candidates.length) {
+      console.log(`  ... ${candidates.length - selected.length} more not shown because of --limit`);
+    }
+    return;
+  }
+
+  const summary = { created: 0, duplicate: 0, skipped: 0, failed: 0, total_candidates: candidates.length };
+  const failures = [];
+  for (const task of selected) {
+    try {
+      const result = await apiRequest(args, '/v1/changelog/from-task', {
+        method: 'POST',
+        body: JSON.stringify({
+          task_id: task.id,
+          source: 'symphony-backfill',
+          evidence: 'Backfilled from completed task metadata.',
+          use_task_updated_at: true,
+        }),
+      });
+      if (result?.skipped) {
+        if (result.reason === 'duplicate') summary.duplicate += 1;
+        else summary.skipped += 1;
+      } else {
+        summary.created += 1;
+      }
+      if (!args.json) console.log(`[${shortId(task.id)}] ${task.project_slug}: ${result?.skipped ? `skipped ${result.reason ?? 'unknown'}` : 'created'}`);
+    } catch (error) {
+      summary.failed += 1;
+      failures.push({ id: task.id, title: task.title, error: error instanceof Error ? error.message : String(error) });
+      if (!args.json) console.log(`[${shortId(task.id)}] ${task.project_slug}: failed`);
+    }
+  }
+
+  await fetchTasks({ ...args, noCache: args.noCache });
+
+  if (args.json) {
+    console.log(JSON.stringify({ ...summary, failures }, null, 2));
+    return;
+  }
+  console.log(
+    `Backfill complete: ${summary.created} created, ${summary.duplicate} duplicate, ${summary.skipped} skipped, ${summary.failed} failed (${summary.total_candidates} candidates)`
+  );
+}
+
 async function updateTaskType(args) {
   const allowedTypes = new Set(['feature', 'bug', 'chore', 'docs', 'research', 'cleanup', 'other']);
   if (!allowedTypes.has(args.taskType)) {
@@ -737,6 +863,12 @@ async function pickTask(args) {
 
 async function createTask(args) {
   if (!args.title?.trim()) throw new Error('Task title is required.');
+  const duplicateWarnings = findReadmeDuplicateTaskWarnings(args.title.trim());
+  for (const warning of duplicateWarnings) {
+    console.warn(
+      `Warning: README Active AI log has a similar task [${warning.id}] ${warning.title} (${warning.status}, ${Math.round(warning.similarity * 100)}% match).`
+    );
+  }
   const payload = await apiRequest(args, '/v1/tasks', {
     method: 'POST',
     body: JSON.stringify({
@@ -750,6 +882,30 @@ async function createTask(args) {
   await fetchTasks(args);
   if (args.json) console.log(JSON.stringify(payload.data, null, 2));
   else console.log(`Created ${shortId(payload.data.id)}: ${payload.data.title}`);
+}
+
+async function showSummary(args) {
+  const tasks = await fetchTasks(args);
+  const summary = buildTaskPassSummary(tasks, { since: args.since });
+  if (args.json) {
+    console.log(JSON.stringify(summary, null, 2));
+    return;
+  }
+  console.log(formatTaskPassSummary(summary));
+}
+
+async function showAgentUsage(args) {
+  const usageArgs = ['scripts/symphony-agent-usage.mjs'];
+  if (args.json) usageArgs.push('--json');
+  if (args.usageRefresh) usageArgs.push('--refresh');
+  if (args.usageMaxAgeMinutes) usageArgs.push('--max-age-minutes', args.usageMaxAgeMinutes);
+  const result = spawnSync(process.execPath, usageArgs, {
+    cwd: process.cwd(),
+    env: process.env,
+    stdio: 'inherit',
+  });
+  if (result.error) throw result.error;
+  if (result.status !== 0) process.exit(result.status ?? 1);
 }
 
 async function deleteTask(args) {
@@ -807,9 +963,12 @@ async function main() {
   const args = parseArgs(process.argv.slice(2));
   if (args.command === 'memory') await manageMemory(args);
   else if (args.command === 'audit') await showAudit(args);
+  else if (args.command === 'summary') await showSummary(args);
+  else if (args.command === 'backfill-changelog') await backfillChangelog(args);
+  else if (args.command === 'usage') await showAgentUsage(args);
   else if (args.command === 'create') await createTask(args);
   else if (args.command === 'claim') await updateTaskStatus(args, 'in_progress');
-  else if (args.command === 'done') await updateTaskStatus(args, 'done');
+  else if (args.command === 'done') await doneTask(args);
   else if (args.command === 'reopen') await updateTaskStatus(args, 'todo');
   else if (args.command === 'type') await updateTaskType(args);
   else if (args.command === 'pick') await pickTask(args);

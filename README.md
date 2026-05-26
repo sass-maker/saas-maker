@@ -63,6 +63,8 @@ pnpm dev:cockpit
 pnpm dev:cockpit:local
 ```
 
+`pnpm dev:cockpit:local` is prod-first for the operator task board: it points local Cockpit at `https://api.sassmaker.com` by default so local and production see the same SaaS Maker task data. To intentionally test against a local Worker/D1 database, run with `NEXT_PUBLIC_API_URL=http://localhost:8787`.
+
 Useful checks:
 
 ```bash
@@ -97,3 +99,18 @@ See [CONTRIBUTING.md](CONTRIBUTING.md). For security issues, use [SECURITY.md](S
 ## License
 
 MIT. See [LICENSE](LICENSE).
+
+<!-- ACTIVE-AI-TASK-LOG:START -->
+## Active AI Task Log
+
+This section is maintained by the SaaS Maker Active-AI product/design loop so future agents do not reopen duplicate UI tasks.
+
+- Business lane: Core/status context
+- Rule: do not create another broad "improve the UI" task unless the acceptance criteria differ materially from the tasks listed here.
+- Source of truth for task status: SaaS Maker task board. README entries are durable context only.
+
+| Task | Status | Priority | Last known note |
+| --- | --- | --- | --- |
+| `564d7c2a` [fleet-audit] saas-maker Fleet Production Smoke failing | done | high | 2026-05-25 18:55:41 |
+| `01d844e7` [needs-user] Expose PostHog connector for fleet analytics audit | todo | medium | 2026-05-25 17:03:12 |
+<!-- ACTIVE-AI-TASK-LOG:END -->

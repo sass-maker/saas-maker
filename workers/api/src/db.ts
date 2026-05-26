@@ -53,6 +53,7 @@ export interface TaskRow {
   deployment_url: string | null;
   deployment_status: 'none' | 'pending' | 'success' | 'failed';
   blocked_on_user: boolean;
+  has_changelog: boolean;
   created_at: string; updated_at: string;
 }
 
@@ -84,6 +85,7 @@ function hydrateTaskRow(row: Record<string, unknown> | null | undefined): TaskRo
     ...row,
     dependencies: parseTaskDependencies(row.dependencies),
     blocked_on_user: row.blocked_on_user === true || row.blocked_on_user === 1,
+    has_changelog: row.has_changelog === true || row.has_changelog === 1,
   } as TaskRow;
 }
 
@@ -716,9 +718,9 @@ export function getDb(d1: D1Database): FeedbackDatabase {
     async createChangelogEntry(input) {
       const publishedInt = input.published ? 1 : 0;
       await d1.prepare(
-        `INSERT INTO changelog_entries (id, project_id, title, content, version, type, published, published_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
-      ).bind(input.id, input.project_id, input.title, input.content, input.version, input.type, publishedInt, input.published_at).run();
+        `INSERT INTO changelog_entries (id, project_id, title, content, version, type, published, published_at, source, task_id, agent, evidence, created_at, updated_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, COALESCE(?, datetime('now')), COALESCE(?, datetime('now')))`
+      ).bind(input.id, input.project_id, input.title, input.content, input.version, input.type, publishedInt, input.published_at, input.source ?? null, input.task_id ?? null, input.agent ?? null, input.evidence ?? null, input.created_at ?? null, input.updated_at ?? input.created_at ?? null).run();
       const row = await d1.prepare(`SELECT * FROM changelog_entries WHERE id = ?`).bind(input.id).first();
       return row as unknown as ChangelogEntryRecord;
     },
@@ -739,6 +741,10 @@ export function getDb(d1: D1Database): FeedbackDatabase {
           sets.push('published_at = NULL');
         }
       }
+      if (input.source !== undefined) { sets.push('source = ?'); values.push(input.source); }
+      if (input.task_id !== undefined) { sets.push('task_id = ?'); values.push(input.task_id); }
+      if (input.agent !== undefined) { sets.push('agent = ?'); values.push(input.agent); }
+      if (input.evidence !== undefined) { sets.push('evidence = ?'); values.push(input.evidence); }
       sets.push("updated_at = datetime('now')");
 
       const sql = `UPDATE changelog_entries SET ${sets.join(', ')} WHERE id = ?`;
@@ -756,6 +762,13 @@ export function getDb(d1: D1Database): FeedbackDatabase {
     async getChangelogEntryById(id) {
       const row = await d1.prepare(`SELECT * FROM changelog_entries WHERE id = ?`).bind(id).first();
       return (row as unknown as ChangelogEntryRecord) || null;
+    },
+
+    async hasChangelogEntryForTask(taskId: string): Promise<boolean> {
+      const row = await d1.prepare(
+        `SELECT id FROM changelog_entries WHERE task_id = ? LIMIT 1`
+      ).bind(taskId).first();
+      return row !== null;
     },
 
     async listChangelogEntries(projectId, page, limit) {
@@ -794,6 +807,18 @@ export function getDb(d1: D1Database): FeedbackDatabase {
         published: (row?.published as number) || 0,
         drafts: (row?.drafts as number) || 0,
       };
+    },
+
+    async listFleetDailyChangelog(_userId: string, date: string) {
+      const { results } = await d1.prepare(
+        `SELECT ce.*, p.slug AS project_slug, p.name AS project_name
+         FROM changelog_entries ce
+         JOIN projects p ON ce.project_id = p.id
+         WHERE date(datetime(ce.created_at, '+5 hours', '+30 minutes')) = ?
+           AND ce.type IN ('feature', 'fix')
+         ORDER BY ce.created_at DESC`
+      ).bind(date).all();
+      return results as unknown as import('@saas-maker/shared-types').FleetChangelogEntry[];
     },
 
     // --- AI Gateway ---
@@ -1235,31 +1260,31 @@ export function getDb(d1: D1Database): FeedbackDatabase {
         input.deployment_status ?? 'none',
         input.blocked_on_user ? 1 : 0,
       ).run();
-      const row = await d1.prepare(`SELECT * FROM tasks WHERE id = ?`).bind(id).first();
+      const row = await d1.prepare(`SELECT t.*, CASE WHEN EXISTS(SELECT 1 FROM changelog_entries ce WHERE ce.task_id = t.id LIMIT 1) THEN 1 ELSE 0 END AS has_changelog FROM tasks t WHERE t.id = ?`).bind(id).first();
       return hydrateTaskRow(row as Record<string, unknown> | null) as TaskRow;
     },
 
     async listTasks(ownerId: string, status?: string, projectSlug?: string): Promise<TaskRow[]> {
-      const conditions = ['owner_id = ?'];
+      const conditions = ['t.owner_id = ?'];
       const values: unknown[] = [ownerId];
       if (status) {
-        conditions.push('status = ?');
+        conditions.push('t.status = ?');
         values.push(status);
       }
       if (projectSlug) {
-        conditions.push('project_slug = ?');
+        conditions.push('t.project_slug = ?');
         values.push(projectSlug);
       }
 
       const { results } = await d1.prepare(
-        `SELECT * FROM tasks WHERE ${conditions.join(' AND ')} ORDER BY created_at DESC`
+        `SELECT t.*, CASE WHEN EXISTS(SELECT 1 FROM changelog_entries ce WHERE ce.task_id = t.id LIMIT 1) THEN 1 ELSE 0 END AS has_changelog FROM tasks t WHERE ${conditions.join(' AND ')} ORDER BY t.created_at DESC`
       ).bind(...values).all();
       return (results ?? []).map((row) => hydrateTaskRow(row as Record<string, unknown>) as TaskRow);
     },
 
     async getTask(id: string, ownerId: string): Promise<TaskRow | null> {
       const row = await d1.prepare(
-        `SELECT * FROM tasks WHERE id = ? AND owner_id = ?`
+        `SELECT t.*, CASE WHEN EXISTS(SELECT 1 FROM changelog_entries ce WHERE ce.task_id = t.id LIMIT 1) THEN 1 ELSE 0 END AS has_changelog FROM tasks t WHERE t.id = ? AND t.owner_id = ?`
       ).bind(id, ownerId).first();
       return hydrateTaskRow(row as Record<string, unknown> | null);
     },
@@ -1290,7 +1315,7 @@ export function getDb(d1: D1Database): FeedbackDatabase {
       const sql = `UPDATE tasks SET ${sets.join(', ')} WHERE id = ? AND owner_id = ?`;
       values.push(id, ownerId);
       await d1.prepare(sql).bind(...values).run();
-      const row = await d1.prepare(`SELECT * FROM tasks WHERE id = ?`).bind(id).first();
+      const row = await d1.prepare(`SELECT t.*, CASE WHEN EXISTS(SELECT 1 FROM changelog_entries ce WHERE ce.task_id = t.id LIMIT 1) THEN 1 ELSE 0 END AS has_changelog FROM tasks t WHERE t.id = ?`).bind(id).first();
       return hydrateTaskRow(row as Record<string, unknown> | null);
     },
 

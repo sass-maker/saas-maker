@@ -93,9 +93,9 @@ function firstJsonObject(text) {
   }
 }
 
-function summarizeClaude(parsed, completedAt) {
+function summarizeClaude(parsed, completedAt, agent = 'claude') {
   return {
-    agent: 'claude',
+    agent,
     available: true,
     ok: parsed?.subtype !== 'error_max_budget_usd' && parsed?.is_error !== true,
     status: parsed?.subtype || (parsed?.is_error ? 'failed' : 'success'),
@@ -123,7 +123,7 @@ function summarizeGemini(parsed, completedAt) {
 }
 
 function updateUsageCache(agent, parsed, completedAt) {
-  if (agent !== 'claude' && agent !== 'gemini') return null;
+  if (agent !== 'claude' && agent !== 'claude-work' && agent !== 'gemini') return null;
   const cache = readJson(USAGE_FILE, {
     sampled_at: completedAt,
     ttl_ms: 45 * 60 * 1000,
@@ -132,9 +132,9 @@ function updateUsageCache(agent, parsed, completedAt) {
 
   cache.sampled_at = completedAt;
   cache.agents ||= {};
-  cache.agents[agent] = agent === 'claude'
-    ? summarizeClaude(parsed, completedAt)
-    : summarizeGemini(parsed, completedAt);
+  cache.agents[agent] = agent === 'gemini'
+    ? summarizeGemini(parsed, completedAt)
+    : summarizeClaude(parsed, completedAt, agent);
 
   writeJson(USAGE_FILE, cache);
   return cache.agents[agent];
