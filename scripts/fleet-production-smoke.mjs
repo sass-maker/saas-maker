@@ -341,13 +341,16 @@ async function runInteraction(page, interaction, errors) {
   }
 }
 
-async function runAuthProbe(project, probe) {
+async function runAuthProbe(project, probe, timeoutMs) {
   const started = Date.now();
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
   const init = {
     method: probe.method,
     headers: probe.body ? { 'Content-Type': 'application/json' } : undefined,
     body: probe.body ? JSON.stringify(probe.body) : undefined,
     redirect: 'manual',
+    signal: controller.signal,
   };
 
   try {
@@ -389,6 +392,8 @@ async function runAuthProbe(project, probe) {
       durationMs: Date.now() - started,
       errors: [{ type: 'auth-exception', message: normalizeError(error.message) }],
     };
+  } finally {
+    clearTimeout(timeout);
   }
 }
 
@@ -570,7 +575,7 @@ async function main() {
         checks.push(await runPageProbe(browser, project, target, args, artifactDir));
       }
       for (const probe of AUTH_PROBES[project] ?? []) {
-        checks.push(await runAuthProbe(project, probe));
+        checks.push(await runAuthProbe(project, probe, args.timeoutMs));
       }
     }
   } finally {
