@@ -1,13 +1,30 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import path from 'node:path';
-import { spawnSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const DEFAULT_FLEET_ROOT = path.resolve(ROOT, '..');
 const DEFAULT_MANIFEST = path.join(ROOT, 'foundry.projects.json');
 const DEFAULT_OUTPUT_DIR = path.join(ROOT, '.symphony', 'fleet-audit');
 const DEFAULT_TIMEOUT_MS = 240_000;
+const DEFAULT_CLOUDFLARE_ACCOUNT_ID = '7d048325699a5acddb44d3be31cf6ba9';
+const DEFAULT_EXPECTED_CLOUDFLARE_BUILD_TOKEN = 'Workers Builds - 2026-05-27 01:49';
+
+const CLOUDFLARE_WORKER_SERVICES = {
+  'email-manager': ['email-manager'],
+  everythingrated: ['everythingrated'],
+  'free-ai': ['free-ai-gateway'],
+  'high-signal': ['high-signal-api', 'high-signal-web'],
+  linkchat: ['linkchat'],
+  'open-historia': ['open-historia'],
+  reader: ['reader'],
+  'resume-tailor': ['resume-tailor'],
+  'saas-maker': ['saasmaker-api', 'saasmaker-dashboard'],
+  significanthobbies: ['significanthobbies'],
+  starboard: ['starboard'],
+  truehire: ['truehire'],
+};
 
 const PROD_TARGETS = {
   anime_list: [
@@ -101,11 +118,15 @@ function parseArgs(argv) {
     runSmoke: true,
     runGithub: true,
     runDirty: true,
+    runCloudflareBuilds: true,
     runPerformance: false,
     runLighthouse: false,
     autofix: false,
     performanceSamples: 3,
     timeoutMs: DEFAULT_TIMEOUT_MS,
+    cloudflareAccountId: process.env.CLOUDFLARE_ACCOUNT_ID || DEFAULT_CLOUDFLARE_ACCOUNT_ID,
+    expectedCloudflareBuildToken:
+      process.env.EXPECTED_CLOUDFLARE_BUILD_TOKEN_NAME || DEFAULT_EXPECTED_CLOUDFLARE_BUILD_TOKEN,
     jsonOnly: false,
     failOnFailure: false,
   };
@@ -119,6 +140,11 @@ function parseArgs(argv) {
     else if (arg === '--skip-smoke') args.runSmoke = false;
     else if (arg === '--skip-github') args.runGithub = false;
     else if (arg === '--skip-dirty') args.runDirty = false;
+    else if (arg === '--skip-cloudflare-builds') args.runCloudflareBuilds = false;
+    else if (arg === '--cloudflare-account-id') args.cloudflareAccountId = argv[++i] ?? args.cloudflareAccountId;
+    else if (arg === '--expected-cloudflare-build-token') {
+      args.expectedCloudflareBuildToken = argv[++i] ?? args.expectedCloudflareBuildToken;
+    }
     else if (arg === '--performance') args.runPerformance = true;
     else if (arg === '--lighthouse') {
       args.runPerformance = true;
@@ -151,6 +177,12 @@ Options:
   --skip-smoke         Skip production URL smoke checks.
   --skip-github        Skip GitHub PR/workflow checks.
   --skip-dirty         Skip local git dirty checks.
+  --skip-cloudflare-builds
+                       Skip Cloudflare Workers Builds health checks.
+  --cloudflare-account-id ID
+                       Cloudflare account id for Workers Builds checks.
+  --expected-cloudflare-build-token NAME
+                       Required Workers Builds API token name.
   --performance        Run frontend curl timing checks.
   --lighthouse         Run frontend Lighthouse checks. Implies --performance.
   --autofix            Attempt safe local remediations (permissions-only) and retry once.
@@ -212,6 +244,142 @@ function networkAudit() {
     status: Number.isFinite(status) ? status : null,
     error: ok ? null : result.stderr || result.error || `curl returned HTTP ${Number.isFinite(status) ? status : 'unknown'}`,
   };
+}
+
+function readCloudflareToken() {
+  if (process.env.CLOUDFLARE_READ_TOKEN) return process.env.CLOUDFLARE_READ_TOKEN;
+  if (process.env.CLOUDFLARE_API_TOKEN) return process.env.CLOUDFLARE_API_TOKEN;
+  try {
+    return execFileSync(
+      'security',
+      ['find-generic-password', '-s', 'foundry-fleet-audit', '-a', 'CLOUDFLARE_READ_TOKEN', '-w'],
+      { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }
+    ).trim();
+  } catch {
+    return null;
+  }
+}
+
+async function cloudflareGet(accountId, token, pathSuffix) {
+  const response = await fetch(`https://api.cloudflare.com/client/v4/accounts/${accountId}${pathSuffix}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const body = await response.json().catch(() => null);
+  if (!response.ok || body?.success === false) {
+    const message = body?.errors?.map((error) => error.message).join('; ') || `HTTP ${response.status}`;
+    throw new Error(message);
+  }
+  return body?.result;
+}
+
+async function cloudflareBuildAuditAll(projects, args, network) {
+  const wantedServices = new Set(
+    projects.flatMap((project) => CLOUDFLARE_WORKER_SERVICES[project.slug] ?? [])
+  );
+  if (!args.runCloudflareBuilds || wantedServices.size === 0) return new Map();
+  if (network && !network.ok) {
+    return new Map(
+      projects.map((project) => [
+        project.slug,
+        {
+          ok: true,
+          skipped: true,
+          error: network.error ?? 'No network',
+          expectedToken: args.expectedCloudflareBuildToken,
+          services: [],
+        },
+      ])
+    );
+  }
+  const token = readCloudflareToken();
+  if (!token) {
+    return new Map(
+      projects.map((project) => [
+        project.slug,
+        {
+          ok: false,
+          skipped: true,
+          error: 'Missing Cloudflare read token in CLOUDFLARE_READ_TOKEN, CLOUDFLARE_API_TOKEN, or macOS keychain item foundry-fleet-audit/CLOUDFLARE_READ_TOKEN',
+          expectedToken: args.expectedCloudflareBuildToken,
+          services: [],
+        },
+      ])
+    );
+  }
+
+  try {
+    const serviceList = await cloudflareGet(args.cloudflareAccountId, token, '/workers/services');
+    const serviceByName = new Map((serviceList ?? []).map((service) => [service.id, service]));
+    const auditByProject = new Map();
+    for (const project of projects) {
+      const serviceNames = CLOUDFLARE_WORKER_SERVICES[project.slug] ?? [];
+      const services = [];
+      for (const serviceName of serviceNames) {
+        const service = serviceByName.get(serviceName);
+        const scriptTag = service?.default_environment?.script_tag;
+        if (!service || !scriptTag) {
+          services.push({
+            name: serviceName,
+            ok: false,
+            error: 'Cloudflare Worker service or production script tag not found',
+          });
+          continue;
+        }
+        const triggers = await cloudflareGet(
+          args.cloudflareAccountId,
+          token,
+          `/builds/workers/${scriptTag}/triggers`
+        );
+        const trigger = triggers?.[0] ?? null;
+        const builds = await cloudflareGet(
+          args.cloudflareAccountId,
+          token,
+          `/builds/workers/${scriptTag}/builds?per_page=1`
+        );
+        const build = builds?.[0] ?? null;
+        const tokenOk = trigger?.build_token_name === args.expectedCloudflareBuildToken;
+        const buildStopped = build?.status === 'stopped';
+        const buildSucceeded = build?.build_outcome === 'success';
+        services.push({
+          name: serviceName,
+          ok: Boolean(tokenOk && buildStopped && buildSucceeded),
+          tokenName: trigger?.build_token_name ?? null,
+          expectedToken: args.expectedCloudflareBuildToken,
+          status: build?.status ?? null,
+          outcome: build?.build_outcome ?? null,
+          commit: build?.build_trigger_metadata?.commit_hash?.slice(0, 7) ?? null,
+          createdOn: build?.created_on ?? null,
+          error: tokenOk
+            ? buildStopped && buildSucceeded
+              ? null
+              : `Latest build is ${build?.status ?? 'missing'} / ${build?.build_outcome ?? 'unknown'}`
+            : `Build trigger token is ${trigger?.build_token_name ?? 'missing'}`,
+        });
+      }
+      if (serviceNames.length > 0) {
+        auditByProject.set(project.slug, {
+          ok: services.every((service) => service.ok),
+          skipped: false,
+          expectedToken: args.expectedCloudflareBuildToken,
+          services,
+        });
+      }
+    }
+    return auditByProject;
+  } catch (error) {
+    return new Map(
+      projects.map((project) => [
+        project.slug,
+        {
+          ok: false,
+          skipped: true,
+          error: error.message,
+          expectedToken: args.expectedCloudflareBuildToken,
+          services: [],
+        },
+      ])
+    );
+  }
 }
 
 function readJson(file) {
@@ -641,6 +809,10 @@ function classify(projectAudit) {
   if (projectAudit.dirty && !projectAudit.dirty.ok) issues.push(`local dirty (${projectAudit.dirty.entries.length})`);
   if (projectAudit.github?.prs?.length) issues.push(`open PRs (${projectAudit.github.prs.length})`);
   if (projectAudit.github?.failedWorkflows?.length) issues.push(`failed workflows (${projectAudit.github.failedWorkflows.length})`);
+  if (projectAudit.cloudflareBuilds && !projectAudit.cloudflareBuilds.ok) {
+    const failedCount = projectAudit.cloudflareBuilds.services?.filter((service) => !service.ok).length ?? 0;
+    issues.push(`Cloudflare builds unhealthy (${failedCount})`);
+  }
   if (projectAudit.smoke && !projectAudit.smoke.ok) issues.push('prod smoke failed');
   if (projectAudit.local && !projectAudit.local.ok) issues.push('local check failed');
   if (projectAudit.performance && !projectAudit.performance.ok) {
@@ -677,6 +849,16 @@ function buildTaskSuggestions(projectAudit) {
         title: `[fleet-audit] ${slug}: ${smoke.label} prod smoke failed`,
         priority: 'high',
         evidence: smoke.url,
+      });
+    }
+  }
+  for (const service of projectAudit.cloudflareBuilds?.services ?? []) {
+    if (!service.ok) {
+      suggestions.push({
+        project: slug,
+        title: `[fleet-audit] ${slug}: ${service.name} Cloudflare build unhealthy`,
+        priority: 'high',
+        evidence: service.error,
       });
     }
   }
@@ -747,6 +929,22 @@ function markdown(report) {
         lines.push(`- Smoke: ${project.smoke.checks.map((check) => `${check.label} ${check.status}${check.ok ? '' : ' FAIL'}`).join(', ') || 'no targets'}`);
       }
     }
+    if (project.cloudflareBuilds) {
+      if (project.cloudflareBuilds.skipped) {
+        lines.push(`- Cloudflare builds: skipped (${project.cloudflareBuilds.error})`);
+      } else {
+        lines.push(
+          `- Cloudflare builds: ${
+            project.cloudflareBuilds.services
+              .map((service) => {
+                const state = service.ok ? 'PASS' : 'FAIL';
+                return `${service.name} ${state} ${service.status ?? '?'} ${service.outcome ?? '?'} token=${service.tokenName ?? '?'}`;
+              })
+              .join(', ') || 'no Workers Builds targets'
+          }`
+        );
+      }
+    }
     if (project.local) {
       lines.push(`- Local: ${project.local.checks.map((check) => `${check.command} ${check.ok ? 'PASS' : 'FAIL'}`).join(', ') || 'no scripts'}`);
     }
@@ -779,11 +977,13 @@ async function main() {
   const args = parseArgs(process.argv.slice(2));
   const network = networkAudit();
   const projects = loadProjects(args);
+  const cloudflareBuilds = await cloudflareBuildAuditAll(projects, args, network);
   const audited = [];
   for (const project of projects) {
     const entry = { ...project, network };
     if (args.runDirty) entry.dirty = dirtyAudit(project);
     if (args.runGithub) entry.github = githubAudit(entry);
+    if (cloudflareBuilds.has(project.slug)) entry.cloudflareBuilds = cloudflareBuilds.get(project.slug);
     if (args.runSmoke) entry.smoke = smokeAudit(entry);
     if (args.runLocal) entry.local = localAudit(project, args.timeoutMs, { autofix: args.autofix });
     if (args.runPerformance) {

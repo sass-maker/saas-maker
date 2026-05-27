@@ -27,6 +27,7 @@
     "fleet:prod-smoke": "node scripts/fleet-production-smoke.mjs",
     "fleet:secret-audit": "node scripts/fleet-secret-audit.mjs",
     "fleet:monitoring-audit": "node scripts/fleet-monitoring-audit.mjs",
+    "fleet:cf-builds": "node scripts/fleet-audit.mjs --skip-local --skip-github --skip-dirty --skip-smoke --fail-on-failure",
     "symphony": "FND_API_URL=${FND_API_URL:-https://api.sassmaker.com} node scripts/symphony-local.mjs",
     "symphony:agent-usage": "node scripts/symphony-agent-usage.mjs",
     "droid:local": "node scripts/droid-headless-local.mjs",
