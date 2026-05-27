@@ -1,8 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
 import {
   Bot,
   Brain,
@@ -22,15 +19,19 @@ import {
   Users,
   Zap,
 } from "lucide-react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { cn } from "@/lib/utils";
 import { apiFetchClient, getClientToken } from "@/lib/api-client";
 import { visibleDashboardProjects } from "@/lib/dashboard-projects";
+import { cn } from "@/lib/utils";
 
 interface Project {
   id: string;
@@ -148,6 +149,19 @@ export function SidebarNav() {
       >
         <ScrollText className="h-4 w-4" />
         Daily Log
+      </Link>
+
+      <Link
+        href="/marketing"
+        className={cn(
+          "flex min-h-11 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
+          pathname.startsWith("/marketing")
+            ? "bg-muted text-foreground"
+            : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+        )}
+      >
+        <Megaphone className="h-4 w-4" />
+        Marketing
       </Link>
 
       <div className="mt-4 px-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50">

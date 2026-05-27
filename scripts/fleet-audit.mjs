@@ -11,6 +11,61 @@ const DEFAULT_TIMEOUT_MS = 240_000;
 const DEFAULT_CLOUDFLARE_ACCOUNT_ID = '7d048325699a5acddb44d3be31cf6ba9';
 const DEFAULT_EXPECTED_CLOUDFLARE_BUILD_TOKEN = 'Workers Builds - 2026-05-27 01:49';
 
+const BUSINESS_LANES = {
+  reader: 'P0 Can make money',
+  'swe-interview-prep': 'P0 Can make money',
+  starboard: 'P0 Can make money',
+  linkchat: 'P0 Can make money',
+  'free-ai': 'P1 Explore',
+  'today-little-log': 'P1 Explore',
+  significanthobbies: 'P1 Explore',
+  truehire: 'P1 Explore',
+  everythingrated: 'P1 Explore',
+  anime_list: 'P2 Watch',
+  looptv: 'P2 Watch',
+  'open-historia': 'P2 Watch',
+  'email-manager': 'P2 Watch',
+};
+
+const MARKETING_ASSETS = [
+  {
+    id: 'hooks',
+    file: 'docs/marketing/hooks.md',
+    title: 'write landing-page hook variants',
+    why: '3-second value and positioning',
+  },
+  {
+    id: 'demo-script',
+    file: 'docs/marketing/demo-60s.md',
+    title: 'write 60-second demo script',
+    why: 'repeatable video/demo proof',
+  },
+  {
+    id: 'social-posts',
+    file: 'docs/marketing/social-posts.md',
+    title: 'draft reusable social launch posts',
+    why: 'distribution without account access',
+  },
+  {
+    id: 'seo-keywords',
+    file: 'docs/marketing/seo-keywords.md',
+    title: 'map SEO search intents',
+    why: 'durable inbound options',
+  },
+  {
+    id: 'comparison',
+    file: 'docs/marketing/comparison-page.md',
+    title: 'draft comparison page copy',
+    why: 'alternative-aware conversion',
+  },
+  {
+    id: 'event-map',
+    file: 'docs/marketing/event-map.md',
+    title: 'define marketing event map',
+    why: 'measure channel and CTA learning',
+  },
+];
+
 const CLOUDFLARE_WORKER_SERVICES = {
   'email-manager': ['email-manager'],
   everythingrated: ['everythingrated'],
@@ -121,9 +176,11 @@ function parseArgs(argv) {
     runCloudflareBuilds: true,
     runPerformance: false,
     runLighthouse: false,
+    runMarketing: false,
     autofix: false,
     performanceSamples: 3,
     timeoutMs: DEFAULT_TIMEOUT_MS,
+    lighthouseTimeoutMs: 90_000,
     cloudflareAccountId: process.env.CLOUDFLARE_ACCOUNT_ID || DEFAULT_CLOUDFLARE_ACCOUNT_ID,
     expectedCloudflareBuildToken:
       process.env.EXPECTED_CLOUDFLARE_BUILD_TOKEN_NAME || DEFAULT_EXPECTED_CLOUDFLARE_BUILD_TOKEN,
@@ -146,6 +203,7 @@ function parseArgs(argv) {
       args.expectedCloudflareBuildToken = argv[++i] ?? args.expectedCloudflareBuildToken;
     }
     else if (arg === '--performance') args.runPerformance = true;
+    else if (arg === '--marketing') args.runMarketing = true;
     else if (arg === '--lighthouse') {
       args.runPerformance = true;
       args.runLighthouse = true;
@@ -155,6 +213,9 @@ function parseArgs(argv) {
       args.performanceSamples = Math.max(1, Number.parseInt(argv[++i] ?? '', 10) || args.performanceSamples);
     }
     else if (arg === '--timeout-ms') args.timeoutMs = Number.parseInt(argv[++i] ?? '', 10) || DEFAULT_TIMEOUT_MS;
+    else if (arg === '--lighthouse-timeout-ms') {
+      args.lighthouseTimeoutMs = Math.max(10_000, Number.parseInt(argv[++i] ?? '', 10) || 90_000);
+    }
     else if (arg === '--json') args.jsonOnly = true;
     else if (arg === '--fail-on-failure') args.failOnFailure = true;
     else if (arg === '--help' || arg === '-h') {
@@ -184,11 +245,14 @@ Options:
   --expected-cloudflare-build-token NAME
                        Required Workers Builds API token name.
   --performance        Run frontend curl timing checks.
-  --lighthouse         Run frontend Lighthouse checks. Implies --performance.
+  --marketing          Audit agent-executable marketing assets and add task suggestions.
+  --lighthouse         Run frontend Lighthouse checks (90s default per call + progressive latest.* writes on partials; implies --performance). Safe to rerun.
   --autofix            Attempt safe local remediations (permissions-only) and retry once.
   --performance-samples N
                        Number of curl timing samples per frontend URL.
   --timeout-ms N       Timeout per local script command.
+  --lighthouse-timeout-ms N
+                       Timeout per Lighthouse run (default 90000).
   --json               Print JSON only.
   --fail-on-failure    Exit 1 when any project is classified as fail.
 `);
@@ -402,6 +466,8 @@ function loadProjects(args) {
       slug,
       desc: meta?.desc ?? '',
       url: meta?.url ?? '',
+      tier: meta?.tier ?? '',
+      businessLane: BUSINESS_LANES[slug] ?? (meta?.tier === 'core' ? 'Core/context' : 'Unclassified'),
       repo: repoFromUrl(meta?.url),
       path: path.join(args.fleetRoot, slug),
     }))
@@ -600,7 +666,12 @@ function curlTiming(target) {
   }
 }
 
-function lighthouseAudit(target) {
+// Bounded per-Lighthouse + watchdog logging + partial writes (Symphony task 87dd6f2b-4b67-431c-9c92-c067d38c6843).
+// Addresses 2026-05-27 hang after child exit: tighter default timeout, start/end logs on every call,
+// and progressive latest.* persistence so one failure never loses prior project data.
+function lighthouseAudit(target, timeoutMs = 90_000) {
+  const t0 = Date.now();
+  console.error(`[watchdog] lighthouse start ${target.url} (timeout ${Math.round(timeoutMs / 1000)}s)`);
   const result = run('pnpm', [
     'exec',
     'lighthouse',
@@ -610,7 +681,15 @@ function lighthouseAudit(target) {
     '--output=json',
     '--output-path=stdout',
     '--only-categories=performance,accessibility,best-practices,seo',
-  ], { timeoutMs: 180_000 });
+  ], { timeoutMs });
+  const dt = ((Date.now() - t0) / 1000).toFixed(1);
+  if (result.timedOut) {
+    console.error(`[watchdog] lighthouse TIMEOUT ${target.url} after ${dt}s`);
+  } else if (!result.ok) {
+    console.error(`[watchdog] lighthouse FAIL ${target.url} after ${dt}s: ${result.error || result.status || 'non-zero exit'}`);
+  } else {
+    console.error(`[watchdog] lighthouse OK ${target.url} after ${dt}s`);
+  }
   if (!result.ok) {
     return {
       ok: false,
@@ -705,7 +784,7 @@ function performanceAudit(project, options) {
       budgetStatus('totalMs', summary.totalMs, PERFORMANCE_BUDGETS.totalMs),
       budgetStatus('downloadBytes', summary.sizeDownload, PERFORMANCE_BUDGETS.downloadBytes),
     ].filter(Boolean);
-    const lighthouse = options.lighthouse ? lighthouseAudit(target) : null;
+    const lighthouse = options.lighthouse ? lighthouseAudit(target, options.lighthouseTimeoutMs ?? 90_000) : null;
     const hardFailure = samples.every((sample) => !sample.ok) || lighthouse?.error;
     return {
       label: target.label,
@@ -722,6 +801,71 @@ function performanceAudit(project, options) {
     ok: checks.every((check) => check.ok),
     hasHardFailure: checks.some((check) => check.hardFailure),
     checks,
+  };
+}
+
+function readTextIfExists(file) {
+  try {
+    return fs.readFileSync(file, 'utf8');
+  } catch {
+    return '';
+  }
+}
+
+function marketingAudit(project) {
+  const repoExists = fs.existsSync(project.path);
+  if (!repoExists) {
+    return {
+      ok: false,
+      skipped: true,
+      businessLane: project.businessLane,
+      error: 'Local repo missing',
+      present: [],
+      missing: MARKETING_ASSETS.map((asset) => asset.id),
+      suggestions: [],
+    };
+  }
+
+  const readme = readTextIfExists(path.join(project.path, 'README.md'));
+  const present = [];
+  const missing = [];
+  const assetStatus = MARKETING_ASSETS.map((asset) => {
+    const fullPath = path.join(project.path, asset.file);
+    const exists = fs.existsSync(fullPath);
+    if (exists) present.push(asset.id);
+    else missing.push(asset.id);
+    return { ...asset, exists };
+  });
+  const hasMarketingIndex = /docs\/marketing|marketing assets|marketing/i.test(readme);
+  const isMoneyLane = project.businessLane.startsWith('P0');
+  const isExploreLane = project.businessLane.startsWith('P1');
+  const maxSuggestions = isMoneyLane ? 6 : isExploreLane ? 4 : 1;
+  const suggestions = assetStatus
+    .filter((asset) => !asset.exists)
+    .slice(0, maxSuggestions)
+    .map((asset) => ({
+      project: project.slug,
+      title: `${project.slug}: marketing ${asset.title}`,
+      priority: isMoneyLane ? 'high' : isExploreLane ? 'medium' : 'low',
+      evidence: `missing ${asset.file}`,
+      valueProof: asset.why,
+      description: [
+        `Business lane: ${project.businessLane}.`,
+        'Agent-executable marketing task; no personal-account posting, secrets, deploy, or production config changes.',
+        `Create ${asset.file} for ${project.desc || project.slug}.`,
+        'Acceptance: asset exists, copy is simple, includes audience/problem/promise/CTA where relevant, and links from README/docs marketing index if the project has one.',
+        `Priority rationale: ${asset.why}; selected over generic UI polish because marketing now needs reusable distribution assets and measurement.`,
+      ].join(' '),
+    }));
+
+  return {
+    ok: missing.length === 0 && hasMarketingIndex,
+    skipped: false,
+    businessLane: project.businessLane,
+    hasMarketingIndex,
+    present,
+    missing,
+    suggestions,
   };
 }
 
@@ -881,6 +1025,9 @@ function buildTaskSuggestions(projectAudit) {
       });
     }
   }
+  for (const task of projectAudit.marketing?.suggestions ?? []) {
+    suggestions.push(task);
+  }
   return suggestions;
 }
 
@@ -914,6 +1061,7 @@ function markdown(report) {
   for (const project of report.projects) {
     lines.push('');
     lines.push(`### ${project.slug}`);
+    lines.push(`- Business lane: ${project.businessLane ?? 'Unclassified'}`);
     if (project.github) {
       if (project.github.skipped) {
         lines.push(`- PRs: skipped (no network)`);
@@ -965,6 +1113,19 @@ function markdown(report) {
         lines.push(`- Performance: ${perfLines.join(', ') || 'no frontend targets'}`);
       }
     }
+    if (project.marketing) {
+      if (project.marketing.skipped) {
+        lines.push(`- Marketing: skipped (${project.marketing.error})`);
+      } else {
+        lines.push(
+          `- Marketing: ${
+            project.marketing.ok ? 'PASS' : 'GAPS'
+          } lane=${project.marketing.businessLane}; assets ${project.marketing.present.length}/${MARKETING_ASSETS.length}; missing ${
+            project.marketing.missing.join(', ') || '-'
+          }`
+        );
+      }
+    }
     if (project.dirty) {
       lines.push(`- Dirty files: ${project.dirty.entries.length}`);
     }
@@ -987,15 +1148,32 @@ async function main() {
     if (args.runSmoke) entry.smoke = smokeAudit(entry);
     if (args.runLocal) entry.local = localAudit(project, args.timeoutMs, { autofix: args.autofix });
     if (args.runPerformance) {
-      entry.performance = performanceAudit(entry, {
-        samples: args.performanceSamples,
-        lighthouse: args.runLighthouse,
-      });
+      try {
+        entry.performance = performanceAudit(entry, {
+          samples: args.performanceSamples,
+          lighthouse: args.runLighthouse,
+          lighthouseTimeoutMs: args.lighthouseTimeoutMs,
+        });
+      } catch (e) {
+        console.error(`[watchdog] performance/LH error for ${project.slug}: ${e.message}`);
+        entry.performance = {
+          ok: false,
+          hasHardFailure: true,
+          checks: [],
+          error: String(e.message || e),
+          skipped: false,
+        };
+      }
     }
+    if (args.runMarketing) entry.marketing = marketingAudit(entry);
     Object.assign(entry, classify(entry));
     entry.taskSuggestions = buildTaskSuggestions(entry);
     audited.push(entry);
+    // Progressive persist after every project: latest.json/latest.md always reflect completed work
+    // (preserves output on partial perf/LH failures per Symphony task 87dd6f2b...).
+    persistReport(audited, network, args);
   }
+  // Final report already persisted; console output only.
   const report = {
     generatedAt: new Date().toISOString(),
     network,
@@ -1003,19 +1181,30 @@ async function main() {
     taskSuggestions: audited.flatMap((project) => project.taskSuggestions),
   };
 
-  fs.mkdirSync(args.outputDir, { recursive: true });
-  const jsonPath = path.join(args.outputDir, 'latest.json');
-  const mdPath = path.join(args.outputDir, 'latest.md');
-  fs.writeFileSync(jsonPath, `${JSON.stringify(report, null, 2)}\n`);
-  fs.writeFileSync(mdPath, markdown(report));
   if (args.jsonOnly) console.log(JSON.stringify(report, null, 2));
   else {
     console.log(markdown(report));
+    const jsonPath = path.join(args.outputDir, 'latest.json');
+    const mdPath = path.join(args.outputDir, 'latest.md');
     console.log(`Wrote ${jsonPath}`);
     console.log(`Wrote ${mdPath}`);
   }
   const hasFailure = report.projects.some((project) => project.status === 'fail');
   process.exitCode = args.failOnFailure && hasFailure ? 1 : 0;
+}
+
+function persistReport(audited, network, args) {
+  const report = {
+    generatedAt: new Date().toISOString(),
+    network,
+    projects: audited,
+    taskSuggestions: audited.flatMap((project) => project.taskSuggestions ?? []),
+  };
+  fs.mkdirSync(args.outputDir, { recursive: true });
+  const jsonPath = path.join(args.outputDir, 'latest.json');
+  const mdPath = path.join(args.outputDir, 'latest.md');
+  fs.writeFileSync(jsonPath, `${JSON.stringify(report, null, 2)}\n`);
+  fs.writeFileSync(mdPath, markdown(report));
 }
 
 main().catch((error) => {
