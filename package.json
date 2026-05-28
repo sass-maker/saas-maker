@@ -8,6 +8,7 @@
     "dev:cockpit": "pnpm -F @saas-maker/dashboard dev",
     "dev:cockpit:local": "node scripts/dev-cockpit-local.mjs",
     "dev:cockpit:prod": "NEXT_PUBLIC_API_URL=https://api.sassmaker.com pnpm --dir apps/cockpit exec next dev --webpack --port 3001",
+    "build": "pnpm build:types && pnpm build:db && pnpm build:email && pnpm build:api && pnpm build:cockpit && pnpm build:widget && pnpm build:showcase && pnpm build:docs",
     "build:types": "pnpm -F @saas-maker/shared-types build",
     "build:db": "pnpm -F @saas-maker/ops build && pnpm -F @saas-maker/db build",
     "build:email": "pnpm -F @saas-maker/ops build && pnpm -F @saas-maker/email build",

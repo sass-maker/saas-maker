@@ -19,7 +19,7 @@ function getAuth() {
       schema: authSchema,
     }),
     secret: process.env.BETTER_AUTH_SECRET || process.env.AUTH_SECRET,
-    baseURL: process.env.AUTH_URL || process.env.NEXTAUTH_URL || "https://app.sassmaker.com",
+    baseURL: process.env.BETTER_AUTH_URL || process.env.AUTH_URL || "https://app.sassmaker.com",
     socialProviders: {
       google: {
         clientId: process.env.AUTH_GOOGLE_ID || process.env.GOOGLE_CLIENT_ID || "",

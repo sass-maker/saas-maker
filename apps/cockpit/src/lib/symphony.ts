@@ -22,7 +22,7 @@ type SymphonyAgentOptions = {
   agentUsage?: SymphonyAgentUsageSnapshot | null;
 };
 
-export type SymphonyAgent = "codex" | "claude" | "claude-work" | "gemini" | "cursor";
+export type SymphonyAgent = "codex" | "claude" | "claude-work" | "gemini" | "grok" | "cursor";
 
 export type SymphonyRoute = {
   agent: SymphonyAgent;
@@ -78,6 +78,7 @@ const AGENT_COMMANDS: Record<string, string> = {
   claude: "claude --dangerously-skip-permissions -p {prompt} --output-format json --no-session-persistence",
   "claude-work": "CLAUDE_CONFIG_DIR=\"$HOME/.claude-work\" claude --dangerously-skip-permissions -p {prompt} --model ${SYMPHONY_CLAUDE_WORK_MODEL:-sonnet} --output-format json --no-session-persistence",
   gemini: "npx -y @google/gemini-cli --model ${SYMPHONY_GEMINI_MODEL:-gemini-2.5-pro} --yolo -p {prompt} --output-format json --skip-trust",
+  grok: "${SYMPHONY_GROK_COMMAND:-grok} --permission-mode bypassPermissions --prompt-file {promptFile} --output-format json --no-alt-screen",
   cursor: "agent --print --force --trust --output-format json {prompt}",
 };
 
@@ -86,20 +87,21 @@ const AGENT_LABELS: Record<SymphonyAgent, string> = {
   claude: "Claude",
   "claude-work": "Claude Work",
   gemini: "Gemini",
+  grok: "Grok",
   cursor: "Cursor",
 };
 
 const HIGH_COST_AGENT_HINTS = ["opus", "gpt-4", "claude-3.7", "claude-4", "pro"];
-const DEFAULT_AGENT_PRIORITY: SymphonyAgent[] = ["gemini", "codex", "claude", "claude-work", "cursor"];
+const DEFAULT_AGENT_PRIORITY: SymphonyAgent[] = ["gemini", "codex", "claude", "claude-work", "grok", "cursor"];
 const CLAUDE_WORK_MIN_HEADROOM_PCT = 25;
 
 export const DEFAULT_SYMPHONY_MEMORY = `Symphony behavior and routing policy:
 - Treat the task row as the source of truth.
 - Use the task project, priority, type, and custom run instructions when deciding how to execute.
-- Prefer agents in this order when the task is not sensitive: Gemini first; Codex or Claude second depending task shape; Claude Work third and only with enough headroom; Cursor fourth.
+- Prefer agents in this order when the task is not sensitive: Gemini first; Codex or Claude second depending task shape; Claude Work third and only with enough headroom; Grok or Cursor later.
 - Keep sensitive cloud/auth/deployment/credential/migration work under Codex orchestration.
 - Avoid high-cost model/profile names such as Opus, Pro, GPT-4, Claude 3.7, or Claude 4 unless the task explicitly asks for that capability.
-- Explicit run instructions or memory preferences mentioning Codex, Claude, or Gemini override the defaults.
+- Explicit run instructions or memory preferences mentioning Codex, Claude, Gemini, Grok, or Cursor override the defaults.
 - Keep work scoped to the task, verify before completion, and report changed files, evidence, and remaining risk.
 - Two-step execution with a separate verifier is not enabled yet; consider it for high-risk complex tasks after the optional verifier-flow task is implemented.`;
 
@@ -124,6 +126,7 @@ function geminiTokenTotal(usage?: GeminiUsage) {
 
 function agentBudgetNote(agent: SymphonyAgent, usage?: SymphonyAgentUsageSnapshot | null) {
   if (agent === "codex") return "Codex local coordinator route; external usage cache not required.";
+  if (agent === "grok") return "Grok local route; external usage cache not required.";
   if (agent === "cursor") return "Cursor Agent route runs headless with write and shell access.";
   const agentUsage = usage?.agents?.[agent];
   if (!agentUsage) return "No recent usage sample; route chosen from task shape only.";
@@ -139,6 +142,7 @@ function agentBudgetNote(agent: SymphonyAgent, usage?: SymphonyAgentUsageSnapsho
 
 function isAgentHealthy(agent: SymphonyAgent, usage?: SymphonyAgentUsageSnapshot | null) {
   if (agent === "codex") return true;
+  if (agent === "grok") return true;
   if (agent === "cursor") return true;
   const agentUsage = usage?.agents?.[agent];
   if (!agentUsage) return true;
@@ -147,7 +151,7 @@ function isAgentHealthy(agent: SymphonyAgent, usage?: SymphonyAgentUsageSnapshot
 }
 
 function agentHeadroomPct(agent: SymphonyAgent, usage?: SymphonyAgentUsageSnapshot | null) {
-  if (agent === "codex" || agent === "cursor") return 100;
+  if (agent === "codex" || agent === "grok" || agent === "cursor") return 100;
   const telemetry = usage?.agents?.[agent]?.provider_telemetry;
   if (typeof telemetry?.headroom_pct === "number") return telemetry.headroom_pct;
   if (typeof telemetry?.worst_used_pct === "number") return Math.max(0, 100 - telemetry.worst_used_pct);
@@ -179,6 +183,7 @@ function normalizeAgent(value?: string | null): SymphonyAgent | null {
     normalized === "claude" ||
     normalized === "claude-work" ||
     normalized === "gemini" ||
+    normalized === "grok" ||
     normalized === "cursor"
   ) {
     return normalized;
@@ -231,7 +236,7 @@ export function chooseSymphonyAgent(
 ): SymphonyRoute {
   const routingText = `${memory ?? ""}\n${additionalInstructions ?? ""}`.toLowerCase();
   const explicitAgent =
-    normalizeAgent(routingText.match(/\b(?:use|route to|agent|model)\s*[:=]?\s*(codex|claude-work|claude|gemini|cursor)\b/)?.[1]);
+    normalizeAgent(routingText.match(/\b(?:use|route to|agent|model)\s*[:=]?\s*(codex|claude-work|claude|gemini|grok|cursor)\b/)?.[1]);
 
   if (explicitAgent) {
     return withBudget({
@@ -262,7 +267,7 @@ export function chooseSymphonyAgent(
   }
 
   if (task.task_type === "bug" || task.priority === "high") {
-    const agent = firstHealthyAgent(["gemini", "codex", "claude", "claude-work", "cursor"], agentUsage);
+    const agent = firstHealthyAgent(["gemini", "codex", "claude", "claude-work", "grok", "cursor"], agentUsage);
     return withBudget({
       agent,
       label: AGENT_LABELS[agent],
@@ -275,7 +280,7 @@ export function chooseSymphonyAgent(
     task.task_type === "chore" ||
     /(cleanup|clean up|refactor|polish|rename|organize|simplify|prose|wording)/.test(text)
   ) {
-    const agent = firstHealthyAgent(["gemini", "claude", "codex", "claude-work", "cursor"], agentUsage);
+    const agent = firstHealthyAgent(["gemini", "claude", "codex", "claude-work", "grok", "cursor"], agentUsage);
     return withBudget({
       agent,
       label: AGENT_LABELS[agent],
@@ -288,7 +293,7 @@ export function chooseSymphonyAgent(
     task.task_type === "docs" ||
     /(audit|research|summarize|inventory|review all|compare|docs|documentation|copy|content)/.test(text)
   ) {
-    const agent = firstHealthyAgent(["gemini", "claude", "codex", "claude-work", "cursor"], agentUsage);
+    const agent = firstHealthyAgent(["gemini", "claude", "codex", "claude-work", "grok", "cursor"], agentUsage);
     return withBudget({
       agent,
       label: AGENT_LABELS[agent],

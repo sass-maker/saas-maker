@@ -37,6 +37,7 @@ pnpm symphony dispatch <task-id-prefix>
 pnpm symphony dispatch <task-id-prefix> --agent auto
 pnpm symphony dispatch <task-id-prefix> --agent claude
 pnpm symphony dispatch <task-id-prefix> --agent gemini
+pnpm symphony dispatch <task-id-prefix> --agent grok
 pnpm symphony dispatch <task-id-prefix> --agent codex-work
 pnpm symphony dispatch <task-id-prefix> --agent-command 'my-agent run --prompt-file {promptFile}'
 pnpm symphony pick --agent claude
@@ -75,15 +76,17 @@ machine/account; Symphony does not accept or pass API keys directly.
 
 The cockpit task board also has a Symphony dispatch action. By default it uses
 auto routing: task metadata and `.symphony/agent-usage.json` decide whether the
-run goes to Codex, Claude, or Gemini. Built-in profiles are `auto`, `codex`,
-`claude`, and `gemini`; the concrete execution profiles run with full local
+run goes to Codex, Claude, Gemini, Grok, or Cursor. Built-in profiles are `auto`, `codex`,
+`claude`, `claude-work`, `gemini`, `grok`, and `cursor`; the concrete execution profiles run with full local
 permissions by default:
 
-- `auto` — choose `codex`, `claude`, or `gemini` from task shape plus recent usage.
+- `auto` — choose `codex`, `claude`, `gemini`, `grok`, or `cursor` from task shape plus recent usage.
 - `codex` — `codex exec --dangerously-bypass-approvals-and-sandbox`.
 - `claude` — `claude --dangerously-skip-permissions -p ... --output-format json --no-session-persistence`.
 - `claude-work` — `CLAUDE_CONFIG_DIR="$HOME/.claude-work" claude --dangerously-skip-permissions -p ... --model ${SYMPHONY_CLAUDE_WORK_MODEL:-sonnet} --output-format json --no-session-persistence`.
 - `gemini` — `gemini --yolo -p ... --output-format json --skip-trust`.
+- `grok` — `grok --permission-mode bypassPermissions --prompt-file ... --output-format json --no-alt-screen`.
+- `cursor` — `agent --print --force --trust --output-format json`.
 
 For multiple Codex, Claude, Gemini, or other local profiles, add named command
 templates to `~/.foundry/config.json`:

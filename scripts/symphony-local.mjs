@@ -27,10 +27,11 @@ const DEFAULT_AGENT_COMMANDS = {
   claude: 'claude --dangerously-skip-permissions -p {prompt} --output-format json --no-session-persistence',
   'claude-work': 'CLAUDE_CONFIG_DIR="$HOME/.claude-work" claude --dangerously-skip-permissions -p {prompt} --model ${SYMPHONY_CLAUDE_WORK_MODEL:-sonnet} --output-format json --no-session-persistence',
   gemini: 'npx -y @google/gemini-cli --model ${SYMPHONY_GEMINI_MODEL:-gemini-2.5-pro} --yolo -p {prompt} --output-format json --skip-trust',
+  grok: '${SYMPHONY_GROK_COMMAND:-grok} --permission-mode bypassPermissions --prompt-file {promptFile} --output-format json --no-alt-screen',
   cursor: 'agent --print --force --trust --output-format json {prompt}',
 };
 
-const DEFAULT_AGENT_PRIORITY = ['gemini', 'codex', 'claude', 'claude-work', 'cursor'];
+const DEFAULT_AGENT_PRIORITY = ['gemini', 'codex', 'claude', 'claude-work', 'grok', 'cursor'];
 const CLAUDE_WORK_MIN_HEADROOM_PCT = 25;
 
 function readJson(filePath) {
@@ -179,6 +180,7 @@ Usage:
   pnpm symphony dispatch ID             Print one task's agent command
   pnpm symphony dispatch ID ID ...      Print batch commands, routed at task level
   pnpm symphony dispatch ID --agent claude
+  pnpm symphony dispatch ID --agent grok
   pnpm symphony dispatch ID --agent codex-work
   pnpm symphony dispatch ID --agent-command 'my-agent run --prompt-file {promptFile}'
   pnpm symphony pick --agent claude     Claim the next runnable todo task (skips tasks with unfinished prerequisites)
@@ -215,7 +217,7 @@ Options:
   --refresh         With usage: force a fresh agent usage probe
   --max-age-minutes With usage: accepted cache age before probing
   --blocked-on-user Mark created task as waiting on a user decision/config
-  --agent NAME     Agent profile for dispatch: auto, codex, claude, claude-work, gemini, cursor, or a configured profile
+  --agent NAME     Agent profile for dispatch: auto, codex, claude, claude-work, gemini, grok, cursor, or a configured profile
   --agent-command  Command template for custom agents; supports {prompt}, {promptFile}, {workspace}, {taskId}
   --push           With memory: push .symphony/memory.md to production
   --pull           With memory: pull production memory into .symphony/memory.md
@@ -228,12 +230,13 @@ Auth:
 
 Profiles:
   Built-in commands run with full permissions:
-    auto    Prefer gemini first; codex/claude second by task shape; claude-work third with headroom; cursor fourth
+    auto    Prefer gemini first; codex/claude second by task shape; claude-work third with headroom; grok/cursor later
     codex   codex exec --dangerously-bypass-approvals-and-sandbox {prompt}
     claude  claude --dangerously-skip-permissions -p {prompt}
     claude-work
             CLAUDE_CONFIG_DIR="$HOME/.claude-work" claude --dangerously-skip-permissions -p {prompt} --model \${SYMPHONY_CLAUDE_WORK_MODEL:-sonnet} with structured JSON output for usage capture
     gemini  npx -y @google/gemini-cli --yolo -p {prompt}
+    grok    grok --permission-mode bypassPermissions --prompt-file {promptFile} --output-format json --no-alt-screen
     cursor  agent --print --force --trust {prompt}
 
   Add more profiles in ~/.foundry/config.json:
@@ -288,6 +291,7 @@ function isFresh(sampledAt) {
 
 function agentHealthy(agent, usage) {
   if (agent === 'codex') return true;
+  if (agent === 'grok') return true;
   if (agent === 'cursor') return true;
   const sample = usage?.agents?.[agent];
   if (!sample) return true;
@@ -304,7 +308,7 @@ function agentHeadroomPct(agent, usage) {
   const telemetry = sample?.provider_telemetry;
   if (typeof telemetry?.headroom_pct === 'number') return telemetry.headroom_pct;
   if (typeof telemetry?.worst_used_pct === 'number') return Math.max(0, 100 - telemetry.worst_used_pct);
-  if (agent === 'codex' || agent === 'cursor') return 100;
+  if (agent === 'codex' || agent === 'grok' || agent === 'cursor') return 100;
   return 50;
 }
 
@@ -335,24 +339,24 @@ function chooseAgent(task, args) {
     candidate = 'codex';
     reason = 'sensitive cloud/auth/deployment work stays with Codex';
   } else if (/(ui|frontend|react|next|component|page|layout|design|polish|revamp|crash|runtime|bug|fix)/.test(text)) {
-    candidate = firstHealthyAgent(['gemini', 'codex', 'claude', 'claude-work', 'cursor'], usage);
+    candidate = firstHealthyAgent(['gemini', 'codex', 'claude', 'claude-work', 'grok', 'cursor'], usage);
     reason = 'implementation/UI/bug route';
   } else if (
     task.task_type === 'cleanup' ||
     task.task_type === 'chore' ||
     /(cleanup|clean up|refactor|polish|rename|organize|simplify|prose|wording)/.test(text)
   ) {
-    candidate = firstHealthyAgent(['gemini', 'claude', 'codex', 'claude-work', 'cursor'], usage);
+    candidate = firstHealthyAgent(['gemini', 'claude', 'codex', 'claude-work', 'grok', 'cursor'], usage);
     reason = 'cleanup/refactor/prose route';
   } else if (
     task.task_type === 'research' ||
     task.task_type === 'docs' ||
     /(audit|research|summarize|inventory|review all|compare|docs|documentation|copy|content)/.test(text)
   ) {
-    candidate = firstHealthyAgent(['gemini', 'claude', 'codex', 'claude-work', 'cursor'], usage);
+    candidate = firstHealthyAgent(['gemini', 'claude', 'codex', 'claude-work', 'grok', 'cursor'], usage);
     reason = 'broad review/docs/synthesis route';
   } else if (task.priority === 'high') {
-    candidate = firstHealthyAgent(['gemini', 'codex', 'claude', 'claude-work', 'cursor'], usage);
+    candidate = firstHealthyAgent(['gemini', 'codex', 'claude', 'claude-work', 'grok', 'cursor'], usage);
     reason = 'high-priority non-sensitive route';
   } else {
     candidate = firstHealthyAgent(DEFAULT_AGENT_PRIORITY, usage);
