@@ -17,7 +17,7 @@ export function initOpsMonitoring(config: PostHogConfig) {
     });
     
     posthog.register({
-      foundry_project_id: config.projectId,
+      project_id: config.projectId,
       foundry_standard: true,
     });
 

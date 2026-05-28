@@ -46,7 +46,7 @@ export function captureError(
   } = {},
 ): void {
   console.error("[app:error]", {
-    project: PROJECT_SLUG,
+    project_id: PROJECT_SLUG,
     route: route(),
     scope: options.scope ?? "unknown",
     digest: options.digest,

@@ -69,7 +69,7 @@ async function checkErrorFeed(fleet: any[]) {
       query: {
         kind: "EventsQuery",
         select: [
-          "*", "event", "timestamp", "properties.message", "properties.severity", "properties.foundry_project_id", "properties.$exception_stack"
+          "*", "event", "timestamp", "properties.message", "properties.severity", "properties.project_id", "properties.$exception_stack"
         ],
         where: [`event == 'foundry_error'`, `timestamp > '${lastProcessedTimestamp}'`],
         orderBy: ["timestamp ASC"], // Process oldest first

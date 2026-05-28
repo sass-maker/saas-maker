@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 interface PostHogError {
   id: string;
   operation: string;
-  project: string;
+  project_id: string;
   durationMs: number;
   timestamp: string;
 }
@@ -48,7 +48,7 @@ async function fetchPostHogErrors(): Promise<PostHogError[]> {
         return {
           id: String(evt.uuid ?? evt.id ?? Math.random()),
           operation: String(props.operation ?? props.op ?? 'unknown'),
-          project: String(props.project ?? props.distinct_id ?? 'unknown'),
+          project_id: String(props.project_id ?? props.project_slug ?? props.project ?? props.foundry_project_id ?? props.distinct_id ?? 'unknown'),
           durationMs: Number(props.duration_ms ?? props.durationMs ?? 0),
           timestamp: String(evt.timestamp ?? ''),
         };
@@ -104,7 +104,7 @@ export default async function FleetPage() {
                 className="flex items-center gap-3 rounded-lg border border-border bg-red-950/20 p-3"
               >
                 <span className="text-red-400 text-xs font-mono">{err.operation}</span>
-                <span className="text-gray-400 text-xs">{err.project}</span>
+                <span className="text-gray-400 text-xs">{err.project_id}</span>
                 <span className="text-gray-600 text-xs ml-auto">{err.durationMs}ms</span>
               </div>
             ))}

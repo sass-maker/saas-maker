@@ -40,7 +40,7 @@ function loadProjects() {
 function readTextFiles(dir) {
   const output = [];
   const stack = [dir];
-  const ignored = new Set(['node_modules', '.next', 'dist', 'build', '.wrangler', '.git', 'coverage', 'out']);
+  const ignored = new Set(['node_modules', '.next', 'dist', 'build', '.wrangler', '.git', '.claude', 'coverage', 'out', 'tmp']);
   while (stack.length > 0) {
     const current = stack.pop();
     if (!current || !fs.existsSync(current)) continue;
@@ -57,15 +57,50 @@ function readTextFiles(dir) {
   return output;
 }
 
+function isAnalyticsSource(file) {
+  const normalized = file.split(path.sep).join('/');
+  return /(?:analytics|analytics-events|foundry-monitoring|monitoring|posthog-provider|providers)\.(tsx?|jsx?)$/.test(normalized);
+}
+
+function auditPostHogIdentity(files) {
+  const analyticsFiles = files.filter(isAnalyticsSource);
+  const findings = [];
+  let hasPostHogSource = false;
+  let hasLocalProjectIdWrapper = false;
+
+  for (const file of analyticsFiles) {
+    const source = fs.readFileSync(file, 'utf8');
+    if (!/posthog|PostHog|capture\(|trackEvent|trackRecommendationEvent/.test(source)) continue;
+    hasPostHogSource = true;
+    if (/from\s+['"]@saas-maker\/posthog-client(?:\/server)?['"]|require\(['"]@saas-maker\/posthog-client(?:\/server)?['"]\)/.test(source)) {
+      findings.push(`${path.relative(FLEET_ROOT, file)} imports @saas-maker/posthog-client`);
+    }
+    if (/foundry_project_id\s*:|project_slug\s*:|project\s*:\s*(?:PROJECT|PROJECT_SLUG|["'][a-z0-9_-]+["'])/.test(source)) {
+      findings.push(`${path.relative(FLEET_ROOT, file)} uses a legacy PostHog project identity property`);
+    }
+    if (/project_id\s*:/.test(source) && /function\s+(?:trackEvent|emit|trackRecommendationEvent)\b|const\s+(?:trackEvent|emit|trackRecommendationEvent)\b/.test(source)) {
+      hasLocalProjectIdWrapper = true;
+    }
+  }
+
+  return {
+    ok: findings.length === 0 && (!hasPostHogSource || hasLocalProjectIdWrapper),
+    findings,
+    hasPostHogSource,
+    hasLocalProjectIdWrapper,
+  };
+}
+
 function auditProject(project) {
   const contract = FLEET_HEALTH_CONTRACTS[project.slug] ?? {};
-  if (!contract.prodUrl) {
+  if (!contract.prodUrl || contract.monitoring?.required === false) {
     return {
       project: project.slug,
       ok: true,
       skipped: true,
       checks: [
         { name: 'posthog_dependency_or_init', ok: true },
+        { name: 'posthog_local_project_id_wrapper', ok: true },
         { name: 'page_crash_capture', ok: true },
         { name: 'auth_or_signup_failure_capture', ok: true },
       ],
@@ -91,12 +126,14 @@ function auditProject(project) {
 
   const hasPostHogDependency = /@saas-maker\/posthog-client|posthog-js|posthog-node/.test(depText);
   const hasPostHogSource = /PostHogProvider|posthog\.init|configurePostHog|initPostHog/.test(source);
+  const posthogIdentity = auditPostHogIdentity(files);
   const hasPageCrashCapture = /installBrowserMonitoring|capturePageCrash|foundry_page_crash/.test(source);
   const hasAuthFailureCapture = /captureAuthFailure|captureSignupFailure|foundry_auth_failure|foundry_signup_failure/.test(source);
   const hasSentry = /@sentry\/|Sentry\.init/.test(`${depText}\n${source}`);
 
   const checks = [
     { name: 'posthog_dependency_or_init', ok: hasPostHogDependency || hasPostHogSource },
+    { name: 'posthog_local_project_id_wrapper', ok: posthogIdentity.ok, details: posthogIdentity.findings },
     { name: 'page_crash_capture', ok: hasPageCrashCapture },
     { name: 'auth_or_signup_failure_capture', ok: !requiresAuthCapture || hasAuthFailureCapture },
   ];
@@ -109,6 +146,8 @@ function auditProject(project) {
     signals: {
       hasPostHogDependency,
       hasPostHogSource,
+      hasLocalProjectIdWrapper: posthogIdentity.hasLocalProjectIdWrapper,
+      posthogIdentityFindings: posthogIdentity.findings,
       hasPageCrashCapture,
       hasAuthFailureCapture,
       hasSentry,

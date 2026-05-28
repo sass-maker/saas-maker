@@ -142,7 +142,7 @@ tasks.post('/', requireSession, async (c) => {
       blocked_on_user: task.blocked_on_user,
     },
   });
-  capture({ distinctId: userId, event: 'task_created', properties: { task_id: task.id, priority: task.priority ?? undefined, task_type: task.task_type ?? undefined, size: task.size ?? undefined, project_slug: body.project_slug ?? undefined } });
+  capture({ distinctId: userId, event: 'task_created', properties: { task_id: task.id, priority: task.priority ?? undefined, task_type: task.task_type ?? undefined, size: task.size ?? undefined, project_id: body.project_slug ?? undefined } });
   return c.json({ data: task }, 201);
 });
 

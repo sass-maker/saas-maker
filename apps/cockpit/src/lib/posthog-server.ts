@@ -1,6 +1,12 @@
 const POSTHOG_API_KEY = process.env.POSTHOG_PERSONAL_API_KEY;
 const POSTHOG_PROJECT_ID = process.env.POSTHOG_PROJECT_ID;
 const POSTHOG_HOST = process.env.POSTHOG_HOST || "https://us.posthog.com";
+const PROJECT_ID_PROPERTY =
+  "coalesce(properties.project_id, properties.project_slug, properties.project, properties.foundry_project_id)";
+
+function escapeHogQLString(value: string): string {
+  return value.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+}
 
 export interface FoundryErrorEvent {
   id: string;
@@ -34,6 +40,9 @@ export async function getFleetErrors(limit = 20): Promise<FoundryErrorEvent[]> {
         "timestamp",
         "properties.message",
         "properties.severity",
+        "properties.project_id",
+        "properties.project_slug",
+        "properties.project",
         "properties.foundry_project_id",
         "properties.$exception_stack",
       ],
@@ -67,8 +76,8 @@ export async function getFleetErrors(limit = 20): Promise<FoundryErrorEvent[]> {
       timestamp: row[2],
       message: row[3],
       severity: row[4],
-      project_id: row[5],
-      stack: row[6],
+      project_id: row[5] ?? row[6] ?? row[7] ?? row[8] ?? "unknown",
+      stack: row[9],
     }));
   } catch (err) {
     console.error("Failed to fetch fleet errors:", err);
@@ -100,7 +109,7 @@ export async function getFleetLatency(): Promise<FoundryLatencyMetric[]> {
       kind: "HogQLQuery",
       query: `
         SELECT
-          properties.foundry_project_id AS project_id,
+          ${PROJECT_ID_PROPERTY} AS project_id,
           properties.traceName AS trace_name,
           avg(properties.traceDuration) AS avg_duration_ms,
           quantile(0.95)(properties.traceDuration) AS p95_duration_ms,
@@ -146,6 +155,7 @@ export async function getProjectOperationalState(projectId: string) {
   if (!POSTHOG_API_KEY || !POSTHOG_PROJECT_ID) return null;
 
   const url = `${POSTHOG_HOST}/api/projects/${POSTHOG_PROJECT_ID}/query/`;
+  const escapedProjectId = escapeHogQLString(projectId);
 
   const query = {
     query: {
@@ -156,7 +166,7 @@ export async function getProjectOperationalState(projectId: string) {
           avgIf(properties.traceDuration, event = 'foundry_trace') AS avg_latency,
           max(timestamp) AS last_event_at
         FROM events
-        WHERE properties.foundry_project_id = '${projectId}' AND timestamp >= now() - INTERVAL 1 DAY
+        WHERE ${PROJECT_ID_PROPERTY} = '${escapedProjectId}' AND timestamp >= now() - INTERVAL 1 DAY
       `
     }
   };

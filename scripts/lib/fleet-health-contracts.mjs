@@ -132,6 +132,7 @@ export const FLEET_HEALTH_CONTRACTS = {
     expectedStatus: 200,
     criticalRoutes: ['/health'],
     auth: { required: false },
+    monitoring: { required: false },
     requiredEnv: { build: [], runtime: [] },
     deployTarget: 'Cloudflare Workers + R2',
     githubWorkflow: null,
