@@ -78,12 +78,21 @@ Marketing tasks should add ideas directly to the SaaS Maker Marketing Queue,
 not only to repo docs. Use a session-auth API call like:
 
 ```bash
-FND_API_URL=https://api.sassmaker.com pnpm --dir ~/Desktop/fleet/saas-maker/packages/cli exec tsx src/index.ts api POST /v1/marketing/posts --auth session --body '{"project_slug":"linkchat","channel":"x","status":"generated","source_type":"task","source_id":"<task-id>","task_id":"<task-id>","title":"Short idea title","hook":"Plain hook","body":"Post body","cta":"Try it and send feedback."}'
+FND_API_URL=https://api.sassmaker.com pnpm --dir ~/Desktop/fleet/saas-maker/packages/cli exec tsx src/index.ts api POST /v1/marketing/posts --auth session --body '{"project_slug":"linkchat","channel":"tiktok","status":"generated","source_type":"task","source_id":"<task-id>","task_id":"<task-id>","title":"Short AI video idea title","hook":"0-2s visual hook","body":"AI video brief: scene-by-scene script, shot list, voiceover, caption text, asset prompts, and edit notes.","cta":"One concrete next step."}'
 ```
 
 The review flow is `generated` → `accepted` or `rejected`; accepted ideas move
 to `sent` after posting. Repo files under `docs/marketing/` are optional source
 notes, not the system of record for publishable ideas.
+
+Marketing queue ideas should be AI-video-first. Default channels are `tiktok`,
+`instagram_reels`, and `youtube_shorts`. Use `blog`, `email`, or `producthunt`
+only when the task clearly calls for owned-channel or launch copy. Avoid
+LinkedIn entirely; use `x` and `reddit` only for non-promotional discussion
+prompts. Reel-platform bodies must include a scene-by-scene script, shot list,
+voiceover, on-screen captions, AI asset prompts, edit notes, and first-frame
+hook. Avoid generic AI phrases such as "unlock", "revolutionize", "seamless",
+"game-changing", "supercharge", "elevate", and "transform your workflow".
 
 The cockpit task board also has a Symphony dispatch action. By default it uses
 auto routing: task metadata and `.symphony/agent-usage.json` decide whether the

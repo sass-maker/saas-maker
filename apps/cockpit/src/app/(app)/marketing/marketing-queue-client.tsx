@@ -17,7 +17,17 @@ import type {
 } from "@/lib/marketing-queue-store";
 
 const STATUSES: MarketingPostStatus[] = ["generated", "accepted", "rejected", "sent"];
-const CHANNELS: MarketingPostChannel[] = ["x", "linkedin", "reddit", "email", "blog", "producthunt", "other"];
+const CHANNELS: MarketingPostChannel[] = [
+  "tiktok",
+  "instagram_reels",
+  "youtube_shorts",
+  "blog",
+  "email",
+  "producthunt",
+  "x",
+  "reddit",
+  "other",
+];
 
 const STATUS_LABEL: Record<MarketingPostStatus, string> = {
   generated: "Generated",
@@ -79,7 +89,7 @@ export function MarketingQueueClient({ initialPosts }: { initialPosts: Marketing
   const [message, setMessage] = useState<string | null>(null);
   const [form, setForm] = useState({
     project_slug: "",
-    channel: "x" as MarketingPostChannel,
+    channel: "tiktok" as MarketingPostChannel,
     title: "",
     hook: "",
     body: "",
@@ -138,7 +148,7 @@ export function MarketingQueueClient({ initialPosts }: { initialPosts: Marketing
     }
     const payload = await res.json() as { data: MarketingPostRow };
     setPosts(prev => [payload.data, ...prev]);
-    setForm({ project_slug: "", channel: "x", title: "", hook: "", body: "", cta: "" });
+    setForm({ project_slug: "", channel: "tiktok", title: "", hook: "", body: "", cta: "" });
     setMessage("Idea created.");
   }
 

@@ -103,6 +103,7 @@ export const DEFAULT_SYMPHONY_MEMORY = `Symphony behavior and routing policy:
 - Avoid high-cost model/profile names such as Opus, Pro, GPT-4, Claude 3.7, or Claude 4 unless the task explicitly asks for that capability.
 - Explicit run instructions or memory preferences mentioning Codex, Claude, Gemini, Grok, or Cursor override the defaults.
 - Keep work scoped to the task, verify before completion, and report changed files, evidence, and remaining risk.
+- For marketing tasks, create AI-generated reel/video briefs for TikTok, Instagram Reels, or YouTube Shorts by default. Avoid LinkedIn entirely and use X/Reddit only for non-promotional discussion prompts. Include scene-by-scene script, shot list, voiceover, captions, asset prompts, edit notes, and a first-frame hook.
 - Two-step execution with a separate verifier is not enabled yet; consider it for high-risk complex tasks after the optional verifier-flow task is implemented.`;
 
 function taskText(task: SymphonyTask) {

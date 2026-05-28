@@ -151,13 +151,17 @@ owner accepts/rejects and marks accepted ideas as sent after posting.
 
 ```bash
 fnd api POST /v1/marketing/posts --auth session \
-  --body '{"project_slug":"linkchat","channel":"x","status":"generated","source_type":"task","source_id":"<taskId>","task_id":"<taskId>","title":"Short idea title","hook":"Plain hook","body":"Post body","cta":"Try it and send feedback."}'
+  --body '{"project_slug":"linkchat","channel":"tiktok","status":"generated","source_type":"task","source_id":"<taskId>","task_id":"<taskId>","title":"Short AI video idea title","hook":"0-2s visual hook","body":"AI video brief: scene-by-scene script, shot list, voiceover, caption text, asset prompts, and edit notes.","cta":"One concrete next step."}'
 
 fnd api GET /v1/marketing/posts --auth session --query status=generated --output table
 
 fnd api PATCH /v1/marketing/posts/<postId> --auth session \
   --body '{"status":"accepted"}'
 ```
+
+Default marketing queue ideas to AI-generated reel/video briefs for `tiktok`,
+`instagram_reels`, or `youtube_shorts`. Avoid LinkedIn entirely. Use `x` and
+`reddit` only for non-promotional discussion prompts.
 
 ## Fleet automation
 

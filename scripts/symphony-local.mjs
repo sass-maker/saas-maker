@@ -469,7 +469,7 @@ function runCliApi(args, method, pathName, options = {}) {
 function buildPrompt(task, memory = '') {
   const project = task.project_slug ?? 'saas-maker';
   const doneCommand = `pnpm --dir ~/Desktop/fleet/saas-maker symphony done ${task.id}`;
-  const marketingCommand = `FND_API_URL=https://api.sassmaker.com pnpm --dir ~/Desktop/fleet/saas-maker/packages/cli exec tsx src/index.ts api POST /v1/marketing/posts --auth session --body '{"project_slug":"${project}","channel":"x","status":"generated","source_type":"task","source_id":"${task.id}","task_id":"${task.id}","title":"Short idea title","hook":"Plain hook","body":"Post body","cta":"Try it and send feedback."}'`;
+  const marketingCommand = `FND_API_URL=https://api.sassmaker.com pnpm --dir ~/Desktop/fleet/saas-maker/packages/cli exec tsx src/index.ts api POST /v1/marketing/posts --auth session --body '{"project_slug":"${project}","channel":"tiktok","status":"generated","source_type":"task","source_id":"${task.id}","task_id":"${task.id}","title":"Short AI video idea title","hook":"0-2s visual hook","body":"AI video brief: scene-by-scene script, shot list, voiceover, caption text, asset prompts, and edit notes.","cta":"One concrete next step."}'`;
   const marketingInstructions = task.task_type === 'docs' && /\bmarketing\b/i.test(`${task.title ?? ''}\n${task.description ?? ''}`)
     ? `
 Marketing Queue contract:
@@ -478,6 +478,13 @@ Marketing Queue contract:
   ${marketingCommand}
 - Use status "generated"; Sarthak accepts/rejects in Cockpit, then marks accepted ideas "sent" after posting.
 - Do not post to social accounts. Repo docs under docs/marketing/ are optional supporting notes only.
+- Default to AI-generated video ideas for reel platforms: "tiktok", "instagram_reels", and "youtube_shorts".
+- Only use "blog", "email", or "producthunt" when the task clearly calls for owned-channel or launch copy.
+- Avoid "linkedin" entirely and do not use "x" or "reddit" for promotional posts. Use "x" or "reddit" only for non-promotional discussion prompts.
+- Make the output personal and product-specific. Include the intended audience, the exact user pain, why this product is credible, and one concrete next step.
+- For reel-platform ideas, the body must include: scene-by-scene script, visual shot list, voiceover, on-screen captions, AI asset prompts, edit notes, and the first frame/hook.
+- Avoid generic AI marketing language: no "unlock", "revolutionize", "seamless", "game-changing", "supercharge", "elevate", "transform your workflow", or vague hype.
+- Write like an AI-generated reel someone would actually watch: direct, visual, specific, slightly opinionated, and honest about what is still early.
 `
     : '';
   return `You are running a Foundry Symphony task.

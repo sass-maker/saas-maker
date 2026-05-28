@@ -109,10 +109,13 @@ fnd api POST /v1/symphony/runs --auth session \
 
 # Add and review marketing queue ideas
 fnd api POST /v1/marketing/posts --auth session \
-  --body '{"project_slug":"linkchat","channel":"x","status":"generated","source_type":"task","source_id":"<taskId>","task_id":"<taskId>","title":"Short idea title","hook":"Plain hook","body":"Post body","cta":"Try it and send feedback."}'
+  --body '{"project_slug":"linkchat","channel":"tiktok","status":"generated","source_type":"task","source_id":"<taskId>","task_id":"<taskId>","title":"Short AI video idea title","hook":"0-2s visual hook","body":"AI video brief: scene-by-scene script, shot list, voiceover, caption text, asset prompts, and edit notes.","cta":"One concrete next step."}'
 fnd api GET /v1/marketing/posts --auth session --query status=generated --output table
 fnd api PATCH /v1/marketing/posts/<postId> --auth session \
   --body '{"status":"accepted"}'
+
+# Marketing tasks should default to AI-generated reel/video briefs for TikTok,
+# Instagram Reels, or YouTube Shorts. Avoid LinkedIn entirely.
 
 # Project-auth route: list feedback
 fnd api GET /v1/feedback --auth project --query type=feature --output table

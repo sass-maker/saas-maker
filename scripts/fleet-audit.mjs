@@ -853,7 +853,9 @@ function marketingAudit(project) {
         `Business lane: ${project.businessLane}.`,
         'Agent-executable marketing task; no personal-account posting, secrets, deploy, or production config changes.',
         `Create ${asset.file} for ${project.desc || project.slug} only when durable source notes help; the required output is one or more SaaS Maker Marketing Queue ideas.`,
-        'Acceptance: create generated marketing_posts via FND_API_URL=https://api.sassmaker.com pnpm --dir ~/Desktop/fleet/saas-maker/packages/cli exec tsx src/index.ts api POST /v1/marketing/posts --auth session with source_type task, task_id, project_slug, channel, title, body, optional hook/cta; copy is simple and includes audience/problem/promise/CTA where relevant.',
+        'Acceptance: create generated marketing_posts via FND_API_URL=https://api.sassmaker.com pnpm --dir ~/Desktop/fleet/saas-maker/packages/cli exec tsx src/index.ts api POST /v1/marketing/posts --auth session with source_type task, task_id, project_slug, channel, title, body, optional hook/cta; default to tiktok, instagram_reels, or youtube_shorts with an AI video brief instead of generic social copy.',
+        'Video rule: for reel-platform ideas, body must include scene-by-scene script, visual shot list, voiceover, on-screen captions, AI asset prompts, edit notes, and first-frame hook; avoid LinkedIn entirely and use X/Reddit only for non-promotional discussion prompts.',
+        'Voice rule: direct, visual, product-specific, slightly opinionated, and honest about early product risk; avoid generic AI phrases such as unlock, revolutionize, seamless, game-changing, supercharge, elevate, and transform your workflow.',
         `Priority rationale: ${asset.why}; selected over generic UI polish because marketing now needs reusable distribution assets and measurement.`,
       ].join(' '),
     }));

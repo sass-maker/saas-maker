@@ -1,7 +1,16 @@
 import { type CockpitD1Database,getCockpitD1 } from '@/lib/cockpit-tasks-store';
 
 export type MarketingPostStatus = 'generated' | 'accepted' | 'rejected' | 'sent';
-export type MarketingPostChannel = 'x' | 'linkedin' | 'reddit' | 'email' | 'blog' | 'producthunt' | 'other';
+export type MarketingPostChannel =
+  | 'tiktok'
+  | 'instagram_reels'
+  | 'youtube_shorts'
+  | 'blog'
+  | 'email'
+  | 'producthunt'
+  | 'x'
+  | 'reddit'
+  | 'other';
 export type MarketingPostSource = 'manual' | 'task' | 'changelog';
 
 export type MarketingPostRow = {
@@ -67,7 +76,17 @@ type ChangelogRow = {
 };
 
 const VALID_STATUSES = ['generated', 'accepted', 'rejected', 'sent'] as const;
-const VALID_CHANNELS = ['x', 'linkedin', 'reddit', 'email', 'blog', 'producthunt', 'other'] as const;
+const VALID_CHANNELS = [
+  'tiktok',
+  'instagram_reels',
+  'youtube_shorts',
+  'blog',
+  'email',
+  'producthunt',
+  'x',
+  'reddit',
+  'other',
+] as const;
 const VALID_SOURCES = ['manual', 'task', 'changelog'] as const;
 
 function cleanString(value: unknown): string | null | undefined {
@@ -198,39 +217,41 @@ export async function deleteMarketingPost(id: string, db = getCockpitD1()) {
 function postCopyFor(entry: ChangelogRow, channel: MarketingPostChannel) {
   const project = entry.project_name || entry.project_slug;
   const plainTitle = entry.title.replace(/^[^:]+:\s*/, '');
-  if (channel === 'linkedin') {
+  if (channel === 'tiktok' || channel === 'instagram_reels' || channel === 'youtube_shorts') {
     return {
-      title: `${project}: LinkedIn idea from ${entry.type}`,
-      hook: `${project} shipped a useful improvement.`,
+      title: `${project}: short-form demo idea from ${entry.type}`,
+      hook: `POV: you hit the exact problem ${project} just fixed.`,
       body: [
-        `${project} update: ${plainTitle}`,
+        `AI video brief for ${channel}:`,
+        `0-2s hook: show the before-state pain for "${plainTitle}".`,
+        '2-8s proof: show the product screen or generated artifact doing the job.',
+        '8-14s contrast: show what the old workflow looked like.',
+        '14-20s payoff: show the result and one specific reason it matters.',
         '',
-        entry.content || 'This change improves the product workflow and is ready for users to try.',
-        '',
-        'Why it matters: small shipped improvements compound when they make the core loop clearer.',
+        entry.content || 'Use concrete product footage or generated UI mock footage. No generic AI stock-video montage.',
       ].join('\n'),
-      cta: `Try ${project} and send feedback.`,
+      cta: `End card: "${project}: ${plainTitle}"`,
     };
   }
-  if (channel === 'reddit') {
+  if (channel === 'email') {
     return {
-      title: `${project}: Reddit feedback idea from ${entry.type}`,
-      hook: `I shipped a small ${project} improvement and want feedback.`,
+      title: `${project}: email idea from ${entry.type}`,
+      hook: `A small ${project} improvement worth trying.`,
       body: [
-        `I shipped this for ${project}: ${plainTitle}`,
+        `Subject: ${plainTitle}`,
         '',
         entry.content || 'The goal is to make the first-use workflow clearer.',
         '',
-        'What would make this more useful or less confusing?',
+        'Keep this as lifecycle/waitlist copy, not personal social promotion.',
       ].join('\n'),
-      cta: 'Ask for feedback, not upvotes.',
+      cta: `Open ${project} and try the changed flow.`,
     };
   }
   return {
-    title: `${project}: X idea from ${entry.type}`,
+    title: `${project}: blog idea from ${entry.type}`,
     hook: plainTitle,
-    body: `${project} update: ${plainTitle}\n\n${entry.content || 'Small product improvement shipped.'}`,
-    cta: 'Try it and tell me what breaks.',
+    body: `${project} update: ${plainTitle}\n\n${entry.content || 'Small product improvement shipped.'}\n\nWrite this as owned-channel content, not a personal social post.`,
+    cta: 'Add a product-specific next step.',
   };
 }
 
@@ -245,7 +266,7 @@ export async function generateMarketingPostsFromChangelog(ownerId: string, db: C
      LIMIT 20`
   ).bind(ownerId).all<ChangelogRow>();
   const entries = results ?? [];
-  const channels: MarketingPostChannel[] = ['x', 'linkedin', 'reddit'];
+  const channels: MarketingPostChannel[] = ['tiktok', 'instagram_reels', 'youtube_shorts'];
   const created: MarketingPostRow[] = [];
   let skipped = 0;
   for (const entry of entries) {

@@ -10,6 +10,7 @@
   "looptv": { "desc": "TV-like app for YouTube curated channels.", "url": "https://github.com/sarthakagrawal927/looptv.git", "tier": "active-ai" },
   "open-historia": { "desc": "Interactive historical timeline and storytelling platform.", "url": "https://github.com/sarthakagrawal927/open-historia.git", "tier": "active-ai" },
   "reader": { "desc": "Web Annotator — Document reading and annotation tool.", "url": "https://github.com/sarthakagrawal927/reader.git", "tier": "active-ai" },
+  "reel-pipeline": { "desc": "AI reel generation and autopost orchestration for fleet marketing.", "url": "https://github.com/sarthakagrawal927/reel-pipeline.git", "tier": "core" },
   "resume-tailor": { "desc": "RolePatch — AI-powered resume tailoring system.", "url": "git@github.com:sarthakagrawal927/resume-tailor.git", "tier": "core" },
   "saas-maker": { "desc": "Foundry — The Industrial Software Factory for Project Fleets.", "url": "https://github.com/sarthakagrawal927/saas-maker.git", "tier": "core" },
   "significanthobbies": { "desc": "Personal hobby mapping and journey visualization tool.", "url": "https://github.com/sarthakagrawal927/significanthobbies.git", "tier": "active-ai" },

@@ -5,7 +5,17 @@ import { requireSession } from '../middleware/auth';
 const marketing = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
 const STATUSES = ['generated', 'accepted', 'rejected', 'sent'] as const;
-const CHANNELS = ['x', 'linkedin', 'reddit', 'email', 'blog', 'producthunt', 'other'] as const;
+const CHANNELS = [
+  'tiktok',
+  'instagram_reels',
+  'youtube_shorts',
+  'blog',
+  'email',
+  'producthunt',
+  'x',
+  'reddit',
+  'other',
+] as const;
 const SOURCES = ['manual', 'task', 'changelog'] as const;
 
 function cleanString(value: unknown): string | null | undefined {
