@@ -1,54 +1,211 @@
 # Reel Pipeline
 
-Internal AI reel pipeline for SaaS Maker Marketing Queue.
+AI reel generation and publishing-prep pipeline for the SaaS Maker fleet.
 
-The goal is to turn accepted/generated marketing ideas into reviewable video
-drafts, then later schedule/autopost approved videos. SaaS Maker remains the
-control plane; this repo owns rendering orchestration.
+This repo is the orchestration layer that turns accepted SaaS Maker Marketing
+Queue ideas into reviewable short-form videos. SaaS Maker stays the source of
+truth for ideas, approvals, task links, and posting state; Reel Pipeline owns the
+video render contract, engine adapters, artifact storage, and posting handoff.
+
+## Why This Repo Exists
+
+The fleet now has a marketing queue, but marketing docs alone are not enough.
+The useful loop is:
+
+1. Agents create product-specific AI-video ideas in SaaS Maker Marketing Queue.
+2. Sarthak accepts or rejects each idea in the UI.
+3. Accepted reel ideas are rendered into MP4 drafts.
+4. The public artifact URL is written back to the Marketing Queue item.
+5. Posting remains gated until there is an explicit schedule/provider.
+
+The first goal is reliable draft generation, not fully autonomous social spam.
+
+## Language Note
+
+GitHub shows this repo as JavaScript because the code in this repo is a small
+Node.js / Cloudflare Workers orchestration layer.
+
+That is intentional for now:
+
+- No frontend framework or build step is needed for the control API.
+- Cloudflare Workers, R2 upload, SaaS Maker API calls, and CLI scripts are all
+  straightforward in Node.
+- The heavy video engines are not implemented here; they are pinned submodules
+  under `engines/` and run behind adapters.
+- MoneyPrinterTurbo itself is Python/FFmpeg/MoviePy; OpenShorts brings Python,
+  Docker, Gemini/fal/ElevenLabs style dependencies; reel-maker is the older
+  Remotion/Modal prototype.
+
+So JavaScript here means orchestration glue, not that the actual video rendering
+stack is JavaScript-only.
+
+## What It Uses
+
+### SaaS Maker
+
+- Repo: `https://github.com/sarthakagrawal927/saas-maker`
+- Role: control plane and system of record.
+- Owns: Marketing Queue, project fleet metadata, task linkage, approval status,
+  changelog-derived marketing ideas, and Cockpit UI.
+- Integration: this repo reads accepted queue items and patches back
+  `asset_url`, `result_url`, provider metadata, and posting handoff notes.
+
+### MoneyPrinterTurbo
+
+- Upstream: `https://github.com/harry0703/MoneyPrinterTurbo`
+- Local path: `engines/MoneyPrinterTurbo`
+- Role: default cheap renderer for stock-footage reels.
+- Why first: MIT licensed, heavily used, actively maintained, and practical for
+  fast MP4 generation with stock footage, voice, subtitles, and FFmpeg.
+- Dependencies: Python 3.11, FFmpeg, ImageMagick, one LLM provider, stock media
+  source such as Pexels/Pixabay or local materials, optional Redis.
+- Current status: adapter implemented, local canary implemented, real MP4 upload
+  to R2 verified.
+
+### OpenShorts
+
+- Upstream: `https://github.com/mutonby/openshorts`
+- Local path: `engines/openshorts`
+- Role: UGC actor / ReelFarm-style workflow reference.
+- Why not default yet: it assumes more paid/hosted services such as Gemini,
+  fal.ai, ElevenLabs, Upload-Post, and optional S3.
+- Current status: guarded job-spec adapter only; it does not invoke paid UGC or
+  autopost dependencies yet.
+
+### reel-maker
+
+- Upstream: `https://github.com/sarthakagrawal927/reel-maker`
+- Local path: `engines/reel-maker`
+- Role: older internal Remotion + Modal prototype.
+- Current status: kept as a reference engine. It should either be superseded by
+  this repo or reused behind the same `VideoBrief` adapter contract.
+
+### Cloudflare
+
+- Worker: `reel-pipeline-artifacts`
+- R2 bucket: `reel-artifacts`
+- Live artifact base URL:
+  `https://reel-pipeline-artifacts.sarthakagrawal927.workers.dev`
+- Worker routes:
+  - `GET /health`
+  - `GET /reels/:key`
+- The artifact Worker supports byte-range responses so MP4 playback works in
+  browsers.
+
+## Architecture
+
+```text
+SaaS Maker Marketing Queue
+        |
+        | accepted reel-channel item
+        v
+VideoBrief contract
+        |
+        +--> MockRenderer for tests/local smoke
+        +--> MoneyPrinterTurbo adapter for real stock-footage MP4s
+        +--> OpenShorts adapter for future UGC job specs
+        |
+        v
+Artifact publisher
+        |
+        +--> local public directory for local testing
+        +--> Cloudflare R2 for production artifacts
+        |
+        v
+SaaS Maker Marketing Queue patched with video metadata
+```
+
+Core files:
+
+- `src/video-brief.js` — normalizes and validates queue items into a video brief.
+- `src/pipeline.js` — creates render jobs and syncs completed artifacts back.
+- `src/adapters/moneyprinterturbo.js` — MoneyPrinterTurbo API adapter.
+- `src/adapters/openshorts.js` — guarded OpenShorts UGC job-spec adapter.
+- `src/artifact-publisher.js` — local and R2 artifact publishing.
+- `src/posting.js` — gated posting handoff / provider abstraction.
+- `src/worker/index.js` — Cloudflare Worker for serving R2 MP4 artifacts.
 
 ## Current Status
 
-- `VideoBrief` contract for reel-platform ideas.
-- Mock renderer that proves request -> artifact -> `video_ready`.
-- MoneyPrinterTurbo adapter for cheap stock-footage rendering.
-- Local MoneyPrinterTurbo canary for no-secrets MP4 generation.
-- HTTP API with `POST /renders`, `GET /renders/:id`, and `GET /health`.
-- Tests for queue mapping, validation, adapter request shape, and mock render.
+Working now:
+
+- VideoBrief validation for TikTok, Instagram Reels, and YouTube Shorts ideas.
+- Mock renderer for fast no-dependency end-to-end tests.
+- MoneyPrinterTurbo adapter and local canary.
+- R2 artifact upload through Wrangler.
+- R2-backed Worker serving MP4s with range requests.
+- SaaS Maker Marketing Queue sync for rendered asset metadata.
+- Manual posting handoff that does not mark a post as sent unless a real posting
+  provider reports success.
+
+Not done yet:
+
+- Real UGC actor pipeline.
+- Real autopost provider wiring.
+- Quality scoring for generated videos.
+- Custom domain for artifacts.
+- Scheduled background job runner.
 
 ## Commands
 
 ```bash
 npm test
-npm run bootstrap:cloudflare
 npm run smoke:mock
-npm run probe:engines
-npm run check:cloudflare
-npm run canary:moneyprinter
-npm run render:accepted -- --mode mock --limit 5
-npm run render:accepted -- --mode mock --limit 5 \
-  --artifact-public-dir ./tmp/public-reels \
-  --artifact-base-url https://assets.example.com/reels
-npm run render:accepted -- --mode moneyprinterturbo --limit 1 \
-  --artifact-r2-bucket reel-artifacts \
-  --artifact-base-url https://assets.example.com/reels
-npm run render:accepted -- --fixture test/fixtures/accepted-marketing-posts.json --mode mock --limit 1
-npm run post:ready -- --fixture test/fixtures/post-ready-marketing-posts.json --confirm-post --limit 1
 npm run smoke:full
-npm run smoke:artifact -- https://assets.example.com sample.mp4
 npm run worker:dry-run
-npm run dev
+npm run check:cloudflare
+npm run bootstrap:cloudflare -- --confirm-deploy
 ```
 
-`canary:moneyprinter` expects MoneyPrinterTurbo to be running at
-`MONEYPRINTER_API_URL` or `http://127.0.0.1:8080`. It uses local generated
-video/audio fixtures only, so it does not spend LLM, TTS, stock-footage, or
-posting API quota.
+Render accepted SaaS Maker queue items with the mock renderer:
+
+```bash
+npm run render:accepted -- --mode mock --limit 5
+```
+
+Render with MoneyPrinterTurbo and upload to R2:
+
+```bash
+npm run render:accepted -- --mode moneyprinterturbo --limit 1 \
+  --artifact-r2-bucket reel-artifacts \
+  --artifact-base-url https://reel-pipeline-artifacts.sarthakagrawal927.workers.dev/reels
+```
+
+Run without SaaS Maker auth using fixtures:
+
+```bash
+npm run render:accepted -- \
+  --fixture test/fixtures/accepted-marketing-posts.json \
+  --mode mock \
+  --limit 1
+```
+
+Prepare posting handoff for ready accepted posts:
+
+```bash
+npm run post:ready -- \
+  --fixture test/fixtures/post-ready-marketing-posts.json \
+  --confirm-post \
+  --limit 1
+```
 
 ## Local API
 
+Start the local API:
+
+```bash
+npm run dev
+```
+
+Smoke health:
+
 ```bash
 curl -sS http://127.0.0.1:4317/health
+```
 
+Create a mock render:
+
+```bash
 curl -sS http://127.0.0.1:4317/renders \
   -H 'content-type: application/json' \
   -d '{
@@ -61,52 +218,95 @@ curl -sS http://127.0.0.1:4317/renders \
     "cta": "Open the profile and ask one question.",
     "renderMode": "mock"
   }'
+```
 
+Render accepted queue items through the local API:
+
+```bash
 curl -sS http://127.0.0.1:4317/marketing/render-accepted \
   -H 'content-type: application/json' \
   -d '{"mode":"mock","limit":5}'
 ```
 
-`render:accepted` and `/marketing/render-accepted` pull accepted SaaS Maker
-Marketing Queue items, render only reel channels, skip items that already have
-`asset_url` or `result_url`, and patch the generated artifact back onto the
-queue item.
+## Environment
 
-Use `--fixture` for local end-to-end testing without SaaS Maker auth.
-Use `--artifact-public-dir` plus `--artifact-base-url` when the synced queue
-item needs an HTTP asset URL instead of a local file URL.
-Use `--artifact-r2-bucket` plus `--artifact-base-url` to upload with
-`npx wrangler r2 object put`; this relies on the local Wrangler login and does
-not store credentials in this repo.
+Do not commit `.env` files or provider tokens.
 
-`worker:dry-run` validates the R2-backed artifact Worker. The Worker exposes
-`GET /health` and `GET /reels/:key`; production upload URLs should use the same
-base URL passed as `--artifact-base-url`.
+Expected local variables when connecting to real SaaS Maker / providers:
 
-`check:cloudflare` verifies Wrangler auth, confirms the configured R2 bucket is
-visible, and runs a Worker dry-run. `smoke:artifact` verifies the deployed
-artifact Worker can serve an uploaded object.
+- `SAASMAKER_API_URL` or default `https://api.sassmaker.com`
+- `SAASMAKER_SESSION_TOKEN` for session-auth Marketing Queue access
+- `MONEYPRINTER_API_URL` or default `http://127.0.0.1:8080`
+- Provider-specific keys stored in the relevant engine config, not in this repo
 
-`bootstrap:cloudflare` is guarded. Without flags it only authenticates,
-checks the bucket, and dry-runs deploy. Use `--confirm-create-bucket` to create
-the configured R2 bucket and `--confirm-deploy` to deploy the Worker.
+Use `.env.example` as the non-secret template.
 
-`post:ready` is deliberately gated: it only processes accepted reel-channel
-items with a rendered asset, a due `scheduled_for` timestamp, and
-`--confirm-post`. The default `manual` provider prepares a posting handoff and
-does not call external social APIs.
+## Submodules
 
-## Next Milestones
+Clone with submodules:
 
-1. Create/bind the real `reel-artifacts` R2 bucket and route/domain.
-2. Wire a real posting provider after manual gate proves useful.
-3. Replace OpenShorts job-spec scaffold with an enabled UGC render once paid providers are chosen.
+```bash
+git clone --recurse-submodules https://github.com/sarthakagrawal927/reel-pipeline.git
+```
 
-## Upstream Engines
-
-Pinned submodules live under `engines/`. See `docs/submodules.md` and
-`docs/engine-pins.md`.
+Or initialize after cloning:
 
 ```bash
 git submodule update --init --recursive
 ```
+
+Pinned engines:
+
+```bash
+git submodule status
+```
+
+See:
+
+- `docs/submodules.md`
+- `docs/engine-pins.md`
+- `docs/upstreams.md`
+- `docs/architecture.md`
+
+## Update Policy
+
+Do not casually update upstream engines on `main`.
+
+Upgrade flow:
+
+```bash
+git checkout -b upgrade/video-engines-YYYY-MM-DD
+git submodule update --remote engines/MoneyPrinterTurbo
+npm test
+npm run smoke:mock
+npm run canary:moneyprinter
+```
+
+Accept an engine update only after at least one real render canary passes and the
+artifact URL/path is recorded in the task or PR.
+
+## Release Verification
+
+Baseline checks before release:
+
+```bash
+npm test
+npm run worker:dry-run
+npm run check:cloudflare
+REEL_ARTIFACT_BASE_URL=https://reel-pipeline-artifacts.sarthakagrawal927.workers.dev \
+  REEL_ARTIFACT_SMOKE_KEY=fixture-real-render.mp4 \
+  npm run smoke:artifact
+```
+
+SaaS Maker fleet integration lives in:
+
+- `../saas-maker/foundry.projects.json`
+- `../saas-maker/scripts/lib/fleet-health-contracts.mjs`
+- `../saas-maker/scripts/fleet-production-smoke.mjs`
+
+## Practical Caveat
+
+The pipeline is technically working. The generated videos are still low-quality
+until we improve creative direction, footage selection, UGC actor support, and
+post-render review. Treat the current release as infrastructure and draft
+production, not final marketing quality.
