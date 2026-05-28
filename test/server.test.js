@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 
 import { createServer } from '../src/server/index.js';
+import { FileReelStore } from '../src/file-reel-store.js';
 
 const reelBody = [
   'Script: show a founder with repeated DMs, then one AI profile answering them.',
@@ -131,6 +132,59 @@ test('HTTP API post-ready gate requires confirmation and prepares ready posts', 
     const payload = await res.json();
     assert.equal(payload.data.results[0].posted.status, 'prepared');
     assert.equal(updates[0].id, 'server-ready-post');
+  } finally {
+    await new Promise(resolve => server.close(resolve));
+  }
+});
+
+test('HTTP API creates and reviews reel drafts', async () => {
+  const reelStore = new FileReelStore({ dir: './tmp/server-test-reels' });
+  const server = createServer({ reelStore });
+  await new Promise(resolve => server.listen(0, resolve));
+  const { port } = server.address();
+
+  try {
+    const created = await fetch(`http://127.0.0.1:${port}/reels`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        id: 'server-reel-draft',
+        projectId: 'linkchat',
+        realDetails: {
+          product: 'link-in-bio chat agent',
+          proof: 'answers repeated profile questions',
+        },
+        goal: 'Show creators that their profile can answer repeated questions',
+        channel: 'tiktok',
+        cta: 'Ask the profile one question.',
+      }),
+    });
+
+    assert.equal(created.status, 201);
+    const createdPayload = await created.json();
+    assert.equal(createdPayload.data.id, 'server-reel-draft');
+    assert.equal(createdPayload.data.status, 'generated');
+    assert.equal(createdPayload.data.hook.includes('{'), false);
+    assert.match(createdPayload.data.body, /Shot list:/);
+    assert.match(createdPayload.data.body, /product: link-in-bio chat agent/);
+
+    const list = await fetch(`http://127.0.0.1:${port}/reels?status=generated`);
+    assert.equal(list.status, 200);
+    const listPayload = await list.json();
+    assert.equal(listPayload.data.some((reel) => reel.id === 'server-reel-draft'), true);
+
+    const review = await fetch(`http://127.0.0.1:${port}/review`);
+    assert.equal(review.status, 200);
+    assert.match(await review.text(), /Reel Review/);
+
+    const approved = await fetch(`http://127.0.0.1:${port}/reels/server-reel-draft/decision`, {
+      method: 'PATCH',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ decision: 'approve' }),
+    });
+    assert.equal(approved.status, 200);
+    const approvedPayload = await approved.json();
+    assert.equal(approvedPayload.data.status, 'approved');
   } finally {
     await new Promise(resolve => server.close(resolve));
   }

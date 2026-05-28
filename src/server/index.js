@@ -1,14 +1,40 @@
 import http from 'node:http';
+import { FileReelStore } from '../file-reel-store.js';
 import { createDraftVideo, createRenderResponse, getDraftVideoStatus, renderAcceptedMarketingPosts } from '../pipeline.js';
 import { postReadyMarketingVideos } from '../posting.js';
+import { createReelDraft, decideReelDraft, listReelDrafts } from '../reel-intake.js';
+import { reviewPageHtml } from '../review-ui.js';
 
 const port = Number(process.env.PORT ?? 4317);
 
 export function createServer(options = {}) {
+  const reelOptions = { ...options, reelStore: options.reelStore ?? new FileReelStore(options.reelStoreOptions) };
   return http.createServer(async (req, res) => {
     try {
       if (req.method === 'GET' && req.url === '/health') {
         return json(res, 200, { ok: true });
+      }
+      if (req.method === 'GET' && (req.url === '/' || req.url === '/review')) {
+        return html(res, 200, reviewPageHtml());
+      }
+      if (req.method === 'POST' && req.url === '/reels') {
+        const body = await readJson(req);
+        const data = await createReelDraft(body, reelOptions);
+        return json(res, 201, { data });
+      }
+      if (req.method === 'GET' && req.url?.startsWith('/reels')) {
+        const url = new URL(req.url, 'http://127.0.0.1');
+        if (url.pathname === '/reels') {
+          const data = await listReelDrafts(Object.fromEntries(url.searchParams), reelOptions);
+          return json(res, 200, { data });
+        }
+      }
+      const decisionMatch = req.method === 'PATCH' && req.url?.match(/^\/reels\/([^/?#]+)\/decision$/);
+      if (decisionMatch) {
+        const body = await readJson(req);
+        const data = await decideReelDraft(decodeURIComponent(decisionMatch[1]), body, reelOptions);
+        if (!data) return json(res, 404, { error: 'reel not found' });
+        return json(res, 200, { data });
       }
       if (req.method === 'POST' && req.url === '/renders') {
         const body = await readJson(req);
@@ -39,8 +65,13 @@ export function createServer(options = {}) {
 }
 
 function json(res, status, body) {
-  res.writeHead(status, { 'content-type': 'application/json' });
+  res.writeHead(status, { 'content-type': 'application/json', 'access-control-allow-origin': '*' });
   res.end(JSON.stringify(body));
+}
+
+function html(res, status, body) {
+  res.writeHead(status, { 'content-type': 'text/html; charset=utf-8' });
+  res.end(body);
 }
 
 async function readJson(req) {

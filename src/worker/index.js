@@ -1,12 +1,46 @@
+import { createReelDraft, decideReelDraft, listReelDrafts, R2ReelStore } from '../reel-intake.js';
+import { reviewPageHtml } from '../review-ui.js';
+
 const JSON_HEADERS = {
   'content-type': 'application/json; charset=utf-8',
+  'access-control-allow-origin': '*',
+  'access-control-allow-methods': 'GET,POST,PATCH,OPTIONS',
+  'access-control-allow-headers': 'content-type',
 };
 
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    if (request.method === 'OPTIONS') {
+      return new Response(null, { status: 204, headers: JSON_HEADERS });
+    }
     if (request.method === 'GET' && url.pathname === '/health') {
       return json({ ok: true });
+    }
+
+    if (request.method === 'GET' && (url.pathname === '/' || url.pathname === '/review')) {
+      return html(reviewPageHtml());
+    }
+
+    if (request.method === 'POST' && url.pathname === '/reels') {
+      const data = await createReelDraft(await request.json(), { reelStore: new R2ReelStore(env.REEL_ARTIFACTS) });
+      return json({ data }, 201);
+    }
+
+    if (request.method === 'GET' && url.pathname === '/reels') {
+      const data = await listReelDrafts(Object.fromEntries(url.searchParams), {
+        reelStore: new R2ReelStore(env.REEL_ARTIFACTS),
+      });
+      return json({ data });
+    }
+
+    const decisionMatch = request.method === 'PATCH' && url.pathname.match(/^\/reels\/([^/]+)\/decision$/);
+    if (decisionMatch) {
+      const data = await decideReelDraft(decodeURIComponent(decisionMatch[1]), await request.json(), {
+        reelStore: new R2ReelStore(env.REEL_ARTIFACTS),
+      });
+      if (!data) return json({ error: 'reel not found' }, 404);
+      return json({ data });
     }
 
     if (request.method === 'GET' && url.pathname.startsWith('/reels/')) {
@@ -68,4 +102,11 @@ function parseRange(value) {
 
 function json(body, status = 200) {
   return new Response(JSON.stringify(body), { status, headers: JSON_HEADERS });
+}
+
+function html(body, status = 200) {
+  return new Response(body, {
+    status,
+    headers: { 'content-type': 'text/html; charset=utf-8' },
+  });
 }

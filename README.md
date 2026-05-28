@@ -118,6 +118,8 @@ SaaS Maker Marketing Queue patched with video metadata
 Core files:
 
 - `src/video-brief.js` — normalizes and validates queue items into a video brief.
+- `src/reel-intake.js` — creates API-submitted reel drafts and records approval decisions.
+- `src/review-ui.js` — plain HTML/CSS/JS swipe review UI.
 - `src/pipeline.js` — creates render jobs and syncs completed artifacts back.
 - `src/adapters/moneyprinterturbo.js` — MoneyPrinterTurbo API adapter.
 - `src/adapters/openshorts.js` — guarded OpenShorts UGC job-spec adapter.
@@ -129,6 +131,9 @@ Core files:
 
 Working now:
 
+- `POST /reels` intake endpoint for project/product details.
+- `GET /review` swipe UI for approving or rejecting generated reel ideas.
+- `GET /reels` and `PATCH /reels/:id/decision` review APIs.
 - VideoBrief validation for TikTok, Instagram Reels, and YouTube Shorts ideas.
 - Mock renderer for fast no-dependency end-to-end tests.
 - MoneyPrinterTurbo adapter and local canary.
@@ -203,6 +208,43 @@ Smoke health:
 curl -sS http://127.0.0.1:4317/health
 ```
 
+Create a reel draft from product details:
+
+```bash
+curl -sS http://127.0.0.1:4317/reels \
+  -H 'content-type: application/json' \
+  -d '{
+    "projectId": "linkchat",
+    "projectSlug": "linkchat",
+    "channel": "tiktok",
+    "goal": "Show creators that their profile can answer repeated questions",
+    "audience": "solo creators with link-in-bio traffic",
+    "realDetails": {
+      "product": "link-in-bio AI chat profile",
+      "proof": "answers repeated profile questions before the creator opens DMs",
+      "risk": "early product, keep the claim narrow"
+    },
+    "cta": "Ask the profile one question."
+  }'
+```
+
+Review generated drafts:
+
+```bash
+open http://127.0.0.1:4317/review
+```
+
+Or review by API:
+
+```bash
+curl -sS 'http://127.0.0.1:4317/reels?status=generated'
+
+curl -sS http://127.0.0.1:4317/reels/<reelId>/decision \
+  -X PATCH \
+  -H 'content-type: application/json' \
+  -d '{"decision":"approve"}'
+```
+
 Create a mock render:
 
 ```bash
@@ -240,6 +282,10 @@ Expected local variables when connecting to real SaaS Maker / providers:
 - Provider-specific keys stored in the relevant engine config, not in this repo
 
 Use `.env.example` as the non-secret template.
+
+The local Node API stores review drafts under `.reel-pipeline/reels` by default.
+The deployed Cloudflare Worker stores review drafts as JSON objects in the
+configured R2 bucket under `reel-requests/`.
 
 ## Submodules
 

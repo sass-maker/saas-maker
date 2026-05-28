@@ -5,7 +5,7 @@ import { briefFromMarketingPost, normalizeVideoBrief, toMoneyPrinterRequest } fr
 import { MoneyPrinterTurboAdapter } from '../src/adapters/moneyprinterturbo.js';
 import { OpenShortsAdapter, toOpenShortsJob } from '../src/adapters/openshorts.js';
 import { publishRenderArtifacts, publishRenderArtifactsToR2 } from '../src/artifact-publisher.js';
-import { createDraftVideo, getDraftVideoStatus, renderAcceptedMarketingPosts } from '../src/pipeline.js';
+import { createDraftVideo, createRenderer, getDraftVideoStatus, renderAcceptedMarketingPosts } from '../src/pipeline.js';
 import { patchForPostingResult, postReadyMarketingVideos, postingGate } from '../src/posting.js';
 import { renderPatchForMarketingPost, SaaSMakerClient } from '../src/saas-maker-client.js';
 
@@ -71,6 +71,10 @@ test('converts video brief into MoneyPrinterTurbo request shape', () => {
   assert.equal(req.video_aspect, '9:16');
   assert.equal(req.video_source, 'pexels');
   assert.match(req.video_script, /guilt folder/);
+});
+
+test('stock render mode maps to MoneyPrinterTurbo adapter', () => {
+  assert.equal(createRenderer('stock').constructor.name, 'MoneyPrinterTurboAdapter');
 });
 
 test('MoneyPrinterTurbo adapter posts to v1 video API and reads task id', async () => {

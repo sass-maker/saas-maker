@@ -1,0 +1,190 @@
+import { normalizeVideoBrief } from './video-brief.js';
+
+const REEL_STATUSES = new Set(['generated', 'approved', 'rejected', 'rendering', 'video_ready', 'posted']);
+
+export class R2ReelStore {
+  constructor(bucket, options = {}) {
+    if (!bucket) throw new Error('missing REEL_ARTIFACTS binding');
+    this.bucket = bucket;
+    this.prefix = options.prefix ?? 'reel-requests/';
+  }
+
+  async save(record) {
+    const now = new Date().toISOString();
+    const next = {
+      ...record,
+      updatedAt: now,
+      createdAt: record.createdAt ?? now,
+    };
+    await this.bucket.put(this.pathFor(record.id), JSON.stringify(next, null, 2), {
+      httpMetadata: { contentType: 'application/json; charset=utf-8' },
+    });
+    return next;
+  }
+
+  async get(id) {
+    const object = await this.bucket.get(this.pathFor(id));
+    if (!object) return null;
+    return object.json();
+  }
+
+  async list() {
+    const listed = await this.bucket.list({ prefix: this.prefix });
+    const objects = await Promise.all((listed.objects ?? []).map((object) => this.bucket.get(object.key)));
+    const records = [];
+    for (const object of objects) {
+      if (object) records.push(await object.json());
+    }
+    return records.sort((left, right) => String(right.createdAt ?? '').localeCompare(String(left.createdAt ?? '')));
+  }
+
+  pathFor(id) {
+    return `${this.prefix}${safeId(id)}.json`;
+  }
+}
+
+export async function createReelDraft(input, options = {}) {
+  const store = requiredStore(options.reelStore);
+  const record = normalizeReelDraftInput(input, options);
+  return store.save(record);
+}
+
+export async function listReelDrafts(filters = {}, options = {}) {
+  const store = requiredStore(options.reelStore);
+  const records = await store.list();
+  return records.filter((record) => {
+    if (filters.status && record.status !== filters.status) return false;
+    if (filters.projectSlug && record.projectSlug !== filters.projectSlug) return false;
+    if (filters.project_slug && record.projectSlug !== filters.project_slug) return false;
+    if (filters.channel && record.channel !== filters.channel) return false;
+    return true;
+  });
+}
+
+export async function decideReelDraft(id, decision, options = {}) {
+  const store = requiredStore(options.reelStore);
+  const record = await store.get(id);
+  if (!record) return null;
+  const normalizedDecision = normalizeDecision(decision);
+  return store.save({
+    ...record,
+    status: normalizedDecision === 'approve' ? 'approved' : 'rejected',
+    decision: normalizedDecision,
+    decidedAt: new Date().toISOString(),
+  });
+}
+
+export function normalizeReelDraftInput(input, options = {}) {
+  const id = optionalString(input.id) ?? makeReelId(options.now?.() ?? new Date());
+  const projectId = optionalString(input.projectId ?? input.project_id);
+  const projectSlug = optionalString(input.projectSlug ?? input.project_slug) ?? projectId;
+  if (!projectSlug) throw new Error('projectSlug or projectId is required');
+
+  const details = input.realDetails ?? input.real_details ?? input.productDetails ?? input.product_details ?? input.details;
+  const title = optionalString(input.title) ?? titleFrom(projectSlug, input.goal);
+  const hook = optionalString(input.hook) ?? hookFrom(input.goal, details, title);
+  const body = optionalString(input.body) ?? buildVideoBriefBody({ ...input, details, title, hook });
+  const channel = optionalString(input.channel) ?? 'tiktok';
+  const brief = normalizeVideoBrief({
+    id: `brief_${id}`,
+    projectSlug,
+    taskId: input.taskId ?? input.task_id,
+    marketingPostId: input.marketingPostId ?? input.marketing_post_id,
+    channel,
+    title,
+    hook,
+    body,
+    cta: input.cta,
+    audience: input.audience,
+    productUrl: input.productUrl ?? input.product_url,
+    renderMode: input.renderMode ?? input.render_mode ?? 'stock',
+    durationSeconds: input.durationSeconds ?? input.duration_seconds,
+  });
+
+  const status = optionalString(input.status) ?? 'generated';
+  if (!REEL_STATUSES.has(status)) throw new Error(`unsupported reel status: ${status}`);
+
+  return {
+    id,
+    status,
+    projectId,
+    projectSlug,
+    channel: brief.channel,
+    title: brief.title,
+    hook: brief.hook,
+    body: brief.body,
+    cta: brief.cta,
+    audience: brief.audience,
+    productUrl: brief.productUrl,
+    source: optionalString(input.source) ?? 'api',
+    sourceDetails: details ?? null,
+    brief,
+    decision: null,
+    renderJobId: null,
+  };
+}
+
+function buildVideoBriefBody(input) {
+  const details = stringifyDetails(input.details);
+  const audience = optionalString(input.audience) ?? 'people with this problem';
+  const goal = optionalString(input.goal) ?? 'show the product value quickly';
+  const proof = optionalString(input.proof) ?? 'use the product screen or concrete output as proof';
+  const cta = optionalString(input.cta) ?? 'try the product';
+  return [
+    `Script: Open with "${input.hook}". Show the user pain, then show ${input.title} solving it with a real product moment. End with "${cta}".`,
+    `Shot list: first-frame pain shot; product UI or artifact proof; before/after contrast; final result screen; simple end card.`,
+    `Captions: "${input.hook}" / "${proof}" / "${cta}".`,
+    `Asset prompts: vertical phone or laptop footage, product UI close-up, realistic creator desk, no generic AI stock montage.`,
+    `Edit notes: 9:16, fast first cut, direct voiceover, keep it specific to ${input.title}, avoid vague hype.`,
+    `Audience: ${audience}.`,
+    `Goal: ${goal}.`,
+    details ? `Real details: ${details}` : 'Real details: none supplied.',
+  ].join('\n');
+}
+
+function normalizeDecision(value) {
+  const decision = typeof value === 'string' ? value : value?.decision;
+  if (decision === 'approve' || decision === 'approved') return 'approve';
+  if (decision === 'reject' || decision === 'rejected') return 'reject';
+  throw new Error('decision must be approve or reject');
+}
+
+function titleFrom(projectSlug, goal) {
+  const cleanGoal = optionalString(goal);
+  if (cleanGoal) return cleanGoal.length > 80 ? cleanGoal.slice(0, 77).trimEnd() + '...' : cleanGoal;
+  return `${projectSlug} reel draft`;
+}
+
+function hookFrom(goal, details, title) {
+  const detailHook = typeof details === 'object' && details
+    ? optionalString(details.pain) ?? optionalString(details.proof) ?? optionalString(details.product)
+    : undefined;
+  const text = optionalString(goal) || detailHook || stringifyDetails(details) || title;
+  return text.length > 90 ? text.slice(0, 87).trimEnd() + '...' : text;
+}
+
+function stringifyDetails(details) {
+  if (!details) return '';
+  if (typeof details === 'string') return details.trim();
+  return Object.entries(details)
+    .filter(([, value]) => value !== undefined && value !== null && String(value).trim())
+    .map(([key, value]) => `${key}: ${String(value).trim()}`)
+    .join('; ');
+}
+
+function makeReelId(now) {
+  return `reel_${now.toISOString().replace(/[^0-9]/g, '').slice(0, 14)}_${Math.random().toString(36).slice(2, 8)}`;
+}
+
+function requiredStore(store) {
+  if (!store) throw new Error('reelStore is required');
+  return store;
+}
+
+function safeId(id) {
+  return String(id).replace(/[^a-zA-Z0-9_.-]/g, '_');
+}
+
+function optionalString(value) {
+  return typeof value === 'string' && value.trim() ? value.trim() : undefined;
+}

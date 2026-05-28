@@ -7,6 +7,7 @@ import { briefFromMarketingPost, normalizeVideoBrief } from './video-brief.js';
 import { renderPatchForMarketingPost, SaaSMakerClient } from './saas-maker-client.js';
 
 export function createRenderer(mode = 'mock', options = {}) {
+  if (mode === 'stock') return new MoneyPrinterTurboAdapter(options.moneyprinterturbo);
   if (mode === 'moneyprinterturbo') return new MoneyPrinterTurboAdapter(options.moneyprinterturbo);
   if (mode === 'openshorts') return new OpenShortsAdapter(options.openshorts);
   if (mode === 'mock') return new MockRenderer(options.mock);

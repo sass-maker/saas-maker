@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 export class FileJobStore {
@@ -23,6 +23,21 @@ export class FileJobStore {
       return JSON.parse(await readFile(this.pathFor(id), 'utf8'));
     } catch (error) {
       if (error?.code === 'ENOENT') return null;
+      throw error;
+    }
+  }
+
+  async list() {
+    try {
+      const files = await readdir(this.dir);
+      const records = await Promise.all(
+        files
+          .filter((file) => file.endsWith('.json'))
+          .map((file) => readFile(path.join(this.dir, file), 'utf8').then(JSON.parse)),
+      );
+      return records.sort((left, right) => String(right.createdAt ?? '').localeCompare(String(left.createdAt ?? '')));
+    } catch (error) {
+      if (error?.code === 'ENOENT') return [];
       throw error;
     }
   }
