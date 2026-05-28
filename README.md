@@ -135,6 +135,8 @@ Working now:
 - `GET /review` swipe UI for approving or rejecting generated reel ideas.
 - `GET /reels` and `PATCH /reels/:id/decision` review APIs.
 - `POST /reels/:id/render` for approved drafts.
+- `PATCH /reels/:id/video-decision` to accept rendered videos as ready to post or reject them.
+- `renderMode: "remotion"` through the pinned `engines/reel-maker` Remotion engine.
 - VideoBrief validation for TikTok, Instagram Reels, and YouTube Shorts ideas.
 - Mock renderer for fast no-dependency end-to-end tests.
 - MoneyPrinterTurbo adapter and local canary.
@@ -158,6 +160,7 @@ Not done yet:
 npm test
 npm run smoke:mock
 npm run smoke:full
+npm run smoke:reel-maker
 npm run worker:dry-run
 npm run check:cloudflare
 npm run bootstrap:cloudflare -- --confirm-deploy
@@ -248,7 +251,12 @@ curl -sS http://127.0.0.1:4317/reels/<reelId>/decision \
 curl -sS http://127.0.0.1:4317/reels/<reelId>/render \
   -X POST \
   -H 'content-type: application/json' \
-  -d '{"mode":"mock"}'
+  -d '{"mode":"remotion"}'
+
+curl -sS http://127.0.0.1:4317/reels/<reelId>/video-decision \
+  -X PATCH \
+  -H 'content-type: application/json' \
+  -d '{"decision":"approve"}'
 ```
 
 Create a mock render:

@@ -4,6 +4,7 @@ import test from 'node:test';
 import { briefFromMarketingPost, normalizeVideoBrief, toMoneyPrinterRequest } from '../src/video-brief.js';
 import { MoneyPrinterTurboAdapter } from '../src/adapters/moneyprinterturbo.js';
 import { OpenShortsAdapter, toOpenShortsJob } from '../src/adapters/openshorts.js';
+import { ReelMakerAdapter, splitBriefIntoScenes } from '../src/adapters/reel-maker.js';
 import { publishRenderArtifacts, publishRenderArtifactsToR2 } from '../src/artifact-publisher.js';
 import { createDraftVideo, createRenderer, getDraftVideoStatus, renderAcceptedMarketingPosts } from '../src/pipeline.js';
 import { patchForPostingResult, postReadyMarketingVideos, postingGate } from '../src/posting.js';
@@ -77,6 +78,11 @@ test('stock render mode maps to MoneyPrinterTurbo adapter', () => {
   assert.equal(createRenderer('stock').constructor.name, 'MoneyPrinterTurboAdapter');
 });
 
+test('remotion render mode maps to ReelMaker adapter', () => {
+  assert.equal(createRenderer('remotion').constructor.name, 'ReelMakerAdapter');
+  assert.equal(createRenderer('reel-maker').constructor.name, 'ReelMakerAdapter');
+});
+
 test('MoneyPrinterTurbo adapter posts to v1 video API and reads task id', async () => {
   const calls = [];
   const adapter = new MoneyPrinterTurboAdapter({
@@ -120,6 +126,37 @@ test('OpenShorts adapter creates a guarded UGC job spec', async () => {
   assert.equal(result.provider, 'openshorts');
   assert.equal(result.status, 'queued');
   assert.match(result.raw.specPath, /job\.json$/);
+});
+
+test('ReelMaker adapter creates Remotion timeline and render job', async () => {
+  const commands = [];
+  const adapter = new ReelMakerAdapter({
+    engineDir: './tmp/reel-maker-engine',
+    now: () => new Date('2026-01-01T00:00:00.000Z'),
+    commandRunner: async (command, args, options = {}) => {
+      commands.push({ command, args, options });
+      if (command === 'ffprobe') return { stdout: '2.5\n', stderr: '' };
+      return { stdout: '', stderr: '' };
+    },
+  });
+  const brief = normalizeVideoBrief({
+    id: 'brief-remotion',
+    projectSlug: 'linkchat',
+    channel: 'tiktok',
+    title: 'AI profile answers DMs',
+    hook: 'Stop answering the same profile question manually.',
+    body: reelBody,
+    cta: 'Ask the profile one question.',
+    renderMode: 'remotion',
+  });
+
+  const result = await adapter.createVideo(brief);
+
+  assert.equal(result.provider, 'reel-maker');
+  assert.equal(result.status, 'completed');
+  assert.match(result.videos[0], /brief-remotion\.mp4$/);
+  assert.equal(commands.some((call) => call.command === 'bunx' && call.args.includes('remotion')), true);
+  assert.equal(splitBriefIntoScenes(brief).length, 3);
 });
 
 test('mock renderer creates a completed draft artifact', async () => {

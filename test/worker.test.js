@@ -135,6 +135,15 @@ test('worker renders approved reel drafts into R2 mock artifacts', async () => {
   const artifact = await worker.fetch(new Request(payload.data.reel.assetUrl), env);
   assert.equal(artifact.status, 200);
   assert.equal(artifact.headers.get('content-type'), 'video/mp4');
+
+  const ready = await worker.fetch(new Request('https://assets.example.test/reels/worker-render-reel/video-decision', {
+    method: 'PATCH',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ decision: 'approve' }),
+  }), env);
+  assert.equal(ready.status, 200);
+  const readyPayload = await ready.json();
+  assert.equal(readyPayload.data.status, 'ready_to_post');
 });
 
 test('artifact worker supports byte ranges for video playback', async () => {

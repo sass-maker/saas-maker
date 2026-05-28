@@ -1,6 +1,6 @@
 import { normalizeVideoBrief } from './video-brief.js';
 
-const REEL_STATUSES = new Set(['generated', 'approved', 'rejected', 'rendering', 'video_ready', 'posted']);
+const REEL_STATUSES = new Set(['generated', 'approved', 'rejected', 'rendering', 'video_ready', 'ready_to_post', 'video_rejected', 'posted']);
 
 export class R2ReelStore {
   constructor(bucket, options = {}) {
@@ -71,6 +71,22 @@ export async function decideReelDraft(id, decision, options = {}) {
     status: normalizedDecision === 'approve' ? 'approved' : 'rejected',
     decision: normalizedDecision,
     decidedAt: new Date().toISOString(),
+  });
+}
+
+export async function decideRenderedReel(id, decision, options = {}) {
+  const store = requiredStore(options.reelStore);
+  const record = await store.get(id);
+  if (!record) return null;
+  if (record.status !== 'video_ready' && record.status !== 'ready_to_post' && record.status !== 'video_rejected') {
+    throw new Error('reel video must be rendered before video decision');
+  }
+  const normalizedDecision = normalizeDecision(decision);
+  return store.save({
+    ...record,
+    status: normalizedDecision === 'approve' ? 'ready_to_post' : 'video_rejected',
+    videoDecision: normalizedDecision,
+    videoDecidedAt: new Date().toISOString(),
   });
 }
 

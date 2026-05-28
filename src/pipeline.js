@@ -1,6 +1,7 @@
 import { MoneyPrinterTurboAdapter } from './adapters/moneyprinterturbo.js';
 import { MockRenderer } from './adapters/mock-renderer.js';
 import { OpenShortsAdapter } from './adapters/openshorts.js';
+import { ReelMakerAdapter } from './adapters/reel-maker.js';
 import { publishRenderArtifacts } from './artifact-publisher.js';
 import { FileJobStore } from './job-store.js';
 import { assertRenderableReel, attachReelRender } from './reel-intake.js';
@@ -11,6 +12,7 @@ export function createRenderer(mode = 'mock', options = {}) {
   if (mode === 'stock') return new MoneyPrinterTurboAdapter(options.moneyprinterturbo);
   if (mode === 'moneyprinterturbo') return new MoneyPrinterTurboAdapter(options.moneyprinterturbo);
   if (mode === 'openshorts') return new OpenShortsAdapter(options.openshorts);
+  if (mode === 'remotion' || mode === 'reel-maker') return new ReelMakerAdapter(options.reelMaker ?? options.reelmaker);
   if (mode === 'mock') return new MockRenderer(options.mock);
   throw new Error(`unsupported renderer mode: ${mode}`);
 }
@@ -20,15 +22,16 @@ export async function createDraftVideo(input, options = {}) {
   const renderer = options.renderer ?? createRenderer(options.mode ?? brief.renderMode ?? 'mock', options);
   const store = options.store ?? new FileJobStore(options.storeOptions);
   const result = await renderer.createVideo(brief);
+  const render = result.status === 'completed' ? await publishRenderArtifacts(result, options.artifacts) : result;
   const job = await store.save({
-    id: result.externalTaskId,
+    id: render.externalTaskId,
     brief,
-    render: result,
+    render,
     sync: null,
-    status: result.status === 'completed' ? 'video_ready' : 'rendering',
+    status: render.status === 'completed' ? 'video_ready' : 'rendering',
   });
 
-  if (options.syncMarketingPost && brief.marketingPostId && result.status === 'completed') {
+  if (options.syncMarketingPost && brief.marketingPostId && render.status === 'completed') {
     return syncMarketingPostForJob(job, options);
   }
 

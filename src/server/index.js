@@ -2,7 +2,7 @@ import http from 'node:http';
 import { FileReelStore } from '../file-reel-store.js';
 import { createDraftVideo, createRenderResponse, getDraftVideoStatus, renderAcceptedMarketingPosts, renderReelDraft } from '../pipeline.js';
 import { postReadyMarketingVideos } from '../posting.js';
-import { createReelDraft, decideReelDraft, listReelDrafts } from '../reel-intake.js';
+import { createReelDraft, decideRenderedReel, decideReelDraft, listReelDrafts } from '../reel-intake.js';
 import { reviewPageHtml } from '../review-ui.js';
 
 const port = Number(process.env.PORT ?? 4317);
@@ -46,6 +46,13 @@ export function createServer(options = {}) {
           force: body.force,
           allowUnapproved: body.allowUnapproved,
         });
+        if (!data) return json(res, 404, { error: 'reel not found' });
+        return json(res, 200, { data });
+      }
+      const videoDecisionMatch = req.method === 'PATCH' && req.url?.match(/^\/reels\/([^/?#]+)\/video-decision$/);
+      if (videoDecisionMatch) {
+        const body = await readJson(req);
+        const data = await decideRenderedReel(decodeURIComponent(videoDecisionMatch[1]), body, reelOptions);
         if (!data) return json(res, 404, { error: 'reel not found' });
         return json(res, 200, { data });
       }

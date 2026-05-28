@@ -1,4 +1,4 @@
-import { assertRenderableReel, attachReelRender, createReelDraft, decideReelDraft, listReelDrafts, R2ReelStore } from '../reel-intake.js';
+import { assertRenderableReel, attachReelRender, createReelDraft, decideRenderedReel, decideReelDraft, listReelDrafts, R2ReelStore } from '../reel-intake.js';
 import { reviewPageHtml } from '../review-ui.js';
 
 const JSON_HEADERS = {
@@ -52,6 +52,15 @@ export default {
       const body = await request.json().catch(() => ({}));
       assertRenderableReel(record, body);
       const data = await renderWorkerMockReel(record, env, reelStore);
+      return json({ data });
+    }
+
+    const videoDecisionMatch = request.method === 'PATCH' && url.pathname.match(/^\/reels\/([^/]+)\/video-decision$/);
+    if (videoDecisionMatch) {
+      const data = await decideRenderedReel(decodeURIComponent(videoDecisionMatch[1]), await request.json(), {
+        reelStore: new R2ReelStore(env.REEL_ARTIFACTS),
+      });
+      if (!data) return json({ error: 'reel not found' }, 404);
       return json({ data });
     }
 

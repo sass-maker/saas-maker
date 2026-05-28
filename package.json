@@ -15,6 +15,7 @@
     "post:ready": "node scripts/post-ready-marketing-videos.js",
     "smoke:full": "node scripts/smoke-full-pipeline.js",
     "smoke:artifact": "node scripts/smoke-live-artifact.js",
+    "smoke:reel-maker": "node scripts/smoke-reel-maker.js",
     "smoke:mock": "node scripts/smoke-mock.js",
     "worker:dry-run": "npx wrangler deploy --dry-run"
   },

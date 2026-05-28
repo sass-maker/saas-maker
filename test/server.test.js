@@ -196,6 +196,15 @@ test('HTTP API creates and reviews reel drafts', async () => {
     assert.equal(renderedPayload.data.reel.status, 'video_ready');
     assert.equal(renderedPayload.data.job.render.provider, 'mock');
     assert.ok(renderedPayload.data.reel.renderJobId);
+
+    const ready = await fetch(`http://127.0.0.1:${port}/reels/server-reel-draft/video-decision`, {
+      method: 'PATCH',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ decision: 'approve' }),
+    });
+    assert.equal(ready.status, 200);
+    const readyPayload = await ready.json();
+    assert.equal(readyPayload.data.status, 'ready_to_post');
   } finally {
     await new Promise(resolve => server.close(resolve));
   }
