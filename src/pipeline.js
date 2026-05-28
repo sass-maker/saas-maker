@@ -3,6 +3,7 @@ import { MockRenderer } from './adapters/mock-renderer.js';
 import { OpenShortsAdapter } from './adapters/openshorts.js';
 import { publishRenderArtifacts } from './artifact-publisher.js';
 import { FileJobStore } from './job-store.js';
+import { assertRenderableReel, attachReelRender } from './reel-intake.js';
 import { briefFromMarketingPost, normalizeVideoBrief } from './video-brief.js';
 import { renderPatchForMarketingPost, SaaSMakerClient } from './saas-maker-client.js';
 
@@ -109,6 +110,22 @@ export async function renderAcceptedMarketingPosts(options = {}) {
   }
 
   return { scanned: posts.length, eligible: reelPosts.length, results };
+}
+
+export async function renderReelDraft(id, options = {}) {
+  const reelStore = options.reelStore;
+  if (!reelStore) throw new Error('reelStore is required');
+  const record = await reelStore.get(id);
+  if (!record) return null;
+  assertRenderableReel(record, options);
+  const mode = options.mode ?? record.brief?.renderMode ?? 'mock';
+  const job = await createDraftVideo({ ...record.brief, renderMode: mode }, {
+    ...options,
+    mode,
+    syncMarketingPost: Boolean(record.brief?.marketingPostId),
+  });
+  const reel = await attachReelRender(id, job, { reelStore });
+  return { reel, job };
 }
 
 export function createRenderResponse(job) {

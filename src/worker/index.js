@@ -1,4 +1,4 @@
-import { createReelDraft, decideReelDraft, listReelDrafts, R2ReelStore } from '../reel-intake.js';
+import { assertRenderableReel, attachReelRender, createReelDraft, decideReelDraft, listReelDrafts, R2ReelStore } from '../reel-intake.js';
 import { reviewPageHtml } from '../review-ui.js';
 
 const JSON_HEADERS = {
@@ -43,6 +43,18 @@ export default {
       return json({ data });
     }
 
+    const renderMatch = request.method === 'POST' && url.pathname.match(/^\/reels\/([^/]+)\/render$/);
+    if (renderMatch) {
+      const reelStore = new R2ReelStore(env.REEL_ARTIFACTS);
+      const id = decodeURIComponent(renderMatch[1]);
+      const record = await reelStore.get(id);
+      if (!record) return json({ error: 'reel not found' }, 404);
+      const body = await request.json().catch(() => ({}));
+      assertRenderableReel(record, body);
+      const data = await renderWorkerMockReel(record, env, reelStore);
+      return json({ data });
+    }
+
     if (request.method === 'GET' && url.pathname.startsWith('/reels/')) {
       return serveArtifact(url.pathname.slice('/reels/'.length), env, request);
     }
@@ -50,6 +62,28 @@ export default {
     return json({ error: 'not found' }, 404);
   },
 };
+
+async function renderWorkerMockReel(record, env, reelStore) {
+  if (!env.REEL_ARTIFACTS) throw new Error('missing REEL_ARTIFACTS binding');
+  const key = `${safeArtifactKey(record.id)}-draft.mp4`;
+  await env.REEL_ARTIFACTS.put(key, `mock mp4 placeholder for ${record.title}\n`, {
+    httpMetadata: { contentType: 'video/mp4' },
+  });
+  const workerUrl = 'https://reel-pipeline-artifacts.sarthakagrawal927.workers.dev';
+  const job = {
+    id: `worker_mock_${record.id}`,
+    status: 'video_ready',
+    render: {
+      provider: 'worker-mock',
+      externalTaskId: `worker_mock_${record.id}`,
+      status: 'completed',
+      videos: [`${workerUrl}/reels/${key}`],
+      raw: { key },
+    },
+  };
+  const reel = await attachReelRender(record.id, job, { reelStore });
+  return { reel, job };
+}
 
 async function serveArtifact(key, env, request) {
   if (!env.REEL_ARTIFACTS) return json({ error: 'missing REEL_ARTIFACTS binding' }, 500);
@@ -78,6 +112,10 @@ async function serveArtifact(key, env, request) {
 
 function isSafeKey(key) {
   return Boolean(key) && !key.includes('..') && !key.includes('/') && /^[A-Za-z0-9._-]+$/.test(key);
+}
+
+function safeArtifactKey(id) {
+  return String(id).replace(/[^A-Za-z0-9._-]/g, '_');
 }
 
 function contentTypeFor(key) {

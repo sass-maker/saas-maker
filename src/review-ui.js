@@ -25,7 +25,9 @@ export function reviewPageHtml() {
     .meta { color: #a1a1aa; font-size: 13px; display: flex; flex-wrap: wrap; gap: 8px; }
     .meta span { border: 1px solid rgba(255,255,255,0.1); border-radius: 999px; padding: 6px 9px; }
     .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .top-actions { display: flex; justify-content: flex-end; margin-bottom: 12px; }
     button { border: 0; border-radius: 20px; padding: 17px 18px; font: inherit; font-weight: 800; cursor: pointer; color: #09090b; }
+    .render { background: #93c5fd; padding: 12px 14px; border-radius: 999px; }
     .reject { background: #fb7185; }
     .approve { background: #34d399; }
     .empty, .error { border: 1px dashed #3f3f46; border-radius: 28px; padding: 28px; color: #d4d4d8; background: rgba(24,24,27,0.72); text-align: center; }
@@ -41,6 +43,7 @@ export function reviewPageHtml() {
       </div>
       <div class="pill"><span id="count">0</span> pending</div>
     </header>
+    <div class="top-actions"><button class="render" id="render-approved">Render next approved</button></div>
     <section class="deck" id="deck"><div class="empty">Loading reel drafts...</div></section>
     <p class="hint">← reject · → approve · approval only changes review state, it does not autopost</p>
   </main>
@@ -127,6 +130,27 @@ export function reviewPageHtml() {
       setTimeout(render, 120);
     }
 
+    async function renderNextApproved() {
+      const approved = await fetch('/reels?status=approved').then(res => res.json());
+      const reel = (approved.data || []).find(item => !item.renderJobId);
+      if (!reel) {
+        deck.innerHTML = '<div class="empty">No approved unrendered reels.</div>';
+        return;
+      }
+      deck.innerHTML = '<div class="empty">Rendering ' + escapeHtml(reel.title) + '...</div>';
+      const res = await fetch('/reels/' + encodeURIComponent(reel.id) + '/render', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ mode: 'mock' }),
+      });
+      const payload = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        deck.innerHTML = '<div class="error">' + escapeHtml(payload.error || 'Render failed') + '</div>';
+        return;
+      }
+      deck.innerHTML = '<div class="empty">Rendered. Asset: ' + escapeHtml(payload.data?.reel?.assetUrl || payload.data?.job?.id || reel.id) + '</div>';
+    }
+
     function escapeHtml(value) {
       return String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
     }
@@ -135,6 +159,7 @@ export function reviewPageHtml() {
       if (event.key === 'ArrowLeft') decide('reject');
       if (event.key === 'ArrowRight') decide('approve');
     });
+    document.querySelector('#render-approved').onclick = renderNextApproved;
     load().catch(error => {
       deck.innerHTML = '<div class="error">' + escapeHtml(error.message) + '</div>';
     });

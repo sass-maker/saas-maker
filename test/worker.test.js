@@ -6,8 +6,8 @@ import worker from '../src/worker/index.js';
 function createR2Mock() {
   const objects = new Map();
   return {
-    async put(key, value) {
-      objects.set(key, String(value));
+    async put(key, value, options = {}) {
+      objects.set(key, { value: String(value), contentType: options.httpMetadata?.contentType });
     },
     async get(key, options) {
       if (key === 'draft.mp4') {
@@ -20,12 +20,12 @@ function createR2Mock() {
         };
       }
       if (!objects.has(key)) return null;
-      const value = objects.get(key);
+      const object = objects.get(key);
       return {
-        body: value,
+        body: object.value,
         httpEtag: '"json-etag"',
-        writeHttpMetadata: (headers) => headers.set('content-type', 'application/json; charset=utf-8'),
-        json: async () => JSON.parse(value),
+        writeHttpMetadata: (headers) => headers.set('content-type', object.contentType ?? 'application/json; charset=utf-8'),
+        json: async () => JSON.parse(object.value),
       };
     },
     async list({ prefix }) {
@@ -101,6 +101,40 @@ test('worker creates reel drafts and serves swipe review UI', async () => {
   assert.equal(decision.status, 200);
   const decisionPayload = await decision.json();
   assert.equal(decisionPayload.data.status, 'rejected');
+});
+
+test('worker renders approved reel drafts into R2 mock artifacts', async () => {
+  const env = { REEL_ARTIFACTS: createR2Mock() };
+  await worker.fetch(new Request('https://assets.example.test/reels', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      id: 'worker-render-reel',
+      projectSlug: 'linkchat',
+      realDetails: 'Profile answers repeated questions.',
+      goal: 'Show creators a profile can answer first',
+      channel: 'tiktok',
+    }),
+  }), env);
+  await worker.fetch(new Request('https://assets.example.test/reels/worker-render-reel/decision', {
+    method: 'PATCH',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ decision: 'approve' }),
+  }), env);
+
+  const rendered = await worker.fetch(new Request('https://assets.example.test/reels/worker-render-reel/render', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ mode: 'mock' }),
+  }), env);
+  assert.equal(rendered.status, 200);
+  const payload = await rendered.json();
+  assert.equal(payload.data.reel.status, 'video_ready');
+  assert.match(payload.data.reel.assetUrl, /worker-render-reel-draft\.mp4$/);
+
+  const artifact = await worker.fetch(new Request(payload.data.reel.assetUrl), env);
+  assert.equal(artifact.status, 200);
+  assert.equal(artifact.headers.get('content-type'), 'video/mp4');
 });
 
 test('artifact worker supports byte ranges for video playback', async () => {

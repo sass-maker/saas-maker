@@ -134,6 +134,7 @@ Working now:
 - `POST /reels` intake endpoint for project/product details.
 - `GET /review` swipe UI for approving or rejecting generated reel ideas.
 - `GET /reels` and `PATCH /reels/:id/decision` review APIs.
+- `POST /reels/:id/render` for approved drafts.
 - VideoBrief validation for TikTok, Instagram Reels, and YouTube Shorts ideas.
 - Mock renderer for fast no-dependency end-to-end tests.
 - MoneyPrinterTurbo adapter and local canary.
@@ -243,6 +244,11 @@ curl -sS http://127.0.0.1:4317/reels/<reelId>/decision \
   -X PATCH \
   -H 'content-type: application/json' \
   -d '{"decision":"approve"}'
+
+curl -sS http://127.0.0.1:4317/reels/<reelId>/render \
+  -X POST \
+  -H 'content-type: application/json' \
+  -d '{"mode":"mock"}'
 ```
 
 Create a mock render:

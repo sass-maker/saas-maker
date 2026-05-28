@@ -74,6 +74,31 @@ export async function decideReelDraft(id, decision, options = {}) {
   });
 }
 
+export async function attachReelRender(id, renderResult, options = {}) {
+  const store = requiredStore(options.reelStore);
+  const record = await store.get(id);
+  if (!record) return null;
+  const job = renderResult.job ?? renderResult;
+  return store.save({
+    ...record,
+    status: job.status === 'video_ready' ? 'video_ready' : job.status ?? 'rendering',
+    renderJobId: job.id,
+    render: job.render ?? null,
+    assetUrl: firstVideoUrl(job),
+    renderedAt: job.status === 'video_ready' ? new Date().toISOString() : record.renderedAt ?? null,
+  });
+}
+
+export function assertRenderableReel(record, options = {}) {
+  if (!record) throw new Error('reel not found');
+  if (!options.allowUnapproved && record.status !== 'approved') {
+    throw new Error('reel must be approved before rendering');
+  }
+  if (record.renderJobId && !options.force) {
+    throw new Error('reel already has a render job');
+  }
+}
+
 export function normalizeReelDraftInput(input, options = {}) {
   const id = optionalString(input.id) ?? makeReelId(options.now?.() ?? new Date());
   const projectId = optionalString(input.projectId ?? input.project_id);
@@ -179,6 +204,10 @@ function makeReelId(now) {
 function requiredStore(store) {
   if (!store) throw new Error('reelStore is required');
   return store;
+}
+
+function firstVideoUrl(job) {
+  return job?.render?.videos?.[0] ?? job?.render?.videoUrl ?? null;
 }
 
 function safeId(id) {

@@ -185,6 +185,49 @@ test('HTTP API creates and reviews reel drafts', async () => {
     assert.equal(approved.status, 200);
     const approvedPayload = await approved.json();
     assert.equal(approvedPayload.data.status, 'approved');
+
+    const rendered = await fetch(`http://127.0.0.1:${port}/reels/server-reel-draft/render`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ mode: 'mock' }),
+    });
+    assert.equal(rendered.status, 200);
+    const renderedPayload = await rendered.json();
+    assert.equal(renderedPayload.data.reel.status, 'video_ready');
+    assert.equal(renderedPayload.data.job.render.provider, 'mock');
+    assert.ok(renderedPayload.data.reel.renderJobId);
+  } finally {
+    await new Promise(resolve => server.close(resolve));
+  }
+});
+
+test('HTTP API refuses to render unapproved reel drafts', async () => {
+  const reelStore = new FileReelStore({ dir: './tmp/server-test-reels-unapproved' });
+  const server = createServer({ reelStore });
+  await new Promise(resolve => server.listen(0, resolve));
+  const { port } = server.address();
+
+  try {
+    const created = await fetch(`http://127.0.0.1:${port}/reels`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        id: 'server-unapproved-render',
+        projectSlug: 'linkchat',
+        goal: 'Show a product moment',
+        realDetails: 'Users need to approve before rendering.',
+        channel: 'tiktok',
+      }),
+    });
+    assert.equal(created.status, 201);
+
+    const rendered = await fetch(`http://127.0.0.1:${port}/reels/server-unapproved-render/render`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ mode: 'mock' }),
+    });
+    assert.equal(rendered.status, 400);
+    assert.match(await rendered.text(), /approved before rendering/);
   } finally {
     await new Promise(resolve => server.close(resolve));
   }

@@ -1,6 +1,6 @@
 import http from 'node:http';
 import { FileReelStore } from '../file-reel-store.js';
-import { createDraftVideo, createRenderResponse, getDraftVideoStatus, renderAcceptedMarketingPosts } from '../pipeline.js';
+import { createDraftVideo, createRenderResponse, getDraftVideoStatus, renderAcceptedMarketingPosts, renderReelDraft } from '../pipeline.js';
 import { postReadyMarketingVideos } from '../posting.js';
 import { createReelDraft, decideReelDraft, listReelDrafts } from '../reel-intake.js';
 import { reviewPageHtml } from '../review-ui.js';
@@ -33,6 +33,19 @@ export function createServer(options = {}) {
       if (decisionMatch) {
         const body = await readJson(req);
         const data = await decideReelDraft(decodeURIComponent(decisionMatch[1]), body, reelOptions);
+        if (!data) return json(res, 404, { error: 'reel not found' });
+        return json(res, 200, { data });
+      }
+      const renderReelMatch = req.method === 'POST' && req.url?.match(/^\/reels\/([^/?#]+)\/render$/);
+      if (renderReelMatch) {
+        const body = await readJson(req);
+        const data = await renderReelDraft(decodeURIComponent(renderReelMatch[1]), {
+          ...options,
+          reelStore: reelOptions.reelStore,
+          mode: body.mode,
+          force: body.force,
+          allowUnapproved: body.allowUnapproved,
+        });
         if (!data) return json(res, 404, { error: 'reel not found' });
         return json(res, 200, { data });
       }
