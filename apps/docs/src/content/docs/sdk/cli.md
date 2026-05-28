@@ -144,6 +144,21 @@ fnd api GET /v1/symphony/audit --auth session --output table
 fnd api GET /v1/symphony/runs --auth session --output table
 ```
 
+### Marketing queue
+
+Agents should add publishable marketing ideas directly to the queue, then the
+owner accepts/rejects and marks accepted ideas as sent after posting.
+
+```bash
+fnd api POST /v1/marketing/posts --auth session \
+  --body '{"project_slug":"linkchat","channel":"x","status":"generated","source_type":"task","source_id":"<taskId>","task_id":"<taskId>","title":"Short idea title","hook":"Plain hook","body":"Post body","cta":"Try it and send feedback."}'
+
+fnd api GET /v1/marketing/posts --auth session --query status=generated --output table
+
+fnd api PATCH /v1/marketing/posts/<postId> --auth session \
+  --body '{"status":"accepted"}'
+```
+
 ## Fleet automation
 
 The `fnd fleet` commands operate across a fleet of repositories on disk (default: `~/Desktop/Fleet`). They are designed for the maintainer working many repos in parallel — most product users won't need them.

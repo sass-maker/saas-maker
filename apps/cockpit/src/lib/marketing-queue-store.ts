@@ -1,6 +1,6 @@
 import { type CockpitD1Database,getCockpitD1 } from '@/lib/cockpit-tasks-store';
 
-export type MarketingPostStatus = 'draft' | 'approved' | 'exported' | 'posted' | 'archived';
+export type MarketingPostStatus = 'generated' | 'accepted' | 'rejected' | 'sent';
 export type MarketingPostChannel = 'x' | 'linkedin' | 'reddit' | 'email' | 'blog' | 'producthunt' | 'other';
 export type MarketingPostSource = 'manual' | 'task' | 'changelog';
 
@@ -66,7 +66,7 @@ type ChangelogRow = {
   project_name: string;
 };
 
-const VALID_STATUSES = ['draft', 'approved', 'exported', 'posted', 'archived'] as const;
+const VALID_STATUSES = ['generated', 'accepted', 'rejected', 'sent'] as const;
 const VALID_CHANNELS = ['x', 'linkedin', 'reddit', 'email', 'blog', 'producthunt', 'other'] as const;
 const VALID_SOURCES = ['manual', 'task', 'changelog'] as const;
 
@@ -125,7 +125,7 @@ export async function listMarketingPosts(filters: MarketingQueueFilters = {}, db
   const { results } = await db.prepare(
     `SELECT * FROM marketing_posts WHERE ${conditions.join(' AND ')}
      ORDER BY
-       CASE status WHEN 'approved' THEN 0 WHEN 'draft' THEN 1 WHEN 'exported' THEN 2 WHEN 'posted' THEN 3 ELSE 4 END,
+       CASE status WHEN 'generated' THEN 0 WHEN 'accepted' THEN 1 WHEN 'sent' THEN 2 WHEN 'rejected' THEN 3 ELSE 4 END,
        created_at DESC
      LIMIT ?`
   ).bind(...values).all<Record<string, unknown>>();
@@ -153,7 +153,7 @@ export async function createMarketingPost(ownerId: string, input: MarketingPostI
       ownerId,
       patch.project_slug ?? null,
       patch.channel ?? 'x',
-      patch.status ?? 'draft',
+      patch.status ?? 'generated',
       patch.title,
       patch.hook ?? null,
       patch.body,
@@ -200,7 +200,7 @@ function postCopyFor(entry: ChangelogRow, channel: MarketingPostChannel) {
   const plainTitle = entry.title.replace(/^[^:]+:\s*/, '');
   if (channel === 'linkedin') {
     return {
-      title: `${project}: LinkedIn draft from ${entry.type}`,
+      title: `${project}: LinkedIn idea from ${entry.type}`,
       hook: `${project} shipped a useful improvement.`,
       body: [
         `${project} update: ${plainTitle}`,
@@ -214,7 +214,7 @@ function postCopyFor(entry: ChangelogRow, channel: MarketingPostChannel) {
   }
   if (channel === 'reddit') {
     return {
-      title: `${project}: Reddit feedback draft from ${entry.type}`,
+      title: `${project}: Reddit feedback idea from ${entry.type}`,
       hook: `I shipped a small ${project} improvement and want feedback.`,
       body: [
         `I shipped this for ${project}: ${plainTitle}`,
@@ -227,7 +227,7 @@ function postCopyFor(entry: ChangelogRow, channel: MarketingPostChannel) {
     };
   }
   return {
-    title: `${project}: X draft from ${entry.type}`,
+    title: `${project}: X idea from ${entry.type}`,
     hook: plainTitle,
     body: `${project} update: ${plainTitle}\n\n${entry.content || 'Small product improvement shipped.'}`,
     cta: 'Try it and tell me what breaks.',
@@ -262,7 +262,7 @@ export async function generateMarketingPostsFromChangelog(ownerId: string, db: C
         ...copy,
         project_slug: entry.project_slug,
         channel,
-        status: 'draft',
+        status: 'generated',
         source_type: 'changelog',
         source_id: entry.id,
         changelog_entry_id: entry.id,

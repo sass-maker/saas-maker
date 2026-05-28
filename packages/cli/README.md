@@ -107,6 +107,13 @@ fnd api GET /v1/symphony/runs --auth session --output table
 fnd api POST /v1/symphony/runs --auth session \
   --body '{"task_id":"<taskId>","command_template":"gemini","agent_profile":"gemini","cost_note":"cheap-default route"}'
 
+# Add and review marketing queue ideas
+fnd api POST /v1/marketing/posts --auth session \
+  --body '{"project_slug":"linkchat","channel":"x","status":"generated","source_type":"task","source_id":"<taskId>","task_id":"<taskId>","title":"Short idea title","hook":"Plain hook","body":"Post body","cta":"Try it and send feedback."}'
+fnd api GET /v1/marketing/posts --auth session --query status=generated --output table
+fnd api PATCH /v1/marketing/posts/<postId> --auth session \
+  --body '{"status":"accepted"}'
+
 # Project-auth route: list feedback
 fnd api GET /v1/feedback --auth project --query type=feature --output table
 

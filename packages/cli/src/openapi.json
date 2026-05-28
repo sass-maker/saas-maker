@@ -536,6 +536,43 @@
         }
       }
     },
+    "/v1/marketing/posts": {
+      "get": {
+        "tags": [
+          "marketing"
+        ],
+        "summary": "GET /v1/marketing/posts",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "marketing"
+        ],
+        "summary": "POST /v1/marketing/posts",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/marketing/posts/{id}": {
+      "patch": {
+        "tags": [
+          "marketing"
+        ],
+        "summary": "PATCH /v1/marketing/posts/{id}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/v1/projects": {
       "get": {
         "tags": [

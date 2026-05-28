@@ -43,7 +43,7 @@ const MARKETING_ASSETS = [
   {
     id: 'social-posts',
     file: 'docs/marketing/social-posts.md',
-    title: 'draft reusable social launch posts',
+    title: 'create reusable social launch ideas',
     why: 'distribution without account access',
   },
   {
@@ -55,7 +55,7 @@ const MARKETING_ASSETS = [
   {
     id: 'comparison',
     file: 'docs/marketing/comparison-page.md',
-    title: 'draft comparison page copy',
+    title: 'create comparison page ideas',
     why: 'alternative-aware conversion',
   },
   {
@@ -852,8 +852,8 @@ function marketingAudit(project) {
       description: [
         `Business lane: ${project.businessLane}.`,
         'Agent-executable marketing task; no personal-account posting, secrets, deploy, or production config changes.',
-        `Create ${asset.file} for ${project.desc || project.slug}.`,
-        'Acceptance: asset exists, copy is simple, includes audience/problem/promise/CTA where relevant, and links from README/docs marketing index if the project has one.',
+        `Create ${asset.file} for ${project.desc || project.slug} only when durable source notes help; the required output is one or more SaaS Maker Marketing Queue ideas.`,
+        'Acceptance: create generated marketing_posts via fnd api POST /v1/marketing/posts --auth session with source_type task, task_id, project_slug, channel, title, body, optional hook/cta; copy is simple and includes audience/problem/promise/CTA where relevant.',
         `Priority rationale: ${asset.why}; selected over generic UI polish because marketing now needs reusable distribution assets and measurement.`,
       ].join(' '),
     }));

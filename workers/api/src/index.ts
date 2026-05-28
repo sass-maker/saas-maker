@@ -20,6 +20,7 @@ import { fleetMetadata } from './routes/fleet-metadata';
 import { tasks } from './routes/tasks';
 import { symphony } from './routes/symphony';
 import { knowledge } from './routes/knowledge';
+import { marketing } from './routes/marketing';
 import { test as testRoutes } from './routes/test';
 import { requireApiKey } from './middleware/auth';
 import { rateLimit } from './middleware/rate-limit';
@@ -147,6 +148,7 @@ app.route('/v1/jobs', jobs);
 app.route('/v1/tasks', tasks);
 app.route('/v1/symphony', symphony);
 app.route('/v1/knowledge', knowledge);
+app.route('/v1/marketing', marketing);
 app.route('/v1/test', testRoutes);
 
 export default app;

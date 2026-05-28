@@ -74,6 +74,17 @@ handoff should also appear in the task list preview for shared visibility.
 Local sync shells out through the Foundry CLI. Run `fnd login` once for this
 machine/account; Symphony does not accept or pass API keys directly.
 
+Marketing tasks should add ideas directly to the SaaS Maker Marketing Queue,
+not only to repo docs. Use a session-auth API call like:
+
+```bash
+fnd api POST /v1/marketing/posts --auth session --body '{"project_slug":"linkchat","channel":"x","status":"generated","source_type":"task","source_id":"<task-id>","task_id":"<task-id>","title":"Short idea title","hook":"Plain hook","body":"Post body","cta":"Try it and send feedback."}'
+```
+
+The review flow is `generated` → `accepted` or `rejected`; accepted ideas move
+to `sent` after posting. Repo files under `docs/marketing/` are optional source
+notes, not the system of record for publishable ideas.
+
 The cockpit task board also has a Symphony dispatch action. By default it uses
 auto routing: task metadata and `.symphony/agent-usage.json` decide whether the
 run goes to Codex, Claude, Gemini, Grok, or Cursor. Built-in profiles are `auto`, `codex`,

@@ -469,6 +469,16 @@ function runCliApi(args, method, pathName, options = {}) {
 function buildPrompt(task, memory = '') {
   const project = task.project_slug ?? 'saas-maker';
   const doneCommand = `pnpm --dir ~/Desktop/fleet/saas-maker symphony done ${task.id}`;
+  const marketingInstructions = task.task_type === 'docs' && /\bmarketing\b/i.test(`${task.title ?? ''}\n${task.description ?? ''}`)
+    ? `
+Marketing Queue contract:
+- The required output is one or more SaaS Maker Marketing Queue ideas, not only repo docs.
+- Create each idea with:
+  fnd api POST /v1/marketing/posts --auth session --body '{"project_slug":"${project}","channel":"x","status":"generated","source_type":"task","source_id":"${task.id}","task_id":"${task.id}","title":"Short idea title","hook":"Plain hook","body":"Post body","cta":"Try it and send feedback."}'
+- Use status "generated"; Sarthak accepts/rejects in Cockpit, then marks accepted ideas "sent" after posting.
+- Do not post to social accounts. Repo docs under docs/marketing/ are optional supporting notes only.
+`
+    : '';
   return `You are running a Foundry Symphony task.
 
 Task ID: ${task.id}
@@ -480,6 +490,7 @@ Current status: ${task.status}
 Description:
 ${task.description?.trim() || 'No additional description provided.'}
 ${formatMemoryBlock(memory)}
+${marketingInstructions}
 
 Execution contract:
 - Treat the task row as the source of truth.
