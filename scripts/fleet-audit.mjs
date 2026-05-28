@@ -853,7 +853,7 @@ function marketingAudit(project) {
         `Business lane: ${project.businessLane}.`,
         'Agent-executable marketing task; no personal-account posting, secrets, deploy, or production config changes.',
         `Create ${asset.file} for ${project.desc || project.slug} only when durable source notes help; the required output is one or more SaaS Maker Marketing Queue ideas.`,
-        'Acceptance: create generated marketing_posts via fnd api POST /v1/marketing/posts --auth session with source_type task, task_id, project_slug, channel, title, body, optional hook/cta; copy is simple and includes audience/problem/promise/CTA where relevant.',
+        'Acceptance: create generated marketing_posts via FND_API_URL=https://api.sassmaker.com pnpm --dir ~/Desktop/fleet/saas-maker/packages/cli exec tsx src/index.ts api POST /v1/marketing/posts --auth session with source_type task, task_id, project_slug, channel, title, body, optional hook/cta; copy is simple and includes audience/problem/promise/CTA where relevant.',
         `Priority rationale: ${asset.why}; selected over generic UI polish because marketing now needs reusable distribution assets and measurement.`,
       ].join(' '),
     }));

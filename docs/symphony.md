@@ -78,7 +78,7 @@ Marketing tasks should add ideas directly to the SaaS Maker Marketing Queue,
 not only to repo docs. Use a session-auth API call like:
 
 ```bash
-fnd api POST /v1/marketing/posts --auth session --body '{"project_slug":"linkchat","channel":"x","status":"generated","source_type":"task","source_id":"<task-id>","task_id":"<task-id>","title":"Short idea title","hook":"Plain hook","body":"Post body","cta":"Try it and send feedback."}'
+FND_API_URL=https://api.sassmaker.com pnpm --dir ~/Desktop/fleet/saas-maker/packages/cli exec tsx src/index.ts api POST /v1/marketing/posts --auth session --body '{"project_slug":"linkchat","channel":"x","status":"generated","source_type":"task","source_id":"<task-id>","task_id":"<task-id>","title":"Short idea title","hook":"Plain hook","body":"Post body","cta":"Try it and send feedback."}'
 ```
 
 The review flow is `generated` → `accepted` or `rejected`; accepted ideas move

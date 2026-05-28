@@ -469,12 +469,13 @@ function runCliApi(args, method, pathName, options = {}) {
 function buildPrompt(task, memory = '') {
   const project = task.project_slug ?? 'saas-maker';
   const doneCommand = `pnpm --dir ~/Desktop/fleet/saas-maker symphony done ${task.id}`;
+  const marketingCommand = `FND_API_URL=https://api.sassmaker.com pnpm --dir ~/Desktop/fleet/saas-maker/packages/cli exec tsx src/index.ts api POST /v1/marketing/posts --auth session --body '{"project_slug":"${project}","channel":"x","status":"generated","source_type":"task","source_id":"${task.id}","task_id":"${task.id}","title":"Short idea title","hook":"Plain hook","body":"Post body","cta":"Try it and send feedback."}'`;
   const marketingInstructions = task.task_type === 'docs' && /\bmarketing\b/i.test(`${task.title ?? ''}\n${task.description ?? ''}`)
     ? `
 Marketing Queue contract:
 - The required output is one or more SaaS Maker Marketing Queue ideas, not only repo docs.
 - Create each idea with:
-  fnd api POST /v1/marketing/posts --auth session --body '{"project_slug":"${project}","channel":"x","status":"generated","source_type":"task","source_id":"${task.id}","task_id":"${task.id}","title":"Short idea title","hook":"Plain hook","body":"Post body","cta":"Try it and send feedback."}'
+  ${marketingCommand}
 - Use status "generated"; Sarthak accepts/rejects in Cockpit, then marks accepted ideas "sent" after posting.
 - Do not post to social accounts. Repo docs under docs/marketing/ are optional supporting notes only.
 `
