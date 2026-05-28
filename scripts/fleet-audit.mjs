@@ -74,6 +74,7 @@ const CLOUDFLARE_WORKER_SERVICES = {
   linkchat: ['linkchat'],
   'open-historia': ['open-historia'],
   reader: ['reader'],
+  'reel-pipeline': ['reel-pipeline-artifacts'],
   'resume-tailor': ['resume-tailor'],
   'saas-maker': ['saasmaker-api', 'saasmaker-dashboard'],
   significanthobbies: ['significanthobbies'],
@@ -99,6 +100,7 @@ const PROD_TARGETS = {
   looptv: [{ label: 'web', url: 'https://looptv.pages.dev', ok: [200] }],
   'open-historia': [{ label: 'web', url: 'https://open-historia.sarthakagrawal927.workers.dev', ok: [200] }],
   reader: [{ label: 'web', url: 'https://reader.sarthakagrawal927.workers.dev', ok: [200] }],
+  'reel-pipeline': [{ label: 'health', url: 'https://reel-pipeline-artifacts.sarthakagrawal927.workers.dev/health', ok: [200] }],
   'resume-tailor': [{ label: 'web', url: 'https://rolepatch.com', ok: [200] }],
   'saas-maker': [
     { label: 'cockpit', url: 'https://app.sassmaker.com', ok: [200] },

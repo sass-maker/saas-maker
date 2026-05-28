@@ -126,6 +126,17 @@ export const FLEET_HEALTH_CONTRACTS = {
     githubWorkflow: 'deploy.yml',
     smokeCommand: 'pnpm run fleet:prod-smoke --project reader',
   },
+  'reel-pipeline': {
+    displayName: 'Reel Pipeline',
+    prodUrl: 'https://reel-pipeline-artifacts.sarthakagrawal927.workers.dev',
+    expectedStatus: 200,
+    criticalRoutes: ['/health'],
+    auth: { required: false },
+    requiredEnv: { build: [], runtime: [] },
+    deployTarget: 'Cloudflare Workers + R2',
+    githubWorkflow: null,
+    smokeCommand: 'pnpm run check:cloudflare && REEL_ARTIFACT_BASE_URL=https://reel-pipeline-artifacts.sarthakagrawal927.workers.dev REEL_ARTIFACT_SMOKE_KEY=fixture-real-render.mp4 pnpm run smoke:artifact',
+  },
   'resume-tailor': {
     displayName: 'RolePatch',
     prodUrl: 'https://rolepatch.com',

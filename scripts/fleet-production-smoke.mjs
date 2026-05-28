@@ -58,6 +58,7 @@ const TARGETS = {
   ],
   'open-historia': [{ label: 'web', url: 'https://open-historia.sarthakagrawal927.workers.dev' }],
   reader: [{ label: 'web', url: 'https://reader.sarthakagrawal927.workers.dev' }],
+  'reel-pipeline': [{ label: 'health', url: 'https://reel-pipeline-artifacts.sarthakagrawal927.workers.dev/health' }],
   'resume-tailor': [{ label: 'web', url: 'https://rolepatch.com' }],
   'saas-maker': [
     { label: 'cockpit', url: 'https://app.sassmaker.com' },
