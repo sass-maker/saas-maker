@@ -28,6 +28,7 @@
     "fleet:prod-smoke": "node scripts/fleet-production-smoke.mjs",
     "fleet:secret-audit": "node scripts/fleet-secret-audit.mjs",
     "fleet:monitoring-audit": "node scripts/fleet-monitoring-audit.mjs",
+    "fleet:clone": "node scripts/fleet-clone.mjs",
     "fleet:cf-builds": "node scripts/fleet-audit.mjs --skip-local --skip-github --skip-dirty --skip-smoke --fail-on-failure",
     "bootstrap:cloudflare": "npm --prefix ../reel-pipeline run bootstrap:cloudflare --",
     "check:cloudflare": "npm --prefix ../reel-pipeline run check:cloudflare --",
