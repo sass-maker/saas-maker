@@ -153,6 +153,22 @@ Not done yet:
 - Custom domain for artifacts.
 - Scheduled background job runner.
 
+End-to-end automation (run on a Mac that has Chrome, ffmpeg, `uvx`, wrangler):
+
+```bash
+# 1. Pull approved SaaS Maker marketing ideas → create reel drafts on worker
+SAASMAKER_SESSION_TOKEN=... npm run sync:saasmaker
+
+# 2. Watch for human-approved reels and auto-render them (long-running)
+npm run watch:render
+```
+
+The watcher polls `/reels?status=approved` every 30s. Any reel where
+`renderJobId === null` and `variants === []` gets rendered by
+`scripts/render-pro.js` (Chrome scroll-tour, Edge TTS, music bed, ScreenStudio
+frame, etc.). Renders run serially. Per-variant accept/reject still happens in
+the `/review` UI.
+
 Recent additions (product-proof reel generator, see `docs/prd-product-proof-reels.md`):
 
 - Playwright/Chrome product screenshot + demo recording capture
