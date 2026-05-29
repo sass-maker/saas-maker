@@ -51,7 +51,8 @@ export default {
       if (!record) return json({ error: 'reel not found' }, 404);
       const body = await request.json().catch(() => ({}));
       assertRenderableReel(record, body);
-      const data = await renderWorkerMockReel(record, env, reelStore);
+      const variantCount = Math.max(1, Math.min(6, Number(body.variantCount ?? 1)));
+      const data = await renderWorkerMockReel(record, env, reelStore, { variantCount });
       return json({ data });
     }
 
@@ -72,26 +73,60 @@ export default {
   },
 };
 
-async function renderWorkerMockReel(record, env, reelStore) {
+async function renderWorkerMockReel(record, env, reelStore, options = {}) {
   if (!env.REEL_ARTIFACTS) throw new Error('missing REEL_ARTIFACTS binding');
-  const key = `${safeArtifactKey(record.id)}-draft.mp4`;
-  await env.REEL_ARTIFACTS.put(key, `mock mp4 placeholder for ${record.title}\n`, {
-    httpMetadata: { contentType: 'video/mp4' },
-  });
   const workerUrl = 'https://reel-pipeline-artifacts.sarthakagrawal927.workers.dev';
-  const job = {
-    id: `worker_mock_${record.id}`,
-    status: 'video_ready',
-    render: {
+  const variantCount = Math.max(1, Math.min(6, Number(options.variantCount ?? 1)));
+
+  if (variantCount === 1) {
+    const key = `${safeArtifactKey(record.id)}-draft.mp4`;
+    await env.REEL_ARTIFACTS.put(key, `mock mp4 placeholder for ${record.title}\n`, {
+      httpMetadata: { contentType: 'video/mp4' },
+    });
+    const job = {
+      id: `worker_mock_${record.id}`,
+      status: 'video_ready',
+      render: {
+        provider: 'worker-mock',
+        externalTaskId: `worker_mock_${record.id}`,
+        status: 'completed',
+        videos: [`${workerUrl}/reels/${key}`],
+        raw: { key },
+      },
+    };
+    const reel = await attachReelRender(record.id, job, { reelStore });
+    return { reel, job };
+  }
+
+  const variants = [];
+  for (let index = 0; index < variantCount; index += 1) {
+    const variantId = `v${index + 1}`;
+    const key = `${safeArtifactKey(record.id)}-${variantId}.mp4`;
+    await env.REEL_ARTIFACTS.put(key, `mock mp4 placeholder ${variantId} for ${record.title}\n`, {
+      httpMetadata: { contentType: 'video/mp4' },
+    });
+    variants.push({
+      variantId,
+      template: ['problem_proof_cta', 'before_after', 'mini_demo', 'teardown_audit', 'changelog_proof'][index % 5],
+      proofType: 'generated_card',
+      hook: record.hook,
+      cta: record.cta ?? null,
+      captionText: record.hook,
+      assetUrl: `${workerUrl}/reels/${key}`,
+      thumbnailUrl: null,
+      durationSeconds: 12,
+      qualityScore: 0.55,
+      qualityScores: {},
+      qualityReasons: ['worker mock — manual review required'],
+      renderLog: [`worker_mock variant ${variantId}`],
+      status: 'needs_review',
       provider: 'worker-mock',
-      externalTaskId: `worker_mock_${record.id}`,
-      status: 'completed',
-      videos: [`${workerUrl}/reels/${key}`],
-      raw: { key },
-    },
-  };
-  const reel = await attachReelRender(record.id, job, { reelStore });
-  return { reel, job };
+      externalTaskId: `worker_mock_${record.id}_${variantId}`,
+      createdAt: new Date().toISOString(),
+    });
+  }
+  const reel = await attachReelRender(record.id, { variants, renderLog: ['worker-mock variants'], job: { id: `worker_mock_${record.id}` } }, { reelStore });
+  return { reel, variants };
 }
 
 async function serveArtifact(key, env, request) {

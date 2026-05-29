@@ -1,0 +1,23 @@
+{
+  "$comment": "Real deployed product URLs per fleet project. Read by render-pro.js and the worker. Source of truth — update here, not in code.",
+  "linkchat": {
+    "productUrl": "https://linkchat.sarthakagrawal927.workers.dev",
+    "fallbackUrl": "https://github.com/sarthakagrawal927/linkchat"
+  },
+  "reader": {
+    "productUrl": "https://reader.sarthakagrawal927.workers.dev",
+    "fallbackUrl": "https://github.com/sarthakagrawal927/reader"
+  },
+  "starboard": {
+    "productUrl": "https://starboard.sarthakagrawal927.workers.dev",
+    "fallbackUrl": "https://github.com/sarthakagrawal927/starboard"
+  },
+  "high-signal": {
+    "productUrl": "https://highsignal.app",
+    "fallbackUrl": "https://github.com/sarthakagrawal927/high-signal"
+  },
+  "codevetter": {
+    "productUrl": "https://codevetter.com",
+    "fallbackUrl": "https://github.com/sarthakagrawal927/CodeVetter"
+  }
+}

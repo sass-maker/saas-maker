@@ -45,6 +45,7 @@ export function createServer(options = {}) {
           mode: body.mode,
           force: body.force,
           allowUnapproved: body.allowUnapproved,
+          variantCount: body.variantCount,
         });
         if (!data) return json(res, 404, { error: 'reel not found' });
         return json(res, 200, { data });

@@ -150,9 +150,22 @@ Not done yet:
 
 - Real UGC actor pipeline.
 - Real autopost provider wiring.
-- Quality scoring for generated videos.
 - Custom domain for artifacts.
 - Scheduled background job runner.
+
+Recent additions (product-proof reel generator, see `docs/prd-product-proof-reels.md`):
+
+- Playwright/Chrome product screenshot + demo recording capture
+  (`src/product-proof-capture.js`).
+- Five product-proof reel templates (`src/reel-templates.js`):
+  problem → product proof → CTA, before/after, changelog proof, mini-demo,
+  teardown/audit.
+- `POST /reels/:id/render` accepts `variantCount` (1-6); each variant uses a
+  different template/hook layout.
+- Local quality scoring (`src/reel-quality.js`) with seven dimensions, gating
+  variants into `video_ready`, `needs_review`, or `video_rejected`.
+- `/review` UI iterates per-variant with per-variant accept/reject and shows the
+  quality score plus reasons.
 
 ## Commands
 
@@ -251,12 +264,12 @@ curl -sS http://127.0.0.1:4317/reels/<reelId>/decision \
 curl -sS http://127.0.0.1:4317/reels/<reelId>/render \
   -X POST \
   -H 'content-type: application/json' \
-  -d '{"mode":"remotion"}'
+  -d '{"mode":"remotion","variantCount":3}'
 
 curl -sS http://127.0.0.1:4317/reels/<reelId>/video-decision \
   -X PATCH \
   -H 'content-type: application/json' \
-  -d '{"decision":"approve"}'
+  -d '{"decision":"approve","variantId":"<reelId>-v1"}'
 ```
 
 Create a mock render:

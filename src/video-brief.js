@@ -12,6 +12,16 @@ const CHANNELS = new Set([
 
 const REEL_CHANNELS = new Set(['tiktok', 'instagram_reels', 'youtube_shorts']);
 
+const PROOF_TYPES = new Set([
+  'screenshot',
+  'recording',
+  'changelog',
+  'before_after',
+  'product_artifact',
+  'cockpit',
+  'generated_card',
+]);
+
 export function isReelChannel(channel) {
   return REEL_CHANNELS.has(channel);
 }
@@ -29,6 +39,15 @@ export function normalizeVideoBrief(input) {
     cta: optionalString(input.cta),
     audience: optionalString(input.audience),
     productUrl: optionalString(input.productUrl ?? input.product_url),
+    proofUrl: optionalString(input.proofUrl ?? input.proof_url),
+    targetRoute: optionalString(input.targetRoute ?? input.target_route),
+    recordingUrl: optionalString(input.recordingUrl ?? input.recording_url),
+    changelogEntryId: optionalString(input.changelogEntryId ?? input.changelog_entry_id),
+    brandTone: optionalString(input.brandTone ?? input.brand_tone),
+    proofType: normalizeProofType(input.proofType ?? input.proof_type),
+    template: optionalString(input.template),
+    screenshots: normalizeScreenshots(input.screenshots),
+    demoSteps: normalizeDemoSteps(input.demoSteps ?? input.demo_steps),
     renderMode: normalizeRenderMode(input.renderMode ?? input.render_mode),
     durationSeconds: normalizeDuration(input.durationSeconds ?? input.duration_seconds),
   };
@@ -38,6 +57,48 @@ export function normalizeVideoBrief(input) {
   }
 
   return brief;
+}
+
+function normalizeProofType(value) {
+  const proof = optionalString(value);
+  if (!proof) return undefined;
+  if (!PROOF_TYPES.has(proof)) throw new Error(`unsupported proofType: ${proof}`);
+  return proof;
+}
+
+function normalizeScreenshots(value) {
+  if (value === undefined || value === null) return undefined;
+  if (!Array.isArray(value)) throw new Error('screenshots must be an array');
+  const list = value
+    .map((entry) => optionalString(entry))
+    .filter(Boolean);
+  return list.length ? list : undefined;
+}
+
+function normalizeDemoSteps(value) {
+  if (value === undefined || value === null) return undefined;
+  if (!Array.isArray(value)) throw new Error('demoSteps must be an array');
+  const steps = [];
+  for (const entry of value) {
+    if (!entry || typeof entry !== 'object') continue;
+    const action = optionalString(entry.action) ?? optionalString(entry.type);
+    if (!action) continue;
+    const step = { action };
+    const route = optionalString(entry.route ?? entry.path ?? entry.url);
+    if (route) step.route = route;
+    const selector = optionalString(entry.selector);
+    if (selector) step.selector = selector;
+    const value = optionalString(entry.value ?? entry.text);
+    if (value) step.value = value;
+    const caption = optionalString(entry.caption);
+    if (caption) step.caption = caption;
+    const waitMs = Number.isFinite(Number(entry.waitMs ?? entry.wait_ms))
+      ? Math.max(0, Math.min(10_000, Number(entry.waitMs ?? entry.wait_ms)))
+      : undefined;
+    if (waitMs !== undefined) step.waitMs = waitMs;
+    steps.push(step);
+  }
+  return steps.length ? steps : undefined;
 }
 
 export function briefFromMarketingPost(post) {

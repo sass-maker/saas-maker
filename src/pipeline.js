@@ -7,14 +7,107 @@ import { FileJobStore } from './job-store.js';
 import { assertRenderableReel, attachReelRender } from './reel-intake.js';
 import { briefFromMarketingPost, normalizeVideoBrief } from './video-brief.js';
 import { renderPatchForMarketingPost, SaaSMakerClient } from './saas-maker-client.js';
+import { ProductProofCapture } from './product-proof-capture.js';
+import { buildVariantPlan } from './reel-templates.js';
+import { scoreVariant } from './reel-quality.js';
 
 export function createRenderer(mode = 'mock', options = {}) {
   if (mode === 'stock') return new MoneyPrinterTurboAdapter(options.moneyprinterturbo);
   if (mode === 'moneyprinterturbo') return new MoneyPrinterTurboAdapter(options.moneyprinterturbo);
   if (mode === 'openshorts') return new OpenShortsAdapter(options.openshorts);
-  if (mode === 'remotion' || mode === 'reel-maker') return new ReelMakerAdapter(options.reelMaker ?? options.reelmaker);
+  if (mode === 'remotion' || mode === 'reel-maker') {
+    return new ReelMakerAdapter({
+      ...(options.reelMaker ?? options.reelmaker ?? {}),
+      productProofCapture: options.productProofCapture
+        ?? options.reelMaker?.productProofCapture
+        ?? null,
+    });
+  }
   if (mode === 'mock') return new MockRenderer(options.mock);
   throw new Error(`unsupported renderer mode: ${mode}`);
+}
+
+export async function renderReelVariants(brief, options = {}) {
+  const variantCount = Math.max(1, Math.min(6, Number(options.variantCount ?? 1)));
+  const mode = options.mode ?? brief.renderMode ?? 'mock';
+  const plan = buildVariantPlan(brief, { variantCount });
+  const renderer = options.renderer ?? createRenderer(mode, options);
+  const variants = [];
+  const renderLog = [];
+
+  for (const entry of plan) {
+    try {
+      const variantBrief = { ...brief, hook: entry.hook, cta: entry.cta, template: entry.template.id };
+      const raw = await renderer.createVideo(variantBrief, {
+        variantId: entry.variantId,
+        template: entry.template.id,
+        hook: entry.hook,
+        cta: entry.cta,
+      });
+      const published = raw.status === 'completed' ? await publishRenderArtifacts(raw, options.artifacts) : raw;
+      const score = scoreVariant({
+        brief: variantBrief,
+        variant: { hook: entry.hook, cta: entry.cta },
+        proof: {
+          type: raw.raw?.proof?.type,
+          proofType: raw.proofType ?? raw.raw?.proof?.proofType ?? 'generated_card',
+          paths: raw.proofPaths ?? raw.raw?.proof?.paths ?? [],
+        },
+        render: {
+          ...published,
+          aspect: raw.raw?.aspect ?? '9:16',
+          durationSeconds: raw.durationSeconds,
+        },
+      });
+      const variant = {
+        variantId: entry.variantId,
+        template: entry.template.id,
+        templateLabel: entry.template.label,
+        proofType: raw.proofType ?? 'generated_card',
+        hook: entry.hook,
+        cta: entry.cta,
+        captionText: raw.captionText ?? null,
+        assetUrl: firstUrl(published) ?? null,
+        thumbnailUrl: typeof raw.thumbnail === 'string' ? raw.thumbnail : null,
+        durationSeconds: raw.durationSeconds ?? null,
+        qualityScore: score.overall,
+        qualityScores: score.scores,
+        qualityReasons: score.reasons,
+        renderLog: raw.renderLog ?? [],
+        status: score.status,
+        provider: raw.provider,
+        externalTaskId: raw.externalTaskId,
+        createdAt: new Date().toISOString(),
+      };
+      variants.push(variant);
+      renderLog.push(`variant=${entry.variantId} status=${score.status} score=${score.overall}`);
+    } catch (error) {
+      renderLog.push(`variant=${entry.variantId} failed: ${formatError(error)}`);
+      variants.push({
+        variantId: entry.variantId,
+        template: entry.template.id,
+        templateLabel: entry.template.label,
+        status: 'video_rejected',
+        qualityReasons: [`render failed: ${formatError(error)}`],
+        qualityScore: 0,
+        createdAt: new Date().toISOString(),
+      });
+    }
+  }
+
+  return { variants, renderLog };
+}
+
+function firstUrl(published) {
+  if (!published) return null;
+  if (Array.isArray(published.videos)) return published.videos[0] ?? null;
+  return published.videoUrl ?? null;
+}
+
+function formatError(error) {
+  if (!error) return 'unknown error';
+  if (error instanceof Error) return error.message;
+  return String(error);
 }
 
 export async function createDraftVideo(input, options = {}) {
@@ -122,6 +215,22 @@ export async function renderReelDraft(id, options = {}) {
   if (!record) return null;
   assertRenderableReel(record, options);
   const mode = options.mode ?? record.brief?.renderMode ?? 'mock';
+  const variantCount = Math.max(1, Math.min(6, Number(options.variantCount ?? 1)));
+  const wantsVariants = variantCount > 1;
+  const wantsProductProof = (mode === 'remotion' || mode === 'reel-maker')
+    && (record.brief?.productUrl || record.brief?.proofUrl || record.brief?.targetRoute
+      || (Array.isArray(record.brief?.screenshots) && record.brief.screenshots.length)
+      || (Array.isArray(record.brief?.demoSteps) && record.brief.demoSteps.length));
+
+  if (wantsVariants || wantsProductProof) {
+    const { variants, renderLog } = await renderReelVariants(
+      { ...record.brief, renderMode: mode },
+      { ...options, mode, variantCount },
+    );
+    const reel = await attachReelRender(id, { variants, renderLog, job: { id: `${record.id}-render-${Date.now()}` } }, { reelStore });
+    return { reel, variants, renderLog };
+  }
+
   const job = await createDraftVideo({ ...record.brief, renderMode: mode }, {
     ...options,
     mode,

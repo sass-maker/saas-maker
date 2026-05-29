@@ -1,6 +1,16 @@
 import { normalizeVideoBrief } from './video-brief.js';
 
-const REEL_STATUSES = new Set(['generated', 'approved', 'rejected', 'rendering', 'video_ready', 'ready_to_post', 'video_rejected', 'posted']);
+const REEL_STATUSES = new Set([
+  'generated',
+  'approved',
+  'rejected',
+  'rendering',
+  'video_ready',
+  'needs_review',
+  'ready_to_post',
+  'video_rejected',
+  'posted',
+]);
 
 export class R2ReelStore {
   constructor(bucket, options = {}) {
@@ -78,15 +88,51 @@ export async function decideRenderedReel(id, decision, options = {}) {
   const store = requiredStore(options.reelStore);
   const record = await store.get(id);
   if (!record) return null;
-  if (record.status !== 'video_ready' && record.status !== 'ready_to_post' && record.status !== 'video_rejected') {
+  const allowed = ['video_ready', 'ready_to_post', 'video_rejected', 'needs_review'];
+  if (!allowed.includes(record.status)) {
     throw new Error('reel video must be rendered before video decision');
   }
   const normalizedDecision = normalizeDecision(decision);
+  const variantId = typeof decision === 'object' ? optionalString(decision.variantId) : undefined;
+
+  const variants = Array.isArray(record.variants) ? record.variants.slice() : [];
+  let targetVariant = null;
+  if (variantId) {
+    const index = variants.findIndex((variant) => variant.variantId === variantId);
+    if (index === -1) throw new Error(`variant not found: ${variantId}`);
+    targetVariant = {
+      ...variants[index],
+      status: normalizedDecision === 'approve' ? 'ready_to_post' : 'video_rejected',
+      decidedAt: new Date().toISOString(),
+    };
+    variants[index] = targetVariant;
+  }
+
+  const acceptedVariant = variants.find((variant) => variant.status === 'ready_to_post');
+  const remainingReviewable = variants.some((variant) => variant.status === 'video_ready' || variant.status === 'needs_review');
+
+  let nextStatus = record.status;
+  let nextAssetUrl = record.assetUrl ?? null;
+  if (variantId) {
+    if (acceptedVariant) {
+      nextStatus = 'ready_to_post';
+      nextAssetUrl = acceptedVariant.assetUrl ?? nextAssetUrl;
+    } else if (remainingReviewable) {
+      nextStatus = 'video_ready';
+    } else {
+      nextStatus = 'video_rejected';
+    }
+  } else {
+    nextStatus = normalizedDecision === 'approve' ? 'ready_to_post' : 'video_rejected';
+  }
+
   return store.save({
     ...record,
-    status: normalizedDecision === 'approve' ? 'ready_to_post' : 'video_rejected',
+    status: nextStatus,
+    assetUrl: nextAssetUrl,
     videoDecision: normalizedDecision,
     videoDecidedAt: new Date().toISOString(),
+    variants,
   });
 }
 
@@ -95,6 +141,25 @@ export async function attachReelRender(id, renderResult, options = {}) {
   const record = await store.get(id);
   if (!record) return null;
   const job = renderResult.job ?? renderResult;
+  const variants = Array.isArray(renderResult.variants) ? renderResult.variants : null;
+
+  if (variants && variants.length) {
+    const variantStatus = variants.some((variant) => variant.status === 'video_ready' || variant.status === 'needs_review')
+      ? variants.some((variant) => variant.status === 'video_ready') ? 'video_ready' : 'needs_review'
+      : 'video_rejected';
+    return store.save({
+      ...record,
+      status: variantStatus,
+      renderJobId: job.id ?? null,
+      render: job.render ?? null,
+      assetUrl: firstVariantUrl(variants),
+      thumbnailUrl: firstVariantThumbnail(variants),
+      renderedAt: new Date().toISOString(),
+      variants,
+      renderLog: renderResult.renderLog ?? null,
+    });
+  }
+
   return store.save({
     ...record,
     status: job.status === 'video_ready' ? 'video_ready' : job.status ?? 'rendering',
@@ -103,6 +168,16 @@ export async function attachReelRender(id, renderResult, options = {}) {
     assetUrl: firstVideoUrl(job),
     renderedAt: job.status === 'video_ready' ? new Date().toISOString() : record.renderedAt ?? null,
   });
+}
+
+function firstVariantUrl(variants) {
+  const ready = variants.find((variant) => variant.status === 'video_ready' || variant.status === 'needs_review');
+  return ready?.assetUrl ?? variants[0]?.assetUrl ?? null;
+}
+
+function firstVariantThumbnail(variants) {
+  const ready = variants.find((variant) => variant.thumbnailUrl);
+  return ready?.thumbnailUrl ?? null;
 }
 
 export function assertRenderableReel(record, options = {}) {
@@ -138,6 +213,15 @@ export function normalizeReelDraftInput(input, options = {}) {
     cta: input.cta,
     audience: input.audience,
     productUrl: input.productUrl ?? input.product_url,
+    proofUrl: input.proofUrl ?? input.proof_url,
+    targetRoute: input.targetRoute ?? input.target_route,
+    recordingUrl: input.recordingUrl ?? input.recording_url,
+    changelogEntryId: input.changelogEntryId ?? input.changelog_entry_id,
+    brandTone: input.brandTone ?? input.brand_tone,
+    proofType: input.proofType ?? input.proof_type,
+    template: input.template,
+    screenshots: input.screenshots,
+    demoSteps: input.demoSteps ?? input.demo_steps,
     renderMode: input.renderMode ?? input.render_mode ?? 'stock',
     durationSeconds: input.durationSeconds ?? input.duration_seconds,
   });
@@ -157,11 +241,19 @@ export function normalizeReelDraftInput(input, options = {}) {
     cta: brief.cta,
     audience: brief.audience,
     productUrl: brief.productUrl,
+    proofUrl: brief.proofUrl,
+    targetRoute: brief.targetRoute,
+    demoSteps: brief.demoSteps ?? null,
+    screenshots: brief.screenshots ?? null,
+    template: brief.template ?? null,
+    proofType: brief.proofType ?? null,
+    brandTone: brief.brandTone ?? null,
     source: optionalString(input.source) ?? 'api',
     sourceDetails: details ?? null,
     brief,
     decision: null,
     renderJobId: null,
+    variants: [],
   };
 }
 
