@@ -1,0 +1,13 @@
+version = 1
+id = "daily-fleet-health-sentinel"
+kind = "cron"
+name = "Daily Fleet Health Sentinel"
+prompt = "Run the daily Foundry fleet health sentinel from /Users/sarthak/Desktop/fleet/saas-maker.\n\nStyle:\n- Be very concise. Report only real regressions, task changes, skipped checks, blockers.\n- Use agents only for tiny independent remediation with clear acceptance; otherwise this is read-mostly.\n\nRules:\n- Lightweight daily health check, not product review or cleanup pass.\n- No deploys, migrations, secret/env/cloud credential edits, commits, pushes, merges, releases, or destructive commands.\n- Preserve dirty user work.\n\nFlow:\n1. Run `pnpm symphony --json --no-cache` to avoid duplicates.\n2. Run `pnpm fleet:prod-smoke -- --timeout-ms 45000`; read latest artifacts.\n3. Run `pnpm fleet:monitoring-audit -- --json`; summarize failures only.\n4. Check latest default-branch GitHub Actions failures with `gh` where available.\n5. Label stale/project-scoped/network-blocked results clearly; do not treat them as product regressions.\n6. Create/update tasks only for new real regressions. Mark access/config/deploy tasks blocked_on_user=true.\n\nOutput:\n- Very concise: regressions, tasks changed, skipped checks, what needs Sarthak.\n- Include commands/artifact paths, not raw logs."
+status = "ACTIVE"
+rrule = "FREQ=WEEKLY;INTERVAL=1;BYDAY=TU,WE,TH,FR,SA,SU;BYHOUR=8;BYMINUTE=0;BYSECOND=0"
+model = "gpt-5.2"
+reasoning_effort = "medium"
+execution_environment = "local"
+cwds = ["/Users/sarthak/Desktop/fleet", "/Users/sarthak/Desktop/fleet/saas-maker"]
+created_at = 1780079525746
+updated_at = 1780079760951

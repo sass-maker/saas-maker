@@ -39,6 +39,18 @@ default, and does not touch secrets or env files.
 
 ## Required local auth
 
+## Install Codex automations
+
+After cloning this repo, copy the checked-in automation templates into Codex:
+
+```bash
+mkdir -p ~/.codex/automations
+cp -R codex-automations/* ~/.codex/automations/
+```
+
+These templates include only `automation.toml` files. They do not include
+per-run memory, secrets, env files, API keys, SSH keys, or cloud credentials.
+
 Run these manually on the target machine:
 
 ```bash
