@@ -6,6 +6,7 @@ import {
   detectCloudflareTarget,
   extractRepoFromGitUrl,
   extractWorkflowSecretRequirements,
+  parseCloudflareConfigState,
   parseSecretNames,
   parseWranglerName,
 } from '../../scripts/lib/fleet-secret-audit.mjs';
@@ -42,6 +43,20 @@ describe('fleet secret audit helpers', () => {
     });
   });
 
+  it('parses Wrangler vars and bindings without reading values', () => {
+    expect(parseCloudflareConfigState(`
+name = "example"
+[vars]
+NODE_ENV = "production"
+PUBLIC_URL = "https://example.com"
+[[d1_databases]]
+binding = "DB"
+`)).toEqual({
+      vars: ['NODE_ENV', 'PUBLIC_URL'],
+      bindings: ['DB'],
+    });
+  });
+
   it('extracts workflow secret references with alternatives', () => {
     expect(extractWorkflowSecretRequirements('/missing', 'deploy.yml')).toEqual([]);
   });
@@ -63,5 +78,48 @@ describe('fleet secret audit helpers', () => {
       provider: 'cloudflare-worker',
       required: ['GOOGLE_CLIENT_SECRET'],
     });
+  });
+
+  it('builds a manifest-backed plan with multiple Cloudflare targets', () => {
+    const plan = buildProjectSecretPlan(
+      { slug: 'demo', repo: 'owner/demo', dir: '/missing' },
+      {
+        deployTarget: 'Cloudflare Workers',
+        githubWorkflow: null,
+        requiredEnv: { build: [], runtime: ['OLD_SECRET'] },
+      },
+      {
+        demo: {
+          targets: [
+            {
+              kind: 'worker',
+              name: 'demo-api',
+              dir: 'workers/api',
+              requiredSecrets: ['API_SECRET'],
+              requiredVars: ['NODE_ENV'],
+            },
+            {
+              kind: 'pages',
+              name: 'demo-web',
+              requiredSecrets: ['WEB_SECRET'],
+            },
+          ],
+        },
+      },
+    );
+
+    expect(plan.runtimes).toHaveLength(2);
+    expect(plan.runtimes[0]).toMatchObject({
+      provider: 'cloudflare-worker',
+      name: 'demo-api',
+      requiredSecrets: ['API_SECRET'],
+      requiredVars: ['NODE_ENV'],
+    });
+    expect(plan.runtimes[1]).toMatchObject({
+      provider: 'cloudflare-pages',
+      name: 'demo-web',
+      requiredSecrets: ['WEB_SECRET'],
+    });
+    expect(plan.runtime.required).toEqual(['API_SECRET']);
   });
 });

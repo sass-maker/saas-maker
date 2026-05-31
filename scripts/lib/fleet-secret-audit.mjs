@@ -10,6 +10,7 @@ export const DEFAULT_DEPLOY_SECRETS = {
 
 const WORKER_TARGET_RE = /Cloudflare Workers/i;
 const PAGES_TARGET_RE = /Cloudflare Pages/i;
+const CLOUDFLARE_TARGETS_FILE = 'cloudflare.targets.json';
 
 const PROJECT_OVERRIDES = {
   'saas-maker': {
@@ -51,6 +52,52 @@ export function loadFleetProjects(root) {
   }));
 }
 
+export function loadCloudflareTargetManifest(root) {
+  const manifestPath = path.join(root, CLOUDFLARE_TARGETS_FILE);
+  if (!fs.existsSync(manifestPath)) return {};
+  return JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+}
+
+function normalizeList(value) {
+  return Array.isArray(value) ? value.filter(Boolean) : [];
+}
+
+function resolveTargetDir(project, target) {
+  if (!target?.dir) return project.dir;
+  return path.resolve(project.dir, target.dir);
+}
+
+function resolveTargetConfigPath(project, target) {
+  const dir = resolveTargetDir(project, target);
+  if (target?.config) return path.resolve(dir, target.config);
+  return ['wrangler.toml', 'wrangler.jsonc']
+    .map((file) => path.join(dir, file))
+    .find((file) => fs.existsSync(file)) ?? null;
+}
+
+function normalizeCloudflareTarget(project, target) {
+  const configPath = resolveTargetConfigPath(project, target);
+  const dir = configPath ? path.dirname(configPath) : resolveTargetDir(project, target);
+  const source = configPath && fs.existsSync(configPath) ? fs.readFileSync(configPath, 'utf8') : '';
+  const detected = source
+    ? detectCloudflareTarget(dir, { deployTarget: target.kind === 'pages' ? 'Cloudflare Pages' : 'Cloudflare Workers' })
+    : { kind: target.kind === 'pages' ? 'cloudflare-pages' : 'cloudflare-worker', name: null };
+  const provider = target.kind === 'pages' || detected.kind === 'cloudflare-pages'
+    ? 'cloudflare-pages'
+    : 'cloudflare-worker';
+  const requiredSecrets = normalizeList(target.requiredSecrets);
+  return {
+    id: target.id ?? target.name ?? detected.name ?? project.slug,
+    provider,
+    name: target.name ?? detected.name ?? project.slug,
+    dir,
+    configPath,
+    requiredSecrets: requiredSecrets.sort((a, b) => String(a).localeCompare(String(b))),
+    requiredVars: normalizeList(target.requiredVars).sort(),
+    requiredBindings: normalizeList(target.requiredBindings).sort(),
+  };
+}
+
 export function parseSecretNames(stdout) {
   const text = String(stdout ?? '').trim();
   if (!text) return [];
@@ -80,6 +127,47 @@ export function parseWranglerName(source) {
   if (toml) return toml[1];
   const json = source.match(/["']name["']\s*:\s*["']([^"']+)["']/);
   return json?.[1] ?? null;
+}
+
+export function parseCloudflareConfigState(source) {
+  const vars = new Set();
+  const bindings = new Set();
+  if (!source) return { vars: [], bindings: [] };
+
+  let inTomlVars = false;
+  for (const line of source.split(/\r?\n/)) {
+    if (/^\s*\[vars\]\s*$/.test(line)) {
+      inTomlVars = true;
+      continue;
+    }
+    if (inTomlVars && /^\s*\[/.test(line)) break;
+    if (!inTomlVars) continue;
+    const match = line.match(/^\s*([A-Z][A-Z0-9_]*)\s*=/);
+    if (match) vars.add(match[1]);
+  }
+
+  const jsonVars = source.match(/["']vars["']\s*:\s*\{([\s\S]*?)\n\s*\}/)?.[1] ?? '';
+  for (const match of jsonVars.matchAll(/["']([A-Z][A-Z0-9_]*)["']\s*:/g)) {
+    vars.add(match[1]);
+  }
+
+  for (const match of source.matchAll(/\bbinding\s*=\s*["']([^"']+)["']/g)) {
+    bindings.add(match[1]);
+  }
+  for (const match of source.matchAll(/\bname\s*=\s*["']([A-Z][A-Za-z0-9_]*)["']/g)) {
+    bindings.add(match[1]);
+  }
+  for (const match of source.matchAll(/["']binding["']\s*:\s*["']([^"']+)["']/g)) {
+    bindings.add(match[1]);
+  }
+  for (const match of source.matchAll(/["']name["']\s*:\s*["']([^"']+)["']/g)) {
+    bindings.add(match[1]);
+  }
+
+  return {
+    vars: Array.from(vars).sort(),
+    bindings: Array.from(bindings).sort(),
+  };
 }
 
 export function detectCloudflareTarget(projectDir, contract = {}) {
@@ -131,11 +219,17 @@ export function extractWorkflowSecretRequirements(projectDir, workflowFile) {
   return requirements;
 }
 
-export function buildProjectSecretPlan(project, contract = FLEET_HEALTH_CONTRACTS[project.slug]) {
+export function buildProjectSecretPlan(
+  project,
+  contract = FLEET_HEALTH_CONTRACTS[project.slug],
+  cloudflareManifest = {},
+) {
   const requiredEnv = contract?.requiredEnv ?? { build: [], runtime: [] };
   const override = PROJECT_OVERRIDES[project.slug] ?? {};
   const runtimeDir = override.runtimeDir ? path.join(project.dir, override.runtimeDir) : project.dir;
   const cf = detectCloudflareTarget(runtimeDir, contract);
+  const manifestTargets = normalizeList(cloudflareManifest[project.slug]?.targets)
+    .map((target) => normalizeCloudflareTarget(project, target));
   const githubSecrets = [];
   const addGithubRequirement = (entry) => {
     const key = Array.isArray(entry) ? entry.join('|') : entry;
@@ -160,6 +254,22 @@ export function buildProjectSecretPlan(project, contract = FLEET_HEALTH_CONTRACT
     else if (/Vercel/i.test(contract?.deployTarget ?? '')) runtimeProvider = 'vercel';
     else runtimeProvider = 'unknown';
   }
+  const fallbackRuntime = {
+    provider: runtimeProvider,
+    name: cf.name,
+    dir: runtimeDir,
+    configPath: ['wrangler.toml', 'wrangler.jsonc']
+      .map((file) => path.join(runtimeDir, file))
+      .find((file) => fs.existsSync(file)) ?? null,
+    requiredSecrets: [...(requiredEnv.runtime ?? [])].sort(),
+    requiredVars: [],
+    requiredBindings: [],
+  };
+  const runtimes = manifestTargets.length > 0
+    ? manifestTargets
+    : fallbackRuntime.requiredSecrets.length > 0
+      ? [fallbackRuntime]
+      : [];
 
   return {
     project: project.slug,
@@ -170,10 +280,11 @@ export function buildProjectSecretPlan(project, contract = FLEET_HEALTH_CONTRACT
       repo: project.repo,
       required: githubSecrets.sort((a, b) => String(a).localeCompare(String(b))),
     },
+    runtimes,
     runtime: {
-      provider: runtimeProvider,
-      name: cf.name,
-      required: [...(requiredEnv.runtime ?? [])].sort(),
+      provider: runtimes[0]?.provider ?? runtimeProvider,
+      name: runtimes[0]?.name ?? cf.name,
+      required: runtimes[0]?.requiredSecrets ?? [...(requiredEnv.runtime ?? [])].sort(),
     },
   };
 }
@@ -238,43 +349,67 @@ export function auditProjectSecretPlan(plan, { root, run = runCommand } = {}) {
     }
   }
 
-  if (plan.runtime.required.length > 0) {
-    if (plan.runtime.provider === 'cloudflare-worker') {
-      const args = ['exec', 'wrangler', 'secret', 'list', '--format', 'json', '--cwd', plan.dir];
+  for (const runtime of plan.runtimes ?? []) {
+    const requiredSecrets = runtime.requiredSecrets ?? runtime.required ?? [];
+    if (requiredSecrets.length > 0 && runtime.provider === 'cloudflare-worker') {
+      const args = ['exec', 'wrangler', 'secret', 'list', '--format', 'json', '--cwd', runtime.dir ?? plan.dir];
       const result = run('pnpm', args, { cwd: root });
       const present = result.ok ? parseSecretNames(result.stdout) : [];
       checks.push({
         platform: 'cloudflare-worker',
-        target: plan.runtime.name,
-        ...compareSecrets(plan.runtime.required, present),
+        target: runtime.name,
+        ...compareSecrets(requiredSecrets, present),
         error: result.ok ? null : normalizeCommandError(result),
       });
-    } else if (plan.runtime.provider === 'cloudflare-pages') {
-      const args = ['exec', 'wrangler', 'pages', 'secret', 'list', '--project-name', plan.runtime.name ?? plan.project];
+    } else if (requiredSecrets.length > 0 && runtime.provider === 'cloudflare-pages') {
+      const args = ['exec', 'wrangler', 'pages', 'secret', 'list', '--project-name', runtime.name ?? plan.project];
       const result = run('pnpm', args, { cwd: root });
       const present = result.ok ? parseSecretNames(result.stdout) : [];
       checks.push({
         platform: 'cloudflare-pages',
-        target: plan.runtime.name ?? plan.project,
-        ...compareSecrets(plan.runtime.required, present),
+        target: runtime.name ?? plan.project,
+        ...compareSecrets(requiredSecrets, present),
         error: result.ok ? null : normalizeCommandError(result),
       });
-    } else if (plan.runtime.provider === 'vercel') {
+    } else if (requiredSecrets.length > 0 && runtime.provider === 'vercel') {
       checks.push({
         platform: 'vercel',
         target: plan.project,
-        ...compareSecrets(plan.runtime.required, []),
+        ...compareSecrets(requiredSecrets, []),
         ok: false,
         error: 'Vercel secret listing is not configured in this audit yet',
       });
-    } else {
+    } else if (requiredSecrets.length > 0) {
       checks.push({
         platform: 'runtime',
         target: plan.project,
-        ...compareSecrets(plan.runtime.required, []),
+        ...compareSecrets(requiredSecrets, []),
         ok: false,
-        error: `Unsupported runtime secret provider: ${plan.runtime.provider}`,
+        error: `Unsupported runtime secret provider: ${runtime.provider}`,
       });
+    }
+
+    if ((runtime.requiredVars?.length ?? 0) > 0 || (runtime.requiredBindings?.length ?? 0) > 0) {
+      const source = runtime.configPath && fs.existsSync(runtime.configPath)
+        ? fs.readFileSync(runtime.configPath, 'utf8')
+        : '';
+      const state = parseCloudflareConfigState(source);
+      if ((runtime.requiredVars?.length ?? 0) > 0) {
+        checks.push({
+          platform: 'cloudflare-vars',
+          target: runtime.name,
+          ...compareSecrets(runtime.requiredVars, state.vars),
+          error: source ? null : `Missing Wrangler config: ${runtime.configPath ?? 'unknown'}`,
+        });
+      }
+      if ((runtime.requiredBindings?.length ?? 0) > 0) {
+        checks.push({
+          platform: 'cloudflare-bindings',
+          target: runtime.name,
+          ...compareSecrets(runtime.requiredBindings, state.bindings),
+          error: source ? null : `Missing Wrangler config: ${runtime.configPath ?? 'unknown'}`,
+        });
+      }
     }
   }
 

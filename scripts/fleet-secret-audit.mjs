@@ -8,6 +8,7 @@ import {
   buildProjectSecretPlan,
   buildSecretTaskPayload,
   formatRequiredSecret,
+  loadCloudflareTargetManifest,
   loadFleetProjects,
   secretFailureKey,
 } from './lib/fleet-secret-audit.mjs';
@@ -149,13 +150,14 @@ function readCachedTasks() {
 const args = parseArgs(process.argv.slice(2));
 const projects = loadFleetProjects(ROOT)
   .filter((project) => !args.project || project.slug === args.project);
+const cloudflareManifest = loadCloudflareTargetManifest(ROOT);
 
 if (args.project && projects.length === 0) {
   console.error(`Unknown project: ${args.project}`);
   process.exit(2);
 }
 
-const plans = projects.map((project) => buildProjectSecretPlan(project));
+const plans = projects.map((project) => buildProjectSecretPlan(project, undefined, cloudflareManifest));
 const results = plans.map((plan) => auditProjectSecretPlan(plan, { root: ROOT }));
 const failures = results.filter((result) => !result.ok);
 
