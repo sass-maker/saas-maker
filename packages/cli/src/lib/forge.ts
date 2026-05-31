@@ -86,7 +86,7 @@ on:
 
 jobs:
   foundry-ci:
-    uses: sarthakagrawal927/saas-maker/.github/workflows/foundry-ci.yml@v1
+    uses: sarthak-fleet/saas-maker/.github/workflows/foundry-ci.yml@v1
 `;
   writeFileSync(join(ciDir, 'ci.yml'), ciConfig);
   log.success('✓ Linked to Global Foundry CI (v1)');

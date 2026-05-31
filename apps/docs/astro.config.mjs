@@ -8,7 +8,7 @@ export default defineConfig({
 		starlight({
 			title: 'Foundry Manual',
 			description: 'The Open Source Foundry for Project Fleets — Standardize, Forge, and Command your repositories.',
-			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/sarthakagrawal927/saas-maker' }],
+			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/sarthak-fleet/saas-maker' }],
 			customCss: ['./src/styles/custom.css'],
 			head: [
 				{ tag: 'link', attrs: { rel: 'preconnect', href: 'https://fonts.googleapis.com' } },
@@ -22,7 +22,7 @@ export default defineConfig({
 				},
 			],
 			editLink: {
-				baseUrl: 'https://github.com/sarthakagrawal927/saas-maker/edit/main/apps/docs/',
+				baseUrl: 'https://github.com/sarthak-fleet/saas-maker/edit/main/apps/docs/',
 			},
 			sidebar: [
 				{

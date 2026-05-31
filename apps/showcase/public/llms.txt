@@ -19,7 +19,7 @@ SaaS Maker provides plug-and-play backend tools for every stage of your SaaS pro
 - Dashboard: https://app.sassmaker.com
 - Documentation: https://docs.sassmaker.com
 - Full API & SDK docs for LLMs: https://docs.sassmaker.com/llms.txt
-- GitHub: https://github.com/sarthakagrawal927/saas-maker
+- GitHub: https://github.com/sarthak-fleet/saas-maker
 - npm SDK: https://www.npmjs.com/package/@saas-maker/sdk
 
 ## Quick Start

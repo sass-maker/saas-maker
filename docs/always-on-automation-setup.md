@@ -9,7 +9,7 @@ First clone SaaS Maker itself into the expected fleet path:
 ```bash
 mkdir -p /Users/sarthak/Desktop/fleet
 cd /Users/sarthak/Desktop/fleet
-git clone https://github.com/sarthakagrawal927/saas-maker.git
+git clone https://github.com/sarthak-fleet/saas-maker.git
 ```
 
 Then from the SaaS Maker repo on the target machine:
