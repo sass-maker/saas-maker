@@ -25,7 +25,7 @@ jobs:
       - run: pnpm -F @saas-maker/dashboard cf:build
       - uses: cloudflare/wrangler-action@v3
         with:
-          apiToken: ${{ secrets.CF_API_TOKEN }}
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           command: deploy
           workingDirectory: apps/cockpit
 
@@ -49,7 +49,7 @@ jobs:
       - run: pnpm -F @saas-maker/dashboard cf:build
       - uses: cloudflare/wrangler-action@v3
         with:
-          apiToken: ${{ secrets.CF_API_TOKEN }}
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           command: deploy --name saasmaker-dashboard-pr-${{ github.event.number }}
           workingDirectory: apps/cockpit
       - name: Comment preview URL
@@ -69,6 +69,6 @@ jobs:
     steps:
       - uses: cloudflare/wrangler-action@v3
         with:
-          apiToken: ${{ secrets.CF_API_TOKEN }}
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           command: delete --name saasmaker-dashboard-pr-${{ github.event.number }} --force
           workingDirectory: apps/cockpit
