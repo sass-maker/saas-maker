@@ -39,7 +39,7 @@ const TARGETS = {
     {
       label: 'web',
       url: 'https://looptv.pages.dev',
-      expectText: ['LoopTV'],
+      expectText: ['Channel-surf YouTube'],
       interactions: [
         {
           label: 'open-science-station',
@@ -75,7 +75,7 @@ const TARGETS = {
   starboard: [{ label: 'web', url: 'https://starboard.sarthakagrawal927.workers.dev' }],
   'swe-interview-prep': [{ label: 'web', url: 'https://swe-interview-prep.pages.dev' }],
   tinygpt: [
-    { label: 'web', url: 'https://tinygpt.pages.dev', expectText: ['TinyGPT'] },
+    { label: 'web', url: 'https://tinygpt.pages.dev', expectText: ['transformer playground'] },
     { label: 'devlog', url: 'https://tinygpt.pages.dev/devlog.html', expectText: ['Devlog'] },
   ],
   'today-little-log': [{ label: 'web', url: 'https://today-little-log.pages.dev' }],
