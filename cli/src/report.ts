@@ -235,6 +235,10 @@ export function renderSwarmReport(
   const cruxSection = renderCrux(renderOpts.cruxByFormFactor);
   if (cruxSection) sections.push(cruxSection);
 
+  // Lab-vs-field gap analysis when both are available.
+  const gapSection = renderLabFieldGap(byPreset, renderOpts.cruxByFormFactor);
+  if (gapSection) sections.push(gapSection);
+
   // "Why?" — surface Lighthouse opportunities + LCP element if audits were captured.
   for (const [presetName, rs] of byPreset) {
     const anyAudits = rs.some((r) => (r as { audits?: unknown[] }).audits?.length);
@@ -308,6 +312,57 @@ function renderWeightedVerdict(
     '\n' +
     chalk.dim(`  profile: ${breakdown}`)
   );
+}
+
+function renderLabFieldGap(
+  byPreset: Map<string, RunResult[]>,
+  cruxByFormFactor?: { mobile?: CruxRecord | null; desktop?: CruxRecord | null },
+): string {
+  if (!cruxByFormFactor) return '';
+  const factors: { factor: 'mobile' | 'desktop'; rec?: CruxRecord | null }[] = [
+    { factor: 'mobile', rec: cruxByFormFactor.mobile },
+    { factor: 'desktop', rec: cruxByFormFactor.desktop },
+  ];
+  const lines: string[] = [];
+  for (const { factor, rec } of factors) {
+    if (!rec) continue;
+    // Aggregate lab LCP values across all presets matching this form factor.
+    const labLcps: number[] = [];
+    for (const [, runs] of byPreset) {
+      const p = runs[0]?.preset;
+      if (!p) continue;
+      if (p.formFactor !== factor) continue;
+      for (const r of runs) {
+        if (typeof r.metrics?.lcp === 'number') labLcps.push(r.metrics.lcp);
+      }
+    }
+    if (labLcps.length === 0) continue;
+    const labStats = computeStats(labLcps);
+    if (!labStats) continue;
+    const fieldLcp = rec.metrics.lcp?.p75;
+    if (typeof fieldLcp !== 'number') continue;
+    const ratio = labStats.p75 / fieldLcp;
+    let verdict: string;
+    if (ratio >= 1.5) {
+      verdict = chalk.yellow(`lab is ${ratio.toFixed(1)}× more pessimistic`);
+    } else if (ratio <= 0.67) {
+      verdict = chalk.red(`lab is ${(1 / ratio).toFixed(1)}× more optimistic than reality`);
+    } else {
+      verdict = chalk.green('lab matches reality (within ±50%)');
+    }
+    const lab = labStats.p75 >= 1000 ? `${(labStats.p75 / 1000).toFixed(2)}s` : `${Math.round(labStats.p75)}ms`;
+    const field = fieldLcp >= 1000 ? `${(fieldLcp / 1000).toFixed(2)}s` : `${Math.round(fieldLcp)}ms`;
+    lines.push(
+      chalk.dim(`  ${factor.padEnd(7)} LCP — lab `) +
+        chalk.bold(lab) +
+        chalk.dim(' vs field ') +
+        chalk.bold(field) +
+        chalk.dim('  →  ') +
+        verdict,
+    );
+  }
+  if (lines.length === 0) return '';
+  return chalk.cyan.bold('Lab vs field gap') + '\n' + lines.join('\n');
 }
 
 function renderCrux(
