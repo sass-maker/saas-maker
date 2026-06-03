@@ -245,11 +245,22 @@ function renderOpportunities(d: Diagnosis): string {
   if (d.lcpElement) {
     const el = d.lcpElement;
     const head = el.nodeLabel ?? el.selector ?? '';
-    const snippet = el.snippet ?? '';
+    const snippet = (el.snippet ?? '').replace(/\s+/g, ' ').trim();
     lines.push(chalk.dim('LCP element: ') + chalk.yellow(head || '(unknown)'));
-    if (snippet && snippet.length < 140) {
-      lines.push(chalk.dim('             ') + chalk.gray(snippet));
+    if (snippet) {
+      const trimmed = snippet.length > 130 ? snippet.slice(0, 127) + '...' : snippet;
+      lines.push(chalk.dim('             ') + chalk.gray(trimmed));
     }
+  }
+  if (d.lcpPhases && d.lcpPhases.length > 0) {
+    const phaseStr = d.lcpPhases
+      .map((p) => {
+        const colorize = parseInt(p.percent, 10) >= 40 ? chalk.red : parseInt(p.percent, 10) >= 25 ? chalk.yellow : chalk.dim;
+        const ms = p.medianMs >= 1000 ? `${(p.medianMs / 1000).toFixed(1)}s` : `${Math.round(p.medianMs)}ms`;
+        return colorize(`${p.phase} ${p.percent} (${ms})`);
+      })
+      .join(chalk.dim('  ·  '));
+    lines.push(chalk.dim('LCP phases : ') + phaseStr);
   }
   const ops = rankOpportunities(d, 8);
   if (ops.length === 0) {

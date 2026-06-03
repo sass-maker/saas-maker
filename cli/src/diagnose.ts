@@ -38,6 +38,7 @@ export interface Diagnosis {
     selector?: string;
     nodeLabel?: string;
   };
+  lcpPhases?: Array<{ phase: string; medianMs: number; percent: string }>;
   consistencyNotes: string[];
 }
 
@@ -113,8 +114,9 @@ export function diagnosePreset(
     });
   }
 
-  // Pull LCP element if available.
+  // Pull LCP element + phase breakdown if available.
   let lcpElement: Diagnosis['lcpElement'];
+  let lcpPhases: Diagnosis['lcpPhases'];
   const lcpAudit = aggregated.find((a) => a.spec.id === 'largest-contentful-paint-element');
   if (lcpAudit && lcpAudit.topItems.length > 0) {
     const first = lcpAudit.topItems[0];
@@ -123,6 +125,26 @@ export function diagnosePreset(
       selector: first.node?.selector,
       nodeLabel: first.node?.nodeLabel,
     };
+  }
+  // Aggregate phase breakdown across all runs that captured it.
+  const phaseObservations = new Map<string, { timings: number[]; percent: string }>();
+  for (const r of okResults) {
+    const lcpAuditRun = r.audits?.find((au) => au.id === 'largest-contentful-paint-element');
+    const phases = lcpAuditRun?.lcpPhases;
+    if (!phases) continue;
+    for (const p of phases) {
+      const cur = phaseObservations.get(p.phase) ?? { timings: [], percent: p.percent };
+      cur.timings.push(p.timingMs);
+      cur.percent = p.percent;
+      phaseObservations.set(p.phase, cur);
+    }
+  }
+  if (phaseObservations.size > 0) {
+    lcpPhases = Array.from(phaseObservations.entries()).map(([phase, data]) => ({
+      phase,
+      medianMs: median(data.timings) ?? 0,
+      percent: data.percent,
+    }));
   }
 
   if (okResults.length < results.length) {
@@ -140,6 +162,7 @@ export function diagnosePreset(
     okRuns: okResults.length,
     audits: aggregated,
     lcpElement,
+    lcpPhases,
     consistencyNotes,
   };
 }

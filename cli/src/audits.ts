@@ -74,6 +74,14 @@ export interface CapturedAudit {
   numericUnit?: string;
   // For audits like render-blocking-resources, unused-js — the top items.
   topItems?: AuditItem[];
+  // LCP-element-only: phase breakdown (TTFB / Load Delay / Load Time / Render Delay).
+  lcpPhases?: LcpPhase[];
+}
+
+export interface LcpPhase {
+  phase: string;
+  timingMs: number;
+  percent: string;
 }
 
 export interface AuditItem {
@@ -107,6 +115,44 @@ interface LhAudit {
 
 const MAX_ITEMS_PER_AUDIT = 5;
 
+/**
+ * Some audits (notably largest-contentful-paint-element) wrap their items
+ * inside an outer { type: 'list', items: [{ type: 'table', items: [...] }, ...] }.
+ * Recurse one level so callers see the leaf items directly.
+ */
+function flattenItems(items: Array<Record<string, unknown>> | undefined): Array<Record<string, unknown>> {
+  if (!Array.isArray(items)) return [];
+  const flat: Array<Record<string, unknown>> = [];
+  for (const it of items) {
+    if (it && typeof it === 'object' && Array.isArray((it as { items?: unknown[] }).items)) {
+      const inner = (it as { items: Array<Record<string, unknown>> }).items;
+      for (const sub of inner) flat.push(sub);
+    } else {
+      flat.push(it);
+    }
+  }
+  return flat;
+}
+
+function extractLcpPhases(items: Array<Record<string, unknown>> | undefined): LcpPhase[] | undefined {
+  if (!Array.isArray(items)) return undefined;
+  // The LCP audit's outer details.items[1] is a table whose inner items have phase + timing + percent.
+  for (const outer of items) {
+    const inner = (outer as { items?: unknown[] }).items;
+    if (!Array.isArray(inner)) continue;
+    if (inner.length === 0) continue;
+    const first = inner[0] as Record<string, unknown>;
+    if (typeof first.phase !== 'string' || typeof first.timing !== 'number') continue;
+    return inner
+      .filter((row): row is { phase: string; timing: number; percent: string } => {
+        const r = row as Record<string, unknown>;
+        return typeof r.phase === 'string' && typeof r.timing === 'number';
+      })
+      .map((r) => ({ phase: r.phase, timingMs: r.timing, percent: r.percent }));
+  }
+  return undefined;
+}
+
 export function captureAuditsFromLhr(audits: Record<string, LhAudit>): CapturedAudit[] {
   const out: CapturedAudit[] = [];
   for (const spec of ACTIONABLE_AUDITS) {
@@ -130,8 +176,9 @@ export function captureAuditsFromLhr(audits: Record<string, LhAudit>): CapturedA
         captured.numericUnit = 'byte';
       }
     }
-    const items = a.details?.items;
-    if (Array.isArray(items) && items.length > 0) {
+    const rawItems = a.details?.items;
+    const items = flattenItems(rawItems);
+    if (items.length > 0) {
       captured.topItems = items.slice(0, MAX_ITEMS_PER_AUDIT).map((it) => {
         const node = it.node as { snippet?: string; selector?: string; nodeLabel?: string } | undefined;
         const hasNode = node && (node.snippet || node.selector || node.nodeLabel);
@@ -146,6 +193,10 @@ export function captureAuditsFromLhr(audits: Record<string, LhAudit>): CapturedA
           duration: typeof it.duration === 'number' ? it.duration : undefined,
         };
       });
+    }
+    if (spec.id === 'largest-contentful-paint-element') {
+      const phases = extractLcpPhases(rawItems);
+      if (phases) captured.lcpPhases = phases;
     }
     out.push(captured);
   }

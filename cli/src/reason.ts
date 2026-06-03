@@ -91,6 +91,7 @@ function compactDiagnosis(d: Diagnosis): Record<string, unknown> {
     runs: d.runs,
     okRuns: d.okRuns,
     lcpElement: d.lcpElement,
+    lcpPhases: d.lcpPhases,
     rankedOpportunities: ops,
   };
 }
