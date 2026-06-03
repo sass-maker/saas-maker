@@ -1,0 +1,22 @@
+{
+  "name": "psi-swarm-monorepo",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Lighthouse, run many times across realistic device/network presets. See the p50/p75/p90/p99 of your Web Vitals, not one noisy point.",
+  "workspaces": [
+    "cli",
+    "web"
+  ],
+  "scripts": {
+    "build:cli": "npm --workspace cli run build",
+    "dev:cli": "npm --workspace cli run dev",
+    "dev:web": "npm --workspace web run dev",
+    "build:web": "npm --workspace web run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sarthakagrawal927/psi-swarm.git"
+  },
+  "author": "Sarthak Agrawal",
+  "license": "MIT"
+}
