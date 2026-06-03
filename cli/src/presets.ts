@@ -111,8 +111,11 @@ export const PRESET_GROUPS: Record<string, string[]> = {
   mobile: ['mobile-slow', 'mobile-mid', 'mobile-fast'],
   desktop: ['desktop'],
   psi: ['mobile-mid', 'desktop'],
-  // Lighter "what most of my real users see" set.
   fast: ['mobile-fast', 'desktop'],
+  // 99% device coverage — every device/network class your product is likely
+  // to see in the wild. Pair with `--profile coverage` for a single weighted
+  // verdict representing the global device-distribution mean.
+  coverage: ['mobile-slow', 'mobile-mid', 'mobile-fast', 'desktop'],
 };
 
 /**
@@ -126,6 +129,11 @@ export const TRAFFIC_PROFILES: Record<string, Record<string, number>> = {
   'desktop-heavy': { 'mobile-mid': 0.15, 'mobile-fast': 0.15, desktop: 0.70 },
   balanced: { 'mobile-mid': 0.5, desktop: 0.5 },
   'mobile-only': { 'mobile-slow': 0.25, 'mobile-mid': 0.5, 'mobile-fast': 0.25 },
+  // 99% device coverage — globally-representative mix of device class × network
+  // quality. Sources: StatCounter (60/40 mobile/desktop), Web Almanac CrUX
+  // breakdowns (within mobile: ~60% on fast 4G/5G, ~30% on slow 4G, ~10% on
+  // 3G or congested 4G). Calibrate to your real audience by adjusting these.
+  coverage: { 'mobile-slow': 0.10, 'mobile-mid': 0.35, 'mobile-fast': 0.15, desktop: 0.40 },
 };
 
 export function resolvePresets(spec: string): Preset[] {

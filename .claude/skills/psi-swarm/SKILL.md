@@ -43,8 +43,15 @@ The CLI binary is `node ~/.psi-swarm-local/cli/dist/cli.js` (or wherever the use
 
 **Always use `--output html` so the user gets a shareable artifact**, not just terminal text.
 
+For **product-level "is my site fast enough" questions** — use the `coverage` preset group + `coverage` profile. This runs every device class (slow 3G low-end Android, slow 4G mid Android, fast 4G iPhone, desktop cable) and gives a single weighted verdict representing ~globally-distributed real users:
+
 ```bash
-# Pick an output path the user can open. Default location: /tmp/psi-<slug>-<timestamp>.html
+node <psi-swarm>/cli/dist/cli.js run <URL> --runs 5 --presets coverage --profile coverage --reason --output html --output-path /tmp/psi-<slug>.html
+```
+
+For **focused PSI-style checks** (PageSpeed Insights matches mobile-mid + desktop only):
+
+```bash
 node <psi-swarm>/cli/dist/cli.js run <URL> --runs 5 --presets psi --reason --output html --output-path /tmp/psi-<slug>.html
 ```
 
