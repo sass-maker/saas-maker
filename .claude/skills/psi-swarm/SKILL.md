@@ -39,37 +39,43 @@ The CLI binary is `node ~/.psi-swarm-local/cli/dist/cli.js` (or wherever the use
 
 ## How to invoke
 
-### Default — a single URL with reasoning
+### Default — run the simulations AND produce an HTML report
+
+**Always use `--output html` so the user gets a shareable artifact**, not just terminal text.
 
 ```bash
-node <psi-swarm>/cli/dist/cli.js run <URL> --runs 5 --presets psi --reason
+# Pick an output path the user can open. Default location: /tmp/psi-<slug>-<timestamp>.html
+node <psi-swarm>/cli/dist/cli.js run <URL> --runs 5 --presets psi --reason --output html --output-path /tmp/psi-<slug>.html
 ```
 
-This gives:
-- p50/p75/p90/p99 of LCP/CLS/TBT/FCP/TTFB/SI across 5 mobile + 5 desktop runs (~2-3 min)
-- Per-preset "Why?" with LCP element, phase breakdown, ranked Lighthouse opportunities
-- Streaming LLM narrative explaining the dominant cause and highest-impact fix
+After the run completes, tell the user:
+1. The headline lab numbers from the terminal output (p75 LCP per preset, verdict, biggest opportunity)
+2. The HTML file path with an `open <path>` command so they can view the full report in a browser
 
-### Quick smoke test (~30 s)
+The HTML is self-contained (~10-17 KB, inline CSS, no external assets). They can share it via email, Slack, GitHub gist, etc.
+
+### Quick smoke test (~45 s)
+
+For a fast directional check:
 
 ```bash
-node <psi-swarm>/cli/dist/cli.js run <URL> --runs 2 --presets desktop --reason
+node <psi-swarm>/cli/dist/cli.js run <URL> --runs 2 --presets desktop --reason --output html --output-path /tmp/psi-quick.html
 ```
 
-### Comparing two URLs
+### Comparing two URLs or two states
 
 ```bash
-node <psi-swarm>/cli/dist/cli.js run <URL1> --runs 5 --tag a
-node <psi-swarm>/cli/dist/cli.js run <URL2> --runs 5 --tag b
-# Then call compare:
-node <psi-swarm>/cli/dist/cli.js compare <URL1> --baseline a --candidate b
+node <psi-swarm>/cli/dist/cli.js run <URL> --runs 5 --tag before-deploy
+# ... user ships the change ...
+node <psi-swarm>/cli/dist/cli.js run <URL> --runs 5 --tag after-deploy
+node <psi-swarm>/cli/dist/cli.js compare <URL> --baseline before-deploy --candidate after-deploy
 ```
 
-### Producing a shareable HTML report
+### What's a "simulation"?
 
-```bash
-node <psi-swarm>/cli/dist/cli.js run <URL> --runs 5 --reason --output html --output-path ./report.html
-```
+Each "run" = **one real Lighthouse audit**: headless Chrome navigates to the live URL with artificial network throttling (latency + bandwidth ceiling) and CPU throttling (idle-cycle insertion). The site is live; the throttling is what makes a fast laptop pretend to be a mid-range Android on Slow 4G.
+
+`--runs N --presets psi` means N × 2 audits (psi = mobile-mid + desktop). 5 runs × psi = 10 audits per URL.
 
 ## Reasoning backend — auto-detected
 
