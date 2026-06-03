@@ -16,8 +16,7 @@
     "build:cli": "npm --workspace cli run build",
     "build:web": "npm --workspace web run build",
     "dev:cli": "npm --workspace cli run dev",
-    "install:skill": "node scripts/install-skill.mjs",
-    "deploy:reports": "ASTRO_BASE=/psi-swarm/ npm --workspace web run build && node scripts/deploy-reports.mjs"
+    "install:skill": "node scripts/install-skill.mjs"
   },
   "engines": {
     "node": ">=20 <24",
