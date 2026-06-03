@@ -337,12 +337,50 @@ export function createAgentServer(opts: ServeOptions): { listen: () => Promise<v
         return send(res, 200, { urls: out }, opts.origin);
       }
 
-      // GET /api/projects — fleet dashboard view
+      // GET /api/projects — fleet dashboard view, grouped by origin
       if (req.method === 'GET' && url.pathname === '/api/projects') {
         const windowDays = parseInt(url.searchParams.get('windowDays') ?? '30', 10);
         const db = new HistoryDB();
-        const projects = db.projects(windowDays);
+        const rows = db.projects(windowDays);
         db.close();
+        // Group URL-level rows by URL origin so multiple pages of the same site
+        // collapse under one "project" card. The path is derived for display.
+        type Page = (typeof rows)[number] & { path: string };
+        const byOrigin = new Map<string, Page[]>();
+        for (const r of rows) {
+          let origin: string;
+          let path: string;
+          try {
+            const u = new URL(r.url);
+            origin = u.origin;
+            path = (u.pathname || '/') + (u.search || '');
+          } catch {
+            origin = r.url;
+            path = '/';
+          }
+          const arr = byOrigin.get(origin) ?? [];
+          arr.push({ ...r, path });
+          byOrigin.set(origin, arr);
+        }
+        const projects = Array.from(byOrigin.entries()).map(([origin, pages]) => {
+          pages.sort((a, b) => a.path.localeCompare(b.path));
+          const totalRuns = pages.reduce((s, p) => s + p.totalRuns, 0);
+          const lastRunAt = pages.reduce((s, p) => Math.max(s, p.lastRunAt), 0);
+          // Rollup metrics: worst-case across pages (the page bringing the project down).
+          const allMobile = pages.map((p) => p.mobileLcpP75).filter((v): v is number => typeof v === 'number');
+          const allDesktop = pages.map((p) => p.desktopLcpP75).filter((v): v is number => typeof v === 'number');
+          const allCls = pages.map((p) => p.cls).filter((v): v is number => typeof v === 'number');
+          return {
+            origin,
+            totalRuns,
+            lastRunAt,
+            pageCount: pages.length,
+            worstMobileLcp: allMobile.length > 0 ? Math.max(...allMobile) : undefined,
+            worstDesktopLcp: allDesktop.length > 0 ? Math.max(...allDesktop) : undefined,
+            worstCls: allCls.length > 0 ? Math.max(...allCls) : undefined,
+            pages,
+          };
+        }).sort((a, b) => b.lastRunAt - a.lastRunAt);
         return send(res, 200, { projects }, opts.origin);
       }
 
