@@ -1,20 +1,25 @@
 {
   "name": "@saas-maker/landing-page",
-  "version": "0.0.0",
+  "type": "module",
+  "version": "0.1.0",
   "private": true,
+  "description": "Foundry — workshop dossier landing page (sassmaker.com). Pure static Astro port of the original Next.js site.",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build && node scripts/inline-critical-css.mjs",
-    "start": "next start"
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "typecheck": "astro sync && tsc --noEmit"
   },
   "dependencies": {
-    "@saas-maker/sdk": "workspace:*" ,
-    "next": "16.2.4",
-    "react": "19.2.5",
-    "react-dom": "19.2.5"
+    "@astrojs/sitemap": "^3.7.3",
+    "astro": "6.1.9",
+    "sharp": "0.34.5",
+    "typescript": "6.0.3"
   },
   "devDependencies": {
-    "@playwright/test": "1.59.1",
-    "beasties": "^0.4.2"
+    "lightningcss": "1.32.0",
+    "wrangler": "4.85.0"
   }
 }

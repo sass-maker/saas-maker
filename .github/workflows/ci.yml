@@ -237,8 +237,9 @@ jobs:
       - run: pnpm build:showcase
         if: steps.changes.outputs.changed == 'true'
       - name: Deploy landing page to Cloudflare Pages
+        # Astro emits to `dist/` (previously Next.js static export → `out/`).
         if: steps.changes.outputs.changed == 'true'
-        run: pnpm exec wrangler pages deploy apps/showcase/out --project-name saas-maker-home --branch main
+        run: pnpm exec wrangler pages deploy apps/showcase/dist --project-name saas-maker-home --branch main
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

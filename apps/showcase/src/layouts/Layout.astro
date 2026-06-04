@@ -1,0 +1,88 @@
+---
+import '../styles/globals.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const SITE_URL = 'https://sassmaker.com';
+const DEFAULT_TITLE = 'Foundry — a personal fleet by Sarthak Agrawal';
+const DEFAULT_DESCRIPTION =
+  'A workshop dossier of twenty-something products I build and ship — and the open-source operating layer running underneath all of them.';
+
+const { title = DEFAULT_TITLE, description = DEFAULT_DESCRIPTION } = Astro.props;
+
+// OG image is generated once by the original Next.js opengraph-image
+// route and shipped as a static PNG (see public/opengraph-image.png).
+// Astro can't easily reproduce next/og's dynamic ImageResponse so we
+// freeze it as a static asset.
+const OG_IMAGE = `${SITE_URL}/opengraph-image.png`;
+
+const STRUCTURED_DATA = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'Foundry',
+  alternateName: 'SaaS Maker',
+  url: SITE_URL,
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'Web',
+  description: DEFAULT_DESCRIPTION,
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  author: {
+    '@type': 'Person',
+    name: 'Sarthak Agrawal',
+    url: 'https://github.com/sarthakagrawal927',
+  },
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={SITE_URL} />
+
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={SITE_URL} />
+    <meta property="og:site_name" content="Foundry" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={OG_IMAGE} />
+    <meta property="og:locale" content="en_US" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={OG_IMAGE} />
+
+    <meta
+      name="keywords"
+      content="foundry, sarthak agrawal, sassmaker, fleet, indie hacker, open source, portfolio"
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    {/* JSON-LD structured data. The original Next.js layout wrapped this
+        in a <template> tag (likely accidental — Google won't read JSON-LD
+        from a <template>). Restoring the canonical <script type="…">
+        form so crawlers actually pick it up. */}
+    <script type="application/ld+json" set:html={JSON.stringify(STRUCTURED_DATA)} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

@@ -1,0 +1,69 @@
+---
+import { SPEC } from '../data/projects';
+
+// The terminal block is a verbatim transcript — preserved exactly,
+// including the trailing newline and the line wrap on the `fnd api`
+// command. <pre> respects whitespace so we leave it as-is.
+const TERMINAL = `$ npm i -g @saas-maker/cli
+$ fnd login
+   ✓ authenticated as @sarthakagrawal927
+
+$ fnd projects list
+   001  Foundry          core   operating layer
+   002  CodeVetter       core   desktop-first AI review
+   003  Reel Pipeline    core   marketing automation
+   004  High Signal      core   editorial signal log
+   005  AI Game          core   multi-agent simulator
+   ... 15 more
+
+$ fnd api POST /v1/feedback \\
+    --body '{"project":"high-signal","title":"add RSS"}'
+   → feedback #142 created`;
+---
+<section class="section" id="spec">
+  <div class="section-head">
+    <div class="section-marker">
+      <span class="section-num">§ 02</span>
+      <span class="section-rule"></span>
+      <span class="section-kw">The Foundry</span>
+    </div>
+    <h2 class="section-title">
+      One <em class="italic">backend</em>
+      <br />
+      for the entire <em class="italic">workshop</em>.
+    </h2>
+    <p class="section-lede">
+      Every project on this page hits the same API. Same registry, same feedback boards,
+      same changelog, same task queue. New product, day one: it&apos;s already integrated.
+    </p>
+  </div>
+
+  <div class="spec-layout">
+    <dl class="spec-sheet">
+      <div class="spec-head">
+        <span class="spec-stamp">SPECIFICATION</span>
+        <span class="spec-rule"></span>
+      </div>
+      {SPEC.map(([k, v]) => (
+        <div class="spec-row">
+          <dt>{k}</dt>
+          <dd>{v}</dd>
+        </div>
+      ))}
+      <div class="spec-foot">
+        <span class="spec-rule"></span>
+        <span class="spec-stamp">END · FOLIO 01</span>
+      </div>
+    </dl>
+
+    <div class="terminal">
+      <div class="terminal-head">
+        <span class="t-dot t-r"></span>
+        <span class="t-dot t-y"></span>
+        <span class="t-dot t-g"></span>
+        <span class="terminal-title">~/fleet — fnd CLI</span>
+      </div>
+      <pre class="terminal-body">{TERMINAL}</pre>
+    </div>
+  </div>
+</section>

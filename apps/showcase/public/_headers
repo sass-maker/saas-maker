@@ -1,11 +1,19 @@
 # Cache the HTML envelope at the CF edge so repeat hits skip the origin.
 # CF Pages was returning cf-cache-status: DYNAMIC with just s-maxage;
-# adding max-age makes CF actually cache HTML at the edge.
+# adding explicit max-age (browser cache) is the tell CF Pages needs to
+# mark HTML responses as cacheable at edge too.
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=()
+
 /
   Cache-Control: public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800
+
 /*.html
   Cache-Control: public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800
 
-# Next.js emits hash-stable bundles under /_next/static/.
-/_next/static/*
+# Astro emits hash-stable bundles under /_astro/.
+/_astro/*
   Cache-Control: public, max-age=31536000, immutable

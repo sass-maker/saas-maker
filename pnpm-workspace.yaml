@@ -14,3 +14,8 @@ allowBuilds:
   sharp: false
   unrs-resolver: true
   workerd: true
+# Supply-chain release-age policy: pin rollup to a vetted version even
+# when Astro pulls a fresher one transitively. See fleet AGENTS.md →
+# release-age policy.
+overrides:
+  rollup: 4.60.2

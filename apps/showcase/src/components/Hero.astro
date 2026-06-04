@@ -1,0 +1,69 @@
+---
+const GITHUB_URL = 'https://github.com/sarthak-fleet/saas-maker';
+
+// Build-time year. The original Next.js page used `new Date().getFullYear()`
+// on every render; for a static site we freeze it at build. The whole
+// landing redeploys frequently enough that this won't drift meaningfully.
+const YEAR = new Date().getFullYear();
+---
+<header class="hero">
+  <div class="hero-grid" aria-hidden="true"></div>
+  <div class="hero-meta hero-anim" style="--delay: 0ms">
+    <span class="status-dot"></span>
+    <span>fleet ledger</span>
+    <span class="hero-meta-sep">/</span>
+    <span class="hero-meta-issue">Vol. 01</span>
+    <span class="hero-meta-sep">/</span>
+    <span>{YEAR}</span>
+  </div>
+
+  <h1 class="hero-title">
+    <span class="hero-line hero-anim" style="--delay: 80ms">
+      A small,
+    </span>
+    <span class="hero-line hero-anim" style="--delay: 160ms">
+      <em class="italic">working</em> fleet of
+    </span>
+    <span class="hero-line hero-anim" style="--delay: 240ms">
+      twenty <em class="italic">curious</em> products,
+    </span>
+    <span class="hero-line hero-anim" style="--delay: 320ms">
+      forged by <span class="copper">one builder</span>.
+    </span>
+  </h1>
+
+  <p class="hero-sub hero-anim" style="--delay: 440ms">
+    This is the dossier of everything I&apos;ve built and kept running — desktop apps, AI experiments,
+    live services — plus <em class="italic">Foundry</em>, the open-source operating layer that holds them together.
+  </p>
+
+  <div class="hero-actions hero-anim" style="--delay: 520ms">
+    <a href="#fleet" class="btn btn-primary btn-lg">Open the catalog</a>
+    <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-lg">
+      <span>Foundry source</span>
+      <span class="btn-arrow">↗</span>
+    </a>
+  </div>
+
+  <dl class="hero-numerals hero-anim" style="--delay: 640ms">
+    <div>
+      <dt>Products</dt>
+      <dd><span class="numeral">20</span></dd>
+    </div>
+    <div>
+      <dt>Operators</dt>
+      <dd>
+        <span class="numeral">1</span>
+        <span class="numeral-dim"> + agents</span>
+      </dd>
+    </div>
+    <div>
+      <dt>Origin</dt>
+      <dd><span class="numeral">MMXXIV</span></dd>
+    </div>
+    <div>
+      <dt>License</dt>
+      <dd><span class="numeral">MIT</span></dd>
+    </div>
+  </dl>
+</header>

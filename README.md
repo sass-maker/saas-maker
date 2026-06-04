@@ -14,7 +14,7 @@ Everything is hosted on Cloudflare. Each deployable ships independently via GitH
 | Cockpit dashboard | `apps/cockpit` | Cloudflare Worker `saasmaker-dashboard` via `@opennextjs/cloudflare` (route `app.sassmaker.com`) |
 | Droid runner | `workers/droid` | Cloudflare Worker `saasmaker-droid` (Containers + Durable Objects) |
 | Docs | `apps/docs` | Cloudflare Pages `saas-maker-docs` (Astro/Starlight; `docs.sassmaker.com`) |
-| Landing/home | `apps/showcase` | Cloudflare Pages `saas-maker-home` (`sassmaker.com`) |
+| Landing/home | `apps/showcase` | Cloudflare Pages `saas-maker-home` (Astro static; `sassmaker.com`) |
 
 | Concern | Service |
 |---------|---------|
@@ -35,7 +35,7 @@ Note: `apps/docs/vercel.json` is stale — docs deploy to Cloudflare Pages, not 
 - `workers/droid` - Experimental Cloudflare Sandbox runner for task execution and PR creation.
 - `apps/cockpit` - Next.js dashboard for projects, tasks, fleet state, and Droid runs.
 - `apps/docs` - Astro/Starlight docs site.
-- `apps/showcase` - Widget and product showcase.
+- `apps/showcase` - Foundry landing page (Astro, pure static; serves `sassmaker.com`).
 - `packages/cli` - `fnd` CLI backed by the generated OpenAPI spec.
 - `packages/blocks` - Shared backend and operational packages.
 - `packages/widgets` - Embeddable feedback, changelog, testimonials, and waitlist widgets.
