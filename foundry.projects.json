@@ -22,7 +22,7 @@
   },
   "event-forecast": {
     "desc": "Event-stream forecasting and action-report service.",
-    "url": "https://github.com/sarthakagrawal927/event-forecast.git",
+    "url": "https://github.com/sarthak-fleet/event-forecast.git",
     "tier": "active-ai",
     "category": "product",
     "priority": "P2"
@@ -43,7 +43,7 @@
   },
   "ai-game": {
     "desc": "Persistent AI world simulator — interactive RPG-style multi-agent game.",
-    "url": "https://github.com/sarthakagrawal927/ai-game.git",
+    "url": "https://github.com/sarthak-fleet/ai-game.git",
     "tier": "core",
     "category": "product",
     "priority": "P1"
@@ -71,7 +71,7 @@
   },
   "local-ai": {
     "desc": "Local AI CLI bridge for Claude, Codex, and Gemini.",
-    "url": "https://github.com/sarthakagrawal927/local-ai.git",
+    "url": "https://github.com/sarthak-fleet/local-ai.git",
     "tier": "helper",
     "category": "helper",
     "priority": "P2"
@@ -85,7 +85,7 @@
   },
   "psi-swarm": {
     "desc": "Lighthouse swarm runner for Web Vitals distributions.",
-    "url": "https://github.com/sarthakagrawal927/psi-swarm.git",
+    "url": "https://github.com/sarthak-fleet/psi-swarm.git",
     "tier": "helper",
     "category": "helper",
     "priority": "P2"

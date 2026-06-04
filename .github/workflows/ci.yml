@@ -212,7 +212,7 @@ jobs:
           changed=false
           while IFS= read -r path; do
             case "$path" in
-              apps/showcase/*|packages/blocks/sdk/*|package.json|pnpm-lock.yaml|pnpm-workspace.yaml|.github/workflows/ci.yml)
+              apps/showcase/*|foundry.projects.json|packages/blocks/sdk/*|package.json|pnpm-lock.yaml|pnpm-workspace.yaml|.github/workflows/ci.yml)
                 changed=true
                 break
                 ;;
