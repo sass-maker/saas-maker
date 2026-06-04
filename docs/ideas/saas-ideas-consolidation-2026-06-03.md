@@ -29,27 +29,27 @@ tasks in those repos, not as standalone idea files.
 
 ## Prototype Task Map
 
-As of 2026-06-04, the strong-fit ideas have explicit Symphony prototype tasks.
-These tasks require a visible or fixture-backed prototype, not just another
+As of 2026-06-04, the strong-fit ideas have completed Symphony prototype tasks.
+These tasks produced visible or fixture-backed prototypes, not just another
 brief. Parked/reference-only ideas below are intentionally excluded until there
 is a clear build decision.
 
 | Task ID  | Project           | Prototype task                                                            | Status |
 | -------- | ----------------- | ------------------------------------------------------------------------- | ------ |
-| 9f85ddb5 | `CodeVetter`      | Prototype synthetic QA replay runner                                      | todo   |
-| 8277934b | `CodeVetter`      | Prototype commit-history intent debugger                                  | todo   |
-| 9164bd9d | `truehire`        | Prototype JD-to-candidate proof comparison board                          | todo   |
-| 989f52c0 | `high-signal`     | Prototype competitor perception signal inbox                              | todo   |
-| b310a08a | `reel-pipeline`   | Prototype signal-to-reel draft generator                                  | todo   |
-| a931e421 | `free-ai`         | Prototype benchmark cost optimizer dashboard                              | todo   |
-| 8948f1db | `reader`          | Prototype browser memory search and blog-to-PDF capture                   | todo   |
-| 921eb03b | `saas-maker`      | Prototype Magic Form reusable product block                               | todo   |
-| 6bff9f2e | `saas-maker`      | Prototype AI feedback digest task generator                               | todo   |
-| 17386fdc | `everythingrated` | Prototype moderated dynamic directory submissions                         | todo   |
-| 14ad2fa6 | `open-historia`   | Prototype AI co-author branch archive for StoryTunes                      | todo   |
-| c48e7301 | `anime_list`      | Prototype privacy-safe anime identity quiz                                | todo   |
-| c22b4f2f | `email-manager`   | Prototype private email memories digest                                   | todo   |
-| 94da56c6 | `event-forecast`  | Prototype event-stream map and action report                              | todo   |
+| 9f85ddb5 | `CodeVetter`      | Prototype synthetic QA replay runner                                      | done   |
+| 8277934b | `CodeVetter`      | Prototype commit-history intent debugger                                  | done   |
+| 9164bd9d | `truehire`        | Prototype JD-to-candidate proof comparison board                          | done   |
+| 989f52c0 | `high-signal`     | Prototype competitor perception signal inbox                              | done   |
+| b310a08a | `reel-pipeline`   | Prototype signal-to-reel draft generator                                  | done   |
+| a931e421 | `free-ai`         | Prototype benchmark cost optimizer dashboard                              | done   |
+| 8948f1db | `reader`          | Prototype browser memory search and blog-to-PDF capture                   | done   |
+| 921eb03b | `saas-maker`      | Prototype Magic Form reusable product block                               | done   |
+| 6bff9f2e | `saas-maker`      | Prototype AI feedback digest task generator                               | done   |
+| 17386fdc | `everythingrated` | Prototype moderated dynamic directory submissions                         | done   |
+| 14ad2fa6 | `open-historia`   | Prototype AI co-author branch archive for StoryTunes                      | done   |
+| c48e7301 | `anime_list`      | Prototype privacy-safe anime identity quiz                                | done   |
+| c22b4f2f | `email-manager`   | Prototype private email memories digest                                   | done   |
+| 94da56c6 | `event-forecast`  | Prototype event-stream map and action report                              | done   |
 
 ## Remaining Worth Doing, Grouped
 

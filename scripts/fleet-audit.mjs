@@ -22,6 +22,7 @@ const BUSINESS_LANES = {
   significanthobbies: 'P1 Explore',
   truehire: 'P1 Explore',
   everythingrated: 'P1 Explore',
+  'event-forecast': 'P1 Explore',
   anime_list: 'P2 Watch',
   looptv: 'P2 Watch',
   'open-historia': 'P2 Watch',
