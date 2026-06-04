@@ -1,5 +1,5 @@
 ---
-import { CORE, ACTIVE } from '../data/projects';
+import { CORE, HELPERS, ACTIVE, PROJECT_COUNT } from '../data/projects';
 ---
 <section class="section" id="fleet">
   <div class="section-head">
@@ -9,7 +9,7 @@ import { CORE, ACTIVE } from '../data/projects';
       <span class="section-kw">The Fleet</span>
     </div>
     <h2 class="section-title">
-      Twenty <em class="italic">distinct</em> products,
+      {PROJECT_COUNT} <em class="italic">distinct</em> projects,
       <br />
       one shared <em class="italic">operating layer</em>.
     </h2>
@@ -52,6 +52,33 @@ import { CORE, ACTIVE } from '../data/projects';
   <div class="active">
     <div class="active-head">
       <span class="section-num">§ 01.02</span>
+      <span class="section-rule short"></span>
+      <span class="section-kw small">Helper systems</span>
+      <span class="active-count">{HELPERS.length} helpers</span>
+    </div>
+    <ul class="active-grid">
+      {HELPERS.map((p) => (
+        <li>
+          <a
+            href={p.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="mini"
+            style={`--accent: ${p.color}`}
+          >
+            <span class="mini-dot"></span>
+            <span class="mini-name">{p.name}</span>
+            <span class="mini-desc">{p.desc}</span>
+            <span class="mini-arrow">↗</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <div class="active">
+    <div class="active-head">
+      <span class="section-num">§ 01.03</span>
       <span class="section-rule short"></span>
       <span class="section-kw small">Also running</span>
       <span class="active-count">{ACTIVE.length} more</span>

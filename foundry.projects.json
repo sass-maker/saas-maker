@@ -1,22 +1,163 @@
 {
-  "anime_list": { "desc": "MAL Explorer — Browse and manage your anime/manga lists.", "url": "https://github.com/sarthak-fleet/anime_list.git", "tier": "active-ai" },
-  "CodeVetter": { "desc": "AI code review platform — desktop-first, works offline.", "url": "git@github.com:sarthak-fleet/CodeVetter.git", "tier": "core" },
-  "email-manager": { "desc": "Unified email management and automation tool.", "url": "https://github.com/sarthak-fleet/email-manager.git", "tier": "active-ai" },
-  "everythingrated": { "desc": "Ratings and review-style app.", "url": "https://github.com/sarthak-fleet/everythingrated.git", "tier": "active-ai" },
-  "free-ai": { "desc": "OpenAI-compatible API gateway for free LLM providers.", "url": "https://github.com/sarthak-fleet/free-ai.git", "tier": "active-ai" },
-  "ai-game": { "desc": "Persistent AI world simulator — interactive RPG-style multi-agent game.", "url": "https://github.com/sarthakagrawal927/ai-game.git", "tier": "core" },
-  "high-signal": { "desc": "Public signal log for AI infrastructure and semiconductors.", "url": "https://github.com/sarthak-fleet/high-signal.git", "tier": "core" },
-  "linkchat": { "desc": "Real-time chat application built with Next.js.", "url": "https://github.com/sarthak-fleet/linkchat.git", "tier": "active-ai" },
-  "looptv": { "desc": "TV-like app for YouTube curated channels.", "url": "https://github.com/sarthak-fleet/looptv.git", "tier": "active-ai" },
-  "open-historia": { "desc": "Interactive historical timeline and storytelling platform.", "url": "https://github.com/sarthak-fleet/open-historia.git", "tier": "active-ai" },
-  "reader": { "desc": "Web Annotator — Document reading and annotation tool.", "url": "https://github.com/sarthak-fleet/reader.git", "tier": "active-ai" },
-  "reel-pipeline": { "desc": "AI reel generation and autopost orchestration for fleet marketing.", "url": "https://github.com/sarthak-fleet/reel-pipeline.git", "tier": "core" },
-  "resume-tailor": { "desc": "RolePatch — AI-powered resume tailoring system.", "url": "git@github.com:sarthak-fleet/resume-tailor.git", "tier": "core" },
-  "saas-maker": { "desc": "Foundry — The Industrial Software Factory for Project Fleets.", "url": "https://github.com/sarthak-fleet/saas-maker.git", "tier": "core" },
-  "significanthobbies": { "desc": "Personal hobby mapping and journey visualization tool.", "url": "https://github.com/sarthak-fleet/significanthobbies.git", "tier": "active-ai" },
-  "starboard": { "desc": "AI-built project management and dashboard system.", "url": "https://github.com/sarthak-fleet/starboard.git", "tier": "active-ai" },
-  "swe-interview-prep": { "desc": "Interview Coder — Software engineering interview prep.", "url": "https://github.com/sarthak-fleet/swe-interview-prep.git", "tier": "active-ai" },
-  "tinygpt": { "desc": "TinyGPT.", "url": "https://github.com/sarthak-fleet/tinygpt.git", "tier": "core" },
-  "today-little-log": { "desc": "Daily logging and micro-journaling application.", "url": "https://github.com/sarthak-fleet/today-little-log.git", "tier": "active-ai" },
-  "truehire": { "desc": "AI-powered recruitment and candidate vetting platform.", "url": "https://github.com/sarthak-fleet/truehire.git", "tier": "active-ai" }
+  "anime_list": {
+    "desc": "MAL Explorer — Browse and manage your anime/manga lists.",
+    "url": "https://github.com/sarthak-fleet/anime_list.git",
+    "tier": "active-ai",
+    "category": "product",
+    "priority": "P2"
+  },
+  "CodeVetter": {
+    "desc": "AI code review platform — desktop-first, works offline.",
+    "url": "git@github.com:sarthak-fleet/CodeVetter.git",
+    "tier": "core",
+    "category": "product",
+    "priority": "P1"
+  },
+  "email-manager": {
+    "desc": "Unified email management and automation tool.",
+    "url": "https://github.com/sarthak-fleet/email-manager.git",
+    "tier": "active-ai",
+    "category": "product",
+    "priority": "P2"
+  },
+  "event-forecast": {
+    "desc": "Event-stream forecasting and action-report service.",
+    "url": "https://github.com/sarthakagrawal927/event-forecast.git",
+    "tier": "active-ai",
+    "category": "product",
+    "priority": "P2"
+  },
+  "everythingrated": {
+    "desc": "Ratings and review-style app.",
+    "url": "https://github.com/sarthak-fleet/everythingrated.git",
+    "tier": "active-ai",
+    "category": "product",
+    "priority": "P2"
+  },
+  "free-ai": {
+    "desc": "OpenAI-compatible API gateway for free LLM providers.",
+    "url": "https://github.com/sarthak-fleet/free-ai.git",
+    "tier": "helper",
+    "category": "helper",
+    "priority": "P1"
+  },
+  "ai-game": {
+    "desc": "Persistent AI world simulator — interactive RPG-style multi-agent game.",
+    "url": "https://github.com/sarthakagrawal927/ai-game.git",
+    "tier": "core",
+    "category": "product",
+    "priority": "P1"
+  },
+  "high-signal": {
+    "desc": "Public signal log for AI infrastructure and semiconductors.",
+    "url": "https://github.com/sarthak-fleet/high-signal.git",
+    "tier": "core",
+    "category": "product",
+    "priority": "P1"
+  },
+  "linkchat": {
+    "desc": "Real-time chat application built with Next.js.",
+    "url": "https://github.com/sarthak-fleet/linkchat.git",
+    "tier": "active-ai",
+    "category": "product",
+    "priority": "P2"
+  },
+  "looptv": {
+    "desc": "TV-like app for YouTube curated channels.",
+    "url": "https://github.com/sarthak-fleet/looptv.git",
+    "tier": "active-ai",
+    "category": "product",
+    "priority": "P2"
+  },
+  "local-ai": {
+    "desc": "Local AI CLI bridge for Claude, Codex, and Gemini.",
+    "url": "https://github.com/sarthakagrawal927/local-ai.git",
+    "tier": "helper",
+    "category": "helper",
+    "priority": "P2"
+  },
+  "open-historia": {
+    "desc": "Interactive historical timeline and storytelling platform.",
+    "url": "https://github.com/sarthak-fleet/open-historia.git",
+    "tier": "active-ai",
+    "category": "product",
+    "priority": "P1"
+  },
+  "psi-swarm": {
+    "desc": "Lighthouse swarm runner for Web Vitals distributions.",
+    "url": "https://github.com/sarthakagrawal927/psi-swarm.git",
+    "tier": "helper",
+    "category": "helper",
+    "priority": "P2"
+  },
+  "reader": {
+    "desc": "Web Annotator — Document reading and annotation tool.",
+    "url": "https://github.com/sarthak-fleet/reader.git",
+    "tier": "active-ai",
+    "category": "product",
+    "priority": "P2"
+  },
+  "reel-pipeline": {
+    "desc": "AI reel generation and autopost orchestration for fleet marketing.",
+    "url": "https://github.com/sarthak-fleet/reel-pipeline.git",
+    "tier": "core",
+    "category": "helper",
+    "priority": "P1"
+  },
+  "resume-tailor": {
+    "desc": "RolePatch — AI-powered resume tailoring system.",
+    "url": "git@github.com:sarthak-fleet/resume-tailor.git",
+    "tier": "core",
+    "category": "product",
+    "priority": "P1"
+  },
+  "saas-maker": {
+    "desc": "Foundry — The Industrial Software Factory for Project Fleets.",
+    "url": "https://github.com/sarthak-fleet/saas-maker.git",
+    "tier": "helper",
+    "category": "helper",
+    "priority": "P0"
+  },
+  "significanthobbies": {
+    "desc": "Personal hobby mapping and journey visualization tool.",
+    "url": "https://github.com/sarthak-fleet/significanthobbies.git",
+    "tier": "active-ai",
+    "category": "product",
+    "priority": "P2"
+  },
+  "starboard": {
+    "desc": "AI-built project management and dashboard system.",
+    "url": "https://github.com/sarthak-fleet/starboard.git",
+    "tier": "active-ai",
+    "category": "product",
+    "priority": "P2"
+  },
+  "swe-interview-prep": {
+    "desc": "Interview Coder — Software engineering interview prep.",
+    "url": "https://github.com/sarthak-fleet/swe-interview-prep.git",
+    "tier": "active-ai",
+    "category": "product",
+    "priority": "P2"
+  },
+  "tinygpt": {
+    "desc": "TinyGPT.",
+    "url": "https://github.com/sarthak-fleet/tinygpt.git",
+    "tier": "core",
+    "category": "product",
+    "priority": "P2"
+  },
+  "today-little-log": {
+    "desc": "Daily logging and micro-journaling application.",
+    "url": "https://github.com/sarthak-fleet/today-little-log.git",
+    "tier": "active-ai",
+    "category": "product",
+    "priority": "P2"
+  },
+  "truehire": {
+    "desc": "AI-powered recruitment and candidate vetting platform.",
+    "url": "https://github.com/sarthak-fleet/truehire.git",
+    "tier": "active-ai",
+    "category": "product",
+    "priority": "P1"
+  }
 }
