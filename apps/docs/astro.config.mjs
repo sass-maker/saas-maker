@@ -4,6 +4,17 @@ import starlight from '@astrojs/starlight';
 
 export default defineConfig({
 	site: 'https://docs.sassmaker.com',
+	// Fleet web stack standard (VoidZero ecosystem):
+	// - Inline per-page stylesheets so the first paint never blocks on an
+	//   external CSS request. Starlight ships some shared CSS via a virtual
+	//   module; the small per-page chunk still benefits from inlining.
+	// - Lightning CSS as the CSS transformer + minifier. Already bundled in
+	//   Vite, opt in via `css.transformer` + `build.cssMinify`.
+	build: { inlineStylesheets: 'always' },
+	vite: {
+		css: { transformer: 'lightningcss' },
+		build: { cssMinify: 'lightningcss' },
+	},
 	integrations: [
 		starlight({
 			title: 'Foundry Manual',
