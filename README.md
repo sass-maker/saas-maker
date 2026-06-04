@@ -119,6 +119,7 @@ Core files:
 
 - `src/video-brief.js` — normalizes and validates queue items into a video brief.
 - `src/signal-intake.js` — maps High Signal reel briefs and SaaS Maker product-improvement ideas into `VideoBrief` drafts.
+- `src/signal-draft-generator.js` — prototype multi-variant draft bundles with claim/evidence review.
 - `src/reel-intake.js` — creates API-submitted reel drafts and records approval decisions.
 - `src/review-ui.js` — plain HTML/CSS/JS swipe review UI.
 - `src/pipeline.js` — creates render jobs and syncs completed artifacts back.
@@ -270,10 +271,26 @@ curl -sS http://127.0.0.1:4317/reels/signal \
   -d @test/fixtures/high-signal-reel-brief.json
 ```
 
-Or generate a local draft file from a fixture:
+### Signal-to-reel draft prototype (no paid render)
+
+Convert a High Signal brief fixture into a reviewable draft bundle with storyboard,
+script, shot list, and captions for **two or more variants**. Claims that need
+evidence are flagged; unsupported claims are rejected and kept out of scripts.
+
+Fixture fields: `targetAudience`, `offer`, `productConstraints`, `evidenceUrls`,
+`claimBoundary`, optional `unsupportedClaims`.
 
 ```bash
 npm run draft:signal -- --fixture test/fixtures/high-signal-reel-brief.json
+npm run draft:signal -- --fixture test/fixtures/high-signal-reel-brief.json --variants 2
+```
+
+Output: `tmp/signal-drafts/<signalId>-draft-bundle.json`
+
+Verify:
+
+```bash
+npm test -- test/signal-draft-generator.test.js
 ```
 
 Review generated drafts:

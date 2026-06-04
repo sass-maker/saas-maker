@@ -6,6 +6,14 @@
   "productName": "High Signal",
   "title": "High Signal: Agent-readiness audit layer",
   "hook": "Your reel gets attention. The agent decides if you are worth trusting.",
+  "targetAudience": "SaaS founders and PMs shipping AI-facing products who need buyer-agent legibility before distribution spend",
+  "offer": "Agent-readiness audit inside High Signal — surface missing proof before assistants filter the product out",
+  "productConstraints": [
+    "9:16 vertical draft only; fixture-backed prototype, no paid render engines",
+    "Claims must map to linked evidence URLs or on-product proof screens",
+    "Do not promise autonomous posting, guaranteed rankings, or certainty beyond evidence",
+    "Keep the audit slice narrow — no new broad product positioning"
+  ],
   "humanTension": "Products that are not legible, cited, and evidence-backed will be filtered out by assistants and buyer agents.",
   "proofBeat": "Agent evaluation is becoming part of product selection: products that are not legible, cited, and evidence-backed will be filtered out.",
   "visualBeats": [
@@ -21,5 +29,8 @@
   "evidenceUrls": [
     "https://highsignal.app/agent-eval",
     "https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-agentic-commerce-opportunity-how-ai-agents-are-ushering-in-a-new-era-for-consumers-and-merchants"
+  ],
+  "unsupportedClaims": [
+    "High Signal guarantees top placement in every AI assistant ranking."
   ]
 }

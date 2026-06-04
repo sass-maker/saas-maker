@@ -1,16 +1,18 @@
 #!/usr/bin/env node
 /**
- * Generate a reviewable reel draft from a High Signal reel brief or SaaS Maker
- * product-improvement fixture/input.
+ * Prototype: convert a High Signal reel brief or SaaS Maker improvement fixture
+ * into a multi-variant storyboard/script/shot-list/caption draft bundle.
  *
  * Usage:
- *   node scripts/draft-from-signal.js --fixture test/fixtures/high-signal-reel-brief.json
- *   node scripts/draft-from-signal.js --fixture test/fixtures/saas-maker-improvement.json --print-brief
+ *   npm run draft:signal -- --fixture test/fixtures/high-signal-reel-brief.json
+ *   npm run draft:signal -- --fixture test/fixtures/high-signal-reel-brief.json --variants 2
+ *   npm run draft:signal -- --fixture test/fixtures/saas-maker-improvement.json --print-brief
  */
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import path from 'node:path';
 
-import { briefFromSignal, normalizeReelDraftFromSignal } from '../src/signal-intake.js';
+import { generateSignalReelDraftBundle } from '../src/signal-draft-generator.js';
+import { briefFromSignal } from '../src/signal-intake.js';
 
 const args = parseArgs(process.argv.slice(2));
 const fixturePath = path.resolve(args.fixture ?? 'test/fixtures/high-signal-reel-brief.json');
@@ -21,14 +23,19 @@ if (args.printBrief) {
   process.exit(0);
 }
 
-const draft = normalizeReelDraftFromSignal(input);
+const bundle = generateSignalReelDraftBundle(input, {
+  variantCount: Number(args.variants ?? 2),
+});
 const outDir = path.resolve(args.outDir ?? './tmp/signal-drafts');
 await mkdir(outDir, { recursive: true });
-const outPath = path.join(outDir, `${draft.id}.json`);
-await writeFile(outPath, `${JSON.stringify(draft, null, 2)}\n`, 'utf8');
+const outPath = path.join(outDir, `${bundle.signalId}-draft-bundle.json`);
+await writeFile(outPath, `${JSON.stringify(bundle, null, 2)}\n`, 'utf8');
 
-console.log(`Draft reel written to ${outPath}`);
-console.log(`  status=${draft.status} project=${draft.projectSlug} hook="${draft.hook}"`);
+console.log(`Signal draft bundle written to ${outPath}`);
+console.log(`  variants=${bundle.variants.length} approvedClaims=${bundle.claimReview.summary.approved} rejected=${bundle.claimReview.summary.rejected}`);
+for (const variant of bundle.variants) {
+  console.log(`  - ${variant.variantId} template=${variant.template} shots=${variant.shotList.length}`);
+}
 
 function parseArgs(argv) {
   const parsed = {};
@@ -36,6 +43,7 @@ function parseArgs(argv) {
     const token = argv[index];
     if (token === '--fixture') parsed.fixture = argv[index + 1];
     if (token === '--out-dir') parsed.outDir = argv[index + 1];
+    if (token === '--variants') parsed.variants = argv[index + 1];
     if (token === '--print-brief') parsed.printBrief = true;
   }
   return parsed;
