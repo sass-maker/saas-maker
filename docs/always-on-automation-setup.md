@@ -68,6 +68,7 @@ cloud credentials from another machine.
 pnpm symphony --json --no-cache
 pnpm fleet:prod-smoke -- --timeout-ms 45000
 pnpm fleet:monitoring-audit -- --json
+pnpm fleet:posthog-verify -- --json   # requires PostHog personal API key in apps/cockpit/.env.local
 ```
 
 If the repo paths differ from `/Users/sarthak/Desktop/fleet`, update the

@@ -30,7 +30,7 @@ describe('Foundry Ops - Trace', () => {
       }, { project: 'saasmaker-api', silent: true });
     } catch (err: any) {
       expect(err).toBeInstanceOf(FoundryError);
-      expect(err.context.project).toBe('saasmaker-api');
+      expect(err.context.project_id).toBe('saasmaker-api');
       expect(err.context.traceName).toBe('project-op');
     }
   });
@@ -45,9 +45,22 @@ describe('Foundry Ops - Trace', () => {
     } catch (err: any) {
       expect(err).toBeInstanceOf(FoundryError);
       expect(err.code).toBe('FAIL_CODE');
-      expect(err.context.project).toBe('saasmaker-api');
+      expect(err.context.project_id).toBe('saasmaker-api');
       expect(err.context.traceName).toBe('nested-op');
       expect(err.context.traceDuration).toBeGreaterThan(0);
+    }
+  });
+
+  it('prefers explicit projectId over the legacy project alias', async () => {
+    expect.assertions(2);
+
+    try {
+      await trace('project-id-op', async () => {
+        throw new Error('raw error');
+      }, { project: 'legacy-project', projectId: 'canonical-project', silent: true });
+    } catch (err: any) {
+      expect(err).toBeInstanceOf(FoundryError);
+      expect(err.context.project_id).toBe('canonical-project');
     }
   });
 });

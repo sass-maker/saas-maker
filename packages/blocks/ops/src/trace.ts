@@ -3,6 +3,7 @@ import { FoundryError } from './error.js';
 export interface TraceOptions {
   silent?: boolean;
   project?: string;
+  projectId?: string;
   context?: Record<string, any>;
 }
 
@@ -17,8 +18,9 @@ function traceContext(
     traceDuration: duration,
   };
 
-  if (options.project) {
-    context['project'] = options.project;
+  const projectId = options.projectId ?? options.project;
+  if (projectId) {
+    context['project_id'] = projectId;
   }
 
   return context;

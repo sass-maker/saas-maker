@@ -1,5 +1,6 @@
 import posthog from 'posthog-js';
 import type { FoundryError } from './error.js';
+import { withCanonicalProjectId } from './posthog-properties.js';
 
 export interface PostHogConfig {
   apiKey: string;
@@ -32,7 +33,7 @@ export function captureFoundryError(error: FoundryError) {
     message: error.message,
     code: error.code,
     severity: error.severity,
-    ...error.context,
+    ...withCanonicalProjectId(error.context ?? {}),
     $exception_message: error.message,
     $exception_type: error.name,
     $exception_stack: error.stack,

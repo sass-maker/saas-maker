@@ -75,8 +75,11 @@ function auditPostHogIdentity(files) {
     if (/from\s+['"]@saas-maker\/posthog-client(?:\/server)?['"]|require\(['"]@saas-maker\/posthog-client(?:\/server)?['"]\)/.test(source)) {
       findings.push(`${path.relative(FLEET_ROOT, file)} imports @saas-maker/posthog-client`);
     }
-    if (/foundry_project_id\s*:|project_slug\s*:|project\s*:\s*(?:PROJECT|PROJECT_SLUG|["'][a-z0-9_-]+["'])/.test(source)) {
+    if (/foundry_project_id\s*:|(?:^|[^_])project_slug\s*:|project\s*:\s*(?:PROJECT|PROJECT_SLUG|["'][a-z0-9_-]+["'])/.test(source)) {
       findings.push(`${path.relative(FLEET_ROOT, file)} uses a legacy PostHog project identity property`);
+    }
+    if (/posthog\.capture\([^)]*project_slug\s*:/.test(source)) {
+      findings.push(`${path.relative(FLEET_ROOT, file)} passes project_slug directly to posthog.capture`);
     }
     if (/project_id\s*:/.test(source) && /function\s+(?:trackEvent|emit|trackRecommendationEvent)\b|const\s+(?:trackEvent|emit|trackRecommendationEvent)\b/.test(source)) {
       hasLocalProjectIdWrapper = true;

@@ -5,6 +5,8 @@
  * Server code (CF Worker, Node) calls these — no SDK, just /capture/ HTTPS.
  */
 
+import { withCanonicalProjectId } from './posthog-properties.js';
+
 interface CaptureEvent {
   distinctId: string;
   event: string;
@@ -26,7 +28,7 @@ export function capture(event: CaptureEvent): void {
     api_key: _apiKey,
     distinct_id: event.distinctId,
     event: event.event,
-    properties: event.properties ?? {},
+    properties: withCanonicalProjectId(event.properties ?? {}),
     timestamp: new Date().toISOString(),
   };
   const promise = fetch(`${_host}/i/v0/e/`, {

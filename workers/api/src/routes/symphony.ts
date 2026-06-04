@@ -166,7 +166,7 @@ symphony.post('/runs', requireSession, async (c) => {
       task_id: data.task_id ?? undefined,
       agent_profile: data.agent_profile ?? undefined,
       command_template: data.command_template,
-      project_slug: data.project_slug ?? undefined,
+      project_id: data.project_slug ?? undefined,
     },
   });
   return c.json({ data }, 201);

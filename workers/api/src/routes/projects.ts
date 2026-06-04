@@ -49,7 +49,7 @@ projects.get('/', async (c) => {
   const data = await trace<ProjectRow[]>(
     'db:listProjects',
     () => db.listProjectsByOwner(userId, source) as Promise<ProjectRow[]>,
-    { project: 'saasmaker-api' },
+    { projectId: 'saasmaker-api' },
   );
   return c.json({ data: data.map((project) => toPublicProject(project)) });
 });

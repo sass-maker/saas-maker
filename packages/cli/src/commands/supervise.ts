@@ -69,7 +69,16 @@ async function checkErrorFeed(fleet: any[]) {
       query: {
         kind: "EventsQuery",
         select: [
-          "*", "event", "timestamp", "properties.message", "properties.severity", "properties.project_id", "properties.$exception_stack"
+          "*",
+          "event",
+          "timestamp",
+          "properties.message",
+          "properties.severity",
+          "properties.project_id",
+          "properties.project_slug",
+          "properties.project",
+          "properties.foundry_project_id",
+          "properties.$exception_stack",
         ],
         where: [`event == 'foundry_error'`, `timestamp > '${lastProcessedTimestamp}'`],
         orderBy: ["timestamp ASC"], // Process oldest first
@@ -95,8 +104,8 @@ async function checkErrorFeed(fleet: any[]) {
       timestamp: row[2],
       message: row[3],
       severity: row[4],
-      project_id: row[5],
-      stack: row[6],
+      project_id: row[5] ?? row[6] ?? row[7] ?? row[8] ?? 'unknown',
+      stack: row[9],
     })) as FoundryErrorEvent[];
 
     if (newErrors.length === 0) {

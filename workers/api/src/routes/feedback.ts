@@ -103,7 +103,7 @@ feedback.get('/', requireApiKey, async (c) => {
 
   const db = getDb(c.env.DB);
   const options = { type, status, sort, page, limit: PAGE_SIZE };
-  const result = await trace('db:listFeedback', () => db.listFeedback(projectId, options), { context: { project: 'saasmaker-api' } }) as { data: FeedbackRecord[]; total: number };
+  const result = await trace('db:listFeedback', () => db.listFeedback(projectId, options), { projectId: 'saasmaker-api' }) as { data: FeedbackRecord[]; total: number };
 
   return c.json({ data: result.data, total: result.total, page, limit: PAGE_SIZE });
 });
