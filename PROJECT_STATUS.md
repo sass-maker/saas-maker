@@ -1,6 +1,12 @@
-# reel-pipeline — project status
+# Project Status
 
-## Shipped
+Last updated: 2026-06-04
+
+## Current Scope
+
+Reel Pipeline is the SaaS Maker fleet's short-form video orchestration layer. It turns accepted marketing ideas and High Signal reel briefs into reviewable draft bundles, render jobs, artifacts, and gated posting handoff while SaaS Maker remains the source of truth for approvals and task linkage.
+
+## Done
 
 - VideoBrief contract, mock/MoneyPrinterTurbo/OpenShorts/reel-maker adapters, SaaS Maker sync.
 - Signal intake from High Signal reel briefs and SaaS Maker improvement fixtures (`src/signal-intake.js`).
@@ -8,12 +14,12 @@
 - CLI: `npm run draft:signal -- --fixture test/fixtures/high-signal-reel-brief.json`
 - Tests: `test/signal-draft-generator.test.js` (run via `npm test`).
 
-## Next
+## Planned Next
 
 - Wire draft bundle output into review UI and optional render queue without paid engines.
 - SaaS Maker task linkage for generated draft bundles.
 
-## Deferred
+## Deferred / Parked
 
 - Real UGC actor pipeline (OpenShorts paid deps).
 - Autopost provider wiring.
