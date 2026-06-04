@@ -1,9 +1,24 @@
 # Magic Form — Product Block Design Brief
 
 **Date:** 2026-06-04  
-**Status:** Design evaluation (no implementation in this pass)  
+**Status:** Prototype added (fixture-backed, no production routes/migrations)  
 **Source:** [saas-ideas](https://github.com/sarthakagrawal927/saas-ideas) at `aba1a83`, triaged in [`docs/ideas/saas-ideas-consolidation-2026-06-03.md`](../ideas/saas-ideas-consolidation-2026-06-03.md)  
 **Symphony task:** `58d18a53-e2a6-4f23-b898-5a33cd9f445f`
+
+## Prototype Command
+
+This plan now has a deterministic local prototype in
+`packages/blocks/ops/src/magic-form.ts`.
+
+Run it with:
+
+```bash
+pnpm --dir packages/blocks/ops test -- --run src/__tests__/magic-form.test.ts
+```
+
+The prototype can generate a schema from a product use case, validate allowed
+fields, capture a versioned mocked response with analytics metadata, and emit a
+widget-style embed example.
 
 ## Summary
 

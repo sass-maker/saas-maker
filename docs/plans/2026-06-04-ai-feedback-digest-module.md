@@ -1,9 +1,23 @@
 # AI Feedback Digest — Product Module Plan
 
 **Date:** 2026-06-04  
-**Status:** Plan (no implementation in this pass)  
+**Status:** Prototype added (fixture-backed dry run, no production AI/writeback)  
 **Source:** [saas-ideas](https://github.com/sarthakagrawal927/saas-ideas) at `aba1a83`, triaged in [`docs/ideas/saas-ideas-consolidation-2026-06-03.md`](../ideas/saas-ideas-consolidation-2026-06-03.md)  
 **Symphony task:** `764795a4-23c9-4d61-be31-83c2ddec800d`
+
+## Prototype Command
+
+This plan now has a deterministic local prototype in
+`packages/blocks/ops/src/feedback-digest.ts`.
+
+Run it with:
+
+```bash
+pnpm --dir packages/blocks/ops test -- --run src/__tests__/feedback-digest.test.ts
+```
+
+The prototype clusters fixture feedback/testimonial/app-review signals, preserves
+source evidence, and emits dry-run task payloads only for actionable clusters.
 
 ## Summary
 

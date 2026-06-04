@@ -3,3 +3,5 @@ export * from './trace.js';
 export * from './posthog-properties.js';
 export * from './posthog.js';
 export * from './posthog-server.js';
+export * from './magic-form.js';
+export * from './feedback-digest.js';
