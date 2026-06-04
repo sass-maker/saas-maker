@@ -3,6 +3,7 @@ import { FileReelStore } from '../file-reel-store.js';
 import { createDraftVideo, createRenderResponse, getDraftVideoStatus, renderAcceptedMarketingPosts, renderReelDraft } from '../pipeline.js';
 import { postReadyMarketingVideos } from '../posting.js';
 import { createReelDraft, decideRenderedReel, decideReelDraft, listReelDrafts } from '../reel-intake.js';
+import { reelDraftInputFromSignal } from '../signal-intake.js';
 import { reviewPageHtml } from '../review-ui.js';
 
 const port = Number(process.env.PORT ?? 4317);
@@ -16,6 +17,11 @@ export function createServer(options = {}) {
       }
       if (req.method === 'GET' && (req.url === '/' || req.url === '/review')) {
         return html(res, 200, reviewPageHtml());
+      }
+      if (req.method === 'POST' && req.url === '/reels/signal') {
+        const body = await readJson(req);
+        const data = await createReelDraft(reelDraftInputFromSignal(body), reelOptions);
+        return json(res, 201, { data });
       }
       if (req.method === 'POST' && req.url === '/reels') {
         const body = await readJson(req);

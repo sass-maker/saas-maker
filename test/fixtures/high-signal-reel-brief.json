@@ -1,0 +1,25 @@
+{
+  "signalSource": "high_signal_reel_brief",
+  "id": "reel-high-signal-agent-evaluation",
+  "recommendationId": "high-signal-agent-evaluation",
+  "productSlug": "high-signal",
+  "productName": "High Signal",
+  "title": "High Signal: Agent-readiness audit layer",
+  "hook": "Your reel gets attention. The agent decides if you are worth trusting.",
+  "humanTension": "Products that are not legible, cited, and evidence-backed will be filtered out by assistants and buyer agents.",
+  "proofBeat": "Agent evaluation is becoming part of product selection: products that are not legible, cited, and evidence-backed will be filtered out.",
+  "visualBeats": [
+    "Open on the uncomfortable decision the builder or buyer is trying to make.",
+    "Show the world shift: assistants filter products without proof surfaces.",
+    "Cut to proof: agent-readiness audit screen with evidence scores.",
+    "Add second receipt: missing proof task feed.",
+    "Close with the exact next action: run the audit, then fix the first missing proof surface."
+  ],
+  "caption": "Agent-readiness audit layer: build a focused audit slice inside High Signal, not a new broad product.",
+  "cta": "Run the audit, then fix the first missing proof surface.",
+  "claimBoundary": "Only use claims backed by the linked evidence; do not turn a weak signal into certainty.",
+  "evidenceUrls": [
+    "https://highsignal.app/agent-eval",
+    "https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-agentic-commerce-opportunity-how-ai-agents-are-ushering-in-a-new-era-for-consumers-and-merchants"
+  ]
+}

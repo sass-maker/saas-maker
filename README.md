@@ -118,6 +118,7 @@ SaaS Maker Marketing Queue patched with video metadata
 Core files:
 
 - `src/video-brief.js` — normalizes and validates queue items into a video brief.
+- `src/signal-intake.js` — maps High Signal reel briefs and SaaS Maker product-improvement ideas into `VideoBrief` drafts.
 - `src/reel-intake.js` — creates API-submitted reel drafts and records approval decisions.
 - `src/review-ui.js` — plain HTML/CSS/JS swipe review UI.
 - `src/pipeline.js` — creates render jobs and syncs completed artifacts back.
@@ -259,6 +260,20 @@ curl -sS http://127.0.0.1:4317/reels \
     },
     "cta": "Ask the profile one question."
   }'
+```
+
+Create a reel draft from a High Signal reel brief or SaaS Maker improvement signal:
+
+```bash
+curl -sS http://127.0.0.1:4317/reels/signal \
+  -H 'content-type: application/json' \
+  -d @test/fixtures/high-signal-reel-brief.json
+```
+
+Or generate a local draft file from a fixture:
+
+```bash
+npm run draft:signal -- --fixture test/fixtures/high-signal-reel-brief.json
 ```
 
 Review generated drafts:

@@ -14,6 +14,7 @@
     "render:accepted": "node scripts/render-accepted-marketing-posts.js",
     "render:pro": "node scripts/render-pro.js",
     "sync:saasmaker": "node scripts/sync-from-saasmaker.js",
+    "draft:signal": "node scripts/draft-from-signal.js",
     "watch:render": "node scripts/auto-render-watcher.js",
     "post:ready": "node scripts/post-ready-marketing-videos.js",
     "smoke:full": "node scripts/smoke-full-pipeline.js",

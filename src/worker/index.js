@@ -1,4 +1,5 @@
 import { assertRenderableReel, attachReelRender, createReelDraft, decideRenderedReel, decideReelDraft, listReelDrafts, R2ReelStore } from '../reel-intake.js';
+import { reelDraftInputFromSignal } from '../signal-intake.js';
 import { reviewPageHtml } from '../review-ui.js';
 
 const JSON_HEADERS = {
@@ -20,6 +21,13 @@ export default {
 
     if (request.method === 'GET' && (url.pathname === '/' || url.pathname === '/review')) {
       return html(reviewPageHtml());
+    }
+
+    if (request.method === 'POST' && url.pathname === '/reels/signal') {
+      const data = await createReelDraft(reelDraftInputFromSignal(await request.json()), {
+        reelStore: new R2ReelStore(env.REEL_ARTIFACTS),
+      });
+      return json({ data }, 201);
     }
 
     if (request.method === 'POST' && url.pathname === '/reels') {
