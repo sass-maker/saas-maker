@@ -279,14 +279,18 @@ nav, header, section, footer, .ticker { position: relative; z-index: 2; }
   opacity: 0.45;
 }
 
+/* LCP-friendly: keep transform-based motion but start at opacity 1 so
+   Lighthouse counts the hero text as painted at frame 1 instead of
+   waiting for the animation to fade in. Same visual feel — text now
+   slides up from translateY(14px) without a fade. */
 .hero-anim {
-  opacity: 0;
+  opacity: 1;
   transform: translateY(14px);
   animation: rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
   animation-delay: var(--delay, 0ms);
 }
 @keyframes rise {
-  to { opacity: 1; transform: translateY(0); }
+  to { transform: translateY(0); }
 }
 
 .hero-meta {
