@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { Bindings, Variables } from '../types';
 import { requireApiKey, requireSession } from '../middleware/auth';
 import { getDb } from '../db';
+import { buildCacheKey, tryCacheMatch, withCachePut } from '../edge-cache';
 import type { SubmitTestimonialRequest } from '@saas-maker/shared-types';
 import { capture } from '@saas-maker/ops';
 
@@ -71,13 +72,22 @@ testimonials.post('/by-project/:slug', async (c) => {
   return c.json({ id: entry.id, status: entry.status, created_at: entry.created_at }, 201);
 });
 
-// Public: get project info by slug (for /t/[slug] page header)
+// Public: get project info by slug (for /t/[slug] page header).
+// Cached at the Worker edge — the row is read-mostly and the response is
+// tiny. 60 s TTL means owner edits propagate within a minute.
 testimonials.get('/by-project/:slug', async (c) => {
   const slug = c.req.param('slug');
+  const cacheKey = buildCacheKey('testimonials/project', `${slug}:v1`);
+
+  const hit = await tryCacheMatch(cacheKey);
+  if (hit) return hit;
+
   const db = getDb(c.env.DB);
   const project = await db.getProjectBySlug(slug);
   if (!project) return c.json({ error: 'Project not found' }, 404);
-  return c.json({ project: { name: project.name, slug: project.slug } });
+
+  const response = c.json({ project: { name: project.name, slug: project.slug } });
+  return withCachePut(c, cacheKey, response, 60);
 });
 
 // Public: list approved testimonials (API key — for wall widget)

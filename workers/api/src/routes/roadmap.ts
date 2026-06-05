@@ -2,21 +2,30 @@ import { Hono } from 'hono';
 import { Bindings, Variables } from '../types';
 import { requireSession } from '../middleware/auth';
 import { getDb } from '../db';
+import { buildCacheKey, tryCacheMatch, withCachePut } from '../edge-cache';
 import type { CreateRoadmapItemRequest, UpdateRoadmapItemRequest, ReorderRoadmapRequest, RoadmapColumn } from '@saas-maker/shared-types';
 
 const roadmap = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
 const VALID_COLUMNS: RoadmapColumn[] = ['backlog', 'planned', 'in_progress', 'done'];
 
-// Public: list public roadmap items by project slug
+// Public: list public roadmap items by project slug.
+// Cached at the Worker edge — list is read-mostly and the response is
+// not user-specific. 60 s TTL keeps owner edits propagating quickly.
 roadmap.get('/public/:slug', async (c) => {
   const slug = c.req.param('slug');
+  const cacheKey = buildCacheKey('roadmap/public', `${slug}:v1`);
+
+  const hit = await tryCacheMatch(cacheKey);
+  if (hit) return hit;
+
   const db = getDb(c.env.DB);
   const project = await db.getProjectBySlug(slug);
   if (!project) return c.json({ error: 'Project not found' }, 404);
 
   const items = await db.listRoadmapItems(project.id, true);
-  return c.json({ data: items, project: { name: project.name, slug: project.slug } });
+  const response = c.json({ data: items, project: { name: project.name, slug: project.slug } });
+  return withCachePut(c, cacheKey, response, 60);
 });
 
 // Public: vote on a roadmap item
