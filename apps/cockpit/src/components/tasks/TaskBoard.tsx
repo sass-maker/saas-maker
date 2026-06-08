@@ -487,7 +487,7 @@ export function TaskBoard({
   const [projectFilter, setProjectFilter] = useState(ALL_PROJECTS);
   const [priorityFilter, setPriorityFilter] = useState(ALL_PRIORITIES);
   const [laneFilter, setLaneFilter] = useState<typeof ALL_LANES | ProductLane>(ALL_LANES);
-  const [workstreamFilter, setWorkstreamFilter] = useState<WorkstreamFilter>('product');
+  const [workstreamFilter, setWorkstreamFilter] = useState<WorkstreamFilter>(ALL_WORKSTREAMS);
   const [showDone, setShowDone] = useState(false);
   const [selectedTaskIds, setSelectedTaskIds] = useState<string[]>([]);
 
@@ -531,6 +531,8 @@ export function TaskBoard({
   const visibleStatusTasks = tasks.filter(task => showDone || task.status !== 'done');
   const marketingTaskCount = visibleStatusTasks.filter(isMarketingTask).length;
   const productWorkTaskCount = visibleStatusTasks.length - marketingTaskCount;
+  const productFilteredTasks = filteredTasks.filter(task => !isMarketingTask(task));
+  const marketingFilteredTasks = filteredTasks.filter(isMarketingTask);
   const currentBlockerTask = blockedUserTasks[blockerIndex] ?? null;
   const currentBlockerComments = currentBlockerTask ? commentsByTaskId[currentBlockerTask.id] ?? [] : [];
   const resolutionOptions = blockerResolutionOptions();
@@ -1496,25 +1498,83 @@ export function TaskBoard({
         </div>
       </div>
 
-      <TaskList
-        tasks={filteredTasks}
-        tasksById={tasksById}
-        selectedTaskIds={selectedTaskIds}
-        onSelectionChange={toggleTaskSelection}
-        onEdit={openEdit}
-        onDelete={handleDelete}
-        onComments={openComments}
-        onRun={handleDispatch}
-        onCustomizeRun={openRun}
-        onDroidRun={openDroidRun}
-        onDroidLogs={openDroidLogs}
-        onStatusChange={handleStatusChange}
-        onPriorityChange={handlePriorityChange}
-        onTypeChange={handleTypeChange}
-        latestRunByTaskId={latestRunByTaskId}
-        loadingDroidLogsTaskId={loadingDroidLogsTaskId}
-        isLocal={isLocal}
-      />
+      {workstreamFilter === ALL_WORKSTREAMS ? (
+        <div className="space-y-4">
+          <TaskListSection
+            title="Product Work"
+            count={productFilteredTasks.length}
+            tone="product"
+          >
+            <TaskList
+              tasks={productFilteredTasks}
+              tasksById={tasksById}
+              selectedTaskIds={selectedTaskIds}
+              onSelectionChange={toggleTaskSelection}
+              onEdit={openEdit}
+              onDelete={handleDelete}
+              onComments={openComments}
+              onRun={handleDispatch}
+              onCustomizeRun={openRun}
+              onDroidRun={openDroidRun}
+              onDroidLogs={openDroidLogs}
+              onStatusChange={handleStatusChange}
+              onPriorityChange={handlePriorityChange}
+              onTypeChange={handleTypeChange}
+              latestRunByTaskId={latestRunByTaskId}
+              loadingDroidLogsTaskId={loadingDroidLogsTaskId}
+              isLocal={isLocal}
+              emptyMessage="No product tasks match these filters."
+            />
+          </TaskListSection>
+          <TaskListSection
+            title="Marketing"
+            count={marketingFilteredTasks.length}
+            tone="marketing"
+          >
+            <TaskList
+              tasks={marketingFilteredTasks}
+              tasksById={tasksById}
+              selectedTaskIds={selectedTaskIds}
+              onSelectionChange={toggleTaskSelection}
+              onEdit={openEdit}
+              onDelete={handleDelete}
+              onComments={openComments}
+              onRun={handleDispatch}
+              onCustomizeRun={openRun}
+              onDroidRun={openDroidRun}
+              onDroidLogs={openDroidLogs}
+              onStatusChange={handleStatusChange}
+              onPriorityChange={handlePriorityChange}
+              onTypeChange={handleTypeChange}
+              latestRunByTaskId={latestRunByTaskId}
+              loadingDroidLogsTaskId={loadingDroidLogsTaskId}
+              isLocal={isLocal}
+              emptyMessage="No marketing tasks match these filters."
+            />
+          </TaskListSection>
+        </div>
+      ) : (
+        <TaskList
+          tasks={filteredTasks}
+          tasksById={tasksById}
+          selectedTaskIds={selectedTaskIds}
+          onSelectionChange={toggleTaskSelection}
+          onEdit={openEdit}
+          onDelete={handleDelete}
+          onComments={openComments}
+          onRun={handleDispatch}
+          onCustomizeRun={openRun}
+          onDroidRun={openDroidRun}
+          onDroidLogs={openDroidLogs}
+          onStatusChange={handleStatusChange}
+          onPriorityChange={handlePriorityChange}
+          onTypeChange={handleTypeChange}
+          latestRunByTaskId={latestRunByTaskId}
+          loadingDroidLogsTaskId={loadingDroidLogsTaskId}
+          isLocal={isLocal}
+          emptyMessage="No tasks match this project filter."
+        />
+      )}
 
       <div className="rounded-lg border bg-card p-4">
         <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
@@ -2304,6 +2364,38 @@ export function TaskBoard({
   );
 }
 
+function TaskListSection({
+  title,
+  count,
+  tone,
+  children,
+}: {
+  title: string;
+  count: number;
+  tone: 'product' | 'marketing';
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="rounded-lg border bg-card">
+      <div className="flex items-center justify-between gap-3 border-b px-4 py-3">
+        <div className="flex min-w-0 items-center gap-2">
+          <span
+            className={cn(
+              'h-2.5 w-2.5 rounded-full',
+              tone === 'marketing' ? 'bg-pink-500' : 'bg-emerald-500'
+            )}
+          />
+          <h2 className="truncate text-sm font-semibold text-foreground">{title}</h2>
+        </div>
+        <Badge variant="outline" className="font-mono text-[10px]">{count}</Badge>
+      </div>
+      <div className="p-2">
+        {children}
+      </div>
+    </section>
+  );
+}
+
 function TaskList({
   tasks,
   tasksById,
@@ -2322,6 +2414,7 @@ function TaskList({
   latestRunByTaskId,
   loadingDroidLogsTaskId,
   isLocal,
+  emptyMessage,
 }: {
   tasks: TaskRow[];
   tasksById: Map<string, TaskRow>;
@@ -2340,11 +2433,12 @@ function TaskList({
   latestRunByTaskId: Map<string, SymphonyRunRow>;
   loadingDroidLogsTaskId: string | null;
   isLocal: boolean;
+  emptyMessage: string;
 }) {
   if (tasks.length === 0) {
     return (
       <div className="rounded-lg border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
-        No tasks match this project filter.
+        {emptyMessage}
       </div>
     );
   }
