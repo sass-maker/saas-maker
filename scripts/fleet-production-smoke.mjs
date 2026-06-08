@@ -75,7 +75,7 @@ const TARGETS = {
   starboard: [{ label: 'web', url: 'https://starboard.sarthakagrawal927.workers.dev' }],
   'swe-interview-prep': [{ label: 'web', url: 'https://swe-interview-prep.pages.dev' }],
   tinygpt: [
-    { label: 'web', url: 'https://tinygpt.pages.dev', expectText: ['transformer playground'] },
+    { label: 'web', url: 'https://tinygpt.pages.dev', expectText: ['trains a real transformer'] },
     { label: 'devlog', url: 'https://tinygpt.pages.dev/devlog.html', expectText: ['Devlog'] },
   ],
   'today-little-log': [{ label: 'web', url: 'https://today-little-log.pages.dev' }],
