@@ -66,6 +66,9 @@ const MARKETING_ASSETS = [
   },
 ];
 
+// Only include workers whose Git-connected Cloudflare Workers Builds record is
+// an active deploy health signal. Reader deploys through GitHub Actions, and
+// Reel Pipeline artifacts deploy through the repo bootstrap/wrangler path.
 const CLOUDFLARE_WORKER_SERVICES = {
   'email-manager': ['email-manager'],
   everythingrated: ['everythingrated'],
@@ -73,8 +76,6 @@ const CLOUDFLARE_WORKER_SERVICES = {
   'high-signal': ['high-signal-api', 'high-signal-web'],
   linkchat: ['linkchat'],
   'open-historia': ['open-historia'],
-  reader: ['reader'],
-  'reel-pipeline': ['reel-pipeline-artifacts'],
   'resume-tailor': ['resume-tailor'],
   'saas-maker': ['saasmaker-api', 'saasmaker-dashboard'],
   significanthobbies: ['significanthobbies'],
