@@ -4,7 +4,7 @@ Last updated: 2026-06-04
 
 ## Current Scope
 
-Reel Pipeline is the SaaS Maker fleet's short-form video orchestration layer. It turns accepted marketing ideas and High Signal reel briefs into reviewable draft bundles, render jobs, artifacts, and gated posting handoff while SaaS Maker remains the source of truth for approvals and task linkage.
+Reel Pipeline is an AI reel generation product that turns input text and project context into reviewable short-form video drafts, render jobs, artifacts, and posting handoff. Its current internal inputs are SaaS Maker marketing ideas and High Signal reel briefs, with SaaS Maker remaining the source of truth for approvals and task linkage.
 
 ## Done
 

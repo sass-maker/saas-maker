@@ -1,11 +1,11 @@
 # Reel Pipeline
 
-AI reel generation and publishing-prep pipeline for the SaaS Maker fleet.
+AI reel generation product that turns input text and project context into short-form video drafts and render artifacts.
 
-This repo is the orchestration layer that turns accepted SaaS Maker Marketing
-Queue ideas into reviewable short-form videos. SaaS Maker stays the source of
-truth for ideas, approvals, task links, and posting state; Reel Pipeline owns the
-video render contract, engine adapters, artifact storage, and posting handoff.
+This repo owns the intake, draft, render, review, artifact, and posting-handoff
+flow for short-form video generation. Its current internal inputs are accepted
+SaaS Maker Marketing Queue ideas and High Signal reel briefs; SaaS Maker stays
+the source of truth for approvals, task links, and posting state.
 
 ## Why This Repo Exists
 
