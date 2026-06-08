@@ -4,7 +4,7 @@ Last updated: 2026-06-05
 
 ## Current Scope
 
-psi-swarm is a local-first helper for fleet and web-performance work. It measures Web Vitals across repeated Lighthouse runs and realistic device/network presets so users can reason about p50, p75, p90, and p99 instead of trusting one noisy PageSpeed/Lighthouse result.
+psi-swarm is a local-first website performance tracker. It measures Web Vitals across repeated Lighthouse runs and realistic device/network presets so users can reason about p50, p75, p90, and p99 instead of trusting one noisy PageSpeed/Lighthouse result.
 
 ## Done
 
@@ -20,8 +20,8 @@ psi-swarm is a local-first helper for fleet and web-performance work. It measure
 
 1. Keep Node 22 LTS as the supported path until the Lighthouse 12 / Node 24 trace-mark issue is resolved.
 2. Improve the local web controller so users can run, compare, and inspect swarms without dropping to the CLI.
-3. Add clearer fleet/demo examples that compare real product pages before and after performance work.
-4. Decide whether psi-swarm should stay a fleet helper or gain a hosted report/gallery surface.
+3. Add clearer public/demo examples that compare real product pages before and after performance work.
+4. Decide whether psi-swarm should add a hosted report/gallery surface on top of the local-first CLI and web controller.
 
 ## Deferred / Parked
 
