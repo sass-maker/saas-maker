@@ -12,7 +12,7 @@
     "build:types": "pnpm -F @saas-maker/shared-types build",
     "build:db": "pnpm -F @saas-maker/ops build && pnpm -F @saas-maker/db build",
     "build:email": "pnpm -F @saas-maker/ops build && pnpm -F @saas-maker/email build",
-    "build:api": "pnpm -F @saas-maker/api build",
+    "build:api": "pnpm -F @saas-maker/api typecheck",
     "build:cockpit": "pnpm -F @saas-maker/dashboard build",
     "build:widget": "pnpm -F @saas-maker/feedback build",
     "build:showcase": "pnpm -F @saas-maker/landing-page build",
