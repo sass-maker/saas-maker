@@ -434,6 +434,9 @@ export function TaskBoard({
   const [droidCommand, setDroidCommand] = useState('pwd && ls -1');
   const [droidPrompt, setDroidPrompt] = useState('');
   const [droidMaxTurns, setDroidMaxTurns] = useState('25');
+  const [droidLoopEnabled, setDroidLoopEnabled] = useState(true);
+  const [droidLoopMaxAttempts, setDroidLoopMaxAttempts] = useState('2');
+  const [droidLoopRetryOnFailure, setDroidLoopRetryOnFailure] = useState(true);
   const [droidCreatePr, setDroidCreatePr] = useState(true);
   const [droidAcceptanceCommand, setDroidAcceptanceCommand] = useState('');
   const [droidAcceptanceSuggestions, setDroidAcceptanceSuggestions] = useState<string[]>([]);
@@ -605,6 +608,9 @@ export function TaskBoard({
       branch,
     }));
     setDroidMaxTurns('25');
+    setDroidLoopEnabled(true);
+    setDroidLoopMaxAttempts('2');
+    setDroidLoopRetryOnFailure(true);
     setDroidCreatePr(true);
     setDroidAcceptanceSuggestions(acceptance.suggestions);
     setDroidAcceptanceCommand(acceptance.explicit ?? '');
@@ -679,6 +685,9 @@ export function TaskBoard({
       branch,
     }));
     setDroidMaxTurns('25');
+    setDroidLoopEnabled(true);
+    setDroidLoopMaxAttempts('2');
+    setDroidLoopRetryOnFailure(true);
     setDroidCreatePr(true);
     setDroidAcceptanceSuggestions(acceptance.suggestions);
     setDroidAcceptanceCommand(acceptance.explicit ?? '');
@@ -1076,6 +1085,12 @@ export function TaskBoard({
           prompt: droidMode !== 'command' ? droidPrompt.trim() : undefined,
           max_turns: droidMode === 'native' ? Number(droidMaxTurns) : undefined,
           timeout_seconds: droidMode !== 'command' ? 900 : undefined,
+          loop_policy: droidMode === 'native' && droidLoopEnabled ? {
+            enabled: true,
+            max_attempts: Number(droidLoopMaxAttempts),
+            retry_on_failure: droidLoopRetryOnFailure,
+            stop_on_blocker: true,
+          } : undefined,
           create_pr: droidCreatePr,
           pr_title: droidTask ? `Droid: ${droidTask.title}` : undefined,
           acceptance_command: droidAcceptanceCommand.trim() || undefined,
@@ -1825,6 +1840,9 @@ export function TaskBoard({
         command={droidCommand}
         prompt={droidPrompt}
         maxTurns={droidMaxTurns}
+        loopEnabled={droidLoopEnabled}
+        loopMaxAttempts={droidLoopMaxAttempts}
+        loopRetryOnFailure={droidLoopRetryOnFailure}
         createPr={droidCreatePr}
         acceptanceCommand={droidAcceptanceCommand}
         acceptanceSuggestions={droidAcceptanceSuggestions}
@@ -1848,6 +1866,9 @@ export function TaskBoard({
         onCommandChange={setDroidCommand}
         onPromptChange={setDroidPrompt}
         onMaxTurnsChange={setDroidMaxTurns}
+        onLoopEnabledChange={setDroidLoopEnabled}
+        onLoopMaxAttemptsChange={setDroidLoopMaxAttempts}
+        onLoopRetryOnFailureChange={setDroidLoopRetryOnFailure}
         onCreatePrChange={setDroidCreatePr}
         onAcceptanceCommandChange={setDroidAcceptanceCommand}
         onBrowserAcceptanceEnabledChange={setDroidBrowserAcceptanceEnabled}
@@ -1870,6 +1891,9 @@ export function TaskBoard({
           setDroidCommand('pwd && ls -1');
           setDroidPrompt('');
           setDroidMaxTurns('25');
+          setDroidLoopEnabled(true);
+          setDroidLoopMaxAttempts('2');
+          setDroidLoopRetryOnFailure(true);
           setDroidCreatePr(true);
           setDroidAcceptanceCommand('');
           setDroidBrowserAcceptanceEnabled(false);

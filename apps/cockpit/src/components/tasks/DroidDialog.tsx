@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { AlertTriangle, CheckCircle2, Clipboard, ExternalLink, Eye, Play, Square, XCircle } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, Clipboard, ExternalLink, Eye, Play, Repeat2, Square, XCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -78,6 +78,9 @@ interface DroidDialogProps {
   command: string;
   prompt: string;
   maxTurns: string;
+  loopEnabled: boolean;
+  loopMaxAttempts: string;
+  loopRetryOnFailure: boolean;
   createPr: boolean;
   acceptanceCommand: string;
   acceptanceSuggestions: string[];
@@ -101,6 +104,9 @@ interface DroidDialogProps {
   onCommandChange: (value: string) => void;
   onPromptChange: (value: string) => void;
   onMaxTurnsChange: (value: string) => void;
+  onLoopEnabledChange: (value: boolean) => void;
+  onLoopMaxAttemptsChange: (value: string) => void;
+  onLoopRetryOnFailureChange: (value: boolean) => void;
   onCreatePrChange: (value: boolean) => void;
   onAcceptanceCommandChange: (value: string) => void;
   onBrowserAcceptanceEnabledChange: (value: boolean) => void;
@@ -126,6 +132,9 @@ export function DroidDialog({
   command,
   prompt,
   maxTurns,
+  loopEnabled,
+  loopMaxAttempts,
+  loopRetryOnFailure,
   createPr,
   acceptanceCommand,
   acceptanceSuggestions,
@@ -149,6 +158,9 @@ export function DroidDialog({
   onCommandChange,
   onPromptChange,
   onMaxTurnsChange,
+  onLoopEnabledChange,
+  onLoopMaxAttemptsChange,
+  onLoopRetryOnFailureChange,
   onCreatePrChange,
   onAcceptanceCommandChange,
   onBrowserAcceptanceEnabledChange,
@@ -232,14 +244,49 @@ export function DroidDialog({
               )}
 
               {mode === 'native' ? (
-                <div className="max-w-40 space-y-1.5">
-                  <Label htmlFor="droid-max-turns">Max turns</Label>
-                  <Input
-                    id="droid-max-turns"
-                    value={maxTurns}
-                    onChange={event => onMaxTurnsChange(event.target.value)}
-                    inputMode="numeric"
-                  />
+                <div className="grid gap-3 sm:grid-cols-[10rem_minmax(0,1fr)]">
+                  <div className="space-y-1.5">
+                    <Label htmlFor="droid-max-turns">Max turns</Label>
+                    <Input
+                      id="droid-max-turns"
+                      value={maxTurns}
+                      onChange={event => onMaxTurnsChange(event.target.value)}
+                      inputMode="numeric"
+                    />
+                  </div>
+                  <div className="space-y-3 rounded-lg border bg-muted/20 p-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="min-w-0">
+                        <Label htmlFor="droid-loop-mode" className="inline-flex items-center gap-1.5">
+                          <Repeat2 className="h-3.5 w-3.5" />
+                          Loop mode
+                        </Label>
+                        <p className="text-xs text-muted-foreground">
+                          Bounded attempts with audit-only retry policy.
+                        </p>
+                      </div>
+                      <Switch id="droid-loop-mode" checked={loopEnabled} onCheckedChange={onLoopEnabledChange} />
+                    </div>
+                    {loopEnabled ? (
+                      <div className="grid gap-3 sm:grid-cols-[8rem_minmax(0,1fr)]">
+                        <div className="space-y-1.5">
+                          <Label htmlFor="droid-loop-attempts">Attempts</Label>
+                          <Input
+                            id="droid-loop-attempts"
+                            value={loopMaxAttempts}
+                            onChange={event => onLoopMaxAttemptsChange(event.target.value)}
+                            inputMode="numeric"
+                          />
+                        </div>
+                        <div className="flex items-center justify-between gap-3 rounded-md border bg-background px-3 py-2">
+                          <Label htmlFor="droid-loop-retry" className="text-xs text-muted-foreground">
+                            Retry on failed checks
+                          </Label>
+                          <Switch id="droid-loop-retry" checked={loopRetryOnFailure} onCheckedChange={onLoopRetryOnFailureChange} />
+                        </div>
+                      </div>
+                    ) : null}
+                  </div>
                 </div>
               ) : null}
 
@@ -504,6 +551,7 @@ function DroidResult({
   onMarkStale: () => void;
 }) {
   const finalReport = useMemo(() => getFinalReport(events), [events]);
+  const loopStatus = useMemo(() => getLoopStatus(events), [events]);
   const reconcileLabel = run?.status === 'queued' ? 'Start queued' : 'Check run';
   const canControl = run?.status === 'queued' || run?.status === 'running';
   const canMarkStale = run?.status === 'running';
@@ -546,6 +594,22 @@ function DroidResult({
           <div><span className="text-foreground">Run:</span> <span className="font-mono">{run.id}</span></div>
           <div><span className="text-foreground">Exit:</span> {run.exit_code ?? 'pending'}</div>
           <div><span className="text-foreground">Duration:</span> {run.duration_ms ? `${Math.round(run.duration_ms / 1000)}s` : 'pending'}</div>
+          {loopStatus ? (
+            <div className="mt-2 rounded-md border bg-background p-2 text-[11px]">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <span className="inline-flex items-center gap-1 font-medium text-foreground">
+                  <Repeat2 className="h-3 w-3" />
+                  Loop
+                </span>
+                <Badge variant="outline">{loopStatus.label}</Badge>
+              </div>
+              <p className="mt-1 text-muted-foreground">
+                attempt {loopStatus.attempt} of {loopStatus.maxAttempts}
+                {loopStatus.retryOnFailure ? ', retry on failed checks' : ', no retry'}
+              </p>
+              {loopStatus.message ? <p className="mt-1 text-muted-foreground">{loopStatus.message}</p> : null}
+            </div>
+          ) : null}
           {run.summary ? <p className="pt-1 text-sm text-foreground">{run.summary}</p> : null}
           {run.error_message ? <p className="pt-1 text-sm text-red-500">{run.error_message}</p> : null}
           {finalReport ? (
@@ -775,6 +839,23 @@ function getFinalReport(events: DroidRunEvent[]) {
     filesChanged: stringArrayFromUnknown(metadata.files_changed),
     checksRun: stringArrayFromUnknown(metadata.checks_run),
   };
+}
+
+function getLoopStatus(events: DroidRunEvent[]) {
+  const loopEvent = getLatestEvent(events, ['loop_completed', 'loop_stopped', 'loop_started']);
+  if (!loopEvent) return null;
+  const metadata = parseDroidMetadata(loopEvent.metadata);
+  return {
+    label: loopEvent.type.replace('loop_', '').replace('_', ' '),
+    message: loopEvent.message ?? '',
+    attempt: numberFromUnknown(metadata.attempt) ?? 1,
+    maxAttempts: numberFromUnknown(metadata.max_attempts) ?? 1,
+    retryOnFailure: metadata.retry_on_failure === true,
+  };
+}
+
+function numberFromUnknown(value: unknown): number | undefined {
+  return typeof value === 'number' && Number.isFinite(value) ? value : undefined;
 }
 
 function formatDroidEvents(events: DroidRunEvent[]) {

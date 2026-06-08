@@ -30,6 +30,7 @@ import type {
   RunProvider,
   RunRecord,
   RunRequest,
+  LoopPolicyRequest,
 } from './types';
 
 const DEFAULT_TIMEOUT_SECONDS = 900;
@@ -153,7 +154,15 @@ export function createApp(executor: RunExecutor) {
       return c.json({ data: queuedRun ?? run, queued_after: activeRun?.id ?? 'global_limit' }, 202);
     }
 
+    const loopPolicy = normalizeLoopPolicy(body?.loop_policy);
+
     await markRunStarted(c.env, runId);
+    if (loopPolicy?.enabled) {
+      await createRunEvent(c.env, runId, buildLoopStartedEvent(loopPolicy, {
+        taskId: body?.task_id?.trim(),
+        command,
+      }));
+    }
     await createRunEvent(c.env, runId, {
       type: 'run_started',
       message: 'Droid run started',
@@ -191,6 +200,7 @@ export function createApp(executor: RunExecutor) {
       acceptanceCommand: body?.acceptance_command?.trim(),
       acceptanceTimeoutSeconds: normalizeAcceptanceTimeoutSeconds(body?.acceptance_timeout_seconds),
       browserAcceptance: normalizeBrowserAcceptance(body?.browser_acceptance),
+      loopPolicy,
       cwd: body?.cwd?.trim(),
       destroyAfterRun: body?.destroy_after_run !== false,
       waitUntil: (promise: Promise<void>) => scheduleBackground(c, promise),
@@ -413,6 +423,13 @@ export function createApp(executor: RunExecutor) {
         },
       });
       await markRunStarted(c.env, run.id);
+      if (queuedInput.loopPolicy?.enabled) {
+        await createRunEvent(c.env, run.id, buildLoopStartedEvent(queuedInput.loopPolicy, {
+          taskId: run.task_id ?? undefined,
+          command: queuedInput.command,
+          dequeued: true,
+        }));
+      }
       await createRunEvent(c.env, run.id, {
         type: 'run_started',
         message: 'Droid run started',
@@ -602,6 +619,7 @@ async function executeRun(
     acceptanceCommand?: string;
     acceptanceTimeoutSeconds?: number;
     browserAcceptance?: BrowserAcceptanceRequest;
+    loopPolicy?: LoopPolicyRequest;
     cwd?: string;
     destroyAfterRun: boolean;
     reconcile?: boolean;
@@ -630,6 +648,7 @@ async function executeRun(
       acceptanceCommand: input.acceptanceCommand,
       acceptanceTimeoutSeconds: input.acceptanceTimeoutSeconds,
       browserAcceptance: input.browserAcceptance,
+      loopPolicy: input.loopPolicy,
       cwd: input.cwd,
       destroyAfterRun: input.destroyAfterRun,
       recordEvent: (event) => createRunEvent(env, input.runId, event),
@@ -657,6 +676,23 @@ async function executeRun(
       exit_code: result.exitCode,
       metadata: { duration_ms: durationMs, status },
     });
+    if (input.loopPolicy?.enabled) {
+      await createRunEvent(env, input.runId, {
+        type: result.success ? 'loop_completed' : 'loop_stopped',
+        message: result.success
+          ? 'Droid loop completed on attempt 1.'
+          : 'Droid loop stopped after attempt 1; retry automation is not enabled in this POC.',
+        exit_code: result.exitCode,
+        metadata: {
+          attempt: 1,
+          max_attempts: input.loopPolicy.max_attempts,
+          retry_on_failure: input.loopPolicy.retry_on_failure,
+          stop_on_blocker: input.loopPolicy.stop_on_blocker,
+          status,
+          poc_retry_automation: false,
+        },
+      });
+    }
   } catch (error) {
     if (error instanceof RunTimeoutError) {
       await handleRunTimeout(env, executor, input, error);
@@ -948,6 +984,7 @@ function buildRunRequestMetadata(
     acceptance_command: body?.acceptance_command ?? null,
     acceptance_timeout_seconds: body?.acceptance_timeout_seconds ?? null,
     browser_acceptance: normalizeBrowserAcceptance(body?.browser_acceptance) ?? null,
+    loop_policy: normalizeLoopPolicy(body?.loop_policy) ?? null,
     cwd: body?.cwd ?? null,
     destroy_after_run: body?.destroy_after_run !== false,
   };
@@ -980,6 +1017,7 @@ function executionInputFromRun(
     acceptanceCommand: stringFromUnknown(request?.acceptance_command),
     acceptanceTimeoutSeconds: normalizeAcceptanceTimeoutSeconds(request?.acceptance_timeout_seconds),
     browserAcceptance: normalizeBrowserAcceptance(request?.browser_acceptance),
+    loopPolicy: normalizeLoopPolicy(request?.loop_policy),
     cwd: stringFromUnknown(request?.cwd) ?? run.cwd ?? undefined,
     destroyAfterRun: request?.destroy_after_run !== false,
   };
@@ -1046,6 +1084,8 @@ function validateRunRequest(body: RunRequest | null): { ok: true } | { ok: false
   }
   const browserValidation = validateBrowserAcceptance(body.browser_acceptance);
   if (!browserValidation.ok) return browserValidation;
+  const loopValidation = validateLoopPolicy(body.loop_policy);
+  if (!loopValidation.ok) return loopValidation;
   return { ok: true };
 }
 
@@ -1162,6 +1202,88 @@ function normalizeBrowserAcceptance(value: unknown): BrowserAcceptanceRequest | 
     assert_text: assertText?.length ? assertText : undefined,
     timeout_seconds: normalizeBrowserTimeoutSeconds(config.timeout_seconds),
     keep_open: typeof config.keep_open === 'boolean' ? config.keep_open : undefined,
+  };
+}
+
+function validateLoopPolicy(value: unknown): { ok: true } | { ok: false; error: string } {
+  if (value === undefined) return { ok: true };
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return { ok: false, error: 'loop_policy must be an object' };
+  }
+  const config = value as Record<string, unknown>;
+  if (config.enabled !== undefined && typeof config.enabled !== 'boolean') {
+    return { ok: false, error: 'loop_policy.enabled must be a boolean' };
+  }
+  if (config.max_attempts !== undefined && normalizeLoopMaxAttempts(config.max_attempts) === undefined) {
+    return { ok: false, error: 'loop_policy.max_attempts must be between 1 and 5' };
+  }
+  if (config.retry_on_failure !== undefined && typeof config.retry_on_failure !== 'boolean') {
+    return { ok: false, error: 'loop_policy.retry_on_failure must be a boolean' };
+  }
+  if (config.stop_on_blocker !== undefined && typeof config.stop_on_blocker !== 'boolean') {
+    return { ok: false, error: 'loop_policy.stop_on_blocker must be a boolean' };
+  }
+  if (
+    config.cost_budget_usd !== undefined &&
+    normalizeLoopCostBudgetUsd(config.cost_budget_usd) === undefined
+  ) {
+    return { ok: false, error: 'loop_policy.cost_budget_usd must be between 0.01 and 25' };
+  }
+  return { ok: true };
+}
+
+function normalizeLoopPolicy(value: unknown): LoopPolicyRequest | undefined {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return undefined;
+  const config = value as Record<string, unknown>;
+  const enabled = config.enabled === true;
+  if (!enabled) return undefined;
+  return {
+    enabled,
+    max_attempts: normalizeLoopMaxAttempts(config.max_attempts) ?? 2,
+    retry_on_failure: typeof config.retry_on_failure === 'boolean' ? config.retry_on_failure : true,
+    stop_on_blocker: typeof config.stop_on_blocker === 'boolean' ? config.stop_on_blocker : true,
+    cost_budget_usd: normalizeLoopCostBudgetUsd(config.cost_budget_usd),
+  };
+}
+
+function normalizeLoopMaxAttempts(value: unknown): number | undefined {
+  if (value === undefined) return undefined;
+  if (typeof value !== 'number' || !Number.isInteger(value)) return undefined;
+  if (value < 1 || value > 5) return undefined;
+  return value;
+}
+
+function normalizeLoopCostBudgetUsd(value: unknown): number | undefined {
+  if (value === undefined) return undefined;
+  if (typeof value !== 'number' || !Number.isFinite(value)) return undefined;
+  if (value < 0.01 || value > 25) return undefined;
+  return Math.round(value * 100) / 100;
+}
+
+function buildLoopStartedEvent(
+  policy: LoopPolicyRequest,
+  input: {
+    taskId?: string;
+    command: string;
+    dequeued?: boolean;
+  }
+): RunEventInput {
+  return {
+    type: 'loop_started',
+    actor: 'droid',
+    source: 'worker',
+    message: 'Droid loop started with bounded attempts and audit-only retry policy.',
+    command: input.command,
+    metadata: {
+      task_id: input.taskId ?? null,
+      attempt: 1,
+      max_attempts: policy.max_attempts,
+      retry_on_failure: policy.retry_on_failure,
+      stop_on_blocker: policy.stop_on_blocker,
+      cost_budget_usd: policy.cost_budget_usd ?? null,
+      dequeued: input.dequeued === true,
+      poc_retry_automation: false,
+    },
   };
 }
 

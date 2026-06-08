@@ -40,6 +40,7 @@ export async function POST(req: Request) {
     acceptance_command?: unknown;
     acceptance_timeout_seconds?: unknown;
     browser_acceptance?: unknown;
+    loop_policy?: unknown;
     repo_url?: unknown;
     branch?: unknown;
     cwd?: unknown;
@@ -80,6 +81,7 @@ export async function POST(req: Request) {
     acceptance_command: typeof body.acceptance_command === "string" && body.acceptance_command.trim() ? body.acceptance_command.trim() : undefined,
     acceptance_timeout_seconds: typeof body.acceptance_timeout_seconds === "number" ? body.acceptance_timeout_seconds : undefined,
     browser_acceptance: normalizeBrowserAcceptance(body.browser_acceptance),
+    loop_policy: normalizeLoopPolicy(body.loop_policy),
     cwd: typeof body.cwd === "string" && body.cwd.trim() ? body.cwd.trim() : undefined,
     destroy_after_run: body.destroy_after_run !== false,
     wait_for_completion: body.wait_for_completion === true,
@@ -107,6 +109,19 @@ function normalizeBrowserAcceptance(value: unknown) {
     assert_text: assertText?.length ? assertText : undefined,
     timeout_seconds: typeof input.timeout_seconds === "number" ? input.timeout_seconds : undefined,
     keep_open: input.keep_open === true,
+  };
+}
+
+function normalizeLoopPolicy(value: unknown) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return undefined;
+  const input = value as Record<string, unknown>;
+  if (input.enabled !== true) return undefined;
+  return {
+    enabled: true,
+    max_attempts: typeof input.max_attempts === "number" ? input.max_attempts : undefined,
+    retry_on_failure: typeof input.retry_on_failure === "boolean" ? input.retry_on_failure : undefined,
+    stop_on_blocker: typeof input.stop_on_blocker === "boolean" ? input.stop_on_blocker : undefined,
+    cost_budget_usd: typeof input.cost_budget_usd === "number" ? input.cost_budget_usd : undefined,
   };
 }
 

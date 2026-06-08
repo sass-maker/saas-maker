@@ -153,6 +153,33 @@ describe('droid runs', () => {
     expect((env.DB as unknown as FakeD1).runs.size).toBe(0);
   });
 
+  it('validates loop policy settings before creating a run', async () => {
+    const app = createApp(fakeExecutor());
+    const env = createEnv();
+
+    const response = await app.request(
+      '/v0/runs',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          command: 'echo ok',
+          loop_policy: { enabled: true, max_attempts: 8 },
+        }),
+        headers: {
+          Authorization: 'Bearer test-token',
+          'Content-Type': 'application/json',
+        },
+      },
+      env
+    );
+
+    expect(response.status).toBe(400);
+    await expect(response.json()).resolves.toEqual({
+      error: 'loop_policy.max_attempts must be between 1 and 5',
+    });
+    expect((env.DB as unknown as FakeD1).runs.size).toBe(0);
+  });
+
   it('requires a Browser Run binding when browser acceptance is enabled', async () => {
     const app = createApp(fakeExecutor());
     const env = createEnv({ BROWSER: undefined });
@@ -361,6 +388,71 @@ describe('droid runs', () => {
       'run_finished',
     ]);
     expect(eventsPayload.data[3].stdout).toBe('ok\n');
+  });
+
+  it('records loop policy events around a Droid run', async () => {
+    const app = createApp(fakeExecutor());
+    const env = createEnv();
+
+    const response = await app.request(
+      '/v0/runs',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          task_id: 'task-loop',
+          project_slug: 'saas-maker',
+          command: 'echo ok',
+          loop_policy: {
+            enabled: true,
+            max_attempts: 2,
+            retry_on_failure: true,
+            stop_on_blocker: true,
+          },
+          wait_for_completion: true,
+        }),
+        headers: {
+          Authorization: 'Bearer test-token',
+          'Content-Type': 'application/json',
+        },
+      },
+      env
+    );
+
+    expect(response.status).toBe(201);
+    const payload = (await response.json()) as {
+      data: { id: string; status: string };
+    };
+    expect(payload.data.status).toBe('completed');
+
+    const eventsResponse = await app.request(
+      `/v0/runs/${payload.data.id}/events`,
+      {
+        headers: { Authorization: 'Bearer test-token' },
+      },
+      env
+    );
+    expect(eventsResponse.status).toBe(200);
+    const eventsPayload = (await eventsResponse.json()) as {
+      data: Array<{ type: string; metadata: string }>;
+    };
+    expect(eventsPayload.data.map((event) => event.type)).toEqual([
+      'run_request',
+      'loop_started',
+      'run_started',
+      'command_start',
+      'command_finish',
+      'run_finished',
+      'loop_completed',
+    ]);
+    expect(JSON.parse(eventsPayload.data[1].metadata)).toMatchObject({
+      max_attempts: 2,
+      retry_on_failure: true,
+      poc_retry_automation: false,
+    });
+    expect(JSON.parse(eventsPayload.data[6].metadata)).toMatchObject({
+      status: 'completed',
+      max_attempts: 2,
+    });
   });
 
   it('passes task metadata and acceptance settings through to the executor', async () => {

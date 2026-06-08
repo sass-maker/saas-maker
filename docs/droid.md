@@ -30,6 +30,12 @@ Cockpit calls the Droid Worker with:
   "pr_title": "Droid: task title",
   "acceptance_command": "pnpm test",
   "acceptance_timeout_seconds": 300,
+  "loop_policy": {
+    "enabled": true,
+    "max_attempts": 2,
+    "retry_on_failure": true,
+    "stop_on_blocker": true
+  },
   "browser_acceptance": {
     "enabled": true,
     "goal": "Verify the task flow works in the UI",
@@ -49,6 +55,7 @@ Key fields:
 - `create_pr`: when true, Droid requires a meaningful patch, review gate, acceptance pass if configured, and then opens a draft PR.
 - `acceptance_command`: optional command Droid runs before a draft PR is created.
 - `acceptance_timeout_seconds`: clamped to 30-900 seconds.
+- `loop_policy`: optional bounded loop envelope. The current POC records `loop_started`, `loop_completed`, and `loop_stopped` events for one Droid attempt; automated retry attempts are still roadmap work.
 - `browser_acceptance`: optional Cloudflare Browser Run check. Use `url` for an existing preview/deploy URL, or `start_command` + `port` + `preview_hostname` to start an app inside the sandbox and expose it.
 
 Droid native prompts are hydrated before the agent starts. The bundle includes
@@ -70,6 +77,8 @@ Droid stores:
 Browser screenshots are stored as small JPEG data URIs for V0 visibility. If `keep_open` is true, the Browser Run session stays alive briefly so it can also be inspected from Cloudflare Browser Run Live Sessions.
 
 The final report event is machine-readable and includes `summary`, `files_changed`, `checks_run`, `pr_url`, `pr_branch`, `next_action`, `blockers`, and `risks`.
+
+Loop-mode runs also record the configured max attempts, retry-on-failure flag, blocker stop policy, and cost budget when provided. In the POC, those fields are audit metadata for the first attempt, not a guarantee that Droid will automatically start attempt 2.
 
 ## Task Feedback
 

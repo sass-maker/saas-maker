@@ -35,6 +35,14 @@ export interface BrowserAcceptanceRequest {
   keep_open?: boolean;
 }
 
+export interface LoopPolicyRequest {
+  enabled?: boolean;
+  max_attempts?: number;
+  retry_on_failure?: boolean;
+  stop_on_blocker?: boolean;
+  cost_budget_usd?: number;
+}
+
 export interface RunRequest {
   mode?: RunMode;
   provider?: RunProvider;
@@ -54,6 +62,7 @@ export interface RunRequest {
   acceptance_command?: string;
   acceptance_timeout_seconds?: number;
   browser_acceptance?: BrowserAcceptanceRequest;
+  loop_policy?: LoopPolicyRequest;
   destroy_after_run?: boolean;
   wait_for_completion?: boolean;
 }
@@ -143,6 +152,7 @@ export interface RunExecutionInput {
   acceptanceCommand?: string;
   acceptanceTimeoutSeconds?: number;
   browserAcceptance?: BrowserAcceptanceRequest;
+  loopPolicy?: LoopPolicyRequest;
   cwd?: string;
   destroyAfterRun: boolean;
   recordEvent: (event: RunEventInput) => Promise<void>;
