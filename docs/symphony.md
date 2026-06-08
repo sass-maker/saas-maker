@@ -74,8 +74,12 @@ handoff should also appear in the task list preview for shared visibility.
 Local sync shells out through the Foundry CLI. Run `fnd login` once for this
 machine/account; Symphony does not accept or pass API keys directly.
 
-Marketing tasks should add ideas directly to the SaaS Maker Marketing Queue,
-not only to repo docs. Use a session-auth API call like:
+Marketing tasks are a separate workstream from product, engineering, ops, and
+fleet-maintenance tasks. The cockpit task board defaults to non-marketing
+product work so marketing batches do not hide real implementation or regression
+work. Keep marketing task titles/descriptions explicitly marked with
+`marketing` and add publishable ideas directly to the SaaS Maker Marketing
+Queue, not only to repo docs. Use a session-auth API call like:
 
 ```bash
 FND_API_URL=https://api.sassmaker.com pnpm --dir ~/Desktop/fleet/saas-maker/packages/cli exec tsx src/index.ts api POST /v1/marketing/posts --auth session --body '{"project_slug":"linkchat","channel":"tiktok","status":"generated","source_type":"task","source_id":"<task-id>","task_id":"<task-id>","title":"Short AI video idea title","hook":"0-2s visual hook","body":"AI video brief: scene-by-scene script, shot list, voiceover, caption text, asset prompts, and edit notes.","cta":"One concrete next step."}'

@@ -212,8 +212,10 @@ const ALL_PROJECTS = '__all__';
 const UNASSIGNED_PROJECT = '__unassigned__';
 const ALL_PRIORITIES = '__all__';
 const ALL_LANES = '__all__';
+const ALL_WORKSTREAMS = '__all__';
 
 type ProductLane = 'P0' | 'P1' | 'P2' | 'Core';
+type WorkstreamFilter = typeof ALL_WORKSTREAMS | 'product' | 'marketing';
 
 const PRODUCT_LANE_ORDER: ProductLane[] = ['P0', 'P1', 'P2', 'Core'];
 
@@ -232,6 +234,11 @@ const PRODUCT_LANE_BADGE: Record<ProductLane, string> = {
 };
 
 const CORE_TASK_TYPES = new Set<TaskRow['task_type']>(['chore', 'cleanup', 'docs', 'research']);
+const MARKETING_TASK_PATTERN = /\b(marketing|landing-page hook|tweet|linkedin|reddit|founder launch|screenshot shot list|demo script|before-after proof|social post|reel|tiktok|instagram|youtube)\b/i;
+
+function isMarketingTask(task: TaskRow): boolean {
+  return MARKETING_TASK_PATTERN.test(`${task.title ?? ''}\n${task.description ?? ''}`);
+}
 
 function getProductLane(task: TaskRow): ProductLane {
   if (CORE_TASK_TYPES.has(task.task_type)) return 'Core';
@@ -480,6 +487,7 @@ export function TaskBoard({
   const [projectFilter, setProjectFilter] = useState(ALL_PROJECTS);
   const [priorityFilter, setPriorityFilter] = useState(ALL_PRIORITIES);
   const [laneFilter, setLaneFilter] = useState<typeof ALL_LANES | ProductLane>(ALL_LANES);
+  const [workstreamFilter, setWorkstreamFilter] = useState<WorkstreamFilter>('product');
   const [showDone, setShowDone] = useState(false);
   const [selectedTaskIds, setSelectedTaskIds] = useState<string[]>([]);
 
@@ -505,8 +513,11 @@ export function TaskBoard({
         (projectFilter === UNASSIGNED_PROJECT ? !task.project_slug : task.project_slug === projectFilter);
       const matchesPriority = priorityFilter === ALL_PRIORITIES || task.priority === priorityFilter;
       const matchesLane = laneFilter === ALL_LANES || getProductLane(task) === laneFilter;
+      const matchesWorkstream =
+        workstreamFilter === ALL_WORKSTREAMS ||
+        (workstreamFilter === 'marketing' ? isMarketingTask(task) : !isMarketingTask(task));
       const matchesStatus = showDone || task.status !== 'done';
-      return matchesProject && matchesPriority && matchesLane && matchesStatus;
+      return matchesProject && matchesPriority && matchesLane && matchesWorkstream && matchesStatus;
     })
   ).sort((a, b) => Number(isTaskBlocked(a, tasksById)) - Number(isTaskBlocked(b, tasksById)));
 
@@ -517,6 +528,9 @@ export function TaskBoard({
   const runnableSelectedTasks = selectedTasks.filter(task => task.status === 'todo' && !isTaskBlocked(task, tasksById));
   const visibleRunnableTasks = filteredTasks.filter(task => task.status === 'todo' && !isTaskBlocked(task, tasksById));
   const blockedUserTasks = sortTasksByPriority(tasks.filter(task => task.status !== 'done' && task.blocked_on_user));
+  const visibleStatusTasks = tasks.filter(task => showDone || task.status !== 'done');
+  const marketingTaskCount = visibleStatusTasks.filter(isMarketingTask).length;
+  const productWorkTaskCount = visibleStatusTasks.length - marketingTaskCount;
   const currentBlockerTask = blockedUserTasks[blockerIndex] ?? null;
   const currentBlockerComments = currentBlockerTask ? commentsByTaskId[currentBlockerTask.id] ?? [] : [];
   const resolutionOptions = blockerResolutionOptions();
@@ -1329,6 +1343,21 @@ export function TaskBoard({
               </Select>
             </div>
             <div className="space-y-1">
+              <Label htmlFor="workstream-filter" className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
+                Workstream
+              </Label>
+              <Select value={workstreamFilter} onValueChange={value => setWorkstreamFilter(value as WorkstreamFilter)}>
+                <SelectTrigger id="workstream-filter" className="h-9 w-44">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={ALL_WORKSTREAMS}>All work</SelectItem>
+                  <SelectItem value="product">Product work ({productWorkTaskCount})</SelectItem>
+                  <SelectItem value="marketing">Marketing ({marketingTaskCount})</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1">
               <Label htmlFor="lane-filter" className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
                 Product lane
               </Label>
@@ -1347,9 +1376,42 @@ export function TaskBoard({
             <Badge variant="outline" className="font-mono text-[10px]">
               {filteredTasks.length} / {tasks.length} tasks
             </Badge>
+            <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label="Filter by workstream">
+              {[
+                { value: 'product' as const, label: 'Product work', count: productWorkTaskCount },
+                { value: 'marketing' as const, label: 'Marketing', count: marketingTaskCount },
+              ].map(item => {
+                const active = workstreamFilter === item.value;
+                return (
+                  <button
+                    key={item.value}
+                    type="button"
+                    onClick={() => setWorkstreamFilter(prev => prev === item.value ? ALL_WORKSTREAMS : item.value)}
+                    className={cn(
+                      'inline-flex h-7 items-center gap-1.5 rounded-md border px-2 font-mono text-[10px] uppercase tracking-wider transition',
+                      item.value === 'marketing'
+                        ? 'border-pink-500/45 bg-pink-500/10 text-pink-600 dark:text-pink-300'
+                        : 'border-emerald-500/45 bg-emerald-500/10 text-emerald-600 dark:text-emerald-300',
+                      active ? 'ring-1 ring-foreground/40' : 'opacity-80 hover:opacity-100',
+                    )}
+                    aria-pressed={active}
+                  >
+                    <span>{item.label}</span>
+                    <span className="rounded-full bg-background/40 px-1.5 text-[10px] font-semibold">
+                      {item.count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
             <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label="Filter by product lane">
               {PRODUCT_LANE_ORDER.map(lane => {
-                const count = tasks.filter(task => (showDone || task.status !== 'done') && getProductLane(task) === lane).length;
+                const count = tasks.filter(task => (
+                  (showDone || task.status !== 'done') &&
+                  (workstreamFilter === ALL_WORKSTREAMS ||
+                    (workstreamFilter === 'marketing' ? isMarketingTask(task) : !isMarketingTask(task))) &&
+                  getProductLane(task) === lane
+                )).length;
                 const active = laneFilter === lane;
                 return (
                   <button
