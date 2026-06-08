@@ -10,6 +10,7 @@ const DEFAULT_OUTPUT_DIR = path.join(ROOT, '.symphony', 'fleet-audit');
 const DEFAULT_TIMEOUT_MS = 240_000;
 const DEFAULT_CLOUDFLARE_ACCOUNT_ID = '7d048325699a5acddb44d3be31cf6ba9';
 const DEFAULT_EXPECTED_CLOUDFLARE_BUILD_TOKEN = 'Workers Builds - 2026-05-27 01:49';
+const OUT_OF_FLEET_PROJECTS = new Set(['personal-memory', 'port-whisperer', 'local-ai']);
 
 const BUSINESS_LANES = {
   reader: 'P0 Can make money',
@@ -474,7 +475,10 @@ function loadProjects(args) {
       repo: repoFromUrl(meta?.url),
       path: path.join(args.fleetRoot, slug),
     }))
-    .filter((project) => !args.project || project.slug === args.project);
+    .filter((project) => {
+      if (args.project) return project.slug === args.project;
+      return !OUT_OF_FLEET_PROJECTS.has(project.slug);
+    });
 }
 
 function parseGhJson(result, fallback) {
