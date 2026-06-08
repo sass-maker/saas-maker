@@ -39,6 +39,45 @@ export type TaskCommentInput = {
   sync_to_description?: boolean;
 };
 
+export type TaskWorkflowRow = {
+  id: string;
+  owner_id: string;
+  task_id: string | null;
+  project_slug: string | null;
+  name: string;
+  description: string | null;
+  context_markdown: string;
+  prompt_template: string;
+  status: 'draft' | 'active' | 'archived';
+  last_run_id: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type TaskWorkflowArtifactRow = {
+  id: string;
+  owner_id: string;
+  workflow_id: string;
+  task_id: string | null;
+  project_slug: string | null;
+  run_id: string | null;
+  type: 'markdown';
+  name: string;
+  content_markdown: string;
+  share_token: string;
+  created_at: string;
+};
+
+export type TaskWorkflowInput = {
+  task_id?: string | null;
+  project_slug?: string | null;
+  name: string;
+  description?: string | null;
+  context_markdown?: string | null;
+  prompt_template: string;
+  status?: 'draft' | 'active' | 'archived';
+};
+
 export type CockpitUserInput = {
   id: string;
   email?: string | null;
@@ -301,4 +340,113 @@ export async function updateCockpitSymphonyMemory(ownerId: string, content: stri
     .bind(ownerId, content)
     .run();
   return db.prepare('SELECT owner_id, content, updated_at FROM symphony_memory WHERE owner_id = ?').bind(ownerId).first<{ owner_id: string; content: string; updated_at: string }>();
+}
+
+export async function createCockpitTaskWorkflow(ownerId: string, input: TaskWorkflowInput, db = getCockpitD1()) {
+  let projectSlug = input.project_slug ?? null;
+  if (input.task_id) {
+    const task = await getCockpitTask(input.task_id, db);
+    if (!task) return null;
+    projectSlug = projectSlug ?? task.project_slug;
+  }
+  const id = crypto.randomUUID();
+  await db.prepare(`INSERT INTO task_workflows (
+    id, owner_id, task_id, project_slug, name, description, context_markdown, prompt_template, status
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+    .bind(
+      id,
+      ownerId,
+      input.task_id ?? null,
+      projectSlug,
+      input.name,
+      input.description ?? null,
+      input.context_markdown ?? '',
+      input.prompt_template,
+      input.status ?? 'draft',
+    )
+    .run();
+  return db.prepare('SELECT * FROM task_workflows WHERE id = ?').bind(id).first<TaskWorkflowRow>();
+}
+
+export async function listCockpitTaskWorkflows(input: { task_id?: string; project_slug?: string; status?: TaskWorkflowRow['status']; limit?: number } = {}, db = getCockpitD1()) {
+  const limit = Math.min(Math.max(input.limit ?? 50, 1), 200);
+  const conditions: string[] = [];
+  const values: unknown[] = [];
+  if (input.task_id) {
+    conditions.push('task_id = ?');
+    values.push(input.task_id);
+  }
+  if (input.project_slug) {
+    conditions.push('project_slug = ?');
+    values.push(input.project_slug);
+  }
+  if (input.status) {
+    conditions.push('status = ?');
+    values.push(input.status);
+  }
+  values.push(limit);
+  const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+  const { results } = await db.prepare(`SELECT * FROM task_workflows ${where} ORDER BY updated_at DESC, created_at DESC LIMIT ?`)
+    .bind(...values)
+    .all<TaskWorkflowRow>();
+  return results ?? [];
+}
+
+export async function getCockpitTaskWorkflow(id: string, db = getCockpitD1()) {
+  return db.prepare('SELECT * FROM task_workflows WHERE id = ?').bind(id).first<TaskWorkflowRow>();
+}
+
+export async function updateCockpitTaskWorkflow(id: string, input: Partial<TaskWorkflowInput & { last_run_id: string | null }>, db = getCockpitD1()) {
+  const patch = { ...input };
+  if (patch.task_id) {
+    const task = await getCockpitTask(patch.task_id, db);
+    if (!task) return null;
+    if (patch.project_slug === undefined) patch.project_slug = task.project_slug;
+  }
+  const sets: string[] = [];
+  const values: unknown[] = [];
+  for (const key of ['task_id', 'project_slug', 'name', 'description', 'context_markdown', 'prompt_template', 'status', 'last_run_id'] as const) {
+    if (patch[key] === undefined) continue;
+    sets.push(`${key} = ?`);
+    values.push(patch[key]);
+  }
+  if (sets.length === 0) return getCockpitTaskWorkflow(id, db);
+  sets.push("updated_at = datetime('now')");
+  values.push(id);
+  await db.prepare(`UPDATE task_workflows SET ${sets.join(', ')} WHERE id = ?`).bind(...values).run();
+  return getCockpitTaskWorkflow(id, db);
+}
+
+export async function createCockpitTaskWorkflowArtifact(workflowId: string, input: { name: string; content_markdown: string; run_id?: string | null }, db = getCockpitD1()) {
+  const workflow = await getCockpitTaskWorkflow(workflowId, db);
+  if (!workflow) return null;
+  const id = crypto.randomUUID();
+  const shareToken = crypto.randomUUID();
+  await db.prepare(`INSERT INTO task_workflow_artifacts (
+    id, owner_id, workflow_id, task_id, project_slug, run_id, type, name, content_markdown, share_token
+  ) VALUES (?, ?, ?, ?, ?, ?, 'markdown', ?, ?, ?)`)
+    .bind(
+      id,
+      workflow.owner_id,
+      workflowId,
+      workflow.task_id,
+      workflow.project_slug,
+      input.run_id ?? workflow.last_run_id ?? null,
+      input.name,
+      input.content_markdown,
+      shareToken,
+    )
+    .run();
+  return db.prepare('SELECT * FROM task_workflow_artifacts WHERE id = ?').bind(id).first<TaskWorkflowArtifactRow>();
+}
+
+export async function listCockpitTaskWorkflowArtifacts(workflowId: string, db = getCockpitD1()) {
+  const { results } = await db.prepare('SELECT * FROM task_workflow_artifacts WHERE workflow_id = ? ORDER BY created_at DESC')
+    .bind(workflowId)
+    .all<TaskWorkflowArtifactRow>();
+  return results ?? [];
+}
+
+export async function getCockpitTaskWorkflowArtifactByShareToken(shareToken: string, db = getCockpitD1()) {
+  return db.prepare('SELECT * FROM task_workflow_artifacts WHERE share_token = ?').bind(shareToken).first<TaskWorkflowArtifactRow>();
 }

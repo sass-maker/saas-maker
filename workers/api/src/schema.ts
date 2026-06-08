@@ -168,6 +168,35 @@ export const task_comments = sqliteTable('task_comments', {
   created_at: text('created_at').notNull().default(sql`(datetime('now'))`),
 });
 
+export const task_workflows = sqliteTable('task_workflows', {
+  id: text('id').primaryKey(),
+  owner_id: text('owner_id').notNull().references(() => users.id),
+  task_id: text('task_id'),
+  project_slug: text('project_slug'),
+  name: text('name').notNull(),
+  description: text('description'),
+  context_markdown: text('context_markdown').notNull().default(''),
+  prompt_template: text('prompt_template').notNull(),
+  status: text('status').notNull().default('draft'),
+  last_run_id: text('last_run_id'),
+  created_at: text('created_at').notNull().default(sql`(datetime('now'))`),
+  updated_at: text('updated_at').notNull().default(sql`(datetime('now'))`),
+});
+
+export const task_workflow_artifacts = sqliteTable('task_workflow_artifacts', {
+  id: text('id').primaryKey(),
+  owner_id: text('owner_id').notNull().references(() => users.id),
+  workflow_id: text('workflow_id').notNull().references(() => task_workflows.id),
+  task_id: text('task_id'),
+  project_slug: text('project_slug'),
+  run_id: text('run_id'),
+  type: text('type').notNull().default('markdown'),
+  name: text('name').notNull(),
+  content_markdown: text('content_markdown').notNull(),
+  share_token: text('share_token').notNull().unique(),
+  created_at: text('created_at').notNull().default(sql`(datetime('now'))`),
+});
+
 export const changelog = sqliteTable('changelog', {
   id: text('id').primaryKey(),
   project_id: text('project_id').notNull().references(() => projects.id),

@@ -15,7 +15,7 @@ This file is a CodeVetter Repo Unpacked-inspired audit written for Starboard rec
 
 Foundry — The Industrial Software Factory for Project Fleets.
 
-SaaS Maker is the foundry helper for the fleet: a Cloudflare-first monorepo with the API, cockpit, docs, widgets, reusable blocks, CLI, and experimental Droid surface that coordinate product tasks and fleet operations.
+SaaS Maker is the foundry helper for the fleet: a Cloudflare-first monorepo with the API, cockpit, docs, widgets, reusable blocks, CLI, and experimental Droid surface that coordinate product tasks, task-linked LLM workflows, and fleet operations.
 
 SaaS Maker SaaS Maker is a TypeScript monorepo for building and operating small SaaS products across a project fleet. It includes a Cloudflare Workers API, a Next.js cockpit, embeddable widgets, shared backend blocks, documentation, and an experimental autonomous runner called Droid. The repo is public, but parts of the deployment are still personal/internal. Treat this as an active product workspace rather than a polished framework release. Deployment & External Services Everything is hosted on Cloudflare. Each deployable ships independently via GitHub Actions .github/workflows/ci.yml on push to main , gated by changed paths. Deployable Source Host ----------------- --------------- --------
 
@@ -35,6 +35,10 @@ SaaS Maker SaaS Maker is a TypeScript monorepo for building and operating small 
 - `apps/cockpit/src/app/layout.tsx`
 - `apps/cockpit/src/app/login/page.tsx`
 - `apps/cockpit/src/app/page.tsx`
+- `apps/cockpit/src/app/api/cockpit/task-workflows/route.ts`
+- `apps/cockpit/src/app/api/task-workflows/[id]/runs/route.ts`
+- `apps/cockpit/src/app/workflow-artifacts/[shareToken]/page.tsx`
+- `apps/cockpit/src/components/tasks/TaskDetailClient.tsx`
 - `apps/showcase/src/pages/index.astro`
 - `workers/api/src/index.ts`
 - `workers/api/src/routes/ai.ts`
@@ -51,6 +55,7 @@ SaaS Maker SaaS Maker is a TypeScript monorepo for building and operating small 
 - `workers/api/src/routes/secrets.ts`
 - `workers/api/src/routes/standards.ts`
 - `workers/api/src/routes/symphony.ts`
+- `workers/api/src/routes/task-workflows.ts`
 - `workers/api/src/routes/tasks.ts`
 - `workers/api/src/routes/test.ts`
 - `workers/api/src/routes/testimonials.ts`

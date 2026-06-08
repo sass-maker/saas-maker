@@ -952,6 +952,93 @@
         }
       }
     },
+    "/v1/task-workflows": {
+      "get": {
+        "tags": [
+          "task-workflows"
+        ],
+        "summary": "GET /v1/task-workflows",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "task-workflows"
+        ],
+        "summary": "POST /v1/task-workflows",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/task-workflows/artifacts/{shareToken}": {
+      "get": {
+        "tags": [
+          "task-workflows"
+        ],
+        "summary": "GET /v1/task-workflows/artifacts/{shareToken}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/task-workflows/{id}": {
+      "get": {
+        "tags": [
+          "task-workflows"
+        ],
+        "summary": "GET /v1/task-workflows/{id}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "task-workflows"
+        ],
+        "summary": "PATCH /v1/task-workflows/{id}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/task-workflows/{id}/artifacts": {
+      "post": {
+        "tags": [
+          "task-workflows"
+        ],
+        "summary": "POST /v1/task-workflows/{id}/artifacts",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/task-workflows/{id}/runs": {
+      "post": {
+        "tags": [
+          "task-workflows"
+        ],
+        "summary": "POST /v1/task-workflows/{id}/runs",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/v1/tasks": {
       "get": {
         "tags": [
