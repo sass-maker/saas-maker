@@ -63,6 +63,14 @@
     "priority": "P1",
     "maturity": "public-ready"
   },
+  "knowledgebase": {
+    "desc": "Private Agent Search — Exa-style search and cited query APIs for private project corpora.",
+    "url": "https://github.com/sarthakagrawal927/knowledge-base.git",
+    "tier": "active-ai",
+    "category": "product",
+    "priority": "P1",
+    "maturity": "internal-first"
+  },
   "linkchat": {
     "desc": "Real-time chat application built with Next.js.",
     "url": "https://github.com/sarthak-fleet/linkchat.git",
@@ -95,6 +103,14 @@
     "priority": "P1",
     "maturity": "public-ready"
   },
+  "pace": {
+    "desc": "Pace — local-only macOS menu-bar voice agent, formerly Clicky Local / Space candidate.",
+    "url": "https://github.com/sarthakagrawal927/clicky.git",
+    "tier": "active-ai",
+    "category": "product",
+    "priority": "P1",
+    "maturity": "internal-first"
+  },
   "psi-swarm": {
     "desc": "Website performance tracker that runs Lighthouse and Web Vitals checks across sites and reports performance distributions.",
     "url": "https://github.com/sarthak-fleet/psi-swarm.git",
@@ -110,6 +126,14 @@
     "category": "product",
     "priority": "P2",
     "maturity": "public-ready"
+  },
+  "researchPapers": {
+    "desc": "Academic-paper intelligence platform with ClickHouse-backed search, ranking, and research dashboards.",
+    "url": "https://github.com/sarthakagrawal927/researchPapers.git",
+    "tier": "active-ai",
+    "category": "product",
+    "priority": "P1",
+    "maturity": "internal-first"
   },
   "reel-pipeline": {
     "desc": "AI reel generation product that turns input text and project context into short-form video drafts and render artifacts.",
@@ -134,6 +158,14 @@
     "category": "helper",
     "priority": "P0",
     "maturity": "internal-first"
+  },
+  "sarthakagrawal": {
+    "desc": "sarthakagrawal.dev personal Astro portfolio and project archive.",
+    "url": "https://github.com/sarthakagrawal927/portfolio.git",
+    "tier": "active-ai",
+    "category": "product",
+    "priority": "P2",
+    "maturity": "public-ready"
   },
   "significanthobbies": {
     "desc": "Personal hobby mapping and journey visualization tool.",

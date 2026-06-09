@@ -654,11 +654,7 @@ async function executeRun(
       recordEvent: (event) => createRunEvent(env, input.runId, event),
       recordArtifact: (artifact) => createRunArtifact(env, input.runId, artifact),
     };
-    const operation =
-      input.reconcile && executor.reconcile
-        ? executor.reconcile(executionInput)
-        : executor.execute(executionInput);
-    const result = await runWithTimeout(operation, input.timeoutSeconds * 1000);
+    const result = await executeRunAttempts(env, executor, input, executionInput);
 
     const durationMs = Date.now() - input.startedAt;
     const status = result.success ? 'completed' : 'failed';
@@ -680,16 +676,17 @@ async function executeRun(
       await createRunEvent(env, input.runId, {
         type: result.success ? 'loop_completed' : 'loop_stopped',
         message: result.success
-          ? 'Droid loop completed on attempt 1.'
-          : 'Droid loop stopped after attempt 1; retry automation is not enabled in this POC.',
+          ? `Droid loop completed on attempt ${result.attempt}.`
+          : `Droid loop stopped after attempt ${result.attempt}.`,
         exit_code: result.exitCode,
         metadata: {
-          attempt: 1,
+          attempt: result.attempt,
           max_attempts: input.loopPolicy.max_attempts,
           retry_on_failure: input.loopPolicy.retry_on_failure,
           stop_on_blocker: input.loopPolicy.stop_on_blocker,
           status,
-          poc_retry_automation: false,
+          blocked: result.blocked,
+          exhausted: result.exhausted,
         },
       });
     }
@@ -727,6 +724,103 @@ async function executeRun(
       void nextPromise;
     }
   }
+}
+
+async function executeRunAttempts(
+  env: Env,
+  executor: RunExecutor,
+  input: Parameters<typeof executeRun>[2],
+  executionInput: RunExecutionInput
+): Promise<CommandResult & { attempt: number; blocked: boolean; exhausted: boolean }> {
+  const loopPolicy = input.loopPolicy?.enabled ? input.loopPolicy : undefined;
+  const maxAttempts = loopPolicy?.max_attempts ?? 1;
+  let attempt = 1;
+  let result: CommandResult | null = null;
+  let blocked = false;
+
+  while (attempt <= maxAttempts) {
+    if (loopPolicy) {
+      await createRunEvent(env, input.runId, {
+        type: 'loop_attempt_started',
+        message: `Droid loop attempt ${attempt} started.`,
+        command: input.command,
+        metadata: {
+          attempt,
+          max_attempts: maxAttempts,
+          retry_on_failure: loopPolicy.retry_on_failure,
+          stop_on_blocker: loopPolicy.stop_on_blocker,
+        },
+      });
+    }
+
+    const operation =
+      input.reconcile && executor.reconcile
+        ? executor.reconcile(executionInput)
+        : executor.execute(executionInput);
+    result = await runWithTimeout(operation, input.timeoutSeconds * 1000);
+    blocked = await isRunBlocked(env, input.runId, result);
+
+    if (loopPolicy) {
+      await createRunEvent(env, input.runId, {
+        type: 'loop_attempt_finished',
+        message: `Droid loop attempt ${attempt} ${result.success ? 'completed' : 'failed'}.`,
+        command: input.command,
+        exit_code: result.exitCode,
+        stdout: result.stdout,
+        stderr: result.stderr,
+        metadata: {
+          attempt,
+          max_attempts: maxAttempts,
+          status: result.success ? 'completed' : 'failed',
+          blocked,
+        },
+      });
+    }
+
+    if (result.success || (blocked && loopPolicy?.stop_on_blocker !== false)) {
+      break;
+    }
+    if (!loopPolicy?.retry_on_failure || attempt >= maxAttempts) {
+      break;
+    }
+
+    await createRunEvent(env, input.runId, {
+      type: 'loop_retry_scheduled',
+      message: `Droid loop retry ${attempt + 1} scheduled after failed attempt ${attempt}.`,
+      command: input.command,
+      metadata: {
+        attempt,
+        next_attempt: attempt + 1,
+        max_attempts: maxAttempts,
+      },
+    });
+    attempt += 1;
+  }
+
+  if (!result) {
+    return {
+      stdout: '',
+      stderr: 'Droid loop did not execute.',
+      exitCode: 1,
+      success: false,
+      attempt,
+      blocked: false,
+      exhausted: true,
+    };
+  }
+
+  return {
+    ...result,
+    attempt,
+    blocked,
+    exhausted: !result.success && !blocked && attempt >= maxAttempts,
+  };
+}
+
+async function isRunBlocked(env: Env, runId: string, result: CommandResult): Promise<boolean> {
+  if (result.exitCode === 75) return true;
+  const events = await listRunEvents(env, runId);
+  return events.some((event) => event.type === 'agent_blocked');
 }
 
 async function dispatchNextQueuedRun(
@@ -1272,7 +1366,7 @@ function buildLoopStartedEvent(
     type: 'loop_started',
     actor: 'droid',
     source: 'worker',
-    message: 'Droid loop started with bounded attempts and audit-only retry policy.',
+    message: 'Droid loop started with bounded retry attempts.',
     command: input.command,
     metadata: {
       task_id: input.taskId ?? null,
@@ -1282,7 +1376,6 @@ function buildLoopStartedEvent(
       stop_on_blocker: policy.stop_on_blocker,
       cost_budget_usd: policy.cost_budget_usd ?? null,
       dequeued: input.dequeued === true,
-      poc_retry_automation: false,
     },
   };
 }

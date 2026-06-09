@@ -1,6 +1,6 @@
 # Project Status
 
-Last updated: 2026-06-08
+Last updated: 2026-06-09
 
 ## Current Scope
 
@@ -12,18 +12,20 @@ SaaS Maker is the foundry helper for the fleet: a Cloudflare-first monorepo with
 - The API, cockpit, docs, widgets, blocks, and CLI are active parts of the system.
 - The task board, task-linked workflows, fleet registry, production smoke checks, and audit lanes are used to coordinate work across projects.
 - Task Workflows MVP is implemented in SaaS Maker only: workflow definitions store Markdown context and prompt templates, Cockpit task detail can run them through Droid native mode, and saved Markdown outputs get stable share pages.
+- Droid loop policies now execute bounded retries with per-attempt events, blocker-aware stops, retry-on-failure controls, and max-attempt exhaustion reporting.
+- Fleet registry sync is enforced by `pnpm check:fleet-contracts`, which compares `foundry.projects.json`, `docs/fleet-canonical-projects.md`, `scripts/lib/fleet-health-contracts.mjs`, and local active project dirs with `PROJECT_STATUS.md`.
 - Magic Form Builder has a fixture-backed prototype in `packages/blocks/ops/src/magic-form.ts` with focused tests.
 - AI Feedback Digest has a fixture-backed dry-run prototype in `packages/blocks/ops/src/feedback-digest.ts` with focused tests.
 - Fleet guidance now requires each project to maintain a root `PROJECT_STATUS.md`.
-- The public showcase now derives its project list, helper systems, and count from `foundry.projects.json`.
+- The public showcase now derives its project list, helper systems, and count from `foundry.projects.json`; the registry now includes `knowledgebase`, `pace`, `researchPapers`, and `sarthakagrawal`.
 
 ## Planned Next
 
-1. Keep the fleet registry, README, AGENTS guidance, project status docs, helper classifications, and public showcase synchronized as projects are added or retired.
+1. Keep the fleet registry, README, AGENTS guidance, project status docs, helper classifications, health contracts, and public showcase synchronized as projects are added or retired.
 2. Graduate Magic Form Builder only after product ownership, storage, preview, and integration boundaries are explicit.
 3. Graduate AI Feedback Digest only after human-review, task writeback, and production AI-cost controls are explicit.
 4. Tighten Task Workflows after real use: automatic Droid result capture, richer run status/events in the panel, and clearer artifact lifecycle controls.
-5. Continue reducing stale deploy/docs references, including old Vercel-style docs where Cloudflare is now canonical.
+5. Continue reducing stale deploy/docs references when concrete drift is found.
 
 ## Deferred / Parked
 

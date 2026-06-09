@@ -1,6 +1,6 @@
 # Project Recommendation Context
 
-Generated: 2026-06-06T21:14:19.617Z
+Generated: 2026-06-09T14:35:00.000Z
 
 This file is a CodeVetter Repo Unpacked-inspired audit written for Starboard recommendations. It is intentionally local, evidence-oriented, and safe to commit: it records product context, feature areas, stack inventory, and recommendation guidance without secrets or environment values.
 
@@ -15,7 +15,7 @@ This file is a CodeVetter Repo Unpacked-inspired audit written for Starboard rec
 
 Foundry — The Industrial Software Factory for Project Fleets.
 
-SaaS Maker is the foundry helper for the fleet: a Cloudflare-first monorepo with the API, cockpit, docs, widgets, reusable blocks, CLI, and experimental Droid surface that coordinate product tasks, task-linked LLM workflows, and fleet operations.
+SaaS Maker is the foundry helper for the fleet: a Cloudflare-first monorepo with the API, cockpit, docs, widgets, reusable blocks, CLI, and experimental Droid surface that coordinate product tasks, task-linked LLM workflows, and fleet operations. Droid loop policies now run bounded retries with per-attempt events, blocker-aware stops, retry-on-failure controls, and max-attempt exhaustion reporting.
 
 SaaS Maker SaaS Maker is a TypeScript monorepo for building and operating small SaaS products across a project fleet. It includes a Cloudflare Workers API, a Next.js cockpit, embeddable widgets, shared backend blocks, documentation, and an experimental autonomous runner called Droid. The repo is public, but parts of the deployment are still personal/internal. Treat this as an active product workspace rather than a polished framework release. Deployment & External Services Everything is hosted on Cloudflare. Each deployable ships independently via GitHub Actions .github/workflows/ci.yml on push to main , gated by changed paths. Deployable Source Host ----------------- --------------- --------
 
@@ -40,6 +40,8 @@ SaaS Maker SaaS Maker is a TypeScript monorepo for building and operating small 
 - `apps/cockpit/src/app/workflow-artifacts/[shareToken]/page.tsx`
 - `apps/cockpit/src/components/tasks/TaskDetailClient.tsx`
 - `apps/showcase/src/pages/index.astro`
+- `scripts/check-fleet-contract-sync.mjs`
+- `scripts/lib/fleet-health-contracts.mjs`
 - `workers/api/src/index.ts`
 - `workers/api/src/routes/ai.ts`
 - `workers/api/src/routes/auth.ts`
@@ -290,6 +292,7 @@ Good matches:
 - Repos that strengthen search and discovery without replacing already-installed libraries.
 - Tools with concrete support for api, workers, src, github.com, sarthak-fleet, product, cloudflare, routes.
 - Implementation repos, SDKs, CLIs, testing utilities, adapters, and focused libraries are higher value than generic awesome lists.
+- Treat `foundry.projects.json` as the fleet registry source of truth and run `pnpm check:fleet-contracts` after adding or retiring active project roots.
 
 Avoid recommending:
 - Do not recommend packages already listed under direct or development dependencies unless the task is migration research.

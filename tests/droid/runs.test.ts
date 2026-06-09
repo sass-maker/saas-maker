@@ -439,20 +439,211 @@ describe('droid runs', () => {
       'run_request',
       'loop_started',
       'run_started',
+      'loop_attempt_started',
       'command_start',
       'command_finish',
+      'loop_attempt_finished',
       'run_finished',
       'loop_completed',
     ]);
     expect(JSON.parse(eventsPayload.data[1].metadata)).toMatchObject({
       max_attempts: 2,
       retry_on_failure: true,
-      poc_retry_automation: false,
     });
-    expect(JSON.parse(eventsPayload.data[6].metadata)).toMatchObject({
+    expect(JSON.parse(eventsPayload.data[8].metadata)).toMatchObject({
       status: 'completed',
       max_attempts: 2,
+      attempt: 1,
     });
+  });
+
+  it('retries a loop run until a failed attempt passes', async () => {
+    let attempts = 0;
+    const app = createApp({
+      async execute(input) {
+        attempts += 1;
+        await input.recordEvent({ type: 'command_start', command: input.command });
+        await input.recordEvent({
+          type: 'command_finish',
+          command: input.command,
+          exit_code: attempts === 1 ? 1 : 0,
+          stdout: attempts === 1 ? '' : 'ok\n',
+          stderr: attempts === 1 ? 'not yet\n' : '',
+        });
+        return attempts === 1
+          ? { stdout: '', stderr: 'not yet\n', exitCode: 1, success: false }
+          : { stdout: 'ok\n', stderr: '', exitCode: 0, success: true };
+      },
+    });
+    const env = createEnv();
+
+    const response = await app.request(
+      '/v0/runs',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          command: 'pnpm test',
+          loop_policy: { enabled: true, max_attempts: 3, retry_on_failure: true },
+          wait_for_completion: true,
+        }),
+        headers: {
+          Authorization: 'Bearer test-token',
+          'Content-Type': 'application/json',
+        },
+      },
+      env
+    );
+
+    expect(response.status).toBe(201);
+    const payload = (await response.json()) as { data: { id: string; status: string } };
+    expect(payload.data.status).toBe('completed');
+    expect(attempts).toBe(2);
+
+    const eventsResponse = await app.request(
+      `/v0/runs/${payload.data.id}/events`,
+      { headers: { Authorization: 'Bearer test-token' } },
+      env
+    );
+    const eventsPayload = (await eventsResponse.json()) as {
+      data: Array<{ type: string; metadata: string }>;
+    };
+    expect(eventsPayload.data.map((event) => event.type)).toContain('loop_retry_scheduled');
+    expect(eventsPayload.data.filter((event) => event.type === 'loop_attempt_started')).toHaveLength(
+      2
+    );
+    expect(
+      JSON.parse(eventsPayload.data.find((event) => event.type === 'loop_completed')!.metadata)
+    ).toMatchObject({ attempt: 2, status: 'completed', exhausted: false });
+  });
+
+  it('does not retry failed loop runs when retry_on_failure is false', async () => {
+    let attempts = 0;
+    const app = createApp({
+      async execute() {
+        attempts += 1;
+        return { stdout: '', stderr: 'fail\n', exitCode: 1, success: false };
+      },
+    });
+    const env = createEnv();
+
+    const response = await app.request(
+      '/v0/runs',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          command: 'pnpm test',
+          loop_policy: { enabled: true, max_attempts: 3, retry_on_failure: false },
+          wait_for_completion: true,
+        }),
+        headers: {
+          Authorization: 'Bearer test-token',
+          'Content-Type': 'application/json',
+        },
+      },
+      env
+    );
+
+    const payload = (await response.json()) as { data: { id: string; status: string } };
+    expect(payload.data.status).toBe('failed');
+    expect(attempts).toBe(1);
+  });
+
+  it('stops loop retries when an agent blocks the task', async () => {
+    let attempts = 0;
+    const app = createApp({
+      async execute(input) {
+        attempts += 1;
+        await input.recordEvent({
+          type: 'agent_blocked',
+          exit_code: 75,
+          stderr: 'needs user input',
+          metadata: { reason: 'missing account access' },
+        });
+        return { stdout: '', stderr: 'needs user input', exitCode: 75, success: false };
+      },
+    });
+    const env = createEnv();
+
+    const response = await app.request(
+      '/v0/runs',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          command: 'native-loop',
+          loop_policy: { enabled: true, max_attempts: 3, retry_on_failure: true },
+          wait_for_completion: true,
+        }),
+        headers: {
+          Authorization: 'Bearer test-token',
+          'Content-Type': 'application/json',
+        },
+      },
+      env
+    );
+
+    const payload = (await response.json()) as { data: { id: string; status: string } };
+    expect(payload.data.status).toBe('failed');
+    expect(attempts).toBe(1);
+
+    const eventsResponse = await app.request(
+      `/v0/runs/${payload.data.id}/events`,
+      { headers: { Authorization: 'Bearer test-token' } },
+      env
+    );
+    const eventsPayload = (await eventsResponse.json()) as {
+      data: Array<{ type: string; metadata: string }>;
+    };
+    expect(eventsPayload.data.map((event) => event.type)).not.toContain('loop_retry_scheduled');
+    expect(
+      JSON.parse(eventsPayload.data.find((event) => event.type === 'loop_stopped')!.metadata)
+    ).toMatchObject({ attempt: 1, blocked: true, exhausted: false });
+  });
+
+  it('stops failed loop runs after max attempts are exhausted', async () => {
+    let attempts = 0;
+    const app = createApp({
+      async execute() {
+        attempts += 1;
+        return { stdout: '', stderr: `fail ${attempts}\n`, exitCode: 1, success: false };
+      },
+    });
+    const env = createEnv();
+
+    const response = await app.request(
+      '/v0/runs',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          command: 'pnpm test',
+          loop_policy: { enabled: true, max_attempts: 2, retry_on_failure: true },
+          wait_for_completion: true,
+        }),
+        headers: {
+          Authorization: 'Bearer test-token',
+          'Content-Type': 'application/json',
+        },
+      },
+      env
+    );
+
+    const payload = (await response.json()) as { data: { id: string; status: string } };
+    expect(payload.data.status).toBe('failed');
+    expect(attempts).toBe(2);
+
+    const eventsResponse = await app.request(
+      `/v0/runs/${payload.data.id}/events`,
+      { headers: { Authorization: 'Bearer test-token' } },
+      env
+    );
+    const eventsPayload = (await eventsResponse.json()) as {
+      data: Array<{ type: string; metadata: string }>;
+    };
+    expect(eventsPayload.data.filter((event) => event.type === 'loop_attempt_finished')).toHaveLength(
+      2
+    );
+    expect(
+      JSON.parse(eventsPayload.data.find((event) => event.type === 'loop_stopped')!.metadata)
+    ).toMatchObject({ attempt: 2, exhausted: true });
   });
 
   it('passes task metadata and acceptance settings through to the executor', async () => {

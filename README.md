@@ -27,7 +27,6 @@ Everything is hosted on Cloudflare. Each deployable ships independently via GitH
 | Analytics    | PostHog                                                                                                              |
 | CI/CD        | GitHub Actions — build/test on every push/PR, auto-deploy each app to Cloudflare on push to `main`                   |
 
-Note: `apps/docs/vercel.json` is stale — docs deploy to Cloudflare Pages, not Vercel. It is a cleanup candidate.
 
 ## What Is Inside
 
@@ -58,8 +57,11 @@ Note: `apps/docs/vercel.json` is stale — docs deploy to Cloudflare Pages, not 
 | [`ai-game`](https://github.com/sarthak-fleet/ai-game)                       | product  | P1       | Persistent AI world simulator and Aliveville game surface.        |
 | [`free-ai`](https://github.com/sarthak-fleet/free-ai)                       | helper   | P1       | OpenAI-compatible gateway for free and local LLM providers.       |
 | [`high-signal`](https://github.com/sarthak-fleet/high-signal)               | product  | P1       | Public signal log for AI infrastructure and semiconductors.       |
+| [`knowledgebase`](https://github.com/sarthakagrawal927/knowledge-base)      | product  | P1       | Private Agent Search for cited private project corpora.           |
 | [`open-historia`](https://github.com/sarthak-fleet/open-historia)           | product  | P1       | Interactive historical timeline and storytelling product.         |
+| [`pace`](https://github.com/sarthakagrawal927/clicky)                       | product  | P1       | Local macOS voice agent, formerly Clicky Local / Space candidate. |
 | [`reel-pipeline`](https://github.com/sarthak-fleet/reel-pipeline)           | helper   | P1       | Fleet marketing video artifact and autopost pipeline.             |
+| [`researchPapers`](https://github.com/sarthakagrawal927/researchPapers)     | product  | P1       | Academic-paper intelligence platform and dashboard.               |
 | [`resume-tailor`](https://github.com/sarthak-fleet/resume-tailor)           | product  | P1       | RolePatch resume tailoring product.                               |
 | [`truehire`](https://github.com/sarthak-fleet/truehire)                     | product  | P1       | Recruiting and candidate vetting product.                         |
 | [`anime_list`](https://github.com/sarthak-fleet/anime_list)                 | product  | P2       | MAL Explorer anime and manga list surface.                        |
@@ -71,6 +73,7 @@ Note: `apps/docs/vercel.json` is stale — docs deploy to Cloudflare Pages, not 
 | [`looptv`](https://github.com/sarthak-fleet/looptv)                         | product  | P2       | TV-like curated channel viewing app.                              |
 | [`psi-swarm`](https://github.com/sarthak-fleet/psi-swarm)                   | helper   | P2       | Local Lighthouse swarm runner for Web Vitals distributions.       |
 | [`reader`](https://github.com/sarthak-fleet/reader)                         | product  | P2       | Web annotator and reading surface.                                |
+| [`sarthakagrawal`](https://github.com/sarthakagrawal927/portfolio)          | product  | P2       | Personal Astro portfolio and project archive.                     |
 | [`significanthobbies`](https://github.com/sarthak-fleet/significanthobbies) | product  | P2       | Personal hobby mapping and journey visualization tool.            |
 | [`starboard`](https://github.com/sarthak-fleet/starboard)                   | product  | P2       | Project dashboard and management system.                          |
 | [`swe-interview-prep`](https://github.com/sarthak-fleet/swe-interview-prep) | product  | P2       | Interview Coder software engineering interview prep.              |
@@ -101,6 +104,7 @@ Useful checks:
 pnpm lint
 pnpm smoke
 pnpm check:openapi
+pnpm check:fleet-contracts
 ```
 
 Some commands require Cloudflare, GitHub, or SaaS Maker production credentials. Do not commit secrets or local environment files.
