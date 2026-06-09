@@ -1,6 +1,6 @@
 # Project Status
 
-Last updated: 2026-06-05
+Last updated: 2026-06-09
 
 ## Current Scope
 
@@ -15,13 +15,19 @@ psi-swarm is a local-first website performance tracker. It measures Web Vitals a
 - Local SQLite history supports tagged runs and before/after comparisons.
 - Optional reasoning can use local-ai or an OpenAI-compatible backend.
 - Claude/Codex usage paths are documented through the installable skill and AGENTS guidance notes.
+- OSS performance-tool integrations were evaluated in
+  `docs/oss-integration-evaluation.md`; the current decision is to keep
+  Lighthouse as the engine and prefer an optional Chrome DevTools trace-insight
+  adapter before adopting a heavier sitespeed/WebPageTest-style stack.
 
 ## Planned Next
 
 1. Keep Node 22 LTS as the supported path until the Lighthouse 12 / Node 24 trace-mark issue is resolved.
 2. Improve the local web controller so users can run, compare, and inspect swarms without dropping to the CLI.
-3. Add clearer public/demo examples that compare real product pages before and after performance work.
-4. Decide whether psi-swarm should add a hosted report/gallery surface on top of the local-first CLI and web controller.
+3. Add an optional trace-insight adapter that stores LLM-readable diagnosis
+   beside existing percentile history.
+4. Add clearer public/demo examples that compare real product pages before and after performance work.
+5. Decide whether psi-swarm should add a hosted report/gallery surface on top of the local-first CLI and web controller.
 
 ## Deferred / Parked
 
