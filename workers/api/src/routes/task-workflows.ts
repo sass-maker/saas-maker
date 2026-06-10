@@ -126,6 +126,8 @@ taskWorkflows.patch('/:id', requireSession, async (c) => {
   for (const key of ['task_id', 'project_slug', 'name', 'description', 'context_markdown', 'prompt_template', 'last_run_id'] as const) {
     if (key in body) updates[key] = optionalString(body[key]);
   }
+  // context_markdown is NOT NULL in the schema; clearing it means ''.
+  if (updates.context_markdown === null) updates.context_markdown = '';
   if ('status' in body) {
     const status = enumValue(body.status, WORKFLOW_STATUSES);
     if (!status) return c.json({ error: 'status is invalid' }, 400);

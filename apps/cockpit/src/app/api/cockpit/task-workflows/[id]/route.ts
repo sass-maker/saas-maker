@@ -41,6 +41,8 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   for (const key of ['task_id', 'project_slug', 'name', 'description', 'context_markdown', 'prompt_template', 'last_run_id'] as const) {
     if (key in body) patch[key] = optionalString(body[key]);
   }
+  // context_markdown is NOT NULL in the schema; clearing it means ''.
+  if (patch.context_markdown === null) patch.context_markdown = '';
   if ('status' in body) {
     const status = enumValue(body.status);
     if (!status) return NextResponse.json({ error: 'status is invalid' }, { status: 400 });
