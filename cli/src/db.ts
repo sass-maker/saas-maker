@@ -75,7 +75,76 @@ export class HistoryDB {
       CREATE INDEX IF NOT EXISTS idx_runs_url_preset ON runs(url, preset);
       CREATE INDEX IF NOT EXISTS idx_runs_started_at ON runs(started_at);
       CREATE INDEX IF NOT EXISTS idx_runs_tag ON runs(tag);
+
+      CREATE TABLE IF NOT EXISTS domain_ratings (
+        domain TEXT PRIMARY KEY,
+        rating REAL NOT NULL,
+        fetched_at INTEGER NOT NULL
+      );
+      CREATE INDEX IF NOT EXISTS idx_domain_ratings_fetched_at ON domain_ratings(fetched_at);
+
+      CREATE TABLE IF NOT EXISTS meta (
+        key TEXT PRIMARY KEY,
+        value TEXT NOT NULL
+      );
     `);
+  }
+
+  getMeta(key: string): string | null {
+    const row = this.db.prepare(`SELECT value FROM meta WHERE key = ?`).get(key) as { value: string } | undefined;
+    return row?.value ?? null;
+  }
+
+  setMeta(key: string, value: string): void {
+    this.db
+      .prepare(`INSERT INTO meta (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value`)
+      .run(key, value);
+  }
+
+  getDomainRating(domain: string): { domain: string; rating: number; fetchedAt: number } | null {
+    const row = this.db
+      .prepare(`SELECT domain, rating, fetched_at as fetchedAt FROM domain_ratings WHERE domain = ?`)
+      .get(domain.toLowerCase()) as { domain: string; rating: number; fetchedAt: number } | undefined;
+    return row ?? null;
+  }
+
+  domainRatings(): Map<string, { domain: string; rating: number; fetchedAt: number }> {
+    const rows = this.db
+      .prepare(`SELECT domain, rating, fetched_at as fetchedAt FROM domain_ratings`)
+      .all() as Array<{ domain: string; rating: number; fetchedAt: number }>;
+    const out = new Map<string, { domain: string; rating: number; fetchedAt: number }>();
+    for (const row of rows) out.set(row.domain.toLowerCase(), row);
+    return out;
+  }
+
+  upsertDomainRating(entry: { domain: string; rating: number; fetchedAt: number }): void {
+    this.db
+      .prepare(
+        `INSERT INTO domain_ratings (domain, rating, fetched_at)
+         VALUES (@domain, @rating, @fetchedAt)
+         ON CONFLICT(domain) DO UPDATE SET
+           rating = excluded.rating,
+           fetched_at = excluded.fetched_at`,
+      )
+      .run({
+        domain: entry.domain.toLowerCase(),
+        rating: entry.rating,
+        fetchedAt: entry.fetchedAt,
+      });
+  }
+
+  /** Distinct URL origins seen in run history. */
+  trackedOrigins(): string[] {
+    const rows = this.db.prepare(`SELECT DISTINCT url FROM runs`).all() as Array<{ url: string }>;
+    const origins = new Set<string>();
+    for (const { url } of rows) {
+      try {
+        origins.add(new URL(url).origin);
+      } catch {
+        /* skip malformed */
+      }
+    }
+    return [...origins];
   }
 
   insert(r: NewRun): number {

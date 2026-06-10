@@ -104,6 +104,7 @@ If neither is set, the swarm still runs and shows the deterministic "Why?" secti
 | `--parallel auto` | Concurrent preset execution. Faster but adds CPU-throttling noise. |
 | `--profile mobile-heavy|desktop-heavy|balanced|mobile-only` | Weighted "fleet verdict" line matching your traffic mix. |
 | `--no-crux` | Skip CrUX field-data lookup. (Auto-skipped if `CRUX_API_KEY` not set.) |
+| `--no-ahrefs` | Skip Ahrefs Domain Rating lookup. (Auto-skipped for `*.pages.dev` / `*.workers.dev`.) |
 | `--tag <name>` | Tag this swarm for later `compare`. |
 
 ## Interpreting the output
@@ -114,9 +115,10 @@ A complete run produces these sections in order:
 3. **`CWV LCP gate (p75 ≤ 2.5s)`** — naive overall verdict
 4. **`Weighted verdict (<profile>)`** — only if `--profile` is set; matches traffic mix
 5. **`Real users (CrUX p75)`** — only if `CRUX_API_KEY` is set and site is in CrUX
-6. **`Lab vs field gap`** — only if both lab and CrUX data exist; tells you whether the lab is over- or under-stating real-user experience
-7. **`Why <preset>?`** — LCP element + LCP phase breakdown (TTFB / Load Delay / Load Time / Render Delay) + ranked opportunities table
-8. **`Reasoning`** — LLM narrative (only with `--reason`)
+6. **`Domain authority (Ahrefs DR)`** — only for custom domains (not `*.pages.dev` / `*.workers.dev`); free public endpoint, no API key
+7. **`Lab vs field gap`** — only if both lab and CrUX data exist; tells you whether the lab is over- or under-stating real-user experience
+8. **`Why <preset>?`** — LCP element + LCP phase breakdown (TTFB / Load Delay / Load Time / Render Delay) + ranked opportunities table
+9. **`Reasoning`** — LLM narrative (only with `--reason`)
 
 **Quick-read heuristic for the user:**
 - If `mobile-mid` LCP is "POOR" but `mobile-fast` and `desktop` are "GOOD" → the test was strict for the bottom-quartile user, not a real product issue.

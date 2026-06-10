@@ -6,6 +6,7 @@ import boxen from 'boxen';
 import Table from 'cli-table3';
 import { PRESETS, PRESET_GROUPS, TRAFFIC_PROFILES, resolvePresets, type Preset } from './presets.js';
 import { fetchCrux, type CruxRecord } from './crux.js';
+import { fetchDomainRating, type DomainRatingResult } from './ahrefs.js';
 import { SwarmRunner, type RunResult, type RunResultWithArtifact } from './runner.js';
 import { HistoryDB } from './db.js';
 import { renderSwarmReport } from './report.js';
@@ -49,6 +50,7 @@ program
   .option('--reason-model <id>', 'Override the model id', 'auto')
   .option('--profile <name>', 'Traffic profile for the weighted verdict (mobile-heavy|desktop-heavy|balanced|mobile-only)')
   .option('--no-crux', 'Skip the CrUX real-user p75 lookup')
+  .option('--no-ahrefs', 'Skip Ahrefs Domain Rating lookup (custom domains only)')
   .option('--output <fmt>', 'Also write a report file: html', undefined)
   .option('--output-path <file>', 'Override the report output path')
   .action(async (url: string, opts) => {
@@ -133,6 +135,16 @@ program
         /* skip — report still renders without CrUX */
       }
     }
+    let domainRating: DomainRatingResult | null | undefined;
+    if (opts.ahrefs !== false) {
+      try {
+        const db = new HistoryDB();
+        domainRating = await fetchDomainRating(url, { db });
+        db.close();
+      } catch {
+        /* skip — report still renders without DR */
+      }
+    }
     let trafficProfile: { name: string; weights: Record<string, number> } | undefined;
     if (opts.profile) {
       const weights = TRAFFIC_PROFILES[opts.profile];
@@ -142,7 +154,7 @@ program
         trafficProfile = { name: opts.profile, weights };
       }
     }
-    console.log('\n' + renderSwarmReport(url, results, elapsed, { cruxByFormFactor, trafficProfile }));
+    console.log('\n' + renderSwarmReport(url, results, elapsed, { cruxByFormFactor, trafficProfile, domainRating }));
 
     let reasoningCapture: { text: string; backend?: string; model?: string; durationMs?: number } | undefined;
     if (opts.reason === true) {
@@ -159,6 +171,7 @@ program
         results,
         elapsedMs: elapsed,
         cruxByFormFactor,
+        domainRating,
         reasoning: reasoningCapture,
       });
       writeFileSync(outPath, html, 'utf-8');
@@ -546,7 +559,8 @@ program
           `${chalk.dim('URL:    ')}${url}\n` +
           `${chalk.dim('Origin: ')}${opts.origin}\n` +
           (opts.token ? `${chalk.dim('Token:  ')}${chalk.yellow(opts.token)}\n` : '') +
-          `\n${chalk.dim('Open the web UI and it will auto-connect. Ctrl-C to stop.')}`,
+          `\n${chalk.dim('Open the web UI and it will auto-connect. Ctrl-C to stop.')}\n` +
+          `${chalk.dim('Ahrefs DR refreshes weekly when idle (no active swarms).')}`,
         { padding: 1, borderColor: 'cyan', borderStyle: 'round' },
       ),
     );

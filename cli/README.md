@@ -29,6 +29,8 @@ psi-swarm run <url> [options]
   --parallel <spec>     Preset-level parallelism: 1|N|auto  (default: 1)
   --no-save             Skip saving to local db
   --no-suggest          Skip post-run link suggestions
+  --no-crux             Skip CrUX field-data lookup (needs CRUX_API_KEY)
+  --no-ahrefs           Skip Ahrefs Domain Rating (custom domains only)
 
 psi-swarm presets             # list available presets and groups
 psi-swarm history <url>       # show recent history (formatted as a report)
@@ -42,6 +44,15 @@ Default is the **`psi`** preset group (mobile + desktop, matching Google PSI) ×
 ### Parallelism
 
 By default runs are **serial** — Lighthouse's CPU throttling assumes a dedicated core, so parallel Chrome instances introduce noise on CPU-bound metrics (TBT, INP, Perf Score). Use `--parallel auto` to run across presets concurrently when speed matters more than perfect TBT integrity. Auto-detects safe parallelism from your CPU/RAM (capped at 4).
+
+### External context (CrUX + Ahrefs)
+
+After a swarm, psi-swarm can enrich the report with two free-ish public signals:
+
+- **CrUX** — real-user p75 from Chrome (`CRUX_API_KEY` required). Works for any URL in Google's field dataset.
+- **Ahrefs Domain Rating** — backlink authority on a 0–100 log scale. Uses Ahrefs' [free public endpoint](https://docs.ahrefs.com/en/api/reference/public/get-domain-rating-free) (no API key). Fetched automatically for **custom domains only** — `*.pages.dev` and `*.workers.dev` are skipped because DR on Cloudflare platform subdomains is not meaningful. Ratings are stored in `~/.psi-swarm/history.db`. When `serve` is running, they refresh **once a week while idle** (no active swarms); the agent probes hourly and skips refresh if a swarm is in flight.
+
+Both appear in terminal reports, HTML exports, and the `/projects` dashboard (via `serve`).
 
 ### Link discovery (the "what else should I test?" feature)
 

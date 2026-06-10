@@ -2,6 +2,7 @@ import type { RunResultWithArtifact } from './runner.js';
 import { computeStats } from './stats.js';
 import { diagnosePreset, rankOpportunities, formatAggregatedAudit } from './diagnose.js';
 import type { CruxRecord } from './crux.js';
+import type { DomainRatingResult } from './ahrefs.js';
 
 /**
  * Self-contained HTML report. One file, no external assets, opens anywhere.
@@ -14,6 +15,7 @@ export interface HtmlReportOptions {
   results: RunResultWithArtifact[];
   elapsedMs: number;
   cruxByFormFactor?: { mobile?: CruxRecord | null; desktop?: CruxRecord | null };
+  domainRating?: DomainRatingResult | null;
   trafficProfile?: { name: string; weights: Record<string, number> };
   reasoning?: { text: string; backend?: string; model?: string; durationMs?: number };
   generatedAt?: Date;
@@ -111,7 +113,7 @@ const CSS = `
 `;
 
 export function renderHtmlReport(opts: HtmlReportOptions): string {
-  const { url, results, elapsedMs, cruxByFormFactor, trafficProfile, reasoning } = opts;
+  const { url, results, elapsedMs, cruxByFormFactor, domainRating, trafficProfile, reasoning } = opts;
   const okResults = results.filter((r) => !r.error);
   const errors = results.length - okResults.length;
   const byPreset = new Map<string, RunResultWithArtifact[]>();
@@ -217,6 +219,19 @@ export function renderHtmlReport(opts: HtmlReportOptions): string {
         <div class="dim" style="font-size:12px;margin-top:8px;">profile: ${escapeHtml(breakdown)}</div>
       </section>`;
     }
+  }
+
+  let domainRatingHtml = '';
+  if (domainRating) {
+    const drClass = domainRating.rating >= 40 ? 'good' : domainRating.rating >= 10 ? 'warn' : 'dim';
+    domainRatingHtml = `<section>
+      <h2>Domain authority (Ahrefs DR)</h2>
+      <div class="sub">Free public endpoint · backlink profile strength on a 0–100 log scale</div>
+      <div style="margin-top:12px;font-size:14px;">
+        <span class="dim">domain</span> <span class="mono">${escapeHtml(domainRating.domain)}</span>
+        <span class="dim" style="margin-left:18px;">DR</span> <span class="${drClass} mono" style="font-size:18px;font-weight:600;">${domainRating.rating.toFixed(1)}</span>
+      </div>
+    </section>`;
   }
 
   // CrUX section
@@ -347,6 +362,7 @@ export function renderHtmlReport(opts: HtmlReportOptions): string {
   ${headerHtml}
   ${presetsHtml}
   ${weightedHtml}
+  ${domainRatingHtml}
   ${cruxHtml}
   ${opportunitiesHtml}
   ${reasoningHtml}

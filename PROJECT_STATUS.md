@@ -1,6 +1,6 @@
 # Project Status
 
-Last updated: 2026-06-09
+Last updated: 2026-06-10
 
 ## Current Scope
 
@@ -19,6 +19,11 @@ psi-swarm is a local-first website performance tracker. It measures Web Vitals a
   `docs/oss-integration-evaluation.md`; the current decision is to keep
   Lighthouse as the engine and prefer an optional Chrome DevTools trace-insight
   adapter before adopting a heavier sitespeed/WebPageTest-style stack.
+- Ahrefs Domain Rating (free public endpoint) is fetched for custom-domain
+  projects in the `/projects` dashboard and CLI/HTML reports. Cloudflare platform
+  hostnames (`*.pages.dev`, `*.workers.dev`) are skipped because DR is not
+  meaningful on shared CF subdomains. Ratings persist in SQLite; `serve` refreshes
+  them weekly when idle (no active swarms), probed hourly.
 
 ## Planned Next
 

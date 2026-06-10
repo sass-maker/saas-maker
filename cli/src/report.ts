@@ -5,6 +5,7 @@ import type { RunResult } from './runner.js';
 import { computeStats, type Stats } from './stats.js';
 import { diagnosePreset, rankOpportunities, formatAggregatedAudit, type Diagnosis } from './diagnose.js';
 import type { CruxRecord } from './crux.js';
+import type { DomainRatingResult } from './ahrefs.js';
 
 type MetricKey =
   | 'lcp'
@@ -175,6 +176,7 @@ export interface RenderOptions {
     desktop?: CruxRecord | null;
   };
   trafficProfile?: { name: string; weights: Record<string, number> };
+  domainRating?: DomainRatingResult | null;
 }
 
 export function renderSwarmReport(
@@ -234,6 +236,9 @@ export function renderSwarmReport(
   // CrUX field data — real-user p75 alongside our lab numbers.
   const cruxSection = renderCrux(renderOpts.cruxByFormFactor);
   if (cruxSection) sections.push(cruxSection);
+
+  const drSection = renderDomainRating(renderOpts.domainRating);
+  if (drSection) sections.push(drSection);
 
   // Lab-vs-field gap analysis when both are available.
   const gapSection = renderLabFieldGap(byPreset, renderOpts.cruxByFormFactor);
@@ -414,6 +419,20 @@ function renderCrux(
     lines.push(chalk.dim(`  · ${source} · ${period}`));
   }
   return lines.join('\n');
+}
+
+function renderDomainRating(rec?: DomainRatingResult | null): string {
+  if (!rec) return '';
+  const color =
+    rec.rating >= 40 ? chalk.green : rec.rating >= 10 ? chalk.yellow : chalk.dim;
+  return (
+    chalk.cyan.bold('Domain authority (Ahrefs DR)') +
+    chalk.dim('  · free public endpoint\n') +
+    chalk.dim('  domain: ') +
+    rec.domain +
+    chalk.dim('  ·  DR: ') +
+    color.bold(rec.rating.toFixed(1))
+  );
 }
 
 function renderOpportunities(d: Diagnosis): string {

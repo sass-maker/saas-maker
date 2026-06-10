@@ -20,6 +20,9 @@ interface ProjectGrouped {
   worstMobileLcp?: number;
   worstDesktopLcp?: number;
   worstCls?: number;
+  isCloudflarePlatform?: boolean;
+  domainRating?: number;
+  domainRatingDomain?: string;
   pages: PageRow[];
 }
 interface HistoryRow {
@@ -67,6 +70,12 @@ function clsTier(v: number | undefined): 'good' | 'warn' | 'poor' | 'dim' {
   if (v <= 0.1) return 'good';
   if (v <= 0.25) return 'warn';
   return 'poor';
+}
+function drTier(v: number | undefined): 'good' | 'warn' | 'dim' {
+  if (typeof v !== 'number') return 'dim';
+  if (v >= 40) return 'good';
+  if (v >= 10) return 'warn';
+  return 'dim';
 }
 const tierColor: Record<string, string> = {
   good: 'var(--color-good)',
@@ -286,14 +295,18 @@ function ProjectCard({ proj, expanded, onToggle, expandedPages, onTogglePage, hi
   const host = useMemo(() => { try { return new URL(proj.origin).host; } catch { return proj.origin; } }, [proj.origin]);
   return (
     <div className="border border-[var(--color-border)] bg-[var(--color-panel)] rounded-lg overflow-hidden">
-      <div className="px-5 py-4 grid grid-cols-[1fr_140px_140px_140px_auto] gap-4 items-center">
+      <div className="px-5 py-4 grid grid-cols-[1fr_100px_140px_140px_140px_auto] gap-4 items-center">
         <div>
           <button onClick={onToggle} className="font-semibold text-left hover:text-[var(--color-cyan)] transition flex items-center gap-2">
             <span className="text-xs text-[var(--color-dim)]">{expanded ? '▼' : '▶'}</span>
             {host}
           </button>
-          <div className="text-xs text-[var(--color-dim)] mt-0.5">{proj.pageCount} page{proj.pageCount === 1 ? '' : 's'} · {proj.totalRuns} runs · last {fmtRelative(proj.lastRunAt)}</div>
+          <div className="text-xs text-[var(--color-dim)] mt-0.5">
+            {proj.pageCount} page{proj.pageCount === 1 ? '' : 's'} · {proj.totalRuns} runs · last {fmtRelative(proj.lastRunAt)}
+            {proj.isCloudflarePlatform && <span> · CF platform</span>}
+          </div>
         </div>
+        <DrCell value={proj.domainRating} cfPlatform={proj.isCloudflarePlatform} />
         <Worst label="worst desktop" value={proj.worstDesktopLcp} />
         <Worst label="worst mobile" value={proj.worstMobileLcp} />
         <ClsCell value={proj.worstCls} />
@@ -327,6 +340,16 @@ function ClsCell({ value }: { value: number | undefined }) {
     <div className="text-right">
       <div className="text-xs text-[var(--color-dim)] uppercase tracking-wide">worst CLS</div>
       <div className="font-mono text-sm" style={{ color: tierColor[clsTier(value)] }}>{typeof value === 'number' ? value.toFixed(3) : '—'}</div>
+    </div>
+  );
+}
+function DrCell({ value, cfPlatform }: { value: number | undefined; cfPlatform?: boolean }) {
+  return (
+    <div>
+      <div className="text-xs text-[var(--color-dim)] uppercase tracking-wide">Ahrefs DR</div>
+      <div className="font-mono text-sm" style={{ color: tierColor[drTier(value)] }}>
+        {typeof value === 'number' ? value.toFixed(1) : cfPlatform ? '—' : '…'}
+      </div>
     </div>
   );
 }

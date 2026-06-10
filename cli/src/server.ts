@@ -13,6 +13,9 @@ import { detectFrameworkRoutes } from './routes.js';
 import { computeStats } from './stats.js';
 import { diagnosePreset, rankOpportunities, formatAggregatedAudit, type Diagnosis } from './diagnose.js';
 import { streamReasoning, probeLocalAi, type ReasonBackend } from './reason.js';
+import { domainRatingsForOrigins } from './ahrefs.js';
+import { isCloudflarePlatformHost, hostnameFromUrl } from './domain.js';
+import { createDomainRatingScheduler } from './domain-rating-scheduler.js';
 
 interface RunRecord {
   id: string;
@@ -258,6 +261,23 @@ export function createAgentServer(opts: ServeOptions): { listen: () => Promise<v
     return false;
   };
 
+  const isIdle = (): boolean => {
+    for (const record of runs.values()) {
+      if (record.status === 'running' || record.status === 'pending') return false;
+    }
+    return true;
+  };
+
+  const domainRatingScheduler = createDomainRatingScheduler({
+    isIdle,
+    onRefresh: ({ domains, refreshedAt }) => {
+      console.log(`[psi-swarm] Ahrefs DR refreshed for ${domains} custom domain(s) · ${new Date(refreshedAt).toISOString()}`);
+    },
+    onError: (err) => {
+      console.warn(`[psi-swarm] Ahrefs DR refresh failed: ${err.message}`);
+    },
+  });
+
   const server = createServer(async (req, res) => {
     const url = new NodeURL(req.url ?? '/', `http://${req.headers.host ?? 'localhost'}`);
 
@@ -406,7 +426,6 @@ export function createAgentServer(opts: ServeOptions): { listen: () => Promise<v
         const windowDays = parseInt(url.searchParams.get('windowDays') ?? '30', 10);
         const db = new HistoryDB();
         const rows = db.projects(windowDays);
-        db.close();
         // Group URL-level rows by URL origin so multiple pages of the same site
         // collapse under one "project" card. The path is derived for display.
         type Page = (typeof rows)[number] & { path: string };
@@ -427,6 +446,8 @@ export function createAgentServer(opts: ServeOptions): { listen: () => Promise<v
           byOrigin.set(origin, arr);
         }
         const registry = getReportRegistry();
+        const origins = Array.from(byOrigin.keys());
+        const dbRatings = domainRatingsForOrigins(origins, db);
         const projects = Array.from(byOrigin.entries()).map(([origin, pages]) => {
           // Attach per-page report info from the registry.
           const enrichedPages = pages.map((p) => {
@@ -442,6 +463,9 @@ export function createAgentServer(opts: ServeOptions): { listen: () => Promise<v
           const allMobile = enrichedPages.map((p) => p.mobileLcpP75).filter((v): v is number => typeof v === 'number');
           const allDesktop = enrichedPages.map((p) => p.desktopLcpP75).filter((v): v is number => typeof v === 'number');
           const allCls = enrichedPages.map((p) => p.cls).filter((v): v is number => typeof v === 'number');
+          const host = hostnameFromUrl(origin);
+          const cfPlatform = host ? isCloudflarePlatformHost(host) : false;
+          const dr = host ? dbRatings.get(host) : undefined;
           return {
             origin,
             totalRuns,
@@ -450,9 +474,14 @@ export function createAgentServer(opts: ServeOptions): { listen: () => Promise<v
             worstMobileLcp: allMobile.length > 0 ? Math.max(...allMobile) : undefined,
             worstDesktopLcp: allDesktop.length > 0 ? Math.max(...allDesktop) : undefined,
             worstCls: allCls.length > 0 ? Math.max(...allCls) : undefined,
+            isCloudflarePlatform: cfPlatform,
+            domainRating: dr?.rating,
+            domainRatingDomain: dr?.domain,
+            domainRatingFetchedAt: dr?.fetchedAt,
             pages: enrichedPages,
           };
         }).sort((a, b) => b.lastRunAt - a.lastRunAt);
+        db.close();
         return send(res, 200, { projects }, opts.origin);
       }
 
@@ -645,10 +674,14 @@ export function createAgentServer(opts: ServeOptions): { listen: () => Promise<v
     listen: () =>
       new Promise<void>((resolve, reject) => {
         server.once('error', reject);
-        server.listen(opts.port, opts.host, () => resolve());
+        server.listen(opts.port, opts.host, () => {
+          domainRatingScheduler.start();
+          resolve();
+        });
       }),
     close: () =>
       new Promise<void>((resolve) => {
+        domainRatingScheduler.stop();
         server.close(() => resolve());
       }),
   };
