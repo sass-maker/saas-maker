@@ -15,6 +15,14 @@
     "priority": "P1",
     "maturity": "public-ready"
   },
+  "drank": {
+    "desc": "Domain Rating tracker — personal DR watchlists plus a shared global Ahrefs DR leaderboard.",
+    "url": "https://github.com/sarthak-fleet/drank.git",
+    "tier": "active-ai",
+    "category": "product",
+    "priority": "P2",
+    "maturity": "public-ready"
+  },
   "email-manager": {
     "desc": "Unified email management and automation tool.",
     "url": "https://github.com/sarthak-fleet/email-manager.git",

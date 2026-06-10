@@ -21,6 +21,17 @@ export const FLEET_HEALTH_CONTRACTS = {
     githubWorkflow: null,
     smokeCommand: 'pnpm run fleet:prod-smoke --project CodeVetter',
   },
+  drank: {
+    displayName: 'drank',
+    prodUrl: 'https://drank-sand.vercel.app',
+    expectedStatus: 200,
+    criticalRoutes: ['/'],
+    auth: { required: false },
+    requiredEnv: { build: [], runtime: [] },
+    deployTarget: 'Vercel',
+    githubWorkflow: 'update-global-dr.yml',
+    smokeCommand: 'pnpm run fleet:prod-smoke --project drank',
+  },
   'email-manager': {
     displayName: 'Email Manager',
     prodUrl: 'https://email-manager.sarthakagrawal927.workers.dev',

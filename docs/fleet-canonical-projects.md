@@ -11,6 +11,7 @@ Registry classification uses two separate fields:
 | -------------------- | ---------------------- | ------------------------------------------------------------------------ |
 | `anime_list`         | MAL Explorer           | Cloudflare Pages project uses the legacy slug.                           |
 | `CodeVetter`         | CodeVetter             | GitHub/local folder are still capitalized; do not rename casually.       |
+| `drank`              | drank                  | Vercel app (drank-sand.vercel.app); shared DR data via GitHub Action.    |
 | `email-manager`      | Email Manager          | Worker-backed product.                                                   |
 | `event-forecast`     | Event Forecast         | Local Rust/Rocket forecasting service; no production URL yet.            |
 | `everythingrated`    | EverythingRated        | Worker frontend with anonymous multi-axis ratings.                       |
