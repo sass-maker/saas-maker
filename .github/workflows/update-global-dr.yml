@@ -1,0 +1,48 @@
+name: Update Global DR History
+
+on:
+  schedule:
+    # Run every Monday at ~04:00 UTC
+    - cron: '0 4 * * 1'
+  workflow_dispatch: {}
+
+jobs:
+  update-dr:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # So we can commit back
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Update global DR data
+        run: node scripts/update-global-dr.mjs
+
+      - name: Commit changes (if any)
+        env:
+          VERCEL_DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/global-dr.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore(dr): weekly update global DR history [skip ci]"
+            git push
+            echo "Committed and pushed updated global-dr.json"
+
+            # Optional: Trigger a Vercel deploy hook so the latest global data goes live without manual deploy
+            # Add your Vercel Deploy Hook URL as a secret named VERCEL_DEPLOY_HOOK
+            if [ -n "$VERCEL_DEPLOY_HOOK" ]; then
+              curl -X POST "$VERCEL_DEPLOY_HOOK"
+            fi
+          fi
