@@ -1,0 +1,69 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+---
+
+<Layout
+  title="Fleet performance case study — Foundry"
+  description="How a 23-site personal fleet closed the desktop LCP gap to under 500ms p75 using Astro overlays, self-hosted fonts, and psi-swarm."
+>
+  <Nav />
+  <main class="case-study">
+    <a href="/" class="case-back">← Foundry</a>
+    <p class="case-kicker">Case study · June 2026</p>
+    <h1>23 sites. One perf push. Under 500&nbsp;ms desktop LCP p75.</h1>
+    <p class="case-lede">
+      A personal fleet on Cloudflare Workers and Pages had a split personality:
+      <code>*.workers.dev</code> URLs were fast; custom domains sat on a 400–1000&nbsp;ms TTFB floor.
+      This is what actually moved the needle — measured with
+      <a href="https://github.com/sarthakagrawal927/psi-swarm">psi-swarm</a>, not a single Lighthouse run.
+    </p>
+
+    <h2>Baseline</h2>
+    <ul>
+      <li>23 shipped fleet sites, mix of Next-on-Workers and Astro-on-Pages</li>
+      <li>Goal: desktop LCP p75 &lt; 500&nbsp;ms across the inventory</li>
+      <li>Constraint: no Argo Smart Routing, no Vercel migration</li>
+    </ul>
+
+    <h2>What worked</h2>
+    <ul>
+      <li><strong>Astro static overlays</strong> for marketing <code>/</code> routes — same app behind, fast HTML at the edge</li>
+      <li><strong>Self-hosted fonts</strong> instead of render-blocking Google Fonts CSS</li>
+      <li><strong>Opacity-0 hero animations removed</strong> — they were 40–70% of LCP render delay</li>
+      <li><strong>CF Cache Rules + <code>caches.default</code></strong> for semi-dynamic Worker homepages</li>
+      <li><strong>Distributional audits</strong> — p75 across repeated runs, not one PSI score</li>
+    </ul>
+
+    <h2>Results</h2>
+    <p>
+      Five sites closed under 500&nbsp;ms in the first push. Remaining gap is app-level TTFB on custom domains —
+      a known Cloudflare Workers floor without paid routing.
+    </p>
+
+    <h2>Try it</h2>
+    <p>
+      <a href="https://github.com/sarthakagrawal927/psi-swarm">psi-swarm</a> runs locally, tracks history in SQLite,
+      and now surfaces Ahrefs Domain Rating for custom domains in the projects dashboard.
+    </p>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .case-study {
+    max-width: 46rem;
+    margin: 0 auto;
+    padding: 6rem 1.5rem 4rem;
+    line-height: 1.75;
+  }
+  .case-back { font-size: 0.75rem; color: var(--muted, #888); }
+  .case-kicker { font-family: var(--font-mono, monospace); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted, #888); margin-top: 1.5rem; }
+  h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; margin-top: 0.75rem; line-height: 1.15; }
+  .case-lede { margin-top: 1.25rem; font-size: 1.05rem; color: var(--muted-fg, #aaa); }
+  h2 { font-size: 1rem; font-weight: 600; margin-top: 2rem; }
+  ul { margin-top: 0.5rem; padding-left: 1.25rem; }
+  code { font-family: var(--font-mono, monospace); font-size: 0.85em; }
+  a { color: var(--accent, #22d3ee); }
+</style>

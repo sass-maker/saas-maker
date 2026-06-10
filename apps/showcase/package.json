@@ -3,6 +3,7 @@
   "type": "module",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://sassmaker.com",
   "description": "Foundry — workshop dossier landing page (sassmaker.com). Pure static Astro port of the original Next.js site.",
   "scripts": {
     "dev": "astro dev",

@@ -1,0 +1,48 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="Privacy — Foundry" description="Privacy policy for sassmaker.com and the Foundry fleet showcase.">
+  <Nav />
+  <main class="legal-page">
+    <a href="/" class="legal-back">← Foundry</a>
+    <h1>Privacy Policy</h1>
+    <p class="legal-meta">Last updated: June 10, 2026</p>
+
+    <h2>What this site is</h2>
+    <p>
+      sassmaker.com is a static showcase for the Foundry personal product fleet.
+      It does not require an account and does not collect form submissions on this domain.
+    </p>
+
+    <h2>What we may collect</h2>
+    <ul>
+      <li><strong>Analytics:</strong> Cloudflare may log standard request metadata (IP, user agent, path) at the edge.</li>
+      <li><strong>Third-party links:</strong> Individual products (app.sassmaker.com, docs.sassmaker.com) have their own policies.</li>
+    </ul>
+
+    <h2>Contact</h2>
+    <p>
+      Questions: <a href="mailto:sarthakagrawal927@gmail.com">sarthakagrawal927@gmail.com</a> ·
+      <a href="https://sarthakagrawal.dev">sarthakagrawal.dev</a>
+    </p>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .legal-page {
+    max-width: 42rem;
+    margin: 0 auto;
+    padding: 6rem 1.5rem 4rem;
+    line-height: 1.7;
+  }
+  .legal-back { font-size: 0.75rem; color: var(--muted, #888); }
+  .legal-meta { font-size: 0.75rem; color: var(--muted, #888); margin-top: 0.5rem; }
+  h1 { font-size: 2rem; font-weight: 700; margin-top: 1rem; }
+  h2 { font-size: 1rem; font-weight: 600; margin-top: 2rem; }
+  ul { margin-top: 0.5rem; padding-left: 1.25rem; }
+  a { color: var(--accent, #22d3ee); }
+</style>

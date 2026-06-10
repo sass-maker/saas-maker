@@ -1,0 +1,48 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="Terms — Foundry" description="Terms of use for sassmaker.com and the Foundry fleet showcase.">
+  <Nav />
+  <main class="legal-page">
+    <a href="/" class="legal-back">← Foundry</a>
+    <h1>Terms of Use</h1>
+    <p class="legal-meta">Last updated: June 10, 2026</p>
+
+    <h2>Use of this site</h2>
+    <p>
+      sassmaker.com describes open-source and personal projects maintained by Sarthak Agrawal.
+      Content is provided as-is for informational purposes. Product apps linked from this site
+      may have separate terms.
+    </p>
+
+    <h2>No warranty</h2>
+    <p>
+      Software and documentation are provided without warranty. You use linked products and
+      repositories at your own risk.
+    </p>
+
+    <h2>Contact</h2>
+    <p>
+      <a href="mailto:sarthakagrawal927@gmail.com">sarthakagrawal927@gmail.com</a> ·
+      <a href="https://sarthakagrawal.dev">sarthakagrawal.dev</a>
+    </p>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .legal-page {
+    max-width: 42rem;
+    margin: 0 auto;
+    padding: 6rem 1.5rem 4rem;
+    line-height: 1.7;
+  }
+  .legal-back { font-size: 0.75rem; color: var(--muted, #888); }
+  .legal-meta { font-size: 0.75rem; color: var(--muted, #888); margin-top: 0.5rem; }
+  h1 { font-size: 2rem; font-weight: 700; margin-top: 1rem; }
+  h2 { font-size: 1rem; font-weight: 600; margin-top: 2rem; }
+  a { color: var(--accent, #22d3ee); }
+</style>
