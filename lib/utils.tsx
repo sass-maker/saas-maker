@@ -73,7 +73,9 @@ export function getTrend(d: TrackedDomain): { delta: number; direction: 'up' | '
   if (d.history.length < 2) return null;
   const prev = d.history[d.history.length - 2].dr;
   const curr = d.history[d.history.length - 1].dr;
-  const delta = curr - prev;
+  // Round to one decimal — DR is a 0-100 float and raw subtraction leaks
+  // artifacts like +0.10000000000000853 into the UI
+  const delta = Number((curr - prev).toFixed(1));
   if (delta > 0) return { delta, direction: 'up' };
   if (delta < 0) return { delta, direction: 'down' };
   return { delta: 0, direction: 'flat' };
@@ -176,7 +178,7 @@ export function loadState(): StoredState | null {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw);
-    if (parsed && parsed.version === 1 && Array.isArray(parsed.domains)) {
+    if (parsed && (parsed.version === 1 || parsed.version === 2) && Array.isArray(parsed.domains)) {
       return parsed as StoredState;
     }
     return null;
@@ -212,7 +214,7 @@ export function importState(file: File): Promise<StoredState | null> {
     reader.onload = () => {
       try {
         const parsed = JSON.parse(reader.result as string);
-        if (parsed && parsed.version === 1 && Array.isArray(parsed.domains)) {
+        if (parsed && (parsed.version === 1 || parsed.version === 2) && Array.isArray(parsed.domains)) {
           resolve(parsed as StoredState);
         } else {
           resolve(null);
@@ -347,7 +349,7 @@ export function getWeeklyChange(domain: TrackedDomain): { delta: number; directi
   }
   if (!base) base = sorted[0];
 
-  const delta = latest.dr - base.dr;
+  const delta = Number((latest.dr - base.dr).toFixed(1));
   if (delta > 0) return { delta, direction: 'up' };
   if (delta < 0) return { delta, direction: 'down' };
   return { delta: 0, direction: 'flat' };

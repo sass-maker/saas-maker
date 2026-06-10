@@ -73,6 +73,7 @@ export function useTrackedDomains(): UseTrackedDomainsReturn {
   const [predictions, setPredictions] = useState<import('./types').Prediction[]>([]);
 
   const toastIdRef = useRef(1);
+  const autoRefreshInFlightRef = useRef(false);
   const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
   const showToast = useCallback((message: string, type: Toast['type'] = 'info') => {
@@ -309,52 +310,59 @@ export function useTrackedDomains(): UseTrackedDomainsReturn {
   );
 
   const runAutoRefreshNow = useCallback(async () => {
+    if (autoRefreshInFlightRef.current) return;
     const customDomains = domainsRef.current.filter((d) => d.isCustom);
     if (customDomains.length === 0) {
       showToast('No custom sites to auto-refresh yet. Add your own domains.', 'info');
       return;
     }
+    autoRefreshInFlightRef.current = true;
 
     showToast(`Auto-refreshing ${customDomains.length} of your sites...`, 'info');
 
-    for (let i = 0; i < customDomains.length; i++) {
-      const d = customDomains[i];
-      setUpdating((u) => new Set(u).add(d.domain));
+    try {
+      for (let i = 0; i < customDomains.length; i++) {
+        const d = customDomains[i];
+        setUpdating((u) => new Set(u).add(d.domain));
 
-      // eslint-disable-next-line no-await-in-loop
-      const result = await fetchDomainRating(d.domain);
+        // eslint-disable-next-line no-await-in-loop
+        const result = await fetchDomainRating(d.domain);
 
-      setUpdating((u) => {
-        const next = new Set(u);
-        next.delete(d.domain);
-        return next;
+        setUpdating((u) => {
+          const next = new Set(u);
+          next.delete(d.domain);
+          return next;
+        });
+
+        if ('error' in result) {
+          showToast(`${d.domain}: ${result.error}`, 'error');
+        } else {
+          applyNewPoint(d.domain, result.dr, result.fetchedAt);
+        }
+
+        if (i < customDomains.length - 1) {
+          // eslint-disable-next-line no-await-in-loop
+          await new Promise((r) => setTimeout(r, REFRESH_DELAY_MS));
+        }
+      }
+
+      const ts = Date.now();
+      setLastAutoRefresh(ts);
+
+      saveState({
+        version: 2,
+        domains: domainsRef.current,
+        lastGlobalRefresh,
+        autoRefreshEnabled,
+        lastAutoRefresh: ts,
+        predictions,
       });
 
-      if ('error' in result) {
-        showToast(`${d.domain}: ${result.error}`, 'error');
-      } else {
-        applyNewPoint(d.domain, result.dr, result.fetchedAt);
-      }
-
-      if (i < customDomains.length - 1) {
-        // eslint-disable-next-line no-await-in-loop
-        await new Promise((r) => setTimeout(r, REFRESH_DELAY_MS));
-      }
+      showToast('Weekly auto-refresh complete for your sites', 'success');
+    } finally {
+      autoRefreshInFlightRef.current = false;
     }
-
-    const ts = Date.now();
-    setLastAutoRefresh(ts);
-
-    saveState({
-      version: 2,
-      domains: domainsRef.current,
-      lastGlobalRefresh,
-      autoRefreshEnabled,
-      lastAutoRefresh: ts,
-    });
-
-    showToast('Weekly auto-refresh complete for your sites', 'success');
-  }, [lastGlobalRefresh, autoRefreshEnabled, showToast]);
+  }, [lastGlobalRefresh, autoRefreshEnabled, predictions, showToast]);
 
   const checkAndTriggerAuto = useCallback(async () => {
     if (!autoRefreshEnabled) return;
@@ -414,9 +422,10 @@ export function useTrackedDomains(): UseTrackedDomainsReturn {
       lastGlobalRefresh,
       autoRefreshEnabled: enabled,
       lastAutoRefresh,
+      predictions,
     });
     showToast(enabled ? 'Weekly auto-refresh enabled for your sites' : 'Weekly auto-refresh disabled', 'info');
-  }, [lastGlobalRefresh, lastAutoRefresh, showToast]);
+  }, [lastGlobalRefresh, lastAutoRefresh, predictions, showToast]);
 
   // =====================
   // PREDICTIONS: "Submit websites you think will be at the top"
@@ -475,10 +484,11 @@ export function useTrackedDomains(): UseTrackedDomainsReturn {
       lastGlobalRefresh,
       autoRefreshEnabled,
       lastAutoRefresh,
+      predictions,
     };
     exportState(state);
     showToast('Exported JSON', 'success');
-  }, [domains, lastGlobalRefresh, autoRefreshEnabled, lastAutoRefresh, showToast]);
+  }, [domains, lastGlobalRefresh, autoRefreshEnabled, lastAutoRefresh, predictions, showToast]);
 
   const importData = useCallback(async (file: File): Promise<boolean> => {
     const parsed = await importState(file);

@@ -17,6 +17,8 @@ export interface StoredState {
   // New in v2 for weekly auto "cron"
   autoRefreshEnabled?: boolean;
   lastAutoRefresh?: number | null;
+  // New in v2: "predict the top" submissions
+  predictions?: Prediction[];
 }
 
 export type SortMode =

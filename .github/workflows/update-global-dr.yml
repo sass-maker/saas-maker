@@ -36,7 +36,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "chore(dr): weekly update global DR history [skip ci]"
+            git commit -m "chore(dr): weekly update global DR history"
             git push
             echo "Committed and pushed updated global-dr.json"
 

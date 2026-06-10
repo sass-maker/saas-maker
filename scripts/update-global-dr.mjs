@@ -67,7 +67,9 @@ async function main() {
   }
 
   const now = Date.now();
-  const updatedDomains = {};
+  // Seed from existing data so domains removed from global-sites.json
+  // keep their accumulated history instead of being silently dropped
+  const updatedDomains = { ...(existing.domains || {}) };
 
   for (let i = 0; i < sites.length; i++) {
     const domain = sites[i];

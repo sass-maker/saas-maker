@@ -21,9 +21,8 @@ import globalSitesStatic from '@/data/global-sites.json';
 import globalDrDataStatic from '@/data/global-dr.json';
 
 // Configurable raw GitHub URL for fresh data after Action runs (no redeploy needed on Vercel)
-// Update this to match your repo when deploying (e.g. 'yourusername/fleet')
-const GLOBAL_DATA_BASE = process.env.NEXT_PUBLIC_GLOBAL_DATA_BASE || 
-  'https://raw.githubusercontent.com/sarthak/fleet/main/drank/data';
+const GLOBAL_DATA_BASE = process.env.NEXT_PUBLIC_GLOBAL_DATA_BASE ||
+  'https://raw.githubusercontent.com/sarthak-fleet/drank/main/data';
 const GLOBAL_DR_URL = `${GLOBAL_DATA_BASE}/global-dr.json`;
 const GLOBAL_SITES_URL = `${GLOBAL_DATA_BASE}/global-sites.json`;
 
@@ -148,6 +147,7 @@ export default function Drank() {
   }, [predictions, leaderboard]);
 
   const [addInput, setAddInput] = useState('');
+  const [nominateInput, setNominateInput] = useState('');
   const [isRefreshingAll, setIsRefreshingAll] = useState(false);
   const [importing, setImporting] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -286,7 +286,7 @@ export default function Drank() {
               <Users className="h-3.5 w-3.5" /> TOTAL TRACKED
             </div>
             <div className="mt-3 text-6xl font-semibold tabular-nums tracking-[-2px] text-white">{stats.count}</div>
-            <div className="mt-1 text-xs text-emerald-400/80">across popular + your sites</div>
+            <div className="mt-1 text-xs text-emerald-400/80">your sites in this browser</div>
           </div>
 
           <div className="group rounded-3xl border border-white/10 bg-zinc-900/60 p-5 backdrop-blur">
@@ -519,16 +519,16 @@ export default function Drank() {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                if (addInput.trim()) {
-                  addPrediction(addInput);
-                  setAddInput('');
+                if (nominateInput.trim()) {
+                  addPrediction(nominateInput);
+                  setNominateInput('');
                 }
               }}
               className="flex gap-2"
             >
               <input
-                value={addInput}
-                onChange={(e) => setAddInput(e.target.value)}
+                value={nominateInput}
+                onChange={(e) => setNominateInput(e.target.value)}
                 placeholder="another-rising-star.com"
                 className="flex-1 rounded-2xl border border-white/10 bg-black/40 px-4 py-2 text-sm placeholder:text-white/40 focus:border-white/30"
               />
@@ -544,7 +544,7 @@ export default function Drank() {
                 <button
                   onClick={() => {
                     const text = predictions.map((p, i) => `${i+1}. ${p.domain}${p.note ? ` — ${p.note}` : ''}`).join('\n');
-                    const issueUrl = `https://github.com/issues/new?title=DR+Prediction+from+drank&body=${encodeURIComponent('My predicted top performers:\n\n' + text + '\n\nSubmitted from the drank app at ' + new Date().toISOString())}`;
+                    const issueUrl = `https://github.com/sarthak-fleet/drank/issues/new?title=DR+Prediction+from+drank&body=${encodeURIComponent('My predicted top performers:\n\n' + text + '\n\nSubmitted from the drank app at ' + new Date().toISOString())}`;
                     window.open(issueUrl, '_blank');
                     // Also copy
                     navigator.clipboard?.writeText(text).catch(() => {});
@@ -828,7 +828,7 @@ export default function Drank() {
                               <td className="px-5 py-2.5">
                                 {delta === null ? <span className="text-white/40">—</span> :
                                   <span className={delta > 0 ? 'text-emerald-400' : delta < 0 ? 'text-red-400' : 'text-white/40'}>
-                                    {delta > 0 ? '+' : ''}{delta}
+                                    {delta > 0 ? '+' : ''}{delta.toFixed(1)}
                                   </span>}
                               </td>
                             </tr>

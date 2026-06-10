@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
         'User-Agent': 'drank/1.0 (domain rating tracker)',
         'Accept': 'application/json',
       },
-      // Short timeout not directly supported in fetch, rely on platform
+      signal: AbortSignal.timeout(10_000),
     });
 
     if (!res.ok) {
