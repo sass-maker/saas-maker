@@ -1,6 +1,6 @@
 # Project Status
 
-Last updated: 2026-06-09
+Last updated: 2026-06-10
 
 ## Current Scope
 
@@ -26,6 +26,7 @@ SaaS Maker is the foundry helper for the fleet: a Cloudflare-first monorepo with
 3. Graduate AI Feedback Digest only after human-review, task writeback, and production AI-cost controls are explicit.
 4. Tighten Task Workflows after real use: automatic Droid result capture, richer run status/events in the panel, and clearer artifact lifecycle controls.
 5. Continue reducing stale deploy/docs references when concrete drift is found.
+6. Execute the EOY DR plan in `docs/launch-kit.md` — target DR ≥ 20 on all seven owned domains by 2026-12-31 via staggered launches, directories, and linkable assets.
 
 ## Deferred / Parked
 

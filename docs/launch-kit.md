@@ -85,3 +85,69 @@ Set **About → Website** on each repo:
 - Submit AlternativeTo / SaaSHub listings (manual forms)
 - Attach `sarthakagrawal.dev` custom domain in Cloudflare Pages if not already routed
 - Deploy each repo after these commits land (showcase, codevetter landing, aliveville, etc.)
+
+---
+
+## EOY 2026 goal — DR 20 across the fleet
+
+**North star:** all seven owned domains at **DR ≥ 20** by **2026-12-31**.
+
+**Today (2026-06-10):** ~0 on six domains, 0.3 on High Signal. Foundation + first devlog + GitHub homepages are done. DR will not move until external links land and Ahrefs recrawls (2–6 week lag).
+
+### Honest odds
+
+| Outcome | Likelihood | Notes |
+|---------|------------|-------|
+| **All 7 at DR 20** | Low (~15–25%) | Needs 7 distinct launch moments + sustained citations; solo bandwidth is the bottleneck |
+| **Hubs DR 18–25, products DR 10–18** | Medium (~50%) | Achievable if every month ships one launch + one linkable asset |
+| **Fleet average DR ~12–15** | High (~70%) | Minimum win if directories + devlog + 2–3 strong launches execute |
+
+Treat **referring domains** as the leading indicator (Ahrefs Site Explorer → Backlinks). DR follows links; psi-swarm weekly DR is the lagging scoreboard.
+
+### Per-domain targets (Dec 31)
+
+| Domain | Jun baseline | EOY target | Primary link magnet |
+|--------|-------------:|-----------:|---------------------|
+| sassmaker.com | 0 | 20 | Case study + fleet roundup page |
+| sarthakagrawal.dev | 0 | 20 | Devlog series + `/projects` hub |
+| codevetter.com | 0 | 20 | Show HN + `/benchmark` |
+| highsignal.app | 0.3 | 20 | Track-record thread + methodology |
+| rolepatch.com | 0 | 18 | `/tools` hub + directories |
+| aliveville.com | 0 | 15 | Launch post + demo GIF embed |
+| significanthobbies.com | 0 | 15 | Niche community shares + IH post |
+
+Products without a dedicated launch will stall at DR 5–8 no matter how polished the site is.
+
+### Six-month execution calendar
+
+Each row = one external-facing moment. Skip a month and EOY 20 across the board becomes unlikely.
+
+| Month | Action | Domains lifted |
+|-------|--------|----------------|
+| **Jun** | Directories (AlternativeTo, SaaSHub, 2 more per product) · reshares of fleet perf devlog | All (baseline links) |
+| **Jul** | CodeVetter Show HN (when unblocked) · benchmark page update | codevetter.com, sassmaker.com |
+| **Aug** | High Signal track-record Twitter thread · RolePatch tools SEO push | highsignal.app, rolepatch.com |
+| **Sep** | psi-swarm OSS push (README + HN Ask/showcase) · second devlog on sarthakagrawal.dev | sarthakagrawal.dev, sassmaker.com |
+| **Oct** | Aliveville launch (Reddit r/gamedev or r/LocalLLaMA) · Significant Hobbies IH post | aliveville.com, significanthobbies.com |
+| **Nov** | Fleet year-in-review on sassmaker.com (linkable `/fleet-2026` page) · cross-link all seven | All hubs |
+| **Dec** | Product Hunt or second Show HN (best performer YTD) · recap thread with DR screenshot | Flagship product |
+
+### Minimum links per domain (rough)
+
+DR 20 typically implies **50–150+ referring domains** depending on link quality (not volume alone). Per domain by EOY:
+
+- **3–5 directory listings** (DR 40–70 sites)
+- **1 launch moment** that earns 5–20 organic links (HN, Reddit, dev Twitter)
+- **1 embeddable asset** others cite (benchmark, tools page, methodology doc)
+- **Hub cross-links** (sassmaker + sarthakagrawal.dev) — weak alone, compounds with the above
+
+### Weekly check (psi-swarm)
+
+1. Run `psi-swarm serve` — watch DR column on `/projects`
+2. Ahrefs free API / Site Explorer — **referring domains count** per custom domain
+3. Log launches in this file (`Status:` lines) so the next pass knows what's done
+
+### If behind in October
+
+Prioritize **hubs first** (sassmaker.com + sarthakagrawal.dev to DR 20), then the two products with the most traction (likely CodeVetter + High Signal). Re-scope laggards to DR 12–15 rather than spreading launches thin across all seven.
+
