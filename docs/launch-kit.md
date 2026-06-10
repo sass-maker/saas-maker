@@ -33,11 +33,23 @@ Track DR weekly in psi-swarm `/projects` after `serve` is running.
 
 ## 3. SaaS Maker — Indie Hackers / dev blog (week 4)
 
+**Status:** Devlog live at https://sarthakagrawal.dev/blog/fleet-performance-without-argo · case study at https://sassmaker.com/case-study/fleet-performance
+
 **Title:** How I run 23 products on Cloudflare without Argo
 
-**URL:** https://sassmaker.com/case-study/fleet-performance
+**Primary URL (share this):** https://sarthakagrawal.dev/blog/fleet-performance-without-argo
+
+**Case study URL:** https://sassmaker.com/case-study/fleet-performance
 
 **One-liner:** Astro overlays for marketing `/`, psi-swarm for distributional LCP, Workers for apps.
+
+**Tweet / thread hook:**
+
+> 23 sites on Cloudflare. Custom domains were 2–3× slower than *.workers.dev on TTFB.
+>
+> Closed desktop LCP p75 under 500 ms on five of them without Argo — static Astro overlays, self-hosted fonts, killed opacity-0 hero animations, distributional Lighthouse via psi-swarm.
+>
+> Write-up: https://sarthakagrawal.dev/blog/fleet-performance-without-argo
 
 ## 4. Directory listings (week 7–8)
 
@@ -53,6 +65,8 @@ Submit these URLs (copy-paste fields):
 
 ## 5. GitHub repo homepage fields
 
+**Status:** Set via `gh repo edit` on all seven custom-domain repos (2026-06-10).
+
 Set **About → Website** on each repo:
 
 | Repo | Homepage |
@@ -63,7 +77,7 @@ Set **About → Website** on each repo:
 | resume-tailor | https://rolepatch.com |
 | ai-game | https://aliveville.com |
 | significanthobbies | https://significanthobbies.com |
-| portfolio (sarthakagrawal) | https://sarthakagrawal.dev |
+| portfolio | https://sarthakagrawal.dev |
 
 ## 6. What still needs you
 
