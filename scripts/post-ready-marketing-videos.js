@@ -8,8 +8,8 @@ const result = await postReadyMarketingVideos({
   limit: Number(args.limit ?? process.env.REEL_POST_LIMIT ?? 5),
   channel: args.channel,
   projectSlug: args.project,
-  includeUnscheduled: Boolean(args.includeUnscheduled ?? args['include-unscheduled']),
-  confirmPost: Boolean(args.confirm ?? args['confirm-post']),
+  includeUnscheduled: parseBool(args.includeUnscheduled ?? args['include-unscheduled']),
+  confirmPost: parseBool(args.confirm ?? args['confirm-post']),
   ...(args.fixture ? { saasMakerClient: await fixtureClient(args.fixture) } : {}),
 });
 
@@ -38,4 +38,11 @@ async function fixtureClient(file) {
     listMarketingPosts: async () => Array.isArray(posts) ? posts : posts.data,
     updateMarketingPost: async (id, patch) => ({ skipped: false, data: { id, ...patch } }),
   };
+}
+
+function parseBool(value) {
+  if (value === undefined || value === null || value === '') return false;
+  if (value === true) return true;
+  const normalized = String(value).trim().toLowerCase();
+  return ['1', 'true', 'yes', 'y', 'on'].includes(normalized);
 }
