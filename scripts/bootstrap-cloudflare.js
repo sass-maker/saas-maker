@@ -15,7 +15,7 @@ const { stdout: bucketList } = await run('wrangler r2 bucket list', ['wrangler',
 const bucketExists = bucketList.includes(bucket);
 
 if (!bucketExists) {
-  if (!args.confirmCreateBucket && !args['confirm-create-bucket']) {
+  if (!parseBool(args.confirmCreateBucket ?? args['confirm-create-bucket'])) {
     actions.push({ action: 'create-bucket', skipped: true, reason: 'missing --confirm-create-bucket', bucket });
   } else {
     await run(`wrangler r2 bucket create ${bucket}`, ['wrangler', 'r2', 'bucket', 'create', bucket]);
@@ -25,7 +25,7 @@ if (!bucketExists) {
   actions.push({ action: 'create-bucket', skipped: true, reason: 'bucket already exists', bucket });
 }
 
-if (args.confirmDeploy || args['confirm-deploy']) {
+if (parseBool(args.confirmDeploy ?? args['confirm-deploy'])) {
   await run('wrangler deploy', ['wrangler', 'deploy']);
   actions.push({ action: 'deploy-worker', skipped: false, worker: config.name });
 } else {
@@ -59,6 +59,13 @@ function parseArgs(argv) {
     }
   }
   return parsed;
+}
+
+function parseBool(value) {
+  if (value === undefined || value === null || value === '') return false;
+  if (value === true) return true;
+  const normalized = String(value).trim().toLowerCase();
+  return ['1', 'true', 'yes', 'y', 'on'].includes(normalized);
 }
 
 function stripJsonComments(input) {
