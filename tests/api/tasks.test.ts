@@ -297,6 +297,20 @@ describe('Tasks API', () => {
     }));
   });
 
+  it('PATCH /v1/tasks/:id persists status changes', async () => {
+    const res = await request('/v1/tasks/task-1', {
+      method: 'PATCH',
+      headers: { Authorization: 'Bearer test-session', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: 'done' }),
+    });
+
+    expect(res.status).toBe(200);
+    expect(mockDb.updateTask).toHaveBeenCalledWith('task-1', 'user-1', expect.objectContaining({
+      status: 'done',
+    }));
+    await expect(res.json()).resolves.toMatchObject({ data: { status: 'done' } });
+  });
+
   it('PATCH /v1/tasks/:id stores task PR lifecycle metadata', async () => {
     const res = await request('/v1/tasks/task-1', {
       method: 'PATCH',
