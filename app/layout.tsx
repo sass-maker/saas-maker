@@ -13,10 +13,20 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "drank · Domain Rating Tracker",
-  description: "Track Domain Ratings for popular websites and your own. All data lives in your browser using the free Ahrefs Domain Rating API. No sign-up, no tracking.",
+  title: "drank · Track Domain Ratings in Your Browser",
+  description: "See the authority score of ~45 popular sites and your own — 100% in your browser. Free Ahrefs API, no sign-up, no server. Your data never leaves your device.",
   icons: {
     icon: "/favicon.ico",
+  },
+  openGraph: {
+    title: "drank · Track Domain Ratings in Your Browser",
+    description: "Free DR tracker. ~45 popular sites + your own. No account, no server — everything lives in this tab.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "drank · Track Domain Ratings in Your Browser",
+    description: "Free DR tracker. ~45 popular sites + your own. No account, no server — everything lives in this tab.",
   },
 };
 

@@ -293,9 +293,9 @@ export default function Drank() {
         <div className="mb-10">
           <div className="flex items-end justify-between gap-4">
             <div>
-              <h1 className="text-6xl font-semibold tracking-[-3.2px] text-white">Your sites.<br />Their DR. Locally.</h1>
+              <h1 className="text-6xl font-semibold tracking-[-3.2px] text-white">Track Domain Ratings.<br />100% in your browser.</h1>
               <p className="mt-3 max-w-md text-xl text-zinc-400">
-                Track Domain Ratings for ~45 popular sites and your own — 100% in your browser. Free Ahrefs API, no sign-up, no server.
+                See the authority score of ~45 popular sites and your own — free Ahrefs API, no sign-up, no server. Your data never leaves your device.
               </p>
             </div>
             <div className="hidden lg:block text-right text-sm text-zinc-500 max-w-[260px]">
@@ -751,9 +751,10 @@ export default function Drank() {
         })()}
 
         <div className="mt-10 text-center text-[11px] text-white/40">
-          DR data via Ahrefs free public endpoint. All history and settings live only in your browser’s localStorage.
-          <br />
-          Also available as a lens inside <a href="https://highsignal.app/domains" target="_blank" rel="noopener noreferrer" className="underline">highsignal.app</a>.
+          No account. No server. No tracking. Just your domains and their scores — stored right here, in this tab.
+          <br className="mb-1" />
+          <span className="text-white/25">DR data via Ahrefs free public API · </span>
+          <a href="https://highsignal.app/domains" target="_blank" rel="noopener noreferrer" className="underline text-white/30 hover:text-white/50">also in highsignal.app</a>
         </div>
       </div>
 
@@ -816,7 +817,7 @@ export default function Drank() {
                   </div>
                 ) : (
                   <div className="flex h-60 items-center justify-center rounded-2xl border border-dashed border-white/10 text-center text-sm text-white/50">
-                    Keep refreshing this domain over time to build a beautiful trend.
+                    Keep refreshing this domain over time to build a full history.
                   </div>
                 )}
 
