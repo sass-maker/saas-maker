@@ -906,6 +906,7 @@ nav, header, section, footer, .ticker { position: relative; z-index: 2; }
 .footer-links a { color: var(--ink-muted); transition: color 0.2s; }
 .footer-links a:hover { color: var(--ink); }
 .footer-copy { display: inline-flex; align-items: center; gap: 0.5rem; }
+.footer-tagline { width: 100%; text-align: center; color: var(--ink-soft); font-size: 0.82rem; font-family: var(--mono); letter-spacing: 0.01em; margin: 0 0 0.5rem; }
 .footer-sigil {
   font-family: var(--serif);
   font-style: italic;
