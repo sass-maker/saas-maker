@@ -87,18 +87,25 @@ export default function Drank() {
 
     (async () => {
       try {
-        const [drRes, sitesRes] = await Promise.all([
+        const [drRes, sitesRes] = await Promise.allSettled([
           fetch(GLOBAL_DR_URL, { cache: 'no-store' }),
           fetch(GLOBAL_SITES_URL, { cache: 'no-store' }),
         ]);
 
-        if (!drRes.ok || !sitesRes.ok || cancelled) return;
+        if (cancelled) return;
 
-        const freshDr = await drRes.json();
-        const freshSites = await sitesRes.json();
+        const drResponse = drRes.status === 'fulfilled' ? drRes.value : null;
+        const sitesResponse = sitesRes.status === 'fulfilled' ? sitesRes.value : null;
 
+        const canUseDr = !!drResponse?.ok;
+        const canUseSites = !!sitesResponse?.ok;
+        if (!canUseDr && !canUseSites) return;
+
+        const freshDr = canUseDr ? await drResponse.json() : globalDrDataStatic;
+        const freshSites = canUseSites ? await sitesResponse.json() : globalSitesStatic;
+
+        const domainsObj = freshDr.domains || {};
         const freshDomains: TrackedDomain[] = (freshSites as string[]).map((domain: string) => {
-          const domainsObj = freshDr.domains || {};
           const hist = domainsObj[domain]?.history || [];
           return {
             domain,
@@ -108,10 +115,8 @@ export default function Drank() {
           };
         });
 
-        if (!cancelled) {
-          setLiveGlobalDomains(freshDomains);
-          setLiveCommunityNoms(freshDr.communityNominations || []);
-        }
+        setLiveGlobalDomains(freshDomains);
+        setLiveCommunityNoms(freshDr.communityNominations || []);
       } catch {
         // graceful fallback to the data bundled at build time
       }
