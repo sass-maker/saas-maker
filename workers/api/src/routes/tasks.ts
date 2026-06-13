@@ -63,6 +63,7 @@ function enumValue<T extends string>(value: unknown, allowed: readonly T[]): T |
 
 const PR_STATUSES = ['none', 'draft', 'open', 'merged', 'closed'] as const;
 const DEPLOYMENT_STATUSES = ['none', 'pending', 'success', 'failed'] as const;
+const TASK_STATUSES = ['todo', 'in_progress', 'done'] as const;
 const COMMENT_AUTHOR_TYPES = ['user', 'agent'] as const;
 
 function normalizeBlockedDeployment(input: {
@@ -175,6 +176,7 @@ tasks.patch('/:id', requireSession, async (c) => {
   });
   const updates: Record<string, unknown> = {
     ...rest,
+    status: enumValue(body.status, TASK_STATUSES),
     branch_name: optionalString(body.branch_name),
     pr_url: optionalString(body.pr_url),
     pr_status: enumValue(body.pr_status, PR_STATUSES),
