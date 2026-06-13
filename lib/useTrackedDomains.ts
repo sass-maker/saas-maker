@@ -11,8 +11,10 @@ import {
   sortDomains,
 } from './utils';
 import { HistoryPoint, SortMode, StoredState, Toast, TrackedDomain } from './types';
+import globalSitesStatic from '@/data/global-sites.json';
 
 const REFRESH_DELAY_MS = 750; // be polite to the free public endpoint
+const GLOBAL_SITE_SET = new Set((globalSitesStatic as string[]).map((domain) => domain.toLowerCase()));
 
 interface UseTrackedDomainsReturn {
   domains: TrackedDomain[];
@@ -179,6 +181,11 @@ export function useTrackedDomains(): UseTrackedDomainsReturn {
     const normalized = normalizeDomain(input);
     if (!normalized) {
       showToast('Please enter a valid domain (e.g. example.com)', 'error');
+      return;
+    }
+
+    if (GLOBAL_SITE_SET.has(normalized)) {
+      showToast(`${normalized} is already included in the shared examples`, 'info');
       return;
     }
 
