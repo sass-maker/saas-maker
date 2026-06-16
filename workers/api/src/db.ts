@@ -277,10 +277,11 @@ export function getDb(d1: D1Database): FeedbackDatabase {
     // --- Projects ---
     async createProject(input) {
       const source = input.source || 'dashboard';
+      const gitUrl = input.git_url ?? null;
       await d1.prepare(
-        `INSERT INTO projects (id, name, slug, api_key, owner_id, source)
-         VALUES (?, ?, ?, ?, ?, ?)`
-      ).bind(input.id, input.name, input.slug, input.api_key, input.owner_id, source).run();
+        `INSERT INTO projects (id, name, slug, api_key, owner_id, source, git_url)
+         VALUES (?, ?, ?, ?, ?, ?, ?)`
+      ).bind(input.id, input.name, input.slug, input.api_key, input.owner_id, source, gitUrl).run();
       const row = await d1.prepare(`SELECT * FROM projects WHERE id = ?`).bind(input.id).first();
       return mapRow<ProjectRecord>(row)!;
     },
@@ -315,6 +316,7 @@ export function getDb(d1: D1Database): FeedbackDatabase {
       if (input.name !== undefined) { sets.push('name = ?'); values.push(input.name); }
       if (input.embedding_model !== undefined) { sets.push('embedding_model = ?'); values.push(input.embedding_model); }
       if (input.readme !== undefined) { sets.push('readme = ?'); values.push(input.readme); }
+      if (input.git_url !== undefined) { sets.push('git_url = ?'); values.push(input.git_url); }
 
       if (sets.length > 0) {
         const sql = `UPDATE projects SET ${sets.join(', ')} WHERE id = ?`;

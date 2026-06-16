@@ -21,6 +21,7 @@ export const projects = sqliteTable('projects', {
   ai_model: text('ai_model'),
   readme: text('readme'),
   source: text('source').notNull().default('dashboard'),
+  git_url: text('git_url'),
   created_at: text('created_at').notNull().default(sql`(datetime('now'))`),
 });
 
