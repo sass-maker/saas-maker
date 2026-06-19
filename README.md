@@ -7,6 +7,16 @@ flow for short-form video generation. Its current internal inputs are accepted
 SaaS Maker Marketing Queue ideas and High Signal reel briefs; SaaS Maker stays
 the source of truth for approvals, task links, and posting state.
 
+## Tutoring Lesson Pipeline
+
+If you want animated tutoring shorts (DeepSeek script → ElevenLabs voice →
+Pexels b-roll → FFmpeg compose, runs entirely on M1), start at
+[`docs/lessons.md`](docs/lessons.md). The fast path is:
+
+```bash
+npm run lesson:render -- --input test/fixtures/lessons/closures.json --auto-approve
+```
+
 ## Why This Repo Exists
 
 The fleet now has a marketing queue, but marketing docs alone are not enough.
