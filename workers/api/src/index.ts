@@ -22,6 +22,7 @@ import { taskWorkflows } from './routes/task-workflows';
 import { symphony } from './routes/symphony';
 import { knowledge } from './routes/knowledge';
 import { marketing } from './routes/marketing';
+import { events } from './routes/events';
 import { test as testRoutes } from './routes/test';
 import { requireApiKey } from './middleware/auth';
 import { rateLimit } from './middleware/rate-limit';
@@ -151,6 +152,7 @@ app.route('/v1/task-workflows', taskWorkflows);
 app.route('/v1/symphony', symphony);
 app.route('/v1/knowledge', knowledge);
 app.route('/v1/marketing', marketing);
+app.route('/v1/events', events);
 app.route('/v1/test', testRoutes);
 
 export default app;

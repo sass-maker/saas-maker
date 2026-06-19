@@ -117,6 +117,22 @@ fnd api PATCH /v1/marketing/posts/<postId> --auth session \
 # Marketing tasks should default to AI-generated reel/video briefs for TikTok,
 # Instagram Reels, or YouTube Shorts. Avoid LinkedIn entirely.
 
+# Fleet events: spokes publish results/telemetry up to the system-of-record.
+# One event or a batch (array, max 100). idempotency_key dedupes retries.
+fnd api POST /v1/events --auth session \
+  --body '{"product":"reel-pipeline","type":"reel.rendered","idempotency_key":"<uuid>","payload":{"reel_id":"r1","result_url":"https://..."}}'
+fnd api GET /v1/events --auth session --query product=reel-pipeline --output table
+
+# Task queue: a worker claims pending work on wake, does it, reports back.
+# Producers enqueue with a capability; workers claim by capability (atomic + leased).
+fnd api POST /v1/tasks --auth session \
+  --body '{"title":"Review PR #12","capability":"review","project_slug":"linkchat"}'
+fnd api POST /v1/tasks/claim --auth session \
+  --body '{"worker":"codevetter@laptop","capability":"review","lease_seconds":900}'   # 204 if queue empty
+fnd api POST /v1/tasks/<taskId>/heartbeat --auth session --body '{"worker":"codevetter@laptop"}'  # extend lease
+fnd api POST /v1/tasks/<taskId>/complete  --auth session --body '{"worker":"codevetter@laptop","result":"LGTM"}'
+fnd api POST /v1/tasks/<taskId>/fail      --auth session --body '{"worker":"codevetter@laptop","error":"build failed"}'  # requeues or dead-letters
+
 # Project-auth route: list feedback
 fnd api GET /v1/feedback --auth project --query type=feature --output table
 

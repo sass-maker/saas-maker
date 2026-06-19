@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
+import { sqliteTable, text, integer, unique } from 'drizzle-orm/sqlite-core';
 import { sql } from 'drizzle-orm';
 
 export const users = sqliteTable('users', {
@@ -197,6 +197,21 @@ export const task_workflow_artifacts = sqliteTable('task_workflow_artifacts', {
   share_token: text('share_token').notNull().unique(),
   created_at: text('created_at').notNull().default(sql`(datetime('now'))`),
 });
+
+export const fleet_events = sqliteTable('fleet_events', {
+  id: text('id').primaryKey(),
+  owner_id: text('owner_id').notNull().references(() => users.id),
+  product: text('product').notNull(),
+  project_slug: text('project_slug'),
+  type: text('type').notNull(),
+  payload: text('payload').notNull().default('{}'),
+  schema_version: integer('schema_version').notNull().default(1),
+  idempotency_key: text('idempotency_key').notNull(),
+  occurred_at: text('occurred_at'),
+  created_at: text('created_at').notNull().default(sql`(datetime('now'))`),
+}, (t) => ({
+  uniqOwnerIdempotency: unique().on(t.owner_id, t.idempotency_key),
+}));
 
 export const changelog = sqliteTable('changelog', {
   id: text('id').primaryKey(),

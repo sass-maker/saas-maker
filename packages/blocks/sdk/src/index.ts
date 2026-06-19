@@ -17,3 +17,5 @@ export type {
 export type { RoadmapItem, RoadmapListResponse } from './services/roadmap';
 export type { ProjectReadmeResponse } from './services/projects';
 export type { KnowledgeService } from './services/knowledge';
+export type { FleetEventInput, EmitResponse } from './services/events';
+export type { FleetTask, DrainOptions, DrainResult } from './services/worker';

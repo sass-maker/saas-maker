@@ -163,6 +163,40 @@ Default marketing queue ideas to AI-generated reel/video briefs for `tiktok`,
 `instagram_reels`, or `youtube_shorts`. Avoid LinkedIn entirely. Use `x` and
 `reddit` only for non-promotional discussion prompts.
 
+### Fleet events (system-of-record)
+
+Spokes publish results and telemetry up to saas-maker via `/v1/events` — the
+append-only fleet system-of-record. Send one event or a batch (array, max 100);
+`idempotency_key` makes outbox retries safe. Only the hub reads the union.
+
+```bash
+fnd api POST /v1/events --auth session \
+  --body '{"product":"reel-pipeline","type":"reel.rendered","idempotency_key":"<uuid>","payload":{"reel_id":"r1","result_url":"https://..."}}'
+
+fnd api GET /v1/events --auth session --query product=reel-pipeline --output table
+```
+
+### Task queue (workers claim work on wake)
+
+The Symphony task board doubles as a polling work-queue. Producers enqueue tasks
+with a `capability`; workers claim by capability — claims are atomic and leased,
+so two workers never run the same task, and a worker that dies mid-task has its
+lease expire and the work reclaimed.
+
+```bash
+# Enqueue (producer)
+fnd api POST /v1/tasks --auth session --body '{"title":"Audit homepage","capability":"audit","project_slug":"linkchat"}'
+
+# Worker wake-loop: claim → do → report
+fnd api POST /v1/tasks/claim --auth session --body '{"worker":"psi-swarm@laptop","capability":"audit","lease_seconds":900}'  # 204 = empty
+fnd api POST /v1/tasks/<taskId>/complete --auth session --body '{"worker":"psi-swarm@laptop","result":"p75 LCP 1.8s"}'
+fnd api POST /v1/tasks/<taskId>/fail     --auth session --body '{"worker":"psi-swarm@laptop","error":"timeout"}'
+```
+
+The `@saas-maker/sdk` `client.worker.drain({ worker, capability, handler })` wraps
+this loop and degrades gracefully — a missing token or unreachable hub ends the
+drain quietly, so each service still works standalone.
+
 ## Fleet automation
 
 The `fnd fleet` commands operate across a fleet of repositories on disk (default: `~/Desktop/Fleet`). They are designed for the maintainer working many repos in parallel — most product users won't need them.
