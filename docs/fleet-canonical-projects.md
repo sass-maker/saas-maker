@@ -4,7 +4,7 @@ SaaS Maker should present one canonical display name per active fleet project. K
 
 Registry classification uses two separate fields:
 
-- `category`: `product` for user-facing or portfolio products, `helper` for fleet support systems such as Foundry, Free AI, local-ai, psi-swarm, and Reel Pipeline.
+- `category`: `product` for user-facing or portfolio products, `helper` for fleet support systems such as Foundry, Free AI, psi-swarm, and Reel Pipeline.
 - `priority`: `P0`, `P1`, or `P2` for current attention level. Priority is not the same as commercial intent.
 
 | Slug                 | Canonical display name | Production name/domain note                                              |
@@ -18,10 +18,9 @@ Registry classification uses two separate fields:
 | `free-ai`            | Free AI Gateway        | Gateway/API product, not a frontend.                                     |
 | `ai-game`            | AI Game                | Public game domain is Aliveville; repo slug remains `ai-game`.           |
 | `high-signal`        | High Signal            | Worker frontend.                                                         |
-| `knowledgebase`      | Private Agent Search   | Local FastAPI search layer for private project corpora.                   |
+| `knowledgebase`      | Private Agent Search   | Local FastAPI search layer for private project corpora.                  |
 | `linkchat`           | Linkchat               | Worker frontend.                                                         |
 | `looptv`             | LoopTV                 | Keep label as LoopTV even if notes mention Loop TV.                      |
-| `local-ai`           | local-ai               | Local helper bridge for authenticated AI CLIs.                           |
 | `open-historia`      | Open Historia          | Worker frontend with Google login.                                       |
 | `pace`               | Pace                   | Local macOS voice agent; previously discussed as Clicky Local / Space.   |
 | `psi-swarm`          | psi-swarm              | Local CLI and browser controller for repeated Lighthouse audits.         |
@@ -34,11 +33,13 @@ Registry classification uses two separate fields:
 | `significanthobbies` | Significant Hobbies    | Domain omits the hyphen.                                                 |
 | `starboard`          | Starboard              | Worker frontend.                                                         |
 | `swe-interview-prep` | Interview Coder        | Product name is Interview Coder; repo slug remains `swe-interview-prep`. |
+| `taste`              | ShipRank               | Package/product name is ShipRank; repo slug remains `taste`.             |
 | `tinygpt`            | TinyGPT                | Research/browser model project.                                          |
 | `today-little-log`   | Today Little Log       | Pages frontend.                                                          |
 | `truehire`           | TrueHire               | Worker frontend with GitHub login.                                       |
+| `verified-bases`     | Verified Bases         | Personal verified-software storefront; deploy targets are split web/api. |
 
-Hidden/removed projects should not appear in fleet dashboards or task project pickers: `ludo`, `chess`, `back-propogate`, `reel-maker`, `dev-learning`, `sarthak-blog`, `clash-royale-meta`, `personalsite`, `port-whisperer`, and `vaulthealth`.
+Hidden/removed projects should not appear in fleet dashboards or task project pickers: `ludo`, `chess`, `back-propogate`, `reel-maker`, `dev-learning`, `sarthak-blog`, `clash-royale-meta`, `personalsite`, `port-whisperer`, `local-ai`, and `vaulthealth`.
 
 ## Adding a Project
 

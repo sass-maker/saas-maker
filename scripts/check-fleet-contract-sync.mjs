@@ -8,15 +8,15 @@ const registryPath = path.join(repoRoot, 'foundry.projects.json');
 const canonicalDocsPath = path.join(repoRoot, 'docs/fleet-canonical-projects.md');
 const healthContractsPath = path.join(repoRoot, 'scripts/lib/fleet-health-contracts.mjs');
 
-const outOfFleetDirs = new Set(['personal-memory', 'port-whisperer']);
+const outOfFleetDirs = new Set(['local-ai', 'personal-memory', 'port-whisperer']);
 
 const registry = JSON.parse(await readFile(registryPath, 'utf8'));
 const registryProjects = Object.keys(registry).sort(compareProjectSlug);
 
 const canonicalDocs = await readFile(canonicalDocsPath, 'utf8');
-const canonicalProjects = [
-  ...canonicalDocs.matchAll(/^\|\s+`([^`]+)`\s+\|/gm),
-].map((match) => match[1]).sort(compareProjectSlug);
+const canonicalProjects = [...canonicalDocs.matchAll(/^\|\s+`([^`]+)`\s+\|/gm)]
+  .map((match) => match[1])
+  .sort(compareProjectSlug);
 
 const { FLEET_HEALTH_CONTRACTS } = await import(pathToFileURL(healthContractsPath).href);
 const healthProjects = Object.keys(FLEET_HEALTH_CONTRACTS).sort(compareProjectSlug);
@@ -24,9 +24,27 @@ const healthProjects = Object.keys(FLEET_HEALTH_CONTRACTS).sort(compareProjectSl
 const localProjects = await listLocalProjectStatusDirs();
 
 let failed = false;
-failed = reportDiff('foundry.projects.json', registryProjects, 'docs/fleet-canonical-projects.md', canonicalProjects) || failed;
-failed = reportDiff('foundry.projects.json', registryProjects, 'scripts/lib/fleet-health-contracts.mjs', healthProjects) || failed;
-failed = reportDiff('foundry.projects.json', registryProjects, 'local PROJECT_STATUS.md dirs', localProjects) || failed;
+failed =
+  reportDiff(
+    'foundry.projects.json',
+    registryProjects,
+    'docs/fleet-canonical-projects.md',
+    canonicalProjects
+  ) || failed;
+failed =
+  reportDiff(
+    'foundry.projects.json',
+    registryProjects,
+    'scripts/lib/fleet-health-contracts.mjs',
+    healthProjects
+  ) || failed;
+failed =
+  reportDiff(
+    'foundry.projects.json',
+    registryProjects,
+    'local PROJECT_STATUS.md dirs',
+    localProjects
+  ) || failed;
 
 if (failed) {
   process.exitCode = 1;

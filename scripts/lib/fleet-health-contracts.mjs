@@ -135,17 +135,6 @@ export const FLEET_HEALTH_CONTRACTS = {
     githubWorkflow: 'deploy.yml',
     smokeCommand: 'pnpm run fleet:prod-smoke --project looptv',
   },
-  'local-ai': {
-    displayName: 'local-ai',
-    prodUrl: null,
-    expectedStatus: null,
-    criticalRoutes: ['/health'],
-    auth: { required: false },
-    requiredEnv: { build: [], runtime: [] },
-    deployTarget: 'Local Express SSE helper',
-    githubWorkflow: null,
-    smokeCommand: null,
-  },
   'open-historia': {
     displayName: 'Open Historia',
     prodUrl: 'https://open-historia.sarthakagrawal927.workers.dev',
@@ -317,6 +306,17 @@ export const FLEET_HEALTH_CONTRACTS = {
     githubWorkflow: 'deploy.yml',
     smokeCommand: 'pnpm run fleet:prod-smoke --project swe-interview-prep',
   },
+  taste: {
+    displayName: 'ShipRank',
+    prodUrl: null,
+    expectedStatus: null,
+    criticalRoutes: [],
+    auth: { required: false },
+    requiredEnv: { build: [], runtime: [] },
+    deployTarget: 'Cloudflare Pages + Functions',
+    githubWorkflow: null,
+    smokeCommand: null,
+  },
   tinygpt: {
     displayName: 'TinyGPT',
     prodUrl: 'https://tinygpt.pages.dev',
@@ -359,6 +359,17 @@ export const FLEET_HEALTH_CONTRACTS = {
     deployTarget: 'Cloudflare Workers',
     githubWorkflow: 'deploy.yml',
     smokeCommand: 'pnpm run fleet:prod-smoke --project truehire',
+  },
+  'verified-bases': {
+    displayName: 'Verified Bases',
+    prodUrl: null,
+    expectedStatus: null,
+    criticalRoutes: [],
+    auth: { required: false },
+    requiredEnv: { build: [], runtime: [] },
+    deployTarget: 'Cloudflare Pages + Workers',
+    githubWorkflow: 'ci.yml',
+    smokeCommand: null,
   },
 };
 

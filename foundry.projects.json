@@ -95,14 +95,6 @@
     "priority": "P2",
     "maturity": "public-ready"
   },
-  "local-ai": {
-    "desc": "Local AI CLI bridge for Claude, Codex, and Gemini.",
-    "url": "https://github.com/sarthak-fleet/local-ai.git",
-    "tier": "helper",
-    "category": "helper",
-    "priority": "P2",
-    "maturity": "internal-first"
-  },
   "open-historia": {
     "desc": "Interactive historical timeline and storytelling platform.",
     "url": "https://github.com/sarthak-fleet/open-historia.git",
@@ -199,6 +191,14 @@
     "priority": "P2",
     "maturity": "public-ready"
   },
+  "taste": {
+    "desc": "ShipRank — pre-A/B testing and AI-assisted product variant ranking for software teams.",
+    "url": "https://github.com/sarthak-fleet/taste.git",
+    "tier": "active-ai",
+    "category": "product",
+    "priority": "P2",
+    "maturity": "internal-first"
+  },
   "tinygpt": {
     "desc": "TinyGPT.",
     "url": "https://github.com/sarthak-fleet/tinygpt.git",
@@ -221,6 +221,14 @@
     "tier": "active-ai",
     "category": "product",
     "priority": "P1",
+    "maturity": "internal-first"
+  },
+  "verified-bases": {
+    "desc": "Verified Bases — personal verified-software storefront with paid delivery and creator collaboration intake.",
+    "url": "https://github.com/sarthakagrawal927/verified-bases.git",
+    "tier": "active-ai",
+    "category": "product",
+    "priority": "P2",
     "maturity": "internal-first"
   }
 }
