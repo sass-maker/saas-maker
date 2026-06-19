@@ -14,12 +14,25 @@ import { apiFetchClient, getClientToken } from "@/lib/api-client";
 
 interface Props {
   code?: string;
+  source?: string;
   userEmail: string;
 }
 
-export function CliAuthApproval({ code, userEmail }: Props) {
+const SOURCE_LABELS: Record<string, { title: string; description: string }> = {
+  codevetter: {
+    title: "Authorize CodeVetter",
+    description: "CodeVetter Desktop is requesting access to your SaaS Maker account.",
+  },
+};
+
+export function CliAuthApproval({ code, source, userEmail }: Props) {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
+  const labels =
+    (source && SOURCE_LABELS[source]) || {
+      title: "Authorize CLI",
+      description: "The SaaS Maker CLI is requesting access to your account.",
+    };
 
   if (!code) {
     return (
@@ -69,10 +82,8 @@ export function CliAuthApproval({ code, userEmail }: Props) {
     <Card className="w-full max-w-sm">
       <CardHeader className="text-center">
         <Terminal className="mx-auto h-10 w-10 text-muted-foreground mb-2" />
-        <CardTitle>Authorize CLI</CardTitle>
-        <CardDescription>
-          The SaaS Maker CLI is requesting access to your account.
-        </CardDescription>
+        <CardTitle>{labels.title}</CardTitle>
+        <CardDescription>{labels.description}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="rounded-md border px-3 py-2 text-sm">

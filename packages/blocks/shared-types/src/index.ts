@@ -26,6 +26,7 @@ export interface ProjectRecord {
   ai_api_key_preview?: string | null;
   readme: string | null;
   source: 'dashboard' | 'linkchat' | string;
+  git_url?: string | null;
   created_at: string;
 }
 
@@ -57,6 +58,7 @@ export interface UpvoteRecord {
 export interface CreateProjectRequest {
   name: string;
   source?: string;
+  git_url?: string;
 }
 
 export interface SubmitFeedbackRequest {

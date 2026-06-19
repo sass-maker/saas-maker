@@ -58,13 +58,15 @@ const VALID_SOURCES = ['dashboard', 'linkchat'];
 
 projects.post('/', async (c) => {
   const userId = c.get('userId')!;
-  const body = (await c.req.json()) as { name: string; source?: string };
+  const body = (await c.req.json()) as { name: string; source?: string; git_url?: string };
   if (!body.name?.trim()) return c.json({ error: 'Project name is required' }, 400);
 
   const source = body.source || 'dashboard';
   if (!VALID_SOURCES.includes(source)) {
     return c.json({ error: `Invalid source. Must be one of: ${VALID_SOURCES.join(', ')}` }, 400);
   }
+
+  const gitUrl = body.git_url?.trim() || null;
 
   const db = getDb(c.env.DB);
   const project = await db.createProject({
@@ -74,6 +76,7 @@ projects.post('/', async (c) => {
     api_key: generateApiKey(),
     owner_id: userId,
     source,
+    git_url: gitUrl,
   });
 
   capture({ distinctId: userId, event: 'project_created', properties: { project_id: project.id, project_name: project.name, source } });
@@ -96,6 +99,7 @@ projects.patch('/:id', async (c) => {
   const body = (await c.req.json()) as {
     name?: string;
     readme?: string;
+    git_url?: string | null;
   };
 
   const db = getDb(c.env.DB);
@@ -105,9 +109,13 @@ projects.patch('/:id', async (c) => {
   if (!existing) return c.json({ error: 'Project not found' }, 404);
   if (existing.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
+  const gitUrl =
+    body.git_url === undefined ? undefined : (body.git_url?.trim?.() || null);
+
   const updated = await db.updateProject(projectId, {
     name: body.name,
     readme: body.readme,
+    git_url: gitUrl,
   });
   capture({ distinctId: userId, event: 'project_updated', properties: { project_id: projectId } });
   return c.json(toPublicProject(updated));
