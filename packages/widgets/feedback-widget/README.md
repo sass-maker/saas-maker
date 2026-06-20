@@ -37,6 +37,7 @@ This renders a floating button that opens a feedback modal.
 | `theme` | `'light' \| 'dark' \| 'auto'` | `'auto'` | Color theme |
 | `accentColor` | `string` | `#1464ff` | Primary accent color |
 | `triggerText` | `string` | `'Feedback'` | Trigger button label |
+| `enablePointing` | `boolean` | `true` | Let users point at a page element to anchor feedback (captures selector + visible text + source) |
 
 ## Examples
 
@@ -68,4 +69,19 @@ This renders a floating button that opens a feedback modal.
   types={['feature']}
   triggerText="Request Feature"
 />
+```
+
+## Point at an element
+
+The widget includes a **"◎ Point at an element"** control (on by default). The user clicks
+it, then clicks any element on the page; the widget captures a stable CSS selector, the
+element's visible text, and — in React dev, or wherever you emit `data-source` attributes —
+the `file:line` source. That anchor is appended to the feedback description, so your team (or
+a coding agent) can jump straight to the spot the feedback is about. The user's in-progress
+text is preserved while they point, and the picker is dismissable with `Esc`.
+
+Turn it off for a plain-form widget:
+
+```tsx
+<FeedbackWidget projectId="pk_xxx" enablePointing={false} />
 ```
