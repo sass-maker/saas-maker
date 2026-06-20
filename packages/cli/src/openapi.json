@@ -264,6 +264,30 @@
         }
       }
     },
+    "/v1/events": {
+      "get": {
+        "tags": [
+          "events"
+        ],
+        "summary": "GET /v1/events",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "events"
+        ],
+        "summary": "POST /v1/events",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/v1/feedback": {
       "get": {
         "tags": [
@@ -1063,6 +1087,19 @@
         }
       }
     },
+    "/v1/tasks/claim": {
+      "post": {
+        "tags": [
+          "tasks"
+        ],
+        "summary": "POST /v1/tasks/claim",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/v1/tasks/{id}": {
       "get": {
         "tags": [
@@ -1115,6 +1152,45 @@
           "tasks"
         ],
         "summary": "POST /v1/tasks/{id}/comments",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/tasks/{id}/complete": {
+      "post": {
+        "tags": [
+          "tasks"
+        ],
+        "summary": "POST /v1/tasks/{id}/complete",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/tasks/{id}/fail": {
+      "post": {
+        "tags": [
+          "tasks"
+        ],
+        "summary": "POST /v1/tasks/{id}/fail",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/tasks/{id}/heartbeat": {
+      "post": {
+        "tags": [
+          "tasks"
+        ],
+        "summary": "POST /v1/tasks/{id}/heartbeat",
         "responses": {
           "200": {
             "description": "Success"

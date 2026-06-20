@@ -54,6 +54,12 @@ export interface TaskRow {
   deployment_status: 'none' | 'pending' | 'success' | 'failed';
   blocked_on_user: boolean;
   has_changelog: boolean;
+  capability: string | null;
+  claimed_by: string | null;
+  lease_until: string | null;
+  attempts: number;
+  last_error: string | null;
+  dead_letter: boolean;
   created_at: string; updated_at: string;
 }
 
@@ -115,6 +121,7 @@ function hydrateTaskRow(row: Record<string, unknown> | null | undefined): TaskRo
     dependencies: parseTaskDependencies(row.dependencies),
     blocked_on_user: row.blocked_on_user === true || row.blocked_on_user === 1,
     has_changelog: row.has_changelog === true || row.has_changelog === 1,
+    dead_letter: row.dead_letter === true || row.dead_letter === 1,
   } as TaskRow;
 }
 
@@ -1261,7 +1268,7 @@ export function getDb(d1: D1Database): FeedbackDatabase {
     },
 
     // --- Tasks ---
-    async createTask(ownerId: string, input: { title: string; description?: string; project_slug?: string; priority?: string; task_type?: string; size?: string; dependencies?: string[]; branch_name?: string | null; pr_url?: string | null; pr_status?: string; commit_sha?: string | null; deployment_url?: string | null; deployment_status?: string; blocked_on_user?: boolean }): Promise<TaskRow> {
+    async createTask(ownerId: string, input: { title: string; description?: string; project_slug?: string; priority?: string; task_type?: string; size?: string; dependencies?: string[]; branch_name?: string | null; pr_url?: string | null; pr_status?: string; commit_sha?: string | null; deployment_url?: string | null; deployment_status?: string; blocked_on_user?: boolean; capability?: string | null }): Promise<TaskRow> {
       const id = crypto.randomUUID();
       const priority = input.priority ?? 'medium';
       const taskType = input.task_type ?? 'feature';
@@ -1270,9 +1277,9 @@ export function getDb(d1: D1Database): FeedbackDatabase {
       await d1.prepare(
         `INSERT INTO tasks (
           id, owner_id, project_slug, title, description, priority, task_type, size, dependencies,
-          branch_name, pr_url, pr_status, commit_sha, deployment_url, deployment_status, blocked_on_user
+          branch_name, pr_url, pr_status, commit_sha, deployment_url, deployment_status, blocked_on_user, capability
         )
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
       ).bind(
         id,
         ownerId,
@@ -1290,6 +1297,7 @@ export function getDb(d1: D1Database): FeedbackDatabase {
         input.deployment_url ?? null,
         input.deployment_status ?? 'none',
         input.blocked_on_user ? 1 : 0,
+        input.capability ?? null,
       ).run();
       const row = await d1.prepare(`SELECT t.*, CASE WHEN EXISTS(SELECT 1 FROM changelog_entries ce WHERE ce.task_id = t.id LIMIT 1) THEN 1 ELSE 0 END AS has_changelog FROM tasks t WHERE t.id = ?`).bind(id).first();
       return hydrateTaskRow(row as Record<string, unknown> | null) as TaskRow;
@@ -1354,6 +1362,71 @@ export function getDb(d1: D1Database): FeedbackDatabase {
       const { meta } = await d1.prepare(
         `DELETE FROM tasks WHERE id = ? AND owner_id = ?`
       ).bind(id, ownerId).run();
+      return (meta.changes ?? 0) > 0;
+    },
+
+    // --- Task-queue primitive (workers claim/complete/fail/heartbeat) ---
+
+    // Atomically claim the next runnable task for a capability. The single UPDATE
+    // is race-safe (D1 serializes writes); expired leases are reclaimed in the same
+    // query, so no separate reaper is needed for correctness. Returns null if none.
+    async claimNextTask(ownerId: string, input: { worker: string; capability?: string | null; leaseSeconds?: number }): Promise<TaskRow | null> {
+      const capability = input.capability ?? null;
+      const leaseMod = `+${input.leaseSeconds ?? 900} seconds`;
+      const { results } = await d1.prepare(
+        `UPDATE tasks
+            SET status = 'in_progress', claimed_by = ?, lease_until = datetime('now', ?),
+                attempts = attempts + 1, updated_at = datetime('now')
+          WHERE id = (
+            SELECT id FROM tasks
+             WHERE owner_id = ? AND dead_letter = 0
+               AND (? IS NULL OR capability = ?)
+               AND (status = 'todo' OR (status = 'in_progress' AND lease_until IS NOT NULL AND lease_until < datetime('now')))
+             ORDER BY CASE priority WHEN 'high' THEN 0 WHEN 'medium' THEN 1 ELSE 2 END, created_at ASC
+             LIMIT 1
+          )
+            AND (status = 'todo' OR (status = 'in_progress' AND lease_until < datetime('now')))
+          RETURNING id`
+      ).bind(input.worker, leaseMod, ownerId, capability, capability).all();
+      const claimedId = (results?.[0] as { id?: string } | undefined)?.id;
+      if (!claimedId) return null;
+      const row = await d1.prepare(`SELECT t.*, CASE WHEN EXISTS(SELECT 1 FROM changelog_entries ce WHERE ce.task_id = t.id LIMIT 1) THEN 1 ELSE 0 END AS has_changelog FROM tasks t WHERE t.id = ?`).bind(claimedId).first();
+      return hydrateTaskRow(row as Record<string, unknown> | null);
+    },
+
+    // Mark done — only the lease holder may complete.
+    async completeTask(id: string, ownerId: string, worker: string): Promise<boolean> {
+      const { meta } = await d1.prepare(
+        `UPDATE tasks SET status = 'done', lease_until = NULL, updated_at = datetime('now')
+          WHERE id = ? AND owner_id = ? AND claimed_by = ?`
+      ).bind(id, ownerId, worker).run();
+      return (meta.changes ?? 0) > 0;
+    },
+
+    // Fail — requeue (back to 'todo') if under maxAttempts, else dead-letter. Lease holder only.
+    async failTask(id: string, ownerId: string, input: { worker: string; error?: string | null; maxAttempts?: number }): Promise<{ dead_letter: boolean; attempts: number; requeued: boolean } | null> {
+      const maxAttempts = input.maxAttempts ?? 3;
+      const { results } = await d1.prepare(
+        `UPDATE tasks
+            SET dead_letter = CASE WHEN attempts >= ? THEN 1 ELSE 0 END,
+                status = CASE WHEN attempts >= ? THEN status ELSE 'todo' END,
+                claimed_by = NULL, lease_until = NULL, last_error = ?, updated_at = datetime('now')
+          WHERE id = ? AND owner_id = ? AND claimed_by = ?
+          RETURNING dead_letter, attempts`
+      ).bind(maxAttempts, maxAttempts, input.error ?? null, id, ownerId, input.worker).all();
+      const row = results?.[0] as { dead_letter?: number; attempts?: number } | undefined;
+      if (!row) return null;
+      const dead = row.dead_letter === 1;
+      return { dead_letter: dead, attempts: row.attempts ?? 0, requeued: !dead };
+    },
+
+    // Extend the lease on an in-flight task (heartbeat from a long-running handler). Lease holder only.
+    async heartbeatTask(id: string, ownerId: string, worker: string, leaseSeconds?: number): Promise<boolean> {
+      const leaseMod = `+${leaseSeconds ?? 900} seconds`;
+      const { meta } = await d1.prepare(
+        `UPDATE tasks SET lease_until = datetime('now', ?), updated_at = datetime('now')
+          WHERE id = ? AND owner_id = ? AND claimed_by = ? AND status = 'in_progress'`
+      ).bind(leaseMod, id, ownerId, worker).run();
       return (meta.changes ?? 0) > 0;
     },
 
