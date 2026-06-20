@@ -13,7 +13,7 @@
     "build:types": "pnpm -F @saas-maker/shared-types build",
     "build:db": "pnpm -F @saas-maker/ops build && pnpm -F @saas-maker/db build",
     "build:api": "pnpm -F @saas-maker/api typecheck",
-    "build:cockpit": "pnpm -F @saas-maker/dashboard build",
+    "build:cockpit": "turbo run build --filter=@saas-maker/dashboard...",
     "build:widget": "pnpm -F @saas-maker/feedback build",
     "build:showcase": "pnpm -F @saas-maker/landing-page build",
     "build:docs": "pnpm -F @saas-maker/docs build",
