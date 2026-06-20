@@ -188,6 +188,18 @@ export const FLEET_HEALTH_CONTRACTS = {
     githubWorkflow: 'deploy.yml',
     smokeCommand: 'pnpm run fleet:prod-smoke --project reader',
   },
+  'rag-service': {
+    displayName: 'RAG Service',
+    prodUrl: 'https://rag-service.sarthakagrawal927.workers.dev',
+    expectedStatus: 200,
+    criticalRoutes: ['/v1/healthz'],
+    auth: { required: true, publicProbe: '/v1/healthz', protectedProbe: '/v1/indexes' },
+    requiredEnv: { build: [], runtime: ['RAG_SERVICE_KEYS'] },
+    deployTarget: 'Cloudflare Workers + D1 + Vectorize + R2',
+    deploySecretsRequired: false,
+    githubWorkflow: null,
+    smokeCommand: 'curl --fail https://rag-service.sarthakagrawal927.workers.dev/v1/healthz',
+  },
   researchPapers: {
     displayName: 'Research Papers',
     prodUrl: null,

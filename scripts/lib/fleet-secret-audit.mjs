@@ -243,7 +243,7 @@ export function buildProjectSecretPlan(
     for (const secret of extractWorkflowSecretRequirements(project.dir, contract.githubWorkflow)) {
       addGithubRequirement(secret);
     }
-  } else if (/Cloudflare/i.test(contract?.deployTarget ?? '')) {
+  } else if (contract?.deploySecretsRequired !== false && /Cloudflare/i.test(contract?.deployTarget ?? '')) {
     for (const secret of DEFAULT_DEPLOY_SECRETS.cloudflare) addGithubRequirement(secret);
   }
 

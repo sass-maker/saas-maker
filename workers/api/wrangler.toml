@@ -4,11 +4,18 @@ compatibility_date = "2026-02-22"
 compatibility_flags = ["nodejs_compat"]
 workers_dev = true
 
+[vars]
+RAG_BACKEND = "service"
+
 [observability]
 enabled = true
 
 [ai]
 binding = "AI"
+
+[[services]]
+binding = "RAG_SERVICE"
+service = "rag-service"
 
 [[unsafe.bindings]]
 name = "RATE_LIMITER"

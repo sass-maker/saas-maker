@@ -60,6 +60,7 @@ Everything is hosted on Cloudflare. Each deployable ships independently via GitH
 | [`knowledgebase`](https://github.com/sarthakagrawal927/knowledge-base)      | product  | P1       | Private Agent Search for cited private project corpora.           |
 | [`open-historia`](https://github.com/sarthak-fleet/open-historia)           | product  | P1       | Interactive historical timeline and storytelling product.         |
 | [`pace`](https://github.com/sarthakagrawal927/clicky)                       | product  | P1       | Local macOS voice agent, formerly Clicky Local / Space candidate. |
+| `rag-service`                                                               | helper   | P1       | Standalone Cloudflare RAG service for fleet knowledge search.     |
 | [`reel-pipeline`](https://github.com/sarthak-fleet/reel-pipeline)           | helper   | P1       | Fleet marketing video artifact and autopost pipeline.             |
 | [`researchPapers`](https://github.com/sarthakagrawal927/researchPapers)     | product  | P1       | Academic-paper intelligence platform and dashboard.               |
 | [`resume-tailor`](https://github.com/sarthak-fleet/resume-tailor)           | product  | P1       | RolePatch resume tailoring product.                               |

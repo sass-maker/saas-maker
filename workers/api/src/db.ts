@@ -598,6 +598,26 @@ export function getDb(d1: D1Database): FeedbackDatabase {
       return (meta.changes ?? 0) > 0;
     },
 
+    async exportKnowledgeIndex(indexId) {
+      const index = await d1.prepare(`SELECT * FROM knowledge_indexes WHERE id = ?`).bind(indexId).first();
+      if (!index) return null;
+      const { results } = await d1.prepare(
+        `SELECT
+           c.id,
+           c.document_id,
+           d.content AS document_content,
+           c.content,
+           c.embedding,
+           c.chunk_index,
+           d.metadata
+         FROM document_chunks c
+         JOIN documents d ON d.id = c.document_id
+         WHERE c.index_id = ?
+         ORDER BY c.document_id, c.chunk_index`
+      ).bind(indexId).all();
+      return { index, chunks: results };
+    },
+
     // --- Waitlist ---
     async createWaitlistEntry(input) {
       const posRow = await d1.prepare(

@@ -133,6 +133,13 @@ fnd api POST /v1/ai/chat/completions --auth project \
 fnd api GET /v1/ai/usage --auth session --query project_id=<projectId> --output table
 ```
 
+### Knowledge export
+
+```bash
+fnd api GET /v1/knowledge/indexes/<indexId>/export --auth session \
+  --output json > saas-maker-knowledge-export.json
+```
+
 ### Symphony memory, audit, and run ledger
 
 ```bash

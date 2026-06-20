@@ -10,8 +10,6 @@ export function request(path: string, init?: RequestInit, env?: Record<string, u
     CORS_ORIGIN: '*',
     DATABASE_URL: 'postgresql://localhost:26257/test',
     FEEDBACK_IMAGES: {} as any,
-    RESEND_API_KEY: 'test',
-    NOTIFICATION_FROM_EMAIL: 'test@test.com',
     FREE_AI_BASE_URL: 'http://localhost:8787',
     FREE_AI_API_KEY: 'test-api-key',
     ...env,

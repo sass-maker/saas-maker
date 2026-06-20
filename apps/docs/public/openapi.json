@@ -523,6 +523,19 @@
         }
       }
     },
+    "/v1/knowledge/indexes/{id}/export": {
+      "get": {
+        "tags": [
+          "knowledge"
+        ],
+        "summary": "GET /v1/knowledge/indexes/{id}/export",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/v1/knowledge/indexes/{id}/search": {
       "post": {
         "tags": [

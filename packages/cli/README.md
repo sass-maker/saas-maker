@@ -136,6 +136,10 @@ fnd api POST /v1/ai/chat/completions --auth project \
 fnd api GET /v1/ai/usage --auth session --query project_id=<projectId> --output table
 fnd api GET /v1/ai/requests --auth session --query project_id=<projectId> --output table
 
+# Export pre-embedded knowledge chunks for RAG service backfill
+fnd api GET /v1/knowledge/indexes/<indexId>/export --auth session \
+  --output json > saas-maker-knowledge-export.json
+
 # Public roadmap items by project slug
 fnd api GET /v1/roadmap/by-project/<slug> --auth project --output table
 

@@ -79,6 +79,14 @@
     "priority": "P1",
     "maturity": "internal-first"
   },
+  "rag-service": {
+    "desc": "Standalone Cloudflare RAG service for fleet knowledge ingestion, vector search, and SaaS Maker knowledge cutover.",
+    "url": "local:/Users/sarthak/Desktop/fleet/rag-service",
+    "tier": "helper",
+    "category": "helper",
+    "priority": "P1",
+    "maturity": "internal-first"
+  },
   "linkchat": {
     "desc": "Real-time chat application built with Next.js.",
     "url": "https://github.com/sarthak-fleet/linkchat.git",

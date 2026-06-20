@@ -24,6 +24,7 @@ Run:
 pnpm fleet:secret-audit
 pnpm fleet:secret-audit -- --json
 pnpm fleet:secret-audit -- --project reader --fail-on-missing
+pnpm fleet:secret-audit -- --project rag-service --fail-on-missing
 ```
 
 The audit checks:
@@ -46,6 +47,17 @@ When adding or changing a Cloudflare app:
    dashboard.
 4. Put deploy credentials in the repository's GitHub Actions secrets/variables.
 5. Run `pnpm fleet:secret-audit -- --project <slug> --fail-on-missing`.
+
+For the standalone RAG service, the expected final runtime blocker is only the
+Worker secret name:
+
+```bash
+cd ../rag-service
+pnpm exec wrangler secret put RAG_SERVICE_KEYS
+RAG_SERVICE_KEY=<service-key> pnpm run readiness:auth
+cd ../saas-maker
+pnpm fleet:secret-audit -- --project rag-service --fail-on-missing
+```
 
 Keep health contracts separate from deployment state. Health contracts describe
 what production should do; `cloudflare.targets.json` describes what Cloudflare

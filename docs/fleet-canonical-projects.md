@@ -25,6 +25,7 @@ Registry classification uses two separate fields:
 | `pace`               | Pace                   | Local macOS voice agent; previously discussed as Clicky Local / Space.   |
 | `psi-swarm`          | psi-swarm              | Local CLI and browser controller for repeated Lighthouse audits.         |
 | `reader`             | Reader                 | Worker frontend with Google login.                                       |
+| `rag-service`        | RAG Service            | Standalone Cloudflare Worker RAG service for fleet knowledge search.     |
 | `researchPapers`     | Research Papers        | Local academic-paper intelligence platform.                              |
 | `reel-pipeline`      | Reel Pipeline          | Artifact Worker and R2-backed video pipeline.                            |
 | `resume-tailor`      | RolePatch              | Product/domain name is RolePatch; repo slug remains `resume-tailor`.     |
