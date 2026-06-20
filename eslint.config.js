@@ -1,3 +1,2 @@
-import getConfig from "@saas-maker/eslint-config";
-
-export default await getConfig();
+// Root is not linted directly — `turbo run lint` runs each package's own lint.
+export default [{ ignores: ["**/*"] }];
