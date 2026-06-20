@@ -35,6 +35,18 @@ const SITE_URL = 'https://app.sassmaker.com';
     </style>
   </head>
   <body>
+    <script is:inline>
+      (function () {
+        var c = document.cookie;
+        if (
+          c.indexOf('better-auth.session_token') !== -1 ||
+          c.indexOf('__Secure-better-auth.session_token') !== -1 ||
+          c.indexOf('better-auth') !== -1
+        ) {
+          location.replace('/tasks');
+        }
+      })();
+    </script>
     <slot />
   </body>
 </html>
