@@ -1,0 +1,14 @@
+{
+  "name": "@saas-maker/astro-landing",
+  "version": "1.0.0",
+  "description": "OpenNext deploy glue: Beasties critical CSS + Astro landing overlay",
+  "type": "module",
+  "bin": {
+    "astro-landing": "cli.js"
+  },
+  "files": ["cli.js", "overlay.js", "inline-css.js"],
+  "publishConfig": { "access": "public" },
+  "dependencies": {
+    "beasties": "^0.3.5"
+  }
+}
