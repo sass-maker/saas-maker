@@ -5,6 +5,7 @@ packages:
   - 'packages/cli'
   - 'packages/ui'
   - 'apps/*'
+  - 'apps/cockpit/landing-astro'
   - 'workers/*'
 allowBuilds:
   core-js: true
