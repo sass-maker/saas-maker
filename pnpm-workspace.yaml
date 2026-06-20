@@ -1,5 +1,4 @@
 packages:
-  - 'packages/tooling/*'
   - 'packages/blocks/*'
   - 'packages/widgets/*'
   - 'packages/cli'

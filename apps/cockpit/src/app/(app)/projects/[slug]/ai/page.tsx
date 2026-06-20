@@ -4,7 +4,7 @@ import type {
   AIProviderConfig,
   AIRequestsResponse,
   AIUsageStats,
-} from "@saas-maker/shared-types";
+} from "@saas-maker/contracts";
 import { getAuthenticatedProject } from "../get-project";
 import { AIGatewayPanel } from "./ai-gateway-panel";
 

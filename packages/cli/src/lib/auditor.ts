@@ -29,12 +29,13 @@ export function auditProject(cwd: string = process.cwd()): AuditResult[] {
 
   // 2. Check ESLint
   const eslintPath = join(cwd, 'eslint.config.js');
-  if (existsSync(eslintPath)) {
-    const content = readFileSync(eslintPath, 'utf-8');
-    if (content.includes('@saas-maker/eslint-config')) {
-      results.push({ check: 'ESLint Standard', status: 'pass', detail: 'Extends Foundry Config' });
+  const eslintMjsPath = join(cwd, 'eslint.config.mjs');
+  if (existsSync(eslintPath) || existsSync(eslintMjsPath)) {
+    const content = readFileSync(existsSync(eslintPath) ? eslintPath : eslintMjsPath, 'utf-8');
+    if (content.includes('Plain flat ESLint') || content.includes('eslint-config-next') || content.includes('typescript-eslint')) {
+      results.push({ check: 'ESLint Standard', status: 'pass', detail: 'Local flat config' });
     } else {
-      results.push({ check: 'ESLint Standard', status: 'fail', detail: 'Not using Foundry standard' });
+      results.push({ check: 'ESLint Standard', status: 'warn', detail: 'Custom eslint config' });
     }
   } else {
     results.push({ check: 'ESLint Standard', status: 'fail', detail: 'Missing eslint.config.js' });
@@ -44,18 +45,18 @@ export function auditProject(cwd: string = process.cwd()): AuditResult[] {
   const tsPath = join(cwd, 'tsconfig.json');
   if (existsSync(tsPath)) {
     const content = readFileSync(tsPath, 'utf-8');
-    if (content.includes('@saas-maker/tsconfig')) {
-      results.push({ check: 'TS Standard', status: 'pass', detail: 'Extends Foundry TSConfig' });
+    if (content.includes('tsconfig.base.json') || content.includes('"strict": true')) {
+      results.push({ check: 'TS Standard', status: 'pass', detail: 'Local tsconfig' });
     } else {
-      results.push({ check: 'TS Standard', status: 'fail', detail: 'Not using Foundry TSConfig' });
+      results.push({ check: 'TS Standard', status: 'warn', detail: 'Custom tsconfig' });
     }
   }
 
   // 4. Check Prettier
-  if (pkg.prettier === '@saas-maker/prettier-config') {
-    results.push({ check: 'Prettier Standard', status: 'pass', detail: 'Linked to Foundry' });
+  if (existsSync(join(cwd, '.prettierrc.json')) || existsSync(join(cwd, '.prettierrc'))) {
+    results.push({ check: 'Prettier Standard', status: 'pass', detail: 'Local .prettierrc' });
   } else {
-    results.push({ check: 'Prettier Standard', status: 'warn', detail: 'Custom prettier or missing link' });
+    results.push({ check: 'Prettier Standard', status: 'warn', detail: 'No local prettier config file' });
   }
 
   // 5. Code Health (Fallow Deep Audit)

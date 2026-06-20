@@ -51,8 +51,7 @@ Provider keys saved for the AI Gateway are write-only. Config reads return wheth
 | Join a waitlist | API Key |
 | Submit a testimonial | API Key |
 | Read published changelog | API Key |
-| Search knowledge base | API Key |
-| AI chat/embeddings/RAG | API Key |
+| AI chat/embeddings | API Key |
 | Update feedback status | Session Token |
 | Manage testimonials (approve/reject) | Session Token |
 | Create changelog entries | Session Token |

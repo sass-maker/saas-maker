@@ -36,10 +36,10 @@ function applyOfflineFoundry(name: string): void {
   scaffoldHusky();
 
   console.log('\n✓ Foundry Standards applied:');
-  console.log('  eslint.config.js, tsconfig.json, .prettierrc, renovate.json');
+  console.log('  eslint.config.js, tsconfig.json, .prettierrc.json, renovate.json');
   console.log('\nNext:');
-  console.log('  pnpm add -D @saas-maker/eslint-config @saas-maker/tsconfig @saas-maker/prettier-config');
-  console.log('  fnd login   ← then re-run fnd init to link to fleet');
+  console.log('  pnpm install   ← installs eslint/prettier devDeps from package.json');
+  console.log('  fnd login      ← then re-run fnd init to link to fleet');
 }
 
 export async function initCommand(options: { offline?: boolean } = {}): Promise<void> {
@@ -143,8 +143,8 @@ export async function initCommand(options: { offline?: boolean } = {}): Promise<
     scaffoldCI();
 
     console.log('\n✓ Foundry Forge complete:');
-    console.log('  1. Install standards:');
-    console.log('     pnpm add -D @saas-maker/eslint-config @saas-maker/tsconfig @saas-maker/prettier-config');
+    console.log('  1. Install dev tooling:');
+    console.log('     pnpm install');
     console.log(`  2. Add to .env.local:`);
     console.log(`     NEXT_PUBLIC_FOUNDRY_KEY=${project.api_key}`);
   } finally {

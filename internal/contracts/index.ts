@@ -1,4 +1,5 @@
-// --- Enums / Unions ---
+/** Internal API/Cockpit contract types (not an npm package). Public types live in `@saas-maker/sdk`. */
+
 export type FeedbackType = 'bug' | 'feature' | 'feedback';
 export type FeedbackStatus = 'new' | 'acknowledged' | 'investigating' | 'planned' | 'in_progress' | 'resolved' | 'dismissed' | 'on_roadmap';
 export type AnyFeedbackStatus = FeedbackStatus;
@@ -87,56 +88,6 @@ export interface PaginatedResponse<T> {
   total: number;
   page: number;
   limit: number;
-}
-
-// --- Vector Memory Service ---
-
-export interface IndexRecord {
-  id: string;
-  project_id: string;
-  name: string;
-  external_id: string | null;
-  created_at: string;
-}
-
-export interface DocumentRecord {
-  id: string;
-  index_id: string;
-  content: string;
-  metadata: Record<string, unknown>;
-  created_at: string;
-}
-
-export interface ChunkRecord {
-  id: string;
-  document_id: string;
-  index_id: string;
-  content: string;
-  chunk_index: number;
-  created_at: string;
-}
-
-export interface CreateIndexRequest {
-  name: string;
-  external_id?: string;
-  embedding_model?: string;
-}
-
-export interface IngestDocumentRequest {
-  content: string;
-  metadata?: Record<string, unknown>;
-}
-
-export interface SearchRequest {
-  query: string;
-  top_k?: number;
-}
-
-export interface SearchResult {
-  document_id: string;
-  chunk_content: string;
-  score: number;
-  metadata: Record<string, unknown>;
 }
 
 // --- Waitlist Service ---
@@ -355,20 +306,6 @@ export interface AIChatCompletionRequest {
 export interface AIEmbeddingRequest {
   input: string | string[];
   model?: string;
-}
-
-export interface AIRagRequest {
-  index_id: string;
-  query: string;
-  system_prompt?: string;
-  top_k?: number;
-  stream?: boolean;
-}
-
-export interface AIRagResponse {
-  response: string;
-  sources: Array<{ document_id: string; chunk_content: string; score: number }>;
-  usage: { input_tokens: number; output_tokens: number };
 }
 
 // --- Roadmap ---

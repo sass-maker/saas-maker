@@ -4,7 +4,7 @@ import { ExternalLink } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { getAuthenticatedProject } from "../get-project";
 import { RoadmapBoard } from "./roadmap-board";
-import type { RoadmapItemRecord } from "@saas-maker/shared-types";
+import type { RoadmapItemRecord } from "@saas-maker/contracts";
 
 export const dynamic = "force-dynamic";
 

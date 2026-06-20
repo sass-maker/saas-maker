@@ -19,7 +19,8 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@saas-maker/contracts": ["../../internal/contracts/index.ts"]
     }
   },
   "include": [

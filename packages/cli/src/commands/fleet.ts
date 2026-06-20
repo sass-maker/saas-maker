@@ -123,7 +123,7 @@ export async function fleetFixCommand(): Promise<void> {
     }
   }
 
-  log.success('\nFleet-wide fix complete. Run `fnd fleet upgrade` to ensure latest versions are installed.');
+  log.success('\nFleet-wide fix complete. Run `fnd fleet upgrade` to refresh lint/format devDependencies.');
 }
 
 /**
@@ -302,7 +302,8 @@ export async function fleetSecretsSyncCommand(): Promise<void> {
 }
 
 export async function fleetUpgradeCommand(): Promise<void> {
-  const command = 'pnpm add -D @saas-maker/tooling @saas-maker/eslint-config @saas-maker/tsconfig @saas-maker/prettier-config @saas-maker/dev-config';
+  const command =
+    'pnpm add -D eslint @eslint/js typescript-eslint globals eslint-config-prettier prettier prettier-plugin-tailwindcss eslint-plugin-simple-import-sort eslint-plugin-react-hooks eslint-plugin-react-refresh eslint-config-next';
   return fleetRunCommand(command, { parallel: true });
 }
 

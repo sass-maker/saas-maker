@@ -3,7 +3,7 @@ import { Bindings, Variables } from '../types';
 import { requireSession } from '../middleware/auth';
 import { getDb } from '../db';
 import { buildCacheKey, tryCacheMatch, withCachePut } from '../edge-cache';
-import type { CreateRoadmapItemRequest, UpdateRoadmapItemRequest, ReorderRoadmapRequest, RoadmapColumn } from '@saas-maker/shared-types';
+import type { CreateRoadmapItemRequest, UpdateRoadmapItemRequest, ReorderRoadmapRequest, RoadmapColumn } from '@saas-maker/contracts';
 
 const roadmap = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 

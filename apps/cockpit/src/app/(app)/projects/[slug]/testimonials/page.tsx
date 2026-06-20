@@ -19,7 +19,7 @@ import { getAuthenticatedProject } from "../get-project";
 import type {
   TestimonialRecord,
   TestimonialStatus,
-} from "@saas-maker/shared-types";
+} from "@saas-maker/contracts";
 
 export const dynamic = "force-dynamic";
 

@@ -7,7 +7,7 @@ import {
   FeedbackStatus,
   AnyFeedbackStatus,
   FeedbackRecord,
-} from '@saas-maker/shared-types';
+} from '@saas-maker/contracts';
 import { getDb } from '../db';
 import { trace, capture } from '../lib/telemetry';
 

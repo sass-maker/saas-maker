@@ -18,8 +18,6 @@ jobs:
           cache: pnpm
       - run: pnpm install
       - run: pnpm check:openapi
-      - run: pnpm build:types
-      - run: pnpm build:db
       - run: pnpm build:widget
       - run: pnpm -F @saas-maker/api typecheck
       - run: pnpm build:cockpit
@@ -47,7 +45,7 @@ jobs:
           changed=false
           while IFS= read -r path; do
             case "$path" in
-              workers/api/*|packages/blocks/db/*|packages/blocks/ops/*|packages/blocks/shared-types/*|package.json|pnpm-lock.yaml|pnpm-workspace.yaml|.github/workflows/ci.yml)
+              workers/api/*|internal/contracts/*|package.json|pnpm-lock.yaml|pnpm-workspace.yaml|.github/workflows/ci.yml)
                 changed=true
                 break
                 ;;
@@ -66,10 +64,6 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install
-        if: steps.changes.outputs.changed == 'true'
-      - run: pnpm build:types
-        if: steps.changes.outputs.changed == 'true'
-      - run: pnpm build:db
         if: steps.changes.outputs.changed == 'true'
       - name: Deploy API to Cloudflare Workers
         if: steps.changes.outputs.changed == 'true'
@@ -152,7 +146,7 @@ jobs:
           changed=false
           while IFS= read -r path; do
             case "$path" in
-              apps/cockpit/*|apps/cockpit/**|packages/blocks/sdk/*|packages/blocks/sdk/**|packages/blocks/shared-types/*|packages/blocks/shared-types/**|packages/blocks/ops/*|packages/blocks/ops/**|packages/ui/*|packages/ui/**|package.json|pnpm-lock.yaml|pnpm-workspace.yaml|.github/workflows/ci.yml)
+              apps/cockpit/*|apps/cockpit/**|internal/contracts/*|packages/blocks/sdk/*|packages/blocks/sdk/**|packages/ui/*|packages/ui/**|package.json|pnpm-lock.yaml|pnpm-workspace.yaml|.github/workflows/ci.yml)
                 changed=true
                 break
                 ;;

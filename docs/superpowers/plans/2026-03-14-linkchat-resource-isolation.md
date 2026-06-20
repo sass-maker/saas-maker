@@ -84,7 +84,7 @@ export interface CreateProjectRequest {
 
 - [ ] **Step 3: Verify types compile**
 
-Run: `pnpm --filter @saas-maker/shared-types build`
+Run: `pnpm --filter @saas-maker/contracts build`
 Expected: Success, no errors
 
 - [ ] **Step 4: Commit**
@@ -248,7 +248,7 @@ Run: `pnpm --filter @saas-maker/db migrate` (or the project's migration command)
 
 - [ ] **Step 2: Build all affected packages**
 
-Run: `pnpm build --filter @saas-maker/shared-types --filter @saas-maker/db --filter api`
+Run: `pnpm build --filter @saas-maker/contracts --filter @saas-maker/db --filter api`
 
 - [ ] **Step 3: Run existing tests to verify no regressions**
 

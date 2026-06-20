@@ -1,5 +1,5 @@
 import { PublicRoadmap } from "./public-roadmap";
-import type { RoadmapItemRecord } from "@saas-maker/shared-types";
+import type { RoadmapItemRecord } from "@saas-maker/contracts";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";

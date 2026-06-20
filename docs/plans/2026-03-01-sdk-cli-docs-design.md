@@ -18,7 +18,7 @@ Three additions to complete saas-maker's developer experience:
 - Published name: `@saas-maker/waitlist`
 - Build: tsup (ESM + CJS + DTS), same pattern as `@saas-maker/feedback`
 - Peer deps: `react >= 18`, `react-dom >= 18`
-- Workspace dep: `@saas-maker/shared-types`
+- Workspace dep: `@saas-maker/contracts`
 
 ### Component: `<WaitlistForm />`
 

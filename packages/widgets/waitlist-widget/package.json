@@ -14,9 +14,6 @@
     "build": "tsup src/index.ts --format esm,cjs --dts --external react --external react-dom",
     "typecheck": "tsc --noEmit"
   },
-  "dependencies": {
-    "@saas-maker/shared-types": "workspace:*"
-  },
   "peerDependencies": {
     "react": "19.2.5",
     "react-dom": "19.2.5"

@@ -1,4 +1,4 @@
-import type { AIProviderConfig } from '@saas-maker/shared-types';
+import type { AIProviderConfig } from '@saas-maker/contracts';
 
 export interface StoredAIConfig {
   ai_base_url: string | null;

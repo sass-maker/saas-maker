@@ -7,7 +7,7 @@ import { PageHeader } from "@/components/page-header";
 import { EmptyState } from "@/components/empty-state";
 import { Megaphone, Bot, Link as LinkIcon } from "lucide-react";
 import Link from "next/link";
-import type { FleetChangelogEntry } from "@saas-maker/shared-types";
+import type { FleetChangelogEntry } from "@saas-maker/contracts";
 import { getFleetToday } from "@/lib/fleet-today";
 import { formatProjectLabel } from "@/lib/fleet-project-names";
 

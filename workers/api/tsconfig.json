@@ -2,9 +2,12 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "dist",
-    "rootDir": "src",
+    "rootDir": "../..",
     "types": ["@cloudflare/workers-types"],
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "paths": {
+      "@saas-maker/contracts": ["../../internal/contracts/index.ts"]
+    }
   },
-  "include": ["src"]
+  "include": ["src/**/*", "../../internal/contracts/index.ts"]
 }

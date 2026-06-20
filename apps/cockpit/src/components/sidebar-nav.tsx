@@ -2,7 +2,6 @@
 
 import {
   Bot,
-  Brain,
   ChevronDown,
   Eye,
   FolderOpen,
@@ -45,8 +44,7 @@ const projectNavItems = [
   { label: "Testimonials", href: "/testimonials", icon: Star },
   { label: "Waitlist", href: "/waitlist", icon: Users },
   { label: "Changelog", href: "/changelog", icon: Megaphone },
-  { label: "Knowledge Base", href: "/knowledge", icon: Brain },
-  { label: "AI Gateway", href: "/ai", icon: Brain },
+  { label: "AI Gateway", href: "/ai", icon: Zap },
   { label: "Settings", href: "/settings", icon: Settings },
 ];
 

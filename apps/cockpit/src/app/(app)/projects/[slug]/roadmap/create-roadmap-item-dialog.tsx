@@ -15,7 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { apiFetchClient, getClientToken } from "@/lib/api-client";
-import type { RoadmapColumn, RoadmapItemRecord } from "@saas-maker/shared-types";
+import type { RoadmapColumn, RoadmapItemRecord } from "@saas-maker/contracts";
 
 interface Props {
   projectId: string;

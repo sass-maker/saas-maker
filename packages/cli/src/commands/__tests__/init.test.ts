@@ -43,19 +43,32 @@ describe('Forge Logic', () => {
   });
 
   describe('applyStandard', () => {
-    it('should write correct configs for next', () => {
+    it('should write local configs for next', () => {
       const writeSpy = vi.spyOn(fs, 'writeFileSync');
-      vi.spyOn(fs, 'readFileSync').mockReturnValue(JSON.stringify({ name: 'test-app' }));
+      vi.spyOn(fs, 'readFileSync').mockImplementation((p: fs.PathOrFileDescriptor) => {
+        const file = String(p);
+        if (file.endsWith('package.json')) {
+          return JSON.stringify({ name: 'test-app' });
+        }
+        if (file.endsWith('eslint.config.js')) {
+          return 'import nextCoreWebVitals from "eslint-config-next/core-web-vitals";\nexport default [];\n';
+        }
+        return '';
+      });
       
       applyStandard('next');
       
       expect(writeSpy).toHaveBeenCalledWith(
         expect.stringContaining('eslint.config.js'),
-        expect.stringContaining('@saas-maker/eslint-config/next')
+        expect.stringContaining('eslint-config-next'),
       );
       expect(writeSpy).toHaveBeenCalledWith(
         expect.stringContaining('tsconfig.json'),
-        expect.stringContaining('@saas-maker/tsconfig/next.json')
+        expect.stringContaining('"strict": true'),
+      );
+      expect(writeSpy).toHaveBeenCalledWith(
+        expect.stringContaining('.prettierrc.json'),
+        expect.stringContaining('prettier-plugin-tailwindcss'),
       );
     });
   });

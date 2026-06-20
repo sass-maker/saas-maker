@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ThumbsUp, Lightbulb, ChevronRight, CheckCircle2, Clock, Rocket } from "lucide-react";
-import type { RoadmapItemRecord, RoadmapColumn } from "@saas-maker/shared-types";
+import type { RoadmapItemRecord, RoadmapColumn } from "@saas-maker/contracts";
 
 const PUBLIC_COLUMNS: RoadmapColumn[] = ["planned", "in_progress", "done"];
 

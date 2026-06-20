@@ -58,7 +58,7 @@ export async function getServerToken(): Promise<string | undefined> {
 export async function getProjectBySlug(
   slug: string,
   token?: string
-): Promise<import("@saas-maker/shared-types").ProjectRecord | null> {
+): Promise<import("@saas-maker/contracts").ProjectRecord | null> {
   try {
     return await apiFetch(`/v1/projects/by-slug/${slug}`, {}, token);
   } catch {

@@ -1,10 +1,7 @@
 import { eq, and, desc } from 'drizzle-orm';
 import { getDrizzle } from './drizzle';
 import * as schema from './schema';
-// FeedbackDatabase isn't actually exported from @saas-maker/db; the API DB
-// surface has grown beyond what the shared block models. Until we extract a
-// proper interface this is intentionally `any` so the rest of the API
-// continues to typecheck.
+// API DB surface is defined in workers/api; no shared @saas-maker/db block.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type FeedbackDatabase = any;
 import type {
@@ -14,8 +11,6 @@ import type {
   ProjectRecord,
   UserRecord,
   UpvoteRecord,
-  IndexRecord,
-  DocumentRecord,
   WaitlistEntryRecord,
 
   TestimonialRecord,
@@ -26,7 +21,7 @@ import type {
   AIMentionPromptRecord,
   AIMentionCheckRecord,
   AIMentionResultRecord,
-} from '@saas-maker/shared-types';
+} from '@saas-maker/contracts';
 
 export interface StandardsRow {
   id: string;
@@ -223,19 +218,6 @@ function toFeedbackRecord(row: Record<string, unknown>): FeedbackRecord {
     ...mapRow<FeedbackRecord>(row)!,
     viewer_vote: parseViewerVote(row.viewer_vote),
   };
-}
-
-function cosineSimilarity(a: number[], b: number[]): number {
-  let dot = 0;
-  let magA = 0;
-  let magB = 0;
-  for (let i = 0; i < a.length; i++) {
-    dot += a[i] * b[i];
-    magA += a[i] * a[i];
-    magB += b[i] * b[i];
-  }
-  const denom = Math.sqrt(magA) * Math.sqrt(magB);
-  return denom === 0 ? 0 : dot / denom;
 }
 
 export function getDb(d1: D1Database): FeedbackDatabase {
@@ -503,108 +485,6 @@ export function getDb(d1: D1Database): FeedbackDatabase {
       return parseViewerVote(row?.vote);
     },
 
-    // --- Vector Memory: Indexes ---
-    async createIndex(input) {
-      await d1.prepare(
-        `INSERT INTO knowledge_indexes (id, project_id, name, external_id) VALUES (?, ?, ?, ?)`
-      ).bind(input.id, input.project_id, input.name, input.external_id).run();
-      const row = await d1.prepare(`SELECT * FROM knowledge_indexes WHERE id = ?`).bind(input.id).first();
-      return row as unknown as IndexRecord;
-    },
-
-    async getIndexById(id) {
-      const row = await d1.prepare(`SELECT * FROM knowledge_indexes WHERE id = ?`).bind(id).first();
-      return (row as unknown as IndexRecord) || null;
-    },
-
-    async listIndexesByProject(projectId) {
-      const { results } = await d1.prepare(
-        `SELECT i.*, COALESCE(d.cnt, 0) AS document_count
-         FROM knowledge_indexes i
-         LEFT JOIN (SELECT index_id, COUNT(*) AS cnt FROM documents GROUP BY index_id) d
-           ON d.index_id = i.id
-         WHERE i.project_id = ?
-         ORDER BY i.created_at DESC`
-      ).bind(projectId).all();
-      return results as unknown as (IndexRecord & { document_count: number })[];
-    },
-
-    async deleteIndex(id) {
-      const { meta } = await d1.prepare(`DELETE FROM knowledge_indexes WHERE id = ?`).bind(id).run();
-      return (meta.changes ?? 0) > 0;
-    },
-
-    // --- Vector Memory: Documents ---
-    async createDocument(input) {
-      await d1.prepare(
-        `INSERT INTO documents (id, index_id, content, metadata) VALUES (?, ?, ?, ?)`
-      ).bind(input.id, input.index_id, input.content, JSON.stringify(input.metadata)).run();
-      const row = await d1.prepare(`SELECT * FROM documents WHERE id = ?`).bind(input.id).first();
-      return row as unknown as DocumentRecord;
-    },
-
-    async getDocumentById(id) {
-      const row = await d1.prepare(`SELECT * FROM documents WHERE id = ?`).bind(id).first();
-      return (row as unknown as DocumentRecord) || null;
-    },
-
-    async listDocumentsByIndex(indexId, page, limit) {
-      const offset = (page - 1) * limit;
-      const countRow = await d1.prepare(
-        `SELECT COUNT(*) AS total FROM documents WHERE index_id = ?`
-      ).bind(indexId).first();
-      const { results } = await d1.prepare(
-        `SELECT * FROM documents WHERE index_id = ? ORDER BY created_at DESC LIMIT ? OFFSET ?`
-      ).bind(indexId, limit, offset).all();
-      return { data: results as unknown as DocumentRecord[], total: (countRow?.total as number) || 0 };
-    },
-
-    async deleteDocument(id) {
-      const { meta } = await d1.prepare(`DELETE FROM documents WHERE id = ?`).bind(id).run();
-      return (meta.changes ?? 0) > 0;
-    },
-
-    // --- Vector Memory: Chunks ---
-    async createChunks(chunks) {
-      if (chunks.length === 0) return 0;
-      const stmts = chunks.map(c =>
-        d1.prepare(
-          `INSERT INTO document_chunks (id, document_id, index_id, content, embedding, chunk_index) VALUES (?, ?, ?, ?, ?, ?)`
-        ).bind(c.id, c.document_id, c.index_id, c.content, JSON.stringify(c.embedding), c.chunk_index)
-      );
-      await d1.batch(stmts);
-      return chunks.length;
-    },
-
-    async searchChunks(indexId, queryEmbedding, topK) {
-      const { results: chunkRows } = await d1.prepare(
-        `SELECT c.document_id, c.content, c.embedding, d.metadata
-         FROM document_chunks c
-         JOIN documents d ON d.id = c.document_id
-         WHERE c.index_id = ?`
-      ).bind(indexId).all();
-
-      const scored = chunkRows.map(row => {
-        const storedEmbedding: number[] = JSON.parse(row.embedding as string);
-        const score = cosineSimilarity(queryEmbedding, storedEmbedding);
-        const metadata = typeof row.metadata === 'string' ? JSON.parse(row.metadata) : (row.metadata || {});
-        return {
-          document_id: row.document_id as string,
-          content: row.content as string,
-          score,
-          metadata: metadata as Record<string, unknown>,
-        };
-      });
-
-      scored.sort((a, b) => b.score - a.score);
-      return scored.slice(0, topK);
-    },
-
-    async deleteChunksByDocument(documentId) {
-      const { meta } = await d1.prepare(`DELETE FROM document_chunks WHERE document_id = ?`).bind(documentId).run();
-      return (meta.changes ?? 0) > 0;
-    },
-
     // --- Waitlist ---
     async createWaitlistEntry(input) {
       const posRow = await d1.prepare(
@@ -856,7 +736,7 @@ export function getDb(d1: D1Database): FeedbackDatabase {
            AND ce.type IN ('feature', 'fix')
          ORDER BY ce.created_at DESC`
       ).bind(date).all();
-      return results as unknown as import('@saas-maker/shared-types').FleetChangelogEntry[];
+      return results as unknown as import('@saas-maker/contracts').FleetChangelogEntry[];
     },
 
     // --- AI Gateway ---

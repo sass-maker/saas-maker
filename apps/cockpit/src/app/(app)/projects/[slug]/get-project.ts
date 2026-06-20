@@ -2,7 +2,7 @@ import { cache } from "react";
 import { getDashboardSession } from "@/lib/server-session";
 import { redirect, notFound } from "next/navigation";
 import { getServerToken, getProjectBySlug } from "@/lib/api";
-import type { ProjectRecord } from "@saas-maker/shared-types";
+import type { ProjectRecord } from "@saas-maker/contracts";
 
 /**
  * Cached per-request helper that authenticates the user and resolves the

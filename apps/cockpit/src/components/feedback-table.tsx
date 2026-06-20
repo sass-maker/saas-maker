@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { FeedbackDetail } from "@/components/feedback-detail";
-import type { FeedbackRecord, AnyFeedbackStatus } from "@saas-maker/shared-types";
+import type { FeedbackRecord, AnyFeedbackStatus } from "@saas-maker/contracts";
 
 const TYPE_STYLES: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
   bug: { label: "Bug", variant: "destructive" },

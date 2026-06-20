@@ -50,7 +50,6 @@ SaaS Maker SaaS Maker is a TypeScript monorepo for building and operating small 
 - `workers/api/src/routes/feedback.ts`
 - `workers/api/src/routes/fleet-metadata.ts`
 - `workers/api/src/routes/jobs.ts`
-- `workers/api/src/routes/knowledge.ts`
 - `workers/api/src/routes/marketing.ts`
 - `workers/api/src/routes/projects.ts`
 - `workers/api/src/routes/roadmap.ts`
@@ -104,7 +103,7 @@ Direct dependencies:
 - `@saas-maker/eslint-plugin-fallow`
 - `@saas-maker/ops`
 - `@saas-maker/sdk`
-- `@saas-maker/shared-types`
+- `@saas-maker/contracts`
 - `@saas-maker/ui`
 - `astro`
 - `better-auth`
@@ -256,7 +255,6 @@ Package scripts:
 - `tests/api/feedback-validation.test.ts`
 - `tests/api/fleet-today.test.ts`
 - `tests/api/helpers.ts`
-- `tests/api/knowledge.test.ts`
 - `tests/api/marketing.test.ts`
 - `tests/api/roadmap.test.ts`
 - `tests/api/tasks.test.ts`

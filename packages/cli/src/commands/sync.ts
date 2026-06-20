@@ -4,6 +4,7 @@ import { homedir } from 'node:os';
 
 import ora from 'ora';
 
+import { buildLocalTsConfig } from '../lib/forge.js';
 import { requestApi } from '../lib/request.js';
 import { log } from '../lib/ui.js';
 
@@ -31,18 +32,17 @@ export async function syncCommand(): Promise<void> {
         continue;
       }
 
-      // Write to cache (used by @saas-maker/eslint-config at lint time)
+      // Write remote standards cache (merged into local configs via fnd fleet fix)
       const cacheKey = `default:${type}`;
       cache[cacheKey] = { ts: Date.now(), data: res.data };
 
-      // Write tsconfig cache file (tsc can't fetch remote, so we write locally)
+      // Write tsconfig snapshot (tsc can't fetch remote, so we write locally)
       mkdirSync(TSCONFIG_CACHE_DIR, { recursive: true });
       const tsconfigPath = join(TSCONFIG_CACHE_DIR, `${type}.json`);
-      const tsconfigContent = {
-        extends: `@saas-maker/tsconfig/${type}.json`,
-        compilerOptions: res.data.tsconfig_options ?? {},
-      };
-      writeFileSync(tsconfigPath, JSON.stringify(tsconfigContent, null, 2));
+      writeFileSync(
+        tsconfigPath,
+        JSON.stringify(buildLocalTsConfig(type, res.data), null, 2) + '\n',
+      );
 
       results.push({ type, ok: true });
     } catch {

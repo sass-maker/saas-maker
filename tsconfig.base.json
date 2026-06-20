@@ -11,6 +11,9 @@
     "resolveJsonModule": true,
     "declaration": true,
     "declarationMap": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "paths": {
+      "@saas-maker/contracts": ["./internal/contracts/index.ts"]
+    }
   }
 }

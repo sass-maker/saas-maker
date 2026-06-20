@@ -3,7 +3,7 @@ import { Bindings, Variables } from '../types';
 import { requireApiKey, requireSession } from '../middleware/auth';
 import { getDb } from '../db';
 import { buildCacheKey, tryCacheMatch, withCachePut } from '../edge-cache';
-import type { SubmitTestimonialRequest } from '@saas-maker/shared-types';
+import type { SubmitTestimonialRequest } from '@saas-maker/contracts';
 import { capture } from '../lib/telemetry';
 
 const testimonials = new Hono<{ Bindings: Bindings; Variables: Variables }>();

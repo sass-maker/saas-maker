@@ -4,7 +4,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Card } from "@/components/ui/card";
 import { Lock, MessageSquare } from "lucide-react";
-import type { RoadmapItemRecord } from "@saas-maker/shared-types";
+import type { RoadmapItemRecord } from "@saas-maker/contracts";
 
 interface KanbanCardProps {
   item: RoadmapItemRecord;

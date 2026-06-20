@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { runOverlay } from '../../../packages/tooling/astro-landing/overlay.js';
+import { runOverlay } from './overlay-astro-landing-lib.mjs';
 
 await runOverlay({
   astroDist: 'landing-astro/dist',

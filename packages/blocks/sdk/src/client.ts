@@ -6,7 +6,6 @@ import { ChangelogService } from './services/changelog';
 import { AIService } from './services/ai';
 import { RoadmapService } from './services/roadmap';
 import { ProjectService } from './services/projects';
-import { KnowledgeService } from './services/knowledge';
 import { EventsService } from './services/events';
 import { WorkerService } from './services/worker';
 
@@ -24,7 +23,6 @@ export class SaaSMakerClient {
   readonly ai: AIService;
   readonly roadmap: RoadmapService;
   readonly projects: ProjectService;
-  readonly knowledge: KnowledgeService;
   readonly events: EventsService;
   readonly worker: WorkerService;
 
@@ -46,7 +44,6 @@ export class SaaSMakerClient {
     this.ai = new AIService(http);
     this.roadmap = new RoadmapService(http);
     this.projects = new ProjectService(http);
-    this.knowledge = new KnowledgeService(http);
     this.events = new EventsService(http);
     this.worker = new WorkerService(http);
   }

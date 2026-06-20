@@ -1,3 +1,0 @@
-#!/bin/sh
-set -e
-npm run lint || { echo "Lint failed, fix before pushing"; exit 1; }

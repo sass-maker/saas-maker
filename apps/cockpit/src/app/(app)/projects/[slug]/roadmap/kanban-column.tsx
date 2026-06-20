@@ -9,7 +9,7 @@ import { KanbanCard } from "./kanban-card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Plus } from "lucide-react";
-import type { RoadmapItemRecord, RoadmapColumn } from "@saas-maker/shared-types";
+import type { RoadmapItemRecord, RoadmapColumn } from "@saas-maker/contracts";
 
 const COLUMN_LABELS: Record<RoadmapColumn, string> = {
   backlog: "Backlog",

@@ -156,7 +156,7 @@ S255 @saas-maker/email package fully migrated to React Email — index.ts wired 
 582 2:28p ✅ Fleet projects — docs updated for three guidance fields on projects
 583 " ✅ Fleet guidance fields — OpenAPI spec regenerated, tests and typecheck pass
 584 2:29p 🟣 Fleet projects — add task management, SASS Maker, and free AI guidance fields
-585 " 🔵 @saas-maker/shared-types must be rebuilt before dashboard typecheck sees new fields
+585 " 🔵 @saas-maker/contracts must be rebuilt before dashboard typecheck sees new fields
 586 " 🔵 Pre-existing TS errors in @saas-maker/api — TraceOptions and SendOptions type mismatches
 587 " ✅ Fleet project guidance — 11 files changed across API, dashboard, docs, CLI, and types
 588 2:30p 🟣 Fleet guidance fields — full implementation diff confirmed across all layers

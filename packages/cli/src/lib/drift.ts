@@ -5,9 +5,9 @@
  *  - foundry.json present
  *  - AGENTS.md present
  *  - .husky/pre-push present and references secret-scan
- *  - eslint.config.js extends @saas-maker/eslint-config
- *  - tsconfig.json extends @saas-maker/tsconfig
- *  - prettier linked
+ *  - eslint.config.js present (local flat config)
+ *  - tsconfig.json present (local base)
+ *  - .prettierrc.json present
  *  - foundry-ci workflow present
  *  - widgets dir present (or n/a for non-foundry projects)
  *
@@ -120,49 +120,52 @@ export function checkProjectDrift(
     });
   }
 
-  // 4. ESLint extends Foundry
+  // 4. ESLint config present (local flat config; no shared package required)
   const eslintPath = join(projectPath, 'eslint.config.js');
-  if (!existsSync(eslintPath)) {
+  const eslintMjsPath = join(projectPath, 'eslint.config.mjs');
+  if (!existsSync(eslintPath) && !existsSync(eslintMjsPath)) {
     checks.push({ id: 'eslint', label: 'eslint config', status: 'fail', detail: 'missing eslint.config.js' });
   } else {
-    const content = readFileSync(eslintPath, 'utf-8');
+    const content = readFileSync(existsSync(eslintPath) ? eslintPath : eslintMjsPath, 'utf-8');
+    const inlined = content.includes('Plain flat ESLint') || content.includes('eslint-config-next');
     checks.push({
       id: 'eslint',
       label: 'eslint config',
-      status: content.includes('@saas-maker/eslint-config') ? 'pass' : 'fail',
-      detail: content.includes('@saas-maker/eslint-config')
-        ? 'extends Foundry'
-        : 'does not extend @saas-maker/eslint-config',
+      status: inlined ? 'pass' : 'warn',
+      detail: inlined ? 'local flat config' : 'custom eslint.config present',
     });
   }
 
-  // 5. tsconfig extends Foundry
+  // 5. tsconfig present
   const tsPath = join(projectPath, 'tsconfig.json');
   if (!existsSync(tsPath)) {
     checks.push({ id: 'tsconfig', label: 'tsconfig', status: 'fail', detail: 'missing tsconfig.json' });
   } else {
     const content = readFileSync(tsPath, 'utf-8');
+    const local =
+      content.includes('tsconfig.base.json') ||
+      content.includes('"strict": true') ||
+      content.includes('"moduleResolution": "bundler"');
     checks.push({
       id: 'tsconfig',
       label: 'tsconfig',
-      status: content.includes('@saas-maker/tsconfig') ? 'pass' : 'warn',
-      detail: content.includes('@saas-maker/tsconfig') ? 'extends Foundry' : 'custom or missing extends',
+      status: local ? 'pass' : 'warn',
+      detail: local ? 'local tsconfig' : 'custom or minimal tsconfig',
     });
   }
 
-  // 6. Prettier linked
+  // 6. Prettier config present
   const pkgPath = join(projectPath, 'package.json');
   if (existsSync(pkgPath)) {
     try {
       const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8')) as Record<string, unknown>;
+      const hasPrettierFile =
+        existsSync(join(projectPath, '.prettierrc.json')) || existsSync(join(projectPath, '.prettierrc'));
       checks.push({
         id: 'prettier',
         label: 'prettier-config',
-        status: pkg['prettier'] === '@saas-maker/prettier-config' ? 'pass' : 'warn',
-        detail:
-          pkg['prettier'] === '@saas-maker/prettier-config'
-            ? 'linked to Foundry'
-            : 'not using @saas-maker/prettier-config',
+        status: hasPrettierFile || typeof pkg['prettier'] === 'object' ? 'pass' : 'warn',
+        detail: hasPrettierFile ? '.prettierrc present' : 'no local prettier config file',
       });
     } catch {
       checks.push({ id: 'prettier', label: 'prettier-config', status: 'warn', detail: 'package.json unreadable' });

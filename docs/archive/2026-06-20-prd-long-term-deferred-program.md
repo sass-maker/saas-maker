@@ -1,5 +1,7 @@
 # SaaS Maker — Long-term PRD
 
+**Status:** Archived program doc (2026-06-20). Phase 1 API contract foundation is shipped. Phases 0, 2–4 and open decisions are a deferred portfolio program — not active PRD tasks. Per-feature work lives in `docs/plans/` and `PROJECT_STATUS.md`.
+
 _Last updated 2026-06-16._
 
 ## TL;DR

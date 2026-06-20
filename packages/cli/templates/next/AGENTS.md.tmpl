@@ -1,28 +1,27 @@
 # AGENTS.md — {{name}}
 
 ## Purpose
-This project was forged by the **Foundry Software Factory**. It follows strict industrial standards for code quality, data access, and operational protection.
+This project was forged by the **Foundry Software Factory**. It follows strict industrial standards for code quality and fleet integration.
 
 ## Context
 - **Project Name**: {{name}}
 - **Standard**: Foundry Gold Standard (v1)
 - **Infrastructure**: Managed via `fnd` (Foundry Commander)
-- **Operational Layer**: Linked via `@saas-maker/ops` and `@saas-maker/db`.
+- **Backend services**: Use `@saas-maker/sdk` when linking to the fleet API.
 
 ## Standard Procedures for Agents
 
 ### 1. Code Changes
-- Always use **Standardized Imports**: Built-ins first, then external `@saas-maker/*` blocks, then local modules.
-- Ensure any new async logic is wrapped in `fnd.trace()` (from `src/lib/foundry.ts`).
-- Use the **Foundry DB Factory** (`db` from `src/lib/foundry.ts`) for all data access.
+- Always use **Standardized Imports**: Built-ins first, then external packages, then local modules.
+- Prefer `@saas-maker/sdk` for feedback, waitlist, changelog, and other fleet API calls.
 
 ### 2. Failure Handling
-- Wrap critical boundaries in try/catch and throw `FoundryError`.
+- Wrap critical boundaries in try/catch with clear error messages.
 - Check the **Foundry Cockpit** error feed if reproduction is difficult.
 
 ### 3. Maintenance
 - Run `fnd audit` inside this directory to verify compliance.
-- Run `fnd fleet upgrade` to keep Foundry dependencies current.
+- Run `fnd fleet upgrade` to refresh lint/format devDependencies.
 
 ## Reference Skills
 - See `saas-maker/skills/protocol-debugging.md` for investigation steps.

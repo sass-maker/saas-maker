@@ -20,46 +20,95 @@ export function detectProjectType(cwd: string = process.cwd()): 'next' | 'vite' 
   return 'node';
 }
 
+const PRETTIER_DEFAULT = {
+  semi: true,
+  singleQuote: true,
+  tabWidth: 2,
+  trailingComma: 'es5',
+  printWidth: 100,
+  plugins: ['prettier-plugin-tailwindcss'],
+};
+
+export const TSCONFIG_BASE = {
+  compilerOptions: {
+    ignoreDeprecations: '6.0',
+    target: 'ES2022',
+    lib: ['ES2022', 'DOM', 'DOM.Iterable'],
+    module: 'ESNext',
+    moduleResolution: 'bundler',
+    resolveJsonModule: true,
+    allowImportingTsExtensions: true,
+    verbatimModuleSyntax: true,
+    noEmit: true,
+    strict: true,
+    skipLibCheck: true,
+    noUnusedLocals: true,
+    noUnusedParameters: true,
+    noFallthroughCasesInSwitch: true,
+    noImplicitOverride: true,
+    noPropertyAccessFromIndexSignature: true,
+    forceConsistentCasingInFileNames: true,
+    esModuleInterop: true,
+    isolatedModules: true,
+  },
+};
+
+export function buildLocalTsConfig(
+  type: 'next' | 'vite' | 'node',
+  remote?: RemoteStandards,
+): Record<string, unknown> {
+  return {
+    ...TSCONFIG_BASE,
+    compilerOptions: {
+      ...TSCONFIG_BASE.compilerOptions,
+      ...(type === 'next'
+        ? { jsx: 'preserve', plugins: [{ name: 'next' }], paths: { '@/*': ['./src/*'] } }
+        : type === 'vite'
+          ? { jsx: 'react-jsx', paths: { '@/*': ['./src/*'] } }
+          : { lib: ['ES2022'], module: 'NodeNext', moduleResolution: 'NodeNext' }),
+      ...(remote?.tsconfig_options ?? {}),
+    },
+    include:
+      type === 'next'
+        ? ['next-env.d.ts', '**/*.ts', '**/*.tsx', '.next/types/**/*.ts']
+        : type === 'vite'
+          ? ['src']
+          : ['src/**/*'],
+    exclude: ['node_modules'],
+  };
+}
+
 export function applyStandard(
   type: 'next' | 'vite' | 'node',
   cwd: string = process.cwd(),
   remote?: RemoteStandards,
 ): void {
-  // 1. ESLint — extends shared package, overrides applied via "rules" block
+  const templatesDir = join(import.meta.dirname, '..', 'templates', type);
+  const eslintTemplate = readFileSync(join(templatesDir, 'eslint.config.js'), 'utf-8');
   const eslintRules = remote?.eslint_rules;
-  const eslintConfig = eslintRules && Object.keys(eslintRules).length > 0
-    ? `import config from "@saas-maker/eslint-config/${type === 'node' ? '' : type}";
-
-export default [
-  ...(Array.isArray(config) ? config : [config]),
-  { rules: ${JSON.stringify(eslintRules, null, 2)} },
-];
-`
-    : `import config from "@saas-maker/eslint-config/${type === 'node' ? '' : type}";\nexport default config;\n`;
+  const eslintConfig =
+    eslintRules && Object.keys(eslintRules).length > 0
+      ? `${eslintTemplate.replace('export default', 'const base =').trim()}\n\nexport default [\n  ...(Array.isArray(base) ? base : [base]),\n  { rules: ${JSON.stringify(eslintRules, null, 2)} },\n];\n`
+      : eslintTemplate;
   writeFileSync(join(cwd, 'eslint.config.js'), eslintConfig);
-  log.success('✓ Applied Foundry ESLint config');
+  log.success('✓ Applied local ESLint config');
 
-  // 2. TSConfig — extends shared package, merges remote compilerOptions
-  const tsConfig: Record<string, unknown> = { extends: `@saas-maker/tsconfig/${type}.json` };
-  if (remote?.tsconfig_options && Object.keys(remote.tsconfig_options).length > 0) {
-    tsConfig.compilerOptions = remote.tsconfig_options;
-  }
-  writeFileSync(join(cwd, 'tsconfig.json'), JSON.stringify(tsConfig, null, 2));
-  log.success('✓ Applied Foundry TSConfig');
+  writeFileSync(join(cwd, 'tsconfig.json'), JSON.stringify(buildLocalTsConfig(type, remote), null, 2) + '\n');
+  log.success('✓ Applied local tsconfig.json');
 
-  // 3. Prettier — link package; if remote overrides, write .prettierrc instead
+  const prettierOptions =
+    remote?.prettier_options && Object.keys(remote.prettier_options).length > 0
+      ? remote.prettier_options
+      : PRETTIER_DEFAULT;
+  writeFileSync(join(cwd, '.prettierrc.json'), JSON.stringify(prettierOptions, null, 2) + '\n');
+
   const pkgPath = join(cwd, 'package.json');
   if (existsSync(pkgPath)) {
     const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
-    if (remote?.prettier_options && Object.keys(remote.prettier_options).length > 0) {
-      writeFileSync(join(cwd, '.prettierrc'), JSON.stringify(remote.prettier_options, null, 2));
-      delete pkg.prettier;
-    } else {
-      pkg.prettier = '@saas-maker/prettier-config';
-    }
-    writeFileSync(pkgPath, JSON.stringify(pkg, null, 2));
-    log.success('✓ Linked Foundry Prettier config');
+    delete pkg.prettier;
+    writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n');
   }
+  log.success('✓ Wrote .prettierrc.json');
 }
 
 export function scaffoldRenovate(cwd: string = process.cwd()): void {

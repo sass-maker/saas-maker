@@ -3,59 +3,45 @@ title: The Standard
 description: Learn about the Foundry Gold Standard for code quality and consistency.
 ---
 
-The **Foundry Standard** is a set of modular, versioned configurations that eliminate configuration drift across your project fleet. It ensures that every project, whether it's a Next.js frontend or a Node.js worker, follows the same best practices.
+The **Foundry Standard** is a set of local, version-controlled configs that eliminate drift across your project fleet. `fnd init` and `fnd fleet fix` write them into each repo — no shared npm tooling packages.
 
-## 🛠️ Components
+## Components
 
-### 1. ESLint (`@saas-maker/eslint-config`)
-Our "Gold Standard" linting rules are strictly enforced and include:
-- **Import Sorting**: Automated organization of your imports.
-- **Promise Best Practices**: Safety for async/await code.
-- **React Refresh**: Specialized rules for Vite and Next.js.
-- **Zero Conflict**: Perfectly aligned with our Prettier configuration.
+### 1. ESLint
+Local flat `eslint.config.js` per stack (Next.js, Vite, or Node). Includes import sorting, React hooks rules, and Prettier compatibility.
 
-### 2. TypeScript (`@saas-maker/tsconfig`)
-Strict, optimized base configurations for various environments:
-- `next.json`: Optimized for Next.js App Router.
-- `vite.json`: Optimized for Vite/React.
-- `node.json`: Optimized for Node.js and Cloudflare Workers.
+### 2. TypeScript
+Local `tsconfig.json` with strict defaults tuned for Next.js, Vite, or Workers.
 
-### 3. Prettier (`@saas-maker/prettier-config`)
-A shared formatting standard that includes:
-- Tailwind CSS plugin for automated class sorting.
-- Consistent spacing and quote rules for the whole fleet.
+### 3. Prettier
+Local `.prettierrc.json` with Tailwind class sorting via `prettier-plugin-tailwindcss`.
 
-### 4. Dev-Config (`@saas-maker/dev-config`)
-The "Auto-pilot" for your repositories. Installing this package automatically sets up:
-- **Husky hooks**: Linting checks before every push.
-- **Secret Scanning**: Basic checks to prevent committing credentials.
+### 4. Fleet integration
+- `foundry.json` links the repo to the control plane
+- `@saas-maker/sdk` for API calls from fleet products
+- Embeddable widgets (`@saas-maker/feedback`, etc.) where needed
 
 ---
 
-## 🚀 How to Apply
+## How to apply
 
-### Automated (Recommended)
-Run the following command in any project directory:
+### Automated (recommended)
 
 ```bash
 fnd init
+# or refresh an existing fleet project:
+fnd fleet fix
+pnpm install
 ```
 
-### Manual Installation
-If you prefer to set it up yourself:
+### Refresh lint/format devDependencies fleet-wide
 
-1. **Install the packages**:
-   ```bash
-   pnpm add -D @saas-maker/eslint-config @saas-maker/tsconfig @saas-maker/prettier-config
-   ```
+```bash
+fnd fleet upgrade
+```
 
-2. **Extend ESLint** in `eslint.config.js`:
-   ```js
-   import config from "@saas-maker/eslint-config/next"; // or /vite, or base
-   export default config;
-   ```
+---
 
-3. **Extend TSConfig** in `tsconfig.json`:
-   ```json
-   { "extends": "@saas-maker/tsconfig/next.json" }
-   ```
+## Backend services
+
+Use **`@saas-maker/sdk`** for feedback, waitlist, changelog, roadmap, events, and task worker helpers. Do not depend on removed internal packages (`@saas-maker/ops`, `@saas-maker/db`, shared eslint/tsconfig packages).

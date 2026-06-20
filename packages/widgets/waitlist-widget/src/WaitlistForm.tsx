@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import type { WaitlistFormProps } from '@saas-maker/shared-types';
+import type { WaitlistFormProps } from './types';
 import { createApiClient } from './api';
 import './styles/waitlist.css';
 

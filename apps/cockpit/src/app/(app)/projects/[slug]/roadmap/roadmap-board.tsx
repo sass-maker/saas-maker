@@ -17,7 +17,7 @@ import { KanbanColumn } from "./kanban-column";
 import { KanbanCard } from "./kanban-card";
 import { CreateRoadmapItemDialog } from "./create-roadmap-item-dialog";
 import { apiFetchClient, getClientToken } from "@/lib/api-client";
-import type { RoadmapItemRecord, RoadmapColumn } from "@saas-maker/shared-types";
+import type { RoadmapItemRecord, RoadmapColumn } from "@saas-maker/contracts";
 
 const COLUMNS: RoadmapColumn[] = ["backlog", "planned", "in_progress", "done"];
 

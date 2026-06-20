@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync, existsSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -25,12 +25,13 @@ afterEach(() => {
 describe('checkProjectDrift', () => {
   it('passes a fully-compliant Foundry project', () => {
     tmpRoot = scaffold({
-      'package.json': JSON.stringify({ name: 'demo', prettier: '@saas-maker/prettier-config' }),
+      'package.json': JSON.stringify({ name: 'demo' }),
+      '.prettierrc.json': JSON.stringify({ semi: true }),
       'foundry.json': JSON.stringify({ slug: 'demo', linked: true }),
       'AGENTS.md': '# agents\n',
       '.husky/pre-push': '#!/bin/sh\nSECRETS=$(git ls-files)\n',
-      'eslint.config.js': 'import config from "@saas-maker/eslint-config";\nexport default config;\n',
-      'tsconfig.json': '{ "extends": "@saas-maker/tsconfig/base.json" }',
+      'eslint.config.js': 'import nextCoreWebVitals from "eslint-config-next/core-web-vitals";\nexport default [];\n',
+      'tsconfig.json': '{ "compilerOptions": { "strict": true, "moduleResolution": "bundler" } }',
       '.github/workflows/ci.yml': 'jobs:\n  ci:\n    uses: ./.github/workflows/foundry-ci.yml\n',
       'src/widgets/Feedback.tsx': 'export const X = null;\n',
     });
@@ -48,7 +49,6 @@ describe('checkProjectDrift', () => {
   it('flags missing foundry.json + AGENTS.md + husky', () => {
     tmpRoot = scaffold({
       'package.json': JSON.stringify({ name: 'bare' }),
-      'eslint.config.js': 'export default [];\n',
     });
     const r = checkProjectDrift(tmpRoot, 'bare');
     expect(r.checks.find((c) => c.id === 'foundry-json')?.status).toBe('fail');
@@ -59,7 +59,7 @@ describe('checkProjectDrift', () => {
 
   it('warns when prettier is unlinked', () => {
     tmpRoot = scaffold({
-      'package.json': JSON.stringify({ name: 'p', prettier: 'self' }),
+      'package.json': JSON.stringify({ name: 'p' }),
     });
     const r = checkProjectDrift(tmpRoot, 'p');
     expect(r.checks.find((c) => c.id === 'prettier')?.status).toBe('warn');
@@ -97,7 +97,6 @@ describe('applyDriftFixes', () => {
     tmpRoot = scaffold({ 'package.json': '{}' });
     const r = checkProjectDrift(tmpRoot, 'demo');
     const result = applyDriftFixes(r);
-    // 'eslint' has no fix lambda
     expect(result.skipped).toContain('eslint');
   });
 });

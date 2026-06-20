@@ -15,7 +15,7 @@ import { WaitlistActions } from "./waitlist-actions";
 import { Users, ExternalLink } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { getAuthenticatedProject } from "../get-project";
-import type { WaitlistEntryRecord } from "@saas-maker/shared-types";
+import type { WaitlistEntryRecord } from "@saas-maker/contracts";
 
 export const dynamic = "force-dynamic";
 

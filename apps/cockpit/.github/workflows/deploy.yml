@@ -21,7 +21,6 @@ jobs:
           node-version: '20'
           cache: pnpm
       - run: pnpm install --frozen-lockfile --ignore-scripts
-      - run: pnpm -F @saas-maker/shared-types build
       - run: pnpm -F @saas-maker/dashboard cf:build
       - uses: cloudflare/wrangler-action@v3
         with:
@@ -45,7 +44,6 @@ jobs:
           node-version: '20'
           cache: pnpm
       - run: pnpm install --frozen-lockfile --ignore-scripts
-      - run: pnpm -F @saas-maker/shared-types build
       - run: pnpm -F @saas-maker/dashboard cf:build
       - uses: cloudflare/wrangler-action@v3
         with:

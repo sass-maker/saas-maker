@@ -36,9 +36,9 @@ Everything is hosted on Cloudflare. Each deployable ships independently via GitH
 - `apps/docs` - Astro/Starlight docs site.
 - `apps/showcase` - Foundry landing page (Astro, pure static; serves `sassmaker.com`).
 - `packages/cli` - `fnd` CLI backed by the generated OpenAPI spec.
-- `packages/blocks` - Shared backend and operational packages.
+- `internal/contracts/` - Internal API/Cockpit type contracts (`@saas-maker/contracts` path alias).
+- `packages/blocks` - `@saas-maker/sdk` client library.
 - `packages/widgets` - Embeddable feedback, changelog, testimonials, and waitlist widgets.
-- `packages/tooling` - Shared TypeScript, ESLint, Prettier, test, Renovate, and Tailwind config.
 
 ## Current Status
 

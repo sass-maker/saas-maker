@@ -33,7 +33,7 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { apiFetch } from "@/lib/api";
-import type { ProjectRecord } from "@saas-maker/shared-types";
+import type { ProjectRecord } from "@saas-maker/contracts";
 
 async function getToken(): Promise<string> {
   const res = await fetch("/api/token");

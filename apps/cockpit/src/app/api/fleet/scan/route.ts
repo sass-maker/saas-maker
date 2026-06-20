@@ -64,7 +64,10 @@ export async function GET() {
           config: fs.existsSync(foundryConfig),
           eslint: fs.existsSync(path.join(projectPath, 'eslint.config.js')),
           tsconfig: fs.existsSync(path.join(projectPath, 'tsconfig.json')),
-          prettier: pkg.prettier === '@saas-maker/prettier-config',
+          prettier:
+            fs.existsSync(path.join(projectPath, '.prettierrc.json')) ||
+            fs.existsSync(path.join(projectPath, '.prettierrc')) ||
+            typeof pkg.prettier === 'object',
           ci: fs.existsSync(path.join(projectPath, '.github/workflows/ci.yml')),
           health: false,
         };

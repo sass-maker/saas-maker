@@ -19,7 +19,7 @@ vi.mock('../../workers/api/src/middleware/auth', () => ({
   resolveBearerUserId: vi.fn().mockResolvedValue('user-1'),
 }));
 
-vi.mock('@saas-maker/ops', () => ({
+vi.mock('../../workers/api/src/lib/telemetry.js', () => ({
   capture: vi.fn(),
 }));
 

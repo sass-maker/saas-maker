@@ -1,8 +1,6 @@
 /**
- * Local telemetry for the API (formerly @saas-maker/ops). Server-side PostHog
- * ingest (no SDK — raw /capture/ HTTPS, CF-Worker friendly) plus a lightweight
- * timing wrapper. The API owns its own telemetry now; events pool in the shared
- * PostHog project. `@saas-maker/ops` stays published for external consumers.
+ * Local telemetry for the API worker. Server-side PostHog ingest (no SDK — raw
+ * /capture/ HTTPS, CF-Worker friendly) plus a lightweight timing wrapper.
  */
 
 const LEGACY_PROJECT_ID_KEYS = ['project_slug', 'project', 'foundry_project_id'] as const;

@@ -17,7 +17,7 @@ import { getDashboardSession } from "@/lib/server-session";
 import { redirect } from "next/navigation";
 import { apiFetch, getServerToken } from "@/lib/api";
 import { visibleDashboardProjects } from "@/lib/dashboard-projects";
-import type { ProjectRecord } from "@saas-maker/shared-types";
+import type { ProjectRecord } from "@saas-maker/contracts";
 import {
   ArrowRight,
   Boxes,

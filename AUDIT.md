@@ -19,13 +19,13 @@ Reviewed: 2026-04-26 (gate hardening pass)
 ## MEDIUM Severity
 
 - [x] **CockroachDB binary in git** — Removed in commit `332c334` (sanitize repo). _Fixed._
-- [ ] **FeedbackStatus type too narrow** — `packages/blocks/shared-types/src/index.ts` — DB and routes use up to 8 values; type and `isValidStatus()` still need widening.
+- [ ] **FeedbackStatus type too narrow** — `internal/contracts/index.ts` and `@saas-maker/sdk` — DB and routes use up to 8 values; public SDK types still need widening.
 - [ ] **Session ID not unique per IP** — `workers/api/src/ua.ts:45` — `computeSessionId()` hashes `date|country|device|browser`. Inflates unique-visitor counts. Add IP-hash component.
 
 ## LOW Severity
 
 - [x] **CORS reflects any Origin** — `workers/api/src/index.ts:51-77` — Allowlist now enforced (`isAllowedOrigin`); falls back to `https://app.sassmaker.com`. _Fixed 2026-04-26._
-- [ ] **Vector search loads all chunks into memory** — `workers/api/src/db.ts:searchChunks` — Acceptable at current scale; migrate to Vectorize binding when growth warrants.
+- [x] **Vector search in API** — knowledge routes and chunk tables removed 2026-06-20. _Fixed._
 - [x] **No secrets in git** — Re-verified 2026-04-26. `.dev.vars`, `.env*`, credentials covered by `.gitignore`.
 
 ## Open Items (post-Foundry transition)

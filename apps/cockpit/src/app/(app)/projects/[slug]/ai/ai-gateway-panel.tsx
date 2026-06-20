@@ -33,7 +33,7 @@ import type {
   AIRequestRecord,
   AIRequestsResponse,
   AIUsageStats,
-} from "@saas-maker/shared-types";
+} from "@saas-maker/contracts";
 
 interface AIGatewayPanelProps {
   projectId: string;

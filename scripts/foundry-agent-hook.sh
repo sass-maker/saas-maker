@@ -21,7 +21,7 @@ if [ -f "$CWD/$CONFIG" ] || [ -f "$CWD/$LEGACY_CONFIG" ]; then
     echo "  - HIGH PRIORITY: Read ./AGENTS.md before making changes."
   fi
   echo "  - STANDARDS: ESLint, TSConfig, and Prettier are shared via @saas-maker/tooling."
-  echo "  - MONITORING: Use the '@saas-maker/ops' trace() utility for all async logic."
+  echo "  - MONITORING: Use local PostHog capture in workers/api/src/lib/telemetry.ts (or project-local telemetry.ts)."
   echo "  - VALIDATION: You MUST run 'fnd audit' before concluding your task."
   echo ""
   

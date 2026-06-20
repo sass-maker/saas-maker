@@ -4,7 +4,7 @@ import { requireSession } from '../middleware/auth';
 import { getDb } from '../db';
 import { trace, capture } from '../lib/telemetry';
 import { maskProviderKey } from '../ai-gateway';
-import type { ProjectRecord } from '@saas-maker/shared-types';
+import type { ProjectRecord } from '@saas-maker/contracts';
 
 const projects = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 projects.use('*', requireSession);
