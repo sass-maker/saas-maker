@@ -1,3 +1,10 @@
+/**
+ * Production health contracts for fleet smoke/monitoring/perf sweeps.
+ *
+ * `prodUrl: null` means no stable public URL is registered for automated checks —
+ * NOT that the project lacks a website. See fleet-canonical-projects.md
+ * ("Website vs prodUrl") before treating null prodUrl as "no web product."
+ */
 export const FLEET_HEALTH_CONTRACTS = {
   anime_list: {
     displayName: 'MAL Explorer',

@@ -50,3 +50,19 @@ When a new active project joins the fleet, update these sources in one commit:
 3. Add the same slug to this document with the canonical display name and any naming/domain caveat future agents need.
 4. Add a matching `FLEET_HEALTH_CONTRACTS` entry in `scripts/lib/fleet-health-contracts.mjs`. Use `prodUrl: null` and `smokeCommand: null` for local-only projects until a real production smoke exists.
 5. Run `pnpm check:fleet-contracts` before committing.
+
+## Website vs `prodUrl` (do not conflate)
+
+Fleet membership and product surface are **not** the same as a curl-able production URL. Agents auditing "does this project have a website?" must check the repo first; `prodUrl: null` only means monitoring/smoke is not wired yet.
+
+| Layer | Question | Examples |
+| ----- | -------- | -------- |
+| **Web surface in repo** | Is there a user-facing web app or marketing site in-tree? | `pace/website/`, `psi-swarm/web/`, `researchPapers/web/`, `taste/` Pages app |
+| **Deployed** | Is that surface (or an API Worker) deployed somewhere, even if DNS/custom domain is missing? | Pages project exists but `*.pages.dev` not in contracts yet |
+| **Live `prodUrl`** | Can fleet smoke/perf hit a stable public URL today? | Entry in `FLEET_HEALTH_CONTRACTS`; drives `fleet:prod-smoke` and perf sweeps only |
+
+**Wrong:** `prodUrl: null` or a failed curl ⇒ "no website" ⇒ rethink fleet membership.
+
+**Right:** No in-repo web surface **and** no plausible product web path (API-only helper, desktop-only with no landing) ⇒ that's the "missing website" signal. Undeployed Astro/Vite/Next in-tree still counts as having a website; the follow-up is deploy or park, not delist.
+
+Helpers (`free-ai`, `reel-pipeline`) may legitimately have no marketing site. Products with `web/`, `website/`, or a Pages/Worker frontend should stay in the fleet even when `prodUrl` is still null.
