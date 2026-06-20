@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
- * Deprecate @saas-maker npm packages removed from the monorepo (2026-06-20).
+ * Deprecate retired @saas-maker npm packages (2026-06-20 cleanup).
+ *
+ * Discovers all packages in the @saas-maker scope via `npm access list packages`,
+ * then deprecates everything except the small set still maintained in-repo.
  *
  * Requires npm publish rights: `npm login` or NPM_TOKEN in the environment.
  * If your account has 2FA (required for deprecate), pass a one-time password:
@@ -8,31 +11,37 @@
  *   NPM_OTP=123456 pnpm deprecate:removed-packages
  *
  * Usage:
- *   pnpm deprecate:removed-packages
+ *   pnpm deprecate:removed-packages -- --list
  *   pnpm deprecate:removed-packages -- --dry-run
  *   pnpm deprecate:removed-packages -- --otp=123456
  */
 const MESSAGE =
-  'Removed from saas-maker monorepo 2026-06-20. Use local eslint/tsconfig/prettier from fnd init templates or repo-local configs. See saas-maker docs/getting-started/standard.md.';
+  'Retired from saas-maker monorepo 2026-06-20. Use local eslint/tsconfig/prettier from fnd init templates, @saas-maker/sdk for API clients, or repo-local helpers. See saas-maker docs/getting-started/standard.md.';
 
-/** Packages that were published to npm and are no longer maintained in-repo. */
-const PACKAGES = [
-  '@saas-maker/eslint-config',
-  '@saas-maker/prettier-config',
-  '@saas-maker/tsconfig',
-  '@saas-maker/ops',
-  '@saas-maker/db',
-  '@saas-maker/shared-types',
-  '@saas-maker/eslint-plugin-fallow',
-  '@saas-maker/email',
-  '@saas-maker/foundry-shield',
-  '@saas-maker/test-config',
-  '@saas-maker/dev-config',
-];
+/** Still published and maintained in the saas-maker monorepo. */
+const ACTIVE_PACKAGES = new Set([
+  '@saas-maker/sdk',
+  '@saas-maker/cli',
+  '@saas-maker/feedback',
+  '@saas-maker/testimonials',
+  '@saas-maker/changelog-widget',
+  '@saas-maker/waitlist',
+]);
 
 const dryRun = process.argv.includes('--dry-run');
+const listOnly = process.argv.includes('--list');
 const otpArg = process.argv.find((arg) => arg.startsWith('--otp='));
 const otp = otpArg?.slice('--otp='.length) || process.env.NPM_OTP || '';
+
+function listScopePackages(execSync) {
+  const raw = execSync('npm access list packages @saas-maker --json', {
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'pipe'],
+  });
+  return Object.keys(JSON.parse(raw))
+    .filter((name) => name.startsWith('@saas-maker/'))
+    .sort();
+}
 
 async function main() {
   const { execSync } = await import('node:child_process');
@@ -44,24 +53,36 @@ async function main() {
     process.exit(1);
   }
 
+  let scopePackages;
+  try {
+    scopePackages = listScopePackages(execSync);
+  } catch (err) {
+    console.error('Failed to list @saas-maker packages. Are you logged in as the scope owner?');
+    console.error(err instanceof Error ? err.message : err);
+    process.exit(1);
+  }
+
+  const active = scopePackages.filter((name) => ACTIVE_PACKAGES.has(name));
+  const retired = scopePackages.filter((name) => !ACTIVE_PACKAGES.has(name));
+
+  console.log(`@saas-maker scope: ${scopePackages.length} packages total`);
+  console.log(`  keep (${active.length}): ${active.join(', ') || '(none)'}`);
+  console.log(`  deprecate (${retired.length}):`);
+  for (const name of retired) console.log(`    - ${name}`);
+
+  if (listOnly) return;
+
   if (!dryRun && !otp) {
     console.error(
-      'npm deprecate requires 2FA on this account. Re-run with `--otp=<code>` or NPM_OTP, or use a granular token with bypass 2FA enabled.',
+      '\nnpm deprecate requires 2FA on this account. Re-run with `--otp=<code>` or NPM_OTP, or use a granular token with bypass 2FA enabled.',
     );
     process.exit(1);
   }
 
   const otpFlag = otp ? ` --otp=${otp}` : '';
-
   let failed = 0;
-  for (const name of PACKAGES) {
-    try {
-      execSync(`npm view ${name} version`, { stdio: 'pipe' });
-    } catch {
-      console.log(`skip ${name} (not published)`);
-      continue;
-    }
 
+  for (const name of retired) {
     const cmd = `npm deprecate ${name}@${JSON.stringify('*')} ${JSON.stringify(MESSAGE)}${otpFlag}`;
     if (dryRun) {
       console.log(`[dry-run] ${cmd}`);
