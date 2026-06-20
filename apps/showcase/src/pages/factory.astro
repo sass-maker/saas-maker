@@ -13,9 +13,12 @@ const stations = [
   { id: 'reel-pipeline', role: 'Distribution',         flow: 'consume',   tag: 'renders & ships',     cap: 'render', auth: true,  note: 'worker + report' },
   { id: 'psi-swarm',     role: 'Perf Sensor',          flow: 'telemetry', tag: 'audit.completed',     cap: '—',      auth: true,  note: 'push-up' },
   { id: 'drank',         role: 'Rank Sensor',          flow: 'telemetry', tag: 'dr.snapshot',         cap: '—',      auth: true,  note: 'push-up' },
+  { id: 'starboard',       role: 'GitHub Insight',      flow: 'insight',   tag: 'reads fleet → better GitHub', cap: '—', auth: true, note: 'open' },
+  { id: 'everythingrated', role: 'GitHub Insight',      flow: 'insight',   tag: 'fleet-aware, closed',  cap: '—',      auth: true,  note: 'closed-source' },
   { id: 'free-ai',       role: 'AI Utility · Power',   flow: 'utility',   tag: 'inference grid',      cap: '—',      auth: true,  note: 'read-only' },
 ];
-const flowLabel = { produce: 'PRODUCE', consume: 'CONSUME', telemetry: 'TELEMETRY', utility: 'UTILITY' };
+const flowLabel = { produce: 'PRODUCE', consume: 'CONSUME', telemetry: 'TELEMETRY', utility: 'UTILITY', insight: 'INSIGHT' };
+const chipText = (s) => s.cap !== '—' ? `cap: ${s.cap}` : ({ telemetry: 'telemetry', insight: 'reads hub', utility: 'inference' }[s.flow] || s.flow);
 ---
 
 <Layout title="The Fleet Factory — saas-maker" description="A futuristic assembly line: every product a station, saas-maker the control tower and system-of-record. Pull task-queue + event telemetry on the Cloudflare edge.">
@@ -30,8 +33,8 @@ const flowLabel = { produce: 'PRODUCE', consume: 'CONSUME', telemetry: 'TELEMETR
         the system-of-record and the task queue. Work flows as <em>pull-claimed</em> jobs; results flow back as
         <em>telemetry</em>. Built on the Cloudflare edge.</p>
       <div class="stat-strip">
-        <div><b>8</b><span>stations linked</span></div>
-        <div><b>8/8</b><span>auth online</span></div>
+        <div><b>10</b><span>stations linked</span></div>
+        <div><b>10/10</b><span>auth online</span></div>
         <div><b>11/11</b><span>e2e transfers ✓</span></div>
         <div><b>D1</b><span>queue + ledger</span></div>
       </div>
@@ -71,7 +74,7 @@ const flowLabel = { produce: 'PRODUCE', consume: 'CONSUME', telemetry: 'TELEMETR
             <p class="st-role">{s.role}</p>
             <p class="st-tag">{s.tag}</p>
             <div class="st-foot">
-              <span class="chip">{s.cap !== '—' ? `cap: ${s.cap}` : 'telemetry'}</span>
+              <span class="chip">{chipText(s)}</span>
               <span class="chip ghost">{s.note}</span>
             </div>
             <div class="st-wire" aria-hidden="true"></div>
@@ -85,6 +88,7 @@ const flowLabel = { produce: 'PRODUCE', consume: 'CONSUME', telemetry: 'TELEMETR
       <div class="lg produce"><span></span>PRODUCE — enqueue work (capability-tagged) → the queue</div>
       <div class="lg consume"><span></span>CONSUME — a worker claims, does it, reports back (atomic lease)</div>
       <div class="lg telemetry"><span></span>TELEMETRY — push-up results to the ledger; hub never reads back</div>
+      <div class="lg insight"><span></span>INSIGHT — reads fleet data (read-down) to sharpen your GitHub presence</div>
       <div class="lg utility"><span></span>UTILITY — free-ai inference grid, drawn on by any station</div>
     </section>
 
@@ -167,14 +171,17 @@ const flowLabel = { produce: 'PRODUCE', consume: 'CONSUME', telemetry: 'TELEMETR
     /* flow accents */
     .flow-produce { border-top: 2px solid #34d399; } .flow-consume { border-top: 2px solid #fcd34d; }
     .flow-telemetry { border-top: 2px solid #67e8f9; } .flow-utility { border-top: 2px solid #e879f9; }
+    .flow-insight { border-top: 2px solid #818cf8; }
     .flow-produce .st-flow { color: #34d399; } .flow-consume .st-flow { color: #fcd34d; }
     .flow-telemetry .st-flow { color: #67e8f9; } .flow-utility .st-flow { color: #e879f9; }
+    .flow-insight .st-flow { color: #818cf8; }
 
     .legend { display: grid; gap: .55rem; max-width: 1040px; margin: 2.6rem auto 0; }
     .lg { display: flex; align-items: center; gap: .7rem; font: 600 .82rem/1.4 ui-monospace, monospace; color: #9fb6d2; }
     .lg span { width: 12px; height: 12px; border-radius: 3px; flex: none; }
     .lg.produce span { background: #34d399; } .lg.consume span { background: #fcd34d; }
     .lg.telemetry span { background: #67e8f9; } .lg.utility span { background: #e879f9; }
+    .lg.insight span { background: #818cf8; }
 
     .fab-foot { max-width: 720px; margin: 3.4rem auto 0; text-align: center; }
     .fab-foot p { color: #7da0c4; line-height: 1.6; } .fab-foot em { color: #5eead4; font-style: normal; }
