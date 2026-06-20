@@ -5,10 +5,12 @@ export type Bindings = {
   CORS_ORIGIN: string;
   DB: D1Database;
   FEEDBACK_IMAGES: R2Bucket;
-  RESEND_API_KEY: string;
-  NOTIFICATION_FROM_EMAIL: string;
   FREE_AI_BASE_URL: string;
   FREE_AI_API_KEY: string;
+  RAG_BACKEND?: string;
+  RAG_SERVICE?: Fetcher;
+  RAG_SERVICE_URL?: string;
+  RAG_SERVICE_KEY?: string;
   AI?: { run: (model: string, input: Record<string, unknown>) => Promise<unknown> };
   AI_GATEWAY_KEY_SECRET?: string;
   RATE_LIMITER?: { limit: (input: { key: string }) => Promise<{ success: boolean }> };

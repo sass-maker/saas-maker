@@ -20,7 +20,7 @@
     "generate:openapi": "node scripts/generate-openapi.mjs",
     "check:openapi": "pnpm generate:openapi && git diff --exit-code -- packages/cli/src/openapi.json docs/openapi/openapi.json apps/docs/public/openapi.json",
     "check:fleet-contracts": "node scripts/check-fleet-contract-sync.mjs",
-    "test": "turbo run test",
+    "test": "vitest run",
     "test:integration": "vitest run --config vitest.integration.config.ts",
     "test:e2e": "playwright test tests/e2e/api/",
     "lint": "turbo run lint",

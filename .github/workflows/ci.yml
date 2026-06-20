@@ -12,8 +12,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: pnpm/action-setup@v6
-        with:
-          version: 10
       - uses: actions/setup-node@v6
         with:
           node-version: 22
@@ -22,7 +20,6 @@ jobs:
       - run: pnpm check:openapi
       - run: pnpm build:types
       - run: pnpm build:db
-      - run: pnpm build:email
       - run: pnpm build:widget
       - run: pnpm -F @saas-maker/api typecheck
       - run: pnpm build:cockpit
@@ -50,7 +47,7 @@ jobs:
           changed=false
           while IFS= read -r path; do
             case "$path" in
-              workers/api/*|packages/blocks/db/*|packages/blocks/email/*|packages/blocks/ops/*|packages/blocks/shared-types/*|package.json|pnpm-lock.yaml|pnpm-workspace.yaml|.github/workflows/ci.yml)
+              workers/api/*|packages/blocks/db/*|packages/blocks/ops/*|packages/blocks/shared-types/*|package.json|pnpm-lock.yaml|pnpm-workspace.yaml|.github/workflows/ci.yml)
                 changed=true
                 break
                 ;;
@@ -63,8 +60,6 @@ jobs:
         run: echo "No API-owned paths changed; skipping saasmaker-api deploy."
       - uses: pnpm/action-setup@v6
         if: steps.changes.outputs.changed == 'true'
-        with:
-          version: 10
       - uses: actions/setup-node@v6
         if: steps.changes.outputs.changed == 'true'
         with:
@@ -75,8 +70,6 @@ jobs:
       - run: pnpm build:types
         if: steps.changes.outputs.changed == 'true'
       - run: pnpm build:db
-        if: steps.changes.outputs.changed == 'true'
-      - run: pnpm build:email
         if: steps.changes.outputs.changed == 'true'
       - name: Deploy API to Cloudflare Workers
         if: steps.changes.outputs.changed == 'true'
@@ -123,8 +116,6 @@ jobs:
         run: echo "No Droid-owned paths changed; skipping saasmaker-droid deploy."
       - uses: pnpm/action-setup@v6
         if: steps.changes.outputs.changed == 'true'
-        with:
-          version: 10
       - uses: actions/setup-node@v6
         if: steps.changes.outputs.changed == 'true'
         with:
@@ -174,8 +165,6 @@ jobs:
         run: echo "No cockpit-owned paths changed; skipping saasmaker-dashboard deploy."
       - uses: pnpm/action-setup@v6
         if: steps.changes.outputs.changed == 'true'
-        with:
-          version: 10
       - uses: actions/setup-node@v6
         if: steps.changes.outputs.changed == 'true'
         with:
@@ -225,8 +214,6 @@ jobs:
         run: echo "No home-owned paths changed; skipping saas-maker-home deploy."
       - uses: pnpm/action-setup@v6
         if: steps.changes.outputs.changed == 'true'
-        with:
-          version: 10
       - uses: actions/setup-node@v6
         if: steps.changes.outputs.changed == 'true'
         with:
@@ -279,8 +266,6 @@ jobs:
         run: echo "No docs-owned paths changed; skipping saas-maker-docs deploy."
       - uses: pnpm/action-setup@v6
         if: steps.changes.outputs.changed == 'true'
-        with:
-          version: 10
       - uses: actions/setup-node@v6
         if: steps.changes.outputs.changed == 'true'
         with:
@@ -305,8 +290,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: pnpm/action-setup@v6
-        with:
-          version: 10
       - uses: actions/setup-node@v6
         with:
           node-version: 22

@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { Bindings, Variables } from '../types';
 import { requireSession } from '../middleware/auth';
 import { getDb } from '../db';
-import { trace, capture } from '@saas-maker/ops';
+import { trace, capture } from '../lib/telemetry';
 import { maskProviderKey } from '../ai-gateway';
 import type { ProjectRecord } from '@saas-maker/shared-types';
 

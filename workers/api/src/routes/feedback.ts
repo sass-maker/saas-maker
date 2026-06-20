@@ -9,22 +9,13 @@ import {
   FeedbackRecord,
 } from '@saas-maker/shared-types';
 import { getDb } from '../db';
-import { email } from '@saas-maker/email';
-import { trace, capture } from '@saas-maker/ops';
+import { trace, capture } from '../lib/telemetry';
 
 const feedback = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
 const VALID_TYPES: FeedbackType[] = ['bug', 'feature', 'feedback'];
 const VALID_STATUSES: FeedbackStatus[] = ['new', 'acknowledged', 'investigating', 'planned', 'in_progress', 'resolved', 'dismissed', 'on_roadmap'];
 const PAGE_SIZE = 20;
-
-function scheduleBackgroundTask(c: Context<{ Bindings: Bindings; Variables: Variables }>, task: Promise<unknown>) {
-  try {
-    c.executionCtx.waitUntil(task);
-  } catch {
-    void task;
-  }
-}
 
 function isValidStatus(status: string): status is FeedbackStatus {
   return VALID_STATUSES.includes(status as FeedbackStatus);
@@ -60,30 +51,6 @@ feedback.post('/', requireApiKey, async (c) => {
     submitter_email: body.submitter_email.trim(),
     submitter_name: body.submitter_name?.trim() || null,
   });
-
-  // Fire-and-forget email notification
-  const project = await db.getProjectById(projectId);
-  if (project) {
-    const owner = await db.getUserById(project.owner_id);
-    if (owner?.email) {
-      scheduleBackgroundTask(
-        c,
-        email.send({
-          to: owner.email,
-          subject: `New ${record.type} on ${project.name}`,
-          template: `New {{type}} submission on {{projectName}}\n\nFrom: {{submitter}}\nTitle: {{title}}\n{{description}}\n\nView in dashboard: {{dashboardUrl}}`,
-          data: {
-            projectName: project.name,
-            type: record.type,
-            title: record.title,
-            description: record.description,
-            submitter: record.submitter_name || record.submitter_email || 'Anonymous',
-            dashboardUrl: `https://app.sassmaker.com/projects/${project.slug}/feedback`,
-          },
-        }).catch(() => {})
-      );
-    }
-  }
 
   capture({ distinctId: record.submitter_email, event: 'feedback_submitted', properties: { feedback_id: record.id, project_id: projectId, type: record.type, title: record.title } });
 

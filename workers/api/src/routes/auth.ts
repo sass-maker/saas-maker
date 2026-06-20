@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { Bindings, Variables } from '../types';
 import { resolveBearerUserId } from '../middleware/auth';
 import { getDb } from '../db';
-import { capture, identify } from '@saas-maker/ops';
+import { capture, identify } from '../lib/telemetry';
 
 const auth = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 

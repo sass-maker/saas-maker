@@ -1,0 +1,44 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "ui": "stream",
+  "globalDependencies": ["pnpm-lock.yaml", "tsconfig.base.json", "tsconfig.json"],
+  "globalEnv": ["NEXT_PUBLIC_API_URL", "NODE_ENV"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        ".open-next/**",
+        "dist/**",
+        "storybook-static/**"
+      ],
+      "inputs": [
+        "src/**",
+        "package.json",
+        "tsup.config.*",
+        "tsconfig*.json",
+        "next.config.*",
+        "open-next.config.*",
+        "astro.config.*",
+        "public/**"
+      ]
+    },
+    "typecheck": {
+      "dependsOn": ["^build"],
+      "outputs": []
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"],
+      "inputs": ["src/**", "tests/**", "vitest.config.*"]
+    },
+    "lint": {
+      "outputs": []
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    }
+  }
+}

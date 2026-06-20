@@ -4,7 +4,7 @@ import { requireApiKey, requireSession } from '../middleware/auth';
 import { getDb } from '../db';
 import { buildCacheKey, tryCacheMatch, withCachePut } from '../edge-cache';
 import type { SubmitTestimonialRequest } from '@saas-maker/shared-types';
-import { capture } from '@saas-maker/ops';
+import { capture } from '../lib/telemetry';
 
 const testimonials = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 

@@ -10,7 +10,7 @@ import type {
   DocumentRecord,
   SearchResult
 } from '@saas-maker/shared-types';
-import { capture } from '@saas-maker/ops';
+import { capture } from '../lib/telemetry';
 
 const knowledge = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 

@@ -8,9 +8,6 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@saas-maker/db": "workspace:*",
-    "@saas-maker/email": "workspace:*",
-    "@saas-maker/ops": "workspace:*",
     "@saas-maker/shared-types": "workspace:*",
     "drizzle-orm": "0.45.2",
     "hono": "4.12.15",
