@@ -57,6 +57,11 @@ const TARGETS = {
     },
   ],
   'open-historia': [{ label: 'web', url: 'https://open-historia.sarthakagrawal927.workers.dev' }],
+  pace: [{ label: 'web', url: 'https://pace-6xg.pages.dev' }],
+  'psi-swarm': [
+    { label: 'web', url: 'https://psi-swarm-web.pages.dev' },
+    { label: 'gallery', url: 'https://psi-swarm-web.pages.dev/gallery/' },
+  ],
   reader: [{ label: 'web', url: 'https://reader.sarthakagrawal927.workers.dev' }],
   'reel-pipeline': [{ label: 'health', url: 'https://reel-pipeline-artifacts.sarthakagrawal927.workers.dev/health' }],
   'resume-tailor': [{ label: 'web', url: 'https://rolepatch.com' }],
@@ -79,7 +84,12 @@ const TARGETS = {
     { label: 'devlog', url: 'https://tinygpt.pages.dev/devlog.html', expectText: ['Devlog'] },
   ],
   'today-little-log': [{ label: 'web', url: 'https://today-little-log.pages.dev' }],
+  taste: [{ label: 'web', url: 'https://shiprank.dev' }],
   truehire: [{ label: 'web', url: 'https://truehire.sarthakagrawal927.workers.dev' }],
+  'verified-bases': [
+    { label: 'web', url: 'https://verified-bases-web.pages.dev' },
+    { label: 'health', url: 'https://verified-bases-web.pages.dev/api/health' },
+  ],
 };
 
 const AUTH_PROBES = {
