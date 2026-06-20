@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import type { FeedbackType, SubmitFeedbackRequest } from '../types';
 import type { ApiClient } from '../api';
+import { anchorLabel, formatAnchor, type ElementAnchor } from '../elementAnchor';
 import { ImageUpload } from './ImageUpload';
 
 interface SubmitFormProps {
@@ -9,6 +10,10 @@ interface SubmitFormProps {
   userName?: string;
   types: FeedbackType[];
   accentColor: string;
+  enablePointing?: boolean;
+  anchor?: ElementAnchor | null;
+  onStartPick?: () => void;
+  onClearAnchor?: () => void;
 }
 
 const TYPE_CONFIG: Record<FeedbackType, { label: string; emoji: string }> = {
@@ -39,6 +44,10 @@ export const SubmitForm: React.FC<SubmitFormProps> = ({
   userName,
   types,
   accentColor,
+  enablePointing = false,
+  anchor,
+  onStartPick,
+  onClearAnchor,
 }) => {
   const [selectedType, setSelectedType] = useState<FeedbackType>(types[0] || 'feedback');
   const [title, setTitle] = useState('');
@@ -81,10 +90,15 @@ export const SubmitForm: React.FC<SubmitFormProps> = ({
 
       setSubmitting(true);
       try {
+        // The API has no structured anchor field, so the pointed-at element rides
+        // in the description as a markdown block the team (and an agent) can act on.
+        const fullDescription = anchor
+          ? description.trim() + '\n' + formatAnchor(anchor)
+          : description.trim();
         const payload: SubmitFeedbackRequest = {
           type: selectedType,
           title: title.trim(),
-          description: description.trim(),
+          description: fullDescription,
           submitter_email: resolvedEmail.trim(),
         };
         if (imageUrl) payload.image_url = imageUrl;
@@ -94,13 +108,14 @@ export const SubmitForm: React.FC<SubmitFormProps> = ({
         await api.submitFeedback(payload);
         setSubmitted(true);
         resetForm();
+        onClearAnchor?.();
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Something went wrong.');
       } finally {
         setSubmitting(false);
       }
     },
-    [api, selectedType, title, description, imageUrl, email, name, userEmail, userName, resetForm],
+    [api, selectedType, title, description, imageUrl, email, name, userEmail, userName, anchor, resetForm, onClearAnchor],
   );
 
   if (submitted) {
@@ -178,6 +193,37 @@ export const SubmitForm: React.FC<SubmitFormProps> = ({
           required
         />
       </div>
+
+      {/* Point at an element */}
+      {enablePointing && (
+        <div className="smw-field">
+          <label className="smw-label">Pinpoint (optional)</label>
+          {anchor ? (
+            <div className="smw-anchor">
+              <span className="smw-anchor__icon" aria-hidden="true">📍</span>
+              <span className="smw-anchor__label" title={anchor.selector}>
+                {anchorLabel(anchor)}
+              </span>
+              <button
+                type="button"
+                className="smw-anchor__clear"
+                onClick={() => onClearAnchor?.()}
+                aria-label="Remove pinpointed element"
+              >
+                ✕
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              className="smw-btn smw-btn--ghost smw-btn--full"
+              onClick={() => onStartPick?.()}
+            >
+              ◎ Point at an element
+            </button>
+          )}
+        </div>
+      )}
 
       {/* Image upload */}
       <div className="smw-field">

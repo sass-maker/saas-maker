@@ -1,8 +1,10 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import type { FeedbackWidgetProps } from './types';
+import type { ElementAnchor } from './elementAnchor';
 import { createApiClient } from './api';
 import { TriggerButton } from './components/TriggerButton';
 import { Modal } from './components/Modal';
+import { ElementPicker } from './components/ElementPicker';
 import './styles/widget.css';
 
 const DEFAULT_TYPES = ['bug', 'feature', 'feedback'] as const;
@@ -19,13 +21,27 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
   theme = 'auto',
   accentColor = DEFAULT_ACCENT,
   triggerText = DEFAULT_TRIGGER_TEXT,
+  enablePointing = true,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  // Picking overlays the page; we keep the modal mounted (hidden) so the user's
+  // in-progress title/description survive the round-trip and the captured anchor
+  // lands back in the same form.
+  const [picking, setPicking] = useState(false);
+  const [anchor, setAnchor] = useState<ElementAnchor | null>(null);
 
   const api = useMemo(
     () => createApiClient(projectId, apiBaseUrl),
     [projectId, apiBaseUrl],
   );
+
+  const startPick = useCallback(() => setPicking(true), []);
+  const handlePick = useCallback((a: ElementAnchor) => {
+    setAnchor(a);
+    setPicking(false);
+  }, []);
+  const cancelPick = useCallback(() => setPicking(false), []);
+  const clearAnchor = useCallback(() => setAnchor(null), []);
 
   const resolvedTypes = types && types.length > 0 ? types : [...DEFAULT_TYPES];
 
@@ -50,13 +66,21 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
       />
       <Modal
         isOpen={isOpen}
+        hidden={picking}
         onClose={() => setIsOpen(false)}
         api={api}
         userEmail={userEmail}
         userName={userName}
         types={resolvedTypes}
         accentColor={accentColor}
+        enablePointing={enablePointing}
+        anchor={anchor}
+        onStartPick={startPick}
+        onClearAnchor={clearAnchor}
       />
+      {enablePointing && (
+        <ElementPicker active={picking} onPick={handlePick} onCancel={cancelPick} />
+      )}
     </div>
   );
 };

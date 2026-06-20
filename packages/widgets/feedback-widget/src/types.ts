@@ -45,4 +45,6 @@ export interface FeedbackWidgetProps {
   theme?: 'light' | 'dark' | 'auto';
   accentColor?: string;
   triggerText?: string;
+  /** Allow pointing at a page element to anchor feedback to it (selector + source). Default true. */
+  enablePointing?: boolean;
 }

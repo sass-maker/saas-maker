@@ -849,3 +849,102 @@
 [data-saasmaker-widget] .smw-browse__list::-webkit-scrollbar-thumb:hover {
   background: var(--smw-text-muted);
 }
+
+/* ---------- Ghost button (used by the pinpoint control) ---------- */
+
+[data-saasmaker-widget] .smw-btn--ghost {
+  background: var(--smw-bg-secondary);
+  color: var(--smw-text);
+  border: 1px solid var(--smw-border);
+}
+
+[data-saasmaker-widget] .smw-btn--ghost:hover {
+  background: var(--smw-bg-hover);
+  border-color: var(--smw-accent);
+}
+
+/* ---------- Pinpointed-element chip ---------- */
+
+[data-saasmaker-widget] .smw-anchor {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: var(--smw-bg-secondary);
+  border: 1px solid var(--smw-border);
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+[data-saasmaker-widget] .smw-anchor__icon {
+  flex: none;
+}
+
+[data-saasmaker-widget] .smw-anchor__label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--smw-text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+[data-saasmaker-widget] .smw-anchor__clear {
+  flex: none;
+  background: transparent;
+  border: none;
+  color: var(--smw-text-muted);
+  cursor: pointer;
+  padding: 2px 4px;
+  line-height: 1;
+  border-radius: 4px;
+}
+
+[data-saasmaker-widget] .smw-anchor__clear:hover {
+  color: var(--smw-text);
+  background: var(--smw-bg-hover);
+}
+
+/* ---------- Element picker overlay (page-level; events pass through) ---------- */
+
+[data-saasmaker-widget] .smw-picker {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  pointer-events: none;
+}
+
+[data-saasmaker-widget] .smw-picker__box {
+  position: fixed;
+  background: color-mix(in srgb, var(--smw-accent) 18%, transparent);
+  border: 2px solid var(--smw-accent);
+  border-radius: 3px;
+  pointer-events: none;
+  transition: top 60ms ease, left 60ms ease, width 60ms ease, height 60ms ease;
+}
+
+[data-saasmaker-widget] .smw-picker__hint {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--smw-text);
+  color: var(--smw-bg);
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-family: system-ui, -apple-system, sans-serif;
+  box-shadow: var(--smw-shadow);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+[data-saasmaker-widget] .smw-picker__hint kbd {
+  background: var(--smw-bg-secondary);
+  color: var(--smw-text);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+}

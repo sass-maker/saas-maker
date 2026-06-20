@@ -1,16 +1,23 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import type { FeedbackType } from '../types';
 import type { ApiClient } from '../api';
+import type { ElementAnchor } from '../elementAnchor';
 import { SubmitForm } from './SubmitForm';
 
 interface ModalProps {
   isOpen: boolean;
+  /** Kept mounted but visually hidden (e.g. during element picking) so form state survives. */
+  hidden?: boolean;
   onClose: () => void;
   api: ApiClient;
   userEmail?: string;
   userName?: string;
   types: FeedbackType[];
   accentColor: string;
+  enablePointing?: boolean;
+  anchor?: ElementAnchor | null;
+  onStartPick?: () => void;
+  onClearAnchor?: () => void;
 }
 
 const CloseIcon: React.FC = () => (
@@ -31,12 +38,17 @@ const CloseIcon: React.FC = () => (
 
 export const Modal: React.FC<ModalProps> = ({
   isOpen,
+  hidden = false,
   onClose,
   api,
   userEmail,
   userName,
   types,
   accentColor,
+  enablePointing,
+  anchor,
+  onStartPick,
+  onClearAnchor,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -48,11 +60,12 @@ export const Modal: React.FC<ModalProps> = ({
   );
 
   useEffect(() => {
-    if (isOpen) {
+    // Don't let Esc close the modal while picking — there Esc cancels the pick.
+    if (isOpen && !hidden) {
       document.addEventListener('keydown', handleKeyDown);
       return () => document.removeEventListener('keydown', handleKeyDown);
     }
-  }, [isOpen, handleKeyDown]);
+  }, [isOpen, hidden, handleKeyDown]);
 
   const handleBackdropClick = useCallback(
     (e: React.MouseEvent) => {
@@ -64,7 +77,11 @@ export const Modal: React.FC<ModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="smw-overlay" onClick={handleBackdropClick}>
+    <div
+      className="smw-overlay"
+      onClick={handleBackdropClick}
+      style={hidden ? { display: 'none' } : undefined}
+    >
       <div
         ref={modalRef}
         className="smw-modal"
@@ -93,6 +110,10 @@ export const Modal: React.FC<ModalProps> = ({
             userName={userName}
             types={types}
             accentColor={accentColor}
+            enablePointing={enablePointing}
+            anchor={anchor}
+            onStartPick={onStartPick}
+            onClearAnchor={onClearAnchor}
           />
         </div>
       </div>
