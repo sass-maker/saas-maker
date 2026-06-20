@@ -23,7 +23,7 @@ Everything is hosted on Cloudflare. Each deployable ships independently via GitH
 | Auth         | better-auth + Google OAuth (cockpit); API validates better-auth session tokens against the shared D1 `session` table |
 | File storage | Cloudflare R2 (`saasmaker-feedback-images`)                                                                          |
 | AI           | Cloudflare Workers AI binding; optional free-ai proxy (`FREE_AI_BASE_URL`); Droid uses DeepSeek models               |
-| Email        | Resend                                                                                                               |
+| Email        | None in production routes today (Cloudflare Email Workers migration planned; legacy Resend helper remains in `workers/api/src/email.ts`) |
 | Analytics    | PostHog                                                                                                              |
 | CI/CD        | GitHub Actions — build/test on every push/PR, auto-deploy each app to Cloudflare on push to `main`                   |
 

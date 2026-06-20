@@ -50,13 +50,6 @@ critical path. Speculative coverage is yak shaving.
   has `noImplicitAny: false` to silence ~15 errors there. Each is a
   potential runtime bug. Re-enable strictness and fix the underlying
   call sites — likely needs splitting `db.ts` into per-domain files.
-- [ ] **`@saas-maker/ops` d.ts drift**. The hand-rolled
-  `packages/blocks/ops/dist/index.d.ts` is the public surface; if a new
-  function lands in `src/` and we forget to mirror, downstream packages
-  break silently. Add a CI check that runs `tsup` and diffs the
-  generated d.ts against the hand-rolled one (or fix the tsup DTS
-  baseUrl warning so the generator works again).
-
 ## MEDIUM — likely to bite once fleet integration starts
 
 - [ ] **`fnd init` against a fresh non-saas-maker repo**. Today's tests

@@ -167,7 +167,7 @@ Brand note: production domain uses **double-s** `sassmaker.com`; display name re
 1. Keep fleet registry, README, AGENTS guidance, project status docs, helper classifications, health contracts, and public showcase synchronized as projects are added or retired.
 2. Revisit Magic Form Builder / AI Feedback Digest only if product ownership, human-review, and integration boundaries are defined (prior ops prototypes removed 2026-06-20).
 3. Tighten Task Workflows after real use: automatic Droid result capture, richer run status/events, clearer artifact lifecycle controls.
-4. Continue reducing stale deploy/docs references when concrete drift is found (README still mentions Resend though sends removed).
+4. Continue reducing stale deploy/docs references when concrete drift is found.
 5. Execute EOY DR plan in `docs/launch-kit.md` — target DR ≥ 20 on all seven owned domains by 2026-12-31.
 
 ### Deferred
@@ -178,7 +178,6 @@ Brand note: production domain uses **double-s** `sassmaker.com`; display name re
 - Long-term portfolio program (Phases 0, 2–4 from archived PRD).
 - Magic Form Builder and AI Feedback Digest shelved prototypes removed with `packages/blocks/ops/` (2026-06-20); not production features.
 - Droid v1 experimental — not a polished daily-driver for all fleet workflows.
-- README still lists Resend for email though Resend sends were removed from feedback/waitlist routes.
 - Deprecated analytics endpoint noted in fleet smoke: `/v1/analytics/events`.
 
 ### Blocked

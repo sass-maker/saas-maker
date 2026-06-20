@@ -1,7 +1,7 @@
 # AI Feedback Digest — Product Module Plan
 
 **Date:** 2026-06-04  
-**Status:** Prototype added (fixture-backed dry run, no production AI/writeback)  
+**Status:** Shelved 2026-06-20 — prototype removed with `packages/blocks/ops/` deletion; no production AI/writeback  
 **Source:** [saas-ideas](https://github.com/sarthakagrawal927/saas-ideas) at `aba1a83`, triaged in [`docs/ideas/saas-ideas-consolidation-2026-06-03.md`](../ideas/saas-ideas-consolidation-2026-06-03.md)  
 **Symphony task:** `764795a4-23c9-4d61-be31-83c2ddec800d`
 

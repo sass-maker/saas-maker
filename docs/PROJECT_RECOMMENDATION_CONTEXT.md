@@ -1,8 +1,10 @@
 # Project Recommendation Context
 
-Generated: 2026-06-09T14:35:00.000Z
+Generated: 2026-06-20 (partial refresh after knowledge/RAG + tooling package removal)
 
 This file is a CodeVetter Repo Unpacked-inspired audit written for Starboard recommendations. It is intentionally local, evidence-oriented, and safe to commit: it records product context, feature areas, stack inventory, and recommendation guidance without secrets or environment values.
+
+**2026-06-20 note:** In-API knowledge/RAG removed from SaaS Maker (not delegated from this control plane). Removed internal packages: `@saas-maker/ops`, `@saas-maker/db`, `@saas-maker/shared-types`, and all `packages/tooling/*` npm packages. Types live in `internal/contracts/`; telemetry in `workers/api/src/lib/telemetry.ts`.
 
 ## Project Identity
 
@@ -21,13 +23,13 @@ SaaS Maker SaaS Maker is a TypeScript monorepo for building and operating small 
 
 ## Feature Map
 
-- **AI agents**: Agents, tool use, workflows, orchestration, RAG, evals, and model integration. Keywords: ai, agent, agents, llm, rag, embedding, eval, model.
+- **AI agents**: Agents, tool use, workflows, orchestration, evals, and model integration (in-API RAG/knowledge removed 2026-06-20). Keywords: ai, agent, agents, llm, eval, model.
 - **UI workflows**: Dashboards, tables, forms, component systems, charts, and user workflows. Keywords: ui, ux, dashboard, table, component, react, next, tailwind.
 - **Cloudflare and deploy**: Workers, Pages, edge runtime, queues, storage, and deploy automation. Keywords: cloudflare, worker, workers, pages, edge, deploy, wrangler, queue.
 - **Database and storage**: SQL, document storage, migrations, cache, queues, vectors, and persistence. Keywords: database, db, sql, sqlite, postgres, turso, libsql, drizzle.
 - **Testing and quality**: Unit tests, browser tests, evals, CI quality gates, and regression checks. Keywords: test, testing, quality, vitest, playwright, ci, eval, benchmark.
 - **Content and media**: Content production, video, reels, documents, markdown, and publishing workflows. Keywords: content, media, video, reel, markdown, document, publish, editor.
-- **Search and discovery**: Search, ranking, recommendations, feeds, semantic retrieval, and discovery UX. Keywords: search, discovery, recommend, ranking, semantic, feed, index, retrieval.
+- **Search and discovery**: Task search, fleet registry, standards — not in-API vector search (removed 2026-06-20). Keywords: search, discovery, recommend, ranking, feed, index.
 
 ## Runtime Surfaces and Entrypoints
 
@@ -77,8 +79,6 @@ SaaS Maker SaaS Maker is a TypeScript monorepo for building and operating small 
 - `packages/blocks/ops/vitest.config.ts`
 - `packages/cli/templates/next/tailwind.config.ts`
 - `packages/cli/vitest.config.ts`
-- `packages/tooling/tailwind-preset/vitest.config.ts`
-- `packages/tooling/test-config/vitest.config.ts`
 - `playwright.config.ts`
 - `standards/hardening/mobile-kit/playwright.config.ts.template`
 - `vitest.config.ts`
@@ -98,10 +98,6 @@ Direct dependencies:
 - `@eslint/js`
 - `@libsql/client`
 - `@radix-ui/react-slot`
-- `@saas-maker/db`
-- `@saas-maker/email`
-- `@saas-maker/eslint-plugin-fallow`
-- `@saas-maker/ops`
 - `@saas-maker/sdk`
 - `@saas-maker/contracts`
 - `@saas-maker/ui`
@@ -145,9 +141,6 @@ Development dependencies:
 - `@eslint/js`
 - `@opennextjs/cloudflare`
 - `@playwright/test`
-- `@saas-maker/eslint-config`
-- `@saas-maker/prettier-config`
-- `@saas-maker/tsconfig`
 - `@storybook/addon-essentials`
 - `@storybook/addon-interactions`
 - `@storybook/addon-links`
@@ -190,9 +183,7 @@ Package scripts:
 - `build-storybook`
 - `build:api`
 - `build:cockpit`
-- `build:db`
 - `build:docs`
-- `build:email`
 - `build:next`
 - `build:showcase`
 - `build:types`
@@ -236,17 +227,11 @@ Package scripts:
 
 ## Testing and Quality Signals
 
-- `packages/blocks/ops/src/__tests__/trace.test.ts`
-- `packages/blocks/ops/vitest.config.ts`
 - `packages/cli/src/commands/__tests__/forge.test.ts`
 - `packages/cli/src/commands/__tests__/init.test.ts`
 - `packages/cli/src/lib/__tests__/drift.test.ts`
 - `packages/cli/src/lib/__tests__/fleet.test.ts`
 - `packages/cli/vitest.config.ts`
-- `packages/tooling/tailwind-preset/src/__tests__/preset.test.ts`
-- `packages/tooling/tailwind-preset/vitest.config.ts`
-- `packages/tooling/test-config/src/__tests__/factories.test.ts`
-- `packages/tooling/test-config/vitest.config.ts`
 - `playwright.config.ts`
 - `standards/hardening/mobile-kit/playwright.config.ts.template`
 - `tests/api/ai-gateway.test.ts`
@@ -323,20 +308,8 @@ Package manifests:
 - `apps/docs/package.json`
 - `apps/showcase/package.json`
 - `package.json`
-- `packages/blocks/db/package.json`
-- `packages/blocks/email/package.json`
-- `packages/blocks/ops/package.json`
 - `packages/blocks/sdk/package.json`
-- `packages/blocks/shared-types/package.json`
 - `packages/cli/package.json`
-- `packages/tooling/dev-config/package.json`
-- `packages/tooling/eslint-config/package.json`
-- `packages/tooling/eslint-plugin-fallow/package.json`
-- `packages/tooling/prettier-config/package.json`
-- `packages/tooling/renovate-config/package.json`
-- `packages/tooling/tailwind-preset/package.json`
-- `packages/tooling/test-config/package.json`
-- `packages/tooling/tsconfig/package.json`
 - `packages/ui/package.json`
 - `packages/widgets/changelog-widget/package.json`
 - `packages/widgets/feedback-widget/package.json`

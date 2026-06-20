@@ -10,14 +10,20 @@ Use this expression everywhere a dashboard filters or groups by app:
 coalesce(properties.project_id, properties.project_slug, properties.project, properties.foundry_project_id) AS project_id
 ```
 
-Exported from `@saas-maker/ops` as `POSTHOG_PROJECT_ID_COALESCE` (`packages/blocks/ops/src/posthog-properties.ts`). Cockpit fleet feeds and `pnpm fleet:posthog-verify` use the same string.
+Canonical HogQL coalesce (also in `scripts/fleet-posthog-verify.mjs` as `PROJECT_ID_COALESCE`):
+
+```sql
+coalesce(properties.project_id, properties.project_slug, properties.project, properties.foundry_project_id)
+```
+
+API routes normalize ingest via `workers/api/src/lib/telemetry.ts` (`withCanonicalProjectId`). Cockpit fleet feeds and `pnpm fleet:posthog-verify` use the same expression.
 
 ## Events that must be filterable by `project_id`
 
 | Group | Events | Emitted by |
 | --- | --- | --- |
 | Product taxonomy | `signup`, `activated`, `core_action`, `returned` | Fleet `analytics.ts` / `analytics-events.ts` wrappers (`project_id: "<slug>"` on every emit) |
-| Foundry monitoring | `foundry_error`, `foundry_trace`, `foundry_page_crash`, `foundry_auth_failure`, `foundry_signup_failure` | `foundry-monitoring.ts`, `@saas-maker/ops` server capture, API worker |
+| Foundry monitoring | `foundry_error`, `foundry_trace`, `foundry_page_crash`, `foundry_auth_failure`, `foundry_signup_failure` | Fleet `foundry-monitoring.ts`, API `workers/api/src/lib/telemetry.ts`, cockpit server queries |
 | SaaS Maker API (cockpit) | `feedback_*`, `waitlist_signup`, `task_*`, `project_*`, … | `workers/api` routes via `capture()` + `withCanonicalProjectId` |
 
 ## Stale dashboard fields — update checklist

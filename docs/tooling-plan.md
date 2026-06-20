@@ -1,5 +1,7 @@
 # Shared Tooling Plan — 22 Personal JS/TS Projects
 
+> **Superseded 2026-06-20.** `@saas-maker/eslint-config`, `@saas-maker/tsconfig`, `@saas-maker/prettier-config`, and `@saas-maker/astro-landing` were removed from saas-maker. Fleet projects now use local configs from `fnd init` templates and repo-local scripts. Kept for historical context only.
+
 ## Context
 
 23 personal JS/TS projects (22 active + saas-maker itself) on `~/Desktop`. Audit revealed:

@@ -1,7 +1,7 @@
 # Magic Form — Product Block Design Brief
 
 **Date:** 2026-06-04  
-**Status:** Prototype added (fixture-backed, no production routes/migrations)  
+**Status:** Shelved 2026-06-20 — prototype removed with `packages/blocks/ops/` deletion; no production routes/migrations  
 **Source:** [saas-ideas](https://github.com/sarthakagrawal927/saas-ideas) at `aba1a83`, triaged in [`docs/ideas/saas-ideas-consolidation-2026-06-03.md`](../ideas/saas-ideas-consolidation-2026-06-03.md)  
 **Symphony task:** `58d18a53-e2a6-4f23-b898-5a33cd9f445f`
 
