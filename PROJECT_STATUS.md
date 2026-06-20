@@ -21,18 +21,19 @@ SaaS Maker is the foundry helper for the fleet: a Cloudflare-first monorepo with
 - **CI/turbo recovery (2026-06-20):** restored missing `turbo.json`, fixed CI pnpm version conflict, removed dead `build:email` steps, and pointed root tests back at `vitest run` (320 tests). Cockpit builds via turbo dependency graph.
 - **API telemetry inlined (2026-06-20):** `workers/api/src/lib/telemetry.ts` replaces direct `@saas-maker/ops` usage in the API worker; `@saas-maker/ops` remains published for external consumers.
 - **Dead email block removed (2026-06-20):** deleted orphaned `@saas-maker/email` package and Resend notification sends from feedback/waitlist routes. Email Workers migration remains tracked separately in fleet docs.
+- **RAG service integration (2026-06-20):** knowledge routes support `RAG_BACKEND=local|dual|service`, service-backed search, dual-run comparison, and `/v1/knowledge/indexes/:id/export` for pre-embedded backfill into `rag-service`.
+- **Astro landing tooling (2026-06-20):** `@saas-maker/astro-landing` CLI ships Beasties critical CSS inlining + landing overlay helpers for fleet OpenNext/Astro migrations.
+- **Fleet hub events (2026-06-20):** events sink + task queue + worker SDK for fleet project auth/integration.
 
 ## Planned Next
 
 1. Keep the fleet registry, README, AGENTS guidance, project status docs, helper classifications, health contracts, and public showcase synchronized as projects are added or retired.
-2. **RAG service cutover (PR #27):** wire knowledge routes to standalone `rag-service` (`RAG_BACKEND=local|dual|service`), add export/backfill endpoint, register health contracts.
-3. **Astro landing tooling (PR #28):** ship `@saas-maker/astro-landing` CLI for Beasties critical CSS + landing overlay helpers.
-4. **Fleet hub events (PR #25):** events sink + task queue + worker SDK for fleet project auth/integration.
-5. Graduate Magic Form Builder only after product ownership, storage, preview, and integration boundaries are explicit.
-6. Graduate AI Feedback Digest only after human-review, task writeback, and production AI-cost controls are explicit.
-7. Tighten Task Workflows after real use: automatic Droid result capture, richer run status/events in the panel, and clearer artifact lifecycle controls.
-8. Continue reducing stale deploy/docs references when concrete drift is found.
-9. Execute the EOY DR plan in `docs/launch-kit.md` — target DR ≥ 20 on all seven owned domains by 2026-12-31 via staggered launches, directories, and linkable assets.
+2. Graduate Magic Form Builder only after product ownership, storage, preview, and integration boundaries are explicit.
+3. Graduate AI Feedback Digest only after human-review, task writeback, and production AI-cost controls are explicit.
+4. Tighten Task Workflows after real use: automatic Droid result capture, richer run status/events in the panel, and clearer artifact lifecycle controls.
+5. Continue reducing stale deploy/docs references when concrete drift is found.
+6. Execute the EOY DR plan in `docs/launch-kit.md` — target DR ≥ 20 on all seven owned domains by 2026-12-31 via staggered launches, directories, and linkable assets.
+7. Complete the RAG migration cutover after backfilling existing knowledge indexes and running dual-mode recall/latency comparison against production-shaped data.
 
 ## Deferred / Parked
 
