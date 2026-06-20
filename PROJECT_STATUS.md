@@ -1,6 +1,6 @@
 # Project Status
 
-Last updated: 2026-06-10
+Last updated: 2026-06-20
 
 ## Current Scope
 
@@ -18,18 +18,25 @@ SaaS Maker is the foundry helper for the fleet: a Cloudflare-first monorepo with
 - AI Feedback Digest has a fixture-backed dry-run prototype in `packages/blocks/ops/src/feedback-digest.ts` with focused tests.
 - Fleet guidance now requires each project to maintain a root `PROJECT_STATUS.md`.
 - The public showcase now derives its project list, helper systems, and count from `foundry.projects.json`; the registry now includes `knowledgebase`, `pace`, `researchPapers`, and `sarthakagrawal`.
+- **CI/turbo recovery (2026-06-20):** restored missing `turbo.json`, fixed CI pnpm version conflict, removed dead `build:email` steps, and pointed root tests back at `vitest run` (320 tests). Cockpit builds via turbo dependency graph.
+- **API telemetry inlined (2026-06-20):** `workers/api/src/lib/telemetry.ts` replaces direct `@saas-maker/ops` usage in the API worker; `@saas-maker/ops` remains published for external consumers.
+- **Dead email block removed (2026-06-20):** deleted orphaned `@saas-maker/email` package and Resend notification sends from feedback/waitlist routes. Email Workers migration remains tracked separately in fleet docs.
 
 ## Planned Next
 
 1. Keep the fleet registry, README, AGENTS guidance, project status docs, helper classifications, health contracts, and public showcase synchronized as projects are added or retired.
-2. Graduate Magic Form Builder only after product ownership, storage, preview, and integration boundaries are explicit.
-3. Graduate AI Feedback Digest only after human-review, task writeback, and production AI-cost controls are explicit.
-4. Tighten Task Workflows after real use: automatic Droid result capture, richer run status/events in the panel, and clearer artifact lifecycle controls.
-5. Continue reducing stale deploy/docs references when concrete drift is found.
-6. Execute the EOY DR plan in `docs/launch-kit.md` — target DR ≥ 20 on all seven owned domains by 2026-12-31 via staggered launches, directories, and linkable assets.
+2. **RAG service cutover (PR #27):** wire knowledge routes to standalone `rag-service` (`RAG_BACKEND=local|dual|service`), add export/backfill endpoint, register health contracts.
+3. **Astro landing tooling (PR #28):** ship `@saas-maker/astro-landing` CLI for Beasties critical CSS + landing overlay helpers.
+4. **Fleet hub events (PR #25):** events sink + task queue + worker SDK for fleet project auth/integration.
+5. Graduate Magic Form Builder only after product ownership, storage, preview, and integration boundaries are explicit.
+6. Graduate AI Feedback Digest only after human-review, task writeback, and production AI-cost controls are explicit.
+7. Tighten Task Workflows after real use: automatic Droid result capture, richer run status/events in the panel, and clearer artifact lifecycle controls.
+8. Continue reducing stale deploy/docs references when concrete drift is found.
+9. Execute the EOY DR plan in `docs/launch-kit.md` — target DR ≥ 20 on all seven owned domains by 2026-12-31 via staggered launches, directories, and linkable assets.
 
 ## Deferred / Parked
 
 - Droid remains experimental, but Task Workflows is now the first concrete fleet workflow using Droid from Cockpit.
 - Automatic task creation from AI feedback is deferred; humans should review digest output first.
 - Production cron/AI workflows for block prototypes are parked until they have clear owners and rollback paths.
+- Owner email notifications for feedback/waitlist are parked pending Cloudflare Email Workers provider work.

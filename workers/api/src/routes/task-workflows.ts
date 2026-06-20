@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { Bindings, Variables } from '../types';
 import { requireSession } from '../middleware/auth';
 import { getDb, type TaskRow, type TaskWorkflowRow } from '../db';
-import { capture } from '@saas-maker/ops';
+import { capture } from '../lib/telemetry';
 
 const taskWorkflows = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 

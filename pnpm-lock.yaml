@@ -17,15 +17,6 @@ importers:
       '@playwright/test':
         specifier: 1.59.1
         version: 1.59.1
-      '@saas-maker/eslint-config':
-        specifier: workspace:*
-        version: link:packages/tooling/eslint-config
-      '@saas-maker/prettier-config':
-        specifier: workspace:*
-        version: link:packages/tooling/prettier-config
-      '@saas-maker/tsconfig':
-        specifier: workspace:*
-        version: link:packages/tooling/tsconfig
       eslint:
         specifier: 9.39.4
         version: 9.39.4(jiti@2.6.1)
@@ -44,6 +35,9 @@ importers:
       prettier-plugin-tailwindcss:
         specifier: 0.8.0
         version: 0.8.0(prettier@3.8.3)
+      turbo:
+        specifier: 2.5.4
+        version: 2.5.4
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -194,9 +188,6 @@ importers:
       '@libsql/client':
         specifier: 0.17.3
         version: 0.17.3
-      '@saas-maker/ops':
-        specifier: workspace:*
-        version: link:../ops
       drizzle-orm:
         specifier: 0.45.2
         version: 0.45.2(@cloudflare/workers-types@4.20260424.1)(@libsql/client@0.17.3)(@opentelemetry/api@1.9.0)(@types/pg@8.6.1)(kysely@0.28.16)
@@ -204,9 +195,6 @@ importers:
       '@cloudflare/workers-types':
         specifier: 4.20260424.1
         version: 4.20260424.1
-      '@saas-maker/tsconfig':
-        specifier: workspace:*
-        version: link:../../tooling/tsconfig
       tsup:
         specifier: 8.0.0
         version: 8.0.0(postcss@8.5.10)(typescript@6.0.3)
@@ -217,28 +205,6 @@ importers:
         specifier: 4.1.5
         version: 4.1.5(@opentelemetry/api@1.9.0)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.5)(happy-dom@20.9.0)(jsdom@29.0.2(@noble/hashes@2.2.0))(msw@2.13.6(@types/node@25.6.0)(typescript@6.0.3))(vite@7.3.2(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.16.9)(tsx@4.21.0)(yaml@2.8.3))
 
-  packages/blocks/email:
-    dependencies:
-      '@saas-maker/ops':
-        specifier: workspace:*
-        version: link:../ops
-      nodemailer:
-        specifier: 6.9.0
-        version: 6.9.0
-    devDependencies:
-      '@types/node':
-        specifier: 25.6.0
-        version: 25.6.0
-      '@types/nodemailer':
-        specifier: 6.4.0
-        version: 6.4.0
-      tsup:
-        specifier: 8.0.0
-        version: 8.0.0(postcss@8.5.10)(typescript@6.0.3)
-      typescript:
-        specifier: 6.0.3
-        version: 6.0.3
-
   packages/blocks/ops:
     dependencies:
       chalk:
@@ -248,9 +214,6 @@ importers:
         specifier: 1.372.1
         version: 1.372.1
     devDependencies:
-      '@saas-maker/tsconfig':
-        specifier: workspace:*
-        version: link:../../tooling/tsconfig
       '@types/node':
         specifier: 25.6.0
         version: 25.6.0
@@ -309,12 +272,6 @@ importers:
       vitest:
         specifier: 4.1.5
         version: 4.1.5(@opentelemetry/api@1.9.0)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.5)(happy-dom@20.9.0)(jsdom@29.0.2(@noble/hashes@2.2.0))(msw@2.13.6(@types/node@25.6.0)(typescript@6.0.3))(vite@7.3.2(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.16.9)(tsx@4.21.0)(yaml@2.8.3))
-
-  packages/tooling/dev-config:
-    dependencies:
-      husky:
-        specifier: 9.1.7
-        version: 9.1.7
 
   packages/tooling/eslint-config:
     dependencies:
@@ -376,48 +333,6 @@ importers:
         specifier: ^0.8.0
         version: 0.8.0(prettier@3.8.3)
 
-  packages/tooling/renovate-config: {}
-
-  packages/tooling/tailwind-preset:
-    dependencies:
-      tailwindcss:
-        specifier: '>=3 <5'
-        version: 4.2.4
-    devDependencies:
-      '@saas-maker/tsconfig':
-        specifier: workspace:*
-        version: link:../tsconfig
-      tsup:
-        specifier: 8.0.0
-        version: 8.0.0(postcss@8.5.10)(typescript@6.0.3)
-      typescript:
-        specifier: 6.0.3
-        version: 6.0.3
-      vitest:
-        specifier: 4.1.5
-        version: 4.1.5(@opentelemetry/api@1.9.0)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.5)(happy-dom@20.9.0)(jsdom@29.0.2(@noble/hashes@2.2.0))(msw@2.13.6(@types/node@25.6.0)(typescript@6.0.3))(vite@7.3.2(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.16.9)(tsx@4.21.0)(yaml@2.8.3))
-
-  packages/tooling/test-config:
-    devDependencies:
-      '@axe-core/playwright':
-        specifier: 4.10.2
-        version: 4.10.2(playwright-core@1.59.1)
-      '@playwright/test':
-        specifier: 1.59.1
-        version: 1.59.1
-      '@saas-maker/tsconfig':
-        specifier: workspace:*
-        version: link:../tsconfig
-      tsup:
-        specifier: 8.0.0
-        version: 8.0.0(postcss@8.5.10)(typescript@6.0.3)
-      typescript:
-        specifier: 6.0.3
-        version: 6.0.3
-      vitest:
-        specifier: 4.1.5
-        version: 4.1.5(@opentelemetry/api@1.9.0)(@types/node@25.6.0)(@vitest/coverage-v8@4.1.5)(happy-dom@20.9.0)(jsdom@29.0.2(@noble/hashes@2.2.0))(msw@2.13.6(@types/node@25.6.0)(typescript@6.0.3))(vite@7.3.2(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.16.9)(tsx@4.21.0)(yaml@2.8.3))
-
   packages/tooling/tsconfig: {}
 
   packages/ui:
@@ -438,12 +353,6 @@ importers:
         specifier: 3.5.0
         version: 3.5.0
     devDependencies:
-      '@saas-maker/eslint-config':
-        specifier: workspace:*
-        version: link:../tooling/eslint-config
-      '@saas-maker/tsconfig':
-        specifier: workspace:*
-        version: link:../tooling/tsconfig
       '@storybook/addon-essentials':
         specifier: 8.5.8
         version: 8.5.8(@types/react@19.2.14)(storybook@8.5.8(prettier@3.8.3))
@@ -583,15 +492,6 @@ importers:
 
   workers/api:
     dependencies:
-      '@saas-maker/db':
-        specifier: workspace:*
-        version: link:../../packages/blocks/db
-      '@saas-maker/email':
-        specifier: workspace:*
-        version: link:../../packages/blocks/email
-      '@saas-maker/ops':
-        specifier: workspace:*
-        version: link:../../packages/blocks/ops
       '@saas-maker/shared-types':
         specifier: workspace:*
         version: link:../../packages/blocks/shared-types
@@ -958,11 +858,6 @@ packages:
   '@aws/lambda-invoke-store@0.2.4':
     resolution: {integrity: sha512-iY8yvjE0y651BixKNPgmv1WrQc+GZ142sb0z4gYnChDDY2YqI4P/jsSopBWrKfAt7LOJAkOXt7rC/hms+WclQQ==}
     engines: {node: '>=18.0.0'}
-
-  '@axe-core/playwright@4.10.2':
-    resolution: {integrity: sha512-6/b5BJjG6hDaRNtgzLIfKr5DfwyiLHO4+ByTLB0cJgWSM8Ll7KqtdblIS6bEkwSF642/Ex91vNqIl3GLXGlceg==}
-    peerDependencies:
-      playwright-core: '>= 1.0.0'
 
   '@babel/code-frame@7.29.0':
     resolution: {integrity: sha512-9NhCeYjq9+3uxgdtp20LSiJXJvN0FeCtNGpJxuMFZ1Kv3cWUNb6DOhJwUvcVCzKGR66cw4njwM6hrJLqgOwbcw==}
@@ -4752,9 +4647,6 @@ packages:
   '@types/node@25.6.0':
     resolution: {integrity: sha512-+qIYRKdNYJwY3vRCZMdJbPLJAtGjQBudzZzdzwQYkEPQd+PJGixUL5QfvCLDaULoLv+RhT3LDkwEfKaAkgSmNQ==}
 
-  '@types/nodemailer@6.4.0':
-    resolution: {integrity: sha512-KY7bFWB0MahRZvVW4CuW83qcCDny59pJJ0MQ5ifvfcjNwPlIT0vW4uARO4u1gtkYnWdhSvURegecY/tzcukJcA==}
-
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
 
@@ -5240,10 +5132,6 @@ packages:
 
   aws4fetch@1.0.20:
     resolution: {integrity: sha512-/djoAN709iY65ETD6LKCtyyEI04XIBP5xVvfmNxsEP0uJB5tyaGBztSryRr4HqMStr9R06PisQE7m9zDTXKu6g==}
-
-  axe-core@4.10.3:
-    resolution: {integrity: sha512-Xm7bpRXnDSX2YE2YFfBk2FnF0ep6tmG7xPh8iHee8MIcrgq762Nkce856dYtJYLkuIoYZvGfTs/PbZhideTcEg==}
-    engines: {node: '>=4'}
 
   axe-core@4.11.4:
     resolution: {integrity: sha512-KunSNx+TVpkAw/6ULfhnx+HWRecjqZGTOyquAoWHYLRSdK1tB5Ihce1ZW+UY3fj33bYAFWPu7W/GRSmmrCGuxA==}
@@ -7902,10 +7790,6 @@ packages:
   node-releases@2.0.38:
     resolution: {integrity: sha512-3qT/88Y3FbH/Kx4szpQQ4HzUbVrHPKTLVpVocKiLfoYvw9XSGOX2FmD2d6DrXbVYyAQTF2HeF6My8jmzx7/CRw==}
 
-  nodemailer@6.9.0:
-    resolution: {integrity: sha512-jFaCEGTeT3E/m/5R2MHWiyQH3pSARECRUDM+1hokOYc3lQAAG7ASuy+2jIsYVf+RVa9zePopSQwKNVFH8DKUpA==}
-    engines: {node: '>=6.0.0'}
-
   normalize-package-data@2.5.0:
     resolution: {integrity: sha512-/5CMN3T0R4XTj4DcGaexo+roZSdSFW/0AOOTROrjxzCG1wrWXEsGbRKevjlIL+ZDE4sZlJr5ED4YW0yqmkK+eA==}
 
@@ -9218,6 +9102,40 @@ packages:
   tsx@4.21.0:
     resolution: {integrity: sha512-5C1sg4USs1lfG0GFb2RLXsdpXqBSEhAaA/0kPL01wxzpMqLILNxIxIOKiILz+cdg/pLnOUxFYOR5yhHU666wbw==}
     engines: {node: '>=18.0.0'}
+    hasBin: true
+
+  turbo-darwin-64@2.5.4:
+    resolution: {integrity: sha512-ah6YnH2dErojhFooxEzmvsoZQTMImaruZhFPfMKPBq8sb+hALRdvBNLqfc8NWlZq576FkfRZ/MSi4SHvVFT9PQ==}
+    cpu: [x64]
+    os: [darwin]
+
+  turbo-darwin-arm64@2.5.4:
+    resolution: {integrity: sha512-2+Nx6LAyuXw2MdXb7pxqle3MYignLvS7OwtsP9SgtSBaMlnNlxl9BovzqdYAgkUW3AsYiQMJ/wBRb7d+xemM5A==}
+    cpu: [arm64]
+    os: [darwin]
+
+  turbo-linux-64@2.5.4:
+    resolution: {integrity: sha512-5May2kjWbc8w4XxswGAl74GZ5eM4Gr6IiroqdLhXeXyfvWEdm2mFYCSWOzz0/z5cAgqyGidF1jt1qzUR8hTmOA==}
+    cpu: [x64]
+    os: [linux]
+
+  turbo-linux-arm64@2.5.4:
+    resolution: {integrity: sha512-/2yqFaS3TbfxV3P5yG2JUI79P7OUQKOUvAnx4MV9Bdz6jqHsHwc9WZPpO4QseQm+NvmgY6ICORnoVPODxGUiJg==}
+    cpu: [arm64]
+    os: [linux]
+
+  turbo-windows-64@2.5.4:
+    resolution: {integrity: sha512-EQUO4SmaCDhO6zYohxIjJpOKRN3wlfU7jMAj3CgcyTPvQR/UFLEKAYHqJOnJtymbQmiiM/ihX6c6W6Uq0yC7mA==}
+    cpu: [x64]
+    os: [win32]
+
+  turbo-windows-arm64@2.5.4:
+    resolution: {integrity: sha512-oQ8RrK1VS8lrxkLriotFq+PiF7iiGgkZtfLKF4DDKsmdbPo0O9R2mQxm7jHLuXraRCuIQDWMIw6dpcr7Iykf4A==}
+    cpu: [arm64]
+    os: [win32]
+
+  turbo@2.5.4:
+    resolution: {integrity: sha512-kc8ZibdRcuWUG1pbYSBFWqmIjynlD8Lp7IB6U3vIzvOv9VG+6Sp8bzyeBWE3Oi8XV5KsQrznyRTBPvrf99E4mA==}
     hasBin: true
 
   tw-animate-css@1.4.0:
@@ -10726,11 +10644,6 @@ snapshots:
       tslib: 2.8.1
 
   '@aws/lambda-invoke-store@0.2.4': {}
-
-  '@axe-core/playwright@4.10.2(playwright-core@1.59.1)':
-    dependencies:
-      axe-core: 4.10.3
-      playwright-core: 1.59.1
 
   '@babel/code-frame@7.29.0':
     dependencies:
@@ -14453,10 +14366,6 @@ snapshots:
     dependencies:
       undici-types: 7.19.2
 
-  '@types/nodemailer@6.4.0':
-    dependencies:
-      '@types/node': 25.6.0
-
   '@types/normalize-package-data@2.4.4': {}
 
   '@types/pg-pool@2.0.6':
@@ -15064,8 +14973,6 @@ snapshots:
       possible-typed-array-names: 1.1.0
 
   aws4fetch@1.0.20: {}
-
-  axe-core@4.10.3: {}
 
   axe-core@4.11.4: {}
 
@@ -18344,8 +18251,6 @@ snapshots:
 
   node-releases@2.0.38: {}
 
-  nodemailer@6.9.0: {}
-
   normalize-package-data@2.5.0:
     dependencies:
       hosted-git-info: 2.8.9
@@ -20014,6 +19919,33 @@ snapshots:
       get-tsconfig: 4.14.0
     optionalDependencies:
       fsevents: 2.3.3
+
+  turbo-darwin-64@2.5.4:
+    optional: true
+
+  turbo-darwin-arm64@2.5.4:
+    optional: true
+
+  turbo-linux-64@2.5.4:
+    optional: true
+
+  turbo-linux-arm64@2.5.4:
+    optional: true
+
+  turbo-windows-64@2.5.4:
+    optional: true
+
+  turbo-windows-arm64@2.5.4:
+    optional: true
+
+  turbo@2.5.4:
+    optionalDependencies:
+      turbo-darwin-64: 2.5.4
+      turbo-darwin-arm64: 2.5.4
+      turbo-linux-64: 2.5.4
+      turbo-linux-arm64: 2.5.4
+      turbo-windows-64: 2.5.4
+      turbo-windows-arm64: 2.5.4
 
   tw-animate-css@1.4.0: {}
 

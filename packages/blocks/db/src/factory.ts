@@ -1,7 +1,19 @@
 import { drizzle } from "drizzle-orm/d1";
 import { drizzle as drizzleLibsql } from "drizzle-orm/libsql";
 import { createClient } from "@libsql/client";
-import { trace } from "@saas-maker/ops";
+
+/** Time a DB operation (formerly @saas-maker/ops' trace — console timing, rethrows). */
+async function trace<T>(name: string, fn: () => Promise<T>): Promise<T> {
+  const start = performance.now();
+  try {
+    const result = await fn();
+    console.info(`[trace] ${name} completed in ${(performance.now() - start).toFixed(2)}ms`);
+    return result;
+  } catch (err) {
+    console.error(`[trace] ${name} failed after ${(performance.now() - start).toFixed(2)}ms`);
+    throw err;
+  }
+}
 
 export interface DbConfig {
   /**
