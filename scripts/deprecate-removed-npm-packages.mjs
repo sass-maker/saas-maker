@@ -33,11 +33,8 @@ const listOnly = process.argv.includes('--list');
 const otpArg = process.argv.find((arg) => arg.startsWith('--otp='));
 const otp = otpArg?.slice('--otp='.length) || process.env.NPM_OTP || '';
 
-function listScopePackages(execSync) {
-  const raw = execSync('npm access list packages @saas-maker --json', {
-    encoding: 'utf8',
-    stdio: ['ignore', 'pipe', 'pipe'],
-  });
+function listScopePackages(npm) {
+  const raw = npm('npm access list packages @saas-maker --json');
   return Object.keys(JSON.parse(raw))
     .filter((name) => name.startsWith('@saas-maker/'))
     .sort();
@@ -45,20 +42,52 @@ function listScopePackages(execSync) {
 
 async function main() {
   const { execSync } = await import('node:child_process');
+  const { mkdtempSync, writeFileSync, rmSync } = await import('node:fs');
+  const { join } = await import('node:path');
+  const { tmpdir } = await import('node:os');
+
+  let npmUserConfig;
+  let npmUserConfigDir;
+  if (process.env.NPM_TOKEN) {
+    npmUserConfigDir = mkdtempSync(join(tmpdir(), 'npm-deprecate-'));
+    npmUserConfig = join(npmUserConfigDir, '.npmrc');
+    writeFileSync(
+      npmUserConfig,
+      `//registry.npmjs.org/:_authToken=${process.env.NPM_TOKEN}\n`,
+      'utf8',
+    );
+  }
+
+  const npmEnv = { ...process.env };
+  if (npmUserConfig) npmEnv.NPM_CONFIG_USERCONFIG = npmUserConfig;
+
+  const npm = (cmd) =>
+    execSync(cmd, {
+      encoding: 'utf8',
+      env: npmEnv,
+      stdio: ['ignore', 'pipe', 'pipe'],
+    });
+
+  const npmInherit = (cmd) =>
+    execSync(cmd, {
+      env: npmEnv,
+      stdio: 'inherit',
+    });
 
   try {
-    execSync('npm whoami', { stdio: 'pipe' });
+    npm('npm whoami');
   } catch {
-    console.error('npm auth required. Run `npm login` or set NPM_TOKEN, then retry.');
+    console.error('npm auth required. Run `npm login`, set NPM_TOKEN, or pass `--otp`.');
     process.exit(1);
   }
 
   let scopePackages;
   try {
-    scopePackages = listScopePackages(execSync);
+    scopePackages = listScopePackages(npm);
   } catch (err) {
     console.error('Failed to list @saas-maker packages. Are you logged in as the scope owner?');
     console.error(err instanceof Error ? err.message : err);
+    if (npmUserConfigDir) rmSync(npmUserConfigDir, { recursive: true, force: true });
     process.exit(1);
   }
 
@@ -72,9 +101,9 @@ async function main() {
 
   if (listOnly) return;
 
-  if (!dryRun && !otp) {
+  if (!dryRun && !otp && !process.env.NPM_TOKEN) {
     console.error(
-      '\nnpm deprecate requires 2FA on this account. Re-run with `--otp=<code>` or NPM_OTP, or use a granular token with bypass 2FA enabled.',
+      '\nnpm deprecate requires 2FA on this account. Re-run with `--otp=<code>` or NPM_OTP, or set NPM_TOKEN (automation/granular write token with bypass 2FA).',
     );
     process.exit(1);
   }
@@ -90,13 +119,15 @@ async function main() {
     }
 
     try {
-      execSync(cmd, { stdio: 'inherit' });
+      npmInherit(cmd);
       console.log(`deprecated ${name}`);
     } catch (err) {
       failed += 1;
       console.error(`failed ${name}:`, err instanceof Error ? err.message : err);
     }
   }
+
+  if (npmUserConfigDir) rmSync(npmUserConfigDir, { recursive: true, force: true });
 
   process.exit(failed > 0 ? 1 : 0);
 }
