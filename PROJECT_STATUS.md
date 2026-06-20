@@ -64,6 +64,7 @@ Brand note: production domain uses **double-s** `sassmaker.com`; display name re
 ## Timeline
 
 - **2026-06-20 — Knowledge/RAG removal:** Deleted `/v1/knowledge/*`, Cockpit knowledge UI, SDK `KnowledgeService`, API RAG bindings, and D1 knowledge tables (`0021_drop_knowledge.sql`, applied to remote `saasmaker-db` 2026-06-20). SaaS Maker is not a search/RAG hub. Deleted `packages/tooling/*` (eslint-config, prettier-config, tsconfig, astro-landing, eslint-plugin-fallow), `packages/blocks/ops`, and shelved `packages/blocks/views/`. Cockpit astro overlay script is local under `apps/cockpit/scripts/`. npm scope: **26 retired packages deprecated on npm** (2026-06-20); **6 active** (`sdk`, `cli`, `feedback`, `testimonials`, `changelog-widget`, `waitlist`).
+- **2026-06-20 — Fleet tooling merge:** Tooling decoupling merged to `main` on starboard, high-signal, linkchat, significanthobbies, and CodeVetter; free-ai, truehire, resume-tailor already on main.
 - **2026-06-20 — Internal contracts collapse:** Removed `@saas-maker/db` (unused) and `@saas-maker/shared-types` package; API/Cockpit types live in `internal/contracts/` (path alias `@saas-maker/contracts`). Public API types remain in `@saas-maker/sdk`.
 - **2026-06-20 — Email package removal:** Orphaned `@saas-maker/email` package removed; Resend sends removed from feedback/waitlist routes.
 - **2026-06-20 — Fleet events hub shipped:** Append-only spoke push-up sink at `/v1/events`; batch ingest with idempotency keys; owner-scoped via session/API auth.
