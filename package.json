@@ -37,6 +37,7 @@
     "symphony:agent-usage": "node scripts/symphony-agent-usage.mjs",
     "droid:local": "node scripts/droid-headless-local.mjs",
     "fleet:audit": "node scripts/fleet-audit.mjs",
+    "deprecate:removed-packages": "node scripts/deprecate-removed-npm-packages.mjs",
     "symphony:runner": "node scripts/symphony-runner.mjs",
     "symphony:import-failures": "node scripts/fleet-failure-import.mjs",
     "symphony:normalize-weekly": "node scripts/fleet-weekly-normalize.mjs",
