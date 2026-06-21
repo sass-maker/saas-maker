@@ -2,6 +2,10 @@
 
 AI reel generation and autopost orchestration for fleet products.
 
+## Shared Fleet Standard
+
+Also read and follow the shared fleet-level agent standard at `../AGENTS.md`. Treat this repository as owned product code: protect production stability, keep changes scoped, verify work, and record durable follow-up tasks when something remains incomplete or blocked.
+
 ## Operating Rules
 
 - Keep SaaS Maker as the source of truth for marketing ideas, approval state, and task linkage.

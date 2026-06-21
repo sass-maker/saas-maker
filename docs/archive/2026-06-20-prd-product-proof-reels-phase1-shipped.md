@@ -1,5 +1,7 @@
 # PRD: Product-Proof Reel Generator
 
+**Status:** Phase 1 shipped (2026-06-20). Archived — living implementation in `src/product-proof-capture.js`, `src/reel-quality.js`, `src/adapters/reel-maker.js`, and `src/pipeline.js`. Phases 2–4 remain tracked in `PROJECT_STATUS.md`, not this file.
+
 ## Summary
 
 Build a free/low-cost reel generation path that turns SaaS Maker marketing ideas

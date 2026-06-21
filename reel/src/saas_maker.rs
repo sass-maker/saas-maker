@@ -7,7 +7,7 @@ use serde_json::{json, Value};
 use crate::artifact::first_video_url;
 use crate::brief::{normalize_from_value, VideoBrief, BriefError};
 
-pub const DEFAULT_API_URL: &str = "https://api.saasmaker.com";
+pub const DEFAULT_API_URL: &str = "https://api.sassmaker.com";
 
 #[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
 pub struct MarketingPost {

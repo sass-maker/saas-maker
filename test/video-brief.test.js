@@ -297,9 +297,9 @@ test('SaaS Maker client skips sync when no session token is configured', async (
   assert.equal(result.reason, 'missing SAASMAKER_SESSION_TOKEN');
 });
 
-test('SaaS Maker client defaults to the saasmaker base URL', () => {
+test('SaaS Maker client defaults to the sassmaker base URL', () => {
   const client = new SaaSMakerClient({ sessionToken: '' });
-  assert.equal(client.baseUrl, 'https://api.saasmaker.com');
+  assert.equal(client.baseUrl, 'https://api.sassmaker.com');
 });
 
 test('post-ready CLI treats confirm=false as false', async () => {

@@ -21,7 +21,7 @@ Independent of OS:
 - **Node ≥ 20** (`engines.node` in `package.json`)
 - **ffmpeg + ffprobe** on PATH (or set `FFMPEG_PATH`/`FFPROBE_PATH` in `.env`)
 - **Disk**: 20GB free for `artifacts/` and `tmp/`. Renders are bursty but get cleaned by the artifact publisher.
-- **Outbound network**: api.openai-compatible.com (DeepSeek), api.elevenlabs.io, api.pexels.com, oauth2.googleapis.com, graph.instagram.com, api.saasmaker.com, R2 endpoint.
+- **Outbound network**: api.openai-compatible.com (DeepSeek), api.elevenlabs.io, api.pexels.com, oauth2.googleapis.com, graph.instagram.com, api.sassmaker.com, R2 endpoint.
 - **No inbound ports required.** Everything is outbound except the one-shot OAuth bootstrap scripts (which need `http://127.0.0.1:8765–8766` reachable from the local browser).
 
 Secrets:

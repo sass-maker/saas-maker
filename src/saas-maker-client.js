@@ -1,6 +1,6 @@
 export class SaaSMakerClient {
   constructor(options = {}) {
-    this.baseUrl = (options.baseUrl ?? process.env.SAASMAKER_API_URL ?? 'https://api.saasmaker.com').replace(/\/$/, '');
+    this.baseUrl = (options.baseUrl ?? process.env.SAASMAKER_API_URL ?? 'https://api.sassmaker.com').replace(/\/$/, '');
     this.sessionToken = options.sessionToken ?? process.env.SAASMAKER_SESSION_TOKEN;
     this.fetchImpl = options.fetchImpl ?? fetch;
   }

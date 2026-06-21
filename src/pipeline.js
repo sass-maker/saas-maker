@@ -6,9 +6,25 @@ import { FileJobStore } from './job-store.js';
 import { assertRenderableReel, attachReelRender } from './reel-intake.js';
 import { briefFromMarketingPost, normalizeVideoBrief } from './video-brief.js';
 import { renderPatchForMarketingPost, SaaSMakerClient } from './saas-maker-client.js';
-import { ProductProofCapture } from './product-proof-capture.js';
+import { ProductProofCapture, loadPlaywrightFactory } from './product-proof-capture.js';
 import { buildVariantPlan } from './reel-templates.js';
 import { scoreVariant } from './reel-quality.js';
+
+let cachedProductProofCapture = null;
+
+export async function resolveProductProofCapture(options = {}) {
+  if (options.productProofCapture) return options.productProofCapture;
+  if (options.reelMaker?.productProofCapture) return options.reelMaker.productProofCapture;
+  if (cachedProductProofCapture) return cachedProductProofCapture;
+  const browserFactory = await loadPlaywrightFactory();
+  if (!browserFactory) return null;
+  cachedProductProofCapture = new ProductProofCapture({
+    outputDir: options.proofOutputDir ?? process.env.REEL_PROOF_DIR ?? './tmp/product-proof',
+    browserFactory,
+    logger: options.logger,
+  });
+  return cachedProductProofCapture;
+}
 
 export function createRenderer(mode = 'mock', options = {}) {
   if (mode === 'stock') return new MoneyPrinterTurboAdapter(options.moneyprinterturbo);
@@ -32,7 +48,17 @@ export async function renderReelVariants(brief, options = {}) {
   const variantCount = Math.max(1, Math.min(6, Number(options.variantCount ?? 1)));
   const mode = options.mode ?? brief.renderMode ?? 'mock';
   const plan = buildVariantPlan(brief, { variantCount });
-  const renderer = options.renderer ?? createRenderer(mode, options);
+  const productProofCapture = (mode === 'remotion' || mode === 'reel-maker')
+    ? await resolveProductProofCapture(options)
+    : null;
+  const renderOptions = productProofCapture
+    ? {
+      ...options,
+      productProofCapture,
+      reelMaker: { ...(options.reelMaker ?? {}), productProofCapture },
+    }
+    : options;
+  const renderer = options.renderer ?? createRenderer(mode, renderOptions);
   const variants = [];
   const renderLog = [];
 
@@ -225,9 +251,16 @@ export async function renderReelDraft(id, options = {}) {
       || (Array.isArray(record.brief?.demoSteps) && record.brief.demoSteps.length));
 
   if (wantsVariants || wantsProductProof) {
+    const productProofCapture = await resolveProductProofCapture(options);
     const { variants, renderLog } = await renderReelVariants(
       { ...record.brief, renderMode: mode },
-      { ...options, mode, variantCount },
+      {
+        ...options,
+        mode,
+        variantCount,
+        productProofCapture,
+        reelMaker: { ...(options.reelMaker ?? {}), productProofCapture },
+      },
     );
     const reel = await attachReelRender(id, { variants, renderLog, job: { id: `${record.id}-render-${Date.now()}` } }, { reelStore });
     return { reel, variants, renderLog };
