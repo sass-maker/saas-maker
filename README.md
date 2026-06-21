@@ -102,6 +102,23 @@ stack is JavaScript-only.
 - The artifact Worker supports byte-range responses so MP4 playback works in
   browsers.
 
+## Credits & Inspiration
+
+Design ideas borrowed from other open-source projects (we adapted concepts, not
+code):
+
+### OpenMontage
+
+- Upstream: `https://github.com/calesthio/OpenMontage` (AGPLv3)
+- Role: agent-first video production system; we deliberately did **not** adopt
+  its runtime (it conflicts with our deterministic Rust autopilot), but stole
+  two of its quality gates:
+  - **Slideshow-risk scoring** — `src/reel-quality.js` flags reels that read as
+    a deck of static cards so they are not auto-posted.
+  - **Post-render self-review** — `src/reel-self-review.js` probes the actually
+    rendered file with `ffprobe` (real duration, aspect, audio) instead of
+    trusting the renderer's claimed metadata.
+
 ## Architecture
 
 ```text
