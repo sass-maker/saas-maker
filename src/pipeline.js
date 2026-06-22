@@ -1,20 +1,38 @@
 import { MoneyPrinterTurboAdapter } from './adapters/moneyprinterturbo.js';
 import { MockRenderer } from './adapters/mock-renderer.js';
-import { OpenShortsAdapter } from './adapters/openshorts.js';
 import { ReelMakerAdapter } from './adapters/reel-maker.js';
 import { publishRenderArtifacts } from './artifact-publisher.js';
 import { FileJobStore } from './job-store.js';
 import { assertRenderableReel, attachReelRender } from './reel-intake.js';
 import { briefFromMarketingPost, normalizeVideoBrief } from './video-brief.js';
 import { renderPatchForMarketingPost, SaaSMakerClient } from './saas-maker-client.js';
-import { ProductProofCapture } from './product-proof-capture.js';
+import { ProductProofCapture, loadPlaywrightFactory } from './product-proof-capture.js';
 import { buildVariantPlan } from './reel-templates.js';
 import { scoreVariant } from './reel-quality.js';
+import { selfReviewRender } from './reel-self-review.js';
+
+let cachedProductProofCapture = null;
+
+export async function resolveProductProofCapture(options = {}) {
+  if (options.productProofCapture) return options.productProofCapture;
+  if (options.reelMaker?.productProofCapture) return options.reelMaker.productProofCapture;
+  if (cachedProductProofCapture) return cachedProductProofCapture;
+  const browserFactory = await loadPlaywrightFactory();
+  if (!browserFactory) return null;
+  cachedProductProofCapture = new ProductProofCapture({
+    outputDir: options.proofOutputDir ?? process.env.REEL_PROOF_DIR ?? './tmp/product-proof',
+    browserFactory,
+    logger: options.logger,
+  });
+  return cachedProductProofCapture;
+}
 
 export function createRenderer(mode = 'mock', options = {}) {
   if (mode === 'stock') return new MoneyPrinterTurboAdapter(options.moneyprinterturbo);
   if (mode === 'moneyprinterturbo') return new MoneyPrinterTurboAdapter(options.moneyprinterturbo);
-  if (mode === 'openshorts' || mode === 'ugc_actor') return new OpenShortsAdapter(options.openshorts);
+  if (mode === 'openshorts' || mode === 'ugc_actor') {
+    throw new Error('openshorts/ugc_actor was removed; use mock or stock (MoneyPrinterTurbo)');
+  }
   if (mode === 'remotion' || mode === 'reel-maker') {
     return new ReelMakerAdapter({
       ...(options.reelMaker ?? options.reelmaker ?? {}),
@@ -31,7 +49,17 @@ export async function renderReelVariants(brief, options = {}) {
   const variantCount = Math.max(1, Math.min(6, Number(options.variantCount ?? 1)));
   const mode = options.mode ?? brief.renderMode ?? 'mock';
   const plan = buildVariantPlan(brief, { variantCount });
-  const renderer = options.renderer ?? createRenderer(mode, options);
+  const productProofCapture = (mode === 'remotion' || mode === 'reel-maker')
+    ? await resolveProductProofCapture(options)
+    : null;
+  const renderOptions = productProofCapture
+    ? {
+      ...options,
+      productProofCapture,
+      reelMaker: { ...(options.reelMaker ?? {}), productProofCapture },
+    }
+    : options;
+  const renderer = options.renderer ?? createRenderer(mode, renderOptions);
   const variants = [];
   const renderLog = [];
 
@@ -45,9 +73,18 @@ export async function renderReelVariants(brief, options = {}) {
         cta: entry.cta,
       });
       const published = raw.status === 'completed' ? await publishRenderArtifacts(raw, options.artifacts) : raw;
+      // Probe the real file (raw still holds the local path; published may have
+      // been rewritten to upload URLs). Verified facts beat claimed metadata.
+      const review = raw.status === 'completed'
+        ? await selfReviewRender(raw, {
+          commandRunner: options.commandRunner ?? options.reelMaker?.commandRunner,
+          ffprobePath: options.ffprobePath,
+        })
+        : null;
       const score = scoreVariant({
         brief: variantBrief,
         variant: { hook: entry.hook, cta: entry.cta },
+        template: entry.template,
         proof: {
           type: raw.raw?.proof?.type,
           proofType: raw.proofType ?? raw.raw?.proof?.proofType ?? 'generated_card',
@@ -55,10 +92,13 @@ export async function renderReelVariants(brief, options = {}) {
         },
         render: {
           ...published,
-          aspect: raw.raw?.aspect ?? '9:16',
-          durationSeconds: raw.durationSeconds,
+          aspect: review?.probed?.aspect ?? raw.raw?.aspect ?? '9:16',
+          durationSeconds: review?.probed?.durationSeconds ?? raw.durationSeconds,
         },
       });
+      if (review?.issues?.length) {
+        score.reasons.push(...review.issues.map((issue) => `self-review: ${issue}`));
+      }
       const variant = {
         variantId: entry.variantId,
         template: entry.template.id,
@@ -69,9 +109,11 @@ export async function renderReelVariants(brief, options = {}) {
         captionText: raw.captionText ?? null,
         assetUrl: firstUrl(published) ?? null,
         thumbnailUrl: typeof raw.thumbnail === 'string' ? raw.thumbnail : null,
-        durationSeconds: raw.durationSeconds ?? null,
+        durationSeconds: review?.probed?.durationSeconds ?? raw.durationSeconds ?? null,
         qualityScore: score.overall,
         qualityScores: score.scores,
+        slideshowRisk: score.slideshowRisk,
+        selfReview: review ?? null,
         qualityReasons: score.reasons,
         renderLog: raw.renderLog ?? [],
         status: score.status,
@@ -224,9 +266,16 @@ export async function renderReelDraft(id, options = {}) {
       || (Array.isArray(record.brief?.demoSteps) && record.brief.demoSteps.length));
 
   if (wantsVariants || wantsProductProof) {
+    const productProofCapture = await resolveProductProofCapture(options);
     const { variants, renderLog } = await renderReelVariants(
       { ...record.brief, renderMode: mode },
-      { ...options, mode, variantCount },
+      {
+        ...options,
+        mode,
+        variantCount,
+        productProofCapture,
+        reelMaker: { ...(options.reelMaker ?? {}), productProofCapture },
+      },
     );
     const reel = await attachReelRender(id, { variants, renderLog, job: { id: `${record.id}-render-${Date.now()}` } }, { reelStore });
     return { reel, variants, renderLog };

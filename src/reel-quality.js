@@ -10,7 +10,7 @@ const SCORE_DIMENSIONS = [
 
 const PLACEHOLDER_PATTERNS = [/lorem/i, /placeholder/i, /todo/i, /\bxxx\b/i, /rainbow/i];
 
-export function scoreVariant({ brief, variant, proof, render }) {
+export function scoreVariant({ brief, variant, template, proof, render }) {
   const reasons = [];
   const scores = {};
 
@@ -22,12 +22,18 @@ export function scoreVariant({ brief, variant, proof, render }) {
   scores.cringeRisk = scoreCringeRisk(brief, variant, reasons);
   scores.postingReadiness = scorePostingReadiness(render, scores, reasons);
 
+  // Slideshow risk is a gate signal, not an averaged dimension: a deck of
+  // static cards can score well on every dimension yet still be a boring,
+  // motionless reel that we should not auto-post. Kept out of `overall`.
+  const slideshowRisk = scoreSlideshowRisk(template, proof, render, reasons);
+
   const overall = average(SCORE_DIMENSIONS.map((dimension) => scores[dimension]));
-  const gate = decideGate({ scores, overall, render, proof, brief, reasons });
+  const gate = decideGate({ scores, overall, slideshowRisk, render, proof, brief, reasons });
 
   return {
     scores,
     overall: round(overall),
+    slideshowRisk,
     reasons,
     status: gate.status,
     gate: gate.summary,
@@ -166,7 +172,9 @@ function scorePostingReadiness(render, scores, reasons) {
   return 0.85;
 }
 
-function decideGate({ scores, overall, reasons }) {
+const SLIDESHOW_GATE = 0.6;
+
+function decideGate({ scores, overall, slideshowRisk, reasons }) {
   const fatal = [];
   if (scores.postingReadiness < 0.3) fatal.push('not ready to post');
   if (scores.productProofStrength < 0.3) fatal.push('no real product proof');
@@ -178,9 +186,53 @@ function decideGate({ scores, overall, reasons }) {
   }
 
   if (overall >= 0.7 && scores.productProofStrength >= 0.6) {
+    if (Number.isFinite(slideshowRisk) && slideshowRisk >= SLIDESHOW_GATE) {
+      reasons.push('downgraded to review: reel reads as a static slideshow, add motion before posting');
+      return { status: 'needs_review', summary: 'high slideshow risk — needs motion before posting' };
+    }
     return { status: 'video_ready', summary: 'passed quality gate' };
   }
   return { status: 'needs_review', summary: 'manual review required' };
+}
+
+// Estimate how much a variant reads as a motionless slideshow (0 = motion-rich,
+// 1 = static deck). Returns null when no template is available so the gate stays
+// neutral and `average()` callers are unaffected. Stolen-in-spirit from
+// OpenMontage's pre-compose slideshow-risk scoring.
+function scoreSlideshowRisk(template, proof, render, reasons) {
+  const scenes = Array.isArray(template?.scenes) ? template.scenes : null;
+  if (!scenes || !scenes.length) return null;
+
+  const proofType = proof?.proofType ?? proof?.type;
+  const motionScenes = scenes.filter((scene) => isMotionScene(scene, proofType));
+  const motionRatio = motionScenes.length / scenes.length;
+
+  let risk = 1 - motionRatio;
+  if (proofType === 'recording') risk = Math.min(risk, 0.25);
+  if (!proofType || proofType === 'generated_card') risk = Math.max(risk, 0.85);
+
+  // Long holds on static frames make the slideshow feel worse.
+  const duration = Number(render?.durationSeconds ?? render?.raw?.durationSeconds);
+  if (Number.isFinite(duration) && motionRatio < 0.5) {
+    const secondsPerScene = duration / scenes.length;
+    if (secondsPerScene >= 6) risk = Math.min(1, risk + 0.1);
+  }
+
+  risk = round(risk);
+  if (risk >= SLIDESHOW_GATE) {
+    reasons.push(
+      `high slideshow risk — only ${motionScenes.length}/${scenes.length} scenes have motion`
+      + (proofType ? ` (proof: ${proofType})` : ' (no real proof)'),
+    );
+  }
+  return risk;
+}
+
+function isMotionScene(scene, proofType) {
+  const source = String(scene?.source ?? '');
+  if (/^demo_step/.test(source)) return true;
+  if (source === 'product_visual' && proofType === 'recording') return true;
+  return false;
 }
 
 function firstVideoUrl(render) {

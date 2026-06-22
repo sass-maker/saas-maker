@@ -255,6 +255,44 @@ test('quality score gates render output by proof strength and overall', () => {
   assert.ok(badScore.reasons.some((reason) => /product proof|rainbow|abstract|aspect/i.test(reason)));
 });
 
+test('slideshow risk downgrades an otherwise-ready static deck to review', () => {
+  const brief = { hook: 'Stop answering the same DM.', cta: 'Ask once.', body: reelBody, projectSlug: 'linkchat', proofUrl: 'https://linkchat.test/proof' };
+  const score = scoreVariant({
+    brief,
+    variant: { hook: brief.hook, cta: brief.cta },
+    template: getTemplate('problem_proof_cta'),
+    proof: { proofType: 'screenshot', type: 'screenshot', paths: ['/tmp/proof.png'] },
+    render: { status: 'completed', videos: ['https://assets.example.test/reels/clip.mp4'], aspect: '9:16', durationSeconds: 18 },
+  });
+  assert.ok(score.slideshowRisk >= 0.6);
+  assert.equal(score.status, 'needs_review');
+  assert.ok(score.reasons.some((reason) => /slideshow/i.test(reason)));
+});
+
+test('a recorded demo keeps low slideshow risk and stays video_ready', () => {
+  const brief = { hook: 'Watch it answer the DM itself.', cta: 'Ask once.', body: reelBody, projectSlug: 'linkchat', proofUrl: 'https://linkchat.test/proof' };
+  const score = scoreVariant({
+    brief,
+    variant: { hook: brief.hook, cta: brief.cta },
+    template: getTemplate('mini_demo'),
+    proof: { proofType: 'recording', type: 'recording', paths: ['/tmp/demo.mp4'] },
+    render: { status: 'completed', videos: ['https://assets.example.test/reels/clip.mp4'], aspect: '9:16', durationSeconds: 14 },
+  });
+  assert.ok(score.slideshowRisk < 0.6);
+  assert.equal(score.status, 'video_ready');
+});
+
+test('slideshow risk is null when no template is supplied', () => {
+  const score = scoreVariant({
+    brief: { hook: 'Stop answering the same DM.', cta: 'Ask once.', body: reelBody, proofUrl: 'https://linkchat.test/proof' },
+    variant: { hook: 'Stop answering the same DM.', cta: 'Ask once.' },
+    proof: { proofType: 'screenshot', type: 'screenshot', paths: ['/tmp/proof.png'] },
+    render: { status: 'completed', videos: ['https://assets.example.test/reels/clip.mp4'], aspect: '9:16', durationSeconds: 14 },
+  });
+  assert.equal(score.slideshowRisk, null);
+  assert.equal(score.status, 'video_ready');
+});
+
 test('gateForScore maps overall score to status', () => {
   assert.equal(gateForScore({ overall: 0.85, scores: { productProofStrength: 0.8 } }), 'video_ready');
   assert.equal(gateForScore({ overall: 0.6, scores: { productProofStrength: 0.4 } }), 'needs_review');

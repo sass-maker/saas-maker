@@ -102,6 +102,23 @@ stack is JavaScript-only.
 - The artifact Worker supports byte-range responses so MP4 playback works in
   browsers.
 
+## Credits & Inspiration
+
+Design ideas borrowed from other open-source projects (we adapted concepts, not
+code):
+
+### OpenMontage
+
+- Upstream: `https://github.com/calesthio/OpenMontage` (AGPLv3)
+- Role: agent-first video production system; we deliberately did **not** adopt
+  its runtime (it conflicts with our deterministic Rust autopilot), but stole
+  two of its quality gates:
+  - **Slideshow-risk scoring** — `src/reel-quality.js` flags reels that read as
+    a deck of static cards so they are not auto-posted.
+  - **Post-render self-review** — `src/reel-self-review.js` probes the actually
+    rendered file with `ffprobe` (real duration, aspect, audio) instead of
+    trusting the renderer's claimed metadata.
+
 ## Architecture
 
 ```text
@@ -181,7 +198,7 @@ The watcher polls `/reels?status=approved` every 30s. Any reel where
 frame, etc.). Renders run serially. Per-variant accept/reject still happens in
 the `/review` UI.
 
-Recent additions (product-proof reel generator, see `docs/prd-product-proof-reels.md`):
+Recent additions (product-proof reel generator, see `docs/archive/2026-06-20-prd-product-proof-reels-phase1-shipped.md`):
 
 - Playwright/Chrome product screenshot + demo recording capture
   (`src/product-proof-capture.js`).
@@ -361,7 +378,7 @@ Do not commit `.env` files or provider tokens.
 
 Expected local variables when connecting to real SaaS Maker / providers:
 
-- `SAASMAKER_API_URL` or default `https://api.saasmaker.com`
+- `SAASMAKER_API_URL` or default `https://api.sassmaker.com`
 - `SAASMAKER_SESSION_TOKEN` for session-auth Marketing Queue access
 - `MONEYPRINTER_API_URL` or default `http://127.0.0.1:8080`
 - Provider-specific keys stored in the relevant engine config, not in this repo

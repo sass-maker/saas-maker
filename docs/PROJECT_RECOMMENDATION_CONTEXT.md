@@ -178,7 +178,7 @@ Primary docs and handoff files:
 - `README.md`
 - `docs/architecture.md`
 - `docs/engine-pins.md`
-- `docs/prd-product-proof-reels.md`
+- `docs/archive/2026-06-20-prd-product-proof-reels-phase1-shipped.md`
 - `docs/submodules.md`
 - `docs/upstreams.md`
 

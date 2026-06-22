@@ -5,7 +5,6 @@ import { promisify } from 'node:util';
 
 import { briefFromMarketingPost, normalizeVideoBrief, toMoneyPrinterRequest } from '../src/video-brief.js';
 import { MoneyPrinterTurboAdapter } from '../src/adapters/moneyprinterturbo.js';
-import { OpenShortsAdapter, toOpenShortsJob } from '../src/adapters/openshorts.js';
 import { ReelMakerAdapter, splitBriefIntoScenes } from '../src/adapters/reel-maker.js';
 import { publishRenderArtifacts, publishRenderArtifactsToR2 } from '../src/artifact-publisher.js';
 import { createDraftVideo, createRenderer, getDraftVideoStatus, renderAcceptedMarketingPosts } from '../src/pipeline.js';
@@ -88,8 +87,9 @@ test('remotion render mode maps to ReelMaker adapter', () => {
   assert.equal(createRenderer('reel-maker').constructor.name, 'ReelMakerAdapter');
 });
 
-test('ugc_actor render mode maps to OpenShorts adapter', () => {
-  assert.equal(createRenderer('ugc_actor').constructor.name, 'OpenShortsAdapter');
+test('openshorts render mode is removed', () => {
+  assert.throws(() => createRenderer('openshorts'), /removed/);
+  assert.throws(() => createRenderer('ugc_actor'), /removed/);
 });
 
 test('MoneyPrinterTurbo adapter posts to v1 video API and reads task id', async () => {
@@ -113,28 +113,6 @@ test('MoneyPrinterTurbo adapter posts to v1 video API and reads task id', async 
 
   assert.equal(result.externalTaskId, 'task-123');
   assert.equal(calls[0].url, 'http://mpt.local/api/v1/videos');
-});
-
-test('OpenShorts adapter creates a guarded UGC job spec', async () => {
-  const brief = normalizeVideoBrief({
-    id: 'brief-openshorts',
-    projectSlug: 'linkchat',
-    channel: 'instagram_reels',
-    title: 'UGC actor draft',
-    hook: 'Your profile can answer first.',
-    body: reelBody,
-    cta: 'Ask one question.',
-    renderMode: 'openshorts',
-  });
-  const spec = toOpenShortsJob(brief);
-  assert.equal(spec.platform, 'instagram');
-  assert.match(spec.guardrails.join('\n'), /Do not autopost/);
-
-  const adapter = new OpenShortsAdapter({ jobDir: './tmp/openshorts-jobs' });
-  const result = await adapter.createVideo(brief);
-  assert.equal(result.provider, 'openshorts');
-  assert.equal(result.status, 'queued');
-  assert.match(result.raw.specPath, /job\.json$/);
 });
 
 test('ReelMaker adapter creates Remotion timeline and render job', async () => {
@@ -319,9 +297,9 @@ test('SaaS Maker client skips sync when no session token is configured', async (
   assert.equal(result.reason, 'missing SAASMAKER_SESSION_TOKEN');
 });
 
-test('SaaS Maker client defaults to the saasmaker base URL', () => {
+test('SaaS Maker client defaults to the sassmaker base URL', () => {
   const client = new SaaSMakerClient({ sessionToken: '' });
-  assert.equal(client.baseUrl, 'https://api.saasmaker.com');
+  assert.equal(client.baseUrl, 'https://api.sassmaker.com');
 });
 
 test('post-ready CLI treats confirm=false as false', async () => {
