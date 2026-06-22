@@ -18,7 +18,7 @@ Registry classification uses two separate fields:
 | `free-ai`            | Free AI Gateway        | Gateway/API product, not a frontend.                                     |
 | `ai-game`            | AI Game                | Public game domain is Aliveville; repo slug remains `ai-game`.           |
 | `high-signal`        | High Signal            | Worker frontend.                                                         |
-| `knowledgebase`      | Private Agent Search   | Local FastAPI search layer for private project corpora.                  |
+| `knowledgebase`      | Private Agent Search   | Cloudflare Worker RAG service for cited private project corpora.         |
 | `linkchat`           | Linkchat               | Worker frontend.                                                         |
 | `looptv`             | LoopTV                 | Keep label as LoopTV even if notes mention Loop TV.                      |
 | `open-historia`      | Open Historia          | Worker frontend with Google login.                                       |
