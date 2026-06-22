@@ -1,100 +1,157 @@
 ---
 import Layout from '../layouts/Layout.astro';
 
-// The Fleet Factory — a futuristic assembly line where every product is a
-// station on the line and saas-maker is the control tower / system-of-record.
-// Data mirrors the real architecture (docs/plans/2026-06-19-fleet-*).
+// The Fleet Factory — a layered map of how the fleet actually works.
+// Three shared layers carry the load; every other repo is a product built on
+// top, drawing only the utilities it needs. Data mirrors the 2026-06-21 fleet
+// connection audit (what calls free-ai, what uses knowledge-base RAG, what
+// embeds the saas-maker widgets) — not an aspirational task-queue.
 
-const stations = [
-  { id: 'high-signal',   role: 'R&D · Discovery',      flow: 'produce',   tag: 'enqueues ideas',      cap: 'ideas',  auth: true,  note: 'cron → tasks' },
-  { id: 'pinpoint',      role: 'Intake · Feedback',    flow: 'produce',   tag: 'UI comment → task',   cap: 'review', auth: true,  note: 'wired' },
-  { id: 'CodeVetter',    role: 'Build · Review · Test',flow: 'consume',   tag: 'claims & works',      cap: 'review', auth: true,  note: 'desktop worker' },
-  { id: 'taste',         role: 'Quality Gate',         flow: 'consume',   tag: 'judges the output',   cap: 'judge',  auth: true,  note: 'hosted worker' },
-  { id: 'reel-pipeline', role: 'Distribution',         flow: 'consume',   tag: 'renders & ships',     cap: 'render', auth: true,  note: 'worker + report' },
-  { id: 'psi-swarm',     role: 'Perf Sensor',          flow: 'telemetry', tag: 'audit.completed',     cap: '—',      auth: true,  note: 'push-up' },
-  { id: 'drank',         role: 'Rank Sensor',          flow: 'telemetry', tag: 'dr.snapshot',         cap: '—',      auth: true,  note: 'push-up' },
-  { id: 'starboard',       role: 'GitHub Insight',      flow: 'insight',   tag: 'reads fleet → better GitHub', cap: '—', auth: true, note: 'open' },
-  { id: 'everythingrated', role: 'GitHub Insight',      flow: 'insight',   tag: 'fleet-aware, closed',  cap: '—',      auth: true,  note: 'closed-source' },
-  { id: 'free-ai',       role: 'AI Utility · Power',   flow: 'utility',   tag: 'inference grid',      cap: '—',      auth: true,  note: 'read-only' },
+const infra = [
+  { id: 'free-ai', accent: 'ai',  role: 'Inference grid',
+    provides: 'OpenAI-compatible API fronting 30+ free LLM providers, health-routed.',
+    count: '11 apps tap it' },
+  { id: 'knowledge-base', accent: 'rag', role: 'RAG service',
+    provides: 'Private semantic search + citations (Vectorize / Qdrant). Itself calls free-ai for embeddings.',
+    count: '2 apps + self' },
 ];
-const flowLabel = { produce: 'PRODUCE', consume: 'CONSUME', telemetry: 'TELEMETRY', utility: 'UTILITY', insight: 'INSIGHT' };
-const chipText = (s) => s.cap !== '—' ? `cap: ${s.cap}` : ({ telemetry: 'telemetry', insight: 'reads hub', utility: 'inference' }[s.flow] || s.flow);
+
+const platform = {
+  id: 'saas-maker', role: 'The Foundry · platform',
+  provides: 'System-of-record for the fleet — project registry (29) · feedback / testimonials / changelog widgets · live event ledger.',
+  rails: ['registry', 'feedback widgets', 'events ledger'],
+};
+
+const bands = [
+  { key: 'ai', title: 'Draw on the AI grid', note: 'call free-ai for inference', items: [
+    { id: 'starboard',          provides: 'GitHub stars organizer + semantic search',  uses: ['ai', 'rag', 'feedback'] },
+    { id: 'karte',           provides: 'AI link-in-bio — chat · encyclopedia · roast', uses: ['ai', 'rag'] },
+    { id: 'high-signal',        provides: 'Daily synthesized intelligence brief',       uses: ['ai', 'feedback'] },
+    { id: 'reader',             provides: 'Research library — capture · annotate · chat', uses: ['ai', 'feedback'] },
+    { id: 'rolepatch',      provides: 'LaTeX résumé tailoring + cover letters',      uses: ['ai', 'feedback'] },
+    { id: 'looptv',             provides: 'TV-style random video player (78 channels)',  uses: ['ai', 'feedback'] },
+    { id: 'ai-game',            provides: '3D AI world simulator with NPC agents',       uses: ['ai'] },
+    { id: 'today-little-log',   provides: 'Personal life PWA · daily scoreboard',        uses: ['ai'] },
+    { id: 'codevetter',         provides: 'Desktop AI code review (local-first)',        uses: ['ai'] },
+  ] },
+  { key: 'platform', title: 'Platform-connected', note: 'embed saas-maker, own their AI', items: [
+    { id: 'email-manager',      provides: 'Gmail workspace · local semantic search',     uses: ['feedback'] },
+    { id: 'swe-interview-prep', provides: 'SWE learning OS · FSRS spaced repetition',     uses: ['feedback'] },
+    { id: 'everythingrated',    provides: 'Multi-axis ratings platform',                 uses: ['feedback'] },
+    { id: 'significanthobbies', provides: 'Hobby discovery + journaling',                uses: ['feedback'] },
+    { id: 'truehire',           provides: 'Verified candidate GitHub scoring',           uses: ['feedback'] },
+    { id: 'reel-pipeline',      provides: 'AI short-form video pipeline (Node + Rust)',     uses: ['sync'] },
+    { id: 'drank',              provides: 'Domain Rating tracker (Ahrefs DR) · client-side', uses: ['telemetry'] },
+  ] },
+  { key: 'solo', title: 'Standalone products', note: 'no fleet wiring — fully self-contained', items: [
+    { id: 'open-historia',      provides: 'AI grand-strategy history game',  uses: [] },
+    { id: 'anime-list',         provides: 'Anime / manga discovery + watchlists', uses: [] },
+    { id: 'taste',              provides: 'AI screenshot ranker · training export', uses: [] },
+    { id: 'verified-bases',     provides: 'Storefront for verified software starters', uses: [] },
+    { id: 'pace',               provides: 'macOS voice companion (on-device)', uses: [] },
+    { id: 'tinygpt',            provides: 'Local LLM factory + runtime (Mac)', uses: [] },
+    { id: 'forecast-lab',       provides: 'Forecasting / recsys benchmark', uses: [] },
+    { id: 'research-papers',     provides: 'Academic paper search platform', uses: [] },
+    { id: 'materia',            provides: 'Evidence-graded supplements explorer (whole body)', uses: [] },
+  ] },
+];
+
+const useLabel = { ai: 'free-ai', rag: 'RAG', feedback: 'feedback', telemetry: 'telemetry', sync: 'sync' };
+const productCount = bands.reduce((n, b) => n + b.items.length, 0);
 ---
 
-<Layout title="The Fleet Factory — saas-maker" description="A futuristic assembly line: every product a station, saas-maker the control tower and system-of-record. Pull task-queue + event telemetry on the Cloudflare edge.">
+<Layout title="The Fleet Factory — saas-maker" description="A layered map of the fleet: free-ai (inference grid) and knowledge-base (RAG) as shared infrastructure, saas-maker as the system-of-record platform, and 25 products built on top — each drawing only the utilities it needs.">
   <main class="factory">
     <div class="grid-floor" aria-hidden="true"></div>
     <div class="scanline" aria-hidden="true"></div>
 
     <header class="fab-hero">
-      <p class="kicker"><span class="led"></span> FOUNDRY · ASSEMBLY LINE ONLINE</p>
+      <p class="kicker"><span class="led"></span> FOUNDRY · FLEET ARCHITECTURE</p>
       <h1>The Fleet Factory</h1>
-      <p class="sub">Every product is a station on one line. <strong>saas-maker</strong> is the control tower —
-        the system-of-record and the task queue. Work flows as <em>pull-claimed</em> jobs; results flow back as
-        <em>telemetry</em>. Built on the Cloudflare edge.</p>
+      <p class="sub">Three shared layers carry the load. <strong>free-ai</strong> is the inference grid every app taps;
+        <strong>knowledge-base</strong> serves RAG; <strong>saas-maker</strong> keeps the record. Everything else is a
+        <em>product built on top</em> — each one standalone, each drawing only the utilities it needs.</p>
       <div class="stat-strip">
-        <div><b>10</b><span>stations linked</span></div>
-        <div><b>10/10</b><span>auth online</span></div>
-        <div><b>11/11</b><span>e2e transfers ✓</span></div>
-        <div><b>D1</b><span>queue + ledger</span></div>
+        <div><b>3</b><span>shared layers</span></div>
+        <div><b>{productCount}</b><span>products</span></div>
+        <div><b>10</b><span>tap free-ai</span></div>
+        <div><b>28</b><span>fleet projects</span></div>
       </div>
     </header>
 
-    <!-- The line -->
-    <section class="floor" aria-label="Assembly line">
-      <!-- Control tower -->
-      <div class="tower">
-        <div class="tower-core">
-          <span class="tower-tag">CONTROL TOWER</span>
-          <span class="tower-name">saas-maker</span>
-          <span class="tower-sub">system-of-record · task queue (D1)</span>
-          <div class="tower-rails">
-            <span class="rail rail-tasks">/v1/tasks · claim · lease</span>
-            <span class="rail rail-events">/v1/events · append-only</span>
-          </div>
+    <section class="stack" aria-label="Fleet architecture">
+
+      <!-- LAYER 1 · SHARED INFRA -->
+      <div class="layer">
+        <span class="layer-tag l-infra">Layer 1 · Shared infrastructure</span>
+        <div class="infra-row">
+          {infra.map((n) => (
+            <article class={`infra-card a-${n.accent}`}>
+              <div class="infra-head"><span class="infra-led"></span><h3>{n.id}</h3></div>
+              <p class="infra-role">{n.role}</p>
+              <p class="infra-provides">{n.provides}</p>
+              <span class="infra-count">{n.count}</span>
+            </article>
+          ))}
         </div>
-        <div class="tower-glow" aria-hidden="true"></div>
       </div>
 
-      <!-- Conveyor -->
-      <div class="conveyor" aria-hidden="true">
-        <div class="belt"></div>
-        <span class="pulse p1"></span><span class="pulse p2"></span><span class="pulse p3"></span><span class="pulse p4"></span>
+      <div class="downflow" aria-hidden="true"><span></span><span></span><span></span><em>drawn on by ↓</em></div>
+
+      <!-- LAYER 2 · PLATFORM -->
+      <div class="layer">
+        <span class="layer-tag l-platform">Layer 2 · Platform</span>
+        <article class="platform-card">
+          <div class="plat-main">
+            <span class="infra-led plat-led"></span>
+            <div>
+              <h3>{platform.id}</h3>
+              <p class="infra-role">{platform.role}</p>
+            </div>
+          </div>
+          <p class="infra-provides">{platform.provides}</p>
+          <div class="plat-rails">{platform.rails.map((r) => <span class="rail">{r}</span>)}</div>
+        </article>
       </div>
 
-      <!-- Stations -->
-      <div class="stations">
-        {stations.map((s, i) => (
-          <article class={`station flow-${s.flow}`} style={`--i:${i}`}>
-            <div class="st-head">
-              <span class={`st-led ${s.auth ? 'on' : ''}`} title="auth online"></span>
-              <span class="st-flow">{flowLabel[s.flow]}</span>
+      <div class="downflow" aria-hidden="true"><span></span><span></span><span></span><em>built on by ↓</em></div>
+
+      <!-- LAYER 3 · PRODUCTS -->
+      <div class="layer">
+        <span class="layer-tag l-products">Layer 3 · Products — {productCount}</span>
+        {bands.map((band) => (
+          <div class="band">
+            <div class="band-head"><span class={`band-dot d-${band.key}`}></span><b>{band.title}</b><em>{band.note}</em></div>
+            <div class="prod-grid">
+              {band.items.map((p, i) => (
+                <article class="prod" style={`--i:${i}`}>
+                  <h4>{p.id}</h4>
+                  <p class="provides">{p.provides}</p>
+                  <div class="uses">
+                    {p.uses.length === 0
+                      ? <span class="u u-solo">standalone</span>
+                      : p.uses.map((u) => <span class={`u u-${u}`}>{useLabel[u]}</span>)}
+                  </div>
+                </article>
+              ))}
             </div>
-            <h3 class="st-name">{s.id}</h3>
-            <p class="st-role">{s.role}</p>
-            <p class="st-tag">{s.tag}</p>
-            <div class="st-foot">
-              <span class="chip">{chipText(s)}</span>
-              <span class="chip ghost">{s.note}</span>
-            </div>
-            <div class="st-wire" aria-hidden="true"></div>
-          </article>
+          </div>
         ))}
       </div>
     </section>
 
     <!-- Legend -->
     <section class="legend">
-      <div class="lg produce"><span></span>PRODUCE — enqueue work (capability-tagged) → the queue</div>
-      <div class="lg consume"><span></span>CONSUME — a worker claims, does it, reports back (atomic lease)</div>
-      <div class="lg telemetry"><span></span>TELEMETRY — push-up results to the ledger; hub never reads back</div>
-      <div class="lg insight"><span></span>INSIGHT — reads fleet data (read-down) to sharpen your GitHub presence</div>
-      <div class="lg utility"><span></span>UTILITY — free-ai inference grid, drawn on by any station</div>
+      <div class="lg ai"><span></span><b>free-ai</b> — inference grid (OpenAI-compatible, 30+ providers)</div>
+      <div class="lg rag"><span></span><b>RAG</b> — knowledge-base semantic search (service binding)</div>
+      <div class="lg feedback"><span></span><b>feedback</b> — embeds saas-maker widgets (feedback / testimonials / changelog)</div>
+      <div class="lg sync"><span></span><b>sync / telemetry</b> — pushes to the saas-maker event ledger / marketing queue</div>
+      <div class="lg solo"><span></span><b>standalone</b> — no fleet wiring; runs entirely on its own</div>
     </section>
 
     <footer class="fab-foot">
-      <p>Pull task-queue · event ledger · graceful-degrading workers — each station runs standalone and
-        <em>just works</em> the moment it connects. Cloudflare D1 + Workers + Cron, $5 tier.</p>
+      <p>One grid, one record, many products. Each app runs on its own and <em>just works</em> — the fleet is the
+        shared infrastructure beneath it, not a dependency between the apps. Cloudflare edge · $5 tier.</p>
       <a class="back" href="/">← back to the fleet</a>
     </footer>
   </main>
@@ -109,7 +166,7 @@ const chipText = (s) => s.cap !== '—' ? `cap: ${s.cap}` : ({ telemetry: 'telem
       background: linear-gradient(transparent 0, #22d3ee 50%, transparent 100%); height: 180px; animation: scan 7s linear infinite; }
     @keyframes scan { 0% { transform: translateY(-200px); } 100% { transform: translateY(110vh); } }
 
-    .fab-hero { position: relative; text-align: center; padding: 7rem 0 3rem; }
+    .fab-hero { position: relative; text-align: center; padding: 7rem 0 2.4rem; }
     .kicker { display: inline-flex; align-items: center; gap: .5rem; font: 600 .72rem/1 ui-monospace, monospace;
       letter-spacing: .28em; color: #67e8f9; text-transform: uppercase; }
     .led { width: 8px; height: 8px; border-radius: 50%; background: #34d399; box-shadow: 0 0 10px #34d399; animation: blink 1.6s ease-in-out infinite; }
@@ -117,7 +174,7 @@ const chipText = (s) => s.cap !== '—' ? `cap: ${s.cap}` : ({ telemetry: 'telem
     .fab-hero h1 { font: 800 clamp(2.6rem, 7vw, 5.2rem)/1 'Inter', system-ui, sans-serif; margin: .6rem 0;
       background: linear-gradient(180deg, #fff, #7dd3fc 70%, #38bdf8); -webkit-background-clip: text; background-clip: text; color: transparent;
       text-shadow: 0 0 60px #0ea5e955; }
-    .sub { max-width: 60ch; margin: 0 auto; color: #93b4d8; line-height: 1.6; font-size: 1.02rem; }
+    .sub { max-width: 62ch; margin: 0 auto; color: #93b4d8; line-height: 1.6; font-size: 1.02rem; }
     .sub strong { color: #e0f2fe; } .sub em { color: #67e8f9; font-style: normal; }
     .stat-strip { display: flex; flex-wrap: wrap; gap: 1.2rem; justify-content: center; margin-top: 2.2rem; }
     .stat-strip div { display: grid; gap: .15rem; padding: .7rem 1.3rem; border: 1px solid #1e3a5f; border-radius: 12px;
@@ -125,70 +182,82 @@ const chipText = (s) => s.cap !== '—' ? `cap: ${s.cap}` : ({ telemetry: 'telem
     .stat-strip b { font: 800 1.5rem/1 'Inter', sans-serif; color: #5eead4; }
     .stat-strip span { font: 600 .62rem/1 ui-monospace, monospace; letter-spacing: .14em; color: #6b88aa; text-transform: uppercase; }
 
-    .floor { position: relative; max-width: 1200px; margin: 3rem auto 0; }
-    .tower { position: relative; display: flex; justify-content: center; margin-bottom: 2.4rem; }
-    .tower-core { position: relative; z-index: 2; display: grid; justify-items: center; gap: .35rem; text-align: center;
-      padding: 1.6rem 2.4rem; border-radius: 18px; border: 1px solid #34d39955;
-      background: linear-gradient(180deg, #0c1c2e, #0a1420); box-shadow: 0 0 0 1px #0ea5e933, 0 24px 60px #00111e88; }
-    .tower-tag { font: 700 .62rem/1 ui-monospace, monospace; letter-spacing: .28em; color: #34d399; }
-    .tower-name { font: 800 1.9rem/1 'Inter', sans-serif; color: #fff; }
-    .tower-sub { font: 500 .82rem/1 ui-monospace, monospace; color: #7da7cf; }
-    .tower-rails { display: flex; gap: .5rem; margin-top: .6rem; flex-wrap: wrap; justify-content: center; }
-    .rail { font: 600 .66rem/1 ui-monospace, monospace; padding: .4rem .6rem; border-radius: 7px; }
-    .rail-tasks { color: #fcd34d; background: #3b2f0a; border: 1px solid #facc1540; }
-    .rail-events { color: #67e8f9; background: #06283a; border: 1px solid #22d3ee40; }
-    .tower-glow { position: absolute; inset: -40px; background: radial-gradient(closest-side, #0ea5e944, transparent); filter: blur(20px); animation: breathe 4s ease-in-out infinite; }
-    @keyframes breathe { 50% { opacity: .55; transform: scale(1.06); } }
+    .stack { position: relative; max-width: 1120px; margin: 2rem auto 0; }
+    .layer { position: relative; }
+    .layer-tag { display: inline-block; font: 700 .64rem/1 ui-monospace, monospace; letter-spacing: .22em;
+      text-transform: uppercase; padding: .4rem .7rem; border-radius: 7px; margin-bottom: 1rem; }
+    .l-infra    { color: #67e8f9; background: #06283a; border: 1px solid #22d3ee40; }
+    .l-platform { color: #34d399; background: #082619; border: 1px solid #34d39940; }
+    .l-products { color: #93b4d8; background: #0c1626; border: 1px solid #25324f; }
 
-    .conveyor { position: relative; height: 26px; border-radius: 8px; margin: 0 auto 1.8rem; max-width: 1040px; overflow: hidden;
-      border: 1px solid #1b3552; background: #060d18; }
-    .belt { position: absolute; inset: 0; background: repeating-linear-gradient(90deg, #0e2236 0 18px, #08131f 18px 36px); animation: roll 1.1s linear infinite; }
-    @keyframes roll { to { background-position: 36px 0; } }
-    .pulse { position: absolute; top: 50%; width: 9px; height: 9px; margin-top: -4.5px; border-radius: 50%; background: #5eead4;
-      box-shadow: 0 0 12px #5eead4; animation: travel 3.4s linear infinite; }
-    .p1 { animation-delay: 0s; } .p2 { animation-delay: .9s; background:#fcd34d; box-shadow:0 0 12px #fcd34d;}
-    .p3 { animation-delay: 1.8s; background:#e879f9; box-shadow:0 0 12px #e879f9;} .p4 { animation-delay: 2.6s; }
-    @keyframes travel { from { left: -2%; } to { left: 102%; } }
+    .infra-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
+    .infra-card { position: relative; padding: 1.4rem 1.5rem; border-radius: 16px; border: 1px solid #173050;
+      background: linear-gradient(180deg, #0b1a2bf2, #081019f2); overflow: hidden; }
+    .infra-card::before { content: ''; position: absolute; inset: 0 auto 0 0; width: 3px; }
+    .a-ai::before  { background: #22d3ee; box-shadow: 0 0 18px #22d3ee; }
+    .a-rag::before { background: #818cf8; box-shadow: 0 0 18px #818cf8; }
+    .infra-head { display: flex; align-items: center; gap: .55rem; }
+    .infra-led { width: 10px; height: 10px; border-radius: 50%; background: #34d399; box-shadow: 0 0 10px #34d399; flex: none; }
+    .a-ai .infra-led { background: #22d3ee; box-shadow: 0 0 10px #22d3ee; }
+    .a-rag .infra-led { background: #818cf8; box-shadow: 0 0 10px #818cf8; }
+    .infra-card h3, .platform-card h3 { font: 800 1.5rem/1 'Inter', sans-serif; color: #f1f5f9; margin: 0; }
+    .infra-role { font: 700 .68rem/1 ui-monospace, monospace; letter-spacing: .14em; text-transform: uppercase; color: #7dd3fc; margin: .5rem 0; }
+    .infra-provides { font-size: .9rem; color: #9fb6d2; line-height: 1.5; margin: .4rem 0 .7rem; }
+    .infra-count { font: 700 .66rem/1 ui-monospace, monospace; color: #5eead4; padding: .34rem .55rem; border-radius: 6px; background: #0a2230; border: 1px solid #22d3ee33; }
 
-    .stations { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
-    .station { position: relative; padding: 1.1rem 1.1rem 1.2rem; border-radius: 14px; border: 1px solid #173050;
+    .downflow { display: flex; flex-direction: column; align-items: center; gap: .28rem; margin: 1.1rem 0; }
+    .downflow span { width: 2px; height: 9px; background: linear-gradient(#2dd4bf, transparent); opacity: .6; }
+    .downflow em { font: 600 .64rem/1 ui-monospace, monospace; letter-spacing: .14em; color: #6b88aa; font-style: normal; text-transform: uppercase; margin-top: .15rem; }
+
+    .platform-card { position: relative; padding: 1.5rem 1.7rem; border-radius: 16px; border: 1px solid #34d39955;
+      background: linear-gradient(180deg, #0c1c2e, #0a1420); box-shadow: 0 0 0 1px #0ea5e922, 0 18px 50px #00111e66; }
+    .plat-main { display: flex; align-items: center; gap: .7rem; }
+    .plat-led { background: #34d399; box-shadow: 0 0 12px #34d399; }
+    .plat-rails { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .3rem; }
+    .rail { font: 600 .66rem/1 ui-monospace, monospace; padding: .4rem .6rem; border-radius: 7px;
+      color: #6ee7b7; background: #082619; border: 1px solid #34d39940; }
+
+    .band { margin-top: 1.5rem; }
+    .band-head { display: flex; align-items: center; gap: .55rem; margin-bottom: .8rem; }
+    .band-head b { font: 700 .92rem/1 'Inter', sans-serif; color: #e2eefb; }
+    .band-head em { font: 500 .76rem/1 ui-monospace, monospace; color: #6b88aa; font-style: normal; }
+    .band-dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+    .d-ai { background: #22d3ee; box-shadow: 0 0 9px #22d3ee; }
+    .d-platform { background: #34d399; box-shadow: 0 0 9px #34d399; }
+    .d-solo { background: #475569; }
+
+    .prod-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: .8rem; }
+    .prod { position: relative; padding: .85rem .9rem 1rem; border-radius: 12px; border: 1px solid #173050;
       background: linear-gradient(180deg, #0a1626f2, #081019f2); backdrop-filter: blur(8px);
-      animation: rise .6s cubic-bezier(.2,.7,.2,1) backwards; animation-delay: calc(var(--i) * 70ms); transition: transform .2s, box-shadow .2s, border-color .2s; }
-    .station:hover { transform: translateY(-4px); border-color: #2dd4bf66; box-shadow: 0 18px 40px #00131f88; }
-    @keyframes rise { from { opacity: 0; transform: translateY(16px); } }
-    .st-head { display: flex; align-items: center; justify-content: space-between; }
-    .st-led { width: 9px; height: 9px; border-radius: 50%; background: #334155; }
-    .st-led.on { background: #34d399; box-shadow: 0 0 9px #34d399; }
-    .st-flow { font: 700 .58rem/1 ui-monospace, monospace; letter-spacing: .18em; color: #6b88aa; }
-    .st-name { font: 800 1.12rem/1 'Inter', sans-serif; margin: .55rem 0 .1rem; color: #f1f5f9; }
-    .st-role { font: 600 .74rem/1.2 ui-monospace, monospace; color: #7dd3fc; margin: 0 0 .5rem; }
-    .st-tag { font-size: .82rem; color: #8fa9c6; margin: 0 0 .8rem; min-height: 2.2em; }
-    .st-foot { display: flex; flex-wrap: wrap; gap: .35rem; }
-    .chip { font: 600 .62rem/1 ui-monospace, monospace; padding: .32rem .5rem; border-radius: 6px; color: #c7d2fe; background: #141d33; border: 1px solid #25324f; }
-    .chip.ghost { color: #6b88aa; background: transparent; }
-    .st-wire { position: absolute; left: 50%; top: -1.8rem; width: 2px; height: 1.8rem; transform: translateX(-50%);
-      background: linear-gradient(#5eead4, transparent); opacity: .5; }
-    /* flow accents */
-    .flow-produce { border-top: 2px solid #34d399; } .flow-consume { border-top: 2px solid #fcd34d; }
-    .flow-telemetry { border-top: 2px solid #67e8f9; } .flow-utility { border-top: 2px solid #e879f9; }
-    .flow-insight { border-top: 2px solid #818cf8; }
-    .flow-produce .st-flow { color: #34d399; } .flow-consume .st-flow { color: #fcd34d; }
-    .flow-telemetry .st-flow { color: #67e8f9; } .flow-utility .st-flow { color: #e879f9; }
-    .flow-insight .st-flow { color: #818cf8; }
+      animation: rise .5s cubic-bezier(.2,.7,.2,1) backwards; animation-delay: calc(var(--i) * 45ms);
+      transition: transform .2s, box-shadow .2s, border-color .2s; }
+    .prod:hover { transform: translateY(-3px); border-color: #2dd4bf55; box-shadow: 0 16px 34px #00131f77; }
+    @keyframes rise { from { opacity: 0; transform: translateY(14px); } }
+    .prod h4 { font: 800 .98rem/1.1 'Inter', sans-serif; color: #f1f5f9; margin: 0 0 .3rem; }
+    .provides { font-size: .78rem; color: #8fa9c6; line-height: 1.4; margin: 0 0 .7rem; min-height: 3.2em; }
+    .uses { display: flex; flex-wrap: wrap; gap: .3rem; }
+    .u { font: 600 .6rem/1 ui-monospace, monospace; padding: .28rem .44rem; border-radius: 5px; border: 1px solid transparent; }
+    .u-ai { color: #67e8f9; background: #06283a; border-color: #22d3ee40; }
+    .u-rag { color: #a5b4fc; background: #15173a; border-color: #818cf840; }
+    .u-feedback { color: #6ee7b7; background: #082619; border-color: #34d39940; }
+    .u-sync, .u-telemetry { color: #fcd34d; background: #2a230a; border-color: #facc1540; }
+    .u-solo { color: #6b88aa; background: transparent; border-color: #25324f; }
 
-    .legend { display: grid; gap: .55rem; max-width: 1040px; margin: 2.6rem auto 0; }
-    .lg { display: flex; align-items: center; gap: .7rem; font: 600 .82rem/1.4 ui-monospace, monospace; color: #9fb6d2; }
+    .legend { display: grid; gap: .55rem; max-width: 1120px; margin: 2.6rem auto 0; }
+    .lg { display: flex; align-items: center; gap: .7rem; font: 500 .82rem/1.4 ui-monospace, monospace; color: #9fb6d2; }
+    .lg b { color: #cfe0f3; }
     .lg span { width: 12px; height: 12px; border-radius: 3px; flex: none; }
-    .lg.produce span { background: #34d399; } .lg.consume span { background: #fcd34d; }
-    .lg.telemetry span { background: #67e8f9; } .lg.utility span { background: #e879f9; }
-    .lg.insight span { background: #818cf8; }
+    .lg.ai span { background: #22d3ee; } .lg.rag span { background: #818cf8; }
+    .lg.feedback span { background: #34d399; } .lg.sync span { background: #fcd34d; }
+    .lg.solo span { background: #475569; }
 
     .fab-foot { max-width: 720px; margin: 3.4rem auto 0; text-align: center; }
     .fab-foot p { color: #7da0c4; line-height: 1.6; } .fab-foot em { color: #5eead4; font-style: normal; }
     .back { display: inline-block; margin-top: 1.2rem; color: #67e8f9; text-decoration: none; font: 600 .9rem ui-monospace, monospace; }
     .back:hover { text-decoration: underline; }
 
-    @media (max-width: 820px) { .stations { grid-template-columns: repeat(2, 1fr); } }
-    @media (prefers-reduced-motion: reduce) { .scanline, .belt, .pulse, .tower-glow, .led { animation: none; } }
+    @media (max-width: 980px) { .prod-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 760px) { .infra-row { grid-template-columns: 1fr; } .prod-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (prefers-reduced-motion: reduce) { .scanline, .led, .prod { animation: none; } }
   </style>
 </Layout>
