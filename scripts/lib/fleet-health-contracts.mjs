@@ -121,7 +121,7 @@ export const FLEET_HEALTH_CONTRACTS = {
     smokeCommand: null,
   },
   linkchat: {
-    displayName: 'Linkchat',
+    displayName: 'Karte',
     prodUrl: 'https://linkchat.sarthakagrawal927.workers.dev',
     expectedStatus: 200,
     criticalRoutes: ['/'],
