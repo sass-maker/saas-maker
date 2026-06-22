@@ -357,30 +357,36 @@ export function getDb(d1: D1Database): FeedbackDatabase {
       const filters = [eq(schema.feedback.project_id, projectId)];
       if (type) filters.push(eq(schema.feedback.type, type));
       if (status) filters.push(eq(schema.feedback.status, status));
-      const countRows = await drz.select({ id: schema.feedback.id }).from(schema.feedback).where(and(...filters));
-      const total = countRows.length;
 
-      // Data — keep raw SQL for viewer_vote join which Drizzle can't express cleanly
-      let rows: unknown[];
-      if (userId) {
-        const sql = `SELECT f.*, v.vote AS viewer_vote
+      // Data — keep raw SQL for viewer_vote join which Drizzle can't express cleanly.
+      // Count and data queries are independent (same filters, no short-circuit) — run in parallel.
+      const dataStmt = userId
+        ? d1
+            .prepare(
+              `SELECT f.*, v.vote AS viewer_vote
            FROM feedback f
            LEFT JOIN feedback_votes v ON v.feedback_id = f.id AND v.user_id = ?
            WHERE ${where}
            ORDER BY ${orderBy}
-           LIMIT ? OFFSET ?`;
-        const { results } = await d1.prepare(sql).bind(userId, ...whereBinds, limit, offset).all();
-        rows = results;
-      } else {
-        const { results } = await d1.prepare(
-          `SELECT f.*, NULL AS viewer_vote
+           LIMIT ? OFFSET ?`
+            )
+            .bind(userId, ...whereBinds, limit, offset)
+        : d1
+            .prepare(
+              `SELECT f.*, NULL AS viewer_vote
            FROM feedback f
            WHERE ${where}
            ORDER BY ${orderBy}
            LIMIT ? OFFSET ?`
-        ).bind(...whereBinds, limit, offset).all();
-        rows = results;
-      }
+            )
+            .bind(...whereBinds, limit, offset);
+
+      const [countRows, dataResult] = await Promise.all([
+        drz.select({ id: schema.feedback.id }).from(schema.feedback).where(and(...filters)),
+        dataStmt.all(),
+      ]);
+      const total = countRows.length;
+      const rows: unknown[] = dataResult.results;
 
       return {
         data: (rows as Record<string, unknown>[]).map(toFeedbackRecord),
