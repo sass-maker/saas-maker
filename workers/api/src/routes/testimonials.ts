@@ -112,8 +112,10 @@ testimonials.get('/all', requireSession, async (c) => {
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
-  const result = await db.listAllTestimonials(projectId, page, PAGE_SIZE);
-  const stats = await db.getTestimonialStats(projectId);
+  const [result, stats] = await Promise.all([
+    db.listAllTestimonials(projectId, page, PAGE_SIZE),
+    db.getTestimonialStats(projectId),
+  ]);
   return c.json({ data: result.data, total: result.total, page, limit: PAGE_SIZE, stats });
 });
 

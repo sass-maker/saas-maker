@@ -109,27 +109,29 @@ feedback.get('/board', requireSession, async (c) => {
   const projects = await db.listProjectsByOwner(userId, 'dashboard');
   if (projects.length === 0) return c.json({ data: [], total: 0 });
 
-  const projectIds = projects.map((p) => p.id);
+  // Query feedback across all projects in parallel (each call is independent)
+  const perProject = await Promise.all(
+    projects.map((proj) =>
+      db.listFeedback(
+        proj.id,
+        {
+          type: 'feature',
+          status: status && status !== 'all' ? (status as AnyFeedbackStatus) : undefined,
+          sort,
+          page: 1,
+          limit: 100,
+        },
+        userId,
+      ),
+    ),
+  );
 
-  // Query feedback across all projects
   const allFeedback: Array<FeedbackRecord & { project_name: string; project_slug: string }> = [];
-  for (const pid of projectIds) {
-    const result = await db.listFeedback(
-      pid,
-      {
-        type: 'feature',
-        status: status && status !== 'all' ? (status as AnyFeedbackStatus) : undefined,
-        sort,
-        page: 1,
-        limit: 100,
-      },
-      userId,
-    );
-    const proj = projects.find((p) => p.id === pid)!;
-    for (const item of result.data) {
+  projects.forEach((proj, i) => {
+    for (const item of perProject[i].data) {
       allFeedback.push({ ...item, project_name: proj.name, project_slug: proj.slug });
     }
-  }
+  });
 
   // Sort merged results
   if (sort === 'upvotes') {

@@ -45,8 +45,10 @@ changelog.get('/dashboard/:projectId', requireSession, async (c) => {
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
-  const result = await db.listChangelogEntries(projectId, page, PAGE_SIZE);
-  const stats = await db.getChangelogStats(projectId);
+  const [result, stats] = await Promise.all([
+    db.listChangelogEntries(projectId, page, PAGE_SIZE),
+    db.getChangelogStats(projectId),
+  ]);
   return c.json({ data: result.data, total: result.total, page, limit: PAGE_SIZE, stats });
 });
 
