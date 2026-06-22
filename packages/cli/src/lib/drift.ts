@@ -17,7 +17,7 @@
 
 import { existsSync, readFileSync, mkdirSync, writeFileSync, chmodSync, readdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { usesBiome } from './forge.js';
+import { usesBiome, detectPackageManager, buildPrePushTemplate } from './forge.js';
 
 export type DriftStatus = 'pass' | 'warn' | 'fail';
 
@@ -42,19 +42,6 @@ export interface DriftOptions {
   skipAgents?: boolean;
 }
 
-const HUSKY_PRE_PUSH_FALLBACK = `#!/bin/sh
-set -e
-if grep -q '"lint"' package.json 2>/dev/null; then
-  pnpm run lint --if-present || { echo "lint failed" >&2; exit 1; }
-fi
-SECRETS=$(git ls-files -z 2>/dev/null \\
-  | xargs -0 grep -lE 'sk-[A-Za-z0-9_-]{20,}|AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{36}' 2>/dev/null \\
-  | grep -vE '(\\.example$|/tests?/|/__tests__/)' || true)
-if [ -n "$SECRETS" ]; then
-  echo "Secret leak detected: $SECRETS" >&2
-  exit 1
-fi
-`;
 
 export function checkProjectDrift(
   projectPath: string,
@@ -103,7 +90,8 @@ export function checkProjectDrift(
       detail: 'missing',
       fix: () => {
         mkdirSync(dirname(huskyPath), { recursive: true });
-        writeFileSync(huskyPath, HUSKY_PRE_PUSH_FALLBACK);
+        const pm = detectPackageManager(projectPath);
+        writeFileSync(huskyPath, buildPrePushTemplate(pm));
         try {
           chmodSync(huskyPath, 0o755);
         } catch {

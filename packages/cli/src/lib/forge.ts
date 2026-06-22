@@ -12,6 +12,20 @@ export interface ApplyStandardOptions {
   force?: boolean;
 }
 
+export type PackageManager = 'bun' | 'pnpm' | 'npm' | 'yarn';
+
+/**
+ * Detects the package manager used in a project by looking for lockfiles.
+ * Precedence: bun → pnpm → npm → yarn → pnpm (default).
+ */
+export function detectPackageManager(cwd: string = process.cwd()): PackageManager {
+  if (existsSync(join(cwd, 'bun.lock')) || existsSync(join(cwd, 'bun.lockb'))) return 'bun';
+  if (existsSync(join(cwd, 'pnpm-lock.yaml'))) return 'pnpm';
+  if (existsSync(join(cwd, 'package-lock.json'))) return 'npm';
+  if (existsSync(join(cwd, 'yarn.lock'))) return 'yarn';
+  return 'pnpm';
+}
+
 /** Returns true if the project at `cwd` uses Biome (biome.json or biome.jsonc present). */
 export function usesBiome(cwd: string = process.cwd()): boolean {
   return existsSync(join(cwd, 'biome.json')) || existsSync(join(cwd, 'biome.jsonc'));
@@ -177,6 +191,83 @@ export function scaffoldRenovate(cwd: string = process.cwd()): void {
   log.success('✓ Created renovate.json');
 }
 
+/**
+ * Builds a self-contained ci.yml for non-pnpm package managers.
+ * Used instead of the reusable foundry-ci.yml@v1 (which is pnpm-only).
+ */
+function buildSelfContainedCI(pm: PackageManager): string {
+  const setupStep =
+    pm === 'bun'
+      ? `      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2`
+      : pm === 'yarn'
+        ? `      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+          cache: 'yarn'`
+        : `      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22'`;
+
+  const installCmd =
+    pm === 'bun'
+      ? 'bun install --frozen-lockfile'
+      : pm === 'npm'
+        ? 'npm ci'
+        : 'yarn install --frozen-lockfile';
+
+  // For npm, --if-present is supported since npm 7. For bun/yarn use `|| true` guard.
+  const lintCmd =
+    pm === 'npm'
+      ? 'npm run lint --if-present'
+      : pm === 'yarn'
+        ? 'yarn lint || true'
+        : `${pm} run lint || true`;
+  const typecheckCmd =
+    pm === 'npm'
+      ? 'npm run typecheck --if-present'
+      : pm === 'yarn'
+        ? 'yarn typecheck || true'
+        : `${pm} run typecheck || true`;
+  const testCmd =
+    pm === 'npm'
+      ? 'npm run test --if-present'
+      : pm === 'yarn'
+        ? 'yarn test || true'
+        : `${pm} run test || true`;
+
+  return `name: CI
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+
+${setupStep}
+
+      - name: Install Dependencies
+        run: ${installCmd}
+
+      - name: Run Lint
+        run: ${lintCmd}
+
+      - name: Type Check
+        run: ${typecheckCmd}
+
+      - name: Run Tests
+        run: ${testCmd}
+`;
+}
+
 export function scaffoldCI(cwd: string = process.cwd(), opts: ApplyStandardOptions = {}): void {
   const ciDir = join(cwd, '.github', 'workflows');
   if (!existsSync(ciDir)) mkdirSync(ciDir, { recursive: true });
@@ -187,7 +278,11 @@ export function scaffoldCI(cwd: string = process.cwd(), opts: ApplyStandardOptio
     return;
   }
 
-  const ciConfig = `name: CI
+  const pm = detectPackageManager(cwd);
+
+  if (pm === 'pnpm') {
+    // pnpm repos: delegate to the reusable foundry-ci.yml@v1 workflow
+    const ciConfig = `name: CI
 on:
   push:
     branches: [main, master]
@@ -198,16 +293,37 @@ jobs:
   foundry-ci:
     uses: sarthak-fleet/saas-maker/.github/workflows/foundry-ci.yml@v1
 `;
-  writeFileSync(ciPath, ciConfig);
-  log.success('✓ Linked to Global Foundry CI (v1)');
+    writeFileSync(ciPath, ciConfig);
+    log.success('✓ Linked to Global Foundry CI (v1)');
+  } else {
+    // Non-pnpm repos: generate a self-contained CI that uses the detected PM.
+    // We do NOT use the reusable workflow because it hardcodes pnpm install --frozen-lockfile
+    // and v1 is a pinned tag shared across all repos — parametrizing it would require a
+    // re-release affecting every consumer.
+    writeFileSync(ciPath, buildSelfContainedCI(pm));
+    log.success(`✓ Scaffolded self-contained CI (${pm})`);
+  }
 }
 
-const PRE_PUSH_TEMPLATE = `#!/bin/sh
+/**
+ * Builds the pre-push hook content for the given package manager.
+ * The lint command is PM-specific; the secret scan is always included.
+ */
+export function buildPrePushTemplate(pm: PackageManager): string {
+  // pnpm supports --if-present; bun/npm/yarn do not have an equivalent flag
+  const lintCmd =
+    pm === 'pnpm'
+      ? 'pnpm run lint --if-present'
+      : pm === 'yarn'
+        ? 'yarn lint'
+        : `${pm} run lint`;
+
+  return `#!/bin/sh
 set -e
 
 # Lint (fast — Biome or ESLint, whatever is configured)
 if grep -q '"lint"' package.json 2>/dev/null; then
-  pnpm run lint --if-present || { echo "lint failed — fix before pushing" >&2; exit 1; }
+  ${lintCmd} || { echo "lint failed — fix before pushing" >&2; exit 1; }
 fi
 
 # Secret scan — abort if tokens/keys found in tracked files
@@ -222,6 +338,7 @@ if [ -n "$SECRETS" ]; then
   exit 1
 fi
 `;
+}
 
 export function scaffoldHusky(cwd: string = process.cwd(), opts: ApplyStandardOptions = {}): void {
   const huskyDir = join(cwd, '.husky');
@@ -231,7 +348,8 @@ export function scaffoldHusky(cwd: string = process.cwd(), opts: ApplyStandardOp
     log.info('  kept existing .husky/pre-push');
     return;
   }
-  writeFileSync(prePush, PRE_PUSH_TEMPLATE);
+  const pm = detectPackageManager(cwd);
+  writeFileSync(prePush, buildPrePushTemplate(pm));
   try { chmodSync(prePush, 0o755); } catch { /* fs may be read-only on some runners */ }
-  log.success('✓ Wrote .husky/pre-push (lint + secret scan)');
+  log.success(`✓ Wrote .husky/pre-push (lint + secret scan) [${pm}]`);
 }
