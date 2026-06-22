@@ -1,75 +1,121 @@
 # drank — PROJECT STATUS
+Last updated: 2026-06-20
 
-**What it is**: A beautiful, private, local-only Next.js web app for tracking Domain Rating (DR) of websites over time using Ahrefs' free public Domain Rating API.
+## Why / What
 
-**Core constraints (by design)**:
-- 100% client-side persistence via `localStorage`
-- No accounts, no backend database, no cookies for user data
-- All tracked domains + full history live only in the user's browser
-- Uses a tiny Next.js API route purely as a CORS-friendly proxy to `https://api.ahrefs.com/v3/public/domain-rating-free`
+**drank** is a private, local-only Next.js dashboard for tracking Domain Rating (DR) over time via Ahrefs' free public API. Product thesis: beautiful DR tracking with zero sign-up — personal data stays in the browser; global leaderboard data is shared via public JSON.
 
-## Current state
+**Users:** SEO practitioners tracking personal domains; community members nominating/predicting top sites; High Signal readers using the `/domains` lens.
 
-**Done**
-- Stunning card-based dashboard (Bento stats, responsive beautiful DomainCards with favicons, huge DR numbers, trend pills, weekly deltas, sparklines, quick actions).
-- Full CRUD + search + sort + filter (All / Your sites / Popular).
-- Gainers & Losers insights section computed from recent history.
-- Rich animated detail modal with AreaChart + clean history table.
-- Export / Import JSON (full state, including auto settings).
-- Keyboard shortcuts, premium motion via framer-motion, great empty states.
-- **Weekly auto "cron" for user data** (see below).
+**Constraints:** Real background server crons cannot touch per-user `localStorage`. Weekly personal refresh is client-opportunistic (runs when tab is open). Ahrefs free API rate limits (~750ms between bulk refreshes).
 
-**Shared global examples + weekly auto for personal sites**
-- **Global example sites** (google.com, github.com, openai.com, etc.) now use **shared historical data** stored in `data/global-dr.json`.
-  - This JSON is the single source of truth for examples and is the same for every user.
-  - Updated automatically by GitHub Action (`scripts/update-global-dr.mjs`) that calls the free Ahrefs public DR API weekly and appends points.
-  - The Action commits the updated JSON back to the repo.
-- **Your personal sites** remain 100% in localStorage with the client-opportunistic weekly auto-refresh (only triggers when you have the dashboard open/return to the tab).
-- Clear visual separation in the UI: "Global Examples (shared)" at the top, "Your Sites (private + auto)" below.
-- Workflow file currently lives at `drank/.github/workflows/...` — for a monorepo you will likely want to move the workflow to the repository root `.github/workflows/` and adjust paths.
+**IN scope:** Single-page dashboard (`app/page.tsx`), `/api/dr` proxy, global JSON pipeline, High Signal integration.
 
-**New: Leaderboard + Submit / Predict the Top**
-- Beautiful **Current Leaderboard** (top ~15 ranked by live shared DR from the global JSON, with rank badges, sparklines, quick "+ Predict" buttons).
-- **Nominate / "I think this will be at the top"**:
-  - Users can submit any domain (via dedicated form or from leaderboard).
-  - Stored in localStorage as personal predictions.
-  - "My Top Predictions" panel shows each pick with its *current actual rank* from the shared leaderboard + hit rate ("X/Y in current Top 20").
-  - "Share my predictions" button: opens a pre-filled GitHub issue + copies the list (users can contribute predictions to the shared pool via issues/PRs that get merged into `communityNominations` in the global JSON).
-- `communityNominations` in the shared `global-dr.json` surface as "Community Nominations" chips that anyone can +Predict locally.
-- This gives a fun, social "prediction market" feel for DR while keeping user data local and global data GitHub-JSON-driven.
+**OUT of scope:** Production deploy (straightforward but not blocking local use), server-side personal domain storage without explicit opt-in.
 
-This gives everyone consistent, rich historical trends for the example sites without any per-user server storage.
+## Dependencies
 
-**Tech**
-- Next.js 16 App Router, React 19, TypeScript, Tailwind v4, Geist.
-- framer-motion, Recharts (detail view only), lucide-react.
-- Custom SVG sparklines + AreaChart in modals.
-- Versioned localStorage (v2) with smooth migration from v1.
+### External
 
-**Not done / future considerations**
-- Server-side weekly crons for user data would require storing (or allowing users to register) their list of domains on a backend (e.g. Cloudflare D1 + Cron Trigger + a public "watch id"). This can be added later as an opt-in "always-fresh" mode if requested.
-- No bulk edit or CSV import yet.
-- Production deploy (Vercel or opennext + CF) is straightforward.
+- **Ahrefs free public API:** Domain Rating endpoint proxied via `/api/dr`; ~750ms between bulk refreshes; no API keys.
+- **GitHub Actions:** weekly global DR update cron; optional `VERCEL_DEPLOY_HOOK` secret for post-update redeploy.
+- **Vercel (planned):** recommended deploy target; root directory `drank` if in monorepo.
 
-## Deployment
+### Internal (fleet)
 
-**Vercel (easiest and recommended)**
+- **High Signal:** `/domains` lens imports global DR history + `communityNominations` from drank's shared pipeline (https://highsignal.app/domains).
 
-- Set **Root Directory** to `drank` when importing the repo.
-- Next.js preset works out of the box.
-- The `/api/dr` route works as a serverless function.
-- Global data is bundled at build time **and** fetched fresh from GitHub raw on the client, so weekly updates from the GitHub Action are visible quickly without redeploying every time.
+### Stack & commands
 
-You can also trigger Vercel deploys from the GitHub Action using a Deploy Hook (add the hook URL as a secret).
+**Stack:** Next.js 16 App Router + React 19 + TypeScript + Tailwind v4 + Recharts + framer-motion; versioned localStorage (v2). No database, no auth.
 
-**Alternative**: The project can also be deployed to Cloudflare Pages / Workers using the patterns from other fleet projects (`open-next` + `worker.mjs`), but Vercel gives the smoothest Next.js experience.
+| Command | Purpose |
+|---------|---------|
+| `npm install` | Install deps |
+| `npm run dev` | Dev server → http://localhost:3000 |
+| `npm run build` | Production build |
+| `npm run start` | Production server |
+| `npm run lint` | ESLint |
+| `npm run check` | Biome check |
 
-Run locally:
-```bash
-cd drank
-npm run dev
-```
+**Deploy (not yet done):** Vercel recommended; root directory `drank` if in monorepo.
 
-Open http://localhost:3000
+**Env files:** None required. No secrets.
 
-See README for full Vercel setup steps.
+## Timeline
+
+- **Weekly (Mondays ~04:00 UTC)** — GitHub Action `update-global-dr.yml` runs `scripts/update-global-dr.mjs`, commits `data/global-dr.json`, optional Vercel deploy hook.
+- **Shipped** — Global example sites (~45), nomination/prediction flow, client-opportunistic weekly personal refresh, High Signal `/domains` integration, Ahrefs proxy API.
+
+## Products
+
+- **Standalone dashboard:** local-only at http://localhost:3000 — single-page app (`app/page.tsx`); not deployed to production URL.
+- **Shared data pipeline:** `data/global-dr.json` + `data/global-sites.json` — ~45 global example sites; fetchable from raw GitHub JSON at runtime.
+- **High Signal lens:** https://highsignal.app/domains — consumes global DR history + community nominations; full interactive experience (personal predictions, local tracking, detailed history) remains in drank standalone.
+
+## Features (shipped)
+
+### Core dashboard (`app/page.tsx`, `lib/`)
+
+- Card-based UI: Bento stats, DomainCards, sparklines (custom SVG), trend pills, search/sort/filter.
+- Full CRUD for personal domains; rich detail modal with Recharts AreaChart + history table.
+- Export/import personal data as JSON; keyboard shortcuts; framer-motion animations; empty states.
+- Gainers & Losers section; premium modals; friendly rate-limit toasts (~750ms between bulk refreshes).
+- Two sections: **Global Examples** (shared, non-custom) and **Your Sites** (private, `isCustom`).
+
+### Architecture & storage
+
+- All personal domains, history, predictions, settings in browser `localStorage` (v2 schema via `lib/useTrackedDomains.ts`).
+- Global example sites (~45) load from `data/global-dr.json` — identical for all users, updated weekly by GitHub Action.
+- Client calls `/api/dr?domain=` → Next.js API route proxies Ahrefs free endpoint with friendly User-Agent (CORS bypass).
+- Global data also fetchable from raw GitHub JSON at runtime (no redeploy needed for DR updates).
+- No auth, no server storage of user data.
+
+### Global & social
+
+- Global example sites (~45) with shared `data/global-dr.json` history.
+- Weekly GitHub Action (`.github/workflows/update-global-dr.yml`): Mondays ~04:00 UTC, runs `scripts/update-global-dr.mjs`, commits `data/global-dr.json`, optional Vercel deploy hook.
+- `data/global-sites.json` seed list; `communityNominations` merged from community predictions.
+- Current Leaderboard (top ~15 ranked globals).
+- Nomination/prediction flow: nominate contenders, live scoring against actual leaderboard ("X of your picks in Top 20").
+- "Share my predictions" generates GitHub issue + copyable list for community merge.
+
+### Personal refresh scheduler (`lib/useTrackedDomains.ts`)
+
+- Client-opportunistic weekly auto-refresh for user-added (`isCustom`) domains only.
+- Triggers on load, visibility/focus, light poll.
+- UI status ("Next in ~4d"), manual "Run now", on/off toggle.
+
+### API proxy (`app/api/dr/route.ts`)
+
+- Proxies Ahrefs free Domain Rating endpoint: https://docs.ahrefs.com/en/api/reference/public/get-domain-rating-free
+- Solves CORS; sets friendly User-Agent.
+
+### Key files
+
+- `app/page.tsx` — entire UI (single page).
+- `lib/types.ts`, `lib/utils.ts` — normalize, fetch, sort, colors, seed, sparkline, persistence.
+- `lib/useTrackedDomains.ts` — state + refresh logic.
+- `data/global-sites.json`, `data/global-dr.json` — shared history.
+
+## Todo / Planned / Deferred / Blocked
+
+### Planned
+
+1. Move GitHub Action workflow to monorepo root `.github/workflows/` (currently under `drank/.github/workflows/update-global-dr.yml`).
+2. Optional opt-in server-side weekly cron (D1 + watch id) for always-fresh personal domains.
+3. Bulk edit or CSV import for personal domain lists (`lib/useTrackedDomains.ts`).
+4. Deploy to Vercel with root directory `drank`.
+
+### Deferred
+
+- Production deploy to Vercel or OpenNext/Cloudflare — not blocking local use.
+- Any backend that stores user domain lists without explicit opt-in design.
+- True always-on server cron for personal lists (requires opt-in server storage).
+
+### Blocked
+
+- Real background server crons cannot touch per-user localStorage — weekly refresh only when tab is open.
+- GitHub Action lives under project-local `.github/` rather than fleet monorepo root.
+- No automated tests; manual smoke on add/refresh/export flows only.
+- Not deployed to production URL.
