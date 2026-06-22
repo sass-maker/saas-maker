@@ -40,6 +40,8 @@ Marketing autopilot and posting run in Rust (`reel` CLI). Node remains for `rend
 
 **Stack:** Rust `reel/` crate (75 tests) · Node.js control scripts · Vitest via `node --test` · Worker `reel-pipeline-artifacts` · R2 `reel-artifacts` · MoneyPrinterTurbo · reel-maker · SaaS Maker client · YouTube + Instagram Graph publishers · review UI `src/review-ui.js`.
 
+**Setup (fresh clone):** the render path shells out to `node scripts/render-pro.js`, which depends on the engine git submodules. Clone with `git clone --recurse-submodules`, or run `git submodule update --init --recursive` after cloning — otherwise render fails with missing `engines/*`.
+
 | Command | Purpose |
 | --- | --- |
 | `npm install` / `npm test` | Install + node --test + cargo test |
