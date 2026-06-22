@@ -54,7 +54,11 @@ fleet
   .option('--output <format>', 'table | json', 'table')
   .option('--fix', 'Auto-apply known fixes', false)
   .action(fleetCheckDriftCommand);
-fleet.command('fix').description('Auto-fix compliance issues across the fleet').action(fleetFixCommand);
+fleet
+  .command('fix')
+  .description('Auto-fix compliance issues across the fleet')
+  .option('--force', 'Overwrite existing config files', false)
+  .action((opts) => fleetFixCommand({ force: opts.force }));
 fleet.command('provision').description('Recreate the entire fleet on this machine').action(fleetProvisionCommand);
 fleet.command('apply <skill>').description('Dispatch an agent swarm to apply a protocol').action(fleetApplySkillCommand);
 fleet.command('supervise')
@@ -90,7 +94,12 @@ program.command('testimonials').description('Manage the Testimonials block').act
 program.command('waitlist').description('Manage the Waitlist block').action(waitlistListCommand);
 
 // --- Forge & Commander Utils ---
-program.command('init').description('Forge a Foundry link in this directory').action(initCommand);
+program
+  .command('init')
+  .description('Forge a Foundry link in this directory')
+  .option('--offline', 'Skip API auth — apply standards locally without fleet link', false)
+  .option('--force', 'Overwrite existing config files', false)
+  .action(initCommand);
 program
   .command('forge')
   .description('Forge a new Foundry-compliant project from scratch')

@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { execSync } from 'node:child_process';
+import { usesBiome } from './forge.js';
 
 export interface AuditResult {
   check: string;
@@ -27,10 +28,12 @@ export function auditProject(cwd: string = process.cwd()): AuditResult[] {
     results.push({ check: 'Foundry Config', status: 'fail', detail: 'Missing foundry.json' });
   }
 
-  // 2. Check ESLint
+  // 2. Check ESLint — Biome is a valid lint standard (treat as pass)
   const eslintPath = join(cwd, 'eslint.config.js');
   const eslintMjsPath = join(cwd, 'eslint.config.mjs');
-  if (existsSync(eslintPath) || existsSync(eslintMjsPath)) {
+  if (usesBiome(cwd)) {
+    results.push({ check: 'ESLint Standard', status: 'pass', detail: 'Biome (valid lint standard)' });
+  } else if (existsSync(eslintPath) || existsSync(eslintMjsPath)) {
     const content = readFileSync(existsSync(eslintPath) ? eslintPath : eslintMjsPath, 'utf-8');
     if (content.includes('Plain flat ESLint') || content.includes('eslint-config-next') || content.includes('typescript-eslint')) {
       results.push({ check: 'ESLint Standard', status: 'pass', detail: 'Local flat config' });

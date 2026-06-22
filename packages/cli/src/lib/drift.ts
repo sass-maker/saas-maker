@@ -17,6 +17,7 @@
 
 import { existsSync, readFileSync, mkdirSync, writeFileSync, chmodSync, readdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
+import { usesBiome } from './forge.js';
 
 export type DriftStatus = 'pass' | 'warn' | 'fail';
 
@@ -120,10 +121,12 @@ export function checkProjectDrift(
     });
   }
 
-  // 4. ESLint config present (local flat config; no shared package required)
+  // 4. ESLint config present — Biome is a valid alternative (treat as pass)
   const eslintPath = join(projectPath, 'eslint.config.js');
   const eslintMjsPath = join(projectPath, 'eslint.config.mjs');
-  if (!existsSync(eslintPath) && !existsSync(eslintMjsPath)) {
+  if (usesBiome(projectPath)) {
+    checks.push({ id: 'eslint', label: 'eslint config', status: 'pass', detail: 'Biome (valid lint standard)' });
+  } else if (!existsSync(eslintPath) && !existsSync(eslintMjsPath)) {
     checks.push({ id: 'eslint', label: 'eslint config', status: 'fail', detail: 'missing eslint.config.js' });
   } else {
     const content = readFileSync(existsSync(eslintPath) ? eslintPath : eslintMjsPath, 'utf-8');
@@ -154,9 +157,11 @@ export function checkProjectDrift(
     });
   }
 
-  // 6. Prettier config present
+  // 6. Prettier config present — Biome replaces Prettier (treat as pass)
   const pkgPath = join(projectPath, 'package.json');
-  if (existsSync(pkgPath)) {
+  if (usesBiome(projectPath)) {
+    checks.push({ id: 'prettier', label: 'prettier-config', status: 'pass', detail: 'Biome (handles formatting)' });
+  } else if (existsSync(pkgPath)) {
     try {
       const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8')) as Record<string, unknown>;
       const hasPrettierFile =

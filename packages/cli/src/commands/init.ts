@@ -17,7 +17,7 @@ interface Project {
 const FOUNDRY_CONFIG = 'foundry.json';
 const LEGACY_CONFIG = '.saasmaker.json';
 
-function applyOfflineFoundry(name: string): void {
+function applyOfflineFoundry(name: string, force = false): void {
   const type = detectProjectType();
 
   const config = {
@@ -30,10 +30,10 @@ function applyOfflineFoundry(name: string): void {
   log.success(`Created ${FOUNDRY_CONFIG} (offline — not linked to fleet yet)`);
 
   log.info(`Detected ${type} project. Applying Foundry Standards...`);
-  applyStandard(type);
+  applyStandard(type, process.cwd(), undefined, { force });
   scaffoldRenovate();
-  scaffoldCI();
-  scaffoldHusky();
+  scaffoldCI(process.cwd(), { force });
+  scaffoldHusky(process.cwd(), { force });
 
   console.log('\n✓ Foundry Standards applied:');
   console.log('  eslint.config.js, tsconfig.json, .prettierrc.json, renovate.json');
@@ -42,7 +42,7 @@ function applyOfflineFoundry(name: string): void {
   console.log('  fnd login      ← then re-run fnd init to link to fleet');
 }
 
-export async function initCommand(options: { offline?: boolean } = {}): Promise<void> {
+export async function initCommand(options: { offline?: boolean; force?: boolean } = {}): Promise<void> {
   const cwd = process.cwd();
   const foundryPath = join(cwd, FOUNDRY_CONFIG);
   const legacyPath = join(cwd, LEGACY_CONFIG);
@@ -68,7 +68,7 @@ export async function initCommand(options: { offline?: boolean } = {}): Promise<
 
   // --offline: skip API, apply standards locally, skip fleet link
   if (options.offline) {
-    applyOfflineFoundry(pkgName);
+    applyOfflineFoundry(pkgName, options.force);
     return;
   }
 
@@ -81,7 +81,7 @@ export async function initCommand(options: { offline?: boolean } = {}): Promise<
       spinner.stop();
       log.warn(`Could not reach fleet API (${getResponseError(res)}). Falling back to offline mode.`);
       log.info('Run `fnd login` to re-authenticate, then `fnd init` to link to fleet.');
-      applyOfflineFoundry(pkgName);
+      applyOfflineFoundry(pkgName, options.force);
       return;
     }
     projects = res.data?.data ?? [];
@@ -89,7 +89,7 @@ export async function initCommand(options: { offline?: boolean } = {}): Promise<
   } catch (err) {
     spinner.stop();
     log.warn(`Network error: ${err instanceof Error ? err.message : 'Unknown'}. Falling back to offline mode.`);
-    applyOfflineFoundry(pkgName);
+    applyOfflineFoundry(pkgName, options.force);
     return;
   }
 
@@ -138,9 +138,9 @@ export async function initCommand(options: { offline?: boolean } = {}): Promise<
     log.success(`Linked to "${project.name}" — wrote ${FOUNDRY_CONFIG}`);
 
     log.info(`Detected ${type} project. Applying Foundry Standards...`);
-    applyStandard(type);
+    applyStandard(type, process.cwd(), undefined, { force: options.force });
     scaffoldRenovate();
-    scaffoldCI();
+    scaffoldCI(process.cwd(), { force: options.force });
 
     console.log('\n✓ Foundry Forge complete:');
     console.log('  1. Install dev tooling:');

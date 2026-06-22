@@ -75,11 +75,12 @@ function scanDir(dirPath: string, depth = 0): FleetProject[] {
             try { pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8')); } catch {}
           }
 
+          const allDeps = { ...pkg.dependencies, ...pkg.devDependencies };
           fleet.push({
             name: pkg.name || name,
             path: projectPath,
             slug: name,
-            type: pkg.dependencies?.next ? 'next' : pkg.dependencies?.vite ? 'vite' : 'node',
+            type: allDeps.next ? 'next' : allDeps.vite ? 'vite' : 'node',
             isFoundry,
           });
           

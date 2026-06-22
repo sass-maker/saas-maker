@@ -5,7 +5,7 @@ import { getLocalFleet } from '../lib/fleet.js';
 import { log } from '../lib/ui.js';
 import { auditProject } from '../lib/auditor.js';
 import { printOutput } from '../lib/output.js';
-import { applyStandard, scaffoldRenovate, detectProjectType, scaffoldCI, scaffoldHusky, type RemoteStandards } from '../lib/forge.js';
+import { applyStandard, scaffoldRenovate, detectProjectType, scaffoldCI, scaffoldHusky, usesBiome, type RemoteStandards } from '../lib/forge.js';
 import { existsSync, mkdirSync, renameSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { requestApi, getResponseError } from '../lib/request.js';
@@ -90,7 +90,7 @@ async function fetchRemoteStandards(type: 'next' | 'vite' | 'node'): Promise<Rem
   }
 }
 
-export async function fleetFixCommand(): Promise<void> {
+export async function fleetFixCommand(opts: { force?: boolean } = {}): Promise<void> {
   const fleet = getLocalFleet();
   if (fleet.length === 0) { log.info('No projects to fix.'); return; }
 
@@ -112,10 +112,10 @@ export async function fleetFixCommand(): Promise<void> {
       if (!(type in remoteCache)) remoteCache[type] = await fetchRemoteStandards(type);
       const remote = remoteCache[type] ?? undefined;
 
-      applyStandard(type, project.path, remote);
+      applyStandard(type, project.path, remote, { force: opts.force });
       scaffoldRenovate(project.path);
-      scaffoldCI(project.path);
-      scaffoldHusky(project.path);
+      scaffoldCI(project.path, { force: opts.force });
+      scaffoldHusky(project.path, { force: opts.force });
 
       spinner.succeed(`[${project.slug}] Compliant${remote ? ' (remote standards applied)' : ''}`);
     } catch (err) {
@@ -301,10 +301,57 @@ export async function fleetSecretsSyncCommand(): Promise<void> {
   log.success('\nFleet-wide secret synchronization complete.');
 }
 
+/** Base ESLint + Prettier deps shared by all non-Biome JS projects. */
+const ESLINT_BASE_DEPS =
+  'eslint @eslint/js typescript-eslint globals eslint-config-prettier eslint-plugin-simple-import-sort';
+
+/** Extra deps for React/Vite projects. */
+const ESLINT_VITE_EXTRA = 'eslint-plugin-react-hooks eslint-plugin-react-refresh';
+
+/** Extra deps for Next.js projects (includes Vite extras via eslint-config-next). */
+const ESLINT_NEXT_EXTRA = 'eslint-config-next eslint-plugin-react-hooks eslint-plugin-react-refresh';
+
+/** Prettier base — all non-Biome, non-node projects get the tailwind plugin. */
+const PRETTIER_BASE_DEPS = 'prettier';
+const PRETTIER_TAILWIND_EXTRA = 'prettier-plugin-tailwindcss';
+
 export async function fleetUpgradeCommand(): Promise<void> {
-  const command =
-    'pnpm add -D eslint @eslint/js typescript-eslint globals eslint-config-prettier prettier prettier-plugin-tailwindcss eslint-plugin-simple-import-sort eslint-plugin-react-hooks eslint-plugin-react-refresh eslint-config-next';
-  return fleetRunCommand(command, { parallel: true });
+  const fleet = getLocalFleet();
+  if (fleet.length === 0) { log.info('No projects to upgrade.'); return; }
+
+  log.info(`Upgrading devDependencies across ${fleet.length} projects...\n`);
+
+  for (const project of fleet) {
+    const spinner = ora(`[${project.slug}] Upgrading...`).start();
+    try {
+      // Skip Biome projects entirely — they manage lint/format themselves
+      if (usesBiome(project.path)) {
+        spinner.info(`[${project.slug}] Skipped (Biome project)`);
+        continue;
+      }
+
+      const type = detectProjectType(project.path);
+      let deps = `${ESLINT_BASE_DEPS} ${PRETTIER_BASE_DEPS}`;
+
+      if (type === 'next') {
+        deps += ` ${ESLINT_NEXT_EXTRA} ${PRETTIER_TAILWIND_EXTRA}`;
+      } else if (type === 'vite') {
+        deps += ` ${ESLINT_VITE_EXTRA} ${PRETTIER_TAILWIND_EXTRA}`;
+      }
+      // node: no react/next plugins, no tailwind prettier plugin
+
+      execSync(`pnpm add -D ${deps}`, {
+        cwd: project.path,
+        stdio: 'inherit',
+        env: { ...process.env, FORCE_COLOR: 'true' },
+      });
+      spinner.succeed(`[${project.slug}] Upgraded (${type})`);
+    } catch (err) {
+      spinner.fail(`[${project.slug}] Upgrade failed: ${err instanceof Error ? err.message : String(err)}`);
+    }
+  }
+
+  log.success('\nFleet-wide upgrade complete.');
 }
 
 import { checkProjectDrift, applyDriftFixes, type DriftReport } from '../lib/drift.js';

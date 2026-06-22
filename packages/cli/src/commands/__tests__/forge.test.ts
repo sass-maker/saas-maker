@@ -1,21 +1,27 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { forgeCommand } from '../forge';
 import fs from 'node:fs';
-import path from 'node:path';
+
+// vi.hoisted ensures the fn is created before vi.mock hoisting runs
+const mockRequestApi = vi.hoisted(() =>
+  vi.fn().mockResolvedValue({
+    ok: true,
+    data: { id: '123', name: 'Test Project', slug: 'test-project', api_key: 'pk_123' },
+  }),
+);
 
 vi.mock('node:fs');
-vi.mock('../lib/ui', () => ({
+vi.mock('../../lib/ui', () => ({
   log: {
     success: vi.fn(),
     info: vi.fn(),
     error: vi.fn(),
+    warn: vi.fn(),
+    debug: vi.fn(),
   },
 }));
-vi.mock('../lib/request', () => ({
-  requestApi: vi.fn().mockResolvedValue({
-    ok: true,
-    data: { id: '123', name: 'Test Project', slug: 'test-project', api_key: 'pk_123' }
-  }),
+vi.mock('../../lib/request', () => ({
+  requestApi: mockRequestApi,
   getResponseError: vi.fn(),
 }));
 
@@ -28,7 +34,7 @@ vi.mock('node:readline/promises', () => ({
   }),
 }));
 
-vi.mock('../lib/config', () => ({
+vi.mock('../../lib/config', () => ({
   getApiKey: vi.fn().mockReturnValue('fake-token'),
   getApiBase: vi.fn().mockReturnValue('https://api.fake.com'),
   saveLocalConfig: vi.fn(),
@@ -38,27 +44,40 @@ vi.mock('../lib/config', () => ({
 describe('Forge Scaffolding with Templates', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Restore the requestApi behavior after clearAllMocks clears call history
+    mockRequestApi.mockResolvedValue({
+      ok: true,
+      data: { id: '123', name: 'Test Project', slug: 'test-project', api_key: 'pk_123' },
+    });
   });
 
   it('should create project and copy template files', async () => {
-    const writeSpy = vi.spyOn(fs, 'writeFileSync');
-    const mkdirSpy = vi.spyOn(fs, 'mkdirSync');
-    
-    // Mock template directory contents
-    vi.spyOn(fs, 'statSync').mockReturnValue({ isDirectory: () => true } as any);
-    vi.spyOn(fs, 'readdirSync').mockReturnValue(['package.json.tmpl', 'tsconfig.json'] as any);
+    const writeSpy = vi.spyOn(fs, 'writeFileSync').mockImplementation(() => {});
+    vi.spyOn(fs, 'mkdirSync').mockImplementation(() => undefined as any);
+    vi.spyOn(fs, 'existsSync').mockReturnValue(false);
+
+    // statSync: template root dir → isDirectory true; template files → isDirectory false
+    vi.spyOn(fs, 'statSync').mockImplementation((p: any) => {
+      const s = String(p);
+      const isDir = s.endsWith('next') || s.endsWith('test-project');
+      return { isDirectory: () => isDir } as any;
+    });
+    // readdirSync: only called on the template root dir (ends with 'next')
+    vi.spyOn(fs, 'readdirSync').mockImplementation((p: any) => {
+      if (String(p).endsWith('next')) return ['package.json.tmpl'] as any;
+      return [] as any;
+    });
     vi.spyOn(fs, 'readFileSync').mockImplementation((p: any) => {
-      if (p.includes('package.json.tmpl')) return '{"name": "{{name}}"}';
-      if (p.includes('tsconfig.json')) return '{"extends": "base"}';
+      if (String(p).includes('package.json.tmpl')) return '{"name": "{{name}}"}';
       return '';
     });
 
     await forgeCommand({ name: 'My Project', type: 'next' });
 
-    // Check template substitution
+    // The slug from the mock is 'test-project'; template substitutes {{name}} → slug
     expect(writeSpy).toHaveBeenCalledWith(
       expect.stringContaining('package.json'),
-      expect.stringContaining('my-project')
+      expect.stringContaining('test-project'),
     );
   });
 });

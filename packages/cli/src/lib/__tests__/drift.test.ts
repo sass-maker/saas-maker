@@ -75,6 +75,38 @@ describe('checkProjectDrift', () => {
   });
 });
 
+describe('checkProjectDrift — Biome awareness', () => {
+  it('passes eslint check for a Biome project (no eslint.config.js needed)', () => {
+    tmpRoot = scaffold({
+      'package.json': JSON.stringify({ name: 'biome-app' }),
+      'biome.json': JSON.stringify({ linter: { enabled: true } }),
+    });
+    const r = checkProjectDrift(tmpRoot, 'biome-app');
+    expect(r.checks.find((c) => c.id === 'eslint')?.status).toBe('pass');
+    expect(r.checks.find((c) => c.id === 'eslint')?.detail).toContain('Biome');
+  });
+
+  it('passes prettier check for a Biome project (no .prettierrc needed)', () => {
+    tmpRoot = scaffold({
+      'package.json': JSON.stringify({ name: 'biome-app' }),
+      'biome.json': JSON.stringify({ formatter: { enabled: true } }),
+    });
+    const r = checkProjectDrift(tmpRoot, 'biome-app');
+    expect(r.checks.find((c) => c.id === 'prettier')?.status).toBe('pass');
+    expect(r.checks.find((c) => c.id === 'prettier')?.detail).toContain('Biome');
+  });
+
+  it('passes eslint/prettier checks for biome.jsonc (alternate extension)', () => {
+    tmpRoot = scaffold({
+      'package.json': JSON.stringify({ name: 'biome-jsonc' }),
+      'biome.jsonc': '{}',
+    });
+    const r = checkProjectDrift(tmpRoot, 'biome-jsonc');
+    expect(r.checks.find((c) => c.id === 'eslint')?.status).toBe('pass');
+    expect(r.checks.find((c) => c.id === 'prettier')?.status).toBe('pass');
+  });
+});
+
 describe('applyDriftFixes', () => {
   it('writes a stub foundry.json + AGENTS.md + husky pre-push when fixes available', () => {
     tmpRoot = scaffold({ 'package.json': '{}' });
