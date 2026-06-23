@@ -1,16 +1,10 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Terminal, Check, Loader2 } from "lucide-react";
-import { apiFetchClient, getClientToken } from "@/lib/api-client";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Terminal, Check, Loader2 } from 'lucide-react';
+import { apiFetchClient, getClientToken } from '@/lib/api-client';
 
 interface Props {
   code?: string;
@@ -20,19 +14,18 @@ interface Props {
 
 const SOURCE_LABELS: Record<string, { title: string; description: string }> = {
   codevetter: {
-    title: "Authorize CodeVetter",
-    description: "CodeVetter Desktop is requesting access to your SaaS Maker account.",
+    title: 'Authorize CodeVetter',
+    description: 'CodeVetter Desktop is requesting access to your SaaS Maker account.',
   },
 };
 
 export function CliAuthApproval({ code, source, userEmail }: Props) {
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [error, setError] = useState<string | null>(null);
-  const labels =
-    (source && SOURCE_LABELS[source]) || {
-      title: "Authorize CLI",
-      description: "The SaaS Maker CLI is requesting access to your account.",
-    };
+  const labels = (source && SOURCE_LABELS[source]) || {
+    title: 'Authorize CLI',
+    description: 'The SaaS Maker CLI is requesting access to your account.',
+  };
 
   if (!code) {
     return (
@@ -41,40 +34,40 @@ export function CliAuthApproval({ code, source, userEmail }: Props) {
           <Terminal className="mx-auto h-10 w-10 text-muted-foreground mb-2" />
           <CardTitle>Invalid Request</CardTitle>
           <CardDescription>
-            No authorization code provided. Run <code className="text-xs bg-muted px-1 py-0.5 rounded">fnd login</code> from your terminal.
+            No authorization code provided. Run{' '}
+            <code className="text-xs bg-muted px-1 py-0.5 rounded">fnd login</code> from your
+            terminal.
           </CardDescription>
         </CardHeader>
       </Card>
     );
   }
 
-  if (status === "success") {
+  if (status === 'success') {
     return (
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
           <Check className="mx-auto h-10 w-10 text-green-500 mb-2" />
           <CardTitle>CLI Authorized</CardTitle>
-          <CardDescription>
-            You can close this tab and return to your terminal.
-          </CardDescription>
+          <CardDescription>You can close this tab and return to your terminal.</CardDescription>
         </CardHeader>
       </Card>
     );
   }
 
   async function handleApprove() {
-    setStatus("loading");
+    setStatus('loading');
     setError(null);
     try {
       const token = await getClientToken();
-      await apiFetchClient("/v1/cli/approve", token, {
-        method: "POST",
+      await apiFetchClient('/v1/cli/approve', token, {
+        method: 'POST',
         body: JSON.stringify({ code }),
       });
-      setStatus("success");
+      setStatus('success');
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to authorize");
-      setStatus("error");
+      setError(e instanceof Error ? e.message : 'Failed to authorize');
+      setStatus('error');
     }
   }
 
@@ -90,16 +83,14 @@ export function CliAuthApproval({ code, source, userEmail }: Props) {
           <span className="text-muted-foreground">Signed in as </span>
           <span className="font-medium">{userEmail}</span>
         </div>
-        {error && (
-          <p className="text-sm text-destructive text-center">{error}</p>
-        )}
+        {error && <p className="text-sm text-destructive text-center">{error}</p>}
         <Button
           onClick={handleApprove}
-          disabled={status === "loading"}
+          disabled={status === 'loading'}
           className="w-full"
           size="lg"
         >
-          {status === "loading" ? (
+          {status === 'loading' ? (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           ) : (
             <Terminal className="mr-2 h-4 w-4" />

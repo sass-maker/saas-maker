@@ -45,7 +45,8 @@ const EXAMPLES: ExampleRow[] = [
   },
   {
     category: 'Feedback',
-    command: 'fnd api POST /v1/feedback --auth project --body \'{"title":"Bug","description":"Broken CTA","submitter_email":"me@example.com","type":"bug"}\'',
+    command:
+      'fnd api POST /v1/feedback --auth project --body \'{"title":"Bug","description":"Broken CTA","submitter_email":"me@example.com","type":"bug"}\'',
     description: 'Create a feedback item',
   },
   {
@@ -60,12 +61,14 @@ const EXAMPLES: ExampleRow[] = [
   },
   {
     category: 'AI Gateway',
-    command: 'fnd api PUT /v1/ai/config --auth session --query project_id=<projectId> --body \'{"ai_base_url":"https://api.openai.com/v1","ai_model":"gpt-4o-mini","ai_api_key":"sk-..."}\'',
+    command:
+      'fnd api PUT /v1/ai/config --auth session --query project_id=<projectId> --body \'{"ai_base_url":"https://api.openai.com/v1","ai_model":"gpt-4o-mini","ai_api_key":"sk-..."}\'',
     description: 'Configure an OpenAI-compatible BYOK provider',
   },
   {
     category: 'AI Gateway',
-    command: 'fnd api POST /v1/ai/chat/completions --auth project --body \'{"messages":[{"role":"user","content":"Write release notes"}]}\'',
+    command:
+      'fnd api POST /v1/ai/chat/completions --auth project --body \'{"messages":[{"role":"user","content":"Write release notes"}]}\'',
     description: 'Proxy a chat completion through the linked project',
   },
   {

@@ -116,9 +116,7 @@ function main() {
       description: 'Generated route-level OpenAPI spec for CLI/docs enforcement.',
       'x-generator': 'scripts/generate-openapi.mjs',
     },
-    servers: [
-      { url: 'https://api.sassmaker.com' },
-    ],
+    servers: [{ url: 'https://api.sassmaker.com' }],
     paths,
   };
 

@@ -11,7 +11,7 @@ describe('SaaSMakerClient AI service', () => {
       new Response(JSON.stringify({ id: 'chatcmpl_test' }), {
         status: 200,
         headers: { 'Content-Type': 'application/json' },
-      }),
+      })
     );
     vi.stubGlobal('fetch', fetchMock);
 
@@ -32,7 +32,7 @@ describe('SaaSMakerClient AI service', () => {
           'Content-Type': 'application/json',
           'X-Project-Key': 'pk_test',
         }),
-      }),
+      })
     );
   });
 
@@ -45,8 +45,8 @@ describe('SaaSMakerClient AI service', () => {
           ai_api_key_configured: true,
           ai_api_key_preview: 'sk-t...test',
         }),
-        { status: 200, headers: { 'Content-Type': 'application/json' } },
-      ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } }
+      )
     );
     vi.stubGlobal('fetch', fetchMock);
 
@@ -64,7 +64,7 @@ describe('SaaSMakerClient AI service', () => {
         headers: expect.objectContaining({
           Authorization: 'Bearer sm_session',
         }),
-      }),
+      })
     );
   });
 });

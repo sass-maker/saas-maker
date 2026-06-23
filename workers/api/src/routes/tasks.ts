@@ -6,14 +6,18 @@ import { capture } from '../lib/telemetry';
 
 const tasks = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
-async function recordAudit(db: ReturnType<typeof getDb>, ownerId: string, input: {
-  task_id?: string | null;
-  action: string;
-  actor_source?: string;
-  agent_profile?: string | null;
-  project_slug?: string | null;
-  metadata?: Record<string, unknown>;
-}) {
+async function recordAudit(
+  db: ReturnType<typeof getDb>,
+  ownerId: string,
+  input: {
+    task_id?: string | null;
+    action: string;
+    actor_source?: string;
+    agent_profile?: string | null;
+    project_slug?: string | null;
+    metadata?: Record<string, unknown>;
+  }
+) {
   try {
     await db.createSymphonyAuditEvent(ownerId, input);
   } catch (error) {
@@ -58,7 +62,7 @@ function optionalString(value: unknown): string | null | undefined {
 }
 
 function enumValue<T extends string>(value: unknown, allowed: readonly T[]): T | undefined {
-  return typeof value === 'string' && allowed.includes(value as T) ? value as T : undefined;
+  return typeof value === 'string' && allowed.includes(value as T) ? (value as T) : undefined;
 }
 
 const PR_STATUSES = ['none', 'draft', 'open', 'merged', 'closed'] as const;
@@ -74,7 +78,7 @@ function clampInt(value: unknown, min: number, max: number, fallback: number): n
 
 function normalizeBlockedDeployment(input: {
   blocked_on_user?: boolean;
-  deployment_status?: typeof DEPLOYMENT_STATUSES[number];
+  deployment_status?: (typeof DEPLOYMENT_STATUSES)[number];
 }) {
   if (input.blocked_on_user === true) {
     input.deployment_status = 'none';
@@ -88,7 +92,7 @@ function normalizeBlockedDeployment(input: {
 // POST /v1/tasks — create task
 tasks.post('/', requireSession, async (c) => {
   const userId = c.get('userId')!;
-  const body = await c.req.json() as {
+  const body = (await c.req.json()) as {
     title?: string;
     description?: string;
     project_slug?: string;
@@ -151,7 +155,17 @@ tasks.post('/', requireSession, async (c) => {
       blocked_on_user: task.blocked_on_user,
     },
   });
-  capture({ distinctId: userId, event: 'task_created', properties: { task_id: task.id, priority: task.priority ?? undefined, task_type: task.task_type ?? undefined, size: task.size ?? undefined, project_id: body.project_slug ?? undefined } });
+  capture({
+    distinctId: userId,
+    event: 'task_created',
+    properties: {
+      task_id: task.id,
+      priority: task.priority ?? undefined,
+      task_type: task.task_type ?? undefined,
+      size: task.size ?? undefined,
+      project_id: body.project_slug ?? undefined,
+    },
+  });
   return c.json({ data: task }, 201);
 });
 
@@ -159,16 +173,27 @@ tasks.post('/', requireSession, async (c) => {
 // The core of the polling work-queue: a worker calls this on wake and drains.
 tasks.post('/claim', requireSession, async (c) => {
   const userId = c.get('userId')!;
-  const body = await c.req.json().catch(() => ({})) as { capability?: unknown; worker?: unknown; lease_seconds?: unknown };
+  const body = (await c.req.json().catch(() => ({}))) as {
+    capability?: unknown;
+    worker?: unknown;
+    lease_seconds?: unknown;
+  };
   const worker = optionalString(body.worker);
   if (!worker) return c.json({ error: 'worker is required' }, 400);
   const capability = optionalString(body.capability) ?? null;
   const db = getDb(c.env.DB);
-  const task = await db.claimNextTask(userId, { worker, capability, leaseSeconds: clampInt(body.lease_seconds, 30, 3600, 900) });
+  const task = await db.claimNextTask(userId, {
+    worker,
+    capability,
+    leaseSeconds: clampInt(body.lease_seconds, 30, 3600, 900),
+  });
   if (!task) return c.body(null, 204);
   await recordAudit(db, userId, {
-    task_id: task.id, action: 'task_claimed', actor_source: 'worker',
-    project_slug: task.project_slug, metadata: { worker, capability },
+    task_id: task.id,
+    action: 'task_claimed',
+    actor_source: 'worker',
+    project_slug: task.project_slug,
+    metadata: { worker, capability },
   });
   return c.json({ data: task });
 });
@@ -177,11 +202,19 @@ tasks.post('/claim', requireSession, async (c) => {
 tasks.post('/:id/heartbeat', requireSession, async (c) => {
   const userId = c.get('userId')!;
   const id = c.req.param('id');
-  const body = await c.req.json().catch(() => ({})) as { worker?: unknown; lease_seconds?: unknown };
+  const body = (await c.req.json().catch(() => ({}))) as {
+    worker?: unknown;
+    lease_seconds?: unknown;
+  };
   const worker = optionalString(body.worker);
   if (!worker) return c.json({ error: 'worker is required' }, 400);
   const db = getDb(c.env.DB);
-  const ok = await db.heartbeatTask(id, userId, worker, clampInt(body.lease_seconds, 30, 3600, 900));
+  const ok = await db.heartbeatTask(
+    id,
+    userId,
+    worker,
+    clampInt(body.lease_seconds, 30, 3600, 900)
+  );
   if (!ok) return c.json({ error: 'Task not found or lease not held by this worker' }, 409);
   return c.json({ ok: true });
 });
@@ -190,7 +223,7 @@ tasks.post('/:id/heartbeat', requireSession, async (c) => {
 tasks.post('/:id/complete', requireSession, async (c) => {
   const userId = c.get('userId')!;
   const id = c.req.param('id');
-  const body = await c.req.json().catch(() => ({})) as { worker?: unknown; result?: unknown };
+  const body = (await c.req.json().catch(() => ({}))) as { worker?: unknown; result?: unknown };
   const worker = optionalString(body.worker);
   if (!worker) return c.json({ error: 'worker is required' }, 400);
   const db = getDb(c.env.DB);
@@ -199,7 +232,12 @@ tasks.post('/:id/complete', requireSession, async (c) => {
   if (typeof body.result === 'string' && body.result.trim()) {
     await db.createTaskComment(userId, id, { body: body.result.trim(), author_type: 'agent' });
   }
-  await recordAudit(db, userId, { task_id: id, action: 'task_completed', actor_source: 'worker', metadata: { worker } });
+  await recordAudit(db, userId, {
+    task_id: id,
+    action: 'task_completed',
+    actor_source: 'worker',
+    metadata: { worker },
+  });
   capture({ distinctId: userId, event: 'task_completed', properties: { task_id: id } });
   const task = await db.getTask(id, userId);
   return c.json({ data: task });
@@ -209,15 +247,25 @@ tasks.post('/:id/complete', requireSession, async (c) => {
 tasks.post('/:id/fail', requireSession, async (c) => {
   const userId = c.get('userId')!;
   const id = c.req.param('id');
-  const body = await c.req.json().catch(() => ({})) as { worker?: unknown; error?: unknown; max_attempts?: unknown };
+  const body = (await c.req.json().catch(() => ({}))) as {
+    worker?: unknown;
+    error?: unknown;
+    max_attempts?: unknown;
+  };
   const worker = optionalString(body.worker);
   if (!worker) return c.json({ error: 'worker is required' }, 400);
   const db = getDb(c.env.DB);
-  const outcome = await db.failTask(id, userId, { worker, error: optionalString(body.error) ?? null, maxAttempts: clampInt(body.max_attempts, 1, 20, 3) });
+  const outcome = await db.failTask(id, userId, {
+    worker,
+    error: optionalString(body.error) ?? null,
+    maxAttempts: clampInt(body.max_attempts, 1, 20, 3),
+  });
   if (!outcome) return c.json({ error: 'Task not found or not held by this worker' }, 409);
   await recordAudit(db, userId, {
-    task_id: id, action: outcome.dead_letter ? 'task_dead_lettered' : 'task_failed_requeued',
-    actor_source: 'worker', metadata: { worker, attempts: outcome.attempts },
+    task_id: id,
+    action: outcome.dead_letter ? 'task_dead_lettered' : 'task_failed_requeued',
+    actor_source: 'worker',
+    metadata: { worker, attempts: outcome.attempts },
   });
   const task = await db.getTask(id, userId);
   return c.json({ data: task, outcome });
@@ -227,7 +275,7 @@ tasks.post('/:id/fail', requireSession, async (c) => {
 tasks.patch('/:id', requireSession, async (c) => {
   const userId = c.get('userId')!;
   const id = c.req.param('id');
-  const body = await c.req.json() as Partial<{
+  const body = (await c.req.json()) as Partial<{
     title: string;
     description: string;
     status: string;
@@ -289,7 +337,12 @@ tasks.patch('/:id', requireSession, async (c) => {
       blocked_on_user: updates.blocked_on_user,
     },
   });
-  if (body.status) capture({ distinctId: userId, event: 'task_status_updated', properties: { task_id: id, status: body.status } });
+  if (body.status)
+    capture({
+      distinctId: userId,
+      event: 'task_status_updated',
+      properties: { task_id: id, status: body.status },
+    });
   return c.json({ data: task });
 });
 
@@ -306,7 +359,7 @@ tasks.get('/:id/comments', requireSession, async (c) => {
 tasks.post('/:id/comments', requireSession, async (c) => {
   const userId = c.get('userId')!;
   const id = c.req.param('id');
-  const body = await c.req.json() as {
+  const body = (await c.req.json()) as {
     body?: unknown;
     author_type?: unknown;
     resolves_blocker?: unknown;
@@ -326,11 +379,18 @@ tasks.post('/:id/comments', requireSession, async (c) => {
     sync_to_description: body.sync_to_description === true,
   });
   if (!comment) return c.json({ error: 'Task not found' }, 404);
-  const task = comment.resolves_blocker || comment.marks_done || body.sync_to_description === true ? await db.getTask(id, userId) : null;
+  const task =
+    comment.resolves_blocker || comment.marks_done || body.sync_to_description === true
+      ? await db.getTask(id, userId)
+      : null;
 
   await recordAudit(db, userId, {
     task_id: id,
-    action: comment.marks_done ? 'task_comment_marked_done' : comment.resolves_blocker ? 'task_comment_resolved_blocker' : 'task_comment_created',
+    action: comment.marks_done
+      ? 'task_comment_marked_done'
+      : comment.resolves_blocker
+        ? 'task_comment_resolved_blocker'
+        : 'task_comment_created',
     actor_source: 'api',
     metadata: {
       author_type: comment.author_type,

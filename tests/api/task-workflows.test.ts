@@ -67,7 +67,9 @@ beforeEach(() => {
   mockDb.getTaskWorkflow.mockReset();
   mockDb.getTaskWorkflow.mockResolvedValue(workflow);
   mockDb.updateTaskWorkflow.mockReset();
-  mockDb.updateTaskWorkflow.mockImplementation(async (_id: string, _ownerId: string, input: any) => ({ ...workflow, ...input }));
+  mockDb.updateTaskWorkflow.mockImplementation(
+    async (_id: string, _ownerId: string, input: any) => ({ ...workflow, ...input })
+  );
   mockDb.createTaskWorkflowArtifact.mockReset();
   mockDb.createTaskWorkflowArtifact.mockResolvedValue({
     id: 'artifact-1',
@@ -133,16 +135,22 @@ describe('Task workflows API', () => {
     });
 
     expect(res.status).toBe(201);
-    expect(mockDb.createTaskWorkflow).toHaveBeenCalledWith('user-1', expect.objectContaining({
-      task_id: 'task-1',
-      name: 'Task workflow',
-      prompt_template: 'Do the task',
-      status: 'active',
-    }));
-    expect(mockDb.createSymphonyAuditEvent).toHaveBeenCalledWith('user-1', expect.objectContaining({
-      action: 'task_workflow_created',
-      task_id: 'task-1',
-    }));
+    expect(mockDb.createTaskWorkflow).toHaveBeenCalledWith(
+      'user-1',
+      expect.objectContaining({
+        task_id: 'task-1',
+        name: 'Task workflow',
+        prompt_template: 'Do the task',
+        status: 'active',
+      })
+    );
+    expect(mockDb.createSymphonyAuditEvent).toHaveBeenCalledWith(
+      'user-1',
+      expect.objectContaining({
+        action: 'task_workflow_created',
+        task_id: 'task-1',
+      })
+    );
   });
 
   it('prepares a Droid-native run prompt and records returned run ids', async () => {
@@ -153,8 +161,13 @@ describe('Task workflows API', () => {
     });
 
     expect(res.status).toBe(200);
-    expect(mockDb.updateTaskWorkflow).toHaveBeenCalledWith('workflow-1', 'user-1', { last_run_id: 'run-1' });
-    const json = await res.json() as { prompt: string; droid_run_payload: { mode: string; prompt: string } };
+    expect(mockDb.updateTaskWorkflow).toHaveBeenCalledWith('workflow-1', 'user-1', {
+      last_run_id: 'run-1',
+    });
+    const json = (await res.json()) as {
+      prompt: string;
+      droid_run_payload: { mode: string; prompt: string };
+    };
     expect(json.prompt).toContain('Build workflow');
     expect(json.droid_run_payload.mode).toBe('native');
   });

@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Star, CheckCircle2, Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Star, CheckCircle2, Loader2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://api.sassmaker.com";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.sassmaker.com';
 
 interface Props {
   slug: string;
@@ -16,10 +16,10 @@ interface Props {
 }
 
 export function TestimonialForm({ slug, projectName }: Props) {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
   const [rating, setRating] = useState(5);
   const [hoverRating, setHoverRating] = useState(0);
   const [submitting, setSubmitting] = useState(false);
@@ -32,29 +32,26 @@ export function TestimonialForm({ slug, projectName }: Props) {
     setSubmitting(true);
 
     try {
-      const res = await fetch(
-        `${API_BASE}/v1/testimonials/by-project/${slug}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            author_name: name,
-            author_email: email,
-            author_title: title || undefined,
-            content,
-            rating,
-          }),
-        }
-      );
+      const res = await fetch(`${API_BASE}/v1/testimonials/by-project/${slug}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          author_name: name,
+          author_email: email,
+          author_title: title || undefined,
+          content,
+          rating,
+        }),
+      });
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || "Failed to submit testimonial");
+        throw new Error(data.error || 'Failed to submit testimonial');
       }
 
       setSubmitted(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
+      setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
       setSubmitting(false);
     }
@@ -66,8 +63,7 @@ export function TestimonialForm({ slug, projectName }: Props) {
         <CheckCircle2 className="mx-auto h-12 w-12 text-green-500" />
         <h2 className="text-xl font-semibold">Thank you!</h2>
         <p className="text-muted-foreground">
-          Your testimonial has been submitted and is pending review by the{" "}
-          {projectName} team.
+          Your testimonial has been submitted and is pending review by the {projectName} team.
         </p>
       </div>
     );
@@ -96,10 +92,10 @@ export function TestimonialForm({ slug, projectName }: Props) {
             >
               <Star
                 className={cn(
-                  "h-8 w-8 transition-colors",
+                  'h-8 w-8 transition-colors',
                   star <= (hoverRating || rating)
-                    ? "fill-yellow-400 text-yellow-400"
-                    : "text-muted-foreground/30"
+                    ? 'fill-yellow-400 text-yellow-400'
+                    : 'text-muted-foreground/30'
                 )}
               />
             </button>

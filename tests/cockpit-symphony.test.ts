@@ -20,10 +20,19 @@ const baseTask = {
 
 describe('cockpit Symphony helpers', () => {
   it('builds batch prompts with one isolated prompt per task', () => {
-    const prompt = buildSymphonyBatchPrompt([
-      { ...baseTask, id: 'task-code', title: 'Fix checkout bug', priority: 'high', task_type: 'bug' },
-      { ...baseTask, id: 'task-docs', title: 'Summarize docs', task_type: 'docs' },
-    ], { memory: 'Prefer Gemini for docs.' });
+    const prompt = buildSymphonyBatchPrompt(
+      [
+        {
+          ...baseTask,
+          id: 'task-code',
+          title: 'Fix checkout bug',
+          priority: 'high',
+          task_type: 'bug',
+        },
+        { ...baseTask, id: 'task-docs', title: 'Summarize docs', task_type: 'docs' },
+      ],
+      { memory: 'Prefer Gemini for docs.' }
+    );
 
     expect(prompt).toContain('# Symphony batch item 1: task-code');
     expect(prompt).toContain('# Symphony batch item 2: task-docs');
@@ -40,7 +49,7 @@ describe('cockpit Symphony helpers', () => {
       { ...baseTask, id: 'task-cleanup', title: 'Clean up copy', task_type: 'cleanup' },
     ]);
 
-    expect(runs.map(run => run.route.agent)).toEqual(['gemini', 'gemini']);
+    expect(runs.map((run) => run.route.agent)).toEqual(['gemini', 'gemini']);
     expect(runs[0].command).toContain('.symphony/workspaces/task-bug/prompt.md');
     expect(runs[1].command).toContain('.symphony/workspaces/task-cleanup/prompt.md');
   });
@@ -49,7 +58,7 @@ describe('cockpit Symphony helpers', () => {
     const prompt = buildSymphonyPrompt(
       { ...baseTask, id: 'task-one', title: 'Run targeted tests' },
       'Use cheap paths first.',
-      'Only touch the CLI surface.',
+      'Only touch the CLI surface.'
     );
 
     expect(prompt).toContain('Symphony operating memory:');
@@ -60,8 +69,9 @@ describe('cockpit Symphony helpers', () => {
   });
 
   it('builds a copyable done command for task handoff prompts', () => {
-    expect(buildSymphonyDoneCommand({ ...baseTask, id: 'task-finish', title: 'Finish me' }))
-      .toBe('pnpm --dir ~/Desktop/fleet/saas-maker symphony done task-finish');
+    expect(buildSymphonyDoneCommand({ ...baseTask, id: 'task-finish', title: 'Finish me' })).toBe(
+      'pnpm --dir ~/Desktop/fleet/saas-maker symphony done task-finish'
+    );
   });
 
   it('uses a healthy usage snapshot when routing broad review work', () => {
@@ -79,7 +89,7 @@ describe('cockpit Symphony helpers', () => {
             stats: { models: { 'gemini-test': { tokens: { total: 10 } } } },
           },
         },
-      },
+      }
     );
 
     expect(route.agent).toBe('gemini');
@@ -101,7 +111,7 @@ describe('cockpit Symphony helpers', () => {
             error: 'rate limited',
           },
         },
-      },
+      }
     );
 
     expect(route.agent).toBe('claude');
@@ -130,7 +140,7 @@ describe('cockpit Symphony helpers', () => {
             provider_telemetry: { headroom_pct: 10 },
           },
         },
-      },
+      }
     );
 
     expect(route.agent).toBe('codex');
@@ -138,21 +148,22 @@ describe('cockpit Symphony helpers', () => {
   });
 
   it('renders Claude and Gemini commands with structured output for usage capture', () => {
-    const claudeRun = buildSymphonyBatchRuns([
-      { ...baseTask, id: 'task-clean', title: 'Clean up docs', task_type: 'cleanup' },
-    ], {
-      agentUsage: {
-        sampled_at: new Date().toISOString(),
-        agents: {
-          gemini: {
-            ok: false,
-            available: true,
-            sampled_at: new Date().toISOString(),
-            error: 'rate limited',
+    const claudeRun = buildSymphonyBatchRuns(
+      [{ ...baseTask, id: 'task-clean', title: 'Clean up docs', task_type: 'cleanup' }],
+      {
+        agentUsage: {
+          sampled_at: new Date().toISOString(),
+          agents: {
+            gemini: {
+              ok: false,
+              available: true,
+              sampled_at: new Date().toISOString(),
+              error: 'rate limited',
+            },
           },
         },
-      },
-    })[0];
+      }
+    )[0];
     const geminiRun = buildSymphonyBatchRuns([
       { ...baseTask, id: 'task-audit', title: 'Audit docs', task_type: 'research' },
     ])[0];

@@ -81,30 +81,52 @@ export class AIService {
 
   /** Read masked provider config. Requires a session token. */
   getConfig(projectId: string): Promise<AIProviderConfig> {
-    return this.http.request<AIProviderConfig>('GET', `/v1/ai/config?${projectQuery(projectId)}`, undefined, { auth: 'session' });
+    return this.http.request<AIProviderConfig>(
+      'GET',
+      `/v1/ai/config?${projectQuery(projectId)}`,
+      undefined,
+      { auth: 'session' }
+    );
   }
 
   /** Create or update provider config. Requires a session token. */
   updateConfig(projectId: string, data: UpdateAIConfigRequest): Promise<AIProviderConfig> {
-    return this.http.request<AIProviderConfig>('PUT', `/v1/ai/config?${projectQuery(projectId)}`, data, { auth: 'session' });
+    return this.http.request<AIProviderConfig>(
+      'PUT',
+      `/v1/ai/config?${projectQuery(projectId)}`,
+      data,
+      { auth: 'session' }
+    );
   }
 
   /** Clear provider config and stored provider key. Requires a session token. */
   deleteConfig(projectId: string): Promise<{ ok: true }> {
-    return this.http.request<{ ok: true }>('DELETE', `/v1/ai/config?${projectQuery(projectId)}`, undefined, { auth: 'session' });
+    return this.http.request<{ ok: true }>(
+      'DELETE',
+      `/v1/ai/config?${projectQuery(projectId)}`,
+      undefined,
+      { auth: 'session' }
+    );
   }
 
   /** Read usage totals. Requires a session token. */
   getUsage(projectId: string, days = 30): Promise<AIUsageStats> {
     const params = `${projectQuery(projectId)}&days=${encodeURIComponent(String(days))}`;
-    return this.http.request<AIUsageStats>('GET', `/v1/ai/usage?${params}`, undefined, { auth: 'session' });
+    return this.http.request<AIUsageStats>('GET', `/v1/ai/usage?${params}`, undefined, {
+      auth: 'session',
+    });
   }
 
   /** List recent proxied requests. Requires a session token. */
-  listRequests(projectId: string, options: { limit?: number; offset?: number } = {}): Promise<AIRequestsResponse> {
+  listRequests(
+    projectId: string,
+    options: { limit?: number; offset?: number } = {}
+  ): Promise<AIRequestsResponse> {
     const params = new URLSearchParams({ project_id: projectId });
     if (options.limit) params.set('limit', String(options.limit));
     if (options.offset) params.set('offset', String(options.offset));
-    return this.http.request<AIRequestsResponse>('GET', `/v1/ai/requests?${params}`, undefined, { auth: 'session' });
+    return this.http.request<AIRequestsResponse>('GET', `/v1/ai/requests?${params}`, undefined, {
+      auth: 'session',
+    });
   }
 }

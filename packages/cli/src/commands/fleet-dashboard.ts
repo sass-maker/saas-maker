@@ -9,7 +9,7 @@ export async function fleetDashboardCommand(): Promise<void> {
     return;
   }
 
-  const rows = fleet.map(p => detectTooling(p.path, p.slug));
+  const rows = fleet.map((p) => detectTooling(p.path, p.slug));
 
   // Column widths
   const col = (s: string, w: number) => s.slice(0, w).padEnd(w);
@@ -17,7 +17,7 @@ export async function fleetDashboardCommand(): Promise<void> {
   const green = chalk.green;
   const yellow = chalk.yellow;
 
-  console.log('\n' + chalk.bold.white(' FOUNDRY FLEET MATRIX') + '\n');
+  console.log(`\n${chalk.bold.white(' FOUNDRY FLEET MATRIX')}\n`);
 
   const header = [
     col('PROJECT', 22),
@@ -49,18 +49,26 @@ export async function fleetDashboardCommand(): Promise<void> {
     console.log(row);
   }
 
-  console.log('\n' + dim(`${rows.length} projects · SM = @saas-maker/* packages · FND = foundry.json`));
-
-  // Summary stats
-  const frameworks = rows.reduce((acc, r) => { acc[r.framework] = (acc[r.framework]||0)+1; return acc; }, {} as Record<string,number>);
-  console.log('\n' + chalk.bold('Stack breakdown:'));
-  Object.entries(frameworks).sort((a,b) => b[1]-a[1]).forEach(([k,v]) =>
-    console.log(`  ${k}: ${v} project${v>1?'s':''}`)
+  console.log(
+    `\n${dim(`${rows.length} projects · SM = @saas-maker/* packages · FND = foundry.json`)}`
   );
 
-  const noTests = rows.filter(r => r.testFrameworks === '-').length;
-  const noAuth = rows.filter(r => r.auth === '-').length;
-  if (noTests > 0) console.log('\n' + yellow(`⚠  ${noTests} projects have no tests`));
+  // Summary stats
+  const frameworks = rows.reduce(
+    (acc, r) => {
+      acc[r.framework] = (acc[r.framework] || 0) + 1;
+      return acc;
+    },
+    {} as Record<string, number>
+  );
+  console.log(`\n${chalk.bold('Stack breakdown:')}`);
+  Object.entries(frameworks)
+    .sort((a, b) => b[1] - a[1])
+    .forEach(([k, v]) => console.log(`  ${k}: ${v} project${v > 1 ? 's' : ''}`));
+
+  const noTests = rows.filter((r) => r.testFrameworks === '-').length;
+  const noAuth = rows.filter((r) => r.auth === '-').length;
+  if (noTests > 0) console.log(`\n${yellow(`⚠  ${noTests} projects have no tests`)}`);
   if (noAuth > 0) console.log(dim(`ℹ  ${noAuth} projects have no auth (may be intentional)`));
   console.log('');
 }

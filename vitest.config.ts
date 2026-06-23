@@ -8,7 +8,15 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['json', 'text-summary'],
-      exclude: ['node_modules', 'dist', '.next', 'coverage', '**/*.d.ts', '**/*.config.*', '**/test/**'],
+      exclude: [
+        'node_modules',
+        'dist',
+        '.next',
+        'coverage',
+        '**/*.d.ts',
+        '**/*.config.*',
+        '**/test/**',
+      ],
     },
   },
 });

@@ -4,7 +4,6 @@ import { execSync, spawn } from 'node:child_process';
 import { join } from 'node:path';
 import { getLocalFleet } from '../lib/fleet.js';
 import { log } from '../lib/ui.js';
-import { requestApi } from '../lib/request.js';
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 
 interface FoundryErrorEvent {
@@ -47,7 +46,7 @@ async function checkErrorFeed(fleet: any[]) {
     // We fetch secrets from the local saas-maker .env.local to get PostHog keys
     const saasMakerPath = join(process.cwd(), 'saas-maker');
     const envPath = join(saasMakerPath, 'apps', 'cockpit', '.env.local');
-    
+
     let posthogKey = process.env.POSTHOG_PERSONAL_API_KEY;
     let posthogProject = process.env.POSTHOG_PROJECT_ID;
 
@@ -67,23 +66,23 @@ async function checkErrorFeed(fleet: any[]) {
     const url = `https://us.posthog.com/api/projects/${posthogProject}/query/`;
     const query = {
       query: {
-        kind: "EventsQuery",
+        kind: 'EventsQuery',
         select: [
-          "*",
-          "event",
-          "timestamp",
-          "properties.message",
-          "properties.severity",
-          "properties.project_id",
-          "properties.project_slug",
-          "properties.project",
-          "properties.foundry_project_id",
-          "properties.$exception_stack",
+          '*',
+          'event',
+          'timestamp',
+          'properties.message',
+          'properties.severity',
+          'properties.project_id',
+          'properties.project_slug',
+          'properties.project',
+          'properties.foundry_project_id',
+          'properties.$exception_stack',
         ],
         where: [`event == 'foundry_error'`, `timestamp > '${lastProcessedTimestamp}'`],
-        orderBy: ["timestamp ASC"], // Process oldest first
+        orderBy: ['timestamp ASC'], // Process oldest first
         limit: 5,
-      }
+      },
     };
 
     const res = await fetch(url, {
@@ -119,18 +118,21 @@ async function checkErrorFeed(fleet: any[]) {
       await dispatchAgent(error, fleet);
       lastProcessedTimestamp = error.timestamp;
     }
-
   } catch (err) {
     spinner.fail(`Supervisor check failed: ${err instanceof Error ? err.message : String(err)}`);
   }
 }
 
 async function dispatchAgent(error: FoundryErrorEvent, fleet: any[]) {
-  console.log(chalk.bgRed.white(`\n 🚨 INCIDENT DETECTED: ${error.project_id || 'Unknown Project'} `));
+  console.log(
+    chalk.bgRed.white(`\n 🚨 INCIDENT DETECTED: ${error.project_id || 'Unknown Project'} `)
+  );
   console.log(chalk.red(`Message: ${error.message}`));
-  
-  const targetProject = fleet.find(p => p.slug === error.project_id || p.name === error.project_id);
-  
+
+  const targetProject = fleet.find(
+    (p) => p.slug === error.project_id || p.name === error.project_id
+  );
+
   if (!targetProject) {
     log.error(`Cannot dispatch agent: Project '${error.project_id}' not found in local fleet.`);
     return;
@@ -171,12 +173,12 @@ YOUR MISSION:
     // We launch the agent harness (Assuming Gemini CLI is available, or fallback to Claude)
     // For this environment, we will use `gemini` as the agent CLI
     console.log(chalk.cyan(`> gemini --prompt-file ${promptFile}`));
-    
+
     // Spawn the agent process interactively so the user can see it work
     const agentProcess = spawn('gemini', ['--prompt', prompt], {
       cwd: targetProject.path,
       stdio: 'inherit',
-      env: process.env
+      env: process.env,
     });
 
     await new Promise<void>((resolve) => {
@@ -189,7 +191,6 @@ YOUR MISSION:
         resolve();
       });
     });
-
   } catch (err) {
     log.error(`Failed to launch agent: ${err instanceof Error ? err.message : String(err)}`);
   }

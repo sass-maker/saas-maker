@@ -1,46 +1,36 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Tabs,
-  TabsList,
-  TabsTrigger,
-  TabsContent,
-} from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
+import { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Save, AlertCircle, CheckCircle2 } from "lucide-react";
-import { cn } from "@/lib/utils";
+} from '@/components/ui/select';
+import { Save, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-type EslintSeverity = "error" | "warn" | "off";
-type TrailingComma = "none" | "es5" | "all";
+type EslintSeverity = 'error' | 'warn' | 'off';
+type TrailingComma = 'none' | 'es5' | 'all';
 type TabWidth = 2 | 4;
 type PrintWidth = 80 | 100 | 120;
 
 interface EslintRules {
-  "react-hooks/set-state-in-effect": EslintSeverity;
-  "react-hooks/exhaustive-deps": EslintSeverity;
-  "react-refresh/only-export-components": EslintSeverity;
-  "@typescript-eslint/no-unused-vars": EslintSeverity;
-  "@typescript-eslint/no-explicit-any": EslintSeverity;
-  "no-console": EslintSeverity;
-  "no-debugger": EslintSeverity;
+  'react-hooks/set-state-in-effect': EslintSeverity;
+  'react-hooks/exhaustive-deps': EslintSeverity;
+  'react-refresh/only-export-components': EslintSeverity;
+  '@typescript-eslint/no-unused-vars': EslintSeverity;
+  '@typescript-eslint/no-explicit-any': EslintSeverity;
+  'no-console': EslintSeverity;
+  'no-debugger': EslintSeverity;
 }
 
 interface TypeScriptOptions {
@@ -75,13 +65,13 @@ export interface StandardsConfig {
 // ─── Defaults ────────────────────────────────────────────────────────────────
 
 const defaultEslint: EslintRules = {
-  "react-hooks/set-state-in-effect": "error",
-  "react-hooks/exhaustive-deps": "warn",
-  "react-refresh/only-export-components": "warn",
-  "@typescript-eslint/no-unused-vars": "error",
-  "@typescript-eslint/no-explicit-any": "warn",
-  "no-console": "warn",
-  "no-debugger": "error",
+  'react-hooks/set-state-in-effect': 'error',
+  'react-hooks/exhaustive-deps': 'warn',
+  'react-refresh/only-export-components': 'warn',
+  '@typescript-eslint/no-unused-vars': 'error',
+  '@typescript-eslint/no-explicit-any': 'warn',
+  'no-console': 'warn',
+  'no-debugger': 'error',
 };
 
 const defaultTypescript: TypeScriptOptions = {
@@ -97,7 +87,7 @@ const defaultPrettier: PrettierOptions = {
   semi: true,
   singleQuote: false,
   tabWidth: 2,
-  trailingComma: "es5",
+  trailingComma: 'es5',
   printWidth: 80,
 };
 
@@ -109,42 +99,77 @@ const defaultStandards: ProjectStandards = {
 
 function makeDefaultConfig(): StandardsConfig {
   return {
-    nextjs: { ...defaultStandards, eslint: { ...defaultEslint }, typescript: { ...defaultTypescript }, prettier: { ...defaultPrettier } },
-    vite: { ...defaultStandards, eslint: { ...defaultEslint }, typescript: { ...defaultTypescript }, prettier: { ...defaultPrettier } },
-    node: { ...defaultStandards, eslint: { ...defaultEslint }, typescript: { ...defaultTypescript }, prettier: { ...defaultPrettier } },
+    nextjs: {
+      ...defaultStandards,
+      eslint: { ...defaultEslint },
+      typescript: { ...defaultTypescript },
+      prettier: { ...defaultPrettier },
+    },
+    vite: {
+      ...defaultStandards,
+      eslint: { ...defaultEslint },
+      typescript: { ...defaultTypescript },
+      prettier: { ...defaultPrettier },
+    },
+    node: {
+      ...defaultStandards,
+      eslint: { ...defaultEslint },
+      typescript: { ...defaultTypescript },
+      prettier: { ...defaultPrettier },
+    },
   };
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 const ESLINT_RULES: Array<{ key: keyof EslintRules; label: string }> = [
-  { key: "react-hooks/set-state-in-effect", label: "react-hooks/set-state-in-effect" },
-  { key: "react-hooks/exhaustive-deps", label: "react-hooks/exhaustive-deps" },
-  { key: "react-refresh/only-export-components", label: "react-refresh/only-export-components" },
-  { key: "@typescript-eslint/no-unused-vars", label: "@typescript-eslint/no-unused-vars" },
-  { key: "@typescript-eslint/no-explicit-any", label: "@typescript-eslint/no-explicit-any" },
-  { key: "no-console", label: "no-console" },
-  { key: "no-debugger", label: "no-debugger" },
+  { key: 'react-hooks/set-state-in-effect', label: 'react-hooks/set-state-in-effect' },
+  { key: 'react-hooks/exhaustive-deps', label: 'react-hooks/exhaustive-deps' },
+  { key: 'react-refresh/only-export-components', label: 'react-refresh/only-export-components' },
+  { key: '@typescript-eslint/no-unused-vars', label: '@typescript-eslint/no-unused-vars' },
+  { key: '@typescript-eslint/no-explicit-any', label: '@typescript-eslint/no-explicit-any' },
+  { key: 'no-console', label: 'no-console' },
+  { key: 'no-debugger', label: 'no-debugger' },
 ];
 
-const TYPESCRIPT_OPTIONS: Array<{ key: keyof TypeScriptOptions; label: string; description: string }> = [
-  { key: "strict", label: "strict", description: "Enable all strict type-checking options" },
-  { key: "skipLibCheck", label: "skipLibCheck", description: "Skip type checking of declaration files" },
-  { key: "noUnusedLocals", label: "noUnusedLocals", description: "Report errors on unused locals" },
-  { key: "noUnusedParameters", label: "noUnusedParameters", description: "Report errors on unused parameters" },
-  { key: "exactOptionalPropertyTypes", label: "exactOptionalPropertyTypes", description: "Differentiate between undefined and missing optional properties" },
-  { key: "noImplicitReturns", label: "noImplicitReturns", description: "Require all code paths in a function to return a value" },
+const TYPESCRIPT_OPTIONS: Array<{
+  key: keyof TypeScriptOptions;
+  label: string;
+  description: string;
+}> = [
+  { key: 'strict', label: 'strict', description: 'Enable all strict type-checking options' },
+  {
+    key: 'skipLibCheck',
+    label: 'skipLibCheck',
+    description: 'Skip type checking of declaration files',
+  },
+  { key: 'noUnusedLocals', label: 'noUnusedLocals', description: 'Report errors on unused locals' },
+  {
+    key: 'noUnusedParameters',
+    label: 'noUnusedParameters',
+    description: 'Report errors on unused parameters',
+  },
+  {
+    key: 'exactOptionalPropertyTypes',
+    label: 'exactOptionalPropertyTypes',
+    description: 'Differentiate between undefined and missing optional properties',
+  },
+  {
+    key: 'noImplicitReturns',
+    label: 'noImplicitReturns',
+    description: 'Require all code paths in a function to return a value',
+  },
 ];
 
 const SEVERITY_OPTIONS: Array<{ value: EslintSeverity; label: string }> = [
-  { value: "error", label: "Error" },
-  { value: "warn", label: "Warn" },
-  { value: "off", label: "Off" },
+  { value: 'error', label: 'Error' },
+  { value: 'warn', label: 'Warn' },
+  { value: 'off', label: 'Off' },
 ];
 
 async function getToken(): Promise<string> {
-  const res = await fetch("/api/token");
-  if (!res.ok) throw new Error("Failed to get auth token");
+  const res = await fetch('/api/token');
+  if (!res.ok) throw new Error('Failed to get auth token');
   const data = await res.json();
   return data.token;
 }
@@ -166,15 +191,15 @@ function SeverityToggle({
           type="button"
           onClick={() => onChange(opt.value)}
           className={cn(
-            "px-2.5 py-1 transition-colors",
-            i > 0 && "border-l",
+            'px-2.5 py-1 transition-colors',
+            i > 0 && 'border-l',
             value === opt.value
-              ? opt.value === "error"
-                ? "bg-destructive text-destructive-foreground"
-                : opt.value === "warn"
-                ? "bg-yellow-500 text-white dark:bg-yellow-600"
-                : "bg-muted text-muted-foreground"
-              : "bg-background text-muted-foreground hover:bg-muted/60"
+              ? opt.value === 'error'
+                ? 'bg-destructive text-destructive-foreground'
+                : opt.value === 'warn'
+                  ? 'bg-yellow-500 text-white dark:bg-yellow-600'
+                  : 'bg-muted text-muted-foreground'
+              : 'bg-background text-muted-foreground hover:bg-muted/60'
           )}
         >
           {opt.label}
@@ -205,10 +230,7 @@ function EslintSection({
             className="flex items-center justify-between gap-4 py-3 first:pt-0 last:pb-0"
           >
             <code className="text-sm font-mono text-foreground">{label}</code>
-            <SeverityToggle
-              value={rules[key]}
-              onChange={(v) => onChange({ ...rules, [key]: v })}
-            />
+            <SeverityToggle value={rules[key]} onChange={(v) => onChange({ ...rules, [key]: v })} />
           </div>
         ))}
       </CardContent>
@@ -242,9 +264,7 @@ function TypeScriptSection({
             </div>
             <Switch
               checked={options[key]}
-              onCheckedChange={(checked) =>
-                onChange({ ...options, [key]: checked })
-              }
+              onCheckedChange={(checked) => onChange({ ...options, [key]: checked })}
             />
           </div>
         ))}
@@ -272,7 +292,9 @@ function PrettierSection({
         <div className="flex items-center justify-between gap-4">
           <div>
             <Label className="font-mono text-sm">semi</Label>
-            <p className="text-xs text-muted-foreground mt-0.5">Print semicolons at the ends of statements</p>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Print semicolons at the ends of statements
+            </p>
           </div>
           <Switch
             checked={options.semi}
@@ -284,7 +306,9 @@ function PrettierSection({
         <div className="flex items-center justify-between gap-4">
           <div>
             <Label className="font-mono text-sm">singleQuote</Label>
-            <p className="text-xs text-muted-foreground mt-0.5">Use single quotes instead of double quotes</p>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Use single quotes instead of double quotes
+            </p>
           </div>
           <Switch
             checked={options.singleQuote}
@@ -296,7 +320,9 @@ function PrettierSection({
         <div className="flex items-center justify-between gap-4">
           <div>
             <Label className="font-mono text-sm">tabWidth</Label>
-            <p className="text-xs text-muted-foreground mt-0.5">Specify the number of spaces per indentation level</p>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Specify the number of spaces per indentation level
+            </p>
           </div>
           <div className="inline-flex rounded-md border overflow-hidden text-xs font-medium">
             {([2, 4] as TabWidth[]).map((w, i) => (
@@ -305,11 +331,11 @@ function PrettierSection({
                 type="button"
                 onClick={() => onChange({ ...options, tabWidth: w })}
                 className={cn(
-                  "px-3 py-1.5 transition-colors",
-                  i > 0 && "border-l",
+                  'px-3 py-1.5 transition-colors',
+                  i > 0 && 'border-l',
                   options.tabWidth === w
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-background text-muted-foreground hover:bg-muted/60"
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-background text-muted-foreground hover:bg-muted/60'
                 )}
               >
                 {w}
@@ -322,13 +348,13 @@ function PrettierSection({
         <div className="flex items-center justify-between gap-4">
           <div>
             <Label className="font-mono text-sm">trailingComma</Label>
-            <p className="text-xs text-muted-foreground mt-0.5">Print trailing commas wherever possible</p>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Print trailing commas wherever possible
+            </p>
           </div>
           <Select
             value={options.trailingComma}
-            onValueChange={(v) =>
-              onChange({ ...options, trailingComma: v as TrailingComma })
-            }
+            onValueChange={(v) => onChange({ ...options, trailingComma: v as TrailingComma })}
           >
             <SelectTrigger size="sm" className="w-24">
               <SelectValue />
@@ -345,7 +371,9 @@ function PrettierSection({
         <div className="flex items-center justify-between gap-4">
           <div>
             <Label className="font-mono text-sm">printWidth</Label>
-            <p className="text-xs text-muted-foreground mt-0.5">Specify the line length that the printer will wrap on</p>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Specify the line length that the printer will wrap on
+            </p>
           </div>
           <div className="inline-flex rounded-md border overflow-hidden text-xs font-medium">
             {([80, 100, 120] as PrintWidth[]).map((w, i) => (
@@ -354,11 +382,11 @@ function PrettierSection({
                 type="button"
                 onClick={() => onChange({ ...options, printWidth: w })}
                 className={cn(
-                  "px-3 py-1.5 transition-colors",
-                  i > 0 && "border-l",
+                  'px-3 py-1.5 transition-colors',
+                  i > 0 && 'border-l',
                   options.printWidth === w
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-background text-muted-foreground hover:bg-muted/60"
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-background text-muted-foreground hover:bg-muted/60'
                 )}
               >
                 {w}
@@ -381,7 +409,7 @@ function ProjectTab({
   saving,
   saveResult,
 }: {
-  type: "nextjs" | "vite" | "node";
+  type: 'nextjs' | 'vite' | 'node';
   standards: ProjectStandards;
   onChange: (s: ProjectStandards) => void;
   onSave: () => void;
@@ -408,8 +436,8 @@ function ProjectTab({
         {saveResult ? (
           <div
             className={cn(
-              "flex items-center gap-2 text-sm",
-              saveResult.ok ? "text-green-600 dark:text-green-400" : "text-destructive"
+              'flex items-center gap-2 text-sm',
+              saveResult.ok ? 'text-green-600 dark:text-green-400' : 'text-destructive'
             )}
           >
             {saveResult.ok ? (
@@ -424,7 +452,7 @@ function ProjectTab({
         )}
         <Button onClick={onSave} disabled={saving} className="gap-2">
           <Save className="h-4 w-4" />
-          {saving ? "Saving..." : "Save"}
+          {saving ? 'Saving...' : 'Save'}
         </Button>
       </div>
     </div>
@@ -438,7 +466,7 @@ interface StandardsEditorProps {
   fetchError: string | null;
 }
 
-type TabType = "nextjs" | "vite" | "node";
+type TabType = 'nextjs' | 'vite' | 'node';
 
 export function StandardsEditor({ initialConfig, fetchError }: StandardsEditorProps) {
   const defaults = makeDefaultConfig();
@@ -460,11 +488,11 @@ export function StandardsEditor({ initialConfig, fetchError }: StandardsEditorPr
     try {
       const token = await getToken();
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "https://api.sassmaker.com"}/v1/standards/${type}`,
+        `${process.env.NEXT_PUBLIC_API_URL || 'https://api.sassmaker.com'}/v1/standards/${type}`,
         {
-          method: "PUT",
+          method: 'PUT',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(config[type]),
@@ -473,14 +501,14 @@ export function StandardsEditor({ initialConfig, fetchError }: StandardsEditorPr
       if (!res.ok) throw new Error(await res.text());
       setSaveResults((prev) => ({
         ...prev,
-        [type]: { ok: true, message: "Standards saved successfully." },
+        [type]: { ok: true, message: 'Standards saved successfully.' },
       }));
     } catch (err) {
       setSaveResults((prev) => ({
         ...prev,
         [type]: {
           ok: false,
-          message: err instanceof Error ? err.message : "Failed to save",
+          message: err instanceof Error ? err.message : 'Failed to save',
         },
       }));
     } finally {
@@ -494,12 +522,8 @@ export function StandardsEditor({ initialConfig, fetchError }: StandardsEditorPr
         <CardHeader className="flex flex-row items-center gap-3">
           <AlertCircle className="h-5 w-5 text-destructive shrink-0" />
           <div>
-            <CardTitle className="text-base text-destructive">
-              Failed to load standards
-            </CardTitle>
-            <p className="mt-1 text-xs font-mono text-muted-foreground break-all">
-              {fetchError}
-            </p>
+            <CardTitle className="text-base text-destructive">Failed to load standards</CardTitle>
+            <p className="mt-1 text-xs font-mono text-muted-foreground break-all">{fetchError}</p>
           </div>
         </CardHeader>
       </Card>
@@ -507,9 +531,9 @@ export function StandardsEditor({ initialConfig, fetchError }: StandardsEditorPr
   }
 
   const tabs: Array<{ value: TabType; label: string }> = [
-    { value: "nextjs", label: "Next.js" },
-    { value: "vite", label: "Vite" },
-    { value: "node", label: "Node" },
+    { value: 'nextjs', label: 'Next.js' },
+    { value: 'vite', label: 'Vite' },
+    { value: 'node', label: 'Node' },
   ];
 
   return (

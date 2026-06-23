@@ -29,7 +29,9 @@ describe('isCanonicalWeeklyWorkflow', () => {
   });
 
   it('rejects hand-written weekly workflows', () => {
-    expect(isCanonicalWeeklyWorkflow('name: Weekly\njobs:\n  test:\n    runs-on: ubuntu-latest\n')).toBe(false);
+    expect(
+      isCanonicalWeeklyWorkflow('name: Weekly\njobs:\n  test:\n    runs-on: ubuntu-latest\n')
+    ).toBe(false);
   });
 });
 

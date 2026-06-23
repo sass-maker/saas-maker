@@ -1,22 +1,18 @@
-import Link from "next/link";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
-import { Activity, ShieldCheck } from "lucide-react";
-import { SidebarNav } from "@/components/sidebar-nav";
-import { MobileNav } from "@/components/mobile-nav";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { getLocalDevSession, isLocalAuthBypassEnabled } from "@/lib/local-auth";
-import { UserMenu } from "@/components/user-menu";
+import Link from 'next/link';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
+import { Activity, ShieldCheck } from 'lucide-react';
+import { SidebarNav } from '@/components/sidebar-nav';
+import { MobileNav } from '@/components/mobile-nav';
+import { ThemeToggle } from '@/components/theme-toggle';
+import { getLocalDevSession, isLocalAuthBypassEnabled } from '@/lib/local-auth';
+import { UserMenu } from '@/components/user-menu';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
-export default async function AppLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const requestHeaders = await headers();
-  const session = isLocalAuthBypassEnabled(requestHeaders.get("host"))
+  const session = isLocalAuthBypassEnabled(requestHeaders.get('host'))
     ? getLocalDevSession()
     : await auth.api.getSession({ headers: requestHeaders });
 
@@ -32,7 +28,9 @@ export default async function AppLayout({
                 <ShieldCheck className="h-4 w-4" />
               </span>
               <span className="min-w-0">
-                <span className="block truncate text-sm font-semibold tracking-tight">SaaS Maker</span>
+                <span className="block truncate text-sm font-semibold tracking-tight">
+                  SaaS Maker
+                </span>
                 <span className="block truncate font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
                   Fleet cockpit
                 </span>
@@ -70,9 +68,7 @@ export default async function AppLayout({
           <ThemeToggle />
         </header>
 
-        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-          {children}
-        </div>
+        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">{children}</div>
       </main>
     </div>
   );

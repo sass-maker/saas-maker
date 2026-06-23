@@ -14,7 +14,9 @@ export const projects = sqliteTable('projects', {
   name: text('name').notNull(),
   slug: text('slug').notNull().unique(),
   api_key: text('api_key').notNull().unique(),
-  owner_id: text('owner_id').notNull().references(() => users.id),
+  owner_id: text('owner_id')
+    .notNull()
+    .references(() => users.id),
   embedding_model: text('embedding_model'),
   ai_base_url: text('ai_base_url'),
   ai_api_key: text('ai_api_key'),
@@ -27,7 +29,9 @@ export const projects = sqliteTable('projects', {
 
 export const feedback = sqliteTable('feedback', {
   id: text('id').primaryKey(),
-  project_id: text('project_id').notNull().references(() => projects.id),
+  project_id: text('project_id')
+    .notNull()
+    .references(() => projects.id),
   type: text('type').notNull(),
   status: text('status').notNull().default('new'),
   title: text('title').notNull(),
@@ -42,7 +46,9 @@ export const feedback = sqliteTable('feedback', {
 
 export const ai_requests = sqliteTable('ai_requests', {
   id: text('id').primaryKey(),
-  project_id: text('project_id').notNull().references(() => projects.id),
+  project_id: text('project_id')
+    .notNull()
+    .references(() => projects.id),
   endpoint: text('endpoint').notNull(),
   model: text('model').notNull(),
   status: text('status').notNull(),
@@ -75,14 +81,18 @@ export const foundry_jobs = sqliteTable('foundry_jobs', {
 });
 
 export const symphony_memory = sqliteTable('symphony_memory', {
-  owner_id: text('owner_id').primaryKey().references(() => users.id),
+  owner_id: text('owner_id')
+    .primaryKey()
+    .references(() => users.id),
   content: text('content').notNull().default(''),
   updated_at: text('updated_at').notNull().default(sql`(datetime('now'))`),
 });
 
 export const symphony_audit_log = sqliteTable('symphony_audit_log', {
   id: text('id').primaryKey(),
-  owner_id: text('owner_id').notNull().references(() => users.id),
+  owner_id: text('owner_id')
+    .notNull()
+    .references(() => users.id),
   task_id: text('task_id'),
   action: text('action').notNull(),
   actor_source: text('actor_source').notNull().default('api'),
@@ -94,7 +104,9 @@ export const symphony_audit_log = sqliteTable('symphony_audit_log', {
 
 export const symphony_runs = sqliteTable('symphony_runs', {
   id: text('id').primaryKey(),
-  owner_id: text('owner_id').notNull().references(() => users.id),
+  owner_id: text('owner_id')
+    .notNull()
+    .references(() => users.id),
   task_id: text('task_id'),
   project_slug: text('project_slug'),
   agent_profile: text('agent_profile'),
@@ -134,7 +146,9 @@ export const droid_runs = sqliteTable('droid_runs', {
 
 export const droid_run_events = sqliteTable('droid_run_events', {
   id: text('id').primaryKey(),
-  run_id: text('run_id').notNull().references(() => droid_runs.id),
+  run_id: text('run_id')
+    .notNull()
+    .references(() => droid_runs.id),
   type: text('type').notNull(),
   actor: text('actor').notNull().default('droid'),
   source: text('source').notNull().default('worker'),
@@ -150,7 +164,9 @@ export const droid_run_events = sqliteTable('droid_run_events', {
 
 export const droid_run_artifacts = sqliteTable('droid_run_artifacts', {
   id: text('id').primaryKey(),
-  run_id: text('run_id').notNull().references(() => droid_runs.id),
+  run_id: text('run_id')
+    .notNull()
+    .references(() => droid_runs.id),
   type: text('type').notNull(),
   name: text('name').notNull(),
   uri: text('uri').notNull(),
@@ -160,7 +176,9 @@ export const droid_run_artifacts = sqliteTable('droid_run_artifacts', {
 
 export const task_comments = sqliteTable('task_comments', {
   id: text('id').primaryKey(),
-  owner_id: text('owner_id').notNull().references(() => users.id),
+  owner_id: text('owner_id')
+    .notNull()
+    .references(() => users.id),
   task_id: text('task_id').notNull(),
   author_type: text('author_type').notNull().default('user'),
   body: text('body').notNull(),
@@ -171,7 +189,9 @@ export const task_comments = sqliteTable('task_comments', {
 
 export const task_workflows = sqliteTable('task_workflows', {
   id: text('id').primaryKey(),
-  owner_id: text('owner_id').notNull().references(() => users.id),
+  owner_id: text('owner_id')
+    .notNull()
+    .references(() => users.id),
   task_id: text('task_id'),
   project_slug: text('project_slug'),
   name: text('name').notNull(),
@@ -186,8 +206,12 @@ export const task_workflows = sqliteTable('task_workflows', {
 
 export const task_workflow_artifacts = sqliteTable('task_workflow_artifacts', {
   id: text('id').primaryKey(),
-  owner_id: text('owner_id').notNull().references(() => users.id),
-  workflow_id: text('workflow_id').notNull().references(() => task_workflows.id),
+  owner_id: text('owner_id')
+    .notNull()
+    .references(() => users.id),
+  workflow_id: text('workflow_id')
+    .notNull()
+    .references(() => task_workflows.id),
   task_id: text('task_id'),
   project_slug: text('project_slug'),
   run_id: text('run_id'),
@@ -198,24 +222,32 @@ export const task_workflow_artifacts = sqliteTable('task_workflow_artifacts', {
   created_at: text('created_at').notNull().default(sql`(datetime('now'))`),
 });
 
-export const fleet_events = sqliteTable('fleet_events', {
-  id: text('id').primaryKey(),
-  owner_id: text('owner_id').notNull().references(() => users.id),
-  product: text('product').notNull(),
-  project_slug: text('project_slug'),
-  type: text('type').notNull(),
-  payload: text('payload').notNull().default('{}'),
-  schema_version: integer('schema_version').notNull().default(1),
-  idempotency_key: text('idempotency_key').notNull(),
-  occurred_at: text('occurred_at'),
-  created_at: text('created_at').notNull().default(sql`(datetime('now'))`),
-}, (t) => ({
-  uniqOwnerIdempotency: unique().on(t.owner_id, t.idempotency_key),
-}));
+export const fleet_events = sqliteTable(
+  'fleet_events',
+  {
+    id: text('id').primaryKey(),
+    owner_id: text('owner_id')
+      .notNull()
+      .references(() => users.id),
+    product: text('product').notNull(),
+    project_slug: text('project_slug'),
+    type: text('type').notNull(),
+    payload: text('payload').notNull().default('{}'),
+    schema_version: integer('schema_version').notNull().default(1),
+    idempotency_key: text('idempotency_key').notNull(),
+    occurred_at: text('occurred_at'),
+    created_at: text('created_at').notNull().default(sql`(datetime('now'))`),
+  },
+  (t) => ({
+    uniqOwnerIdempotency: unique().on(t.owner_id, t.idempotency_key),
+  })
+);
 
 export const changelog = sqliteTable('changelog', {
   id: text('id').primaryKey(),
-  project_id: text('project_id').notNull().references(() => projects.id),
+  project_id: text('project_id')
+    .notNull()
+    .references(() => projects.id),
   day: text('day').notNull(), // YYYY-MM-DD
   summary: text('summary').notNull(),
   author: text('author'),

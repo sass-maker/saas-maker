@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -9,13 +9,13 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { apiFetchClient, getClientToken } from "@/lib/api-client";
-import type { RoadmapColumn, RoadmapItemRecord } from "@saas-maker/contracts";
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { apiFetchClient, getClientToken } from '@/lib/api-client';
+import type { RoadmapColumn, RoadmapItemRecord } from '@saas-maker/contracts';
 
 interface Props {
   projectId: string;
@@ -25,16 +25,22 @@ interface Props {
   onCreated: (item: RoadmapItemRecord) => void;
 }
 
-export function CreateRoadmapItemDialog({ projectId, column, open, onOpenChange, onCreated }: Props) {
+export function CreateRoadmapItemDialog({
+  projectId,
+  column,
+  open,
+  onOpenChange,
+  onCreated,
+}: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
   const [isPublic, setIsPublic] = useState(true);
 
   function resetForm() {
-    setTitle("");
-    setDescription("");
+    setTitle('');
+    setDescription('');
     setIsPublic(true);
     setError(null);
   }
@@ -50,7 +56,7 @@ export function CreateRoadmapItemDialog({ projectId, column, open, onOpenChange,
         `/v1/roadmap/dashboard/${projectId}`,
         token,
         {
-          method: "POST",
+          method: 'POST',
           body: JSON.stringify({
             title: title.trim(),
             description: description.trim() || undefined,
@@ -63,14 +69,20 @@ export function CreateRoadmapItemDialog({ projectId, column, open, onOpenChange,
       onOpenChange(false);
       resetForm();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to create item");
+      setError(err instanceof Error ? err.message : 'Failed to create item');
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <Dialog open={open} onOpenChange={(v) => { onOpenChange(v); if (!v) resetForm(); }}>
+    <Dialog
+      open={open}
+      onOpenChange={(v) => {
+        onOpenChange(v);
+        if (!v) resetForm();
+      }}
+    >
       <DialogContent className="sm:max-w-md">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
@@ -80,11 +92,21 @@ export function CreateRoadmapItemDialog({ projectId, column, open, onOpenChange,
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="rm-title">Title *</Label>
-              <Input id="rm-title" value={title} onChange={(e) => setTitle(e.target.value)} required />
+              <Input
+                id="rm-title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                required
+              />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="rm-desc">Description</Label>
-              <Textarea id="rm-desc" rows={3} value={description} onChange={(e) => setDescription(e.target.value)} />
+              <Textarea
+                id="rm-desc"
+                rows={3}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
             </div>
             <div className="flex items-center gap-2">
               <Switch id="rm-public" checked={isPublic} onCheckedChange={setIsPublic} />
@@ -93,9 +115,11 @@ export function CreateRoadmapItemDialog({ projectId, column, open, onOpenChange,
             {error && <p className="text-sm text-destructive">{error}</p>}
           </div>
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+              Cancel
+            </Button>
             <Button type="submit" disabled={loading || !title.trim()}>
-              {loading ? "Creating..." : "Add Task"}
+              {loading ? 'Creating...' : 'Add Task'}
             </Button>
           </DialogFooter>
         </form>

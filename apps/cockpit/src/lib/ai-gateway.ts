@@ -4,18 +4,18 @@ interface SnippetInput {
 }
 
 export function formatTokenCount(value: number | null | undefined): string {
-  if (!value) return "0";
+  if (!value) return '0';
   if (value >= 1_000_000) return `${(value / 1_000_000).toFixed(1)}M`;
   if (value >= 1_000) return `${(value / 1_000).toFixed(1)}K`;
   return value.toString();
 }
 
 export function formatLatency(value: number | null | undefined): string {
-  return value == null ? "-" : `${value}ms`;
+  return value == null ? '-' : `${value}ms`;
 }
 
 export function buildAIGatewaySnippets({ apiBaseUrl, projectKey }: SnippetInput) {
-  const baseUrl = apiBaseUrl.replace(/\/+$/, "");
+  const baseUrl = apiBaseUrl.replace(/\/+$/, '');
 
   return {
     curl: `curl ${baseUrl}/v1/ai/chat/completions \\

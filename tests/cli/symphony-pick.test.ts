@@ -80,9 +80,24 @@ describe('findNextTask', () => {
   });
 
   it('returns the highest-priority runnable task', () => {
-    const a = baseTask({ id: 'a', status: 'todo', priority: 'low', created_at: '2026-04-30T00:00:00Z' });
-    const b = baseTask({ id: 'b', status: 'todo', priority: 'high', created_at: '2026-05-01T00:00:00Z' });
-    const c = baseTask({ id: 'c', status: 'todo', priority: 'high', created_at: '2026-04-29T00:00:00Z' });
+    const a = baseTask({
+      id: 'a',
+      status: 'todo',
+      priority: 'low',
+      created_at: '2026-04-30T00:00:00Z',
+    });
+    const b = baseTask({
+      id: 'b',
+      status: 'todo',
+      priority: 'high',
+      created_at: '2026-05-01T00:00:00Z',
+    });
+    const c = baseTask({
+      id: 'c',
+      status: 'todo',
+      priority: 'high',
+      created_at: '2026-04-29T00:00:00Z',
+    });
     expect(findNextTask([a, b, c]).id).toBe('c');
   });
 

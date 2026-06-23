@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 export async function POST(req: Request) {
   const session = await getDashboardSession(req.headers);
   if (!session?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  const ownerId = await getDefaultCockpitOwnerId() ?? await ensureCockpitUser(session.user);
+  const ownerId = (await getDefaultCockpitOwnerId()) ?? (await ensureCockpitUser(session.user));
   const data = await generateMarketingPostsFromChangelog(ownerId);
   return NextResponse.json({ data }, { status: 201 });
 }

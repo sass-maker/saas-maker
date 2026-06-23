@@ -15,15 +15,29 @@ vi.mock('../../packages/cli/src/lib/output.js', () => ({
 
 vi.mock('../../packages/cli/src/lib/fleet.js', () => ({
   getLocalFleet: vi.fn().mockReturnValue([
-    { name: 'app-a', path: '/tmp/fleet/a', slug: 'a', type: 'next', isLegacy: false, lastModified: '2026-01-01' },
-    { name: 'app-b', path: '/tmp/fleet/b', slug: 'b', type: 'vite', isLegacy: false, lastModified: '2026-01-01' },
+    {
+      name: 'app-a',
+      path: '/tmp/fleet/a',
+      slug: 'a',
+      type: 'next',
+      isLegacy: false,
+      lastModified: '2026-01-01',
+    },
+    {
+      name: 'app-b',
+      path: '/tmp/fleet/b',
+      slug: 'b',
+      type: 'vite',
+      isLegacy: false,
+      lastModified: '2026-01-01',
+    },
   ]),
 }));
 
 vi.mock('../../packages/cli/src/lib/auditor.js', () => ({
-  auditProject: vi.fn().mockReturnValue([
-    { check: 'Foundry Config', status: 'pass', detail: 'foundry.json present' },
-  ]),
+  auditProject: vi
+    .fn()
+    .mockReturnValue([{ check: 'Foundry Config', status: 'pass', detail: 'foundry.json present' }]),
 }));
 
 vi.mock('../../packages/cli/src/lib/forge.js', () => ({
@@ -78,7 +92,10 @@ describe('fleet CLI', () => {
   });
 
   it('fix calls applyStandard + scaffoldHusky per project', async () => {
-    mockApi.mockResolvedValue({ ok: true, data: { eslint_rules: {}, tsconfig_options: {}, prettier_options: {} } });
+    mockApi.mockResolvedValue({
+      ok: true,
+      data: { eslint_rules: {}, tsconfig_options: {}, prettier_options: {} },
+    });
     await fleetFixCommand();
     expect(applyStandard).toHaveBeenCalledTimes(2);
     expect(scaffoldHusky).toHaveBeenCalledTimes(2);

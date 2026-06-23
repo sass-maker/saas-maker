@@ -89,7 +89,13 @@ describe('parseGhRunList + isFailedRun', () => {
   it('parses gh json output into normalized run objects', () => {
     const runs = parseGhRunList(stdout);
     expect(runs).toHaveLength(3);
-    expect(runs[0]).toMatchObject({ name: 'CI', conclusion: 'failure', headBranch: 'main', workflowDatabaseId: 100, workflowName: 'CI' });
+    expect(runs[0]).toMatchObject({
+      name: 'CI',
+      conclusion: 'failure',
+      headBranch: 'main',
+      workflowDatabaseId: 100,
+      workflowName: 'CI',
+    });
   });
 
   it('returns empty array for invalid json', () => {

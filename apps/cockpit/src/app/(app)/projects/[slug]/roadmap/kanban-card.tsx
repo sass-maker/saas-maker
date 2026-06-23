@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { Card } from "@/components/ui/card";
-import { Lock, MessageSquare } from "lucide-react";
-import type { RoadmapItemRecord } from "@saas-maker/contracts";
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { Card } from '@/components/ui/card';
+import { Lock, MessageSquare } from 'lucide-react';
+import type { RoadmapItemRecord } from '@saas-maker/contracts';
 
 interface KanbanCardProps {
   item: RoadmapItemRecord;
@@ -12,14 +12,9 @@ interface KanbanCardProps {
 }
 
 export function KanbanCard({ item, onClick }: KanbanCardProps) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: item.id });
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: item.id,
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),

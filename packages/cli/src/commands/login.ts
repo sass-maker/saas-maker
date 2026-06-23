@@ -4,11 +4,12 @@ import { saveGlobalConfig, getGlobalConfig, getApiBase } from '../lib/config.js'
 import { log } from '../lib/ui.js';
 
 function openBrowser(url: string): void {
-  const cmd = process.platform === 'darwin'
-    ? `open "${url}"`
-    : process.platform === 'win32'
-      ? `start "${url}"`
-      : `xdg-open "${url}"`;
+  const cmd =
+    process.platform === 'darwin'
+      ? `open "${url}"`
+      : process.platform === 'win32'
+        ? `start "${url}"`
+        : `xdg-open "${url}"`;
   exec(cmd);
 }
 
@@ -29,7 +30,7 @@ export async function loginCommand(): Promise<void> {
       headers: { 'Content-Type': 'application/json' },
     });
     if (!res.ok) throw new Error(`API error: ${res.status}`);
-    const data = await res.json() as { code: string; url: string };
+    const data = (await res.json()) as { code: string; url: string };
     code = data.code;
     url = data.url;
   } catch (err) {
@@ -52,7 +53,7 @@ export async function loginCommand(): Promise<void> {
     try {
       const res = await fetch(`${base}/v1/cli/poll?code=${code}`);
       if (!res.ok) continue;
-      const data = await res.json() as { status: string; token?: string };
+      const data = (await res.json()) as { status: string; token?: string };
 
       if (data.status === 'approved' && data.token) {
         pollSpinner.stop();

@@ -20,7 +20,10 @@ export async function captureGitPatch(
   if (!input.repoUrl) return emptyPatch();
 
   try {
-    const gitCheck = await sandbox.exec(`git -C ${quote(workspace)} rev-parse --is-inside-work-tree`, { timeout: 10000 });
+    const gitCheck = await sandbox.exec(
+      `git -C ${quote(workspace)} rev-parse --is-inside-work-tree`,
+      { timeout: 10000 }
+    );
     if (!gitCheck.success) {
       await input.recordEvent({
         type: 'patch_capture_skipped',
@@ -33,7 +36,9 @@ export async function captureGitPatch(
     }
 
     await sandbox.exec(`git -C ${quote(workspace)} add -N .`, { timeout: 10000 });
-    const status = await sandbox.exec(`git -C ${quote(workspace)} status --short`, { timeout: 10000 });
+    const status = await sandbox.exec(`git -C ${quote(workspace)} status --short`, {
+      timeout: 10000,
+    });
     const changed = status.stdout.trim().length > 0;
 
     if (!changed) {
@@ -51,8 +56,12 @@ export async function captureGitPatch(
       return { changed: false, patchBytes: 0, status: status.stdout, stat: '' };
     }
 
-    const stat = await sandbox.exec(`git -C ${quote(workspace)} diff HEAD --stat -- .`, { timeout: 30000 });
-    const diff = await sandbox.exec(`git -C ${quote(workspace)} diff HEAD --patch --binary -- .`, { timeout: 30000 });
+    const stat = await sandbox.exec(`git -C ${quote(workspace)} diff HEAD --stat -- .`, {
+      timeout: 30000,
+    });
+    const diff = await sandbox.exec(`git -C ${quote(workspace)} diff HEAD --patch --binary -- .`, {
+      timeout: 30000,
+    });
     const patchBytes = new TextEncoder().encode(diff.stdout).length;
 
     await input.recordEvent({

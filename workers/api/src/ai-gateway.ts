@@ -29,7 +29,8 @@ function encodeBase64Url(bytes: Uint8Array): string {
 }
 
 function decodeBase64Url(value: string): Uint8Array {
-  const padded = value.replace(/-/g, '+').replace(/_/g, '/') + '='.repeat((4 - value.length % 4) % 4);
+  const padded =
+    value.replace(/-/g, '+').replace(/_/g, '/') + '='.repeat((4 - (value.length % 4)) % 4);
   const binary = atob(padded);
   return Uint8Array.from(binary, (char) => char.charCodeAt(0));
 }
@@ -55,13 +56,16 @@ export async function encryptProviderKey(apiKey: string, secret?: string): Promi
   const ciphertext = await crypto.subtle.encrypt(
     { name: 'AES-GCM', iv },
     key,
-    new TextEncoder().encode(apiKey),
+    new TextEncoder().encode(apiKey)
   );
 
   return `${ENCRYPTED_KEY_PREFIX}${encodeBase64Url(iv)}:${encodeBase64Url(new Uint8Array(ciphertext))}`;
 }
 
-export async function decryptProviderKey(value: string | null, secret?: string): Promise<string | null> {
+export async function decryptProviderKey(
+  value: string | null,
+  secret?: string
+): Promise<string | null> {
   if (!value || !isEncryptedProviderKey(value)) return value;
   if (!secret) {
     throw new Error('AI_GATEWAY_KEY_SECRET is required to decrypt provider keys');
@@ -77,12 +81,15 @@ export async function decryptProviderKey(value: string | null, secret?: string):
   const plaintext = await crypto.subtle.decrypt(
     { name: 'AES-GCM', iv: toArrayBuffer(decodeBase64Url(ivPart)) },
     key,
-    toArrayBuffer(decodeBase64Url(cipherPart)),
+    toArrayBuffer(decodeBase64Url(cipherPart))
   );
   return new TextDecoder().decode(plaintext);
 }
 
-export function buildProviderEndpoint(baseUrl: string, endpoint: 'chat/completions' | 'embeddings'): string {
+export function buildProviderEndpoint(
+  baseUrl: string,
+  endpoint: 'chat/completions' | 'embeddings'
+): string {
   const base = baseUrl.trim().replace(/\/+$/, '');
   if (base.endsWith(`/${endpoint}`)) return base;
   if (base.endsWith('/v1')) return `${base}/${endpoint}`;

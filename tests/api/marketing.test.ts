@@ -44,7 +44,8 @@ function createMockD1() {
           }
           return { meta: { changes: 1 } };
         },
-        first: async () => rows.find(row => row.id === values[0] && row.owner_id === values[1]) ?? null,
+        first: async () =>
+          rows.find((row) => row.id === values[0] && row.owner_id === values[1]) ?? null,
         all: async () => ({ results: rows }),
       }),
     }),
@@ -53,21 +54,25 @@ function createMockD1() {
 
 describe('marketing posts API', () => {
   it('accepts reel-platform channels for AI video briefs', async () => {
-    const res = await request('/v1/marketing/posts', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        project_slug: 'linkchat',
-        channel: 'tiktok',
-        status: 'generated',
-        source_type: 'task',
-        title: 'AI video hook',
-        body: 'AI video brief with shot list and captions.',
-      }),
-    }, { DB: createMockD1() });
+    const res = await request(
+      '/v1/marketing/posts',
+      {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          project_slug: 'linkchat',
+          channel: 'tiktok',
+          status: 'generated',
+          source_type: 'task',
+          title: 'AI video hook',
+          body: 'AI video brief with shot list and captions.',
+        }),
+      },
+      { DB: createMockD1() }
+    );
 
     expect(res.status).toBe(201);
-    const payload = await res.json() as { data: { channel: string } };
+    const payload = (await res.json()) as { data: { channel: string } };
     expect(payload.data.channel).toBe('tiktok');
   });
 });

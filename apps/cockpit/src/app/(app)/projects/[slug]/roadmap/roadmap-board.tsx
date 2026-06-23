@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 import {
   DndContext,
   DragOverlay,
@@ -11,15 +11,15 @@ import {
   type DragStartEvent,
   type DragEndEvent,
   type DragOverEvent,
-} from "@dnd-kit/core";
-import { arrayMove } from "@dnd-kit/sortable";
-import { KanbanColumn } from "./kanban-column";
-import { KanbanCard } from "./kanban-card";
-import { CreateRoadmapItemDialog } from "./create-roadmap-item-dialog";
-import { apiFetchClient, getClientToken } from "@/lib/api-client";
-import type { RoadmapItemRecord, RoadmapColumn } from "@saas-maker/contracts";
+} from '@dnd-kit/core';
+import { arrayMove } from '@dnd-kit/sortable';
+import { KanbanColumn } from './kanban-column';
+import { KanbanCard } from './kanban-card';
+import { CreateRoadmapItemDialog } from './create-roadmap-item-dialog';
+import { apiFetchClient, getClientToken } from '@/lib/api-client';
+import type { RoadmapItemRecord, RoadmapColumn } from '@saas-maker/contracts';
 
-const COLUMNS: RoadmapColumn[] = ["backlog", "planned", "in_progress", "done"];
+const COLUMNS: RoadmapColumn[] = ['backlog', 'planned', 'in_progress', 'done'];
 
 interface Props {
   projectId: string;
@@ -31,9 +31,7 @@ export function RoadmapBoard({ projectId, initialItems }: Props) {
   const [activeItem, setActiveItem] = useState<RoadmapItemRecord | null>(null);
   const [addColumn, setAddColumn] = useState<RoadmapColumn | null>(null);
 
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
-  );
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
 
   function getColumnItems(col: RoadmapColumn) {
     return items.filter((i) => i.column === col).sort((a, b) => a.position - b.position);
@@ -64,9 +62,7 @@ export function RoadmapBoard({ projectId, initialItems }: Props) {
     if (!activeCol || !overCol || activeCol === overCol) return;
 
     setItems((prev) =>
-      prev.map((item) =>
-        item.id === activeId ? { ...item, column: overCol } : item
-      )
+      prev.map((item) => (item.id === activeId ? { ...item, column: overCol } : item))
     );
   }
 
@@ -102,14 +98,18 @@ export function RoadmapBoard({ projectId, initialItems }: Props) {
 
     // Persist reorder
     const finalColItems = getColumnItems(activeCol);
-    persistReorder(finalColItems.map((item, i) => ({ id: item.id, column: activeCol, position: i })));
+    persistReorder(
+      finalColItems.map((item, i) => ({ id: item.id, column: activeCol, position: i }))
+    );
   }
 
-  async function persistReorder(updates: { id: string; column: RoadmapColumn; position: number }[]) {
+  async function persistReorder(
+    updates: { id: string; column: RoadmapColumn; position: number }[]
+  ) {
     try {
       const token = await getClientToken();
       await apiFetchClient(`/v1/roadmap/dashboard/${projectId}/reorder`, token, {
-        method: "POST",
+        method: 'POST',
         body: JSON.stringify({ items: updates }),
       });
     } catch {
@@ -151,7 +151,9 @@ export function RoadmapBoard({ projectId, initialItems }: Props) {
           projectId={projectId}
           column={addColumn}
           open={!!addColumn}
-          onOpenChange={(open) => { if (!open) setAddColumn(null); }}
+          onOpenChange={(open) => {
+            if (!open) setAddColumn(null);
+          }}
           onCreated={handleItemCreated}
         />
       )}

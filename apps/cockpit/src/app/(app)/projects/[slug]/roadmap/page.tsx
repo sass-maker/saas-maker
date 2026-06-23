@@ -1,18 +1,18 @@
-import { PageHeader } from "@/components/page-header";
-import { CopyButton } from "@/components/copy-button";
-import { ExternalLink } from "lucide-react";
-import { apiFetch } from "@/lib/api";
-import { getAuthenticatedProject } from "../get-project";
-import { RoadmapBoard } from "./roadmap-board";
-import type { RoadmapItemRecord } from "@saas-maker/contracts";
+import { PageHeader } from '@/components/page-header';
+import { CopyButton } from '@/components/copy-button';
+import { ExternalLink } from 'lucide-react';
+import { apiFetch } from '@/lib/api';
+import { getAuthenticatedProject } from '../get-project';
+import { RoadmapBoard } from './roadmap-board';
+import type { RoadmapItemRecord } from '@saas-maker/contracts';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
 export default async function RoadmapPage({ params }: Props) {
   const { slug } = await params;
@@ -21,11 +21,7 @@ export default async function RoadmapPage({ params }: Props) {
   let items: RoadmapItemRecord[] = [];
 
   try {
-    const res = await apiFetch(
-      `/v1/roadmap/dashboard/${project.id}`,
-      {},
-      token
-    );
+    const res = await apiFetch(`/v1/roadmap/dashboard/${project.id}`, {}, token);
     items = res.data ?? [];
   } catch {
     // Fetch failed

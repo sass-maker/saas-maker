@@ -1,24 +1,24 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { CopyButton } from "@/components/copy-button";
-import { CheckCircle2, Code2, FolderPlus } from "lucide-react";
-import { apiFetch } from "@/lib/api";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { CopyButton } from '@/components/copy-button';
+import { CheckCircle2, Code2, FolderPlus } from 'lucide-react';
+import { apiFetch } from '@/lib/api';
 
 const STEPS = [
-  { id: 1, label: "Create project", icon: FolderPlus },
-  { id: 2, label: "Install widget", icon: Code2 },
-  { id: 3, label: "Done", icon: CheckCircle2 },
+  { id: 1, label: 'Create project', icon: FolderPlus },
+  { id: 2, label: 'Install widget', icon: Code2 },
+  { id: 3, label: 'Done', icon: CheckCircle2 },
 ];
 
 async function getToken(): Promise<string> {
-  const res = await fetch("/api/token");
-  if (!res.ok) throw new Error("Failed to get auth token");
+  const res = await fetch('/api/token');
+  if (!res.ok) throw new Error('Failed to get auth token');
   const data = await res.json();
   return data.token;
 }
@@ -26,11 +26,11 @@ async function getToken(): Promise<string> {
 export function OnboardingFlow() {
   const router = useRouter();
   const [step, setStep] = useState(1);
-  const [name, setName] = useState("");
-  const [url, setUrl] = useState("");
+  const [name, setName] = useState('');
+  const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [apiKey, setApiKey] = useState("YOUR_KEY");
+  const [apiKey, setApiKey] = useState('YOUR_KEY');
 
   async function handleCreateProject(e: React.FormEvent) {
     e.preventDefault();
@@ -40,15 +40,18 @@ export function OnboardingFlow() {
     try {
       const token = await getToken();
       const project = await apiFetch(
-        "/v1/projects",
-        { method: "POST", body: JSON.stringify({ name: name.trim(), url: url.trim() || undefined }) },
+        '/v1/projects',
+        {
+          method: 'POST',
+          body: JSON.stringify({ name: name.trim(), url: url.trim() || undefined }),
+        },
         token
       );
       if (project?.apiKey) setApiKey(project.apiKey);
       else if (project?.key) setApiKey(project.key);
       setStep(2);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to create project");
+      setError(err instanceof Error ? err.message : 'Failed to create project');
     } finally {
       setLoading(false);
     }
@@ -72,17 +75,23 @@ export function OnboardingFlow() {
             <div key={s.id} className="flex items-center gap-2">
               <div
                 className={[
-                  "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-colors",
-                  done ? "bg-green-500/20 text-green-400" :
-                  active ? "bg-primary/20 text-primary" :
-                  "bg-muted text-muted-foreground",
-                ].join(" ")}
+                  'flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-colors',
+                  done
+                    ? 'bg-green-500/20 text-green-400'
+                    : active
+                      ? 'bg-primary/20 text-primary'
+                      : 'bg-muted text-muted-foreground',
+                ].join(' ')}
               >
                 <Icon className="h-3.5 w-3.5" />
                 {s.label}
               </div>
               {i < STEPS.length - 1 && (
-                <div className={["h-px w-6 shrink-0", done ? "bg-green-500/50" : "bg-border"].join(" ")} />
+                <div
+                  className={['h-px w-6 shrink-0', done ? 'bg-green-500/50' : 'bg-border'].join(
+                    ' '
+                  )}
+                />
               )}
             </div>
           );
@@ -123,7 +132,7 @@ export function OnboardingFlow() {
               </div>
               {error && <p className="text-sm text-destructive">{error}</p>}
               <Button type="submit" className="w-full" disabled={loading || !name.trim()}>
-                {loading ? "Creating..." : "Create Project"}
+                {loading ? 'Creating...' : 'Create Project'}
               </Button>
             </form>
           </CardContent>
@@ -136,9 +145,9 @@ export function OnboardingFlow() {
           <CardHeader>
             <CardTitle>Install the widget</CardTitle>
             <CardDescription>
-              Paste this snippet before the closing{" "}
-              <code className="text-xs bg-muted px-1 py-0.5 rounded">&lt;/body&gt;</code>{" "}
-              tag of your site.
+              Paste this snippet before the closing{' '}
+              <code className="text-xs bg-muted px-1 py-0.5 rounded">&lt;/body&gt;</code> tag of
+              your site.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -149,7 +158,8 @@ export function OnboardingFlow() {
               <CopyButton value={widgetSnippet} />
             </div>
             <p className="text-xs text-muted-foreground">
-              Replace <code className="bg-muted px-1 rounded">YOUR_KEY</code> with your project API key if it wasn&apos;t auto-filled.
+              Replace <code className="bg-muted px-1 rounded">YOUR_KEY</code> with your project API
+              key if it wasn&apos;t auto-filled.
             </p>
             <Button className="w-full" onClick={() => setStep(3)}>
               Done — I&apos;ve added it
@@ -167,7 +177,8 @@ export function OnboardingFlow() {
             </div>
             <CardTitle className="text-2xl">You&apos;re all set!</CardTitle>
             <CardDescription className="max-w-xs">
-              Your project is live. Head to the dashboard to see feedback, changelogs, testimonials, and more as they roll in.
+              Your project is live. Head to the dashboard to see feedback, changelogs, testimonials,
+              and more as they roll in.
             </CardDescription>
           </CardHeader>
           <CardContent className="flex justify-center">

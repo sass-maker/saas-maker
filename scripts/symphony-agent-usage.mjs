@@ -7,7 +7,8 @@ const STATE_DIR = path.join(process.cwd(), '.symphony');
 const CACHE_FILE = path.join(STATE_DIR, 'agent-usage.json');
 const PROVIDER_TELEMETRY_FILE = path.join(STATE_DIR, 'provider-telemetry.json');
 const DEFAULT_TTL_MS = 45 * 60 * 1000;
-const PROBE_PROMPT = 'Symphony routing usage probe. Do not edit files or run commands. Return only JSON: {"ok":true}.';
+const PROBE_PROMPT =
+  'Symphony routing usage probe. Do not edit files or run commands. Return only JSON: {"ok":true}.';
 
 function readJson(filePath) {
   try {
@@ -40,12 +41,16 @@ function parseArgs(argv) {
     if (arg === '--refresh') args.refresh = true;
     else if (arg === '--json') args.json = true;
     else if (arg === '--ttl-ms') args.ttlMs = Number(argv[++i] || DEFAULT_TTL_MS);
-    else if (arg === '--claude-budget-usd') args.claudeBudgetUsd = argv[++i] || args.claudeBudgetUsd;
+    else if (arg === '--claude-budget-usd')
+      args.claudeBudgetUsd = argv[++i] || args.claudeBudgetUsd;
     else if (arg === '--claude-model') args.claudeModel = argv[++i] || args.claudeModel;
-    else if (arg === '--claude-work-budget-usd') args.claudeWorkBudgetUsd = argv[++i] || args.claudeWorkBudgetUsd;
-    else if (arg === '--claude-work-model') args.claudeWorkModel = argv[++i] || args.claudeWorkModel;
+    else if (arg === '--claude-work-budget-usd')
+      args.claudeWorkBudgetUsd = argv[++i] || args.claudeWorkBudgetUsd;
+    else if (arg === '--claude-work-model')
+      args.claudeWorkModel = argv[++i] || args.claudeWorkModel;
     else if (arg === '--gemini-model') args.geminiModel = argv[++i] || args.geminiModel;
-    else if (arg === '--telemetry-file') args.telemetryFile = path.resolve(argv[++i] || args.telemetryFile);
+    else if (arg === '--telemetry-file')
+      args.telemetryFile = path.resolve(argv[++i] || args.telemetryFile);
     else if (arg === '--help' || arg === '-h') {
       printHelp();
       process.exit(0);
@@ -101,7 +106,8 @@ function commandExists(command) {
 
 function runProbe(agent, command, args) {
   const env = { ...process.env, NO_COLOR: '1', TERM: process.env.TERM || 'dumb' };
-  if (agent === 'claude-work') env.CLAUDE_CONFIG_DIR = path.join(process.env.HOME || '', '.claude-work');
+  if (agent === 'claude-work')
+    env.CLAUDE_CONFIG_DIR = path.join(process.env.HOME || '', '.claude-work');
   const startedAt = new Date().toISOString();
   const result = spawnSync(command, args, {
     cwd: process.cwd(),
@@ -120,7 +126,9 @@ function runProbe(agent, command, args) {
     signal: result.signal,
     started_at: startedAt,
     completed_at: completedAt,
-    error: result.error?.message || (result.status === 0 ? null : String(result.stderr || '').trim() || null),
+    error:
+      result.error?.message ||
+      (result.status === 0 ? null : String(result.stderr || '').trim() || null),
     parsed,
   };
 }
@@ -158,12 +166,20 @@ function summarizeGemini(probe) {
 
 function sampleClaude(args, agent = 'claude') {
   if (!commandExists('claude')) {
-    return { agent, available: false, ok: false, status: 'missing', error: 'claude command not found', sampled_at: new Date().toISOString() };
+    return {
+      agent,
+      available: false,
+      ok: false,
+      status: 'missing',
+      error: 'claude command not found',
+      sampled_at: new Date().toISOString(),
+    };
   }
 
-  const env = agent === 'claude-work'
-    ? { ...process.env, CLAUDE_CONFIG_DIR: path.join(process.env.HOME || '', '.claude-work') }
-    : process.env;
+  const env =
+    agent === 'claude-work'
+      ? { ...process.env, CLAUDE_CONFIG_DIR: path.join(process.env.HOME || '', '.claude-work') }
+      : process.env;
   const auth = spawnSync('claude', ['auth', 'status', '--json'], {
     cwd: process.cwd(),
     encoding: 'utf8',
@@ -172,7 +188,15 @@ function sampleClaude(args, agent = 'claude') {
   });
   const authJson = firstJsonObject(auth.stdout);
   if (!authJson?.loggedIn) {
-    return { agent, available: false, ok: false, status: 'unauthenticated', auth: authJson, error: auth.stderr?.trim() || null, sampled_at: new Date().toISOString() };
+    return {
+      agent,
+      available: false,
+      ok: false,
+      status: 'unauthenticated',
+      auth: authJson,
+      error: auth.stderr?.trim() || null,
+      sampled_at: new Date().toISOString(),
+    };
   }
 
   const requestedModel = agent === 'claude-work' ? args.claudeWorkModel : args.claudeModel;
@@ -195,7 +219,14 @@ function sampleClaude(args, agent = 'claude') {
 
 function sampleGemini(args) {
   if (!commandExists('gemini')) {
-    return { agent: 'gemini', available: false, ok: false, status: 'missing', error: 'gemini command not found', sampled_at: new Date().toISOString() };
+    return {
+      agent: 'gemini',
+      available: false,
+      ok: false,
+      status: 'missing',
+      error: 'gemini command not found',
+      sampled_at: new Date().toISOString(),
+    };
   }
 
   const geminiArgs = [
@@ -264,7 +295,10 @@ function printSummary(cache) {
     const details = [];
     if (agent.total_cost_usd != null) details.push(`cost $${agent.total_cost_usd.toFixed(4)}`);
     if (agent.stats?.models) {
-      const totalTokens = Object.values(agent.stats.models).reduce((sum, model) => sum + (model.tokens?.total || 0), 0);
+      const totalTokens = Object.values(agent.stats.models).reduce(
+        (sum, model) => sum + (model.tokens?.total || 0),
+        0
+      );
       details.push(`${totalTokens} tokens`);
     }
     if (agent.provider_telemetry?.worst_used_pct != null) {
@@ -274,7 +308,9 @@ function printSummary(cache) {
       details.push(`${Math.round(agent.provider_telemetry.headroom_pct)}% headroom`);
     }
     if (agent.error) details.push(`error: ${agent.error}`);
-    console.log(`- ${agent.agent}: ${agent.ok ? 'ok' : agent.available ? 'available with warning' : 'unavailable'}${details.length ? ` (${details.join(', ')})` : ''}`);
+    console.log(
+      `- ${agent.agent}: ${agent.ok ? 'ok' : agent.available ? 'available with warning' : 'unavailable'}${details.length ? ` (${details.join(', ')})` : ''}`
+    );
   }
   console.log(`Cache: ${CACHE_FILE}`);
 }

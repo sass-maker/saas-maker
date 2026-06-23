@@ -4,7 +4,11 @@ import { headers } from 'next/headers';
 import { apiFetchAuthed } from '@/lib/api-client';
 import { isLocalAuthBypassEnabled } from '@/lib/local-auth';
 import { TaskDetailClient } from '@/components/tasks/TaskDetailClient';
-import { getCockpitTask, listCockpitRuns, listCockpitTaskComments } from '@/lib/cockpit-tasks-store';
+import {
+  getCockpitTask,
+  listCockpitRuns,
+  listCockpitTaskComments,
+} from '@/lib/cockpit-tasks-store';
 import type { SymphonyRunRow, TaskCommentRow, TaskRow } from '@/components/tasks/TaskBoard';
 
 export const dynamic = 'force-dynamic';
@@ -42,19 +46,25 @@ export default async function TaskDetailPage({ params }: Props) {
     }
 
     try {
-      const res = await apiFetchAuthed<{ data: SymphonyRunRow[] }>(`/v1/symphony/runs?task_id=${encodeURIComponent(id)}&limit=20`);
+      const res = await apiFetchAuthed<{ data: SymphonyRunRow[] }>(
+        `/v1/symphony/runs?task_id=${encodeURIComponent(id)}&limit=20`
+      );
       runs = res.data ?? [];
     } catch {
       runs = [];
     }
   } else {
-    task = await getCockpitTask(id) as TaskRow;
+    task = (await getCockpitTask(id)) as TaskRow;
     if (!task) notFound();
-    [comments, runs] = await Promise.all([
-      listCockpitTaskComments(id),
-      listCockpitRuns(20, id),
-    ]);
+    [comments, runs] = await Promise.all([listCockpitTaskComments(id), listCockpitRuns(20, id)]);
   }
 
-  return <TaskDetailClient initialTask={task} initialComments={comments} initialRuns={runs} isLocal={isLocal} />;
+  return (
+    <TaskDetailClient
+      initialTask={task}
+      initialComments={comments}
+      initialRuns={runs}
+      isLocal={isLocal}
+    />
+  );
 }

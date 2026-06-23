@@ -18,9 +18,11 @@ testimonials.post('/', requireApiKey, async (c) => {
 
   if (!body.author_name?.trim()) return c.json({ error: 'Name is required' }, 400);
   if (!body.author_email?.trim()) return c.json({ error: 'Email is required' }, 400);
-  if (!EMAIL_RE.test(body.author_email.trim())) return c.json({ error: 'Invalid email format' }, 400);
+  if (!EMAIL_RE.test(body.author_email.trim()))
+    return c.json({ error: 'Invalid email format' }, 400);
   if (!body.content?.trim()) return c.json({ error: 'Content is required' }, 400);
-  if (!body.rating || body.rating < 1 || body.rating > 5) return c.json({ error: 'Rating must be 1-5' }, 400);
+  if (!body.rating || body.rating < 1 || body.rating > 5)
+    return c.json({ error: 'Rating must be 1-5' }, 400);
 
   const db = getDb(c.env.DB);
   const entry = await db.createTestimonial({
@@ -36,7 +38,11 @@ testimonials.post('/', requireApiKey, async (c) => {
     tweet_url: body.tweet_url?.trim() || null,
   });
 
-  capture({ distinctId: entry.author_email, event: 'testimonial_submitted', properties: { testimonial_id: entry.id, project_id: projectId, rating: entry.rating } });
+  capture({
+    distinctId: entry.author_email,
+    event: 'testimonial_submitted',
+    properties: { testimonial_id: entry.id, project_id: projectId, rating: entry.rating },
+  });
   return c.json({ id: entry.id, status: entry.status, created_at: entry.created_at }, 201);
 });
 
@@ -47,9 +53,11 @@ testimonials.post('/by-project/:slug', async (c) => {
 
   if (!body.author_name?.trim()) return c.json({ error: 'Name is required' }, 400);
   if (!body.author_email?.trim()) return c.json({ error: 'Email is required' }, 400);
-  if (!EMAIL_RE.test(body.author_email.trim())) return c.json({ error: 'Invalid email format' }, 400);
+  if (!EMAIL_RE.test(body.author_email.trim()))
+    return c.json({ error: 'Invalid email format' }, 400);
   if (!body.content?.trim()) return c.json({ error: 'Content is required' }, 400);
-  if (!body.rating || body.rating < 1 || body.rating > 5) return c.json({ error: 'Rating must be 1-5' }, 400);
+  if (!body.rating || body.rating < 1 || body.rating > 5)
+    return c.json({ error: 'Rating must be 1-5' }, 400);
 
   const db = getDb(c.env.DB);
   const project = await db.getProjectBySlug(slug);
@@ -68,7 +76,16 @@ testimonials.post('/by-project/:slug', async (c) => {
     tweet_url: body.tweet_url?.trim() || null,
   });
 
-  capture({ distinctId: entry.author_email, event: 'testimonial_submitted', properties: { testimonial_id: entry.id, project_id: project.id, rating: entry.rating, via: 'public_slug' } });
+  capture({
+    distinctId: entry.author_email,
+    event: 'testimonial_submitted',
+    properties: {
+      testimonial_id: entry.id,
+      project_id: project.id,
+      rating: entry.rating,
+      via: 'public_slug',
+    },
+  });
   return c.json({ id: entry.id, status: entry.status, created_at: entry.created_at }, 201);
 });
 
@@ -133,7 +150,8 @@ testimonials.post('/dashboard/:projectId', requireSession, async (c) => {
   if (!body.author_name?.trim()) return c.json({ error: 'Name is required' }, 400);
   if (!body.author_email?.trim()) return c.json({ error: 'Email is required' }, 400);
   if (!body.content?.trim()) return c.json({ error: 'Content is required' }, 400);
-  if (!body.rating || body.rating < 1 || body.rating > 5) return c.json({ error: 'Rating must be 1-5' }, 400);
+  if (!body.rating || body.rating < 1 || body.rating > 5)
+    return c.json({ error: 'Rating must be 1-5' }, 400);
 
   const entry = await db.createTestimonial({
     id: crypto.randomUUID(),

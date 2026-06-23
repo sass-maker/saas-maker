@@ -508,9 +508,9 @@ describe('droid runs', () => {
       data: Array<{ type: string; metadata: string }>;
     };
     expect(eventsPayload.data.map((event) => event.type)).toContain('loop_retry_scheduled');
-    expect(eventsPayload.data.filter((event) => event.type === 'loop_attempt_started')).toHaveLength(
-      2
-    );
+    expect(
+      eventsPayload.data.filter((event) => event.type === 'loop_attempt_started')
+    ).toHaveLength(2);
     expect(
       JSON.parse(eventsPayload.data.find((event) => event.type === 'loop_completed')!.metadata)
     ).toMatchObject({ attempt: 2, status: 'completed', exhausted: false });
@@ -638,9 +638,9 @@ describe('droid runs', () => {
     const eventsPayload = (await eventsResponse.json()) as {
       data: Array<{ type: string; metadata: string }>;
     };
-    expect(eventsPayload.data.filter((event) => event.type === 'loop_attempt_finished')).toHaveLength(
-      2
-    );
+    expect(
+      eventsPayload.data.filter((event) => event.type === 'loop_attempt_finished')
+    ).toHaveLength(2);
     expect(
       JSON.parse(eventsPayload.data.find((event) => event.type === 'loop_stopped')!.metadata)
     ).toMatchObject({ attempt: 2, exhausted: true });
@@ -1382,7 +1382,9 @@ describe('droid runs', () => {
     expect(response.status).toBe(201);
     const payload = (await response.json()) as { data: { status: string; summary: string } };
     expect(payload.data.status).toBe('failed');
-    expect(payload.data.summary).toBe('Command failed with exit code 1: Error: package build failed');
+    expect(payload.data.summary).toBe(
+      'Command failed with exit code 1: Error: package build failed'
+    );
   });
 
   it('uses live run room activity to guard reconcile', async () => {
@@ -1723,12 +1725,17 @@ class FakeStatement {
           .filter((run) => isStaleFakeRun(this.db, run)).length,
       };
     }
-    if (this.sql.includes('SELECT COALESCE(SUM(duration_ms), 0) AS total_duration_ms FROM droid_runs')) {
+    if (
+      this.sql.includes('SELECT COALESCE(SUM(duration_ms), 0) AS total_duration_ms FROM droid_runs')
+    ) {
       const projectSlug = this.params.length > 0 ? this.params[0] : undefined;
       return {
         total_duration_ms: Array.from(this.db.runs.values())
           .filter((run) => projectSlug === undefined || run.project_slug === projectSlug)
-          .reduce((sum, run) => sum + (typeof run.duration_ms === 'number' ? run.duration_ms : 0), 0),
+          .reduce(
+            (sum, run) => sum + (typeof run.duration_ms === 'number' ? run.duration_ms : 0),
+            0
+          ),
       };
     }
     if (this.sql.includes('FROM droid_run_events') && this.sql.includes("type = 'run_request'")) {

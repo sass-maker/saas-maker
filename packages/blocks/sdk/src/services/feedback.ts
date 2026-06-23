@@ -76,7 +76,7 @@ export class FeedbackService {
     const qs = params.toString();
     return this.http.request<FeedbackListResponse>(
       'GET',
-      `/v1/feedback/by-project/${encodeURIComponent(slug)}${qs ? `?${qs}` : ''}`,
+      `/v1/feedback/by-project/${encodeURIComponent(slug)}${qs ? `?${qs}` : ''}`
     );
   }
 }

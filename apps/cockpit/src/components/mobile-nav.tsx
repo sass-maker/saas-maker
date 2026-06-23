@@ -1,15 +1,10 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Menu } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
-import { SidebarNav } from "@/components/sidebar-nav";
+import { useState } from 'react';
+import { Menu } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { SidebarNav } from '@/components/sidebar-nav';
 
 export function MobileNav() {
   const [open, setOpen] = useState(false);

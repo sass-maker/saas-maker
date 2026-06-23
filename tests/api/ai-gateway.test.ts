@@ -165,7 +165,7 @@ describe('AI Gateway config API', () => {
           ai_api_key: 'sk-new-provider-key',
         }),
       },
-      { AI_GATEWAY_KEY_SECRET: 'test-encryption-secret' },
+      { AI_GATEWAY_KEY_SECRET: 'test-encryption-secret' }
     );
 
     expect(res.status).toBe(200);
@@ -187,8 +187,8 @@ describe('AI Gateway proxy API', () => {
           choices: [{ message: { role: 'assistant', content: 'Done' } }],
           usage: { prompt_tokens: 4, completion_tokens: 7 },
         }),
-        { status: 200, headers: { 'Content-Type': 'application/json' } },
-      ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } }
+      )
     );
     vi.stubGlobal('fetch', fetchMock);
 
@@ -206,21 +206,23 @@ describe('AI Gateway proxy API', () => {
         headers: expect.objectContaining({
           Authorization: 'Bearer sk-secret-provider-key',
         }),
-      }),
+      })
     );
     expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toMatchObject({
       model: 'gpt-4o-mini',
       messages: [{ role: 'user', content: 'Hi' }],
     });
-    expect(mockDb.logAIRequest).toHaveBeenCalledWith(expect.objectContaining({
-      projectId: 'proj-1',
-      endpoint: 'chat/completions',
-      model: 'gpt-4o-mini',
-      status: 'success',
-      inputTokens: 4,
-      outputTokens: 7,
-      errorMessage: null,
-    }));
+    expect(mockDb.logAIRequest).toHaveBeenCalledWith(
+      expect.objectContaining({
+        projectId: 'proj-1',
+        endpoint: 'chat/completions',
+        model: 'gpt-4o-mini',
+        status: 'success',
+        inputTokens: 4,
+        outputTokens: 7,
+        errorMessage: null,
+      })
+    );
 
     vi.unstubAllGlobals();
   });
@@ -232,8 +234,8 @@ describe('AI Gateway proxy API', () => {
         new Response(JSON.stringify({ error: 'bad upstream key' }), {
           status: 401,
           headers: { 'Content-Type': 'application/json' },
-        }),
-      ),
+        })
+      )
     );
 
     const res = await request('/v1/ai/embeddings', {
@@ -243,11 +245,13 @@ describe('AI Gateway proxy API', () => {
     });
 
     expect(res.status).toBe(401);
-    expect(mockDb.logAIRequest).toHaveBeenCalledWith(expect.objectContaining({
-      endpoint: 'embeddings',
-      status: 'error',
-      errorMessage: '{"error":"bad upstream key"}',
-    }));
+    expect(mockDb.logAIRequest).toHaveBeenCalledWith(
+      expect.objectContaining({
+        endpoint: 'embeddings',
+        status: 'error',
+        errorMessage: '{"error":"bad upstream key"}',
+      })
+    );
 
     vi.unstubAllGlobals();
   });
@@ -267,7 +271,7 @@ describe('AI Gateway proxy API', () => {
           ai_api_key: 'sk-encrypted-provider-key',
         }),
       },
-      { AI_GATEWAY_KEY_SECRET: 'proxy-secret' },
+      { AI_GATEWAY_KEY_SECRET: 'proxy-secret' }
     );
     expect(updateRes.status).toBe(200);
     const storedKey = mockDb.updateProjectAIConfig.mock.calls.at(-1)?.[1].ai_api_key;
@@ -280,7 +284,7 @@ describe('AI Gateway proxy API', () => {
       new Response(JSON.stringify({ data: [], usage: { prompt_tokens: 1 } }), {
         status: 200,
         headers: { 'Content-Type': 'application/json' },
-      }),
+      })
     );
     vi.stubGlobal('fetch', fetchMock);
 
@@ -291,7 +295,7 @@ describe('AI Gateway proxy API', () => {
         headers: { 'Content-Type': 'application/json', 'X-Project-Key': 'pk_test' },
         body: JSON.stringify({ input: 'docs' }),
       },
-      { AI_GATEWAY_KEY_SECRET: 'proxy-secret' },
+      { AI_GATEWAY_KEY_SECRET: 'proxy-secret' }
     );
 
     expect(res.status).toBe(200);
@@ -301,7 +305,7 @@ describe('AI Gateway proxy API', () => {
         headers: expect.objectContaining({
           Authorization: 'Bearer sk-encrypted-provider-key',
         }),
-      }),
+      })
     );
 
     vi.unstubAllGlobals();
@@ -318,7 +322,7 @@ describe('AI Gateway proxy API', () => {
         headers: { 'Content-Type': 'application/json', 'X-Project-Key': 'pk_test' },
         body: JSON.stringify({ messages: [{ role: 'user', content: 'Hi' }] }),
       },
-      { RATE_LIMITER: { limit: vi.fn().mockResolvedValue({ success: false }) } },
+      { RATE_LIMITER: { limit: vi.fn().mockResolvedValue({ success: false }) } }
     );
 
     expect(res.status).toBe(429);

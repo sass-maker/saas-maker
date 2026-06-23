@@ -1,4 +1,5 @@
-const BOT_PATTERNS = /bot|crawler|spider|headless|phantom|puppeteer|playwright|slurp|googlebot|bingbot|yandexbot|baiduspider|duckduckbot|gptbot|claudebot|chatgpt-user|anthropic|perplexity|cohere-ai|ahrefs|semrush|screaming.frog|uptimerobot|pingdom|twitterbot|facebookexternalhit|linkedinbot|slackbot|whatsapp|telegrambot|applebot|bytespider/i;
+const BOT_PATTERNS =
+  /bot|crawler|spider|headless|phantom|puppeteer|playwright|slurp|googlebot|bingbot|yandexbot|baiduspider|duckduckbot|gptbot|claudebot|chatgpt-user|anthropic|perplexity|cohere-ai|ahrefs|semrush|screaming.frog|uptimerobot|pingdom|twitterbot|facebookexternalhit|linkedinbot|slackbot|whatsapp|telegrambot|applebot|bytespider/i;
 
 export function isBot(ua: string): boolean {
   if (!ua) return false;
@@ -42,12 +43,18 @@ export function extractPathname(url: string | null | undefined): string | null {
   }
 }
 
-export function computeSessionId(date: string, country: string | null, device: string | null, browser: string | null, ipHash: string | null = null): string {
+export function computeSessionId(
+  date: string,
+  country: string | null,
+  device: string | null,
+  browser: string | null,
+  ipHash: string | null = null
+): string {
   const raw = `${date}|${country || ''}|${device || ''}|${browser || ''}|${ipHash || ''}`;
   let hash = 0;
   for (let i = 0; i < raw.length; i++) {
     const chr = raw.charCodeAt(i);
-    hash = ((hash << 5) - hash) + chr;
+    hash = (hash << 5) - hash + chr;
     hash |= 0;
   }
   return hash.toString(36);

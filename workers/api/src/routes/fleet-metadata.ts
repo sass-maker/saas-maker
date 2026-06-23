@@ -15,7 +15,7 @@ fleetMetadata.get('/', async (c) => {
 
 fleetMetadata.post('/', async (c) => {
   const userId = c.get('userId')!;
-  const body = await c.req.json() as {
+  const body = (await c.req.json()) as {
     projects: any[];
     replace?: boolean;
     retired_slugs?: string[];
@@ -39,12 +39,11 @@ fleetMetadata.post('/', async (c) => {
     .filter((p) => p.slug.length > 0);
 
   const slugs = [...new Set(projects.map((p) => p.slug))];
-  if (projects.length !== body.projects.length) return c.json({ error: 'project slug required' }, 400);
+  if (projects.length !== body.projects.length)
+    return c.json({ error: 'project slug required' }, 400);
 
   const db = getDb(c.env.DB);
-  await Promise.all(
-    projects.map((p) => db.upsertFleetMetadata(userId, p))
-  );
+  await Promise.all(projects.map((p) => db.upsertFleetMetadata(userId, p)));
 
   let pruned = 0;
   if (body.replace) {

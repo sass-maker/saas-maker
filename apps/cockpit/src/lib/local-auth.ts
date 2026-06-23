@@ -4,9 +4,9 @@ export {
   isLocalAuthBypassEnabled,
   isLocalHost,
   isLocalProtectionEnabled,
-} from "./local-auth-edge";
+} from './local-auth-edge';
 
-export const LOCAL_DEV_SESSION_TOKEN = "local-dev-session";
+export const LOCAL_DEV_SESSION_TOKEN = 'local-dev-session';
 
 type LocalCliConfig = {
   apiKey?: string;
@@ -15,7 +15,7 @@ type LocalCliConfig = {
 };
 
 type BuiltinFs = {
-  readFileSync(path: string, encoding: "utf8"): string;
+  readFileSync(path: string, encoding: 'utf8'): string;
 };
 
 function readConfigToken(filePath: string): string | undefined {
@@ -28,11 +28,13 @@ function readConfigToken(filePath: string): string | undefined {
         getBuiltinModule?: (name: string) => unknown;
       }
     ).getBuiltinModule;
-    const fs = (getBuiltinModule?.("fs") ??
-      (runtimeProcess.versions?.node ? eval("require")("node:fs") : undefined)) as BuiltinFs | undefined;
+    const fs = (getBuiltinModule?.('fs') ??
+      (runtimeProcess.versions?.node ? eval('require')('node:fs') : undefined)) as
+      | BuiltinFs
+      | undefined;
     if (!fs) return undefined;
 
-    const config = JSON.parse(fs.readFileSync(filePath, "utf8")) as LocalCliConfig;
+    const config = JSON.parse(fs.readFileSync(filePath, 'utf8')) as LocalCliConfig;
     return config.apiKey || config.sessionToken || config.token;
   } catch {
     return undefined;
@@ -56,9 +58,9 @@ export function getLocalSessionToken(): string {
 export function getLocalDevSession() {
   return {
     user: {
-      id: "local-dev",
-      name: "Local Dev",
-      email: "local@saasmaker.dev",
+      id: 'local-dev',
+      name: 'Local Dev',
+      email: 'local@saasmaker.dev',
       image: null,
     },
     session: {

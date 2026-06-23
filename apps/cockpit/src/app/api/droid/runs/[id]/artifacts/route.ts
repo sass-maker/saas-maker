@@ -1,6 +1,6 @@
-import { droidApiUrl, droidJsonResponse, requireDroidAccess } from "@/app/api/droid/_lib";
+import { droidApiUrl, droidJsonResponse, requireDroidAccess } from '@/app/api/droid/_lib';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const denied = await requireDroidAccess();

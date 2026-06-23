@@ -1,5 +1,5 @@
 import { createInterface } from 'node:readline/promises';
-import { existsSync, mkdirSync, writeFileSync, readFileSync, readdirSync, copyFileSync, statSync } from 'node:fs';
+import { existsSync, mkdirSync, writeFileSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import ora from 'ora';
@@ -24,7 +24,7 @@ interface ForgeOptions {
 function copyRecursive(src: string, dest: string, vars: Record<string, string>) {
   if (statSync(src).isDirectory()) {
     if (!existsSync(dest)) mkdirSync(dest, { recursive: true });
-    readdirSync(src).forEach(child => copyRecursive(join(src, child), join(dest, child), vars));
+    readdirSync(src).forEach((child) => copyRecursive(join(src, child), join(dest, child), vars));
   } else {
     let content = readFileSync(src, 'utf-8');
     Object.entries(vars).forEach(([key, val]) => {
@@ -43,7 +43,7 @@ export async function forgeCommand(options: ForgeOptions = {}): Promise<void> {
       log.error('Not logged in. Please run `fnd login` first.');
       return;
     }
-  } catch (e) {
+  } catch (_e) {
     log.error('Authentication check failed. Please ensure you are logged in.');
     return;
   }
@@ -52,14 +52,15 @@ export async function forgeCommand(options: ForgeOptions = {}): Promise<void> {
 
   try {
     log.info('Preparing to forge project...');
-    const inputName = options.name ?? await rl.question('Project name: ');
+    const inputName = options.name ?? (await rl.question('Project name: '));
     const name = inputName.trim();
     if (!name) {
       log.error('Project name cannot be empty.');
       return;
     }
 
-    const typeInput = options.type ?? (await rl.question('Project type (next | vite | node) [node]: ')).trim();
+    const typeInput =
+      options.type ?? (await rl.question('Project type (next | vite | node) [node]: ')).trim();
     const type = (typeInput || 'node') as 'next' | 'vite' | 'node';
 
     // 1. Create in Cockpit
@@ -87,20 +88,27 @@ export async function forgeCommand(options: ForgeOptions = {}): Promise<void> {
     spinner.start(`Forging ${type} project at ./${project.slug}...`);
     log.debug(`Template dir: ${templateDir}`);
     log.debug(`Target dir: ${targetDir}`);
-    
+
     mkdirSync(targetDir, { recursive: true });
-    
+
     // Copy template files
     log.debug('Copying files...');
     copyRecursive(templateDir, targetDir, { name: project.slug });
-    
+
     // Create foundry.json
     log.debug('Writing foundry.json...');
-    writeFileSync(join(targetDir, 'foundry.json'), JSON.stringify({
-      slug: project.slug,
-      projectId: project.id,
-      projectKey: project.api_key
-    }, null, 2));
+    writeFileSync(
+      join(targetDir, 'foundry.json'),
+      JSON.stringify(
+        {
+          slug: project.slug,
+          projectId: project.id,
+          projectKey: project.api_key,
+        },
+        null,
+        2
+      )
+    );
 
     log.debug('Scaffolding renovate...');
     scaffoldRenovate(targetDir);
@@ -121,7 +129,7 @@ export async function forgeCommand(options: ForgeOptions = {}): Promise<void> {
         writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
         log.success('✓ Registered in Foundry Manifest');
       }
-    } catch (e) {
+    } catch (_e) {
       log.warn('Failed to update manifest, please add manually.');
     }
 

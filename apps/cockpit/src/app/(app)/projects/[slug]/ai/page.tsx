@@ -1,14 +1,10 @@
-import { PageHeader } from "@/components/page-header";
-import { apiFetch } from "@/lib/api";
-import type {
-  AIProviderConfig,
-  AIRequestsResponse,
-  AIUsageStats,
-} from "@saas-maker/contracts";
-import { getAuthenticatedProject } from "../get-project";
-import { AIGatewayPanel } from "./ai-gateway-panel";
+import { PageHeader } from '@/components/page-header';
+import { apiFetch } from '@/lib/api';
+import type { AIProviderConfig, AIRequestsResponse, AIUsageStats } from '@saas-maker/contracts';
+import { getAuthenticatedProject } from '../get-project';
+import { AIGatewayPanel } from './ai-gateway-panel';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -38,7 +34,7 @@ const emptyRequests: AIRequestsResponse = {
 };
 
 function settledValue<T>(result: PromiseSettledResult<T>, fallback: T): T {
-  return result.status === "fulfilled" ? result.value : fallback;
+  return result.status === 'fulfilled' ? result.value : fallback;
 }
 
 export default async function AIGatewayPage({ params }: Props) {
@@ -60,7 +56,7 @@ export default async function AIGatewayPage({ params }: Props) {
       <AIGatewayPanel
         projectId={project.id}
         projectKey={project.api_key}
-        apiBaseUrl={process.env.NEXT_PUBLIC_API_URL || "https://api.sassmaker.com"}
+        apiBaseUrl={process.env.NEXT_PUBLIC_API_URL || 'https://api.sassmaker.com'}
         initialConfig={settledValue(config, emptyConfig)}
         initialUsage={settledValue(usage, emptyUsage)}
         initialRequests={settledValue(requests, emptyRequests)}

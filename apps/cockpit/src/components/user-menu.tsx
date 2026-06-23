@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import { User } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import Image from 'next/image';
+import { User } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { SignOutButton } from "@/components/sign-out-button";
+} from '@/components/ui/dropdown-menu';
+import { SignOutButton } from '@/components/sign-out-button';
 
 type UserMenuProps = {
   user: {
@@ -27,7 +27,7 @@ export function UserMenu({ user }: UserMenuProps) {
           {user?.image ? (
             <Image
               src={user.image}
-              alt={user.name ?? "User"}
+              alt={user.name ?? 'User'}
               width={24}
               height={24}
               className="h-6 w-6 rounded-full"
@@ -35,9 +35,7 @@ export function UserMenu({ user }: UserMenuProps) {
           ) : (
             <User className="h-4 w-4" />
           )}
-          <span className="truncate text-sm">
-            {user?.name ?? "Account"}
-          </span>
+          <span className="truncate text-sm">{user?.name ?? 'Account'}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-56">

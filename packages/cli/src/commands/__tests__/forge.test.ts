@@ -7,7 +7,7 @@ const mockRequestApi = vi.hoisted(() =>
   vi.fn().mockResolvedValue({
     ok: true,
     data: { id: '123', name: 'Test Project', slug: 'test-project', api_key: 'pk_123' },
-  }),
+  })
 );
 
 vi.mock('node:fs');
@@ -27,9 +27,7 @@ vi.mock('../../lib/request', () => ({
 
 vi.mock('node:readline/promises', () => ({
   createInterface: vi.fn().mockReturnValue({
-    question: vi.fn()
-      .mockResolvedValueOnce('My Project')
-      .mockResolvedValueOnce('next'),
+    question: vi.fn().mockResolvedValueOnce('My Project').mockResolvedValueOnce('next'),
     close: vi.fn(),
   }),
 }));
@@ -77,7 +75,7 @@ describe('Forge Scaffolding with Templates', () => {
     // The slug from the mock is 'test-project'; template substitutes {{name}} → slug
     expect(writeSpy).toHaveBeenCalledWith(
       expect.stringContaining('package.json'),
-      expect.stringContaining('test-project'),
+      expect.stringContaining('test-project')
     );
   });
 });

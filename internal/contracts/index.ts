@@ -1,7 +1,15 @@
 /** Internal API/Cockpit contract types (not an npm package). Public types live in `@saas-maker/sdk`. */
 
 export type FeedbackType = 'bug' | 'feature' | 'feedback';
-export type FeedbackStatus = 'new' | 'acknowledged' | 'investigating' | 'planned' | 'in_progress' | 'resolved' | 'dismissed' | 'on_roadmap';
+export type FeedbackStatus =
+  | 'new'
+  | 'acknowledged'
+  | 'investigating'
+  | 'planned'
+  | 'in_progress'
+  | 'resolved'
+  | 'dismissed'
+  | 'on_roadmap';
 export type AnyFeedbackStatus = FeedbackStatus;
 export type FeedbackVote = 'up' | 'down' | null;
 

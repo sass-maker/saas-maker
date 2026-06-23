@@ -1,4 +1,4 @@
-import { mkdtempSync, writeFileSync, mkdirSync, existsSync, readFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, writeFileSync, mkdirSync, readFileSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -19,7 +19,10 @@ let tmpDir: string;
 beforeEach(() => {
   tmpDir = mkdtempSync(join(tmpdir(), 'forge-test-'));
   // Place a package.json so scaffoldHusky/scaffoldCI don't skip
-  writeFileSync(join(tmpDir, 'package.json'), JSON.stringify({ name: 'test', scripts: { lint: 'echo ok' } }));
+  writeFileSync(
+    join(tmpDir, 'package.json'),
+    JSON.stringify({ name: 'test', scripts: { lint: 'echo ok' } })
+  );
 });
 
 afterEach(() => {

@@ -1,11 +1,11 @@
-import type { Metadata } from "next";
-import { PublicFeedbackContent } from "@/app/(app)/projects/[slug]/feedback/public-feedback-content";
-import { getDashboardSession } from "@/lib/server-session";
-import { PublicAuthButtons } from "@/components/public-auth-buttons";
+import type { Metadata } from 'next';
+import { PublicFeedbackContent } from '@/app/(app)/projects/[slug]/feedback/public-feedback-content';
+import { getDashboardSession } from '@/lib/server-session';
+import { PublicAuthButtons } from '@/components/public-auth-buttons';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://api.sassmaker.com";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.sassmaker.com';
 
 interface Props {
   params: Promise<{ slug: string }>;

@@ -1,63 +1,133 @@
 ---
-import Layout from '../layouts/Layout.astro';
-
 // The Fleet Factory — a layered map of how the fleet actually works.
 // Three shared layers carry the load; every other repo is a product built on
 // top, drawing only the utilities it needs. Data mirrors the 2026-06-21 fleet
 // connection audit (what calls free-ai, what uses knowledge-base RAG, what
 // embeds the saas-maker widgets) — not an aspirational task-queue.
 
-const infra = [
-  { id: 'free-ai', accent: 'ai',  role: 'Inference grid',
+const _infra = [
+  {
+    id: 'free-ai',
+    accent: 'ai',
+    role: 'Inference grid',
     provides: 'OpenAI-compatible API fronting 30+ free LLM providers, health-routed.',
-    count: '11 apps tap it' },
-  { id: 'knowledge-base', accent: 'rag', role: 'RAG service',
-    provides: 'Private semantic search + citations (Vectorize / Qdrant). Itself calls free-ai for embeddings.',
-    count: '2 apps + self' },
+    count: '11 apps tap it',
+  },
+  {
+    id: 'knowledge-base',
+    accent: 'rag',
+    role: 'RAG service',
+    provides:
+      'Private semantic search + citations (Vectorize / Qdrant). Itself calls free-ai for embeddings.',
+    count: '2 apps + self',
+  },
 ];
 
-const platform = {
-  id: 'saas-maker', role: 'The Foundry · platform',
-  provides: 'System-of-record for the fleet — project registry (29) · feedback / testimonials / changelog widgets · live event ledger.',
+const _platform = {
+  id: 'saas-maker',
+  role: 'The Foundry · platform',
+  provides:
+    'System-of-record for the fleet — project registry (29) · feedback / testimonials / changelog widgets · live event ledger.',
   rails: ['registry', 'feedback widgets', 'events ledger'],
 };
 
 const bands = [
-  { key: 'ai', title: 'Draw on the AI grid', note: 'call free-ai for inference', items: [
-    { id: 'starboard',          provides: 'GitHub stars organizer + semantic search',  uses: ['ai', 'rag', 'feedback'] },
-    { id: 'karte',           provides: 'AI link-in-bio — chat · encyclopedia · roast', uses: ['ai', 'rag'] },
-    { id: 'high-signal',        provides: 'Daily synthesized intelligence brief',       uses: ['ai', 'feedback'] },
-    { id: 'reader',             provides: 'Research library — capture · annotate · chat', uses: ['ai', 'feedback'] },
-    { id: 'rolepatch',      provides: 'LaTeX résumé tailoring + cover letters',      uses: ['ai', 'feedback'] },
-    { id: 'looptv',             provides: 'TV-style random video player (78 channels)',  uses: ['ai', 'feedback'] },
-    { id: 'ai-game',            provides: '3D AI world simulator with NPC agents',       uses: ['ai'] },
-    { id: 'today-little-log',   provides: 'Personal life PWA · daily scoreboard',        uses: ['ai'] },
-    { id: 'codevetter',         provides: 'Desktop AI code review (local-first)',        uses: ['ai'] },
-  ] },
-  { key: 'platform', title: 'Platform-connected', note: 'embed saas-maker, own their AI', items: [
-    { id: 'email-manager',      provides: 'Gmail workspace · local semantic search',     uses: ['feedback'] },
-    { id: 'swe-interview-prep', provides: 'SWE learning OS · FSRS spaced repetition',     uses: ['feedback'] },
-    { id: 'everythingrated',    provides: 'Multi-axis ratings platform',                 uses: ['feedback'] },
-    { id: 'significanthobbies', provides: 'Hobby discovery + journaling',                uses: ['feedback'] },
-    { id: 'truehire',           provides: 'Verified candidate GitHub scoring',           uses: ['feedback'] },
-    { id: 'reel-pipeline',      provides: 'AI short-form video pipeline (Node + Rust)',     uses: ['sync'] },
-    { id: 'drank',              provides: 'Domain Rating tracker (Ahrefs DR) · client-side', uses: ['telemetry'] },
-  ] },
-  { key: 'solo', title: 'Standalone products', note: 'no fleet wiring — fully self-contained', items: [
-    { id: 'open-historia',      provides: 'AI grand-strategy history game',  uses: [] },
-    { id: 'anime-list',         provides: 'Anime / manga discovery + watchlists', uses: [] },
-    { id: 'taste',              provides: 'AI screenshot ranker · training export', uses: [] },
-    { id: 'verified-bases',     provides: 'Storefront for verified software starters', uses: [] },
-    { id: 'pace',               provides: 'macOS voice companion (on-device)', uses: [] },
-    { id: 'tinygpt',            provides: 'Local LLM factory + runtime (Mac)', uses: [] },
-    { id: 'forecast-lab',       provides: 'Forecasting / recsys benchmark', uses: [] },
-    { id: 'research-papers',     provides: 'Academic paper search platform', uses: [] },
-    { id: 'materia',            provides: 'Evidence-graded supplements explorer (whole body)', uses: [] },
-  ] },
+  {
+    key: 'ai',
+    title: 'Draw on the AI grid',
+    note: 'call free-ai for inference',
+    items: [
+      {
+        id: 'starboard',
+        provides: 'GitHub stars organizer + semantic search',
+        uses: ['ai', 'rag', 'feedback'],
+      },
+      {
+        id: 'karte',
+        provides: 'AI link-in-bio — chat · encyclopedia · roast',
+        uses: ['ai', 'rag'],
+      },
+      {
+        id: 'high-signal',
+        provides: 'Daily synthesized intelligence brief',
+        uses: ['ai', 'feedback'],
+      },
+      {
+        id: 'reader',
+        provides: 'Research library — capture · annotate · chat',
+        uses: ['ai', 'feedback'],
+      },
+      {
+        id: 'rolepatch',
+        provides: 'LaTeX résumé tailoring + cover letters',
+        uses: ['ai', 'feedback'],
+      },
+      {
+        id: 'looptv',
+        provides: 'TV-style random video player (78 channels)',
+        uses: ['ai', 'feedback'],
+      },
+      { id: 'ai-game', provides: '3D AI world simulator with NPC agents', uses: ['ai'] },
+      { id: 'today-little-log', provides: 'Personal life PWA · daily scoreboard', uses: ['ai'] },
+      { id: 'codevetter', provides: 'Desktop AI code review (local-first)', uses: ['ai'] },
+    ],
+  },
+  {
+    key: 'platform',
+    title: 'Platform-connected',
+    note: 'embed saas-maker, own their AI',
+    items: [
+      {
+        id: 'email-manager',
+        provides: 'Gmail workspace · local semantic search',
+        uses: ['feedback'],
+      },
+      {
+        id: 'swe-interview-prep',
+        provides: 'SWE learning OS · FSRS spaced repetition',
+        uses: ['feedback'],
+      },
+      { id: 'everythingrated', provides: 'Multi-axis ratings platform', uses: ['feedback'] },
+      { id: 'significanthobbies', provides: 'Hobby discovery + journaling', uses: ['feedback'] },
+      { id: 'truehire', provides: 'Verified candidate GitHub scoring', uses: ['feedback'] },
+      {
+        id: 'reel-pipeline',
+        provides: 'AI short-form video pipeline (Node + Rust)',
+        uses: ['sync'],
+      },
+      {
+        id: 'drank',
+        provides: 'Domain Rating tracker (Ahrefs DR) · client-side',
+        uses: ['telemetry'],
+      },
+    ],
+  },
+  {
+    key: 'solo',
+    title: 'Standalone products',
+    note: 'no fleet wiring — fully self-contained',
+    items: [
+      { id: 'open-historia', provides: 'AI grand-strategy history game', uses: [] },
+      { id: 'anime-list', provides: 'Anime / manga discovery + watchlists', uses: [] },
+      { id: 'taste', provides: 'AI screenshot ranker · training export', uses: [] },
+      { id: 'verified-bases', provides: 'Storefront for verified software starters', uses: [] },
+      { id: 'pace', provides: 'macOS voice companion (on-device)', uses: [] },
+      { id: 'tinygpt', provides: 'Local LLM factory + runtime (Mac)', uses: [] },
+      { id: 'forecast-lab', provides: 'Forecasting / recsys benchmark', uses: [] },
+      { id: 'research-papers', provides: 'Academic paper search platform', uses: [] },
+      { id: 'materia', provides: 'Evidence-graded supplements explorer (whole body)', uses: [] },
+    ],
+  },
 ];
 
-const useLabel = { ai: 'free-ai', rag: 'RAG', feedback: 'feedback', telemetry: 'telemetry', sync: 'sync' };
-const productCount = bands.reduce((n, b) => n + b.items.length, 0);
+const _useLabel = {
+  ai: 'free-ai',
+  rag: 'RAG',
+  feedback: 'feedback',
+  telemetry: 'telemetry',
+  sync: 'sync',
+};
+const _productCount = bands.reduce((n, b) => n + b.items.length, 0);
 ---
 
 <Layout title="The Fleet Factory — saas-maker" description="A layered map of the fleet: free-ai (inference grid) and knowledge-base (RAG) as shared infrastructure, saas-maker as the system-of-record platform, and 25 products built on top — each drawing only the utilities it needs.">

@@ -56,7 +56,7 @@ export const Modal: React.FC<ModalProps> = ({
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     },
-    [onClose],
+    [onClose]
   );
 
   useEffect(() => {
@@ -71,7 +71,7 @@ export const Modal: React.FC<ModalProps> = ({
     (e: React.MouseEvent) => {
       if (e.target === e.currentTarget) onClose();
     },
-    [onClose],
+    [onClose]
   );
 
   if (!isOpen) return null;
@@ -92,12 +92,7 @@ export const Modal: React.FC<ModalProps> = ({
         {/* Header */}
         <div className="smw-modal__header">
           <h2 className="smw-modal__title">Feedback</h2>
-          <button
-            type="button"
-            className="smw-modal__close"
-            onClick={onClose}
-            aria-label="Close"
-          >
+          <button type="button" className="smw-modal__close" onClick={onClose} aria-label="Close">
             <CloseIcon />
           </button>
         </div>

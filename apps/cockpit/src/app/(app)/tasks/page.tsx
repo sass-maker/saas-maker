@@ -5,7 +5,14 @@ import { apiFetchAuthed } from '@/lib/api-client';
 import { getManifestProjectRepos, getManifestProjectSlugs } from '@/lib/fleet-manifest';
 import { sortProjectSlugs } from '@/lib/fleet-project-names';
 import { TaskBoard } from '@/components/tasks/TaskBoard';
-import { ensureCockpitUser, getCockpitSymphonyMemory, getDefaultCockpitOwnerId, listCockpitProjectSlugs, listCockpitRuns, listCockpitTasks } from '@/lib/cockpit-tasks-store';
+import {
+  ensureCockpitUser,
+  getCockpitSymphonyMemory,
+  getDefaultCockpitOwnerId,
+  listCockpitProjectSlugs,
+  listCockpitRuns,
+  listCockpitTasks,
+} from '@/lib/cockpit-tasks-store';
 import { isLocalAuthBypassEnabled } from '@/lib/local-auth';
 import { DEFAULT_SYMPHONY_MEMORY } from '@/lib/symphony';
 import { CheckCircle2, ListTodo, ShieldAlert } from 'lucide-react';
@@ -32,7 +39,9 @@ export default async function TasksPage() {
       const res = await apiFetchAuthed<{ data: any[] }>('/v1/tasks');
       tasks = res.data ?? [];
     } catch (error) {
-      loadErrors.push(`Tasks failed to load: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      loadErrors.push(
+        `Tasks failed to load: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
       tasks = [];
     }
 
@@ -40,7 +49,9 @@ export default async function TasksPage() {
       const res = await apiFetchAuthed<{ data: any[] }>('/v1/fleet/metadata');
       projects = (res.data ?? []).map((p: any) => p.slug).filter(Boolean);
     } catch (error) {
-      loadErrors.push(`Projects failed to load: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      loadErrors.push(
+        `Projects failed to load: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
       projects = [];
     }
 
@@ -64,12 +75,18 @@ export default async function TasksPage() {
         listCockpitTasks(),
         listCockpitProjectSlugs(),
         listCockpitRuns(200),
-        (getDefaultCockpitOwnerId().then(ownerId => ownerId ?? ensureCockpitUser(session!.user))).then(ownerId =>
-          getCockpitSymphonyMemory(ownerId).then(content => content.trim() ? content : DEFAULT_SYMPHONY_MEMORY)
-        ),
+        getDefaultCockpitOwnerId()
+          .then((ownerId) => ownerId ?? ensureCockpitUser(session!.user))
+          .then((ownerId) =>
+            getCockpitSymphonyMemory(ownerId).then((content) =>
+              content.trim() ? content : DEFAULT_SYMPHONY_MEMORY
+            )
+          ),
       ]);
     } catch (error) {
-      loadErrors.push(`Cockpit D1 read failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      loadErrors.push(
+        `Cockpit D1 read failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
     }
   }
 
@@ -84,7 +101,8 @@ export default async function TasksPage() {
             </div>
             <h1 className="text-3xl font-semibold tracking-tight text-foreground">Tasks</h1>
             <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-              Create production tasks, route them to agents, and pull them locally with pnpm symphony.
+              Create production tasks, route them to agents, and pull them locally with pnpm
+              symphony.
             </p>
           </div>
           <div className="grid grid-cols-3 gap-2 text-xs sm:w-[25rem]">
@@ -93,7 +111,9 @@ export default async function TasksPage() {
                 <ListTodo className="h-3.5 w-3.5" />
                 Total
               </div>
-              <div className="mt-1 font-mono text-lg font-semibold text-foreground">{tasks.length}</div>
+              <div className="mt-1 font-mono text-lg font-semibold text-foreground">
+                {tasks.length}
+              </div>
             </div>
             <div className="rounded-md border border-border/70 bg-muted/20 px-3 py-2">
               <div className="flex items-center gap-1.5 text-muted-foreground">
@@ -101,7 +121,7 @@ export default async function TasksPage() {
                 Open
               </div>
               <div className="mt-1 font-mono text-lg font-semibold text-amber-300">
-                {tasks.filter(task => task.status !== 'done').length}
+                {tasks.filter((task) => task.status !== 'done').length}
               </div>
             </div>
             <div className="rounded-md border border-border/70 bg-muted/20 px-3 py-2">
@@ -110,7 +130,7 @@ export default async function TasksPage() {
                 Done
               </div>
               <div className="mt-1 font-mono text-lg font-semibold text-emerald-300">
-                {tasks.filter(task => task.status === 'done').length}
+                {tasks.filter((task) => task.status === 'done').length}
               </div>
             </div>
           </div>

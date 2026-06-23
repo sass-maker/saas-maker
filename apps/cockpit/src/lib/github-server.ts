@@ -41,7 +41,10 @@ function resolveToken(): string {
   if (process.env.GH_TOKEN) return process.env.GH_TOKEN;
   if (process.env.GITHUB_TOKEN) return process.env.GITHUB_TOKEN;
   try {
-    const out = execSync('gh auth token', { encoding: 'utf-8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
+    const out = execSync('gh auth token', {
+      encoding: 'utf-8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    }).trim();
     return out || '';
   } catch {
     return '';
@@ -79,10 +82,14 @@ function parseRepo(url: string): { owner: string; repo: string } | null {
 function mapConclusion(run: WorkflowRun): CIStatus['conclusion'] {
   if (run.status === 'in_progress' || run.status === 'queued') return 'in_progress';
   switch (run.conclusion) {
-    case 'success': return 'success';
-    case 'failure': return 'failure';
-    case 'cancelled': return 'cancelled';
-    default: return 'unknown';
+    case 'success':
+      return 'success';
+    case 'failure':
+      return 'failure';
+    case 'cancelled':
+      return 'cancelled';
+    default:
+      return 'unknown';
   }
 }
 

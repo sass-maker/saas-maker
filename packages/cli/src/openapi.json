@@ -14,9 +14,7 @@
   "paths": {
     "/health": {
       "get": {
-        "tags": [
-          "system"
-        ],
+        "tags": ["system"],
         "summary": "GET /health",
         "responses": {
           "200": {
@@ -27,9 +25,7 @@
     },
     "/v1/ai/chat/completions": {
       "post": {
-        "tags": [
-          "ai"
-        ],
+        "tags": ["ai"],
         "summary": "POST /v1/ai/chat/completions",
         "responses": {
           "200": {
@@ -40,9 +36,7 @@
     },
     "/v1/ai/config": {
       "get": {
-        "tags": [
-          "ai"
-        ],
+        "tags": ["ai"],
         "summary": "GET /v1/ai/config",
         "responses": {
           "200": {
@@ -51,9 +45,7 @@
         }
       },
       "put": {
-        "tags": [
-          "ai"
-        ],
+        "tags": ["ai"],
         "summary": "PUT /v1/ai/config",
         "responses": {
           "200": {
@@ -62,9 +54,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "ai"
-        ],
+        "tags": ["ai"],
         "summary": "DELETE /v1/ai/config",
         "responses": {
           "200": {
@@ -75,9 +65,7 @@
     },
     "/v1/ai/embeddings": {
       "post": {
-        "tags": [
-          "ai"
-        ],
+        "tags": ["ai"],
         "summary": "POST /v1/ai/embeddings",
         "responses": {
           "200": {
@@ -88,9 +76,7 @@
     },
     "/v1/ai/requests": {
       "get": {
-        "tags": [
-          "ai"
-        ],
+        "tags": ["ai"],
         "summary": "GET /v1/ai/requests",
         "responses": {
           "200": {
@@ -101,9 +87,7 @@
     },
     "/v1/ai/usage": {
       "get": {
-        "tags": [
-          "ai"
-        ],
+        "tags": ["ai"],
         "summary": "GET /v1/ai/usage",
         "responses": {
           "200": {
@@ -114,9 +98,7 @@
     },
     "/v1/auth/logout": {
       "post": {
-        "tags": [
-          "auth"
-        ],
+        "tags": ["auth"],
         "summary": "POST /v1/auth/logout",
         "responses": {
           "200": {
@@ -127,9 +109,7 @@
     },
     "/v1/auth/session": {
       "get": {
-        "tags": [
-          "auth"
-        ],
+        "tags": ["auth"],
         "summary": "GET /v1/auth/session",
         "responses": {
           "200": {
@@ -140,9 +120,7 @@
     },
     "/v1/changelog": {
       "get": {
-        "tags": [
-          "changelog"
-        ],
+        "tags": ["changelog"],
         "summary": "GET /v1/changelog",
         "responses": {
           "200": {
@@ -153,9 +131,7 @@
     },
     "/v1/changelog/dashboard/{projectId}": {
       "get": {
-        "tags": [
-          "changelog"
-        ],
+        "tags": ["changelog"],
         "summary": "GET /v1/changelog/dashboard/{projectId}",
         "responses": {
           "200": {
@@ -164,9 +140,7 @@
         }
       },
       "post": {
-        "tags": [
-          "changelog"
-        ],
+        "tags": ["changelog"],
         "summary": "POST /v1/changelog/dashboard/{projectId}",
         "responses": {
           "200": {
@@ -177,9 +151,7 @@
     },
     "/v1/changelog/dashboard/{projectId}/{id}": {
       "patch": {
-        "tags": [
-          "changelog"
-        ],
+        "tags": ["changelog"],
         "summary": "PATCH /v1/changelog/dashboard/{projectId}/{id}",
         "responses": {
           "200": {
@@ -188,9 +160,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "changelog"
-        ],
+        "tags": ["changelog"],
         "summary": "DELETE /v1/changelog/dashboard/{projectId}/{id}",
         "responses": {
           "200": {
@@ -201,9 +171,7 @@
     },
     "/v1/changelog/fleet/daily": {
       "get": {
-        "tags": [
-          "changelog"
-        ],
+        "tags": ["changelog"],
         "summary": "GET /v1/changelog/fleet/daily",
         "responses": {
           "200": {
@@ -214,9 +182,7 @@
     },
     "/v1/changelog/from-task": {
       "post": {
-        "tags": [
-          "changelog"
-        ],
+        "tags": ["changelog"],
         "summary": "POST /v1/changelog/from-task",
         "responses": {
           "200": {
@@ -227,9 +193,7 @@
     },
     "/v1/cli/approve": {
       "post": {
-        "tags": [
-          "cli"
-        ],
+        "tags": ["cli"],
         "summary": "POST /v1/cli/approve",
         "responses": {
           "200": {
@@ -240,9 +204,7 @@
     },
     "/v1/cli/code": {
       "post": {
-        "tags": [
-          "cli"
-        ],
+        "tags": ["cli"],
         "summary": "POST /v1/cli/code",
         "responses": {
           "200": {
@@ -253,9 +215,7 @@
     },
     "/v1/cli/poll": {
       "get": {
-        "tags": [
-          "cli"
-        ],
+        "tags": ["cli"],
         "summary": "GET /v1/cli/poll",
         "responses": {
           "200": {
@@ -266,9 +226,7 @@
     },
     "/v1/events": {
       "get": {
-        "tags": [
-          "events"
-        ],
+        "tags": ["events"],
         "summary": "GET /v1/events",
         "responses": {
           "200": {
@@ -277,9 +235,7 @@
         }
       },
       "post": {
-        "tags": [
-          "events"
-        ],
+        "tags": ["events"],
         "summary": "POST /v1/events",
         "responses": {
           "200": {
@@ -290,9 +246,7 @@
     },
     "/v1/feedback": {
       "get": {
-        "tags": [
-          "feedback"
-        ],
+        "tags": ["feedback"],
         "summary": "GET /v1/feedback",
         "responses": {
           "200": {
@@ -301,9 +255,7 @@
         }
       },
       "post": {
-        "tags": [
-          "feedback"
-        ],
+        "tags": ["feedback"],
         "summary": "POST /v1/feedback",
         "responses": {
           "200": {
@@ -314,9 +266,7 @@
     },
     "/v1/feedback/board": {
       "get": {
-        "tags": [
-          "feedback"
-        ],
+        "tags": ["feedback"],
         "summary": "GET /v1/feedback/board",
         "responses": {
           "200": {
@@ -327,9 +277,7 @@
     },
     "/v1/feedback/by-project/{slug}": {
       "get": {
-        "tags": [
-          "feedback"
-        ],
+        "tags": ["feedback"],
         "summary": "GET /v1/feedback/by-project/{slug}",
         "responses": {
           "200": {
@@ -340,9 +288,7 @@
     },
     "/v1/feedback/inbox/{projectId}": {
       "get": {
-        "tags": [
-          "feedback"
-        ],
+        "tags": ["feedback"],
         "summary": "GET /v1/feedback/inbox/{projectId}",
         "responses": {
           "200": {
@@ -353,9 +299,7 @@
     },
     "/v1/feedback/{id}": {
       "patch": {
-        "tags": [
-          "feedback"
-        ],
+        "tags": ["feedback"],
         "summary": "PATCH /v1/feedback/{id}",
         "responses": {
           "200": {
@@ -364,9 +308,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "feedback"
-        ],
+        "tags": ["feedback"],
         "summary": "DELETE /v1/feedback/{id}",
         "responses": {
           "200": {
@@ -377,9 +319,7 @@
     },
     "/v1/feedback/{id}/downvote": {
       "post": {
-        "tags": [
-          "feedback"
-        ],
+        "tags": ["feedback"],
         "summary": "POST /v1/feedback/{id}/downvote",
         "responses": {
           "200": {
@@ -388,9 +328,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "feedback"
-        ],
+        "tags": ["feedback"],
         "summary": "DELETE /v1/feedback/{id}/downvote",
         "responses": {
           "200": {
@@ -401,9 +339,7 @@
     },
     "/v1/feedback/{id}/upvote": {
       "post": {
-        "tags": [
-          "feedback"
-        ],
+        "tags": ["feedback"],
         "summary": "POST /v1/feedback/{id}/upvote",
         "responses": {
           "200": {
@@ -412,9 +348,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "feedback"
-        ],
+        "tags": ["feedback"],
         "summary": "DELETE /v1/feedback/{id}/upvote",
         "responses": {
           "200": {
@@ -425,9 +359,7 @@
     },
     "/v1/fleet/metadata": {
       "get": {
-        "tags": [
-          "fleet"
-        ],
+        "tags": ["fleet"],
         "summary": "GET /v1/fleet/metadata",
         "responses": {
           "200": {
@@ -436,9 +368,7 @@
         }
       },
       "post": {
-        "tags": [
-          "fleet"
-        ],
+        "tags": ["fleet"],
         "summary": "POST /v1/fleet/metadata",
         "responses": {
           "200": {
@@ -449,9 +379,7 @@
     },
     "/v1/jobs": {
       "get": {
-        "tags": [
-          "jobs"
-        ],
+        "tags": ["jobs"],
         "summary": "GET /v1/jobs",
         "responses": {
           "200": {
@@ -462,9 +390,7 @@
     },
     "/v1/jobs/{id}/logs": {
       "post": {
-        "tags": [
-          "jobs"
-        ],
+        "tags": ["jobs"],
         "summary": "POST /v1/jobs/{id}/logs",
         "responses": {
           "200": {
@@ -475,9 +401,7 @@
     },
     "/v1/marketing/posts": {
       "get": {
-        "tags": [
-          "marketing"
-        ],
+        "tags": ["marketing"],
         "summary": "GET /v1/marketing/posts",
         "responses": {
           "200": {
@@ -486,9 +410,7 @@
         }
       },
       "post": {
-        "tags": [
-          "marketing"
-        ],
+        "tags": ["marketing"],
         "summary": "POST /v1/marketing/posts",
         "responses": {
           "200": {
@@ -499,9 +421,7 @@
     },
     "/v1/marketing/posts/{id}": {
       "patch": {
-        "tags": [
-          "marketing"
-        ],
+        "tags": ["marketing"],
         "summary": "PATCH /v1/marketing/posts/{id}",
         "responses": {
           "200": {
@@ -512,9 +432,7 @@
     },
     "/v1/projects": {
       "get": {
-        "tags": [
-          "projects"
-        ],
+        "tags": ["projects"],
         "summary": "GET /v1/projects",
         "responses": {
           "200": {
@@ -523,9 +441,7 @@
         }
       },
       "post": {
-        "tags": [
-          "projects"
-        ],
+        "tags": ["projects"],
         "summary": "POST /v1/projects",
         "responses": {
           "200": {
@@ -536,9 +452,7 @@
     },
     "/v1/projects/by-slug/{slug}": {
       "get": {
-        "tags": [
-          "projects"
-        ],
+        "tags": ["projects"],
         "summary": "GET /v1/projects/by-slug/{slug}",
         "responses": {
           "200": {
@@ -549,9 +463,7 @@
     },
     "/v1/projects/readme": {
       "get": {
-        "tags": [
-          "projects"
-        ],
+        "tags": ["projects"],
         "summary": "GET /v1/projects/readme",
         "responses": {
           "200": {
@@ -560,9 +472,7 @@
         }
       },
       "put": {
-        "tags": [
-          "projects"
-        ],
+        "tags": ["projects"],
         "summary": "PUT /v1/projects/readme",
         "responses": {
           "200": {
@@ -573,9 +483,7 @@
     },
     "/v1/projects/{id}": {
       "patch": {
-        "tags": [
-          "projects"
-        ],
+        "tags": ["projects"],
         "summary": "PATCH /v1/projects/{id}",
         "responses": {
           "200": {
@@ -584,9 +492,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "projects"
-        ],
+        "tags": ["projects"],
         "summary": "DELETE /v1/projects/{id}",
         "responses": {
           "200": {
@@ -597,9 +503,7 @@
     },
     "/v1/projects/{id}/readme": {
       "get": {
-        "tags": [
-          "projects"
-        ],
+        "tags": ["projects"],
         "summary": "GET /v1/projects/{id}/readme",
         "responses": {
           "200": {
@@ -608,9 +512,7 @@
         }
       },
       "put": {
-        "tags": [
-          "projects"
-        ],
+        "tags": ["projects"],
         "summary": "PUT /v1/projects/{id}/readme",
         "responses": {
           "200": {
@@ -621,9 +523,7 @@
     },
     "/v1/roadmap/dashboard/{projectId}": {
       "get": {
-        "tags": [
-          "roadmap"
-        ],
+        "tags": ["roadmap"],
         "summary": "GET /v1/roadmap/dashboard/{projectId}",
         "responses": {
           "200": {
@@ -632,9 +532,7 @@
         }
       },
       "post": {
-        "tags": [
-          "roadmap"
-        ],
+        "tags": ["roadmap"],
         "summary": "POST /v1/roadmap/dashboard/{projectId}",
         "responses": {
           "200": {
@@ -645,9 +543,7 @@
     },
     "/v1/roadmap/dashboard/{projectId}/from-feedback/{feedbackId}": {
       "post": {
-        "tags": [
-          "roadmap"
-        ],
+        "tags": ["roadmap"],
         "summary": "POST /v1/roadmap/dashboard/{projectId}/from-feedback/{feedbackId}",
         "responses": {
           "200": {
@@ -658,9 +554,7 @@
     },
     "/v1/roadmap/dashboard/{projectId}/reorder": {
       "post": {
-        "tags": [
-          "roadmap"
-        ],
+        "tags": ["roadmap"],
         "summary": "POST /v1/roadmap/dashboard/{projectId}/reorder",
         "responses": {
           "200": {
@@ -671,9 +565,7 @@
     },
     "/v1/roadmap/dashboard/{projectId}/{id}": {
       "patch": {
-        "tags": [
-          "roadmap"
-        ],
+        "tags": ["roadmap"],
         "summary": "PATCH /v1/roadmap/dashboard/{projectId}/{id}",
         "responses": {
           "200": {
@@ -682,9 +574,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "roadmap"
-        ],
+        "tags": ["roadmap"],
         "summary": "DELETE /v1/roadmap/dashboard/{projectId}/{id}",
         "responses": {
           "200": {
@@ -695,9 +585,7 @@
     },
     "/v1/roadmap/public/{slug}": {
       "get": {
-        "tags": [
-          "roadmap"
-        ],
+        "tags": ["roadmap"],
         "summary": "GET /v1/roadmap/public/{slug}",
         "responses": {
           "200": {
@@ -708,9 +596,7 @@
     },
     "/v1/roadmap/public/{slug}/submit": {
       "post": {
-        "tags": [
-          "roadmap"
-        ],
+        "tags": ["roadmap"],
         "summary": "POST /v1/roadmap/public/{slug}/submit",
         "responses": {
           "200": {
@@ -721,9 +607,7 @@
     },
     "/v1/roadmap/public/{slug}/{id}/vote": {
       "post": {
-        "tags": [
-          "roadmap"
-        ],
+        "tags": ["roadmap"],
         "summary": "POST /v1/roadmap/public/{slug}/{id}/vote",
         "responses": {
           "200": {
@@ -732,9 +616,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "roadmap"
-        ],
+        "tags": ["roadmap"],
         "summary": "DELETE /v1/roadmap/public/{slug}/{id}/vote",
         "responses": {
           "200": {
@@ -745,9 +627,7 @@
     },
     "/v1/secrets": {
       "get": {
-        "tags": [
-          "secrets"
-        ],
+        "tags": ["secrets"],
         "summary": "GET /v1/secrets",
         "responses": {
           "200": {
@@ -756,9 +636,7 @@
         }
       },
       "post": {
-        "tags": [
-          "secrets"
-        ],
+        "tags": ["secrets"],
         "summary": "POST /v1/secrets",
         "responses": {
           "200": {
@@ -769,9 +647,7 @@
     },
     "/v1/secrets/{id}": {
       "delete": {
-        "tags": [
-          "secrets"
-        ],
+        "tags": ["secrets"],
         "summary": "DELETE /v1/secrets/{id}",
         "responses": {
           "200": {
@@ -782,9 +658,7 @@
     },
     "/v1/standards": {
       "get": {
-        "tags": [
-          "standards"
-        ],
+        "tags": ["standards"],
         "summary": "GET /v1/standards",
         "responses": {
           "200": {
@@ -795,9 +669,7 @@
     },
     "/v1/standards/{type}": {
       "get": {
-        "tags": [
-          "standards"
-        ],
+        "tags": ["standards"],
         "summary": "GET /v1/standards/{type}",
         "responses": {
           "200": {
@@ -806,9 +678,7 @@
         }
       },
       "put": {
-        "tags": [
-          "standards"
-        ],
+        "tags": ["standards"],
         "summary": "PUT /v1/standards/{type}",
         "responses": {
           "200": {
@@ -819,9 +689,7 @@
     },
     "/v1/symphony/audit": {
       "get": {
-        "tags": [
-          "symphony"
-        ],
+        "tags": ["symphony"],
         "summary": "GET /v1/symphony/audit",
         "responses": {
           "200": {
@@ -830,9 +698,7 @@
         }
       },
       "post": {
-        "tags": [
-          "symphony"
-        ],
+        "tags": ["symphony"],
         "summary": "POST /v1/symphony/audit",
         "responses": {
           "200": {
@@ -843,9 +709,7 @@
     },
     "/v1/symphony/memory": {
       "get": {
-        "tags": [
-          "symphony"
-        ],
+        "tags": ["symphony"],
         "summary": "GET /v1/symphony/memory",
         "responses": {
           "200": {
@@ -854,9 +718,7 @@
         }
       },
       "put": {
-        "tags": [
-          "symphony"
-        ],
+        "tags": ["symphony"],
         "summary": "PUT /v1/symphony/memory",
         "responses": {
           "200": {
@@ -867,9 +729,7 @@
     },
     "/v1/symphony/runs": {
       "get": {
-        "tags": [
-          "symphony"
-        ],
+        "tags": ["symphony"],
         "summary": "GET /v1/symphony/runs",
         "responses": {
           "200": {
@@ -878,9 +738,7 @@
         }
       },
       "post": {
-        "tags": [
-          "symphony"
-        ],
+        "tags": ["symphony"],
         "summary": "POST /v1/symphony/runs",
         "responses": {
           "200": {
@@ -891,9 +749,7 @@
     },
     "/v1/task-workflows": {
       "get": {
-        "tags": [
-          "task-workflows"
-        ],
+        "tags": ["task-workflows"],
         "summary": "GET /v1/task-workflows",
         "responses": {
           "200": {
@@ -902,9 +758,7 @@
         }
       },
       "post": {
-        "tags": [
-          "task-workflows"
-        ],
+        "tags": ["task-workflows"],
         "summary": "POST /v1/task-workflows",
         "responses": {
           "200": {
@@ -915,9 +769,7 @@
     },
     "/v1/task-workflows/artifacts/{shareToken}": {
       "get": {
-        "tags": [
-          "task-workflows"
-        ],
+        "tags": ["task-workflows"],
         "summary": "GET /v1/task-workflows/artifacts/{shareToken}",
         "responses": {
           "200": {
@@ -928,9 +780,7 @@
     },
     "/v1/task-workflows/{id}": {
       "get": {
-        "tags": [
-          "task-workflows"
-        ],
+        "tags": ["task-workflows"],
         "summary": "GET /v1/task-workflows/{id}",
         "responses": {
           "200": {
@@ -939,9 +789,7 @@
         }
       },
       "patch": {
-        "tags": [
-          "task-workflows"
-        ],
+        "tags": ["task-workflows"],
         "summary": "PATCH /v1/task-workflows/{id}",
         "responses": {
           "200": {
@@ -952,9 +800,7 @@
     },
     "/v1/task-workflows/{id}/artifacts": {
       "post": {
-        "tags": [
-          "task-workflows"
-        ],
+        "tags": ["task-workflows"],
         "summary": "POST /v1/task-workflows/{id}/artifacts",
         "responses": {
           "200": {
@@ -965,9 +811,7 @@
     },
     "/v1/task-workflows/{id}/runs": {
       "post": {
-        "tags": [
-          "task-workflows"
-        ],
+        "tags": ["task-workflows"],
         "summary": "POST /v1/task-workflows/{id}/runs",
         "responses": {
           "200": {
@@ -978,9 +822,7 @@
     },
     "/v1/tasks": {
       "get": {
-        "tags": [
-          "tasks"
-        ],
+        "tags": ["tasks"],
         "summary": "GET /v1/tasks",
         "responses": {
           "200": {
@@ -989,9 +831,7 @@
         }
       },
       "post": {
-        "tags": [
-          "tasks"
-        ],
+        "tags": ["tasks"],
         "summary": "POST /v1/tasks",
         "responses": {
           "200": {
@@ -1002,9 +842,7 @@
     },
     "/v1/tasks/claim": {
       "post": {
-        "tags": [
-          "tasks"
-        ],
+        "tags": ["tasks"],
         "summary": "POST /v1/tasks/claim",
         "responses": {
           "200": {
@@ -1015,9 +853,7 @@
     },
     "/v1/tasks/{id}": {
       "get": {
-        "tags": [
-          "tasks"
-        ],
+        "tags": ["tasks"],
         "summary": "GET /v1/tasks/{id}",
         "responses": {
           "200": {
@@ -1026,9 +862,7 @@
         }
       },
       "patch": {
-        "tags": [
-          "tasks"
-        ],
+        "tags": ["tasks"],
         "summary": "PATCH /v1/tasks/{id}",
         "responses": {
           "200": {
@@ -1037,9 +871,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "tasks"
-        ],
+        "tags": ["tasks"],
         "summary": "DELETE /v1/tasks/{id}",
         "responses": {
           "200": {
@@ -1050,9 +882,7 @@
     },
     "/v1/tasks/{id}/comments": {
       "get": {
-        "tags": [
-          "tasks"
-        ],
+        "tags": ["tasks"],
         "summary": "GET /v1/tasks/{id}/comments",
         "responses": {
           "200": {
@@ -1061,9 +891,7 @@
         }
       },
       "post": {
-        "tags": [
-          "tasks"
-        ],
+        "tags": ["tasks"],
         "summary": "POST /v1/tasks/{id}/comments",
         "responses": {
           "200": {
@@ -1074,9 +902,7 @@
     },
     "/v1/tasks/{id}/complete": {
       "post": {
-        "tags": [
-          "tasks"
-        ],
+        "tags": ["tasks"],
         "summary": "POST /v1/tasks/{id}/complete",
         "responses": {
           "200": {
@@ -1087,9 +913,7 @@
     },
     "/v1/tasks/{id}/fail": {
       "post": {
-        "tags": [
-          "tasks"
-        ],
+        "tags": ["tasks"],
         "summary": "POST /v1/tasks/{id}/fail",
         "responses": {
           "200": {
@@ -1100,9 +924,7 @@
     },
     "/v1/tasks/{id}/heartbeat": {
       "post": {
-        "tags": [
-          "tasks"
-        ],
+        "tags": ["tasks"],
         "summary": "POST /v1/tasks/{id}/heartbeat",
         "responses": {
           "200": {
@@ -1113,9 +935,7 @@
     },
     "/v1/testimonials": {
       "get": {
-        "tags": [
-          "testimonials"
-        ],
+        "tags": ["testimonials"],
         "summary": "GET /v1/testimonials",
         "responses": {
           "200": {
@@ -1124,9 +944,7 @@
         }
       },
       "post": {
-        "tags": [
-          "testimonials"
-        ],
+        "tags": ["testimonials"],
         "summary": "POST /v1/testimonials",
         "responses": {
           "200": {
@@ -1137,9 +955,7 @@
     },
     "/v1/testimonials/all": {
       "get": {
-        "tags": [
-          "testimonials"
-        ],
+        "tags": ["testimonials"],
         "summary": "GET /v1/testimonials/all",
         "responses": {
           "200": {
@@ -1150,9 +966,7 @@
     },
     "/v1/testimonials/by-project/{slug}": {
       "get": {
-        "tags": [
-          "testimonials"
-        ],
+        "tags": ["testimonials"],
         "summary": "GET /v1/testimonials/by-project/{slug}",
         "responses": {
           "200": {
@@ -1161,9 +975,7 @@
         }
       },
       "post": {
-        "tags": [
-          "testimonials"
-        ],
+        "tags": ["testimonials"],
         "summary": "POST /v1/testimonials/by-project/{slug}",
         "responses": {
           "200": {
@@ -1174,9 +986,7 @@
     },
     "/v1/testimonials/dashboard/{projectId}": {
       "post": {
-        "tags": [
-          "testimonials"
-        ],
+        "tags": ["testimonials"],
         "summary": "POST /v1/testimonials/dashboard/{projectId}",
         "responses": {
           "200": {
@@ -1187,9 +997,7 @@
     },
     "/v1/testimonials/{id}": {
       "patch": {
-        "tags": [
-          "testimonials"
-        ],
+        "tags": ["testimonials"],
         "summary": "PATCH /v1/testimonials/{id}",
         "responses": {
           "200": {
@@ -1198,9 +1006,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "testimonials"
-        ],
+        "tags": ["testimonials"],
         "summary": "DELETE /v1/testimonials/{id}",
         "responses": {
           "200": {
@@ -1211,9 +1017,7 @@
     },
     "/v1/upload": {
       "post": {
-        "tags": [
-          "upload"
-        ],
+        "tags": ["upload"],
         "summary": "POST /v1/upload",
         "responses": {
           "200": {
@@ -1224,9 +1028,7 @@
     },
     "/v1/waitlist": {
       "get": {
-        "tags": [
-          "waitlist"
-        ],
+        "tags": ["waitlist"],
         "summary": "GET /v1/waitlist",
         "responses": {
           "200": {
@@ -1235,9 +1037,7 @@
         }
       },
       "post": {
-        "tags": [
-          "waitlist"
-        ],
+        "tags": ["waitlist"],
         "summary": "POST /v1/waitlist",
         "responses": {
           "200": {
@@ -1248,9 +1048,7 @@
     },
     "/v1/waitlist/count": {
       "get": {
-        "tags": [
-          "waitlist"
-        ],
+        "tags": ["waitlist"],
         "summary": "GET /v1/waitlist/count",
         "responses": {
           "200": {
@@ -1261,9 +1059,7 @@
     },
     "/v1/waitlist/{id}": {
       "delete": {
-        "tags": [
-          "waitlist"
-        ],
+        "tags": ["waitlist"],
         "summary": "DELETE /v1/waitlist/{id}",
         "responses": {
           "200": {

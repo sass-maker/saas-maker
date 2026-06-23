@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server";
-import { getDashboardSession } from "@/lib/server-session";
-import { activeProcesses } from "@/lib/process-registry";
+import { NextResponse } from 'next/server';
+import { getDashboardSession } from '@/lib/server-session';
+import { activeProcesses } from '@/lib/process-registry';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 /**
  * SSE Route: Streams live stdout/stderr from a dispatched agent job.
@@ -10,14 +10,17 @@ export const dynamic = "force-dynamic";
 export async function GET(req: Request, { params }: { params: Promise<{ jobId: string }> }) {
   const session = await getDashboardSession(req.headers);
   if (!session?.user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   const { jobId } = await params;
   const child = activeProcesses.get(jobId);
 
   if (!child) {
-    return NextResponse.json({ error: "Job session not found or already terminated" }, { status: 404 });
+    return NextResponse.json(
+      { error: 'Job session not found or already terminated' },
+      { status: 404 }
+    );
   }
 
   const stream = new ReadableStream({
@@ -26,10 +29,10 @@ export async function GET(req: Request, { params }: { params: Promise<{ jobId: s
         controller.enqueue(`data: ${msg}\n\n`);
       };
 
-      child.stdout?.on("data", (chunk: any) => send(chunk.toString()));
-      child.stderr?.on("data", (chunk: any) => send(`ERR: ${chunk.toString()}`));
+      child.stdout?.on('data', (chunk: any) => send(chunk.toString()));
+      child.stderr?.on('data', (chunk: any) => send(`ERR: ${chunk.toString()}`));
 
-      child.on("close", (code: number) => {
+      child.on('close', (code: number) => {
         send(`[SYSTEM] Factory Agent terminated with code ${code}`);
         activeProcesses.delete(jobId);
         controller.close();
@@ -38,14 +41,14 @@ export async function GET(req: Request, { params }: { params: Promise<{ jobId: s
     cancel() {
       child.kill();
       activeProcesses.delete(jobId);
-    }
+    },
   });
 
   return new Response(stream, {
     headers: {
-      "Content-Type": "text/event-stream",
-      "Cache-Control": "no-cache",
-      "Connection": "keep-alive",
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+      Connection: 'keep-alive',
     },
   });
 }

@@ -112,7 +112,7 @@ describe('GET /v1/changelog/fleet/daily', () => {
   it('returns 200 with empty entries by default', async () => {
     const res = await request('/v1/changelog/fleet/daily');
     expect(res.status).toBe(200);
-    const json = await res.json() as any;
+    const json = (await res.json()) as any;
     expect(json.entries).toEqual([]);
     expect(json.by_project).toEqual({});
     expect(json.date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
@@ -126,7 +126,7 @@ describe('GET /v1/changelog/fleet/daily', () => {
   it('forwards an explicit date param to db and reflects it in the response', async () => {
     const res = await request('/v1/changelog/fleet/daily?date=2026-05-25');
     expect(res.status).toBe(200);
-    const json = await res.json() as any;
+    const json = (await res.json()) as any;
     expect(json.date).toBe('2026-05-25');
     expect(mockDb.listFleetDailyChangelog).toHaveBeenCalledWith('user-1', '2026-05-25');
   });
@@ -134,7 +134,7 @@ describe('GET /v1/changelog/fleet/daily', () => {
   it('falls back to today when the date param is malformed', async () => {
     const res = await request('/v1/changelog/fleet/daily?date=not-a-date');
     expect(res.status).toBe(200);
-    const json = await res.json() as any;
+    const json = (await res.json()) as any;
     expect(json.date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     expect(json.date).not.toBe('not-a-date');
   });
@@ -142,16 +142,16 @@ describe('GET /v1/changelog/fleet/daily', () => {
   it('groups returned entries by project_slug', async () => {
     const fleetEntries = [
       { ...baseEntry, id: 'e1', project_slug: 'alpha', project_name: 'Alpha' },
-      { ...baseEntry, id: 'e2', project_slug: 'beta',  project_name: 'Beta'  },
+      { ...baseEntry, id: 'e2', project_slug: 'beta', project_name: 'Beta' },
       { ...baseEntry, id: 'e3', project_slug: 'alpha', project_name: 'Alpha' },
     ];
     mockDb.listFleetDailyChangelog.mockResolvedValue(fleetEntries);
     const res = await request('/v1/changelog/fleet/daily?date=2026-05-25');
-    const json = await res.json() as any;
+    const json = (await res.json()) as any;
     expect(json.entries).toHaveLength(3);
     expect(Object.keys(json.by_project).sort()).toEqual(['alpha', 'beta']);
-    expect(json.by_project['alpha']).toHaveLength(2);
-    expect(json.by_project['beta']).toHaveLength(1);
+    expect(json.by_project.alpha).toHaveLength(2);
+    expect(json.by_project.beta).toHaveLength(1);
   });
 
   it('late-UTC IST date reaches db correctly (regression: IST today hid late-UTC entries)', async () => {
@@ -173,7 +173,7 @@ describe('POST /v1/changelog/from-task', () => {
       body: JSON.stringify({ task_id: 'task-uuid-1', source: 'symphony-cli' }),
     });
     expect(res.status).toBe(201);
-    const json = await res.json() as any;
+    const json = (await res.json()) as any;
     expect(json.data).toBeDefined();
     expect(mockDb.createChangelogEntry).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -189,7 +189,11 @@ describe('POST /v1/changelog/from-task', () => {
   });
 
   it('maps bug task_type to fix changelog type', async () => {
-    mockDb.getTask.mockResolvedValue({ ...baseTask, task_type: 'bug', title: 'Fix crash on login' });
+    mockDb.getTask.mockResolvedValue({
+      ...baseTask,
+      task_type: 'bug',
+      title: 'Fix crash on login',
+    });
     const res = await request('/v1/changelog/from-task', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -247,7 +251,7 @@ describe('POST /v1/changelog/from-task', () => {
       body: JSON.stringify({ task_id: 'task-uuid-1' }),
     });
     expect(res.status).toBe(200);
-    const json = await res.json() as any;
+    const json = (await res.json()) as any;
     expect(json.skipped).toBe(true);
     expect(json.reason).toBe('infra_task');
     expect(mockDb.createChangelogEntry).not.toHaveBeenCalled();
@@ -261,7 +265,7 @@ describe('POST /v1/changelog/from-task', () => {
       body: JSON.stringify({ task_id: 'task-uuid-1' }),
     });
     expect(res.status).toBe(200);
-    const json = await res.json() as any;
+    const json = (await res.json()) as any;
     expect(json.skipped).toBe(true);
     expect(json.reason).toBe('duplicate');
     expect(mockDb.createChangelogEntry).not.toHaveBeenCalled();
@@ -294,7 +298,7 @@ describe('POST /v1/changelog/from-task', () => {
       body: JSON.stringify({ task_id: 'task-uuid-1' }),
     });
     expect(res.status).toBe(200);
-    const json = await res.json() as any;
+    const json = (await res.json()) as any;
     expect(json.skipped).toBe(true);
     expect(json.reason).toBe('no_project');
   });
@@ -315,7 +319,11 @@ describe('POST /v1/changelog/from-task', () => {
     const res = await request('/v1/changelog/from-task', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ task_id: 'task-uuid-1', source: 'symphony-backfill', use_task_updated_at: true }),
+      body: JSON.stringify({
+        task_id: 'task-uuid-1',
+        source: 'symphony-backfill',
+        use_task_updated_at: true,
+      }),
     });
     expect(res.status).toBe(201);
     expect(mockDb.createChangelogEntry).toHaveBeenCalledWith(

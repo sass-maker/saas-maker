@@ -34,7 +34,7 @@ export class SaaSMakerClient {
     const http = new HttpClient(
       config.baseUrl || 'https://api.sassmaker.com',
       config.apiKey,
-      config.sessionToken,
+      config.sessionToken
     );
 
     this.feedback = new FeedbackService(http);

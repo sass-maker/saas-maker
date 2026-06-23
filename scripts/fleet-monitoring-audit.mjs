@@ -40,7 +40,18 @@ function loadProjects() {
 function readTextFiles(dir) {
   const output = [];
   const stack = [dir];
-  const ignored = new Set(['node_modules', '.next', 'dist', 'build', '.wrangler', '.git', '.claude', 'coverage', 'out', 'tmp']);
+  const ignored = new Set([
+    'node_modules',
+    '.next',
+    'dist',
+    'build',
+    '.wrangler',
+    '.git',
+    '.claude',
+    'coverage',
+    'out',
+    'tmp',
+  ]);
   while (stack.length > 0) {
     const current = stack.pop();
     if (!current || !fs.existsSync(current)) continue;
@@ -59,7 +70,9 @@ function readTextFiles(dir) {
 
 function isAnalyticsSource(file) {
   const normalized = file.split(path.sep).join('/');
-  return /(?:analytics|analytics-events|foundry-monitoring|monitoring|posthog-provider|providers)\.(tsx?|jsx?)$/.test(normalized);
+  return /(?:analytics|analytics-events|foundry-monitoring|monitoring|posthog-provider|providers)\.(tsx?|jsx?)$/.test(
+    normalized
+  );
 }
 
 function auditPostHogIdentity(files) {
@@ -72,16 +85,33 @@ function auditPostHogIdentity(files) {
     const source = fs.readFileSync(file, 'utf8');
     if (!/posthog|PostHog|capture\(|trackEvent|trackRecommendationEvent/.test(source)) continue;
     hasPostHogSource = true;
-    if (/from\s+['"]@saas-maker\/posthog-client(?:\/server)?['"]|require\(['"]@saas-maker\/posthog-client(?:\/server)?['"]\)/.test(source)) {
+    if (
+      /from\s+['"]@saas-maker\/posthog-client(?:\/server)?['"]|require\(['"]@saas-maker\/posthog-client(?:\/server)?['"]\)/.test(
+        source
+      )
+    ) {
       findings.push(`${path.relative(FLEET_ROOT, file)} imports @saas-maker/posthog-client`);
     }
-    if (/foundry_project_id\s*:|(?:^|[^_])project_slug\s*:|project\s*:\s*(?:PROJECT|PROJECT_SLUG|["'][a-z0-9_-]+["'])/.test(source)) {
-      findings.push(`${path.relative(FLEET_ROOT, file)} uses a legacy PostHog project identity property`);
+    if (
+      /foundry_project_id\s*:|(?:^|[^_])project_slug\s*:|project\s*:\s*(?:PROJECT|PROJECT_SLUG|["'][a-z0-9_-]+["'])/.test(
+        source
+      )
+    ) {
+      findings.push(
+        `${path.relative(FLEET_ROOT, file)} uses a legacy PostHog project identity property`
+      );
     }
     if (/posthog\.capture\([^)]*project_slug\s*:/.test(source)) {
-      findings.push(`${path.relative(FLEET_ROOT, file)} passes project_slug directly to posthog.capture`);
+      findings.push(
+        `${path.relative(FLEET_ROOT, file)} passes project_slug directly to posthog.capture`
+      );
     }
-    if (/project_id\s*:/.test(source) && /function\s+(?:trackEvent|emit|trackRecommendationEvent)\b|const\s+(?:trackEvent|emit|trackRecommendationEvent)\b/.test(source)) {
+    if (
+      /project_id\s*:/.test(source) &&
+      /function\s+(?:trackEvent|emit|trackRecommendationEvent)\b|const\s+(?:trackEvent|emit|trackRecommendationEvent)\b/.test(
+        source
+      )
+    ) {
       hasLocalProjectIdWrapper = true;
     }
   }
@@ -128,15 +158,26 @@ function auditProject(project) {
     .join('\n');
 
   const hasPostHogDependency = /@saas-maker\/posthog-client|posthog-js|posthog-node/.test(depText);
-  const hasPostHogSource = /PostHogProvider|posthog\.init|configurePostHog|initPostHog/.test(source);
+  const hasPostHogSource = /PostHogProvider|posthog\.init|configurePostHog|initPostHog/.test(
+    source
+  );
   const posthogIdentity = auditPostHogIdentity(files);
-  const hasPageCrashCapture = /installBrowserMonitoring|capturePageCrash|foundry_page_crash/.test(source);
-  const hasAuthFailureCapture = /captureAuthFailure|captureSignupFailure|foundry_auth_failure|foundry_signup_failure/.test(source);
+  const hasPageCrashCapture = /installBrowserMonitoring|capturePageCrash|foundry_page_crash/.test(
+    source
+  );
+  const hasAuthFailureCapture =
+    /captureAuthFailure|captureSignupFailure|foundry_auth_failure|foundry_signup_failure/.test(
+      source
+    );
   const hasSentry = /@sentry\/|Sentry\.init/.test(`${depText}\n${source}`);
 
   const checks = [
     { name: 'posthog_dependency_or_init', ok: hasPostHogDependency || hasPostHogSource },
-    { name: 'posthog_local_project_id_wrapper', ok: posthogIdentity.ok, details: posthogIdentity.findings },
+    {
+      name: 'posthog_local_project_id_wrapper',
+      ok: posthogIdentity.ok,
+      details: posthogIdentity.findings,
+    },
     { name: 'page_crash_capture', ok: hasPageCrashCapture },
     { name: 'auth_or_signup_failure_capture', ok: !requiresAuthCapture || hasAuthFailureCapture },
   ];
@@ -167,7 +208,10 @@ function printMarkdown(results) {
   console.log('| Project | Status | Missing |');
   console.log('| --- | --- | --- |');
   for (const result of results) {
-    const missing = result.checks.filter((check) => !check.ok).map((check) => check.name).join(', ');
+    const missing = result.checks
+      .filter((check) => !check.ok)
+      .map((check) => check.name)
+      .join(', ');
     console.log(`| ${result.project} | ${result.ok ? 'pass' : 'fail'} | ${missing || '-'} |`);
   }
 }
@@ -175,7 +219,8 @@ function printMarkdown(results) {
 const args = parseArgs(process.argv.slice(2));
 const projects = loadProjects().filter((project) => !args.project || project.slug === args.project);
 const results = projects.map(auditProject);
-if (args.json) console.log(JSON.stringify({ generatedAt: new Date().toISOString(), results }, null, 2));
+if (args.json)
+  console.log(JSON.stringify({ generatedAt: new Date().toISOString(), results }, null, 2));
 else printMarkdown(results);
 
 if (args.failOnMissing && results.some((result) => !result.ok)) process.exit(1);

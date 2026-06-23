@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent, Badge } from "@saas-maker/ui";
-import { Activity, Terminal, RefreshCcw } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useEffect, useState } from 'react';
+import { Card, CardHeader, CardTitle, CardContent, Badge } from '@saas-maker/ui';
+import { Activity, Terminal, RefreshCcw } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface LatencyMetric {
   project_id: string;
@@ -21,11 +21,11 @@ export function LatencyMap() {
   async function fetchLatency() {
     setRefreshing(true);
     try {
-      const res = await fetch("/api/fleet/latency");
+      const res = await fetch('/api/fleet/latency');
       const data = await res.json();
       setMetrics(data.latency || []);
-    } catch (err) {
-      console.error("Failed to load latency map");
+    } catch (_err) {
+      console.error('Failed to load latency map');
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -36,7 +36,7 @@ export function LatencyMap() {
     fetchLatency();
     const interval = setInterval(fetchLatency, 60000);
     return () => clearInterval(interval);
-  }, []);
+  }, [fetchLatency]);
 
   if (loading) return null;
 
@@ -49,9 +49,9 @@ export function LatencyMap() {
             Fleet Latency Map
           </CardTitle>
         </div>
-        <Button 
-          variant="ghost" 
-          size="icon" 
+        <Button
+          variant="ghost"
+          size="icon"
           className="h-6 w-6 text-primary/50 hover:text-primary"
           onClick={fetchLatency}
           disabled={refreshing}
@@ -67,7 +67,10 @@ export function LatencyMap() {
             </div>
           ) : (
             metrics.map((metric, idx) => (
-              <div key={`${metric.project_id}-${metric.trace_name}-${idx}`} className="p-4 hover:bg-primary/10 transition-colors">
+              <div
+                key={`${metric.project_id}-${metric.trace_name}-${idx}`}
+                className="p-4 hover:bg-primary/10 transition-colors"
+              >
                 <div className="flex items-center justify-between gap-4">
                   <div className="space-y-1">
                     <p className="text-xs font-mono font-bold text-foreground leading-tight truncate max-w-[200px]">
@@ -82,8 +85,8 @@ export function LatencyMap() {
                     </div>
                   </div>
                   <div className="text-right">
-                    <Badge 
-                      variant={metric.avg_duration_ms > 1000 ? "destructive" : "secondary"}
+                    <Badge
+                      variant={metric.avg_duration_ms > 1000 ? 'destructive' : 'secondary'}
                       className="font-mono text-[10px] tabular-nums"
                     >
                       ~{metric.avg_duration_ms}ms

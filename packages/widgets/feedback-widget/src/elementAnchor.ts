@@ -38,9 +38,9 @@ export function reactSource(el: Element): string | null {
       let fiber: any = (el as any)[key];
       let hops = 0;
       while (fiber && hops < 30) {
-        const src = fiber._debugSource || (fiber.memoizedProps && fiber.memoizedProps.__source);
-        if (src && src.fileName) {
-          return src.fileName + ':' + (src.lineNumber || 0) + (src.columnNumber ? ':' + src.columnNumber : '');
+        const src = fiber._debugSource || fiber.memoizedProps?.__source;
+        if (src?.fileName) {
+          return `${src.fileName}:${src.lineNumber || 0}${src.columnNumber ? `:${src.columnNumber}` : ''}`;
         }
         fiber = fiber._debugOwner || fiber.return;
         hops++;
@@ -54,7 +54,7 @@ export function reactSource(el: Element): string | null {
 /** A data-source / data-pp-source attribute (from a source-locator plugin), walking up. */
 export function attrSource(el: Element): string | null {
   let cur: Element | null = el;
-  while (cur && cur.getAttribute) {
+  while (cur?.getAttribute) {
     const v = cur.getAttribute('data-pp-source') || cur.getAttribute('data-source');
     if (v) return v;
     cur = cur.parentElement;
@@ -64,8 +64,8 @@ export function attrSource(el: Element): string | null {
 
 /** A stable-ish CSS selector: #id anchors where possible, else an nth-child path. */
 export function stableSelector(el: Element): string {
-  if (!el || !el.tagName) return '';
-  if (el.id) return '#' + cssEscape(el.id);
+  if (!el?.tagName) return '';
+  if (el.id) return `#${cssEscape(el.id)}`;
   let path = el.tagName.toLowerCase();
   let cur: Element = el;
   let depth = 0;
@@ -73,9 +73,9 @@ export function stableSelector(el: Element): string {
     const parent: HTMLElement = cur.parentElement;
     const kids: Element[] = parent.children ? Array.prototype.slice.call(parent.children) : [];
     const idx = kids.indexOf(cur) + 1;
-    path = parent.tagName.toLowerCase() + ':nth-child(' + idx + ') > ' + path;
+    path = `${parent.tagName.toLowerCase()}:nth-child(${idx}) > ${path}`;
     if (parent.id) {
-      path = '#' + cssEscape(parent.id) + ' > ' + path;
+      path = `#${cssEscape(parent.id)} > ${path}`;
       break;
     }
     cur = parent;
@@ -85,7 +85,7 @@ export function stableSelector(el: Element): string {
 }
 
 export function textSnippet(el: Element): string {
-  return (el && el.textContent ? el.textContent : '').replace(/\s+/g, ' ').trim().slice(0, SNIPPET_MAX);
+  return (el?.textContent ? el.textContent : '').replace(/\s+/g, ' ').trim().slice(0, SNIPPET_MAX);
 }
 
 /** Best available source hint, in priority order. May be null. */
@@ -97,7 +97,7 @@ export function resolveSource(el: Element): string | null {
 export function describeElement(el: Element): ElementAnchor {
   return {
     selector: stableSelector(el),
-    tag: el && el.tagName ? el.tagName.toLowerCase() : null,
+    tag: el?.tagName ? el.tagName.toLowerCase() : null,
     text: textSnippet(el),
     source: resolveSource(el),
     url: typeof location !== 'undefined' ? location.pathname + location.search : '',

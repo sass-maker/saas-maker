@@ -1,20 +1,20 @@
-import { Suspense } from "react";
-import { PageHeader } from "@/components/page-header";
-import { 
-  Card, 
-  CardHeader, 
-  CardTitle, 
-  CardDescription, 
-  CardContent,
-  Badge,
-  Button
-} from "@saas-maker/ui";
-import { Activity, Clock, AlertTriangle, ShieldCheck, Zap, Globe, Rocket, Terminal } from "lucide-react";
-import { getAuthenticatedProject } from "./get-project";
-import { getProjectOperationalState } from "@/lib/posthog-server";
-import { getFleetCIStatus } from "@/lib/github-server";
+import { PageHeader } from '@/components/page-header';
+import { Card, CardHeader, CardTitle, CardContent, Badge, Button } from '@saas-maker/ui';
+import {
+  Activity,
+  Clock,
+  AlertTriangle,
+  ShieldCheck,
+  Zap,
+  Globe,
+  Rocket,
+  Terminal,
+} from 'lucide-react';
+import { getAuthenticatedProject } from './get-project';
+import { getProjectOperationalState } from '@/lib/posthog-server';
+import { getFleetCIStatus } from '@/lib/github-server';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -26,7 +26,7 @@ export default async function ProjectStatusPage({ params }: Props) {
 
   // 1. Fetch Live Operational State (PostHog)
   const opState = await getProjectOperationalState(project.id);
-  
+
   // 2. Fetch CI/CD State (GitHub)
   const ciMap = await getFleetCIStatus([project.slug]);
   const latestCI = ciMap[project.slug];
@@ -53,7 +53,9 @@ export default async function ProjectStatusPage({ params }: Props) {
         <Card className="bg-primary/5 border-primary/20">
           <CardHeader className="p-4 flex flex-row items-center justify-between space-y-0">
             <div className="space-y-1">
-              <p className="text-[10px] font-bold uppercase tracking-wider text-primary/70">Avg Latency</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-primary/70">
+                Avg Latency
+              </p>
               <div className="text-2xl font-bold">{opState?.avgLatency || 0}ms</div>
             </div>
             <Activity className="h-5 w-5 text-primary/40" />
@@ -63,7 +65,9 @@ export default async function ProjectStatusPage({ params }: Props) {
         <Card className="bg-destructive/5 border-destructive/20">
           <CardHeader className="p-4 flex flex-row items-center justify-between space-y-0">
             <div className="space-y-1">
-              <p className="text-[10px] font-bold uppercase tracking-wider text-destructive/70">Errors (24h)</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-destructive/70">
+                Errors (24h)
+              </p>
               <div className="text-2xl font-bold">{opState?.errorCount || 0}</div>
             </div>
             <AlertTriangle className="h-5 w-5 text-destructive/40" />
@@ -73,9 +77,13 @@ export default async function ProjectStatusPage({ params }: Props) {
         <Card className="bg-muted/50 border-muted">
           <CardHeader className="p-4 flex flex-row items-center justify-between space-y-0">
             <div className="space-y-1">
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Last Activity</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Last Activity
+              </p>
               <div className="text-lg font-bold truncate max-w-[150px]">
-                {opState?.lastEventAt ? new Date(opState.lastEventAt).toLocaleTimeString() : 'No data'}
+                {opState?.lastEventAt
+                  ? new Date(opState.lastEventAt).toLocaleTimeString()
+                  : 'No data'}
               </div>
             </div>
             <Clock className="h-5 w-5 text-muted-foreground/40" />
@@ -100,7 +108,9 @@ export default async function ProjectStatusPage({ params }: Props) {
                     <Badge variant={latestCI.conclusion === 'success' ? 'success' : 'destructive'}>
                       {latestCI.conclusion?.toUpperCase() || 'RUNNING'}
                     </Badge>
-                    <span className="text-xs font-mono text-muted-foreground">{latestCI.workflowName}</span>
+                    <span className="text-xs font-mono text-muted-foreground">
+                      {latestCI.workflowName}
+                    </span>
                   </div>
                   {latestCI.updatedAt && (
                     <p className="text-[10px] text-muted-foreground italic">
@@ -133,10 +143,16 @@ export default async function ProjectStatusPage({ params }: Props) {
             </div>
           </CardHeader>
           <CardContent className="p-6 grid grid-cols-2 gap-4">
-            <Button variant="outline" className="h-10 text-xs gap-2 border-primary/20 hover:bg-primary/5">
+            <Button
+              variant="outline"
+              className="h-10 text-xs gap-2 border-primary/20 hover:bg-primary/5"
+            >
               <Terminal className="h-3 w-3" /> Fix Unit
             </Button>
-            <Button variant="outline" className="h-10 text-xs gap-2 border-primary/20 hover:bg-primary/5">
+            <Button
+              variant="outline"
+              className="h-10 text-xs gap-2 border-primary/20 hover:bg-primary/5"
+            >
               <Zap className="h-3 w-3" /> Sync Secrets
             </Button>
             <Button variant="default" className="h-10 text-xs gap-2 col-span-2 shadow-lg">

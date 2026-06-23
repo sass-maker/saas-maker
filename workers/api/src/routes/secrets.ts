@@ -23,12 +23,7 @@ secrets.get('/', async (c) => {
     results = await db.client
       .select()
       .from(foundry_secrets)
-      .where(
-        or(
-          isNull(foundry_secrets.project_id),
-          eq(foundry_secrets.project_id, project_id)
-        )
-      );
+      .where(or(isNull(foundry_secrets.project_id), eq(foundry_secrets.project_id, project_id)));
   } else {
     // Just fetch all (user is authenticated at this point)
     results = await db.client.select().from(foundry_secrets);
@@ -50,7 +45,7 @@ secrets.post('/', async (c) => {
   }
 
   const id = crypto.randomUUID();
-  
+
   // Upsert logic (Drizzle doesn't have a clean SQLite upsert for conflict on non-primary yet in some versions)
   // We'll check existence first for simplicity in this factory unit
   const existing = await db.client

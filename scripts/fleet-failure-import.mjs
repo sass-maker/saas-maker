@@ -169,7 +169,7 @@ function upsertViaSymphony(payload) {
       '--priority',
       payload.priority,
     ],
-    { encoding: 'utf8', stdio: 'inherit' },
+    { encoding: 'utf8', stdio: 'inherit' }
   );
   return cli.status === 0;
 }
@@ -184,7 +184,12 @@ function printPretty({ fresh, skipped, failures }, args) {
   for (const payload of fresh) {
     console.log('');
     console.log(`+ ${payload.title} [${payload.priority}]`);
-    console.log(payload.description.split('\n').map((line) => `  ${line}`).join('\n'));
+    console.log(
+      payload.description
+        .split('\n')
+        .map((line) => `  ${line}`)
+        .join('\n')
+    );
   }
   if (skipped.length) {
     console.log('');
@@ -226,7 +231,9 @@ async function main() {
   if (!args.json) console.log(`\nUpserted ${written}/${fresh.length} tasks via Symphony.`);
 }
 
-const isMain = process.argv[1] && path.resolve(process.argv[1]) === path.resolve(new URL(import.meta.url).pathname);
+const isMain =
+  process.argv[1] &&
+  path.resolve(process.argv[1]) === path.resolve(new URL(import.meta.url).pathname);
 if (isMain) {
   main().catch((error) => {
     console.error(error.stack ?? error.message ?? error);

@@ -1,29 +1,29 @@
-"use client";
+'use client';
 
-import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback } from "react";
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useCallback } from 'react';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { ArrowDownUp } from "lucide-react";
+} from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
+import { ArrowDownUp } from 'lucide-react';
 
 export function FilterBar() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const type = searchParams.get("type") ?? "all";
-  const status = searchParams.get("status") ?? "all";
-  const sort = searchParams.get("sort") ?? "newest";
+  const type = searchParams.get('type') ?? 'all';
+  const status = searchParams.get('status') ?? 'all';
+  const sort = searchParams.get('sort') ?? 'newest';
 
   const updateParam = useCallback(
     (key: string, value: string) => {
       const params = new URLSearchParams(searchParams.toString());
-      if (value === "all") {
+      if (value === 'all') {
         params.delete(key);
       } else {
         params.set(key, value);
@@ -34,12 +34,12 @@ export function FilterBar() {
   );
 
   const toggleSort = useCallback(() => {
-    updateParam("sort", sort === "newest" ? "upvotes" : "newest");
+    updateParam('sort', sort === 'newest' ? 'upvotes' : 'newest');
   }, [sort, updateParam]);
 
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <Select value={type} onValueChange={(v) => updateParam("type", v)}>
+      <Select value={type} onValueChange={(v) => updateParam('type', v)}>
         <SelectTrigger className="w-[140px]">
           <SelectValue placeholder="Type" />
         </SelectTrigger>
@@ -51,7 +51,7 @@ export function FilterBar() {
         </SelectContent>
       </Select>
 
-      <Select value={status} onValueChange={(v) => updateParam("status", v)}>
+      <Select value={status} onValueChange={(v) => updateParam('status', v)}>
         <SelectTrigger className="w-[160px]">
           <SelectValue placeholder="Status" />
         </SelectTrigger>
@@ -65,7 +65,7 @@ export function FilterBar() {
 
       <Button variant="outline" size="sm" onClick={toggleSort} className="gap-2">
         <ArrowDownUp className="h-4 w-4" />
-        {sort === "newest" ? "Newest" : "Most Upvoted"}
+        {sort === 'newest' ? 'Newest' : 'Most Upvoted'}
       </Button>
     </div>
   );

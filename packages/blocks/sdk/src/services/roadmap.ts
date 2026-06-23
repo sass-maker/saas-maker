@@ -28,16 +28,20 @@ export class RoadmapService {
   listPublic(slug: string): Promise<RoadmapListResponse> {
     return this.http.request<RoadmapListResponse>(
       'GET',
-      `/v1/roadmap/public/${encodeURIComponent(slug)}`,
+      `/v1/roadmap/public/${encodeURIComponent(slug)}`
     );
   }
 
   /** Vote on a roadmap item (POST /v1/roadmap/public/:slug/:id/vote). */
-  vote(slug: string, itemId: string, data: { user_identifier: string; vote: 1 | -1 }): Promise<{ ok: true }> {
+  vote(
+    slug: string,
+    itemId: string,
+    data: { user_identifier: string; vote: 1 | -1 }
+  ): Promise<{ ok: true }> {
     return this.http.request<{ ok: true }>(
       'POST',
       `/v1/roadmap/public/${encodeURIComponent(slug)}/${encodeURIComponent(itemId)}/vote`,
-      data,
+      data
     );
   }
 
@@ -46,7 +50,7 @@ export class RoadmapService {
     const params = new URLSearchParams({ user_identifier: userIdentifier });
     return this.http.request<{ ok: true }>(
       'DELETE',
-      `/v1/roadmap/public/${encodeURIComponent(slug)}/${encodeURIComponent(itemId)}/vote?${params}`,
+      `/v1/roadmap/public/${encodeURIComponent(slug)}/${encodeURIComponent(itemId)}/vote?${params}`
     );
   }
 }

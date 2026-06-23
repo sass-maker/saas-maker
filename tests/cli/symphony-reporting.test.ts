@@ -28,14 +28,37 @@ describe('Symphony reporting helpers', () => {
   });
 
   it('scores similar task titles high enough for duplicate warnings', () => {
-    expect(titleSimilarity('Improve checkout empty state copy', 'Improve checkout empty state')).toBeGreaterThanOrEqual(0.75);
+    expect(
+      titleSimilarity('Improve checkout empty state copy', 'Improve checkout empty state')
+    ).toBeGreaterThanOrEqual(0.75);
   });
 
   it('summarizes tasks by project and changelog coverage', () => {
     const summary = buildTaskPassSummary([
-      { id: '1', project_slug: 'reader', status: 'done', task_type: 'feature', has_changelog: true, updated_at: '2026-05-26T00:00:00Z' },
-      { id: '2', project_slug: 'reader', status: 'done', task_type: 'bug', has_changelog: false, updated_at: '2026-05-26T00:00:00Z' },
-      { id: '3', project_slug: 'saas-maker', status: 'todo', task_type: 'chore', has_changelog: false, updated_at: '2026-05-26T00:00:00Z' },
+      {
+        id: '1',
+        project_slug: 'reader',
+        status: 'done',
+        task_type: 'feature',
+        has_changelog: true,
+        updated_at: '2026-05-26T00:00:00Z',
+      },
+      {
+        id: '2',
+        project_slug: 'reader',
+        status: 'done',
+        task_type: 'bug',
+        has_changelog: false,
+        updated_at: '2026-05-26T00:00:00Z',
+      },
+      {
+        id: '3',
+        project_slug: 'saas-maker',
+        status: 'todo',
+        task_type: 'chore',
+        has_changelog: false,
+        updated_at: '2026-05-26T00:00:00Z',
+      },
     ]);
 
     expect(summary.done).toBe(2);

@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -11,15 +11,15 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Plus } from "lucide-react";
-import { apiFetch } from "@/lib/api";
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Plus } from 'lucide-react';
+import { apiFetch } from '@/lib/api';
 
 async function getToken(): Promise<string> {
-  const res = await fetch("/api/token");
-  if (!res.ok) throw new Error("Failed to get auth token");
+  const res = await fetch('/api/token');
+  if (!res.ok) throw new Error('Failed to get auth token');
   const data = await res.json();
   return data.token;
 }
@@ -27,8 +27,8 @@ async function getToken(): Promise<string> {
 export function CreateProjectDialog() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [name, setName] = useState("");
-  const [gitUrl, setGitUrl] = useState("");
+  const [name, setName] = useState('');
+  const [gitUrl, setGitUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -45,13 +45,13 @@ export function CreateProjectDialog() {
       const payload: Record<string, string> = { name: name.trim() };
       if (trimmedGit) payload.git_url = trimmedGit;
       const project = await apiFetch(
-        "/v1/projects",
-        { method: "POST", body: JSON.stringify(payload) },
+        '/v1/projects',
+        { method: 'POST', body: JSON.stringify(payload) },
         token
       );
       setOpen(false);
-      setName("");
-      setGitUrl("");
+      setName('');
+      setGitUrl('');
       // Navigate to the new project or refresh the list
       if (project?.slug) {
         router.push(`/projects/${project.slug}`);
@@ -59,7 +59,7 @@ export function CreateProjectDialog() {
         router.refresh();
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to create project");
+      setError(err instanceof Error ? err.message : 'Failed to create project');
     } finally {
       setLoading(false);
     }
@@ -103,23 +103,18 @@ export function CreateProjectDialog() {
                 onChange={(e) => setGitUrl(e.target.value)}
               />
               <p className="text-xs text-muted-foreground">
-                Fleet clients (e.g. CodeVetter) use this to auto-link local repos to the right project.
+                Fleet clients (e.g. CodeVetter) use this to auto-link local repos to the right
+                project.
               </p>
             </div>
-            {error && (
-              <p className="text-sm text-destructive">{error}</p>
-            )}
+            {error && <p className="text-sm text-destructive">{error}</p>}
           </div>
           <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setOpen(false)}
-            >
+            <Button type="button" variant="outline" onClick={() => setOpen(false)}>
               Cancel
             </Button>
             <Button type="submit" disabled={loading || !name.trim()}>
-              {loading ? "Creating..." : "Create Project"}
+              {loading ? 'Creating...' : 'Create Project'}
             </Button>
           </DialogFooter>
         </form>

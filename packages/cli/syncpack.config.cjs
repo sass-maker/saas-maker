@@ -1,30 +1,25 @@
 module.exports = {
-  indent: "  ",
+  indent: '  ',
   semverGroups: [
     {
-      range: "",
-      dependencyTypes: ["prod", "dev"],
-      dependencies: ["**"],
-      packages: ["**"]
-    }
+      range: '',
+      dependencyTypes: ['prod', 'dev'],
+      dependencies: ['**'],
+      packages: ['**'],
+    },
   ],
   versionGroups: [
     {
-      label: "Foundry Core Blocks",
-      dependencies: ["@saas-maker/*"],
-      packages: ["**"]
+      label: 'Foundry Core Blocks',
+      dependencies: ['@saas-maker/*'],
+      packages: ['**'],
     },
     {
-      label: "Standard React Ecosystem",
-      dependencies: ["react", "react-dom", "next"],
-      packages: ["**"]
-    }
+      label: 'Standard React Ecosystem',
+      dependencies: ['react', 'react-dom', 'next'],
+      packages: ['**'],
+    },
   ],
-  sortAz: [
-    "dependencies",
-    "devDependencies",
-    "peerDependencies",
-    "scripts"
-  ],
-  sortFirst: ["name", "version", "private", "type", "scripts", "dependencies", "devDependencies"]
+  sortAz: ['dependencies', 'devDependencies', 'peerDependencies', 'scripts'],
+  sortFirst: ['name', 'version', 'private', 'type', 'scripts', 'dependencies', 'devDependencies'],
 };

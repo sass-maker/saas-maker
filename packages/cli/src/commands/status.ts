@@ -97,11 +97,27 @@ export async function statusCommand(options: StatusOptions = {}): Promise<void> 
       requestApi({ path: '/v1/testimonials', auth: 'project', projectKey }),
       requestApi({ path: '/v1/changelog', auth: 'project', projectKey }),
       linkedProjectId
-        ? requestApi({ path: '/v1/testimonials/all', auth: 'session', query: { project_id: linkedProjectId } })
-        : Promise.resolve({ ok: false, status: 0, url: '', data: undefined, text: 'Session route unavailable' }),
+        ? requestApi({
+            path: '/v1/testimonials/all',
+            auth: 'session',
+            query: { project_id: linkedProjectId },
+          })
+        : Promise.resolve({
+            ok: false,
+            status: 0,
+            url: '',
+            data: undefined,
+            text: 'Session route unavailable',
+          }),
       linkedProjectId
         ? requestApi({ path: `/v1/changelog/dashboard/${linkedProjectId}`, auth: 'session' })
-        : Promise.resolve({ ok: false, status: 0, url: '', data: undefined, text: 'Session route unavailable' }),
+        : Promise.resolve({
+            ok: false,
+            status: 0,
+            url: '',
+            data: undefined,
+            text: 'Session route unavailable',
+          }),
     ]);
 
     spinner?.stop();
@@ -111,8 +127,18 @@ export async function statusCommand(options: StatusOptions = {}): Promise<void> 
       asFeature('Feedback', feedbackRes, 'project', countFromList(feedbackRes)),
       asFeature('Waitlist', waitlistRes, 'project', countFromSingleNumber(waitlistRes, 'count')),
       testimonialsSessionRes.ok
-        ? asFeature('Testimonials', testimonialsSessionRes, 'session', countFromList(testimonialsSessionRes))
-        : asFeature('Testimonials', testimonialsPublicRes, 'fallback', countFromList(testimonialsPublicRes)),
+        ? asFeature(
+            'Testimonials',
+            testimonialsSessionRes,
+            'session',
+            countFromList(testimonialsSessionRes)
+          )
+        : asFeature(
+            'Testimonials',
+            testimonialsPublicRes,
+            'fallback',
+            countFromList(testimonialsPublicRes)
+          ),
       changelogSessionRes.ok
         ? asFeature('Changelog', changelogSessionRes, 'session', countFromList(changelogSessionRes))
         : asFeature('Changelog', changelogPublicRes, 'fallback', countFromList(changelogPublicRes)),

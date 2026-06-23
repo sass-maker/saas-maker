@@ -56,7 +56,8 @@ function resolveAuthHeaders(options: RequestApiOptions): Record<string, string> 
     return headers;
   }
   if (mode === 'project') {
-    if (!projectKey) throw new Error('No project key found. Run `fnd init` first or pass --project-key.');
+    if (!projectKey)
+      throw new Error('No project key found. Run `fnd init` first or pass --project-key.');
     headers['X-Project-Key'] = projectKey;
     return headers;
   }
@@ -69,7 +70,10 @@ function resolveAuthHeaders(options: RequestApiOptions): Record<string, string> 
   return headers;
 }
 
-function resolveRequestBody(options: RequestApiOptions, headers: Record<string, string>): BodyInit | undefined {
+function resolveRequestBody(
+  options: RequestApiOptions,
+  headers: Record<string, string>
+): BodyInit | undefined {
   if (options.body === undefined || options.body === null) return undefined;
   if (typeof options.body === 'string') return options.body;
   if (!headers['Content-Type']) headers['Content-Type'] = 'application/json';
@@ -93,7 +97,7 @@ export async function requestApi<T = unknown>(options: RequestApiOptions): Promi
       method,
       headers,
       body,
-      signal: controller.signal
+      signal: controller.signal,
     });
     const contentType = res.headers.get('content-type') ?? '';
 
@@ -131,6 +135,6 @@ export function getResponseError(response: ApiResponse<unknown>): string {
     const error = (response.data as { error?: unknown }).error;
     if (typeof error === 'string' && error.trim()) return error;
   }
-  if (response.text && response.text.trim()) return response.text.trim();
+  if (response.text?.trim()) return response.text.trim();
   return `API error: ${response.status}`;
 }

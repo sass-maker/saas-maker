@@ -57,8 +57,13 @@ if (shouldStartLocalApi && !apiHealthy) {
 
 await new Promise((resolve) => setTimeout(resolve, shouldStartLocalApi && !apiHealthy ? 1500 : 0));
 
-start('cockpit', 'pnpm', ['--dir', 'apps/cockpit', 'exec', 'next', 'dev', '--webpack', '--port', COCKPIT_PORT], {
-  LOCAL_AUTH_BYPASS: 'true',
-  NEXT_PUBLIC_API_URL: API_URL,
-  SAASMAKER_LOCAL_SESSION_TOKEN: LOCAL_SESSION_TOKEN,
-});
+start(
+  'cockpit',
+  'pnpm',
+  ['--dir', 'apps/cockpit', 'exec', 'next', 'dev', '--webpack', '--port', COCKPIT_PORT],
+  {
+    LOCAL_AUTH_BYPASS: 'true',
+    NEXT_PUBLIC_API_URL: API_URL,
+    SAASMAKER_LOCAL_SESSION_TOKEN: LOCAL_SESSION_TOKEN,
+  }
+);

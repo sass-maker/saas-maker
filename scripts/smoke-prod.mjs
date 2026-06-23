@@ -86,7 +86,9 @@ const checks = [
       const res = await fetch(`${APP}/projects`, { redirect: 'manual' });
       const html = await res.text();
       if (html.includes('localhost:8787')) {
-        throw new Error('shipped HTML references localhost:8787 — NEXT_PUBLIC_API_URL was missing at build');
+        throw new Error(
+          'shipped HTML references localhost:8787 — NEXT_PUBLIC_API_URL was missing at build'
+        );
       }
     },
   },
@@ -107,5 +109,7 @@ for (const check of checks) {
 }
 
 const ms = Date.now() - start;
-console.log(`\n${failures === 0 ? '✓' : '✗'} ${checks.length - failures}/${checks.length} passed in ${ms}ms`);
+console.log(
+  `\n${failures === 0 ? '✓' : '✗'} ${checks.length - failures}/${checks.length} passed in ${ms}ms`
+);
 process.exit(failures);

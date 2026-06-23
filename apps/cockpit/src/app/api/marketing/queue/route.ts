@@ -25,11 +25,11 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   const session = await getDashboardSession(req.headers);
   if (!session?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  const body = await req.json().catch(() => null) as MarketingPostInput | null;
+  const body = (await req.json().catch(() => null)) as MarketingPostInput | null;
   if (!body?.title || !body.body) {
     return NextResponse.json({ error: 'title and body are required' }, { status: 400 });
   }
-  const ownerId = await getDefaultCockpitOwnerId() ?? await ensureCockpitUser(session.user);
+  const ownerId = (await getDefaultCockpitOwnerId()) ?? (await ensureCockpitUser(session.user));
   const data = await createMarketingPost(ownerId, body);
   return NextResponse.json({ data }, { status: 201 });
 }

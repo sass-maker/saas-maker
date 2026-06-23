@@ -1,18 +1,12 @@
-"use client";
+'use client';
 
-import { useMemo, useState } from "react";
-import { Bot, KeyRound, Save, Trash2 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { useMemo, useState } from 'react';
+import { Bot, KeyRound, Save, Trash2 } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Table,
   TableBody,
@@ -20,20 +14,16 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { CopyButton } from "@/components/copy-button";
-import { apiFetchClient, getClientToken } from "@/lib/api-client";
-import {
-  buildAIGatewaySnippets,
-  formatLatency,
-  formatTokenCount,
-} from "@/lib/ai-gateway";
+} from '@/components/ui/table';
+import { CopyButton } from '@/components/copy-button';
+import { apiFetchClient, getClientToken } from '@/lib/api-client';
+import { buildAIGatewaySnippets, formatLatency, formatTokenCount } from '@/lib/ai-gateway';
 import type {
   AIProviderConfig,
   AIRequestRecord,
   AIRequestsResponse,
   AIUsageStats,
-} from "@saas-maker/contracts";
+} from '@saas-maker/contracts';
 
 interface AIGatewayPanelProps {
   projectId: string;
@@ -51,10 +41,10 @@ const emptyConfig: AIProviderConfig = {
   ai_api_key_preview: null,
 };
 
-function statusVariant(status: AIRequestRecord["status"]) {
-  if (status === "success") return "default";
-  if (status === "timeout") return "secondary";
-  return "destructive";
+function statusVariant(status: AIRequestRecord['status']) {
+  if (status === 'success') return 'default';
+  if (status === 'timeout') return 'secondary';
+  return 'destructive';
 }
 
 function formatDate(value: string): string {
@@ -70,9 +60,9 @@ export function AIGatewayPanel({
   initialRequests,
 }: AIGatewayPanelProps) {
   const [config, setConfig] = useState(initialConfig ?? emptyConfig);
-  const [baseUrl, setBaseUrl] = useState(initialConfig.ai_base_url ?? "");
-  const [model, setModel] = useState(initialConfig.ai_model ?? "");
-  const [apiKey, setApiKey] = useState("");
+  const [baseUrl, setBaseUrl] = useState(initialConfig.ai_base_url ?? '');
+  const [model, setModel] = useState(initialConfig.ai_model ?? '');
+  const [apiKey, setApiKey] = useState('');
   const [saving, setSaving] = useState(false);
   const [clearing, setClearing] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -97,13 +87,13 @@ export function AIGatewayPanel({
       const next = await apiFetchClient<AIProviderConfig>(
         `/v1/ai/config?project_id=${encodeURIComponent(projectId)}`,
         token,
-        { method: "PUT", body: JSON.stringify(body) }
+        { method: 'PUT', body: JSON.stringify(body) }
       );
       setConfig(next);
-      setApiKey("");
-      setMessage("Saved");
+      setApiKey('');
+      setMessage('Saved');
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to save AI config");
+      setError(err instanceof Error ? err.message : 'Failed to save AI config');
     } finally {
       setSaving(false);
     }
@@ -118,21 +108,23 @@ export function AIGatewayPanel({
       await apiFetchClient<{ ok: true }>(
         `/v1/ai/config?project_id=${encodeURIComponent(projectId)}`,
         token,
-        { method: "DELETE" }
+        { method: 'DELETE' }
       );
       setConfig(emptyConfig);
-      setBaseUrl("");
-      setModel("");
-      setApiKey("");
-      setMessage("Cleared");
+      setBaseUrl('');
+      setModel('');
+      setApiKey('');
+      setMessage('Cleared');
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to clear AI config");
+      setError(err instanceof Error ? err.message : 'Failed to clear AI config');
     } finally {
       setClearing(false);
     }
   }
 
-  const canSave = Boolean(baseUrl.trim() && model.trim()) && (config.ai_api_key_configured || Boolean(apiKey.trim()));
+  const canSave =
+    Boolean(baseUrl.trim() && model.trim()) &&
+    (config.ai_api_key_configured || Boolean(apiKey.trim()));
 
   return (
     <div className="space-y-6">
@@ -140,25 +132,19 @@ export function AIGatewayPanel({
         <Card>
           <CardHeader className="pb-2">
             <CardDescription>Total Requests</CardDescription>
-            <CardTitle className="text-2xl tabular-nums">
-              {initialUsage.total_requests}
-            </CardTitle>
+            <CardTitle className="text-2xl tabular-nums">{initialUsage.total_requests}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
             <CardDescription>Success</CardDescription>
-            <CardTitle className="text-2xl tabular-nums">
-              {initialUsage.success_count}
-            </CardTitle>
+            <CardTitle className="text-2xl tabular-nums">{initialUsage.success_count}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
             <CardDescription>Errors</CardDescription>
-            <CardTitle className="text-2xl tabular-nums">
-              {initialUsage.error_count}
-            </CardTitle>
+            <CardTitle className="text-2xl tabular-nums">{initialUsage.error_count}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
@@ -183,8 +169,8 @@ export function AIGatewayPanel({
                 OpenAI-compatible endpoint used by project-authenticated AI calls.
               </CardDescription>
             </div>
-            <Badge variant={config.ai_api_key_configured ? "default" : "secondary"}>
-              {config.ai_api_key_configured ? "Configured" : "Missing key"}
+            <Badge variant={config.ai_api_key_configured ? 'default' : 'secondary'}>
+              {config.ai_api_key_configured ? 'Configured' : 'Missing key'}
             </Badge>
           </div>
         </CardHeader>
@@ -220,12 +206,12 @@ export function AIGatewayPanel({
                 placeholder={
                   config.ai_api_key_preview
                     ? `Leave blank to keep ${config.ai_api_key_preview}`
-                    : "sk-..."
+                    : 'sk-...'
                 }
               />
               <Button onClick={saveConfig} disabled={!canSave || saving} className="gap-2">
                 <Save className="h-4 w-4" />
-                {saving ? "Saving" : "Save"}
+                {saving ? 'Saving' : 'Save'}
               </Button>
               <Button
                 variant="outline"
@@ -234,7 +220,7 @@ export function AIGatewayPanel({
                 className="gap-2"
               >
                 <Trash2 className="h-4 w-4" />
-                {clearing ? "Clearing" : "Clear"}
+                {clearing ? 'Clearing' : 'Clear'}
               </Button>
             </div>
           </div>
@@ -286,7 +272,8 @@ export function AIGatewayPanel({
         <CardHeader>
           <CardTitle>Requests</CardTitle>
           <CardDescription>
-            Last {initialRequests.data.length} requests, average latency {formatLatency(initialUsage.avg_latency_ms)}.
+            Last {initialRequests.data.length} requests, average latency{' '}
+            {formatLatency(initialUsage.avg_latency_ms)}.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -312,16 +299,14 @@ export function AIGatewayPanel({
                     <TableCell>{request.endpoint}</TableCell>
                     <TableCell>{request.model}</TableCell>
                     <TableCell>
-                      <Badge variant={statusVariant(request.status)}>
-                        {request.status}
-                      </Badge>
+                      <Badge variant={statusVariant(request.status)}>{request.status}</Badge>
                     </TableCell>
                     <TableCell>
                       {formatTokenCount((request.input_tokens ?? 0) + (request.output_tokens ?? 0))}
                     </TableCell>
                     <TableCell>{formatLatency(request.latency_ms)}</TableCell>
                     <TableCell className="max-w-64 truncate">
-                      {request.error_message ?? "-"}
+                      {request.error_message ?? '-'}
                     </TableCell>
                   </TableRow>
                 ))}

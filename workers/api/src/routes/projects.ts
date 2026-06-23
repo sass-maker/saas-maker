@@ -49,7 +49,7 @@ projects.get('/', async (c) => {
   const data = await trace<ProjectRow[]>(
     'db:listProjects',
     () => db.listProjectsByOwner(userId, source) as Promise<ProjectRow[]>,
-    { projectId: 'saasmaker-api' },
+    { projectId: 'saasmaker-api' }
   );
   return c.json({ data: data.map((project) => toPublicProject(project)) });
 });
@@ -72,14 +72,18 @@ projects.post('/', async (c) => {
   const project = await db.createProject({
     id: crypto.randomUUID(),
     name: body.name.trim(),
-    slug: slugify(body.name) + '-' + Date.now().toString(36),
+    slug: `${slugify(body.name)}-${Date.now().toString(36)}`,
     api_key: generateApiKey(),
     owner_id: userId,
     source,
     git_url: gitUrl,
   });
 
-  capture({ distinctId: userId, event: 'project_created', properties: { project_id: project.id, project_name: project.name, source } });
+  capture({
+    distinctId: userId,
+    event: 'project_created',
+    properties: { project_id: project.id, project_name: project.name, source },
+  });
 
   return c.json(toPublicProject(project), 201);
 });
@@ -109,8 +113,7 @@ projects.patch('/:id', async (c) => {
   if (!existing) return c.json({ error: 'Project not found' }, 404);
   if (existing.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
-  const gitUrl =
-    body.git_url === undefined ? undefined : (body.git_url?.trim?.() || null);
+  const gitUrl = body.git_url === undefined ? undefined : body.git_url?.trim?.() || null;
 
   const updated = await db.updateProject(projectId, {
     name: body.name,
@@ -135,7 +138,7 @@ projects.get('/:id/readme', async (c) => {
 projects.put('/:id/readme', async (c) => {
   const userId = c.get('userId')!;
   const projectId = c.req.param('id');
-  const body = await c.req.json() as { content: string };
+  const body = (await c.req.json()) as { content: string };
   if (typeof body.content !== 'string') return c.json({ error: 'content is required' }, 400);
   const db = getDb(c.env.DB);
   const project = await db.getProjectById(projectId);
@@ -156,7 +159,11 @@ projects.delete('/:id', async (c) => {
   if (existing.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
   await db.deleteProject(projectId);
-  capture({ distinctId: userId, event: 'project_deleted', properties: { project_id: projectId, project_name: existing.name } });
+  capture({
+    distinctId: userId,
+    event: 'project_deleted',
+    properties: { project_id: projectId, project_name: existing.name },
+  });
   return c.json({ ok: true });
 });
 

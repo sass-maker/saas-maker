@@ -34,7 +34,12 @@ const failingNavCheck = {
   ok: false,
   errors: [
     { type: 'navigation', status: 500, message: 'unexpected status 500' },
-    { type: 'bad-response', status: 503, url: 'https://alpha.example.com/api', resourceType: 'fetch' },
+    {
+      type: 'bad-response',
+      status: 503,
+      url: 'https://alpha.example.com/api',
+      resourceType: 'fetch',
+    },
   ],
 };
 
@@ -45,9 +50,7 @@ const failingConsoleOnlyCheck = {
   url: 'https://bravo.example.com',
   status: 200,
   ok: false,
-  errors: [
-    { type: 'console', message: 'TypeError: undefined is not a function' },
-  ],
+  errors: [{ type: 'console', message: 'TypeError: undefined is not a function' }],
 };
 
 const failingAuthCheck = {
@@ -98,7 +101,12 @@ describe('buildSmokeFailure', () => {
 
 describe('buildSmokeFailures + buildSmokeTaskPayloads', () => {
   it('skips passing checks and sorts by project/label', () => {
-    const failures = buildSmokeFailures([passingCheck, failingConsoleOnlyCheck, failingNavCheck, failingAuthCheck]);
+    const failures = buildSmokeFailures([
+      passingCheck,
+      failingConsoleOnlyCheck,
+      failingNavCheck,
+      failingAuthCheck,
+    ]);
     expect(failures.map((f) => `${f.project}/${f.label}`)).toEqual([
       'alpha/google-signin',
       'alpha/web',
@@ -141,9 +149,7 @@ describe('diffPayloadsAgainstTasks', () => {
   const payload = buildSmokeTaskPayload(buildSmokeFailure(failingNavCheck)!);
 
   it('treats matching open tasks as already-tracked', () => {
-    const existing = [
-      { id: 't1', title: '[fleet-smoke] alpha/web', status: 'todo' },
-    ];
+    const existing = [{ id: 't1', title: '[fleet-smoke] alpha/web', status: 'todo' }];
     const { fresh, skipped } = diffPayloadsAgainstTasks([payload], existing);
     expect(fresh).toHaveLength(0);
     expect(skipped).toHaveLength(1);
@@ -160,12 +166,12 @@ describe('diffPayloadsAgainstTasks', () => {
   it('treats blocked/in_progress tasks as already-tracked', () => {
     const inProgress = findExistingTask(
       [{ id: 't2', title: '[fleet-smoke] alpha/web', status: 'in_progress' }],
-      payload,
+      payload
     );
     expect(inProgress?.id).toBe('t2');
     const blocked = findExistingTask(
       [{ id: 't3', title: '[fleet-smoke] alpha/web', status: 'blocked' }],
-      payload,
+      payload
     );
     expect(blocked?.id).toBe('t3');
   });
@@ -190,7 +196,11 @@ describe('fleet health contracts', () => {
   });
 
   it('maps smoke checks to pass/fail health state', () => {
-    expect(getHealthContractStatus('reader', [{ ...passingCheck, project: 'reader' }])).toBe('pass');
-    expect(getHealthContractStatus('reader', [{ ...failingAuthCheck, project: 'reader' }])).toBe('fail');
+    expect(getHealthContractStatus('reader', [{ ...passingCheck, project: 'reader' }])).toBe(
+      'pass'
+    );
+    expect(getHealthContractStatus('reader', [{ ...failingAuthCheck, project: 'reader' }])).toBe(
+      'fail'
+    );
   });
 });

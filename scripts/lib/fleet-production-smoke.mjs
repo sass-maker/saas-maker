@@ -101,7 +101,8 @@ export function buildSmokeTaskDescription(failure, { generatedAt } = {}) {
   lines.push(`Project: ${failure.project}`);
   lines.push(`Surface: ${failure.kind}:${failure.label}`);
   if (failure.url) lines.push(`URL: ${failure.url}`);
-  if (failure.status !== null && failure.status !== undefined) lines.push(`HTTP status: ${failure.status}`);
+  if (failure.status !== null && failure.status !== undefined)
+    lines.push(`HTTP status: ${failure.status}`);
   if (generatedAt) lines.push(`Detected at: ${generatedAt}`);
   lines.push('');
   lines.push(`Errors observed (${failure.errorCount}):`);

@@ -21,12 +21,10 @@ const TARGET_DIRS = [
   '.cache',
   'tsconfig.tsbuildinfo',
   'src-tauri/target', // Massive Rust build artifacts
-  'target',           // Standard Rust target
+  'target', // Standard Rust target
 ];
 
-const DEEP_TARGETS = [
-  'node_modules',
-];
+const DEEP_TARGETS = ['node_modules'];
 
 export async function fleetCleanCommand(options: CleanOptions = {}): Promise<void> {
   const fleet = getLocalFleet();
@@ -35,17 +33,19 @@ export async function fleetCleanCommand(options: CleanOptions = {}): Promise<voi
     return;
   }
 
-  log.info(`Scanning ${fleet.length} units for industrial cleaning...${options.dryRun ? chalk.yellow(' [DRY RUN]') : ''}\n`);
+  log.info(
+    `Scanning ${fleet.length} units for industrial cleaning...${options.dryRun ? chalk.yellow(' [DRY RUN]') : ''}\n`
+  );
 
   let totalDeleted = 0;
   const targets = options.hard ? [...TARGET_DIRS, ...DEEP_TARGETS] : TARGET_DIRS;
 
   for (const project of fleet) {
     const projectTargets: string[] = [];
-    
+
     // Find matching targets in the project root AND sub-apps (1 level deep)
     const scanTargets = (dir: string) => {
-      targets.forEach(t => {
+      targets.forEach((t) => {
         const fullPath = join(dir, t);
         if (existsSync(fullPath)) projectTargets.push(fullPath);
       });
@@ -55,10 +55,10 @@ export async function fleetCleanCommand(options: CleanOptions = {}): Promise<voi
         const appsDir = join(dir, 'apps');
         if (existsSync(appsDir)) {
           const apps = readdirSync(appsDir);
-          apps.forEach(app => {
+          apps.forEach((app) => {
             const appPath = join(appsDir, app);
             if (statSync(appPath).isDirectory()) {
-              targets.forEach(t => {
+              targets.forEach((t) => {
                 const fullPath = join(appPath, t);
                 if (existsSync(fullPath)) projectTargets.push(fullPath);
               });
@@ -72,10 +72,12 @@ export async function fleetCleanCommand(options: CleanOptions = {}): Promise<voi
 
     if (projectTargets.length > 0) {
       if (options.dryRun) {
-        console.log(`${chalk.cyan(project.slug)}: Would remove ${chalk.gray(projectTargets.map(t => t.replace(project.path, '.')).join(', '))}`);
+        console.log(
+          `${chalk.cyan(project.slug)}: Would remove ${chalk.gray(projectTargets.map((t) => t.replace(project.path, '.')).join(', '))}`
+        );
       } else {
         const spinner = ora(`Purging ${project.slug}...`).start();
-        projectTargets.forEach(targetPath => {
+        projectTargets.forEach((targetPath) => {
           rmSync(targetPath, { recursive: true, force: true });
         });
         spinner.succeed(`Purged ${project.slug} (${projectTargets.length} targets)`);
@@ -89,7 +91,7 @@ export async function fleetCleanCommand(options: CleanOptions = {}): Promise<voi
     try {
       execSync('pnpm store prune', { stdio: 'ignore' });
       pruneSpinner.succeed('Global pnpm store pruned.');
-    } catch (e) {
+    } catch (_e) {
       pruneSpinner.fail('Failed to prune pnpm store.');
     }
     log.success(`\nFleet industrial clean complete. Reclaimed space from ${totalDeleted} targets.`);

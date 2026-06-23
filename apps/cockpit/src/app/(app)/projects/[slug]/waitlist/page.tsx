@@ -1,4 +1,4 @@
-import { Card } from "@/components/ui/card";
+import { Card } from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -6,18 +6,18 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { PageHeader } from "@/components/page-header";
-import { StatCard } from "@/components/stat-card";
-import { EmptyState } from "@/components/empty-state";
-import { CopyButton } from "@/components/copy-button";
-import { WaitlistActions } from "./waitlist-actions";
-import { Users, ExternalLink } from "lucide-react";
-import { apiFetch } from "@/lib/api";
-import { getAuthenticatedProject } from "../get-project";
-import type { WaitlistEntryRecord } from "@saas-maker/contracts";
+} from '@/components/ui/table';
+import { PageHeader } from '@/components/page-header';
+import { StatCard } from '@/components/stat-card';
+import { EmptyState } from '@/components/empty-state';
+import { CopyButton } from '@/components/copy-button';
+import { WaitlistActions } from './waitlist-actions';
+import { Users, ExternalLink } from 'lucide-react';
+import { apiFetch } from '@/lib/api';
+import { getAuthenticatedProject } from '../get-project';
+import type { WaitlistEntryRecord } from '@saas-maker/contracts';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -31,26 +31,19 @@ export default async function WaitlistPage({ params }: Props) {
   let total = 0;
 
   try {
-    const res = await apiFetch(
-      `/v1/waitlist?project_id=${project.id}`,
-      {},
-      token
-    );
+    const res = await apiFetch(`/v1/waitlist?project_id=${project.id}`, {}, token);
     entries = res.data ?? [];
     total = res.total ?? 0;
   } catch {
     // Waitlist fetch failed — show empty state
   }
 
-  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
   const publicWaitlistUrl = `${SITE_URL}/w/${project.slug}`;
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Waitlist"
-        description={`${total} total signup${total !== 1 ? "s" : ""}`}
-      />
+      <PageHeader title="Waitlist" description={`${total} total signup${total !== 1 ? 's' : ''}`} />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard title="Total Signups" value={total} icon={Users} />
@@ -83,21 +76,16 @@ export default async function WaitlistPage({ params }: Props) {
                     #{entry.position}
                   </TableCell>
                   <TableCell className="font-medium">{entry.email}</TableCell>
+                  <TableCell className="text-muted-foreground">{entry.name ?? '—'}</TableCell>
                   <TableCell className="text-muted-foreground">
-                    {entry.name ?? "—"}
-                  </TableCell>
-                  <TableCell className="text-muted-foreground">
-                    {new Date(entry.created_at).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
+                    {new Date(entry.created_at).toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric',
                     })}
                   </TableCell>
                   <TableCell>
-                    <WaitlistActions
-                      entryId={entry.id}
-                      projectId={project.id}
-                    />
+                    <WaitlistActions entryId={entry.id} projectId={project.id} />
                   </TableCell>
                 </TableRow>
               ))}

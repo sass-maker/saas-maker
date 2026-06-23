@@ -706,7 +706,8 @@ describe('PATCH /v1/roadmap/dashboard/:projectId/:id', () => {
     });
 
     expect(res.status).toBe(200);
-    expect(mockDb.updateRoadmapItem).toHaveBeenCalledWith('item-1',
+    expect(mockDb.updateRoadmapItem).toHaveBeenCalledWith(
+      'item-1',
       expect.objectContaining({ description: 'New desc' })
     );
   });

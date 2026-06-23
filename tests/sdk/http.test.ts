@@ -61,10 +61,7 @@ describe('HttpClient auth modes', () => {
     await expect(
       http.request('GET', '/v1/projects', undefined, { auth: 'session' })
     ).rejects.toMatchObject(
-      new SaaSMakerError(
-        'Session token is required for session-authenticated endpoints',
-        401
-      )
+      new SaaSMakerError('Session token is required for session-authenticated endpoints', 401)
     );
 
     expect(fetchMock).not.toHaveBeenCalled();

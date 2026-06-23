@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import { FilterBar } from "@/components/filter-bar";
-import { FeedbackTable } from "@/components/feedback-table";
-import type { FeedbackRecord, AnyFeedbackStatus } from "@saas-maker/contracts";
-import { apiFetch } from "@/lib/api";
+import { useCallback, useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { FilterBar } from '@/components/filter-bar';
+import { FeedbackTable } from '@/components/feedback-table';
+import type { FeedbackRecord, AnyFeedbackStatus } from '@saas-maker/contracts';
+import { apiFetch } from '@/lib/api';
 // apiFetch still used for auth'd writes (status change, delete)
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://api.sassmaker.com";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.sassmaker.com';
 
 interface InboxContentProps {
   slug: string;
@@ -16,8 +16,8 @@ interface InboxContentProps {
 }
 
 async function getToken(): Promise<string> {
-  const res = await fetch("/api/token");
-  if (!res.ok) throw new Error("Failed to get auth token");
+  const res = await fetch('/api/token');
+  if (!res.ok) throw new Error('Failed to get auth token');
   const data = await res.json();
   return data.token;
 }
@@ -25,9 +25,9 @@ async function getToken(): Promise<string> {
 export function InboxContent({ slug, projectId }: InboxContentProps) {
   const searchParams = useSearchParams();
 
-  const typeFilter = searchParams.get("type") ?? "all";
-  const statusFilter = searchParams.get("status") ?? "all";
-  const sort = searchParams.get("sort") ?? "newest";
+  const typeFilter = searchParams.get('type') ?? 'all';
+  const statusFilter = searchParams.get('status') ?? 'all';
+  const sort = searchParams.get('sort') ?? 'newest';
 
   const [feedback, setFeedback] = useState<FeedbackRecord[]>([]);
   const [loading, setLoading] = useState(true);
@@ -38,17 +38,17 @@ export function InboxContent({ slug, projectId }: InboxContentProps) {
     setError(null);
     try {
       const params = new URLSearchParams();
-      if (typeFilter !== "all") params.set("type", typeFilter);
-      if (statusFilter !== "all") params.set("status", statusFilter);
-      params.set("sort", sort === "upvotes" ? "upvotes" : "newest");
+      if (typeFilter !== 'all') params.set('type', typeFilter);
+      if (statusFilter !== 'all') params.set('status', statusFilter);
+      params.set('sort', sort === 'upvotes' ? 'upvotes' : 'newest');
 
       const qs = params.toString();
-      const res = await fetch(`${API_BASE}/v1/feedback/by-project/${slug}${qs ? `?${qs}` : ""}`);
-      if (!res.ok) throw new Error("Failed to load feedback");
+      const res = await fetch(`${API_BASE}/v1/feedback/by-project/${slug}${qs ? `?${qs}` : ''}`);
+      if (!res.ok) throw new Error('Failed to load feedback');
       const data = await res.json();
       setFeedback(data.data ?? []);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load feedback");
+      setError(err instanceof Error ? err.message : 'Failed to load feedback');
     } finally {
       setLoading(false);
     }
@@ -62,29 +62,30 @@ export function InboxContent({ slug, projectId }: InboxContentProps) {
     const token = await getToken();
     const updated: FeedbackRecord = await apiFetch(
       `/v1/feedback/${item.id}`,
-      { method: "PATCH", body: JSON.stringify({ status }) },
+      { method: 'PATCH', body: JSON.stringify({ status }) },
       token
     );
-    setFeedback((prev) =>
-      prev.map((f) => (f.id === item.id ? { ...f, ...updated } : f))
-    );
+    setFeedback((prev) => prev.map((f) => (f.id === item.id ? { ...f, ...updated } : f)));
   }
 
   async function handleDelete(id: string) {
     const token = await getToken();
-    await apiFetch(`/v1/feedback/${id}`, { method: "DELETE" }, token);
+    await apiFetch(`/v1/feedback/${id}`, { method: 'DELETE' }, token);
     setFeedback((prev) => prev.filter((f) => f.id !== id));
   }
 
   async function handleMoveToRoadmap(item: FeedbackRecord) {
     const token = await getToken();
-    const res = await fetch(`${API_BASE}/v1/roadmap/dashboard/${projectId}/from-feedback/${item.id}`, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    if (!res.ok) throw new Error("Failed to move to roadmap");
+    const res = await fetch(
+      `${API_BASE}/v1/roadmap/dashboard/${projectId}/from-feedback/${item.id}`,
+      {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    if (!res.ok) throw new Error('Failed to move to roadmap');
     setFeedback((prev) =>
-      prev.map((f) => (f.id === item.id ? { ...f, status: "on_roadmap" as AnyFeedbackStatus } : f))
+      prev.map((f) => (f.id === item.id ? { ...f, status: 'on_roadmap' as AnyFeedbackStatus } : f))
     );
   }
 

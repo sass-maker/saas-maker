@@ -30,9 +30,7 @@ export const TriggerButton: React.FC<TriggerButtonProps> = ({
   triggerText,
 }) => {
   const positionClass =
-    position === 'bottom-left'
-      ? 'smw-trigger--bottom-left'
-      : 'smw-trigger--bottom-right';
+    position === 'bottom-left' ? 'smw-trigger--bottom-left' : 'smw-trigger--bottom-right';
 
   return (
     <button

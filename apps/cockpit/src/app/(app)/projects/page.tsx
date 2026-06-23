@@ -1,23 +1,16 @@
-import Link from "next/link";
-import {
-  Badge,
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@saas-maker/ui";
-import { CreateProjectDialog } from "@/components/create-project-dialog";
-import { PageHeader } from "@/components/page-header";
-import { FleetMonitor } from "@/components/fleet-monitor";
-import { ErrorFeed } from "@/components/error-feed";
-import { LatencyMap } from "@/components/latency-map";
-import { OnboardingFlow } from "@/components/onboarding/OnboardingFlow";
-import { getDashboardSession } from "@/lib/server-session";
-import { redirect } from "next/navigation";
-import { apiFetch, getServerToken } from "@/lib/api";
-import { visibleDashboardProjects } from "@/lib/dashboard-projects";
-import type { ProjectRecord } from "@saas-maker/contracts";
+import Link from 'next/link';
+import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@saas-maker/ui';
+import { CreateProjectDialog } from '@/components/create-project-dialog';
+import { PageHeader } from '@/components/page-header';
+import { FleetMonitor } from '@/components/fleet-monitor';
+import { ErrorFeed } from '@/components/error-feed';
+import { LatencyMap } from '@/components/latency-map';
+import { OnboardingFlow } from '@/components/onboarding/OnboardingFlow';
+import { getDashboardSession } from '@/lib/server-session';
+import { redirect } from 'next/navigation';
+import { apiFetch, getServerToken } from '@/lib/api';
+import { visibleDashboardProjects } from '@/lib/dashboard-projects';
+import type { ProjectRecord } from '@saas-maker/contracts';
 import {
   ArrowRight,
   Boxes,
@@ -27,31 +20,31 @@ import {
   KeyRound,
   NotebookText,
   AlertCircle,
-} from "lucide-react";
+} from 'lucide-react';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 function formatDate(date: string) {
-  return new Intl.DateTimeFormat("en", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
+  return new Intl.DateTimeFormat('en', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
   }).format(new Date(date));
 }
 
 export default async function ProjectsPage() {
   const session = await getDashboardSession();
-  if (!session?.user) redirect("/login");
+  if (!session?.user) redirect('/login');
 
   const token = await getServerToken();
   let projects: ProjectRecord[] = [];
   let error: string | null = null;
 
   try {
-    const res = await apiFetch("/v1/projects", {}, token);
+    const res = await apiFetch('/v1/projects', {}, token);
     projects = visibleDashboardProjects(res.data ?? []);
   } catch (e) {
-    error = e instanceof Error ? e.message : "Failed to load projects";
+    error = e instanceof Error ? e.message : 'Failed to load projects';
   }
 
   return (
@@ -73,9 +66,7 @@ export default async function ProjectsPage() {
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <Cloud className="h-5 w-5 text-muted-foreground" />
-            <h2 className="text-lg font-semibold tracking-tight">
-              Cloud Blocks
-            </h2>
+            <h2 className="text-lg font-semibold tracking-tight">Cloud Blocks</h2>
           </div>
           <p className="text-sm text-muted-foreground">
             Active API projects connected to this cockpit.
@@ -83,7 +74,7 @@ export default async function ProjectsPage() {
         </div>
         {!error && projects.length > 0 && (
           <Badge variant="outline" className="font-mono text-[10px]">
-            {projects.length} {projects.length === 1 ? "project" : "projects"}
+            {projects.length} {projects.length === 1 ? 'project' : 'projects'}
           </Badge>
         )}
       </div>
@@ -93,9 +84,7 @@ export default async function ProjectsPage() {
           <CardHeader className="flex flex-row items-center gap-3">
             <AlertCircle className="h-5 w-5 text-destructive shrink-0" />
             <div>
-              <CardTitle className="text-base text-destructive">
-                Failed to load fleet
-              </CardTitle>
+              <CardTitle className="text-base text-destructive">Failed to load fleet</CardTitle>
               <CardDescription className="mt-1 text-xs font-mono break-all">
                 {error}
               </CardDescription>
@@ -107,11 +96,7 @@ export default async function ProjectsPage() {
       ) : (
         <div className="grid gap-3">
           {projects.map((project) => (
-            <Link
-              key={project.id}
-              href={`/projects/${project.slug}`}
-              className="group block"
-            >
+            <Link key={project.id} href={`/projects/${project.slug}`} className="group block">
               <Card className="overflow-hidden py-0 transition-all hover:border-primary/40 hover:bg-muted/30 hover:shadow-md">
                 <CardHeader className="grid gap-4 p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
                   <div className="flex min-w-0 items-center gap-3">
@@ -120,13 +105,8 @@ export default async function ProjectsPage() {
                     </div>
                     <div className="min-w-0 space-y-1">
                       <div className="flex min-w-0 flex-wrap items-center gap-2">
-                        <CardTitle className="truncate text-base">
-                          {project.name}
-                        </CardTitle>
-                        <Badge
-                          variant="outline"
-                          className="capitalize text-[10px]"
-                        >
+                        <CardTitle className="truncate text-base">{project.name}</CardTitle>
+                        <Badge variant="outline" className="capitalize text-[10px]">
                           {project.source}
                         </Badge>
                       </div>
@@ -158,11 +138,11 @@ export default async function ProjectsPage() {
                   </div>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <Database className="h-3.5 w-3.5" />
-                    <span>{project.embedding_model ?? "Default model"}</span>
+                    <span>{project.embedding_model ?? 'Default model'}</span>
                   </div>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <NotebookText className="h-3.5 w-3.5" />
-                    <span>{project.readme ? "Readme added" : "No readme"}</span>
+                    <span>{project.readme ? 'Readme added' : 'No readme'}</span>
                   </div>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <span className="flex items-center gap-1">

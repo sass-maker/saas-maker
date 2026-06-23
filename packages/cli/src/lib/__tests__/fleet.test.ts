@@ -36,9 +36,9 @@ describe('Fleet Detection', () => {
 
     const fleet = getLocalFleet();
 
-    expect(fleet.find(p => p.slug === 'project-a')?.isFoundry).toBe(true);
-    expect(fleet.find(p => p.slug === 'project-b')?.isFoundry).toBe(false);
-    expect(fleet.find(p => p.slug === 'project-b')?.type).toBe('next');
+    expect(fleet.find((p) => p.slug === 'project-a')?.isFoundry).toBe(true);
+    expect(fleet.find((p) => p.slug === 'project-b')?.isFoundry).toBe(false);
+    expect(fleet.find((p) => p.slug === 'project-b')?.type).toBe('next');
   });
 
   it('detects vite from devDependencies (not just dependencies)', () => {
@@ -66,6 +66,6 @@ describe('Fleet Detection', () => {
     });
 
     const fleet = getLocalFleet();
-    expect(fleet.find(p => p.slug === 'vite-app')?.type).toBe('vite');
+    expect(fleet.find((p) => p.slug === 'vite-app')?.type).toBe('vite');
   });
 });

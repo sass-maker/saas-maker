@@ -45,11 +45,7 @@ function SkeletonItem() {
   );
 }
 
-export const BrowseList: React.FC<BrowseListProps> = ({
-  api,
-  types,
-  accentColor,
-}) => {
+export const BrowseList: React.FC<BrowseListProps> = ({ api, types, accentColor }) => {
   const [items, setItems] = useState<FeedbackRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -75,7 +71,7 @@ export const BrowseList: React.FC<BrowseListProps> = ({
   }, [fetchFeedback]);
 
   const truncate = (text: string, maxLen: number) =>
-    text.length > maxLen ? text.slice(0, maxLen) + '...' : text;
+    text.length > maxLen ? `${text.slice(0, maxLen)}...` : text;
 
   const allFilters: Array<FeedbackType | 'all'> = ['all', ...types];
 
@@ -89,9 +85,7 @@ export const BrowseList: React.FC<BrowseListProps> = ({
             type="button"
             className={`smw-filter-pill ${filter === f ? 'smw-filter-pill--active' : ''}`}
             style={
-              filter === f
-                ? ({ '--smw-accent': accentColor } as React.CSSProperties)
-                : undefined
+              filter === f ? ({ '--smw-accent': accentColor } as React.CSSProperties) : undefined
             }
             onClick={() => setFilter(f)}
           >
@@ -111,11 +105,7 @@ export const BrowseList: React.FC<BrowseListProps> = ({
         ) : error ? (
           <div className="smw-browse__empty">
             <p>{error}</p>
-            <button
-              type="button"
-              className="smw-btn smw-btn--secondary"
-              onClick={fetchFeedback}
-            >
+            <button type="button" className="smw-btn smw-btn--secondary" onClick={fetchFeedback}>
               Retry
             </button>
           </div>
@@ -132,18 +122,14 @@ export const BrowseList: React.FC<BrowseListProps> = ({
                 title="Sign in on the dashboard to upvote"
               >
                 <UpvoteIcon />
-                <span className="smw-browse-item__count">
-                  {item.upvote_count}
-                </span>
+                <span className="smw-browse-item__count">{item.upvote_count}</span>
               </div>
               <div className="smw-browse-item__content">
                 <span className={`smw-badge smw-badge--${item.type}`}>
                   {TYPE_LABELS[item.type]}
                 </span>
                 <h4 className="smw-browse-item__title">{item.title}</h4>
-                <p className="smw-browse-item__desc">
-                  {truncate(item.description, 120)}
-                </p>
+                <p className="smw-browse-item__desc">{truncate(item.description, 120)}</p>
               </div>
             </div>
           ))

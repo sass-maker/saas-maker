@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server';
 import { getDashboardSession } from '@/lib/server-session';
-import { createCockpitTaskComment, getCockpitTask, listCockpitTaskComments } from '@/lib/cockpit-tasks-store';
+import {
+  createCockpitTaskComment,
+  getCockpitTask,
+  listCockpitTaskComments,
+} from '@/lib/cockpit-tasks-store';
 
 export const dynamic = 'force-dynamic';
 
@@ -22,8 +26,9 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   }
   const data = await createCockpitTaskComment(id, body);
   if (!data) return NextResponse.json({ error: 'Task not found' }, { status: 404 });
-  const task = body.resolves_blocker === true || body.marks_done === true || body.sync_to_description === true
-    ? await getCockpitTask(id)
-    : null;
+  const task =
+    body.resolves_blocker === true || body.marks_done === true || body.sync_to_description === true
+      ? await getCockpitTask(id)
+      : null;
   return NextResponse.json({ data, task }, { status: 201 });
 }

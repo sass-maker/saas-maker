@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { buildRunAuditEvent, buildRunLedgerRecord, DISPATCH_AUDIT_ACTION, PICK_AUDIT_ACTION } from '../../scripts/lib/symphony-audit.mjs';
+import {
+  buildRunAuditEvent,
+  buildRunLedgerRecord,
+  DISPATCH_AUDIT_ACTION,
+  PICK_AUDIT_ACTION,
+} from '../../scripts/lib/symphony-audit.mjs';
 
 const task = {
   id: 'task-1',

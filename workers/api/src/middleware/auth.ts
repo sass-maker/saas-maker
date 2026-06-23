@@ -25,16 +25,28 @@ async function resolveLocalSession(c: { env: Bindings }, token: string): Promise
  *
  * Returns the resolved user id, or null if the token is unknown / expired.
  */
-async function resolveBetterAuthSession(c: { env: Bindings }, token: string): Promise<string | null> {
+async function resolveBetterAuthSession(
+  c: { env: Bindings },
+  token: string
+): Promise<string | null> {
   const row = await c.env.DB.prepare(
     `SELECT s.userId, s.expiresAt, u.email, u.name, u.image
      FROM session s
      JOIN user u ON u.id = s.userId
      WHERE s.token = ?`
-  ).bind(token).first<{ userId: string; expiresAt: string | number; email: string; name: string | null; image: string | null }>();
+  )
+    .bind(token)
+    .first<{
+      userId: string;
+      expiresAt: string | number;
+      email: string;
+      name: string | null;
+      image: string | null;
+    }>();
   if (!row) return null;
   // expiresAt is a unix-timestamp (better-auth sqlite mode: 'timestamp' = seconds)
-  const expiresMs = typeof row.expiresAt === 'number' ? row.expiresAt * 1000 : Date.parse(String(row.expiresAt));
+  const expiresMs =
+    typeof row.expiresAt === 'number' ? row.expiresAt * 1000 : Date.parse(String(row.expiresAt));
   if (Number.isFinite(expiresMs) && expiresMs < Date.now()) return null;
 
   const db = getDb(c.env.DB);
@@ -51,7 +63,10 @@ async function resolveBetterAuthSession(c: { env: Bindings }, token: string): Pr
  * Resolve any Bearer token the API accepts to a user id, or null. Tries CLI
  * tokens (`sm_` prefix) then better-auth opaque session tokens.
  */
-export async function resolveBearerUserId(c: { env: Bindings }, token: string): Promise<string | null> {
+export async function resolveBearerUserId(
+  c: { env: Bindings },
+  token: string
+): Promise<string | null> {
   const localUserId = await resolveLocalSession(c, token);
   if (localUserId) return localUserId;
 
@@ -78,30 +93,31 @@ export const requireSession = createMiddleware<{ Bindings: Bindings; Variables: 
   }
 );
 
-export const requireApiKeyOrSession = createMiddleware<{ Bindings: Bindings; Variables: Variables }>(
-  async (c, next) => {
-    const apiKey = c.req.header('X-Project-Key');
-    if (apiKey) {
-      const db = getDb(c.env.DB);
-      const project = await db.getProjectByApiKey(apiKey);
-      if (!project) return c.json({ error: 'Invalid API key' }, 401);
-      c.set('projectId', project.id);
-      c.set('project', project);
-      return next();
-    }
-
-    const authHeader = c.req.header('Authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return c.json({ error: 'Unauthorized' }, 401);
-    }
-
-    const userId = await resolveBearerUserId(c, authHeader.slice(7));
-    if (!userId) return c.json({ error: 'Unauthorized' }, 401);
-
-    c.set('userId', userId);
-    await next();
+export const requireApiKeyOrSession = createMiddleware<{
+  Bindings: Bindings;
+  Variables: Variables;
+}>(async (c, next) => {
+  const apiKey = c.req.header('X-Project-Key');
+  if (apiKey) {
+    const db = getDb(c.env.DB);
+    const project = await db.getProjectByApiKey(apiKey);
+    if (!project) return c.json({ error: 'Invalid API key' }, 401);
+    c.set('projectId', project.id);
+    c.set('project', project);
+    return next();
   }
-);
+
+  const authHeader = c.req.header('Authorization');
+  if (!authHeader?.startsWith('Bearer ')) {
+    return c.json({ error: 'Unauthorized' }, 401);
+  }
+
+  const userId = await resolveBearerUserId(c, authHeader.slice(7));
+  if (!userId) return c.json({ error: 'Unauthorized' }, 401);
+
+  c.set('userId', userId);
+  await next();
+});
 
 export const requireApiKey = createMiddleware<{ Bindings: Bindings; Variables: Variables }>(
   async (c, next) => {

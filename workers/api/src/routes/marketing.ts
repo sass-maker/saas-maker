@@ -25,7 +25,7 @@ function cleanString(value: unknown): string | null | undefined {
 }
 
 function enumValue<T extends string>(value: unknown, allowed: readonly T[]): T | undefined {
-  return typeof value === 'string' && allowed.includes(value as T) ? value as T : undefined;
+  return typeof value === 'string' && allowed.includes(value as T) ? (value as T) : undefined;
 }
 
 function normalizeInput(input: Record<string, unknown>) {
@@ -71,7 +71,10 @@ marketing.get('/posts', async (c) => {
     conditions.push('project_slug = ?');
     values.push(projectSlug);
   }
-  const limit = Math.min(Math.max(Number.parseInt(c.req.query('limit') ?? '200', 10) || 200, 1), 500);
+  const limit = Math.min(
+    Math.max(Number.parseInt(c.req.query('limit') ?? '200', 10) || 200, 1),
+    500
+  );
   values.push(limit);
   const { results } = await c.env.DB.prepare(
     `SELECT * FROM marketing_posts WHERE ${conditions.join(' AND ')}
@@ -79,13 +82,15 @@ marketing.get('/posts', async (c) => {
        CASE status WHEN 'generated' THEN 0 WHEN 'accepted' THEN 1 WHEN 'sent' THEN 2 WHEN 'rejected' THEN 3 ELSE 4 END,
        created_at DESC
      LIMIT ?`
-  ).bind(...values).all();
+  )
+    .bind(...values)
+    .all();
   return c.json({ data: results ?? [] });
 });
 
 marketing.post('/posts', async (c) => {
   const userId = c.get('userId')!;
-  const body = normalizeInput(await c.req.json().catch(() => ({})) as Record<string, unknown>);
+  const body = normalizeInput((await c.req.json().catch(() => ({}))) as Record<string, unknown>);
   if (!body.title) return c.json({ error: 'title is required' }, 400);
   if (!body.body) return c.json({ error: 'body is required' }, 400);
   const id = crypto.randomUUID();
@@ -114,8 +119,9 @@ marketing.post('/posts', async (c) => {
       body.exported_at ?? null,
       body.posted_at ?? null,
       body.result_url ?? null,
-      body.notes ?? null,
-    ).run();
+      body.notes ?? null
+    )
+    .run();
   const data = await c.env.DB.prepare('SELECT * FROM marketing_posts WHERE id = ? AND owner_id = ?')
     .bind(id, userId)
     .first();
@@ -125,7 +131,7 @@ marketing.post('/posts', async (c) => {
 marketing.patch('/posts/:id', async (c) => {
   const userId = c.get('userId')!;
   const id = c.req.param('id');
-  const patch = normalizeInput(await c.req.json().catch(() => ({})) as Record<string, unknown>);
+  const patch = normalizeInput((await c.req.json().catch(() => ({}))) as Record<string, unknown>);
   const sets: string[] = [];
   const values: unknown[] = [];
   for (const [key, value] of Object.entries(patch)) {
@@ -136,7 +142,9 @@ marketing.patch('/posts/:id', async (c) => {
   if (sets.length === 0) return c.json({ error: 'no valid fields to update' }, 400);
   sets.push("updated_at = datetime('now')");
   values.push(id, userId);
-  await c.env.DB.prepare(`UPDATE marketing_posts SET ${sets.join(', ')} WHERE id = ? AND owner_id = ?`)
+  await c.env.DB.prepare(
+    `UPDATE marketing_posts SET ${sets.join(', ')} WHERE id = ? AND owner_id = ?`
+  )
     .bind(...values)
     .run();
   const data = await c.env.DB.prepare('SELECT * FROM marketing_posts WHERE id = ? AND owner_id = ?')

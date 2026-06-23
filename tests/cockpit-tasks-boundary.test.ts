@@ -19,7 +19,10 @@ describe('Cockpit tasks production data boundary', () => {
 
   it('mirrors cockpit-auth users before production task and memory writes', () => {
     const createRoute = readFileSync('apps/cockpit/src/app/api/cockpit/tasks/route.ts', 'utf8');
-    const memoryRoute = readFileSync('apps/cockpit/src/app/api/cockpit/symphony/memory/route.ts', 'utf8');
+    const memoryRoute = readFileSync(
+      'apps/cockpit/src/app/api/cockpit/symphony/memory/route.ts',
+      'utf8'
+    );
     expect(createRoute).toContain('ensureCockpitUser');
     expect(createRoute).toContain('getDefaultCockpitOwnerId');
     expect(memoryRoute).toContain('ensureCockpitUser');

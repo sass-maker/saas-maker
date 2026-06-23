@@ -132,11 +132,13 @@ describe('testimonials by slug', () => {
 describe('auth', () => {
   it('rejects invalid API key', async () => {
     const bad = new SaaSMakerClient({ apiKey: 'bad-key' });
-    await expect(bad.feedback.submit({
-      title: 'should fail',
-      description: 'should fail',
-      type: 'bug',
-      submitter_email: 'fail@test.com',
-    })).rejects.toThrow();
+    await expect(
+      bad.feedback.submit({
+        title: 'should fail',
+        description: 'should fail',
+        type: 'bug',
+        submitter_email: 'fail@test.com',
+      })
+    ).rejects.toThrow();
   });
 });

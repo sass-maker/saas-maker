@@ -90,7 +90,9 @@ function printPretty(plan, summary, write) {
 
   for (const entry of plan) {
     if (entry.status === 'canonical') continue;
-    console.log(`${write ? 'wrote' : 'needs update'}\t${entry.status}\t${entry.slug}\t${entry.workflowPath}`);
+    console.log(
+      `${write ? 'wrote' : 'needs update'}\t${entry.status}\t${entry.slug}\t${entry.workflowPath}`
+    );
   }
 }
 

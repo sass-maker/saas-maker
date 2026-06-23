@@ -1,6 +1,10 @@
 import { describe, expect, it, vi } from 'vitest';
 import { runAcceptanceCommand } from '../../workers/droid/src/acceptance';
-import type { RunArtifactInput, RunEventInput, RunExecutionInput } from '../../workers/droid/src/types';
+import type {
+  RunArtifactInput,
+  RunEventInput,
+  RunExecutionInput,
+} from '../../workers/droid/src/types';
 
 describe('droid acceptance command', () => {
   it('records acceptance pass evidence', async () => {
@@ -78,10 +82,7 @@ describe('droid acceptance command', () => {
   });
 });
 
-function createInput(
-  events: RunEventInput[],
-  artifacts: RunArtifactInput[]
-): RunExecutionInput {
+function createInput(events: RunEventInput[], artifacts: RunArtifactInput[]): RunExecutionInput {
   return {
     env: {
       DROID_INTERNAL_TOKEN: 'test-token',

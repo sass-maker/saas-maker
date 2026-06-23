@@ -60,62 +60,95 @@ function createMockD1() {
 
 describe('fleet events API', () => {
   it('accepts a single event and reports accepted=1', async () => {
-    const res = await request('/v1/events', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ product: 'reel-pipeline', type: 'reel.rendered', payload: { reel_id: 'r1' } }),
-    }, { DB: createMockD1() });
+    const res = await request(
+      '/v1/events',
+      {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          product: 'reel-pipeline',
+          type: 'reel.rendered',
+          payload: { reel_id: 'r1' },
+        }),
+      },
+      { DB: createMockD1() }
+    );
 
     expect(res.status).toBe(201);
     expect(await res.json()).toMatchObject({ accepted: 1, deduped: 0, received: 1 });
   });
 
   it('rejects an event missing required fields', async () => {
-    const res = await request('/v1/events', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ type: 'reel.rendered' }),
-    }, { DB: createMockD1() });
+    const res = await request(
+      '/v1/events',
+      {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ type: 'reel.rendered' }),
+      },
+      { DB: createMockD1() }
+    );
 
     expect(res.status).toBe(400);
-    expect((await res.json() as { error: string }).error).toContain('product is required');
+    expect(((await res.json()) as { error: string }).error).toContain('product is required');
   });
 
   it('dedupes a repeated idempotency_key within a batch', async () => {
     const db = createMockD1();
-    const event = { product: 'psi-swarm', type: 'audit.completed', idempotency_key: 'dup-1', payload: {} };
-    const res = await request('/v1/events', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify([event, event]),
-    }, { DB: db });
+    const event = {
+      product: 'psi-swarm',
+      type: 'audit.completed',
+      idempotency_key: 'dup-1',
+      payload: {},
+    };
+    const res = await request(
+      '/v1/events',
+      {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify([event, event]),
+      },
+      { DB: db }
+    );
 
     expect(res.status).toBe(201);
     expect(await res.json()).toMatchObject({ accepted: 1, deduped: 1, received: 2 });
   });
 
   it('rejects an over-sized batch', async () => {
-    const events = Array.from({ length: 101 }, (_, i) => ({ product: 'p', type: 't', idempotency_key: `k${i}` }));
-    const res = await request('/v1/events', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(events),
-    }, { DB: createMockD1() });
+    const events = Array.from({ length: 101 }, (_, i) => ({
+      product: 'p',
+      type: 't',
+      idempotency_key: `k${i}`,
+    }));
+    const res = await request(
+      '/v1/events',
+      {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(events),
+      },
+      { DB: createMockD1() }
+    );
 
     expect(res.status).toBe(400);
   });
 
   it('lists events for the owner', async () => {
     const db = createMockD1();
-    await request('/v1/events', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ product: 'taste', type: 'study.completed', idempotency_key: 'a1' }),
-    }, { DB: db });
+    await request(
+      '/v1/events',
+      {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ product: 'taste', type: 'study.completed', idempotency_key: 'a1' }),
+      },
+      { DB: db }
+    );
 
     const res = await request('/v1/events?product=taste', { method: 'GET' }, { DB: db });
     expect(res.status).toBe(200);
-    const payload = await res.json() as { data: unknown[] };
+    const payload = (await res.json()) as { data: unknown[] };
     expect(Array.isArray(payload.data)).toBe(true);
     expect(payload.data.length).toBe(1);
   });

@@ -22,7 +22,12 @@ describe('Feedback submission validation', () => {
     const res = await request('/v1/feedback', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title: 'Bug', description: 'broken', submitter_email: 'a@b.com', type: 'bug' }),
+      body: JSON.stringify({
+        title: 'Bug',
+        description: 'broken',
+        submitter_email: 'a@b.com',
+        type: 'bug',
+      }),
     });
     expect(res.status).toBe(401);
     const body = await res.json();

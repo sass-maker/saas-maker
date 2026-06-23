@@ -122,16 +122,18 @@ beforeEach(() => {
   mockDb.listTaskComments.mockReset();
   mockDb.listTaskComments.mockResolvedValue([]);
   mockDb.createTaskComment.mockReset();
-  mockDb.createTaskComment.mockImplementation(async (owner_id: string, task_id: string, input: any) => ({
-    id: 'comment-1',
-    owner_id,
-    task_id,
-    author_type: input.author_type ?? 'user',
-    body: input.body,
-    resolves_blocker: input.resolves_blocker ?? false,
-    marks_done: input.marks_done ?? false,
-    created_at: '2026-05-02 00:00:00',
-  }));
+  mockDb.createTaskComment.mockImplementation(
+    async (owner_id: string, task_id: string, input: any) => ({
+      id: 'comment-1',
+      owner_id,
+      task_id,
+      author_type: input.author_type ?? 'user',
+      body: input.body,
+      resolves_blocker: input.resolves_blocker ?? false,
+      marks_done: input.marks_done ?? false,
+      created_at: '2026-05-02 00:00:00',
+    })
+  );
   mockDb.createSymphonyAuditEvent.mockReset();
   mockDb.createSymphonyAuditEvent.mockImplementation(async (owner_id: string, input: any) => ({
     id: 'audit-1',
@@ -182,12 +184,54 @@ beforeEach(() => {
 describe('Tasks API', () => {
   it('GET /v1/tasks passes has_changelog through from db', async () => {
     mockDb.listTasks.mockResolvedValueOnce([
-      { id: 'task-1', owner_id: 'user-1', project_slug: 'saas-maker', title: 'Feature', description: null, status: 'done', priority: 'medium', task_type: 'feature', size: 'm', dependencies: [], branch_name: null, pr_url: null, pr_status: 'none', commit_sha: null, deployment_url: null, deployment_status: 'none', blocked_on_user: false, has_changelog: true, created_at: '2026-05-26 00:00:00', updated_at: '2026-05-26 00:00:00' },
-      { id: 'task-2', owner_id: 'user-1', project_slug: 'saas-maker', title: 'Bug', description: null, status: 'done', priority: 'high', task_type: 'bug', size: 's', dependencies: [], branch_name: null, pr_url: null, pr_status: 'none', commit_sha: null, deployment_url: null, deployment_status: 'none', blocked_on_user: false, has_changelog: false, created_at: '2026-05-26 00:00:00', updated_at: '2026-05-26 00:00:00' },
+      {
+        id: 'task-1',
+        owner_id: 'user-1',
+        project_slug: 'saas-maker',
+        title: 'Feature',
+        description: null,
+        status: 'done',
+        priority: 'medium',
+        task_type: 'feature',
+        size: 'm',
+        dependencies: [],
+        branch_name: null,
+        pr_url: null,
+        pr_status: 'none',
+        commit_sha: null,
+        deployment_url: null,
+        deployment_status: 'none',
+        blocked_on_user: false,
+        has_changelog: true,
+        created_at: '2026-05-26 00:00:00',
+        updated_at: '2026-05-26 00:00:00',
+      },
+      {
+        id: 'task-2',
+        owner_id: 'user-1',
+        project_slug: 'saas-maker',
+        title: 'Bug',
+        description: null,
+        status: 'done',
+        priority: 'high',
+        task_type: 'bug',
+        size: 's',
+        dependencies: [],
+        branch_name: null,
+        pr_url: null,
+        pr_status: 'none',
+        commit_sha: null,
+        deployment_url: null,
+        deployment_status: 'none',
+        blocked_on_user: false,
+        has_changelog: false,
+        created_at: '2026-05-26 00:00:00',
+        updated_at: '2026-05-26 00:00:00',
+      },
     ]);
     const res = await request('/v1/tasks');
     expect(res.status).toBe(200);
-    const json = await res.json() as { data: { id: string; has_changelog: boolean }[] };
+    const json = (await res.json()) as { data: { id: string; has_changelog: boolean }[] };
     expect(json.data[0].has_changelog).toBe(true);
     expect(json.data[1].has_changelog).toBe(false);
   });
@@ -219,27 +263,36 @@ describe('Tasks API', () => {
     });
 
     expect(res.status).toBe(201);
-    expect(mockDb.createSymphonyAuditEvent).toHaveBeenCalledWith('user-1', expect.objectContaining({
-      task_id: 'task-1',
-      action: 'task_created',
-      actor_source: 'api',
-      project_slug: 'saas-maker',
-    }));
+    expect(mockDb.createSymphonyAuditEvent).toHaveBeenCalledWith(
+      'user-1',
+      expect.objectContaining({
+        task_id: 'task-1',
+        action: 'task_created',
+        actor_source: 'api',
+        project_slug: 'saas-maker',
+      })
+    );
   });
 
   it('POST /v1/tasks accepts dependency ids', async () => {
     const res = await request('/v1/tasks', {
       method: 'POST',
       headers: { Authorization: 'Bearer test-session', 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title: 'Blocked task', dependencies: ['prereq-1', 'prereq-2', '', 'prereq-1'] }),
+      body: JSON.stringify({
+        title: 'Blocked task',
+        dependencies: ['prereq-1', 'prereq-2', '', 'prereq-1'],
+      }),
     });
 
     expect(res.status).toBe(201);
-    expect(mockDb.createTask).toHaveBeenCalledWith('user-1', expect.objectContaining({
-      title: 'Blocked task',
-      dependencies: ['prereq-1', 'prereq-2'],
-    }));
-    const body = await res.json() as { data: { dependencies: string[] } };
+    expect(mockDb.createTask).toHaveBeenCalledWith(
+      'user-1',
+      expect.objectContaining({
+        title: 'Blocked task',
+        dependencies: ['prereq-1', 'prereq-2'],
+      })
+    );
+    const body = (await res.json()) as { data: { dependencies: string[] } };
     expect(body.data.dependencies).toEqual(['prereq-1', 'prereq-2']);
   });
 
@@ -251,10 +304,13 @@ describe('Tasks API', () => {
     });
 
     expect(res.status).toBe(201);
-    expect(mockDb.createTask).toHaveBeenCalledWith('user-1', expect.objectContaining({
-      title: 'Plain task',
-      dependencies: undefined,
-    }));
+    expect(mockDb.createTask).toHaveBeenCalledWith(
+      'user-1',
+      expect.objectContaining({
+        title: 'Plain task',
+        dependencies: undefined,
+      })
+    );
   });
 
   it('PATCH /v1/tasks/:id forwards dependencies when provided', async () => {
@@ -265,9 +321,13 @@ describe('Tasks API', () => {
     });
 
     expect(res.status).toBe(200);
-    expect(mockDb.updateTask).toHaveBeenCalledWith('task-1', 'user-1', expect.objectContaining({
-      dependencies: ['prereq-1'],
-    }));
+    expect(mockDb.updateTask).toHaveBeenCalledWith(
+      'task-1',
+      'user-1',
+      expect.objectContaining({
+        dependencies: ['prereq-1'],
+      })
+    );
   });
 
   it('PATCH /v1/tasks/:id leaves dependencies untouched when omitted', async () => {
@@ -290,11 +350,14 @@ describe('Tasks API', () => {
     });
 
     expect(res.status).toBe(200);
-    expect(mockDb.createSymphonyAuditEvent).toHaveBeenCalledWith('user-1', expect.objectContaining({
-      task_id: 'task-1',
-      action: 'task_status_updated',
-      metadata: expect.objectContaining({ status: 'in_progress' }),
-    }));
+    expect(mockDb.createSymphonyAuditEvent).toHaveBeenCalledWith(
+      'user-1',
+      expect.objectContaining({
+        task_id: 'task-1',
+        action: 'task_status_updated',
+        metadata: expect.objectContaining({ status: 'in_progress' }),
+      })
+    );
   });
 
   it('PATCH /v1/tasks/:id persists status changes', async () => {
@@ -305,9 +368,13 @@ describe('Tasks API', () => {
     });
 
     expect(res.status).toBe(200);
-    expect(mockDb.updateTask).toHaveBeenCalledWith('task-1', 'user-1', expect.objectContaining({
-      status: 'done',
-    }));
+    expect(mockDb.updateTask).toHaveBeenCalledWith(
+      'task-1',
+      'user-1',
+      expect.objectContaining({
+        status: 'done',
+      })
+    );
     await expect(res.json()).resolves.toMatchObject({ data: { status: 'done' } });
   });
 
@@ -326,23 +393,30 @@ describe('Tasks API', () => {
     });
 
     expect(res.status).toBe(200);
-    expect(mockDb.updateTask).toHaveBeenCalledWith('task-1', 'user-1', expect.objectContaining({
-      branch_name: 'codex/task-lifecycle',
-      pr_url: 'https://github.com/acme/app/pull/42',
-      pr_status: 'open',
-      commit_sha: 'abcdef1234567890',
-      deployment_url: 'https://preview.example.com',
-      deployment_status: 'pending',
-    }));
-    expect(mockDb.createSymphonyAuditEvent).toHaveBeenCalledWith('user-1', expect.objectContaining({
-      task_id: 'task-1',
-      action: 'task_updated',
-      metadata: expect.objectContaining({
-        changed_fields: expect.arrayContaining(['pr_url', 'deployment_status']),
+    expect(mockDb.updateTask).toHaveBeenCalledWith(
+      'task-1',
+      'user-1',
+      expect.objectContaining({
+        branch_name: 'codex/task-lifecycle',
+        pr_url: 'https://github.com/acme/app/pull/42',
         pr_status: 'open',
+        commit_sha: 'abcdef1234567890',
+        deployment_url: 'https://preview.example.com',
         deployment_status: 'pending',
-      }),
-    }));
+      })
+    );
+    expect(mockDb.createSymphonyAuditEvent).toHaveBeenCalledWith(
+      'user-1',
+      expect.objectContaining({
+        task_id: 'task-1',
+        action: 'task_updated',
+        metadata: expect.objectContaining({
+          changed_fields: expect.arrayContaining(['pr_url', 'deployment_status']),
+          pr_status: 'open',
+          deployment_status: 'pending',
+        }),
+      })
+    );
   });
 
   it('PATCH /v1/tasks/:id can mark a task blocked on the user', async () => {
@@ -353,10 +427,14 @@ describe('Tasks API', () => {
     });
 
     expect(res.status).toBe(200);
-    expect(mockDb.updateTask).toHaveBeenCalledWith('task-1', 'user-1', expect.objectContaining({
-      blocked_on_user: true,
-      deployment_status: 'none',
-    }));
+    expect(mockDb.updateTask).toHaveBeenCalledWith(
+      'task-1',
+      'user-1',
+      expect.objectContaining({
+        blocked_on_user: true,
+        deployment_status: 'none',
+      })
+    );
   });
 
   it('PATCH /v1/tasks/:id unblocks a task when deployment starts', async () => {
@@ -367,14 +445,29 @@ describe('Tasks API', () => {
     });
 
     expect(res.status).toBe(200);
-    expect(mockDb.updateTask).toHaveBeenCalledWith('task-1', 'user-1', expect.objectContaining({
-      blocked_on_user: false,
-      deployment_status: 'pending',
-    }));
+    expect(mockDb.updateTask).toHaveBeenCalledWith(
+      'task-1',
+      'user-1',
+      expect.objectContaining({
+        blocked_on_user: false,
+        deployment_status: 'pending',
+      })
+    );
   });
 
   it('GET /v1/tasks/:id/comments lists task comments', async () => {
-    mockDb.listTaskComments.mockResolvedValueOnce([{ id: 'comment-1', task_id: 'task-1', owner_id: 'user-1', author_type: 'user', body: 'Ship it', resolves_blocker: false, marks_done: false, created_at: '2026-05-02 00:00:00' }]);
+    mockDb.listTaskComments.mockResolvedValueOnce([
+      {
+        id: 'comment-1',
+        task_id: 'task-1',
+        owner_id: 'user-1',
+        author_type: 'user',
+        body: 'Ship it',
+        resolves_blocker: false,
+        marks_done: false,
+        created_at: '2026-05-02 00:00:00',
+      },
+    ]);
 
     const res = await request('/v1/tasks/task-1/comments', {
       headers: { Authorization: 'Bearer test-session' },
@@ -415,14 +508,21 @@ describe('Tasks API', () => {
     });
 
     expect(res.status).toBe(201);
-    expect(mockDb.createTaskComment).toHaveBeenCalledWith('user-1', 'task-1', expect.objectContaining({
-      body: 'Answered: use Google OAuth only.',
-      resolves_blocker: true,
-    }));
-    expect(mockDb.createSymphonyAuditEvent).toHaveBeenCalledWith('user-1', expect.objectContaining({
-      task_id: 'task-1',
-      action: 'task_comment_resolved_blocker',
-    }));
+    expect(mockDb.createTaskComment).toHaveBeenCalledWith(
+      'user-1',
+      'task-1',
+      expect.objectContaining({
+        body: 'Answered: use Google OAuth only.',
+        resolves_blocker: true,
+      })
+    );
+    expect(mockDb.createSymphonyAuditEvent).toHaveBeenCalledWith(
+      'user-1',
+      expect.objectContaining({
+        task_id: 'task-1',
+        action: 'task_comment_resolved_blocker',
+      })
+    );
     await expect(res.json()).resolves.toMatchObject({
       data: { resolves_blocker: true },
       task: { id: 'task-1', blocked_on_user: false },
@@ -459,14 +559,21 @@ describe('Tasks API', () => {
     });
 
     expect(res.status).toBe(201);
-    expect(mockDb.createTaskComment).toHaveBeenCalledWith('user-1', 'task-1', expect.objectContaining({
-      body: 'Confirmed this is done.',
-      marks_done: true,
-    }));
-    expect(mockDb.createSymphonyAuditEvent).toHaveBeenCalledWith('user-1', expect.objectContaining({
-      task_id: 'task-1',
-      action: 'task_comment_marked_done',
-    }));
+    expect(mockDb.createTaskComment).toHaveBeenCalledWith(
+      'user-1',
+      'task-1',
+      expect.objectContaining({
+        body: 'Confirmed this is done.',
+        marks_done: true,
+      })
+    );
+    expect(mockDb.createSymphonyAuditEvent).toHaveBeenCalledWith(
+      'user-1',
+      expect.objectContaining({
+        task_id: 'task-1',
+        action: 'task_comment_marked_done',
+      })
+    );
     await expect(res.json()).resolves.toMatchObject({
       data: { marks_done: true },
       task: { id: 'task-1', status: 'done', blocked_on_user: false },
@@ -503,15 +610,22 @@ describe('Tasks API', () => {
     });
 
     expect(res.status).toBe(201);
-    expect(mockDb.createTaskComment).toHaveBeenCalledWith('user-1', 'task-1', expect.objectContaining({
-      body: 'Use GitHub OAuth.',
-      sync_to_description: true,
-    }));
-    expect(mockDb.createSymphonyAuditEvent).toHaveBeenCalledWith('user-1', expect.objectContaining({
-      task_id: 'task-1',
-      action: 'task_comment_created',
-      metadata: expect.objectContaining({ sync_to_description: true }),
-    }));
+    expect(mockDb.createTaskComment).toHaveBeenCalledWith(
+      'user-1',
+      'task-1',
+      expect.objectContaining({
+        body: 'Use GitHub OAuth.',
+        sync_to_description: true,
+      })
+    );
+    expect(mockDb.createSymphonyAuditEvent).toHaveBeenCalledWith(
+      'user-1',
+      expect.objectContaining({
+        task_id: 'task-1',
+        action: 'task_comment_created',
+        metadata: expect.objectContaining({ sync_to_description: true }),
+      })
+    );
     await expect(res.json()).resolves.toMatchObject({
       task: {
         id: 'task-1',
@@ -546,7 +660,10 @@ describe('Symphony memory API', () => {
     });
 
     expect(res.status).toBe(200);
-    expect(mockDb.upsertSymphonyMemory).toHaveBeenCalledWith('user-1', 'Prefer Gemini for bounded cheap asks.');
+    expect(mockDb.upsertSymphonyMemory).toHaveBeenCalledWith(
+      'user-1',
+      'Prefer Gemini for bounded cheap asks.'
+    );
     await expect(res.json()).resolves.toMatchObject({
       data: {
         owner_id: 'user-1',
@@ -563,7 +680,10 @@ describe('Symphony audit API', () => {
     });
 
     expect(res.status).toBe(200);
-    expect(mockDb.listSymphonyAuditEvents).toHaveBeenCalledWith('user-1', { task_id: 'task-1', limit: 10 });
+    expect(mockDb.listSymphonyAuditEvents).toHaveBeenCalledWith('user-1', {
+      task_id: 'task-1',
+      limit: 10,
+    });
   });
 
   it('POST /v1/symphony/audit records local CLI events', async () => {
@@ -580,12 +700,15 @@ describe('Symphony audit API', () => {
     });
 
     expect(res.status).toBe(201);
-    expect(mockDb.createSymphonyAuditEvent).toHaveBeenCalledWith('user-1', expect.objectContaining({
-      task_id: 'task-1',
-      action: 'task_dispatched',
-      actor_source: 'local-cli',
-      agent_profile: 'claude',
-    }));
+    expect(mockDb.createSymphonyAuditEvent).toHaveBeenCalledWith(
+      'user-1',
+      expect.objectContaining({
+        task_id: 'task-1',
+        action: 'task_dispatched',
+        actor_source: 'local-cli',
+        agent_profile: 'claude',
+      })
+    );
   });
 });
 
@@ -596,7 +719,10 @@ describe('Symphony run ledger API', () => {
     });
 
     expect(res.status).toBe(200);
-    expect(mockDb.listSymphonyRuns).toHaveBeenCalledWith('user-1', { task_id: 'task-1', limit: 10 });
+    expect(mockDb.listSymphonyRuns).toHaveBeenCalledWith('user-1', {
+      task_id: 'task-1',
+      limit: 10,
+    });
   });
 
   it('POST /v1/symphony/runs records task start metadata', async () => {
@@ -618,14 +744,17 @@ describe('Symphony run ledger API', () => {
     });
 
     expect(res.status).toBe(201);
-    expect(mockDb.createSymphonyRun).toHaveBeenCalledWith('user-1', expect.objectContaining({
-      task_id: 'task-1',
-      agent_profile: 'codex',
-      command_template: 'codex',
-      pid: 1234,
-      cost_note: 'cheap-default route',
-      metadata: { route_label: 'Codex' },
-    }));
+    expect(mockDb.createSymphonyRun).toHaveBeenCalledWith(
+      'user-1',
+      expect.objectContaining({
+        task_id: 'task-1',
+        agent_profile: 'codex',
+        command_template: 'codex',
+        pid: 1234,
+        cost_note: 'cheap-default route',
+        metadata: { route_label: 'Codex' },
+      })
+    );
   });
 
   it('POST /v1/symphony/runs requires a command template', async () => {

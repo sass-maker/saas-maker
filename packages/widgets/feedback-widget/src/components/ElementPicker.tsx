@@ -16,7 +16,7 @@ interface Box {
 
 /** Is this node part of the widget's own chrome (so we never let it be picked)? */
 function isWidgetChrome(el: Element | null): boolean {
-  return !!(el && el.closest && el.closest('[data-saasmaker-widget], .smw-picker'));
+  return !!el?.closest?.('[data-saasmaker-widget], .smw-picker');
 }
 
 /**
@@ -42,7 +42,7 @@ export const ElementPicker: React.FC<ElementPickerProps> = ({ active, onPick, on
 
     const onMove = (e: MouseEvent) => {
       const t = targetFromEvent(e);
-      if (!t || !t.getBoundingClientRect) {
+      if (!t?.getBoundingClientRect) {
         setBox(null);
         return;
       }

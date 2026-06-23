@@ -1,15 +1,12 @@
 function requireEnv(name: string): string {
   const value = process.env[name]?.trim();
   if (!value) {
-    throw new Error(
-      `Missing required env var ${name} for Playwright e2e API tests.`
-    );
+    throw new Error(`Missing required env var ${name} for Playwright e2e API tests.`);
   }
   return value;
 }
 
-export const API_BASE =
-  process.env.SAASMAKER_E2E_API_BASE?.trim() || 'https://api.sassmaker.com';
+export const API_BASE = process.env.SAASMAKER_E2E_API_BASE?.trim() || 'https://api.sassmaker.com';
 export const CLI_TOKEN = requireEnv('SAASMAKER_E2E_CLI_TOKEN');
 export const PROJECT_ID = requireEnv('SAASMAKER_E2E_PROJECT_ID');
 export const API_KEY = requireEnv('SAASMAKER_E2E_PROJECT_API_KEY');

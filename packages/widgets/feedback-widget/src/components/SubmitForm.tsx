@@ -93,7 +93,7 @@ export const SubmitForm: React.FC<SubmitFormProps> = ({
         // The API has no structured anchor field, so the pointed-at element rides
         // in the description as a markdown block the team (and an agent) can act on.
         const fullDescription = anchor
-          ? description.trim() + '\n' + formatAnchor(anchor)
+          ? `${description.trim()}\n${formatAnchor(anchor)}`
           : description.trim();
         const payload: SubmitFeedbackRequest = {
           type: selectedType,
@@ -115,7 +115,20 @@ export const SubmitForm: React.FC<SubmitFormProps> = ({
         setSubmitting(false);
       }
     },
-    [api, selectedType, title, description, imageUrl, email, name, userEmail, userName, anchor, resetForm, onClearAnchor],
+    [
+      api,
+      selectedType,
+      title,
+      description,
+      imageUrl,
+      email,
+      name,
+      userEmail,
+      userName,
+      anchor,
+      resetForm,
+      onClearAnchor,
+    ]
   );
 
   if (submitted) {
@@ -200,7 +213,9 @@ export const SubmitForm: React.FC<SubmitFormProps> = ({
           <label className="smw-label">Pinpoint (optional)</label>
           {anchor ? (
             <div className="smw-anchor">
-              <span className="smw-anchor__icon" aria-hidden="true">📍</span>
+              <span className="smw-anchor__icon" aria-hidden="true">
+                📍
+              </span>
               <span className="smw-anchor__label" title={anchor.selector}>
                 {anchorLabel(anchor)}
               </span>

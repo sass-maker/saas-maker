@@ -6,49 +6,49 @@
   "workers_dev": true,
   "vars": {
     "DROID_DEEPSEEK_MODEL": "deepseek-v4-pro",
-    "DROID_DEEPSEEK_REVIEW_MODEL": "deepseek-chat",
+    "DROID_DEEPSEEK_REVIEW_MODEL": "deepseek-chat"
   },
   "observability": {
-    "enabled": true,
+    "enabled": true
   },
   "browser": {
-    "binding": "BROWSER",
+    "binding": "BROWSER"
   },
   "containers": [
     {
       "class_name": "Sandbox",
       "image": "./Dockerfile",
       "instance_type": "basic",
-      "max_instances": 3,
-    },
+      "max_instances": 3
+    }
   ],
   "durable_objects": {
     "bindings": [
       {
         "class_name": "Sandbox",
-        "name": "Sandbox",
+        "name": "Sandbox"
       },
       {
         "class_name": "DroidRunRoom",
-        "name": "DROID_RUN_ROOMS",
-      },
-    ],
+        "name": "DROID_RUN_ROOMS"
+      }
+    ]
   },
   "migrations": [
     {
       "tag": "v1",
-      "new_sqlite_classes": ["Sandbox"],
+      "new_sqlite_classes": ["Sandbox"]
     },
     {
       "tag": "v2",
-      "new_sqlite_classes": ["DroidRunRoom"],
-    },
+      "new_sqlite_classes": ["DroidRunRoom"]
+    }
   ],
   "d1_databases": [
     {
       "binding": "DB",
       "database_name": "saasmaker-db",
-      "database_id": "4fe6cffc-593a-4540-9577-1c33e8c64491",
-    },
-  ],
+      "database_id": "4fe6cffc-593a-4540-9577-1c33e8c64491"
+    }
+  ]
 }

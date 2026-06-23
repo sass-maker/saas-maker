@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { useState } from 'react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 import {
   Sheet,
   SheetBody,
@@ -17,7 +17,7 @@ import {
   SheetDescription,
   SheetHeader,
   SheetTitle,
-} from "@/components/ui/sheet";
+} from '@/components/ui/sheet';
 import {
   Dialog,
   DialogContent,
@@ -25,18 +25,17 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Map, ThumbsUp, Trash2 } from "lucide-react";
-import type {
-  FeedbackRecord,
-  AnyFeedbackStatus,
-  FeedbackStatus,
-} from "@saas-maker/contracts";
+} from '@/components/ui/dialog';
+import { Map, ThumbsUp, Trash2 } from 'lucide-react';
+import type { FeedbackRecord, AnyFeedbackStatus, FeedbackStatus } from '@saas-maker/contracts';
 
-const TYPE_STYLES: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
-  bug: { label: "Bug", variant: "destructive" },
-  feature: { label: "Feature", variant: "default" },
-  feedback: { label: "Feedback", variant: "secondary" },
+const TYPE_STYLES: Record<
+  string,
+  { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }
+> = {
+  bug: { label: 'Bug', variant: 'destructive' },
+  feature: { label: 'Feature', variant: 'default' },
+  feedback: { label: 'Feedback', variant: 'secondary' },
 };
 
 interface FeedbackDetailProps {
@@ -48,8 +47,15 @@ interface FeedbackDetailProps {
   onMoveToRoadmap?: (item: FeedbackRecord) => Promise<void>;
 }
 
-export function FeedbackDetail({ item, open, onClose, onStatusChange, onDelete, onMoveToRoadmap }: FeedbackDetailProps) {
-  const [status, setStatus] = useState<AnyFeedbackStatus>(item?.status ?? "new");
+export function FeedbackDetail({
+  item,
+  open,
+  onClose,
+  onStatusChange,
+  onDelete,
+  onMoveToRoadmap,
+}: FeedbackDetailProps) {
+  const [status, setStatus] = useState<AnyFeedbackStatus>(item?.status ?? 'new');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [updating, setUpdating] = useState(false);
@@ -63,11 +69,14 @@ export function FeedbackDetail({ item, open, onClose, onStatusChange, onDelete, 
   if (!item) return null;
   const currentItem = item;
 
-  const typeStyle = TYPE_STYLES[currentItem.type] ?? { label: currentItem.type, variant: "outline" as const };
+  const typeStyle = TYPE_STYLES[currentItem.type] ?? {
+    label: currentItem.type,
+    variant: 'outline' as const,
+  };
   const statusOptions: Array<{ value: AnyFeedbackStatus; label: string }> = [
-    { value: "new", label: "New" },
-    { value: "dismissed", label: "Dismissed" },
-    { value: "on_roadmap", label: "On Roadmap" },
+    { value: 'new', label: 'New' },
+    { value: 'dismissed', label: 'Dismissed' },
+    { value: 'on_roadmap', label: 'On Roadmap' },
   ];
 
   async function handleStatusChange(value: string) {
@@ -115,7 +124,7 @@ export function FeedbackDetail({ item, open, onClose, onStatusChange, onDelete, 
             <div className="space-y-2">
               <h4 className="text-sm font-medium text-muted-foreground">Description</h4>
               <p className="text-sm leading-relaxed">
-                {item.description || "No description provided."}
+                {item.description || 'No description provided.'}
               </p>
             </div>
 
@@ -134,8 +143,12 @@ export function FeedbackDetail({ item, open, onClose, onStatusChange, onDelete, 
             {/* Upvotes */}
             <div className="flex items-center gap-2 text-sm">
               <ThumbsUp className="h-4 w-4 text-muted-foreground" />
-              <span>{item.upvote_count} upvote{item.upvote_count !== 1 ? "s" : ""}</span>
-              <span className="text-muted-foreground">• {item.downvote_count} downvote{item.downvote_count !== 1 ? "s" : ""}</span>
+              <span>
+                {item.upvote_count} upvote{item.upvote_count !== 1 ? 's' : ''}
+              </span>
+              <span className="text-muted-foreground">
+                • {item.downvote_count} downvote{item.downvote_count !== 1 ? 's' : ''}
+              </span>
             </div>
 
             {/* Submitter info */}
@@ -151,12 +164,12 @@ export function FeedbackDetail({ item, open, onClose, onStatusChange, onDelete, 
             <div className="space-y-1">
               <h4 className="text-sm font-medium text-muted-foreground">Submitted</h4>
               <p className="text-sm">
-                {new Date(item.created_at).toLocaleDateString("en-US", {
-                  month: "long",
-                  day: "numeric",
-                  year: "numeric",
-                  hour: "numeric",
-                  minute: "2-digit",
+                {new Date(item.created_at).toLocaleDateString('en-US', {
+                  month: 'long',
+                  day: 'numeric',
+                  year: 'numeric',
+                  hour: 'numeric',
+                  minute: '2-digit',
                 })}
               </p>
             </div>
@@ -179,7 +192,7 @@ export function FeedbackDetail({ item, open, onClose, onStatusChange, onDelete, 
             </div>
 
             {/* Move to Roadmap */}
-            {item.status !== "on_roadmap" && onMoveToRoadmap && (
+            {item.status !== 'on_roadmap' && onMoveToRoadmap && (
               <div className="border-t pt-4">
                 <Button
                   variant="outline"
@@ -196,7 +209,7 @@ export function FeedbackDetail({ item, open, onClose, onStatusChange, onDelete, 
                   className="gap-2"
                 >
                   <Map className="h-4 w-4" />
-                  {movingToRoadmap ? "Moving..." : "Move to Roadmap"}
+                  {movingToRoadmap ? 'Moving...' : 'Move to Roadmap'}
                 </Button>
               </div>
             )}
@@ -223,8 +236,8 @@ export function FeedbackDetail({ item, open, onClose, onStatusChange, onDelete, 
           <DialogHeader>
             <DialogTitle>Delete Feedback</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete &quot;{item.title}&quot;? This action cannot
-              be undone.
+              Are you sure you want to delete &quot;{item.title}&quot;? This action cannot be
+              undone.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -232,7 +245,7 @@ export function FeedbackDetail({ item, open, onClose, onStatusChange, onDelete, 
               Cancel
             </Button>
             <Button variant="destructive" onClick={handleDelete} disabled={deleting}>
-              {deleting ? "Deleting..." : "Delete"}
+              {deleting ? 'Deleting...' : 'Delete'}
             </Button>
           </DialogFooter>
         </DialogContent>

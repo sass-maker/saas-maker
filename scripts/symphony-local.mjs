@@ -3,7 +3,12 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { findNextTask, isTaskBlocked, sortTasksRunnableFirst, normalizeDependencies } from './symphony-tasks.mjs';
+import {
+  findNextTask,
+  isTaskBlocked,
+  sortTasksRunnableFirst,
+  normalizeDependencies,
+} from './symphony-tasks.mjs';
 import {
   buildRunLedgerRecord,
   buildRunAuditEvent,
@@ -24,9 +29,12 @@ const LOCAL_AGENT_USAGE_CACHE = path.join(LOCAL_STATE_DIR, 'agent-usage.json');
 const DEFAULT_CLI_COMMAND = 'pnpm --dir packages/cli exec tsx src/index.ts';
 const DEFAULT_AGENT_COMMANDS = {
   codex: 'codex exec --dangerously-bypass-approvals-and-sandbox {prompt}',
-  claude: 'claude --dangerously-skip-permissions -p {prompt} --output-format json --no-session-persistence',
-  'claude-work': 'CLAUDE_CONFIG_DIR="$HOME/.claude-work" claude --dangerously-skip-permissions -p {prompt} --model ${SYMPHONY_CLAUDE_WORK_MODEL:-sonnet} --output-format json --no-session-persistence',
-  gemini: 'npx -y @google/gemini-cli --model ${SYMPHONY_GEMINI_MODEL:-gemini-2.5-pro} --yolo -p {prompt} --output-format json --skip-trust',
+  claude:
+    'claude --dangerously-skip-permissions -p {prompt} --output-format json --no-session-persistence',
+  'claude-work':
+    'CLAUDE_CONFIG_DIR="$HOME/.claude-work" claude --dangerously-skip-permissions -p {prompt} --model ${SYMPHONY_CLAUDE_WORK_MODEL:-sonnet} --output-format json --no-session-persistence',
+  gemini:
+    'npx -y @google/gemini-cli --model ${SYMPHONY_GEMINI_MODEL:-gemini-2.5-pro} --yolo -p {prompt} --output-format json --skip-trust',
   grok: '${SYMPHONY_GROK_COMMAND:-grok} --permission-mode bypassPermissions --prompt-file {promptFile} --output-format json --no-alt-screen',
   cursor: 'agent --print --force --trust --output-format json {prompt}',
 };
@@ -95,7 +103,8 @@ function parseArgs(argv) {
   const args = {
     command: 'list',
     apiBase: process.env.FND_API_URL || process.env.SAASMAKER_API_URL || globalConfig.apiBaseUrl,
-    cliCommand: process.env.SYMPHONY_CLI_COMMAND || globalConfig.symphonyCliCommand || DEFAULT_CLI_COMMAND,
+    cliCommand:
+      process.env.SYMPHONY_CLI_COMMAND || globalConfig.symphonyCliCommand || DEFAULT_CLI_COMMAND,
     json: false,
     commands: false,
     dispatch: null,
@@ -124,7 +133,24 @@ function parseArgs(argv) {
     limit: null,
   };
 
-  const commands = new Set(['list', 'pull', 'sync', 'create', 'claim', 'done', 'reopen', 'type', 'dispatch', 'pick', 'delete', 'memory', 'audit', 'summary', 'usage', 'backfill-changelog']);
+  const commands = new Set([
+    'list',
+    'pull',
+    'sync',
+    'create',
+    'claim',
+    'done',
+    'reopen',
+    'type',
+    'dispatch',
+    'pick',
+    'delete',
+    'memory',
+    'audit',
+    'summary',
+    'usage',
+    'backfill-changelog',
+  ]);
   if (argv[0] && !argv[0].startsWith('-') && commands.has(argv[0])) {
     args.command = argv.shift();
   }
@@ -158,7 +184,10 @@ function parseArgs(argv) {
     } else if (args.command === 'dispatch') {
       args.ids.push(arg);
       args.id ||= arg;
-    } else if (!args.id && ['claim', 'done', 'reopen', 'type', 'delete', 'audit'].includes(args.command)) {
+    } else if (
+      !args.id &&
+      ['claim', 'done', 'reopen', 'type', 'delete', 'audit'].includes(args.command)
+    ) {
       args.id = arg;
     } else if (args.command === 'type' && !args.taskType) {
       args.taskType = arg;
@@ -275,7 +304,9 @@ function resolveAgentCommand(args) {
   if (args.agentCommand) return args.agentCommand;
   const command = args.agentCommands[args.effectiveAgent ?? args.agent];
   if (!command) {
-    throw new Error(`Unknown agent profile "${args.effectiveAgent ?? args.agent}". Use --agent-command or add it to symphonyAgentCommands in ~/.foundry/config.json.`);
+    throw new Error(
+      `Unknown agent profile "${args.effectiveAgent ?? args.agent}". Use --agent-command or add it to symphonyAgentCommands in ~/.foundry/config.json.`
+    );
   }
   return command;
 }
@@ -296,7 +327,12 @@ function agentHealthy(agent, usage) {
   const sample = usage?.agents?.[agent];
   if (!sample) return true;
   const minHeadroom = agent === 'claude-work' ? CLAUDE_WORK_MIN_HEADROOM_PCT : 8;
-  return sample.available !== false && sample.ok !== false && isFresh(sample.sampled_at) && agentHeadroomPct(agent, usage) >= minHeadroom;
+  return (
+    sample.available !== false &&
+    sample.ok !== false &&
+    isFresh(sample.sampled_at) &&
+    agentHeadroomPct(agent, usage) >= minHeadroom
+  );
 }
 
 function firstHealthyAgent(candidates, usage) {
@@ -307,7 +343,8 @@ function agentHeadroomPct(agent, usage) {
   const sample = usage?.agents?.[agent];
   const telemetry = sample?.provider_telemetry;
   if (typeof telemetry?.headroom_pct === 'number') return telemetry.headroom_pct;
-  if (typeof telemetry?.worst_used_pct === 'number') return Math.max(0, 100 - telemetry.worst_used_pct);
+  if (typeof telemetry?.worst_used_pct === 'number')
+    return Math.max(0, 100 - telemetry.worst_used_pct);
   if (agent === 'codex' || agent === 'grok' || agent === 'cursor') return 100;
   return 50;
 }
@@ -330,7 +367,10 @@ function chooseAgent(task, args) {
   let candidate = 'codex';
   let reason = 'default route';
   const explicitAgent = assignedAgent(task);
-  const explicitlySensitive = /(set secret|add secret|write secret|rotate secret|production credential|deploy now|release now|migration)/.test(text);
+  const explicitlySensitive =
+    /(set secret|add secret|write secret|rotate secret|production credential|deploy now|release now|migration)/.test(
+      text
+    );
 
   if (explicitAgent && !explicitlySensitive && agentHealthy(explicitAgent, usage)) {
     candidate = explicitAgent;
@@ -338,25 +378,43 @@ function chooseAgent(task, args) {
   } else if (/(secret|credential|oauth|migration|database|d1)/.test(text) || explicitlySensitive) {
     candidate = 'codex';
     reason = 'sensitive cloud/auth/deployment work stays with Codex';
-  } else if (/(ui|frontend|react|next|component|page|layout|design|polish|revamp|crash|runtime|bug|fix)/.test(text)) {
-    candidate = firstHealthyAgent(['gemini', 'codex', 'claude', 'claude-work', 'grok', 'cursor'], usage);
+  } else if (
+    /(ui|frontend|react|next|component|page|layout|design|polish|revamp|crash|runtime|bug|fix)/.test(
+      text
+    )
+  ) {
+    candidate = firstHealthyAgent(
+      ['gemini', 'codex', 'claude', 'claude-work', 'grok', 'cursor'],
+      usage
+    );
     reason = 'implementation/UI/bug route';
   } else if (
     task.task_type === 'cleanup' ||
     task.task_type === 'chore' ||
     /(cleanup|clean up|refactor|polish|rename|organize|simplify|prose|wording)/.test(text)
   ) {
-    candidate = firstHealthyAgent(['gemini', 'claude', 'codex', 'claude-work', 'grok', 'cursor'], usage);
+    candidate = firstHealthyAgent(
+      ['gemini', 'claude', 'codex', 'claude-work', 'grok', 'cursor'],
+      usage
+    );
     reason = 'cleanup/refactor/prose route';
   } else if (
     task.task_type === 'research' ||
     task.task_type === 'docs' ||
-    /(audit|research|summarize|inventory|review all|compare|docs|documentation|copy|content)/.test(text)
+    /(audit|research|summarize|inventory|review all|compare|docs|documentation|copy|content)/.test(
+      text
+    )
   ) {
-    candidate = firstHealthyAgent(['gemini', 'claude', 'codex', 'claude-work', 'grok', 'cursor'], usage);
+    candidate = firstHealthyAgent(
+      ['gemini', 'claude', 'codex', 'claude-work', 'grok', 'cursor'],
+      usage
+    );
     reason = 'broad review/docs/synthesis route';
   } else if (task.priority === 'high') {
-    candidate = firstHealthyAgent(['gemini', 'codex', 'claude', 'claude-work', 'grok', 'cursor'], usage);
+    candidate = firstHealthyAgent(
+      ['gemini', 'codex', 'claude', 'claude-work', 'grok', 'cursor'],
+      usage
+    );
     reason = 'high-priority non-sensitive route';
   } else {
     candidate = firstHealthyAgent(DEFAULT_AGENT_PRIORITY, usage);
@@ -364,7 +422,10 @@ function chooseAgent(task, args) {
   }
 
   if (!agentHealthy(candidate, usage)) {
-    return { agent: 'codex', reason: `${candidate} matched but recent usage sample was unhealthy/stale` };
+    return {
+      agent: 'codex',
+      reason: `${candidate} matched but recent usage sample was unhealthy/stale`,
+    };
   }
   return { agent: candidate, reason };
 }
@@ -470,8 +531,10 @@ function buildPrompt(task, memory = '') {
   const project = task.project_slug ?? 'saas-maker';
   const doneCommand = `pnpm --dir ~/Desktop/fleet/saas-maker symphony done ${task.id}`;
   const marketingCommand = `FND_API_URL=https://api.sassmaker.com pnpm --dir ~/Desktop/fleet/saas-maker/packages/cli exec tsx src/index.ts api POST /v1/marketing/posts --auth session --body '{"project_slug":"${project}","channel":"tiktok","status":"generated","source_type":"task","source_id":"${task.id}","task_id":"${task.id}","title":"Short AI video idea title","hook":"0-2s visual hook","body":"AI video brief: scene-by-scene script, shot list, voiceover, caption text, asset prompts, and edit notes.","cta":"One concrete next step."}'`;
-  const marketingInstructions = task.task_type === 'docs' && /\bmarketing\b/i.test(`${task.title ?? ''}\n${task.description ?? ''}`)
-    ? `
+  const marketingInstructions =
+    task.task_type === 'docs' &&
+    /\bmarketing\b/i.test(`${task.title ?? ''}\n${task.description ?? ''}`)
+      ? `
 Marketing Queue contract:
 - The required output is one or more SaaS Maker Marketing Queue ideas, not only repo docs.
 - Create each idea with:
@@ -486,7 +549,7 @@ Marketing Queue contract:
 - Avoid generic AI marketing language: no "unlock", "revolutionize", "seamless", "game-changing", "supercharge", "elevate", "transform your workflow", or vague hype.
 - Write like an AI-generated reel someone would actually watch: direct, visual, specific, slightly opinionated, and honest about what is still early.
 `
-    : '';
+      : '';
   return `You are running a Foundry Symphony task.
 
 Task ID: ${task.id}
@@ -606,12 +669,19 @@ async function loadPromptMemory(args) {
 
 function writeTaskCache(tasks, args) {
   fs.mkdirSync(LOCAL_STATE_DIR, { recursive: true });
-  fs.writeFileSync(LOCAL_TASK_CACHE, JSON.stringify({
-    cliCommand: args.cliCommand,
-    apiBase: args.apiBase ?? null,
-    syncedAt: new Date().toISOString(),
-    tasks,
-  }, null, 2));
+  fs.writeFileSync(
+    LOCAL_TASK_CACHE,
+    JSON.stringify(
+      {
+        cliCommand: args.cliCommand,
+        apiBase: args.apiBase ?? null,
+        syncedAt: new Date().toISOString(),
+        tasks,
+      },
+      null,
+      2
+    )
+  );
 }
 
 function shortId(id) {
@@ -642,7 +712,9 @@ function printTasks(tasks, args) {
       const project = task.project_slug ?? 'saas-maker';
       const description = task.description ? ` — ${task.description.split('\n')[0]}` : '';
       const blockedTag = task.blocked ? ' [BLOCKED]' : '';
-      console.log(`  - [${shortId(task.id)}] ${task.priority} ${project}: ${task.title}${blockedTag}${description}`);
+      console.log(
+        `  - [${shortId(task.id)}] ${task.priority} ${project}: ${task.title}${blockedTag}${description}`
+      );
       if (task.blocked) {
         const deps = normalizeDependencies(task);
         if (task.blocked_on_user) console.log('    waiting on: decision/config');
@@ -666,24 +738,39 @@ async function runOnce(args) {
     for (const task of batch) assertDispatchable(task, tasks);
     for (const task of batch) {
       const route = chooseAgent(task, args);
-      await recordRun(args, buildRunLedgerRecord({
-        task,
-        agent: route.agent,
-        agentCommand: args.agentCommand,
-        terminalHint: batch.length > 1 ? 'pnpm symphony batch dispatch printed command' : 'pnpm symphony dispatch printed command',
-      }));
-      await recordAudit(args, buildRunAuditEvent({
-        task,
-        action: DISPATCH_AUDIT_ACTION,
-        actorSource: 'local-cli',
-        agent: route.agent,
-        agentCommand: args.agentCommand,
-        note: `${batch.length > 1 ? 'CLI batch dispatch' : 'CLI dispatch'} - printed shell command (${route.reason})`,
-      }));
+      await recordRun(
+        args,
+        buildRunLedgerRecord({
+          task,
+          agent: route.agent,
+          agentCommand: args.agentCommand,
+          terminalHint:
+            batch.length > 1
+              ? 'pnpm symphony batch dispatch printed command'
+              : 'pnpm symphony dispatch printed command',
+        })
+      );
+      await recordAudit(
+        args,
+        buildRunAuditEvent({
+          task,
+          action: DISPATCH_AUDIT_ACTION,
+          actorSource: 'local-cli',
+          agent: route.agent,
+          agentCommand: args.agentCommand,
+          note: `${batch.length > 1 ? 'CLI batch dispatch' : 'CLI dispatch'} - printed shell command (${route.reason})`,
+        })
+      );
     }
     const commands = batch.map((task) => buildCommand(task, args));
     if (args.json) {
-      console.log(JSON.stringify(batch.map((task, index) => ({ task, command: commands[index] })), null, 2));
+      console.log(
+        JSON.stringify(
+          batch.map((task, index) => ({ task, command: commands[index] })),
+          null,
+          2
+        )
+      );
       return;
     }
     console.log(commands.join('\n\n'));
@@ -695,11 +782,10 @@ async function runOnce(args) {
 
 function findTask(tasks, id) {
   if (!id) throw new Error('Task id or id prefix is required.');
-  const task = tasks.find((candidate) => (
-    candidate.id === id ||
-    candidate.id.startsWith(id) ||
-    shortId(candidate.id) === id
-  ));
+  const task = tasks.find(
+    (candidate) =>
+      candidate.id === id || candidate.id.startsWith(id) || shortId(candidate.id) === id
+  );
   if (!task) throw new Error(`Task not found for id prefix: ${id}`);
   return task;
 }
@@ -758,14 +844,18 @@ async function doneTask(args) {
     });
     if (!args.json) {
       if (result?.skipped) {
-        if (result.reason === 'duplicate') console.log(`Changelog: draft already exists for this task`);
+        if (result.reason === 'duplicate')
+          console.log(`Changelog: draft already exists for this task`);
         else console.log(`Changelog: skipped (${result.reason ?? 'unknown reason'})`);
       } else if (result?.data) {
         console.log(`Changelog draft created: "${task.title}" (publish in Cockpit when ready)`);
       }
     }
   } catch (error) {
-    if (!args.json) console.log(`Changelog: skipped (${error instanceof Error ? error.message.slice(0, 120) : 'request failed'})`);
+    if (!args.json)
+      console.log(
+        `Changelog: skipped (${error instanceof Error ? error.message.slice(0, 120) : 'request failed'})`
+      );
   }
 }
 
@@ -776,13 +866,19 @@ async function backfillChangelog(args) {
     .filter((task) => PRODUCT_TASK_TYPES.has(task.task_type))
     .filter((task) => !task.has_changelog)
     .filter((task) => task.project_slug)
-    .sort((a, b) => Date.parse(a.updated_at ?? a.created_at ?? '') - Date.parse(b.updated_at ?? b.created_at ?? ''));
+    .sort(
+      (a, b) =>
+        Date.parse(a.updated_at ?? a.created_at ?? '') -
+        Date.parse(b.updated_at ?? b.created_at ?? '')
+    );
 
   const limit = Number.isFinite(args.limit) && args.limit > 0 ? args.limit : candidates.length;
   const selected = candidates.slice(0, limit);
 
   if (args.json && args.dryRun) {
-    console.log(JSON.stringify({ dry_run: true, total_candidates: candidates.length, selected }, null, 2));
+    console.log(
+      JSON.stringify({ dry_run: true, total_candidates: candidates.length, selected }, null, 2)
+    );
     return;
   }
 
@@ -797,7 +893,13 @@ async function backfillChangelog(args) {
     return;
   }
 
-  const summary = { created: 0, duplicate: 0, skipped: 0, failed: 0, total_candidates: candidates.length };
+  const summary = {
+    created: 0,
+    duplicate: 0,
+    skipped: 0,
+    failed: 0,
+    total_candidates: candidates.length,
+  };
   const failures = [];
   for (const task of selected) {
     try {
@@ -816,10 +918,17 @@ async function backfillChangelog(args) {
       } else {
         summary.created += 1;
       }
-      if (!args.json) console.log(`[${shortId(task.id)}] ${task.project_slug}: ${result?.skipped ? `skipped ${result.reason ?? 'unknown'}` : 'created'}`);
+      if (!args.json)
+        console.log(
+          `[${shortId(task.id)}] ${task.project_slug}: ${result?.skipped ? `skipped ${result.reason ?? 'unknown'}` : 'created'}`
+        );
     } catch (error) {
       summary.failed += 1;
-      failures.push({ id: task.id, title: task.title, error: error instanceof Error ? error.message : String(error) });
+      failures.push({
+        id: task.id,
+        title: task.title,
+        error: error instanceof Error ? error.message : String(error),
+      });
       if (!args.json) console.log(`[${shortId(task.id)}] ${task.project_slug}: failed`);
     }
   }
@@ -847,7 +956,8 @@ async function updateTaskType(args) {
     body: JSON.stringify({ task_type: args.taskType }),
   });
   await fetchTasks(args);
-  if (!args.json) console.log(`Updated ${shortId(task.id)} to ${args.taskType}: ${payload.data.title}`);
+  if (!args.json)
+    console.log(`Updated ${shortId(task.id)} to ${args.taskType}: ${payload.data.title}`);
   if (args.json) console.log(JSON.stringify(payload.data, null, 2));
 }
 
@@ -863,20 +973,26 @@ async function pickTask(args) {
   await fetchTasks(args);
   const route = chooseAgent(pickedTask, args);
   const command = buildCommand(pickedTask, args);
-  await recordRun(args, buildRunLedgerRecord({
-    task: pickedTask,
-    agent: route.agent,
-    agentCommand: args.agentCommand,
-    terminalHint: 'pnpm symphony pick claimed task and printed command',
-  }));
-  await recordAudit(args, buildRunAuditEvent({
-    task: pickedTask,
-    action: PICK_AUDIT_ACTION,
-    actorSource: 'local-cli',
-    agent: route.agent,
-    agentCommand: args.agentCommand,
-    note: `CLI pick - claimed task and printed shell command (${route.reason})`,
-  }));
+  await recordRun(
+    args,
+    buildRunLedgerRecord({
+      task: pickedTask,
+      agent: route.agent,
+      agentCommand: args.agentCommand,
+      terminalHint: 'pnpm symphony pick claimed task and printed command',
+    })
+  );
+  await recordAudit(
+    args,
+    buildRunAuditEvent({
+      task: pickedTask,
+      action: PICK_AUDIT_ACTION,
+      actorSource: 'local-cli',
+      agent: route.agent,
+      agentCommand: args.agentCommand,
+      note: `CLI pick - claimed task and printed shell command (${route.reason})`,
+    })
+  );
   if (args.json) {
     console.log(JSON.stringify({ task: pickedTask, command }, null, 2));
     return;
@@ -961,7 +1077,8 @@ async function manageMemory(args) {
     const content = readLocalMemory();
     const row = await pushRemoteMemory(args, content);
     if (args.json) console.log(JSON.stringify(row, null, 2));
-    else console.log(`Pushed Symphony memory from ${path.relative(process.cwd(), LOCAL_MEMORY_FILE)}`);
+    else
+      console.log(`Pushed Symphony memory from ${path.relative(process.cwd(), LOCAL_MEMORY_FILE)}`);
     return;
   }
 
@@ -969,7 +1086,8 @@ async function manageMemory(args) {
     const content = await fetchRemoteMemory(args);
     writeLocalMemory(content);
     if (args.json) console.log(JSON.stringify({ content }, null, 2));
-    else console.log(`Pulled Symphony memory to ${path.relative(process.cwd(), LOCAL_MEMORY_FILE)}`);
+    else
+      console.log(`Pulled Symphony memory to ${path.relative(process.cwd(), LOCAL_MEMORY_FILE)}`);
     return;
   }
 

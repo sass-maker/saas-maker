@@ -43,7 +43,7 @@
 }
 
 [data-saasmaker-changelog] {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   color: var(--smw-cl-text);
 }
 
@@ -54,7 +54,7 @@
 }
 
 .smw-cl-timeline::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 7px;
   top: 8px;
@@ -85,10 +85,18 @@
   z-index: 1;
 }
 
-.smw-cl-dot--feature { background: #3b82f6; }
-.smw-cl-dot--improvement { background: #22c55e; }
-.smw-cl-dot--fix { background: #eab308; }
-.smw-cl-dot--breaking { background: #ef4444; }
+.smw-cl-dot--feature {
+  background: #3b82f6;
+}
+.smw-cl-dot--improvement {
+  background: #22c55e;
+}
+.smw-cl-dot--fix {
+  background: #eab308;
+}
+.smw-cl-dot--breaking {
+  background: #ef4444;
+}
 
 /* Date */
 .smw-cl-date {

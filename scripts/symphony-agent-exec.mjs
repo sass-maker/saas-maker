@@ -132,9 +132,10 @@ function updateUsageCache(agent, parsed, completedAt) {
 
   cache.sampled_at = completedAt;
   cache.agents ||= {};
-  cache.agents[agent] = agent === 'gemini'
-    ? summarizeGemini(parsed, completedAt)
-    : summarizeClaude(parsed, completedAt, agent);
+  cache.agents[agent] =
+    agent === 'gemini'
+      ? summarizeGemini(parsed, completedAt)
+      : summarizeClaude(parsed, completedAt, agent);
 
   writeJson(USAGE_FILE, cache);
   return cache.agents[agent];
@@ -199,7 +200,10 @@ async function run() {
   };
 
   writeJson(resultPath, result);
-  append(logPath, `\n[${completedAt}] ${result.status} exit=${exit.code ?? 'signal'} signal=${exit.signal ?? ''}\n`);
+  append(
+    logPath,
+    `\n[${completedAt}] ${result.status} exit=${exit.code ?? 'signal'} signal=${exit.signal ?? ''}\n`
+  );
   process.exit(exit.code ?? 1);
 }
 

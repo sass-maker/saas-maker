@@ -45,15 +45,15 @@ describe('apiCommand', () => {
 
   it('rejects body with GET', async () => {
     await apiCommand('GET', '/v1/projects', { body: '{"name":"x"}' });
-    expect(log.error).toHaveBeenCalledWith('Method GET should not be used with --body/--body-file.');
+    expect(log.error).toHaveBeenCalledWith(
+      'Method GET should not be used with --body/--body-file.'
+    );
     expect(requestApi).not.toHaveBeenCalled();
   });
 
   it('rejects paths not in OpenAPI by default', async () => {
     await apiCommand('GET', '/v1/not-a-real-route', {});
-    expect(log.error).toHaveBeenCalledWith(
-      expect.stringContaining('is not in OpenAPI spec')
-    );
+    expect(log.error).toHaveBeenCalledWith(expect.stringContaining('is not in OpenAPI spec'));
     expect(requestApi).not.toHaveBeenCalled();
   });
 

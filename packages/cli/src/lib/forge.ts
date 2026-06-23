@@ -86,7 +86,7 @@ export const TSCONFIG_BASE = {
 
 export function buildLocalTsConfig(
   type: 'next' | 'vite' | 'node',
-  remote?: RemoteStandards,
+  remote?: RemoteStandards
 ): Record<string, unknown> {
   return {
     ...TSCONFIG_BASE,
@@ -113,7 +113,7 @@ export function applyStandard(
   type: 'next' | 'vite' | 'node',
   cwd: string = process.cwd(),
   remote?: RemoteStandards,
-  opts: ApplyStandardOptions = {},
+  opts: ApplyStandardOptions = {}
 ): void {
   // Guard: no package.json → skip entirely (Go/Rust/non-JS root)
   if (!existsSync(join(cwd, 'package.json'))) {
@@ -127,7 +127,7 @@ export function applyStandard(
     // Still write tsconfig — Biome does not typecheck
     const tsPath = join(cwd, 'tsconfig.json');
     if (!existsSync(tsPath) || opts.force) {
-      writeFileSync(tsPath, JSON.stringify(buildLocalTsConfig(type, remote), null, 2) + '\n');
+      writeFileSync(tsPath, `${JSON.stringify(buildLocalTsConfig(type, remote), null, 2)}\n`);
       log.success('✓ Applied local tsconfig.json');
     } else {
       log.info('  kept existing tsconfig.json');
@@ -154,7 +154,7 @@ export function applyStandard(
   // tsconfig — skip if exists unless --force
   const tsPath = join(cwd, 'tsconfig.json');
   if (!existsSync(tsPath) || opts.force) {
-    writeFileSync(tsPath, JSON.stringify(buildLocalTsConfig(type, remote), null, 2) + '\n');
+    writeFileSync(tsPath, `${JSON.stringify(buildLocalTsConfig(type, remote), null, 2)}\n`);
     log.success('✓ Applied local tsconfig.json');
   } else {
     log.info('  kept existing tsconfig.json');
@@ -167,12 +167,12 @@ export function applyStandard(
       remote?.prettier_options && Object.keys(remote.prettier_options).length > 0
         ? remote.prettier_options
         : getPrettierDefault(type);
-    writeFileSync(prettierPath, JSON.stringify(prettierOptions, null, 2) + '\n');
+    writeFileSync(prettierPath, `${JSON.stringify(prettierOptions, null, 2)}\n`);
 
     const pkgPath = join(cwd, 'package.json');
     const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
     delete pkg.prettier;
-    writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n');
+    writeFileSync(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`);
 
     log.success('✓ Wrote .prettierrc.json');
   } else {
@@ -312,11 +312,7 @@ jobs:
 export function buildPrePushTemplate(pm: PackageManager): string {
   // pnpm supports --if-present; bun/npm/yarn do not have an equivalent flag
   const lintCmd =
-    pm === 'pnpm'
-      ? 'pnpm run lint --if-present'
-      : pm === 'yarn'
-        ? 'yarn lint'
-        : `${pm} run lint`;
+    pm === 'pnpm' ? 'pnpm run lint --if-present' : pm === 'yarn' ? 'yarn lint' : `${pm} run lint`;
 
   return `#!/bin/sh
 set -e
@@ -350,6 +346,10 @@ export function scaffoldHusky(cwd: string = process.cwd(), opts: ApplyStandardOp
   }
   const pm = detectPackageManager(cwd);
   writeFileSync(prePush, buildPrePushTemplate(pm));
-  try { chmodSync(prePush, 0o755); } catch { /* fs may be read-only on some runners */ }
+  try {
+    chmodSync(prePush, 0o755);
+  } catch {
+    /* fs may be read-only on some runners */
+  }
   log.success(`✓ Wrote .husky/pre-push (lint + secret scan) [${pm}]`);
 }

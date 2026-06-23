@@ -30,10 +30,7 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
   const [picking, setPicking] = useState(false);
   const [anchor, setAnchor] = useState<ElementAnchor | null>(null);
 
-  const api = useMemo(
-    () => createApiClient(projectId, apiBaseUrl),
-    [projectId, apiBaseUrl],
-  );
+  const api = useMemo(() => createApiClient(projectId, apiBaseUrl), [projectId, apiBaseUrl]);
 
   const startPick = useCallback(() => setPicking(true), []);
   const handlePick = useCallback((a: ElementAnchor) => {
@@ -46,11 +43,7 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
   const resolvedTypes = types && types.length > 0 ? types : [...DEFAULT_TYPES];
 
   const themeClass =
-    theme === 'light'
-      ? 'smw--light'
-      : theme === 'dark'
-        ? 'smw--dark'
-        : 'smw--auto';
+    theme === 'light' ? 'smw--light' : theme === 'dark' ? 'smw--dark' : 'smw--auto';
 
   return (
     <div

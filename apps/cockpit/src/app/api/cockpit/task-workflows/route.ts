@@ -13,8 +13,9 @@ export const dynamic = 'force-dynamic';
 const WORKFLOW_STATUSES = ['draft', 'active', 'archived'] as const;
 
 function enumValue(value: unknown) {
-  return typeof value === 'string' && WORKFLOW_STATUSES.includes(value as typeof WORKFLOW_STATUSES[number])
-    ? value as typeof WORKFLOW_STATUSES[number]
+  return typeof value === 'string' &&
+    WORKFLOW_STATUSES.includes(value as (typeof WORKFLOW_STATUSES)[number])
+    ? (value as (typeof WORKFLOW_STATUSES)[number])
     : undefined;
 }
 
@@ -41,14 +42,18 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   const session = await getDashboardSession(req.headers);
   if (!session?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  const body = await req.json().catch(() => null) as Partial<TaskWorkflowInput> | null;
+  const body = (await req.json().catch(() => null)) as Partial<TaskWorkflowInput> | null;
   if (!body?.name || typeof body.name !== 'string' || !body.name.trim()) {
     return NextResponse.json({ error: 'name is required' }, { status: 400 });
   }
-  if (!body.prompt_template || typeof body.prompt_template !== 'string' || !body.prompt_template.trim()) {
+  if (
+    !body.prompt_template ||
+    typeof body.prompt_template !== 'string' ||
+    !body.prompt_template.trim()
+  ) {
     return NextResponse.json({ error: 'prompt_template is required' }, { status: 400 });
   }
-  const ownerId = await getDefaultCockpitOwnerId() ?? await ensureCockpitUser(session.user);
+  const ownerId = (await getDefaultCockpitOwnerId()) ?? (await ensureCockpitUser(session.user));
   const data = await createCockpitTaskWorkflow(ownerId, {
     task_id: optionalString(body.task_id) ?? null,
     project_slug: optionalString(body.project_slug) ?? null,

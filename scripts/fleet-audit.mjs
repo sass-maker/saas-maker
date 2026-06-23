@@ -91,9 +91,15 @@ const PROD_TARGETS = {
     { label: 'api-root', url: 'https://mal-api.sarthakagrawal927.workers.dev', ok: [404] },
   ],
   CodeVetter: [{ label: 'web', url: 'https://codevetter.com', ok: [200] }],
-  'email-manager': [{ label: 'web', url: 'https://email-manager.sarthakagrawal927.workers.dev', ok: [200] }],
-  everythingrated: [{ label: 'web', url: 'https://everythingrated.sarthakagrawal927.workers.dev', ok: [200] }],
-  'free-ai': [{ label: 'gateway', url: 'https://free-ai-gateway.sarthakagrawal927.workers.dev', ok: [200] }],
+  'email-manager': [
+    { label: 'web', url: 'https://email-manager.sarthakagrawal927.workers.dev', ok: [200] },
+  ],
+  everythingrated: [
+    { label: 'web', url: 'https://everythingrated.sarthakagrawal927.workers.dev', ok: [200] },
+  ],
+  'free-ai': [
+    { label: 'gateway', url: 'https://free-ai-gateway.sarthakagrawal927.workers.dev', ok: [200] },
+  ],
   'ai-game': [{ label: 'web', url: 'https://aliveville.com', ok: [200] }],
   'high-signal': [
     { label: 'web', url: 'https://highsignal.app', ok: [200] },
@@ -101,9 +107,17 @@ const PROD_TARGETS = {
   ],
   linkchat: [{ label: 'web', url: 'https://linkchat.sarthakagrawal927.workers.dev', ok: [200] }],
   looptv: [{ label: 'web', url: 'https://looptv.pages.dev', ok: [200] }],
-  'open-historia': [{ label: 'web', url: 'https://open-historia.sarthakagrawal927.workers.dev', ok: [200] }],
+  'open-historia': [
+    { label: 'web', url: 'https://open-historia.sarthakagrawal927.workers.dev', ok: [200] },
+  ],
   reader: [{ label: 'web', url: 'https://reader.sarthakagrawal927.workers.dev', ok: [200] }],
-  'reel-pipeline': [{ label: 'health', url: 'https://reel-pipeline-artifacts.sarthakagrawal927.workers.dev/health', ok: [200] }],
+  'reel-pipeline': [
+    {
+      label: 'health',
+      url: 'https://reel-pipeline-artifacts.sarthakagrawal927.workers.dev/health',
+      ok: [200],
+    },
+  ],
   'resume-tailor': [{ label: 'web', url: 'https://rolepatch.com', ok: [200] }],
   'saas-maker': [
     { label: 'cockpit', url: 'https://app.sassmaker.com', ok: [200] },
@@ -203,25 +217,26 @@ function parseArgs(argv) {
     else if (arg === '--skip-github') args.runGithub = false;
     else if (arg === '--skip-dirty') args.runDirty = false;
     else if (arg === '--skip-cloudflare-builds') args.runCloudflareBuilds = false;
-    else if (arg === '--cloudflare-account-id') args.cloudflareAccountId = argv[++i] ?? args.cloudflareAccountId;
+    else if (arg === '--cloudflare-account-id')
+      args.cloudflareAccountId = argv[++i] ?? args.cloudflareAccountId;
     else if (arg === '--expected-cloudflare-build-token') {
       args.expectedCloudflareBuildToken = argv[++i] ?? args.expectedCloudflareBuildToken;
-    }
-    else if (arg === '--performance') args.runPerformance = true;
+    } else if (arg === '--performance') args.runPerformance = true;
     else if (arg === '--marketing') args.runMarketing = true;
     else if (arg === '--lighthouse') {
       args.runPerformance = true;
       args.runLighthouse = true;
-    }
-    else if (arg === '--autofix') args.autofix = true;
+    } else if (arg === '--autofix') args.autofix = true;
     else if (arg === '--performance-samples') {
-      args.performanceSamples = Math.max(1, Number.parseInt(argv[++i] ?? '', 10) || args.performanceSamples);
-    }
-    else if (arg === '--timeout-ms') args.timeoutMs = Number.parseInt(argv[++i] ?? '', 10) || DEFAULT_TIMEOUT_MS;
+      args.performanceSamples = Math.max(
+        1,
+        Number.parseInt(argv[++i] ?? '', 10) || args.performanceSamples
+      );
+    } else if (arg === '--timeout-ms')
+      args.timeoutMs = Number.parseInt(argv[++i] ?? '', 10) || DEFAULT_TIMEOUT_MS;
     else if (arg === '--lighthouse-timeout-ms') {
       args.lighthouseTimeoutMs = Math.max(10_000, Number.parseInt(argv[++i] ?? '', 10) || 90_000);
-    }
-    else if (arg === '--json') args.jsonOnly = true;
+    } else if (arg === '--json') args.jsonOnly = true;
     else if (arg === '--fail-on-failure') args.failOnFailure = true;
     else if (arg === '--help' || arg === '-h') {
       printHelp();
@@ -311,7 +326,11 @@ function networkAudit() {
   return {
     ok,
     status: Number.isFinite(status) ? status : null,
-    error: ok ? null : result.stderr || result.error || `curl returned HTTP ${Number.isFinite(status) ? status : 'unknown'}`,
+    error: ok
+      ? null
+      : result.stderr ||
+        result.error ||
+        `curl returned HTTP ${Number.isFinite(status) ? status : 'unknown'}`,
   };
 }
 
@@ -330,12 +349,16 @@ function readCloudflareToken() {
 }
 
 async function cloudflareGet(accountId, token, pathSuffix) {
-  const response = await fetch(`https://api.cloudflare.com/client/v4/accounts/${accountId}${pathSuffix}`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  const response = await fetch(
+    `https://api.cloudflare.com/client/v4/accounts/${accountId}${pathSuffix}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
   const body = await response.json().catch(() => null);
   if (!response.ok || body?.success === false) {
-    const message = body?.errors?.map((error) => error.message).join('; ') || `HTTP ${response.status}`;
+    const message =
+      body?.errors?.map((error) => error.message).join('; ') || `HTTP ${response.status}`;
     throw new Error(message);
   }
   return body?.result;
@@ -368,7 +391,8 @@ async function cloudflareBuildAuditAll(projects, args, network) {
         {
           ok: false,
           skipped: true,
-          error: 'Missing Cloudflare read token in CLOUDFLARE_READ_TOKEN, CLOUDFLARE_API_TOKEN, or macOS keychain item foundry-fleet-audit/CLOUDFLARE_READ_TOKEN',
+          error:
+            'Missing Cloudflare read token in CLOUDFLARE_READ_TOKEN, CLOUDFLARE_API_TOKEN, or macOS keychain item foundry-fleet-audit/CLOUDFLARE_READ_TOKEN',
           expectedToken: args.expectedCloudflareBuildToken,
           services: [],
         },
@@ -456,7 +480,9 @@ function readJson(file) {
 }
 
 function repoFromUrl(url) {
-  const trimmed = String(url ?? '').trim().replace(/\.git$/, '');
+  const trimmed = String(url ?? '')
+    .trim()
+    .replace(/\.git$/, '');
   const ssh = trimmed.match(/^git@[^:]+:([^/]+)\/([^/]+)$/);
   if (ssh) return `${ssh[1]}/${ssh[2]}`;
   const https = trimmed.match(/^https?:\/\/[^/]+\/([^/]+)\/([^/]+)$/);
@@ -472,7 +498,8 @@ function loadProjects(args) {
       desc: meta?.desc ?? '',
       url: meta?.url ?? '',
       tier: meta?.tier ?? '',
-      businessLane: BUSINESS_LANES[slug] ?? (meta?.tier === 'core' ? 'Core/context' : 'Unclassified'),
+      businessLane:
+        BUSINESS_LANES[slug] ?? (meta?.tier === 'core' ? 'Core/context' : 'Unclassified'),
       repo: repoFromUrl(meta?.url),
       path: path.join(args.fleetRoot, slug),
     }))
@@ -544,11 +571,16 @@ function githubAudit(project) {
   const prs = parseGhJson(prsResult, []);
   const workflows = latestByWorkflow(parseGhJson(runsResult, []));
   const failedWorkflows = workflows.filter((workflow) =>
-    ['failure', 'cancelled', 'timed_out', 'startup_failure'].includes(String(workflow.conclusion ?? ''))
+    ['failure', 'cancelled', 'timed_out', 'startup_failure'].includes(
+      String(workflow.conclusion ?? '')
+    )
   );
   return {
     ok: prsResult.ok && runsResult.ok && failedWorkflows.length === 0,
-    error: prsResult.ok && runsResult.ok ? null : [prsResult.stderr, runsResult.stderr].filter(Boolean).join('\n'),
+    error:
+      prsResult.ok && runsResult.ok
+        ? null
+        : [prsResult.stderr, runsResult.stderr].filter(Boolean).join('\n'),
     prs,
     workflows,
     failedWorkflows,
@@ -561,7 +593,11 @@ function dirtyAudit(project) {
   }
   const result = run('git', ['status', '--short'], { cwd: project.path });
   const entries = result.stdout.split(/\r?\n/).filter(Boolean);
-  return { ok: result.ok && entries.length === 0, error: result.ok ? null : result.stderr, entries };
+  return {
+    ok: result.ok && entries.length === 0,
+    error: result.ok ? null : result.stderr,
+    entries,
+  };
 }
 
 function smokeAudit(project) {
@@ -582,19 +618,23 @@ function smokeAudit(project) {
   }
   const targets = PROD_TARGETS[project.slug] ?? [];
   const checks = targets.map((target) => {
-    const result = run('curl', [
-      '-L',
-      '-s',
-      '-o',
-      '/dev/null',
-      '-w',
-      '%{http_code} %{url_effective}',
-      '--connect-timeout',
-      '5',
-      '--max-time',
-      '15',
-      target.url,
-    ], { timeoutMs: 20_000 });
+    const result = run(
+      'curl',
+      [
+        '-L',
+        '-s',
+        '-o',
+        '/dev/null',
+        '-w',
+        '%{http_code} %{url_effective}',
+        '--connect-timeout',
+        '5',
+        '--max-time',
+        '15',
+        target.url,
+      ],
+      { timeoutMs: 20_000 }
+    );
     const [statusText, ...urlParts] = result.stdout.trim().split(/\s+/);
     const status = Number.parseInt(statusText ?? '', 10);
     return {
@@ -639,19 +679,23 @@ function curlTiming(target) {
     '"urlEffective":"%{url_effective}"',
     '}',
   ].join('');
-  const result = run('curl', [
-    '-L',
-    '-s',
-    '-o',
-    '/dev/null',
-    '-w',
-    format,
-    '--connect-timeout',
-    '8',
-    '--max-time',
-    '30',
-    target.url,
-  ], { timeoutMs: 35_000 });
+  const result = run(
+    'curl',
+    [
+      '-L',
+      '-s',
+      '-o',
+      '/dev/null',
+      '-w',
+      format,
+      '--connect-timeout',
+      '8',
+      '--max-time',
+      '30',
+      target.url,
+    ],
+    { timeoutMs: 35_000 }
+  );
   if (!result.ok) {
     return { ok: false, error: result.stderr || result.error || 'curl failed' };
   }
@@ -667,7 +711,10 @@ function curlTiming(target) {
       timeTlsMs: secondsToMs(parsed.timeAppConnect),
       ttfbMs: secondsToMs(parsed.timeStartTransfer),
       totalMs: secondsToMs(parsed.timeTotal),
-      error: parsed.httpCode >= 200 && parsed.httpCode < 400 ? null : `Unexpected HTTP ${parsed.httpCode}`,
+      error:
+        parsed.httpCode >= 200 && parsed.httpCode < 400
+          ? null
+          : `Unexpected HTTP ${parsed.httpCode}`,
     };
   } catch {
     return { ok: false, error: `Could not parse curl timing output: ${result.stdout}` };
@@ -679,22 +726,30 @@ function curlTiming(target) {
 // and progressive latest.* persistence so one failure never loses prior project data.
 function lighthouseAudit(target, timeoutMs = 90_000) {
   const t0 = Date.now();
-  console.error(`[watchdog] lighthouse start ${target.url} (timeout ${Math.round(timeoutMs / 1000)}s)`);
-  const result = run('pnpm', [
-    'exec',
-    'lighthouse',
-    target.url,
-    '--quiet',
-    '--chrome-flags=--headless=new --no-sandbox',
-    '--output=json',
-    '--output-path=stdout',
-    '--only-categories=performance,accessibility,best-practices,seo',
-  ], { timeoutMs });
+  console.error(
+    `[watchdog] lighthouse start ${target.url} (timeout ${Math.round(timeoutMs / 1000)}s)`
+  );
+  const result = run(
+    'pnpm',
+    [
+      'exec',
+      'lighthouse',
+      target.url,
+      '--quiet',
+      '--chrome-flags=--headless=new --no-sandbox',
+      '--output=json',
+      '--output-path=stdout',
+      '--only-categories=performance,accessibility,best-practices,seo',
+    ],
+    { timeoutMs }
+  );
   const dt = ((Date.now() - t0) / 1000).toFixed(1);
   if (result.timedOut) {
     console.error(`[watchdog] lighthouse TIMEOUT ${target.url} after ${dt}s`);
   } else if (!result.ok) {
-    console.error(`[watchdog] lighthouse FAIL ${target.url} after ${dt}s: ${result.error || result.status || 'non-zero exit'}`);
+    console.error(
+      `[watchdog] lighthouse FAIL ${target.url} after ${dt}s: ${result.error || result.status || 'non-zero exit'}`
+    );
   } else {
     console.error(`[watchdog] lighthouse OK ${target.url} after ${dt}s`);
   }
@@ -727,9 +782,24 @@ function lighthouseAudit(target, timeoutMs = 90_000) {
         : null,
     };
     const budgets = [
-      budgetStatus('lighthousePerformance', scores.performance, PERFORMANCE_BUDGETS.lighthousePerformance, 'min'),
-      budgetStatus('lighthouseAccessibility', scores.accessibility, PERFORMANCE_BUDGETS.lighthouseAccessibility, 'min'),
-      budgetStatus('lighthouseBestPractices', scores.bestPractices, PERFORMANCE_BUDGETS.lighthouseBestPractices, 'min'),
+      budgetStatus(
+        'lighthousePerformance',
+        scores.performance,
+        PERFORMANCE_BUDGETS.lighthousePerformance,
+        'min'
+      ),
+      budgetStatus(
+        'lighthouseAccessibility',
+        scores.accessibility,
+        PERFORMANCE_BUDGETS.lighthouseAccessibility,
+        'min'
+      ),
+      budgetStatus(
+        'lighthouseBestPractices',
+        scores.bestPractices,
+        PERFORMANCE_BUDGETS.lighthouseBestPractices,
+        'min'
+      ),
       budgetStatus('lighthouseSeo', scores.seo, PERFORMANCE_BUDGETS.lighthouseSeo, 'min'),
       budgetStatus('lcpMs', metrics.lcpMs, PERFORMANCE_BUDGETS.lcpMs),
       budgetStatus('cls', metrics.cls, PERFORMANCE_BUDGETS.cls),
@@ -792,7 +862,9 @@ function performanceAudit(project, options) {
       budgetStatus('totalMs', summary.totalMs, PERFORMANCE_BUDGETS.totalMs),
       budgetStatus('downloadBytes', summary.sizeDownload, PERFORMANCE_BUDGETS.downloadBytes),
     ].filter(Boolean);
-    const lighthouse = options.lighthouse ? lighthouseAudit(target, options.lighthouseTimeoutMs ?? 90_000) : null;
+    const lighthouse = options.lighthouse
+      ? lighthouseAudit(target, options.lighthouseTimeoutMs ?? 90_000)
+      : null;
     const hardFailure = samples.every((sample) => !sample.ok) || lighthouse?.error;
     return {
       label: target.label,
@@ -801,7 +873,8 @@ function performanceAudit(project, options) {
       summary,
       budgets,
       lighthouse,
-      ok: !hardFailure && budgets.every((budget) => budget.ok) && (lighthouse ? lighthouse.ok : true),
+      ok:
+        !hardFailure && budgets.every((budget) => budget.ok) && (lighthouse ? lighthouse.ok : true),
       hardFailure: Boolean(hardFailure),
     };
   });
@@ -893,7 +966,7 @@ function availableLocalChecks(project) {
 function extractEpermPath(output) {
   const text = String(output ?? '');
   if (!text.includes('EPERM')) return null;
-  const match = text.match(/open '([^']+)'/) ?? text.match(/open \"([^\"]+)\"/);
+  const match = text.match(/open '([^']+)'/) ?? text.match(/open "([^"]+)"/);
   return match?.[1] ?? null;
 }
 
@@ -921,8 +994,12 @@ function tryAutofixPermissions(projectPath, output) {
   for (const target of targets) {
     if (!fs.existsSync(target)) continue;
     attempted = true;
-    const chmodResult = run('chmod', ['-R', 'u+rwX', target], { cwd: projectPath, timeoutMs: 30_000 });
-    if (!chmodResult.ok) notes.push(`chmod failed: ${chmodResult.error ?? chmodResult.status ?? 'unknown error'}`);
+    const chmodResult = run('chmod', ['-R', 'u+rwX', target], {
+      cwd: projectPath,
+      timeoutMs: 30_000,
+    });
+    if (!chmodResult.ok)
+      notes.push(`chmod failed: ${chmodResult.error ?? chmodResult.status ?? 'unknown error'}`);
   }
 
   if (attempted) notes.push('Retried after chmod u+rwX');
@@ -950,8 +1027,13 @@ function localAudit(project, timeoutMs, options = {}) {
       ok: finalResult.ok,
       status: finalResult.status,
       timedOut: finalResult.timedOut,
-      tail: `${finalResult.stdout}\n${finalResult.stderr}`.split(/\r?\n/).filter(Boolean).slice(-12),
-      autofix: autofix?.notes?.length ? { attempted: autofix.attempted, notes: autofix.notes } : null,
+      tail: `${finalResult.stdout}\n${finalResult.stderr}`
+        .split(/\r?\n/)
+        .filter(Boolean)
+        .slice(-12),
+      autofix: autofix?.notes?.length
+        ? { attempted: autofix.attempted, notes: autofix.notes }
+        : null,
     });
     if (!finalResult.ok) break;
   }
@@ -960,24 +1042,32 @@ function localAudit(project, timeoutMs, options = {}) {
 
 function classify(projectAudit) {
   const issues = [];
-  if (projectAudit.dirty && !projectAudit.dirty.ok) issues.push(`local dirty (${projectAudit.dirty.entries.length})`);
+  if (projectAudit.dirty && !projectAudit.dirty.ok)
+    issues.push(`local dirty (${projectAudit.dirty.entries.length})`);
   if (projectAudit.github?.prs?.length) issues.push(`open PRs (${projectAudit.github.prs.length})`);
-  if (projectAudit.github?.failedWorkflows?.length) issues.push(`failed workflows (${projectAudit.github.failedWorkflows.length})`);
+  if (projectAudit.github?.failedWorkflows?.length)
+    issues.push(`failed workflows (${projectAudit.github.failedWorkflows.length})`);
   if (projectAudit.cloudflareBuilds && !projectAudit.cloudflareBuilds.ok) {
-    const failedCount = projectAudit.cloudflareBuilds.services?.filter((service) => !service.ok).length ?? 0;
+    const failedCount =
+      projectAudit.cloudflareBuilds.services?.filter((service) => !service.ok).length ?? 0;
     issues.push(`Cloudflare builds unhealthy (${failedCount})`);
   }
   if (projectAudit.smoke && !projectAudit.smoke.ok) issues.push('prod smoke failed');
   if (projectAudit.local && !projectAudit.local.ok) issues.push('local check failed');
   if (projectAudit.performance && !projectAudit.performance.ok) {
-    issues.push(projectAudit.performance.hasHardFailure ? 'performance audit failed' : 'performance budget watch');
+    issues.push(
+      projectAudit.performance.hasHardFailure
+        ? 'performance audit failed'
+        : 'performance budget watch'
+    );
   }
   if (issues.length === 0) return { status: 'ok', issues };
   return {
-    status: issues.some((issue) =>
-      !issue.startsWith('open PRs') &&
-      !issue.startsWith('local dirty') &&
-      issue !== 'performance budget watch'
+    status: issues.some(
+      (issue) =>
+        !issue.startsWith('open PRs') &&
+        !issue.startsWith('local dirty') &&
+        issue !== 'performance budget watch'
     )
       ? 'fail'
       : 'watch',
@@ -1047,7 +1137,9 @@ function markdown(report) {
   lines.push('');
   lines.push(`Generated: ${report.generatedAt}`);
   if (report.network) {
-    lines.push(`Network: ${report.network.ok ? `ok (${report.network.status})` : `offline (${report.network.status ?? '?'})`}`);
+    lines.push(
+      `Network: ${report.network.ok ? `ok (${report.network.status})` : `offline (${report.network.status ?? '?'})`}`
+    );
   }
   lines.push(`Projects: ${report.projects.length}`);
   lines.push('');
@@ -1077,14 +1169,20 @@ function markdown(report) {
         lines.push(`- PRs: skipped (no network)`);
         lines.push(`- Failed workflows: skipped (no network)`);
       } else {
-        lines.push(`- PRs: ${project.github.prs.map((pr) => `#${pr.number} ${pr.title}`).join(', ') || 'none'}`);
-        lines.push(`- Failed workflows: ${project.github.failedWorkflows.map((run) => run.workflowName).join(', ') || 'none'}`);
+        lines.push(
+          `- PRs: ${project.github.prs.map((pr) => `#${pr.number} ${pr.title}`).join(', ') || 'none'}`
+        );
+        lines.push(
+          `- Failed workflows: ${project.github.failedWorkflows.map((run) => run.workflowName).join(', ') || 'none'}`
+        );
       }
     }
     if (project.smoke) {
       if (project.smoke.skipped) lines.push(`- Smoke: skipped (no network)`);
       else {
-        lines.push(`- Smoke: ${project.smoke.checks.map((check) => `${check.label} ${check.status}${check.ok ? '' : ' FAIL'}`).join(', ') || 'no targets'}`);
+        lines.push(
+          `- Smoke: ${project.smoke.checks.map((check) => `${check.label} ${check.status}${check.ok ? '' : ' FAIL'}`).join(', ') || 'no targets'}`
+        );
       }
     }
     if (project.cloudflareBuilds) {
@@ -1104,7 +1202,9 @@ function markdown(report) {
       }
     }
     if (project.local) {
-      lines.push(`- Local: ${project.local.checks.map((check) => `${check.command} ${check.ok ? 'PASS' : 'FAIL'}`).join(', ') || 'no scripts'}`);
+      lines.push(
+        `- Local: ${project.local.checks.map((check) => `${check.command} ${check.ok ? 'PASS' : 'FAIL'}`).join(', ') || 'no scripts'}`
+      );
     }
     if (project.performance) {
       if (project.performance.skipped) lines.push(`- Performance: skipped (no network)`);
@@ -1154,7 +1254,8 @@ async function main() {
     const entry = { ...project, network };
     if (args.runDirty) entry.dirty = dirtyAudit(project);
     if (args.runGithub) entry.github = githubAudit(entry);
-    if (cloudflareBuilds.has(project.slug)) entry.cloudflareBuilds = cloudflareBuilds.get(project.slug);
+    if (cloudflareBuilds.has(project.slug))
+      entry.cloudflareBuilds = cloudflareBuilds.get(project.slug);
     if (args.runSmoke) entry.smoke = smokeAudit(entry);
     if (args.runLocal) entry.local = localAudit(project, args.timeoutMs, { autofix: args.autofix });
     if (args.runPerformance) {

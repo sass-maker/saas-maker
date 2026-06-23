@@ -25,7 +25,7 @@ export interface DrainOptions {
   /** Stop after this many tasks (default: drain until empty). */
   maxTasks?: number;
   /** Does the work. Return a string to attach as the result comment. Throw to fail the task. */
-  handler: (task: FleetTask) => Promise<string | void> | string | void;
+  handler: (task: FleetTask) => Promise<string | undefined> | string | undefined;
 }
 
 export interface DrainResult {
@@ -51,12 +51,16 @@ export class WorkerService {
   constructor(private http: HttpClient) {}
 
   /** Atomically claim the next runnable task, or null if the queue is empty. */
-  async claim(opts: { worker: string; capability?: string; leaseSeconds?: number }): Promise<FleetTask | null> {
+  async claim(opts: {
+    worker: string;
+    capability?: string;
+    leaseSeconds?: number;
+  }): Promise<FleetTask | null> {
     const res = await this.http.requestRaw(
       'POST',
       '/v1/tasks/claim',
       { worker: opts.worker, capability: opts.capability, lease_seconds: opts.leaseSeconds },
-      { auth: 'session' },
+      { auth: 'session' }
     );
     if (res.status === 204) return null;
     return ((await res.json()) as { data: FleetTask }).data;
@@ -64,17 +68,40 @@ export class WorkerService {
 
   /** Extend the lease on an in-flight task (call periodically from long handlers). */
   heartbeat(id: string, worker: string, leaseSeconds?: number): Promise<{ ok: true }> {
-    return this.http.request('POST', `/v1/tasks/${encodeURIComponent(id)}/heartbeat`, { worker, lease_seconds: leaseSeconds }, { auth: 'session' });
+    return this.http.request(
+      'POST',
+      `/v1/tasks/${encodeURIComponent(id)}/heartbeat`,
+      { worker, lease_seconds: leaseSeconds },
+      { auth: 'session' }
+    );
   }
 
   /** Mark a claimed task done; optional `result` is stored as an agent comment. */
   complete(id: string, worker: string, result?: string): Promise<{ data: FleetTask }> {
-    return this.http.request('POST', `/v1/tasks/${encodeURIComponent(id)}/complete`, { worker, result }, { auth: 'session' });
+    return this.http.request(
+      'POST',
+      `/v1/tasks/${encodeURIComponent(id)}/complete`,
+      { worker, result },
+      { auth: 'session' }
+    );
   }
 
   /** Report failure; the hub requeues (under max_attempts) or dead-letters. */
-  fail(id: string, worker: string, error?: string, maxAttempts?: number): Promise<{ data: FleetTask; outcome: { dead_letter: boolean; requeued: boolean; attempts: number } }> {
-    return this.http.request('POST', `/v1/tasks/${encodeURIComponent(id)}/fail`, { worker, error, max_attempts: maxAttempts }, { auth: 'session' });
+  fail(
+    id: string,
+    worker: string,
+    error?: string,
+    maxAttempts?: number
+  ): Promise<{
+    data: FleetTask;
+    outcome: { dead_letter: boolean; requeued: boolean; attempts: number };
+  }> {
+    return this.http.request(
+      'POST',
+      `/v1/tasks/${encodeURIComponent(id)}/fail`,
+      { worker, error, max_attempts: maxAttempts },
+      { auth: 'session' }
+    );
   }
 
   /**
@@ -91,7 +118,11 @@ export class WorkerService {
     while (completed + failed < max) {
       let task: FleetTask | null;
       try {
-        task = await this.claim({ worker: opts.worker, capability: opts.capability, leaseSeconds: opts.leaseSeconds });
+        task = await this.claim({
+          worker: opts.worker,
+          capability: opts.capability,
+          leaseSeconds: opts.leaseSeconds,
+        });
       } catch {
         return { completed, failed, hubUnavailable: true }; // hub down → stop quietly, service lives on
       }

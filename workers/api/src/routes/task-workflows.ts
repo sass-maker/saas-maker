@@ -22,34 +22,42 @@ function requiredString(value: unknown, field: string) {
 }
 
 function enumValue<T extends string>(value: unknown, allowed: readonly T[]): T | undefined {
-  return typeof value === 'string' && allowed.includes(value as T) ? value as T : undefined;
+  return typeof value === 'string' && allowed.includes(value as T) ? (value as T) : undefined;
 }
 
 function renderWorkflowPrompt(workflow: TaskWorkflowRow, task?: TaskRow | null) {
   const sections = [
     `# ${workflow.name}`,
     workflow.description ? `## Workflow\n${workflow.description}` : null,
-    task ? [
-      '## Task',
-      `- id: ${task.id}`,
-      `- title: ${task.title}`,
-      `- project: ${task.project_slug ?? workflow.project_slug ?? 'unassigned'}`,
-      `- status: ${task.status}`,
-      `- priority: ${task.priority}`,
-      task.description ? `\n${task.description}` : null,
-    ].filter(Boolean).join('\n') : null,
+    task
+      ? [
+          '## Task',
+          `- id: ${task.id}`,
+          `- title: ${task.title}`,
+          `- project: ${task.project_slug ?? workflow.project_slug ?? 'unassigned'}`,
+          `- status: ${task.status}`,
+          `- priority: ${task.priority}`,
+          task.description ? `\n${task.description}` : null,
+        ]
+          .filter(Boolean)
+          .join('\n')
+      : null,
     workflow.context_markdown.trim() ? `## Context\n${workflow.context_markdown.trim()}` : null,
     `## Prompt\n${workflow.prompt_template.trim()}`,
   ].filter(Boolean);
   return sections.join('\n\n').trim();
 }
 
-async function recordAudit(db: ReturnType<typeof getDb>, ownerId: string, input: {
-  task_id?: string | null;
-  action: string;
-  project_slug?: string | null;
-  metadata?: Record<string, unknown>;
-}) {
+async function recordAudit(
+  db: ReturnType<typeof getDb>,
+  ownerId: string,
+  input: {
+    task_id?: string | null;
+    action: string;
+    project_slug?: string | null;
+    metadata?: Record<string, unknown>;
+  }
+) {
   try {
     await db.createSymphonyAuditEvent(ownerId, {
       ...input,
@@ -83,7 +91,7 @@ taskWorkflows.get('/', requireSession, async (c) => {
 
 taskWorkflows.post('/', requireSession, async (c) => {
   const userId = c.get('userId')!;
-  const body = await c.req.json().catch(() => null) as Record<string, unknown> | null;
+  const body = (await c.req.json().catch(() => null)) as Record<string, unknown> | null;
   const name = requiredString(body?.name, 'name');
   if ('error' in name) return c.json({ error: name.error }, 400);
   const promptTemplate = requiredString(body?.prompt_template, 'prompt_template');
@@ -106,7 +114,15 @@ taskWorkflows.post('/', requireSession, async (c) => {
     project_slug: workflow.project_slug,
     metadata: { workflow_id: workflow.id, status: workflow.status },
   });
-  capture({ distinctId: userId, event: 'task_workflow_created', properties: { workflow_id: workflow.id, task_id: workflow.task_id ?? undefined, project_id: workflow.project_slug ?? undefined } });
+  capture({
+    distinctId: userId,
+    event: 'task_workflow_created',
+    properties: {
+      workflow_id: workflow.id,
+      task_id: workflow.task_id ?? undefined,
+      project_id: workflow.project_slug ?? undefined,
+    },
+  });
   return c.json({ data: workflow }, 201);
 });
 
@@ -121,9 +137,17 @@ taskWorkflows.get('/:id', requireSession, async (c) => {
 
 taskWorkflows.patch('/:id', requireSession, async (c) => {
   const userId = c.get('userId')!;
-  const body = await c.req.json().catch(() => ({})) as Record<string, unknown>;
+  const body = (await c.req.json().catch(() => ({}))) as Record<string, unknown>;
   const updates: Record<string, unknown> = {};
-  for (const key of ['task_id', 'project_slug', 'name', 'description', 'context_markdown', 'prompt_template', 'last_run_id'] as const) {
+  for (const key of [
+    'task_id',
+    'project_slug',
+    'name',
+    'description',
+    'context_markdown',
+    'prompt_template',
+    'last_run_id',
+  ] as const) {
     if (key in body) updates[key] = optionalString(body[key]);
   }
   // context_markdown is NOT NULL in the schema; clearing it means ''.
@@ -134,7 +158,8 @@ taskWorkflows.patch('/:id', requireSession, async (c) => {
     updates.status = status;
   }
   if ('name' in updates && !updates.name) return c.json({ error: 'name is required' }, 400);
-  if ('prompt_template' in updates && !updates.prompt_template) return c.json({ error: 'prompt_template is required' }, 400);
+  if ('prompt_template' in updates && !updates.prompt_template)
+    return c.json({ error: 'prompt_template is required' }, 400);
   const db = getDb(c.env.DB);
   const workflow = await db.updateTaskWorkflow(c.req.param('id'), userId, updates);
   if (!workflow) return c.json({ error: 'Workflow not found' }, 404);
@@ -149,35 +174,40 @@ taskWorkflows.patch('/:id', requireSession, async (c) => {
 
 taskWorkflows.post('/:id/runs', requireSession, async (c) => {
   const userId = c.get('userId')!;
-  const body = await c.req.json().catch(() => ({})) as Record<string, unknown>;
+  const body = (await c.req.json().catch(() => ({}))) as Record<string, unknown>;
   const db = getDb(c.env.DB);
   const workflow = await db.getTaskWorkflow(c.req.param('id'), userId);
   if (!workflow) return c.json({ error: 'Workflow not found' }, 404);
   const task = workflow.task_id ? await db.getTask(workflow.task_id, userId) : null;
   const prompt = renderWorkflowPrompt(workflow, task);
   const runId = optionalString(body.run_id);
-  const data = runId ? await db.updateTaskWorkflow(workflow.id, userId, { last_run_id: runId }) : workflow;
+  const data = runId
+    ? await db.updateTaskWorkflow(workflow.id, userId, { last_run_id: runId })
+    : workflow;
   await recordAudit(db, userId, {
     task_id: workflow.task_id,
     action: runId ? 'task_workflow_run_recorded' : 'task_workflow_run_prepared',
     project_slug: workflow.project_slug,
     metadata: { workflow_id: workflow.id, run_id: runId ?? null },
   });
-  return c.json({
-    data,
-    prompt,
-    droid_run_payload: {
-      mode: 'native',
-      task_id: workflow.task_id,
-      project_slug: workflow.project_slug,
+  return c.json(
+    {
+      data,
       prompt,
+      droid_run_payload: {
+        mode: 'native',
+        task_id: workflow.task_id,
+        project_slug: workflow.project_slug,
+        prompt,
+      },
     },
-  }, runId ? 200 : 202);
+    runId ? 200 : 202
+  );
 });
 
 taskWorkflows.post('/:id/artifacts', requireSession, async (c) => {
   const userId = c.get('userId')!;
-  const body = await c.req.json().catch(() => null) as Record<string, unknown> | null;
+  const body = (await c.req.json().catch(() => null)) as Record<string, unknown> | null;
   const name = requiredString(body?.name, 'name');
   if ('error' in name) return c.json({ error: name.error }, 400);
   const content = requiredString(body?.content_markdown, 'content_markdown');
@@ -193,7 +223,11 @@ taskWorkflows.post('/:id/artifacts', requireSession, async (c) => {
     task_id: artifact.task_id,
     action: 'task_workflow_artifact_created',
     project_slug: artifact.project_slug,
-    metadata: { workflow_id: artifact.workflow_id, artifact_id: artifact.id, run_id: artifact.run_id },
+    metadata: {
+      workflow_id: artifact.workflow_id,
+      artifact_id: artifact.id,
+      run_id: artifact.run_id,
+    },
   });
   return c.json({ data: artifact }, 201);
 });

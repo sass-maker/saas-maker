@@ -1,10 +1,10 @@
-import { PublicRoadmap } from "./public-roadmap";
-import type { RoadmapItemRecord } from "@saas-maker/contracts";
-import type { Metadata } from "next";
+import { PublicRoadmap } from './public-roadmap';
+import type { RoadmapItemRecord } from '@saas-maker/contracts';
+import type { Metadata } from 'next';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://api.sassmaker.com";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.sassmaker.com';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -42,11 +42,15 @@ export default async function PublicRoadmapPage({ params }: Props) {
         <div className="mx-auto max-w-5xl px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="h-7 w-7 rounded-md bg-indigo-600 flex items-center justify-center">
-              <span className="text-xs font-bold text-white">{projectName.charAt(0).toUpperCase()}</span>
+              <span className="text-xs font-bold text-white">
+                {projectName.charAt(0).toUpperCase()}
+              </span>
             </div>
             <span className="text-sm font-semibold text-neutral-100">{projectName}</span>
           </div>
-          <span className="text-xs text-neutral-500 font-medium tracking-wide uppercase">Roadmap</span>
+          <span className="text-xs text-neutral-500 font-medium tracking-wide uppercase">
+            Roadmap
+          </span>
         </div>
       </header>
 
@@ -76,7 +80,6 @@ export default async function PublicRoadmapPage({ params }: Props) {
           >
             SAAS Maker
           </a>
-
         </div>
       </footer>
     </div>

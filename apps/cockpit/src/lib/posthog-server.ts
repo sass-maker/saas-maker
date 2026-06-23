@@ -1,11 +1,11 @@
 const POSTHOG_API_KEY = process.env.POSTHOG_PERSONAL_API_KEY;
 const POSTHOG_PROJECT_ID = process.env.POSTHOG_PROJECT_ID;
-const POSTHOG_HOST = process.env.POSTHOG_HOST || "https://us.posthog.com";
+const POSTHOG_HOST = process.env.POSTHOG_HOST || 'https://us.posthog.com';
 const PROJECT_ID_PROPERTY =
-  "coalesce(properties.project_id, properties.project_slug, properties.project, properties.foundry_project_id)";
+  'coalesce(properties.project_id, properties.project_slug, properties.project, properties.foundry_project_id)';
 
 function escapeHogQLString(value: string): string {
-  return value.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+  return value.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
 }
 
 export interface FoundryErrorEvent {
@@ -25,7 +25,7 @@ export interface FoundryErrorEvent {
  */
 export async function getFleetErrors(limit = 20): Promise<FoundryErrorEvent[]> {
   if (!POSTHOG_API_KEY || !POSTHOG_PROJECT_ID) {
-    console.warn("PostHog credentials missing for Error Feed");
+    console.warn('PostHog credentials missing for Error Feed');
     return [];
   }
 
@@ -33,31 +33,31 @@ export async function getFleetErrors(limit = 20): Promise<FoundryErrorEvent[]> {
 
   const query = {
     query: {
-      kind: "EventsQuery",
+      kind: 'EventsQuery',
       select: [
-        "*",
-        "event",
-        "timestamp",
-        "properties.message",
-        "properties.severity",
-        "properties.project_id",
-        "properties.project_slug",
-        "properties.project",
-        "properties.foundry_project_id",
-        "properties.$exception_stack",
+        '*',
+        'event',
+        'timestamp',
+        'properties.message',
+        'properties.severity',
+        'properties.project_id',
+        'properties.project_slug',
+        'properties.project',
+        'properties.foundry_project_id',
+        'properties.$exception_stack',
       ],
       where: ["event == 'foundry_error'"],
-      orderBy: ["timestamp DESC"],
+      orderBy: ['timestamp DESC'],
       limit,
     },
   };
 
   try {
     const res = await fetch(url, {
-      method: "POST",
+      method: 'POST',
       headers: {
         Authorization: `Bearer ${POSTHOG_API_KEY}`,
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(query),
     });
@@ -67,7 +67,7 @@ export async function getFleetErrors(limit = 20): Promise<FoundryErrorEvent[]> {
     }
 
     const data = await res.json();
-    
+
     // PostHog query results come back as an array of arrays (rows)
     // Map them back to objects based on the 'select' fields
     return (data.results || []).map((row: any[]) => ({
@@ -76,11 +76,11 @@ export async function getFleetErrors(limit = 20): Promise<FoundryErrorEvent[]> {
       timestamp: row[2],
       message: row[3],
       severity: row[4],
-      project_id: row[5] ?? row[6] ?? row[7] ?? row[8] ?? "unknown",
+      project_id: row[5] ?? row[6] ?? row[7] ?? row[8] ?? 'unknown',
       stack: row[9],
     }));
   } catch (err) {
-    console.error("Failed to fetch fleet errors:", err);
+    console.error('Failed to fetch fleet errors:', err);
     return [];
   }
 }
@@ -106,7 +106,7 @@ export async function getFleetLatency(): Promise<FoundryLatencyMetric[]> {
 
   const query = {
     query: {
-      kind: "HogQLQuery",
+      kind: 'HogQLQuery',
       query: `
         SELECT
           ${PROJECT_ID_PROPERTY} AS project_id,
@@ -119,16 +119,16 @@ export async function getFleetLatency(): Promise<FoundryLatencyMetric[]> {
         GROUP BY project_id, trace_name
         ORDER BY avg_duration_ms DESC
         LIMIT 50
-      `
-    }
+      `,
+    },
   };
 
   try {
     const res = await fetch(url, {
-      method: "POST",
+      method: 'POST',
       headers: {
         Authorization: `Bearer ${POSTHOG_API_KEY}`,
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(query),
     });
@@ -159,7 +159,7 @@ export async function getProjectOperationalState(projectId: string) {
 
   const query = {
     query: {
-      kind: "HogQLQuery",
+      kind: 'HogQLQuery',
       query: `
         SELECT
           countIf(event = 'foundry_error') AS error_count,
@@ -167,14 +167,14 @@ export async function getProjectOperationalState(projectId: string) {
           max(timestamp) AS last_event_at
         FROM events
         WHERE ${PROJECT_ID_PROPERTY} = '${escapedProjectId}' AND timestamp >= now() - INTERVAL 1 DAY
-      `
-    }
+      `,
+    },
   };
 
   try {
     const res = await fetch(url, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${POSTHOG_API_KEY}`, "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { Authorization: `Bearer ${POSTHOG_API_KEY}`, 'Content-Type': 'application/json' },
       body: JSON.stringify(query),
     });
 
@@ -186,7 +186,7 @@ export async function getProjectOperationalState(projectId: string) {
       errorCount: row[0],
       avgLatency: Math.round(row[1] || 0),
       lastEventAt: row[2],
-      isOnline: row[2] ? (Date.now() - new Date(row[2]).getTime()) < 300000 : false, // Online if event in last 5 mins
+      isOnline: row[2] ? Date.now() - new Date(row[2]).getTime() < 300000 : false, // Online if event in last 5 mins
     };
   } catch {
     return null;

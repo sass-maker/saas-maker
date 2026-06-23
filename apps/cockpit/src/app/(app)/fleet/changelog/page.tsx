@@ -1,19 +1,19 @@
-import { redirect } from "next/navigation";
-import { getCloudflareContext } from "@opennextjs/cloudflare";
-import { getDashboardSession } from "@/lib/server-session";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { PageHeader } from "@/components/page-header";
-import { EmptyState } from "@/components/empty-state";
-import { Megaphone, Bot, Link as LinkIcon } from "lucide-react";
-import Link from "next/link";
-import type { FleetChangelogEntry } from "@saas-maker/contracts";
-import { getFleetToday } from "@/lib/fleet-today";
-import { formatProjectLabel } from "@/lib/fleet-project-names";
+import { redirect } from 'next/navigation';
+import { getCloudflareContext } from '@opennextjs/cloudflare';
+import { getDashboardSession } from '@/lib/server-session';
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { PageHeader } from '@/components/page-header';
+import { EmptyState } from '@/components/empty-state';
+import { Megaphone, Bot, Link as LinkIcon } from 'lucide-react';
+import Link from 'next/link';
+import type { FleetChangelogEntry } from '@saas-maker/contracts';
+import { getFleetToday } from '@/lib/fleet-today';
+import { formatProjectLabel } from '@/lib/fleet-project-names';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
-const FLEET_CHANGELOG_TIME_ZONE = "Asia/Kolkata"; // documents the target tz; logic lives in fleet-today.ts
+const FLEET_CHANGELOG_TIME_ZONE = 'Asia/Kolkata'; // documents the target tz; logic lives in fleet-today.ts
 
 interface FleetDailyResponse {
   date: string;
@@ -25,53 +25,57 @@ interface Props {
   searchParams: Promise<{ date?: string }>;
 }
 
-const typeBadgeVariant: Record<
-  string,
-  "default" | "secondary" | "outline" | "destructive"
-> = {
-  feature: "default",
-  improvement: "secondary",
-  fix: "outline",
-  breaking: "destructive",
+const typeBadgeVariant: Record<string, 'default' | 'secondary' | 'outline' | 'destructive'> = {
+  feature: 'default',
+  improvement: 'secondary',
+  fix: 'outline',
+  breaking: 'destructive',
 };
 
 function formatDate(iso: string) {
-  return new Date(iso).toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
+  return new Date(iso).toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
     hour12: true,
   });
 }
 
 function toDisplayDate(date: string) {
   const d = new Date(`${date}T12:00:00Z`);
-  return d.toLocaleDateString("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-    year: "numeric",
+  return d.toLocaleDateString('en-US', {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
   });
 }
 
 async function loadFleetDailyChangelog(date: string) {
   const { env } = getCloudflareContext();
-  const db = (env as { DB?: {
-    prepare: (query: string) => {
-      bind: (...values: unknown[]) => {
-        all: () => Promise<{ results: unknown[] }>;
+  const db = (
+    env as {
+      DB?: {
+        prepare: (query: string) => {
+          bind: (...values: unknown[]) => {
+            all: () => Promise<{ results: unknown[] }>;
+          };
+        };
       };
-    };
-  } }).DB;
-  if (!db) throw new Error("D1 database binding is unavailable.");
+    }
+  ).DB;
+  if (!db) throw new Error('D1 database binding is unavailable.');
 
-  const { results } = await db.prepare(
-    `SELECT ce.*, p.slug AS project_slug, p.name AS project_name
+  const { results } = await db
+    .prepare(
+      `SELECT ce.*, p.slug AS project_slug, p.name AS project_name
      FROM changelog_entries ce
      JOIN projects p ON ce.project_id = p.id
      WHERE date(datetime(ce.created_at, '+5 hours', '+30 minutes')) = ?
        AND ce.type IN ('feature', 'fix')
      ORDER BY ce.created_at DESC`
-  ).bind(date).all();
+    )
+    .bind(date)
+    .all();
 
   const entries = results as unknown as FleetChangelogEntry[];
   const byProject: Record<string, FleetChangelogEntry[]> = {};
@@ -86,7 +90,7 @@ async function loadFleetDailyChangelog(date: string) {
 
 export default async function FleetChangelogPage({ searchParams }: Props) {
   const session = await getDashboardSession();
-  if (!session?.user) redirect("/login");
+  if (!session?.user) redirect('/login');
 
   const { date: dateParam } = await searchParams;
   const today = getFleetToday();
@@ -98,7 +102,7 @@ export default async function FleetChangelogPage({ searchParams }: Props) {
   try {
     data = await loadFleetDailyChangelog(date);
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
+    const message = error instanceof Error ? error.message : 'Unknown error';
     fetchError = `Could not load fleet changelog: ${message.slice(0, 160)}`;
   }
 
@@ -161,8 +165,14 @@ export default async function FleetChangelogPage({ searchParams }: Props) {
             <h2 className="text-sm font-semibold">Empty-state checks</h2>
             <ul className="mt-2 space-y-1.5 text-xs text-muted-foreground">
               <li>• Confirm the date above matches the local day you expect.</li>
-              <li>• Confirm completed product tasks created changelog drafts through `pnpm symphony done &lt;task-id&gt;`.</li>
-              <li>• Publish or edit drafts from a project changelog page when the copy needs a human pass.</li>
+              <li>
+                • Confirm completed product tasks created changelog drafts through `pnpm symphony
+                done &lt;task-id&gt;`.
+              </li>
+              <li>
+                • Publish or edit drafts from a project changelog page when the copy needs a human
+                pass.
+              </li>
             </ul>
           </Card>
         </div>
@@ -180,9 +190,7 @@ export default async function FleetChangelogPage({ searchParams }: Props) {
                   >
                     {projectName}
                   </Link>
-                  <span className="text-xs text-muted-foreground font-mono">
-                    {slug}
-                  </span>
+                  <span className="text-xs text-muted-foreground font-mono">{slug}</span>
                 </div>
 
                 <div className="divide-y divide-border/50">
@@ -190,9 +198,11 @@ export default async function FleetChangelogPage({ searchParams }: Props) {
                     <details key={entry.id} className="group py-3">
                       <summary className="flex cursor-pointer list-none items-start justify-between gap-3 rounded-md px-1 py-1 hover:bg-muted/40">
                         <div className="flex min-w-0 items-center gap-2">
-                          <span className="text-xs text-muted-foreground transition-transform group-open:rotate-90">›</span>
+                          <span className="text-xs text-muted-foreground transition-transform group-open:rotate-90">
+                            ›
+                          </span>
                           <Badge
-                            variant={typeBadgeVariant[entry.type] ?? "secondary"}
+                            variant={typeBadgeVariant[entry.type] ?? 'secondary'}
                             className="shrink-0 text-xs"
                           >
                             {entry.type}
@@ -218,9 +228,7 @@ export default async function FleetChangelogPage({ searchParams }: Props) {
                               {entry.source}
                             </span>
                           )}
-                          {entry.agent && (
-                            <span className="font-mono">{entry.agent}</span>
-                          )}
+                          {entry.agent && <span className="font-mono">{entry.agent}</span>}
                           {entry.task_id ? (
                             <Link
                               href={`/tasks/${entry.task_id}`}
@@ -237,9 +245,7 @@ export default async function FleetChangelogPage({ searchParams }: Props) {
                               <span className="max-w-xs truncate">{entry.evidence}</span>
                             </span>
                           )}
-                          {entry.version && (
-                            <span className="font-mono">v{entry.version}</span>
-                          )}
+                          {entry.version && <span className="font-mono">v{entry.version}</span>}
                         </div>
                       </div>
                     </details>
@@ -252,8 +258,9 @@ export default async function FleetChangelogPage({ searchParams }: Props) {
       )}
 
       <p className="text-xs text-muted-foreground">
-        {data.entries.length} feature/fix changelog entr{data.entries.length !== 1 ? "ies" : "y"} across{" "}
-        {projectSlugs.length} project{projectSlugs.length !== 1 ? "s" : ""}. Task-only completions are intentionally hidden.
+        {data.entries.length} feature/fix changelog entr{data.entries.length !== 1 ? 'ies' : 'y'}{' '}
+        across {projectSlugs.length} project{projectSlugs.length !== 1 ? 's' : ''}. Task-only
+        completions are intentionally hidden.
       </p>
     </div>
   );

@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 @theme {
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);

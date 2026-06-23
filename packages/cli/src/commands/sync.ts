@@ -41,7 +41,7 @@ export async function syncCommand(): Promise<void> {
       const tsconfigPath = join(TSCONFIG_CACHE_DIR, `${type}.json`);
       writeFileSync(
         tsconfigPath,
-        JSON.stringify(buildLocalTsConfig(type, res.data), null, 2) + '\n',
+        `${JSON.stringify(buildLocalTsConfig(type, res.data), null, 2)}\n`
       );
 
       results.push({ type, ok: true });

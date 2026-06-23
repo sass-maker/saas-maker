@@ -3,7 +3,12 @@ import { Bindings, Variables } from '../types';
 import { requireSession } from '../middleware/auth';
 import { getDb } from '../db';
 import { buildCacheKey, tryCacheMatch, withCachePut } from '../edge-cache';
-import type { CreateRoadmapItemRequest, UpdateRoadmapItemRequest, ReorderRoadmapRequest, RoadmapColumn } from '@saas-maker/contracts';
+import type {
+  CreateRoadmapItemRequest,
+  UpdateRoadmapItemRequest,
+  ReorderRoadmapRequest,
+  RoadmapColumn,
+} from '@saas-maker/contracts';
 
 const roadmap = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
@@ -35,7 +40,8 @@ roadmap.post('/public/:slug/:id/vote', async (c) => {
   const body = await c.req.json();
 
   const identifier = typeof body.user_identifier === 'string' ? body.user_identifier.trim() : '';
-  if (!identifier || identifier.length === 0) return c.json({ error: 'user_identifier is required' }, 400);
+  if (!identifier || identifier.length === 0)
+    return c.json({ error: 'user_identifier is required' }, 400);
   if (![1, -1].includes(body.vote)) return c.json({ error: 'vote must be 1 or -1' }, 400);
 
   const db = getDb(c.env.DB);
@@ -162,7 +168,8 @@ roadmap.post('/dashboard/:projectId/from-feedback/:feedbackId', requireSession, 
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
   const feedback = await db.getFeedbackById(feedbackId);
-  if (!feedback || feedback.project_id !== projectId) return c.json({ error: 'Feedback not found' }, 404);
+  if (!feedback || feedback.project_id !== projectId)
+    return c.json({ error: 'Feedback not found' }, 404);
 
   const position = await db.getNextRoadmapPosition(projectId, 'planned');
 

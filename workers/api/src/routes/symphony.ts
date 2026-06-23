@@ -51,7 +51,7 @@ symphony.get('/memory', requireSession, async (c) => {
 
 symphony.put('/memory', requireSession, async (c) => {
   const userId = c.get('userId')!;
-  const body = await c.req.json() as { content?: unknown };
+  const body = (await c.req.json()) as { content?: unknown };
   if (typeof body.content !== 'string') {
     return c.json({ error: 'content is required' }, 400);
   }
@@ -84,7 +84,7 @@ symphony.get('/audit', requireSession, async (c) => {
 
 symphony.post('/audit', requireSession, async (c) => {
   const userId = c.get('userId')!;
-  const body = await c.req.json() as {
+  const body = (await c.req.json()) as {
     task_id?: unknown;
     action?: unknown;
     actor_source?: unknown;
@@ -105,7 +105,15 @@ symphony.post('/audit', requireSession, async (c) => {
     project_slug: typeof body.project_slug === 'string' ? body.project_slug : null,
     metadata: safeMetadata(body.metadata),
   });
-  capture({ distinctId: userId, event: 'symphony_audit_event_recorded', properties: { action: data.action, task_id: data.task_id ?? undefined, actor_source: data.actor_source } });
+  capture({
+    distinctId: userId,
+    event: 'symphony_audit_event_recorded',
+    properties: {
+      action: data.action,
+      task_id: data.task_id ?? undefined,
+      actor_source: data.actor_source,
+    },
+  });
   return c.json({ data }, 201);
 });
 
@@ -120,7 +128,7 @@ symphony.get('/runs', requireSession, async (c) => {
 
 symphony.post('/runs', requireSession, async (c) => {
   const userId = c.get('userId')!;
-  const body = await c.req.json() as {
+  const body = (await c.req.json()) as {
     task_id?: unknown;
     project_slug?: unknown;
     agent_profile?: unknown;

@@ -8,9 +8,7 @@ import { log } from '../lib/ui.js';
 
 function getSaasMakerRoot() {
   const cwd = process.cwd();
-  return cwd.includes('saas-maker')
-    ? resolve(cwd.split('saas-maker')[0]!, 'saas-maker')
-    : cwd;
+  return cwd.includes('saas-maker') ? resolve(cwd.split('saas-maker')[0]!, 'saas-maker') : cwd;
 }
 
 function getManifestSlugs() {
@@ -43,10 +41,13 @@ export async function fleetScanCommand(): Promise<void> {
       isFoundry: existsSync(join(rootPath, 'foundry.json')),
     });
   }
-  if (fleet.length === 0) { log.error('No fleet projects detected.'); return; }
+  if (fleet.length === 0) {
+    log.error('No fleet projects detected.');
+    return;
+  }
 
   const spinner = ora(`Scanning ${fleet.length} projects...`).start();
-  const tooling = fleet.map(p => detectTooling(p.path, p.slug));
+  const tooling = fleet.map((p) => detectTooling(p.path, p.slug));
   spinner.text = 'Uploading to Foundry...';
 
   const res = await requestApi({

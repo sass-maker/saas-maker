@@ -3,18 +3,15 @@ import { API_BASE, PROJECT_ID, authHeaders } from '../helpers';
 
 test.describe('Roadmap CRUD', () => {
   test('create a roadmap item returns correct shape', async ({ request }) => {
-    const res = await request.post(
-      `${API_BASE}/v1/roadmap/dashboard/${PROJECT_ID}`,
-      {
-        headers: authHeaders(),
-        data: {
-          title: 'E2E Roadmap Item',
-          description: 'Created by Playwright e2e tests',
-          column: 'backlog',
-          public: true,
-        },
-      }
-    );
+    const res = await request.post(`${API_BASE}/v1/roadmap/dashboard/${PROJECT_ID}`, {
+      headers: authHeaders(),
+      data: {
+        title: 'E2E Roadmap Item',
+        description: 'Created by Playwright e2e tests',
+        column: 'backlog',
+        public: true,
+      },
+    });
     expect(res.status()).toBe(201);
     const body = await res.json();
     expect(body.title).toBe('E2E Roadmap Item');
@@ -28,31 +25,24 @@ test.describe('Roadmap CRUD', () => {
     expect(body).toHaveProperty('updated_at');
 
     // Cleanup
-    await request.delete(
-      `${API_BASE}/v1/roadmap/dashboard/${PROJECT_ID}/${body.id}`,
-      { headers: authHeaders() }
-    );
+    await request.delete(`${API_BASE}/v1/roadmap/dashboard/${PROJECT_ID}/${body.id}`, {
+      headers: authHeaders(),
+    });
   });
 
   test('create with invalid column returns 400', async ({ request }) => {
-    const res = await request.post(
-      `${API_BASE}/v1/roadmap/dashboard/${PROJECT_ID}`,
-      {
-        headers: authHeaders(),
-        data: { title: 'Bad Column', column: 'invalid_col', public: true },
-      }
-    );
+    const res = await request.post(`${API_BASE}/v1/roadmap/dashboard/${PROJECT_ID}`, {
+      headers: authHeaders(),
+      data: { title: 'Bad Column', column: 'invalid_col', public: true },
+    });
     expect(res.status()).toBe(400);
   });
 
   test('create with missing title returns 400', async ({ request }) => {
-    const res = await request.post(
-      `${API_BASE}/v1/roadmap/dashboard/${PROJECT_ID}`,
-      {
-        headers: authHeaders(),
-        data: { column: 'backlog', public: true },
-      }
-    );
+    const res = await request.post(`${API_BASE}/v1/roadmap/dashboard/${PROJECT_ID}`, {
+      headers: authHeaders(),
+      data: { column: 'backlog', public: true },
+    });
     expect(res.status()).toBe(400);
     const body = await res.json();
     expect(body.error).toContain('Title');
@@ -60,13 +50,10 @@ test.describe('Roadmap CRUD', () => {
 
   test('update a roadmap item returns updated data', async ({ request }) => {
     // Create
-    const createRes = await request.post(
-      `${API_BASE}/v1/roadmap/dashboard/${PROJECT_ID}`,
-      {
-        headers: authHeaders(),
-        data: { title: 'To Update', column: 'backlog', public: true },
-      }
-    );
+    const createRes = await request.post(`${API_BASE}/v1/roadmap/dashboard/${PROJECT_ID}`, {
+      headers: authHeaders(),
+      data: { title: 'To Update', column: 'backlog', public: true },
+    });
     const itemId = (await createRes.json()).id;
 
     // Update: move column and change title
@@ -86,21 +73,17 @@ test.describe('Roadmap CRUD', () => {
     expect(updateBody.title).toBe('Updated Item');
 
     // Cleanup
-    await request.delete(
-      `${API_BASE}/v1/roadmap/dashboard/${PROJECT_ID}/${itemId}`,
-      { headers: authHeaders() }
-    );
+    await request.delete(`${API_BASE}/v1/roadmap/dashboard/${PROJECT_ID}/${itemId}`, {
+      headers: authHeaders(),
+    });
   });
 
   test('delete a roadmap item returns ok', async ({ request }) => {
     // Create
-    const createRes = await request.post(
-      `${API_BASE}/v1/roadmap/dashboard/${PROJECT_ID}`,
-      {
-        headers: authHeaders(),
-        data: { title: 'To Delete', column: 'backlog', public: true },
-      }
-    );
+    const createRes = await request.post(`${API_BASE}/v1/roadmap/dashboard/${PROJECT_ID}`, {
+      headers: authHeaders(),
+      data: { title: 'To Delete', column: 'backlog', public: true },
+    });
     const itemId = (await createRes.json()).id;
 
     // Delete
@@ -122,10 +105,9 @@ test.describe('Roadmap CRUD', () => {
   });
 
   test('list roadmap items returns array', async ({ request }) => {
-    const res = await request.get(
-      `${API_BASE}/v1/roadmap/dashboard/${PROJECT_ID}`,
-      { headers: authHeaders() }
-    );
+    const res = await request.get(`${API_BASE}/v1/roadmap/dashboard/${PROJECT_ID}`, {
+      headers: authHeaders(),
+    });
     expect(res.status()).toBe(200);
     const body = await res.json();
     expect(body).toHaveProperty('data');
@@ -134,13 +116,10 @@ test.describe('Roadmap CRUD', () => {
 
   test('update with invalid column returns 400', async ({ request }) => {
     // Create
-    const createRes = await request.post(
-      `${API_BASE}/v1/roadmap/dashboard/${PROJECT_ID}`,
-      {
-        headers: authHeaders(),
-        data: { title: 'Bad Update', column: 'backlog', public: true },
-      }
-    );
+    const createRes = await request.post(`${API_BASE}/v1/roadmap/dashboard/${PROJECT_ID}`, {
+      headers: authHeaders(),
+      data: { title: 'Bad Update', column: 'backlog', public: true },
+    });
     const itemId = (await createRes.json()).id;
 
     // Update with invalid column
@@ -154,9 +133,8 @@ test.describe('Roadmap CRUD', () => {
     expect(updateRes.status()).toBe(400);
 
     // Cleanup
-    await request.delete(
-      `${API_BASE}/v1/roadmap/dashboard/${PROJECT_ID}/${itemId}`,
-      { headers: authHeaders() }
-    );
+    await request.delete(`${API_BASE}/v1/roadmap/dashboard/${PROJECT_ID}/${itemId}`, {
+      headers: authHeaders(),
+    });
   });
 });

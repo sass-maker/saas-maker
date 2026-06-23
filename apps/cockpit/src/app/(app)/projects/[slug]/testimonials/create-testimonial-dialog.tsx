@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -11,19 +11,19 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Plus } from "lucide-react";
-import { apiFetchClient, getClientToken } from "@/lib/api-client";
+} from '@/components/ui/select';
+import { Plus } from 'lucide-react';
+import { apiFetchClient, getClientToken } from '@/lib/api-client';
 
 interface Props {
   projectId: string;
@@ -35,20 +35,20 @@ export function CreateTestimonialDialog({ projectId }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [authorName, setAuthorName] = useState("");
-  const [authorEmail, setAuthorEmail] = useState("");
-  const [authorTitle, setAuthorTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [rating, setRating] = useState("5");
-  const [tweetUrl, setTweetUrl] = useState("");
+  const [authorName, setAuthorName] = useState('');
+  const [authorEmail, setAuthorEmail] = useState('');
+  const [authorTitle, setAuthorTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [rating, setRating] = useState('5');
+  const [tweetUrl, setTweetUrl] = useState('');
 
   function resetForm() {
-    setAuthorName("");
-    setAuthorEmail("");
-    setAuthorTitle("");
-    setContent("");
-    setRating("5");
-    setTweetUrl("");
+    setAuthorName('');
+    setAuthorEmail('');
+    setAuthorTitle('');
+    setContent('');
+    setRating('5');
+    setTweetUrl('');
     setError(null);
   }
 
@@ -59,28 +59,22 @@ export function CreateTestimonialDialog({ projectId }: Props) {
 
     try {
       const token = await getClientToken();
-      await apiFetchClient(
-        `/v1/testimonials/dashboard/${projectId}`,
-        token,
-        {
-          method: "POST",
-          body: JSON.stringify({
-            author_name: authorName.trim(),
-            author_email: authorEmail.trim(),
-            author_title: authorTitle.trim() || undefined,
-            content: content.trim(),
-            rating: parseInt(rating, 10),
-            tweet_url: tweetUrl.trim() || undefined,
-          }),
-        }
-      );
+      await apiFetchClient(`/v1/testimonials/dashboard/${projectId}`, token, {
+        method: 'POST',
+        body: JSON.stringify({
+          author_name: authorName.trim(),
+          author_email: authorEmail.trim(),
+          author_title: authorTitle.trim() || undefined,
+          content: content.trim(),
+          rating: parseInt(rating, 10),
+          tweet_url: tweetUrl.trim() || undefined,
+        }),
+      });
       setOpen(false);
       resetForm();
       router.refresh();
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Failed to add testimonial"
-      );
+      setError(err instanceof Error ? err.message : 'Failed to add testimonial');
     } finally {
       setLoading(false);
     }
@@ -104,9 +98,7 @@ export function CreateTestimonialDialog({ projectId }: Props) {
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>Add Testimonial</DialogTitle>
-            <DialogDescription>
-              Manually add a testimonial from a customer.
-            </DialogDescription>
+            <DialogDescription>Manually add a testimonial from a customer.</DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-2 gap-4">
@@ -149,8 +141,8 @@ export function CreateTestimonialDialog({ projectId }: Props) {
                   <SelectContent>
                     {[5, 4, 3, 2, 1].map((n) => (
                       <SelectItem key={n} value={String(n)}>
-                        {"★".repeat(n)}
-                        {"☆".repeat(5 - n)}
+                        {'★'.repeat(n)}
+                        {'☆'.repeat(5 - n)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -180,23 +172,14 @@ export function CreateTestimonialDialog({ projectId }: Props) {
             {error && <p className="text-sm text-destructive">{error}</p>}
           </div>
           <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setOpen(false)}
-            >
+            <Button type="button" variant="outline" onClick={() => setOpen(false)}>
               Cancel
             </Button>
             <Button
               type="submit"
-              disabled={
-                loading ||
-                !authorName.trim() ||
-                !authorEmail.trim() ||
-                !content.trim()
-              }
+              disabled={loading || !authorName.trim() || !authorEmail.trim() || !content.trim()}
             >
-              {loading ? "Adding..." : "Add Testimonial"}
+              {loading ? 'Adding...' : 'Add Testimonial'}
             </Button>
           </DialogFooter>
         </form>

@@ -10,7 +10,7 @@ function readJson(req) {
   return new Promise((resolve, reject) => {
     let body = '';
     req.setEncoding('utf8');
-    req.on('data', chunk => {
+    req.on('data', (chunk) => {
       body += chunk;
       if (body.length > maxBodyBytes) {
         reject(new Error('Request body too large'));

@@ -8,11 +8,9 @@ import {
 
 describe('droid pr gate helpers', () => {
   it('extracts changed files from git status and stat output', () => {
-    expect(changedFilesFromStatus(' M README.md\nR  old.ts -> src/new.ts\n?? docs/note.md\n')).toEqual([
-      'README.md',
-      'src/new.ts',
-      'docs/note.md',
-    ]);
+    expect(
+      changedFilesFromStatus(' M README.md\nR  old.ts -> src/new.ts\n?? docs/note.md\n')
+    ).toEqual(['README.md', 'src/new.ts', 'docs/note.md']);
     expect(changedFilesFromStat(' README.md | 1 +\n src/new.ts | 4 ++--\n')).toEqual([
       'README.md',
       'src/new.ts',
@@ -32,9 +30,7 @@ describe('droid pr gate helpers', () => {
       meaningful: true,
     });
 
-    expect(collectPrGateEvidence({ patchBytes: 128, status: '', stat: '' }).meaningful).toBe(
-      false
-    );
+    expect(collectPrGateEvidence({ patchBytes: 128, status: '', stat: '' }).meaningful).toBe(false);
   });
 
   it('builds a structured final report payload', () => {

@@ -1,8 +1,8 @@
-import { betterAuth } from "better-auth";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { drizzle } from "drizzle-orm/d1";
-import { getCloudflareContext } from "@opennextjs/cloudflare";
-import * as authSchema from "./auth-schema";
+import { betterAuth } from 'better-auth';
+import { drizzleAdapter } from 'better-auth/adapters/drizzle';
+import { drizzle } from 'drizzle-orm/d1';
+import { getCloudflareContext } from '@opennextjs/cloudflare';
+import * as authSchema from './auth-schema';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let _auth: any = null;
@@ -15,18 +15,18 @@ function getAuth() {
   const db = (env as any).DB;
   _auth = betterAuth({
     database: drizzleAdapter(drizzle(db, { schema: authSchema }), {
-      provider: "sqlite",
+      provider: 'sqlite',
       schema: authSchema,
     }),
     secret: process.env.BETTER_AUTH_SECRET || process.env.AUTH_SECRET,
-    baseURL: process.env.BETTER_AUTH_URL || process.env.AUTH_URL || "https://app.sassmaker.com",
+    baseURL: process.env.BETTER_AUTH_URL || process.env.AUTH_URL || 'https://app.sassmaker.com',
     socialProviders: {
       google: {
-        clientId: process.env.AUTH_GOOGLE_ID || process.env.GOOGLE_CLIENT_ID || "",
-        clientSecret: process.env.AUTH_GOOGLE_SECRET || process.env.GOOGLE_CLIENT_SECRET || "",
+        clientId: process.env.AUTH_GOOGLE_ID || process.env.GOOGLE_CLIENT_ID || '',
+        clientSecret: process.env.AUTH_GOOGLE_SECRET || process.env.GOOGLE_CLIENT_SECRET || '',
       },
     },
-    trustedOrigins: ["https://app.sassmaker.com"],
+    trustedOrigins: ['https://app.sassmaker.com'],
     rateLimit: {
       enabled: false,
     },
@@ -35,11 +35,8 @@ function getAuth() {
 }
 
 // Proxy that lazily delegates to the real betterAuth instance
-export const auth: ReturnType<typeof betterAuth> = new Proxy(
-  {} as ReturnType<typeof betterAuth>,
-  {
-    get(_target, prop, receiver) {
-      return Reflect.get(getAuth(), prop, receiver);
-    },
-  }
-);
+export const auth: ReturnType<typeof betterAuth> = new Proxy({} as ReturnType<typeof betterAuth>, {
+  get(_target, prop, receiver) {
+    return Reflect.get(getAuth(), prop, receiver);
+  },
+});

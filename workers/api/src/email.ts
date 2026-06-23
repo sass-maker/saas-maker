@@ -13,7 +13,15 @@ export async function sendNewFeedbackEmail(
   fromEmail: string,
   params: SendEmailParams
 ): Promise<void> {
-  const { to, projectName, feedbackTitle, feedbackType, feedbackDescription, submitterEmail, dashboardUrl } = params;
+  const {
+    to,
+    projectName,
+    feedbackTitle,
+    feedbackType,
+    feedbackDescription,
+    submitterEmail,
+    dashboardUrl,
+  } = params;
 
   const response = await fetch('https://api.resend.com/emails', {
     method: 'POST',

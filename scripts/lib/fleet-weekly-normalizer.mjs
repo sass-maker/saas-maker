@@ -1,6 +1,4 @@
-export function buildWeeklyWorkflow({
-  nodeVersion = '22',
-} = {}) {
+export function buildWeeklyWorkflow({ nodeVersion = '22' } = {}) {
   return `name: Weekly Quality Check
 on:
   schedule:
@@ -68,7 +66,9 @@ jobs:
 }
 
 export function normalizeWorkflowContent(content) {
-  return String(content ?? '').replace(/\r\n/g, '\n').trimEnd() + '\n';
+  return `${String(content ?? '')
+    .replace(/\r\n/g, '\n')
+    .trimEnd()}\n`;
 }
 
 export function isCanonicalWeeklyWorkflow(content, options = {}) {
@@ -94,11 +94,12 @@ export function buildNormalizationPlan({
     const repoPath = project.path ?? projectRepoPath(fleetRoot, slug);
     const workflowPath = `${repoPath}/.github/workflows/weekly.yml`;
     const existing = existingWorkflows.get(slug) ?? null;
-    const status = existing === null
-      ? 'missing'
-      : isCanonicalWeeklyWorkflow(existing, options)
-        ? 'canonical'
-        : 'drifted';
+    const status =
+      existing === null
+        ? 'missing'
+        : isCanonicalWeeklyWorkflow(existing, options)
+          ? 'canonical'
+          : 'drifted';
 
     return {
       slug,

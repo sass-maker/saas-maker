@@ -42,7 +42,7 @@ function findFleetRoot(rootPath: string) {
 
 function scanDir(dirPath: string, depth = 0): FleetProject[] {
   if (depth > 2) return [];
-  
+
   try {
     const entries = fs.readdirSync(dirPath, { withFileTypes: true });
     const fleet: FleetProject[] = [];
@@ -50,19 +50,22 @@ function scanDir(dirPath: string, depth = 0): FleetProject[] {
     for (const entry of entries) {
       if (entry.isDirectory() || entry.isSymbolicLink()) {
         const name = entry.name;
-        
-        if (name.startsWith('.') ||
-            name.startsWith('_') ||
-            name === 'dist' ||
-            name === 'build' ||
-            IGNORED_PROJECT_DIRS.has(name)) continue;
-        
+
+        if (
+          name.startsWith('.') ||
+          name.startsWith('_') ||
+          name === 'dist' ||
+          name === 'build' ||
+          IGNORED_PROJECT_DIRS.has(name)
+        )
+          continue;
+
         if (name === 'saas-maker') continue;
 
         // Resolve real path to handle symlinks correctly
         const rawPath = path.join(dirPath, name);
         const projectPath = fs.realpathSync(rawPath);
-        
+
         const foundryConfig = path.join(projectPath, 'foundry.json');
         const pkgPath = path.join(projectPath, 'package.json');
 
@@ -72,7 +75,9 @@ function scanDir(dirPath: string, depth = 0): FleetProject[] {
         if (isFoundry || (hasPkg && depth === 0)) {
           let pkg: any = {};
           if (hasPkg) {
-            try { pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8')); } catch {}
+            try {
+              pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
+            } catch {}
           }
 
           const allDeps = { ...pkg.dependencies, ...pkg.devDependencies };
@@ -83,10 +88,10 @@ function scanDir(dirPath: string, depth = 0): FleetProject[] {
             type: allDeps.next ? 'next' : allDeps.vite ? 'vite' : 'node',
             isFoundry,
           });
-          
+
           if (name !== 'agentMode') continue;
         }
-        
+
         fleet.push(...scanDir(projectPath, depth + 1));
       }
     }
@@ -99,13 +104,13 @@ function scanDir(dirPath: string, depth = 0): FleetProject[] {
 export function getLocalFleet(): FleetProject[] {
   const rootPath = process.cwd();
   const fleetPath = findFleetRoot(rootPath);
-  
+
   if (!fs.existsSync(fleetPath)) return [];
 
   const rawFleet = scanDir(fleetPath);
   const seen = new Set<string>();
-  
-  return rawFleet.filter(p => {
+
+  return rawFleet.filter((p) => {
     if (seen.has(p.path)) return false;
     seen.add(p.path);
     return true;

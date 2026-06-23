@@ -27,7 +27,7 @@ cliAuth.post('/approve', requireSession, async (c) => {
 
   const db = getDb(c.env.DB);
   const entry = await db.getCliAuthCode(code);
-  if (!entry || entry.status !== 'pending') {
+  if (entry?.status !== 'pending') {
     return c.json({ error: 'Invalid or expired code' }, 400);
   }
   if (new Date(entry.expires_at) < new Date()) {

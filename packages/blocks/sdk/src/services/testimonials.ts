@@ -60,7 +60,7 @@ export class TestimonialService {
     return this.http.request<SubmitTestimonialResponse>(
       'POST',
       `/v1/testimonials/by-project/${encodeURIComponent(slug)}`,
-      data,
+      data
     );
   }
 
@@ -72,7 +72,7 @@ export class TestimonialService {
     const qs = params.toString();
     return this.http.request<TestimonialListResponse>(
       'GET',
-      `/v1/testimonials${qs ? `?${qs}` : ''}`,
+      `/v1/testimonials${qs ? `?${qs}` : ''}`
     );
   }
 }

@@ -1,9 +1,9 @@
-import { apiFetch } from "@/lib/api";
-import { PageHeader } from "@/components/page-header";
-import { SettingsForm } from "./settings-form";
-import { getAuthenticatedProject } from "../get-project";
+import { apiFetch } from '@/lib/api';
+import { PageHeader } from '@/components/page-header';
+import { SettingsForm } from './settings-form';
+import { getAuthenticatedProject } from '../get-project';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -35,10 +35,10 @@ export default async function SettingsPage({ params }: Props) {
       apiFetch(`/v1/changelog/dashboard/${project.id}`, {}, token),
     ]);
 
-    if (fb.status === "fulfilled") counts.feedback = fb.value.total ?? 0;
-    if (wl.status === "fulfilled") counts.waitlist = wl.value.total ?? 0;
-    if (tm.status === "fulfilled") counts.testimonials = tm.value.total ?? 0;
-    if (cl.status === "fulfilled") counts.changelog = cl.value.total ?? 0;
+    if (fb.status === 'fulfilled') counts.feedback = fb.value.total ?? 0;
+    if (wl.status === 'fulfilled') counts.waitlist = wl.value.total ?? 0;
+    if (tm.status === 'fulfilled') counts.testimonials = tm.value.total ?? 0;
+    if (cl.status === 'fulfilled') counts.changelog = cl.value.total ?? 0;
   } catch {
     // Counts stay at 0
   }

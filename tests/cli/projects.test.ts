@@ -46,7 +46,9 @@ describe('projects CLI', () => {
   it('list prints rows when API returns data', async () => {
     mocked.mockResolvedValue({
       ok: true,
-      data: { data: [{ id: 'p_1', name: 'Foo', slug: 'foo', api_key: 'pk_1', created_at: '2026-01-01' }] },
+      data: {
+        data: [{ id: 'p_1', name: 'Foo', slug: 'foo', api_key: 'pk_1', created_at: '2026-01-01' }],
+      },
       status: 200,
     });
     await projectsListCommand({ output: 'json' });
@@ -60,7 +62,11 @@ describe('projects CLI', () => {
   });
 
   it('create POSTs with the project name', async () => {
-    mocked.mockResolvedValue({ ok: true, data: { id: 'p_1', name: 'New', slug: 'new', api_key: 'pk_1' }, status: 200 });
+    mocked.mockResolvedValue({
+      ok: true,
+      data: { id: 'p_1', name: 'New', slug: 'new', api_key: 'pk_1' },
+      status: 200,
+    });
     await projectsCreateCommand({ name: 'New' });
     expect(mocked).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -74,23 +80,42 @@ describe('projects CLI', () => {
 
   it('delete sends DELETE to the resolved project id', async () => {
     mocked
-      .mockResolvedValueOnce({ ok: true, data: { data: [{ id: 'p_1', name: 'Foo', slug: 'foo', api_key: 'pk_1' }] }, status: 200 })
+      .mockResolvedValueOnce({
+        ok: true,
+        data: { data: [{ id: 'p_1', name: 'Foo', slug: 'foo', api_key: 'pk_1' }] },
+        status: 200,
+      })
       .mockResolvedValueOnce({ ok: true, data: { ok: true }, status: 200 });
 
     await projectsDeleteCommand({ id: 'p_1', force: true });
 
     const calls = mocked.mock.calls.map((c) => c[0]);
-    expect(calls.some((c: any) => c.path === '/v1/projects/p_1' && c.method === 'DELETE')).toBe(true);
+    expect(calls.some((c: any) => c.path === '/v1/projects/p_1' && c.method === 'DELETE')).toBe(
+      true
+    );
   });
 
   it('update sends PATCH with provided name', async () => {
     mocked
-      .mockResolvedValueOnce({ ok: true, data: { data: [{ id: 'p_1', name: 'Foo', slug: 'foo', api_key: 'pk_1' }] }, status: 200 })
-      .mockResolvedValueOnce({ ok: true, data: { id: 'p_1', name: 'Renamed', slug: 'foo', api_key: 'pk_1' }, status: 200 });
+      .mockResolvedValueOnce({
+        ok: true,
+        data: { data: [{ id: 'p_1', name: 'Foo', slug: 'foo', api_key: 'pk_1' }] },
+        status: 200,
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        data: { id: 'p_1', name: 'Renamed', slug: 'foo', api_key: 'pk_1' },
+        status: 200,
+      });
 
     await projectsUpdateCommand({ id: 'p_1', name: 'Renamed' });
 
     const calls = mocked.mock.calls.map((c) => c[0]);
-    expect(calls.some((c: any) => c.path === '/v1/projects/p_1' && c.method === 'PATCH' && c.body?.name === 'Renamed')).toBe(true);
+    expect(
+      calls.some(
+        (c: any) =>
+          c.path === '/v1/projects/p_1' && c.method === 'PATCH' && c.body?.name === 'Renamed'
+      )
+    ).toBe(true);
   });
 });

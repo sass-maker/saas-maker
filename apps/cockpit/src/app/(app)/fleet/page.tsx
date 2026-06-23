@@ -48,7 +48,14 @@ async function fetchPostHogErrors(): Promise<PostHogError[]> {
         return {
           id: String(evt.uuid ?? evt.id ?? Math.random()),
           operation: String(props.operation ?? props.op ?? 'unknown'),
-          project_id: String(props.project_id ?? props.project_slug ?? props.project ?? props.foundry_project_id ?? props.distinct_id ?? 'unknown'),
+          project_id: String(
+            props.project_id ??
+              props.project_slug ??
+              props.project ??
+              props.foundry_project_id ??
+              props.distinct_id ??
+              'unknown'
+          ),
           durationMs: Number(props.duration_ms ?? props.durationMs ?? 0),
           timestamp: String(evt.timestamp ?? ''),
         };
@@ -80,12 +87,15 @@ export default async function FleetPage() {
         <div>
           <h1 className="text-2xl font-bold text-white">Fleet Control</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            LTS framework baselines, scan metadata, and the managed project list. Run <code className="bg-muted px-1 rounded text-xs">fnd fleet scan</code> to refresh.
+            LTS framework baselines, scan metadata, and the managed project list. Run{' '}
+            <code className="bg-muted px-1 rounded text-xs">fnd fleet scan</code> to refresh.
           </p>
         </div>
       </div>
       {fleetError ? (
-        <div className="rounded-lg border border-yellow-800 bg-yellow-950/20 p-4 text-sm text-yellow-400">{fleetError}</div>
+        <div className="rounded-lg border border-yellow-800 bg-yellow-950/20 p-4 text-sm text-yellow-400">
+          {fleetError}
+        </div>
       ) : (
         <FleetMatrix projects={projects} />
       )}

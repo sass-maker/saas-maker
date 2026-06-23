@@ -90,7 +90,9 @@ async function main() {
   const { apiKey, projectId } = loadCredentials();
 
   if (!apiKey || !projectId) {
-    console.error('Missing PostHog credentials. Set POSTHOG_PERSONAL_API_KEY and POSTHOG_PROJECT_ID or apps/cockpit/.env.local');
+    console.error(
+      'Missing PostHog credentials. Set POSTHOG_PERSONAL_API_KEY and POSTHOG_PROJECT_ID or apps/cockpit/.env.local'
+    );
     process.exit(2);
   }
 
@@ -110,7 +112,7 @@ async function main() {
         AND timestamp >= now() - INTERVAL ${args.days} DAY
       GROUP BY event
       ORDER BY event
-    `,
+    `
   );
 
   const byEvent = new Map(rows.map((row) => [row[0], row]));
@@ -121,7 +123,13 @@ async function main() {
     const withCoalesced = Number(row?.[3] ?? 0);
     const distinctProjects = Number(row?.[4] ?? 0);
     const coverage =
-      total === 0 ? 'no_events' : withCoalesced === total ? 'full' : withCoalesced > 0 ? 'partial' : 'missing';
+      total === 0
+        ? 'no_events'
+        : withCoalesced === total
+          ? 'full'
+          : withCoalesced > 0
+            ? 'partial'
+            : 'missing';
     return {
       event,
       group: TAXONOMY_EVENTS.includes(event) ? 'taxonomy' : 'foundry',
@@ -162,19 +170,29 @@ async function main() {
     console.log('');
     for (const row of results) {
       const status =
-        row.total === 0 ? '—' : row.coverage === 'full' ? 'OK' : row.coverage === 'partial' ? 'PARTIAL' : 'GAP';
+        row.total === 0
+          ? '—'
+          : row.coverage === 'full'
+            ? 'OK'
+            : row.coverage === 'partial'
+              ? 'PARTIAL'
+              : 'GAP';
       console.log(
-        `${status.padEnd(8)} ${row.event.padEnd(24)} total=${String(row.total).padStart(6)} canonical=${String(row.with_canonical_project_id).padStart(6)} coalesced=${String(row.with_coalesced_project_id).padStart(6)} projects=${row.distinct_projects}`,
+        `${status.padEnd(8)} ${row.event.padEnd(24)} total=${String(row.total).padStart(6)} canonical=${String(row.with_canonical_project_id).padStart(6)} coalesced=${String(row.with_coalesced_project_id).padStart(6)} projects=${row.distinct_projects}`
       );
     }
     if (gaps.length > 0) {
       console.log('\nGaps (events with traffic but incomplete project_id):');
       for (const g of gaps) {
-        console.log(`  - ${g.event}: ${g.with_coalesced_project_id}/${g.total} coalesced, ${g.with_canonical_project_id}/${g.total} canonical`);
+        console.log(
+          `  - ${g.event}: ${g.with_coalesced_project_id}/${g.total} coalesced, ${g.with_canonical_project_id}/${g.total} canonical`
+        );
       }
     }
     if (noTraffic.length > 0) {
-      console.log(`\nNo events in window (${noTraffic.length}): ${noTraffic.map((r) => r.event).join(', ')}`);
+      console.log(
+        `\nNo events in window (${noTraffic.length}): ${noTraffic.map((r) => r.event).join(', ')}`
+      );
     }
     console.log(`\nOverall: ${ok ? 'PASS' : 'FAIL'} (${gaps.length} gap(s))`);
   }

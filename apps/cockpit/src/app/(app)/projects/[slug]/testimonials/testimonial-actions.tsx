@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Check, X, Trash2, Loader2 } from "lucide-react";
-import { apiFetchClient, getClientToken } from "@/lib/api-client";
-import type { TestimonialStatus } from "@saas-maker/contracts";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Check, X, Trash2, Loader2 } from 'lucide-react';
+import { apiFetchClient, getClientToken } from '@/lib/api-client';
+import type { TestimonialStatus } from '@saas-maker/contracts';
 
 interface TestimonialActionsProps {
   testimonialId: string;
@@ -25,63 +25,60 @@ export function TestimonialActions({
     setLoading(status);
     try {
       const token = await getClientToken();
-      await apiFetchClient(
-        `/v1/testimonials/${testimonialId}?project_id=${projectId}`,
-        token,
-        { method: "PATCH", body: JSON.stringify({ status }) }
-      );
+      await apiFetchClient(`/v1/testimonials/${testimonialId}?project_id=${projectId}`, token, {
+        method: 'PATCH',
+        body: JSON.stringify({ status }),
+      });
       router.refresh();
     } catch (e) {
-      console.error("Failed to update testimonial:", e);
+      console.error('Failed to update testimonial:', e);
       setLoading(null);
     }
   }
 
   async function handleDelete() {
-    if (!confirm("Delete this testimonial?")) return;
-    setLoading("delete");
+    if (!confirm('Delete this testimonial?')) return;
+    setLoading('delete');
     try {
       const token = await getClientToken();
-      await apiFetchClient(
-        `/v1/testimonials/${testimonialId}?project_id=${projectId}`,
-        token,
-        { method: "DELETE" }
-      );
+      await apiFetchClient(`/v1/testimonials/${testimonialId}?project_id=${projectId}`, token, {
+        method: 'DELETE',
+      });
       router.refresh();
     } catch (e) {
-      console.error("Failed to delete testimonial:", e);
+      console.error('Failed to delete testimonial:', e);
       setLoading(null);
     }
   }
 
   return (
     <div className="flex items-center gap-1">
-      {currentStatus !== "approved" && (
+      {currentStatus !== 'approved' && (
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => handleStatusChange("approved")}
+          onClick={() => handleStatusChange('approved')}
           disabled={loading !== null}
           className="h-8 w-8"
           title="Approve"
         >
-          {loading === "approved" ? (
+          {loading === 'approved' ? (
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (
             <Check className="h-4 w-4 text-green-600" />
           )}
         </Button>
       )}
-      {currentStatus !== "rejected" && (
+      {currentStatus !== 'rejected' && (
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => handleStatusChange("rejected")}
+          onClick={() => handleStatusChange('rejected')}
           disabled={loading !== null}
           className="h-8 w-8"
           title="Reject"
         >
-          {loading === "rejected" ? (
+          {loading === 'rejected' ? (
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (
             <X className="h-4 w-4 text-orange-500" />
@@ -96,7 +93,7 @@ export function TestimonialActions({
         className="h-8 w-8"
         title="Delete"
       >
-        {loading === "delete" ? (
+        {loading === 'delete' ? (
           <Loader2 className="h-4 w-4 animate-spin" />
         ) : (
           <Trash2 className="h-4 w-4 text-muted-foreground" />

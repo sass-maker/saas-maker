@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
-import { captureError } from "@/lib/capture-error";
+import { captureError } from '@/lib/capture-error';
 
 export default function FleetError({
   error,
@@ -12,7 +12,7 @@ export default function FleetError({
   reset: () => void;
 }) {
   useEffect(() => {
-    captureError(error, { scope: "fleet", digest: error.digest });
+    captureError(error, { scope: 'fleet', digest: error.digest });
   }, [error]);
 
   return (
@@ -22,16 +22,11 @@ export default function FleetError({
         <p className="mb-6 text-sm text-muted-foreground">
           Something went wrong while loading fleet health — try again.
         </p>
-        <button
-          onClick={reset}
-          className="rounded-md border px-4 py-2 text-sm hover:bg-muted"
-        >
+        <button onClick={reset} className="rounded-md border px-4 py-2 text-sm hover:bg-muted">
           Try again
         </button>
         {error.digest ? (
-          <p className="mt-6 text-xs text-muted-foreground/60">
-            Reference: {error.digest}
-          </p>
+          <p className="mt-6 text-xs text-muted-foreground/60">Reference: {error.digest}</p>
         ) : null}
       </div>
     </div>

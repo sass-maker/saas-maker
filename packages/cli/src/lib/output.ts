@@ -55,12 +55,16 @@ function pickSelection(value: unknown, fields: string[]): unknown {
 
 function normalizeRows(value: unknown): Record<string, unknown>[] {
   if (Array.isArray(value)) {
-    return value.filter((item): item is Record<string, unknown> => !!item && typeof item === 'object');
+    return value.filter(
+      (item): item is Record<string, unknown> => !!item && typeof item === 'object'
+    );
   }
   if (value && typeof value === 'object') {
     const maybeData = (value as Record<string, unknown>).data;
     if (Array.isArray(maybeData)) {
-      return maybeData.filter((item): item is Record<string, unknown> => !!item && typeof item === 'object');
+      return maybeData.filter(
+        (item): item is Record<string, unknown> => !!item && typeof item === 'object'
+      );
     }
   }
   return [];
@@ -82,10 +86,12 @@ export function printOutput(value: unknown, options: OutputOptions = {}): void {
 
   const rows = normalizeRows(value);
   if (rows.length > 0) {
-    const columns = fields.length > 0
-      ? fields
-      : options.defaultColumns?.filter((key) => rows.some((row) => getByPath(row, key) !== undefined))
-        ?? Object.keys(rows[0]).slice(0, 8);
+    const columns =
+      fields.length > 0
+        ? fields
+        : (options.defaultColumns?.filter((key) =>
+            rows.some((row) => getByPath(row, key) !== undefined)
+          ) ?? Object.keys(rows[0]).slice(0, 8));
     const rendered = [
       columns.map((c) => c.toUpperCase()),
       ...rows.map((row) => columns.map((c) => serializeCell(getByPath(row, c)))),
@@ -98,10 +104,7 @@ export function printOutput(value: unknown, options: OutputOptions = {}): void {
     const objectValue = pickSelection(value, fields);
     const entries = Object.entries(objectValue as Record<string, unknown>);
     if (entries.length > 0) {
-      table([
-        ['KEY', 'VALUE'],
-        ...entries.map(([k, v]) => [k, serializeCell(v)]),
-      ]);
+      table([['KEY', 'VALUE'], ...entries.map(([k, v]) => [k, serializeCell(v)])]);
       return;
     }
   }

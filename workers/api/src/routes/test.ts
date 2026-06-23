@@ -41,20 +41,31 @@ test.post('/mint-session', async (c) => {
     `INSERT INTO user (id, name, email, emailVerified, image, createdAt, updatedAt)
      VALUES (?, ?, ?, 1, NULL, ?, ?)
      ON CONFLICT (email) DO UPDATE SET updatedAt = excluded.updatedAt`
-  ).bind(userId, 'E2E Test User', body.email, now, now).run();
+  )
+    .bind(userId, 'E2E Test User', body.email, now, now)
+    .run();
 
-  const userRow = await c.env.DB.prepare(`SELECT id FROM user WHERE email = ?`).bind(body.email).first<{ id: string }>();
+  const userRow = await c.env.DB.prepare(`SELECT id FROM user WHERE email = ?`)
+    .bind(body.email)
+    .first<{ id: string }>();
   const resolvedUserId = userRow?.id ?? userId;
 
   // 2. Insert better-auth session row keyed by opaque token
   await c.env.DB.prepare(
     `INSERT INTO session (id, expiresAt, token, createdAt, updatedAt, ipAddress, userAgent, userId)
      VALUES (?, ?, ?, ?, ?, NULL, 'foundry-e2e', ?)`
-  ).bind(sessionId, expiresAt, token, now, now, resolvedUserId).run();
+  )
+    .bind(sessionId, expiresAt, token, now, now, resolvedUserId)
+    .run();
 
   // 3. Mirror into legacy users table so the rest of the API works
   const db = getDb(c.env.DB);
-  await db.upsertUser({ id: resolvedUserId, email: body.email, name: 'E2E Test User', avatar_url: null });
+  await db.upsertUser({
+    id: resolvedUserId,
+    email: body.email,
+    name: 'E2E Test User',
+    avatar_url: null,
+  });
 
   return c.json({ token, userId: resolvedUserId, expiresAt });
 });

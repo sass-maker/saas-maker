@@ -3,9 +3,24 @@ import { useMemo, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { Search, CheckCircle2, XCircle, SlidersHorizontal, ShieldCheck, ShieldAlert, EyeOff, ExternalLink } from 'lucide-react';
+import {
+  Search,
+  CheckCircle2,
+  XCircle,
+  SlidersHorizontal,
+  ShieldCheck,
+  ShieldAlert,
+  EyeOff,
+  ExternalLink,
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   ACTIVE_FLEET_PROJECTS,
@@ -15,10 +30,17 @@ import {
 } from '@/lib/fleet-project-names';
 
 interface Project {
-  slug: string; name: string; framework: string; db: string;
+  slug: string;
+  name: string;
+  framework: string;
+  db: string;
   framework_version: string | null;
-  auth: string; deploy: string; test_frameworks: string;
-  saasmaker_count: number; foundry_linked: number; last_scanned: string;
+  auth: string;
+  deploy: string;
+  test_frameworks: string;
+  saasmaker_count: number;
+  foundry_linked: number;
+  last_scanned: string;
 }
 
 type BaselineStatus = 'on-baseline' | 'review' | 'unknown' | 'manual';
@@ -34,41 +56,56 @@ const FRAMEWORK_BASELINES: Record<string, { label: string; major?: number; note:
 
 const BADGE_COLORS: Record<string, string> = {
   'Next.js': 'bg-black border border-white/20 text-white',
-  'Vite': 'bg-purple-950 text-purple-300',
-  'Astro': 'bg-orange-950 text-orange-300',
-  'Remotion': 'bg-pink-950 text-pink-300',
-  'Turso': 'bg-emerald-950 text-emerald-300',
-  'Drizzle': 'bg-emerald-900 text-emerald-200',
-  'Firebase': 'bg-amber-950 text-amber-300',
-  'NextAuth': 'bg-blue-950 text-blue-300',
-  'BetterAuth': 'bg-violet-950 text-violet-300',
-  'PostHog': 'bg-fuchsia-950 text-fuchsia-300',
-  'Google': 'bg-blue-950 text-blue-300',
-  'GitHub': 'bg-slate-800 text-slate-200',
-  'OpenAI': 'bg-teal-950 text-teal-300',
-  'Anthropic': 'bg-zinc-800 text-zinc-200',
-  'Gemini': 'bg-blue-950 text-blue-300',
-  'Cloudflare': 'bg-orange-950 text-orange-300',
+  Vite: 'bg-purple-950 text-purple-300',
+  Astro: 'bg-orange-950 text-orange-300',
+  Remotion: 'bg-pink-950 text-pink-300',
+  Turso: 'bg-emerald-950 text-emerald-300',
+  Drizzle: 'bg-emerald-900 text-emerald-200',
+  Firebase: 'bg-amber-950 text-amber-300',
+  NextAuth: 'bg-blue-950 text-blue-300',
+  BetterAuth: 'bg-violet-950 text-violet-300',
+  PostHog: 'bg-fuchsia-950 text-fuchsia-300',
+  Google: 'bg-blue-950 text-blue-300',
+  GitHub: 'bg-slate-800 text-slate-200',
+  OpenAI: 'bg-teal-950 text-teal-300',
+  Anthropic: 'bg-zinc-800 text-zinc-200',
+  Gemini: 'bg-blue-950 text-blue-300',
+  Cloudflare: 'bg-orange-950 text-orange-300',
   'Workers AI': 'bg-orange-950 text-orange-300',
   'free-ai': 'bg-emerald-950 text-emerald-300',
-  'YouTube': 'bg-red-950 text-red-300',
-  'Gmail': 'bg-red-950 text-red-300',
+  YouTube: 'bg-red-950 text-red-300',
+  Gmail: 'bg-red-950 text-red-300',
 };
 
 function Pill({ label }: { label: string }) {
-  const color = Object.entries(BADGE_COLORS).find(([k]) => label.includes(k))?.[1] ?? 'bg-gray-800 text-gray-300';
-  return <span className={cn('inline-block rounded px-1.5 py-0.5 text-xs font-medium mr-1 mb-1', color)}>{label}</span>;
+  const color =
+    Object.entries(BADGE_COLORS).find(([k]) => label.includes(k))?.[1] ??
+    'bg-gray-800 text-gray-300';
+  return (
+    <span className={cn('inline-block rounded px-1.5 py-0.5 text-xs font-medium mr-1 mb-1', color)}>
+      {label}
+    </span>
+  );
 }
 
 function splitLabels(value: string | null | undefined) {
   if (!value || value === '-') return [];
-  return value.split('+').map((label) => label.trim()).filter(Boolean);
+  return value
+    .split('+')
+    .map((label) => label.trim())
+    .filter(Boolean);
 }
 
 function Pills({ value }: { value: string }) {
   const labels = splitLabels(value);
   if (labels.length === 0) return <span className="text-gray-600 text-xs">—</span>;
-  return <>{labels.map(v => <Pill key={v} label={v} />)}</>;
+  return (
+    <>
+      {labels.map((v) => (
+        <Pill key={v} label={v} />
+      ))}
+    </>
+  );
 }
 
 function getPrimaryFramework(project: Project) {
@@ -76,7 +113,9 @@ function getPrimaryFramework(project: Project) {
 }
 
 function getProjectDetails(project: Project) {
-  return getActiveFleetProjectDetails(project) ?? getActiveFleetProjectDetails({ slug: project.slug });
+  return (
+    getActiveFleetProjectDetails(project) ?? getActiveFleetProjectDetails({ slug: project.slug })
+  );
 }
 
 function getExternalDependencies(project: Project) {
@@ -155,13 +194,18 @@ function getBaseline(project: Project): {
 function sortProjects(projects: Project[], sortKey: SortKey) {
   return [...projects].sort((a, b) => {
     if (sortKey === 'framework') {
-      return getPrimaryFramework(a).localeCompare(getPrimaryFramework(b)) || a.name.localeCompare(b.name);
+      return (
+        getPrimaryFramework(a).localeCompare(getPrimaryFramework(b)) || a.name.localeCompare(b.name)
+      );
     }
     if (sortKey === 'last-scanned') {
       return new Date(b.last_scanned || 0).getTime() - new Date(a.last_scanned || 0).getTime();
     }
     if (sortKey === 'external-deps') {
-      return getExternalDependencies(b).length - getExternalDependencies(a).length || a.name.localeCompare(b.name);
+      return (
+        getExternalDependencies(b).length - getExternalDependencies(a).length ||
+        a.name.localeCompare(b.name)
+      );
     }
     return a.name.localeCompare(b.name);
   });
@@ -208,7 +252,9 @@ export function FleetMatrix({ projects }: { projects: Project[] }) {
   const [showHidden, setShowHidden] = useState(false);
 
   const activeProjects = useMemo(() => {
-    const projectsBySlug = new Map(projects.map((project) => [project.slug.toLowerCase(), project]));
+    const projectsBySlug = new Map(
+      projects.map((project) => [project.slug.toLowerCase(), project])
+    );
 
     return Object.keys(ACTIVE_FLEET_PROJECTS).map((slug) => {
       const scannedProject = projectsBySlug.get(slug.toLowerCase());
@@ -232,7 +278,9 @@ export function FleetMatrix({ projects }: { projects: Project[] }) {
   const hiddenCount = scannedExtras.length;
 
   const frameworkOptions = useMemo(() => {
-    return Array.from(new Set(managedProjects.map(getPrimaryFramework))).sort((a, b) => a.localeCompare(b));
+    return Array.from(new Set(managedProjects.map(getPrimaryFramework))).sort((a, b) =>
+      a.localeCompare(b)
+    );
   }, [managedProjects]);
 
   const filtered = useMemo(() => {
@@ -250,10 +298,13 @@ export function FleetMatrix({ projects }: { projects: Project[] }) {
           getExternalDependencies(project).join(' '),
           project.framework,
           project.framework_version ?? '',
-        ].join(' ').toLowerCase();
+        ]
+          .join(' ')
+          .toLowerCase();
 
         if (query && !fields.includes(query)) return false;
-        if (frameworkFilter !== 'all' && getPrimaryFramework(project) !== frameworkFilter) return false;
+        if (frameworkFilter !== 'all' && getPrimaryFramework(project) !== frameworkFilter)
+          return false;
         if (baselineFilter !== 'all' && baseline.status !== baselineFilter) return false;
         return true;
       }),
@@ -287,10 +338,14 @@ export function FleetMatrix({ projects }: { projects: Project[] }) {
     <div className="space-y-5">
       <div className="grid gap-3 md:grid-cols-4">
         <div className="rounded-lg border border-border bg-muted/10 p-3">
-          <div className="text-xs uppercase tracking-wider text-muted-foreground">Managed projects</div>
+          <div className="text-xs uppercase tracking-wider text-muted-foreground">
+            Managed projects
+          </div>
           <div className="mt-2 text-2xl font-semibold text-white">{managedProjects.length}</div>
           <div className="mt-1 text-xs text-muted-foreground">
-            {showHidden ? `${hiddenCount} scanned extras included` : `${hiddenCount} scanned extras excluded`}
+            {showHidden
+              ? `${hiddenCount} scanned extras included`
+              : `${hiddenCount} scanned extras excluded`}
           </div>
         </div>
         <div className="rounded-lg border border-border bg-muted/10 p-3">
@@ -298,23 +353,35 @@ export function FleetMatrix({ projects }: { projects: Project[] }) {
             <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
             LTS baseline
           </div>
-          <div className="mt-2 text-2xl font-semibold text-white">{baselineCounts['on-baseline']}</div>
-          <div className="mt-1 text-xs text-muted-foreground">Projects at or above fleet target</div>
+          <div className="mt-2 text-2xl font-semibold text-white">
+            {baselineCounts['on-baseline']}
+          </div>
+          <div className="mt-1 text-xs text-muted-foreground">
+            Projects at or above fleet target
+          </div>
         </div>
         <div className="rounded-lg border border-border bg-muted/10 p-3">
           <div className="flex items-center gap-2 text-xs uppercase tracking-wider text-muted-foreground">
             <ShieldAlert className="h-3.5 w-3.5 text-amber-400" />
             Needs review
           </div>
-          <div className="mt-2 text-2xl font-semibold text-white">{baselineCounts.review + baselineCounts.unknown}</div>
+          <div className="mt-2 text-2xl font-semibold text-white">
+            {baselineCounts.review + baselineCounts.unknown}
+          </div>
           <div className="mt-1 text-xs text-muted-foreground">Upgrade or version scan required</div>
         </div>
         <div className="rounded-lg border border-border bg-muted/10 p-3">
-          <div className="text-xs uppercase tracking-wider text-muted-foreground">External deps</div>
+          <div className="text-xs uppercase tracking-wider text-muted-foreground">
+            External deps
+          </div>
           <div className="mt-2 text-2xl font-semibold text-white">{externalDependencyCount}</div>
           <div className="mt-1 flex flex-wrap gap-1">
             {Object.entries(tierCounts).map(([tier, count]) => (
-              <Badge key={tier} variant="outline" className="border-border bg-background/40 text-xs">
+              <Badge
+                key={tier}
+                variant="outline"
+                className="border-border bg-background/40 text-xs"
+              >
                 {tier} {count}
               </Badge>
             ))}
@@ -334,7 +401,7 @@ export function FleetMatrix({ projects }: { projects: Project[] }) {
               placeholder="Filter projects..."
               className="pl-9"
               value={search}
-              onChange={e => setSearch(e.target.value)}
+              onChange={(e) => setSearch(e.target.value)}
             />
           </div>
           <Select value={frameworkFilter} onValueChange={setFrameworkFilter}>
@@ -344,7 +411,9 @@ export function FleetMatrix({ projects }: { projects: Project[] }) {
             <SelectContent>
               <SelectItem value="all">All frameworks</SelectItem>
               {frameworkOptions.map((framework) => (
-                <SelectItem key={framework} value={framework}>{framework}</SelectItem>
+                <SelectItem key={framework} value={framework}>
+                  {framework}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -373,10 +442,18 @@ export function FleetMatrix({ projects }: { projects: Project[] }) {
           </Select>
           <div className="flex items-center gap-2 rounded-md border border-border px-3 py-2">
             <EyeOff className="h-4 w-4 text-muted-foreground" />
-            <Label htmlFor="show-hidden-projects" className="whitespace-nowrap text-xs text-muted-foreground">
+            <Label
+              htmlFor="show-hidden-projects"
+              className="whitespace-nowrap text-xs text-muted-foreground"
+            >
               Include extras
             </Label>
-            <Switch id="show-hidden-projects" size="sm" checked={showHidden} onCheckedChange={setShowHidden} />
+            <Switch
+              id="show-hidden-projects"
+              size="sm"
+              checked={showHidden}
+              onCheckedChange={setShowHidden}
+            />
           </div>
         </div>
       </div>
@@ -386,58 +463,84 @@ export function FleetMatrix({ projects }: { projects: Project[] }) {
           <table className="w-full min-w-[64rem] text-sm">
             <thead>
               <tr className="border-b border-border bg-muted/30">
-                {['Project','Framework','LTS','External dependencies','Foundry'].map(h => (
-                  <th key={h} className="px-3 py-2.5 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">{h}</th>
+                {['Project', 'Framework', 'LTS', 'External dependencies', 'Foundry'].map((h) => (
+                  <th
+                    key={h}
+                    className="px-3 py-2.5 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider"
+                  >
+                    {h}
+                  </th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {filtered.length === 0 && (
-                <tr><td colSpan={5} className="px-3 py-8 text-center text-sm text-muted-foreground">
-                  No projects found. Run <code className="rounded bg-muted px-1">fnd fleet scan</code> first.
-                </td></tr>
-              )}
-            {filtered.map((project, i) => {
-              const baseline = getBaseline(project);
-              const details = getProjectDetails(project);
-              const repoUrl = details?.url ? normalizeRepoUrl(details.url) : null;
-              const externalDeps = getExternalDependencies(project);
-
-              return (
-                <tr key={project.slug} className={cn('border-b border-border/50 hover:bg-muted/20 transition-colors', i % 2 === 0 ? '' : 'bg-muted/10')}>
-                  <td className="px-3 py-2.5">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-medium text-white">{project.name}</span>
-                      {details?.tier ? (
-                        <Badge variant="outline" className="border-border bg-background/40 text-xs">
-                          {details.tier}
-                        </Badge>
-                      ) : null}
-                    </div>
-                    {details?.desc ? (
-                      <div className="mt-1 max-w-xs text-xs leading-5 text-muted-foreground">{details.desc}</div>
-                    ) : null}
-                    <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                      <span>{project.slug}</span>
-                      {repoUrl ? (
-                        <a
-                          href={repoUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="inline-flex items-center gap-1 text-primary hover:underline"
-                        >
-                          Repo
-                          <ExternalLink className="h-3 w-3" />
-                        </a>
-                      ) : null}
-                    </div>
+                <tr>
+                  <td colSpan={5} className="px-3 py-8 text-center text-sm text-muted-foreground">
+                    No projects found. Run{' '}
+                    <code className="rounded bg-muted px-1">fnd fleet scan</code> first.
                   </td>
+                </tr>
+              )}
+              {filtered.map((project, i) => {
+                const baseline = getBaseline(project);
+                const details = getProjectDetails(project);
+                const repoUrl = details?.url ? normalizeRepoUrl(details.url) : null;
+                const externalDeps = getExternalDependencies(project);
+
+                return (
+                  <tr
+                    key={project.slug}
+                    className={cn(
+                      'border-b border-border/50 hover:bg-muted/20 transition-colors',
+                      i % 2 === 0 ? '' : 'bg-muted/10'
+                    )}
+                  >
                     <td className="px-3 py-2.5">
-                      <div><Pills value={project.framework} /></div>
-                      <div className="mt-0.5 text-xs text-muted-foreground">{getFrameworkVersion(project)}</div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="font-medium text-white">{project.name}</span>
+                        {details?.tier ? (
+                          <Badge
+                            variant="outline"
+                            className="border-border bg-background/40 text-xs"
+                          >
+                            {details.tier}
+                          </Badge>
+                        ) : null}
+                      </div>
+                      {details?.desc ? (
+                        <div className="mt-1 max-w-xs text-xs leading-5 text-muted-foreground">
+                          {details.desc}
+                        </div>
+                      ) : null}
+                      <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                        <span>{project.slug}</span>
+                        {repoUrl ? (
+                          <a
+                            href={repoUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-1 text-primary hover:underline"
+                          >
+                            Repo
+                            <ExternalLink className="h-3 w-3" />
+                          </a>
+                        ) : null}
+                      </div>
                     </td>
                     <td className="px-3 py-2.5">
-                      <Badge variant="outline" className={cn('whitespace-nowrap text-xs', baseline.className)}>
+                      <div>
+                        <Pills value={project.framework} />
+                      </div>
+                      <div className="mt-0.5 text-xs text-muted-foreground">
+                        {getFrameworkVersion(project)}
+                      </div>
+                    </td>
+                    <td className="px-3 py-2.5">
+                      <Badge
+                        variant="outline"
+                        className={cn('whitespace-nowrap text-xs', baseline.className)}
+                      >
                         {baseline.label}
                       </Badge>
                       <div className="mt-1 text-xs text-muted-foreground">{baseline.detail}</div>
@@ -454,9 +557,11 @@ export function FleetMatrix({ projects }: { projects: Project[] }) {
                       )}
                     </td>
                     <td className="px-3 py-2.5 text-center">
-                      {project.foundry_linked
-                        ? <CheckCircle2 className="mx-auto h-4 w-4 text-emerald-400" />
-                        : <XCircle className="mx-auto h-4 w-4 text-gray-600" />}
+                      {project.foundry_linked ? (
+                        <CheckCircle2 className="mx-auto h-4 w-4 text-emerald-400" />
+                      ) : (
+                        <XCircle className="mx-auto h-4 w-4 text-gray-600" />
+                      )}
                     </td>
                   </tr>
                 );
@@ -466,7 +571,8 @@ export function FleetMatrix({ projects }: { projects: Project[] }) {
         </div>
       </div>
       <p className="text-xs text-muted-foreground">
-        {filtered.length} of {managedProjects.length} projects · Last scan: {getLastScanned(managedProjects)}
+        {filtered.length} of {managedProjects.length} projects · Last scan:{' '}
+        {getLastScanned(managedProjects)}
       </p>
     </div>
   );

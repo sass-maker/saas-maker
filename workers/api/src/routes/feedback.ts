@@ -14,7 +14,16 @@ import { trace, capture } from '../lib/telemetry';
 const feedback = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
 const VALID_TYPES: FeedbackType[] = ['bug', 'feature', 'feedback'];
-const VALID_STATUSES: FeedbackStatus[] = ['new', 'acknowledged', 'investigating', 'planned', 'in_progress', 'resolved', 'dismissed', 'on_roadmap'];
+const VALID_STATUSES: FeedbackStatus[] = [
+  'new',
+  'acknowledged',
+  'investigating',
+  'planned',
+  'in_progress',
+  'resolved',
+  'dismissed',
+  'on_roadmap',
+];
 const PAGE_SIZE = 20;
 
 function isValidStatus(status: string): status is FeedbackStatus {
@@ -52,7 +61,16 @@ feedback.post('/', requireApiKey, async (c) => {
     submitter_name: body.submitter_name?.trim() || null,
   });
 
-  capture({ distinctId: record.submitter_email, event: 'feedback_submitted', properties: { feedback_id: record.id, project_id: projectId, type: record.type, title: record.title } });
+  capture({
+    distinctId: record.submitter_email,
+    event: 'feedback_submitted',
+    properties: {
+      feedback_id: record.id,
+      project_id: projectId,
+      type: record.type,
+      title: record.title,
+    },
+  });
 
   return c.json(record, 201);
 });
@@ -70,7 +88,9 @@ feedback.get('/', requireApiKey, async (c) => {
 
   const db = getDb(c.env.DB);
   const options = { type, status, sort, page, limit: PAGE_SIZE };
-  const result = await trace('db:listFeedback', () => db.listFeedback(projectId, options), { projectId: 'saasmaker-api' }) as { data: FeedbackRecord[]; total: number };
+  const result = (await trace('db:listFeedback', () => db.listFeedback(projectId, options), {
+    projectId: 'saasmaker-api',
+  })) as { data: FeedbackRecord[]; total: number };
 
   return c.json({ data: result.data, total: result.total, page, limit: PAGE_SIZE });
 });
@@ -93,7 +113,11 @@ feedback.get('/inbox/:projectId', requireSession, async (c) => {
   const project = await db.getProjectById(projectId);
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
-  const result = await db.listFeedback(projectId, { type, status, sort, page, limit: PAGE_SIZE }, userId);
+  const result = await db.listFeedback(
+    projectId,
+    { type, status, sort, page, limit: PAGE_SIZE },
+    userId
+  );
 
   return c.json({ data: result.data, total: result.total, page, limit: PAGE_SIZE });
 });
@@ -121,9 +145,9 @@ feedback.get('/board', requireSession, async (c) => {
           page: 1,
           limit: 100,
         },
-        userId,
-      ),
-    ),
+        userId
+      )
+    )
   );
 
   const allFeedback: Array<FeedbackRecord & { project_name: string; project_slug: string }> = [];
@@ -136,13 +160,10 @@ feedback.get('/board', requireSession, async (c) => {
   // Sort merged results
   if (sort === 'upvotes') {
     allFeedback.sort(
-      (a, b) =>
-        b.upvote_count - b.downvote_count - (a.upvote_count - a.downvote_count),
+      (a, b) => b.upvote_count - b.downvote_count - (a.upvote_count - a.downvote_count)
     );
   } else {
-    allFeedback.sort(
-      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-    );
+    allFeedback.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
   }
 
   return c.json({ data: allFeedback, total: allFeedback.length });
@@ -164,9 +185,19 @@ feedback.get('/by-project/:slug', async (c) => {
   if (!project) return c.json({ error: 'Project not found' }, 404);
 
   const viewerId = await getOptionalUserId(c);
-  const result = await db.listFeedback(project.id, { type, status, sort, page, limit: PAGE_SIZE }, viewerId);
+  const result = await db.listFeedback(
+    project.id,
+    { type, status, sort, page, limit: PAGE_SIZE },
+    viewerId
+  );
 
-  return c.json({ data: result.data, total: result.total, page, limit: PAGE_SIZE, project: { name: project.name, slug: project.slug } });
+  return c.json({
+    data: result.data,
+    total: result.total,
+    page,
+    limit: PAGE_SIZE,
+    project: { name: project.name, slug: project.slug },
+  });
 });
 
 // Upvote (requires Google OAuth session)
@@ -252,7 +283,11 @@ feedback.patch('/:id', requireSession, async (c) => {
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
   const updated = await db.updateFeedbackStatus(feedbackId, body.status);
-  capture({ distinctId: userId, event: 'feedback_status_updated', properties: { feedback_id: feedbackId, status: body.status, project_id: existing.project_id } });
+  capture({
+    distinctId: userId,
+    event: 'feedback_status_updated',
+    properties: { feedback_id: feedbackId, status: body.status, project_id: existing.project_id },
+  });
   return c.json(updated);
 });
 
@@ -271,7 +306,11 @@ feedback.delete('/:id', requireSession, async (c) => {
   if (!project || project.owner_id !== userId) return c.json({ error: 'Forbidden' }, 403);
 
   await db.deleteFeedback(feedbackId);
-  capture({ distinctId: userId, event: 'feedback_deleted', properties: { feedback_id: feedbackId, project_id: existing.project_id, type: existing.type } });
+  capture({
+    distinctId: userId,
+    event: 'feedback_deleted',
+    properties: { feedback_id: feedbackId, project_id: existing.project_id, type: existing.type },
+  });
   return c.json({ ok: true });
 });
 

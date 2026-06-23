@@ -8,9 +8,7 @@
  */
 
 const TASK_TITLE_PREFIX = '[fleet-failure]';
-const DEFAULT_IGNORED_WORKFLOW_NAMES = new Set([
-  'Foundry Weekly Quality Check (reusable)',
-]);
+const DEFAULT_IGNORED_WORKFLOW_NAMES = new Set(['Foundry Weekly Quality Check (reusable)']);
 
 export const FAILURE_PRIORITY = {
   workflow: 'high',
@@ -224,9 +222,7 @@ export function buildTaskPayloads(failures) {
 
 export function findExistingTask(tasks, payload) {
   if (!Array.isArray(tasks)) return null;
-  return (
-    tasks.find((task) => task && task.title === payload.title) ?? null
-  );
+  return tasks.find((task) => task && task.title === payload.title) ?? null;
 }
 
 export function diffPayloadsAgainstTasks(payloads, existingTasks) {

@@ -112,7 +112,10 @@ export function buildTaskPassSummary(tasks, options = {}) {
     done: scopedTasks.filter((task) => task.status === 'done').length,
     todo: scopedTasks.filter((task) => task.status === 'todo').length,
     in_progress: scopedTasks.filter((task) => task.status === 'in_progress').length,
-    product_done_without_changelog: projectSummaries.reduce((sum, project) => sum + project.product_done_without_changelog, 0),
+    product_done_without_changelog: projectSummaries.reduce(
+      (sum, project) => sum + project.product_done_without_changelog,
+      0
+    ),
     projects: projectSummaries,
   };
 }
@@ -129,7 +132,7 @@ export function formatTaskPassSummary(summary) {
   for (const project of summary.projects) {
     lines.push(
       `- ${project.project}: ${project.done} done, ${project.in_progress} in progress, ${project.todo} todo` +
-      ` | changelog ${project.product_done_with_changelog}/${project.product_done}`
+        ` | changelog ${project.product_done_with_changelog}/${project.product_done}`
     );
   }
 

@@ -1,27 +1,28 @@
-import { NextResponse } from "next/server";
-import { headers } from "next/headers";
-import { auth } from "@/lib/auth";
-import { isLocalAuthBypassEnabled } from "@/lib/local-auth";
+import { NextResponse } from 'next/server';
+import { headers } from 'next/headers';
+import { auth } from '@/lib/auth';
+import { isLocalAuthBypassEnabled } from '@/lib/local-auth';
 
-export const DROID_API_URL = process.env.DROID_API_URL || "https://saasmaker-droid.sarthakagrawal927.workers.dev";
+export const DROID_API_URL =
+  process.env.DROID_API_URL || 'https://saasmaker-droid.sarthakagrawal927.workers.dev';
 
 export async function requireDroidAccess() {
   const requestHeaders = await headers();
-  if (isLocalAuthBypassEnabled(requestHeaders.get("host"))) return null;
+  if (isLocalAuthBypassEnabled(requestHeaders.get('host'))) return null;
   const session = await auth.api.getSession({ headers: requestHeaders });
-  return session?.user ? null : NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  return session?.user ? null : NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 }
 
 export async function droidJsonResponse(upstream: string | URL, init: RequestInit = {}) {
   const token = process.env.DROID_INTERNAL_TOKEN;
   if (!token) {
-    return NextResponse.json({ error: "DROID_INTERNAL_TOKEN is not configured" }, { status: 500 });
+    return NextResponse.json({ error: 'DROID_INTERNAL_TOKEN is not configured' }, { status: 500 });
   }
 
   const requestHeaders = new Headers(init.headers);
-  requestHeaders.set("Authorization", `Bearer ${token}`);
-  if (init.body && !requestHeaders.has("Content-Type")) {
-    requestHeaders.set("Content-Type", "application/json");
+  requestHeaders.set('Authorization', `Bearer ${token}`);
+  if (init.body && !requestHeaders.has('Content-Type')) {
+    requestHeaders.set('Content-Type', 'application/json');
   }
 
   const response = await fetch(upstream, {

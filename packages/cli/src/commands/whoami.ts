@@ -1,4 +1,10 @@
-import { getApiKey, getApiBase, getLocalConfig, getLocalProjectId, getLocalProjectKey } from '../lib/config.js';
+import {
+  getApiKey,
+  getApiBase,
+  getLocalConfig,
+  getLocalProjectId,
+  getLocalProjectKey,
+} from '../lib/config.js';
 import { log } from '../lib/ui.js';
 
 export function whoamiCommand(): void {

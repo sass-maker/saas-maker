@@ -32,10 +32,10 @@ jobs.post('/:id/logs', async (c) => {
 
   await db.client
     .update(foundry_jobs)
-    .set({ 
-      logs, 
-      status, 
-      updated_at: new Date().toISOString() 
+    .set({
+      logs,
+      status,
+      updated_at: new Date().toISOString(),
     })
     .where(eq(foundry_jobs.id, id));
 

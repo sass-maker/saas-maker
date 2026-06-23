@@ -1,4 +1,4 @@
-import type { BrowserAcceptanceRequest, CommandResult, RunExecutionInput } from './types';
+import type { BrowserAcceptanceRequest, RunExecutionInput } from './types';
 
 type BrowserAcceptanceProcess = {
   id: string;
@@ -77,7 +77,8 @@ export async function runBrowserAcceptance(
           stderr: 'browser_acceptance.port must be between 1024 and 65535.',
         });
       }
-      const hostname = config.preview_hostname?.trim() || input.env.DROID_BROWSER_PREVIEW_HOSTNAME?.trim();
+      const hostname =
+        config.preview_hostname?.trim() || input.env.DROID_BROWSER_PREVIEW_HOSTNAME?.trim();
       if (!hostname) {
         return await recordBrowserFailure(input, {
           summary: 'Browser acceptance needs a preview hostname to expose the sandbox app.',
@@ -137,7 +138,10 @@ export async function runBrowserAcceptance(
       const sessionId = typeof browser.sessionId === 'function' ? browser.sessionId() : undefined;
       await page.goto(targetUrl, { waitUntil: 'networkidle', timeout: timeoutMs });
       const title = await page.title().catch(() => '');
-      const bodyText = await page.locator('body').innerText({ timeout: 5000 }).catch(() => '');
+      const bodyText = await page
+        .locator('body')
+        .innerText({ timeout: 5000 })
+        .catch(() => '');
       const missing = assertions.filter((text) => !bodyText.includes(text));
       const screenshot = await page.screenshot({
         fullPage: false,
@@ -209,14 +213,19 @@ export async function runBrowserAcceptance(
       summary: error instanceof Error ? error.message : 'Browser acceptance failed.',
       url: targetUrl ?? '',
       stdout: logs.stdout,
-      stderr: appendTail(logs.stderr, error instanceof Error ? error.message : 'Browser acceptance failed.'),
+      stderr: appendTail(
+        logs.stderr,
+        error instanceof Error ? error.message : 'Browser acceptance failed.'
+      ),
     });
   } finally {
     if (process) await process.kill().catch(() => undefined);
   }
 }
 
-export function isBrowserAcceptanceEnabled(config: BrowserAcceptanceRequest | undefined): config is BrowserAcceptanceRequest {
+export function isBrowserAcceptanceEnabled(
+  config: BrowserAcceptanceRequest | undefined
+): config is BrowserAcceptanceRequest {
   if (!config) return false;
   if (config.enabled === false) return false;
   return Boolean(config.url?.trim() || config.start_command?.trim() || config.goal?.trim());
@@ -240,7 +249,9 @@ function normalizePort(value: unknown): number | undefined {
 
 function normalizeAssertions(value: unknown): string[] {
   if (!Array.isArray(value)) return [];
-  return value.filter((item): item is string => typeof item === 'string' && item.trim().length > 0).map((item) => item.trim());
+  return value
+    .filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
+    .map((item) => item.trim());
 }
 
 function isHttpUrl(value: string): boolean {

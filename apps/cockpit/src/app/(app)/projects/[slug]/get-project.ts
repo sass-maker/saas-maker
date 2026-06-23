@@ -1,8 +1,8 @@
-import { cache } from "react";
-import { getDashboardSession } from "@/lib/server-session";
-import { redirect, notFound } from "next/navigation";
-import { getServerToken, getProjectBySlug } from "@/lib/api";
-import type { ProjectRecord } from "@saas-maker/contracts";
+import { cache } from 'react';
+import { getDashboardSession } from '@/lib/server-session';
+import { redirect, notFound } from 'next/navigation';
+import { getServerToken, getProjectBySlug } from '@/lib/api';
+import type { ProjectRecord } from '@saas-maker/contracts';
 
 /**
  * Cached per-request helper that authenticates the user and resolves the
@@ -12,7 +12,7 @@ import type { ProjectRecord } from "@saas-maker/contracts";
 export const getAuthenticatedProject = cache(
   async (slug: string): Promise<{ project: ProjectRecord; token: string }> => {
     const session = await getDashboardSession();
-    if (!session?.user) redirect("/login");
+    if (!session?.user) redirect('/login');
 
     const token = await getServerToken();
     const project = await getProjectBySlug(slug, token);

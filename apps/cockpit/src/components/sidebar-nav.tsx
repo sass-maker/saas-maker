@@ -1,10 +1,8 @@
-"use client";
+'use client';
 
 import {
   Bot,
   ChevronDown,
-  Eye,
-  FolderOpen,
   LayoutDashboard,
   LayoutList,
   ListTodo,
@@ -17,20 +15,20 @@ import {
   Star,
   Users,
   Zap,
-} from "lucide-react";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+} from 'lucide-react';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { apiFetchClient, getClientToken } from "@/lib/api-client";
-import { visibleDashboardProjects } from "@/lib/dashboard-projects";
-import { cn } from "@/lib/utils";
+} from '@/components/ui/dropdown-menu';
+import { apiFetchClient, getClientToken } from '@/lib/api-client';
+import { visibleDashboardProjects } from '@/lib/dashboard-projects';
+import { cn } from '@/lib/utils';
 
 interface Project {
   id: string;
@@ -39,13 +37,13 @@ interface Project {
 }
 
 const projectNavItems = [
-  { label: "Feedback", href: "", icon: MessageSquare },
-  { label: "Roadmap", href: "/roadmap", icon: Map },
-  { label: "Testimonials", href: "/testimonials", icon: Star },
-  { label: "Waitlist", href: "/waitlist", icon: Users },
-  { label: "Changelog", href: "/changelog", icon: Megaphone },
-  { label: "AI Gateway", href: "/ai", icon: Zap },
-  { label: "Settings", href: "/settings", icon: Settings },
+  { label: 'Feedback', href: '', icon: MessageSquare },
+  { label: 'Roadmap', href: '/roadmap', icon: Map },
+  { label: 'Testimonials', href: '/testimonials', icon: Star },
+  { label: 'Waitlist', href: '/waitlist', icon: Users },
+  { label: 'Changelog', href: '/changelog', icon: Megaphone },
+  { label: 'AI Gateway', href: '/ai', icon: Zap },
+  { label: 'Settings', href: '/settings', icon: Settings },
 ];
 
 export function SidebarNav() {
@@ -61,10 +59,7 @@ export function SidebarNav() {
     async function loadProjects() {
       try {
         const token = await getClientToken();
-        const res = await apiFetchClient<{ data: Project[] }>(
-          "/v1/projects",
-          token
-        );
+        const res = await apiFetchClient<{ data: Project[] }>('/v1/projects', token);
         setProjects(visibleDashboardProjects(res.data ?? []));
       } catch {
         // Silently fail
@@ -87,10 +82,10 @@ export function SidebarNav() {
       <Link
         href="/projects"
         className={cn(
-          "flex min-h-11 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
-          pathname === "/projects"
-            ? "bg-muted text-foreground"
-            : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+          'flex min-h-11 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors',
+          pathname === '/projects'
+            ? 'bg-muted text-foreground'
+            : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
         )}
       >
         <LayoutDashboard className="h-4 w-4" />
@@ -100,10 +95,10 @@ export function SidebarNav() {
       <Link
         href="/fleet"
         className={cn(
-          "flex min-h-11 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
-          pathname === "/fleet"
-            ? "bg-muted text-foreground"
-            : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+          'flex min-h-11 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors',
+          pathname === '/fleet'
+            ? 'bg-muted text-foreground'
+            : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
         )}
       >
         <LayoutList className="h-4 w-4" />
@@ -113,10 +108,10 @@ export function SidebarNav() {
       <Link
         href="/standards"
         className={cn(
-          "flex min-h-11 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
-          pathname === "/standards"
-            ? "bg-muted text-foreground"
-            : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+          'flex min-h-11 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors',
+          pathname === '/standards'
+            ? 'bg-muted text-foreground'
+            : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
         )}
       >
         <ShieldCheck className="h-4 w-4" />
@@ -126,10 +121,10 @@ export function SidebarNav() {
       <Link
         href="/tasks"
         className={cn(
-          "flex min-h-11 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
-          pathname === "/tasks"
-            ? "bg-muted text-foreground"
-            : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+          'flex min-h-11 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors',
+          pathname === '/tasks'
+            ? 'bg-muted text-foreground'
+            : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
         )}
       >
         <ListTodo className="h-4 w-4" />
@@ -139,10 +134,10 @@ export function SidebarNav() {
       <Link
         href="/fleet/changelog"
         className={cn(
-          "flex min-h-11 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
-          pathname.startsWith("/fleet/changelog")
-            ? "bg-muted text-foreground"
-            : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+          'flex min-h-11 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors',
+          pathname.startsWith('/fleet/changelog')
+            ? 'bg-muted text-foreground'
+            : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
         )}
       >
         <ScrollText className="h-4 w-4" />
@@ -152,10 +147,10 @@ export function SidebarNav() {
       <Link
         href="/marketing"
         className={cn(
-          "flex min-h-11 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
-          pathname.startsWith("/marketing")
-            ? "bg-muted text-foreground"
-            : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+          'flex min-h-11 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors',
+          pathname.startsWith('/marketing')
+            ? 'bg-muted text-foreground'
+            : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
         )}
       >
         <Megaphone className="h-4 w-4" />
@@ -169,10 +164,10 @@ export function SidebarNav() {
       <Link
         href="/jobs"
         className={cn(
-          "flex min-h-11 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
-          pathname === "/jobs"
-            ? "bg-muted text-foreground"
-            : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+          'flex min-h-11 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors',
+          pathname === '/jobs'
+            ? 'bg-muted text-foreground'
+            : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
         )}
       >
         <Bot className="h-4 w-4" />
@@ -192,9 +187,7 @@ export function SidebarNav() {
                   <DropdownMenuItem
                     key={p.id}
                     onClick={() => router.push(`/projects/${p.slug}`)}
-                    className={cn(
-                      p.slug === slug && "bg-muted font-medium"
-                    )}
+                    className={cn(p.slug === slug && 'bg-muted font-medium')}
                   >
                     {p.name}
                   </DropdownMenuItem>
@@ -205,9 +198,7 @@ export function SidebarNav() {
           {projectNavItems.map((item) => {
             const href = `/projects/${slug}${item.href}`;
             const isActive =
-              item.href === ""
-                ? pathname === `/projects/${slug}`
-                : pathname.startsWith(href);
+              item.href === '' ? pathname === `/projects/${slug}` : pathname.startsWith(href);
 
             return (
               <li key={item.label}>
@@ -215,10 +206,10 @@ export function SidebarNav() {
                   href={href}
                   prefetch={false}
                   className={cn(
-                    "flex min-h-11 items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors",
+                    'flex min-h-11 items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors',
                     isActive
-                      ? "bg-muted text-foreground font-medium"
-                      : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                      ? 'bg-muted text-foreground font-medium'
+                      : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
                   )}
                 >
                   <item.icon className="h-4 w-4" />

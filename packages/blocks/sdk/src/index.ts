@@ -1,9 +1,25 @@
 export { SaaSMakerClient, type SaaSMakerConfig } from './client';
 export { SaaSMakerError } from './http';
 
-export type { FeedbackRecord, SubmitFeedbackData, FeedbackListResponse, FeedbackListOptions, FeedbackType, FeedbackStatus } from './services/feedback';
-export type { WaitlistSignupData, WaitlistSignupResponse, WaitlistCountResponse } from './services/waitlist';
-export type { TestimonialRecord, SubmitTestimonialData, TestimonialListResponse, TestimonialListOptions } from './services/testimonials';
+export type {
+  FeedbackRecord,
+  SubmitFeedbackData,
+  FeedbackListResponse,
+  FeedbackListOptions,
+  FeedbackType,
+  FeedbackStatus,
+} from './services/feedback';
+export type {
+  WaitlistSignupData,
+  WaitlistSignupResponse,
+  WaitlistCountResponse,
+} from './services/waitlist';
+export type {
+  TestimonialRecord,
+  SubmitTestimonialData,
+  TestimonialListResponse,
+  TestimonialListOptions,
+} from './services/testimonials';
 export type { ChangelogEntry, ChangelogListResponse } from './services/changelog';
 export type {
   AIChatCompletionRequest,

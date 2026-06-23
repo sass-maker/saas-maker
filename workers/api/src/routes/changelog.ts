@@ -2,28 +2,38 @@ import { Hono } from 'hono';
 import { Bindings, Variables } from '../types';
 import { requireApiKey, requireSession } from '../middleware/auth';
 import { getDb } from '../db';
-import type { CreateChangelogEntryRequest, UpdateChangelogEntryRequest } from '@saas-maker/contracts';
+import type {
+  CreateChangelogEntryRequest,
+  UpdateChangelogEntryRequest,
+} from '@saas-maker/contracts';
 
 const changelog = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
 const PAGE_SIZE = 50;
 const VALID_TYPES = ['feature', 'improvement', 'fix', 'breaking'];
 
-async function resolveProjectForTaskSlug(db: ReturnType<typeof getDb>, userId: string, taskSlug: string) {
+async function resolveProjectForTaskSlug(
+  db: ReturnType<typeof getDb>,
+  userId: string,
+  taskSlug: string
+) {
   const exactProject = await db.getProjectBySlug(taskSlug);
   if (exactProject?.owner_id === userId) return exactProject;
 
   const normalizeProjectKey = (value: string) => value.toLowerCase().replace(/[^a-z0-9]/g, '');
   const normalizedTaskSlug = normalizeProjectKey(taskSlug);
   const projects = await db.listProjectsByOwner(userId, 'all');
-  return projects.find((project) => (
-    project.slug === taskSlug ||
-    project.slug.startsWith(`${taskSlug}-`) ||
-    project.name.toLowerCase() === taskSlug.toLowerCase() ||
-    normalizeProjectKey(project.slug) === normalizedTaskSlug ||
-    normalizeProjectKey(project.slug).startsWith(normalizedTaskSlug) ||
-    normalizeProjectKey(project.name) === normalizedTaskSlug
-  )) ?? null;
+  return (
+    projects.find(
+      (project) =>
+        project.slug === taskSlug ||
+        project.slug.startsWith(`${taskSlug}-`) ||
+        project.name.toLowerCase() === taskSlug.toLowerCase() ||
+        normalizeProjectKey(project.slug) === normalizedTaskSlug ||
+        normalizeProjectKey(project.slug).startsWith(normalizedTaskSlug) ||
+        normalizeProjectKey(project.name) === normalizedTaskSlug
+    ) ?? null
+  );
 }
 
 // Public: list published changelog entries (API key — for widget)
@@ -66,7 +76,10 @@ changelog.post('/dashboard/:projectId', requireSession, async (c) => {
   if (!body.title?.trim()) return c.json({ error: 'Title is required' }, 400);
   if (!body.content?.trim()) return c.json({ error: 'Content is required' }, 400);
   if (body.type && !VALID_TYPES.includes(body.type)) {
-    return c.json({ error: 'Invalid type. Must be one of: feature, improvement, fix, breaking' }, 400);
+    return c.json(
+      { error: 'Invalid type. Must be one of: feature, improvement, fix, breaking' },
+      400
+    );
   }
 
   const published = body.published ?? false;
@@ -101,7 +114,10 @@ changelog.patch('/dashboard/:projectId/:id', requireSession, async (c) => {
   const body = (await c.req.json()) as UpdateChangelogEntryRequest;
 
   if (body.type && !VALID_TYPES.includes(body.type)) {
-    return c.json({ error: 'Invalid type. Must be one of: feature, improvement, fix, breaking' }, 400);
+    return c.json(
+      { error: 'Invalid type. Must be one of: feature, improvement, fix, breaking' },
+      400
+    );
   }
 
   const updated = await db.updateChangelogEntry(entryId, {
@@ -141,7 +157,7 @@ changelog.delete('/dashboard/:projectId/:id', requireSession, async (c) => {
 // Returns { data: entry } on creation, { skipped: true, reason } when skipped.
 changelog.post('/from-task', requireSession, async (c) => {
   const userId = c.get('userId')!;
-  const body = await c.req.json() as {
+  const body = (await c.req.json()) as {
     task_id?: unknown;
     source?: unknown;
     agent?: unknown;
@@ -188,10 +204,12 @@ changelog.post('/from-task', requireSession, async (c) => {
     type: typeMap[task.task_type] || 'improvement',
     published: false,
     published_at: null,
-    source: typeof body.source === 'string' && body.source.trim() ? body.source.trim() : 'symphony-cli',
+    source:
+      typeof body.source === 'string' && body.source.trim() ? body.source.trim() : 'symphony-cli',
     task_id: taskId,
     agent: typeof body.agent === 'string' && body.agent.trim() ? body.agent.trim() : null,
-    evidence: typeof body.evidence === 'string' && body.evidence.trim() ? body.evidence.trim() : null,
+    evidence:
+      typeof body.evidence === 'string' && body.evidence.trim() ? body.evidence.trim() : null,
     created_at: taskTimestamp,
     updated_at: taskTimestamp,
   });
@@ -208,9 +226,10 @@ changelog.post('/from-task', requireSession, async (c) => {
 changelog.get('/fleet/daily', requireSession, async (c) => {
   const userId = c.get('userId')!;
   const dateParam = c.req.query('date');
-  const date = dateParam && /^\d{4}-\d{2}-\d{2}$/.test(dateParam)
-    ? dateParam
-    : new Date().toISOString().slice(0, 10);
+  const date =
+    dateParam && /^\d{4}-\d{2}-\d{2}$/.test(dateParam)
+      ? dateParam
+      : new Date().toISOString().slice(0, 10);
 
   const db = getDb(c.env.DB);
   const entries = await db.listFleetDailyChangelog(userId, date);

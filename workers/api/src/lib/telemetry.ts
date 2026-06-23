@@ -7,7 +7,7 @@ const LEGACY_PROJECT_ID_KEYS = ['project_slug', 'project', 'foundry_project_id']
 
 /** Normalize fleet project identity to a canonical `project_id` property. */
 function withCanonicalProjectId(properties: Record<string, unknown> = {}): Record<string, unknown> {
-  let projectId = properties['project_id'];
+  let projectId = properties.project_id;
   if (typeof projectId !== 'string' || projectId.length === 0) {
     for (const key of LEGACY_PROJECT_ID_KEYS) {
       const value = properties[key];
@@ -57,8 +57,15 @@ export function capture(event: CaptureEvent): void {
   queue.push(promise);
 }
 
-export function identify(event: { distinctId: string; properties?: Record<string, unknown> }): void {
-  capture({ distinctId: event.distinctId, event: '$identify', properties: { $set: event.properties ?? {} } });
+export function identify(event: {
+  distinctId: string;
+  properties?: Record<string, unknown>;
+}): void {
+  capture({
+    distinctId: event.distinctId,
+    event: '$identify',
+    properties: { $set: event.properties ?? {} },
+  });
 }
 
 export async function flushPostHog(): Promise<void> {
@@ -74,14 +81,20 @@ export interface TraceOptions {
 }
 
 /** Time an async operation (formerly ops' trace — console timing, rethrows on error). */
-export async function trace<T>(name: string, fn: () => Promise<T>, options: TraceOptions = {}): Promise<T> {
+export async function trace<T>(
+  name: string,
+  fn: () => Promise<T>,
+  options: TraceOptions = {}
+): Promise<T> {
   const start = performance.now();
   try {
     const result = await fn();
-    if (!options.silent) console.info(`[trace] ${name} completed in ${(performance.now() - start).toFixed(2)}ms`);
+    if (!options.silent)
+      console.info(`[trace] ${name} completed in ${(performance.now() - start).toFixed(2)}ms`);
     return result;
   } catch (err) {
-    if (!options.silent) console.error(`[trace] ${name} failed after ${(performance.now() - start).toFixed(2)}ms`);
+    if (!options.silent)
+      console.error(`[trace] ${name} failed after ${(performance.now() - start).toFixed(2)}ms`);
     throw err;
   }
 }

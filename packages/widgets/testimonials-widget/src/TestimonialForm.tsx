@@ -32,7 +32,8 @@ export const TestimonialForm: React.FC<TestimonialFormProps> = ({
 
   const api = useMemo(() => createApiClient(projectId, apiBaseUrl), [projectId, apiBaseUrl]);
 
-  const themeClass = theme === 'light' ? 'smw-tm--light' : theme === 'dark' ? 'smw-tm--dark' : 'smw-tm--auto';
+  const themeClass =
+    theme === 'light' ? 'smw-tm--light' : theme === 'dark' ? 'smw-tm--dark' : 'smw-tm--auto';
 
   async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -77,7 +78,11 @@ export const TestimonialForm: React.FC<TestimonialFormProps> = ({
 
   if (success) {
     return (
-      <div data-saasmaker-testimonials="" className={themeClass} style={{ '--smw-tm-accent': accentColor } as React.CSSProperties}>
+      <div
+        data-saasmaker-testimonials=""
+        className={themeClass}
+        style={{ '--smw-tm-accent': accentColor } as React.CSSProperties}
+      >
         <div className="smw-tm-success">
           <div className="smw-tm-success-icon">&#10003;</div>
           <p className="smw-tm-success-title">Thank you!</p>
@@ -88,13 +93,40 @@ export const TestimonialForm: React.FC<TestimonialFormProps> = ({
   }
 
   return (
-    <div data-saasmaker-testimonials="" className={themeClass} style={{ '--smw-tm-accent': accentColor } as React.CSSProperties}>
+    <div
+      data-saasmaker-testimonials=""
+      className={themeClass}
+      style={{ '--smw-tm-accent': accentColor } as React.CSSProperties}
+    >
       <form className="smw-tm-form" onSubmit={handleSubmit}>
         <div className="smw-tm-row">
-          <input type="text" className="smw-tm-input" placeholder="Your name *" value={name} onChange={(e) => setName(e.target.value)} required disabled={submitting} />
-          <input type="email" className="smw-tm-input" placeholder="Email *" value={email} onChange={(e) => setEmail(e.target.value)} required disabled={submitting} />
+          <input
+            type="text"
+            className="smw-tm-input"
+            placeholder="Your name *"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+            disabled={submitting}
+          />
+          <input
+            type="email"
+            className="smw-tm-input"
+            placeholder="Email *"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            disabled={submitting}
+          />
         </div>
-        <input type="text" className="smw-tm-input" placeholder="Title / Company (optional)" value={title} onChange={(e) => setTitle(e.target.value)} disabled={submitting} />
+        <input
+          type="text"
+          className="smw-tm-input"
+          placeholder="Title / Company (optional)"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          disabled={submitting}
+        />
 
         <div className="smw-tm-stars">
           {[1, 2, 3, 4, 5].map((star) => (
@@ -112,11 +144,23 @@ export const TestimonialForm: React.FC<TestimonialFormProps> = ({
           ))}
         </div>
 
-        <textarea className="smw-tm-textarea" placeholder={placeholder} value={content} onChange={(e) => setContent(e.target.value)} required disabled={submitting} />
+        <textarea
+          className="smw-tm-textarea"
+          placeholder={placeholder}
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          required
+          disabled={submitting}
+        />
 
         {showImageUpload && (
           <div className="smw-tm-upload">
-            <button type="button" className="smw-tm-upload-btn" onClick={() => fileRef.current?.click()} disabled={uploading || submitting}>
+            <button
+              type="button"
+              className="smw-tm-upload-btn"
+              onClick={() => fileRef.current?.click()}
+              disabled={uploading || submitting}
+            >
               {uploading ? 'Uploading...' : 'Attach image'}
             </button>
             <input ref={fileRef} type="file" accept="image/*" onChange={handleImageUpload} />
@@ -125,7 +169,14 @@ export const TestimonialForm: React.FC<TestimonialFormProps> = ({
         )}
 
         {showTweetUrl && (
-          <input type="url" className="smw-tm-input" placeholder="Tweet URL (optional)" value={tweetUrl} onChange={(e) => setTweetUrl(e.target.value)} disabled={submitting} />
+          <input
+            type="url"
+            className="smw-tm-input"
+            placeholder="Tweet URL (optional)"
+            value={tweetUrl}
+            onChange={(e) => setTweetUrl(e.target.value)}
+            disabled={submitting}
+          />
         )}
 
         {error && <p className="smw-tm-error">{error}</p>}

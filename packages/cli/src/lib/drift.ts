@@ -15,7 +15,14 @@
  * fixes via the --fix flag.
  */
 
-import { existsSync, readFileSync, mkdirSync, writeFileSync, chmodSync, readdirSync } from 'node:fs';
+import {
+  existsSync,
+  readFileSync,
+  mkdirSync,
+  writeFileSync,
+  chmodSync,
+  readdirSync,
+} from 'node:fs';
 import { dirname, join } from 'node:path';
 import { usesBiome, detectPackageManager, buildPrePushTemplate } from './forge.js';
 
@@ -42,11 +49,10 @@ export interface DriftOptions {
   skipAgents?: boolean;
 }
 
-
 export function checkProjectDrift(
   projectPath: string,
   projectName: string,
-  opts: DriftOptions = {},
+  opts: DriftOptions = {}
 ): DriftReport {
   const checks: DriftCheck[] = [];
 
@@ -60,8 +66,12 @@ export function checkProjectDrift(
           label: 'foundry.json',
           status: 'fail',
           detail: 'missing',
-          fix: () => writeFileSync(foundryPath, JSON.stringify({ slug: projectName, linked: false }, null, 2) + '\n'),
-        },
+          fix: () =>
+            writeFileSync(
+              foundryPath,
+              `${JSON.stringify({ slug: projectName, linked: false }, null, 2)}\n`
+            ),
+        }
   );
 
   // 2. AGENTS.md
@@ -75,8 +85,9 @@ export function checkProjectDrift(
             label: 'AGENTS.md',
             status: 'warn',
             detail: 'missing',
-            fix: () => writeFileSync(agentsPath, `# agents.md — ${projectName}\n\n## Purpose\n_TODO_\n`),
-          },
+            fix: () =>
+              writeFileSync(agentsPath, `# agents.md — ${projectName}\n\n## Purpose\n_TODO_\n`),
+          }
     );
   }
 
@@ -113,9 +124,19 @@ export function checkProjectDrift(
   const eslintPath = join(projectPath, 'eslint.config.js');
   const eslintMjsPath = join(projectPath, 'eslint.config.mjs');
   if (usesBiome(projectPath)) {
-    checks.push({ id: 'eslint', label: 'eslint config', status: 'pass', detail: 'Biome (valid lint standard)' });
+    checks.push({
+      id: 'eslint',
+      label: 'eslint config',
+      status: 'pass',
+      detail: 'Biome (valid lint standard)',
+    });
   } else if (!existsSync(eslintPath) && !existsSync(eslintMjsPath)) {
-    checks.push({ id: 'eslint', label: 'eslint config', status: 'fail', detail: 'missing eslint.config.js' });
+    checks.push({
+      id: 'eslint',
+      label: 'eslint config',
+      status: 'fail',
+      detail: 'missing eslint.config.js',
+    });
   } else {
     const content = readFileSync(existsSync(eslintPath) ? eslintPath : eslintMjsPath, 'utf-8');
     const inlined = content.includes('Plain flat ESLint') || content.includes('eslint-config-next');
@@ -130,7 +151,12 @@ export function checkProjectDrift(
   // 5. tsconfig present
   const tsPath = join(projectPath, 'tsconfig.json');
   if (!existsSync(tsPath)) {
-    checks.push({ id: 'tsconfig', label: 'tsconfig', status: 'fail', detail: 'missing tsconfig.json' });
+    checks.push({
+      id: 'tsconfig',
+      label: 'tsconfig',
+      status: 'fail',
+      detail: 'missing tsconfig.json',
+    });
   } else {
     const content = readFileSync(tsPath, 'utf-8');
     const local =
@@ -148,27 +174,43 @@ export function checkProjectDrift(
   // 6. Prettier config present — Biome replaces Prettier (treat as pass)
   const pkgPath = join(projectPath, 'package.json');
   if (usesBiome(projectPath)) {
-    checks.push({ id: 'prettier', label: 'prettier-config', status: 'pass', detail: 'Biome (handles formatting)' });
+    checks.push({
+      id: 'prettier',
+      label: 'prettier-config',
+      status: 'pass',
+      detail: 'Biome (handles formatting)',
+    });
   } else if (existsSync(pkgPath)) {
     try {
       const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8')) as Record<string, unknown>;
       const hasPrettierFile =
-        existsSync(join(projectPath, '.prettierrc.json')) || existsSync(join(projectPath, '.prettierrc'));
+        existsSync(join(projectPath, '.prettierrc.json')) ||
+        existsSync(join(projectPath, '.prettierrc'));
       checks.push({
         id: 'prettier',
         label: 'prettier-config',
-        status: hasPrettierFile || typeof pkg['prettier'] === 'object' ? 'pass' : 'warn',
+        status: hasPrettierFile || typeof pkg.prettier === 'object' ? 'pass' : 'warn',
         detail: hasPrettierFile ? '.prettierrc present' : 'no local prettier config file',
       });
     } catch {
-      checks.push({ id: 'prettier', label: 'prettier-config', status: 'warn', detail: 'package.json unreadable' });
+      checks.push({
+        id: 'prettier',
+        label: 'prettier-config',
+        status: 'warn',
+        detail: 'package.json unreadable',
+      });
     }
   }
 
   // 7. foundry-ci usage
   const ciDir = join(projectPath, '.github/workflows');
   if (!existsSync(ciDir)) {
-    checks.push({ id: 'foundry-ci', label: 'foundry-ci workflow', status: 'warn', detail: 'no .github/workflows' });
+    checks.push({
+      id: 'foundry-ci',
+      label: 'foundry-ci workflow',
+      status: 'warn',
+      detail: 'no .github/workflows',
+    });
   } else {
     let usesFoundryCI = false;
     try {

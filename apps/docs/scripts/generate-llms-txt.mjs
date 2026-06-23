@@ -1,27 +1,21 @@
-import { readFileSync, writeFileSync, readdirSync, statSync } from "fs";
-import { join, dirname, relative } from "path";
-import { fileURLToPath } from "url";
+import { readFileSync, writeFileSync, readdirSync, statSync } from 'node:fs';
+import { join, dirname, relative } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const docsRoot = join(__dirname, "../src/content/docs");
-const outputPath = join(__dirname, "../public/llms.txt");
+const docsRoot = join(__dirname, '../src/content/docs');
+const outputPath = join(__dirname, '../public/llms.txt');
 
 // Section ordering — directories are processed in this order.
 // Files within each directory are sorted alphabetically.
 // Any new directory or file is automatically included.
-const SECTION_ORDER = [
-  "getting-started",
-  "api",
-  "services",
-  "sdk",
-  "widgets",
-];
+const SECTION_ORDER = ['getting-started', 'api', 'services', 'sdk', 'widgets'];
 
 const HEADER =
-  "# SaaS Maker API Documentation\n\n> Drop-in backend services for SaaS apps. Base URL: https://api.sassmaker.com\n\n";
+  '# SaaS Maker API Documentation\n\n> Drop-in backend services for SaaS apps. Base URL: https://api.sassmaker.com\n\n';
 
 function stripFrontmatter(content) {
-  return content.replace(/^---[\s\S]*?---\n?/, "").trimStart();
+  return content.replace(/^---[\s\S]*?---\n?/, '').trimStart();
 }
 
 function collectMarkdownFiles(dir) {
@@ -31,7 +25,7 @@ function collectMarkdownFiles(dir) {
     const stat = statSync(fullPath);
     if (stat.isDirectory()) {
       files.push(...collectMarkdownFiles(fullPath));
-    } else if (entry.endsWith(".md") || entry.endsWith(".mdx")) {
+    } else if (entry.endsWith('.md') || entry.endsWith('.mdx')) {
       files.push(fullPath);
     }
   }
@@ -51,22 +45,20 @@ for (const file of allFiles) {
 
 // Order: known sections first, then any new directories alphabetically
 const knownDirs = SECTION_ORDER.filter((d) => byDir.has(d));
-const unknownDirs = [...byDir.keys()]
-  .filter((d) => !SECTION_ORDER.includes(d))
-  .sort();
+const unknownDirs = [...byDir.keys()].filter((d) => !SECTION_ORDER.includes(d)).sort();
 const orderedDirs = [...knownDirs, ...unknownDirs];
 
 const orderedFiles = orderedDirs.flatMap((dir) => byDir.get(dir));
 
 const sections = orderedFiles.map((relativePath) => {
   const fullPath = join(docsRoot, relativePath);
-  const raw = readFileSync(fullPath, "utf-8");
+  const raw = readFileSync(fullPath, 'utf-8');
   return stripFrontmatter(raw);
 });
 
-const output = HEADER + sections.join("\n---\n\n");
+const output = HEADER + sections.join('\n---\n\n');
 
-writeFileSync(outputPath, output, "utf-8");
+writeFileSync(outputPath, output, 'utf-8');
 console.log(
   `Generated ${outputPath} (${orderedFiles.length} files from ${orderedDirs.length} sections)`
 );

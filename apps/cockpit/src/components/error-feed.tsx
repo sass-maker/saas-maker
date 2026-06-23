@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent, Badge } from "@saas-maker/ui";
-import { AlertCircle, Terminal, Clock, RefreshCcw, Zap } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import { AgentTerminal } from "./agent-terminal";
+import { useEffect, useState } from 'react';
+import { Card, CardHeader, CardTitle, CardContent, Badge } from '@saas-maker/ui';
+import { AlertCircle, Terminal, Clock, RefreshCcw, Zap } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
+import { AgentTerminal } from './agent-terminal';
 
 interface ErrorEvent {
   id: string;
@@ -26,11 +26,11 @@ export function ErrorFeed() {
   async function fetchErrors() {
     setRefreshing(true);
     try {
-      const res = await fetch("/api/fleet/errors?limit=10");
+      const res = await fetch('/api/fleet/errors?limit=10');
       const data = await res.json();
       setErrors(data.errors || []);
-    } catch (err) {
-      console.error("Failed to load error feed");
+    } catch (_err) {
+      console.error('Failed to load error feed');
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -40,25 +40,25 @@ export function ErrorFeed() {
   async function dispatchAgent(error: ErrorEvent) {
     setDispatchingId(error.id);
     try {
-      const res = await fetch("/api/fleet/dispatch", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('/api/fleet/dispatch', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           projectId: error.project_id,
           message: error.message,
           stack: error.stack,
         }),
       });
-      
+
       const data = await res.json();
       if (res.ok) {
         toast.success(`Foundry Agent dispatched to ${error.project_id}`);
         setActiveJob({ id: data.jobId, projectId: error.project_id });
       } else {
-        toast.error(data.error || "Dispatch failed");
+        toast.error(data.error || 'Dispatch failed');
       }
     } catch {
-      toast.error("Failed to connect to Dispatch API");
+      toast.error('Failed to connect to Dispatch API');
     } finally {
       setDispatchingId(null);
     }
@@ -68,7 +68,7 @@ export function ErrorFeed() {
     fetchErrors();
     const interval = setInterval(fetchErrors, 60000);
     return () => clearInterval(interval);
-  }, []);
+  }, [fetchErrors]);
 
   if (loading) return null;
 
@@ -82,9 +82,9 @@ export function ErrorFeed() {
               Global Error Feed
             </CardTitle>
           </div>
-          <Button 
-            variant="ghost" 
-            size="icon" 
+          <Button
+            variant="ghost"
+            size="icon"
             className="h-6 w-6 text-destructive/50 hover:text-destructive"
             onClick={fetchErrors}
             disabled={refreshing}
@@ -117,9 +117,9 @@ export function ErrorFeed() {
                         </span>
                       </div>
                       <div className="mt-3">
-                        <Button 
-                          size="sm" 
-                          variant="outline" 
+                        <Button
+                          size="sm"
+                          variant="outline"
                           className="h-7 text-[10px] gap-1.5 border-destructive/20 hover:bg-destructive/10 text-destructive font-bold uppercase tracking-tight"
                           onClick={() => dispatchAgent(error)}
                           disabled={dispatchingId === error.id}
@@ -133,7 +133,10 @@ export function ErrorFeed() {
                         </Button>
                       </div>
                     </div>
-                    <Badge variant="destructive" className="text-[9px] h-4 px-1 leading-none uppercase shrink-0">
+                    <Badge
+                      variant="destructive"
+                      className="text-[9px] h-4 px-1 leading-none uppercase shrink-0"
+                    >
                       {error.severity}
                     </Badge>
                   </div>
@@ -145,10 +148,10 @@ export function ErrorFeed() {
       </Card>
 
       {activeJob && (
-        <AgentTerminal 
-          jobId={activeJob.id} 
-          projectId={activeJob.projectId} 
-          onClose={() => setActiveJob(null)} 
+        <AgentTerminal
+          jobId={activeJob.id}
+          projectId={activeJob.projectId}
+          onClose={() => setActiveJob(null)}
         />
       )}
     </>

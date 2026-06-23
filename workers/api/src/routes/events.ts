@@ -97,7 +97,7 @@ events.post('/', async (c) => {
       row.payload,
       row.schema_version,
       row.idempotency_key,
-      row.occurred_at,
+      row.occurred_at
     )
   );
 
@@ -128,12 +128,17 @@ events.get('/', async (c) => {
     values.push(since);
   }
 
-  const limit = Math.min(Math.max(Number.parseInt(c.req.query('limit') ?? '100', 10) || 100, 1), 500);
+  const limit = Math.min(
+    Math.max(Number.parseInt(c.req.query('limit') ?? '100', 10) || 100, 1),
+    500
+  );
   values.push(limit);
 
   const { results } = await c.env.DB.prepare(
     `SELECT * FROM fleet_events WHERE ${conditions.join(' AND ')} ORDER BY created_at DESC LIMIT ?`
-  ).bind(...values).all();
+  )
+    .bind(...values)
+    .all();
 
   return c.json({ data: results ?? [] });
 });

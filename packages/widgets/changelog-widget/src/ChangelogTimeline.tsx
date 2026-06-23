@@ -22,13 +22,17 @@ export const ChangelogTimeline: React.FC<ChangelogTimelineProps> = ({
   const [loading, setLoading] = useState(true);
 
   const api = useMemo(() => createApiClient(projectId, apiBaseUrl), [projectId, apiBaseUrl]);
-  const themeClass = theme === 'light' ? 'smw-cl--light' : theme === 'dark' ? 'smw-cl--dark' : 'smw-cl--auto';
+  const themeClass =
+    theme === 'light' ? 'smw-cl--light' : theme === 'dark' ? 'smw-cl--dark' : 'smw-cl--auto';
 
   useEffect(() => {
-    api.list(maxItems).then((data) => {
-      setEntries(data);
-      setLoading(false);
-    }).catch(() => setLoading(false));
+    api
+      .list(maxItems)
+      .then((data) => {
+        setEntries(data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
   }, [api, maxItems]);
 
   if (loading) return null;
@@ -48,19 +52,13 @@ export const ChangelogTimeline: React.FC<ChangelogTimelineProps> = ({
           <div key={entry.id} className="smw-cl-entry">
             <div className={`smw-cl-dot smw-cl-dot--${entry.type}`} />
 
-            <div className="smw-cl-date">
-              {formatDate(entry.published_at || entry.created_at)}
-            </div>
+            <div className="smw-cl-date">{formatDate(entry.published_at || entry.created_at)}</div>
 
             <div className="smw-cl-badges">
               {entry.version && (
-                <span className="smw-cl-badge smw-cl-badge--version">
-                  v{entry.version}
-                </span>
+                <span className="smw-cl-badge smw-cl-badge--version">v{entry.version}</span>
               )}
-              <span className={`smw-cl-badge smw-cl-badge--${entry.type}`}>
-                {entry.type}
-              </span>
+              <span className={`smw-cl-badge smw-cl-badge--${entry.type}`}>{entry.type}</span>
             </div>
 
             <h3 className="smw-cl-title">{entry.title}</h3>

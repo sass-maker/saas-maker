@@ -54,7 +54,7 @@ async function main() {
     writeFileSync(
       npmUserConfig,
       `//registry.npmjs.org/:_authToken=${process.env.NPM_TOKEN}\n`,
-      'utf8',
+      'utf8'
     );
   }
 
@@ -103,7 +103,7 @@ async function main() {
 
   if (!dryRun && !otp && !process.env.NPM_TOKEN) {
     console.error(
-      '\nnpm deprecate requires 2FA on this account. Re-run with `--otp=<code>` or NPM_OTP, or set NPM_TOKEN (automation/granular write token with bypass 2FA).',
+      '\nnpm deprecate requires 2FA on this account. Re-run with `--otp=<code>` or NPM_OTP, or set NPM_TOKEN (automation/granular write token with bypass 2FA).'
     );
     process.exit(1);
   }

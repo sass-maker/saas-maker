@@ -1,13 +1,12 @@
-import { notFound } from "next/navigation";
-import { PublicFeedbackContent } from "./public-feedback-content";
+import { PublicFeedbackContent } from './public-feedback-content';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://api.sassmaker.com";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.sassmaker.com';
 
 export default async function PublicFeedbackPage({ params }: Props) {
   const { slug } = await params;

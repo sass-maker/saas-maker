@@ -42,9 +42,7 @@ function getBody(options: ApiCommandOptions): unknown {
     throw new Error('Use either --body or --body-file, not both.');
   }
 
-  const bodyText = options.bodyFile
-    ? readFileSync(options.bodyFile, 'utf-8')
-    : options.body;
+  const bodyText = options.bodyFile ? readFileSync(options.bodyFile, 'utf-8') : options.body;
   if (!bodyText) return undefined;
 
   try {

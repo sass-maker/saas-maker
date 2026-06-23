@@ -1,13 +1,29 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { AlertTriangle, CheckCircle2, Clipboard, ExternalLink, Eye, Play, Repeat2, Square, XCircle } from 'lucide-react';
+import {
+  AlertTriangle,
+  CheckCircle2,
+  Clipboard,
+  ExternalLink,
+  Eye,
+  Play,
+  Repeat2,
+  Square,
+  XCircle,
+} from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
@@ -180,12 +196,18 @@ export function DroidDialog({
   onClose,
 }: DroidDialogProps) {
   const acceptanceWarning = createPr && !acceptanceCommand.trim();
-  const browserTargetMissing = browserAcceptanceEnabled && !browserAcceptanceUrl.trim() && !browserAcceptanceStartCommand.trim();
+  const browserTargetMissing =
+    browserAcceptanceEnabled &&
+    !browserAcceptanceUrl.trim() &&
+    !browserAcceptanceStartCommand.trim();
 
   return (
-    <Dialog open={!!task} onOpenChange={open => {
-      if (!open) onClose();
-    }}>
+    <Dialog
+      open={!!task}
+      onOpenChange={(open) => {
+        if (!open) onClose();
+      }}
+    >
       <DialogContent className="w-[min(56rem,calc(100vw-2rem))] sm:max-w-4xl">
         <DialogHeader>
           <DialogTitle>Droid</DialogTitle>
@@ -197,13 +219,17 @@ export function DroidDialog({
                 <div className="text-sm font-medium text-foreground">{task.title}</div>
                 <div className="mt-1 flex flex-wrap gap-1 text-xs text-muted-foreground">
                   <span>{task.project_slug ?? 'Unassigned'}</span>
-                  {repoUrl ? <span className="font-mono">{repoUrl}</span> : <span>No repo selected</span>}
+                  {repoUrl ? (
+                    <span className="font-mono">{repoUrl}</span>
+                  ) : (
+                    <span>No repo selected</span>
+                  )}
                 </div>
               </div>
 
               <div className="space-y-1.5">
                 <Label>Mode</Label>
-                <Select value={mode} onValueChange={value => onModeChange(value as DroidMode)}>
+                <Select value={mode} onValueChange={(value) => onModeChange(value as DroidMode)}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
@@ -220,7 +246,7 @@ export function DroidDialog({
                   <Textarea
                     id="droid-command"
                     value={command}
-                    onChange={event => onCommandChange(event.target.value)}
+                    onChange={(event) => onCommandChange(event.target.value)}
                     rows={5}
                     className="min-h-28 resize-y font-mono text-xs"
                     placeholder="pnpm test"
@@ -232,13 +258,14 @@ export function DroidDialog({
                   <Textarea
                     id="droid-prompt"
                     value={prompt}
-                    onChange={event => onPromptChange(event.target.value)}
+                    onChange={(event) => onPromptChange(event.target.value)}
                     rows={8}
                     className="min-h-40 resize-y"
                     placeholder="Ask Droid to inspect or change the repo..."
                   />
                   <p className="text-xs text-muted-foreground">
-                    Uses Droid native tools pointed at DeepSeek. Requires the Droid Worker secret `DROID_DEEPSEEK_API_KEY`.
+                    Uses Droid native tools pointed at DeepSeek. Requires the Droid Worker secret
+                    `DROID_DEEPSEEK_API_KEY`.
                   </p>
                 </div>
               )}
@@ -250,14 +277,17 @@ export function DroidDialog({
                     <Input
                       id="droid-max-turns"
                       value={maxTurns}
-                      onChange={event => onMaxTurnsChange(event.target.value)}
+                      onChange={(event) => onMaxTurnsChange(event.target.value)}
                       inputMode="numeric"
                     />
                   </div>
                   <div className="space-y-3 rounded-lg border bg-muted/20 p-3">
                     <div className="flex items-center justify-between gap-3">
                       <div className="min-w-0">
-                        <Label htmlFor="droid-loop-mode" className="inline-flex items-center gap-1.5">
+                        <Label
+                          htmlFor="droid-loop-mode"
+                          className="inline-flex items-center gap-1.5"
+                        >
                           <Repeat2 className="h-3.5 w-3.5" />
                           Loop mode
                         </Label>
@@ -265,7 +295,11 @@ export function DroidDialog({
                           Bounded attempts with audit-only retry policy.
                         </p>
                       </div>
-                      <Switch id="droid-loop-mode" checked={loopEnabled} onCheckedChange={onLoopEnabledChange} />
+                      <Switch
+                        id="droid-loop-mode"
+                        checked={loopEnabled}
+                        onCheckedChange={onLoopEnabledChange}
+                      />
                     </div>
                     {loopEnabled ? (
                       <div className="grid gap-3 sm:grid-cols-[8rem_minmax(0,1fr)]">
@@ -274,15 +308,22 @@ export function DroidDialog({
                           <Input
                             id="droid-loop-attempts"
                             value={loopMaxAttempts}
-                            onChange={event => onLoopMaxAttemptsChange(event.target.value)}
+                            onChange={(event) => onLoopMaxAttemptsChange(event.target.value)}
                             inputMode="numeric"
                           />
                         </div>
                         <div className="flex items-center justify-between gap-3 rounded-md border bg-background px-3 py-2">
-                          <Label htmlFor="droid-loop-retry" className="text-xs text-muted-foreground">
+                          <Label
+                            htmlFor="droid-loop-retry"
+                            className="text-xs text-muted-foreground"
+                          >
                             Retry on failed checks
                           </Label>
-                          <Switch id="droid-loop-retry" checked={loopRetryOnFailure} onCheckedChange={onLoopRetryOnFailureChange} />
+                          <Switch
+                            id="droid-loop-retry"
+                            checked={loopRetryOnFailure}
+                            onCheckedChange={onLoopRetryOnFailureChange}
+                          />
                         </div>
                       </div>
                     ) : null}
@@ -297,7 +338,11 @@ export function DroidDialog({
                     Push changed Droid runs to a GitHub branch and open a draft PR.
                   </p>
                 </div>
-                <Switch id="droid-create-pr" checked={createPr} onCheckedChange={onCreatePrChange} />
+                <Switch
+                  id="droid-create-pr"
+                  checked={createPr}
+                  onCheckedChange={onCreatePrChange}
+                />
               </div>
 
               <div className="space-y-1.5">
@@ -305,13 +350,13 @@ export function DroidDialog({
                 <Input
                   id="droid-acceptance"
                   value={acceptanceCommand}
-                  onChange={event => onAcceptanceCommandChange(event.target.value)}
+                  onChange={(event) => onAcceptanceCommandChange(event.target.value)}
                   placeholder="pnpm test"
                   className="font-mono text-xs"
                 />
                 {acceptanceSuggestions.length > 0 ? (
                   <div className="flex flex-wrap gap-1.5">
-                    {acceptanceSuggestions.map(suggestion => (
+                    {acceptanceSuggestions.map((suggestion) => (
                       <Button
                         key={suggestion}
                         type="button"
@@ -328,7 +373,9 @@ export function DroidDialog({
                 {acceptanceWarning ? (
                   <div className="flex items-start gap-2 rounded-md border border-amber-500/35 bg-amber-500/10 p-2 text-xs text-amber-700 dark:text-amber-200">
                     <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-                    <span>Droid can open a PR without this, but no acceptance check will guard it.</span>
+                    <span>
+                      Droid can open a PR without this, but no acceptance check will guard it.
+                    </span>
                   </div>
                 ) : null}
                 <p className="text-xs text-muted-foreground">
@@ -357,7 +404,7 @@ export function DroidDialog({
                       <Input
                         id="droid-browser-goal"
                         value={browserAcceptanceGoal}
-                        onChange={event => onBrowserAcceptanceGoalChange(event.target.value)}
+                        onChange={(event) => onBrowserAcceptanceGoalChange(event.target.value)}
                         placeholder="Verify the Droid dialog shows acceptance, artifacts, and events"
                       />
                     </div>
@@ -366,7 +413,7 @@ export function DroidDialog({
                       <Input
                         id="droid-browser-url"
                         value={browserAcceptanceUrl}
-                        onChange={event => onBrowserAcceptanceUrlChange(event.target.value)}
+                        onChange={(event) => onBrowserAcceptanceUrlChange(event.target.value)}
                         placeholder="https://preview-or-deploy.example.com/tasks"
                       />
                     </div>
@@ -376,7 +423,9 @@ export function DroidDialog({
                         <Input
                           id="droid-browser-start"
                           value={browserAcceptanceStartCommand}
-                          onChange={event => onBrowserAcceptanceStartCommandChange(event.target.value)}
+                          onChange={(event) =>
+                            onBrowserAcceptanceStartCommandChange(event.target.value)
+                          }
                           placeholder="pnpm dev --host 0.0.0.0 --port 3000"
                           className="font-mono text-xs"
                         />
@@ -386,7 +435,7 @@ export function DroidDialog({
                         <Input
                           id="droid-browser-port"
                           value={browserAcceptancePort}
-                          onChange={event => onBrowserAcceptancePortChange(event.target.value)}
+                          onChange={(event) => onBrowserAcceptancePortChange(event.target.value)}
                           inputMode="numeric"
                         />
                       </div>
@@ -396,12 +445,17 @@ export function DroidDialog({
                       <Input
                         id="droid-browser-assert"
                         value={browserAcceptanceAssertText}
-                        onChange={event => onBrowserAcceptanceAssertTextChange(event.target.value)}
+                        onChange={(event) =>
+                          onBrowserAcceptanceAssertTextChange(event.target.value)
+                        }
                         placeholder="Droid,Acceptance,Events"
                       />
                     </div>
                     <div className="flex items-center justify-between gap-3">
-                      <Label htmlFor="droid-browser-keep-open" className="text-xs text-muted-foreground">
+                      <Label
+                        htmlFor="droid-browser-keep-open"
+                        className="text-xs text-muted-foreground"
+                      >
                         Keep live browser open briefly
                       </Label>
                       <Switch
@@ -426,7 +480,7 @@ export function DroidDialog({
                   <Input
                     id="droid-repo"
                     value={repoUrl}
-                    onChange={event => onRepoUrlChange(event.target.value)}
+                    onChange={(event) => onRepoUrlChange(event.target.value)}
                     placeholder="https://github.com/org/repo.git"
                   />
                   <p className="text-xs text-muted-foreground">
@@ -438,7 +492,7 @@ export function DroidDialog({
                   <Input
                     id="droid-branch"
                     value={branch}
-                    onChange={event => onBranchChange(event.target.value)}
+                    onChange={(event) => onBranchChange(event.target.value)}
                     placeholder="main"
                   />
                 </div>
@@ -449,7 +503,7 @@ export function DroidDialog({
                 <Input
                   id="droid-cwd"
                   value={cwd}
-                  onChange={event => onCwdChange(event.target.value)}
+                  onChange={(event) => onCwdChange(event.target.value)}
                   placeholder="packages/cli"
                 />
               </div>
@@ -458,7 +512,15 @@ export function DroidDialog({
                 <Button type="button" variant="outline" onClick={onClose}>
                   Close
                 </Button>
-                <Button type="button" onClick={onRun} disabled={running || browserTargetMissing || (mode === 'command' ? !command.trim() : !prompt.trim())}>
+                <Button
+                  type="button"
+                  onClick={onRun}
+                  disabled={
+                    running ||
+                    browserTargetMissing ||
+                    (mode === 'command' ? !command.trim() : !prompt.trim())
+                  }
+                >
                   <Play className="h-4 w-4" />
                   {running ? 'Running...' : mode === 'command' ? 'Run in Droid' : 'Ask Droid'}
                 </Button>
@@ -512,7 +574,9 @@ function DroidStats({ stats }: { stats: DroidRunStats | null }) {
       <div className="flex items-center justify-between gap-2">
         <h3 className="text-sm font-semibold text-foreground">Health</h3>
         {stats.avg_duration_ms !== null ? (
-          <span className="text-xs text-muted-foreground">avg {Math.round(stats.avg_duration_ms / 1000)}s</span>
+          <span className="text-xs text-muted-foreground">
+            avg {Math.round(stats.avg_duration_ms / 1000)}s
+          </span>
         ) : null}
       </div>
       <div className="mt-2 grid grid-cols-6 gap-2">
@@ -529,7 +593,8 @@ function DroidStats({ stats }: { stats: DroidRunStats | null }) {
         </p>
       ) : null}
       <p className="mt-2 text-[11px] text-muted-foreground">
-        idle after {formatDuration(stats.idle_after_seconds ?? 360)}; stale reap after {formatDuration(stats.stale_after_seconds ?? 900)}
+        idle after {formatDuration(stats.idle_after_seconds ?? 360)}; stale reap after{' '}
+        {formatDuration(stats.stale_after_seconds ?? 900)}
       </p>
     </div>
   );
@@ -568,22 +633,37 @@ function DroidResult({
               </Button>
             ) : null}
             {canControl ? (
-              <Button type="button" size="sm" variant="outline" onClick={onReconcile} disabled={running}>
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                onClick={onReconcile}
+                disabled={running}
+              >
                 {reconcileLabel}
               </Button>
             ) : null}
             {canMarkStale ? (
-              <Button type="button" size="sm" variant="outline" onClick={onMarkStale} disabled={running}>
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                onClick={onMarkStale}
+                disabled={running}
+              >
                 Mark stale
               </Button>
             ) : null}
-            <Badge variant="outline" className={cn(
-              run.status === 'completed'
-                ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-600 dark:text-emerald-300'
-                : run.status === 'failed'
-                  ? 'border-red-500/45 bg-red-500/10 text-red-600 dark:text-red-300'
-                  : 'border-amber-500/45 bg-amber-500/10 text-amber-600 dark:text-amber-300'
-            )}>
+            <Badge
+              variant="outline"
+              className={cn(
+                run.status === 'completed'
+                  ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-600 dark:text-emerald-300'
+                  : run.status === 'failed'
+                    ? 'border-red-500/45 bg-red-500/10 text-red-600 dark:text-red-300'
+                    : 'border-amber-500/45 bg-amber-500/10 text-amber-600 dark:text-amber-300'
+              )}
+            >
               {run.status}
             </Badge>
           </div>
@@ -591,9 +671,17 @@ function DroidResult({
       </div>
       {run ? (
         <div className="mt-2 space-y-1 text-xs text-muted-foreground">
-          <div><span className="text-foreground">Run:</span> <span className="font-mono">{run.id}</span></div>
-          <div><span className="text-foreground">Exit:</span> {run.exit_code ?? 'pending'}</div>
-          <div><span className="text-foreground">Duration:</span> {run.duration_ms ? `${Math.round(run.duration_ms / 1000)}s` : 'pending'}</div>
+          <div>
+            <span className="text-foreground">Run:</span>{' '}
+            <span className="font-mono">{run.id}</span>
+          </div>
+          <div>
+            <span className="text-foreground">Exit:</span> {run.exit_code ?? 'pending'}
+          </div>
+          <div>
+            <span className="text-foreground">Duration:</span>{' '}
+            {run.duration_ms ? `${Math.round(run.duration_ms / 1000)}s` : 'pending'}
+          </div>
           {loopStatus ? (
             <div className="mt-2 rounded-md border bg-background p-2 text-[11px]">
               <div className="flex flex-wrap items-center justify-between gap-2">
@@ -607,11 +695,15 @@ function DroidResult({
                 attempt {loopStatus.attempt} of {loopStatus.maxAttempts}
                 {loopStatus.retryOnFailure ? ', retry on failed checks' : ', no retry'}
               </p>
-              {loopStatus.message ? <p className="mt-1 text-muted-foreground">{loopStatus.message}</p> : null}
+              {loopStatus.message ? (
+                <p className="mt-1 text-muted-foreground">{loopStatus.message}</p>
+              ) : null}
             </div>
           ) : null}
           {run.summary ? <p className="pt-1 text-sm text-foreground">{run.summary}</p> : null}
-          {run.error_message ? <p className="pt-1 text-sm text-red-500">{run.error_message}</p> : null}
+          {run.error_message ? (
+            <p className="pt-1 text-sm text-red-500">{run.error_message}</p>
+          ) : null}
           {finalReport ? (
             <div className="mt-2 space-y-2 rounded-md border bg-background p-2">
               <div className="flex flex-wrap items-center justify-between gap-2">
@@ -628,7 +720,9 @@ function DroidResult({
                   </a>
                 ) : null}
               </div>
-              {finalReport.summary ? <p className="text-xs text-foreground">{finalReport.summary}</p> : null}
+              {finalReport.summary ? (
+                <p className="text-xs text-foreground">{finalReport.summary}</p>
+              ) : null}
               {finalReport.prBranch ? (
                 <div className="break-all text-[11px] text-muted-foreground">
                   <span className="text-foreground">Branch:</span> {finalReport.prBranch}
@@ -636,13 +730,17 @@ function DroidResult({
               ) : null}
               {finalReport.filesChanged.length > 0 ? (
                 <div className="text-[11px] text-muted-foreground">
-                  <span className="text-foreground">Files:</span> {finalReport.filesChanged.slice(0, 4).join(', ')}
-                  {finalReport.filesChanged.length > 4 ? ` +${finalReport.filesChanged.length - 4}` : ''}
+                  <span className="text-foreground">Files:</span>{' '}
+                  {finalReport.filesChanged.slice(0, 4).join(', ')}
+                  {finalReport.filesChanged.length > 4
+                    ? ` +${finalReport.filesChanged.length - 4}`
+                    : ''}
                 </div>
               ) : null}
               {finalReport.checksRun.length > 0 ? (
                 <div className="text-[11px] text-muted-foreground">
-                  <span className="text-foreground">Checks:</span> {finalReport.checksRun.join(', ')}
+                  <span className="text-foreground">Checks:</span>{' '}
+                  {finalReport.checksRun.join(', ')}
                 </div>
               ) : null}
               {finalReport.nextAction ? (
@@ -661,31 +759,46 @@ function DroidResult({
 }
 
 function DroidAcceptance({ events }: { events: DroidRunEvent[] }) {
-  const acceptance = useMemo(() => getLatestEvent(events, ['acceptance_passed', 'acceptance_failed']), [events]);
+  const acceptance = useMemo(
+    () => getLatestEvent(events, ['acceptance_passed', 'acceptance_failed']),
+    [events]
+  );
   if (!acceptance) return null;
   const passed = acceptance.type === 'acceptance_passed';
   return (
-    <div className={cn(
-      'rounded-lg border p-3',
-      passed
-        ? 'border-emerald-500/35 bg-emerald-500/10'
-        : 'border-red-500/40 bg-red-500/10'
-    )}>
+    <div
+      className={cn(
+        'rounded-lg border p-3',
+        passed ? 'border-emerald-500/35 bg-emerald-500/10' : 'border-red-500/40 bg-red-500/10'
+      )}
+    >
       <div className="flex items-center justify-between gap-2">
         <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
-          {passed ? <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-300" /> : <XCircle className="h-4 w-4 text-red-600 dark:text-red-300" />}
+          {passed ? (
+            <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-300" />
+          ) : (
+            <XCircle className="h-4 w-4 text-red-600 dark:text-red-300" />
+          )}
           Acceptance
         </h3>
-        <Badge variant="outline" className={passed
-          ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-200'
-          : 'border-red-500/40 bg-red-500/10 text-red-700 dark:text-red-200'
-        }>
+        <Badge
+          variant="outline"
+          className={
+            passed
+              ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-200'
+              : 'border-red-500/40 bg-red-500/10 text-red-700 dark:text-red-200'
+          }
+        >
           {passed ? 'passed' : 'failed'}
         </Badge>
       </div>
       <div className="mt-2 space-y-1 text-xs text-muted-foreground">
-        {acceptance.command ? <div className="break-all font-mono text-foreground">{acceptance.command}</div> : null}
-        {acceptance.cwd ? <div className="break-all font-mono text-[11px]">{acceptance.cwd}</div> : null}
+        {acceptance.command ? (
+          <div className="break-all font-mono text-foreground">{acceptance.command}</div>
+        ) : null}
+        {acceptance.cwd ? (
+          <div className="break-all font-mono text-[11px]">{acceptance.cwd}</div>
+        ) : null}
         {acceptance.message ? <p>{acceptance.message}</p> : null}
         {acceptance.exit_code !== null ? <p>exit {acceptance.exit_code}</p> : null}
       </div>
@@ -693,9 +806,21 @@ function DroidAcceptance({ events }: { events: DroidRunEvent[] }) {
   );
 }
 
-function DroidBrowserAcceptance({ events, artifacts }: { events: DroidRunEvent[]; artifacts: DroidRunArtifact[] }) {
-  const event = useMemo(() => getLatestEvent(events, ['browser_acceptance_passed', 'browser_acceptance_failed']), [events]);
-  const artifact = useMemo(() => [...artifacts].reverse().find(item => item.type === 'browser_acceptance') ?? null, [artifacts]);
+function DroidBrowserAcceptance({
+  events,
+  artifacts,
+}: {
+  events: DroidRunEvent[];
+  artifacts: DroidRunArtifact[];
+}) {
+  const event = useMemo(
+    () => getLatestEvent(events, ['browser_acceptance_passed', 'browser_acceptance_failed']),
+    [events]
+  );
+  const artifact = useMemo(
+    () => [...artifacts].reverse().find((item) => item.type === 'browser_acceptance') ?? null,
+    [artifacts]
+  );
   if (!event && !artifact) return null;
   const passed = event?.type === 'browser_acceptance_passed';
   const metadata = parseDroidMetadata((artifact ?? event)?.metadata ?? '{}');
@@ -704,38 +829,60 @@ function DroidBrowserAcceptance({ events, artifacts }: { events: DroidRunEvent[]
   const title = stringFromUnknown(metadata.title);
   const sessionId = stringFromUnknown(metadata.session_id);
   return (
-    <div className={cn(
-      'rounded-lg border p-3',
-      passed
-        ? 'border-emerald-500/35 bg-emerald-500/10'
-        : 'border-red-500/40 bg-red-500/10'
-    )}>
+    <div
+      className={cn(
+        'rounded-lg border p-3',
+        passed ? 'border-emerald-500/35 bg-emerald-500/10' : 'border-red-500/40 bg-red-500/10'
+      )}
+    >
       <div className="flex items-center justify-between gap-2">
         <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
-          <Eye className={cn('h-4 w-4', passed ? 'text-emerald-600 dark:text-emerald-300' : 'text-red-600 dark:text-red-300')} />
+          <Eye
+            className={cn(
+              'h-4 w-4',
+              passed ? 'text-emerald-600 dark:text-emerald-300' : 'text-red-600 dark:text-red-300'
+            )}
+          />
           Browser
         </h3>
-        <Badge variant="outline" className={passed
-          ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-200'
-          : 'border-red-500/40 bg-red-500/10 text-red-700 dark:text-red-200'
-        }>
+        <Badge
+          variant="outline"
+          className={
+            passed
+              ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-200'
+              : 'border-red-500/40 bg-red-500/10 text-red-700 dark:text-red-200'
+          }
+        >
           {passed ? 'passed' : 'failed'}
         </Badge>
       </div>
       <div className="mt-2 space-y-1 text-xs text-muted-foreground">
         {url ? (
-          <a href={url} target="_blank" rel="noreferrer" className="inline-flex max-w-full items-center gap-1 text-blue-600 hover:underline dark:text-blue-300">
+          <a
+            href={url}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex max-w-full items-center gap-1 text-blue-600 hover:underline dark:text-blue-300"
+          >
             <span className="truncate">{url}</span>
             <ExternalLink className="h-3 w-3 shrink-0" />
           </a>
         ) : null}
-        {title ? <p><span className="text-foreground">Title:</span> {title}</p> : null}
+        {title ? (
+          <p>
+            <span className="text-foreground">Title:</span> {title}
+          </p>
+        ) : null}
         {sessionId ? <p className="break-all font-mono text-[11px]">session {sessionId}</p> : null}
         {event?.message ? <p>{event.message}</p> : null}
       </div>
       {screenshot ? (
         <div className="mt-2 overflow-hidden rounded-md border bg-background">
-          <img src={screenshot} alt="Droid browser acceptance screenshot" className="h-auto w-full" />
+          <img
+            src={screenshot}
+            alt="Droid browser acceptance screenshot"
+            className="h-auto w-full"
+          />
         </div>
       ) : null}
     </div>
@@ -748,7 +895,7 @@ function DroidArtifacts({ artifacts }: { artifacts: DroidRunArtifact[] }) {
     <div className="rounded-lg border bg-muted/15 p-3">
       <h3 className="text-sm font-semibold text-foreground">Artifacts</h3>
       <div className="mt-2 space-y-2">
-        {artifacts.map(artifact => {
+        {artifacts.map((artifact) => {
           const metadata = parseDroidMetadata(artifact.metadata);
           const stat = typeof metadata.stat === 'string' ? metadata.stat.trim().split('\n')[0] : '';
           const patchBytes = typeof metadata.patch_bytes === 'number' ? metadata.patch_bytes : null;
@@ -757,14 +904,25 @@ function DroidArtifacts({ artifacts }: { artifacts: DroidRunArtifact[] }) {
             <div key={artifact.id} className="rounded-md border bg-background p-2 text-xs">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <span className="font-medium text-foreground">{artifact.name}</span>
-                <Badge variant="outline" className="border-blue-500/40 bg-blue-500/10 text-blue-600 dark:text-blue-300">
+                <Badge
+                  variant="outline"
+                  className="border-blue-500/40 bg-blue-500/10 text-blue-600 dark:text-blue-300"
+                >
                   {artifact.type}
                 </Badge>
               </div>
               {stat ? <p className="mt-1 text-muted-foreground">{stat}</p> : null}
-              {patchBytes !== null ? <p className="mt-1 text-muted-foreground">{patchBytes.toLocaleString()} bytes captured in audit log</p> : null}
+              {patchBytes !== null ? (
+                <p className="mt-1 text-muted-foreground">
+                  {patchBytes.toLocaleString()} bytes captured in audit log
+                </p>
+              ) : null}
               {screenshot ? (
-                <img src={screenshot} alt={artifact.name} className="mt-2 h-auto w-full rounded border" />
+                <img
+                  src={screenshot}
+                  alt={artifact.name}
+                  className="mt-2 h-auto w-full rounded border"
+                />
               ) : null}
             </div>
           );
@@ -790,7 +948,13 @@ function DroidEvents({ events }: { events: DroidRunEvent[] }) {
     <div className="max-h-[26rem] overflow-y-auto rounded-lg border bg-background p-3">
       <div className="mb-2 flex items-center justify-between gap-2">
         <h3 className="text-sm font-semibold text-foreground">Events</h3>
-        <Button type="button" size="sm" variant="outline" onClick={copyLogs} disabled={events.length === 0}>
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          onClick={copyLogs}
+          disabled={events.length === 0}
+        >
           <Clipboard className="h-3.5 w-3.5" />
           {copied ? 'Copied' : 'Copy'}
         </Button>
@@ -799,16 +963,26 @@ function DroidEvents({ events }: { events: DroidRunEvent[] }) {
         <p className="text-sm text-muted-foreground">No Droid events yet.</p>
       ) : (
         <div className="space-y-2">
-          {events.map(event => (
+          {events.map((event) => (
             <article key={event.id} className="rounded-md border bg-muted/20 p-2">
               <div className="flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
                 <span className="font-medium text-foreground">{event.type}</span>
                 <span>{formatRunTime(event.created_at)}</span>
                 {event.exit_code !== null ? <span>exit {event.exit_code}</span> : null}
               </div>
-              {event.command ? <div className="mt-1 break-all font-mono text-xs text-foreground">{event.command}</div> : null}
-              {event.cwd ? <div className="mt-1 break-all font-mono text-[11px] text-muted-foreground">{event.cwd}</div> : null}
-              {event.message ? <p className="mt-1 text-xs text-muted-foreground">{event.message}</p> : null}
+              {event.command ? (
+                <div className="mt-1 break-all font-mono text-xs text-foreground">
+                  {event.command}
+                </div>
+              ) : null}
+              {event.cwd ? (
+                <div className="mt-1 break-all font-mono text-[11px] text-muted-foreground">
+                  {event.cwd}
+                </div>
+              ) : null}
+              {event.message ? (
+                <p className="mt-1 text-xs text-muted-foreground">{event.message}</p>
+              ) : null}
               {event.stdout || event.stderr ? (
                 <pre className="mt-2 max-h-32 overflow-auto whitespace-pre-wrap rounded bg-black/75 p-2 text-[11px] leading-5 text-zinc-100">
                   {[event.stdout, event.stderr].filter(Boolean).join('\n')}
@@ -824,7 +998,7 @@ function DroidEvents({ events }: { events: DroidRunEvent[] }) {
 
 function getLatestEvent(events: DroidRunEvent[], types: string[]) {
   const allowed = new Set(types);
-  return [...events].reverse().find(event => allowed.has(event.type)) ?? null;
+  return [...events].reverse().find((event) => allowed.has(event.type)) ?? null;
 }
 
 function getFinalReport(events: DroidRunEvent[]) {
@@ -859,18 +1033,20 @@ function numberFromUnknown(value: unknown): number | undefined {
 }
 
 function formatDroidEvents(events: DroidRunEvent[]) {
-  return events.map(event => {
-    const lines = [
-      `[${formatRunTime(event.created_at)}] ${event.type}`,
-      event.command ? `command: ${event.command}` : '',
-      event.cwd ? `cwd: ${event.cwd}` : '',
-      event.exit_code !== null ? `exit: ${event.exit_code}` : '',
-      event.message ? `message: ${event.message}` : '',
-      event.stdout ? `stdout:\n${event.stdout}` : '',
-      event.stderr ? `stderr:\n${event.stderr}` : '',
-    ].filter(Boolean);
-    return lines.join('\n');
-  }).join('\n\n');
+  return events
+    .map((event) => {
+      const lines = [
+        `[${formatRunTime(event.created_at)}] ${event.type}`,
+        event.command ? `command: ${event.command}` : '',
+        event.cwd ? `cwd: ${event.cwd}` : '',
+        event.exit_code !== null ? `exit: ${event.exit_code}` : '',
+        event.message ? `message: ${event.message}` : '',
+        event.stdout ? `stdout:\n${event.stdout}` : '',
+        event.stderr ? `stderr:\n${event.stderr}` : '',
+      ].filter(Boolean);
+      return lines.join('\n');
+    })
+    .join('\n\n');
 }
 
 function stringArrayFromUnknown(value: unknown): string[] {
@@ -885,7 +1061,13 @@ function stringFromUnknown(value: unknown): string {
 function formatRunTime(value: string) {
   const time = new Date(value);
   if (!Number.isFinite(time.getTime())) return value;
-  return time.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'UTC' });
+  return time.toLocaleString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'UTC',
+  });
 }
 
 function formatDuration(seconds: number) {
@@ -897,7 +1079,7 @@ function formatDuration(seconds: number) {
 function parseDroidMetadata(value: string): Record<string, unknown> {
   try {
     const parsed = JSON.parse(value);
-    return parsed && typeof parsed === 'object' ? parsed as Record<string, unknown> : {};
+    return parsed && typeof parsed === 'object' ? (parsed as Record<string, unknown>) : {};
   } catch {
     return {};
   }

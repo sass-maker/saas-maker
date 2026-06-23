@@ -107,10 +107,9 @@ test.describe('Feedback', () => {
   });
 
   test('list feedback via dashboard inbox returns paginated shape', async ({ request }) => {
-    const res = await request.get(
-      `${API_BASE}/v1/feedback/inbox/${PROJECT_ID}`,
-      { headers: authHeaders() }
-    );
+    const res = await request.get(`${API_BASE}/v1/feedback/inbox/${PROJECT_ID}`, {
+      headers: authHeaders(),
+    });
 
     expect(res.status()).toBe(200);
     const body = await res.json();
@@ -134,10 +133,9 @@ test.describe('Feedback', () => {
     });
     const feedbackId = (await createRes.json()).id;
 
-    const deleteRes = await request.delete(
-      `${API_BASE}/v1/feedback/${feedbackId}`,
-      { headers: authHeaders() }
-    );
+    const deleteRes = await request.delete(`${API_BASE}/v1/feedback/${feedbackId}`, {
+      headers: authHeaders(),
+    });
     expect(deleteRes.status()).toBe(200);
     const deleteBody = await deleteRes.json();
     expect(deleteBody.ok).toBe(true);

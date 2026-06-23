@@ -30,7 +30,9 @@ console.log(`workspace: ${workspace}`);
 console.log(`mode: ${mock ? 'mock' : `deepseek:${model}`}`);
 
 for (let turn = 1; turn <= maxTurns; turn += 1) {
-  const action = mock ? mockPlan.shift() || { action: 'final', summary: 'Mock run completed.' } : await requestDeepSeekAction(messages, model);
+  const action = mock
+    ? mockPlan.shift() || { action: 'final', summary: 'Mock run completed.' }
+    : await requestDeepSeekAction(messages, model);
   logEvent('agent_step', { turn, action: scrubAction(action) });
   transcript.push(`turn ${turn}: ${summarizeAction(action)}`);
 
@@ -40,7 +42,12 @@ for (let turn = 1; turn <= maxTurns; turn += 1) {
   }
 
   const result = await executeTool(action, { workspace, timeoutSeconds });
-  logEvent('tool_result', { turn, ok: result.ok, exitCode: result.exitCode, output: truncate(result.output, 1200) });
+  logEvent('tool_result', {
+    turn,
+    ok: result.ok,
+    exitCode: result.exitCode,
+    output: truncate(result.output, 1200),
+  });
   transcript.push(result.output);
   messages.push({ role: 'assistant', content: JSON.stringify(action) });
   messages.push({
@@ -70,7 +77,9 @@ function parseArgs(argv) {
     else if (arg === '--timeout-seconds') parsed.timeoutSeconds = argv[++i];
     else if (arg === '--model') parsed.model = argv[++i];
     else if (arg === '--help' || arg === '-h') {
-      console.log(`Usage: node scripts/droid-headless-local.mjs --workspace PATH --prompt "task" [--mock]`);
+      console.log(
+        `Usage: node scripts/droid-headless-local.mjs --workspace PATH --prompt "task" [--mock]`
+      );
       process.exit(0);
     } else {
       fail(`Unknown argument: ${arg}`);
@@ -107,18 +116,21 @@ function buildSystemPrompt(cwd) {
 }
 
 function buildMockPlan(userPrompt) {
-  const fileMatch = userPrompt.match(/(?:create|write|add)\s+([A-Za-z0-9._/-]+\.(?:md|txt|json|ts|tsx|js|mjs))/i);
+  const fileMatch = userPrompt.match(
+    /(?:create|write|add)\s+([A-Za-z0-9._/-]+\.(?:md|txt|json|ts|tsx|js|mjs))/i
+  );
   const filePath = fileMatch?.[1] || 'droid-local-smoke.md';
-  const content = [
-    '# Droid Local Smoke',
-    '',
-    'Native Droid local headless smoke passed.',
-    '',
-  ].join('\n');
+  const content = ['# Droid Local Smoke', '', 'Native Droid local headless smoke passed.', ''].join(
+    '\n'
+  );
   return [
     { action: 'list', path: '.' },
     { action: 'write', path: filePath, content },
-    { action: 'command', command: `test -f ${shellQuote(filePath)} && sed -n '1,5p' ${shellQuote(filePath)}`, timeout_seconds: 30 },
+    {
+      action: 'command',
+      command: `test -f ${shellQuote(filePath)} && sed -n '1,5p' ${shellQuote(filePath)}`,
+      timeout_seconds: 30,
+    },
     { action: 'final', summary: `Created ${filePath} and verified it exists.` },
   ];
 }
@@ -165,15 +177,29 @@ function parseAction(content) {
   const parsed = JSON.parse(jsonText);
   if (parsed.action === 'list') return { action: 'list', path: optionalString(parsed.path) };
   if (parsed.action === 'read' && typeof parsed.path === 'string') {
-    return { action: 'read', path: parsed.path, start_line: optionalNumber(parsed.start_line), end_line: optionalNumber(parsed.end_line) };
+    return {
+      action: 'read',
+      path: parsed.path,
+      start_line: optionalNumber(parsed.start_line),
+      end_line: optionalNumber(parsed.end_line),
+    };
   }
-  if (parsed.action === 'write' && typeof parsed.path === 'string' && typeof parsed.content === 'string') {
+  if (
+    parsed.action === 'write' &&
+    typeof parsed.path === 'string' &&
+    typeof parsed.content === 'string'
+  ) {
     return { action: 'write', path: parsed.path, content: parsed.content };
   }
   if (parsed.action === 'command' && typeof parsed.command === 'string') {
-    return { action: 'command', command: parsed.command, timeout_seconds: optionalNumber(parsed.timeout_seconds) };
+    return {
+      action: 'command',
+      command: parsed.command,
+      timeout_seconds: optionalNumber(parsed.timeout_seconds),
+    };
   }
-  if (parsed.action === 'final' && typeof parsed.summary === 'string') return { action: 'final', summary: parsed.summary };
+  if (parsed.action === 'final' && typeof parsed.summary === 'string')
+    return { action: 'final', summary: parsed.summary };
   fail(`Invalid action: ${JSON.stringify(parsed).slice(0, 500)}`);
 }
 
@@ -191,11 +217,14 @@ async function executeTool(action, context) {
 
 async function listTool(action, { workspace }) {
   const target = resolveSafePath(workspace, action.path || '.');
-  return commandTool({
-    action: 'command',
-    command: `find ${shellQuote(path.relative(workspace, target) || '.')} -maxdepth 2 \\( -path '*/.git' -o -path '*/node_modules' -o -path '*/.next' -o -path '*/dist' \\) -prune -o -print | sort | head -200`,
-    timeout_seconds: 30,
-  }, { workspace, timeoutSeconds: 30 });
+  return commandTool(
+    {
+      action: 'command',
+      command: `find ${shellQuote(path.relative(workspace, target) || '.')} -maxdepth 2 \\( -path '*/.git' -o -path '*/node_modules' -o -path '*/.next' -o -path '*/dist' \\) -prune -o -print | sort | head -200`,
+      timeout_seconds: 30,
+    },
+    { workspace, timeoutSeconds: 30 }
+  );
 }
 
 async function readTool(action, { workspace }) {
@@ -203,8 +232,15 @@ async function readTool(action, { workspace }) {
   const text = await readFile(target, 'utf8');
   const lines = text.split('\n');
   const start = clampNumber(action.start_line || 1, 1, lines.length || 1);
-  const end = clampNumber(action.end_line || start + 199, start, Math.min(lines.length || 1, start + 239));
-  const output = lines.slice(start - 1, end).map((line, index) => `${start + index}\t${line}`).join('\n');
+  const end = clampNumber(
+    action.end_line || start + 199,
+    start,
+    Math.min(lines.length || 1, start + 239)
+  );
+  const output = lines
+    .slice(start - 1, end)
+    .map((line, index) => `${start + index}\t${line}`)
+    .join('\n');
   return { ok: true, output };
 }
 
@@ -212,7 +248,11 @@ async function writeTool(action, { workspace }) {
   const target = resolveSafePath(workspace, action.path);
   await mkdir(path.dirname(target), { recursive: true });
   await writeFile(target, action.content);
-  return { ok: true, exitCode: 0, output: `wrote ${action.path} (${Buffer.byteLength(action.content)} bytes)` };
+  return {
+    ok: true,
+    exitCode: 0,
+    output: `wrote ${action.path} (${Buffer.byteLength(action.content)} bytes)`,
+  };
 }
 
 function commandTool(action, { workspace, timeoutSeconds }) {
@@ -238,8 +278,11 @@ function commandTool(action, { workspace, timeoutSeconds }) {
       const timedOut = signal === 'SIGTERM';
       resolve({
         ok: code === 0 && !timedOut,
-        exitCode: timedOut ? 124 : code ?? 1,
-        output: truncate([stdout, stderr ? `stderr:\n${stderr}` : ''].filter(Boolean).join('\n'), 20000),
+        exitCode: timedOut ? 124 : (code ?? 1),
+        output: truncate(
+          [stdout, stderr ? `stderr:\n${stderr}` : ''].filter(Boolean).join('\n'),
+          20000
+        ),
       });
     });
   });

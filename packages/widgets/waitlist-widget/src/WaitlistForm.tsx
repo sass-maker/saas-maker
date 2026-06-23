@@ -22,21 +22,17 @@ export const WaitlistForm: React.FC<WaitlistFormProps> = ({
   const [position, setPosition] = useState<number | null>(null);
   const [count, setCount] = useState<number | null>(null);
 
-  const api = useMemo(
-    () => createApiClient(projectId, apiBaseUrl),
-    [projectId, apiBaseUrl],
-  );
+  const api = useMemo(() => createApiClient(projectId, apiBaseUrl), [projectId, apiBaseUrl]);
 
   const themeClass =
-    theme === 'light'
-      ? 'smw-wl--light'
-      : theme === 'dark'
-        ? 'smw-wl--dark'
-        : 'smw-wl--auto';
+    theme === 'light' ? 'smw-wl--light' : theme === 'dark' ? 'smw-wl--dark' : 'smw-wl--auto';
 
   useEffect(() => {
     if (showCount) {
-      api.getCount().then(setCount).catch(() => {});
+      api
+        .getCount()
+        .then(setCount)
+        .catch(() => {});
     }
   }, [api, showCount]);
 

@@ -43,11 +43,7 @@ const CloseIcon: React.FC = () => (
   </svg>
 );
 
-export const ImageUpload: React.FC<ImageUploadProps> = ({
-  api,
-  imageUrl,
-  onImageUrl,
-}) => {
+export const ImageUpload: React.FC<ImageUploadProps> = ({ api, imageUrl, onImageUrl }) => {
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
@@ -93,7 +89,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         setProgress(0);
       }
     },
-    [api, onImageUrl],
+    [api, onImageUrl, validateFile]
   );
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
@@ -116,7 +112,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       const file = e.dataTransfer.files[0];
       if (file) uploadFile(file);
     },
-    [uploadFile],
+    [uploadFile]
   );
 
   const handleFileSelect = useCallback(
@@ -126,7 +122,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       // Reset input so the same file can be re-selected
       if (inputRef.current) inputRef.current.value = '';
     },
-    [uploadFile],
+    [uploadFile]
   );
 
   const handleRemove = useCallback(() => {
@@ -174,23 +170,14 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         />
         {uploading ? (
           <div className="smw-image-upload__progress">
-            <div
-              className="smw-image-upload__progress-bar"
-              style={{ width: `${progress}%` }}
-            />
-            <span className="smw-image-upload__progress-text">
-              Uploading... {progress}%
-            </span>
+            <div className="smw-image-upload__progress-bar" style={{ width: `${progress}%` }} />
+            <span className="smw-image-upload__progress-text">Uploading... {progress}%</span>
           </div>
         ) : (
           <>
             <UploadIcon />
-            <span className="smw-image-upload__label">
-              Drop an image here or click to upload
-            </span>
-            <span className="smw-image-upload__hint">
-              JPEG, PNG, GIF, WebP (max 5MB)
-            </span>
+            <span className="smw-image-upload__label">Drop an image here or click to upload</span>
+            <span className="smw-image-upload__hint">JPEG, PNG, GIF, WebP (max 5MB)</span>
           </>
         )}
       </div>

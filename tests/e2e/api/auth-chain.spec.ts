@@ -43,7 +43,7 @@ test.describe('Auth chain', () => {
   test('Cockpit /projects redirects unauthenticated callers', async ({ request }) => {
     const res = await request.get(`${APP_BASE}/projects`, { maxRedirects: 0 });
     expect([301, 302, 307, 308]).toContain(res.status());
-    const loc = res.headers()['location'] ?? '';
+    const loc = res.headers().location ?? '';
     expect(loc).toContain('/login');
   });
 
@@ -79,16 +79,12 @@ test.describe('Auth chain', () => {
     test(`Cockpit ${route} redirects unauthenticated to /login`, async ({ request }) => {
       const res = await request.get(`${APP_BASE}${route}`, { maxRedirects: 0 });
       expect([301, 302, 307, 308]).toContain(res.status());
-      expect(res.headers()['location'] ?? '').toContain('/login');
+      expect(res.headers().location ?? '').toContain('/login');
     });
   }
 
   // Public-bypass routes (per middleware) render 200 directly
-  for (const route of [
-    '/projects/test-project/feedback',
-    '/f/test-project',
-    '/t/test-project',
-  ]) {
+  for (const route of ['/projects/test-project/feedback', '/f/test-project', '/t/test-project']) {
     test(`Cockpit ${route} renders publicly (no auth required)`, async ({ request }) => {
       const res = await request.get(`${APP_BASE}${route}`, { maxRedirects: 0 });
       // 200 if project exists, 404 if not — both prove the route is public.

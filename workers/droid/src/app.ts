@@ -158,10 +158,14 @@ export function createApp(executor: RunExecutor) {
 
     await markRunStarted(c.env, runId);
     if (loopPolicy?.enabled) {
-      await createRunEvent(c.env, runId, buildLoopStartedEvent(loopPolicy, {
-        taskId: body?.task_id?.trim(),
-        command,
-      }));
+      await createRunEvent(
+        c.env,
+        runId,
+        buildLoopStartedEvent(loopPolicy, {
+          taskId: body?.task_id?.trim(),
+          command,
+        })
+      );
     }
     await createRunEvent(c.env, runId, {
       type: 'run_started',
@@ -424,11 +428,15 @@ export function createApp(executor: RunExecutor) {
       });
       await markRunStarted(c.env, run.id);
       if (queuedInput.loopPolicy?.enabled) {
-        await createRunEvent(c.env, run.id, buildLoopStartedEvent(queuedInput.loopPolicy, {
-          taskId: run.task_id ?? undefined,
-          command: queuedInput.command,
-          dequeued: true,
-        }));
+        await createRunEvent(
+          c.env,
+          run.id,
+          buildLoopStartedEvent(queuedInput.loopPolicy, {
+            taskId: run.task_id ?? undefined,
+            command: queuedInput.command,
+            dequeued: true,
+          })
+        );
       }
       await createRunEvent(c.env, run.id, {
         type: 'run_started',
@@ -916,10 +924,12 @@ function summarizeCommandResult(result: CommandResult): string {
 }
 
 function firstUsefulLine(value: string): string {
-  return value
-    .split('\n')
-    .map((line) => line.trim())
-    .find((line) => line.length > 0) ?? '';
+  return (
+    value
+      .split('\n')
+      .map((line) => line.trim())
+      .find((line) => line.length > 0) ?? ''
+  );
 }
 
 function truncateSummary(value: string): string {
@@ -1109,7 +1119,9 @@ function executionInputFromRun(
     prBody: stringFromUnknown(request?.pr_body),
     prBaseBranch: stringFromUnknown(request?.pr_base_branch),
     acceptanceCommand: stringFromUnknown(request?.acceptance_command),
-    acceptanceTimeoutSeconds: normalizeAcceptanceTimeoutSeconds(request?.acceptance_timeout_seconds),
+    acceptanceTimeoutSeconds: normalizeAcceptanceTimeoutSeconds(
+      request?.acceptance_timeout_seconds
+    ),
     browserAcceptance: normalizeBrowserAcceptance(request?.browser_acceptance),
     loopPolicy: normalizeLoopPolicy(request?.loop_policy),
     cwd: stringFromUnknown(request?.cwd) ?? run.cwd ?? undefined,
@@ -1233,9 +1245,7 @@ function normalizeAcceptanceTimeoutSeconds(value: unknown): number | undefined {
   return value;
 }
 
-function validateBrowserAcceptance(
-  value: unknown
-): { ok: true } | { ok: false; error: string } {
+function validateBrowserAcceptance(value: unknown): { ok: true } | { ok: false; error: string } {
   if (value === undefined) return { ok: true };
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
     return { ok: false, error: 'browser_acceptance must be an object' };
@@ -1273,7 +1283,8 @@ function validateBrowserAcceptance(
   }
   if (
     config.assert_text !== undefined &&
-    (!Array.isArray(config.assert_text) || config.assert_text.some((item) => typeof item !== 'string'))
+    (!Array.isArray(config.assert_text) ||
+      config.assert_text.some((item) => typeof item !== 'string'))
   ) {
     return { ok: false, error: 'browser_acceptance.assert_text must be an array of strings' };
   }
@@ -1284,7 +1295,9 @@ function normalizeBrowserAcceptance(value: unknown): BrowserAcceptanceRequest | 
   if (!value || typeof value !== 'object' || Array.isArray(value)) return undefined;
   const config = value as Record<string, unknown>;
   const assertText = Array.isArray(config.assert_text)
-    ? config.assert_text.filter((item): item is string => typeof item === 'string' && item.trim().length > 0).map((item) => item.trim())
+    ? config.assert_text
+        .filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
+        .map((item) => item.trim())
     : undefined;
   return {
     enabled: typeof config.enabled === 'boolean' ? config.enabled : undefined,
@@ -1308,7 +1321,10 @@ function validateLoopPolicy(value: unknown): { ok: true } | { ok: false; error: 
   if (config.enabled !== undefined && typeof config.enabled !== 'boolean') {
     return { ok: false, error: 'loop_policy.enabled must be a boolean' };
   }
-  if (config.max_attempts !== undefined && normalizeLoopMaxAttempts(config.max_attempts) === undefined) {
+  if (
+    config.max_attempts !== undefined &&
+    normalizeLoopMaxAttempts(config.max_attempts) === undefined
+  ) {
     return { ok: false, error: 'loop_policy.max_attempts must be between 1 and 5' };
   }
   if (config.retry_on_failure !== undefined && typeof config.retry_on_failure !== 'boolean') {

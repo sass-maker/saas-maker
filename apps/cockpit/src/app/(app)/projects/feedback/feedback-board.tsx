@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
-import type { FeedbackRecord } from "@saas-maker/contracts";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import type { FeedbackRecord } from '@saas-maker/contracts';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 import {
   Sheet,
   SheetBody,
@@ -19,15 +19,9 @@ import {
   SheetDescription,
   SheetHeader,
   SheetTitle,
-} from "@/components/ui/sheet";
-import {
-  ArrowDownUp,
-  ChevronDown,
-  ChevronUp,
-  LayoutGrid,
-  MessageSquare,
-} from "lucide-react";
-import { getClientToken, apiFetchClient } from "@/lib/api-client";
+} from '@/components/ui/sheet';
+import { ArrowDownUp, ChevronDown, ChevronUp, LayoutGrid, MessageSquare } from 'lucide-react';
+import { getClientToken, apiFetchClient } from '@/lib/api-client';
 
 type BoardStatus = 'new' | 'dismissed' | 'on_roadmap';
 
@@ -39,28 +33,28 @@ type BoardFeedbackRecord = FeedbackRecord & {
 const STATUS_COLUMNS: Array<{
   value: BoardStatus;
   label: string;
-  variant: "default" | "secondary" | "destructive" | "outline";
+  variant: 'default' | 'secondary' | 'destructive' | 'outline';
 }> = [
-  { value: "new", label: "New", variant: "default" },
-  { value: "on_roadmap", label: "On Roadmap", variant: "secondary" },
-  { value: "dismissed", label: "Dismissed", variant: "destructive" },
+  { value: 'new', label: 'New', variant: 'default' },
+  { value: 'on_roadmap', label: 'On Roadmap', variant: 'secondary' },
+  { value: 'dismissed', label: 'Dismissed', variant: 'destructive' },
 ];
 
 const STATUS_STYLE_MAP = Object.fromEntries(
   STATUS_COLUMNS.map((column) => [column.value, column])
 ) as Record<BoardStatus, (typeof STATUS_COLUMNS)[number]>;
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://api.sassmaker.com";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.sassmaker.com';
 
-function withVote(item: BoardFeedbackRecord, vote: "up" | "down" | null): BoardFeedbackRecord {
+function withVote(item: BoardFeedbackRecord, vote: 'up' | 'down' | null): BoardFeedbackRecord {
   const prev = item.viewer_vote ?? null;
   let up = item.upvote_count;
   let down = item.downvote_count;
 
-  if (prev === "up") up = Math.max(up - 1, 0);
-  if (prev === "down") down = Math.max(down - 1, 0);
-  if (vote === "up") up += 1;
-  if (vote === "down") down += 1;
+  if (prev === 'up') up = Math.max(up - 1, 0);
+  if (prev === 'down') down = Math.max(down - 1, 0);
+  if (vote === 'up') up += 1;
+  if (vote === 'down') down += 1;
 
   return {
     ...item,
@@ -74,8 +68,8 @@ export function FeedbackBoard() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const statusFilter = searchParams.get("status") ?? "all";
-  const sort = searchParams.get("sort") ?? "upvotes";
+  const statusFilter = searchParams.get('status') ?? 'all';
+  const sort = searchParams.get('sort') ?? 'upvotes';
 
   const [feedback, setFeedback] = useState<BoardFeedbackRecord[]>([]);
   const [loading, setLoading] = useState(true);
@@ -91,7 +85,7 @@ export function FeedbackBoard() {
   const updateParam = useCallback(
     (key: string, value: string) => {
       const params = new URLSearchParams(searchParams.toString());
-      if (value === "all") params.delete(key);
+      if (value === 'all') params.delete(key);
       else params.set(key, value);
       router.push(`?${params.toString()}`);
     },
@@ -104,8 +98,8 @@ export function FeedbackBoard() {
       setError(null);
       try {
         const params = new URLSearchParams();
-        if (statusFilter !== "all") params.set("status", statusFilter);
-        params.set("sort", sort === "newest" ? "newest" : "upvotes");
+        if (statusFilter !== 'all') params.set('status', statusFilter);
+        params.set('sort', sort === 'newest' ? 'newest' : 'upvotes');
 
         const data = await apiFetchClient<{ data: BoardFeedbackRecord[]; total: number }>(
           `/v1/feedback/board?${params.toString()}`,
@@ -113,9 +107,7 @@ export function FeedbackBoard() {
         );
         setFeedback(data.data ?? []);
       } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "Failed to load feature requests"
-        );
+        setError(err instanceof Error ? err.message : 'Failed to load feature requests');
       } finally {
         setLoading(false);
       }
@@ -134,7 +126,7 @@ export function FeedbackBoard() {
         await fetchFeedback(nextToken);
       } catch {
         if (!cancelled) {
-          setError("Failed to authenticate. Please sign in.");
+          setError('Failed to authenticate. Please sign in.');
           setLoading(false);
         }
       }
@@ -156,11 +148,9 @@ export function FeedbackBoard() {
 
     for (const item of feedback) {
       const normalized =
-        item.status === "new" ||
-        item.status === "dismissed" ||
-        item.status === "on_roadmap"
+        item.status === 'new' || item.status === 'dismissed' || item.status === 'on_roadmap'
           ? item.status
-          : "new";
+          : 'new';
       buckets[normalized].push(item);
     }
 
@@ -168,10 +158,10 @@ export function FeedbackBoard() {
   }, [feedback]);
 
   const handleVote = useCallback(
-    async (item: BoardFeedbackRecord, target: "up" | "down") => {
+    async (item: BoardFeedbackRecord, target: 'up' | 'down') => {
       setActionError(null);
       if (!token) {
-        setActionError("Sign in to vote on feature requests.");
+        setActionError('Sign in to vote on feature requests.');
         return;
       }
 
@@ -179,10 +169,8 @@ export function FeedbackBoard() {
       const nextVote = currentVote === target ? null : target;
 
       const endpoint =
-        target === "up"
-          ? `/v1/feedback/${item.id}/upvote`
-          : `/v1/feedback/${item.id}/downvote`;
-      const method = nextVote === null ? "DELETE" : "POST";
+        target === 'up' ? `/v1/feedback/${item.id}/upvote` : `/v1/feedback/${item.id}/downvote`;
+      const method = nextVote === null ? 'DELETE' : 'POST';
 
       setVotePendingId(item.id);
       try {
@@ -192,7 +180,7 @@ export function FeedbackBoard() {
         });
         if (!res.ok) {
           const body = await res.json().catch(() => ({}));
-          throw new Error(body.error || "Voting failed");
+          throw new Error(body.error || 'Voting failed');
         }
 
         setFeedback((prev) =>
@@ -201,7 +189,7 @@ export function FeedbackBoard() {
           )
         );
       } catch (err) {
-        setActionError(err instanceof Error ? err.message : "Voting failed");
+        setActionError(err instanceof Error ? err.message : 'Voting failed');
       } finally {
         setVotePendingId(null);
       }
@@ -217,9 +205,9 @@ export function FeedbackBoard() {
 
       try {
         const res = await fetch(`${API_BASE}/v1/feedback/${item.id}`, {
-          method: "PATCH",
+          method: 'PATCH',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ status: nextStatus }),
@@ -227,20 +215,16 @@ export function FeedbackBoard() {
 
         if (!res.ok) {
           const body = await res.json().catch(() => ({}));
-          throw new Error(body.error || "Failed to update status");
+          throw new Error(body.error || 'Failed to update status');
         }
 
         setFeedback((prev) =>
           prev.map((candidate) =>
-            candidate.id === item.id
-              ? { ...candidate, status: nextStatus }
-              : candidate
+            candidate.id === item.id ? { ...candidate, status: nextStatus } : candidate
           )
         );
       } catch (err) {
-        setActionError(
-          err instanceof Error ? err.message : "Failed to update status"
-        );
+        setActionError(err instanceof Error ? err.message : 'Failed to update status');
       } finally {
         setStatusPendingId(null);
       }
@@ -251,7 +235,7 @@ export function FeedbackBoard() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-3">
-        <Select value={statusFilter} onValueChange={(v) => updateParam("status", v)}>
+        <Select value={statusFilter} onValueChange={(v) => updateParam('status', v)}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
@@ -268,13 +252,11 @@ export function FeedbackBoard() {
         <Button
           variant="outline"
           size="sm"
-          onClick={() =>
-            updateParam("sort", sort === "newest" ? "upvotes" : "newest")
-          }
+          onClick={() => updateParam('sort', sort === 'newest' ? 'upvotes' : 'newest')}
           className="gap-2"
         >
           <ArrowDownUp className="h-4 w-4" />
-          {sort === "newest" ? "Newest" : "Most Voted"}
+          {sort === 'newest' ? 'Newest' : 'Most Voted'}
         </Button>
 
         <Badge variant="outline" className="gap-2">
@@ -287,9 +269,7 @@ export function FeedbackBoard() {
         Owner mode enabled. You can update request status directly from each card.
       </p>
 
-      {actionError && (
-        <p className="text-sm text-destructive">{actionError}</p>
-      )}
+      {actionError && <p className="text-sm text-destructive">{actionError}</p>}
 
       {loading ? (
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -316,7 +296,7 @@ export function FeedbackBoard() {
       ) : (
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {STATUS_COLUMNS.map((column) => {
-            if (statusFilter !== "all" && statusFilter !== column.value) {
+            if (statusFilter !== 'all' && statusFilter !== column.value) {
               return null;
             }
 
@@ -348,13 +328,13 @@ export function FeedbackBoard() {
                           <div className="flex items-center gap-1 shrink-0">
                             <Button
                               type="button"
-                              variant={item.viewer_vote === "up" ? "default" : "outline"}
+                              variant={item.viewer_vote === 'up' ? 'default' : 'outline'}
                               size="icon"
                               className="h-7 w-7"
                               disabled={votePendingId === item.id}
                               onClick={(e) => {
                                 e.stopPropagation();
-                                handleVote(item, "up");
+                                handleVote(item, 'up');
                               }}
                               title="Upvote"
                             >
@@ -362,13 +342,13 @@ export function FeedbackBoard() {
                             </Button>
                             <Button
                               type="button"
-                              variant={item.viewer_vote === "down" ? "destructive" : "outline"}
+                              variant={item.viewer_vote === 'down' ? 'destructive' : 'outline'}
                               size="icon"
                               className="h-7 w-7"
                               disabled={votePendingId === item.id}
                               onClick={(e) => {
                                 e.stopPropagation();
-                                handleVote(item, "down");
+                                handleVote(item, 'down');
                               }}
                               title="Downvote"
                             >
@@ -390,11 +370,11 @@ export function FeedbackBoard() {
                         <div onClick={(e) => e.stopPropagation()}>
                           <Select
                             value={
-                              item.status === "new" ||
-                              item.status === "dismissed" ||
-                              item.status === "on_roadmap"
+                              item.status === 'new' ||
+                              item.status === 'dismissed' ||
+                              item.status === 'on_roadmap'
                                 ? item.status
-                                : "new"
+                                : 'new'
                             }
                             onValueChange={(value) =>
                               handleStatusChange(item, value as BoardStatus)
@@ -406,10 +386,7 @@ export function FeedbackBoard() {
                             </SelectTrigger>
                             <SelectContent>
                               {STATUS_COLUMNS.map((statusOption) => (
-                                <SelectItem
-                                  key={statusOption.value}
-                                  value={statusOption.value}
-                                >
+                                <SelectItem key={statusOption.value} value={statusOption.value}>
                                   {statusOption.label}
                                 </SelectItem>
                               ))}
@@ -426,10 +403,7 @@ export function FeedbackBoard() {
         </div>
       )}
 
-      <Sheet
-        open={selectedId !== null}
-        onOpenChange={(open) => !open && setSelectedId(null)}
-      >
+      <Sheet open={selectedId !== null} onOpenChange={(open) => !open && setSelectedId(null)}>
         <SheetContent className="w-full sm:max-w-lg">
           {selected && (
             <>
@@ -439,21 +413,21 @@ export function FeedbackBoard() {
                   <Badge
                     variant={
                       STATUS_STYLE_MAP[
-                        (selected.status === "new" ||
-                        selected.status === "dismissed" ||
-                        selected.status === "on_roadmap"
+                        (selected.status === 'new' ||
+                        selected.status === 'dismissed' ||
+                        selected.status === 'on_roadmap'
                           ? selected.status
-                          : "new") as BoardStatus
+                          : 'new') as BoardStatus
                       ].variant
                     }
                   >
                     {
                       STATUS_STYLE_MAP[
-                        (selected.status === "new" ||
-                        selected.status === "dismissed" ||
-                        selected.status === "on_roadmap"
+                        (selected.status === 'new' ||
+                        selected.status === 'dismissed' ||
+                        selected.status === 'on_roadmap'
                           ? selected.status
-                          : "new") as BoardStatus
+                          : 'new') as BoardStatus
                       ].label
                     }
                   </Badge>
@@ -461,30 +435,26 @@ export function FeedbackBoard() {
                 </div>
                 <SheetTitle className="text-left">{selected.title}</SheetTitle>
                 <SheetDescription className="text-left">
-                  Submitted {" "}
-                  {new Date(selected.created_at).toLocaleDateString("en-US", {
-                    month: "long",
-                    day: "numeric",
-                    year: "numeric",
+                  Submitted{' '}
+                  {new Date(selected.created_at).toLocaleDateString('en-US', {
+                    month: 'long',
+                    day: 'numeric',
+                    year: 'numeric',
                   })}
                 </SheetDescription>
               </SheetHeader>
 
               <SheetBody className="space-y-6">
                 <div className="space-y-2">
-                  <h4 className="text-sm font-medium text-muted-foreground">
-                    Description
-                  </h4>
+                  <h4 className="text-sm font-medium text-muted-foreground">Description</h4>
                   <p className="text-sm leading-relaxed">
-                    {selected.description || "No description provided."}
+                    {selected.description || 'No description provided.'}
                   </p>
                 </div>
 
                 {selected.image_url && (
                   <div className="space-y-2">
-                    <h4 className="text-sm font-medium text-muted-foreground">
-                      Attachment
-                    </h4>
+                    <h4 className="text-sm font-medium text-muted-foreground">Attachment</h4>
                     <img
                       src={selected.image_url}
                       alt="Feedback attachment"

@@ -1,4 +1,4 @@
-import { getCanonicalProjectName } from "./fleet-project-names";
+import { getCanonicalProjectName } from './fleet-project-names';
 
 export interface FleetComplianceChecks {
   config: boolean;
@@ -71,47 +71,54 @@ const CHECK_ACTIONS: Record<keyof FleetComplianceChecks, string> = {
 
 export function buildFleetCommandCenter(
   projects: FleetHealthProject[],
-  registeredProjectSlugs: string[] = [],
+  registeredProjectSlugs: string[] = []
 ): FleetCommandCenter {
   const registered = new Set(registeredProjectSlugs);
 
-  const commandProjects = projects.map((project) => {
-    const missingChecks = Object.entries(project.compliance.checks)
-      .filter(([, passed]) => !passed)
-      .map(([check]) => check as keyof FleetComplianceChecks);
-    const readiness = Math.round((project.compliance.score / project.compliance.total) * 100);
-    const isRegistered = registered.has(project.slug);
-    const issues = missingChecks.map((check) => CHECK_LABELS[check]);
-    const actions = missingChecks.map((check) => CHECK_ACTIONS[check]);
+  const commandProjects = projects
+    .map((project) => {
+      const missingChecks = Object.entries(project.compliance.checks)
+        .filter(([, passed]) => !passed)
+        .map(([check]) => check as keyof FleetComplianceChecks);
+      const readiness = Math.round((project.compliance.score / project.compliance.total) * 100);
+      const isRegistered = registered.has(project.slug);
+      const issues = missingChecks.map((check) => CHECK_LABELS[check]);
+      const actions = missingChecks.map((check) => CHECK_ACTIONS[check]);
 
-    if (!isRegistered) {
-      issues.push('Not registered in SaaS Maker');
-      actions.push('Create or sync the project record.');
-    }
+      if (!isRegistered) {
+        issues.push('Not registered in SaaS Maker');
+        actions.push('Create or sync the project record.');
+      }
 
-    const status: FleetCommandStatus = readiness < 60 || !project.compliance.checks.ci
-      ? 'critical'
-      : issues.length > 0
-        ? 'attention'
-        : 'ready';
+      const status: FleetCommandStatus =
+        readiness < 60 || !project.compliance.checks.ci
+          ? 'critical'
+          : issues.length > 0
+            ? 'attention'
+            : 'ready';
 
-    return {
-      slug: project.slug,
-      name: getCanonicalProjectName(project.slug, project.name),
-      type: project.type,
-      readiness,
-      score: project.compliance.score,
-      total: project.compliance.total,
-      status,
-      issues,
-      actions,
-      isRegistered,
-      isLegacy: Boolean(project.isLegacy),
-    };
-  }).sort((a, b) => {
-    const statusWeight: Record<FleetCommandStatus, number> = { critical: 0, attention: 1, ready: 2 };
-    return statusWeight[a.status] - statusWeight[b.status] || a.readiness - b.readiness;
-  });
+      return {
+        slug: project.slug,
+        name: getCanonicalProjectName(project.slug, project.name),
+        type: project.type,
+        readiness,
+        score: project.compliance.score,
+        total: project.compliance.total,
+        status,
+        issues,
+        actions,
+        isRegistered,
+        isLegacy: Boolean(project.isLegacy),
+      };
+    })
+    .sort((a, b) => {
+      const statusWeight: Record<FleetCommandStatus, number> = {
+        critical: 0,
+        attention: 1,
+        ready: 2,
+      };
+      return statusWeight[a.status] - statusWeight[b.status] || a.readiness - b.readiness;
+    });
 
   const compliant = commandProjects.filter((project) => project.issues.length === 0).length;
   const legacy = commandProjects.filter((project) => project.isLegacy).length;

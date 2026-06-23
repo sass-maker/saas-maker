@@ -12,7 +12,8 @@ upload.post('/', requireApiKey, async (c) => {
   const file = formData.get('file') as File | null;
 
   if (!file) return c.json({ error: 'No file provided' }, 400);
-  if (!ALLOWED_TYPES.includes(file.type)) return c.json({ error: 'Invalid file type. Allowed: jpeg, png, gif, webp' }, 400);
+  if (!ALLOWED_TYPES.includes(file.type))
+    return c.json({ error: 'Invalid file type. Allowed: jpeg, png, gif, webp' }, 400);
   if (file.size > MAX_FILE_SIZE) return c.json({ error: 'File too large. Max 5MB' }, 400);
 
   const ext = file.type.split('/')[1];

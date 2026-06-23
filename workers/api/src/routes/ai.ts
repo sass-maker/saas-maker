@@ -72,19 +72,27 @@ function readProviderModel(config: StoredAIConfig, body: Record<string, unknown>
   return config.ai_model?.trim() || null;
 }
 
-async function readAIConfig(c: AppContext, db: ReturnType<typeof getDb>, projectId: string): Promise<StoredAIConfig> {
-  const config = await db.getProjectAIConfig(projectId) as StoredAIConfig;
+async function readAIConfig(
+  c: AppContext,
+  db: ReturnType<typeof getDb>,
+  projectId: string
+): Promise<StoredAIConfig> {
+  const config = (await db.getProjectAIConfig(projectId)) as StoredAIConfig;
   return {
     ...config,
     ai_api_key: await decryptProviderKey(config.ai_api_key, c.env.AI_GATEWAY_KEY_SECRET),
   };
 }
 
-async function enforceAIProxyRateLimit(c: AppContext, endpoint: ProxyEndpoint): Promise<Response | null> {
+async function enforceAIProxyRateLimit(
+  c: AppContext,
+  endpoint: ProxyEndpoint
+): Promise<Response | null> {
   if (!c.env.RATE_LIMITER) return null;
 
   const projectId = c.get('projectId')!;
-  const requestKey = c.req.header('X-Project-Key') || c.req.header('CF-Connecting-IP') || 'anonymous';
+  const requestKey =
+    c.req.header('X-Project-Key') || c.req.header('CF-Connecting-IP') || 'anonymous';
   const key = `ai:${projectId}:${endpoint}:${requestKey}`;
 
   try {
@@ -110,7 +118,7 @@ async function logAIRequest(
     inputTokens: number | null;
     outputTokens: number | null;
     errorMessage: string | null;
-  },
+  }
 ): Promise<void> {
   await db.logAIRequest({
     id: crypto.randomUUID(),
@@ -198,7 +206,8 @@ async function proxyAIRequest(c: AppContext, endpoint: ProxyEndpoint): Promise<R
 
   const latencyMs = Date.now() - started;
   const contentType = upstream.headers.get('Content-Type');
-  const isStreaming = upstream.ok && (body.stream === true || contentType?.includes('text/event-stream'));
+  const isStreaming =
+    upstream.ok && (body.stream === true || contentType?.includes('text/event-stream'));
 
   if (isStreaming) {
     await logAIRequest(db, {
@@ -264,7 +273,7 @@ ai.put('/config', requireSession, async (c) => {
 
   let body: UpdateAIConfigBody;
   try {
-    body = await c.req.json() as UpdateAIConfigBody;
+    body = (await c.req.json()) as UpdateAIConfigBody;
   } catch {
     return c.json({ error: 'Request body must be valid JSON' }, 400);
   }
@@ -278,11 +287,15 @@ ai.put('/config', requireSession, async (c) => {
   if (typeof body.ai_model !== 'string' || !body.ai_model.trim()) {
     return c.json({ error: 'ai_model is required' }, 400);
   }
-  if (body.ai_api_key !== undefined && body.ai_api_key !== null && typeof body.ai_api_key !== 'string') {
+  if (
+    body.ai_api_key !== undefined &&
+    body.ai_api_key !== null &&
+    typeof body.ai_api_key !== 'string'
+  ) {
     return c.json({ error: 'ai_api_key must be a string when provided' }, 400);
   }
 
-  const current = await owned.db.getProjectAIConfig(projectId) as StoredAIConfig;
+  const current = (await owned.db.getProjectAIConfig(projectId)) as StoredAIConfig;
   const nextApiKey = typeof body.ai_api_key === 'string' ? body.ai_api_key.trim() : '';
   if (!current.ai_api_key && !nextApiKey) {
     return c.json({ error: 'ai_api_key is required when no provider key is configured' }, 400);
@@ -291,7 +304,9 @@ ai.put('/config', requireSession, async (c) => {
   await owned.db.updateProjectAIConfig(projectId, {
     ai_base_url: body.ai_base_url.trim().replace(/\/+$/, ''),
     ai_model: body.ai_model.trim(),
-    ...(nextApiKey ? { ai_api_key: await encryptProviderKey(nextApiKey, c.env.AI_GATEWAY_KEY_SECRET) } : {}),
+    ...(nextApiKey
+      ? { ai_api_key: await encryptProviderKey(nextApiKey, c.env.AI_GATEWAY_KEY_SECRET) }
+      : {}),
   });
 
   const config = await readAIConfig(c, owned.db, projectId);

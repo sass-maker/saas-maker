@@ -46,14 +46,11 @@ export function withCachePut(
   c: AppContext,
   cacheKey: string,
   response: Response,
-  ttlSeconds: number = DEFAULT_TTL_SECONDS,
+  ttlSeconds: number = DEFAULT_TTL_SECONDS
 ): Response {
   const edgeCache = getEdgeCache();
   const cacheable = new Response(response.body, response);
-  cacheable.headers.set(
-    'Cache-Control',
-    `public, max-age=0, s-maxage=${ttlSeconds}`,
-  );
+  cacheable.headers.set('Cache-Control', `public, max-age=0, s-maxage=${ttlSeconds}`);
   cacheable.headers.set('X-Edge-Cache', 'MISS');
   if (edgeCache) {
     try {

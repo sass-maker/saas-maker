@@ -21,10 +21,7 @@ const PROJECT_OVERRIDES = {
   },
 };
 
-const PUBLIC_GITHUB_CONFIG_NAMES = new Set([
-  'CF_ACCOUNT_ID',
-  'CLOUDFLARE_ACCOUNT_ID',
-]);
+const PUBLIC_GITHUB_CONFIG_NAMES = new Set(['CF_ACCOUNT_ID', 'CLOUDFLARE_ACCOUNT_ID']);
 
 export function extractRepoFromGitUrl(value) {
   if (typeof value !== 'string' || !value.trim()) return null;
@@ -70,9 +67,11 @@ function resolveTargetDir(project, target) {
 function resolveTargetConfigPath(project, target) {
   const dir = resolveTargetDir(project, target);
   if (target?.config) return path.resolve(dir, target.config);
-  return ['wrangler.toml', 'wrangler.jsonc']
-    .map((file) => path.join(dir, file))
-    .find((file) => fs.existsSync(file)) ?? null;
+  return (
+    ['wrangler.toml', 'wrangler.jsonc']
+      .map((file) => path.join(dir, file))
+      .find((file) => fs.existsSync(file)) ?? null
+  );
 }
 
 function normalizeCloudflareTarget(project, target) {
@@ -80,11 +79,14 @@ function normalizeCloudflareTarget(project, target) {
   const dir = configPath ? path.dirname(configPath) : resolveTargetDir(project, target);
   const source = configPath && fs.existsSync(configPath) ? fs.readFileSync(configPath, 'utf8') : '';
   const detected = source
-    ? detectCloudflareTarget(dir, { deployTarget: target.kind === 'pages' ? 'Cloudflare Pages' : 'Cloudflare Workers' })
+    ? detectCloudflareTarget(dir, {
+        deployTarget: target.kind === 'pages' ? 'Cloudflare Pages' : 'Cloudflare Workers',
+      })
     : { kind: target.kind === 'pages' ? 'cloudflare-pages' : 'cloudflare-worker', name: null };
-  const provider = target.kind === 'pages' || detected.kind === 'cloudflare-pages'
-    ? 'cloudflare-pages'
-    : 'cloudflare-worker';
+  const provider =
+    target.kind === 'pages' || detected.kind === 'cloudflare-pages'
+      ? 'cloudflare-pages'
+      : 'cloudflare-worker';
   const requiredSecrets = normalizeList(target.requiredSecrets);
   return {
     id: target.id ?? target.name ?? detected.name ?? project.slug,
@@ -189,9 +191,10 @@ export function extractWorkflowSecretRequirements(projectDir, workflowFile) {
   const candidates = workflowFile
     ? [path.join(workflowsDir, workflowFile)]
     : fs.existsSync(workflowsDir)
-      ? fs.readdirSync(workflowsDir)
-        .filter((file) => /\.(ya?ml)$/i.test(file))
-        .map((file) => path.join(workflowsDir, file))
+      ? fs
+          .readdirSync(workflowsDir)
+          .filter((file) => /\.(ya?ml)$/i.test(file))
+          .map((file) => path.join(workflowsDir, file))
       : [];
 
   const requirements = [];
@@ -207,9 +210,8 @@ export function extractWorkflowSecretRequirements(projectDir, workflowFile) {
         .filter((name) => name !== 'GITHUB_TOKEN');
       if (names.length === 0) continue;
       const uniqueNames = Array.from(new Set(names));
-      const requirement = match[1].includes('||') && uniqueNames.length > 1
-        ? uniqueNames.sort()
-        : uniqueNames[0];
+      const requirement =
+        match[1].includes('||') && uniqueNames.length > 1 ? uniqueNames.sort() : uniqueNames[0];
       const key = Array.isArray(requirement) ? requirement.join('|') : requirement;
       if (seen.has(key)) continue;
       seen.add(key);
@@ -222,18 +224,25 @@ export function extractWorkflowSecretRequirements(projectDir, workflowFile) {
 export function buildProjectSecretPlan(
   project,
   contract = FLEET_HEALTH_CONTRACTS[project.slug],
-  cloudflareManifest = {},
+  cloudflareManifest = {}
 ) {
   const requiredEnv = contract?.requiredEnv ?? { build: [], runtime: [] };
   const override = PROJECT_OVERRIDES[project.slug] ?? {};
-  const runtimeDir = override.runtimeDir ? path.join(project.dir, override.runtimeDir) : project.dir;
+  const runtimeDir = override.runtimeDir
+    ? path.join(project.dir, override.runtimeDir)
+    : project.dir;
   const cf = detectCloudflareTarget(runtimeDir, contract);
-  const manifestTargets = normalizeList(cloudflareManifest[project.slug]?.targets)
-    .map((target) => normalizeCloudflareTarget(project, target));
+  const manifestTargets = normalizeList(cloudflareManifest[project.slug]?.targets).map((target) =>
+    normalizeCloudflareTarget(project, target)
+  );
   const githubSecrets = [];
   const addGithubRequirement = (entry) => {
     const key = Array.isArray(entry) ? entry.join('|') : entry;
-    if (!githubSecrets.some((existing) => (Array.isArray(existing) ? existing.join('|') : existing) === key)) {
+    if (
+      !githubSecrets.some(
+        (existing) => (Array.isArray(existing) ? existing.join('|') : existing) === key
+      )
+    ) {
       githubSecrets.push(entry);
     }
   };
@@ -258,18 +267,20 @@ export function buildProjectSecretPlan(
     provider: runtimeProvider,
     name: cf.name,
     dir: runtimeDir,
-    configPath: ['wrangler.toml', 'wrangler.jsonc']
-      .map((file) => path.join(runtimeDir, file))
-      .find((file) => fs.existsSync(file)) ?? null,
+    configPath:
+      ['wrangler.toml', 'wrangler.jsonc']
+        .map((file) => path.join(runtimeDir, file))
+        .find((file) => fs.existsSync(file)) ?? null,
     requiredSecrets: [...(requiredEnv.runtime ?? [])].sort(),
     requiredVars: [],
     requiredBindings: [],
   };
-  const runtimes = manifestTargets.length > 0
-    ? manifestTargets
-    : fallbackRuntime.requiredSecrets.length > 0
-      ? [fallbackRuntime]
-      : [];
+  const runtimes =
+    manifestTargets.length > 0
+      ? manifestTargets
+      : fallbackRuntime.requiredSecrets.length > 0
+        ? [fallbackRuntime]
+        : [];
 
   return {
     project: project.slug,
@@ -334,11 +345,21 @@ export function auditProjectSecretPlan(plan, { root, run = runCommand } = {}) {
         error: 'No GitHub repository URL in foundry.projects.json',
       });
     } else {
-      const result = run('gh', ['secret', 'list', '-R', plan.github.repo, '--json', 'name,updatedAt'], { cwd: root });
-      const variableResult = run('gh', ['variable', 'list', '-R', plan.github.repo, '--json', 'name,updatedAt'], { cwd: root });
+      const result = run(
+        'gh',
+        ['secret', 'list', '-R', plan.github.repo, '--json', 'name,updatedAt'],
+        { cwd: root }
+      );
+      const variableResult = run(
+        'gh',
+        ['variable', 'list', '-R', plan.github.repo, '--json', 'name,updatedAt'],
+        { cwd: root }
+      );
       const presentSecrets = result.ok ? parseSecretNames(result.stdout) : [];
       const presentVariables = variableResult.ok
-        ? parseSecretNames(variableResult.stdout).filter((name) => PUBLIC_GITHUB_CONFIG_NAMES.has(name))
+        ? parseSecretNames(variableResult.stdout).filter((name) =>
+            PUBLIC_GITHUB_CONFIG_NAMES.has(name)
+          )
         : [];
       checks.push({
         platform: 'github-actions',
@@ -352,7 +373,16 @@ export function auditProjectSecretPlan(plan, { root, run = runCommand } = {}) {
   for (const runtime of plan.runtimes ?? []) {
     const requiredSecrets = runtime.requiredSecrets ?? runtime.required ?? [];
     if (requiredSecrets.length > 0 && runtime.provider === 'cloudflare-worker') {
-      const args = ['exec', 'wrangler', 'secret', 'list', '--format', 'json', '--cwd', runtime.dir ?? plan.dir];
+      const args = [
+        'exec',
+        'wrangler',
+        'secret',
+        'list',
+        '--format',
+        'json',
+        '--cwd',
+        runtime.dir ?? plan.dir,
+      ];
       const result = run('pnpm', args, { cwd: root });
       const present = result.ok ? parseSecretNames(result.stdout) : [];
       checks.push({
@@ -362,7 +392,15 @@ export function auditProjectSecretPlan(plan, { root, run = runCommand } = {}) {
         error: result.ok ? null : normalizeCommandError(result),
       });
     } else if (requiredSecrets.length > 0 && runtime.provider === 'cloudflare-pages') {
-      const args = ['exec', 'wrangler', 'pages', 'secret', 'list', '--project-name', runtime.name ?? plan.project];
+      const args = [
+        'exec',
+        'wrangler',
+        'pages',
+        'secret',
+        'list',
+        '--project-name',
+        runtime.name ?? plan.project,
+      ];
       const result = run('pnpm', args, { cwd: root });
       const present = result.ok ? parseSecretNames(result.stdout) : [];
       checks.push({
@@ -390,9 +428,10 @@ export function auditProjectSecretPlan(plan, { root, run = runCommand } = {}) {
     }
 
     if ((runtime.requiredVars?.length ?? 0) > 0 || (runtime.requiredBindings?.length ?? 0) > 0) {
-      const source = runtime.configPath && fs.existsSync(runtime.configPath)
-        ? fs.readFileSync(runtime.configPath, 'utf8')
-        : '';
+      const source =
+        runtime.configPath && fs.existsSync(runtime.configPath)
+          ? fs.readFileSync(runtime.configPath, 'utf8')
+          : '';
       const state = parseCloudflareConfigState(source);
       if ((runtime.requiredVars?.length ?? 0) > 0) {
         checks.push({
@@ -423,7 +462,10 @@ export function auditProjectSecretPlan(plan, { root, run = runCommand } = {}) {
 export function buildSecretTaskPayload(failure, generatedAt = new Date().toISOString()) {
   const missingLines = failure.checks
     .filter((check) => check.missing.length > 0 || check.error)
-    .map((check) => `- ${check.platform}${check.target ? ` (${check.target})` : ''}: missing ${check.missing.map(formatRequiredSecret).join(', ') || 'unknown'}${check.error ? `; audit error: ${check.error}` : ''}`);
+    .map(
+      (check) =>
+        `- ${check.platform}${check.target ? ` (${check.target})` : ''}: missing ${check.missing.map(formatRequiredSecret).join(', ') || 'unknown'}${check.error ? `; audit error: ${check.error}` : ''}`
+    );
 
   return {
     title: `[fleet-secrets] ${failure.project}`,
@@ -453,5 +495,9 @@ export function secretFailureKey(failure) {
 }
 
 function normalizeCommandError(result) {
-  return (result.stderr || result.stdout || result.error || `exit ${result.status}`).trim().split(/\r?\n/).slice(-4).join(' ');
+  return (result.stderr || result.stdout || result.error || `exit ${result.status}`)
+    .trim()
+    .split(/\r?\n/)
+    .slice(-4)
+    .join(' ');
 }

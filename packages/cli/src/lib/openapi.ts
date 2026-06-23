@@ -50,15 +50,15 @@ export function validateApiOperation(methodInput: string, pathInput: string): Va
 
   if (!matchedTemplate) {
     const similar = listSimilarPaths(path);
-    const suggestions = similar.length > 0
-      ? ` Similar routes: ${similar.join(', ')}`
-      : '';
+    const suggestions = similar.length > 0 ? ` Similar routes: ${similar.join(', ')}` : '';
     return { ok: false, message: `Path "${path}" is not in OpenAPI spec.${suggestions}` };
   }
 
   const operation = (spec.paths as Record<string, Record<string, unknown>>)[matchedTemplate];
   if (!(method in operation)) {
-    const methods = Object.keys(operation).map((m) => m.toUpperCase()).join(', ');
+    const methods = Object.keys(operation)
+      .map((m) => m.toUpperCase())
+      .join(', ');
     return {
       ok: false,
       message: `Method ${method.toUpperCase()} is not defined for "${matchedTemplate}". Allowed: ${methods}`,

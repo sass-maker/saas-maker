@@ -110,7 +110,7 @@ app.get('/v1/projects/readme', requireApiKey, async (c) => {
 
 app.put('/v1/projects/readme', requireApiKey, async (c) => {
   const projectId = c.get('projectId')!;
-  const body = await c.req.json() as { content: string };
+  const body = (await c.req.json()) as { content: string };
   if (typeof body.content !== 'string') return c.json({ error: 'content is required' }, 400);
   const db = getDb(c.env.DB);
   await db.updateProject(projectId, { readme: body.content });

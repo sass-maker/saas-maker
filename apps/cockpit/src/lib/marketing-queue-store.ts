@@ -1,4 +1,4 @@
-import { type CockpitD1Database,getCockpitD1 } from '@/lib/cockpit-tasks-store';
+import { type CockpitD1Database, getCockpitD1 } from '@/lib/cockpit-tasks-store';
 
 export type MarketingPostStatus = 'generated' | 'accepted' | 'rejected' | 'sent';
 export type MarketingPostChannel =
@@ -96,7 +96,7 @@ function cleanString(value: unknown): string | null | undefined {
 }
 
 function enumValue<T extends string>(value: unknown, allowed: readonly T[]): T | undefined {
-  return typeof value === 'string' && allowed.includes(value as T) ? value as T : undefined;
+  return typeof value === 'string' && allowed.includes(value as T) ? (value as T) : undefined;
 }
 
 function normalizeInput(input: MarketingPostInput) {
@@ -141,28 +141,37 @@ export async function listMarketingPosts(filters: MarketingQueueFilters = {}, db
   }
   const limit = Math.min(Math.max(filters.limit ?? 200, 1), 500);
   values.push(limit);
-  const { results } = await db.prepare(
-    `SELECT * FROM marketing_posts WHERE ${conditions.join(' AND ')}
+  const { results } = await db
+    .prepare(
+      `SELECT * FROM marketing_posts WHERE ${conditions.join(' AND ')}
      ORDER BY
        CASE status WHEN 'generated' THEN 0 WHEN 'accepted' THEN 1 WHEN 'sent' THEN 2 WHEN 'rejected' THEN 3 ELSE 4 END,
        created_at DESC
      LIMIT ?`
-  ).bind(...values).all<Record<string, unknown>>();
+    )
+    .bind(...values)
+    .all<Record<string, unknown>>();
   return (results ?? []) as unknown as MarketingPostRow[];
 }
 
 export async function getMarketingPost(id: string, db = getCockpitD1()) {
-  return await db.prepare('SELECT * FROM marketing_posts WHERE id = ?')
+  return await db
+    .prepare('SELECT * FROM marketing_posts WHERE id = ?')
     .bind(id)
     .first<MarketingPostRow>();
 }
 
-export async function createMarketingPost(ownerId: string, input: MarketingPostInput, db = getCockpitD1()) {
+export async function createMarketingPost(
+  ownerId: string,
+  input: MarketingPostInput,
+  db = getCockpitD1()
+) {
   const patch = normalizeInput(input);
   if (!patch.title) throw new Error('title is required');
   if (!patch.body) throw new Error('body is required');
   const id = crypto.randomUUID();
-  await db.prepare(`INSERT INTO marketing_posts (
+  await db
+    .prepare(`INSERT INTO marketing_posts (
     id, owner_id, project_slug, channel, status, title, hook, body, cta, asset_url,
     source_type, source_id, task_id, changelog_entry_id, scheduled_for, exported_at,
     posted_at, result_url, notes
@@ -186,14 +195,19 @@ export async function createMarketingPost(ownerId: string, input: MarketingPostI
       patch.exported_at ?? null,
       patch.posted_at ?? null,
       patch.result_url ?? null,
-      patch.notes ?? null,
-    ).run();
+      patch.notes ?? null
+    )
+    .run();
   const post = await getMarketingPost(id, db);
   if (!post) throw new Error('Marketing post was not created');
   return post;
 }
 
-export async function updateMarketingPost(id: string, input: MarketingPostInput, db = getCockpitD1()) {
+export async function updateMarketingPost(
+  id: string,
+  input: MarketingPostInput,
+  db = getCockpitD1()
+) {
   const patch = normalizeInput(input);
   const sets: string[] = [];
   const values: unknown[] = [];
@@ -205,7 +219,10 @@ export async function updateMarketingPost(id: string, input: MarketingPostInput,
   if (sets.length === 0) return null;
   sets.push("updated_at = datetime('now')");
   values.push(id);
-  await db.prepare(`UPDATE marketing_posts SET ${sets.join(', ')} WHERE id = ?`).bind(...values).run();
+  await db
+    .prepare(`UPDATE marketing_posts SET ${sets.join(', ')} WHERE id = ?`)
+    .bind(...values)
+    .run();
   return getMarketingPost(id, db);
 }
 
@@ -228,7 +245,8 @@ function postCopyFor(entry: ChangelogRow, channel: MarketingPostChannel) {
         '8-14s contrast: show what the old workflow looked like.',
         '14-20s payoff: show the result and one specific reason it matters.',
         '',
-        entry.content || 'Use concrete product footage or generated UI mock footage. No generic AI stock-video montage.',
+        entry.content ||
+          'Use concrete product footage or generated UI mock footage. No generic AI stock-video montage.',
       ].join('\n'),
       cta: `End card: "${project}: ${plainTitle}"`,
     };
@@ -255,41 +273,56 @@ function postCopyFor(entry: ChangelogRow, channel: MarketingPostChannel) {
   };
 }
 
-export async function generateMarketingPostsFromChangelog(ownerId: string, db: CockpitD1Database = getCockpitD1()) {
-  const { results } = await db.prepare(
-    `SELECT ce.id, ce.title, ce.content, ce.type, ce.task_id, ce.created_at, p.slug AS project_slug, p.name AS project_name
+export async function generateMarketingPostsFromChangelog(
+  ownerId: string,
+  db: CockpitD1Database = getCockpitD1()
+) {
+  const { results } = await db
+    .prepare(
+      `SELECT ce.id, ce.title, ce.content, ce.type, ce.task_id, ce.created_at, p.slug AS project_slug, p.name AS project_name
      FROM changelog_entries ce
      JOIN projects p ON ce.project_id = p.id
      WHERE p.owner_id = ?
        AND ce.type IN ('feature', 'fix', 'improvement')
      ORDER BY ce.created_at DESC
      LIMIT 20`
-  ).bind(ownerId).all<ChangelogRow>();
+    )
+    .bind(ownerId)
+    .all<ChangelogRow>();
   const entries = results ?? [];
   const channels: MarketingPostChannel[] = ['tiktok', 'instagram_reels', 'youtube_shorts'];
   const created: MarketingPostRow[] = [];
   let skipped = 0;
   for (const entry of entries) {
     for (const channel of channels) {
-      const duplicate = await db.prepare(
-        `SELECT id FROM marketing_posts WHERE owner_id = ? AND source_type = 'changelog' AND source_id = ? AND channel = ? LIMIT 1`
-      ).bind(ownerId, entry.id, channel).first<{ id: string }>();
+      const duplicate = await db
+        .prepare(
+          `SELECT id FROM marketing_posts WHERE owner_id = ? AND source_type = 'changelog' AND source_id = ? AND channel = ? LIMIT 1`
+        )
+        .bind(ownerId, entry.id, channel)
+        .first<{ id: string }>();
       if (duplicate) {
         skipped += 1;
         continue;
       }
       const copy = postCopyFor(entry, channel);
-      created.push(await createMarketingPost(ownerId, {
-        ...copy,
-        project_slug: entry.project_slug,
-        channel,
-        status: 'generated',
-        source_type: 'changelog',
-        source_id: entry.id,
-        changelog_entry_id: entry.id,
-        task_id: entry.task_id,
-        notes: 'Generated from changelog. Review manually before posting.',
-      }, db));
+      created.push(
+        await createMarketingPost(
+          ownerId,
+          {
+            ...copy,
+            project_slug: entry.project_slug,
+            channel,
+            status: 'generated',
+            source_type: 'changelog',
+            source_id: entry.id,
+            changelog_entry_id: entry.id,
+            task_id: entry.task_id,
+            notes: 'Generated from changelog. Review manually before posting.',
+          },
+          db
+        )
+      );
     }
   }
   return { created, skipped, scanned: entries.length };

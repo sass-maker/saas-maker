@@ -27,7 +27,7 @@ export function isTaskBlocked(task, tasks) {
   const byId = tasks instanceof Map ? tasks : new Map(tasks.map((t) => [t.id, t]));
   return deps.some((id) => {
     const prereq = byId.get(id);
-    return !prereq || prereq.status !== 'done';
+    return prereq?.status !== 'done';
   });
 }
 
@@ -63,7 +63,10 @@ export function findNextTask(tasks, options = {}) {
   if (candidates.length === 0) {
     const projectHint = project ? ` for project ${project}` : '';
     const blockedCount = annotated.filter((task) => task.status === status && task.blocked).length;
-    const blockedHint = status === 'todo' && blockedCount > 0 ? ` (${blockedCount} blocked by prerequisites or decision/config)` : '';
+    const blockedHint =
+      status === 'todo' && blockedCount > 0
+        ? ` (${blockedCount} blocked by prerequisites or decision/config)`
+        : '';
     throw new Error(`No runnable ${status} tasks available${projectHint}${blockedHint}.`);
   }
   return candidates[0];

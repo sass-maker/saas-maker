@@ -2,17 +2,34 @@ import { Command } from 'commander';
 import { loginCommand } from './commands/login.js';
 import { whoamiCommand } from './commands/whoami.js';
 import { keysCommand } from './commands/keys.js';
-import { projectsListCommand, projectsCreateCommand, projectsDeleteCommand, projectsUpdateCommand } from './commands/projects.js';
-import { fleetListCommand, fleetRunCommand, fleetUpgradeCommand, fleetAuditCommand, fleetFixCommand, fleetSecretsSyncCommand, fleetVersionsCommand, fleetApplySkillCommand, fleetProvisionCommand, fleetSearchCommand, fleetCheckDriftCommand } from './commands/fleet.js';
+import {
+  projectsListCommand,
+  projectsCreateCommand,
+  projectsDeleteCommand,
+  projectsUpdateCommand,
+} from './commands/projects.js';
+import {
+  fleetListCommand,
+  fleetRunCommand,
+  fleetUpgradeCommand,
+  fleetAuditCommand,
+  fleetFixCommand,
+  fleetSecretsSyncCommand,
+  fleetVersionsCommand,
+  fleetApplySkillCommand,
+  fleetProvisionCommand,
+  fleetSearchCommand,
+  fleetCheckDriftCommand,
+} from './commands/fleet.js';
 import { fleetSuperviseCommand } from './commands/supervise.js';
 import { fleetCleanCommand } from './commands/clean.js';
 import { fleetScanCommand } from './commands/fleet-scan.js';
 import { fleetDashboardCommand } from './commands/fleet-dashboard.js';
-import { feedbackListCommand, feedbackUpdateCommand, feedbackDeleteCommand } from './commands/feedback.js';
-import { roadmapListCommand, roadmapCreateCommand, roadmapUpdateCommand, roadmapDeleteCommand } from './commands/roadmap.js';
-import { changelogListCommand, changelogCreateCommand, changelogUpdateCommand, changelogDeleteCommand } from './commands/changelog.js';
-import { testimonialsListCommand, testimonialsUpdateCommand, testimonialsDeleteCommand } from './commands/testimonials.js';
-import { waitlistListCommand, waitlistCountCommand, waitlistDeleteCommand } from './commands/waitlist.js';
+import { feedbackListCommand } from './commands/feedback.js';
+import { roadmapListCommand } from './commands/roadmap.js';
+import { changelogListCommand } from './commands/changelog.js';
+import { testimonialsListCommand } from './commands/testimonials.js';
+import { waitlistListCommand } from './commands/waitlist.js';
 import { initCommand } from './commands/init.js';
 import { forgeCommand } from './commands/forge.js';
 import { statusCommand } from './commands/status.js';
@@ -38,16 +55,28 @@ program.command('keys').description('Show API keys for the linked block').action
 // --- Fleet Management ---
 const fleet = program.command('fleet').description('Manage your project fleet');
 fleet.command('list').description('List all projects in your fleet').action(fleetListCommand);
-fleet.command('scan').description('Scan local fleet and upload tooling metadata to Foundry').action(fleetScanCommand);
-fleet.command('dashboard').description('Print fleet tooling matrix locally').action(fleetDashboardCommand);
+fleet
+  .command('scan')
+  .description('Scan local fleet and upload tooling metadata to Foundry')
+  .action(fleetScanCommand);
+fleet
+  .command('dashboard')
+  .description('Print fleet tooling matrix locally')
+  .action(fleetDashboardCommand);
 fleet
   .command('run <command>')
   .description('Run a shell command across the entire fleet')
   .option('--type <type>', 'next | vite | node')
   .option('--parallel', 'Run concurrently despite failures')
   .action(fleetRunCommand);
-fleet.command('search <pattern>').description('Search for a pattern across the entire fleet').action(fleetSearchCommand);
-fleet.command('audit').description('Audit all fleet projects for Foundry compliance').action(fleetAuditCommand);
+fleet
+  .command('search <pattern>')
+  .description('Search for a pattern across the entire fleet')
+  .action(fleetSearchCommand);
+fleet
+  .command('audit')
+  .description('Audit all fleet projects for Foundry compliance')
+  .action(fleetAuditCommand);
 fleet
   .command('check-drift')
   .description('Audit registry projects against the foundry rules; --fix auto-applies known fixes')
@@ -59,37 +88,79 @@ fleet
   .description('Auto-fix compliance issues across the fleet')
   .option('--force', 'Overwrite existing config files', false)
   .action((opts) => fleetFixCommand({ force: opts.force }));
-fleet.command('provision').description('Recreate the entire fleet on this machine').action(fleetProvisionCommand);
-fleet.command('apply <skill>').description('Dispatch an agent swarm to apply a protocol').action(fleetApplySkillCommand);
-fleet.command('supervise')
+fleet
+  .command('provision')
+  .description('Recreate the entire fleet on this machine')
+  .action(fleetProvisionCommand);
+fleet
+  .command('apply <skill>')
+  .description('Dispatch an agent swarm to apply a protocol')
+  .action(fleetApplySkillCommand);
+fleet
+  .command('supervise')
   .description('Run the autonomous maintenance daemon')
   .option('--simulate', 'Test the loop using mock data')
   .action(fleetSuperviseCommand);
-fleet.command('clean')
+fleet
+  .command('clean')
   .description('Cleanup build artifacts and caches across the fleet')
   .option('--dry-run', 'Show what would be removed without deleting')
   .option('--deep', 'Also remove node_modules for a complete reset')
   .action(fleetCleanCommand);
-fleet.command('secrets-sync').description('Synchronize shared environment variables').action(fleetSecretsSyncCommand);
-fleet.command('upgrade').description('Upgrade all projects to Foundry Standards').action(fleetUpgradeCommand);
+fleet
+  .command('secrets-sync')
+  .description('Synchronize shared environment variables')
+  .action(fleetSecretsSyncCommand);
+fleet
+  .command('upgrade')
+  .description('Upgrade all projects to Foundry Standards')
+  .action(fleetUpgradeCommand);
 
-const versions = fleet.command('versions').description('Manage dependency versions across the fleet');
-versions.command('list').description('List all dependency versions').action(() => fleetVersionsCommand('list'));
-versions.command('fix').description('Fix version mismatches').action(() => fleetVersionsCommand('fix'));
-versions.command('check').description('Check for version mismatches').action(() => fleetVersionsCommand('check'));
+const versions = fleet
+  .command('versions')
+  .description('Manage dependency versions across the fleet');
+versions
+  .command('list')
+  .description('List all dependency versions')
+  .action(() => fleetVersionsCommand('list'));
+versions
+  .command('fix')
+  .description('Fix version mismatches')
+  .action(() => fleetVersionsCommand('fix'));
+versions
+  .command('check')
+  .description('Check for version mismatches')
+  .action(() => fleetVersionsCommand('check'));
 
 // --- Projects ---
 const projects = program.command('projects').description('Manage projects');
 projects.command('list').description('List your projects').action(projectsListCommand);
-projects.command('create').description('Create a new project').option('--name <name>', 'Project name').action(projectsCreateCommand);
-projects.command('delete').description('Delete a project').option('--id <id>', 'Project id').option('--force', 'Skip confirmation').action(projectsDeleteCommand);
-projects.command('update').description('Update a project').option('--id <id>', 'Project id').option('--name <name>', 'New name').action(projectsUpdateCommand);
+projects
+  .command('create')
+  .description('Create a new project')
+  .option('--name <name>', 'Project name')
+  .action(projectsCreateCommand);
+projects
+  .command('delete')
+  .description('Delete a project')
+  .option('--id <id>', 'Project id')
+  .option('--force', 'Skip confirmation')
+  .action(projectsDeleteCommand);
+projects
+  .command('update')
+  .description('Update a project')
+  .option('--id <id>', 'Project id')
+  .option('--name <name>', 'New name')
+  .action(projectsUpdateCommand);
 
 // --- Blocks & Widgets ---
 program.command('feedback').description('Manage the Feedback block').action(feedbackListCommand);
 program.command('roadmap').description('Manage the Roadmap block').action(roadmapListCommand);
 program.command('changelog').description('Manage the Changelog block').action(changelogListCommand);
-program.command('testimonials').description('Manage the Testimonials block').action(testimonialsListCommand);
+program
+  .command('testimonials')
+  .description('Manage the Testimonials block')
+  .action(testimonialsListCommand);
 
 program.command('waitlist').description('Manage the Waitlist block').action(waitlistListCommand);
 
@@ -126,7 +197,10 @@ program
   .action(doctorCommand);
 
 program.command('examples').description('Show practical command examples').action(examplesCommand);
-program.command('completions [shell]').description('Print shell completion script').action(completionsCommand);
+program
+  .command('completions [shell]')
+  .description('Print shell completion script')
+  .action(completionsCommand);
 program
   .command('api <method> <path>')
   .description('Call any API route')

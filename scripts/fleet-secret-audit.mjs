@@ -64,13 +64,17 @@ function printMarkdown(results) {
   console.log('| --- | --- | --- |');
   for (const result of results) {
     const missing = result.checks
-      .flatMap((check) => check.missing.map((name) => `${check.platform}:${formatRequiredSecret(name)}`))
+      .flatMap((check) =>
+        check.missing.map((name) => `${check.platform}:${formatRequiredSecret(name)}`)
+      )
       .join(', ');
     const errors = result.checks
       .filter((check) => check.error)
       .map((check) => `${check.platform}: ${check.error}`)
       .join('; ');
-    console.log(`| ${result.project} | ${result.ok ? 'pass' : 'fail'} | ${missing || errors || '-'} |`);
+    console.log(
+      `| ${result.project} | ${result.ok ? 'pass' : 'fail'} | ${missing || errors || '-'} |`
+    );
   }
   if (failures.length > 0) {
     console.log('\n## Failure Detail\n');
@@ -79,8 +83,12 @@ function printMarkdown(results) {
       for (const check of result.checks) {
         if (check.ok && !check.error) continue;
         const target = check.target ? ` (${check.target})` : '';
-        const missing = check.missing.length ? check.missing.map(formatRequiredSecret).join(', ') : 'none';
-        console.log(`- ${check.platform}${target}: missing ${missing}${check.error ? `; error: ${check.error}` : ''}`);
+        const missing = check.missing.length
+          ? check.missing.map(formatRequiredSecret).join(', ')
+          : 'none';
+        console.log(
+          `- ${check.platform}${target}: missing ${missing}${check.error ? `; error: ${check.error}` : ''}`
+        );
       }
       console.log('');
     }
@@ -98,7 +106,11 @@ async function createTasksForFailures(failures) {
     const key = secretFailureKey(failure);
     const existingTask = existing.find((task) => {
       const status = String(task.status ?? '').toLowerCase();
-      return open.has(status) && (task.title === `[fleet-secrets] ${failure.project}` || String(task.description ?? '').includes(key));
+      return (
+        open.has(status) &&
+        (task.title === `[fleet-secrets] ${failure.project}` ||
+          String(task.description ?? '').includes(key))
+      );
     });
     if (existingTask) {
       skipped.push({ failure, existing: existingTask });
@@ -106,29 +118,38 @@ async function createTasksForFailures(failures) {
     }
     const payload = buildSecretTaskPayload(failure);
     payload.description = `${payload.description}\n\nFailure key: ${key}`;
-    const result = spawnSync('pnpm', [
-      '--dir',
-      'packages/cli',
-      'exec',
-      'tsx',
-      'src/index.ts',
-      'api',
-      'POST',
-      '/v1/tasks',
-      '--auth',
-      'session',
-      '--body',
-      JSON.stringify(payload),
-      '--output',
-      'json',
-      '--no-validate',
-    ], {
-      cwd: ROOT,
-      encoding: 'utf8',
-      env: { ...process.env, FND_API_URL: process.env.FND_API_URL || 'https://api.sassmaker.com' },
-    });
+    const result = spawnSync(
+      'pnpm',
+      [
+        '--dir',
+        'packages/cli',
+        'exec',
+        'tsx',
+        'src/index.ts',
+        'api',
+        'POST',
+        '/v1/tasks',
+        '--auth',
+        'session',
+        '--body',
+        JSON.stringify(payload),
+        '--output',
+        'json',
+        '--no-validate',
+      ],
+      {
+        cwd: ROOT,
+        encoding: 'utf8',
+        env: {
+          ...process.env,
+          FND_API_URL: process.env.FND_API_URL || 'https://api.sassmaker.com',
+        },
+      }
+    );
     if (result.status !== 0) {
-      throw new Error(`Failed to create task for ${failure.project}: ${result.stderr || result.stdout}`);
+      throw new Error(
+        `Failed to create task for ${failure.project}: ${result.stderr || result.stdout}`
+      );
     }
     created.push({ failure, response: result.stdout });
   }
@@ -148,8 +169,9 @@ function readCachedTasks() {
 }
 
 const args = parseArgs(process.argv.slice(2));
-const projects = loadFleetProjects(ROOT)
-  .filter((project) => !args.project || project.slug === args.project);
+const projects = loadFleetProjects(ROOT).filter(
+  (project) => !args.project || project.slug === args.project
+);
 const cloudflareManifest = loadCloudflareTargetManifest(ROOT);
 
 if (args.project && projects.length === 0) {
@@ -157,7 +179,9 @@ if (args.project && projects.length === 0) {
   process.exit(2);
 }
 
-const plans = projects.map((project) => buildProjectSecretPlan(project, undefined, cloudflareManifest));
+const plans = projects.map((project) =>
+  buildProjectSecretPlan(project, undefined, cloudflareManifest)
+);
 const results = plans.map((plan) => auditProjectSecretPlan(plan, { root: ROOT }));
 const failures = results.filter((result) => !result.ok);
 

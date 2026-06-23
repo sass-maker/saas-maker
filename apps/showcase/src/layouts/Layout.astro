@@ -14,17 +14,16 @@ const DEFAULT_DESCRIPTION =
 const { title = DEFAULT_TITLE, description = DEFAULT_DESCRIPTION } = Astro.props;
 
 // Cloudflare Pages serves clean URLs without `.html`; canonicals should match.
-const pathname =
-  Astro.url.pathname.replace(/\.html$/, '').replace(/\/index$/, '') || '/';
-const canonical = new URL(pathname, Astro.site).href;
+const pathname = Astro.url.pathname.replace(/\.html$/, '').replace(/\/index$/, '') || '/';
+const _canonical = new URL(pathname, Astro.site).href;
 
 // OG image is generated once by the original Next.js opengraph-image
 // route and shipped as a static PNG (see public/opengraph-image.png).
 // Astro can't easily reproduce next/og's dynamic ImageResponse so we
 // freeze it as a static asset.
-const OG_IMAGE = `${SITE_URL}/opengraph-image.png`;
+const _OG_IMAGE = `${SITE_URL}/opengraph-image.png`;
 
-const STRUCTURED_DATA = {
+const _STRUCTURED_DATA = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
   name: 'Foundry',

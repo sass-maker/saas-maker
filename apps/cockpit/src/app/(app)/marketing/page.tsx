@@ -1,16 +1,16 @@
-import { redirect } from "next/navigation";
+import { redirect } from 'next/navigation';
 
-import { PageHeader } from "@/components/page-header";
-import { listMarketingPosts, type MarketingPostRow } from "@/lib/marketing-queue-store";
-import { getDashboardSession } from "@/lib/server-session";
+import { PageHeader } from '@/components/page-header';
+import { listMarketingPosts, type MarketingPostRow } from '@/lib/marketing-queue-store';
+import { getDashboardSession } from '@/lib/server-session';
 
-import { MarketingQueueClient } from "./marketing-queue-client";
+import { MarketingQueueClient } from './marketing-queue-client';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 export default async function MarketingPage() {
   const session = await getDashboardSession();
-  if (!session?.user) redirect("/login");
+  if (!session?.user) redirect('/login');
 
   let posts: MarketingPostRow[] = [];
   let error: string | null = null;
@@ -28,7 +28,7 @@ export default async function MarketingPage() {
       />
       {error ? (
         <div className="rounded-lg border border-yellow-800 bg-yellow-950/20 p-4 text-sm text-yellow-400">
-          Could not load marketing queue: {error}. Run migration{" "}
+          Could not load marketing queue: {error}. Run migration{' '}
           <code>workers/api/migrations/0015_marketing_posts.sql</code> before using this page.
         </div>
       ) : (

@@ -39,7 +39,7 @@ export function getGlobalConfig(): GlobalConfig {
   const legacy = readJsonOrNull<GlobalConfig>(LEGACY_GLOBAL_CONFIG);
   if (legacy) {
     mkdirSync(GLOBAL_DIR, { recursive: true });
-    writeFileSync(GLOBAL_CONFIG, JSON.stringify(legacy, null, 2) + '\n');
+    writeFileSync(GLOBAL_CONFIG, `${JSON.stringify(legacy, null, 2)}\n`);
     return legacy;
   }
   return {};
@@ -47,7 +47,7 @@ export function getGlobalConfig(): GlobalConfig {
 
 export function saveGlobalConfig(config: GlobalConfig): void {
   mkdirSync(GLOBAL_DIR, { recursive: true });
-  writeFileSync(GLOBAL_CONFIG, JSON.stringify(config, null, 2) + '\n');
+  writeFileSync(GLOBAL_CONFIG, `${JSON.stringify(config, null, 2)}\n`);
 }
 
 export function getLocalConfig(): LocalConfig | null {
@@ -56,18 +56,26 @@ export function getLocalConfig(): LocalConfig | null {
   // Auto-migrate legacy .saasmaker.json → foundry.json
   const legacy = readJsonOrNull<LocalConfig>(LEGACY_LOCAL_CONFIG);
   if (legacy) {
-    writeFileSync(LOCAL_CONFIG, JSON.stringify(legacy, null, 2) + '\n');
-    try { unlinkSync(LEGACY_LOCAL_CONFIG); } catch { /* keep going */ }
+    writeFileSync(LOCAL_CONFIG, `${JSON.stringify(legacy, null, 2)}\n`);
+    try {
+      unlinkSync(LEGACY_LOCAL_CONFIG);
+    } catch {
+      /* keep going */
+    }
     return legacy;
   }
   return null;
 }
 
 export function saveLocalConfig(config: LocalConfig): void {
-  writeFileSync(LOCAL_CONFIG, JSON.stringify(config, null, 2) + '\n');
+  writeFileSync(LOCAL_CONFIG, `${JSON.stringify(config, null, 2)}\n`);
   // Clean up legacy file if it exists alongside the new one
   if (existsSync(LEGACY_LOCAL_CONFIG)) {
-    try { unlinkSync(LEGACY_LOCAL_CONFIG); } catch { /* ignore */ }
+    try {
+      unlinkSync(LEGACY_LOCAL_CONFIG);
+    } catch {
+      /* ignore */
+    }
   }
 }
 
@@ -77,10 +85,10 @@ export function getApiKey(): string | null {
 
 export function getApiBase(): string {
   return (
-    process.env.FND_API_URL
-    ?? process.env.SAASMAKER_API_URL
-    ?? getGlobalConfig().apiBaseUrl
-    ?? 'https://api.sassmaker.com'
+    process.env.FND_API_URL ??
+    process.env.SAASMAKER_API_URL ??
+    getGlobalConfig().apiBaseUrl ??
+    'https://api.sassmaker.com'
   );
 }
 

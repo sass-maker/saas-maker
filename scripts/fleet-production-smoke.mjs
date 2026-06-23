@@ -9,10 +9,7 @@ import {
   buildSmokeTaskPayloads,
   diffPayloadsAgainstTasks,
 } from './lib/fleet-production-smoke.mjs';
-import {
-  getHealthContractStatus,
-  listHealthContracts,
-} from './lib/fleet-health-contracts.mjs';
+import { getHealthContractStatus, listHealthContracts } from './lib/fleet-health-contracts.mjs';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const DEFAULT_OUTPUT_DIR = path.join(ROOT, '.symphony', 'fleet-production-smoke');
@@ -24,9 +21,18 @@ const TARGETS = {
   'email-manager': [{ label: 'web', url: 'https://email-manager.sarthakagrawal927.workers.dev' }],
   everythingrated: [
     { label: 'web', url: 'https://everythingrated.sarthakagrawal927.workers.dev' },
-    { label: 'directory-ai-dev-tools', url: 'https://everythingrated.sarthakagrawal927.workers.dev/d/ai-dev-tools' },
-    { label: 'directory-databases', url: 'https://everythingrated.sarthakagrawal927.workers.dev/d/databases' },
-    { label: 'directory-hosting', url: 'https://everythingrated.sarthakagrawal927.workers.dev/d/hosting' },
+    {
+      label: 'directory-ai-dev-tools',
+      url: 'https://everythingrated.sarthakagrawal927.workers.dev/d/ai-dev-tools',
+    },
+    {
+      label: 'directory-databases',
+      url: 'https://everythingrated.sarthakagrawal927.workers.dev/d/databases',
+    },
+    {
+      label: 'directory-hosting',
+      url: 'https://everythingrated.sarthakagrawal927.workers.dev/d/hosting',
+    },
   ],
   'free-ai': [
     { label: 'health', url: 'https://free-ai-gateway.sarthakagrawal927.workers.dev/health' },
@@ -63,7 +69,12 @@ const TARGETS = {
     { label: 'gallery', url: 'https://psi-swarm-web.pages.dev/gallery/' },
   ],
   reader: [{ label: 'web', url: 'https://reader.sarthakagrawal927.workers.dev' }],
-  'reel-pipeline': [{ label: 'health', url: 'https://reel-pipeline-artifacts.sarthakagrawal927.workers.dev/health' }],
+  'reel-pipeline': [
+    {
+      label: 'health',
+      url: 'https://reel-pipeline-artifacts.sarthakagrawal927.workers.dev/health',
+    },
+  ],
   'resume-tailor': [{ label: 'web', url: 'https://rolepatch.com' }],
   'saas-maker': [
     { label: 'cockpit', url: 'https://app.sassmaker.com' },
@@ -100,7 +111,11 @@ const AUTH_PROBES = {
       method: 'POST',
       body: { provider: 'google', callbackURL: '/' },
       okStatuses: [200, 302, 400, 401],
-      failBodyIncludes: ['PROVIDER_NOT_FOUND', 'Provider not found', 'Authentication is not configured'],
+      failBodyIncludes: [
+        'PROVIDER_NOT_FOUND',
+        'Provider not found',
+        'Authentication is not configured',
+      ],
     },
   ],
   'saas-maker': [
@@ -161,11 +176,14 @@ function parseArgs(argv) {
     const arg = argv[i];
     if (arg === '--project') args.project = argv[++i] ?? null;
     else if (arg === '--output-dir') args.outputDir = path.resolve(argv[++i] ?? DEFAULT_OUTPUT_DIR);
-    else if (arg === '--timeout-ms') args.timeoutMs = Number.parseInt(argv[++i] ?? '', 10) || args.timeoutMs;
-    else if (arg === '--concurrency') args.concurrency = Number.parseInt(argv[++i] ?? '', 10) || args.concurrency;
+    else if (arg === '--timeout-ms')
+      args.timeoutMs = Number.parseInt(argv[++i] ?? '', 10) || args.timeoutMs;
+    else if (arg === '--concurrency')
+      args.concurrency = Number.parseInt(argv[++i] ?? '', 10) || args.concurrency;
     else if (arg === '--json') args.jsonOnly = true;
     else if (arg === '--fail-on-failure') args.failOnFailure = true;
-    else if (arg === '--existing-tasks') args.existingTasksFile = path.resolve(argv[++i] ?? DEFAULT_EXISTING_TASKS);
+    else if (arg === '--existing-tasks')
+      args.existingTasksFile = path.resolve(argv[++i] ?? DEFAULT_EXISTING_TASKS);
     else if (arg === '--create-tasks') args.createTasks = true;
     else if (arg === '--screenshot-all') args.screenshotAll = true;
     else if (arg === '--help' || arg === '-h') {
@@ -200,7 +218,10 @@ function includesPattern(value, patterns = SEVERE_TEXT_PATTERNS) {
 }
 
 function normalizeError(value) {
-  return String(value ?? '').replace(/\s+/g, ' ').trim().slice(0, 500);
+  return String(value ?? '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 500);
 }
 
 function isIgnoredResponse(response) {
@@ -241,7 +262,8 @@ async function runPageProbe(browser, project, target, args, artifactDir) {
   page.on('response', (response) => {
     const resourceType = response.request().resourceType();
     const status = response.status();
-    const expectedLoggedOutFetch = ['xhr', 'fetch'].includes(resourceType) && [401, 403].includes(status);
+    const expectedLoggedOutFetch =
+      ['xhr', 'fetch'].includes(resourceType) && [401, 403].includes(status);
     if (
       ['document', 'script', 'stylesheet', 'xhr', 'fetch'].includes(resourceType) &&
       status >= 400 &&
@@ -259,7 +281,10 @@ async function runPageProbe(browser, project, target, args, artifactDir) {
 
   let status = null;
   try {
-    const response = await page.goto(target.url, { waitUntil: 'domcontentloaded', timeout: args.timeoutMs });
+    const response = await page.goto(target.url, {
+      waitUntil: 'domcontentloaded',
+      timeout: args.timeoutMs,
+    });
     status = response?.status() ?? null;
     if (!status || status >= 400) {
       errors.push({ type: 'navigation', status, message: `unexpected status ${status}` });
@@ -267,7 +292,12 @@ async function runPageProbe(browser, project, target, args, artifactDir) {
     await page.waitForLoadState('load', { timeout: 15_000 }).catch(() => {});
     await page.waitForTimeout(1_500);
 
-    const bodyText = normalizeError(await page.locator('body').innerText({ timeout: 5_000 }).catch(() => ''));
+    const bodyText = normalizeError(
+      await page
+        .locator('body')
+        .innerText({ timeout: 5_000 })
+        .catch(() => '')
+    );
     if (includesPattern(bodyText)) {
       errors.push({ type: 'page-text', message: bodyText });
     }
@@ -317,7 +347,12 @@ async function runInteraction(page, interaction, errors) {
     await locator.click({ timeout: 8_000 });
     await page.waitForLoadState('networkidle', { timeout: 15_000 }).catch(() => {});
     await page.waitForTimeout(750);
-    const bodyText = normalizeError(await page.locator('body').innerText({ timeout: 5_000 }).catch(() => ''));
+    const bodyText = normalizeError(
+      await page
+        .locator('body')
+        .innerText({ timeout: 5_000 })
+        .catch(() => '')
+    );
     for (const expected of interaction.expectText ?? []) {
       if (!bodyText.includes(expected)) {
         errors.push({
@@ -329,9 +364,9 @@ async function runInteraction(page, interaction, errors) {
       }
     }
     if (interaction.expectIframeIncludes) {
-      const iframeSources = await page.locator('iframe').evaluateAll((nodes) =>
-        nodes.map((node) => node.getAttribute('src') ?? ''),
-      );
+      const iframeSources = await page
+        .locator('iframe')
+        .evaluateAll((nodes) => nodes.map((node) => node.getAttribute('src') ?? ''));
       if (!iframeSources.some((source) => source.includes(interaction.expectIframeIncludes))) {
         errors.push({
           type: 'interaction-missing-iframe',
@@ -412,7 +447,9 @@ async function runAuthProbe(project, probe, timeoutMs) {
 }
 
 function selectedProjects(args) {
-  const projects = Object.keys(TARGETS).filter((project) => !args.project || project === args.project);
+  const projects = Object.keys(TARGETS).filter(
+    (project) => !args.project || project === args.project
+  );
   if (args.project && projects.length === 0) {
     throw new Error(`Unknown project: ${args.project}`);
   }
@@ -451,7 +488,10 @@ function summarizeHealthContracts(checks) {
 function writeReports(args, report) {
   fs.mkdirSync(args.outputDir, { recursive: true });
   fs.mkdirSync(path.join(args.outputDir, 'artifacts'), { recursive: true });
-  fs.writeFileSync(path.join(args.outputDir, 'latest.json'), `${JSON.stringify(report, null, 2)}\n`);
+  fs.writeFileSync(
+    path.join(args.outputDir, 'latest.json'),
+    `${JSON.stringify(report, null, 2)}\n`
+  );
   fs.writeFileSync(path.join(args.outputDir, 'latest.md'), renderMarkdown(report));
 }
 
@@ -495,14 +535,19 @@ function renderMarkdown(report) {
   lines.push('| Project | Status | Prod URL | Deploy Target | Workflow | Smoke |');
   lines.push('| --- | --- | --- | --- | --- | --- |');
   for (const contract of report.healthContracts ?? []) {
-    lines.push([
-      contract.project,
-      contract.status,
-      contract.prodUrl ?? 'blocked',
-      contract.deployTarget ?? 'unknown',
-      contract.githubWorkflow ?? 'none',
-      contract.smokeCommand ? '`configured`' : 'blocked',
-    ].join(' | ').replace(/^/, '| ').replace(/$/, ' |'));
+    lines.push(
+      [
+        contract.project,
+        contract.status,
+        contract.prodUrl ?? 'blocked',
+        contract.deployTarget ?? 'unknown',
+        contract.githubWorkflow ?? 'none',
+        contract.smokeCommand ? '`configured`' : 'blocked',
+      ]
+        .join(' | ')
+        .replace(/^/, '| ')
+        .replace(/$/, ' |')
+    );
   }
   lines.push('');
 
@@ -569,7 +614,7 @@ function upsertViaSymphony(payload) {
       '--priority',
       payload.priority,
     ],
-    { encoding: 'utf8', stdio: 'inherit' },
+    { encoding: 'utf8', stdio: 'inherit' }
   );
   return cli.status === 0;
 }
@@ -598,16 +643,20 @@ async function main() {
   const checks = [];
 
   try {
-    const projectChecks = await mapLimit(projects, Math.max(1, args.concurrency), async (project) => {
-      const checksForProject = [];
-      for (const target of TARGETS[project]) {
-        checksForProject.push(await runPageProbe(browser, project, target, args, artifactDir));
+    const projectChecks = await mapLimit(
+      projects,
+      Math.max(1, args.concurrency),
+      async (project) => {
+        const checksForProject = [];
+        for (const target of TARGETS[project]) {
+          checksForProject.push(await runPageProbe(browser, project, target, args, artifactDir));
+        }
+        for (const probe of AUTH_PROBES[project] ?? []) {
+          checksForProject.push(await runAuthProbe(project, probe, args.timeoutMs));
+        }
+        return checksForProject;
       }
-      for (const probe of AUTH_PROBES[project] ?? []) {
-        checksForProject.push(await runAuthProbe(project, probe, args.timeoutMs));
-      }
-      return checksForProject;
-    });
+    );
     checks.push(...projectChecks.flat());
   } finally {
     await browser.close();
@@ -639,7 +688,9 @@ async function main() {
   } else {
     for (const item of report.summary) {
       const marker = item.status === 'pass' ? 'PASS' : 'FAIL';
-      console.log(`${marker} ${item.project}: ${item.checks - item.failures}/${item.checks} checks passed`);
+      console.log(
+        `${marker} ${item.project}: ${item.checks - item.failures}/${item.checks} checks passed`
+      );
     }
     if (fresh.length || skipped.length) {
       console.log(`\nSuggested tasks: ${fresh.length} new, ${skipped.length} already tracked`);

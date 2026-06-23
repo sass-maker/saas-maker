@@ -19,9 +19,7 @@ export const log = {
 
 export function table(rows: string[][]): void {
   if (rows.length === 0) return;
-  const widths = rows[0].map((_, i) =>
-    Math.max(...rows.map((row) => (row[i] ?? '').length)),
-  );
+  const widths = rows[0].map((_, i) => Math.max(...rows.map((row) => (row[i] ?? '').length)));
   for (const row of rows) {
     console.log(row.map((cell, i) => cell.padEnd(widths[i])).join('  '));
   }

@@ -20,8 +20,13 @@ describe('fleet secret audit helpers', () => {
 
   it('parses secret names from json and wrangler text output', () => {
     expect(parseSecretNames('[{"name":"AAA"},{"name":"BBB"}]')).toEqual(['AAA', 'BBB']);
-    expect(parseSecretNames('The production environment has access to:\nAAA\nBBB\n')).toEqual(['AAA', 'BBB']);
-    expect(parseSecretNames('The production environment has access to:\n  - AAA: Value Encrypted\n')).toEqual(['AAA']);
+    expect(parseSecretNames('The production environment has access to:\nAAA\nBBB\n')).toEqual([
+      'AAA',
+      'BBB',
+    ]);
+    expect(
+      parseSecretNames('The production environment has access to:\n  - AAA: Value Encrypted\n')
+    ).toEqual(['AAA']);
   });
 
   it('compares required and present secret names without values', () => {
@@ -44,14 +49,16 @@ describe('fleet secret audit helpers', () => {
   });
 
   it('parses Wrangler vars and bindings without reading values', () => {
-    expect(parseCloudflareConfigState(`
+    expect(
+      parseCloudflareConfigState(`
 name = "example"
 [vars]
 NODE_ENV = "production"
 PUBLIC_URL = "https://example.com"
 [[d1_databases]]
 binding = "DB"
-`)).toEqual({
+`)
+    ).toEqual({
       vars: ['NODE_ENV', 'PUBLIC_URL'],
       bindings: ['DB'],
     });
@@ -71,7 +78,7 @@ binding = "DB"
           build: ['NEXT_PUBLIC_KEY'],
           runtime: ['GOOGLE_CLIENT_SECRET'],
         },
-      },
+      }
     );
     expect(plan.github.required).toEqual(['NEXT_PUBLIC_KEY']);
     expect(plan.runtime).toMatchObject({
@@ -105,7 +112,7 @@ binding = "DB"
             },
           ],
         },
-      },
+      }
     );
 
     expect(plan.runtimes).toHaveLength(2);

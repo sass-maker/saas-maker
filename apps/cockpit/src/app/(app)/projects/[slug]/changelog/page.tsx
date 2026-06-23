@@ -1,4 +1,4 @@
-import { Card } from "@/components/ui/card";
+import { Card } from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -6,22 +6,19 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { PageHeader } from "@/components/page-header";
-import { StatCard } from "@/components/stat-card";
-import { EmptyState } from "@/components/empty-state";
-import { ChangelogActions } from "./changelog-actions";
-import { CreateChangelogDialog } from "./create-changelog-dialog";
-import { Megaphone, FileText, Eye, EyeOff } from "lucide-react";
-import { apiFetch } from "@/lib/api";
-import { getAuthenticatedProject } from "../get-project";
-import type {
-  ChangelogEntryRecord,
-  ChangelogEntryType,
-} from "@saas-maker/contracts";
+} from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+import { PageHeader } from '@/components/page-header';
+import { StatCard } from '@/components/stat-card';
+import { EmptyState } from '@/components/empty-state';
+import { ChangelogActions } from './changelog-actions';
+import { CreateChangelogDialog } from './create-changelog-dialog';
+import { Megaphone, FileText, Eye, EyeOff } from 'lucide-react';
+import { apiFetch } from '@/lib/api';
+import { getAuthenticatedProject } from '../get-project';
+import type { ChangelogEntryRecord, ChangelogEntryType } from '@saas-maker/contracts';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -29,12 +26,12 @@ interface Props {
 
 const typeBadge: Record<
   ChangelogEntryType,
-  { label: string; variant: "default" | "secondary" | "outline" | "destructive" }
+  { label: string; variant: 'default' | 'secondary' | 'outline' | 'destructive' }
 > = {
-  feature: { label: "Feature", variant: "default" },
-  improvement: { label: "Improvement", variant: "secondary" },
-  fix: { label: "Fix", variant: "outline" },
-  breaking: { label: "Breaking", variant: "destructive" },
+  feature: { label: 'Feature', variant: 'default' },
+  improvement: { label: 'Improvement', variant: 'secondary' },
+  fix: { label: 'Fix', variant: 'outline' },
+  breaking: { label: 'Breaking', variant: 'destructive' },
 };
 
 export default async function ChangelogPage({ params }: Props) {
@@ -46,11 +43,7 @@ export default async function ChangelogPage({ params }: Props) {
   let stats = { total: 0, published: 0, drafts: 0 };
 
   try {
-    const res = await apiFetch(
-      `/v1/changelog/dashboard/${project.id}`,
-      {},
-      token
-    );
+    const res = await apiFetch(`/v1/changelog/dashboard/${project.id}`, {}, token);
     entries = res.data ?? [];
     total = res.total ?? 0;
     stats = res.stats ?? stats;
@@ -62,7 +55,7 @@ export default async function ChangelogPage({ params }: Props) {
     <div className="space-y-6">
       <PageHeader
         title="Changelog"
-        description={`${total} total entr${total !== 1 ? "ies" : "y"}`}
+        description={`${total} total entr${total !== 1 ? 'ies' : 'y'}`}
         action={<CreateChangelogDialog projectId={project.id} />}
       />
 
@@ -97,23 +90,21 @@ export default async function ChangelogPage({ params }: Props) {
                       </p>
                     </TableCell>
                     <TableCell className="text-muted-foreground font-mono text-sm">
-                      {entry.version ?? "--"}
+                      {entry.version ?? '--'}
                     </TableCell>
                     <TableCell>
                       <Badge variant={badge.variant}>{badge.label}</Badge>
                     </TableCell>
                     <TableCell>
-                      <Badge
-                        variant={entry.published ? "default" : "secondary"}
-                      >
-                        {entry.published ? "Published" : "Draft"}
+                      <Badge variant={entry.published ? 'default' : 'secondary'}>
+                        {entry.published ? 'Published' : 'Draft'}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-muted-foreground text-sm">
-                      {new Date(entry.created_at).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
+                      {new Date(entry.created_at).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric',
                       })}
                     </TableCell>
                     <TableCell>

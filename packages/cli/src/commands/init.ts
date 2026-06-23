@@ -5,7 +5,13 @@ import ora from 'ora';
 import { getResponseError, requestApi } from '../lib/request.js';
 import { saveLocalConfig } from '../lib/config.js';
 import { log } from '../lib/ui.js';
-import { detectProjectType, applyStandard, scaffoldRenovate, scaffoldCI, scaffoldHusky } from '../lib/forge.js';
+import {
+  detectProjectType,
+  applyStandard,
+  scaffoldRenovate,
+  scaffoldCI,
+  scaffoldHusky,
+} from '../lib/forge.js';
 
 interface Project {
   id: string;
@@ -26,7 +32,7 @@ function applyOfflineFoundry(name: string, force = false): void {
     linked: false,
     standards: { eslint: true, tsconfig: true, prettier: true, renovate: true },
   };
-  writeFileSync(join(process.cwd(), FOUNDRY_CONFIG), JSON.stringify(config, null, 2) + '\n');
+  writeFileSync(join(process.cwd(), FOUNDRY_CONFIG), `${JSON.stringify(config, null, 2)}\n`);
   log.success(`Created ${FOUNDRY_CONFIG} (offline — not linked to fleet yet)`);
 
   log.info(`Detected ${type} project. Applying Foundry Standards...`);
@@ -42,7 +48,9 @@ function applyOfflineFoundry(name: string, force = false): void {
   console.log('  fnd login      ← then re-run fnd init to link to fleet');
 }
 
-export async function initCommand(options: { offline?: boolean; force?: boolean } = {}): Promise<void> {
+export async function initCommand(
+  options: { offline?: boolean; force?: boolean } = {}
+): Promise<void> {
   const cwd = process.cwd();
   const foundryPath = join(cwd, FOUNDRY_CONFIG);
   const legacyPath = join(cwd, LEGACY_CONFIG);
@@ -50,7 +58,11 @@ export async function initCommand(options: { offline?: boolean; force?: boolean 
   // Auto-migrate legacy → canonical at the start of every init
   if (!existsSync(foundryPath) && existsSync(legacyPath)) {
     writeFileSync(foundryPath, readFileSync(legacyPath, 'utf-8'));
-    try { require('node:fs').unlinkSync(legacyPath); } catch { /* ignore */ }
+    try {
+      require('node:fs').unlinkSync(legacyPath);
+    } catch {
+      /* ignore */
+    }
     log.info('Migrated .saasmaker.json → foundry.json');
   }
 
@@ -63,7 +75,9 @@ export async function initCommand(options: { offline?: boolean; force?: boolean 
   let pkgName = 'my-project';
   const pkgPath = join(cwd, 'package.json');
   if (existsSync(pkgPath)) {
-    try { pkgName = JSON.parse(readFileSync(pkgPath, 'utf-8')).name ?? pkgName; } catch {}
+    try {
+      pkgName = JSON.parse(readFileSync(pkgPath, 'utf-8')).name ?? pkgName;
+    } catch {}
   }
 
   // --offline: skip API, apply standards locally, skip fleet link
@@ -79,7 +93,9 @@ export async function initCommand(options: { offline?: boolean; force?: boolean 
     const res = await requestApi<{ data: Project[] }>({ path: '/v1/projects', auth: 'session' });
     if (!res.ok) {
       spinner.stop();
-      log.warn(`Could not reach fleet API (${getResponseError(res)}). Falling back to offline mode.`);
+      log.warn(
+        `Could not reach fleet API (${getResponseError(res)}). Falling back to offline mode.`
+      );
       log.info('Run `fnd login` to re-authenticate, then `fnd init` to link to fleet.');
       applyOfflineFoundry(pkgName, options.force);
       return;
@@ -88,7 +104,9 @@ export async function initCommand(options: { offline?: boolean; force?: boolean 
     spinner.stop();
   } catch (err) {
     spinner.stop();
-    log.warn(`Network error: ${err instanceof Error ? err.message : 'Unknown'}. Falling back to offline mode.`);
+    log.warn(
+      `Network error: ${err instanceof Error ? err.message : 'Unknown'}. Falling back to offline mode.`
+    );
     applyOfflineFoundry(pkgName, options.force);
     return;
   }
@@ -107,7 +125,7 @@ export async function initCommand(options: { offline?: boolean; force?: boolean 
     const choice = await rl.question(`\nSelect project to link (1-${projects.length}): `);
     const idx = parseInt(choice, 10) - 1;
 
-    if (isNaN(idx) || idx < 0 || idx >= projects.length) {
+    if (Number.isNaN(idx) || idx < 0 || idx >= projects.length) {
       log.error('Invalid selection.');
       return;
     }
@@ -125,7 +143,7 @@ export async function initCommand(options: { offline?: boolean; force?: boolean 
       projectKey: project.api_key,
       standards: { eslint: true, tsconfig: true, prettier: true, renovate: true },
     };
-    writeFileSync(foundryPath, JSON.stringify(config, null, 2) + '\n');
+    writeFileSync(foundryPath, `${JSON.stringify(config, null, 2)}\n`);
 
     // saveLocalConfig also persists the slug/projectId/projectKey shape
     saveLocalConfig({

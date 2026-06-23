@@ -15,7 +15,12 @@ describe('droid patch capture', () => {
     const events: RunEventInput[] = [];
     const artifacts: RunArtifactInput[] = [];
 
-    await captureGitPatch(createInput(events, artifacts), { exec }, '/workspace/repo', ok('done\n'));
+    await captureGitPatch(
+      createInput(events, artifacts),
+      { exec },
+      '/workspace/repo',
+      ok('done\n')
+    );
 
     expect(events).toEqual([
       expect.objectContaining({
@@ -51,7 +56,10 @@ describe('droid patch capture', () => {
   });
 });
 
-function createInput(events: RunEventInput[], artifacts: RunArtifactInput[]): Parameters<RunExecutor['execute']>[0] {
+function createInput(
+  events: RunEventInput[],
+  artifacts: RunArtifactInput[]
+): Parameters<RunExecutor['execute']>[0] {
   return {
     env: {
       DROID_INTERNAL_TOKEN: 'test-token',

@@ -56,7 +56,12 @@ export const sandboxExecutor: RunExecutor = {
 
     await input.recordEvent(providerContractEvent(resolveProviderContract(input)));
     if (canRunBrowserAcceptanceWithoutSandbox(input)) {
-      const browserResult = await runBrowserAcceptance(input, {}, workspace, input.browserAcceptance!);
+      const browserResult = await runBrowserAcceptance(
+        input,
+        {},
+        workspace,
+        input.browserAcceptance!
+      );
       await recordStructuredFinal(
         input,
         {
@@ -288,7 +293,9 @@ function getDroidSandbox(
   });
 }
 
-function canRunBrowserAcceptanceWithoutSandbox(input: Parameters<RunExecutor['execute']>[0]): boolean {
+function canRunBrowserAcceptanceWithoutSandbox(
+  input: Parameters<RunExecutor['execute']>[0]
+): boolean {
   return Boolean(
     input.browserAcceptance?.url?.trim() &&
       !input.browserAcceptance.start_command?.trim() &&
@@ -767,21 +774,27 @@ async function getTaskCallbackClient(
     return null;
   }
   return {
-    apiUrl: (input.env.SAASMAKER_API_URL?.trim() || 'https://api.sassmaker.com').replace(/\/+$/, ''),
+    apiUrl: (input.env.SAASMAKER_API_URL?.trim() || 'https://api.sassmaker.com').replace(
+      /\/+$/,
+      ''
+    ),
     token,
     taskId: input.taskId,
   };
 }
 
 async function postTaskComment(client: TaskCallbackClient, body: string): Promise<void> {
-  const response = await fetch(`${client.apiUrl}/v1/tasks/${encodeURIComponent(client.taskId)}/comments`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${client.token}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ body, author_type: 'agent' }),
-  });
+  const response = await fetch(
+    `${client.apiUrl}/v1/tasks/${encodeURIComponent(client.taskId)}/comments`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${client.token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ body, author_type: 'agent' }),
+    }
+  );
   if (!response.ok) {
     const text = await response.text();
     throw new Error(`comment failed with HTTP ${response.status}: ${text.slice(0, 300)}`);
@@ -1243,7 +1256,13 @@ async function createDraftPullRequest(
         pr_number: pr.number,
       },
     });
-    return { created: true, url: pr.html_url, branch: branchName, number: pr.number, headSha: commit.sha };
+    return {
+      created: true,
+      url: pr.html_url,
+      branch: branchName,
+      number: pr.number,
+      headSha: commit.sha,
+    };
   } catch (error) {
     await input.recordEvent({
       type: 'pr_failed',
@@ -1277,10 +1296,10 @@ async function finalizeWorkspacePatch(
   if (!input.createPr) {
     const accepted = await runConfiguredAcceptance(input, sandbox, workspace);
     if (!accepted.success) {
-    await recordStructuredFinal(input, accepted, finalEvidence, null, null, {
-      summary: accepted.stderr || 'Droid acceptance command failed.',
-      risks: [accepted.stderr || 'Droid acceptance command failed.'],
-    });
+      await recordStructuredFinal(input, accepted, finalEvidence, null, null, {
+        summary: accepted.stderr || 'Droid acceptance command failed.',
+        risks: [accepted.stderr || 'Droid acceptance command failed.'],
+      });
       return accepted;
     }
     await recordStructuredFinal(input, result, finalEvidence, null, null);
@@ -1320,7 +1339,10 @@ async function finalizeWorkspacePatch(
         files_changed: evidence.filesChanged,
       },
     });
-    await recordStructuredFinal(input, result, finalEvidence, null, null, { summary, risks: [summary] });
+    await recordStructuredFinal(input, result, finalEvidence, null, null, {
+      summary,
+      risks: [summary],
+    });
     return {
       stdout: result.stdout,
       stderr: appendTail(result.stderr, summary),
@@ -1348,7 +1370,8 @@ async function finalizeWorkspacePatch(
 
   const accepted = await runConfiguredAcceptance(input, sandbox, workspace);
   if (!accepted.success) {
-    const summary = accepted.stderr || 'Droid acceptance command failed, so no pull request was created.';
+    const summary =
+      accepted.stderr || 'Droid acceptance command failed, so no pull request was created.';
     await input.recordEvent({
       type: 'pr_gate_failed',
       actor: 'tester',
@@ -1373,16 +1396,13 @@ async function finalizeWorkspacePatch(
     return accepted;
   }
 
-  const pr = await createDraftPullRequestWithTimeout(
-    input,
-    sandbox,
-    workspace,
-    hydration,
-    patch
-  );
+  const pr = await createDraftPullRequestWithTimeout(input, sandbox, workspace, hydration, patch);
   if (!pr.created) {
     const summary = 'Droid could not create the requested pull request.';
-    await recordStructuredFinal(input, result, finalEvidence, null, null, { summary, risks: [summary] });
+    await recordStructuredFinal(input, result, finalEvidence, null, null, {
+      summary,
+      risks: [summary],
+    });
     return {
       stdout: result.stdout,
       stderr: appendTail(result.stderr, summary),
@@ -1414,7 +1434,8 @@ async function finalizeWorkspacePatch(
     source: 'worker',
     command: 'Droid PR follow-up',
     cwd: workspace,
-    message: 'Droid opened a draft PR. If CI fails, rerun Droid on the same task with the PR context to repair the branch.',
+    message:
+      'Droid opened a draft PR. If CI fails, rerun Droid on the same task with the PR context to repair the branch.',
     metadata: {
       pr_url: pr.url ?? null,
       pr_branch: pr.branch ?? null,
@@ -1482,7 +1503,10 @@ function withAcceptanceChecks(
   const checks = [...evidence.checkCommands];
   if (input.acceptanceCommand) checks.push(input.acceptanceCommand);
   if (isBrowserAcceptanceEnabled(input.browserAcceptance)) {
-    const label = input.browserAcceptance.goal?.trim() || input.browserAcceptance.url?.trim() || 'browser acceptance';
+    const label =
+      input.browserAcceptance.goal?.trim() ||
+      input.browserAcceptance.url?.trim() ||
+      'browser acceptance';
     checks.push(`browser: ${label}`);
   }
   return {
@@ -1561,12 +1585,18 @@ async function syncTaskFromFinalReport(
   if (!client) return;
 
   const comment = [
-    report.prUrl ? 'Droid opened a draft PR.' : report.success ? 'Droid finished the run.' : 'Droid finished with a failure.',
+    report.prUrl
+      ? 'Droid opened a draft PR.'
+      : report.success
+        ? 'Droid finished the run.'
+        : 'Droid finished with a failure.',
     '',
     `Summary: ${report.summary}`,
     report.prUrl ? `PR: ${report.prUrl}` : '',
     report.prBranch ? `Branch: ${report.prBranch}` : '',
-    report.filesChanged.length ? `Files: ${report.filesChanged.slice(0, 8).join(', ')}${report.filesChanged.length > 8 ? ` +${report.filesChanged.length - 8}` : ''}` : '',
+    report.filesChanged.length
+      ? `Files: ${report.filesChanged.slice(0, 8).join(', ')}${report.filesChanged.length > 8 ? ` +${report.filesChanged.length - 8}` : ''}`
+      : '',
     report.checksRun.length ? `Checks: ${report.checksRun.join(', ')}` : '',
     report.risks.length ? `Risks: ${report.risks.join('; ')}` : '',
     report.blockers.length ? `Blockers: ${report.blockers.join('; ')}` : '',

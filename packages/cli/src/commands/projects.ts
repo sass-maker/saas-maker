@@ -72,7 +72,7 @@ export async function projectsCreateCommand(options: ProjectsCreateOptions = {})
   const rl = createInterface({ input: process.stdin, output: process.stdout });
 
   try {
-    const inputName = options.name ?? await rl.question('Project name: ');
+    const inputName = options.name ?? (await rl.question('Project name: '));
     const name = inputName.trim();
     if (!name) {
       log.error('Project name cannot be empty.');
@@ -117,10 +117,20 @@ export async function projectsDeleteCommand(options: ProjectsDeleteOptions = {})
     let projectId = options.id;
 
     if (!projectId) {
-      const listRes = await requestApi<{ data: Project[] }>({ path: '/v1/projects', auth: 'session' });
-      if (!listRes.ok) { log.error(getResponseError(listRes)); process.exitCode = 1; return; }
+      const listRes = await requestApi<{ data: Project[] }>({
+        path: '/v1/projects',
+        auth: 'session',
+      });
+      if (!listRes.ok) {
+        log.error(getResponseError(listRes));
+        process.exitCode = 1;
+        return;
+      }
       const projects = listRes.data?.data ?? [];
-      if (projects.length === 0) { log.info('No projects to delete.'); return; }
+      if (projects.length === 0) {
+        log.info('No projects to delete.');
+        return;
+      }
 
       log.info('Your projects:');
       projects.forEach((p, i) => console.log(`  ${i + 1}. ${p.name} (${p.slug}) — ${p.id}`));
@@ -129,18 +139,34 @@ export async function projectsDeleteCommand(options: ProjectsDeleteOptions = {})
       projectId = num > 0 && num <= projects.length ? projects[num - 1].id : choice.trim();
     }
 
-    if (!projectId) { log.error('No project ID provided.'); return; }
+    if (!projectId) {
+      log.error('No project ID provided.');
+      return;
+    }
 
     if (!options.force) {
-      const confirm = await rl.question(`Delete project ${projectId}? This cannot be undone. (y/N) `);
-      if (confirm.toLowerCase() !== 'y') { log.info('Cancelled.'); return; }
+      const confirm = await rl.question(
+        `Delete project ${projectId}? This cannot be undone. (y/N) `
+      );
+      if (confirm.toLowerCase() !== 'y') {
+        log.info('Cancelled.');
+        return;
+      }
     }
 
     const spinner = ora('Deleting project...').start();
     try {
-      const res = await requestApi({ path: `/v1/projects/${projectId}`, method: 'DELETE', auth: 'session' });
+      const res = await requestApi({
+        path: `/v1/projects/${projectId}`,
+        method: 'DELETE',
+        auth: 'session',
+      });
       spinner.stop();
-      if (!res.ok) { log.error(getResponseError(res)); process.exitCode = 1; return; }
+      if (!res.ok) {
+        log.error(getResponseError(res));
+        process.exitCode = 1;
+        return;
+      }
       log.success('Project deleted.');
     } catch (err) {
       spinner.stop();
@@ -157,10 +183,20 @@ export async function projectsUpdateCommand(options: ProjectsUpdateOptions = {})
   try {
     let projectId = options.id;
     if (!projectId) {
-      const listRes = await requestApi<{ data: Project[] }>({ path: '/v1/projects', auth: 'session' });
-      if (!listRes.ok) { log.error(getResponseError(listRes)); process.exitCode = 1; return; }
+      const listRes = await requestApi<{ data: Project[] }>({
+        path: '/v1/projects',
+        auth: 'session',
+      });
+      if (!listRes.ok) {
+        log.error(getResponseError(listRes));
+        process.exitCode = 1;
+        return;
+      }
       const projects = listRes.data?.data ?? [];
-      if (projects.length === 0) { log.info('No projects.'); return; }
+      if (projects.length === 0) {
+        log.info('No projects.');
+        return;
+      }
 
       log.info('Your projects:');
       projects.forEach((p, i) => console.log(`  ${i + 1}. ${p.name} (${p.slug}) — ${p.id}`));
@@ -169,16 +205,31 @@ export async function projectsUpdateCommand(options: ProjectsUpdateOptions = {})
       projectId = num > 0 && num <= projects.length ? projects[num - 1].id : choice.trim();
     }
 
-    if (!projectId) { log.error('No project ID provided.'); return; }
+    if (!projectId) {
+      log.error('No project ID provided.');
+      return;
+    }
 
     const name = options.name ?? (await rl.question('New project name: ')).trim();
-    if (!name) { log.error('Name cannot be empty.'); return; }
+    if (!name) {
+      log.error('Name cannot be empty.');
+      return;
+    }
 
     const spinner = ora('Updating project...').start();
     try {
-      const res = await requestApi<Project>({ path: `/v1/projects/${projectId}`, method: 'PATCH', auth: 'session', body: { name } });
+      const res = await requestApi<Project>({
+        path: `/v1/projects/${projectId}`,
+        method: 'PATCH',
+        auth: 'session',
+        body: { name },
+      });
       spinner.stop();
-      if (!res.ok || !res.data) { log.error(getResponseError(res)); process.exitCode = 1; return; }
+      if (!res.ok || !res.data) {
+        log.error(getResponseError(res));
+        process.exitCode = 1;
+        return;
+      }
       log.success(`Updated project to "${res.data.name}"`);
       printOutput(res.data, { output: options.output ?? 'json', raw: options.raw });
     } catch (err) {

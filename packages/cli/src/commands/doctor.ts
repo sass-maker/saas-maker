@@ -1,12 +1,5 @@
-import {
-  getApiBase,
-  getApiKey,
-  getLocalConfig,
-  getLocalProjectId,
-  getLocalProjectKey,
-} from '../lib/config.js';
+import { getApiBase, getApiKey, getLocalConfig } from '../lib/config.js';
 import { printOutput, type OutputFormat } from '../lib/output.js';
-import { requireLinkedProjectId } from '../lib/project.js';
 import { getResponseError, requestApi } from '../lib/request.js';
 import { auditProject } from '../lib/auditor.js';
 
@@ -47,7 +40,12 @@ export async function doctorCommand(options: DoctorOptions = {}): Promise<void> 
       pushCheck(checks, 'Health Endpoint', 'fail', getResponseError(health));
     }
   } catch (err) {
-    pushCheck(checks, 'Health Endpoint', 'fail', err instanceof Error ? err.message : 'Request failed');
+    pushCheck(
+      checks,
+      'Health Endpoint',
+      'fail',
+      err instanceof Error ? err.message : 'Request failed'
+    );
   }
 
   const token = getApiKey();
@@ -67,7 +65,7 @@ export async function doctorCommand(options: DoctorOptions = {}): Promise<void> 
 
   // 3. Foundry Standard Compliance (Deep Inspection)
   const compliance = auditProject();
-  compliance.forEach(c => pushCheck(checks, `Standard: ${c.check}`, c.status, c.detail));
+  compliance.forEach((c) => pushCheck(checks, `Standard: ${c.check}`, c.status, c.detail));
 
   printOutput(checks, {
     output: options.output ?? 'table',

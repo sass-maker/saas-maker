@@ -6,13 +6,7 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [
-        ".next/**",
-        "!.next/cache/**",
-        ".open-next/**",
-        "dist/**",
-        "storybook-static/**"
-      ],
+      "outputs": [".next/**", "!.next/cache/**", ".open-next/**", "dist/**", "storybook-static/**"],
       "inputs": [
         "src/**",
         "package.json",

@@ -30,7 +30,8 @@ describe('checkProjectDrift', () => {
       'foundry.json': JSON.stringify({ slug: 'demo', linked: true }),
       'AGENTS.md': '# agents\n',
       '.husky/pre-push': '#!/bin/sh\nSECRETS=$(git ls-files)\n',
-      'eslint.config.js': 'import nextCoreWebVitals from "eslint-config-next/core-web-vitals";\nexport default [];\n',
+      'eslint.config.js':
+        'import nextCoreWebVitals from "eslint-config-next/core-web-vitals";\nexport default [];\n',
       'tsconfig.json': '{ "compilerOptions": { "strict": true, "moduleResolution": "bundler" } }',
       '.github/workflows/ci.yml': 'jobs:\n  ci:\n    uses: ./.github/workflows/foundry-ci.yml\n',
       'src/widgets/Feedback.tsx': 'export const X = null;\n',

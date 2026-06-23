@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 import {
   Table,
   TableBody,
@@ -8,21 +8,27 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { FeedbackDetail } from "@/components/feedback-detail";
-import type { FeedbackRecord, AnyFeedbackStatus } from "@saas-maker/contracts";
+} from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+import { FeedbackDetail } from '@/components/feedback-detail';
+import type { FeedbackRecord, AnyFeedbackStatus } from '@saas-maker/contracts';
 
-const TYPE_STYLES: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
-  bug: { label: "Bug", variant: "destructive" },
-  feature: { label: "Feature", variant: "default" },
-  feedback: { label: "Feedback", variant: "secondary" },
+const TYPE_STYLES: Record<
+  string,
+  { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }
+> = {
+  bug: { label: 'Bug', variant: 'destructive' },
+  feature: { label: 'Feature', variant: 'default' },
+  feedback: { label: 'Feedback', variant: 'secondary' },
 };
 
-const STATUS_STYLES: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
-  new: { label: "New", variant: "default" },
-  dismissed: { label: "Dismissed", variant: "outline" },
-  on_roadmap: { label: "On Roadmap", variant: "secondary" },
+const STATUS_STYLES: Record<
+  string,
+  { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }
+> = {
+  new: { label: 'New', variant: 'default' },
+  dismissed: { label: 'Dismissed', variant: 'outline' },
+  on_roadmap: { label: 'On Roadmap', variant: 'secondary' },
 };
 
 interface FeedbackTableProps {
@@ -32,7 +38,12 @@ interface FeedbackTableProps {
   onMoveToRoadmap?: (item: FeedbackRecord) => Promise<void>;
 }
 
-export function FeedbackTable({ feedback, onStatusChange, onDelete, onMoveToRoadmap }: FeedbackTableProps) {
+export function FeedbackTable({
+  feedback,
+  onStatusChange,
+  onDelete,
+  onMoveToRoadmap,
+}: FeedbackTableProps) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selected = feedback.find((f) => f.id === selectedId) ?? null;
 
@@ -59,8 +70,14 @@ export function FeedbackTable({ feedback, onStatusChange, onDelete, onMoveToRoad
               </TableRow>
             ) : (
               feedback.map((item) => {
-                const typeStyle = TYPE_STYLES[item.type] ?? { label: item.type, variant: "outline" as const };
-                const statusStyle = STATUS_STYLES[item.status] ?? { label: item.status, variant: "outline" as const };
+                const typeStyle = TYPE_STYLES[item.type] ?? {
+                  label: item.type,
+                  variant: 'outline' as const,
+                };
+                const statusStyle = STATUS_STYLES[item.status] ?? {
+                  label: item.status,
+                  variant: 'outline' as const,
+                };
 
                 return (
                   <TableRow
@@ -82,9 +99,9 @@ export function FeedbackTable({ feedback, onStatusChange, onDelete, onMoveToRoad
                       <Badge variant={statusStyle.variant}>{statusStyle.label}</Badge>
                     </TableCell>
                     <TableCell className="hidden md:table-cell text-muted-foreground">
-                      {new Date(item.created_at).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
+                      {new Date(item.created_at).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
                       })}
                     </TableCell>
                   </TableRow>
