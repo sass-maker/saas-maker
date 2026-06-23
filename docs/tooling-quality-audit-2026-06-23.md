@@ -88,15 +88,16 @@ The fleet has strong standardization on core infrastructure (pnpm, Vitest, Playw
 
 | Setup | Count | Projects |
 |-------|-------|----------|
-| v8 configured + thresholds | 5 | swe-interview-prep (80/70), saas-maker (ratchet 39/30), free-ai (80/70), starboard (80/70), significanthobbies (80/70) |
+| v8 configured + thresholds | 22 | swe-interview-prep (80/70), saas-maker (ratchet 39/30), free-ai (80/70), starboard (80/70), significanthobbies (80/70), reader (30/30), reader/chrome-extension (70/80 on importQuality), rolepatch (20/25), high-signal/workers/api (34/30), knowledge-base (55/55), open-historia (15/10), tinygpt/browser, anime-list, everythingrated, materia, karte, ai-game, taste, verified-bases/web, looptv, email-manager |
 | v8 configured, no thresholds | 0 | — |
 | v8 installed, not configured | 0 | — |
-| `test:coverage` script, no provider | 1 | reader |
-| None | 23 | all others |
+| `test:coverage` script, no provider | 0 | — |
+| None | 6 | truehire (e2e-only, no unit tests), drank, today-little-log, codevetter (Playwright e2e), reel-pipeline, pace (XCTest) |
 
 **Findings:**
-- **5 products now enforce coverage thresholds** (up from 1). saas-maker uses a ratchet floor (39/30) with 80% target documented; the other 4 use 80/70 on core modules.
-- The swe-interview-prep model (selective thresholds on core modules) is now the fleet standard, applied to free-ai, starboard, and significanthobbies on 2026-06-23.
+- **22 products now enforce coverage thresholds** (up from 1 in original audit, up from 5 after session 1). All use v8 provider with ratchet floors at current coverage levels.
+- 6 products have no coverage measurement: 3 are e2e-only or non-JS (truehire, codevetter, pace, reel-pipeline), 2 are untested at unit level (drank, today-little-log).
+- The swe-interview-prep model (selective thresholds on core modules with ratchet floors) is now the fleet standard.
 
 ### Build framework
 
