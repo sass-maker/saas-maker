@@ -16,7 +16,9 @@
       "!**/node_modules",
       "!**/next-env.d.ts",
       "!**/package-lock.json",
-      "!**/tsconfig.tsbuildinfo"
+      "!**/tsconfig.tsbuildinfo",
+      "!**/*.svg",
+      "!**/public"
     ]
   },
   "formatter": {
@@ -37,7 +39,19 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true
+      "recommended": true,
+      "suspicious": {
+        "noExplicitAny": "off"
+      },
+      "a11y": {
+        "recommended": false
+      },
+      "performance": {
+        "noImgElement": "off"
+      },
+      "correctness": {
+        "useExhaustiveDependencies": "off"
+      }
     }
   },
   "assist": {

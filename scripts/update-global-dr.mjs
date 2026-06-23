@@ -28,7 +28,7 @@ async function fetchDR(domain) {
     const res = await fetch(url, {
       headers: {
         'User-Agent': 'drank-global-update/1.0 (+github-actions)',
-        'Accept': 'application/json',
+        Accept: 'application/json',
       },
     });
     if (!res.ok) {
@@ -84,7 +84,7 @@ async function main() {
       const lastPoint = currentHistory[currentHistory.length - 1];
       const lastDay = lastPoint ? new Date(lastPoint.ts).toISOString().slice(0, 10) : null;
 
-      let newHistory = [...currentHistory];
+      const newHistory = [...currentHistory];
 
       if (lastDay !== today) {
         newHistory.push({ ts: now, dr });
@@ -122,7 +122,7 @@ async function main() {
     communityNominations: existing.communityNominations || [],
   };
 
-  writeFileSync(DATA_PATH, JSON.stringify(newData, null, 2) + '\n', 'utf8');
+  writeFileSync(DATA_PATH, `${JSON.stringify(newData, null, 2)}\n`, 'utf8');
   console.log(`\nWrote ${DATA_PATH}`);
   console.log('Done.');
 }

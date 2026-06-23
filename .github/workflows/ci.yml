@@ -20,6 +20,8 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run build
+      - name: Check bundle size
+        run: npm run size
 
   deploy:
     needs: test

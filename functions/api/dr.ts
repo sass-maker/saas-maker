@@ -9,9 +9,7 @@ interface AhrefsDRResponse {
   domain_rating?: { domain_rating?: number };
 }
 
-export async function onRequestGet(context: {
-  request: Request;
-}): Promise<Response> {
+export async function onRequestGet(context: { request: Request }): Promise<Response> {
   const { request } = context;
   const { searchParams } = new URL(request.url);
   const target = searchParams.get('target');
@@ -33,7 +31,7 @@ export async function onRequestGet(context: {
     return json({ error: 'Invalid target domain' }, 400);
   }
 
-  if (!hostname || !hostname.includes('.')) {
+  if (!hostname?.includes('.')) {
     return json({ error: 'Invalid target domain' }, 400);
   }
 

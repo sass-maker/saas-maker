@@ -10,11 +10,13 @@ import {
   saveState,
   sortDomains,
 } from './utils';
-import { HistoryPoint, SortMode, StoredState, Toast, TrackedDomain } from './types';
+import type { HistoryPoint, SortMode, StoredState, Toast, TrackedDomain } from './types';
 import globalSitesStatic from '@/data/global-sites.json';
 
 const REFRESH_DELAY_MS = 750; // be polite to the free public endpoint
-const GLOBAL_SITE_SET = new Set((globalSitesStatic as string[]).map((domain) => domain.toLowerCase()));
+const GLOBAL_SITE_SET = new Set(
+  (globalSitesStatic as string[]).map((domain) => domain.toLowerCase())
+);
 
 interface UseTrackedDomainsReturn {
   domains: TrackedDomain[];
@@ -68,7 +70,9 @@ export function useTrackedDomains(): UseTrackedDomainsReturn {
     return [];
   });
   const domainsRef = useRef<TrackedDomain[]>([]);
-  const [lastGlobalRefresh, setLastGlobalRefresh] = useState<number | null>(() => loadState()?.lastGlobalRefresh ?? null);
+  const [lastGlobalRefresh, setLastGlobalRefresh] = useState<number | null>(
+    () => loadState()?.lastGlobalRefresh ?? null
+  );
   const [search, setSearch] = useState('');
   const [sortMode, setSortMode] = useState<SortMode>('dr-desc');
   const [toasts, setToasts] = useState<Toast[]>([]);
@@ -77,11 +81,17 @@ export function useTrackedDomains(): UseTrackedDomainsReturn {
   const [isLoading] = useState(false);
 
   // Auto weekly refresh (client-side opportunistic cron for user custom sites)
-  const [autoRefreshEnabled, setAutoRefreshEnabled] = useState<boolean>(() => loadState()?.autoRefreshEnabled ?? true);
-  const [lastAutoRefresh, setLastAutoRefresh] = useState<number | null>(() => loadState()?.lastAutoRefresh ?? null);
+  const [autoRefreshEnabled, setAutoRefreshEnabled] = useState<boolean>(
+    () => loadState()?.autoRefreshEnabled ?? true
+  );
+  const [lastAutoRefresh, setLastAutoRefresh] = useState<number | null>(
+    () => loadState()?.lastAutoRefresh ?? null
+  );
 
   // Predictions / "I think this will be at the top" submissions (localStorage only)
-  const [predictions, setPredictions] = useState<import('./types').Prediction[]>(() => loadState()?.predictions || []);
+  const [predictions, setPredictions] = useState<import('./types').Prediction[]>(
+    () => loadState()?.predictions || []
+  );
 
   const toastIdRef = useRef(1);
   const autoRefreshInFlightRef = useRef(false);
@@ -116,26 +126,32 @@ export function useTrackedDomains(): UseTrackedDomainsReturn {
   }, [domains]);
 
   // Persist with full v2 auto + predictions state
-  const persist = useCallback((nextDomains: TrackedDomain[], nextLastGlobal?: number | null, nextPreds?: any) => {
-    const state: StoredState = {
-      version: 2,
-      domains: nextDomains,
-      lastGlobalRefresh: nextLastGlobal !== undefined ? nextLastGlobal : lastGlobalRefresh,
-      autoRefreshEnabled,
-      lastAutoRefresh,
-      predictions: nextPreds !== undefined ? nextPreds : predictions,
-    } as any;
-    saveState(state);
-  }, [lastGlobalRefresh, autoRefreshEnabled, lastAutoRefresh, predictions]);
+  const persist = useCallback(
+    (nextDomains: TrackedDomain[], nextLastGlobal?: number | null, nextPreds?: any) => {
+      const state: StoredState = {
+        version: 2,
+        domains: nextDomains,
+        lastGlobalRefresh: nextLastGlobal !== undefined ? nextLastGlobal : lastGlobalRefresh,
+        autoRefreshEnabled,
+        lastAutoRefresh,
+        predictions: nextPreds !== undefined ? nextPreds : predictions,
+      } as any;
+      saveState(state);
+    },
+    [lastGlobalRefresh, autoRefreshEnabled, lastAutoRefresh, predictions]
+  );
 
-  const updateDomains = useCallback((updater: (prev: TrackedDomain[]) => TrackedDomain[]) => {
-    setDomains((prev) => {
-      const next = updater(prev);
-      domainsRef.current = next;
-      persist(next);
-      return next;
-    });
-  }, [persist]);
+  const updateDomains = useCallback(
+    (updater: (prev: TrackedDomain[]) => TrackedDomain[]) => {
+      setDomains((prev) => {
+        const next = updater(prev);
+        domainsRef.current = next;
+        persist(next);
+        return next;
+      });
+    },
+    [persist]
+  );
 
   const applyNewPoint = (domain: string, dr: number, fetchedAt: number) => {
     updateDomains((prev) =>
@@ -157,68 +173,77 @@ export function useTrackedDomains(): UseTrackedDomainsReturn {
     );
   };
 
-  const refreshDomain = useCallback(async (domain: string) => {
-    setUpdating((u) => new Set(u).add(domain));
+  const refreshDomain = useCallback(
+    async (domain: string) => {
+      setUpdating((u) => new Set(u).add(domain));
 
-    const result = await fetchDomainRating(domain);
+      const result = await fetchDomainRating(domain);
 
-    setUpdating((u) => {
-      const next = new Set(u);
-      next.delete(domain);
-      return next;
-    });
+      setUpdating((u) => {
+        const next = new Set(u);
+        next.delete(domain);
+        return next;
+      });
 
-    if ('error' in result) {
-      showToast(`${domain}: ${result.error}`, 'error');
-      return;
-    }
+      if ('error' in result) {
+        showToast(`${domain}: ${result.error}`, 'error');
+        return;
+      }
 
-    applyNewPoint(domain, result.dr, result.fetchedAt);
-    // no toast on single success — too noisy for refresh all
-  }, [showToast, updateDomains]);
+      applyNewPoint(domain, result.dr, result.fetchedAt);
+      // no toast on single success — too noisy for refresh all
+    },
+    [showToast, applyNewPoint]
+  );
 
-  const addDomain = useCallback(async (input: string) => {
-    const normalized = normalizeDomain(input);
-    if (!normalized) {
-      showToast('Please enter a valid domain (e.g. example.com)', 'error');
-      return;
-    }
+  const addDomain = useCallback(
+    async (input: string) => {
+      const normalized = normalizeDomain(input);
+      if (!normalized) {
+        showToast('Please enter a valid domain (e.g. example.com)', 'error');
+        return;
+      }
 
-    if (GLOBAL_SITE_SET.has(normalized)) {
-      showToast(`${normalized} is already included in the shared examples`, 'info');
-      return;
-    }
+      if (GLOBAL_SITE_SET.has(normalized)) {
+        showToast(`${normalized} is already included in the shared examples`, 'info');
+        return;
+      }
 
-    // If already tracked, just refresh it and select
-    const existing = domains.find((d) => d.domain === normalized);
-    if (existing) {
-      showToast(`${normalized} is already tracked`, 'info');
-      setSelectedDomain(normalized);
+      // If already tracked, just refresh it and select
+      const existing = domains.find((d) => d.domain === normalized);
+      if (existing) {
+        showToast(`${normalized} is already tracked`, 'info');
+        setSelectedDomain(normalized);
+        await refreshDomain(normalized);
+        return;
+      }
+
+      // Add immediately with empty history — mark as custom so it gets weekly auto love
+      const newDomain: TrackedDomain = {
+        domain: normalized,
+        history: [],
+        lastChecked: null,
+        isCustom: true,
+      };
+
+      updateDomains((prev) => [...prev, newDomain]);
+      // domainsRef is updated inside updateDomains
+      showToast(`Added ${normalized}`, 'success');
+
+      // Immediately fetch its rating
       await refreshDomain(normalized);
-      return;
-    }
-
-    // Add immediately with empty history — mark as custom so it gets weekly auto love
-    const newDomain: TrackedDomain = {
-      domain: normalized,
-      history: [],
-      lastChecked: null,
-      isCustom: true,
-    };
-
-    updateDomains((prev) => [...prev, newDomain]);
-    // domainsRef is updated inside updateDomains
-    showToast(`Added ${normalized}`, 'success');
-
-    // Immediately fetch its rating
-    await refreshDomain(normalized);
-    setSelectedDomain(normalized);
-  }, [domains, refreshDomain, updateDomains, showToast]);
+      setSelectedDomain(normalized);
+    },
+    [domains, refreshDomain, updateDomains, showToast]
+  );
 
   const refreshAll = useCallback(async () => {
     if (domains.length === 0) return;
 
-    showToast(`Refreshing ${domains.length} domains... (this may take ~${Math.ceil((domains.length * REFRESH_DELAY_MS) / 1000)}s)`, 'info');
+    showToast(
+      `Refreshing ${domains.length} domains... (this may take ~${Math.ceil((domains.length * REFRESH_DELAY_MS) / 1000)}s)`,
+      'info'
+    );
 
     const sorted = [...domains]; // current order is fine
 
@@ -253,15 +278,18 @@ export function useTrackedDomains(): UseTrackedDomainsReturn {
     // Use ref + current auto + predictions state
     persist(domainsRef.current, now, predictions);
     showToast('Refresh complete', 'success');
-  }, [domains, persist, showToast]);
+  }, [domains, persist, showToast, predictions, applyNewPoint]);
 
-  const removeDomain = useCallback((domain: string) => {
-    updateDomains((prev) => prev.filter((d) => d.domain !== domain));
-    if (selectedDomain === domain) {
-      setSelectedDomain(null);
-    }
-    showToast(`Removed ${domain}`, 'info');
-  }, [updateDomains, selectedDomain, showToast]);
+  const removeDomain = useCallback(
+    (domain: string) => {
+      updateDomains((prev) => prev.filter((d) => d.domain !== domain));
+      if (selectedDomain === domain) {
+        setSelectedDomain(null);
+      }
+      showToast(`Removed ${domain}`, 'info');
+    },
+    [updateDomains, selectedDomain, showToast]
+  );
 
   const clearAll = useCallback(() => {
     if (!confirm('Clear all tracked domains and their history? This cannot be undone.')) return;
@@ -283,7 +311,7 @@ export function useTrackedDomains(): UseTrackedDomainsReturn {
       predictions: [],
     } as any);
     showToast('All data cleared', 'info');
-  }, [persist, showToast]);
+  }, [showToast]);
 
   const selectDomain = useCallback((domain: string | null) => {
     setSelectedDomain(domain);
@@ -297,10 +325,7 @@ export function useTrackedDomains(): UseTrackedDomainsReturn {
   // =====================
   // WEEKLY AUTO-REFRESH (client-side opportunistic "cron")
   // =====================
-  const customCount = useMemo(
-    () => domains.filter((d) => d.isCustom).length,
-    [domains]
-  );
+  const customCount = useMemo(() => domains.filter((d) => d.isCustom).length, [domains]);
 
   const runAutoRefreshNow = useCallback(async () => {
     if (autoRefreshInFlightRef.current) return;
@@ -355,7 +380,7 @@ export function useTrackedDomains(): UseTrackedDomainsReturn {
     } finally {
       autoRefreshInFlightRef.current = false;
     }
-  }, [lastGlobalRefresh, autoRefreshEnabled, predictions, showToast]);
+  }, [lastGlobalRefresh, autoRefreshEnabled, predictions, showToast, applyNewPoint]);
 
   const checkAndTriggerAuto = useCallback(async () => {
     if (!autoRefreshEnabled) return;
@@ -400,67 +425,85 @@ export function useTrackedDomains(): UseTrackedDomainsReturn {
 
   // Light background check while the dashboard is open (every ~3 hours)
   useEffect(() => {
-    const id = setInterval(() => {
-      checkAndTriggerAuto();
-    }, 3 * 60 * 60 * 1000);
+    const id = setInterval(
+      () => {
+        checkAndTriggerAuto();
+      },
+      3 * 60 * 60 * 1000
+    );
     return () => clearInterval(id);
   }, [checkAndTriggerAuto]);
 
-  const toggleAutoRefresh = useCallback((enabled: boolean) => {
-    setAutoRefreshEnabled(enabled);
-    const currentDomains = domainsRef.current;
-    saveState({
-      version: 2,
-      domains: currentDomains,
-      lastGlobalRefresh,
-      autoRefreshEnabled: enabled,
-      lastAutoRefresh,
-      predictions,
-    });
-    showToast(enabled ? 'Weekly auto-refresh enabled for your sites' : 'Weekly auto-refresh disabled', 'info');
-  }, [lastGlobalRefresh, lastAutoRefresh, predictions, showToast]);
+  const toggleAutoRefresh = useCallback(
+    (enabled: boolean) => {
+      setAutoRefreshEnabled(enabled);
+      const currentDomains = domainsRef.current;
+      saveState({
+        version: 2,
+        domains: currentDomains,
+        lastGlobalRefresh,
+        autoRefreshEnabled: enabled,
+        lastAutoRefresh,
+        predictions,
+      });
+      showToast(
+        enabled ? 'Weekly auto-refresh enabled for your sites' : 'Weekly auto-refresh disabled',
+        'info'
+      );
+    },
+    [lastGlobalRefresh, lastAutoRefresh, predictions, showToast]
+  );
 
   // =====================
   // PREDICTIONS: "Submit websites you think will be at the top"
   // =====================
-  const persistFullState = useCallback((nextDomains = domainsRef.current, extra: Partial<StoredState> = {}) => {
-    const state: StoredState = {
-      version: 2,
-      domains: nextDomains,
-      lastGlobalRefresh,
-      autoRefreshEnabled,
-      lastAutoRefresh,
-      ...(extra as any),
-    };
-    saveState(state);
-  }, [lastGlobalRefresh, autoRefreshEnabled, lastAutoRefresh]);
+  const persistFullState = useCallback(
+    (nextDomains = domainsRef.current, extra: Partial<StoredState> = {}) => {
+      const state: StoredState = {
+        version: 2,
+        domains: nextDomains,
+        lastGlobalRefresh,
+        autoRefreshEnabled,
+        lastAutoRefresh,
+        ...(extra as any),
+      };
+      saveState(state);
+    },
+    [lastGlobalRefresh, autoRefreshEnabled, lastAutoRefresh]
+  );
 
-  const addPrediction = useCallback((domain: string, note?: string) => {
-    const normalized = normalizeDomain(domain);
-    if (!normalized) {
-      showToast('Invalid domain for prediction', 'error');
-      return;
-    }
-    setPredictions((prev) => {
-      if (prev.some((p) => p.domain === normalized)) {
-        showToast('Already in your predictions', 'info');
-        return prev;
+  const addPrediction = useCallback(
+    (domain: string, note?: string) => {
+      const normalized = normalizeDomain(domain);
+      if (!normalized) {
+        showToast('Invalid domain for prediction', 'error');
+        return;
       }
-      const next = [...prev, { domain: normalized, note, addedAt: Date.now() }];
-      // Persist together with other user data
-      persistFullState(domainsRef.current, { predictions: next } as any);
-      showToast(`Added ${normalized} to your top predictions`, 'success');
-      return next;
-    });
-  }, [showToast, persistFullState]);
+      setPredictions((prev) => {
+        if (prev.some((p) => p.domain === normalized)) {
+          showToast('Already in your predictions', 'info');
+          return prev;
+        }
+        const next = [...prev, { domain: normalized, note, addedAt: Date.now() }];
+        // Persist together with other user data
+        persistFullState(domainsRef.current, { predictions: next } as any);
+        showToast(`Added ${normalized} to your top predictions`, 'success');
+        return next;
+      });
+    },
+    [showToast, persistFullState]
+  );
 
-  const removePrediction = useCallback((domain: string) => {
-    setPredictions((prev) => {
-      const next = prev.filter((p) => p.domain !== domain);
-      persistFullState(domainsRef.current, { predictions: next } as any);
-      return next;
-    });
-  }, [persistFullState]);
+  const removePrediction = useCallback(
+    (domain: string) => {
+      setPredictions((prev) => {
+        const next = prev.filter((p) => p.domain !== domain);
+        persistFullState(domainsRef.current, { predictions: next } as any);
+        return next;
+      });
+    },
+    [persistFullState]
+  );
 
   // =====================
   // END PREDICTIONS
@@ -483,39 +526,42 @@ export function useTrackedDomains(): UseTrackedDomainsReturn {
     showToast('Exported JSON', 'success');
   }, [domains, lastGlobalRefresh, autoRefreshEnabled, lastAutoRefresh, predictions, showToast]);
 
-  const importData = useCallback(async (file: File): Promise<boolean> => {
-    const parsed = await importState(file);
-    if (!parsed) {
-      showToast('Invalid or corrupted import file', 'error');
-      return false;
-    }
+  const importData = useCallback(
+    async (file: File): Promise<boolean> => {
+      const parsed = await importState(file);
+      if (!parsed) {
+        showToast('Invalid or corrupted import file', 'error');
+        return false;
+      }
 
-    const migrated = (parsed.domains || []).map((d: TrackedDomain) => ({
-      ...d,
-      isCustom: d.isCustom ?? true,
-    }));
+      const migrated = (parsed.domains || []).map((d: TrackedDomain) => ({
+        ...d,
+        isCustom: d.isCustom ?? true,
+      }));
 
-    setDomains(migrated);
-    domainsRef.current = migrated;
-    setLastGlobalRefresh(parsed.lastGlobalRefresh ?? null);
-    setAutoRefreshEnabled(parsed.autoRefreshEnabled ?? true);
-    setLastAutoRefresh(parsed.lastAutoRefresh ?? null);
-    setSelectedDomain(null);
-    const importedPreds = (parsed as any).predictions || [];
-    setPredictions(importedPreds);
+      setDomains(migrated);
+      domainsRef.current = migrated;
+      setLastGlobalRefresh(parsed.lastGlobalRefresh ?? null);
+      setAutoRefreshEnabled(parsed.autoRefreshEnabled ?? true);
+      setLastAutoRefresh(parsed.lastAutoRefresh ?? null);
+      setSelectedDomain(null);
+      const importedPreds = (parsed as any).predictions || [];
+      setPredictions(importedPreds);
 
-    saveState({
-      version: 2,
-      domains: migrated,
-      lastGlobalRefresh: parsed.lastGlobalRefresh ?? null,
-      autoRefreshEnabled: parsed.autoRefreshEnabled ?? true,
-      lastAutoRefresh: parsed.lastAutoRefresh ?? null,
-      predictions: importedPreds,
-    } as any);
+      saveState({
+        version: 2,
+        domains: migrated,
+        lastGlobalRefresh: parsed.lastGlobalRefresh ?? null,
+        autoRefreshEnabled: parsed.autoRefreshEnabled ?? true,
+        lastAutoRefresh: parsed.lastAutoRefresh ?? null,
+        predictions: importedPreds,
+      } as any);
 
-    showToast(`Imported ${migrated.length} domains`, 'success');
-    return true;
-  }, [showToast]);
+      showToast(`Imported ${migrated.length} domains`, 'success');
+      return true;
+    },
+    [showToast]
+  );
 
   // Derived: filter + sort
   const filteredAndSorted = useMemo(() => {
@@ -536,7 +582,9 @@ export function useTrackedDomains(): UseTrackedDomainsReturn {
 
     return {
       count: domains.length,
-      avg: withDR.length ? Number((withDR.reduce((a, b) => a + b, 0) / withDR.length).toFixed(1)) : null,
+      avg: withDR.length
+        ? Number((withDR.reduce((a, b) => a + b, 0) / withDR.length).toFixed(1))
+        : null,
       max: withDR.length ? Math.max(...withDR) : null,
       totalMeasurements: domains.reduce((sum, d) => sum + d.history.length, 0),
     };

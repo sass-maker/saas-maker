@@ -38,7 +38,13 @@ export function DrHistoryChart({ history }: { history: Point[] }) {
             color: '#e4e4e7',
           }}
         />
-        <Area type="natural" dataKey="DR" stroke="#22c55e" strokeWidth={2.5} fill="url(#drGradient)" />
+        <Area
+          type="natural"
+          dataKey="DR"
+          stroke="#22c55e"
+          strokeWidth={2.5}
+          fill="url(#drGradient)"
+        />
       </AreaChart>
     </ResponsiveContainer>
   );

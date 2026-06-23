@@ -1,6 +1,6 @@
 'use client';
 
-import { HistoryPoint, SortMode, StoredState, TrackedDomain } from './types';
+import type { HistoryPoint, SortMode, StoredState, TrackedDomain } from './types';
 
 const STORAGE_KEY = 'drank:v1';
 
@@ -24,7 +24,7 @@ export function normalizeDomain(input: string): string | null {
     }
 
     // Basic sanity: must have a dot and reasonable length
-    if (!host || !host.includes('.') || host.length < 4 || host.length > 253) {
+    if (!host?.includes('.') || host.length < 4 || host.length > 253) {
       return null;
     }
 
@@ -39,11 +39,13 @@ export function normalizeDomain(input: string): string | null {
   }
 }
 
-export async function fetchDomainRating(domain: string): Promise<{ dr: number; fetchedAt: number } | { error: string }> {
+export async function fetchDomainRating(
+  domain: string
+): Promise<{ dr: number; fetchedAt: number } | { error: string }> {
   try {
     const res = await fetch(`/api/dr?target=${encodeURIComponent(domain)}`, {
       method: 'GET',
-      headers: { 'Accept': 'application/json' },
+      headers: { Accept: 'application/json' },
     });
 
     if (!res.ok) {
@@ -59,7 +61,7 @@ export async function fetchDomainRating(domain: string): Promise<{ dr: number; f
       return { dr: data.dr, fetchedAt: data.fetchedAt || Date.now() };
     }
     return { error: 'Unexpected response shape' };
-  } catch (e) {
+  } catch (_e) {
     return { error: 'Network error. Check your connection.' };
   }
 }
@@ -69,7 +71,9 @@ export function getCurrentDR(d: TrackedDomain): number | null {
   return d.history[d.history.length - 1].dr;
 }
 
-export function getTrend(d: TrackedDomain): { delta: number; direction: 'up' | 'down' | 'flat' } | null {
+export function getTrend(
+  d: TrackedDomain
+): { delta: number; direction: 'up' | 'down' | 'flat' } | null {
   if (d.history.length < 2) return null;
   const prev = d.history[d.history.length - 2].dr;
   const curr = d.history[d.history.length - 1].dr;
@@ -108,11 +112,14 @@ export function formatDate(ts: number): string {
 
 export function getDRColor(dr: number | null): { text: string; bg: string; border: string } {
   if (dr === null) return { text: 'text-zinc-400', bg: 'bg-zinc-100', border: 'border-zinc-200' };
-  if (dr >= 90) return { text: 'text-emerald-700', bg: 'bg-emerald-100', border: 'border-emerald-200' };
+  if (dr >= 90)
+    return { text: 'text-emerald-700', bg: 'bg-emerald-100', border: 'border-emerald-200' };
   if (dr >= 70) return { text: 'text-green-700', bg: 'bg-green-100', border: 'border-green-200' };
   if (dr >= 50) return { text: 'text-lime-700', bg: 'bg-lime-100', border: 'border-lime-200' };
-  if (dr >= 30) return { text: 'text-yellow-700', bg: 'bg-yellow-100', border: 'border-yellow-200' };
-  if (dr >= 10) return { text: 'text-orange-700', bg: 'bg-orange-100', border: 'border-orange-200' };
+  if (dr >= 30)
+    return { text: 'text-yellow-700', bg: 'bg-yellow-100', border: 'border-yellow-200' };
+  if (dr >= 10)
+    return { text: 'text-orange-700', bg: 'bg-orange-100', border: 'border-orange-200' };
   return { text: 'text-red-700', bg: 'bg-red-100', border: 'border-red-200' };
 }
 
@@ -127,12 +134,13 @@ export function getDRBarColor(dr: number | null): string {
 }
 
 export function calculateStats(domains: TrackedDomain[]) {
-  const withDR = domains
-    .map(getCurrentDR)
-    .filter((d): d is number => d !== null);
+  const withDR = domains.map(getCurrentDR).filter((d): d is number => d !== null);
 
   const count = domains.length;
-  const avg = withDR.length > 0 ? Number((withDR.reduce((a, b) => a + b, 0) / withDR.length).toFixed(1)) : null;
+  const avg =
+    withDR.length > 0
+      ? Number((withDR.reduce((a, b) => a + b, 0) / withDR.length).toFixed(1))
+      : null;
   const max = withDR.length > 0 ? Math.max(...withDR) : null;
 
   const totalMeasurements = domains.reduce((sum, d) => sum + d.history.length, 0);
@@ -214,7 +222,11 @@ export function importState(file: File): Promise<StoredState | null> {
     reader.onload = () => {
       try {
         const parsed = JSON.parse(reader.result as string);
-        if (parsed && (parsed.version === 1 || parsed.version === 2) && Array.isArray(parsed.domains)) {
+        if (
+          parsed &&
+          (parsed.version === 1 || parsed.version === 2) &&
+          Array.isArray(parsed.domains)
+        ) {
           resolve(parsed as StoredState);
         } else {
           resolve(null);
@@ -229,7 +241,15 @@ export function importState(file: File): Promise<StoredState | null> {
 }
 
 // Small pure SVG sparkline (no extra deps in table rows)
-export function Sparkline({ history, width = 72, height = 28 }: { history: HistoryPoint[]; width?: number; height?: number }) {
+export function Sparkline({
+  history,
+  width = 72,
+  height = 28,
+}: {
+  history: HistoryPoint[];
+  width?: number;
+  height?: number;
+}) {
   if (history.length < 2) {
     return (
       <div className="flex h-7 w-[72px] items-center justify-center text-[10px] text-zinc-400">
@@ -243,11 +263,13 @@ export function Sparkline({ history, width = 72, height = 28 }: { history: Histo
   const max = Math.max(...values, 100);
   const range = Math.max(max - min, 1);
 
-  const points = history.map((h, i) => {
-    const x = (i / (history.length - 1)) * (width - 4) + 2;
-    const y = height - 2 - ((h.dr - min) / range) * (height - 4);
-    return `${x},${y}`;
-  }).join(' ');
+  const points = history
+    .map((h, i) => {
+      const x = (i / (history.length - 1)) * (width - 4) + 2;
+      const y = height - 2 - ((h.dr - min) / range) * (height - 4);
+      return `${x},${y}`;
+    })
+    .join(' ');
 
   const color = getDRBarColor(values[values.length - 1]);
 
@@ -329,7 +351,9 @@ export function getFaviconUrl(domain: string): string {
   return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=64`;
 }
 
-export function getWeeklyChange(domain: TrackedDomain): { delta: number; direction: 'up' | 'down' | 'flat' } | null {
+export function getWeeklyChange(
+  domain: TrackedDomain
+): { delta: number; direction: 'up' | 'down' | 'flat' } | null {
   if (domain.history.length < 2) return null;
 
   const now = Date.now();
@@ -342,7 +366,7 @@ export function getWeeklyChange(domain: TrackedDomain): { delta: number; directi
   // Find the closest point that is at least ~5 days old (to have meaningful "weekly")
   let base: HistoryPoint | null = null;
   for (let i = sorted.length - 2; i >= 0; i--) {
-    if (sorted[i].ts <= weekAgo + (2 * 24 * 60 * 60 * 1000)) {
+    if (sorted[i].ts <= weekAgo + 2 * 24 * 60 * 60 * 1000) {
       base = sorted[i];
       break;
     }
@@ -382,8 +406,14 @@ export function computeGainersLosers(domains: TrackedDomain[]) {
     })
     .filter(Boolean) as Array<{ domain: string; delta: number; direction: 'up' | 'down' | 'flat' }>;
 
-  const gainers = changes.filter((c) => c.direction === 'up').sort((a, b) => b.delta - a.delta).slice(0, 3);
-  const losers = changes.filter((c) => c.direction === 'down').sort((a, b) => a.delta - b.delta).slice(0, 3);
+  const gainers = changes
+    .filter((c) => c.direction === 'up')
+    .sort((a, b) => b.delta - a.delta)
+    .slice(0, 3);
+  const losers = changes
+    .filter((c) => c.direction === 'down')
+    .sort((a, b) => a.delta - b.delta)
+    .slice(0, 3);
 
   return { gainers, losers };
 }
