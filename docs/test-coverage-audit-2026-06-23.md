@@ -94,11 +94,11 @@ All 11 sub-ADEQUATE projects were lifted to ADEQUATE in one pass:
 
 ## Fleet-wide gaps
 
-1. **Coverage measurement almost absent.** Only 4 projects configure a Vitest coverage provider (saas-maker, free-ai, starboard, significanthobbies). Only 1 enforces thresholds (swe-interview-prep). The fleet cannot answer "what % is covered?" for 96% of products.
+1. **Coverage measurement expanding.** 5 projects now configure v8 coverage with thresholds (swe-interview-prep, saas-maker, free-ai, starboard, significanthobbies) — up from 1. 23 products still have no coverage measurement. Expanding `coverage.include` to more modules is the next step.
 2. **CI test gate inconsistent.** 18/29 run tests in CI; 11 do not. Several have test suites but CI skips them (email-manager, everythingrated). Several have no CI at all.
 3. **7 products have zero tests.** No framework, no test files, no CI test step.
-4. **Framework drift.** Most JS/TS projects use Vitest + Playwright (de-facto standard). codevetter and karte use Node native runner (no coverage support). pace and tinygpt use XCTest (appropriate for native).
-5. **swe-interview-prep is the fleet model** — selective thresholds on core modules (80/70), unit + e2e mix, CI-enforced. Reference for STRONG tier.
+4. **Framework drift.** Most JS/TS projects use Vitest + Playwright (de-facto standard). codevetter and karte were already on Vitest (audit was stale). pace and tinygpt use XCTest (appropriate for native).
+5. **swe-interview-prep is the fleet model** — selective thresholds on core modules (80/70), unit + e2e mix, CI-enforced. Reference for STRONG tier. Now applied to 4 more projects.
 
 ## Work plan: lift everything to ADEQUATE — COMPLETED 2026-06-23
 

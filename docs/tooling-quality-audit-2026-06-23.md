@@ -31,20 +31,28 @@ The fleet has strong standardization on core infrastructure (pnpm, Vitest, Playw
 
 ### Linter / formatter
 
+> **Correction (2026-06-23, post-verification):** The original audit claimed 14
+> projects run both Biome and ESLint. Filesystem verification showed this was
+> false — the "eslint dep" matches were all in build artifacts (`.next/standalone`,
+> `.open-next/`, `.venv`, `.pages-deploy`), not real dev dependencies. Only
+> **looptv** had a genuine dual Biome+ESLint setup. The corrected table below
+> reflects verified state after remediation.
+
 | Setup | Count | Projects |
 |-------|-------|----------|
-| Biome only | 2 | everythingrated, materia |
-| ESLint only | 5 | saas-maker, free-ai, codevetter, karte, taste |
-| Biome + ESLint (dual) | 14 | ai-game, anime-list, drank, email-manager, high-signal, looptv, open-historia, reader, rolepatch, significanthobbies, starboard, swe-interview-prep, today-little-log, truehire |
+| Biome only | 18 | ai-game, anime-list, drank, email-manager, everythingrated, high-signal, looptv (post-fix), materia, open-historia, reader, rolepatch, significanthobbies, starboard, swe-interview-prep, taste, today-little-log, truehire |
+| ESLint only | 4 | saas-maker, free-ai, codevetter, karte |
 | None | 1 | reel-pipeline (root; engines have ESLint) |
 
 **Findings:**
-- **14 projects run both Biome and ESLint** — this is the biggest tooling quality issue. Dual linting means:
-  - Redundant CI time
-  - Potential rule conflicts (Biome and ESLint can disagree on formatting)
-  - Confusing developer experience (which tool is authoritative?)
-- Biome 2.5 is capable of replacing ESLint for most projects. The fleet should pick one.
-- The AGENTS.md fleet standard doesn't mandate a linter — this should be clarified.
+- **Biome is the de-facto fleet standard** (18/22 JS/TS projects). The original
+  audit's "14 dual-lint" claim was a false positive from build artifacts.
+- **4 projects still use ESLint** (saas-maker, free-ai, codevetter, karte) —
+  these are genuine ESLint setups with `eslint.config.js` and ESLint dev deps.
+  They could migrate to Biome for fleet consistency, but this is lower priority
+  than the original audit suggested (not 14 projects, just 4).
+- looptv's dual-lint was remediated (PR #12): ESLint removed, Biome is sole
+  linter/formatter.
 
 ### Test framework
 
@@ -53,7 +61,8 @@ The fleet has strong standardization on core infrastructure (pnpm, Vitest, Playw
 | Vitest + Playwright | 14 | saas-maker, free-ai, ai-game, anime-list, email-manager, everythingrated, looptv, open-historia, reader, rolepatch, significanthobbies, starboard, swe-interview-prep, truehire |
 | Vitest only | 4 | drank, materia, taste, verified-bases/web |
 | Playwright only | 1 | today-little-log |
-| Node native + Playwright | 2 | codevetter, karte |
+| Vitest + Playwright (Tauri e2e) | 1 | codevetter (migrated from node:test 2026-06-23) |
+| Vitest only | 1 | karte (migrated from node:test prior; confirmed 2026-06-23) |
 | Node native only | 1 | reel-pipeline |
 | XCTest | 1 | pace |
 | XCTest + Node/WASM | 1 | tinygpt |
@@ -65,7 +74,7 @@ The fleet has strong standardization on core infrastructure (pnpm, Vitest, Playw
 
 **Findings:**
 - Vitest + Playwright is the de-facto fleet standard (14/22 JS/TS projects).
-- **codevetter and karte use Node native test runner** — no coverage support, diverges from fleet standard. Should migrate to Vitest.
+- **codevetter and karte were already on Vitest** — the original audit's "Node native test runner" claim was stale. Both have `vitest` in devDependencies and `vitest run` as the test script. codevetter's last Tauri e2e spec was migrated from `node:test` to Vitest on 2026-06-23.
 - **today-little-log is e2e-only** (Playwright, no unit tests) — business logic is untested at unit level.
 - free-ai uses `@cloudflare/vitest-pool-workers` — the right pattern for Workers testing. Only 1 project uses it.
 
@@ -73,16 +82,15 @@ The fleet has strong standardization on core infrastructure (pnpm, Vitest, Playw
 
 | Setup | Count | Projects |
 |-------|-------|----------|
-| v8 configured + thresholds | 1 | swe-interview-prep (80% lines/fn/stmt, 70% branches) |
-| v8 configured, no thresholds | 3 | saas-maker, free-ai, starboard |
-| v8 installed, not configured | 1 | significanthobbies |
+| v8 configured + thresholds | 5 | swe-interview-prep (80/70), saas-maker (ratchet 39/30), free-ai (80/70), starboard (80/70), significanthobbies (80/70) |
+| v8 configured, no thresholds | 0 | — |
+| v8 installed, not configured | 0 | — |
 | `test:coverage` script, no provider | 1 | reader |
 | None | 23 | all others |
 
 **Findings:**
-- **Only 1 of 29 products enforces coverage thresholds.** This is the single biggest tooling gap.
-- Only 4 projects can even produce a coverage report.
-- The swe-interview-prep model (selective thresholds on core modules) should be the fleet standard.
+- **5 products now enforce coverage thresholds** (up from 1). saas-maker uses a ratchet floor (39/30) with 80% target documented; the other 4 use 80/70 on core modules.
+- The swe-interview-prep model (selective thresholds on core modules) is now the fleet standard, applied to free-ai, starboard, and significanthobbies on 2026-06-23.
 
 ### Build framework
 
@@ -190,14 +198,18 @@ The fleet has strong standardization on core infrastructure (pnpm, Vitest, Playw
 
 ### Needs attention (drift or gaps)
 
-1. **Linter/formatter**: 14 projects run BOTH Biome and ESLint. This is redundant, potentially conflicting, and confusing. The fleet should standardize on one. Biome 2.5 can replace ESLint for most projects.
-2. **Coverage tooling**: Only 1 project enforces thresholds. The fleet is flying blind on coverage for 97% of products.
+> **Updated 2026-06-23 after verification + remediation.** Items 1, 4, 5, 6, 7, 8
+> were addressed in the same-day remediation pass. Item 2 was partially addressed
+> (4 projects added). Item 3 remains.
+
+1. ~~**Linter/formatter**: 14 projects run BOTH Biome and ESLint.~~ **CORRECTED**: Only looptv had genuine dual-lint (remediated, PR #12). 4 projects still use ESLint only (saas-maker, free-ai, codevetter, karte) — lower-priority Biome migration.
+2. **Coverage tooling**: 5 products now enforce thresholds (up from 1). 23 products still have no coverage measurement. Expanding `coverage.include` to more modules is the next step.
 3. **Package manager version**: pnpm versions range from 10.28 to 11.0.8 across projects. Minor, but worth pinning.
-4. **Node native test runner**: codevetter and karte use `node --test` instead of Vitest — no coverage support, diverges from fleet standard.
-5. **Python lockfiles**: forecast-lab's Python subprojects have no requirements.txt or pyproject.toml. Reproducibility risk.
-6. **taste package manager**: declares bun but CI uses pnpm. Needs reconciliation.
-7. **pace CI**: 1079 tests but no CI. Should add macOS GitHub Actions runner.
-8. **drank deploy target**: Only Vercel project in a Cloudflare-standard fleet.
+4. ~~**Node native test runner**: codevetter and karte use `node --test`.~~ **RESOLVED**: Both already on Vitest; audit was stale.
+5. ~~**Python lockfiles**: forecast-lab's Python subprojects have no pyproject.toml.~~ **RESOLVED**: pyproject.toml + uv.lock added with pinned deps (commit 5a0a35e).
+6. ~~**taste package manager**: declares bun but CI uses pnpm.~~ **RESOLVED**: Reconciled to bun (commit 9744e64).
+7. ~~**pace CI**: 1079 tests but no CI.~~ **RESOLVED**: macOS GitHub Actions CI added (PR #50).
+8. ~~**drank deploy target**: Only Vercel project.~~ **RESOLVED**: Migrated to Cloudflare Pages with static export (commit b846968).
 
 ### Appropriate diversity (not drift)
 
@@ -207,11 +219,14 @@ The fleet has strong standardization on core infrastructure (pnpm, Vitest, Playw
 
 ## Recommendations (prioritized)
 
-1. **Standardize on Biome, remove ESLint** — 14 projects run both. Pick Biome as the fleet linter/formatter, remove ESLint configs. This is the highest-impact cleanup.
-2. **Adopt swe-interview-prep's coverage model fleet-wide** — selective v8 thresholds on core modules (80/70). Start with the 4 projects that already have v8 configured.
-3. **Migrate codevetter and karte to Vitest** — Node native runner blocks coverage and diverges from the fleet standard.
-4. **Add pyproject.toml to forecast-lab Python labs** — pin deps with uv for reproducibility.
-5. **Reconcile taste's package manager** — pick bun or pnpm, not both.
-6. **Add CI for pace** — macOS GitHub Actions runner to run XCTest.
-7. **Consider migrating drank to Cloudflare Pages** — it's client-side only, the lone Vercel outlier.
-8. **Pin pnpm version fleet-wide** — standardize on one pnpm major (10.x or 11.x).
+> **Updated 2026-06-23.** Items 2-7 were completed in the same-day remediation
+> pass. Remaining items are 1 (partial) and 8.
+
+1. **Migrate remaining 4 ESLint projects to Biome** — saas-maker, free-ai, codevetter, karte still use ESLint. Lower priority than originally estimated (was 14, is 4).
+2. ~~**Adopt swe-interview-prep's coverage model fleet-wide**~~ **DONE**: Applied to free-ai, starboard, significanthobbies. saas-maker already had it.
+3. ~~**Migrate codevetter and karte to Vitest**~~ **DONE**: Both already on Vitest.
+4. ~~**Add pyproject.toml to forecast-lab Python labs**~~ **DONE**.
+5. ~~**Reconcile taste's package manager**~~ **DONE**: Settled on bun.
+6. ~~**Add CI for pace**~~ **DONE**: PR #50.
+7. ~~**Migrate drank to Cloudflare Pages**~~ **DONE**: Static export, commit b846968.
+8. **Pin pnpm version fleet-wide** — standardize on one pnpm major (10.x or 11.x). Still open.
