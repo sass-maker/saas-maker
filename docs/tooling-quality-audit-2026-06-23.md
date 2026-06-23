@@ -26,8 +26,13 @@ The fleet has strong standardization on core infrastructure (pnpm, Vitest, Playw
 **Findings:**
 - pnpm is the clear fleet standard for JS/TS (18/22 projects).
 - 3 projects use npm (drank, materia, verified-bases/web) — minor drift, not blocking.
-- **taste is the outlier**: declares `bun@1.3.14` as packageManager but the subagent generated a pnpm-lock.yaml. This will cause CI friction. Needs reconciliation.
-- **forecast-lab Python labs have no lockfile** — CI installs deps inline. Reproducibility risk.
+- **taste reconciled to bun** (2026-06-23): pnpm-lock.yaml removed, bun.lock regenerated, CI/scripts aligned.
+- **All 18 pnpm projects pinned to pnpm@10.33.2** (2026-06-23): 7 projects had
+  missing `packageManager` fields (added), 11 had varying versions (10.28.0,
+  10.32.1, 11.0.8 — all standardized to 10.33.2). CI fallback `corepack prepare`
+  versions also updated. PRs created for all 18 repos.
+- **forecast-lab Python labs have lockfiles** (2026-06-23): `pyproject.toml` +
+  `uv.lock` added to demand-forecast and recsys-lab with pinned deps.
 
 ### Linter / formatter
 
@@ -40,18 +45,19 @@ The fleet has strong standardization on core infrastructure (pnpm, Vitest, Playw
 
 | Setup | Count | Projects |
 |-------|-------|----------|
-| Biome only | 18 | ai-game, anime-list, drank, email-manager, everythingrated, high-signal, looptv (post-fix), materia, open-historia, reader, rolepatch, significanthobbies, starboard, swe-interview-prep, taste, today-little-log, truehire |
-| ESLint only | 4 | saas-maker, free-ai, codevetter, karte |
+| Biome only | 22 | ai-game, anime-list, codevetter (post-fix), drank, email-manager, everythingrated, free-ai (post-fix), high-signal, karte (post-fix), looptv (post-fix), materia, open-historia, reader, rolepatch, saas-maker (post-fix), significanthobbies, starboard, swe-interview-prep, taste, today-little-log, truehire |
+| ESLint only | 0 | — |
 | None | 1 | reel-pipeline (root; engines have ESLint) |
 
 **Findings:**
-- **Biome is the de-facto fleet standard** (18/22 JS/TS projects). The original
-  audit's "14 dual-lint" claim was a false positive from build artifacts.
-- **4 projects still use ESLint** (saas-maker, free-ai, codevetter, karte) —
-  these are genuine ESLint setups with `eslint.config.js` and ESLint dev deps.
-  They could migrate to Biome for fleet consistency, but this is lower priority
-  than the original audit suggested (not 14 projects, just 4).
-- looptv's dual-lint was remediated (PR #12): ESLint removed, Biome is sole
+- **Biome is now the sole fleet linter/formatter standard** (22/22 JS/TS projects).
+  The original audit's "14 dual-lint" claim was a false positive from build artifacts.
+- **All 4 ESLint projects migrated to Biome** (2026-06-23): saas-maker (commit
+  e605b4b), free-ai (commit b592d9e), codevetter (commit 59b7740), karte (commit
+  d0fefc1). Each adopted Biome 2.5 recommended preset with project-appropriate
+  rule disables. Template eslint configs in saas-maker's `packages/cli/templates`
+  preserved for scaffolding.
+- looptv's dual-lint was remediated earlier (PR #12): ESLint removed, Biome is sole
   linter/formatter.
 
 ### Test framework
