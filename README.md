@@ -34,7 +34,7 @@ If you ever want true always-on server cron updates for your personal list, that
 
 1. First load → beautiful seed of popular domains (marked as non-custom).
 2. Add your sites → they are marked `isCustom` and become eligible for weekly auto.
-3. The scheduler + manual refresh buttons call the local `/api/dr` proxy → free Ahrefs public endpoint.
+3. The scheduler + manual refresh buttons call the `/api/dr` proxy (Cloudflare Pages Function) → free Ahrefs public endpoint.
 4. Every measurement is appended to history in localStorage.
 5. All visuals (cards, charts, insights) are derived 100% from your local data.
 
@@ -60,7 +60,7 @@ You can import it on any other browser/device running drank.
 
 - Next.js 16 App Router + TypeScript + Tailwind v4
 - Recharts only for the big history chart in the modal (table sparklines are tiny custom SVGs)
-- One API route that acts as a proxy (solves CORS + lets us set a friendly User-Agent)
+- One Cloudflare Pages Function (`functions/api/dr.ts`) that acts as a proxy (solves CORS + lets us set a friendly User-Agent)
 
 ## Respecting the free API
 
@@ -72,25 +72,26 @@ Built for personal / fleet use. Domain Rating data © Ahrefs. The free public en
 
 https://docs.ahrefs.com/en/api/reference/public/get-domain-rating-free
 
-## Deploy to Vercel (recommended for this app)
+## Deploy to Cloudflare Pages
+
+This app is client-side only (localStorage, no server DB) and uses Next.js
+static export (`output: 'export'` → `out/`). The `/api/dr` proxy is served as a
+Cloudflare Pages Function (`functions/api/dr.ts`).
 
 1. Push your code to GitHub (the `drank` folder can live inside a monorepo).
-2. Go to [vercel.com](https://vercel.com) → **Add New Project**.
-3. Import your GitHub repository.
-4. **Important settings**:
-   - **Root Directory**: `drank` (this is crucial if `drank` is not at the repo root)
-   - Framework Preset: **Next.js** (auto-detected)
-   - Build Command: `npm run build` (default)
-   - Output Directory: `.next` (default)
-5. Click **Deploy**.
+2. Create a Cloudflare Pages project named `drank` (or update `wrangler.toml` /
+   the `deploy` script to match your project name).
+3. Build & deploy locally:
+   ```bash
+   npm run deploy    # builds then runs wrangler pages deploy out --project-name=drank
+   ```
+   Or let CI handle it — the `ci.yml` workflow deploys `out/` on push to `main`
+   using `CLOUDFLARE_API_TOKEN` from repo secrets.
 
-The app works great on Vercel:
-- The `/api/dr` proxy route becomes a serverless function.
+The app works great on Cloudflare Pages:
+- The `/api/dr` proxy runs as a Pages Function (CORS bypass + friendly User-Agent).
 - All global leaderboard data is loaded at build time + refreshed at runtime from the raw GitHub JSON (so weekly Action updates appear without manual redeploys).
 - User data and predictions stay 100% in the browser (localStorage).
-
-**Optional but nice**:
-- After the GitHub Action updates `data/global-dr.json`, you can add a "Deploy Hook" in Vercel and call it from the Action using a secret so data updates trigger a new production deploy automatically.
 
 See the GitHub Action in `.github/workflows/` (move to repo root `.github` if this is part of a larger monorepo).
 
@@ -98,8 +99,9 @@ See the GitHub Action in `.github/workflows/` (move to repo root `.github` if th
 
 ```
 app/
-  api/dr/route.ts     # proxy to Ahrefs free DR endpoint
   page.tsx            # the entire UI
+functions/
+  api/dr.ts           # Cloudflare Pages Function — proxy to Ahrefs free DR endpoint
 lib/
   types.ts
   utils.ts            # normalize, fetch, sort, colors, seed list, sparkline, persistence

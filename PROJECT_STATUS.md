@@ -9,7 +9,7 @@ Last updated: 2026-06-20
 
 **Constraints:** Real background server crons cannot touch per-user `localStorage`. Weekly personal refresh is client-opportunistic (runs when tab is open). Ahrefs free API rate limits (~750ms between bulk refreshes).
 
-**IN scope:** Single-page dashboard (`app/page.tsx`), `/api/dr` proxy, global JSON pipeline, High Signal integration.
+**IN scope:** Single-page dashboard (`app/page.tsx`), `/api/dr` Pages Function proxy, global JSON pipeline, High Signal integration.
 
 **OUT of scope:** Production deploy (straightforward but not blocking local use), server-side personal domain storage without explicit opt-in.
 
@@ -18,8 +18,8 @@ Last updated: 2026-06-20
 ### External
 
 - **Ahrefs free public API:** Domain Rating endpoint proxied via `/api/dr`; ~750ms between bulk refreshes; no API keys.
-- **GitHub Actions:** weekly global DR update cron; optional `VERCEL_DEPLOY_HOOK` secret for post-update redeploy.
-- **Vercel (planned):** recommended deploy target; root directory `drank` if in monorepo.
+- **GitHub Actions:** weekly global DR update cron.
+- **Cloudflare Pages:** deploy target (static export via `output: 'export'`, served from `out/`; `/api/dr` runs as a Pages Function).
 
 ### Internal (fleet)
 
@@ -38,18 +38,18 @@ Last updated: 2026-06-20
 | `npm run lint` | ESLint |
 | `npm run check` | Biome check |
 
-**Deploy (not yet done):** Vercel recommended; root directory `drank` if in monorepo.
+**Deploy:** Cloudflare Pages — `npm run deploy` (builds then `wrangler pages deploy out --project-name=drank`); CI auto-deploys on push to `main` via `CLOUDFLARE_API_TOKEN`.
 
 **Env files:** None required. No secrets.
 
 ## Timeline
 
-- **Weekly (Mondays ~04:00 UTC)** — GitHub Action `update-global-dr.yml` runs `scripts/update-global-dr.mjs`, commits `data/global-dr.json`, optional Vercel deploy hook.
+- **Weekly (Mondays ~04:00 UTC)** — GitHub Action `update-global-dr.yml` runs `scripts/update-global-dr.mjs`, commits `data/global-dr.json`.
 - **Shipped** — Global example sites (~45), nomination/prediction flow, client-opportunistic weekly personal refresh, High Signal `/domains` integration, Ahrefs proxy API.
 
 ## Products
 
-- **Standalone dashboard:** local-only at http://localhost:3000 — single-page app (`app/page.tsx`); not deployed to production URL.
+- **Standalone dashboard:** single-page app (`app/page.tsx`); deploys to Cloudflare Pages (static export). Also runs locally at http://localhost:3000.
 - **Shared data pipeline:** `data/global-dr.json` + `data/global-sites.json` — ~45 global example sites; fetchable from raw GitHub JSON at runtime.
 - **High Signal lens:** https://highsignal.app/domains — consumes global DR history + community nominations; full interactive experience (personal predictions, local tracking, detailed history) remains in drank standalone.
 
@@ -67,14 +67,14 @@ Last updated: 2026-06-20
 
 - All personal domains, history, predictions, settings in browser `localStorage` (v2 schema via `lib/useTrackedDomains.ts`).
 - Global example sites (~45) load from `data/global-dr.json` — identical for all users, updated weekly by GitHub Action.
-- Client calls `/api/dr?domain=` → Next.js API route proxies Ahrefs free endpoint with friendly User-Agent (CORS bypass).
+- Client calls `/api/dr?target=` → Cloudflare Pages Function (`functions/api/dr.ts`) proxies Ahrefs free endpoint with friendly User-Agent (CORS bypass).
 - Global data also fetchable from raw GitHub JSON at runtime (no redeploy needed for DR updates).
 - No auth, no server storage of user data.
 
 ### Global & social
 
 - Global example sites (~45) with shared `data/global-dr.json` history.
-- Weekly GitHub Action (`.github/workflows/update-global-dr.yml`): Mondays ~04:00 UTC, runs `scripts/update-global-dr.mjs`, commits `data/global-dr.json`, optional Vercel deploy hook.
+- Weekly GitHub Action (`.github/workflows/update-global-dr.yml`): Mondays ~04:00 UTC, runs `scripts/update-global-dr.mjs`, commits `data/global-dr.json`.
 - `data/global-sites.json` seed list; `communityNominations` merged from community predictions.
 - Current Leaderboard (top ~15 ranked globals).
 - Nomination/prediction flow: nominate contenders, live scoring against actual leaderboard ("X of your picks in Top 20").
@@ -86,10 +86,10 @@ Last updated: 2026-06-20
 - Triggers on load, visibility/focus, light poll.
 - UI status ("Next in ~4d"), manual "Run now", on/off toggle.
 
-### API proxy (`app/api/dr/route.ts`)
+### API proxy (`functions/api/dr.ts`)
 
-- Proxies Ahrefs free Domain Rating endpoint: https://docs.ahrefs.com/en/api/reference/public/get-domain-rating-free
-- Solves CORS; sets friendly User-Agent.
+- Cloudflare Pages Function that proxies Ahrefs free Domain Rating endpoint: https://docs.ahrefs.com/en/api/reference/public/get-domain-rating-free
+- Solves CORS; sets friendly User-Agent. Served at `/api/dr` by `wrangler pages deploy`.
 
 ### Key files
 
@@ -105,11 +105,11 @@ Last updated: 2026-06-20
 1. Move GitHub Action workflow to monorepo root `.github/workflows/` (currently under `drank/.github/workflows/update-global-dr.yml`).
 2. Optional opt-in server-side weekly cron (D1 + watch id) for always-fresh personal domains.
 3. Bulk edit or CSV import for personal domain lists (`lib/useTrackedDomains.ts`).
-4. Deploy to Vercel with root directory `drank`.
+4. Deploy to Cloudflare Pages (`npm run deploy` or via CI).
 
 ### Deferred
 
-- Production deploy to Vercel or OpenNext/Cloudflare — not blocking local use.
+- Production deploy to Cloudflare Pages — config and CI are ready; manual `wrangler pages deploy` (or CI push to `main`) when ready.
 - Any backend that stores user domain lists without explicit opt-in design.
 - True always-on server cron for personal lists (requires opt-in server storage).
 
@@ -118,4 +118,3 @@ Last updated: 2026-06-20
 - Real background server crons cannot touch per-user localStorage — weekly refresh only when tab is open.
 - GitHub Action lives under project-local `.github/` rather than fleet monorepo root.
 - No automated tests; manual smoke on add/refresh/export flows only.
-- Not deployed to production URL.

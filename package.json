@@ -10,7 +10,9 @@
     "biome:lint": "biome lint .",
     "format": "biome format --write .",
     "format:check": "biome format .",
-    "check": "biome check ."
+    "check": "biome check .",
+    "cf:build": "npm run build",
+    "deploy": "npm run build && wrangler pages deploy out --project-name=drank"
   },
   "dependencies": {
     "framer-motion": "^12.40.0",

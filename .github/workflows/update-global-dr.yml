@@ -27,8 +27,6 @@ jobs:
         run: node scripts/update-global-dr.mjs
 
       - name: Commit changes (if any)
-        env:
-          VERCEL_DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -39,10 +37,4 @@ jobs:
             git commit -m "chore(dr): weekly update global DR history"
             git push
             echo "Committed and pushed updated global-dr.json"
-
-            # Optional: Trigger a Vercel deploy hook so the latest global data goes live without manual deploy
-            # Add your Vercel Deploy Hook URL as a secret named VERCEL_DEPLOY_HOOK
-            if [ -n "$VERCEL_DEPLOY_HOOK" ]; then
-              curl -X POST "$VERCEL_DEPLOY_HOOK"
-            fi
           fi
