@@ -4,19 +4,18 @@
 This project was forged by the **Foundry Software Factory**. It follows the VoidZero ecosystem standard.
 
 ## Stack
-- **Framework**: Vite + React 19 (SPA)
-- **Build**: Vite 8 with `@vitejs/plugin-react-swc` (SWC-based React transform)
+- **Framework**: Astro (island architecture, zero JS by default)
 - **Styling**: Tailwind CSS v4 (via `@tailwindcss/vite`, CSS-first config)
-- **CSS**: Lightning CSS (Rust-based transformer + minifier, replaces PostCSS)
+- **CSS**: Lightning CSS (Rust-based transformer + minifier)
 - **Lint/Format**: Biome
 - **Testing**: Vitest
 - **Deploy**: Cloudflare Pages (`pages_build_output_dir: dist`)
 
 ## VoidZero Standard
-- `vite.config.ts` uses `@tailwindcss/vite` + Lightning CSS (`css.transformer: "lightningcss"`)
-- No `tailwind.config.ts` — Tailwind v4 uses CSS-first config (`@import "tailwindcss"` in `src/index.css`)
+- `astro.config.mjs` uses `@tailwindcss/vite` + Lightning CSS
+- `build.inlineStylesheets: "always"` — inlines per-page CSS for fastest LCP
+- No `tailwind.config.ts` — Tailwind v4 uses CSS-first config (`@import "tailwindcss"` in `src/styles/global.css`)
 - No PostCSS config needed — `@tailwindcss/vite` handles it
-- `build.cssMinify: "lightningcss"` for smaller CSS output
 
 ## Context
 - **Project Name**: {{name}}
@@ -26,9 +25,9 @@ This project was forged by the **Foundry Software Factory**. It follows the Void
 
 ## Key commands
 ```bash
-pnpm dev      # vite dev
-pnpm build    # tsc && vite build → dist/
-pnpm preview  # vite preview
+pnpm dev      # astro dev (localhost:4321)
+pnpm build    # astro build → dist/
+pnpm preview  # astro preview
 pnpm lint     # biome check .
 pnpm test     # vitest run
 ```
@@ -36,9 +35,9 @@ pnpm test     # vitest run
 ## Standard Procedures for Agents
 
 ### 1. Code Changes
-- Use `@` path alias for imports from `src/`.
-- Keep Tailwind utilities as the default styling approach.
-- Prefer React function components with hooks.
+- Prefer Astro components (`.astro`) over React for content/static surfaces.
+- Use React islands only where interactivity is needed (add `@astrojs/react` integration).
+- Keep CSS in `src/styles/global.css` — Tailwind v4 utilities are the default.
 
 ### 2. Maintenance
 - Run `fnd audit` inside this directory to verify compliance.

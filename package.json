@@ -19,6 +19,7 @@
     "check:openapi": "pnpm generate:openapi && git diff --exit-code -- packages/cli/src/openapi.json docs/openapi/openapi.json apps/docs/public/openapi.json",
     "check:fleet-contracts": "node scripts/check-fleet-contract-sync.mjs",
     "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "test:integration": "vitest run --config vitest.integration.config.ts",
     "test:e2e": "playwright test tests/e2e/api/",
     "lint": "turbo run lint",
@@ -55,6 +56,7 @@
     "turbo": "2.5.4",
     "typescript": "6.0.3",
     "vitest": "4.1.5",
+    "@vitest/coverage-v8": "^4.1.9",
     "wrangler": "4.85.0"
   }
 }

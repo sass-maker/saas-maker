@@ -43,7 +43,7 @@ fleet.command('dashboard').description('Print fleet tooling matrix locally').act
 fleet
   .command('run <command>')
   .description('Run a shell command across the entire fleet')
-  .option('--type <type>', 'next | vite | node')
+  .option('--type <type>', 'next | vite | astro | node')
   .option('--parallel', 'Run concurrently despite failures')
   .action(fleetRunCommand);
 fleet.command('search <pattern>').description('Search for a pattern across the entire fleet').action(fleetSearchCommand);
@@ -104,7 +104,7 @@ program
   .command('forge')
   .description('Forge a new Foundry-compliant project from scratch')
   .option('--name <name>', 'Project name')
-  .option('--type <type>', 'next | vite | node')
+  .option('--type <type>', 'next | vite | astro | node')
   .action(forgeCommand);
 
 program

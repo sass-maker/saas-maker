@@ -17,3 +17,13 @@ if [ -n "$SECRETS" ]; then
   printf '  %s\n' $SECRETS >&2
   exit 1
 fi
+
+# Typecheck — fleet-wide TypeScript check before pushing
+if grep -q '"typecheck"' package.json 2>/dev/null; then
+  pnpm run --if-present typecheck || { echo "typecheck failed — fix before pushing" >&2; exit 1; }
+fi
+
+# Unit tests — fast feedback before pushing
+if grep -q '"test"' package.json 2>/dev/null; then
+  pnpm run --if-present test || { echo "tests failed — fix before pushing" >&2; exit 1; }
+fi

@@ -26,11 +26,10 @@ describe('checkProjectDrift', () => {
   it('passes a fully-compliant Foundry project', () => {
     tmpRoot = scaffold({
       'package.json': JSON.stringify({ name: 'demo' }),
-      '.prettierrc.json': JSON.stringify({ semi: true }),
+      'biome.json': JSON.stringify({ linter: { enabled: true } }),
       'foundry.json': JSON.stringify({ slug: 'demo', linked: true }),
       'AGENTS.md': '# agents\n',
       '.husky/pre-push': '#!/bin/sh\nSECRETS=$(git ls-files)\n',
-      'eslint.config.js': 'import nextCoreWebVitals from "eslint-config-next/core-web-vitals";\nexport default [];\n',
       'tsconfig.json': '{ "compilerOptions": { "strict": true, "moduleResolution": "bundler" } }',
       '.github/workflows/ci.yml': 'jobs:\n  ci:\n    uses: ./.github/workflows/foundry-ci.yml\n',
       'src/widgets/Feedback.tsx': 'export const X = null;\n',
@@ -39,7 +38,7 @@ describe('checkProjectDrift', () => {
     const r = checkProjectDrift(tmpRoot, 'demo');
     expect(r.checks.find((c) => c.id === 'foundry-json')?.status).toBe('pass');
     expect(r.checks.find((c) => c.id === 'agents-md')?.status).toBe('pass');
-    expect(r.checks.find((c) => c.id === 'eslint')?.status).toBe('pass');
+    expect(r.checks.find((c) => c.id === 'biome')?.status).toBe('pass');
     expect(r.checks.find((c) => c.id === 'tsconfig')?.status).toBe('pass');
     expect(r.checks.find((c) => c.id === 'prettier')?.status).toBe('pass');
     expect(r.checks.find((c) => c.id === 'foundry-ci')?.status).toBe('pass');
@@ -54,10 +53,10 @@ describe('checkProjectDrift', () => {
     expect(r.checks.find((c) => c.id === 'foundry-json')?.status).toBe('fail');
     expect(r.checks.find((c) => c.id === 'agents-md')?.status).toBe('warn');
     expect(r.checks.find((c) => c.id === 'husky-pre-push')?.status).toBe('fail');
-    expect(r.checks.find((c) => c.id === 'eslint')?.status).toBe('fail');
+    expect(r.checks.find((c) => c.id === 'biome')?.status).toBe('fail');
   });
 
-  it('warns when prettier is unlinked', () => {
+  it('warns when no formatter config', () => {
     tmpRoot = scaffold({
       'package.json': JSON.stringify({ name: 'p' }),
     });
@@ -76,14 +75,14 @@ describe('checkProjectDrift', () => {
 });
 
 describe('checkProjectDrift — Biome awareness', () => {
-  it('passes eslint check for a Biome project (no eslint.config.js needed)', () => {
+  it('passes biome check for a Biome project', () => {
     tmpRoot = scaffold({
       'package.json': JSON.stringify({ name: 'biome-app' }),
       'biome.json': JSON.stringify({ linter: { enabled: true } }),
     });
     const r = checkProjectDrift(tmpRoot, 'biome-app');
-    expect(r.checks.find((c) => c.id === 'eslint')?.status).toBe('pass');
-    expect(r.checks.find((c) => c.id === 'eslint')?.detail).toContain('Biome');
+    expect(r.checks.find((c) => c.id === 'biome')?.status).toBe('pass');
+    expect(r.checks.find((c) => c.id === 'biome')?.detail).toContain('Biome');
   });
 
   it('passes prettier check for a Biome project (no .prettierrc needed)', () => {
@@ -96,13 +95,13 @@ describe('checkProjectDrift — Biome awareness', () => {
     expect(r.checks.find((c) => c.id === 'prettier')?.detail).toContain('Biome');
   });
 
-  it('passes eslint/prettier checks for biome.jsonc (alternate extension)', () => {
+  it('passes biome/prettier checks for biome.jsonc (alternate extension)', () => {
     tmpRoot = scaffold({
       'package.json': JSON.stringify({ name: 'biome-jsonc' }),
       'biome.jsonc': '{}',
     });
     const r = checkProjectDrift(tmpRoot, 'biome-jsonc');
-    expect(r.checks.find((c) => c.id === 'eslint')?.status).toBe('pass');
+    expect(r.checks.find((c) => c.id === 'biome')?.status).toBe('pass');
     expect(r.checks.find((c) => c.id === 'prettier')?.status).toBe('pass');
   });
 });
@@ -129,6 +128,6 @@ describe('applyDriftFixes', () => {
     tmpRoot = scaffold({ 'package.json': '{}' });
     const r = checkProjectDrift(tmpRoot, 'demo');
     const result = applyDriftFixes(r);
-    expect(result.skipped).toContain('eslint');
+    expect(result.skipped).toContain('biome');
   });
 });

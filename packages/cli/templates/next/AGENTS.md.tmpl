@@ -1,7 +1,19 @@
 # AGENTS.md — {{name}}
 
 ## Purpose
-This project was forged by the **Foundry Software Factory**. It follows strict industrial standards for code quality and fleet integration.
+This project was forged by the **Foundry Software Factory**. It uses Next.js on Cloudflare Workers (OpenNext).
+
+## Stack
+- **Framework**: Next.js 16 (App Router, React 19)
+- **Styling**: Tailwind CSS v4 (via `@tailwindcss/postcss`, CSS-first config)
+- **Lint/Format**: Biome
+- **Testing**: Vitest
+- **Deploy**: Cloudflare Workers via `@opennextjs/cloudflare`
+
+## Tailwind v4 Setup
+- No `tailwind.config.ts` — Tailwind v4 uses CSS-first config (`@import "tailwindcss"` in `src/app/globals.css`)
+- PostCSS config in `postcss.config.mjs` uses `@tailwindcss/postcss`
+- Note: `experimental.useLightningcss: true` in Next.js conflicts with Tailwind v4 — do not enable it
 
 ## Context
 - **Project Name**: {{name}}
@@ -9,20 +21,22 @@ This project was forged by the **Foundry Software Factory**. It follows strict i
 - **Infrastructure**: Managed via `fnd` (Foundry Commander)
 - **Backend services**: Use `@saas-maker/sdk` when linking to the fleet API.
 
+## Key commands
+```bash
+pnpm dev      # next dev
+pnpm build    # next build
+pnpm start    # next start
+pnpm lint     # biome check .
+pnpm test     # vitest run
+```
+
 ## Standard Procedures for Agents
 
 ### 1. Code Changes
-- Always use **Standardized Imports**: Built-ins first, then external packages, then local modules.
-- Prefer `@saas-maker/sdk` for feedback, waitlist, changelog, and other fleet API calls.
+- Use `@` path alias for imports from `src/`.
+- Keep Tailwind utilities as the default styling approach.
+- Use Server Components by default; add `"use client"` only when needed.
 
-### 2. Failure Handling
-- Wrap critical boundaries in try/catch with clear error messages.
-- Check the **Foundry Cockpit** error feed if reproduction is difficult.
-
-### 3. Maintenance
+### 2. Maintenance
 - Run `fnd audit` inside this directory to verify compliance.
-- Run `fnd fleet upgrade` to refresh lint/format devDependencies.
-
-## Reference Skills
-- See `saas-maker/skills/protocol-debugging.md` for investigation steps.
-- See `saas-maker/skills/protocol-migration.md` for refactoring legacy code.
+- Run `fnd fleet upgrade` to refresh devDependencies.

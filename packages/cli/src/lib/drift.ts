@@ -5,9 +5,8 @@
  *  - foundry.json present
  *  - AGENTS.md present
  *  - .husky/pre-push present and references secret-scan
- *  - eslint.config.js present (local flat config)
+ *  - biome.json present (fleet lint/format standard)
  *  - tsconfig.json present (local base)
- *  - .prettierrc.json present
  *  - foundry-ci workflow present
  *  - widgets dir present (or n/a for non-foundry projects)
  *
@@ -109,21 +108,15 @@ export function checkProjectDrift(
     });
   }
 
-  // 4. ESLint config present — Biome is a valid alternative (treat as pass)
-  const eslintPath = join(projectPath, 'eslint.config.js');
-  const eslintMjsPath = join(projectPath, 'eslint.config.mjs');
+  // 4. Biome config present (fleet lint/format standard)
   if (usesBiome(projectPath)) {
-    checks.push({ id: 'eslint', label: 'eslint config', status: 'pass', detail: 'Biome (valid lint standard)' });
-  } else if (!existsSync(eslintPath) && !existsSync(eslintMjsPath)) {
-    checks.push({ id: 'eslint', label: 'eslint config', status: 'fail', detail: 'missing eslint.config.js' });
+    checks.push({ id: 'biome', label: 'biome config', status: 'pass', detail: 'Biome (fleet lint/format standard)' });
   } else {
-    const content = readFileSync(existsSync(eslintPath) ? eslintPath : eslintMjsPath, 'utf-8');
-    const inlined = content.includes('Plain flat ESLint') || content.includes('eslint-config-next');
     checks.push({
-      id: 'eslint',
-      label: 'eslint config',
-      status: inlined ? 'pass' : 'warn',
-      detail: inlined ? 'local flat config' : 'custom eslint.config present',
+      id: 'biome',
+      label: 'biome config',
+      status: 'fail',
+      detail: 'missing biome.json — run `fnd init` to scaffold',
     });
   }
 
@@ -145,23 +138,22 @@ export function checkProjectDrift(
     });
   }
 
-  // 6. Prettier config present — Biome replaces Prettier (treat as pass)
+  // 6. Prettier — Biome handles formatting (fleet standard)
   const pkgPath = join(projectPath, 'package.json');
   if (usesBiome(projectPath)) {
-    checks.push({ id: 'prettier', label: 'prettier-config', status: 'pass', detail: 'Biome (handles formatting)' });
+    checks.push({ id: 'prettier', label: 'format config', status: 'pass', detail: 'Biome (handles formatting)' });
   } else if (existsSync(pkgPath)) {
     try {
-      const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8')) as Record<string, unknown>;
       const hasPrettierFile =
         existsSync(join(projectPath, '.prettierrc.json')) || existsSync(join(projectPath, '.prettierrc'));
       checks.push({
         id: 'prettier',
-        label: 'prettier-config',
-        status: hasPrettierFile || typeof pkg['prettier'] === 'object' ? 'pass' : 'warn',
-        detail: hasPrettierFile ? '.prettierrc present' : 'no local prettier config file',
+        label: 'format config',
+        status: hasPrettierFile ? 'warn' : 'warn',
+        detail: hasPrettierFile ? 'Legacy .prettierrc — migrate to Biome' : 'No formatter — run `fnd init`',
       });
     } catch {
-      checks.push({ id: 'prettier', label: 'prettier-config', status: 'warn', detail: 'package.json unreadable' });
+      checks.push({ id: 'prettier', label: 'format config', status: 'warn', detail: 'package.json unreadable' });
     }
   }
 

@@ -31,7 +31,7 @@ export function usesBiome(cwd: string = process.cwd()): boolean {
   return existsSync(join(cwd, 'biome.json')) || existsSync(join(cwd, 'biome.jsonc'));
 }
 
-export function detectProjectType(cwd: string = process.cwd()): 'next' | 'vite' | 'node' {
+export function detectProjectType(cwd: string = process.cwd()): 'next' | 'vite' | 'astro' | 'node' {
   const pkgPath = join(cwd, 'package.json');
   if (!existsSync(pkgPath)) return 'node';
 
@@ -39,25 +39,10 @@ export function detectProjectType(cwd: string = process.cwd()): 'next' | 'vite' 
   const deps = { ...pkg.dependencies, ...pkg.devDependencies };
 
   if (deps.next) return 'next';
-  // Astro uses Vite under the hood — treat as 'vite' so it gets the correct
-  // ESLint/Prettier config (with tailwind plugin) rather than the plain node one.
-  if (deps.astro || deps.vite) return 'vite';
+  // Astro is a first-class VoidZero template type (content/marketing/landing).
+  if (deps.astro) return 'astro';
+  if (deps.vite) return 'vite';
   return 'node';
-}
-
-const PRETTIER_BASE = {
-  semi: true,
-  singleQuote: true,
-  tabWidth: 2,
-  trailingComma: 'es5',
-  printWidth: 100,
-};
-
-/** Returns prettier config for the given project type. Node projects do not get
- *  prettier-plugin-tailwindcss because they have no Tailwind setup. */
-function getPrettierDefault(type: 'next' | 'vite' | 'node'): Record<string, unknown> {
-  if (type === 'node') return { ...PRETTIER_BASE };
-  return { ...PRETTIER_BASE, plugins: ['prettier-plugin-tailwindcss'] };
 }
 
 export const TSCONFIG_BASE = {
@@ -85,7 +70,7 @@ export const TSCONFIG_BASE = {
 };
 
 export function buildLocalTsConfig(
-  type: 'next' | 'vite' | 'node',
+  type: 'next' | 'vite' | 'astro' | 'node',
   remote?: RemoteStandards,
 ): Record<string, unknown> {
   return {
@@ -96,7 +81,9 @@ export function buildLocalTsConfig(
         ? { jsx: 'preserve', plugins: [{ name: 'next' }], paths: { '@/*': ['./src/*'] } }
         : type === 'vite'
           ? { jsx: 'react-jsx', paths: { '@/*': ['./src/*'] } }
-          : { lib: ['ES2022'], module: 'NodeNext', moduleResolution: 'NodeNext' }),
+          : type === 'astro'
+            ? { jsx: 'preserve' }
+            : { lib: ['ES2022'], module: 'NodeNext', moduleResolution: 'NodeNext' }),
       ...(remote?.tsconfig_options ?? {}),
     },
     include:
@@ -104,13 +91,15 @@ export function buildLocalTsConfig(
         ? ['next-env.d.ts', '**/*.ts', '**/*.tsx', '.next/types/**/*.ts']
         : type === 'vite'
           ? ['src']
-          : ['src/**/*'],
+          : type === 'astro'
+            ? ['src', '.astro/types.d.ts']
+            : ['src/**/*'],
     exclude: ['node_modules'],
   };
 }
 
 export function applyStandard(
-  type: 'next' | 'vite' | 'node',
+  type: 'next' | 'vite' | 'astro' | 'node',
   cwd: string = process.cwd(),
   remote?: RemoteStandards,
   opts: ApplyStandardOptions = {},
@@ -121,62 +110,26 @@ export function applyStandard(
     return;
   }
 
-  // Guard: Biome projects skip ESLint and Prettier (Biome handles both)
-  if (usesBiome(cwd)) {
-    log.info('Biome detected — skipping ESLint and Prettier scaffold');
-    // Still write tsconfig — Biome does not typecheck
-    const tsPath = join(cwd, 'tsconfig.json');
-    if (!existsSync(tsPath) || opts.force) {
-      writeFileSync(tsPath, JSON.stringify(buildLocalTsConfig(type, remote), null, 2) + '\n');
-      log.success('✓ Applied local tsconfig.json');
-    } else {
-      log.info('  kept existing tsconfig.json');
-    }
-    return;
-  }
-
-  // ESLint — skip if exists unless --force
-  const eslintPath = join(cwd, 'eslint.config.js');
-  if (!existsSync(eslintPath) || opts.force) {
-    const templatesDir = join(import.meta.dirname, '..', 'templates', type);
-    const eslintTemplate = readFileSync(join(templatesDir, 'eslint.config.js'), 'utf-8');
-    const eslintRules = remote?.eslint_rules;
-    const eslintConfig =
-      eslintRules && Object.keys(eslintRules).length > 0
-        ? `${eslintTemplate.replace('export default', 'const base =').trim()}\n\nexport default [\n  ...(Array.isArray(base) ? base : [base]),\n  { rules: ${JSON.stringify(eslintRules, null, 2)} },\n];\n`
-        : eslintTemplate;
-    writeFileSync(eslintPath, eslintConfig);
-    log.success('✓ Applied local ESLint config');
+  // Biome — scaffold if not present (fleet standard linter/formatter)
+  const biomePath = join(cwd, 'biome.json');
+  if (!existsSync(biomePath) || opts.force) {
+    const biomeTemplate = readFileSync(
+      join(import.meta.dirname, '..', 'templates', 'biome.json.tmpl'),
+      'utf-8',
+    );
+    writeFileSync(biomePath, biomeTemplate);
+    log.success('✓ Applied local biome.json (fleet lint/format standard)');
   } else {
-    log.info('  kept existing eslint.config.js');
+    log.info('  kept existing biome.json');
   }
 
-  // tsconfig — skip if exists unless --force
+  // tsconfig — skip if exists unless --force (Biome does not typecheck)
   const tsPath = join(cwd, 'tsconfig.json');
   if (!existsSync(tsPath) || opts.force) {
     writeFileSync(tsPath, JSON.stringify(buildLocalTsConfig(type, remote), null, 2) + '\n');
     log.success('✓ Applied local tsconfig.json');
   } else {
     log.info('  kept existing tsconfig.json');
-  }
-
-  // Prettier — skip if exists unless --force
-  const prettierPath = join(cwd, '.prettierrc.json');
-  if (!existsSync(prettierPath) || opts.force) {
-    const prettierOptions =
-      remote?.prettier_options && Object.keys(remote.prettier_options).length > 0
-        ? remote.prettier_options
-        : getPrettierDefault(type);
-    writeFileSync(prettierPath, JSON.stringify(prettierOptions, null, 2) + '\n');
-
-    const pkgPath = join(cwd, 'package.json');
-    const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
-    delete pkg.prettier;
-    writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n');
-
-    log.success('✓ Wrote .prettierrc.json');
-  } else {
-    log.info('  kept existing .prettierrc.json');
   }
 }
 

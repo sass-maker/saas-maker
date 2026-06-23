@@ -21,7 +21,36 @@ jobs:
       - run: pnpm build:widget
       - run: pnpm -F @saas-maker/api typecheck
       - run: pnpm build:cockpit
-      - run: pnpm test
+      - run: pnpm test:coverage
+      # Upload coverage report as a CI artifact for offline inspection.
+      # Runs with `if: always()` so the report is uploaded even when tests fail.
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 7
+
+  # E2E tests hit the live production API and require a CLI token.
+  # Gated to pushes on main only (not PRs) and allowed to fail without
+  # blocking the pipeline, since they depend on production availability.
+  e2e:
+    needs: build-and-test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install
+      - name: Run Playwright e2e tests
+        run: pnpm test:e2e
+        env:
+          SAASMAKER_E2E_CLI_TOKEN: ${{ secrets.SAASMAKER_E2E_CLI_TOKEN }}
 
   deploy-api:
     needs: build-and-test

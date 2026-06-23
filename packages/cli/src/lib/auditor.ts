@@ -28,20 +28,11 @@ export function auditProject(cwd: string = process.cwd()): AuditResult[] {
     results.push({ check: 'Foundry Config', status: 'fail', detail: 'Missing foundry.json' });
   }
 
-  // 2. Check ESLint — Biome is a valid lint standard (treat as pass)
-  const eslintPath = join(cwd, 'eslint.config.js');
-  const eslintMjsPath = join(cwd, 'eslint.config.mjs');
+  // 2. Check Biome (fleet lint/format standard)
   if (usesBiome(cwd)) {
-    results.push({ check: 'ESLint Standard', status: 'pass', detail: 'Biome (valid lint standard)' });
-  } else if (existsSync(eslintPath) || existsSync(eslintMjsPath)) {
-    const content = readFileSync(existsSync(eslintPath) ? eslintPath : eslintMjsPath, 'utf-8');
-    if (content.includes('Plain flat ESLint') || content.includes('eslint-config-next') || content.includes('typescript-eslint')) {
-      results.push({ check: 'ESLint Standard', status: 'pass', detail: 'Local flat config' });
-    } else {
-      results.push({ check: 'ESLint Standard', status: 'warn', detail: 'Custom eslint config' });
-    }
+    results.push({ check: 'Biome Standard', status: 'pass', detail: 'biome.json present (fleet lint standard)' });
   } else {
-    results.push({ check: 'ESLint Standard', status: 'fail', detail: 'Missing eslint.config.js' });
+    results.push({ check: 'Biome Standard', status: 'fail', detail: 'Missing biome.json — run `fnd init` to scaffold' });
   }
 
   // 3. Check TSConfig
@@ -55,11 +46,13 @@ export function auditProject(cwd: string = process.cwd()): AuditResult[] {
     }
   }
 
-  // 4. Check Prettier
-  if (existsSync(join(cwd, '.prettierrc.json')) || existsSync(join(cwd, '.prettierrc'))) {
-    results.push({ check: 'Prettier Standard', status: 'pass', detail: 'Local .prettierrc' });
+  // 4. Prettier — Biome handles formatting (fleet standard)
+  if (usesBiome(cwd)) {
+    results.push({ check: 'Format Standard', status: 'pass', detail: 'Biome (handles formatting)' });
+  } else if (existsSync(join(cwd, '.prettierrc.json')) || existsSync(join(cwd, '.prettierrc'))) {
+    results.push({ check: 'Format Standard', status: 'warn', detail: 'Legacy .prettierrc — migrate to Biome' });
   } else {
-    results.push({ check: 'Prettier Standard', status: 'warn', detail: 'No local prettier config file' });
+    results.push({ check: 'Format Standard', status: 'warn', detail: 'No formatter config — run `fnd init`' });
   }
 
   // 5. Code Health (Fallow Deep Audit)

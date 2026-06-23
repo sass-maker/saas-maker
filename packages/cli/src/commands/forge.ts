@@ -18,7 +18,7 @@ interface Project {
 
 interface ForgeOptions {
   name?: string;
-  type?: 'next' | 'vite' | 'node';
+  type?: 'next' | 'vite' | 'astro' | 'node';
 }
 
 function copyRecursive(src: string, dest: string, vars: Record<string, string>) {
@@ -59,8 +59,8 @@ export async function forgeCommand(options: ForgeOptions = {}): Promise<void> {
       return;
     }
 
-    const typeInput = options.type ?? (await rl.question('Project type (next | vite | node) [node]: ')).trim();
-    const type = (typeInput || 'node') as 'next' | 'vite' | 'node';
+    const typeInput = options.type ?? (await rl.question('Project type (next | vite | astro | node) [node]: ')).trim();
+    const type = (typeInput || 'node') as 'next' | 'vite' | 'astro' | 'node';
 
     // 1. Create in Cockpit
     const spinner = ora('Creating project in cockpit...').start();

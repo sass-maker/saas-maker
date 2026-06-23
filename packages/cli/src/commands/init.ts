@@ -24,7 +24,7 @@ function applyOfflineFoundry(name: string, force = false): void {
     name,
     type,
     linked: false,
-    standards: { eslint: true, tsconfig: true, prettier: true, renovate: true },
+    standards: { biome: true, tsconfig: true, renovate: true },
   };
   writeFileSync(join(process.cwd(), FOUNDRY_CONFIG), JSON.stringify(config, null, 2) + '\n');
   log.success(`Created ${FOUNDRY_CONFIG} (offline — not linked to fleet yet)`);
@@ -36,9 +36,9 @@ function applyOfflineFoundry(name: string, force = false): void {
   scaffoldHusky(process.cwd(), { force });
 
   console.log('\n✓ Foundry Standards applied:');
-  console.log('  eslint.config.js, tsconfig.json, .prettierrc.json, renovate.json');
+  console.log('  biome.json, tsconfig.json, renovate.json');
   console.log('\nNext:');
-  console.log('  pnpm install   ← installs eslint/prettier devDeps from package.json');
+  console.log('  pnpm install   ← installs biome devDep from package.json');
   console.log('  fnd login      ← then re-run fnd init to link to fleet');
 }
 
@@ -123,7 +123,7 @@ export async function initCommand(options: { offline?: boolean; force?: boolean 
       linked: true,
       projectId: project.id,
       projectKey: project.api_key,
-      standards: { eslint: true, tsconfig: true, prettier: true, renovate: true },
+      standards: { biome: true, tsconfig: true, renovate: true },
     };
     writeFileSync(foundryPath, JSON.stringify(config, null, 2) + '\n');
 
