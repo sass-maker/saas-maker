@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "node src/server/index.js",
     "test": "node --test && cargo test --quiet --manifest-path reel/Cargo.toml",
+    "test:coverage": "node --test --experimental-test-coverage --test-coverage-include='src/**/*.js' --test-coverage-lines=20 --test-coverage-functions=25",
     "bootstrap:cloudflare": "node scripts/bootstrap-cloudflare.js",
     "probe:engines": "node scripts/probe-engines.js",
     "canary:moneyprinter": "node scripts/canary-moneyprinter-local.js",
