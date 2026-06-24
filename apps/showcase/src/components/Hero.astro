@@ -1,10 +1,12 @@
 ---
-const _GITHUB_URL = 'https://github.com/sarthak-fleet/saas-maker';
+import { PROJECT_COUNT } from '../data/projects';
+
+const GITHUB_URL = 'https://github.com/sarthak-fleet/saas-maker';
 
 // Build-time year. The original Next.js page used `new Date().getFullYear()`
 // on every render; for a static site we freeze it at build. The whole
 // landing redeploys frequently enough that this won't drift meaningfully.
-const _YEAR = new Date().getFullYear();
+const YEAR = new Date().getFullYear();
 ---
 <header class="hero">
   <div class="hero-grid" aria-hidden="true"></div>

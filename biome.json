@@ -20,7 +20,8 @@
       "!**/tsconfig.tsbuildinfo",
       "!**/packages/cli/templates",
       "!**/design.html",
-      "!**/*.css"
+      "!**/*.css",
+      "!**/*.astro"
     ]
   },
   "formatter": {
