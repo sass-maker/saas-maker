@@ -282,25 +282,48 @@ curl -X POST https://api.sassmaker.com/v1/feedback \
 
 ---
 
-The **Foundry Standard** uses local configs written by `fnd init` / `fnd fleet fix` — no shared npm eslint/tsconfig/prettier packages.
+The **Foundry Standard** is a set of local, version-controlled configs that eliminate drift across your project fleet. `fnd init` and `fnd fleet fix` write them into each repo — no shared npm tooling packages.
 
 ## Components
 
-- Local `eslint.config.js` (Next / Vite / Node flat configs)
-- Local `tsconfig.json` (strict, stack-tuned)
-- Local `.prettierrc.json` (Tailwind class sorting)
-- `@saas-maker/sdk` for fleet API integration from products
+### 1. ESLint
+Local flat `eslint.config.js` per stack (Next.js, Vite, or Node). Includes import sorting, React hooks rules, and Prettier compatibility.
+
+### 2. TypeScript
+Local `tsconfig.json` with strict defaults tuned for Next.js, Vite, or Workers.
+
+### 3. Prettier
+Local `.prettierrc.json` with Tailwind class sorting via `prettier-plugin-tailwindcss`.
+
+### 4. Fleet integration
+- `foundry.json` links the repo to the control plane
+- `@saas-maker/sdk` for API calls from fleet products
+- Embeddable widgets (`@saas-maker/feedback`, etc.) where needed
+
+---
 
 ## How to apply
 
+### Automated (recommended)
+
 ```bash
 fnd init
-# or
-fnd fleet fix && pnpm install
-fnd fleet upgrade   # refresh lint/format devDependencies
+# or refresh an existing fleet project:
+fnd fleet fix
+pnpm install
 ```
 
-Removed internal packages: `@saas-maker/ops`, `@saas-maker/db`, shared eslint/tsconfig/prettier tooling packages.
+### Refresh lint/format devDependencies fleet-wide
+
+```bash
+fnd fleet upgrade
+```
+
+---
+
+## Backend services
+
+Use **`@saas-maker/sdk`** for feedback, waitlist, changelog, roadmap, events, and task worker helpers. Do not depend on removed internal packages (`@saas-maker/ops`, `@saas-maker/db`, shared eslint/tsconfig packages).
 
 ---
 
@@ -1798,6 +1821,40 @@ fnd api PATCH /v1/marketing/posts/<postId> --auth session \
 Default marketing queue ideas to AI-generated reel/video briefs for `tiktok`,
 `instagram_reels`, or `youtube_shorts`. Avoid LinkedIn entirely. Use `x` and
 `reddit` only for non-promotional discussion prompts.
+
+### Fleet events (system-of-record)
+
+Spokes publish results and telemetry up to saas-maker via `/v1/events` — the
+append-only fleet system-of-record. Send one event or a batch (array, max 100);
+`idempotency_key` makes outbox retries safe. Only the hub reads the union.
+
+```bash
+fnd api POST /v1/events --auth session \
+  --body '{"product":"reel-pipeline","type":"reel.rendered","idempotency_key":"<uuid>","payload":{"reel_id":"r1","result_url":"https://..."}}'
+
+fnd api GET /v1/events --auth session --query product=reel-pipeline --output table
+```
+
+### Task queue (workers claim work on wake)
+
+The Symphony task board doubles as a polling work-queue. Producers enqueue tasks
+with a `capability`; workers claim by capability — claims are atomic and leased,
+so two workers never run the same task, and a worker that dies mid-task has its
+lease expire and the work reclaimed.
+
+```bash
+# Enqueue (producer)
+fnd api POST /v1/tasks --auth session --body '{"title":"Audit homepage","capability":"audit","project_slug":"linkchat"}'
+
+# Worker wake-loop: claim → do → report
+fnd api POST /v1/tasks/claim --auth session --body '{"worker":"psi-swarm@laptop","capability":"audit","lease_seconds":900}'  # 204 = empty
+fnd api POST /v1/tasks/<taskId>/complete --auth session --body '{"worker":"psi-swarm@laptop","result":"p75 LCP 1.8s"}'
+fnd api POST /v1/tasks/<taskId>/fail     --auth session --body '{"worker":"psi-swarm@laptop","error":"timeout"}'
+```
+
+The `@saas-maker/sdk` `client.worker.drain({ worker, capability, handler })` wraps
+this loop and degrades gracefully — a missing token or unreachable hub ends the
+drain quietly, so each service still works standalone.
 
 ## Fleet automation
 
