@@ -149,6 +149,31 @@ manual, one-time step per project.
 
 ---
 
+## Additional findings (deeper audit, 2026-06-26)
+
+7. **Lint debt was two different things.** `high-signal` + `taste` had *real*
+   Biome debt (Biome is their push/CI gate) — cleared by reformatting + safe
+   fixes. But `open-historia` + `reader` "debt" was a **stale local
+   `node_modules`** (eslint not symlinked into `.bin` → `command not found` →
+   pre-push hook failed); their CI was already green. Fix was `pnpm install`.
+   Lesson: a failing pre-push hook ≠ failing CI — check which, and check the
+   local install, before assuming code debt.
+8. **high-signal — 53 deferred lint instances.** Clearing the gate required
+   downgrading 3 Biome rules to `warn` (`useButtonType` ×25, `noArrayIndexKey`
+   ×21, `useExhaustiveDependencies` ×7). These are real and need a durable task
+   to fix + restore the rules to `error` — especially `useExhaustiveDependencies`
+   (silences a stale-closure bug class for all future code). See memory
+   `project_fleet_biome_pushblock`.
+9. **taste/shiprank deploy blocked on un-provisioned D1.** Build + lint fixed,
+   but `wrangler pages deploy` fails: `Error 8000022: Invalid database UUID
+   (local-shiprank-db)` — `taste/wrangler.toml` has a placeholder `database_id`
+   and **no production shiprank D1 exists** in the account. Needs a D1 created +
+   migrations applied (a provisioning decision) before it can deploy.
+10. **drank deploy job red on a missing Pages project.** Its workflow targets a
+   `drank` Pages project that doesn't exist in the account; drank's own
+   `PROJECT_STATUS.md` marks production deploy **out of scope**. Pre-existing —
+   either create the project or gate/remove the deploy job.
+
 ## Systemic prevention (fleet-standards work)
 
 1. **No unverified fleet-wide sweeps.** A chore applied to N repos must run that
