@@ -19,6 +19,7 @@
       "!**/pnpm-lock.yaml",
       "!**/tsconfig.tsbuildinfo",
       "!**/packages/cli/templates",
+      "!**/openapi.json",
       "!**/design.html",
       "!**/*.css",
       "!**/*.astro"
