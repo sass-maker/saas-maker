@@ -39,12 +39,12 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
+      "preset": "recommended",
       "suspicious": {
         "noExplicitAny": "off"
       },
       "a11y": {
-        "recommended": false
+        "preset": "none"
       },
       "performance": {
         "noImgElement": "off"

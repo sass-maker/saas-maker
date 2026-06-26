@@ -66,7 +66,6 @@ const COMMUNITY_NOMINATIONS: any[] = (globalDrDataStatic as any).communityNomina
 
 export default function Drank() {
   const {
-    domains: userDomains, // only your custom sites (localStorage)
     filteredAndSorted: filteredUser,
     isLoading,
     updating,
