@@ -174,6 +174,32 @@ manual, one-time step per project.
    `PROJECT_STATUS.md` marks production deploy **out of scope**. Pre-existing —
    either create the project or gate/remove the deploy job.
 
+## The ESLint→Biome migration was the dominant root cause
+
+A fleet-wide sweep that swapped ESLint for Biome and ran `biome check --write`
+caused **at least 6 distinct breakage classes** — because it reformatted/edited
+files Biome doesn't fully understand and was merged per-repo without running the
+build:
+
+| Symptom | Repos | Why |
+|---|---|---|
+| Push-blocking lint debt | high-signal, taste, drank, swe-interview-prep | config set, code never reformatted (or deprecated `recommended` field) |
+| **`.astro` files mangled** → broken deploy | **codevetter, starboard** | Biome can't parse Astro frontmatter; `--write` deleted "unused" imports (`Layout`) + renamed template vars (`TITLE`/`OG_IMAGE`→`_TITLE`) → `astro build` "X is not defined" |
+| Generated files reformatted → CI drift | saas-maker (`openapi.json`), taste (`coverage/`) | `biome check --write` reformatted committed generated artifacts so `git diff --exit-code` / generator checks failed |
+| Red CI on a stale run | looptv | fix landed in a PR but the merge didn't trigger a fresh run |
+| Tests asserting source text broke | starboard | Biome reformatted a function the test matched as a contiguous substring |
+| Local pre-push false-failures | open-historia, reader | stale `node_modules` (eslint unlinked) — not real debt |
+
+**The fix pattern, applied per repo:** exclude generated + unparseable files from
+Biome (`!**/*.astro`, `!**/openapi.json`, `!**/coverage`, `!**/*.css`), run the
+formatter to clear real debt, and verify the **build** (not just lint) before merge.
+
+**Prevention:** a linter/formatter migration MUST (1) exclude generated +
+non-native files up front, (2) run the formatter as part of the same change, and
+(3) gate on `build` + `test`, not just `lint`, per repo. The `.astro` and
+generated-file excludes should be in a shared Biome base config so every repo
+inherits them.
+
 ## Systemic prevention (fleet-standards work)
 
 1. **No unverified fleet-wide sweeps.** A chore applied to N repos must run that
