@@ -56,6 +56,29 @@ export type RunnerEvent =
 
 const DEFAULT_AGENT_URLS = ['http://127.0.0.1:7777', 'http://127.0.0.1:7778', 'http://localhost:7777'];
 
+/**
+ * Whether to auto-probe the local agent on mount.
+ *
+ * The agent lives on localhost, so probing always fires a request to
+ * 127.0.0.1:7777. When the page is served from a deployed origin and no agent
+ * is running, that request fails with ERR_CONNECTION_REFUSED — which is the
+ * normal "disconnected" state, not a real error, but it still surfaces as a
+ * failed network request (e.g. in CI smoke probes that listen for requestfailed).
+ *
+ * So only auto-probe when there is a signal that a local agent is expected:
+ * either the page itself is served from localhost (dev / `psi-swarm serve`), or
+ * the URL carries explicit connect intent (`?agent=` / `?token=`). On a bare
+ * deployed page load we stay disconnected until the user explicitly connects.
+ */
+export function shouldAutoProbeAgent(): boolean {
+  if (typeof window === 'undefined') return false;
+  const { hostname, search } = window.location;
+  const isLocalHost = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '[::1]';
+  const params = new URLSearchParams(search);
+  const hasConnectIntent = params.has('agent') || params.has('token');
+  return isLocalHost || hasConnectIntent;
+}
+
 function withToken(url: string, token?: string): string {
   const u = new URL(url);
   if (token) u.searchParams.set('token', token);

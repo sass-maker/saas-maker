@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   AgentClient,
   probeAgent,
+  shouldAutoProbeAgent,
   type HealthResponse,
   type PresetsResponse,
   type RunMetrics,
@@ -105,30 +106,38 @@ export default function RunDashboard() {
   const [error, setError] = useState<string | null>(null);
   const runUnsubRef = useRef<(() => void) | null>(null);
 
-  // Probe for the local agent on mount.
-  useEffect(() => {
-    void (async () => {
-      const pageUrl = new URL(window.location.href);
-      const preferredAgent = pageUrl.searchParams.get('agent') ?? undefined;
-      const token = pageUrl.searchParams.get('token') ?? undefined;
-      const probe = await probeAgent(undefined, { preferredUrl: preferredAgent, token });
-      if (!probe) {
-        setView('disconnected');
-        return;
-      }
-      const c = new AgentClient(probe.url, token);
-      setClient(c);
-      setHealth(probe.health);
-      try {
-        const ps = await c.presets();
-        setPresetsData(ps);
-        setView('form');
-      } catch (err) {
-        setError((err as Error).message);
-        setView('disconnected');
-      }
-    })();
+  // Probe for the local agent. Auto-runs on mount only when an agent is
+  // expected (localhost dev, or explicit ?agent=/?token= intent); otherwise we
+  // stay disconnected so a bare deployed page load never fires a failed
+  // localhost request. The Retry button calls this directly to connect on demand.
+  const connect = useCallback(async () => {
+    setError(null);
+    setView('connecting');
+    const pageUrl = new URL(window.location.href);
+    const preferredAgent = pageUrl.searchParams.get('agent') ?? undefined;
+    const token = pageUrl.searchParams.get('token') ?? undefined;
+    const probe = await probeAgent(undefined, { preferredUrl: preferredAgent, token });
+    if (!probe) {
+      setView('disconnected');
+      return;
+    }
+    const c = new AgentClient(probe.url, token);
+    setClient(c);
+    setHealth(probe.health);
+    try {
+      const ps = await c.presets();
+      setPresetsData(ps);
+      setView('form');
+    } catch (err) {
+      setError((err as Error).message);
+      setView('disconnected');
+    }
   }, []);
+
+  useEffect(() => {
+    if (shouldAutoProbeAgent()) void connect();
+    else setView('disconnected');
+  }, [connect]);
 
   useEffect(() => {
     return () => {
@@ -289,7 +298,7 @@ export default function RunDashboard() {
     return <ConnectingPanel />;
   }
   if (view === 'disconnected') {
-    return <DisconnectedPanel onRetry={() => location.reload()} error={error} />;
+    return <DisconnectedPanel onRetry={() => void connect()} error={error} />;
   }
   if (!presetsData || !health) {
     return <ConnectingPanel />;

@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
-import { AgentClient, probeAgent, type HealthResponse } from '../lib/agent.js';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { AgentClient, probeAgent, shouldAutoProbeAgent, type HealthResponse } from '../lib/agent.js';
 
 interface PageRow {
   url: string;
@@ -117,18 +117,25 @@ export default function ProjectsView() {
   const [error, setError] = useState<string | null>(null);
   const [runningUrl, setRunningUrl] = useState<string | null>(null);
 
-  useEffect(() => {
-    void (async () => {
-      const pageUrl = new URL(window.location.href);
-      const preferredAgent = pageUrl.searchParams.get('agent') ?? undefined;
-      const token = pageUrl.searchParams.get('token') ?? undefined;
-      const probe = await probeAgent(undefined, { preferredUrl: preferredAgent, token });
-      if (!probe) { setStatus('disconnected'); return; }
-      setClient(new AgentClient(probe.url, token));
-      setHealth(probe.health);
-      setStatus('ready');
-    })();
+  // Auto-probe on mount only when an agent is expected (localhost dev, or
+  // explicit ?agent=/?token= intent); otherwise stay disconnected so a bare
+  // deployed page load never fires a failed localhost request. Retry connects on demand.
+  const connect = useCallback(async () => {
+    setStatus('probing');
+    const pageUrl = new URL(window.location.href);
+    const preferredAgent = pageUrl.searchParams.get('agent') ?? undefined;
+    const token = pageUrl.searchParams.get('token') ?? undefined;
+    const probe = await probeAgent(undefined, { preferredUrl: preferredAgent, token });
+    if (!probe) { setStatus('disconnected'); return; }
+    setClient(new AgentClient(probe.url, token));
+    setHealth(probe.health);
+    setStatus('ready');
   }, []);
+
+  useEffect(() => {
+    if (shouldAutoProbeAgent()) void connect();
+    else setStatus('disconnected');
+  }, [connect]);
 
   const loadProjects = async () => {
     if (!client) return;
@@ -236,7 +243,7 @@ export default function ProjectsView() {
     <Panel>
       <h2 className="text-xl font-semibold mb-3">No local agent running</h2>
       <p className="text-[var(--color-dim)] text-sm mb-3">Start it: <code className="text-[var(--color-cyan)]">npm run serve</code></p>
-      <button onClick={() => location.reload()} className="px-4 py-2 bg-[var(--color-cyan)] text-black rounded font-medium hover:opacity-90 transition">Retry</button>
+      <button onClick={() => void connect()} className="px-4 py-2 bg-[var(--color-cyan)] text-black rounded font-medium hover:opacity-90 transition">Retry</button>
     </Panel>
   );
 

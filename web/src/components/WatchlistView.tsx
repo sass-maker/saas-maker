@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { AgentClient, probeAgent, type HealthResponse } from '../lib/agent.js';
+import { AgentClient, probeAgent, shouldAutoProbeAgent, type HealthResponse } from '../lib/agent.js';
 
 type WatchStatus = 'regressed' | 'improved' | 'stable' | 'stale' | 'missing';
 
@@ -51,6 +51,13 @@ export default function WatchlistView() {
   };
 
   useEffect(() => {
+    // Only auto-probe when an agent is expected (localhost dev, or explicit
+    // ?agent=/?token= intent); a bare deployed page load must not fire a failed
+    // localhost request.
+    if (!shouldAutoProbeAgent()) {
+      setStatus('disconnected');
+      return;
+    }
     void (async () => {
       const probe = await probeAgent();
       if (!probe) {
