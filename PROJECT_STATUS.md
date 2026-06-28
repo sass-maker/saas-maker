@@ -1,6 +1,6 @@
 # Project Status
 
-Last updated: 2026-06-26 (v0.4.0)
+Last updated: 2026-06-28 (v0.4.0)
 
 ## Current Scope
 
@@ -54,19 +54,7 @@ psi-swarm is a local-first website performance tracker. It measures Web Vitals a
 
 ### Blocked
 
-- **CI deploy cannot go green — missing Cloudflare credentials.** This repo is
-  `sarthakagrawal927/psi-swarm` (personal account), **not** in the `sarthak-fleet`
-  org, so the org-level `CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID` secrets do
-  not reach it (the deploy step runs but wrangler errors with an empty
-  `CLOUDFLARE_API_TOKEN`). The workflow is correct and will pass the instant the
-  creds exist. Owner action required, one of:
-  1. **(recommended, matches fleet)** Transfer `sarthakagrawal927/psi-swarm` into the
-     `sarthak-fleet` org → it inherits the org secrets like every other fleet repo.
-  2. Add repo-level secrets:
-     `gh secret set CLOUDFLARE_API_TOKEN -R sarthakagrawal927/psi-swarm` and
-     `gh secret set CLOUDFLARE_ACCOUNT_ID -R sarthakagrawal927/psi-swarm` (user
-     supplies values; never hardcoded).
-  Meanwhile, manual deploys with an OAuth-authed wrangler keep the site current.
+- (none — repo transferred to `sarthak-fleet` org; org secrets now available)
 
 ## Planned Next
 
