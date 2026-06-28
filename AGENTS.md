@@ -12,4 +12,4 @@ Also read and follow the shared fleet-level agent standard at `../AGENTS.md`. Tr
 
 - **Stack**: Next.js 16, React 19, Tailwind v4, localStorage-only (no backend DB).
 - **Local dev**: `npm run dev` (http://localhost:3000)
-- **Deploy**: Vercel with root directory `drank` (recommended).
+- **Deploy**: Cloudflare Pages (`drank`) via `npm run deploy` (`wrangler pages deploy out`).
