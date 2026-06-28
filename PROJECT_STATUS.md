@@ -1,6 +1,6 @@
 # reel-pipeline — PROJECT STATUS
 
-Last updated: 2026-06-20
+Last updated: 2026-06-28
 
 ## Why / What
 
@@ -119,10 +119,9 @@ Marketing autopilot and posting run in Rust (`reel` CLI). Node remains for `rend
 
 ### Planned
 
-1. Merge `opt/rust-rewrite` PR + staging sign-off on live renders.
-2. Phase 2 screen-recording renderer (`demoSteps` browser flow with screenshot fallback).
-3. Phase 3 multi-variant render (`variantCount` > 1) polish in review UI.
-4. Wire draft bundle output into review UI without paid engines.
+1. Phase 2 screen-recording renderer (`demoSteps` browser flow with screenshot fallback).
+2. Phase 3 multi-variant render (`variantCount` > 1) polish in review UI.
+3. Wire draft bundle output into review UI without paid engines.
 
 ### Deferred
 
@@ -136,4 +135,4 @@ Marketing autopilot and posting run in Rust (`reel` CLI). Node remains for `rend
 
 ### Blocked
 
-- `opt/rust-rewrite` PR not yet merged; staging sign-off on live renders pending.
+- (none — `opt/rust-rewrite` PR #7 merged; Rust renderer is the production path)
