@@ -1,120 +1,200 @@
-# Fleet Performance Monitoring
+# Fleet Performance + Error Handling Monitoring
+
+> **Verified 2026-07-02.** Coverage tables below reflect the actual state of
+> each project's code, not an aspirational target. Previous versions of this
+> doc over-stated adoption; this version is grounded in file-level inspection.
 
 ## Overview
 
-The fleet has three layers of performance measurement:
+Four layers of performance measurement, plus error handling:
 
-1. **Frontend RUM** — Real User Monitoring via `web-vitals` (LCP, CLS, INP, TTFB, FCP) collected from real page loads and sent to PostHog or a beacon endpoint.
-2. **Bundle size tracking** — `size-limit` checks in CI prevent JS/CSS bundle bloat regressions on every PR.
-3. **Backend timing** — `Server-Timing` response headers + slow-request logging on all API routes.
-4. **Weekly PSI sweep** — Distributional Lighthouse audits via psi-swarm, producing a dated scoreboard + regression check.
+1. **Frontend RUM** — `web-vitals` (LCP, CLS, INP, TTFB, FCP) sent to PostHog or a beacon endpoint.
+2. **Bundle size tracking** — `size-limit` checks in CI prevent JS/CSS bloat on every PR.
+3. **Backend timing** — `Server-Timing` response headers + slow-request logging.
+4. **Weekly PSI sweep** — Distributional Lighthouse audits via psi-swarm.
+5. **Error handling** — `app.onError()` on Hono workers, React ErrorBoundary / Next.js `error.tsx` on frontends.
+
+---
 
 ## 1. Frontend RUM (web-vitals)
 
 ### What's measured
-- **LCP** (Largest Contentful Paint) — when the largest visible element renders
-- **CLS** (Cumulative Layout Shift) — visual stability score
-- **INP** (Interaction to Next Paint) — responsiveness to user input
-- **TTFB** (Time to First Byte) — server response time
-- **FCP** (First Contentful Paint) — first content render
+- **LCP**, **CLS**, **INP**, **TTFB**, **FCP**
 
 ### How it works
-Each frontend project has a `src/lib/vitals.ts` (or `src/components/VitalsReporter.tsx` for Next.js) module that:
-1. Registers `web-vitals` listeners on page load
-2. Sends each metric to PostHog if `posthog` is available on `window`
-3. Falls back to `navigator.sendBeacon()` to a fleet analytics endpoint
+A `src/lib/vitals.ts` (Vite SPA) or `components/VitalsReporter.tsx` (Next.js) module registers `web-vitals` listeners, sends metrics to PostHog if available, and falls back to `navigator.sendBeacon()` to a fleet analytics endpoint. PostHog is initialized via `posthog-provider.tsx` / `foundry-monitoring.ts`, wired into the app root layout or `main.tsx`.
+
+### Real coverage
+
+| Status | Projects |
+|--------|----------|
+| ✅ web-vitals + PostHog wired | anime-list, email-manager, everythingrated, high-signal, karte, looptv, rolepatch, significanthobbies, starboard, swe-interview-prep, today-little-log, truehire, tinygpt/browser |
+| ✅ web-vitals only (no PostHog) | ai-game (web3d), taste |
+| ⚠️ PostHog only (no web-vitals dep) | open-historia, reader |
+| ❌ Not wired | drank (dead vitals files removed), saas-maker (platform, no client RUM) |
+
+> 15/18 frontend projects have RUM wired. The standard pattern is
+> `vitals.ts` + `posthog-provider.tsx` + `foundry-monitoring.ts` +
+> `analytics.ts`, imported from the app root layout (Next.js) or
+> `main.tsx` (Vite SPA).
 
 ### Where to view data
 - **PostHog** — events named `web_vital` with properties `name`, `value`, `rating`, `id`, `navigation_type`
-- Query: `web_vital` events grouped by `name` to see p50/p75/p90 per metric per project
+- Beacon fallback: `https://vitals.fleet.workers.dev/collect`
 
-### Projects with RUM
-All frontend projects: ai-game, anime-list, drank, email-manager, everythingrated, high-signal, karte, looptv, open-historia, reader, rolepatch, saas-maker, significanthobbies, starboard, swe-interview-prep, taste, today-little-log, truehire, tinygpt/browser.
+---
 
 ## 2. Bundle Size Tracking (size-limit)
 
 ### What's measured
-- **JS bundle** (gzip) — limit: 500 KB per project
-- **CSS bundle** (gzip) — limit: 50 KB per project
+- **JS bundle** (gzip) — limit varies per project (500 KB default, up to 6 MB for app-heavy projects)
+- **CSS bundle** (gzip) — limit: 50 KB
 
-### How it works
-Each Vite/SPA project has a `.size-limit.json` config that specifies the build output glob and limits. CI runs `pnpm run size` (or `npm run size`) after the build step. If the bundle exceeds the limit, CI fails.
+### Real coverage (7 projects — CI-enforced)
 
-### Projects with size tracking
-ai-game, anime-list, drank, open-historia, swe-interview-prep, taste, today-little-log, tinygpt/browser.
+| Project | JS limit | CSS limit | CI runs size |
+|---------|----------|-----------|--------------|
+| ai-game | 5 MB | 50 KB | ✅ |
+| anime-list | 500 KB | 50 KB | ✅ |
+| drank | 500 KB | 50 KB | ✅ |
+| swe-interview-prep | 6 MB | 50 KB | ✅ |
+| taste | 500 KB | 50 KB | ✅ |
+| today-little-log | 500 KB | 50 KB | ✅ |
+| tinygpt/browser | 500 KB | — | ✅ |
+
+> **Missing:** email-manager, everythingrated, free-ai, high-signal, karte,
+> knowledge-base, looptv, materia, open-historia, pace, reader, rolepatch,
+> saas-maker, significanthobbies, starboard, truehire, verified-bases.
 
 ### Adjusting limits
-Edit `.size-limit.json` in the project root. Lower the limit to enforce tighter budgets as bundles shrink. The 500 KB starting point is generous — tighten per project as you optimize.
+Edit `.size-limit.json` in the project root. Lower the limit to enforce tighter budgets as bundles shrink.
+
+---
 
 ## 3. Backend API Timing
 
 ### What's measured
-- **Response duration** — wall clock time from request entry to response, via `performance.now()`
-- **Slow request detection** — any request taking >200ms is logged via `console.warn`
+- **Response duration** — `performance.now()` wall clock
+- **Slow request detection** — >200ms logged via `console.warn`
 
 ### How it works
-Each API project has a `withTiming()` wrapper that:
-1. Records `performance.now()` at request entry
-2. Awaits the handler
-3. Adds a `Server-Timing: app;dur=<ms>` response header
-4. Logs `[slow] METHOD /path — Xms` for requests over 200ms
+A `withTiming()` wrapper records `performance.now()` at request entry, awaits the handler, adds `Server-Timing: app;dur=<ms>`, and logs slow requests.
+
+### Real coverage (12 projects)
+
+| Project | withTiming | Applied | Server-Timing |
+|---------|-----------|---------|---------------|
+| anime-list | ✅ | ✅ | ✅ |
+| email-manager | ✅ | ✅ | ✅ |
+| everythingrated | ✅ | ✅ | ✅ |
+| high-signal | ✅ | ✅ | ✅ |
+| karte | ✅ | ✅ | ✅ |
+| knowledge-base | ✅ (variant: `withTimingHeaders`) | ✅ | ✅ |
+| rolepatch | ✅ | ✅ | ✅ |
+| significanthobbies | ✅ | ✅ | ✅ |
+| starboard | ✅ | ✅ | ✅ |
+| swe-interview-prep | ✅ | ✅ | ✅ |
+| taste | ✅ | ✅ | ✅ |
+| truehire | ✅ | ✅ | ✅ |
+
+> **Missing:** saas-maker, free-ai, open-historia, reader, looptv,
+> today-little-log, ai-game, verified-bases.
 
 ### Where to view data
-- **Cloudflare Workers dashboard** — `Server-Timing` header visible in browser DevTools → Network tab
-- **Workers logs** — slow request warnings appear in `wrangler tail` and Cloudflare dashboard logs
-- **PostHog** — if PostHog is initialized on the frontend, the `Server-Timing` header can be parsed and correlated
+- **Browser DevTools** → Network tab → `Server-Timing` header
+- **Workers logs** — slow request warnings in `wrangler tail`
 
-### Projects with backend timing
-All projects with API routes: anime-list, email-manager, everythingrated, high-signal, karte, looptv, open-historia, reader, rolepatch, saas-maker, significanthobbies, starboard, swe-interview-prep, taste, today-little-log, truehire.
+---
 
-## 4. Weekly PSI Sweep
+## 4. PSI Sweep
 
 ### What's measured
-- **Desktop LCP p50/p75/p90** — distributional Lighthouse audits via psi-swarm
-- **Performance score** — Lighthouse 100-point performance score
+- **Desktop LCP p50/p75/p90** — distributional Lighthouse via psi-swarm
+- **Performance score**
 
 ### How it works
-`fleet-ops/scripts/fleet-perf-sweep.mjs` runs psi-swarm against all production URLs (from `fleet-health-contracts.mjs`). Results are saved to `fleet-ops/docs/fleet-perf-scoreboard-YYYY-MM-DD.json`.
+`fleet-ops/scripts/fleet-perf-sweep.mjs` runs psi-swarm against production URLs from `saas-maker/scripts/lib/fleet-health-contracts.mjs` (25 prodUrls). Results saved to `fleet-ops/docs/fleet-perf-scoreboard-YYYY-MM-DD.json`.
 
-### Running the weekly sweep
-
-```bash
-cd fleet-ops
-bash scripts/fleet-perf-weekly.sh --runs 3 --concurrency 2
-```
-
-This runs the sweep and then the regression check against the previous scoreboard.
+### Automation
+- **GitHub Actions:** scheduled workflow in `.github/workflows/perf-sweep.yml` (weekly).
+- **Manual:** `bash scripts/fleet-perf-weekly.sh --runs 3 --concurrency 2`
 
 ### Regression check
-
-`fleet-ops/scripts/fleet-perf-regression-check.mjs` compares the two newest scoreboards and flags projects where LCP p90 regressed by more than 15% (configurable via `--threshold`).
-
-```bash
-node scripts/fleet-perf-regression-check.mjs --threshold 20
-```
-
-Exit code 1 if any regressions are found.
+`fleet-perf-regression-check.mjs` compares the two newest scoreboards, flags LCP p90 regressions >15% (configurable via `--threshold`). Exit 1 if regressions found.
 
 ### Existing scoreboards
-- `fleet-perf-scoreboard-2026-06-20.json` — baseline sweep (28 projects, 2 runs each)
-- `fleet-perf-master-list-2026-06-23.md` — 240+ findings ranked by ROI
-- `fleet-perf-opportunities-2026-06-23.md` — per-project analysis
+- `fleet-perf-scoreboard-2026-06-20.json` — baseline sweep
+
+---
+
+## 5. Error Handling
+
+### Frontend error boundaries
+
+| Pattern | Projects |
+|---------|----------|
+| ✅ Next.js `error.tsx` + `global-error.tsx` | drank, everythingrated, high-signal, karte, looptv, rolepatch, significanthobbies, starboard, truehire |
+| ✅ React `<ErrorBoundary>` component | ai-game (web3d), anime-list, email-manager, open-historia, reader, swe-interview-prep, taste, today-little-log |
+| ❌ Missing | (none — all frontend projects covered) |
+
+### Backend `app.onError()` / global error handler
+
+| Status | Projects | Pattern |
+|--------|----------|---------|
+| ✅ Hono `app.onError` | anime-list, email-manager, free-ai, high-signal, open-historia, reader, saas-maker, taste | `app.onError((err, c) => ...)` |
+| ✅ Pages Functions try/catch | swe-interview-prep, today-little-log | try/catch around `next()` in `_middleware.ts` |
+| ✅ OpenNext worker try/catch | everythingrated, karte, rolepatch, significanthobbies, starboard, truehire | try/catch around `openNext.fetch()` in `worker.mjs` |
+| ❌ Missing | (none — all API projects covered) | |
+
+> **No Sentry or external error tracking SDK** is used anywhere in the fleet.
+> All error handling is local: `app.onError` / try/catch → `console.error` on
+> the backend, ErrorBoundary → fallback UI on the frontend. No structured
+> logging library (pino/winston) is used — all logging is `console.log/warn/error`.
+
+### Reference patterns
+
+**Hono worker `app.onError`:**
+```ts
+app.onError((err, c) => {
+  console.error(`[error] ${c.req.method} ${c.req.path}:`, err.message, err.stack);
+  return c.json({ error: 'Internal Server Error' }, 500);
+});
+```
+
+**React ErrorBoundary (Vite SPA):**
+```tsx
+// components/ErrorBoundary.tsx
+import { Component, type ReactNode } from 'react';
+
+export class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean }> {
+  state = { hasError: false };
+  static getDerivedStateFromError() { return { hasError: true }; }
+  componentDidCatch(err: Error) { console.error('[ErrorBoundary]', err); }
+  render() { return this.state.hasError ? <div>Something went wrong.</div> : this.props.children; }
+}
+```
+
+---
 
 ## Quick reference
 
-| Layer | Tool | Where | CI? | Frequency |
-|-------|------|-------|-----|-----------|
-| Frontend RUM | web-vitals + PostHog | Client-side | No | Every page load |
-| Bundle size | size-limit | `.size-limit.json` | Yes (per PR) | Every push |
-| Backend timing | performance.now() | API routes | No | Every request |
-| PSI sweep | psi-swarm | fleet-ops/scripts | Manual | Weekly |
+| Layer | Tool | Where | CI? | Real coverage |
+|-------|------|-------|-----|---------------|
+| Frontend RUM | web-vitals + PostHog | Client-side | No | 15/18 projects |
+| Bundle size | size-limit | `.size-limit.json` | Yes (per PR) | 7/26 projects |
+| Backend timing | performance.now() | API routes | No | 12/27 projects |
+| PSI sweep | psi-swarm | fleet-ops/scripts | Weekly (GHA) | All prod URLs |
+| Error tracking | app.onError + ErrorBoundary | Workers + frontends | No | See tables above |
+
+---
 
 ## Adding perf monitoring to a new project
 
 ### Frontend RUM
-1. `pnpm add web-vitals`
-2. Create `src/lib/vitals.ts` with the `initVitals()` pattern
+1. `pnpm add web-vitals posthog-js`
+2. Create `src/lib/vitals.ts` with the `initVitals()` pattern (see anime-list for reference)
 3. Call `initVitals()` in the app entry point
+4. Initialize PostHog with `posthog.init()`
 
 ### Bundle size
 1. `pnpm add -D size-limit @size-limit/file`
@@ -123,6 +203,11 @@ Exit code 1 if any regressions are found.
 4. Add `pnpm run size` step to CI after build
 
 ### Backend timing
-1. Create timing wrapper in `functions/_lib/timing.ts` or `src/lib/api-timing.ts`
+1. Create timing wrapper in `functions/_lib/timing.ts` or `src/lib/timing.ts`
 2. Wrap API handlers with `withTiming()`
 3. Verify `Server-Timing` header appears in responses
+
+### Error handling
+1. **Hono worker:** add `app.onError()` after route registration
+2. **Vite SPA:** create `components/ErrorBoundary.tsx`, wrap `<App>` in `main.tsx`
+3. **Next.js:** add `app/error.tsx` + `app/global-error.tsx`
