@@ -1,5 +1,5 @@
 # drank — PROJECT STATUS
-Last updated: 2026-06-28
+Last updated: 2026-07-02
 
 ## Why / What
 
@@ -44,6 +44,7 @@ Last updated: 2026-06-28
 
 ## Timeline
 
+- **2026-07-02** — Added Next.js error boundaries (`app/error.tsx`, `app/global-error.tsx`); removed dead `web-vitals` dependency and unused vitals files.
 - **Weekly (Mondays ~04:00 UTC)** — GitHub Action `update-global-dr.yml` runs `scripts/update-global-dr.mjs`, commits `data/global-dr.json`.
 - **Shipped** — Global example sites (~45), nomination/prediction flow, client-opportunistic weekly personal refresh, High Signal `/domains` integration, Ahrefs proxy API.
 
