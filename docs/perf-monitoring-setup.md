@@ -46,6 +46,12 @@ A `src/lib/vitals.ts` (Vite SPA) or `components/VitalsReporter.tsx` (Next.js) mo
 
 ## 2. Bundle Size Tracking (size-limit)
 
+> **Low priority.** Bundle size matters only insofar as it affects actual page
+> speed. The fleet's perf bar is "is the site fast?" (measured by the PSI
+> sweep), not "is the bundle under N KB?" Existing size-limit configs are kept
+> but expanding to more projects is not a priority unless a project's LCP
+> regresses and bundle size is the root cause.
+
 ### What's measured
 - **JS bundle** (gzip) — limit varies per project (500 KB default, up to 6 MB for app-heavy projects)
 - **CSS bundle** (gzip) — limit: 50 KB
@@ -146,10 +152,12 @@ A `withTiming()` wrapper records `performance.now()` at request entry, awaits th
 | ✅ OpenNext worker try/catch | everythingrated, karte, rolepatch, significanthobbies, starboard, truehire | try/catch around `openNext.fetch()` in `worker.mjs` |
 | ❌ Missing | (none — all API projects covered) | |
 
-> **No Sentry or external error tracking SDK** is used anywhere in the fleet.
-> All error handling is local: `app.onError` / try/catch → `console.error` on
-> the backend, ErrorBoundary → fallback UI on the frontend. No structured
-> logging library (pino/winston) is used — all logging is `console.log/warn/error`.
+> **PostHog is the fleet error tracking standard** (no Sentry). Frontend
+> error boundaries send `error_captured` / `foundry_page_crash` events to
+> PostHog via `foundry-monitoring.ts`'s `captureError()` / `capturePageCrash()`.
+> Backend `app.onError` / try/catch handlers log to `console.error` with a
+> consistent format. No structured logging library (pino/winston) is used —
+> all logging is `console.log/warn/error`.
 
 ### Reference patterns
 
@@ -181,10 +189,10 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, { hasError
 | Layer | Tool | Where | CI? | Real coverage |
 |-------|------|-------|-----|---------------|
 | Frontend RUM | web-vitals + PostHog | Client-side | No | 15/18 projects |
-| Bundle size | size-limit | `.size-limit.json` | Yes (per PR) | 7/26 projects |
+| Bundle size | size-limit | `.size-limit.json` | Yes (per PR) | 7/26 projects (low priority) |
 | Backend timing | performance.now() | API routes | No | 12/27 projects |
 | PSI sweep | psi-swarm | fleet-ops/scripts | Weekly (GHA) | All prod URLs |
-| Error tracking | app.onError + ErrorBoundary | Workers + frontends | No | See tables above |
+| Error tracking | PostHog + app.onError + ErrorBoundary | Workers + frontends | No | All projects |
 
 ---
 
