@@ -18,11 +18,10 @@ const pathname =
   Astro.url.pathname.replace(/\.html$/, '').replace(/\/index$/, '') || '/';
 const canonical = new URL(pathname, Astro.site).href;
 
-// OG image is generated once by the original Next.js opengraph-image
-// route and shipped as a static PNG (see public/opengraph-image.png).
-// Astro can't easily reproduce next/og's dynamic ImageResponse so we
-// freeze it as a static asset.
-const OG_IMAGE = `${SITE_URL}/opengraph-image.png`;
+// OG image is a hand-authored static SVG (see public/og-image.svg) sized
+// 1200×630, matching the site's warm-dark / copper aesthetic. SVG is
+// supported by most social crawlers; the legacy PNG is kept as a fallback.
+const OG_IMAGE = `${SITE_URL}/og-image.svg`;
 
 const STRUCTURED_DATA = {
   '@context': 'https://schema.org',
@@ -35,6 +34,22 @@ const STRUCTURED_DATA = {
   description: DEFAULT_DESCRIPTION,
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   author: {
+    '@type': 'Person',
+    name: 'Sarthak Agrawal',
+    url: 'https://github.com/sarthakagrawal927',
+  },
+};
+
+const WEBSITE_DATA = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Foundry',
+  alternateName: 'SaaS Maker',
+  url: 'https://sassmaker.com',
+  description:
+    'A workshop dossier of twenty-something products I build and ship — and the open-source operating layer running underneath all of them.',
+  inLanguage: 'en',
+  publisher: {
     '@type': 'Person',
     name: 'Sarthak Agrawal',
     url: 'https://github.com/sarthakagrawal927',
@@ -71,6 +86,7 @@ const STRUCTURED_DATA = {
       name="keywords"
       content="foundry, sarthak agrawal, sassmaker, fleet, indie hacker, open source, portfolio"
     />
+    <meta name="author" content="Sarthak Agrawal" />
     <meta name="robots" content="index, follow" />
     <meta name="googlebot" content="index, follow" />
 
@@ -99,6 +115,7 @@ const STRUCTURED_DATA = {
         from a <template>). Restoring the canonical <script type="…">
         form so crawlers actually pick it up. */}
     <script type="application/ld+json" set:html={JSON.stringify(STRUCTURED_DATA)} />
+    <script type="application/ld+json" set:html={JSON.stringify(WEBSITE_DATA)} />
   </head>
   <body>
     <slot />

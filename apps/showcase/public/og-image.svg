@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" font-family="Manrope, system-ui, -apple-system, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b0d12"/>
+      <stop offset="100%" stop-color="#11141b"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#e07b3a" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#e07b3a" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="copper" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#f4965a"/>
+      <stop offset="100%" stop-color="#e07b3a"/>
+    </linearGradient>
+  </defs>
+
+  <!-- background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <!-- blueprint grid lines -->
+  <g stroke="#1f232c" stroke-width="1" opacity="0.6">
+    <line x1="0" y1="157" x2="1200" y2="157"/>
+    <line x1="0" y1="473" x2="1200" y2="473"/>
+  </g>
+
+  <!-- top tag row -->
+  <g font-family="JetBrains Mono, ui-monospace, monospace" font-size="16" fill="#7a7568" letter-spacing="2">
+    <text x="80" y="100">FOUNDRY · WORKSHOP DOSSIER</text>
+    <text x="1120" y="100" text-anchor="end">sassmaker.com</text>
+  </g>
+
+  <!-- copper accent bar -->
+  <rect x="80" y="200" width="64" height="6" rx="3" fill="url(#copper)"/>
+
+  <!-- main wordmark -->
+  <text x="80" y="300" font-size="120" font-weight="800" fill="#ede8dd" letter-spacing="-2">Foundry</text>
+
+  <!-- tagline -->
+  <text x="80" y="380" font-size="34" font-weight="500" fill="#b9b3a6">
+    A workshop of <tspan fill="url(#copper)" font-weight="700">29 projects</tspan>, one shared operating layer
+  </text>
+
+  <!-- subtitle / description -->
+  <text x="80" y="440" font-size="22" font-weight="400" fill="#7a7568">
+    Twenty-something products, forged by one builder — open-source underneath.
+  </text>
+
+  <!-- bottom meta row -->
+  <g font-family="JetBrains Mono, ui-monospace, monospace" font-size="16" fill="#7a7568" letter-spacing="1">
+    <text x="80" y="560">Sarthak Agrawal</text>
+    <text x="1120" y="560" text-anchor="end">github.com/sarthakagrawal927</text>
+  </g>
+
+  <!-- bottom copper line -->
+  <rect x="80" y="585" width="1040" height="2" fill="#1f232c"/>
+  <rect x="80" y="585" width="220" height="2" fill="url(#copper)"/>
+</svg>
