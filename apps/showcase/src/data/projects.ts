@@ -79,7 +79,7 @@ const OVERRIDES: Record<string, ShowcaseOverride> = {
     name: 'AI Game',
     initials: 'Ag',
     tag: 'Simulation · core',
-    desc: 'A persistent AI world simulator — interactive, multi-agent, RPG-shaped.',
+    desc: 'A persistent AI world simulator. Multi-agent and RPG-shaped.',
     color: '#8b5cf6',
   },
   'high-signal': {
@@ -140,7 +140,7 @@ const OVERRIDES: Record<string, ShowcaseOverride> = {
     name: 'Foundry',
     initials: 'Fd',
     tag: 'Helper',
-    desc: 'The open-source factory floor running underneath every other project on this page. Registry, feedback, changelog, tasks, audits, widgets — one cockpit, one API, one CLI.',
+    desc: 'The open-source factory floor running underneath every other project on this page. Registry, feedback, changelog, tasks, audits, widgets, all behind one cockpit, one API, and one CLI.',
     color: '#e07b3a',
     size: 'feature',
     href: GITHUB_URL,
