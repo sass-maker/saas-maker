@@ -167,11 +167,6 @@ const OVERRIDES: Record<string, ShowcaseOverride> = {
     desc: 'A small language model, built from the ground up.',
     color: '#06b6d4',
   },
-  'today-little-log': {
-    name: 'Today Little Log',
-    desc: 'Daily logging and micro-journaling.',
-    color: '#a8a29e',
-  },
   truehire: {
     name: 'TrueHire',
     desc: 'AI-powered candidate vetting platform.',

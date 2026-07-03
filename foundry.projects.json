@@ -207,14 +207,6 @@
     "priority": "P2",
     "maturity": "internal-first"
   },
-  "today-little-log": {
-    "desc": "Daily logging and micro-journaling application.",
-    "url": "https://github.com/sarthak-fleet/today-little-log.git",
-    "tier": "active-ai",
-    "category": "product",
-    "priority": "P2",
-    "maturity": "public-ready"
-  },
   "truehire": {
     "desc": "AI-powered recruitment and candidate vetting platform.",
     "url": "https://github.com/sarthak-fleet/truehire.git",

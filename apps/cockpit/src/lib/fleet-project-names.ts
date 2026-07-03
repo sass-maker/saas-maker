@@ -255,13 +255,6 @@ export const ACTIVE_FLEET_PROJECTS = {
     url: 'https://github.com/sarthak-fleet/tinygpt.git',
     externalDeps: [],
   },
-  'today-little-log': {
-    name: 'Today Little Log',
-    desc: 'Daily logging and micro-journaling application.',
-    tier: 'active-ai',
-    url: 'https://github.com/sarthak-fleet/today-little-log.git',
-    externalDeps: ['Turso', 'Google OAuth', 'free-ai gateway', 'PostHog'],
-  },
   truehire: {
     name: 'TrueHire',
     desc: 'AI-powered recruitment and candidate vetting platform.',
