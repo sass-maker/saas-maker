@@ -1,0 +1,82 @@
+---
+// FAQ section — Generative Engine Optimization (GEO).
+// AI search engines lift 35-60 word passages from pages, so each
+// answer is kept factual, self-contained, and within that band.
+// FAQPage JSON-LD is emitted alongside the visible markup so crawlers
+// can index the same Q&A pairs verbatim.
+
+const FAQ = [
+  {
+    q: 'What is Foundry?',
+    a: "Foundry is Sarthak Agrawal's personal product fleet — twenty-something shipped apps plus the open-source operating layer (CLI, cockpit, and deploy tooling) that runs them. The showcase at sassmaker.com is the fleet map, with per-product case studies documenting how each app is built and shipped.",
+  },
+  {
+    q: 'What is SaaS Maker?',
+    a: 'SaaS Maker is the operating layer behind Foundry. It provides drop-in backend services for SaaS products: feedback, waitlist, analytics, AI gateway, chatbot, testimonials, changelog, and forms. These packages are shared infrastructure used across the entire fleet of apps.',
+  },
+  {
+    q: 'Is Foundry open source?',
+    a: 'The source code for individual fleet products is on GitHub at github.com/sarthak-fleet. The SaaS Maker packages provide shared infrastructure across projects and are also published there. Everything is MIT licensed and designed to be forked and run on your own Cloudflare account.',
+  },
+  {
+    q: 'What products are in the Foundry fleet?',
+    a: 'The Foundry fleet includes Aliveville (AI world simulator), CodeVetter (AI code review), High Signal (daily intelligence brief), RolePatch (resume tailoring), Karte (link-in-bio with AI), Significant Hobbies (life planner), Reel Pipeline (marketing automation), and AI Game (multi-agent simulator), plus more in active development.',
+  },
+  {
+    q: 'What tech stack does Foundry use?',
+    a: 'Foundry uses Cloudflare Workers and Pages for hosting, Next.js and Astro for web, Turso and D1 for databases, better-auth for authentication, and the free-ai gateway for LLM access. The monorepo is managed with pnpm workspaces, and deploys ship through Cloudflare\u2019s edge network.',
+  },
+  {
+    q: 'Can I use SaaS Maker for my own project?',
+    a: 'Yes. SaaS Maker packages are designed as drop-in backend services. Install the SDK, configure your project, and get feedback, waitlist, analytics, AI gateway, and forms out of the box. The CLI (@saas-maker/cli) provides API-first access to every feature without writing server code.',
+  },
+  {
+    q: 'How fast are Foundry sites?',
+    a: 'Fleet sites target sub-500ms desktop LCP at the p75 percentile. The case study at sassmaker.com/case-study/fleet-performance documents how 23 sites were optimized toward that target using edge hosting, non-blocking font loading, and minimal JavaScript on the critical render path.',
+  },
+];
+
+const FAQ_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQ.map(({ q, a }) => ({
+    '@type': 'Question',
+    name: q,
+    acceptedAnswer: { '@type': 'Answer', text: a },
+  })),
+};
+---
+
+<section class="section faq" id="faq">
+  <div class="section-head">
+    <div class="section-marker">
+      <span class="section-num">§ 03</span>
+      <span class="section-rule"></span>
+      <span class="section-kw">Field Notes</span>
+    </div>
+    <h2 class="section-title">
+      Frequently asked,
+      <br />
+      <em class="italic">straight answers.</em>
+    </h2>
+    <p class="section-lede">
+      The basics on Foundry, SaaS Maker, the fleet, and how the whole shop
+      fits together &mdash; in plain language.
+    </p>
+  </div>
+
+  <div class="faq-list">
+    {FAQ.map(({ q, a }, i) => (
+      <details class="faq-item" open={i === 0}>
+        <summary class="faq-q">
+          <span class="faq-q-num">{String(i + 1).padStart(2, '0')}</span>
+          <span class="faq-q-text">{q}</span>
+          <span class="faq-q-mark" aria-hidden="true">+</span>
+        </summary>
+        <p class="faq-a">{a}</p>
+      </details>
+    ))}
+  </div>
+
+  <script type="application/ld+json" set:html={JSON.stringify(FAQ_JSONLD)} />
+</section>
