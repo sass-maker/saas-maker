@@ -1,18 +1,19 @@
 # Fleet Performance + Error Handling Monitoring
 
-> **Verified 2026-07-02.** Coverage tables below reflect the actual state of
+> **Verified 2026-07-03.** Coverage tables below reflect the actual state of
 > each project's code, not an aspirational target. Previous versions of this
 > doc over-stated adoption; this version is grounded in file-level inspection.
 
 ## Overview
 
-Four layers of performance measurement, plus error handling:
+Five layers of performance measurement, plus error handling:
 
 1. **Frontend RUM** — `web-vitals` (LCP, CLS, INP, TTFB, FCP) sent to PostHog or a beacon endpoint.
-2. **Bundle size tracking** — `size-limit` checks in CI prevent JS/CSS bloat on every PR.
-3. **Backend timing** — `Server-Timing` response headers + slow-request logging.
-4. **Weekly PSI sweep** — Distributional Lighthouse audits via psi-swarm.
-5. **Error handling** — `app.onError()` on Hono workers, React ErrorBoundary / Next.js `error.tsx` on frontends.
+2. **Client-side API timing** — Resource Timing API samples fetch/XHR duration + TTFB per route, sent to PostHog as `api_call_timing` events.
+3. **Bundle size tracking** — `size-limit` checks in CI prevent JS/CSS bloat on every PR.
+4. **Backend timing** — `Server-Timing` response headers + slow-request logging.
+5. **Weekly PSI sweep** — Distributional Lighthouse audits via psi-swarm.
+6. **Error handling** — `app.onError()` on Hono workers, React ErrorBoundary / Next.js `error.tsx` on frontends.
 
 ---
 
@@ -44,7 +45,59 @@ A `src/lib/vitals.ts` (Vite SPA) or `components/VitalsReporter.tsx` (Next.js) mo
 
 ---
 
-## 2. Bundle Size Tracking (size-limit)
+## 2. Client-side API Timing (Resource Timing API)
+
+### What's measured
+- **Full round-trip duration** per API route (network + DNS + TLS + server processing)
+- **TTFB** (time to first byte) per API route
+- **Transfer size** per API route
+- Aggregated as **p50 / p90 / max** per normalized route per sampling window
+
+### Why this layer exists
+Backend `withTiming()` / `Server-Timing` only measures server processing time —
+it cannot capture network RTT, DNS, TLS, or connection setup, which vary by
+user region. This layer measures the actual latency the user experiences,
+broken down by route, with PostHog's geo data providing regional breakdowns for
+free.
+
+### How it works
+A `src/lib/api-timing.ts` module polls `performance.getEntriesByType('resource')`
+every 30 seconds, filters to `fetch` / `xmlhttprequest` entries matching API URL
+patterns (same-origin `/api/` + configurable extra patterns), normalizes routes
+(collapses IDs: `/api/articles/123` → `/api/articles/:id`), and emits
+`api_call_timing` events to PostHog with p50/p90/max duration + TTFB + transfer
+size. Also flushes on `visibilitychange` (page hidden). No call-site changes
+needed — the browser records Resource Timing automatically.
+
+**Limitation:** Resource Timing does not expose HTTP status codes for fetch/XHR
+calls (browser security restriction). Latency-by-status is not available here;
+use backend `Server-Timing` + `app.onError` for that.
+
+### Real coverage (20 browser projects)
+
+| Status | Projects |
+|--------|----------|
+| ✅ Wired (existing PostHog) | anime-list, email-manager, everythingrated, high-signal, karte, looptv, open-historia, reader, rolepatch, significanthobbies, starboard, swe-interview-prep, truehire, tinygpt/browser |
+| ✅ Wired (PostHog added in same pass) | ai-game (web3d), drank, saas-maker (cockpit), verified-bases, research-papers, taste |
+| ❌ Not applicable (no browser) | companion-robot, forecast-lab, free-ai, pace, psi-swarm, reel-pipeline, codevetter (Tauri desktop), materia (static, no API calls) |
+
+> 20/20 browser projects have client-side API timing wired. The module is
+> `api-timing.ts` (template at `fleet-ops/templates/api-timing.ts`), called
+> via `initApiTiming()` alongside `initVitals()` in the app entry point.
+
+### Where to view data
+- **PostHog** — events named `api_call_timing` with properties:
+  - `project_id`, `route` (normalized), `sample_count`
+  - `duration_p50`, `duration_p90`, `duration_max` (ms)
+  - `ttfb_p50`, `ttfb_p90` (ms)
+  - `transfer_size_total` (bytes)
+- Filter by `project_id` to see per-project, or group by `route` for hotspots.
+- PostHog's geo data (`$geoip_city`, `$geoip_country`) provides regional
+  breakdowns without any client-side changes.
+
+---
+
+## 3. Bundle Size Tracking (size-limit)
 
 > **Low priority.** Bundle size matters only insofar as it affects actual page
 > speed. The fleet's perf bar is "is the site fast?" (measured by the PSI
@@ -77,7 +130,7 @@ Edit `.size-limit.json` in the project root. Lower the limit to enforce tighter 
 
 ---
 
-## 3. Backend API Timing
+## 4. Backend API Timing
 
 ### What's measured
 - **Response duration** — `performance.now()` wall clock
@@ -112,7 +165,7 @@ A `withTiming()` wrapper records `performance.now()` at request entry, awaits th
 
 ---
 
-## 4. PSI Sweep
+## 5. PSI Sweep
 
 ### What's measured
 - **Desktop LCP p50/p75/p90** — distributional Lighthouse via psi-swarm
@@ -133,7 +186,7 @@ A `withTiming()` wrapper records `performance.now()` at request entry, awaits th
 
 ---
 
-## 5. Error Handling
+## 6. Error Handling
 
 ### Frontend error boundaries
 
@@ -188,7 +241,8 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, { hasError
 
 | Layer | Tool | Where | CI? | Real coverage |
 |-------|------|-------|-----|---------------|
-| Frontend RUM | web-vitals + PostHog | Client-side | No | 15/18 projects |
+| Frontend RUM | web-vitals + PostHog | Client-side | No | 15/18 frontend projects |
+| Client-side API timing | Resource Timing API + PostHog | Client-side | No | 20/20 browser projects |
 | Bundle size | size-limit | `.size-limit.json` | Yes (per PR) | 7/26 projects (low priority) |
 | Backend timing | performance.now() | API routes | No | 12/27 projects |
 | PSI sweep | psi-swarm | fleet-ops/scripts | Weekly (GHA) | All prod URLs |
@@ -203,6 +257,12 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, { hasError
 2. Create `src/lib/vitals.ts` with the `initVitals()` pattern (see anime-list for reference)
 3. Call `initVitals()` in the app entry point
 4. Initialize PostHog with `posthog.init()`
+
+### Client-side API timing
+1. Copy `fleet-ops/templates/api-timing.ts` to `src/lib/api-timing.ts`
+2. Set the `_projectSlug` constant to your project slug
+3. Call `initApiTiming()` alongside `initVitals()` in the app entry point
+4. (Optional) Pass `urlPatterns` to match cross-origin API hosts
 
 ### Bundle size
 1. `pnpm add -D size-limit @size-limit/file`
