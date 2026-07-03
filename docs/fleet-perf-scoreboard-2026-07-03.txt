@@ -1,0 +1,101 @@
+URL: https://reader.sarthakagrawal927.workers.dev
+  CWV LCP gate (p75 ≤ 2.5s): GOOD  observed p75 = 238ms
+  
+  
+
+URL: https://starboard.sarthakagrawal927.workers.dev
+  CWV LCP gate (p75 ≤ 2.5s): GOOD  observed p75 = 209ms
+  
+  
+
+URL: https://app.sassmaker.com/login
+  CWV LCP gate (p75 ≤ 2.5s): GOOD  observed p75 = 2.20s
+  
+  
+
+URL: https://rolepatch.com
+  CWV LCP gate (p75 ≤ 2.5s): GOOD  observed p75 = 618ms
+  
+  
+
+URL: https://tinygpt.sarthakagrawal.dev
+  CWV LCP gate (p75 ≤ 2.5s): GOOD  observed p75 = 567ms
+  
+  
+
+URL: https://drank.pages.dev
+  CWV LCP gate (p75 ≤ 2.5s): GOOD  observed p75 = 322ms
+  
+  
+
+URL: https://research-papers.pages.dev
+  CWV LCP gate (p75 ≤ 2.5s): GOOD  observed p75 = 629ms
+  
+  
+
+URL: https://highsignal.app
+  CWV LCP gate (p75 ≤ 2.5s): GOOD  observed p75 = 677ms
+  
+  
+
+URL: https://anime-list-9lk.pages.dev
+  CWV LCP gate (p75 ≤ 2.5s): GOOD  observed p75 = 211ms
+  
+  
+
+URL: https://truehire.sarthakagrawal927.workers.dev
+  CWV LCP gate (p75 ≤ 2.5s): GOOD  observed p75 = 258ms
+  
+  
+
+URL: https://everythingrated.sarthakagrawal927.workers.dev
+  CWV LCP gate (p75 ≤ 2.5s): GOOD  observed p75 = 301ms
+  
+  
+
+URL: https://swe-interview-prep.pages.dev
+  CWV LCP gate (p75 ≤ 2.5s): GOOD  observed p75 = 884ms
+  
+  
+
+URL: https://karte.cc
+  CWV LCP gate (p75 ≤ 2.5s): GOOD  observed p75 = 541ms
+  
+  
+
+URL: https://aliveville.com
+  CWV LCP gate (p75 ≤ 2.5s): GOOD  observed p75 = 568ms
+  
+  
+
+URL: https://shiprank.pages.dev
+  CWV LCP gate (p75 ≤ 2.5s): GOOD  observed p75 = 1.00s
+  
+  
+
+URL: https://open-historia.sarthakagrawal927.workers.dev
+  CWV LCP gate (p75 ≤ 2.5s): GOOD  observed p75 = 248ms
+  
+  
+
+URL: https://verified-bases-web.pages.dev
+  CWV LCP gate (p75 ≤ 2.5s): GOOD  observed p75 = 560ms
+  
+  
+
+URL: https://significanthobbies.com
+  CWV LCP gate (p75 ≤ 2.5s): GOOD  observed p75 = 1.02s
+  
+  
+
+URL: https://looptv.pages.dev
+  CWV LCP gate (p75 ≤ 2.5s): GOOD  observed p75 = 500ms
+  
+  
+
+URL: https://email-manager.sarthakagrawal927.workers.dev
+  CWV LCP gate (p75 ≤ 2.5s): GOOD  observed p75 = 239ms
+  
+  
+
+ALL DONE

@@ -3,6 +3,8 @@
 > **Verified 2026-07-03.** Coverage tables below reflect the actual state of
 > each project's code, not an aspirational target. Previous versions of this
 > doc over-stated adoption; this version is grounded in file-level inspection.
+> PSI sweep results updated 2026-07-03 (all 20 production URLs, 2 runs each,
+> desktop preset — see §5).
 
 ## Overview
 
@@ -30,7 +32,7 @@ A `src/lib/vitals.ts` (Vite SPA) or `components/VitalsReporter.tsx` (Next.js) mo
 | Status | Projects |
 |--------|----------|
 | ✅ web-vitals + PostHog wired | anime-list, email-manager, everythingrated, high-signal, karte, looptv, rolepatch, significanthobbies, starboard, swe-interview-prep, today-little-log, truehire, tinygpt/browser |
-| ✅ web-vitals only (no PostHog) | ai-game (web3d), taste |
+| ✅ web-vitals only (no PostHog) | ai-game (web3d), taste (beacon fallback only — `posthog-js` not installed) |
 | ⚠️ PostHog only (no web-vitals dep) | open-historia, reader |
 | ❌ Not wired | drank (dead vitals files removed), saas-maker (platform, no client RUM) |
 
@@ -78,7 +80,8 @@ use backend `Server-Timing` + `app.onError` for that.
 | Status | Projects |
 |--------|----------|
 | ✅ Wired (existing PostHog) | anime-list, email-manager, everythingrated, high-signal, karte, looptv, open-historia, reader, rolepatch, significanthobbies, starboard, swe-interview-prep, truehire, tinygpt/browser |
-| ✅ Wired (PostHog added in same pass) | ai-game (web3d), drank, saas-maker (cockpit), verified-bases, research-papers, taste |
+| ✅ Wired (PostHog added in same pass) | ai-game (web3d), drank, saas-maker (cockpit), verified-bases, research-papers |
+| ⚠️ Wired but PostHog not initialized | taste — `api-timing.ts` + `vitals.ts` reference `window.posthog` but `posthog-js` is not installed or initialized; `api_call_timing` events are silently dropped, `web_vital` falls back to beacon |
 | ❌ Not applicable (no browser) | companion-robot, forecast-lab, free-ai, pace, psi-swarm, reel-pipeline, codevetter (Tauri desktop), materia (static, no API calls) |
 
 > 20/20 browser projects have client-side API timing wired. The module is
@@ -183,6 +186,40 @@ A `withTiming()` wrapper records `performance.now()` at request entry, awaits th
 
 ### Existing scoreboards
 - `fleet-perf-scoreboard-2026-06-20.json` — baseline sweep
+- `fleet-perf-scoreboard-2026-07-03.txt` — full fleet sweep (20 URLs, 2 runs, desktop)
+
+### 2026-07-03 sweep results (desktop LCP p75)
+
+All 20 production URLs pass the LCP gate (p75 ≤ 2.5s). No regressions.
+
+| Project | URL | LCP p75 | Gate |
+|---------|-----|---------|------|
+| anime-list | anime-list-9lk.pages.dev | 211 ms | ✅ GOOD |
+| starboard | starboard.sarthakagrawal927.workers.dev | 209 ms | ✅ GOOD |
+| reader | reader.sarthakagrawal927.workers.dev | 238 ms | ✅ GOOD |
+| email-manager | email-manager.sarthakagrawal927.workers.dev | 239 ms | ✅ GOOD |
+| open-historia | open-historia.sarthakagrawal927.workers.dev | 248 ms | ✅ GOOD |
+| truehire | truehire.sarthakagrawal927.workers.dev | 258 ms | ✅ GOOD |
+| everythingrated | everythingrated.sarthakagrawal927.workers.dev | 301 ms | ✅ GOOD |
+| drank | drank.pages.dev | 322 ms | ✅ GOOD |
+| looptv | looptv.pages.dev | 500 ms | ✅ GOOD |
+| karte | karte.cc | 541 ms | ✅ GOOD |
+| verified-bases | verified-bases-web.pages.dev | 560 ms | ✅ GOOD |
+| tinygpt | tinygpt.sarthakagrawal.dev | 567 ms | ✅ GOOD |
+| aliveville (ai-game) | aliveville.com | 568 ms | ✅ GOOD |
+| rolepatch | rolepatch.com | 618 ms | ✅ GOOD |
+| research-papers | research-papers.pages.dev | 629 ms | ✅ GOOD |
+| high-signal | highsignal.app | 677 ms | ✅ GOOD |
+| swe-interview-prep | swe-interview-prep.pages.dev | 884 ms | ✅ GOOD |
+| shiprank (taste) | shiprank.pages.dev | 1.00 s | ✅ GOOD |
+| significanthobbies | significanthobbies.com | 1.02 s | ✅ GOOD |
+| saas-maker | app.sassmaker.com/login | 2.20 s | ✅ GOOD (watch) |
+
+> **Watch list:** saas-maker (2.20s) is close to the 2.5s threshold — it's a
+> Next.js app on OpenNext with a heavy JS bundle. If it regresses past 2.5s,
+> port the login page to Astro per the fleet stack standard.
+> significanthobbies (1.02s) and taste/shiprank (1.00s) are Next.js apps
+> worth monitoring.
 
 ---
 
@@ -242,10 +279,10 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, { hasError
 | Layer | Tool | Where | CI? | Real coverage |
 |-------|------|-------|-----|---------------|
 | Frontend RUM | web-vitals + PostHog | Client-side | No | 15/18 frontend projects |
-| Client-side API timing | Resource Timing API + PostHog | Client-side | No | 20/20 browser projects |
+| Client-side API timing | Resource Timing API + PostHog | Client-side | No | 19/20 browser projects (taste: PostHog not initialized) |
 | Bundle size | size-limit | `.size-limit.json` | Yes (per PR) | 7/26 projects (low priority) |
 | Backend timing | performance.now() | API routes | No | 12/27 projects |
-| PSI sweep | psi-swarm | fleet-ops/scripts | Weekly (GHA) | All prod URLs |
+| PSI sweep | psi-swarm | fleet-ops/scripts | Weekly (GHA) | 20/20 prod URLs — all pass LCP gate (2026-07-03) |
 | Error tracking | PostHog + app.onError + ErrorBoundary | Workers + frontends | No | All projects |
 
 ---
