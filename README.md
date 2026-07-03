@@ -11,7 +11,7 @@ the source of truth for approvals, task links, and posting state.
 
 If you want animated tutoring shorts (DeepSeek script → ElevenLabs voice →
 Pexels b-roll → FFmpeg compose, runs entirely on M1), start at
-[`docs/lessons.md`](docs/lessons.md). The fast path is:
+[`docs/lesson-video-pipeline.md`](docs/lesson-video-pipeline.md). The fast path is:
 
 ```bash
 npm run lesson:render -- --input test/fixtures/lessons/closures.json --auto-approve
