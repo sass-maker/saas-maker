@@ -5,6 +5,7 @@ import { isBrowserAcceptanceEnabled, runBrowserAcceptance } from './browser-acce
 import { captureGitPatch } from './patch';
 import { buildFinalReport, collectPrGateEvidence, type PrGateEvidence } from './pr-gate';
 import { providerContractEvent, resolveProviderContract } from './provider';
+import { runPreflight } from './preflight';
 
 type GitAuth = {
   prefix: string;
@@ -117,6 +118,36 @@ export const sandboxExecutor: RunExecutor = {
     }
 
     const cwd = resolveWorkspaceCwd(workspace, input.cwd);
+
+    // Pre-flight validation: fail fast with a clear, categorized reason
+    // before the main task runs. Skipped for browser-only acceptance runs
+    // that do not touch a repo workspace.
+    const preflight = await runPreflight(input, sandbox, cwd);
+    if (!preflight.ok) {
+      const preflightResult: CommandResult = {
+        stdout: '',
+        stderr: `Pre-flight validation failed: ${preflight.reason ?? 'unknown'}`,
+        exitCode: 78,
+        success: false,
+      };
+      await input.recordEvent({
+        type: 'command_finish',
+        command: input.command,
+        cwd,
+        exit_code: preflightResult.exitCode,
+        stderr: preflightResult.stderr,
+        metadata: { preflight: false, reason: preflight.reason },
+      });
+      if (input.destroyAfterRun) {
+        await input.recordEvent({
+          type: 'sandbox_destroy',
+          message: `Destroying sandbox ${input.sandboxId}`,
+        });
+        await sandbox.destroy();
+      }
+      return preflightResult;
+    }
+
     if (input.mode !== 'command') {
       const result = await runAgent(input, sandbox, cwd);
       const finalResult = await finalizeWorkspacePatch(

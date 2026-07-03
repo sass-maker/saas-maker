@@ -402,7 +402,7 @@ function PrettierSection({
 // ─── Tab panel ────────────────────────────────────────────────────────────────
 
 function ProjectTab({
-  type,
+  type: _type,
   standards,
   onChange,
   onSave,

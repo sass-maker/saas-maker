@@ -6,6 +6,9 @@ import type {
   RunRecord,
   RunEventRecord,
   RunStats,
+  DroidSuccessDashboard,
+  DroidFailureReasonBreakdown,
+  DroidRetryBucket,
 } from './types';
 
 export const DROID_IDLE_AFTER_SECONDS = 6 * 60;
@@ -381,4 +384,99 @@ export async function createRunArtifact(
 function truncate(value: string | undefined): string | null {
   if (value === undefined) return null;
   return value.length > 16000 ? `${value.slice(0, 16000)}\n...[truncated]` : value;
+}
+
+// ---------------------------------------------------------------------------
+// Droid graduation: success-rate dashboard
+// ---------------------------------------------------------------------------
+
+export async function getDroidSuccessDashboard(
+  env: Env,
+  input: { projectSlug?: string; days?: number }
+): Promise<DroidSuccessDashboard> {
+  const days = Math.min(Math.max(input.days ?? 7, 1), 90);
+  const projectSlug = input.projectSlug?.trim() || null;
+  const binds: (string | number)[] = [];
+  const projectWhere = projectSlug ? 'AND project_slug = ?' : '';
+  if (projectSlug) binds.push(projectSlug);
+
+  // Window bounds
+  const windowEnd = new Date();
+  const windowStart = new Date(windowEnd.getTime() - days * 24 * 60 * 60 * 1000);
+  const windowStartIso = windowStart.toISOString();
+
+  // Total / completed / failed counts in the window
+  binds.push(windowStartIso);
+  const summaryRow = await env.DB.prepare(
+    `SELECT
+       COUNT(*) AS total_runs,
+       SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) AS completed_runs,
+       SUM(CASE WHEN status = 'failed' THEN 1 ELSE 0 END) AS failed_runs,
+       AVG(CASE WHEN duration_ms IS NOT NULL THEN duration_ms END) AS avg_duration_ms
+     FROM droid_runs
+     WHERE created_at >= ? ${projectWhere}`
+  )
+    .bind(...binds)
+    .first<{ total_runs: number; completed_runs: number; failed_runs: number; avg_duration_ms: number | null }>();
+
+  const totalRuns = Number(summaryRow?.total_runs ?? 0);
+  const completedRuns = Number(summaryRow?.completed_runs ?? 0);
+  const failedRuns = Number(summaryRow?.failed_runs ?? 0);
+  const successRate =
+    totalRuns > 0 ? Math.round((completedRuns / totalRuns) * 1000) / 1000 : null;
+
+  // Failure reason breakdown
+  const reasonBinds: (string | number)[] = [windowStartIso];
+  if (projectSlug) reasonBinds.push(projectSlug);
+  const reasonRows = await env.DB.prepare(
+    `SELECT failure_reason AS reason, COUNT(*) AS count
+     FROM droid_runs
+     WHERE created_at >= ? ${projectWhere} AND status = 'failed' AND failure_reason IS NOT NULL
+     GROUP BY failure_reason
+     ORDER BY count DESC
+     LIMIT 20`
+  )
+    .bind(...reasonBinds)
+    .all<{ reason: string; count: number }>();
+
+  const failureReasons: DroidFailureReasonBreakdown[] = (reasonRows.results ?? []).map((r) => ({
+    reason: r.reason,
+    count: Number(r.count) || 0,
+  }));
+
+  // Retry count distribution
+  const retryBinds: (string | number)[] = [windowStartIso];
+  if (projectSlug) retryBinds.push(projectSlug);
+  const retryRows = await env.DB.prepare(
+    `SELECT retry_count, COUNT(*) AS count
+     FROM droid_runs
+     WHERE created_at >= ? ${projectWhere}
+     GROUP BY retry_count
+     ORDER BY retry_count ASC
+     LIMIT 10`
+  )
+    .bind(...retryBinds)
+    .all<{ retry_count: number; count: number }>();
+
+  const retryDistribution: DroidRetryBucket[] = (retryRows.results ?? []).map((r) => ({
+    retry_count: Number(r.retry_count) || 0,
+    count: Number(r.count) || 0,
+  }));
+
+  return {
+    window_days: days,
+    window_start: windowStart.toISOString(),
+    window_end: windowEnd.toISOString(),
+    total_runs: totalRuns,
+    completed_runs: completedRuns,
+    failed_runs: failedRuns,
+    success_rate: successRate,
+    failure_reasons: failureReasons,
+    avg_duration_ms:
+      summaryRow?.avg_duration_ms === null || summaryRow?.avg_duration_ms === undefined
+        ? null
+        : Math.round(Number(summaryRow.avg_duration_ms)),
+    retry_count_distribution: retryDistribution,
+    project_slug: projectSlug,
+  };
 }

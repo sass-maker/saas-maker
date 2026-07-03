@@ -382,12 +382,14 @@ describe('droid runs', () => {
     };
     expect(eventsPayload.data.map((event) => event.type)).toEqual([
       'run_request',
+      'retry_contract',
+      'timeout_contract',
       'run_started',
       'command_start',
       'command_finish',
       'run_finished',
     ]);
-    expect(eventsPayload.data[3].stdout).toBe('ok\n');
+    expect(eventsPayload.data[5].stdout).toBe('ok\n');
   });
 
   it('records loop policy events around a Droid run', async () => {
@@ -437,6 +439,8 @@ describe('droid runs', () => {
     };
     expect(eventsPayload.data.map((event) => event.type)).toEqual([
       'run_request',
+      'retry_contract',
+      'timeout_contract',
       'loop_started',
       'run_started',
       'loop_attempt_started',
@@ -446,11 +450,11 @@ describe('droid runs', () => {
       'run_finished',
       'loop_completed',
     ]);
-    expect(JSON.parse(eventsPayload.data[1].metadata)).toMatchObject({
+    expect(JSON.parse(eventsPayload.data[3].metadata)).toMatchObject({
       max_attempts: 2,
       retry_on_failure: true,
     });
-    expect(JSON.parse(eventsPayload.data[8].metadata)).toMatchObject({
+    expect(JSON.parse(eventsPayload.data[10].metadata)).toMatchObject({
       status: 'completed',
       max_attempts: 2,
       attempt: 1,
@@ -788,7 +792,7 @@ describe('droid runs', () => {
     await expect(statusResponse.json()).resolves.toMatchObject({
       data: {
         run_id: payload.data.id,
-        event_count: 5,
+        event_count: 7,
         recent_events: expect.arrayContaining([
           expect.objectContaining({ type: 'command_finish' }),
         ]),
@@ -1498,6 +1502,8 @@ describe('droid runs', () => {
       const eventsPayload = (await eventsResponse.json()) as { data: Array<{ type: string }> };
       expect(eventsPayload.data.map((event) => event.type)).toEqual([
         'run_request',
+        'retry_contract',
+        'timeout_contract',
         'run_started',
         'agent_process_start',
         'run_timeout',

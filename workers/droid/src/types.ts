@@ -35,12 +35,44 @@ export interface BrowserAcceptanceRequest {
   keep_open?: boolean;
 }
 
+export type BackoffStrategy = 'fixed' | 'linear' | 'exponential';
+
 export interface LoopPolicyRequest {
   enabled?: boolean;
   max_attempts?: number;
   retry_on_failure?: boolean;
   stop_on_blocker?: boolean;
   cost_budget_usd?: number;
+  backoff_strategy?: BackoffStrategy;
+  backoff_initial_ms?: number;
+  backoff_max_ms?: number;
+  backoff_jitter?: boolean;
+}
+
+/**
+ * Explicit, durable retry contract derived from a LoopPolicyRequest.
+ * Recorded as a `retry_contract` event so every Droid run declares its
+ * retry behaviour up front instead of relying on implicit defaults.
+ */
+export interface RetryContract {
+  max_attempts: number;
+  retry_on_failure: boolean;
+  stop_on_blocker: boolean;
+  backoff_strategy: BackoffStrategy;
+  backoff_initial_ms: number;
+  backoff_max_ms: number;
+  backoff_jitter: boolean;
+}
+
+/**
+ * Explicit, durable timeout contract for a Droid run.
+ * Recorded as a `timeout_contract` event so the per-attempt and total
+ * timeout budgets are visible and auditable.
+ */
+export interface TimeoutContract {
+  per_attempt_seconds: number;
+  total_budget_seconds: number;
+  grace_seconds: number;
 }
 
 export interface RunRequest {
@@ -81,6 +113,8 @@ export interface RunRecord {
   duration_ms: number | null;
   summary: string | null;
   error_message: string | null;
+  retry_count: number;
+  failure_reason: string | null;
   created_at: string;
   started_at: string | null;
   finished_at: string | null;
@@ -122,6 +156,30 @@ export interface RunStats {
   stale_after_seconds: number;
   estimated_compute_seconds: number;
   recent: RunRecord[];
+}
+
+export interface DroidFailureReasonBreakdown {
+  reason: string;
+  count: number;
+}
+
+export interface DroidRetryBucket {
+  retry_count: number;
+  count: number;
+}
+
+export interface DroidSuccessDashboard {
+  window_days: number;
+  window_start: string;
+  window_end: string;
+  total_runs: number;
+  completed_runs: number;
+  failed_runs: number;
+  success_rate: number | null;
+  failure_reasons: DroidFailureReasonBreakdown[];
+  avg_duration_ms: number | null;
+  retry_count_distribution: DroidRetryBucket[];
+  project_slug: string | null;
 }
 
 export interface CommandResult {

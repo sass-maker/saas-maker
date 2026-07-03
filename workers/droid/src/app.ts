@@ -6,6 +6,7 @@ import {
   createRunEvent as createRunEventInDb,
   finishRun,
   getActiveRunForQueue,
+  getDroidSuccessDashboard,
   getLatestRunEvent,
   getLatestRunRequest,
   getNextQueuedRunForQueue,
@@ -31,6 +32,9 @@ import type {
   RunRecord,
   RunRequest,
   LoopPolicyRequest,
+  RetryContract,
+  TimeoutContract,
+  BackoffStrategy,
 } from './types';
 
 const DEFAULT_TIMEOUT_SECONDS = 900;
@@ -155,8 +159,13 @@ export function createApp(executor: RunExecutor) {
     }
 
     const loopPolicy = normalizeLoopPolicy(body?.loop_policy);
+    const timeoutSeconds = normalizeTimeoutSeconds(body?.timeout_seconds) ?? DEFAULT_TIMEOUT_SECONDS;
+    const retryContract = resolveRetryContract(loopPolicy);
+    const timeoutContract = resolveTimeoutContract(timeoutSeconds, loopPolicy);
 
     await markRunStarted(c.env, runId);
+    await createRunEvent(c.env, runId, retryContractEvent(retryContract));
+    await createRunEvent(c.env, runId, timeoutContractEvent(timeoutContract));
     if (loopPolicy?.enabled) {
       await createRunEvent(
         c.env,
@@ -179,7 +188,7 @@ export function createApp(executor: RunExecutor) {
         repo_url: body?.repo_url ?? null,
         branch: body?.branch ?? null,
         sandbox_id: sandboxId,
-        timeout_seconds: normalizeTimeoutSeconds(body?.timeout_seconds) ?? DEFAULT_TIMEOUT_SECONDS,
+        timeout_seconds: timeoutSeconds,
       },
     });
 
@@ -249,6 +258,14 @@ export function createApp(executor: RunExecutor) {
       limit: normalizeLimit(c.req.query('limit')),
     });
     return c.json({ data: stats });
+  });
+
+  app.get('/v0/dashboard/success-rate', async (c) => {
+    const dashboard = await getDroidSuccessDashboard(c.env, {
+      projectSlug: c.req.query('project_slug')?.trim(),
+      days: normalizeDashboardDays(c.req.query('days')),
+    });
+    return c.json({ data: dashboard });
   });
 
   app.post('/v0/runs/reap-stale', async (c) => {
@@ -1347,13 +1364,35 @@ function normalizeLoopPolicy(value: unknown): LoopPolicyRequest | undefined {
   const config = value as Record<string, unknown>;
   const enabled = config.enabled === true;
   if (!enabled) return undefined;
+  const backoff = normalizeBackoffStrategy(config.backoff_strategy);
   return {
     enabled,
     max_attempts: normalizeLoopMaxAttempts(config.max_attempts) ?? 2,
     retry_on_failure: typeof config.retry_on_failure === 'boolean' ? config.retry_on_failure : true,
     stop_on_blocker: typeof config.stop_on_blocker === 'boolean' ? config.stop_on_blocker : true,
     cost_budget_usd: normalizeLoopCostBudgetUsd(config.cost_budget_usd),
+    backoff_strategy: backoff,
+    backoff_initial_ms: normalizeBackoffMs(config.backoff_initial_ms, 1000, 60_000, 2000),
+    backoff_max_ms: normalizeBackoffMs(config.backoff_max_ms, 1000, 600_000, 30_000),
+    backoff_jitter: typeof config.backoff_jitter === 'boolean' ? config.backoff_jitter : true,
   };
+}
+
+function normalizeBackoffStrategy(value: unknown): BackoffStrategy {
+  if (value === 'linear' || value === 'exponential') return value;
+  return 'fixed';
+}
+
+function normalizeBackoffMs(
+  value: unknown,
+  min: number,
+  max: number,
+  fallback: number
+): number {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return fallback;
+  if (value < min) return min;
+  if (value > max) return max;
+  return Math.round(value);
 }
 
 function normalizeLoopMaxAttempts(value: unknown): number | undefined {
@@ -1444,4 +1483,88 @@ function normalizeMaxRunningRuns(value: unknown): number {
   if (parsed < 1) return 1;
   if (parsed > 20) return 20;
   return parsed;
+}
+
+// ---------------------------------------------------------------------------
+// Droid graduation: durable retry/timeout contracts + success dashboard
+// ---------------------------------------------------------------------------
+
+function resolveRetryContract(
+  policy: LoopPolicyRequest | undefined
+): RetryContract {
+  if (!policy) {
+    return {
+      max_attempts: 1,
+      retry_on_failure: false,
+      stop_on_blocker: true,
+      backoff_strategy: 'fixed',
+      backoff_initial_ms: 2000,
+      backoff_max_ms: 30_000,
+      backoff_jitter: true,
+    };
+  }
+  return {
+    max_attempts: policy.max_attempts ?? 2,
+    retry_on_failure: policy.retry_on_failure ?? true,
+    stop_on_blocker: policy.stop_on_blocker ?? true,
+    backoff_strategy: policy.backoff_strategy ?? 'fixed',
+    backoff_initial_ms: policy.backoff_initial_ms ?? 2000,
+    backoff_max_ms: policy.backoff_max_ms ?? 30_000,
+    backoff_jitter: policy.backoff_jitter ?? true,
+  };
+}
+
+function resolveTimeoutContract(
+  timeoutSeconds: number,
+  policy: LoopPolicyRequest | undefined
+): TimeoutContract {
+  const maxAttempts = policy?.max_attempts ?? 1;
+  const graceSeconds = 30;
+  const totalBudgetSeconds = timeoutSeconds * maxAttempts + graceSeconds;
+  return {
+    per_attempt_seconds: timeoutSeconds,
+    total_budget_seconds: totalBudgetSeconds,
+    grace_seconds: graceSeconds,
+  };
+}
+
+function retryContractEvent(contract: RetryContract): RunEventInput {
+  return {
+    type: 'retry_contract',
+    actor: 'droid',
+    source: 'worker',
+    message: `Retry contract: max ${contract.max_attempts} attempts, backoff=${contract.backoff_strategy}`,
+    metadata: {
+      max_attempts: contract.max_attempts,
+      retry_on_failure: contract.retry_on_failure,
+      stop_on_blocker: contract.stop_on_blocker,
+      backoff_strategy: contract.backoff_strategy,
+      backoff_initial_ms: contract.backoff_initial_ms,
+      backoff_max_ms: contract.backoff_max_ms,
+      backoff_jitter: contract.backoff_jitter,
+    },
+  };
+}
+
+function timeoutContractEvent(contract: TimeoutContract): RunEventInput {
+  return {
+    type: 'timeout_contract',
+    actor: 'droid',
+    source: 'worker',
+    message: `Timeout contract: ${contract.per_attempt_seconds}s per attempt, ${contract.total_budget_seconds}s total budget`,
+    metadata: {
+      per_attempt_seconds: contract.per_attempt_seconds,
+      total_budget_seconds: contract.total_budget_seconds,
+      grace_seconds: contract.grace_seconds,
+    },
+  };
+}
+
+function normalizeDashboardDays(value: unknown): number {
+  if (typeof value !== 'string' && typeof value !== 'number') return 7;
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) return 7;
+  if (parsed < 1) return 1;
+  if (parsed > 90) return 90;
+  return Math.round(parsed);
 }

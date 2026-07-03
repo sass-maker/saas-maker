@@ -1,7 +1,10 @@
 'use client';
 
 import {
+  AlertTriangle,
+  BarChart3,
   Check,
+  Clock,
   Copy,
   Download,
   ExternalLink,
@@ -27,6 +30,14 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import {
+  buildMarketingOpsSummary,
+  isMissedMarketingPost,
+  matchesMarketingOpsFilter,
+  type MarketingOpsFilter,
+  parseMarketingMetrics,
+  parsePostingFailure,
+} from '@/lib/marketing-queue-ops';
 import type {
   MarketingPostChannel,
   MarketingPostRow,
@@ -59,6 +70,14 @@ const STATUS_CLASS: Record<MarketingPostStatus, string> = {
   rejected: 'border-rose-500/40 bg-rose-500/10 text-rose-300',
   sent: 'border-violet-500/40 bg-violet-500/10 text-violet-300',
 };
+
+const OPS_FILTERS: Array<{ value: MarketingOpsFilter; label: string }> = [
+  { value: 'all', label: 'All ops' },
+  { value: 'missed', label: 'Missed' },
+  { value: 'errors', label: 'Errors' },
+  { value: 'metrics_pending', label: 'Metrics pending' },
+  { value: 'metrics_synced', label: 'Metrics synced' },
+];
 
 function postText(post: MarketingPostRow) {
   return [post.hook, post.body, post.cta].filter(Boolean).join('\n\n');
@@ -108,6 +127,7 @@ export function MarketingQueueClient({ initialPosts }: { initialPosts: Marketing
   const [statusFilter, setStatusFilter] = useState<MarketingPostStatus | 'all'>('all');
   const [projectFilter, setProjectFilter] = useState('all');
   const [channelFilter, setChannelFilter] = useState<MarketingPostChannel | 'all'>('all');
+  const [opsFilter, setOpsFilter] = useState<MarketingOpsFilter>('all');
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [form, setForm] = useState({
@@ -127,12 +147,21 @@ export function MarketingQueueClient({ initialPosts }: { initialPosts: Marketing
     (post) =>
       (statusFilter === 'all' || post.status === statusFilter) &&
       (projectFilter === 'all' || post.project_slug === projectFilter) &&
-      (channelFilter === 'all' || post.channel === channelFilter)
+      (channelFilter === 'all' || post.channel === channelFilter) &&
+      matchesMarketingOpsFilter(post, opsFilter)
   );
   const generatedCount = posts.filter((post) => post.status === 'generated').length;
   const acceptedCount = posts.filter((post) => post.status === 'accepted').length;
   const rejectedCount = posts.filter((post) => post.status === 'rejected').length;
   const sentCount = posts.filter((post) => post.status === 'sent').length;
+  const opsSummary = useMemo(() => buildMarketingOpsSummary(posts), [posts]);
+  const topMetrics = useMemo(
+    () =>
+      [...opsSummary.metricsReady]
+        .sort((a, b) => (b.snapshot.metrics.views ?? 0) - (a.snapshot.metrics.views ?? 0))
+        .slice(0, 3),
+    [opsSummary.metricsReady]
+  );
 
   async function refresh() {
     const res = await fetch('/api/marketing/queue');
@@ -265,6 +294,137 @@ export function MarketingQueueClient({ initialPosts }: { initialPosts: Marketing
         </Card>
       </div>
 
+      <div className="grid gap-3 lg:grid-cols-4">
+        <button
+          type="button"
+          onClick={() => setOpsFilter('missed')}
+          className="text-left"
+          aria-label="Filter missed ready posts"
+        >
+          <Card className="h-full gap-2 p-4 transition-colors hover:border-amber-500/50">
+            <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground">
+              <Clock className="h-4 w-4" />
+              Missed ready
+            </div>
+            <p className="text-3xl font-semibold text-amber-300">{opsSummary.missedPosts.length}</p>
+            <p className="text-sm text-muted-foreground">
+              Overdue accepted reels with rendered assets.
+            </p>
+          </Card>
+        </button>
+        <button
+          type="button"
+          onClick={() => setOpsFilter('errors')}
+          className="text-left"
+          aria-label="Filter posting errors"
+        >
+          <Card className="h-full gap-2 p-4 transition-colors hover:border-rose-500/50">
+            <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground">
+              <AlertTriangle className="h-4 w-4" />
+              Posting errors
+            </div>
+            <p className="text-3xl font-semibold text-rose-300">
+              {opsSummary.postingFailures.length}
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Review reconnect, asset, and caption failures.
+            </p>
+          </Card>
+        </button>
+        <button
+          type="button"
+          onClick={() => setOpsFilter('metrics_synced')}
+          className="text-left"
+          aria-label="Filter posts with synced metrics"
+        >
+          <Card className="h-full gap-2 p-4 transition-colors hover:border-cyan-500/50">
+            <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground">
+              <BarChart3 className="h-4 w-4" />
+              Metrics synced
+            </div>
+            <p className="text-3xl font-semibold text-cyan-300">{opsSummary.metricsReady.length}</p>
+            <p className="text-sm text-muted-foreground">
+              {opsSummary.totals.views.toLocaleString()} views ·{' '}
+              {opsSummary.totals.likes.toLocaleString()} likes
+            </p>
+          </Card>
+        </button>
+        <button
+          type="button"
+          onClick={() => setOpsFilter('metrics_pending')}
+          className="text-left"
+          aria-label="Filter posts pending metrics"
+        >
+          <Card className="h-full gap-2 p-4 transition-colors hover:border-violet-500/50">
+            <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground">
+              <BarChart3 className="h-4 w-4" />
+              Metrics pending
+            </div>
+            <p className="text-3xl font-semibold text-violet-300">
+              {opsSummary.metricsPending.length}
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Sent posts with release IDs but no synced metrics.
+            </p>
+          </Card>
+        </button>
+      </div>
+
+      {(opsSummary.missedPosts.length > 0 ||
+        opsSummary.postingFailures.length > 0 ||
+        topMetrics.length > 0) && (
+        <Card className="gap-4 p-4">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <h2 className="font-semibold">Posting ops</h2>
+              <p className="text-sm text-muted-foreground">
+                Missed posts, publish failures, and top synced metrics from reel-pipeline notes.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Badge
+                variant="outline"
+                className="border-amber-500/40 bg-amber-500/10 text-amber-300"
+              >
+                {opsSummary.missedPosts.length} missed
+              </Badge>
+              <Badge variant="outline" className="border-rose-500/40 bg-rose-500/10 text-rose-300">
+                {opsSummary.postingFailures.length} errors
+              </Badge>
+            </div>
+          </div>
+          <div className="grid gap-3 lg:grid-cols-3">
+            <OpsList
+              title="Missed posts"
+              empty="No overdue accepted reels."
+              items={opsSummary.missedPosts.slice(0, 4).map((post) => ({
+                id: post.id,
+                title: post.title,
+                detail: `${post.project_slug ?? 'Unassigned'} · ${post.channel} · ${formatDateTime(post.scheduled_for)}`,
+              }))}
+            />
+            <OpsList
+              title="Posting failures"
+              empty="No posting failures in notes."
+              items={opsSummary.postingFailures.slice(0, 4).map(({ post, failure }) => ({
+                id: post.id,
+                title: post.title,
+                detail: `${failure.category ?? 'unknown'} · ${failure.message ?? 'No error message'}`,
+              }))}
+            />
+            <OpsList
+              title="Top metrics"
+              empty="No synced metrics yet."
+              items={topMetrics.map(({ post, snapshot }) => ({
+                id: post.id,
+                title: post.title,
+                detail: `${(snapshot.metrics.views ?? 0).toLocaleString()} views · ${(snapshot.metrics.likes ?? 0).toLocaleString()} likes`,
+              }))}
+            />
+          </div>
+        </Card>
+      )}
+
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_360px]">
         <div className="space-y-4">
           <Card className="gap-4 p-4">
@@ -323,6 +483,24 @@ export function MarketingQueueClient({ initialPosts }: { initialPosts: Marketing
                   </SelectContent>
                 </Select>
               </div>
+              <div className="space-y-1">
+                <Label>Ops</Label>
+                <Select
+                  value={opsFilter}
+                  onValueChange={(value) => setOpsFilter(value as MarketingOpsFilter)}
+                >
+                  <SelectTrigger className="w-44">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {OPS_FILTERS.map((filter) => (
+                      <SelectItem key={filter.value} value={filter.value}>
+                        {filter.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
               <div className="ml-auto flex flex-wrap gap-2">
                 <Button variant="outline" onClick={() => copyExport('markdown')}>
                   <Download className="h-4 w-4" />
@@ -368,6 +546,30 @@ export function MarketingQueueClient({ initialPosts }: { initialPosts: Marketing
                           <span className="font-mono text-xs text-muted-foreground">
                             {post.source_type}:{post.source_id.slice(0, 8)}
                           </span>
+                        )}
+                        {isMissedPost(post) && (
+                          <Badge
+                            variant="outline"
+                            className="border-amber-500/40 bg-amber-500/10 text-amber-300"
+                          >
+                            Missed
+                          </Badge>
+                        )}
+                        {hasPostingFailure(post) && (
+                          <Badge
+                            variant="outline"
+                            className="border-rose-500/40 bg-rose-500/10 text-rose-300"
+                          >
+                            Post error
+                          </Badge>
+                        )}
+                        {hasMetrics(post) && (
+                          <Badge
+                            variant="outline"
+                            className="border-cyan-500/40 bg-cyan-500/10 text-cyan-300"
+                          >
+                            Metrics
+                          </Badge>
                         )}
                       </div>
                       <h2 className="truncate text-base font-semibold">{post.title}</h2>
@@ -454,6 +656,13 @@ export function MarketingQueueClient({ initialPosts }: { initialPosts: Marketing
                   <pre className="max-h-72 overflow-auto whitespace-pre-wrap rounded-lg border bg-muted/30 p-3 text-sm leading-relaxed text-muted-foreground">
                     {postText(post)}
                   </pre>
+                  {hasMetrics(post) && (
+                    <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
+                      {metricLine(post, 'views')}
+                      {metricLine(post, 'likes')}
+                      {metricLine(post, 'comments')}
+                    </div>
+                  )}
                 </Card>
               ))
             )}
@@ -560,4 +769,62 @@ export function MarketingQueueClient({ initialPosts }: { initialPosts: Marketing
       </div>
     </div>
   );
+}
+
+function OpsList({
+  title,
+  empty,
+  items,
+}: {
+  title: string;
+  empty: string;
+  items: Array<{ id: string; title: string; detail: string }>;
+}) {
+  return (
+    <div className="rounded-lg border bg-muted/20 p-3">
+      <h3 className="text-sm font-medium">{title}</h3>
+      {items.length === 0 ? (
+        <p className="mt-2 text-sm text-muted-foreground">{empty}</p>
+      ) : (
+        <div className="mt-3 space-y-3">
+          {items.map((item) => (
+            <div key={item.id} className="min-w-0">
+              <p className="truncate text-sm font-medium">{item.title}</p>
+              <p className="truncate text-xs text-muted-foreground">{item.detail}</p>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function isMissedPost(post: MarketingPostRow) {
+  return isMissedMarketingPost(post);
+}
+
+function hasPostingFailure(post: MarketingPostRow) {
+  return Boolean(parsePostingFailure(post.notes));
+}
+
+function hasMetrics(post: MarketingPostRow) {
+  const snapshot = parseMarketingMetrics(post.notes);
+  return Boolean(snapshot.syncedAt && Object.keys(snapshot.metrics).length > 0);
+}
+
+function metricLine(post: MarketingPostRow, key: string) {
+  const value = parseMarketingMetrics(post.notes).metrics[key];
+  if (value === undefined || value === null) return null;
+  return (
+    <span key={key} className="rounded-md border bg-muted/30 px-2 py-1">
+      {key}: {value.toLocaleString()}
+    </span>
+  );
+}
+
+function formatDateTime(value: string | null) {
+  if (!value) return 'unscheduled';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleString();
 }

@@ -1,6 +1,9 @@
 import type { NextConfig } from 'next';
+import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare';
 import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+
+initOpenNextCloudflareForDev();
 
 const projectRoot = dirname(fileURLToPath(import.meta.url));
 

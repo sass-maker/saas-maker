@@ -63,6 +63,12 @@ Brand note: production domain uses **double-s** `sassmaker.com`; display name re
 
 ## Timeline
 
+- **2026-07-03 — Droid graduation:** Droid now records durable retry and timeout contracts as run events (every run declares its retry/backoff/timeout behaviour up front). Pre-flight validation fails fast with categorized reasons (git clean state, dependencies installed) before the main task runs. New `/v0/dashboard/success-rate` endpoint computes a rolling 7-day success-rate dashboard with failure-reason breakdown and retry-count distribution. Migration `0022_droid_graduation.sql` adds `retry_count` and `failure_reason` columns + indexes. Backoff strategies (fixed/linear/exponential) with jitter configurable via loop_policy.
+- **2026-07-03 — Marketing posting ops summary:** Cockpit marketing queue now
+  derives missed ready posts, reel-pipeline posting failures, synced
+  YouTube/Instagram metrics, and metrics-pending posts from marketing post
+  notes. Summary cards and an Ops filter make those states actionable without
+  adding a separate Reel Pipeline dashboard.
 - **2026-06-20 — Knowledge/RAG removal:** Deleted `/v1/knowledge/*`, Cockpit knowledge UI, SDK `KnowledgeService`, API RAG bindings, and D1 knowledge tables (`0021_drop_knowledge.sql`, applied to remote `saasmaker-db` 2026-06-20). SaaS Maker is not a search/RAG hub. Deleted `packages/tooling/*` (eslint-config, prettier-config, tsconfig, astro-landing, eslint-plugin-fallow), `packages/blocks/ops`, and shelved `packages/blocks/views/`. Cockpit astro overlay script is local under `apps/cockpit/scripts/`. npm scope: **26 retired packages deprecated on npm** (2026-06-20); **6 active** (`sdk`, `cli`, `feedback`, `testimonials`, `changelog-widget`, `waitlist`).
 - **2026-06-20 — Fleet tooling merge:** Tooling decoupling merged to `main` on starboard, high-signal, linkchat, significanthobbies, and CodeVetter; free-ai, truehire, resume-tailor already on main.
 - **2026-06-20 — Internal contracts collapse:** Removed `@saas-maker/db` (unused) and `@saas-maker/shared-types` package; API/Cockpit types live in `internal/contracts/` (path alias `@saas-maker/contracts`). Public API types remain in `@saas-maker/sdk`.
@@ -107,6 +113,9 @@ Brand note: production domain uses **double-s** `sassmaker.com`; display name re
 ### Cockpit (`apps/cockpit`)
 
 - Next.js dashboard: projects, tasks, fleet state, marketing posts, Droid runs.
+- Marketing queue summary cards flag missed ready posts, posting failures,
+  synced post metrics, and posts waiting for metrics backfill, with an Ops
+  filter for narrowing the queue to those states.
 - Task board with product vs marketing workstream filter.
 - Task Workflows MVP: Markdown context + prompt templates; run via Droid native mode; stable share pages for saved Markdown artifacts.
 - Sidebar nav includes `/marketing`.
@@ -142,6 +151,9 @@ Brand note: production domain uses **double-s** `sassmaker.com`; display name re
 - Sources: manual, task, changelog.
 - Fields: title, hook, body, cta, asset_url, result_url, task_id, scheduled_for, posted_at.
 - **reel-pipeline integration verified 2026-06-20**: pull accepted items, PATCH rendered artifacts back.
+- **reel-pipeline posting ops visible 2026-07-03**: Cockpit parses structured
+  reel-pipeline notes for missed posts, posting failures, platform release IDs,
+  and YouTube/Instagram metrics blocks.
 
 ### Fleet events hub (`/v1/events`)
 
