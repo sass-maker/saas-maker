@@ -272,6 +272,17 @@ export class HistoryDB {
       .all(url, tag) as RunRow[];
   }
 
+  /** Distinct tags for a URL, with run count and most-recent timestamp. */
+  tagsForUrl(url: string): { tag: string; count: number; last: number }[] {
+    return this.db
+      .prepare(
+        `SELECT tag, COUNT(*) as count, MAX(started_at) as last
+         FROM runs WHERE url = ? AND tag IS NOT NULL AND tag != ''
+         GROUP BY tag ORDER BY last DESC`,
+      )
+      .all(url) as { tag: string; count: number; last: number }[];
+  }
+
   urls(): { url: string; count: number; last: number }[] {
     return this.db
       .prepare(

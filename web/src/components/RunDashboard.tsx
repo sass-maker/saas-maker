@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   AgentClient,
-  probeAgent,
-  shouldAutoProbeAgent,
+  connectToAgent,
   type HealthResponse,
   type PresetsResponse,
   type RunMetrics,
@@ -106,26 +105,21 @@ export default function RunDashboard() {
   const [error, setError] = useState<string | null>(null);
   const runUnsubRef = useRef<(() => void) | null>(null);
 
-  // Probe for the local agent. Auto-runs on mount only when an agent is
-  // expected (localhost dev, or explicit ?agent=/?token= intent); otherwise we
-  // stay disconnected so a bare deployed page load never fires a failed
-  // localhost request. The Retry button calls this directly to connect on demand.
-  const connect = useCallback(async () => {
+  // Probe for the local agent. Probing is quiet + opt-in (see connectToAgent):
+  // on mount we only reconnect to a remembered/explicitly-requested agent with a
+  // single request; the Connect button does the full candidate fan-out on demand.
+  const connect = useCallback(async (mode: 'auto' | 'explicit') => {
     setError(null);
     setView('connecting');
-    const pageUrl = new URL(window.location.href);
-    const preferredAgent = pageUrl.searchParams.get('agent') ?? undefined;
-    const token = pageUrl.searchParams.get('token') ?? undefined;
-    const probe = await probeAgent(undefined, { preferredUrl: preferredAgent, token });
-    if (!probe) {
+    const conn = await connectToAgent(mode);
+    if (!conn) {
       setView('disconnected');
       return;
     }
-    const c = new AgentClient(probe.url, token);
-    setClient(c);
-    setHealth(probe.health);
+    setClient(conn.client);
+    setHealth(conn.health);
     try {
-      const ps = await c.presets();
+      const ps = await conn.client.presets();
       setPresetsData(ps);
       setView('form');
     } catch (err) {
@@ -135,8 +129,7 @@ export default function RunDashboard() {
   }, []);
 
   useEffect(() => {
-    if (shouldAutoProbeAgent()) void connect();
-    else setView('disconnected');
+    void connect('auto');
   }, [connect]);
 
   useEffect(() => {
@@ -298,7 +291,7 @@ export default function RunDashboard() {
     return <ConnectingPanel />;
   }
   if (view === 'disconnected') {
-    return <DisconnectedPanel onRetry={() => void connect()} error={error} />;
+    return <DisconnectedPanel onRetry={() => void connect('explicit')} error={error} />;
   }
   if (!presetsData || !health) {
     return <ConnectingPanel />;
@@ -394,7 +387,7 @@ psi-swarm serve --origin http://localhost:4321`}
         onClick={onRetry}
         className="px-4 py-2 bg-[var(--color-cyan)] text-black rounded font-medium hover:opacity-90 transition"
       >
-        Retry connection
+        Connect to local agent
       </button>
     </div>
   );

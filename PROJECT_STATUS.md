@@ -44,6 +44,7 @@ Internal (fleet):
 
 ## Timeline
 
+- **2026-07-03** — Finished the local web controller: `psi-swarm web` command starts the agent + opens the browser UI in one step. Compare API (`/api/compare`, `/api/tags`) for tagged swarm diffs. Agent connection refactored to quiet opt-in probing (`connectToAgent`). WatchlistView fixed to use the new connection API. Non-CLI users can now run, compare, and inspect swarms entirely in the browser.
 - **2026-06-03/04** — core build-out: `/projects` fleet dashboard backed by
   local SQLite history, Astro/React HTML reports (self-contained files),
   multi-page projects grouped by URL origin, `coverage` preset/profile for
@@ -144,8 +145,8 @@ Fleet & tooling:
 Planned next:
 1. Keep Node 22 LTS as the supported path until the Lighthouse 12 / Node 24
    trace-mark issue is resolved.
-2. Improve the local web controller so users can run, compare, and inspect
-   swarms without dropping to the CLI.
+2. ~~Improve the local web controller so users can run, compare, and inspect
+   swarms without dropping to the CLI.~~ **Done** — `psi-swarm web` command + compare API + browser UI.
 3. Validate an external trace-insight adapter against a small set of known
    regressions (Chrome DevTools MCP path).
 

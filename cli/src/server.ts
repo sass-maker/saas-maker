@@ -572,6 +572,65 @@ export function createAgentServer(opts: ServeOptions): { listen: () => Promise<v
         return send(res, 200, { rows }, opts.origin);
       }
 
+      // GET /api/tags?url= — distinct tags for a URL (for the compare UI)
+      if (req.method === 'GET' && url.pathname === '/api/tags') {
+        const u = url.searchParams.get('url');
+        if (!u) return send(res, 400, { error: 'url query param required' }, opts.origin);
+        const db = new HistoryDB();
+        const tags = db.tagsForUrl(u);
+        db.close();
+        return send(res, 200, { url: u, tags }, opts.origin);
+      }
+
+      // GET /api/compare?url=&baseline=&candidate=&pct= — compare two tagged swarms
+      if (req.method === 'GET' && url.pathname === '/api/compare') {
+        const u = url.searchParams.get('url');
+        const baselineTag = url.searchParams.get('baseline');
+        const candidateTag = url.searchParams.get('candidate');
+        if (!u || !baselineTag || !candidateTag) {
+          return send(res, 400, { error: 'url, baseline, and candidate query params required' }, opts.origin);
+        }
+        const pctKey = (url.searchParams.get('pct') ?? 'p75').toLowerCase();
+        if (!['p50', 'p75', 'p90', 'p99'].includes(pctKey)) {
+          return send(res, 400, { error: 'pct must be one of p50|p75|p90|p99' }, opts.origin);
+        }
+        const db = new HistoryDB();
+        try {
+          const baseRows = db.runsByTag(u, baselineTag);
+          const candRows = db.runsByTag(u, candidateTag);
+          const metricKeys = ['lcp', 'cls', 'inp', 'tbt', 'fcp', 'ttfb', 'si', 'performance_score'] as const;
+          const metrics = metricKeys.map((key) => {
+            const baseVals = baseRows
+              .filter((r) => !r.error)
+              .map((r) => r[key])
+              .filter((v): v is number => typeof v === 'number');
+            const candVals = candRows
+              .filter((r) => !r.error)
+              .map((r) => r[key])
+              .filter((v): v is number => typeof v === 'number');
+            const basePct = computeStats(baseVals);
+            const candPct = computeStats(candVals);
+            return { key, baseline: basePct, candidate: candPct };
+          });
+          return send(
+            res,
+            200,
+            {
+              url: u,
+              baselineTag,
+              candidateTag,
+              pct: pctKey,
+              baselineCount: baseRows.filter((r) => !r.error).length,
+              candidateCount: candRows.filter((r) => !r.error).length,
+              metrics,
+            },
+            opts.origin,
+          );
+        } finally {
+          db.close();
+        }
+      }
+
       // POST /api/discover
       if (req.method === 'POST' && url.pathname === '/api/discover') {
         const body = await readJson<{ url: string }>(req);

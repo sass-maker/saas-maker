@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { AgentClient, probeAgent, shouldAutoProbeAgent, type HealthResponse } from '../lib/agent.js';
+import { AgentClient, connectToAgent, type HealthResponse } from '../lib/agent.js';
 
 interface PageRow {
   url: string;
@@ -117,24 +117,20 @@ export default function ProjectsView() {
   const [error, setError] = useState<string | null>(null);
   const [runningUrl, setRunningUrl] = useState<string | null>(null);
 
-  // Auto-probe on mount only when an agent is expected (localhost dev, or
-  // explicit ?agent=/?token= intent); otherwise stay disconnected so a bare
-  // deployed page load never fires a failed localhost request. Retry connects on demand.
-  const connect = useCallback(async () => {
+  // Quiet + opt-in probing (see connectToAgent): on mount only a remembered or
+  // explicitly requested agent is probed with a single request; the Connect
+  // button does the full candidate fan-out on demand.
+  const connect = useCallback(async (mode: 'auto' | 'explicit') => {
     setStatus('probing');
-    const pageUrl = new URL(window.location.href);
-    const preferredAgent = pageUrl.searchParams.get('agent') ?? undefined;
-    const token = pageUrl.searchParams.get('token') ?? undefined;
-    const probe = await probeAgent(undefined, { preferredUrl: preferredAgent, token });
-    if (!probe) { setStatus('disconnected'); return; }
-    setClient(new AgentClient(probe.url, token));
-    setHealth(probe.health);
+    const conn = await connectToAgent(mode);
+    if (!conn) { setStatus('disconnected'); return; }
+    setClient(conn.client);
+    setHealth(conn.health);
     setStatus('ready');
   }, []);
 
   useEffect(() => {
-    if (shouldAutoProbeAgent()) void connect();
-    else setStatus('disconnected');
+    void connect('auto');
   }, [connect]);
 
   const loadProjects = async () => {
@@ -242,8 +238,8 @@ export default function ProjectsView() {
   if (status === 'disconnected') return (
     <Panel>
       <h2 className="text-xl font-semibold mb-3">No local agent running</h2>
-      <p className="text-[var(--color-dim)] text-sm mb-3">Start it: <code className="text-[var(--color-cyan)]">npm run serve</code></p>
-      <button onClick={() => void connect()} className="px-4 py-2 bg-[var(--color-cyan)] text-black rounded font-medium hover:opacity-90 transition">Retry</button>
+      <p className="text-[var(--color-dim)] text-sm mb-3">Start it: <code className="text-[var(--color-cyan)]">pnpm run serve</code></p>
+      <button onClick={() => void connect('explicit')} className="px-4 py-2 bg-[var(--color-cyan)] text-black rounded font-medium hover:opacity-90 transition">Connect to local agent</button>
     </Panel>
   );
 

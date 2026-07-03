@@ -56,27 +56,75 @@ export type RunnerEvent =
 
 const DEFAULT_AGENT_URLS = ['http://127.0.0.1:7777', 'http://127.0.0.1:7778', 'http://localhost:7777'];
 
+const AGENT_STORAGE_KEY = 'psi-swarm:agent-url';
+
+export function rememberedAgentUrl(): string | null {
+  try {
+    return window.localStorage.getItem(AGENT_STORAGE_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function rememberAgentUrl(url: string): void {
+  try {
+    window.localStorage.setItem(AGENT_STORAGE_KEY, url);
+  } catch {
+    /* private mode etc. — memory is best-effort */
+  }
+}
+
+function forgetAgentUrl(): void {
+  try {
+    window.localStorage.removeItem(AGENT_STORAGE_KEY);
+  } catch {
+    /* ignore */
+  }
+}
+
+export interface AgentConnection {
+  client: AgentClient;
+  health: HealthResponse;
+}
+
 /**
- * Whether to auto-probe the local agent on mount.
+ * Connect to the local agent. Probing is quiet and opt-in:
  *
- * The agent lives on localhost, so probing always fires a request to
- * 127.0.0.1:7777. When the page is served from a deployed origin and no agent
- * is running, that request fails with ERR_CONNECTION_REFUSED — which is the
- * normal "disconnected" state, not a real error, but it still surfaces as a
- * failed network request (e.g. in CI smoke probes that listen for requestfailed).
+ * The agent lives on localhost, so every probe fires a request to
+ * 127.0.0.1:7777. When no agent is running that request fails with
+ * ERR_CONNECTION_REFUSED — the normal "disconnected" state, not a real error,
+ * but it still shows up as a failed network request (PR #10 history).
  *
- * So only auto-probe when there is a signal that a local agent is expected:
- * either the page itself is served from localhost (dev / `psi-swarm serve`), or
- * the URL carries explicit connect intent (`?agent=` / `?token=`). On a bare
- * deployed page load we stay disconnected until the user explicitly connects.
+ * - `mode: 'auto'` (component mount): probe only when there is explicit connect
+ *   intent (`?agent=` / `?token=`) or a previously remembered agent from a past
+ *   successful connection — and probe just that one endpoint, no candidate
+ *   fan-out. A bare page load with neither fires zero requests. A stale
+ *   remembered agent is forgotten after one failed probe so reloads stay quiet.
+ * - `mode: 'explicit'` (user clicked Connect/Retry): fan out across the default
+ *   candidate ports.
+ *
+ * A successful connection is remembered in localStorage so the next visit
+ * reconnects automatically with a single request.
  */
-export function shouldAutoProbeAgent(): boolean {
-  if (typeof window === 'undefined') return false;
-  const { hostname, search } = window.location;
-  const isLocalHost = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '[::1]';
-  const params = new URLSearchParams(search);
-  const hasConnectIntent = params.has('agent') || params.has('token');
-  return isLocalHost || hasConnectIntent;
+export async function connectToAgent(mode: 'auto' | 'explicit' = 'auto'): Promise<AgentConnection | null> {
+  if (typeof window === 'undefined') return null;
+  const params = new URLSearchParams(window.location.search);
+  const preferred = params.get('agent') ?? undefined;
+  const token = params.get('token') ?? undefined;
+  const remembered = rememberedAgentUrl() ?? undefined;
+
+  let probe: { url: string; health: HealthResponse } | null;
+  if (mode === 'auto') {
+    const target = preferred ?? remembered;
+    if (!target) return null; // no intent, no memory → stay quiet
+    probe = await probeAgent([target], { token });
+    if (!probe && !preferred) forgetAgentUrl();
+  } else {
+    probe = await probeAgent(undefined, { preferredUrl: preferred ?? remembered, token });
+  }
+  if (!probe) return null;
+  rememberAgentUrl(probe.url);
+  return { client: new AgentClient(probe.url, token), health: probe.health };
 }
 
 function withToken(url: string, token?: string): string {
@@ -185,6 +233,23 @@ export class AgentClient {
     return r.json();
   }
 
+  async tags(url: string): Promise<{ url: string; tags: { tag: string; count: number; last: number }[] }> {
+    const r = await fetch(this.requestUrl('/api/tags', { url }));
+    if (!r.ok) throw new Error(`tags: HTTP ${r.status}`);
+    return r.json();
+  }
+
+  async compare(
+    url: string,
+    baseline: string,
+    candidate: string,
+    pct: 'p50' | 'p75' | 'p90' | 'p99' = 'p75',
+  ): Promise<CompareResponse> {
+    const r = await fetch(this.requestUrl('/api/compare', { url, baseline, candidate, pct }));
+    if (!r.ok) throw new Error(`compare: HTTP ${r.status}`);
+    return r.json();
+  }
+
   async diagnosis(runId: string): Promise<DiagnosisResponse> {
     const r = await fetch(this.requestUrl(`/api/runs/${runId}/diagnosis`));
     if (!r.ok) throw new Error(`diagnosis: HTTP ${r.status}`);
@@ -237,6 +302,32 @@ export interface DiagnosisResponse {
       }>;
     }
   >;
+}
+
+export interface Stats {
+  n: number;
+  mean: number;
+  stddev: number;
+  min: number;
+  max: number;
+  p50: number;
+  p75: number;
+  p90: number;
+  p99: number;
+}
+
+export interface CompareResponse {
+  url: string;
+  baselineTag: string;
+  candidateTag: string;
+  pct: string;
+  baselineCount: number;
+  candidateCount: number;
+  metrics: Array<{
+    key: string;
+    baseline: Stats | null;
+    candidate: Stats | null;
+  }>;
 }
 
 export type ReasonEvent =

@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-import ProjectsView from '../components/ProjectsView.tsx';
+import CompareView from '../components/CompareView.tsx';
 ---
 
 <!doctype html>
@@ -8,25 +8,25 @@ import ProjectsView from '../components/ProjectsView.tsx';
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>psi-swarm · projects</title>
+    <title>psi-swarm · compare</title>
   </head>
   <body class="min-h-screen">
     <main class="max-w-5xl mx-auto px-6 py-10">
       <header class="mb-8">
         <h1 class="text-3xl font-bold tracking-tight">
-          <span class="text-[var(--color-cyan)]">psi</span>-swarm · projects
+          <span class="text-[var(--color-cyan)]">psi</span>-swarm · compare
         </h1>
         <p class="text-[var(--color-dim)] mt-1 text-sm">
-          Tracked URLs from your local SQLite history. Latest performance, recent trend, click to drill into the full run history.
+          Compare two tagged swarms side-by-side — see if a deploy helped or hurt, at p50/p75/p90/p99.
         </p>
-        <p class="text-[var(--color-dim)] mt-3 text-xs flex flex-wrap gap-4">
-          <a href="./" class="text-[var(--color-cyan)] hover:underline">← single-URL dashboard</a>
-          <a href="./compare/" class="hover:text-[var(--color-text)]">compare</a>
+        <nav class="text-[var(--color-dim)] mt-3 text-xs flex flex-wrap gap-4">
+          <a href="./" class="text-[var(--color-cyan)] hover:underline">← run dashboard</a>
+          <a href="./projects/" class="hover:text-[var(--color-text)]">projects</a>
           <a href="./watchlist/" class="hover:text-[var(--color-text)]">watchlist</a>
           <a href="./gallery/" class="hover:text-[var(--color-text)]">demo gallery</a>
-        </p>
+        </nav>
       </header>
-      <ProjectsView client:load />
+      <CompareView client:load />
     </main>
   </body>
 </html>

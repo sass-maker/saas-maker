@@ -20,7 +20,8 @@ import { streamReasoning, probeLocalAi, type ReasonBackend } from './reason.js';
 import { renderHtmlReport } from './html-report.js';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { resolve as pathResolve, join as pathJoin } from 'node:path';
-import { homedir } from 'node:os';
+import { homedir, platform } from 'node:os';
+import { exec } from 'node:child_process';
 import { exportSwarmArtifacts } from './artifacts.js';
 import { deriveTraceInsights } from './trace-insight.js';
 import { evaluateWatchlist, summarizeWatchlist } from './watchlist.js';
@@ -584,6 +585,60 @@ program
         { padding: 1, borderColor: 'cyan', borderStyle: 'round' },
       ),
     );
+    const shutdown = async () => {
+      console.log(chalk.dim('\nShutting down...'));
+      await server.close();
+      process.exit(0);
+    };
+    process.on('SIGINT', shutdown);
+    process.on('SIGTERM', shutdown);
+  });
+
+program
+  .command('web')
+  .description('Start the local agent and open the web UI in your browser (one command)')
+  .option('-p, --port <n>', 'Port to listen on', '7777')
+  .option('--host <addr>', 'Bind address (127.0.0.1 for loopback only)', '127.0.0.1')
+  .option('--token <tok>', 'Optional shared secret required for requests')
+  .option('--no-open', 'Do not open the browser automatically')
+  .action(async (opts) => {
+    const port = parseInt(opts.port, 10);
+    if (!Number.isInteger(port) || port < 1 || port > 65535) {
+      console.error(chalk.red('--port must be 1-65535'));
+      process.exit(1);
+    }
+    // Permissive CORS so the deployed web app (or any local origin) can connect.
+    const server = createAgentServer({
+      port,
+      host: opts.host,
+      origin: '*',
+      token: opts.token,
+    });
+    try {
+      await server.listen();
+    } catch (err) {
+      console.error(chalk.red(`Failed to listen on ${opts.host}:${port}: ${(err as Error).message}`));
+      process.exit(1);
+    }
+    const agentUrl = `http://${opts.host}:${port}`;
+    const webUrl = `https://psi-swarm-web.pages.dev/?agent=${encodeURIComponent(agentUrl)}${opts.token ? `&token=${encodeURIComponent(opts.token)}` : ''}`;
+    console.log(
+      boxen(
+        `${chalk.bold.cyan('psi-swarm web mode')}\n\n` +
+          `${chalk.dim('Agent:  ')}${agentUrl}\n` +
+          `${chalk.dim('Web UI: ')}${webUrl}\n` +
+          `\n${chalk.dim('Opening your browser… Ctrl-C to stop.')}`,
+        { padding: 1, borderColor: 'cyan', borderStyle: 'round' },
+      ),
+    );
+    if (opts.open) {
+      const cmd = platform() === 'darwin' ? 'open' : platform() === 'win32' ? 'start ""' : 'xdg-open';
+      try {
+        exec(`${cmd} "${webUrl}"`);
+      } catch {
+        /* browser open is best-effort */
+      }
+    }
     const shutdown = async () => {
       console.log(chalk.dim('\nShutting down...'));
       await server.close();
