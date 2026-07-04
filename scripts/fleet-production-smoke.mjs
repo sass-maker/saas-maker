@@ -77,7 +77,7 @@ const TARGETS = {
   ],
   'resume-tailor': [{ label: 'web', url: 'https://rolepatch.com' }],
   'saas-maker': [
-    { label: 'cockpit', url: 'https://app.sassmaker.com' },
+    { label: 'cockpit', url: 'https://app.sassmaker.com/login' },
     { label: 'home', url: 'https://sassmaker.com' },
     { label: 'docs', url: 'https://docs.sassmaker.com' },
   ],
@@ -94,13 +94,8 @@ const TARGETS = {
     { label: 'web', url: 'https://tinygpt.pages.dev', expectText: ['Build routed specialists that earn their keep'] },
     { label: 'devlog', url: 'https://tinygpt.pages.dev/devlog.html', expectText: ['Devlog'] },
   ],
-  'today-little-log': [{ label: 'web', url: 'https://today-little-log.pages.dev' }],
   taste: [{ label: 'web', url: 'https://shiprank.dev' }],
   truehire: [{ label: 'web', url: 'https://truehire.sarthakagrawal927.workers.dev' }],
-  'verified-bases': [
-    { label: 'web', url: 'https://verified-bases-web.pages.dev' },
-    { label: 'health', url: 'https://verified-bases-web.pages.dev/api/health' },
-  ],
 };
 
 const AUTH_PROBES = {
