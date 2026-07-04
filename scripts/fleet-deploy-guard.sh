@@ -121,6 +121,7 @@ else
 fi
 
 # 5. Cloudflare target known?
+# Check root first, then subdirectories (monorepo support)
 cf_target=""
 for f in wrangler.toml wrangler.jsonc wrangler.json; do
   if [[ -f "$f" ]]; then
@@ -133,6 +134,19 @@ for f in wrangler.toml wrangler.jsonc wrangler.json; do
   fi
 done
 
+# If not at root, check one level deep (monorepo: workers/, apps/, etc.)
+if [[ -z "$cf_target" ]]; then
+  while IFS= read -r -d '' f; do
+    if [[ "$f" == *.json* ]] && command -v jq >/dev/null 2>&1; then
+      cf_target=$(jq -r '.name // empty' "$f" 2>/dev/null || true)
+    elif [[ "$f" == *.toml ]]; then
+      cf_target=$(grep -E '^\s*name\s*=' "$f" 2>/dev/null | head -1 | sed -E 's/.*=\s*"([^"]+)".*/\1/' || true)
+    fi
+    [[ -n "$cf_target" ]] && break
+  done < <(find . -maxdepth 3 -name "wrangler.*" -not -path '*/node_modules/*' -print0 2>/dev/null)
+  [[ -n "$cf_target" ]] && cf_target="$cf_target (subdir)"
+fi
+
 if [[ -n "$cf_target" ]]; then
   check "CF target" "ok" "$cf_target"
 else
@@ -140,9 +154,11 @@ else
 fi
 
 # 6. Blockers in PROJECT_STATUS.md?
+# Look for actual blocked items (lines starting with - or numbered under a Blocked section),
+# not just the section header "Todo / Planned / Deferred / Blocked"
 blockers=""
 if [[ -f "PROJECT_STATUS.md" ]]; then
-  blockers=$(grep -i -A1 'blocked\|blocker' PROJECT_STATUS.md 2>/dev/null | head -3 || true)
+  blockers=$(awk '/^#+.*Blocked/{found=1; next} /^#+/{found=0} found && /^[-0-9]/{print; exit}' PROJECT_STATUS.md 2>/dev/null || true)
 fi
 
 if [[ -z "$blockers" ]]; then
