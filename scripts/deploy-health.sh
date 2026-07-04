@@ -129,7 +129,7 @@ is_out_of_fleet_repo() {
   repo_name="$(basename "$repo")"
 
   case "$repo_name" in
-    local-ai|port-whisperer)
+    today-little-log|verified-bases|companion-robot|forecast-lab)
       return 0
       ;;
   esac
@@ -172,13 +172,8 @@ repo_dir_for_project() {
   local project="$1"
   local normalized
 
-  case "$project" in
-    anime_list) printf '%s\n' "anime-list"; return ;;
-    resume-tailor) printf '%s\n' "rolepatch"; return ;;
-    linkchat) printf '%s\n' "karte"; return ;;
-    knowledgebase) printf '%s\n' "knowledge-base"; return ;;
-  esac
-
+  # All fleet projects now use kebab-case dir names matching repo names.
+  # No legacy name mappings needed — just normalize underscores to hyphens.
   normalized="${project//_/-}"
 
   if [[ -d "$ROOT/$project/.git" ]]; then

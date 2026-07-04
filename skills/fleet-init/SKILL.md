@@ -31,22 +31,27 @@ in the fleet root.
 
 Confirm with the user:
 - **Project name** (repo name, kebab-case)
-- **Category** (support, personal, saas, data, research — or multiple)
+- **Category** (support, personal+free-tool, personal+saas, data, research, support+saas)
 - **One-line description**
 - **Stack** (Astro/Vite/Next.js/Worker/Tauri/etc.)
 - **Visibility** (public or private)
 
-Then:
+Then run the backing script:
 
 ```bash
-# 1. Create GitHub repo
-gh repo create sarthak-fleet/<name> --<visibility> --clone ~/Desktop/fleet/<name>
-
-# 2. Scaffold files (use templates from fleet-ops/templates/ if available)
-# 3. Commit + push initial scaffold
-# 4. Add to fleet README under the right category
-# 5. Commit + push fleet README update
+bash ~/Desktop/fleet/fleet-ops/scripts/fleet-init.sh <name> \
+  --category <cat> \
+  --desc "<one-line description>" \
+  --stack "<stack>" \
+  [--private]
 ```
+
+The script:
+1. Creates the GitHub repo (`sarthak-fleet/<name>`) and clones it
+2. Scaffolds AGENTS.md, PROJECT_STATUS.md, .gitignore, CI workflow
+3. Commits and pushes the initial scaffold
+4. Adds the project to the fleet README under the specified category
+5. Commits and pushes the README update
 
 ## Post-creation checklist
 

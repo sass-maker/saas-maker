@@ -28,28 +28,14 @@ to run. Enforces the fleet deployment standard from AGENTS.md.
 ## How to invoke
 
 ```bash
-# From the project directory:
-bash ~/Desktop/fleet/fleet-ops/scripts/deploy-health.sh
+bash ~/Desktop/fleet/fleet-ops/scripts/fleet-deploy-guard.sh <project>
+bash ~/Desktop/fleet/fleet-ops/scripts/fleet-deploy-guard.sh saas-maker
+bash ~/Desktop/fleet/fleet-ops/scripts/fleet-deploy-guard.sh saas-maker --force  # skip CI check
 ```
 
-Or manually check each gate:
-
-```bash
-# 1. On main?
-git branch --show-current
-
-# 2. Clean?
-git status --porcelain
-
-# 3. Synced?
-git status -sb | head -1
-
-# 4. CI green?
-gh run list --branch main --limit 1 --json conclusion -q '.[0].conclusion'
-
-# 5. Cloudflare target?
-grep -E 'name\s*=' wrangler.toml wrangler.jsonc 2>/dev/null
-```
+The script checks all 6 gates and exits non-zero if any fail. Use `--force` to
+skip the CI gate (only when CI is red for unrelated reasons — name the exception
+in the handoff).
 
 ## Output
 

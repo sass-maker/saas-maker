@@ -2,36 +2,17 @@
 set -euo pipefail
 
 ROOT="/Users/sarthak/Desktop/fleet"
-CODE_COUNT="${CODE_COUNT:-25}"
 STAGGER_SECONDS="${STAGGER_SECONDS:-8}"
 
-projects=(
-  "ai-game"
-  "anime-list"
-  "codevetter"
-  "drank"
-  "email-manager"
-  "everythingrated"
-  "free-ai"
-  "high-signal"
-  "karte"
-  "knowledge-base"
-  "looptv"
-  "materia"
-  "open-historia"
-  "pace"
-  "reader"
-  "reel-pipeline"
-  "research-papers"
-  "rolepatch"
-  "saas-maker"
-  "significanthobbies"
-  "starboard"
-  "swe-interview-prep"
-  "taste"
-  "tinygpt"
-  "truehire"
+# Read project list dynamically from the fleet README.
+# Extracts slugs from both top-level and indented (sub-product) markdown links.
+mapfile -t projects < <(
+  grep -E '^(  )?- \[' "$ROOT/README.md" \
+    | sed -E 's/^(  )?- \[([^]]+)\].*/\1/' \
+    | sort -u
 )
+
+CODE_COUNT="${CODE_COUNT:-${#projects[@]}}"
 
 prompt_file="$(mktemp -t fleet-bench-prompt)"
 cat >"$prompt_file" <<'EOF'
