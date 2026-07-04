@@ -335,17 +335,6 @@ export const FLEET_HEALTH_CONTRACTS = {
     githubWorkflow: null,
     smokeCommand: 'pnpm run fleet:prod-smoke --project tinygpt',
   },
-  'today-little-log': {
-    displayName: 'Today Little Log',
-    prodUrl: 'https://today-little-log.pages.dev',
-    expectedStatus: 200,
-    criticalRoutes: ['/'],
-    auth: { required: false },
-    requiredEnv: { build: [], runtime: [] },
-    deployTarget: 'Cloudflare Pages',
-    githubWorkflow: 'deploy.yml',
-    smokeCommand: 'pnpm run fleet:prod-smoke --project today-little-log',
-  },
   truehire: {
     displayName: 'TrueHire',
     prodUrl: 'https://truehire.sarthakagrawal927.workers.dev',
