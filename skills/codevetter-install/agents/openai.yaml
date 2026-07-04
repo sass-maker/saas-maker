@@ -1,0 +1,4 @@
+interface:
+  display_name: "CodeVetter Install"
+  short_description: "Reinstall CodeVetter desktop app from the local repo"
+  default_prompt: "Reinstall CodeVetter locally and verify the installed app."
