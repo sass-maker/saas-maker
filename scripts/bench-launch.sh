@@ -22,7 +22,6 @@ projects=(
   "pace"
   "personal-memory"
   "port-whisperer"
-  "psi-swarm"
   "reader"
   "reel-pipeline"
   "researchPapers"

@@ -1,0 +1,32 @@
+---
+import '../styles/global.css';
+import CompareView from '../components/CompareView.tsx';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>psi-swarm · compare</title>
+  </head>
+  <body class="min-h-screen">
+    <main class="max-w-5xl mx-auto px-6 py-10">
+      <header class="mb-8">
+        <h1 class="text-3xl font-bold tracking-tight">
+          <span class="text-[var(--color-cyan)]">psi</span>-swarm · compare
+        </h1>
+        <p class="text-[var(--color-dim)] mt-1 text-sm">
+          Compare two tagged swarms side-by-side — see if a deploy helped or hurt, at p50/p75/p90/p99.
+        </p>
+        <nav class="text-[var(--color-dim)] mt-3 text-xs flex flex-wrap gap-4">
+          <a href="./" class="text-[var(--color-cyan)] hover:underline">← run dashboard</a>
+          <a href="./projects/" class="hover:text-[var(--color-text)]">projects</a>
+          <a href="./watchlist/" class="hover:text-[var(--color-text)]">watchlist</a>
+          <a href="./gallery/" class="hover:text-[var(--color-text)]">demo gallery</a>
+        </nav>
+      </header>
+      <CompareView client:load />
+    </main>
+  </body>
+</html>

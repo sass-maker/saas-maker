@@ -10,7 +10,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const PSI_CLI = process.env.PSI_SWARM_CLI ?? `${process.env.HOME}/.psi-swarm-local/cli/dist/cli.js`;
+const PSI_CLI = process.env.PSI_SWARM_CLI ?? `${__dirname}/../psi-swarm/cli/dist/cli.js`;
 
 const arg = (flag) => process.argv.find((a, i) => process.argv[i - 1] === flag);
 

@@ -82,7 +82,7 @@ use backend `Server-Timing` + `app.onError` for that.
 | ✅ Wired (existing PostHog) | anime-list, email-manager, everythingrated, high-signal, karte, looptv, open-historia, reader, rolepatch, significanthobbies, starboard, swe-interview-prep, truehire, tinygpt/browser |
 | ✅ Wired (PostHog added in same pass) | ai-game (web3d), drank, saas-maker (cockpit), verified-bases, research-papers |
 | ⚠️ Wired but PostHog not initialized | taste — `api-timing.ts` + `vitals.ts` reference `window.posthog` but `posthog-js` is not installed or initialized; `api_call_timing` events are silently dropped, `web_vital` falls back to beacon |
-| ❌ Not applicable (no browser) | companion-robot, forecast-lab, free-ai, pace, psi-swarm, reel-pipeline, codevetter (Tauri desktop), materia (static, no API calls) |
+| ❌ Not applicable (no browser) | companion-robot (delayed), forecast-lab (delayed), free-ai, pace, reel-pipeline, codevetter (Tauri desktop), materia (static, no API calls) |
 
 > 20/20 browser projects have client-side API timing wired. The module is
 > `api-timing.ts` (template at `fleet-ops/templates/api-timing.ts`), called
