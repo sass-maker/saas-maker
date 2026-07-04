@@ -239,10 +239,10 @@ export const FLEET_HEALTH_CONTRACTS = {
   },
   'saas-maker': {
     displayName: 'SaaS Maker',
-    prodUrl: 'https://app.sassmaker.com',
+    prodUrl: 'https://app.sassmaker.com/login',
     expectedStatus: 200,
     criticalRoutes: [
-      'https://app.sassmaker.com',
+      'https://app.sassmaker.com/login',
       'https://sassmaker.com',
       'https://docs.sassmaker.com',
     ],
