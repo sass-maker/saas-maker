@@ -1,6 +1,9 @@
 import { MoneyPrinterTurboAdapter } from './adapters/moneyprinterturbo.js';
 import { MockRenderer } from './adapters/mock-renderer.js';
 import { ReelMakerAdapter } from './adapters/reel-maker.js';
+import { GrokVideoAdapter } from './adapters/grok-video.js';
+import { AsciiAnimationAdapter } from './adapters/ascii-animation.js';
+import { HtmlCompositionAdapter } from './adapters/html-composition.js';
 import { publishRenderArtifacts } from './artifact-publisher.js';
 import { FileJobStore } from './job-store.js';
 import { assertRenderableReel, attachReelRender } from './reel-intake.js';
@@ -30,6 +33,9 @@ export async function resolveProductProofCapture(options = {}) {
 export function createRenderer(mode = 'mock', options = {}) {
   if (mode === 'stock') return new MoneyPrinterTurboAdapter(options.moneyprinterturbo);
   if (mode === 'moneyprinterturbo') return new MoneyPrinterTurboAdapter(options.moneyprinterturbo);
+  if (mode === 'grok' || mode === 'grok-video' || mode === 'grok-videos') return new GrokVideoAdapter(options.grokVideo ?? options.grok ?? {});
+  if (mode === 'ascii' || mode === 'ascii-animation' || mode === 'ascii-fable' || mode === 'askai') return new AsciiAnimationAdapter(options.asciiAnimation ?? options.ascii ?? options.askai ?? {});
+  if (mode === 'html' || mode === 'html-composition' || mode === 'web-composition') return new HtmlCompositionAdapter(options.htmlComposition ?? options.html ?? {});
   if (mode === 'openshorts' || mode === 'ugc_actor') {
     throw new Error('openshorts/ugc_actor was removed; use mock or stock (MoneyPrinterTurbo)');
   }

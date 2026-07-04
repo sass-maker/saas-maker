@@ -7,7 +7,8 @@
 use anyhow::{anyhow, Context, Result};
 use serde::Deserialize;
 
-pub const DEFAULT_WORKER_URL: &str = "https://reel-pipeline-artifacts.sarthakagrawal927.workers.dev";
+pub const DEFAULT_WORKER_URL: &str =
+    "https://reel-pipeline-artifacts.sarthakagrawal927.workers.dev";
 
 #[derive(Debug, Clone, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]

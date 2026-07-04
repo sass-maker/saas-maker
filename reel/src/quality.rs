@@ -195,7 +195,11 @@ fn score_cringe_risk(input: &ScoreInput, reasons: &mut Vec<String>) -> f64 {
     0.85
 }
 
-fn score_posting_readiness(input: &ScoreInput, proof_strength: f64, reasons: &mut Vec<String>) -> f64 {
+fn score_posting_readiness(
+    input: &ScoreInput,
+    proof_strength: f64,
+    reasons: &mut Vec<String>,
+) -> f64 {
     if input.render_failed {
         reasons.push("render did not complete".into());
         return 0.0;
@@ -208,8 +212,12 @@ fn score_posting_readiness(input: &ScoreInput, proof_strength: f64, reasons: &mu
         }
     };
     let lower = url.to_lowercase();
-    let is_video = lower.ends_with(".mp4") || lower.ends_with(".mov") || lower.ends_with(".webm")
-        || lower.contains(".mp4?") || lower.contains(".mov?") || lower.contains(".webm?");
+    let is_video = lower.ends_with(".mp4")
+        || lower.ends_with(".mov")
+        || lower.ends_with(".webm")
+        || lower.contains(".mp4?")
+        || lower.contains(".mov?")
+        || lower.contains(".webm?");
     if !is_video {
         reasons.push("asset URL is not a video file".into());
         return 0.4;
@@ -220,7 +228,11 @@ fn score_posting_readiness(input: &ScoreInput, proof_strength: f64, reasons: &mu
     0.85
 }
 
-fn decide_gate(scores: &std::collections::BTreeMap<String, f64>, overall: f64, reasons: &mut Vec<String>) -> (Gate, String) {
+fn decide_gate(
+    scores: &std::collections::BTreeMap<String, f64>,
+    overall: f64,
+    reasons: &mut Vec<String>,
+) -> (Gate, String) {
     let posting = scores["postingReadiness"];
     let proof = scores["productProofStrength"];
     let caption = scores["captionReadability"];

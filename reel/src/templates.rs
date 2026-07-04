@@ -25,7 +25,11 @@ pub struct Template {
 }
 
 fn scene(label: &'static str, source: &'static str, caption: &'static str) -> Scene {
-    Scene { label, source, caption }
+    Scene {
+        label,
+        source,
+        caption,
+    }
 }
 
 /// The ordered template catalog. Order matters: `selectTemplate` returns the
@@ -102,7 +106,9 @@ fn matches(template_id: &str, brief: &VideoBrief) -> bool {
             ["audit", "teardown", "signal", "score", "review"]
                 .iter()
                 .any(|k| body.contains(k))
-                || ["signal", "vetter", "audit"].iter().any(|k| slug.contains(k))
+                || ["signal", "vetter", "audit"]
+                    .iter()
+                    .any(|k| slug.contains(k))
         }
         _ => false,
     }
@@ -164,10 +170,7 @@ pub struct HookVariant {
 
 /// Port of `hookVariantsForBrief`.
 pub fn hook_variants_for_brief(brief: &VideoBrief, count: usize) -> Vec<HookVariant> {
-    let base = brief
-        .hook
-        .trim()
-        .to_string();
+    let base = brief.hook.trim().to_string();
     let base = if base.is_empty() {
         brief.title.trim().to_string()
     } else {
@@ -178,7 +181,10 @@ pub fn hook_variants_for_brief(brief: &VideoBrief, count: usize) -> Vec<HookVari
     } else {
         brief.project_slug.clone()
     };
-    let cta = brief.cta.clone().unwrap_or_else(|| "try it once.".to_string());
+    let cta = brief
+        .cta
+        .clone()
+        .unwrap_or_else(|| "try it once.".to_string());
 
     let pool = vec![
         base.clone(),
@@ -207,7 +213,10 @@ pub fn hook_variants_for_brief(brief: &VideoBrief, count: usize) -> Vec<HookVari
     unique
         .into_iter()
         .take(count)
-        .map(|hook| HookVariant { hook, cta: cta.clone() })
+        .map(|hook| HookVariant {
+            hook,
+            cta: cta.clone(),
+        })
         .collect()
 }
 

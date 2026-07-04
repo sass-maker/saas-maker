@@ -90,7 +90,10 @@ where
         }
     }
 
-    RenderReport { variants, render_log }
+    RenderReport {
+        variants,
+        render_log,
+    }
 }
 
 fn render_one<E, P>(
@@ -121,7 +124,10 @@ where
     };
 
     let asset_url = crate::artifact::first_video_url(&published_videos, &raw.combined_videos, None);
-    let proof_type = raw.proof_type.clone().unwrap_or_else(|| "generated_card".to_string());
+    let proof_type = raw
+        .proof_type
+        .clone()
+        .unwrap_or_else(|| "generated_card".to_string());
 
     let score = score_variant(&ScoreInput {
         hook: Some(entry.hook.clone()),

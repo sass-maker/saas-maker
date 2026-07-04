@@ -49,10 +49,7 @@ pub fn classify_artifact(url: &str, cwd: &Path) -> Option<ArtifactSource> {
 
 fn is_loopback_url(url: &str) -> bool {
     // Strip scheme, take host[:port] before the first '/'.
-    let after_scheme = url
-        .split_once("://")
-        .map(|(_, rest)| rest)
-        .unwrap_or(url);
+    let after_scheme = url.split_once("://").map(|(_, rest)| rest).unwrap_or(url);
     let host_port = after_scheme.split('/').next().unwrap_or("");
     let host = host_port.split(':').next().unwrap_or("");
     host == "127.0.0.1" || host == "localhost"
@@ -109,7 +106,13 @@ pub fn is_safe_key(key: &str) -> bool {
 /// Port of `safeArtifactKey`: replace anything outside `[A-Za-z0-9._-]` with `_`.
 pub fn safe_artifact_key(id: &str) -> String {
     id.chars()
-        .map(|c| if c.is_ascii_alphanumeric() || matches!(c, '.' | '_' | '-') { c } else { '_' })
+        .map(|c| {
+            if c.is_ascii_alphanumeric() || matches!(c, '.' | '_' | '-') {
+                c
+            } else {
+                '_'
+            }
+        })
         .collect()
 }
 
@@ -153,7 +156,9 @@ mod tests {
         let cwd = PathBuf::from("/work");
         assert_eq!(
             classify_artifact("http://127.0.0.1:8080/x/a.mp4", &cwd),
-            Some(ArtifactSource::LocalHttp("http://127.0.0.1:8080/x/a.mp4".into()))
+            Some(ArtifactSource::LocalHttp(
+                "http://127.0.0.1:8080/x/a.mp4".into()
+            ))
         );
         assert_eq!(
             classify_artifact("https://cdn.example/a.mp4", &cwd),
@@ -210,7 +215,10 @@ mod tests {
             first_video_url(&[], &["b.mp4".into()], Some("c.mp4")),
             Some("b.mp4".into())
         );
-        assert_eq!(first_video_url(&[], &[], Some("c.mp4")), Some("c.mp4".into()));
+        assert_eq!(
+            first_video_url(&[], &[], Some("c.mp4")),
+            Some("c.mp4".into())
+        );
         assert_eq!(first_video_url(&[], &[], None), None);
     }
 }

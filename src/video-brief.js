@@ -186,7 +186,23 @@ function normalizeChannel(channel) {
 
 function normalizeRenderMode(mode) {
   const value = optionalString(mode) ?? 'stock';
-  if (!['stock', 'remotion', 'reel-maker', 'mock', 'moneyprinterturbo'].includes(value)) {
+  if (![
+    'stock',
+    'remotion',
+    'reel-maker',
+    'mock',
+    'moneyprinterturbo',
+    'grok',
+    'grok-video',
+    'grok-videos',
+    'ascii',
+    'ascii-animation',
+    'ascii-fable',
+    'askai',
+    'html',
+    'html-composition',
+    'web-composition',
+  ].includes(value)) {
     throw new Error(`unsupported renderMode: ${value}`);
   }
   return value;

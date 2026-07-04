@@ -25,13 +25,19 @@ test('generateSignalReelDraftBundle emits two variants with storyboard script sh
   const bundle = generateSignalReelDraftBundle(fixture, { variantCount: 2, now: () => new Date('2026-06-04T12:00:00.000Z') });
 
   assert.equal(bundle.variants.length, 2);
+  assert.equal(bundle.experimentPlan.minDailyPosts, 5);
+  assert.equal(bundle.experimentPlan.maxDailyPosts, 7);
+  assert.equal(bundle.experimentPlan.decisionPostCount, 35);
   assert.equal(bundle.targetAudience, fixture.targetAudience);
   assert.equal(bundle.offer, fixture.offer);
   assert.deepEqual(bundle.productConstraints, fixture.productConstraints);
 
   for (const variant of bundle.variants) {
+    assert.ok(variant.growthFormat.id);
+    assert.ok(variant.formatExecution.ctaPlacement);
     assert.ok(variant.storyboard.length >= 3);
     assert.match(variant.script, /HOOK:/);
+    assert.match(variant.script, /FORMAT:/);
     assert.match(variant.script, /CTA:/);
     assert.ok(variant.shotList.length >= 3);
     assert.ok(variant.captions.hook);
@@ -42,6 +48,18 @@ test('generateSignalReelDraftBundle emits two variants with storyboard script sh
 
   const templates = new Set(bundle.variants.map((variant) => variant.template));
   assert.ok(templates.size >= 1);
+});
+
+test('generateSignalReelDraftBundle defaults to five growth formats for a 35-post experiment', async () => {
+  const fixture = await loadFixture('high-signal-reel-brief.json');
+  const bundle = generateSignalReelDraftBundle(fixture, { now: () => new Date('2026-06-04T12:00:00.000Z') });
+
+  assert.equal(bundle.variants.length, 5);
+  assert.deepEqual(
+    bundle.variants.map((variant) => variant.growthFormat.id),
+    ['ranking_system', 'sound_sync', 'tutorial_value', 'trend_copy', 'before_after'],
+  );
+  assert.match(bundle.experimentPlan.decisionRule, /35 posts/i);
 });
 
 test('reviewSignalClaims marks evidence requirements and rejects unsupported claims', async () => {

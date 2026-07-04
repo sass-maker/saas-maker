@@ -23,7 +23,13 @@ pub trait ReelStore {
 /// Port of `safeId`: replace anything outside `[A-Za-z0-9_.-]` with `_`.
 pub fn safe_id(id: &str) -> String {
     id.chars()
-        .map(|c| if c.is_ascii_alphanumeric() || matches!(c, '_' | '.' | '-') { c } else { '_' })
+        .map(|c| {
+            if c.is_ascii_alphanumeric() || matches!(c, '_' | '.' | '-') {
+                c
+            } else {
+                '_'
+            }
+        })
         .collect()
 }
 

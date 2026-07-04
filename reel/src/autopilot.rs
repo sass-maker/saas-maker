@@ -7,8 +7,12 @@ use serde::Serialize;
 use time::{format_description::well_known::Rfc3339, Duration, OffsetDateTime};
 
 use crate::engine::factory::create_renderer;
-use crate::marketing::{render_accepted_marketing_posts, RenderAcceptedOptions, RenderAcceptedReport};
-use crate::marketing_posting::{post_ready_marketing_videos, MarketingPoster, PostReadyOptions, PostReadyReport};
+use crate::marketing::{
+    render_accepted_marketing_posts, RenderAcceptedOptions, RenderAcceptedReport,
+};
+use crate::marketing_posting::{
+    post_ready_marketing_videos, MarketingPoster, PostReadyOptions, PostReadyReport,
+};
 use crate::runner::ProcessRunner;
 use crate::saas_maker::{ListFilters, MarketingClient, MarketingPost, UpdateResult};
 
@@ -98,11 +102,7 @@ where
     Ok(accepted)
 }
 
-fn created_at_past_hold(
-    post: &MarketingPost,
-    field: &str,
-    cutoff: OffsetDateTime,
-) -> bool {
+fn created_at_past_hold(post: &MarketingPost, field: &str, cutoff: OffsetDateTime) -> bool {
     let Some(raw) = post_field(post, field) else {
         return false;
     };
@@ -174,6 +174,7 @@ where
         &PostReadyOptions {
             limit: config.limit,
             include_unscheduled: config.include_unscheduled,
+            missed_only: false,
             confirm_post: true,
             ..Default::default()
         },
@@ -296,12 +297,16 @@ mod tests {
             .iter()
             .map(|p| (p.id.as_str(), p.status.as_str()))
             .collect();
-        assert!(statuses.iter().any(|(id, status)| *id == "aged" && *status == "sent"));
-        assert!(statuses.iter().any(|(id, status)| *id == "ready" && *status == "sent"));
+        assert!(statuses
+            .iter()
+            .any(|(id, status)| *id == "aged" && *status == "sent"));
+        assert!(statuses
+            .iter()
+            .any(|(id, status)| *id == "ready" && *status == "sent"));
     }
 
     #[test]
-    fn autopilot_propagates_post_errors_without_corrupting_intake() {
+    fn autopilot_records_post_errors_without_corrupting_intake() {
         let tmp = TempDir::new().unwrap();
         let now = OffsetDateTime::parse("2026-06-16T12:00:00Z", &Rfc3339).unwrap();
         let client = StubMarketingClient::new(vec![MarketingPost {
@@ -311,7 +316,7 @@ mod tests {
             created_at: Some("2020-01-01T00:00:00Z".into()),
             ..pending("aged", "2020-01-01T00:00:00Z")
         }]);
-        let err = run_autopilot_tick(
+        let report = run_autopilot_tick(
             &client,
             tmp.path(),
             &FailingPoster,
@@ -319,8 +324,16 @@ mod tests {
             &AutopilotConfig::default(),
             &mut |_| {},
         )
-        .unwrap_err();
-        assert!(err.to_string().contains("YT 503"));
+        .unwrap();
+        assert_eq!(
+            report.posted.results[0].failure.as_ref().unwrap().category,
+            "provider_down"
+        );
         assert_eq!(client.posts.borrow()[0].status, "accepted");
+        assert!(client.posts.borrow()[0]
+            .notes
+            .as_deref()
+            .unwrap()
+            .contains("posting_status: error"));
     }
 }

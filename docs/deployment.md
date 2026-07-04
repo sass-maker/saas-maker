@@ -110,18 +110,41 @@ Persistent=true
 WantedBy=timers.target
 ```
 
+`reel-metrics-sync.service`:
+```ini
+[Unit]
+Description=Sync published reel metrics into SaaS Maker
+[Service]
+Type=oneshot
+User=reel
+WorkingDirectory=/home/reel/reel-pipeline
+EnvironmentFile=/home/reel/reel-pipeline/.env
+ExecStart=/usr/bin/npm run sync:metrics
+```
+
+`reel-metrics-sync.timer`:
+```ini
+[Unit]
+Description=Daily reel metrics sync
+[Timer]
+OnCalendar=*-*-* 09:30:00
+Persistent=true
+[Install]
+WantedBy=timers.target
+```
+
 Enable:
 ```bash
 sudo touch /var/log/reel-autopilot.log /var/log/reel-autopilot.err
 sudo chown reel:reel /var/log/reel-autopilot.*
 sudo systemctl daemon-reload
-sudo systemctl enable --now reel-autopilot.service reel-ig-refresh.timer
+sudo systemctl enable --now reel-autopilot.service reel-ig-refresh.timer reel-metrics-sync.timer
 ```
 
 Watch:
 ```bash
 sudo journalctl -u reel-autopilot -f
-sudo systemctl list-timers reel-ig-refresh.timer
+sudo systemctl list-timers reel-ig-refresh.timer reel-metrics-sync.timer
 ```
 
 ## M1 16GB Pro setup (zero-cost fallback)
@@ -172,10 +195,33 @@ Same pattern as Hetzner but with launchd. `.env` lives in the repo root; node li
 </plist>
 ```
 
+`~/Library/LaunchAgents/com.fleet.reel-metrics-sync.plist`:
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.fleet.reel-metrics-sync</string>
+  <key>WorkingDirectory</key><string>/Users/sarthak/Desktop/fleet/reel-pipeline</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/opt/homebrew/bin/npm</string>
+    <string>run</string>
+    <string>sync:metrics</string>
+  </array>
+  <key>StartCalendarInterval</key>
+  <dict><key>Hour</key><integer>9</integer><key>Minute</key><integer>30</integer></dict>
+  <key>StandardOutPath</key><string>/tmp/reel-metrics-sync.log</string>
+  <key>StandardErrorPath</key><string>/tmp/reel-metrics-sync.err</string>
+</dict>
+</plist>
+```
+
 Load:
 ```bash
 launchctl load -w ~/Library/LaunchAgents/com.fleet.reel-autopilot.plist
 launchctl load -w ~/Library/LaunchAgents/com.fleet.reel-ig-refresh.plist
+launchctl load -w ~/Library/LaunchAgents/com.fleet.reel-metrics-sync.plist
 ```
 
 Pin `PIPELINE_RENDER_CONCURRENCY=1` on the M1. Higher will thrash.
@@ -353,6 +399,7 @@ After install on any host, run in order:
 ```bash
 npm test                       # 123 tests should pass
 npm run autopilot:once         # one full tick against live SaaS Maker
+npm run sync:metrics           # backfill latest post metrics into SaaS Maker notes
 sudo journalctl -u reel-autopilot --since "5 minutes ago"   # linux
 tail -50 /tmp/reel-autopilot.log                            # mac
 ```

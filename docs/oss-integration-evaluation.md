@@ -1,6 +1,6 @@
 # OSS Integration Evaluation
 
-Last updated: 2026-06-09
+Last updated: 2026-07-03
 
 ## Scope
 
@@ -21,16 +21,52 @@ handoff, and deterministic local previews.
 | Subtitle Edit | https://github.com/SubtitleEdit/subtitleedit | Mature subtitle tooling and format reference. | High: desktop/.NET app, not a library fit. | Reference for subtitle formats only. |
 | Remotion | https://github.com/remotion-dev/remotion | Already in use for programmatic video rendering. | None for current path. | Do not add more Remotion packages unless upgrading/adapting existing usage. |
 | Aeneas | https://github.com/readbeyond/aeneas | Forced alignment. | High and AGPL license makes product integration risky. | Reject. |
+| Postiz | https://github.com/gitroomhq/postiz-app | Strong social publishing workflow reference: provider capabilities, post preflight, token/error classification, missed-post recovery, analytics, calendar/list UX. | High as a dependency: AGPL-3.0, large NestJS/Prisma/Temporal monorepo, overlaps SaaS Maker control-plane ownership. | Reimplement selected workflow patterns only; do not copy source or adopt runtime. |
+| Editframe | https://editframe.com/ | Strong agent/video-as-code reference: HTML/CSS composition, explicit time model, caption cues, local preview, and visual testing workflow. | Low if used as a pattern; unknown/unneeded as a runtime dependency for now. | Reimplement a local HTML composition artifact contract; do not add SDK/runtime dependency yet. |
 
 ## Decision
 
-Do not add a new media dependency in this pass. The highest-ROI next slice is a
-fixture-backed caption QA adapter that can optionally run WhisperX or stable-ts
-against an already-rendered mock reel and compare generated timestamps/captions
-to the draft bundle. This improves reviewable reels without touching real
-credentials, posting state, or production config.
+Do not add a new media or publishing dependency in this pass. For media QA, the
+highest-ROI next slice remains a fixture-backed caption QA adapter that can
+optionally run WhisperX or stable-ts against an already-rendered mock reel and
+compare generated timestamps/captions to the draft bundle.
+
+For social publishing, Postiz is useful as a pattern source, not as code. Its
+AGPL license and broad app runtime make direct integration a poor fit. The
+worthwhile parts are now reimplemented locally in the existing Node/Rust
+posting contracts:
+
+- provider capability declarations for manual, Upload-Post, YouTube, and Instagram;
+- provider-specific preflight before posting;
+- classified posting failures (`needs_reconnect`, `quota`, `rate_limited`,
+  `provider_down`, `bad_caption`, `bad_asset`);
+- per-post failure isolation so one broken post no longer aborts the scan;
+- explicit missed-post recovery for overdue scheduled posts;
+- provider-level analytics hooks for YouTube video statistics and Instagram
+  media insights;
+- a metrics backfill command that patches the latest post-level metrics into
+  SaaS Maker notes;
+- a SaaS Maker Cockpit posting-ops summary for missed posts, posting failures,
+  synced metrics, and posts waiting for metrics backfill;
+- deployment guidance for scheduling daily metrics sync on the posting host;
+- structured posting failure notes patched back to SaaS Maker while preserving
+  SaaS Maker as the source of truth.
+
+For video authoring, Editframe is useful as a product-pattern source. The
+worthwhile piece is not another hosted render dependency; it is a deterministic
+intermediate representation that agents can inspect and revise before any
+expensive render. Reel Pipeline now has `html` / `html-composition` /
+`web-composition` modes that export:
+
+- `composition.html` for local browser preview;
+- `timeline.json` for explicit scene start/end/duration metadata;
+- `captions.json` with cue-level and word-level timing;
+- normal render-result metadata so Rust and Node entrypoints share the same
+  request/status contract.
 
 ## Suggested Implementation Slice
+
+### Caption QA
 
 1. Keep the existing mock render fixture as the input.
 2. Add an optional caption-alignment command adapter behind a capability check.
@@ -39,9 +75,20 @@ credentials, posting state, or production config.
 4. Attach that JSON to the draft/review bundle before any real render queue or
    autopost work.
 
+### Posting Ops
+
+1. Keep calendar/list UX in SaaS Maker, not this repo, unless the review UI
+   becomes the canonical operator surface.
+
+### HTML Composition Previews
+
+1. Use the new preview artifacts for agent-authored storyboard review.
+2. Only add MP4 capture from the HTML preview after one product flow proves the
+   preview is useful enough to become a render source.
+
 ## Verification
 
-Docs-only evaluation in this pass. Run:
+Run:
 
 ```bash
 npm test

@@ -17,6 +17,17 @@ AI reel generation product that turns input text and project context into short-
 
 Reel Pipeline is an AI reel generation product that turns input text and project context into reviewable short-form video drafts, render jobs, artifacts, and posting handoff. Its current internal inputs are SaaS Maker marketing ideas and High Signal reel briefs, with SaaS Maker remaining the source of truth for approvals and task linkage.
 
+For kids story reels, the current recommendation posture is intentionally
+creator-first: validate three manually produced public-domain story videos
+before recommending more software automation, dashboards, agents, auto-uploaders,
+analytics scripts, or render-engine expansion. See `docs/creator-mvp.md` and
+the complete manual packets under `docs/creator-mvp-packs/`.
+
+For app marketing reels, recommendations should preserve the growth-format
+experiment layer: 5-7 posts/day, review after 35 posts, and compare ranking,
+sound-sync, tutorial, trend-copy, and before/after formats before adding broad
+new tooling.
+
 Reel Pipeline AI reel generation product that turns input text and project context into short-form video drafts and render artifacts. This repo owns the intake, draft, render, review, artifact, and posting-handoff flow for short-form video generation. Its current internal inputs are accepted SaaS Maker Marketing Queue ideas and High Signal reel briefs; SaaS Maker stays the source of truth for approvals, task links, and posting state. Why This Repo Exists The fleet now has a marketing queue, but marketing docs alone are not enough. The useful loop is: 1. Agents create product-specific AI-video ideas in SaaS Maker Marketing Queue. 2. Sarthak accepts or rejects each idea in the UI. 3. Accepted 
 
 ## Feature Map
@@ -155,6 +166,14 @@ Package scripts:
 ## Recommendation Guidance
 
 Good matches:
+- Manual creator-MVP support for kids story validation: source-rights notes,
+  scene breakdowns, draft bundles, asset manifests, review checklists, and
+  lightweight export handoff.
+- Growth-format experimentation that improves draft metadata, format-level
+  measurement, and review workflows without bypassing accepted queue gates.
+- Social publishing operations that extend the existing Rust/Node provider
+  contracts with preflight, missed-post recovery, metrics backfill, and
+  operator-visible error state while keeping SaaS Maker as the control plane.
 - Repos that strengthen content and media without replacing already-installed libraries.
 - Repos that strengthen ui workflows without replacing already-installed libraries.
 - Repos that strengthen ai agents without replacing already-installed libraries.
@@ -166,6 +185,13 @@ Good matches:
 - Implementation repos, SDKs, CLIs, testing utilities, adapters, and focused libraries are higher value than generic awesome lists.
 
 Avoid recommending:
+- For the kids-story bet, avoid new automation stacks until the first three
+  manual videos exist and pass a parent-trust review.
+- Avoid app-marketing recommendations that skip format testing and jump straight
+  to more render engines, schedulers, or auto-posting.
+- Avoid copying AGPL social-publishing code such as Postiz into this repo;
+  reimplement small workflow patterns locally when they fit the existing
+  provider contracts.
 - Do not recommend packages already listed under direct or development dependencies unless the task is migration research.
 - Do not recommend broad framework replacements unless the project context explicitly calls for a rewrite.
 - Downrank curated lists, archived repos, stale demos, and generic UI kits that do not map to the feature catalog.
@@ -176,6 +202,9 @@ Primary docs and handoff files:
 - `AGENTS.md`
 - `PROJECT_STATUS.md`
 - `README.md`
+- `docs/creator-mvp.md`
+- `docs/creator-mvp-packs/README.md`
+- `docs/growth-format-playbook.md`
 - `docs/architecture.md`
 - `docs/engine-pins.md`
 - `docs/archive/2026-06-20-prd-product-proof-reels-phase1-shipped.md`

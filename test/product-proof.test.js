@@ -139,6 +139,39 @@ test('product proof capture falls back to generated cards without a browser', as
   assert.equal(commands.every((call) => call.command === 'ffmpeg'), true);
 });
 
+test('product proof capture can use Grok video assets before generated cards', async () => {
+  const tmpDir = path.resolve('./tmp/proof-grok-test');
+  const assetDir = path.join(tmpDir, 'grok-assets');
+  await rm(tmpDir, { recursive: true, force: true });
+  await mkdir(assetDir, { recursive: true });
+  await writeFile(path.join(assetDir, 'space-grok-imagine.mp4'), Buffer.from('fake-video-bytes'));
+
+  const previous = process.env.GROK_VIDEO_ASSET_DIR;
+  process.env.GROK_VIDEO_ASSET_DIR = assetDir;
+  try {
+    const capture = new ProductProofCapture({
+      outputDir: path.join(tmpDir, 'proof'),
+      commandRunner: async () => ({ stdout: '', stderr: '' }),
+      screenshotFinder: async () => null,
+    });
+    const brief = normalizeVideoBrief({
+      id: 'brief-grok-proof',
+      projectSlug: 'science',
+      channel: 'tiktok',
+      title: 'Cosmic scale',
+      hook: 'Space is bigger than intuition.',
+      body: reelBody,
+    });
+    const result = await capture.capture(brief);
+    assert.equal(result.type, 'recording');
+    assert.equal(result.proofType, 'recording');
+    assert.equal(path.basename(result.paths[0]), 'grok-space-grok-imagine.mp4');
+  } finally {
+    if (previous === undefined) delete process.env.GROK_VIDEO_ASSET_DIR;
+    else process.env.GROK_VIDEO_ASSET_DIR = previous;
+  }
+});
+
 test('product proof capture uses live browser screenshot when available', async () => {
   const tmpDir = path.resolve('./tmp/proof-live-test');
   await rm(tmpDir, { recursive: true, force: true });

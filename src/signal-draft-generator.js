@@ -1,4 +1,5 @@
 import { buildVariantPlan } from './reel-templates.js';
+import { buildGrowthExperimentPlan, selectGrowthFormats } from './growth-formats.js';
 import { briefFromSignal, detectSignalSource } from './signal-intake.js';
 
 const EVIDENCE_REQUIRED_PATTERNS = [
@@ -30,10 +31,15 @@ const CREATIVE_FRAMING_PATTERNS = [
 export function generateSignalReelDraftBundle(signal, options = {}) {
   const source = detectSignalSource(signal);
   const brief = briefFromSignal(signal, options);
-  const variantCount = Math.max(2, Number(options.variantCount ?? 2));
+  const requestedGrowthFormats = selectGrowthFormats({
+    count: options.growthFormatCount ?? options.variantCount ?? 5,
+    formats: options.growthFormats,
+  });
+  const variantCount = Math.max(2, Number(options.variantCount ?? requestedGrowthFormats.length));
   const plan = buildVariantPlan(brief, { variantCount });
   const context = buildSignalContext(signal, brief);
   const claimReview = reviewSignalClaims(signal, context);
+  const experimentPlan = buildGrowthExperimentPlan(options.experimentPlan);
 
   const variants = plan.map((entry, index) => buildVariantBundle({
     entry,
@@ -42,6 +48,7 @@ export function generateSignalReelDraftBundle(signal, options = {}) {
     signal,
     context,
     claimReview,
+    growthFormat: requestedGrowthFormats[index % requestedGrowthFormats.length],
   }));
 
   return {
@@ -54,6 +61,7 @@ export function generateSignalReelDraftBundle(signal, options = {}) {
     productConstraints: context.productConstraints,
     evidence: context.evidence,
     claimBoundary: context.claimBoundary,
+    experimentPlan,
     claimReview,
     brief,
     variants,
@@ -254,18 +262,26 @@ function violatesClaimBoundary(text, boundary) {
   return false;
 }
 
-function buildVariantBundle({ entry, index, brief, signal, context, claimReview }) {
+function buildVariantBundle({ entry, index, brief, signal, context, claimReview, growthFormat }) {
   const hook = sanitizeHookForClaims(entry.hook, claimReview);
   const visualBeats = normalizeStringList(signal.visualBeats ?? signal.visual_beats);
-  const storyboard = buildStoryboard(entry, hook, visualBeats, context, index);
-  const script = buildScript(entry, hook, context, claimReview);
-  const shotList = buildShotList(entry, visualBeats, index);
-  const captions = buildCaptions(hook, context, claimReview, entry.cta);
+  const storyboard = buildStoryboard(entry, hook, visualBeats, context, index, growthFormat);
+  const script = buildScript(entry, hook, context, claimReview, growthFormat);
+  const shotList = buildShotList(entry, visualBeats, index, growthFormat, context);
+  const captions = buildCaptions(hook, context, claimReview, entry.cta, growthFormat);
+  const formatExecution = buildFormatExecution(growthFormat, entry, context);
 
   return {
     variantId: entry.variantId,
     template: entry.template.id,
     templateLabel: entry.template.label,
+    growthFormat: {
+      id: growthFormat.id,
+      label: growthFormat.label,
+      postGoal: growthFormat.postGoal,
+      ctaPlacement: growthFormat.ctaPlacement,
+    },
+    formatExecution,
     hook,
     cta: entry.cta,
     storyboard,
@@ -285,18 +301,20 @@ function buildVariantBundle({ entry, index, brief, signal, context, claimReview 
   };
 }
 
-function buildStoryboard(entry, hook, visualBeats, context, variantIndex) {
+function buildStoryboard(entry, hook, visualBeats, context, variantIndex, growthFormat) {
   const scenes = entry.template.scenes ?? [];
-  const beats = visualBeats.length ? visualBeats : [
+  const beats = buildFormatBeats(growthFormat, visualBeats, context, entry);
+  const fallbackBeats = [
     'Open on the buyer decision tension',
     'Show assistants filtering products without proof',
     'Cut to on-product audit evidence',
     'Close with the next action',
   ];
-  const offset = variantIndex % Math.max(1, beats.length - scenes.length + 1);
+  const resolvedBeats = beats.length ? beats : fallbackBeats;
+  const offset = variantIndex % Math.max(1, resolvedBeats.length - scenes.length + 1);
 
   return scenes.map((scene, sceneIndex) => {
-    const beat = beats[sceneIndex + offset] ?? beats[sceneIndex] ?? beats[beats.length - 1];
+    const beat = resolvedBeats[sceneIndex + offset] ?? resolvedBeats[sceneIndex] ?? resolvedBeats[resolvedBeats.length - 1];
     return {
       beat: sceneIndex + 1,
       label: scene.label,
@@ -307,39 +325,91 @@ function buildStoryboard(entry, hook, visualBeats, context, variantIndex) {
       evidenceRef: scene.label === 'Evidence' || scene.label === 'Proof'
         ? (context.evidence.proofUrl ?? context.evidence.urls[0] ?? context.evidence.productUrl)
         : null,
+      growthFormat: growthFormat.id,
     };
   });
 }
 
-function buildScript(entry, hook, context, claimReview) {
+function buildScript(entry, hook, context, claimReview, growthFormat) {
   const proofClaim = claimReview.approvedClaims.find((claim) => claim.source === 'proofBeat')
     ?? claimReview.approvedClaims.find((claim) => claim.evidenceStatus === 'supported');
   const proofLine = proofClaim?.text ?? context.evidence.proofBeat ?? 'Show linked product evidence only.';
   return [
     `0-3s HOOK: ${hook}`,
-    `3-10s TENSION: ${context.targetAudience ?? 'Target buyer'} — ${context.offer ?? entry.template.label}.`,
-    `10-16s PROOF: ${proofLine}`,
-    `16-20s CTA: ${entry.cta}`,
+    `3-8s FORMAT: ${growthFormat.label} — ${growthFormat.postGoal}`,
+    `8-14s TENSION: ${context.targetAudience ?? 'Target buyer'} — ${context.offer ?? entry.template.label}.`,
+    `14-18s PROOF: ${proofLine}`,
+    `18-20s CTA: ${entry.cta}`,
+    `CTA PLACEMENT: ${growthFormat.ctaPlacement}`,
   ].join('\n');
 }
 
-function buildShotList(entry, visualBeats, variantIndex) {
-  if (visualBeats.length) {
-    const rotated = [...visualBeats.slice(variantIndex), ...visualBeats.slice(0, variantIndex)];
+function buildShotList(entry, visualBeats, variantIndex, growthFormat, context) {
+  const formatBeats = buildFormatBeats(growthFormat, visualBeats, context, entry);
+  if (formatBeats.length) {
+    const rotated = [...formatBeats.slice(variantIndex), ...formatBeats.slice(0, variantIndex)];
     return rotated.map((beat, index) => `${index + 1}. ${beat}`);
   }
   return entry.template.scenes.map((scene, index) => `${index + 1}. ${scene.label} — ${scene.source}`);
 }
 
-function buildCaptions(hook, context, claimReview, cta) {
+function buildCaptions(hook, context, claimReview, cta, growthFormat) {
   const proofClaim = claimReview.approvedClaims.find((claim) => claim.source === 'proofBeat' && !claim.rejected);
   const proofCaption = proofClaim?.text ?? compactText(context.evidence.proofBeat, 90) ?? 'Evidence on screen';
   return {
     hook,
     proof: proofCaption,
     cta,
-    overlayNotes: 'Mute-friendly; keep proof line tied to visible evidence URL or product screen',
+    overlayNotes: `Mute-friendly; ${growthFormat.label}; ${growthFormat.ctaPlacement}`,
   };
+}
+
+function buildFormatExecution(growthFormat, entry, context) {
+  return {
+    formatId: growthFormat.id,
+    slideTarget: `${growthFormat.slideCount.min}-${growthFormat.slideCount.max} slides`,
+    ctaPlacement: growthFormat.ctaPlacement,
+    productionNotes: growthFormat.storyboardNotes,
+    metricsToWatch: ['views', 'average_watch', 'completion', 'saves', 'shares', 'comments', 'qualified_clicks'],
+    productInsertion: context.offer ?? entry.cta ?? 'Use the product as the payoff, not the opening ad.',
+  };
+}
+
+function buildFormatBeats(growthFormat, visualBeats, context = {}, entry = {}) {
+  const product = context.offer ?? entry.cta ?? 'the product';
+  const proof = context.evidence?.proofBeat ?? 'visible product proof';
+  const beats = {
+    ranking_system: [
+      `Rank the top niche mistakes or tactics; keep the top slot unresolved.`,
+      `Show a mid-list item the audience recognizes from their own workflow.`,
+      `Place ${product} around slot #2 or #3 with a concrete proof receipt.`,
+      `Reveal the #1 item as a non-product insight so the post does not feel like an ad.`,
+    ],
+    sound_sync: [
+      'Beat 1: opening text lands on the first sound hit.',
+      'Beat 2: slide reveal creates the curiosity gap.',
+      `Drop: show ${proof}.`,
+      `Final beat: ${product} payoff and soft CTA.`,
+    ],
+    tutorial_value: [
+      'Open with the specific outcome the viewer wants.',
+      'Teach the manual step before mentioning the product.',
+      `Show ${product} completing the hard step faster or cleaner.`,
+      'Close with one repeatable action the viewer can try today.',
+    ],
+    trend_copy: [
+      'Use the trend structure as the shell while replacing all assets and context.',
+      'Slide 1 sets up the familiar curiosity gap.',
+      `Slide 2 transforms the format into ${product}.`,
+      'Final slide adds a product-specific receipt and CTA.',
+    ],
+    before_after: [
+      'Slide 1: before state with a clear unresolved result gap.',
+      `Slide 2: after state created by ${product}.`,
+      `Slide 3: proof receipt — ${proof}.`,
+    ],
+  };
+  return beats[growthFormat.id] ?? visualBeats;
 }
 
 function sanitizeHookForClaims(hook, claimReview) {

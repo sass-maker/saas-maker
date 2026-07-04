@@ -23,6 +23,7 @@ import { access, copyFile, mkdir, readFile, rm, stat, writeFile } from 'node:fs/
 import path from 'node:path';
 import { promisify } from 'node:util';
 
+import { selectGrokVideoAsset } from '../src/adapters/grok-video.js';
 import { captureScrollTour, recordScreencast, recordScrollScreencast } from './cdp-capture.js';
 
 const execFileAsync = promisify(execFile);
@@ -329,6 +330,26 @@ async function renderReel(reelId) {
     }
   }
 
+  let grokMotion = null;
+  try {
+    grokMotion = await selectGrokVideoAsset({
+      id: reel.id,
+      projectSlug: reel.projectSlug,
+      title: reel.title,
+      hook: reel.hook ?? reel.title,
+      body: reel.body ?? '',
+      cta: reel.cta,
+      audience: reel.audience,
+    }, {
+      sceneHints: script.flatMap((beat) => [beat.label, beat.caption, beat.voice]),
+    });
+    if (grokMotion) {
+      console.log(`  using Grok motion insert ${path.basename(grokMotion.path)}…`);
+    }
+  } catch (error) {
+    console.warn(`  Grok motion lookup failed (${error.message?.slice(0, 120)}); continuing without generated inserts`);
+  }
+
   // Hook frame at the top + brand close at the bottom of every reel.
   const hookSpec = PROJECT_HOOK_WORDS[reel.projectSlug] ?? PROJECT_HOOK_WORDS.default;
   const closeSpec = PROJECT_BRAND_CLOSE[reel.projectSlug] ?? PROJECT_BRAND_CLOSE.default;
@@ -352,9 +373,15 @@ async function renderReel(reelId) {
     project: reel.projectSlug,
   };
 
+  let grokInserted = false;
   const middleScenes = script.map((beat) => {
     const isHowScene = beat.kind === 'screenshot' && beat.label === 'How';
     const usesScreencast = isHowScene && screencastPath;
+    const usesGrokMotion = !usesScreencast
+      && !grokInserted
+      && grokMotion
+      && (beat.kind === 'screenshot' || /proof|product|how|visual|outcome/i.test(`${beat.label} ${beat.caption}`));
+    if (usesGrokMotion) grokInserted = true;
     return {
       ...beat,
       palette,
@@ -363,7 +390,8 @@ async function renderReel(reelId) {
       // The "How" scene gets the real-motion screencast when available — it's
       // the one moment in the reel where we show the product responding,
       // not zooming on a still page.
-      videoBgPath: usesScreencast ? screencastPath : null,
+      videoBgPath: usesScreencast ? screencastPath : (usesGrokMotion ? grokMotion.path : null),
+      motionSource: usesScreencast ? 'product_screencast' : (usesGrokMotion ? 'grok_video' : null),
       screencastBackdrop: usesScreencast ? screencastBackdrop : null,
       screencastMask: usesScreencast ? screencastMask : null,
       screencastShadow: usesScreencast ? screencastShadow : null,
@@ -410,7 +438,7 @@ async function renderReel(reelId) {
   }
 
   console.log('  patching reel record with variants…');
-  await patchReelRecordMultiVariant(reel, renderedVariants, dir, useEdgeTts, tour !== null);
+  await patchReelRecordMultiVariant(reel, renderedVariants, dir, useEdgeTts, tour !== null, Boolean(grokMotion && grokInserted));
 
   const summary = renderedVariants.map(({ variantSpec, assetUrl, totalDuration }) => ({
     variantId: `${reel.id}-${variantSpec.id}`,
@@ -422,7 +450,7 @@ async function renderReel(reelId) {
   return { reelId, ok: true, variants: summary, scenes: baseScenes.length, voiceProvider: useEdgeTts ? VOICE : 'macos-say' };
 }
 
-async function patchReelRecordMultiVariant(reel, rendered, dir, useEdge, usedCapture) {
+async function patchReelRecordMultiVariant(reel, rendered, dir, useEdge, usedCapture, usedGrokMotion = false) {
   const variants = rendered.map(({ variantSpec, scenes, assetUrl, totalDuration }) => {
     const scores = scoreVariantHonest({
       usedRealCapture: usedCapture,
@@ -435,7 +463,7 @@ async function patchReelRecordMultiVariant(reel, rendered, dir, useEdge, usedCap
       variantId: `${reel.id}-${variantSpec.id}`,
       template: 'explainer_6_beat',
       templateLabel: `Pain → Why → Product → How → Outcome → CTA (${variantSpec.label})`,
-      proofType: usedCapture ? 'screenshot' : 'generated_card',
+      proofType: usedGrokMotion ? 'recording' : (usedCapture ? 'screenshot' : 'generated_card'),
       hook: scenes[0].voice,
       cta: scenes[scenes.length - 1].voice,
       captionText: scenes.flatMap((scene) => (scene.cues || []).map((cue) => cue.text)).join(' / '),
@@ -449,6 +477,7 @@ async function patchReelRecordMultiVariant(reel, rendered, dir, useEdge, usedCap
         'template=explainer_6_beat',
         `variant=${variantSpec.id}`,
         `proof=${usedCapture ? 'scroll-tour' : 'card'}`,
+        `grokMotion=${usedGrokMotion}`,
         `voice=${useEdge ? VOICE : 'macos-say'}`,
         `syncedCaptions=${useEdge}`,
         `scenes=${scenes.length}`,

@@ -12,7 +12,10 @@
 //! deferred to later phases (see PLAN.md); their trait shape is identical so
 //! they slot in without touching callers.
 
+pub mod ascii_animation;
 pub mod factory;
+pub mod grok_video;
+pub mod html_composition;
 pub mod mock;
 pub mod money_printer;
 pub mod render_pro;
@@ -100,6 +103,9 @@ pub trait RenderEngine {
     /// Poll an async render task (MoneyPrinterTurbo). Default impl errors.
     fn get_status(&self, external_task_id: &str) -> Result<RenderResult> {
         let _ = external_task_id;
-        Err(anyhow::anyhow!("get_status not supported by {}", self.name()))
+        Err(anyhow::anyhow!(
+            "get_status not supported by {}",
+            self.name()
+        ))
     }
 }

@@ -39,7 +39,10 @@ fn full_variant_render_flow_with_mock_engine() {
     // teardown_audit should be selected first (slug + body match), then padded.
     assert_eq!(report.variants[0].template, "teardown_audit");
     for v in &report.variants {
-        assert!(v.asset_url.is_some(), "each completed variant has an asset url");
+        assert!(
+            v.asset_url.is_some(),
+            "each completed variant has an asset url"
+        );
         assert!(!v.status.is_empty());
     }
     assert_eq!(report.render_log.len(), 2);
@@ -51,14 +54,20 @@ fn render_pro_engine_shells_out_exactly_once_per_reel() {
     // builds the right wrangler upload — without executing either.
     let render_runner = RecordingRunner::new().with_response(0, "✓ done");
     let engine = RenderProEngine::new(render_runner, "/repo");
-    let opts = RenderOptions { variant_count: 1, ..Default::default() };
+    let opts = RenderOptions {
+        variant_count: 1,
+        ..Default::default()
+    };
     let result = engine.render_reel_by_id("demo-linkchat-1", &opts).unwrap();
     assert_eq!(result.provider, "render-pro");
 
     let publish_runner = RecordingRunner::new().with_response(0, "");
     let publisher = R2Publisher::new(publish_runner, "reel-artifacts", "https://w.dev/reels");
     let urls = publisher
-        .publish(&["file:///repo/tmp/render-pro/demo/final.mp4".into()], Path::new("/repo"))
+        .publish(
+            &["file:///repo/tmp/render-pro/demo/final.mp4".into()],
+            Path::new("/repo"),
+        )
         .unwrap();
     assert_eq!(urls, vec!["https://w.dev/reels/demo-final.mp4".to_string()]);
 }
@@ -73,6 +82,12 @@ fn recording_runner_captures_render_pro_invocation() {
     let _ = recording.run(&spec).unwrap();
     let calls = recording.calls();
     assert_eq!(calls.len(), 1);
-    assert_eq!(calls[0].args, vec!["scripts/render-pro.js", "demo-reader-1"]);
-    assert_eq!(calls[0].env.get("REEL_VARIANT_COUNT").map(String::as_str), Some("2"));
+    assert_eq!(
+        calls[0].args,
+        vec!["scripts/render-pro.js", "demo-reader-1"]
+    );
+    assert_eq!(
+        calls[0].env.get("REEL_VARIANT_COUNT").map(String::as_str),
+        Some("2")
+    );
 }

@@ -22,7 +22,10 @@ pub struct CommandSpec {
 }
 
 impl CommandSpec {
-    pub fn new(program: impl Into<String>, args: impl IntoIterator<Item = impl Into<String>>) -> Self {
+    pub fn new(
+        program: impl Into<String>,
+        args: impl IntoIterator<Item = impl Into<String>>,
+    ) -> Self {
         Self {
             program: program.into(),
             args: args.into_iter().map(Into::into).collect(),
@@ -147,9 +150,7 @@ pub mod testing {
                     stderr: String::new(),
                 })
             } else {
-                responses
-                    .remove(0)
-                    .map_err(|e| anyhow::anyhow!(e))
+                responses.remove(0).map_err(|e| anyhow::anyhow!(e))
             }
         }
     }

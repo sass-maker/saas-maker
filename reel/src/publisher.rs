@@ -112,7 +112,11 @@ mod tests {
 
     #[test]
     fn r2_publisher_builds_wrangler_command() {
-        let publisher = R2Publisher::new(RecordingRunner::new(), "reel-artifacts", "https://w.dev/reels");
+        let publisher = R2Publisher::new(
+            RecordingRunner::new(),
+            "reel-artifacts",
+            "https://w.dev/reels",
+        );
         let spec = publisher.put_command(Path::new("/tmp/task1/final.mp4"), "task1-final.mp4");
         assert_eq!(spec.program, "npx");
         assert_eq!(
@@ -139,7 +143,10 @@ mod tests {
         let urls = publisher
             .publish(&["file:///tmp/task1/final.mp4".into()], Path::new("/work"))
             .unwrap();
-        assert_eq!(urls, vec!["https://w.dev/reels/task1-final.mp4".to_string()]);
+        assert_eq!(
+            urls,
+            vec!["https://w.dev/reels/task1-final.mp4".to_string()]
+        );
     }
 
     #[test]
@@ -158,7 +165,11 @@ mod tests {
         runner
             .responses
             .borrow_mut()
-            .push(Ok(crate::runner::CommandOutput { status: 1, stdout: String::new(), stderr: "boom".into() }));
+            .push(Ok(crate::runner::CommandOutput {
+                status: 1,
+                stdout: String::new(),
+                stderr: "boom".into(),
+            }));
         let publisher = R2Publisher::new(runner, "b", "https://w.dev/reels");
         let err = publisher
             .publish(&["file:///tmp/t/x.mp4".into()], Path::new("/work"))

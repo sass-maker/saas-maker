@@ -59,6 +59,16 @@ pub const RENDER_MODES: &[&str] = &[
     "reel-maker",
     "mock",
     "moneyprinterturbo",
+    "grok",
+    "grok-video",
+    "grok-videos",
+    "ascii",
+    "ascii-animation",
+    "ascii-fable",
+    "askai",
+    "html",
+    "html-composition",
+    "web-composition",
 ];
 
 pub fn is_reel_channel(channel: &str) -> bool {
@@ -144,7 +154,10 @@ fn optional_string(value: Option<&serde_json::Value>) -> Option<String> {
     }
 }
 
-fn string_or_throw(value: Option<&serde_json::Value>, field: &'static str) -> Result<String, BriefError> {
+fn string_or_throw(
+    value: Option<&serde_json::Value>,
+    field: &'static str,
+) -> Result<String, BriefError> {
     optional_string(value).ok_or(BriefError::Required(field))
 }
 
@@ -256,9 +269,15 @@ fn looks_like_video_brief(body: &str) -> bool {
 pub fn normalize_video_brief(input: &RawInput) -> Result<VideoBrief, BriefError> {
     let brief = VideoBrief {
         id: string_or_throw(input.get("id"), "id")?,
-        project_slug: string_or_throw(lookup(input, &["projectSlug", "project_slug"]), "projectSlug")?,
+        project_slug: string_or_throw(
+            lookup(input, &["projectSlug", "project_slug"]),
+            "projectSlug",
+        )?,
         task_id: optional_string(lookup(input, &["taskId", "task_id"])),
-        marketing_post_id: optional_string(lookup(input, &["marketingPostId", "marketing_post_id"])),
+        marketing_post_id: optional_string(lookup(
+            input,
+            &["marketingPostId", "marketing_post_id"],
+        )),
         channel: normalize_channel(input)?,
         title: string_or_throw(input.get("title"), "title")?,
         hook: string_or_throw(input.get("hook"), "hook")?,
@@ -269,7 +288,10 @@ pub fn normalize_video_brief(input: &RawInput) -> Result<VideoBrief, BriefError>
         proof_url: optional_string(lookup(input, &["proofUrl", "proof_url"])),
         target_route: optional_string(lookup(input, &["targetRoute", "target_route"])),
         recording_url: optional_string(lookup(input, &["recordingUrl", "recording_url"])),
-        changelog_entry_id: optional_string(lookup(input, &["changelogEntryId", "changelog_entry_id"])),
+        changelog_entry_id: optional_string(lookup(
+            input,
+            &["changelogEntryId", "changelog_entry_id"],
+        )),
         brand_tone: optional_string(lookup(input, &["brandTone", "brand_tone"])),
         proof_type: normalize_proof_type(input)?,
         template: optional_string(input.get("template")),
@@ -313,11 +335,17 @@ pub fn to_money_printer_request(brief: &VideoBrief) -> serde_json::Value {
     );
     body.insert("video_aspect".to_string(), serde_json::json!("9:16"));
     body.insert("video_concat_mode".to_string(), serde_json::json!("random"));
-    body.insert("video_transition_mode".to_string(), serde_json::json!("FadeIn"));
+    body.insert(
+        "video_transition_mode".to_string(),
+        serde_json::json!("FadeIn"),
+    );
     body.insert("video_clip_duration".to_string(), serde_json::json!(4));
     body.insert("video_count".to_string(), serde_json::json!(1));
     body.insert("video_source".to_string(), serde_json::json!("pexels"));
-    body.insert("voice_name".to_string(), serde_json::json!("en-US-AriaNeural-Female"));
+    body.insert(
+        "voice_name".to_string(),
+        serde_json::json!("en-US-AriaNeural-Female"),
+    );
     body.insert("voice_rate".to_string(), serde_json::json!(1.05));
     body.insert("bgm_type".to_string(), serde_json::json!("random"));
     body.insert("bgm_volume".to_string(), serde_json::json!(0.12));
@@ -372,7 +400,15 @@ fn clean_for_narration(text: &str) -> String {
         out.push_str(l);
         out.push('\n');
     }
-    let lowered_labels = ["asset prompts:", "asset prompt:", "edit notes:", "edit note:", "shot list:", "captions:", "caption:"];
+    let lowered_labels = [
+        "asset prompts:",
+        "asset prompt:",
+        "edit notes:",
+        "edit note:",
+        "shot list:",
+        "captions:",
+        "caption:",
+    ];
     let mut cleaned = out;
     for label in lowered_labels {
         // case-insensitive removal of the label token
@@ -441,6 +477,23 @@ mod tests {
         assert_eq!(brief.product_url.as_deref(), Some("https://x.dev"));
         assert_eq!(brief.render_mode, "mock");
         assert_eq!(brief.duration_seconds, 30.0);
+    }
+
+    #[test]
+    fn accepts_html_composition_render_modes() {
+        for mode in ["html", "html-composition", "web-composition"] {
+            let brief = normalize_video_brief(&raw(serde_json::json!({
+                "id": "b1",
+                "project_slug": "reader",
+                "channel": "youtube_shorts",
+                "title": "t",
+                "hook": "h",
+                "body": valid_reel_body(),
+                "render_mode": mode,
+            })))
+            .unwrap();
+            assert_eq!(brief.render_mode, mode);
+        }
     }
 
     #[test]
@@ -553,6 +606,9 @@ mod tests {
         let terms = req["video_terms"].as_array().unwrap();
         assert!(terms.iter().any(|t| t == "high signal"));
         assert!(terms.len() <= 5);
-        assert!(req["video_script"].as_str().unwrap().contains("Try this next: Try it"));
+        assert!(req["video_script"]
+            .as_str()
+            .unwrap()
+            .contains("Try this next: Try it"));
     }
 }

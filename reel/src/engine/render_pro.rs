@@ -47,9 +47,12 @@ impl<R: CommandRunner> RenderProEngine<R> {
     /// `runRenderPro` in `auto-render-watcher.js`.
     pub fn command_for(&self, reel_id: &str, variant_count: usize) -> CommandSpec {
         let count = variant_count.clamp(1, 3).max(1);
-        CommandSpec::new(&self.node_bin, [self.script_path.clone(), reel_id.to_string()])
-            .cwd(self.repo_root.clone())
-            .env("REEL_VARIANT_COUNT", count.to_string())
+        CommandSpec::new(
+            &self.node_bin,
+            [self.script_path.clone(), reel_id.to_string()],
+        )
+        .cwd(self.repo_root.clone())
+        .env("REEL_VARIANT_COUNT", count.to_string())
     }
 }
 
@@ -106,21 +109,31 @@ mod tests {
         assert_eq!(spec.program, "node");
         assert_eq!(spec.args, vec!["scripts/render-pro.js", "demo-linkchat-1"]);
         assert_eq!(spec.cwd.as_deref(), Some(std::path::Path::new("/repo")));
-        assert_eq!(spec.env.get("REEL_VARIANT_COUNT").map(String::as_str), Some("2"));
+        assert_eq!(
+            spec.env.get("REEL_VARIANT_COUNT").map(String::as_str),
+            Some("2")
+        );
     }
 
     #[test]
     fn variant_count_clamped_to_three() {
         let engine = RenderProEngine::new(RecordingRunner::new(), "/repo");
         let spec = engine.command_for("demo-1", 99);
-        assert_eq!(spec.env.get("REEL_VARIANT_COUNT").map(String::as_str), Some("3"));
+        assert_eq!(
+            spec.env.get("REEL_VARIANT_COUNT").map(String::as_str),
+            Some("3")
+        );
     }
 
     #[test]
     fn render_by_id_runs_and_reports_completed() {
-        let runner = RecordingRunner::new().with_response(0, "  capturing scroll tour…\n  ✓ uploaded\n");
+        let runner =
+            RecordingRunner::new().with_response(0, "  capturing scroll tour…\n  ✓ uploaded\n");
         let engine = RenderProEngine::new(runner, "/repo");
-        let opts = RenderOptions { variant_count: 1, ..Default::default() };
+        let opts = RenderOptions {
+            variant_count: 1,
+            ..Default::default()
+        };
         let result = engine.render_reel_by_id("demo-1", &opts).unwrap();
         assert_eq!(result.status, RenderStatus::Completed);
         assert_eq!(result.provider, "render-pro");
@@ -131,7 +144,10 @@ mod tests {
     fn render_by_id_propagates_nonzero_exit() {
         let runner = RecordingRunner::new().with_response(1, "");
         let engine = RenderProEngine::new(runner, "/repo");
-        let opts = RenderOptions { variant_count: 1, ..Default::default() };
+        let opts = RenderOptions {
+            variant_count: 1,
+            ..Default::default()
+        };
         let err = engine.render_reel_by_id("demo-1", &opts).unwrap_err();
         assert!(err.to_string().contains("exited 1"));
     }

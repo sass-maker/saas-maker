@@ -52,7 +52,7 @@ test('ChannelRoutingProvider falls back to manual for unknown channels', async (
 test('ChannelRoutingProvider falls back to manual when a channel has no provider configured', async () => {
   const yt = stubProvider('youtube');
   const router = new ChannelRoutingProvider({ youtubeProvider: yt });
-  const result = await router.post({ id: 'a', channel: 'instagram_reels', title: 't' });
+  const result = await router.post({ id: 'a', channel: 'instagram_reels', title: 't', result_url: 'https://x/y.mp4' });
   assert.equal(yt.calls.length, 0);
   assert.equal(result.provider, 'manual');
 });

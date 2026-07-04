@@ -9,9 +9,7 @@ use std::path::Path;
 use anyhow::{Context, Result};
 use clap::Parser;
 
-use reel::autopilot::{
-    load_fixture_posts, run_autopilot_tick, AutopilotConfig,
-};
+use reel::autopilot::{load_fixture_posts, run_autopilot_tick, AutopilotConfig};
 use reel::autopilot_daemon::{run_autopilot_daemon, AutopilotDaemonConfig};
 use reel::brief::normalize_from_value;
 use reel::config::{load_project_urls, resolve_social_accounts};
@@ -20,6 +18,9 @@ use reel::engine::render_pro::RenderProEngine;
 use reel::engine::RenderEngine;
 use reel::engine::RenderOptions;
 use reel::marketing::{render_accepted_marketing_posts, RenderAcceptedOptions};
+use reel::marketing_metrics::{
+    sync_marketing_post_metrics, ChannelRoutingMetricsFetcher, MetricsSyncOptions,
+};
 use reel::marketing_posting::{create_poster, post_ready_marketing_videos, PostReadyOptions};
 use reel::orchestrator::render_reel_variants;
 use reel::publisher::NoopPublisher;
@@ -45,11 +46,13 @@ fn main() -> Result<()> {
         Command::Autopilot(args) => cmd_autopilot(&cli.repo_root, args),
         Command::RenderAccepted(args) => cmd_render_accepted(&cli.repo_root, args),
         Command::Post(args) => cmd_post(&cli.repo_root, args),
+        Command::Metrics(args) => cmd_metrics(&cli.repo_root, args),
     }
 }
 
 fn read_brief_value(path: &Path) -> Result<serde_json::Value> {
-    let raw = std::fs::read_to_string(path).with_context(|| format!("reading brief {}", path.display()))?;
+    let raw = std::fs::read_to_string(path)
+        .with_context(|| format!("reading brief {}", path.display()))?;
     serde_json::from_str(&raw).with_context(|| format!("parsing brief json {}", path.display()))
 }
 
@@ -78,7 +81,10 @@ fn cmd_render(repo_root: &Path, args: &cli::RenderArgs) -> Result<()> {
             );
             println!(
                 "          REEL_VARIANT_COUNT={}",
-                spec.env.get("REEL_VARIANT_COUNT").cloned().unwrap_or_default()
+                spec.env
+                    .get("REEL_VARIANT_COUNT")
+                    .cloned()
+                    .unwrap_or_default()
             );
         }
     }
@@ -180,10 +186,7 @@ fn cmd_autopilot(repo_root: &Path, args: &cli::AutopilotArgs) -> Result<()> {
 
     let poster = create_poster(&config.posting_provider, repo_root, now)?;
     let mut log = |message: &str| {
-        println!(
-            "[{}] {message}",
-            now.format(&Rfc3339).unwrap_or_default()
-        );
+        println!("[{}] {message}", now.format(&Rfc3339).unwrap_or_default());
     };
 
     if let Some(fixture) = &args.fixture {
@@ -246,7 +249,10 @@ fn cmd_render_accepted(repo_root: &Path, args: &cli::RenderAcceptedArgs) -> Resu
             args.render_mode, args.limit
         );
         if args.fixture.is_some() {
-            println!("[dry-run] fixture={}", args.fixture.as_ref().unwrap().display());
+            println!(
+                "[dry-run] fixture={}",
+                args.fixture.as_ref().unwrap().display()
+            );
         } else {
             println!("[dry-run] requires SAASMAKER_SESSION_TOKEN for live SaaS Maker");
         }
@@ -259,22 +265,10 @@ fn cmd_render_accepted(repo_root: &Path, args: &cli::RenderAcceptedArgs) -> Resu
     let report = if let Some(fixture) = &args.fixture {
         let posts = load_fixture_posts(fixture)?;
         let client = StubMarketingClient::new(posts);
-        render_accepted_marketing_posts(
-            &client,
-            &engine,
-            &publisher,
-            repo_root,
-            &options,
-        )?
+        render_accepted_marketing_posts(&client, &engine, &publisher, repo_root, &options)?
     } else {
         let client = SaaSMakerClient::from_env();
-        render_accepted_marketing_posts(
-            &client,
-            &engine,
-            &publisher,
-            repo_root,
-            &options,
-        )?
+        render_accepted_marketing_posts(&client, &engine, &publisher, repo_root, &options)?
     };
 
     println!("{}", serde_json::to_string_pretty(&report)?);
@@ -296,6 +290,7 @@ fn cmd_post(repo_root: &Path, args: &cli::PostArgs) -> Result<()> {
         project_slug: args.project_slug.clone(),
         channel: args.channel.clone(),
         include_unscheduled: args.include_unscheduled,
+        missed_only: args.missed_only,
         confirm_post: true,
     };
     let report = if let Some(fixture) = &args.fixture {
@@ -305,6 +300,46 @@ fn cmd_post(repo_root: &Path, args: &cli::PostArgs) -> Result<()> {
     } else {
         let client = SaaSMakerClient::from_env();
         post_ready_marketing_videos(&client, &poster, now, &options)?
+    };
+    println!("{}", serde_json::to_string_pretty(&report)?);
+    Ok(())
+}
+
+fn cmd_metrics(repo_root: &Path, args: &cli::MetricsArgs) -> Result<()> {
+    if !args.execute {
+        println!(
+            "[dry-run] would sync sent post metrics · status={} · limit={}",
+            args.status, args.limit
+        );
+        if args.fixture.is_some() {
+            println!(
+                "[dry-run] fixture={}",
+                args.fixture.as_ref().unwrap().display()
+            );
+        } else {
+            println!(
+                "[dry-run] requires SAASMAKER_SESSION_TOKEN plus configured YouTube/Instagram accounts"
+            );
+        }
+        return Ok(());
+    }
+
+    let now = OffsetDateTime::now_utc();
+    let options = MetricsSyncOptions {
+        limit: args.limit,
+        project_slug: args.project_slug.clone(),
+        channel: args.channel.clone(),
+        status: args.status.clone(),
+        confirm_sync: true,
+    };
+    let fetcher = ChannelRoutingMetricsFetcher::from_config(repo_root)?;
+    let report = if let Some(fixture) = &args.fixture {
+        let posts = load_fixture_posts(fixture)?;
+        let client = StubMarketingClient::new(posts);
+        sync_marketing_post_metrics(&client, &fetcher, now, &options)?
+    } else {
+        let client = SaaSMakerClient::from_env();
+        sync_marketing_post_metrics(&client, &fetcher, now, &options)?
     };
     println!("{}", serde_json::to_string_pretty(&report)?);
     Ok(())

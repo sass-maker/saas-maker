@@ -10,6 +10,8 @@ How a finished reel reaches YouTube Shorts and Instagram Reels with zero clicks.
 | Instagram Reels | Standard Access API, multi-account (`src/publishers/instagram.js`) | Shipped — see [`instagram-setup.md`](./instagram-setup.md) |
 | Autopilot loop | SaaS Maker → intake hold → render → post (`scripts/marketing-autopilot.js`) | Shipped |
 | Account routing | `config/social-accounts.json` + `AccountRouter` (project_slug → handle) | Shipped |
+| Missed-post recovery | `reel post --missed-only --execute` / `npm run post:ready -- --missed-only` | Shipped |
+| Provider metrics backfill | `reel metrics --execute` / `npm run sync:metrics` patches metrics into SaaS Maker notes | Shipped |
 
 Manual posting via Meta Business Suite or YouTube Studio still works as a backup — the manual provider in `src/posting.js` is unchanged.
 
@@ -41,6 +43,44 @@ One process — `npm run autopilot` — owns the whole loop.
 Posts SaaS Maker creates start in `status: pending`. Autopilot only auto-accepts them once `created_at` is older than `AUTOPILOT_HOLD_WINDOW_MS` (default 30 min). If you reject a post in the SaaS Maker dashboard before the window expires, it never gets posted. Knob lives in `.env`; no code change to dial it in or out.
 
 To bypass the gate entirely, set `AUTOPILOT_HOLD_WINDOW_MS=0`. To run with the old human-accept-only behavior, set `AUTOPILOT_INTAKE_STATUS=__never__` so nothing matches the intake filter.
+
+## Missed-post recovery
+
+Use a missed-only pass when the scheduler was down or a previous post tick failed
+after the scheduled time. The pass only touches accepted reel posts that already
+have a rendered asset, have a `scheduled_for` timestamp in the past, and do not
+have `posted_at`.
+
+```bash
+npm run post:ready -- --missed-only
+```
+
+The same option is available directly through Rust:
+
+```bash
+cargo run --quiet --manifest-path reel/Cargo.toml -- post --execute --repo-root . --missed-only
+```
+
+## Metrics backfill
+
+Posting writes `posting_provider` and `external_id` notes after a successful
+YouTube/Instagram publish. Run metrics sync after posts have had time to accrue
+views:
+
+```bash
+npm run sync:metrics
+```
+
+The same command is available directly through Rust:
+
+```bash
+cargo run --quiet --manifest-path reel/Cargo.toml -- metrics --execute --repo-root .
+```
+
+The sync scans `status=sent` marketing posts by default, skips posts without a
+supported provider/release ID, fetches YouTube video statistics or Instagram
+media insights, and replaces the prior `metric_*` note block so repeated runs
+do not accumulate stale metrics.
 
 ## Two daemons, not one
 
@@ -122,12 +162,17 @@ npm run autopilot:once
 - **YT quota**: default 10k units/day; an upload is ~1,600 units → ~6/day per project. Request more via GCP console if needed.
 - **IG public-URL requirement**: Meta fetches the video; the pipeline must upload to R2 (`REEL_ARTIFACT_R2_BUCKET`) and pass the public URL. Local-only renders won't post.
 - **IG token TTL**: 60 days; daily refresh cron extends another 60. If a token expires (refresh job broken for 60 days), re-run `ig:bootstrap` for that handle.
-- **Failure isolation**: the autopilot logs a per-tick error and continues. A single bad post doesn't take down the loop.
+- **Failure isolation**: posting failures are classified, patched back to SaaS
+  Maker notes, and isolated per post. A single bad post does not take down the loop.
+- **Metrics backfill**: publisher clients fetch YouTube video statistics and
+  Instagram media insights for the saved `external_id`; `reel metrics --execute`
+  patches the latest values back to SaaS Maker notes.
 
 ## Files
 
 - `src/publishers/youtube.js`, `src/publishers/instagram.js` — wire-protocol clients
 - `src/posting.js` — `YouTubePostingProvider`, `InstagramPostingProvider`, `ChannelRoutingProvider`
+- `reel/src/marketing_metrics.rs` — metrics target parsing, provider fetch, SaaS Maker note patching
 - `src/config/social-accounts.js` — env-pointer loader + `AccountRouter`
 - `src/autopilot.js` — `runAutopilotTick` + `autoAcceptIntake`
 - `scripts/marketing-autopilot.js` — daemon entry point

@@ -10,6 +10,7 @@ use serde_json::{json, Value};
 
 const DEFAULT_OAUTH_URL: &str = "https://oauth2.googleapis.com/token";
 const DEFAULT_UPLOAD_URL: &str = "https://www.googleapis.com/upload/youtube/v3/videos";
+const DEFAULT_VIDEOS_URL: &str = "https://www.googleapis.com/youtube/v3/videos";
 const DEFAULT_CATEGORY_ID: &str = "22";
 const TOKEN_SAFETY_WINDOW_MS: u64 = 60_000;
 
@@ -40,19 +41,31 @@ pub struct YouTubeUploadResult {
     pub raw: Value,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct YouTubeAnalyticsResult {
+    pub video_id: String,
+    pub views: Option<u64>,
+    pub likes: Option<u64>,
+    pub comments: Option<u64>,
+    pub raw: Value,
+}
+
 pub struct YouTubePublisher {
     client_id: String,
     client_secret: String,
     refresh_token: String,
     oauth_url: String,
     upload_url: String,
+    videos_url: String,
     default_privacy: String,
     category_id: String,
     token_cache: RefCell<Option<TokenCache>>,
 }
 
 impl YouTubePublisher {
-    pub fn from_account_fields(fields: &std::collections::BTreeMap<String, String>) -> Result<Self> {
+    pub fn from_account_fields(
+        fields: &std::collections::BTreeMap<String, String>,
+    ) -> Result<Self> {
         Ok(Self {
             client_id: field_or_env(fields, "clientId", "YOUTUBE_OAUTH_CLIENT_ID")?,
             client_secret: field_or_env(fields, "clientSecret", "YOUTUBE_OAUTH_CLIENT_SECRET")?,
@@ -65,6 +78,10 @@ impl YouTubePublisher {
                 .get("uploadUrl")
                 .cloned()
                 .unwrap_or_else(|| DEFAULT_UPLOAD_URL.to_string()),
+            videos_url: fields
+                .get("videosUrl")
+                .cloned()
+                .unwrap_or_else(|| DEFAULT_VIDEOS_URL.to_string()),
             default_privacy: std::env::var("YOUTUBE_DEFAULT_PRIVACY")
                 .ok()
                 .or_else(|| fields.get("defaultPrivacy").cloned())
@@ -97,7 +114,10 @@ impl YouTubePublisher {
             .map_err(|err| anyhow!("YouTube token refresh failed: {err}"))?;
         if response.status() != 200 {
             let text = response.body_mut().read_to_string().unwrap_or_default();
-            return Err(anyhow!("YouTube token refresh failed {}: {text}", response.status()));
+            return Err(anyhow!(
+                "YouTube token refresh failed {}: {text}",
+                response.status()
+            ));
         }
         let payload: Value = serde_json::from_str(&response.body_mut().read_to_string()?)
             .context("parsing YouTube token response")?;
@@ -105,7 +125,10 @@ impl YouTubePublisher {
             .get("access_token")
             .and_then(|v| v.as_str())
             .ok_or_else(|| anyhow!("YouTube token refresh missing access_token"))?;
-        let expires_in = payload.get("expires_in").and_then(|v| v.as_i64()).unwrap_or(3600);
+        let expires_in = payload
+            .get("expires_in")
+            .and_then(|v| v.as_i64())
+            .unwrap_or(3600);
         *self.token_cache.borrow_mut() = Some(TokenCache {
             token: token.to_string(),
             expires_at_ms: now + (expires_in as u64 * 1000),
@@ -122,10 +145,10 @@ impl YouTubePublisher {
         }
         let title = trim_to_bytes(input.title, 100);
         let description = append_shorts_tag(input.description.unwrap_or(""));
-        let tags = input.tags.map(|t| t.iter().take(30).cloned().collect::<Vec<_>>());
-        let category_id = input
-            .category_id
-            .unwrap_or(self.category_id.as_str());
+        let tags = input
+            .tags
+            .map(|t| t.iter().take(30).cloned().collect::<Vec<_>>());
+        let category_id = input.category_id.unwrap_or(self.category_id.as_str());
         let publish_at = input.publish_at.map(normalize_iso);
         let privacy_status = if publish_at.is_some() {
             "private".to_string()
@@ -170,7 +193,10 @@ impl YouTubePublisher {
             .map_err(|err| anyhow!("YouTube resumable init failed: {err}"))?;
         if init.status() != 200 {
             let text = init.body_mut().read_to_string().unwrap_or_default();
-            return Err(anyhow!("YouTube resumable init failed {}: {text}", init.status()));
+            return Err(anyhow!(
+                "YouTube resumable init failed {}: {text}",
+                init.status()
+            ));
         }
         let session_url = init
             .headers()
@@ -210,6 +236,56 @@ impl YouTubePublisher {
                 .or(publish_at),
             raw: payload,
         })
+    }
+
+    pub fn video_analytics(&self, video_id: &str) -> Result<YouTubeAnalyticsResult> {
+        if video_id.trim().is_empty() {
+            return Err(anyhow!("video_analytics requires video_id"));
+        }
+        let access_token = self.access_token()?;
+        let url = format!(
+            "{}?part=statistics&id={}",
+            self.videos_url.trim_end_matches('/'),
+            urlencode(video_id)
+        );
+        let mut response = ureq::get(&url)
+            .header("authorization", &format!("Bearer {access_token}"))
+            .call()
+            .map_err(|err| anyhow!("YouTube analytics failed: {err}"))?;
+        if response.status() != 200 {
+            let text = response.body_mut().read_to_string().unwrap_or_default();
+            return Err(anyhow!(
+                "YouTube analytics failed {}: {text}",
+                response.status()
+            ));
+        }
+        let payload: Value = serde_json::from_str(&response.body_mut().read_to_string()?)
+            .context("parsing YouTube analytics response")?;
+        parse_video_analytics(video_id, payload)
+    }
+}
+
+fn parse_video_analytics(video_id: &str, payload: Value) -> Result<YouTubeAnalyticsResult> {
+    let item = payload
+        .get("items")
+        .and_then(|v| v.as_array())
+        .and_then(|items| items.first())
+        .ok_or_else(|| anyhow!("YouTube analytics missing video {video_id}"))?;
+    let stats = item.get("statistics").unwrap_or(&Value::Null);
+    Ok(YouTubeAnalyticsResult {
+        video_id: video_id.to_string(),
+        views: metric_u64(stats.get("viewCount")),
+        likes: metric_u64(stats.get("likeCount")),
+        comments: metric_u64(stats.get("commentCount")),
+        raw: payload,
+    })
+}
+
+fn metric_u64(value: Option<&Value>) -> Option<u64> {
+    match value? {
+        Value::Number(n) => n.as_u64(),
+        Value::String(s) => s.parse().ok(),
+        _ => None,
     }
 }
 
@@ -278,5 +354,27 @@ mod tests {
     #[test]
     fn trim_to_bytes_respects_limit() {
         assert_eq!(trim_to_bytes("hello", 3), "hel");
+    }
+
+    #[test]
+    fn parse_video_analytics_normalizes_counts() {
+        let parsed = parse_video_analytics(
+            "vid-1",
+            json!({
+                "items": [{
+                    "id": "vid-1",
+                    "statistics": {
+                        "viewCount": "1200",
+                        "likeCount": "34",
+                        "commentCount": "5"
+                    }
+                }]
+            }),
+        )
+        .unwrap();
+        assert_eq!(parsed.video_id, "vid-1");
+        assert_eq!(parsed.views, Some(1200));
+        assert_eq!(parsed.likes, Some(34));
+        assert_eq!(parsed.comments, Some(5));
     }
 }

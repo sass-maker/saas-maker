@@ -25,7 +25,8 @@ pub fn load_project_urls(path: &Path) -> Result<BTreeMap<String, String>> {
 }
 
 pub fn parse_project_urls(raw: &str) -> Result<BTreeMap<String, String>> {
-    let value: serde_json::Value = serde_json::from_str(raw).context("parsing project urls json")?;
+    let value: serde_json::Value =
+        serde_json::from_str(raw).context("parsing project urls json")?;
     let obj = value
         .as_object()
         .ok_or_else(|| anyhow!("project urls must be a JSON object"))?;
@@ -80,7 +81,8 @@ pub fn resolve_social_accounts<F>(raw: &str, env: F) -> Result<SocialAccountsCon
 where
     F: Fn(&str) -> Option<String>,
 {
-    let parsed: RawSocialAccounts = serde_json::from_str(raw).context("parsing social accounts json")?;
+    let parsed: RawSocialAccounts =
+        serde_json::from_str(raw).context("parsing social accounts json")?;
     Ok(SocialAccountsConfig {
         youtube: resolve_platform(&parsed.youtube, &env)?,
         instagram: resolve_platform(&parsed.instagram, &env)?,
@@ -117,7 +119,10 @@ where
                 .collect()
         })
         .unwrap_or_default();
-    let default = obj.get("default").and_then(|v| v.as_bool()).unwrap_or(false);
+    let default = obj
+        .get("default")
+        .and_then(|v| v.as_bool())
+        .unwrap_or(false);
 
     let mut fields = BTreeMap::new();
     for (key, value) in obj {

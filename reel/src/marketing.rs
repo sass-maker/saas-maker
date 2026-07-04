@@ -130,12 +130,7 @@ where
         };
 
         let mut render = engine.create_video(&brief, &RenderOptions::default())?;
-        render = poll_until_complete(
-            engine,
-            render,
-            options.poll_limit,
-            options.poll_interval_ms,
-        )?;
+        render = poll_until_complete(engine, render, options.poll_limit, options.poll_interval_ms)?;
 
         if render.status == RenderStatus::Failed {
             results.push(RenderAcceptedResult {
@@ -280,7 +275,10 @@ mod tests {
             &RenderAcceptedOptions::default(),
         )
         .unwrap();
-        assert_eq!(report.results[0].reason.as_deref(), Some("already has render artifact"));
+        assert_eq!(
+            report.results[0].reason.as_deref(),
+            Some("already has render artifact")
+        );
         assert!(client.patches.borrow().is_empty());
     }
 }

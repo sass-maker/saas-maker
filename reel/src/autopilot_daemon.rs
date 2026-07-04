@@ -49,10 +49,7 @@ where
 
         let now = OffsetDateTime::now_utc();
         let mut log = |message: &str| {
-            println!(
-                "[{}] {message}",
-                now.format(&Rfc3339).unwrap_or_default()
-            );
+            println!("[{}] {message}", now.format(&Rfc3339).unwrap_or_default());
         };
 
         match run_autopilot_tick(client, repo_root, poster, now, autopilot, &mut log) {

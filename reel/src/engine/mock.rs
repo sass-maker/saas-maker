@@ -48,14 +48,20 @@ impl RenderEngine for MockEngine {
         let dir = self.artifact_dir.join(&task_id);
         std::fs::create_dir_all(&dir).with_context(|| format!("creating {}", dir.display()))?;
         let video_path = dir.join("draft.mp4");
-        std::fs::write(&video_path, format!("mock mp4 placeholder for {}\n", brief.title))?;
+        std::fs::write(
+            &video_path,
+            format!("mock mp4 placeholder for {}\n", brief.title),
+        )?;
         let manifest = serde_json::json!({
             "taskId": task_id,
             "brief": brief,
             "videoPath": video_path,
             "status": "completed",
         });
-        std::fs::write(dir.join("manifest.json"), serde_json::to_string_pretty(&manifest)?)?;
+        std::fs::write(
+            dir.join("manifest.json"),
+            serde_json::to_string_pretty(&manifest)?,
+        )?;
 
         let mut result = RenderResult::completed("mock", &task_id);
         result.videos = vec![video_path.to_string_lossy().into_owned()];
@@ -106,7 +112,9 @@ mod tests {
     fn mock_writes_placeholder_and_reports_completed() {
         let tmp = tempfile::tempdir().unwrap();
         let engine = MockEngine::new(tmp.path()).with_task_suffix("fixed");
-        let result = engine.create_video(&brief(), &RenderOptions::default()).unwrap();
+        let result = engine
+            .create_video(&brief(), &RenderOptions::default())
+            .unwrap();
         assert_eq!(result.status, RenderStatus::Completed);
         assert_eq!(result.external_task_id, "mock_b1_fixed");
         let video = &result.videos[0];

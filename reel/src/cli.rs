@@ -17,7 +17,11 @@ use std::path::PathBuf;
 use clap::{Args, Parser, Subcommand};
 
 #[derive(Debug, Parser)]
-#[command(name = "reel", version, about = "Rust orchestrator for the reel-pipeline")]
+#[command(
+    name = "reel",
+    version,
+    about = "Rust orchestrator for the reel-pipeline"
+)]
 pub struct Cli {
     /// Repo root (where scripts/ and config/ live). Defaults to the parent of
     /// the binary's working dir assumption: current dir.
@@ -48,6 +52,8 @@ pub enum Command {
     RenderAccepted(RenderAcceptedArgs),
     /// Post ready marketing videos (gate + YouTube/Instagram).
     Post(PostArgs),
+    /// Backfill platform metrics for sent marketing videos.
+    Metrics(MetricsArgs),
 }
 
 #[derive(Debug, Args)]
@@ -159,12 +165,33 @@ pub struct PostArgs {
     pub channel: Option<String>,
     #[arg(long, default_value_t = true)]
     pub include_unscheduled: bool,
+    /// Only post accepted rendered items whose scheduled time is already past.
+    #[arg(long, default_value_t = false)]
+    pub missed_only: bool,
     #[arg(long, default_value_t = true)]
     pub dry_run: bool,
     #[arg(long, default_value_t = false)]
     pub execute: bool,
     #[arg(long, env = "REEL_POST_PROVIDER", default_value = "auto")]
     pub posting_provider: String,
+    #[arg(long)]
+    pub fixture: Option<PathBuf>,
+}
+
+#[derive(Debug, Args)]
+pub struct MetricsArgs {
+    #[arg(long, env = "REEL_METRICS_LIMIT", default_value_t = 20)]
+    pub limit: usize,
+    #[arg(long)]
+    pub project_slug: Option<String>,
+    #[arg(long)]
+    pub channel: Option<String>,
+    #[arg(long, env = "REEL_METRICS_STATUS", default_value = "sent")]
+    pub status: String,
+    #[arg(long, default_value_t = true)]
+    pub dry_run: bool,
+    #[arg(long, default_value_t = false)]
+    pub execute: bool,
     #[arg(long)]
     pub fixture: Option<PathBuf>,
 }

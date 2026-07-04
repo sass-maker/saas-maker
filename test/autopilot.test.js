@@ -125,26 +125,25 @@ test('runAutopilotTick routes posts by channel through ChannelRoutingProvider', 
   assert.deepEqual(seenChannels.sort(), ['instagram_reels', 'youtube_shorts']);
 });
 
-test('runAutopilotTick propagates errors from the post phase without corrupting intake', async () => {
+test('runAutopilotTick records post errors without corrupting intake', async () => {
   const client = stubClient([
     { id: 'aged', status: 'pending', channel: 'youtube_shorts', project_slug: 'p', title: 't', hook: 'h', body: 'b', result_url: 'https://x/y.mp4', created_at: '2020-01-01T00:00:00Z' },
   ]);
   const postingProvider = {
     post: async () => { throw new Error('YT 503'); },
   };
-  await assert.rejects(
-    runAutopilotTick({
-      saasMakerClient: client,
-      now: new Date('2026-06-16T12:00:00Z'),
-      postingProvider,
-      accounts: { youtube: {}, instagram: {} },
-      render: { mode: 'mock' },
-      log: () => {},
-    }),
-    /YT 503/,
-  );
+  const result = await runAutopilotTick({
+    saasMakerClient: client,
+    now: new Date('2026-06-16T12:00:00Z'),
+    postingProvider,
+    accounts: { youtube: {}, instagram: {} },
+    render: { mode: 'mock' },
+    log: () => {},
+  });
+  assert.equal(result.posted.results[0].failure.category, 'provider_down');
   const agedPost = client.posts.find((p) => p.id === 'aged');
   assert.equal(agedPost.status, 'accepted');
+  assert.match(agedPost.notes, /posting_status: error/);
 });
 
 test('runAutopilotTick chains intake → render → post and returns each phase result', async () => {

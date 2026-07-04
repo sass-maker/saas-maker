@@ -56,10 +56,7 @@ impl MoneyPrinterEngine {
 }
 
 fn normalize_url(url: &str) -> String {
-    if url.starts_with("http://")
-        || url.starts_with("https://")
-        || url.starts_with("file://")
-    {
+    if url.starts_with("http://") || url.starts_with("https://") || url.starts_with("file://") {
         return url.to_string();
     }
     url.to_string()
@@ -79,7 +76,10 @@ impl RenderEngine for MoneyPrinterEngine {
             .map_err(|err| anyhow!("MoneyPrinterTurbo create failed: {err}"))?;
         if response.status() != 200 {
             let text = response.body_mut().read_to_string().unwrap_or_default();
-            return Err(anyhow!("MoneyPrinterTurbo create failed {}: {text}", response.status()));
+            return Err(anyhow!(
+                "MoneyPrinterTurbo create failed {}: {text}",
+                response.status()
+            ));
         }
         let body = response.body_mut().read_to_string()?;
         let payload: Value = serde_json::from_str(&body).context("parsing create response")?;
@@ -102,7 +102,9 @@ impl RenderEngine for MoneyPrinterEngine {
     }
 
     fn render_reel_by_id(&self, _reel_id: &str, _options: &RenderOptions) -> Result<RenderResult> {
-        Err(anyhow!("moneyprinterturbo does not support render_reel_by_id"))
+        Err(anyhow!(
+            "moneyprinterturbo does not support render_reel_by_id"
+        ))
     }
 
     fn get_status(&self, external_task_id: &str) -> Result<RenderResult> {
@@ -116,7 +118,10 @@ impl RenderEngine for MoneyPrinterEngine {
             .map_err(|err| anyhow!("MoneyPrinterTurbo status failed: {err}"))?;
         if response.status() != 200 {
             let text = response.body_mut().read_to_string().unwrap_or_default();
-            return Err(anyhow!("MoneyPrinterTurbo status failed {}: {text}", response.status()));
+            return Err(anyhow!(
+                "MoneyPrinterTurbo status failed {}: {text}",
+                response.status()
+            ));
         }
         let body = response.body_mut().read_to_string()?;
         let payload: Value = serde_json::from_str(&body).context("parsing status response")?;

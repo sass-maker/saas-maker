@@ -3,6 +3,8 @@ import { access, copyFile, mkdir, readdir, stat, writeFile } from 'node:fs/promi
 import path from 'node:path';
 import { promisify } from 'node:util';
 
+import { selectGrokVideoAsset } from './adapters/grok-video.js';
+
 const execFileAsync = promisify(execFile);
 
 const DEFAULT_VIEWPORT = { width: 1080, height: 1920 };
@@ -45,6 +47,9 @@ export class ProductProofCapture {
 
     const repo = await this.tryRepoScreenshot(brief, sceneDir, reasons);
     if (repo) return repo;
+
+    const grok = await this.tryGrokVideo(brief, sceneDir, reasons);
+    if (grok) return grok;
 
     return this.generateFallbackCards(brief, sceneDir, reasons);
   }
@@ -178,6 +183,25 @@ export class ProductProofCapture {
     return {
       type: 'repo_screenshot',
       proofType: 'screenshot',
+      paths: [destination],
+      reasons,
+      primary: destination,
+      sceneDir,
+    };
+  }
+
+  async tryGrokVideo(brief, sceneDir, reasons) {
+    const selected = await selectGrokVideoAsset(brief);
+    if (!selected) {
+      reasons.push('no Grok video asset found');
+      return null;
+    }
+    const destination = path.join(sceneDir, `grok-${path.basename(selected.path)}`);
+    await copyFile(selected.path, destination);
+    reasons.push(`used Grok video asset ${selected.path}`);
+    return {
+      type: 'recording',
+      proofType: 'recording',
       paths: [destination],
       reasons,
       primary: destination,

@@ -1,5 +1,6 @@
 //! Instagram Graph reel publishing — port of `src/publishers/instagram.js`.
 
+use std::collections::BTreeMap;
 use std::thread;
 use std::time::{Duration, Instant};
 
@@ -10,6 +11,7 @@ const DEFAULT_GRAPH_URL: &str = "https://graph.instagram.com";
 const DEFAULT_API_VERSION: &str = "v22.0";
 const DEFAULT_POLL_INTERVAL_MS: u64 = 3_000;
 const DEFAULT_POLL_TIMEOUT_MS: u64 = 5 * 60_000;
+const DEFAULT_INSIGHT_METRICS: &[&str] = &["views", "likes", "comments", "shares", "saved"];
 
 #[derive(Debug, Clone)]
 pub struct InstagramReelInput<'a> {
@@ -26,6 +28,13 @@ pub struct InstagramPublishResult {
     pub raw: Value,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct InstagramInsightsResult {
+    pub media_id: String,
+    pub metrics: BTreeMap<String, Option<f64>>,
+    pub raw: Value,
+}
+
 pub struct InstagramPublisher {
     user_id: String,
     long_lived_token: String,
@@ -36,7 +45,9 @@ pub struct InstagramPublisher {
 }
 
 impl InstagramPublisher {
-    pub fn from_account_fields(fields: &std::collections::BTreeMap<String, String>) -> Result<Self> {
+    pub fn from_account_fields(
+        fields: &std::collections::BTreeMap<String, String>,
+    ) -> Result<Self> {
         Ok(Self {
             user_id: fields
                 .get("userId")
@@ -87,9 +98,46 @@ impl InstagramPublisher {
         let container_id = self.create_container(input)?;
         let status = self.wait_for_container(&container_id)?;
         if status != "FINISHED" {
-            return Err(anyhow!("Instagram container {container_id} ended in {status}"));
+            return Err(anyhow!(
+                "Instagram container {container_id} ended in {status}"
+            ));
         }
         self.publish_container(&container_id)
+    }
+
+    pub fn media_insights(
+        &self,
+        media_id: &str,
+        metrics: Option<&[&str]>,
+    ) -> Result<InstagramInsightsResult> {
+        if media_id.trim().is_empty() {
+            return Err(anyhow!("media_insights requires media_id"));
+        }
+        let metric_list = metrics.unwrap_or(DEFAULT_INSIGHT_METRICS).join(",");
+        let url = format!(
+            "{}/{}/insights?metric={}&access_token={}",
+            self.api_base(),
+            urlencode(media_id),
+            urlencode(&metric_list),
+            urlencode(&self.long_lived_token),
+        );
+        let mut response = ureq::get(&url)
+            .call()
+            .map_err(|err| anyhow!("Instagram media_insights failed: {err}"))?;
+        if response.status() != 200 {
+            let text = response.body_mut().read_to_string().unwrap_or_default();
+            return Err(anyhow!(
+                "Instagram media_insights failed {}: {text}",
+                response.status()
+            ));
+        }
+        let payload: Value = serde_json::from_str(&response.body_mut().read_to_string()?)
+            .context("parsing Instagram media insights response")?;
+        Ok(InstagramInsightsResult {
+            media_id: media_id.to_string(),
+            metrics: parse_insights_metrics(&payload),
+            raw: payload,
+        })
     }
 
     fn create_container(&self, input: &InstagramReelInput<'_>) -> Result<String> {
@@ -112,7 +160,10 @@ impl InstagramPublisher {
             .map_err(|err| anyhow!("Instagram createContainer failed: {err}"))?;
         if response.status() != 200 {
             let text = response.body_mut().read_to_string().unwrap_or_default();
-            return Err(anyhow!("Instagram createContainer failed {}: {text}", response.status()));
+            return Err(anyhow!(
+                "Instagram createContainer failed {}: {text}",
+                response.status()
+            ));
         }
         let payload: Value = serde_json::from_str(&response.body_mut().read_to_string()?)
             .context("parsing Instagram createContainer response")?;
@@ -138,7 +189,10 @@ impl InstagramPublisher {
                 .map_err(|err| anyhow!("Instagram waitForContainer failed: {err}"))?;
             if response.status() != 200 {
                 let text = response.body_mut().read_to_string().unwrap_or_default();
-                return Err(anyhow!("Instagram waitForContainer failed {}: {text}", response.status()));
+                return Err(anyhow!(
+                    "Instagram waitForContainer failed {}: {text}",
+                    response.status()
+                ));
             }
             let payload: Value = serde_json::from_str(&response.body_mut().read_to_string()?)?;
             last = payload
@@ -170,7 +224,10 @@ impl InstagramPublisher {
             .map_err(|err| anyhow!("Instagram media_publish failed: {err}"))?;
         if response.status() != 200 {
             let text = response.body_mut().read_to_string().unwrap_or_default();
-            return Err(anyhow!("Instagram media_publish failed {}: {text}", response.status()));
+            return Err(anyhow!(
+                "Instagram media_publish failed {}: {text}",
+                response.status()
+            ));
         }
         let payload: Value = serde_json::from_str(&response.body_mut().read_to_string()?)?;
         let media_id = payload
@@ -182,6 +239,30 @@ impl InstagramPublisher {
             url: format!("https://www.instagram.com/reel/{media_id}/"),
             raw: payload,
         })
+    }
+}
+
+fn parse_insights_metrics(payload: &Value) -> BTreeMap<String, Option<f64>> {
+    let mut metrics = BTreeMap::new();
+    if let Some(items) = payload.get("data").and_then(|v| v.as_array()) {
+        for item in items {
+            let Some(name) = item.get("name").and_then(|v| v.as_str()) else {
+                continue;
+            };
+            let value = item
+                .pointer("/values/0/value")
+                .or_else(|| item.pointer("/total_value/value"));
+            metrics.insert(name.to_string(), metric_f64(value));
+        }
+    }
+    metrics
+}
+
+fn metric_f64(value: Option<&Value>) -> Option<f64> {
+    match value? {
+        Value::Number(n) => n.as_f64(),
+        Value::String(s) => s.parse().ok(),
+        _ => None,
     }
 }
 
@@ -222,5 +303,19 @@ mod tests {
             })
             .unwrap_err();
         assert!(err.to_string().contains("http(s) URL"));
+    }
+
+    #[test]
+    fn parse_insights_metrics_normalizes_values() {
+        let metrics = parse_insights_metrics(&serde_json::json!({
+            "data": [
+                { "name": "views", "values": [{ "value": 100 }] },
+                { "name": "likes", "values": [{ "value": "12" }] },
+                { "name": "comments", "total_value": { "value": 3 } }
+            ]
+        }));
+        assert_eq!(metrics.get("views"), Some(&Some(100.0)));
+        assert_eq!(metrics.get("likes"), Some(&Some(12.0)));
+        assert_eq!(metrics.get("comments"), Some(&Some(3.0)));
     }
 }

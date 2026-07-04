@@ -7,6 +7,33 @@ flow for short-form video generation. Its current internal inputs are accepted
 SaaS Maker Marketing Queue ideas and High Signal reel briefs; SaaS Maker stays
 the source of truth for approvals, task links, and posting state.
 
+## Creator MVP First
+
+For kids story videos, do not start by building more pipeline software. Start
+with the manual creator stack in [`docs/creator-mvp.md`](docs/creator-mvp.md):
+public-domain story, rewritten script, consistent illustrated scenes, warm
+narration, simple edit, music/SFX, thumbnail, and YouTube Studio upload.
+
+The first validation target is three manually produced videos:
+
+1. [`The Lion and the Mouse`](docs/creator-mvp-packs/lion-and-mouse.md)
+2. [`The Tortoise and the Hare`](docs/creator-mvp-packs/tortoise-and-hare.md)
+3. [`The Crow and the Pitcher`](docs/creator-mvp-packs/crow-and-pitcher.md)
+
+Until those exist and pass a parent-trust quality review, avoid adding new
+dashboards, agents, custom renderers, auto-uploaders, or analytics scripts for
+the kids-story bet.
+
+## Growth Format Testing
+
+For app marketing reels, the objective is to find a repeatable format that gets
+views consistently. Use the [growth format playbook](docs/growth-format-playbook.md)
+for the 5-7 posts/day, 35-post experiment loop across ranking, sound-sync,
+tutorial, trend-copy, and before/after formats.
+
+Signal draft bundles now include per-variant growth format metadata and the
+35-post decision rule; rendering and autopost still stay behind review gates.
+
 ## Tutoring Lesson Pipeline
 
 If you want animated tutoring shorts (DeepSeek script → ElevenLabs voice →
@@ -72,6 +99,48 @@ stack is JavaScript-only.
 - Current status: adapter implemented, local canary implemented, real MP4 upload
   to R2 verified.
 
+### Grok / Imagine Videos
+
+- Source: local MP4 exports generated outside this repo, for example Grok
+  Imagine science clips.
+- Role: curated premium/source footage when a finished Grok clip already exists;
+  clips can be inserted into normal generated reels or published as a standalone
+  `grok-video` render.
+- Why local: there is no credentialed Grok API path in this repo; the adapter
+  only copies approved local MP4s and returns standard render metadata.
+- Configure: set `GROK_VIDEO_ASSET_DIR` to a folder containing `.mp4` exports.
+- Current status: `grok-video` render mode implemented in Node and Rust;
+  `render-pro.js` can also insert one matching Grok clip as a motion scene when
+  `GROK_VIDEO_ASSET_DIR` is set.
+
+### ASCII Animation Inserts
+
+- Source: local generated ASCII/pixel animation inspired by
+  `adithyaakrishna/ascii-fable`.
+- Role: stylized subsection/interlude footage for explaining abstract ideas
+  between higher-fidelity Grok/Imagine or product-proof scenes.
+- Why local: this is deterministic generated motion; no API credentials or
+  external model calls are required.
+- Configure: use render mode `ascii`, `ascii-animation`, `ascii-fable`, or
+  `askai`. The high-quality path renders HTML terminal art through headless
+  Chrome, then assembles MP4s with `ffmpeg`; set `REEL_ASCII_RENDERER=raster`
+  for the faster no-Chrome fallback, or `FFMPEG_PATH` if needed.
+- Current status: Node adapter implemented; Rust orchestrator shells out to the
+  same Node renderer for parity.
+
+### Editframe-Inspired HTML Composition
+
+- Upstream: `https://editframe.com/`
+- Role: agent-friendly preview format for videos as deterministic HTML/CSS
+  scenes with a timeline and word-level caption cues.
+- Why not depend on it: keep Reel Pipeline local-first and avoid adding another
+  production video runtime before the preview contract proves useful.
+- Configure: use render mode `html`, `html-composition`, or `web-composition`.
+  The output is `composition.html`, `timeline.json`, and `captions.json`, not a
+  posting-ready MP4.
+- Current status: Node adapter implemented; Rust orchestrator shells out to the
+  same Node exporter for parity.
+
 ### OpenShorts
 
 - Upstream: `https://github.com/mutonby/openshorts`
@@ -79,8 +148,8 @@ stack is JavaScript-only.
 - Role: UGC actor / ReelFarm-style workflow reference.
 - Why not default yet: it assumes more paid/hosted services such as Gemini,
   fal.ai, ElevenLabs, Upload-Post, and optional S3.
-- Current status: guarded job-spec adapter only; it does not invoke paid UGC or
-  autopost dependencies yet.
+- Current status: adapter removed from the active pipeline; submodule is parked
+  as a reference.
 
 ### reel-maker
 
@@ -119,6 +188,27 @@ code):
     rendered file with `ffprobe` (real duration, aspect, audio) instead of
     trusting the renderer's claimed metadata.
 
+### Postiz
+
+- Upstream: `https://github.com/gitroomhq/postiz-app` (AGPLv3)
+- Role: social publishing workflow reference; we deliberately did **not** copy
+  source or adopt its NestJS/Prisma/Temporal runtime.
+- Reimplemented concepts:
+  - **Provider capabilities and preflight** — posting providers now declare
+    whether they need local files, public URLs, caption/title/tag limits, and
+    channel support before calling platform APIs.
+  - **Actionable posting failures** — posting errors are classified as
+    reconnect, quota, rate limit, provider outage, bad caption, bad asset, or
+    unknown, then patched back to SaaS Maker notes without marking the post sent.
+  - **Per-post isolation** — one bad post no longer aborts the whole ready-post scan.
+  - **Missed-post recovery** — `reel post --missed-only --execute` limits a
+    recovery run to overdue scheduled posts that still have no `posted_at`.
+  - **Metrics backfill** — `reel metrics --execute` fetches YouTube statistics
+    and Instagram media insights, then patches a compact metrics block into
+    SaaS Maker notes.
+  - **Release IDs** — posting notes include the platform `external_id` so later
+    metrics backfill does not need to infer IDs from URLs.
+
 ## Architecture
 
 ```text
@@ -130,7 +220,8 @@ VideoBrief contract
         |
         +--> MockRenderer for tests/local smoke
         +--> MoneyPrinterTurbo adapter for real stock-footage MP4s
-        +--> OpenShorts adapter for future UGC job specs
+        +--> GrokVideo adapter for curated local Grok/Imagine MP4s
+        +--> HtmlComposition adapter for preview HTML + timeline/captions JSON
         |
         v
 Artifact publisher
@@ -151,7 +242,8 @@ Core files:
 - `src/review-ui.js` — plain HTML/CSS/JS swipe review UI.
 - `src/pipeline.js` — creates render jobs and syncs completed artifacts back.
 - `src/adapters/moneyprinterturbo.js` — MoneyPrinterTurbo API adapter.
-- `src/adapters/openshorts.js` — guarded OpenShorts UGC job-spec adapter.
+- `src/adapters/grok-video.js` — local Grok/Imagine MP4 asset adapter.
+- `src/adapters/html-composition.js` — HTML/CSS composition preview exporter.
 - `src/artifact-publisher.js` — local and R2 artifact publishing.
 - `src/posting.js` — gated posting handoff / provider abstraction.
 - `src/worker/index.js` — Cloudflare Worker for serving R2 MP4 artifacts.
@@ -169,11 +261,17 @@ Working now:
 - VideoBrief validation for TikTok, Instagram Reels, and YouTube Shorts ideas.
 - Mock renderer for fast no-dependency end-to-end tests.
 - MoneyPrinterTurbo adapter and local canary.
+- Grok/Imagine local MP4 adapter (`renderMode: "grok-video"`) and optional
+  generated-motion inserts in `render-pro.js`.
 - R2 artifact upload through Wrangler.
 - R2-backed Worker serving MP4s with range requests.
 - SaaS Maker Marketing Queue sync for rendered asset metadata.
 - Manual posting handoff that does not mark a post as sent unless a real posting
   provider reports success.
+- Provider-specific posting preflight and classified posting failure notes for
+  YouTube, Instagram, Upload-Post, and manual handoff.
+- Explicit missed-post recovery, provider-level metrics backfill, and SaaS
+  Maker Cockpit posting-ops summaries for missed/error/metrics states.
 
 Not done yet:
 
@@ -236,6 +334,27 @@ Render with MoneyPrinterTurbo and upload to R2:
 npm run render:accepted -- --mode moneyprinterturbo --limit 1 \
   --artifact-r2-bucket reel-artifacts \
   --artifact-base-url https://reel-pipeline-artifacts.sarthakagrawal927.workers.dev/reels
+```
+
+Render accepted SaaS Maker queue items with local Grok/Imagine MP4s:
+
+```bash
+GROK_VIDEO_ASSET_DIR=/path/to/grok-mp4s \
+npm run render:accepted -- --mode grok-video --limit 1 \
+  --artifact-r2-bucket reel-artifacts \
+  --artifact-base-url https://reel-pipeline-artifacts.sarthakagrawal927.workers.dev/reels
+```
+
+Use Grok/Imagine clips as inserted motion inside normal `render-pro` reels:
+
+```bash
+GROK_VIDEO_ASSET_DIR=/path/to/grok-mp4s npm run render:pro -- demo-linkchat-1
+```
+
+Render an ASCII-fable-style subsection clip locally:
+
+```bash
+node scripts/render-ascii-animation.js --brief ./path/to/brief.json --artifact-dir ./artifacts/ascii-animation
 ```
 
 Run without SaaS Maker auth using fixtures:
@@ -458,3 +577,7 @@ The pipeline is technically working. The generated videos are still low-quality
 until we improve creative direction, footage selection, UGC actor support, and
 post-render review. Treat the current release as infrastructure and draft
 production, not final marketing quality.
+
+For kids story reels, the immediate product risk is not missing automation. It
+is making generic AI content that parents do not trust. Keep that workflow
+manual until the first three story videos prove the format.

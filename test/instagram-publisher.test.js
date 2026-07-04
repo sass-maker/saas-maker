@@ -174,6 +174,29 @@ test('refreshLongLivedToken returns a new token + TTL', async () => {
   assert.equal(calls.length, 1);
 });
 
+test('mediaInsights fetches media insight metrics and normalizes values', async () => {
+  const { fetchImpl, calls } = routedFetch([
+    {
+      match: (url) => url.includes('/media-99/insights') && url.includes('metric=views%2Clikes%2Ccomments'),
+      respond: {
+        body: {
+          data: [
+            { name: 'views', values: [{ value: 100 }] },
+            { name: 'likes', values: [{ value: '12' }] },
+            { name: 'comments', total_value: { value: 3 } },
+          ],
+        },
+      },
+    },
+  ]);
+  const pub = publisher({ fetchImpl });
+  const result = await pub.mediaInsights('media-99', ['views', 'likes', 'comments']);
+
+  assert.equal(calls.length, 1);
+  assert.match(calls[0].url, /access_token=lltoken/);
+  assert.deepEqual(result.metrics, { views: 100, likes: 12, comments: 3 });
+});
+
 test('InstagramPostingProvider rejects non-instagram_reels channels', async () => {
   const provider = new InstagramPostingProvider({ publisher: { publishReel: async () => ({}) } });
   await assert.rejects(
@@ -204,6 +227,7 @@ test('InstagramPostingProvider with single publisher passes video URL + caption'
   assert.match(calls[0].caption, /Watch this/);
   assert.equal(result.provider, 'instagram');
   assert.equal(result.status, 'posted');
+  assert.equal(result.externalId, 'm1');
   assert.equal(result.externalUrl, 'https://www.instagram.com/reel/m1/');
 });
 

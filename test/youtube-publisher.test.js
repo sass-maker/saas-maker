@@ -130,6 +130,35 @@ test('upload surfaces non-2xx from resumable init', async () => {
   );
 });
 
+test('videoAnalytics fetches video statistics and normalizes metrics', async () => {
+  const { fetchImpl, calls } = queuedFetch([
+    { body: { access_token: 'at-1', expires_in: 3600 } },
+    {
+      body: {
+        items: [
+          {
+            id: 'vid-123',
+            statistics: {
+              viewCount: '1200',
+              likeCount: '34',
+              commentCount: '5',
+            },
+          },
+        ],
+      },
+    },
+  ]);
+  const pub = publisher({ fetchImpl, videosUrl: 'https://youtube.example.test/videos' });
+  const result = await pub.videoAnalytics('vid-123');
+
+  assert.equal(calls.length, 2);
+  assert.match(calls[1].url, /^https:\/\/youtube\.example\.test\/videos\?/);
+  assert.match(calls[1].url, /part=statistics/);
+  assert.match(calls[1].url, /id=vid-123/);
+  assert.equal(calls[1].init.headers.authorization, 'Bearer at-1');
+  assert.deepEqual(result.metrics, { views: 1200, likes: 34, comments: 5 });
+});
+
 test('YouTubePostingProvider rejects non-youtube_shorts channels', async () => {
   const provider = new YouTubePostingProvider({ publisher: { upload: async () => ({}) } });
   await assert.rejects(
@@ -163,6 +192,7 @@ test('YouTubePostingProvider maps marketing post → upload args → result shap
   assert.match(uploads[0].description, /Quick algebra trick/);
   assert.equal(result.provider, 'youtube');
   assert.equal(result.status, 'posted');
+  assert.equal(result.externalId, 'vid-7');
   assert.equal(result.externalUrl, 'https://youtube.com/shorts/vid-7');
 });
 

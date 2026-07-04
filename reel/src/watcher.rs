@@ -38,7 +38,11 @@ impl WatchConfig {
     }
 }
 
-pub fn run_watch<R: CommandRunner>(repo_root: &Path, config: &WatchConfig, runner: R) -> Result<()> {
+pub fn run_watch<R: CommandRunner>(
+    repo_root: &Path,
+    config: &WatchConfig,
+    runner: R,
+) -> Result<()> {
     let client = WorkerClient::from_env_or_default(config.worker_url.clone());
     let interval = Duration::from_millis(config.interval_ms());
     let engine = RenderProEngine::new(runner, repo_root);
@@ -104,10 +108,7 @@ fn tick<R: CommandRunner>(
         return Ok(());
     }
 
-    let batch: Vec<_> = candidates
-        .into_iter()
-        .take(config.max_per_tick())
-        .collect();
+    let batch: Vec<_> = candidates.into_iter().take(config.max_per_tick()).collect();
 
     if !config.execute {
         for reel in &batch {

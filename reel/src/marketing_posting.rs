@@ -9,11 +9,11 @@ use serde_json::{json, Value};
 use time::{format_description::well_known::Rfc3339, OffsetDateTime};
 
 use crate::artifact::{classify_artifact, ArtifactSource};
+use crate::brief::is_reel_channel;
 use crate::config::{resolve_social_accounts, route_account, SocialAccount, SocialAccountsConfig};
-use crate::publishers::{InstagramPublisher, YouTubePublisher};
 use crate::publishers::instagram::InstagramReelInput;
 use crate::publishers::youtube::YouTubeUploadInput;
-use crate::brief::is_reel_channel;
+use crate::publishers::{InstagramPublisher, YouTubePublisher};
 use crate::saas_maker::{ListFilters, MarketingClient, MarketingPost, UpdateResult};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -28,6 +28,8 @@ pub struct PostedOutcome {
     pub status: String,
     pub channel: String,
     pub asset_url: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub external_id: Option<String>,
     pub external_url: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub posted_at: Option<String>,
@@ -35,6 +37,13 @@ pub struct PostedOutcome {
     pub prepared_at: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub scheduled_for: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
+pub struct PostingFailure {
+    pub category: String,
+    pub retryable: bool,
+    pub message: String,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -46,6 +55,8 @@ pub struct PostReadyResult {
     pub reason: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub posted: Option<PostedOutcome>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub failure: Option<PostingFailure>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub sync: Option<UpdateResult>,
 }
@@ -60,6 +71,51 @@ pub trait MarketingPoster {
     fn post(&self, marketing_post: &MarketingPost) -> Result<PostedOutcome>;
 }
 
+#[derive(Debug, Clone)]
+pub struct PostingCapabilities {
+    pub provider: &'static str,
+    pub channels: &'static [&'static str],
+    pub requires_rendered_asset: bool,
+    pub requires_public_video_url: bool,
+    pub requires_local_video: bool,
+    pub max_caption_length: Option<usize>,
+    pub max_title_length: Option<usize>,
+    pub max_tags: Option<usize>,
+}
+
+const MANUAL_CAPABILITIES: PostingCapabilities = PostingCapabilities {
+    provider: "manual",
+    channels: &["tiktok", "instagram_reels", "youtube_shorts"],
+    requires_rendered_asset: true,
+    requires_public_video_url: false,
+    requires_local_video: false,
+    max_caption_length: Some(4096),
+    max_title_length: None,
+    max_tags: None,
+};
+
+const YOUTUBE_CAPABILITIES: PostingCapabilities = PostingCapabilities {
+    provider: "youtube",
+    channels: &["youtube_shorts"],
+    requires_rendered_asset: true,
+    requires_public_video_url: false,
+    requires_local_video: true,
+    max_caption_length: Some(5000),
+    max_title_length: Some(100),
+    max_tags: Some(30),
+};
+
+const INSTAGRAM_CAPABILITIES: PostingCapabilities = PostingCapabilities {
+    provider: "instagram",
+    channels: &["instagram_reels"],
+    requires_rendered_asset: true,
+    requires_public_video_url: true,
+    requires_local_video: false,
+    max_caption_length: Some(2200),
+    max_title_length: None,
+    max_tags: None,
+};
+
 pub struct ManualPoster {
     now: OffsetDateTime,
 }
@@ -72,6 +128,7 @@ impl ManualPoster {
 
 impl MarketingPoster for ManualPoster {
     fn post(&self, marketing_post: &MarketingPost) -> Result<PostedOutcome> {
+        validate_posting_preflight(marketing_post, &MANUAL_CAPABILITIES, None)?;
         Ok(PostedOutcome {
             provider: "manual".into(),
             status: "prepared".into(),
@@ -80,6 +137,7 @@ impl MarketingPoster for ManualPoster {
                 .result_url
                 .clone()
                 .or_else(|| marketing_post.asset_url.clone()),
+            external_id: None,
             external_url: None,
             posted_at: None,
             prepared_at: Some(self.now.format(&Rfc3339).unwrap_or_default()),
@@ -99,6 +157,7 @@ impl MarketingPoster for StubPoster {
             status: "posted".into(),
             channel: marketing_post.channel.clone(),
             asset_url: marketing_post.result_url.clone(),
+            external_id: Some("posted".into()),
             external_url: Some("https://x/posted".into()),
             posted_at: Some("2026-06-16T12:00:01Z".into()),
             prepared_at: None,
@@ -162,7 +221,10 @@ impl ChannelRoutingPoster {
         })
     }
 
-    fn youtube_for<'a>(&'a self, post: &MarketingPost) -> Result<(&'a YouTubePublisher, Option<String>)> {
+    fn youtube_for<'a>(
+        &'a self,
+        post: &MarketingPost,
+    ) -> Result<(&'a YouTubePublisher, Option<String>)> {
         let account = route_account(
             &self.youtube_accounts,
             post.account_slug.as_deref(),
@@ -208,6 +270,7 @@ impl ChannelRoutingPoster {
     fn post_youtube(&self, post: &MarketingPost) -> Result<PostedOutcome> {
         let (publisher, _account_slug) = self.youtube_for(post)?;
         let video_path = resolve_local_video_path(post, &self.repo_root)?;
+        validate_posting_preflight(post, &YOUTUBE_CAPABILITIES, Some(video_path.as_path()))?;
         let uploaded = publisher.upload(&YouTubeUploadInput {
             video_path: &video_path,
             title: &post.title,
@@ -221,7 +284,11 @@ impl ChannelRoutingPoster {
         let posted_at = if uploaded.publish_at.is_some() {
             None
         } else {
-            Some(OffsetDateTime::now_utc().format(&Rfc3339).unwrap_or_default())
+            Some(
+                OffsetDateTime::now_utc()
+                    .format(&Rfc3339)
+                    .unwrap_or_default(),
+            )
         };
         Ok(PostedOutcome {
             provider: "youtube".into(),
@@ -232,6 +299,7 @@ impl ChannelRoutingPoster {
             },
             channel: post.channel.clone(),
             asset_url: post.result_url.clone().or_else(|| post.asset_url.clone()),
+            external_id: Some(uploaded.video_id),
             external_url: Some(uploaded.url),
             posted_at,
             prepared_at: None,
@@ -246,6 +314,7 @@ impl ChannelRoutingPoster {
             .as_deref()
             .or(post.asset_url.as_deref())
             .ok_or_else(|| anyhow!("no rendered asset URL for marketing post {}", post.id))?;
+        validate_posting_preflight(post, &INSTAGRAM_CAPABILITIES, None)?;
         let published = publisher.publish_reel(&InstagramReelInput {
             video_url,
             caption: Some(build_caption(post).as_str()),
@@ -257,8 +326,13 @@ impl ChannelRoutingPoster {
             status: "posted".into(),
             channel: post.channel.clone(),
             asset_url: Some(video_url.to_string()),
+            external_id: Some(published.media_id),
             external_url: Some(published.url),
-            posted_at: Some(OffsetDateTime::now_utc().format(&Rfc3339).unwrap_or_default()),
+            posted_at: Some(
+                OffsetDateTime::now_utc()
+                    .format(&Rfc3339)
+                    .unwrap_or_default(),
+            ),
             prepared_at: None,
             scheduled_for: None,
         })
@@ -279,7 +353,11 @@ impl MarketingPoster for AnyMarketingPoster {
     }
 }
 
-pub fn create_poster(mode: &str, repo_root: &Path, now: OffsetDateTime) -> Result<AnyMarketingPoster> {
+pub fn create_poster(
+    mode: &str,
+    repo_root: &Path,
+    now: OffsetDateTime,
+) -> Result<AnyMarketingPoster> {
     match mode {
         "manual" => Ok(AnyMarketingPoster::Manual(ManualPoster::new(now))),
         "auto" => Ok(AnyMarketingPoster::Auto(ChannelRoutingPoster::from_config(
@@ -314,7 +392,10 @@ pub fn resolve_local_video_path(post: &MarketingPost, repo_root: &Path) -> Resul
         .ok_or_else(|| anyhow!("no local video path for marketing post {}", post.id))?;
     match classify_artifact(url, repo_root) {
         Some(ArtifactSource::Local(path)) => Ok(path),
-        _ => Err(anyhow!("no local video path for marketing post {}", post.id)),
+        _ => Err(anyhow!(
+            "no local video path for marketing post {}",
+            post.id
+        )),
     }
 }
 
@@ -324,6 +405,7 @@ pub struct PostReadyOptions {
     pub project_slug: Option<String>,
     pub channel: Option<String>,
     pub include_unscheduled: bool,
+    pub missed_only: bool,
     pub confirm_post: bool,
 }
 
@@ -378,6 +460,28 @@ pub fn posting_gate(
     }
 }
 
+pub fn is_missed_ready_post(post: &MarketingPost, now: OffsetDateTime) -> bool {
+    if !is_reel_channel(&post.channel) {
+        return false;
+    }
+    if post.status != "accepted" {
+        return false;
+    }
+    if post.result_url.is_none() && post.asset_url.is_none() && post.local_path.is_none() {
+        return false;
+    }
+    if post.posted_at.is_some() {
+        return false;
+    }
+    let Some(scheduled_for) = &post.scheduled_for else {
+        return false;
+    };
+    let Ok(when) = OffsetDateTime::parse(scheduled_for, &Rfc3339) else {
+        return false;
+    };
+    when <= now
+}
+
 pub fn patch_for_posting_result(post: &MarketingPost, posted: &PostedOutcome) -> Value {
     let mut patch = json!({
         "status": if posted.status == "posted" { "sent" } else { "accepted" },
@@ -398,6 +502,14 @@ pub fn patch_for_posting_result(post: &MarketingPost, posted: &PostedOutcome) ->
     patch
 }
 
+pub fn patch_for_posting_failure(post: &MarketingPost, failure: &PostingFailure) -> Value {
+    json!({
+        "status": "accepted",
+        "result_url": post.result_url.as_deref().or(post.asset_url.as_deref()),
+        "notes": append_posting_failure_notes(post.notes.as_deref(), failure),
+    })
+}
+
 fn append_posting_notes(existing: Option<&str>, posted: &PostedOutcome) -> String {
     let mut lines = vec![existing.map(str::to_string)];
     lines.push(Some("Posting gate handled by reel-pipeline.".into()));
@@ -406,10 +518,149 @@ fn append_posting_notes(existing: Option<&str>, posted: &PostedOutcome) -> Strin
     if let Some(prepared_at) = &posted.prepared_at {
         lines.push(Some(format!("prepared_at: {prepared_at}")));
     }
+    if let Some(external_id) = &posted.external_id {
+        lines.push(Some(format!("external_id: {external_id}")));
+    }
     if let Some(external_url) = &posted.external_url {
         lines.push(Some(format!("external_url: {external_url}")));
     }
     lines.into_iter().flatten().collect::<Vec<_>>().join("\n")
+}
+
+fn append_posting_failure_notes(existing: Option<&str>, failure: &PostingFailure) -> String {
+    let mut lines = vec![existing.map(str::to_string)];
+    lines.push(Some("Posting gate handled by reel-pipeline.".into()));
+    lines.push(Some("posting_status: error".into()));
+    lines.push(Some(format!(
+        "posting_error_category: {}",
+        failure.category
+    )));
+    lines.push(Some(format!(
+        "posting_error_retryable: {}",
+        if failure.retryable { "true" } else { "false" }
+    )));
+    lines.push(Some(format!("posting_error: {}", failure.message)));
+    lines.into_iter().flatten().collect::<Vec<_>>().join("\n")
+}
+
+pub fn validate_posting_preflight(
+    post: &MarketingPost,
+    capabilities: &PostingCapabilities,
+    local_video_path: Option<&Path>,
+) -> Result<()> {
+    if !capabilities.channels.contains(&post.channel.as_str()) {
+        return Err(anyhow!(
+            "{} does not support channel {}",
+            capabilities.provider,
+            post.channel
+        ));
+    }
+
+    let asset_url = post.result_url.as_deref().or(post.asset_url.as_deref());
+    let has_local_video = local_video_path.is_some()
+        || post
+            .local_path
+            .as_ref()
+            .is_some_and(|p| !p.trim().is_empty());
+    if capabilities.requires_rendered_asset && asset_url.is_none() && !has_local_video {
+        return Err(anyhow!("missing rendered asset"));
+    }
+    if capabilities.requires_public_video_url {
+        let Some(asset_url) = asset_url else {
+            return Err(anyhow!(
+                "{} requires a public http(s) video URL",
+                capabilities.provider
+            ));
+        };
+        if !is_http_url(asset_url) {
+            return Err(anyhow!(
+                "{} requires a public http(s) video URL",
+                capabilities.provider
+            ));
+        }
+    }
+    if capabilities.requires_local_video && !has_local_video {
+        return Err(anyhow!(
+            "{} requires a local video path",
+            capabilities.provider
+        ));
+    }
+
+    let caption = build_caption(post);
+    if let Some(max) = capabilities.max_caption_length {
+        if caption.len() > max {
+            return Err(anyhow!(
+                "{} caption exceeds {} characters",
+                capabilities.provider,
+                max
+            ));
+        }
+    }
+    if let Some(max) = capabilities.max_title_length {
+        if post.title.len() > max {
+            return Err(anyhow!(
+                "{} title exceeds {} characters",
+                capabilities.provider,
+                max
+            ));
+        }
+    }
+    if let Some(max) = capabilities.max_tags {
+        if post.tags.as_ref().is_some_and(|tags| tags.len() > max) {
+            return Err(anyhow!(
+                "{} allows at most {} tags",
+                capabilities.provider,
+                max
+            ));
+        }
+    }
+
+    Ok(())
+}
+
+pub fn classify_posting_error(error: &anyhow::Error) -> PostingFailure {
+    let message = error.to_string();
+    let lower = message.to_lowercase();
+    if lower.contains("quota") {
+        return failure("quota", true, message);
+    }
+    if lower.contains("token")
+        || lower.contains("oauth")
+        || lower.contains("401")
+        || lower.contains("403")
+    {
+        return failure("needs_reconnect", false, message);
+    }
+    if lower.contains("429") || lower.contains("rate limit") {
+        return failure("rate_limited", true, message);
+    }
+    if lower.contains("timeout")
+        || lower.contains("timed out")
+        || lower.contains("503")
+        || lower.contains("502")
+        || lower.contains("500")
+    {
+        return failure("provider_down", true, message);
+    }
+    if lower.contains("caption") || lower.contains("title") || lower.contains("too long") {
+        return failure("bad_caption", false, message);
+    }
+    if lower.contains("video") || lower.contains("asset") || lower.contains("container") {
+        return failure("bad_asset", false, message);
+    }
+    failure("unknown", true, message)
+}
+
+fn failure(category: &str, retryable: bool, message: String) -> PostingFailure {
+    PostingFailure {
+        category: category.into(),
+        retryable,
+        message,
+    }
+}
+
+fn is_http_url(value: &str) -> bool {
+    value.starts_with("http://") || value.starts_with("https://")
 }
 
 pub fn post_ready_marketing_videos<C, P>(
@@ -433,6 +684,18 @@ where
     })?;
     let mut results = Vec::new();
     for post in &posts {
+        if options.missed_only && !is_missed_ready_post(post, now) {
+            results.push(PostReadyResult {
+                post_id: post.id.clone(),
+                skipped: Some(true),
+                reason: Some("not missed ready post".into()),
+                posted: None,
+                failure: None,
+                sync: None,
+            });
+            continue;
+        }
+
         let gate = posting_gate(post, now, options.include_unscheduled);
         if !gate.ready {
             results.push(PostReadyResult {
@@ -440,20 +703,38 @@ where
                 skipped: Some(true),
                 reason: gate.reason,
                 posted: None,
+                failure: None,
                 sync: None,
             });
             continue;
         }
-        let posted = poster.post(post)?;
-        let patch = patch_for_posting_result(post, &posted);
-        let sync = client.update_marketing_post(&post.id, &patch)?;
-        results.push(PostReadyResult {
-            post_id: post.id.clone(),
-            skipped: None,
-            reason: None,
-            posted: Some(posted),
-            sync: Some(sync),
-        });
+        match poster.post(post) {
+            Ok(posted) => {
+                let patch = patch_for_posting_result(post, &posted);
+                let sync = client.update_marketing_post(&post.id, &patch)?;
+                results.push(PostReadyResult {
+                    post_id: post.id.clone(),
+                    skipped: None,
+                    reason: None,
+                    posted: Some(posted),
+                    failure: None,
+                    sync: Some(sync),
+                });
+            }
+            Err(error) => {
+                let failure = classify_posting_error(&error);
+                let patch = patch_for_posting_failure(post, &failure);
+                let sync = client.update_marketing_post(&post.id, &patch)?;
+                results.push(PostReadyResult {
+                    post_id: post.id.clone(),
+                    skipped: Some(true),
+                    reason: Some(failure.message.clone()),
+                    posted: None,
+                    failure: Some(failure),
+                    sync: Some(sync),
+                });
+            }
+        }
     }
     Ok(PostReadyReport {
         scanned: posts.len(),
@@ -501,6 +782,71 @@ mod tests {
             ..post("b", "blog", "accepted")
         };
         assert!(!posting_gate(&blog, now, true).ready);
+    }
+
+    #[test]
+    fn missed_ready_post_requires_overdue_schedule_and_render() {
+        let now = OffsetDateTime::parse("2026-06-16T12:00:00Z", &Rfc3339).unwrap();
+        let ready = post("ready", "youtube_shorts", "accepted");
+        assert!(is_missed_ready_post(&ready, now));
+        assert!(!is_missed_ready_post(
+            &MarketingPost {
+                scheduled_for: Some("2026-06-16T13:00:00Z".into()),
+                ..ready.clone()
+            },
+            now
+        ));
+        assert!(!is_missed_ready_post(
+            &MarketingPost {
+                scheduled_for: None,
+                ..ready.clone()
+            },
+            now
+        ));
+        assert!(!is_missed_ready_post(
+            &MarketingPost {
+                posted_at: Some("2026-06-16T12:30:00Z".into()),
+                ..ready
+            },
+            now
+        ));
+    }
+
+    #[test]
+    fn provider_preflight_catches_platform_asset_requirements() {
+        let instagram_local = MarketingPost {
+            result_url: Some("file:///tmp/reel.mp4".into()),
+            ..post("ig", "instagram_reels", "accepted")
+        };
+        let err = validate_posting_preflight(&instagram_local, &INSTAGRAM_CAPABILITIES, None)
+            .unwrap_err();
+        assert!(err.to_string().contains("public http(s) video URL"));
+
+        let youtube_remote = MarketingPost {
+            local_path: None,
+            result_url: Some("https://assets.example.test/reel.mp4".into()),
+            ..post("yt", "youtube_shorts", "accepted")
+        };
+        let err =
+            validate_posting_preflight(&youtube_remote, &YOUTUBE_CAPABILITIES, None).unwrap_err();
+        assert!(err.to_string().contains("local video path"));
+    }
+
+    #[test]
+    fn classify_posting_errors_into_actionable_buckets() {
+        assert_eq!(
+            classify_posting_error(&anyhow!("OAuth refresh token expired")).category,
+            "needs_reconnect"
+        );
+        assert_eq!(
+            classify_posting_error(&anyhow!("YouTube quota exceeded")).category,
+            "quota"
+        );
+        assert!(classify_posting_error(&anyhow!("provider returned 503")).retryable);
+        assert_eq!(
+            classify_posting_error(&anyhow!("caption is too long")).category,
+            "bad_caption"
+        );
     }
 
     #[test]
@@ -580,5 +926,112 @@ mod tests {
         assert_eq!(report.results.len(), 1);
         assert!(report.results[0].skipped.is_none());
         assert_eq!(client.posts.borrow()[0].status, "sent");
+        assert!(client.posts.borrow()[0]
+            .notes
+            .as_deref()
+            .unwrap()
+            .contains("external_id: posted"));
+    }
+
+    #[test]
+    fn post_ready_records_posting_failure_and_continues() {
+        let now = OffsetDateTime::parse("2026-06-16T12:00:00Z", &Rfc3339).unwrap();
+        let client = StubMarketingClient::new(vec![
+            post("bad", "youtube_shorts", "accepted"),
+            post("good", "youtube_shorts", "accepted"),
+        ]);
+        struct SometimesFailingPoster;
+        impl MarketingPoster for SometimesFailingPoster {
+            fn post(&self, marketing_post: &MarketingPost) -> Result<PostedOutcome> {
+                if marketing_post.id == "bad" {
+                    return Err(anyhow!("caption is too long"));
+                }
+                Ok(PostedOutcome {
+                    provider: "manual".into(),
+                    status: "prepared".into(),
+                    channel: marketing_post.channel.clone(),
+                    asset_url: marketing_post.result_url.clone(),
+                    external_id: None,
+                    external_url: None,
+                    posted_at: None,
+                    prepared_at: Some("2026-06-16T12:00:01Z".into()),
+                    scheduled_for: None,
+                })
+            }
+        }
+
+        let report = post_ready_marketing_videos(
+            &client,
+            &SometimesFailingPoster,
+            now,
+            &PostReadyOptions {
+                limit: 5,
+                include_unscheduled: true,
+                confirm_post: true,
+                ..Default::default()
+            },
+        )
+        .unwrap();
+
+        assert_eq!(
+            report.results[0].failure.as_ref().unwrap().category,
+            "bad_caption"
+        );
+        assert_eq!(
+            report.results[1].posted.as_ref().unwrap().status,
+            "prepared"
+        );
+        let posts = client.posts.borrow();
+        assert_eq!(posts[0].status, "accepted");
+        assert!(posts[0]
+            .notes
+            .as_deref()
+            .unwrap()
+            .contains("posting_error_category: bad_caption"));
+    }
+
+    #[test]
+    fn post_ready_can_run_missed_only_recovery() {
+        let now = OffsetDateTime::parse("2026-06-16T12:00:00Z", &Rfc3339).unwrap();
+        let client = StubMarketingClient::new(vec![
+            post("missed", "youtube_shorts", "accepted"),
+            MarketingPost {
+                id: "future".into(),
+                scheduled_for: Some("2026-06-16T13:00:00Z".into()),
+                ..post("future", "youtube_shorts", "accepted")
+            },
+            MarketingPost {
+                id: "unscheduled".into(),
+                scheduled_for: None,
+                ..post("unscheduled", "youtube_shorts", "accepted")
+            },
+        ]);
+
+        let report = post_ready_marketing_videos(
+            &client,
+            &StubPoster { outcomes: vec![] },
+            now,
+            &PostReadyOptions {
+                limit: 5,
+                include_unscheduled: true,
+                missed_only: true,
+                confirm_post: true,
+                ..Default::default()
+            },
+        )
+        .unwrap();
+
+        assert_eq!(report.results[0].posted.as_ref().unwrap().status, "posted");
+        assert_eq!(
+            report.results[1].reason.as_deref(),
+            Some("not missed ready post")
+        );
+        assert_eq!(
+            report.results[2].reason.as_deref(),
+            Some("not missed ready post")
+        );
+        assert_eq!(client.posts.borrow()[0].status, "sent");
+        assert_eq!(client.posts.borrow()[1].status, "accepted");
+        assert_eq!(client.posts.borrow()[2].status, "accepted");
     }
 }

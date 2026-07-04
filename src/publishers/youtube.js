@@ -2,6 +2,7 @@ import { readFile, stat } from 'node:fs/promises';
 
 const DEFAULT_OAUTH_URL = 'https://oauth2.googleapis.com/token';
 const DEFAULT_UPLOAD_URL = 'https://www.googleapis.com/upload/youtube/v3/videos';
+const DEFAULT_VIDEOS_URL = 'https://www.googleapis.com/youtube/v3/videos';
 const DEFAULT_CATEGORY_ID = '22';
 const TOKEN_SAFETY_WINDOW_MS = 60_000;
 
@@ -12,6 +13,7 @@ export class YouTubePublisher {
     this.refreshToken = options.refreshToken ?? process.env.YOUTUBE_OAUTH_REFRESH_TOKEN;
     this.oauthUrl = options.oauthUrl ?? DEFAULT_OAUTH_URL;
     this.uploadUrl = options.uploadUrl ?? DEFAULT_UPLOAD_URL;
+    this.videosUrl = options.videosUrl ?? DEFAULT_VIDEOS_URL;
     this.defaultPrivacy = options.defaultPrivacy ?? process.env.YOUTUBE_DEFAULT_PRIVACY ?? 'private';
     this.defaultCategoryId = options.categoryId ?? process.env.YOUTUBE_CATEGORY_ID ?? DEFAULT_CATEGORY_ID;
     this.fetchImpl = options.fetchImpl ?? fetch;
@@ -114,6 +116,34 @@ export class YouTubePublisher {
       raw: payload,
     };
   }
+
+  async videoAnalytics(videoId) {
+    if (!videoId) throw new Error('videoAnalytics requires videoId');
+    const accessToken = await this.accessToken();
+    const url = new URL(this.videosUrl);
+    url.searchParams.set('part', 'statistics');
+    url.searchParams.set('id', videoId);
+    const res = await this.fetchImpl(url.toString(), {
+      headers: { authorization: `Bearer ${accessToken}` },
+    });
+    if (!res.ok) {
+      throw new Error(`YouTube analytics failed ${res.status}: ${await res.text()}`);
+    }
+    const payload = await res.json();
+    const item = payload.items?.[0];
+    if (!item) throw new Error(`YouTube analytics missing video ${videoId}`);
+    const stats = item.statistics ?? {};
+    return {
+      provider: 'youtube',
+      postId: videoId,
+      metrics: {
+        views: numberOrNull(stats.viewCount),
+        likes: numberOrNull(stats.likeCount),
+        comments: numberOrNull(stats.commentCount),
+      },
+      raw: payload,
+    };
+  }
 }
 
 function appendShortsTag(description) {
@@ -129,4 +159,10 @@ function headerValue(headers, name) {
   if (!headers) return null;
   if (typeof headers.get === 'function') return headers.get(name);
   return headers[name] ?? headers[name.toLowerCase()] ?? null;
+}
+
+function numberOrNull(value) {
+  if (value === undefined || value === null || value === '') return null;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
 }

@@ -3,6 +3,7 @@ const DEFAULT_API_VERSION = 'v22.0';
 const DEFAULT_POLL_INTERVAL_MS = 3_000;
 const DEFAULT_POLL_TIMEOUT_MS = 5 * 60_000;
 const TERMINAL_STATUSES = new Set(['FINISHED', 'ERROR', 'EXPIRED']);
+const DEFAULT_INSIGHT_METRICS = ['views', 'likes', 'comments', 'shares', 'saved'];
 
 export class InstagramPublisher {
   constructor(options = {}) {
@@ -112,8 +113,41 @@ export class InstagramPublisher {
       expiresInSeconds: Number(payload.expires_in ?? 0),
     };
   }
+
+  async mediaInsights(mediaId, metrics = DEFAULT_INSIGHT_METRICS) {
+    if (!this.longLivedToken) throw new Error('mediaInsights requires longLivedToken');
+    if (!mediaId) throw new Error('mediaInsights requires mediaId');
+    const metricList = metrics.join(',');
+    const url = `${this.base()}/${encodeURIComponent(mediaId)}/insights?metric=${encodeURIComponent(metricList)}&access_token=${encodeURIComponent(this.longLivedToken)}`;
+    const res = await this.fetchImpl(url);
+    if (!res.ok) {
+      throw new Error(`Instagram mediaInsights failed ${res.status}: ${await res.text()}`);
+    }
+    const payload = await res.json();
+    return {
+      provider: 'instagram',
+      postId: mediaId,
+      metrics: normalizeInsights(payload),
+      raw: payload,
+    };
+  }
 }
 
 function isHttpUrl(value) {
   return typeof value === 'string' && /^https?:\/\//i.test(value);
+}
+
+function normalizeInsights(payload) {
+  const metrics = {};
+  for (const item of payload?.data ?? []) {
+    const value = item.values?.[0]?.value ?? item.total_value?.value ?? null;
+    metrics[item.name] = numberOrNull(value);
+  }
+  return metrics;
+}
+
+function numberOrNull(value) {
+  if (value === undefined || value === null || value === '') return null;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
 }

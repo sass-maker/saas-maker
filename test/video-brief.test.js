@@ -6,7 +6,14 @@ import { MoneyPrinterTurboAdapter } from '../src/adapters/moneyprinterturbo.js';
 import { ReelMakerAdapter, splitBriefIntoScenes } from '../src/adapters/reel-maker.js';
 import { publishRenderArtifacts, publishRenderArtifactsToR2 } from '../src/artifact-publisher.js';
 import { createDraftVideo, createRenderer, getDraftVideoStatus, renderAcceptedMarketingPosts } from '../src/pipeline.js';
-import { patchForPostingResult, postReadyMarketingVideos, postingGate } from '../src/posting.js';
+import {
+  classifyPostingError,
+  isMissedReadyPost,
+  patchForPostingResult,
+  postReadyMarketingVideos,
+  postingGate,
+  validatePostingPreflight,
+} from '../src/posting.js';
 import { renderPatchForMarketingPost, SaaSMakerClient } from '../src/saas-maker-client.js';
 import { scoreVariant } from '../src/reel-quality.js';
 
@@ -492,6 +499,56 @@ test('postingGate requires acceptance, rendered asset, and schedule by default',
   assert.equal(postingGate({ ...readyPost, scheduled_for: null }, { now: new Date('2026-01-02T00:00:00.000Z') }).reason, 'not scheduled');
 });
 
+test('isMissedReadyPost only matches overdue scheduled rendered accepted posts', () => {
+  const now = new Date('2026-01-02T00:00:00.000Z');
+  const readyPost = {
+    id: 'post-ready',
+    channel: 'youtube_shorts',
+    status: 'accepted',
+    result_url: 'https://assets.example.test/reel.mp4',
+    scheduled_for: '2026-01-01T00:00:00.000Z',
+  };
+  assert.equal(isMissedReadyPost(readyPost, now), true);
+  assert.equal(isMissedReadyPost({ ...readyPost, scheduled_for: '2026-01-03T00:00:00.000Z' }, now), false);
+  assert.equal(isMissedReadyPost({ ...readyPost, scheduled_for: null }, now), false);
+  assert.equal(isMissedReadyPost({ ...readyPost, posted_at: '2026-01-01T01:00:00.000Z' }, now), false);
+});
+
+test('posting provider preflight catches provider-specific asset requirements', () => {
+  assert.equal(validatePostingPreflight({
+    id: 'ig-local',
+    channel: 'instagram_reels',
+    status: 'accepted',
+    title: 'Instagram local',
+    result_url: 'file:///tmp/reel.mp4',
+  }, {
+    provider: 'instagram',
+    channels: ['instagram_reels'],
+    requiresRenderedAsset: true,
+    requiresPublicVideoUrl: true,
+  }).category, 'bad_asset');
+
+  assert.equal(validatePostingPreflight({
+    id: 'yt-no-local',
+    channel: 'youtube_shorts',
+    status: 'accepted',
+    title: 'YouTube',
+    result_url: 'https://assets.example.test/reel.mp4',
+  }, {
+    provider: 'youtube',
+    channels: ['youtube_shorts'],
+    requiresRenderedAsset: true,
+    requiresLocalVideo: true,
+  }).reason, 'youtube requires a local video path');
+});
+
+test('classifyPostingError separates reconnect, quota, retryable, and bad content failures', () => {
+  assert.equal(classifyPostingError(new Error('OAuth refresh token expired')).category, 'needs_reconnect');
+  assert.equal(classifyPostingError(new Error('YouTube quota exceeded')).category, 'quota');
+  assert.equal(classifyPostingError(new Error('provider returned 503')).retryable, true);
+  assert.equal(classifyPostingError(new Error('caption is too long')).category, 'bad_caption');
+});
+
 test('postReadyMarketingVideos requires explicit confirmation', async () => {
   await assert.rejects(
     () => postReadyMarketingVideos({ saasMakerClient: { listMarketingPosts: async () => [] } }),
@@ -542,6 +599,117 @@ test('postReadyMarketingVideos prepares ready posts and patches marketing queue'
   assert.match(updates[0].patch.notes, /posting_provider: manual/);
 });
 
+test('postReadyMarketingVideos patches classified posting failures and continues', async () => {
+  const updates = [];
+  const result = await postReadyMarketingVideos({
+    confirmPost: true,
+    includeUnscheduled: false,
+    now: new Date('2026-01-02T00:00:00.000Z'),
+    provider: {
+      post: async (post) => {
+        if (post.id === 'bad') throw new Error('caption is too long');
+        return {
+          provider: 'manual',
+          status: 'prepared',
+          channel: post.channel,
+          assetUrl: post.result_url,
+          externalUrl: null,
+          preparedAt: '2026-01-02T00:00:00.000Z',
+        };
+      },
+    },
+    saasMakerClient: {
+      listMarketingPosts: async () => ([
+        {
+          id: 'bad',
+          channel: 'tiktok',
+          status: 'accepted',
+          title: 'Bad post',
+          result_url: 'https://assets.example.test/bad.mp4',
+          scheduled_for: '2026-01-01T00:00:00.000Z',
+        },
+        {
+          id: 'good',
+          channel: 'tiktok',
+          status: 'accepted',
+          title: 'Good post',
+          result_url: 'https://assets.example.test/good.mp4',
+          scheduled_for: '2026-01-01T00:00:00.000Z',
+        },
+      ]),
+      updateMarketingPost: async (id, patch) => {
+        updates.push({ id, patch });
+        return { skipped: false, data: { id, ...patch } };
+      },
+    },
+  });
+
+  assert.equal(result.scanned, 2);
+  assert.equal(result.results[0].failure.category, 'bad_caption');
+  assert.equal(result.results[1].posted.status, 'prepared');
+  assert.equal(updates[0].id, 'bad');
+  assert.equal(updates[0].patch.status, 'accepted');
+  assert.match(updates[0].patch.notes, /posting_status: error/);
+  assert.match(updates[0].patch.notes, /posting_error_category: bad_caption/);
+  assert.equal(updates[1].id, 'good');
+});
+
+test('postReadyMarketingVideos can run a missed-only recovery pass', async () => {
+  const calls = [];
+  const result = await postReadyMarketingVideos({
+    confirmPost: true,
+    missedOnly: true,
+    includeUnscheduled: true,
+    now: new Date('2026-01-02T00:00:00.000Z'),
+    provider: {
+      post: async (post) => {
+        calls.push(post.id);
+        return {
+          provider: 'manual',
+          status: 'prepared',
+          channel: post.channel,
+          assetUrl: post.result_url,
+          externalUrl: null,
+          preparedAt: '2026-01-02T00:00:00.000Z',
+        };
+      },
+    },
+    saasMakerClient: {
+      listMarketingPosts: async () => ([
+        {
+          id: 'missed',
+          channel: 'youtube_shorts',
+          status: 'accepted',
+          title: 'Missed',
+          result_url: 'https://assets.example.test/missed.mp4',
+          scheduled_for: '2026-01-01T00:00:00.000Z',
+        },
+        {
+          id: 'future',
+          channel: 'youtube_shorts',
+          status: 'accepted',
+          title: 'Future',
+          result_url: 'https://assets.example.test/future.mp4',
+          scheduled_for: '2026-01-03T00:00:00.000Z',
+        },
+        {
+          id: 'unscheduled',
+          channel: 'youtube_shorts',
+          status: 'accepted',
+          title: 'Unscheduled',
+          result_url: 'https://assets.example.test/unscheduled.mp4',
+        },
+      ]),
+      updateMarketingPost: async (id, patch) => ({ skipped: false, data: { id, ...patch } }),
+    },
+  });
+
+  assert.deepEqual(calls, ['missed']);
+  assert.equal(result.results[0].posted.status, 'prepared');
+  assert.equal(result.results[1].reason, 'not missed ready post');
+  assert.equal(result.results[2].reason, 'not missed ready post');
+});
+
 test('patchForPostingResult marks sent only after a real post', () => {
   const patch = patchForPostingResult({
     result_url: 'https://assets.example.test/reel.mp4',
@@ -549,6 +717,7 @@ test('patchForPostingResult marks sent only after a real post', () => {
   }, {
     provider: 'upload-post',
     status: 'posted',
+    externalId: 'post-1',
     externalUrl: 'https://tiktok.example.test/post/1',
     postedAt: '2026-01-02T00:00:00.000Z',
   });
@@ -556,4 +725,5 @@ test('patchForPostingResult marks sent only after a real post', () => {
   assert.equal(patch.status, 'sent');
   assert.equal(patch.posted_at, '2026-01-02T00:00:00.000Z');
   assert.equal(patch.result_url, 'https://tiktok.example.test/post/1');
+  assert.match(patch.notes, /external_id: post-1/);
 });
