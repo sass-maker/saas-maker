@@ -146,6 +146,7 @@
   "resume-tailor": {
     "desc": "RolePatch — AI-powered resume tailoring system.",
     "url": "git@github.com:sarthak-fleet/rolepatch.git",
+    "path": "/Users/sarthak/Desktop/fleet/rolepatch",
     "tier": "core",
     "category": "product",
     "priority": "P1",

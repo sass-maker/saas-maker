@@ -292,8 +292,13 @@ function shellVariableRef(name) {
   return `"$${name}"`;
 }
 
-function homePath(value) {
-  return `"$HOME/${value.replace(/(["\\$`])/g, '\\$1')}"`;
+export function resolveProjectCwd(project) {
+  const registry = readJson(path.join(process.cwd(), 'foundry.projects.json'));
+  const configuredPath = registry?.[project]?.path;
+  if (typeof configuredPath === 'string' && configuredPath.trim()) {
+    return configuredPath;
+  }
+  return path.join(os.homedir(), 'Desktop', 'fleet', project);
 }
 
 function workspaceKey(task) {
@@ -577,6 +582,7 @@ Execution contract:
 
 function buildCommand(task, args) {
   const project = task.project_slug ?? 'saas-maker';
+  const projectCwd = resolveProjectCwd(project);
   const workspacePath = `.symphony/workspaces/${workspaceKey(task)}`;
   const prompt = buildPrompt(task, args.memory);
   const route = chooseAgent(task, args);
@@ -584,7 +590,7 @@ function buildCommand(task, args) {
   const agentTemplate = resolveAgentCommand(args);
   const agentCommand = `${renderEnvPrefix(args)}${renderAgentCommand(agentTemplate, task, prompt, workspacePath)}`;
   return [
-    `cd ${homePath(`Desktop/fleet/${project}`)}`,
+    `cd ${shellQuote(projectCwd)}`,
     `mkdir -p ${shellQuote(workspacePath)}`,
     `printf %s ${shellQuote(prompt)} > ${shellQuote(`${workspacePath}/prompt.md`)}`,
     `printf %s ${shellQuote(`Routed agent: ${route.agent}\nRouting reason: ${route.reason}\n`)} >> ${shellQuote(`${workspacePath}/route.md`)}`,
@@ -1125,7 +1131,9 @@ async function main() {
   }
 }
 
-main().catch((error) => {
-  console.error(error.message);
-  process.exit(1);
-});
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main().catch((error) => {
+    console.error(error.message);
+    process.exit(1);
+  });
+}
