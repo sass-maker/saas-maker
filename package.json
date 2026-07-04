@@ -2,6 +2,7 @@
   "name": "drank",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@10.33.2",
   "scripts": {
     "dev": "next dev",
     "build": "next build --webpack",
@@ -11,8 +12,8 @@
     "format": "biome format --write .",
     "format:check": "biome format .",
     "check": "biome check .",
-    "cf:build": "npm run build",
-    "deploy": "npm run build && wrangler pages deploy out --project-name=drank",
+    "cf:build": "pnpm run build",
+    "deploy": "pnpm run build && wrangler pages deploy out --project-name=drank",
     "size": "size-limit",
     "test:coverage": "vitest run --coverage"
   },

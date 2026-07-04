@@ -11,5 +11,6 @@ Also read and follow the shared fleet-level agent standard at `../AGENTS.md`. Tr
 ## Project
 
 - **Stack**: Next.js 16, React 19, Tailwind v4, localStorage-only (no backend DB).
-- **Local dev**: `npm run dev` (http://localhost:3000)
-- **Deploy**: Cloudflare Pages (`drank`) via `npm run deploy` (`wrangler pages deploy out`).
+- **Package manager**: pnpm
+- **Local dev**: `pnpm dev` (http://localhost:3000)
+- **Deploy**: Cloudflare Pages (`drank`) via `pnpm deploy` (`wrangler pages deploy out`).
