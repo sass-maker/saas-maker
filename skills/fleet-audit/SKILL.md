@@ -1,94 +1,139 @@
 ---
 name: fleet-audit
-description: Run and interpret the SaaS Maker/Foundry fleet audit across local repos, GitHub PRs/actions, Cloudflare/prod smoke checks, and local build/test health; use when asked to audit the fleet, check project health, prepare recurring fleet reports, or triage fleet regressions.
+description: Audit the fleet — git/CI health, PROJECT_STATUS sync, or full recurring audit. Use when the user asks "is the fleet healthy?", "what's the fleet status?", "what's everyone working on?", "audit the fleet", "check all projects", "what's broken?", or wants a fleet-wide snapshot before a deploy or audit pass.
 metadata:
   short-description: Audit the Foundry project fleet
 ---
 
 # Fleet Audit
 
-Use this skill for recurring or ad hoc audits of the Foundry fleet in `/Users/sarthak/Desktop/fleet`.
+Three modes, one skill. The user's question determines which mode to run.
 
-## Default Command
+## Mode: health
 
-Run from the `saas-maker` repo:
+**Trigger:** "Is the fleet healthy?", "check all projects", "what's broken?", "can I deploy everything?"
 
-```bash
-pnpm fleet:audit
+Checks git state, CI signal, and branch status across all 25 active projects
+(listed in `~/Desktop/fleet/README.md`).
+
+For each project:
+
+1. **Git state** — `git status --porcelain` (clean? dirty?)
+2. **Branch** — `git branch --show-current` (on main?)
+3. **Remote sync** — `git status -sb | head -1` (ahead/behind?)
+4. **CI signal** — `gh run list --branch main --limit 1 --json conclusion -q '.[0].conclusion'`
+
+Output a compact table:
+
+```
+PROJECT          BRANCH  GIT    CI     NOTES
+saas-maker       main    clean  green  —
+ai-game          main    dirty  green  2 uncommitted files
+anime-list       main    clean  red    ci.yml failing
 ```
 
-The command writes:
+Summary: N clean, N dirty, N CI-red, N unknown.
 
+**Act on results:**
+- CI-red → investigate the failing workflow, fix or track
+- Dirty → commit or stash before fleet operations
+- Not on main → flag if deploy planned
+
+## Mode: status
+
+**Trigger:** "What's the fleet status?", "what's everyone working on?", "what shipped recently?", "what's blocked?"
+
+Reads each project's `PROJECT_STATUS.md` (first 40 lines is enough for thesis +
+timeline + scope). For each project extract:
+
+- **Last updated** date
+- **Thesis** (one line)
+- **Latest timeline entry** (most recent ship)
+- **Active scope** (what's IN scope)
+- **Blockers** (if any)
+
+Output:
+
+```
+## Fleet Status — YYYY-MM-DD
+
+### Recently shipped (last 7 days)
+- project-name: what shipped
+
+### Active work
+- project-name: current focus
+
+### Blocked / deferred
+- project-name: what's blocked and why
+
+### Stale (PROJECT_STATUS.md not updated in 30+ days)
+- project-name: last updated YYYY-MM-DD
+```
+
+Don't fabricate status — if a PROJECT_STATUS.md is missing or unreadable, report
+that explicitly. This is read-only; it doesn't modify any files.
+
+## Mode: full
+
+**Trigger:** "Audit the fleet", "run the fleet audit", "prepare a fleet report", "triage fleet regressions"
+
+Runs the SaaS Maker/Foundry fleet audit from the `saas-maker` repo:
+
+```bash
+cd ~/Desktop/fleet/saas-maker && pnpm fleet:audit
+```
+
+Writes to:
 - `.symphony/fleet-audit/latest.md`
 - `.symphony/fleet-audit/latest.json`
 
-For a faster non-local pass:
+Variations:
 
 ```bash
-pnpm fleet:audit -- --skip-local
+pnpm fleet:audit -- --skip-local              # faster, skip local builds
+pnpm fleet:audit -- --performance --lighthouse # full + perf checks
+pnpm fleet:audit -- --project <slug>           # one project
 ```
 
-For the recurring full audit, including frontend performance checks:
+### How to interpret
 
-```bash
-pnpm fleet:audit -- --performance --lighthouse
-```
-
-For one project:
-
-```bash
-pnpm fleet:audit -- --project <slug>
-```
-
-## How To Interpret
-
-- `ok`: no open PRs, failed latest main workflows, failed prod smoke checks, local dirty state, or local check failures.
-- `watch`: usually open PRs or performance budget warnings; do not create urgent tasks unless stale, regressed from baseline, or user asks.
+- `ok`: no open PRs, failed workflows, failed smoke checks, dirty state, or check failures.
+- `watch`: open PRs or perf budget warnings; don't create urgent tasks unless stale or regressed.
 - `fail`: real regression candidate; read details before creating tasks.
 
 Expected non-issues:
-
 - `api.sassmaker.com/` root may be `404`.
 - `mal-api...workers.dev/` root may be `404`.
-- `saas-maker` can be dirty during active local setup work; report it, but do not revert or clean without user approval.
-- First-run performance budget warnings are baselines for review, not automatic regressions.
+- `saas-maker` can be dirty during active local work; report but don't revert.
+- First-run perf budget warnings are baselines, not regressions.
 
-## Audit Workflow
+### Workflow
 
 1. Run `pnpm fleet:audit` unless the user asks for a quick pass.
 2. Read `.symphony/fleet-audit/latest.md`.
-3. Summarize:
-   - open PRs
-   - failed latest main workflows
-   - failed prod smoke checks
-   - local build/test failures
-   - performance hard failures and budget warnings
-   - dirty repos that need attention
-4. If the report has task suggestions, propose or create Symphony tasks only for real regressions.
-5. Do not auto-merge PRs, deploy, delete Cloudflare projects, rotate secrets, or clean dirty worktrees unless the user explicitly asks.
+3. Summarize: open PRs, failed workflows, failed smoke checks, local failures, perf issues, dirty repos.
+4. Propose or create Symphony tasks only for real regressions.
+5. Do not auto-merge, deploy, delete Cloudflare projects, rotate secrets, or clean worktrees unless explicitly asked.
 
-## Task Creation Rules
+### Task creation rules
 
-Create or update Symphony tasks for:
-
+Create tasks for:
 - latest main workflow failures
 - failed production smoke checks
 - local build/test/typecheck failures
 - broken deploy pipeline
 
 Do not create tasks for:
-
 - known open PRs unless stale or blocking
-- expected API-root `404`s
-- local dirty state in `saas-maker` during active work
+- expected API-root 404s
+- local dirty state in saas-maker during active work
 - missing local OAuth credentials when builds pass
 
-## Output Style
+## Output style (all modes)
 
-Keep the final report compact:
-
+Keep reports compact:
 - lead with overall status
 - list real regressions first
 - list watch items separately
 - include links for PRs/actions when available
-- include the report path
+- include the report path (for full mode)
