@@ -417,13 +417,17 @@ export async function getDroidSuccessDashboard(
      WHERE created_at >= ? ${projectWhere}`
   )
     .bind(...binds)
-    .first<{ total_runs: number; completed_runs: number; failed_runs: number; avg_duration_ms: number | null }>();
+    .first<{
+      total_runs: number;
+      completed_runs: number;
+      failed_runs: number;
+      avg_duration_ms: number | null;
+    }>();
 
   const totalRuns = Number(summaryRow?.total_runs ?? 0);
   const completedRuns = Number(summaryRow?.completed_runs ?? 0);
   const failedRuns = Number(summaryRow?.failed_runs ?? 0);
-  const successRate =
-    totalRuns > 0 ? Math.round((completedRuns / totalRuns) * 1000) / 1000 : null;
+  const successRate = totalRuns > 0 ? Math.round((completedRuns / totalRuns) * 1000) / 1000 : null;
 
   // Failure reason breakdown
   const reasonBinds: (string | number)[] = [windowStartIso];

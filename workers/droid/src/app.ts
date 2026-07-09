@@ -159,7 +159,8 @@ export function createApp(executor: RunExecutor) {
     }
 
     const loopPolicy = normalizeLoopPolicy(body?.loop_policy);
-    const timeoutSeconds = normalizeTimeoutSeconds(body?.timeout_seconds) ?? DEFAULT_TIMEOUT_SECONDS;
+    const timeoutSeconds =
+      normalizeTimeoutSeconds(body?.timeout_seconds) ?? DEFAULT_TIMEOUT_SECONDS;
     const retryContract = resolveRetryContract(loopPolicy);
     const timeoutContract = resolveTimeoutContract(timeoutSeconds, loopPolicy);
 
@@ -1383,12 +1384,7 @@ function normalizeBackoffStrategy(value: unknown): BackoffStrategy {
   return 'fixed';
 }
 
-function normalizeBackoffMs(
-  value: unknown,
-  min: number,
-  max: number,
-  fallback: number
-): number {
+function normalizeBackoffMs(value: unknown, min: number, max: number, fallback: number): number {
   if (typeof value !== 'number' || !Number.isFinite(value)) return fallback;
   if (value < min) return min;
   if (value > max) return max;
@@ -1489,9 +1485,7 @@ function normalizeMaxRunningRuns(value: unknown): number {
 // Droid graduation: durable retry/timeout contracts + success dashboard
 // ---------------------------------------------------------------------------
 
-function resolveRetryContract(
-  policy: LoopPolicyRequest | undefined
-): RetryContract {
+function resolveRetryContract(policy: LoopPolicyRequest | undefined): RetryContract {
   if (!policy) {
     return {
       max_attempts: 1,
