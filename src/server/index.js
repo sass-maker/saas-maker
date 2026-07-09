@@ -34,8 +34,18 @@ export function createServer(options = {}) {
         return html(res, 200, studioPageHtml());
       }
       if (req.url?.startsWith('/studio/')) {
-        const pathname = new URL(req.url, 'http://127.0.0.1').pathname;
-        const result = await handleStudioRequest(req.method, pathname, () => readJson(req), options.studio ?? {});
+        const url = new URL(req.url, 'http://127.0.0.1');
+        const result = await handleStudioRequest(
+          req.method,
+          url.pathname,
+          () => readJson(req),
+          options.studio ?? {},
+          Object.fromEntries(url.searchParams),
+        );
+        if (result?.raw) {
+          res.writeHead(result.status, { 'content-type': result.raw.contentType });
+          return res.end(result.raw.content);
+        }
         if (result) return json(res, result.status, result.body);
       }
       if (req.method === 'POST' && req.url === '/reels/signal') {

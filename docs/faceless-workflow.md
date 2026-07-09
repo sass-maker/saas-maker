@@ -71,6 +71,33 @@ Topics run sequentially; a failure on one topic never stops the rest. The run
 writes `batch-summary.json` with per-topic success/failure and exits non-zero
 if anything failed.
 
+## Factory conveyor
+
+The production line over the ideas manager:
+
+```bash
+npm run factory -- plan --niche "everyday personal finance" --count 10
+npm run factory -- produce --count 2 --engine kokoro --duration 45
+npm run factory -- status
+```
+
+`plan` fills the backlog (`new` ideas with angle/hook/format). `produce`
+advances the next N `new` ideas through script → render → quality gate →
+publish packet, updating each idea in place (failures leave the idea `new`
+for retry). Both are also panels in the `/studio` web UI, and the **Renders**
+panel lists produced videos with their quality verdicts, plays them in the
+browser, and approves (→`posted`) or rejects (→`new`) each one.
+
+Every render gets:
+
+- `quality.json` — 0–100 score and pass/review/fail verdict across duration
+  fit, resolution, audio presence, hook strength, pacing, and caption
+  coverage (video evidence via ffprobe; degrades to script-only heuristics
+  when the file can't be probed).
+- `packet/upload.md` — chosen title + alternates, description, tags line
+  within the 500-char budget, hashtags, and a manual upload checklist, plus
+  a thumbnail (PNG when Playwright is installed, HTML preview otherwise).
+
 ## Posting
 
 The workflow never posts automatically. Rendered videos enter the normal

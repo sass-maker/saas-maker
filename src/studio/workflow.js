@@ -6,6 +6,7 @@ import { generateScript, DEFAULT_VOICE } from './script.js';
 import { normalizeKokoroVoice } from '../adapters/kokoro.js';
 import { generateTitles, generateTags, buildHashtags } from './metadata.js';
 import { IdeaStore } from './idea-store.js';
+import { assessRender } from './quality.js';
 
 const VOICE_ROTATION_POOL = [
   'en-US-AriaNeural-Female',
@@ -71,7 +72,9 @@ export async function runFacelessWorkflow({
   voiceProfile,
   outputDir = './tmp/studio/faceless',
   postHandoff = false,
+  ideaId,
   ideaStore,
+  assessQuality = assessRender,
   rendererOptions = {},
   llm,
   logger = console,
@@ -105,14 +108,19 @@ export async function runFacelessWorkflow({
   const render = await renderer.createVideo(brief);
   await writeFile(path.join(dir, 'render.json'), JSON.stringify(render, null, 2));
 
+  const quality = await assessQuality({ script, videoPath: render.videos?.[0] ?? null });
+  await writeFile(path.join(dir, 'quality.json'), JSON.stringify(quality, null, 2));
+
   const store = ideaStore ?? new IdeaStore();
-  const idea = await store.saveIdea({
-    title: script.topic,
-    niche: niche ?? null,
-    hook: script.hook,
-    status: 'rendered',
-    notes: `artifacts: ${dir}`,
-  });
+  const idea = ideaId
+    ? await store.updateIdea(ideaId, { status: 'rendered', hook: script.hook, notes: `artifacts: ${dir}` })
+    : await store.saveIdea({
+      title: script.topic,
+      niche: niche ?? null,
+      hook: script.hook,
+      status: 'rendered',
+      notes: `artifacts: ${dir}`,
+    });
 
   const summary = {
     topic: script.topic,
@@ -122,6 +130,7 @@ export async function runFacelessWorkflow({
     artifactDir: dir,
     video: render.videos?.[0] ?? null,
     renderStatus: render.status,
+    quality,
     ideaId: idea.id,
     voicePlan,
     postHandoff: postHandoff

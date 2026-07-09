@@ -112,6 +112,25 @@ const TOOLS = [
     ],
   },
   {
+    id: 'plan',
+    label: 'Factory: plan',
+    hint: 'Fill the backlog with ideas for a niche (status: new).',
+    fields: [
+      { name: 'niche', label: 'Niche', placeholder: 'home espresso', required: true },
+      { name: 'count', label: 'Count', type: 'number', value: '10' },
+    ],
+  },
+  {
+    id: 'produce',
+    label: 'Factory: produce',
+    hint: 'Render the next N backlog ideas: script → video → quality gate → publish packet.',
+    fields: [
+      { name: 'count', label: 'How many', type: 'number', value: '1' },
+      { name: 'engine', label: 'Engine', type: 'select', options: ['kokoro', 'mock', 'moneyprinterturbo'] },
+      { name: 'duration', label: 'Duration (seconds)', type: 'number', value: '60' },
+    ],
+  },
+  {
     id: 'save',
     label: 'Save idea',
     hint: 'Add an idea to the manager (statuses: new → scripted → rendered → posted).',
@@ -203,6 +222,18 @@ managerBtn.textContent = 'Ideas manager';
 managerBtn.dataset.tool = 'manager';
 managerBtn.onclick = () => { activate('manager'); loadIdeas(); };
 nav.appendChild(managerBtn);
+
+const rendersBtn = document.createElement('button');
+rendersBtn.textContent = 'Renders';
+rendersBtn.dataset.tool = 'renders';
+rendersBtn.onclick = () => { activate('renders'); loadRenders(); };
+nav.appendChild(rendersBtn);
+
+const rendersPanel = document.createElement('section');
+rendersPanel.className = 'panel';
+rendersPanel.id = 'panel-renders';
+rendersPanel.innerHTML = '<h2>Renders</h2><p class="hint">Produced videos with quality verdicts. Approve moves an idea to posted; reject returns it to the backlog.</p><div id="renders-table"></div><div id="renders-player"></div>';
+panels.appendChild(rendersPanel);
 
 const managerPanel = document.createElement('section');
 managerPanel.className = 'panel';
@@ -306,6 +337,43 @@ async function loadIdeas() {
       loadIdeas();
     };
   }
+}
+
+async function loadRenders() {
+  const table = document.getElementById('renders-table');
+  const res = await fetch('/studio/renders-list');
+  const payload = await res.json();
+  const renders = payload.data || [];
+  if (!renders.length) { table.innerHTML = '<p class="hint">no renders yet — run Factory: produce</p>'; return; }
+  const rows = renders.map((render, index) =>
+    '<tr><td>' + escapeText(render.title) + '</td>' +
+    '<td>' + (render.quality ? render.quality.verdict + ' (' + render.quality.overall + ')' : '—') + '</td>' +
+    '<td>' + escapeText(render.provider || '') + '</td>' +
+    '<td>' + escapeText(render.status) + '</td>' +
+    '<td>' +
+      (render.video ? '<button class="copy" data-play="' + index + '">play</button> ' : '') +
+      '<button class="copy" data-approve="' + escapeText(render.ideaId) + '">approve</button> ' +
+      '<button class="copy" data-reject="' + escapeText(render.ideaId) + '">reject</button>' +
+    '</td></tr>').join('');
+  table.innerHTML = '<table><tr><th>Title</th><th>Quality</th><th>Engine</th><th>Status</th><th></th></tr>' + rows + '</table>';
+  const player = document.getElementById('renders-player');
+  for (const btn of table.querySelectorAll('button[data-play]')) {
+    btn.onclick = () => {
+      const render = renders[Number(btn.dataset.play)];
+      player.innerHTML = '<h3>' + escapeText(render.title) + '</h3>' +
+        '<video controls style="max-width:320px;max-height:568px" src="/studio/render-file?path=' + encodeURIComponent(render.video) + '"></video>';
+    };
+  }
+  const setStatus = async (id, to) => {
+    await fetch('/studio/status', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ id, to }),
+    });
+    loadRenders();
+  };
+  for (const btn of table.querySelectorAll('button[data-approve]')) btn.onclick = () => setStatus(btn.dataset.approve, 'posted');
+  for (const btn of table.querySelectorAll('button[data-reject]')) btn.onclick = () => setStatus(btn.dataset.reject, 'new');
 }
 
 function statusSelect(idea) {

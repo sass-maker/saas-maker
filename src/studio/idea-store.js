@@ -52,6 +52,21 @@ export class IdeaStore {
     return status ? ideas.filter((idea) => idea.status === status) : ideas;
   }
 
+  async updateIdea(id, patch = {}) {
+    const ideas = await this.load();
+    const idea = ideas.find((entry) => entry.id === id);
+    if (!idea) throw new Error(`idea not found: ${id}`);
+    if (patch.status !== undefined && !STATUSES.includes(patch.status)) {
+      throw new Error(`unsupported idea status: ${patch.status} (expected ${STATUSES.join(', ')})`);
+    }
+    for (const key of ['status', 'niche', 'angle', 'hook', 'format', 'notes']) {
+      if (patch[key] !== undefined) idea[key] = patch[key];
+    }
+    idea.updatedAt = new Date().toISOString();
+    await this.persist(ideas);
+    return idea;
+  }
+
   async updateIdeaStatus(id, status) {
     if (!STATUSES.includes(status)) {
       throw new Error(`unsupported idea status: ${status} (expected ${STATUSES.join(', ')})`);

@@ -47,6 +47,7 @@
     "smoke:studio": "node scripts/smoke-studio.js",
     "studio": "node scripts/studio.js",
     "faceless": "node scripts/faceless.js",
+    "factory": "node scripts/factory.js",
     "setup:kokoro": "bash scripts/setup-kokoro.sh",
     "worker:dry-run": "npx wrangler deploy --dry-run",
     "deploy": "node scripts/manual-deploy.mjs deploy.yml ci.yml"

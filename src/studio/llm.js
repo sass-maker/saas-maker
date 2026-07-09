@@ -80,6 +80,10 @@ class CodexProvider {
     return this.available;
   }
 
+  markUnavailable() {
+    this.available = false;
+  }
+
   async chatJson(messages, _options = {}) {
     const prompt = [
       ...messages.map((message) => `[${message.role}]\n${message.content}`),
@@ -196,6 +200,10 @@ export class StudioLlm {
       } catch (error) {
         lastError = error;
         this.logger.warn?.(`studio llm provider ${provider.name} failed: ${error.message}`);
+        // A provider that errors on a real call (rate limit, timeout, dead
+        // endpoint) is skipped for the rest of the session instead of
+        // costing its full timeout on every subsequent tool call.
+        if (typeof provider.markUnavailable === 'function') provider.markUnavailable();
       }
     }
     throw lastError ?? new Error('all studio llm providers failed');

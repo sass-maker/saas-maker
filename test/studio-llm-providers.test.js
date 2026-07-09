@@ -87,6 +87,27 @@ test('codex provider builds the exec call and parses the last message', async ()
   assert.match(exec.input, /Reply with only the JSON object/);
 });
 
+test('a codex call failure marks the provider unavailable for the session', async () => {
+  let execCalls = 0;
+  const llm = new StudioLlm({
+    providers: ['codex'],
+    codex: {
+      runner: (args) => {
+        if (args[0] === '--version') return { status: 0, stdout: 'ok' };
+        execCalls += 1;
+        return { status: 1, stderr: 'usage limit' };
+      },
+    },
+    logger: silent,
+  });
+  const first = await llm.generate({ messages: MESSAGES, fallback: () => ({ from: 'template' }) });
+  assert.equal(first.source, 'template');
+  assert.equal(execCalls, 1);
+  const second = await llm.generate({ messages: MESSAGES, fallback: () => ({ from: 'template' }) });
+  assert.equal(second.source, 'template');
+  assert.equal(execCalls, 1, 'failed provider should not be retried in the same session');
+});
+
 test('codex provider reports unavailable when the binary is missing', () => {
   const llm = new StudioLlm({
     providers: ['codex'],
