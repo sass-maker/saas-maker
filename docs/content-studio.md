@@ -4,11 +4,22 @@ TubeMagic-style creator toolset built into reel-pipeline: ideation, metadata,
 scripts, brand voice, keyword research, transcripts, thumbnail concepts, and a
 saved-ideas manager. Original implementation; no third-party product code.
 
-Every tool works offline at $0 via deterministic templates. Setting
-`DEEPSEEK_API_KEY` (plus optional `DEEPSEEK_BASE_URL` / `DEEPSEEK_MODEL` for
-any OpenAI-compatible endpoint) upgrades output quality; results carry
-`source: "llm"` or `source: "template"` so you always know which path ran.
-Provider failures fall back to templates instead of erroring.
+Every tool works offline at $0 via deterministic templates, and upgrades to
+LLM output through a provider chain tried in order (override with
+`STUDIO_LLM_PROVIDERS`):
+
+1. **free-ai** — the fleet's free gateway; set `FREE_AI_API_KEY` (optional
+   `FREE_AI_BASE_URL`, `FREE_AI_MODEL` defaults to `auto`,
+   `FREE_AI_PROJECT_ID` defaults to `reel-pipeline`).
+2. **codex** — the local Codex CLI on PATH, run non-interactively in a
+   read-only sandbox (your ChatGPT subscription; optional
+   `STUDIO_CODEX_MODEL`). Slower per call than HTTP providers.
+3. **deepseek** — `DEEPSEEK_API_KEY` (optional `DEEPSEEK_BASE_URL` /
+   `DEEPSEEK_MODEL` for any OpenAI-compatible endpoint).
+
+Results carry `source: "llm"` (plus the `provider` that answered) or
+`source: "template"`. A provider failure falls through to the next, then to
+templates — never an error.
 
 For the topic→video→post workflow that consumes these tools, see
 [faceless-workflow.md](./faceless-workflow.md).
