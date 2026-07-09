@@ -1,10 +1,10 @@
 //! reel — Rust orchestrator for the reel-pipeline.
 //!
-//! Phase 1 rewrite of the Node glue that orchestrates the render engines, R2
-//! artifact publishing, and (gated) social posting. Heavy lifting stays behind
-//! traits with one concrete shell-out impl each:
-//!   - [`engine::RenderEngine`] → [`engine::render_pro::RenderProEngine`]
-//!     (shells out to `scripts/render-pro.js`).
+//! Rust orchestration for render engines, R2 artifact publishing, and gated
+//! social posting. Heavy lifting stays behind traits and adapter-specific
+//! engines:
+//!   - [`engine::RenderEngine`] → render-pro, MoneyPrinterTurbo, Grok local
+//!     MP4s, ASCII animation, HTML composition, reel-maker, and mock engines.
 //!   - [`publisher::ArtifactPublisher`] → [`publisher::R2Publisher`]
 //!     (shells out to `wrangler r2 object put`).
 //!   - [`social::SocialPoster`] → [`social::DryRunPoster`] (never posts yet).

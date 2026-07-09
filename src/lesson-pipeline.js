@@ -11,7 +11,8 @@ export async function generateScripts(lessonInput, options = {}) {
   const lesson = lessonInput.id
     ? await lessonStore.get(lessonInput.id) ?? (await createLessonDraft(lessonInput, { lessonStore }))
     : await createLessonDraft(lessonInput, { lessonStore });
-  const scripts = await generateLessonScripts(lesson, options.deepseek ?? {});
+  const scriptGenerator = options.generateLessonScripts ?? generateLessonScripts;
+  const scripts = await scriptGenerator(lesson, options.deepseek ?? {});
   const updated = await attachLessonScripts(lesson.id, scripts, { lessonStore });
   return updated;
 }
@@ -32,6 +33,9 @@ export async function renderLesson(lessonId, options = {}) {
 
   const variants = [];
   const renderLog = [];
+  const audioSynthesizer = options.synthesizeSceneAudio ?? synthesizeSceneAudio;
+  const brollFetcher = options.fetchScenebRoll ?? fetchScenebRoll;
+  const lessonComposer = options.composeLesson ?? composeLesson;
 
   for (const script of lesson.scripts) {
     const variantWorkDir = path.join(baseWorkDir, script.variantId);
@@ -40,7 +44,7 @@ export async function renderLesson(lessonId, options = {}) {
     const outputPath = path.join(outputDir, `${script.variantId}.mp4`);
 
     try {
-      const sceneAudio = await synthesizeSceneAudio(script.scenes, {
+      const sceneAudio = await audioSynthesizer(script.scenes, {
         ...(options.elevenlabs ?? {}),
         outputDir: audioDir,
         voiceId: lesson.voicePreference?.voiceId ?? options.elevenlabs?.voiceId,
@@ -49,7 +53,7 @@ export async function renderLesson(lessonId, options = {}) {
         similarity: lesson.voicePreference?.similarity ?? options.elevenlabs?.similarity,
       });
 
-      const sceneClips = await fetchScenebRoll(script.scenes, {
+      const sceneClips = await brollFetcher(script.scenes, {
         ...(options.pexels ?? {}),
         outputDir: brollDir,
       });
@@ -58,7 +62,7 @@ export async function renderLesson(lessonId, options = {}) {
         throw new Error(`no b-roll for scene ${missingClip + 1} (query: "${script.scenes[missingClip].brollQuery}")`);
       }
 
-      const compose = await composeLesson({
+      const compose = await lessonComposer({
         script,
         sceneAudio,
         sceneClips,

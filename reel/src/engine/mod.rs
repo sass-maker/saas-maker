@@ -1,16 +1,10 @@
 //! Render-engine interface.
 //!
-//! The heavy lifting (actual video render) stays *behind* this trait. Phase 1
-//! ships two concrete impls:
-//!  - [`render_pro::RenderProEngine`] — the ONE production path, shelling out to
-//!    the existing `scripts/render-pro.js` (Chrome CDP scroll-tour + Edge TTS +
-//!    ffmpeg + `wrangler r2 object put`). We do NOT reimplement any of that in
-//!    Rust; we orchestrate it.
-//!  - [`mock::MockEngine`] — writes a placeholder, for tests / dry runs.
-//!
-//! MoneyPrinterTurbo (HTTP API adapter) and reel-maker (Remotion shell-out) are
-//! deferred to later phases (see PLAN.md); their trait shape is identical so
-//! they slot in without touching callers.
+//! The heavy lifting (actual video render) stays *behind* this trait. Rust owns
+//! orchestration and delegates specialized render work to adapter-specific
+//! engines: `render-pro` for the canonical worker render, MoneyPrinterTurbo for
+//! stock-footage MP4s, Grok local MP4s, ASCII animation clips, HTML composition
+//! previews, reel-maker/Remotion, and mock dry runs.
 
 pub mod ascii_animation;
 pub mod factory;
@@ -18,6 +12,7 @@ pub mod grok_video;
 pub mod html_composition;
 pub mod mock;
 pub mod money_printer;
+pub mod reel_maker;
 pub mod render_pro;
 
 use std::path::PathBuf;

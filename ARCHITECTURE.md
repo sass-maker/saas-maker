@@ -5,10 +5,10 @@ replaces the Node *glue*. It does NOT touch the git submodules under `engines/`,
 and it does not reimplement ffmpeg, Chrome capture, TTS, or the render engines —
 those stay behind trait interfaces with one shell-out impl.
 
-## The two real flows in the JS
+## The two real flows
 
 The pipeline has two non-overlapping orchestration flows (the README and
-`scripts/marketing-autopilot.js` header confirm this):
+current package scripts expose both):
 
 ### 1. Worker reel flow — the ONE production render path
 
@@ -46,8 +46,8 @@ the Node "glue" around it is just `auto-render-watcher.js` (the spawn loop) and
 SaaS Maker Marketing Queue (saas-maker-client.js)
         │  accepted reel-channel item
         ▼
-marketing-autopilot.js → src/autopilot.js (runAutopilotTick)
-   auto-accept aged intake → renderAcceptedMarketingPosts (src/pipeline.js)
+reel autopilot → renderAcceptedMarketingPosts
+   auto-accept aged intake → render accepted posts
         │
         ▼
 VideoBrief contract (src/video-brief.js)  ── normalize + validate
@@ -55,8 +55,10 @@ VideoBrief contract (src/video-brief.js)  ── normalize + validate
    createRenderer(mode):
      mock              → MockRenderer            (placeholder, tests)
      stock/moneyprinterturbo → MoneyPrinterTurboAdapter (HTTP API, real MP4)
-     openshorts/ugc_actor    → OpenShortsAdapter (job-spec STUB, unused)
-     remotion/reel-maker     → ReelMakerAdapter  (Remotion shell-out)
+     grok-video        → GrokVideoAdapter        (approved local MP4 copy)
+     ascii             → ASCII animation adapter (local MP4)
+     html-composition  → HTML preview exporter   (review artifacts)
+     remotion/reel-maker     → ReelMakerAdapter  (Remotion/product-proof shell-out)
         │
         ▼
    per-variant: buildVariantPlan (reel-templates.js) → render
@@ -70,8 +72,9 @@ VideoBrief contract (src/video-brief.js)  ── normalize + validate
    postReadyMarketingVideos (posting.js) — gated handoff, default mock
 ```
 
-Default `REEL_RENDER_MODE` is `mock`. The autopilot can post to
-YouTube/Instagram only when a real provider reports success.
+Default `REEL_RENDER_MODE` is `mock`. The supported mode and alias matrix is
+`config/render-modes.json`. The autopilot can post to YouTube/Instagram only
+when a real provider reports success.
 
 ### Which engines are actually used
 
@@ -79,8 +82,10 @@ YouTube/Instagram only when a real provider reports success.
   Used by the autopilot `stock` mode. Kept; ported in a later phase.
 - **reel-maker** — Remotion shell-out adapter, the `remotion` mode. Kept as a
   reference engine; lower priority than render-pro.
-- **OpenShorts** — guarded **stub**: it only writes a `job.json` spec and never
-  invokes paid UGC deps. Effectively unused. **Drop candidate** (PLAN.md).
+- **Grok local MP4s / ASCII / HTML composition** — local/no-credential modes
+  used for approved assets, stylized MP4s, and reviewable preview artifacts.
+- **OpenShorts** — removed from the active renderer factory; the submodule is
+  parked as a reference only and remains a dedicated cleanup item.
 - **render-pro.js** — not exposed through `createRenderer`; it is its own
   production renderer driven by the watcher. **This is the path the Rust CLI
   replaces first.**
@@ -124,6 +129,7 @@ MarketingClient     ── SaaSMakerClient  → ureq list/patch marketing posts
    │                   StubMarketingClient → fixture/tests
 RenderEngine        ── MockEngine       → placeholder mp4
    │                   MoneyPrinterEngine → HTTP /api/v1/videos + poll
+   │                   ReelMakerEngine    → node scripts/render-reel-maker.js
    │                   RenderProEngine    → node scripts/render-pro.js
 ```
 
@@ -137,7 +143,7 @@ the exact `node`/`wrangler` argv that *would* run.
 reel render <reelId...> [--variant-count N] [--execute]   # production path; dry-run by default
 reel watch [--worker-url URL] [--once] [--execute]        # auto-render-watcher equivalent
 reel autopilot [--once] [--execute] [--fixture path]      # marketing-autopilot equivalent
-reel render-accepted [--execute] [--fixture path]       # render accepted marketing posts
+reel render-accepted [--execute] [--fixture path] [--mode MODE] # render accepted marketing posts
 reel post [--execute] [--posting-provider auto|manual]  # post ready marketing videos
 reel plan <brief.json> [--variant-count N]                # preview templates + hooks
 reel validate-brief <brief.json>                          # VideoBrief lint
@@ -147,6 +153,10 @@ reel config <project-urls|social-accounts>                # inspect resolved con
 
 `render`/`watch`/`autopilot`/`post` print intended actions unless `--execute` is passed.
 Use `--posting-provider manual` for dry-run-style “prepared” outcomes without API calls.
+Use `npm run check:generation-readiness -- --refresh --strict` to refresh the
+required local/live proof set. Use `--fail-unresolved` for final target-host
+acceptance; the generated report's `targetHostReady` field is the all-case
+target-host signal.
 
 ## Safety properties preserved
 

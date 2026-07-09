@@ -34,6 +34,18 @@ tutorial, trend-copy, and before/after formats.
 Signal draft bundles now include per-variant growth format metadata and the
 35-post decision rule; rendering and autopost still stay behind review gates.
 
+## Content Studio + Faceless Workflow
+
+For creator tooling (video ideas, titles, tags, scripts, keyword research,
+thumbnails) see [`docs/content-studio.md`](docs/content-studio.md); for the
+one-command topic→script→render faceless pipeline with batch mode see
+[`docs/faceless-workflow.md`](docs/faceless-workflow.md). Fast paths:
+
+```bash
+npm run studio -- ideas --niche "home espresso"
+npm run faceless -- --topic "latte art basics" --engine mock
+```
+
 ## Tutoring Lesson Pipeline
 
 If you want animated tutoring shorts (DeepSeek script → ElevenLabs voice →
@@ -221,7 +233,9 @@ VideoBrief contract
         +--> MockRenderer for tests/local smoke
         +--> MoneyPrinterTurbo adapter for real stock-footage MP4s
         +--> GrokVideo adapter for curated local Grok/Imagine MP4s
+        +--> AsciiAnimation adapter for stylized generated interlude MP4s
         +--> HtmlComposition adapter for preview HTML + timeline/captions JSON
+        +--> ReelMaker adapter for Remotion/product-proof MP4s
         |
         v
 Artifact publisher
@@ -243,7 +257,9 @@ Core files:
 - `src/pipeline.js` — creates render jobs and syncs completed artifacts back.
 - `src/adapters/moneyprinterturbo.js` — MoneyPrinterTurbo API adapter.
 - `src/adapters/grok-video.js` — local Grok/Imagine MP4 asset adapter.
+- `src/adapters/ascii-animation.js` — generated ASCII/pixel animation adapter.
 - `src/adapters/html-composition.js` — HTML/CSS composition preview exporter.
+- `src/adapters/reel-maker.js` — Remotion/product-proof adapter.
 - `src/artifact-publisher.js` — local and R2 artifact publishing.
 - `src/posting.js` — gated posting handoff / provider abstraction.
 - `src/worker/index.js` — Cloudflare Worker for serving R2 MP4 artifacts.
@@ -315,12 +331,52 @@ Recent additions (product-proof reel generator, see `docs/archive/2026-06-20-prd
 ```bash
 npm test
 npm run smoke:mock
+npm run smoke:generation-cases
+npm run smoke:render-modes
+npm run check:generation-readiness
+npm run ready:local
+npm run ready:proofs
+npm run ready:target
 npm run smoke:full
 npm run smoke:reel-maker
+npm run moneyprinter:api
 npm run worker:dry-run
 npm run check:cloudflare
 npm run bootstrap:cloudflare -- --confirm-deploy
 ```
+
+Check local generation-mode readiness:
+
+```bash
+npm run ready:local
+```
+
+The generation-cases smoke covers marketing render modes, the Worker
+`render-pro` entrypoint, lesson-video CLI readiness, and manual creator packet
+presence. The render-modes smoke reads
+[`config/render-modes.json`](config/render-modes.json) and verifies the unified
+`render:accepted` path for `mock`, `html-composition`, `ascii`, `grok-video`,
+and `reel-maker` without external credentials. It reports MoneyPrinterTurbo and
+`render-pro` separately because those require live services and production
+render environment; the true `render-pro` live proof is a manual target-host
+check because it mutates a real Worker reel record and R2 object. The readiness checker reads
+[`config/live-generation-readiness.json`](config/live-generation-readiness.json)
+and writes `tmp/generation-readiness/report.json`; use
+`npm run ready:proofs` after starting `npm run moneyprinter:api` in another
+terminal to refresh required local/live proofs. Use `npm run ready:target` for
+final target-host acceptance; it refreshes refreshable proof reports and fails
+unless `targetHostReady` is true. Pass `--acceptance
+<acceptance.json>` to `check:generation-readiness` only for documented
+target-host exceptions.
+The report prints both `strictReady` and `targetHostReady`; only
+`targetHostReady: true` means the selected host is fully accepted. When it is
+false, use the report's `targetHostNextActions` array, or the CLI `next ...`
+lines, for the exact remaining commands and target-host docs.
+
+For the full local/live readiness checklist, use
+[`docs/generation-readiness.md`](docs/generation-readiness.md).
+For unresolved target-host checks, use
+[`docs/target-host-readiness.md`](docs/target-host-readiness.md).
 
 Render accepted SaaS Maker queue items with the mock renderer:
 
@@ -331,6 +387,8 @@ npm run render:accepted -- --mode mock --limit 5
 Render with MoneyPrinterTurbo and upload to R2:
 
 ```bash
+npm run moneyprinter:api
+MONEYPRINTER_API_URL=http://127.0.0.1:18080 npm run canary:moneyprinter
 npm run render:accepted -- --mode moneyprinterturbo --limit 1 \
   --artifact-r2-bucket reel-artifacts \
   --artifact-base-url https://reel-pipeline-artifacts.sarthakagrawal927.workers.dev/reels
@@ -349,6 +407,12 @@ Use Grok/Imagine clips as inserted motion inside normal `render-pro` reels:
 
 ```bash
 GROK_VIDEO_ASSET_DIR=/path/to/grok-mp4s npm run render:pro -- demo-linkchat-1
+```
+
+Render accepted queue items with the reel-maker/Remotion adapter:
+
+```bash
+npm run render:accepted -- --mode reel-maker --limit 1
 ```
 
 Render an ASCII-fable-style subsection clip locally:
@@ -371,6 +435,7 @@ Prepare posting handoff for ready accepted posts:
 ```bash
 npm run post:ready -- \
   --fixture test/fixtures/post-ready-marketing-posts.json \
+  --posting-provider manual \
   --confirm-post \
   --limit 1
 ```
@@ -546,7 +611,7 @@ git checkout -b upgrade/video-engines-YYYY-MM-DD
 git submodule update --remote engines/MoneyPrinterTurbo
 npm test
 npm run smoke:mock
-npm run canary:moneyprinter
+MONEYPRINTER_API_URL=http://127.0.0.1:18080 npm run canary:moneyprinter
 ```
 
 Accept an engine update only after at least one real render canary passes and the

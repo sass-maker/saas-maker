@@ -24,7 +24,7 @@ SaaS Maker draft (status=pending)
         ▼
 auto-accept (status=accepted)
         │
-        │  renderAcceptedMarketingPosts → MockRenderer / Remotion / MPT
+│  renderAcceptedMarketingPosts → mock / HTML / ASCII / Grok MP4 / reel-maker / MoneyPrinterTurbo
         ▼
 artifact in R2 + asset_url on the post
         │

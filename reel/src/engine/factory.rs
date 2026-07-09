@@ -12,6 +12,7 @@ use super::grok_video::GrokVideoEngine;
 use super::html_composition::HtmlCompositionEngine;
 use super::mock::MockEngine;
 use super::money_printer::MoneyPrinterEngine;
+use super::reel_maker::ReelMakerEngine;
 use super::render_pro::RenderProEngine;
 use super::{RenderEngine, RenderOptions, RenderResult};
 
@@ -21,6 +22,7 @@ pub enum PipelineEngine<R: CommandRunner> {
     GrokVideo(GrokVideoEngine),
     HtmlComposition(HtmlCompositionEngine<R>),
     MoneyPrinter(MoneyPrinterEngine),
+    ReelMaker(ReelMakerEngine<R>),
     RenderPro(RenderProEngine<R>),
 }
 
@@ -32,6 +34,7 @@ impl<R: CommandRunner> RenderEngine for PipelineEngine<R> {
             PipelineEngine::GrokVideo(e) => e.name(),
             PipelineEngine::HtmlComposition(e) => e.name(),
             PipelineEngine::MoneyPrinter(e) => e.name(),
+            PipelineEngine::ReelMaker(e) => e.name(),
             PipelineEngine::RenderPro(e) => e.name(),
         }
     }
@@ -43,6 +46,7 @@ impl<R: CommandRunner> RenderEngine for PipelineEngine<R> {
             PipelineEngine::GrokVideo(e) => e.create_video(brief, options),
             PipelineEngine::HtmlComposition(e) => e.create_video(brief, options),
             PipelineEngine::MoneyPrinter(e) => e.create_video(brief, options),
+            PipelineEngine::ReelMaker(e) => e.create_video(brief, options),
             PipelineEngine::RenderPro(e) => e.create_video(brief, options),
         }
     }
@@ -54,6 +58,7 @@ impl<R: CommandRunner> RenderEngine for PipelineEngine<R> {
             PipelineEngine::GrokVideo(e) => e.render_reel_by_id(reel_id, options),
             PipelineEngine::HtmlComposition(e) => e.render_reel_by_id(reel_id, options),
             PipelineEngine::MoneyPrinter(e) => e.render_reel_by_id(reel_id, options),
+            PipelineEngine::ReelMaker(e) => e.render_reel_by_id(reel_id, options),
             PipelineEngine::RenderPro(e) => e.render_reel_by_id(reel_id, options),
         }
     }
@@ -65,6 +70,7 @@ impl<R: CommandRunner> RenderEngine for PipelineEngine<R> {
             PipelineEngine::GrokVideo(e) => e.get_status(external_task_id),
             PipelineEngine::HtmlComposition(e) => e.get_status(external_task_id),
             PipelineEngine::MoneyPrinter(e) => e.get_status(external_task_id),
+            PipelineEngine::ReelMaker(e) => e.get_status(external_task_id),
             PipelineEngine::RenderPro(e) => e.get_status(external_task_id),
         }
     }
@@ -91,9 +97,95 @@ pub fn create_renderer<R: CommandRunner>(
         "html" | "html-composition" | "web-composition" => Ok(PipelineEngine::HtmlComposition(
             HtmlCompositionEngine::new(runner, repo_root),
         )),
+        "remotion" | "reel-maker" => Ok(PipelineEngine::ReelMaker(ReelMakerEngine::new(
+            runner, repo_root,
+        ))),
         "render-pro" | "renderpro" => Ok(PipelineEngine::RenderPro(RenderProEngine::new(
             runner, repo_root,
         ))),
         other => Err(anyhow!("unsupported render mode: {other}")),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::brief::RENDER_MODES;
+    use crate::runner::testing::RecordingRunner;
+    use serde_json::Value;
+
+    #[test]
+    fn factory_covers_supported_rust_render_modes() {
+        let cases = [
+            ("mock", "mock"),
+            ("stock", "moneyprinterturbo"),
+            ("moneyprinterturbo", "moneyprinterturbo"),
+            ("grok-video", "grok-video"),
+            ("ascii", "ascii-animation"),
+            ("html-composition", "html-composition"),
+            ("remotion", "reel-maker"),
+            ("reel-maker", "reel-maker"),
+            ("render-pro", "render-pro"),
+        ];
+
+        for (mode, expected_name) in cases {
+            let engine = create_renderer(mode, Path::new("/repo"), RecordingRunner::new())
+                .unwrap_or_else(|err| panic!("{mode} should create an engine: {err}"));
+            assert_eq!(engine.name(), expected_name);
+        }
+    }
+
+    #[test]
+    fn factory_and_brief_validation_cover_render_mode_matrix() {
+        let manifest_dir = Path::new(env!("CARGO_MANIFEST_DIR"));
+        let matrix_path = manifest_dir
+            .parent()
+            .unwrap()
+            .join("config/render-modes.json");
+        let raw = std::fs::read_to_string(&matrix_path)
+            .unwrap_or_else(|err| panic!("reading {}: {err}", matrix_path.display()));
+        let matrix: Value = serde_json::from_str(&raw)
+            .unwrap_or_else(|err| panic!("parsing {}: {err}", matrix_path.display()));
+        let modes = matrix
+            .get("modes")
+            .and_then(Value::as_array)
+            .expect("render mode matrix must have a modes array");
+
+        for mode in modes {
+            let id = mode.get("id").and_then(Value::as_str).expect("mode id");
+            let provider = mode
+                .get("provider")
+                .and_then(Value::as_str)
+                .expect("mode provider");
+            let surface = mode
+                .get("surface")
+                .and_then(Value::as_str)
+                .expect("mode surface");
+            let aliases = mode
+                .get("aliases")
+                .and_then(Value::as_array)
+                .cloned()
+                .unwrap_or_default();
+            let values = std::iter::once(Value::String(id.to_string()))
+                .chain(aliases.into_iter())
+                .collect::<Vec<_>>();
+
+            for value in values {
+                let render_mode = value.as_str().expect("render mode alias is a string");
+                let engine =
+                    create_renderer(render_mode, Path::new("/repo"), RecordingRunner::new())
+                        .unwrap_or_else(|err| {
+                            panic!("matrix mode {render_mode} should create an engine: {err}")
+                        });
+                assert_eq!(engine.name(), provider, "mode {render_mode}");
+
+                if surface == "render-accepted" {
+                    assert!(
+                        RENDER_MODES.contains(&render_mode),
+                        "render-accepted mode {render_mode} must be accepted by VideoBrief"
+                    );
+                }
+            }
+        }
     }
 }

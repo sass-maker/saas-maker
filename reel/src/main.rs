@@ -17,7 +17,9 @@ use reel::engine::factory::create_renderer;
 use reel::engine::render_pro::RenderProEngine;
 use reel::engine::RenderEngine;
 use reel::engine::RenderOptions;
-use reel::marketing::{render_accepted_marketing_posts, RenderAcceptedOptions};
+use reel::marketing::{
+    render_accepted_marketing_posts, ArtifactPublisherConfig, RenderAcceptedOptions,
+};
 use reel::marketing_metrics::{
     sync_marketing_post_metrics, ChannelRoutingMetricsFetcher, MetricsSyncOptions,
 };
@@ -260,7 +262,14 @@ fn cmd_render_accepted(repo_root: &Path, args: &cli::RenderAcceptedArgs) -> Resu
     }
 
     let engine = create_renderer(&args.render_mode, repo_root, ProcessRunner)?;
-    let publisher = reel::marketing::resolve_artifact_publisher(repo_root, ProcessRunner);
+    let publisher = reel::marketing::resolve_artifact_publisher(
+        repo_root,
+        ProcessRunner,
+        ArtifactPublisherConfig {
+            r2_bucket: args.artifact_r2_bucket.clone(),
+            public_base_url: args.artifact_base_url.clone(),
+        },
+    );
 
     let report = if let Some(fixture) = &args.fixture {
         let posts = load_fixture_posts(fixture)?;

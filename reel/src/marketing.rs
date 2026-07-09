@@ -25,6 +25,12 @@ pub struct RenderAcceptedOptions {
     pub poll_interval_ms: u64,
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct ArtifactPublisherConfig {
+    pub r2_bucket: Option<String>,
+    pub public_base_url: Option<String>,
+}
+
 #[derive(Debug, Clone, Serialize)]
 pub struct RenderAcceptedResult {
     pub post_id: String,
@@ -48,10 +54,15 @@ pub struct RenderAcceptedReport {
 pub fn resolve_artifact_publisher<R: CommandRunner>(
     repo_root: &Path,
     runner: R,
+    config: ArtifactPublisherConfig,
 ) -> ResolvedPublisher<R> {
-    let bucket = std::env::var("REEL_ARTIFACT_R2_BUCKET").ok();
-    let base = std::env::var("REEL_ARTIFACT_PUBLIC_BASE_URL")
-        .or_else(|_| std::env::var("REEL_WORKER_URL"))
+    let bucket = config
+        .r2_bucket
+        .or_else(|| std::env::var("REEL_ARTIFACT_R2_BUCKET").ok());
+    let base = config
+        .public_base_url
+        .or_else(|| std::env::var("REEL_ARTIFACT_PUBLIC_BASE_URL").ok())
+        .or_else(|| std::env::var("REEL_WORKER_URL").ok())
         .unwrap_or_default();
     if let Some(bucket) = bucket.filter(|b| !b.trim().is_empty()) {
         if !base.trim().is_empty() {

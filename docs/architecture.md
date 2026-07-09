@@ -26,16 +26,17 @@ Use it first because it is MIT licensed, heavily starred, actively maintained,
 and runs with Docker or local Python. The first canary uses local generated
 video/audio material only, so the renderer can be verified without API quota.
 
+### Local review modes
+
+`grok-video`, `ascii`, and `html-composition` are local/no-credential paths for
+approved MP4 copies, stylized MP4s, and deterministic preview artifacts. They
+use the same accepted-marketing-post contract as the real renderers.
+
 ### OpenShorts
 
-Premium UGC path and workflow reference. It is closer to ReelFarm: UGC actors,
-website/product analysis, gallery, scheduling, and Upload-Post publishing.
-
-Do not make it the first default engine because it assumes more paid services:
-Gemini, fal.ai, ElevenLabs, Upload-Post, and optional S3.
-
-The current adapter writes a guarded OpenShorts job spec only. It intentionally
-does not invoke paid UGC dependencies or autopost.
+OpenShorts is parked as a UGC workflow reference only. The active adapter was
+removed from the renderer factory; the submodule remains until it is removed in
+a dedicated cleanup change.
 
 ### reel-maker
 
@@ -74,3 +75,12 @@ The canary writes generated local fixtures under the MoneyPrinterTurbo storage
 folder, submits `POST /api/v1/videos`, polls `GET /api/v1/tasks/:id`, verifies
 the output MP4 exists, and saves a machine-readable result in
 `tmp/moneyprinter-canary-result.json`.
+
+For the full generation matrix, run:
+
+```bash
+npm run check:generation-readiness -- --refresh --strict
+```
+
+That command reruns refreshable proofs and writes the consolidated report to
+`tmp/generation-readiness/report.json`.

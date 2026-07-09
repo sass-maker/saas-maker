@@ -1,6 +1,6 @@
 # reel-pipeline — PROJECT STATUS
 
-Last updated: 2026-07-04
+Last updated: 2026-07-10
 
 ## Why / What
 
@@ -67,19 +67,69 @@ Marketing autopilot and posting run in Rust (`reel` CLI). Node remains for `rend
 | `npm run watch:render:once` / `:dry` | One-shot / dry-run watcher |
 | `npm run autopilot` / `:once` / `:dry` | Marketing autopilot intake → render → post |
 | `npm run render:pro` | Canonical production render (`node scripts/render-pro.js`) |
+| `npm run moneyprinter:api` | Start MoneyPrinterTurbo API on `127.0.0.1:18080` for canaries |
 | `npm run render:html -- --brief brief.json --artifact-dir artifacts/html` | Export Editframe-inspired HTML/CSS preview artifacts |
-| `npm run render:pro:rs` / `render:accepted` | Rust render paths; supports `--mode grok-video` with `GROK_VIDEO_ASSET_DIR` |
+| `npm run render:pro:rs` / `render:accepted` | Rust render paths; supports `--mode moneyprinterturbo`, `grok-video`, `ascii`, `html-composition`, `reel-maker`, and `mock` |
 | `npm run post:ready` | Post ready reels |
 | `npm run yt:bootstrap` / `ig:bootstrap` / `ig:refresh` | OAuth bootstrap + token refresh |
 | `npm run sync:saasmaker` / `draft:signal` | SaaS Maker sync & drafts |
-| `npm run smoke:mock` / `smoke:reel-maker` / `smoke:artifact` / `smoke:full` | Smokes |
+| `npm run smoke:generation-cases` | Top-level readiness smoke for marketing render modes, Worker render-pro, lesson CLI, and creator packets |
+| `npm run smoke:render-modes` | Fixture-backed readiness smoke for local/no-credential render modes |
+| `npm run check:generation-readiness` / `-- --refresh --strict` | Consolidated current-evidence report / refreshed required-proof gate |
+| `npm run ready:local` / `ready:proofs` / `ready:target` | One-command local smoke / refreshed proof / final target-host acceptance gates |
+| `npm run smoke:mock` / `smoke:reel-maker` / `smoke:artifact` / `smoke:full` / `smoke:studio` | Smokes |
+| `npm run studio -- <tool>` | Content studio: ideas, titles, descriptions, tags, scripts, brand voice, keywords, transcripts, thumbnails, ideas manager |
+| `npm run dev` → `/studio` | Content studio web UI (all tools + ideas manager + faceless runs in the browser) |
+| `npm run faceless -- --topic "..."` | Topic → script → brief → rendered faceless video (batch via `--topics-file`) |
 | `npm run bootstrap:cloudflare` / `check:cloudflare` / `worker:dry-run` | Cloudflare setup |
 | `npm run lesson:render -- --input test/fixtures/lessons/closures.json --auto-approve` | Tutoring lesson pipeline |
 
-**Entrypoints:** `src/worker/index.js` · `src/video-brief.js` · `src/saas-maker-client.js` · `reel/src/saas_maker.rs` · `reel/src/publishers/`.
+**Entrypoints:** `src/worker/index.js` · `src/video-brief.js` ·
+`src/saas-maker-client.js` · `reel/src/saas_maker.rs` ·
+`reel/src/publishers/`.
+
+**Render mode matrix:** `config/render-modes.json` is the operator-facing list
+of supported modes, aliases, provider names, smoke coverage, and live-service
+requirements.
+
+**Live readiness matrix:** `config/live-generation-readiness.json` maps local
+smokes, live canaries, artifact playback, lesson prerequisites, posting
+prerequisites, and manual creator review into one current-evidence report at
+`tmp/generation-readiness/report.json`.
+It also records the production `render-pro` live proof as a manual target-host
+check because that run mutates a real Worker reel record and R2 object.
+
+**Readiness checklist:** `docs/generation-readiness.md` defines the local and
+live proof commands for render modes, lesson videos, artifact hosting, and
+posting.
+Use `npm run ready:target` for final target-host acceptance when manual and
+missing checks must be closed.
+The generated report separates `strictReady` from `targetHostReady`; only
+`targetHostReady: true` means all target-host generation cases are closed or
+explicitly accepted. When target-host readiness is false, `targetHostNextActions`
+records the remaining proof commands and docs links.
+Use `docs/target-host-readiness.md` for the evidence checklist behind those
+unresolved target-host items, including the optional documented acceptance file
+for intentional target-host exclusions.
 
 ## Timeline
 
+- **2026-07-10 — Content studio + faceless workflow shipped:** TubeMagic-style
+  creator toolset (`src/studio/`, `npm run studio`) — ideas, titles,
+  descriptions, tags, scripts (30s–20min), brand voice, keyword research,
+  transcript tooling, thumbnail concepts, ideas manager — plus a Vid.ai-style
+  `npm run faceless` topic→script→brief→render workflow with batch mode and
+  posting handoff. Template-mode $0 default, DeepSeek-compatible LLM upgrade.
+  Same-day follow-up: `/studio` web UI on the local control server (all tools,
+  ideas manager, faceless runs from the browser). Specs archived as
+  `content-studio-faceless-pipeline` and `studio-web-ui`. Docs:
+  `docs/content-studio.md`, `docs/faceless-workflow.md`.
+- **2026-07-10 — Generation cases consolidated:** added
+  `config/generation-cases.json`, `config/render-modes.json`, and
+  `config/live-generation-readiness.json` as the operator-facing matrix for
+  marketing render modes, Worker `render-pro`, lesson videos, and the manual
+  creator MVP; `npm run check:generation-readiness` now separates local
+  `strictReady` from target-host `targetHostReady`.
 - **2026-07-03 — Postiz-inspired posting hardening:** reimplemented selected
   Postiz workflow patterns without copying AGPL code: provider capabilities,
   provider-specific preflight, classified posting failures, per-post failure
@@ -180,6 +230,21 @@ Marketing autopilot and posting run in Rust (`reel` CLI). Node remains for `rend
 - reel-maker composition with proof visuals; auto-wired via `resolveProductProofCapture()` in `src/pipeline.js`.
 - Review UI surfaces quality dimensions; smoke at `npm run smoke:reel-maker`.
 
+### Content studio + faceless workflow (2026-07-10)
+
+- `src/studio/` toolset: ideas/niche/channel names, titles/descriptions/tags
+  (500-char budget enforcement), scripts with duration scaling and
+  article-to-script, brand-voice profiles, keyless keyword research + YouTube
+  transcript fetch, thumbnail concepts with HTML previews, JSON ideas manager.
+- `npm run faceless`: topic → script → VideoBrief → render via existing
+  adapters (mock/MoneyPrinterTurbo), single-voice default with opt-in
+  rotation, batch mode with per-topic failure isolation, manual posting
+  handoff (never auto-posts).
+- All tools run at $0 offline via templates; LLM upgrade via provider chain
+  `free-ai` (fleet gateway) → `codex` (local CLI) → `deepseek`, order
+  overridable with `STUDIO_LLM_PROVIDERS`, graceful fall-through. Smoke:
+  `npm run smoke:studio`; tests: `test/studio-*.test.js`.
+
 ## Todo / Planned / Deferred / Blocked
 
 ### Planned
@@ -197,7 +262,8 @@ Marketing autopilot and posting run in Rust (`reel` CLI). Node remains for `rend
 
 - Remove `engines/openshorts` git submodule (explicit approval).
 - Cloudflare Worker rewrite of orchestration (stay on JS + Rust CLI).
-- reel-maker / Remotion path (`render-pro` is canonical production renderer).
+- Make reel-maker/Remotion production-quality if it becomes more than the
+  product-proof/reference path (`render-pro` stays canonical production renderer).
 - Product-proof Phases 2–3 (screen recording, multi-variant drafts).
 - Phase 2–3 product-proof PRD work not started.
 - OpenShorts submodule still present though adapter removed.
@@ -207,4 +273,10 @@ Marketing autopilot and posting run in Rust (`reel` CLI). Node remains for `rend
 
 ### Blocked
 
-- (none — `opt/rust-rewrite` PR #7 merged; Rust renderer is the production path)
+- Final target-host readiness is not complete until
+  `tmp/generation-readiness/report.json` has `targetHostReady: true`.
+  Current open case checks:
+  - `marketing-render-modes`: `social-posting-prereqs` (YouTube or Instagram OAuth env)
+  - `worker-render-pro`: `render-pro-live-proof` (real approved Worker reel id + R2 playback proof)
+  - `lesson-video`: `lesson-live-prereqs` (DeepSeek, ElevenLabs, Pexels env)
+  - `creator-mvp`: `creator-mvp-reviewed` (three manual story videos reviewed)

@@ -147,7 +147,11 @@ where
     let accepted = auto_accept_intake(client, now, config, log)?;
     log("▸ render: scanning accepted marketing posts");
     let engine = create_renderer(&config.render_mode, repo_root, ProcessRunner)?;
-    let publisher = crate::marketing::resolve_artifact_publisher(repo_root, ProcessRunner);
+    let publisher = crate::marketing::resolve_artifact_publisher(
+        repo_root,
+        ProcessRunner,
+        crate::marketing::ArtifactPublisherConfig::default(),
+    );
     let rendered = render_accepted_marketing_posts(
         client,
         &engine,

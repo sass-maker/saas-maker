@@ -28,9 +28,9 @@ Ported + unit tested:
 - [x] `render_reel_variants` orchestration loop (`orchestrator.rs`).
 - [x] CLI: `render`, `watch`, `plan`, `validate-brief`, `score`, `config`.
 
-Verification: `cargo build`, `cargo check`, `cargo test` all green
-(55 unit + 3 integration tests). CLI smoke-tested against real
-`config/project-urls.json` and a fixture brief.
+Verification: `npm test` is the current full gate: Node tests plus
+`cargo test --manifest-path reel/Cargo.toml`. The latest local run covered 202
+Node tests, 93 Rust tests, and 3 Rust integration tests.
 
 Explicitly NOT done in Phase 1 (by design): live render, live R2 upload, live
 polling loop, any social post. `render`/`watch` are dry-run by default.
@@ -51,7 +51,6 @@ Make the Rust CLI the real driver of the worker reel flow, replacing
       candidate selection against the live worker (dry-run).
 - [ ] Staging bucket diff of produced asset URLs + reel-record patches (manual sign-off).
 - [x] Cutover: `npm run watch:render` invokes the Rust CLI.
-      JS watcher kept as fallback (`watch:render:js`).
 
 ## Phase 3 — autopilot / SaaS Maker flow (DONE)
 
@@ -73,10 +72,14 @@ Port the marketing-queue flow (`autopilot.js` + `pipeline.js` + clients).
 - [x] `ChannelRoutingPoster` routes by channel + `config/social-accounts.json`.
 - [x] CLI: `reel post --execute` (`npm run post:ready`).
 
-## Phase 6 — retire JS glue (DONE for orchestration scripts)
+## Phase 6 — retire JS glue and consolidate engines (PARTIAL)
 
 - [x] Deleted superseded JS scripts (watcher, autopilot, render-accepted, post-ready).
 - [x] Removed OpenShorts adapter (`openshorts`/`ugc_actor` render modes throw).
+- [x] Consolidated supported generation modes in `config/render-modes.json`.
+- [x] Kept `render-pro.js`, OAuth bootstrap scripts, and `src/server` dev harness.
+- [x] Added the host readiness gate in `config/live-generation-readiness.json`
+      and `npm run check:generation-readiness`.
 - [ ] Drop `engines/openshorts` git submodule (submodule dir still present; delete in dedicated PR).
 - [ ] Drop `engines/reel-maker` if render-pro fully supersedes Remotion (unchanged).
 
@@ -90,14 +93,6 @@ small. Options, in order of preference:
 2. If a rewrite is wanted: `workers-rs` + the R2 binding; port the route table
    and the byte-range `serveArtifact` logic (the trickiest part — 206/416
    handling is already documented in the JS).
-
-## Phase 6 — retire JS + drop unused engines (PARTIAL)
-
-- [x] Deleted orchestration glue scripts (watcher, autopilot, render-accepted, post-ready).
-- [x] Removed OpenShorts adapter; `openshorts`/`ugc_actor` modes throw.
-- [x] Kept `render-pro.js`, OAuth bootstrap scripts, and `src/server` dev harness.
-- [ ] Drop `engines/openshorts` git submodule (directory still present).
-- [ ] Drop `engines/reel-maker` if render-pro fully supersedes Remotion.
 
 ## Risks / open questions
 

@@ -1,5 +1,9 @@
 import { renderAcceptedMarketingPosts } from '../src/pipeline.js';
 import { postReadyMarketingVideos } from '../src/posting.js';
+import { mkdir, writeFile } from 'node:fs/promises';
+import path from 'node:path';
+
+const REPORT_PATH = process.env.FULL_PIPELINE_SMOKE_REPORT ?? 'tmp/full-pipeline-smoke/report.json';
 
 const queue = [
   {
@@ -72,9 +76,16 @@ if (postPatch.patch.status !== 'accepted') {
   throw new Error(`manual handoff must keep status accepted, got ${postPatch.patch.status}`);
 }
 
-console.log(JSON.stringify({
+const report = {
+  schema: 'reel-pipeline.full-pipeline-smoke.v1',
   ok: true,
   render,
   post,
   finalPost: queue[0],
-}, null, 2));
+  reportPath: REPORT_PATH,
+  generatedAt: new Date().toISOString(),
+};
+
+await mkdir(path.dirname(REPORT_PATH), { recursive: true });
+await writeFile(REPORT_PATH, `${JSON.stringify(report, null, 2)}\n`);
+console.log(JSON.stringify(report, null, 2));

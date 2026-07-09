@@ -172,6 +172,10 @@ pub struct PostArgs {
     pub dry_run: bool,
     #[arg(long, default_value_t = false)]
     pub execute: bool,
+    /// Backward-compatible alias used by older npm examples. `npm run post:ready`
+    /// already includes `--execute`, so this flag is accepted for CLI stability.
+    #[arg(long, default_value_t = false)]
+    pub confirm_post: bool,
     #[arg(long, env = "REEL_POST_PROVIDER", default_value = "auto")]
     pub posting_provider: String,
     #[arg(long)]
@@ -198,7 +202,12 @@ pub struct MetricsArgs {
 
 #[derive(Debug, Args)]
 pub struct RenderAcceptedArgs {
-    #[arg(long, env = "REEL_RENDER_MODE", default_value = "mock")]
+    #[arg(
+        long,
+        visible_alias = "mode",
+        env = "REEL_RENDER_MODE",
+        default_value = "mock"
+    )]
     pub render_mode: String,
     #[arg(long, env = "REEL_RENDER_LIMIT", default_value_t = 5)]
     pub limit: usize,
@@ -216,4 +225,14 @@ pub struct RenderAcceptedArgs {
     pub execute: bool,
     #[arg(long)]
     pub fixture: Option<PathBuf>,
+    /// R2 bucket for publishing local render artifacts.
+    #[arg(long, env = "REEL_ARTIFACT_R2_BUCKET")]
+    pub artifact_r2_bucket: Option<String>,
+    /// Public base URL that serves artifacts from the bucket.
+    #[arg(
+        long,
+        env = "REEL_ARTIFACT_PUBLIC_BASE_URL",
+        visible_alias = "artifact_base_url"
+    )]
+    pub artifact_base_url: Option<String>,
 }
