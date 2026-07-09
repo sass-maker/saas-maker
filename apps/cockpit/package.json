@@ -7,7 +7,7 @@
     "build": "next build --webpack",
     "build:next": "next build",
     "cf:build": "opennextjs-cloudflare build && opennextjs-cloudflare populateCache local && pnpm --filter cockpit-landing-astro build && node scripts/run-overlay-astro-landing.mjs --strict",
-    "deploy": "pnpm cf:build && wrangler deploy && node ../../scripts/smoke-prod.mjs",
+    "deploy": "pnpm --filter @saas-maker/ui build && pnpm cf:build && wrangler deploy && node ../../scripts/smoke-prod.mjs",
     "preview": "wrangler pages dev",
     "start": "next start",
     "typecheck": "tsc --noEmit"
