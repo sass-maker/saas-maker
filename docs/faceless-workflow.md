@@ -15,6 +15,9 @@ live in `config/render-modes.json` and [generation-readiness.md](./generation-re
 npm run faceless -- --topic "five minute stretching routine" --duration 60 --engine mock
 ```
 
+Also available from the browser: `npm run dev`, then the "Faceless run" panel
+at `http://127.0.0.1:4317/studio`.
+
 Steps performed:
 
 1. Generate a scene-structured script sized to `--duration` (30–1200 seconds).

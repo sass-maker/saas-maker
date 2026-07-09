@@ -5,6 +5,8 @@ import { postReadyMarketingVideos } from '../posting.js';
 import { createReelDraft, decideRenderedReel, decideReelDraft, listReelDrafts } from '../reel-intake.js';
 import { reelDraftInputFromSignal } from '../signal-intake.js';
 import { reviewPageHtml } from '../review-ui.js';
+import { studioPageHtml } from '../studio/ui.js';
+import { handleStudioRequest } from '../studio/api.js';
 import {
   FileLessonStore,
   createLessonDraft,
@@ -27,6 +29,14 @@ export function createServer(options = {}) {
       }
       if (req.method === 'GET' && (req.url === '/' || req.url === '/review')) {
         return html(res, 200, reviewPageHtml());
+      }
+      if (req.method === 'GET' && req.url === '/studio') {
+        return html(res, 200, studioPageHtml());
+      }
+      if (req.url?.startsWith('/studio/')) {
+        const pathname = new URL(req.url, 'http://127.0.0.1').pathname;
+        const result = await handleStudioRequest(req.method, pathname, () => readJson(req), options.studio ?? {});
+        if (result) return json(res, result.status, result.body);
       }
       if (req.method === 'POST' && req.url === '/reels/signal') {
         const body = await readJson(req);

@@ -13,6 +13,13 @@ Provider failures fall back to templates instead of erroring.
 For the topic→video→post workflow that consumes these tools, see
 [faceless-workflow.md](./faceless-workflow.md).
 
+## Web UI
+
+Every tool below is also usable from the browser: run `npm run dev` and open
+`http://127.0.0.1:4317/studio`. The page has one panel per tool, an ideas
+manager with status dropdowns, and a faceless-run panel (mock engine by
+default; select `moneyprinterturbo` when `npm run moneyprinter:api` is up).
+
 ## Commands
 
 All tools run through one CLI and print JSON:
