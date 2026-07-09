@@ -1,7 +1,8 @@
 import path from 'node:path';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { generateLessonScripts } from './adapters/deepseek.js';
-import { synthesizeSceneAudio } from './adapters/elevenlabs.js';
+import { synthesizeSceneAudio as synthesizeWithElevenLabs } from './adapters/elevenlabs.js';
+import { synthesizeSceneAudio as synthesizeWithKokoro, isKokoroReady } from './adapters/kokoro.js';
 import { fetchScenebRoll } from './adapters/pexels.js';
 import { composeLesson } from './composer/lesson-composer.js';
 import { attachLessonRender, attachLessonScripts, createLessonDraft, FileLessonStore } from './lesson-intake.js';
@@ -15,6 +16,14 @@ export async function generateScripts(lessonInput, options = {}) {
   const scripts = await scriptGenerator(lesson, options.deepseek ?? {});
   const updated = await attachLessonScripts(lesson.id, scripts, { lessonStore });
   return updated;
+}
+
+export function resolveTtsSynthesizer(options = {}) {
+  const provider = options.ttsProvider ?? process.env.LESSON_TTS_PROVIDER
+    ?? (isKokoroReady() ? 'kokoro' : 'elevenlabs');
+  if (provider === 'kokoro') return synthesizeWithKokoro;
+  if (provider === 'elevenlabs') return synthesizeWithElevenLabs;
+  throw new Error(`unsupported LESSON_TTS_PROVIDER: ${provider} (expected kokoro or elevenlabs)`);
 }
 
 export async function renderLesson(lessonId, options = {}) {
@@ -33,7 +42,7 @@ export async function renderLesson(lessonId, options = {}) {
 
   const variants = [];
   const renderLog = [];
-  const audioSynthesizer = options.synthesizeSceneAudio ?? synthesizeSceneAudio;
+  const audioSynthesizer = options.synthesizeSceneAudio ?? resolveTtsSynthesizer(options);
   const brollFetcher = options.fetchScenebRoll ?? fetchScenebRoll;
   const lessonComposer = options.composeLesson ?? composeLesson;
 

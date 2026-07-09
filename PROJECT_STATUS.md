@@ -80,7 +80,8 @@ Marketing autopilot and posting run in Rust (`reel` CLI). Node remains for `rend
 | `npm run smoke:mock` / `smoke:reel-maker` / `smoke:artifact` / `smoke:full` / `smoke:studio` | Smokes |
 | `npm run studio -- <tool>` | Content studio: ideas, titles, descriptions, tags, scripts, brand voice, keywords, transcripts, thumbnails, ideas manager |
 | `npm run dev` → `/studio` | Content studio web UI (all tools + ideas manager + faceless runs in the browser) |
-| `npm run faceless -- --topic "..."` | Topic → script → brief → rendered faceless video (batch via `--topics-file`) |
+| `npm run faceless -- --topic "..."` | Topic → script → brief → rendered faceless video (batch via `--topics-file`; engines mock/kokoro/moneyprinterturbo) |
+| `npm run setup:kokoro` | One-time local Kokoro-82M TTS install (venv + ~340MB model) |
 | `npm run bootstrap:cloudflare` / `check:cloudflare` / `worker:dry-run` | Cloudflare setup |
 | `npm run lesson:render -- --input test/fixtures/lessons/closures.json --auto-approve` | Tutoring lesson pipeline |
 
@@ -114,6 +115,15 @@ for intentional target-host exclusions.
 
 ## Timeline
 
+- **2026-07-10 — Kokoro local voice shipped:** Kokoro-82M runs locally via
+  `kokoro-onnx` (`npm run setup:kokoro`, `tools/kokoro/`, gitignored).
+  Lesson videos default to Kokoro TTS when installed
+  (`LESSON_TTS_PROVIDER` overrides; removes the ElevenLabs live-prereq),
+  and the faceless workflow gains a fully local `kokoro` engine — Kokoro
+  narration + Pexels b-roll + FFmpeg captions (drawtext-capable binary
+  auto-resolved; Pexels key falls back to the MoneyPrinterTurbo config).
+  Live proof: 40.6s 1080×1920 h264 render end-to-end. Spec archived as
+  `kokoro-local-voice`.
 - **2026-07-10 — Content studio + faceless workflow shipped:** TubeMagic-style
   creator toolset (`src/studio/`, `npm run studio`) — ideas, titles,
   descriptions, tags, scripts (30s–20min), brand voice, keyword research,

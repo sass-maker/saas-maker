@@ -107,7 +107,7 @@ const TOOLS = [
         name: 'engine',
         label: 'Engine',
         type: 'select',
-        options: ['mock', 'moneyprinterturbo'],
+        options: ['mock', 'kokoro', 'moneyprinterturbo'],
       },
     ],
   },

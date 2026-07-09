@@ -36,18 +36,29 @@ plan), `render.json`.
 
 - `--engine mock` (default) — placeholder render, works anywhere, used by
   smokes.
-- `--engine moneyprinterturbo` — real faceless render (stock footage + TTS +
-  subtitles) at $0/render. Start the API first: `npm run moneyprinter:api`.
+- `--engine kokoro` — fully local render: Kokoro-82M narration (local ONNX,
+  no network at synth time) + Pexels b-roll + FFmpeg compose with burned
+  captions. One-time setup: `npm run setup:kokoro` (~340MB model download).
+  The Pexels key resolves from `PEXELS_API_KEY` or the local
+  MoneyPrinterTurbo config; captions auto-select a drawtext-capable ffmpeg.
+  Voice: `af_heart` default, override with `KOKORO_VOICE` (Kokoro-style
+  names like `am_adam`).
+- `--engine moneyprinterturbo` — stock footage + Edge-TTS + subtitles through
+  the local MoneyPrinterTurbo API. Start it first: `npm run moneyprinter:api`.
 
 `render-pro.js` remains the canonical production renderer; this workflow is a
 draft-production path that feeds the same review/post queue.
 
 ## Voice
 
-Single narration voice by default (`en-US-AriaNeural-Female`, override with
-`--voice`). Per-scene rotation reads as disjointed for non-dialog scripts, so
-it requires an explicit `--voice-rotation` opt-in. Pass a brand-voice profile
-from `npm run studio -- voice` with `--voice-profile profile.json`.
+Single narration voice by default — `af_heart` (Kokoro engine) or
+`en-US-AriaNeural-Female` (MoneyPrinterTurbo), override with `--voice`.
+Per-scene rotation reads as disjointed for non-dialog scripts, so it requires
+an explicit `--voice-rotation` opt-in. Pass a brand-voice profile from
+`npm run studio -- voice` with `--voice-profile profile.json`.
+
+Lesson videos share the same voice stack: `LESSON_TTS_PROVIDER` selects
+`kokoro` (default when installed) or `elevenlabs`.
 
 ## Batch production
 

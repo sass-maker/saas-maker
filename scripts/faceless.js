@@ -10,7 +10,9 @@ Flags:
   --topics-file <file>     Batch: one topic per line, or a JSON array
   --niche <niche>          Channel niche for metadata generation
   --duration <seconds>     Target duration, 30-1200 (default 60)
-  --engine <mode>          mock | moneyprinterturbo (default mock)
+  --engine <mode>          mock | moneyprinterturbo | kokoro (default mock)
+                           kokoro = fully local: Kokoro voice + Pexels b-roll
+                           + FFmpeg (run npm run setup:kokoro once first)
   --voice <voice>          TTS voice id (default en-US-AriaNeural-Female)
   --voice-rotation         Opt in to per-scene voice rotation (off by default)
   --voice-profile <file>   JSON brand-voice profile from "npm run studio -- voice"

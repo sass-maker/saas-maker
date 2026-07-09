@@ -3,6 +3,7 @@ import path from 'node:path';
 import { normalizeVideoBrief } from '../video-brief.js';
 import { createRenderer } from '../pipeline.js';
 import { generateScript, DEFAULT_VOICE } from './script.js';
+import { normalizeKokoroVoice } from '../adapters/kokoro.js';
 import { generateTitles, generateTags, buildHashtags } from './metadata.js';
 import { IdeaStore } from './idea-store.js';
 
@@ -77,7 +78,9 @@ export async function runFacelessWorkflow({
 } = {}) {
   if (!topic || !topic.trim()) throw new Error('topic is required');
 
-  const script = await generateScript({ topic, niche, durationSeconds, voice, voiceProfile, llm });
+  const isKokoroEngine = engine === 'kokoro' || engine === 'kokoro-compose';
+  const effectiveVoice = isKokoroEngine ? normalizeKokoroVoice(voice) : voice;
+  const script = await generateScript({ topic, niche, durationSeconds, voice: effectiveVoice, voiceProfile, llm });
   const { brief, voicePlan } = scriptToBrief(script, { engine, voiceRotation });
   const [titles, tags] = await Promise.all([
     generateTitles({ topic, llm }),
@@ -95,7 +98,10 @@ export async function runFacelessWorkflow({
     voicePlan,
   }, null, 2));
 
-  const renderer = rendererOptions.renderer ?? createRenderer(engine, rendererOptions);
+  const engineOptions = isKokoroEngine
+    ? { ...rendererOptions, kokoroCompose: { script, voice: effectiveVoice, ...(rendererOptions.kokoroCompose ?? {}) } }
+    : rendererOptions;
+  const renderer = rendererOptions.renderer ?? createRenderer(engine, engineOptions);
   const render = await renderer.createVideo(brief);
   await writeFile(path.join(dir, 'render.json'), JSON.stringify(render, null, 2));
 

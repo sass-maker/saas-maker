@@ -10,3 +10,4 @@ tmp/
 config/social-accounts.json
 test/fixtures/test-clip.mp4
 reel/target/
+tools/kokoro/

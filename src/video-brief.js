@@ -202,6 +202,8 @@ function normalizeRenderMode(mode) {
     'html',
     'html-composition',
     'web-composition',
+    'kokoro',
+    'kokoro-compose',
   ].includes(value)) {
     throw new Error(`unsupported renderMode: ${value}`);
   }

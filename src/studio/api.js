@@ -8,7 +8,7 @@ import { generateThumbnailConcepts } from './thumbnails.js';
 import { IdeaStore } from './idea-store.js';
 import { runFacelessWorkflow } from './workflow.js';
 
-const FACELESS_ENGINES = new Set(['mock', 'moneyprinterturbo']);
+const FACELESS_ENGINES = new Set(['mock', 'moneyprinterturbo', 'kokoro']);
 
 function toolHandlers(options) {
   const llm = options.llm;

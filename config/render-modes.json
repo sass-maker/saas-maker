@@ -7,51 +7,75 @@
       "surface": "render-accepted",
       "category": "local",
       "description": "No-dependency placeholder renderer for tests and dry runs.",
-      "smoke": { "type": "renderAccepted" }
+      "smoke": {
+        "type": "renderAccepted"
+      }
     },
     {
       "id": "html-composition",
-      "aliases": ["html", "web-composition"],
+      "aliases": [
+        "html",
+        "web-composition"
+      ],
       "provider": "html-composition",
       "surface": "render-accepted",
       "category": "local",
       "description": "Exports HTML/CSS preview artifacts, timeline JSON, and word-level captions.",
-      "smoke": { "type": "renderAccepted" }
+      "smoke": {
+        "type": "renderAccepted"
+      }
     },
     {
       "id": "ascii",
-      "aliases": ["ascii-animation", "ascii-fable", "askai"],
+      "aliases": [
+        "ascii-animation",
+        "ascii-fable",
+        "askai"
+      ],
       "provider": "ascii-animation",
       "surface": "render-accepted",
       "category": "local",
       "description": "Generates stylized ASCII/pixel interlude MP4s with local tools.",
-      "smoke": { "type": "renderAccepted" }
+      "smoke": {
+        "type": "renderAccepted"
+      }
     },
     {
       "id": "grok-video",
-      "aliases": ["grok", "grok-videos"],
+      "aliases": [
+        "grok",
+        "grok-videos"
+      ],
       "provider": "grok-video",
       "surface": "render-accepted",
       "category": "local-asset",
       "description": "Copies approved local Grok/Imagine MP4 exports into the standard artifact flow.",
-      "smoke": { "type": "grokFixture" }
+      "smoke": {
+        "type": "grokFixture"
+      }
     },
     {
       "id": "reel-maker",
-      "aliases": ["remotion"],
+      "aliases": [
+        "remotion"
+      ],
       "provider": "reel-maker",
       "surface": "render-accepted",
       "category": "local-remotion",
       "description": "Remotion/product-proof adapter behind the VideoBrief contract.",
       "smoke": {
         "type": "renderAccepted",
-        "env": { "REEL_MAKER_SKIP_REMOTION": "1" },
+        "env": {
+          "REEL_MAKER_SKIP_REMOTION": "1"
+        },
         "note": "Remotion skipped; adapter/orchestrator path verified."
       }
     },
     {
       "id": "moneyprinterturbo",
-      "aliases": ["stock"],
+      "aliases": [
+        "stock"
+      ],
       "provider": "moneyprinterturbo",
       "surface": "render-accepted",
       "category": "service",
@@ -66,7 +90,9 @@
     },
     {
       "id": "render-pro",
-      "aliases": ["renderpro"],
+      "aliases": [
+        "renderpro"
+      ],
       "provider": "render-pro",
       "surface": "worker-reel-id",
       "category": "production",
@@ -74,8 +100,34 @@
       "smoke": {
         "type": "command",
         "command": "node",
-        "args": ["--check", "scripts/render-pro.js"],
+        "args": [
+          "--check",
+          "scripts/render-pro.js"
+        ],
         "hint": "Live render-pro needs Worker/R2/Chrome/ffmpeg/voice environment and real reel ids."
+      }
+    },
+    {
+      "id": "kokoro",
+      "provider": "kokoro",
+      "surface": "faceless-workflow",
+      "category": "local",
+      "aliases": [
+        "kokoro-compose"
+      ],
+      "description": "Fully local faceless renderer: Kokoro-82M narration + Pexels b-roll + FFmpeg compose.",
+      "requires": [
+        "npm run setup:kokoro (one-time ~340MB model download)",
+        "Pexels key (env or MoneyPrinterTurbo config)"
+      ],
+      "smoke": {
+        "type": "command",
+        "command": "node",
+        "args": [
+          "-e",
+          "import('./src/adapters/kokoro.js').then(m => process.exit(m.isKokoroReady() ? 0 : 1))"
+        ],
+        "hint": "run `npm run setup:kokoro` to install the local Kokoro model"
       }
     }
   ]
