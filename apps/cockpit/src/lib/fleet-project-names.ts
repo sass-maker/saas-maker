@@ -241,13 +241,6 @@ export const ACTIVE_FLEET_PROJECTS = {
       'DeepSeek',
     ],
   },
-  taste: {
-    name: 'ShipRank',
-    desc: 'Pre-A/B testing and AI-assisted product variant ranking for software teams.',
-    tier: 'active-ai',
-    url: 'https://github.com/sarthak-fleet/taste.git',
-    externalDeps: ['Cloudflare D1', 'Drizzle', 'AI API'],
-  },
   tinygpt: {
     name: 'TinyGPT',
     desc: 'TinyGPT.',

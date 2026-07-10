@@ -192,14 +192,6 @@
     "priority": "P2",
     "maturity": "public-ready"
   },
-  "taste": {
-    "desc": "ShipRank — pre-A/B testing and AI-assisted product variant ranking for software teams.",
-    "url": "https://github.com/sarthak-fleet/taste.git",
-    "tier": "active-ai",
-    "category": "product",
-    "priority": "P2",
-    "maturity": "internal-first"
-  },
   "tinygpt": {
     "desc": "TinyGPT.",
     "url": "https://github.com/sarthak-fleet/tinygpt.git",

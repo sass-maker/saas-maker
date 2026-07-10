@@ -33,13 +33,12 @@ Registry classification uses two separate fields:
 | `significanthobbies` | Significant Hobbies    | Domain omits the hyphen.                                                 |
 | `starboard`          | Starboard              | Worker frontend.                                                         |
 | `swe-interview-prep` | Interview Coder        | Product name is Interview Coder; repo slug remains `swe-interview-prep`. |
-| `taste`              | ShipRank               | Package/product name is ShipRank; repo slug remains `taste`.             |
 | `tinygpt`            | TinyGPT                | Research/browser model project.                                          |
 | `today-little-log`   | Today Little Log       | Pages frontend.                                                          |
 | `truehire`           | TrueHire               | Worker frontend with GitHub login.                                       |
 | `verified-bases`     | Verified Bases         | Personal verified-software storefront; deploy targets are split web/api. |
 
-Hidden/removed projects should not appear in fleet dashboards or task project pickers: `ludo`, `chess`, `back-propogate`, `reel-maker`, `dev-learning`, `sarthak-blog`, `clash-royale-meta`, `personalsite`, `port-whisperer`, `local-ai`, and `vaulthealth`.
+Hidden/removed projects should not appear in fleet dashboards or task project pickers: `ludo`, `chess`, `back-propogate`, `reel-maker`, `dev-learning`, `sarthak-blog`, `clash-royale-meta`, `personalsite`, `port-whisperer`, `local-ai`, `taste` (ShipRank retired into CodeVetter), and `vaulthealth`.
 
 ## Adding a Project
 
@@ -57,7 +56,7 @@ Fleet membership and product surface are **not** the same as a curl-able product
 
 | Layer | Question | Examples |
 | ----- | -------- | -------- |
-| **Web surface in repo** | Is there a user-facing web app or marketing site in-tree? | `pace/website/`, `psi-swarm/web/`, `researchPapers/web/`, `taste/` Pages app |
+| **Web surface in repo** | Is there a user-facing web app or marketing site in-tree? | `pace/website/`, `psi-swarm/web/`, `researchPapers/web/` |
 | **Deployed** | Is that surface (or an API Worker) deployed somewhere, even if DNS/custom domain is missing? | Pages project exists but `*.pages.dev` not in contracts yet |
 | **Live `prodUrl`** | Can fleet smoke/perf hit a stable public URL today? | Entry in `FLEET_HEALTH_CONTRACTS`; drives `fleet:prod-smoke` and perf sweeps only |
 

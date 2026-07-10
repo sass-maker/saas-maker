@@ -8,7 +8,7 @@ const registryPath = path.join(repoRoot, 'foundry.projects.json');
 const canonicalDocsPath = path.join(repoRoot, 'docs/fleet-canonical-projects.md');
 const healthContractsPath = path.join(repoRoot, 'scripts/lib/fleet-health-contracts.mjs');
 
-const outOfFleetDirs = new Set(['local-ai', 'personal-memory', 'port-whisperer']);
+const outOfFleetDirs = new Set(['local-ai', 'personal-memory', 'port-whisperer', 'taste']);
 
 const registry = JSON.parse(await readFile(registryPath, 'utf8'));
 const registryProjects = Object.keys(registry).sort(compareProjectSlug);

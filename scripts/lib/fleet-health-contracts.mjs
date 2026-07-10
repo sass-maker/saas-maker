@@ -313,17 +313,6 @@ export const FLEET_HEALTH_CONTRACTS = {
     githubWorkflow: 'deploy.yml',
     smokeCommand: 'pnpm run fleet:prod-smoke --project swe-interview-prep',
   },
-  taste: {
-    displayName: 'ShipRank',
-    prodUrl: 'https://shiprank.dev',
-    expectedStatus: 200,
-    criticalRoutes: ['/'],
-    auth: { required: false },
-    requiredEnv: { build: [], runtime: [] },
-    deployTarget: 'Cloudflare Pages + Functions',
-    githubWorkflow: null,
-    smokeCommand: 'pnpm run fleet:prod-smoke --project taste',
-  },
   tinygpt: {
     displayName: 'TinyGPT',
     prodUrl: 'https://tinygpt.pages.dev',

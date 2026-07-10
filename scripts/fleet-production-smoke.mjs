@@ -97,7 +97,6 @@ const TARGETS = {
     },
     { label: 'devlog', url: 'https://tinygpt.pages.dev/devlog.html', expectText: ['Devlog'] },
   ],
-  taste: [{ label: 'web', url: 'https://shiprank.dev' }],
   truehire: [{ label: 'web', url: 'https://truehire.sarthakagrawal927.workers.dev' }],
 };
 
