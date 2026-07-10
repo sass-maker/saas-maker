@@ -38,7 +38,7 @@ Registry classification uses two separate fields:
 | `truehire`           | TrueHire               | Worker frontend with GitHub login.                                       |
 | `verified-bases`     | Verified Bases         | Personal verified-software storefront; deploy targets are split web/api. |
 
-Hidden/removed projects should not appear in fleet dashboards or task project pickers: `ludo`, `chess`, `back-propogate`, `reel-maker`, `dev-learning`, `sarthak-blog`, `clash-royale-meta`, `personalsite`, `port-whisperer`, `local-ai`, `taste` (ShipRank retired into CodeVetter), and `vaulthealth`.
+Hidden/removed projects should not appear in fleet dashboards or task project pickers: `ludo`, `chess`, `back-propogate`, `reel-maker`, `dev-learning`, `sarthak-blog`, `clash-royale-meta`, `personalsite`, `port-whisperer`, `local-ai`, and `vaulthealth`.
 
 ## Adding a Project
 

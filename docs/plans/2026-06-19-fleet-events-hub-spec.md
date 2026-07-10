@@ -4,7 +4,7 @@
 **Status:** Spec / ready to build
 **Companion to:** [2026-06-19-fleet-hub-and-spoke-eval.md](./2026-06-19-fleet-hub-and-spoke-eval.md) — read that for *why*. This is the *how*.
 
-**Scope:** this spec is the **return path** — the append-only sink where results, fire-and-forget callbacks, and telemetry land, and which Cockpit reads. It is **one half** of the hub. The **outbound** half — saas-maker *calling* drank/psi-swarm/taste, *dispatching* to reel-pipeline, *pulling* high-signal — follows the typed interaction styles in the eval doc's §3 and is sketched in §8 below. The events sink is **not** how the hub invokes a capability; it's where capability *results* come to rest.
+**Scope:** this spec is the **return path** — the append-only sink where results, fire-and-forget callbacks, and telemetry land, and which Cockpit reads. It is **one half** of the hub. The **outbound** half — saas-maker *assigning tasks* to CodeVetter, *dispatching* to reel-pipeline, and *pulling* high-signal — follows the typed interaction styles in the eval doc's §3 and is sketched in §8 below. The events sink is **not** how the hub invokes a capability; it's where capability *results* come to rest.
 
 The discipline still holds: saas-maker is the append-only **system-of-record**; spokes **read down** the registry; **no spoke reads another spoke**; single-writer per store; spokes that report up do so via a local **outbox** so they never block on the hub.
 
@@ -75,7 +75,7 @@ The **buffer backing differs by host** — same SDK surface, different durabilit
 
 | Spoke | Outbox backing | Flush trigger |
 | :--- | :--- | :--- |
-| high-signal, taste, reel-pipeline (CF Workers) | row in their **own D1** `outbox` table | `ctx.waitUntil(flush())` after request; drain on next request |
+| high-signal, reel-pipeline (CF Workers) | row in their **own D1** `outbox` table | `ctx.waitUntil(flush())` after request; drain on next request |
 | drank (Vercel / browser) | **no per-user upload.** The existing GitHub Action that publishes the global DR snapshot also POSTs that snapshot | on each scheduled refresh |
 | CodeVetter (desktop, local SQLite) | local `outbox` table | flush opportunistically when online (emits review telemetry) |
 | psi-swarm (CLI, local SQLite) | local `outbox` table | POST after a run; drain stale rows on next invocation |
@@ -100,16 +100,15 @@ A "Fleet Activity" view in `apps/cockpit` reads `GET /v1/events` and renders a c
 
 1. **reel-pipeline** — on render complete, `events.emit({ type: 'reel.rendered', payload })`. Already pushes up via marketing-queue PATCH; this adds it to the system-of-record. *(Phase 1 proof.)*
 2. **high-signal** — emit `signal.published` / `brief.composed`. Already a `@saas-maker/*` consumer, so the SDK is in place. *(Phase 1 proof.)*
-3. **taste** — emit `study.completed` / `arena.vote` from Pages Functions.
-4. **psi-swarm** — emit `audit.completed` with p75/p99 after a run.
-5. **CodeVetter** — emit `review.completed` telemetry (it already has Roadmap/telemetry).
-6. **drank** — GitHub Action emits `dr.snapshot`; replaces the drank→high-signal GitHub-JSON hop later.
+3. **psi-swarm** — emit `audit.completed` with p75/p99 after a run.
+4. **CodeVetter** — emit `review.completed` and audience-validation telemetry (it already has Roadmap/telemetry).
+5. **drank** — GitHub Action emits `dr.snapshot`; replaces the drank→high-signal GitHub-JSON hop later.
 
 ## 6. Phasing
 
 - **Phase 0:** migration + `routes/events.ts` + SDK `events.emit` + Cockpit Fleet Activity skeleton.
 - **Phase 1:** wire reel-pipeline + high-signal (the two live flows) → prove end-to-end.
-- **Phase 2:** onboard taste, psi-swarm, CodeVetter.
+- **Phase 2:** onboard psi-swarm and CodeVetter.
 - **Phase 3:** drank snapshot up; collapse the GitHub-JSON hop.
 - **Later (only if needed):** add CF Queues to the API for server-side buffering of any *pull-ETL* (saas-maker calling a spoke's API on a schedule); shared SSO/billing.
 
@@ -126,7 +125,7 @@ The sink above is where results land; this is how the hub *invokes* capabilities
 
 - **Publish-up only — drank, psi-swarm (local-only tools).** These run standalone and **push their learning up**; saas-maker never reads or calls them. No outbound capability layer, no hosted endpoint, no reachability problem — they reuse the events sink in §1. psi-swarm emits `audit.completed` after each local run (Node CLI holds an `sm_` token, local SQLite outbox for retry); drank's existing GitHub Action also POSTs `dr.snapshot` (per-user browser data stays local; only the aggregate goes up).
 - **Fire-and-forget — reel-pipeline.** Already built: saas-maker enqueues in the marketing queue, reel-pipeline pulls + renders + PATCHes the result back. Fold that result into `/v1/events` so it also lands in the system-of-record.
-- **Job + result — taste, CodeVetter.** saas-maker creates a job, the spoke runs it, the result returns. taste is hub-callable (create study → poll/callback for verdict). **CodeVetter is a desktop runner that reuses the existing Symphony `tasks` API — no new jobs table.** It mirrors the *Symphony CLI* runner loop (not Droid, which is push-based):
+- **Job + result — CodeVetter.** saas-maker creates a job, the spoke runs it, and the result returns. **CodeVetter is a desktop runner that reuses the existing Symphony `tasks` API — no new jobs table.** It mirrors the *Symphony CLI* runner loop (not Droid, which is push-based):
   1. Auth once via CLI device flow (`POST /v1/cli-auth/code` → approve → poll for an `sm_*` token); use `Authorization: Bearer sm_*` thereafter.
   2. `GET /v1/tasks?status=todo` to read work.
   3. Claim, run build/review/test locally.
@@ -186,4 +185,4 @@ Limits verified 2026-06-19 for **Workers Paid ($5/mo)** — the plan in use:
 
 "Pick up tasks as soon as they start" = startup-poll: a worker calls `claim` on boot and loops until empty — no special primitive, just the API + D1.
 
-**Strategic consequence of Paid:** any spoke whose job fits ≤5min CPU with no special runtime can become an *always-on cron-polled Worker* (taste agent-eval, high-signal, orchestration, the reaper) — shrinking the intermittent set to only those needing a local/desktop runtime: psi-swarm (headless Chrome → Browser Rendering to host), CodeVetter (desktop), pinpoint (local dev). Workers still have no persistent FS + a wall-clock/subrequest ceiling, so Lighthouse/repo-builds stay local or use Containers/Browser Rendering. Still **not** Queues (consumers are push-targets; offline workers can't be pushed to). DO+Alarms (SQLite or KV-backed on Paid) only for sub-minute reactivity; Workflows for the v2 orchestration DAG.
+**Strategic consequence of Paid:** any spoke whose job fits ≤5min CPU with no special runtime can become an *always-on cron-polled Worker* (high-signal, orchestration, the reaper) — shrinking the intermittent set to only those needing a local/desktop runtime: psi-swarm (headless Chrome → Browser Rendering to host), CodeVetter (desktop), pinpoint (local dev). Workers still have no persistent FS + a wall-clock/subrequest ceiling, so Lighthouse/repo-builds stay local or use Containers/Browser Rendering. Still **not** Queues (consumers are push-targets; offline workers can't be pushed to). DO+Alarms (SQLite or KV-backed on Paid) only for sub-minute reactivity; Workflows for the v2 orchestration DAG.

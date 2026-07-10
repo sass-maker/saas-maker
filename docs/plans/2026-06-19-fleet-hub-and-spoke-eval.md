@@ -24,7 +24,7 @@ The premise slightly overstates today's coupling. Across 6 services there are **
 | high-signal → reel-pipeline (reel briefs) | `POST /reels/signal` JSON | async push |
 | drank → high-signal (DR leaderboard) | public GitHub JSON sync | async batch |
 
-Everything else (taste, psi-swarm, CodeVetter) is an **island**. The O(N²) point-to-point mess that justifies a runtime hub **does not exist yet** — so the value here is *not* "less integration upkeep." The value is the confirmed driver: **one place that knows everything** (events, results, metrics). That goal is real and worth building toward, incrementally.
+Everything else (psi-swarm and CodeVetter) is an **island**. The O(N²) point-to-point mess that justifies a runtime hub **does not exist yet** — so the value here is *not* "less integration upkeep." The value is the confirmed driver: **one place that knows everything** (events, results, metrics). That goal is real and worth building toward, incrementally.
 
 Note also: high-signal already consumes `@saas-maker/*` npm packages (ai, ops, db, analytics-sdk, feedback). That is **build-time centralization** — the *good* kind of "going through saas-maker," with zero runtime coupling. It's the model to expand, not replace.
 
@@ -50,7 +50,7 @@ The central question isn't "shared DB or API" — it's **who owns which data and
 
 - **saas-maker owns the *shared/central* data** — project registry, config/standards, and the cross-product system-of-record. Spokes **read this down** via a read-only contract (`/v1/fleet/metadata`, `/v1/standards`, `/v1/secrets` already do this). ✅ Good centralization.
 - **Each spoke owns its *operational* data.** saas-maker does **not** reach into a spoke's raw tables.
-- **Exchange via contracts, not raw tables.** When saas-maker needs a spoke's data it **pulls through that spoke's API** (e.g. taste's `/api/studies`), not its DB. When a spoke contributes data it **pushes up**. Either direction is fine; the invariant is **single-writer per store, no shared raw tables**.
+- **Exchange via contracts, not raw tables.** When saas-maker needs a spoke's data it **pulls through that spoke's API** (for example, high-signal's brief API), not its DB. When a spoke contributes data it **pushes up**. Either direction is fine; the invariant is **single-writer per store, no shared raw tables**.
 
 Why not let saas-maker pull/write every spoke's DB directly? Two reasons:
 
@@ -62,7 +62,6 @@ Why not let saas-maker pull/write every spoke's DB directly? Two reasons:
 | psi-swarm | local SQLite `~/.psi-swarm` | ❌ on user's machine |
 | CodeVetter | local SQLite (desktop Tauri) | ❌ on user's machine |
 | reel-pipeline | no DB (state in saas-maker / local JSON) | ⚠️ nothing of its own |
-| taste | CF D1 `shiprank-db` | ⚠️ only via binding/HTTP |
 | high-signal | CF D1 | ⚠️ only via binding/HTTP |
 
 For **4 of 6**, "saas-maker writes data into the service" is impossible by design — so it can't be the foundation.
@@ -90,13 +89,12 @@ These are six *different products with different purposes*, so each gets a *diff
 | **psi-swarm** | perf-audit results (p50–p99) | **publish-up only** | spoke → hub (hub never reads it) | pushes after each local run |
 | **reel-pipeline** | render + distribute reels | **fire-and-forget** | hub → spoke (result drifts back) | already wired (marketing queue) |
 | **pinpoint** | UI feedback → tasks | **task producer (push-up)** | spoke → hub (hub never reads it) | local-only; already posts `/v1/tasks` |
-| **CodeVetter** | build / review / test | **task runner (consumer)** | spoke **pulls** tasks, pushes results | desktop; pulls, so no inbound reach needed |
-| **taste** | judge end-product quality | **job + verdict** | hub → spoke, returns verdict | hosted (CF Pages + agents) |
+| **CodeVetter** | build / review / test / audience validation | **task runner (consumer)** | spoke **pulls** tasks, pushes results | desktop; pulls, so no inbound reach needed |
 | **high-signal** | ideas / mentions / does-AI-know-us | **pull / ingest** | hub ← spoke | hosted API; needs a scheduler |
 
 **Task-board pairing.** pinpoint *produces* tasks (UI feedback → `/v1/tasks`) and CodeVetter *consumes* them (build/review/test → status update). They never talk to each other — the Symphony task board is their only meeting point, which is exactly the hub-as-system-of-record pattern. This makes the **runner-routing field load-bearing**: with both producers and consumers on one board, tasks need a type/runner tag so the right consumer picks up the right work (see spec §8).
 
-**Unifying architecture: a polling task-queue where the DB is the coordinator.** The model generalizes — every spoke is a **worker** that, on wake (local run, background daemon, or schedule), claims the pending tasks it can handle, executes, and writes results back to saas-maker's DB. No spoke calls another; no hub reaches into a machine; workers *pull*. The per-style taxonomy above collapses into **two roles on one queue**: *producers* enqueue work (pinpoint, crons), *workers* drain it (CodeVetter, psi-swarm, taste, high-signal). Some are both. The one surviving distinction: **queue = assigned work pulled; events sink = unsolicited telemetry pushed** (drank's DR snapshot is nobody's task → event).
+**Unifying architecture: a polling task-queue where the DB is the coordinator.** The model generalizes — every spoke is a **worker** that, on wake (local run, background daemon, or schedule), claims the pending tasks it can handle, executes, and writes results back to saas-maker's DB. No spoke calls another; no hub reaches into a machine; workers *pull*. The per-style taxonomy above collapses into **two roles on one queue**: *producers* enqueue work (pinpoint, crons), *workers* drain it (CodeVetter, psi-swarm, high-signal). Some are both. The one surviving distinction: **queue = assigned work pulled; events sink = unsolicited telemetry pushed** (drank's DR snapshot is nobody's task → event).
 
 DB-as-queue (D1 + tasks table) is the right choice for intermittent, heterogeneous, low-volume workers — *not* Redis/SQS/CF Queues. But three things become correctness-critical: **(1) atomic claim** (conditional `UPDATE … WHERE status='pending'`, check rows-affected — concurrent wakes race), **(2) lease / visibility timeout** (a worker dies mid-task → stuck `claimed` forever unless `lease_until` makes it reclaimable — the most-overlooked part), **(3) task typing/routing** so the right worker claims the right work. Plus idempotent handlers and recurring-task generation (crons enqueue). Highest-leverage build: a shared **worker SDK** (`claimNext(capabilities) → run → report`) embedded by every service; the only bespoke part per spoke is the handler. See spec §9.
 
@@ -108,7 +106,7 @@ This does **not** reverse §2.2's SPOF warning: there the risk was a *local-firs
 
 **Design tenet: the hub is optional.** Every service must (a) work fully standalone with no saas-maker, and (b) "just work" — auto-drain its queue, publish its results — the moment it's started with a token and can reach the hub. The hub is never a hard dependency. Operationally this means: a service only engages the hub when a token is configured, and the worker loop swallows hub/network errors (the SDK's `client.worker.drain()` ends quietly with `hubUnavailable: true` rather than throwing). Open services → connect → they all just work; unplug the hub → each keeps working alone.
 
-**Reachability invariant (the simplification).** The local-only tools — **psi-swarm** (localhost CLI), **drank** (browser/Vercel), and **pinpoint** (CLI/daemon/extension) — are **push-only: they emit up (events or tasks), and saas-maker never reads or calls them.** This dissolves the old "a cloud Worker can't reach into your laptop" problem — there's nothing to reach into; work flows outward. (Explicitly rejected: having the hub pull pinpoint's local `history.jsonl` off the machine — that would violate this invariant. Instead, whoever *runs* a pinpoint-seeded task updates its status in the hub.) **CodeVetter** is also local (desktop) but *pulls* tasks, so it too needs no inbound reachability. Net: **nothing requires the hub to reach into a local machine.** The hub only ever *calls* hosted spokes (taste, reel-pipeline dispatch, high-signal pull); every local/desktop spoke either pushes up or pulls down. psi-swarm and drank reuse the Phase 0 events sink as-is; pinpoint already posts to the task board — no new infra for any of the three.
+**Reachability invariant (the simplification).** The local-only tools — **psi-swarm** (localhost CLI), **drank** (browser/Vercel), and **pinpoint** (CLI/daemon/extension) — are **push-only: they emit up (events or tasks), and saas-maker never reads or calls them.** This dissolves the old "a cloud Worker can't reach into your laptop" problem — there's nothing to reach into; work flows outward. (Explicitly rejected: having the hub pull pinpoint's local `history.jsonl` off the machine — that would violate this invariant. Instead, whoever *runs* a pinpoint-seeded task updates its status in the hub.) **CodeVetter** is also local (desktop) but *pulls* tasks, so it too needs no inbound reachability. Net: **nothing requires the hub to reach into a local machine.** The hub only ever *calls* hosted spokes (reel-pipeline dispatch and high-signal pull); every local/desktop spoke either pushes up or pulls down. psi-swarm and drank reuse the Phase 0 events sink as-is; pinpoint already posts to the task board — no new infra for any of the three.
 
 ## 4. Why this is a good idea (in this form)
 
@@ -129,7 +127,7 @@ This does **not** reverse §2.2's SPOF warning: there the risk was a *local-firs
 
 1. **Phase 0 — Schema (small):** define the fleet event contract `{ product, type, payload, ts, idempotency_key }`; add `POST /v1/events` + an `events` D1 table; confirm `analytics-sdk` can carry it.
 2. **Phase 1 — Prove with the two live flows:** route reel-pipeline render results and high-signal brief emissions into `/v1/events`. Surface them in a Cockpit "Fleet Activity" view. (Validates the system-of-record claim end-to-end.)
-3. **Phase 2 — Onboard reporters:** taste (study/arena results), psi-swarm (audit percentiles), CodeVetter (review telemetry) publish up. Each is a few lines via the SDK.
+3. **Phase 2 — Onboard reporters:** psi-swarm (audit percentiles) and CodeVetter (review and audience-validation telemetry) publish up. Each is a few lines via the SDK.
 4. **Phase 3 — Collapse the odd hop:** replace drank→high-signal GitHub-JSON sync with publish-up so drank's snapshot lives in saas-maker too. Optionally re-home the high-signal→reel-pipeline brief through a saas-maker queue.
 5. **Phase 4 (only if a real need appears):** shared identity/SSO and a unified paywall — defer until a product actually needs cross-product accounts. Not required for the data goal.
 
