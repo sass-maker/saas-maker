@@ -196,11 +196,11 @@ describe('fleet health contracts', () => {
   });
 
   it('maps smoke checks to pass/fail health state', () => {
-    expect(getHealthContractStatus('reader', [{ ...passingCheck, project: 'reader' }])).toBe(
+    expect(getHealthContractStatus('rolepatch', [{ ...passingCheck, project: 'rolepatch' }])).toBe(
       'pass'
     );
-    expect(getHealthContractStatus('reader', [{ ...failingAuthCheck, project: 'reader' }])).toBe(
-      'fail'
-    );
+    expect(
+      getHealthContractStatus('rolepatch', [{ ...failingAuthCheck, project: 'rolepatch' }])
+    ).toBe('fail');
   });
 });
