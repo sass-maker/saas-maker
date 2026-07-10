@@ -32,6 +32,12 @@ The fleet is managed in four buckets:
 - **Personal use:** `rolepatch`, `karte`, `reader`, `swe-interview-prep`, `significanthobbies`
 - **Archive / experiment:** `truehire`, `open-historia`, `games`, `email-manager`, `everythingrated`, `materia`; `alive-ville` remains an organization-owned experimental sandbox
 
+Operating rule: any product with a purchased custom domain remains in **Support**
+even when it is not a focus bet. Personal-use products receive maintenance only;
+when they also have a custom domain, that maintenance includes keeping the public
+surface minimally healthy. Known domain-backed surfaces include `alive-ville`,
+`karte`, `rolepatch`, `significanthobbies`, and `saas-maker`.
+
 Archived products were transferred from the `sarthak-fleet` GitHub organization to
 the personal account `sarthakagrawal927` where GitHub permitted the move. They
 remain locally available for reference but are excluded from new fleet work.
