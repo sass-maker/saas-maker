@@ -6,7 +6,7 @@
  * ("Website vs prodUrl") before treating null prodUrl as "no web product."
  */
 export const FLEET_HEALTH_CONTRACTS = {
-  anime_list: {
+  'anime-list': {
     displayName: 'MAL Explorer',
     prodUrl: 'https://anime-list-9lk.pages.dev',
     expectedStatus: 200,
@@ -15,7 +15,7 @@ export const FLEET_HEALTH_CONTRACTS = {
     requiredEnv: { build: [], runtime: [] },
     deployTarget: 'Cloudflare Pages',
     githubWorkflow: 'deploy.yml',
-    smokeCommand: 'pnpm run fleet:prod-smoke --project anime_list',
+    smokeCommand: 'pnpm run fleet:prod-smoke --project anime-list',
   },
   CodeVetter: {
     displayName: 'CodeVetter',
@@ -50,28 +50,6 @@ export const FLEET_HEALTH_CONTRACTS = {
     githubWorkflow: 'deploy.yml',
     smokeCommand: 'pnpm run fleet:prod-smoke --project email-manager',
   },
-  'event-forecast': {
-    displayName: 'Event Forecast',
-    prodUrl: null,
-    expectedStatus: null,
-    criticalRoutes: [],
-    auth: { required: false },
-    requiredEnv: { build: [], runtime: [] },
-    deployTarget: 'Local Rust/Rocket service',
-    githubWorkflow: null,
-    smokeCommand: null,
-  },
-  everythingrated: {
-    displayName: 'Everything Rated',
-    prodUrl: 'https://everythingrated.sarthakagrawal927.workers.dev',
-    expectedStatus: 200,
-    criticalRoutes: ['/'],
-    auth: { required: false },
-    requiredEnv: { build: [], runtime: [] },
-    deployTarget: 'Cloudflare Workers',
-    githubWorkflow: 'deploy.yml',
-    smokeCommand: 'pnpm run fleet:prod-smoke --project everythingrated',
-  },
   'free-ai': {
     displayName: 'Free AI Gateway',
     prodUrl: 'https://free-ai-gateway.sarthakagrawal927.workers.dev',
@@ -87,7 +65,7 @@ export const FLEET_HEALTH_CONTRACTS = {
     smokeCommand:
       'pnpm --dir ../free-ai test && curl --fail https://free-ai-gateway.sarthakagrawal927.workers.dev/health',
   },
-  'ai-game': {
+  'alive-ville': {
     displayName: 'AI Game',
     prodUrl: 'https://aliveville.com',
     expectedStatus: 200,
@@ -96,7 +74,7 @@ export const FLEET_HEALTH_CONTRACTS = {
     requiredEnv: { build: [], runtime: [] },
     deployTarget: 'Cloudflare Workers',
     githubWorkflow: 'deploy.yml',
-    smokeCommand: 'pnpm run fleet:prod-smoke --project ai-game',
+    smokeCommand: 'pnpm run fleet:prod-smoke --project alive-ville',
   },
   'high-signal': {
     displayName: 'High Signal',
@@ -109,7 +87,7 @@ export const FLEET_HEALTH_CONTRACTS = {
     githubWorkflow: 'deploy.yml',
     smokeCommand: 'pnpm run fleet:prod-smoke --project high-signal',
   },
-  knowledgebase: {
+  'knowledge-base': {
     displayName: 'Private Agent Search',
     prodUrl: 'https://knowledgebase.sarthakagrawal927.workers.dev',
     expectedStatus: 200,
@@ -120,7 +98,7 @@ export const FLEET_HEALTH_CONTRACTS = {
     githubWorkflow: null,
     smokeCommand: 'curl --fail https://knowledgebase.sarthakagrawal927.workers.dev/v1/healthz',
   },
-  linkchat: {
+  karte: {
     displayName: 'Karte',
     prodUrl: 'https://linkchat.sarthakagrawal927.workers.dev',
     expectedStatus: 200,
@@ -129,7 +107,7 @@ export const FLEET_HEALTH_CONTRACTS = {
     requiredEnv: { build: [], runtime: [] },
     deployTarget: 'Cloudflare Workers',
     githubWorkflow: 'deploy.yml',
-    smokeCommand: 'pnpm run fleet:prod-smoke --project linkchat',
+    smokeCommand: 'pnpm run fleet:prod-smoke --project karte',
   },
   looptv: {
     displayName: 'LoopTV',
@@ -141,17 +119,6 @@ export const FLEET_HEALTH_CONTRACTS = {
     deployTarget: 'Cloudflare Pages',
     githubWorkflow: 'deploy.yml',
     smokeCommand: 'pnpm run fleet:prod-smoke --project looptv',
-  },
-  'open-historia': {
-    displayName: 'Open Historia',
-    prodUrl: 'https://open-historia.sarthakagrawal927.workers.dev',
-    expectedStatus: 200,
-    criticalRoutes: ['/'],
-    auth: { required: false },
-    requiredEnv: { build: [], runtime: ['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET'] },
-    deployTarget: 'Cloudflare Workers',
-    githubWorkflow: 'deploy.yml',
-    smokeCommand: 'pnpm run fleet:prod-smoke --project open-historia',
   },
   pace: {
     displayName: 'Pace',
@@ -195,7 +162,7 @@ export const FLEET_HEALTH_CONTRACTS = {
     githubWorkflow: 'deploy.yml',
     smokeCommand: 'pnpm run fleet:prod-smoke --project reader',
   },
-  researchPapers: {
+  'research-papers': {
     displayName: 'Research Papers',
     prodUrl: null,
     expectedStatus: null,
@@ -219,7 +186,7 @@ export const FLEET_HEALTH_CONTRACTS = {
     smokeCommand:
       'pnpm run check:cloudflare && REEL_ARTIFACT_BASE_URL=https://reel-pipeline-artifacts.sarthakagrawal927.workers.dev REEL_ARTIFACT_SMOKE_KEY=fixture-real-render.mp4 pnpm run smoke:artifact',
   },
-  'resume-tailor': {
+  rolepatch: {
     displayName: 'RolePatch',
     prodUrl: 'https://rolepatch.com',
     expectedStatus: 200,
@@ -235,7 +202,7 @@ export const FLEET_HEALTH_CONTRACTS = {
     },
     deployTarget: 'Cloudflare Workers',
     githubWorkflow: 'deploy.yml',
-    smokeCommand: 'pnpm run fleet:prod-smoke --project resume-tailor',
+    smokeCommand: 'pnpm run fleet:prod-smoke --project rolepatch',
   },
   'saas-maker': {
     displayName: 'SaaS Maker',
@@ -313,49 +280,18 @@ export const FLEET_HEALTH_CONTRACTS = {
     githubWorkflow: 'deploy.yml',
     smokeCommand: 'pnpm run fleet:prod-smoke --project swe-interview-prep',
   },
-  tinygpt: {
-    displayName: 'TinyGPT',
-    prodUrl: 'https://tinygpt.pages.dev',
+  posttrainllm: {
+    displayName: 'posttrainllm',
+    prodUrl: 'https://posttrainllm.com',
     expectedStatus: 200,
     criticalRoutes: ['/', '/devlog.html'],
     auth: { required: false },
     requiredEnv: { build: [], runtime: [] },
     deployTarget: 'Cloudflare Pages',
     githubWorkflow: null,
-    smokeCommand: 'pnpm run fleet:prod-smoke --project tinygpt',
+    smokeCommand: 'pnpm run fleet:prod-smoke --project posttrainllm',
   },
-  truehire: {
-    displayName: 'TrueHire',
-    prodUrl: 'https://truehire.sarthakagrawal927.workers.dev',
-    expectedStatus: 200,
-    criticalRoutes: ['/'],
-    auth: { required: true, provider: 'github' },
-    requiredEnv: {
-      build: [],
-      runtime: [
-        'AUTH_SECRET',
-        ['AUTH_GITHUB_ID', 'GITHUB_ID'],
-        ['AUTH_GITHUB_SECRET', 'GITHUB_SECRET'],
-        'DATABASE_URL',
-        'DATABASE_AUTH_TOKEN',
-        'GITHUB_API_TOKEN',
-      ],
-    },
-    deployTarget: 'Cloudflare Workers',
-    githubWorkflow: 'deploy.yml',
-    smokeCommand: 'pnpm run fleet:prod-smoke --project truehire',
-  },
-  'verified-bases': {
-    displayName: 'Verified Bases',
-    prodUrl: 'https://verified-bases-web.pages.dev',
-    expectedStatus: 200,
-    criticalRoutes: ['/', '/api/health'],
-    auth: { required: false },
-    requiredEnv: { build: [], runtime: [] },
-    deployTarget: 'Cloudflare Pages + Workers',
-    githubWorkflow: 'ci.yml',
-    smokeCommand: 'pnpm run fleet:prod-smoke --project verified-bases',
-  },
+
 };
 
 export function getHealthContract(project) {
