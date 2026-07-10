@@ -87,14 +87,6 @@
     "priority": "P1",
     "maturity": "internal-first"
   },
-  "psi-swarm": {
-    "desc": "Website performance tracker that runs Lighthouse and Web Vitals checks across sites and reports performance distributions.",
-    "url": "https://github.com/sarthak-fleet/psi-swarm.git",
-    "tier": "active-ai",
-    "category": "product",
-    "priority": "P2",
-    "maturity": "public-ready"
-  },
   "reader": {
     "desc": "Web Annotator — Document reading and annotation tool.",
     "url": "https://github.com/sarthak-fleet/reader.git",

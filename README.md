@@ -68,7 +68,6 @@ Everything is hosted on Cloudflare. Each deployable ships independently via GitH
 | [`karte`](https://github.com/sarthak-fleet/karte)                           | product  | P2       | AI link-in-bio product.                                           |
 | [`looptv`](https://github.com/sarthak-fleet/looptv)                         | product  | P2       | TV-like curated channel viewing app.                              |
 | [`posttrainllm`](https://github.com/sarthak-fleet/tinygpt)                  | product  | P2       | Post-training and model learning workspace.                       |
-| [`psi-swarm`](https://github.com/sarthak-fleet/psi-swarm)                   | product  | P2       | Local Lighthouse swarm runner for Web Vitals distributions.       |
 | [`reader`](https://github.com/sarthak-fleet/reader)                         | product  | P2       | Web annotator and reading surface.                                |
 | [`sarthakagrawal`](https://github.com/sarthakagrawal927/portfolio)          | product  | P2       | Personal Astro portfolio and project archive.                     |
 | [`significanthobbies`](https://github.com/sarthak-fleet/significanthobbies) | product  | P2       | Personal hobby mapping and journey visualization tool.            |

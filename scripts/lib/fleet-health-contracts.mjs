@@ -131,17 +131,6 @@ export const FLEET_HEALTH_CONTRACTS = {
     githubWorkflow: null,
     smokeCommand: 'pnpm run fleet:prod-smoke --project pace',
   },
-  'psi-swarm': {
-    displayName: 'psi-swarm',
-    prodUrl: 'https://psi-swarm-web.pages.dev',
-    expectedStatus: 200,
-    criticalRoutes: ['/', '/gallery'],
-    auth: { required: false },
-    requiredEnv: { build: [], runtime: [] },
-    deployTarget: 'Cloudflare Pages (Astro controller) + local CLI agent',
-    githubWorkflow: null,
-    smokeCommand: 'pnpm run fleet:prod-smoke --project psi-swarm',
-  },
   reader: {
     displayName: 'Reader',
     prodUrl: 'https://reader.sarthakagrawal927.workers.dev',

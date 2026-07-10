@@ -48,10 +48,6 @@ const TARGETS = {
     },
   ],
   pace: [{ label: 'web', url: 'https://pace-6xg.pages.dev' }],
-  'psi-swarm': [
-    { label: 'web', url: 'https://psi-swarm-web.pages.dev' },
-    { label: 'gallery', url: 'https://psi-swarm-web.pages.dev/gallery/' },
-  ],
   reader: [{ label: 'web', url: 'https://reader.sarthakagrawal927.workers.dev' }],
   'reel-pipeline': [
     {

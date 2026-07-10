@@ -20,7 +20,6 @@ const LOCAL_PATH_OVERRIDES = {
   rolepatch: 'rolepatch',
   karte: 'karte',
   posttrainllm: 'posttrainllm',
-  'psi-swarm': 'fleet-ops/psi-swarm',
 };
 
 const BUSINESS_LANES = {

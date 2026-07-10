@@ -84,12 +84,6 @@ const OVERRIDES: Record<string, ShowcaseOverride> = {
     desc: 'TV-like app for curated YouTube channels.',
     color: '#a855f7',
   },
-  'psi-swarm': {
-    name: 'psi-swarm',
-    tag: 'Helper',
-    desc: 'Lighthouse swarms for p50/p75/p90/p99 Web Vitals.',
-    color: '#22d3ee',
-  },
   reader: {
     name: 'Reader',
     desc: 'Web annotator for documents and articles.',
@@ -145,7 +139,7 @@ const OVERRIDES: Record<string, ShowcaseOverride> = {
 
 const SPOTLIGHT_ORDER = ['CodeVetter', 'high-signal', 'alive-ville', 'rolepatch'];
 
-const HELPER_ORDER = ['saas-maker', 'free-ai', 'psi-swarm'];
+const HELPER_ORDER = ['saas-maker', 'free-ai'];
 
 const FALLBACK_COLORS = [
   '#e07b3a',
