@@ -172,6 +172,19 @@ mod tests {
 
             for value in values {
                 let render_mode = value.as_str().expect("render mode alias is a string");
+                if surface == "faceless-workflow" {
+                    assert!(
+                        create_renderer(render_mode, Path::new("/repo"), RecordingRunner::new())
+                            .is_err(),
+                        "faceless mode {render_mode} must stay outside the Rust renderer factory"
+                    );
+                    assert!(
+                        !RENDER_MODES.contains(&render_mode),
+                        "faceless mode {render_mode} must stay outside Rust VideoBrief validation"
+                    );
+                    continue;
+                }
+
                 let engine =
                     create_renderer(render_mode, Path::new("/repo"), RecordingRunner::new())
                         .unwrap_or_else(|err| {
