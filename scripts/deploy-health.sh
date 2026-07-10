@@ -186,9 +186,10 @@ repo_dir_for_project() {
   local project="$1"
   local normalized
 
-  # All fleet projects now use kebab-case dir names matching repo names.
-  # No legacy name mappings needed — just normalize underscores to hyphens.
-  normalized="${project//_/-}"
+  case "$project" in
+    tinygpt) normalized="posttrainllm" ;;
+    *) normalized="${project//_/-}" ;;
+  esac
 
   if [[ -d "$ROOT/$project/.git" ]]; then
     printf '%s\n' "$project"

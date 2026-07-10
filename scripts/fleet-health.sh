@@ -50,6 +50,13 @@ if [[ -z "$ONLY" ]]; then
   PROJECTS=$(printf '%s\n%s\n' "$PROJECTS" "$SUBPRODUCTS" | sort -u)
 fi
 
+repo_dir_for_project() {
+  case "$1" in
+    tinygpt) printf '%s\n' "posttrainllm" ;;
+    *) printf '%s\n' "$1" ;;
+  esac
+}
+
 printf '%-20s %-10s %-8s %-8s %s\n' "PROJECT" "BRANCH" "GIT" "CI" "NOTES"
 printf '%-20s %-10s %-8s %-8s %s\n' "-------" "------" "---" "--" "-----"
 
@@ -60,7 +67,7 @@ ci_unknown=0
 total=0
 
 for project in $PROJECTS; do
-  dir="$ROOT/$project"
+  dir="$ROOT/$(repo_dir_for_project "$project")"
   total=$((total + 1))
 
   if [[ ! -d "$dir/.git" ]]; then
