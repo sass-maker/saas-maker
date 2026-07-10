@@ -53,32 +53,27 @@ Everything is hosted on Cloudflare. Each deployable ships independently via GitH
 | Project                                                                     | Category | Priority | Role                                                              |
 | --------------------------------------------------------------------------- | -------- | -------- | ----------------------------------------------------------------- |
 | [`saas-maker`](https://github.com/sarthak-fleet/saas-maker)                 | helper   | P0       | Foundry control plane, cockpit, API, docs, widgets, and showcase. |
-| [`CodeVetter`](https://github.com/sarthak-fleet/CodeVetter)                 | product  | P1       | Desktop-first AI code review platform.                            |
-| [`ai-game`](https://github.com/sarthak-fleet/ai-game)                       | product  | P1       | Persistent AI world simulator and Aliveville game surface.        |
-| [`free-ai`](https://github.com/sarthak-fleet/free-ai)                       | helper   | P1       | OpenAI-compatible gateway for free and local LLM providers.       |
+| [`CodeVetter`](https://github.com/sarthak-fleet/codevetter)                 | product  | P1       | Desktop-first AI code review platform.                            |
+| [`alive-ville`](https://github.com/sarthak-fleet/alive-ville)               | product  | P1       | Persistent AI world simulator and AliveVille game surface.        |
+| [`free-ai`](https://github.com/sarthak-fleet/free-ai)                       | product  | P1       | OpenAI-compatible gateway for free and local LLM providers.       |
 | [`high-signal`](https://github.com/sarthak-fleet/high-signal)               | product  | P1       | Public signal log for AI infrastructure and semiconductors.       |
-| [`knowledgebase`](https://github.com/sarthakagrawal927/knowledge-base)      | product  | P1       | Private Agent Search for cited private project corpora.           |
-| [`open-historia`](https://github.com/sarthak-fleet/open-historia)           | product  | P1       | Interactive historical timeline and storytelling product.         |
-| [`pace`](https://github.com/sarthakagrawal927/clicky)                       | product  | P1       | Local macOS voice agent, formerly Clicky Local / Space candidate. |
-| [`reel-pipeline`](https://github.com/sarthak-fleet/reel-pipeline)           | helper   | P1       | Fleet marketing video artifact and autopost pipeline.             |
-| [`researchPapers`](https://github.com/sarthakagrawal927/researchPapers)     | product  | P1       | Academic-paper intelligence platform and dashboard.               |
-| [`resume-tailor`](https://github.com/sarthak-fleet/resume-tailor)           | product  | P1       | RolePatch resume tailoring product.                               |
-| [`truehire`](https://github.com/sarthak-fleet/truehire)                     | product  | P1       | Recruiting and candidate vetting product.                         |
-| [`anime_list`](https://github.com/sarthak-fleet/anime_list)                 | product  | P2       | MAL Explorer anime and manga list surface.                        |
+| [`knowledge-base`](https://github.com/sarthak-fleet/knowledge-base)         | product  | P1       | Private Agent Search for cited private project corpora.           |
+| [`pace`](https://github.com/sarthak-fleet/pace)                             | product  | P1       | Local macOS voice agent.                                          |
+| [`reel-pipeline`](https://github.com/sarthak-fleet/reel-pipeline)           | product  | P1       | Fleet marketing video artifact and autopost pipeline.             |
+| [`research-papers`](https://github.com/sarthak-fleet/research-papers)       | product  | P1       | Academic-paper intelligence platform and dashboard.               |
+| [`rolepatch`](https://github.com/sarthak-fleet/rolepatch)                   | product  | P1       | RolePatch resume tailoring product.                               |
+| [`anime-list`](https://github.com/sarthak-fleet/anime-list)                 | product  | P2       | MAL Explorer anime and manga list surface.                        |
+| [`drank`](https://github.com/sarthak-fleet/drank)                           | product  | P2       | Ahrefs Domain Rating tracker.                                     |
 | [`email-manager`](https://github.com/sarthak-fleet/email-manager)           | product  | P2       | Unified email management and automation tool.                     |
-| [`event-forecast`](https://github.com/sarthak-fleet/event-forecast)         | product  | P2       | Event-stream forecasting and action-report service.               |
-| [`everythingrated`](https://github.com/sarthak-fleet/everythingrated)       | product  | P2       | Anonymous multi-axis ratings product.                             |
-| [`linkchat`](https://github.com/sarthak-fleet/linkchat)                     | product  | P2       | Real-time chat application.                                       |
-| [`local-ai`](https://github.com/sarthak-fleet/local-ai)                     | helper   | P2       | Local bridge for authenticated AI CLIs and development agents.    |
+| [`karte`](https://github.com/sarthak-fleet/karte)                           | product  | P2       | AI link-in-bio product.                                           |
 | [`looptv`](https://github.com/sarthak-fleet/looptv)                         | product  | P2       | TV-like curated channel viewing app.                              |
-| [`psi-swarm`](https://github.com/sarthak-fleet/psi-swarm)                   | helper   | P2       | Local Lighthouse swarm runner for Web Vitals distributions.       |
+| [`posttrainllm`](https://github.com/sarthak-fleet/tinygpt)                  | product  | P2       | Post-training and model learning workspace.                       |
+| [`psi-swarm`](https://github.com/sarthak-fleet/psi-swarm)                   | product  | P2       | Local Lighthouse swarm runner for Web Vitals distributions.       |
 | [`reader`](https://github.com/sarthak-fleet/reader)                         | product  | P2       | Web annotator and reading surface.                                |
 | [`sarthakagrawal`](https://github.com/sarthakagrawal927/portfolio)          | product  | P2       | Personal Astro portfolio and project archive.                     |
 | [`significanthobbies`](https://github.com/sarthak-fleet/significanthobbies) | product  | P2       | Personal hobby mapping and journey visualization tool.            |
 | [`starboard`](https://github.com/sarthak-fleet/starboard)                   | product  | P2       | Project dashboard and management system.                          |
 | [`swe-interview-prep`](https://github.com/sarthak-fleet/swe-interview-prep) | product  | P2       | Interview Coder software engineering interview prep.              |
-| [`tinygpt`](https://github.com/sarthak-fleet/tinygpt)                       | product  | P2       | Browser/research tiny language model project.                     |
-| [`today-little-log`](https://github.com/sarthak-fleet/today-little-log)     | product  | P2       | Daily logging and micro-journaling app.                           |
 
 ## Quick Start
 

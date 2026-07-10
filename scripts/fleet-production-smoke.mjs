@@ -16,31 +16,16 @@ const DEFAULT_OUTPUT_DIR = path.join(ROOT, '.symphony', 'fleet-production-smoke'
 const DEFAULT_EXISTING_TASKS = path.join(ROOT, '.symphony', 'tasks.json');
 
 const TARGETS = {
-  anime_list: [{ label: 'web', url: 'https://anime-list-9lk.pages.dev' }],
+  'anime-list': [{ label: 'web', url: 'https://anime-list-9lk.pages.dev' }],
   CodeVetter: [{ label: 'web', url: 'https://codevetter.com' }],
   'email-manager': [{ label: 'web', url: 'https://email-manager.sarthakagrawal927.workers.dev' }],
-  everythingrated: [
-    { label: 'web', url: 'https://everythingrated.sarthakagrawal927.workers.dev' },
-    {
-      label: 'directory-ai-dev-tools',
-      url: 'https://everythingrated.sarthakagrawal927.workers.dev/d/ai-dev-tools',
-    },
-    {
-      label: 'directory-databases',
-      url: 'https://everythingrated.sarthakagrawal927.workers.dev/d/databases',
-    },
-    {
-      label: 'directory-hosting',
-      url: 'https://everythingrated.sarthakagrawal927.workers.dev/d/hosting',
-    },
-  ],
   'free-ai': [
     { label: 'health', url: 'https://free-ai-gateway.sarthakagrawal927.workers.dev/health' },
     { label: 'models', url: 'https://free-ai-gateway.sarthakagrawal927.workers.dev/v1/models' },
   ],
-  'ai-game': [{ label: 'web', url: 'https://aliveville.com' }],
+  'alive-ville': [{ label: 'web', url: 'https://aliveville.com' }],
   'high-signal': [{ label: 'web', url: 'https://highsignal.app' }],
-  linkchat: [{ label: 'web', url: 'https://linkchat.sarthakagrawal927.workers.dev' }],
+  karte: [{ label: 'web', url: 'https://linkchat.sarthakagrawal927.workers.dev' }],
   looptv: [
     {
       label: 'web',
@@ -62,7 +47,6 @@ const TARGETS = {
       ],
     },
   ],
-  'open-historia': [{ label: 'web', url: 'https://open-historia.sarthakagrawal927.workers.dev' }],
   pace: [{ label: 'web', url: 'https://pace-6xg.pages.dev' }],
   'psi-swarm': [
     { label: 'web', url: 'https://psi-swarm-web.pages.dev' },
@@ -75,7 +59,7 @@ const TARGETS = {
       url: 'https://reel-pipeline-artifacts.sarthakagrawal927.workers.dev/health',
     },
   ],
-  'resume-tailor': [{ label: 'web', url: 'https://rolepatch.com' }],
+  rolepatch: [{ label: 'web', url: 'https://rolepatch.com' }],
   'saas-maker': [
     { label: 'cockpit', url: 'https://app.sassmaker.com/login' },
     { label: 'home', url: 'https://sassmaker.com' },
@@ -89,7 +73,7 @@ const TARGETS = {
     },
   ],
   'swe-interview-prep': [{ label: 'web', url: 'https://swe-interview-prep.pages.dev' }],
-  tinygpt: [
+  posttrainllm: [
     {
       label: 'web',
       url: 'https://tinygpt.pages.dev',
@@ -97,7 +81,6 @@ const TARGETS = {
     },
     { label: 'devlog', url: 'https://tinygpt.pages.dev/devlog.html', expectText: ['Devlog'] },
   ],
-  truehire: [{ label: 'web', url: 'https://truehire.sarthakagrawal927.workers.dev' }],
 };
 
 const AUTH_PROBES = {

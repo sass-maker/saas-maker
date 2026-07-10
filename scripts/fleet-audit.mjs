@@ -80,20 +80,17 @@ const MARKETING_ASSETS = [
 // Reel Pipeline artifacts deploy through the repo bootstrap/wrangler path.
 const CLOUDFLARE_WORKER_SERVICES = {
   'email-manager': ['email-manager'],
-  everythingrated: ['everythingrated'],
   'free-ai': ['free-ai-gateway'],
   'high-signal': ['high-signal-api', 'high-signal-web'],
-  linkchat: ['linkchat'],
-  'open-historia': ['open-historia'],
-  'resume-tailor': ['resume-tailor'],
+  karte: ['linkchat'],
+  rolepatch: ['resume-tailor'],
   'saas-maker': ['saasmaker-api', 'saasmaker-dashboard'],
   significanthobbies: ['significanthobbies'],
   starboard: ['starboard'],
-  truehire: ['truehire'],
 };
 
 const PROD_TARGETS = {
-  anime_list: [
+  'anime-list': [
     { label: 'web', url: 'https://anime-list-9lk.pages.dev', ok: [200] },
     { label: 'api-root', url: 'https://mal-api.sarthakagrawal927.workers.dev', ok: [404] },
   ],
@@ -101,22 +98,16 @@ const PROD_TARGETS = {
   'email-manager': [
     { label: 'web', url: 'https://email-manager.sarthakagrawal927.workers.dev', ok: [200] },
   ],
-  everythingrated: [
-    { label: 'web', url: 'https://everythingrated.sarthakagrawal927.workers.dev', ok: [200] },
-  ],
   'free-ai': [
     { label: 'gateway', url: 'https://free-ai-gateway.sarthakagrawal927.workers.dev', ok: [200] },
   ],
-  'ai-game': [{ label: 'web', url: 'https://aliveville.com', ok: [200] }],
+  'alive-ville': [{ label: 'web', url: 'https://aliveville.com', ok: [200] }],
   'high-signal': [
     { label: 'web', url: 'https://highsignal.app', ok: [200] },
     { label: 'api', url: 'https://high-signal-api.sarthakagrawal927.workers.dev', ok: [200] },
   ],
-  linkchat: [{ label: 'web', url: 'https://linkchat.sarthakagrawal927.workers.dev', ok: [200] }],
+  karte: [{ label: 'web', url: 'https://linkchat.sarthakagrawal927.workers.dev', ok: [200] }],
   looptv: [{ label: 'web', url: 'https://looptv.pages.dev', ok: [200] }],
-  'open-historia': [
-    { label: 'web', url: 'https://open-historia.sarthakagrawal927.workers.dev', ok: [200] },
-  ],
   reader: [{ label: 'web', url: 'https://reader.sarthakagrawal927.workers.dev', ok: [200] }],
   'reel-pipeline': [
     {
@@ -125,7 +116,7 @@ const PROD_TARGETS = {
       ok: [200],
     },
   ],
-  'resume-tailor': [{ label: 'web', url: 'https://rolepatch.com', ok: [200] }],
+  rolepatch: [{ label: 'web', url: 'https://rolepatch.com', ok: [200] }],
   'saas-maker': [
     { label: 'cockpit', url: 'https://app.sassmaker.com', ok: [200] },
     { label: 'api-root', url: 'https://api.sassmaker.com', ok: [404] },
@@ -133,35 +124,29 @@ const PROD_TARGETS = {
     { label: 'docs', url: 'https://docs.sassmaker.com', ok: [200] },
   ],
   significanthobbies: [{ label: 'web', url: 'https://significanthobbies.com', ok: [200] }],
-  starboard: [{ label: 'web', url: 'https://starboard.sarthakagrawal927.workers.dev', ok: [200] }],
+  starboard: [{ label: 'web', url: 'https://starboard.codevetter.com', ok: [200] }],
   'swe-interview-prep': [{ label: 'web', url: 'https://swe-interview-prep.pages.dev', ok: [200] }],
-  'today-little-log': [{ label: 'web', url: 'https://today-little-log.pages.dev', ok: [200] }],
-  truehire: [{ label: 'worker', url: 'https://truehire.sarthakagrawal927.workers.dev', ok: [200] }],
 };
 
 const FRONTEND_TARGETS = {
-  anime_list: [{ label: 'web', url: 'https://anime-list-9lk.pages.dev' }],
+  'anime-list': [{ label: 'web', url: 'https://anime-list-9lk.pages.dev' }],
   CodeVetter: [{ label: 'web', url: 'https://codevetter.com' }],
   'email-manager': [{ label: 'web', url: 'https://email-manager.sarthakagrawal927.workers.dev' }],
-  everythingrated: [{ label: 'web', url: 'https://everythingrated.sarthakagrawal927.workers.dev' }],
   'free-ai': [],
-  'ai-game': [{ label: 'web', url: 'https://aliveville.com' }],
+  'alive-ville': [{ label: 'web', url: 'https://aliveville.com' }],
   'high-signal': [{ label: 'web', url: 'https://highsignal.app' }],
-  linkchat: [{ label: 'web', url: 'https://linkchat.sarthakagrawal927.workers.dev' }],
+  karte: [{ label: 'web', url: 'https://linkchat.sarthakagrawal927.workers.dev' }],
   looptv: [{ label: 'web', url: 'https://looptv.pages.dev' }],
-  'open-historia': [{ label: 'web', url: 'https://open-historia.sarthakagrawal927.workers.dev' }],
   reader: [{ label: 'web', url: 'https://reader.sarthakagrawal927.workers.dev' }],
-  'resume-tailor': [{ label: 'web', url: 'https://rolepatch.com' }],
+  rolepatch: [{ label: 'web', url: 'https://rolepatch.com' }],
   'saas-maker': [
     { label: 'cockpit', url: 'https://app.sassmaker.com' },
     { label: 'home', url: 'https://sassmaker.com' },
     { label: 'docs', url: 'https://docs.sassmaker.com' },
   ],
   significanthobbies: [{ label: 'web', url: 'https://significanthobbies.com' }],
-  starboard: [{ label: 'web', url: 'https://starboard.sarthakagrawal927.workers.dev' }],
+  starboard: [{ label: 'web', url: 'https://starboard.codevetter.com' }],
   'swe-interview-prep': [{ label: 'web', url: 'https://swe-interview-prep.pages.dev' }],
-  'today-little-log': [{ label: 'web', url: 'https://today-little-log.pages.dev' }],
-  truehire: [{ label: 'web', url: 'https://truehire.sarthakagrawal927.workers.dev' }],
 };
 
 const PERFORMANCE_BUDGETS = {

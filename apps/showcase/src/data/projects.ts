@@ -43,7 +43,7 @@ interface ShowcaseOverride {
 }
 
 const OVERRIDES: Record<string, ShowcaseOverride> = {
-  anime_list: {
+  'anime-list': {
     name: 'Shelf',
     desc: 'MAL explorer for anime and manga lists.',
     color: '#ec4899',
@@ -59,25 +59,15 @@ const OVERRIDES: Record<string, ShowcaseOverride> = {
     desc: 'Unified email management and automation.',
     color: '#3b82f6',
   },
-  'event-forecast': {
-    name: 'Event Forecast',
-    desc: 'Event-stream forecasting and decision reports.',
-    color: '#38bdf8',
-  },
-  everythingrated: {
-    name: 'EverythingRated',
-    desc: 'Ratings and reviews, with different axes for different categories.',
-    color: '#ef4444',
-  },
   'free-ai': {
     name: 'Free AI',
     tag: 'Helper',
     desc: 'OpenAI-compatible gateway for free LLM providers.',
     color: '#fbbf24',
   },
-  'ai-game': {
-    name: 'AI Game',
-    initials: 'Ag',
+  'alive-ville': {
+    name: 'AliveVille',
+    initials: 'Av',
     tag: 'Simulation · core',
     desc: 'A persistent AI world simulator. Multi-agent and RPG-shaped.',
     color: '#8b5cf6',
@@ -89,26 +79,10 @@ const OVERRIDES: Record<string, ShowcaseOverride> = {
     color: '#84cc16',
     size: 'wide',
   },
-  linkchat: {
-    name: 'LinkChat',
-    desc: 'Link-in-bio pages with AI profile modes.',
-    color: '#0ea5e9',
-  },
   looptv: {
     name: 'LoopTV',
     desc: 'TV-like app for curated YouTube channels.',
     color: '#a855f7',
-  },
-  'local-ai': {
-    name: 'local-ai',
-    tag: 'Helper',
-    desc: 'Local SSE bridge for Claude, Codex, and Gemini CLIs.',
-    color: '#60a5fa',
-  },
-  'open-historia': {
-    name: 'Open Historia',
-    desc: 'Interactive historical timeline platform.',
-    color: '#f97316',
   },
   'psi-swarm': {
     name: 'psi-swarm',
@@ -128,9 +102,9 @@ const OVERRIDES: Record<string, ShowcaseOverride> = {
     color: '#c026d3',
     size: 'tall',
   },
-  'resume-tailor': {
+  rolepatch: {
     name: 'RolePatch',
-    initials: 'Rt',
+    initials: 'Rp',
     tag: 'AI · core',
     desc: 'AI-powered resume tailoring for a specific role and a specific story.',
     color: '#f43f5e',
@@ -160,30 +134,18 @@ const OVERRIDES: Record<string, ShowcaseOverride> = {
     desc: 'Interview prep tooling for engineers.',
     color: '#22c55e',
   },
-  tinygpt: {
-    name: 'TinyGPT',
-    initials: 'Tg',
+  posttrainllm: {
+    name: 'PostTrainLLM',
+    initials: 'Pt',
     tag: 'Research · core',
     desc: 'A small language model, built from the ground up.',
     color: '#06b6d4',
   },
-  truehire: {
-    name: 'TrueHire',
-    desc: 'AI-powered candidate vetting platform.',
-    color: '#6366f1',
-  },
 };
 
-const SPOTLIGHT_ORDER = [
-  'CodeVetter',
-  'high-signal',
-  'ai-game',
-  'resume-tailor',
-  'truehire',
-  'open-historia',
-];
+const SPOTLIGHT_ORDER = ['CodeVetter', 'high-signal', 'alive-ville', 'rolepatch'];
 
-const HELPER_ORDER = ['saas-maker', 'free-ai', 'local-ai', 'psi-swarm'];
+const HELPER_ORDER = ['saas-maker', 'free-ai', 'psi-swarm'];
 
 const FALLBACK_COLORS = [
   '#e07b3a',

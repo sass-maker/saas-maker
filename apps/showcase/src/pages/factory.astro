@@ -18,7 +18,7 @@ const infra = [
 
 const platform = {
   id: 'saas-maker', role: 'The Foundry · platform',
-  provides: 'System-of-record for the fleet — project registry (29) · feedback / testimonials / changelog widgets · live event ledger.',
+  provides: 'System-of-record for the fleet — active project registry (22) · feedback / testimonials / changelog widgets · live event ledger.',
   rails: ['registry', 'feedback widgets', 'events ledger'],
 };
 
@@ -30,27 +30,21 @@ const bands = [
     { id: 'reader',             provides: 'Research library — capture · annotate · chat', uses: ['ai', 'feedback'] },
     { id: 'rolepatch',      provides: 'LaTeX résumé tailoring + cover letters',      uses: ['ai', 'feedback'] },
     { id: 'looptv',             provides: 'TV-style random video player (78 channels)',  uses: ['ai', 'feedback'] },
-    { id: 'ai-game',            provides: '3D AI world simulator with NPC agents',       uses: ['ai'] },
+    { id: 'alive-ville',        provides: '3D AI world simulator with NPC agents',       uses: ['ai'] },
     { id: 'codevetter',         provides: 'Desktop AI code review (local-first)',        uses: ['ai'] },
   ] },
   { key: 'platform', title: 'Platform-connected', note: 'embed saas-maker, own their AI', items: [
     { id: 'email-manager',      provides: 'Gmail workspace · local semantic search',     uses: ['feedback'] },
     { id: 'swe-interview-prep', provides: 'SWE learning OS · FSRS spaced repetition',     uses: ['feedback'] },
-    { id: 'everythingrated',    provides: 'Multi-axis ratings platform',                 uses: ['feedback'] },
     { id: 'significanthobbies', provides: 'Hobby discovery + journaling',                uses: ['feedback'] },
-    { id: 'truehire',           provides: 'Verified candidate GitHub scoring',           uses: ['feedback'] },
     { id: 'reel-pipeline',      provides: 'AI short-form video pipeline (Node + Rust)',     uses: ['sync'] },
     { id: 'drank',              provides: 'Domain Rating tracker (Ahrefs DR) · client-side', uses: ['telemetry'] },
   ] },
   { key: 'solo', title: 'Standalone products', note: 'no fleet wiring — fully self-contained', items: [
-    { id: 'open-historia',      provides: 'AI grand-strategy history game',  uses: [] },
     { id: 'anime-list',         provides: 'Anime / manga discovery + watchlists', uses: [] },
-    { id: 'verified-bases',     provides: 'Storefront for verified software starters', uses: [] },
     { id: 'pace',               provides: 'macOS voice companion (on-device)', uses: [] },
-    { id: 'tinygpt',            provides: 'Local LLM factory + runtime (Mac)', uses: [] },
-    { id: 'forecast-lab',       provides: 'Forecasting / recsys benchmark', uses: [] },
+    { id: 'posttrainllm',       provides: 'Local LLM factory + runtime (Mac)', uses: [] },
     { id: 'research-papers',     provides: 'Academic paper search platform', uses: [] },
-    { id: 'materia',            provides: 'Evidence-graded supplements explorer (whole body)', uses: [] },
   ] },
 ];
 
@@ -73,7 +67,7 @@ const productCount = bands.reduce((n, b) => n + b.items.length, 0);
         <div><b>3</b><span>shared layers</span></div>
         <div><b>{productCount}</b><span>products</span></div>
         <div><b>10</b><span>tap free-ai</span></div>
-        <div><b>28</b><span>fleet projects</span></div>
+        <div><b>22</b><span>registry entries</span></div>
       </div>
     </header>
 

@@ -9,7 +9,7 @@
   },
   "CodeVetter": {
     "desc": "AI code review platform — desktop-first, works offline.",
-    "url": "git@github.com:sarthak-fleet/CodeVetter.git",
+    "url": "https://github.com/sarthak-fleet/codevetter.git",
     "tier": "core",
     "category": "product",
     "priority": "P1",
@@ -80,8 +80,8 @@
     "maturity": "public-ready"
   },
   "pace": {
-    "desc": "Pace — local-only macOS menu-bar voice agent, formerly Clicky Local / Space candidate.",
-    "url": "https://github.com/sarthakagrawal927/clicky.git",
+    "desc": "Pace — local-only macOS menu-bar voice agent.",
+    "url": "https://github.com/sarthak-fleet/pace.git",
     "tier": "active-ai",
     "category": "product",
     "priority": "P1",
