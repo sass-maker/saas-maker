@@ -291,7 +291,6 @@ export const FLEET_HEALTH_CONTRACTS = {
     githubWorkflow: null,
     smokeCommand: 'pnpm run fleet:prod-smoke --project posttrainllm',
   },
-
 };
 
 export function getHealthContract(project) {
