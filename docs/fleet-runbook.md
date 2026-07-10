@@ -27,10 +27,10 @@ Cloudflare, Vercel, and other hosts are deployment targets, not task stores.
 
 The fleet is managed in four buckets:
 
-- **Focus:** `high-signal`, `pace`, `codevetter`, `posttrainllm`
-- **Support:** `drank`, `research-papers`, `looptv`, `anime-list`, `fleet-ops`, `saas-maker`, `free-ai`, `knowledge-base`, `reel-pipeline`
-- **Personal use:** `rolepatch`, `karte`, `reader`, `swe-interview-prep`, `significanthobbies`
-- **Archive / experiment:** `alive-ville` remains an organization-owned experimental sandbox; `truehire`, `open-historia`, `email-manager`, `everythingrated`, and `materia` are external archived repositories and are no longer checked as fleet projects
+- **Focus:** `pace`, `codevetter`, `posttrainllm`
+- **Support:** `high-signal`, `drank`, `research-papers`, `fleet-ops`, `saas-maker`, `free-ai`, `knowledge-base`, `reel-pipeline`
+- **Personal use:** `rolepatch`, `karte`, `reader`, `swe-interview-prep`, `significanthobbies`, `looptv`, `anime-list`, `ai-game` (AliveVille)
+- **Archive:** `truehire`, `open-historia`, `email-manager`, `everythingrated`, and `materia` are external archived repositories and are no longer checked as fleet projects
 
 Operating rule: any product with a purchased custom domain remains in **Support**
 even when it is not a focus bet. Personal-use products receive maintenance only;
@@ -42,7 +42,7 @@ Archived products were transferred from the `sarthak-fleet` GitHub organization 
 the personal account `sarthakagrawal927` where GitHub permitted the move. Their
 working copies live under `/Users/sarthak/Desktop/fleet-archive-2026-07-10` and
 are excluded from fleet health checks and new fleet work.
-`alive-ville` is the exception: it remains organization-owned as an experiment.
+AliveVille is the `ai-game` checkout and remains organization-owned as a personal-use experiment.
 TrueHire's active concept is represented by RolePatch's `/proof` surface.
 
 ## Fresh Machine Setup
