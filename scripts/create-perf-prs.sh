@@ -11,7 +11,6 @@ declare -A PRS=(
   ["significanthobbies"]="perf/fix-n1-queries-and-caching|perf: fix N+1 like-counts + add caching|Batch like-count queries, add edge cache for public pages, add DB indexes."
   ["everythingrated"]="perf/fix-ratings-full-scan|perf: fix ratings full-scan + add index|Replace full-table scan with indexed lookup, add composite index on ratings."
   ["research-papers"]="perf/vector-index-and-caching|perf: vector index + caching fixes|Add vector index for similarity search, fix Cache-Control header (private not public), add edge cache."
-  ["taste"]="perf/indexes-cache-batch|perf: indexes + arena leaderboard + R2 cache + batch queries|Add FK indexes, fix arena leaderboard N+1, R2 cache headers, batch evaluator queries, batch inserts, admin pagination, dedup JSON parse."
   ["verified-bases"]="perf/cache-pooling-indexes|perf: cache headers, async emails, HTTP client reuse, intent index|Add Pages _headers cache, fire-and-forget emails, shared HTTP client singletons, orders(intent_id) index."
 )
 

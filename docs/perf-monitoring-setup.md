@@ -15,14 +15,14 @@ Six layers:
 
 ---
 
-## Coverage (25 active projects)
+## Coverage (24 active projects)
 
 ### Frontend RUM
 
 | Status | Projects |
 |--------|----------|
 | ✅ web-vitals + PostHog | anime-list, email-manager, everythingrated, high-signal, karte, looptv, rolepatch, significanthobbies, starboard, swe-interview-prep, truehire, tinygpt/browser |
-| ✅ web-vitals only (no PostHog) | ai-game (web3d), taste (beacon fallback) |
+| ✅ web-vitals only (no PostHog) | ai-game (web3d) |
 | ⚠️ PostHog only (no web-vitals) | open-historia, reader |
 | ❌ Not wired | drank, saas-maker (platform, no client RUM), materia (static) |
 
@@ -31,14 +31,13 @@ Six layers:
 | Status | Projects |
 |--------|----------|
 | ✅ Wired | anime-list, email-manager, everythingrated, high-signal, karte, looptv, open-historia, reader, rolepatch, significanthobbies, starboard, swe-interview-prep, truehire, tinygpt/browser, ai-game (web3d), drank, saas-maker (cockpit), research-papers |
-| ⚠️ PostHog not initialized | taste |
 | ❌ N/A (no browser) | free-ai, pace, reel-pipeline, codevetter (Tauri), materia (static) |
 
 Template: `fleet-ops/templates/api-timing.ts`
 
 ### Backend timing (withTiming / Server-Timing)
 
-| ✅ Wired | anime-list, email-manager, everythingrated, high-signal, karte, knowledge-base, rolepatch, significanthobbies, starboard, swe-interview-prep, taste, truehire |
+| ✅ Wired | anime-list, email-manager, everythingrated, high-signal, karte, knowledge-base, rolepatch, significanthobbies, starboard, swe-interview-prep, truehire |
 |----------|---|
 | ❌ Missing | saas-maker, free-ai, open-historia, reader, looptv, ai-game |
 
@@ -51,7 +50,7 @@ All API projects have `app.onError()` or equivalent try/catch. PostHog is the er
 
 ## PSI sweep (2026-07-03)
 
-All 20 production URLs pass the LCP gate (p75 ≤ 2.5s).
+All 19 production URLs pass the LCP gate (p75 ≤ 2.5s).
 
 | Project | LCP p75 | Gate |
 |---------|---------|------|
@@ -71,7 +70,6 @@ All 20 production URLs pass the LCP gate (p75 ≤ 2.5s).
 | research-papers | 629 ms | ✅ |
 | high-signal | 677 ms | ✅ |
 | swe-interview-prep | 884 ms | ✅ |
-| taste (shiprank) | 1.00 s | ✅ |
 | significanthobbies | 1.02 s | ✅ |
 | saas-maker | 2.20 s | ✅ (watch) |
 

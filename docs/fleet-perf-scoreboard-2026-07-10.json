@@ -212,17 +212,6 @@
       "p90ms": 493
     },
     {
-      "slug": "taste",
-      "name": "ShipRank",
-      "url": "https://shiprank.dev",
-      "ok": true,
-      "p50": "458ms",
-      "p75": "458ms",
-      "p90": "458ms",
-      "score": "100",
-      "p90ms": 458
-    },
-    {
       "slug": "open-historia",
       "name": "Open Historia",
       "url": "https://open-historia.sarthakagrawal927.workers.dev",

@@ -15,7 +15,7 @@ _Last audited: 2026-06-23._
 
 | State | Projects |
 |---|---|
-| **Has study queue** (16) | ai-game (25 topics), high-signal (14), codevetter (13), reel-pipeline (13), email-manager · reader · saas-maker · swe-interview-prep (12), pace (11), open-historia · starboard (10), free-ai · research-papers · taste (9), looptv (7), tinygpt (14, migrated 2026-06-23) |
+| **Has study queue** (15) | ai-game (25 topics), high-signal (14), codevetter (13), reel-pipeline (13), email-manager · reader · saas-maker · swe-interview-prep (12), pace (11), open-historia · starboard (10), free-ai · research-papers (9), looptv (7), tinygpt (14, migrated 2026-06-23) |
 | **Old scaffold — migrated/retired** | tinygpt → `new-things.md` (old `lessons.md` archived); truehire → exempt, `decisions.md` archived |
 | **Exempt (plain full-stack)** | anime-list, drank, everythingrated, significanthobbies, today-little-log, rolepatch, materia, forecast-lab, truehire |
 | **Fancy but no track — candidates** | karte (agent-trust/AI chat), knowledge-base (RAG), verified-bases (payments/Go) |
