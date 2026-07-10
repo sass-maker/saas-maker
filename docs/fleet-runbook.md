@@ -30,11 +30,12 @@ The fleet is managed in four buckets:
 - **Focus:** `high-signal`, `pace`, `codevetter`, `posttrainllm`
 - **Support:** `drank`, `research-papers`, `looptv`, `anime-list`, `fleet-ops`, `saas-maker`, `free-ai`, `knowledge-base`, `reel-pipeline`
 - **Personal use:** `rolepatch`, `karte`, `reader`, `swe-interview-prep`, `significanthobbies`
-- **Archive / experiment:** `truehire`, `open-historia`, `games`, `email-manager`, `everythingrated`, `materia`; `ai-game` remains a personal experimental sandbox
+- **Archive / experiment:** `truehire`, `open-historia`, `games`, `email-manager`, `everythingrated`, `materia`; `alive-ville` remains an organization-owned experimental sandbox
 
 Archived products were transferred from the `sarthak-fleet` GitHub organization to
 the personal account `sarthakagrawal927` where GitHub permitted the move. They
 remain locally available for reference but are excluded from new fleet work.
+`alive-ville` is the exception: it remains organization-owned as an experiment.
 TrueHire's active concept is represented by RolePatch's `/proof` surface.
 
 ## Fresh Machine Setup
