@@ -1,7 +1,7 @@
 {
-  "anime_list": {
+  "anime-list": {
     "desc": "MAL Explorer — Browse and manage your anime/manga lists.",
-    "url": "https://github.com/sarthak-fleet/anime_list.git",
+    "url": "https://github.com/sarthak-fleet/anime-list.git",
     "tier": "active-ai",
     "category": "product",
     "priority": "P2",
@@ -31,22 +31,6 @@
     "priority": "P2",
     "maturity": "public-ready"
   },
-  "event-forecast": {
-    "desc": "Time-series forecasting product that ingests event, order, and operations streams to predict future demand, requirements, or anomalies.",
-    "url": "https://github.com/sarthak-fleet/event-forecast.git",
-    "tier": "active-ai",
-    "category": "product",
-    "priority": "P2",
-    "maturity": "internal-first"
-  },
-  "everythingrated": {
-    "desc": "Ratings and review-style app.",
-    "url": "https://github.com/sarthak-fleet/everythingrated.git",
-    "tier": "active-ai",
-    "category": "product",
-    "priority": "P2",
-    "maturity": "internal-first"
-  },
   "free-ai": {
     "desc": "OpenAI-compatible AI gateway that connects multiple free model providers and exposes them through one API.",
     "url": "https://github.com/sarthak-fleet/free-ai.git",
@@ -55,9 +39,9 @@
     "priority": "P1",
     "maturity": "internal-first"
   },
-  "ai-game": {
+  "alive-ville": {
     "desc": "Persistent AI world simulator — interactive RPG-style multi-agent game.",
-    "url": "https://github.com/sarthak-fleet/ai-game.git",
+    "url": "https://github.com/sarthak-fleet/alive-ville.git",
     "tier": "core",
     "category": "product",
     "priority": "P1",
@@ -71,16 +55,16 @@
     "priority": "P1",
     "maturity": "public-ready"
   },
-  "knowledgebase": {
+  "knowledge-base": {
     "desc": "Private Agent Search — Exa-style search and cited query APIs for private project corpora.",
-    "url": "https://github.com/sarthakagrawal927/knowledge-base.git",
+    "url": "https://github.com/sarthak-fleet/knowledge-base.git",
     "tier": "active-ai",
     "category": "product",
     "priority": "P1",
     "maturity": "internal-first"
   },
-  "linkchat": {
-    "desc": "Karte — AI link-in-bio (chat, encyclopedia, roast) at karte.cc.",
+  "karte": {
+    "desc": "Karte — AI link-in-bio at karte.cc.",
     "url": "https://github.com/sarthak-fleet/karte.git",
     "tier": "active-ai",
     "category": "product",
@@ -93,14 +77,6 @@
     "tier": "active-ai",
     "category": "product",
     "priority": "P2",
-    "maturity": "public-ready"
-  },
-  "open-historia": {
-    "desc": "Interactive historical timeline and storytelling platform.",
-    "url": "https://github.com/sarthak-fleet/open-historia.git",
-    "tier": "active-ai",
-    "category": "product",
-    "priority": "P1",
     "maturity": "public-ready"
   },
   "pace": {
@@ -127,9 +103,9 @@
     "priority": "P2",
     "maturity": "public-ready"
   },
-  "researchPapers": {
+  "research-papers": {
     "desc": "Academic-paper intelligence platform with ClickHouse-backed search, ranking, and research dashboards.",
-    "url": "https://github.com/sarthakagrawal927/researchPapers.git",
+    "url": "https://github.com/sarthak-fleet/research-papers.git",
     "tier": "active-ai",
     "category": "product",
     "priority": "P1",
@@ -143,7 +119,7 @@
     "priority": "P1",
     "maturity": "internal-first"
   },
-  "resume-tailor": {
+  "rolepatch": {
     "desc": "RolePatch — AI-powered resume tailoring system.",
     "url": "git@github.com:sarthak-fleet/rolepatch.git",
     "path": "/Users/sarthak/Desktop/fleet/rolepatch",
@@ -192,26 +168,10 @@
     "priority": "P2",
     "maturity": "public-ready"
   },
-  "tinygpt": {
-    "desc": "TinyGPT.",
+  "posttrainllm": {
+    "desc": "PostTrainLLM — post-training and model learning workspace.",
     "url": "https://github.com/sarthak-fleet/tinygpt.git",
     "tier": "core",
-    "category": "product",
-    "priority": "P2",
-    "maturity": "internal-first"
-  },
-  "truehire": {
-    "desc": "AI-powered recruitment and candidate vetting platform.",
-    "url": "https://github.com/sarthak-fleet/truehire.git",
-    "tier": "active-ai",
-    "category": "product",
-    "priority": "P1",
-    "maturity": "internal-first"
-  },
-  "verified-bases": {
-    "desc": "Verified Bases — personal verified-software storefront with paid delivery and creator collaboration intake.",
-    "url": "https://github.com/sarthakagrawal927/verified-bases.git",
-    "tier": "active-ai",
     "category": "product",
     "priority": "P2",
     "maturity": "internal-first"
