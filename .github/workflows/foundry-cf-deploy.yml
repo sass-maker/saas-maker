@@ -1,9 +1,87 @@
 name: Foundry — Cloudflare Deploy
 
 # Reusable workflow. Pin via `@v1` from consuming repos:
-#   uses: sarthakagrawal927/saas-maker/.github/workflows/foundry-cf-deploy.yml@v1
+#   uses: sarthak-fleet/saas-maker/.github/workflows/foundry-cf-deploy.yml@v1
 on:
+  workflow_call:
+    inputs:
+      worker_name:
+        required: true
+        type: string
+      wrangler_config_path:
+        required: false
+        type: string
+        default: wrangler.toml
+      working_directory:
+        required: false
+        type: string
+        default: .
+      node_version:
+        required: false
+        type: string
+        default: '22'
+      pnpm_version:
+        required: false
+        type: string
+        default: '10'
+      build_command:
+        required: false
+        type: string
+        default: pnpm build
+      dry_run:
+        required: false
+        type: boolean
+        default: false
+      smoke_url:
+        required: false
+        type: string
+        default: ''
+      smoke_max_attempts:
+        required: false
+        type: number
+        default: 12
+    secrets:
+      CLOUDFLARE_API_TOKEN:
+        required: true
+      CLOUDFLARE_ACCOUNT_ID:
+        required: false
   workflow_dispatch:
+    inputs:
+      worker_name:
+        required: true
+        type: string
+      wrangler_config_path:
+        required: false
+        type: string
+        default: wrangler.toml
+      working_directory:
+        required: false
+        type: string
+        default: .
+      node_version:
+        required: false
+        type: string
+        default: '22'
+      pnpm_version:
+        required: false
+        type: string
+        default: '10'
+      build_command:
+        required: false
+        type: string
+        default: pnpm build
+      dry_run:
+        required: false
+        type: boolean
+        default: false
+      smoke_url:
+        required: false
+        type: string
+        default: ''
+      smoke_max_attempts:
+        required: false
+        type: number
+        default: 12
 jobs:
   deploy:
     name: Deploy ${{ inputs.worker_name }}
@@ -35,7 +113,14 @@ jobs:
 
       - name: Wrangler deploy
         if: inputs.dry_run == false
-        run: pnpm exec wrangler deploy --config ${{ inputs.wrangler_config_path }}
+        shell: bash
+        run: |
+          set -eo pipefail
+          if [[ -n "${{ inputs.wrangler_config_path }}" ]]; then
+            pnpm exec wrangler deploy --config "${{ inputs.wrangler_config_path }}"
+          else
+            pnpm exec wrangler deploy
+          fi
         working-directory: ${{ inputs.working_directory }}
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -43,7 +128,14 @@ jobs:
 
       - name: Wrangler dry-run
         if: inputs.dry_run == true
-        run: pnpm exec wrangler deploy --config ${{ inputs.wrangler_config_path }} --dry-run
+        shell: bash
+        run: |
+          set -eo pipefail
+          if [[ -n "${{ inputs.wrangler_config_path }}" ]]; then
+            pnpm exec wrangler deploy --config "${{ inputs.wrangler_config_path }}" --dry-run
+          else
+            pnpm exec wrangler deploy --dry-run
+          fi
         working-directory: ${{ inputs.working_directory }}
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

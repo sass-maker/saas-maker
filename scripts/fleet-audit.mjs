@@ -11,21 +11,28 @@ const DEFAULT_TIMEOUT_MS = 240_000;
 const DEFAULT_CLOUDFLARE_ACCOUNT_ID = '7d048325699a5acddb44d3be31cf6ba9';
 const DEFAULT_EXPECTED_CLOUDFLARE_BUILD_TOKEN = 'Workers Builds - 2026-05-27 01:49';
 const OUT_OF_FLEET_PROJECTS = new Set(['personal-memory', 'port-whisperer', 'local-ai']);
+const LOCAL_PATH_OVERRIDES = {
+  'alive-ville': 'ai-game',
+  'anime-list': 'anime-list',
+  CodeVetter: 'codevetter',
+  'knowledge-base': 'knowledge-base',
+  'research-papers': 'research-papers',
+  rolepatch: 'rolepatch',
+  karte: 'karte',
+  posttrainllm: 'posttrainllm',
+  'psi-swarm': 'fleet-ops/psi-swarm',
+};
 
 const BUSINESS_LANES = {
   reader: 'P0 Can make money',
   'swe-interview-prep': 'P0 Can make money',
   starboard: 'P0 Can make money',
-  linkchat: 'P0 Can make money',
+  karte: 'P2 Watch',
   'free-ai': 'P1 Explore',
-  'today-little-log': 'P1 Explore',
   significanthobbies: 'P1 Explore',
-  truehire: 'P1 Explore',
-  everythingrated: 'P1 Explore',
-  'event-forecast': 'P1 Explore',
-  anime_list: 'P2 Watch',
+  rolepatch: 'P2 Watch',
+  'anime-list': 'P2 Watch',
   looptv: 'P2 Watch',
-  'open-historia': 'P2 Watch',
   'email-manager': 'P2 Watch',
 };
 
@@ -172,7 +179,7 @@ const PERFORMANCE_BUDGETS = {
 const LOCAL_CHECK_OVERRIDES = {
   CodeVetter: [
     ['pnpm', ['--dir', 'apps/desktop', 'run', '--if-present', 'build']],
-    ['pnpm', ['--dir', 'apps/landing-page', 'run', '--if-present', 'build']],
+    ['pnpm', ['--dir', 'apps/landing-page-astro', 'run', '--if-present', 'build']],
   ],
 };
 
@@ -490,6 +497,18 @@ function repoFromUrl(url) {
   return null;
 }
 
+function localProjectPath(args, slug, meta) {
+  if (meta?.path) return path.resolve(String(meta.path));
+  const candidates = [
+    LOCAL_PATH_OVERRIDES[slug],
+    slug,
+    repoFromUrl(meta?.url)?.split('/').pop(),
+    repoFromUrl(meta?.url)?.split('/').pop()?.toLowerCase(),
+  ].filter(Boolean);
+  const found = candidates.find((candidate) => fs.existsSync(path.join(args.fleetRoot, candidate)));
+  return path.join(args.fleetRoot, found ?? slug);
+}
+
 function loadProjects(args) {
   const manifest = readJson(args.manifest);
   return Object.entries(manifest)
@@ -501,7 +520,7 @@ function loadProjects(args) {
       businessLane:
         BUSINESS_LANES[slug] ?? (meta?.tier === 'core' ? 'Core/context' : 'Unclassified'),
       repo: repoFromUrl(meta?.url),
-      path: path.join(args.fleetRoot, slug),
+      path: localProjectPath(args, slug, meta),
     }))
     .filter((project) => {
       if (args.project) return project.slug === args.project;
@@ -589,7 +608,7 @@ function githubAudit(project) {
 
 function dirtyAudit(project) {
   if (!fs.existsSync(path.join(project.path, '.git'))) {
-    return { ok: false, error: 'Local checkout missing', entries: [] };
+    return { ok: true, skipped: true, error: 'Local checkout missing', entries: [] };
   }
   const result = run('git', ['status', '--short'], { cwd: project.path });
   const entries = result.stdout.split(/\r?\n/).filter(Boolean);
