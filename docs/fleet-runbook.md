@@ -42,6 +42,27 @@ project.
 AliveVille is the `ai-game` checkout and remains organization-owned with light support.
 TrueHire's active concept is represented by RolePatch's `/proof` surface.
 
+## Owned Domain Map
+
+The ten owned root domains currently mapped to fleet projects are:
+
+| Domain | Project |
+| --- | --- |
+| `sassmaker.com` | SaaS Maker |
+| `posttrainllm.com` | posttrainllm (GitHub repo `tinygpt`) |
+| `sarthakagrawal.dev` | Portfolio |
+| `heypace.app` | Pace |
+| `codevetter.com` | CodeVetter |
+| `aliveville.com` | AliveVille (`ai-game` checkout) |
+| `rolepatch.com` | RolePatch |
+| `highsignal.app` | High Signal |
+| `karte.cc` | Karte |
+| `significanthobbies.com` | Significant Hobbies |
+
+Subdomains such as `api.sassmaker.com`, `docs.sassmaker.com`, and
+`www.*` variants belong to the same parent project and are not separate fleet
+products.
+
 ## Fresh Machine Setup
 
 From the Fleet root:
