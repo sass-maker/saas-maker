@@ -30,7 +30,6 @@ The fleet is managed in four buckets:
 - **Focus:** `pace`, `codevetter`, `posttrainllm`
 - **Support:** `high-signal`, `drank`, `research-papers`, `fleet-ops`, `saas-maker`, `free-ai`, `knowledge-base`, `reel-pipeline`, `ai-game` (AliveVille)
 - **Personal use:** `rolepatch`, `karte`, `reader`, `swe-interview-prep`, `significanthobbies`, `looptv`, `anime-list`, `email-manager`
-- **Archive:** `truehire`, `open-historia`, `everythingrated`, and `materia` are external archived repositories and are no longer checked as fleet projects
 
 Operating rule: any product with a purchased custom domain remains in **Support**
 even when it is not a focus bet. Personal-use products receive maintenance only;
@@ -38,11 +37,8 @@ when they also have a custom domain, that maintenance includes keeping the publi
 surface minimally healthy. Known domain-backed surfaces include `alive-ville`,
 `karte`, `rolepatch`, `significanthobbies`, and `saas-maker`.
 
-Archived products were transferred from the `sarthak-fleet` GitHub organization to
-the personal account `sarthakagrawal927` where GitHub permitted the move. Archived
-working copies live under `/Users/sarthak/Desktop/fleet-archive-2026-07-10` and are
-excluded from fleet health checks and new fleet work. Email Manager is retained in
-the fleet workspace as a personal-use maintenance project.
+Email Manager is retained in the fleet workspace as a personal-use maintenance
+project.
 AliveVille is the `ai-game` checkout and remains organization-owned with light support.
 TrueHire's active concept is represented by RolePatch's `/proof` surface.
 
@@ -147,12 +143,10 @@ The active production fleet is listed in
 | `anime_list` | MAL Explorer for anime/manga discovery and watchlists | `pnpm dev` | `pnpm lint`, `pnpm test`, `pnpm pages:build` | `pnpm deploy` |
 | `CodeVetter` | Desktop-first AI code review platform | see project README | see project README / CI | see project README / CI |
 | `email-manager` | Gmail/email triage and automation | `pnpm dev` | `pnpm lint`, `pnpm cf:build` | `pnpm deploy` |
-| `everythingrated` | Multi-axis ratings platform | `pnpm dev` | `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm cf:build` | `pnpm deploy` |
 | `free-ai` | OpenAI-compatible gateway for free LLM providers | `pnpm dev` | `pnpm check`, `pnpm test:e2e` when relevant | `pnpm deploy` |
 | `high-signal` | Signal intelligence and collections | `pnpm dev` | `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build` | project workflows |
 | `linkchat` | AI-enhanced public profiles and chat/contact analytics | `pnpm dev` | `pnpm lint`, `pnpm build`, `pnpm cf:build` | `pnpm deploy:cf` |
 | `looptv` | Lean-back YouTube station player | `pnpm dev` | `pnpm lint`, `pnpm test`, `pnpm build` | `pnpm deploy` |
-| `open-historia` | LLM-adjudicated alternate-history game | `pnpm dev` | `pnpm lint`, `pnpm build`, `pnpm cf:build` | `pnpm deploy` |
 | `reader` | Article/PDF reader, annotation, and research workspace | `pnpm dev` | `pnpm lint`, `pnpm type-check`, `pnpm test`, `pnpm cf:build` | `pnpm deploy` |
 | `resume-tailor` | RolePatch resume tailoring and interview prep | `pnpm dev` | `pnpm lint`, `pnpm test`, `pnpm cf:build` | `pnpm deploy` |
 | `saas-maker` | Foundry cockpit, API, CLI, widgets, docs, Symphony | package-specific dev commands | `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm smoke` after deploy | package/workflow deploys |
@@ -160,7 +154,6 @@ The active production fleet is listed in
 | `starboard` | GitHub stars organization and stack discovery | `pnpm dev` | `pnpm lint`, `pnpm test`, `pnpm cf:build` | `pnpm deploy:cf` |
 | `swe-interview-prep` | Interview Coder prep app | `pnpm dev` | `pnpm lint`, `pnpm test`, `pnpm build` | `pnpm deploy` |
 | `today-little-log` | Daily scoreboard, journal, and personal patterns | `pnpm dev` | `pnpm lint`, `pnpm build` | `pnpm deploy` |
-| `truehire` | Verified candidate profile and recruiter evaluation | `pnpm dev` | `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build` | project workflows |
 
 ## Local-Only Or Non-Fleet Repositories
 
