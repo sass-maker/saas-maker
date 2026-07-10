@@ -14,10 +14,10 @@ fleet-ops/
 │   ├── fleet-deploy-guard/ ← subskill: deploy readiness gate
 │   ├── fleet-workspace/ ← subskill: cross-project workspace decisions
 │   ├── name-domains/    ← standalone: domain name generation
-│   ├── codevetter-install/ ← standalone: reinstall CodeVetter desktop app
 │   ├── spec-driven/     ← standalone: OpenSpec spec-driven dev workflow for new features
 │   ├── agent-ready/     ← standalone: AI crawler readiness scan (isitagentready.com)
-│   └── seo-audit/       ← standalone: on-page SEO audit (meta, OG, JSON-LD, headings, alt, SSR leaks)
+│   ├── seo-audit/       ← standalone: on-page SEO audit (meta, OG, JSON-LD, headings, alt, SSR leaks)
+│   └── token-budget/    ← standalone: Codex context/token audit
 ├── teammates/           ← delegation skills + roster + scorecard
 │   └── skills/
 │       ├── call-teammate/ ← parent: routes to 5 call-* subskills
@@ -33,7 +33,7 @@ fleet-ops/
 
 ## Skill discovery model
 
-Only 8 skills are symlinked into each agent's skill dir — 2 parents + 6 standalones.
+Only 8 fleet skills are exposed to each agent — 2 parents + 6 standalones.
 Agents load the parent, read the routing table, then load the relevant subskill
 on demand (progressive disclosure).
 
@@ -42,11 +42,11 @@ on demand (progressive disclosure).
 | `fleet-ops` | parent | fleet-audit, fleet-init, fleet-deploy-guard, fleet-workspace |
 | `call-teammate` | parent | call-claude-code, call-codex, call-cursor, call-devin, call-grok |
 | `name-domains` | standalone | — |
-| `codevetter-install` | standalone | — |
 | `spec-driven` | standalone | — |
 | `psi-swarm` | standalone | — |
 | `agent-ready` | standalone | — |
 | `seo-audit` | standalone | — |
+| `token-budget` | standalone | — |
 
 Wired into: `~/.claude/skills/`, `~/.codex/skills/`, `~/.cursor/skills/`, `~/.config/devin/skills/`
 

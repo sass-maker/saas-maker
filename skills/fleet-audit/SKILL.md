@@ -13,8 +13,8 @@ Three modes, one skill. The user's question determines which mode to run.
 
 **Trigger:** "Is the fleet healthy?", "check all projects", "what's broken?", "can I deploy everything?"
 
-Checks git state, CI signal, and branch status across all 25 active projects
-(listed in `~/Desktop/fleet/README.md`).
+Checks git state, CI signal, and branch status across active projects listed in
+`~/Desktop/fleet/README.md`.
 
 ```bash
 bash ~/Desktop/fleet/fleet-ops/scripts/fleet-health.sh

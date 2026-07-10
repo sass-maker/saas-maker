@@ -29,5 +29,7 @@ If the request spans multiple subskills (e.g. "audit the fleet, then scaffold a 
 
 - Delegating to other agent CLIs → use the `call-teammate` skill
 - Domain name generation → use `name-domains` skill
-- CodeVetter desktop install → use `codevetter-install` skill
 - Lighthouse/perf audits → use `psi-swarm` skill
+- AI crawler readiness → use `agent-ready` skill
+- On-page SEO audits → use `seo-audit` skill
+- Codex context/token audits → use `token-budget` skill

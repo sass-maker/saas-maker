@@ -147,6 +147,16 @@ if [[ -z "$cf_target" ]]; then
   [[ -n "$cf_target" ]] && cf_target="$cf_target (subdir)"
 fi
 
+if [[ -z "$cf_target" && -f "package.json" && "$(command -v node || true)" ]]; then
+  deploy_script=$(node -e "const p=require('./package.json'); process.stdout.write(p.scripts?.deploy || '')" 2>/dev/null || true)
+  if [[ "$deploy_script" == *"wrangler pages deploy"* ]]; then
+    cf_target=$(printf '%s\n' "$deploy_script" | sed -nE 's/.*--project-name[= ]([^ ]+).*/\1/p' | head -1)
+    [[ -z "$cf_target" ]] && cf_target="package deploy script"
+  elif [[ "$deploy_script" == *"manual-deploy"* ]]; then
+    cf_target="package manual deploy script"
+  fi
+fi
+
 if [[ -n "$cf_target" ]]; then
   check "CF target" "ok" "$cf_target"
 else
@@ -158,7 +168,25 @@ fi
 # not just the section header "Todo / Planned / Deferred / Blocked"
 blockers=""
 if [[ -f "PROJECT_STATUS.md" ]]; then
-  blockers=$(awk '/^#+.*Blocked/{found=1; next} /^#+/{found=0} found && /^[-0-9]/{print; exit}' PROJECT_STATUS.md 2>/dev/null || true)
+  blockers=$(
+    awk '
+      /^#+.*Blocked/ { found=1; next }
+      /^#+/ { found=0 }
+      found && /^[-0-9]/ {
+        line=$0
+        sub(/^[[:space:]]*[-0-9.)]+[[:space:]]*/, "", line)
+        if (line ~ /^\(?none([[:space:]]|\)|$)/) next
+        lower=tolower(line)
+        if (lower !~ /(^|[^a-z])(deploy|deployment|release|production)([^a-z]|$)/) next
+        if (lower ~ /^production:[[:space:]]/) next
+        if (lower ~ /^deploy:[[:space:]]/) next
+        if (lower ~ /^worker name:[[:space:]]/) next
+        if (lower !~ /(block|blocked|defer|deferred|not ready|cannot|refus|missing|required)/) next
+        print
+        exit
+      }
+    ' PROJECT_STATUS.md 2>/dev/null || true
+  )
 fi
 
 if [[ -z "$blockers" ]]; then

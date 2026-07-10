@@ -44,6 +44,21 @@ git_path_exists() {
   [[ -n "$path" && -e "$path" ]]
 }
 
+is_out_of_fleet_repo() {
+  local repo="$1"
+  local repo_name
+
+  repo_name="$(basename "$repo")"
+
+  case "$repo_name" in
+    today-little-log|verified-bases|companion-robot|forecast-lab|elves-hq)
+      return 0
+      ;;
+  esac
+
+  return 1
+}
+
 scan_repo() {
   local repo="$1"
 
@@ -143,12 +158,14 @@ scan_repo() {
     echo "$gone" | sed 's/^/  - /'
   fi
 
-  local unmerged
-  unmerged="$(
-    git -C "$repo" branch --no-merged 2>/dev/null |
-      sed 's/^[* ]*//' |
-      sed '/^$/d'
-  )"
+  local unmerged=""
+  if git -C "$repo" rev-parse --verify HEAD >/dev/null 2>&1; then
+    unmerged="$(
+      git -C "$repo" branch --no-merged 2>/dev/null |
+        sed 's/^[* ]*//' |
+        sed '/^$/d'
+    )"
+  fi
 
   if [[ -n "$unmerged" ]]; then
     echo "Local branches not merged into ${branch:-HEAD}:"
@@ -164,7 +181,11 @@ if [[ "$ALL" == true ]]; then
 
   find "$ROOT" -maxdepth 2 -type d -name ".git" -prune -print0 |
     while IFS= read -r -d '' gitdir; do
-      scan_repo "$(dirname "$gitdir")"
+      repo="$(dirname "$gitdir")"
+      if is_out_of_fleet_repo "$repo"; then
+        continue
+      fi
+      scan_repo "$repo"
     done
 else
   if ! git -C "$ROOT" rev-parse --is-inside-work-tree >/dev/null 2>&1; then

@@ -129,10 +129,24 @@ is_out_of_fleet_repo() {
   repo_name="$(basename "$repo")"
 
   case "$repo_name" in
-    today-little-log|verified-bases|companion-robot|forecast-lab)
+    today-little-log|verified-bases|companion-robot|forecast-lab|elves-hq)
       return 0
       ;;
   esac
+
+  return 1
+}
+
+is_local_only_project() {
+  local repo="$1"
+  local file
+
+  for file in "$repo/AGENTS.md" "$repo/agents.md" "$repo/README.md" "$repo/PROJECT_STATUS.md"; do
+    [[ -f "$file" ]] || continue
+    if grep -Eiq 'deploy:[[:space:]]*none|local-only until it earns daily use|no production deploy' "$file"; then
+      return 0
+    fi
+  done
 
   return 1
 }
@@ -222,6 +236,11 @@ check_github_actions() {
       continue
     fi
 
+    if is_local_only_project "$repo"; then
+      record "OK" "$repo is local-only; GitHub Actions not required"
+      continue
+    fi
+
     slug="$(github_slug_for_repo "$repo" || true)"
 
     if [[ -z "$slug" ]]; then
@@ -301,6 +320,11 @@ check_project_standards() {
     repo="${gitdir%/.git}"
 
     if is_fleet_root_repo "$repo" || is_out_of_fleet_repo "$repo"; then
+      continue
+    fi
+
+    if is_local_only_project "$repo"; then
+      record "OK" "$repo is local-only; deploy standard not required"
       continue
     fi
 

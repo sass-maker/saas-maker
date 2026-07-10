@@ -10,8 +10,8 @@ Use this skill for Fleet-wide workspace decisions and cross-project maintenance.
 ## Read First
 
 1. Read the nearest project `AGENTS.md`.
-2. Read `/Users/sarthakagrawal/Desktop/Fleet/AGENTS.md` for Fleet-wide policy.
-3. If Claude-specific context is needed, read `/Users/sarthakagrawal/Desktop/Fleet/CLAUDE.md`.
+2. Read `/Users/sarthak/Desktop/fleet/AGENTS.md` for Fleet-wide policy.
+3. If deeper Fleet policy is needed, read `/Users/sarthak/Desktop/fleet/fleet-ops/docs/fleet-agent-standards.md`.
 
 ## Rules
 
@@ -22,12 +22,11 @@ Use this skill for Fleet-wide workspace decisions and cross-project maintenance.
   project.
 - Prefer Symphony tasks over new plan docs for operational follow-up.
 - Do not install Fleet behavior globally unless the user explicitly asks for
-  Fleet behavior to appear outside `/Users/sarthakagrawal/Desktop/Fleet`.
+  Fleet behavior to appear outside `/Users/sarthak/Desktop/fleet`.
 
 ## When Adding Shared Agent Assets
 
-- Put Codex skills in `Fleet/.agents/skills/`.
-- Put Claude skills in `Fleet/.claude/skills/`.
-- Use `Fleet/scripts/link-project-agent-assets.sh` to expose them to child
-  projects.
+- Put shared skills under `/Users/sarthak/Desktop/fleet/fleet-ops/skills/`.
+- Use `/Users/sarthak/Desktop/fleet/fleet-ops/scripts/link-project-agent-assets.sh`
+  when project-local agent assets need to be exposed.
 - Keep global machine config private and personal.
