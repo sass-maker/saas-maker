@@ -23,6 +23,20 @@ Use this order when working on the Fleet:
 Symphony is the task source of truth. GitHub is the code source of truth.
 Cloudflare, Vercel, and other hosts are deployment targets, not task stores.
 
+## Portfolio Buckets (2026-07-10)
+
+The fleet is managed in four buckets:
+
+- **Focus:** `high-signal`, `pace`, `codevetter`, `posttrainllm`
+- **Support:** `drank`, `research-papers`, `looptv`, `anime-list`, `fleet-ops`, `saas-maker`, `free-ai`, `knowledge-base`, `reel-pipeline`
+- **Personal use:** `rolepatch`, `karte`, `reader`, `swe-interview-prep`, `significanthobbies`
+- **Archive / experiment:** `truehire`, `open-historia`, `games`, `email-manager`, `everythingrated`, `materia`; `ai-game` remains a personal experimental sandbox
+
+Archived products were transferred from the `sarthak-fleet` GitHub organization to
+the personal account `sarthakagrawal927` where GitHub permitted the move. They
+remain locally available for reference but are excluded from new fleet work.
+TrueHire's active concept is represented by RolePatch's `/proof` surface.
+
 ## Fresh Machine Setup
 
 From the Fleet root:
