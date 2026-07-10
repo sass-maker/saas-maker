@@ -9,23 +9,21 @@ Registry classification uses two separate fields:
 
 | Slug                 | Canonical display name | Production name/domain note                                              |
 | -------------------- | ---------------------- | ------------------------------------------------------------------------ |
-| `anime_list`         | MAL Explorer           | Cloudflare Pages project uses the legacy slug.                           |
+| `anime-list`         | MAL Explorer           | GitHub and local slug are `anime-list`.                                 |
 | `CodeVetter`         | CodeVetter             | GitHub/local folder are still capitalized; do not rename casually.       |
 | `drank`              | drank                  | Vercel app (drank-sand.vercel.app); shared DR data via GitHub Action.    |
 | `email-manager`      | Email Manager          | Worker-backed product.                                                   |
 | `event-forecast`     | Event Forecast         | Local Rust/Rocket forecasting service; no production URL yet.            |
-| `everythingrated`    | EverythingRated        | Worker frontend with anonymous multi-axis ratings.                       |
 | `free-ai`            | Free AI Gateway        | Gateway/API product, not a frontend.                                     |
-| `ai-game`            | AI Game                | Public game domain is Aliveville; repo slug remains `ai-game`.           |
+| `ai-game`            | AliveVille             | Public game domain is AliveVille; GitHub repo is `alive-ville`, local checkout remains `ai-game`. |
 | `high-signal`        | High Signal            | Worker frontend.                                                         |
-| `knowledgebase`      | Private Agent Search   | Cloudflare Worker RAG service for cited private project corpora.         |
-| `linkchat`           | Linkchat               | Worker frontend.                                                         |
+| `knowledge-base`     | Private Agent Search   | Cloudflare Worker RAG service for cited private project corpora.         |
+| `karte`              | Karte                  | Worker frontend at karte.cc.                                             |
 | `looptv`             | LoopTV                 | Keep label as LoopTV even if notes mention Loop TV.                      |
-| `open-historia`      | Open Historia          | Worker frontend with Google login.                                       |
 | `pace`               | Pace                   | Local macOS voice agent; previously discussed as Clicky Local / Space.   |
 | `psi-swarm`          | psi-swarm              | Local CLI and browser controller for repeated Lighthouse audits.         |
 | `reader`             | Reader                 | Worker frontend with Google login.                                       |
-| `researchPapers`     | Research Papers        | Local academic-paper intelligence platform.                              |
+| `research-papers`    | Research Papers        | Cloudflare Pages academic-paper intelligence platform.                    |
 | `reel-pipeline`      | Reel Pipeline          | Artifact Worker and R2-backed video pipeline.                            |
 | `resume-tailor`      | RolePatch              | Product/domain name is RolePatch; repo slug remains `resume-tailor`.     |
 | `saas-maker`         | SaaS Maker             | Production domain uses `sassmaker.com`; display name remains SaaS Maker. |
@@ -33,9 +31,7 @@ Registry classification uses two separate fields:
 | `significanthobbies` | Significant Hobbies    | Domain omits the hyphen.                                                 |
 | `starboard`          | Starboard              | Worker frontend.                                                         |
 | `swe-interview-prep` | Interview Coder        | Product name is Interview Coder; repo slug remains `swe-interview-prep`. |
-| `tinygpt`            | TinyGPT                | Research/browser model project.                                          |
 | `today-little-log`   | Today Little Log       | Pages frontend.                                                          |
-| `truehire`           | TrueHire               | Worker frontend with GitHub login.                                       |
 | `verified-bases`     | Verified Bases         | Personal verified-software storefront; deploy targets are split web/api. |
 
 Hidden/removed projects should not appear in fleet dashboards or task project pickers: `ludo`, `chess`, `back-propogate`, `reel-maker`, `dev-learning`, `sarthak-blog`, `clash-royale-meta`, `personalsite`, `port-whisperer`, `local-ai`, and `vaulthealth`.
@@ -56,7 +52,7 @@ Fleet membership and product surface are **not** the same as a curl-able product
 
 | Layer | Question | Examples |
 | ----- | -------- | -------- |
-| **Web surface in repo** | Is there a user-facing web app or marketing site in-tree? | `pace/website/`, `psi-swarm/web/`, `researchPapers/web/` |
+| **Web surface in repo** | Is there a user-facing web app or marketing site in-tree? | `pace/website/`, `psi-swarm/web/`, `research-papers/web/` |
 | **Deployed** | Is that surface (or an API Worker) deployed somewhere, even if DNS/custom domain is missing? | Pages project exists but `*.pages.dev` not in contracts yet |
 | **Live `prodUrl`** | Can fleet smoke/perf hit a stable public URL today? | Entry in `FLEET_HEALTH_CONTRACTS`; drives `fleet:prod-smoke` and perf sweeps only |
 
