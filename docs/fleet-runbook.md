@@ -30,7 +30,7 @@ The fleet is managed in four buckets:
 - **Focus:** `high-signal`, `pace`, `codevetter`, `posttrainllm`
 - **Support:** `drank`, `research-papers`, `looptv`, `anime-list`, `fleet-ops`, `saas-maker`, `free-ai`, `knowledge-base`, `reel-pipeline`
 - **Personal use:** `rolepatch`, `karte`, `reader`, `swe-interview-prep`, `significanthobbies`
-- **Archive / experiment:** `truehire`, `open-historia`, `games`, `email-manager`, `everythingrated`, `materia`; `alive-ville` remains an organization-owned experimental sandbox
+- **Archive / experiment:** `alive-ville` remains an organization-owned experimental sandbox; `truehire`, `open-historia`, `email-manager`, `everythingrated`, and `materia` are external archived repositories and are no longer checked as fleet projects
 
 Operating rule: any product with a purchased custom domain remains in **Support**
 even when it is not a focus bet. Personal-use products receive maintenance only;
@@ -39,8 +39,9 @@ surface minimally healthy. Known domain-backed surfaces include `alive-ville`,
 `karte`, `rolepatch`, `significanthobbies`, and `saas-maker`.
 
 Archived products were transferred from the `sarthak-fleet` GitHub organization to
-the personal account `sarthakagrawal927` where GitHub permitted the move. They
-remain locally available for reference but are excluded from new fleet work.
+the personal account `sarthakagrawal927` where GitHub permitted the move. Their
+working copies live under `/Users/sarthak/Desktop/fleet-archive-2026-07-10` and
+are excluded from fleet health checks and new fleet work.
 `alive-ville` is the exception: it remains organization-owned as an experiment.
 TrueHire's active concept is represented by RolePatch's `/proof` surface.
 
