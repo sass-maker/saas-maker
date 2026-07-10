@@ -257,7 +257,7 @@ export const FLEET_HEALTH_CONTRACTS = {
   },
   starboard: {
     displayName: 'Starboard',
-    prodUrl: 'https://starboard.sarthakagrawal927.workers.dev',
+    prodUrl: 'https://starboard.codevetter.com',
     expectedStatus: 200,
     criticalRoutes: ['/'],
     auth: { required: false },
