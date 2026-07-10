@@ -1,58 +1,35 @@
 ---
 import Layout from '../layouts/Layout.astro';
 
-// The Fleet Factory — a layered map of how the fleet actually works.
-// Three shared layers carry the load; every other repo is a product built on
-// top, drawing only the utilities it needs. Data mirrors the 2026-06-21 fleet
-// connection audit (what calls free-ai, what uses knowledge-base RAG, what
-// embeds the saas-maker widgets) — not an aspirational task-queue.
-
-const infra = [
-  { id: 'free-ai', accent: 'ai',  role: 'Inference grid',
-    provides: 'OpenAI-compatible API fronting 30+ free LLM providers, health-routed.',
-    count: '11 apps tap it' },
-  { id: 'knowledge-base', accent: 'rag', role: 'RAG service',
-    provides: 'Private semantic search + citations (Vectorize / Qdrant). Itself calls free-ai for embeddings.',
-    count: '2 apps + self' },
-];
+// The Fleet Factory — a compact public directory for the few projects that
+// should be presented. Internal fleet tooling stays in repo docs and scripts.
 
 const platform = {
   id: 'saas-maker', role: 'The Foundry · platform',
-  provides: 'System-of-record for the fleet — active project registry (21) · feedback / testimonials / changelog widgets · live event ledger.',
+  provides: 'System-of-record for the selected directory — project registry (9) · feedback / testimonials / changelog widgets · live event ledger.',
   rails: ['registry', 'feedback widgets', 'events ledger'],
 };
 
 const bands = [
-  { key: 'ai', title: 'Draw on the AI grid', note: 'call free-ai for inference', items: [
-    { id: 'starboard',          provides: 'GitHub stars organizer + semantic search',  uses: ['ai', 'rag', 'feedback'] },
-    { id: 'karte',           provides: 'AI link-in-bio — chat · encyclopedia · roast', uses: ['ai', 'rag'] },
-    { id: 'high-signal',        provides: 'Daily synthesized intelligence brief',       uses: ['ai', 'feedback'] },
-    { id: 'reader',             provides: 'Research library — capture · annotate · chat', uses: ['ai', 'feedback'] },
-    { id: 'rolepatch',      provides: 'LaTeX résumé tailoring + cover letters',      uses: ['ai', 'feedback'] },
-    { id: 'looptv',             provides: 'TV-style random video player (78 channels)',  uses: ['ai', 'feedback'] },
-    { id: 'alive-ville',        provides: '3D AI world simulator with NPC agents',       uses: ['ai'] },
+  { key: 'ai', title: 'Primary public products', note: 'focus and domain-backed bets', items: [
     { id: 'codevetter',         provides: 'Desktop AI code review (local-first)',        uses: ['ai'] },
+    { id: 'high-signal',        provides: 'Daily synthesized intelligence brief',       uses: ['ai', 'feedback'] },
+    { id: 'rolepatch',          provides: 'LaTeX resume tailoring + cover letters',      uses: ['ai', 'feedback'] },
+    { id: 'karte',           provides: 'AI link-in-bio — chat · encyclopedia · roast', uses: ['ai', 'rag'] },
+    { id: 'alive-ville',        provides: '3D AI world simulator with NPC agents',       uses: ['ai'] },
   ] },
-  { key: 'platform', title: 'Platform-connected', note: 'embed saas-maker, own their AI', items: [
-    { id: 'email-manager',      provides: 'Gmail workspace · local semantic search',     uses: ['feedback'] },
-    { id: 'swe-interview-prep', provides: 'SWE learning OS · FSRS spaced repetition',     uses: ['feedback'] },
-    { id: 'significanthobbies', provides: 'Hobby discovery + journaling',                uses: ['feedback'] },
-    { id: 'reel-pipeline',      provides: 'AI short-form video pipeline (Node + Rust)',     uses: ['sync'] },
-    { id: 'drank',              provides: 'Domain Rating tracker (Ahrefs DR) · client-side', uses: ['telemetry'] },
-  ] },
-  { key: 'solo', title: 'Standalone products', note: 'no fleet wiring — fully self-contained', items: [
-    { id: 'anime-list',         provides: 'Anime / manga discovery + watchlists', uses: [] },
+  { key: 'solo', title: 'Focused standalone bets', note: 'kept visible because they are active bets', items: [
     { id: 'pace',               provides: 'macOS voice companion (on-device)', uses: [] },
     { id: 'posttrainllm',       provides: 'Local LLM factory + runtime (Mac)', uses: [] },
-    { id: 'research-papers',     provides: 'Academic paper search platform', uses: [] },
+    { id: 'significanthobbies', provides: 'Hobby discovery + journaling',                uses: ['feedback'] },
   ] },
 ];
 
-const useLabel = { ai: 'free-ai', rag: 'RAG', feedback: 'feedback', telemetry: 'telemetry', sync: 'sync' };
+const useLabel = { ai: 'AI', rag: 'RAG', feedback: 'feedback' };
 const productCount = bands.reduce((n, b) => n + b.items.length, 0);
 ---
 
-<Layout title="The Fleet Factory — saas-maker" description="A layered map of the fleet: free-ai (inference grid) and knowledge-base (RAG) as shared infrastructure, saas-maker as the system-of-record platform, and 25 products built on top — each drawing only the utilities it needs.">
+<Layout title="The Fleet Factory — saas-maker" description="A compact directory of the few fleet products that should be presented publicly.">
   <main class="factory">
     <div class="grid-floor" aria-hidden="true"></div>
     <div class="scanline" aria-hidden="true"></div>
@@ -60,39 +37,17 @@ const productCount = bands.reduce((n, b) => n + b.items.length, 0);
     <header class="fab-hero">
       <p class="kicker"><span class="led"></span> FOUNDRY · FLEET ARCHITECTURE</p>
       <h1>The Fleet Factory</h1>
-      <p class="sub">Three shared layers carry the load. <strong>free-ai</strong> is the inference grid every app taps;
-        <strong>knowledge-base</strong> serves RAG; <strong>saas-maker</strong> keeps the record. Everything else is a
-        <em>product built on top</em> — each one standalone, each drawing only the utilities it needs.</p>
+      <p class="sub"><strong>saas-maker</strong> keeps the record. The directory only shows the few projects worth presenting publicly; internal support tools stay out of the showcase.</p>
       <div class="stat-strip">
-        <div><b>3</b><span>shared layers</span></div>
+        <div><b>1</b><span>platform</span></div>
         <div><b>{productCount}</b><span>products</span></div>
-        <div><b>10</b><span>tap free-ai</span></div>
-        <div><b>21</b><span>registry entries</span></div>
+        <div><b>9</b><span>directory entries</span></div>
       </div>
     </header>
 
     <section class="stack" aria-label="Fleet architecture">
-
-      <!-- LAYER 1 · SHARED INFRA -->
       <div class="layer">
-        <span class="layer-tag l-infra">Layer 1 · Shared infrastructure</span>
-        <div class="infra-row">
-          {infra.map((n) => (
-            <article class={`infra-card a-${n.accent}`}>
-              <div class="infra-head"><span class="infra-led"></span><h3>{n.id}</h3></div>
-              <p class="infra-role">{n.role}</p>
-              <p class="infra-provides">{n.provides}</p>
-              <span class="infra-count">{n.count}</span>
-            </article>
-          ))}
-        </div>
-      </div>
-
-      <div class="downflow" aria-hidden="true"><span></span><span></span><span></span><em>drawn on by ↓</em></div>
-
-      <!-- LAYER 2 · PLATFORM -->
-      <div class="layer">
-        <span class="layer-tag l-platform">Layer 2 · Platform</span>
+        <span class="layer-tag l-platform">Platform</span>
         <article class="platform-card">
           <div class="plat-main">
             <span class="infra-led plat-led"></span>
@@ -108,9 +63,8 @@ const productCount = bands.reduce((n, b) => n + b.items.length, 0);
 
       <div class="downflow" aria-hidden="true"><span></span><span></span><span></span><em>built on by ↓</em></div>
 
-      <!-- LAYER 3 · PRODUCTS -->
       <div class="layer">
-        <span class="layer-tag l-products">Layer 3 · Products — {productCount}</span>
+        <span class="layer-tag l-products">Directory products — {productCount}</span>
         {bands.map((band) => (
           <div class="band">
             <div class="band-head"><span class={`band-dot d-${band.key}`}></span><b>{band.title}</b><em>{band.note}</em></div>

@@ -1,12 +1,4 @@
 {
-  "anime-list": {
-    "desc": "MAL Explorer — Browse and manage your anime/manga lists.",
-    "url": "https://github.com/sarthak-fleet/anime-list.git",
-    "tier": "active-ai",
-    "category": "product",
-    "priority": "P2",
-    "maturity": "public-ready"
-  },
   "CodeVetter": {
     "desc": "AI code review platform — desktop-first, works offline.",
     "url": "https://github.com/sarthak-fleet/codevetter.git",
@@ -14,30 +6,6 @@
     "category": "product",
     "priority": "P1",
     "maturity": "public-ready"
-  },
-  "drank": {
-    "desc": "Domain Rating tracker — personal DR watchlists plus a shared global Ahrefs DR leaderboard.",
-    "url": "https://github.com/sarthak-fleet/drank.git",
-    "tier": "active-ai",
-    "category": "product",
-    "priority": "P2",
-    "maturity": "public-ready"
-  },
-  "email-manager": {
-    "desc": "Unified email management and automation tool.",
-    "url": "https://github.com/sarthak-fleet/email-manager.git",
-    "tier": "active-ai",
-    "category": "product",
-    "priority": "P2",
-    "maturity": "public-ready"
-  },
-  "free-ai": {
-    "desc": "OpenAI-compatible AI gateway that connects multiple free model providers and exposes them through one API.",
-    "url": "https://github.com/sarthak-fleet/free-ai.git",
-    "tier": "helper",
-    "category": "product",
-    "priority": "P1",
-    "maturity": "internal-first"
   },
   "alive-ville": {
     "desc": "Persistent AI world simulator — interactive RPG-style multi-agent game.",
@@ -55,25 +23,9 @@
     "priority": "P1",
     "maturity": "public-ready"
   },
-  "knowledge-base": {
-    "desc": "Private Agent Search — Exa-style search and cited query APIs for private project corpora.",
-    "url": "https://github.com/sarthak-fleet/knowledge-base.git",
-    "tier": "active-ai",
-    "category": "product",
-    "priority": "P1",
-    "maturity": "internal-first"
-  },
   "karte": {
     "desc": "Karte — AI link-in-bio at karte.cc.",
     "url": "https://github.com/sarthak-fleet/karte.git",
-    "tier": "active-ai",
-    "category": "product",
-    "priority": "P2",
-    "maturity": "public-ready"
-  },
-  "looptv": {
-    "desc": "TV-like app for YouTube curated channels.",
-    "url": "https://github.com/sarthak-fleet/looptv.git",
     "tier": "active-ai",
     "category": "product",
     "priority": "P2",
@@ -83,30 +35,6 @@
     "desc": "Pace — local-only macOS menu-bar voice agent.",
     "url": "https://github.com/sarthak-fleet/pace.git",
     "tier": "active-ai",
-    "category": "product",
-    "priority": "P1",
-    "maturity": "internal-first"
-  },
-  "reader": {
-    "desc": "Web Annotator — Document reading and annotation tool.",
-    "url": "https://github.com/sarthak-fleet/reader.git",
-    "tier": "active-ai",
-    "category": "product",
-    "priority": "P2",
-    "maturity": "public-ready"
-  },
-  "research-papers": {
-    "desc": "Academic-paper intelligence platform with ClickHouse-backed search, ranking, and research dashboards.",
-    "url": "https://github.com/sarthak-fleet/research-papers.git",
-    "tier": "active-ai",
-    "category": "product",
-    "priority": "P1",
-    "maturity": "internal-first"
-  },
-  "reel-pipeline": {
-    "desc": "AI reel generation product that turns input text and project context into short-form video drafts and render artifacts.",
-    "url": "https://github.com/sarthak-fleet/reel-pipeline.git",
-    "tier": "core",
     "category": "product",
     "priority": "P1",
     "maturity": "internal-first"
@@ -128,33 +56,9 @@
     "priority": "P0",
     "maturity": "internal-first"
   },
-  "sarthakagrawal": {
-    "desc": "sarthakagrawal.dev personal Astro portfolio and project archive.",
-    "url": "https://github.com/sarthakagrawal927/portfolio.git",
-    "tier": "active-ai",
-    "category": "product",
-    "priority": "P2",
-    "maturity": "public-ready"
-  },
   "significanthobbies": {
     "desc": "Personal hobby mapping and journey visualization tool.",
     "url": "https://github.com/sarthak-fleet/significanthobbies.git",
-    "tier": "active-ai",
-    "category": "product",
-    "priority": "P2",
-    "maturity": "public-ready"
-  },
-  "starboard": {
-    "desc": "AI-built project management and dashboard system.",
-    "url": "https://github.com/sarthak-fleet/starboard.git",
-    "tier": "active-ai",
-    "category": "product",
-    "priority": "P2",
-    "maturity": "public-ready"
-  },
-  "swe-interview-prep": {
-    "desc": "Interview Coder — Software engineering interview prep.",
-    "url": "https://github.com/sarthak-fleet/swe-interview-prep.git",
     "tier": "active-ai",
     "category": "product",
     "priority": "P2",

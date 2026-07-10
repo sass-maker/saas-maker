@@ -43,27 +43,12 @@ interface ShowcaseOverride {
 }
 
 const OVERRIDES: Record<string, ShowcaseOverride> = {
-  'anime-list': {
-    name: 'Shelf',
-    desc: 'MAL explorer for anime and manga lists.',
-    color: '#ec4899',
-  },
   CodeVetter: {
     initials: 'Cv',
     tag: 'Desktop · core',
     desc: 'AI code review platform. Desktop-first, works offline.',
     color: '#10b981',
     size: 'tall',
-  },
-  'email-manager': {
-    desc: 'Unified email management and automation.',
-    color: '#3b82f6',
-  },
-  'free-ai': {
-    name: 'Free AI',
-    tag: 'Helper',
-    desc: 'OpenAI-compatible gateway for free LLM providers.',
-    color: '#fbbf24',
   },
   'alive-ville': {
     name: 'AliveVille',
@@ -78,23 +63,6 @@ const OVERRIDES: Record<string, ShowcaseOverride> = {
     desc: 'A public signal log for AI infrastructure and semiconductors.',
     color: '#84cc16',
     size: 'wide',
-  },
-  looptv: {
-    name: 'LoopTV',
-    desc: 'TV-like app for curated YouTube channels.',
-    color: '#a855f7',
-  },
-  reader: {
-    name: 'Reader',
-    desc: 'Web annotator for documents and articles.',
-    color: '#94a3b8',
-  },
-  'reel-pipeline': {
-    name: 'Reel Pipeline',
-    tag: 'Automation · core',
-    desc: 'AI reel generation and autopost orchestration for fleet marketing.',
-    color: '#c026d3',
-    size: 'tall',
   },
   rolepatch: {
     name: 'RolePatch',
@@ -118,16 +86,6 @@ const OVERRIDES: Record<string, ShowcaseOverride> = {
     desc: 'Personal hobby mapping and journey visualizer.',
     color: '#f472b6',
   },
-  starboard: {
-    name: 'Starboard',
-    desc: 'Organize and filter your GitHub starred repos.',
-    color: '#14b8a6',
-  },
-  'swe-interview-prep': {
-    name: 'Interview Coder',
-    desc: 'Interview prep tooling for engineers.',
-    color: '#22c55e',
-  },
   posttrainllm: {
     name: 'PostTrainLLM',
     initials: 'Pt',
@@ -139,7 +97,7 @@ const OVERRIDES: Record<string, ShowcaseOverride> = {
 
 const SPOTLIGHT_ORDER = ['CodeVetter', 'high-signal', 'alive-ville', 'rolepatch'];
 
-const HELPER_ORDER = ['saas-maker', 'free-ai'];
+const HELPER_ORDER = ['saas-maker'];
 
 const FALLBACK_COLORS = [
   '#e07b3a',
