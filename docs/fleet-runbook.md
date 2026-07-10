@@ -28,8 +28,8 @@ Cloudflare, Vercel, and other hosts are deployment targets, not task stores.
 The fleet is managed in four buckets:
 
 - **Focus:** `pace`, `codevetter`, `posttrainllm`
-- **Support:** `high-signal`, `drank`, `research-papers`, `fleet-ops`, `saas-maker`, `free-ai`, `knowledge-base`, `reel-pipeline`
-- **Personal use:** `rolepatch`, `karte`, `reader`, `swe-interview-prep`, `significanthobbies`, `looptv`, `anime-list`, `ai-game` (AliveVille)
+- **Support:** `high-signal`, `drank`, `research-papers`, `fleet-ops`, `saas-maker`, `free-ai`, `knowledge-base`, `reel-pipeline`, `ai-game` (AliveVille)
+- **Personal use:** `rolepatch`, `karte`, `reader`, `swe-interview-prep`, `significanthobbies`, `looptv`, `anime-list`
 - **Archive:** `truehire`, `open-historia`, `email-manager`, `everythingrated`, and `materia` are external archived repositories and are no longer checked as fleet projects
 
 Operating rule: any product with a purchased custom domain remains in **Support**
@@ -42,7 +42,7 @@ Archived products were transferred from the `sarthak-fleet` GitHub organization 
 the personal account `sarthakagrawal927` where GitHub permitted the move. Their
 working copies live under `/Users/sarthak/Desktop/fleet-archive-2026-07-10` and
 are excluded from fleet health checks and new fleet work.
-AliveVille is the `ai-game` checkout and remains organization-owned as a personal-use experiment.
+AliveVille is the `ai-game` checkout and remains organization-owned with light support.
 TrueHire's active concept is represented by RolePatch's `/proof` surface.
 
 ## Fresh Machine Setup
