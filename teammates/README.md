@@ -9,29 +9,22 @@ to brief it, how much authority to give it, and how to verify its work.
 - `skills/call-teammate/` — **parent skill**: routes to the right subskill based on which CLI the user names. Start here.
 - `skills/call-codex/` — Codex CLI (`codex exec`); schema-enforced output.
 - `skills/call-grok/` — Grok CLI; best-of-N, self-check, native worktrees.
-- `skills/call-claude-code/` — fresh headless Claude Code; both profiles.
-- `skills/call-devin/` — Devin CLI; cloud sessions; ACU-metered.
-- `skills/call-cursor/` — Cursor Agent CLI; fast implementation; verified worktree isolation; separate quota.
+- `skills/call-hermes/` — local open-source persistent specialist.
 - `ROSTER.md` — comparative routing table (who is strong at what).
 - `SCORECARD.md` — append-only outcome log, one line per delegation.
 
 ## Skill discovery (progressive disclosure)
 
-Only the `call-teammate` parent skill is symlinked into agent skill dirs.
-The 5 `call-*` subskills are loaded on demand via the parent's routing table.
+Only the `call-teammate` parent skill is symlinked into Codex. The open-source
+subskills are loaded on demand via the parent's routing table.
 
 Agent skill dirs wired (symlinks point to `fleet-ops/` paths):
 ```
-~/.claude/skills/call-teammate      -> ~/Desktop/fleet/fleet-ops/teammates/skills/call-teammate
 ~/.codex/skills/call-teammate       -> ~/Desktop/fleet/fleet-ops/teammates/skills/call-teammate
-~/.cursor/skills/call-teammate      -> ~/Desktop/fleet/fleet-ops/teammates/skills/call-teammate
-~/.config/devin/skills/call-teammate -> ~/Desktop/fleet/fleet-ops/teammates/skills/call-teammate
-~/.claude/teammates                 -> ~/Desktop/fleet/fleet-ops/teammates
 ```
 
-All 4 agent runtimes (Claude Code, Codex, Cursor, Devin) discover the parent
-skill via symlink. The parent's routing table tells the agent which subskill
-to read for the specific CLI the user named.
+Codex discovers the parent skill via symlink. Hermes is configured as its own
+open-source runtime and follows the same versioned Fleet Ops guidance.
 
 Edit skills here, never in `~/.claude/skills` or other agent dirs (those are
 symlinks). New teammate = new `skills/call-<name>/SKILL.md` + a row in the

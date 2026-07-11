@@ -1,0 +1,4 @@
+.openclaw/
+memory/
+reports/*
+!reports/.gitkeep

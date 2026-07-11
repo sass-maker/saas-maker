@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cd /Users/assistant/Desktop/fleet/saas-maker
+
+pnpm fleet:audit -- \
+  --fleet-root /Users/assistant/Desktop/fleet \
+  --skip-local \
+  --skip-github \
+  --skip-smoke \
+  --skip-cloudflare-builds \
+  --marketing \
+  "$@"
