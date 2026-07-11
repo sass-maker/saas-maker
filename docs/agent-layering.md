@@ -34,7 +34,7 @@ reference to the Fleet policy files.
 Use:
 
 ```bash
-./scripts/link-project-agent-assets.sh reader linkchat
+./scripts/link-project-agent-assets.sh reader karte
 ```
 
 or link every immediate child Git repository:
@@ -53,7 +53,7 @@ The script adds:
 Remove the links and managed reference blocks with:
 
 ```bash
-./scripts/unlink-project-agent-assets.sh reader linkchat
+./scripts/unlink-project-agent-assets.sh reader karte
 ```
 
 ## Why Not Global Install?

@@ -27,7 +27,7 @@ Cloudflare, Vercel, and other hosts are deployment targets, not task stores.
 
 The fleet is managed in four buckets:
 
-- **Focus:** `pace`, `codevetter`, `posttrainllm`
+- **Focus:** `pace`, `codevetter`, `tinygpt`
 - **Support:** `high-signal`, `drank`, `research-papers`, `fleet-ops`, `saas-maker`, `free-ai`, `knowledge-base`, `reel-pipeline`, `alive-ville`
 - **Personal use:** `rolepatch`, `karte`, `reader`, `swe-interview-prep`, `significanthobbies`, `looptv`, `anime-list`, `email-manager`
 
@@ -46,10 +46,6 @@ Local checkout aliases:
 | Canonical project | Local checkout |
 | --- | --- |
 | `alive-ville` | `ai-game` |
-| `anime-list` | `anime_list` |
-| `karte` | `linkchat` |
-| `posttrainllm` | `tinygpt` |
-| `rolepatch` | `resume-tailor` |
 
 ## Owned Domain Map
 
@@ -58,10 +54,10 @@ The ten owned root domains currently mapped to fleet projects are:
 | Domain | Project |
 | --- | --- |
 | `sassmaker.com` | SaaS Maker |
-| `posttrainllm.com` | posttrainllm (GitHub repo `tinygpt`) |
+| `posttrainllm.com` | tinygpt (legacy PostTrainLLM domain) |
 | `sarthakagrawal.dev` | Portfolio |
 | `heypace.app` | Pace |
-| `codevetter.com` | CodeVetter |
+| `codevetter.com` | codevetter |
 | `aliveville.com` | AliveVille (`ai-game` checkout) |
 | `rolepatch.com` | RolePatch |
 | `highsignal.app` | High Signal |
@@ -171,21 +167,21 @@ The active production fleet is listed in
 | Project | Purpose | Local run | Verify before push | Deploy |
 | --- | --- | --- | --- | --- |
 | `alive-ville` (`ai-game`) | AliveVille 3D AI world simulator | `pnpm dev` | `pnpm typecheck`, `pnpm test`, `pnpm build` | project workflows |
-| `anime-list` (`anime_list`) | MAL Explorer for anime/manga discovery and watchlists | `pnpm dev` | `pnpm lint`, `pnpm test`, `pnpm pages:build` | `pnpm deploy` |
-| `CodeVetter` | Desktop-first AI code review platform | see project README | see project README / CI | see project README / CI |
+| `anime-list` | MAL Explorer for anime/manga discovery and watchlists | `pnpm dev` | `pnpm lint`, `pnpm test`, `pnpm pages:build` | `pnpm deploy` |
+| `codevetter` | Desktop-first AI code review platform | see project README | see project README / CI | see project README / CI |
 | `drank` | Domain rating tracker | see project README | see project README / CI | see project README / CI |
 | `email-manager` | Gmail/email triage and automation | `pnpm dev` | `pnpm lint`, `pnpm cf:build` | `pnpm deploy` |
 | `free-ai` | OpenAI-compatible gateway for free LLM providers | `pnpm dev` | `pnpm check`, `pnpm test:e2e` when relevant | `pnpm deploy` |
 | `high-signal` | Signal intelligence and collections | `pnpm dev` | `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build` | project workflows |
-| `karte` (`linkchat`) | AI-enhanced public profiles and chat/contact analytics | `pnpm dev` | `pnpm lint`, `pnpm build`, `pnpm cf:build` | `pnpm deploy:cf` |
+| `karte` | AI-enhanced public profiles and chat/contact analytics | `pnpm dev` | `pnpm lint`, `pnpm build`, `pnpm cf:build` | `pnpm deploy:cf` |
 | `knowledge-base` | Private Agent Search over project corpora | see project README | see project README / CI | see project README / CI |
 | `looptv` | Lean-back YouTube station player | `pnpm dev` | `pnpm lint`, `pnpm test`, `pnpm build` | `pnpm deploy` |
 | `pace` | Local macOS voice agent | see project README | see project README / CI | see project README / CI |
-| `posttrainllm` (`tinygpt`) | Local LLM factory/runtime | see project README | see project README / CI | see project README / CI |
+| `tinygpt` | Local LLM factory/runtime | see project README | see project README / CI | see project README / CI |
 | `reader` | Article/PDF reader, annotation, and research workspace | `pnpm dev` | `pnpm lint`, `pnpm type-check`, `pnpm test`, `pnpm cf:build` | `pnpm deploy` |
 | `reel-pipeline` | AI short-form video generation pipeline | see project README | see project README / CI | see project README / CI |
 | `research-papers` | Academic paper platform and search asset | see project README | see project README / CI | see project README / CI |
-| `rolepatch` (`resume-tailor`) | RolePatch resume tailoring and interview prep | `pnpm dev` | `pnpm lint`, `pnpm test`, `pnpm cf:build` | `pnpm deploy` |
+| `rolepatch` | RolePatch resume tailoring and interview prep | `pnpm dev` | `pnpm lint`, `pnpm test`, `pnpm cf:build` | `pnpm deploy` |
 | `saas-maker` | Foundry cockpit, API, CLI, widgets, docs, Symphony | package-specific dev commands | `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm smoke` after deploy | package/workflow deploys |
 | `significanthobbies` | Hobby journeys and discovery | `pnpm dev` | `pnpm lint`, `pnpm test`, `pnpm cf:build` | `pnpm deploy` |
 | `starboard` | GitHub stars organization and stack discovery | `pnpm dev` | `pnpm lint`, `pnpm test`, `pnpm cf:build` | `pnpm deploy:cf` |

@@ -45,13 +45,13 @@ Current implementation state:
 
 | Project | Cloudflare config | Domain | Notes |
 |---|---:|---|---|
-| `resume-tailor` / RolePatch | yes | `rolepatch.com`, `www.rolepatch.com` | Own product brand; keep. |
+| `rolepatch` | yes | `rolepatch.com`, `www.rolepatch.com` | Own product brand; keep. |
 | `significanthobbies` | yes | `significanthobbies.com`, `www.significanthobbies.com` | Own product brand; keep. |
-| `linkchat` / Karte | yes | `karte.cc`, `*.karte.cc`, `origin.karte.cc` | Own product brand; keep. |
+| `karte` | yes | `karte.cc`, `*.karte.cc`, `origin.karte.cc` | Own product brand; keep. |
 | `saas-maker` | not in local wrangler audit | `sassmaker.com` | Recorded in Fleet README as SaaS Maker production domain. |
 | `high-signal` | not in local wrangler audit | `highsignal.app` | Recorded in Fleet README. |
 | `ai-game` / AliveVille | not in local wrangler audit | `aliveville.com` | Recorded in Fleet README. |
-| `CodeVetter` | not checked out locally | `codevetter.com` | Recorded in Fleet README. |
+| `codevetter` | not in local wrangler audit | `codevetter.com` | Recorded in Fleet README. |
 
 ## Needs Domain Assignment
 
@@ -62,9 +62,9 @@ custom production domain in that config.
 |---:|---|---|---|---|
 | 1 | `reader` | Worker, no routes | `reader.sassmaker.com` | Public research library. Needs crawlable landing, `/sitemap.xml`, article/library index, OG defaults. |
 | 1 | `swe-interview-prep` | Pages domain attached, initializing | `interview.sassmaker.com` | Evergreen learning content. Needs concept pages, problem index, sitemap. |
-| 2 | `anime_list` | Pages domain attached, initializing | `anime.sassmaker.com` | Free tool. Needs canonical metadata and indexable anime/manga routes. |
+| 2 | `anime-list` | Pages domain attached, initializing | `anime.sassmaker.com` | Free tool. Needs canonical metadata and indexable anime/manga routes. |
 | 2 | `looptv` | Pages domain attached, initializing | `tv.sassmaker.com` | Free tool. Needs curated channel/category pages, sitemap. |
-| 2 | `starboard` | Worker route config prepared | `starboard.sassmaker.com` | SaaS surface. Could also become `stars.codevetter.com` if CodeVetter umbrella wins. |
+| 2 | `starboard` | Worker route config prepared | `starboard.sassmaker.com` | SaaS surface. Could also become `stars.codevetter.com` if codevetter umbrella wins. |
 | 3 | `email-manager` | Worker route config prepared | `mail.sassmaker.com` | Likely auth-heavy. Use marketing/docs pages for SEO, keep app noindex if private. |
 | 3 | `free-ai` | Worker route config prepared | `ai.sassmaker.com` | API gateway/docs. SEO via docs and model/provider pages; API base can be `api.ai.sassmaker.com`. |
 | 4 | `reel-pipeline` | Worker route config prepared | `reels.sassmaker.com` | Mostly support infra. SEO only if there is a public gallery/docs surface. |
@@ -76,11 +76,6 @@ Excluded:
 - `device-net-test`: scratch network test app, moved out of active Fleet root.
 - `saas-maker-ci-fix`: duplicate worktree, moved out of active Fleet root.
 - `everythingrated`, `truehire`: not in the active Foundry catalog; moved out of active Fleet root.
-
-Renamed local checkouts kept in active Fleet:
-
-- `linkchat` is the local checkout for `karte`.
-- `resume-tailor` is the local checkout for `rolepatch`.
 
 ## SEO Baseline Per Project
 

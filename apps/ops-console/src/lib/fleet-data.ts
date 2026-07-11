@@ -8,16 +8,20 @@ const fleetRoot = resolve(fleetOpsRoot, "..");
 const saasMakerRoot = resolve(fleetRoot, "saas-maker");
 
 const localDirBySlug: Record<string, string> = {
-  "alive-ville": "ai-game",
-  "anime-list": "anime_list",
-  karte: "linkchat",
-  posttrainllm: "tinygpt",
-  rolepatch: "resume-tailor"
+  "alive-ville": "ai-game"
 };
 
-const canonicalSlugByAlias: Record<string, string> = Object.fromEntries(
-  Object.entries(localDirBySlug).map(([slug, localDir]) => [localDir, slug])
-);
+const canonicalSlugByAlias: Record<string, string> = {
+  CodeVetter: "codevetter",
+  anime_list: "anime-list",
+  linkchat: "karte",
+  posttrainllm: "tinygpt",
+  "resume-tailor": "rolepatch"
+};
+
+function canonicalProjectSlug(slug: string) {
+  return canonicalSlugByAlias[slug] ?? slug;
+}
 
 export type CronJob = {
   id: string;
@@ -320,7 +324,7 @@ export function getFleetTasks(): FleetTask[] {
   const raw = readJsonObject(resolve(saasMakerRoot, ".symphony/tasks.json")) as { tasks?: Array<Record<string, unknown>> };
   return (raw.tasks ?? []).map((task) => ({
     id: String(task.id ?? ""),
-    projectSlug: canonicalSlugByAlias[String(task.project_slug ?? "")] ?? String(task.project_slug ?? "unassigned"),
+    projectSlug: canonicalProjectSlug(String(task.project_slug ?? "unassigned")),
     title: String(task.title ?? "Untitled task"),
     status: String(task.status ?? "unknown"),
     priority: String(task.priority ?? "unknown"),
@@ -333,10 +337,13 @@ export function getFleetTasks(): FleetTask[] {
 }
 
 export function getFleetProjects(): FleetProject[] {
-  const catalog = readJsonObject(resolve(saasMakerRoot, "foundry.projects.json")) as Record<
+  const rawCatalog = readJsonObject(resolve(saasMakerRoot, "foundry.projects.json")) as Record<
     string,
     { desc?: string; url?: string; tier?: string }
   >;
+  const catalog = Object.fromEntries(
+    Object.entries(rawCatalog).map(([slug, meta]) => [canonicalProjectSlug(slug), meta])
+  ) as Record<string, { desc?: string; url?: string; tier?: string }>;
   const audit = readJsonObject(resolve(saasMakerRoot, ".symphony/fleet-audit/latest.json")) as {
     projects?: Array<Record<string, any>>;
   };
@@ -344,8 +351,8 @@ export function getFleetProjects(): FleetProject[] {
     summary?: Array<Record<string, unknown>>;
   };
   const tasks = getFleetTasks();
-  const auditBySlug = new Map((audit.projects ?? []).map((project) => [String(project.slug), project]));
-  const smokeBySlug = new Map((smoke.summary ?? []).map((item) => [String(item.project), item]));
+  const auditBySlug = new Map((audit.projects ?? []).map((project) => [canonicalProjectSlug(String(project.slug)), project]));
+  const smokeBySlug = new Map((smoke.summary ?? []).map((item) => [canonicalProjectSlug(String(item.project)), item]));
   const slugs = [...new Set([...Object.keys(catalog), "fleet-ops", "wifi-watch"])]
     .filter((slug) => Boolean(catalog[slug]) || existsSync(projectRoot(slug)))
     .sort((a, b) => a.localeCompare(b));

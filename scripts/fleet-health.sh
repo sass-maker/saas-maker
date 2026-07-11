@@ -51,10 +51,7 @@ if [[ -z "$ONLY" ]]; then
 fi
 
 repo_dir_for_project() {
-  case "$1" in
-    tinygpt) printf '%s\n' "posttrainllm" ;;
-    *) printf '%s\n' "$1" ;;
-  esac
+  printf '%s\n' "$1"
 }
 
 printf '%-20s %-10s %-8s %-8s %s\n' "PROJECT" "BRANCH" "GIT" "CI" "NOTES"

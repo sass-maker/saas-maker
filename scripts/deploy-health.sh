@@ -187,7 +187,6 @@ repo_dir_for_project() {
   local normalized
 
   case "$project" in
-    tinygpt) normalized="posttrainllm" ;;
     *) normalized="${project//_/-}" ;;
   esac
 

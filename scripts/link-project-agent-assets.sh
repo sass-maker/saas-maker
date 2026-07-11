@@ -14,7 +14,7 @@ immediate child directory containing .git is used.
 
 Examples:
   scripts/link-project-agent-assets.sh --dry-run
-  scripts/link-project-agent-assets.sh reader linkchat
+  scripts/link-project-agent-assets.sh reader karte
 USAGE
 }
 
