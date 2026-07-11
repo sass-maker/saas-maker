@@ -15,7 +15,7 @@ _Last audited: 2026-06-23._
 
 | State | Projects |
 |---|---|
-| **Has study queue** (14) | ai-game (25 topics), high-signal (14), codevetter (13), reel-pipeline (13), email-manager · reader · saas-maker · swe-interview-prep (12), pace (11), starboard (10), free-ai · research-papers (9), looptv (7), tinygpt (14, migrated 2026-06-23) |
+| **Has study queue** (14) | aliveville (25 topics), high-signal (14), codevetter (13), reel-pipeline (13), email-manager · reader · saas-maker · swe-interview-prep (12), pace (11), starboard (10), free-ai · research-papers (9), looptv (7), tinygpt (14, migrated 2026-06-23) |
 | **Old scaffold — migrated/retired** | tinygpt → `new-things.md` (old `lessons.md` archived) |
 | **Exempt (plain full-stack)** | anime-list, drank, significanthobbies, rolepatch |
 | **Fancy but no track — candidates** | karte (agent-trust/AI chat), knowledge-base (RAG) |
@@ -23,7 +23,7 @@ _Last audited: 2026-06-23._
 ## Verdict
 
 **Scaffolding is stocked; the learning is unfilled.** Across *every* populated
-project the `Why here:` field is ~100% `TBD` (ai-game 26 TBD, high-signal 14,
+project the `Why here:` field is ~100% `TBD` (aliveville 26 TBD, high-signal 14,
 email-manager 12, …). That's by-design — `Why here` is the user's to fill — so
 the agent-side job (stub topics) is done, but no queue has been worked through
 yet. Populating the `Why here:` lines as the user learns each topic is the

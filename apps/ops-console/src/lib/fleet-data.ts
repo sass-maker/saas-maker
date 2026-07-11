@@ -8,11 +8,13 @@ const fleetRoot = resolve(fleetOpsRoot, "..");
 const saasMakerRoot = resolve(fleetRoot, "saas-maker");
 
 const localDirBySlug: Record<string, string> = {
-  "alive-ville": "ai-game"
+  "alive-ville": "aliveville"
 };
 
 const canonicalSlugByAlias: Record<string, string> = {
   CodeVetter: "codevetter",
+  "ai-game": "aliveville",
+  "alive-ville": "aliveville",
   anime_list: "anime-list",
   linkchat: "karte",
   posttrainllm: "tinygpt",

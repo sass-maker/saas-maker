@@ -22,7 +22,7 @@ Six layers:
 | Status | Projects |
 |--------|----------|
 | ✅ web-vitals + PostHog | anime-list, email-manager, high-signal, karte, looptv, rolepatch, significanthobbies, starboard, swe-interview-prep, tinygpt/browser |
-| ✅ web-vitals only (no PostHog) | alive-ville (`ai-game` web3d) |
+| ✅ web-vitals only (no PostHog) | aliveville web3d |
 | ⚠️ PostHog only (no web-vitals) | reader |
 | ❌ Not wired | drank, saas-maker (platform, no client RUM) |
 
@@ -30,7 +30,7 @@ Six layers:
 
 | Status | Projects |
 |--------|----------|
-| ✅ Wired | anime-list, email-manager, high-signal, karte, looptv, reader, rolepatch, significanthobbies, starboard, swe-interview-prep, tinygpt/browser, alive-ville (`ai-game` web3d), drank, saas-maker (cockpit), research-papers |
+| ✅ Wired | anime-list, email-manager, high-signal, karte, looptv, reader, rolepatch, significanthobbies, starboard, swe-interview-prep, tinygpt/browser, aliveville web3d, drank, saas-maker (cockpit), research-papers |
 | ❌ N/A (no browser) | free-ai, pace, reel-pipeline, codevetter (Tauri) |
 
 Template: `fleet-ops/templates/api-timing.ts`
@@ -39,7 +39,7 @@ Template: `fleet-ops/templates/api-timing.ts`
 
 | ✅ Wired | anime-list, email-manager, high-signal, karte, knowledge-base, rolepatch, significanthobbies, starboard, swe-interview-prep |
 |----------|---|
-| ❌ Missing | saas-maker, free-ai, reader, looptv, alive-ville (`ai-game`) |
+| ❌ Missing | saas-maker, free-ai, reader, looptv, aliveville |
 
 ### Error handling
 
@@ -62,7 +62,7 @@ All 15 active production URLs in the last sweep passed the LCP gate (p75 ≤ 2.5
 | looptv | 500 ms | ✅ |
 | karte | 541 ms | ✅ |
 | tinygpt | 567 ms | ✅ |
-| alive-ville (`ai-game`) | 568 ms | ✅ |
+| aliveville | 568 ms | ✅ |
 | rolepatch | 618 ms | ✅ |
 | research-papers | 629 ms | ✅ |
 | high-signal | 677 ms | ✅ |

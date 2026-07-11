@@ -50,7 +50,7 @@ Current implementation state:
 | `karte` | yes | `karte.cc`, `*.karte.cc`, `origin.karte.cc` | Own product brand; keep. |
 | `saas-maker` | not in local wrangler audit | `sassmaker.com` | Recorded in Fleet README as SaaS Maker production domain. |
 | `high-signal` | not in local wrangler audit | `highsignal.app` | Recorded in Fleet README. |
-| `ai-game` / AliveVille | not in local wrangler audit | `aliveville.com` | Recorded in Fleet README. |
+| `aliveville` | not in local wrangler audit | `aliveville.com` | Recorded in Fleet README. |
 | `codevetter` | not in local wrangler audit | `codevetter.com` | Recorded in Fleet README. |
 
 ## Needs Domain Assignment

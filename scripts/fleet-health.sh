@@ -6,7 +6,7 @@
 # Usage:
 #   bash fleet-ops/scripts/fleet-health.sh
 #   bash fleet-ops/scripts/fleet-health.sh --no-fetch   # skip git fetch
-#   bash fleet-ops/scripts/fleet-health.sh --only saas-maker,ai-game
+#   bash fleet-ops/scripts/fleet-health.sh --only saas-maker,aliveville
 
 set -euo pipefail
 

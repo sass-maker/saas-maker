@@ -134,7 +134,7 @@ feature moves from OpenSpec into PROJECT_STATUS.md.
 
 ## Cross-repo features (Stores)
 
-For features that span multiple repos (e.g. ai-game + open-historia, rolepatch
+For features that span multiple repos (e.g. aliveville + open-historia, rolepatch
 + truehire, high-signal + drank + free-ai):
 
 1. Create or attach to a Store: `openspec store create <name>` or

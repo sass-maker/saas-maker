@@ -28,13 +28,13 @@ Cloudflare, Vercel, and other hosts are deployment targets, not task stores.
 The fleet is managed in four buckets:
 
 - **Focus:** `pace`, `codevetter`, `tinygpt`
-- **Support:** `high-signal`, `drank`, `research-papers`, `fleet-ops`, `saas-maker`, `free-ai`, `knowledge-base`, `reel-pipeline`, `alive-ville`
+- **Support:** `high-signal`, `drank`, `research-papers`, `fleet-ops`, `saas-maker`, `free-ai`, `knowledge-base`, `reel-pipeline`, `aliveville`
 - **Personal use:** `rolepatch`, `karte`, `reader`, `swe-interview-prep`, `significanthobbies`, `looptv`, `anime-list`, `email-manager`
 
 Operating rule: any product with a purchased custom domain remains in **Support**
 even when it is not a focus bet. Personal-use products receive maintenance only;
 when they also have a custom domain, that maintenance includes keeping the public
-surface minimally healthy. Known domain-backed surfaces include `alive-ville`,
+surface minimally healthy. Known domain-backed surfaces include `aliveville`,
 `karte`, `rolepatch`, `significanthobbies`, and `saas-maker`.
 
 Email Manager is retained in the fleet workspace as a personal-use maintenance
@@ -45,7 +45,6 @@ Local checkout aliases:
 
 | Canonical project | Local checkout |
 | --- | --- |
-| `alive-ville` | `ai-game` |
 
 ## Owned Domain Map
 
@@ -58,7 +57,7 @@ The ten owned root domains currently mapped to fleet projects are:
 | `sarthakagrawal.dev` | Portfolio |
 | `heypace.app` | Pace |
 | `codevetter.com` | codevetter |
-| `aliveville.com` | AliveVille (`ai-game` checkout) |
+| `aliveville.com` | aliveville |
 | `rolepatch.com` | RolePatch |
 | `highsignal.app` | High Signal |
 | `karte.cc` | Karte |
@@ -166,7 +165,7 @@ The active production fleet is listed in
 
 | Project | Purpose | Local run | Verify before push | Deploy |
 | --- | --- | --- | --- | --- |
-| `alive-ville` (`ai-game`) | AliveVille 3D AI world simulator | `pnpm dev` | `pnpm typecheck`, `pnpm test`, `pnpm build` | project workflows |
+| `aliveville` | AliveVille 3D AI world simulator | `pnpm dev` | `pnpm typecheck`, `pnpm test`, `pnpm build` | project workflows |
 | `anime-list` | MAL Explorer for anime/manga discovery and watchlists | `pnpm dev` | `pnpm lint`, `pnpm test`, `pnpm pages:build` | `pnpm deploy` |
 | `codevetter` | Desktop-first AI code review platform | see project README | see project README / CI | see project README / CI |
 | `drank` | Domain rating tracker | see project README | see project README / CI | see project README / CI |

@@ -19,7 +19,7 @@ Checks git state, CI signal, and branch status across active projects listed in
 ```bash
 bash ~/Desktop/fleet/fleet-ops/scripts/fleet-health.sh
 bash ~/Desktop/fleet/fleet-ops/scripts/fleet-health.sh --no-fetch     # skip git fetch
-bash ~/Desktop/fleet/fleet-ops/scripts/fleet-health.sh --only saas-maker,ai-game
+bash ~/Desktop/fleet/fleet-ops/scripts/fleet-health.sh --only saas-maker,aliveville
 ```
 
 The script reads the project list from the fleet README, so it stays in sync
@@ -35,7 +35,7 @@ Output a compact table:
 ```
 PROJECT          BRANCH  GIT    CI     NOTES
 saas-maker       main    clean  green  —
-ai-game          main    dirty  green  2 uncommitted files
+aliveville       main    dirty  green  2 uncommitted files
 anime-list       main    clean  red    ci.yml failing
 ```
 
