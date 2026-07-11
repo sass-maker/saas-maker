@@ -52,19 +52,26 @@ Current implementation state:
 | `high-signal` | not in local wrangler audit | `highsignal.app` | Recorded in Fleet README. |
 | `aliveville` | not in local wrangler audit | `aliveville.com` | Recorded in Fleet README. |
 | `codevetter` | not in local wrangler audit | `codevetter.com` | Recorded in Fleet README. |
+| `pace` | Pages app | `heypace.app` | Focus-zone product. |
+| `tinygpt` | Pages app | `posttrainllm.com` | Legacy domain; consider `tinygpt.sassmaker.com` as secondary canonical only if the product is renamed publicly. |
 
 ## Needs Domain Assignment
 
-These are non-archived projects with local Cloudflare deployment config and no
-custom production domain in that config.
+These are non-archived projects without their own active fleet product domain.
+Default to stable `*.sassmaker.com` hostnames unless a separate brand domain is
+purchased later.
 
 | Priority | Project | Current CF target/config | Proposed canonical | SEO posture |
 |---:|---|---|---|---|
+| 0 | `fleet-ops` | Cloudflare Tunnel prepared | `fleet.sassmaker.com` | Operator console. Index the public fleet map; noindex private host diagnostics. |
 | 1 | `reader` | Worker, no routes | `reader.sassmaker.com` | Public research library. Needs crawlable landing, `/sitemap.xml`, article/library index, OG defaults. |
 | 1 | `swe-interview-prep` | Pages domain attached, initializing | `interview.sassmaker.com` | Evergreen learning content. Needs concept pages, problem index, sitemap. |
+| 1 | `research-papers` | Pages demo | `papers.sassmaker.com`, `api.papers.sassmaker.com` | Research search/RAG surface. Needs crawlable paths, cited answer examples, and paper-topic hubs. |
+| 1 | `knowledge-base` | private/search infra | `search.sassmaker.com`, `api.search.sassmaker.com` | Private Agent Search. Public SEO should be docs/use-cases only; keep private indexes noindex. |
 | 2 | `anime-list` | Pages domain attached, initializing | `anime.sassmaker.com` | Free tool. Needs canonical metadata and indexable anime/manga routes. |
 | 2 | `looptv` | Pages domain attached, initializing | `tv.sassmaker.com` | Free tool. Needs curated channel/category pages, sitemap. |
 | 2 | `starboard` | Worker route config prepared | `starboard.sassmaker.com` | SaaS surface. Could also become `stars.codevetter.com` if codevetter umbrella wins. |
+| 2 | `drank` | support app | `domains.sassmaker.com`, `api.domains.sassmaker.com` | Domain-rating support surface. SEO via DR explainer, tracked-domain examples, and High Signal backlinks. |
 | 3 | `email-manager` | Worker route config prepared | `mail.sassmaker.com` | Likely auth-heavy. Use marketing/docs pages for SEO, keep app noindex if private. |
 | 3 | `free-ai` | Worker route config prepared | `ai.sassmaker.com` | API gateway/docs. SEO via docs and model/provider pages; API base can be `api.ai.sassmaker.com`. |
 | 4 | `reel-pipeline` | Worker route config prepared | `reels.sassmaker.com` | Mostly support infra. SEO only if there is a public gallery/docs surface. |
