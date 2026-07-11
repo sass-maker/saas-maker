@@ -1,0 +1,116 @@
+---
+import { getFleetProjects, getSnapshotInfo } from "../lib/fleet-data";
+
+const projects = getFleetProjects();
+const snapshot = getSnapshotInfo();
+const stateCounts = projects.reduce<Record<string, number>>((acc, project) => {
+  acc[project.stateLabel] = (acc[project.stateLabel] ?? 0) + 1;
+  return acc;
+}, {});
+const formatDate = (value: string | null) =>
+  value
+    ? new Intl.DateTimeFormat("en", {
+        dateStyle: "medium",
+        timeStyle: "short",
+        timeZone: "Asia/Kolkata"
+      }).format(new Date(value))
+    : "No recent task";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Fleet Projects</title>
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Fleet Ops</p>
+          <h1>Projects</h1>
+        </div>
+        <nav class="topnav" aria-label="Fleet console">
+          <a href="/">Overview</a>
+          <a href="/projects">Projects</a>
+          <a href="/connections">Connections</a>
+        </nav>
+      </header>
+
+      <section class="summary">
+        <article><strong>{projects.length}</strong><span>Total projects</span></article>
+        {
+          Object.entries(stateCounts).map(([label, count]) => (
+            <article><strong>{count}</strong><span>{label}</span></article>
+          ))
+        }
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">State</p>
+            <h2>What is being worked on</h2>
+          </div>
+          <span>Updates every 5 min · Generated {formatDate(snapshot.generatedAt)}</span>
+        </div>
+
+        <div class="project-list">
+          {
+            projects.map((project) => (
+              <a class="project-row" href={`/projects/${project.slug}`}>
+                <div>
+                  <span class:list={["state", project.state]}>{project.stateLabel}</span>
+                  <h3>{project.slug}</h3>
+                  <p>{project.desc}</p>
+                </div>
+                <dl>
+                  <div><dt>Lane</dt><dd>{project.lane}</dd></div>
+                  <div><dt>Open</dt><dd>{project.openTasks.length}</dd></div>
+                  <div><dt>High</dt><dd>{project.highPriorityTasks}</dd></div>
+                  <div><dt>Blocked</dt><dd>{project.blockedTasks}</dd></div>
+                  <div><dt>Smoke</dt><dd>{project.smokeStatus}</dd></div>
+                  <div><dt>Dirty</dt><dd>{project.dirtyCount}</dd></div>
+                </dl>
+              </a>
+            ))
+          }
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
+
+<style>
+  :root { color-scheme: dark; --bg:#0f1110; --panel:#171a18; --line:#333a36; --text:#f4f6f8; --muted:#aab3bd; --green:#8ce99a; --cyan:#76d7c4; --yellow:#ffd166; --red:#ff8787; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:linear-gradient(180deg,rgba(118,215,196,.08),transparent 320px),var(--bg); color:var(--text); font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.45; }
+  .shell { width:min(1440px,100%); margin:0 auto; padding:24px; }
+  .topbar { display:flex; align-items:end; justify-content:space-between; gap:16px; min-height:128px; margin-bottom:16px; border-bottom:1px solid var(--line); }
+  .eyebrow { margin:0 0 6px; color:var(--muted); font-size:12px; font-weight:800; text-transform:uppercase; }
+  h1 { margin:0; font-size:clamp(42px,7vw,78px); line-height:.98; letter-spacing:0; }
+  h2,h3,p { margin-top:0; }
+  .topnav { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:8px; margin-bottom:12px; }
+  .topnav a { display:inline-flex; align-items:center; min-height:32px; border:1px solid var(--line); border-radius:999px; padding:4px 12px; color:var(--muted); text-decoration:none; font-size:12px; font-weight:800; text-transform:uppercase; }
+  .summary { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; margin-bottom:16px; }
+  .summary article,.panel,.project-row { border:1px solid var(--line); border-radius:8px; background:var(--panel); }
+  .summary article { min-height:112px; padding:16px; display:flex; flex-direction:column; justify-content:space-between; }
+  .summary strong { font-size:40px; line-height:1; }
+  .summary span,.panel-head span,.project-row p,dt { color:var(--muted); }
+  .panel { padding:16px; }
+  .panel-head { display:flex; align-items:start; justify-content:space-between; gap:16px; margin-bottom:16px; }
+  .project-list { display:grid; gap:10px; }
+  .project-row { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(420px,.8fr); gap:16px; padding:14px; color:var(--text); text-decoration:none; }
+  .project-row h3 { margin:8px 0 6px; font-size:24px; }
+  dl { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin:0; }
+  dd { margin:2px 0 0; font-weight:800; }
+  .state { display:inline-flex; border:1px solid var(--line); border-radius:999px; padding:3px 9px; font-size:12px; font-weight:800; text-transform:uppercase; }
+  .state.needs-attention { color:var(--red); border-color:rgba(255,135,135,.5); background:rgba(255,135,135,.08); }
+  .state.active { color:var(--cyan); border-color:rgba(118,215,196,.5); background:rgba(118,215,196,.08); }
+  .state.blocked { color:var(--yellow); border-color:rgba(255,209,102,.5); background:rgba(255,209,102,.08); }
+  .state.local-changes { color:var(--yellow); border-color:rgba(255,209,102,.5); background:rgba(255,209,102,.08); }
+  .state.steady { color:var(--green); border-color:rgba(140,233,154,.5); background:rgba(140,233,154,.08); }
+  @media (max-width:760px) { .shell{padding:14px;} .topbar,.panel-head,.project-row{display:grid;} .topnav{justify-content:stretch;} .topnav a{justify-content:center;} .project-row{grid-template-columns:1fr;} dl{grid-template-columns:repeat(2,minmax(0,1fr));} }
+</style>
+

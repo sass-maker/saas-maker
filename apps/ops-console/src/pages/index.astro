@@ -1,8 +1,10 @@
 ---
-import { getCronJobs, getWifiSummary } from "../lib/fleet-data";
+import { getCronJobs, getFleetProjects, getSnapshotInfo, getWifiSummary } from "../lib/fleet-data";
 
 const cronJobs = getCronJobs();
 const wifi = getWifiSummary();
+const projects = getFleetProjects();
+const snapshot = getSnapshotInfo();
 const activeJobs = cronJobs.filter((job) => job.enabled);
 const heavyJobs = cronJobs.filter((job) => job.effort === "high").length;
 const wifiMax = Math.max(...wifi.sparkline, 1);
@@ -34,7 +36,11 @@ const formatDate = (value: string | null) =>
           <p class="eyebrow">Fleet Ops</p>
           <h1>Machine-run control plane</h1>
         </div>
-        <div class="status-pill">Internet view</div>
+        <nav class="topnav" aria-label="Fleet console">
+          <a href="/">Overview</a>
+          <a href="/projects">Projects</a>
+          <a href="/connections">Connections</a>
+        </nav>
       </header>
 
       <section class="hero-grid" aria-label="Fleet Ops summary">
@@ -61,11 +67,17 @@ const formatDate = (value: string | null) =>
         </article>
         <article class="summary-card">
           <div>
-            <p class="label">Pause/resume</p>
-            <strong>1</strong>
+            <p class="label">Projects</p>
+            <strong>{projects.length}</strong>
           </div>
-          <span>`agent-stack.sh` owns OpenClaw and cron lifecycle together.</span>
+          <span>Read-only project state, work queues, smoke, and relationships.</span>
         </article>
+      </section>
+
+      <section class="panel update-panel" aria-label="Update cadence">
+        <strong>Read-only snapshot</strong>
+        <span>{snapshot.refreshCadence}</span>
+        <span>Generated {formatDate(snapshot.generatedAt)}</span>
       </section>
 
       <section class="content-grid">
@@ -288,6 +300,27 @@ const formatDate = (value: string | null) =>
     text-transform: uppercase;
   }
 
+  .topnav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  .topnav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 4px 12px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
   .hero-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -335,6 +368,19 @@ const formatDate = (value: string | null) =>
     grid-template-columns: minmax(0, 1fr) 380px;
     gap: 16px;
     align-items: start;
+  }
+
+  .update-panel {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 18px;
+    align-items: center;
+    margin-bottom: 16px;
+    color: var(--muted);
+  }
+
+  .update-panel strong {
+    color: var(--text);
   }
 
   .panel {
@@ -526,6 +572,14 @@ const formatDate = (value: string | null) =>
     .panel-head,
     .job-head {
       display: grid;
+    }
+
+    .topnav {
+      justify-content: stretch;
+    }
+
+    .topnav a {
+      justify-content: center;
     }
 
     .hero-grid,
