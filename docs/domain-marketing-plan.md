@@ -159,7 +159,7 @@ changes.
 | `knowledge-base` | `search.sassmaker.com` | `api.search.sassmaker.com` | Public docs only; private indexes noindex. |
 | `anime-list` | `anime.sassmaker.com` | `api.anime.sassmaker.com` if MAL API moves | Free discovery tool. |
 | `looptv` | `tv.sassmaker.com` | none initially | Curated channels/categories for SEO. |
-| `starboard` | `starboard.sassmaker.com` | `stars.codevetter.com` optional | Choose `stars.codevetter.com` if CodeVetter umbrella branding wins. |
+| `starboard` | `starboard.codevetter.com` | none initially | CodeVetter umbrella branding won in the Starboard Worker config. |
 | `drank` | `domains.sassmaker.com` | `api.domains.sassmaker.com` | Domain Rating support and High Signal backlinks. |
 | `email-manager` | `mail.sassmaker.com` | none initially | Auth-heavy app; marketing/docs indexable, app private/noindex. |
 | `free-ai` | `ai.sassmaker.com` | `api.ai.sassmaker.com` | API docs and provider/model pages. |

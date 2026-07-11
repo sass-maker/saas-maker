@@ -32,7 +32,8 @@ install_skills() {
     mkdir -p "$dir"
     ln -sfn "$FLEET_OPS_DIR/skills/fleet-ops" "$dir/fleet-ops"
     ln -sfn "$FLEET_OPS_DIR/teammates/skills/call-teammate" "$dir/call-teammate"
-    for skill in name-domains spec-driven psi-swarm agent-ready seo-audit token-budget; do
+    ln -sfn "$FLEET_OPS_DIR/psi-swarm" "$dir/psi-swarm"
+    for skill in name-domains spec-driven agent-ready seo-audit token-budget; do
       ln -sfn "$FLEET_OPS_DIR/skills/$skill" "$dir/$skill"
     done
   done

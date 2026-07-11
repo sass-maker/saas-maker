@@ -70,7 +70,7 @@ purchased later.
 | 1 | `knowledge-base` | private/search infra | `search.sassmaker.com`, `api.search.sassmaker.com` | Private Agent Search. Public SEO should be docs/use-cases only; keep private indexes noindex. |
 | 2 | `anime-list` | Pages domain attached, initializing | `anime.sassmaker.com` | Free tool. Needs canonical metadata and indexable anime/manga routes. |
 | 2 | `looptv` | Pages domain attached, initializing | `tv.sassmaker.com` | Free tool. Needs curated channel/category pages, sitemap. |
-| 2 | `starboard` | Worker route config prepared | `starboard.sassmaker.com` | SaaS surface. Could also become `stars.codevetter.com` if codevetter umbrella wins. |
+| 2 | `starboard` | Worker custom-domain route prepared | `starboard.codevetter.com` | SaaS surface under the CodeVetter umbrella. |
 | 2 | `drank` | support app | `domains.sassmaker.com`, `api.domains.sassmaker.com` | Domain-rating support surface. SEO via DR explainer, tracked-domain examples, and High Signal backlinks. |
 | 3 | `email-manager` | Worker route config prepared | `mail.sassmaker.com` | Likely auth-heavy. Use marketing/docs pages for SEO, keep app noindex if private. |
 | 3 | `free-ai` | Worker route config prepared | `ai.sassmaker.com` | API gateway/docs. SEO via docs and model/provider pages; API base can be `api.ai.sassmaker.com`. |
