@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "build": "pnpm run typecheck",
     "dev": "wrangler dev",
     "deploy": "wrangler deploy && node ../../scripts/smoke-prod.mjs",
     "typecheck": "tsc --noEmit"
