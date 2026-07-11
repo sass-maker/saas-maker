@@ -3,6 +3,9 @@
   "name": "reel-pipeline-artifacts",
   "main": "src/worker/index.js",
   "compatibility_date": "2026-05-28",
+  "routes": [
+    { "pattern": "reels.sassmaker.com/*", "zone_name": "sassmaker.com" }
+  ],
   "r2_buckets": [
     {
       "binding": "REEL_ARTIFACTS",
