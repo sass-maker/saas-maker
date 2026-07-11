@@ -250,10 +250,9 @@ Only 8 fleet skills are exposed to each agent — 2 parents + 6 standalones:
 | `token-budget` | standalone | Codex context/token audit |
 
 Agent skill dirs wired (symlinks point to `fleet-ops/` paths):
-- `~/.claude/skills/` (Claude Code)
 - `~/.codex/skills/` (Codex CLI)
-- `~/.cursor/skills/` (Cursor)
-- `~/.config/devin/skills/` (Devin CLI)
+- `~/.hermes/skills/` (Hermes Agent)
+- `~/.openclaw/skills/` (OpenClaw Gateway agents)
 
 Agents load the parent skill, read the routing table, then load the relevant
 subskill's SKILL.md on demand. Subskills are not symlinked individually —

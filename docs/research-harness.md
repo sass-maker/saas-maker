@@ -23,8 +23,22 @@ its own narrow tool policy and artifact boundary.
 
 ```bash
 ./fleet-ops/scripts/agent-bin/harness-health
+./fleet-ops/scripts/agent-stack.sh install-skills
+./fleet-ops/scripts/agent-stack.sh install-agents
 ./fleet-ops/scripts/agent-bin/research-dispatch "Compare options for ..."
 ./fleet-ops/scripts/agent-bin/grok-research-review "Challenge report ..."
+```
+
+`install-skills` links Fleet skills into Codex, Hermes, and OpenClaw.
+`install-agents` registers Fleet support workspaces as isolated OpenClaw agents:
+`fleet-ops`, `saas-maker`, `free-ai`, `reel-pipeline`, `drank`, `high-signal`,
+`knowledge-base`, `research-papers`, `aliveville`, `codevetter`, and
+`starboard`.
+
+Use a project id directly for targeted support work, for example:
+
+```bash
+openclaw agent --agent reel-pipeline --message "Read AGENTS.md and PROJECT_STATUS.md, then summarize current render readiness."
 ```
 
 The control plane should improve decisions or remove recurring work. Do not add

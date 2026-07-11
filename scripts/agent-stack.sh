@@ -10,6 +10,7 @@ usage: agent-stack.sh <command>
 
 Commands:
   install-skills  Link Fleet Ops skills into local agent runtimes.
+  install-agents  Register Fleet support projects as OpenClaw agents.
   install-cron    Install Fleet Ops Codex cron jobs.
   remove-cron     Remove Fleet Ops Codex cron jobs.
   cron-ui         Render the local Codex cron dashboard.
@@ -27,7 +28,7 @@ install_skills() {
   local dir
   local skill
 
-  for dir in "$HOME/.codex/skills" "$HOME/.hermes/skills"; do
+  for dir in "$HOME/.codex/skills" "$HOME/.hermes/skills" "$HOME/.openclaw/skills"; do
     mkdir -p "$dir"
     ln -sfn "$FLEET_OPS_DIR/skills/fleet-ops" "$dir/fleet-ops"
     ln -sfn "$FLEET_OPS_DIR/teammates/skills/call-teammate" "$dir/call-teammate"
@@ -39,6 +40,7 @@ install_skills() {
 
 case "${1:-}" in
   install-skills) install_skills ;;
+  install-agents) "$FLEET_OPS_DIR/scripts/agent-bin/setup-openclaw-support-agents" "${@:2}" ;;
   install-cron) "$FLEET_OPS_DIR/scripts/agent-bin/install-codex-cron" ;;
   remove-cron) "$FLEET_OPS_DIR/scripts/agent-bin/install-codex-cron" --remove ;;
   cron-ui) "$FLEET_OPS_DIR/scripts/agent-bin/render-codex-cron-ui" ;;
