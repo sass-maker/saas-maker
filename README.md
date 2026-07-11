@@ -48,16 +48,22 @@ Everything is hosted on Cloudflare. Each deployable ships independently via GitH
 
 ## Fleet Registry
 
-`foundry.projects.json` is the source of truth for the active fleet catalog. The public showcase at `sassmaker.com` derives its project list from that registry at build time. `category` separates focus products, personal projects, and helper systems; `priority` tracks current attention level (`P0`, `P1`, `P2`, `P3`).
+`foundry.projects.json` is the source of truth for the active fleet catalog. The public showcase at `sassmaker.com` derives its project list from that registry at build time. `tier` separates focus, support/platform, and personal projects; `priority` tracks current attention level (`P1`, `P2`, `P3`).
 
 | Project                                                                     | Category | Priority | Role                                                              |
 | --------------------------------------------------------------------------- | -------- | -------- | ----------------------------------------------------------------- |
-| [`saas-maker`](https://github.com/sarthak-fleet/saas-maker)                 | helper   | P0       | Foundry control plane, cockpit, API, docs, widgets, and showcase. |
 | [`CodeVetter`](https://github.com/sarthak-fleet/codevetter)                 | product  | P1       | Desktop-first AI code review platform.                            |
 | [`pace`](https://github.com/sarthak-fleet/pace)                             | product  | P1       | Local macOS voice agent.                                          |
-| [`alive-ville`](https://github.com/sarthak-fleet/alive-ville)               | product  | P2       | Persistent AI world simulator and AliveVille game surface.        |
-| [`high-signal`](https://github.com/sarthak-fleet/high-signal)               | product  | P2       | Public signal log for AI infrastructure and semiconductors.       |
 | [`posttrainllm`](https://github.com/sarthak-fleet/tinygpt)                  | product  | P2       | Post-training and model learning workspace.                       |
+| [`saas-maker`](https://github.com/sarthak-fleet/saas-maker)                 | product  | P2       | Foundry control plane, cockpit, API, docs, widgets, and showcase. |
+| [`alive-ville`](https://github.com/sarthak-fleet/alive-ville)               | product  | P2       | Persistent AI world simulator and AliveVille game surface.        |
+| [`drank`](https://github.com/sarthak-fleet/drank)                           | product  | P2       | Domain Rating tracker for domain research.                        |
+| [`free-ai`](https://github.com/sarthak-fleet/free-ai)                       | product  | P2       | OpenAI-compatible LLM gateway for free-tier providers.            |
+| [`high-signal`](https://github.com/sarthak-fleet/high-signal)               | product  | P2       | Public signal log for AI infrastructure and semiconductors.       |
+| [`knowledge-base`](https://github.com/sarthak-fleet/knowledge-base)         | product  | P2       | Private Agent Search over project-scoped corpora.                 |
+| [`reel-pipeline`](https://github.com/sarthak-fleet/reel-pipeline)           | product  | P2       | Short-form video generation pipeline for fleet marketing assets.  |
+| [`research-papers`](https://github.com/sarthak-fleet/research-papers)       | product  | P2       | Academic paper platform and research data asset.                  |
+| [`starboard`](https://github.com/sarthak-fleet/starboard)                   | product  | P2       | GitHub stars organizer and semantic search under CodeVetter.      |
 | [`anime-list`](https://github.com/sarthak-fleet/anime-list)                 | personal | P3       | Personal anime discovery and tracking surface.                    |
 | [`email-manager`](https://github.com/sarthak-fleet/email-manager)           | personal | P3       | Personal email operations workspace.                              |
 | [`karte`](https://github.com/sarthak-fleet/karte)                           | personal | P3       | AI link-in-bio product.                                           |

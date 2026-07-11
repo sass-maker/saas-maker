@@ -97,6 +97,7 @@ const PROD_TARGETS = {
   'email-manager': [
     { label: 'web', url: 'https://email-manager.sarthakagrawal927.workers.dev', ok: [200] },
   ],
+  drank: [{ label: 'web', url: 'https://drank-sand.vercel.app', ok: [200] }],
   'free-ai': [
     { label: 'gateway', url: 'https://free-ai-gateway.sarthakagrawal927.workers.dev', ok: [200] },
   ],
@@ -104,6 +105,13 @@ const PROD_TARGETS = {
   'high-signal': [
     { label: 'web', url: 'https://highsignal.app', ok: [200] },
     { label: 'api', url: 'https://high-signal-api.sarthakagrawal927.workers.dev', ok: [200] },
+  ],
+  'knowledge-base': [
+    {
+      label: 'health',
+      url: 'https://knowledgebase.sarthakagrawal927.workers.dev/v1/healthz',
+      ok: [200],
+    },
   ],
   karte: [{ label: 'web', url: 'https://linkchat.sarthakagrawal927.workers.dev', ok: [200] }],
   looptv: [{ label: 'web', url: 'https://looptv.pages.dev', ok: [200] }],
@@ -131,9 +139,13 @@ const FRONTEND_TARGETS = {
   'anime-list': [{ label: 'web', url: 'https://anime-list-9lk.pages.dev' }],
   CodeVetter: [{ label: 'web', url: 'https://codevetter.com' }],
   'email-manager': [{ label: 'web', url: 'https://email-manager.sarthakagrawal927.workers.dev' }],
+  drank: [{ label: 'web', url: 'https://drank-sand.vercel.app' }],
   'free-ai': [],
   'alive-ville': [{ label: 'web', url: 'https://aliveville.com' }],
   'high-signal': [{ label: 'web', url: 'https://highsignal.app' }],
+  'knowledge-base': [
+    { label: 'health', url: 'https://knowledgebase.sarthakagrawal927.workers.dev/v1/healthz' },
+  ],
   karte: [{ label: 'web', url: 'https://linkchat.sarthakagrawal927.workers.dev' }],
   looptv: [{ label: 'web', url: 'https://looptv.pages.dev' }],
   reader: [{ label: 'web', url: 'https://reader.sarthakagrawal927.workers.dev' }],

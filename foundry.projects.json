@@ -23,6 +23,30 @@
     "priority": "P2",
     "maturity": "public-ready"
   },
+  "drank": {
+    "desc": "Domain Rating tracker that supports High Signal and domain research.",
+    "url": "https://github.com/sarthak-fleet/drank.git",
+    "tier": "support",
+    "category": "product",
+    "priority": "P2",
+    "maturity": "maintained"
+  },
+  "free-ai": {
+    "desc": "OpenAI-compatible LLM gateway fronting free-tier model providers.",
+    "url": "https://github.com/sarthak-fleet/free-ai.git",
+    "tier": "support",
+    "category": "product",
+    "priority": "P2",
+    "maturity": "maintained"
+  },
+  "knowledge-base": {
+    "desc": "Private Agent Search over project-scoped corpora.",
+    "url": "https://github.com/sarthak-fleet/knowledge-base.git",
+    "tier": "support",
+    "category": "product",
+    "priority": "P2",
+    "maturity": "maintained"
+  },
   "karte": {
     "desc": "Karte — AI link-in-bio at karte.cc.",
     "url": "https://github.com/sarthak-fleet/karte.git",
@@ -80,12 +104,28 @@
     "priority": "P3",
     "maturity": "maintained"
   },
+  "reel-pipeline": {
+    "desc": "AI short-form video generation pipeline for fleet marketing assets.",
+    "url": "https://github.com/sarthak-fleet/reel-pipeline.git",
+    "tier": "support",
+    "category": "product",
+    "priority": "P2",
+    "maturity": "maintained"
+  },
+  "research-papers": {
+    "desc": "Academic paper platform and data asset for research workflows.",
+    "url": "https://github.com/sarthak-fleet/research-papers.git",
+    "tier": "support",
+    "category": "product",
+    "priority": "P2",
+    "maturity": "maintained"
+  },
   "saas-maker": {
     "desc": "Foundry — The Industrial Software Factory for Project Fleets.",
     "url": "https://github.com/sarthak-fleet/saas-maker.git",
-    "tier": "helper",
-    "category": "helper",
-    "priority": "P0",
+    "tier": "support",
+    "category": "product",
+    "priority": "P2",
     "maturity": "internal-first"
   },
   "significanthobbies": {
@@ -102,6 +142,14 @@
     "tier": "personal",
     "category": "personal",
     "priority": "P3",
+    "maturity": "maintained"
+  },
+  "starboard": {
+    "desc": "GitHub stars organizer and semantic search surface under CodeVetter.",
+    "url": "https://github.com/sarthak-fleet/starboard.git",
+    "tier": "support",
+    "category": "product",
+    "priority": "P2",
     "maturity": "maintained"
   },
   "posttrainllm": {

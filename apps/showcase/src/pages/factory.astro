@@ -6,7 +6,7 @@ import Layout from '../layouts/Layout.astro';
 
 const platform = {
   id: 'saas-maker', role: 'The Foundry · platform',
-  provides: 'System-of-record for the selected directory — project registry (14) · feedback / testimonials / changelog widgets · live event ledger.',
+  provides: 'System-of-record for the selected directory — project registry (20) · feedback / testimonials / changelog widgets · live event ledger.',
   rails: ['registry', 'feedback widgets', 'events ledger'],
 };
 
@@ -17,8 +17,15 @@ const bands = [
     { id: 'posttrainllm',       provides: 'Local LLM factory + runtime (Mac)', uses: [] },
   ] },
   { key: 'support', title: 'Support products', note: 'kept alive and lightly improved', items: [
+    { id: 'saas-maker',         provides: 'Fleet control plane and public directory', uses: ['feedback', 'sync'] },
     { id: 'high-signal',        provides: 'Daily synthesized intelligence brief', uses: ['ai', 'feedback'] },
     { id: 'alive-ville',        provides: '3D AI world simulator with NPC agents', uses: ['ai'] },
+    { id: 'free-ai',            provides: 'OpenAI-compatible free-model gateway', uses: ['ai'] },
+    { id: 'knowledge-base',     provides: 'Private Agent Search and cited retrieval', uses: ['rag'] },
+    { id: 'reel-pipeline',      provides: 'Short-form video generation pipeline', uses: ['ai', 'sync'] },
+    { id: 'research-papers',    provides: 'Academic paper platform and data asset', uses: ['rag'] },
+    { id: 'drank',              provides: 'Domain Rating tracker', uses: ['sync'] },
+    { id: 'starboard',          provides: 'GitHub stars organizer and search', uses: ['rag'] },
   ] },
   { key: 'personal', title: 'Personal projects', note: 'maintained, lesser love', items: [
     { id: 'rolepatch',          provides: 'LaTeX resume tailoring + cover letters', uses: ['ai', 'feedback'] },
@@ -32,13 +39,20 @@ const bands = [
   ] },
 ];
 
-const useLabel = { ai: 'AI', rag: 'RAG', feedback: 'feedback' };
+const useLabel = { ai: 'AI', rag: 'RAG', feedback: 'feedback', sync: 'sync' };
 const displayName = {
   'codevetter': 'CodeVetter',
   'pace': 'Pace',
   'posttrainllm': 'PostTrainLLM',
+  'saas-maker': 'SaaS Maker',
   'high-signal': 'High Signal',
   'alive-ville': 'AliveVille',
+  'free-ai': 'Free AI',
+  'knowledge-base': 'Knowledge Base',
+  'reel-pipeline': 'Reel Pipeline',
+  'research-papers': 'Research Papers',
+  'drank': 'drank',
+  'starboard': 'Starboard',
   'rolepatch': 'RolePatch',
   'karte': 'Karte',
   'significanthobbies': 'Significant Hobbies',
@@ -50,8 +64,9 @@ const displayName = {
 };
 const productCount = bands.reduce((n, b) => n + b.items.length, 0);
 const focusCount = bands.find((b) => b.key === 'ai')?.items.length ?? 0;
+const supportCount = bands.find((b) => b.key === 'support')?.items.length ?? 0;
 const personalCount = bands.find((b) => b.key === 'personal')?.items.length ?? 0;
-const directoryEntries = productCount + 1;
+const directoryEntries = productCount;
 ---
 
 <Layout title="The Fleet Factory — saas-maker" description="A compact directory of focus, support, and personal fleet projects.">
@@ -62,9 +77,10 @@ const directoryEntries = productCount + 1;
     <header class="fab-hero">
       <p class="kicker"><span class="led"></span> FOUNDRY · FLEET ARCHITECTURE</p>
       <h1>The Fleet Factory</h1>
-      <p class="sub"><strong>saas-maker</strong> keeps the record. Focus products get the most attention; support products stay alive; personal projects are visible but intentionally lower-touch.</p>
+      <p class="sub"><strong>saas-maker</strong> keeps the record. Focus products get the most attention; support includes the platform layer; personal projects are visible but intentionally lower-touch.</p>
       <div class="stat-strip">
         <div><b>{focusCount}</b><span>focus</span></div>
+        <div><b>{supportCount}</b><span>support</span></div>
         <div><b>{personalCount}</b><span>personal</span></div>
         <div><b>{directoryEntries}</b><span>entries</span></div>
       </div>
@@ -72,7 +88,7 @@ const directoryEntries = productCount + 1;
 
     <section class="stack" aria-label="Fleet architecture">
       <div class="layer">
-        <span class="layer-tag l-platform">Platform</span>
+        <span class="layer-tag l-platform">Support/platform</span>
         <article class="platform-card">
           <div class="plat-main">
             <span class="infra-led plat-led"></span>
@@ -89,7 +105,7 @@ const directoryEntries = productCount + 1;
       <div class="downflow" aria-hidden="true"><span></span><span></span><span></span><em>built on by ↓</em></div>
 
       <div class="layer">
-        <span class="layer-tag l-products">Directory products — {productCount}</span>
+        <span class="layer-tag l-products">Directory entries — {productCount}</span>
         {bands.map((band) => (
           <div class={`band band-${band.key}`}>
             <div class="band-head"><span class={`band-dot d-${band.key}`}></span><b>{band.title}</b><em>{band.note}</em></div>

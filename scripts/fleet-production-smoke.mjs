@@ -19,12 +19,16 @@ const TARGETS = {
   'anime-list': [{ label: 'web', url: 'https://anime-list-9lk.pages.dev' }],
   CodeVetter: [{ label: 'web', url: 'https://codevetter.com' }],
   'email-manager': [{ label: 'web', url: 'https://email-manager.sarthakagrawal927.workers.dev' }],
+  drank: [{ label: 'web', url: 'https://drank-sand.vercel.app' }],
   'free-ai': [
     { label: 'health', url: 'https://free-ai-gateway.sarthakagrawal927.workers.dev/health' },
     { label: 'models', url: 'https://free-ai-gateway.sarthakagrawal927.workers.dev/v1/models' },
   ],
   'alive-ville': [{ label: 'web', url: 'https://aliveville.com' }],
   'high-signal': [{ label: 'web', url: 'https://highsignal.app' }],
+  'knowledge-base': [
+    { label: 'health', url: 'https://knowledgebase.sarthakagrawal927.workers.dev/v1/healthz' },
+  ],
   karte: [{ label: 'web', url: 'https://linkchat.sarthakagrawal927.workers.dev' }],
   looptv: [
     {
@@ -68,6 +72,7 @@ const TARGETS = {
       expectText: ['Start your hobby map'],
     },
   ],
+  starboard: [{ label: 'web', url: 'https://starboard.codevetter.com' }],
   'swe-interview-prep': [{ label: 'web', url: 'https://swe-interview-prep.pages.dev' }],
   posttrainllm: [
     {
