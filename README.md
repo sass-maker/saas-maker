@@ -133,7 +133,7 @@ MIT. See [LICENSE](LICENSE).
 
 This section is maintained by the SaaS Maker Active-AI product/design loop so future agents do not reopen duplicate UI tasks.
 
-- Business lane: Core/status context
+- Fleet bucket: Support/platform
 - Rule: do not create another broad "improve the UI" task unless the acceptance criteria differ materially from the tasks listed here.
 - Source of truth for task status: SaaS Maker task board. README entries are durable context only.
 

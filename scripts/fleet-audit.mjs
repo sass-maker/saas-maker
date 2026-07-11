@@ -22,17 +22,10 @@ const LOCAL_PATH_OVERRIDES = {
   posttrainllm: 'posttrainllm',
 };
 
-const BUSINESS_LANES = {
-  reader: 'P0 Can make money',
-  'swe-interview-prep': 'P0 Can make money',
-  starboard: 'P0 Can make money',
-  karte: 'P2 Watch',
-  'free-ai': 'P1 Explore',
-  significanthobbies: 'P1 Explore',
-  rolepatch: 'P2 Watch',
-  'anime-list': 'P2 Watch',
-  looptv: 'P2 Watch',
-  'email-manager': 'P2 Watch',
+const FLEET_BUCKETS = {
+  core: 'Focus',
+  support: 'Support/platform',
+  personal: 'Personal use',
 };
 
 const MARKETING_ASSETS = [
@@ -514,13 +507,7 @@ function loadProjects(args) {
       url: meta?.url ?? '',
       tier: meta?.tier ?? '',
       category: meta?.category ?? '',
-      businessLane:
-        BUSINESS_LANES[slug] ??
-        (meta?.category === 'personal'
-          ? 'Personal/maintained'
-          : meta?.tier === 'core'
-            ? 'Core/context'
-            : 'Unclassified'),
+      businessLane: FLEET_BUCKETS[meta?.tier] ?? FLEET_BUCKETS[meta?.category] ?? 'Unbucketed',
       repo: repoFromUrl(meta?.url),
       path: localProjectPath(args, slug, meta),
     }))
@@ -939,20 +926,20 @@ function marketingAudit(project) {
     return { ...asset, exists };
   });
   const hasMarketingIndex = /docs\/marketing|marketing assets|marketing/i.test(readme);
-  const isMoneyLane = project.businessLane.startsWith('P0');
-  const isExploreLane = project.businessLane.startsWith('P1');
-  const maxSuggestions = isMoneyLane ? 6 : isExploreLane ? 4 : 1;
+  const isFocusBucket = project.tier === 'core';
+  const isSupportBucket = project.tier === 'support';
+  const maxSuggestions = isFocusBucket ? 6 : isSupportBucket ? 4 : 1;
   const suggestions = assetStatus
     .filter((asset) => !asset.exists)
     .slice(0, maxSuggestions)
     .map((asset) => ({
       project: project.slug,
       title: `${project.slug}: marketing ${asset.title}`,
-      priority: isMoneyLane ? 'high' : isExploreLane ? 'medium' : 'low',
+      priority: isFocusBucket ? 'high' : isSupportBucket ? 'medium' : 'low',
       evidence: `missing ${asset.file}`,
       valueProof: asset.why,
       description: [
-        `Business lane: ${project.businessLane}.`,
+        `Fleet bucket: ${project.businessLane}.`,
         'Agent-executable marketing task; no personal-account posting, secrets, deploy, or production config changes.',
         `Create ${asset.file} for ${project.desc || project.slug} only when durable source notes help; the required output is one or more SaaS Maker Marketing Queue ideas.`,
         'Acceptance: create generated marketing_posts via FND_API_URL=https://api.sassmaker.com pnpm --dir ~/Desktop/fleet/saas-maker/packages/cli exec tsx src/index.ts api POST /v1/marketing/posts --auth session with source_type task, task_id, project_slug, channel, title, body, optional hook/cta; default to tiktok, instagram_reels, or youtube_shorts with an AI video brief instead of generic social copy.',
@@ -1189,7 +1176,7 @@ function markdown(report) {
   for (const project of report.projects) {
     lines.push('');
     lines.push(`### ${project.slug}`);
-    lines.push(`- Business lane: ${project.businessLane ?? 'Unclassified'}`);
+    lines.push(`- Fleet bucket: ${project.businessLane ?? 'Unbucketed'}`);
     if (project.github) {
       if (project.github.skipped) {
         lines.push(`- PRs: skipped (no network)`);
@@ -1256,7 +1243,7 @@ function markdown(report) {
         lines.push(
           `- Marketing: ${
             project.marketing.ok ? 'PASS' : 'GAPS'
-          } lane=${project.marketing.businessLane}; assets ${project.marketing.present.length}/${MARKETING_ASSETS.length}; missing ${
+          } bucket=${project.marketing.businessLane}; assets ${project.marketing.present.length}/${MARKETING_ASSETS.length}; missing ${
             project.marketing.missing.join(', ') || '-'
           }`
         );
