@@ -51,7 +51,7 @@ is_out_of_fleet_repo() {
   repo_name="$(basename "$repo")"
 
   case "$repo_name" in
-    today-little-log|verified-bases|companion-robot|forecast-lab|elves-hq)
+    everythingrated|open-historia|today-little-log|truehire|verified-bases|companion-robot|device-net-test|forecast-lab|elves-hq|saas-maker-ci-fix)
       return 0
       ;;
   esac

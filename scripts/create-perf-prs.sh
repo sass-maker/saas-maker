@@ -7,11 +7,8 @@
 set -e
 
 declare -A PRS=(
-  ["truehire"]="perf/fix-verification-scan-and-indexes|perf: fix verification scan + add indexes|Fix N+1 verification queries, add composite indexes on verifications and ratings tables. 10-50X faster admin dashboard."
   ["significanthobbies"]="perf/fix-n1-queries-and-caching|perf: fix N+1 like-counts + add caching|Batch like-count queries, add edge cache for public pages, add DB indexes."
-  ["everythingrated"]="perf/fix-ratings-full-scan|perf: fix ratings full-scan + add index|Replace full-table scan with indexed lookup, add composite index on ratings."
   ["research-papers"]="perf/vector-index-and-caching|perf: vector index + caching fixes|Add vector index for similarity search, fix Cache-Control header (private not public), add edge cache."
-  ["verified-bases"]="perf/cache-pooling-indexes|perf: cache headers, async emails, HTTP client reuse, intent index|Add Pages _headers cache, fire-and-forget emails, shared HTTP client singletons, orders(intent_id) index."
 )
 
 for repo in "${!PRS[@]}"; do

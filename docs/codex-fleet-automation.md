@@ -128,7 +128,7 @@ community wrappers around `codex exec`. Docs: [mcp](https://developers.openai.co
 #!/usr/bin/env bash
 set -euo pipefail
 FLEET=~/Desktop/fleet
-EXCLUDE="today-little-log|verified-bases|companion-robot|forecast-lab|free-ai"   # out-of-fleet + hands-off (see AGENTS.md)
+EXCLUDE="everythingrated|open-historia|today-little-log|truehire|verified-bases|companion-robot|device-net-test|forecast-lab|elves-hq|saas-maker-ci-fix|free-ai"   # out-of-fleet + hands-off (see AGENTS.md)
 
 for repo in "$FLEET"/*/; do
   name=$(basename "$repo")
@@ -142,8 +142,7 @@ done
 ```
 
 Start on the `audit` (read-only) profile until outputs are trusted, then graduate
-specific jobs to `fix`. Excludes out-of-fleet projects (today-little-log,
-verified-bases, companion-robot, forecast-lab) and free-ai (hands-off) per
+specific jobs to `fix`. Excludes out-of-fleet projects and free-ai (hands-off) per
 [`AGENTS.md`](../../AGENTS.md).
 
 ## 7. Constraints to design around

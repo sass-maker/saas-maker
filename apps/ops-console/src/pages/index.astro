@@ -7,6 +7,10 @@ const projects = getFleetProjects();
 const snapshot = getSnapshotInfo();
 const activeJobs = cronJobs.filter((job) => job.enabled);
 const heavyJobs = cronJobs.filter((job) => job.effort === "high").length;
+const hostingCounts = projects.reduce<Record<string, number>>((acc, project) => {
+  acc[project.hostingLabel] = (acc[project.hostingLabel] ?? 0) + 1;
+  return acc;
+}, {});
 const wifiMax = Math.max(...wifi.sparkline, 1);
 const formatDate = (value: string | null) =>
   value
@@ -72,12 +76,33 @@ const formatDate = (value: string | null) =>
           </div>
           <span>Read-only project state, work queues, smoke, and relationships.</span>
         </article>
+        <article class="summary-card">
+          <div>
+            <p class="label">Machine-hosted</p>
+            <strong>{hostingCounts["Machine-hosted"] ?? 0}</strong>
+          </div>
+          <span>This Mac hosts only the Fleet info console; products are tracked separately.</span>
+        </article>
       </section>
 
       <section class="panel update-panel" aria-label="Update cadence">
         <strong>Read-only snapshot</strong>
+        <span>Last updated {formatDate(snapshot.generatedAt)}</span>
         <span>{snapshot.refreshCadence}</span>
-        <span>Generated {formatDate(snapshot.generatedAt)}</span>
+        <span>Tasks {formatDate(snapshot.tasksSyncedAt)} · Smoke {formatDate(snapshot.smokeGeneratedAt)} · Audit {formatDate(snapshot.auditGeneratedAt)}</span>
+      </section>
+
+      <section class="panel hosting-panel" aria-label="Hosting split">
+        <div class="panel-head compact">
+          <div>
+            <p class="eyebrow">Hosting</p>
+            <h2>Where things run</h2>
+          </div>
+          <a href="/projects">Inspect projects</a>
+        </div>
+        <div class="hosting-grid">
+          {Object.entries(hostingCounts).map(([label, count]) => <article><strong>{count}</strong><span>{label}</span></article>)}
+        </div>
       </section>
 
       <section class="content-grid">
@@ -323,7 +348,7 @@ const formatDate = (value: string | null) =>
 
   .hero-grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 12px;
     margin-bottom: 16px;
   }
@@ -385,6 +410,41 @@ const formatDate = (value: string | null) =>
 
   .panel {
     padding: 16px;
+  }
+
+  .hosting-panel {
+    margin-bottom: 16px;
+  }
+
+  .hosting-panel a {
+    color: var(--cyan);
+    font-size: 12px;
+    font-weight: 800;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .hosting-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+  }
+
+  .hosting-grid article {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 12px;
+    background: var(--panel-strong);
+  }
+
+  .hosting-grid strong {
+    display: block;
+    font-size: 28px;
+    line-height: 1;
+  }
+
+  .hosting-grid span {
+    color: var(--muted);
   }
 
   .panel-head {

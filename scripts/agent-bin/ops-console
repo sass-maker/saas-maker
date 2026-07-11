@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:${PATH:-}"
+
 APP_DIR="/Users/assistant/Desktop/fleet/fleet-ops/apps/ops-console"
 SCRIPT_PATH="/Users/assistant/Desktop/fleet/fleet-ops/scripts/agent-bin/ops-console"
 LABEL="com.assistant.fleet-ops-console"
@@ -9,6 +11,7 @@ PLIST="$HOME/Library/LaunchAgents/$LABEL.plist"
 REFRESH_PLIST="$HOME/Library/LaunchAgents/$REFRESH_LABEL.plist"
 LOG_DIR="$HOME/Library/Logs"
 RUNTIME_DIR="$HOME/Library/Application Support/Fleet Ops/ops-console"
+REFRESH_RUNNER="$RUNTIME_DIR/refresh.zsh"
 PORT="${FLEET_OPS_CONSOLE_PORT:-4329}"
 PUBLIC_URL="${FLEET_OPS_CONSOLE_URL:-https://fleet.sassmaker.com}"
 
@@ -57,6 +60,17 @@ EOF
 
 write_refresh_plist() {
   mkdir -p "$HOME/Library/LaunchAgents" "$LOG_DIR" "$RUNTIME_DIR"
+  cat > "$REFRESH_RUNNER" <<EOF
+#!/bin/zsh
+set -euo pipefail
+export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:\${PATH:-}"
+cd "$APP_DIR"
+mkdir -p "$RUNTIME_DIR"
+rm -rf "$RUNTIME_DIR/dist"
+./node_modules/.bin/astro build --outDir "$RUNTIME_DIR/dist"
+FLEET_OPS_CONSOLE_DIST="$RUNTIME_DIR/dist" /opt/homebrew/bin/node scripts/build-worker.mjs
+EOF
+  chmod 755 "$REFRESH_RUNNER"
   cat > "$REFRESH_PLIST" <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
@@ -67,11 +81,11 @@ write_refresh_plist() {
   <string>$REFRESH_LABEL</string>
   <key>ProgramArguments</key>
   <array>
-    <string>$SCRIPT_PATH</string>
-    <string>publish</string>
+    <string>/bin/zsh</string>
+    <string>$REFRESH_RUNNER</string>
   </array>
   <key>StartInterval</key>
-  <integer>300</integer>
+  <integer>60</integer>
   <key>RunAtLoad</key>
   <true/>
   <key>StandardOutPath</key>

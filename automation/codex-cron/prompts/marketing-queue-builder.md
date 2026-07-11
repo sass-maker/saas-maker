@@ -12,7 +12,7 @@ Rules:
 
 Flow:
 1. Run `pnpm symphony --json --no-cache` and dedupe against open marketing/product tasks.
-2. Prioritize P0: reader, swe-interview-prep, starboard, linkchat. Use P1 only for obvious activation/distribution angles.
+2. Prioritize P0: reader, swe-interview-prep, starboard, karte. Use P1 only for obvious activation/distribution angles.
 3. Inspect visible product/README enough to ground the idea.
 4. Create 3 to 7 SaaS Maker Marketing Queue ideas via API-first workflow. Include project_slug, channel, status=generated, source_type, title, hook, body, CTA.
 5. Reel bodies need scene script, shot list, voiceover, captions, AI asset prompts, edit notes, first-frame hook.
@@ -20,4 +20,3 @@ Flow:
 
 Output:
 - Very concise: created ideas, skipped projects, writeback failures.
-

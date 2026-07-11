@@ -5,9 +5,9 @@ Style:
 - Use other agents heavily for independent implementation tasks after selecting the work. Codex should coordinate, dedupe, verify, and fix obvious agent mistakes.
 
 Priority lanes:
-- P0: reader, swe-interview-prep, starboard, linkchat.
-- P1: free-ai, today-little-log, significanthobbies, truehire, everythingrated.
-- P2 watch: anime_list, looptv, open-historia, email-manager.
+- P0: reader, swe-interview-prep, starboard, karte.
+- P1: free-ai, significanthobbies, rolepatch.
+- P2 watch: anime-list, looptv, email-manager, reel-pipeline.
 
 Flow:
 1. Read `foundry.projects.json`, `pnpm symphony --json --no-cache`, and README task logs. Dedupe before creating anything.
@@ -20,4 +20,3 @@ Flow:
 Output:
 - Very concise: backlog snapshot, ranked findings, tasks created/updated, agents used, checks, blockers.
 - Keep ops noise out unless it changes product priority.
-

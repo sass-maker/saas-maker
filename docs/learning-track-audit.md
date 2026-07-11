@@ -15,10 +15,10 @@ _Last audited: 2026-06-23._
 
 | State | Projects |
 |---|---|
-| **Has study queue** (15) | ai-game (25 topics), high-signal (14), codevetter (13), reel-pipeline (13), email-manager · reader · saas-maker · swe-interview-prep (12), pace (11), open-historia · starboard (10), free-ai · research-papers (9), looptv (7), tinygpt (14, migrated 2026-06-23) |
-| **Old scaffold — migrated/retired** | tinygpt → `new-things.md` (old `lessons.md` archived); truehire → exempt, `decisions.md` archived |
-| **Exempt (plain full-stack)** | anime-list, drank, everythingrated, significanthobbies, today-little-log, rolepatch, materia, forecast-lab, truehire |
-| **Fancy but no track — candidates** | karte (agent-trust/AI chat), knowledge-base (RAG), verified-bases (payments/Go) |
+| **Has study queue** (14) | ai-game (25 topics), high-signal (14), codevetter (13), reel-pipeline (13), email-manager · reader · saas-maker · swe-interview-prep (12), pace (11), starboard (10), free-ai · research-papers (9), looptv (7), tinygpt (14, migrated 2026-06-23) |
+| **Old scaffold — migrated/retired** | tinygpt → `new-things.md` (old `lessons.md` archived) |
+| **Exempt (plain full-stack)** | anime-list, drank, significanthobbies, rolepatch |
+| **Fancy but no track — candidates** | karte (agent-trust/AI chat), knowledge-base (RAG) |
 
 ## Verdict
 
@@ -33,11 +33,10 @@ outstanding, human-side work; it is NOT something an agent should fabricate.
 
 1. ~~**Migrate old scaffolds**~~ — DONE 2026-06-23: tinygpt migrated to
    `docs/learning/new-things.md` (14 topic stubs, all `Why here: TBD`); old
-   `lessons.md` archived. truehire judged plain full-stack (exempt); its
-   `decisions.md` was retired to `docs/archive/`.
+   `lessons.md` archived.
 2. **This audit doc** — previously referenced by the standard but missing; now
    created here.
-3. **Candidate new tracks** — karte, knowledge-base, verified-bases use
+3. **Candidate new tracks** — karte and knowledge-base use
    non-trivial tech but have no track. Per the standard, creating one is a
    structural addition to **confirm with the user first** before scaffolding.
 

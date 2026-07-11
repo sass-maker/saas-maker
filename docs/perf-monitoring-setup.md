@@ -15,31 +15,31 @@ Six layers:
 
 ---
 
-## Coverage (24 active projects)
+## Coverage (active project surfaces)
 
 ### Frontend RUM
 
 | Status | Projects |
 |--------|----------|
-| ✅ web-vitals + PostHog | anime-list, email-manager, everythingrated, high-signal, karte, looptv, rolepatch, significanthobbies, starboard, swe-interview-prep, truehire, tinygpt/browser |
-| ✅ web-vitals only (no PostHog) | ai-game (web3d) |
-| ⚠️ PostHog only (no web-vitals) | open-historia, reader |
-| ❌ Not wired | drank, saas-maker (platform, no client RUM), materia (static) |
+| ✅ web-vitals + PostHog | anime-list, email-manager, high-signal, karte, looptv, rolepatch, significanthobbies, starboard, swe-interview-prep, tinygpt/browser |
+| ✅ web-vitals only (no PostHog) | alive-ville (`ai-game` web3d) |
+| ⚠️ PostHog only (no web-vitals) | reader |
+| ❌ Not wired | drank, saas-maker (platform, no client RUM) |
 
 ### Client-side API timing
 
 | Status | Projects |
 |--------|----------|
-| ✅ Wired | anime-list, email-manager, everythingrated, high-signal, karte, looptv, open-historia, reader, rolepatch, significanthobbies, starboard, swe-interview-prep, truehire, tinygpt/browser, ai-game (web3d), drank, saas-maker (cockpit), research-papers |
-| ❌ N/A (no browser) | free-ai, pace, reel-pipeline, codevetter (Tauri), materia (static) |
+| ✅ Wired | anime-list, email-manager, high-signal, karte, looptv, reader, rolepatch, significanthobbies, starboard, swe-interview-prep, tinygpt/browser, alive-ville (`ai-game` web3d), drank, saas-maker (cockpit), research-papers |
+| ❌ N/A (no browser) | free-ai, pace, reel-pipeline, codevetter (Tauri) |
 
 Template: `fleet-ops/templates/api-timing.ts`
 
 ### Backend timing (withTiming / Server-Timing)
 
-| ✅ Wired | anime-list, email-manager, everythingrated, high-signal, karte, knowledge-base, rolepatch, significanthobbies, starboard, swe-interview-prep, truehire |
+| ✅ Wired | anime-list, email-manager, high-signal, karte, knowledge-base, rolepatch, significanthobbies, starboard, swe-interview-prep |
 |----------|---|
-| ❌ Missing | saas-maker, free-ai, open-historia, reader, looptv, ai-game |
+| ❌ Missing | saas-maker, free-ai, reader, looptv, alive-ville (`ai-game`) |
 
 ### Error handling
 
@@ -50,7 +50,7 @@ All API projects have `app.onError()` or equivalent try/catch. PostHog is the er
 
 ## PSI sweep (2026-07-03)
 
-All 19 production URLs pass the LCP gate (p75 ≤ 2.5s).
+All 15 active production URLs in the last sweep passed the LCP gate (p75 ≤ 2.5s).
 
 | Project | LCP p75 | Gate |
 |---------|---------|------|
@@ -58,14 +58,11 @@ All 19 production URLs pass the LCP gate (p75 ≤ 2.5s).
 | starboard | 209 ms | ✅ |
 | reader | 238 ms | ✅ |
 | email-manager | 239 ms | ✅ |
-| open-historia | 248 ms | ✅ |
-| truehire | 258 ms | ✅ |
-| everythingrated | 301 ms | ✅ |
 | drank | 322 ms | ✅ |
 | looptv | 500 ms | ✅ |
 | karte | 541 ms | ✅ |
 | tinygpt | 567 ms | ✅ |
-| ai-game (aliveville) | 568 ms | ✅ |
+| alive-ville (`ai-game`) | 568 ms | ✅ |
 | rolepatch | 618 ms | ✅ |
 | research-papers | 629 ms | ✅ |
 | high-signal | 677 ms | ✅ |

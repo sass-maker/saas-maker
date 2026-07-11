@@ -111,7 +111,7 @@ Preferred stacks, in order:
    interactivity below the fold is small. Already meeting <500 ms desktop
    LCP on tinygpt and sarthakagrawal.pages.dev with this stack.
 2. **Vite + React (SPA)** — for app shells where the interactive surface
-   is the whole page. `today-little-log` is the reference.
+   is the whole page. `reader` and `swe-interview-prep` are active references.
 3. **Next.js on Cloudflare Workers (OpenNext)** — keep for projects that
    already have it AND need SSR, server actions, or per-route caching that
    Astro can't trivially express. New marketing surfaces should not be
@@ -373,11 +373,16 @@ The following personal, archived, delayed, or parked projects are NOT part of
 the fleet product surface. Do not include them in fleet-wide sweeps, perf
 audits, or standardisation passes; do not write fleet-wide tasks against them.
 
+- `everythingrated` — retired/out-of-fleet
+- `open-historia` — archived/out-of-fleet
 - `today-little-log` — archived (merged into significanthobbies)
+- `truehire` — retired; RolePatch owns the active resume/proof surface
 - `verified-bases` — archived
 - `companion-robot` — delayed
+- `device-net-test` — scratch network test app
 - `forecast-lab` — delayed
 - `elves-hq` — parked
+- `saas-maker-ci-fix` — duplicate worktree
 
 If a sweep touches all fleet projects, exclude these by name. Active fleet
 products are listed in the fleet `README.md`.

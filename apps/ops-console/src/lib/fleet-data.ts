@@ -69,8 +69,13 @@ export type FleetProject = {
   repoUrl: string | null;
   homepage: string | null;
   localPath: string;
+  localDir: string;
+  checkedOut: boolean;
   branch: string | null;
   dirtyCount: number;
+  hostingKind: "machine" | "cloudflare" | "external" | "local" | "unknown";
+  hostingLabel: string;
+  hostingDetail: string;
   smokeStatus: string;
   smokeFailures: number;
   workflowStatus: string;
@@ -78,6 +83,7 @@ export type FleetProject = {
   blockedTasks: number;
   highPriorityTasks: number;
   doneTasks: number;
+  taskSummary: string;
   state: "needs-attention" | "active" | "blocked" | "local-changes" | "steady";
   stateLabel: string;
   updatedAt: string | null;
@@ -148,6 +154,69 @@ function projectRoot(slug: string) {
 function projectLocalPath(slug: string) {
   const localDir = localDirBySlug[slug] ?? slug;
   return existsSync(resolve(fleetRoot, localDir)) ? `fleet/${localDir}` : "not checked out";
+}
+
+function getHosting(project: {
+  slug: string;
+  root: string;
+  checkedOut: boolean;
+  pkg: Record<string, unknown>;
+  homepage: string | null;
+}) {
+  if (project.slug === "fleet-ops") {
+    return {
+      hostingKind: "machine" as const,
+      hostingLabel: "Machine-hosted",
+      hostingDetail: "This Mac serves the Fleet info console through Cloudflare Tunnel."
+    };
+  }
+
+  if (project.slug === "wifi-watch") {
+    return {
+      hostingKind: "local" as const,
+      hostingLabel: "Machine telemetry",
+      hostingDetail: "Local Wi-Fi telemetry feeds the console; it is not a separate public app host."
+    };
+  }
+
+  if (!project.checkedOut) {
+    return {
+      hostingKind: "unknown" as const,
+      hostingLabel: "Not checked out",
+      hostingDetail: "Cataloged in Foundry, but this machine has no local checkout to inspect."
+    };
+  }
+
+  const hasWranglerConfig =
+    existsSync(resolve(project.root, "wrangler.toml")) ||
+    existsSync(resolve(project.root, "wrangler.jsonc")) ||
+    existsSync(resolve(project.root, "wrangler.json"));
+  const scripts = project.pkg && typeof project.pkg === "object" ? ((project.pkg as { scripts?: unknown }).scripts ?? {}) : {};
+  const scriptText = JSON.stringify(scripts).toLowerCase();
+
+  if (hasWranglerConfig || scriptText.includes("wrangler") || scriptText.includes("pages deploy")) {
+    return {
+      hostingKind: "cloudflare" as const,
+      hostingLabel: "Cloudflare",
+      hostingDetail: hasWranglerConfig
+        ? "Local deploy config points at Cloudflare Workers or Pages."
+        : "Package scripts deploy through Cloudflare tooling."
+    };
+  }
+
+  if (project.homepage) {
+    return {
+      hostingKind: "external" as const,
+      hostingLabel: "External/own domain",
+      hostingDetail: "Has a public homepage, but no local Cloudflare deploy config was detected here."
+    };
+  }
+
+  return {
+    hostingKind: "local" as const,
+    hostingLabel: "Local/dev",
+    hostingDetail: "No public deploy target detected from this checkout."
+  };
 }
 
 function summarizePrompt(prompt: string) {
@@ -240,7 +309,7 @@ export function getSnapshotInfo() {
 
   return {
     generatedAt: new Date().toISOString(),
-    refreshCadence: "Every 5 minutes while this Mac is awake; manual refresh via ops-console restart.",
+    refreshCadence: "Every minute while this Mac is awake; manual refresh via ops-console restart.",
     tasksSyncedAt: tasks.syncedAt ?? null,
     smokeGeneratedAt: smoke.generatedAt ?? null,
     auditGeneratedAt: audit.generatedAt ?? null
@@ -285,6 +354,10 @@ export function getFleetProjects(): FleetProject[] {
     const root = projectRoot(slug);
     const pkg = readJsonObject(resolve(root, "package.json")) as { homepage?: string; name?: string; description?: string };
     const meta = catalog[slug] ?? {};
+    const localDir = localDirBySlug[slug] ?? slug;
+    const checkedOut = existsSync(root);
+    const homepage = pkg.homepage ?? null;
+    const hosting = getHosting({ slug, root, checkedOut, pkg, homepage });
     const auditProject = auditBySlug.get(slug);
     const smokeProject = smokeBySlug.get(slug);
     const projectTasks = tasks.filter((task) => task.projectSlug === slug);
@@ -307,6 +380,7 @@ export function getFleetProjects(): FleetProject[] {
     const blockedTasks = openTasks.filter((task) => task.blocked).length;
     const highPriorityTasks = openTasks.filter((task) => task.priority === "high").length;
     const doneTasks = projectTasks.filter((task) => task.status === "done").length;
+    const taskSummary = `${openTasks.length} open / ${highPriorityTasks} high / ${blockedTasks} blocked / ${doneTasks} done`;
     const updatedAt = openTasks[0]?.updatedAt ?? projectTasks[0]?.updatedAt ?? null;
     let state: FleetProject["state"] = "steady";
     if (smokeStatus === "fail" || highPriorityTasks > 0) state = "needs-attention";
@@ -328,10 +402,13 @@ export function getFleetProjects(): FleetProject[] {
       tier: meta.tier ?? (slug === "fleet-ops" || slug === "wifi-watch" ? "ops" : "unknown"),
       lane: auditProject?.businessLane ?? (meta.tier === "core" ? "Core" : meta.tier === "active-ai" ? "Active AI" : "Ops"),
       repoUrl: publicRepoUrl(meta.url) ?? publicRepoUrl(safeGit(["remote", "get-url", "origin"], root)) ?? null,
-      homepage: pkg.homepage ?? null,
+      homepage,
       localPath: projectLocalPath(slug),
+      localDir,
+      checkedOut,
       branch,
       dirtyCount,
+      ...hosting,
       smokeStatus,
       smokeFailures,
       workflowStatus,
@@ -339,6 +416,7 @@ export function getFleetProjects(): FleetProject[] {
       blockedTasks,
       highPriorityTasks,
       doneTasks,
+      taskSummary,
       state,
       stateLabel,
       updatedAt

@@ -2,7 +2,7 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 const projectRoot = new URL("..", import.meta.url).pathname;
-const distRoot = join(projectRoot, "dist");
+const distRoot = process.env.FLEET_OPS_CONSOLE_DIST ?? join(projectRoot, "dist");
 const html = readFileSync(join(distRoot, "index.html"), "utf8");
 
 mkdirSync(join(distRoot, "server"), { recursive: true });
@@ -33,4 +33,3 @@ export default {
 );
 
 console.log("built Sites worker: dist/server/index.js");
-
