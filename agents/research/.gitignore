@@ -1,4 +1,5 @@
 .openclaw/
+openclaw-workspace-state.json
 memory/
 reports/*
 !reports/.gitkeep
