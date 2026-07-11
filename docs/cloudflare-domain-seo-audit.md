@@ -72,9 +72,10 @@ custom production domain in that config.
 Excluded:
 
 - `today-little-log`: Fleet README marks it archived/out-of-fleet.
-- `open-historia`: held from domain assignment pending archive/active decision.
+- `open-historia`: not in the active Foundry catalog; treated as archived/out-of-fleet for this rollout.
 - `device-net-test`: scratch network test app, moved out of active Fleet root.
 - `saas-maker-ci-fix`: duplicate worktree, moved out of active Fleet root.
+- `everythingrated`, `linkchat`, `resume-tailor`, `truehire`: not in the active Foundry catalog; moved out of active Fleet root.
 
 ## SEO Baseline Per Project
 
