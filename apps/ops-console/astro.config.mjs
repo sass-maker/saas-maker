@@ -4,6 +4,10 @@ export default defineConfig({
   output: "static",
   build: {
     inlineStylesheets: "always"
+  },
+  vite: {
+    preview: {
+      allowedHosts: ["assistant-fleet.sarthakagrawal.dev"]
+    }
   }
 });
-
