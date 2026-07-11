@@ -13,40 +13,33 @@ Important domain state:
 
 - `sassmaker.com` is on Cloudflare nameservers and is currently the production
   SaaS Maker domain recorded in Fleet docs.
-- `saasmaker.com` is on AWS Route 53 nameservers. `fleet.saasmaker.com`
-  currently resolves to AWS IPs and returns an IIS login redirect, not the
-  Fleet Ops Cloudflare Tunnel.
-- Wrangler is installed locally but not authenticated, so Cloudflare API truth
-  cannot be enumerated or mutated from this shell yet.
-- Local audit source is `wrangler.toml` / `wrangler.jsonc` plus Fleet README
-  project status.
+- `sassmaker.com` is the canonical Fleet domain family for this rollout.
+- `saasmaker.com` is a separate AWS Route 53 domain and should not be used for
+  this SEO program unless it is later redirected to `sassmaker.com`.
+- Wrangler OAuth is authenticated for Cloudflare Pages/Workers operations.
+- The current token can read the `sassmaker.com` zone but does not have DNS
+  record edit permission.
+- Audit source is Cloudflare Pages project inventory, `wrangler.toml` /
+  `wrangler.jsonc`, and Fleet README project status.
 
 ## Canonical Domain Recommendation
 
-Use one of these two strategies consistently:
-
-1. **Preferred if the brand is SaaS Maker:** move/delegate `saasmaker.com` DNS
-   into Cloudflare, then use `*.saasmaker.com` for the long-term product grid.
-2. **Fastest with current DNS:** use `*.sassmaker.com` because that zone is
-   already on Cloudflare.
-
-Do not mix `saasmaker.com` and `sassmaker.com` for SEO unless one is explicitly
-redirected to the other.
+Use `*.sassmaker.com` for the long-term product grid. Do not mix
+`saasmaker.com` and `sassmaker.com` for SEO unless one is explicitly redirected
+to the other.
 
 ## Fleet Ops Console
 
-Requested target: `https://fleet.saasmaker.com`
+Requested target: `https://fleet.sassmaker.com`
 
 Current implementation state:
 
-- Local Cloudflare Tunnel ingress includes `fleet.saasmaker.com` and points it
+- Local Cloudflare Tunnel ingress includes `fleet.sassmaker.com` and points it
   at `http://127.0.0.1:4329`.
-- DNS is not correct yet because `saasmaker.com` is not controlled by
-  Cloudflare in this environment.
-- Current public response is not the Fleet console: `fleet.saasmaker.com`
-  resolves to AWS IPs and redirects to `/Login.aspx`.
 - Required DNS target when DNS access is available:
   `fceb4f22-db20-4e77-88cf-07c1f290fd42.cfargotunnel.com`
+- Current blocker: creating the DNS CNAME needs DNS record edit permission for
+  the `sassmaker.com` zone.
 
 ## Already Has Own Domain
 
@@ -67,19 +60,21 @@ custom production domain in that config.
 
 | Priority | Project | Current CF target/config | Proposed canonical | SEO posture |
 |---:|---|---|---|---|
-| 1 | `reader` | Worker, no routes | `reader.saasmaker.com` | Public research library. Needs crawlable landing, `/sitemap.xml`, article/library index, OG defaults. |
-| 1 | `swe-interview-prep` | Pages, no custom domain | `interview.saasmaker.com` | Evergreen learning content. Needs concept pages, problem index, sitemap. |
-| 1 | `open-historia` | Worker, no routes | `historia.saasmaker.com` | Public timeline/story content. Needs topic pages and sitemap. |
-| 2 | `anime_list` | Pages, no custom domain | `anime.saasmaker.com` | Free tool. Needs canonical metadata and indexable anime/manga routes. |
-| 2 | `looptv` | Pages, no custom domain | `tv.saasmaker.com` | Free tool. Needs curated channel/category pages, sitemap. |
-| 2 | `starboard` | Worker, no routes | `starboard.saasmaker.com` | SaaS surface. Could also become `stars.codevetter.com` if CodeVetter umbrella wins. |
-| 3 | `email-manager` | Worker, no routes | `mail.saasmaker.com` | Likely auth-heavy. Use marketing/docs pages for SEO, keep app noindex if private. |
-| 3 | `free-ai` | Worker, `workers_dev = true` | `ai.saasmaker.com` | API gateway/docs. SEO via docs and model/provider pages; API base can be `api.ai.saasmaker.com`. |
-| 4 | `reel-pipeline` | Worker/R2 artifacts | `reels.saasmaker.com` | Mostly support infra. SEO only if there is a public gallery/docs surface. |
+| 1 | `reader` | Worker, no routes | `reader.sassmaker.com` | Public research library. Needs crawlable landing, `/sitemap.xml`, article/library index, OG defaults. |
+| 1 | `swe-interview-prep` | Pages domain attached, initializing | `interview.sassmaker.com` | Evergreen learning content. Needs concept pages, problem index, sitemap. |
+| 2 | `anime_list` | Pages domain attached, initializing | `anime.sassmaker.com` | Free tool. Needs canonical metadata and indexable anime/manga routes. |
+| 2 | `looptv` | Pages domain attached, initializing | `tv.sassmaker.com` | Free tool. Needs curated channel/category pages, sitemap. |
+| 2 | `starboard` | Worker route config prepared | `starboard.sassmaker.com` | SaaS surface. Could also become `stars.codevetter.com` if CodeVetter umbrella wins. |
+| 3 | `email-manager` | Worker route config prepared | `mail.sassmaker.com` | Likely auth-heavy. Use marketing/docs pages for SEO, keep app noindex if private. |
+| 3 | `free-ai` | Worker route config prepared | `ai.sassmaker.com` | API gateway/docs. SEO via docs and model/provider pages; API base can be `api.ai.sassmaker.com`. |
+| 4 | `reel-pipeline` | Worker route config prepared | `reels.sassmaker.com` | Mostly support infra. SEO only if there is a public gallery/docs surface. |
 
 Excluded:
 
 - `today-little-log`: Fleet README marks it archived/out-of-fleet.
+- `open-historia`: held from domain assignment pending archive/active decision.
+- `device-net-test`: scratch network test app, moved out of active Fleet root.
+- `saas-maker-ci-fix`: duplicate worktree, moved out of active Fleet root.
 
 ## SEO Baseline Per Project
 
@@ -94,25 +89,20 @@ Every assigned domain should ship:
 - Google Search Console and Bing Webmaster verification.
 - Basic schema where useful: `SoftwareApplication`, `WebSite`,
   `BreadcrumbList`, `Article`, `FAQPage`.
-- Internal links from `fleet.saasmaker.com` and the SaaS Maker product index.
+- Internal links from `fleet.sassmaker.com` and the SaaS Maker product index.
 
 ## Apply Plan
 
-1. Decide canonical spelling: `saasmaker.com` versus `sassmaker.com`.
-2. Authenticate Wrangler or provide Cloudflare API token with zone/project edit
-   permissions.
-3. If using `saasmaker.com`, move/delegate DNS to Cloudflare or update Route 53
-   records manually.
-4. Add custom domains in Cloudflare:
-   - Pages projects: attach custom domain in Pages project settings/API.
-   - Workers projects: add routes/custom domains in `wrangler.*` and deploy.
-   - Tunnel-hosted Fleet Ops: CNAME `fleet` to the tunnel target.
-5. Update each app's public env/canonical metadata.
-6. Add or verify `robots.txt`, `sitemap.xml`, and default SEO metadata.
-7. Submit sitemaps and track indexing.
+1. Add DNS edit permission for `sassmaker.com` or create required DNS records
+   manually in the Cloudflare dashboard.
+2. Deploy Worker projects after reviewing unrelated dirty local changes:
+   `email-manager`, `reader`, `free-ai`, `starboard`, `reel-pipeline`.
+3. Update each app's public env/canonical metadata.
+4. Add or verify `robots.txt`, `sitemap.xml`, and default SEO metadata.
+5. Submit sitemaps and track indexing.
 
 ## Current Blockers
 
-- `wrangler whoami` reports unauthenticated.
-- No AWS CLI / Route 53 access was available from this shell.
-- `saasmaker.com` is not on Cloudflare nameservers, while `sassmaker.com` is.
+- Current Wrangler OAuth lacks DNS record edit permission.
+- Several Worker repos have unrelated dirty files, so route config changes are
+  prepared but not deployed from this checkout.

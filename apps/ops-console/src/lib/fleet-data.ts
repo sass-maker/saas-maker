@@ -256,7 +256,7 @@ export function getFleetProjects(): FleetProject[] {
   const tasks = getFleetTasks();
   const auditBySlug = new Map((audit.projects ?? []).map((project) => [String(project.slug), project]));
   const smokeBySlug = new Map((smoke.summary ?? []).map((item) => [String(item.project), item]));
-  const slugs = [...new Set([...Object.keys(catalog), "fleet-ops", "wifi-watch", "device-net-test"])]
+  const slugs = [...new Set([...Object.keys(catalog), "fleet-ops", "wifi-watch"])]
     .filter((slug) => Boolean(catalog[slug]) || existsSync(resolve(fleetRoot, slug)))
     .sort((a, b) => a.localeCompare(b));
 
@@ -327,9 +327,7 @@ export function getFleetProjects(): FleetProject[] {
 
 export function getFleetConnections(): FleetConnection[] {
   const projects = getFleetProjects();
-  const registered = projects.filter(
-    (project) => !["fleet-ops", "wifi-watch", "device-net-test", "saas-maker"].includes(project.slug)
-  );
+  const registered = projects.filter((project) => !["fleet-ops", "wifi-watch", "saas-maker"].includes(project.slug));
   const edges: FleetConnection[] = [
     {
       from: "fleet-ops",

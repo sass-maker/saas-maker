@@ -10,7 +10,7 @@ REFRESH_PLIST="$HOME/Library/LaunchAgents/$REFRESH_LABEL.plist"
 LOG_DIR="$HOME/Library/Logs"
 RUNTIME_DIR="$HOME/Library/Application Support/Fleet Ops/ops-console"
 PORT="${FLEET_OPS_CONSOLE_PORT:-4329}"
-PUBLIC_URL="${FLEET_OPS_CONSOLE_URL:-https://fleet.saasmaker.com}"
+PUBLIC_URL="${FLEET_OPS_CONSOLE_URL:-https://fleet.sassmaker.com}"
 
 usage() {
   cat <<'EOF'
