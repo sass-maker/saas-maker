@@ -7,6 +7,18 @@ const fleetOpsRoot = resolve(appRoot, "../..");
 const fleetRoot = resolve(fleetOpsRoot, "..");
 const saasMakerRoot = resolve(fleetRoot, "saas-maker");
 
+const localDirBySlug: Record<string, string> = {
+  "alive-ville": "ai-game",
+  "anime-list": "anime_list",
+  karte: "linkchat",
+  posttrainllm: "tinygpt",
+  rolepatch: "resume-tailor"
+};
+
+const canonicalSlugByAlias: Record<string, string> = Object.fromEntries(
+  Object.entries(localDirBySlug).map(([slug, localDir]) => [localDir, slug])
+);
+
 export type CronJob = {
   id: string;
   enabled: boolean;
@@ -129,6 +141,15 @@ function titleize(slug: string) {
     .replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
+function projectRoot(slug: string) {
+  return resolve(fleetRoot, localDirBySlug[slug] ?? slug);
+}
+
+function projectLocalPath(slug: string) {
+  const localDir = localDirBySlug[slug] ?? slug;
+  return existsSync(resolve(fleetRoot, localDir)) ? `fleet/${localDir}` : "not checked out";
+}
+
 function summarizePrompt(prompt: string) {
   const lines = prompt
     .split("\n")
@@ -230,7 +251,7 @@ export function getFleetTasks(): FleetTask[] {
   const raw = readJsonObject(resolve(saasMakerRoot, ".symphony/tasks.json")) as { tasks?: Array<Record<string, unknown>> };
   return (raw.tasks ?? []).map((task) => ({
     id: String(task.id ?? ""),
-    projectSlug: String(task.project_slug ?? "unassigned"),
+    projectSlug: canonicalSlugByAlias[String(task.project_slug ?? "")] ?? String(task.project_slug ?? "unassigned"),
     title: String(task.title ?? "Untitled task"),
     status: String(task.status ?? "unknown"),
     priority: String(task.priority ?? "unknown"),
@@ -257,11 +278,11 @@ export function getFleetProjects(): FleetProject[] {
   const auditBySlug = new Map((audit.projects ?? []).map((project) => [String(project.slug), project]));
   const smokeBySlug = new Map((smoke.summary ?? []).map((item) => [String(item.project), item]));
   const slugs = [...new Set([...Object.keys(catalog), "fleet-ops", "wifi-watch"])]
-    .filter((slug) => Boolean(catalog[slug]) || existsSync(resolve(fleetRoot, slug)))
+    .filter((slug) => Boolean(catalog[slug]) || existsSync(projectRoot(slug)))
     .sort((a, b) => a.localeCompare(b));
 
   return slugs.map((slug) => {
-    const root = resolve(fleetRoot, slug);
+    const root = projectRoot(slug);
     const pkg = readJsonObject(resolve(root, "package.json")) as { homepage?: string; name?: string; description?: string };
     const meta = catalog[slug] ?? {};
     const auditProject = auditBySlug.get(slug);
@@ -308,7 +329,7 @@ export function getFleetProjects(): FleetProject[] {
       lane: auditProject?.businessLane ?? (meta.tier === "core" ? "Core" : meta.tier === "active-ai" ? "Active AI" : "Ops"),
       repoUrl: publicRepoUrl(meta.url) ?? publicRepoUrl(safeGit(["remote", "get-url", "origin"], root)) ?? null,
       homepage: pkg.homepage ?? null,
-      localPath: existsSync(root) ? `fleet/${slug}` : "not checked out",
+      localPath: projectLocalPath(slug),
       branch,
       dirtyCount,
       smokeStatus,
@@ -349,7 +370,7 @@ export function getFleetConnections(): FleetConnection[] {
     },
     {
       from: "free-ai",
-      to: "resume-tailor",
+      to: "rolepatch",
       type: "ai-gateway",
       detail: "RolePatch records free-ai as the AI gateway/chokepoint for model traffic."
     }

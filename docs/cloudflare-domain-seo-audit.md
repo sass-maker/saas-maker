@@ -75,7 +75,12 @@ Excluded:
 - `open-historia`: not in the active Foundry catalog; treated as archived/out-of-fleet for this rollout.
 - `device-net-test`: scratch network test app, moved out of active Fleet root.
 - `saas-maker-ci-fix`: duplicate worktree, moved out of active Fleet root.
-- `everythingrated`, `linkchat`, `resume-tailor`, `truehire`: not in the active Foundry catalog; moved out of active Fleet root.
+- `everythingrated`, `truehire`: not in the active Foundry catalog; moved out of active Fleet root.
+
+Renamed local checkouts kept in active Fleet:
+
+- `linkchat` is the local checkout for `karte`.
+- `resume-tailor` is the local checkout for `rolepatch`.
 
 ## SEO Baseline Per Project
 
