@@ -12,14 +12,31 @@ const DEFAULT_CLOUDFLARE_ACCOUNT_ID = '7d048325699a5acddb44d3be31cf6ba9';
 const DEFAULT_EXPECTED_CLOUDFLARE_BUILD_TOKEN = 'Workers Builds - 2026-05-27 01:49';
 const OUT_OF_FLEET_PROJECTS = new Set(['personal-memory', 'port-whisperer', 'local-ai']);
 const LOCAL_PATH_OVERRIDES = {
-  'alive-ville': 'ai-game',
+  'alive-ville': 'aliveville',
   'anime-list': 'anime-list',
   CodeVetter: 'codevetter',
   'knowledge-base': 'knowledge-base',
   'research-papers': 'research-papers',
   rolepatch: 'rolepatch',
   karte: 'karte',
-  posttrainllm: 'posttrainllm',
+  posttrainllm: 'tinygpt',
+};
+
+const DOMAIN_MARKETING_PROJECTS = new Set([
+  'CodeVetter',
+  'alive-ville',
+  'high-signal',
+  'karte',
+  'pace',
+  'posttrainllm',
+  'rolepatch',
+  'saas-maker',
+  'significanthobbies',
+]);
+const DOMAIN_MARKETING_PLAN_ALIASES = {
+  CodeVetter: 'codevetter',
+  'alive-ville': 'aliveville',
+  posttrainllm: 'tinygpt',
 };
 
 const FLEET_BUCKETS = {
@@ -487,7 +504,10 @@ function repoFromUrl(url) {
 }
 
 function localProjectPath(args, slug, meta) {
-  if (meta?.path) return path.resolve(String(meta.path));
+  if (meta?.path) {
+    const explicitPath = path.resolve(String(meta.path));
+    if (fs.existsSync(explicitPath)) return explicitPath;
+  }
   const candidates = [
     LOCAL_PATH_OVERRIDES[slug],
     slug,
@@ -509,6 +529,7 @@ function loadProjects(args) {
       category: meta?.category ?? '',
       businessLane: FLEET_BUCKETS[meta?.tier] ?? FLEET_BUCKETS[meta?.category] ?? 'Unbucketed',
       repo: repoFromUrl(meta?.url),
+      fleetRoot: args.fleetRoot,
       path: localProjectPath(args, slug, meta),
     }))
     .filter((project) => {
@@ -926,9 +947,20 @@ function marketingAudit(project) {
     return { ...asset, exists };
   });
   const hasMarketingIndex = /docs\/marketing|marketing assets|marketing/i.test(readme);
+  const domainPlanPath = path.join(
+    project.fleetRoot ?? DEFAULT_FLEET_ROOT,
+    'fleet-ops',
+    'docs',
+    'domain-marketing-plan.md'
+  );
+  const domainPlan = readTextIfExists(domainPlanPath);
+  const domainPlanSlug = DOMAIN_MARKETING_PLAN_ALIASES[project.slug] ?? project.slug;
+  const hasDomainMarketingPlan =
+    DOMAIN_MARKETING_PROJECTS.has(project.slug) &&
+    domainPlan.includes(`\`${domainPlanSlug}\``);
   const isFocusBucket = project.tier === 'core';
   const isSupportBucket = project.tier === 'support';
-  const maxSuggestions = isFocusBucket ? 6 : isSupportBucket ? 4 : 1;
+  const maxSuggestions = hasDomainMarketingPlan ? 0 : isFocusBucket ? 6 : isSupportBucket ? 4 : 1;
   const suggestions = assetStatus
     .filter((asset) => !asset.exists)
     .slice(0, maxSuggestions)
@@ -950,7 +982,8 @@ function marketingAudit(project) {
     }));
 
   return {
-    ok: missing.length === 0 && hasMarketingIndex,
+    domainPlan: hasDomainMarketingPlan ? path.relative(project.fleetRoot ?? DEFAULT_FLEET_ROOT, domainPlanPath) : null,
+    ok: (missing.length === 0 && hasMarketingIndex) || hasDomainMarketingPlan,
     skipped: false,
     businessLane: project.businessLane,
     hasMarketingIndex,
