@@ -10,7 +10,7 @@ REFRESH_PLIST="$HOME/Library/LaunchAgents/$REFRESH_LABEL.plist"
 LOG_DIR="$HOME/Library/Logs"
 RUNTIME_DIR="$HOME/Library/Application Support/Fleet Ops/ops-console"
 PORT="${FLEET_OPS_CONSOLE_PORT:-4329}"
-PUBLIC_URL="${FLEET_OPS_CONSOLE_URL:-https://assistant-fleet.sarthakagrawal.dev}"
+PUBLIC_URL="${FLEET_OPS_CONSOLE_URL:-https://fleet.saasmaker.com}"
 
 usage() {
   cat <<'EOF'
@@ -159,7 +159,11 @@ case "${1:-}" in
     launchctl list | grep "$LABEL" || true
     curl -fsS --max-time 5 "http://127.0.0.1:$PORT" >/dev/null && echo "local: ok" || echo "local: down"
     curl -fsS --max-time 5 "http://127.0.0.1:$PORT/projects" >/dev/null && echo "local projects: ok" || echo "local projects: down"
-    curl -fsS --max-time 10 "$PUBLIC_URL" >/dev/null && echo "public: ok $PUBLIC_URL" || echo "public: down $PUBLIC_URL"
+    if [ "$(curl -fsSL --max-time 10 "$PUBLIC_URL/healthz" 2>/dev/null || true)" = "ok" ]; then
+      echo "public: ok $PUBLIC_URL"
+    else
+      echo "public: down $PUBLIC_URL"
+    fi
     ;;
   open) open "$PUBLIC_URL" ;;
   publish) publish_runtime ;;
