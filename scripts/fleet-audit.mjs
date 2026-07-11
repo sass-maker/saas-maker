@@ -956,8 +956,7 @@ function marketingAudit(project) {
   const domainPlan = readTextIfExists(domainPlanPath);
   const domainPlanSlug = DOMAIN_MARKETING_PLAN_ALIASES[project.slug] ?? project.slug;
   const hasDomainMarketingPlan =
-    DOMAIN_MARKETING_PROJECTS.has(project.slug) &&
-    domainPlan.includes(`\`${domainPlanSlug}\``);
+    DOMAIN_MARKETING_PROJECTS.has(project.slug) && domainPlan.includes(`\`${domainPlanSlug}\``);
   const isFocusBucket = project.tier === 'core';
   const isSupportBucket = project.tier === 'support';
   const maxSuggestions = hasDomainMarketingPlan ? 0 : isFocusBucket ? 6 : isSupportBucket ? 4 : 1;
@@ -982,7 +981,9 @@ function marketingAudit(project) {
     }));
 
   return {
-    domainPlan: hasDomainMarketingPlan ? path.relative(project.fleetRoot ?? DEFAULT_FLEET_ROOT, domainPlanPath) : null,
+    domainPlan: hasDomainMarketingPlan
+      ? path.relative(project.fleetRoot ?? DEFAULT_FLEET_ROOT, domainPlanPath)
+      : null,
     ok: (missing.length === 0 && hasMarketingIndex) || hasDomainMarketingPlan,
     skipped: false,
     businessLane: project.businessLane,
