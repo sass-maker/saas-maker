@@ -10,31 +10,55 @@
   "alive-ville": {
     "desc": "Persistent AI world simulator — interactive RPG-style multi-agent game.",
     "url": "https://github.com/sarthak-fleet/alive-ville.git",
-    "tier": "core",
+    "tier": "support",
     "category": "product",
-    "priority": "P1",
+    "priority": "P2",
     "maturity": "internal-first"
   },
   "high-signal": {
     "desc": "Public signal log for AI infrastructure and semiconductors.",
     "url": "https://github.com/sarthak-fleet/high-signal.git",
-    "tier": "core",
+    "tier": "support",
     "category": "product",
-    "priority": "P1",
+    "priority": "P2",
     "maturity": "public-ready"
   },
   "karte": {
     "desc": "Karte — AI link-in-bio at karte.cc.",
     "url": "https://github.com/sarthak-fleet/karte.git",
-    "tier": "active-ai",
-    "category": "product",
-    "priority": "P2",
+    "tier": "personal",
+    "category": "personal",
+    "priority": "P3",
     "maturity": "public-ready"
+  },
+  "anime-list": {
+    "desc": "Anime List — personal anime discovery and tracking surface.",
+    "url": "https://github.com/sarthak-fleet/anime-list.git",
+    "tier": "personal",
+    "category": "personal",
+    "priority": "P3",
+    "maturity": "maintained"
+  },
+  "email-manager": {
+    "desc": "Email Manager — personal email operations workspace.",
+    "url": "https://github.com/sarthak-fleet/email-manager.git",
+    "tier": "personal",
+    "category": "personal",
+    "priority": "P3",
+    "maturity": "internal-first"
+  },
+  "looptv": {
+    "desc": "LoopTV — personal ambient video and anime list companion.",
+    "url": "https://github.com/sarthak-fleet/looptv.git",
+    "tier": "personal",
+    "category": "personal",
+    "priority": "P3",
+    "maturity": "maintained"
   },
   "pace": {
     "desc": "Pace — local-only macOS menu-bar voice agent.",
     "url": "https://github.com/sarthak-fleet/pace.git",
-    "tier": "active-ai",
+    "tier": "core",
     "category": "product",
     "priority": "P1",
     "maturity": "internal-first"
@@ -43,10 +67,18 @@
     "desc": "RolePatch — AI-powered resume tailoring system.",
     "url": "git@github.com:sarthak-fleet/rolepatch.git",
     "path": "/Users/sarthak/Desktop/fleet/rolepatch",
-    "tier": "core",
-    "category": "product",
-    "priority": "P1",
+    "tier": "personal",
+    "category": "personal",
+    "priority": "P3",
     "maturity": "public-ready"
+  },
+  "reader": {
+    "desc": "Reader — personal reading and saved-article workflow.",
+    "url": "https://github.com/sarthak-fleet/reader.git",
+    "tier": "personal",
+    "category": "personal",
+    "priority": "P3",
+    "maturity": "maintained"
   },
   "saas-maker": {
     "desc": "Foundry — The Industrial Software Factory for Project Fleets.",
@@ -59,10 +91,18 @@
   "significanthobbies": {
     "desc": "Personal hobby mapping and journey visualization tool.",
     "url": "https://github.com/sarthak-fleet/significanthobbies.git",
-    "tier": "active-ai",
-    "category": "product",
-    "priority": "P2",
+    "tier": "personal",
+    "category": "personal",
+    "priority": "P3",
     "maturity": "public-ready"
+  },
+  "swe-interview-prep": {
+    "desc": "SWE Interview Prep — personal interview practice workspace.",
+    "url": "https://github.com/sarthak-fleet/swe-interview-prep.git",
+    "tier": "personal",
+    "category": "personal",
+    "priority": "P3",
+    "maturity": "maintained"
   },
   "posttrainllm": {
     "desc": "PostTrainLLM — post-training and model learning workspace.",

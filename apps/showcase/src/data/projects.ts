@@ -27,9 +27,9 @@ export interface ActiveProject {
 interface RegistryProject {
   desc: string;
   url: string;
-  tier?: 'core' | 'active-ai' | 'helper' | string;
-  category?: 'product' | 'helper' | string;
-  priority?: 'P0' | 'P1' | 'P2' | string;
+  tier?: 'core' | 'support' | 'personal' | 'active-ai' | 'helper' | string;
+  category?: 'product' | 'personal' | 'helper' | string;
+  priority?: 'P0' | 'P1' | 'P2' | 'P3' | string;
 }
 
 interface ShowcaseOverride {
@@ -57,20 +57,54 @@ const OVERRIDES: Record<string, ShowcaseOverride> = {
     desc: 'A persistent AI world simulator. Multi-agent and RPG-shaped.',
     color: '#8b5cf6',
   },
+  'anime-list': {
+    name: 'Anime List',
+    initials: 'Al',
+    tag: 'Personal · maintained',
+    desc: 'Personal anime discovery and tracking surface.',
+    color: '#f97316',
+  },
+  'email-manager': {
+    name: 'Email Manager',
+    initials: 'Em',
+    tag: 'Personal · maintained',
+    desc: 'Personal email operations workspace.',
+    color: '#3b82f6',
+  },
   'high-signal': {
     name: 'High Signal',
-    tag: 'Editorial · core',
+    tag: 'Editorial · support',
     desc: 'A public signal log for AI infrastructure and semiconductors.',
     color: '#84cc16',
     size: 'wide',
   },
+  karte: {
+    name: 'Karte',
+    initials: 'Ka',
+    tag: 'Personal · maintained',
+    desc: 'AI link-in-bio at karte.cc.',
+    color: '#fbbf24',
+  },
+  looptv: {
+    name: 'LoopTV',
+    initials: 'Lt',
+    tag: 'Personal · maintained',
+    desc: 'Ambient video and anime companion.',
+    color: '#6366f1',
+  },
+  reader: {
+    name: 'Reader',
+    initials: 'Rd',
+    tag: 'Personal · maintained',
+    desc: 'Personal reading and saved-article workflow.',
+    color: '#14b8a6',
+  },
   rolepatch: {
     name: 'RolePatch',
     initials: 'Rp',
-    tag: 'AI · core',
+    tag: 'Personal · maintained',
     desc: 'AI-powered resume tailoring for a specific role and a specific story.',
     color: '#f43f5e',
-    size: 'wide',
   },
   'saas-maker': {
     name: 'Foundry',
@@ -83,8 +117,17 @@ const OVERRIDES: Record<string, ShowcaseOverride> = {
   },
   significanthobbies: {
     name: 'Significant Hobbies',
+    initials: 'Sh',
+    tag: 'Personal · maintained',
     desc: 'Personal hobby mapping and journey visualizer.',
     color: '#f472b6',
+  },
+  'swe-interview-prep': {
+    name: 'SWE Interview Prep',
+    initials: 'Si',
+    tag: 'Personal · maintained',
+    desc: 'Personal interview practice workspace.',
+    color: '#94a3b8',
   },
   posttrainllm: {
     name: 'PostTrainLLM',
@@ -95,9 +138,20 @@ const OVERRIDES: Record<string, ShowcaseOverride> = {
   },
 };
 
-const SPOTLIGHT_ORDER = ['CodeVetter', 'high-signal', 'alive-ville', 'rolepatch'];
+const SPOTLIGHT_ORDER = ['CodeVetter', 'pace', 'posttrainllm'];
 
 const HELPER_ORDER = ['saas-maker'];
+const ACTIVE_ORDER = ['high-signal', 'alive-ville'];
+const PERSONAL_ORDER = [
+  'rolepatch',
+  'karte',
+  'significanthobbies',
+  'reader',
+  'swe-interview-prep',
+  'looptv',
+  'anime-list',
+  'email-manager',
+];
 
 const FALLBACK_COLORS = [
   '#e07b3a',
@@ -153,9 +207,16 @@ function isHelper(project: RegistryProject): boolean {
   return project.category === 'helper' || project.tier === 'helper';
 }
 
+function isPersonal(project: RegistryProject): boolean {
+  return (
+    project.category === 'personal' || project.tier === 'personal' || project.priority === 'P3'
+  );
+}
+
 function isSpotlight(project: RegistryProject): boolean {
   return (
     !isHelper(project) &&
+    !isPersonal(project) &&
     (project.priority === 'P0' || project.priority === 'P1' || project.tier === 'core')
   );
 }
@@ -164,6 +225,7 @@ function priorityRank(project: RegistryProject): number {
   if (project.priority === 'P0') return 0;
   if (project.priority === 'P1') return 1;
   if (project.priority === 'P2') return 2;
+  if (project.priority === 'P3') return 3;
   return 3;
 }
 
@@ -225,22 +287,45 @@ const helperEntries = entries
     return a.localeCompare(b);
   });
 const activeEntries = entries
-  .filter(([, project]) => !isSpotlight(project) && !isHelper(project))
+  .filter(([, project]) => !isSpotlight(project) && !isHelper(project) && !isPersonal(project))
   .sort(([a, aProject], [b, bProject]) => {
+    const aIndex = ACTIVE_ORDER.indexOf(a);
+    const bIndex = ACTIVE_ORDER.indexOf(b);
+    if (aIndex !== -1 || bIndex !== -1) {
+      return (
+        (aIndex === -1 ? Number.MAX_SAFE_INTEGER : aIndex) -
+        (bIndex === -1 ? Number.MAX_SAFE_INTEGER : bIndex)
+      );
+    }
     const priorityDiff = priorityRank(aProject) - priorityRank(bProject);
     if (priorityDiff !== 0) return priorityDiff;
+    return a.localeCompare(b);
+  });
+const personalEntries = entries
+  .filter(([, project]) => isPersonal(project))
+  .sort(([a], [b]) => {
+    const aIndex = PERSONAL_ORDER.indexOf(a);
+    const bIndex = PERSONAL_ORDER.indexOf(b);
+    if (aIndex !== -1 || bIndex !== -1) {
+      return (
+        (aIndex === -1 ? Number.MAX_SAFE_INTEGER : aIndex) -
+        (bIndex === -1 ? Number.MAX_SAFE_INTEGER : bIndex)
+      );
+    }
     return a.localeCompare(b);
   });
 
 export const CORE: CoreProject[] = coreEntries.map(toCoreProject);
 export const HELPERS: ActiveProject[] = helperEntries.map(toActiveProject);
 export const ACTIVE: ActiveProject[] = activeEntries.map(toActiveProject);
-export const PROJECT_COUNT = CORE.length + HELPERS.length + ACTIVE.length;
-export const PRODUCT_COUNT = CORE.length + ACTIVE.length;
+export const PERSONAL: ActiveProject[] = personalEntries.map(toActiveProject);
+export const PROJECT_COUNT = CORE.length + HELPERS.length + ACTIVE.length + PERSONAL.length;
+export const PRODUCT_COUNT = CORE.length + ACTIVE.length + PERSONAL.length;
 export const TICKER: string[] = [
   ...CORE.map((p) => p.name),
   ...HELPERS.map((p) => p.name),
   ...ACTIVE.map((p) => p.name),
+  ...PERSONAL.map((p) => p.name),
 ];
 
 export const SPEC: Array<[string, string]> = [
@@ -250,6 +335,7 @@ export const SPEC: Array<[string, string]> = [
   ['Primitives', 'registry · feedback · changelog · tasks · audits · waitlist'],
   ['Projects', String(PROJECT_COUNT)],
   ['Helper systems', String(HELPERS.length)],
+  ['Personal projects', String(PERSONAL.length)],
   ['Origin', '2024 →'],
   ['License', 'MIT'],
   ['Source', 'github.com/sarthak-fleet/saas-maker'],

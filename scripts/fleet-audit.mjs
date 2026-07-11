@@ -501,8 +501,14 @@ function loadProjects(args) {
       desc: meta?.desc ?? '',
       url: meta?.url ?? '',
       tier: meta?.tier ?? '',
+      category: meta?.category ?? '',
       businessLane:
-        BUSINESS_LANES[slug] ?? (meta?.tier === 'core' ? 'Core/context' : 'Unclassified'),
+        BUSINESS_LANES[slug] ??
+        (meta?.category === 'personal'
+          ? 'Personal/maintained'
+          : meta?.tier === 'core'
+            ? 'Core/context'
+            : 'Unclassified'),
       repo: repoFromUrl(meta?.url),
       path: localProjectPath(args, slug, meta),
     }))
@@ -1045,6 +1051,7 @@ function localAudit(project, timeoutMs, options = {}) {
 
 function classify(projectAudit) {
   const issues = [];
+  const isPersonal = projectAudit.category === 'personal' || projectAudit.tier === 'personal';
   if (projectAudit.dirty && !projectAudit.dirty.ok)
     issues.push(`local dirty (${projectAudit.dirty.entries.length})`);
   if (projectAudit.github?.prs?.length) issues.push(`open PRs (${projectAudit.github.prs.length})`);
@@ -1070,6 +1077,7 @@ function classify(projectAudit) {
       (issue) =>
         !issue.startsWith('open PRs') &&
         !issue.startsWith('local dirty') &&
+        !(isPersonal && issue.startsWith('failed workflows')) &&
         issue !== 'performance budget watch'
     )
       ? 'fail'
@@ -1081,13 +1089,16 @@ function classify(projectAudit) {
 function buildTaskSuggestions(projectAudit) {
   const suggestions = [];
   const slug = projectAudit.slug;
-  for (const workflow of projectAudit.github?.failedWorkflows ?? []) {
-    suggestions.push({
-      project: slug,
-      title: `[fleet-audit] ${slug}: ${workflow.workflowName} failing`,
-      priority: 'high',
-      evidence: workflow.url,
-    });
+  const isPersonal = projectAudit.category === 'personal' || projectAudit.tier === 'personal';
+  if (!isPersonal) {
+    for (const workflow of projectAudit.github?.failedWorkflows ?? []) {
+      suggestions.push({
+        project: slug,
+        title: `[fleet-audit] ${slug}: ${workflow.workflowName} failing`,
+        priority: 'high',
+        evidence: workflow.url,
+      });
+    }
   }
   for (const smoke of projectAudit.smoke?.checks ?? []) {
     if (!smoke.ok) {

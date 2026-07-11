@@ -48,19 +48,24 @@ Everything is hosted on Cloudflare. Each deployable ships independently via GitH
 
 ## Fleet Registry
 
-`foundry.projects.json` is the source of truth for the active fleet catalog. The public showcase at `sassmaker.com` derives its project list from that registry at build time. `category` separates user-facing products from helper systems; `priority` tracks current attention level (`P0`, `P1`, `P2`).
+`foundry.projects.json` is the source of truth for the active fleet catalog. The public showcase at `sassmaker.com` derives its project list from that registry at build time. `category` separates focus products, personal projects, and helper systems; `priority` tracks current attention level (`P0`, `P1`, `P2`, `P3`).
 
 | Project                                                                     | Category | Priority | Role                                                              |
 | --------------------------------------------------------------------------- | -------- | -------- | ----------------------------------------------------------------- |
 | [`saas-maker`](https://github.com/sarthak-fleet/saas-maker)                 | helper   | P0       | Foundry control plane, cockpit, API, docs, widgets, and showcase. |
 | [`CodeVetter`](https://github.com/sarthak-fleet/codevetter)                 | product  | P1       | Desktop-first AI code review platform.                            |
-| [`alive-ville`](https://github.com/sarthak-fleet/alive-ville)               | product  | P1       | Persistent AI world simulator and AliveVille game surface.        |
-| [`high-signal`](https://github.com/sarthak-fleet/high-signal)               | product  | P1       | Public signal log for AI infrastructure and semiconductors.       |
 | [`pace`](https://github.com/sarthak-fleet/pace)                             | product  | P1       | Local macOS voice agent.                                          |
-| [`rolepatch`](https://github.com/sarthak-fleet/rolepatch)                   | product  | P1       | RolePatch resume tailoring product.                               |
-| [`karte`](https://github.com/sarthak-fleet/karte)                           | product  | P2       | AI link-in-bio product.                                           |
+| [`alive-ville`](https://github.com/sarthak-fleet/alive-ville)               | product  | P2       | Persistent AI world simulator and AliveVille game surface.        |
+| [`high-signal`](https://github.com/sarthak-fleet/high-signal)               | product  | P2       | Public signal log for AI infrastructure and semiconductors.       |
 | [`posttrainllm`](https://github.com/sarthak-fleet/tinygpt)                  | product  | P2       | Post-training and model learning workspace.                       |
-| [`significanthobbies`](https://github.com/sarthak-fleet/significanthobbies) | product  | P2       | Personal hobby mapping and journey visualization tool.            |
+| [`anime-list`](https://github.com/sarthak-fleet/anime-list)                 | personal | P3       | Personal anime discovery and tracking surface.                    |
+| [`email-manager`](https://github.com/sarthak-fleet/email-manager)           | personal | P3       | Personal email operations workspace.                              |
+| [`karte`](https://github.com/sarthak-fleet/karte)                           | personal | P3       | AI link-in-bio product.                                           |
+| [`looptv`](https://github.com/sarthak-fleet/looptv)                         | personal | P3       | Personal ambient video and anime list companion.                  |
+| [`reader`](https://github.com/sarthak-fleet/reader)                         | personal | P3       | Personal reading and saved-article workflow.                      |
+| [`rolepatch`](https://github.com/sarthak-fleet/rolepatch)                   | personal | P3       | RolePatch resume tailoring product.                               |
+| [`significanthobbies`](https://github.com/sarthak-fleet/significanthobbies) | personal | P3       | Personal hobby mapping and journey visualization tool.            |
+| [`swe-interview-prep`](https://github.com/sarthak-fleet/swe-interview-prep) | personal | P3       | Personal interview practice workspace.                            |
 
 ## Quick Start
 

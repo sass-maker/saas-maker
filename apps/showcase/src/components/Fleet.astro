@@ -1,5 +1,5 @@
 ---
-import { CORE, HELPERS, ACTIVE, PROJECT_COUNT } from '../data/projects';
+import { CORE, HELPERS, ACTIVE, PERSONAL, PROJECT_COUNT } from '../data/projects';
 ---
 <section class="section" id="fleet">
   <div class="section-head">
@@ -91,6 +91,33 @@ import { CORE, HELPERS, ACTIVE, PROJECT_COUNT } from '../data/projects';
             target="_blank"
             rel="noopener noreferrer"
             class="mini"
+            style={`--accent: ${p.color}`}
+          >
+            <span class="mini-dot"></span>
+            <span class="mini-name">{p.name}</span>
+            <span class="mini-desc">{p.desc}</span>
+            <span class="mini-arrow">↗</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <div class="active">
+    <div class="active-head">
+      <span class="section-num">§ 01.04</span>
+      <span class="section-rule short"></span>
+      <span class="section-kw small">Personal projects</span>
+      <span class="active-count">{PERSONAL.length} lower-touch</span>
+    </div>
+    <ul class="active-grid">
+      {PERSONAL.map((p) => (
+        <li>
+          <a
+            href={p.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="mini mini-personal"
             style={`--accent: ${p.color}`}
           >
             <span class="mini-dot"></span>

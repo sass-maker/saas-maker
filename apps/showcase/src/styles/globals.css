@@ -841,6 +841,12 @@ footer,
 .mini:hover {
   background: var(--bg-card-hi);
 }
+.mini-personal {
+  background: color-mix(in srgb, var(--bg-card) 88%, var(--bg) 12%);
+}
+.mini-personal .mini-dot {
+  opacity: 0.75;
+}
 .mini:hover::before {
   transform: scaleY(1);
 }

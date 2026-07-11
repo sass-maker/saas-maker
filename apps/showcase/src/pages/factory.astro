@@ -1,35 +1,60 @@
 ---
 import Layout from '../layouts/Layout.astro';
 
-// The Fleet Factory — a compact public directory for the few projects that
-// should be presented. Internal fleet tooling stays in repo docs and scripts.
+// The Fleet Factory — a compact public directory with clear attention levels.
+// Focus products stay prominent; personal projects are visible but lower-touch.
 
 const platform = {
   id: 'saas-maker', role: 'The Foundry · platform',
-  provides: 'System-of-record for the selected directory — project registry (9) · feedback / testimonials / changelog widgets · live event ledger.',
+  provides: 'System-of-record for the selected directory — project registry (14) · feedback / testimonials / changelog widgets · live event ledger.',
   rails: ['registry', 'feedback widgets', 'events ledger'],
 };
 
 const bands = [
-  { key: 'ai', title: 'Primary public products', note: 'focus and domain-backed bets', items: [
-    { id: 'codevetter',         provides: 'Desktop AI code review (local-first)',        uses: ['ai'] },
-    { id: 'high-signal',        provides: 'Daily synthesized intelligence brief',       uses: ['ai', 'feedback'] },
-    { id: 'rolepatch',          provides: 'LaTeX resume tailoring + cover letters',      uses: ['ai', 'feedback'] },
-    { id: 'karte',           provides: 'AI link-in-bio — chat · encyclopedia · roast', uses: ['ai', 'rag'] },
-    { id: 'alive-ville',        provides: '3D AI world simulator with NPC agents',       uses: ['ai'] },
-  ] },
-  { key: 'solo', title: 'Focused standalone bets', note: 'kept visible because they are active bets', items: [
+  { key: 'ai', title: 'Focus products', note: 'primary bets', items: [
+    { id: 'codevetter',         provides: 'Desktop AI code review (local-first)', uses: ['ai'] },
     { id: 'pace',               provides: 'macOS voice companion (on-device)', uses: [] },
     { id: 'posttrainllm',       provides: 'Local LLM factory + runtime (Mac)', uses: [] },
-    { id: 'significanthobbies', provides: 'Hobby discovery + journaling',                uses: ['feedback'] },
+  ] },
+  { key: 'support', title: 'Support products', note: 'kept alive and lightly improved', items: [
+    { id: 'high-signal',        provides: 'Daily synthesized intelligence brief', uses: ['ai', 'feedback'] },
+    { id: 'alive-ville',        provides: '3D AI world simulator with NPC agents', uses: ['ai'] },
+  ] },
+  { key: 'personal', title: 'Personal projects', note: 'maintained, lesser love', items: [
+    { id: 'rolepatch',          provides: 'LaTeX resume tailoring + cover letters', uses: ['ai', 'feedback'] },
+    { id: 'karte',              provides: 'AI link-in-bio — chat · encyclopedia · roast', uses: ['ai', 'rag'] },
+    { id: 'significanthobbies', provides: 'Hobby discovery + journaling', uses: ['feedback'] },
+    { id: 'reader',             provides: 'Reading and saved-article workflow', uses: [] },
+    { id: 'swe-interview-prep', provides: 'Interview practice workspace', uses: [] },
+    { id: 'looptv',             provides: 'Ambient video and anime companion', uses: [] },
+    { id: 'anime-list',         provides: 'Anime discovery and tracking', uses: [] },
+    { id: 'email-manager',      provides: 'Personal email operations workspace', uses: [] },
   ] },
 ];
 
 const useLabel = { ai: 'AI', rag: 'RAG', feedback: 'feedback' };
+const displayName = {
+  'codevetter': 'CodeVetter',
+  'pace': 'Pace',
+  'posttrainllm': 'PostTrainLLM',
+  'high-signal': 'High Signal',
+  'alive-ville': 'AliveVille',
+  'rolepatch': 'RolePatch',
+  'karte': 'Karte',
+  'significanthobbies': 'Significant Hobbies',
+  'reader': 'Reader',
+  'swe-interview-prep': 'SWE Interview Prep',
+  'looptv': 'LoopTV',
+  'anime-list': 'Anime List',
+  'email-manager': 'Email Manager',
+};
 const productCount = bands.reduce((n, b) => n + b.items.length, 0);
+const focusCount = bands.find((b) => b.key === 'ai')?.items.length ?? 0;
+const personalCount = bands.find((b) => b.key === 'personal')?.items.length ?? 0;
+const directoryEntries = productCount + 1;
 ---
 
-<Layout title="The Fleet Factory — saas-maker" description="A compact directory of the few fleet products that should be presented publicly.">
+<Layout title="The Fleet Factory — saas-maker" description="A compact directory of focus, support, and personal fleet projects.">
   <main class="factory">
     <div class="grid-floor" aria-hidden="true"></div>
     <div class="scanline" aria-hidden="true"></div>
@@ -37,11 +62,11 @@ const productCount = bands.reduce((n, b) => n + b.items.length, 0);
     <header class="fab-hero">
       <p class="kicker"><span class="led"></span> FOUNDRY · FLEET ARCHITECTURE</p>
       <h1>The Fleet Factory</h1>
-      <p class="sub"><strong>saas-maker</strong> keeps the record. The directory only shows the few projects worth presenting publicly; internal support tools stay out of the showcase.</p>
+      <p class="sub"><strong>saas-maker</strong> keeps the record. Focus products get the most attention; support products stay alive; personal projects are visible but intentionally lower-touch.</p>
       <div class="stat-strip">
-        <div><b>1</b><span>platform</span></div>
-        <div><b>{productCount}</b><span>products</span></div>
-        <div><b>9</b><span>directory entries</span></div>
+        <div><b>{focusCount}</b><span>focus</span></div>
+        <div><b>{personalCount}</b><span>personal</span></div>
+        <div><b>{directoryEntries}</b><span>entries</span></div>
       </div>
     </header>
 
@@ -66,12 +91,12 @@ const productCount = bands.reduce((n, b) => n + b.items.length, 0);
       <div class="layer">
         <span class="layer-tag l-products">Directory products — {productCount}</span>
         {bands.map((band) => (
-          <div class="band">
+          <div class={`band band-${band.key}`}>
             <div class="band-head"><span class={`band-dot d-${band.key}`}></span><b>{band.title}</b><em>{band.note}</em></div>
             <div class="prod-grid">
               {band.items.map((p, i) => (
                 <article class="prod" style={`--i:${i}`}>
-                  <h4>{p.id}</h4>
+                  <h4>{displayName[p.id] ?? p.id}</h4>
                   <p class="provides">{p.provides}</p>
                   <div class="uses">
                     {p.uses.length === 0
@@ -169,6 +194,8 @@ const productCount = bands.reduce((n, b) => n + b.items.length, 0);
     .band-head em { font: 500 .76rem/1 ui-monospace, monospace; color: #6b88aa; font-style: normal; }
     .band-dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
     .d-ai { background: #22d3ee; box-shadow: 0 0 9px #22d3ee; }
+    .d-support { background: #34d399; box-shadow: 0 0 9px #34d399; }
+    .d-personal { background: #94a3b8; box-shadow: 0 0 9px #64748b; }
     .d-platform { background: #34d399; box-shadow: 0 0 9px #34d399; }
     .d-solo { background: #475569; }
 
@@ -178,6 +205,8 @@ const productCount = bands.reduce((n, b) => n + b.items.length, 0);
       animation: rise .5s cubic-bezier(.2,.7,.2,1) backwards; animation-delay: calc(var(--i) * 45ms);
       transition: transform .2s, box-shadow .2s, border-color .2s; }
     .prod:hover { transform: translateY(-3px); border-color: #2dd4bf55; box-shadow: 0 16px 34px #00131f77; }
+    .band-personal .prod { border-color: #25324f; background: linear-gradient(180deg, #0b1420e8, #080e18e8); }
+    .band-personal .prod:hover { border-color: #94a3b855; }
     @keyframes rise { from { opacity: 0; transform: translateY(14px); } }
     .prod h4 { font: 800 .98rem/1.1 'Inter', sans-serif; color: #f1f5f9; margin: 0 0 .3rem; }
     .provides { font-size: .78rem; color: #8fa9c6; line-height: 1.4; margin: 0 0 .7rem; min-height: 3.2em; }
