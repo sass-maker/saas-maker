@@ -110,13 +110,6 @@ export type FleetProject = {
   updatedAt: string | null;
 };
 
-export type FleetConnection = {
-  from: string;
-  to: string;
-  type: string;
-  detail: string;
-};
-
 export type AgentSurface = {
   name: string;
   status: "running" | "configured" | "missing" | "stopped" | "unknown";
@@ -495,58 +488,6 @@ export function getFleetProjects(): FleetProject[] {
   });
 }
 
-export function getFleetConnections(): FleetConnection[] {
-  const projects = getFleetProjects();
-  const registered = projects.filter((project) => !["fleet-ops", "wifi-watch", "saas-maker"].includes(project.slug));
-  const edges: FleetConnection[] = [
-    {
-      from: "fleet-ops",
-      to: "saas-maker",
-      type: "control",
-      detail: "Fleet Ops cron and agents run Foundry audits, task routing, smoke checks, and marketing queue work."
-    },
-    {
-      from: "wifi-watch",
-      to: "fleet-ops",
-      type: "telemetry",
-      detail: "Wi-Fi Watch feeds the public console network snapshot and validates the machine access layer."
-    },
-    {
-      from: "reel-pipeline",
-      to: "saas-maker",
-      type: "marketing",
-      detail: "Reel Pipeline consumes accepted Marketing Queue work and writes rendered artifact/posting status back."
-    },
-    {
-      from: "free-ai",
-      to: "rolepatch",
-      type: "ai-gateway",
-      detail: "RolePatch records free-ai as the AI gateway/chokepoint for model traffic."
-    }
-  ];
-
-  for (const project of registered) {
-    edges.push({
-      from: "saas-maker",
-      to: project.slug,
-      type: "registry",
-      detail: `Foundry tracks ${project.slug} metadata, tasks, smoke status, and fleet audit state.`
-    });
-  }
-
-  for (const project of projects.filter((project) => project.openTasks.length > 0)) {
-    const noun = project.openTasks.length === 1 ? "task currently attaches" : "tasks currently attach";
-    edges.push({
-      from: "fleet-ops",
-      to: project.slug,
-      type: "work",
-      detail: `${project.openTasks.length} open Symphony ${noun} to ${project.slug}.`
-    });
-  }
-
-  return edges;
-}
-
 export function getFleetNodes(): FleetNode[] {
   const host = "private tailnet node";
   const label = "Primary Fleet machine";
@@ -641,53 +582,6 @@ export function getFleetNodes(): FleetNode[] {
         "This is the only machine currently hosting a public Fleet surface.",
         "Most products are Cloudflare-hosted; project pages show the per-product hosting split.",
         "Secrets and private terminal links are deliberately excluded from the public dashboard."
-      ]
-    },
-    {
-      id: "secondary-mac",
-      label: "Second Fleet machine",
-      role: "Standby execution node",
-      status: "planned",
-      host: "pending-tailnet-hostname",
-      operator: "pending",
-      publicWorkloads: [],
-      privateAccess: [
-        {
-          name: "Tailscale SSH",
-          status: "missing",
-          detail: "Clone fleet-ops, log into Tailscale, and run mobile-control start-tailscale."
-        },
-        {
-          name: "Emergency terminal fallback",
-          status: "missing",
-          detail: "Do not install by default; use Tailscale SSH on this node."
-        }
-      ],
-      agents: [
-        {
-          name: "OpenClaw",
-          status: "missing",
-          detail: "Register this executor with the primary OpenClaw router; a separate Telegram bot is optional."
-        },
-        {
-          name: "Hermes",
-          status: "missing",
-          detail: "Run Hermes only if this node needs local persistence; route normal chat through the primary bot."
-        },
-        {
-          name: "Grok",
-          status: "missing",
-          detail: "Install and authenticate only if this node should run Grok teammate work."
-        },
-        {
-          name: "Devin",
-          status: "missing",
-          detail: "Optional proprietary teammate; configure only when explicitly needed."
-        }
-      ],
-      notes: [
-        "No public products should be hosted here by default.",
-        "Use it for remote control, failover, or agent execution only."
       ]
     }
   ];

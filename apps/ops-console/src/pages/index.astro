@@ -45,7 +45,6 @@ const formatDate = (value: string | null) =>
         <nav class="topnav" aria-label="Fleet console">
           <a href="/">Overview</a>
           <a href="/projects">Projects</a>
-          <a href="/connections">Connections</a>
         </nav>
       </header>
 
@@ -83,7 +82,7 @@ const formatDate = (value: string | null) =>
             <p class="label">Fleet nodes</p>
             <strong>{nodes.length}</strong>
           </div>
-          <span>Primary Mac is active; second Mac is a planned standby node.</span>
+          <span>Primary Mac is the only active Fleet control node for now.</span>
         </article>
       </section>
 
