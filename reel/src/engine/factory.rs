@@ -172,7 +172,7 @@ mod tests {
 
             for value in values {
                 let render_mode = value.as_str().expect("render mode alias is a string");
-                if surface == "faceless-workflow" {
+                if surface == "faceless-workflow" || surface == "content-package" {
                     assert!(
                         create_renderer(render_mode, Path::new("/repo"), RecordingRunner::new())
                             .is_err(),

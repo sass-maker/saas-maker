@@ -129,6 +129,24 @@
         ],
         "hint": "run `npm run setup:kokoro` to install the local Kokoro model"
       }
+    },
+    {
+      "id": "brand-video",
+      "provider": "brand-video-local",
+      "surface": "content-package",
+      "category": "local",
+      "description": "Source-backed brand motion graphics with local Kokoro narration, Chromium frames, and FFmpeg composition.",
+      "requires": [
+        "approved fleet.content-package.v1",
+        "npm run setup:kokoro",
+        "Playwright Chromium (`npx playwright install chromium`)",
+        "ffmpeg"
+      ],
+      "smoke": {
+        "type": "command",
+        "command": "npm",
+        "args": ["run", "render:package", "--", "--file", "test/fixtures/approved-content-package.json", "--out", "tmp/brand-video-smoke"]
+      }
     }
   ]
 }

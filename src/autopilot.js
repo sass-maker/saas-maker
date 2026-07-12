@@ -36,26 +36,13 @@ export async function loadFixtureClient(path) {
   return createFixtureClient(posts);
 }
 
-const DEFAULT_HOLD_WINDOW_MS = 30 * 60_000;
-const DEFAULT_INTAKE_STATUS = 'pending';
-const DEFAULT_CREATED_AT_FIELD = 'created_at';
-
 export async function runAutopilotTick(options = {}) {
   const client = options.saasMakerClient ?? new SaaSMakerClient(options.saasMaker);
   const now = options.now ?? new Date();
   const log = options.log ?? (() => {});
-  const holdWindowMs = Number(options.holdWindowMs ?? process.env.AUTOPILOT_HOLD_WINDOW_MS ?? DEFAULT_HOLD_WINDOW_MS);
-  const intakeStatus = options.intakeStatus ?? process.env.AUTOPILOT_INTAKE_STATUS ?? DEFAULT_INTAKE_STATUS;
-  const createdAtField = options.createdAtField ?? process.env.AUTOPILOT_CREATED_AT_FIELD ?? DEFAULT_CREATED_AT_FIELD;
   const limit = Number(options.limit ?? process.env.AUTOPILOT_LIMIT ?? 10);
 
   const accepted = await autoAcceptIntake({
-    client,
-    now,
-    holdWindowMs,
-    intakeStatus,
-    createdAtField,
-    limit,
     log,
   });
 
@@ -83,34 +70,8 @@ export async function runAutopilotTick(options = {}) {
 }
 
 export async function autoAcceptIntake(options) {
-  const { client, now, holdWindowMs, intakeStatus, createdAtField, limit, log } = options;
-  const posts = await client.listMarketingPosts({ status: intakeStatus, limit });
-  const cutoff = now.getTime() - holdWindowMs;
-  const ready = posts.filter((post) => {
-    const createdAtRaw = post[createdAtField];
-    if (!createdAtRaw) return false;
-    const createdAt = new Date(createdAtRaw).getTime();
-    if (Number.isNaN(createdAt)) return false;
-    return createdAt <= cutoff;
-  });
-  log(`▸ intake: ${ready.length}/${posts.length} past hold window (${Math.round(holdWindowMs / 60000)}m)`);
-  const accepted = [];
-  for (const post of ready) {
-    const sync = await client.updateMarketingPost(post.id, {
-      status: 'accepted',
-      notes: appendIntakeNote(post.notes, holdWindowMs),
-    });
-    accepted.push({ postId: post.id, sync });
-  }
-  return accepted;
-}
-
-function appendIntakeNote(existingNotes, holdWindowMs) {
-  const lines = [
-    existingNotes,
-    `Auto-accepted by autopilot after ${Math.round(holdWindowMs / 60000)}m hold window.`,
-  ].filter(Boolean);
-  return lines.join('\n');
+  options.log('intake: automatic acceptance disabled; explicit approval required');
+  return [];
 }
 
 function buildDefaultPostingProvider(options) {

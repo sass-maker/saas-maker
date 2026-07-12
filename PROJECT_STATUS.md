@@ -1,6 +1,6 @@
 # reel-pipeline — PROJECT STATUS
 
-Last updated: 2026-07-10
+Last updated: 2026-07-12
 
 ## Why / What
 
@@ -115,6 +115,15 @@ unresolved target-host items, including the optional documented acceptance file
 for intentional target-host exclusions.
 
 ## Timeline
+
+- **2026-07-12 — Source-backed multi-brand marketing path:** added read-only
+  extractors for High Signal, Significant Hobbies, and SWE Interview Prep;
+  revisioned `fleet.content-package.v1` packages; per-brand visual/channel
+  configuration; local Kokoro + Chromium + FFmpeg vertical video rendering;
+  and a separate `fleet.distribution-request.v1` gate. Both Rust and Node
+  time-based auto-accept paths are disabled. Live posting now fails closed
+  until the exact brand/channel account is mapped and the distribution request
+  is separately approved. See `docs/content-package-pipeline.md`.
 
 - **2026-07-10 — Studio factory line shipped:** production conveyor over the
   ideas manager — `npm run factory` plan/produce/status; every render now

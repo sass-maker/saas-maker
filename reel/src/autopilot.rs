@@ -4,7 +4,7 @@ use std::path::Path;
 
 use anyhow::{Context, Result};
 use serde::Serialize;
-use time::{format_description::well_known::Rfc3339, Duration, OffsetDateTime};
+use time::OffsetDateTime;
 
 use crate::engine::factory::create_renderer;
 use crate::marketing::{
@@ -14,7 +14,7 @@ use crate::marketing_posting::{
     post_ready_marketing_videos, MarketingPoster, PostReadyOptions, PostReadyReport,
 };
 use crate::runner::ProcessRunner;
-use crate::saas_maker::{ListFilters, MarketingClient, MarketingPost, UpdateResult};
+use crate::saas_maker::{MarketingClient, UpdateResult};
 
 pub const DEFAULT_HOLD_WINDOW_MS: u64 = 30 * 60_000;
 pub const DEFAULT_INTAKE_STATUS: &str = "pending";
@@ -63,73 +63,16 @@ impl Default for AutopilotConfig {
 }
 
 pub fn auto_accept_intake<C>(
-    client: &C,
-    now: OffsetDateTime,
-    config: &AutopilotConfig,
+    _client: &C,
+    _now: OffsetDateTime,
+    _config: &AutopilotConfig,
     log: &mut dyn FnMut(&str),
 ) -> Result<Vec<AcceptedEntry>>
 where
     C: MarketingClient,
 {
-    let posts = client.list_marketing_posts(&ListFilters {
-        status: Some(config.intake_status.clone()),
-        limit: Some(config.limit),
-        ..Default::default()
-    })?;
-    let cutoff = now - Duration::milliseconds(config.hold_window_ms as i64);
-    let ready: Vec<_> = posts
-        .iter()
-        .filter(|post| created_at_past_hold(post, &config.created_at_field, cutoff))
-        .collect();
-    log(&format!(
-        "▸ intake: {}/{} past hold window ({}m)",
-        ready.len(),
-        posts.len(),
-        config.hold_window_ms / 60_000
-    ));
-    let mut accepted = Vec::new();
-    for post in ready {
-        let patch = serde_json::json!({
-            "status": "accepted",
-            "notes": append_intake_note(post.notes.as_deref(), config.hold_window_ms),
-        });
-        let sync = client.update_marketing_post(&post.id, &patch)?;
-        accepted.push(AcceptedEntry {
-            post_id: post.id.clone(),
-            sync,
-        });
-    }
-    Ok(accepted)
-}
-
-fn created_at_past_hold(post: &MarketingPost, field: &str, cutoff: OffsetDateTime) -> bool {
-    let Some(raw) = post_field(post, field) else {
-        return false;
-    };
-    let Ok(created_at) = OffsetDateTime::parse(raw, &Rfc3339) else {
-        return false;
-    };
-    created_at <= cutoff
-}
-
-fn post_field<'a>(post: &'a MarketingPost, field: &str) -> Option<&'a str> {
-    match field {
-        "created_at" => post.created_at.as_deref(),
-        "inserted_at" => post.inserted_at.as_deref(),
-        other => {
-            let _ = other;
-            post.created_at.as_deref()
-        }
-    }
-}
-
-fn append_intake_note(existing: Option<&str>, hold_window_ms: u64) -> String {
-    let mut lines = vec![existing.map(str::to_string)];
-    lines.push(Some(format!(
-        "Auto-accepted by autopilot after {}m hold window.",
-        hold_window_ms / 60_000
-    )));
-    lines.into_iter().flatten().collect::<Vec<_>>().join("\n")
+    log("▸ intake: auto-accept disabled; owner approval in SaaS Maker is required");
+    Ok(Vec::new())
 }
 
 pub fn run_autopilot_tick<C, P>(
@@ -221,6 +164,7 @@ mod tests {
     use crate::saas_maker::stub::StubMarketingClient;
     use crate::saas_maker::MarketingPost;
     use tempfile::TempDir;
+    use time::format_description::well_known::Rfc3339;
 
     fn pending(id: &str, created_at: &str) -> MarketingPost {
         MarketingPost {
@@ -247,7 +191,7 @@ mod tests {
     }
 
     #[test]
-    fn auto_accept_only_flips_aged_posts() {
+    fn autopilot_never_auto_accepts_aged_posts() {
         let now = OffsetDateTime::parse("2026-06-16T12:00:00Z", &Rfc3339).unwrap();
         let client = StubMarketingClient::new(vec![
             pending("fresh", "2026-06-16T11:50:00Z"),
@@ -262,8 +206,8 @@ mod tests {
             ..Default::default()
         };
         let accepted = auto_accept_intake(&client, now, &config, &mut |_| {}).unwrap();
-        assert_eq!(accepted.len(), 1);
-        assert_eq!(accepted[0].post_id, "aged");
+        assert!(accepted.is_empty());
+        assert!(client.patches.borrow().is_empty());
     }
 
     #[test]
@@ -295,7 +239,7 @@ mod tests {
             &mut |_| {},
         )
         .unwrap();
-        assert_eq!(report.accepted.len(), 1);
+        assert!(report.accepted.is_empty());
         let posts = client.posts.borrow();
         let statuses: Vec<_> = posts
             .iter()
@@ -303,7 +247,7 @@ mod tests {
             .collect();
         assert!(statuses
             .iter()
-            .any(|(id, status)| *id == "aged" && *status == "sent"));
+            .any(|(id, status)| *id == "aged" && *status == "pending"));
         assert!(statuses
             .iter()
             .any(|(id, status)| *id == "ready" && *status == "sent"));
@@ -314,7 +258,7 @@ mod tests {
         let tmp = TempDir::new().unwrap();
         let now = OffsetDateTime::parse("2026-06-16T12:00:00Z", &Rfc3339).unwrap();
         let client = StubMarketingClient::new(vec![MarketingPost {
-            status: "pending".into(),
+            status: "accepted".into(),
             result_url: Some("https://x/y.mp4".into()),
             asset_url: Some("https://x/y.mp4".into()),
             created_at: Some("2020-01-01T00:00:00Z".into()),

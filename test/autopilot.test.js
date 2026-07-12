@@ -18,7 +18,7 @@ function stubClient(initialPosts = []) {
   };
 }
 
-test('autoAcceptIntake only flips posts that aged past the hold window', async () => {
+test('autoAcceptIntake never flips pending posts', async () => {
   const now = new Date('2026-06-16T12:00:00Z');
   const client = stubClient([
     { id: 'fresh', status: 'pending', created_at: '2026-06-16T11:50:00Z' },
@@ -34,65 +34,8 @@ test('autoAcceptIntake only flips posts that aged past the hold window', async (
     limit: 10,
     log: () => {},
   });
-  assert.equal(accepted.length, 1);
-  assert.equal(accepted[0].postId, 'aged');
-  assert.equal(client.patches.length, 1);
-  assert.equal(client.patches[0].patch.status, 'accepted');
-});
-
-test('autoAcceptIntake skips posts missing or with unparseable created_at', async () => {
-  const now = new Date('2026-06-16T12:00:00Z');
-  const client = stubClient([
-    { id: 'missing', status: 'pending' },
-    { id: 'bad', status: 'pending', created_at: 'definitely not a date' },
-    { id: 'aged', status: 'pending', created_at: '2026-06-16T10:00:00Z' },
-  ]);
-  const accepted = await autoAcceptIntake({
-    client,
-    now,
-    holdWindowMs: 30 * 60_000,
-    intakeStatus: 'pending',
-    createdAtField: 'created_at',
-    limit: 10,
-    log: () => {},
-  });
-  assert.equal(accepted.length, 1);
-  assert.equal(accepted[0].postId, 'aged');
-});
-
-test('autoAcceptIntake with hold window 0 accepts every pending post immediately', async () => {
-  const now = new Date('2026-06-16T12:00:00Z');
-  const client = stubClient([
-    { id: 'a', status: 'pending', created_at: '2026-06-16T11:59:59Z' },
-    { id: 'b', status: 'pending', created_at: '2026-06-16T11:59:30Z' },
-  ]);
-  const accepted = await autoAcceptIntake({
-    client,
-    now,
-    holdWindowMs: 0,
-    intakeStatus: 'pending',
-    createdAtField: 'created_at',
-    limit: 10,
-    log: () => {},
-  });
-  assert.equal(accepted.length, 2);
-});
-
-test('autoAcceptIntake respects a custom createdAtField name', async () => {
-  const now = new Date('2026-06-16T12:00:00Z');
-  const client = stubClient([
-    { id: 'a', status: 'pending', inserted_at: '2026-06-16T10:00:00Z' },
-  ]);
-  const accepted = await autoAcceptIntake({
-    client,
-    now,
-    holdWindowMs: 30 * 60_000,
-    intakeStatus: 'pending',
-    createdAtField: 'inserted_at',
-    limit: 10,
-    log: () => {},
-  });
-  assert.equal(accepted.length, 1);
+  assert.equal(accepted.length, 0);
+  assert.equal(client.patches.length, 0);
 });
 
 test('runAutopilotTick routes posts by channel through ChannelRoutingProvider', async () => {
@@ -127,7 +70,7 @@ test('runAutopilotTick routes posts by channel through ChannelRoutingProvider', 
 
 test('runAutopilotTick records post errors without corrupting intake', async () => {
   const client = stubClient([
-    { id: 'aged', status: 'pending', channel: 'youtube_shorts', project_slug: 'p', title: 't', hook: 'h', body: 'b', result_url: 'https://x/y.mp4', created_at: '2020-01-01T00:00:00Z' },
+    { id: 'aged', status: 'accepted', channel: 'youtube_shorts', project_slug: 'p', title: 't', hook: 'h', body: 'b', result_url: 'https://x/y.mp4', created_at: '2020-01-01T00:00:00Z' },
   ]);
   const postingProvider = {
     post: async () => { throw new Error('YT 503'); },
@@ -195,9 +138,8 @@ test('runAutopilotTick chains intake → render → post and returns each phase 
     render: { mode: 'mock' },
     log: () => {},
   });
-  assert.equal(result.accepted.length, 1);
-  assert.equal(result.accepted[0].postId, 'aged');
-  assert.deepEqual(postedCalls.sort(), ['aged', 'ready']);
+  assert.equal(result.accepted.length, 0);
+  assert.deepEqual(postedCalls, ['ready']);
   assert.equal(client.posts.find((p) => p.id === 'ready').status, 'sent');
-  assert.equal(client.posts.find((p) => p.id === 'aged').status, 'sent');
+  assert.equal(client.posts.find((p) => p.id === 'aged').status, 'pending');
 });

@@ -6,7 +6,7 @@
   "description": "Control-plane-friendly reel generation pipeline for SaaS Maker marketing queue items.",
   "scripts": {
     "dev": "node src/server/index.js",
-    "test": "node --test && cargo test --quiet --manifest-path reel/Cargo.toml",
+    "test": "node --experimental-strip-types --test && cargo test --quiet --manifest-path reel/Cargo.toml",
     "test:coverage": "node --test --experimental-test-coverage --test-coverage-include='src/**/*.js' --test-coverage-lines=20 --test-coverage-functions=25",
     "bootstrap:cloudflare": "node scripts/bootstrap-cloudflare.js",
     "probe:engines": "node scripts/probe-engines.js",
@@ -16,10 +16,13 @@
     "render:accepted": "cargo run --quiet --manifest-path reel/Cargo.toml -- render-accepted --execute --repo-root .",
     "render:pro": "node scripts/render-pro.js",
     "render:html": "node scripts/export-html-composition.js",
+    "render:package": "node scripts/render-content-package.js",
+    "distribution": "node scripts/distribute-content-package.js",
     "render:reel-maker": "node scripts/render-reel-maker.js",
     "render:pro:rs": "cargo run --quiet --manifest-path reel/Cargo.toml -- render --execute --repo-root .",
     "sync:saasmaker": "node scripts/sync-from-saasmaker.js",
     "draft:signal": "node scripts/draft-from-signal.js",
+    "content": "node --experimental-strip-types scripts/content-packages.js",
     "lesson:render": "node scripts/render-lesson.js",
     "smoke:lesson-local": "node scripts/smoke-lesson-local.js",
     "watch:render": "cargo run --quiet --manifest-path reel/Cargo.toml -- watch --execute --repo-root .",
@@ -54,5 +57,8 @@
   },
   "engines": {
     "node": ">=20"
+  },
+  "devDependencies": {
+    "playwright": "^1.61.1"
   }
 }

@@ -1,0 +1,45 @@
+{
+  "schema": "fleet.content-package.v1",
+  "id": "high-signal:fixture-proof",
+  "revision": 1,
+  "createdAt": "2026-07-12T12:00:00.000Z",
+  "brand": { "slug": "high-signal" },
+  "source": {
+    "adapter": "high-signal-reel-briefs",
+    "sourceId": "fixture-proof",
+    "canonicalUrl": "https://highsignal.app/agent-eval",
+    "generatedAt": "2026-07-12T12:00:00.000Z"
+  },
+  "topic": {
+    "title": "Evidence changes the decision",
+    "summary": "A source-backed claim is more useful than a confident promise.",
+    "audience": "Product builders",
+    "destinationUrl": "https://highsignal.app/agent-eval",
+    "claims": [
+      {
+        "text": "Visible evidence makes a product easier to evaluate.",
+        "evidenceUrls": ["https://highsignal.app/agent-eval"]
+      }
+    ]
+  },
+  "approval": {
+    "status": "approved",
+    "approvedAt": "2026-07-12T12:05:00.000Z",
+    "approvedBy": "fixture-owner"
+  },
+  "variants": [
+    {
+      "id": "vertical-proof-v1",
+      "channel": "youtube_shorts",
+      "status": "approved",
+      "hook": "Show the proof, not the promise.",
+      "script": "A source-backed claim is more useful than a confident promise. Visible evidence makes a product easier to evaluate.",
+      "shotList": ["Immediate hook", "Why it matters", "Visible source", "Practical takeaway", "Next action"],
+      "captions": ["Show the proof", "Visible evidence changes trust", "Read the evidence"],
+      "visualDirection": "Use High Signal brand colors, source receipts, large captions, and no generic stock imagery.",
+      "cta": "Read the evidence.",
+      "template": "source_proof_takeaway",
+      "durationSeconds": 25
+    }
+  ]
+}

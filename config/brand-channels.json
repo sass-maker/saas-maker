@@ -1,0 +1,32 @@
+{
+  "$schema": "fleet.brand-channels.v1",
+  "brands": {
+    "high-signal": {
+      "name": "High Signal",
+      "domain": "https://highsignal.app",
+      "contentBase": "high-signal-reel-briefs",
+      "voice": ["evidence-led", "direct", "calm"],
+      "palette": { "background": "#101416", "foreground": "#F4F7F5", "accent": "#76D7C4", "secondary": "#F2C14E" },
+      "channels": ["instagram_reels", "youtube_shorts", "tiktok"],
+      "accountMappings": {}
+    },
+    "significanthobbies": {
+      "name": "Significant Hobbies",
+      "domain": "https://significanthobbies.com",
+      "contentBase": "significant-hobbies-editorial",
+      "voice": ["warm", "specific", "curious"],
+      "palette": { "background": "#14201B", "foreground": "#F7F3E8", "accent": "#8FD694", "secondary": "#F2B84B" },
+      "channels": ["instagram_reels", "youtube_shorts", "tiktok"],
+      "accountMappings": {}
+    },
+    "swe-interview-prep": {
+      "name": "SWE Interview Prep",
+      "domain": "https://swe-interview-prep.pages.dev",
+      "contentBase": "swe-learning-sources",
+      "voice": ["clear", "technical", "teacherly"],
+      "palette": { "background": "#0B1117", "foreground": "#F4F8FB", "accent": "#43D3FF", "secondary": "#FFD166" },
+      "channels": ["instagram_reels", "youtube_shorts", "tiktok"],
+      "accountMappings": {}
+    }
+  }
+}
