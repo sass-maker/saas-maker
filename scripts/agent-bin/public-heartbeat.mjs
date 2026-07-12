@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { execFileSync } from "node:child_process";
-import { mkdirSync, renameSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 
 const defaultOutput = `${process.env.HOME}/Library/Application Support/Fleet Ops/ops-console/runtime.json`;
@@ -45,6 +45,28 @@ function localHealthy() {
   return run("curl", ["-fsS", "--max-time", "2", "http://127.0.0.1:4329/healthz"], 2500) === "ok";
 }
 
+function notificationSummary() {
+  const root = `${process.env.HOME}/Library/Application Support/Fleet Ops/notifications`;
+  const read = (bucket) => {
+    const dir = `${root}/${bucket}`;
+    if (!existsSync(dir)) return [];
+    return readdirSync(dir).filter((name) => name.endsWith(".json")).flatMap((name) => {
+      try {
+        return [JSON.parse(readFileSync(`${dir}/${name}`, "utf8"))];
+      } catch {
+        return [];
+      }
+    });
+  };
+  const pending = read("pending");
+  return {
+    pending: pending.length,
+    critical: pending.filter((event) => event.severity === "critical").length,
+    blocked: pending.filter((event) => event.state === "blocked").length,
+    deadLetter: read("dead").length
+  };
+}
+
 const services = [
   { id: "console", label: "Fleet dashboard", status: localHealthy() ? "running" : "stopped" },
   { id: "openclaw", label: "OpenClaw", status: launchdRunning("ai.openclaw.gateway") ? "running" : "stopped" },
@@ -56,6 +78,7 @@ const heartbeat = {
   schemaVersion: 1,
   generatedAt: new Date().toISOString(),
   cadenceSeconds: 60,
+  notifications: notificationSummary(),
   node: {
     id: process.env.FLEET_NODE_ID || "primary-mac",
     label: process.env.FLEET_NODE_LABEL || "Primary Fleet machine",
@@ -67,7 +90,7 @@ const heartbeat = {
 };
 
 mkdirSync(dirname(outputPath), { recursive: true });
-const tempPath = `${outputPath}.tmp`;
+const tempPath = `${outputPath}.${process.pid}.tmp`;
 writeFileSync(tempPath, `${JSON.stringify(heartbeat, null, 2)}\n`, { mode: 0o644 });
 renameSync(tempPath, outputPath);
 console.log(heartbeat.generatedAt);

@@ -15,6 +15,7 @@ Commands:
   install-cron    Install Fleet Ops Codex cron jobs.
   remove-cron     Remove Fleet Ops Codex cron jobs.
   cron-ui         Render the local Codex cron dashboard.
+  notify          Send or inspect a durable Fleet notification.
   console         Start the Fleet Ops public console.
   check           Validate local OpenClaw, Hermes, Telegram, and security state.
   start           Start OpenClaw, Hermes, console, and scheduled work.
@@ -51,6 +52,7 @@ case "${1:-}" in
   install-cron) "$FLEET_OPS_DIR/scripts/agent-bin/install-codex-cron" ;;
   remove-cron) "$FLEET_OPS_DIR/scripts/agent-bin/install-codex-cron" --remove ;;
   cron-ui) "$FLEET_OPS_DIR/scripts/agent-bin/render-codex-cron-ui" ;;
+  notify) "$FLEET_OPS_DIR/scripts/agent-bin/fleet-notify" "${@:2}" ;;
   console) "$FLEET_OPS_DIR/scripts/agent-bin/ops-console" start ;;
   check)
     openclaw config validate
@@ -71,6 +73,7 @@ case "${1:-}" in
     openclaw plugins enable telegram >/dev/null 2>&1 || true
     openclaw gateway start
     "$FLEET_OPS_DIR/scripts/agent-bin/ops-console" start
+    "$FLEET_OPS_DIR/scripts/agent-bin/fleet-notification-service" start
     "$FLEET_OPS_DIR/scripts/agent-bin/install-codex-cron"
     ;;
   pause)
@@ -79,6 +82,7 @@ case "${1:-}" in
       hermes gateway stop || true
     fi
     "$FLEET_OPS_DIR/scripts/agent-bin/ops-console" stop
+    "$FLEET_OPS_DIR/scripts/agent-bin/fleet-notification-service" stop
     "$FLEET_OPS_DIR/scripts/agent-bin/install-codex-cron" --remove
     ;;
   restart)
@@ -87,6 +91,7 @@ case "${1:-}" in
       hermes gateway restart || hermes gateway start || true
     fi
     "$FLEET_OPS_DIR/scripts/agent-bin/ops-console" restart
+    "$FLEET_OPS_DIR/scripts/agent-bin/fleet-notification-service" restart
     "$FLEET_OPS_DIR/scripts/agent-bin/install-codex-cron"
     ;;
   status)
@@ -99,6 +104,8 @@ case "${1:-}" in
     openclaw cron status
     openclaw nodes status
     "$FLEET_OPS_DIR/scripts/agent-bin/ops-console" status
+    "$FLEET_OPS_DIR/scripts/agent-bin/fleet-notification-service" status
+    "$FLEET_OPS_DIR/scripts/agent-bin/fleet-notify" status
     "$FLEET_OPS_DIR/scripts/agent-bin/mobile-control" status
     crontab -l 2>/dev/null | sed -n '/BEGIN FLEET OPS CODEX CRON/,/END FLEET OPS CODEX CRON/p' || true
     ;;

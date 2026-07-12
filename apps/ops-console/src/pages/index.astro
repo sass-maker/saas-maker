@@ -91,6 +91,7 @@ const formatDate = (value: string | null) =>
         <strong>Read-only snapshot</strong>
         <span data-heartbeat-at>Last heartbeat loading</span>
         <span data-heartbeat-state>Machine state loading</span>
+        <span data-notification-state>Notification queue loading</span>
         <span>{snapshot.refreshCadence}</span>
         <span>Tasks {formatDate(snapshot.tasksSyncedAt)} · Smoke {formatDate(snapshot.smokeGeneratedAt)} · Audit {formatDate(snapshot.auditGeneratedAt)}</span>
       </section>
@@ -296,6 +297,17 @@ const formatDate = (value: string | null) =>
       const nodeState = ageMs > 180000 ? "offline" : heartbeat.node.status;
       at.textContent = `Last heartbeat ${formatHeartbeat(heartbeat.generatedAt)}`;
       state.textContent = `Primary machine ${nodeState}`;
+      const notificationState = document.querySelector("[data-notification-state]");
+      if (notificationState && heartbeat.notifications) {
+        const pending = Number(heartbeat.notifications.pending || 0);
+        const critical = Number(heartbeat.notifications.critical || 0);
+        const blocked = Number(heartbeat.notifications.blocked || 0);
+        notificationState.textContent = critical
+          ? `Notifications ${critical} critical / ${pending} pending`
+          : blocked
+            ? `Notifications ${blocked} blocked / ${pending} pending`
+            : `Notifications healthy / ${pending} pending`;
+      }
 
       const node = document.querySelector(`[data-node-id="${heartbeat.node.id}"]`);
       setState(node?.querySelector("[data-node-status]"), nodeState);
@@ -310,6 +322,8 @@ const formatDate = (value: string | null) =>
     } catch {
       at.textContent = "Live heartbeat unavailable";
       state.textContent = "Static project snapshot remains available";
+      const notificationState = document.querySelector("[data-notification-state]");
+      if (notificationState) notificationState.textContent = "Notification state unavailable";
     }
   }
 

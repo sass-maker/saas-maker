@@ -51,3 +51,11 @@ Use `../scripts/agent-stack.sh pause` to stop OpenClaw, Hermes, the console, and
 the managed Fleet Ops crontab block on a machine. `resume` restores them. These
 controls and all shared behavior live in this repository so another machine can
 use the same Fleet Ops source of truth without copying credentials.
+
+## Durable notifications
+
+`notifications/` defines the fleet-wide severity, quiet-hours, dedupe, retry,
+and delivery policy. `../scripts/agent-bin/fleet-notify` owns the machine-local
+outbox and delivery receipts. Cron failures page through Hermes Telegram; routine
+successes remain available as history without generating phone noise. See
+`notifications/README.md` for adapters and commands.

@@ -7,6 +7,7 @@ CRON_DIR="$FLEET_OPS_DIR/automation/codex-cron"
 JOBS_FILE="$CRON_DIR/jobs.tsv"
 LOG_DIR="$CRON_DIR/logs"
 LOCK_DIR="$CRON_DIR/locks"
+NOTIFY="$SCRIPT_DIR/fleet-notify"
 
 usage() {
   cat <<'EOF'
@@ -66,6 +67,7 @@ if ! mkdir "$lock_path" 2>/dev/null; then
 fi
 trap 'rm -rf "$lock_path"' EXIT INT TERM
 
+set +e
 {
   echo "job: $name"
   echo "id: $id"
@@ -91,3 +93,19 @@ trap 'rm -rf "$lock_path"' EXIT INT TERM
     -o "$LOG_DIR/$id-last-message.md" \
     - < "$prompt_path"
 } 2>&1 | tee -a "$log_path"
+job_status="${PIPESTATUS[0]}"
+set -e
+
+if [ "$DRY_RUN" != "--dry-run" ] && [ -x "$NOTIFY" ]; then
+  if [ "$job_status" -eq 0 ]; then
+    "$NOTIFY" emit --severity success --source codex-cron --project "$id" \
+      --title "$name completed" --body "The scheduled Fleet job finished successfully." \
+      --dedupe-key "cron:$id:success:$(date +%Y-%m-%d)" >/dev/null 2>&1 || true
+  else
+    "$NOTIFY" emit --severity warning --source codex-cron --project "$id" \
+      --title "$name failed" --body "The scheduled Fleet job exited with status $job_status. Check the machine-local cron log." \
+      --dedupe-key "cron:$id:failure" >/dev/null 2>&1 || true
+  fi
+fi
+
+exit "$job_status"
