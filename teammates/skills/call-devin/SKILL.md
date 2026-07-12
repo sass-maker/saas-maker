@@ -12,10 +12,10 @@ vendor-lock-in tradeoff. Prefer Codex, Grok, or Hermes when they can do the job.
 ## Current Local State
 
 Fleet Ops includes `scripts/agent-bin/devin-session.mjs`, a narrow adapter for
-the official Devin v3 REST API. It needs a least-privilege service-user token
-and organization ID in `DEVIN_API_KEY` and `DEVIN_ORG_ID`. Keep both
-machine-local. The adapter refuses session creation unless the invoking process
-also sets `DEVIN_ALLOW_SPEND=yes`.
+the official Devin v3 REST API. The local `devin` CLI is installed, but the API
+adapter still needs a least-privilege service-user token and organization ID in
+`DEVIN_API_KEY` and `DEVIN_ORG_ID`. Keep both machine-local. The adapter refuses
+session creation unless the invoking process also sets `DEVIN_ALLOW_SPEND=yes`.
 
 ```sh
 ./fleet-ops/scripts/agent-bin/devin-session.mjs status

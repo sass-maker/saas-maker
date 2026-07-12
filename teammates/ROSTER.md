@@ -7,9 +7,9 @@ Outcomes that should update these judgments live in [SCORECARD.md](SCORECARD.md)
 | Teammate | Skill | Strong at | Weak at / cost | Verified |
 | --- | --- | --- | --- | --- |
 | Codex (`codex exec`, gpt-5.5) | `call-codex` | Scoped repo implementation, test-fix loops, `exec review`; only teammate with **schema-enforced output** (`--output-schema`) | No conversation context; slow at `high` effort; ~18k token floor/call | ✅ e2e 2026-07-03 |
-| Grok (`grok -p`, grok-build) | `call-grok` | **best-of-N parallel attempts**, `--check` self-verify; third-family second opinion | No output schema; headless needs `--always-approve`; local auth currently missing | installed, auth pending 2026-07-12 |
+| Grok (`grok -p`, grok-4.5) | `call-grok` | **best-of-N parallel attempts**, `--check` self-verify; third-family second opinion | No output schema; headless needs `--always-approve`; verify `stopReason` on JSON runs | ✅ smoke-tested 2026-07-12 |
 | Hermes (`hermes`) | `call-hermes` | Optional open-source persistent skills, repeat-work learning, backup bot/provider lane | Needs model credentials and a named recurring job before it is useful | optional; gateway verified 2026-07-12 |
-| Devin | `call-devin` | Optional proprietary autonomous teammate for expensive external attempts | ACU/spend + vendor lock-in; no local CLI detected | optional, explicit approval required |
+| Devin (`devin`, API adapter) | `call-devin` | Optional proprietary autonomous teammate for expensive external attempts | ACU/spend + vendor lock-in; credentials missing | installed, credentials pending 2026-07-12 |
 
 Routing heuristics:
 

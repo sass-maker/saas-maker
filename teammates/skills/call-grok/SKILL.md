@@ -8,8 +8,9 @@ description: "Delegate coding work to Grok CLI (xAI's terminal agent) as a teamm
 Same stance as all teammate skills: Grok is a specialist contractor. You brief
 it, bound its authority, verify its output independently, accept or reject.
 
-Validated against `grok 0.2.60` on this machine (2026-07-03); auth present in
-`~/.grok/auth.json`. Default model: `grok-build`.
+Validated against `grok 0.2.93` on this machine (2026-07-12); logged in with
+grok.com. Default model: `grok-4.5`. Smoke test:
+`grok -p "Reply with exactly: GROK_OK" --always-approve` returned `GROK_OK`.
 
 ## When to call Grok
 
