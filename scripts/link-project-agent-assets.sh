@@ -2,15 +2,20 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-FLEET_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+FLEET_OPS_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+FLEET_ROOT="$(cd "$FLEET_OPS_DIR/.." && pwd)"
 DRY_RUN=0
+SKILLS_ONLY=0
 
 usage() {
   cat <<'USAGE'
-Usage: scripts/link-project-agent-assets.sh [--dry-run] [project ...]
+Usage: scripts/link-project-agent-assets.sh [--dry-run] [--skills-only] [project ...]
 
 Links Fleet-owned agent assets into child projects. With no projects, every
 immediate child directory containing .git is used.
+
+Use --skills-only to link skill directories without modifying AGENTS.md or
+CLAUDE.md files.
 
 Examples:
   scripts/link-project-agent-assets.sh --dry-run
@@ -125,6 +130,10 @@ while [[ "$#" -gt 0 ]]; do
       DRY_RUN=1
       shift
       ;;
+    --skills-only)
+      SKILLS_ONLY=1
+      shift
+      ;;
     -h|--help)
       usage
       exit 0
@@ -137,9 +146,15 @@ while [[ "$#" -gt 0 ]]; do
 done
 
 targets=()
-while IFS= read -r target; do
-  [[ -n "$target" ]] && targets+=("$target")
-done < <(project_list "${projects[@]}")
+if [[ "${#projects[@]}" -gt 0 ]]; then
+  while IFS= read -r target; do
+    [[ -n "$target" ]] && targets+=("$target")
+  done < <(project_list "${projects[@]}")
+else
+  while IFS= read -r target; do
+    [[ -n "$target" ]] && targets+=("$target")
+  done < <(project_list)
+fi
 
 if [[ "${#targets[@]}" -eq 0 ]]; then
   log "No child Git projects found."
@@ -161,6 +176,10 @@ for project in "${targets[@]}"; do
 
   link_skill_dir "$FLEET_ROOT/.agents/skills" "$project/.agents/skills"
   link_skill_dir "$FLEET_ROOT/.claude/skills" "$project/.claude/skills"
+
+  if [[ "$SKILLS_ONLY" == "1" ]]; then
+    continue
+  fi
 
   rel_fleet_agents="$(relpath "$FLEET_ROOT/AGENTS.md" "$project")"
   rel_fleet_claude="$(relpath "$FLEET_ROOT/CLAUDE.md" "$project")"

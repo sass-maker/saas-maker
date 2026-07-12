@@ -109,9 +109,15 @@ while [[ "$#" -gt 0 ]]; do
 done
 
 targets=()
-while IFS= read -r target; do
-  [[ -n "$target" ]] && targets+=("$target")
-done < <(project_list "${projects[@]}")
+if [[ "${#projects[@]}" -gt 0 ]]; then
+  while IFS= read -r target; do
+    [[ -n "$target" ]] && targets+=("$target")
+  done < <(project_list "${projects[@]}")
+else
+  while IFS= read -r target; do
+    [[ -n "$target" ]] && targets+=("$target")
+  done < <(project_list)
+fi
 
 if [[ "${#targets[@]}" -eq 0 ]]; then
   log "No child Git projects found."

@@ -3,6 +3,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 FLEET_OPS_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+FLEET_ROOT="$(cd "$FLEET_OPS_DIR/.." && pwd)"
 
 usage() {
   cat <<'EOF'
@@ -30,7 +31,19 @@ install_skills() {
   local dir
   local skill
 
-  for dir in "$HOME/.codex/skills" "$HOME/.openclaw/skills"; do
+  # Keep Codex skills local to Fleet instead of loading them in every repo.
+  dir="$FLEET_ROOT/.agents/skills"
+  mkdir -p "$dir"
+  ln -sfn "$FLEET_OPS_DIR/skills/fleet-ops" "$dir/fleet-ops"
+  ln -sfn "$FLEET_OPS_DIR/teammates/skills/call-teammate" "$dir/call-teammate"
+  ln -sfn "$FLEET_OPS_DIR/psi-swarm" "$dir/psi-swarm"
+  for skill in name-domains spec-driven agent-ready seo-audit token-budget mobile-task-control daily-learning; do
+    ln -sfn "$FLEET_OPS_DIR/skills/$skill" "$dir/$skill"
+  done
+  "$FLEET_OPS_DIR/scripts/link-project-agent-assets.sh" --skills-only
+
+  # Gateway runtimes are not repository-scoped, so keep user-level links.
+  for dir in "$HOME/.openclaw/skills"; do
     mkdir -p "$dir"
     ln -sfn "$FLEET_OPS_DIR/skills/fleet-ops" "$dir/fleet-ops"
     ln -sfn "$FLEET_OPS_DIR/teammates/skills/call-teammate" "$dir/call-teammate"

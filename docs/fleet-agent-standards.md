@@ -252,7 +252,7 @@ Only 10 fleet skills are exposed to each agent — 2 parents + 8 standalones:
 | `daily-learning` | standalone | private adaptive learning-session links |
 
 Agent skill dirs wired (symlinks point to `fleet-ops/` paths):
-- `~/.codex/skills/` (Codex CLI)
+- `fleet/.agents/skills/` and each child repo's `.agents/skills/` (Codex)
 - `~/.openclaw/skills/` (OpenClaw Gateway agents)
 - `~/.hermes/skills/` (optional Hermes Agent, only when enabled locally)
 
@@ -264,7 +264,8 @@ they're discovered via the parent.
 
 1. Create `fleet-ops/skills/<name>/SKILL.md` (or under `teammates/skills/` for delegation).
 2. If it belongs under an existing parent, add a row to the parent's routing table.
-3. If standalone, symlink it into each agent skill dir: `~/.claude/skills/`, `~/.codex/skills/`, `~/.cursor/skills/`, `~/.config/devin/skills/`.
+3. If standalone, add it to the Fleet repo-local Codex links and the relevant
+   gateway runtime skill dirs.
 4. Commit and push.
 
 ## Agent teammate delegation (call-teammate parent skill)
