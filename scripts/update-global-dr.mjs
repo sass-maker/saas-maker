@@ -16,8 +16,14 @@ import { dirname, join } from 'node:path';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
 
-const SITES_PATH = join(ROOT, 'data/global-sites.json');
-const DATA_PATH = join(ROOT, 'data/global-dr.json');
+const args = process.argv.slice(2);
+const flag = (name, fallback) => {
+  const index = args.indexOf(name);
+  return index >= 0 && args[index + 1] ? join(ROOT, args[index + 1]) : fallback;
+};
+const SITES_PATH = flag('--sites', join(ROOT, 'data/global-sites.json'));
+const DATA_PATH = flag('--data', join(ROOT, 'data/global-dr.json'));
+const LABEL = flag('--label', 'global').split('/').at(-1);
 
 const API_BASE = 'https://api.ahrefs.com/v3/public/domain-rating-free';
 const DELAY_MS = 650; // be nice to the free public endpoint
@@ -53,7 +59,7 @@ async function sleep(ms) {
 }
 
 async function main() {
-  console.log('Updating global DR history...');
+  console.log(`Updating ${LABEL} DR history...`);
 
   const sites = JSON.parse(readFileSync(SITES_PATH, 'utf8'));
   console.log(`  Sites: ${sites.length}`);

@@ -26,11 +26,14 @@ jobs:
       - name: Update global DR data
         run: node scripts/update-global-dr.mjs
 
+      - name: Update Fleet domain DR data
+        run: node scripts/update-global-dr.mjs --sites data/fleet-sites.json --data data/fleet-dr.json --label fleet
+
       - name: Commit changes (if any)
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/global-dr.json
+          git add data/global-dr.json data/fleet-dr.json
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
