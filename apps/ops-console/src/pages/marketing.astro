@@ -69,7 +69,7 @@ const channelLabel = (channel: string) => ({ instagram_reels: "Instagram", youtu
       <section class="proof">
         <div><p class="eyebrow">Verified media path</p><h2>{pipeline.proof ? "A real source-backed reel passed" : "No verified render yet"}</h2></div>
         {pipeline.proof && <dl><div><dt>Brand</dt><dd>{pipeline.proof.brand}</dd></div><div><dt>Quality</dt><dd>{pipeline.proof.score} / 100</dd></div><div><dt>Duration</dt><dd>{pipeline.proof.durationSeconds}s</dd></div><div><dt>Source</dt><dd><a href={pipeline.proof.sourceUrl}>Open evidence</a></dd></div></dl>}
-        <p>The proof is local and was not posted. Live distribution remains blocked until brand-specific OAuth accounts are connected and an exact distribution request is approved.</p>
+        <p>The proof is local and was not posted. Live Instagram and YouTube distribution remains blocked until brand-specific OAuth accounts are connected and an exact distribution request is approved. TikTok/Postiz is deferred and does not count against launch readiness.</p>
       </section>
     </main>
   </body>

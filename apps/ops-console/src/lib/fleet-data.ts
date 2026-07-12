@@ -670,8 +670,7 @@ export function getMarketingPipeline(): MarketingPipeline {
       { name: "Source extraction", state: contentReady && brands.every((brand) => brand.sourceReady) ? "ready" : "blocked", detail: "Read-only adapters emit proposed, evidence-backed packages." },
       { name: "Approval", state: distributionReady ? "ready" : "blocked", detail: "Media and distribution require separate explicit approvals." },
       { name: "Video factory", state: videoReady && Boolean(rawProof.quality?.overall) ? "ready" : "blocked", detail: "Local Kokoro, Playwright Chromium, and FFmpeg vertical render." },
-      { name: "Native publishing", state: anyAccountMappings ? "ready" : "blocked", detail: "YouTube and Instagram adapters exist; brand account OAuth is not mapped." },
-      { name: "TikTok / Postiz", state: "not-configured", detail: "Adapter and audited TikTok account connection still required." }
+      { name: "Native publishing", state: anyAccountMappings ? "ready" : "blocked", detail: "YouTube and Instagram adapters exist; brand account OAuth is not mapped." }
     ],
     brands
   };
