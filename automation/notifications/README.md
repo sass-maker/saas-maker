@@ -22,6 +22,18 @@ OpenClaw Telegram bot so completed jobs send a proper "done" notification.
 `critical` also uses ntfy when configured and bypasses quiet hours. Override
 routing for one event with repeated `--channel` flags.
 
+For terminal-run agents, use:
+
+```bash
+fleet-ops/scripts/agent-bin/fleet-notify emit \
+  --severity success --source terminal-agent --title "Task complete" \
+  --body "Claude/Codex finished the requested work."
+
+fleet-ops/scripts/agent-bin/fleet-notify emit \
+  --severity warning --source terminal-agent --title "Agent needs help" \
+  --body "Claude/Codex is blocked and needs operator input."
+```
+
 ## Machine-local configuration
 
 The worker reads these environment variables from
