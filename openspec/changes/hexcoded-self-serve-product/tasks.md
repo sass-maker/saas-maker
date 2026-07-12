@@ -15,7 +15,7 @@
 - [ ] 1.3 Add workspace-scoped campaigns, briefs, render jobs/attempts, artifacts, and audit events
 - [x] 1.4 Implement the customer URL-to-ad draft/review flow over the existing VideoBrief contract
 - [ ] 1.5 Add private artifact delivery and customer render history/download APIs
-- [ ] 1.6 Preserve approval gates and prove the existing internal SaaS Maker flow still works
+- [x] 1.6 Preserve approval gates and prove the existing internal SaaS Maker flow still works
 
 ## 2. Billing and credit ledger
 
@@ -45,7 +45,7 @@
 
 - [x] 5.1 Add actor role/profile and versioned Actor Licence acceptance before biometric upload
 - [ ] 5.2 Add verification, twin-asset lifecycle, processor deletion, and actor-controlled pause/withdrawal
-- [ ] 5.3 Add actor library search/selection with only active, licensed twins
+- [x] 5.3 Add actor library search/selection with only active, licensed twins
 - [x] 5.4 Snapshot consent/licence per generation and attach the snapshot to provenance and delivered output
 - [ ] 5.5 Add append-only actor-use earnings, reversals, dashboard balances, KYC/tax status, payout accounts, and payouts
 - [ ] 5.6 Test actor death/incapacity escalation, fraud invalidation, misuse reports, withdrawal, master deletion, and delivered-licence survival

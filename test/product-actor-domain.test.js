@@ -8,6 +8,7 @@ import {
   beginBiometricUpload,
   createActorLicenceSnapshot,
   createActorProfile,
+  searchLicensedActorLibrary,
   transitionTwin,
 } from '../src/product/actor-domain.js';
 
@@ -67,4 +68,31 @@ test('paused, withdrawn, and unverified twins cannot be cast', () => {
       rate: { currency: 'USD', minorUnits: 500 },
     }), ActorPolicyError);
   }
+});
+
+test('actor library exposes only active twins with the current licence acceptance', () => {
+  const current = acceptActorLicence({
+    actorId: 'actor-1', documentVersion: '2026-07', documentHash: hash, source: 'web',
+  });
+  const old = acceptActorLicence({
+    actorId: 'actor-2', documentVersion: '2026-01', documentHash: hash, source: 'web',
+  });
+  const results = searchLicensedActorLibrary({
+    actors: [
+      { id: 'actor-1', displayName: 'Asha', tags: ['product-demo'] },
+      { id: 'actor-2', displayName: 'Ben', tags: ['founder'] },
+      { id: 'actor-3', displayName: 'Chen', tags: ['product-demo'] },
+    ],
+    twins: [
+      { id: 'twin-1', actorId: 'actor-1', status: 'active', statusEvidence: { licenceAcceptanceId: current.id } },
+      { id: 'twin-2', actorId: 'actor-2', status: 'active', statusEvidence: { licenceAcceptanceId: old.id } },
+      { id: 'twin-3', actorId: 'actor-3', status: 'paused', statusEvidence: { licenceAcceptanceId: 'missing' } },
+    ],
+    licenceAcceptances: [current, old],
+    requiredDocumentVersion: '2026-07',
+    query: 'product',
+  });
+  assert.deepEqual(results.map((result) => result.actor.displayName), ['Asha']);
+  assert.equal(results[0].twin.status, 'active');
+  assert.equal(Object.isFrozen(results[0].actor.tags), true);
 });

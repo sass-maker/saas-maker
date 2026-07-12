@@ -121,8 +121,11 @@ for intentional target-host exclusions.
   aggregate, actor consent/licence lifecycle invariants, immutable output
   provenance checks, fail-closed product feature gates, versioned legal
   acceptances, a review-gated URL-to-ad domain flow over `VideoBrief`, and
-  append-only actor earning/reversal records. Actor licence snapshots now have
-  an integration test proving they remain attached to delivered provenance.
+  append-only actor earning/reversal records. The actor-library domain exposes
+  only active twins with evidence for the current Actor Licence version. Actor
+  licence snapshots now have an integration test proving they remain attached
+  to delivered provenance, while the full regression suite proves the existing
+  SaaS Maker approval and posting gates remain intact.
   Real actor casting cannot enable unless all consent, licence, identity,
   liveness, earnings, withdrawal, retention, misuse, and payout evidence gates
   pass. The self-serve product is not launch-ready; durable persistence,
@@ -336,7 +339,8 @@ for intentional target-host exclusions.
   customer-app repository or legal documents currently exist in the fleet.
   Provider-neutral domain work is complete for URL-to-ad draft review,
   versioned acceptance records, input-rights/provenance, actor profiles and
-  pre-upload licence gates, licence snapshots, and earning/reversal records;
+  pre-upload licence gates, active/current-licence actor catalog filtering,
+  licence snapshots, and earning/reversal records;
   these records are not yet persisted or exposed through customer APIs.
   Actor casting, brand self-serve, billing, and customer social publishing stay
   disabled pending implementation and target-host acceptance evidence.

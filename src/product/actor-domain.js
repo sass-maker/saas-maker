@@ -68,6 +68,30 @@ export function assertTwinCastable(twin) {
   return twin;
 }
 
+export function searchLicensedActorLibrary({ actors, twins, licenceAcceptances, requiredDocumentVersion, query = '' }) {
+  if (!Array.isArray(actors) || !Array.isArray(twins) || !Array.isArray(licenceAcceptances) || !requiredDocumentVersion) {
+    throw new ActorPolicyError('actors, twins, licence acceptances, and the current licence version are required');
+  }
+  const normalizedQuery = query.trim().toLowerCase();
+  return actors.flatMap((actor) => twins
+    .filter((twin) => twin.actorId === actor.id && twin.status === CASTABLE_STATUS)
+    .flatMap((twin) => {
+      const acceptance = licenceAcceptances.find((candidate) =>
+        candidate.id === twin.statusEvidence?.licenceAcceptanceId &&
+        candidate.actorId === actor.id &&
+        candidate.document === 'actor-licence' &&
+        candidate.documentVersion === requiredDocumentVersion);
+      if (!acceptance) return [];
+      const searchable = [actor.displayName, ...(actor.tags ?? [])].filter(Boolean).join(' ').toLowerCase();
+      if (normalizedQuery && !searchable.includes(normalizedQuery)) return [];
+      return [immutable({
+        actor: { id: actor.id, displayName: actor.displayName, tags: actor.tags ?? [] },
+        twin: { id: twin.id, status: twin.status },
+        licenceAcceptanceId: acceptance.id,
+      })];
+    }));
+}
+
 export class ActorPolicyError extends Error {
   constructor(message) {
     super(message);
