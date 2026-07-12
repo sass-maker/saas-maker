@@ -116,6 +116,21 @@ for intentional target-host exclusions.
 
 ## Timeline
 
+- **2026-07-13 — HexCoded provider-neutral commercial and actor slice:**
+  completed the locally executable product-domain layer without enabling any
+  public capability or choosing production providers. Commercial renders now
+  bind accepted briefs to append-only credit holds and idempotently capture or
+  release them through bounded render attempts. Immutable output provenance
+  includes source, renderer, actor/twin status, approvals, and disclosure.
+  Added claim/evidence review, misuse/takedown/appeal/repeat-abuse controls,
+  export/deletion jobs with purpose-bound retention evidence, actor
+  verification and processor-deletion receipts, KYC/tax and tokenised payout
+  state, actor balances, and redacted structured events wired into commercial
+  render transitions. Fake-adapter brand and actor smokes pass, alongside
+  death/incapacity, fraud, withdrawal, master-deletion, and delivered-licence
+  survival cases. Provider-backed persistence and customer surfaces remain
+  blocked and all feature flags remain off.
+
 - **2026-07-13 — HexCoded safety foundation (capabilities remain disabled):**
   added provider-neutral workspace authorisation, an append-only credit-ledger
   aggregate, actor consent/licence lifecycle invariants, immutable output
@@ -338,9 +353,12 @@ for intentional target-host exclusions.
   actual public Terms, Privacy, and Actor Licence documents. No matching
   customer-app repository or legal documents currently exist in the fleet.
   Provider-neutral domain work is complete for URL-to-ad draft review,
-  versioned acceptance records, input-rights/provenance, actor profiles and
-  pre-upload licence gates, active/current-licence actor catalog filtering,
-  licence snapshots, and earning/reversal records;
+  versioned acceptance records, commercial credit holds and exactly-once
+  settlement, input-rights/provenance, claim/evidence and misuse controls,
+  export/deletion retention evidence, redacted observability, actor profiles
+  and pre-upload licence gates, active/current-licence actor catalog filtering,
+  verification and processor deletion, licence snapshots, earning/reversal
+  records, KYC/tax state, and tokenised payout workflows;
   these records are not yet persisted or exposed through customer APIs.
   Actor casting, brand self-serve, billing, and customer social publishing stay
   disabled pending implementation and target-host acceptance evidence.

@@ -2,6 +2,11 @@ import { randomUUID } from 'node:crypto';
 
 const POSITIVE_INTEGER = Number.isSafeInteger;
 
+export function createCreditAccount({ workspaceId, currency = 'credits', id, createdAt = new Date().toISOString() }) {
+  if (!workspaceId || !currency) throw new TypeError('workspaceId and currency are required');
+  return Object.freeze({ id: id ?? randomUUID(), workspaceId, currency, status: 'active', createdAt });
+}
+
 export class CreditLedger {
   #entries;
   #idempotency;

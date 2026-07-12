@@ -40,7 +40,7 @@ test('customer input-rights evidence is mandatory', () => {
 test('actor outputs require the exact licence snapshot', () => {
   assert.throws(() => createOutputProvenance(validInput({ actorUse: { actorId: 'actor-1', twinId: 'twin-1' } })), ProvenanceError);
   const record = createOutputProvenance(validInput({
-    actorUse: { actorId: 'actor-1', twinId: 'twin-1', licenceSnapshotId: 'snapshot-1' },
+    actorUse: { actorId: 'actor-1', twinId: 'twin-1', licenceSnapshotId: 'snapshot-1', actorStatus: 'active', twinStatus: 'active' },
   }));
   assert.equal(record.actorUse.licenceSnapshotId, 'snapshot-1');
 });
@@ -66,7 +66,7 @@ test('actor licence snapshot is attached unchanged to delivered provenance', () 
     actor, twin, licenceAcceptance, consent: { id: 'consent-1', actorId: actor.id }, rate: { amount: 25, currency: 'USD_CENTS' },
   });
   const record = createOutputProvenance(validInput({
-    actorUse: { actorId: actor.id, twinId: twin.id, licenceSnapshotId: snapshot.id },
+    actorUse: { actorId: actor.id, twinId: twin.id, licenceSnapshotId: snapshot.id, actorStatus: 'active', twinStatus: twin.status },
   }));
   assert.equal(record.actorUse.licenceSnapshotId, snapshot.id);
   assert.equal(verifyOutputProvenance(record), true);

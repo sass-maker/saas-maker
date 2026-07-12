@@ -14,8 +14,11 @@ export function createOutputProvenance(input) {
   if (!Array.isArray(input.sourceAssets) || input.sourceAssets.some((asset) => !asset.id || !asset.rightsBasis)) {
     throw new ProvenanceError('every source asset requires an id and rights basis');
   }
-  if (input.actorUse && !input.actorUse.licenceSnapshotId) {
-    throw new ProvenanceError('actor use requires an immutable licence snapshot');
+  if (input.actorUse && (!input.actorUse.licenceSnapshotId || !input.actorUse.actorStatus || !input.actorUse.twinStatus)) {
+    throw new ProvenanceError('actor use requires an immutable licence snapshot and actor/twin status');
+  }
+  if (!input.review.briefAcceptanceId || !input.review.outputAcceptanceId) {
+    throw new ProvenanceError('brief and output review approvals are required');
   }
   assertDisclosureDeliverable(input.disclosure);
 
@@ -28,6 +31,7 @@ export function createOutputProvenance(input) {
     renderer: input.renderer,
     sourceAssets: input.sourceAssets,
     music: input.music ?? null,
+    fonts: input.fonts ?? [],
     voice: input.voice ?? null,
     actorUse: input.actorUse ?? null,
     review: input.review,
