@@ -7,8 +7,9 @@ Outcomes that should update these judgments live in [SCORECARD.md](SCORECARD.md)
 | Teammate | Skill | Strong at | Weak at / cost | Verified |
 | --- | --- | --- | --- | --- |
 | Codex (`codex exec`, gpt-5.5) | `call-codex` | Scoped repo implementation, test-fix loops, `exec review`; only teammate with **schema-enforced output** (`--output-schema`) | No conversation context; slow at `high` effort; ~18k token floor/call | ✅ e2e 2026-07-03 |
-| Grok (`grok -p`, grok-build) | `call-grok` | **best-of-N parallel attempts**, `--check` self-verify; third-family second opinion | No output schema; headless needs `--always-approve` (prompts silently cancel, exit 0); `-w` doesn't isolate headless — manual worktree required | ✅ full agentic e2e |
-| Hermes (`hermes`) | `call-hermes` | Open-source persistent skills and repeat-work learning | Keep gateway/channels off unless a concrete workflow needs them | pending local setup |
+| Grok (`grok -p`, grok-build) | `call-grok` | **best-of-N parallel attempts**, `--check` self-verify; third-family second opinion | No output schema; headless needs `--always-approve`; local auth currently missing | installed, auth pending 2026-07-12 |
+| Hermes (`hermes`) | `call-hermes` | Open-source persistent skills, repeat-work learning, mobile operator gateway | Needs Telegram/model credentials before mobile chat is useful | gateway verified 2026-07-12; Telegram pending |
+| Devin | `call-devin` | Optional proprietary autonomous teammate for expensive external attempts | ACU/spend + vendor lock-in; no local CLI detected | optional, explicit approval required |
 
 Routing heuristics:
 
@@ -16,15 +17,18 @@ Routing heuristics:
 - Hard/ambiguous but verifiable, worth N attempts → **Grok** `--best-of-n`.
 - Review of the parent's own diff → **Grok** fresh context or **Codex** `exec review`.
 - Repeatable learning workflow → **Hermes**, with an explicit workspace and scope.
+- External autonomous attempt worth proprietary spend → **Devin**, only after explicit approval.
 - Needs your conversation context → nobody; do it yourself or use the
   in-session Agent tool.
 
 ## Usage-aware failover
 
-Teammates run on separate model quotas (Codex → ChatGPT plan, Grok → xAI plan).
+Teammates run on separate model quotas/spend pools (Codex → ChatGPT plan, Grok
+→ xAI plan, Devin → ACU/spend, Hermes → configured provider).
 When one is exhausted, switch or park the task rather than waiting:
 
 - **Implementation / test-fix**: Codex → Grok in a manually created worktree.
+- **Implementation / test-fix**: Codex → Grok → Devin only if approved.
 - **Review / second opinion**: Codex `exec review` → Grok.
 
 Detection is reactive (none of these CLIs exposes a reliable headless quota

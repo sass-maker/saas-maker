@@ -1,9 +1,11 @@
 ---
-import { getCronJobs, getFleetProjects, getSnapshotInfo, getWifiSummary } from "../lib/fleet-data";
+import { getCronJobs, getFleetNodes, getFleetProjects, getSnapshotInfo, getWifiSummary } from "../lib/fleet-data";
 
 const cronJobs = getCronJobs();
 const wifi = getWifiSummary();
 const projects = getFleetProjects();
+const productCount = projects.filter((project) => !["fleet-ops", "wifi-watch"].includes(project.slug)).length;
+const nodes = getFleetNodes();
 const snapshot = getSnapshotInfo();
 const activeJobs = cronJobs.filter((job) => job.enabled);
 const heavyJobs = cronJobs.filter((job) => job.effort === "high").length;
@@ -30,7 +32,7 @@ const formatDate = (value: string | null) =>
     <title>Fleet Ops Console</title>
     <meta
       name="description"
-      content="Public Fleet Ops control-plane view for Codex cron schedules and Wi-Fi Watch telemetry."
+      content="Public, read-only status for Fleet projects, schedules, hosting, and sanitized machine health."
     />
   </head>
   <body>
@@ -38,7 +40,7 @@ const formatDate = (value: string | null) =>
       <header class="topbar">
         <div>
           <p class="eyebrow">Fleet Ops</p>
-          <h1>Machine-run control plane</h1>
+          <h1>Fleet status</h1>
         </div>
         <nav class="topnav" aria-label="Fleet console">
           <a href="/">Overview</a>
@@ -72,22 +74,23 @@ const formatDate = (value: string | null) =>
         <article class="summary-card">
           <div>
             <p class="label">Projects</p>
-            <strong>{projects.length}</strong>
+            <strong>{productCount}</strong>
           </div>
-          <span>Read-only project state, work queues, smoke, and relationships.</span>
+          <span>Products, plus Fleet Ops and Wi-Fi telemetry as separate operational surfaces.</span>
         </article>
         <article class="summary-card">
           <div>
-            <p class="label">Machine-hosted</p>
-            <strong>{hostingCounts["Machine-hosted"] ?? 0}</strong>
+            <p class="label">Fleet nodes</p>
+            <strong>{nodes.length}</strong>
           </div>
-          <span>This Mac hosts only the Fleet info console; products are tracked separately.</span>
+          <span>Primary Mac is active; second Mac is a planned standby node.</span>
         </article>
       </section>
 
       <section class="panel update-panel" aria-label="Update cadence">
         <strong>Read-only snapshot</strong>
-        <span>Last updated {formatDate(snapshot.generatedAt)}</span>
+        <span data-heartbeat-at>Last heartbeat loading</span>
+        <span data-heartbeat-state>Machine state loading</span>
         <span>{snapshot.refreshCadence}</span>
         <span>Tasks {formatDate(snapshot.tasksSyncedAt)} · Smoke {formatDate(snapshot.smokeGeneratedAt)} · Audit {formatDate(snapshot.auditGeneratedAt)}</span>
       </section>
@@ -102,6 +105,51 @@ const formatDate = (value: string | null) =>
         </div>
         <div class="hosting-grid">
           {Object.entries(hostingCounts).map(([label, count]) => <article><strong>{count}</strong><span>{label}</span></article>)}
+        </div>
+      </section>
+
+      <section class="panel node-panel" aria-label="Machine and mobile control state">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Mobile control</p>
+            <h2>Machines, agents, and private access</h2>
+          </div>
+          <code>mobile-control status</code>
+        </div>
+        <div class="node-grid">
+          {
+            nodes.map((node) => (
+              <article class="node-card" data-node-id={node.id}>
+                <div class="node-head">
+                  <div>
+                    <span class:list={["status-pill", node.status]} data-node-status>{node.status}</span>
+                    <h3>{node.label}</h3>
+                    <p>{node.role} · {node.host}</p>
+                  </div>
+                  <span>{node.publicWorkloads.length ? `${node.publicWorkloads.length} public workload${node.publicWorkloads.length === 1 ? "" : "s"}` : "no public hosting"}</span>
+                </div>
+                <div class="surface-grid">
+                  {node.agents.map((agent) => (
+                    <div data-service-label={agent.name}>
+                      <span class:list={["mini-state", agent.status]}>{agent.status}</span>
+                      <strong>{agent.name}</strong>
+                      <p>{agent.detail}</p>
+                    </div>
+                  ))}
+                  {node.privateAccess.map((access) => (
+                    <div data-service-label={access.name}>
+                      <span class:list={["mini-state", access.status]}>{access.status}</span>
+                      <strong>{access.name}</strong>
+                      <p>{access.detail}</p>
+                    </div>
+                  ))}
+                </div>
+                <ul>
+                  {node.notes.map((note) => <li>{note}</li>)}
+                </ul>
+              </article>
+            ))
+          }
         </div>
       </section>
 
@@ -203,13 +251,14 @@ const formatDate = (value: string | null) =>
             <div class="panel-head compact">
               <div>
                 <p class="eyebrow">Runbook</p>
-                <h2 id="commands-title">Machine controls</h2>
+                <h2 id="commands-title">Private control boundary</h2>
               </div>
             </div>
             <ul>
-              <li><code>fleet-ops/scripts/agent-stack.sh resume</code><span>OpenClaw plus cron</span></li>
-              <li><code>fleet-ops/scripts/agent-stack.sh pause</code><span>stop gateway and cron</span></li>
-              <li><code>run-codex-cron &lt;job&gt; --dry-run</code><span>single-job check</span></li>
+              <li><strong>Telegram</strong><span>Hermes operator and OpenClaw project routing</span></li>
+              <li><strong>Tailscale SSH</strong><span>durable phone-to-machine terminal access</span></li>
+              <li><strong>Cloudflare Access</strong><span>required before any private operational view is published</span></li>
+              <li><strong>Public dashboard</strong><span>sanitized health only; no tokens, terminal links, IPs, or controls</span></li>
             </ul>
           </section>
         </aside>
@@ -217,6 +266,56 @@ const formatDate = (value: string | null) =>
     </main>
   </body>
 </html>
+
+<script is:inline>
+  const formatHeartbeat = (value) =>
+    new Intl.DateTimeFormat("en", {
+      dateStyle: "medium",
+      timeStyle: "medium",
+      timeZone: "Asia/Kolkata"
+    }).format(new Date(value));
+
+  const setState = (element, state) => {
+    if (!element) return;
+    element.textContent = state;
+    element.className = element.className
+      .split(" ")
+      .filter((name) => !["online", "degraded", "offline", "running", "stopped", "needs-setup"].includes(name))
+      .concat(state)
+      .join(" ");
+  };
+
+  async function refreshHeartbeat() {
+    const at = document.querySelector("[data-heartbeat-at]");
+    const state = document.querySelector("[data-heartbeat-state]");
+    try {
+      const response = await fetch("/api/runtime", { cache: "no-store" });
+      if (!response.ok) throw new Error("heartbeat unavailable");
+      const heartbeat = await response.json();
+      const ageMs = Date.now() - Date.parse(heartbeat.generatedAt);
+      const nodeState = ageMs > 180000 ? "offline" : heartbeat.node.status;
+      at.textContent = `Last heartbeat ${formatHeartbeat(heartbeat.generatedAt)}`;
+      state.textContent = `Primary machine ${nodeState}`;
+
+      const node = document.querySelector(`[data-node-id="${heartbeat.node.id}"]`);
+      setState(node?.querySelector("[data-node-status]"), nodeState);
+
+      for (const service of heartbeat.node.services || []) {
+        const surface = [...document.querySelectorAll("[data-service-label]")]
+          .find((element) => element.dataset.serviceLabel === service.label ||
+            (service.id === "console" && element.dataset.serviceLabel === "Fleet Ops console") ||
+            (service.id === "tailscale" && element.dataset.serviceLabel === "Tailscale SSH"));
+        setState(surface?.querySelector(".mini-state"), service.status);
+      }
+    } catch {
+      at.textContent = "Live heartbeat unavailable";
+      state.textContent = "Static project snapshot remains available";
+    }
+  }
+
+  refreshHeartbeat();
+  window.setInterval(refreshHeartbeat, 30000);
+</script>
 
 <style>
   :root {
@@ -416,6 +515,10 @@ const formatDate = (value: string | null) =>
     margin-bottom: 16px;
   }
 
+  .node-panel {
+    margin-bottom: 16px;
+  }
+
   .hosting-panel a {
     color: var(--cyan);
     font-size: 12px;
@@ -428,6 +531,106 @@ const formatDate = (value: string | null) =>
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 10px;
+  }
+
+  .node-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .node-card {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 14px;
+    background: #131614;
+  }
+
+  .node-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  .node-head h3 {
+    margin-top: 8px;
+    font-size: 22px;
+  }
+
+  .node-head p,
+  .node-head > span,
+  .surface-grid p,
+  .node-card li {
+    color: var(--muted);
+  }
+
+  .surface-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .surface-grid div {
+    min-height: 126px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 12px;
+    background: #0c0f0d;
+  }
+
+  .surface-grid strong {
+    display: block;
+    margin-top: 8px;
+  }
+
+  .surface-grid p {
+    margin: 6px 0 0;
+    font-size: 13px;
+  }
+
+  .mini-state {
+    display: inline-flex;
+    min-height: 24px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 2px 8px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .status-pill.online,
+  .mini-state.running,
+  .mini-state.configured {
+    border-color: rgba(140, 233, 154, 0.45);
+    color: var(--green);
+    background: rgba(140, 233, 154, 0.08);
+  }
+
+  .status-pill.needs-setup,
+  .status-pill.planned,
+  .mini-state.stopped,
+  .mini-state.unknown {
+    border-color: rgba(255, 209, 102, 0.45);
+    color: var(--yellow);
+    background: rgba(255, 209, 102, 0.08);
+  }
+
+  .status-pill.offline,
+  .mini-state.missing {
+    border-color: rgba(255, 135, 135, 0.45);
+    color: var(--red);
+    background: rgba(255, 135, 135, 0.08);
+  }
+
+  .node-card ul {
+    display: grid;
+    gap: 6px;
+    margin: 14px 0 0;
+    padding-left: 18px;
   }
 
   .hosting-grid article {
@@ -609,7 +812,8 @@ const formatDate = (value: string | null) =>
 
   @media (max-width: 1100px) {
     .hero-grid,
-    .content-grid {
+    .content-grid,
+    .node-grid {
       grid-template-columns: 1fr 1fr;
     }
 
@@ -644,6 +848,8 @@ const formatDate = (value: string | null) =>
 
     .hero-grid,
     .content-grid,
+    .node-grid,
+    .surface-grid,
     dl,
     .facts {
       grid-template-columns: 1fr;

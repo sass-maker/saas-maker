@@ -1,6 +1,6 @@
 ---
 name: call-teammate
-description: Delegate work to an open-source agent runtime or an approved model provider: Codex, Grok, or Hermes. Use for independent review, parallel attempts, and bounded specialist work.
+description: Delegate work to Codex, Grok, Hermes, or optional Devin. Use for independent review, parallel attempts, bounded specialist work, and explicit-spend external agent runs.
 ---
 
 # call-teammate — parent skill
@@ -15,6 +15,7 @@ delegate to. Subskills live as sibling directories under `fleet-ops/teammates/sk
 | "delegate to codex" / "call codex" / "second opinion from a different model" / "mechanical refactor / test-fix loop" | `call-codex` | `../call-codex/SKILL.md` | OpenAI model family, scoped implementation, independent review |
 | "delegate to grok" / "call grok" / "N parallel attempts" / "cross-model second opinion" / "non-Anthropic/non-OpenAI opinion" | `call-grok` | `../call-grok/SKILL.md` | xAI model family, native worktree isolation, best-of-N attempts |
 | "delegate to hermes" / "call hermes" / "repeat this workflow" | `call-hermes` | `../call-hermes/SKILL.md` | Open-source self-improving specialist and persistent skills |
+| "delegate to devin" / "call devin" / "external autonomous agent" | `call-devin` | `../call-devin/SKILL.md` | Proprietary optional agent platform; requires explicit spend approval |
 
 ## How to use
 
@@ -30,6 +31,7 @@ Regardless of which teammate you call:
 - **Delegate from a clean checkout into a worktree** — don't delegate from a dirty tree.
 - **`< /dev/null` on every invocation** — prevent stdin hang.
 - **Verify diffs and tests yourself** — the teammate's output is a draft, not a finished product.
+- **Devin is optional/proprietary** — use only when the user explicitly asks for it or confirms the spend/lock-in tradeoff.
 - **Fail over down the chain** if a teammate hits usage/rate limits — see `fleet-ops/teammates/ROSTER.md` for the chain order. Log the switch in `fleet-ops/teammates/SCORECARD.md`.
 - **Don't retry an exhausted teammate** or silently drop the task.
 

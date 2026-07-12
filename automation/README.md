@@ -19,21 +19,35 @@ Render the dashboard with:
 ../scripts/agent-bin/render-codex-cron-ui
 ```
 
-## Future channels
+## Mobile channels
 
-New conversational crons should be added only after they have a delivery surface
-and a specific benefit. The first useful additions are:
+Hermes Telegram is the primary delivery surface for mobile operator pings and
+cron results. OpenClaw Telegram is the support-agent and control-plane chat
+surface. They must use different Telegram bot tokens.
+
+Configure both with:
+
+```sh
+../scripts/agent-bin/mobile-control needs
+../scripts/agent-bin/mobile-control configure-telegram
+../scripts/agent-bin/mobile-control ping
+```
+
+New conversational crons should still be added only after they have a specific
+benefit. The first useful additions are:
 
 - a weekday morning brief once calendar and inbox access are explicitly wired;
 - a weekly Fleet health report delivered to the operator's chosen phone channel;
 - a Wi-Fi alert escalation only when the existing monitor detects a sustained
   outage.
 
-Phone delivery is deliberately a prerequisite for conversational crons. Before
-a phone node or explicit messaging channel is paired, scheduled agent output
-would only create noise on the host machine.
+Phone delivery is a prerequisite for conversational crons. Before Telegram is
+configured and paired, scheduled agent output should remain local.
 
-Use `../scripts/agent-stack.sh pause` to stop the OpenClaw gateway and remove
-the managed Fleet Ops crontab block on a machine. `resume` restores both. These
+Tailscale SSH is the durable private terminal path. `tmate` is a deprecated,
+explicit emergency fallback only; its session links are credentials.
+
+Use `../scripts/agent-stack.sh pause` to stop OpenClaw, Hermes, the console, and
+the managed Fleet Ops crontab block on a machine. `resume` restores them. These
 controls and all shared behavior live in this repository so another machine can
 use the same Fleet Ops source of truth without copying credentials.

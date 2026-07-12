@@ -102,6 +102,25 @@ export type FleetConnection = {
   detail: string;
 };
 
+export type AgentSurface = {
+  name: string;
+  status: "running" | "configured" | "missing" | "stopped" | "unknown";
+  detail: string;
+};
+
+export type FleetNode = {
+  id: string;
+  label: string;
+  role: string;
+  status: "online" | "needs-setup" | "offline" | "planned";
+  host: string;
+  operator: string;
+  publicWorkloads: string[];
+  privateAccess: AgentSurface[];
+  agents: AgentSurface[];
+  notes: string[];
+};
+
 const nextHints: Record<string, string> = {
   "daily-fleet-health-sentinel": "Tue-Sun, 08:00 local",
   "weekly-fleet-ops-audit": "Mon, 08:00 local",
@@ -135,6 +154,34 @@ function safeGit(args: string[], cwd: string) {
     return execFileSync("git", args, { cwd, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
   } catch {
     return "";
+  }
+}
+
+function safeExec(command: string, args: string[] = [], timeout = 3500) {
+  try {
+    return execFileSync(command, args, {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"],
+      timeout
+    }).trim();
+  } catch (error) {
+    const err = error as { stdout?: Buffer | string; stderr?: Buffer | string; message?: string };
+    const stdout = err.stdout ? String(err.stdout).trim() : "";
+    const stderr = err.stderr ? String(err.stderr).trim() : "";
+    return stdout || stderr || err.message || "";
+  }
+}
+
+function commandExists(command: string) {
+  try {
+    execFileSync("zsh", ["-lc", `command -v ${command}`], {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+      timeout: 1200
+    });
+    return true;
+  } catch {
+    return false;
   }
 }
 
@@ -315,7 +362,7 @@ export function getSnapshotInfo() {
 
   return {
     generatedAt: new Date().toISOString(),
-    refreshCadence: "Every minute while this Mac is awake; manual refresh via ops-console restart.",
+    refreshCadence: "Machine heartbeat updates every minute; project pages rebuild only when published.",
     tasksSyncedAt: tasks.syncedAt ?? null,
     smokeGeneratedAt: smoke.generatedAt ?? null,
     auditGeneratedAt: audit.generatedAt ?? null
@@ -483,4 +530,147 @@ export function getFleetConnections(): FleetConnection[] {
   }
 
   return edges;
+}
+
+export function getFleetNodes(): FleetNode[] {
+  const host = "private tailnet node";
+  const label = "Primary Fleet machine";
+  const operator = "private";
+  const openClawStatus = commandExists("openclaw") ? safeExec("openclaw", ["status", "--json"], 5000) : "";
+  const openClawTelegram = commandExists("openclaw") ? safeExec("zsh", ["-lc", "openclaw channels list --all 2>/dev/null | sed -n '/Telegram/p'"], 5000) : "";
+  const hermesGateway = commandExists("hermes") ? safeExec("hermes", ["gateway", "status"], 5000) : "";
+  const hermesStatus = commandExists("hermes") ? safeExec("hermes", ["status"], 5000) : "";
+  const tailscaleStatus = commandExists("tailscale")
+    ? safeExec(resolve(fleetOpsRoot, "scripts/agent-bin/mobile-control"), ["tailscale-status"], 2500)
+    : "";
+  const tmateStatus = safeExec(resolve(fleetOpsRoot, "scripts/agent-bin/mobile-control"), ["tmate-status"], 2500);
+  const consoleStatus = safeExec("curl", ["-fsS", "--max-time", "2", "http://127.0.0.1:4329/healthz"], 2500);
+  const grokStatus = commandExists("grok") ? safeExec("grok", ["models"], 10000) : "";
+
+  const openClawRunning = openClawStatus.includes('"runtimeVersion"') || openClawStatus.includes("Dashboard");
+  const hermesRunning = hermesGateway.includes("Gateway is supervised") || hermesGateway.includes("running");
+  const openClawTelegramConfigured = /Telegram:\s+installed,\s+configured,\s+enabled/i.test(openClawTelegram);
+  const hermesTelegramConfigured = /Telegram\s+✓|Telegram\s+configured/i.test(hermesStatus);
+  const tailscaleRunning = Boolean(tailscaleStatus) && !/failed to connect|not running|stopped/i.test(tailscaleStatus);
+  const tmateRunning = /^\s*active\b/im.test(tmateStatus);
+  const consoleRunning = consoleStatus === "ok";
+  const grokReady = commandExists("grok") && !/not authenticated|unauthenticated|login/i.test(grokStatus);
+  const devinReady = commandExists("devin") || commandExists("devin-cli");
+
+  return [
+    {
+      id: "primary-mac",
+      label,
+      role: "Primary Fleet node",
+      status: openClawRunning && hermesRunning && consoleRunning ? "online" : "needs-setup",
+      host,
+      operator,
+      publicWorkloads: ["Fleet Ops console", "Wi-Fi Watch telemetry"],
+      privateAccess: [
+        {
+          name: "Tailscale SSH",
+          status: tailscaleRunning ? "running" : commandExists("tailscale") ? "stopped" : "missing",
+          detail: tailscaleRunning
+            ? "Tailnet connected; use Tailscale SSH from mobile once ACLs allow it."
+            : "Tailscale CLI is installed, but the local service is not connected."
+        },
+        {
+          name: "Emergency terminal fallback",
+          status: tmateRunning ? "running" : commandExists("tmate") ? "stopped" : "missing",
+          detail: tmateRunning
+            ? "A deprecated temporary session is active; credential links remain private."
+            : "tmate is disabled by default. Tailscale SSH is the durable mobile path."
+        }
+      ],
+      agents: [
+        {
+          name: "OpenClaw",
+          status: openClawRunning ? "running" : commandExists("openclaw") ? "stopped" : "missing",
+          detail: openClawTelegramConfigured
+            ? "Gateway running with Telegram configured."
+            : "Gateway running; Telegram plugin is installed but still needs bot token and allowlist."
+        },
+        {
+          name: "Hermes",
+          status: hermesRunning ? "running" : commandExists("hermes") ? "stopped" : "missing",
+          detail: hermesTelegramConfigured
+            ? "Gateway running with Telegram configured."
+            : "Gateway running under launchd; Telegram still needs bot token and allowlist."
+        },
+        {
+          name: "Fleet Ops console",
+          status: consoleRunning ? "running" : "stopped",
+          detail: consoleRunning ? "Local dashboard service is healthy." : "Local dashboard service is down."
+        },
+        {
+          name: "Grok",
+          status: grokReady ? "configured" : commandExists("grok") ? "stopped" : "missing",
+          detail: grokReady
+            ? "Grok CLI is installed and authenticated for teammate review/parallel attempts."
+            : commandExists("grok")
+              ? "Grok CLI is installed, but authentication is missing."
+              : "Grok CLI is not installed on this node."
+        },
+        {
+          name: "Devin",
+          status: devinReady ? "configured" : "missing",
+          detail: devinReady
+            ? "Devin CLI is available as an optional explicit-spend teammate."
+            : "No Devin CLI detected; keep it optional and invoke only with explicit spend approval."
+        }
+      ],
+      notes: [
+        "This is the only machine currently hosting a public Fleet surface.",
+        "Most products are Cloudflare-hosted; project pages show the per-product hosting split.",
+        "Secrets and private terminal links are deliberately excluded from the public dashboard."
+      ]
+    },
+    {
+      id: "secondary-mac",
+      label: "Second Fleet machine",
+      role: "Standby execution node",
+      status: "planned",
+      host: "pending-tailnet-hostname",
+      operator: "pending",
+      publicWorkloads: [],
+      privateAccess: [
+        {
+          name: "Tailscale SSH",
+          status: "missing",
+          detail: "Clone fleet-ops, log into Tailscale, and run mobile-control start-tailscale."
+        },
+        {
+          name: "Emergency terminal fallback",
+          status: "missing",
+          detail: "Do not install by default; use Tailscale SSH on this node."
+        }
+      ],
+      agents: [
+        {
+          name: "OpenClaw",
+          status: "missing",
+          detail: "Register this executor with the primary OpenClaw router; a separate Telegram bot is optional."
+        },
+        {
+          name: "Hermes",
+          status: "missing",
+          detail: "Run Hermes only if this node needs local persistence; route normal chat through the primary bot."
+        },
+        {
+          name: "Grok",
+          status: "missing",
+          detail: "Install and authenticate only if this node should run Grok teammate work."
+        },
+        {
+          name: "Devin",
+          status: "missing",
+          detail: "Optional proprietary teammate; configure only when explicitly needed."
+        }
+      ],
+      notes: [
+        "No public products should be hosted here by default.",
+        "Use it for remote control, failover, or agent execution only."
+      ]
+    }
+  ];
 }
