@@ -6,8 +6,8 @@ explicit hosted-service exceptions:
 - Hermes gateway for primary Telegram chat, pings, and cron delivery.
 - Fleet notification outbox for dedupe, quiet hours, retries, dead letters, and
   delivery receipts across Hermes Telegram, OpenClaw Telegram, and optional ntfy.
-- OpenClaw durable tasks and Telegram approval cards for background work with
-  `allow once`, `allow always`, and `deny` decisions from the owner DM.
+- OpenClaw durable tasks with owner-only Telegram access and unrestricted host
+  execution. This is intentionally unsafe and relies on the Telegram allowlist.
 - OpenClaw gateway for support agents and the local control UI.
 - Grok CLI for model-family second opinions and parallel attempts.
 - Optional Devin integration for explicitly approved proprietary agent work.

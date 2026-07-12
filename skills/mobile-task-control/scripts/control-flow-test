@@ -21,11 +21,11 @@ case "$command" in
   complete)
     mkdir -p "$STATE_DIR"
     temporary="$receipt.$$.tmp"
-    printf '{"schemaVersion":1,"runId":"%s","status":"approved-and-completed","completedAt":"%s"}\n' \
+    printf '{"schemaVersion":1,"runId":"%s","status":"completed","completedAt":"%s"}\n' \
       "$run_id" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > "$temporary"
     chmod 600 "$temporary"
     mv "$temporary" "$receipt"
-    printf '{"runId":"%s","status":"approved-and-completed"}\n' "$run_id"
+    printf '{"runId":"%s","status":"completed"}\n' "$run_id"
     ;;
   status)
     if [ ! -f "$receipt" ]; then
