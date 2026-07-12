@@ -10,6 +10,8 @@ RUNTIME_DIR="$HOME/Library/Application Support/Fleet Ops/mobile-control"
 TMATE_SOCKET="$RUNTIME_DIR/tmate.sock"
 TAILSCALE_DIR="$RUNTIME_DIR/tailscale"
 TAILSCALE_SOCKET="$TAILSCALE_DIR/tailscaled.sock"
+TAILSCALE_LABEL="com.assistant.fleet-tailscaled-userspace"
+TAILSCALE_PLIST="$HOME/Library/LaunchAgents/$TAILSCALE_LABEL.plist"
 
 usage() {
   cat <<'EOF'
@@ -21,6 +23,7 @@ Commands:
   configure-telegram  Configure OpenClaw + Hermes Telegram from environment variables.
   ping                Send a mobile ping through Hermes Telegram, once configured.
   start-tailscale     Start Tailscale with SSH enabled; may print a login URL/QR.
+  stop-tailscale      Stop the machine-local userspace Tailscale service.
   tailscale-status    Show the private tailnet connection state.
   serve-dashboard     Expose the local dashboard inside the tailnet with Tailscale Serve.
   emergency-tmate     Start deprecated tmate only for temporary emergency access.
@@ -330,14 +333,49 @@ start_tailscale() {
     rm -f "$TAILSCALE_SOCKET"
   fi
   if [ ! -S "$TAILSCALE_SOCKET" ]; then
-    nohup tailscaled \
-      --tun=userspace-networking \
-      --socket "$TAILSCALE_SOCKET" \
-      --statedir "$TAILSCALE_DIR/state" \
-      > "$TAILSCALE_DIR/tailscaled.log" 2>&1 &
-    sleep 2
+    mkdir -p "$HOME/Library/LaunchAgents" "$TAILSCALE_DIR/state"
+    cat > "$TAILSCALE_PLIST" <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>$TAILSCALE_LABEL</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/opt/homebrew/bin/tailscaled</string>
+    <string>--tun=userspace-networking</string>
+    <string>--socket</string>
+    <string>$TAILSCALE_SOCKET</string>
+    <string>--statedir</string>
+    <string>$TAILSCALE_DIR/state</string>
+  </array>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+  <key>StandardOutPath</key>
+  <string>$TAILSCALE_DIR/tailscaled.log</string>
+  <key>StandardErrorPath</key>
+  <string>$TAILSCALE_DIR/tailscaled.log</string>
+</dict>
+</plist>
+EOF
+    launchctl bootout "gui/$(id -u)" "$TAILSCALE_PLIST" >/dev/null 2>&1 || true
+    launchctl bootstrap "gui/$(id -u)" "$TAILSCALE_PLIST"
+    launchctl enable "gui/$(id -u)/$TAILSCALE_LABEL" >/dev/null 2>&1 || true
+    launchctl kickstart -k "gui/$(id -u)/$TAILSCALE_LABEL"
+    for _ in {1..20}; do
+      [ -S "$TAILSCALE_SOCKET" ] && break
+      sleep 0.25
+    done
   fi
   tailscale --socket "$TAILSCALE_SOCKET" up --ssh --hostname fleet-mac --qr --timeout 60s
+}
+
+stop_tailscale() {
+  launchctl bootout "gui/$(id -u)" "$TAILSCALE_PLIST" >/dev/null 2>&1 || true
 }
 
 tailscale_status() {
@@ -367,6 +405,7 @@ case "${1:-}" in
   stop-tmate) stop_tmate ;;
   tmate-status) tmate_status ;;
   start-tailscale) start_tailscale ;;
+  stop-tailscale) stop_tailscale ;;
   tailscale-status) tailscale_status ;;
   serve-dashboard) serve_dashboard ;;
   -h|--help|help) usage ;;
