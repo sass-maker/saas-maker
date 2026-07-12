@@ -86,6 +86,43 @@ function taskSummary() {
   }
 }
 
+function marketingSummary() {
+  const readinessPath = `${process.env.HOME}/Library/Application Support/Fleet Ops/marketing/readiness.json`;
+  let readiness = {};
+  try { readiness = JSON.parse(readFileSync(readinessPath, "utf8")); } catch {}
+  const cli = "/Users/assistant/Desktop/fleet/saas-maker/packages/cli/dist/index.js";
+  const raw = existsSync(cli)
+    ? run(process.execPath, [cli, "api", "GET", "/v1/marketing/posts", "--auth", "session", "--query", "limit=500", "--raw", "--quiet"], 15000)
+    : "";
+  let posts = [];
+  try {
+    const start = raw.indexOf("{");
+    posts = (JSON.parse(start >= 0 ? raw.slice(start) : raw).data || []).filter((post) => String(post.notes || "").includes("fleet_distribution_v1:"));
+  } catch {}
+  const envelopes = posts.map((post) => ({ post, envelope: decodeDistributionEnvelope(post.notes) })).filter((entry) => entry.envelope);
+  return {
+    generatedAt: readiness.generatedAt || null,
+    routedAccounts: Number(readiness.summary?.routedAccounts || 0),
+    connectedAccounts: Number(readiness.summary?.connectedAccounts || 0),
+    totalAccounts: Number(readiness.summary?.totalAccounts || 6),
+    infrastructureReady: Boolean(readiness.summary?.infrastructureReady),
+    drafts: envelopes.filter(({ post }) => post.status === "generated").length,
+    rendering: envelopes.filter(({ post, envelope }) => post.status === "accepted" && !envelope.mediaReceipt).length,
+    review: envelopes.filter(({ envelope }) => envelope.mediaReceipt && envelope.distributionRequest?.approval?.status === "proposed").length,
+    scheduled: envelopes.filter(({ envelope }) => envelope.distributionRequest?.approval?.status === "approved" && !envelope.publicationReceipt).length,
+    retrying: envelopes.filter(({ envelope }) => envelope.attempts?.state === "retry_wait").length,
+    failed: envelopes.filter(({ envelope }) => envelope.attempts?.state === "failed").length,
+    released: envelopes.filter(({ post, envelope }) => post.status === "sent" || Boolean(envelope.publicationReceipt)).length
+  };
+}
+
+function decodeDistributionEnvelope(notes) {
+  const line = String(notes || "").split(/\r?\n/).find((entry) => entry.startsWith("fleet_distribution_v1:"));
+  if (!line) return null;
+  try { return JSON.parse(Buffer.from(line.slice("fleet_distribution_v1:".length), "base64url").toString("utf8")); }
+  catch { return null; }
+}
+
 const services = [
   { id: "console", label: "Fleet dashboard", status: localHealthy() ? "running" : "stopped" },
   { id: "openclaw", label: "OpenClaw", status: launchdRunning("ai.openclaw.gateway") ? "running" : "stopped" },
@@ -99,6 +136,7 @@ const heartbeat = {
   cadenceSeconds: 60,
   notifications: notificationSummary(),
   tasks: taskSummary(),
+  marketing: marketingSummary(),
   node: {
     id: process.env.FLEET_NODE_ID || "primary-mac",
     label: process.env.FLEET_NODE_LABEL || "Primary Fleet machine",

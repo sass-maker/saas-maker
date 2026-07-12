@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+REEL_DIR="/Users/assistant/Desktop/fleet/reel-pipeline"
+RUNTIME_DIR="$HOME/Library/Application Support/Fleet Ops/marketing"
+ENV_FILE="$RUNTIME_DIR/env"
+LOG_DIR="$HOME/Library/Logs/Fleet Ops"
+LOCK_DIR="$RUNTIME_DIR/control-loop.lock"
+
+mkdir -p "$RUNTIME_DIR" "$LOG_DIR"
+if ! mkdir "$LOCK_DIR" 2>/dev/null; then
+  echo "marketing control loop already running"
+  exit 0
+fi
+trap 'rmdir "$LOCK_DIR" 2>/dev/null || true' EXIT
+
+if [ -f "$ENV_FILE" ]; then
+  set -a
+  # shellcheck disable=SC1090
+  source "$ENV_FILE"
+  set +a
+fi
+
+cd "$REEL_DIR"
+npm run check:social -- --out "$RUNTIME_DIR/readiness.json" >/dev/null
+
+if [ -z "${SAASMAKER_SESSION_TOKEN:-}" ] && ! /Users/assistant/Desktop/fleet/fleet-ops/scripts/agent-bin/fnd whoami >/dev/null 2>&1; then
+  echo "marketing control loop waiting for SaaS Maker session configuration"
+  exit 0
+fi
+
+npm run marketing -- tick >>"$LOG_DIR/marketing-control-loop.log" 2>>"$LOG_DIR/marketing-control-loop.error.log"

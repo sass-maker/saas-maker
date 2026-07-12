@@ -141,6 +141,7 @@ export type MarketingPipeline = {
     sourceDetail: string;
     channels: string[];
     mappedChannels: string[];
+    connectedChannels: string[];
     postingState: "ready" | "blocked";
   }>;
 };
@@ -620,6 +621,10 @@ export function getMarketingPipeline(): MarketingPipeline {
     media?: { durationSeconds?: number };
     quality?: { overall?: number; verdict?: string };
   };
+  const socialReadiness = readJsonObject(resolve(process.env.HOME ?? "", "Library/Application Support/Fleet Ops/marketing/readiness.json")) as {
+    accounts?: Array<{ brand?: string; channel?: string; ready?: boolean }>;
+    summary?: { totalAccounts?: number; connectedAccounts?: number; infrastructureReady?: boolean };
+  };
   const sources: Record<string, { path: string; detail: string }> = {
     "high-signal": {
       path: resolve(fleetRoot, "high-signal/data/personal-reel-briefs.jsonl"),
@@ -638,6 +643,9 @@ export function getMarketingPipeline(): MarketingPipeline {
     const source = sources[slug];
     const mappedChannels = Object.keys(brand.accountMappings ?? {}).filter((channel) => Boolean(brand.accountMappings?.[channel]));
     const channels = brand.channels ?? [];
+    const connectedChannels = (socialReadiness.accounts ?? [])
+      .filter((entry) => entry.brand === slug && entry.ready && entry.channel)
+      .map((entry) => String(entry.channel));
     return {
       slug,
       name: brand.name ?? titleize(slug),
@@ -646,7 +654,8 @@ export function getMarketingPipeline(): MarketingPipeline {
       sourceDetail: source?.detail ?? "Source adapter not registered",
       channels,
       mappedChannels,
-      postingState: mappedChannels.length === channels.length && channels.length > 0 ? "ready" as const : "blocked" as const
+      connectedChannels,
+      postingState: connectedChannels.length === channels.length && channels.length > 0 ? "ready" as const : "blocked" as const
     };
   });
   const contentReady = existsSync(resolve(pipelineRoot, "src/content-package.js"))
@@ -655,7 +664,8 @@ export function getMarketingPipeline(): MarketingPipeline {
     && existsSync(resolve(pipelineRoot, "node_modules/playwright"))
     && existsSync(resolve(pipelineRoot, "tools/kokoro"));
   const distributionReady = existsSync(resolve(pipelineRoot, "src/distribution.js"));
-  const anyAccountMappings = brands.some((brand) => brand.mappedChannels.length > 0);
+  const totalAccounts = Number(socialReadiness.summary?.totalAccounts ?? brands.reduce((sum, brand) => sum + brand.channels.length, 0));
+  const connectedAccounts = Number(socialReadiness.summary?.connectedAccounts ?? 0);
 
   return {
     updatedAt: rawProof.generatedAt ?? null,
@@ -670,7 +680,7 @@ export function getMarketingPipeline(): MarketingPipeline {
       { name: "Source extraction", state: contentReady && brands.every((brand) => brand.sourceReady) ? "ready" : "blocked", detail: "Read-only adapters emit proposed, evidence-backed packages." },
       { name: "Approval", state: distributionReady ? "ready" : "blocked", detail: "Media and distribution require separate explicit approvals." },
       { name: "Video factory", state: videoReady && Boolean(rawProof.quality?.overall) ? "ready" : "blocked", detail: "Local Kokoro, Playwright Chromium, and FFmpeg vertical render." },
-      { name: "Native publishing", state: anyAccountMappings ? "ready" : "blocked", detail: "YouTube and Instagram adapters exist; brand account OAuth is not mapped." }
+      { name: "Native publishing", state: connectedAccounts === totalAccounts && totalAccounts > 0 ? "ready" : "blocked", detail: `All ${totalAccounts} account routes are configured; ${connectedAccounts}/${totalAccounts} OAuth connections are ready.` }
     ],
     brands
   };

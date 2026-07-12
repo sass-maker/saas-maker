@@ -84,18 +84,21 @@ case "${1:-}" in
     openclaw gateway start
     "$FLEET_OPS_DIR/scripts/agent-bin/ops-console" start
     "$FLEET_OPS_DIR/scripts/agent-bin/fleet-notification-service" start
+    "$FLEET_OPS_DIR/scripts/agent-bin/marketing-control-service" start
     "$FLEET_OPS_DIR/scripts/agent-bin/install-codex-cron"
     ;;
   pause)
     openclaw gateway stop
     "$FLEET_OPS_DIR/scripts/agent-bin/ops-console" stop
     "$FLEET_OPS_DIR/scripts/agent-bin/fleet-notification-service" stop
+    "$FLEET_OPS_DIR/scripts/agent-bin/marketing-control-service" stop
     "$FLEET_OPS_DIR/scripts/agent-bin/install-codex-cron" --remove
     ;;
   restart)
     openclaw gateway restart
     "$FLEET_OPS_DIR/scripts/agent-bin/ops-console" restart
     "$FLEET_OPS_DIR/scripts/agent-bin/fleet-notification-service" restart
+    "$FLEET_OPS_DIR/scripts/agent-bin/marketing-control-service" restart
     "$FLEET_OPS_DIR/scripts/agent-bin/install-codex-cron"
     ;;
   status)
@@ -109,6 +112,7 @@ case "${1:-}" in
     openclaw nodes status
     "$FLEET_OPS_DIR/scripts/agent-bin/ops-console" status
     "$FLEET_OPS_DIR/scripts/agent-bin/fleet-notification-service" status
+    "$FLEET_OPS_DIR/scripts/agent-bin/marketing-control-service" status
     "$FLEET_OPS_DIR/scripts/agent-bin/fleet-notify" status
     "$FLEET_OPS_DIR/scripts/agent-bin/mobile-control" status
     crontab -l 2>/dev/null | sed -n '/BEGIN FLEET OPS CODEX CRON/,/END FLEET OPS CODEX CRON/p' || true
