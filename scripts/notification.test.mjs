@@ -28,7 +28,7 @@ test("queues a structured event and suppresses its duplicate", () => {
     assert.equal(files.length, 1);
     const event = JSON.parse(readFileSync(resolve(state, "pending", files[0]), "utf8"));
     assert.equal(event.schemaVersion, 1);
-    assert.deepEqual(event.channels, ["hermes-telegram"]);
+    assert.deepEqual(event.channels, ["openclaw-telegram"]);
     assert.equal(event.body, "Details");
 
     const second = run(state, args);

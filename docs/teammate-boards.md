@@ -13,7 +13,10 @@ Fleet teammates are personas first. A teammate can be:
 
 Use two baseline bots first:
 
-- Hermes bot: primary mobile operator, pings, cron delivery, repeat workflows.
+- OpenClaw bot: primary mobile operator, pings, cron delivery, approvals, and
+  project routing.
+- Hermes bot: optional backup/persistent lane for repeat workflows that need a
+  separate runtime.
 - OpenClaw bot: support-agent router, project agents, teammate boards.
 - Grok: model teammate for second opinions and best-of-N attempts.
 - Devin: optional proprietary teammate, only when explicitly approved.

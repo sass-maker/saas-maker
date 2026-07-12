@@ -578,7 +578,7 @@ export function getFleetNodes(): FleetNode[] {
       id: "primary-mac",
       label,
       role: "Primary Fleet node",
-      status: openClawRunning && hermesRunning && consoleRunning ? "online" : "needs-setup",
+      status: openClawRunning && consoleRunning ? "online" : "needs-setup",
       host,
       operator,
       publicWorkloads: ["Fleet Ops console", "Wi-Fi Watch telemetry"],
@@ -610,8 +610,8 @@ export function getFleetNodes(): FleetNode[] {
           name: "Hermes",
           status: hermesRunning ? "running" : commandExists("hermes") ? "stopped" : "missing",
           detail: hermesTelegramConfigured
-            ? "Gateway running with Telegram configured."
-            : "Gateway running under launchd; Telegram still needs bot token and allowlist."
+            ? "Optional backup/persistent lane is running with Telegram configured."
+            : "Optional lane only; configure Telegram and a model provider when a recurring job needs Hermes."
         },
         {
           name: "Fleet Ops console",

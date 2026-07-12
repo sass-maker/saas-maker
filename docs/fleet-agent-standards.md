@@ -253,8 +253,8 @@ Only 10 fleet skills are exposed to each agent — 2 parents + 8 standalones:
 
 Agent skill dirs wired (symlinks point to `fleet-ops/` paths):
 - `~/.codex/skills/` (Codex CLI)
-- `~/.hermes/skills/` (Hermes Agent)
 - `~/.openclaw/skills/` (OpenClaw Gateway agents)
+- `~/.hermes/skills/` (optional Hermes Agent, only when enabled locally)
 
 Agents load the parent skill, read the routing table, then load the relevant
 subskill's SKILL.md on demand. Subskills are not symlinked individually —

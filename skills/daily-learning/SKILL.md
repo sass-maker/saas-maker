@@ -19,7 +19,7 @@ Return the generated URL directly. The site requires the owner's Google account.
 Each invocation creates a new session ID, so there is no daily limit. Questions
 come at the end and their result controls FSRS rescheduling.
 
-The managed machine cron sends one balanced link through Hermes Telegram at
+The managed machine cron sends one balanced link through OpenClaw Telegram at
 08:05 Asia/Kolkata each day. This scheduled link does not limit on-demand runs.
 
 If the command reports that its catalog is missing, run

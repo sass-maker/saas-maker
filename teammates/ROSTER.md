@@ -8,7 +8,7 @@ Outcomes that should update these judgments live in [SCORECARD.md](SCORECARD.md)
 | --- | --- | --- | --- | --- |
 | Codex (`codex exec`, gpt-5.5) | `call-codex` | Scoped repo implementation, test-fix loops, `exec review`; only teammate with **schema-enforced output** (`--output-schema`) | No conversation context; slow at `high` effort; ~18k token floor/call | ✅ e2e 2026-07-03 |
 | Grok (`grok -p`, grok-build) | `call-grok` | **best-of-N parallel attempts**, `--check` self-verify; third-family second opinion | No output schema; headless needs `--always-approve`; local auth currently missing | installed, auth pending 2026-07-12 |
-| Hermes (`hermes`) | `call-hermes` | Open-source persistent skills, repeat-work learning, mobile operator gateway | Needs Telegram/model credentials before mobile chat is useful | gateway verified 2026-07-12; Telegram pending |
+| Hermes (`hermes`) | `call-hermes` | Optional open-source persistent skills, repeat-work learning, backup bot/provider lane | Needs model credentials and a named recurring job before it is useful | optional; gateway verified 2026-07-12 |
 | Devin | `call-devin` | Optional proprietary autonomous teammate for expensive external attempts | ACU/spend + vendor lock-in; no local CLI detected | optional, explicit approval required |
 
 Routing heuristics:
@@ -16,7 +16,7 @@ Routing heuristics:
 - Scoped implementation with tests → **Codex** (schema output + verified loop).
 - Hard/ambiguous but verifiable, worth N attempts → **Grok** `--best-of-n`.
 - Review of the parent's own diff → **Grok** fresh context or **Codex** `exec review`.
-- Repeatable learning workflow → **Hermes**, with an explicit workspace and scope.
+- Repeatable learning workflow → **OpenClaw** by default; **Hermes** only when the workflow needs a separate persistent lane.
 - External autonomous attempt worth proprietary spend → **Devin**, only after explicit approval.
 - Needs your conversation context → nobody; do it yourself or use the
   in-session Agent tool.

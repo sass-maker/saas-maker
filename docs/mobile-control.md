@@ -3,12 +3,14 @@
 Fleet mobile control keeps its versioned control layer portable and uses a few
 explicit hosted-service exceptions:
 
-- Hermes gateway for primary Telegram chat, pings, and cron delivery.
+- OpenClaw gateway for primary Telegram chat, pings, approvals, durable tasks,
+  support agents, and the local control UI.
 - Fleet notification outbox for dedupe, quiet hours, retries, dead letters, and
   delivery receipts across Hermes Telegram, OpenClaw Telegram, and optional ntfy.
 - OpenClaw durable tasks with owner-only Telegram access and unrestricted host
   execution. This is intentionally unsafe and relies on the Telegram allowlist.
-- OpenClaw gateway for support agents and the local control UI.
+- Optional Hermes gateway for backup delivery, recurring digests, or repeat
+  workflows that need a separate model provider or bot identity.
 - Grok CLI for model-family second opinions and parallel attempts.
 - Optional Devin integration for explicitly approved proprietary agent work.
 - Tailscale SSH for durable private phone-to-machine access.
@@ -22,9 +24,7 @@ personas, boards, and optional dedicated teammate bots.
 
 ## What You Need To Provide
 
-1. Two baseline Telegram bots from BotFather:
-   - one token for OpenClaw;
-   - one different token for Hermes.
+1. One baseline Telegram bot token from BotFather for OpenClaw.
 2. Your numeric Telegram user ID.
 3. Optional private Fleet Ops group or topic ID.
 4. Tailscale login on this Mac, the second Mac, and your phone.
@@ -33,17 +33,17 @@ personas, boards, and optional dedicated teammate bots.
 7. Grok login if you want Grok teammate runs from this machine.
 8. Optional Devin credentials/app access if you explicitly want Devin teammate
    runs: a least-privilege service-user `DEVIN_API_KEY` and `DEVIN_ORG_ID`.
-9. Later, an extra BotFather token only for a teammate that genuinely needs a
-   separate identity or permission boundary. Most personas route through the
-   OpenClaw bot.
+9. Later, an extra BotFather token only for Hermes or a teammate that genuinely
+   needs a separate identity or permission boundary. Most personas route through
+   the OpenClaw bot.
 
 Do not commit tokens. Configure them from local environment variables:
 
 ```sh
 export OPENCLAW_TELEGRAM_BOT_TOKEN='...'
-export HERMES_TELEGRAM_BOT_TOKEN='...'
 export TELEGRAM_ALLOWED_USERS='123456789'
 export TELEGRAM_HOME_CHANNEL='123456789'
+# optional: export HERMES_TELEGRAM_BOT_TOKEN='...'
 ./fleet-ops/scripts/agent-bin/mobile-control configure-telegram
 ```
 
@@ -86,9 +86,9 @@ logs, issues, commits, or unauthenticated messages.
 
 The primary Mac is the coordinator and may host a small number of intentional
 machine workloads. The second Mac is a private execution node with no public
-ingress or public products. Both join the tailnet; the primary OpenClaw/Hermes
-pair routes work by node identity so every machine does not need duplicate
-public chat bots.
+ingress or public products. Both join the tailnet; the primary OpenClaw gateway
+routes work by node identity so every machine does not need duplicate public chat
+bots.
 
 For a second machine:
 

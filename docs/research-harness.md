@@ -1,8 +1,10 @@
 # Research Harness
 
-Fleet uses the existing `call-teammate` delegation layer plus two always-on
-operator gateways: OpenClaw and Hermes. OpenClaw owns support-agent routing and
-its control UI; Hermes is the primary persistent learning and messaging runtime.
+Fleet uses the existing `call-teammate` delegation layer plus one primary
+operator gateway: OpenClaw. OpenClaw owns Telegram control, support-agent
+routing, durable tasks, approvals, and its control UI. Hermes remains an
+optional persistent/backup runtime for recurring workflows that need a separate
+model provider or bot identity.
 Fleet Ops owns the reusable routing, skills, scripts, mobile-control setup, and
 evidence standards.
 
@@ -11,7 +13,8 @@ evidence standards.
 | Lane | Runtime | Best use | Guardrail |
 | --- | --- | --- | --- |
 | Primary implementation | Codex | Local code, tests, and Fleet operations | Verify the diff and checks locally |
-| Operator control | Hermes Agent | Always-on Telegram, cron delivery, repeat-work learning, mobile requests | Open-source runtime; configured with its own bot token and allowlist |
+| Operator control | OpenClaw | Always-on Telegram, approvals, durable tasks, project routing, mobile requests | Owner allowlist and explicit approval flow |
+| Optional persistent lane | Hermes Agent | Backup bot, recurring digests, repeat-work learning, separate provider quota | Optional open-source runtime; configure only when the lane has a named job |
 | Support agents | OpenClaw agents | Project-specific routing, dashboard, pairing, and support workspaces | Each support agent stays scoped to its project |
 | Independent review | Grok CLI | Cross-model challenge and alternate hypotheses | Read-only plan mode; requires `grok login` |
 | Evidence research | OpenClaw `research` agent | Current source-backed decisions | Isolated workspace and evidence artifacts |
@@ -42,10 +45,11 @@ its own narrow tool policy and artifact boundary.
 `knowledge-base`, `research-papers`, `aliveville`, `codevetter`, and
 `starboard`.
 
-Hermes and OpenClaw must use separate Telegram bot tokens. Telegram long polling
-allows one active gateway per token; sharing a token causes one gateway to
-disconnect the other. Use `mobile-control configure-telegram` with local
-environment variables so secrets stay out of git.
+Hermes is not required for the primary mobile path. If a machine enables Hermes
+as an optional lane, it must use a separate Telegram bot token from OpenClaw.
+Telegram long polling allows one active gateway per token; sharing a token
+causes one gateway to disconnect the other. Use `mobile-control
+configure-telegram` with local environment variables so secrets stay out of git.
 
 For mobile terminal control, Fleet uses a private-first path:
 

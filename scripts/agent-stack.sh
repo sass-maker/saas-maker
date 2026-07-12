@@ -17,11 +17,11 @@ Commands:
   cron-ui         Render the local Codex cron dashboard.
   notify          Send or inspect a durable Fleet notification.
   console         Start the Fleet Ops public console.
-  check           Validate local OpenClaw, Hermes, Telegram, and security state.
-  start           Start OpenClaw, Hermes, console, and scheduled work.
-  pause           Stop OpenClaw, Hermes, console, and scheduled work.
-  resume          Start OpenClaw, Hermes, console, and scheduled work.
-  restart         Restart OpenClaw, Hermes, and the console.
+  check           Validate local OpenClaw, optional Hermes, Telegram, and security state.
+  start           Start OpenClaw, console, notifications, and scheduled work.
+  pause           Stop OpenClaw, console, notifications, and scheduled work.
+  resume          Start OpenClaw, console, notifications, and scheduled work.
+  restart         Restart OpenClaw, the console, notifications, and scheduled work.
   status          Show gateway, cron, mobile, and paired-device status.
 EOF
 }
@@ -30,7 +30,7 @@ install_skills() {
   local dir
   local skill
 
-  for dir in "$HOME/.codex/skills" "$HOME/.hermes/skills" "$HOME/.openclaw/skills"; do
+  for dir in "$HOME/.codex/skills" "$HOME/.openclaw/skills"; do
     mkdir -p "$dir"
     ln -sfn "$FLEET_OPS_DIR/skills/fleet-ops" "$dir/fleet-ops"
     ln -sfn "$FLEET_OPS_DIR/teammates/skills/call-teammate" "$dir/call-teammate"
@@ -43,6 +43,19 @@ install_skills() {
       ln -sfn "$FLEET_OPS_DIR/skills/$skill" "$dir/$skill"
     done
   done
+  if [ -d "$HOME/.hermes/skills" ]; then
+    dir="$HOME/.hermes/skills"
+    ln -sfn "$FLEET_OPS_DIR/skills/fleet-ops" "$dir/fleet-ops"
+    ln -sfn "$FLEET_OPS_DIR/teammates/skills/call-teammate" "$dir/call-teammate"
+    ln -sfn "$FLEET_OPS_DIR/teammates/skills/call-codex" "$dir/call-codex"
+    ln -sfn "$FLEET_OPS_DIR/teammates/skills/call-grok" "$dir/call-grok"
+    ln -sfn "$FLEET_OPS_DIR/teammates/skills/call-hermes" "$dir/call-hermes"
+    ln -sfn "$FLEET_OPS_DIR/teammates/skills/call-devin" "$dir/call-devin"
+    ln -sfn "$FLEET_OPS_DIR/psi-swarm" "$dir/psi-swarm"
+    for skill in name-domains spec-driven agent-ready seo-audit token-budget mobile-task-control daily-learning; do
+      ln -sfn "$FLEET_OPS_DIR/skills/$skill" "$dir/$skill"
+    done
+  fi
 }
 
 case "${1:-}" in
@@ -67,9 +80,6 @@ case "${1:-}" in
     ;;
   start|resume)
     "$FLEET_OPS_DIR/scripts/agent-stack.sh" install-skills
-    if command -v hermes >/dev/null 2>&1; then
-      hermes gateway install --start-now --start-on-login || hermes gateway start || true
-    fi
     openclaw plugins enable telegram >/dev/null 2>&1 || true
     openclaw gateway start
     "$FLEET_OPS_DIR/scripts/agent-bin/ops-console" start
@@ -78,18 +88,12 @@ case "${1:-}" in
     ;;
   pause)
     openclaw gateway stop
-    if command -v hermes >/dev/null 2>&1; then
-      hermes gateway stop || true
-    fi
     "$FLEET_OPS_DIR/scripts/agent-bin/ops-console" stop
     "$FLEET_OPS_DIR/scripts/agent-bin/fleet-notification-service" stop
     "$FLEET_OPS_DIR/scripts/agent-bin/install-codex-cron" --remove
     ;;
   restart)
     openclaw gateway restart
-    if command -v hermes >/dev/null 2>&1; then
-      hermes gateway restart || hermes gateway start || true
-    fi
     "$FLEET_OPS_DIR/scripts/agent-bin/ops-console" restart
     "$FLEET_OPS_DIR/scripts/agent-bin/fleet-notification-service" restart
     "$FLEET_OPS_DIR/scripts/agent-bin/install-codex-cron"

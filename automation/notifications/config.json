@@ -12,7 +12,7 @@
   "routes": {
     "info": [],
     "success": [],
-    "warning": ["hermes-telegram"],
-    "critical": ["hermes-telegram", "ntfy"]
+    "warning": ["openclaw-telegram"],
+    "critical": ["openclaw-telegram", "ntfy"]
   }
 }

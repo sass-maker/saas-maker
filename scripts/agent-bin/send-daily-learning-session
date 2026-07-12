@@ -15,6 +15,6 @@ date_key="$(jq -r '.date' <<<"$session")"
   --url "$url" \
   --dedupe-key "daily-learning:$date_key" \
   --ttl-minutes 840 \
-  --channel hermes-telegram >/dev/null
+  --channel openclaw-telegram >/dev/null
 
 printf '%s\n' "$url"

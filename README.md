@@ -53,7 +53,8 @@ on demand (progressive disclosure).
 | `mobile-task-control` | standalone | — |
 | `daily-learning` | standalone | fresh private 30-minute learning sessions |
 
-Wired into: `~/.codex/skills/` and Hermes agent configuration.
+Wired into: `~/.codex/skills/`, `~/.openclaw/skills/`, and optional Hermes agent
+configuration when that runtime is enabled.
 
 ## Adding a new skill
 
@@ -61,7 +62,7 @@ Wired into: `~/.codex/skills/` and Hermes agent configuration.
 2. If it belongs under an existing parent, add a row to the parent's routing table — no new symlink needed.
 3. If standalone, symlink it into each agent skill dir:
    ```bash
-   for dir in ~/.codex/skills; do
+   for dir in ~/.codex/skills ~/.openclaw/skills; do
      ln -s ~/Desktop/fleet/fleet-ops/skills/<name> "$dir/<name>"
    done
    ```

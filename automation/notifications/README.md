@@ -18,16 +18,16 @@ fleet-ops/scripts/agent-bin/fleet-notification-service start
 ```
 
 `info` and `success` are history-only by default. `warning` pages through the
-Hermes Telegram bot. `critical` also uses ntfy when configured and bypasses quiet
-hours. Override routing for one event with repeated `--channel` flags.
+OpenClaw Telegram bot. `critical` also uses ntfy when configured and bypasses
+quiet hours. Override routing for one event with repeated `--channel` flags.
 
 ## Machine-local configuration
 
 The worker reads these environment variables from
 `~/Library/Application Support/Fleet Ops/notifications/env` as `KEY=VALUE` lines:
 
-- `HERMES_TELEGRAM_TARGET` (defaults to `telegram`, Hermes' home channel)
 - `OPENCLAW_TELEGRAM_TARGET` (required to use `openclaw-telegram`)
+- `HERMES_TELEGRAM_TARGET` (optional, defaults to `telegram`, Hermes' home channel)
 - `FLEET_NTFY_URL` (for example a self-hosted server plus topic URL)
 - `FLEET_NTFY_TOKEN` (optional bearer token)
 
