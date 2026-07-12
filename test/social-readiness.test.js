@@ -24,7 +24,7 @@ test('readiness becomes true when all declared env and infrastructure inputs exi
       for (const [key, envName] of Object.entries(account)) if (key.endsWith('Env')) env[envName] = 'present';
     }
   }
-  const report = checkSocialReadiness({ configPath: '/definitely/missing.json', templatePath: 'config/social-accounts.example.json', env, ffmpegReady: true, fndBin: '/definitely/missing-fnd' });
+  const report = checkSocialReadiness({ configPath: '/definitely/missing.json', templatePath: 'config/social-accounts.example.json', env, ffmpegReady: true, kokoroReady: true, fndBin: '/definitely/missing-fnd' });
   assert.equal(report.summary.connectedAccounts, 6);
   assert.equal(report.summary.readyForLivePosting, true);
 });

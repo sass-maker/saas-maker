@@ -45,7 +45,7 @@ export function checkSocialReadiness(options = {}) {
     saasMakerAccess: Boolean(env.SAASMAKER_SESSION_TOKEN) || fndAuthenticated(options.fndBin),
     artifactBucket: true,
     artifactBaseUrl: true,
-    kokoro: existsSync(path.resolve('tools/kokoro')),
+    kokoro: options.kokoroReady ?? existsSync(path.resolve('tools/kokoro')),
     ffmpeg: options.ffmpegReady ?? commandExists('ffmpeg', options.pathEnv ?? env.PATH),
   };
   const summary = {
