@@ -117,6 +117,10 @@ Needed from you:
 5. In Tailscale admin, allow Tailscale SSH from your user to this Mac.
 6. Install a mobile SSH client if you want terminal control:
    - Termius, Blink Shell, Prompt, iSH, or any SSH client works with Tailscale SSH.
+7. Optional Devin API teammate:
+   - create a least-privilege Devin service user;
+   - export DEVIN_API_KEY and DEVIN_ORG_ID only when using the adapter;
+   - set DEVIN_ALLOW_SPEND=yes only for an explicitly approved session.
 
 Then run, without pasting secrets into git:
 
@@ -241,6 +245,8 @@ status() {
     devin --version 2>&1 | sed 's/^/  devin: /' | sed -n '1,1p'
   elif has devin-cli; then
     devin-cli --version 2>&1 | sed 's/^/  devin-cli: /' | sed -n '1,1p'
+  elif [ -x "$SCRIPT_DIR/devin-session.mjs" ]; then
+    "$SCRIPT_DIR/devin-session.mjs" status 2>&1 | sed 's/^/  devin /'
   else
     echo "  devin: missing local CLI"
   fi

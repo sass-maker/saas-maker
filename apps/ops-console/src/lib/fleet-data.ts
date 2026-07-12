@@ -556,6 +556,7 @@ export function getFleetNodes(): FleetNode[] {
   const consoleRunning = consoleStatus === "ok";
   const grokReady = commandExists("grok") && !/not authenticated|unauthenticated|login/i.test(grokStatus);
   const devinReady = commandExists("devin") || commandExists("devin-cli");
+  const devinAdapter = existsSync(resolve(fleetOpsRoot, "scripts/agent-bin/devin-session.mjs"));
 
   return [
     {
@@ -613,10 +614,12 @@ export function getFleetNodes(): FleetNode[] {
         },
         {
           name: "Devin",
-          status: devinReady ? "configured" : "missing",
+          status: devinReady ? "configured" : devinAdapter ? "stopped" : "missing",
           detail: devinReady
             ? "Devin CLI is available as an optional explicit-spend teammate."
-            : "No Devin CLI detected; keep it optional and invoke only with explicit spend approval."
+            : devinAdapter
+              ? "Fleet API adapter is installed; service-user credentials and explicit spend approval are still required."
+              : "No Devin integration detected; keep it optional and invoke only with explicit spend approval."
         }
       ],
       notes: [

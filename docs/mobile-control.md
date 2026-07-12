@@ -28,7 +28,7 @@ personas, boards, and optional dedicated teammate bots.
 6. A mobile SSH client such as Termius, Blink Shell, iSH, or any normal SSH app.
 7. Grok login if you want Grok teammate runs from this machine.
 8. Optional Devin credentials/app access if you explicitly want Devin teammate
-   runs.
+   runs: a least-privilege service-user `DEVIN_API_KEY` and `DEVIN_ORG_ID`.
 9. Later, an extra BotFather token only for a teammate that genuinely needs a
    separate identity or permission boundary. Most personas route through the
    OpenClaw bot.

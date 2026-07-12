@@ -11,9 +11,18 @@ vendor-lock-in tradeoff. Prefer Codex, Grok, or Hermes when they can do the job.
 
 ## Current Local State
 
-No Devin CLI is currently detected on this machine. Do not invent credentials or
-add secrets to the repo. If Devin is configured later, keep credentials
-machine-local and record only non-secret status in Fleet Ops.
+Fleet Ops includes `scripts/agent-bin/devin-session.mjs`, a narrow adapter for
+the official Devin v3 REST API. It needs a least-privilege service-user token
+and organization ID in `DEVIN_API_KEY` and `DEVIN_ORG_ID`. Keep both
+machine-local. The adapter refuses session creation unless the invoking process
+also sets `DEVIN_ALLOW_SPEND=yes`.
+
+```sh
+./fleet-ops/scripts/agent-bin/devin-session.mjs status
+DEVIN_ALLOW_SPEND=yes ./fleet-ops/scripts/agent-bin/devin-session.mjs create \
+  --title "Bounded Fleet task" \
+  "GOAL: ... SCOPE: ... CONSTRAINTS: ... VERIFY: ... RETURN: ..."
+```
 
 ## Guardrails
 
@@ -35,5 +44,5 @@ VERIFY:
 RETURN:
 ```
 
-If no Devin CLI/app integration is available, report that status and fall back
-to Codex, Grok, or Hermes.
+If Devin credentials are unavailable or spend is not approved, report that
+status and fall back to Codex, Grok, or Hermes.
