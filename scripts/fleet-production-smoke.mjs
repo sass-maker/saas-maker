@@ -78,7 +78,7 @@ const TARGETS = {
     {
       label: 'web',
       url: 'https://tinygpt.pages.dev',
-      expectText: ['Build routed specialists that earn their keep'],
+      expectText: ['The LLM factory that fits on one Mac.'],
     },
     { label: 'devlog', url: 'https://tinygpt.pages.dev/devlog.html', expectText: ['Devlog'] },
   ],
