@@ -1,4 +1,8 @@
 import { type CockpitD1Database, getCockpitD1 } from '@/lib/cockpit-tasks-store';
+import {
+  marketingDistributionSummary,
+  type MarketingDistributionSummary,
+} from '@/lib/marketing-distribution-envelope';
 
 export type MarketingPostStatus = 'generated' | 'accepted' | 'rejected' | 'sent';
 export type MarketingPostChannel =
@@ -35,6 +39,7 @@ export type MarketingPostRow = {
   notes: string | null;
   created_at: string;
   updated_at: string;
+  distribution?: MarketingDistributionSummary | null;
 };
 
 export type MarketingPostInput = Partial<{
@@ -151,14 +156,23 @@ export async function listMarketingPosts(filters: MarketingQueueFilters = {}, db
     )
     .bind(...values)
     .all<Record<string, unknown>>();
-  return (results ?? []) as unknown as MarketingPostRow[];
+  return ((results ?? []) as unknown as MarketingPostRow[]).map(withDistributionSummary);
 }
 
 export async function getMarketingPost(id: string, db = getCockpitD1()) {
-  return await db
+  const post = await db
     .prepare('SELECT * FROM marketing_posts WHERE id = ?')
     .bind(id)
     .first<MarketingPostRow>();
+  return post ? withDistributionSummary(post) : null;
+}
+
+function withDistributionSummary(post: MarketingPostRow): MarketingPostRow {
+  try {
+    return { ...post, distribution: marketingDistributionSummary(post.notes) };
+  } catch {
+    return { ...post, distribution: null };
+  }
 }
 
 export async function createMarketingPost(
@@ -290,7 +304,7 @@ export async function generateMarketingPostsFromChangelog(
     .bind(ownerId)
     .all<ChangelogRow>();
   const entries = results ?? [];
-  const channels: MarketingPostChannel[] = ['tiktok', 'instagram_reels', 'youtube_shorts'];
+  const channels: MarketingPostChannel[] = ['instagram_reels', 'youtube_shorts'];
   const created: MarketingPostRow[] = [];
   let skipped = 0;
   for (const entry of entries) {

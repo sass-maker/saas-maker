@@ -96,6 +96,8 @@ export function isMissedMarketingPost(post: MarketingPostRow, now = new Date()) 
   if (post.posted_at) return false;
   if (!post.asset_url && !post.result_url) return false;
   if (!post.scheduled_for) return false;
+  if (post.distribution && post.distribution.approvalStatus !== 'approved') return false;
+  if (post.distribution?.attemptState === 'inflight') return false;
   const scheduledFor = new Date(post.scheduled_for);
   if (Number.isNaN(scheduledFor.getTime())) return false;
   return scheduledFor <= now;
@@ -110,7 +112,10 @@ export function buildMarketingOpsSummary(
   const metricsPending: MarketingPostRow[] = [];
 
   for (const post of posts) {
-    const failure = parsePostingFailure(post.notes);
+    const failure =
+      post.distribution?.attemptState === 'failed'
+        ? { category: 'distribution', retryable: false, message: post.distribution.lastError }
+        : parsePostingFailure(post.notes);
     if (failure) postingFailures.push({ post, failure });
 
     if (post.status !== 'sent') continue;

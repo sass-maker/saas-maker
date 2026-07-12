@@ -63,6 +63,13 @@ Brand note: production domain uses **double-s** `sassmaker.com`; display name re
 
 ## Timeline
 
+- **2026-07-12 — Two-stage marketing approvals:** Cockpit recognizes Reel
+  Pipeline's versioned distribution envelopes, keeps content acceptance separate
+  from posting approval, exposes `Approve & schedule` only after a media receipt
+  exists, and hides manual sent/status shortcuts for managed rows. Queue summaries
+  now include durable render, schedule, retry, failure, and platform receipt state
+  without a D1 migration or unpublished-copy leak.
+
 - **2026-07-11 — Fleet deploy/audit alignment:** Restored the reusable Cloudflare deploy workflow contract with Node 22 defaults and aligned fleet-audit local checkout resolution and business lanes to the canonical project slugs.
 - **2026-07-03 — Droid graduation:** Droid now records durable retry and timeout contracts as run events (every run declares its retry/backoff/timeout behaviour up front). Pre-flight validation fails fast with categorized reasons (git clean state, dependencies installed) before the main task runs. New `/v0/dashboard/success-rate` endpoint computes a rolling 7-day success-rate dashboard with failure-reason breakdown and retry-count distribution. Migration `0022_droid_graduation.sql` adds `retry_count` and `failure_reason` columns + indexes. Backoff strategies (fixed/linear/exponential) with jitter configurable via loop_policy.
 - **2026-07-03 — Marketing posting ops summary:** Cockpit marketing queue now

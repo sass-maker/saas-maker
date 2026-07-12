@@ -3,6 +3,7 @@
 import {
   AlertTriangle,
   BarChart3,
+  CalendarClock,
   Check,
   Clock,
   Copy,
@@ -46,7 +47,6 @@ import type {
 
 const STATUSES: MarketingPostStatus[] = ['generated', 'accepted', 'rejected', 'sent'];
 const CHANNELS: MarketingPostChannel[] = [
-  'tiktok',
   'instagram_reels',
   'youtube_shorts',
   'blog',
@@ -132,12 +132,13 @@ export function MarketingQueueClient({ initialPosts }: { initialPosts: Marketing
   const [message, setMessage] = useState<string | null>(null);
   const [form, setForm] = useState({
     project_slug: '',
-    channel: 'tiktok' as MarketingPostChannel,
+    channel: 'instagram_reels' as MarketingPostChannel,
     title: '',
     hook: '',
     body: '',
     cta: '',
   });
+  const [scheduleById, setScheduleById] = useState<Record<string, string>>({});
 
   const projectOptions = useMemo(
     () => Array.from(new Set(posts.map((post) => post.project_slug).filter(Boolean))) as string[],
@@ -154,6 +155,9 @@ export function MarketingQueueClient({ initialPosts }: { initialPosts: Marketing
   const acceptedCount = posts.filter((post) => post.status === 'accepted').length;
   const rejectedCount = posts.filter((post) => post.status === 'rejected').length;
   const sentCount = posts.filter((post) => post.status === 'sent').length;
+  const distributionReviewCount = posts.filter(
+    (post) => post.distribution?.approvalStatus === 'proposed'
+  ).length;
   const opsSummary = useMemo(() => buildMarketingOpsSummary(posts), [posts]);
   const topMetrics = useMemo(
     () =>
@@ -204,7 +208,14 @@ export function MarketingQueueClient({ initialPosts }: { initialPosts: Marketing
     }
     const payload = (await res.json()) as { data: MarketingPostRow };
     setPosts((prev) => [payload.data, ...prev]);
-    setForm({ project_slug: '', channel: 'tiktok', title: '', hook: '', body: '', cta: '' });
+    setForm({
+      project_slug: '',
+      channel: 'instagram_reels',
+      title: '',
+      hook: '',
+      body: '',
+      cta: '',
+    });
     setMessage('Idea created.');
   }
 
@@ -246,7 +257,9 @@ export function MarketingQueueClient({ initialPosts }: { initialPosts: Marketing
   }
 
   async function markSent() {
-    const ids = filteredPosts.filter((post) => post.status === 'accepted').map((post) => post.id);
+    const ids = filteredPosts
+      .filter((post) => post.status === 'accepted' && !post.distribution)
+      .map((post) => post.id);
     await Promise.all(
       ids.map((id) =>
         updatePost(id, {
@@ -256,6 +269,31 @@ export function MarketingQueueClient({ initialPosts }: { initialPosts: Marketing
       )
     );
     setMessage(`Marked ${ids.length} accepted posts as sent.`);
+  }
+
+  async function decideDistribution(post: MarketingPostRow, action: 'approve' | 'reject') {
+    const localSchedule = scheduleById[post.id];
+    const scheduledFor = localSchedule
+      ? new Date(localSchedule).toISOString()
+      : new Date().toISOString();
+    const res = await fetch(`/api/marketing/queue/${post.id}/distribution`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action,
+        ...(action === 'approve' ? { scheduled_for: scheduledFor } : {}),
+      }),
+    });
+    if (!res.ok) {
+      const payload = (await res.json().catch(() => null)) as { error?: string } | null;
+      setMessage(payload?.error ?? 'Could not update posting approval');
+      return;
+    }
+    const payload = (await res.json()) as { data: MarketingPostRow };
+    setPosts((prev) => prev.map((entry) => (entry.id === post.id ? payload.data : entry)));
+    setMessage(
+      action === 'approve' ? 'Posting approved and scheduled.' : 'Posting request rejected.'
+    );
   }
 
   return (
@@ -289,7 +327,8 @@ export function MarketingQueueClient({ initialPosts }: { initialPosts: Marketing
         <Card className="gap-2 p-4">
           <p className="text-xs uppercase tracking-widest text-muted-foreground">Safe mode</p>
           <p className="text-sm text-muted-foreground">
-            No auto-posting. Accept, reject, then mark sent.
+            Two approvals. {distributionReviewCount} rendered post
+            {distributionReviewCount === 1 ? '' : 's'} waiting for release approval.
           </p>
         </Card>
       </div>
@@ -510,7 +549,12 @@ export function MarketingQueueClient({ initialPosts }: { initialPosts: Marketing
                   <Download className="h-4 w-4" />
                   Copy CSV
                 </Button>
-                <Button onClick={markSent} disabled={acceptedCount === 0}>
+                <Button
+                  onClick={markSent}
+                  disabled={
+                    !filteredPosts.some((post) => post.status === 'accepted' && !post.distribution)
+                  }
+                >
                   <Send className="h-4 w-4" />
                   Mark sent
                 </Button>
@@ -571,6 +615,26 @@ export function MarketingQueueClient({ initialPosts }: { initialPosts: Marketing
                             Metrics
                           </Badge>
                         )}
+                        {post.distribution && (
+                          <Badge
+                            variant="outline"
+                            className={
+                              post.distribution.mediaStatus === 'rendered'
+                                ? 'border-cyan-500/40 bg-cyan-500/10 text-cyan-300'
+                                : ''
+                            }
+                          >
+                            Media {post.distribution.mediaStatus}
+                          </Badge>
+                        )}
+                        {post.distribution?.approvalStatus === 'approved' && (
+                          <Badge
+                            variant="outline"
+                            className="border-emerald-500/40 bg-emerald-500/10 text-emerald-300"
+                          >
+                            Posting approved
+                          </Badge>
+                        )}
                       </div>
                       <h2 className="truncate text-base font-semibold">{post.title}</h2>
                       {post.hook && (
@@ -597,7 +661,7 @@ export function MarketingQueueClient({ initialPosts }: { initialPosts: Marketing
                           </Button>
                         </>
                       )}
-                      {post.status === 'accepted' && (
+                      {post.status === 'accepted' && !post.distribution && (
                         <Button
                           size="sm"
                           onClick={() =>
@@ -611,6 +675,35 @@ export function MarketingQueueClient({ initialPosts }: { initialPosts: Marketing
                           Sent
                         </Button>
                       )}
+                      {post.status === 'accepted' &&
+                        post.distribution?.approvalStatus === 'proposed' && (
+                          <div className="flex flex-wrap items-center gap-2">
+                            <Input
+                              type="datetime-local"
+                              aria-label={`Schedule ${post.title}`}
+                              className="h-8 w-48"
+                              value={scheduleById[post.id] ?? ''}
+                              onChange={(event) =>
+                                setScheduleById((prev) => ({
+                                  ...prev,
+                                  [post.id]: event.target.value,
+                                }))
+                              }
+                            />
+                            <Button size="sm" onClick={() => decideDistribution(post, 'approve')}>
+                              <CalendarClock className="h-4 w-4" />
+                              Approve & schedule
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => decideDistribution(post, 'reject')}
+                            >
+                              <X className="h-4 w-4" />
+                              Reject posting
+                            </Button>
+                          </div>
+                        )}
                       <Button size="sm" variant="outline" onClick={() => copyPost(post)}>
                         {copiedId === post.id ? (
                           <Check className="h-4 w-4" />
@@ -619,23 +712,25 @@ export function MarketingQueueClient({ initialPosts }: { initialPosts: Marketing
                         )}
                         Copy
                       </Button>
-                      <Select
-                        value={post.status}
-                        onValueChange={(value) =>
-                          updatePost(post.id, { status: value as MarketingPostStatus })
-                        }
-                      >
-                        <SelectTrigger className="h-8 w-32">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {STATUSES.map((status) => (
-                            <SelectItem key={status} value={status}>
-                              {STATUS_LABEL[status]}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      {!post.distribution && (
+                        <Select
+                          value={post.status}
+                          onValueChange={(value) =>
+                            updatePost(post.id, { status: value as MarketingPostStatus })
+                          }
+                        >
+                          <SelectTrigger className="h-8 w-32">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {STATUSES.map((status) => (
+                              <SelectItem key={status} value={status}>
+                                {STATUS_LABEL[status]}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
                       {post.task_id && (
                         <Button asChild size="icon-sm" variant="ghost">
                           <a href={`/tasks/${post.task_id}`} aria-label="Open task">
@@ -677,8 +772,8 @@ export function MarketingQueueClient({ initialPosts }: { initialPosts: Marketing
                 Generate from changelog
               </h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                Creates generated X, LinkedIn, and Reddit ideas from recent feature/fix/improvement
-                entries. Duplicates are skipped.
+                Creates Instagram Reel and YouTube Short ideas from recent feature, fix, and
+                improvement entries. Duplicates are skipped.
               </p>
             </div>
             <Button onClick={generateFromChangelog}>Generate ideas</Button>
