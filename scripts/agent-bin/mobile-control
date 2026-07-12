@@ -154,12 +154,8 @@ configure_telegram() {
 
   if has openclaw; then
     openclaw plugins enable telegram >/dev/null 2>&1 || true
-    local token_file
-    token_file="$(mktemp)"
-    chmod 600 "$token_file"
-    printf '%s' "$OPENCLAW_TELEGRAM_BOT_TOKEN" > "$token_file"
-    openclaw channels add --channel telegram --token-file "$token_file"
-    rm -f "$token_file"
+    openclaw config unset channels.telegram.tokenFile >/dev/null 2>&1 || true
+    openclaw channels add --channel telegram --token "$OPENCLAW_TELEGRAM_BOT_TOKEN"
     python3 - "$TELEGRAM_ALLOWED_USERS" "$owner" "${TELEGRAM_GROUP_ALLOWED_CHATS:-}" <<'PY' | openclaw config patch --stdin
 import json
 import sys
@@ -198,6 +194,11 @@ PY
     hermes gateway install --start-now --start-on-login || hermes gateway start || true
     hermes gateway restart || true
   fi
+
+  local notification_env="$HOME/Library/Application Support/Fleet Ops/notifications/env"
+  local notification_target="${TELEGRAM_HOME_CHANNEL:-$owner}"
+  set_env_value "$notification_env" HERMES_TELEGRAM_TARGET "telegram:$notification_target"
+  set_env_value "$notification_env" OPENCLAW_TELEGRAM_TARGET "$notification_target"
 
   echo "Telegram config applied. DM both bots, then run:"
   echo "  openclaw pairing list telegram"
