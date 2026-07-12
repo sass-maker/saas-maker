@@ -17,9 +17,10 @@ fleet-ops/scripts/agent-bin/fleet-notify list --limit 20
 fleet-ops/scripts/agent-bin/fleet-notification-service start
 ```
 
-`info` and `success` are history-only by default. `warning` pages through the
-OpenClaw Telegram bot. `critical` also uses ntfy when configured and bypasses
-quiet hours. Override routing for one event with repeated `--channel` flags.
+`info` is history-only by default. `success` and `warning` page through the
+OpenClaw Telegram bot so completed jobs send a proper "done" notification.
+`critical` also uses ntfy when configured and bypasses quiet hours. Override
+routing for one event with repeated `--channel` flags.
 
 ## Machine-local configuration
 
