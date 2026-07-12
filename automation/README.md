@@ -9,6 +9,13 @@ The deterministic `nightly-learning-sync` job runs at 02:15 local time. It
 refreshes the SWE Interview Prep source registry from a clean machine-local
 checkout and commits only semantic changes; no model is invoked.
 
+Reader saves use the existing authenticated Reader export. Configure its
+machine-local token without committing it:
+
+```bash
+./scripts/agent-bin/sync-learning-sources configure-reader
+```
+
 `codex-cron/` is the versioned replacement for the Codex app schedules. It keeps
 the schedule registry, prompts, runner, installer, and static dashboard in git.
 Install or refresh the local crontab with:

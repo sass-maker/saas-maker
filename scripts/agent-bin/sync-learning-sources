@@ -6,12 +6,33 @@ FLEET_OPS_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 FLEET_ROOT="$(cd "$FLEET_OPS_DIR/.." && pwd)"
 STATE_ROOT="$HOME/Library/Application Support/Fleet Ops/learning-sync"
 CHECKOUT="$STATE_ROOT/swe-interview-prep"
+READER_ENV="$STATE_ROOT/reader.env"
 LOG_DIR="$STATE_ROOT/logs"
 LOCK_DIR="$STATE_ROOT/sync.lock"
 NOTIFY="$SCRIPT_DIR/fleet-notify"
 REMOTE="https://github.com/sarthak-fleet/swe-interview-prep.git"
 
 mkdir -p "$STATE_ROOT" "$LOG_DIR"
+
+if [ "${1:-}" = "configure-reader" ]; then
+  printf "Reader API token (starts with rdr_): " >&2
+  IFS= read -r -s token
+  printf '\n' >&2
+  if [[ "$token" != rdr_* ]]; then
+    echo "invalid Reader API token" >&2
+    exit 2
+  fi
+  umask 077
+  printf 'READER_API_TOKEN=%q\n' "$token" > "$READER_ENV"
+  echo "Reader learning sync configured"
+  exit 0
+fi
+
+if [ "$#" -gt 0 ]; then
+  echo "usage: sync-learning-sources [configure-reader]" >&2
+  exit 2
+fi
+
 if ! mkdir "$LOCK_DIR" 2>/dev/null; then
   echo "learning sync already running"
   exit 0
@@ -42,6 +63,15 @@ git -C "$CHECKOUT" pull --ff-only origin main
 
 if [ ! -d "$CHECKOUT/node_modules" ]; then
   pnpm --dir "$CHECKOUT" install --frozen-lockfile
+fi
+
+if [ -f "$READER_ENV" ]; then
+  set -a
+  # shellcheck disable=SC1090
+  source "$READER_ENV"
+  set +a
+else
+  echo "Reader token not configured; Reader remains visible as a pending source"
 fi
 
 FLEET_ROOT="$FLEET_ROOT" pnpm --dir "$CHECKOUT" sync:learning-sources
