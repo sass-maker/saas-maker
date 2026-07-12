@@ -1,0 +1,67 @@
+---
+import { getFleetDevlog } from "../lib/fleet-data";
+
+const projects = getFleetDevlog(3);
+const commits = projects.flatMap((project) => project.commits.map((commit) => ({ ...commit, project })))
+  .sort((left, right) => Date.parse(right.committedAt) - Date.parse(left.committedAt));
+const latestAt = commits[0]?.committedAt ?? null;
+const commitsToday = commits.filter((commit) => Date.now() - Date.parse(commit.committedAt) < 24 * 60 * 60 * 1000).length;
+const formatDate = (value: string | null) => value
+  ? new Intl.DateTimeFormat("en", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Kolkata" }).format(new Date(value))
+  : "No commits";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Devlog · Fleet Ops</title>
+    <meta name="description" content="Recent local Git activity across checked-out Fleet projects." />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div><p class="eyebrow">Fleet Ops / Devlog</p><h1>Recent changes</h1></div>
+        <nav aria-label="Fleet console"><a href="/">Overview</a><a href="/build">Build</a><a href="/marketing">Market</a><a href="https://swe-interview-prep.pages.dev/sources">Learn</a><a class="active" href="/devlog">Devlog</a></nav>
+      </header>
+
+      <section class="summary" aria-label="Devlog summary">
+        <div><span>Repositories</span><strong>{projects.length}</strong><small>with local commit history</small></div>
+        <div><span>Recent commits</span><strong>{commits.length}</strong><small>latest three per project</small></div>
+        <div><span>Last 24 hours</span><strong>{commitsToday}</strong><small>commits in this snapshot</small></div>
+        <div><span>Latest activity</span><strong class="date-value">{formatDate(latestAt)}</strong><small>Asia/Kolkata</small></div>
+      </section>
+
+      <section class="band">
+        <div class="section-head"><div><p class="eyebrow">Git activity</p><h2>By project</h2></div><span>Read-only local snapshot</span></div>
+        <div class="devlog-list">
+          {projects.map((project) => (
+            <article class="project-log">
+              <header>
+                <div><h3>{project.projectTitle}</h3><a href={`/projects/${project.projectSlug}`}>{project.projectSlug}</a></div>
+                {project.repoUrl && <a href={project.repoUrl}>Repository</a>}
+              </header>
+              <ol>
+                {project.commits.map((commit) => (
+                  <li>
+                    <code>{commit.shortHash}</code>
+                    <strong>{commit.subject}</strong>
+                    <time datetime={commit.committedAt}>{formatDate(commit.committedAt)}</time>
+                  </li>
+                ))}
+              </ol>
+            </article>
+          ))}
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
+
+<style>
+  :root{color-scheme:dark;--bg:#090b0c;--surface:#101416;--line:#2b302d;--text:#f3f6f4;--muted:#a6aea9;--mint:#79dcc8}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,sans-serif;letter-spacing:0}.shell{width:min(1240px,100%);margin:auto;padding:24px}.topbar{min-height:150px;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;border-bottom:1px solid var(--line);padding-bottom:24px}.eyebrow{margin:0 0 8px;color:var(--mint);font-size:12px;font-weight:800;text-transform:uppercase}h1,h2,h3,p{margin-top:0}h1{margin-bottom:0;font-size:52px;line-height:1}h2{margin-bottom:0;font-size:28px}nav{display:flex;gap:6px;max-width:100%}nav a{color:var(--muted);text-decoration:none;border:1px solid var(--line);padding:10px 14px}nav a.active,nav a:hover{color:var(--text);border-color:var(--mint)}a{color:var(--mint)}.summary{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--line)}.summary div{min-height:145px;padding:24px;border-right:1px solid var(--line);display:grid;align-content:center}.summary div:last-child{border-right:0}.summary span,.summary small,.section-head>span{color:var(--muted)}.summary strong{font-size:40px}.summary .date-value{font-size:18px;line-height:1.3}.band{padding:44px 0}.section-head{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:24px}.devlog-list{border-top:1px solid var(--line)}.project-log{display:grid;grid-template-columns:240px 1fr;gap:28px;padding:24px 0;border-bottom:1px solid var(--line)}.project-log>header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.project-log h3{margin-bottom:4px;font-size:19px}.project-log header a{font-size:12px}ol{margin:0;padding:0;list-style:none}li{display:grid;grid-template-columns:72px minmax(0,1fr) 180px;gap:14px;align-items:center;min-height:56px;padding:10px 12px;border:1px solid var(--line);border-bottom:0;background:var(--surface)}li:last-child{border-bottom:1px solid var(--line)}code{color:var(--mint);font-size:12px}li strong{font-size:14px;overflow-wrap:anywhere}time{color:var(--muted);font-size:12px;text-align:right}@media(max-width:760px){.shell{padding:14px}.topbar,.section-head{display:grid}.topbar{min-height:170px}nav{overflow-x:auto}h1{font-size:40px}.summary{grid-template-columns:1fr 1fr}.summary div{min-height:115px;padding:16px}.summary div:nth-child(2){border-right:0}.project-log{grid-template-columns:1fr;gap:16px}li{grid-template-columns:64px minmax(0,1fr)}time{grid-column:2;text-align:left}}
+</style>
+<style>
+  @media(max-width:760px){.topbar nav{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));overflow:visible!important}.topbar nav a{display:grid;place-items:center;padding-inline:8px}.summary div{min-width:0}.summary .date-value{font-size:15px!important;overflow-wrap:anywhere}}
+</style>

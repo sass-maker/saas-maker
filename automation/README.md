@@ -15,6 +15,10 @@ due Instagram/YouTube distribution requests. Missing credentials leave it in a
 quiet waiting state. Idempotency claims and retry state persist under
 `~/Library/Application Support/Fleet Ops/marketing-publications/`.
 
+The supervised `weekly-domain-intelligence` job runs Mondays at 09:30 local.
+It refreshes drank Domain Rating history for the nine owned domains, runs three
+mobile PSI Swarm samples per domain, and refreshes the public aggregate feed.
+
 Reader saves use the existing authenticated Reader export. Configure its
 machine-local token without committing it:
 

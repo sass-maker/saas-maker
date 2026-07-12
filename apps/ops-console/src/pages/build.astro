@@ -1,16 +1,20 @@
 ---
-import { getFleetProjects, getSnapshotInfo } from "../lib/fleet-data";
+import { getFleetProjects, getFleetTasks, getSnapshotInfo } from "../lib/fleet-data";
 
 const projects = getFleetProjects();
 const snapshot = getSnapshotInfo();
+const projectTitles = new Map(projects.map((project) => [project.slug, project.title]));
 const activeProjects = projects
   .filter((project) => project.openTasks.length > 0)
   .sort((left, right) => right.highPriorityTasks - left.highPriorityTasks || right.openTasks.length - left.openTasks.length);
-const tasks = activeProjects
-  .flatMap((project) => project.openTasks.map((task) => ({ ...task, projectTitle: project.title })))
-  .sort((left, right) => Number(right.priority === "high") - Number(left.priority === "high") || Number(right.blocked) - Number(left.blocked));
+const tasks = getFleetTasks()
+  .filter((task) => task.status !== "done")
+  .map((task) => ({ ...task, projectTitle: projectTitles.get(task.projectSlug) ?? task.projectSlug }))
+  .sort((left, right) => Number(right.status === "in_progress") - Number(left.status === "in_progress") || Number(right.priority === "high") - Number(left.priority === "high") || Number(right.blocked) - Number(left.blocked));
 const blockedTasks = tasks.filter((task) => task.blocked).length;
 const highPriorityTasks = tasks.filter((task) => task.priority === "high").length;
+const inProgressTasks = tasks.filter((task) => task.status === "in_progress").length;
+const taskProjects = [...new Set(tasks.map((task) => task.projectSlug))].sort();
 const formatDate = (value: string | null) => value
   ? new Intl.DateTimeFormat("en", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Kolkata" }).format(new Date(value))
   : "No recent update";
@@ -28,11 +32,11 @@ const formatDate = (value: string | null) => value
     <main class="shell">
       <header class="topbar">
         <div><p class="eyebrow">Fleet Ops / Build</p><h1>Execution queue</h1></div>
-        <nav aria-label="Fleet console"><a href="/">Overview</a><a href="/projects">Projects</a><a class="active" href="/build">Build</a><a href="/marketing">Market</a><a href="https://swe-interview-prep.pages.dev/sources">Learn</a></nav>
+        <nav aria-label="Fleet console"><a href="/">Overview</a><a class="active" href="/build">Build</a><a href="/marketing">Market</a><a href="https://swe-interview-prep.pages.dev/sources">Learn</a><a href="/devlog">Devlog</a></nav>
       </header>
 
       <section class="summary" aria-label="Build summary">
-        <div><span>Active projects</span><strong>{activeProjects.length}</strong><small>with open work</small></div>
+        <div><span>In progress</span><strong>{inProgressTasks}</strong><small>claimed in SaaS Maker</small></div>
         <div><span>Open tasks</span><strong>{tasks.length}</strong><small>across the fleet</small></div>
         <div><span>High priority</span><strong>{highPriorityTasks}</strong><small>need focused execution</small></div>
         <div><span>Blocked</span><strong>{blockedTasks}</strong><small>waiting for input</small></div>
@@ -56,13 +60,31 @@ const formatDate = (value: string | null) => value
       </section>
 
       <section class="band">
-        <div class="section-head"><div><p class="eyebrow">Tasks</p><h2>Next work</h2></div><span>Top {Math.min(tasks.length, 12)} of {tasks.length} open</span></div>
-        <div class="task-list">
-          {tasks.slice(0, 12).map((task) => (
-            <article class="task">
+        <div class="section-head"><div><p class="eyebrow">SaaS Maker tasks</p><h2>Task list</h2></div><span data-task-count>{tasks.length} open</span></div>
+        <div class="task-controls" aria-label="Task filters">
+          <input type="search" placeholder="Search tasks" aria-label="Search tasks" data-task-search />
+          <select aria-label="Filter by project" data-task-project>
+            <option value="">All projects</option>
+            {taskProjects.map((slug) => <option value={slug}>{projectTitles.get(slug) ?? slug}</option>)}
+          </select>
+          <select aria-label="Filter by status" data-task-status>
+            <option value="">All statuses</option>
+            <option value="in_progress">In progress</option>
+            <option value="todo">Todo</option>
+          </select>
+          <select aria-label="Filter by priority" data-task-priority>
+            <option value="">All priorities</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+          </select>
+        </div>
+        <div class="task-list" data-task-list>
+          {tasks.map((task) => (
+            <article class="task" data-project={task.projectSlug} data-status={task.status} data-priority={task.priority} data-search={`${task.projectTitle} ${task.title}`.toLowerCase()}>
               <div><span class:list={["priority", task.priority]}>{task.priority}</span><strong>{task.projectTitle}</strong></div>
               <h3>{task.title}</h3>
-              <p>{task.status}{task.size ? ` · ${task.size}` : ""}{task.blocked ? " · blocked on input" : ""}</p>
+              <p>{task.status.replace("_", " ")}{task.claimedBy ? ` · ${task.claimedBy}` : ""}{task.size ? ` · ${task.size}` : ""}{task.blocked ? " · blocked on input" : ""}</p>
             </article>
           ))}
         </div>
@@ -71,6 +93,29 @@ const formatDate = (value: string | null) => value
   </body>
 </html>
 
+<script>
+  const search = document.querySelector("[data-task-search]");
+  const project = document.querySelector("[data-task-project]");
+  const status = document.querySelector("[data-task-status]");
+  const priority = document.querySelector("[data-task-priority]");
+  const count = document.querySelector("[data-task-count]");
+  const rows = [...document.querySelectorAll("[data-task-list] .task")];
+  function filterTasks() {
+    const query = search?.value.trim().toLowerCase() ?? "";
+    let visible = 0;
+    for (const row of rows) {
+      const matches = (!query || row.dataset.search?.includes(query))
+        && (!project?.value || row.dataset.project === project.value)
+        && (!status?.value || row.dataset.status === status.value)
+        && (!priority?.value || row.dataset.priority === priority.value);
+      row.hidden = !matches;
+      if (matches) visible += 1;
+    }
+    if (count) count.textContent = `${visible} of ${rows.length} open`;
+  }
+  for (const control of [search, project, status, priority]) control?.addEventListener("input", filterTasks);
+</script>
+
 <style>
-  :root{color-scheme:dark;--bg:#090b0c;--surface:#101416;--line:#2b302d;--text:#f3f6f4;--muted:#a6aea9;--mint:#79dcc8;--yellow:#f2c14e;--red:#ff8e8e;--green:#91e49e}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,sans-serif;letter-spacing:0}.shell{width:min(1240px,100%);margin:auto;padding:24px}.topbar{min-height:150px;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;border-bottom:1px solid var(--line);padding-bottom:24px}.eyebrow{margin:0 0 8px;color:var(--mint);font-size:12px;font-weight:800;text-transform:uppercase}h1,h2,h3,p{margin-top:0}h1{margin-bottom:0;font-size:52px;line-height:1}h2{margin-bottom:0;font-size:28px}nav{display:flex;gap:6px}nav a{color:var(--muted);text-decoration:none;border:1px solid var(--line);padding:10px 14px}nav a.active,nav a:hover{color:var(--text);border-color:var(--mint)}.summary{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--line)}.summary div{min-height:145px;padding:24px;border-right:1px solid var(--line);display:grid;align-content:center}.summary div:last-child{border-right:0}.summary span,.summary small,.section-head>span{color:var(--muted)}.summary strong{font-size:40px}.band{padding:44px 0;border-bottom:1px solid var(--line)}.section-head{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:24px}.project-list,.task-list{border-top:1px solid var(--line)}.project{display:grid;grid-template-columns:minmax(260px,1fr) 1fr;gap:28px;padding:20px 0;border-bottom:1px solid var(--line);color:var(--text);text-decoration:none}.project h3{margin:9px 0 5px;font-size:20px}.project p,.task p{margin-bottom:0;color:var(--muted)}dl{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:0;align-content:center}dt{color:var(--muted);font-size:10px;text-transform:uppercase}dd{margin:4px 0 0;font-weight:800}.state,.priority{display:inline-flex;width:max-content;border:1px solid var(--line);padding:4px 8px;font:800 10px ui-monospace,monospace;text-transform:uppercase}.state.steady{color:var(--green);border-color:#91e49e66}.state.active,.priority.medium{color:var(--mint);border-color:#79dcc866}.state.blocked,.state.local-changes,.priority.low{color:var(--yellow);border-color:#f2c14e66}.state.needs-attention,.priority.high{color:var(--red);border-color:#ff8e8e66}.task{display:grid;grid-template-columns:190px 1fr minmax(160px,.5fr);gap:20px;align-items:center;padding:18px 0;border-bottom:1px solid var(--line)}.task>div{display:grid;gap:8px}.task h3{margin:0;font-size:16px}.task p{text-align:right}@media(max-width:760px){.shell{padding:14px}.topbar,.section-head{display:grid}.topbar{min-height:170px}nav{overflow-x:auto}h1{font-size:40px}.summary{grid-template-columns:1fr 1fr}.summary div{min-height:115px;padding:16px}.summary div:nth-child(2){border-right:0}.project,.task{grid-template-columns:1fr;gap:14px}.project dl{grid-template-columns:1fr 1fr}.task p{text-align:left}}
+  :root{color-scheme:dark;--bg:#090b0c;--surface:#101416;--line:#2b302d;--text:#f3f6f4;--muted:#a6aea9;--mint:#79dcc8;--yellow:#f2c14e;--red:#ff8e8e;--green:#91e49e}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,sans-serif;letter-spacing:0}.shell{width:min(1240px,100%);margin:auto;padding:24px}.topbar{min-height:150px;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;border-bottom:1px solid var(--line);padding-bottom:24px}.eyebrow{margin:0 0 8px;color:var(--mint);font-size:12px;font-weight:800;text-transform:uppercase}h1,h2,h3,p{margin-top:0}h1{margin-bottom:0;font-size:52px;line-height:1}h2{margin-bottom:0;font-size:28px}nav{display:flex;gap:6px}nav a{color:var(--muted);text-decoration:none;border:1px solid var(--line);padding:10px 14px}nav a.active,nav a:hover{color:var(--text);border-color:var(--mint)}.summary{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--line)}.summary div{min-height:145px;padding:24px;border-right:1px solid var(--line);display:grid;align-content:center}.summary div:last-child{border-right:0}.summary span,.summary small,.section-head>span{color:var(--muted)}.summary strong{font-size:40px}.band{padding:44px 0;border-bottom:1px solid var(--line)}.section-head{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:24px}.project-list,.task-list{border-top:1px solid var(--line)}.project{display:grid;grid-template-columns:minmax(260px,1fr) 1fr;gap:28px;padding:20px 0;border-bottom:1px solid var(--line);color:var(--text);text-decoration:none}.project h3{margin:9px 0 5px;font-size:20px}.project p,.task p{margin-bottom:0;color:var(--muted)}dl{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:0;align-content:center}dt{color:var(--muted);font-size:10px;text-transform:uppercase}dd{margin:4px 0 0;font-weight:800}.state,.priority{display:inline-flex;width:max-content;border:1px solid var(--line);padding:4px 8px;font:800 10px ui-monospace,monospace;text-transform:uppercase}.state.steady{color:var(--green);border-color:#91e49e66}.state.active,.priority.medium{color:var(--mint);border-color:#79dcc866}.state.blocked,.state.local-changes,.priority.low{color:var(--yellow);border-color:#f2c14e66}.state.needs-attention,.priority.high{color:var(--red);border-color:#ff8e8e66}.task-controls{display:grid;grid-template-columns:1.5fr repeat(3,1fr);gap:8px;margin-bottom:12px}.task-controls input,.task-controls select{width:100%;min-height:42px;border:1px solid var(--line);border-radius:0;padding:8px 10px;background:var(--surface);color:var(--text);font:inherit}.task-list{max-height:960px;overflow-y:auto}.task[hidden]{display:none}.task{display:grid;grid-template-columns:190px 1fr minmax(160px,.5fr);gap:20px;align-items:center;padding:18px 0;border-bottom:1px solid var(--line)}.task>div{display:grid;gap:8px}.task h3{margin:0;font-size:16px}.task p{text-align:right}@media(max-width:760px){.shell{padding:14px}.topbar,.section-head{display:grid}.topbar{min-height:170px}nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}nav a{justify-content:center;padding-inline:8px}h1{font-size:40px}.summary{grid-template-columns:1fr 1fr}.summary div{min-width:0;min-height:115px;padding:16px}.summary div:nth-child(2){border-right:0}.project,.task,.task-controls{grid-template-columns:1fr;gap:14px}.project dl{grid-template-columns:1fr 1fr}.task-list{max-height:720px}.task p{text-align:left}}
 </style>

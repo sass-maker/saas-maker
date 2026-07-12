@@ -8,7 +8,8 @@ const fleetRoot = resolve(fleetOpsRoot, "..");
 const saasMakerRoot = resolve(fleetRoot, "saas-maker");
 
 const localDirBySlug: Record<string, string> = {
-  "alive-ville": "aliveville"
+  "alive-ville": "aliveville",
+  posttrainllm: "tinygpt"
 };
 
 const canonicalSlugByAlias: Record<string, string> = {
@@ -17,27 +18,46 @@ const canonicalSlugByAlias: Record<string, string> = {
   "alive-ville": "aliveville",
   anime_list: "anime-list",
   linkchat: "karte",
-  posttrainllm: "tinygpt",
+  tinygpt: "posttrainllm",
   "resume-tailor": "rolepatch"
 };
 
 const productTitleBySlug: Record<string, string> = {
+  aliveville: "AliveVille",
   "anime-list": "MAL Explorer",
+  codevetter: "CodeVetter",
+  drank: "drank",
   "email-manager": "Email Manager",
   "fleet-ops": "Fleet Ops",
   "free-ai": "Free AI",
   "high-signal": "High Signal",
+  karte: "Karte",
+  "knowledge-base": "Knowledge Base",
+  looptv: "LoopTV",
+  pace: "Pace",
+  reader: "Reader",
   "reel-pipeline": "Reel Pipeline",
   "research-papers": "Research Papers",
+  rolepatch: "RolePatch",
   "saas-maker": "SaaS Maker",
+  starboard: "Starboard",
   "significanthobbies": "Significant Hobbies",
   "swe-interview-prep": "SWE Interview Prep",
-  "tinygpt": "posttrainllm",
+  posttrainllm: "posttrainllm",
   "wifi-watch": "Wi-Fi Watch"
 };
 
 function canonicalProjectSlug(slug: string) {
   return canonicalSlugByAlias[slug] ?? slug;
+}
+
+function canonicalProductText(value: string) {
+  return value
+    .replace(/\btinygpt\b/gi, "posttrainllm")
+    .replace(/\blinkchat\b/gi, "Karte")
+    .replace(/\bresume-tailor\b/gi, "RolePatch")
+    .replace(/\bai-game\b/gi, "AliveVille")
+    .replace(/\binterview-coder\b/gi, "SWE Interview Prep");
 }
 
 export type CronJob = {
@@ -79,6 +99,30 @@ export type FleetTask = {
   blocked: boolean;
   claimedBy: string | null;
   updatedAt: string | null;
+};
+
+export type FleetCommit = {
+  hash: string;
+  shortHash: string;
+  committedAt: string;
+  subject: string;
+};
+
+export type FleetDevlog = {
+  projectSlug: string;
+  projectTitle: string;
+  repoUrl: string | null;
+  commits: FleetCommit[];
+};
+
+export type DomainIntelligence = {
+  domain: string;
+  domainRating: number | null;
+  domainRatingUpdatedAt: string | null;
+  performanceScore: number | null;
+  lcpMs: number | null;
+  cls: number | null;
+  psiUpdatedAt: string | null;
 };
 
 export type FleetProject = {
@@ -399,7 +443,7 @@ export function getFleetTasks(): FleetTask[] {
   return (raw.tasks ?? []).map((task) => ({
     id: String(task.id ?? ""),
     projectSlug: canonicalProjectSlug(String(task.project_slug ?? "unassigned")),
-    title: String(task.title ?? "Untitled task"),
+    title: canonicalProductText(String(task.title ?? "Untitled task")),
     status: String(task.status ?? "unknown"),
     priority: String(task.priority ?? "unknown"),
     size: task.size ? String(task.size) : null,
@@ -408,6 +452,62 @@ export function getFleetTasks(): FleetTask[] {
     claimedBy: task.claimed_by ? String(task.claimed_by) : null,
     updatedAt: task.updated_at ? String(task.updated_at) : null
   }));
+}
+
+export function getFleetDevlog(limit = 3): FleetDevlog[] {
+  return getFleetProjects()
+    .filter((project) => project.checkedOut)
+    .map((project) => {
+      const raw = safeGit(["log", `-${limit}`, "--format=%H%x09%h%x09%aI%x09%s"], projectRoot(project.slug));
+      const commits = raw.split("\n").filter(Boolean).flatMap((line) => {
+        const [hash, shortHash, committedAt, ...subjectParts] = line.split("\t");
+        if (!hash || !shortHash || !committedAt) return [];
+        return [{ hash, shortHash, committedAt, subject: subjectParts.join("\t") || "Untitled commit" }];
+      });
+      return {
+        projectSlug: project.slug,
+        projectTitle: project.title,
+        repoUrl: project.repoUrl,
+        commits
+      };
+    })
+    .filter((entry) => entry.commits.length > 0)
+    .sort((left, right) => Date.parse(right.commits[0]?.committedAt ?? "") - Date.parse(left.commits[0]?.committedAt ?? ""));
+}
+
+export function getDomainIntelligence(): DomainIntelligence[] {
+  const drank = readJsonObject(resolve(fleetRoot, "drank/data/fleet-dr.json")) as {
+    lastUpdated?: string | null;
+    domains?: Record<string, { history?: Array<{ ts?: number; dr?: number }> }>;
+  };
+  const dbPath = resolve(process.env.HOME ?? "", ".psi-swarm/history.db");
+  const rawRuns = existsSync(dbPath)
+    ? safeExec("sqlite3", ["-json", dbPath, "SELECT url, started_at, lcp, cls, performance_score FROM runs WHERE error IS NULL AND tag = 'fleet-weekly' ORDER BY started_at DESC LIMIT 200"], 5000)
+    : "";
+  let runs: Array<{ url?: string; started_at?: number; lcp?: number; cls?: number; performance_score?: number }> = [];
+  try { runs = JSON.parse(rawRuns || "[]"); } catch {}
+  const domains = Object.entries(drank.domains ?? {}).map(([domain, entry]) => {
+    const latestRating = (entry.history ?? []).at(-1);
+    const domainRuns = runs.filter((run) => {
+      try { return new URL(String(run.url)).hostname.replace(/^www\./, "") === domain; } catch { return false; }
+    }).slice(0, 3);
+    const median = (values: number[]) => {
+      if (!values.length) return null;
+      const sorted = [...values].sort((left, right) => left - right);
+      return sorted[Math.floor(sorted.length / 2)] ?? null;
+    };
+    const performanceScore = median(domainRuns.map((run) => Number(run.performance_score)).filter(Number.isFinite));
+    return {
+      domain,
+      domainRating: typeof latestRating?.dr === "number" ? latestRating.dr : null,
+      domainRatingUpdatedAt: latestRating?.ts ? new Date(latestRating.ts).toISOString() : drank.lastUpdated ?? null,
+      performanceScore: performanceScore !== null && performanceScore <= 1 ? performanceScore * 100 : performanceScore,
+      lcpMs: median(domainRuns.map((run) => Number(run.lcp)).filter(Number.isFinite)),
+      cls: median(domainRuns.map((run) => Number(run.cls)).filter(Number.isFinite)),
+      psiUpdatedAt: domainRuns[0]?.started_at ? new Date(Number(domainRuns[0].started_at)).toISOString() : null
+    };
+  });
+  return domains.sort((left, right) => left.domain.localeCompare(right.domain));
 }
 
 export function getFleetProjects(): FleetProject[] {

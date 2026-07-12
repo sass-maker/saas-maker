@@ -138,6 +138,39 @@ function marketingSummary() {
   };
 }
 
+function domainSummary() {
+  const drankPath = "/Users/assistant/Desktop/fleet/drank/data/fleet-dr.json";
+  let drank = {};
+  try { drank = JSON.parse(readFileSync(drankPath, "utf8")); } catch {}
+  const dbPath = `${process.env.HOME}/.psi-swarm/history.db`;
+  const raw = existsSync(dbPath)
+    ? run("sqlite3", ["-json", dbPath, "SELECT url, started_at, lcp, cls, performance_score FROM runs WHERE error IS NULL AND tag = 'fleet-weekly' ORDER BY started_at DESC LIMIT 200"], 5000)
+    : "";
+  let runs = [];
+  try { runs = JSON.parse(raw || "[]"); } catch {}
+  const median = (values) => {
+    if (!values.length) return null;
+    const sorted = [...values].sort((left, right) => left - right);
+    return sorted[Math.floor(sorted.length / 2)] ?? null;
+  };
+  return Object.entries(drank.domains || {}).map(([domain, entry]) => {
+    const rating = (entry.history || []).at(-1);
+    const domainRuns = runs.filter((item) => {
+      try { return new URL(String(item.url)).hostname.replace(/^www\./, "") === domain; } catch { return false; }
+    }).slice(0, 3);
+    const rawScore = median(domainRuns.map((item) => Number(item.performance_score)).filter(Number.isFinite));
+    return {
+      domain,
+      domainRating: typeof rating?.dr === "number" ? rating.dr : null,
+      domainRatingUpdatedAt: rating?.ts ? new Date(rating.ts).toISOString() : drank.lastUpdated || null,
+      performanceScore: rawScore !== null && rawScore <= 1 ? rawScore * 100 : rawScore,
+      lcpMs: median(domainRuns.map((item) => Number(item.lcp)).filter(Number.isFinite)),
+      cls: median(domainRuns.map((item) => Number(item.cls)).filter(Number.isFinite)),
+      psiUpdatedAt: domainRuns[0]?.started_at ? new Date(Number(domainRuns[0].started_at)).toISOString() : null
+    };
+  }).sort((left, right) => left.domain.localeCompare(right.domain));
+}
+
 function decodeDistributionEnvelope(notes) {
   const line = String(notes || "").split(/\r?\n/).find((entry) => entry.startsWith("fleet_distribution_v1:"));
   if (!line) return null;
@@ -159,6 +192,7 @@ const heartbeat = {
   notifications: notificationSummary(),
   tasks: taskSummary(),
   marketing: marketingSummary(),
+  domains: domainSummary(),
   node: {
     id: process.env.FLEET_NODE_ID || "primary-mac",
     label: process.env.FLEET_NODE_LABEL || "Primary Fleet machine",

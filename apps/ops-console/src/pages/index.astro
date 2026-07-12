@@ -1,10 +1,12 @@
 ---
-import { getCronJobs, getFleetNodes, getFleetProjects, getSnapshotInfo, getWifiSummary } from "../lib/fleet-data";
+import { getCronJobs, getDomainIntelligence, getFleetNodes, getFleetProjects, getSnapshotInfo, getWifiSummary } from "../lib/fleet-data";
 
 const cronJobs = getCronJobs();
 const wifi = getWifiSummary();
+const domains = getDomainIntelligence();
 const projects = getFleetProjects();
-const productCount = projects.filter((project) => !["fleet-ops", "wifi-watch"].includes(project.slug)).length;
+const productProjects = projects.filter((project) => !["fleet-ops", "wifi-watch"].includes(project.slug));
+const productCount = productProjects.length;
 const nodes = getFleetNodes();
 const snapshot = getSnapshotInfo();
 const activeJobs = cronJobs.filter((job) => job.enabled);
@@ -44,10 +46,10 @@ const formatDate = (value: string | null) =>
         </div>
         <nav class="topnav" aria-label="Fleet console">
           <a class="active" href="/">Overview</a>
-          <a href="/projects">Projects</a>
           <a href="/build">Build</a>
           <a href="/marketing">Market</a>
           <a href="https://swe-interview-prep.pages.dev/sources">Learn</a>
+          <a href="/devlog">Devlog</a>
         </nav>
       </header>
 
@@ -123,10 +125,61 @@ const formatDate = (value: string | null) =>
             <p class="eyebrow">Hosting</p>
             <h2>Where things run</h2>
           </div>
-          <a href="/projects">Inspect projects</a>
+          <a href="#projects">Inspect projects</a>
         </div>
         <div class="hosting-grid">
           {Object.entries(hostingCounts).map(([label, count]) => <article><strong>{count}</strong><span>{label}</span></article>)}
+        </div>
+      </section>
+
+      <section id="projects" class="panel project-panel" aria-labelledby="projects-title">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Projects</p>
+            <h2 id="projects-title">Product inventory</h2>
+          </div>
+          <span>{productProjects.length} products · Fleet Ops and Wi-Fi Watch shown separately</span>
+        </div>
+        <div class="project-directory">
+          {productProjects.map((project) => (
+            <a class="project-item" href={`/projects/${project.slug}`}>
+              <div class="project-title">
+                <span class:list={["project-state", project.state]}>{project.stateLabel}</span>
+                <span class:list={["project-hosting", project.hostingKind]}>{project.hostingLabel}</span>
+                <h3>{project.title}</h3>
+                <p>{project.desc}</p>
+              </div>
+              <dl>
+                <div><dt>Lane</dt><dd>{project.lane}</dd></div>
+                <div><dt>Open</dt><dd>{project.openTasks.length}</dd></div>
+                <div><dt>Blocked</dt><dd>{project.blockedTasks}</dd></div>
+                <div><dt>Updated</dt><dd>{formatDate(project.updatedAt)}</dd></div>
+              </dl>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section class="panel domain-panel" aria-labelledby="domains-title">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Domain intelligence</p>
+            <h2 id="domains-title">drank + PSI Swarm</h2>
+          </div>
+          <span>Weekly owned-domain snapshot</span>
+        </div>
+        <div class="domain-table" role="table" aria-label="Domain rating and performance results">
+          <div class="domain-row domain-head" role="row"><span>Domain</span><span>DR</span><span>Performance</span><span>LCP</span><span>CLS</span><span>Updated</span></div>
+          {domains.map((domain) => (
+            <div class="domain-row" role="row" data-domain={domain.domain}>
+              <a href={`https://${domain.domain}`}>{domain.domain}</a>
+              <strong data-domain-rating>{domain.domainRating ?? "-"}</strong>
+              <strong data-domain-score class:list={[domain.performanceScore !== null && domain.performanceScore >= 90 ? "good" : domain.performanceScore !== null && domain.performanceScore >= 50 ? "warn" : "bad"]}>{domain.performanceScore !== null ? Math.round(domain.performanceScore) : "Pending"}</strong>
+              <span data-domain-lcp>{domain.lcpMs !== null ? `${(domain.lcpMs / 1000).toFixed(2)}s` : "Pending"}</span>
+              <span data-domain-cls>{domain.cls !== null ? domain.cls.toFixed(3) : "Pending"}</span>
+              <time data-domain-updated datetime={domain.psiUpdatedAt ?? domain.domainRatingUpdatedAt ?? undefined}>{formatDate(domain.psiUpdatedAt ?? domain.domainRatingUpdatedAt)}</time>
+            </div>
+          ))}
         </div>
       </section>
 
@@ -346,6 +399,25 @@ const formatDate = (value: string | null) =>
             (service.id === "console" && element.dataset.serviceLabel === "Fleet Ops console") ||
             (service.id === "tailscale" && element.dataset.serviceLabel === "Tailscale SSH"));
         setState(surface?.querySelector(".mini-state"), service.status);
+      }
+
+      for (const domain of heartbeat.domains || []) {
+        const row = document.querySelector(`[data-domain="${domain.domain}"]`);
+        if (!row) continue;
+        const rating = row.querySelector("[data-domain-rating]");
+        const score = row.querySelector("[data-domain-score]");
+        const lcp = row.querySelector("[data-domain-lcp]");
+        const cls = row.querySelector("[data-domain-cls]");
+        const updated = row.querySelector("[data-domain-updated]");
+        if (rating) rating.textContent = String(domain.domainRating ?? "-");
+        if (score) {
+          score.textContent = domain.performanceScore === null ? "Pending" : String(Math.round(domain.performanceScore));
+          score.className = domain.performanceScore >= 90 ? "good" : domain.performanceScore >= 50 ? "warn" : "bad";
+        }
+        if (lcp) lcp.textContent = domain.lcpMs === null ? "Pending" : `${(domain.lcpMs / 1000).toFixed(2)}s`;
+        if (cls) cls.textContent = domain.cls === null ? "Pending" : Number(domain.cls).toFixed(3);
+        const updatedAt = domain.psiUpdatedAt || domain.domainRatingUpdatedAt;
+        if (updated) updated.textContent = updatedAt ? formatHeartbeat(updatedAt) : "Pending";
       }
     } catch {
       at.textContent = "Live heartbeat unavailable";
@@ -608,6 +680,107 @@ const formatDate = (value: string | null) =>
 
   .node-panel {
     margin-bottom: 16px;
+  }
+
+  .project-panel {
+    margin-bottom: 16px;
+  }
+
+  .domain-panel {
+    margin-bottom: 16px;
+  }
+
+  .domain-table {
+    border-top: 1px solid var(--line);
+  }
+
+  .domain-row {
+    display: grid;
+    grid-template-columns: minmax(180px, 1.3fr) repeat(4, minmax(90px, .65fr)) minmax(160px, 1fr);
+    gap: 14px;
+    align-items: center;
+    min-height: 58px;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .domain-row a {
+    color: var(--cyan);
+  }
+
+  .domain-row time,
+  .domain-row span {
+    color: var(--muted);
+  }
+
+  .domain-head {
+    min-height: 40px;
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .domain-row .good { color: var(--green); }
+  .domain-row .warn { color: var(--yellow); }
+  .domain-row .bad { color: var(--red); }
+
+  .project-directory {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-top: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+  }
+
+  .project-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 220px;
+    gap: 18px;
+    min-height: 170px;
+    padding: 16px;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .project-item:hover {
+    background: rgba(121, 220, 200, 0.04);
+  }
+
+  .project-title h3 {
+    margin: 10px 0 5px;
+    font-size: 19px;
+  }
+
+  .project-title p {
+    margin-bottom: 0;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .project-state,
+  .project-hosting {
+    display: inline-flex;
+    border: 1px solid var(--line);
+    padding: 3px 7px;
+    font: 800 9px "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
+    text-transform: uppercase;
+  }
+
+  .project-state.steady,
+  .project-hosting.cloudflare { color: var(--green); border-color: rgba(145, 228, 158, 0.45); }
+  .project-state.active,
+  .project-hosting.machine { color: var(--cyan); border-color: rgba(121, 220, 200, 0.45); }
+  .project-state.blocked,
+  .project-state.local-changes,
+  .project-hosting.external,
+  .project-hosting.local { color: var(--yellow); border-color: rgba(242, 193, 78, 0.45); }
+  .project-state.needs-attention { color: var(--red); border-color: rgba(255, 142, 142, 0.45); }
+
+  .project-item dl {
+    grid-template-columns: 1fr 1fr;
+    align-content: start;
   }
 
   .hosting-panel a {
@@ -904,7 +1077,8 @@ const formatDate = (value: string | null) =>
   @media (max-width: 1100px) {
     .hero-grid,
     .content-grid,
-    .node-grid {
+    .node-grid,
+    .project-directory {
       grid-template-columns: 1fr 1fr;
     }
 
@@ -930,6 +1104,8 @@ const formatDate = (value: string | null) =>
     }
 
     .topnav {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       justify-content: stretch;
     }
 
@@ -943,7 +1119,13 @@ const formatDate = (value: string | null) =>
     }
 
     .lane-grid a {
+      min-width: 0;
       min-height: 104px;
+    }
+
+    .lane-grid small,
+    .summary-card span {
+      overflow-wrap: anywhere;
     }
 
     .lane-grid a:nth-child(2n) {
@@ -959,8 +1141,33 @@ const formatDate = (value: string | null) =>
     .node-grid,
     .surface-grid,
     dl,
-    .facts {
+    .facts,
+    .project-directory,
+    .project-item {
       grid-template-columns: 1fr;
+    }
+
+    .domain-table {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      border-top: 0;
+    }
+
+    .domain-head {
+      display: none;
+    }
+
+    .domain-row {
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 12px;
+      padding: 14px;
+      border: 1px solid var(--line);
+    }
+
+    .domain-row a,
+    .domain-row time {
+      grid-column: 1 / -1;
     }
 
     h1 {
