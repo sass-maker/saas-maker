@@ -17,11 +17,11 @@ const updated = project.updatedAt ? formatDate(project.updatedAt) : "No recent t
 
 <!doctype html>
 <html lang="en">
-  <head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>{project.slug} · Fleet Project</title></head>
+  <head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>{project.title} · Fleet Project</title></head>
   <body>
     <main class="shell">
       <header class="topbar">
-        <div><p class="eyebrow">Project</p><h1>{project.slug}</h1></div>
+        <div><p class="eyebrow">Project</p><h1>{project.title}</h1></div>
         <nav class="topnav" aria-label="Fleet console"><a href="/">Overview</a><a href="/projects">Projects</a><a href="/connections">Connections</a></nav>
       </header>
 

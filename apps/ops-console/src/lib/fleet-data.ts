@@ -21,6 +21,21 @@ const canonicalSlugByAlias: Record<string, string> = {
   "resume-tailor": "rolepatch"
 };
 
+const productTitleBySlug: Record<string, string> = {
+  "anime-list": "MAL Explorer",
+  "email-manager": "Email Manager",
+  "fleet-ops": "Fleet Ops",
+  "free-ai": "Free AI",
+  "high-signal": "High Signal",
+  "reel-pipeline": "Reel Pipeline",
+  "research-papers": "Research Papers",
+  "saas-maker": "SaaS Maker",
+  "significanthobbies": "Significant Hobbies",
+  "swe-interview-prep": "SWE Interview Prep",
+  "tinygpt": "posttrainllm",
+  "wifi-watch": "Wi-Fi Watch"
+};
+
 function canonicalProjectSlug(slug: string) {
   return canonicalSlugByAlias[slug] ?? slug;
 }
@@ -453,7 +468,7 @@ export function getFleetProjects(): FleetProject[] {
 
     return {
       slug,
-      title: pkg.name ? titleize(String(pkg.name).replace(/^@[^/]+\//, "")) : titleize(slug),
+      title: productTitleBySlug[slug] ?? (pkg.name ? titleize(String(pkg.name).replace(/^@[^/]+\//, "")) : titleize(slug)),
       desc: meta.desc ?? pkg.description ?? "No description recorded yet.",
       tier: meta.tier ?? (slug === "fleet-ops" || slug === "wifi-watch" ? "ops" : "unknown"),
       lane: auditProject?.businessLane ?? (meta.tier === "core" ? "Core" : meta.tier === "active-ai" ? "Active AI" : "Ops"),
