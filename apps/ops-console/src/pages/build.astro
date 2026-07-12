@@ -8,7 +8,7 @@ const activeProjects = projects
   .filter((project) => project.openTasks.length > 0)
   .sort((left, right) => right.highPriorityTasks - left.highPriorityTasks || right.openTasks.length - left.openTasks.length);
 const tasks = getFleetTasks()
-  .filter((task) => task.status !== "done")
+  .filter((task) => task.lane === "build" && task.status !== "done" && projectTitles.has(task.projectSlug))
   .map((task) => ({ ...task, projectTitle: projectTitles.get(task.projectSlug) ?? task.projectSlug }))
   .sort((left, right) => Number(right.status === "in_progress") - Number(left.status === "in_progress") || Number(right.priority === "high") - Number(left.priority === "high") || Number(right.blocked) - Number(left.blocked));
 const blockedTasks = tasks.filter((task) => task.blocked).length;

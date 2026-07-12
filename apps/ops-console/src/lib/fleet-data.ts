@@ -99,6 +99,7 @@ export type FleetTask = {
   blocked: boolean;
   claimedBy: string | null;
   updatedAt: string | null;
+  lane: "build" | "marketing";
 };
 
 export type FleetCommit = {
@@ -440,18 +441,22 @@ export function getSnapshotInfo() {
 
 export function getFleetTasks(): FleetTask[] {
   const raw = readJsonObject(resolve(saasMakerRoot, ".symphony/tasks.json")) as { tasks?: Array<Record<string, unknown>> };
-  return (raw.tasks ?? []).map((task) => ({
-    id: String(task.id ?? ""),
-    projectSlug: canonicalProjectSlug(String(task.project_slug ?? "unassigned")),
-    title: canonicalProductText(String(task.title ?? "Untitled task")),
-    status: String(task.status ?? "unknown"),
-    priority: String(task.priority ?? "unknown"),
-    size: task.size ? String(task.size) : null,
-    type: task.task_type ? String(task.task_type) : null,
-    blocked: Boolean(task.blocked_on_user),
-    claimedBy: task.claimed_by ? String(task.claimed_by) : null,
-    updatedAt: task.updated_at ? String(task.updated_at) : null
-  }));
+  return (raw.tasks ?? []).map((task) => {
+    const rawTitle = String(task.title ?? "Untitled task");
+    return {
+      id: String(task.id ?? ""),
+      projectSlug: canonicalProjectSlug(String(task.project_slug ?? "unassigned")),
+      title: canonicalProductText(rawTitle),
+      status: String(task.status ?? "unknown"),
+      priority: String(task.priority ?? "unknown"),
+      size: task.size ? String(task.size) : null,
+      type: task.task_type ? String(task.task_type) : null,
+      blocked: Boolean(task.blocked_on_user),
+      claimedBy: task.claimed_by ? String(task.claimed_by) : null,
+      updatedAt: task.updated_at ? String(task.updated_at) : null,
+      lane: /\bmarketing\b/i.test(rawTitle) ? "marketing" : "build"
+    };
+  });
 }
 
 export function getFleetDevlog(limit = 3): FleetDevlog[] {
@@ -541,7 +546,7 @@ export function getFleetProjects(): FleetProject[] {
     const hosting = getHosting({ slug, root, checkedOut, pkg, homepage });
     const auditProject = auditBySlug.get(slug);
     const smokeProject = smokeBySlug.get(slug);
-    const projectTasks = tasks.filter((task) => task.projectSlug === slug);
+    const projectTasks = tasks.filter((task) => task.projectSlug === slug && task.lane === "build");
     const openTasks = projectTasks
       .filter((task) => !["done", "closed", "cancelled"].includes(task.status))
       .sort((a, b) => {
@@ -564,7 +569,7 @@ export function getFleetProjects(): FleetProject[] {
     const taskSummary = `${openTasks.length} open / ${highPriorityTasks} high / ${blockedTasks} blocked / ${doneTasks} done`;
     const updatedAt = openTasks[0]?.updatedAt ?? projectTasks[0]?.updatedAt ?? null;
     let state: FleetProject["state"] = "steady";
-    if (smokeStatus === "fail" || highPriorityTasks > 0) state = "needs-attention";
+    if (smokeStatus === "fail" || openTasks.some((task) => /^\[fleet-(failure|smoke|ci)\]/i.test(task.title))) state = "needs-attention";
     else if (blockedTasks > 0) state = "blocked";
     else if (openTasks.length > 0) state = "active";
     else if (dirtyCount > 0) state = "local-changes";

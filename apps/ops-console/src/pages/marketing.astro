@@ -1,11 +1,21 @@
 ---
-import { getMarketingPipeline } from "../lib/fleet-data";
+import { getFleetProjects, getFleetTasks, getMarketingPipeline } from "../lib/fleet-data";
 
 const pipeline = getMarketingPipeline();
 const readyStages = pipeline.stages.filter((stage) => stage.state === "ready").length;
 const mappedChannels = pipeline.brands.reduce((sum, brand) => sum + brand.mappedChannels.length, 0);
 const totalChannels = pipeline.brands.reduce((sum, brand) => sum + brand.channels.length, 0);
 const connectedChannels = pipeline.brands.reduce((sum, brand) => sum + brand.connectedChannels.length, 0);
+const projectTitles = new Map(getFleetProjects().map((project) => [project.slug, project.title]));
+const brandSlugs = new Set(pipeline.brands.map((brand) => brand.slug));
+const marketingTasks = getFleetTasks()
+  .filter((task) => task.lane === "marketing" && task.status !== "done" && brandSlugs.has(task.projectSlug))
+  .sort((left, right) => Number(right.status === "in_progress") - Number(left.status === "in_progress") || Number(right.priority === "high") - Number(left.priority === "high"));
+const marketingTaskGroups = pipeline.brands.map((brand) => ({
+  slug: brand.slug,
+  name: projectTitles.get(brand.slug) ?? brand.name,
+  tasks: marketingTasks.filter((task) => task.projectSlug === brand.slug)
+}));
 const formatDate = (value: string | null) => value
   ? new Intl.DateTimeFormat("en", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Kolkata" }).format(new Date(value))
   : "No proof yet";
@@ -29,7 +39,7 @@ const channelLabel = (channel: string) => ({ instagram_reels: "Instagram", youtu
 
       <section class="summary" aria-label="Marketing pipeline summary">
         <div><span>Pipeline stages</span><strong>{readyStages} / {pipeline.stages.length}</strong><small>operational now</small></div>
-        <div><span>Brand programs</span><strong>{pipeline.brands.length}</strong><small>source adapters registered</small></div>
+        <div><span>Brand programs</span><strong>{pipeline.brands.length}</strong><small>{marketingTasks.length} relevant marketing tasks</small></div>
         <div><span>Account routes</span><strong>{mappedChannels} / {totalChannels}</strong><small>{connectedChannels} OAuth connections ready</small></div>
         <div><span>Latest video proof</span><strong>{pipeline.proof?.score ?? "-"}</strong><small>{pipeline.proof ? `${pipeline.proof.verdict} · ${pipeline.proof.durationSeconds}s` : "not run"}</small></div>
       </section>
@@ -56,6 +66,28 @@ const channelLabel = (channel: string) => ({ instagram_reels: "Instagram", youtu
           <div><strong data-marketing-scheduled>-</strong><span>Scheduled</span></div>
           <div><strong data-marketing-retrying>-</strong><span>Retrying</span></div>
           <div><strong data-marketing-released>-</strong><span>Released</span></div>
+        </div>
+      </section>
+
+      <section class="band marketing-task-band" aria-labelledby="marketing-tasks-title">
+        <div class="section-head"><div><p class="eyebrow">SaaS Maker tasks</p><h2 id="marketing-tasks-title">Marketing backlog</h2></div><span>{marketingTasks.length} open across registered programs</span></div>
+        <div class="marketing-task-groups">
+          {marketingTaskGroups.map((group) => (
+            <section class="marketing-task-group">
+              <header><div><h3>{group.name}</h3><span>{group.tasks.length} open</span></div><a href={`/projects/${group.slug}`}>Project</a></header>
+              {group.tasks.length > 0 ? (
+                <div class="marketing-task-list">
+                  {group.tasks.map((task) => (
+                    <div class="marketing-task-row">
+                      <span class:list={["state", task.status === "in_progress" ? "ready" : "blocked"]}>{task.status.replace("_", " ")}</span>
+                      <strong>{task.title.replace(/^.*?:\s*marketing\s*/i, "")}</strong>
+                      <small>{task.priority}{task.claimedBy ? ` · ${task.claimedBy}` : ""}</small>
+                    </div>
+                  ))}
+                </div>
+              ) : <p class="empty-marketing">No open marketing tasks.</p>}
+            </section>
+          ))}
         </div>
       </section>
 
@@ -169,4 +201,17 @@ const channelLabel = (channel: string) => ({ instagram_reels: "Instagram", youtu
 </style>
 <style>
   @media(max-width:760px){.topbar nav{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));overflow:visible!important}.topbar nav a{justify-content:center;padding-inline:8px}.summary div{min-width:0}}
+</style>
+<style>
+  .marketing-task-groups{border-top:1px solid var(--line)}
+  .marketing-task-group{display:grid;grid-template-columns:minmax(220px,.65fr) minmax(0,1.6fr);gap:28px;padding:24px 0;border-bottom:1px solid var(--line)}
+  .marketing-task-group>header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+  .marketing-task-group>header span,.marketing-task-row small,.empty-marketing{color:var(--muted)}
+  .marketing-task-group>header a{color:var(--mint)}
+  .marketing-task-list{max-height:430px;overflow-y:auto;border-top:1px solid var(--line)}
+  .marketing-task-row{display:grid;grid-template-columns:92px minmax(0,1fr) 90px;gap:14px;align-items:center;min-height:54px;padding:10px 8px;border-bottom:1px solid var(--line)}
+  .marketing-task-row strong{font-size:14px;overflow-wrap:anywhere}
+  .marketing-task-row small{text-align:right;text-transform:capitalize}
+  .empty-marketing{margin:0}
+  @media(max-width:760px){.marketing-task-group{grid-template-columns:1fr;gap:16px}.marketing-task-row{grid-template-columns:82px minmax(0,1fr)}.marketing-task-row small{grid-column:2;text-align:left}}
 </style>
