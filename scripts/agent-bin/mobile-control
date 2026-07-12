@@ -326,6 +326,9 @@ start_tailscale() {
     exit 1
   fi
   mkdir -p "$TAILSCALE_DIR"
+  if [ -S "$TAILSCALE_SOCKET" ] && ! tailscale --socket "$TAILSCALE_SOCKET" status >/dev/null 2>&1; then
+    rm -f "$TAILSCALE_SOCKET"
+  fi
   if [ ! -S "$TAILSCALE_SOCKET" ]; then
     nohup tailscaled \
       --tun=userspace-networking \
