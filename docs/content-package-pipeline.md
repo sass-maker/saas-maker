@@ -39,7 +39,7 @@ Live execution requires an independently approved request, an exact package/medi
 npm run distribution -- --file approved-package.json --receipt receipt.json --request approved-distribution-request.json --execute --accounts config/social-accounts.json
 ```
 
-TikTok stays blocked until the Postiz adapter and an audited TikTok app/account connection are configured. A missing account mapping is a hard error, never a fallback to another brand.
+The active launch scope is Instagram Reels and YouTube Shorts. TikTok/Postiz is deferred and does not count against current readiness. A missing account mapping is a hard error, never a fallback to another brand.
 
 ## Approval invariants
 
