@@ -14,7 +14,7 @@ const mediaReceipt = {
 test('buildDistributionRequest prepares a proposed request and never posts', () => {
   const request = buildDistributionRequest(contentPackage, mediaReceipt, { createdAt: '2026-07-12T12:10:00Z' });
   assert.equal(request.approval.status, 'proposed');
-  assert.equal(request.accountSlug, null);
+  assert.equal(request.accountSlug, 'high-signal-youtube');
   assert.equal(request.provider, 'manual');
 });
 
@@ -31,10 +31,11 @@ test('manual distribution prepares a receipt without posting', async () => {
   assert.equal(receipt.externalId, null);
 });
 
-test('native posting fails closed when the brand has no account mapping', async () => {
+test('native posting uses the pre-routed brand account and fails without a publisher', async () => {
   const request = buildDistributionRequest(contentPackage, mediaReceipt, { provider: 'native' });
+  assert.equal(request.accountSlug, 'high-signal-youtube');
   request.approval = { status: 'approved', approvedAt: '2026-07-12T12:15:00Z', approvedBy: 'owner' };
-  await assert.rejects(executeDistribution(contentPackage, mediaReceipt, request, { nativeProvider: { post: async () => ({ status: 'posted' }) } }), /no youtube_shorts account mapping/);
+  await assert.rejects(executeDistribution(contentPackage, mediaReceipt, request), /native publisher is not configured/);
 });
 
 test('package, media, and distribution revisions cannot be mixed', () => {

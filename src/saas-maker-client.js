@@ -1,3 +1,9 @@
+import { execFile } from 'node:child_process';
+import path from 'node:path';
+import { promisify } from 'node:util';
+
+const execFileAsync = promisify(execFile);
+
 export class SaaSMakerClient {
   constructor(options = {}) {
     this.baseUrl = (options.baseUrl ?? process.env.SAASMAKER_API_URL ?? 'https://api.sassmaker.com').replace(/\/$/, '');
@@ -24,6 +30,21 @@ export class SaaSMakerClient {
     return payload?.data ?? [];
   }
 
+  async createMarketingPost(input) {
+    if (!this.sessionToken) throw new Error('missing SAASMAKER_SESSION_TOKEN');
+    const res = await this.fetchImpl(`${this.baseUrl}/v1/marketing/posts`, {
+      method: 'POST',
+      headers: {
+        'authorization': `Bearer ${this.sessionToken}`,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify(input),
+    });
+    if (!res.ok) throw new Error(`SaaS Maker marketing create failed ${res.status}: ${await res.text()}`);
+    const payload = await res.json();
+    return payload?.data ?? payload;
+  }
+
   async updateMarketingPost(id, patch) {
     if (!this.sessionToken) {
       return {
@@ -47,6 +68,45 @@ export class SaaSMakerClient {
       data: await res.json(),
     };
   }
+}
+
+export class FndSaaSMakerClient {
+  constructor(options = {}) {
+    this.fndBin = options.fndBin ?? process.execPath;
+    this.fndArgsPrefix = options.fndArgsPrefix ?? [process.env.FND_CLI_JS ?? path.resolve('../saas-maker/packages/cli/dist/index.js')];
+    this.execFileImpl = options.execFileImpl ?? execFileAsync;
+  }
+
+  async listMarketingPosts(filters = {}) {
+    const args = ['api', 'GET', '/v1/marketing/posts', '--auth', 'session', '--raw', '--quiet'];
+    for (const [key, value] of Object.entries(filters)) {
+      if (value !== undefined && value !== null && value !== '') args.push('--query', `${key}=${value}`);
+    }
+    const payload = await this.run(args);
+    return payload?.data ?? [];
+  }
+
+  async createMarketingPost(input) {
+    const payload = await this.run(['api', 'POST', '/v1/marketing/posts', '--auth', 'session', '--raw', '--quiet', '--body', JSON.stringify(input)]);
+    return payload?.data ?? payload;
+  }
+
+  async updateMarketingPost(id, patch) {
+    const payload = await this.run(['api', 'PATCH', `/v1/marketing/posts/${encodeURIComponent(id)}`, '--auth', 'session', '--raw', '--quiet', '--body', JSON.stringify(patch)]);
+    return { skipped: false, data: payload?.data ?? payload };
+  }
+
+  async run(args) {
+    const { stdout } = await this.execFileImpl(this.fndBin, [...this.fndArgsPrefix, ...args], { timeout: 30_000, maxBuffer: 1024 * 1024 * 10 });
+    const jsonStart = stdout.indexOf('{');
+    try { return JSON.parse(jsonStart >= 0 ? stdout.slice(jsonStart) : stdout); } catch { throw new Error('fnd returned invalid JSON for SaaS Maker marketing request'); }
+  }
+}
+
+export function createSaaSMakerClient(options = {}) {
+  if (options.client) return options.client;
+  if (options.sessionToken ?? process.env.SAASMAKER_SESSION_TOKEN) return new SaaSMakerClient(options);
+  return new FndSaaSMakerClient(options);
 }
 
 export function renderPatchForMarketingPost(renderResult) {

@@ -119,7 +119,10 @@ function makePackage({ id, brandSlug, sourceAdapter, sourceId, canonicalUrl, gen
     source: { adapter: sourceAdapter, sourceId, canonicalUrl, generatedAt },
     topic: { title, summary, audience, destinationUrl, claims: [{ text: claim, evidenceUrls }] },
     approval: { status: 'proposed', approvedAt: null, approvedBy: null },
-    variants: [buildProposedVariant({ hook, summary, proof, cta, brandSlug })],
+    variants: [
+      buildProposedVariant({ id: 'youtube-shorts-v1', channel: 'youtube_shorts', hook, summary, proof, cta, brandSlug }),
+      buildProposedVariant({ id: 'instagram-reels-v1', channel: 'instagram_reels', hook, summary, proof, cta, brandSlug }),
+    ],
   });
 }
 

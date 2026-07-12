@@ -11,14 +11,31 @@ SWE Interview Prep ───┘                                      │
                                                              └─> distribution approval ─> channel account
 ```
 
-Reel Pipeline owns media production and posting adapters. It does not become the source of product claims. SaaS Maker can provide the approval UI and queue, but package and receipt files keep the boundary portable.
+Reel Pipeline owns media production and posting adapters. It does not become the source of product claims. SaaS Maker provides the approval UI and queue, while package and receipt files keep the boundary portable.
 
 ## Commands
+
+Install the credential-free account routing template and inspect readiness:
+
+```bash
+npm run check:social -- --install
+```
+
+All six Instagram/YouTube account routes are versioned. The ignored
+`config/social-accounts.json` contains only environment-variable references;
+tokens never enter git or the Fleet dashboard.
 
 Extract proposed packages without modifying source projects:
 
 ```bash
 npm run content -- extract --source all --fleet-root ../ --catalog /path/to/learning-sources.json --out tmp/content-packages
+```
+
+Sync one source-backed package per active brand into SaaS Maker. Duplicate
+source revisions are skipped, and sync pauses when 12 items already need review:
+
+```bash
+npm run marketing -- sync
 ```
 
 Render an approved package locally with Kokoro, Playwright Chromium, and FFmpeg:
@@ -41,11 +58,38 @@ npm run distribution -- --file approved-package.json --receipt receipt.json --re
 
 The active launch scope is Instagram Reels and YouTube Shorts. TikTok/Postiz is deferred and does not count against current readiness. A missing account mapping is a hard error, never a fallback to another brand.
 
+## Operator loop
+
+1. Daily source sync creates `generated` SaaS Maker rows. Accepting one is the
+   explicit content/media-production approval.
+2. The supervised machine service runs every minute, renders accepted packages,
+   uploads the MP4 to the existing `reel-artifacts` R2 bucket, and returns a
+   proposed distribution request to the same row.
+3. Cockpit shows the video as ready. `Approve & schedule` is a separate owner
+   action and may be immediate or future-dated.
+4. The minute service claims a SHA-256 idempotency key before calling YouTube or
+   Instagram. A crashed/inflight claim never silently retries and duplicates a
+   release.
+5. Retryable provider failures use bounded exponential backoff (five attempts,
+   five minutes through six hours). Permanent failures stop and notify the
+   operator through the Fleet notification outbox.
+6. A platform ID/URL is recorded only after the provider succeeds. The public
+   Fleet dashboard receives aggregate queue counts every minute, never package
+   copy, source evidence, credentials, or private links.
+
+The LaunchAgent is managed with:
+
+```bash
+../fleet-ops/scripts/agent-bin/marketing-control-service status
+../fleet-ops/scripts/agent-bin/marketing-control-service restart
+```
+
 ## Approval invariants
 
 - Extraction produces `proposed`, never `approved`.
 - Package approval permits media production only.
 - Distribution approval permits one exact package revision, variant, channel, artifact, and account.
 - Pending items never become accepted because they are old.
+- Content approval never implies distribution approval.
 - Manual preparation records `prepared`, not `posted`.
 - Platform release IDs and URLs are recorded only after a provider reports success.

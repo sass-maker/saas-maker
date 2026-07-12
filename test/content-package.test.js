@@ -73,6 +73,7 @@ test('extracts proposed packages from all three read-only source formats', async
   const packages = await extractContentPackages('all', { fleetRoot, limit: 1, now: () => NOW });
   assert.deepEqual(packages.map((entry) => entry.brand.slug).sort(), ['high-signal', 'significanthobbies', 'swe-interview-prep']);
   assert.ok(packages.every((entry) => entry.approval.status === 'proposed'));
+  assert.ok(packages.every((entry) => entry.variants.map((variant) => variant.channel).sort().join(',') === 'instagram_reels,youtube_shorts'));
   assert.ok(packages.every((entry) => entry.topic.claims[0].evidenceUrls.length > 0));
 });
 

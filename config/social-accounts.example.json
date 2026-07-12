@@ -1,23 +1,51 @@
 {
   "youtube": {
-    "tutoring": {
-      "clientIdEnv": "YT_TUTORING_CLIENT_ID",
-      "clientSecretEnv": "YT_TUTORING_CLIENT_SECRET",
-      "refreshTokenEnv": "YT_TUTORING_REFRESH_TOKEN",
+    "high-signal-youtube": {
+      "clientIdEnv": "YT_HIGH_SIGNAL_CLIENT_ID",
+      "clientSecretEnv": "YT_HIGH_SIGNAL_CLIENT_SECRET",
+      "refreshTokenEnv": "YT_HIGH_SIGNAL_REFRESH_TOKEN",
+      "defaultPrivacy": "private",
+      "categoryId": "28",
+      "projects": ["high-signal"]
+    },
+    "significanthobbies-youtube": {
+      "clientIdEnv": "YT_SIGNIFICANTHOBBIES_CLIENT_ID",
+      "clientSecretEnv": "YT_SIGNIFICANTHOBBIES_CLIENT_SECRET",
+      "refreshTokenEnv": "YT_SIGNIFICANTHOBBIES_REFRESH_TOKEN",
+      "defaultPrivacy": "private",
+      "categoryId": "22",
+      "projects": ["significanthobbies"]
+    },
+    "swe-interview-prep-youtube": {
+      "clientIdEnv": "YT_SWE_INTERVIEW_PREP_CLIENT_ID",
+      "clientSecretEnv": "YT_SWE_INTERVIEW_PREP_CLIENT_SECRET",
+      "refreshTokenEnv": "YT_SWE_INTERVIEW_PREP_REFRESH_TOKEN",
       "defaultPrivacy": "private",
       "categoryId": "27",
-      "projects": ["tutoring-q3"],
-      "default": true
+      "projects": ["swe-interview-prep"]
     }
   },
   "instagram": {
-    "tutoring": {
-      "appIdEnv": "IG_TUTORING_APP_ID",
-      "appSecretEnv": "IG_TUTORING_APP_SECRET",
-      "userIdEnv": "IG_TUTORING_USER_ID",
-      "longLivedTokenEnv": "IG_TUTORING_LONG_LIVED_TOKEN",
-      "projects": ["tutoring-q3"],
-      "default": true
+    "high-signal-instagram": {
+      "appIdEnv": "IG_HIGH_SIGNAL_APP_ID",
+      "appSecretEnv": "IG_HIGH_SIGNAL_APP_SECRET",
+      "userIdEnv": "IG_HIGH_SIGNAL_USER_ID",
+      "longLivedTokenEnv": "IG_HIGH_SIGNAL_LONG_LIVED_TOKEN",
+      "projects": ["high-signal"]
+    },
+    "significanthobbies-instagram": {
+      "appIdEnv": "IG_SIGNIFICANTHOBBIES_APP_ID",
+      "appSecretEnv": "IG_SIGNIFICANTHOBBIES_APP_SECRET",
+      "userIdEnv": "IG_SIGNIFICANTHOBBIES_USER_ID",
+      "longLivedTokenEnv": "IG_SIGNIFICANTHOBBIES_LONG_LIVED_TOKEN",
+      "projects": ["significanthobbies"]
+    },
+    "swe-interview-prep-instagram": {
+      "appIdEnv": "IG_SWE_INTERVIEW_PREP_APP_ID",
+      "appSecretEnv": "IG_SWE_INTERVIEW_PREP_APP_SECRET",
+      "userIdEnv": "IG_SWE_INTERVIEW_PREP_USER_ID",
+      "longLivedTokenEnv": "IG_SWE_INTERVIEW_PREP_LONG_LIVED_TOKEN",
+      "projects": ["swe-interview-prep"]
     }
   }
 }

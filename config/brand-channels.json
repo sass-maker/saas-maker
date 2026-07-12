@@ -8,7 +8,10 @@
       "voice": ["evidence-led", "direct", "calm"],
       "palette": { "background": "#101416", "foreground": "#F4F7F5", "accent": "#76D7C4", "secondary": "#F2C14E" },
       "channels": ["instagram_reels", "youtube_shorts"],
-      "accountMappings": {}
+      "accountMappings": {
+        "instagram_reels": "high-signal-instagram",
+        "youtube_shorts": "high-signal-youtube"
+      }
     },
     "significanthobbies": {
       "name": "Significant Hobbies",
@@ -17,7 +20,10 @@
       "voice": ["warm", "specific", "curious"],
       "palette": { "background": "#14201B", "foreground": "#F7F3E8", "accent": "#8FD694", "secondary": "#F2B84B" },
       "channels": ["instagram_reels", "youtube_shorts"],
-      "accountMappings": {}
+      "accountMappings": {
+        "instagram_reels": "significanthobbies-instagram",
+        "youtube_shorts": "significanthobbies-youtube"
+      }
     },
     "swe-interview-prep": {
       "name": "SWE Interview Prep",
@@ -26,7 +32,10 @@
       "voice": ["clear", "technical", "teacherly"],
       "palette": { "background": "#0B1117", "foreground": "#F4F8FB", "accent": "#43D3FF", "secondary": "#FFD166" },
       "channels": ["instagram_reels", "youtube_shorts"],
-      "accountMappings": {}
+      "accountMappings": {
+        "instagram_reels": "swe-interview-prep-instagram",
+        "youtube_shorts": "swe-interview-prep-youtube"
+      }
     }
   }
 }

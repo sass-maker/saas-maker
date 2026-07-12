@@ -14,7 +14,7 @@ use crate::marketing_posting::{
     post_ready_marketing_videos, MarketingPoster, PostReadyOptions, PostReadyReport,
 };
 use crate::runner::ProcessRunner;
-use crate::saas_maker::{MarketingClient, UpdateResult};
+use crate::saas_maker::{MarketingClient, MarketingPost, UpdateResult};
 
 pub const DEFAULT_HOLD_WINDOW_MS: u64 = 30 * 60_000;
 pub const DEFAULT_INTAKE_STATUS: &str = "pending";

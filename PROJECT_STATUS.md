@@ -116,6 +116,15 @@ for intentional target-host exclusions.
 
 ## Timeline
 
+- **2026-07-12 — Durable marketing control loop:** source packages now round-trip
+  through SaaS Maker in a versioned distribution envelope, with separate content
+  and posting approvals, public R2 media handoff, per-brand account routing,
+  schedule gates, a persistent SHA-256 publication ledger, bounded retries, and
+  Fleet notifications. A supervised one-minute LaunchAgent is installed and
+  verified against the authenticated production queue. Daily intake is capped
+  at one package per active brand and pauses at 12 pending reviews. Six initial
+  Instagram/YouTube drafts were created; none were approved, rendered, or posted.
+
 - **2026-07-12 — Source-backed multi-brand marketing path:** added read-only
   extractors for High Signal, Significant Hobbies, and SWE Interview Prep;
   revisioned `fleet.content-package.v1` packages; per-brand visual/channel
