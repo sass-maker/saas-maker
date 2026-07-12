@@ -56,6 +56,6 @@
 - [ ] 6.1 Run the full unit/integration/concurrency/tenant-isolation suite
 - [ ] 6.2 Prove target-host private artifact playback and one successful brand render with billing test mode
 - [ ] 6.3 Prove one authorised YouTube or Instagram publish while retaining accepted/scheduled/confirm gates
-- [ ] 6.4 Keep actor feature flags off until all actor consent/licence/earning/payout gates pass
+- [x] 6.4 Keep actor feature flags off until all actor consent/licence/earning/payout gates pass
 - [ ] 6.5 Update product copy and legal documents to expose only enabled capabilities
 - [ ] 6.6 Update PROJECT_STATUS, archive the OpenSpec change, and obtain explicit approval before deploy or public launch
