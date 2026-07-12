@@ -1,0 +1,80 @@
+---
+import { getMarketingPipeline } from "../lib/fleet-data";
+
+const pipeline = getMarketingPipeline();
+const readyStages = pipeline.stages.filter((stage) => stage.state === "ready").length;
+const mappedChannels = pipeline.brands.reduce((sum, brand) => sum + brand.mappedChannels.length, 0);
+const totalChannels = pipeline.brands.reduce((sum, brand) => sum + brand.channels.length, 0);
+const formatDate = (value: string | null) => value
+  ? new Intl.DateTimeFormat("en", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Kolkata" }).format(new Date(value))
+  : "No proof yet";
+const channelLabel = (channel: string) => ({ instagram_reels: "Instagram", youtube_shorts: "YouTube", tiktok: "TikTok" })[channel] ?? channel;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Marketing Pipeline · Fleet Ops</title>
+    <meta name="description" content="Read-only Fleet marketing pipeline status by brand, stage, evidence, and publishing account." />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div><p class="eyebrow">Fleet Ops / Marketing</p><h1>Source to channel</h1></div>
+        <nav aria-label="Fleet console"><a href="/">Overview</a><a href="/projects">Projects</a><a class="active" href="/marketing">Marketing</a></nav>
+      </header>
+
+      <section class="summary" aria-label="Marketing pipeline summary">
+        <div><span>Pipeline stages</span><strong>{readyStages} / {pipeline.stages.length}</strong><small>operational now</small></div>
+        <div><span>Brand programs</span><strong>{pipeline.brands.length}</strong><small>source adapters registered</small></div>
+        <div><span>Channel accounts</span><strong>{mappedChannels} / {totalChannels}</strong><small>explicitly mapped</small></div>
+        <div><span>Latest video proof</span><strong>{pipeline.proof?.score ?? "-"}</strong><small>{pipeline.proof ? `${pipeline.proof.verdict} · ${pipeline.proof.durationSeconds}s` : "not run"}</small></div>
+      </section>
+
+      <section class="band">
+        <div class="section-head"><div><p class="eyebrow">Control plane</p><h2>Pipeline state</h2></div><span>Updated {formatDate(pipeline.updatedAt)}</span></div>
+        <div class="stage-list">
+          {pipeline.stages.map((stage, index) => (
+            <article>
+              <span class="index">{String(index + 1).padStart(2, "0")}</span>
+              <div><h3>{stage.name}</h3><p>{stage.detail}</p></div>
+              <span class:list={["state", stage.state]}>{stage.state.replace("-", " ")}</span>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="band">
+        <div class="section-head"><div><p class="eyebrow">Programs</p><h2>Brands and channels</h2></div><span>Sources stay in their product repositories</span></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Brand</th><th>Source</th><th>Channels</th><th>Account mapping</th><th>Posting</th></tr></thead>
+            <tbody>
+              {pipeline.brands.map((brand) => (
+                <tr>
+                  <td data-label="Brand"><strong>{brand.name}</strong><a href={brand.domain}>{brand.domain.replace(/^https?:\/\//, "")}</a></td>
+                  <td data-label="Source"><span class="cell-copy"><span class:list={["dot", brand.sourceReady ? "ready" : "blocked"]}></span>{brand.sourceDetail}</span></td>
+                  <td data-label="Channels"><div class="chips">{brand.channels.map((channel) => <span>{channelLabel(channel)}</span>)}</div></td>
+                  <td data-label="Accounts">{brand.mappedChannels.length ? brand.mappedChannels.map(channelLabel).join(", ") : "No accounts connected"}</td>
+                  <td data-label="Posting"><span class:list={["state", brand.postingState]}>{brand.postingState}</span></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="proof">
+        <div><p class="eyebrow">Verified media path</p><h2>{pipeline.proof ? "A real source-backed reel passed" : "No verified render yet"}</h2></div>
+        {pipeline.proof && <dl><div><dt>Brand</dt><dd>{pipeline.proof.brand}</dd></div><div><dt>Quality</dt><dd>{pipeline.proof.score} / 100</dd></div><div><dt>Duration</dt><dd>{pipeline.proof.durationSeconds}s</dd></div><div><dt>Source</dt><dd><a href={pipeline.proof.sourceUrl}>Open evidence</a></dd></div></dl>}
+        <p>The proof is local and was not posted. Live distribution remains blocked until brand-specific OAuth accounts are connected and an exact distribution request is approved.</p>
+      </section>
+    </main>
+  </body>
+</html>
+
+<style>
+  :root{color-scheme:dark;--bg:#090b0c;--surface:#101416;--line:#2b302d;--text:#f3f6f4;--muted:#a6aea9;--mint:#79dcc8;--yellow:#f2c14e;--red:#ff8e8e;--green:#91e49e}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,sans-serif;letter-spacing:0}.shell{width:min(1240px,100%);margin:auto;padding:24px}.topbar{min-height:150px;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;border-bottom:1px solid var(--line);padding-bottom:24px}.eyebrow{margin:0 0 8px;color:var(--mint);font-size:12px;font-weight:800;text-transform:uppercase}h1,h2,h3,p{margin-top:0}h1{margin-bottom:0;font-size:52px;line-height:1}h2{margin-bottom:0;font-size:28px}nav{display:flex;gap:6px}nav a{color:var(--muted);text-decoration:none;border:1px solid var(--line);padding:10px 14px}nav a.active,nav a:hover{color:var(--text);border-color:var(--mint)}.summary{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--line)}.summary div{min-height:145px;padding:24px;border-right:1px solid var(--line);display:grid;align-content:center}.summary div:last-child{border-right:0}.summary span,.summary small,.section-head>span{color:var(--muted)}.summary strong{font-size:40px}.band{padding:44px 0;border-bottom:1px solid var(--line)}.section-head{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:24px}.stage-list{border-top:1px solid var(--line)}.stage-list article{display:grid;grid-template-columns:52px 1fr auto;gap:20px;align-items:center;padding:18px 0;border-bottom:1px solid var(--line)}.index{font:700 13px ui-monospace,monospace;color:var(--muted)}h3{margin-bottom:4px;font-size:17px}.stage-list p,.proof>p{margin-bottom:0;color:var(--muted)}.state{display:inline-flex;width:max-content;border:1px solid var(--line);padding:5px 8px;font:800 11px ui-monospace,monospace;text-transform:uppercase}.state.ready{color:var(--green);border-color:#91e49e66}.state.blocked{color:var(--yellow);border-color:#f2c14e66}.state.not-configured{color:var(--red);border-color:#ff8e8e66}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:900px;text-align:left}th{padding:12px;color:var(--muted);font-size:11px;text-transform:uppercase;border-bottom:1px solid var(--line)}td{padding:18px 12px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--muted)}td:first-child{color:var(--text)}td:first-child strong,td:first-child a{display:block}a{color:var(--mint)}.dot{display:inline-block;width:8px;height:8px;margin-right:8px;background:var(--red)}.dot.ready{background:var(--green)}.chips{display:flex;flex-wrap:wrap;gap:5px}.chips span{border:1px solid var(--line);padding:4px 6px;color:var(--text);font-size:12px}.proof{padding:44px 0 60px;display:grid;grid-template-columns:minmax(260px,1fr) 1.5fr;gap:28px}.proof dl{margin:0;display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line)}.proof dl div{padding:16px;background:var(--surface)}dt{color:var(--muted);font-size:11px;text-transform:uppercase}dd{margin:5px 0 0;font-weight:800}.proof>p{grid-column:1/-1;max-width:850px}@media(max-width:760px){.shell{padding:14px}.topbar,.section-head{display:grid}.topbar{min-height:170px}.topbar nav{overflow-x:auto}h1{font-size:40px}.summary{grid-template-columns:1fr 1fr}.summary div{min-height:115px;padding:16px}.summary div:nth-child(2){border-right:0}.proof{grid-template-columns:1fr}.proof dl{grid-template-columns:1fr 1fr}.stage-list article{grid-template-columns:36px 1fr}.stage-list .state{grid-column:2}.table-wrap{overflow:visible}table,tbody,tr,td{display:block;min-width:0}thead{display:none}tr{padding:18px 0;border-bottom:1px solid var(--line)}td{display:grid;grid-template-columns:76px 1fr;gap:10px;padding:7px 0;border:0}td::before{content:attr(data-label);color:var(--muted);font-size:10px;font-weight:800;text-transform:uppercase}td:first-child strong,td:first-child a,.cell-copy,.chips{grid-column:2}}
+</style>

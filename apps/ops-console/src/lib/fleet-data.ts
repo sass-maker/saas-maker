@@ -129,6 +129,22 @@ export type FleetNode = {
   notes: string[];
 };
 
+export type MarketingPipeline = {
+  updatedAt: string | null;
+  proof: { brand: string; score: number; verdict: string; durationSeconds: number; sourceUrl: string } | null;
+  stages: Array<{ name: string; state: "ready" | "blocked" | "not-configured"; detail: string }>;
+  brands: Array<{
+    slug: string;
+    name: string;
+    domain: string;
+    sourceReady: boolean;
+    sourceDetail: string;
+    channels: string[];
+    mappedChannels: string[];
+    postingState: "ready" | "blocked";
+  }>;
+};
+
 const nextHints: Record<string, string> = {
   "daily-fleet-health-sentinel": "Tue-Sun, 08:00 local",
   "weekly-fleet-ops-audit": "Mon, 08:00 local",
@@ -585,4 +601,78 @@ export function getFleetNodes(): FleetNode[] {
       ]
     }
   ];
+}
+
+export function getMarketingPipeline(): MarketingPipeline {
+  const pipelineRoot = resolve(fleetRoot, "reel-pipeline");
+  const rawConfig = readJsonObject(resolve(pipelineRoot, "config/brand-channels.json")) as {
+    brands?: Record<string, {
+      name?: string;
+      domain?: string;
+      channels?: string[];
+      accountMappings?: Record<string, string>;
+    }>;
+  };
+  const rawProof = readJsonObject(resolve(pipelineRoot, "config/brand-video-proof.json")) as {
+    generatedAt?: string;
+    brand?: string;
+    sourceUrl?: string;
+    media?: { durationSeconds?: number };
+    quality?: { overall?: number; verdict?: string };
+  };
+  const sources: Record<string, { path: string; detail: string }> = {
+    "high-signal": {
+      path: resolve(fleetRoot, "high-signal/data/personal-reel-briefs.jsonl"),
+      detail: "Personal reel briefs and High Signal evidence URLs"
+    },
+    significanthobbies: {
+      path: resolve(fleetRoot, "significanthobbies/src/lib/blog-posts.ts"),
+      detail: "Published editorial and structured hobby posts"
+    },
+    "swe-interview-prep": {
+      path: resolve(fleetRoot, "swe-interview-prep/docs"),
+      detail: "Learning tracks and project-backed learning docs"
+    }
+  };
+  const brands = Object.entries(rawConfig.brands ?? {}).map(([slug, brand]) => {
+    const source = sources[slug];
+    const mappedChannels = Object.keys(brand.accountMappings ?? {}).filter((channel) => Boolean(brand.accountMappings?.[channel]));
+    const channels = brand.channels ?? [];
+    return {
+      slug,
+      name: brand.name ?? titleize(slug),
+      domain: brand.domain ?? "",
+      sourceReady: Boolean(source && existsSync(source.path)),
+      sourceDetail: source?.detail ?? "Source adapter not registered",
+      channels,
+      mappedChannels,
+      postingState: mappedChannels.length === channels.length && channels.length > 0 ? "ready" as const : "blocked" as const
+    };
+  });
+  const contentReady = existsSync(resolve(pipelineRoot, "src/content-package.js"))
+    && existsSync(resolve(pipelineRoot, "src/content-extractors.js"));
+  const videoReady = existsSync(resolve(pipelineRoot, "src/adapters/brand-video.js"))
+    && existsSync(resolve(pipelineRoot, "node_modules/playwright"))
+    && existsSync(resolve(pipelineRoot, "tools/kokoro"));
+  const distributionReady = existsSync(resolve(pipelineRoot, "src/distribution.js"));
+  const anyAccountMappings = brands.some((brand) => brand.mappedChannels.length > 0);
+
+  return {
+    updatedAt: rawProof.generatedAt ?? null,
+    proof: rawProof.quality?.overall ? {
+      brand: rawProof.brand ?? "unknown",
+      score: Number(rawProof.quality.overall),
+      verdict: rawProof.quality.verdict ?? "unknown",
+      durationSeconds: Number(rawProof.media?.durationSeconds ?? 0),
+      sourceUrl: rawProof.sourceUrl ?? ""
+    } : null,
+    stages: [
+      { name: "Source extraction", state: contentReady && brands.every((brand) => brand.sourceReady) ? "ready" : "blocked", detail: "Read-only adapters emit proposed, evidence-backed packages." },
+      { name: "Approval", state: distributionReady ? "ready" : "blocked", detail: "Media and distribution require separate explicit approvals." },
+      { name: "Video factory", state: videoReady && Boolean(rawProof.quality?.overall) ? "ready" : "blocked", detail: "Local Kokoro, Playwright Chromium, and FFmpeg vertical render." },
+      { name: "Native publishing", state: anyAccountMappings ? "ready" : "blocked", detail: "YouTube and Instagram adapters exist; brand account OAuth is not mapped." },
+      { name: "TikTok / Postiz", state: "not-configured", detail: "Adapter and audited TikTok account connection still required." }
+    ],
+    brands
+  };
 }
