@@ -22,6 +22,12 @@ explicit hosted-service exceptions:
 Teammate boards sit on top of OpenClaw. See `docs/teammate-boards.md` for
 personas, boards, and optional dedicated teammate bots.
 
+Fleet's mobile model deliberately keeps the assistant and the workbench
+separate. OpenClaw is the conversational control plane for Telegram, approvals,
+status, notifications, and routing. Serious implementation work still happens
+in terminal sessions on the machine, usually through Codex or Claude running
+inside `tmux` so phone or iPad disconnects do not stop the work.
+
 ## What You Need To Provide
 
 1. One baseline Telegram bot token from BotFather for OpenClaw.

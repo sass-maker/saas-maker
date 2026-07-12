@@ -8,11 +8,15 @@ model provider or bot identity.
 Fleet Ops owns the reusable routing, skills, scripts, mobile-control setup, and
 evidence standards.
 
+OpenClaw is the conversational assistant and control plane, not the raw coding
+surface. Important implementation work should still run from terminal sessions
+on the machine through Codex, Claude, or an explicitly selected teammate.
+
 ## Lanes
 
 | Lane | Runtime | Best use | Guardrail |
 | --- | --- | --- | --- |
-| Primary implementation | Codex | Local code, tests, and Fleet operations | Verify the diff and checks locally |
+| Primary implementation | Codex / Claude from terminal | Local code, tests, implementation loops, and Fleet operations | Keep long runs in `tmux`; verify the diff and checks locally |
 | Operator control | OpenClaw | Always-on Telegram, approvals, durable tasks, project routing, mobile requests | Owner allowlist and explicit approval flow |
 | Optional persistent lane | Hermes Agent | Backup bot, recurring digests, repeat-work learning, separate provider quota | Optional open-source runtime; configure only when the lane has a named job |
 | Support agents | OpenClaw agents | Project-specific routing, dashboard, pairing, and support workspaces | Each support agent stays scoped to its project |
@@ -59,6 +63,9 @@ For mobile terminal control, Fleet uses a private-first path:
 
 Private terminal links must not be shown on the public dashboard. Send them only
 through an authenticated channel or read them from the local command output.
+Use those terminal sessions as the raw coding surface for Codex, Claude, test
+runs, and deploy checks. OpenClaw should notify, approve, and route; it should
+not be treated as the terminal replacement.
 
 Use a project id directly for targeted support work, for example:
 
