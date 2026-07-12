@@ -1,6 +1,10 @@
 /**
  * Local telemetry for the API worker. Server-side PostHog ingest (no SDK — raw
- * /capture/ HTTPS, CF-Worker friendly) plus a lightweight timing wrapper.
+ * /batch/ HTTPS, CF-Worker friendly) plus a lightweight timing wrapper.
+ *
+ * Events are queued in-memory and flushed in a single batch request via
+ * `flushPostHog()` (called from `waitUntil` at the end of each request).
+ * This reduces N individual HTTP requests per request cycle to 1 batch call.
  */
 
 const LEGACY_PROJECT_ID_KEYS = ['project_slug', 'project', 'foundry_project_id'] as const;
@@ -31,7 +35,7 @@ interface CaptureEvent {
 
 let _apiKey: string | null = null;
 let _host = 'https://us.i.posthog.com';
-const queue: Promise<unknown>[] = [];
+const eventQueue: Array<Record<string, unknown>> = [];
 
 export function configurePostHog(apiKey: string, host = 'https://us.i.posthog.com'): void {
   _apiKey = apiKey;
@@ -40,21 +44,12 @@ export function configurePostHog(apiKey: string, host = 'https://us.i.posthog.co
 
 export function capture(event: CaptureEvent): void {
   if (!_apiKey) return;
-  const body = {
-    api_key: _apiKey,
+  eventQueue.push({
     distinct_id: event.distinctId,
     event: event.event,
     properties: withCanonicalProjectId(event.properties ?? {}),
     timestamp: new Date().toISOString(),
-  };
-  const promise = fetch(`${_host}/i/v0/e/`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  }).catch((err) => {
-    console.error('[telemetry] PostHog capture failed:', err instanceof Error ? err.message : err);
   });
-  queue.push(promise);
 }
 
 export function identify(event: {
@@ -69,8 +64,21 @@ export function identify(event: {
 }
 
 export async function flushPostHog(): Promise<void> {
-  const pending = queue.splice(0, queue.length);
-  await Promise.allSettled(pending);
+  const batch = eventQueue.splice(0, eventQueue.length);
+  if (batch.length === 0 || !_apiKey) return;
+
+  try {
+    await fetch(`${_host}/i/v0/batch/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ api_key: _apiKey, batch }),
+    });
+  } catch (err) {
+    console.error(
+      '[telemetry] PostHog batch flush failed:',
+      err instanceof Error ? err.message : err
+    );
+  }
 }
 
 export interface TraceOptions {

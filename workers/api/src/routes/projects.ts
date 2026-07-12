@@ -4,6 +4,7 @@ import { requireSession } from '../middleware/auth';
 import { getDb } from '../db';
 import { trace, capture } from '../lib/telemetry';
 import { maskProviderKey } from '../ai-gateway';
+import { buildCacheKey, tryCacheMatch, withCachePut } from '../edge-cache';
 import type { ProjectRecord } from '@saas-maker/contracts';
 
 const projects = new Hono<{ Bindings: Bindings; Variables: Variables }>();
@@ -45,13 +46,19 @@ function toPublicProject(project: ProjectRow) {
 projects.get('/', async (c) => {
   const userId = c.get('userId')!;
   const source = c.req.query('source') || 'dashboard';
+  const cacheKey = buildCacheKey('projects/list', `${userId}:${source}:v1`);
+
+  const hit = await tryCacheMatch(cacheKey);
+  if (hit) return hit;
+
   const db = getDb(c.env.DB);
   const data = await trace<ProjectRow[]>(
     'db:listProjects',
     () => db.listProjectsByOwner(userId, source) as Promise<ProjectRow[]>,
     { projectId: 'saasmaker-api' }
   );
-  return c.json({ data: data.map((project) => toPublicProject(project)) });
+  const response = c.json({ data: data.map((project) => toPublicProject(project)) });
+  return withCachePut(c, cacheKey, response, 60);
 });
 
 const VALID_SOURCES = ['dashboard', 'linkchat'];

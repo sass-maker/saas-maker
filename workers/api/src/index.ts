@@ -89,8 +89,9 @@ app.use('*', async (c, next) => {
     posthogConfigured = true;
   }
   await next();
-  // Keep CF Worker alive until PostHog requests complete
-  if (c.env.POSTHOG_API_KEY) {
+  // Keep CF Worker alive until PostHog batch flush completes.
+  // Skip on /health to avoid unnecessary overhead on liveness probes.
+  if (c.env.POSTHOG_API_KEY && c.req.path !== '/health') {
     c.executionCtx.waitUntil(flushPostHog());
   }
 });

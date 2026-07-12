@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { Bindings, Variables } from '../types';
 import { requireApiKey, requireSession } from '../middleware/auth';
 import { getDb } from '../db';
+import { buildCacheKey, tryCacheMatch, withCachePut } from '../edge-cache';
 import type {
   CreateChangelogEntryRequest,
   UpdateChangelogEntryRequest,
@@ -40,9 +41,15 @@ async function resolveProjectForTaskSlug(
 changelog.get('/', requireApiKey, async (c) => {
   const projectId = c.get('projectId')!;
   const limit = parseInt(c.req.query('limit') || '50', 10);
+  const cacheKey = buildCacheKey('changelog/published', `${projectId}:${limit}:v1`);
+
+  const hit = await tryCacheMatch(cacheKey);
+  if (hit) return hit;
+
   const db = getDb(c.env.DB);
   const data = await db.listPublishedChangelog(projectId, limit);
-  return c.json({ data });
+  const response = c.json({ data });
+  return withCachePut(c, cacheKey, response, 60);
 });
 
 // Dashboard: list all changelog entries (session auth)

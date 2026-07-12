@@ -10,6 +10,7 @@ import {
 } from '@saas-maker/contracts';
 import { getDb } from '../db';
 import { trace, capture } from '../lib/telemetry';
+import { buildCacheKey, tryCacheMatch, withCachePut } from '../edge-cache';
 
 const feedback = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
@@ -86,13 +87,22 @@ feedback.get('/', requireApiKey, async (c) => {
   if (type && !VALID_TYPES.includes(type)) return c.json({ error: 'Invalid type filter' }, 400);
   if (status && !isValidStatus(status)) return c.json({ error: 'Invalid status filter' }, 400);
 
+  const cacheKey = buildCacheKey(
+    'feedback/list',
+    `${projectId}:${type || 'all'}:${status || 'all'}:${sort}:${page}:v1`
+  );
+
+  const hit = await tryCacheMatch(cacheKey);
+  if (hit) return hit;
+
   const db = getDb(c.env.DB);
   const options = { type, status, sort, page, limit: PAGE_SIZE };
   const result = (await trace('db:listFeedback', () => db.listFeedback(projectId, options), {
     projectId: 'saasmaker-api',
   })) as { data: FeedbackRecord[]; total: number };
 
-  return c.json({ data: result.data, total: result.total, page, limit: PAGE_SIZE });
+  const response = c.json({ data: result.data, total: result.total, page, limit: PAGE_SIZE });
+  return withCachePut(c, cacheKey, response, 60);
 });
 
 // Dashboard inbox - list feedback for a project (session auth)

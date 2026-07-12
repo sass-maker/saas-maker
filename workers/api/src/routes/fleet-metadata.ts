@@ -2,15 +2,22 @@ import { Hono } from 'hono';
 import { Bindings, Variables } from '../types';
 import { requireSession } from '../middleware/auth';
 import { getDb } from '../db';
+import { buildCacheKey, tryCacheMatch, withCachePut } from '../edge-cache';
 
 const fleetMetadata = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 fleetMetadata.use('*', requireSession);
 
 fleetMetadata.get('/', async (c) => {
   const userId = c.get('userId')!;
+  const cacheKey = buildCacheKey('fleet-metadata', `${userId}:v1`);
+
+  const hit = await tryCacheMatch(cacheKey);
+  if (hit) return hit;
+
   const db = getDb(c.env.DB);
   const projects = await db.getFleetMetadata(userId);
-  return c.json({ data: projects });
+  const response = c.json({ data: projects });
+  return withCachePut(c, cacheKey, response, 60);
 });
 
 fleetMetadata.post('/', async (c) => {
