@@ -119,11 +119,15 @@ for intentional target-host exclusions.
 - **2026-07-13 — HexCoded safety foundation (capabilities remain disabled):**
   added provider-neutral workspace authorisation, an append-only credit-ledger
   aggregate, actor consent/licence lifecycle invariants, immutable output
-  provenance checks, and fail-closed product feature gates. Real actor casting
-  cannot enable unless all consent, licence, identity, liveness, earnings,
-  withdrawal, retention, misuse, and payout evidence gates pass. The self-serve
-  product is not launch-ready; durable persistence and external integrations
-  remain blocked on the decisions below.
+  provenance checks, fail-closed product feature gates, versioned legal
+  acceptances, a review-gated URL-to-ad domain flow over `VideoBrief`, and
+  append-only actor earning/reversal records. Actor licence snapshots now have
+  an integration test proving they remain attached to delivered provenance.
+  Real actor casting cannot enable unless all consent, licence, identity,
+  liveness, earnings, withdrawal, retention, misuse, and payout evidence gates
+  pass. The self-serve product is not launch-ready; durable persistence,
+  customer APIs/UI, and external integrations remain blocked on the decisions
+  below.
 
 - **2026-07-12 — Durable marketing control loop:** source packages now round-trip
   through SaaS Maker in a versioned distribution envelope, with separate content
@@ -330,6 +334,10 @@ for intentional target-host exclusions.
   jurisdiction-specific disclosure and biometric-retention policy; and the
   actual public Terms, Privacy, and Actor Licence documents. No matching
   customer-app repository or legal documents currently exist in the fleet.
+  Provider-neutral domain work is complete for URL-to-ad draft review,
+  versioned acceptance records, input-rights/provenance, actor profiles and
+  pre-upload licence gates, licence snapshots, and earning/reversal records;
+  these records are not yet persisted or exposed through customer APIs.
   Actor casting, brand self-serve, billing, and customer social publishing stay
   disabled pending implementation and target-host acceptance evidence.
 

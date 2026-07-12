@@ -7,8 +7,23 @@ import {
   assertTwinCastable,
   beginBiometricUpload,
   createActorLicenceSnapshot,
+  createActorProfile,
   transitionTwin,
 } from '../src/product/actor-domain.js';
+
+test('actor profile requires an explicit adult attestation', () => {
+  assert.throws(() => createActorProfile({
+    subjectId: 'subject-1', workspaceId: 'workspace-1', displayName: 'Actor One', adultAttestation: { confirmed: false },
+  }), ActorPolicyError);
+  const profile = createActorProfile({
+    subjectId: 'subject-1', workspaceId: 'workspace-1', displayName: 'Actor One',
+    adultAttestation: { confirmed: true, acceptanceId: 'adult-attestation-1' },
+    createdAt: '2026-07-01T00:00:00.000Z',
+  });
+  assert.equal(profile.role, 'actor');
+  assert.equal(profile.status, 'onboarding');
+  assert.equal(Object.isFrozen(profile.adultAttestation), true);
+});
 
 const hash = 'a'.repeat(64);
 

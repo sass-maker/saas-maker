@@ -10,6 +10,22 @@ const TWIN_TRANSITIONS = Object.freeze({
   withdrawn: new Set(),
 });
 
+export function createActorProfile({ subjectId, workspaceId, displayName, adultAttestation, createdAt = new Date().toISOString() }) {
+  if (!subjectId || !workspaceId || !displayName || adultAttestation?.confirmed !== true || !adultAttestation?.acceptanceId) {
+    throw new ActorPolicyError('actor identity, workspace, display name, and adult attestation are required');
+  }
+  return immutable({
+    id: randomUUID(),
+    subjectId,
+    workspaceId,
+    displayName,
+    role: 'actor',
+    adultAttestation,
+    status: 'onboarding',
+    createdAt,
+  });
+}
+
 export function acceptActorLicence({ actorId, documentVersion, documentHash, source, acceptedAt = new Date().toISOString() }) {
   if (!actorId || !documentVersion || !validHash(documentHash) || !source) throw new TypeError('complete immutable licence acceptance is required');
   return immutable({ id: randomUUID(), actorId, document: 'actor-licence', documentVersion, documentHash, source, acceptedAt });

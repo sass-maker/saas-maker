@@ -13,7 +13,7 @@
 - [ ] 1.1 Add durable users, workspaces, membership roles, and legal-acceptance records
 - [ ] 1.2 Add authentication middleware, workspace authorisation, restricted CORS, and tenant-isolation tests
 - [ ] 1.3 Add workspace-scoped campaigns, briefs, render jobs/attempts, artifacts, and audit events
-- [ ] 1.4 Implement the customer URL-to-ad draft/review flow over the existing VideoBrief contract
+- [x] 1.4 Implement the customer URL-to-ad draft/review flow over the existing VideoBrief contract
 - [ ] 1.5 Add private artifact delivery and customer render history/download APIs
 - [ ] 1.6 Preserve approval gates and prove the existing internal SaaS Maker flow still works
 
@@ -27,7 +27,7 @@
 
 ## 3. Provenance, disclosure, and abuse controls
 
-- [ ] 3.1 Add customer input-rights attestations and immutable output provenance/licence records
+- [x] 3.1 Add customer input-rights attestations and immutable output provenance/licence records
 - [ ] 3.2 Record source assets, models/providers, actor status, review state, and disclosure decision for every output
 - [ ] 3.3 Add synthetic-content label/metadata support appropriate to the enabled jurisdictions and platforms
 - [ ] 3.4 Add policy checks, claim/evidence review, misuse reporting, takedown, appeal, and repeat-abuse controls
@@ -43,10 +43,10 @@
 
 ## 5. Actor marketplace
 
-- [ ] 5.1 Add actor role/profile and versioned Actor Licence acceptance before biometric upload
+- [x] 5.1 Add actor role/profile and versioned Actor Licence acceptance before biometric upload
 - [ ] 5.2 Add verification, twin-asset lifecycle, processor deletion, and actor-controlled pause/withdrawal
 - [ ] 5.3 Add actor library search/selection with only active, licensed twins
-- [ ] 5.4 Snapshot consent/licence per generation and attach the snapshot to provenance and delivered output
+- [x] 5.4 Snapshot consent/licence per generation and attach the snapshot to provenance and delivered output
 - [ ] 5.5 Add append-only actor-use earnings, reversals, dashboard balances, KYC/tax status, payout accounts, and payouts
 - [ ] 5.6 Test actor death/incapacity escalation, fraud invalidation, misuse reports, withdrawal, master deletion, and delivered-licence survival
 - [ ] 5.7 Run the actor smoke: consent -> verify -> cast -> artifact/licence -> earning -> withdraw -> payout

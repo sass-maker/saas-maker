@@ -7,6 +7,7 @@ import {
   createOutputProvenance,
   verifyOutputProvenance,
 } from '../src/product/provenance.js';
+import { acceptActorLicence, createActorLicenceSnapshot, transitionTwin } from '../src/product/actor-domain.js';
 
 function validInput(overrides = {}) {
   return {
@@ -51,4 +52,22 @@ test('delivery is blocked when required disclosure is absent', () => {
   assert.throws(() => createOutputProvenance(validInput({
     disclosure: { decision: 'metadata', policyVersion: '2026-01', required: true, applied: true, machineReadableRequired: true },
   })), DisclosureBlockedError);
+});
+
+test('actor licence snapshot is attached unchanged to delivered provenance', () => {
+  const actor = { id: 'actor-1' };
+  const licenceAcceptance = acceptActorLicence({
+    actorId: actor.id, documentVersion: '2026-07', documentHash: 'a'.repeat(64), source: 'customer-app',
+  });
+  const twin = transitionTwin({ id: 'twin-1', actorId: actor.id, status: 'verifying' }, 'active', {
+    identityVerified: true, livenessVerified: true, licenceAcceptanceId: licenceAcceptance.id,
+  });
+  const snapshot = createActorLicenceSnapshot({
+    actor, twin, licenceAcceptance, consent: { id: 'consent-1', actorId: actor.id }, rate: { amount: 25, currency: 'USD_CENTS' },
+  });
+  const record = createOutputProvenance(validInput({
+    actorUse: { actorId: actor.id, twinId: twin.id, licenceSnapshotId: snapshot.id },
+  }));
+  assert.equal(record.actorUse.licenceSnapshotId, snapshot.id);
+  assert.equal(verifyOutputProvenance(record), true);
 });
