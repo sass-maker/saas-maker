@@ -100,6 +100,27 @@ function marketingSummary() {
     posts = (JSON.parse(start >= 0 ? raw.slice(start) : raw).data || []).filter((post) => String(post.notes || "").includes("fleet_distribution_v1:"));
   } catch {}
   const envelopes = posts.map((post) => ({ post, envelope: decodeDistributionEnvelope(post.notes) })).filter((entry) => entry.envelope);
+  const brandSlugs = [...new Set([
+    ...(readiness.accounts || []).map((account) => account.brand),
+    ...envelopes.map(({ post, envelope }) => envelope.contentPackage?.brand?.slug || post.project_slug)
+  ].filter(Boolean))].sort();
+  const brands = brandSlugs.map((slug) => {
+    const accounts = (readiness.accounts || []).filter((account) => account.brand === slug);
+    const brandPosts = envelopes.filter(({ post, envelope }) => (envelope.contentPackage?.brand?.slug || post.project_slug) === slug);
+    const published = brandPosts.filter(({ post, envelope }) => post.status === "sent" || Boolean(envelope.publicationReceipt));
+    const lastPostedAt = published
+      .map(({ post, envelope }) => envelope.publicationReceipt?.recordedAt || envelope.publicationReceipt?.postedAt || post.posted_at)
+      .filter(Boolean)
+      .sort()
+      .at(-1) || null;
+    return {
+      slug,
+      channels: accounts.map((account) => account.channel).filter(Boolean).sort(),
+      connectedChannels: accounts.filter((account) => account.ready).map((account) => account.channel).filter(Boolean).sort(),
+      totalPosts: published.length,
+      lastPostedAt
+    };
+  });
   return {
     generatedAt: readiness.generatedAt || null,
     routedAccounts: Number(readiness.summary?.routedAccounts || 0),
@@ -112,7 +133,8 @@ function marketingSummary() {
     scheduled: envelopes.filter(({ envelope }) => envelope.distributionRequest?.approval?.status === "approved" && !envelope.publicationReceipt).length,
     retrying: envelopes.filter(({ envelope }) => envelope.attempts?.state === "retry_wait").length,
     failed: envelopes.filter(({ envelope }) => envelope.attempts?.state === "failed").length,
-    released: envelopes.filter(({ post, envelope }) => post.status === "sent" || Boolean(envelope.publicationReceipt)).length
+    released: envelopes.filter(({ post, envelope }) => post.status === "sent" || Boolean(envelope.publicationReceipt)).length,
+    brands
   };
 }
 

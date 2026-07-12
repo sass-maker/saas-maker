@@ -43,37 +43,29 @@ const formatDate = (value: string | null) =>
           <h1>Fleet status</h1>
         </div>
         <nav class="topnav" aria-label="Fleet console">
-          <a href="/">Overview</a>
+          <a class="active" href="/">Overview</a>
           <a href="/projects">Projects</a>
-          <a href="/#mobile-control">Connections</a>
+          <a href="/build">Build</a>
+          <a href="/marketing">Market</a>
+          <a href="https://swe-interview-prep.pages.dev/sources">Learn</a>
         </nav>
       </header>
 
-      <nav class="lane-grid" aria-label="Fleet operating lanes">
-        <a href="/projects">
+      <nav class="lane-grid" aria-label="Fleet operating tabs">
+        <a href="/build">
           <span>01</span>
-          <strong>Building</strong>
-          <small>Products and active work</small>
+          <strong>Build</strong>
+          <small>Active work and execution queue</small>
         </a>
         <a href="https://swe-interview-prep.pages.dev/sources">
           <span>02</span>
-          <strong>Learning</strong>
+          <strong>Learn</strong>
           <small>Daily sessions and project roadmaps</small>
         </a>
         <a href="/marketing">
           <span>03</span>
-          <strong>Marketing</strong>
+          <strong>Market</strong>
           <small>Focus products and distribution</small>
-        </a>
-        <a href="/#mobile-control">
-          <span>04</span>
-          <strong>Control</strong>
-          <small>Machines, agents, and mobile access</small>
-        </a>
-        <a href="/">
-          <span>05</span>
-          <strong>Visibility</strong>
-          <small>Status, schedules, and hosting</small>
         </a>
       </nav>
 
@@ -372,16 +364,16 @@ const formatDate = (value: string | null) =>
 <style>
   :root {
     color-scheme: dark;
-    --bg: #0f1110;
-    --panel: #171a18;
-    --panel-strong: #1f2623;
-    --line: #333a36;
-    --text: #f4f6f8;
-    --muted: #aab3bd;
-    --green: #8ce99a;
-    --cyan: #76d7c4;
-    --yellow: #ffd166;
-    --red: #ff8787;
+    --bg: #090b0c;
+    --panel: #101416;
+    --panel-strong: #151b1d;
+    --line: #2b302d;
+    --text: #f3f6f4;
+    --muted: #a6aea9;
+    --green: #91e49e;
+    --cyan: #79dcc8;
+    --yellow: #f2c14e;
+    --red: #ff8e8e;
   }
 
   * {
@@ -390,9 +382,7 @@ const formatDate = (value: string | null) =>
 
   body {
     margin: 0;
-    background:
-      linear-gradient(180deg, rgba(118, 215, 196, 0.08), transparent 320px),
-      var(--bg);
+    background: var(--bg);
     color: var(--text);
     font-family:
       Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -410,25 +400,25 @@ const formatDate = (value: string | null) =>
   }
 
   .shell {
-    width: min(1440px, 100%);
+    width: min(1240px, 100%);
     margin: 0 auto;
     padding: 24px;
   }
 
   .topbar {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: space-between;
     gap: 16px;
     min-height: 148px;
-    margin-bottom: 16px;
+    padding-bottom: 24px;
     border-bottom: 1px solid var(--line);
   }
 
   .eyebrow,
   .label {
     margin: 0 0 6px;
-    color: var(--muted);
+    color: var(--cyan);
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 0;
@@ -445,8 +435,8 @@ const formatDate = (value: string | null) =>
   h1 {
     margin-bottom: 0;
     max-width: 840px;
-    font-size: clamp(36px, 6vw, 76px);
-    line-height: 0.98;
+    font-size: 52px;
+    line-height: 1;
     letter-spacing: 0;
   }
 
@@ -467,7 +457,7 @@ const formatDate = (value: string | null) =>
     align-items: center;
     min-height: 30px;
     border: 1px solid var(--line);
-    border-radius: 999px;
+    border-radius: 0;
     padding: 4px 10px;
     color: var(--muted);
     background: #111518;
@@ -488,18 +478,23 @@ const formatDate = (value: string | null) =>
     align-items: center;
     min-height: 32px;
     border: 1px solid var(--line);
-    border-radius: 999px;
-    padding: 4px 12px;
+    border-radius: 0;
+    padding: 10px 14px;
     color: var(--muted);
     text-decoration: none;
-    font-size: 12px;
-    font-weight: 800;
-    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .topnav a.active,
+  .topnav a:hover {
+    color: var(--text);
+    border-color: var(--cyan);
   }
 
   .lane-grid {
     display: grid;
-    grid-template-columns: repeat(5, minmax(170px, 1fr));
+    grid-template-columns: repeat(3, minmax(220px, 1fr));
     margin-bottom: 16px;
     overflow-x: auto;
     border-block: 1px solid var(--line);
@@ -554,7 +549,7 @@ const formatDate = (value: string | null) =>
   .panel,
   .job-card {
     border: 1px solid var(--line);
-    border-radius: 8px;
+    border-radius: 0;
     background: var(--panel);
   }
 
@@ -567,9 +562,7 @@ const formatDate = (value: string | null) =>
   }
 
   .summary-card.primary {
-    background:
-      linear-gradient(135deg, rgba(118, 215, 196, 0.12), transparent 70%),
-      var(--panel-strong);
+    background: var(--panel-strong);
   }
 
   .summary-card strong {
@@ -639,7 +632,7 @@ const formatDate = (value: string | null) =>
 
   .node-card {
     border: 1px solid var(--line);
-    border-radius: 8px;
+    border-radius: 0;
     padding: 14px;
     background: #131614;
   }
@@ -673,7 +666,7 @@ const formatDate = (value: string | null) =>
   .surface-grid div {
     min-height: 126px;
     border: 1px solid var(--line);
-    border-radius: 8px;
+    border-radius: 0;
     padding: 12px;
     background: #0c0f0d;
   }
@@ -692,7 +685,7 @@ const formatDate = (value: string | null) =>
     display: inline-flex;
     min-height: 24px;
     border: 1px solid var(--line);
-    border-radius: 999px;
+    border-radius: 0;
     padding: 2px 8px;
     color: var(--muted);
     font-size: 11px;
@@ -733,7 +726,7 @@ const formatDate = (value: string | null) =>
 
   .hosting-grid article {
     border: 1px solid var(--line);
-    border-radius: 8px;
+    border-radius: 0;
     padding: 12px;
     background: var(--panel-strong);
   }
@@ -834,7 +827,7 @@ const formatDate = (value: string | null) =>
     color: var(--muted);
     background: #0b0e10;
     border: 1px solid var(--line);
-    border-radius: 8px;
+    border-radius: 0;
     padding: 12px;
     font-size: 12px;
   }
