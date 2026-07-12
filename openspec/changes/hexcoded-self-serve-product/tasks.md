@@ -20,18 +20,18 @@
 ## 2. Billing and credit ledger
 
 - [ ] 2.1 Add purchases, persisted billing-event inbox, signature verification, and idempotency
-- [x] 2.2 Add append-only credit accounts/entries with hold, capture, release, expiry, refund, and chargeback operations
-- [x] 2.3 Gate render enqueue on a credit hold and reconcile success/failure exactly once
+- [ ] 2.2 Add append-only credit accounts/entries with hold, capture, release, expiry, refund, and chargeback operations
+- [ ] 2.3 Gate render enqueue on a credit hold and reconcile success/failure exactly once
 - [ ] 2.4 Add customer balance/history and subscription/cancellation state APIs
 - [ ] 2.5 Test duplicate submissions, duplicate/out-of-order webhooks, retries, terminal failures, refunds, and insufficient balance
 
 ## 3. Provenance, disclosure, and abuse controls
 
 - [x] 3.1 Add customer input-rights attestations and immutable output provenance/licence records
-- [x] 3.2 Record source assets, models/providers, actor status, review state, and disclosure decision for every output
+- [ ] 3.2 Record source assets, models/providers, actor status, review state, and disclosure decision for every output
 - [ ] 3.3 Add synthetic-content label/metadata support appropriate to the enabled jurisdictions and platforms
-- [x] 3.4 Add policy checks, claim/evidence review, misuse reporting, takedown, appeal, and repeat-abuse controls
-- [x] 3.5 Add customer export/deletion and purpose-bound retention jobs with audit evidence
+- [ ] 3.4 Add policy checks, claim/evidence review, misuse reporting, takedown, appeal, and repeat-abuse controls
+- [ ] 3.5 Add customer export/deletion and purpose-bound retention jobs with audit evidence
 
 ## 4. Durable production execution
 
@@ -39,17 +39,17 @@
 - [ ] 4.2 Make render dispatch/completion, artifact publication, credit settlement, and posting idempotent
 - [ ] 4.3 Add outbox/inbox handling for Dodo, SaaS Maker, renderer, and social-provider side effects
 - [x] 4.4 Add structured observability without logging credentials, biometric inputs, or unnecessary customer content
-- [x] 4.5 Run the brand smoke: sign-in -> URL -> accepted brief -> hold -> render -> artifact -> capture/release
+- [ ] 4.5 Run the brand smoke: sign-in -> URL -> accepted brief -> hold -> render -> artifact -> capture/release
 
 ## 5. Actor marketplace
 
 - [x] 5.1 Add actor role/profile and versioned Actor Licence acceptance before biometric upload
-- [x] 5.2 Add verification, twin-asset lifecycle, processor deletion, and actor-controlled pause/withdrawal
+- [ ] 5.2 Add verification, twin-asset lifecycle, processor deletion, and actor-controlled pause/withdrawal
 - [x] 5.3 Add actor library search/selection with only active, licensed twins
 - [x] 5.4 Snapshot consent/licence per generation and attach the snapshot to provenance and delivered output
-- [x] 5.5 Add append-only actor-use earnings, reversals, dashboard balances, KYC/tax status, payout accounts, and payouts
+- [ ] 5.5 Add append-only actor-use earnings, reversals, dashboard balances, KYC/tax status, payout accounts, and payouts
 - [x] 5.6 Test actor death/incapacity escalation, fraud invalidation, misuse reports, withdrawal, master deletion, and delivered-licence survival
-- [x] 5.7 Run the actor smoke: consent -> verify -> cast -> artifact/licence -> earning -> withdraw -> payout
+- [ ] 5.7 Run the actor smoke: consent -> verify -> cast -> artifact/licence -> earning -> withdraw -> payout
 
 ## 6. Launch gates
 

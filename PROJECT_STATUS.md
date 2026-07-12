@@ -116,8 +116,8 @@ for intentional target-host exclusions.
 
 ## Timeline
 
-- **2026-07-13 — HexCoded provider-neutral commercial and actor slice:**
-  completed the locally executable product-domain layer without enabling any
+- **2026-07-13 — HexCoded provider-neutral commercial and actor contracts:**
+  extended the locally executable product-domain layer without enabling any
   public capability or choosing production providers. Commercial renders now
   bind accepted briefs to append-only credit holds and idempotently capture or
   release them through bounded render attempts. Immutable output provenance
@@ -126,10 +126,12 @@ for intentional target-host exclusions.
   export/deletion jobs with purpose-bound retention evidence, actor
   verification and processor-deletion receipts, KYC/tax and tokenised payout
   state, actor balances, and redacted structured events wired into commercial
-  render transitions. Fake-adapter brand and actor smokes pass, alongside
+  render transitions. Domain-level fake-adapter brand and actor simulations
+  pass, alongside
   death/incapacity, fraud, withdrawal, master-deletion, and delivered-licence
-  survival cases. Provider-backed persistence and customer surfaces remain
-  blocked and all feature flags remain off.
+  survival cases. These contracts do not close the corresponding persistence,
+  provider, customer-app, or target-host tasks. Provider-backed persistence and
+  customer surfaces remain blocked and all feature flags remain off.
 
 - **2026-07-13 — HexCoded safety foundation (capabilities remain disabled):**
   added provider-neutral workspace authorisation, an append-only credit-ledger
