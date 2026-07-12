@@ -236,7 +236,7 @@ fleet-ops/
 
 ### Skill discovery (progressive disclosure)
 
-Only 8 fleet skills are exposed to each agent — 2 parents + 6 standalones:
+Only 10 fleet skills are exposed to each agent — 2 parents + 8 standalones:
 
 | Symlink | Type | Routes to |
 |---|---|---|
@@ -248,6 +248,8 @@ Only 8 fleet skills are exposed to each agent — 2 parents + 6 standalones:
 | `agent-ready` | standalone | AI crawler readiness |
 | `seo-audit` | standalone | on-page SEO audit |
 | `token-budget` | standalone | Codex context/token audit |
+| `mobile-task-control` | standalone | durable chat-requested task control |
+| `daily-learning` | standalone | private adaptive learning-session links |
 
 Agent skill dirs wired (symlinks point to `fleet-ops/` paths):
 - `~/.codex/skills/` (Codex CLI)

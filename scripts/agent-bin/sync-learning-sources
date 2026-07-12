@@ -6,13 +6,23 @@ FLEET_OPS_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 FLEET_ROOT="$(cd "$FLEET_OPS_DIR/.." && pwd)"
 STATE_ROOT="$HOME/Library/Application Support/Fleet Ops/learning-sync"
 CHECKOUT="$STATE_ROOT/swe-interview-prep"
-READER_ENV="$STATE_ROOT/reader.env"
 LOG_DIR="$STATE_ROOT/logs"
 LOCK_DIR="$STATE_ROOT/sync.lock"
 NOTIFY="$SCRIPT_DIR/fleet-notify"
 REMOTE="https://github.com/sarthak-fleet/swe-interview-prep.git"
 
 mkdir -p "$STATE_ROOT" "$LOG_DIR"
+
+ensure_checkout() {
+  if [ ! -d "$CHECKOUT/.git" ]; then
+    git clone "$REMOTE" "$CHECKOUT"
+  fi
+  git -C "$CHECKOUT" switch main
+  git -C "$CHECKOUT" pull --ff-only origin main
+  if [ ! -d "$CHECKOUT/node_modules" ]; then
+    pnpm --dir "$CHECKOUT" install --frozen-lockfile
+  fi
+}
 
 if [ "${1:-}" = "configure-reader" ]; then
   printf "Reader API token (starts with rdr_): " >&2
@@ -22,9 +32,11 @@ if [ "${1:-}" = "configure-reader" ]; then
     echo "invalid Reader API token" >&2
     exit 2
   fi
-  umask 077
-  printf 'READER_API_TOKEN=%q\n' "$token" > "$READER_ENV"
-  echo "Reader learning sync configured"
+  ensure_checkout
+  printf '%s' "$token" | pnpm --dir "$CHECKOUT" exec wrangler pages secret put \
+    READER_API_TOKEN --project-name=swe-interview-prep
+  unset token
+  echo "Private Reader learning proxy configured in Cloudflare Pages"
   exit 0
 fi
 
@@ -54,25 +66,7 @@ trap 'exit 143' TERM
 log="$LOG_DIR/$(date +%Y%m%d-%H%M%S).log"
 exec > >(tee -a "$log") 2>&1
 
-if [ ! -d "$CHECKOUT/.git" ]; then
-  git clone "$REMOTE" "$CHECKOUT"
-fi
-
-git -C "$CHECKOUT" switch main
-git -C "$CHECKOUT" pull --ff-only origin main
-
-if [ ! -d "$CHECKOUT/node_modules" ]; then
-  pnpm --dir "$CHECKOUT" install --frozen-lockfile
-fi
-
-if [ -f "$READER_ENV" ]; then
-  set -a
-  # shellcheck disable=SC1090
-  source "$READER_ENV"
-  set +a
-else
-  echo "Reader token not configured; Reader remains visible as a pending source"
-fi
+ensure_checkout
 
 FLEET_ROOT="$FLEET_ROOT" pnpm --dir "$CHECKOUT" sync:learning-sources
 
@@ -88,6 +82,6 @@ git -C "$CHECKOUT" push origin main
 if [ -x "$NOTIFY" ]; then
   "$NOTIFY" emit --severity success --source learning-sync --project swe-interview-prep \
     --title "Learning sources refreshed" \
-    --body "Project learning docs, research paths, and the daily briefing registry were refreshed." \
+    --body "Project learning docs, research paths, and the daily briefing registry were refreshed. Reader saves load privately at request time." \
     --dedupe-key "learning-sync:$(date +%Y-%m-%d)" >/dev/null 2>&1 || true
 fi

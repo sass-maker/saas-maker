@@ -36,7 +36,7 @@ fleet-ops/
 
 ## Skill discovery model
 
-Only 8 fleet skills are exposed to each agent — 2 parents + 6 standalones.
+Only 10 fleet skills are exposed to each agent — 2 parents + 8 standalones.
 Agents load the parent, read the routing table, then load the relevant subskill
 on demand (progressive disclosure).
 
@@ -50,6 +50,8 @@ on demand (progressive disclosure).
 | `agent-ready` | standalone | — |
 | `seo-audit` | standalone | — |
 | `token-budget` | standalone | — |
+| `mobile-task-control` | standalone | — |
+| `daily-learning` | standalone | fresh private 30-minute learning sessions |
 
 Wired into: `~/.codex/skills/` and Hermes agent configuration.
 
