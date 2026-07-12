@@ -67,6 +67,25 @@ function notificationSummary() {
   };
 }
 
+function taskSummary() {
+  const raw = run("openclaw", ["tasks", "list", "--json"], 5000);
+  if (!raw) return { queued: 0, running: 0, blocked: 0, recentStatus: "unavailable", recentAt: null };
+  try {
+    const payload = JSON.parse(raw);
+    const tasks = Array.isArray(payload) ? payload : payload.tasks || [];
+    const recent = [...tasks].sort((left, right) => (right.lastEventAt || 0) - (left.lastEventAt || 0))[0];
+    return {
+      queued: tasks.filter((task) => task.status === "queued").length,
+      running: tasks.filter((task) => task.status === "running").length,
+      blocked: tasks.filter((task) => ["timed_out", "lost"].includes(task.status)).length,
+      recentStatus: recent?.status || "none",
+      recentAt: recent?.lastEventAt ? new Date(recent.lastEventAt).toISOString() : null
+    };
+  } catch {
+    return { queued: 0, running: 0, blocked: 0, recentStatus: "unavailable", recentAt: null };
+  }
+}
+
 const services = [
   { id: "console", label: "Fleet dashboard", status: localHealthy() ? "running" : "stopped" },
   { id: "openclaw", label: "OpenClaw", status: launchdRunning("ai.openclaw.gateway") ? "running" : "stopped" },
@@ -79,6 +98,7 @@ const heartbeat = {
   generatedAt: new Date().toISOString(),
   cadenceSeconds: 60,
   notifications: notificationSummary(),
+  tasks: taskSummary(),
   node: {
     id: process.env.FLEET_NODE_ID || "primary-mac",
     label: process.env.FLEET_NODE_LABEL || "Primary Fleet machine",

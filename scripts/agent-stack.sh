@@ -39,7 +39,7 @@ install_skills() {
     ln -sfn "$FLEET_OPS_DIR/teammates/skills/call-hermes" "$dir/call-hermes"
     ln -sfn "$FLEET_OPS_DIR/teammates/skills/call-devin" "$dir/call-devin"
     ln -sfn "$FLEET_OPS_DIR/psi-swarm" "$dir/psi-swarm"
-    for skill in name-domains spec-driven agent-ready seo-audit token-budget; do
+    for skill in name-domains spec-driven agent-ready seo-audit token-budget mobile-task-control; do
       ln -sfn "$FLEET_OPS_DIR/skills/$skill" "$dir/$skill"
     done
   done

@@ -92,6 +92,7 @@ const formatDate = (value: string | null) =>
         <span data-heartbeat-at>Last heartbeat loading</span>
         <span data-heartbeat-state>Machine state loading</span>
         <span data-notification-state>Notification queue loading</span>
+        <span data-task-state>Agent tasks loading</span>
         <span>{snapshot.refreshCadence}</span>
         <span>Tasks {formatDate(snapshot.tasksSyncedAt)} · Smoke {formatDate(snapshot.smokeGeneratedAt)} · Audit {formatDate(snapshot.auditGeneratedAt)}</span>
       </section>
@@ -308,6 +309,13 @@ const formatDate = (value: string | null) =>
             ? `Notifications ${blocked} blocked / ${pending} pending`
             : `Notifications healthy / ${pending} pending`;
       }
+      const taskState = document.querySelector("[data-task-state]");
+      if (taskState && heartbeat.tasks) {
+        const active = Number(heartbeat.tasks.running || 0) + Number(heartbeat.tasks.queued || 0);
+        taskState.textContent = active
+          ? `Agent tasks ${active} active / latest ${heartbeat.tasks.recentStatus}`
+          : `Agent tasks idle / latest ${heartbeat.tasks.recentStatus}`;
+      }
 
       const node = document.querySelector(`[data-node-id="${heartbeat.node.id}"]`);
       setState(node?.querySelector("[data-node-status]"), nodeState);
@@ -324,6 +332,8 @@ const formatDate = (value: string | null) =>
       state.textContent = "Static project snapshot remains available";
       const notificationState = document.querySelector("[data-notification-state]");
       if (notificationState) notificationState.textContent = "Notification state unavailable";
+      const taskState = document.querySelector("[data-task-state]");
+      if (taskState) taskState.textContent = "Agent task state unavailable";
     }
   }
 

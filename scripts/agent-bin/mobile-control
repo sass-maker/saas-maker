@@ -154,6 +154,7 @@ configure_telegram() {
 
   if has openclaw; then
     openclaw plugins enable telegram >/dev/null 2>&1 || true
+    openclaw exec-policy preset cautious >/dev/null
     openclaw config unset channels.telegram.tokenFile >/dev/null 2>&1 || true
     openclaw channels add --channel telegram --token "$OPENCLAW_TELEGRAM_BOT_TOKEN"
     python3 - "$TELEGRAM_ALLOWED_USERS" "$owner" "${TELEGRAM_GROUP_ALLOWED_CHATS:-}" <<'PY' | openclaw config patch --stdin
@@ -168,16 +169,31 @@ telegram = {
     "dmPolicy": "allowlist",
     "allowFrom": users,
     "groupPolicy": "allowlist",
+    "capabilities": {"inlineButtons": "dm"},
+    "execApprovals": {
+        "enabled": True,
+        "approvers": [owner],
+        "target": "dm",
+    },
 }
 if groups:
     telegram["groups"] = {group: {"requireMention": True} for group in groups}
 patch = {
     "channels": {"telegram": telegram},
     "commands": {"ownerAllowFrom": [f"telegram:{owner}"]},
+    "approvals": {
+        "exec": {
+            "enabled": True,
+            "mode": "both",
+            "agentFilter": ["fleet-ops"],
+            "targets": [{"channel": "telegram", "to": owner}],
+        }
+    },
 }
 print(json.dumps(patch))
 PY
     openclaw gateway restart || openclaw gateway start || true
+    openclaw agents bind --agent fleet-ops --bind telegram:default >/dev/null 2>&1 || true
   fi
 
   if has hermes; then
