@@ -13,22 +13,28 @@ Three modes, one skill. The user's question determines which mode to run.
 
 **Trigger:** "Is the fleet healthy?", "check all projects", "what's broken?", "can I deploy everything?"
 
-Checks git state, CI signal, and branch status across active projects listed in
+Updates safe repositories, then checks git state, CI signal, and branch status
+across the fleet workspace plus active projects listed in
 `~/Desktop/fleet/README.md`.
 
 ```bash
 bash ~/Desktop/fleet/fleet-ops/scripts/fleet-health.sh
-bash ~/Desktop/fleet/fleet-ops/scripts/fleet-health.sh --no-fetch     # skip git fetch
+bash ~/Desktop/fleet/fleet-ops/scripts/fleet-health.sh --no-fetch     # skip git fetch and pull
 bash ~/Desktop/fleet/fleet-ops/scripts/fleet-health.sh --only saas-maker,aliveville
 ```
 
 The script reads the project list from the fleet README, so it stays in sync
-automatically. For each project it checks:
+automatically, and includes the fleet workspace repository itself. By default
+it fetches each repository and fast-forward-pulls a behind branch only when the
+worktree is clean, the branch has an upstream, and there are no local-only
+commits. Dirty, detached, ahead, and diverged repositories are left untouched
+and reported. For each repository it then checks:
 
-1. **Git state** — clean? dirty?
-2. **Branch** — on main?
-3. **Remote sync** — ahead/behind?
-4. **CI signal** — latest GitHub Actions run on main
+1. **Update** — safely pulled, already current, or intentionally skipped?
+2. **Git state** — clean? dirty?
+3. **Branch** — on main?
+4. **Remote sync** — ahead/behind?
+5. **CI signal** — latest GitHub Actions run on main
 
 Output a compact table:
 
