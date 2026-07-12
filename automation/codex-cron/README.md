@@ -2,6 +2,10 @@
 
 Versioned replacement for the Codex app automation schedules.
 
+`jobs.tsv` contains conversational Codex jobs. `system-jobs.tsv` contains
+deterministic jobs that do not need a model, including the nightly learning
+source sync.
+
 ## Commands
 
 ```sh
@@ -15,4 +19,3 @@ user crontab. It preserves any unrelated crontab lines.
 
 Runtime logs and locks stay local under this directory and are intentionally not
 committed.
-

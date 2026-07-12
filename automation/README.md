@@ -5,6 +5,10 @@ credentials, device pairings, and local run logs remain machine-local.
 
 ## Active cron jobs
 
+The deterministic `nightly-learning-sync` job runs at 02:15 local time. It
+refreshes the SWE Interview Prep source registry from a clean machine-local
+checkout and commits only semantic changes; no model is invoked.
+
 `codex-cron/` is the versioned replacement for the Codex app schedules. It keeps
 the schedule registry, prompts, runner, installer, and static dashboard in git.
 Install or refresh the local crontab with:

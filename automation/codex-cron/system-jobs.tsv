@@ -1,0 +1,2 @@
+id	enabled	cron	name	command
+nightly-learning-sync	yes	15 2 * * *	Nightly Learning Source Sync	/Users/assistant/Desktop/fleet/fleet-ops/scripts/agent-bin/sync-learning-sources
