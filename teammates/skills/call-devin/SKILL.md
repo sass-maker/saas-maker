@@ -11,13 +11,21 @@ vendor-lock-in tradeoff. Prefer Codex, Grok, or Hermes when they can do the job.
 
 ## Current Local State
 
-Fleet Ops includes `scripts/agent-bin/devin-session.mjs`, a narrow adapter for
-the official Devin v3 REST API. The local `devin` CLI is installed, but the API
-adapter still needs a least-privilege service-user token and organization ID in
-`DEVIN_API_KEY` and `DEVIN_ORG_ID`. Keep both machine-local. The adapter refuses
-session creation unless the invoking process also sets `DEVIN_ALLOW_SPEND=yes`.
+The local `devin` CLI is installed and logged in to Sarthak's Devin Pro account.
+Prefer the CLI for teammate calls. Smoke test on 2026-07-12:
+`devin -p "Reply with exactly: DEVIN_OK" --permission-mode auto` returned
+`DEVIN_OK`.
+
+Fleet Ops also includes `scripts/agent-bin/devin-session.mjs`, a narrow adapter
+for the official Devin v3 REST API. The adapter is optional and still needs a
+least-privilege service-user token and organization ID in `DEVIN_API_KEY` and
+`DEVIN_ORG_ID`. Keep both machine-local. The adapter refuses session creation
+unless the invoking process also sets `DEVIN_ALLOW_SPEND=yes`.
 
 ```sh
+devin -p "GOAL: ... SCOPE: ... CONSTRAINTS: ... VERIFY: ... RETURN: ..." \
+  --permission-mode auto
+
 ./fleet-ops/scripts/agent-bin/devin-session.mjs status
 DEVIN_ALLOW_SPEND=yes ./fleet-ops/scripts/agent-bin/devin-session.mjs create \
   --title "Bounded Fleet task" \
