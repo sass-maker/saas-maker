@@ -45,8 +45,37 @@ const formatDate = (value: string | null) =>
         <nav class="topnav" aria-label="Fleet console">
           <a href="/">Overview</a>
           <a href="/projects">Projects</a>
+          <a href="/#mobile-control">Connections</a>
         </nav>
       </header>
+
+      <nav class="lane-grid" aria-label="Fleet operating lanes">
+        <a href="/projects">
+          <span>01</span>
+          <strong>Building</strong>
+          <small>Products and active work</small>
+        </a>
+        <a href="https://swe-interview-prep.pages.dev/sources">
+          <span>02</span>
+          <strong>Learning</strong>
+          <small>Daily sessions and project roadmaps</small>
+        </a>
+        <a href="/projects/saas-maker">
+          <span>03</span>
+          <strong>Marketing</strong>
+          <small>Focus products and distribution</small>
+        </a>
+        <a href="/#mobile-control">
+          <span>04</span>
+          <strong>Control</strong>
+          <small>Machines, agents, and mobile access</small>
+        </a>
+        <a href="/">
+          <span>05</span>
+          <strong>Visibility</strong>
+          <small>Status, schedules, and hosting</small>
+        </a>
+      </nav>
 
       <section class="hero-grid" aria-label="Fleet Ops summary">
         <article class="summary-card primary">
@@ -109,7 +138,7 @@ const formatDate = (value: string | null) =>
         </div>
       </section>
 
-      <section class="panel node-panel" aria-label="Machine and mobile control state">
+      <section id="mobile-control" class="panel node-panel" aria-label="Machine and mobile control state">
         <div class="panel-head">
           <div>
             <p class="eyebrow">Mobile control</p>
@@ -466,6 +495,52 @@ const formatDate = (value: string | null) =>
     font-size: 12px;
     font-weight: 800;
     text-transform: uppercase;
+  }
+
+  .lane-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(170px, 1fr));
+    margin-bottom: 16px;
+    overflow-x: auto;
+    border-block: 1px solid var(--line);
+  }
+
+  .lane-grid a {
+    display: grid;
+    min-height: 112px;
+    align-content: center;
+    gap: 4px;
+    padding: 16px;
+    border-right: 1px solid var(--line);
+    color: var(--text);
+    text-decoration: none;
+    transition: background 140ms ease;
+  }
+
+  .lane-grid a:last-child {
+    border-right: 0;
+  }
+
+  .lane-grid a:hover {
+    background: rgba(118, 215, 196, 0.07);
+  }
+
+  .lane-grid span,
+  .lane-grid small {
+    color: var(--muted);
+  }
+
+  .lane-grid span {
+    font-family: "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
+    font-size: 10px;
+  }
+
+  .lane-grid strong {
+    font-size: 18px;
+  }
+
+  .lane-grid small {
+    font-size: 12px;
   }
 
   .hero-grid {
@@ -867,6 +942,23 @@ const formatDate = (value: string | null) =>
 
     .topnav a {
       justify-content: center;
+    }
+
+    .lane-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      overflow: visible;
+    }
+
+    .lane-grid a {
+      min-height: 104px;
+    }
+
+    .lane-grid a:nth-child(2n) {
+      border-right: 0;
+    }
+
+    .lane-grid a:last-child {
+      grid-column: 1 / -1;
     }
 
     .hero-grid,
