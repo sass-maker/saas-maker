@@ -1,0 +1,6 @@
+{
+  "schema": "reel-pipeline.presenter-pack.v1",
+  "packId": "production-presenters",
+  "presenters": [],
+  "productionGate": "Add an approved, model-released human presenter asset and its checksum before enabling anonymous rendering."
+}

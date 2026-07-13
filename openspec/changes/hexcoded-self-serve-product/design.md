@@ -1,167 +1,92 @@
-# Design — HexCoded self-serve product
+# Design — anonymous brand website to reel
 
-## Architecture boundary
-
-Keep renderer engines behind the existing `VideoBrief` adapter contract and
-keep Rust as the long-running render/post orchestrator. Add a product service
-layer in front of those paths for authentication, tenancy, commercial state,
-and durable job submission.
+## Product boundary
 
 ```text
-Customer app
-    |
-    v
-Authenticated product API
-    |-- workspace + acceptance records
-    |-- credit ledger + Dodo event inbox
-    |-- actor/licence/provenance records
-    |
-    v
-Durable render queue -> Rust orchestrator -> existing renderer adapters
-    |                                      -> review/quality gate
-    v
-Tenant-scoped R2 artifact -> optional authorised social publisher
+Public URL form
+  -> safe website intake
+  -> cited brand brief
+  -> script + storyboard
+  -> licensed presenter + brand visuals
+  -> existing render/review core
+  -> preview + MP4 download
 ```
 
-SaaS Maker remains the system of record for fleet marketing ideas and their
-approval/posting state. Customer accounts, billing, biometric assets, and actor
-earnings must not be stored in SaaS Maker notes or local JSON files.
+There is no identity, workspace, purchase, credit, marketplace, or publishing
+layer. A generated job is addressed by an unguessable job identifier. The job
+store may remain local for this first product slice; the API must not imply
+multi-tenant privacy guarantees it does not provide.
 
-## Domain model
+## Website intake
 
-Minimum durable records:
+Accept only `https:` URLs. Resolve DNS before every request and reject loopback,
+link-local, private, multicast, reserved, and metadata-service addresses for
+IPv4 and IPv6. Apply the same checks to redirects. Use bounded redirects,
+timeouts, response bytes, document count, and image count.
 
-- `User`, `Workspace`, `WorkspaceMember`, `ExternalIdentity`
-- `LegalAcceptance` with document, version/hash, subject, timestamp, and source
-- `Campaign`, `VideoBrief`, `RenderJob`, `RenderAttempt`, `Artifact`
-- `CreditAccount`, append-only `CreditEntry`, `Purchase`, `BillingEvent`
-- `AssetProvenance`, `OutputLicence`, `DisclosureRecord`
-- `Actor`, `ActorConsent`, `Twin`, `TwinAsset`, `ActorLicenceSnapshot`
-- `ActorUse`, `EarningEntry`, `PayoutAccount`, `Payout`
-- `SocialConnection`, `PublishJob`, `AuditEvent`
+Extract:
 
-Identifiers exposed externally must be opaque. Every customer-owned record
-must carry `workspaceId`; every actor use must carry `actorId`, `twinId`, and
-the immutable licence/consent snapshot used for that generation.
+- canonical URL, title, description, headings, and high-confidence product facts;
+- logo, product/hero images, palette, and typography hints;
+- desktop/mobile page captures when the existing capture path is available;
+- a provenance entry containing the source URL for every retained claim/asset.
 
-## Authentication and tenancy
+Do not execute arbitrary downloaded code, submit forms, crawl authenticated
+pages, or infer unsupported claims.
 
-- Integrate one supported identity provider behind an internal auth adapter;
-  do not spread provider-specific claims through render code.
-- Authorise every read/write using workspace membership and role.
-- Replace wildcard CORS with an explicit customer-app origin allowlist.
-- Serve private artifacts through short-lived signed URLs or an authorised
-  delivery endpoint; public URLs are created only for an explicitly approved
-  publishing job and follow a documented expiry/revocation policy.
-- Store service-to-service credentials outside application records and logs.
+## Creative plan
 
-## URL-to-ad workflow
+Convert the evidence into a short brief with hook, audience-neutral value
+proposition, scene narration, on-screen text, CTA, and asset references. Claims
+without source evidence are removed or rewritten as non-factual creative copy.
 
-1. Customer submits a product URL plus audience, goal, claims, CTA, actor or
-   non-actor treatment, and target channel.
-2. Intake captures permitted product evidence and produces a draft brief.
-3. The customer reviews claims, script, source assets, disclosure, and expected
-   credit cost before accepting the generation.
-4. A render job is created only from an accepted brief and an authorised credit
-   hold.
-5. Existing renderer adapters execute the job. Quality gates determine
-   `ready`, `needs_review`, or `failed`; they never publish automatically.
-6. Customer accepts the output before download or social publishing.
+The default output is 1080x1920, 24–30 fps, and approximately 15–30 seconds.
+The presenter appears prominently in the opening and at least one later scene;
+supporting scenes use brand imagery, captured page regions, kinetic text, and
+subtle generated backgrounds. Captions remain in safe areas.
 
-The initial launch supports non-actor stock/product-proof formats. Actor
-selection remains feature-gated until Phase 2 is complete.
+## Human presenter
 
-## Credit and billing semantics
+Use a curated, checksum-pinned presenter pack. Every presenter manifest entry
+must include asset path, checksum, commercial-use licence reference,
+model-release reference, attribution requirements, and allowed transformations.
+Composition fails closed when the asset or proof is missing or mismatched.
 
-- Treat the credit ledger as append-only double-entry-style events rather than
-  a mutable balance field.
-- Authorise/hold the quoted cost before enqueueing a render.
-- Capture the hold once when a usable output reaches the defined successful
-  state; release it on terminal technical failure.
-- Require idempotency keys for render submission, Dodo webhooks, captures,
-  releases, refunds, and chargeback adjustments.
-- Reconcile purchase and refund events from a persisted webhook inbox; verify
-  signatures before processing.
-- Keep plan expiry, top-up expiry, allocation order, cancellation, refunds, and
-  chargeback behavior explicit and testable.
+This is a licensed prerecorded presenter treatment, not customer actor casting,
+biometric cloning, or an AI-twin marketplace. Generated voice remains behind the
+existing provider adapter and is recorded in output provenance.
 
-## Actor lifecycle and licensing
+## Rendering and delivery
 
-- Actor onboarding is a separate role and workflow from brand accounts.
-- Capture Actor Licence acceptance before uploading or processing biometric
-  source material. Verification and twin creation are separately auditable
-  stages.
-- `Twin.status` supports at least `draft`, `verifying`, `active`, `paused`,
-  `withdrawn`, and `rejected`. Only `active` twins can be newly cast.
-- At generation time, snapshot the consent and licence terms into the
-  `ActorUse`; later withdrawals stop new jobs but do not rewrite delivered-use
-  history.
-- Delivered outputs retain their licence proof without requiring retention of
-  reusable master face/voice recordings. Master retention follows a separate,
-  purpose-bound schedule.
-- Earnings are created once per chargeable successful actor use, adjusted by
-  explicit reversal entries, and never silently mutated.
+Reuse existing `VideoBrief`, renderer adapters, FFmpeg composition, job state,
+self-review, and artifact response helpers. The anonymous service owns the thin
+orchestration boundary:
 
-## Provenance and disclosure
+- `POST /api/videos` validates/fetches the URL and creates a job;
+- `GET /api/videos/:id` returns safe status and error details;
+- `GET /api/videos/:id/preview` streams inline with byte ranges;
+- `GET /api/videos/:id/download` returns the MP4 as an attachment;
+- `GET /` renders the URL form and current job state.
 
-For every output record:
+No route publishes, schedules, charges, signs in, or connects an account.
 
-- customer-supplied inputs and claimed permissions;
-- renderer/model/provider and relevant version;
-- source footage, music, font, voice, and actor licence references;
-- generation and edit timestamps;
-- required AI/synthetic-content disclosure decision;
-- exported metadata/label status;
-- review and publication approvals.
+## Failure behavior
 
-The service must be capable of embedding or attaching required machine-readable
-synthetic-content metadata. It must not assume that shifting all disclosure
-responsibility to the customer is sufficient.
+- Unsafe URL: reject before network access.
+- Site fetch/extraction failure: terminal, actionable intake error.
+- Insufficient evidence/assets: return a brief-quality error; do not invent facts.
+- Missing presenter licence/checksum: block render.
+- Renderer failure: preserve the classified error and never expose a partial
+  file as complete.
+- Review failure: mark `needs_review` or `failed`; do not call it downloadable.
 
-## Durable execution
+## Verification
 
-- Persist state transitions before dispatching work.
-- Lease jobs to workers with heartbeat/expiry and bounded retries.
-- Make render completion, artifact publication, credit capture, and posting
-  independently idempotent.
-- Use an outbox/inbox boundary for external callbacks and SaaS Maker patches.
-- A failed posting job must not convert an accepted render into a posted state.
-- Preserve the existing accepted-item, scheduled-time, and explicit-confirm
-  posting gates.
-
-## Rollout
-
-1. Introduce workspace-aware records and auth around a non-production shadow
-   path while current internal flows remain available.
-2. Migrate brand-only URL-to-ad renders and artifact access.
-3. Enable billing in test mode; run duplicate-webhook and failed-render drills.
-4. Prove one target-host brand flow, then enable a limited brand beta.
-5. Build actor onboarding and run internal/sandbox actors only.
-6. Enable real-actor casting after consent, licence, earnings, deletion, misuse,
-   and payout acceptance tests pass.
-
-No phase is enabled publicly merely because its code is merged.
-
-## Verification strategy
-
-- Unit tests for role checks, state transitions, credit invariants, licence
-  snapshots, retention decisions, and disclosure decisions.
-- Integration tests with fake identity, Dodo, KYC, twin, and renderer adapters.
-- Concurrency tests for duplicate render requests and webhook delivery.
-- Tenant-isolation tests over every customer API and artifact route.
-- Smoke test for request -> accepted brief -> credit hold -> render status ->
-  artifact metadata -> capture/release.
-- Actor smoke test for consent -> verification -> cast -> artifact/licence ->
-  earning -> withdrawal -> payout.
-- Target-host acceptance with real billing test mode, private artifact playback,
-  and one authorised social publish.
-
-## Open decisions before apply
-
-- Which repo owns the customer web app, if it is not this repository.
-- Identity provider and durable database/queue selection.
-- Dodo product, subscription, webhook, tax, and refund contract details.
-- Verification/twin provider responsibilities and deletion APIs.
-- Exact credit success boundary and customer retry policy.
-- Jurisdiction-specific disclosure metadata and actor-retention schedule after
-  counsel review.
+- Unit tests for URL/DNS/redirect safety, extraction bounds, claim provenance,
+  presenter manifest validation, and route responses.
+- Integration test from fixture website -> brief -> render request -> completed
+  artifact metadata using fake fetch/render adapters.
+- FFmpeg smoke proving a 9:16 MP4 with presenter, captions, audio, and range
+  playback metadata.
+- Regression tests proving retained internal review/studio paths still work and
+  obsolete product routes are absent.
