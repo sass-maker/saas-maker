@@ -24,6 +24,13 @@ handoff, and deterministic local previews.
 | Postiz | https://github.com/gitroomhq/postiz-app | Strong social publishing workflow reference: provider capabilities, post preflight, token/error classification, missed-post recovery, analytics, calendar/list UX. | High as a dependency: AGPL-3.0, large NestJS/Prisma/Temporal monorepo, overlaps SaaS Maker control-plane ownership. | Reimplement selected workflow patterns only; do not copy source or adopt runtime. |
 | Editframe | https://editframe.com/ | Strong agent/video-as-code reference: HTML/CSS composition, explicit time model, caption cues, local preview, and visual testing workflow. | Low if used as a pattern; unknown/unneeded as a runtime dependency for now. | Reimplement a local HTML composition artifact contract; do not add SDK/runtime dependency yet. |
 
+The provider-neutral distribution seam also has a Postiz contract fixture at
+`test/fixtures/postiz-contract.json` and an inert evaluator in
+`src/postiz-fixture-adapter.js`. It proves translation, account isolation,
+channel-specific settings, publication results, and metrics normalization
+without importing Postiz code, making network calls, installing the stack, or
+connecting an account. Fixture success is not live Postiz readiness.
+
 ## Decision
 
 Do not add a new media or publishing dependency in this pass. For media QA, the
