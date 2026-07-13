@@ -12,6 +12,7 @@ Mobile Dev Cockpit already proves the remote edit-to-deploy loop on an iPhone-si
 - Prefer on-device recognition, disclose when a locale/device cannot satisfy it, and never send microphone audio to the desktop bridge or a third-party speech provider.
 - Keep the existing text composer available and keep every agent instruction subject to the same authenticated bridge and visible PTY session boundaries.
 - Add iPad and voice state tests, native build gates, and visual verification at representative compact and regular widths.
+- Adopt UIKit's required single-window scene lifecycle through an idempotent Expo config plugin so clean prebuilds made with the iOS 27 SDK launch on iOS 27 while retaining the supported iOS 16.4 floor.
 
 ## Capabilities
 
@@ -30,5 +31,6 @@ None. The original MVP change remains the iPhone contract; these additive capabi
 - The home and project routes gain shared adaptive layout primitives and regular-width navigation.
 - A local iOS Swift module is added under the mobile app and linked through Expo Modules; no third-party production speech dependency or hosted voice service is introduced.
 - The generated iOS project gains microphone and speech-recognition usage descriptions through Expo configuration.
+- The generated AppDelegate and Info.plist gain a single-window UIScene integration at prebuild time; ignored native output remains reproducible and no hand-edited Xcode project becomes a source of truth.
 - CI and tests expand to cover an iPad simulator build/launch and representative portrait, landscape, and resized-window layouts.
 - The desktop bridge and shared wire protocol remain unchanged because only the final transcript text is sent as an existing `agentInstruction` request.

@@ -74,3 +74,27 @@ The iPad interface SHALL respect safe areas, Dynamic Type, minimum touch targets
 
 - **WHEN** the app runs in a narrow supported multitasking window
 - **THEN** it uses the compact navigation and preserves a scrollable path to every project action
+
+### Requirement: Scene-based native lifecycle
+
+The generated iOS application MUST adopt UIKit's single-window scene lifecycle, MUST remain reproducible through Expo prebuild, and MUST preserve the existing React Native startup and linking behavior across the supported operating-system range.
+
+#### Scenario: Launch an iOS 27 SDK build on iOS 27
+
+- **WHEN** a standalone Release app is generated and compiled with the iOS 27 SDK and launched on iOS 27
+- **THEN** UIKit creates the configured application scene, React Native starts inside its window, and the onboarding or cockpit interface becomes visible without a lifecycle assertion
+
+#### Scenario: Retain older-system compatibility
+
+- **WHEN** the same scene-enabled Release app is launched on iOS 26.4 or another supported iOS version
+- **THEN** the same React Native entry point renders and compact or regular layout behavior remains available
+
+#### Scenario: Regenerate the native project
+
+- **WHEN** Expo prebuild runs repeatedly from a clean generated-native state
+- **THEN** the scene manifest and Swift lifecycle integration are applied exactly once without relying on a tracked Xcode project or duplicate source blocks
+
+#### Scenario: Receive a link through a scene
+
+- **WHEN** UIKit delivers a URL or user activity to the connected application scene
+- **THEN** the scene delegate forwards it through the existing Expo and React Native linking handlers

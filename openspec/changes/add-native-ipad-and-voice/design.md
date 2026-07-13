@@ -14,6 +14,7 @@ This change should feel like an Apple app without replacing the proven connectio
 - Keep voice input reviewable and explicit: the user sees and may edit a transcript before it becomes an agent instruction.
 - Preserve the existing bridge protocol, repository allowlist, WebView isolation, and approval model.
 - Add native simulator evidence for both iPhone and iPad.
+- Launch a clean standalone Release build on both iOS 26.4 and iOS 27 when compiled with the iOS 27 SDK.
 
 **Non-Goals:**
 
@@ -81,6 +82,18 @@ On iPhone full-screen, the Preview control may continue to request portrait or l
 
 Core controls retain 44-point-or-larger targets, accessibility labels, and visible selection. Regular-width navigation exposes conventional keyboard actions for switching sections, sending an instruction, and cancelling voice capture where Expo/React Native's native command surface supports them. Pointer hover is additive; every action remains touch-accessible.
 
+### Adopt a generated-project-safe single-window scene lifecycle
+
+iOS 27 requires every app built with its SDK to adopt UIScene before the process may launch. Expo SDK 57 still generates a legacy AppDelegate that creates the window and starts React Native directly from `didFinishLaunchingWithOptions`, while this repository intentionally ignores generated native directories.
+
+Add a local Expo config plugin that makes three deterministic prebuild changes:
+
+- add a single-window `UIApplicationSceneManifest` to Info.plist with multiple scenes disabled;
+- keep process-wide Expo/React Native factory initialization in AppDelegate, retain launch options, and implement `application(_:configurationForConnecting:options:)`;
+- add a `UIWindowSceneDelegate` in the generated Swift source that owns the window, converts cold-start scene connection options into React Native launch options, starts React Native once for the connected application scene, and forwards later scene-delivered URLs and user activities through the existing AppDelegate/React Native linking path.
+
+Keeping the scene delegate in the generated AppDelegate source avoids a separate Xcode-project file mutation. The plugin must be idempotent and must fail with an actionable error when Expo's generated template no longer matches, so an SDK upgrade cannot silently emit a half-migrated native app. `UIApplicationSupportsMultipleScenes` remains false because the cockpit has one authenticated connection and one authoritative navigation state; multiwindow would require a separate product/state design.
+
 ## Risks / Trade-offs
 
 - [SpeechAnalyzer is unavailable below iOS 26] → Keep an availability-gated `SFSpeechRecognizer` implementation and test both facades with deterministic state fixtures.
@@ -90,6 +103,8 @@ Core controls retain 44-point-or-larger targets, accessibility labels, and visib
 - [A width breakpoint can churn during resize] → Use three stable layout bands with hysteresis-free pure derivation and preserve route/selection state across transitions.
 - [Programmatic orientation conflicts with iPad multitasking] → Never lock iPad orientation; use in-canvas viewport presets there.
 - [Raw terminal output is unsuitable for automatic speech synthesis] → Keep this change focused on voice input and defer spoken agent responses until the agent bridge has structured turn boundaries.
+- [Expo template changes can invalidate a source transform] → Unit-test the pure transformation, make it idempotent, and fail prebuild loudly when expected anchors are absent instead of generating an unlaunchable native project.
+- [Scene delivery can bypass legacy URL callbacks] → Forward scene URL and user-activity events through the existing AppDelegate handlers and verify both cold launch and normal launch on iOS 26.4 and iOS 27.
 
 ## Migration Plan
 
@@ -98,7 +113,8 @@ Core controls retain 44-point-or-larger targets, accessibility labels, and visib
 3. Add the local Swift voice module, permissions, and a testable TypeScript facade.
 4. Integrate push-to-talk into the agent composer and add iPad regular-width navigation/workspace layouts.
 5. Run unit checks, exports, clean native prebuild/pod install, iPhone and iPad simulator builds, launches, screenshots, and representative width visual tests.
-6. Install on the paired iPhone and available iPad when Developer Mode/device availability permits; record any remaining hardware-only validation separately.
+6. Generate from a clean native directory, build with Xcode 27, and launch the standalone Release app on iOS 26.4 and iOS 27 simulators.
+7. Install on the paired iPhone and available iPad when Developer Mode/device availability permits; record any remaining hardware-only validation separately.
 
 Rollback is removing the local voice module and adaptive layout wrapper and restoring the phone-only manifest. There is no server, protocol, data, credential, or production migration.
 

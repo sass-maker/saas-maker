@@ -3,6 +3,8 @@
 - [x] 1.1 Enable universal iPhone/iPad support, all required orientations, iPad multitasking, and microphone/speech usage descriptions in Expo configuration
 - [x] 1.2 Add pure compact/intermediate/regular layout derivation and tests for representative iPhone, iPad portrait, iPad landscape, Split View, and Stage Manager widths
 - [x] 1.3 Add reusable adaptive cockpit, sidebar/navigation, and detail workspace primitives that preserve route and draft state while resizing
+- [x] 1.4 Add an idempotent Expo config plugin for a single-window UIKit scene manifest, AppDelegate factory setup, SceneDelegate window ownership, and scene-delivered linking
+- [x] 1.5 Add pure plugin tests covering first application, repeated application, template drift, and generated Info.plist shape
 
 ## 2. Native iPad cockpit
 
@@ -36,9 +38,12 @@
 - [x] 5.4 Capture and visually inspect iPhone portrait/landscape plus iPad portrait/landscape and compact multitasking screenshots
 - [x] 5.5 Verify VoiceOver labels, Dynamic Type reachability, pointer/touch targets, keyboard behavior, and microphone release after every terminal voice state
 - [ ] 5.6 Install on available physical iPhone/iPad hardware and verify permissions, on-device transcription, interruption teardown, rotation/resize, reconnect, WebView preview, and screenshot-to-agent flow
+- [x] 5.7 Generate a clean native project, build once with Xcode 27, and install/launch the same standalone Release app on iOS 26.4 and iOS 27 simulators without Metro
 
 ## 6. Handoff
 
 - [x] 6.1 Update README setup/privacy guidance and PROJECT_STATUS.md with universal iPad and native voice evidence plus any physical-device-only residual risk
 - [ ] 6.2 Validate the OpenSpec change strictly and archive it only after all required scenarios have direct evidence
 - [x] 6.3 Commit and push the reviewed implementation with the relevant CI checks green
+- [x] 6.4 Update README and PROJECT_STATUS.md with the iOS 27 scene-lifecycle evidence and remaining physical-device-only validation
+- [x] 6.5 Commit and push the scene-lifecycle migration with the relevant CI checks green

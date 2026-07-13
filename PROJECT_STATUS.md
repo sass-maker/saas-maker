@@ -17,7 +17,7 @@ Mobile Dev Cockpit is a native universal iPhone and iPad interface for supervisi
 ### External
 
 - Expo SDK 57, React Native, Expo Router, SecureStore, WebView, view capture, and system sharing.
-- Xcode 26.4+ and CocoaPods for native iOS builds; the hosted simulator compile uses GitHub's macOS 26 runner.
+- Xcode 26.4+ and CocoaPods for native iOS builds; the hosted simulator compile uses GitHub's macOS 26 runner, while local Xcode 27 verification covers the mandatory scene lifecycle.
 - Node.js 22+, the `ws` WebSocket server package, and `node-pty` for owned interactive agent sessions.
 - Git and whichever dev, test, agent, and deploy CLIs a user explicitly configures.
 - Optional Tailscale CLI and a signed-in tailnet for the recommended private HTTPS remote transport; LAN or another TLS reverse proxy remains supported.
@@ -40,6 +40,7 @@ Mobile Dev Cockpit is a native universal iPhone and iPad interface for supervisi
 - 2026-07-13 — Added low-configuration discovery roots and an owner-only dynamic project registry with one-use enrollment approvals; visually verified pair, discover, exact candidate review, enroll, and restored project access at phone and iPad widths.
 - 2026-07-13 — Added universal iPad layouts for portrait, landscape, Split View, and Stage Manager plus a dedicated Apple-native speech composer. The app-local Swift module compiles on Xcode 27 and uses SpeechAnalyzer on iOS 26+ with an on-device SFSpeechRecognizer fallback for iOS 16.4–25.
 - 2026-07-13 — Installed and launched the standalone Release app without Metro on iOS 26.4 iPhone 17 Pro and iPad Pro 13-inch simulators. Native portrait captures, browser-backed portrait/landscape/Split View captures, extreme Dynamic Type, strict OpenSpec validation, all 55 tests, bridge build, and both platform exports pass.
+- 2026-07-13 — Added a generated-project-safe single-window UIScene lifecycle for iOS 27. A clean Xcode 27 Release binary launches without Metro on iOS 26.4 and iOS 27 iPhone simulators plus an iOS 27 iPad simulator; the previous pre-React-Native lifecycle assertion is gone.
 
 ## Products
 
@@ -68,10 +69,10 @@ Mobile Dev Cockpit is a native universal iPhone and iPad interface for supervisi
 - Clean macOS 26 CI compilation of the generated native app, including all Expo/React Native pods, with the SDK 57-required Xcode 26.4 toolchain.
 - Standalone Release simulator installation and launch gate with a visually inspected full-resolution native onboarding screenshot artifact.
 - Standalone universal Release installation and launch evidence on representative iPhone and iPad simulators, plus compact/intermediate/regular browser screenshots and an accessibility-extra-extra-extra-large Dynamic Type pass.
+- Idempotent local Expo scene-lifecycle plugin with a single-window manifest, scene-owned React Native startup, Expo lifecycle forwarding, deep-link forwarding, template-drift tests, and standalone Xcode 27 launch evidence on iOS 26.4 and iOS 27.
 
 ## Todo / Planned / Deferred / Blocked
 
 1. Blocked: enable Developer Mode on the paired iPhone, then install the personal-team-signed Release build and validate Apple Speech permissions/on-device transcription/interruption teardown, WKWebView, Keychain persistence, screenshot sharing, orientation, background reconnect, and the complete edit-to-deploy loop on that physical device. Repeat the native resize and speech checks on physical iPad hardware when one is available. Full Xcode, CocoaPods, a valid personal signing identity, and the paired iPhone are now present.
 2. Deferred: hosted relay and account system, pending evidence that private Tailscale connectivity is insufficient.
 3. Deferred: App Store/TestFlight distribution decision, pending physical-device validation and policy review.
-4. Deferred: migrate the Expo-generated app delegate to the mandatory UIScene lifecycle before supporting the iOS 27 runtime. The current supported iOS 16.4–26.4 Release build is green; the iOS 27 beta simulator rejects non-UIScene applications before React Native starts.
