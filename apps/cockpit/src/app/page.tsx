@@ -19,8 +19,9 @@ export const metadata: Metadata = {
 };
 
 /**
- * The Worker wrapper serves Astro for anonymous GET `/` requests. Authenticated
- * requests reach this route and redirect before the landing page is rendered.
+ * The Worker wrapper serves Astro for anonymous GET `/` requests and redirects
+ * requests with a session cookie straight to `/tasks`. This route remains the
+ * server-side fallback when a request reaches OpenNext directly.
  */
 export default async function HomePage() {
   const requestHeaders = await headers();
