@@ -66,6 +66,28 @@ benefit. The first useful additions are:
 Phone delivery is a prerequisite for conversational crons. Before Telegram is
 configured and paired, scheduled agent output should remain local.
 
+### Learning control from chat
+
+The `daily-learning` skill is linked into Codex, OpenClaw, and optional Hermes
+by `agent-stack.sh install-skills`. Telegram messages such as “sync learning”,
+“start a Pace session”, “learning status”, or “complete <session-id>” map to the
+same bounded commands:
+
+```sh
+../scripts/agent-bin/learning-control sync
+../scripts/agent-bin/learning-control today [source]
+../scripts/agent-bin/learning-control start [source]
+../scripts/agent-bin/learning-control status
+../scripts/agent-bin/learning-control complete <session-id>
+```
+
+`today` and `start` return a private learning URL. `status` returns only source
+freshness and aggregate session state; it never returns Reader bodies,
+credentials, answers, or notes. `complete` is idempotent and records control
+completion only—the web app remains authoritative for progress and FSRS ratings.
+Run `sync` only on an explicit refresh request because it may commit and push an
+updated checked-in catalog.
+
 Tailscale SSH is the durable private terminal path. `tmate` is a deprecated,
 explicit emergency fallback only; its session links are credentials.
 

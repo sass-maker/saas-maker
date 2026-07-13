@@ -178,6 +178,20 @@ export type MarketingPipeline = {
   updatedAt: string | null;
   proof: { brand: string; score: number; verdict: string; durationSeconds: number; sourceUrl: string } | null;
   stages: Array<{ name: string; state: "ready" | "blocked" | "not-configured"; detail: string }>;
+  programs: Array<{
+    slug: string;
+    name: string;
+    mode: "focus" | "evergreen" | "infrastructure" | "private";
+    domain: string | null;
+    publicMarketing: boolean;
+    sourceBacked: boolean;
+    cadence: string;
+    cta: string;
+  }>;
+  orchestration: { state: "ready" | "blocked" | "not-configured"; detail: string; lastAt: string | null };
+  targetHost: { state: "ready" | "blocked" | "not-configured"; detail: string; checkedAt: string | null };
+  publisher: { state: "ready" | "blocked" | "not-configured"; detail: string; connected: number; total: number };
+  lastReceipt: { brand: string; channel: string; provider: string; status: string; recordedAt: string } | null;
   brands: Array<{
     slug: string;
     name: string;
@@ -738,12 +752,13 @@ export function getFleetNodes(): FleetNode[] {
 
 export function getMarketingPipeline(): MarketingPipeline {
   const pipelineRoot = resolve(fleetRoot, "reel-pipeline");
-  const rawConfig = readJsonObject(resolve(pipelineRoot, "config/brand-channels.json")) as {
-    brands?: Record<string, {
-      name?: string;
-      domain?: string;
-      channels?: string[];
-      accountMappings?: Record<string, string>;
+  const registry = readJsonObject(resolve(fleetOpsRoot, "config/marketing-program.json")) as {
+    version?: number;
+    projects?: Array<{
+      slug: string; name: string; mode: "focus" | "evergreen" | "infrastructure" | "private";
+      domain: string | null; publicMarketing: boolean; cadence: string; cta: string;
+      contentBase: { adapter?: string; path?: string } | null;
+      channels: Array<{ channel: string; accountSlug: string }>;
     }>;
   };
   const rawProof = readJsonObject(resolve(pipelineRoot, "config/brand-video-proof.json")) as {
@@ -757,33 +772,30 @@ export function getMarketingPipeline(): MarketingPipeline {
     accounts?: Array<{ brand?: string; channel?: string; ready?: boolean }>;
     summary?: { totalAccounts?: number; connectedAccounts?: number; infrastructureReady?: boolean };
   };
-  const sources: Record<string, { path: string; detail: string }> = {
-    "high-signal": {
-      path: resolve(fleetRoot, "high-signal/data/personal-reel-briefs.jsonl"),
-      detail: "Personal reel briefs and High Signal evidence URLs"
-    },
-    significanthobbies: {
-      path: resolve(fleetRoot, "significanthobbies/src/lib/blog-posts.ts"),
-      detail: "Published editorial and structured hobby posts"
-    },
-    "swe-interview-prep": {
-      path: resolve(fleetRoot, "swe-interview-prep/docs"),
-      detail: "Learning tracks and project-backed learning docs"
-    }
+  const targetReport = readJsonObject(resolve(pipelineRoot, "tmp/generation-readiness/report.json")) as {
+    generatedAt?: string; targetHostReady?: boolean; targetHostNextActions?: unknown[];
   };
-  const brands = Object.entries(rawConfig.brands ?? {}).map(([slug, brand]) => {
-    const source = sources[slug];
-    const mappedChannels = Object.keys(brand.accountMappings ?? {}).filter((channel) => Boolean(brand.accountMappings?.[channel]));
-    const channels = brand.channels ?? [];
+  const runtime = readJsonObject(resolve(process.env.HOME ?? "", "Library/Application Support/Fleet Ops/ops-console/runtime.json")) as {
+    marketing?: { lastReceipt?: MarketingPipeline["lastReceipt"] };
+  };
+  const programs = (registry.projects ?? []).map((program) => ({
+    slug: program.slug, name: program.name, mode: program.mode, domain: program.domain,
+    publicMarketing: program.publicMarketing, sourceBacked: Boolean(program.contentBase), cadence: program.cadence, cta: program.cta
+  }));
+  const channelPrograms = (registry.projects ?? []).filter((program) => program.channels.length > 0);
+  const brands = channelPrograms.map((program) => {
+    const slug = program.slug;
+    const channels = program.channels.map((mapping) => mapping.channel);
+    const mappedChannels = program.channels.filter((mapping) => Boolean(mapping.accountSlug)).map((mapping) => mapping.channel);
     const connectedChannels = (socialReadiness.accounts ?? [])
       .filter((entry) => entry.brand === slug && entry.ready && entry.channel)
       .map((entry) => String(entry.channel));
     return {
       slug,
-      name: brand.name ?? titleize(slug),
-      domain: brand.domain ?? "",
-      sourceReady: Boolean(source && existsSync(source.path)),
-      sourceDetail: source?.detail ?? "Source adapter not registered",
+      name: program.name,
+      domain: program.domain ?? "",
+      sourceReady: Boolean(program.contentBase?.path && existsSync(resolve(fleetRoot, program.contentBase.path))),
+      sourceDetail: program.contentBase ? `${program.contentBase.adapter} · ${program.contentBase.path}` : "Source adapter not registered",
       channels,
       mappedChannels,
       connectedChannels,
@@ -798,6 +810,21 @@ export function getMarketingPipeline(): MarketingPipeline {
   const distributionReady = existsSync(resolve(pipelineRoot, "src/distribution.js"));
   const totalAccounts = Number(socialReadiness.summary?.totalAccounts ?? brands.reduce((sum, brand) => sum + brand.channels.length, 0));
   const connectedAccounts = Number(socialReadiness.summary?.connectedAccounts ?? 0);
+  const publisherState = totalAccounts === 0 ? "not-configured" as const : connectedAccounts === totalAccounts ? "ready" as const : "blocked" as const;
+  const targetHostState = typeof targetReport.targetHostReady !== "boolean" ? "not-configured" as const : targetReport.targetHostReady ? "ready" as const : "blocked" as const;
+  const taskPayload = safeExec("openclaw", ["tasks", "list", "--json"], 5000);
+  let orchestrationTask: { status?: string; lastEventAt?: number } | null = null;
+  try {
+    const parsed = JSON.parse(taskPayload) as { tasks?: Array<Record<string, unknown>> };
+    orchestrationTask = (parsed.tasks ?? [])
+      .filter((task) => JSON.stringify(task).includes("marketing-control-dry-run"))
+      .sort((left, right) => Number(right.lastEventAt ?? 0) - Number(left.lastEventAt ?? 0))[0] as typeof orchestrationTask;
+  } catch {}
+  const orchestrationState = orchestrationTask?.status === "succeeded"
+    ? "ready" as const
+    : orchestrationTask
+      ? "blocked" as const
+      : "not-configured" as const;
 
   return {
     updatedAt: rawProof.generatedAt ?? null,
@@ -814,6 +841,29 @@ export function getMarketingPipeline(): MarketingPipeline {
       { name: "Video factory", state: videoReady && Boolean(rawProof.quality?.overall) ? "ready" : "blocked", detail: "Local Kokoro, Playwright Chromium, and FFmpeg vertical render." },
       { name: "Native publishing", state: connectedAccounts === totalAccounts && totalAccounts > 0 ? "ready" : "blocked", detail: `All ${totalAccounts} account routes are configured; ${connectedAccounts}/${totalAccounts} OAuth connections are ready.` }
     ],
+    programs,
+    orchestration: {
+      state: orchestrationState,
+      detail: orchestrationState === "ready"
+        ? "Latest durable OpenClaw marketing dry-run succeeded with zero queue writes; Telegram completion evidence was delivered."
+        : orchestrationState === "blocked"
+          ? `Latest durable OpenClaw marketing dry-run ended ${orchestrationTask?.status ?? "without success"}.`
+          : "No durable OpenClaw marketing dry-run evidence is available.",
+      lastAt: orchestrationTask?.lastEventAt ? new Date(orchestrationTask.lastEventAt).toISOString() : null
+    },
+    targetHost: {
+      state: targetHostState,
+      detail: targetHostState === "ready" ? "Reel Pipeline reports current target-host readiness." : targetHostState === "blocked"
+        ? `${targetReport.targetHostNextActions?.length ?? 0} target-host acceptance action(s) remain.` : "No target-host readiness report is available.",
+      checkedAt: targetReport.generatedAt ?? null
+    },
+    publisher: {
+      state: publisherState,
+      detail: `${connectedAccounts}/${totalAccounts} configured channel accounts are ready; no missing account is inferred ready.`,
+      connected: connectedAccounts,
+      total: totalAccounts
+    },
+    lastReceipt: runtime.marketing?.lastReceipt ?? null,
     brands
   };
 }

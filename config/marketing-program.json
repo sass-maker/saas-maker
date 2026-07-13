@@ -1,0 +1,37 @@
+{
+  "$schema": "fleet.marketing-program.v1",
+  "version": 1,
+  "focusSet": ["pace", "codevetter", "tinygpt"],
+  "defaults": {
+    "globalReviewDebtCeiling": 12,
+    "focusReviewDebtCeiling": 4,
+    "freshnessHours": 168
+  },
+  "projects": [
+    { "slug": "pace", "name": "Pace", "aliases": [], "mode": "focus", "domain": "https://heypace.app", "domainPosture": "root", "publicMarketing": true, "cta": "Download the Mac app or join the release list", "cadence": "weekly", "contentBase": null, "channels": [] },
+    { "slug": "codevetter", "name": "CodeVetter", "aliases": ["CodeVetter"], "mode": "focus", "domain": "https://codevetter.com", "domainPosture": "root", "publicMarketing": true, "cta": "Download the desktop reviewer", "cadence": "weekly", "contentBase": null, "channels": [] },
+    { "slug": "tinygpt", "name": "TinyGPT", "aliases": ["posttrainllm", "PostTrainLLM"], "mode": "focus", "domain": "https://posttrainllm.com", "domainPosture": "legacy-root", "publicMarketing": true, "cta": "Train or run a tiny local model", "cadence": "weekly", "contentBase": null, "channels": [] },
+
+    { "slug": "aliveville", "name": "AliveVille", "aliases": ["alive-ville", "ai-game"], "mode": "evergreen", "domain": "https://aliveville.com", "domainPosture": "root", "publicMarketing": true, "cta": "Play the Rival slice", "cadence": "monthly", "contentBase": null, "channels": [] },
+    { "slug": "anime-list", "name": "MAL Explorer", "aliases": ["anime_list"], "mode": "evergreen", "domain": "https://anime.significanthobbies.com", "domainPosture": "product-subdomain", "publicMarketing": true, "cta": "Explore anime and manga", "cadence": "monthly", "contentBase": null, "channels": [] },
+    { "slug": "drank", "name": "drank", "aliases": [], "mode": "evergreen", "domain": "https://domains.sassmaker.com", "domainPosture": "product-subdomain", "publicMarketing": true, "cta": "Check a domain rating", "cadence": "monthly", "contentBase": null, "channels": [] },
+    { "slug": "high-signal", "name": "High Signal", "aliases": [], "mode": "evergreen", "domain": "https://highsignal.app", "domainPosture": "root", "publicMarketing": true, "cta": "Read the daily brief", "cadence": "daily", "contentBase": { "adapter": "high-signal-reel-briefs", "path": "high-signal/data/personal-reel-briefs.jsonl" }, "channels": [{ "channel": "instagram_reels", "accountSlug": "high-signal-instagram" }, { "channel": "youtube_shorts", "accountSlug": "high-signal-youtube" }] },
+    { "slug": "karte", "name": "Karte", "aliases": ["linkchat"], "mode": "evergreen", "domain": "https://karte.cc", "domainPosture": "root", "publicMarketing": true, "cta": "Create an AI profile", "cadence": "monthly", "contentBase": null, "channels": [] },
+    { "slug": "looptv", "name": "LoopTV", "aliases": [], "mode": "evergreen", "domain": "https://tv.significanthobbies.com", "domainPosture": "product-subdomain", "publicMarketing": true, "cta": "Browse a curated channel", "cadence": "monthly", "contentBase": null, "channels": [] },
+    { "slug": "reader", "name": "Reader", "aliases": [], "mode": "evergreen", "domain": "https://read.significanthobbies.com", "domainPosture": "product-subdomain", "publicMarketing": true, "cta": "Save and revisit an article", "cadence": "monthly", "contentBase": null, "channels": [] },
+    { "slug": "research-papers", "name": "Research Papers", "aliases": [], "mode": "evergreen", "domain": "https://papers.highsignal.app", "domainPosture": "product-subdomain", "publicMarketing": true, "cta": "Explore a research answer", "cadence": "monthly", "contentBase": null, "channels": [] },
+    { "slug": "rolepatch", "name": "RolePatch", "aliases": ["resume-tailor"], "mode": "evergreen", "domain": "https://rolepatch.com", "domainPosture": "root", "publicMarketing": true, "cta": "Tailor a resume or browse jobs", "cadence": "monthly", "contentBase": null, "channels": [] },
+    { "slug": "significanthobbies", "name": "Significant Hobbies", "aliases": [], "mode": "evergreen", "domain": "https://significanthobbies.com", "domainPosture": "root", "publicMarketing": true, "cta": "Pick a meaningful hobby path", "cadence": "weekly", "contentBase": { "adapter": "significant-hobbies-editorial", "path": "significanthobbies/src/lib/blog-posts.ts" }, "channels": [{ "channel": "instagram_reels", "accountSlug": "significanthobbies-instagram" }, { "channel": "youtube_shorts", "accountSlug": "significanthobbies-youtube" }] },
+    { "slug": "starboard", "name": "Starboard", "aliases": [], "mode": "evergreen", "domain": "https://starboard.codevetter.com", "domainPosture": "product-subdomain", "publicMarketing": true, "cta": "Inspect a GitHub tool collection", "cadence": "monthly", "contentBase": null, "channels": [] },
+    { "slug": "swe-interview-prep", "name": "SWE Interview Prep", "aliases": ["interview-coder"], "mode": "evergreen", "domain": "https://learn.significanthobbies.com", "domainPosture": "product-subdomain", "publicMarketing": true, "cta": "Start a learning track", "cadence": "weekly", "contentBase": { "adapter": "swe-learning-sources", "path": "swe-interview-prep/docs" }, "channels": [{ "channel": "instagram_reels", "accountSlug": "swe-interview-prep-instagram" }, { "channel": "youtube_shorts", "accountSlug": "swe-interview-prep-youtube" }] },
+
+    { "slug": "fleet-ops", "name": "Fleet Ops", "aliases": [], "mode": "infrastructure", "domain": "https://fleet.sassmaker.com", "domainPosture": "product-subdomain", "publicMarketing": false, "cta": "Inspect the public fleet map", "cadence": "quarterly", "contentBase": null, "channels": [] },
+    { "slug": "free-ai", "name": "AI Gateway", "aliases": ["Free AI"], "mode": "infrastructure", "domain": "https://ai-gateway.sassmaker.com", "domainPosture": "product-subdomain", "publicMarketing": true, "cta": "Read the API documentation", "cadence": "quarterly", "contentBase": null, "channels": [] },
+    { "slug": "reel-pipeline", "name": "Reel Pipeline", "aliases": [], "mode": "infrastructure", "domain": "https://fleet.sassmaker.com/marketing", "domainPosture": "dashboard-path", "publicMarketing": false, "cta": "Review the media pipeline", "cadence": "quarterly", "contentBase": null, "channels": [] },
+    { "slug": "saas-maker", "name": "SaaS Maker", "aliases": [], "mode": "infrastructure", "domain": "https://sassmaker.com", "domainPosture": "root", "publicMarketing": true, "cta": "Explore the fleet or use fnd", "cadence": "monthly", "contentBase": null, "channels": [] },
+
+    { "slug": "email-manager", "name": "Email Manager", "aliases": [], "mode": "private", "domain": "https://mail.sassmaker.com", "domainPosture": "private-subdomain", "publicMarketing": false, "cta": "Use the private mail workspace", "cadence": "none", "contentBase": null, "channels": [] },
+    { "slug": "knowledge-base", "name": "Knowledge Base", "aliases": ["knowledgebase"], "mode": "private", "domain": "https://search.sassmaker.com", "domainPosture": "private-subdomain", "publicMarketing": false, "cta": "Use private Agent Search", "cadence": "none", "contentBase": null, "channels": [] },
+    { "slug": "wifi-watch", "name": "Wi-Fi Watch", "aliases": [], "mode": "private", "domain": null, "domainPosture": "local-only", "publicMarketing": false, "cta": "Inspect local network health", "cadence": "none", "contentBase": null, "channels": [] }
+  ]
+}

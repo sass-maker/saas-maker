@@ -2,26 +2,42 @@
 
 Generated: 2026-07-11
 
-This is the Fleet source of truth for the nine active product root domains and
-the next canonical hostnames for projects that do not yet have their own domain.
-The three focus-zone projects are `pace`, `codevetter`, and `tinygpt`; their
-plans stay active. The other six domain-backed projects are maintenance/support
-surfaces and should be treated as finished marketing plans unless product scope
-changes.
+This is the human-facing narrative for Fleet domains. The versioned machine
+source of truth for project identity, operating mode, focus state, content-base
+adapters, channel routes, cadence, and CTA is
+`fleet-ops/config/marketing-program.json`; validate it with
+`node fleet-ops/scripts/validate-marketing-program.mjs` before automation runs.
+The three registry focus projects are `pace`, `codevetter`, and `tinygpt`.
+Domain-backed non-focus projects remain evergreen or infrastructure programs as
+declared in the registry; a historical plan being finished does not make an
+unregistered project eligible for queue generation.
+
+Before any queue-generation run, inspect the current authenticated backlog with
+the aggregate-only command below. It emits no post content or identifiers and
+guarantees `queueWrites: 0`:
+
+```bash
+fleet-ops/scripts/agent-bin/marketing-dry-run
+```
+
+If global or focus review debt exceeds the registry ceiling, or a focus project
+already has open work/recent activity, stop at the reported review/recovery
+action. The durable OpenClaw version uses the same command and records terminal
+task plus Telegram completion/failure evidence.
 
 ## Domain-backed Projects
 
-| Project | Domain | Zone | Marketing state | Primary CTA |
+| Project | Domain | Registry mode | Marketing state | Primary CTA |
 | --- | --- | --- | --- | --- |
 | `pace` | `heypace.app` | Focus | Active | Download the Mac app / join release list |
 | `codevetter` | `codevetter.com` | Focus | Active | Download desktop reviewer |
 | `tinygpt` | `posttrainllm.com` | Focus | Active | Train or run a tiny local model |
-| `saas-maker` | `sassmaker.com` | Support | Finished | Explore the fleet / use `fnd` |
-| `aliveville` | `aliveville.com` | Support | Finished | Play the Rival slice |
-| `rolepatch` | `rolepatch.com` | Personal SaaS | Finished | Tailor a resume or browse jobs |
-| `high-signal` | `highsignal.app` | Support SaaS | Finished | Read the daily brief |
-| `karte` | `karte.cc` | Personal SaaS | Finished | Create an AI profile |
-| `significanthobbies` | `significanthobbies.com` | Personal | Finished | Pick a meaningful hobby path |
+| `saas-maker` | `sassmaker.com` | Infrastructure | Finished | Explore the fleet / use `fnd` |
+| `aliveville` | `aliveville.com` | Evergreen | Finished | Play the Rival slice |
+| `rolepatch` | `rolepatch.com` | Evergreen | Finished | Tailor a resume or browse jobs |
+| `high-signal` | `highsignal.app` | Evergreen, source-backed | Active channel program | Read the daily brief |
+| `karte` | `karte.cc` | Evergreen | Finished | Create an AI profile |
+| `significanthobbies` | `significanthobbies.com` | Evergreen, source-backed | Active channel program | Pick a meaningful hobby path |
 
 ## Finished Non-focus Plans
 

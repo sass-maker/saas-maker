@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-STATE_ROOT="$HOME/Library/Application Support/Fleet Ops/learning-sync"
-CATALOG="$STATE_ROOT/swe-interview-prep/src/data/learning-sources.json"
+STATE_ROOT="${FLEET_LEARNING_STATE_ROOT:-$HOME/Library/Application Support/Fleet Ops/learning-sync}"
+CATALOG="${FLEET_LEARNING_CATALOG:-$STATE_ROOT/swe-interview-prep/src/data/learning-sources.json}"
 BASE_URL="${FLEET_LEARNING_URL:-https://swe-interview-prep.pages.dev}"
 
 usage() {
@@ -12,8 +12,8 @@ usage() {
 
 [ "$#" -le 1 ] || usage
 
-date_key="$(date +%Y-%m-%d)"
-session_id="$(date +%s)-$RANDOM"
+date_key="${FLEET_LEARNING_DATE:-$(date +%Y-%m-%d)}"
+session_id="${FLEET_LEARNING_SESSION_ID:-$(date +%s)-$RANDOM}"
 source_query=""
 source_label="Balanced"
 

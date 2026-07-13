@@ -4,6 +4,9 @@ import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 
+import { loadMarketingProgram } from "../../lib/marketing-program.mjs";
+import { buildMarketingSnapshot } from "../../lib/marketing-snapshot.mjs";
+
 const defaultOutput = `${process.env.HOME}/Library/Application Support/Fleet Ops/ops-console/runtime.json`;
 const outputIndex = process.argv.indexOf("--output");
 const outputPath = outputIndex >= 0 ? process.argv[outputIndex + 1] : defaultOutput;
@@ -90,6 +93,7 @@ function marketingSummary() {
   const readinessPath = `${process.env.HOME}/Library/Application Support/Fleet Ops/marketing/readiness.json`;
   let readiness = {};
   try { readiness = JSON.parse(readFileSync(readinessPath, "utf8")); } catch {}
+  const registry = loadMarketingProgram("/Users/assistant/Desktop/fleet/fleet-ops/config/marketing-program.json");
   const cli = "/Users/assistant/Desktop/fleet/saas-maker/packages/cli/dist/index.js";
   const raw = existsSync(cli)
     ? run(process.execPath, [cli, "api", "GET", "/v1/marketing/posts", "--auth", "session", "--query", "limit=500", "--raw", "--quiet"], 15000)
@@ -97,43 +101,40 @@ function marketingSummary() {
   let posts = [];
   try {
     const start = raw.indexOf("{");
-    posts = (JSON.parse(start >= 0 ? raw.slice(start) : raw).data || []).filter((post) => String(post.notes || "").includes("fleet_distribution_v1:"));
+    posts = JSON.parse(start >= 0 ? raw.slice(start) : raw).data || [];
   } catch {}
-  const envelopes = posts.map((post) => ({ post, envelope: decodeDistributionEnvelope(post.notes) })).filter((entry) => entry.envelope);
-  const brandSlugs = [...new Set([
-    ...(readiness.accounts || []).map((account) => account.brand),
-    ...envelopes.map(({ post, envelope }) => envelope.contentPackage?.brand?.slug || post.project_slug)
-  ].filter(Boolean))].sort();
-  const brands = brandSlugs.map((slug) => {
+  const snapshot = buildMarketingSnapshot(posts, registry);
+  const brands = registry.projects.filter((project) => project.channels.length > 0).map((program) => {
+    const slug = program.slug;
     const accounts = (readiness.accounts || []).filter((account) => account.brand === slug);
-    const brandPosts = envelopes.filter(({ post, envelope }) => (envelope.contentPackage?.brand?.slug || post.project_slug) === slug);
-    const published = brandPosts.filter(({ post, envelope }) => post.status === "sent" || Boolean(envelope.publicationReceipt));
-    const lastPostedAt = published
-      .map(({ post, envelope }) => envelope.publicationReceipt?.recordedAt || envelope.publicationReceipt?.postedAt || post.posted_at)
-      .filter(Boolean)
-      .sort()
-      .at(-1) || null;
+    const project = snapshot.projects.find((entry) => entry.slug === slug);
     return {
       slug,
-      channels: accounts.map((account) => account.channel).filter(Boolean).sort(),
+      channels: program.channels.map((entry) => entry.channel),
       connectedChannels: accounts.filter((account) => account.ready).map((account) => account.channel).filter(Boolean).sort(),
-      totalPosts: published.length,
-      lastPostedAt
+      totalPosts: project?.stages.published ?? 0,
+      lastPostedAt: snapshot.lastReceipt?.brand === slug ? snapshot.lastReceipt.recordedAt : project?.latestActivityAt ?? null
     };
   });
   return {
-    generatedAt: readiness.generatedAt || null,
+    ...snapshot.totals,
+    schemaVersion: snapshot.schemaVersion,
+    registryVersion: snapshot.registryVersion,
+    generatedAt: snapshot.generatedAt,
     routedAccounts: Number(readiness.summary?.routedAccounts || 0),
     connectedAccounts: Number(readiness.summary?.connectedAccounts || 0),
-    totalAccounts: Number(readiness.summary?.totalAccounts || 6),
+    totalAccounts: Number(readiness.summary?.totalAccounts || registry.projects.reduce((sum, project) => sum + project.channels.length, 0)),
     infrastructureReady: Boolean(readiness.summary?.infrastructureReady),
-    drafts: envelopes.filter(({ post }) => post.status === "generated").length,
-    rendering: envelopes.filter(({ post, envelope }) => post.status === "accepted" && !envelope.mediaReceipt).length,
-    review: envelopes.filter(({ envelope }) => envelope.mediaReceipt && envelope.distributionRequest?.approval?.status === "proposed").length,
-    scheduled: envelopes.filter(({ envelope }) => envelope.distributionRequest?.approval?.status === "approved" && !envelope.publicationReceipt).length,
-    retrying: envelopes.filter(({ envelope }) => envelope.attempts?.state === "retry_wait").length,
-    failed: envelopes.filter(({ envelope }) => envelope.attempts?.state === "failed").length,
-    released: envelopes.filter(({ post, envelope }) => post.status === "sent" || Boolean(envelope.publicationReceipt)).length,
+    drafts: snapshot.totals.queued,
+    rendering: Math.max(0, snapshot.totals.approved - snapshot.totals.produced),
+    review: Math.max(0, snapshot.totals.produced - snapshot.totals.published),
+    scheduled: posts.filter((post) => decodeDistributionEnvelope(post.notes)?.distributionRequest?.approval?.status === "approved" && !decodeDistributionEnvelope(post.notes)?.publicationReceipt).length,
+    retrying: posts.filter((post) => decodeDistributionEnvelope(post.notes)?.attempts?.state === "retry_wait").length,
+    failed: snapshot.totals.failures,
+    released: snapshot.totals.published,
+    measured: snapshot.totals.measured,
+    projects: snapshot.projects,
+    lastReceipt: snapshot.lastReceipt,
     brands
   };
 }

@@ -1,6 +1,6 @@
 ---
 import FleetNav from "../components/FleetNav.astro";
-import { getCronJobs, getDomainIntelligence, getFleetNodes, getFleetProjects, getSnapshotInfo, getWifiSummary } from "../lib/fleet-data";
+import { getCronJobs, getDomainIntelligence, getFleetNodes, getFleetProjects, getLearningSummary, getSnapshotInfo, getWifiSummary } from "../lib/fleet-data";
 
 const cronJobs = getCronJobs();
 const wifi = getWifiSummary();
@@ -10,6 +10,7 @@ const productProjects = projects.filter((project) => !["fleet-ops", "wifi-watch"
 const productCount = productProjects.length;
 const nodes = getFleetNodes();
 const snapshot = getSnapshotInfo();
+const learning = getLearningSummary();
 const activeJobs = cronJobs.filter((job) => job.enabled);
 const heavyJobs = cronJobs.filter((job) => job.effort === "high").length;
 const hostingCounts = projects.reduce<Record<string, number>>((acc, project) => {
@@ -122,6 +123,13 @@ const formatDate = (value: string | null) =>
           </div>
           <span>Primary Mac is the only active Fleet control node for now.</span>
         </article>
+        <a class="summary-card" href={learning.url} aria-label="Open Fleet learning sources">
+          <div>
+            <p class="label">Learning sources</p>
+            <strong>{learning.freshCount}/{learning.sourceCount}</strong>
+          </div>
+          <span>{learning.staleCount} stale · {learning.pendingCount} pending · {learning.activeSessionCount} active session(s)</span>
+        </a>
       </section>
 
       <section class="panel update-panel" aria-label="Update cadence">
