@@ -2,8 +2,13 @@ name = "saasmaker-dashboard"
 compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
 main = "worker.mjs"
-# Serve overlaid Astro index.html for GET / without invoking the Worker.
-assets = { directory = ".open-next/assets", binding = "ASSETS", run_worker_first = [ "/*", "!/" ] }
+# Route `/` through the wrapper so authenticated sessions can skip the static
+# landing before it paints. Anonymous requests are still served from ASSETS.
+assets = { directory = ".open-next/assets", binding = "ASSETS", run_worker_first = [ "/*" ] }
+
+routes = [
+  { pattern = "app.sassmaker.com/*", zone_name = "sassmaker.com" }
+]
 
 # Self-reference for OpenNext incremental cache tag-based revalidation
 services = [
@@ -14,10 +19,6 @@ services = [
 [[r2_buckets]]
 binding = "NEXT_INC_CACHE_R2_BUCKET"
 bucket_name = "saasmaker-dashboard-opennext-cache"
-
-routes = [
-  { pattern = "app.sassmaker.com/*", zone_name = "sassmaker.com" }
-]
 
 [vars]
 AUTH_URL = "https://app.sassmaker.com"
