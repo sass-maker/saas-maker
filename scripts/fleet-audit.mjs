@@ -100,7 +100,7 @@ const CLOUDFLARE_WORKER_SERVICES = {
 
 const PROD_TARGETS = {
   'anime-list': [
-    { label: 'web', url: 'https://anime-list-9lk.pages.dev', ok: [200] },
+    { label: 'web', url: 'https://anime.significanthobbies.com', ok: [200] },
     { label: 'api-root', url: 'https://mal-api.sarthakagrawal927.workers.dev', ok: [404] },
   ],
   CodeVetter: [{ label: 'web', url: 'https://codevetter.com', ok: [200] }],
@@ -108,9 +108,7 @@ const PROD_TARGETS = {
     { label: 'web', url: 'https://email-manager.sarthakagrawal927.workers.dev', ok: [200] },
   ],
   drank: [{ label: 'web', url: 'https://drank-sand.vercel.app', ok: [200] }],
-  'free-ai': [
-    { label: 'gateway', url: 'https://free-ai-gateway.sarthakagrawal927.workers.dev', ok: [200] },
-  ],
+  'free-ai': [{ label: 'gateway', url: 'https://ai-gateway.sassmaker.com', ok: [200] }],
   'alive-ville': [{ label: 'web', url: 'https://aliveville.com', ok: [200] }],
   'high-signal': [
     { label: 'web', url: 'https://highsignal.app', ok: [200] },
@@ -124,8 +122,8 @@ const PROD_TARGETS = {
     },
   ],
   karte: [{ label: 'web', url: 'https://linkchat.sarthakagrawal927.workers.dev', ok: [200] }],
-  looptv: [{ label: 'web', url: 'https://looptv.pages.dev', ok: [200] }],
-  reader: [{ label: 'web', url: 'https://reader.sarthakagrawal927.workers.dev', ok: [200] }],
+  looptv: [{ label: 'web', url: 'https://tv.significanthobbies.com', ok: [200] }],
+  reader: [{ label: 'web', url: 'https://read.significanthobbies.com', ok: [200] }],
   'reel-pipeline': [
     {
       label: 'health',
@@ -142,11 +140,11 @@ const PROD_TARGETS = {
   ],
   significanthobbies: [{ label: 'web', url: 'https://significanthobbies.com', ok: [200] }],
   starboard: [{ label: 'web', url: 'https://starboard.codevetter.com', ok: [200] }],
-  'swe-interview-prep': [{ label: 'web', url: 'https://swe-interview-prep.pages.dev', ok: [200] }],
+  'swe-interview-prep': [{ label: 'web', url: 'https://learn.significanthobbies.com', ok: [200] }],
 };
 
 const FRONTEND_TARGETS = {
-  'anime-list': [{ label: 'web', url: 'https://anime-list-9lk.pages.dev' }],
+  'anime-list': [{ label: 'web', url: 'https://anime.significanthobbies.com' }],
   CodeVetter: [{ label: 'web', url: 'https://codevetter.com' }],
   'email-manager': [{ label: 'web', url: 'https://email-manager.sarthakagrawal927.workers.dev' }],
   drank: [{ label: 'web', url: 'https://drank-sand.vercel.app' }],
@@ -157,8 +155,8 @@ const FRONTEND_TARGETS = {
     { label: 'health', url: 'https://knowledgebase.sarthakagrawal927.workers.dev/v1/healthz' },
   ],
   karte: [{ label: 'web', url: 'https://linkchat.sarthakagrawal927.workers.dev' }],
-  looptv: [{ label: 'web', url: 'https://looptv.pages.dev' }],
-  reader: [{ label: 'web', url: 'https://reader.sarthakagrawal927.workers.dev' }],
+  looptv: [{ label: 'web', url: 'https://tv.significanthobbies.com' }],
+  reader: [{ label: 'web', url: 'https://read.significanthobbies.com' }],
   rolepatch: [{ label: 'web', url: 'https://rolepatch.com' }],
   'saas-maker': [
     { label: 'cockpit', url: 'https://app.sassmaker.com' },
@@ -167,7 +165,7 @@ const FRONTEND_TARGETS = {
   ],
   significanthobbies: [{ label: 'web', url: 'https://significanthobbies.com' }],
   starboard: [{ label: 'web', url: 'https://starboard.codevetter.com' }],
-  'swe-interview-prep': [{ label: 'web', url: 'https://swe-interview-prep.pages.dev' }],
+  'swe-interview-prep': [{ label: 'web', url: 'https://learn.significanthobbies.com' }],
 };
 
 const PERFORMANCE_BUDGETS = {

@@ -30,7 +30,7 @@ export const FLEET_HEALTH_CONTRACTS = {
   },
   'anime-list': {
     displayName: 'MAL Explorer',
-    prodUrl: 'https://anime-list-9lk.pages.dev',
+    prodUrl: 'https://anime.significanthobbies.com',
     expectedStatus: 200,
     criticalRoutes: ['/'],
     auth: { required: false },
@@ -63,7 +63,7 @@ export const FLEET_HEALTH_CONTRACTS = {
   },
   'free-ai': {
     displayName: 'Free AI Gateway',
-    prodUrl: 'https://free-ai-gateway.sarthakagrawal927.workers.dev',
+    prodUrl: 'https://ai-gateway.sassmaker.com',
     expectedStatus: 200,
     criticalRoutes: ['/health', '/v1/models'],
     auth: { required: true, publicProbe: '/v1/models', protectedProbe: '/v1/chat/completions' },
@@ -74,7 +74,7 @@ export const FLEET_HEALTH_CONTRACTS = {
     deployTarget: 'Cloudflare Workers',
     githubWorkflow: 'cloudflare-deploy.yml',
     smokeCommand:
-      'pnpm --dir ../free-ai test && curl --fail https://free-ai-gateway.sarthakagrawal927.workers.dev/health',
+      'pnpm --dir ../free-ai test && curl --fail https://ai-gateway.sassmaker.com/health',
   },
   'high-signal': {
     displayName: 'High Signal',
@@ -111,7 +111,7 @@ export const FLEET_HEALTH_CONTRACTS = {
   },
   looptv: {
     displayName: 'LoopTV',
-    prodUrl: 'https://looptv.pages.dev',
+    prodUrl: 'https://tv.significanthobbies.com',
     expectedStatus: 200,
     criticalRoutes: ['/'],
     auth: { required: false },
@@ -133,7 +133,7 @@ export const FLEET_HEALTH_CONTRACTS = {
   },
   reader: {
     displayName: 'Reader',
-    prodUrl: 'https://reader.sarthakagrawal927.workers.dev',
+    prodUrl: 'https://read.significanthobbies.com',
     expectedStatus: 200,
     criticalRoutes: ['/', '/login', '/api/auth/sign-in/social'],
     auth: { required: true, provider: 'google', smokeProbe: 'google-signin-provider-configured' },
@@ -235,7 +235,7 @@ export const FLEET_HEALTH_CONTRACTS = {
   },
   'swe-interview-prep': {
     displayName: 'Interview Coder',
-    prodUrl: 'https://swe-interview-prep.pages.dev',
+    prodUrl: 'https://learn.significanthobbies.com',
     expectedStatus: 200,
     criticalRoutes: ['/', '/api/auth/verify', '/api/auth/google'],
     auth: { required: true, provider: 'google', smokeProbe: 'google-auth-is-configured' },

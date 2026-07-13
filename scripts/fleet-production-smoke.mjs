@@ -16,13 +16,13 @@ const DEFAULT_OUTPUT_DIR = path.join(ROOT, '.symphony', 'fleet-production-smoke'
 const DEFAULT_EXISTING_TASKS = path.join(ROOT, '.symphony', 'tasks.json');
 
 const TARGETS = {
-  'anime-list': [{ label: 'web', url: 'https://anime-list-9lk.pages.dev' }],
+  'anime-list': [{ label: 'web', url: 'https://anime.significanthobbies.com' }],
   CodeVetter: [{ label: 'web', url: 'https://codevetter.com' }],
   'email-manager': [{ label: 'web', url: 'https://email-manager.sarthakagrawal927.workers.dev' }],
   drank: [{ label: 'web', url: 'https://drank-sand.vercel.app' }],
   'free-ai': [
-    { label: 'health', url: 'https://free-ai-gateway.sarthakagrawal927.workers.dev/health' },
-    { label: 'models', url: 'https://free-ai-gateway.sarthakagrawal927.workers.dev/v1/models' },
+    { label: 'health', url: 'https://ai-gateway.sassmaker.com/health' },
+    { label: 'models', url: 'https://ai-gateway.sassmaker.com/v1/models' },
   ],
   'alive-ville': [{ label: 'web', url: 'https://aliveville.com' }],
   'high-signal': [{ label: 'web', url: 'https://highsignal.app' }],
@@ -33,7 +33,7 @@ const TARGETS = {
   looptv: [
     {
       label: 'web',
-      url: 'https://looptv.pages.dev',
+      url: 'https://tv.significanthobbies.com',
       expectText: ['Channel-surf YouTube'],
       interactions: [
         {
@@ -52,7 +52,7 @@ const TARGETS = {
     },
   ],
   pace: [{ label: 'web', url: 'https://pace-6xg.pages.dev' }],
-  reader: [{ label: 'web', url: 'https://reader.sarthakagrawal927.workers.dev' }],
+  reader: [{ label: 'web', url: 'https://read.significanthobbies.com' }],
   'reel-pipeline': [
     {
       label: 'health',
@@ -73,7 +73,7 @@ const TARGETS = {
     },
   ],
   starboard: [{ label: 'web', url: 'https://starboard.codevetter.com' }],
-  'swe-interview-prep': [{ label: 'web', url: 'https://swe-interview-prep.pages.dev' }],
+  'swe-interview-prep': [{ label: 'web', url: 'https://learn.significanthobbies.com' }],
   posttrainllm: [
     {
       label: 'web',
@@ -88,7 +88,7 @@ const AUTH_PROBES = {
   reader: [
     {
       label: 'google-signin-provider-configured',
-      url: 'https://reader.sarthakagrawal927.workers.dev/api/auth/sign-in/social',
+      url: 'https://read.significanthobbies.com/api/auth/sign-in/social',
       method: 'POST',
       body: { provider: 'google', callbackURL: '/' },
       okStatuses: [200, 302, 400, 401],
@@ -112,13 +112,13 @@ const AUTH_PROBES = {
   'swe-interview-prep': [
     {
       label: 'verify-rejects-logged-out',
-      url: 'https://swe-interview-prep.pages.dev/api/auth/verify',
+      url: 'https://learn.significanthobbies.com/api/auth/verify',
       method: 'GET',
       okStatuses: [401],
     },
     {
       label: 'google-auth-is-configured',
-      url: 'https://swe-interview-prep.pages.dev/api/auth/google',
+      url: 'https://learn.significanthobbies.com/api/auth/google',
       method: 'POST',
       body: { credential: 'invalid-production-smoke-token' },
       okStatuses: [400, 401],
