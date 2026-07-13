@@ -41,6 +41,7 @@ Mobile Dev Cockpit is a native universal iPhone and iPad interface for supervisi
 - 2026-07-13 — Added universal iPad layouts for portrait, landscape, Split View, and Stage Manager plus a dedicated Apple-native speech composer. The app-local Swift module compiles on Xcode 27 and uses SpeechAnalyzer on iOS 26+ with an on-device SFSpeechRecognizer fallback for iOS 16.4–25.
 - 2026-07-13 — Installed and launched the standalone Release app without Metro on iOS 26.4 iPhone 17 Pro and iPad Pro 13-inch simulators. Native portrait captures, browser-backed portrait/landscape/Split View captures, extreme Dynamic Type, strict OpenSpec validation, all 55 tests, bridge build, and both platform exports pass.
 - 2026-07-13 — Added a generated-project-safe single-window UIScene lifecycle for iOS 27. A clean Xcode 27 Release binary launches without Metro on iOS 26.4 and iOS 27 iPhone simulators plus an iOS 27 iPad simulator; the previous pre-React-Native lifecycle assertion is gone.
+- 2026-07-13 — Made the iOS 16.4 deployment floor reproducible across the generated app and every CocoaPods target. A generic physical-device Release build now compiles with Xcode 27 without a command-line deployment override; a signed retry reaches only the expected missing Apple Account/provisioning-profile gate.
 
 ## Products
 
@@ -70,6 +71,7 @@ Mobile Dev Cockpit is a native universal iPhone and iPad interface for supervisi
 - Standalone Release simulator installation and launch gate with a visually inspected full-resolution native onboarding screenshot artifact.
 - Standalone universal Release installation and launch evidence on representative iPhone and iPad simulators, plus compact/intermediate/regular browser screenshots and an accessibility-extra-extra-extra-large Dynamic Type pass.
 - Idempotent local Expo scene-lifecycle plugin with a single-window manifest, scene-owned React Native startup, Expo lifecycle forwarding, deep-link forwarding, template-drift tests, and standalone Xcode 27 launch evidence on iOS 26.4 and iOS 27.
+- Generated iOS 16.4 app and CocoaPods deployment targets, including guarded handling for legacy privacy resource bundles that Xcode 27 otherwise rejects.
 
 ## Todo / Planned / Deferred / Blocked
 

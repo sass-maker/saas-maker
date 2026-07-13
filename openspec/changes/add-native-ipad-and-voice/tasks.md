@@ -39,6 +39,7 @@
 - [x] 5.5 Verify VoiceOver labels, Dynamic Type reachability, pointer/touch targets, keyboard behavior, and microphone release after every terminal voice state
 - [ ] 5.6 Install on available physical iPhone/iPad hardware and verify permissions, on-device transcription, interruption teardown, rotation/resize, reconnect, WebView preview, and screenshot-to-agent flow
 - [x] 5.7 Generate a clean native project, build once with Xcode 27, and install/launch the same standalone Release app on iOS 26.4 and iOS 27 simulators without Metro
+- [x] 5.8 Generate the iOS 16.4 floor for the app and every CocoaPods target, then compile a generic physical-device Release app with Xcode 27 and no deployment-target override
 
 ## 6. Handoff
 

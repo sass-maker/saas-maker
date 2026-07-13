@@ -29,7 +29,16 @@
       ],
       "expo-secure-store",
       "expo-sharing",
-      "./plugins/with-ios-scene-lifecycle"
+      "./plugins/with-ios-scene-lifecycle",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "deploymentTarget": "16.4"
+          }
+        }
+      ],
+      "./plugins/with-ios-pod-deployment-target"
     ],
     "experiments": {
       "typedRoutes": true,
