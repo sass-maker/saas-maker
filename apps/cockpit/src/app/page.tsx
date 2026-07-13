@@ -19,8 +19,8 @@ export const metadata: Metadata = {
 };
 
 /**
- * Astro owns anon GET `/` in production (landing-astro overlay + run_worker_first).
- * This route is only a fallback when a request reaches OpenNext.
+ * The Worker wrapper serves Astro for anonymous GET `/` requests. Authenticated
+ * requests reach this route and redirect before the landing page is rendered.
  */
 export default async function HomePage() {
   const requestHeaders = await headers();
