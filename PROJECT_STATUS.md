@@ -72,6 +72,7 @@ Brand note: production domain uses **double-s** `sassmaker.com`; display name re
 
 - **2026-07-11 — Fleet deploy/audit alignment:** Restored the reusable Cloudflare deploy workflow contract with Node 22 defaults and aligned fleet-audit local checkout resolution and business lanes to the canonical project slugs.
 - **2026-07-13 — Canonical Fleet health contracts:** Moved production smoke and audit targets to the owned product domains, folded Reel Pipeline visibility into `fleet.sassmaker.com/marketing`, and allowed shared widgets from `*.significanthobbies.com`.
+- **2026-07-13 — Stable LoopTV smoke:** Classified Chromium's optional YouTube `compute-pressure` permissions warning as non-fatal while retaining iframe and playback interaction checks.
 - **2026-07-03 — Droid graduation:** Droid now records durable retry and timeout contracts as run events (every run declares its retry/backoff/timeout behaviour up front). Pre-flight validation fails fast with categorized reasons (git clean state, dependencies installed) before the main task runs. New `/v0/dashboard/success-rate` endpoint computes a rolling 7-day success-rate dashboard with failure-reason breakdown and retry-count distribution. Migration `0022_droid_graduation.sql` adds `retry_count` and `failure_reason` columns + indexes. Backoff strategies (fixed/linear/exponential) with jitter configurable via loop_policy.
 - **2026-07-03 — Marketing posting ops summary:** Cockpit marketing queue now
   derives missed ready posts, reel-pipeline posting failures, synced

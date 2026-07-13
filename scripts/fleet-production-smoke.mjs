@@ -140,6 +140,12 @@ const SEVERE_TEXT_PATTERNS = [
   /localhost:8787/i,
 ];
 
+const IGNORED_CONSOLE_PATTERNS = [
+  // YouTube embeds emit this in Chromium when the browser omits the optional
+  // Compute Pressure permission. Playback is unaffected.
+  /Permissions policy violation: compute-pressure is not allowed in this document/i,
+];
+
 const DEPRECATED_SAAS_MAKER_ANALYTICS_URL = 'https://api.sassmaker.com/v1/analytics/events';
 
 function parseArgs(argv) {
@@ -218,6 +224,7 @@ async function runPageProbe(browser, project, target, args, artifactDir) {
 
   page.on('console', (message) => {
     const text = normalizeError(message.text());
+    if (includesPattern(text, IGNORED_CONSOLE_PATTERNS)) return;
     const isBrowserResourceMessage = /^Failed to load resource:/i.test(text);
     if ((message.type() === 'error' && !isBrowserResourceMessage) || includesPattern(text)) {
       errors.push({ type: 'console', message: text });
