@@ -32,4 +32,4 @@
 - [x] 5.1 Add fixture integration coverage for URL -> brief -> render request -> reviewed artifact metadata.
 - [x] 5.2 Add an FFmpeg smoke proving 9:16 video, visible presenter, audio, captions, and playable range metadata.
 - [x] 5.3 Run focused and full regression checks, update `PROJECT_STATUS.md`, and push the implementation branch.
-- [ ] 5.4 Keep deployment and production configuration changes gated on explicit approval.
+- [x] 5.4 Keep deployment and production configuration changes gated on explicit approval.
