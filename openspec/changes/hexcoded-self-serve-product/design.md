@@ -7,7 +7,7 @@ Public URL form
   -> safe website intake
   -> cited brand brief
   -> script + storyboard
-  -> licensed presenter + brand visuals
+  -> provenance-safe human presenter + brand visuals
   -> existing render/review core
   -> preview + MP4 download
 ```
@@ -48,13 +48,16 @@ subtle generated backgrounds. Captions remain in safe areas.
 ## Human presenter
 
 Use a curated, checksum-pinned presenter pack. Every presenter manifest entry
-must include asset path, checksum, commercial-use licence reference,
-model-release reference, attribution requirements, and allowed transformations.
-Composition fails closed when the asset or proof is missing or mismatched.
+must include asset path, checksum, commercial-use rights reference, attribution
+requirements, and allowed transformations. A real likeness also requires a
+model release. A fictional synthetic human instead requires generator, creation
+date, generation reference, and an explicit non-real-identity attestation.
+Composition fails closed when the asset or its applicable proof is missing or
+mismatched.
 
-This is a licensed prerecorded presenter treatment, not customer actor casting,
-biometric cloning, or an AI-twin marketplace. Generated voice remains behind the
-existing provider adapter and is recorded in output provenance.
+This is a curated presenter treatment, not customer actor casting, biometric
+cloning, or an AI-twin marketplace. Generated voice remains behind the existing
+provider adapter and is recorded in output provenance.
 
 ## Rendering and delivery
 
@@ -75,7 +78,7 @@ No route publishes, schedules, charges, signs in, or connects an account.
 - Unsafe URL: reject before network access.
 - Site fetch/extraction failure: terminal, actionable intake error.
 - Insufficient evidence/assets: return a brief-quality error; do not invent facts.
-- Missing presenter licence/checksum: block render.
+- Missing presenter rights/provenance/checksum: block render.
 - Renderer failure: preserve the classified error and never expose a partial
   file as complete.
 - Review failure: mark `needs_review` or `failed`; do not call it downloadable.

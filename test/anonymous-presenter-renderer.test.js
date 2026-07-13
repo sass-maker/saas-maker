@@ -61,6 +61,44 @@ test('presenter manifest requires checksum, commercial licence, release, and tra
   );
 });
 
+test('synthetic human presenters require explicit fictional generation provenance, not a model release', () => {
+  const validated = validatePresenterManifest(fixtureManifest({
+    likenessType: 'synthetic-human',
+    modelReleaseRef: undefined,
+    syntheticProvenance: {
+      generator: 'fixture-image-generator',
+      generationRef: 'fixture://synthetic-presenter-1',
+      createdAt: '2026-07-13T00:00:00Z',
+      fictionalIdentity: true,
+    },
+  }), {
+    manifestPath: fixtureManifestPath,
+    allowTestOnly: true,
+  });
+  assert.equal(validated.presenters[0].likenessType, 'synthetic-human');
+  assert.equal(validated.presenters[0].modelReleaseRef, null);
+  assert.equal(validated.presenters[0].syntheticProvenance.fictionalIdentity, true);
+  assert.throws(
+    () => validatePresenterManifest(fixtureManifest({
+      likenessType: 'synthetic-human',
+      modelReleaseRef: undefined,
+      syntheticProvenance: { fictionalIdentity: false },
+    }), {
+      manifestPath: fixtureManifestPath,
+      allowTestOnly: true,
+    }),
+    /fictionalIdentity must be true/,
+  );
+});
+
+test('production presenter pack resolves the checksum-pinned fictional synthetic presenter', async () => {
+  const presenter = await resolvePresenter();
+  assert.equal(presenter.id, 'synthetic-presenter-v1');
+  assert.equal(presenter.likenessType, 'synthetic-human');
+  assert.equal(presenter.syntheticProvenance.fictionalIdentity, true);
+  assert.equal(presenter.modelReleaseRef, null);
+});
+
 test('presenter resolution fails closed before use on production approval or checksum mismatch', async () => {
   await assert.rejects(
     resolvePresenter({ manifest: fixtureManifest(), manifestPath: fixtureManifestPath }),
@@ -87,8 +125,13 @@ test('FFmpeg composition scales to 9:16 and overlays the presenter continuously'
   });
   assert.equal(calls.length, 1);
   assert.match(calls[0].join(' '), /scale=1080:1920/);
+  assert.match(calls[0].join(' '), /force_original_aspect_ratio=increase/);
+  assert.match(calls[0].join(' '), /scale=720:1100/);
+  assert.match(calls[0].join(' '), /enable='lt\(t,4\)'/);
   assert.match(calls[0].join(' '), /overlay=W-w-48:H-h-170/);
+  assert.match(calls[0].join(' '), /enable='gte\(t,4\)'/);
   assert.equal(result.aspect, '9:16');
+  assert.equal(result.presenterPlacement, 'center-opening-then-lower-right');
   assert.equal(result.presenterProminentInOpening, true);
   assert.equal(result.presenterAppearsInLaterScene, true);
 });
@@ -128,6 +171,7 @@ test('presenter-led renderer validates proof first and records complete provenan
   assert.equal(result.raw.presenterIncluded, true);
   assert.equal(result.provenance.website.canonicalUrl, 'https://brand.example/');
   assert.equal(result.provenance.presenter.sha256, fixtureSha);
+  assert.equal(result.provenance.presenter.likenessType, 'real-human');
   assert.equal(result.provenance.voice.provider, 'fixture-tts');
   assert.equal(result.provenance.renderer.baseProvider, 'fixture-renderer');
   assert.equal(result.provenance.timing.width, 1080);

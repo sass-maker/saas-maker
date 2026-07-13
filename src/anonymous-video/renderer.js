@@ -84,9 +84,12 @@ export async function composePresenterOverlay(input) {
   await runFfmpeg([
     '-y', '-i', input.sourceVideo, ...presenterInput,
     '-filter_complex',
-    '[0:v]scale=1080:1920:force_original_aspect_ratio=cover,crop=1080:1920[base];'
-      + '[1:v]scale=420:720:force_original_aspect_ratio=decrease,format=rgba[presenter];'
-      + '[base][presenter]overlay=W-w-48:H-h-170:shortest=1:format=auto[v]',
+    '[0:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920[base];'
+      + '[1:v]format=rgba,split=2[presenter-open-source][presenter-bug-source];'
+      + '[presenter-open-source]scale=720:1100:force_original_aspect_ratio=decrease[presenter-open];'
+      + '[presenter-bug-source]scale=420:720:force_original_aspect_ratio=decrease[presenter-bug];'
+      + "[base][presenter-open]overlay=(W-w)/2:H-h-90:enable='lt(t,4)'[opening];"
+      + "[opening][presenter-bug]overlay=W-w-48:H-h-170:enable='gte(t,4)':shortest=1:format=auto[v]",
     '-map', '[v]', '-map', '0:a?', '-c:v', 'libx264', '-preset', 'medium', '-crf', '19',
     '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '160k', '-shortest', '-movflags', '+faststart', input.outputPath,
   ]);
@@ -95,7 +98,7 @@ export async function composePresenterOverlay(input) {
     width: 1080,
     height: 1920,
     aspect: '9:16',
-    presenterPlacement: 'lower-right-continuous',
+    presenterPlacement: 'center-opening-then-lower-right',
     presenterProminentInOpening: true,
     presenterAppearsInLaterScene: true,
     supportingVisuals: true,
@@ -124,8 +127,10 @@ export function buildArtifactProvenance({ input, presenter, baseRender, render, 
       packId: presenter.packId,
       sha256: presenter.sha256,
       mediaType: presenter.mediaType,
+      likenessType: presenter.likenessType,
       commercialLicenseRef: presenter.commercialLicenseRef,
       modelReleaseRef: presenter.modelReleaseRef,
+      syntheticProvenance: presenter.syntheticProvenance,
       allowedTransformations: Object.freeze([...presenter.allowedTransformations]),
       attribution: presenter.attribution,
     }),

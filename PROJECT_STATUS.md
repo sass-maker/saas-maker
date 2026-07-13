@@ -120,7 +120,7 @@ for intentional target-host exclusions.
 
 ## Timeline
 
-- **2026-07-13 — Anonymous brand website to reel:** replaced the unrequested HexCoded account/billing/actor-marketplace plan and deleted its isolated product-domain code. The public root now accepts one HTTPS brand URL without auth or payment, performs DNS-pinned SSRF-safe bounded extraction, builds an evidence-backed script/storyboard, runs a presenter-led 9:16 composition boundary, and exposes safe status, range preview, and attachment download only after review. `/review`, `/studio`, Significant Content, and internal accepted-marketing paths remain intact. The complete Node/Rust regression suite passes. Production generation intentionally fails closed until the presenter manifest receives an approved commercially usable, model-released human asset; the included non-human fixture cannot be promoted.
+- **2026-07-13 — Anonymous brand website to reel:** replaced the unrequested HexCoded account/billing/actor-marketplace plan and deleted its isolated product-domain code. The public root now accepts one HTTPS brand URL without auth or payment, performs DNS-pinned SSRF-safe bounded extraction, builds an evidence-backed script/storyboard, runs a presenter-led 9:16 composition boundary, and exposes safe status, range preview, and attachment download only after review. `/review`, `/studio`, Significant Content, and internal accepted-marketing paths remain intact. The production presenter pack now includes a checksum-pinned fictional synthetic human cutout with generator provenance and an explicit non-real-identity attestation; real likenesses remain fail-closed without model-release proof. The complete Node/Rust regression suite passes.
 - **2026-07-13 — Significant Hobbies content handoff:** added the versioned
   `significant-content-reels/v1` intake and `significant-content-receipt/v1`
   output contracts. Approved variants enter Idea Store idempotently with
@@ -343,7 +343,7 @@ for intentional target-host exclusions.
 
 ### Planned
 
-1. Approve and add one checksum-pinned human presenter asset with commercial-use licence and model-release proof to `assets/presenters/manifest.json`.
+1. Run a production-environment canary with the checksum-pinned synthetic presenter in `assets/presenters/manifest.json`; add any future real likeness only with model-release proof.
 2. Produce the first creator-MVP kids story manually from `docs/creator-mvp-packs/lion-and-mouse.md`.
 3. Produce manual validation videos 2-3 from `docs/creator-mvp-packs/tortoise-and-hare.md` and `docs/creator-mvp-packs/crow-and-pitcher.md`.
 4. Record watch/parent-trust notes for the three completed videos.
@@ -368,12 +368,12 @@ for intentional target-host exclusions.
 
 ### Blocked
 
-- Anonymous presenter-led generation is blocked only on an approved presenter
-  asset and its proof record. `assets/presenters/manifest.json` is deliberately
-  empty; production returns `presenter_pack_empty` rather than using an
-  unlicensed likeness. Auth, billing, credits, actor onboarding/twins, KYC,
-  earnings, payouts, marketplace, and customer social posting are not blockers
-  because they are no longer product scope.
+- Anonymous presenter-led generation has no remaining local implementation
+  blocker. Its production pack contains a checksum-pinned fictional synthetic
+  human with generator provenance; a target-environment canary remains an
+  operator release gate. Auth, billing, credits, actor onboarding/twins, KYC,
+  earnings, payouts, marketplace, and customer social posting are not product
+  scope.
 
 - Final target-host readiness is not complete until
   `tmp/generation-readiness/report.json` has `targetHostReady: true`.

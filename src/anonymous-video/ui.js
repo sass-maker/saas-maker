@@ -17,7 +17,7 @@ export function anonymousVideoPageHtml() {
 <body><main>
   <div class="eyebrow">Reel · one link in, one video out</div>
   <h1>Turn your website into a <em>beautiful reel.</em></h1>
-  <p>We read your public brand site, find the strongest story and visuals, then compose a vertical reel with a licensed human presenter. No account or setup.</p>
+  <p>We read your public brand site, find the strongest story and visuals, then compose a vertical reel with a fictional synthetic human presenter. No account or setup.</p>
   <form id="create-form">
     <input id="brand-url" name="url" type="url" inputmode="url" autocomplete="url" placeholder="https://yourbrand.com" aria-label="Public brand website" required pattern="https://.*">
     <button id="submit" type="submit">Make my reel</button>

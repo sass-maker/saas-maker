@@ -28,13 +28,15 @@ claim as website-derived.
 - **WHEN** the generated script contains a factual product claim
 - **THEN** the job provenance identifies the source page and extracted evidence supporting it
 
-### Requirement: Licensed human presenter
+### Requirement: Provenance-safe human presenter
 Every successful reel SHALL visibly include a human presenter selected from a
-checksum-pinned asset manifest with commercial-use licence and model-release
-proof. Missing or invalid proof SHALL block composition.
+checksum-pinned asset manifest with commercial-use rights. A real person's
+likeness SHALL include model-release proof. A fictional synthetic human SHALL
+instead include explicit generation provenance and an attestation that it does
+not depict a real identity. Missing or invalid proof SHALL block composition.
 
 #### Scenario: Presenter proof is incomplete
-- **WHEN** the selected presenter lacks a valid asset checksum, commercial licence reference, or model-release reference
+- **WHEN** the selected presenter lacks a valid asset checksum, commercial-rights reference, or the proof required for its likeness type
 - **THEN** rendering fails closed and no completed artifact is exposed
 
 ### Requirement: Polished vertical composition

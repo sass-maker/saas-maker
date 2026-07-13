@@ -54,7 +54,28 @@ export function validatePresenterManifest(input, options = {}) {
     const mediaType = requiredString(entry.mediaType, `${field}.mediaType`);
     if (!MEDIA_TYPES.has(mediaType)) throw new PresenterValidationError(`${field}.mediaType is unsupported`);
     const commercialLicenseRef = requiredString(entry.commercialLicenseRef, `${field}.commercialLicenseRef`);
-    const modelReleaseRef = requiredString(entry.modelReleaseRef, `${field}.modelReleaseRef`);
+    const likenessType = optionalString(entry.likenessType) ?? 'real-human';
+    if (!['real-human', 'synthetic-human'].includes(likenessType)) {
+      throw new PresenterValidationError(`${field}.likenessType is unsupported`);
+    }
+    const modelReleaseRef = likenessType === 'real-human'
+      ? requiredString(entry.modelReleaseRef, `${field}.modelReleaseRef`)
+      : optionalString(entry.modelReleaseRef);
+    let syntheticProvenance = null;
+    if (likenessType === 'synthetic-human') {
+      if (!entry.syntheticProvenance || typeof entry.syntheticProvenance !== 'object') {
+        throw new PresenterValidationError(`${field}.syntheticProvenance is required`);
+      }
+      if (entry.syntheticProvenance.fictionalIdentity !== true) {
+        throw new PresenterValidationError(`${field}.syntheticProvenance.fictionalIdentity must be true`);
+      }
+      syntheticProvenance = Object.freeze({
+        generator: requiredString(entry.syntheticProvenance.generator, `${field}.syntheticProvenance.generator`),
+        generationRef: requiredString(entry.syntheticProvenance.generationRef, `${field}.syntheticProvenance.generationRef`),
+        createdAt: requiredString(entry.syntheticProvenance.createdAt, `${field}.syntheticProvenance.createdAt`),
+        fictionalIdentity: true,
+      });
+    }
     if (!Array.isArray(entry.allowedTransformations) || entry.allowedTransformations.length === 0) {
       throw new PresenterValidationError(`${field}.allowedTransformations must not be empty`);
     }
@@ -79,8 +100,10 @@ export function validatePresenterManifest(input, options = {}) {
       assetPath,
       sha256,
       mediaType,
+      likenessType,
       commercialLicenseRef,
       modelReleaseRef,
+      syntheticProvenance,
       allowedTransformations: Object.freeze([...allowedTransformations]),
       attribution: Object.freeze({ required: attributionRequired, text: attributionText ?? null }),
       productionApproved: entry.productionApproved === true,

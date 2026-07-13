@@ -15,7 +15,7 @@
 
 ## 3. Presenter-led rendering
 
-- [ ] 3.1 Add a checksum-pinned presenter manifest with commercial-use licence and model-release references. (Manifest contract is implemented; an approved production human asset and proof record are still required.)
+- [x] 3.1 Add a checksum-pinned presenter manifest with commercial-use rights and likeness-appropriate provenance. (The production pack contains a fictional synthetic human generated for this product; real likenesses still require model-release proof.)
 - [x] 3.2 Validate presenter assets and proof at composition time and fail closed on mismatch or absence.
 - [x] 3.3 Compose a 9:16 MP4 with presenter, brand/product visuals, narration, captions, on-screen text, and CTA using existing adapters.
 - [x] 3.4 Record website, asset, presenter, voice, renderer, timing, and review provenance on the artifact.
