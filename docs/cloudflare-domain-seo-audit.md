@@ -1,13 +1,12 @@
 # Cloudflare Domain And SEO Audit
 
-Generated: 2026-07-11
+Updated: 2026-07-13
 
 ## Executive Summary
 
-The Fleet has several Cloudflare-backed projects still running on `workers.dev`,
-`pages.dev`, or without a public production domain in local deploy config. For
-SEO long game, every non-archived public product should have a stable canonical
-domain, a sitemap, robots policy, metadata defaults, and Search Console setup.
+Every active public Fleet product now has a stable canonical hostname. Pages and
+`workers.dev` addresses remain deployment aliases or backend endpoints where a
+separate public API hostname was not requested.
 
 Important domain state:
 
@@ -17,8 +16,6 @@ Important domain state:
 - `saasmaker.com` is a separate AWS Route 53 domain and should not be used for
   this SEO program unless it is later redirected to `sassmaker.com`.
 - Wrangler OAuth is authenticated for Cloudflare Pages/Workers operations.
-- The current token can read the `sassmaker.com` zone but does not have DNS
-  record edit permission.
 - Audit source is Cloudflare Pages project inventory, `wrangler.toml` /
   `wrangler.jsonc`, and Fleet README project status.
 
@@ -30,16 +27,15 @@ to the other.
 
 ## Fleet Ops Console
 
-Requested target: `https://fleet.sassmaker.com`
+Canonical target: `https://fleet.sassmaker.com`
 
 Current implementation state:
 
 - Local Cloudflare Tunnel ingress includes `fleet.sassmaker.com` and points it
   at `http://127.0.0.1:4329`.
-- Required DNS target when DNS access is available:
+- DNS points to the tunnel target:
   `fceb4f22-db20-4e77-88cf-07c1f290fd42.cfargotunnel.com`
-- Current blocker: creating the DNS CNAME needs DNS record edit permission for
-  the `sassmaker.com` zone.
+- The public console is live and returns HTTP 200.
 
 ## Already Has Own Domain
 
@@ -55,26 +51,25 @@ Current implementation state:
 | `pace` | Pages app | `heypace.app` | Focus-zone product. |
 | `tinygpt` | Pages app | `posttrainllm.com` | Legacy domain; consider `tinygpt.sassmaker.com` as secondary canonical only if the product is renamed publicly. |
 
-## Needs Domain Assignment
+## Assigned Product Subdomains
 
-These are non-archived projects without their own active fleet product domain.
-Default to stable `*.sassmaker.com` hostnames unless a separate brand domain is
-purchased later.
+These non-archived projects use product subdomains under the appropriate Fleet
+brand. Every hostname below was live when this audit was updated.
 
 | Priority | Project | Current CF target/config | Proposed canonical | SEO posture |
 |---:|---|---|---|---|
-| 0 | `fleet-ops` | Cloudflare Tunnel prepared | `fleet.sassmaker.com` | Operator console. Index the public fleet map; noindex private host diagnostics. |
-| 1 | `reader` | Worker, no routes | `reader.sassmaker.com` | Public research library. Needs crawlable landing, `/sitemap.xml`, article/library index, OG defaults. |
-| 1 | `swe-interview-prep` | Pages domain attached, initializing | `interview.sassmaker.com` | Evergreen learning content. Needs concept pages, problem index, sitemap. |
-| 1 | `research-papers` | Pages demo | `papers.sassmaker.com`, `api.papers.sassmaker.com` | Research search/RAG surface. Needs crawlable paths, cited answer examples, and paper-topic hubs. |
-| 1 | `knowledge-base` | private/search infra | `search.sassmaker.com`, `api.search.sassmaker.com` | Private Agent Search. Public SEO should be docs/use-cases only; keep private indexes noindex. |
-| 2 | `anime-list` | Pages domain attached, initializing | `anime.sassmaker.com` | Free tool. Needs canonical metadata and indexable anime/manga routes. |
-| 2 | `looptv` | Pages domain attached, initializing | `tv.sassmaker.com` | Free tool. Needs curated channel/category pages, sitemap. |
-| 2 | `starboard` | Worker custom-domain route prepared | `starboard.codevetter.com` | SaaS surface under the CodeVetter umbrella. |
-| 2 | `drank` | support app | `domains.sassmaker.com`, `api.domains.sassmaker.com` | Domain-rating support surface. SEO via DR explainer, tracked-domain examples, and High Signal backlinks. |
-| 3 | `email-manager` | Worker route config prepared | `mail.sassmaker.com` | Likely auth-heavy. Use marketing/docs pages for SEO, keep app noindex if private. |
-| 3 | `free-ai` | Worker route config prepared | `ai.sassmaker.com` | API gateway/docs. SEO via docs and model/provider pages; API base can be `api.ai.sassmaker.com`. |
-| 4 | `reel-pipeline` | Worker route config prepared | `reels.sassmaker.com` | Mostly support infra. SEO only if there is a public gallery/docs surface. |
+| 0 | `fleet-ops` | Cloudflare Tunnel | `fleet.sassmaker.com` | Public read-only Fleet console. |
+| 1 | `reader` | Worker custom domain | `read.significanthobbies.com` | Authenticated private reading workspace. |
+| 1 | `swe-interview-prep` | Pages custom domain | `learn.significanthobbies.com` | Owner-authenticated Learning OS. |
+| 1 | `research-papers` | Pages custom domain | `papers.highsignal.app` | Public research paths and cited answers. |
+| 1 | `knowledge-base` | Worker custom domain | `search.sassmaker.com` | Private Agent Search app; indexes remain noindex. |
+| 2 | `anime-list` | Pages custom domain | `anime.significanthobbies.com` | Public anime and manga discovery. |
+| 2 | `looptv` | Pages custom domain | `tv.significanthobbies.com` | Public curated stations and categories. |
+| 2 | `starboard` | Worker custom domain | `starboard.codevetter.com` | CodeVetter umbrella product. |
+| 2 | `drank` | Pages custom domain | `domains.sassmaker.com` | Domain-rating support surface. |
+| 3 | `email-manager` | Worker custom domain | `mail.sassmaker.com` | Authenticated mail workspace. |
+| 3 | `free-ai` | Worker custom domain | `ai-gateway.sassmaker.com` | AI Gateway API, dashboard, and docs. |
+| 4 | `reel-pipeline` | Fleet dashboard path | `fleet.sassmaker.com/marketing` | Public aggregate state only; controls remain private. |
 
 Excluded:
 
@@ -99,18 +94,11 @@ Every assigned domain should ship:
   `BreadcrumbList`, `Article`, `FAQPage`.
 - Internal links from `fleet.sassmaker.com` and the SaaS Maker product index.
 
-## Apply Plan
+## Remaining SEO Work
 
-1. Add DNS edit permission for `sassmaker.com` or create required DNS records
-   manually in the Cloudflare dashboard.
-2. Deploy Worker projects after reviewing unrelated dirty local changes:
-   `email-manager`, `reader`, `free-ai`, `starboard`, `reel-pipeline`.
-3. Update each app's public env/canonical metadata.
-4. Add or verify `robots.txt`, `sitemap.xml`, and default SEO metadata.
-5. Submit sitemaps and track indexing.
-
-## Current Blockers
-
-- Current Wrangler OAuth lacks DNS record edit permission.
-- Several Worker repos have unrelated dirty files, so route config changes are
-  prepared but not deployed from this checkout.
+1. Verify `robots.txt`, sitemap, metadata, and structured data as each public
+   surface changes.
+2. Submit public sitemaps to Google Search Console and Bing Webmaster Tools.
+3. Keep private Reader, Learning, Mail, and Agent Search routes out of indexes.
+4. Track domain rating and indexing weekly when the deferred domain cron is
+   enabled.

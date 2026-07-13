@@ -164,31 +164,33 @@ task plus Telegram completion/failure evidence.
 - **Next assets:** browser playground demo, gallery story, performance proof
   page, migration plan for `tinygpt.sassmaker.com` or a purchased root domain.
 
-## Projects Needing Domains
+## Canonical Product Surfaces
 
 | Project | Canonical hostname | Necessary subdomains | Notes |
 | --- | --- | --- | --- |
-| `fleet-ops` | `fleet.sassmaker.com` | none | DNS CNAME still blocked by missing DNS edit permission. |
-| `reader` | `reader.sassmaker.com` | `api.reader.sassmaker.com` if API split | Public library/index should be crawlable; auth/private notes noindex. |
-| `swe-interview-prep` | `interview.sassmaker.com` | none initially | Evergreen concept/problem pages should be indexable. |
-| `research-papers` | `papers.sassmaker.com` | `api.papers.sassmaker.com` | Research Answer API and paper paths. |
-| `knowledge-base` | `search.sassmaker.com` | `api.search.sassmaker.com` | Public docs only; private indexes noindex. |
-| `anime-list` | `anime.sassmaker.com` | `api.anime.sassmaker.com` if MAL API moves | Free discovery tool. |
-| `looptv` | `tv.sassmaker.com` | none initially | Curated channels/categories for SEO. |
+| `fleet-ops` | `fleet.sassmaker.com` | none | Live public read-only control and visibility dashboard. |
+| `reader` | `read.significanthobbies.com` | none | Authenticated saved reading; private content remains noindex. |
+| `swe-interview-prep` | `learn.significanthobbies.com` | none | Owner-authenticated Learning OS and daily sessions. |
+| `research-papers` | `papers.highsignal.app` | none | Public research paths and Research Answer surface. |
+| `knowledge-base` | `search.sassmaker.com` | none | Private Agent Search app; RAG API remains an internal Worker endpoint. |
+| `anime-list` | `anime.significanthobbies.com` | none | Public anime and manga discovery. |
+| `looptv` | `tv.significanthobbies.com` | none | Public curated channels and categories. |
 | `starboard` | `starboard.codevetter.com` | none initially | CodeVetter umbrella branding won in the Starboard Worker config. |
 | `drank` | `domains.sassmaker.com` | `api.domains.sassmaker.com` | Domain Rating support and High Signal backlinks. |
 | `email-manager` | `mail.sassmaker.com` | none initially | Auth-heavy app; marketing/docs indexable, app private/noindex. |
-| `free-ai` | `ai.sassmaker.com` | `api.ai.sassmaker.com` | API docs and provider/model pages. |
-| `reel-pipeline` | `reels.sassmaker.com` | none initially | Public gallery/docs only; rendering control paths stay private. |
+| `free-ai` | `ai-gateway.sassmaker.com` | none | AI Gateway API, dashboard, and documentation. |
+| `reel-pipeline` | `fleet.sassmaker.com/marketing` | none | Merged into Fleet; rendering and posting controls stay private. |
 
-## DNS / Cloudflare Next Actions
+All listed canonical hostnames are live. The owning repositories carry these
+hosts in runtime defaults, SEO metadata, deployment documentation, or route
+configuration; Pages and `workers.dev` hostnames remain deployment aliases, not
+product identity.
 
-1. Grant DNS edit permission for the `sassmaker.com` zone or add the CNAMEs in
-   the Cloudflare dashboard.
-2. Create `fleet.sassmaker.com` CNAME to the existing tunnel target:
-   `fceb4f22-db20-4e77-88cf-07c1f290fd42.cfargotunnel.com`.
-3. For Worker-backed hostnames, add routes in each repo's `wrangler.*`, then
-   deploy only from a clean, synced project checkout.
-4. For Pages-backed hostnames, attach the custom domain in Pages and verify DNS.
-5. Add Search Console/Bing verification after each hostname serves canonical
-   metadata, robots, sitemap, and no private-route indexing leaks.
+## Marketing Execution
+
+The source-backed Reel Pipeline handles High Signal, Significant Hobbies, and
+SWE Interview Prep directly. Versioned project campaigns now make the finished
+non-focus plans for AliveVille, Karte, RolePatch, and SaaS Maker renderable from
+their owning repository evidence. Every extracted item remains proposed until
+content approval, and every distribution remains blocked until its exact social
+account is connected and separately approved.

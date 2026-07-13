@@ -67,7 +67,7 @@ function status() {
     active: sessions.filter((entry) => entry.status === 'started').slice(-10),
     completedCount: sessions.filter((entry) => entry.status === 'completed').length,
     latest: sessions.at(-1) || null,
-    learningUrl: 'https://swe-interview-prep.pages.dev/sources',
+    learningUrl: 'https://learn.significanthobbies.com/sources',
   };
 }
 

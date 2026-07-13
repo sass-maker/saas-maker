@@ -78,6 +78,12 @@ configuration when that runtime is enabled.
 small, credential-free, and explicit about any provider environment variable
 they require.
 
+Current-month Cloudflare Worker CPU attribution is available with:
+
+```bash
+node scripts/report-workers-cpu.mjs
+```
+
 ## Editing skills
 
 Edit SKILL.md files in this repo. Never edit in `~/.claude/skills/` or other

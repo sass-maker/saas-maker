@@ -7,7 +7,7 @@ export default defineConfig({
   },
   vite: {
     preview: {
-      allowedHosts: ["assistant-fleet.sarthakagrawal.dev"]
+      allowedHosts: ["fleet.sassmaker.com"]
     }
   }
 });

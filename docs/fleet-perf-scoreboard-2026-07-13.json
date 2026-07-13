@@ -16,7 +16,7 @@
     {
       "slug": "pace",
       "name": "Pace",
-      "url": "https://pace-6xg.pages.dev",
+      "url": "https://heypace.app",
       "ok": true,
       "p50": "1.14s",
       "p75": "1.17s",
@@ -27,7 +27,7 @@
     {
       "slug": "swe-interview-prep",
       "name": "Interview Coder",
-      "url": "https://swe-interview-prep.pages.dev",
+      "url": "https://learn.significanthobbies.com",
       "ok": true,
       "p50": "1.10s",
       "p75": "1.14s",
@@ -49,7 +49,7 @@
     {
       "slug": "looptv",
       "name": "LoopTV",
-      "url": "https://looptv.pages.dev",
+      "url": "https://tv.significanthobbies.com",
       "ok": true,
       "p50": "675ms",
       "p75": "819ms",
@@ -115,7 +115,7 @@
     {
       "slug": "karte",
       "name": "Karte",
-      "url": "https://linkchat.sarthakagrawal927.workers.dev",
+      "url": "https://karte.cc",
       "ok": true,
       "p50": "543ms",
       "p75": "555ms",
@@ -126,7 +126,7 @@
     {
       "slug": "anime-list",
       "name": "MAL Explorer",
-      "url": "https://anime-list-9lk.pages.dev",
+      "url": "https://anime.significanthobbies.com",
       "ok": true,
       "p50": "459ms",
       "p75": "502ms",
@@ -148,7 +148,7 @@
     {
       "slug": "drank",
       "name": "drank",
-      "url": "https://drank.pages.dev",
+      "url": "https://domains.sassmaker.com",
       "ok": true,
       "p50": "459ms",
       "p75": "483ms",
@@ -159,7 +159,7 @@
     {
       "slug": "knowledge-base",
       "name": "Private Agent Search",
-      "url": "https://knowledgebase.sarthakagrawal927.workers.dev",
+      "url": "https://search.sassmaker.com",
       "ok": true,
       "p50": "248ms",
       "p75": "252ms",
@@ -170,14 +170,14 @@
     {
       "slug": "email-manager",
       "name": "Email Manager",
-      "url": "https://email-manager.sarthakagrawal927.workers.dev",
+      "url": "https://mail.sassmaker.com",
       "ok": true,
       "p90ms": null
     },
     {
       "slug": "reader",
       "name": "Reader",
-      "url": "https://reader.sarthakagrawal927.workers.dev",
+      "url": "https://read.significanthobbies.com",
       "ok": true,
       "p90ms": null
     }
