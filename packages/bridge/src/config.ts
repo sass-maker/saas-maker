@@ -1,4 +1,5 @@
 import { existsSync, readFileSync, realpathSync } from "node:fs";
+import { homedir, hostname } from "node:os";
 import { dirname, isAbsolute, resolve } from "node:path";
 import type { OperationName } from "@mobile-dev-cockpit/protocol";
 
@@ -15,6 +16,9 @@ export interface ProjectConfig {
   productionUrl?: string;
   environment: Record<string, string>;
   commands: CommandMap;
+  source?: "static" | "dynamic";
+  discoveryRoot?: string;
+  repositoryIdentity?: string;
 }
 
 export interface BridgeConfig {
@@ -28,6 +32,8 @@ export interface BridgeConfig {
   logLineLimit: number;
   diffByteLimit: number;
   stateFile: string;
+  catalogFile: string;
+  discoveryRoots: string[];
   projects: ProjectConfig[];
 }
 
@@ -76,12 +82,28 @@ function optionalUrl(value: unknown, label: string): string | undefined {
 
 export function parseConfig(input: unknown, configPath: string): BridgeConfig {
   const root = record(input, "config");
-  if (!Array.isArray(root.projects) || root.projects.length === 0) {
-    throw new Error("projects must contain at least one configured repository");
+  const rawProjects = root.projects === undefined ? [] : root.projects;
+  if (!Array.isArray(rawProjects)) throw new Error("projects must be an array");
+
+  const rawDiscoveryRoots =
+    root.discoveryRoots === undefined ? [] : root.discoveryRoots;
+  if (!Array.isArray(rawDiscoveryRoots))
+    throw new Error("discoveryRoots must be an array");
+  const discoveryRoots = rawDiscoveryRoots.map((value, index) => {
+    const configured = text(value, `discoveryRoots[${index}]`);
+    if (!isAbsolute(configured))
+      throw new Error(`discoveryRoots[${index}] must be absolute`);
+    if (!existsSync(configured))
+      throw new Error(`discoveryRoots[${index}] does not exist`);
+    return realpathSync(configured);
+  });
+
+  if (rawProjects.length === 0 && discoveryRoots.length === 0) {
+    throw new Error("Configure at least one project or discovery root");
   }
 
   const seen = new Set<string>();
-  const projects = root.projects.map((raw, index): ProjectConfig => {
+  const projects = rawProjects.map((raw, index): ProjectConfig => {
     const project = record(raw, `projects[${index}]`);
     const id = text(project.id, `projects[${index}].id`);
     if (!/^[a-z0-9][a-z0-9-]*$/.test(id))
@@ -155,6 +177,13 @@ export function parseConfig(input: unknown, configPath: string): BridgeConfig {
   const stateFile = isAbsolute(rawStateFile)
     ? rawStateFile
     : resolve(configDirectory, rawStateFile);
+  const rawCatalogFile =
+    typeof root.catalogFile === "string"
+      ? root.catalogFile
+      : resolve(dirname(stateFile), "projects.json");
+  const catalogFile = isAbsolute(rawCatalogFile)
+    ? rawCatalogFile
+    : resolve(configDirectory, rawCatalogFile);
 
   return {
     machineName: text(root.machineName, "machineName"),
@@ -187,6 +216,8 @@ export function parseConfig(input: unknown, configPath: string): BridgeConfig {
       "diffByteLimit",
     ),
     stateFile,
+    catalogFile,
+    discoveryRoots,
     projects,
   };
 }
@@ -195,5 +226,26 @@ export function loadConfig(configPath: string): BridgeConfig {
   return parseConfig(
     JSON.parse(readFileSync(configPath, "utf8")) as unknown,
     configPath,
+  );
+}
+
+export function createLowConfiguration(
+  roots: string[],
+  stateDirectory = resolve(
+    homedir(),
+    "Library",
+    "Application Support",
+    "Mobile Dev Cockpit",
+  ),
+): BridgeConfig {
+  return parseConfig(
+    {
+      machineName: hostname().replace(/\.local$/i, ""),
+      discoveryRoots: roots.map((root) => resolve(root)),
+      stateFile: resolve(stateDirectory, "state.json"),
+      catalogFile: resolve(stateDirectory, "projects.json"),
+      projects: [],
+    },
+    resolve(stateDirectory, "config.json"),
   );
 }

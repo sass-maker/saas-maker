@@ -13,6 +13,7 @@ const snapshot: MachineSnapshot = {
     {
       id: "site",
       name: "Site",
+      source: "static",
       capabilities: {
         dev: true,
         tunnel: true,

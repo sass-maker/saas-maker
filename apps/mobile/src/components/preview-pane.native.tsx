@@ -1,11 +1,19 @@
 import { useEffect, useRef, useState } from "react";
-import { Linking, StyleSheet, Text, View } from "react-native";
+import {
+  Linking,
+  Platform,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import * as Sharing from "expo-sharing";
 import * as ScreenOrientation from "expo-screen-orientation";
 import { captureRef } from "react-native-view-shot";
 import { WebView } from "react-native-webview";
 import { Button } from "./ui";
 import { colors } from "../lib/theme";
+import { deriveCockpitLayout } from "../lib/layout";
 
 interface PreviewPaneProps {
   url: string;
@@ -22,6 +30,9 @@ export function PreviewPane({
   onSendToAgent,
 }: PreviewPaneProps) {
   const webView = useRef<WebView>(null);
+  const window = useWindowDimensions();
+  const layout = deriveCockpitLayout(window.width, window.height);
+  const usesCanvasOrientation = Platform.OS === "ios" && Platform.isPad;
   const captureTarget = useRef<View>(null);
   const [landscape, setLandscape] = useState(false);
   const [theme, setTheme] = useState<"system" | "light" | "dark">("system");
@@ -85,6 +96,10 @@ export function PreviewPane({
 
   const rotate = async (): Promise<void> => {
     const next = !landscape;
+    if (usesCanvasOrientation) {
+      setLandscape(next);
+      return;
+    }
     try {
       await ScreenOrientation.lockAsync(
         next
@@ -115,7 +130,7 @@ export function PreviewPane({
   })(); true;`;
 
   return (
-    <View style={styles.frame}>
+    <View style={[styles.frame, { height: layout.previewHeight }]}>
       <View style={styles.toolbar}>
         <Button variant="secondary" onPress={() => webView.current?.goBack()}>
           Back
@@ -135,7 +150,13 @@ export function PreviewPane({
           Send to agent
         </Button>
         <Button variant="secondary" onPress={() => void rotate()}>
-          {landscape ? "Portrait" : "Rotate"}
+          {usesCanvasOrientation
+            ? landscape
+              ? "Portrait viewport"
+              : "Landscape viewport"
+            : landscape
+              ? "Portrait"
+              : "Rotate"}
         </Button>
         <Button variant="secondary" onPress={nextTheme}>
           {theme}
@@ -152,22 +173,29 @@ export function PreviewPane({
           {feedback.message}
         </Text>
       ) : null}
-      <View
-        ref={captureTarget}
-        collapsable={false}
-        style={styles.previewSurface}
-      >
-        <WebView
-          ref={webView}
-          key={`${url}:${theme}`}
-          source={{ uri: url }}
-          style={styles.webView}
-          allowsBackForwardNavigationGestures
-          injectedJavaScriptBeforeContentLoaded={themeScript}
-          onShouldStartLoadWithRequest={(request) =>
-            /^https?:\/\//i.test(request.url)
-          }
-        />
+      <View style={styles.previewCanvas}>
+        <View
+          ref={captureTarget}
+          collapsable={false}
+          style={[
+            styles.previewSurface,
+            usesCanvasOrientation && styles.deviceViewport,
+            usesCanvasOrientation &&
+              (landscape ? styles.deviceLandscape : styles.devicePortrait),
+          ]}
+        >
+          <WebView
+            ref={webView}
+            key={`${url}:${theme}`}
+            source={{ uri: url }}
+            style={styles.webView}
+            allowsBackForwardNavigationGestures
+            injectedJavaScriptBeforeContentLoaded={themeScript}
+            onShouldStartLoadWithRequest={(request) =>
+              /^https?:\/\//i.test(request.url)
+            }
+          />
+        </View>
       </View>
     </View>
   );
@@ -175,7 +203,6 @@ export function PreviewPane({
 
 const styles = StyleSheet.create({
   frame: {
-    height: 600,
     borderRadius: 18,
     overflow: "hidden",
     backgroundColor: colors.panel,
@@ -207,6 +234,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingBottom: 8,
   },
-  previewSurface: { flex: 1, backgroundColor: "#FFFFFF" },
+  previewCanvas: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.code,
+    padding: 10,
+  },
+  previewSurface: { flex: 1, width: "100%", backgroundColor: "#FFFFFF" },
+  deviceViewport: { flex: undefined, maxWidth: "100%", maxHeight: "100%" },
+  devicePortrait: { height: "100%", aspectRatio: 9 / 16 },
+  deviceLandscape: { width: "100%", aspectRatio: 16 / 9 },
   webView: { flex: 1, backgroundColor: "#FFFFFF" },
 });

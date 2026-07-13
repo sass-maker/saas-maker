@@ -1,6 +1,7 @@
 #!/usr/bin/env node
+import { realpathSync } from "node:fs";
 import { resolve } from "node:path";
-import { loadConfig } from "./config.js";
+import { createLowConfiguration, loadConfig } from "./config.js";
 import { discoverRepositories } from "./discover.js";
 import { BridgeServer } from "./server.js";
 import {
@@ -9,11 +10,19 @@ import {
   enableTailscaleServe,
 } from "./tailscale.js";
 
-function configArgument(args: string[]): string {
+function configArgument(args: string[]): string | undefined {
   const index = args.indexOf("--config");
-  if (index < 0 || !args[index + 1])
-    throw new Error("Usage: mobile-dev-cockpit-bridge --config <path>");
+  if (index < 0) return undefined;
+  if (!args[index + 1]) throw new Error("--config requires a path");
   return resolve(process.env.INIT_CWD ?? process.cwd(), args[index + 1]);
+}
+
+function rootArguments(args: string[]): string[] {
+  return args.flatMap((argument, index) =>
+    argument === "--root" && args[index + 1]
+      ? [resolve(process.env.INIT_CWD ?? process.cwd(), args[index + 1]!)]
+      : [],
+  );
 }
 
 try {
@@ -24,12 +33,14 @@ try {
     console.log(`Mobile Dev Cockpit bridge
 
 Usage:
-  mobile-dev-cockpit-bridge --config <path> [--tailscale]
+  mobile-dev-cockpit-bridge --root <path> [--root <path>] [--tailscale]
+  mobile-dev-cockpit-bridge --config <path> [--root <path>] [--tailscale]
   mobile-dev-cockpit-bridge discover --root <path> [--root <path>]
   mobile-dev-cockpit-bridge tailscale-off
 
 Options:
   --tailscale      Publish the loopback bridge privately with Tailscale Serve
+  --root <path>    Allow bounded repository discovery inside this local root
   -h, --help       Show this help
   -V, --version    Show the bridge version`);
     process.exit(0);
@@ -39,11 +50,7 @@ Options:
     process.exit(0);
   }
   if (args[0] === "discover") {
-    const roots = args.flatMap((argument, index) =>
-      argument === "--root" && args[index + 1]
-        ? [resolve(process.env.INIT_CWD ?? process.cwd(), args[index + 1]!)]
-        : [],
-    );
+    const roots = rootArguments(args);
     if (!roots.length)
       throw new Error(
         "Usage: mobile-dev-cockpit-bridge discover --root <path> [--root <path>]",
@@ -59,13 +66,32 @@ Options:
     process.exit(0);
   }
   const configPath = configArgument(args);
-  const config = loadConfig(configPath);
+  const roots = rootArguments(args);
+  if (!configPath && !roots.length)
+    throw new Error(
+      "Usage: mobile-dev-cockpit-bridge --root <path> [--root <path>] [--tailscale]",
+    );
+  const config = configPath
+    ? loadConfig(configPath)
+    : createLowConfiguration(roots);
+  if (configPath && roots.length) {
+    config.discoveryRoots = [
+      ...new Set([
+        ...config.discoveryRoots,
+        ...roots.map((root) => realpathSync(root)),
+      ]),
+    ];
+  }
   if (args.includes("--tailscale")) assertTailscaleHost(config.host);
   const server = new BridgeServer(config);
   const port = await server.listen();
   console.log(
     `Mobile Dev Cockpit bridge listening on ws://${server.config.host}:${port}`,
   );
+  if (server.config.discoveryRoots.length) {
+    console.log(`Discovery roots: ${server.config.discoveryRoots.join(", ")}`);
+    console.log(`Dynamic catalog: ${server.config.catalogFile}`);
+  }
   if (args.includes("--tailscale")) {
     try {
       const tailscale = enableTailscaleServe(server.config.host, port);

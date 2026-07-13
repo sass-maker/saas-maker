@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { mkdtempSync, readdirSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readdirSync, realpathSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
@@ -7,7 +7,7 @@ import {
   type ClientRequest,
   type ServerResponse,
 } from "@mobile-dev-cockpit/protocol";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { WebSocket } from "ws";
 import type { BridgeConfig } from "../src/config.js";
 import { BridgeServer } from "../src/server.js";
@@ -39,6 +39,8 @@ function fixture(): BridgeConfig {
     logLineLimit: 100,
     diffByteLimit: 10_000,
     stateFile: join(repositoryPath, ".state", "state.json"),
+    catalogFile: join(repositoryPath, ".state", "projects.json"),
+    discoveryRoots: [],
     projects: [
       {
         id: "site",
@@ -71,6 +73,56 @@ function fixture(): BridgeConfig {
   };
 }
 
+function dynamicFixture(): BridgeConfig {
+  const repositoryPath = realpathSync(
+    mkdtempSync(join(tmpdir(), "cockpit-dynamic-")),
+  );
+  execFileSync("git", ["init", "-q"], { cwd: repositoryPath });
+  writeFileSync(
+    join(repositoryPath, "package.json"),
+    JSON.stringify({
+      name: "dynamic-site",
+      packageManager: "npm@11.0.0",
+      scripts: {
+        dev: `${process.execPath} -e \"console.log('http://localhost:4010'); setInterval(() => {}, 1000)\"`,
+        check: `${process.execPath} -e \"console.log('checked')\"`,
+        deploy: `${process.execPath} -e \"console.log('deployed')\"`,
+      },
+    }),
+  );
+  writeFileSync(
+    join(repositoryPath, ".mobile-dev-cockpit.json"),
+    JSON.stringify({
+      commands: {
+        agent: [
+          process.execPath,
+          "-e",
+          "process.stdin.on('data', data => console.log(data.toString().trim())); setInterval(() => {}, 1000)",
+        ],
+        agentResume: [
+          process.execPath,
+          "-e",
+          "console.log('resumed'); setInterval(() => {}, 1000)",
+        ],
+      },
+    }),
+  );
+  return {
+    machineName: "Dynamic Mac",
+    host: "127.0.0.1",
+    port: 0,
+    pairingTtlSeconds: 60,
+    sessionTtlSeconds: 86_400,
+    approvalTtlSeconds: 60,
+    logLineLimit: 100,
+    diffByteLimit: 10_000,
+    stateFile: join(repositoryPath, ".state", "state.json"),
+    catalogFile: join(repositoryPath, ".state", "projects.json"),
+    discoveryRoots: [repositoryPath],
+    projects: [],
+  };
+}
+
 function open(url: string): Promise<WebSocket> {
   return new Promise((resolve, reject) => {
     const socket = new WebSocket(url);
@@ -100,6 +152,299 @@ function request(
 }
 
 describe("BridgeServer", () => {
+  it("discovers, stale-checks, enrolls, restores, and removes a dynamic project", async () => {
+    const config = dynamicFixture();
+    const server = new BridgeServer(config);
+    servers.push(server);
+    const port = await server.listen();
+    const socket = await open(`ws://127.0.0.1:${port}`);
+    expect(
+      (
+        await request(socket, {
+          version: PROTOCOL_VERSION,
+          type: "discoverRepositories",
+          requestId: "unauth-discovery",
+        })
+      ).error?.code,
+    ).toBe("authentication_required");
+    await request(socket, {
+      version: PROTOCOL_VERSION,
+      type: "pair",
+      requestId: "pair-dynamic",
+      pairingToken: server.pairingToken,
+      clientName: "Test phone",
+    });
+    const discovery = await request(socket, {
+      version: PROTOCOL_VERSION,
+      type: "discoverRepositories",
+      requestId: "discovery",
+    });
+    const repository = (
+      discovery.data as {
+        repositories: Array<{ id: string; relativeLocation: string }>;
+      }
+    ).repositories[0]!;
+    expect(repository.relativeLocation).toBe(".");
+    expect(JSON.stringify(discovery.data)).not.toContain(
+      config.discoveryRoots[0],
+    );
+
+    const options = await request(socket, {
+      version: PROTOCOL_VERSION,
+      type: "getEnrollmentOptions",
+      requestId: "options",
+      repositoryId: repository.id,
+    });
+    const candidates = (
+      options.data as {
+        candidates: Array<{ id: string; operation: string; source: string }>;
+      }
+    ).candidates.filter(
+      (candidate) =>
+        ["dev", "test", "deploy"].includes(candidate.operation) ||
+        (["agent", "agentResume"].includes(candidate.operation) &&
+          candidate.source === "manifest"),
+    );
+    expect(candidates).toHaveLength(5);
+    expect(JSON.stringify(options.data)).not.toContain("repositoryPath");
+    expect(JSON.stringify(options.data)).not.toContain('"argv"');
+
+    const staleProposal = await request(socket, {
+      version: PROTOCOL_VERSION,
+      type: "requestEnrollment",
+      requestId: "proposal-stale",
+      repositoryId: repository.id,
+      candidateIds: candidates.map((candidate) => candidate.id),
+    });
+    writeFileSync(
+      join(config.discoveryRoots[0]!, "package.json"),
+      JSON.stringify({
+        name: "dynamic-site",
+        scripts: {
+          dev: `${process.execPath} -e \"console.log('http://localhost:4010'); setInterval(() => {}, 1000)\"`,
+          check: `${process.execPath} -e \"console.log('changed')\"`,
+          deploy: `${process.execPath} -e \"console.log('deployed')\"`,
+        },
+      }),
+    );
+    expect(
+      (
+        await request(socket, {
+          version: PROTOCOL_VERSION,
+          type: "resolveEnrollment",
+          requestId: "resolve-stale",
+          proposalId: (staleProposal.data as { proposal: { id: string } })
+            .proposal.id,
+          approve: true,
+        })
+      ).error?.code,
+    ).toBe("approval_stale");
+
+    const freshOptions = await request(socket, {
+      version: PROTOCOL_VERSION,
+      type: "getEnrollmentOptions",
+      requestId: "fresh-options",
+      repositoryId: repository.id,
+    });
+    const freshCandidates = (
+      freshOptions.data as {
+        candidates: Array<{ id: string; operation: string; source: string }>;
+      }
+    ).candidates.filter(
+      (candidate) =>
+        ["dev", "test", "deploy"].includes(candidate.operation) ||
+        (["agent", "agentResume"].includes(candidate.operation) &&
+          candidate.source === "manifest"),
+    );
+    const freshProposal = await request(socket, {
+      version: PROTOCOL_VERSION,
+      type: "requestEnrollment",
+      requestId: "fresh-proposal",
+      repositoryId: repository.id,
+      candidateIds: freshCandidates.map((candidate) => candidate.id),
+    });
+    const proposalId = (freshProposal.data as { proposal: { id: string } })
+      .proposal.id;
+    const enrolled = await request(socket, {
+      version: PROTOCOL_VERSION,
+      type: "resolveEnrollment",
+      requestId: "enroll",
+      proposalId,
+      approve: true,
+    });
+    expect(enrolled.error).toBeUndefined();
+    const projectId = (enrolled.data as { projectId: string }).projectId;
+    expect(server.snapshot().projects[0]).toMatchObject({
+      id: projectId,
+      source: "dynamic",
+    });
+    expect(
+      (
+        await request(socket, {
+          version: PROTOCOL_VERSION,
+          type: "resolveEnrollment",
+          requestId: "replay-enrollment",
+          proposalId,
+          approve: true,
+        })
+      ).error?.code,
+    ).toBe("approval_expired");
+    const runtimeDeployApproval = await request(socket, {
+      version: PROTOCOL_VERSION,
+      type: "requestApproval",
+      requestId: "dynamic-deploy-approval",
+      projectId,
+      operation: "deploy",
+    });
+    expect(runtimeDeployApproval.ok).toBe(true);
+    expect(server.snapshot().projects[0]?.processes.deploy).toBeUndefined();
+    expect(
+      (
+        await request(socket, {
+          version: PROTOCOL_VERSION,
+          type: "startOperation",
+          requestId: "dynamic-start-dev",
+          projectId,
+          operation: "dev",
+        })
+      ).ok,
+    ).toBe(true);
+    expect(
+      (
+        await request(socket, {
+          version: PROTOCOL_VERSION,
+          type: "startOperation",
+          requestId: "dynamic-start-agent",
+          projectId,
+          operation: "agent",
+        })
+      ).ok,
+    ).toBe(true);
+    await request(socket, {
+      version: PROTOCOL_VERSION,
+      type: "agentInstruction",
+      requestId: "dynamic-agent-input",
+      projectId,
+      instruction: "status",
+    });
+    await vi.waitFor(
+      () => {
+        expect(server.snapshot().projects[0]?.previewUrl).toBe(
+          "http://localhost:4010/",
+        );
+      },
+      { interval: 25, timeout: 2_000 },
+    );
+    expect(
+      (
+        await request(socket, {
+          version: PROTOCOL_VERSION,
+          type: "requestProjectRemoval",
+          requestId: "busy-removal",
+          projectId,
+        })
+      ).error?.code,
+    ).toBe("project_busy");
+    await request(socket, {
+      version: PROTOCOL_VERSION,
+      type: "stopOperation",
+      requestId: "dynamic-stop-agent",
+      projectId,
+      operation: "agent",
+    });
+    await request(socket, {
+      version: PROTOCOL_VERSION,
+      type: "stopOperation",
+      requestId: "dynamic-stop-dev",
+      projectId,
+      operation: "dev",
+    });
+    socket.close();
+    await server.close();
+    servers.splice(servers.indexOf(server), 1);
+
+    const restarted = new BridgeServer(config);
+    servers.push(restarted);
+    expect(restarted.snapshot().projects[0]).toMatchObject({
+      id: projectId,
+      source: "dynamic",
+    });
+    const restartedPort = await restarted.listen();
+    const restartedSocket = await open(`ws://127.0.0.1:${restartedPort}`);
+    await request(restartedSocket, {
+      version: PROTOCOL_VERSION,
+      type: "pair",
+      requestId: "pair-restarted",
+      pairingToken: restarted.pairingToken,
+      clientName: "Test phone",
+    });
+    const removal = await request(restartedSocket, {
+      version: PROTOCOL_VERSION,
+      type: "requestProjectRemoval",
+      requestId: "remove-proposal",
+      projectId,
+    });
+    await request(restartedSocket, {
+      version: PROTOCOL_VERSION,
+      type: "resolveEnrollment",
+      requestId: "remove",
+      proposalId: (removal.data as { proposal: { id: string } }).proposal.id,
+      approve: true,
+    });
+    expect(restarted.snapshot().projects).toEqual([]);
+    restartedSocket.close();
+  });
+
+  it("expires enrollment approvals", async () => {
+    let now = 1_000;
+    const config = dynamicFixture();
+    config.approvalTtlSeconds = 1;
+    const server = new BridgeServer(config, () => now);
+    servers.push(server);
+    const port = await server.listen();
+    const socket = await open(`ws://127.0.0.1:${port}`);
+    await request(socket, {
+      version: PROTOCOL_VERSION,
+      type: "pair",
+      requestId: "pair-expiring-enrollment",
+      pairingToken: server.pairingToken,
+      clientName: "Test phone",
+    });
+    const discovery = await request(socket, {
+      version: PROTOCOL_VERSION,
+      type: "discoverRepositories",
+      requestId: "expiring-discovery",
+    });
+    const repositoryId = (
+      discovery.data as { repositories: Array<{ id: string }> }
+    ).repositories[0]!.id;
+    const options = await request(socket, {
+      version: PROTOCOL_VERSION,
+      type: "getEnrollmentOptions",
+      requestId: "expiring-options",
+      repositoryId,
+    });
+    const candidateId = (options.data as { candidates: Array<{ id: string }> })
+      .candidates[0]!.id;
+    const proposed = await request(socket, {
+      version: PROTOCOL_VERSION,
+      type: "requestEnrollment",
+      requestId: "expiring-proposal",
+      repositoryId,
+      candidateIds: [candidateId],
+    });
+    now = 2_000;
+    const expired = await request(socket, {
+      version: PROTOCOL_VERSION,
+      type: "resolveEnrollment",
+      requestId: "expired-proposal",
+      proposalId: (proposed.data as { proposal: { id: string } }).proposal.id,
+      approve: true,
+    });
+    expect(expired.error?.code).toBe("approval_expired");
+    socket.close();
+  });
+
   it("pairs, recovers a snapshot, reviews changes, and consumes deploy approval once", async () => {
     const server = new BridgeServer(fixture());
     servers.push(server);
@@ -134,6 +479,16 @@ describe("BridgeServer", () => {
       (snapshot.data as { snapshot: { projects: unknown[] } }).snapshot
         .projects,
     ).toHaveLength(1);
+    expect(
+      (
+        await request(socket, {
+          version: PROTOCOL_VERSION,
+          type: "requestProjectRemoval",
+          requestId: "remove-static",
+          projectId: "site",
+        })
+      ).error?.code,
+    ).toBe("static_project");
 
     expect(
       (

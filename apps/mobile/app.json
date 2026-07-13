@@ -9,8 +9,11 @@
     "ios": {
       "icon": "./assets/expo.icon",
       "bundleIdentifier": "dev.sarthak.mobiledevcockpit",
-      "supportsTablet": false,
-      "requireFullScreen": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "Mobile Dev Cockpit uses the microphone only while you record a voice draft for an agent instruction.",
+        "NSSpeechRecognitionUsageDescription": "Mobile Dev Cockpit transcribes your voice into an editable agent instruction using Apple Speech."
+      }
     },
     "web": {
       "output": "static",

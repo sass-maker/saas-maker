@@ -9,6 +9,8 @@
   "logLineLimit": 500,
   "diffByteLimit": 200000,
   "stateFile": ".mobile-dev-cockpit/state.json",
+  "catalogFile": ".mobile-dev-cockpit/projects.json",
+  "discoveryRoots": ["/absolute/path/to/workspace"],
   "projects": [
     {
       "id": "example-site",

@@ -1,4 +1,4 @@
-import { mkdtempSync } from "node:fs";
+import { mkdtempSync, realpathSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -24,6 +24,30 @@ describe("bridge config", () => {
     );
     expect(config.host).toBe("127.0.0.1");
     expect(config.projects[0]?.commands.dev).toEqual(["node", "server.js"]);
+    expect(config.discoveryRoots).toEqual([]);
+    expect(config.catalogFile).toMatch(/projects\.json$/);
+  });
+
+  it("supports zero static projects when a local discovery root is configured", () => {
+    const config = parseConfig(
+      {
+        machineName: "Test Mac",
+        projects: [],
+        discoveryRoots: [repositoryPath],
+      },
+      join(repositoryPath, "config.json"),
+    );
+    expect(config.projects).toEqual([]);
+    expect(config.discoveryRoots).toEqual([realpathSync(repositoryPath)]);
+  });
+
+  it("rejects zero projects without a discovery root", () => {
+    expect(() =>
+      parseConfig(
+        { machineName: "Test Mac", projects: [] },
+        "/tmp/config.json",
+      ),
+    ).toThrow(/project or discovery root/);
   });
 
   it("rejects relative repository paths and shell strings", () => {

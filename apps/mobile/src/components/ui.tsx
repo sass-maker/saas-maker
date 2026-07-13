@@ -6,22 +6,29 @@ import {
   Text,
   View,
   type PressableProps,
+  type StyleProp,
+  type ViewStyle,
 } from "react-native";
 import { colors } from "../lib/theme";
 
 export function Card({
   children,
   elevated = false,
-}: PropsWithChildren<{ elevated?: boolean }>) {
+  style,
+}: PropsWithChildren<{ elevated?: boolean; style?: StyleProp<ViewStyle> }>) {
   return (
-    <View style={[styles.card, elevated && styles.cardElevated]}>
+    <View style={[styles.card, elevated && styles.cardElevated, style]}>
       {children}
     </View>
   );
 }
 
 export function Label({ children }: PropsWithChildren) {
-  return <Text style={styles.label}>{children}</Text>;
+  return (
+    <Text maxFontSizeMultiplier={1.8} style={styles.label}>
+      {children}
+    </Text>
+  );
 }
 
 export function Button({
@@ -29,6 +36,7 @@ export function Button({
   variant = "primary",
   busy,
   disabled,
+  style,
   ...props
 }: PropsWithChildren<
   PressableProps & {
@@ -39,11 +47,19 @@ export function Button({
   return (
     <Pressable
       {...props}
+      accessibilityRole={props.accessibilityRole ?? "button"}
+      accessibilityState={{
+        disabled: Boolean(disabled || busy),
+        busy: Boolean(busy),
+      }}
+      focusable
+      hitSlop={4}
       disabled={disabled || busy}
-      style={({ pressed }) => [
+      style={(state) => [
         styles.button,
         styles[variant],
-        (pressed || disabled || busy) && styles.buttonDim,
+        (state.pressed || disabled || busy) && styles.buttonDim,
+        typeof style === "function" ? style(state) : style,
       ]}
     >
       {busy ? (
@@ -78,7 +94,10 @@ export function Badge({
 }>) {
   return (
     <View style={[styles.badge, styles[`badge_${tone}`]]}>
-      <Text style={[styles.badgeText, styles[`badgeText_${tone}`]]}>
+      <Text
+        maxFontSizeMultiplier={1.6}
+        style={[styles.badgeText, styles[`badgeText_${tone}`]]}
+      >
         {children}
       </Text>
     </View>

@@ -2,7 +2,10 @@ import { mkdirSync, mkdtempSync, realpathSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { discoverRepositories } from "../src/discover.js";
+import {
+  discoverRepositories,
+  discoverRepositoryDetails,
+} from "../src/discover.js";
 
 describe("discoverRepositories", () => {
   it("finds Git roots without treating them as controllable config", () => {
@@ -13,5 +16,24 @@ describe("discoverRepositories", () => {
     expect(discoverRepositories([root])).toEqual([
       { name: "site", repositoryPath: realpathSync(repository) },
     ]);
+  });
+
+  it("returns only safe relative metadata for authenticated discovery surfaces", () => {
+    const root = mkdtempSync(join(tmpdir(), "cockpit-details-"));
+    const repository = join(root, "products", "site");
+    mkdirSync(join(repository, ".git"), { recursive: true });
+    writeFileSync(
+      join(repository, "package.json"),
+      JSON.stringify({ packageManager: "pnpm@10.0.0" }),
+    );
+    const [details] = discoverRepositoryDetails([root]);
+    expect(details).toMatchObject({
+      name: "site",
+      relativeLocation: join("products", "site"),
+      ecosystem: "node",
+      packageManager: "pnpm",
+      enrollment: "available",
+    });
+    expect(details?.id).toMatch(/^repo_/);
   });
 });

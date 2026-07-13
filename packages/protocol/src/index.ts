@@ -9,6 +9,11 @@ export type ProjectCapabilities = Record<OperationName, boolean> & {
   agentResume: boolean;
 };
 
+export type ProjectSource = "static" | "dynamic";
+export type CandidateOperation = OperationName | "agentResume";
+export type CandidateSource = "package" | "agent" | "manifest";
+export type CandidateRisk = "routine" | "review" | "guarded";
+
 export interface ProjectSummary {
   id: string;
   name: string;
@@ -16,6 +21,38 @@ export interface ProjectSummary {
   productionUrl?: string;
   capabilities: ProjectCapabilities;
   processes: Partial<Record<OperationName, ProcessSnapshot>>;
+  source: ProjectSource;
+}
+
+export interface RepositorySummary {
+  id: string;
+  name: string;
+  relativeLocation: string;
+  ecosystem: "node" | "unknown";
+  packageManager?: "pnpm" | "npm" | "yarn" | "bun";
+  enrollment: "available" | "enrolled";
+  enrolledProjectId?: string;
+}
+
+export interface CommandCandidate {
+  id: string;
+  operation: CandidateOperation;
+  label: string;
+  argvLabel: string;
+  source: CandidateSource;
+  risk: CandidateRisk;
+  scriptBody?: string;
+}
+
+export interface EnrollmentProposal {
+  id: string;
+  action: "enroll" | "update" | "remove";
+  repository?: RepositorySummary;
+  projectId?: string;
+  projectName: string;
+  candidates: CommandCandidate[];
+  selectedCandidateIds: string[];
+  expiresAt: string;
 }
 
 export interface ProcessSnapshot {
@@ -72,6 +109,22 @@ export type ClientRequest =
   | (RequestBase & { type: "pair"; pairingToken: string; clientName: string })
   | (RequestBase & { type: "authenticate"; sessionToken: string })
   | (RequestBase & { type: "getSnapshot" })
+  | (RequestBase & { type: "discoverRepositories" })
+  | (RequestBase & { type: "getEnrollmentOptions"; repositoryId: string })
+  | (RequestBase & {
+      type: "requestEnrollment";
+      repositoryId: string;
+      candidateIds: string[];
+    })
+  | (RequestBase & {
+      type: "requestProjectRemoval";
+      projectId: string;
+    })
+  | (RequestBase & {
+      type: "resolveEnrollment";
+      proposalId: string;
+      approve: boolean;
+    })
   | (RequestBase & {
       type: "startOperation";
       projectId: string;
@@ -154,6 +207,17 @@ const requestKeys: Record<ClientRequest["type"], readonly string[]> = {
   pair: ["version", "type", "requestId", "pairingToken", "clientName"],
   authenticate: ["version", "type", "requestId", "sessionToken"],
   getSnapshot: ["version", "type", "requestId"],
+  discoverRepositories: ["version", "type", "requestId"],
+  getEnrollmentOptions: ["version", "type", "requestId", "repositoryId"],
+  requestEnrollment: [
+    "version",
+    "type",
+    "requestId",
+    "repositoryId",
+    "candidateIds",
+  ],
+  requestProjectRemoval: ["version", "type", "requestId", "projectId"],
+  resolveEnrollment: ["version", "type", "requestId", "proposalId", "approve"],
   startOperation: ["version", "type", "requestId", "projectId", "operation"],
   stopOperation: ["version", "type", "requestId", "projectId", "operation"],
   agentInstruction: [
@@ -249,6 +313,37 @@ export function parseClientRequest(input: string | unknown): ClientRequest {
       break;
     case "authenticate":
       requireString(value, "sessionToken");
+      break;
+    case "requestEnrollment": {
+      requireString(value, "repositoryId");
+      if (
+        !Array.isArray(value.candidateIds) ||
+        value.candidateIds.length === 0 ||
+        value.candidateIds.length > 12 ||
+        value.candidateIds.some(
+          (candidate) =>
+            typeof candidate !== "string" || candidate.length === 0,
+        ) ||
+        new Set(value.candidateIds).size !== value.candidateIds.length
+      ) {
+        throw new ProtocolError(
+          "invalid_candidates",
+          "candidateIds must contain 1 to 12 unique opaque IDs",
+        );
+      }
+      break;
+    }
+    case "getEnrollmentOptions":
+      requireString(value, "repositoryId");
+      break;
+    case "requestProjectRemoval":
+      requireString(value, "projectId");
+      break;
+    case "resolveEnrollment":
+      requireString(value, "proposalId");
+      if (typeof value.approve !== "boolean") {
+        throw new ProtocolError("invalid_message", "approve must be boolean");
+      }
       break;
     case "startOperation": {
       requireString(value, "projectId");
@@ -367,6 +462,7 @@ export function parseClientRequest(input: string | unknown): ClientRequest {
       }
       break;
     case "getSnapshot":
+    case "discoverRepositories":
       break;
   }
 

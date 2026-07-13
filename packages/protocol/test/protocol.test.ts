@@ -33,6 +33,58 @@ describe("parseClientRequest", () => {
     );
   });
 
+  it("accepts opaque enrollment candidates and rejects mobile paths or argv", () => {
+    expect(
+      parseClientRequest({
+        version: PROTOCOL_VERSION,
+        type: "requestEnrollment",
+        requestId: "enroll",
+        repositoryId: "repo_123",
+        candidateIds: ["candidate_1", "candidate_2"],
+      }),
+    ).toMatchObject({ type: "requestEnrollment" });
+    for (const field of [
+      "path",
+      "workingDirectory",
+      "executable",
+      "argv",
+      "command",
+      "environment",
+    ]) {
+      expect(() =>
+        parseClientRequest({
+          version: PROTOCOL_VERSION,
+          type: "requestEnrollment",
+          requestId: `reject-${field}`,
+          repositoryId: "repo_123",
+          candidateIds: ["candidate_1"],
+          [field]: field === "argv" ? ["sh"] : "/tmp/repo",
+        }),
+      ).toThrow(/Unexpected field/);
+    }
+  });
+
+  it("bounds enrollment candidate selection", () => {
+    expect(() =>
+      parseClientRequest({
+        version: PROTOCOL_VERSION,
+        type: "requestEnrollment",
+        requestId: "empty",
+        repositoryId: "repo_123",
+        candidateIds: [],
+      }),
+    ).toThrow(/candidateIds/);
+    expect(() =>
+      parseClientRequest({
+        version: PROTOCOL_VERSION,
+        type: "requestEnrollment",
+        requestId: "duplicate",
+        repositoryId: "repo_123",
+        candidateIds: ["same", "same"],
+      }),
+    ).toThrow(/unique/);
+  });
+
   it("requires approval-only operations to use the approval flow", () => {
     expect(() =>
       parseClientRequest({

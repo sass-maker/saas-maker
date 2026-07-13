@@ -1,6 +1,13 @@
-import { Linking, StyleSheet, Text, View } from "react-native";
+import {
+  Linking,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import { Button } from "./ui";
 import { colors } from "../lib/theme";
+import { deriveCockpitLayout } from "../lib/layout";
 
 export function PreviewPane({
   url,
@@ -12,8 +19,10 @@ export function PreviewPane({
     base64: string;
   }) => Promise<void>;
 }) {
+  const window = useWindowDimensions();
+  const layout = deriveCockpitLayout(window.width, window.height);
   return (
-    <View style={styles.frame}>
+    <View style={[styles.frame, { height: layout.previewHeight }]}>
       <View style={styles.toolbar}>
         <Text numberOfLines={1} style={styles.url}>
           {url}
@@ -34,7 +43,6 @@ export function PreviewPane({
 
 const styles = StyleSheet.create({
   frame: {
-    height: 600,
     borderRadius: 18,
     overflow: "hidden",
     backgroundColor: colors.panel,

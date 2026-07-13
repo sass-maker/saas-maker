@@ -7,6 +7,8 @@ import {
   type ApprovalRequest,
   type ApprovalOperation,
   type ClientRequest,
+  type CommandCandidate,
+  type EnrollmentProposal,
   type MachineSnapshot,
   type OperationName,
   type ServerMessage,
@@ -16,7 +18,18 @@ import { WebSocket, WebSocketServer } from "ws";
 import { PairingToken, SessionStore } from "./auth.js";
 import { writeAgentAttachment } from "./attachments.js";
 import type { BridgeConfig, ProjectConfig } from "./config.js";
+import {
+  discoverRepositoryDetails,
+  type RepositoryDetails,
+} from "./discover.js";
 import { ProcessManager } from "./process-manager.js";
+import { ProjectRegistry } from "./project-registry.js";
+import {
+  commandsFromCandidates,
+  detectCommandCandidates,
+  metadataFingerprint,
+  type InternalCandidate,
+} from "./repository-candidates.js";
 import {
   commitStaged,
   getReview,
@@ -35,6 +48,15 @@ interface PendingApproval {
   fingerprint?: string;
 }
 
+interface PendingEnrollment {
+  proposal: EnrollmentProposal;
+  repositoryId?: string;
+  projectId?: string;
+  candidateIds: string[];
+  fingerprint?: string;
+  expiresAt: number;
+}
+
 export class BridgeServer {
   private readonly sockets = new Set<WebSocket>();
   private readonly authenticated = new WeakSet<WebSocket>();
@@ -43,7 +65,9 @@ export class BridgeServer {
   private readonly sessions: SessionStore;
   private readonly pairing: PairingToken;
   private readonly processes: ProcessManager;
+  private readonly registry: ProjectRegistry;
   private readonly approvals = new Map<string, PendingApproval>();
+  private readonly enrollmentApprovals = new Map<string, PendingEnrollment>();
   private readonly detectedPreviewUrls = new Map<string, string>();
   private server?: WebSocketServer;
   private heartbeat?: NodeJS.Timeout;
@@ -58,6 +82,7 @@ export class BridgeServer {
     );
     this.pairing = new PairingToken(config.pairingTtlSeconds, this.now());
     this.processes = new ProcessManager(config.logLineLimit);
+    this.registry = new ProjectRegistry(config);
     this.processes.on("log", (entry) =>
       this.broadcast({ version: PROTOCOL_VERSION, type: "log", entry }),
     );
@@ -128,7 +153,7 @@ export class BridgeServer {
       machineName: this.config.machineName,
       bridgeVersion: "0.1.0",
       protocolVersion: PROTOCOL_VERSION,
-      projects: this.config.projects.map((project) => ({
+      projects: this.registry.all().map((project) => ({
         id: project.id,
         name: project.name,
         previewUrl:
@@ -145,6 +170,7 @@ export class BridgeServer {
           rollback: Boolean(project.commands.rollback),
         },
         processes: this.processes.snapshots(project.id),
+        source: project.source ?? "static",
       })),
     };
   }
@@ -225,6 +251,34 @@ export class BridgeServer {
     switch (request.type) {
       case "getSnapshot":
         return { snapshot: this.snapshot() };
+      case "discoverRepositories":
+        return {
+          repositories: this.repositories().map((repository) =>
+            this.publicRepository(repository),
+          ),
+        };
+      case "getEnrollmentOptions": {
+        const repository = this.repository(request.repositoryId);
+        return {
+          repository: this.publicRepository(repository),
+          candidates: detectCommandCandidates(repository).map((candidate) =>
+            this.publicCandidate(candidate),
+          ),
+        };
+      }
+      case "requestEnrollment":
+        return {
+          proposal: this.createEnrollmentProposal(
+            request.repositoryId,
+            request.candidateIds,
+          ),
+        };
+      case "requestProjectRemoval":
+        return {
+          proposal: this.createRemovalProposal(request.projectId),
+        };
+      case "resolveEnrollment":
+        return this.resolveEnrollment(request.proposalId, request.approve);
       case "startOperation":
         return {
           process: this.processes.start(
@@ -301,12 +355,191 @@ export class BridgeServer {
   }
 
   private project(projectId: string): ProjectConfig {
-    const project = this.config.projects.find(
-      (candidate) => candidate.id === projectId,
-    );
+    const project = this.registry.get(projectId);
     if (!project)
       throw new ProtocolError("unknown_project", "Project is not configured");
     return project;
+  }
+
+  private repositories(): RepositoryDetails[] {
+    return discoverRepositoryDetails(
+      this.config.discoveryRoots,
+      this.registry.enrolledPaths(),
+    );
+  }
+
+  private repository(repositoryId: string): RepositoryDetails {
+    const repository = this.repositories().find(
+      (candidate) => candidate.id === repositoryId,
+    );
+    if (!repository)
+      throw new ProtocolError(
+        "unknown_repository",
+        "Repository is no longer available inside an approved discovery root",
+      );
+    return repository;
+  }
+
+  private publicRepository({
+    repositoryPath: _path,
+    discoveryRoot: _root,
+    ...repository
+  }: RepositoryDetails) {
+    return repository;
+  }
+
+  private publicCandidate({
+    argv: _argv,
+    ...candidate
+  }: InternalCandidate): CommandCandidate {
+    return candidate;
+  }
+
+  private createEnrollmentProposal(
+    repositoryId: string,
+    candidateIds: string[],
+  ): EnrollmentProposal {
+    const repository = this.repository(repositoryId);
+    const allCandidates = detectCommandCandidates(repository);
+    const selected = candidateIds.map((candidateId) => {
+      const candidate = allCandidates.find((item) => item.id === candidateId);
+      if (!candidate)
+        throw new ProtocolError(
+          "stale_candidate",
+          "A selected command candidate is missing or changed",
+        );
+      return candidate;
+    });
+    try {
+      commandsFromCandidates(selected);
+    } catch (error) {
+      throw new ProtocolError(
+        "invalid_candidates",
+        error instanceof Error ? error.message : "Invalid command selection",
+      );
+    }
+    const existingProject = repository.enrolledProjectId
+      ? this.registry.get(repository.enrolledProjectId, false)
+      : undefined;
+    if (existingProject?.source === "static")
+      throw new ProtocolError(
+        "static_project",
+        "Static projects can only be changed in local configuration",
+      );
+    const id = randomUUID();
+    const expiresAt = this.now() + this.config.approvalTtlSeconds * 1000;
+    const proposal: EnrollmentProposal = {
+      id,
+      action: existingProject ? "update" : "enroll",
+      repository: this.publicRepository(repository),
+      projectId: existingProject?.id,
+      projectName: existingProject?.name ?? repository.name,
+      candidates: selected.map((candidate) => this.publicCandidate(candidate)),
+      selectedCandidateIds: selected.map((candidate) => candidate.id),
+      expiresAt: new Date(expiresAt).toISOString(),
+    };
+    this.enrollmentApprovals.set(id, {
+      proposal,
+      repositoryId,
+      projectId: existingProject?.id,
+      candidateIds: proposal.selectedCandidateIds,
+      fingerprint: metadataFingerprint(repository.repositoryPath),
+      expiresAt,
+    });
+    return proposal;
+  }
+
+  private createRemovalProposal(projectId: string): EnrollmentProposal {
+    const project = this.registry.get(projectId, false);
+    if (!project)
+      throw new ProtocolError("unknown_project", "Project is not configured");
+    if (project.source !== "dynamic")
+      throw new ProtocolError(
+        "static_project",
+        "Static projects can only be changed in local configuration",
+      );
+    if (this.processes.hasActiveProject(projectId))
+      throw new ProtocolError(
+        "project_busy",
+        "Stop every project process before removing it",
+      );
+    const id = randomUUID();
+    const expiresAt = this.now() + this.config.approvalTtlSeconds * 1000;
+    const proposal: EnrollmentProposal = {
+      id,
+      action: "remove",
+      projectId,
+      projectName: project.name,
+      candidates: [],
+      selectedCandidateIds: [],
+      expiresAt: new Date(expiresAt).toISOString(),
+    };
+    this.enrollmentApprovals.set(id, {
+      proposal,
+      projectId,
+      candidateIds: [],
+      expiresAt,
+    });
+    return proposal;
+  }
+
+  private resolveEnrollment(proposalId: string, approve: boolean): unknown {
+    const pending = this.enrollmentApprovals.get(proposalId);
+    this.enrollmentApprovals.delete(proposalId);
+    if (!pending || this.now() >= pending.expiresAt)
+      throw new ProtocolError(
+        "approval_expired",
+        "Enrollment approval is missing, expired, or already consumed",
+      );
+    if (!approve) return { approved: false };
+    if (pending.proposal.action === "remove") {
+      if (!pending.projectId)
+        throw new ProtocolError(
+          "unknown_project",
+          "Removal has no project target",
+        );
+      if (this.processes.hasActiveProject(pending.projectId))
+        throw new ProtocolError(
+          "project_busy",
+          "Project became active after approval",
+        );
+      this.registry.remove(pending.projectId);
+      this.broadcast({
+        version: PROTOCOL_VERSION,
+        type: "snapshot",
+        snapshot: this.snapshot(),
+      });
+      return {
+        approved: true,
+        removedProjectId: pending.projectId,
+        snapshot: this.snapshot(),
+      };
+    }
+    if (!pending.repositoryId)
+      throw new ProtocolError(
+        "unknown_repository",
+        "Enrollment has no repository target",
+      );
+    const repository = this.repository(pending.repositoryId);
+    if (metadataFingerprint(repository.repositoryPath) !== pending.fingerprint)
+      throw new ProtocolError(
+        "approval_stale",
+        "Repository command metadata changed after review",
+      );
+    const allCandidates = detectCommandCandidates(repository);
+    const selected = pending.candidateIds.map((candidateId) => {
+      const candidate = allCandidates.find((item) => item.id === candidateId);
+      if (!candidate)
+        throw new ProtocolError(
+          "approval_stale",
+          "A selected command candidate changed after review",
+        );
+      return candidate;
+    });
+    const project = this.registry.enroll(repository, selected);
+    const snapshot = this.snapshot();
+    this.broadcast({ version: PROTOCOL_VERSION, type: "snapshot", snapshot });
+    return { approved: true, projectId: project.id, snapshot };
   }
 
   private reachablePreviewUrl(value: string): string {

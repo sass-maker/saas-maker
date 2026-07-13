@@ -16,6 +16,7 @@ export default function RootLayout() {
           }}
         >
           <Stack.Screen name="index" />
+          <Stack.Screen name="enroll" />
           <Stack.Screen name="project/[id]" />
         </Stack>
       </SafeAreaView>

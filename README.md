@@ -1,11 +1,13 @@
 # Mobile Dev Cockpit
 
-An iPhone cockpit for a developer-controlled machine: pair once, choose an allowlisted repository, run its dev server and agent, preview the site, review changes, run tests, and explicitly approve deployment.
+A native iPhone and iPad cockpit for a developer-controlled machine: pair once, enroll a discovered repository, run its dev server and agent, preview the site, dictate editable instructions, review changes, run tests, and explicitly approve deployment.
 
 ## Trust model
 
 - The bridge binds to `127.0.0.1` unless configuration explicitly opts into another host.
-- The phone can invoke only named operations whose argv is declared in local configuration.
+- Repository discovery is restricted to canonical roots supplied locally when the bridge starts. The phone cannot submit paths, working directories, executables, argv, shell text, or environment values.
+- The bridge derives bounded command candidates from current package metadata, installed bridge-owned agent adapters, or a strict local repository manifest. Enrollment is a separate expiring one-use approval and never executes a command.
+- Dynamic projects are re-canonicalized inside their approved root before every process or Git action. Deploy, rollback, destructive Git, and commit still require their existing fresh runtime approvals after enrollment.
 - Pairing tokens expire after five minutes and can be used once. Session credentials are stored hashed by the bridge and in iOS SecureStore by the app.
 - Session credentials expire after the configured bounded lifetime (24 hours by default); expired credentials must pair again.
 - Preview WebViews receive only HTTP(S) URLs—never bridge credentials or a native control channel.
@@ -20,19 +22,25 @@ Requirements: Node.js 22+, pnpm 10, Git, and an Expo-compatible iOS development 
 ```bash
 pnpm install
 pnpm build:bridge
-cp config.example.json config.local.json
-pnpm bridge -- --config ./config.local.json
+pnpm bridge -- --root ~/Desktop/fleet
 pnpm mobile
 ```
 
-Edit `config.local.json` with absolute repository paths and argv arrays. The bridge prints a one-time pairing token. Enter the reachable bridge URL and token in the app.
+The bridge prints a one-time pairing token. Enter the reachable bridge URL and token in the app, tap **Add project**, review bridge-detected actions, and approve enrollment. The root is the only mandatory machine-specific repository setting: it defines the filesystem boundary the paired app may discover. Dynamic project configuration is persisted atomically in the owner-only application-support directory and restored after restart.
+
+Use repeated `--root` arguments for more than one local workspace. A JSON config remains available for advanced networking, limits, static projects, and explicit command/environment overrides:
+
+```bash
+cp config.example.json config.local.json
+pnpm bridge -- --config ./config.local.json
+```
 
 ### Tailscale (recommended)
 
 Install and sign in to Tailscale on the Mac and iPhone, keep the bridge host set to `127.0.0.1`, then run:
 
 ```bash
-pnpm bridge -- --config ./config.local.json --tailscale
+pnpm bridge -- --root ~/Desktop/fleet --tailscale
 ```
 
 The bridge checks the local Tailscale state, configures private HTTPS Serve at `/mobile-dev-cockpit`, and prints a URL like:
@@ -54,7 +62,7 @@ This integration uses Tailscale Serve, never Funnel. If tailnet HTTPS is not ena
 For a built bridge instead of the TypeScript development entrypoint:
 
 ```bash
-pnpm --filter @mobile-dev-cockpit/bridge start -- --config ./config.local.json
+pnpm --filter @mobile-dev-cockpit/bridge start -- --root ~/Desktop/fleet
 ```
 
 To find Git repositories before configuring them:
@@ -63,11 +71,11 @@ To find Git repositories before configuring them:
 pnpm discover -- --root ~/Desktop
 ```
 
-Discovery is read-only and bounded to three directory levels. A discovered repository is not controllable until it is explicitly added to the bridge configuration.
+Discovery is read-only, bounded to three directory levels and 200 results, and does not follow symlinked directories. A discovered repository is not controllable until its exact bridge-owned command candidates are explicitly approved in the app.
 
 ## Configuration
 
-Commands are argv arrays, never shell strings. Environment variables can be declared per project, but local configs are ignored and must not contain secrets unless the configured command itself requires them.
+`discoveryRoots` and `projects` can be used together. Commands in static configuration are argv arrays, never shell strings. Environment variables can be declared per static project, but local configs are ignored and must not contain secrets unless the configured command itself requires them.
 
 ```json
 {
@@ -75,6 +83,7 @@ Commands are argv arrays, never shell strings. Environment variables can be decl
   "host": "127.0.0.1",
   "advertisedHost": "your-machine.tailnet.ts.net",
   "port": 4782,
+  "discoveryRoots": ["/absolute/path/to/workspace"],
   "projects": [
     {
       "id": "example",
@@ -108,6 +117,22 @@ When a development process prints an HTTP(S) URL, the bridge detects it and publ
 An optional configured `tunnel` argv can run a user-installed tool such as `cloudflared`; the first HTTP(S) URL it prints becomes the project preview URL. Mobile Dev Cockpit does not install, authenticate, or manage that external tunnel provider.
 The example Codex commands use the installed CLI's interactive approval mode and resume its latest local session. Replace them with another allowlisted agent argv when needed.
 
+For repositories that are not Node projects, an optional local `.mobile-dev-cockpit.json` can declare a strict `commands` object using the same argv-array shape. The bridge labels every manifest command as guarded until enrollment approval. The mobile app never edits this file.
+
+## iPad and Apple Speech
+
+The same universal binary supports iPhone and iPad portrait, landscape, Split View, and Stage Manager. Layout follows the current window width: compact windows retain horizontal section tabs, while regular-width iPad windows show persistent section navigation beside a flexible workspace. On iPad, preview orientation changes the in-canvas viewport and never locks the system orientation or disables multitasking.
+
+The agent composer includes a dedicated Apple-native voice draft interface:
+
+- iOS 26 and newer use `SpeechAnalyzer` and `SpeechTranscriber`; iOS 16.4–25 use `SFSpeechRecognizer`.
+- `AVAudioEngine` owns microphone capture and releases it on finish, cancel, interruption, route change, or screen unmount.
+- On-device recognition is the default. If it is unavailable, the app requires explicit one-time consent before Apple Speech may recognize that recording online.
+- Raw audio never crosses the React Native boundary and is never sent to the bridge, coding agent, or a third-party speech service.
+- Final speech becomes editable text. The existing **Send instruction** action remains a separate explicit step.
+
+The web development fallback reports voice as unsupported; it does not simulate microphone behavior.
+
 Native screenshot delivery writes a validated JPEG or PNG to the bridge's private state directory and sends only that local path plus the optional note to the active agent PTY. Attachments are never executed.
 
 After a successful deployment, the deploy screen offers the refreshed production URL inside the embedded preview as well as Safari. Failed or stopped deployments retain their logs without invalidating the current WebView.
@@ -121,7 +146,7 @@ pnpm mobile:export
 pnpm mobile:export:ios
 ```
 
-`expo prebuild --platform ios --no-install` can generate the native project. A physical-device build still requires full Xcode and CocoaPods on the Mac.
-Every push also performs a clean native prebuild, pod install, and unsigned Release compile on Xcode 26.4 in GitHub Actions. CI then installs the standalone app in an iPhone simulator, launches it without Metro, and uploads a screenshot of the rendered onboarding screen.
+`expo prebuild --platform ios --no-install` can generate the native project. A physical-device build still requires full Xcode and CocoaPods on the Mac. Voice recognition itself requires physical microphone hardware for final validation.
+Every push performs a clean native prebuild, pod install, and unsigned Release compile on Xcode 26.4 or newer in GitHub Actions. CI then installs the standalone app in a simulator, launches it without Metro, and uploads a screenshot of the rendered onboarding screen.
 
-The feature contract and progress live in `openspec/changes/build-mobile-dev-cockpit-mvp/` until the MVP is fully verified and archived.
+Active feature contracts live in `openspec/changes/` until their required simulator and physical-device evidence is complete and they are archived.

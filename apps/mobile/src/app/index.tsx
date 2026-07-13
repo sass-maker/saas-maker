@@ -7,17 +7,21 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  useWindowDimensions,
   View,
 } from "react-native";
 import { Badge, Button, Card, Label, StatusDot } from "../components/ui";
 import { getLastBridgeUrl } from "../lib/credential-store";
 import { useConnection } from "../lib/connection";
+import { deriveCockpitLayout } from "../lib/layout";
 import { colors } from "../lib/theme";
 
 type ConnectionMode = "tailscale" | "local";
 
 export default function HomeScreen() {
   const connection = useConnection();
+  const window = useWindowDimensions();
+  const layout = deriveCockpitLayout(window.width, window.height);
   const [url, setUrl] = useState("");
   const [connectionMode, setConnectionMode] =
     useState<ConnectionMode>("tailscale");
@@ -75,16 +79,24 @@ export default function HomeScreen() {
       <View style={styles.glowTop} />
       <View style={styles.glowSide} />
       <ScrollView
-        contentContainerStyle={styles.page}
+        contentContainerStyle={[
+          styles.page,
+          { maxWidth: layout.contentMaxWidth },
+          layout.mode === "regular" && styles.pageRegular,
+        ]}
         keyboardShouldPersistTaps="handled"
       >
         <View style={styles.hero}>
           <View style={styles.heroTopline}>
             <Badge tone="accent">Tailnet native</Badge>
-            <Text style={styles.version}>iOS cockpit · 01</Text>
+            <Text maxFontSizeMultiplier={1.6} style={styles.version}>
+              iOS cockpit · 01
+            </Text>
           </View>
-          <Text style={styles.title}>Your build loop, in your hand.</Text>
-          <Text style={styles.subtitle}>
+          <Text maxFontSizeMultiplier={1.8} style={styles.title}>
+            Your build loop, in your hand.
+          </Text>
+          <Text maxFontSizeMultiplier={2} style={styles.subtitle}>
             Pair a trusted machine. Preview the real site. Supervise the agent.
             Review before anything ships.
           </Text>
@@ -95,8 +107,12 @@ export default function HomeScreen() {
               ["03", "Ship"],
             ].map(([number, label]) => (
               <View key={number} style={styles.step}>
-                <Text style={styles.stepNumber}>{number}</Text>
-                <Text style={styles.stepLabel}>{label}</Text>
+                <Text maxFontSizeMultiplier={1.6} style={styles.stepNumber}>
+                  {number}
+                </Text>
+                <Text maxFontSizeMultiplier={1.6} style={styles.stepLabel}>
+                  {label}
+                </Text>
               </View>
             ))}
           </View>
@@ -145,56 +161,97 @@ export default function HomeScreen() {
             </Card>
 
             <View style={styles.sectionHeader}>
-              <Label>Projects</Label>
-              <Text style={styles.meta}>
-                {connection.snapshot.projects.length} allowlisted
-              </Text>
+              <View>
+                <Label>Projects</Label>
+                <Text style={styles.meta}>
+                  {connection.snapshot.projects.length} enrolled
+                </Text>
+              </View>
+              <Button
+                variant="secondary"
+                accessibilityLabel="Add a discovered project"
+                onPress={() => router.push({ pathname: "/enroll" } as never)}
+              >
+                Add project
+              </Button>
             </View>
-            {connection.snapshot.projects.map((project, index) => {
-              const running = Object.values(project.processes).filter(
-                (process) => process?.phase === "running",
-              ).length;
-              return (
-                <Card key={project.id}>
-                  <View style={styles.row}>
-                    <View style={styles.projectIdentity}>
-                      <Text style={styles.projectIndex}>
-                        {String(index + 1).padStart(2, "0")}
-                      </Text>
-                      <View style={styles.flex}>
-                        <Text style={styles.cardTitle}>{project.name}</Text>
-                        <Text style={styles.meta}>
-                          {running
-                            ? `${running} active process${running === 1 ? "" : "es"}`
-                            : "Ready for a new session"}
-                        </Text>
+            <View
+              style={[
+                styles.projectGrid,
+                layout.mode === "regular" && styles.projectGridRegular,
+              ]}
+            >
+              {connection.snapshot.projects.map((project, index) => {
+                const running = Object.values(project.processes).filter(
+                  (process) => process?.phase === "running",
+                ).length;
+                return (
+                  <View
+                    key={project.id}
+                    style={
+                      layout.mode === "regular"
+                        ? styles.projectGridItem
+                        : undefined
+                    }
+                  >
+                    <Card style={styles.projectCard}>
+                      <View style={styles.row}>
+                        <View style={styles.projectIdentity}>
+                          <Text style={styles.projectIndex}>
+                            {String(index + 1).padStart(2, "0")}
+                          </Text>
+                          <View style={styles.flex}>
+                            <Text style={styles.cardTitle}>{project.name}</Text>
+                            <Text style={styles.meta}>
+                              {running
+                                ? `${running} active process${running === 1 ? "" : "es"}`
+                                : "Ready for a new session"}
+                            </Text>
+                          </View>
+                        </View>
+                        <Badge tone={running ? "accent" : "muted"}>
+                          {running ? "Live" : project.source}
+                        </Badge>
                       </View>
-                    </View>
-                    <Badge tone={running ? "accent" : "muted"}>
-                      {running ? "Live" : "Ready"}
-                    </Badge>
+                      <Text style={styles.capabilities}>
+                        {Object.entries(project.capabilities)
+                          .filter(([, enabled]) => enabled)
+                          .map(([name]) =>
+                            name === "agentResume" ? "resume" : name,
+                          )
+                          .join("  ·  ")}
+                      </Text>
+                      <Button
+                        onPress={() =>
+                          router.push({
+                            pathname: "/project/[id]",
+                            params: { id: project.id },
+                          })
+                        }
+                      >
+                        Open project
+                      </Button>
+                    </Card>
                   </View>
-                  <Text style={styles.capabilities}>
-                    {Object.entries(project.capabilities)
-                      .filter(([, enabled]) => enabled)
-                      .map(([name]) =>
-                        name === "agentResume" ? "resume" : name,
-                      )
-                      .join("  ·  ")}
+                );
+              })}
+              {connection.snapshot.projects.length === 0 ? (
+                <Card style={styles.projectCard}>
+                  <Text style={styles.cardTitle}>No projects enrolled yet</Text>
+                  <Text style={styles.meta}>
+                    Discover repositories inside the roots approved when the
+                    bridge started.
                   </Text>
                   <Button
                     onPress={() =>
-                      router.push({
-                        pathname: "/project/[id]",
-                        params: { id: project.id },
-                      })
+                      router.push({ pathname: "/enroll" } as never)
                     }
                   >
-                    Open project
+                    Add your first project
                   </Button>
                 </Card>
-              );
-            })}
+              ) : null}
+            </View>
           </>
         ) : (
           <Card elevated>
@@ -291,13 +348,14 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingBottom: 56,
     gap: 15,
-    maxWidth: 720,
     width: "100%",
     alignSelf: "center",
   },
+  pageRegular: { paddingHorizontal: 32, gap: 18 },
   hero: { paddingTop: 34, paddingBottom: 18, gap: 14 },
   heroTopline: {
     flexDirection: "row",
+    flexWrap: "wrap",
     alignItems: "center",
     justifyContent: "space-between",
     gap: 12,
@@ -378,6 +436,10 @@ const styles = StyleSheet.create({
     marginTop: 14,
     paddingHorizontal: 2,
   },
+  projectGrid: { gap: 15 },
+  projectGridRegular: { flexDirection: "row", flexWrap: "wrap" },
+  projectGridItem: { width: "48.8%" },
+  projectCard: { flex: 1 },
   capabilities: {
     color: colors.muted,
     textTransform: "uppercase",

@@ -4,11 +4,11 @@ Last updated: 2026-07-13
 
 ## Why / What
 
-Mobile Dev Cockpit is a native iPhone interface for supervising development on a laptop or remote machine: select an allowlisted repository, start its dev server, preview the website, instruct a coding agent, review Git changes, run tests, and approve deployment.
+Mobile Dev Cockpit is a native universal iPhone and iPad interface for supervising development on a laptop or remote machine: discover and explicitly enroll a repository, start its dev server, preview the website, instruct a coding agent by text or Apple-native speech, review Git changes, run tests, and approve deployment.
 
-**Users:** Developers using Codex, Claude Code, or another configured CLI agent who want to supervise an edit-to-deploy loop from an iPhone.
+**Users:** Developers using Codex, Claude Code, or another configured CLI agent who want to supervise an edit-to-deploy loop from an iPhone or iPad.
 
-**IN scope:** Single-user machine pairing, configured repositories and commands, streamed logs, agent supervision, isolated WebView preview, Git review, tests, and guarded deploy/rollback.
+**IN scope:** Single-user machine pairing, bounded repository discovery, explicit command enrollment, streamed logs, text and native voice agent supervision, adaptive iPhone/iPad workspaces, isolated WebView preview, Git review, tests, and guarded deploy/rollback.
 
 **OUT of scope:** General SSH, arbitrary remote shell, full code editing, hosted relay/accounts, collaboration, Android, plugin marketplace, hosting, and device-farm testing.
 
@@ -37,6 +37,9 @@ Mobile Dev Cockpit is a native iPhone interface for supervising development on a
 - 2026-07-13 — Added a clean hosted native build gate: Expo prebuild, CocoaPods installation, and the complete unsigned iOS Simulator app compile and link pass on Xcode 26.4 alongside the existing 34 tests, bridge build, and platform exports.
 - 2026-07-13 — Upgraded the native gate to a standalone Release build, fixed React Native workspace resolution for the shared protocol, installed and launched the bundled app in an iPhone simulator without Metro, and visually verified the uploaded native onboarding screenshot.
 - 2026-07-13 — Prepared the local physical-device toolchain with Xcode 27 beta 3 and CocoaPods 1.17, detected the paired iPhone 16 Pro, and selected the valid personal Apple Development identity. The signed device build is waiting only for Developer Mode to be enabled and confirmed on the iPhone.
+- 2026-07-13 — Added low-configuration discovery roots and an owner-only dynamic project registry with one-use enrollment approvals; visually verified pair, discover, exact candidate review, enroll, and restored project access at phone and iPad widths.
+- 2026-07-13 — Added universal iPad layouts for portrait, landscape, Split View, and Stage Manager plus a dedicated Apple-native speech composer. The app-local Swift module compiles on Xcode 27 and uses SpeechAnalyzer on iOS 26+ with an on-device SFSpeechRecognizer fallback for iOS 16.4–25.
+- 2026-07-13 — Installed and launched the standalone Release app without Metro on iOS 26.4 iPhone 17 Pro and iPad Pro 13-inch simulators. Native portrait captures, browser-backed portrait/landscape/Split View captures, extreme Dynamic Type, strict OpenSpec validation, all 55 tests, bridge build, and both platform exports pass.
 
 ## Products
 
@@ -50,9 +53,12 @@ Mobile Dev Cockpit is a native iPhone interface for supervising development on a
 - Five-minute one-use pairing token, bounded expiring hashed session credentials, iOS SecureStore client storage, cold-launch reconnect, reconnect backoff, and full state/log recovery.
 - Tailscale Serve integration that retains loopback binding, checks connected/MagicDNS state, configures only `/mobile-dev-cockpit`, prints the secure WSS URL, and removes that mapping without touching unrelated services.
 - Read-only bounded repository discovery plus explicit allowlisted project configuration.
+- Low-configuration bridge startup with repeated `--root` arguments, authenticated repository discovery, exact bridge-detected command review, expiring one-use enrollment proposals, atomic owner-only persistence, guarded updates, and idle-only removal. Mobile clients cannot submit paths, executables, arguments, shell text, or environment values.
 - Configured dev/tunnel/build/test/agent/deploy/rollback processes with streamed logs, complete process-group stop controls, detected preview URLs, and advertised-host rewriting.
 - Native isolated WebView preview with back, refresh, Safari, screenshot sharing, orientation control, theme hint cycling, and dev/production targets.
+- Universal iPhone/iPad layouts with compact, intermediate, and regular-width navigation; portrait, landscape, Split View, and Stage Manager sizing; window-aware previews; pointer and hardware-keyboard focus; and state-preserving layout transitions.
 - PTY-backed agent supervision with new/resume controls, instruction and prompt-decision streaming, active-session survival across network reconnects, and validated private screenshot attachments.
+- Dedicated Apple-native voice drafting with microphone level and partial transcript feedback, explicit permission and online-recognition consent states, editable final transcripts, and a separate Send action. Audio stays inside the native module and is never sent to the bridge or coding agent.
 - Bounded Git review with per-file stage/unstage, protected tracked-file revert, staged-only commit, untracked-file deletion prevention, and exact-state fingerprints that invalidate stale approvals.
 - One-use expiring approval gates for deploy, rollback, revert, and commit.
 - Successful deployments invalidate the embedded production preview and expose a direct in-app refresh action; failed and stopped deployments preserve the current preview.
@@ -61,9 +67,11 @@ Mobile Dev Cockpit is a native iPhone interface for supervising development on a
 - Expo web fallback used for 390x844 visual verification and local end-to-end smoke testing; generated iOS native project and both platform bundles verified locally.
 - Clean macOS 26 CI compilation of the generated native app, including all Expo/React Native pods, with the SDK 57-required Xcode 26.4 toolchain.
 - Standalone Release simulator installation and launch gate with a visually inspected full-resolution native onboarding screenshot artifact.
+- Standalone universal Release installation and launch evidence on representative iPhone and iPad simulators, plus compact/intermediate/regular browser screenshots and an accessibility-extra-extra-extra-large Dynamic Type pass.
 
 ## Todo / Planned / Deferred / Blocked
 
-1. Blocked: enable Developer Mode on the paired iPhone, then install the personal-team-signed Release build and validate WKWebView, Keychain persistence, screenshot sharing, orientation, background reconnect, and the complete edit-to-deploy loop on that physical device. Full Xcode, CocoaPods, a valid personal signing identity, and the paired iPhone are now present.
+1. Blocked: enable Developer Mode on the paired iPhone, then install the personal-team-signed Release build and validate Apple Speech permissions/on-device transcription/interruption teardown, WKWebView, Keychain persistence, screenshot sharing, orientation, background reconnect, and the complete edit-to-deploy loop on that physical device. Repeat the native resize and speech checks on physical iPad hardware when one is available. Full Xcode, CocoaPods, a valid personal signing identity, and the paired iPhone are now present.
 2. Deferred: hosted relay and account system, pending evidence that private Tailscale connectivity is insufficient.
 3. Deferred: App Store/TestFlight distribution decision, pending physical-device validation and policy review.
+4. Deferred: migrate the Expo-generated app delegate to the mandatory UIScene lifecycle before supporting the iOS 27 runtime. The current supported iOS 16.4–26.4 Release build is green; the iOS 27 beta simulator rejects non-UIScene applications before React Native starts.

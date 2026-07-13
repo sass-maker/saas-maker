@@ -164,6 +164,12 @@ export class ProcessManager extends EventEmitter<ProcessEvents> {
     return this.active.has(`${projectId}:agent`);
   }
 
+  hasActiveProject(projectId: string): boolean {
+    return [...this.active.keys()].some((key) =>
+      key.startsWith(`${projectId}:`),
+    );
+  }
+
   snapshots(
     projectId: string,
   ): Partial<Record<OperationName, ProcessSnapshot>> {
