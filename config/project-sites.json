@@ -1,0 +1,26 @@
+{
+  "$schema": "fleet.project-sites.v1",
+  "verifiedAt": "2026-07-13T03:12:00Z",
+  "projects": {
+    "aliveville": { "url": "https://aliveville.com", "platform": "Cloudflare Pages" },
+    "anime-list": { "url": "https://anime-list-9lk.pages.dev", "platform": "Cloudflare Pages" },
+    "codevetter": { "url": "https://codevetter.com", "platform": "Cloudflare Pages" },
+    "drank": { "url": "https://drank-5vh.pages.dev", "platform": "Cloudflare Pages" },
+    "email-manager": { "url": "https://email-manager.sarthakagrawal927.workers.dev", "platform": "Cloudflare Workers" },
+    "free-ai": { "url": "https://free-ai-gateway.sarthakagrawal927.workers.dev", "platform": "Cloudflare Workers" },
+    "high-signal": { "url": "https://highsignal.app", "platform": "Cloudflare Workers" },
+    "karte": { "url": "https://karte.cc", "platform": "Cloudflare Workers" },
+    "knowledge-base": { "url": "https://knowledgebase-app.sarthakagrawal927.workers.dev", "platform": "Cloudflare Workers" },
+    "looptv": { "url": "https://looptv.pages.dev", "platform": "Cloudflare Pages" },
+    "pace": { "url": "https://heypace.app", "platform": "Cloudflare Pages" },
+    "posttrainllm": { "url": "https://posttrainllm.com", "platform": "Cloudflare Pages" },
+    "reader": { "url": "https://reader.sarthakagrawal927.workers.dev", "platform": "Cloudflare Workers" },
+    "reel-pipeline": { "url": "https://reel-pipeline-artifacts.sarthakagrawal927.workers.dev", "platform": "Cloudflare Workers" },
+    "research-papers": { "url": "https://research-papers.pages.dev", "platform": "Cloudflare Pages" },
+    "rolepatch": { "url": "https://rolepatch.com", "platform": "Cloudflare Workers" },
+    "saas-maker": { "url": "https://sassmaker.com", "platform": "Cloudflare Pages" },
+    "significanthobbies": { "url": "https://significanthobbies.com", "platform": "Cloudflare Workers" },
+    "starboard": { "url": "https://starboard.codevetter.com", "platform": "Cloudflare Workers" },
+    "swe-interview-prep": { "url": "https://swe-interview-prep.pages.dev", "platform": "Cloudflare Pages" }
+  }
+}

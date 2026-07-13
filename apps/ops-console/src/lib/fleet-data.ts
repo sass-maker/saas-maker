@@ -191,6 +191,17 @@ export type MarketingPipeline = {
   }>;
 };
 
+export type LearningSummary = {
+  url: string;
+  generatedAt: string | null;
+  sourceCount: number;
+  freshCount: number;
+  staleCount: number;
+  pendingCount: number;
+  activeSessionCount: number;
+  completedSessionCount: number;
+};
+
 const nextHints: Record<string, string> = {
   "daily-fleet-health-sentinel": "Tue-Sun, 08:00 local",
   "weekly-fleet-ops-audit": "Mon, 08:00 local",
@@ -285,6 +296,7 @@ function getHosting(project: {
   checkedOut: boolean;
   pkg: Record<string, unknown>;
   homepage: string | null;
+  verifiedSite: { url: string; platform: string } | null;
 }) {
   if (project.slug === "fleet-ops") {
     return {
@@ -299,6 +311,14 @@ function getHosting(project: {
       hostingKind: "local" as const,
       hostingLabel: "Machine telemetry",
       hostingDetail: "Local Wi-Fi telemetry feeds the console; it is not a separate public app host."
+    };
+  }
+
+  if (project.verifiedSite) {
+    return {
+      hostingKind: "cloudflare" as const,
+      hostingLabel: project.verifiedSite.platform,
+      hostingDetail: `Live URL verified ${project.verifiedSite.url}`
     };
   }
 
@@ -530,6 +550,9 @@ export function getFleetProjects(): FleetProject[] {
     summary?: Array<Record<string, unknown>>;
   };
   const tasks = getFleetTasks();
+  const siteRegistry = readJsonObject(resolve(fleetOpsRoot, "config/project-sites.json")) as {
+    projects?: Record<string, { url?: string; platform?: string }>;
+  };
   const auditBySlug = new Map((audit.projects ?? []).map((project) => [canonicalProjectSlug(String(project.slug)), project]));
   const smokeBySlug = new Map((smoke.summary ?? []).map((item) => [canonicalProjectSlug(String(item.project)), item]));
   const slugs = [...new Set([...Object.keys(catalog), "fleet-ops", "wifi-watch"])]
@@ -542,8 +565,12 @@ export function getFleetProjects(): FleetProject[] {
     const meta = catalog[slug] ?? {};
     const localDir = localDirBySlug[slug] ?? slug;
     const checkedOut = existsSync(root);
-    const homepage = pkg.homepage ?? null;
-    const hosting = getHosting({ slug, root, checkedOut, pkg, homepage });
+    const registeredSite = siteRegistry.projects?.[slug];
+    const verifiedSite = registeredSite?.url
+      ? { url: registeredSite.url, platform: registeredSite.platform ?? "Cloudflare" }
+      : null;
+    const homepage = verifiedSite?.url ?? pkg.homepage ?? null;
+    const hosting = getHosting({ slug, root, checkedOut, pkg, homepage, verifiedSite });
     const auditProject = auditBySlug.get(slug);
     const smokeProject = smokeBySlug.get(slug);
     const projectTasks = tasks.filter((task) => task.projectSlug === slug && task.lane === "build");
@@ -788,5 +815,29 @@ export function getMarketingPipeline(): MarketingPipeline {
       { name: "Native publishing", state: connectedAccounts === totalAccounts && totalAccounts > 0 ? "ready" : "blocked", detail: `All ${totalAccounts} account routes are configured; ${connectedAccounts}/${totalAccounts} OAuth connections are ready.` }
     ],
     brands
+  };
+}
+
+export function getLearningSummary(): LearningSummary {
+  const catalog = readJsonObject(resolve(fleetRoot, "swe-interview-prep/src/data/learning-sources.json")) as {
+    generatedAt?: string;
+    sources?: Array<{ syncStatus?: string }>;
+  };
+  const control = readJsonObject(resolve(
+    process.env.HOME ?? "",
+    "Library/Application Support/Fleet Ops/learning-sync/control-state.json"
+  )) as { sessions?: Array<{ status?: string }> };
+  const sources = Array.isArray(catalog.sources) ? catalog.sources : [];
+  const sessions = Array.isArray(control.sessions) ? control.sessions : [];
+  const countSources = (status: string) => sources.filter((source) => source.syncStatus === status).length;
+  return {
+    url: "https://swe-interview-prep.pages.dev/sources",
+    generatedAt: catalog.generatedAt ?? null,
+    sourceCount: sources.length,
+    freshCount: countSources("fresh"),
+    staleCount: countSources("stale"),
+    pendingCount: countSources("pending"),
+    activeSessionCount: sessions.filter((session) => session.status === "started").length,
+    completedSessionCount: sessions.filter((session) => session.status === "completed").length
   };
 }
