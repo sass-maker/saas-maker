@@ -44,7 +44,8 @@ jobs:
       - name: Generate the native iOS project
         run: pnpm --filter @mobile-dev-cockpit/mobile exec expo prebuild --platform ios --no-install
       - name: Install iOS pods
-        run: pod install --project-directory=apps/mobile/ios
+        working-directory: apps/mobile/ios
+        run: pod install
       - name: Compile for iOS Simulator
         run: |
           set -o pipefail
