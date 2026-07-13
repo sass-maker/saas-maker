@@ -41,4 +41,4 @@
 
 - [x] 6.1 Update README setup/privacy guidance and PROJECT_STATUS.md with universal iPad and native voice evidence plus any physical-device-only residual risk
 - [ ] 6.2 Validate the OpenSpec change strictly and archive it only after all required scenarios have direct evidence
-- [ ] 6.3 Commit and push the reviewed implementation with the relevant CI checks green
+- [x] 6.3 Commit and push the reviewed implementation with the relevant CI checks green

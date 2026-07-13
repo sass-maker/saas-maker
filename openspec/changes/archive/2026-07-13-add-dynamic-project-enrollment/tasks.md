@@ -43,4 +43,4 @@
 - [x] 6.3 Verify the enrollment flow visually at iPhone and regular-width iPad dimensions and confirm no arbitrary path/command controls are rendered
 - [x] 6.4 Compile, install, and launch the standalone native app after protocol/UI changes
 - [x] 6.5 Update README and PROJECT_STATUS.md with low-configuration startup, dynamic enrollment, trust boundaries, and validation evidence
-- [ ] 6.6 Archive the change only after all scenarios are implemented and directly verified, then commit and push with CI green
+- [x] 6.6 Archive the change only after all scenarios are implemented and directly verified, then commit and push with CI green
