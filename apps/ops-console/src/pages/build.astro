@@ -1,4 +1,5 @@
 ---
+import FleetNav from "../components/FleetNav.astro";
 import { getFleetDevlog, getFleetProjects, getFleetTasks, getSnapshotInfo } from "../lib/fleet-data";
 
 const projects = getFleetProjects();
@@ -36,10 +37,8 @@ const formatDate = (value: string | null) => value
   </head>
   <body>
     <main class="shell">
-      <header class="topbar">
-        <div><p class="eyebrow">Fleet Ops / Build</p><h1>Execution queue</h1></div>
-        <nav aria-label="Fleet console"><a href="/">Overview</a><a class="active" href="/build">Build</a><a href="/marketing">Market</a><a href="https://swe-interview-prep.pages.dev/sources">Learn</a></nav>
-      </header>
+      <FleetNav active="build" />
+      <header class="topbar"><div><p class="eyebrow">Fleet Ops / Build</p><h1>Execution queue</h1></div></header>
 
       <section class="summary" aria-label="Build summary">
         <div><span>In progress</span><strong>{inProgressTasks}</strong><small>claimed in SaaS Maker</small></div>

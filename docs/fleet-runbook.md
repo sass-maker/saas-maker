@@ -48,7 +48,7 @@ Local checkout aliases:
 
 ## Owned Domain Map
 
-The nine owned root domains currently mapped to active fleet projects are:
+The ten owned root domains are:
 
 | Domain | Project |
 | --- | --- |
@@ -61,9 +61,11 @@ The nine owned root domains currently mapped to active fleet projects are:
 | `highsignal.app` | High Signal |
 | `karte.cc` | Karte |
 | `significanthobbies.com` | Significant Hobbies |
+| `sarthakagrawal.dev` | Portfolio |
 
-`sarthakagrawal.dev` is the portfolio domain, not counted as an active Fleet
-product domain.
+Nine root domains map to active Fleet products. `sarthakagrawal.dev` is the
+portfolio domain and is included in the ownership count, but not the product
+count.
 
 Subdomains such as `api.sassmaker.com`, `docs.sassmaker.com`, and
 `www.*` variants belong to the same parent project and are not separate fleet

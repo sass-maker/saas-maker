@@ -1,4 +1,5 @@
 ---
+import FleetNav from "../components/FleetNav.astro";
 import { getCronJobs, getDomainIntelligence, getFleetNodes, getFleetProjects, getSnapshotInfo, getWifiSummary } from "../lib/fleet-data";
 
 const cronJobs = getCronJobs();
@@ -39,20 +40,28 @@ const formatDate = (value: string | null) =>
   </head>
   <body>
     <main class="shell">
+      <FleetNav active="overview" />
       <header class="topbar">
         <div>
-          <p class="eyebrow">Fleet Ops</p>
+          <p class="eyebrow">Overview</p>
           <h1>Fleet status</h1>
         </div>
-        <nav class="topnav" aria-label="Fleet console">
-          <a class="active" href="/">Overview</a>
-          <a href="/build">Build</a>
-          <a href="/marketing">Market</a>
-          <a href="https://swe-interview-prep.pages.dev/sources">Learn</a>
-        </nav>
       </header>
 
-      <nav class="lane-grid" aria-label="Fleet operating tabs">
+      <div class="overview-layout">
+        <aside class="overview-sidebar" aria-label="Overview sections">
+          <span>On this page</span>
+          <nav>
+            <a href="#summary">Summary</a>
+            <a href="#hosting">Hosting</a>
+            <a href="#projects">Projects</a>
+            <a href="#domains">Domains</a>
+            <a href="#schedules">Schedules</a>
+            <a href="#wifi">Wi-Fi Watch</a>
+          </nav>
+        </aside>
+        <div class="overview-main">
+      <nav id="summary" class="lane-grid" aria-label="Fleet operating tabs">
         <a href="/build">
           <span>01</span>
           <strong>Build</strong>
@@ -60,7 +69,7 @@ const formatDate = (value: string | null) =>
         </a>
         <a href="https://swe-interview-prep.pages.dev/sources">
           <span>02</span>
-          <strong>Learn</strong>
+          <strong>Learn ↗</strong>
           <small>Daily sessions and project roadmaps</small>
         </a>
         <a href="/marketing">
@@ -101,6 +110,13 @@ const formatDate = (value: string | null) =>
         </article>
         <article class="summary-card">
           <div>
+            <p class="label">Owned domains</p>
+            <strong>{domains.length}</strong>
+          </div>
+          <span>Root domains only. Project subdomains are grouped under their parent domain.</span>
+        </article>
+        <article class="summary-card">
+          <div>
             <p class="label">Fleet nodes</p>
             <strong>{nodes.length}</strong>
           </div>
@@ -118,7 +134,7 @@ const formatDate = (value: string | null) =>
         <span>Tasks {formatDate(snapshot.tasksSyncedAt)} · Smoke {formatDate(snapshot.smokeGeneratedAt)} · Audit {formatDate(snapshot.auditGeneratedAt)}</span>
       </section>
 
-      <section class="panel hosting-panel" aria-label="Hosting split">
+      <section id="hosting" class="panel hosting-panel" aria-label="Hosting split">
         <div class="panel-head compact">
           <div>
             <p class="eyebrow">Hosting</p>
@@ -159,13 +175,13 @@ const formatDate = (value: string | null) =>
         </div>
       </section>
 
-      <section class="panel domain-panel" aria-labelledby="domains-title">
+      <section id="domains" class="panel domain-panel" aria-labelledby="domains-title">
         <div class="panel-head">
           <div>
             <p class="eyebrow">Domain intelligence</p>
             <h2 id="domains-title">drank + PSI Swarm</h2>
           </div>
-          <span>Weekly owned-domain snapshot</span>
+          <span>{domains.length} owned root domains · subdomains grouped by parent</span>
         </div>
         <div class="domain-table" role="table" aria-label="Domain rating and performance results">
           <div class="domain-row domain-head" role="row"><span>Domain</span><span>DR</span><span>Performance</span><span>LCP</span><span>CLS</span><span>Updated</span></div>
@@ -182,53 +198,8 @@ const formatDate = (value: string | null) =>
         </div>
       </section>
 
-      <section id="mobile-control" class="panel node-panel" aria-label="Machine and mobile control state">
-        <div class="panel-head">
-          <div>
-            <p class="eyebrow">Mobile control</p>
-            <h2>Machines, agents, and private access</h2>
-          </div>
-          <code>mobile-control status</code>
-        </div>
-        <div class="node-grid">
-          {
-            nodes.map((node) => (
-              <article class="node-card" data-node-id={node.id}>
-                <div class="node-head">
-                  <div>
-                    <span class:list={["status-pill", node.status]} data-node-status>{node.status}</span>
-                    <h3>{node.label}</h3>
-                    <p>{node.role} · {node.host}</p>
-                  </div>
-                  <span>{node.publicWorkloads.length ? `${node.publicWorkloads.length} public workload${node.publicWorkloads.length === 1 ? "" : "s"}` : "no public hosting"}</span>
-                </div>
-                <div class="surface-grid">
-                  {node.agents.map((agent) => (
-                    <div data-service-label={agent.name}>
-                      <span class:list={["mini-state", agent.status]}>{agent.status}</span>
-                      <strong>{agent.name}</strong>
-                      <p>{agent.detail}</p>
-                    </div>
-                  ))}
-                  {node.privateAccess.map((access) => (
-                    <div data-service-label={access.name}>
-                      <span class:list={["mini-state", access.status]}>{access.status}</span>
-                      <strong>{access.name}</strong>
-                      <p>{access.detail}</p>
-                    </div>
-                  ))}
-                </div>
-                <ul>
-                  {node.notes.map((note) => <li>{note}</li>)}
-                </ul>
-              </article>
-            ))
-          }
-        </div>
-      </section>
-
       <section class="content-grid">
-        <section class="panel cron-panel" aria-labelledby="cron-title">
+        <section id="schedules" class="panel cron-panel" aria-labelledby="cron-title">
           <div class="panel-head">
             <div>
               <p class="eyebrow">Schedules</p>
@@ -279,7 +250,7 @@ const formatDate = (value: string | null) =>
         </section>
 
         <aside class="side-stack">
-          <section class="panel wifi-panel" aria-labelledby="wifi-title">
+          <section id="wifi" class="panel wifi-panel" aria-labelledby="wifi-title">
             <div class="panel-head compact">
               <div>
                 <p class="eyebrow">Fleet product</p>
@@ -337,6 +308,8 @@ const formatDate = (value: string | null) =>
           </section>
         </aside>
       </section>
+        </div>
+      </div>
     </main>
   </body>
 </html>
@@ -348,16 +321,6 @@ const formatDate = (value: string | null) =>
       timeStyle: "medium",
       timeZone: "Asia/Kolkata"
     }).format(new Date(value));
-
-  const setState = (element, state) => {
-    if (!element) return;
-    element.textContent = state;
-    element.className = element.className
-      .split(" ")
-      .filter((name) => !["online", "degraded", "offline", "running", "stopped", "needs-setup"].includes(name))
-      .concat(state)
-      .join(" ");
-  };
 
   async function refreshHeartbeat() {
     const at = document.querySelector("[data-heartbeat-at]");
@@ -387,17 +350,6 @@ const formatDate = (value: string | null) =>
         taskState.textContent = active
           ? `Agent tasks ${active} active / latest ${heartbeat.tasks.recentStatus}`
           : `Agent tasks idle / latest ${heartbeat.tasks.recentStatus}`;
-      }
-
-      const node = document.querySelector(`[data-node-id="${heartbeat.node.id}"]`);
-      setState(node?.querySelector("[data-node-status]"), nodeState);
-
-      for (const service of heartbeat.node.services || []) {
-        const surface = [...document.querySelectorAll("[data-service-label]")]
-          .find((element) => element.dataset.serviceLabel === service.label ||
-            (service.id === "console" && element.dataset.serviceLabel === "Fleet Ops console") ||
-            (service.id === "tailscale" && element.dataset.serviceLabel === "Tailscale SSH"));
-        setState(surface?.querySelector(".mini-state"), service.status);
       }
 
       for (const domain of heartbeat.domains || []) {
@@ -521,7 +473,6 @@ const formatDate = (value: string | null) =>
     font-size: 16px;
   }
 
-  .status-pill,
   .job-state,
   .health {
     display: inline-flex;
@@ -537,31 +488,7 @@ const formatDate = (value: string | null) =>
     text-transform: uppercase;
   }
 
-  .topnav {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    gap: 8px;
-  }
-
-  .topnav a {
-    display: inline-flex;
-    align-items: center;
-    min-height: 32px;
-    border: 1px solid var(--line);
-    border-radius: 0;
-    padding: 10px 14px;
-    color: var(--muted);
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 600;
-  }
-
-  .topnav a.active,
-  .topnav a:hover {
-    color: var(--text);
-    border-color: var(--cyan);
-  }
+  .overview-layout{display:grid;grid-template-columns:176px minmax(0,1fr);gap:24px;align-items:start}.overview-main{min-width:0}.overview-sidebar{position:sticky;top:80px;padding:18px 0}.overview-sidebar>span{display:block;margin-bottom:10px;color:var(--muted);font-size:11px;font-weight:800;text-transform:uppercase}.overview-sidebar nav{display:grid;border-top:1px solid var(--line)}.overview-sidebar a{border-bottom:1px solid var(--line);padding:10px 4px;color:var(--muted);text-decoration:none;font-size:13px}.overview-sidebar a:hover{color:var(--text)}#summary,#hosting,#projects,#domains,#schedules,#wifi{scroll-margin-top:88px}
 
   .lane-grid {
     display: grid;
@@ -674,10 +601,6 @@ const formatDate = (value: string | null) =>
   }
 
   .hosting-panel {
-    margin-bottom: 16px;
-  }
-
-  .node-panel {
     margin-bottom: 16px;
   }
 
@@ -794,106 +717,6 @@ const formatDate = (value: string | null) =>
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 10px;
-  }
-
-  .node-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
-  }
-
-  .node-card {
-    border: 1px solid var(--line);
-    border-radius: 0;
-    padding: 14px;
-    background: #131614;
-  }
-
-  .node-head {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 14px;
-    margin-bottom: 14px;
-  }
-
-  .node-head h3 {
-    margin-top: 8px;
-    font-size: 22px;
-  }
-
-  .node-head p,
-  .node-head > span,
-  .surface-grid p,
-  .node-card li {
-    color: var(--muted);
-  }
-
-  .surface-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-  }
-
-  .surface-grid div {
-    min-height: 126px;
-    border: 1px solid var(--line);
-    border-radius: 0;
-    padding: 12px;
-    background: #0c0f0d;
-  }
-
-  .surface-grid strong {
-    display: block;
-    margin-top: 8px;
-  }
-
-  .surface-grid p {
-    margin: 6px 0 0;
-    font-size: 13px;
-  }
-
-  .mini-state {
-    display: inline-flex;
-    min-height: 24px;
-    border: 1px solid var(--line);
-    border-radius: 0;
-    padding: 2px 8px;
-    color: var(--muted);
-    font-size: 11px;
-    font-weight: 800;
-    text-transform: uppercase;
-  }
-
-  .status-pill.online,
-  .mini-state.running,
-  .mini-state.configured {
-    border-color: rgba(140, 233, 154, 0.45);
-    color: var(--green);
-    background: rgba(140, 233, 154, 0.08);
-  }
-
-  .status-pill.needs-setup,
-  .status-pill.planned,
-  .mini-state.stopped,
-  .mini-state.unknown {
-    border-color: rgba(255, 209, 102, 0.45);
-    color: var(--yellow);
-    background: rgba(255, 209, 102, 0.08);
-  }
-
-  .status-pill.offline,
-  .mini-state.missing {
-    border-color: rgba(255, 135, 135, 0.45);
-    color: var(--red);
-    background: rgba(255, 135, 135, 0.08);
-  }
-
-  .node-card ul {
-    display: grid;
-    gap: 6px;
-    margin: 14px 0 0;
-    padding-left: 18px;
   }
 
   .hosting-grid article {
@@ -1076,7 +899,6 @@ const formatDate = (value: string | null) =>
   @media (max-width: 1100px) {
     .hero-grid,
     .content-grid,
-    .node-grid,
     .project-directory {
       grid-template-columns: 1fr 1fr;
     }
@@ -1100,16 +922,6 @@ const formatDate = (value: string | null) =>
     .panel-head,
     .job-head {
       display: grid;
-    }
-
-    .topnav {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      justify-content: stretch;
-    }
-
-    .topnav a {
-      justify-content: center;
     }
 
     .lane-grid {
@@ -1137,14 +949,14 @@ const formatDate = (value: string | null) =>
 
     .hero-grid,
     .content-grid,
-    .node-grid,
-    .surface-grid,
     dl,
     .facts,
     .project-directory,
     .project-item {
       grid-template-columns: 1fr;
     }
+
+    .overview-layout{display:block}.overview-sidebar{top:104px;z-index:10;margin-bottom:12px;padding:0;background:var(--bg);overflow-x:auto}.overview-sidebar>span{display:none}.overview-sidebar nav{display:flex;width:max-content;border-top:0}.overview-sidebar a{min-width:max-content;border:1px solid var(--line);border-right:0;padding:8px 11px}.overview-sidebar a:last-child{border-right:1px solid var(--line)}
 
     .domain-table {
       display: grid;

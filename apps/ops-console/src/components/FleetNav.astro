@@ -1,0 +1,29 @@
+---
+interface Props {
+  active: "overview" | "build" | "market";
+}
+
+const { active } = Astro.props;
+---
+
+<header class="fleet-nav">
+  <a class="brand" href="/" aria-label="Fleet Ops overview">
+    <strong>Fleet</strong>
+    <span>Ops console</span>
+  </a>
+  <nav aria-label="Fleet console">
+    <a class:list={{ active: active === "overview" }} href="/">Overview</a>
+    <a class:list={{ active: active === "build" }} href="/build">Build</a>
+    <a class:list={{ active: active === "market" }} href="/marketing">Market</a>
+    <a class="external" href="https://swe-interview-prep.pages.dev/sources" aria-label="Learn, opens the learning application">
+      Learn <span aria-hidden="true">↗</span>
+    </a>
+  </nav>
+</header>
+
+<style>
+  .fleet-nav{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:64px;border-bottom:1px solid #2b302d;background:rgba(9,11,12,.96);backdrop-filter:blur(12px)}
+  .brand{display:flex;align-items:baseline;gap:8px;color:#f3f6f4;text-decoration:none}.brand strong{font-size:17px}.brand span{color:#a6aea9;font-size:12px;text-transform:uppercase}
+  nav{display:flex;align-items:center;gap:4px}nav a{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:36px;border:1px solid transparent;padding:7px 12px;color:#a6aea9;text-decoration:none;font-size:14px;font-weight:650}nav a:hover,nav a.active{border-color:#2b302d;color:#f3f6f4;background:#101416}.external span{color:#79dcc8;font-size:15px}
+  @media(max-width:640px){.fleet-nav{display:grid;gap:8px;padding:10px 0}.brand{padding-inline:4px}nav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));width:100%}nav a{min-width:0;padding-inline:5px;font-size:12px}}
+</style>
