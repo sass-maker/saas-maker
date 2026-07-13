@@ -267,6 +267,16 @@ for intentional target-host exclusions.
 
 ## Features (shipped)
 
+### Anonymous brand reel
+
+- Public one-field HTTPS brand URL intake fetches the website through bounded,
+  DNS-pinned SSRF controls, extracts evidence-backed brand facts and visuals,
+  and turns them into a reviewed 9:16 reel with narration, captions, CTA, and a
+  checksum-pinned fictional synthetic human presenter.
+- Anonymous status, byte-range preview, and attachment download expose only the
+  reviewed artifact. This product surface has no authentication, workspaces,
+  billing, credits, actor marketplace, payouts, social posting, or scheduling.
+
 ### Architecture
 
 - SaaS Maker Marketing Queue (`/v1/marketing/posts`) supplies accepted items; pipeline PATCHes `asset_url`, `result_url`, status back.
