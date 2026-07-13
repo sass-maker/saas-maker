@@ -36,6 +36,7 @@ Mobile Dev Cockpit is a native iPhone interface for supervising development on a
 - 2026-07-13 — Added Tailscale-first onboarding and a loopback-only Tailscale Serve CLI mode with scoped setup/cleanup, MagicDNS WSS output, unsafe-binding rejection, and tests. Polished the iPhone onboarding and dashboard using local React Native primitives and visually verified both secure and local modes at 390x844.
 - 2026-07-13 — Added a clean hosted native build gate: Expo prebuild, CocoaPods installation, and the complete unsigned iOS Simulator app compile and link pass on Xcode 26.4 alongside the existing 34 tests, bridge build, and platform exports.
 - 2026-07-13 — Upgraded the native gate to a standalone Release build, fixed React Native workspace resolution for the shared protocol, installed and launched the bundled app in an iPhone simulator without Metro, and visually verified the uploaded native onboarding screenshot.
+- 2026-07-13 — Prepared the local physical-device toolchain with Xcode 27 beta 3 and CocoaPods 1.17, detected the paired iPhone 16 Pro, and selected the valid personal Apple Development identity. The signed device build is waiting only for Developer Mode to be enabled and confirmed on the iPhone.
 
 ## Products
 
@@ -63,6 +64,6 @@ Mobile Dev Cockpit is a native iPhone interface for supervising development on a
 
 ## Todo / Planned / Deferred / Blocked
 
-1. Blocked: install and validate WKWebView, Keychain persistence, screenshot sharing, orientation, and reconnect on a physical iPhone; native compilation is proven in CI, but this Mac has Command Line Tools only, no full Xcode installation, and no CocoaPods.
+1. Blocked: enable Developer Mode on the paired iPhone, then install the personal-team-signed Release build and validate WKWebView, Keychain persistence, screenshot sharing, orientation, background reconnect, and the complete edit-to-deploy loop on that physical device. Full Xcode, CocoaPods, a valid personal signing identity, and the paired iPhone are now present.
 2. Deferred: hosted relay and account system, pending evidence that private Tailscale connectivity is insufficient.
 3. Deferred: App Store/TestFlight distribution decision, pending physical-device validation and policy review.
