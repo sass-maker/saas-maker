@@ -62,6 +62,7 @@ function isAllowedOrigin(origin: string): boolean {
   if (origin.endsWith('.sarthakagrawal927.workers.dev')) return true;
   if (origin.endsWith('.pages.dev')) return true;
   if (origin.endsWith('.sassmaker.com')) return true;
+  if (origin.endsWith('.significanthobbies.com')) return true;
   return false;
 }
 

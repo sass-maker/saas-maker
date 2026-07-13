@@ -71,6 +71,7 @@ Brand note: production domain uses **double-s** `sassmaker.com`; display name re
   without a D1 migration or unpublished-copy leak.
 
 - **2026-07-11 — Fleet deploy/audit alignment:** Restored the reusable Cloudflare deploy workflow contract with Node 22 defaults and aligned fleet-audit local checkout resolution and business lanes to the canonical project slugs.
+- **2026-07-13 — Canonical Fleet health contracts:** Moved production smoke and audit targets to the owned product domains, folded Reel Pipeline visibility into `fleet.sassmaker.com/marketing`, and allowed shared widgets from `*.significanthobbies.com`.
 - **2026-07-03 — Droid graduation:** Droid now records durable retry and timeout contracts as run events (every run declares its retry/backoff/timeout behaviour up front). Pre-flight validation fails fast with categorized reasons (git clean state, dependencies installed) before the main task runs. New `/v0/dashboard/success-rate` endpoint computes a rolling 7-day success-rate dashboard with failure-reason breakdown and retry-count distribution. Migration `0022_droid_graduation.sql` adds `retry_count` and `failure_reason` columns + indexes. Backoff strategies (fixed/linear/exponential) with jitter configurable via loop_policy.
 - **2026-07-03 — Marketing posting ops summary:** Cockpit marketing queue now
   derives missed ready posts, reel-pipeline posting failures, synced
@@ -111,7 +112,7 @@ Brand note: production domain uses **double-s** `sassmaker.com`; display name re
 
 ### API (`workers/api`)
 
-- Hono app with CORS allowlist (`*.sassmaker.com`, localhost, `*.workers.dev`, `*.pages.dev`).
+- Hono app with CORS allowlist (`*.sassmaker.com`, `*.significanthobbies.com`, localhost, `*.workers.dev`, `*.pages.dev`).
 - Rate limit middleware on `/v1/*` (100/min; `/v1/ai` skipped).
 - Routes live: auth, projects, feedback, upload, waitlist, ai, testimonials, changelog, cli-auth, secrets, jobs, roadmap, standards, fleet-metadata, tasks, task-workflows, symphony, marketing, events, test.
 - Project readme GET/PUT for SDK (`/v1/projects/readme`).

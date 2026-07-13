@@ -18,8 +18,8 @@ const DEFAULT_EXISTING_TASKS = path.join(ROOT, '.symphony', 'tasks.json');
 const TARGETS = {
   'anime-list': [{ label: 'web', url: 'https://anime.significanthobbies.com' }],
   CodeVetter: [{ label: 'web', url: 'https://codevetter.com' }],
-  'email-manager': [{ label: 'web', url: 'https://email-manager.sarthakagrawal927.workers.dev' }],
-  drank: [{ label: 'web', url: 'https://drank-sand.vercel.app' }],
+  'email-manager': [{ label: 'web', url: 'https://mail.sassmaker.com' }],
+  drank: [{ label: 'web', url: 'https://domains.sassmaker.com' }],
   'free-ai': [
     { label: 'health', url: 'https://ai-gateway.sassmaker.com/health' },
     { label: 'models', url: 'https://ai-gateway.sassmaker.com/v1/models' },
@@ -27,9 +27,10 @@ const TARGETS = {
   'alive-ville': [{ label: 'web', url: 'https://aliveville.com' }],
   'high-signal': [{ label: 'web', url: 'https://highsignal.app' }],
   'knowledge-base': [
+    { label: 'web', url: 'https://search.sassmaker.com' },
     { label: 'health', url: 'https://knowledgebase.sarthakagrawal927.workers.dev/v1/healthz' },
   ],
-  karte: [{ label: 'web', url: 'https://linkchat.sarthakagrawal927.workers.dev' }],
+  karte: [{ label: 'web', url: 'https://karte.cc' }],
   looptv: [
     {
       label: 'web',
@@ -55,10 +56,11 @@ const TARGETS = {
   reader: [{ label: 'web', url: 'https://read.significanthobbies.com' }],
   'reel-pipeline': [
     {
-      label: 'health',
-      url: 'https://reel-pipeline-artifacts.sarthakagrawal927.workers.dev/health',
+      label: 'dashboard',
+      url: 'https://fleet.sassmaker.com/marketing',
     },
   ],
+  'research-papers': [{ label: 'web', url: 'https://papers.highsignal.app' }],
   rolepatch: [{ label: 'web', url: 'https://rolepatch.com' }],
   'saas-maker': [
     { label: 'cockpit', url: 'https://app.sassmaker.com/login' },
@@ -77,10 +79,10 @@ const TARGETS = {
   posttrainllm: [
     {
       label: 'web',
-      url: 'https://tinygpt.pages.dev',
+      url: 'https://posttrainllm.com',
       expectText: ['The LLM factory that fits on one Mac.'],
     },
-    { label: 'devlog', url: 'https://tinygpt.pages.dev/devlog.html', expectText: ['Devlog'] },
+    { label: 'devlog', url: 'https://posttrainllm.com/devlog.html', expectText: ['Devlog'] },
   ],
 };
 

@@ -104,10 +104,8 @@ const PROD_TARGETS = {
     { label: 'api-root', url: 'https://mal-api.sarthakagrawal927.workers.dev', ok: [404] },
   ],
   CodeVetter: [{ label: 'web', url: 'https://codevetter.com', ok: [200] }],
-  'email-manager': [
-    { label: 'web', url: 'https://email-manager.sarthakagrawal927.workers.dev', ok: [200] },
-  ],
-  drank: [{ label: 'web', url: 'https://drank-sand.vercel.app', ok: [200] }],
+  'email-manager': [{ label: 'web', url: 'https://mail.sassmaker.com', ok: [200] }],
+  drank: [{ label: 'web', url: 'https://domains.sassmaker.com', ok: [200] }],
   'free-ai': [{ label: 'gateway', url: 'https://ai-gateway.sassmaker.com', ok: [200] }],
   'alive-ville': [{ label: 'web', url: 'https://aliveville.com', ok: [200] }],
   'high-signal': [
@@ -115,22 +113,24 @@ const PROD_TARGETS = {
     { label: 'api', url: 'https://high-signal-api.sarthakagrawal927.workers.dev', ok: [200] },
   ],
   'knowledge-base': [
+    { label: 'web', url: 'https://search.sassmaker.com', ok: [200] },
     {
       label: 'health',
       url: 'https://knowledgebase.sarthakagrawal927.workers.dev/v1/healthz',
       ok: [200],
     },
   ],
-  karte: [{ label: 'web', url: 'https://linkchat.sarthakagrawal927.workers.dev', ok: [200] }],
+  karte: [{ label: 'web', url: 'https://karte.cc', ok: [200] }],
   looptv: [{ label: 'web', url: 'https://tv.significanthobbies.com', ok: [200] }],
   reader: [{ label: 'web', url: 'https://read.significanthobbies.com', ok: [200] }],
   'reel-pipeline': [
     {
-      label: 'health',
-      url: 'https://reel-pipeline-artifacts.sarthakagrawal927.workers.dev/health',
+      label: 'dashboard',
+      url: 'https://fleet.sassmaker.com/marketing',
       ok: [200],
     },
   ],
+  'research-papers': [{ label: 'web', url: 'https://papers.highsignal.app', ok: [200] }],
   rolepatch: [{ label: 'web', url: 'https://rolepatch.com', ok: [200] }],
   'saas-maker': [
     { label: 'cockpit', url: 'https://app.sassmaker.com', ok: [200] },
@@ -146,17 +146,16 @@ const PROD_TARGETS = {
 const FRONTEND_TARGETS = {
   'anime-list': [{ label: 'web', url: 'https://anime.significanthobbies.com' }],
   CodeVetter: [{ label: 'web', url: 'https://codevetter.com' }],
-  'email-manager': [{ label: 'web', url: 'https://email-manager.sarthakagrawal927.workers.dev' }],
-  drank: [{ label: 'web', url: 'https://drank-sand.vercel.app' }],
+  'email-manager': [{ label: 'web', url: 'https://mail.sassmaker.com' }],
+  drank: [{ label: 'web', url: 'https://domains.sassmaker.com' }],
   'free-ai': [],
   'alive-ville': [{ label: 'web', url: 'https://aliveville.com' }],
   'high-signal': [{ label: 'web', url: 'https://highsignal.app' }],
-  'knowledge-base': [
-    { label: 'health', url: 'https://knowledgebase.sarthakagrawal927.workers.dev/v1/healthz' },
-  ],
-  karte: [{ label: 'web', url: 'https://linkchat.sarthakagrawal927.workers.dev' }],
+  'knowledge-base': [{ label: 'web', url: 'https://search.sassmaker.com' }],
+  karte: [{ label: 'web', url: 'https://karte.cc' }],
   looptv: [{ label: 'web', url: 'https://tv.significanthobbies.com' }],
   reader: [{ label: 'web', url: 'https://read.significanthobbies.com' }],
+  'research-papers': [{ label: 'web', url: 'https://papers.highsignal.app' }],
   rolepatch: [{ label: 'web', url: 'https://rolepatch.com' }],
   'saas-maker': [
     { label: 'cockpit', url: 'https://app.sassmaker.com' },
