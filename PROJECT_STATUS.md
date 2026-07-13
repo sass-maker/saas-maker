@@ -8,7 +8,7 @@ Reel Pipeline turns approved reel drafts into rendered MP4s and posts them throu
 
 `Worker (R2) → Rust watcher → node scripts/render-pro.js → R2 upload → worker patch`
 
-**Users:** Marketing operators running autopilot/post flows; fleet integrators syncing SaaS Maker marketing queue; reviewers using swipe approve/reject UI.
+**Users:** Visitors generating an anonymous brand reel from a public website; marketing operators running autopilot/post flows; fleet integrators syncing SaaS Maker marketing queue; reviewers using swipe approve/reject UI.
 
 **Constraints:** `render-pro.js` is canonical production renderer; Rust owns watch/autopilot/post entrypoints with JS glue retired. Hub-and-spoke: SaaS Maker is system of record.
 
@@ -22,7 +22,7 @@ a format that gets views consistently. Use `docs/growth-format-playbook.md` and
 the structured `src/growth-formats.js` taxonomy to draft 5-7 posts/day until
 the 35-post decision review.
 
-**IN scope:** VideoBrief contract, MoneyPrinterTurbo + reel-maker adapters, R2 artifact Worker, Rust CLI orchestration, YouTube + Instagram Graph posting, product-proof Phase 1 quality gates, and lightweight draft/export support for the creator MVP.
+**IN scope:** Anonymous HTTPS brand intake and presenter-led preview/download, VideoBrief contract, MoneyPrinterTurbo + reel-maker adapters, R2 artifact Worker, Rust CLI orchestration, YouTube + Instagram Graph posting for internal accepted marketing items, product-proof Phase 1 quality gates, and lightweight draft/export support for the creator MVP.
 
 **OUT of scope:** OpenShorts adapter (removed), Cloudflare Worker rewrite of orchestration, product-proof Phases 2–3 until Phase 1 stabilizes, and kids-story automation before the first three manual videos prove the format.
 
@@ -52,6 +52,7 @@ Marketing autopilot and posting run in Rust (`reel` CLI). Node remains for `rend
 | --- | --- |
 | **SaaS Maker** | System of record for marketing queue; pull accepted reel items; patch `asset_url`, `result_url`, provider metadata, posting state |
 | **High Signal** | Reel brief intake via `src/signal-intake.js` |
+| **Significant Hobbies** | Approved, versioned reel envelopes imported into Idea Store with immutable source payloads; Reel returns file-based render/upload/metrics receipts and never edits the content checkout |
 
 ### Stack & commands
 
@@ -63,6 +64,7 @@ Marketing autopilot and posting run in Rust (`reel` CLI). Node remains for `rend
 | --- | --- |
 | `npm install` / `npm test` | Install + node --test + cargo test |
 | `npm run dev` | Local control API |
+| `npm run dev` → `/` | Anonymous one-field brand URL → status → reviewed MP4 preview/download |
 | `npm run watch:render` | Production watcher (`reel watch --execute`) |
 | `npm run watch:render:once` / `:dry` | One-shot / dry-run watcher |
 | `npm run autopilot` / `:once` / `:dry` | Marketing autopilot intake → render → post |
@@ -83,6 +85,8 @@ Marketing autopilot and posting run in Rust (`reel` CLI). Node remains for `rend
 | `npm run faceless -- --topic "..."` | Topic → script → brief → rendered faceless video (batch via `--topics-file`; engines mock/kokoro/moneyprinterturbo) |
 | `npm run setup:kokoro` | One-time local Kokoro-82M TTS install (venv + ~340MB model) |
 | `npm run factory -- plan/produce/status` | Backlog conveyor: plan ideas → produce renders with quality gate + publish packet |
+| `npm run significant-content -- validate/import/status/receipt/report/follow-up` | Local Significant Hobbies handoff, receipt, status, and draft-only performance loop |
+| `npm run smoke:significant-content` | Offline versioned handoff/idempotency/receipt/performance proof; no upload or posting |
 | `npm run bootstrap:cloudflare` / `check:cloudflare` / `worker:dry-run` | Cloudflare setup |
 | `npm run lesson:render -- --input test/fixtures/lessons/closures.json --auto-approve` | Tutoring lesson pipeline |
 
@@ -115,6 +119,20 @@ unresolved target-host items, including the optional documented acceptance file
 for intentional target-host exclusions.
 
 ## Timeline
+
+- **2026-07-13 — Anonymous brand website to reel:** replaced the unrequested HexCoded account/billing/actor-marketplace plan and deleted its isolated product-domain code. The public root now accepts one HTTPS brand URL without auth or payment, performs DNS-pinned SSRF-safe bounded extraction, builds an evidence-backed script/storyboard, runs a presenter-led 9:16 composition boundary, and exposes safe status, range preview, and attachment download only after review. `/review`, `/studio`, Significant Content, and internal accepted-marketing paths remain intact. The production presenter pack now includes a checksum-pinned fictional synthetic human cutout with generator provenance and an explicit non-real-identity attestation; real likenesses remain fail-closed without model-release proof. The complete Node/Rust regression suite passes.
+- **2026-07-13 — Significant Hobbies content handoff:** added the versioned
+  `significant-content-reels/v1` intake and `significant-content-receipt/v1`
+  output contracts. Approved variants enter Idea Store idempotently with
+  immutable provenance, and the factory preserves their exact hook, payoff,
+  ordered scenes, visuals, overlays, duration, and CTA instead of regenerating
+  copy. Local commands now validate/import, report cross-repo status, build
+  render/upload/metrics receipts, compare performance, and emit draft-only
+  follow-up briefs. The offline fixture proves duplicate intake and receipt
+  collapse without calling any upload, posting, schedule, credential, or
+  Significant Hobbies write path. Existing quality, review, accepted-post, and
+  provider preflight gates remain authoritative; see
+  `docs/significant-content-openclaw-runbook.md`.
 
 - **2026-07-13 — HexCoded provider-neutral commercial and actor contracts:**
   extended the locally executable product-domain layer without enabling any
@@ -249,9 +267,22 @@ for intentional target-host exclusions.
 
 ## Features (shipped)
 
+### Anonymous brand reel
+
+- Public one-field HTTPS brand URL intake fetches the website through bounded,
+  DNS-pinned SSRF controls, extracts evidence-backed brand facts and visuals,
+  and turns them into a reviewed 9:16 reel with narration, captions, CTA, and a
+  checksum-pinned fictional synthetic human presenter.
+- Anonymous status, byte-range preview, and attachment download expose only the
+  reviewed artifact. This product surface has no authentication, workspaces,
+  billing, credits, actor marketplace, payouts, social posting, or scheduling.
+
 ### Architecture
 
 - SaaS Maker Marketing Queue (`/v1/marketing/posts`) supplies accepted items; pipeline PATCHes `asset_url`, `result_url`, status back.
+- Significant Hobbies approved-content adapter: versioned, idempotent Idea Store
+  intake; exact scene-to-script conversion; attributed render/upload/metrics
+  receipts; machine-readable status/performance and draft-only follow-up output.
 - VideoBrief contract (`src/video-brief.js`) feeds mock, MoneyPrinterTurbo
   (default stock-footage MP4s), Grok/Imagine local MP4s, ASCII animation
   interlude MP4s, HTML/CSS composition previews, or reel-maker (+ product-proof capture) adapters;
@@ -322,14 +353,15 @@ for intentional target-host exclusions.
 
 ### Planned
 
-1. Produce the first creator-MVP kids story manually from `docs/creator-mvp-packs/lion-and-mouse.md`.
-2. Produce manual validation videos 2-3 from `docs/creator-mvp-packs/tortoise-and-hare.md` and `docs/creator-mvp-packs/crow-and-pitcher.md`.
-3. Record watch/parent-trust notes for the three completed videos.
-4. After those three videos, decide whether Reel Pipeline should support only scene/asset manifests, draft bundles, and review handoff, or resume renderer automation.
-5. Run one 35-post app-marketing experiment across the five growth formats and record format-level results.
-6. Phase 2 screen-recording renderer (`demoSteps` browser flow with screenshot fallback).
-7. Phase 3 multi-variant render (`variantCount` > 1) polish in review UI.
-8. Wire draft bundle output into review UI without paid engines.
+1. Run a production-environment canary with the checksum-pinned synthetic presenter in `assets/presenters/manifest.json`; add any future real likeness only with model-release proof.
+2. Produce the first creator-MVP kids story manually from `docs/creator-mvp-packs/lion-and-mouse.md`.
+3. Produce manual validation videos 2-3 from `docs/creator-mvp-packs/tortoise-and-hare.md` and `docs/creator-mvp-packs/crow-and-pitcher.md`.
+4. Record watch/parent-trust notes for the three completed videos.
+5. After those three videos, decide whether Reel Pipeline should support only scene/asset manifests, draft bundles, and review handoff, or resume renderer automation.
+6. Run one 35-post app-marketing experiment across the five growth formats and record format-level results.
+7. Phase 2 screen-recording renderer (`demoSteps` browser flow with screenshot fallback).
+8. Phase 3 multi-variant render (`variantCount` > 1) polish in review UI.
+9. Wire draft bundle output into review UI without paid engines.
 
 ### Deferred
 
@@ -346,24 +378,12 @@ for intentional target-host exclusions.
 
 ### Blocked
 
-- HexCoded self-serve implementation (`openspec/changes/hexcoded-self-serve-product`)
-  is blocked from durable/API integration by explicit product and provider
-  approvals: customer-app repository/API ownership; identity provider;
-  database and queue; Dodo checkout/webhook/refund and credit-success semantics;
-  identity/liveness/twin/voice/KYC/payout processors and deletion contracts;
-  jurisdiction-specific disclosure and biometric-retention policy; and the
-  actual public Terms, Privacy, and Actor Licence documents. No matching
-  customer-app repository or legal documents currently exist in the fleet.
-  Provider-neutral domain work is complete for URL-to-ad draft review,
-  versioned acceptance records, commercial credit holds and exactly-once
-  settlement, input-rights/provenance, claim/evidence and misuse controls,
-  export/deletion retention evidence, redacted observability, actor profiles
-  and pre-upload licence gates, active/current-licence actor catalog filtering,
-  verification and processor deletion, licence snapshots, earning/reversal
-  records, KYC/tax state, and tokenised payout workflows;
-  these records are not yet persisted or exposed through customer APIs.
-  Actor casting, brand self-serve, billing, and customer social publishing stay
-  disabled pending implementation and target-host acceptance evidence.
+- Anonymous presenter-led generation has no remaining local implementation
+  blocker. Its production pack contains a checksum-pinned fictional synthetic
+  human with generator provenance; a target-environment canary remains an
+  operator release gate. Auth, billing, credits, actor onboarding/twins, KYC,
+  earnings, payouts, marketplace, and customer social posting are not product
+  scope.
 
 - Final target-host readiness is not complete until
   `tmp/generation-readiness/report.json` has `targetHostReady: true`.

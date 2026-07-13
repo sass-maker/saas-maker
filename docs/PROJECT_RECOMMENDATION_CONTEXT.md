@@ -15,7 +15,7 @@ This file is a CodeVetter Repo Unpacked-inspired audit written for Starboard rec
 
 AI reel generation product that turns input text and project context into short-form video drafts and render artifacts.
 
-Reel Pipeline is an AI reel generation product that turns input text and project context into reviewable short-form video drafts, render jobs, artifacts, and posting handoff. Its current internal inputs are SaaS Maker marketing ideas and High Signal reel briefs, with SaaS Maker remaining the source of truth for approvals and task linkage.
+Reel Pipeline is an AI reel generation product that turns input text and project context into reviewable short-form video drafts, render jobs, artifacts, and posting handoff. Its current internal inputs are SaaS Maker marketing ideas, High Signal reel briefs, and approved Significant Hobbies content envelopes. SaaS Maker remains the source of truth for queue acceptance and posting state; Significant Hobbies remains the source of truth for canonical article claims and creative approval.
 
 For kids story reels, the current recommendation posture is intentionally
 creator-first: validate three manually produced public-domain story videos
@@ -28,7 +28,7 @@ experiment layer: 5-7 posts/day, review after 35 posts, and compare ranking,
 sound-sync, tutorial, trend-copy, and before/after formats before adding broad
 new tooling.
 
-Reel Pipeline AI reel generation product that turns input text and project context into short-form video drafts and render artifacts. This repo owns the intake, draft, render, review, artifact, and posting-handoff flow for short-form video generation. Its current internal inputs are accepted SaaS Maker Marketing Queue ideas and High Signal reel briefs; SaaS Maker stays the source of truth for approvals, task links, and posting state. Why This Repo Exists The fleet now has a marketing queue, but marketing docs alone are not enough. The useful loop is: 1. Agents create product-specific AI-video ideas in SaaS Maker Marketing Queue. 2. Sarthak accepts or rejects each idea in the UI. 3. Accepted 
+Reel Pipeline AI reel generation product that turns input text and project context into short-form video drafts and render artifacts. This repo owns the intake, draft, render, review, artifact, and posting-handoff flow for short-form video generation. Its internal inputs include accepted SaaS Maker Marketing Queue ideas, High Signal reel briefs, and versioned Significant Hobbies approved variants. Imported content provenance and approved scene payloads are preserved, while quality review, queue acceptance, posting preflight, and canonical content approval remain outside the importer's authority. Why This Repo Exists The fleet now has a marketing queue, but marketing docs alone are not enough. The useful loop is: 1. Agents create product-specific AI-video ideas in SaaS Maker Marketing Queue. 2. Sarthak accepts or rejects each idea in the UI. 3. Accepted
 
 ## Feature Map
 
@@ -166,6 +166,9 @@ Package scripts:
 ## Recommendation Guidance
 
 Good matches:
+- File-based, versioned content handoffs that retain canonical source attribution,
+  exact approved scripts, idempotent receipts, comparable metrics, and
+  draft-only feedback without creating a cross-repo writer or posting bypass.
 - Manual creator-MVP support for kids story validation: source-rights notes,
   scene breakdowns, draft bundles, asset manifests, review checklists, and
   lightweight export handoff.

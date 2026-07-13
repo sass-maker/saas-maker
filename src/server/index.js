@@ -16,6 +16,8 @@ import {
   listLessons,
 } from '../lesson-intake.js';
 import { generateScripts, renderLesson } from '../lesson-pipeline.js';
+import { anonymousVideoPageHtml } from '../anonymous-video/ui.js';
+import { sendAnonymousArtifact } from '../anonymous-video/artifact-response.js';
 
 const port = Number(process.env.PORT ?? 4317);
 
@@ -27,7 +29,10 @@ export function createServer(options = {}) {
       if (req.method === 'GET' && req.url === '/health') {
         return json(res, 200, { ok: true });
       }
-      if (req.method === 'GET' && (req.url === '/' || req.url === '/review')) {
+      if (req.method === 'GET' && req.url === '/') {
+        return anonymousHtml(res, anonymousVideoPageHtml());
+      }
+      if (req.method === 'GET' && req.url === '/review') {
         return html(res, 200, reviewPageHtml());
       }
       if (req.method === 'GET' && req.url === '/studio') {
@@ -47,6 +52,25 @@ export function createServer(options = {}) {
           return res.end(result.raw.content);
         }
         if (result) return json(res, result.status, result.body);
+      }
+      if (req.method === 'POST' && req.url === '/api/videos') {
+        const service = await resolveAnonymousVideoService(options);
+        const body = await readJson(req);
+        const data = await service.create({ url: body.url });
+        return json(res, 202, { data });
+      }
+      const anonymousVideoMatch = req.url?.match(/^\/api\/videos\/([^/?#]+)(?:\/(preview|download))?$/);
+      if (req.method === 'GET' && anonymousVideoMatch) {
+        const service = await resolveAnonymousVideoService(options);
+        const id = decodeURIComponent(anonymousVideoMatch[1]);
+        const action = anonymousVideoMatch[2];
+        if (!action) {
+          const data = await service.get(id);
+          if (!data) return json(res, 404, { error: { code: 'not_found', message: 'video not found' } });
+          return json(res, 200, { data });
+        }
+        const opened = await service.openArtifact(id);
+        return sendAnonymousArtifact(req, res, opened, { download: action === 'download' });
       }
       if (req.method === 'POST' && req.url === '/reels/signal') {
         const body = await readJson(req);
@@ -176,6 +200,25 @@ function json(res, status, body) {
 function html(res, status, body) {
   res.writeHead(status, { 'content-type': 'text/html; charset=utf-8' });
   res.end(body);
+}
+
+function anonymousHtml(res, body) {
+  res.writeHead(200, {
+    'content-type': 'text/html; charset=utf-8',
+    'content-security-policy': "default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; media-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'",
+    'x-content-type-options': 'nosniff',
+  });
+  res.end(body);
+}
+
+async function resolveAnonymousVideoService(options) {
+  if (options.anonymousVideoService) return options.anonymousVideoService;
+  const module = await import('../anonymous-video/service.js');
+  if (typeof module.createAnonymousVideoService === 'function') {
+    options.anonymousVideoService = module.createAnonymousVideoService(options.anonymousVideo ?? options);
+    return options.anonymousVideoService;
+  }
+  throw new Error('anonymous video service is unavailable');
 }
 
 async function readJson(req) {

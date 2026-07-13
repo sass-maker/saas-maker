@@ -1,11 +1,16 @@
 # Reel Pipeline
 
-AI reel generation product that turns input text and project context into short-form video drafts and render artifacts.
+The public product does one thing: paste a public HTTPS brand website and get a
+presenter-led vertical reel. It fetches the site safely, extracts cited brand
+facts and visuals, creates the script/storyboard, and renders a downloadable
+9:16 video with a fictional synthetic human presenter. There is no login,
+account, billing, workspace, actor onboarding, or social connection in this
+flow.
 
-This repo owns the intake, draft, render, review, artifact, and posting-handoff
-flow for short-form video generation. Its current internal inputs are accepted
-SaaS Maker Marketing Queue ideas and High Signal reel briefs; SaaS Maker stays
-the source of truth for approvals, task links, and posting state.
+Run `npm run dev`, open the root page, and submit the brand URL. The older review,
+studio, and fleet marketing utilities documented below are internal tooling;
+they are not visitor product surfaces and do not add identity to the anonymous
+brand-reel path.
 
 ## Creator MVP First
 

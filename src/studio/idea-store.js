@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 const STATUSES = ['new', 'scripted', 'rendered', 'posted'];
@@ -12,7 +12,7 @@ export class IdeaStore {
     try {
       const raw = await readFile(this.filePath, 'utf8');
       const parsed = JSON.parse(raw);
-      return Array.isArray(parsed.ideas) ? parsed.ideas : [];
+      return Array.isArray(parsed.ideas) ? parsed.ideas.map(freezeSourcePayload) : [];
     } catch (error) {
       if (error.code === 'ENOENT') return [];
       throw error;
@@ -21,7 +21,9 @@ export class IdeaStore {
 
   async persist(ideas) {
     await mkdir(path.dirname(this.filePath), { recursive: true });
-    await writeFile(this.filePath, JSON.stringify({ ideas }, null, 2));
+    const temporary = `${this.filePath}.${process.pid}.${Date.now()}.tmp`;
+    await writeFile(temporary, `${JSON.stringify({ ideas }, null, 2)}\n`);
+    await rename(temporary, this.filePath);
   }
 
   async saveIdea(input) {
@@ -38,13 +40,16 @@ export class IdeaStore {
       hook: input.hook ?? null,
       format: input.format ?? null,
       notes: input.notes ?? null,
+      idempotencyKey: optionalString(input.idempotencyKey) ?? null,
+      contentSource: input.contentSource ? structuredClone(input.contentSource) : null,
+      approvedVariant: input.approvedVariant ? structuredClone(input.approvedVariant) : null,
       status: STATUSES.includes(input.status) ? input.status : 'new',
       createdAt: now,
       updatedAt: now,
     };
     ideas.push(idea);
     await this.persist(ideas);
-    return idea;
+    return freezeSourcePayload(idea);
   }
 
   async listIdeas({ status } = {}) {
@@ -64,7 +69,7 @@ export class IdeaStore {
     }
     idea.updatedAt = new Date().toISOString();
     await this.persist(ideas);
-    return idea;
+    return freezeSourcePayload(idea);
   }
 
   async updateIdeaStatus(id, status) {
@@ -77,8 +82,24 @@ export class IdeaStore {
     idea.status = status;
     idea.updatedAt = new Date().toISOString();
     await this.persist(ideas);
-    return idea;
+    return freezeSourcePayload(idea);
   }
 }
 
 export const IDEA_STATUSES = STATUSES;
+
+function optionalString(value) {
+  return typeof value === 'string' && value.trim() ? value.trim() : undefined;
+}
+
+function freezeSourcePayload(idea) {
+  if (idea?.contentSource) deepFreeze(idea.contentSource);
+  if (idea?.approvedVariant) deepFreeze(idea.approvedVariant);
+  return idea;
+}
+
+function deepFreeze(value) {
+  if (!value || typeof value !== 'object' || Object.isFrozen(value)) return value;
+  for (const nested of Object.values(value)) deepFreeze(nested);
+  return Object.freeze(value);
+}
