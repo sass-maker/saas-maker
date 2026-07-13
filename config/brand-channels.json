@@ -1,6 +1,18 @@
 {
   "$schema": "fleet.brand-channels.v1",
   "brands": {
+    "aliveville": {
+      "name": "AliveVille",
+      "domain": "https://aliveville.com",
+      "contentBase": "project-campaigns",
+      "voice": ["playful", "specific", "systems-minded"],
+      "palette": { "background": "#121418", "foreground": "#F6F7F9", "accent": "#58C27D", "secondary": "#F0B44D" },
+      "channels": ["instagram_reels", "youtube_shorts"],
+      "accountMappings": {
+        "instagram_reels": "aliveville-instagram",
+        "youtube_shorts": "aliveville-youtube"
+      }
+    },
     "high-signal": {
       "name": "High Signal",
       "domain": "https://highsignal.app",
@@ -11,6 +23,42 @@
       "accountMappings": {
         "instagram_reels": "high-signal-instagram",
         "youtube_shorts": "high-signal-youtube"
+      }
+    },
+    "karte": {
+      "name": "Karte",
+      "domain": "https://karte.cc",
+      "contentBase": "project-campaigns",
+      "voice": ["personal", "clear", "confident"],
+      "palette": { "background": "#111418", "foreground": "#F7F5F0", "accent": "#5EC8E5", "secondary": "#F0A35E" },
+      "channels": ["instagram_reels", "youtube_shorts"],
+      "accountMappings": {
+        "instagram_reels": "karte-instagram",
+        "youtube_shorts": "karte-youtube"
+      }
+    },
+    "rolepatch": {
+      "name": "RolePatch",
+      "domain": "https://rolepatch.com",
+      "contentBase": "project-campaigns",
+      "voice": ["practical", "evidence-led", "supportive"],
+      "palette": { "background": "#151719", "foreground": "#F5F6F4", "accent": "#73C991", "secondary": "#E5B94F" },
+      "channels": ["instagram_reels", "youtube_shorts"],
+      "accountMappings": {
+        "instagram_reels": "rolepatch-instagram",
+        "youtube_shorts": "rolepatch-youtube"
+      }
+    },
+    "saas-maker": {
+      "name": "SaaS Maker",
+      "domain": "https://sassmaker.com",
+      "contentBase": "project-campaigns",
+      "voice": ["operational", "direct", "technical"],
+      "palette": { "background": "#0E1215", "foreground": "#F4F7F5", "accent": "#65C7B4", "secondary": "#E8B84E" },
+      "channels": ["instagram_reels", "youtube_shorts"],
+      "accountMappings": {
+        "instagram_reels": "saas-maker-instagram",
+        "youtube_shorts": "saas-maker-youtube"
       }
     },
     "significanthobbies": {
@@ -27,7 +75,7 @@
     },
     "swe-interview-prep": {
       "name": "SWE Interview Prep",
-      "domain": "https://swe-interview-prep.pages.dev",
+      "domain": "https://learn.significanthobbies.com",
       "contentBase": "swe-learning-sources",
       "voice": ["clear", "technical", "teacherly"],
       "palette": { "background": "#0B1117", "foreground": "#F4F8FB", "accent": "#43D3FF", "secondary": "#FFD166" },

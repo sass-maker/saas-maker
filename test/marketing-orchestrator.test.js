@@ -5,7 +5,7 @@ import path from 'node:path';
 import test from 'node:test';
 
 import { approveEnvelopeDistribution, buildDistributionEnvelope, parseDistributionEnvelope, upsertDistributionEnvelope } from '../src/distribution-envelope.js';
-import { enqueueContentPackages, renderApprovedContent, runScheduledDistributions, syncSourceContent } from '../src/marketing-orchestrator.js';
+import { enqueueContentPackages, renderApprovedContent, runScheduledDistributions, syncSourceContent, takePackagesWithinReviewCapacity } from '../src/marketing-orchestrator.js';
 import { FilePublicationLedger } from '../src/publication-ledger.js';
 
 const approvedFixture = JSON.parse(await readFile(new URL('./fixtures/approved-content-package.json', import.meta.url), 'utf8'));
@@ -113,4 +113,19 @@ test('source sync applies review backpressure before extraction or queue writes'
   assert.equal(result.skipped, true);
   assert.equal(result.reason, 'review backlog 12/12');
   assert.equal(client.posts.length, 12);
+});
+
+test('source sync selection cannot create more review items than the remaining ceiling', () => {
+  const packages = Array.from({ length: 7 }, (_, index) => {
+    const contentPackage = { ...structuredClone(proposed), id: `package-${index}` };
+    contentPackage.variants.push({
+      ...structuredClone(contentPackage.variants[0]),
+      id: 'instagram-reels-v1',
+      channel: 'instagram_reels',
+    });
+    return contentPackage;
+  });
+  const selected = takePackagesWithinReviewCapacity(packages, 12);
+  assert.equal(selected.length, 6);
+  assert.equal(selected.flatMap((entry) => entry.variants).length, 12);
 });

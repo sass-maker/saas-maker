@@ -4,12 +4,12 @@ import test from 'node:test';
 import socialTemplate from '../config/social-accounts.example.json' with { type: 'json' };
 import { checkSocialReadiness } from '../src/social-readiness.js';
 
-test('social template declares all six pre-routed accounts', () => {
-  assert.equal(Object.keys(socialTemplate.youtube).length, 3);
-  assert.equal(Object.keys(socialTemplate.instagram).length, 3);
+test('social template declares every pre-routed account', () => {
+  assert.equal(Object.keys(socialTemplate.youtube).length, 7);
+  assert.equal(Object.keys(socialTemplate.instagram).length, 7);
   const report = checkSocialReadiness({ configPath: '/definitely/missing.json', templatePath: 'config/social-accounts.example.json', env: {}, ffmpegReady: true, fndBin: '/definitely/missing-fnd' });
-  assert.equal(report.summary.totalAccounts, 6);
-  assert.equal(report.summary.routedAccounts, 6);
+  assert.equal(report.summary.totalAccounts, 14);
+  assert.equal(report.summary.routedAccounts, 14);
   assert.equal(report.summary.connectedAccounts, 0);
   assert.equal(report.summary.readyForLivePosting, false);
   assert.equal(report.accounts.every((entry) => entry.accountDeclared && entry.routeConfigured), true);
@@ -25,6 +25,6 @@ test('readiness becomes true when all declared env and infrastructure inputs exi
     }
   }
   const report = checkSocialReadiness({ configPath: '/definitely/missing.json', templatePath: 'config/social-accounts.example.json', env, ffmpegReady: true, kokoroReady: true, fndBin: '/definitely/missing-fnd' });
-  assert.equal(report.summary.connectedAccounts, 6);
+  assert.equal(report.summary.connectedAccounts, 14);
   assert.equal(report.summary.readyForLivePosting, true);
 });

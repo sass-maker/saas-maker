@@ -1,15 +1,20 @@
 {
   "$comment": "Real deployed product URLs per fleet project. Read by render-pro.js and the worker. Source of truth — update here, not in code.",
+  "karte": {
+    "productUrl": "https://karte.cc",
+    "fallbackUrl": "https://github.com/sarthak-fleet/karte"
+  },
   "linkchat": {
-    "productUrl": "https://linkchat.sarthakagrawal927.workers.dev",
-    "fallbackUrl": "https://github.com/sarthak-fleet/linkchat"
+    "$comment": "Legacy project slug retained for old queue items; Karte is canonical.",
+    "productUrl": "https://karte.cc",
+    "fallbackUrl": "https://github.com/sarthak-fleet/karte"
   },
   "reader": {
-    "productUrl": "https://reader.sarthakagrawal927.workers.dev",
+    "productUrl": "https://read.significanthobbies.com",
     "fallbackUrl": "https://github.com/sarthak-fleet/reader"
   },
   "starboard": {
-    "productUrl": "https://starboard.sarthakagrawal927.workers.dev",
+    "productUrl": "https://starboard.codevetter.com",
     "fallbackUrl": "https://github.com/sarthak-fleet/starboard"
   },
   "high-signal": {

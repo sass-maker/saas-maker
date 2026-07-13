@@ -33,7 +33,7 @@ if (command === 'extract') {
   console.log(JSON.stringify(brief, null, 2));
 } else {
   console.log(`Usage:
-  npm run content -- extract [--source all|high-signal|significanthobbies|swe-interview-prep] [--limit 5] [--out DIR] [--fleet-root DIR]
+  npm run content -- extract [--source all|high-signal|significanthobbies|swe-interview-prep|project-campaigns] [--limit 5] [--out DIR] [--fleet-root DIR]
   npm run content -- validate --file package.json
   npm run content -- brief --file approved-package.json [--variant ID] [--mode html-composition]
 

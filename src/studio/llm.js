@@ -5,7 +5,7 @@ import path from 'node:path';
 
 const DEEPSEEK_BASE_URL = 'https://api.deepseek.com';
 const DEEPSEEK_MODEL = 'deepseek-chat';
-const FREE_AI_BASE_URL = 'https://free-ai-gateway.sarthakagrawal927.workers.dev';
+const FREE_AI_BASE_URL = 'https://ai-gateway.sassmaker.com';
 const FREE_AI_MODEL = 'auto';
 const FREE_AI_PROJECT_ID = 'reel-pipeline';
 const HTTP_TIMEOUT_MS = 45_000;

@@ -8,6 +8,7 @@ Each product remains the source of truth for its own facts and editorial materia
 High Signal ──────────┐
 Significant Hobbies ──┼─> proposed content packages ─> approval ─> brand video
 SWE Interview Prep ───┘                                      │
+Project campaigns ─────┘                                      │
                                                              └─> distribution approval ─> channel account
 ```
 
@@ -30,6 +31,12 @@ Extract proposed packages without modifying source projects:
 ```bash
 npm run content -- extract --source all --fleet-root ../ --catalog /path/to/learning-sources.json --out tmp/content-packages
 ```
+
+`config/project-campaigns.json` makes the finished evergreen plans for
+AliveVille, Karte, RolePatch, and SaaS Maker executable. Each campaign points
+back to its owning repository status or README, carries SEO keywords and a
+canonical destination, and produces proposed Instagram and YouTube variants.
+The source projects remain authoritative; campaign extraction is read-only.
 
 Sync one source-backed package per active brand into SaaS Maker. Duplicate
 source revisions are skipped, and sync pauses when 12 items already need review:

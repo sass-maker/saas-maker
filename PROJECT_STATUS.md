@@ -22,7 +22,7 @@ a format that gets views consistently. Use `docs/growth-format-playbook.md` and
 the structured `src/growth-formats.js` taxonomy to draft 5-7 posts/day until
 the 35-post decision review.
 
-**IN scope:** Anonymous HTTPS brand intake and presenter-led preview/download, VideoBrief contract, MoneyPrinterTurbo + reel-maker adapters, R2 artifact Worker, Rust CLI orchestration, YouTube + Instagram Graph posting for internal accepted marketing items, product-proof Phase 1 quality gates, and lightweight draft/export support for the creator MVP.
+**IN scope:** Anonymous HTTPS brand intake and presenter-led preview/download, VideoBrief contract, MoneyPrinterTurbo + reel-maker adapters, R2 artifact Worker, Rust CLI orchestration, YouTube + Instagram Graph posting for internal accepted marketing items, source-backed packages for seven Fleet brands, product-proof Phase 1 quality gates, and lightweight draft/export support for the creator MVP.
 
 **OUT of scope:** OpenShorts adapter (removed), Cloudflare Worker rewrite of orchestration, product-proof Phases 2–3 until Phase 1 stabilizes, and kids-story automation before the first three manual videos prove the format.
 
@@ -120,6 +120,14 @@ for intentional target-host exclusions.
 
 ## Timeline
 
+- **2026-07-13 — Evergreen campaigns became executable:** added versioned,
+  source-referenced campaign inputs for AliveVille, Karte, RolePatch, and SaaS
+  Maker alongside the existing High Signal, Significant Hobbies, and SWE
+  Interview Prep extractors. All seven brands now produce proposed Instagram
+  and YouTube content packages through the same approval-gated render contract.
+  Account routes are declared but live posting remains blocked until each exact
+  account is connected. Source sync now enforces the review-debt ceiling before
+  enqueueing variants.
 - **2026-07-13 — Anonymous brand website to reel:** replaced the unrequested HexCoded account/billing/actor-marketplace plan and deleted its isolated product-domain code. The public root now accepts one HTTPS brand URL without auth or payment, performs DNS-pinned SSRF-safe bounded extraction, builds an evidence-backed script/storyboard, runs a presenter-led 9:16 composition boundary, and exposes safe status, range preview, and attachment download only after review. `/review`, `/studio`, Significant Content, and internal accepted-marketing paths remain intact. The production presenter pack now includes a checksum-pinned fictional synthetic human cutout with generator provenance and an explicit non-real-identity attestation; real likenesses remain fail-closed without model-release proof. The complete Node/Rust regression suite passes.
 - **2026-07-13 — Significant Hobbies content handoff:** added the versioned
   `significant-content-reels/v1` intake and `significant-content-receipt/v1`

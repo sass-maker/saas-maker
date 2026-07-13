@@ -53,7 +53,7 @@ test('maps an approved package revision to an attributable VideoBrief', () => {
   assert.match(brief.body, /Source package: high-signal:proof-one revision 1/);
 });
 
-test('extracts proposed packages from all three read-only source formats', async () => {
+test('extracts proposed packages from specialized and project campaign sources', async () => {
   const fleetRoot = await mkdtemp(path.join(os.tmpdir(), 'fleet-content-'));
   await mkdir(path.join(fleetRoot, 'high-signal', 'data'), { recursive: true });
   await writeFile(path.join(fleetRoot, 'high-signal', 'data', 'personal-reel-briefs.jsonl'), `${JSON.stringify({
@@ -70,8 +70,13 @@ test('extracts proposed packages from all three read-only source formats', async
     items: [{ id: 'project:demo:vectors', sourceKind: 'project', title: 'Vectors', summary: 'Vectors carry magnitude and direction.', resources: [{ url: 'https://example.com/vectors' }] }],
   }));
 
+  for (const project of ['aliveville', 'karte', 'rolepatch', 'saas-maker']) {
+    await mkdir(path.join(fleetRoot, project), { recursive: true });
+    await writeFile(path.join(fleetRoot, project, 'PROJECT_STATUS.md'), `# ${project}\n\nCurrent product facts.\n`);
+  }
+
   const packages = await extractContentPackages('all', { fleetRoot, limit: 1, now: () => NOW });
-  assert.deepEqual(packages.map((entry) => entry.brand.slug).sort(), ['high-signal', 'significanthobbies', 'swe-interview-prep']);
+  assert.deepEqual(packages.map((entry) => entry.brand.slug).sort(), ['aliveville', 'high-signal', 'karte', 'rolepatch', 'saas-maker', 'significanthobbies', 'swe-interview-prep']);
   assert.ok(packages.every((entry) => entry.approval.status === 'proposed'));
   assert.ok(packages.every((entry) => entry.variants.map((variant) => variant.channel).sort().join(',') === 'instagram_reels,youtube_shorts'));
   assert.ok(packages.every((entry) => entry.topic.claims[0].evidenceUrls.length > 0));

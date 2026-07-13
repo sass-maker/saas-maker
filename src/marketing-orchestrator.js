@@ -76,11 +76,24 @@ export async function syncSourceContent(options = {}) {
     const fleetRoot = options.fleetRoot ?? path.resolve(REPO_ROOT, '..');
     const catalogPath = options.catalogPath ?? path.join(process.env.HOME ?? '.', 'Library/Application Support/Fleet Ops/learning-sync/swe-interview-prep/src/data/learning-sources.json');
     const packages = await extractContentPackages(options.source ?? 'all', { fleetRoot, catalogPath, limit: options.limit ?? 1 });
-    const results = await enqueueContentPackages(packages, { client });
-    return { skipped: false, extracted: packages.length, results };
+    const selected = takePackagesWithinReviewCapacity(packages, maxPending - pending.length);
+    const results = await enqueueContentPackages(selected, { client });
+    return { skipped: false, extracted: packages.length, selected: selected.length, results };
   } finally {
     await rmdir(syncLock).catch(() => {});
   }
+}
+
+export function takePackagesWithinReviewCapacity(packages, availableSlots) {
+  const selected = [];
+  let remaining = Math.max(0, availableSlots);
+  for (const contentPackage of packages) {
+    const slots = contentPackage.variants.filter((variant) => ACTIVE_CHANNELS.has(variant.channel)).length;
+    if (slots > remaining) continue;
+    selected.push(contentPackage);
+    remaining -= slots;
+  }
+  return selected;
 }
 
 export async function renderApprovedContent(options = {}) {

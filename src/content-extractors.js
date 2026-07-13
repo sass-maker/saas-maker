@@ -1,6 +1,6 @@
-import { readFile } from 'node:fs/promises';
+import { readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
-import { pathToFileURL } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { buildProposedVariant, CONTENT_PACKAGE_SCHEMA, normalizeContentPackage } from './content-package.js';
 
@@ -25,18 +25,54 @@ export async function extractSweInterviewPrep({ fleetRoot, limit = 5, now = () =
   return candidates.slice(0, limit).map((item) => packageFromLearningItem(item, catalog.generatedAt, now));
 }
 
+export async function extractProjectCampaigns({ fleetRoot, limit = 5, now = () => new Date(), campaignPath }) {
+  const filePath = campaignPath ?? path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'config', 'project-campaigns.json');
+  const config = JSON.parse(await readFile(filePath, 'utf8'));
+  if (config.$schema !== 'fleet.project-campaigns.v1' || !Array.isArray(config.campaigns)) {
+    throw new Error('invalid project campaign registry');
+  }
+  const selected = selectPerBrand(config.campaigns, limit);
+  return Promise.all(selected.map(async (campaign) => {
+    const source = await stat(path.join(fleetRoot, campaign.sourcePath));
+    return packageFromProjectCampaign(campaign, source.mtime.toISOString(), now);
+  }));
+}
+
 export async function extractContentPackages(source, options) {
   if (source === 'high-signal') return extractHighSignal(options);
   if (source === 'significanthobbies') return extractSignificantHobbies(options);
   if (source === 'swe-interview-prep') return extractSweInterviewPrep(options);
+  if (source === 'project-campaigns') return extractProjectCampaigns(options);
   if (source === 'all') {
     return (await Promise.all([
       extractHighSignal(options),
       extractSignificantHobbies(options),
       extractSweInterviewPrep(options),
+      extractProjectCampaigns(options),
     ])).flat();
   }
   throw new Error(`unsupported content source: ${source}`);
+}
+
+function packageFromProjectCampaign(campaign, generatedAt, now) {
+  return makePackage({
+    id: `${campaign.brandSlug}:${campaign.id}`,
+    brandSlug: campaign.brandSlug,
+    sourceAdapter: 'project-campaigns',
+    sourceId: campaign.id,
+    canonicalUrl: campaign.canonicalUrl,
+    generatedAt,
+    title: campaign.title,
+    summary: campaign.summary,
+    audience: campaign.audience,
+    destinationUrl: campaign.destinationUrl,
+    claim: campaign.claim,
+    evidenceUrls: [campaign.canonicalUrl],
+    hook: campaign.hook,
+    proof: campaign.proof,
+    cta: campaign.cta,
+    now,
+  });
 }
 
 function packageFromHighSignal(brief, generatedAt, now) {
@@ -87,8 +123,8 @@ function packageFromHobbyPost(post, now) {
 
 function packageFromLearningItem(item, generatedAt, now) {
   const resourceUrls = item.resources.map((resource) => resource.url).filter((url) => /^https?:/.test(url));
-  const canonicalUrl = resourceUrls[0] ?? 'https://swe-interview-prep.pages.dev/learn';
-  const destinationUrl = `https://swe-interview-prep.pages.dev/sources/${encodeURIComponent(item.id)}`;
+  const canonicalUrl = resourceUrls[0] ?? 'https://learn.significanthobbies.com/learn';
+  const destinationUrl = `https://learn.significanthobbies.com/sources/${encodeURIComponent(item.id)}`;
   return makePackage({
     id: `swe-interview-prep:${safeId(item.id)}`,
     brandSlug: 'swe-interview-prep',
@@ -134,4 +170,13 @@ function absoluteEvidenceUrl(value, base) {
 }
 function safeId(value) {
   return String(value).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 120);
+}
+function selectPerBrand(campaigns, limit) {
+  const counts = new Map();
+  return campaigns.filter((campaign) => {
+    const count = counts.get(campaign.brandSlug) ?? 0;
+    if (count >= limit) return false;
+    counts.set(campaign.brandSlug, count + 1);
+    return true;
+  });
 }
