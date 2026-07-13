@@ -57,8 +57,12 @@ jobs:
             -sdk iphonesimulator \
             -destination 'generic/platform=iOS Simulator' \
             -derivedDataPath "$RUNNER_TEMP/MobileDevCockpitDerivedData" \
-            CODE_SIGNING_ALLOWED=NO \
             build
+      - name: Verify simulator Keychain entitlement
+        run: |
+          SIMULATED_ENTITLEMENTS="$(find "$RUNNER_TEMP/MobileDevCockpitDerivedData/Build/Intermediates.noindex" -name 'MobileDevCockpit.app-Simulated.xcent' -print -quit)"
+          test -n "$SIMULATED_ENTITLEMENTS"
+          /usr/libexec/PlistBuddy -c 'Print :application-identifier' "$SIMULATED_ENTITLEMENTS"
       - name: Launch the standalone app in iOS Simulator
         run: |
           DEVICE_ID="$(

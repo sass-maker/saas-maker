@@ -42,6 +42,7 @@ Mobile Dev Cockpit is a native universal iPhone and iPad interface for supervisi
 - 2026-07-13 — Installed and launched the standalone Release app without Metro on iOS 26.4 iPhone 17 Pro and iPad Pro 13-inch simulators. Native portrait captures, browser-backed portrait/landscape/Split View captures, extreme Dynamic Type, strict OpenSpec validation, all 55 tests, bridge build, and both platform exports pass.
 - 2026-07-13 — Added a generated-project-safe single-window UIScene lifecycle for iOS 27. A clean Xcode 27 Release binary launches without Metro on iOS 26.4 and iOS 27 iPhone simulators plus an iOS 27 iPad simulator; the previous pre-React-Native lifecycle assertion is gone.
 - 2026-07-13 — Made the iOS 16.4 deployment floor reproducible across the generated app and every CocoaPods target. A generic physical-device Release build now compiles with Xcode 27 without a command-line deployment override; a signed retry reaches only the expected missing Apple Account/provisioning-profile gate.
+- 2026-07-13 — Exercised the standalone Xcode 27 Release app through the real local bridge on an iOS 27 iPhone simulator. Fixed simulator Keychain entitlement generation, one-time-token autofill semantics, and nested repository discovery under a Git workspace root; native pairing, Keychain persistence, fleet discovery, explicit enrollment, project workspace entry, streamed command logs, and a successful configured test run now pass without Metro.
 
 ## Products
 
@@ -55,7 +56,7 @@ Mobile Dev Cockpit is a native universal iPhone and iPad interface for supervisi
 - Five-minute one-use pairing token, bounded expiring hashed session credentials, iOS SecureStore client storage, cold-launch reconnect, reconnect backoff, and full state/log recovery.
 - Tailscale Serve integration that retains loopback binding, checks connected/MagicDNS state, configures only `/mobile-dev-cockpit`, prints the secure WSS URL, and removes that mapping without touching unrelated services.
 - Read-only bounded repository discovery plus explicit allowlisted project configuration.
-- Low-configuration bridge startup with repeated `--root` arguments, authenticated repository discovery, exact bridge-detected command review, expiring one-use enrollment proposals, atomic owner-only persistence, guarded updates, and idle-only removal. Mobile clients cannot submit paths, executables, arguments, shell text, or environment values.
+- Low-configuration bridge startup with repeated `--root` arguments, authenticated root-and-nested repository discovery, exact bridge-detected command review, expiring one-use enrollment proposals, atomic owner-only persistence, guarded updates, and idle-only removal. Mobile clients cannot submit paths, executables, arguments, shell text, or environment values.
 - Configured dev/tunnel/build/test/agent/deploy/rollback processes with streamed logs, complete process-group stop controls, detected preview URLs, and advertised-host rewriting.
 - Native isolated WebView preview with back, refresh, Safari, screenshot sharing, orientation control, theme hint cycling, and dev/production targets.
 - Universal iPhone/iPad layouts with compact, intermediate, and regular-width navigation; portrait, landscape, Split View, and Stage Manager sizing; window-aware previews; pointer and hardware-keyboard focus; and state-preserving layout transitions.
@@ -69,6 +70,7 @@ Mobile Dev Cockpit is a native universal iPhone and iPad interface for supervisi
 - Expo web fallback used for 390x844 visual verification and local end-to-end smoke testing; generated iOS native project and both platform bundles verified locally.
 - Clean macOS 26 CI compilation of the generated native app, including all Expo/React Native pods, with the SDK 57-required Xcode 26.4 toolchain.
 - Standalone Release simulator installation and launch gate with a visually inspected full-resolution native onboarding screenshot artifact.
+- Standalone Release simulator pairing evidence through Keychain persistence, nested fleet discovery, explicit project enrollment, workspace navigation, bridge-owned test execution, streamed logs, and successful completion without Metro.
 - Standalone universal Release installation and launch evidence on representative iPhone and iPad simulators, plus compact/intermediate/regular browser screenshots and an accessibility-extra-extra-extra-large Dynamic Type pass.
 - Idempotent local Expo scene-lifecycle plugin with a single-window manifest, scene-owned React Native startup, Expo lifecycle forwarding, deep-link forwarding, template-drift tests, and standalone Xcode 27 launch evidence on iOS 26.4 and iOS 27.
 - Generated iOS 16.4 app and CocoaPods deployment targets, including guarded handling for legacy privacy resource bundles that Xcode 27 otherwise rejects.

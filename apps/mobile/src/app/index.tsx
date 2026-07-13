@@ -310,12 +310,14 @@ export default function HomeScreen() {
             <TextInput
               value={pairingToken}
               onChangeText={setPairingToken}
+              autoComplete="one-time-code"
               autoCapitalize="none"
               autoCorrect={false}
               placeholder="One-time pairing token"
               placeholderTextColor={colors.muted}
               secureTextEntry
               style={styles.input}
+              textContentType="oneTimeCode"
             />
             {insecure ? (
               <Text style={styles.warning}>

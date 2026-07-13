@@ -48,7 +48,6 @@ export function discoverRepositories(
         name: basename(repositoryPath),
         repositoryPath,
       });
-      return;
     }
     for (const entry of entries) {
       if (
