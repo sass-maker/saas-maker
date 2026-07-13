@@ -18,16 +18,21 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://domains.sassmaker.com'),
   title: 'drank · Track Domain Ratings in Your Browser',
   description:
     'See the authority score of ~45 popular sites and your own — 100% in your browser. Free Ahrefs API, no sign-up, no server. Your data never leaves your device.',
   icons: {
     icon: '/favicon.ico',
   },
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
     title: 'drank · Track Domain Ratings in Your Browser',
     description:
       'Free DR tracker. ~45 popular sites + your own. No account, no server — everything lives in this tab.',
+    url: 'https://domains.sassmaker.com',
     type: 'website',
   },
   twitter: {
