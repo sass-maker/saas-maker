@@ -32,7 +32,6 @@ jobs:
       CI: 1
       DEVELOPER_DIR: /Applications/Xcode_26.4.app/Contents/Developer
       EXPO_NO_TELEMETRY: 1
-      IOS_DERIVED_DATA: ${{ runner.temp }}/MobileDevCockpitDerivedData
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -57,7 +56,7 @@ jobs:
             -configuration Release \
             -sdk iphonesimulator \
             -destination 'generic/platform=iOS Simulator' \
-            -derivedDataPath "$IOS_DERIVED_DATA" \
+            -derivedDataPath "$RUNNER_TEMP/MobileDevCockpitDerivedData" \
             CODE_SIGNING_ALLOWED=NO \
             build
       - name: Launch the standalone app in iOS Simulator
@@ -69,12 +68,12 @@ jobs:
           xcrun simctl boot "$DEVICE_ID" 2>/dev/null || true
           xcrun simctl bootstatus "$DEVICE_ID" -b
 
-          APP_PATH="$(find "$IOS_DERIVED_DATA/Build/Products/Release-iphonesimulator" -maxdepth 1 -name '*.app' -print -quit)"
+          APP_PATH="$(find "$RUNNER_TEMP/MobileDevCockpitDerivedData/Build/Products/Release-iphonesimulator" -maxdepth 1 -name '*.app' -print -quit)"
           test -n "$APP_PATH"
           xcrun simctl install "$DEVICE_ID" "$APP_PATH"
           xcrun simctl launch --terminate-running-process "$DEVICE_ID" dev.sarthak.mobiledevcockpit
           sleep 8
-          xcrun simctl io "$DEVICE_ID" screenshot "${{ runner.temp }}/mobile-dev-cockpit-simulator.png"
+          xcrun simctl io "$DEVICE_ID" screenshot "$RUNNER_TEMP/mobile-dev-cockpit-simulator.png"
       - name: Upload the native launch screenshot
         uses: actions/upload-artifact@v4
         with:
