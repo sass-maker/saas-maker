@@ -146,7 +146,7 @@ pnpm mobile:export
 pnpm mobile:export:ios
 ```
 
-`expo prebuild --platform ios --no-install` can generate the native project. A physical-device build still requires full Xcode and CocoaPods on the Mac. Voice recognition itself requires physical microphone hardware for final validation.
+`expo prebuild --platform ios --no-install` can generate the native project. A physical-device build still requires full Xcode and CocoaPods on the Mac. In Xcode > Settings > Apple Accounts, sign in with the Apple Account that should own the Personal Team, then connect and unlock the device, enable Developer Mode under Privacy & Security, and let automatic signing create the provisioning profile. A paid Apple Developer Program membership is not required for personal on-device testing, but free Personal Team profiles expire periodically. Voice recognition itself requires physical microphone hardware for final validation.
 Every push performs a clean native prebuild, pod install, and unsigned Release compile on Xcode 26.4 or newer in GitHub Actions. CI then installs the standalone app in a simulator, launches it without Metro, and uploads a screenshot of the rendered onboarding screen.
 
 The local `with-ios-scene-lifecycle` Expo config plugin reproducibly adds UIKit's required single-window scene manifest and delegate to every generated native project. A standalone Release binary built with Xcode 27 has been installed and launched without Metro on iOS 26.4 and iOS 27 iPhone simulators and an iOS 27 iPad simulator. The plugin keeps multiple scenes disabled, preserves Expo/React Native lifecycle subscribers, and forwards scene-delivered URLs and user activities through the existing linking handlers.
