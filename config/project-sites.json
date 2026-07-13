@@ -1,6 +1,6 @@
 {
   "$schema": "fleet.project-sites.v1",
-  "verifiedAt": "2026-07-13T03:12:00Z",
+  "verifiedAt": "2026-07-13T12:48:45Z",
   "projects": {
     "aliveville": { "url": "https://aliveville.com", "platform": "Cloudflare Pages" },
     "anime-list": { "url": "https://anime.significanthobbies.com", "platform": "Cloudflare Pages" },
