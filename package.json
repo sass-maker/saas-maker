@@ -10,7 +10,7 @@
     "format:check": "prettier --check .",
     "lint": "pnpm --recursive --if-present lint",
     "typecheck": "pnpm --recursive --if-present typecheck",
-    "test": "pnpm --recursive --if-present test",
+    "test": "pnpm --filter @mobile-dev-cockpit/protocol build && pnpm --recursive --if-present test",
     "bridge": "pnpm --filter @mobile-dev-cockpit/bridge dev",
     "discover": "pnpm --filter @mobile-dev-cockpit/bridge dev -- discover",
     "mobile": "pnpm --filter @mobile-dev-cockpit/mobile start",
