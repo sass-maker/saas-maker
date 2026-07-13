@@ -29,7 +29,7 @@ const productTitleBySlug: Record<string, string> = {
   drank: "drank",
   "email-manager": "Email Manager",
   "fleet-ops": "Fleet Ops",
-  "free-ai": "Free AI",
+  "free-ai": "AI Gateway",
   "high-signal": "High Signal",
   karte: "Karte",
   "knowledge-base": "Knowledge Base",
@@ -831,7 +831,7 @@ export function getLearningSummary(): LearningSummary {
   const sessions = Array.isArray(control.sessions) ? control.sessions : [];
   const countSources = (status: string) => sources.filter((source) => source.syncStatus === status).length;
   return {
-    url: "https://swe-interview-prep.pages.dev/sources",
+    url: "https://learn.significanthobbies.com/sources",
     generatedAt: catalog.generatedAt ?? null,
     sourceCount: sources.length,
     freshCount: countSources("fresh"),
