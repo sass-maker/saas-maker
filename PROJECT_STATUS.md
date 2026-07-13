@@ -52,6 +52,7 @@ Marketing autopilot and posting run in Rust (`reel` CLI). Node remains for `rend
 | --- | --- |
 | **SaaS Maker** | System of record for marketing queue; pull accepted reel items; patch `asset_url`, `result_url`, provider metadata, posting state |
 | **High Signal** | Reel brief intake via `src/signal-intake.js` |
+| **Significant Hobbies** | Approved, versioned reel envelopes imported into Idea Store with immutable source payloads; Reel returns file-based render/upload/metrics receipts and never edits the content checkout |
 
 ### Stack & commands
 
@@ -83,6 +84,8 @@ Marketing autopilot and posting run in Rust (`reel` CLI). Node remains for `rend
 | `npm run faceless -- --topic "..."` | Topic → script → brief → rendered faceless video (batch via `--topics-file`; engines mock/kokoro/moneyprinterturbo) |
 | `npm run setup:kokoro` | One-time local Kokoro-82M TTS install (venv + ~340MB model) |
 | `npm run factory -- plan/produce/status` | Backlog conveyor: plan ideas → produce renders with quality gate + publish packet |
+| `npm run significant-content -- validate/import/status/receipt/report/follow-up` | Local Significant Hobbies handoff, receipt, status, and draft-only performance loop |
+| `npm run smoke:significant-content` | Offline versioned handoff/idempotency/receipt/performance proof; no upload or posting |
 | `npm run bootstrap:cloudflare` / `check:cloudflare` / `worker:dry-run` | Cloudflare setup |
 | `npm run lesson:render -- --input test/fixtures/lessons/closures.json --auto-approve` | Tutoring lesson pipeline |
 
@@ -115,6 +118,19 @@ unresolved target-host items, including the optional documented acceptance file
 for intentional target-host exclusions.
 
 ## Timeline
+
+- **2026-07-13 — Significant Hobbies content handoff:** added the versioned
+  `significant-content-reels/v1` intake and `significant-content-receipt/v1`
+  output contracts. Approved variants enter Idea Store idempotently with
+  immutable provenance, and the factory preserves their exact hook, payoff,
+  ordered scenes, visuals, overlays, duration, and CTA instead of regenerating
+  copy. Local commands now validate/import, report cross-repo status, build
+  render/upload/metrics receipts, compare performance, and emit draft-only
+  follow-up briefs. The offline fixture proves duplicate intake and receipt
+  collapse without calling any upload, posting, schedule, credential, or
+  Significant Hobbies write path. Existing quality, review, accepted-post, and
+  provider preflight gates remain authoritative; see
+  `docs/significant-content-openclaw-runbook.md`.
 
 - **2026-07-13 — HexCoded provider-neutral commercial and actor contracts:**
   extended the locally executable product-domain layer without enabling any
@@ -252,6 +268,9 @@ for intentional target-host exclusions.
 ### Architecture
 
 - SaaS Maker Marketing Queue (`/v1/marketing/posts`) supplies accepted items; pipeline PATCHes `asset_url`, `result_url`, status back.
+- Significant Hobbies approved-content adapter: versioned, idempotent Idea Store
+  intake; exact scene-to-script conversion; attributed render/upload/metrics
+  receipts; machine-readable status/performance and draft-only follow-up output.
 - VideoBrief contract (`src/video-brief.js`) feeds mock, MoneyPrinterTurbo
   (default stock-footage MP4s), Grok/Imagine local MP4s, ASCII animation
   interlude MP4s, HTML/CSS composition previews, or reel-maker (+ product-proof capture) adapters;

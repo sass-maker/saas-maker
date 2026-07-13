@@ -1,0 +1,100 @@
+{
+  "schema": "significant-content-reels/v1",
+  "packageId": "hobby:urban-sketching-field-notes",
+  "packageRevision": 3,
+  "sourceUrl": "https://www.significanthobbies.com/blog/urban-sketching-field-notes",
+  "destinationUrl": "https://www.significanthobbies.com/blog/urban-sketching-field-notes",
+  "exportedAt": "2026-07-13T06:00:00.000Z",
+  "variants": [
+    {
+      "id": "permission-slip",
+      "status": "approved",
+      "format": "contrarian-permission",
+      "hypothesis": "Removing the talent objection will increase first-three-second retention.",
+      "hook": "Your first sketch is allowed to be bad.",
+      "payoff": "Ten imperfect minutes gives you a place worth remembering.",
+      "targetDurationSeconds": 18,
+      "scenes": [
+        {
+          "label": "hook",
+          "narration": "Your first sketch is allowed to be bad.",
+          "visual": "A blank pocket sketchbook opens on a cafe table.",
+          "onScreenText": "BAD IS ALLOWED",
+          "durationSeconds": 1.5
+        },
+        {
+          "label": "practice",
+          "narration": "Choose one doorway, draw only the largest shapes, and stop after ten minutes.",
+          "visual": "Three bold shapes appear over a loose doorway sketch.",
+          "onScreenText": "ONE VIEW · 10 MINUTES",
+          "durationSeconds": 9
+        },
+        {
+          "label": "payoff",
+          "narration": "Ten imperfect minutes gives you a place worth remembering.",
+          "visual": "The finished page sits beside the real doorway.",
+          "onScreenText": "REMEMBER THE PLACE",
+          "durationSeconds": 7.5
+        }
+      ],
+      "visualDirection": "Warm documentary phone footage, real ink lines, no synthetic artwork.",
+      "caption": "A ten-minute urban sketch is a memory practice, not a talent test.",
+      "cta": "Use the field-note prompt in the full article.",
+      "tags": ["urban sketching", "creative hobbies", "beginner practice"],
+      "destinationUrl": "https://www.significanthobbies.com/blog/urban-sketching-field-notes",
+      "provenance": {
+        "sourceIds": ["section:start-small", "takeaway:memory-not-mastery"],
+        "sourceUrls": ["https://www.significanthobbies.com/blog/urban-sketching-field-notes"],
+        "generatedAt": "2026-07-13T05:30:00.000Z",
+        "approvedAt": "2026-07-13T05:55:00.000Z",
+        "approvedBy": "fixture-owner",
+        "audience": "Curious adults starting a creative hobby"
+      }
+    },
+    {
+      "id": "one-doorway",
+      "status": "approved",
+      "format": "micro-challenge",
+      "hypothesis": "A bounded ten-minute challenge will increase saves and completions.",
+      "hook": "Draw this doorway before your coffee cools.",
+      "payoff": "You leave with a page that records where you were.",
+      "targetDurationSeconds": 16,
+      "scenes": [
+        {
+          "label": "hook",
+          "narration": "Draw this doorway before your coffee cools.",
+          "visual": "Coffee steam rises beside a doorway and pocket sketchbook.",
+          "onScreenText": "BEFORE IT COOLS",
+          "durationSeconds": 1.5
+        },
+        {
+          "label": "challenge",
+          "narration": "Block the frame, add three shadows, then write the street and date.",
+          "visual": "A hand draws the frame, shadows, street, and date in four quick cuts.",
+          "onScreenText": "FRAME · SHADOW · DATE",
+          "durationSeconds": 8
+        },
+        {
+          "label": "payoff",
+          "narration": "You leave with a page that records where you were.",
+          "visual": "The sketchbook closes as the person leaves the cafe.",
+          "onScreenText": "A PAGE OF THE PLACE",
+          "durationSeconds": 6.5
+        }
+      ],
+      "visualDirection": "Fast tactile close-ups of real paper, ink, coffee, and street details.",
+      "caption": "Try one doorway in ten minutes. The goal is a field note, not a portfolio piece.",
+      "cta": "Open the full field-note guide and choose your first view.",
+      "tags": ["sketchbook challenge", "urban sketching", "ten minute hobby"],
+      "destinationUrl": "https://www.significanthobbies.com/blog/urban-sketching-field-notes",
+      "provenance": {
+        "sourceIds": ["section:ten-minute-loop", "product-action:first-field-note"],
+        "sourceUrls": ["https://www.significanthobbies.com/blog/urban-sketching-field-notes"],
+        "generatedAt": "2026-07-13T05:31:00.000Z",
+        "approvedAt": "2026-07-13T05:56:00.000Z",
+        "approvedBy": "fixture-owner",
+        "audience": "Busy beginners who want a bounded creative practice"
+      }
+    }
+  ]
+}

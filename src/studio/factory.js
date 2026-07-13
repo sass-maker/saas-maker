@@ -2,6 +2,7 @@ import { generateIdeas } from './ideas.js';
 import { IdeaStore, IDEA_STATUSES } from './idea-store.js';
 import { runFacelessWorkflow } from './workflow.js';
 import { buildPublishPacket } from './packet.js';
+import { runImportedVariantWorkflow } from '../significant-content-handoff.js';
 
 /** Fill the backlog: generate ideas for a niche and save them as `new`. */
 export async function planIdeas({ niche, count = 10, store, llm } = {}) {
@@ -30,6 +31,7 @@ export async function produceNext({
   engine = 'kokoro',
   store,
   workflow = runFacelessWorkflow,
+  importedWorkflow = runImportedVariantWorkflow,
   packetBuilder = buildPublishPacket,
   llm,
   logger = console,
@@ -42,16 +44,24 @@ export async function produceNext({
   const produced = [];
   for (const idea of backlog) {
     try {
-      const summary = await workflow({
-        ...workflowOptions,
-        topic: idea.title,
-        niche: idea.niche ?? undefined,
-        engine,
-        ideaId: idea.id,
-        ideaStore,
-        llm,
-        logger,
-      });
+      const summary = idea.contentSource?.schema === 'significant-content-reels/v1'
+        ? await importedWorkflow({
+          ...workflowOptions,
+          idea,
+          store: ideaStore,
+          engine,
+          logger,
+        })
+        : await workflow({
+          ...workflowOptions,
+          topic: idea.title,
+          niche: idea.niche ?? undefined,
+          engine,
+          ideaId: idea.id,
+          ideaStore,
+          llm,
+          logger,
+        });
       let packet = null;
       try {
         packet = await packetBuilder({ artifactDir: summary.artifactDir, llm });
