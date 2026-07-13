@@ -157,6 +157,28 @@ if [[ -z "$cf_target" && -f "package.json" && "$(command -v node || true)" ]]; t
   fi
 fi
 
+# Some products keep a standalone Pages site below the repository root (for
+# example, pace/website). Recognize the same guarded deploy scripts there.
+if [[ -z "$cf_target" && "$(command -v node || true)" ]]; then
+  while IFS= read -r -d '' package_file; do
+    deploy_script=$(node -e '
+      const fs = require("node:fs");
+      const file = process.argv[1];
+      const pkg = JSON.parse(fs.readFileSync(file, "utf8"));
+      process.stdout.write(pkg.scripts?.deploy || "");
+    ' "$package_file" 2>/dev/null || true)
+    if [[ "$deploy_script" == *"wrangler pages deploy"* ]]; then
+      cf_target=$(printf '%s\n' "$deploy_script" | sed -nE 's/.*--project-name[= ]([^ ]+).*/\1/p' | head -1)
+      [[ -z "$cf_target" ]] && cf_target="package deploy script"
+      cf_target="$cf_target (subdir)"
+      break
+    elif [[ "$deploy_script" == *"manual-deploy"* ]]; then
+      cf_target="package manual deploy script (subdir)"
+      break
+    fi
+  done < <(find . -maxdepth 2 -name package.json -not -path './package.json' -not -path '*/node_modules/*' -print0 2>/dev/null)
+fi
+
 if [[ -n "$cf_target" ]]; then
   check "CF target" "ok" "$cf_target"
 else
