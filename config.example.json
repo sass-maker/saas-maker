@@ -1,0 +1,37 @@
+{
+  "machineName": "Developer Mac",
+  "host": "127.0.0.1",
+  "advertisedHost": "your-machine.tailnet.ts.net",
+  "port": 4782,
+  "pairingTtlSeconds": 300,
+  "sessionTtlSeconds": 86400,
+  "approvalTtlSeconds": 60,
+  "logLineLimit": 500,
+  "diffByteLimit": 200000,
+  "stateFile": ".mobile-dev-cockpit/state.json",
+  "projects": [
+    {
+      "id": "example-site",
+      "name": "Example site",
+      "repositoryPath": "/absolute/path/to/example-site",
+      "previewUrl": "http://your-machine.local:5173",
+      "productionUrl": "https://example.com",
+      "commands": {
+        "dev": ["pnpm", "dev", "--host", "0.0.0.0"],
+        "tunnel": ["cloudflared", "tunnel", "--url", "http://127.0.0.1:5173"],
+        "build": ["pnpm", "build"],
+        "test": ["pnpm", "test"],
+        "agent": ["codex", "--no-alt-screen", "-a", "on-request"],
+        "agentResume": [
+          "codex",
+          "--no-alt-screen",
+          "-a",
+          "on-request",
+          "resume",
+          "--last"
+        ],
+        "deploy": ["pnpm", "deploy"]
+      }
+    }
+  ]
+}

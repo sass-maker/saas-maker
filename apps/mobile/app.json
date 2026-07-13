@@ -1,0 +1,36 @@
+{
+  "expo": {
+    "name": "Mobile Dev Cockpit",
+    "slug": "mobile-dev-cockpit",
+    "version": "1.0.0",
+    "orientation": "default",
+    "scheme": "mobiledevcockpit",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "icon": "./assets/expo.icon",
+      "bundleIdentifier": "dev.sarthak.mobiledevcockpit",
+      "supportsTablet": false,
+      "requireFullScreen": true
+    },
+    "web": {
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#050A14"
+        }
+      ],
+      "expo-secure-store",
+      "expo-sharing"
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    },
+    "platforms": ["ios", "web"]
+  }
+}

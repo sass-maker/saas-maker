@@ -1,0 +1,28 @@
+{
+  "name": "@mobile-dev-cockpit/bridge",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "mobile-dev-cockpit-bridge": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "pnpm --filter @mobile-dev-cockpit/protocol build && tsc -p tsconfig.build.json && node ../../scripts/prepare-bridge-cli.mjs",
+    "dev": "pnpm --filter @mobile-dev-cockpit/protocol build && tsx src/cli.ts",
+    "start": "node dist/cli.js",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@mobile-dev-cockpit/protocol": "workspace:*",
+    "node-pty": "1.1.0",
+    "ws": "^8.18.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.15",
+    "@types/ws": "^8.18.1",
+    "tsx": "^4.20.3",
+    "typescript": "~6.0.3",
+    "vitest": "^3.2.4"
+  }
+}
