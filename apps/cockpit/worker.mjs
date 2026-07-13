@@ -29,7 +29,7 @@ const worker = {
       return openNext.fetch(request, env, ctx);
     }
     if (hasAuthCookie(request)) {
-      return Response.redirect(new URL('/tasks', request.url), 307);
+      return openNext.fetch(request, env, ctx);
     }
 
     if (env.ASSETS) {
