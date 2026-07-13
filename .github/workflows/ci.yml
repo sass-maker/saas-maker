@@ -32,6 +32,7 @@ jobs:
       CI: 1
       DEVELOPER_DIR: /Applications/Xcode_26.4.app/Contents/Developer
       EXPO_NO_TELEMETRY: 1
+      IOS_DERIVED_DATA: ${{ runner.temp }}/MobileDevCockpitDerivedData
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -53,8 +54,30 @@ jobs:
           xcodebuild \
             -workspace apps/mobile/ios/MobileDevCockpit.xcworkspace \
             -scheme MobileDevCockpit \
-            -configuration Debug \
+            -configuration Release \
             -sdk iphonesimulator \
             -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath "$IOS_DERIVED_DATA" \
             CODE_SIGNING_ALLOWED=NO \
             build
+      - name: Launch the standalone app in iOS Simulator
+        run: |
+          DEVICE_ID="$(
+            xcrun simctl list devices available -j |
+              ruby -rjson -e 'devices = JSON.parse(STDIN.read).fetch("devices").values.flatten; device = devices.find { |item| item["isAvailable"] }; abort("No available iOS Simulator device") unless device; puts device.fetch("udid")'
+          )"
+          xcrun simctl boot "$DEVICE_ID" 2>/dev/null || true
+          xcrun simctl bootstatus "$DEVICE_ID" -b
+
+          APP_PATH="$(find "$IOS_DERIVED_DATA/Build/Products/Release-iphonesimulator" -maxdepth 1 -name '*.app' -print -quit)"
+          test -n "$APP_PATH"
+          xcrun simctl install "$DEVICE_ID" "$APP_PATH"
+          xcrun simctl launch --terminate-running-process "$DEVICE_ID" dev.sarthak.mobiledevcockpit
+          sleep 8
+          xcrun simctl io "$DEVICE_ID" screenshot "${{ runner.temp }}/mobile-dev-cockpit-simulator.png"
+      - name: Upload the native launch screenshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: mobile-dev-cockpit-ios-simulator
+          path: ${{ runner.temp }}/mobile-dev-cockpit-simulator.png
+          if-no-files-found: error
