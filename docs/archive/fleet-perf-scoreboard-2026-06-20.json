@@ -241,7 +241,7 @@
     },
     {
       "slug": "tinygpt",
-      "name": "TinyGPT",
+      "name": "PostTrainLLM",
       "url": "https://tinygpt.pages.dev",
       "ok": true,
       "p50": "288ms",
