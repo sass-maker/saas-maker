@@ -21,7 +21,7 @@ export default defineConfig({
       description:
         'The Open Source Foundry for Project Fleets — Standardize, Forge, and Command your repositories.',
       social: [
-        { icon: 'github', label: 'GitHub', href: 'https://github.com/sarthak-fleet/saas-maker' },
+        { icon: 'github', label: 'GitHub', href: 'https://github.com/sass-maker/saas-maker' },
       ],
       customCss: ['./src/styles/custom.css'],
       head: [
@@ -39,7 +39,7 @@ export default defineConfig({
         },
       ],
       editLink: {
-        baseUrl: 'https://github.com/sarthak-fleet/saas-maker/edit/main/apps/docs/',
+        baseUrl: 'https://github.com/sass-maker/saas-maker/edit/main/apps/docs/',
       },
       sidebar: [
         {

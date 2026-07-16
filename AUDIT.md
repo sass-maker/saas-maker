@@ -7,7 +7,7 @@ Reviewed: 2026-04-26 (gate hardening pass)
 
 - **Pre-push** (`.husky/pre-push`): lint → typecheck (fleet-wide `tsc --noEmit`) → tests (vitest) → secret scan.
 - **Post-deploy smoke** (`scripts/smoke-prod.mjs`): 7 prod checks (API health, CORS, auth rejection, cockpit /login, /projects redirect, sign-in/social returns Google URL, bundled JS does not contain `localhost:8787`). Wired into both `pnpm -F @saas-maker/api run deploy` and `pnpm -F @saas-maker/dashboard run deploy`.
-- **CI tag-pinned** (`@v1`): fleet repos consume `sarthak-fleet/saas-maker/.github/workflows/foundry-ci.yml@v1`. Bad commits to saas-maker `main` no longer break the entire fleet's CI; promotion is explicit via `git tag -f v1`.
+- **CI tag-pinned** (`@v1`): fleet repos consume `sass-maker/saas-maker/.github/workflows/foundry-ci.yml@v1`. Bad commits to saas-maker `main` no longer break the entire fleet's CI; promotion is explicit via `git tag -f v1`.
 
 ---
 

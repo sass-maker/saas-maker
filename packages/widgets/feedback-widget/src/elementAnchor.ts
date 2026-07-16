@@ -1,7 +1,7 @@
 /**
  * Element anchoring — given a DOM element the user pointed at, produce the
  * strongest hint for locating it (and the source behind it). Ported from
- * pinpoint's source.js (github.com/sarthak-fleet/pinpoint), the OSS prior art
+ * pinpoint's source.js (github.com/sarthakagrawal927/pinpoint), the OSS prior art
  * for click-to-comment source capture. Pure + dependency-free.
  *
  * React reality (verified): React <=18 exposes `fiber._debugSource`

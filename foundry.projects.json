@@ -1,7 +1,7 @@
 {
   "CodeVetter": {
     "desc": "AI code review platform — desktop-first, works offline.",
-    "url": "https://github.com/sarthak-fleet/codevetter.git",
+    "url": "https://github.com/Codevetter/codevetter.git",
     "tier": "core",
     "category": "product",
     "priority": "P1",
@@ -9,7 +9,7 @@
   },
   "alive-ville": {
     "desc": "Persistent AI world simulator — interactive RPG-style multi-agent game.",
-    "url": "https://github.com/sarthak-fleet/alive-ville.git",
+    "url": "https://github.com/sarthakagrawal927/alive-ville.git",
     "tier": "support",
     "category": "product",
     "priority": "P2",
@@ -17,7 +17,7 @@
   },
   "high-signal": {
     "desc": "Public signal log for AI infrastructure and semiconductors.",
-    "url": "https://github.com/sarthak-fleet/high-signal.git",
+    "url": "https://github.com/High-Signal-App/high-signal.git",
     "tier": "support",
     "category": "product",
     "priority": "P2",
@@ -25,7 +25,7 @@
   },
   "drank": {
     "desc": "Domain Rating tracker that supports High Signal and domain research.",
-    "url": "https://github.com/sarthak-fleet/drank.git",
+    "url": "https://github.com/High-Signal-App/drank.git",
     "tier": "support",
     "category": "product",
     "priority": "P2",
@@ -33,7 +33,7 @@
   },
   "free-ai": {
     "desc": "OpenAI-compatible LLM gateway fronting free-tier model providers.",
-    "url": "https://github.com/sarthak-fleet/free-ai.git",
+    "url": "https://github.com/sass-maker/free-ai.git",
     "tier": "support",
     "category": "product",
     "priority": "P2",
@@ -41,7 +41,7 @@
   },
   "knowledge-base": {
     "desc": "Private Agent Search over project-scoped corpora.",
-    "url": "https://github.com/sarthak-fleet/knowledge-base.git",
+    "url": "https://github.com/sass-maker/knowledge-base.git",
     "tier": "support",
     "category": "product",
     "priority": "P2",
@@ -49,7 +49,7 @@
   },
   "karte": {
     "desc": "Karte — AI link-in-bio at karte.cc.",
-    "url": "https://github.com/sarthak-fleet/karte.git",
+    "url": "https://github.com/sarthakagrawal927/karte.git",
     "tier": "personal",
     "category": "personal",
     "priority": "P3",
@@ -57,7 +57,7 @@
   },
   "anime-list": {
     "desc": "Anime List — personal anime discovery and tracking surface.",
-    "url": "https://github.com/sarthak-fleet/anime-list.git",
+    "url": "https://github.com/Significant-Hobbies/anime-list.git",
     "tier": "personal",
     "category": "personal",
     "priority": "P3",
@@ -65,7 +65,7 @@
   },
   "email-manager": {
     "desc": "Email Manager — personal email operations workspace.",
-    "url": "https://github.com/sarthak-fleet/email-manager.git",
+    "url": "https://github.com/sarthakagrawal927/email-manager.git",
     "tier": "personal",
     "category": "personal",
     "priority": "P3",
@@ -73,7 +73,7 @@
   },
   "looptv": {
     "desc": "LoopTV — personal ambient video and anime list companion.",
-    "url": "https://github.com/sarthak-fleet/looptv.git",
+    "url": "https://github.com/Significant-Hobbies/looptv.git",
     "tier": "personal",
     "category": "personal",
     "priority": "P3",
@@ -81,7 +81,7 @@
   },
   "pace": {
     "desc": "Pace — local-only macOS menu-bar voice agent.",
-    "url": "https://github.com/sarthak-fleet/pace.git",
+    "url": "https://github.com/HeyPace/pace.git",
     "tier": "core",
     "category": "product",
     "priority": "P1",
@@ -89,7 +89,7 @@
   },
   "rolepatch": {
     "desc": "RolePatch — AI-powered resume tailoring system.",
-    "url": "git@github.com:sarthak-fleet/rolepatch.git",
+    "url": "git@github.com:sarthakagrawal927/rolepatch.git",
     "path": "/Users/sarthak/Desktop/fleet/rolepatch",
     "tier": "personal",
     "category": "personal",
@@ -98,7 +98,7 @@
   },
   "reader": {
     "desc": "Reader — personal reading and saved-article workflow.",
-    "url": "https://github.com/sarthak-fleet/reader.git",
+    "url": "https://github.com/Significant-Hobbies/reader.git",
     "tier": "personal",
     "category": "personal",
     "priority": "P3",
@@ -106,7 +106,7 @@
   },
   "reel-pipeline": {
     "desc": "AI short-form video generation pipeline for fleet marketing assets.",
-    "url": "https://github.com/sarthak-fleet/reel-pipeline.git",
+    "url": "https://github.com/sass-maker/reel-pipeline.git",
     "tier": "support",
     "category": "product",
     "priority": "P2",
@@ -114,7 +114,7 @@
   },
   "research-papers": {
     "desc": "Academic paper platform and data asset for research workflows.",
-    "url": "https://github.com/sarthak-fleet/research-papers.git",
+    "url": "https://github.com/High-Signal-App/research-papers.git",
     "tier": "support",
     "category": "product",
     "priority": "P2",
@@ -122,7 +122,7 @@
   },
   "saas-maker": {
     "desc": "Foundry — The Industrial Software Factory for Project Fleets.",
-    "url": "https://github.com/sarthak-fleet/saas-maker.git",
+    "url": "https://github.com/sass-maker/saas-maker.git",
     "tier": "support",
     "category": "product",
     "priority": "P2",
@@ -130,7 +130,7 @@
   },
   "significanthobbies": {
     "desc": "Personal hobby mapping and journey visualization tool.",
-    "url": "https://github.com/sarthak-fleet/significanthobbies.git",
+    "url": "https://github.com/Significant-Hobbies/significanthobbies.git",
     "tier": "personal",
     "category": "personal",
     "priority": "P3",
@@ -138,7 +138,7 @@
   },
   "swe-interview-prep": {
     "desc": "SWE Interview Prep — personal interview practice workspace.",
-    "url": "https://github.com/sarthak-fleet/swe-interview-prep.git",
+    "url": "https://github.com/Significant-Hobbies/swe-interview-prep.git",
     "tier": "personal",
     "category": "personal",
     "priority": "P3",
@@ -146,7 +146,7 @@
   },
   "starboard": {
     "desc": "GitHub stars organizer and semantic search surface under CodeVetter.",
-    "url": "https://github.com/sarthak-fleet/starboard.git",
+    "url": "https://github.com/Codevetter/starboard.git",
     "tier": "support",
     "category": "product",
     "priority": "P2",
@@ -154,7 +154,7 @@
   },
   "posttrainllm": {
     "desc": "PostTrainLLM — post-training and model learning workspace.",
-    "url": "https://github.com/sarthak-fleet/tinygpt.git",
+    "url": "https://github.com/PostTrainLLM/tinygpt.git",
     "tier": "core",
     "category": "product",
     "priority": "P2",

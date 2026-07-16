@@ -1,7 +1,7 @@
 name: Foundry — Cloudflare Deploy
 
 # Reusable workflow. Pin via `@v1` from consuming repos:
-#   uses: sarthak-fleet/saas-maker/.github/workflows/foundry-cf-deploy.yml@v1
+#   uses: sass-maker/saas-maker/.github/workflows/foundry-cf-deploy.yml@v1
 on:
   workflow_call:
     inputs:

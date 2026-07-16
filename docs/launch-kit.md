@@ -16,7 +16,7 @@ Track DR weekly in psi-swarm `/projects` after `serve` is running.
 >
 > Building a public benchmark of agent PRs with hand-labeled bugs: https://codevetter.com/benchmark
 >
-> macOS download: https://codevetter.com/download · GitHub: https://github.com/sarthak-fleet/CodeVetter
+> macOS download: https://codevetter.com/download · GitHub: https://github.com/Codevetter/codevetter
 
 ## 2. High Signal — finance / builder Twitter (week 6)
 

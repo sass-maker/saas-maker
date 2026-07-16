@@ -52,26 +52,26 @@ Everything is hosted on Cloudflare. Each deployable ships independently via GitH
 
 | Project                                                                     | Category | Priority | Role                                                              |
 | --------------------------------------------------------------------------- | -------- | -------- | ----------------------------------------------------------------- |
-| [`CodeVetter`](https://github.com/sarthak-fleet/codevetter)                 | product  | P1       | Desktop-first AI code review platform.                            |
-| [`pace`](https://github.com/sarthak-fleet/pace)                             | product  | P1       | Local macOS voice agent.                                          |
-| [`posttrainllm`](https://github.com/sarthak-fleet/tinygpt)                  | product  | P2       | Post-training and model learning workspace.                       |
-| [`saas-maker`](https://github.com/sarthak-fleet/saas-maker)                 | product  | P2       | Foundry control plane, cockpit, API, docs, widgets, and showcase. |
-| [`alive-ville`](https://github.com/sarthak-fleet/alive-ville)               | product  | P2       | Persistent AI world simulator and AliveVille game surface.        |
-| [`drank`](https://github.com/sarthak-fleet/drank)                           | product  | P2       | Domain Rating tracker for domain research.                        |
-| [`free-ai`](https://github.com/sarthak-fleet/free-ai)                       | product  | P2       | OpenAI-compatible LLM gateway for free-tier providers.            |
-| [`high-signal`](https://github.com/sarthak-fleet/high-signal)               | product  | P2       | Public signal log for AI infrastructure and semiconductors.       |
-| [`knowledge-base`](https://github.com/sarthak-fleet/knowledge-base)         | product  | P2       | Private Agent Search over project-scoped corpora.                 |
-| [`reel-pipeline`](https://github.com/sarthak-fleet/reel-pipeline)           | product  | P2       | Short-form video generation pipeline for fleet marketing assets.  |
-| [`research-papers`](https://github.com/sarthak-fleet/research-papers)       | product  | P2       | Academic paper platform and research data asset.                  |
-| [`starboard`](https://github.com/sarthak-fleet/starboard)                   | product  | P2       | GitHub stars organizer and semantic search under CodeVetter.      |
-| [`anime-list`](https://github.com/sarthak-fleet/anime-list)                 | personal | P3       | Personal anime discovery and tracking surface.                    |
-| [`email-manager`](https://github.com/sarthak-fleet/email-manager)           | personal | P3       | Personal email operations workspace.                              |
-| [`karte`](https://github.com/sarthak-fleet/karte)                           | personal | P3       | AI link-in-bio product.                                           |
-| [`looptv`](https://github.com/sarthak-fleet/looptv)                         | personal | P3       | Personal ambient video and anime list companion.                  |
-| [`reader`](https://github.com/sarthak-fleet/reader)                         | personal | P3       | Personal reading and saved-article workflow.                      |
-| [`rolepatch`](https://github.com/sarthak-fleet/rolepatch)                   | personal | P3       | RolePatch resume tailoring product.                               |
-| [`significanthobbies`](https://github.com/sarthak-fleet/significanthobbies) | personal | P3       | Personal hobby mapping and journey visualization tool.            |
-| [`swe-interview-prep`](https://github.com/sarthak-fleet/swe-interview-prep) | personal | P3       | Personal interview practice workspace.                            |
+| [`CodeVetter`](https://github.com/Codevetter/codevetter)                         | product  | P1       | Desktop-first AI code review platform.                            |
+| [`pace`](https://github.com/HeyPace/pace)                                        | product  | P1       | Local macOS voice agent.                                          |
+| [`posttrainllm`](https://github.com/PostTrainLLM/tinygpt)                       | product  | P2       | Post-training and model learning workspace.                       |
+| [`saas-maker`](https://github.com/sass-maker/saas-maker)                        | product  | P2       | Foundry control plane, cockpit, API, docs, widgets, and showcase. |
+| [`alive-ville`](https://github.com/sarthakagrawal927/alive-ville)                | product  | P2       | Persistent AI world simulator and AliveVille game surface.        |
+| [`drank`](https://github.com/High-Signal-App/drank)                              | product  | P2       | Domain Rating tracker for domain research.                        |
+| [`free-ai`](https://github.com/sass-maker/free-ai)                               | product  | P2       | OpenAI-compatible LLM gateway for free-tier providers.            |
+| [`high-signal`](https://github.com/High-Signal-App/high-signal)                  | product  | P2       | Public signal log for AI infrastructure and semiconductors.       |
+| [`knowledge-base`](https://github.com/sass-maker/knowledge-base)                  | product  | P2       | Private Agent Search over project-scoped corpora.                 |
+| [`reel-pipeline`](https://github.com/sass-maker/reel-pipeline)                    | product  | P2       | Short-form video generation pipeline for fleet marketing assets.  |
+| [`research-papers`](https://github.com/High-Signal-App/research-papers)           | product  | P2       | Academic paper platform and research data asset.                  |
+| [`starboard`](https://github.com/Codevetter/starboard)                            | product  | P2       | GitHub stars organizer and semantic search under CodeVetter.      |
+| [`anime-list`](https://github.com/Significant-Hobbies/anime-list)                 | personal | P3       | Personal anime discovery and tracking surface.                    |
+| [`email-manager`](https://github.com/sarthakagrawal927/email-manager)             | personal | P3       | Personal email operations workspace.                              |
+| [`karte`](https://github.com/sarthakagrawal927/karte)                             | personal | P3       | AI link-in-bio product.                                           |
+| [`looptv`](https://github.com/Significant-Hobbies/looptv)                         | personal | P3       | Personal ambient video and anime list companion.                  |
+| [`reader`](https://github.com/Significant-Hobbies/reader)                         | personal | P3       | Personal reading and saved-article workflow.                      |
+| [`rolepatch`](https://github.com/sarthakagrawal927/rolepatch)                     | personal | P3       | RolePatch resume tailoring product.                               |
+| [`significanthobbies`](https://github.com/Significant-Hobbies/significanthobbies) | personal | P3       | Personal hobby mapping and journey visualization tool.            |
+| [`swe-interview-prep`](https://github.com/Significant-Hobbies/swe-interview-prep) | personal | P3       | Personal interview practice workspace.                            |
 
 ## Quick Start
 

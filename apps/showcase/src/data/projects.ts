@@ -4,7 +4,7 @@
 
 import registry from '../../../../foundry.projects.json';
 
-export const GITHUB_URL = 'https://github.com/sarthak-fleet/saas-maker';
+export const GITHUB_URL = 'https://github.com/sass-maker/saas-maker';
 
 export interface CoreProject {
   n: string;
@@ -368,5 +368,5 @@ export const SPEC: Array<[string, string]> = [
   ['Personal projects', String(PERSONAL.length)],
   ['Origin', '2024 →'],
   ['License', 'MIT'],
-  ['Source', 'github.com/sarthak-fleet/saas-maker'],
+  ['Source', 'github.com/sass-maker/saas-maker'],
 ];

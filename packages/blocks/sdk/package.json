@@ -19,7 +19,7 @@
   "homepage": "https://sassmaker.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sarthak-fleet/saas-maker",
+    "url": "https://github.com/sass-maker/saas-maker",
     "directory": "packages/sdk"
   },
   "main": "dist/index.js",

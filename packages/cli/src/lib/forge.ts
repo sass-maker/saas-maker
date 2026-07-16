@@ -291,7 +291,7 @@ on:
 
 jobs:
   foundry-ci:
-    uses: sarthak-fleet/saas-maker/.github/workflows/foundry-ci.yml@v1
+    uses: sass-maker/saas-maker/.github/workflows/foundry-ci.yml@v1
 `;
     writeFileSync(ciPath, ciConfig);
     log.success('✓ Linked to Global Foundry CI (v1)');
