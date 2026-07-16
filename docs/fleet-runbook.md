@@ -27,7 +27,7 @@ Cloudflare, Vercel, and other hosts are deployment targets, not task stores.
 
 The fleet is managed in four buckets:
 
-- **Focus:** `pace`, `codevetter`, `tinygpt`
+- **Focus:** `pace`, `codevetter`, `posttrainllm`
 - **Support:** `high-signal`, `drank`, `research-papers`, `fleet-ops`, `saas-maker`, `free-ai`, `knowledge-base`, `reel-pipeline`, `aliveville`
 - **Personal use:** `rolepatch`, `karte`, `reader`, `swe-interview-prep`, `significanthobbies`, `looptv`, `anime-list`, `email-manager`
 
@@ -53,7 +53,7 @@ The ten owned root domains are:
 | Domain | Project |
 | --- | --- |
 | `sassmaker.com` | SaaS Maker |
-| `posttrainllm.com` | tinygpt (legacy PostTrainLLM domain) |
+| `posttrainllm.com` | PostTrainLLM |
 | `heypace.app` | Pace |
 | `codevetter.com` | codevetter |
 | `aliveville.com` | aliveville |
@@ -180,7 +180,7 @@ The active production fleet is listed in
 | `knowledge-base` | Private Agent Search over project corpora | see project README | see project README / CI | see project README / CI |
 | `looptv` | Lean-back YouTube station player | `pnpm dev` | `pnpm lint`, `pnpm test`, `pnpm build` | `pnpm deploy` |
 | `pace` | Local macOS voice agent | see project README | see project README / CI | see project README / CI |
-| `tinygpt` | Local LLM factory/runtime | see project README | see project README / CI | see project README / CI |
+| `posttrainllm` | Local LLM factory/runtime | see project README | see project README / CI | see project README / CI |
 | `reader` | Article/PDF reader, annotation, and research workspace | `pnpm dev` | `pnpm lint`, `pnpm type-check`, `pnpm test`, `pnpm cf:build` | `pnpm deploy` |
 | `reel-pipeline` | AI short-form video generation pipeline | see project README | see project README / CI | see project README / CI |
 | `research-papers` | Academic paper platform and search asset | see project README | see project README / CI | see project README / CI |

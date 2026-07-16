@@ -15,8 +15,8 @@ _Last audited: 2026-06-23._
 
 | State | Projects |
 |---|---|
-| **Has study queue** (14) | aliveville (25 topics), high-signal (14), codevetter (13), reel-pipeline (13), email-manager · reader · saas-maker · swe-interview-prep (12), pace (11), starboard (10), free-ai · research-papers (9), looptv (7), tinygpt (14, migrated 2026-06-23) |
-| **Old scaffold — migrated/retired** | tinygpt → `new-things.md` (old `lessons.md` archived) |
+| **Has study queue** (14) | aliveville (25 topics), high-signal (14), codevetter (13), reel-pipeline (13), email-manager · reader · saas-maker · swe-interview-prep (12), pace (11), starboard (10), free-ai · research-papers (9), looptv (7), posttrainllm (14, migrated 2026-06-23) |
+| **Old scaffold — migrated/retired** | posttrainllm → `new-things.md` (old `lessons.md` archived) |
 | **Exempt (plain full-stack)** | anime-list, drank, significanthobbies, rolepatch |
 | **Fancy but no track — candidates** | karte (agent-trust/AI chat), knowledge-base (RAG) |
 
@@ -31,7 +31,7 @@ outstanding, human-side work; it is NOT something an agent should fabricate.
 
 ## Agent-side gaps (fixable without inventing understanding)
 
-1. ~~**Migrate old scaffolds**~~ — DONE 2026-06-23: tinygpt migrated to
+1. ~~**Migrate old scaffolds**~~ — DONE 2026-06-23: posttrainllm migrated to
    `docs/learning/new-things.md` (14 topic stubs, all `Why here: TBD`); old
    `lessons.md` archived.
 2. **This audit doc** — previously referenced by the standard but missing; now

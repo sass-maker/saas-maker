@@ -9,7 +9,7 @@ const registry = JSON.parse(await readFile(new URL('../config/marketing-program.
 test('registry validates every active catalog project and exact focus set', async () => {
   const catalog = JSON.parse(await readFile(new URL('../../saas-maker/foundry.projects.json', import.meta.url), 'utf8'));
   const result = validateMarketingProgram(registry, { activeSlugs: [...Object.keys(catalog), 'fleet-ops', 'wifi-watch'] });
-  assert.deepEqual(result.focusSet, ['pace', 'codevetter', 'tinygpt']);
+  assert.deepEqual(result.focusSet, ['pace', 'codevetter', 'posttrainllm']);
   assert.equal(result.projects.length, 22);
   assert.deepEqual(result.projects.filter((project) => project.contentBase).map((project) => project.slug).sort(), ['aliveville', 'high-signal', 'karte', 'rolepatch', 'saas-maker', 'significanthobbies', 'swe-interview-prep']);
 });
@@ -19,7 +19,7 @@ test('canonical identities and historical aliases resolve uniquely', () => {
   assert.equal(resolve('linkchat'), 'karte');
   assert.equal(resolve('interview-coder'), 'swe-interview-prep');
   assert.equal(resolve('resume-tailor'), 'rolepatch');
-  assert.equal(resolve('posttrainllm'), 'tinygpt');
+  assert.equal(resolve('tinygpt'), 'posttrainllm');
   assert.equal(resolve('CodeVetter'), 'codevetter');
 });
 

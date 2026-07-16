@@ -49,7 +49,7 @@ Current implementation state:
 | `aliveville` | not in local wrangler audit | `aliveville.com` | Recorded in Fleet README. |
 | `codevetter` | not in local wrangler audit | `codevetter.com` | Recorded in Fleet README. |
 | `pace` | Pages app | `heypace.app` | Focus-zone product. |
-| `tinygpt` | Pages app | `posttrainllm.com` | Legacy domain; consider `tinygpt.sassmaker.com` as secondary canonical only if the product is renamed publicly. |
+| `posttrainllm` | Pages app | `posttrainllm.com` | Canonical product domain. |
 
 ## Assigned Product Subdomains
 

@@ -7,7 +7,7 @@ source of truth for project identity, operating mode, focus state, content-base
 adapters, channel routes, cadence, and CTA is
 `fleet-ops/config/marketing-program.json`; validate it with
 `node fleet-ops/scripts/validate-marketing-program.mjs` before automation runs.
-The three registry focus projects are `pace`, `codevetter`, and `tinygpt`.
+The three registry focus projects are `pace`, `codevetter`, and `posttrainllm`.
 Domain-backed non-focus projects remain evergreen or infrastructure programs as
 declared in the registry; a historical plan being finished does not make an
 unregistered project eligible for queue generation.
@@ -31,7 +31,7 @@ task plus Telegram completion/failure evidence.
 | --- | --- | --- | --- | --- |
 | `pace` | `heypace.app` | Focus | Active | Download the Mac app / join release list |
 | `codevetter` | `codevetter.com` | Focus | Active | Download desktop reviewer |
-| `tinygpt` | `posttrainllm.com` | Focus | Active | Train or run a tiny local model |
+| `posttrainllm` | `posttrainllm.com` | Focus | Active | Train or run a small local model |
 | `saas-maker` | `sassmaker.com` | Infrastructure | Finished | Explore the fleet / use `fnd` |
 | `aliveville` | `aliveville.com` | Evergreen | Finished | Play the Rival slice |
 | `rolepatch` | `rolepatch.com` | Evergreen | Finished | Tailor a resume or browse jobs |
@@ -155,14 +155,14 @@ task plus Telegram completion/failure evidence.
 - **Next assets:** benchmark page, "review an agent PR" demo, comparison versus
   raw LLM review, downloadable release proof.
 
-### TinyGPT
+### PostTrainLLM
 
 - **Positioning:** tiny local LLM factory and WebGPU playground for training,
   running, and understanding small models on one machine.
 - **Current marketing job:** rename away from legacy PostTrainLLM when ready,
   then show credible measured training/perf claims.
 - **Next assets:** browser playground demo, gallery story, performance proof
-  page, migration plan for `tinygpt.sassmaker.com` or a purchased root domain.
+  page and a clear path from the factory overview into artifacts, experiments, and the playground.
 
 ## Canonical Product Surfaces
 

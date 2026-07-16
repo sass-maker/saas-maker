@@ -109,7 +109,7 @@ Preferred stacks, in order:
 1. **Astro** — for content / marketing / docs / landing surfaces. Default
    choice for any page where the LCP element is text or an image and the
    interactivity below the fold is small. Already meeting <500 ms desktop
-   LCP on tinygpt and sarthakagrawal.pages.dev with this stack.
+   LCP on PostTrainLLM and sarthakagrawal.pages.dev with this stack.
 2. **Vite + React (SPA)** — for app shells where the interactive surface
    is the whole page. `reader` and `swe-interview-prep` are active references.
 3. **Next.js on Cloudflare Workers (OpenNext)** — keep for projects that
