@@ -21,7 +21,7 @@ to run. Enforces the fleet deployment standard from AGENTS.md.
 1. **On main branch** — not a feature branch
 2. **Clean working tree** — no uncommitted changes
 3. **Synced with remote** — not ahead or behind
-4. **CI green on main** — latest GitHub Actions run is passing
+4. **CI green for current main** — the exact `HEAD` commit has a successful push workflow; unrelated manual or scheduled workflows do not mask that signal
 5. **Cloudflare target known** — wrangler.toml/jsonc exists and names a Worker/Pages project
 6. **No known regressions** — check PROJECT_STATUS.md for any flagged blockers
 

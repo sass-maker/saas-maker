@@ -84,7 +84,7 @@ else
   check "Remote" "fail" "no upstream configured"
 fi
 
-# 4. CI green on main?
+# 4. CI green for the exact main commit?
 if [[ "$FORCE" == true ]]; then
   check "CI" "ok" "skipped (--force)"
 else
@@ -101,14 +101,15 @@ else
     slug="${slug%.git}"
 
     if [[ -n "$slug" ]]; then
-      conclusion=$(gh run list -R "$slug" --branch main --limit 1 \
+      head_sha=$(git rev-parse HEAD 2>/dev/null || true)
+      conclusion=$(gh run list -R "$slug" --branch main --commit "$head_sha" --event push --limit 1 \
         --json conclusion -q '.[0].conclusion // "none"' 2>/dev/null || echo "none")
       case "$conclusion" in
-        success) ci_result="ok"; ci_detail="green" ;;
+        success) ci_result="ok"; ci_detail="green for ${head_sha:0:8}" ;;
         failure|cancelled|timed_out|action_required|startup_failure)
           ci_result="fail"; ci_detail="red ($conclusion)"
           ;;
-        *) ci_result="fail"; ci_detail="no runs on main" ;;
+        *) ci_result="fail"; ci_detail="no completed push CI for ${head_sha:0:8}" ;;
       esac
     else
       ci_result="fail"; ci_detail="no GitHub remote"
