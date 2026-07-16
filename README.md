@@ -97,7 +97,7 @@ stack is JavaScript-only.
 
 ### SaaS Maker
 
-- Repo: `https://github.com/sarthak-fleet/saas-maker`
+- Repo: `https://github.com/sass-maker/saas-maker`
 - Role: control plane and system of record.
 - Owns: Marketing Queue, project fleet metadata, task linkage, approval status,
   changelog-derived marketing ideas, and Cockpit UI.
@@ -583,7 +583,7 @@ configured R2 bucket under `reel-requests/`.
 Clone with submodules:
 
 ```bash
-git clone --recurse-submodules https://github.com/sarthak-fleet/reel-pipeline.git
+git clone --recurse-submodules https://github.com/sass-maker/reel-pipeline.git
 ```
 
 Or initialize after cloning:

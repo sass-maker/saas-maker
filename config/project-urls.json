@@ -2,27 +2,27 @@
   "$comment": "Real deployed product URLs per fleet project. Read by render-pro.js and the worker. Source of truth — update here, not in code.",
   "karte": {
     "productUrl": "https://karte.cc",
-    "fallbackUrl": "https://github.com/sarthak-fleet/karte"
+    "fallbackUrl": "https://github.com/sarthakagrawal927/karte"
   },
   "linkchat": {
     "$comment": "Legacy project slug retained for old queue items; Karte is canonical.",
     "productUrl": "https://karte.cc",
-    "fallbackUrl": "https://github.com/sarthak-fleet/karte"
+    "fallbackUrl": "https://github.com/sarthakagrawal927/karte"
   },
   "reader": {
     "productUrl": "https://read.significanthobbies.com",
-    "fallbackUrl": "https://github.com/sarthak-fleet/reader"
+    "fallbackUrl": "https://github.com/Significant-Hobbies/reader"
   },
   "starboard": {
     "productUrl": "https://starboard.codevetter.com",
-    "fallbackUrl": "https://github.com/sarthak-fleet/starboard"
+    "fallbackUrl": "https://github.com/Codevetter/starboard"
   },
   "high-signal": {
     "productUrl": "https://highsignal.app",
-    "fallbackUrl": "https://github.com/sarthak-fleet/high-signal"
+    "fallbackUrl": "https://github.com/High-Signal-App/high-signal"
   },
   "codevetter": {
     "productUrl": "https://codevetter.com",
-    "fallbackUrl": "https://github.com/sarthak-fleet/CodeVetter"
+    "fallbackUrl": "https://github.com/Codevetter/codevetter"
   }
 }
