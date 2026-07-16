@@ -47,7 +47,7 @@ import globalDrDataStatic from '@/data/global-dr.json';
 // Configurable raw GitHub URL for fresh data after Action runs (no redeploy needed on Vercel)
 const GLOBAL_DATA_BASE =
   process.env.NEXT_PUBLIC_GLOBAL_DATA_BASE ||
-  'https://raw.githubusercontent.com/sarthak-fleet/drank/main/data';
+  'https://raw.githubusercontent.com/High-Signal-App/drank/main/data';
 const GLOBAL_DR_URL = `${GLOBAL_DATA_BASE}/global-dr.json`;
 const GLOBAL_SITES_URL = `${GLOBAL_DATA_BASE}/global-sites.json`;
 
@@ -733,7 +733,7 @@ export default function Drank() {
                         const text = predictions
                           .map((p, i) => `${i + 1}. ${p.domain}${p.note ? ` — ${p.note}` : ''}`)
                           .join('\n');
-                        const issueUrl = `https://github.com/sarthak-fleet/drank/issues/new?title=DR+Prediction+from+drank&body=${encodeURIComponent(`My predicted top performers:\n\n${text}\n\nSubmitted from the drank app at ${new Date().toISOString()}`)}`;
+                        const issueUrl = `https://github.com/High-Signal-App/drank/issues/new?title=DR+Prediction+from+drank&body=${encodeURIComponent(`My predicted top performers:\n\n${text}\n\nSubmitted from the drank app at ${new Date().toISOString()}`)}`;
                         window.open(issueUrl, '_blank', 'noopener,noreferrer');
                         // Also copy
                         navigator.clipboard?.writeText(text).catch(() => {});

@@ -30,7 +30,7 @@ yourself after learning; never invent rationale.
 ## GitHub raw JSON for live data without redeploy
 - What: Fetching data from raw GitHub URLs so weekly GitHub Action updates are visible without redeploying the app
 - Why here: TBD
-- Gotcha (from code): `app/page.tsx:47-51` — fetches `https://raw.githubusercontent.com/sarthak-fleet/drank/main/data/global-dr.json` for the live leaderboard
+- Gotcha (from code): `app/page.tsx:47-51` — fetches `https://raw.githubusercontent.com/High-Signal-App/drank/main/data/global-dr.json` for the live leaderboard
 - Source: https://docs.github.com/en/rest/repos/contents
 
 ## CF Pages Functions as API proxy
