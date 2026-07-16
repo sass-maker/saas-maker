@@ -40,7 +40,7 @@ psi-swarm/
 ## Quick start (3 commands)
 
 ```bash
-git clone https://github.com/sarthak-fleet/psi-swarm.git
+git clone https://github.com/sass-maker/psi-swarm.git
 cd psi-swarm
 pnpm run setup                                                # installs + builds CLI
 pnpm run cli -- run https://example.com --runs 5 --parallel auto

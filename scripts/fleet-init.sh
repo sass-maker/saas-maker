@@ -16,6 +16,7 @@ CATEGORY=""
 DESC=""
 STACK=""
 VISIBILITY="--public"
+GITHUB_OWNER="${FLEET_GITHUB_OWNER:-sarthakagrawal927}"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -70,8 +71,8 @@ echo "Visibility: ${VISIBILITY#--}"
 echo ""
 
 # 1. Create GitHub repo and clone
-echo "1. Creating GitHub repo sarthak-fleet/$NAME..."
-gh repo create "sarthak-fleet/$NAME" $VISIBILITY \
+echo "1. Creating GitHub repo $GITHUB_OWNER/$NAME..."
+gh repo create "$GITHUB_OWNER/$NAME" $VISIBILITY \
   --description "$DESC" \
   --clone "$DIR" \
   2>/dev/null || {
@@ -190,7 +191,7 @@ echo ""
 echo "3. Adding to fleet README under category: $CATEGORY..."
 
 README="$ROOT/README.md"
-ENTRY="- [$NAME](https://github.com/sarthak-fleet/$NAME) — $DESC"
+ENTRY="- [$NAME](https://github.com/$GITHUB_OWNER/$NAME) — $DESC"
 
 # Find the category section and add the entry
 python3 - "$README" "$ENTRY" "$CATEGORY" <<'PYEOF'
@@ -239,7 +240,7 @@ git push origin main 2>/dev/null || true
 echo ""
 echo "=== Done ==="
 echo "Project: $NAME"
-echo "Repo: https://github.com/sarthak-fleet/$NAME"
+echo "Repo: https://github.com/$GITHUB_OWNER/$NAME"
 echo "Local: $DIR"
 echo "Fleet README: updated under $CATEGORY"
 echo ""

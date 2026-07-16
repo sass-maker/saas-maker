@@ -5,9 +5,10 @@ description: Scaffold a new fleet project — create the GitHub repo, AGENTS.md,
 
 # fleet-init — new project scaffolding
 
-Creates a new fleet project with the standard structure: GitHub repo under
-sarthak-fleet, AGENTS.md, PROJECT_STATUS.md, CI workflow, and a README entry
-in the fleet root.
+Creates a new fleet project with the standard structure: GitHub repo under the
+personal incubator account by default, AGENTS.md, PROJECT_STATUS.md, CI
+workflow, and a README entry in the fleet root. Set `FLEET_GITHUB_OWNER` when a
+project should start directly inside a durable product organization.
 
 ## When to invoke
 
@@ -18,7 +19,8 @@ in the fleet root.
 
 ## What it creates
 
-1. **GitHub repo** — `sarthak-fleet/<name>` (private or public per user request)
+1. **GitHub repo** — `sarthakagrawal927/<name>` by default (private or public
+   per user request), or `$FLEET_GITHUB_OWNER/<name>` when explicitly set
 2. **Local checkout** — `~/Desktop/fleet/<name>/`
 3. **AGENTS.md** — standard fleet agent file with shared standard reference
 4. **PROJECT_STATUS.md** — with the 6 required sections (Why/What, Dependencies,
@@ -47,7 +49,7 @@ bash ~/Desktop/fleet/fleet-ops/scripts/fleet-init.sh <name> \
 ```
 
 The script:
-1. Creates the GitHub repo (`sarthak-fleet/<name>`) and clones it
+1. Creates the GitHub repo (`sarthakagrawal927/<name>` by default) and clones it
 2. Scaffolds AGENTS.md, PROJECT_STATUS.md, .gitignore, CI workflow
 3. Commits and pushes the initial scaffold
 4. Adds the project to the fleet README under the specified category

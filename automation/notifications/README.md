@@ -10,7 +10,7 @@ message bodies never enter the public dashboard.
 fleet-ops/scripts/agent-bin/fleet-notify emit \
   --severity warning --source deploy --project high-signal \
   --title "Deploy needs attention" --body "Production smoke check failed" \
-  --url "https://github.com/sarthak-fleet/high-signal/actions"
+  --url "https://github.com/High-Signal-App/high-signal/actions"
 
 fleet-ops/scripts/agent-bin/fleet-notify status
 fleet-ops/scripts/agent-bin/fleet-notify list --limit 20

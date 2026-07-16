@@ -9,7 +9,7 @@ CHECKOUT="$STATE_ROOT/swe-interview-prep"
 LOG_DIR="$STATE_ROOT/logs"
 LOCK_DIR="$STATE_ROOT/sync.lock"
 NOTIFY="$SCRIPT_DIR/fleet-notify"
-REMOTE="https://github.com/sarthak-fleet/swe-interview-prep.git"
+REMOTE="https://github.com/Significant-Hobbies/swe-interview-prep.git"
 
 mkdir -p "$STATE_ROOT" "$LOG_DIR"
 

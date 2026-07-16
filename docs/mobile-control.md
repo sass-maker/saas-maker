@@ -98,7 +98,8 @@ bots.
 
 For a second machine:
 
-1. Clone `sarthak-fleet/fleet-ops` into `~/Desktop/fleet/fleet-ops`.
+1. Clone `sass-maker/fleet-workspace` into `~/Desktop/fleet`; Fleet Ops lives
+   in its `fleet-ops/` subdirectory.
 2. Run `./fleet-ops/scripts/agent-stack.sh install-skills`.
 3. Run `./fleet-ops/scripts/agent-bin/mobile-control start-tailscale`.
 4. Give it a unique `FLEET_NODE_ID` and keep machine-local credentials on that
