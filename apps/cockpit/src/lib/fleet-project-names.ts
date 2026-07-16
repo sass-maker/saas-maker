@@ -241,11 +241,11 @@ export const ACTIVE_FLEET_PROJECTS = {
       'DeepSeek',
     ],
   },
-  tinygpt: {
-    name: 'TinyGPT',
-    desc: 'TinyGPT.',
+  posttrainllm: {
+    name: 'PostTrainLLM',
+    desc: 'Local LLM factory, runtime, and model-learning workspace.',
     tier: 'core',
-    url: 'https://github.com/PostTrainLLM/tinygpt.git',
+    url: 'https://github.com/PostTrainLLM/posttrainllm.git',
     externalDeps: [],
   },
   truehire: {

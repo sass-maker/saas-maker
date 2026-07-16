@@ -154,7 +154,7 @@
   },
   "posttrainllm": {
     "desc": "PostTrainLLM — post-training and model learning workspace.",
-    "url": "https://github.com/PostTrainLLM/tinygpt.git",
+    "url": "https://github.com/PostTrainLLM/posttrainllm.git",
     "tier": "core",
     "category": "product",
     "priority": "P2",
