@@ -238,7 +238,7 @@ function buildSurface(product) {
       },
       ...productLinks
         .filter((l) => !l.url.endsWith('/') || l.title !== 'Home')
-        .slice(0, 12)
+        // Fleet hub (sassmaker) may list 20+ product roots; keep them all in /api/ai.
         .map((l) => ({
           id: slugId(l.title),
           url: l.url,

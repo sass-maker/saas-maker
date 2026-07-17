@@ -5,6 +5,10 @@
 **Logs:** `config/directory-submissions/log.jsonl` · `status.json` · `research-probe.json`  
 **Tools:** `scripts/directory-submit/spray.py`
 
+**Outcomes:** Free-directory spray is awareness-only. For AI citations + Domain
+Rating, follow [`geo-dr-outcomes.md`](./geo-dr-outcomes.md) — deploy S-tier
+agent surfaces (`agent-ready`) and human-kick high-DA listings only.
+
 ## Research pass (2026-07-17)
 
 Sources scanned:
