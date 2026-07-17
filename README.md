@@ -56,7 +56,7 @@ Everything is hosted on Cloudflare. Each deployable ships independently via GitH
 | [`pace`](https://github.com/HeyPace/pace)                                        | product  | P1       | Local macOS voice agent.                                          |
 | [`posttrainllm`](https://github.com/PostTrainLLM/tinygpt)                       | product  | P2       | Post-training and model learning workspace.                       |
 | [`saas-maker`](https://github.com/sass-maker/saas-maker)                        | product  | P2       | Foundry control plane, cockpit, API, docs, widgets, and showcase. |
-| [`alive-ville`](https://github.com/sarthakagrawal927/alive-ville)                | product  | P2       | Persistent AI world simulator and AliveVille game surface.        |
+| [`aliveville`](https://github.com/sarthakagrawal927/aliveville)                  | product  | P2       | Persistent AI world simulator and AliveVille game surface.        |
 | [`drank`](https://github.com/High-Signal-App/drank)                              | product  | P2       | Domain Rating tracker for domain research.                        |
 | [`free-ai`](https://github.com/sass-maker/free-ai)                               | product  | P2       | OpenAI-compatible LLM gateway for free-tier providers.            |
 | [`high-signal`](https://github.com/High-Signal-App/high-signal)                  | product  | P2       | Public signal log for AI infrastructure and semiconductors.       |

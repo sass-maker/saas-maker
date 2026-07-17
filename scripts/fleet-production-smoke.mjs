@@ -24,7 +24,7 @@ const TARGETS = {
     { label: 'health', url: 'https://ai-gateway.sassmaker.com/health' },
     { label: 'models', url: 'https://ai-gateway.sassmaker.com/v1/models' },
   ],
-  'alive-ville': [{ label: 'web', url: 'https://aliveville.com' }],
+  aliveville: [{ label: 'web', url: 'https://aliveville.com' }],
   'high-signal': [{ label: 'web', url: 'https://highsignal.app' }],
   'knowledge-base': [
     { label: 'web', url: 'https://search.sassmaker.com' },

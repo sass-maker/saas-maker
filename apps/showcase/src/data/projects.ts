@@ -50,7 +50,7 @@ const OVERRIDES: Record<string, ShowcaseOverride> = {
     color: '#10b981',
     size: 'tall',
   },
-  'alive-ville': {
+  aliveville: {
     name: 'AliveVille',
     initials: 'Av',
     tag: 'Simulation · core',
@@ -184,7 +184,7 @@ const SPOTLIGHT_ORDER = ['CodeVetter', 'pace', 'posttrainllm'];
 const SUPPORT_ORDER = [
   'saas-maker',
   'high-signal',
-  'alive-ville',
+  'aliveville',
   'free-ai',
   'knowledge-base',
   'reel-pipeline',

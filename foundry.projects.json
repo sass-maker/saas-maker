@@ -7,9 +7,9 @@
     "priority": "P1",
     "maturity": "public-ready"
   },
-  "alive-ville": {
+  "aliveville": {
     "desc": "Persistent AI world simulator — interactive RPG-style multi-agent game.",
-    "url": "https://github.com/sarthakagrawal927/alive-ville.git",
+    "url": "https://github.com/sarthakagrawal927/aliveville.git",
     "tier": "support",
     "category": "product",
     "priority": "P2",

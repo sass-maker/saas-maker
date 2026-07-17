@@ -12,7 +12,7 @@ const DEFAULT_CLOUDFLARE_ACCOUNT_ID = '7d048325699a5acddb44d3be31cf6ba9';
 const DEFAULT_EXPECTED_CLOUDFLARE_BUILD_TOKEN = 'Workers Builds - 2026-05-27 01:49';
 const OUT_OF_FLEET_PROJECTS = new Set(['personal-memory', 'port-whisperer', 'local-ai']);
 const LOCAL_PATH_OVERRIDES = {
-  'alive-ville': 'aliveville',
+  aliveville: 'aliveville',
   'anime-list': 'anime-list',
   CodeVetter: 'codevetter',
   'knowledge-base': 'knowledge-base',
@@ -24,7 +24,7 @@ const LOCAL_PATH_OVERRIDES = {
 
 const DOMAIN_MARKETING_PROJECTS = new Set([
   'CodeVetter',
-  'alive-ville',
+  'aliveville',
   'high-signal',
   'karte',
   'pace',
@@ -35,7 +35,7 @@ const DOMAIN_MARKETING_PROJECTS = new Set([
 ]);
 const DOMAIN_MARKETING_PLAN_ALIASES = {
   CodeVetter: 'codevetter',
-  'alive-ville': 'aliveville',
+  aliveville: 'aliveville',
   posttrainllm: 'tinygpt',
 };
 
@@ -107,7 +107,7 @@ const PROD_TARGETS = {
   'email-manager': [{ label: 'web', url: 'https://mail.sassmaker.com', ok: [200] }],
   drank: [{ label: 'web', url: 'https://domains.sassmaker.com', ok: [200] }],
   'free-ai': [{ label: 'gateway', url: 'https://ai-gateway.sassmaker.com', ok: [200] }],
-  'alive-ville': [{ label: 'web', url: 'https://aliveville.com', ok: [200] }],
+  aliveville: [{ label: 'web', url: 'https://aliveville.com', ok: [200] }],
   'high-signal': [
     { label: 'web', url: 'https://highsignal.app', ok: [200] },
     { label: 'api', url: 'https://high-signal-api.sarthakagrawal927.workers.dev', ok: [200] },
@@ -149,7 +149,7 @@ const FRONTEND_TARGETS = {
   'email-manager': [{ label: 'web', url: 'https://mail.sassmaker.com' }],
   drank: [{ label: 'web', url: 'https://domains.sassmaker.com' }],
   'free-ai': [],
-  'alive-ville': [{ label: 'web', url: 'https://aliveville.com' }],
+  aliveville: [{ label: 'web', url: 'https://aliveville.com' }],
   'high-signal': [{ label: 'web', url: 'https://highsignal.app' }],
   'knowledge-base': [{ label: 'web', url: 'https://search.sassmaker.com' }],
   karte: [{ label: 'web', url: 'https://karte.cc' }],

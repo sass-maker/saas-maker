@@ -17,7 +17,7 @@ export const FLEET_HEALTH_CONTRACTS = {
     githubWorkflow: null,
     smokeCommand: 'pnpm run fleet:prod-smoke --project CodeVetter',
   },
-  'alive-ville': {
+  aliveville: {
     displayName: 'AliveVille',
     prodUrl: 'https://aliveville.com',
     expectedStatus: 200,
@@ -26,7 +26,7 @@ export const FLEET_HEALTH_CONTRACTS = {
     requiredEnv: { build: [], runtime: [] },
     deployTarget: 'Cloudflare Workers',
     githubWorkflow: 'deploy.yml',
-    smokeCommand: 'pnpm run fleet:prod-smoke --project alive-ville',
+    smokeCommand: 'pnpm run fleet:prod-smoke --project aliveville',
   },
   'anime-list': {
     displayName: 'MAL Explorer',

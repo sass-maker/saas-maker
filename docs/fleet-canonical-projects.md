@@ -15,7 +15,7 @@ Registry classification uses two separate fields:
 | `email-manager`      | Email Manager          | Worker-backed product.                                                   |
 | `event-forecast`     | Event Forecast         | Local Rust/Rocket forecasting service; no production URL yet.            |
 | `free-ai`            | Free AI Gateway        | Gateway/API product, not a frontend.                                     |
-| `ai-game`            | AliveVille             | Public game domain is AliveVille; GitHub repo is `alive-ville`, local checkout remains `ai-game`. |
+| `aliveville`         | AliveVille             | GitHub, local checkout, and public registry use `aliveville`.             |
 | `high-signal`        | High Signal            | Worker frontend.                                                         |
 | `knowledge-base`     | Private Agent Search   | Cloudflare Worker RAG service for cited private project corpora.         |
 | `karte`              | Karte                  | Worker frontend at karte.cc.                                             |
