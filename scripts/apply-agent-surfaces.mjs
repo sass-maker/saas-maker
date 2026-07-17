@@ -6,6 +6,7 @@
  *   node fleet-ops/scripts/apply-agent-surfaces.mjs
  *   node fleet-ops/scripts/apply-agent-surfaces.mjs --id rolepatch
  *   node fleet-ops/scripts/apply-agent-surfaces.mjs --dry-run
+ *   node fleet-ops/scripts/apply-agent-surfaces.mjs --jsonld --dry-run
  */
 
 import {
@@ -17,6 +18,7 @@ import {
 } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { loadRegistry, productOrigin } from './lib/registry.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const FLEET_ROOT = resolve(__dirname, '../..');
@@ -28,11 +30,41 @@ const EDGE_TEMPLATE = join(
 const MARKER = 'handleAgentEdge';
 const IMPORT_MARKER = "from './agent-edge.mjs'";
 
+// JSON-LD fleet publisher constants
+const FLEET_ORG_ID = 'https://sassmaker.com/#org';
+const FLEET_ORG_NAME = 'SaaS Maker (Foundry)';
+const FLEET_HUB_URL = 'https://sassmaker.com';
+
 const args = process.argv.slice(2);
 const dryRun = args.includes('--dry-run');
+const jsonldMode = args.includes('--jsonld');
 const onlyId = args.includes('--id') ? args[args.indexOf('--id') + 1] : null;
 
-const registry = JSON.parse(readFileSync(REGISTRY, 'utf8'));
+const registry = loadRegistry(REGISTRY);
+
+// --- JSON-LD dry-run mode: print per-product JSON-LD, no file writes ---
+if (jsonldMode) {
+  let ok = 0;
+  let fail = 0;
+  for (const product of registry.products) {
+    if (onlyId && product.id !== onlyId) continue;
+    const json = buildJsonLd(product, registry);
+    const str = JSON.stringify(json);
+    try {
+      JSON.parse(str);
+      ok++;
+      console.log(`✓ ${product.id}`);
+      console.log(str);
+      console.log('');
+    } catch (e) {
+      fail++;
+      console.error(`✗ ${product.id}: ${e.message}`);
+    }
+  }
+  console.log(`\nJSON-LD dry-run: ${ok} ok, ${fail} fail${dryRun ? ' (dry-run)' : ''}`);
+  process.exit(fail === 0 ? 0 : 1);
+}
+
 const template = readFileSync(EDGE_TEMPLATE, 'utf8');
 
 let written = 0;
@@ -418,4 +450,59 @@ function slugId(title) {
 
 function rel(p) {
   return p.replace(FLEET_ROOT + '/', '');
+}
+
+// --- JSON-LD generation ---
+
+/**
+ * Build a per-product JSON-LD @graph with the fleet Organization publisher
+ * and a SoftwareApplication or WebSite node. Uses the shared productOrigin
+ * preference chain from lib/registry.mjs.
+ *
+ * @param {object} product - registry product entry
+ * @param {object} registry - full registry (for fleet publisher lookup)
+ * @returns {{ '@context': string, '@graph': object[] }}
+ */
+function buildJsonLd(product, registry) {
+  const origin = productOrigin(product);
+  if (!origin) throw new Error(`Product ${product.id} has no url`);
+
+  const schemaType = product.schemaType || 'SoftwareApplication';
+  const productSameAs = Array.isArray(product.sameAs) ? product.sameAs : [];
+
+  const orgNode = {
+    '@type': 'Organization',
+    '@id': FLEET_ORG_ID,
+    name: FLEET_ORG_NAME,
+    url: FLEET_HUB_URL,
+    sameAs: [FLEET_HUB_URL, ...productSameAs],
+  };
+
+  const appNode = {
+    '@type': schemaType,
+    '@id': `${origin}/#app`,
+    name: product.name,
+    url: origin,
+    description: product.summary,
+    publisher: { '@id': FLEET_ORG_ID },
+  };
+
+  if (product.applicationCategory) {
+    appNode.applicationCategory = product.applicationCategory;
+  }
+  if (product.offers) {
+    appNode.offers = product.offers;
+  }
+  if (schemaType === 'WebSite' && product.url) {
+    appNode.potentialAction = {
+      '@type': 'SearchAction',
+      target: `${origin}/?q={search_term_string}`,
+      'query-input': 'required name=search_term_string',
+    };
+  }
+
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [orgNode, appNode],
+  };
 }

@@ -26,14 +26,14 @@ import {
 } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import {
+  loadRegistry,
+  productOriginRequired as productOrigin,
+} from './lib/registry.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const FLEET_ROOT = resolve(__dirname, '../..');
 const CONFIG_PATH = join(FLEET_ROOT, 'fleet-ops/config/indexnow.json');
-const REGISTRY_PATH = join(
-  FLEET_ROOT,
-  'fleet-ops/config/agent-surfaces-registry.json'
-);
 const STATE_PATH = join(FLEET_ROOT, 'fleet-ops/config/indexnow-state.json');
 
 const DEFAULT_TIMEOUT_MS = 20_000;
@@ -93,10 +93,6 @@ function saveConfig(cfg) {
   writeFileSync(CONFIG_PATH, `${JSON.stringify(cfg, null, 2)}\n`, 'utf8');
 }
 
-function loadRegistry() {
-  return JSON.parse(readFileSync(REGISTRY_PATH, 'utf8'));
-}
-
 /** @returns {{ version: number, submitted: Record<string, { etag?: string, lastOkAt?: string, urls: Record<string, string> }> }} */
 function loadState() {
   if (!existsSync(STATE_PATH)) {
@@ -112,20 +108,6 @@ function loadState() {
 function saveState(state) {
   mkdirSync(dirname(STATE_PATH), { recursive: true });
   writeFileSync(STATE_PATH, `${JSON.stringify(state, null, 2)}\n`, 'utf8');
-}
-
-/**
- * Prefer explicit indexNowOrigin / marketingOrigin, else product.url.
- * Registry is the source of truth (no hardcoding pace → heypace here).
- */
-function productOrigin(product) {
-  const url =
-    product.indexNowOrigin ||
-    product.marketingOrigin ||
-    product.canonicalOrigin ||
-    product.url;
-  if (!url) throw new Error(`Product ${product.id} has no url`);
-  return String(url).replace(/\/$/, '');
 }
 
 function hostOf(origin) {

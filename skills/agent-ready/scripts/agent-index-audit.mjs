@@ -24,14 +24,14 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import {
+  loadRegistry,
+  productOrigin as registryProductOrigin,
+} from '../../../scripts/lib/registry.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 // scripts → agent-ready → skills → fleet-ops → fleet root
 const FLEET_ROOT = resolve(__dirname, '../../../..');
-const REGISTRY_PATH = join(
-  FLEET_ROOT,
-  'fleet-ops/config/agent-surfaces-registry.json'
-);
 const INDEXNOW_CONFIG_PATH = join(FLEET_ROOT, 'fleet-ops/config/indexnow.json');
 
 const UA = 'fleet-agent-index-audit/2.0 (+https://sassmaker.com)';
@@ -124,14 +124,6 @@ Targets: fleet-ops/config/agent-surfaces-registry.json
 `);
 }
 
-function loadRegistry() {
-  if (!existsSync(REGISTRY_PATH)) {
-    console.error(`Missing agent-surfaces registry at ${REGISTRY_PATH}`);
-    process.exit(2);
-  }
-  return JSON.parse(readFileSync(REGISTRY_PATH, 'utf8'));
-}
-
 function loadIndexNowKey() {
   try {
     if (!existsSync(INDEXNOW_CONFIG_PATH)) return null;
@@ -142,14 +134,13 @@ function loadIndexNowKey() {
   }
 }
 
-/** Same origin-preference order as indexnow-submit.mjs — keep in sync. */
+/**
+ * Origin (protocol//host) for a product, via the shared registry preference
+ * chain. Returns null when the product has no URL.
+ */
 function productOrigin(product) {
-  const url =
-    product.indexNowOrigin ||
-    product.marketingOrigin ||
-    product.canonicalOrigin ||
-    product.url;
-  return url ? originOf(String(url)) : null;
+  const url = registryProductOrigin(product);
+  return url ? originOf(url) : null;
 }
 
 function resolveTargets(args) {
