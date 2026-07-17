@@ -165,9 +165,12 @@ audit_page() {
   fi
 
   # --- H1 ---
+  # Multi-line <h1>…</h1> (common with nested spans) is one heading; use
+  # perl multiline match so we don't double-count open tags only.
   local h1_count h1_text
-  h1_count=$(count_tag "$html" "h1")
-  h1_text=$(echo "$html" | grep -oiE '<h1[^>]*>.*</h1>' | head -1 | sed 's/<[^>]*>//g' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+  h1_count=$(echo "$html" | perl -0777 -ne 'print scalar(() = /<h1\b[^>]*>.*?<\/h1>/gis)')
+  h1_count=${h1_count:-0}
+  h1_text=$(echo "$html" | perl -0777 -ne 'if (/<h1\b[^>]*>(.*?)<\/h1>/is) { $_=$1; s/<[^>]+>/ /g; s/\s+/ /g; s/^\s+|\s+$//g; print; exit }')
   if [[ $h1_count -eq 0 ]]; then
     echo "  h1                 FAIL   no h1 found"; ((FAIL++))
   elif [[ $h1_count -gt 1 ]]; then
@@ -213,11 +216,16 @@ audit_page() {
   fi
 
   # --- SSR leak ---
-  # Strip <script> and <style> blocks first — inline JS legitimately uses `${}`
-  # template literals. Real SSR leaks appear in visible HTML / href attributes.
-  # Use perl for non-greedy multi-line matching (sed can't do this reliably).
+  # Strip <script>, <style>, and <code>/<pre> blocks — docs and marketing pages
+  # legitimately show `${}` / `{{` in code samples. Real SSR leaks appear in
+  # visible HTML / href attributes outside those contexts.
   local html_no_script
-  html_no_script=$(echo "$html" | perl -0777 -pe 's/<script[^>]*>.*?<\/script>//gs; s/<style[^>]*>.*?<\/style>//gs')
+  html_no_script=$(echo "$html" | perl -0777 -pe '
+    s/<script\b[^>]*>.*?<\/script>//gis;
+    s/<style\b[^>]*>.*?<\/style>//gis;
+    s/<code\b[^>]*>.*?<\/code>//gis;
+    s/<pre\b[^>]*>.*?<\/pre>//gis;
+  ')
   local leak_count
   leak_count=$(echo "$html_no_script" | grep -cE '\$\{|{{|<%=' || true)
   if [[ $leak_count -gt 0 ]]; then

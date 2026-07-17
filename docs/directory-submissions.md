@@ -20,6 +20,10 @@ Sources scanned:
 **113 submit URLs probed** with Playwright for CAPTCHA / Cloudflare / auth / multi-field free forms.  
 **17 looked automatable** on first pass; most of the rest are CAPTCHA, OAuth, paid, dead, or login-only.
 
+**Pair totals (source of truth: `config/directory-submissions/status.json`):**
+842 unique product×directory pairs · 116 `submitted_likely` · 623 `submitted_unknown` ·
+21 blocked · 24 no-form · 58 error · 80 dirs touched.
+
 ## Parallel runner
 
 ```bash
@@ -31,15 +35,20 @@ cd fleet-ops
 
 Skips directories already at 23/23. Append-only log uses `fcntl` so workers don't corrupt `log.jsonl`.
 
-## Confirmed full-set sprays (23/23)
+## Confirmed editorial queues (status.json)
 
-| Directory | Evidence | Notes |
+Five directories recorded confirmed fills (counts are product rows, not all full 23/23):
+
+| Directory | Count | Notes |
 |---|---|---|
-| **Insidr.ai** | Elementor success toast | Editorial review |
-| **Paggu** | `unapproved=` / `#comment-` | Moderation queue |
-| **TheStartupInc** | CF7 form + “we will review” | Parallel worker |
+| **Paggu** | 23 | Full set; moderation queue |
+| **TheStartupInc** | 23 | Full set; CF7 “we will review” |
+| **TheStartupInc (alt)** | 23 | Second form endpoint |
+| **Insidr.ai** | 22 | Elementor toast; missing 1 product |
+| **TechPluto** | 22 | Editorial; missing 1 product |
 
-Every product in `products.json` on those three.
+Do not claim “3 confirmed directories” or “5 full-set 23/23” — use the table above.
+`status.json` is canonical; this doc is a human summary.
 
 ## Filled / attempted (no success toast)
 

@@ -15,14 +15,20 @@ Directory spray alone does **not** achieve either goal.
 
 Spam directories and undeployed `public/llms.txt` files do not count.
 
-## Current baseline (2026-07-17)
+## Current baseline (2026-07-17, reconciled with audit + status.json)
 
-**Live GEO (agent-index-audit):** ~4/26 S-tier (RolePatch, DRank, SaaS Maker marketing, TrueHire).  
-**Surface matrix:** 5 products at 5/5 paths; many others SPA-shell or 404 until deploy.
+**Live GEO:** independent audit found **24/24** hosts serving llms.txt / api/ai / index.md
+with matching schemas; IndexNow keys **23/23** live. Agent-index-audit S-tier grades
+were optimistic (tool ignores CF managed robots that block GPTBot/ClaudeBot on 13 hosts).
 
-**On-page SEO (seo-audit sample):** RolePatch/DRank critical checks pass; docs missing OG image + JSON-LD on live.
+**On-page SEO:** RolePatch/DRank critical checks pass; highsignal + rolepatch had
+site-wide canonical collapse (fixing in flight); SVG OG images still need PNG on
+several products.
 
-**Directories:** 842 product×dir pairs attempted; 3 confirmed full-set editorial queues (Paggu, TheStartupInc×2); most free fills are low-authority. High-DA walls remain human-kick.
+**Directories (`status.json` truth):** 842 unique pairs · 116 `submitted_likely` ·
+623 `submitted_unknown` · 5 confirmed queues (Paggu 23, TheStartupInc 23+23,
+Insidr 22, TechPluto 22). Not “3 confirmed” / not all 23/23. High-DA walls remain
+human-kick. Spray ≠ DR.
 
 ## Workstream A — AI citations (GEO)
 

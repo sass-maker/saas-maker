@@ -28,18 +28,26 @@ node fleet-ops/scripts/indexnow-submit.mjs
 node fleet-ops/scripts/indexnow-submit.mjs --id rolepatch
 node fleet-ops/scripts/indexnow-submit.mjs --host highsignal.app --max 80
 node fleet-ops/scripts/indexnow-submit.mjs --url https://codevetter.com/
+
+# Robustness
+node fleet-ops/scripts/indexnow-submit.mjs --force          # ignore state; resubmit all
+node fleet-ops/scripts/indexnow-submit.mjs --reset-state    # clear state file
 ```
 
 Config: `fleet-ops/config/indexnow.json`  
-Products: `fleet-ops/config/agent-surfaces-registry.json`
+State (changed-only): `fleet-ops/config/indexnow-state.json`  
+Products: `fleet-ops/config/agent-surfaces-registry.json`  
+Origins: `product.indexNowOrigin` || `marketingOrigin` || `url` (no hardcoded hosts in the script).
 
 ## How it works
 
 1. Loads IndexNow `key` from config.
 2. Per origin: discovers sitemap via `robots.txt` / `/sitemap.xml` / `/sitemap-index.xml`.
 3. Skips HTML SPA shells pretending to be sitemaps.
-4. Always includes `/`, `/llms.txt`, `/llms-full.txt`, `/index.md`, `/api/ai`.
-5. POSTs batches to `https://api.indexnow.org/indexnow`.
+4. Always includes `/`, `/llms.txt`, `/index.md`, `/api/ai` (llms-full only if in sitemap).
+5. Filters already-submitted URLs via state file (use `--force` to resubmit).
+6. POSTs batches with **timeout + retry/backoff**; one host failure does not abort others.
+7. `--max N` requires a positive integer (missing/invalid value errors out).
 
 ## Engines covered
 

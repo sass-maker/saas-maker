@@ -5,7 +5,7 @@
       "id": "codevetter",
       "name": "CodeVetter",
       "url": "https://codevetter.com",
-      "summary": "Desktop-first AI code review workbench for agent-generated code. Local SQLite, Tauri shell, evidence-backed review \u2014 your repo never hits a central server.",
+      "summary": "Desktop-first AI code review workbench for agent-generated code. Local SQLite, Tauri shell, evidence-backed review — your repo never hits a central server.",
       "publicDir": "codevetter/apps/landing-page-astro/public",
       "stack": "astro-static",
       "productLinks": [
@@ -25,7 +25,7 @@
           "description": "Local-first data handling"
         }
       ],
-      "indexMd": "# CodeVetter\n\nDesktop-first AI code review for agent-generated code.\n\n## What it is\n\n- Local SQLite storage and Tauri desktop shell\n- Evidence-backed review loops\n- Optional Claude, Codex, or Gemini CLI backends\n- Open source (ISC)\n\n## Who it's for\n\nEngineers shipping AI-generated PRs who want review before merge \u2014 without uploading the repo to a central server.\n\n## Agent entrypoints\n\n- https://codevetter.com/llms.txt\n- https://codevetter.com/api/ai\n- https://codevetter.com/index.md\n"
+      "indexMd": "# CodeVetter\n\nDesktop-first AI code review for agent-generated code.\n\n## What it is\n\n- Local SQLite storage and Tauri desktop shell\n- Evidence-backed review loops\n- Optional Claude, Codex, or Gemini CLI backends\n- Open source (ISC)\n\n## Who it's for\n\nEngineers shipping AI-generated PRs who want review before merge — without uploading the repo to a central server.\n\n## Agent entrypoints\n\n- https://codevetter.com/llms.txt\n- https://codevetter.com/api/ai\n- https://codevetter.com/index.md\n"
     },
     {
       "id": "rolepatch",
@@ -52,13 +52,13 @@
           "description": "Public tools"
         }
       ],
-      "indexMd": "# RolePatch\n\nAI-powered resume tailoring and job-application assistant.\n\n## What it is\n\n- Score resume fit against a job description\n- Rewrite bullets for the role\n- Cover letters, company research, STAR prep\n\n## Who it's for\n\nJob seekers who want reviewed, role-specific application materials \u2014 not generic AI fluff.\n\n## Agent entrypoints\n\n- https://rolepatch.com/llms.txt\n- https://rolepatch.com/api/ai\n- https://rolepatch.com/index.md\n\nDashboard routes require auth and are not agent-indexed.\n"
+      "indexMd": "# RolePatch\n\nAI-powered resume tailoring and job-application assistant.\n\n## What it is\n\n- Score resume fit against a job description\n- Rewrite bullets for the role\n- Cover letters, company research, STAR prep\n\n## Who it's for\n\nJob seekers who want reviewed, role-specific application materials — not generic AI fluff.\n\n## Agent entrypoints\n\n- https://rolepatch.com/llms.txt\n- https://rolepatch.com/api/ai\n- https://rolepatch.com/index.md\n\nDashboard routes require auth and are not agent-indexed.\n"
     },
     {
       "id": "high-signal",
       "name": "High Signal",
       "url": "https://highsignal.app",
-      "summary": "Daily synthesized brief on technology, startups, and finance \u2014 five sections with inline hit-rates, no signup required.",
+      "summary": "Daily synthesized brief on technology, startups, and finance — five sections with inline hit-rates, no signup required.",
       "publicDir": "high-signal/apps/web/public",
       "stack": "opennext",
       "worker": "high-signal/apps/web/worker.mjs",
@@ -107,13 +107,13 @@
           "description": "Agent index"
         }
       ],
-      "indexMd": "# Karte\n\nLink-in-bio registry for humans and AI agents.\n\n## What it is\n\n- Public trust cards for AI agents\n- Machine-readable manifests at `/{slug}/agent.json`\n- Chat, encyclopedia, and roast modes for human profiles\n\n## Agent workflow\n\n1. Read https://karte.cc/skill.md\n2. Install skill: `curl -fsSL https://karte.cc/skills/karte/install.sh | bash`\n3. Auth via email code \u2192 `kk_` API key\n4. Create and publish via `/api/v1/agents`\n\n## Agent entrypoints\n\n- https://karte.cc/llms.txt\n- https://karte.cc/skill.md\n- https://karte.cc/api/ai\n- https://karte.cc/index.md\n- https://karte.cc/.well-known/skills/index.json\n"
+      "indexMd": "# Karte\n\nLink-in-bio registry for humans and AI agents.\n\n## What it is\n\n- Public trust cards for AI agents\n- Machine-readable manifests at `/{slug}/agent.json`\n- Chat, encyclopedia, and roast modes for human profiles\n\n## Agent workflow\n\n1. Read https://karte.cc/skill.md\n2. Install skill: `curl -fsSL https://karte.cc/skills/karte/install.sh | bash`\n3. Auth via email code → `kk_` API key\n4. Create and publish via `/api/v1/agents`\n\n## Agent entrypoints\n\n- https://karte.cc/llms.txt\n- https://karte.cc/skill.md\n- https://karte.cc/api/ai\n- https://karte.cc/index.md\n- https://karte.cc/.well-known/skills/index.json\n"
     },
     {
       "id": "significanthobbies",
       "name": "Significant Hobbies",
       "url": "https://significanthobbies.com",
-      "summary": "Life planner for private daily rituals and public living \u2014 hobbies, bucket lists, and side quests over time.",
+      "summary": "Life planner for private daily rituals and public living — hobbies, bucket lists, and side quests over time.",
       "publicDir": "significanthobbies/public",
       "stack": "opennext",
       "worker": "significanthobbies/worker.mjs",
@@ -135,7 +135,7 @@
       "id": "materia",
       "name": "Materia",
       "url": "https://materia.significanthobbies.com",
-      "summary": "Evidence-graded reference for remedies organized by body part \u2014 body \u2192 condition \u2192 remedy \u2192 compound \u2192 study, with citations.",
+      "summary": "Evidence-graded reference for remedies organized by body part — body → condition → remedy → compound → study, with citations.",
       "publicDir": "materia/public",
       "stack": "astro-static",
       "productLinks": [
@@ -160,13 +160,13 @@
           "description": "How grades are assigned"
         }
       ],
-      "indexMd": "# Materia\n\nEvidence-graded body, supplement, herb, and drug reference.\n\n## What it is\n\n- Layered body explorer into a knowledge graph\n- Body part \u2192 condition \u2192 remedy \u2192 compound \u2192 study\n- Every remedy evidence-graded and study-cited\n- Ad-free; not medical advice\n\n## Agent entrypoints\n\n- https://materia.significanthobbies.com/llms.txt\n- https://materia.significanthobbies.com/api/ai\n- https://materia.significanthobbies.com/index.md\n\nPrefer content collection pages and methodology over inventing medical claims.\n"
+      "indexMd": "# Materia\n\nEvidence-graded body, supplement, herb, and drug reference.\n\n## What it is\n\n- Layered body explorer into a knowledge graph\n- Body part → condition → remedy → compound → study\n- Every remedy evidence-graded and study-cited\n- Ad-free; not medical advice\n\n## Agent entrypoints\n\n- https://materia.significanthobbies.com/llms.txt\n- https://materia.significanthobbies.com/api/ai\n- https://materia.significanthobbies.com/index.md\n\nPrefer content collection pages and methodology over inventing medical claims.\n"
     },
     {
       "id": "saas-maker-showcase",
       "name": "Foundry (SaaS Maker)",
       "url": "https://sassmaker.com",
-      "summary": "Sarthak Agrawal's personal product fleet showcase \u2014 RolePatch, High Signal, CodeVetter, Pace, PostTrainLLM, Karte, Significant Hobbies, and 15+ other shipped apps, plus the open-source Foundry operating layer on Cloudflare.",
+      "summary": "Sarthak Agrawal's personal product fleet showcase — RolePatch, High Signal, CodeVetter, Pace, PostTrainLLM, Karte, Significant Hobbies, and 15+ other shipped apps, plus the open-source Foundry operating layer on Cloudflare.",
       "publicDir": "saas-maker/apps/showcase/public",
       "stack": "astro-static",
       "productLinks": [
@@ -188,7 +188,7 @@
         {
           "title": "CodeVetter",
           "url": "https://codevetter.com",
-          "description": "Desktop-first AI code review workbench for agent-generated code. Local SQLite, Tauri shell, evidence-backed review \u2014 your repo never hits a central server."
+          "description": "Desktop-first AI code review workbench for agent-generated code. Local SQLite, Tauri shell, evidence-backed review — your repo never hits a central server."
         },
         {
           "title": "RolePatch",
@@ -198,7 +198,7 @@
         {
           "title": "High Signal",
           "url": "https://highsignal.app",
-          "description": "Daily synthesized brief on technology, startups, and finance \u2014 five sections with inline hit-rates, no signup required."
+          "description": "Daily synthesized brief on technology, startups, and finance — five sections with inline hit-rates, no signup required."
         },
         {
           "title": "Karte",
@@ -208,12 +208,12 @@
         {
           "title": "Significant Hobbies",
           "url": "https://significanthobbies.com",
-          "description": "Life planner for private daily rituals and public living \u2014 hobbies, bucket lists, and side quests over time."
+          "description": "Life planner for private daily rituals and public living — hobbies, bucket lists, and side quests over time."
         },
         {
           "title": "Materia",
           "url": "https://materia.significanthobbies.com",
-          "description": "Evidence-graded reference for remedies organized by body part \u2014 body \u2192 condition \u2192 remedy \u2192 compound \u2192 study, with citations."
+          "description": "Evidence-graded reference for remedies organized by body part — body → condition → remedy → compound → study, with citations."
         },
         {
           "title": "SaaS Maker Docs",
@@ -223,12 +223,12 @@
         {
           "title": "Starboard",
           "url": "https://starboard.codevetter.com",
-          "description": "GitHub stars organizer with semantic search \u2014 sub-product of CodeVetter for repo intelligence."
+          "description": "GitHub stars organizer with semantic search — sub-product of CodeVetter for repo intelligence."
         },
         {
           "title": "EverythingRated",
           "url": "https://ratings.highsignal.app",
-          "description": "Multi-axis rating tool for structured directories and catalogs \u2014 decisions with explicit trade-offs, not star averages."
+          "description": "Multi-axis rating tool for structured directories and catalogs — decisions with explicit trade-offs, not star averages."
         },
         {
           "title": "TrueHire",
@@ -238,12 +238,12 @@
         {
           "title": "researchPapers",
           "url": "https://papers.highsignal.app",
-          "description": "Academic paper platform over a high-citation OpenAlex CS corpus \u2014 search, analytics, and RAG demo (~488k papers)."
+          "description": "Academic paper platform over a high-citation OpenAlex CS corpus — search, analytics, and RAG demo (~488k papers)."
         },
         {
           "title": "PostTrainLLM",
           "url": "https://posttrainllm.com",
-          "description": "Mac-local LLM specialist factory \u2014 post-training and runtime that fits on one Mac, plus WebGPU playground."
+          "description": "Mac-local LLM specialist factory — post-training and runtime that fits on one Mac, plus WebGPU playground."
         },
         {
           "title": "Pace",
@@ -273,12 +273,12 @@
         {
           "title": "Reader",
           "url": "https://read.significanthobbies.com",
-          "description": "Research library: capture, annotate, and AI-chat over your reading \u2014 private by default."
+          "description": "Research library: capture, annotate, and AI-chat over your reading — private by default."
         },
         {
           "title": "Email Manager",
           "url": "https://mail.sassmaker.com",
-          "description": "Gmail workspace with local semantic search \u2014 private email tooling."
+          "description": "Gmail workspace with local semantic search — private email tooling."
         },
         {
           "title": "AI Gateway",
@@ -296,7 +296,7 @@
           "description": "Distributional Lighthouse / PageSpeed audits with grounded performance analysis across the fleet."
         }
       ],
-      "indexMd": "# Foundry (SaaS Maker)\n\nPersonal product fleet by Sarthak Agrawal \u2014 shipped apps plus the open-source operating layer (CLI, cockpit, deploy tooling) on Cloudflare.\n\n## What it is\n\n- Static showcase at https://sassmaker.com\n- Each product on its own custom domain\n- Agent-readable surfaces: `/llms.txt`, `/api/ai`, `/index.md` on every public origin\n\n## Public products (canonical URLs)\n\n- **CodeVetter** \u2014 https://codevetter.com \u2014 Desktop-first AI code review workbench for agent-generated code. Local SQLite, Tauri shell, evidence-backed review \u2014 your repo never hits a central server.\n- **RolePatch** \u2014 https://rolepatch.com \u2014 AI-powered resume tailoring. Score fit against a job description, rewrite bullets for the role, and prep interviews.\n- **High Signal** \u2014 https://highsignal.app \u2014 Daily synthesized brief on technology, startups, and finance \u2014 five sections with inline hit-rates, no signup required.\n- **Karte** \u2014 https://karte.cc \u2014 Link-in-bio registry for humans and AI agents. Publish trust cards with public manifests at /{slug}/agent.json.\n- **Significant Hobbies** \u2014 https://significanthobbies.com \u2014 Life planner for private daily rituals and public living \u2014 hobbies, bucket lists, and side quests over time.\n- **Materia** \u2014 https://materia.significanthobbies.com \u2014 Evidence-graded reference for remedies organized by body part \u2014 body \u2192 condition \u2192 remedy \u2192 compound \u2192 study, with citations.\n- **SaaS Maker Docs** \u2014 https://docs.sassmaker.com \u2014 Drop-in backend services for SaaS apps. API docs for Foundry (feedback, waitlist, testimonials, and more).\n- **Starboard** \u2014 https://starboard.codevetter.com \u2014 GitHub stars organizer with semantic search \u2014 sub-product of CodeVetter for repo intelligence.\n- **EverythingRated** \u2014 https://ratings.highsignal.app \u2014 Multi-axis rating tool for structured directories and catalogs \u2014 decisions with explicit trade-offs, not star averages.\n- **TrueHire** \u2014 https://truehire.rolepatch.com \u2014 Hiring-side companion under RolePatch for evaluating candidates with structured role fit.\n- **researchPapers** \u2014 https://papers.highsignal.app \u2014 Academic paper platform over a high-citation OpenAlex CS corpus \u2014 search, analytics, and RAG demo (~488k papers).\n- **PostTrainLLM** \u2014 https://posttrainllm.com \u2014 Mac-local LLM specialist factory \u2014 post-training and runtime that fits on one Mac, plus WebGPU playground.\n- **Pace** \u2014 https://pace-6xg.pages.dev \u2014 On-device Mac voice agent that reads your screen and acts with local context.\n- **DRank** \u2014 https://domains.sassmaker.com \u2014 Ahrefs Domain Rating tracker feeding High Signal /domains and fleet domain marketing work.\n- **LoopTV** \u2014 https://tv.significanthobbies.com \u2014 TV-style random video player for lean-back browsing of curated channels.\n- **MAL Explorer** \u2014 https://anime.significanthobbies.com \u2014 Anime and manga discovery with multi-axis filtering and watchlists.\n- **Chess Coach** \u2014 https://chess.significanthobbies.com \u2014 AI-coached chess game for practice with coaching feedback.\n- **Reader** \u2014 https://read.significanthobbies.com \u2014 Research library: capture, annotate, and AI-chat over your reading \u2014 private by default.\n- **Email Manager** \u2014 https://mail.sassmaker.com \u2014 Gmail workspace with local semantic search \u2014 private email tooling.\n- **AI Gateway** \u2014 https://ai-gateway.sassmaker.com \u2014 OpenAI-compatible LLM gateway fronting free-tier models across multiple providers.\n- **SWE Interview Prep** \u2014 https://learn.significanthobbies.com \u2014 SWE learning OS with FSRS spaced repetition, drills, and feedback.\n- **psi-swarm** \u2014 https://performance.sassmaker.com \u2014 Distributional Lighthouse / PageSpeed audits with grounded performance analysis across the fleet.\n\n## Focus products (active marketing)\n\n- **Pace** \u2014 https://heypace.app / https://pace-6xg.pages.dev \u2014 Mac app for pacing work\n- **CodeVetter** \u2014 https://codevetter.com \u2014 desktop AI code review\n- **PostTrainLLM** \u2014 https://posttrainllm.com \u2014 train/run small local models\n\n## Agent entrypoints\n\n- https://sassmaker.com/llms.txt\n- https://sassmaker.com/llms-full.txt\n- https://sassmaker.com/api/ai\n- https://sassmaker.com/index.md\n- https://docs.sassmaker.com/llms.txt\n\n## Who it is for\n\nBuilders and agents that need a single source of truth for Sarthak's public product surface area \u2014 not generic AI fluff.\n"
+      "indexMd": "# Foundry (SaaS Maker)\n\nPersonal product fleet by Sarthak Agrawal — shipped apps plus the open-source operating layer (CLI, cockpit, deploy tooling) on Cloudflare.\n\n## What it is\n\n- Static showcase at https://sassmaker.com\n- Each product on its own custom domain\n- Agent-readable surfaces: `/llms.txt`, `/api/ai`, `/index.md` on every public origin\n\n## Public products (canonical URLs)\n\n- **CodeVetter** — https://codevetter.com — Desktop-first AI code review workbench for agent-generated code. Local SQLite, Tauri shell, evidence-backed review — your repo never hits a central server.\n- **RolePatch** — https://rolepatch.com — AI-powered resume tailoring. Score fit against a job description, rewrite bullets for the role, and prep interviews.\n- **High Signal** — https://highsignal.app — Daily synthesized brief on technology, startups, and finance — five sections with inline hit-rates, no signup required.\n- **Karte** — https://karte.cc — Link-in-bio registry for humans and AI agents. Publish trust cards with public manifests at /{slug}/agent.json.\n- **Significant Hobbies** — https://significanthobbies.com — Life planner for private daily rituals and public living — hobbies, bucket lists, and side quests over time.\n- **Materia** — https://materia.significanthobbies.com — Evidence-graded reference for remedies organized by body part — body → condition → remedy → compound → study, with citations.\n- **SaaS Maker Docs** — https://docs.sassmaker.com — Drop-in backend services for SaaS apps. API docs for Foundry (feedback, waitlist, testimonials, and more).\n- **Starboard** — https://starboard.codevetter.com — GitHub stars organizer with semantic search — sub-product of CodeVetter for repo intelligence.\n- **EverythingRated** — https://ratings.highsignal.app — Multi-axis rating tool for structured directories and catalogs — decisions with explicit trade-offs, not star averages.\n- **TrueHire** — https://truehire.rolepatch.com — Hiring-side companion under RolePatch for evaluating candidates with structured role fit.\n- **researchPapers** — https://papers.highsignal.app — Academic paper platform over a high-citation OpenAlex CS corpus — search, analytics, and RAG demo (~488k papers).\n- **PostTrainLLM** — https://posttrainllm.com — Mac-local LLM specialist factory — post-training and runtime that fits on one Mac, plus WebGPU playground.\n- **Pace** — https://pace-6xg.pages.dev — On-device Mac voice agent that reads your screen and acts with local context.\n- **DRank** — https://domains.sassmaker.com — Ahrefs Domain Rating tracker feeding High Signal /domains and fleet domain marketing work.\n- **LoopTV** — https://tv.significanthobbies.com — TV-style random video player for lean-back browsing of curated channels.\n- **MAL Explorer** — https://anime.significanthobbies.com — Anime and manga discovery with multi-axis filtering and watchlists.\n- **Chess Coach** — https://chess.significanthobbies.com — AI-coached chess game for practice with coaching feedback.\n- **Reader** — https://read.significanthobbies.com — Research library: capture, annotate, and AI-chat over your reading — private by default.\n- **Email Manager** — https://mail.sassmaker.com — Gmail workspace with local semantic search — private email tooling.\n- **AI Gateway** — https://ai-gateway.sassmaker.com — OpenAI-compatible LLM gateway fronting free-tier models across multiple providers.\n- **SWE Interview Prep** — https://learn.significanthobbies.com — SWE learning OS with FSRS spaced repetition, drills, and feedback.\n- **psi-swarm** — https://performance.sassmaker.com — Distributional Lighthouse / PageSpeed audits with grounded performance analysis across the fleet.\n\n## Focus products (active marketing)\n\n- **Pace** — https://heypace.app / https://pace-6xg.pages.dev — Mac app for pacing work\n- **CodeVetter** — https://codevetter.com — desktop AI code review\n- **PostTrainLLM** — https://posttrainllm.com — train/run small local models\n\n## Agent entrypoints\n\n- https://sassmaker.com/llms.txt\n- https://sassmaker.com/llms-full.txt\n- https://sassmaker.com/api/ai\n- https://sassmaker.com/index.md\n- https://docs.sassmaker.com/llms.txt\n\n## Who it is for\n\nBuilders and agents that need a single source of truth for Sarthak's public product surface area — not generic AI fluff.\n"
     },
     {
       "id": "saas-maker-docs",
@@ -324,7 +324,7 @@
       "id": "starboard",
       "name": "Starboard",
       "url": "https://starboard.codevetter.com",
-      "summary": "GitHub stars organizer with semantic search \u2014 sub-product of CodeVetter for repo intelligence.",
+      "summary": "GitHub stars organizer with semantic search — sub-product of CodeVetter for repo intelligence.",
       "publicDir": "starboard/public",
       "stack": "opennext",
       "worker": "starboard/worker.mjs",
@@ -346,7 +346,7 @@
       "id": "everythingrated",
       "name": "EverythingRated",
       "url": "https://ratings.highsignal.app",
-      "summary": "Multi-axis rating tool for structured directories and catalogs \u2014 decisions with explicit trade-offs, not star averages.",
+      "summary": "Multi-axis rating tool for structured directories and catalogs — decisions with explicit trade-offs, not star averages.",
       "publicDir": "everythingrated/apps/web/public",
       "stack": "opennext",
       "worker": "everythingrated/apps/web/worker.mjs",
@@ -385,7 +385,7 @@
       "id": "research-papers",
       "name": "researchPapers",
       "url": "https://papers.highsignal.app",
-      "summary": "Academic paper platform over a high-citation OpenAlex CS corpus \u2014 search, analytics, and RAG demo (~488k papers).",
+      "summary": "Academic paper platform over a high-citation OpenAlex CS corpus — search, analytics, and RAG demo (~488k papers).",
       "publicDir": "research-papers/web/public",
       "stack": "astro-static",
       "productLinks": [
@@ -395,13 +395,13 @@
           "description": "Search and analytics"
         }
       ],
-      "indexMd": "# researchPapers\n\n~488k papers with semantic search, analytics, and paid answers demo.\n\n## What it is\n\n- High-citation OpenAlex Computer Science corpus\n- Semantic search and analytics\n- RAG-style Q&A paths\n\n## Agent entrypoints\n\n- https://papers.highsignal.app/llms.txt\n- https://papers.highsignal.app/api/ai\n- https://papers.highsignal.app/index.md\n\nDo not invent paper claims \u2014 cite corpus results.\n"
+      "indexMd": "# researchPapers\n\n~488k papers with semantic search, analytics, and paid answers demo.\n\n## What it is\n\n- High-citation OpenAlex Computer Science corpus\n- Semantic search and analytics\n- RAG-style Q&A paths\n\n## Agent entrypoints\n\n- https://papers.highsignal.app/llms.txt\n- https://papers.highsignal.app/api/ai\n- https://papers.highsignal.app/index.md\n\nDo not invent paper claims — cite corpus results.\n"
     },
     {
       "id": "posttrainllm",
       "name": "PostTrainLLM",
       "url": "https://posttrainllm.com",
-      "summary": "Mac-local LLM specialist factory \u2014 post-training and runtime that fits on one Mac, plus WebGPU playground.",
+      "summary": "Mac-local LLM specialist factory — post-training and runtime that fits on one Mac, plus WebGPU playground.",
       "publicDir": "posttrainllm/browser/public",
       "stack": "astro-static",
       "altPublicDirs": [
@@ -424,7 +424,7 @@
     {
       "id": "pace",
       "name": "Pace",
-      "url": "https://pace-6xg.pages.dev",
+      "url": "https://heypace.app",
       "summary": "On-device Mac voice agent that reads your screen and acts with local context.",
       "publicDir": "pace/website/public",
       "stack": "astro-static",
@@ -434,11 +434,13 @@
       "productLinks": [
         {
           "title": "Home",
-          "url": "https://pace-6xg.pages.dev/",
+          "url": "https://heypace.app/",
           "description": "Product landing"
         }
       ],
-      "indexMd": "# Pace\n\nOn-device Mac voice agent that reads your screen.\n\n## What it is\n\n- Local/on-device voice agent for macOS\n- Screen-aware assistance\n\n## Agent entrypoints\n\n- https://pace-6xg.pages.dev/llms.txt\n- https://pace-6xg.pages.dev/api/ai\n- https://pace-6xg.pages.dev/index.md\n"
+      "indexMd": "# Pace\n\nOn-device Mac voice agent that reads your screen.\n\n## What it is\n\n- Local/on-device voice agent for macOS\n- Screen-aware assistance\n\n## Agent entrypoints\n\n- https://heypace.app/llms.txt\n- https://heypace.app/api/ai\n- https://heypace.app/index.md\n",
+      "marketingOrigin": "https://heypace.app",
+      "indexNowOrigin": "https://heypace.app"
     },
     {
       "id": "drank",
@@ -510,7 +512,7 @@
       "id": "reader",
       "name": "Reader",
       "url": "https://read.significanthobbies.com",
-      "summary": "Research library: capture, annotate, and AI-chat over your reading \u2014 private by default.",
+      "summary": "Research library: capture, annotate, and AI-chat over your reading — private by default.",
       "publicDir": "reader/public",
       "stack": "spa-hono",
       "worker": "reader/src/worker.ts",
@@ -532,7 +534,7 @@
       "id": "email-manager",
       "name": "Email Manager",
       "url": "https://mail.sassmaker.com",
-      "summary": "Gmail workspace with local semantic search \u2014 private email tooling.",
+      "summary": "Gmail workspace with local semantic search — private email tooling.",
       "publicDir": "email-manager/public",
       "stack": "spa-hono",
       "worker": "email-manager/src/worker.ts",
