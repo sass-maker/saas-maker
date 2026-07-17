@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="SaaS Maker">
-  <rect width="512" height="512" fill="#0b1020"/>
-  <path fill="#f5c542" d="M256 64 L292 196 H428 L318 278 L354 412 L256 332 L158 412 L194 278 L84 196 H220 Z"/>
-  <circle cx="256" cy="256" r="52" fill="#0b1020"/>
-  <circle cx="256" cy="256" r="24" fill="#f5c542"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Foundry">
+  <rect width="512" height="512" fill="#0b0d12"/>
+  <rect x="56" y="56" width="400" height="400" rx="80" fill="#e07b3a"/>
+  <!-- Bold geometric F with slight right lean (workshop monogram) -->
+  <path fill="#1a0f06" d="
+    M152 128
+    H360
+    L348 188
+    H230
+    L222 232
+    H332
+    L320 288
+    H210
+    L190 384
+    H140
+    Z"/>
 </svg>

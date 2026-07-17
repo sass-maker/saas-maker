@@ -97,24 +97,21 @@ const ICONS = {
     `,
   },
   "saas-maker-showcase": {
-    bg: "#0b1020",
-    fg: "#f5c542",
-    note: "foundry spark / star forge",
+    bg: "#0b0d12",
+    fg: "#e07b3a",
+    note: "Foundry copper F (matches site brand-mark)",
     mark: `
-      <path fill="#f5c542" d="M16 4.5 18.2 12h7.8l-6.3 4.6 2.4 7.4L16 19.5 9.9 24l2.4-7.4L6 12h7.8z"/>
-      <circle cx="16" cy="16" r="3.2" fill="#0b1020"/>
-      <circle cx="16" cy="16" r="1.6" fill="#f5c542"/>
+      <rect x="4.5" y="4.5" width="23" height="23" rx="5.5" fill="#e07b3a"/>
+      <path fill="#1a0f06" d="M9.5 8.5h13l-.75 3.75H14.5l-.5 2.5h6.75l-.75 3.5H13.2L12 23.5H8.9z"/>
     `,
   },
   "saas-maker-docs": {
-    bg: "#0b1020",
-    fg: "#93c5fd",
-    note: "docs book + spark",
+    bg: "#0b0d12",
+    fg: "#e07b3a",
+    note: "Foundry copper F for docs",
     mark: `
-      <path fill="#93c5fd" d="M7 8.5c0-1.1.9-2 2-2h5.2c.4 0 .8.2 1 .5L16 8.2l.8-1.2c.2-.3.6-.5 1-.5H23c1.1 0 2 .9 2 2V23c0 .8-.7 1.5-1.5 1.5H17.2c-.4 0-.8-.2-1-.5L16 23.2l-.2.3c-.2.3-.6.5-1 .5H8.5C7.7 24 7 23.3 7 22.5z"/>
-      <path fill="#0b1020" d="M15.2 10.2v11.2h-5.5c-.3 0-.5-.2-.5-.5V10.2c0-.3.2-.5.5-.5h5.5z"/>
-      <path fill="#0b1020" d="M16.8 10.2h5.5c.3 0 .5.2.5.5v10.7c0 .3-.2.5-.5.5h-5.5z"/>
-      <path fill="#f5c542" d="M22.5 7.2l.55 1.7h1.8l-1.45 1.05.55 1.7-1.45-1.05-1.45 1.05.55-1.7-1.45-1.05h1.8z"/>
+      <rect x="4.5" y="4.5" width="23" height="23" rx="5.5" fill="#e07b3a"/>
+      <path fill="#1a0f06" d="M9.5 8.5h13l-.75 3.75H14.5l-.5 2.5h6.75l-.75 3.5H13.2L12 23.5H8.9z"/>
     `,
   },
   starboard: {

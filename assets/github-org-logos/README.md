@@ -11,7 +11,7 @@ Flat geometric avatars for **orgs you own** (sole admin). No glossy AI-icon look
 | [Significant-Hobbies](https://github.com/Significant-Hobbies) | Two rings + core | [profile](https://github.com/organizations/Significant-Hobbies/settings/profile) |
 | [HeyPace](https://github.com/HeyPace) | Four pace bars | [profile](https://github.com/organizations/HeyPace/settings/profile) |
 | [PostTrainLLM](https://github.com/PostTrainLLM) | Training curve | [profile](https://github.com/organizations/PostTrainLLM/settings/profile) |
-| [sass-maker](https://github.com/sass-maker) | Forge spark | [profile](https://github.com/organizations/sass-maker/settings/profile) |
+| [sass-maker](https://github.com/sass-maker) | Copper **F** (Foundry) | [profile](https://github.com/organizations/sass-maker/settings/profile) |
 
 ## Intentionally excluded
 

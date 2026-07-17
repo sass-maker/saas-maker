@@ -77,14 +77,27 @@ const ORGS = {
 </svg>`,
   },
   "sass-maker": {
-    name: "SaaS Maker / Foundry",
-    note: "Simple forge spark",
+    name: "Foundry",
+    note: "Copper F — matches sassmaker.com brand mark",
+    // Same copper tile + F as apps/showcase Nav.astro (.brand-mark)
+    // Geometric italic-leaning F paths so it stays crisp without fonts.
     svg: `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="SaaS Maker">
-  <rect width="512" height="512" fill="#0b1020"/>
-  <path fill="#f5c542" d="M256 64 L292 196 H428 L318 278 L354 412 L256 332 L158 412 L194 278 L84 196 H220 Z"/>
-  <circle cx="256" cy="256" r="52" fill="#0b1020"/>
-  <circle cx="256" cy="256" r="24" fill="#f5c542"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Foundry">
+  <rect width="512" height="512" fill="#0b0d12"/>
+  <rect x="56" y="56" width="400" height="400" rx="80" fill="#e07b3a"/>
+  <!-- Bold geometric F with slight right lean (workshop monogram) -->
+  <path fill="#1a0f06" d="
+    M152 128
+    H360
+    L348 188
+    H230
+    L222 232
+    H332
+    L320 288
+    H210
+    L190 384
+    H140
+    Z"/>
 </svg>`,
   },
 };
@@ -219,28 +232,32 @@ def posttrain(d, s):
     r2 = scale(18, s)
     d.ellipse([cx-r2, cy-r2, cx+r2, cy+r2], fill="#0d0e10")
 
-# --- sass-maker ---
+# --- sass-maker / Foundry copper F ---
 def foundry(d, s):
-    import math
-    cx, cy = 256, 256
-    # 5-point star outer
-    pts = []
-    for i in range(10):
-        ang = -math.pi/2 + i * math.pi/5
-        r = 192 if i % 2 == 0 else 78
-        pts.append((scale(cx + r*math.cos(ang), s), scale(cy + r*math.sin(ang), s)))
-    d.polygon(pts, fill="#f5c542")
-    r = scale(52, s)
-    d.ellipse([scale(cx,s)-r, scale(cy,s)-r, scale(cx,s)+r, scale(cy,s)+r], fill="#0b1020")
-    r = scale(24, s)
-    d.ellipse([scale(cx,s)-r, scale(cy,s)-r, scale(cx,s)+r, scale(cy,s)+r], fill="#f5c542")
+    d.rounded_rectangle(
+        [scale(56,s), scale(56,s), scale(456,s), scale(456,s)],
+        radius=scale(80,s),
+        fill="#e07b3a",
+    )
+    d.polygon([
+        (scale(152,s), scale(128,s)),
+        (scale(360,s), scale(128,s)),
+        (scale(348,s), scale(188,s)),
+        (scale(230,s), scale(188,s)),
+        (scale(222,s), scale(232,s)),
+        (scale(332,s), scale(232,s)),
+        (scale(320,s), scale(288,s)),
+        (scale(210,s), scale(288,s)),
+        (scale(190,s), scale(384,s)),
+        (scale(140,s), scale(384,s)),
+    ], fill="#1a0f06")
 
 save("Codevetter", codevetter, "#12141a")
 save("High-Signal-App", high_signal, "#0a0a0c")
 save("Significant-Hobbies", sh, "#047857")
 save("HeyPace", pace, "#000000")
 save("PostTrainLLM", posttrain, "#0d0e10")
-save("sass-maker", foundry, "#0b1020")
+save("sass-maker", foundry, "#0b0d12")
 print("done")
 `,
   "utf8",
@@ -265,7 +282,7 @@ Flat geometric avatars for **orgs you own** (sole admin). No glossy AI-icon look
 | [Significant-Hobbies](https://github.com/Significant-Hobbies) | Two rings + core | [profile](https://github.com/organizations/Significant-Hobbies/settings/profile) |
 | [HeyPace](https://github.com/HeyPace) | Four pace bars | [profile](https://github.com/organizations/HeyPace/settings/profile) |
 | [PostTrainLLM](https://github.com/PostTrainLLM) | Training curve | [profile](https://github.com/organizations/PostTrainLLM/settings/profile) |
-| [sass-maker](https://github.com/sass-maker) | Forge spark | [profile](https://github.com/organizations/sass-maker/settings/profile) |
+| [sass-maker](https://github.com/sass-maker) | Copper **F** (Foundry) | [profile](https://github.com/organizations/sass-maker/settings/profile) |
 
 ## Intentionally excluded
 
