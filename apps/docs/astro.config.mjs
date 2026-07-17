@@ -25,6 +25,21 @@ export default defineConfig({
       ],
       customCss: ['./src/styles/custom.css'],
       head: [
+        {
+          tag: 'meta',
+          attrs: { property: 'og:image', content: 'https://sassmaker.com/og-image.svg' },
+        },
+        {
+          tag: 'script',
+          attrs: { type: 'application/ld+json' },
+          content: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'TechArticle',
+            name: 'The Foundry Manual',
+            url: 'https://docs.sassmaker.com/',
+            description: 'Documentation for the SaaS Maker operating layer.',
+          }),
+        },
         { tag: 'link', attrs: { rel: 'preconnect', href: 'https://fonts.googleapis.com' } },
         {
           tag: 'link',
