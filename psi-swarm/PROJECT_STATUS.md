@@ -82,7 +82,8 @@ Internal (fleet):
 - **Local web controller (`web/`)** — Astro + React + Tailwind browser UI for
   the CLI `serve` agent, talking to it over CORS/SSE.
 - **Deployed web app** — static Astro build on the Cloudflare Pages project
-  `psi-swarm-web` (https://psi-swarm-web.pages.dev). Build:
+  `psi-swarm-web` (<https://performance.sassmaker.com>). The platform hostname
+  remains `psi-swarm-web.pages.dev`. Build:
   `pnpm --filter psi-swarm-web run build` → `web/dist`. Includes a static
   `/gallery` demo that works without the local agent.
 - **CI/CD** — `.github/workflows/deploy.yml` builds the web workspace with
