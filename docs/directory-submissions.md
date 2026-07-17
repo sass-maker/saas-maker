@@ -16,14 +16,26 @@ Sources scanned:
 **113 submit URLs probed** with Playwright for CAPTCHA / Cloudflare / auth / multi-field free forms.  
 **17 looked automatable** on first pass; most of the rest are CAPTCHA, OAuth, paid, dead, or login-only.
 
+## Parallel runner
+
+```bash
+cd fleet-ops
+# 8 processes = 8 Chromiums, one directory per worker
+.venv-directory-submit/bin/python scripts/directory-submit/spray_parallel.py --workers 8
+# optional: --dirs thestartupinc,dynamite  --force
+```
+
+Skips directories already at 23/23. Append-only log uses `fcntl` so workers don't corrupt `log.jsonl`.
+
 ## Confirmed full-set sprays (23/23)
 
 | Directory | Evidence | Notes |
 |---|---|---|
-| **Insidr.ai** | Elementor `"Your submission was successful."` | AI tools list; editorial review |
-| **Paggu** | `?unapproved=` / `#comment-` moderation URLs | Startup/SaaS comment queue |
+| **Insidr.ai** | Elementor success toast | Editorial review |
+| **Paggu** | `unapproved=` / `#comment-` | Moderation queue |
+| **TheStartupInc** | CF7 form + “we will review” | Parallel worker |
 
-Every product in `products.json` landed on both.
+Every product in `products.json` on those three.
 
 ## Filled / attempted (no success toast)
 
