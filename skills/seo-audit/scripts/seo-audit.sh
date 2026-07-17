@@ -306,21 +306,40 @@ audit_site() {
   if [[ -n "$sitemap_url" ]]; then
     local sitemap_xml sitemap_locs
     sitemap_xml=$(fetch "$sitemap_url")
-    # if it's a sitemap index, fetch the first child sitemap
+    # if it's a sitemap index, fetch ALL child sitemaps and merge their URLs
+    # (large sites split across many child sitemaps — checking only the first
+    # one causes false "not found in sitemap" warnings).
     if echo "$sitemap_xml" | grep -qi '<sitemapindex'; then
-      local first_child
-      first_child=$(echo "$sitemap_xml" | grep -oiE '<loc>[^<]*</loc>' | head -1 | sed 's/<loc>//;s/<\/loc>//')
-      [[ -n "$first_child" ]] && sitemap_xml=$(fetch "$first_child")
+      local child_urls
+      child_urls=$(echo "$sitemap_xml" | grep -oiE '<loc>[^<]*</loc>' | sed 's/<loc>//;s/<\/loc>//')
+      local merged=""
+      while IFS= read -r child; do
+        [[ -z "$child" ]] && continue
+        local child_xml
+        child_xml=$(fetch "$child") || true
+        merged+="$child_xml"$'\n'
+      done <<< "$child_urls"
+      sitemap_locs=$(echo "$merged" | grep -oiE '<loc>[^<]*</loc>' | sed 's/<loc>//;s/<\/loc>//' | sort -u)
+    else
+      sitemap_locs=$(echo "$sitemap_xml" | grep -oiE '<loc>[^<]*</loc>' | sed 's/<loc>//;s/<\/loc>//' | sort -u)
     fi
-    sitemap_locs=$(echo "$sitemap_xml" | grep -oiE '<loc>[^<]*</loc>' | sed 's/<loc>//;s/<\/loc>//' | sort -u)
 
     local missing=0
+    # Write normalized sitemap URLs to a temp file so grep -xF can handle
+    # very large sitemaps (100k+ URLs) without pipe-buffer truncation.
+    local tmp_locs
+    tmp_locs=$(mktemp)
+    echo "$sitemap_locs" | sed 's#/$##' > "$tmp_locs"
     for url in "${URLS[@]}"; do
-      if ! echo "$sitemap_locs" | grep -qF "$url"; then
+      # Normalize: strip trailing slash (except root) so https://site/ matches
+      # https://site in the sitemap and vice-versa.
+      local norm_url="${url%/}"
+      if ! grep -qxF "$norm_url" "$tmp_locs"; then
         echo "  sitemap-coverage   WARN   $url not found in sitemap"; ((WARN++))
         ((missing++))
       fi
     done
+    rm -f "$tmp_locs"
     if [[ $missing -eq 0 ]]; then
       echo "  sitemap-coverage   PASS   all audited URLs in sitemap"; ((PASS++))
     fi
