@@ -37,10 +37,11 @@ const publicProducts = productSites.products ?? [];
     <ul class="product-directory-grid">
       {publicProducts.map((p) => (
         <li>
-          <a href={p.url} class="product-link" rel="noopener">
+          <a href={`/p/${p.id}`} class="product-link" rel="noopener">
             <span class="product-link-name">{p.name}</span>
             <span class="product-link-host">{p.url.replace(/^https?:\/\//, '').replace(/\/$/, '')}</span>
             {p.summary ? <span class="product-link-desc">{p.summary}</span> : null}
+            <span class="product-link-hub">View product page →</span>
           </a>
         </li>
       ))}

@@ -860,6 +860,16 @@ footer,
   line-height: 1.4;
   margin-top: 0.25rem;
 }
+.product-link-hub {
+  font-size: 0.72rem;
+  font-family: var(--mono);
+  color: var(--copper);
+  margin-top: 0.4rem;
+  letter-spacing: 0.02em;
+}
+.product-link:hover .product-link-hub {
+  color: var(--copper-hi);
+}
 
 .mini {
   display: grid;
