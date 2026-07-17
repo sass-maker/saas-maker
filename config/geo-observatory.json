@@ -1,0 +1,85 @@
+{
+  "$comment": "GEO Observatory query config. Queries are STABLE identifiers — never rephrase an existing query (add a new one instead) or trend history breaks. Rubric: A = product's own domain in top 3 organic results; B = product surfaced only via hub (sassmaker.com) or aggregator/directory; C = absent from first page.",
+  "cadence": "weekly",
+  "classes": ["A", "B", "C"],
+  "products": [
+    {
+      "id": "codevetter",
+      "origin": "https://codevetter.com",
+      "queries": [
+        { "qid": "codevetter-brand", "kind": "brand", "q": "CodeVetter" },
+        { "qid": "codevetter-category", "kind": "category", "q": "AI code review benchmark agent-written bugs" }
+      ]
+    },
+    {
+      "id": "rolepatch",
+      "origin": "https://rolepatch.com",
+      "queries": [
+        { "qid": "rolepatch-brand", "kind": "brand", "q": "RolePatch" },
+        { "qid": "rolepatch-category", "kind": "category", "q": "free ATS resume checker" }
+      ]
+    },
+    {
+      "id": "saas-maker-showcase",
+      "origin": "https://sassmaker.com",
+      "queries": [
+        { "qid": "sassmaker-brand", "kind": "brand", "q": "sassmaker" },
+        { "qid": "sassmaker-category", "kind": "category", "q": "solo founder fleet of products built with agents" }
+      ]
+    },
+    {
+      "id": "high-signal",
+      "origin": "https://highsignal.app",
+      "queries": [
+        { "qid": "highsignal-brand", "kind": "brand", "q": "highsignal.app" },
+        { "qid": "highsignal-category", "kind": "category", "q": "daily brief with prediction hit rates" }
+      ]
+    },
+    {
+      "id": "pace",
+      "origin": "https://heypace.app",
+      "queries": [
+        { "qid": "pace-brand", "kind": "brand", "q": "heypace" },
+        { "qid": "pace-category", "kind": "category", "q": "Mac voice agent reads your screen" }
+      ]
+    },
+    {
+      "id": "posttrainllm",
+      "origin": "https://posttrainllm.com",
+      "queries": [
+        { "qid": "posttrainllm-brand", "kind": "brand", "q": "posttrainllm" },
+        { "qid": "posttrainllm-category", "kind": "category", "q": "fine-tune LLM specialists on Mac Apple Silicon" }
+      ]
+    },
+    {
+      "id": "materia",
+      "origin": "https://materia.significanthobbies.com",
+      "queries": [
+        { "qid": "materia-brand", "kind": "brand", "q": "materia evidence graded remedies" },
+        { "qid": "materia-category", "kind": "category", "q": "herb drug interaction checker evidence" }
+      ]
+    },
+    {
+      "id": "significanthobbies",
+      "origin": "https://significanthobbies.com",
+      "queries": [
+        { "qid": "sighobbies-brand", "kind": "brand", "q": "Significant Hobbies planner" }
+      ]
+    },
+    {
+      "id": "anime-list",
+      "origin": "https://anime.significanthobbies.com",
+      "queries": [
+        { "qid": "anime-longtail-1", "kind": "category", "q": "Fullmetal Alchemist Brotherhood filter by episode count site:anime.significanthobbies.com" },
+        { "qid": "anime-category", "kind": "category", "q": "anime discovery multi-field filter watchlist" }
+      ]
+    },
+    {
+      "id": "drank",
+      "origin": "https://domains.sassmaker.com",
+      "queries": [
+        { "qid": "drank-category", "kind": "category", "q": "free domain rating dataset weekly" }
+      ]
+    }
+  ]
+}
