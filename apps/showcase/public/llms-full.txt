@@ -1,0 +1,42 @@
+# Foundry (SaaS Maker) — full agent brief
+
+Sarthak Agrawal's personal product fleet showcase — shipped apps plus the open-source operating layer that runs them.
+
+## Index
+
+# Foundry (SaaS Maker)
+
+Personal product fleet by Sarthak Agrawal — twenty-something shipped apps plus the operating layer (CLI, cockpit, deploy tooling).
+
+## What it is
+
+- Static showcase at sassmaker.com
+- Apps on their own custom domains
+- Open-source Foundry stack for running the fleet
+
+## Agent entrypoints
+
+- https://sassmaker.com/llms.txt
+- https://sassmaker.com/api/ai
+- https://sassmaker.com/index.md
+- https://docs.sassmaker.com/llms.txt
+
+## Product links
+
+- Home: https://sassmaker.com/ — Fleet map
+- Docs: https://docs.sassmaker.com — Foundry manual
+- Cockpit: https://app.sassmaker.com — Operator dashboard (auth)
+
+## Machine surfaces
+
+- https://sassmaker.com/llms.txt
+- https://sassmaker.com/llms-full.txt
+- https://sassmaker.com/api/ai
+- https://sassmaker.com/index.md
+- https://sassmaker.com/sitemap.xml
+- https://sassmaker.com/robots.txt
+
+## Contact / fleet
+
+- Fleet: https://sassmaker.com
+- Agent email for directory verification: sarthakagrawal@agentmail.to
