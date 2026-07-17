@@ -17,8 +17,10 @@ const DEFAULT_EXISTING_TASKS = path.join(ROOT, '.symphony', 'tasks.json');
 
 const TARGETS = {
   'anime-list': [{ label: 'web', url: 'https://anime.significanthobbies.com' }],
+  chess: [{ label: 'web', url: 'https://chess.significanthobbies.com' }],
   CodeVetter: [{ label: 'web', url: 'https://codevetter.com' }],
   'email-manager': [{ label: 'web', url: 'https://mail.sassmaker.com' }],
+  everythingrated: [{ label: 'web', url: 'https://ratings.highsignal.app' }],
   drank: [{ label: 'web', url: 'https://domains.sassmaker.com' }],
   'free-ai': [
     { label: 'health', url: 'https://ai-gateway.sassmaker.com/health' },
@@ -52,7 +54,13 @@ const TARGETS = {
       ],
     },
   ],
+  materia: [{ label: 'web', url: 'https://materia.significanthobbies.com' }],
   pace: [{ label: 'web', url: 'https://pace-6xg.pages.dev' }],
+  'protein-index': [{ label: 'web', url: 'https://protein.significanthobbies.com' }],
+  'psi-swarm': [
+    { label: 'web', url: 'https://performance.sassmaker.com' },
+    { label: 'projects', url: 'https://performance.sassmaker.com/projects/' },
+  ],
   reader: [{ label: 'web', url: 'https://read.significanthobbies.com' }],
   'reel-pipeline': [
     {
@@ -75,6 +83,7 @@ const TARGETS = {
     },
   ],
   starboard: [{ label: 'web', url: 'https://starboard.codevetter.com' }],
+  truehire: [{ label: 'web', url: 'https://truehire.rolepatch.com' }],
   'swe-interview-prep': [{ label: 'web', url: 'https://learn.significanthobbies.com' }],
   posttrainllm: [
     {

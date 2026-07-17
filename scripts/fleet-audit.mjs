@@ -14,12 +14,17 @@ const OUT_OF_FLEET_PROJECTS = new Set(['personal-memory', 'port-whisperer', 'loc
 const LOCAL_PATH_OVERRIDES = {
   aliveville: 'aliveville',
   'anime-list': 'anime-list',
+  chess: 'chess',
   CodeVetter: 'codevetter',
   'knowledge-base': 'knowledge-base',
+  materia: 'materia',
+  'protein-index': 'protein-index',
+  'psi-swarm': 'fleet-ops/psi-swarm',
   'research-papers': 'research-papers',
   rolepatch: 'rolepatch',
   karte: 'karte',
   posttrainllm: 'tinygpt',
+  truehire: 'truehire',
 };
 
 const DOMAIN_MARKETING_PROJECTS = new Set([
@@ -103,8 +108,10 @@ const PROD_TARGETS = {
     { label: 'web', url: 'https://anime.significanthobbies.com', ok: [200] },
     { label: 'api-root', url: 'https://mal-api.sarthakagrawal927.workers.dev', ok: [404] },
   ],
+  chess: [{ label: 'web', url: 'https://chess.significanthobbies.com', ok: [200] }],
   CodeVetter: [{ label: 'web', url: 'https://codevetter.com', ok: [200] }],
   'email-manager': [{ label: 'web', url: 'https://mail.sassmaker.com', ok: [200] }],
+  everythingrated: [{ label: 'web', url: 'https://ratings.highsignal.app', ok: [200] }],
   drank: [{ label: 'web', url: 'https://domains.sassmaker.com', ok: [200] }],
   'free-ai': [{ label: 'gateway', url: 'https://ai-gateway.sassmaker.com', ok: [200] }],
   aliveville: [{ label: 'web', url: 'https://aliveville.com', ok: [200] }],
@@ -122,6 +129,9 @@ const PROD_TARGETS = {
   ],
   karte: [{ label: 'web', url: 'https://karte.cc', ok: [200] }],
   looptv: [{ label: 'web', url: 'https://tv.significanthobbies.com', ok: [200] }],
+  materia: [{ label: 'web', url: 'https://materia.significanthobbies.com', ok: [200] }],
+  'protein-index': [{ label: 'web', url: 'https://protein.significanthobbies.com', ok: [200] }],
+  'psi-swarm': [{ label: 'web', url: 'https://performance.sassmaker.com', ok: [200] }],
   reader: [{ label: 'web', url: 'https://read.significanthobbies.com', ok: [200] }],
   'reel-pipeline': [
     {
@@ -141,12 +151,15 @@ const PROD_TARGETS = {
   significanthobbies: [{ label: 'web', url: 'https://significanthobbies.com', ok: [200] }],
   starboard: [{ label: 'web', url: 'https://starboard.codevetter.com', ok: [200] }],
   'swe-interview-prep': [{ label: 'web', url: 'https://learn.significanthobbies.com', ok: [200] }],
+  truehire: [{ label: 'web', url: 'https://truehire.rolepatch.com', ok: [200] }],
 };
 
 const FRONTEND_TARGETS = {
   'anime-list': [{ label: 'web', url: 'https://anime.significanthobbies.com' }],
+  chess: [{ label: 'web', url: 'https://chess.significanthobbies.com' }],
   CodeVetter: [{ label: 'web', url: 'https://codevetter.com' }],
   'email-manager': [{ label: 'web', url: 'https://mail.sassmaker.com' }],
+  everythingrated: [{ label: 'web', url: 'https://ratings.highsignal.app' }],
   drank: [{ label: 'web', url: 'https://domains.sassmaker.com' }],
   'free-ai': [],
   aliveville: [{ label: 'web', url: 'https://aliveville.com' }],
@@ -154,6 +167,9 @@ const FRONTEND_TARGETS = {
   'knowledge-base': [{ label: 'web', url: 'https://search.sassmaker.com' }],
   karte: [{ label: 'web', url: 'https://karte.cc' }],
   looptv: [{ label: 'web', url: 'https://tv.significanthobbies.com' }],
+  materia: [{ label: 'web', url: 'https://materia.significanthobbies.com' }],
+  'protein-index': [{ label: 'web', url: 'https://protein.significanthobbies.com' }],
+  'psi-swarm': [{ label: 'web', url: 'https://performance.sassmaker.com' }],
   reader: [{ label: 'web', url: 'https://read.significanthobbies.com' }],
   'research-papers': [{ label: 'web', url: 'https://papers.highsignal.app' }],
   rolepatch: [{ label: 'web', url: 'https://rolepatch.com' }],
@@ -165,6 +181,7 @@ const FRONTEND_TARGETS = {
   significanthobbies: [{ label: 'web', url: 'https://significanthobbies.com' }],
   starboard: [{ label: 'web', url: 'https://starboard.codevetter.com' }],
   'swe-interview-prep': [{ label: 'web', url: 'https://learn.significanthobbies.com' }],
+  truehire: [{ label: 'web', url: 'https://truehire.rolepatch.com' }],
 };
 
 const PERFORMANCE_BUDGETS = {

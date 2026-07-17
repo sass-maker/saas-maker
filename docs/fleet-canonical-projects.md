@@ -10,31 +10,33 @@ Registry classification uses two separate fields:
 | Slug                 | Canonical display name | Production name/domain note                                              |
 | -------------------- | ---------------------- | ------------------------------------------------------------------------ |
 | `anime-list`         | MAL Explorer           | GitHub and local slug are `anime-list`.                                 |
+| `chess`              | Chess Coach            | Significant Hobbies app at `chess.significanthobbies.com`.              |
 | `CodeVetter`         | CodeVetter             | GitHub/local folder are still capitalized; do not rename casually.       |
 | `drank`              | drank                  | Vercel app (drank-sand.vercel.app); shared DR data via GitHub Action.    |
 | `email-manager`      | Email Manager          | Worker-backed product.                                                   |
-| `event-forecast`     | Event Forecast         | Local Rust/Rocket forecasting service; no production URL yet.            |
+| `everythingrated`    | EverythingRated        | High Signal ratings directory at `ratings.highsignal.app`.               |
 | `free-ai`            | Free AI Gateway        | Gateway/API product, not a frontend.                                     |
 | `aliveville`         | AliveVille             | GitHub, local checkout, and public registry use `aliveville`.             |
 | `high-signal`        | High Signal            | Worker frontend.                                                         |
 | `knowledge-base`     | Private Agent Search   | Cloudflare Worker RAG service for cited private project corpora.         |
 | `karte`              | Karte                  | Worker frontend at karte.cc.                                             |
 | `looptv`             | LoopTV                 | Keep label as LoopTV even if notes mention Loop TV.                      |
+| `materia`            | Materia                | Significant Hobbies evidence reference at `materia.significanthobbies.com`. |
 | `pace`               | Pace                   | Local macOS voice agent; previously discussed as Clicky Local / Space.   |
+| `posttrainllm`       | PostTrainLLM           | Repository and product organization use `posttrainllm`.                  |
 | `psi-swarm`          | psi-swarm              | Local CLI and browser controller for repeated Lighthouse audits.         |
+| `protein-index`      | Protein Index          | Significant Hobbies nutrition reference at `protein.significanthobbies.com`. |
 | `reader`             | Reader                 | Worker frontend with Google login.                                       |
 | `research-papers`    | Research Papers        | Cloudflare Pages academic-paper intelligence platform.                    |
 | `reel-pipeline`      | Reel Pipeline          | Artifact Worker and R2-backed video pipeline.                            |
-| `resume-tailor`      | RolePatch              | Product/domain name is RolePatch; repo slug remains `resume-tailor`.     |
+| `rolepatch`          | RolePatch              | Product and canonical fleet slug are RolePatch; Worker remains `resume-tailor`. |
 | `saas-maker`         | SaaS Maker             | Production domain uses `sassmaker.com`; display name remains SaaS Maker. |
-| `sarthakagrawal`     | sarthakagrawal.dev     | Personal Astro portfolio and project archive.                            |
 | `significanthobbies` | Significant Hobbies    | Domain omits the hyphen.                                                 |
 | `starboard`          | Starboard              | Worker frontend.                                                         |
 | `swe-interview-prep` | Interview Coder        | Product name is Interview Coder; repo slug remains `swe-interview-prep`. |
-| `today-little-log`   | Today Little Log       | Pages frontend.                                                          |
-| `verified-bases`     | Verified Bases         | Personal verified-software storefront; deploy targets are split web/api. |
+| `truehire`           | TrueHire               | RolePatch-family hiring workspace at `truehire.rolepatch.com`.            |
 
-Hidden/removed projects should not appear in fleet dashboards or task project pickers: `ludo`, `chess`, `back-propogate`, `reel-maker`, `dev-learning`, `sarthak-blog`, `clash-royale-meta`, `personalsite`, `port-whisperer`, `local-ai`, and `vaulthealth`.
+Hidden/removed projects should not appear in fleet dashboards or task project pickers: `ludo`, `back-propogate`, `reel-maker`, `dev-learning`, `sarthak-blog`, `clash-royale-meta`, `personalsite`, `port-whisperer`, `local-ai`, and `vaulthealth`.
 
 ## Adding a Project
 

@@ -63,6 +63,14 @@
     "priority": "P3",
     "maturity": "maintained"
   },
+  "chess": {
+    "desc": "Chess Coach — browser chess against Stockfish with optional AI move coaching.",
+    "url": "https://github.com/Significant-Hobbies/chess.git",
+    "tier": "personal",
+    "category": "personal",
+    "priority": "P3",
+    "maturity": "maintained"
+  },
   "email-manager": {
     "desc": "Email Manager — personal email operations workspace.",
     "url": "https://github.com/sarthakagrawal927/email-manager.git",
@@ -71,9 +79,25 @@
     "priority": "P3",
     "maturity": "internal-first"
   },
+  "everythingrated": {
+    "desc": "Multi-axis AI dev-tool ratings for evidence-based adoption decisions.",
+    "url": "https://github.com/High-Signal-App/everythingrated.git",
+    "tier": "support",
+    "category": "product",
+    "priority": "P2",
+    "maturity": "maintained"
+  },
   "looptv": {
     "desc": "LoopTV — personal ambient video and anime list companion.",
     "url": "https://github.com/Significant-Hobbies/looptv.git",
+    "tier": "personal",
+    "category": "personal",
+    "priority": "P3",
+    "maturity": "maintained"
+  },
+  "materia": {
+    "desc": "Interactive anatomy joined to cited, evidence-graded remedies and studies.",
+    "url": "https://github.com/Significant-Hobbies/materia.git",
     "tier": "personal",
     "category": "personal",
     "priority": "P3",
@@ -86,6 +110,22 @@
     "category": "product",
     "priority": "P1",
     "maturity": "internal-first"
+  },
+  "protein-index": {
+    "desc": "Normalized Indian protein-product intelligence with source-aware nutrition and value comparisons.",
+    "url": "https://github.com/Significant-Hobbies/protein-index.git",
+    "tier": "personal",
+    "category": "personal",
+    "priority": "P3",
+    "maturity": "maintained"
+  },
+  "psi-swarm": {
+    "desc": "Local-first website performance tracker built around repeated Lighthouse distributions.",
+    "url": "https://github.com/sass-maker/psi-swarm.git",
+    "tier": "support",
+    "category": "helper",
+    "priority": "P2",
+    "maturity": "maintained"
   },
   "rolepatch": {
     "desc": "RolePatch — AI-powered resume tailoring system.",
@@ -150,6 +190,14 @@
     "tier": "support",
     "category": "product",
     "priority": "P2",
+    "maturity": "maintained"
+  },
+  "truehire": {
+    "desc": "TrueHire — AI-assisted hiring workspace within the RolePatch product family.",
+    "url": "https://github.com/sarthakagrawal927/truehire.git",
+    "tier": "personal",
+    "category": "personal",
+    "priority": "P3",
     "maturity": "maintained"
   },
   "posttrainllm": {

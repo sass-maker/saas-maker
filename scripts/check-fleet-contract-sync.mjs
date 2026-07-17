@@ -8,7 +8,18 @@ const registryPath = path.join(repoRoot, 'foundry.projects.json');
 const canonicalDocsPath = path.join(repoRoot, 'docs/fleet-canonical-projects.md');
 const healthContractsPath = path.join(repoRoot, 'scripts/lib/fleet-health-contracts.mjs');
 
-const outOfFleetDirs = new Set(['local-ai', 'personal-memory', 'port-whisperer']);
+const outOfFleetDirs = new Set([
+  'codevetter-rebuild-20260715T044829Z',
+  'codevetter-series-20260715T044829Z',
+  'local-ai',
+  'mobile-dev-cockpit',
+  'personal-memory',
+  'port-whisperer',
+]);
+const localProjectAliases = new Map([
+  ['ai-game', 'aliveville'],
+  ['codevetter', 'CodeVetter'],
+]);
 
 const registry = JSON.parse(await readFile(registryPath, 'utf8'));
 const registryProjects = Object.keys(registry).sort(compareProjectSlug);
@@ -61,10 +72,16 @@ async function listLocalProjectStatusDirs() {
     if (outOfFleetDirs.has(entry.name)) continue;
     try {
       await access(path.join(fleetRoot, entry.name, 'PROJECT_STATUS.md'));
-      projects.push(entry.name);
+      projects.push(localProjectAliases.get(entry.name) ?? entry.name);
     } catch {
       // No project status means this directory is not part of the local active-project contract.
     }
+  }
+  try {
+    await access(path.join(fleetRoot, 'fleet-ops', 'psi-swarm', 'PROJECT_STATUS.md'));
+    projects.push('psi-swarm');
+  } catch {
+    // psi-swarm is intentionally nested under fleet-ops.
   }
   return projects.sort(compareProjectSlug);
 }

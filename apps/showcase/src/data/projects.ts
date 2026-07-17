@@ -71,6 +71,12 @@ const OVERRIDES: Record<string, ShowcaseOverride> = {
     desc: 'Personal email operations workspace.',
     color: '#3b82f6',
   },
+  everythingrated: {
+    name: 'EverythingRated',
+    initials: 'Er',
+    tag: 'Research · ratings',
+    color: '#ec4899',
+  },
   'high-signal': {
     name: 'High Signal',
     tag: 'Editorial · support',
@@ -113,6 +119,24 @@ const OVERRIDES: Record<string, ShowcaseOverride> = {
     desc: 'Ambient video and anime companion.',
     color: '#6366f1',
   },
+  materia: {
+    name: 'Materia',
+    initials: 'Ma',
+    tag: 'Personal · evidence',
+    color: '#22c55e',
+  },
+  'protein-index': {
+    name: 'Protein Index',
+    initials: 'Pi',
+    tag: 'Personal · nutrition',
+    color: '#f59e0b',
+  },
+  'psi-swarm': {
+    name: 'psi-swarm',
+    initials: 'Ps',
+    tag: 'Support · performance',
+    color: '#0ea5e9',
+  },
   reader: {
     name: 'Reader',
     initials: 'Rd',
@@ -126,6 +150,18 @@ const OVERRIDES: Record<string, ShowcaseOverride> = {
     tag: 'Personal · maintained',
     desc: 'AI-powered resume tailoring for a specific role and a specific story.',
     color: '#f43f5e',
+  },
+  chess: {
+    name: 'Chess Coach',
+    initials: 'Cc',
+    tag: 'Personal · learning',
+    color: '#a8a29e',
+  },
+  truehire: {
+    name: 'TrueHire',
+    initials: 'Th',
+    tag: 'Personal · hiring',
+    color: '#c026d3',
   },
   'saas-maker': {
     name: 'SaaS Maker',
@@ -184,6 +220,7 @@ const SPOTLIGHT_ORDER = ['CodeVetter', 'pace', 'posttrainllm'];
 const SUPPORT_ORDER = [
   'saas-maker',
   'high-signal',
+  'everythingrated',
   'aliveville',
   'free-ai',
   'knowledge-base',
@@ -191,6 +228,7 @@ const SUPPORT_ORDER = [
   'research-papers',
   'drank',
   'starboard',
+  'psi-swarm',
 ];
 const PERSONAL_ORDER = [
   'rolepatch',
@@ -201,6 +239,10 @@ const PERSONAL_ORDER = [
   'looptv',
   'anime-list',
   'email-manager',
+  'chess',
+  'materia',
+  'protein-index',
+  'truehire',
 ];
 
 const FALLBACK_COLORS = [

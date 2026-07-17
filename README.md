@@ -64,14 +64,20 @@ Everything is hosted on Cloudflare. Each deployable ships independently via GitH
 | [`reel-pipeline`](https://github.com/sass-maker/reel-pipeline)                    | product  | P2       | Short-form video generation pipeline for fleet marketing assets.  |
 | [`research-papers`](https://github.com/High-Signal-App/research-papers)           | product  | P2       | Academic paper platform and research data asset.                  |
 | [`starboard`](https://github.com/Codevetter/starboard)                            | product  | P2       | GitHub stars organizer and semantic search under CodeVetter.      |
+| [`everythingrated`](https://github.com/High-Signal-App/everythingrated)           | product  | P2       | Multi-axis AI dev-tool adoption ratings.                          |
+| [`psi-swarm`](https://github.com/sass-maker/psi-swarm)                            | helper   | P2       | Repeated Lighthouse performance tracking and comparison.         |
 | [`anime-list`](https://github.com/Significant-Hobbies/anime-list)                 | personal | P3       | Personal anime discovery and tracking surface.                    |
+| [`chess`](https://github.com/Significant-Hobbies/chess)                           | personal | P3       | Stockfish chess with optional AI coaching.                        |
 | [`email-manager`](https://github.com/sarthakagrawal927/email-manager)             | personal | P3       | Personal email operations workspace.                              |
 | [`karte`](https://github.com/sarthakagrawal927/karte)                             | personal | P3       | AI link-in-bio product.                                           |
 | [`looptv`](https://github.com/Significant-Hobbies/looptv)                         | personal | P3       | Personal ambient video and anime list companion.                  |
+| [`materia`](https://github.com/Significant-Hobbies/materia)                       | personal | P3       | Interactive anatomy and evidence-graded remedies.                 |
+| [`protein-index`](https://github.com/Significant-Hobbies/protein-index)           | personal | P3       | Source-aware protein product intelligence.                        |
 | [`reader`](https://github.com/Significant-Hobbies/reader)                         | personal | P3       | Personal reading and saved-article workflow.                      |
 | [`rolepatch`](https://github.com/sarthakagrawal927/rolepatch)                     | personal | P3       | RolePatch resume tailoring product.                               |
 | [`significanthobbies`](https://github.com/Significant-Hobbies/significanthobbies) | personal | P3       | Personal hobby mapping and journey visualization tool.            |
 | [`swe-interview-prep`](https://github.com/Significant-Hobbies/swe-interview-prep) | personal | P3       | Personal interview practice workspace.                            |
+| [`truehire`](https://github.com/sarthakagrawal927/truehire)                       | personal | P3       | RolePatch-family hiring workspace.                                |
 
 ## Quick Start
 
