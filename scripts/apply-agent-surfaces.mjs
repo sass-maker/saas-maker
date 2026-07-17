@@ -165,6 +165,10 @@ function applyProduct(product) {
     }
   }
 
+  // Never write a tiny public/sitemap.xml stub — it overrides Next.js
+  // app/sitemap.ts and Astro @astrojs/sitemap generators. Huge sitemaps
+  // must come from dynamic generators or dedicated content scripts.
+
   return {
     ok,
     written: writtenLocal,
