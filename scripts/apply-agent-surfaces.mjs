@@ -96,6 +96,14 @@ function applyProduct(product) {
   writtenLocal++;
   messages.push('index.md');
 
+  // llms-full.txt — expanded dump for agents that prefer one-shot context
+  const llmsFullPath = join(targetPublic, 'llms-full.txt');
+  if (!product.skipLlmsOverwrite) {
+    write(llmsFullPath, surface.llmsFullTxt);
+    writtenLocal++;
+    messages.push('llms-full.txt');
+  }
+
   write(apiAiJsonPath, `${JSON.stringify(surface.catalog, null, 2)}\n`);
   writtenLocal++;
   messages.push('api-ai.json');
@@ -216,8 +224,9 @@ function buildSurface(product) {
     version: '1',
     url: origin,
     llms: `${origin}/llms.txt`,
-    llmsFull: product.id === 'significanthobbies' ? `${origin}/llms-full.txt` : null,
+    llmsFull: `${origin}/llms-full.txt`,
     sitemap: `${origin}/sitemap.xml`,
+    robots: `${origin}/robots.txt`,
     markdown: { suffix: '.md', negotiation: true },
     surfaces: [
       {
@@ -244,13 +253,42 @@ function buildSurface(product) {
     },
   };
 
+  const llmsFullTxt = [
+    `# ${product.name} — full agent brief`,
+    '',
+    product.summary,
+    '',
+    '## Index',
+    '',
+    (product.indexMd || '').trim(),
+    '',
+    '## Product links',
+    '',
+    ...productLinks.map((l) => `- ${l.title}: ${l.url}${l.description ? ` — ${l.description}` : ''}`),
+    '',
+    '## Machine surfaces',
+    '',
+    `- ${origin}/llms.txt`,
+    `- ${origin}/llms-full.txt`,
+    `- ${origin}/api/ai`,
+    `- ${origin}/index.md`,
+    `- ${origin}/sitemap.xml`,
+    `- ${origin}/robots.txt`,
+    '',
+    '## Contact / fleet',
+    '',
+    '- Fleet: https://sassmaker.com',
+    '- Agent email for directory verification: sarthakagrawal@agentmail.to',
+    '',
+  ].join('\n');
+
   return {
     name: product.name,
     url: origin,
+    llmsFullTxt,
     llmsTxt: llmsLines.join('\n'),
     indexMd: product.indexMd.endsWith('\n') ? product.indexMd : `${product.indexMd}\n`,
     catalog,
-    llmsFull: null,
   };
 }
 
@@ -261,7 +299,11 @@ function ensureRobots(robotsPath, siteUrl) {
     body = body.trimEnd() + `\n\nSitemap: ${origin}/sitemap.xml\n`;
   }
   if (!body.includes('/llms.txt')) {
-    body = body.trimEnd() + `\n# Agent indexing\nAllow: /llms.txt\nAllow: /index.md\nAllow: /api/ai\n`;
+    body =
+      body.trimEnd() +
+      `\n# Agent indexing\nAllow: /llms.txt\nAllow: /llms-full.txt\nAllow: /index.md\nAllow: /api/ai\n`;
+  } else if (!body.includes('/llms-full.txt')) {
+    body = body.trimEnd() + `\nAllow: /llms-full.txt\n`;
   }
   if (!dryRun) {
     mkdirSync(dirname(robotsPath), { recursive: true });

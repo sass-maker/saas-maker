@@ -22,7 +22,7 @@ CFG = ROOT / "config" / "directory-submissions"
 PRODUCTS_PATH = CFG / "products.json"
 LOG = CFG / "log.jsonl"
 
-# Free-leaning targets from research (skip already full-set confirmed unless --force)
+# Hardcoded free-leaning targets + research-probe.json merge at runtime
 DEFAULT_TARGETS = [
     ("dynamite", "https://www.dynamite-ai.com/submit"),
     ("submissionweb", "https://www.submissionwebdirectory.com/submit.php"),
@@ -56,9 +56,72 @@ DEFAULT_TARGETS = [
     ("webrazzi", "https://webrazzi.com/en/startup-form/"),
     ("inc42", "https://inc42.com/startup-submission/"),
     ("americaninno", "https://www.americaninno.com/post-a-startup/"),
-    ("paggu", "https://www.paggu.com/submit-your-startup/"),  # already done; skip via success
+    ("paggu", "https://www.paggu.com/submit-your-startup/"),
     ("insidr", "https://www.insidr.ai/submit-tools/"),
+    ("promoteproject", "https://promoteproject.com/submit"),
+    ("profithunt", "https://profithunt.co/submit"),
+    ("poweredbyai", "https://poweredbyai.app/submit"),
+    ("topai", "https://topai.tools/submit"),
+    ("saasworthy", "https://www.saasworthy.com/offerings"),
+    ("growthjunkie", "https://growthjunkie.com/submit"),
+    ("thestartupinc2", "https://www.thestartupinc.com/submit"),
+    ("benbites", "https://news.bensbites.com/submit"),
+    ("crozdesk", "https://vendor.softwareselect.com/user/signup"),
+    ("softwaresuggest", "https://www.softwaresuggest.com/vendors/register"),
+    ("super_new", "https://linusekenstam.typeform.com/super-new"),
+    ("sideprojectors", "https://www.sideprojectors.com/project/new"),
+    ("startupinspire", "https://startupinspire.com/dashboard/startup/create"),
+    ("taalk", "https://taalk.com/submit-startup/"),
+    ("beingguru", "https://beingguru.com/submit-startup/"),
+    ("startupwizz", "https://startupwizz.com/submit-a-startup/"),
+    ("10words", "https://portal.10words.io/submissions/submit"),
+    ("postmake", "https://postmake.io/submit"),
+    ("devhunt", "https://devhunt.org/submit"),
+    ("smollaunch", "https://smollaunch.com/submit"),
+    ("launchingnext", "https://www.launchingnext.com/submit"),
+    ("saashub", "https://www.saashub.com/submit"),
+    ("alternativeto", "https://alternativeto.net/software/new/"),
+    ("peerlist", "https://peerlist.io/launch"),
+    ("open-launch", "https://www.open-launch.com/projects/submit"),
+    ("startupfa_st", "https://www.startupfa.st/projects/submit"),
+    ("toolify", "https://www.toolify.ai/submit"),
+    ("futurepedia", "https://www.futurepedia.io/submit-tool"),
+    ("futuretools", "https://www.futuretools.io/submit-a-tool"),
+    ("startupstash", "https://startupstash.com/add-listing/"),
+    ("dang", "https://dang.ai/pricing"),
+    ("landbook", "https://land-book.com/submit"),
+    ("nocodedevs", "https://www.nocodedevs.com/submit"),
+    ("bigstartups", "https://bigstartups.co/submit"),
+    ("startuptracker", "https://startuptracker.io/submit"),
+    ("startuplister", "https://www.startuplister.com/submit-startup"),
+    ("victrays", "https://victrays.com/submit"),
+    ("appagg", "https://appagg.com/submit/"),
+    ("webapprater", "https://webapprater.com/submit-your-web-application-for-review-html"),
+    ("comparasoftware", "https://comparasoftware.com/en/submit"),
+    ("projecthatch", "https://projecthatch.co/your-story/"),
+    ("thepopularapps", "https://thepopularapps.com/submit-app/"),
 ]
+
+
+def load_all_targets() -> list[tuple[str, str]]:
+    """Merge DEFAULT_TARGETS with research-probe.json (dedupe by id)."""
+    seen: dict[str, str] = {}
+    for did, url in DEFAULT_TARGETS:
+        seen[did] = url
+    probe_path = CFG / "research-probe.json"
+    if probe_path.exists():
+        try:
+            probe = json.loads(probe_path.read_text())
+            for r in probe.get("all") or []:
+                did = r.get("id")
+                url = r.get("url")
+                if not did or not url or r.get("cf"):
+                    continue
+                if did not in seen:
+                    seen[did] = url
+        except Exception:
+            pass
+    return list(seen.items())
 
 
 def log_locked(ev: dict) -> None:
@@ -471,7 +534,7 @@ def main() -> int:
     name = data["contact"]["name"]
     done = load_success_set()
 
-    targets = DEFAULT_TARGETS
+    targets = load_all_targets()
     if args.dirs:
         want = set(args.dirs.split(","))
         targets = [t for t in targets if t[0] in want]
