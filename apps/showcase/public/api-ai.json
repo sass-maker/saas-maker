@@ -31,6 +31,160 @@
       "md": null,
       "kind": "static",
       "description": "Operator dashboard (auth)"
+    },
+    {
+      "id": "codevetter",
+      "url": "https://codevetter.com",
+      "md": null,
+      "kind": "static",
+      "description": "Desktop-first AI code review workbench for agent-generated code. Local SQLite, Tauri shell, evidence-backed review — your repo never hits a central server."
+    },
+    {
+      "id": "rolepatch",
+      "url": "https://rolepatch.com",
+      "md": null,
+      "kind": "static",
+      "description": "AI-powered resume tailoring. Score fit against a job description, rewrite bullets for the role, and prep interviews."
+    },
+    {
+      "id": "high-signal",
+      "url": "https://highsignal.app",
+      "md": null,
+      "kind": "static",
+      "description": "Daily synthesized brief on technology, startups, and finance — five sections with inline hit-rates, no signup required."
+    },
+    {
+      "id": "karte",
+      "url": "https://karte.cc",
+      "md": null,
+      "kind": "static",
+      "description": "Link-in-bio registry for humans and AI agents. Publish trust cards with public manifests at /{slug}/agent.json."
+    },
+    {
+      "id": "significant-hobbies",
+      "url": "https://significanthobbies.com",
+      "md": null,
+      "kind": "static",
+      "description": "Life planner for private daily rituals and public living — hobbies, bucket lists, and side quests over time."
+    },
+    {
+      "id": "materia",
+      "url": "https://materia.significanthobbies.com",
+      "md": null,
+      "kind": "static",
+      "description": "Evidence-graded reference for remedies organized by body part — body → condition → remedy → compound → study, with citations."
+    },
+    {
+      "id": "saas-maker-docs",
+      "url": "https://docs.sassmaker.com",
+      "md": null,
+      "kind": "static",
+      "description": "Drop-in backend services for SaaS apps. API docs for Foundry (feedback, waitlist, testimonials, and more)."
+    },
+    {
+      "id": "starboard",
+      "url": "https://starboard.codevetter.com",
+      "md": null,
+      "kind": "static",
+      "description": "GitHub stars organizer with semantic search — sub-product of CodeVetter for repo intelligence."
+    },
+    {
+      "id": "everythingrated",
+      "url": "https://ratings.highsignal.app",
+      "md": null,
+      "kind": "static",
+      "description": "Multi-axis rating tool for structured directories and catalogs — decisions with explicit trade-offs, not star averages."
+    },
+    {
+      "id": "truehire",
+      "url": "https://truehire.rolepatch.com",
+      "md": null,
+      "kind": "static",
+      "description": "Hiring-side companion under RolePatch for evaluating candidates with structured role fit."
+    },
+    {
+      "id": "researchpapers",
+      "url": "https://papers.highsignal.app",
+      "md": null,
+      "kind": "static",
+      "description": "Academic paper platform over a high-citation OpenAlex CS corpus — search, analytics, and RAG demo (~488k papers)."
+    },
+    {
+      "id": "posttrainllm",
+      "url": "https://posttrainllm.com",
+      "md": null,
+      "kind": "static",
+      "description": "Mac-local LLM specialist factory — post-training and runtime that fits on one Mac, plus WebGPU playground."
+    },
+    {
+      "id": "pace",
+      "url": "https://pace-6xg.pages.dev",
+      "md": null,
+      "kind": "static",
+      "description": "On-device Mac voice agent that reads your screen and acts with local context."
+    },
+    {
+      "id": "drank",
+      "url": "https://domains.sassmaker.com",
+      "md": null,
+      "kind": "static",
+      "description": "Ahrefs Domain Rating tracker feeding High Signal /domains and fleet domain marketing work."
+    },
+    {
+      "id": "looptv",
+      "url": "https://tv.significanthobbies.com",
+      "md": null,
+      "kind": "static",
+      "description": "TV-style random video player for lean-back browsing of curated channels."
+    },
+    {
+      "id": "mal-explorer",
+      "url": "https://anime.significanthobbies.com",
+      "md": null,
+      "kind": "static",
+      "description": "Anime and manga discovery with multi-axis filtering and watchlists."
+    },
+    {
+      "id": "chess-coach",
+      "url": "https://chess.significanthobbies.com",
+      "md": null,
+      "kind": "static",
+      "description": "AI-coached chess game for practice with coaching feedback."
+    },
+    {
+      "id": "reader",
+      "url": "https://read.significanthobbies.com",
+      "md": null,
+      "kind": "static",
+      "description": "Research library: capture, annotate, and AI-chat over your reading — private by default."
+    },
+    {
+      "id": "email-manager",
+      "url": "https://mail.sassmaker.com",
+      "md": null,
+      "kind": "static",
+      "description": "Gmail workspace with local semantic search — private email tooling."
+    },
+    {
+      "id": "ai-gateway",
+      "url": "https://ai-gateway.sassmaker.com",
+      "md": null,
+      "kind": "static",
+      "description": "OpenAI-compatible LLM gateway fronting free-tier models across multiple providers."
+    },
+    {
+      "id": "swe-interview-prep",
+      "url": "https://learn.significanthobbies.com",
+      "md": null,
+      "kind": "static",
+      "description": "SWE learning OS with FSRS spaced repetition, drills, and feedback."
+    },
+    {
+      "id": "psi-swarm",
+      "url": "https://performance.sassmaker.com",
+      "md": null,
+      "kind": "static",
+      "description": "Distributional Lighthouse / PageSpeed audits with grounded performance analysis across the fleet."
     }
   ],
   "auth": {

@@ -1,16 +1,52 @@
 # Foundry (SaaS Maker)
 
-Personal product fleet by Sarthak Agrawal — twenty-something shipped apps plus the operating layer (CLI, cockpit, deploy tooling).
+Personal product fleet by Sarthak Agrawal — shipped apps plus the open-source operating layer (CLI, cockpit, deploy tooling) on Cloudflare.
 
 ## What it is
 
-- Static showcase at sassmaker.com
-- Apps on their own custom domains
-- Open-source Foundry stack for running the fleet
+- Static showcase at https://sassmaker.com
+- Each product on its own custom domain
+- Agent-readable surfaces: `/llms.txt`, `/api/ai`, `/index.md` on every public origin
+
+## Public products (canonical URLs)
+
+- **CodeVetter** — https://codevetter.com — Desktop-first AI code review workbench for agent-generated code. Local SQLite, Tauri shell, evidence-backed review — your repo never hits a central server.
+- **RolePatch** — https://rolepatch.com — AI-powered resume tailoring. Score fit against a job description, rewrite bullets for the role, and prep interviews.
+- **High Signal** — https://highsignal.app — Daily synthesized brief on technology, startups, and finance — five sections with inline hit-rates, no signup required.
+- **Karte** — https://karte.cc — Link-in-bio registry for humans and AI agents. Publish trust cards with public manifests at /{slug}/agent.json.
+- **Significant Hobbies** — https://significanthobbies.com — Life planner for private daily rituals and public living — hobbies, bucket lists, and side quests over time.
+- **Materia** — https://materia.significanthobbies.com — Evidence-graded reference for remedies organized by body part — body → condition → remedy → compound → study, with citations.
+- **SaaS Maker Docs** — https://docs.sassmaker.com — Drop-in backend services for SaaS apps. API docs for Foundry (feedback, waitlist, testimonials, and more).
+- **Starboard** — https://starboard.codevetter.com — GitHub stars organizer with semantic search — sub-product of CodeVetter for repo intelligence.
+- **EverythingRated** — https://ratings.highsignal.app — Multi-axis rating tool for structured directories and catalogs — decisions with explicit trade-offs, not star averages.
+- **TrueHire** — https://truehire.rolepatch.com — Hiring-side companion under RolePatch for evaluating candidates with structured role fit.
+- **researchPapers** — https://papers.highsignal.app — Academic paper platform over a high-citation OpenAlex CS corpus — search, analytics, and RAG demo (~488k papers).
+- **PostTrainLLM** — https://posttrainllm.com — Mac-local LLM specialist factory — post-training and runtime that fits on one Mac, plus WebGPU playground.
+- **Pace** — https://pace-6xg.pages.dev — On-device Mac voice agent that reads your screen and acts with local context.
+- **DRank** — https://domains.sassmaker.com — Ahrefs Domain Rating tracker feeding High Signal /domains and fleet domain marketing work.
+- **LoopTV** — https://tv.significanthobbies.com — TV-style random video player for lean-back browsing of curated channels.
+- **MAL Explorer** — https://anime.significanthobbies.com — Anime and manga discovery with multi-axis filtering and watchlists.
+- **Chess Coach** — https://chess.significanthobbies.com — AI-coached chess game for practice with coaching feedback.
+- **Reader** — https://read.significanthobbies.com — Research library: capture, annotate, and AI-chat over your reading — private by default.
+- **Email Manager** — https://mail.sassmaker.com — Gmail workspace with local semantic search — private email tooling.
+- **AI Gateway** — https://ai-gateway.sassmaker.com — OpenAI-compatible LLM gateway fronting free-tier models across multiple providers.
+- **SWE Interview Prep** — https://learn.significanthobbies.com — SWE learning OS with FSRS spaced repetition, drills, and feedback.
+- **psi-swarm** — https://performance.sassmaker.com — Distributional Lighthouse / PageSpeed audits with grounded performance analysis across the fleet.
+
+## Focus products (active marketing)
+
+- **Pace** — https://heypace.app / https://pace-6xg.pages.dev — Mac app for pacing work
+- **CodeVetter** — https://codevetter.com — desktop AI code review
+- **PostTrainLLM** — https://posttrainllm.com — train/run small local models
 
 ## Agent entrypoints
 
 - https://sassmaker.com/llms.txt
+- https://sassmaker.com/llms-full.txt
 - https://sassmaker.com/api/ai
 - https://sassmaker.com/index.md
 - https://docs.sassmaker.com/llms.txt
+
+## Who it is for
+
+Builders and agents that need a single source of truth for Sarthak's public product surface area — not generic AI fluff.

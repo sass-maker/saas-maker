@@ -1,12 +1,34 @@
 # Foundry (SaaS Maker)
 
-> Sarthak Agrawal's personal product fleet showcase — shipped apps plus the open-source operating layer that runs them.
+> Sarthak Agrawal's personal product fleet showcase — RolePatch, High Signal, CodeVetter, Pace, PostTrainLLM, Karte, Significant Hobbies, and 15+ other shipped apps, plus the open-source Foundry operating layer on Cloudflare.
 
 ## Product
 
 - [Home](https://sassmaker.com/): Fleet map
 - [Docs](https://docs.sassmaker.com): Foundry manual
 - [Cockpit](https://app.sassmaker.com): Operator dashboard (auth)
+- [CodeVetter](https://codevetter.com): Desktop-first AI code review workbench for agent-generated code. Local SQLite, Tauri shell, evidence-backed review — your repo never hits a central server.
+- [RolePatch](https://rolepatch.com): AI-powered resume tailoring. Score fit against a job description, rewrite bullets for the role, and prep interviews.
+- [High Signal](https://highsignal.app): Daily synthesized brief on technology, startups, and finance — five sections with inline hit-rates, no signup required.
+- [Karte](https://karte.cc): Link-in-bio registry for humans and AI agents. Publish trust cards with public manifests at /{slug}/agent.json.
+- [Significant Hobbies](https://significanthobbies.com): Life planner for private daily rituals and public living — hobbies, bucket lists, and side quests over time.
+- [Materia](https://materia.significanthobbies.com): Evidence-graded reference for remedies organized by body part — body → condition → remedy → compound → study, with citations.
+- [SaaS Maker Docs](https://docs.sassmaker.com): Drop-in backend services for SaaS apps. API docs for Foundry (feedback, waitlist, testimonials, and more).
+- [Starboard](https://starboard.codevetter.com): GitHub stars organizer with semantic search — sub-product of CodeVetter for repo intelligence.
+- [EverythingRated](https://ratings.highsignal.app): Multi-axis rating tool for structured directories and catalogs — decisions with explicit trade-offs, not star averages.
+- [TrueHire](https://truehire.rolepatch.com): Hiring-side companion under RolePatch for evaluating candidates with structured role fit.
+- [researchPapers](https://papers.highsignal.app): Academic paper platform over a high-citation OpenAlex CS corpus — search, analytics, and RAG demo (~488k papers).
+- [PostTrainLLM](https://posttrainllm.com): Mac-local LLM specialist factory — post-training and runtime that fits on one Mac, plus WebGPU playground.
+- [Pace](https://pace-6xg.pages.dev): On-device Mac voice agent that reads your screen and acts with local context.
+- [DRank](https://domains.sassmaker.com): Ahrefs Domain Rating tracker feeding High Signal /domains and fleet domain marketing work.
+- [LoopTV](https://tv.significanthobbies.com): TV-style random video player for lean-back browsing of curated channels.
+- [MAL Explorer](https://anime.significanthobbies.com): Anime and manga discovery with multi-axis filtering and watchlists.
+- [Chess Coach](https://chess.significanthobbies.com): AI-coached chess game for practice with coaching feedback.
+- [Reader](https://read.significanthobbies.com): Research library: capture, annotate, and AI-chat over your reading — private by default.
+- [Email Manager](https://mail.sassmaker.com): Gmail workspace with local semantic search — private email tooling.
+- [AI Gateway](https://ai-gateway.sassmaker.com): OpenAI-compatible LLM gateway fronting free-tier models across multiple providers.
+- [SWE Interview Prep](https://learn.significanthobbies.com): SWE learning OS with FSRS spaced repetition, drills, and feedback.
+- [psi-swarm](https://performance.sassmaker.com): Distributional Lighthouse / PageSpeed audits with grounded performance analysis across the fleet.
 
 ## Machine surfaces
 
