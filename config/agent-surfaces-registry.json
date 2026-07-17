@@ -184,6 +184,12 @@
       "headFile": "saas-maker/apps/showcase/src/layouts/Layout.astro",
       "schemaType": "WebSite",
       "sameAs": ["https://github.com/sass-maker/saas-maker"],
+      "applicationCategory": "DeveloperApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
       "productLinks": [
         {
           "title": "Home",
@@ -425,6 +431,12 @@
       "headFile": "posttrainllm/browser/src/layouts/Default.astro",
       "schemaType": "SoftwareApplication",
       "sameAs": ["https://github.com/PostTrainLLM/posttrainllm"],
+      "applicationCategory": "DeveloperApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
       "altPublicDirs": [
         "posttrainllm/public"
       ],
@@ -452,6 +464,13 @@
       "headFile": "pace/website/src/layouts/BaseLayout.astro",
       "schemaType": "SoftwareApplication",
       "sameAs": ["https://github.com/HeyPace/pace"],
+      "applicationCategory": "UtilitiesApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "29.00",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock"
+      },
       "altPublicDirs": [
         "pace/public"
       ],
@@ -508,6 +527,12 @@
       "headFile": "anime-list/index.html",
       "schemaType": "WebSite",
       "sameAs": ["https://github.com/Significant-Hobbies/anime-list"],
+      "applicationCategory": "EntertainmentApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
       "worker": "anime-list/src/worker.ts",
       "wrangler": "anime-list/wrangler.toml",
       "productLinks": [
@@ -593,6 +618,7 @@
       "headFile": "free-ai/site/src/pages/index.astro",
       "schemaType": "SoftwareApplication",
       "sameAs": ["https://github.com/sass-maker/free-ai"],
+      "applicationCategory": "DeveloperApplication",
       "worker": "free-ai/src/index.ts",
       "productLinks": [
         {
