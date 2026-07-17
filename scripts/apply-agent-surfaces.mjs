@@ -40,9 +40,55 @@ const JSONLD_END = '<!-- fleet-jsonld:end -->';
 const args = process.argv.slice(2);
 const dryRun = args.includes('--dry-run');
 const jsonldMode = args.includes('--jsonld');
+const jsonldEmitMode = args.includes('--jsonld-emit');
 const onlyId = args.includes('--id') ? args[args.indexOf('--id') + 1] : null;
 
 const registry = loadRegistry(REGISTRY);
+
+// --- JSON-LD emit mode: write standalone snippet files to fleet-ops/out/jsonld/ ---
+if (jsonldEmitMode) {
+  const outDir = join(FLEET_ROOT, 'fleet-ops/out/jsonld');
+  if (!dryRun) {
+    mkdirSync(outDir, { recursive: true });
+  }
+
+  let ok = 0;
+  let fail = 0;
+
+  for (const product of registry.products) {
+    if (onlyId && product.id !== onlyId) continue;
+
+    // Only emit for products with headFile (skip saas-maker-docs, psi-swarm)
+    if (!product.headFile) continue;
+
+    const json = buildJsonLd(product, registry);
+    const jsonStr = JSON.stringify(json, null, 2);
+
+    try {
+      JSON.parse(jsonStr);
+    } catch (e) {
+      fail++;
+      console.error(`✗ ${product.id}: invalid JSON: ${e.message}`);
+      continue;
+    }
+
+    const fileName = `${product.id}.json`;
+    const content = `${JSONLD_START}\n${jsonStr}\n${JSONLD_END}\n`;
+
+    if (dryRun) {
+      ok++;
+      console.log(`✓ ${product.id}: would emit ${fileName}`);
+      continue;
+    }
+
+    writeFileSync(join(outDir, fileName), content, 'utf8');
+    ok++;
+    console.log(`✓ ${product.id}: emitted ${fileName}`);
+  }
+
+  console.log(`\nJSON-LD emit: ${ok} ok, ${fail} fail${dryRun ? ' (dry-run)' : ''}`);
+  process.exit(fail === 0 ? 0 : 1);
+}
 
 // --- JSON-LD mode: dry-run prints JSON + would-be diff; wet-run injects ---
 if (jsonldMode) {
@@ -70,6 +116,18 @@ if (jsonldMode) {
       skipped++;
       if (dryRun) {
         console.log(`· ${product.id}: no headFile (snippet — task 7)`);
+        console.log(jsonStr);
+        console.log('');
+      }
+      continue;
+    }
+
+    // Next.js layouts (.tsx) use JSX dangerouslySetInnerHTML, not text injection.
+    // Use --jsonld-emit to generate snippet files, then insert by hand.
+    if (product.headFile.endsWith('.tsx') || product.headFile.endsWith('.jsx')) {
+      skipped++;
+      if (dryRun) {
+        console.log(`· ${product.id}: JSX headFile (use --jsonld-emit)`);
         console.log(jsonStr);
         console.log('');
       }

@@ -43,6 +43,9 @@
       "summary": "AI-powered resume tailoring. Score fit against a job description, rewrite bullets for the role, and prep interviews.",
       "publicDir": "rolepatch/public",
       "stack": "opennext",
+      "headFile": "rolepatch/src/app/layout.tsx",
+      "schemaType": "SoftwareApplication",
+      "sameAs": ["https://github.com/sarthakagrawal927/rolepatch"],
       "worker": "rolepatch/worker.mjs",
       "productLinks": [
         {
@@ -70,6 +73,9 @@
       "summary": "Daily synthesized brief on technology, startups, and finance — five sections with inline hit-rates, no signup required.",
       "publicDir": "high-signal/apps/web/public",
       "stack": "opennext",
+      "headFile": "high-signal/apps/web/src/app/layout.tsx",
+      "schemaType": "SoftwareApplication",
+      "sameAs": ["https://github.com/High-Signal-App/high-signal"],
       "worker": "high-signal/apps/web/worker.mjs",
       "productLinks": [
         {
@@ -97,6 +103,9 @@
       "summary": "Link-in-bio registry for humans and AI agents. Publish trust cards with public manifests at /{slug}/agent.json.",
       "publicDir": "karte/public",
       "stack": "opennext",
+      "headFile": "karte/src/app/layout.tsx",
+      "schemaType": "SoftwareApplication",
+      "sameAs": ["https://github.com/sarthakagrawal927/karte"],
       "worker": "karte/worker.mjs",
       "hasDynamicLlms": true,
       "productLinks": [
@@ -125,6 +134,9 @@
       "summary": "Life planner for private daily rituals and public living — hobbies, bucket lists, and side quests over time.",
       "publicDir": "significanthobbies/public",
       "stack": "opennext",
+      "headFile": "significanthobbies/src/app/layout.tsx",
+      "schemaType": "SoftwareApplication",
+      "sameAs": ["https://github.com/Significant-Hobbies/significanthobbies"],
       "worker": "significanthobbies/worker.mjs",
       "productLinks": [
         {
@@ -348,6 +360,9 @@
       "summary": "GitHub stars organizer with semantic search — sub-product of CodeVetter for repo intelligence.",
       "publicDir": "starboard/public",
       "stack": "opennext",
+      "headFile": "starboard/src/app/layout.tsx",
+      "schemaType": "SoftwareApplication",
+      "sameAs": ["https://github.com/Codevetter/starboard"],
       "worker": "starboard/worker.mjs",
       "productLinks": [
         {
@@ -370,6 +385,9 @@
       "summary": "Multi-axis rating tool for structured directories and catalogs — decisions with explicit trade-offs, not star averages.",
       "publicDir": "everythingrated/apps/web/public",
       "stack": "opennext",
+      "headFile": "everythingrated/apps/web/src/app/layout.tsx",
+      "schemaType": "SoftwareApplication",
+      "sameAs": ["https://github.com/High-Signal-App/everythingrated"],
       "worker": "everythingrated/apps/web/worker.mjs",
       "productLinks": [
         {
@@ -387,6 +405,9 @@
       "summary": "Hiring-side companion under RolePatch for evaluating candidates with structured role fit.",
       "publicDir": "truehire/apps/web/public",
       "stack": "opennext",
+      "headFile": "truehire/apps/web/src/app/layout.tsx",
+      "schemaType": "SoftwareApplication",
+      "sameAs": ["https://github.com/sarthakagrawal927/truehire"],
       "worker": "truehire/apps/web/worker.mjs",
       "productLinks": [
         {
@@ -492,6 +513,9 @@
       "summary": "Ahrefs Domain Rating tracker feeding High Signal /domains and fleet domain marketing work.",
       "publicDir": "drank/public",
       "stack": "next-static",
+      "headFile": "drank/app/layout.tsx",
+      "schemaType": "SoftwareApplication",
+      "sameAs": ["https://github.com/High-Signal-App/drank"],
       "productLinks": [
         {
           "title": "Home",
@@ -508,6 +532,9 @@
       "summary": "TV-style random video player for lean-back browsing of curated channels.",
       "publicDir": "looptv/public",
       "stack": "next-static",
+      "headFile": "looptv/src/app/layout.tsx",
+      "schemaType": "SoftwareApplication",
+      "sameAs": ["https://github.com/Significant-Hobbies/looptv"],
       "productLinks": [
         {
           "title": "Home",
