@@ -79,13 +79,12 @@ const ICONS = {
     `,
   },
   significanthobbies: {
-    bg: "#059669",
-    fg: "#ffffff",
-    note: "overlapping hobby rings",
+    bg: "#047857",
+    fg: "#ecfdf5",
+    note: "soft life stamp — single ring + center",
     mark: `
-      <circle cx="13" cy="16" r="7.2" fill="none" stroke="#ffffff" stroke-width="2.4"/>
-      <circle cx="19" cy="16" r="7.2" fill="none" stroke="#a7f3d0" stroke-width="2.4" opacity=".9"/>
-      <circle cx="16" cy="16" r="2.4" fill="#ffffff"/>
+      <circle cx="16" cy="16" r="8.2" fill="none" stroke="#ecfdf5" stroke-width="2.8"/>
+      <circle cx="16" cy="16" r="3" fill="#ecfdf5"/>
     `,
   },
   materia: {

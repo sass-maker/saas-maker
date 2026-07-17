@@ -8,7 +8,7 @@ Flat geometric avatars for **orgs you own** (sole admin). No glossy AI-icon look
 |---|---|---|
 | [Codevetter](https://github.com/Codevetter) | Nested diamond | [profile](https://github.com/organizations/Codevetter/settings/profile) |
 | [High-Signal-App](https://github.com/High-Signal-App) | Waveform + baseline | [profile](https://github.com/organizations/High-Signal-App/settings/profile) |
-| [Significant-Hobbies](https://github.com/Significant-Hobbies) | Two rings + core | [profile](https://github.com/organizations/Significant-Hobbies/settings/profile) |
+| [Significant-Hobbies](https://github.com/Significant-Hobbies) | Soft life stamp (ring + center) | [profile](https://github.com/organizations/Significant-Hobbies/settings/profile) |
 | [HeyPace](https://github.com/HeyPace) | Four pace bars | [profile](https://github.com/organizations/HeyPace/settings/profile) |
 | [PostTrainLLM](https://github.com/PostTrainLLM) | Training curve | [profile](https://github.com/organizations/PostTrainLLM/settings/profile) |
 | [sass-maker](https://github.com/sass-maker) | Copper **F** (Foundry) | [profile](https://github.com/organizations/sass-maker/settings/profile) |

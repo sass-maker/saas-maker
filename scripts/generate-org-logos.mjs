@@ -42,13 +42,13 @@ const ORGS = {
   },
   "Significant-Hobbies": {
     name: "Significant Hobbies",
-    note: "Two rings, one center",
+    note: "Soft life stamp — single ring + center",
+    // Lifestyle: one calm ring (life) and a solid center (you). No interlocking tech motifs.
     svg: `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Significant Hobbies">
   <rect width="512" height="512" fill="#047857"/>
-  <circle cx="210" cy="256" r="118" fill="none" stroke="#ecfdf5" stroke-width="36"/>
-  <circle cx="302" cy="256" r="118" fill="none" stroke="#a7f3d0" stroke-width="36"/>
-  <circle cx="256" cy="256" r="36" fill="#ffffff"/>
+  <circle cx="256" cy="256" r="132" fill="none" stroke="#ecfdf5" stroke-width="40"/>
+  <circle cx="256" cy="256" r="48" fill="#ecfdf5"/>
 </svg>`,
   },
   HeyPace: {
@@ -168,18 +168,20 @@ def high_signal(d, s):
     pts = [(scale(x,s), scale(y,s)) for x,y in pts]
     d.line(pts, fill="#22d3ee", width=max(4, scale(28,s)), joint="curve")
 
-# --- Significant Hobbies ---
+# --- Significant Hobbies (simple life stamp) ---
 def sh(d, s):
-    w = max(4, scale(36, s))
-    # outer rings as thick ellipses via arc rings approximation
-    for cx, cy, r, col in [
-        (210, 256, 118, "#ecfdf5"),
-        (302, 256, 118, "#a7f3d0"),
-    ]:
-        bbox = [scale(cx-r,s), scale(cy-r,s), scale(cx+r,s), scale(cy+r,s)]
-        d.ellipse(bbox, outline=col, width=w)
-    r = 36
-    d.ellipse([scale(256-r,s), scale(256-r,s), scale(256+r,s), scale(256+r,s)], fill="#ffffff")
+    w = max(4, scale(40, s))
+    r = 132
+    d.ellipse(
+        [scale(256 - r, s), scale(256 - r, s), scale(256 + r, s), scale(256 + r, s)],
+        outline="#ecfdf5",
+        width=w,
+    )
+    r = 48
+    d.ellipse(
+        [scale(256 - r, s), scale(256 - r, s), scale(256 + r, s), scale(256 + r, s)],
+        fill="#ecfdf5",
+    )
 
 # --- Pace ---
 def pace(d, s):
@@ -279,7 +281,7 @@ Flat geometric avatars for **orgs you own** (sole admin). No glossy AI-icon look
 |---|---|---|
 | [Codevetter](https://github.com/Codevetter) | Nested diamond | [profile](https://github.com/organizations/Codevetter/settings/profile) |
 | [High-Signal-App](https://github.com/High-Signal-App) | Waveform + baseline | [profile](https://github.com/organizations/High-Signal-App/settings/profile) |
-| [Significant-Hobbies](https://github.com/Significant-Hobbies) | Two rings + core | [profile](https://github.com/organizations/Significant-Hobbies/settings/profile) |
+| [Significant-Hobbies](https://github.com/Significant-Hobbies) | Soft life stamp (ring + center) | [profile](https://github.com/organizations/Significant-Hobbies/settings/profile) |
 | [HeyPace](https://github.com/HeyPace) | Four pace bars | [profile](https://github.com/organizations/HeyPace/settings/profile) |
 | [PostTrainLLM](https://github.com/PostTrainLLM) | Training curve | [profile](https://github.com/organizations/PostTrainLLM/settings/profile) |
 | [sass-maker](https://github.com/sass-maker) | Copper **F** (Foundry) | [profile](https://github.com/organizations/sass-maker/settings/profile) |
