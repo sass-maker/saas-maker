@@ -111,8 +111,10 @@ Semgrep** on the same real agent PRs; measure defects caught / false positives /
 duplicate comments / review time / cost / fix-verified; publish every raw
 output. Then a `/ai-code-review-tools` roundup page built *from that data*.
 - I design the methodology + harness before any execution. glm's role will be
-  limited to page scaffolding once the data exists. Left here as a placeholder so
-  it's tracked; **do not start as a generic SEO article.**
+  limited to page scaffolding once the data exists. **Do not start as a generic
+  SEO article.**
+- **Design (done):** `fleet-ops/docs/proof-assets/codevetter-competitor-benchmark.md`.
+  Blocked on [user] provisioning competitor accounts (B-INFRA).
 
 ### CV7 — Trust + credibility fixes (product infra) · M · high priority
 - **Signing/notarization:** add Developer ID codesign + `notarytool` +
@@ -120,10 +122,10 @@ output. Then a `/ai-code-review-tools` roundup page built *from that data*.
   Secrets (`APPLE_ID`, `APPLE_TEAM_ID`, `APPLE_APP_PASSWORD`, Developer ID cert)
   come from the user — write the workflow to read them from GitHub secrets and
   no-op with a clear log line if absent. **[user] provides secrets — see B-INFRA.**
-- **Telemetry opt-out:** the in-app PostHog capture (`apps/desktop/src/lib/analytics.ts`)
-  fires unconditionally — this contradicts the privacy-first positioning. Add a
-  first-run consent gate + a Settings toggle (default per user decision; **recommend
-  opt-in** for a privacy-marketed tool). Respect it before any `capture`.
+- **Telemetry opt-in (DECIDED 2026-07-18):** the in-app PostHog capture
+  (`apps/desktop/src/lib/analytics.ts`) fires unconditionally — this contradicts
+  the privacy-first positioning. Add a first-run consent gate + a Settings toggle,
+  **default OFF (opt-in)**. No `capture` fires until the user explicitly opts in.
 - **Accept:** release workflow produces a signed+notarized DMG when secrets
   present; telemetry gated behind explicit consent; privacy page matches actual
   behavior.
@@ -177,6 +179,8 @@ the device (privacy), and offline capability vs cloud Mac assistants
 (Superwhisper/Dottie/Shadow/Siri). Published as a crawlable page + downloadable
 data + `Dataset` JSON-LD — the citable data source Pace lacks. I design the
 methodology; glm builds the page from the data.
+- **Design (done):** `fleet-ops/docs/proof-assets/heypace-ondevice-benchmark.md`.
+  Blocked on [user] providing a measurement Mac + comparator apps (B-INFRA).
 
 ### HP6 — Feedback + trust (product infra) · M
 - Add a `.github/ISSUE_TEMPLATE/` (bug + feature) and an in-app "Send feedback"
@@ -306,11 +310,15 @@ collision (CodeVet/CodVerter; PostTrainBench; generic "Pace").
 - **Accept:** identical name + descriptor across all surfaces per product;
   Organization/WebSite JSON-LD present with sameAs.
 
-### X4 — [me] Show HN + outreach evidence packages
-Draft posts (Show HN for CodeVetter benchmark, HeyPace $29 Mac tool,
-PostTrainLLM browser-training) and the roundup-author outreach email (the
-"would you test it for the next update, here's a reproducible benchmark" frame).
-I own the framing; **[user]** posts/sends — see B-LAUNCH.
+### X4 — [me] Outreach evidence packages · HN parked
+Draft the roundup-author outreach email + AlternativeTo/Product Hunt copy per
+product (the "would you test it for the next update, here's a reproducible
+benchmark" frame). I own the framing; **[user]** sends/submits — see B-LAUNCH.
+- **Copy (done):** `fleet-ops/docs/outreach-evidence-packages-2026-07.md` —
+  per-product outreach email + AlternativeTo + Product Hunt copy, ready to send.
+- **Show HN is on hold (user, 2026-07-18)** — no HN posting for now. Drafts kept
+  in the evidence-package doc so a launch is ready when you choose to, but not
+  queued.
 
 ---
 
@@ -341,7 +349,7 @@ analytics is live. In browser queue.
 # Product infra — user decisions (summary; details in browser queue B-INFRA)
 
 - **Apple Developer signing secrets** for CodeVetter (CV7) + Pace (HP6) CI.
-- **CodeVetter telemetry consent default** (recommend opt-in).
+- ~~CodeVetter telemetry consent default~~ — DECIDED: opt-in (default OFF), CV7.
 - **Pace commerce/licensing** ($29 app currently unenforced) — Gumroad/Stripe/
   Paddle + StoreKit or license-key validation.
 - **PostTrainLLM Mac-app vs web-only positioning** (PT8).

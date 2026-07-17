@@ -154,12 +154,11 @@ Extends B9. These create the third-party consensus LLMs cite. Order:
 3. **Populate the HF org** (extends B8): publish the leaderboard models publicly
    at `huggingface.co/PostTrainLLM` — instant proof + citation surface (currently
    empty). Upload via `huggingface-cli upload`.
-4. **Show HN** (needs you present 3–4h): CodeVetter benchmark first (strongest
-   asset), then PostTrainLLM browser-training, then HeyPace $29 tool. Drafts from
-   X4.
-5. **r/LocalLLaMA** posts — best-fit sub for all three (local/on-device angle).
-6. **Outreach** to roundup authors with the evidence package (X4) — "would you
+4. **r/LocalLLaMA** posts — best-fit sub for all three (local/on-device angle).
+5. **Outreach** to roundup authors with the evidence package (X4) — "would you
    test it for the next update, here's a reproducible benchmark."
+6. **Show HN — ON HOLD (2026-07-18):** not posting to HN for now. Drafts stay
+   ready in the evidence-package doc; unpark when you decide to launch.
 
 ## B-INFRA — Product-infra decisions (gate the trust/commerce fixes)
 
@@ -167,9 +166,8 @@ Extends B9. These create the third-party consensus LLMs cite. Order:
   `APPLE_APP_PASSWORD`, and the Developer ID cert as GitHub secrets for
   CodeVetter (CV7) and Pace (HP6) so CI can ship signed+notarized DMGs.
   CodeVetter currently ships an **unsigned DMG** → Gatekeeper blocks normal users.
-- **CodeVetter telemetry default:** decide opt-in vs opt-out for the in-app
-  PostHog (recommend **opt-in** — current always-on contradicts the privacy
-  pitch). glm (CV7) implements the gate either way.
+- ~~CodeVetter telemetry default~~ — **DECIDED 2026-07-18: opt-in (default
+  OFF).** glm (CV7) implements the consent gate; no capture until opt-in.
 - **Pace commerce/licensing:** the $29 app has no automated checkout or license
   enforcement (mailto + hand-sent keys; anyone with the `.zip` runs it fully).
   Pick a path — Gumroad/Stripe/Paddle for checkout + a license-key or StoreKit
