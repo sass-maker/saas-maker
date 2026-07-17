@@ -216,8 +216,11 @@ fleet-ops/
 │   ├── fleet-workspace/ ← subskill: cross-project workspace decisions
 │   ├── name-domains/    ← standalone: domain name generation
 │   ├── spec-driven/     ← standalone: OpenSpec spec-driven dev workflow for new features
-│   ├── agent-ready/     ← standalone: AI crawler readiness scan
-│   ├── seo-audit/       ← standalone: on-page SEO audit
+│   ├── site-health/    ← parent: routes to agent-ready, seo-audit, psi-swarm, geo-observatory + combined scorecard
+│   ├── agent-ready/     ← subskill: AI crawler readiness scan
+│   ├── seo-audit/       ← subskill: on-page SEO audit
+│   ├── psi-swarm/       ← subskill: Lighthouse perf audits (CLI tool lives in fleet-ops/psi-swarm/)
+│   ├── geo-observatory/ ← subskill: recurring GEO outcome measurement (ledger + trend report)
 │   └── token-budget/    ← standalone: Codex context/token audit
 ├── teammates/skills/    ← delegation skills
 │   ├── call-teammate/   ← parent: routes to 5 call-* subskills
@@ -226,7 +229,7 @@ fleet-ops/
 │   ├── call-cursor/     ← subskill
 │   ├── call-devin/      ← subskill
 │   └── call-grok/       ← subskill
-├── psi-swarm/           ← standalone: Lighthouse perf audits (skill + CLI tool)
+├── psi-swarm/           ← CLI tool for the psi-swarm subskill
 ├── scripts/             ← fleet scripts (health checks, perf sweeps, bench-launch, link/unlink)
 ├── docs/                ← living docs (runbook, agent-layering, perf-monitoring, audits)
 │   └── archive/         ← dated snapshots (not living reference)
@@ -236,17 +239,16 @@ fleet-ops/
 
 ### Skill discovery (progressive disclosure)
 
-Only 10 fleet skills are exposed to each agent — 2 parents + 8 standalones:
+Fleet skills are exposed via 3 parents + standalones (canonical home:
+`fleet-ops/skills/` — never add skills to `~/.claude/skills`):
 
-| Symlink | Type | Routes to |
+| Skill | Type | Routes to |
 |---|---|---|
 | `fleet-ops` | parent | fleet-audit, fleet-init, fleet-deploy-guard, fleet-workspace |
 | `call-teammate` | parent | call-claude-code, call-codex, call-cursor, call-devin, call-grok |
+| `site-health` | parent | agent-ready, seo-audit, psi-swarm, geo-observatory; combined scorecard |
 | `name-domains` | standalone | — |
-| `psi-swarm` | standalone | — |
 | `spec-driven` | standalone | OpenSpec workflow for new features |
-| `agent-ready` | standalone | AI crawler readiness |
-| `seo-audit` | standalone | on-page SEO audit |
 | `token-budget` | standalone | Codex context/token audit |
 | `mobile-task-control` | standalone | durable chat-requested task control |
 | `daily-learning` | standalone | private adaptive learning-session links |

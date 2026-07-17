@@ -1,11 +1,13 @@
 ---
 name: agent-ready
-description: Check if a website is ready for AI agents — can GPTBot, ClaudeBot, Perplexity, and other AI crawlers discover and read the site? Prefer the local fleet agent-index audit (llms.txt, /api/ai, markdown negotiation, SPA-fake detection). Optional external isitagentready.com scan for protocol extras. Use when the user asks "is my site ready for AI?", "can AI crawlers read my site?", "check AI crawler access", "is GPTBot blocked?", "agent readiness scan", GEO, llms.txt, or wants to verify a site is discoverable by AI agents before launch.
+description: Subskill of site-health — AI/agent indexing audit (llms.txt, /api/ai, markdown negotiation, robots vs AI crawlers, SPA-fake detection). Route here from site-health for "can AI read my site" checks.
 metadata:
   short-description: AI agent indexing audit (llms.txt, markdown, /api/ai)
 ---
 
 # Agent Ready
+
+Subskill of `site-health` — invoked directly or via the parent router.
 
 Check whether a website is ready for AI agents and crawlers to **discover and
 read product truth without JS**. Fleet S-tier is defined in

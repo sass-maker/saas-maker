@@ -1,15 +1,15 @@
 ---
 name: geo-observatory
 description: >
-  Run the fleet's recurring GEO/SEO outcome measurement: probe configured
-  brand/category queries on live web search, classify each product A/B/C,
-  append to the observation ledger, and regenerate the trend report. Use for
-  "run the observatory", "did our SEO move?", "check GEO results", weekly
-  scheduled measurement runs, or after major deploys/launches to capture a
-  new observation point.
+  Subskill of site-health — recurring GEO/SEO outcome measurement: probe
+  configured queries on live web search, classify A/B/C, append to the
+  ledger, regenerate the trend report. Route here from site-health for
+  "did results move" and scheduled weekly runs.
 ---
 
 # geo-observatory — fleet GEO outcome measurement
+
+Subskill of `site-health` — invoked directly, via the parent router, or by the weekly routine.
 
 You are recording **comparable, evidence-backed observations over time**.
 Discipline matters more than cleverness: run the configured queries exactly,

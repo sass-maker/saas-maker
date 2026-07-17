@@ -1,11 +1,13 @@
 ---
 name: seo-audit
-description: On-page SEO audit for any URL or list of URLs. Checks title, meta description, canonical, OG/Twitter tags, hreflang, JSON-LD structured data, sitemap coverage, robots.txt, H1/H2 hierarchy, image alt text, word count, SSR/template-literal leaks, and broken internal links. Use when the user asks "audit SEO for X", "check my pages for SEO", "is X SEO-healthy", "review meta tags", "check structured data", before launch, before deploy, or as part of a fleet audit alongside psi-swarm and agent-ready.
+description: Subskill of site-health — on-page SEO audit (title/meta/canonical/OG/hreflang/JSON-LD/sitemap/headings/alt/SSR leaks) for any URL list. Route here from site-health for "check my SEO" requests.
 metadata:
   short-description: On-page SEO audit (meta, OG, canonical, hreflang, JSON-LD, sitemap, headings, alt, SSR leaks)
 ---
 
 # seo-audit — on-page SEO audit
+
+Subskill of `site-health` — invoked directly or via the parent router.
 
 Run a consistent on-page SEO audit against any URL or list of URLs.
 Covers the checks that matter for search engines and AI crawlers alike:

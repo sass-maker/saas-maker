@@ -1,9 +1,11 @@
 ---
 name: psi-swarm
-description: Run distributional Lighthouse audits with grounded LLM reasoning on any URL. Use when the user asks about web performance, Core Web Vitals (LCP/CLS/INP/TBT/FCP/TTFB), PageSpeed Insights, Lighthouse scores, "is my site fast?", "why is X slow?", comparing perf before/after a change, or analysing render-blocking resources / hero image weight / unused JS. Returns p50/p75/p90/p99 across realistic device/network presets plus a natural-language explanation grounded in actual audit findings (LCP element, phase breakdown, ranked opportunities with byte/ms savings).
+description: Subskill of site-health — distributional Lighthouse audits with grounded LLM reasoning on any URL. Use when the user asks about web performance, Core Web Vitals (LCP/CLS/INP/TBT/FCP/TTFB), PageSpeed Insights, Lighthouse scores, "is my site fast?", "why is X slow?", comparing perf before/after a change, or analysing render-blocking resources / hero image weight / unused JS. Returns p50/p75/p90/p99 across realistic device/network presets plus a natural-language explanation grounded in actual audit findings (LCP element, phase breakdown, ranked opportunities with byte/ms savings).
 ---
 
 # psi-swarm — distributional Lighthouse with reasoning
+
+Subskill of `site-health` — invoked directly or via the parent router.
 
 You have access to **psi-swarm** — a CLI tool that runs Lighthouse many times against a URL across realistic device/network presets, then explains the results. It lives in the fleet-ops project at `fleet-ops/psi-swarm/` (this skill file is its canonical home).
 
