@@ -1,3 +1,7 @@
 User-agent: *
 Allow: /
 Sitemap: https://sassmaker.com/sitemap-index.xml
+# Agent indexing
+Allow: /llms.txt
+Allow: /index.md
+Allow: /api/ai

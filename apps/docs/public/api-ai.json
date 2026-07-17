@@ -1,0 +1,39 @@
+{
+  "name": "SaaS Maker Docs",
+  "version": "1",
+  "url": "https://docs.sassmaker.com",
+  "llms": "https://docs.sassmaker.com/llms.txt",
+  "llmsFull": null,
+  "sitemap": "https://docs.sassmaker.com/sitemap.xml",
+  "markdown": {
+    "suffix": ".md",
+    "negotiation": true
+  },
+  "surfaces": [
+    {
+      "id": "home",
+      "url": "https://docs.sassmaker.com/",
+      "md": "https://docs.sassmaker.com/index.md",
+      "kind": "static",
+      "description": "Product home"
+    },
+    {
+      "id": "docs-home",
+      "url": "https://docs.sassmaker.com/",
+      "md": null,
+      "kind": "static",
+      "description": "Documentation root"
+    },
+    {
+      "id": "full-llm-dump",
+      "url": "https://docs.sassmaker.com/llms.txt",
+      "md": null,
+      "kind": "static",
+      "description": "Generated corpus"
+    }
+  ],
+  "auth": {
+    "public": true,
+    "notes": "Auth-walled app routes are not agent-indexed unless listed here."
+  }
+}

@@ -1,28 +1,19 @@
 # Foundry (SaaS Maker)
 
-> Foundry is Sarthak Agrawal's personal product fleet — twenty-something shipped apps plus the open-source operating layer (CLI, cockpit, deploy tooling) that runs them.
-
-Static showcase at sassmaker.com. Apps live on their own custom domains; this site is the fleet map and case studies.
+> Sarthak Agrawal's personal product fleet showcase — shipped apps plus the open-source operating layer that runs them.
 
 ## Product
 
-- [Home](https://sassmaker.com/): Fleet showcase and product inventory
-- [Fleet performance case study](https://sassmaker.com/case-study/fleet-performance): How 23 sites were pushed toward sub-500ms desktop LCP p75
-- [Privacy](https://sassmaker.com/privacy): Privacy policy for this showcase site
-- [Terms](https://sassmaker.com/terms): Terms of use
+- [Home](https://sassmaker.com/): Fleet map
+- [Docs](https://docs.sassmaker.com): Foundry manual
+- [Cockpit](https://app.sassmaker.com): Operator dashboard (auth)
 
-## Fleet apps (custom domains)
+## Machine surfaces
 
-- [Cockpit](https://app.sassmaker.com): Operator dashboard for fleet tasks and deploys
-- [Documentation](https://docs.sassmaker.com): Foundry manual and stack notes
-- [CodeVetter](https://codevetter.com): AI code review desktop app
-- [High Signal](https://highsignal.app): Daily market and startup brief
-- [RolePatch](https://rolepatch.com): Resume tailoring
-- [Significant Hobbies](https://significanthobbies.com): Hobby timelines
-- [Aliveville](https://aliveville.com): AI world game
-- [Portfolio](https://sarthakagrawal.dev): Builder home page
+- [Agent catalog](https://sassmaker.com/api/ai): JSON inventory of public surfaces
+- [Homepage markdown](https://sassmaker.com/index.md): Product brief without JS
+- [This index](https://sassmaker.com/llms.txt)
 
 ## Optional
 
-- [GitHub — saas-maker](https://github.com/sass-maker/saas-maker): Monorepo source
-- [Launch kit](https://github.com/sass-maker/saas-maker/blob/main/docs/launch-kit.md): Distribution copy for Show HN, directories, and DR work
+- [Foundry](https://sassmaker.com): Parent fleet showcase

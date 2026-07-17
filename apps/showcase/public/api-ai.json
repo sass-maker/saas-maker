@@ -1,0 +1,39 @@
+{
+  "name": "Foundry (SaaS Maker)",
+  "version": "1",
+  "url": "https://sassmaker.com",
+  "llms": "https://sassmaker.com/llms.txt",
+  "llmsFull": null,
+  "sitemap": "https://sassmaker.com/sitemap.xml",
+  "markdown": {
+    "suffix": ".md",
+    "negotiation": true
+  },
+  "surfaces": [
+    {
+      "id": "home",
+      "url": "https://sassmaker.com/",
+      "md": "https://sassmaker.com/index.md",
+      "kind": "static",
+      "description": "Product home"
+    },
+    {
+      "id": "docs",
+      "url": "https://docs.sassmaker.com",
+      "md": null,
+      "kind": "static",
+      "description": "Foundry manual"
+    },
+    {
+      "id": "cockpit",
+      "url": "https://app.sassmaker.com",
+      "md": null,
+      "kind": "static",
+      "description": "Operator dashboard (auth)"
+    }
+  ],
+  "auth": {
+    "public": true,
+    "notes": "Auth-walled app routes are not agent-indexed unless listed here."
+  }
+}
