@@ -11,6 +11,12 @@
       "headFile": "codevetter/apps/landing-page-astro/src/layouts/Layout.astro",
       "schemaType": "SoftwareApplication",
       "sameAs": ["https://github.com/Codevetter/codevetter"],
+      "applicationCategory": "DeveloperApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
       "productLinks": [
         {
           "title": "Home",
