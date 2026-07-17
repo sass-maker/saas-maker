@@ -95,6 +95,60 @@ A file in `public/llms.txt` is worthless if the SPA catch-all returns HTML 200.
 5. `llms.txt` = map; page MD / `llms-full` = substance.
 6. Huge corpora use indexes + deep links — do not dump millions of entities to the edge.
 
+## JSON-LD structured data
+
+Every public product homepage ships a `@graph` JSON-LD block with:
+
+1. **Organization** — fleet publisher (SaaS Maker / Foundry), `sameAs` → hub URL + GitHub repo
+2. **SoftwareApplication** or **WebSite** — the product node with `name`, `url`, `description`, `publisher` ref, and optional `applicationCategory` / `offers`
+
+The block is generated from `agent-surfaces-registry.json` by
+`apply-agent-surfaces.mjs --jsonld` and injected into each product's head file
+(layout, index.html, or app.html). A marked comment block
+(`<!-- fleet-jsonld:start/end -->`) wraps the injection for idempotent re-runs.
+
+### Registry fields
+
+| Field | Required | Purpose |
+|---|---|---|
+| `headFile` | yes (text-injectable) | Path to the head file (layout, index.html) |
+| `schemaType` | yes | `SoftwareApplication` or `WebSite` |
+| `sameAs` | recommended | Array of canonical URLs (GitHub repo, etc.) |
+| `applicationCategory` | optional | e.g. `DeveloperApplication`, `EntertainmentApplication` |
+| `offers` | optional | Schema.org Offer object (price, currency, availability) |
+
+### Injection modes
+
+| Mode | Products | How |
+|---|---|---|
+| **Text injection** | Astro layouts, HTML files | `--jsonld` inserts marked block before `</head>` |
+| **JSX snippet** | Next.js layouts (.tsx) | `--jsonld-emit` generates snippet; insert by hand |
+| **Manual** | Starlight, no-src sites | Copy JSON from `fleet-ops/out/jsonld/<id>.json` |
+
+```bash
+# Dry-run (print JSON + would-be action, no writes)
+node fleet-ops/scripts/apply-agent-surfaces.mjs --jsonld --dry-run
+
+# Inject into all text-injectable head files
+node fleet-ops/scripts/apply-agent-surfaces.mjs --jsonld
+
+# Emit standalone snippet files for JSX layouts
+node fleet-ops/scripts/apply-agent-surfaces.mjs --jsonld-emit
+```
+
+### Safety checks
+
+The injector verifies after each write:
+1. **Parse-back** — re-extract the marked block and `JSON.parse` the script contents
+2. **Head balance** — `</head>` count in the written file matches the original
+3. **Restore-on-fail** — if any check fails, the original file is restored
+
+### Audit
+
+The `jsonld` column in `agent-index-audit.mjs` reports (bonus, not required for
+S-tier): fleet-marked block presence, `@graph` structure, Organization +
+SoftwareApplication/WebSite nodes, and valid JSON count.
+
 ## Audit
 
 ```bash

@@ -81,6 +81,11 @@ bash fleet-ops/skills/seo-audit/scripts/seo-audit.sh https://rolepatch.com/ --si
 # Apply agent files (then deploy)
 node fleet-ops/scripts/apply-agent-surfaces.mjs
 
+# JSON-LD structured data (see agent-indexing-standard.md § JSON-LD)
+node fleet-ops/scripts/apply-agent-surfaces.mjs --jsonld --dry-run    # preview
+node fleet-ops/scripts/apply-agent-surfaces.mjs --jsonld              # inject
+node fleet-ops/scripts/apply-agent-surfaces.mjs --jsonld-emit         # emit snippets for JSX layouts
+
 # IndexNow (Bing/Yandex/etc. — not Google). See docs/indexnow.md
 node fleet-ops/scripts/indexnow-submit.mjs --init-key
 node fleet-ops/scripts/indexnow-submit.mjs --apply-keys   # then deploy
