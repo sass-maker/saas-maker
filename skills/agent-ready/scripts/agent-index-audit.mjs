@@ -10,24 +10,37 @@
  *   node agent-index-audit.mjs --all --json
  *   node agent-index-audit.mjs --project rolepatch
  *
- * Does NOT call isitagentready.com (rate limits). Probes origins directly
- * and detects SPA-fake HTML shells on agent paths.
+ * Targets come from fleet-ops/config/agent-surfaces-registry.json (the
+ * canonical product list). Does NOT call isitagentready.com (rate limits).
+ * Probes origins directly and detects SPA-fake HTML shells on agent paths.
+ *
+ * Required checks: llms.txt, /api/ai, homepage markdown, not-SPA-fake,
+ * robots (User-agent + Sitemap line), AI-crawler access (GPTBot/ClaudeBot/
+ * OAI-SearchBot/PerplexityBot not disallowed), sitemap (real XML, same-host
+ * <loc> entries). If /api/ai advertises llmsFull, that URL must resolve.
+ * Bonus (reported, not required): /skill.md, IndexNow key file.
  */
 
 import { readFileSync, existsSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 // scripts → agent-ready → skills → fleet-ops → fleet root
 const FLEET_ROOT = resolve(__dirname, '../../../..');
-const CONTRACTS_PATH = join(
+const REGISTRY_PATH = join(
   FLEET_ROOT,
-  'saas-maker/scripts/lib/fleet-health-contracts.mjs'
+  'fleet-ops/config/agent-surfaces-registry.json'
 );
+const INDEXNOW_CONFIG_PATH = join(FLEET_ROOT, 'fleet-ops/config/indexnow.json');
 
-const UA = 'fleet-agent-index-audit/1.0 (+https://sassmaker.com)';
+const UA = 'fleet-agent-index-audit/2.0 (+https://sassmaker.com)';
 const TIMEOUT_MS = 15_000;
+
+// Answer-engine crawlers that must not be disallowed for GEO to work at all.
+const CRITICAL_AI_BOTS = ['GPTBot', 'ClaudeBot', 'OAI-SearchBot', 'PerplexityBot'];
+// Reported when blocked, but not required (training-only or low-value bots).
+const REPORTED_AI_BOTS = ['Google-Extended', 'CCBot', 'ChatGPT-User', 'Claude-Web'];
 
 const REQUIRED_CHECKS = [
   'llms_txt',
@@ -35,23 +48,26 @@ const REQUIRED_CHECKS = [
   'homepage_md',
   'not_spa_fake',
   'robots',
+  'ai_access',
   'sitemap',
 ];
 
 async function main() {
   const args = parseArgs(process.argv.slice(2));
-  const targets = await resolveTargets(args);
+  const targets = resolveTargets(args);
 
   if (targets.length === 0) {
-    console.error('No targets. Pass a URL, --project <name>, or --all.');
+    console.error('No targets. Pass a URL, --project <registry-id>, or --all.');
     process.exit(2);
   }
+
+  const indexNowKey = loadIndexNowKey();
 
   const results = [];
   for (const t of targets) {
     process.stderr.write(`Auditing ${t.name} (${t.origin})…\n`);
     try {
-      results.push(await auditOrigin(t));
+      results.push(await auditOrigin(t, { indexNowKey }));
     } catch (err) {
       results.push({
         name: t.name,
@@ -101,12 +117,42 @@ function parseArgs(argv) {
 function printHelp() {
   console.log(`Usage:
   agent-index-audit.mjs <url>
-  agent-index-audit.mjs --project <health-contract-key>
+  agent-index-audit.mjs --project <registry-id>
   agent-index-audit.mjs --all [--json]
+
+Targets: fleet-ops/config/agent-surfaces-registry.json
 `);
 }
 
-async function resolveTargets(args) {
+function loadRegistry() {
+  if (!existsSync(REGISTRY_PATH)) {
+    console.error(`Missing agent-surfaces registry at ${REGISTRY_PATH}`);
+    process.exit(2);
+  }
+  return JSON.parse(readFileSync(REGISTRY_PATH, 'utf8'));
+}
+
+function loadIndexNowKey() {
+  try {
+    if (!existsSync(INDEXNOW_CONFIG_PATH)) return null;
+    const cfg = JSON.parse(readFileSync(INDEXNOW_CONFIG_PATH, 'utf8'));
+    return typeof cfg.key === 'string' && cfg.key.length >= 16 ? cfg.key : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Same origin-preference order as indexnow-submit.mjs — keep in sync. */
+function productOrigin(product) {
+  const url =
+    product.indexNowOrigin ||
+    product.marketingOrigin ||
+    product.canonicalOrigin ||
+    product.url;
+  return url ? originOf(String(url)) : null;
+}
+
+function resolveTargets(args) {
   if (args.urls.length) {
     return args.urls.map((u) => ({
       name: hostOf(u),
@@ -114,49 +160,40 @@ async function resolveTargets(args) {
     }));
   }
 
-  const contracts = await loadContracts();
+  const registry = loadRegistry();
+  const products = registry.products || [];
+
   if (args.project) {
-    const c = contracts[args.project];
-    if (!c?.prodUrl) {
-      console.error(`No prodUrl for project ${args.project}`);
+    const p = products.find((x) => x.id === args.project);
+    if (!p) {
+      console.error(
+        `No product '${args.project}' in registry. Known ids: ${products
+          .map((x) => x.id)
+          .join(', ')}`
+      );
       process.exit(2);
     }
-    return [{ name: c.displayName || args.project, origin: originOf(c.prodUrl) }];
+    const origin = productOrigin(p);
+    if (!origin) {
+      console.error(`Product ${p.id} has no url in the registry`);
+      process.exit(2);
+    }
+    return [{ name: p.name || p.id, origin }];
   }
 
   if (args.all) {
-    return Object.entries(contracts)
-      .filter(([, c]) => c.prodUrl)
-      .map(([key, c]) => ({
-        name: c.displayName || key,
-        origin: originOf(c.prodUrl),
-        key,
-      }))
-      // Prefer marketing apex when saas-maker points at app login
-      .map((t) => {
-        if (t.key === 'saas-maker') {
-          return { ...t, origin: 'https://sassmaker.com', name: 'SaaS Maker (marketing)' };
-        }
-        return t;
-      });
+    return products
+      .map((p) => ({ name: p.name || p.id, origin: productOrigin(p), id: p.id }))
+      .filter((t) => t.origin);
   }
 
   return [];
 }
 
-async function loadContracts() {
-  if (!existsSync(CONTRACTS_PATH)) {
-    console.error(`Missing fleet health contracts at ${CONTRACTS_PATH}`);
-    process.exit(2);
-  }
-  const mod = await import(pathToFileURL(CONTRACTS_PATH).href);
-  return mod.FLEET_HEALTH_CONTRACTS;
-}
-
 /**
  * @param {{ name: string, origin: string }} target
  */
-async function auditOrigin(target) {
+async function auditOrigin(target, { indexNowKey } = {}) {
   const { origin, name } = target;
   const checks = {};
 
@@ -166,7 +203,7 @@ async function auditOrigin(target) {
 
   // --- SPA fake on llms ---
   checks.not_spa_fake = {
-    status: llms.ok && !llms.isHtml ? 'pass' : llms.ok && llms.isHtml ? 'fail' : 'fail',
+    status: llms.ok && !llms.isHtml ? 'pass' : 'fail',
     detail: llms.ok
       ? llms.isHtml
         ? 'SPA/HTML shell returned for /llms.txt'
@@ -178,6 +215,9 @@ async function auditOrigin(target) {
   const apiAi = await probe(`${origin}/api/ai`, { accept: 'application/json' });
   checks.api_ai = gradeApiAi(apiAi);
 
+  // --- advertised llms-full must resolve (skip if not advertised) ---
+  checks.llms_full = await gradeAdvertisedLlmsFull(apiAi);
+
   // --- homepage markdown (negotiation or index.md) ---
   const neg = await probe(`${origin}/`, {
     accept: 'text/markdown, text/plain;q=0.9, text/html;q=0.1',
@@ -187,27 +227,13 @@ async function auditOrigin(target) {
   });
   checks.homepage_md = gradeHomepageMd(neg, indexMd);
 
-  // --- robots ---
+  // --- robots + AI-crawler access ---
   const robots = await probe(`${origin}/robots.txt`);
   checks.robots = gradeRobots(robots);
+  checks.ai_access = gradeAiAccess(robots);
 
-  // --- sitemap ---
-  const smPaths = ['/sitemap.xml', '/sitemap-index.xml'];
-  let sitemap = null;
-  for (const p of smPaths) {
-    const s = await probe(`${origin}${p}`);
-    if (s.ok && !s.isHtml) {
-      sitemap = s;
-      sitemap.path = p;
-      break;
-    }
-  }
-  checks.sitemap = {
-    status: sitemap ? 'pass' : 'fail',
-    detail: sitemap
-      ? `${sitemap.path} (${sitemap.status}, ${sitemap.bytes}B)`
-      : 'no sitemap.xml / sitemap-index.xml',
-  };
+  // --- sitemap (real XML, same-host locs) ---
+  checks.sitemap = await gradeSitemap(origin, robots);
 
   // Bonus (not required for S but reported)
   const skill = await probe(`${origin}/skill.md`);
@@ -216,11 +242,26 @@ async function auditOrigin(target) {
     detail: skill.ok && !skill.isHtml ? 'present (S+)' : 'absent (ok for non-agent-native)',
   };
 
-  const passCount = REQUIRED_CHECKS.filter((k) => checks[k]?.status === 'pass').length;
-  const failCount = REQUIRED_CHECKS.filter((k) => checks[k]?.status === 'fail').length;
-  const score = Math.round((passCount / REQUIRED_CHECKS.length) * 100);
+  if (indexNowKey) {
+    const keyProbe = await probe(`${origin}/${indexNowKey}.txt`);
+    const keyOk = keyProbe.ok && !keyProbe.isHtml && keyProbe.bodyFull?.trim() === indexNowKey;
+    checks.indexnow_key = {
+      status: keyOk ? 'pass' : 'skip',
+      detail: keyOk
+        ? 'key file live'
+        : `key file not live (${keyProbe.status}${keyProbe.isHtml ? ', HTML shell' : ''}) — IndexNow submits for this host will fail`,
+    };
+  }
+
+  // llms_full is required only when advertised (skip = not applicable)
+  const applicable = [...REQUIRED_CHECKS];
+  if (checks.llms_full.status !== 'skip') applicable.push('llms_full');
+
+  const passCount = applicable.filter((k) => checks[k]?.status === 'pass').length;
+  const failCount = applicable.filter((k) => checks[k]?.status === 'fail').length;
+  const score = Math.round((passCount / applicable.length) * 100);
   const tier =
-    failCount === 0 ? 'S' : passCount >= 4 ? 'A' : passCount >= 2 ? 'B' : 'C';
+    failCount === 0 ? 'S' : passCount >= 5 ? 'A' : passCount >= 3 ? 'B' : 'C';
 
   return {
     name,
@@ -275,10 +316,35 @@ function gradeApiAi(probe) {
     return {
       status: 'pass',
       detail: `${data.surfaces.length} surfaces, name=${data.name}`,
+      data,
     };
   } catch {
     return { status: 'fail', detail: 'body is not JSON' };
   }
+}
+
+/** If /api/ai advertises an llmsFull URL, it must actually resolve. */
+async function gradeAdvertisedLlmsFull(apiAiProbe) {
+  let advertised = null;
+  try {
+    const data = JSON.parse(apiAiProbe.bodyFull || '{}');
+    advertised = typeof data.llmsFull === 'string' ? data.llmsFull : null;
+  } catch {
+    /* api_ai check reports the JSON problem */
+  }
+  if (!advertised) {
+    return { status: 'skip', detail: 'llmsFull not advertised' };
+  }
+  const full = await probe(advertised);
+  if (!full.ok || full.isHtml) {
+    return {
+      status: 'fail',
+      detail: `api/ai advertises ${advertised} but it returns ${
+        full.isHtml ? 'HTML shell' : `HTTP ${full.status || 'err'}`
+      }`,
+    };
+  }
+  return { status: 'pass', detail: `advertised llms-full resolves (${full.bytes}B)` };
 }
 
 function gradeHomepageMd(neg, indexMd) {
@@ -314,11 +380,155 @@ function gradeRobots(probe) {
   if (probe.isHtml) return { status: 'fail', detail: 'HTML instead of robots.txt' };
   const text = probe.bodyFull || probe.bodyPreview || '';
   const hasUa = /user-agent:/i.test(text);
-  const hasSitemap = /sitemap:/i.test(text);
+  const hasSitemap = /^\s*sitemap:/im.test(text);
   if (!hasUa) return { status: 'fail', detail: 'no User-agent directive' };
+  if (!hasSitemap) return { status: 'fail', detail: 'no Sitemap: line' };
+  return { status: 'pass', detail: 'has User-agent + Sitemap' };
+}
+
+/**
+ * Fail when robots.txt disallows the answer-engine crawlers GEO depends on
+ * (e.g. Cloudflare's managed "block AI bots" robots.txt). Serving llms.txt
+ * while telling ClaudeBot/GPTBot `Disallow: /` defeats the whole surface.
+ */
+function gradeAiAccess(probe) {
+  if (!probe.ok || probe.isHtml) {
+    // No robots.txt (or broken) means nothing is blocked; robots check
+    // already reports the problem itself.
+    return { status: 'pass', detail: 'no parseable robots.txt — nothing blocked' };
+  }
+  const groups = parseRobotsGroups(probe.bodyFull || probe.bodyPreview || '');
+  const blockedCritical = CRITICAL_AI_BOTS.filter((b) => isBotBlocked(groups, b));
+  const blockedReported = REPORTED_AI_BOTS.filter((b) => isBotBlocked(groups, b));
+  if (blockedCritical.length) {
+    return {
+      status: 'fail',
+      detail: `robots disallows ${blockedCritical.join(', ')}${
+        blockedReported.length ? ` (also: ${blockedReported.join(', ')})` : ''
+      } — likely Cloudflare "block AI bots" zone setting`,
+    };
+  }
+  if (blockedReported.length) {
+    return {
+      status: 'pass',
+      detail: `answer-engine bots allowed (training-only blocked: ${blockedReported.join(', ')})`,
+    };
+  }
+  return { status: 'pass', detail: 'AI crawlers allowed' };
+}
+
+/** Minimal robots.txt group parser (user-agent groups + allow/disallow). */
+function parseRobotsGroups(text) {
+  const groups = [];
+  let cur = null;
+  let lastWasUa = false;
+  for (const raw of text.split(/\r?\n/)) {
+    const line = raw.replace(/#.*$/, '').trim();
+    if (!line) continue;
+    const m = line.match(/^([A-Za-z][A-Za-z-]*)\s*:\s*(.*)$/);
+    if (!m) continue;
+    const field = m[1].toLowerCase();
+    const value = m[2].trim();
+    if (field === 'user-agent') {
+      if (!cur || !lastWasUa) {
+        cur = { agents: [], rules: [] };
+        groups.push(cur);
+      }
+      cur.agents.push(value.toLowerCase());
+      lastWasUa = true;
+    } else if (field === 'allow' || field === 'disallow') {
+      if (cur) cur.rules.push({ type: field, path: value });
+      lastWasUa = false;
+    } else {
+      lastWasUa = false;
+    }
+  }
+  return groups;
+}
+
+function isBotBlocked(groups, bot) {
+  const b = bot.toLowerCase();
+  let g = groups.find((x) => x.agents.some((a) => a === b));
+  if (!g) g = groups.find((x) => x.agents.includes('*'));
+  if (!g) return false;
+  const disallowRoot = g.rules.some((r) => r.type === 'disallow' && r.path === '/');
+  const allowRoot = g.rules.some((r) => r.type === 'allow' && r.path === '/');
+  return disallowRoot && !allowRoot;
+}
+
+/**
+ * A sitemap only passes if it is real XML (urlset/sitemapindex) whose <loc>
+ * entries live on the audited host — catches SPA HTML shells served with 200
+ * and workers.dev/pages.dev host leaks.
+ */
+async function gradeSitemap(origin, robotsProbe) {
+  const host = hostOf(origin);
+  const candidates = [];
+  const robotsText = robotsProbe?.bodyFull || '';
+  for (const m of robotsText.matchAll(/^\s*sitemap:\s*(\S+)/gim)) {
+    candidates.push(m[1]);
+  }
+  for (const p of ['/sitemap.xml', '/sitemap-index.xml']) {
+    const u = `${origin}${p}`;
+    if (!candidates.includes(u)) candidates.push(u);
+  }
+
+  const failures = [];
+  for (const url of candidates) {
+    let candidateHost;
+    try {
+      candidateHost = hostOf(url);
+    } catch {
+      failures.push(`${url}: unparseable URL`);
+      continue;
+    }
+    if (candidateHost !== host) {
+      failures.push(`${url}: advertised sitemap on foreign host ${candidateHost}`);
+      continue;
+    }
+    const s = await probe(url);
+    if (!s.ok) {
+      failures.push(`${url}: HTTP ${s.status || 'err'}`);
+      continue;
+    }
+    if (s.isHtml) {
+      failures.push(`${url}: HTML/SPA shell, not XML`);
+      continue;
+    }
+    const body = s.bodyFull || s.bodyPreview || '';
+    const head = body.trimStart().slice(0, 300).toLowerCase();
+    const isXml =
+      head.startsWith('<?xml') || head.includes('<urlset') || head.includes('<sitemapindex');
+    if (!isXml) {
+      failures.push(`${url}: not sitemap XML`);
+      continue;
+    }
+    const locs = [...body.matchAll(/<loc>\s*([^<]+?)\s*<\/loc>/gi)].map((x) => x[1]);
+    if (locs.length === 0) {
+      failures.push(`${url}: sitemap has zero <loc> entries`);
+      continue;
+    }
+    const foreign = locs.filter((l) => {
+      try {
+        return hostOf(l) !== host;
+      } catch {
+        return true;
+      }
+    });
+    if (foreign.length) {
+      failures.push(
+        `${url}: ${foreign.length}/${locs.length} <loc> on foreign host (e.g. ${foreign[0]})`
+      );
+      continue;
+    }
+    return {
+      status: 'pass',
+      detail: `${new URL(url).pathname} (${s.status}, ${locs.length} locs, ${s.bytes}B)`,
+    };
+  }
   return {
-    status: 'pass',
-    detail: hasSitemap ? 'has User-agent + Sitemap' : 'has User-agent (no Sitemap line)',
+    status: 'fail',
+    detail: failures.length ? failures.join('; ') : 'no sitemap candidates found',
   };
 }
 
@@ -354,7 +564,7 @@ async function probe(url, { accept } = {}) {
       bytes,
       bodyPreview,
       // Keep full body only for small responses (api/ai, robots, llms)
-      bodyFull: bytes <= 512_000 ? bodyFull : bodyPreview,
+      bodyFull: bytes <= 2_000_000 ? bodyFull : bodyPreview,
       isHtml,
       finalUrl: res.url,
     };
@@ -401,9 +611,10 @@ function printScoreboard(results) {
       pad('api/ai', 7) +
       pad('home.md', 8) +
       pad('robots', 7) +
+      pad('ai-ok', 6) +
       'sitemap'
   );
-  console.log('-'.repeat(90));
+  console.log('-'.repeat(96));
 
   for (const r of sorted) {
     if (r.error) {
@@ -419,6 +630,7 @@ function printScoreboard(results) {
         pad(mark('api_ai'), 7) +
         pad(mark('homepage_md'), 8) +
         pad(mark('robots'), 7) +
+        pad(mark('ai_access'), 6) +
         mark('sitemap')
     );
   }
@@ -450,9 +662,6 @@ function originOf(url) {
 function hostOf(url) {
   return new URL(url).host;
 }
-
-// silence unused import if tree-shaken
-void readFileSync;
 
 main().catch((err) => {
   console.error(err);
