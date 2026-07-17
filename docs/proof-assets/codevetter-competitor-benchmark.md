@@ -94,6 +94,59 @@ synthetic) so results are statistically less noisy than 27.
   `Dataset` + `FAQPage` JSON-LD. Link from nav + `/benchmark` + all machine
   surfaces.
 
+## Provisioning + kickoff checklist ("Do 2")
+
+What I need from you to run the snapshot (cheapest path — trials are fine for a
+one-time run):
+1. **CodeRabbit** — free trial on a test repo (14-day) is enough.
+2. **Greptile** — trial / lowest tier on the test repo.
+3. **Qodo** — use the **open-source PR-Agent** (self-hosted, free) with your own
+   model key; no paid seat needed.
+4. **GitHub Copilot Code Review** — needs a Copilot subscription (you likely
+   already have one); enable review on the test repo.
+5. **Semgrep** — free tier (control, no account friction).
+6. Confirm the public test repo name: default `Codevetter/codevetter-benchmark`.
+
+Everything else is mine: the harness, the rubric, the adjudication, the new
+cases, the page.
+
+## Results schema (v2 — turn-key target)
+
+`codevetter-benchmark-v2.json` extends v1 with a per-tool results block so the
+page and `Dataset` JSON-LD generate mechanically:
+
+```jsonc
+{
+  "version": 2, "license": "CC0-1.0", "datePublished": "<run date>",
+  "tools": [{ "id": "codevetter", "version": "...", "formFactor": "desktop" }, ...],
+  "cases": [{
+    "id": "case-NN", "language": "...", "category": "bug|concurrency|maintainability|security",
+    "prUrl": "https://github.com/Codevetter/codevetter-benchmark/pull/NN",
+    "expectedFindings": [ { "type": "...", "severity": "...", "location": "...", "desc": "..." } ],
+    "results": { "<toolId>": {
+      "caught": ["<expectedFindingId>", ...], "falsePositives": N, "duplicates": N,
+      "latencySec": N, "costUsd": N, "fixVerified": true|false, "rawUrl": "<published raw output>"
+    } }
+  }],
+  "metrics": ["caught","falsePositives","duplicates","latencySec","costUsd","fixVerified"]
+}
+```
+
+## Scoring rubric (precise, published)
+
+- **Caught** = the tool names the *same defect* at the *same location* as an
+  `expectedFinding`. Different wording is fine; wrong location or wrong root
+  cause does not count. Adjudicated blind (tool labels stripped).
+- **False positive** = a flagged issue not in `expectedFindings` and not a real
+  latent defect (a second human confirms before it counts as FP).
+- **Duplicate** = same `expectedFinding` reported >1× → counts once for
+  `caught`, the extras increment `duplicates`.
+- **fixVerified** = tool proposed a fix AND demonstrated (re-run / executable
+  check) that it resolves the defect. Reported as a capability axis, not added
+  to the catch score.
+- Every adjudication decision is published in the scoring sheet so readers can
+  contest it (this is the outreach hook).
+
 ## Risks / honesty flags
 
 - **Cost/access:** competitor seats cost money; a single-snapshot trial run is

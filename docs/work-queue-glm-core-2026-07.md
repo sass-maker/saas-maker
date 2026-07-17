@@ -191,9 +191,22 @@ methodology; glm builds the page from the data.
   provides secrets — B-INFRA.**
 - **Accept:** issue templates present; in-app feedback path works; release
   workflow notarizes + ships a DMG when secrets present.
-- **Note [user]:** the $29 checkout is a `mailto:` with hand-sent keys and the
-  app has no license enforcement — commerce/licensing is a product decision, see
-  B-INFRA.
+
+### HP7 — Commerce + licensing (DECIDED 2026-07-18) · M
+The $29 app has no automated checkout and no license enforcement (mailto +
+hand-sent keys; anyone with the `.zip` runs it fully). **Decision: Lemon Squeezy**
+(merchant-of-record — handles global VAT/tax for a solo dev) for a $29 one-time
+checkout + license keys, with **offline-friendly activation** to match the
+on-device/privacy ethos.
+- Replace the `mailto:` checkout with a Lemon Squeezy buy link/overlay on
+  `/pricing`.
+- In-app: a one-time license-key **activation** call at first launch (Lemon
+  Squeezy license API), then **cache the validated license locally** — no
+  recurring phone-home; the app works fully offline after activation.
+- **[user]** creates the Lemon Squeezy store + $29 product + gets the API key
+  (B-INFRA); glm scaffolds the activation UI + local validation/caching.
+- **Accept:** `/pricing` checkout goes through Lemon Squeezy; app validates a key
+  once then runs offline; no unlicensed full-feature path.
 
 ---
 
@@ -270,11 +283,19 @@ a Worker that doesn't exist. Remove the dead fallback (PostHog handles vitals).
 - **Accept:** no reference to the non-existent collector; vitals still captured
   via PostHog.
 
-### PT8 — [user] Positioning honesty
+### PT8 — Positioning: web-app-first (DECIDED 2026-07-18) · S
 `native-mac/` is a dev-only SwiftPM build (no installable Mac app); the web app
-is the real product. Decide whether to build a real Mac app or adjust the
-"Mac-local" framing so the site/README/registry match what a user can actually
-install. Product decision — see B-INFRA.
+is the real product. **Decision: web-app-first.** The product = the browser app
+(WebGPU playground + training) plus the **MLX training toolkit/recipes** you run
+locally on a Mac (a CLI/toolkit, not a GUI app). Do **not** frame it as a
+downloadable Mac app until a real signed app exists.
+- Reword the site homepage, README, and the registry `summary` so "Mac-local"
+  describes the *MLX training capability/recipes*, not an installable app.
+  Remove any "download the Mac app" CTA; lead with the browser playground.
+- Registry entry: `fleet-ops/config/agent-surfaces-registry.json` (`posttrainllm`
+  summary) — align the one-liner to the web-first framing.
+- **Accept:** no surface implies a downloadable GUI Mac app; playground is the
+  primary CTA; registry summary matches.
 
 ---
 
@@ -346,13 +367,14 @@ analytics is live. In browser queue.
 
 ---
 
-# Product infra — user decisions (summary; details in browser queue B-INFRA)
+# Product infra — decisions (details in browser queue B-INFRA)
 
-- **Apple Developer signing secrets** for CodeVetter (CV7) + Pace (HP6) CI.
+- **Apple Developer Program** — user buying now (2026-07-18); one account covers
+  CodeVetter (CV7) + Pace (HP6) signing. Secrets list in B-INFRA.
 - ~~CodeVetter telemetry consent default~~ — DECIDED: opt-in (default OFF), CV7.
-- **Pace commerce/licensing** ($29 app currently unenforced) — Gumroad/Stripe/
-  Paddle + StoreKit or license-key validation.
-- **PostTrainLLM Mac-app vs web-only positioning** (PT8).
-- **Email capture** — optional; recommend Buttondown (privacy-friendly) if wanted.
-- **Homebrew casks** for CodeVetter + HeyPace (distribution + trust) — glm can
-  draft the cask formulae once signed artifacts exist.
+- ~~Pace commerce/licensing~~ — DECIDED: Lemon Squeezy + offline activation, HP7.
+- ~~PostTrainLLM positioning~~ — DECIDED: web-app-first, PT8.
+- **Email capture** — SKIP for now (the on-device products don't need a
+  newsletter yet; revisit with Buttondown if a launch calls for it).
+- **Homebrew casks** for CodeVetter + HeyPace — glm drafts the cask formulae
+  once signed artifacts exist (post-Apple-account). Distribution + trust win.

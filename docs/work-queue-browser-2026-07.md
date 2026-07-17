@@ -168,15 +168,21 @@ Extends B9. These create the third-party consensus LLMs cite. Order:
   CodeVetter currently ships an **unsigned DMG** → Gatekeeper blocks normal users.
 - ~~CodeVetter telemetry default~~ — **DECIDED 2026-07-18: opt-in (default
   OFF).** glm (CV7) implements the consent gate; no capture until opt-in.
-- **Pace commerce/licensing:** the $29 app has no automated checkout or license
-  enforcement (mailto + hand-sent keys; anyone with the `.zip` runs it fully).
-  Pick a path — Gumroad/Stripe/Paddle for checkout + a license-key or StoreKit
-  validation in-app. Product decision.
-- **PostTrainLLM positioning (PT8):** decide build-a-real-Mac-app vs adjust the
-  "Mac-local" framing to match the web app being the actual product.
-- **Homebrew casks:** once signed artifacts exist, glm drafts casks for
-  CodeVetter + HeyPace; you tap/submit them.
-- **Email capture (optional):** if wanted, recommend Buttondown (privacy-friendly).
+- **Pace commerce — DECIDED (Lemon Squeezy):** create a Lemon Squeezy store, add
+  a **$29 one-time** product, enable **license keys**, and get the API key (for
+  HP7's in-app activation). LS is merchant-of-record so it handles global
+  VAT/tax. This replaces the mailto checkout.
+- ~~PostTrainLLM positioning~~ — DECIDED: web-app-first (PT8, glm). No action for
+  you beyond confirming you don't want to build a real Mac app right now.
+- **Apple proof-asset accounts (for CV6):** CodeRabbit trial, Greptile trial,
+  Copilot review (existing sub), Qodo via OSS PR-Agent, Semgrep free — on a test
+  repo. Only needed when we run the competitor benchmark.
+- **HeyPace benchmark rig (for HP5):** a clean Apple-Silicon Mac + Superwhisper/
+  Wispr/Dottie/Shadow installed + Little Snitch. Only needed for the on-device
+  benchmark run.
+- **Homebrew casks:** once signed artifacts exist (post-Apple-account), glm
+  drafts casks for CodeVetter + HeyPace; you tap/submit them.
+- ~~Email capture~~ — SKIPPED for now.
 
 ## Done / not needed
 

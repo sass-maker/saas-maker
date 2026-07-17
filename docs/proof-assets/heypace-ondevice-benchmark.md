@@ -90,6 +90,49 @@ Optional 4th axis: resource use (peak RAM/CPU) — cheap to capture, adds credib
   `Dataset` + `FAQPage` JSON-LD. Link from nav, `/compared` hub, and all machine
   surfaces; surface the privacy headline in `llms.txt`.
 
+## Provisioning + kickoff checklist ("Do 2")
+
+What I need from you to run the snapshot:
+1. **A clean Mac** (macOS 26, Apple Silicon) as the measurement rig — ideally
+   one I can drive, or a screen-share session where you run the commands.
+2. **Comparator apps installed:** Superwhisper, Wispr Flow (free tier),
+   Dottie (trial), Shadow (trial). Siri/Apple Intelligence is built in.
+3. **Little Snitch** (or LuLu, free) for per-app egress capture; `tcpdump`
+   ships with macOS.
+4. ~30–45 min for one capture pass across the task suite.
+
+Everything else is mine: task suite, runner, capture protocol, scoring, page.
+
+## Task suite (fixed, run identically per tool)
+
+| # | Task | Type | Success = |
+|---|---|---|---|
+| 1 | Transcribe a fixed 90-word paragraph | dictation | WER vs reference |
+| 2 | "What does this error say?" (screenshot of a stack trace) | screen-read | correct summary |
+| 3 | "Summarize what's on this page" (a fixed article) | screen-read | key points present |
+| 4 | "Click the Submit button" (a fixed form) | action | button clicked |
+| 5 | "Rename this file to report-final.pdf" (Finder) | action | file renamed |
+| 6 | "Open the third search result" | action | correct link opened |
+| 7 | Tasks 1–6 with **network disabled** (airplane) | offline | success/fail per task |
+
+Each task: N=5 repetitions, screen-recorded with timestamps. Capture egress
+(bytes + destination hosts) per task while online.
+
+## Capture protocol (egress = the wedge)
+
+For each tool, logged out where possible:
+```bash
+# Start a per-task capture (run before each online task, stop after):
+sudo tcpdump -i any -w /tmp/pace-bench/<tool>-task<N>.pcap host not <local-subnet> &
+# ... perform the task ...
+# then: kill %1 ; summarize bytes + unique destination hosts:
+tcpdump -r /tmp/pace-bench/<tool>-task<N>.pcap -nn | \
+  awk '{print $3, $5}' | sort | uniq -c   # dst hosts + counts
+```
+Pair with Little Snitch's per-app connection log for host attribution. **Redact
+any incidental PII from summaries before publishing; publish host lists + byte
+counts, never raw pcaps.**
+
 ## Risks / honesty flags
 
 - **Measurement rig:** needs a real Mac + the comparator apps installed; this is
