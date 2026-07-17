@@ -153,9 +153,13 @@ const IGNORED_CONSOLE_PATTERNS = [
   // YouTube embeds emit this in Chromium when the browser omits the optional
   // Compute Pressure permission. Playback is unaffected.
   /Permissions policy violation: compute-pressure is not allowed in this document/i,
+  // Cloudflare may inject its optional analytics beacon at the edge. A product
+  // CSP can deliberately decline it without affecting the application.
+  /static\.cloudflareinsights\.com\/beacon\.min\.js.*Content Security Policy/i,
 ];
 
 const DEPRECATED_SAAS_MAKER_ANALYTICS_URL = 'https://api.sassmaker.com/v1/analytics/events';
+const OPTIONAL_CLOUDFLARE_ANALYTICS_URL = 'https://static.cloudflareinsights.com/';
 
 function parseArgs(argv) {
   const args = {
@@ -248,6 +252,7 @@ async function runPageProbe(browser, project, target, args, artifactDir) {
     const resourceType = request.resourceType();
     const failureText = request.failure()?.errorText ?? 'request failed';
     if (failureText.includes('ERR_ABORTED')) return;
+    if (request.url().startsWith(OPTIONAL_CLOUDFLARE_ANALYTICS_URL)) return;
     if (['document', 'script', 'stylesheet', 'xhr', 'fetch'].includes(resourceType)) {
       errors.push({
         type: 'requestfailed',
