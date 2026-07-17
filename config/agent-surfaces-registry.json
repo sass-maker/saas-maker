@@ -8,6 +8,9 @@
       "summary": "Desktop-first AI code review workbench for agent-generated code. Local SQLite, Tauri shell, evidence-backed review — your repo never hits a central server.",
       "publicDir": "codevetter/apps/landing-page-astro/public",
       "stack": "astro-static",
+      "headFile": "codevetter/apps/landing-page-astro/src/layouts/Layout.astro",
+      "schemaType": "SoftwareApplication",
+      "sameAs": ["https://github.com/Codevetter/codevetter"],
       "productLinks": [
         {
           "title": "Home",
@@ -138,6 +141,9 @@
       "summary": "Evidence-graded reference for remedies organized by body part — body → condition → remedy → compound → study, with citations.",
       "publicDir": "materia/public",
       "stack": "astro-static",
+      "headFile": "materia/src/layouts/BaseLayout.astro",
+      "schemaType": "WebSite",
+      "sameAs": ["https://github.com/Significant-Hobbies/materia"],
       "productLinks": [
         {
           "title": "Home",
@@ -169,6 +175,9 @@
       "summary": "Sarthak Agrawal's personal product fleet showcase — RolePatch, High Signal, CodeVetter, Pace, PostTrainLLM, Karte, Significant Hobbies, and 15+ other shipped apps, plus the open-source Foundry operating layer on Cloudflare.",
       "publicDir": "saas-maker/apps/showcase/public",
       "stack": "astro-static",
+      "headFile": "saas-maker/apps/showcase/src/layouts/Layout.astro",
+      "schemaType": "WebSite",
+      "sameAs": ["https://github.com/sass-maker/saas-maker"],
       "productLinks": [
         {
           "title": "Home",
@@ -388,6 +397,9 @@
       "summary": "Academic paper platform over a high-citation OpenAlex CS corpus — search, analytics, and RAG demo (~488k papers).",
       "publicDir": "research-papers/web/public",
       "stack": "astro-static",
+      "headFile": "research-papers/web/src/pages/index.astro",
+      "schemaType": "WebSite",
+      "sameAs": ["https://github.com/High-Signal-App/research-papers"],
       "productLinks": [
         {
           "title": "Home",
@@ -404,6 +416,9 @@
       "summary": "Mac-local LLM specialist factory — post-training and runtime that fits on one Mac, plus WebGPU playground.",
       "publicDir": "posttrainllm/browser/public",
       "stack": "astro-static",
+      "headFile": "posttrainllm/browser/src/layouts/Default.astro",
+      "schemaType": "SoftwareApplication",
+      "sameAs": ["https://github.com/PostTrainLLM/posttrainllm"],
       "altPublicDirs": [
         "posttrainllm/public"
       ],
@@ -428,6 +443,9 @@
       "summary": "On-device Mac voice agent that reads your screen and acts with local context.",
       "publicDir": "pace/website/public",
       "stack": "astro-static",
+      "headFile": "pace/website/src/layouts/BaseLayout.astro",
+      "schemaType": "SoftwareApplication",
+      "sameAs": ["https://github.com/HeyPace/pace"],
       "altPublicDirs": [
         "pace/public"
       ],
@@ -481,6 +499,9 @@
       "summary": "Anime and manga discovery with multi-axis filtering and watchlists.",
       "publicDir": "anime-list/public",
       "stack": "spa-hono",
+      "headFile": "anime-list/index.html",
+      "schemaType": "WebSite",
+      "sameAs": ["https://github.com/Significant-Hobbies/anime-list"],
       "worker": "anime-list/src/worker.ts",
       "wrangler": "anime-list/wrangler.toml",
       "productLinks": [
@@ -499,6 +520,9 @@
       "summary": "AI-coached chess game for practice with coaching feedback.",
       "publicDir": "chess/public",
       "stack": "spa-static",
+      "headFile": "chess/index.html",
+      "schemaType": "SoftwareApplication",
+      "sameAs": ["https://github.com/Significant-Hobbies/chess"],
       "productLinks": [
         {
           "title": "Home",
@@ -515,6 +539,9 @@
       "summary": "Research library: capture, annotate, and AI-chat over your reading — private by default.",
       "publicDir": "reader/public",
       "stack": "spa-hono",
+      "headFile": "reader/app.html",
+      "schemaType": "SoftwareApplication",
+      "sameAs": ["https://github.com/Significant-Hobbies/reader"],
       "worker": "reader/src/worker.ts",
       "productLinks": [
         {
@@ -537,6 +564,9 @@
       "summary": "Gmail workspace with local semantic search — private email tooling.",
       "publicDir": "email-manager/public",
       "stack": "spa-hono",
+      "headFile": "email-manager/index.html",
+      "schemaType": "SoftwareApplication",
+      "sameAs": ["https://github.com/sarthakagrawal927/email-manager"],
       "worker": "email-manager/src/worker.ts",
       "productLinks": [
         {
@@ -554,6 +584,9 @@
       "summary": "OpenAI-compatible LLM gateway fronting free-tier models across multiple providers.",
       "publicDir": "free-ai/site/public",
       "stack": "spa-hono",
+      "headFile": "free-ai/site/src/pages/index.astro",
+      "schemaType": "SoftwareApplication",
+      "sameAs": ["https://github.com/sass-maker/free-ai"],
       "worker": "free-ai/src/index.ts",
       "productLinks": [
         {
@@ -576,6 +609,9 @@
       "summary": "SWE learning OS with FSRS spaced repetition, drills, and feedback.",
       "publicDir": "swe-interview-prep/public",
       "stack": "spa-static",
+      "headFile": "swe-interview-prep/index.html",
+      "schemaType": "SoftwareApplication",
+      "sameAs": ["https://github.com/Significant-Hobbies/swe-interview-prep"],
       "productLinks": [
         {
           "title": "Home",
