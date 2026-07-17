@@ -113,9 +113,77 @@ Not computer-use tasks — attention is the product. Queue when assets ready:
 3. Product Hunt for pace/codevetter — only after pricing pages + OG images
    are live (glm G3), otherwise wasted launch.
 
+---
+
+# Core-app GEO/SEO tasks (added 2026-07-18)
+
+Tied to `geo-seo-plan-2026-07.md` + `work-queue-glm-core-2026-07.md`. These are
+the user/browser-only items that gate or complement the glm execution list.
+Named to match the cross-references in the glm doc.
+
+## B-DEPLOY — Redeploy the three core sites · UNBLOCKS a lot
+
+Production deploys are manual. Deploy current `origin/main` for each once the
+matching glm PRs merge:
+1. **PostTrainLLM (do first, standalone win):** the live site is a stale build.
+   A redeploy alone recovers `/data/leaderboard.json`, the RSS feed,
+   extensionless canonicals, and the `Dataset` JSON-LD — no code change needed.
+2. **HeyPace:** redeploy after HP1 merges so the sitemap includes `/pricing` +
+   `/faq` (live sitemap is currently stale at 18 URLs).
+3. **CodeVetter:** redeploy after CV1–CV4 merge.
+Verify each with `curl` on the named surfaces after deploy.
+
+## B-MEASURE — Search Console + Bing + AI-referral segments
+
+Focuses B2/B3 on the three core domains (do these first of the 7):
+- GSC property + sitemap submit for `codevetter.com`, `heypace.app`,
+  `posttrainllm.com`. Request indexing for the homepage + benchmark/leaderboard.
+- Bing Webmaster import for the same three.
+- After AN1 ships analytics, add an "AI referrals" segment
+  (`utm_source=chatgpt.com`, `perplexity.ai`, `gemini`, referrer contains the
+  AI hosts) so you can see which pages answer engines send traffic to.
+
+## B-LAUNCH — First citable third-party URLs (the real GEO lever)
+
+Extends B9. These create the third-party consensus LLMs cite. Order:
+1. **Submit the awesome-list PRs** glm prepared (X1) — one per target list, under
+   your GitHub identity.
+2. **AlternativeTo + Product Hunt** entries for CodeVetter + HeyPace (Pace as an
+   alternative to Superwhisper/Raycast/Siri/Dottie; CodeVetter as a local
+   CodeRabbit/Greptile alternative).
+3. **Populate the HF org** (extends B8): publish the leaderboard models publicly
+   at `huggingface.co/PostTrainLLM` — instant proof + citation surface (currently
+   empty). Upload via `huggingface-cli upload`.
+4. **Show HN** (needs you present 3–4h): CodeVetter benchmark first (strongest
+   asset), then PostTrainLLM browser-training, then HeyPace $29 tool. Drafts from
+   X4.
+5. **r/LocalLLaMA** posts — best-fit sub for all three (local/on-device angle).
+6. **Outreach** to roundup authors with the evidence package (X4) — "would you
+   test it for the next update, here's a reproducible benchmark."
+
+## B-INFRA — Product-infra decisions (gate the trust/commerce fixes)
+
+- **Apple Developer signing:** provide `APPLE_ID`, `APPLE_TEAM_ID`,
+  `APPLE_APP_PASSWORD`, and the Developer ID cert as GitHub secrets for
+  CodeVetter (CV7) and Pace (HP6) so CI can ship signed+notarized DMGs.
+  CodeVetter currently ships an **unsigned DMG** → Gatekeeper blocks normal users.
+- **CodeVetter telemetry default:** decide opt-in vs opt-out for the in-app
+  PostHog (recommend **opt-in** — current always-on contradicts the privacy
+  pitch). glm (CV7) implements the gate either way.
+- **Pace commerce/licensing:** the $29 app has no automated checkout or license
+  enforcement (mailto + hand-sent keys; anyone with the `.zip` runs it fully).
+  Pick a path — Gumroad/Stripe/Paddle for checkout + a license-key or StoreKit
+  validation in-app. Product decision.
+- **PostTrainLLM positioning (PT8):** decide build-a-real-Mac-app vs adjust the
+  "Mac-local" framing to match the web app being the actual product.
+- **Homebrew casks:** once signed artifacts exist, glm drafts casks for
+  CodeVetter + HeyPace; you tap/submit them.
+- **Email capture (optional):** if wanted, recommend Buttondown (privacy-friendly).
+
 ## Done / not needed
 
-- GitHub repo topics: done 2026-07-17 (all 21 repos).
+- GitHub repo topics: done 2026-07-17 (all 21 repos). (X2 refines the core-three
+  topics toward the GEO query terms — verify current topics before re-applying.)
 - IndexNow initial submit: done (1057 URLs, 202s); Crawler Hints (B4)
   automates the future.
 - Google Indexing API: NOT applicable (jobs/livestream only).
