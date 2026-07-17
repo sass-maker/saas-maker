@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="High Signal">
+  <rect width="512" height="512" fill="#0a0a0c"/>
+  <!-- baseline above the pulse, same structure as product favicon -->
+  <path fill="none" stroke="#e4e4e7" stroke-width="16" stroke-linecap="round" d="M96 128 H416"/>
+  <path fill="none" stroke="#22d3ee" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"
+    d="M80 320 H136 L184 200 L248 380 L320 220 H432"/>
+</svg>

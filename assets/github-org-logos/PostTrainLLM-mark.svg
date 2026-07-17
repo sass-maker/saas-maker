@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="PostTrainLLM">
+  <rect width="512" height="512" fill="#0d0e10"/>
+  <path fill="none" stroke="#48e5c2" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"
+    d="M80 120 C140 120 168 360 260 380 C330 396 360 396 416 396"/>
+  <circle cx="416" cy="396" r="34" fill="#48e5c2"/>
+  <circle cx="416" cy="396" r="16" fill="#0d0e10"/>
+</svg>

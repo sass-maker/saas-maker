@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="CodeVetter">
+  <rect width="512" height="512" fill="#12141a"/>
+  <path fill="#c9952e" d="M256 72 L408 256 L256 440 L104 256 Z"/>
+  <path fill="#12141a" d="M256 148 L340 256 L256 364 L172 256 Z"/>
+  <path fill="#e8c36a" d="M256 208 L292 256 L256 304 L220 256 Z"/>
+</svg>
