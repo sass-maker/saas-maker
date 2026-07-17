@@ -40,13 +40,14 @@ const ICONS = {
     `,
   },
   rolepatch: {
-    bg: "#4f46e5",
-    fg: "#ffffff",
-    note: "patch badge + RP bars",
+    bg: "#141413",
+    fg: "#e8e6e1",
+    note: "L-mono parallel lines (final)",
     mark: `
-      <path fill="#ffffff" d="M7.5 7.2h13c1.1 0 2 .6 2.5 1.6l2.1 4.8c.3.7.3 1.4 0 2.1l-2.1 4.8c-.5 1-1.4 1.6-2.5 1.6h-13c-1.3 0-2.3-1-2.3-2.3V9.5c0-1.3 1-2.3 2.3-2.3z"/>
-      <path fill="#4f46e5" d="M10.2 11h4.2c1.7 0 2.9 1 2.9 2.6 0 1.3-.7 2.2-1.8 2.5l2.1 3.7h-2.5l-1.9-3.4h-1.2V19.8h-1.8zm1.8 1.7v2.2h2.1c.7 0 1.1-.4 1.1-1.1s-.4-1.1-1.1-1.1z"/>
-      <path fill="#c7d2fe" d="M22.2 10.5l1.6 5.5-1.6 5.5h-1.7l1.4-4.7-1.4-4.7h1.7z"/>
+      <rect x="6" y="8" width="13" height="2.4" rx="0.7" fill="#6b6b66"/>
+      <rect x="6" y="12.5" width="18.5" height="2.4" rx="0.7" fill="#e8e6e1"/>
+      <rect x="6" y="17" width="10.5" height="2.4" rx="0.7" fill="#3a3a36"/>
+      <rect x="6" y="21.5" width="15.5" height="2.4" rx="0.7" fill="#e8e6e1" opacity=".55"/>
     `,
   },
   "high-signal": {
