@@ -3,8 +3,9 @@
   "version": "1",
   "url": "https://domains.sassmaker.com",
   "llms": "https://domains.sassmaker.com/llms.txt",
-  "llmsFull": null,
+  "llmsFull": "https://domains.sassmaker.com/llms-full.txt",
   "sitemap": "https://domains.sassmaker.com/sitemap.xml",
+  "robots": "https://domains.sassmaker.com/robots.txt",
   "markdown": {
     "suffix": ".md",
     "negotiation": true

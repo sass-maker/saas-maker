@@ -1,0 +1,33 @@
+# DRank — full agent brief
+
+Ahrefs Domain Rating tracker feeding High Signal /domains and fleet domain marketing work.
+
+## Index
+
+# DRank
+
+Ahrefs Domain Rating tracker for fleet domains.
+
+## Agent entrypoints
+
+- https://domains.sassmaker.com/llms.txt
+- https://domains.sassmaker.com/api/ai
+- https://domains.sassmaker.com/index.md
+
+## Product links
+
+- Home: https://domains.sassmaker.com/ — Domain rating tracker
+
+## Machine surfaces
+
+- https://domains.sassmaker.com/llms.txt
+- https://domains.sassmaker.com/llms-full.txt
+- https://domains.sassmaker.com/api/ai
+- https://domains.sassmaker.com/index.md
+- https://domains.sassmaker.com/sitemap.xml
+- https://domains.sassmaker.com/robots.txt
+
+## Contact / fleet
+
+- Fleet: https://sassmaker.com
+- Agent email for directory verification: sarthakagrawal@agentmail.to
