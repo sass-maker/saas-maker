@@ -174,6 +174,7 @@ The active production fleet is listed in
 | `codevetter` | Desktop-first AI code review platform | see project README | see project README / CI | see project README / CI |
 | `drank` | Domain rating tracker | see project README | see project README / CI | see project README / CI |
 | `email-manager` | Gmail/email triage and automation | `pnpm dev` | `pnpm lint`, `pnpm cf:build` | `pnpm deploy` |
+| `everythingrated` | Multi-axis ratings for High Signal directories | `pnpm dev` | see project README / CI | project workflows |
 | `free-ai` | OpenAI-compatible gateway for free LLM providers | `pnpm dev` | `pnpm check`, `pnpm test:e2e` when relevant | `pnpm deploy` |
 | `high-signal` | Signal intelligence and collections | `pnpm dev` | `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build` | project workflows |
 | `karte` | AI-enhanced public profiles and chat/contact analytics | `pnpm dev` | `pnpm lint`, `pnpm build`, `pnpm cf:build` | `pnpm deploy:cf` |
@@ -195,7 +196,6 @@ The active production fleet is listed in
 These are not part of the active production fleet and should be excluded from
 fleet-wide sweeps unless explicitly re-added:
 
-- `everythingrated`
 - `open-historia`
 - `personalsite`: removed from the active fleet. Do not create new Fleet tasks
   for it unless it is explicitly re-added.

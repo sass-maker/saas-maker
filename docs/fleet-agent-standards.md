@@ -375,7 +375,6 @@ The following personal, archived, delayed, or parked projects are NOT part of
 the fleet product surface. Do not include them in fleet-wide sweeps, perf
 audits, or standardisation passes; do not write fleet-wide tasks against them.
 
-- `everythingrated` — retired/out-of-fleet
 - `open-historia` — archived/out-of-fleet
 - `today-little-log` — archived (merged into significanthobbies)
 - `truehire` — retired; RolePatch owns the active resume/proof surface

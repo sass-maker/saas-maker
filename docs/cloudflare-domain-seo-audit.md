@@ -77,7 +77,8 @@ Excluded:
 - `open-historia`: not in the active Foundry catalog; treated as archived/out-of-fleet for this rollout.
 - `device-net-test`: scratch network test app, moved out of active Fleet root.
 - `saas-maker-ci-fix`: duplicate worktree, moved out of active Fleet root.
-- `everythingrated`, `truehire`: not in the active Foundry catalog; moved out of active Fleet root.
+- `truehire`: not in the active Foundry catalog; moved out of active Fleet root.
+- `everythingrated`: active High Signal tool; currently remains on its Worker hostname while `ratings.highsignal.app` is pending attachment.
 
 ## SEO Baseline Per Project
 
