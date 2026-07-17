@@ -1,0 +1,182 @@
+{
+  "version": 1,
+  "contact": {
+    "name": "Sarthak Agrawal",
+    "email": "sarthakagrawal@agentmail.to",
+    "makerUrl": "https://sassmaker.com",
+    "twitter": ""
+  },
+  "notes": "Skip codevetter + protein-index (other agents). Skip private tooling (email-manager, reader library). Contact email is AgentMail inbox.",
+  "products": [
+    {
+      "id": "rolepatch",
+      "name": "RolePatch",
+      "url": "https://rolepatch.com",
+      "tagline": "AI resume tailoring scored against the job description",
+      "description": "RolePatch scores resume fit against a job description, rewrites bullets for the role, and helps with cover letters, company research, and interview prep. Built for job seekers who want role-specific materials instead of generic AI fluff.",
+      "categories": ["AI", "Career", "Productivity", "SaaS"],
+      "pricing": "Freemium",
+      "priority": 1
+    },
+    {
+      "id": "high-signal",
+      "name": "High Signal",
+      "url": "https://highsignal.app",
+      "tagline": "Daily tech, startup, and finance brief with hit-rates",
+      "description": "High Signal publishes a free daily synthesized brief on technology, startups, and finance — five sections with inline hit-rates on market calls, a public track record, and no signup required for the brief.",
+      "categories": ["News", "Finance", "Startups", "AI"],
+      "pricing": "Free",
+      "priority": 1
+    },
+    {
+      "id": "karte",
+      "name": "Karte",
+      "url": "https://karte.cc",
+      "tagline": "Link-in-bio registry for humans and AI agents",
+      "description": "Karte is a link-in-bio registry for humans and AI agents. Publish trust cards with public manifests at /{slug}/agent.json so agents can discover, verify, and interact with profiles programmatically.",
+      "categories": ["AI", "Developer Tools", "Social", "SaaS"],
+      "pricing": "Freemium",
+      "priority": 1
+    },
+    {
+      "id": "significanthobbies",
+      "name": "Significant Hobbies",
+      "url": "https://significanthobbies.com",
+      "tagline": "Life planner for private rituals and public living",
+      "description": "Significant Hobbies is a life planner for private daily rituals and public living — hobbies, bucket lists, and side quests tracked over time with public exploration.",
+      "categories": ["Lifestyle", "Productivity", "Social"],
+      "pricing": "Freemium",
+      "priority": 1
+    },
+    {
+      "id": "materia",
+      "name": "Materia",
+      "url": "https://materia.significanthobbies.com",
+      "tagline": "Evidence-graded body, remedy, and compound reference",
+      "description": "Materia is an evidence-graded reference for remedies organized by body part — body → condition → remedy → compound → study, with citations. Ad-free; not medical advice.",
+      "categories": ["Health", "Reference", "Education"],
+      "pricing": "Free",
+      "priority": 1
+    },
+    {
+      "id": "posttrainllm",
+      "name": "PostTrainLLM",
+      "url": "https://posttrainllm.com",
+      "tagline": "Mac-local LLM specialist factory and WebGPU playground",
+      "description": "PostTrainLLM is a Mac-local LLM specialist factory — post-training and runtime that fits on one Mac (MLX), plus a browser WebGPU playground for local model experimentation.",
+      "categories": ["AI", "Developer Tools", "Machine Learning"],
+      "pricing": "Free",
+      "priority": 1
+    },
+    {
+      "id": "saas-maker-showcase",
+      "name": "Foundry (SaaS Maker)",
+      "url": "https://sassmaker.com",
+      "tagline": "Personal product fleet showcase and open operating layer",
+      "description": "Foundry (SaaS Maker) is Sarthak Agrawal's personal product fleet showcase — shipped apps on custom domains plus the open-source operating layer (CLI, cockpit, deploy tooling) that runs them.",
+      "categories": ["Developer Tools", "SaaS", "Open Source"],
+      "pricing": "Free",
+      "priority": 2
+    },
+    {
+      "id": "starboard",
+      "name": "Starboard",
+      "url": "https://starboard.codevetter.com",
+      "tagline": "GitHub stars organizer with semantic search",
+      "description": "Starboard organizes GitHub stars with semantic search so developers can find the right starred repo again without scrolling endless lists.",
+      "categories": ["Developer Tools", "GitHub", "Productivity"],
+      "pricing": "Free",
+      "priority": 2
+    },
+    {
+      "id": "everythingrated",
+      "name": "EverythingRated",
+      "url": "https://ratings.highsignal.app",
+      "tagline": "Multi-axis ratings for directories and catalogs",
+      "description": "EverythingRated is a multi-axis rating tool for structured directories and catalogs — decisions with explicit trade-offs, not single star averages.",
+      "categories": ["Productivity", "SaaS", "Data"],
+      "pricing": "Free",
+      "priority": 2
+    },
+    {
+      "id": "research-papers",
+      "name": "researchPapers",
+      "url": "https://papers.highsignal.app",
+      "tagline": "Search and analytics over ~488k CS papers",
+      "description": "researchPapers is an academic paper platform over a high-citation OpenAlex Computer Science corpus — semantic search, analytics, and RAG-style answers across ~488k papers.",
+      "categories": ["AI", "Research", "Education", "Developer Tools"],
+      "pricing": "Freemium",
+      "priority": 2
+    },
+    {
+      "id": "pace",
+      "name": "Pace",
+      "url": "https://pace-6xg.pages.dev",
+      "tagline": "On-device Mac voice agent that reads your screen",
+      "description": "Pace is an on-device Mac voice agent that reads your screen and acts with local context — screen-aware assistance without shipping everything to the cloud.",
+      "categories": ["AI", "Productivity", "macOS"],
+      "pricing": "Free",
+      "priority": 2
+    },
+    {
+      "id": "free-ai",
+      "name": "AI Gateway",
+      "url": "https://ai-gateway.sassmaker.com",
+      "tagline": "OpenAI-compatible gateway over free-tier models",
+      "description": "AI Gateway is an OpenAI-compatible LLM gateway fronting free-tier models across multiple providers — one API for multi-provider free inference.",
+      "categories": ["AI", "Developer Tools", "API"],
+      "pricing": "Free",
+      "priority": 2
+    },
+    {
+      "id": "looptv",
+      "name": "LoopTV",
+      "url": "https://tv.significanthobbies.com",
+      "tagline": "TV-style random player for curated video channels",
+      "description": "LoopTV is a lean-back TV-style random video player for curated channels — click and watch without decision fatigue.",
+      "categories": ["Entertainment", "Video"],
+      "pricing": "Free",
+      "priority": 3
+    },
+    {
+      "id": "anime-list",
+      "name": "MAL Explorer",
+      "url": "https://anime.significanthobbies.com",
+      "tagline": "Anime and manga discovery with multi-axis filters",
+      "description": "MAL Explorer helps discover anime and manga with multi-axis filtering and watchlists beyond single-score rankings.",
+      "categories": ["Entertainment", "Anime"],
+      "pricing": "Free",
+      "priority": 3
+    },
+    {
+      "id": "chess",
+      "name": "Chess Coach",
+      "url": "https://chess.significanthobbies.com",
+      "tagline": "AI-coached chess practice in the browser",
+      "description": "Chess Coach is AI-coached chess practice in the browser with coaching feedback for improving players.",
+      "categories": ["Games", "Education", "AI"],
+      "pricing": "Free",
+      "priority": 3
+    },
+    {
+      "id": "swe-interview-prep",
+      "name": "SWE Interview Prep",
+      "url": "https://learn.significanthobbies.com",
+      "tagline": "SWE learning OS with FSRS spaced repetition",
+      "description": "SWE Interview Prep is a software engineering learning OS with FSRS spaced repetition, drills, and feedback for interview prep.",
+      "categories": ["Education", "Developer Tools", "Career"],
+      "pricing": "Free",
+      "priority": 3
+    },
+    {
+      "id": "psi-swarm",
+      "name": "psi-swarm",
+      "url": "https://performance.sassmaker.com",
+      "tagline": "Distributional Lighthouse performance audits",
+      "description": "psi-swarm runs distributional Lighthouse / PageSpeed audits with grounded performance analysis across realistic device and network presets.",
+      "categories": ["Developer Tools", "Performance", "SaaS"],
+      "pricing": "Free",
+      "priority": 3
+    }
+  ]
+}

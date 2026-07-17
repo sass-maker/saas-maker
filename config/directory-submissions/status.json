@@ -1,0 +1,25 @@
+{
+  "date": "2026-07-17",
+  "contact": "sarthakagrawal@agentmail.to",
+  "automated": {
+    "insidr_successful_products": [
+      "everythingrated",
+      "free-ai",
+      "high-signal",
+      "karte",
+      "materia",
+      "pace",
+      "posttrainllm",
+      "psi-swarm",
+      "research-papers",
+      "saas-maker-showcase",
+      "significanthobbies",
+      "starboard"
+    ],
+    "insidr_count": 12,
+    "aitoolnet": "partial then cloudflare",
+    "futuretools": "captcha blocked",
+    "note": "Success confirmed via Elementor message 'Your submission was successful.' where msg captured."
+  },
+  "human_kick": "see docs/directory-submissions.md"
+}
