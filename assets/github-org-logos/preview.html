@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GitHub org logos — preview</title>
+  <style>
+    :root { color-scheme: dark; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+      background: #0b0d10;
+      color: #e8eaed;
+      padding: 32px 24px 64px;
+    }
+    h1 { font-size: 1.35rem; font-weight: 650; margin: 0 0 8px; }
+    p { color: #9aa3af; margin: 0 0 28px; max-width: 52rem; line-height: 1.5; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: #14181f;
+      border: 1px solid #232a35;
+      border-radius: 16px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+    .card img.sq {
+      width: 140px;
+      height: 140px;
+      border-radius: 28px;
+      object-fit: cover;
+      box-shadow: 0 12px 40px rgba(0,0,0,.45);
+    }
+    .card img.circle {
+      width: 72px;
+      height: 72px;
+      border-radius: 999px;
+      object-fit: cover;
+      border: 2px solid #2a3340;
+    }
+    .row { display: flex; gap: 12px; align-items: center; }
+    .meta { text-align: center; }
+    .meta strong { display: block; font-size: .95rem; }
+    .meta span { color: #8b95a5; font-size: .78rem; }
+    a { color: #7dd3fc; text-decoration: none; font-size: .8rem; }
+    a:hover { text-decoration: underline; }
+    h2 { margin: 36px 0 14px; font-size: 1rem; color: #c3cad4; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <h1>GitHub organization logos</h1>
+  <p>
+    Square avatars for upload to org profile settings. Shown as rounded square
+    (GitHub org style) and circle (avatar chip). Use the <code>*-avatar-1024.png</code> files.
+  </p>
+
+  <h2>Fleet product orgs</h2>
+  <div class="grid" id="fleet"></div>
+
+  <h2>Other orgs</h2>
+  <div class="grid" id="other"></div>
+
+  <script>
+    const fleet = [
+      ['Codevetter', 'Gold diamond gem', 'Codevetter'],
+      ['High-Signal-App', 'Cyan signal waveform', 'High-Signal-App'],
+      ['Significant-Hobbies', 'Emerald interlocking rings', 'Significant-Hobbies'],
+      ['HeyPace', 'Blue equalizer bars', 'HeyPace'],
+      ['PostTrainLLM', 'Teal learning curve', 'PostTrainLLM'],
+      ['sass-maker', 'Gold forge star', 'sass-maker'],
+    ];
+    const other = [
+      ['vaultwealth-ltd', 'Vault shield / keyhole', 'vaultwealth-ltd'],
+      ['manipalthetalk', 'Student media mark', 'manipalthetalk'],
+      ['ADG-Manipal', 'Developer geometric mark', 'ADG-Manipal'],
+    ];
+    function card([org, mark, file]) {
+      const src = `${file}-avatar-512.png`;
+      return `
+        <article class="card">
+          <img class="sq" src="${src}" alt="${org} logo" />
+          <div class="row">
+            <img class="circle" src="${src}" alt="" />
+            <div class="meta" style="text-align:left">
+              <strong>${org}</strong>
+              <span>${mark}</span>
+            </div>
+          </div>
+          <a href="https://github.com/organizations/${org}/settings/profile" target="_blank" rel="noreferrer">
+            Upload on GitHub →
+          </a>
+        </article>`;
+    }
+    document.getElementById('fleet').innerHTML = fleet.map(card).join('');
+    document.getElementById('other').innerHTML = other.map(card).join('');
+  </script>
+</body>
+</html>
