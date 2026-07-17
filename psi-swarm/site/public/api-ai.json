@@ -1,0 +1,32 @@
+{
+  "name": "psi-swarm",
+  "version": "1",
+  "url": "https://performance.sassmaker.com",
+  "llms": "https://performance.sassmaker.com/llms.txt",
+  "llmsFull": null,
+  "sitemap": "https://performance.sassmaker.com/sitemap.xml",
+  "markdown": {
+    "suffix": ".md",
+    "negotiation": true
+  },
+  "surfaces": [
+    {
+      "id": "home",
+      "url": "https://performance.sassmaker.com/",
+      "md": "https://performance.sassmaker.com/index.md",
+      "kind": "static",
+      "description": "Product home"
+    },
+    {
+      "id": "projects",
+      "url": "https://performance.sassmaker.com/projects/",
+      "md": null,
+      "kind": "static",
+      "description": "Per-project results"
+    }
+  ],
+  "auth": {
+    "public": true,
+    "notes": "Auth-walled app routes are not agent-indexed unless listed here."
+  }
+}

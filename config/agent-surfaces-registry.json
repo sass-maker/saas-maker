@@ -1,0 +1,319 @@
+{
+  "version": 1,
+  "products": [
+    {
+      "id": "codevetter",
+      "name": "CodeVetter",
+      "url": "https://codevetter.com",
+      "summary": "Desktop-first AI code review workbench for agent-generated code. Local SQLite, Tauri shell, evidence-backed review — your repo never hits a central server.",
+      "publicDir": "codevetter/apps/landing-page-astro/public",
+      "stack": "astro-static",
+      "productLinks": [
+        { "title": "Home", "url": "https://codevetter.com/", "description": "Features, pricing, how it works" },
+        { "title": "Download", "url": "https://codevetter.com/download", "description": "macOS release" },
+        { "title": "Privacy", "url": "https://codevetter.com/privacy", "description": "Local-first data handling" }
+      ],
+      "indexMd": "# CodeVetter\n\nDesktop-first AI code review for agent-generated code.\n\n## What it is\n\n- Local SQLite storage and Tauri desktop shell\n- Evidence-backed review loops\n- Optional Claude, Codex, or Gemini CLI backends\n- Open source (ISC)\n\n## Who it's for\n\nEngineers shipping AI-generated PRs who want review before merge — without uploading the repo to a central server.\n\n## Agent entrypoints\n\n- https://codevetter.com/llms.txt\n- https://codevetter.com/api/ai\n- https://codevetter.com/index.md\n"
+    },
+    {
+      "id": "rolepatch",
+      "name": "RolePatch",
+      "url": "https://rolepatch.com",
+      "summary": "AI-powered resume tailoring. Score fit against a job description, rewrite bullets for the role, and prep interviews.",
+      "publicDir": "rolepatch/public",
+      "stack": "opennext",
+      "worker": "rolepatch/worker.mjs",
+      "productLinks": [
+        { "title": "Home", "url": "https://rolepatch.com/", "description": "Product landing" },
+        { "title": "Pricing", "url": "https://rolepatch.com/pricing", "description": "Plans and limits" },
+        { "title": "Tools", "url": "https://rolepatch.com/tools", "description": "Public tools" }
+      ],
+      "indexMd": "# RolePatch\n\nAI-powered resume tailoring and job-application assistant.\n\n## What it is\n\n- Score resume fit against a job description\n- Rewrite bullets for the role\n- Cover letters, company research, STAR prep\n\n## Who it's for\n\nJob seekers who want reviewed, role-specific application materials — not generic AI fluff.\n\n## Agent entrypoints\n\n- https://rolepatch.com/llms.txt\n- https://rolepatch.com/api/ai\n- https://rolepatch.com/index.md\n\nDashboard routes require auth and are not agent-indexed.\n"
+    },
+    {
+      "id": "high-signal",
+      "name": "High Signal",
+      "url": "https://highsignal.app",
+      "summary": "Daily synthesized brief on technology, startups, and finance — five sections with inline hit-rates, no signup required.",
+      "publicDir": "high-signal/apps/web/public",
+      "stack": "opennext",
+      "worker": "high-signal/apps/web/worker.mjs",
+      "productLinks": [
+        { "title": "Daily brief", "url": "https://highsignal.app/", "description": "Primary composed brief" },
+        { "title": "Track record", "url": "https://highsignal.app/track-record", "description": "Public hit-rate ledger" },
+        { "title": "Markets", "url": "https://highsignal.app/markets", "description": "Market signals" }
+      ],
+      "indexMd": "# High Signal\n\nDaily synthesized intelligence brief on technology, startups, and finance.\n\n## What it is\n\n- Five-section composed brief at `/` and `/brief`\n- Inline hit-rates on market calls\n- Public track record and methodology pages\n- Free, no signup for the brief\n\n## Who it's for\n\nOperators and investors who want a high-signal daily read instead of raw feed noise.\n\n## Agent entrypoints\n\n- https://highsignal.app/llms.txt\n- https://highsignal.app/api/ai\n- https://highsignal.app/index.md\n- RSS: https://highsignal.app/signals/rss\n"
+    },
+    {
+      "id": "karte",
+      "name": "Karte",
+      "url": "https://karte.cc",
+      "summary": "Link-in-bio registry for humans and AI agents. Publish trust cards with public manifests at /{slug}/agent.json.",
+      "publicDir": "karte/public",
+      "stack": "opennext",
+      "worker": "karte/worker.mjs",
+      "hasDynamicLlms": true,
+      "productLinks": [
+        { "title": "Home", "url": "https://karte.cc/", "description": "Product landing" },
+        { "title": "Skill", "url": "https://karte.cc/skill.md", "description": "Full agent workflow" },
+        { "title": "LLM index", "url": "https://karte.cc/llms.txt", "description": "Agent index" }
+      ],
+      "indexMd": "# Karte\n\nLink-in-bio registry for humans and AI agents.\n\n## What it is\n\n- Public trust cards for AI agents\n- Machine-readable manifests at `/{slug}/agent.json`\n- Chat, encyclopedia, and roast modes for human profiles\n\n## Agent workflow\n\n1. Read https://karte.cc/skill.md\n2. Install skill: `curl -fsSL https://karte.cc/skills/karte/install.sh | bash`\n3. Auth via email code → `kk_` API key\n4. Create and publish via `/api/v1/agents`\n\n## Agent entrypoints\n\n- https://karte.cc/llms.txt\n- https://karte.cc/skill.md\n- https://karte.cc/api/ai\n- https://karte.cc/index.md\n- https://karte.cc/.well-known/skills/index.json\n"
+    },
+    {
+      "id": "significanthobbies",
+      "name": "Significant Hobbies",
+      "url": "https://significanthobbies.com",
+      "summary": "Life planner for private daily rituals and public living — hobbies, bucket lists, and side quests over time.",
+      "publicDir": "significanthobbies/public",
+      "stack": "opennext",
+      "worker": "significanthobbies/worker.mjs",
+      "productLinks": [
+        { "title": "Home", "url": "https://significanthobbies.com/", "description": "Product landing" },
+        { "title": "Explore", "url": "https://significanthobbies.com/explore", "description": "Public hobby timelines" }
+      ],
+      "indexMd": "# Significant Hobbies\n\nLife planner: private daily rituals + public living (hobbies, bucket lists, side quests).\n\n## What it is\n\n- Hobby timelines and public exploration\n- Private rituals and progress tracking\n- Editorial content for agents at `/llms-full.txt`\n\n## Agent entrypoints\n\n- https://significanthobbies.com/llms.txt\n- https://significanthobbies.com/llms-full.txt\n- https://significanthobbies.com/api/ai\n- https://significanthobbies.com/index.md\n\nAuth-walled personal data is not agent-indexed.\n"
+    },
+    {
+      "id": "materia",
+      "name": "Materia",
+      "url": "https://materia.significanthobbies.com",
+      "summary": "Evidence-graded reference for remedies organized by body part — body → condition → remedy → compound → study, with citations.",
+      "publicDir": "materia/public",
+      "stack": "astro-static",
+      "productLinks": [
+        { "title": "Home", "url": "https://materia.significanthobbies.com/", "description": "Body explorer" },
+        { "title": "Parts", "url": "https://materia.significanthobbies.com/parts", "description": "By anatomical system" },
+        { "title": "Remedies", "url": "https://materia.significanthobbies.com/remedies", "description": "Evidence-graded remedies" },
+        { "title": "Methodology", "url": "https://materia.significanthobbies.com/methodology", "description": "How grades are assigned" }
+      ],
+      "indexMd": "# Materia\n\nEvidence-graded body, supplement, herb, and drug reference.\n\n## What it is\n\n- Layered body explorer into a knowledge graph\n- Body part → condition → remedy → compound → study\n- Every remedy evidence-graded and study-cited\n- Ad-free; not medical advice\n\n## Agent entrypoints\n\n- https://materia.significanthobbies.com/llms.txt\n- https://materia.significanthobbies.com/api/ai\n- https://materia.significanthobbies.com/index.md\n\nPrefer content collection pages and methodology over inventing medical claims.\n"
+    },
+    {
+      "id": "saas-maker-showcase",
+      "name": "Foundry (SaaS Maker)",
+      "url": "https://sassmaker.com",
+      "summary": "Sarthak Agrawal's personal product fleet showcase — shipped apps plus the open-source operating layer that runs them.",
+      "publicDir": "saas-maker/apps/showcase/public",
+      "stack": "astro-static",
+      "productLinks": [
+        { "title": "Home", "url": "https://sassmaker.com/", "description": "Fleet map" },
+        { "title": "Docs", "url": "https://docs.sassmaker.com", "description": "Foundry manual" },
+        { "title": "Cockpit", "url": "https://app.sassmaker.com", "description": "Operator dashboard (auth)" }
+      ],
+      "indexMd": "# Foundry (SaaS Maker)\n\nPersonal product fleet by Sarthak Agrawal — twenty-something shipped apps plus the operating layer (CLI, cockpit, deploy tooling).\n\n## What it is\n\n- Static showcase at sassmaker.com\n- Apps on their own custom domains\n- Open-source Foundry stack for running the fleet\n\n## Agent entrypoints\n\n- https://sassmaker.com/llms.txt\n- https://sassmaker.com/api/ai\n- https://sassmaker.com/index.md\n- https://docs.sassmaker.com/llms.txt\n"
+    },
+    {
+      "id": "saas-maker-docs",
+      "name": "SaaS Maker Docs",
+      "url": "https://docs.sassmaker.com",
+      "summary": "Drop-in backend services for SaaS apps. API docs for Foundry (feedback, waitlist, testimonials, and more).",
+      "publicDir": "saas-maker/apps/docs/public",
+      "stack": "astro-static",
+      "skipLlmsOverwrite": true,
+      "productLinks": [
+        { "title": "Docs home", "url": "https://docs.sassmaker.com/", "description": "Documentation root" },
+        { "title": "Full LLM dump", "url": "https://docs.sassmaker.com/llms.txt", "description": "Generated corpus" }
+      ],
+      "indexMd": "# SaaS Maker API Documentation\n\nDrop-in backend services for SaaS apps. Base API: https://api.sassmaker.com\n\n## Auth\n\n- Project API key via `X-Project-Key` for public SDK/widget endpoints\n- Session/CLI Bearer tokens for dashboard and admin operations\n\n## Agent entrypoints\n\n- https://docs.sassmaker.com/llms.txt (full generated docs dump)\n- https://docs.sassmaker.com/api/ai\n- https://docs.sassmaker.com/index.md\n"
+    },
+    {
+      "id": "starboard",
+      "name": "Starboard",
+      "url": "https://starboard.codevetter.com",
+      "summary": "GitHub stars organizer with semantic search — sub-product of CodeVetter for repo intelligence.",
+      "publicDir": "starboard/public",
+      "stack": "opennext",
+      "worker": "starboard/worker.mjs",
+      "productLinks": [
+        { "title": "Home", "url": "https://starboard.codevetter.com/", "description": "Product" },
+        { "title": "CodeVetter", "url": "https://codevetter.com/", "description": "Parent product" }
+      ],
+      "indexMd": "# Starboard\n\nGitHub stars organizer + semantic search (CodeVetter sub-product).\n\n## What it is\n\n- Organize and search starred repositories\n- Semantic search over star metadata\n\n## Agent entrypoints\n\n- https://starboard.codevetter.com/llms.txt\n- https://starboard.codevetter.com/api/ai\n- https://starboard.codevetter.com/index.md\n"
+    },
+    {
+      "id": "everythingrated",
+      "name": "EverythingRated",
+      "url": "https://ratings.highsignal.app",
+      "summary": "Multi-axis rating tool for structured directories and catalogs — decisions with explicit trade-offs, not star averages.",
+      "publicDir": "everythingrated/apps/web/public",
+      "stack": "opennext",
+      "worker": "everythingrated/apps/web/worker.mjs",
+      "productLinks": [
+        { "title": "Home", "url": "https://ratings.highsignal.app/", "description": "Directories and ratings" }
+      ],
+      "indexMd": "# EverythingRated\n\nMulti-axis ratings for structured directories and catalogs.\n\n## What it is\n\n- Rate items on multiple axes (not a single star score)\n- Built for AI/dev tool and catalog decisions\n\n## Agent entrypoints\n\n- https://ratings.highsignal.app/llms.txt\n- https://ratings.highsignal.app/api/ai\n- https://ratings.highsignal.app/index.md\n"
+    },
+    {
+      "id": "truehire",
+      "name": "TrueHire",
+      "url": "https://truehire.rolepatch.com",
+      "summary": "Hiring-side companion under RolePatch for evaluating candidates with structured role fit.",
+      "publicDir": "truehire/apps/web/public",
+      "stack": "opennext",
+      "worker": "truehire/apps/web/worker.mjs",
+      "productLinks": [
+        { "title": "Home", "url": "https://truehire.rolepatch.com/", "description": "Product" },
+        { "title": "RolePatch", "url": "https://rolepatch.com/", "description": "Parent product" }
+      ],
+      "indexMd": "# TrueHire\n\nHiring companion related to RolePatch for structured candidate evaluation.\n\n## Agent entrypoints\n\n- https://truehire.rolepatch.com/llms.txt\n- https://truehire.rolepatch.com/api/ai\n- https://truehire.rolepatch.com/index.md\n"
+    },
+    {
+      "id": "research-papers",
+      "name": "researchPapers",
+      "url": "https://papers.highsignal.app",
+      "summary": "Academic paper platform over a high-citation OpenAlex CS corpus — search, analytics, and RAG demo (~488k papers).",
+      "publicDir": "research-papers/web/public",
+      "stack": "astro-static",
+      "productLinks": [
+        { "title": "Home", "url": "https://papers.highsignal.app/", "description": "Search and analytics" }
+      ],
+      "indexMd": "# researchPapers\n\n~488k papers with semantic search, analytics, and paid answers demo.\n\n## What it is\n\n- High-citation OpenAlex Computer Science corpus\n- Semantic search and analytics\n- RAG-style Q&A paths\n\n## Agent entrypoints\n\n- https://papers.highsignal.app/llms.txt\n- https://papers.highsignal.app/api/ai\n- https://papers.highsignal.app/index.md\n\nDo not invent paper claims — cite corpus results.\n"
+    },
+    {
+      "id": "posttrainllm",
+      "name": "PostTrainLLM",
+      "url": "https://posttrainllm.com",
+      "summary": "Mac-local LLM specialist factory — post-training and runtime that fits on one Mac, plus WebGPU playground.",
+      "publicDir": "posttrainllm/browser/public",
+      "stack": "astro-static",
+      "altPublicDirs": ["posttrainllm/public"],
+      "productLinks": [
+        { "title": "Home", "url": "https://posttrainllm.com/", "description": "Product" },
+        { "title": "Devlog", "url": "https://posttrainllm.com/devlog.html", "description": "Build log" }
+      ],
+      "indexMd": "# PostTrainLLM\n\nMac-local LLM factory + runtime (MLX) and WebGPU playground.\n\n## What it is\n\n- Local post-training workflows on Mac\n- Specialist model factory narrative\n- Browser playground surfaces\n\n## Agent entrypoints\n\n- https://posttrainllm.com/llms.txt\n- https://posttrainllm.com/api/ai\n- https://posttrainllm.com/index.md\n"
+    },
+    {
+      "id": "pace",
+      "name": "Pace",
+      "url": "https://pace-6xg.pages.dev",
+      "summary": "On-device Mac voice agent that reads your screen and acts with local context.",
+      "publicDir": "pace/website/public",
+      "stack": "astro-static",
+      "altPublicDirs": ["pace/public"],
+      "productLinks": [
+        { "title": "Home", "url": "https://pace-6xg.pages.dev/", "description": "Product landing" }
+      ],
+      "indexMd": "# Pace\n\nOn-device Mac voice agent that reads your screen.\n\n## What it is\n\n- Local/on-device voice agent for macOS\n- Screen-aware assistance\n\n## Agent entrypoints\n\n- https://pace-6xg.pages.dev/llms.txt\n- https://pace-6xg.pages.dev/api/ai\n- https://pace-6xg.pages.dev/index.md\n"
+    },
+    {
+      "id": "drank",
+      "name": "DRank",
+      "url": "https://domains.sassmaker.com",
+      "summary": "Ahrefs Domain Rating tracker feeding High Signal /domains and fleet domain marketing work.",
+      "publicDir": "drank/public",
+      "stack": "next-static",
+      "productLinks": [
+        { "title": "Home", "url": "https://domains.sassmaker.com/", "description": "Domain rating tracker" }
+      ],
+      "indexMd": "# DRank\n\nAhrefs Domain Rating tracker for fleet domains.\n\n## Agent entrypoints\n\n- https://domains.sassmaker.com/llms.txt\n- https://domains.sassmaker.com/api/ai\n- https://domains.sassmaker.com/index.md\n"
+    },
+    {
+      "id": "looptv",
+      "name": "LoopTV",
+      "url": "https://tv.significanthobbies.com",
+      "summary": "TV-style random video player for lean-back browsing of curated channels.",
+      "publicDir": "looptv/public",
+      "stack": "next-static",
+      "productLinks": [
+        { "title": "Home", "url": "https://tv.significanthobbies.com/", "description": "Player" }
+      ],
+      "indexMd": "# LoopTV\n\nTV-style random video player for curated channels.\n\n## Agent entrypoints\n\n- https://tv.significanthobbies.com/llms.txt\n- https://tv.significanthobbies.com/api/ai\n- https://tv.significanthobbies.com/index.md\n"
+    },
+    {
+      "id": "anime-list",
+      "name": "MAL Explorer",
+      "url": "https://anime.significanthobbies.com",
+      "summary": "Anime and manga discovery with multi-axis filtering and watchlists.",
+      "publicDir": "anime-list/public",
+      "stack": "spa-hono",
+      "worker": "anime-list/src/worker.ts",
+      "wrangler": "anime-list/wrangler.toml",
+      "productLinks": [
+        { "title": "Home", "url": "https://anime.significanthobbies.com/", "description": "Discovery UI (SPA)" }
+      ],
+      "indexMd": "# MAL Explorer\n\nAnime/manga discovery with multi-axis filtering and watchlists.\n\n## Note for agents\n\nThe UI is a client SPA. Prefer this markdown and `/api/ai` over scraping HTML shells.\n\n## Agent entrypoints\n\n- https://anime.significanthobbies.com/llms.txt\n- https://anime.significanthobbies.com/api/ai\n- https://anime.significanthobbies.com/index.md\n"
+    },
+    {
+      "id": "chess",
+      "name": "Chess Coach",
+      "url": "https://chess.significanthobbies.com",
+      "summary": "AI-coached chess game for practice with coaching feedback.",
+      "publicDir": "chess/public",
+      "stack": "spa-static",
+      "productLinks": [
+        { "title": "Home", "url": "https://chess.significanthobbies.com/", "description": "Play (SPA)" }
+      ],
+      "indexMd": "# Chess Coach\n\nAI-coached chess practice in the browser.\n\n## Note for agents\n\nThe app is a client SPA with little server-rendered copy. Use this brief and `/api/ai` (when deployed with a worker) rather than HTML shell scraping.\n\n## Agent entrypoints\n\n- https://chess.significanthobbies.com/llms.txt\n- https://chess.significanthobbies.com/index.md\n"
+    },
+    {
+      "id": "reader",
+      "name": "Reader",
+      "url": "https://read.significanthobbies.com",
+      "summary": "Research library: capture, annotate, and AI-chat over your reading — private by default.",
+      "publicDir": "reader/public",
+      "stack": "spa-hono",
+      "worker": "reader/src/worker.ts",
+      "productLinks": [
+        { "title": "Home", "url": "https://read.significanthobbies.com/", "description": "App (auth for library)" },
+        { "title": "Login", "url": "https://read.significanthobbies.com/login", "description": "Sign in" }
+      ],
+      "indexMd": "# Reader\n\nResearch library for capture, annotation, and AI chat over your reading.\n\n## Privacy\n\nPersonal libraries require auth and are not agent-indexed. Public marketing surfaces only.\n\n## Agent entrypoints\n\n- https://read.significanthobbies.com/llms.txt\n- https://read.significanthobbies.com/api/ai\n- https://read.significanthobbies.com/index.md\n"
+    },
+    {
+      "id": "email-manager",
+      "name": "Email Manager",
+      "url": "https://mail.sassmaker.com",
+      "summary": "Gmail workspace with local semantic search — private email tooling.",
+      "publicDir": "email-manager/public",
+      "stack": "spa-hono",
+      "worker": "email-manager/src/worker.ts",
+      "productLinks": [
+        { "title": "Home", "url": "https://mail.sassmaker.com/", "description": "App shell" }
+      ],
+      "indexMd": "# Email Manager\n\nGmail workspace with local semantic search.\n\n## Privacy\n\nMailbox content is private. Agents should only use public product description surfaces.\n\n## Agent entrypoints\n\n- https://mail.sassmaker.com/llms.txt\n- https://mail.sassmaker.com/api/ai\n- https://mail.sassmaker.com/index.md\n"
+    },
+    {
+      "id": "free-ai",
+      "name": "AI Gateway",
+      "url": "https://ai-gateway.sassmaker.com",
+      "summary": "OpenAI-compatible LLM gateway fronting free-tier models across multiple providers.",
+      "publicDir": "free-ai/site/public",
+      "stack": "spa-hono",
+      "worker": "free-ai/src/index.ts",
+      "productLinks": [
+        { "title": "Health", "url": "https://ai-gateway.sassmaker.com/health", "description": "Health probe" },
+        { "title": "Models", "url": "https://ai-gateway.sassmaker.com/v1/models", "description": "OpenAI-compatible models list" }
+      ],
+      "indexMd": "# AI Gateway (free-ai)\n\nOpenAI-compatible gateway over free-tier models across providers.\n\n## API\n\n- Base: https://ai-gateway.sassmaker.com\n- `GET /health`\n- `GET /v1/models`\n- Chat completions require API key (`GATEWAY_API_KEY`)\n\n## Agent entrypoints\n\n- https://ai-gateway.sassmaker.com/llms.txt\n- https://ai-gateway.sassmaker.com/api/ai\n- https://ai-gateway.sassmaker.com/index.md\n"
+    },
+    {
+      "id": "swe-interview-prep",
+      "name": "SWE Interview Prep",
+      "url": "https://learn.significanthobbies.com",
+      "summary": "SWE learning OS with FSRS spaced repetition, drills, and feedback.",
+      "publicDir": "swe-interview-prep/public",
+      "stack": "spa-static",
+      "productLinks": [
+        { "title": "Home", "url": "https://learn.significanthobbies.com/", "description": "Learning app" }
+      ],
+      "indexMd": "# SWE Interview Prep\n\nSoftware engineering learning OS with spaced repetition (FSRS), drills, and feedback.\n\n## Note for agents\n\nMuch of the app is authenticated SPA. Public product brief only here.\n\n## Agent entrypoints\n\n- https://learn.significanthobbies.com/llms.txt\n- https://learn.significanthobbies.com/index.md\n"
+    },
+    {
+      "id": "psi-swarm",
+      "name": "psi-swarm",
+      "url": "https://performance.sassmaker.com",
+      "summary": "Distributional Lighthouse / PageSpeed audits with grounded performance analysis across the fleet.",
+      "publicDir": "fleet-ops/psi-swarm/site/public",
+      "stack": "astro-static",
+      "altPublicDirs": ["fleet-ops/psi-swarm/public"],
+      "productLinks": [
+        { "title": "Home", "url": "https://performance.sassmaker.com/", "description": "Perf dashboards" },
+        { "title": "Projects", "url": "https://performance.sassmaker.com/projects/", "description": "Per-project results" }
+      ],
+      "indexMd": "# psi-swarm\n\nDistributional Lighthouse performance audits for the fleet.\n\n## Agent entrypoints\n\n- https://performance.sassmaker.com/llms.txt\n- https://performance.sassmaker.com/api/ai\n- https://performance.sassmaker.com/index.md\n"
+    }
+  ]
+}
