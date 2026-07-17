@@ -43,7 +43,7 @@ export const ACTIVE_FLEET_PROJECTS = {
     name: 'everythingrated',
     desc: 'Ratings and review-style app.',
     tier: 'active-ai',
-    url: 'https://github.com/sarthakagrawal927/everythingrated.git',
+    url: 'https://github.com/High-Signal-App/everythingrated.git',
     externalDeps: ['Cloudflare D1', 'PostHog', 'Rate Limiter'],
   },
   'free-ai': {
