@@ -193,21 +193,31 @@ blockers=""
 if [[ -f "PROJECT_STATUS.md" ]]; then
   blockers=$(
     awk '
-      /^#+.*Blocked/ { found=1; next }
-      /^#+/ { found=0 }
-      found && /^[-0-9]/ {
-        line=$0
+      function inspect_item( line, lower) {
+        if (item == "" || matched) return
+        line=item
         sub(/^[[:space:]]*[-0-9.)]+[[:space:]]*/, "", line)
-        if (line ~ /^\(?none([[:space:]]|\)|$)/) next
+        if (line ~ /^\(?none([[:space:]]|\)|$)/) { item=""; return }
         lower=tolower(line)
-        if (lower !~ /(^|[^a-z])(deploy|deployment|release|production)([^a-z]|$)/) next
-        if (lower ~ /^production:[[:space:]]/) next
-        if (lower ~ /^deploy:[[:space:]]/) next
-        if (lower ~ /^worker name:[[:space:]]/) next
-        if (lower !~ /(block|blocked|defer|deferred|not ready|cannot|refus|missing|required)/) next
-        print
-        exit
+        if (lower !~ /(^|[^a-z])(deploy|deployment|release|production)([^a-z]|$)/) { item=""; return }
+        if (lower ~ /^production:[[:space:]]/) { item=""; return }
+        if (lower ~ /^deploy:[[:space:]]/) { item=""; return }
+        if (lower ~ /^worker name:[[:space:]]/) { item=""; return }
+        if (lower !~ /(block|blocked|defer|deferred|not ready|cannot|refus|missing|required|pending|approval)/) { item=""; return }
+        print item
+        matched=1
+        item=""
       }
+      /^#+.*Blocked/ { inspect_item(); found=1; next }
+      /^#+/ { inspect_item(); found=0; next }
+      found && /^[[:space:]]*([-*]|[0-9]+[.)])[[:space:]]+/ {
+        inspect_item()
+        if (matched) exit
+        item=$0
+        next
+      }
+      found && item != "" && /^[[:space:]]+/ { item=item " " $0 }
+      END { inspect_item() }
     ' PROJECT_STATUS.md 2>/dev/null || true
   )
 fi
