@@ -141,3 +141,29 @@ Repo `saas-maker/apps/showcase/` (hub directory shipped f1a0ea3).
   registry index page — do not start until the name question is settled.
 - **starboard** (same-niche OSS collision): GitHub-native distribution only.
 - **chess**: rate-limit the AI proxy before any promotion work.
+
+## G11 — post-review follow-ups (added 2026-07-17 after the review pass)
+
+Small items from the fleet review; all verified-real gaps, none blocking:
+1. high-signal: add `/data/hit-rate.json` + `.csv` as DataDownload
+   distributions in the Dataset JSON-LD (currently only the old
+   track-record.json is declared); remove the now-unneeded
+   `biome-ignore lint/complexity/useLiteralKeys` comments (rule is off
+   repo-wide since 9933112 — they warn as unused suppressions).
+2. research-papers: add `citation_author` meta tags (Google Scholar treats
+   them as required); drop the nonstandard `citation_in_corpus_citations`.
+3. rolepatch: upgrade the 3 remaining short tool H1s (ats-check,
+   word-count, snippets) to keyword-rich variants; apply the brand title
+   suffix under the tools/* segment.
+4. posttrainllm: devlog RSS entries are a hand-maintained array mirroring
+   devlog.astro anchors — derive both from one source before they drift.
+5. saas-maker showcase build-log: 8 entries have `sha: '—'` with
+   paraphrased messages while the page claims verbatim git provenance —
+   either find the real SHAs or soften the page's claim.
+6. JSON-LD coverage gap: saas-maker-docs and psi-swarm have neither a
+   headFile injection nor an emitted snippet (21/23 covered) — add
+   headFile entries or emit + insert snippets.
+7. Org profile READMEs: glm's expanded drafts sit in
+   saas-maker/docs/org-profiles/ while a different session pushed thinner
+   live versions the same day — needs a reconciliation decision from the
+   user before pushing either.
