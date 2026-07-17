@@ -26,8 +26,20 @@ export default defineConfig({
       customCss: ['./src/styles/custom.css'],
       head: [
         {
+          tag: 'link',
+          attrs: { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' },
+        },
+        {
+          tag: 'link',
+          attrs: { rel: 'icon', href: '/favicon.ico', sizes: 'any' },
+        },
+        {
+          tag: 'link',
+          attrs: { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
+        },
+        {
           tag: 'meta',
-          attrs: { property: 'og:image', content: 'https://sassmaker.com/og-image.svg' },
+          attrs: { property: 'og:image', content: 'https://sassmaker.com/og-image.png' },
         },
         {
           tag: 'script',
