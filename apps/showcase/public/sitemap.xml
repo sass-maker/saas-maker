@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://sassmaker.com/</loc></url>
+  <url><loc>https://sassmaker.com/api/ai</loc></url>
+  <url><loc>https://sassmaker.com/case-study/fleet-performance</loc></url>
+  <url><loc>https://sassmaker.com/factory</loc></url>
   <url><loc>https://sassmaker.com/index.md</loc></url>
   <url><loc>https://sassmaker.com/llms.txt</loc></url>
-  <url><loc>https://sassmaker.com/api/ai</loc></url>
-  <url><loc>https://docs.sassmaker.com</loc></url>
-  <url><loc>https://app.sassmaker.com</loc></url>
+  <url><loc>https://sassmaker.com/privacy</loc></url>
+  <url><loc>https://sassmaker.com/terms</loc></url>
 </urlset>
