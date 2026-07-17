@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="favicon">
+  <rect width="32" height="32" rx="7" fill="#0a0805"/>
+  <defs>
+        <linearGradient id="kGold" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#f6e5b8"/>
+          <stop offset="55%" stop-color="#c4a46b"/>
+          <stop offset="100%" stop-color="#8a6b34"/>
+        </linearGradient>
+      </defs>
+      <rect x="8" y="5" width="16" height="22" rx="2.2" fill="url(#kGold)"/>
+      <rect x="9.2" y="6.2" width="13.6" height="19.6" rx="1.4" fill="#0a0805"/>
+      <path fill="url(#kGold)" d="M16 11.2l1.35 2.75 3.03.44-2.19 2.14.52 3.02L16 17.95l-2.71 1.42.52-3.02-2.19-2.14 3.03-.44z"/>
+      <circle cx="11.6" cy="8.6" r="1.1" fill="url(#kGold)"/>
+      <circle cx="20.4" cy="23.4" r="1.1" fill="url(#kGold)"/>
+</svg>
