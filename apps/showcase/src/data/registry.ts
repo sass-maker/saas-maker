@@ -27,7 +27,8 @@ export interface RegistryProduct {
   hasDynamicLlms?: boolean;
 }
 
-export const REGISTRY_PRODUCTS: RegistryProduct[] = (registry as { products: RegistryProduct[] }).products;
+export const REGISTRY_PRODUCTS: RegistryProduct[] = (registry as { products: RegistryProduct[] })
+  .products;
 
 export const REGISTRY_BY_ID: Record<string, RegistryProduct> = Object.fromEntries(
   REGISTRY_PRODUCTS.map((p) => [p.id, p])

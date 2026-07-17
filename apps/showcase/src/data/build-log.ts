@@ -52,7 +52,7 @@ export const BUILD_LOG: BuildLogEntry[] = [
     repo: 'free-ai',
     sha: '341d997',
     message: 'feat: implement Cloudflare Worker AI gateway with routing, auth, docs, and tests',
-    note: 'The AI Gateway shipped — an OpenAI-compatible LLM gateway fronting free-tier models across 30+ providers. This became the fleet\'s default inference path for routine agent work.',
+    note: "The AI Gateway shipped — an OpenAI-compatible LLM gateway fronting free-tier models across 30+ providers. This became the fleet's default inference path for routine agent work.",
   },
   {
     date: '2026-02-22',
@@ -133,7 +133,7 @@ export const BUILD_LOG: BuildLogEntry[] = [
     repo: 'high-signal',
     sha: '—',
     message: 'chore: deploy Modal — daily ingest + scoring crons live',
-    note: 'High Signal\'s daily ingest and scoring crons went live on Modal. The pipeline ran end-to-end: HF Inference Router → push-to-API writer → worker → web.',
+    note: "High Signal's daily ingest and scoring crons went live on Modal. The pipeline ran end-to-end: HF Inference Router → push-to-API writer → worker → web.",
   },
   {
     date: '2026-04-26',
@@ -192,7 +192,8 @@ export const BUILD_LOG: BuildLogEntry[] = [
     date: '2026-06-22',
     repo: 'fleet-ops',
     sha: '—',
-    message: 'workspace: track fleet-ops/ (tooling, perf outputs, retired-project archives) + standards',
+    message:
+      'workspace: track fleet-ops/ (tooling, perf outputs, retired-project archives) + standards',
     note: 'fleet-ops was formalized — the version-controlled home for shared fleet tooling: skills, scripts, teammates, automation, psi-swarm, and the agent-surfaces-registry that now drives this hub.',
   },
   {
