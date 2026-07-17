@@ -1,93 +1,72 @@
 # Fleet directory submissions
 
-Status tracker for listing fleet products on launch directories.
+**Contact:** `sarthakagrawal@agentmail.to` (AgentMail)  
+**Products:** 23 public surfaces in `config/directory-submissions/products.json`  
+**Logs:** `config/directory-submissions/log.jsonl` · `status.json` · `research-probe.json`  
+**Tools:** `scripts/directory-submit/spray.py`
 
-**Contact email:** `sarthakagrawal@agentmail.to` (AgentMail)  
-**Payloads:** `config/directory-submissions/products.json`  
-**Directory catalog:** `config/directory-submissions/directories.json`  
-**Run log:** `config/directory-submissions/log.jsonl`  
-**Tooling:** `scripts/directory-submit/` (Playwright venv at `.venv-directory-submit/`)
+## Research pass (2026-07-17)
 
-## What automation can do
+Sources scanned:
 
-Fleet standards: no-CAPTCHA email forms → Playwright + AgentMail; OAuth / CAPTCHA → human.
+- [rushout09/directory-submission-sites](https://github.com/rushout09/directory-submission-sites) (250+ free DA list)
+- [best-of-ai/ai-directories](https://github.com/best-of-ai/ai-directories)
+- Smol Launch / startupproject / GrowPad free SaaS directory writeups
 
-Most high-value directories in 2026 are **CAPTCHA-walled**, **OAuth-only**, or **paid launch**. Mass “submit everywhere” is not automatable without a paid CAPTCHA solver (out of policy). Quality shortlists beat 100 low-tier dumps.
+**113 submit URLs probed** with Playwright for CAPTCHA / Cloudflare / auth / multi-field free forms.  
+**17 looked automatable** on first pass; most of the rest are CAPTCHA, OAuth, paid, dead, or login-only.
 
-## Automated results (2026-07-17 spray)
+## Confirmed full-set sprays (23/23)
 
-**23 public fleet products** in `products.json` (full spray set). Contact: **sarthakagrawal@agentmail.to**.
-
-| Directory | Products | Result |
+| Directory | Evidence | Notes |
 |---|---|---|
-| **Insidr.ai** | **23/23 confirmed** | Elementor `"Your submission was successful."` |
-| Betabound | 23 filled (11 fields each) | Submitted; no success toast (ticket form) — treat as attempt |
-| Toolfinder | 23 filled | **Paid** ($29) — not free complete |
-| Aitoolnet | partial | Cloudflare |
-| Future Tools / Futurepedia / Toolify | attempted | CAPTCHA |
-| Dang.ai | magic-link login via AgentMail | Free tier needs **backlink to dang.ai** first |
-| TAAFT / PH / SaaSHub / DevHunt / HN / etc. | probed | Auth / CAPTCHA / paywall |
+| **Insidr.ai** | Elementor `"Your submission was successful."` | AI tools list; editorial review |
+| **Paggu** | `?unapproved=` / `#comment-` moderation URLs | Startup/SaaS comment queue |
 
-### Insidr.ai — all 23 products confirmed
+Every product in `products.json` landed on both.
 
-RolePatch, High Signal, Karte, Significant Hobbies, Materia, PostTrainLLM, Foundry, SaaS Maker Docs, Starboard, CodeVetter, EverythingRated, TrueHire, researchPapers, Pace, AI Gateway, DRank, LoopTV, MAL Explorer, Chess Coach, Reader, Email Manager, SWE Interview Prep, psi-swarm.
+## Filled / attempted (no success toast)
 
-Awaiting **their editorial approval** before public listing.
+| Directory | Count | Notes |
+|---|---|---|
+| Betabound | 23× filled | Free beta announce form (Centercode ticket) |
+| Dynamite AI | 23× filled (7 fields) | No toast; may need backlink/badge |
+| Toolfinder | 23× filled | **$29 paywall** — not free complete |
+| SubmissionWebDirectory | 13× filled | Classic web directory; often needs account |
 
-### Spray tooling
+## Walls (not automatable without you)
+
+CAPTCHA / Cloudflare: Future Tools, Futurepedia, Toolify, Startup Stash, ExactSeek, Peerlist, Product Hunt, SourceForge, Clutch, Open Launch, …
+
+Auth-only: GetWorm, SaaSHub, DevHunt, Startup Fast, Indie Hackers, AlternativeTo, HN, G2 vendor, …
+
+Paid packages: TAAFT launch, Easy With AI ($125), Toolfinder ($29), Dang free needs **backlink to dang.ai**
+
+## Human kick (highest value)
+
+Do these logged-in as you, one product at a time:
+
+1. Product Hunt  
+2. Smol Launch  
+3. Launching Next  
+4. DevHunt  
+5. SaaSHub  
+6. There's An AI For That  
+7. Indie Hackers  
+8. AlternativeTo  
+9. G2 / Capterra  
+10. Show HN (one strong post — not 23 spam)
+
+Copy for paste lives in `products.json` (`name`, `tagline`, `description`, `url`).
+
+## Re-run
 
 ```bash
 cd fleet-ops
 .venv-directory-submit/bin/python scripts/directory-submit/spray.py
-# or targeted:
-.venv-directory-submit/bin/python scripts/directory-submit/submit_free_forms.py
+# research probe already at config/directory-submissions/research-probe.json
 ```
 
-## Human kick (high value)
+## Reality
 
-Do these in a browser logged in as you. Use the same copy from `products.json`.
-
-| # | Directory | Why | URL | Notes |
-|---|---|---|---|---|
-| 1 | **Product Hunt** | Highest launch reach | producthunt.com/posts/new | OAuth; plan launch day; one product at a time |
-| 2 | **Smol Launch** | Weekly indie launch | smollaunch.com | Find current submit path (old `/submit` 404’d) |
-| 3 | **Launching Next** | Free permanent dofollow | launchingnext.com | Site “Submit Startup” may be gated; check current form |
-| 4 | **DevHunt** | Dev tools dofollow | devhunt.org/submit | Auth account |
-| 5 | **SaaSHub** | B2B SaaS | saashub.com/submit | Sign in |
-| 6 | **There's An AI For That** | AI traffic | theresanaiforthat.com/launch | Login + often paid packages |
-| 7 | **Indie Hackers** | Maker audience | indiehackers.com/products | Account + product + post |
-| 8 | **AlternativeTo** | Comparison SEO | alternativeto.net | Account; place vs competitors |
-| 9 | **G2 / Capterra** | B2B reviews | g2.com / capterra.com | Vendor portal; slow build |
-| 10 | **Hacker News Show HN** | One quality post | news.ycombinator.com/submit | Do **not** spam every product |
-| 11 | **BetaList** | Pre-launch only | betalist.com/submit | Only if still beta-ish |
-| 12 | **Startup Fast** | Agent CLI exists | startupfa.st | Free needs badge on site; OAuth CLI login |
-
-### Suggested product order for human launches
-
-1. RolePatch  
-2. High Signal  
-3. Karte  
-4. PostTrainLLM  
-5. Significant Hobbies / Materia  
-6. Foundry (sassmaker.com) as portfolio umbrella  
-
-Skip private tooling (email-manager, reader library). Skip codevetter / protein-index if other agents own those launches.
-
-## Re-run automation
-
-```bash
-cd fleet-ops
-# optional: recreate venv
-# uv venv .venv-directory-submit && uv pip install --python .venv-directory-submit/bin/python playwright
-# .venv-directory-submit/bin/playwright install chromium
-
-.venv-directory-submit/bin/python scripts/directory-submit/probe_and_submit.py --mode probe
-.venv-directory-submit/bin/python scripts/directory-submit/submit_free_forms.py
-```
-
-## Policy notes
-
-- Do not pay for directory spots without explicit approval.
-- Do not solve CAPTCHA with third-party solvers unless approved.
-- Prefer 3–5 quality listings over 50 nofollow dumps.
-- Keep `log.jsonl` as the append-only attempt history.
+Quality directories in 2026 gate free bots with CAPTCHA/OAuth. **Spray-and-pray only fully clears open free forms.** Confirmed complete automation: **Insidr + Paggu (46 product-listings)**. Everything else is human or paid or filled-without-ack.

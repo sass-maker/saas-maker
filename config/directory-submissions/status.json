@@ -2,37 +2,60 @@
   "date": "2026-07-17",
   "contact": "sarthakagrawal@agentmail.to",
   "products_total": 23,
-  "insidr_confirmed": [
-    "anime-list",
-    "chess",
-    "codevetter",
-    "drank",
-    "email-manager",
-    "everythingrated",
-    "free-ai",
-    "high-signal",
-    "karte",
-    "looptv",
-    "materia",
-    "pace",
-    "posttrainllm",
-    "psi-swarm",
-    "reader",
-    "research-papers",
-    "rolepatch",
-    "saas-maker-docs",
-    "saas-maker-showcase",
-    "significanthobbies",
-    "starboard",
-    "swe-interview-prep",
-    "truehire"
-  ],
-  "insidr_count": 23,
-  "by_directory_confirmed": {
-    "futuretools": [
-      "rolepatch"
+  "research": {
+    "dirs_probed": 113,
+    "good_form_candidates": [
+      "insidr",
+      "startupbase",
+      "getworm",
+      "feedough",
+      "paggu",
+      "techpluto",
+      "apprater",
+      "marsx",
+      "dynamite",
+      "submissionweb",
+      "9sites",
+      "business-software",
+      "tiny_startups",
+      "microlaunch_tally",
+      "startups_fyi",
+      "thestartupinc",
+      "crozdesk"
     ],
+    "sources": [
+      "github.com/rushout09/directory-submission-sites (250+)",
+      "github.com/best-of-ai/ai-directories",
+      "Smol Launch / startupproject / growpad free SaaS lists"
+    ]
+  },
+  "confirmed_full_set": {
     "insidr": [
+      "anime-list",
+      "chess",
+      "codevetter",
+      "drank",
+      "email-manager",
+      "everythingrated",
+      "free-ai",
+      "high-signal",
+      "karte",
+      "looptv",
+      "materia",
+      "pace",
+      "posttrainllm",
+      "psi-swarm",
+      "reader",
+      "research-papers",
+      "rolepatch",
+      "saas-maker-docs",
+      "saas-maker-showcase",
+      "significanthobbies",
+      "starboard",
+      "swe-interview-prep",
+      "truehire"
+    ],
+    "paggu": [
       "anime-list",
       "chess",
       "codevetter",
@@ -58,6 +81,41 @@
       "truehire"
     ]
   },
-  "never_confirmed": [],
-  "note": "23/23 on Insidr with success toast. Betabound filled all 23 without toast. Most other dirs CAPTCHA/auth/paid."
+  "confirmed_counts": {
+    "insidr": 23,
+    "paggu": 23
+  },
+  "filled_no_toast_counts": {
+    "betabound": 23,
+    "toolfinder": 23,
+    "dynamite": 23,
+    "submissionweb": 13
+  },
+  "walls_aborted": [
+    [
+      "getworm",
+      "needs_auth"
+    ],
+    [
+      "feedough",
+      "no_form"
+    ]
+  ],
+  "human_kick_high_value": [
+    "Product Hunt",
+    "Smol Launch",
+    "Launching Next",
+    "DevHunt",
+    "SaaSHub",
+    "There's An AI For That",
+    "Indie Hackers",
+    "AlternativeTo",
+    "G2",
+    "Capterra",
+    "Hacker News Show HN",
+    "BetaList",
+    "Uneed",
+    "Fazier",
+    "Startup Fast"
+  ]
 }
