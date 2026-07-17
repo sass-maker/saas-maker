@@ -96,21 +96,23 @@ const ICONS = {
     `,
   },
   "saas-maker-showcase": {
-    bg: "#0b0d12",
-    fg: "#e07b3a",
-    note: "Foundry copper F (matches site brand-mark)",
+    bg: "#0c0a06",
+    fg: "#f5c542",
+    note: "Foundry gold layers (option B)",
     mark: `
-      <rect x="4.5" y="4.5" width="23" height="23" rx="5.5" fill="#e07b3a"/>
-      <path fill="#1a0f06" d="M9.5 8.5h13l-.75 3.75H14.5l-.5 2.5h6.75l-.75 3.5H13.2L12 23.5H8.9z"/>
+      <path fill="#f5c542" d="M16 5.5 L26.25 10.5 L16 15.5 L5.75 10.5 Z"/>
+      <path fill="#f0d878" d="M16 11.75 L26.25 16.75 L16 21.75 L5.75 16.75 Z"/>
+      <path fill="#d4a017" d="M16 18 L26.25 23 L16 28 L5.75 23 Z"/>
     `,
   },
   "saas-maker-docs": {
-    bg: "#0b0d12",
-    fg: "#e07b3a",
-    note: "Foundry copper F for docs",
+    bg: "#0c0a06",
+    fg: "#f5c542",
+    note: "Foundry gold layers (option B)",
     mark: `
-      <rect x="4.5" y="4.5" width="23" height="23" rx="5.5" fill="#e07b3a"/>
-      <path fill="#1a0f06" d="M9.5 8.5h13l-.75 3.75H14.5l-.5 2.5h6.75l-.75 3.5H13.2L12 23.5H8.9z"/>
+      <path fill="#f5c542" d="M16 5.5 L26.25 10.5 L16 15.5 L5.75 10.5 Z"/>
+      <path fill="#f0d878" d="M16 11.75 L26.25 16.75 L16 21.75 L5.75 16.75 Z"/>
+      <path fill="#d4a017" d="M16 18 L26.25 23 L16 28 L5.75 23 Z"/>
     `,
   },
   starboard: {

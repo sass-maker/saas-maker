@@ -1,18 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Foundry">
-  <rect width="512" height="512" fill="#0b0d12"/>
-  <rect x="56" y="56" width="400" height="400" rx="80" fill="#e07b3a"/>
-  <!-- Bold geometric F with slight right lean (workshop monogram) -->
-  <path fill="#1a0f06" d="
-    M152 128
-    H360
-    L348 188
-    H230
-    L222 232
-    H332
-    L320 288
-    H210
-    L190 384
-    H140
-    Z"/>
+  <rect width="512" height="512" fill="#0c0a06"/>
+  <path fill="#f5c542" d="M256 88 L420 168 L256 248 L92 168 Z"/>
+  <path fill="#f0d878" d="M256 188 L420 268 L256 348 L92 268 Z"/>
+  <path fill="#d4a017" d="M256 288 L420 368 L256 448 L92 368 Z"/>
 </svg>
