@@ -74,4 +74,11 @@ bash fleet-ops/skills/seo-audit/scripts/seo-audit.sh https://rolepatch.com/ --si
 
 # Apply agent files (then deploy)
 node fleet-ops/scripts/apply-agent-surfaces.mjs
+
+# IndexNow (Bing/Yandex/etc. — not Google). See docs/indexnow.md
+node fleet-ops/scripts/indexnow-submit.mjs --init-key
+node fleet-ops/scripts/indexnow-submit.mjs --apply-keys   # then deploy
+node fleet-ops/scripts/indexnow-submit.mjs --check-keys
+node fleet-ops/scripts/indexnow-submit.mjs --dry-run
+node fleet-ops/scripts/indexnow-submit.mjs
 ```
