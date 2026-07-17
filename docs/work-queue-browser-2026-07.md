@@ -86,14 +86,24 @@ posttrainllm, highsignal) with their `https://<host>/llms.txt` URLs to:
   categories in the email field — if listings are absent, that's why; one
   manual resubmit of the 3 focus products is worth it, mass resubmit is not.
 
-## B7 — Hugging Face org for PostTrainLLM · 10 min browser + CLI handoff
+## B7 — Enable the weekly GEO Observatory routine · 5 min · UNBLOCKS MEASUREMENT
+
+- 1: connect GitHub to claude.ai (Settings → Connectors / account settings).
+- 2: install the Claude GitHub App on **sass-maker/fleet-workspace**:
+  https://claude.ai/code/onboarding?magic=github-app-setup
+- 3: tell any Claude Code session "create the geo-observatory routine from
+  fleet-ops/skills/geo-observatory/routine.json" (runs Mondays 08:00 IST;
+  baseline is already seeded, so run 1 shows deltas).
+- Verify: routine listed at https://claude.ai/code/routines
+
+## B8 — Hugging Face org for PostTrainLLM · 10 min browser + CLI handoff
 
 - URL: https://huggingface.co/organizations/new → create org `PostTrainLLM`
   (avatar from repo favicon, website https://posttrainllm.com).
 - Model card content + upload commands come from glm task G4; actual upload
   is CLI (`huggingface-cli upload`), not browser.
 
-## B8 — Launches · needs the human present, schedule deliberately
+## B9 — Launches · needs the human present, schedule deliberately
 
 Not computer-use tasks — attention is the product. Queue when assets ready:
 1. **Show HN: CodeVetter benchmark** (after glm G1 ships the benchmark page).
