@@ -1,7 +1,6 @@
 # Fleet Runbook
 
-This is the operating guide for the projects under
-`/Users/sarthak/Desktop/fleet`.
+This is the operating guide for the projects in the Fleet workspace.
 
 The Fleet root is a lightweight documentation and policy repository. Each child
 directory is its own project repository with its own Git history, deploy flow,
@@ -73,17 +72,49 @@ products.
 
 ## Fresh Machine Setup
 
-From the Fleet root:
+Prerequisites: Git, GitHub CLI, Node 22, pnpm, and Wrangler. Authenticate once,
+then clone the Fleet root and its active child repositories:
 
 ```bash
-cd /Users/sarthak/Desktop/fleet
+gh auth status
+wrangler whoami
+gh repo clone sarthakagrawal927/fleet fleet
+cd fleet
+
+while read -r repo directory; do
+  test -d "$directory/.git" || gh repo clone "$repo" "$directory"
+done <<'REPOS'
+sarthakagrawal927/aliveville aliveville
+Significant-Hobbies/anime-list anime-list
+Significant-Hobbies/chess chess
+Codevetter/codevetter codevetter
+High-Signal-App/drank drank
+sarthakagrawal927/email-manager email-manager
+High-Signal-App/everythingrated everythingrated
+sass-maker/free-ai free-ai
+High-Signal-App/high-signal high-signal
+sarthakagrawal927/karte karte
+sass-maker/knowledge-base knowledge-base
+Significant-Hobbies/looptv looptv
+Significant-Hobbies/materia materia
+sass-maker/mobile-dev-cockpit mobile-dev-cockpit
+HeyPace/pace pace
+PostTrainLLM/posttrainllm posttrainllm
+Significant-Hobbies/protein-index protein-index
+Significant-Hobbies/reader reader
+sass-maker/reel-pipeline reel-pipeline
+High-Signal-App/research-papers research-papers
+sarthakagrawal927/rolepatch rolepatch
+sarthakagrawal927/web-playables web-playables
+sass-maker/saas-maker saas-maker
+Significant-Hobbies/significanthobbies significanthobbies
+Codevetter/starboard starboard
+Significant-Hobbies/swe-interview-prep swe-interview-prep
+REPOS
+
+./fleet-ops/scripts/agent-stack.sh install-skills
 git status --short --branch
-```
-
-From the Foundry/SaaS Maker project:
-
-```bash
-cd /Users/sarthak/Desktop/fleet/saas-maker
+cd saas-maker
 pnpm install
 fnd login
 pnpm symphony
@@ -92,7 +123,9 @@ pnpm symphony
 `fnd login` stores the Foundry session locally. Symphony uses that session and
 does not require API keys for normal local task sync.
 
-Cloudflare-backed projects require a working Wrangler login:
+Cloudflare-backed projects require a working Wrangler login. GitHub Actions
+deploys additionally require the repository's Cloudflare secrets; local
+Wrangler auth is intentionally not copied between machines:
 
 ```bash
 wrangler whoami
@@ -104,26 +137,39 @@ GitHub-backed checks require a working GitHub CLI login:
 gh auth status
 ```
 
+Return to the Fleet root and validate the installation:
+
+```bash
+cd ..
+bash fleet-ops/scripts/fleet-health.sh --no-fetch
+bash fleet-ops/scripts/deploy-health.sh
+```
+
+Cloudflare Pages showing `Git Provider: No` is expected for direct-upload
+projects. Do not connect them to GitHub in Cloudflare: the guarded deploy
+workflow and its recorded Git commit provide repository provenance without
+turning `main` into an automatic production deploy.
+
 ## Daily Fleet Checks
 
 Check task state:
 
 ```bash
-cd /Users/sarthak/Desktop/fleet/saas-maker
+cd saas-maker
 pnpm symphony
 ```
 
 Check child repository cleanliness:
 
 ```bash
-cd /Users/sarthak/Desktop/fleet
-./scripts/git-health.sh --all
+cd /path/to/fleet
+bash fleet-ops/scripts/fleet-health.sh
 ```
 
 Check GitHub Actions and Cloudflare deployment health:
 
 ```bash
-./scripts/deploy-health.sh
+bash fleet-ops/scripts/deploy-health.sh
 ```
 
 The deploy health script is read-only. It checks GitHub Actions for immediate
@@ -164,8 +210,7 @@ for work that needs deeper reasoning or higher correctness guarantees.
 
 ## Active Projects
 
-The active production fleet is listed in
-`/Users/sarthak/Desktop/fleet/saas-maker/foundry.projects.json`.
+The active production fleet is listed in `saas-maker/foundry.projects.json`.
 
 | Project | Purpose | Local run | Verify before push | Deploy |
 | --- | --- | --- | --- | --- |

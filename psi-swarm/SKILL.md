@@ -31,7 +31,9 @@ If `cli/dist/cli.js` is missing, build it once:
 cd ~/Desktop/fleet/fleet-ops/psi-swarm && pnpm install && pnpm --workspace cli run build
 ```
 
-> **Node version**: psi-swarm requires Node 20-23. Lighthouse 12 crashes on Node 24. If the user is on Node 24, suggest `nvm use 22` or installing nvm.
+> **Node version**: use the Node version that installed `node_modules`; the
+> native `better-sqlite3` binding must match it. The current Fleet installation
+> is verified on Node 24. Re-run `pnpm install` after changing Node versions.
 
 ## How to invoke
 
@@ -42,13 +44,13 @@ cd ~/Desktop/fleet/fleet-ops/psi-swarm && pnpm install && pnpm --workspace cli r
 For **product-level "is my site fast enough" questions** — use the `coverage` preset group + `coverage` profile. This runs every device class (slow 3G low-end Android, slow 4G mid Android, fast 4G iPhone, desktop cable) and gives a single weighted verdict representing ~globally-distributed real users:
 
 ```bash
-node <psi-swarm>/cli/dist/cli.js run <URL> --runs 5 --presets coverage --profile coverage --reason --output html --output-path /tmp/psi-<slug>.html
+node <psi-swarm>/cli/dist/cli.js run <URL> --runs 5 --presets coverage --profile coverage --reason --output html
 ```
 
 For **focused PSI-style checks** (PageSpeed Insights matches mobile-mid + desktop only):
 
 ```bash
-node <psi-swarm>/cli/dist/cli.js run <URL> --runs 5 --presets psi --reason --output html --output-path /tmp/psi-<slug>.html
+node <psi-swarm>/cli/dist/cli.js run <URL> --runs 5 --presets psi --reason --output html
 ```
 
 After the run completes, tell the user:
@@ -62,7 +64,7 @@ The HTML is self-contained (~10-17 KB, inline CSS, no external assets). They can
 For a fast directional check:
 
 ```bash
-node <psi-swarm>/cli/dist/cli.js run <URL> --runs 2 --presets desktop --reason --output html --output-path /tmp/psi-quick.html
+node <psi-swarm>/cli/dist/cli.js run <URL> --runs 2 --presets desktop --reason --output html
 ```
 
 ### Comparing two URLs or two states
