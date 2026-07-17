@@ -5,6 +5,9 @@ import { fileURLToPath } from 'node:url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const docsRoot = join(__dirname, '../src/content/docs');
 const outputPath = join(__dirname, '../public/llms.txt');
+// /api/ai advertises llms-full.txt; docs' llms.txt is already the full
+// concatenation, so both surfaces share the same generated content.
+const fullOutputPath = join(__dirname, '../public/llms-full.txt');
 
 // Section ordering — directories are processed in this order.
 // Files within each directory are sorted alphabetically.
@@ -59,6 +62,7 @@ const sections = orderedFiles.map((relativePath) => {
 const output = HEADER + sections.join('\n---\n\n');
 
 writeFileSync(outputPath, output, 'utf-8');
+writeFileSync(fullOutputPath, output, 'utf-8');
 console.log(
-  `Generated ${outputPath} (${orderedFiles.length} files from ${orderedDirs.length} sections)`
+  `Generated ${outputPath} + llms-full.txt (${orderedFiles.length} files from ${orderedDirs.length} sections)`
 );
