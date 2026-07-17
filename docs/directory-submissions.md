@@ -14,27 +14,34 @@ Fleet standards: no-CAPTCHA email forms → Playwright + AgentMail; OAuth / CAPT
 
 Most high-value directories in 2026 are **CAPTCHA-walled**, **OAuth-only**, or **paid launch**. Mass “submit everywhere” is not automatable without a paid CAPTCHA solver (out of policy). Quality shortlists beat 100 low-tier dumps.
 
-## Automated results (2026-07-17)
+## Automated results (2026-07-17 spray)
+
+**23 public fleet products** in `products.json` (full spray set). Contact: **sarthakagrawal@agentmail.to**.
 
 | Directory | Products | Result |
 |---|---|---|
-| **Insidr.ai** | 12 confirmed + RolePatch flaky | **Submitted** — Elementor `"Your submission was successful."` |
-| Aitoolnet | partial | Cloudflare after 1–2 posts |
-| Future Tools | all attempted | CAPTCHA blocked |
-| TAAFT / Toolify / Uneed / Open Launch / Peerlist | probed | CAPTCHA or paywall |
-| SaaSHub / DevHunt / Startup Fast / Microlaunch | probed | Auth required |
-| Launching Next `/submit` | probed | Newsletter only (no product form) |
-| Easy With AI | probed | Paid ($125) |
+| **Insidr.ai** | **23/23 confirmed** | Elementor `"Your submission was successful."` |
+| Betabound | 23 filled (11 fields each) | Submitted; no success toast (ticket form) — treat as attempt |
+| Toolfinder | 23 filled | **Paid** ($29) — not free complete |
+| Aitoolnet | partial | Cloudflare |
+| Future Tools / Futurepedia / Toolify | attempted | CAPTCHA |
+| Dang.ai | magic-link login via AgentMail | Free tier needs **backlink to dang.ai** first |
+| TAAFT / PH / SaaSHub / DevHunt / HN / etc. | probed | Auth / CAPTCHA / paywall |
 
-### Insidr.ai confirmed submissions (awaiting editorial approval)
+### Insidr.ai — all 23 products confirmed
 
-High Signal, Karte, PostTrainLLM, Starboard, EverythingRated, researchPapers, Pace, AI Gateway, Significant Hobbies, Materia, Foundry (SaaS Maker), psi-swarm.
+RolePatch, High Signal, Karte, Significant Hobbies, Materia, PostTrainLLM, Foundry, SaaS Maker Docs, Starboard, CodeVetter, EverythingRated, TrueHire, researchPapers, Pace, AI Gateway, DRank, LoopTV, MAL Explorer, Chess Coach, Reader, Email Manager, SWE Interview Prep, psi-swarm.
 
-**RolePatch** filled but did not return a success toast — retry manually if missing from their queue.
+Awaiting **their editorial approval** before public listing.
 
-Email used where required: **sarthakagrawal@agentmail.to**.
+### Spray tooling
 
-No new verification messages in AgentMail after these free forms (they don’t email-verify on submit).
+```bash
+cd fleet-ops
+.venv-directory-submit/bin/python scripts/directory-submit/spray.py
+# or targeted:
+.venv-directory-submit/bin/python scripts/directory-submit/submit_free_forms.py
+```
 
 ## Human kick (high value)
 

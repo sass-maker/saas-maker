@@ -1,25 +1,60 @@
 {
   "date": "2026-07-17",
   "contact": "sarthakagrawal@agentmail.to",
-  "automated": {
-    "insidr_successful_products": [
+  "products_total": 23,
+  "confirmed_anywhere": [
+    "anime-list",
+    "chess",
+    "drank",
+    "email-manager",
+    "everythingrated",
+    "free-ai",
+    "high-signal",
+    "karte",
+    "looptv",
+    "materia",
+    "pace",
+    "posttrainllm",
+    "psi-swarm",
+    "reader",
+    "research-papers",
+    "rolepatch",
+    "saas-maker-showcase",
+    "significanthobbies",
+    "starboard",
+    "swe-interview-prep",
+    "truehire"
+  ],
+  "by_directory": {
+    "insidr": [
+      "anime-list",
+      "chess",
+      "drank",
+      "email-manager",
       "everythingrated",
       "free-ai",
       "high-signal",
       "karte",
+      "looptv",
       "materia",
       "pace",
       "posttrainllm",
       "psi-swarm",
+      "reader",
       "research-papers",
       "saas-maker-showcase",
       "significanthobbies",
-      "starboard"
+      "starboard",
+      "swe-interview-prep",
+      "truehire"
     ],
-    "insidr_count": 12,
-    "aitoolnet": "partial then cloudflare",
-    "futuretools": "captcha blocked",
-    "note": "Success confirmed via Elementor message 'Your submission was successful.' where msg captured."
+    "futuretools": [
+      "rolepatch"
+    ]
   },
-  "human_kick": "see docs/directory-submissions.md"
+  "never_confirmed": [
+    "codevetter",
+    "saas-maker-docs"
+  ],
+  "note": "submitted_likely requires success toast/message. Many fills with no toast logged as submitted_unknown (may still have been received)."
 }
