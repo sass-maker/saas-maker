@@ -2,9 +2,10 @@
   "date": "2026-07-17",
   "contact": "sarthakagrawal@agentmail.to",
   "products_total": 23,
-  "confirmed_anywhere": [
+  "insidr_confirmed": [
     "anime-list",
     "chess",
+    "codevetter",
     "drank",
     "email-manager",
     "everythingrated",
@@ -19,16 +20,22 @@
     "reader",
     "research-papers",
     "rolepatch",
+    "saas-maker-docs",
     "saas-maker-showcase",
     "significanthobbies",
     "starboard",
     "swe-interview-prep",
     "truehire"
   ],
-  "by_directory": {
+  "insidr_count": 23,
+  "by_directory_confirmed": {
+    "futuretools": [
+      "rolepatch"
+    ],
     "insidr": [
       "anime-list",
       "chess",
+      "codevetter",
       "drank",
       "email-manager",
       "everythingrated",
@@ -42,19 +49,15 @@
       "psi-swarm",
       "reader",
       "research-papers",
+      "rolepatch",
+      "saas-maker-docs",
       "saas-maker-showcase",
       "significanthobbies",
       "starboard",
       "swe-interview-prep",
       "truehire"
-    ],
-    "futuretools": [
-      "rolepatch"
     ]
   },
-  "never_confirmed": [
-    "codevetter",
-    "saas-maker-docs"
-  ],
-  "note": "submitted_likely requires success toast/message. Many fills with no toast logged as submitted_unknown (may still have been received)."
+  "never_confirmed": [],
+  "note": "23/23 on Insidr with success toast. Betabound filled all 23 without toast. Most other dirs CAPTCHA/auth/paid."
 }
