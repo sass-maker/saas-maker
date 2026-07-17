@@ -1,87 +1,52 @@
 ---
 import Layout from '../layouts/Layout.astro';
 
-// The Fleet Factory — a compact public directory with clear attention levels.
-// Focus products stay prominent; personal projects are visible but lower-touch.
+// Public SaaS Maker architecture. The wider fleet remains operational data in Cockpit.
 
 const platform = {
   id: 'saas-maker', role: 'The Foundry · platform',
-  provides: 'System-of-record for the selected directory — project registry (20) · feedback / testimonials / changelog widgets · live event ledger.',
+  provides: 'Core product platform — project registry · feedback / testimonials / changelog widgets · tasks · live event ledger.',
   rails: ['registry', 'feedback widgets', 'events ledger'],
 };
 
 const bands = [
-  { key: 'ai', title: 'Focus products', note: 'primary bets', items: [
-    { id: 'codevetter',         provides: 'Desktop AI code review (local-first)', uses: ['ai'] },
-    { id: 'pace',               provides: 'macOS voice companion (on-device)', uses: [] },
-    { id: 'posttrainllm',       provides: 'Local LLM factory + runtime (Mac)', uses: [] },
+  { key: 'ai', title: 'Core product', note: 'SaaS Maker', items: [
+    { id: 'saas-maker',         provides: 'Product platform, API, cockpit, SDKs, and widgets', uses: ['feedback', 'sync'] },
   ] },
-  { key: 'support', title: 'Support products', note: 'kept alive and lightly improved', items: [
-    { id: 'saas-maker',         provides: 'Fleet control plane and public directory', uses: ['feedback', 'sync'] },
-    { id: 'high-signal',        provides: 'Daily synthesized intelligence brief', uses: ['ai', 'feedback'] },
-    { id: 'aliveville',         provides: '3D AI world simulator with NPC agents', uses: ['ai'] },
+  { key: 'support', title: 'Supporting repositories', note: 'directly serve SaaS Maker', items: [
     { id: 'free-ai',            provides: 'OpenAI-compatible free-model gateway', uses: ['ai'] },
     { id: 'knowledge-base',     provides: 'Private Agent Search and cited retrieval', uses: ['rag'] },
     { id: 'reel-pipeline',      provides: 'Short-form video generation pipeline', uses: ['ai', 'sync'] },
-    { id: 'research-papers',    provides: 'Academic paper platform and data asset', uses: ['rag'] },
-    { id: 'drank',              provides: 'Domain Rating tracker', uses: ['sync'] },
-    { id: 'starboard',          provides: 'GitHub stars organizer and search', uses: ['rag'] },
-  ] },
-  { key: 'personal', title: 'Personal projects', note: 'maintained, lesser love', items: [
-    { id: 'rolepatch',          provides: 'LaTeX resume tailoring + cover letters', uses: ['ai', 'feedback'] },
-    { id: 'karte',              provides: 'AI link-in-bio — chat · encyclopedia · roast', uses: ['ai', 'rag'] },
-    { id: 'significanthobbies', provides: 'Hobby discovery + journaling', uses: ['feedback'] },
-    { id: 'reader',             provides: 'Reading and saved-article workflow', uses: [] },
-    { id: 'swe-interview-prep', provides: 'Interview practice workspace', uses: [] },
-    { id: 'looptv',             provides: 'Ambient video and anime companion', uses: [] },
-    { id: 'anime-list',         provides: 'Anime discovery and tracking', uses: [] },
-    { id: 'email-manager',      provides: 'Personal email operations workspace', uses: [] },
+    { id: 'psi-swarm',          provides: 'Repeated Lighthouse performance tracking', uses: ['sync'] },
   ] },
 ];
 
 const useLabel = { ai: 'AI', rag: 'RAG', feedback: 'feedback', sync: 'sync' };
 const displayName = {
-  'codevetter': 'CodeVetter',
-  'pace': 'Pace',
-  'posttrainllm': 'PostTrainLLM',
   'saas-maker': 'SaaS Maker',
-  'high-signal': 'High Signal',
-  aliveville: 'AliveVille',
   'free-ai': 'Free AI',
   'knowledge-base': 'Knowledge Base',
   'reel-pipeline': 'Reel Pipeline',
-  'research-papers': 'Research Papers',
-  'drank': 'drank',
-  'starboard': 'Starboard',
-  'rolepatch': 'RolePatch',
-  'karte': 'Karte',
-  'significanthobbies': 'Significant Hobbies',
-  'reader': 'Reader',
-  'swe-interview-prep': 'SWE Interview Prep',
-  'looptv': 'LoopTV',
-  'anime-list': 'Anime List',
-  'email-manager': 'Email Manager',
+  'psi-swarm': 'psi-swarm',
 };
 const productCount = bands.reduce((n, b) => n + b.items.length, 0);
 const focusCount = bands.find((b) => b.key === 'ai')?.items.length ?? 0;
 const supportCount = bands.find((b) => b.key === 'support')?.items.length ?? 0;
-const personalCount = bands.find((b) => b.key === 'personal')?.items.length ?? 0;
 const directoryEntries = productCount;
 ---
 
-<Layout title="The Fleet Factory — saas-maker" description="A compact directory of focus, support, and personal fleet projects.">
+<Layout title="The SaaS Maker system" description="SaaS Maker and the repositories that directly support it.">
   <main class="factory">
     <div class="grid-floor" aria-hidden="true"></div>
     <div class="scanline" aria-hidden="true"></div>
 
     <header class="fab-hero">
-      <p class="kicker"><span class="led"></span> FOUNDRY · FLEET ARCHITECTURE</p>
-      <h1>The Fleet Factory</h1>
-      <p class="sub"><strong>saas-maker</strong> keeps the record. Focus products get the most attention; support includes the platform layer; personal projects are visible but intentionally lower-touch.</p>
+      <p class="kicker"><span class="led"></span> SaaS MAKER · PRODUCT ARCHITECTURE</p>
+      <h1>The SaaS Maker system</h1>
+      <p class="sub"><strong>SaaS Maker</strong> is the core product. These supporting repositories directly extend its infrastructure and operating workflows. Other products remain separate brands even when Cockpit tracks them internally.</p>
       <div class="stat-strip">
         <div><b>{focusCount}</b><span>focus</span></div>
         <div><b>{supportCount}</b><span>support</span></div>
-        <div><b>{personalCount}</b><span>personal</span></div>
         <div><b>{directoryEntries}</b><span>entries</span></div>
       </div>
     </header>

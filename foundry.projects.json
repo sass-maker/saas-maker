@@ -10,17 +10,17 @@
   "aliveville": {
     "desc": "Persistent AI world simulator — interactive RPG-style multi-agent game.",
     "url": "https://github.com/sarthakagrawal927/aliveville.git",
-    "tier": "support",
-    "category": "product",
-    "priority": "P2",
-    "maturity": "internal-first"
+    "tier": "personal",
+    "category": "personal",
+    "priority": "P3",
+    "maturity": "maintained"
   },
   "high-signal": {
     "desc": "Public signal log for AI infrastructure and semiconductors.",
     "url": "https://github.com/High-Signal-App/high-signal.git",
-    "tier": "support",
+    "tier": "core",
     "category": "product",
-    "priority": "P2",
+    "priority": "P1",
     "maturity": "public-ready"
   },
   "drank": {
@@ -134,7 +134,7 @@
     "tier": "personal",
     "category": "personal",
     "priority": "P3",
-    "maturity": "public-ready"
+    "maturity": "maintained"
   },
   "reader": {
     "desc": "Reader — personal reading and saved-article workflow.",
@@ -163,9 +163,9 @@
   "saas-maker": {
     "desc": "Foundry — The Industrial Software Factory for Project Fleets.",
     "url": "https://github.com/sass-maker/saas-maker.git",
-    "tier": "support",
+    "tier": "core",
     "category": "product",
-    "priority": "P2",
+    "priority": "P1",
     "maturity": "internal-first"
   },
   "significanthobbies": {
@@ -205,7 +205,7 @@
     "url": "https://github.com/PostTrainLLM/posttrainllm.git",
     "tier": "core",
     "category": "product",
-    "priority": "P2",
+    "priority": "P1",
     "maturity": "internal-first"
   }
 }

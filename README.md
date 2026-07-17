@@ -54,12 +54,11 @@ Everything is hosted on Cloudflare. Each deployable ships independently via GitH
 | --------------------------------------------------------------------------- | -------- | -------- | ----------------------------------------------------------------- |
 | [`CodeVetter`](https://github.com/Codevetter/codevetter)                         | product  | P1       | Desktop-first AI code review platform.                            |
 | [`pace`](https://github.com/HeyPace/pace)                                        | product  | P1       | Local macOS voice agent.                                          |
-| [`posttrainllm`](https://github.com/PostTrainLLM/tinygpt)                       | product  | P2       | Post-training and model learning workspace.                       |
-| [`saas-maker`](https://github.com/sass-maker/saas-maker)                        | product  | P2       | Foundry control plane, cockpit, API, docs, widgets, and showcase. |
-| [`aliveville`](https://github.com/sarthakagrawal927/aliveville)                  | product  | P2       | Persistent AI world simulator and AliveVille game surface.        |
+| [`posttrainllm`](https://github.com/PostTrainLLM/posttrainllm)                   | product  | P1       | Post-training and model learning workspace.                       |
+| [`saas-maker`](https://github.com/sass-maker/saas-maker)                        | product  | P1       | Core product platform, cockpit, API, docs, widgets, and tooling.  |
+| [`high-signal`](https://github.com/High-Signal-App/high-signal)                  | product  | P1       | Core signal product for AI infrastructure and semiconductors.     |
 | [`drank`](https://github.com/High-Signal-App/drank)                              | product  | P2       | Domain Rating tracker for domain research.                        |
 | [`free-ai`](https://github.com/sass-maker/free-ai)                               | product  | P2       | OpenAI-compatible LLM gateway for free-tier providers.            |
-| [`high-signal`](https://github.com/High-Signal-App/high-signal)                  | product  | P2       | Public signal log for AI infrastructure and semiconductors.       |
 | [`knowledge-base`](https://github.com/sass-maker/knowledge-base)                  | product  | P2       | Private Agent Search over project-scoped corpora.                 |
 | [`reel-pipeline`](https://github.com/sass-maker/reel-pipeline)                    | product  | P2       | Short-form video generation pipeline for fleet marketing assets.  |
 | [`research-papers`](https://github.com/High-Signal-App/research-papers)           | product  | P2       | Academic paper platform and research data asset.                  |
@@ -67,6 +66,7 @@ Everything is hosted on Cloudflare. Each deployable ships independently via GitH
 | [`everythingrated`](https://github.com/High-Signal-App/everythingrated)           | product  | P2       | Multi-axis AI dev-tool adoption ratings.                          |
 | [`psi-swarm`](https://github.com/sass-maker/psi-swarm)                            | helper   | P2       | Repeated Lighthouse performance tracking and comparison.         |
 | [`anime-list`](https://github.com/Significant-Hobbies/anime-list)                 | personal | P3       | Personal anime discovery and tracking surface.                    |
+| [`aliveville`](https://github.com/sarthakagrawal927/aliveville)                  | personal | P3       | Maintained multi-agent world experiment; not a focus product.     |
 | [`chess`](https://github.com/Significant-Hobbies/chess)                           | personal | P3       | Stockfish chess with optional AI coaching.                        |
 | [`email-manager`](https://github.com/sarthakagrawal927/email-manager)             | personal | P3       | Personal email operations workspace.                              |
 | [`karte`](https://github.com/sarthakagrawal927/karte)                             | personal | P3       | AI link-in-bio product.                                           |
@@ -139,7 +139,7 @@ MIT. See [LICENSE](LICENSE).
 
 This section is maintained by the SaaS Maker Active-AI product/design loop so future agents do not reopen duplicate UI tasks.
 
-- Fleet bucket: Support/platform
+- Fleet bucket: Core product
 - Rule: do not create another broad "improve the UI" task unless the acceptance criteria differ materially from the tasks listed here.
 - Source of truth for task status: SaaS Maker task board. README entries are durable context only.
 

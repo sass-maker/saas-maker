@@ -1,21 +1,21 @@
 ---
-import { CORE, ACTIVE, PERSONAL, PROJECT_COUNT } from '../data/projects';
+import { CORE, ACTIVE, PROJECT_COUNT } from '../data/projects';
 ---
 <section class="section" id="fleet">
   <div class="section-head">
     <div class="section-marker">
       <span class="section-num">§ 01</span>
       <span class="section-rule"></span>
-      <span class="section-kw">The Fleet</span>
+      <span class="section-kw">The Product</span>
     </div>
     <h2 class="section-title">
-      {PROJECT_COUNT} <em class="italic">distinct</em> projects,
+      {PROJECT_COUNT} <em class="italic">connected</em> repositories,
       <br />
       one shared <em class="italic">operating layer</em>.
     </h2>
     <p class="section-lede">
-      No mockups. No fake screenshots. Each card below is a real repository,
-      color-coded by its place in the fleet, ordered by how much I&apos;m still actively shipping it.
+      SaaS Maker is the core product. The supporting repositories below extend
+      its model access, search, media, and performance workflows.
     </p>
   </div>
 
@@ -53,7 +53,7 @@ import { CORE, ACTIVE, PERSONAL, PROJECT_COUNT } from '../data/projects';
     <div class="active-head">
       <span class="section-num">§ 01.02</span>
       <span class="section-rule short"></span>
-      <span class="section-kw small">Support/platform</span>
+      <span class="section-kw small">Supporting repositories</span>
       <span class="active-count">{ACTIVE.length} support</span>
     </div>
     <ul class="active-grid">
@@ -76,30 +76,4 @@ import { CORE, ACTIVE, PERSONAL, PROJECT_COUNT } from '../data/projects';
     </ul>
   </div>
 
-  <div class="active">
-    <div class="active-head">
-      <span class="section-num">§ 01.03</span>
-      <span class="section-rule short"></span>
-      <span class="section-kw small">Personal projects</span>
-      <span class="active-count">{PERSONAL.length} lower-touch</span>
-    </div>
-    <ul class="active-grid">
-      {PERSONAL.map((p) => (
-        <li>
-          <a
-            href={p.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="mini mini-personal"
-            style={`--accent: ${p.color}`}
-          >
-            <span class="mini-dot"></span>
-            <span class="mini-name">{p.name}</span>
-            <span class="mini-desc">{p.desc}</span>
-            <span class="mini-arrow">↗</span>
-          </a>
-        </li>
-      ))}
-    </ul>
-  </div>
 </section>

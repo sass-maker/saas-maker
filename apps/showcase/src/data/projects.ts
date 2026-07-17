@@ -269,7 +269,17 @@ const FALLBACK_COLORS = [
   '#38bdf8',
 ];
 
-const entries = Object.entries(registry as Record<string, RegistryProject>);
+const PUBLIC_SHOWCASE_SLUGS = new Set([
+  'saas-maker',
+  'free-ai',
+  'knowledge-base',
+  'reel-pipeline',
+  'psi-swarm',
+]);
+
+const entries = Object.entries(registry as Record<string, RegistryProject>).filter(([slug]) =>
+  PUBLIC_SHOWCASE_SLUGS.has(slug)
+);
 
 function titleCase(slug: string): string {
   return slug.replace(/[_-]+/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
