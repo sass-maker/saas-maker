@@ -16,7 +16,7 @@
     "maturity": "maintained"
   },
   "high-signal": {
-    "desc": "Public signal log for AI infrastructure and semiconductors.",
+    "desc": "Evidence-backed daily brief across technology, startups, finance, and public-market signals.",
     "url": "https://github.com/High-Signal-App/high-signal.git",
     "tier": "core",
     "category": "product",
