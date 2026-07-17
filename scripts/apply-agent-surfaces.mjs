@@ -320,15 +320,20 @@ function patchWorker(workerPath) {
     return 'unknown-shape';
   }
 
-  // Insert import after last import block
+  // Insert import after the full import block (never mid multi-line `import {`).
   if (!src.includes("from './agent-edge.mjs'") && !src.includes('from "./agent-edge.mjs"')) {
     const importLine = "import { handleAgentEdge } from './agent-edge.mjs';\n";
-    const lastImport = [...src.matchAll(/^import .+$/gm)].pop();
-    if (lastImport) {
-      const idx = lastImport.index + lastImport[0].length;
+    // Prefer end of last complete import (ends with `;`).
+    const complete = [...src.matchAll(/^import[\s\S]*?;\s*$/gm)];
+    if (complete.length) {
+      const last = complete[complete.length - 1];
+      const idx = last.index + last[0].length;
       src = src.slice(0, idx) + '\n' + importLine + src.slice(idx);
     } else {
-      src = importLine + src;
+      // Fallback: first non-comment/non-import line
+      const m = src.match(/^(?:(?:\/\/[^\n]*|\/\*[\s\S]*?\*\/)\s*)*/);
+      const start = m ? m[0].length : 0;
+      src = src.slice(0, start) + importLine + src.slice(start);
     }
   }
 
