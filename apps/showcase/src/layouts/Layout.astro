@@ -18,10 +18,8 @@ const pathname =
   Astro.url.pathname.replace(/\.html$/, '').replace(/\/index$/, '') || '/';
 const canonical = new URL(pathname, Astro.site).href;
 
-// OG image is a hand-authored static SVG (see public/og-image.svg) sized
-// 1200×630, matching the site's warm-dark / copper aesthetic. SVG is
-// supported by most social crawlers; the legacy PNG is kept as a fallback.
-const OG_IMAGE = `${SITE_URL}/og-image.svg`;
+// Raster OG (social crawlers poorly support SVG). JPG keeps WhatsApp under ~300KB.
+const OG_IMAGE = `${SITE_URL}/og-image.jpg`;
 
 const STRUCTURED_DATA = {
   '@context': 'https://schema.org',

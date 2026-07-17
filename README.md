@@ -1,5 +1,8 @@
 # SaaS Maker
 
+**Product:** [sassmaker.com](https://sassmaker.com)
+
+
 SaaS Maker is a TypeScript monorepo for building and operating small SaaS products across a project fleet. It includes a Cloudflare Workers API, a Next.js cockpit, embeddable widgets, shared backend blocks, documentation, and an experimental autonomous runner called Droid.
 
 The repo is public, but parts of the deployment are still personal/internal. Treat this as an active product workspace rather than a polished framework release.

@@ -1,5 +1,8 @@
 ---
 import { CORE, ACTIVE, PROJECT_COUNT } from '../data/projects';
+import productSites from '../data/product-sites.json';
+
+const publicProducts = productSites.products ?? [];
 ---
 <section class="section" id="fleet">
   <div class="section-head">
@@ -17,6 +20,31 @@ import { CORE, ACTIVE, PROJECT_COUNT } from '../data/projects';
       SaaS Maker is the core product. The supporting repositories below extend
       its model access, search, media, and performance workflows.
     </p>
+  </div>
+
+  <!-- Crawlable dofollow product roots — hub link equity for the fleet. -->
+  <div class="product-directory" id="products">
+    <div class="active-head" style="margin-bottom: 1rem">
+      <span class="section-num">§ 01.00</span>
+      <span class="section-rule short"></span>
+      <span class="section-kw small">Public product sites</span>
+      <span class="active-count">{publicProducts.length} live</span>
+    </div>
+    <p class="section-lede" style="margin-bottom: 1.25rem; max-width: 40rem">
+      Every public surface in the fleet. These are the product URLs to cite,
+      review, and link — not just GitHub mirrors.
+    </p>
+    <ul class="product-directory-grid">
+      {publicProducts.map((p) => (
+        <li>
+          <a href={p.url} class="product-link" rel="noopener">
+            <span class="product-link-name">{p.name}</span>
+            <span class="product-link-host">{p.url.replace(/^https?:\/\//, '').replace(/\/$/, '')}</span>
+            {p.summary ? <span class="product-link-desc">{p.summary}</span> : null}
+          </a>
+        </li>
+      ))}
+    </ul>
   </div>
 
   <div class="bento">

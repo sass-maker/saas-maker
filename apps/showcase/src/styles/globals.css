@@ -814,6 +814,53 @@ footer,
   border-radius: 10px;
   overflow: hidden;
 }
+
+/* Public product roots — crawlable hub equity */
+.product-directory {
+  margin: 0 0 3rem;
+}
+.product-directory-grid {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 0.65rem;
+  margin: 0;
+  padding: 0;
+}
+.product-link {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg-card);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s, background 0.15s;
+}
+.product-link:hover {
+  border-color: var(--copper);
+  background: var(--bg-card-hi);
+}
+.product-link-name {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.product-link-host {
+  font-size: 0.78rem;
+  color: var(--copper-hi);
+  word-break: break-all;
+}
+.product-link-desc {
+  font-size: 0.8rem;
+  color: var(--ink-muted);
+  line-height: 1.4;
+  margin-top: 0.25rem;
+}
+
 .mini {
   display: grid;
   grid-template-columns: auto 1fr auto;
