@@ -2,7 +2,7 @@
 
 This is the operator checklist for the different generation paths in Reel
 Pipeline. The source of truth for render modes is
-[`config/render-modes.json`](../config/render-modes.json).
+[`config/render-modes.json`](../../../config/render-modes.json).
 
 ## Local Readiness
 
@@ -15,7 +15,7 @@ npm run ready:local
 The generation-cases command writes machine-readable evidence to
 `tmp/generation-cases-smoke/report.json`. The render-modes command writes to
 `tmp/render-mode-smoke/report.json`. The readiness command reads
-[`config/live-generation-readiness.json`](../config/live-generation-readiness.json)
+[`config/live-generation-readiness.json`](../../../config/live-generation-readiness.json)
 and writes the consolidated current evidence report to
 `tmp/generation-readiness/report.json`. Each readiness check includes
 `generationCases`, so unresolved report entries identify which top-level case is
@@ -160,6 +160,6 @@ Do not treat this repository as fully ready for all generation cases until:
    required refreshed proof set.
 8. `npm run ready:target` passes, or every remaining unresolved check in
    `tmp/generation-readiness/report.json` has a documented target-host
-   exception using `docs/target-host-readiness.md`; the report shows
+   exception using [`target-host-readiness.md`](./target-host-readiness.md); the report shows
    `targetHostReady: true`.
 9. `PROJECT_STATUS.md` reflects any remaining skipped or deferred cases.

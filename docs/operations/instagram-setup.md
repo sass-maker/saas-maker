@@ -94,7 +94,7 @@ Two practical implications for us:
 - `src/publishers/instagram.js` — create-poll-publish + long-lived token refresh helper, defaults to `graph.instagram.com`.
 - `src/posting.js` — `InstagramPostingProvider` (multi-account via `AccountRouter`); register with `'instagram'` mode in `createPostingProvider`.
 - `scripts/instagram-oauth-bootstrap.js` — `npm run ig:bootstrap` mints the long-lived token + IG user ID for one handle.
-- `scripts/refresh-instagram-tokens.js` — `npm run ig:refresh` extends every handle's TTL by 60 days; run daily via launchd (template in [`auto-posting.md`](./auto-posting.md#launchd-setup-on-the-m5-production-node)).
+- `scripts/refresh-instagram-tokens.js` — `npm run ig:refresh` extends every handle's TTL by 60 days; run daily via launchd (template in [`deployment.md`](./deployment.md)).
 - `config/social-accounts.example.json` — unified YT+IG account map; secrets pulled from env via `*Env` pointers.
 
 ### Operator sequence (per IG handle)

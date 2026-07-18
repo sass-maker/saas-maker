@@ -39,4 +39,5 @@ engine and record the output artifact URL/path in the PR or task.
 
 Our code must call engines through adapters under `src/adapters/`. Avoid editing
 files inside `engines/*`. If an upstream patch is unavoidable, document it in
-`docs/upstreams.md` and prefer sending it upstream or carrying a tiny patch file.
+[`architecture/engines.md`](../architecture/engines.md) and prefer sending it
+upstream or carrying a tiny patch file.

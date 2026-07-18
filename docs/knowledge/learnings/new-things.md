@@ -11,9 +11,9 @@ Novel AI + video tech stacked in one pipeline: Workers orchestrating Python engi
 - Source: https://developers.cloudflare.com/workers/platform/limits/
 
 ## Engine Pinning Strategy
-- What: Each engine submodule is locked to an exact commit in `engine-pins.md`; upgrades require a passing canary render on a branch first.
+- What: Each engine submodule is locked to an exact commit in [`architecture/engines.md`](../../architecture/engines.md); upgrades require a passing canary render on a branch first.
 - Why here: TBD
-- Gotcha (from code): `docs/engine-pins.md:8-9` confirms `openshorts` (`fe87af6`) and `reel-maker` (`92b6268`) are on `heads/main` (floating ref), while MoneyPrinterTurbo is on tagged `v1.2.8` — any `git submodule update --remote` silently advances the two floating engines without a canary.
+- Gotcha (from code): `openshorts` (`fe87af6`) and `reel-maker` (`92b6268`) are on `heads/main` (floating ref), while MoneyPrinterTurbo is on tagged `v1.2.8` — any `git submodule update --remote` silently advances the two floating engines without a canary.
 - Source: https://git-scm.com/book/en/v2/Git-Tools-Submodules
 
 ## Gemini for Vision + Dynamic FFmpeg Generation

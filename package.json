@@ -57,7 +57,12 @@
     "significant-content": "node scripts/significant-content.js",
     "setup:kokoro": "bash scripts/setup-kokoro.sh",
     "worker:dry-run": "npx wrangler deploy --dry-run",
-    "deploy": "node scripts/manual-deploy.mjs deploy.yml ci.yml"
+    "deploy": "node scripts/manual-deploy.mjs deploy.yml ci.yml",
+    "docs:validate": "node scripts/validate-docs.mjs",
+    "docs:links": "blume validate",
+    "docs:dev": "blume dev",
+    "docs:build": "blume build",
+    "docs:preview": "blume preview"
   },
   "engines": {
     "node": ">=20"

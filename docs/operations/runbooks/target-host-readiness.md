@@ -114,7 +114,7 @@ Generation case: `creator-mvp`
 Evidence required:
 
 - Produce and review the three public-domain story packets under
-  `docs/creator-mvp-packs/`.
+  [`product/creator-mvp-packs/`](../../product/creator-mvp-packs/).
 - Record watch/parent-trust notes for each video.
 - Decide whether to keep this as a manual creator workflow or add only
   scene/asset manifest support.

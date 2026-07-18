@@ -2,6 +2,10 @@
 
 Last updated: 2026-07-13
 
+> Short executive view: [`STATUS.md`](STATUS.md). Full docs hub:
+> [`docs/index.md`](docs/index.md). Agent bootloader:
+> [`AGENTS.md`](AGENTS.md).
+
 ## Why / What
 
 Reel Pipeline turns approved reel drafts into rendered MP4s and posts them through the SaaS Maker marketing queue. Production render path:
@@ -13,12 +17,12 @@ Reel Pipeline turns approved reel drafts into rendered MP4s and posts them throu
 **Constraints:** `render-pro.js` is canonical production renderer; Rust owns watch/autopilot/post entrypoints with JS glue retired. Hub-and-spoke: SaaS Maker is system of record.
 
 **Creator validation constraint:** for kids story reels, the next step is a
-manual creator MVP, not more pipeline software. Use `docs/creator-mvp.md` to
+manual creator MVP, not more pipeline software. Use `docs/product/creator-mvp.md` to
 make the first three public-domain story videos by hand before adding new
 automation, dashboards, agents, auto-uploaders, or render engines for that bet.
 
 **Growth format constraint:** for app marketing reels, the objective is to find
-a format that gets views consistently. Use `docs/growth-format-playbook.md` and
+a format that gets views consistently. Use `docs/product/growth-format-playbook.md` and
 the structured `src/growth-formats.js` taxonomy to draft 5-7 posts/day until
 the 35-post decision review.
 
@@ -105,7 +109,7 @@ prerequisites, and manual creator review into one current-evidence report at
 It also records the production `render-pro` live proof as a manual target-host
 check because that run mutates a real Worker reel record and R2 object.
 
-**Readiness checklist:** `docs/generation-readiness.md` defines the local and
+**Readiness checklist:** `docs/operations/runbooks/generation-readiness.md` defines the local and
 live proof commands for render modes, lesson videos, artifact hosting, and
 posting.
 Use `npm run ready:target` for final target-host acceptance when manual and
@@ -114,7 +118,7 @@ The generated report separates `strictReady` from `targetHostReady`; only
 `targetHostReady: true` means all target-host generation cases are closed or
 explicitly accepted. When target-host readiness is false, `targetHostNextActions`
 records the remaining proof commands and docs links.
-Use `docs/target-host-readiness.md` for the evidence checklist behind those
+Use `docs/operations/runbooks/target-host-readiness.md` for the evidence checklist behind those
 unresolved target-host items, including the optional documented acceptance file
 for intentional target-host exclusions.
 
@@ -140,7 +144,7 @@ for intentional target-host exclusions.
   collapse without calling any upload, posting, schedule, credential, or
   Significant Hobbies write path. Existing quality, review, accepted-post, and
   provider preflight gates remain authoritative; see
-  `docs/significant-content-openclaw-runbook.md`.
+  `docs/operations/runbooks/significant-content-openclaw.md`.
 
 - **2026-07-13 — HexCoded provider-neutral commercial and actor contracts:**
   extended the locally executable product-domain layer without enabling any
@@ -193,7 +197,7 @@ for intentional target-host exclusions.
   until the exact brand/channel account is mapped and the distribution request
   is separately approved. Initial distribution scope is Instagram Reels and
   YouTube Shorts; TikTok/Postiz is deferred. See
-  `docs/content-package-pipeline.md`.
+  `docs/operations/runbooks/content-package-pipeline.md`.
 
 - **2026-07-10 — Studio factory line shipped:** production conveyor over the
   ideas manager — `npm run factory` plan/produce/status; every render now
@@ -222,7 +226,7 @@ for intentional target-host exclusions.
   Same-day follow-up: `/studio` web UI on the local control server (all tools,
   ideas manager, faceless runs from the browser). Specs archived as
   `content-studio-faceless-pipeline` and `studio-web-ui`. Docs:
-  `docs/content-studio.md`, `docs/faceless-workflow.md`.
+  `docs/product/content-studio.md`, `docs/product/faceless-workflow.md`.
 - **2026-07-10 — Generation cases consolidated:** added
   `config/generation-cases.json`, `config/render-modes.json`, and
   `config/live-generation-readiness.json` as the operator-facing matrix for
@@ -250,14 +254,14 @@ for intentional target-host exclusions.
   terminal art with a raster fallback, and Rust shells out to the same Node
   renderer.
 - **2026-07-03 — Creator MVP reset for kids stories:** documented a manual
-  kids-story validation workflow in `docs/creator-mvp.md`; defer more software
+  kids-story validation workflow in `docs/product/creator-mvp.md`; defer more software
   automation until the first three public-domain story videos are made and
   reviewed.
 - **2026-07-03 — First creator MVP packets built out:** added complete manual
   production packets for `The Lion and the Mouse`, `The Tortoise and the Hare`,
-  and `The Crow and the Pitcher` under `docs/creator-mvp-packs/`.
+  and `The Crow and the Pitcher` under `docs/product/creator-mvp-packs/`.
 - **2026-07-04 — Growth format experiment layer:** added
-  `docs/growth-format-playbook.md` and `src/growth-formats.js`; signal draft
+  `docs/product/growth-format-playbook.md` and `src/growth-formats.js`; signal draft
   bundles now carry 5-7 posts/day, 35-post decision metadata plus per-variant
   ranking, sound-sync, tutorial, trend-copy, and before/after format notes.
 - **2026-06-20 — Product-proof Phase 1 shipped:** Playwright screenshot capture (`src/product-proof-capture.js`); quality gate scoring (`src/reel-quality.js`); reel-maker composition with proof visuals; auto-wired via `resolveProductProofCapture()` in `src/pipeline.js`; review UI surfaces quality dimensions; smoke at `npm run smoke:reel-maker`.
@@ -362,8 +366,8 @@ for intentional target-host exclusions.
 ### Planned
 
 1. Run a production-environment canary with the checksum-pinned synthetic presenter in `assets/presenters/manifest.json`; add any future real likeness only with model-release proof.
-2. Produce the first creator-MVP kids story manually from `docs/creator-mvp-packs/lion-and-mouse.md`.
-3. Produce manual validation videos 2-3 from `docs/creator-mvp-packs/tortoise-and-hare.md` and `docs/creator-mvp-packs/crow-and-pitcher.md`.
+2. Produce the first creator-MVP kids story manually from `docs/product/creator-mvp-packs/lion-and-mouse.md`.
+3. Produce manual validation videos 2-3 from `docs/product/creator-mvp-packs/tortoise-and-hare.md` and `docs/product/creator-mvp-packs/crow-and-pitcher.md`.
 4. Record watch/parent-trust notes for the three completed videos.
 5. After those three videos, decide whether Reel Pipeline should support only scene/asset manifests, draft bundles, and review handoff, or resume renderer automation.
 6. Run one 35-post app-marketing experiment across the five growth formats and record format-level results.

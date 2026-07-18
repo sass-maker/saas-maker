@@ -7,7 +7,7 @@ no third-party product code.
 
 The studio tools that generate the script/metadata are documented in
 [content-studio.md](./content-studio.md). Render modes and their requirements
-live in `config/render-modes.json` and [generation-readiness.md](./generation-readiness.md).
+live in `config/render-modes.json` and [generation-readiness.md](../operations/runbooks/generation-readiness.md).
 
 ## One video
 
@@ -109,7 +109,7 @@ npm run post:ready
 
 Pass `--post-handoff` to have the run summary include that command explicitly.
 Posting capability rules, preflight, and recovery are unchanged (see
-[auto-posting.md](./auto-posting.md)).
+[auto-posting.md](../operations/auto-posting.md)).
 
 ## Verification
 

@@ -4,6 +4,11 @@ Generated: 2026-06-06T21:14:19.605Z
 
 This file is a CodeVetter Repo Unpacked-inspired audit written for Starboard recommendations. It is intentionally local, evidence-oriented, and safe to commit: it records product context, feature areas, stack inventory, and recommendation guidance without secrets or environment values.
 
+> **Note:** This is an audit snapshot. Doc paths referenced below reflect the
+> repository layout at generation time and may have since moved during the
+> documentation consolidation — see [`../index.md`](../index.md) for current
+> locations.
+
 ## Project Identity
 
 - Slug: `reel-pipeline`
@@ -20,8 +25,8 @@ Reel Pipeline is an AI reel generation product that turns input text and project
 For kids story reels, the current recommendation posture is intentionally
 creator-first: validate three manually produced public-domain story videos
 before recommending more software automation, dashboards, agents, auto-uploaders,
-analytics scripts, or render-engine expansion. See `docs/creator-mvp.md` and
-the complete manual packets under `docs/creator-mvp-packs/`.
+analytics scripts, or render-engine expansion. See `docs/product/creator-mvp.md` and
+the complete manual packets under `docs/product/creator-mvp-packs/`.
 
 For app marketing reels, recommendations should preserve the growth-format
 experiment layer: 5-7 posts/day, review after 35 posts, and compare ranking,

@@ -58,7 +58,7 @@
       ],
       "requiredForFullReadiness": true,
       "refreshable": true,
-      "docs": "docs/generation-readiness.md#live-render-proof",
+      "docs": "docs/operations/runbooks/generation-readiness.md#live-render-proof",
       "command": "MONEYPRINTER_API_URL=http://127.0.0.1:18080 npm run canary:moneyprinter"
     },
     {
@@ -103,7 +103,7 @@
       "generationCases": ["worker-render-pro"],
       "type": "manual",
       "requiredForFullReadiness": false,
-      "docs": "docs/target-host-readiness.md#render-pro-live-proof",
+      "docs": "docs/operations/runbooks/target-host-readiness.md#render-pro-live-proof",
       "command": "npm run render:pro -- <approved-reel-id>; confirm Worker record has render metadata and R2 serves the MP4."
     },
     {
@@ -113,7 +113,7 @@
       "type": "env",
       "env": ["DEEPSEEK_API_KEY", "ELEVENLABS_API_KEY", "ELEVENLABS_VOICE_ID", "PEXELS_API_KEY"],
       "requiredForFullReadiness": false,
-      "docs": "docs/target-host-readiness.md#lesson-live-prereqs",
+      "docs": "docs/operations/runbooks/target-host-readiness.md#lesson-live-prereqs",
       "command": "npm run lesson:render -- --input test/fixtures/lessons/closures.json --auto-approve"
     },
     {
@@ -126,7 +126,7 @@
         ["IG_APP_ID", "IG_APP_SECRET"]
       ],
       "requiredForFullReadiness": false,
-      "docs": "docs/target-host-readiness.md#social-posting-prereqs",
+      "docs": "docs/operations/runbooks/target-host-readiness.md#social-posting-prereqs",
       "command": "npm run post:ready -- --posting-provider auto --limit 1"
     },
     {
@@ -135,8 +135,8 @@
       "generationCases": ["creator-mvp"],
       "type": "manual",
       "requiredForFullReadiness": false,
-      "docs": "docs/target-host-readiness.md#creator-mvp-reviewed",
-      "command": "Use docs/creator-mvp.md and docs/creator-mvp-packs/ before adding automation."
+      "docs": "docs/operations/runbooks/target-host-readiness.md#creator-mvp-reviewed",
+      "command": "Use docs/product/creator-mvp.md and docs/product/creator-mvp-packs/ before adding automation."
     }
   ]
 }

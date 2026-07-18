@@ -39,11 +39,11 @@
         "type": "files",
         "status": "manual",
         "paths": [
-          "docs/creator-mvp.md",
-          "docs/creator-mvp-packs/README.md",
-          "docs/creator-mvp-packs/lion-and-mouse.md",
-          "docs/creator-mvp-packs/tortoise-and-hare.md",
-          "docs/creator-mvp-packs/crow-and-pitcher.md"
+          "docs/product/creator-mvp.md",
+          "docs/product/creator-mvp-packs/README.md",
+          "docs/product/creator-mvp-packs/lion-and-mouse.md",
+          "docs/product/creator-mvp-packs/tortoise-and-hare.md",
+          "docs/product/creator-mvp-packs/crow-and-pitcher.md"
         ],
         "hint": "Manual videos are not software-rendered; produce and review the three packets before adding automation."
       }

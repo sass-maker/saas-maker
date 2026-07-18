@@ -118,7 +118,7 @@ test('target host next actions preserve commands and docs links', () => {
       generationCases: ['worker-render-pro'],
       detail: 'manual proof required',
       command: 'npm run render:pro -- <approved-reel-id>',
-      docs: 'docs/target-host-readiness.md#render-pro-live-proof',
+      docs: 'docs/operations/runbooks/target-host-readiness.md#render-pro-live-proof',
     },
     {
       name: 'lesson-live-prereqs',
@@ -127,7 +127,7 @@ test('target host next actions preserve commands and docs links', () => {
       generationCases: ['lesson-video'],
       detail: 'missing env DEEPSEEK_API_KEY',
       command: 'npm run lesson:render',
-      docs: 'docs/target-host-readiness.md#lesson-live-prereqs',
+      docs: 'docs/operations/runbooks/target-host-readiness.md#lesson-live-prereqs',
     },
   ];
 
@@ -145,7 +145,7 @@ test('target host next actions preserve commands and docs links', () => {
       generationCases: ['worker-render-pro'],
       detail: 'manual proof required',
       command: 'npm run render:pro -- <approved-reel-id>',
-      docs: 'docs/target-host-readiness.md#render-pro-live-proof',
+      docs: 'docs/operations/runbooks/target-host-readiness.md#render-pro-live-proof',
     },
     {
       name: 'lesson-live-prereqs',
@@ -154,12 +154,12 @@ test('target host next actions preserve commands and docs links', () => {
       generationCases: ['lesson-video'],
       detail: 'missing env DEEPSEEK_API_KEY',
       command: 'npm run lesson:render',
-      docs: 'docs/target-host-readiness.md#lesson-live-prereqs',
+      docs: 'docs/operations/runbooks/target-host-readiness.md#lesson-live-prereqs',
     },
   ]);
   assert.equal(
     formatTargetHostNextAction(actions[0]),
-    'next render-pro-live-proof [worker-render-pro]: manual proof required command=npm run render:pro -- <approved-reel-id> docs=docs/target-host-readiness.md#render-pro-live-proof',
+    'next render-pro-live-proof [worker-render-pro]: manual proof required command=npm run render:pro -- <approved-reel-id> docs=docs/operations/runbooks/target-host-readiness.md#render-pro-live-proof',
   );
 });
 
