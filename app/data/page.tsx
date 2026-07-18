@@ -18,7 +18,9 @@ function loadGlobalDr(): GlobalDrFile {
   return JSON.parse(readFileSync(path, 'utf8')) as GlobalDrFile;
 }
 
-function getWeeklyChange(history: HistoryPoint[]): { delta: number; direction: 'up' | 'down' | 'flat'; latest: number; previous: number } | null {
+function getWeeklyChange(
+  history: HistoryPoint[]
+): { delta: number; direction: 'up' | 'down' | 'flat'; latest: number; previous: number } | null {
   if (history.length < 2) return null;
   const sorted = [...history].sort((a, b) => a.ts - b.ts);
   const latest = sorted[sorted.length - 1];
@@ -69,21 +71,17 @@ export default function DataPage() {
       return { domain, ...change, history };
     })
     .filter(Boolean) as Array<{
-      domain: string;
-      delta: number;
-      direction: 'up' | 'down' | 'flat';
-      latest: number;
-      previous: number;
-      history: HistoryPoint[];
-    }>;
+    domain: string;
+    delta: number;
+    direction: 'up' | 'down' | 'flat';
+    latest: number;
+    previous: number;
+    history: HistoryPoint[];
+  }>;
 
-  const gainers = movers
-    .filter((m) => m.direction === 'up')
-    .sort((a, b) => b.delta - a.delta);
+  const gainers = movers.filter((m) => m.direction === 'up').sort((a, b) => b.delta - a.delta);
 
-  const losers = movers
-    .filter((m) => m.direction === 'down')
-    .sort((a, b) => a.delta - b.delta);
+  const losers = movers.filter((m) => m.direction === 'down').sort((a, b) => a.delta - b.delta);
 
   const allSorted = [...movers].sort((a, b) => b.latest - a.latest);
   const totalDomains = domainEntries.length;
@@ -130,13 +128,11 @@ export default function DataPage() {
           / <span className="text-zinc-200">data</span>
         </nav>
 
-        <h1 className="text-4xl font-semibold tracking-tight text-white mb-3">
-          Public DR Dataset
-        </h1>
+        <h1 className="text-4xl font-semibold tracking-tight text-white mb-3">Public DR Dataset</h1>
         <p className="text-zinc-400 max-w-2xl mb-8">
-          Weekly Ahrefs Domain Rating snapshots for {totalDomains} popular websites plus the
-          SaaS Maker fleet domain set. The raw JSON is updated every Monday ~04:00 UTC via a
-          GitHub Action and mirrored here for download.
+          Weekly Ahrefs Domain Rating snapshots for {totalDomains} popular websites plus the SaaS
+          Maker fleet domain set. The raw JSON is updated every Monday ~04:00 UTC via a GitHub
+          Action and mirrored here for download.
         </p>
 
         <div className="grid grid-cols-3 gap-4 mb-10">
@@ -149,7 +145,9 @@ export default function DataPage() {
             <div className="text-sm text-zinc-400">Total DR snapshots</div>
           </div>
           <div className="bg-zinc-900 rounded-lg p-4 border border-zinc-800">
-            <div className="text-2xl font-bold text-white">{formatDate(new Date(data.lastUpdated).getTime())}</div>
+            <div className="text-2xl font-bold text-white">
+              {formatDate(new Date(data.lastUpdated).getTime())}
+            </div>
             <div className="text-sm text-zinc-400">Last updated</div>
           </div>
         </div>
@@ -174,8 +172,8 @@ export default function DataPage() {
         <section className="mb-12">
           <h2 className="text-2xl font-semibold text-white mb-1">Weekly DR Movers</h2>
           <p className="text-zinc-400 text-sm mb-6">
-            Change between the latest snapshot and the one ~7 days prior. Most established
-            domains are stable week-over-week; movers reflect recent backlink shifts.
+            Change between the latest snapshot and the one ~7 days prior. Most established domains
+            are stable week-over-week; movers reflect recent backlink shifts.
           </p>
 
           {gainers.length > 0 && (
@@ -197,7 +195,9 @@ export default function DataPage() {
                         <td className="px-4 py-2 text-zinc-200">{m.domain}</td>
                         <td className="px-4 py-2 text-right text-zinc-400">{m.previous}</td>
                         <td className="px-4 py-2 text-right text-white font-medium">{m.latest}</td>
-                        <td className="px-4 py-2 text-right text-green-400 font-medium">+{m.delta}</td>
+                        <td className="px-4 py-2 text-right text-green-400 font-medium">
+                          +{m.delta}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -302,11 +302,14 @@ export default function DataPage() {
         <section className="text-sm text-zinc-500 border-t border-zinc-800 pt-6">
           <h2 className="text-lg font-medium text-zinc-300 mb-2">Data Provenance</h2>
           <p>
-            DR values are fetched from Ahrefs' free public Domain Rating API via a weekly
-            GitHub Action (<code className="text-zinc-400">scripts/update-global-dr.mjs</code>).
-            The fleet subset covers SaaS Maker product domains. Data is licensed CC-BY 4.0.
-            The interactive tracker at <a href="/" className="underline hover:text-zinc-300">drank home</a> lets
-            you add your own domains and track them locally in your browser.
+            DR values are fetched from Ahrefs' free public Domain Rating API via a weekly GitHub
+            Action (<code className="text-zinc-400">scripts/update-global-dr.mjs</code>). The fleet
+            subset covers SaaS Maker product domains. Data is licensed CC-BY 4.0. The interactive
+            tracker at{' '}
+            <a href="/" className="underline hover:text-zinc-300">
+              drank home
+            </a>{' '}
+            lets you add your own domains and track them locally in your browser.
           </p>
         </section>
       </div>
