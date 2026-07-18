@@ -184,7 +184,34 @@ Extends B9. These create the third-party consensus LLMs cite. Order:
   drafts casks for CodeVetter + HeyPace; you tap/submit them.
 - ~~Email capture~~ — SKIPPED for now.
 
-## B-CF — Cloudflare hygiene
+## B-CF-DNS — Finish Cloudflare "green" (browser editor / CF dashboard)
+
+Account: `sarthakagrawal927@gmail.com`. Only one real task left; the rest is
+verify/skip.
+
+**TASK 1 (required — clears the last red domain): add DNS for `ideas.sassmaker.com`**
+1. CF dashboard → **Websites → sassmaker.com → DNS → Records → Add record**.
+2. Type `CNAME` · Name `ideas` · Target `saas-ideas.pages.dev` · Proxy status
+   **Proxied (orange cloud)** · TTL Auto → **Save**.
+3. Then **Workers & Pages → saas-ideas → Custom domains** — `ideas.sassmaker.com`
+   should flip **Active** within ~1 min (hit "Retry/Check" if it doesn't).
+4. Verify `https://ideas.sassmaker.com` returns 200. Done = project no longer red.
+
+**TASK 2 (verify only, no dashboard action): `shop.sassmaker.com`**
+- Already routes to the `verified-bases-api` worker (DNS/routing fine), but
+  returns **404 at `/`** — that's app-level (the storefront worker doesn't serve
+  a homepage yet), NOT a DNS/green problem. Just flag to Sarthak: verified-bases
+  needs a deploy with a root route. No CF dashboard action.
+
+**DO NOT do:** the `tinygpt → posttrainllm` project rename — deferred on purpose
+(cosmetic; a fresh project 522s without the env/KV bindings).
+
+**Not a browser task (needs code deploy, not dashboard):** the 5 newly-registered
+products (verified-bases, protein-index, open-historia, knowledgebase-app,
+saas-ideas) have GEO surfaces committed but not yet deployed — they go live on
+each repo's next deploy. Hand that to Sarthak/CI, not the browser editor.
+
+## B-CF — Cloudflare hygiene (history)
 
 From the 2026-07-18 CF reconciliation (`cloudflare-inventory-2026-07.md`).
 Nearly all DONE via the Infisical CF token. Remaining decision:
