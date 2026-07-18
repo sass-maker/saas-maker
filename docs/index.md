@@ -21,6 +21,7 @@ output.
 ## Architecture
 
 - [Architecture overview](architecture/overview.md) — static export, Pages Functions, localStorage, dual data sources.
+- [How it works, end to end](architecture/how-it-works.md) — a guided walk-through of the components, data flows, and the "why" behind each decision.
 - [Decisions (ADRs)](architecture/decisions/) — recorded technical decisions and their rationale.
 
 ## Development
