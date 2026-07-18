@@ -18,6 +18,12 @@ one CLI, one cockpit, one set of widgets — running on Cloudflare's $5 tier.
 
 ## The fleet
 
+## Spotlight products
+
+The personal landing page leads with four products — CodeVetter, Post-train
+LLM, HeyPace, and HiSignal — and links here as the broader directory and
+operating layer for the full fleet.
+
 sass-maker is the operating layer. The products it serves span multiple GitHub
 orgs — each with its own brand and domain:
 
