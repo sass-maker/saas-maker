@@ -74,24 +74,35 @@ scripts) needs a scoped API token — see "Open gaps."
 ## Decisions & actions taken (2026-07-18)
 
 Per user review of the six findings:
-1. **tinygpt → posttrainllm rename + clear stray domain:** APPROVED. wrangler has
-   no Pages custom-domain command, so the domain migration + stray-domain removal
-   need the dashboard or an API token → queued as **B-CF** (browser). Safest cut
-   during the next PostTrainLLM redeploy (PT0) to avoid downtime on the live
-   Focus domain.
+1. **tinygpt → posttrainllm rename + clear stray domain:** stray
+   `tinygpt.sarthakagrawal.dev` **REMOVED** 2026-07-18 (via API token from
+   Infisical). The project **rename** (recreate + move `posttrainllm.com`) stays
+   coupled to the PT0 redeploy to avoid downtime on the live Focus domain.
 2. **knowledgebase-landing:** IDENTIFIED — it's the landing for `knowledge-base`
    = "Private Agent Search," the fleet shared **RAG service** (RAG_SERVICE
    Worker + Vectorize/D1/R2). Reclassified **Parked → Active**. **saas-ideas:**
    kept (user: let it be).
-3. **verified-bases-web:** DELETED via wrangler. **today-little-log:** delete
-   blocked by CF (git-connected + deployment cap; CLI can't purge cleanly) →
-   queued as **B-CF** dashboard delete.
+3. **verified-bases-web:** DELETED via wrangler. **today-little-log:** DELETED
+   2026-07-18 via API (purged 126 deployments, then the project). Note:
+   `verified-bases-api` + `open-historia` **Workers** are still live (out-of-fleet)
+   — delete pending your decision.
 4. **ai-game (aliveville.com + idle.aliveville.com):** kept (user: leave).
 5. **everythingrated.com:** NOT the user's domain (external) — removed the
    association; canonical stays `ratings.highsignal.app`. (Registry already
    listed only the subdomain.)
-6. **Canonical manifest built:** `fleet-ops/config/projects.json` (33 projects)
-   — the single source of truth merging tier + repo + deploy reality.
+6. **Canonical manifest built:** `fleet-ops/config/projects.json` (now 34
+   projects) — the single source of truth merging tier + repo + deploy reality.
+
+**Also 2026-07-18 (via Infisical CF token):**
+- **Workers gap CLOSED** — all 25 live Workers enumerated (listed in the manifest
+  `_meta.workers`). `everythingrated`, `truehire`, `protein-index` confirmed as
+  Workers; `protein-index` is live (was marked undeployed).
+- **saas-ideas promoted:** repo transferred `sarthakagrawal927 → sass-maker` org
+  + cloned into the fleet; domain **ideas.sassmaker.com** added (provisioning);
+  now Secondary under the saas-maker family (was orphan).
+- **Green check:** all 18 Pages `latest=success`; all 30 custom domains 200/3xx.
+
+**Live CF counts (2026-07-18): 18 Pages + 25 Workers = 43 deployment units.**
 
 ## Open gaps (need a scoped API token to close)
 

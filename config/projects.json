@@ -14,15 +14,16 @@
       "status": "live | undeployed | orphan | deleted | unverified",
       "notes": "reconciliation flags / decisions"
     },
+    "workers": "25 live Workers (enumerated 2026-07-18 via API): aliveville, codevetter-landing-proxy, email-manager, everythingrated, free-ai-gateway, high-signal-web/-api/-annotation, karte-email, knowledgebase, knowledgebase-app, linkchat, mal-api, open-historia, protein-index, reader, reel-pipeline-artifacts, resume-tailor, saasmaker-dashboard/-api/-droid, significanthobbies, starboard, truehire, verified-bases-api.",
     "openGaps": [
-      "Full Workers enumeration needs a workers:read API token (OAuth not readable) — worker-only products' liveness confirmed by HTTP 200, not by account listing.",
-      "deployKind 'unknown' for everythingrated + truehire (absent from cloudflare.targets.json)."
+      "Out-of-fleet Workers still live: open-historia, verified-bases-api (its Pages twin verified-bases-web was deleted). Delete pending user decision.",
+      "tinygpt Pages project rename to posttrainllm still pending (coupled to PT0 redeploy)."
     ]
   },
   "projects": [
     { "id": "codevetter", "family": "codevetter", "tier": "focus", "repo": "codevetter", "deployKind": "pages", "cfProject": "codevetter", "domains": ["codevetter.com"], "app": "tauri", "inRegistry": true, "status": "live", "notes": "" },
     { "id": "pace", "family": "pace", "tier": "focus", "repo": "pace", "deployKind": "pages", "cfProject": "pace", "domains": ["heypace.app"], "app": "swift", "inRegistry": true, "status": "live", "notes": "" },
-    { "id": "posttrainllm", "family": "posttrainllm", "tier": "focus", "repo": "posttrainllm", "deployKind": "pages", "cfProject": "tinygpt", "domains": ["posttrainllm.com"], "app": "web", "inRegistry": true, "status": "live", "notes": "RENAME PENDING: CF project still named 'tinygpt'; stray domain tinygpt.sarthakagrawal.dev to be removed (dashboard/token). See work-queue B-CF." },
+    { "id": "posttrainllm", "family": "posttrainllm", "tier": "focus", "repo": "posttrainllm", "deployKind": "pages", "cfProject": "tinygpt", "domains": ["posttrainllm.com"], "app": "web", "inRegistry": true, "status": "live", "notes": "Stray domain tinygpt.sarthakagrawal.dev REMOVED 2026-07-18. CF project still named 'tinygpt' — rename to posttrainllm coupled to PT0 redeploy (needs new project + domain cutover)." },
 
     { "id": "saas-maker-showcase", "family": "saas-maker", "tier": "active", "repo": "saas-maker", "deployKind": "pages", "cfProject": "saas-maker-home", "domains": ["sassmaker.com"], "inRegistry": true, "status": "live", "notes": "the hub" },
     { "id": "saas-maker-docs", "family": "saas-maker", "tier": "active", "repo": "saas-maker", "deployKind": "pages", "cfProject": "saas-maker-docs", "domains": ["docs.sassmaker.com"], "inRegistry": true, "status": "live", "notes": "" },
@@ -33,7 +34,7 @@
     { "id": "psi-swarm", "family": "saas-maker", "tier": "active", "repo": "fleet-ops/psi-swarm", "deployKind": "pages", "cfProject": "psi-swarm-web", "domains": ["performance.sassmaker.com"], "inRegistry": true, "status": "live", "notes": "" },
 
     { "id": "high-signal", "family": "high-signal", "tier": "active", "repo": "high-signal", "deployKind": "worker", "cfProject": "high-signal-web, high-signal-api, high-signal-annotation", "domains": ["highsignal.app"], "inRegistry": true, "status": "live", "notes": "Next/OpenNext on Workers" },
-    { "id": "everythingrated", "family": "high-signal", "tier": "secondary", "repo": "everythingrated", "deployKind": "unknown", "cfProject": "(not in targets.json)", "domains": ["ratings.highsignal.app"], "inRegistry": true, "status": "live", "notes": "canonical = ratings.highsignal.app; everythingrated.com is NOT ours (external) — do not associate" },
+    { "id": "everythingrated", "family": "high-signal", "tier": "secondary", "repo": "everythingrated", "deployKind": "worker", "cfProject": "everythingrated", "domains": ["ratings.highsignal.app"], "inRegistry": true, "status": "live", "notes": "canonical = ratings.highsignal.app; everythingrated.com is NOT ours (external) — do not associate" },
     { "id": "research-papers", "family": "high-signal", "tier": "secondary", "repo": "research-papers", "deployKind": "pages", "cfProject": "research-papers", "domains": ["papers.highsignal.app"], "inRegistry": true, "status": "live", "notes": "" },
 
     { "id": "materia", "family": "materia", "tier": "active", "repo": "materia", "deployKind": "pages", "cfProject": "materia", "domains": ["materia.significanthobbies.com"], "inRegistry": true, "status": "live", "notes": "own bet; hosted on SH domain" },
@@ -53,13 +54,14 @@
 
     { "id": "ai-game", "family": "ai-game", "tier": "parked", "repo": "ai-game", "deployKind": "pages", "cfProject": "aliveville, web-playables", "domains": ["aliveville.com", "idle.aliveville.com"], "inRegistry": false, "status": "live", "notes": "Aliveville world-sim; parked but live (user: leave)" },
     { "id": "reel-pipeline", "family": "reel-pipeline", "tier": "parked", "repo": "reel-pipeline", "deployKind": "worker", "cfProject": "reel-pipeline-artifacts", "domains": [], "inRegistry": false, "status": "unverified", "notes": "reel→Rust rewrite" },
-    { "id": "protein-index", "family": "protein-index", "tier": "parked", "repo": "protein-index", "deployKind": "none", "cfProject": null, "domains": [], "inRegistry": false, "status": "undeployed", "notes": "" },
+    { "id": "protein-index", "family": "protein-index", "tier": "parked", "repo": "protein-index", "deployKind": "worker", "cfProject": "protein-index", "domains": [], "inRegistry": false, "status": "live", "notes": "worker deployed (no custom domain)" },
     { "id": "mobile-dev-cockpit", "family": "mobile-dev-cockpit", "tier": "parked", "repo": "mobile-dev-cockpit", "deployKind": "none", "cfProject": null, "domains": [], "inRegistry": false, "status": "undeployed", "notes": "tooling/experimental" },
-    { "id": "saas-ideas", "family": "saas-ideas", "tier": "parked", "repo": null, "deployKind": "pages", "cfProject": "saas-ideas", "domains": [], "inRegistry": false, "status": "orphan", "notes": "no repo/registry match; pages.dev only. User: let it be." },
+    { "id": "saas-ideas", "family": "saas-maker", "tier": "secondary", "repo": "saas-ideas", "deployKind": "pages", "cfProject": "saas-ideas", "domains": ["ideas.sassmaker.com"], "inRegistry": false, "status": "live", "notes": "Scored catalog of SaaS ideas. 2026-07-18: repo moved sarthakagrawal927 -> sass-maker org + cloned into fleet; domain ideas.sassmaker.com added (provisioning)." },
 
-    { "id": "truehire", "family": "rolepatch", "tier": "out-of-fleet", "repo": "truehire", "deployKind": "unknown", "cfProject": "(not in targets.json)", "domains": ["truehire.rolepatch.com"], "inRegistry": true, "status": "live", "notes": "out-of-fleet per AGENTS.md but live + registered" },
-    { "id": "today-little-log", "family": "today-little-log", "tier": "out-of-fleet", "repo": null, "deployKind": "pages", "cfProject": "today-little-log", "domains": [], "inRegistry": false, "status": "live", "notes": "DELETE PENDING: git-connected + deployment cap, needs dashboard delete. See work-queue B-CF." },
-    { "id": "verified-bases", "family": "verified-bases", "tier": "out-of-fleet", "repo": null, "deployKind": "none", "cfProject": "verified-bases-web", "domains": [], "inRegistry": false, "status": "deleted", "notes": "Pages project deleted 2026-07-18" },
+    { "id": "truehire", "family": "rolepatch", "tier": "out-of-fleet", "repo": "truehire", "deployKind": "worker", "cfProject": "truehire", "domains": ["truehire.rolepatch.com"], "inRegistry": true, "status": "live", "notes": "out-of-fleet per AGENTS.md but live + registered" },
+    { "id": "today-little-log", "family": "today-little-log", "tier": "out-of-fleet", "repo": null, "deployKind": "none", "cfProject": "today-little-log", "domains": [], "inRegistry": false, "status": "deleted", "notes": "Pages project deleted 2026-07-18 (purged 126 deployments then project)" },
+    { "id": "verified-bases", "family": "verified-bases", "tier": "out-of-fleet", "repo": null, "deployKind": "worker", "cfProject": "verified-bases-api (worker still live)", "domains": [], "inRegistry": false, "status": "live", "notes": "Pages project verified-bases-web deleted 2026-07-18; verified-bases-api WORKER still live — delete pending user decision" },
+    { "id": "open-historia", "family": "open-historia", "tier": "out-of-fleet", "repo": null, "deployKind": "worker", "cfProject": "open-historia", "domains": [], "inRegistry": false, "status": "live", "notes": "out-of-fleet worker still live — delete pending user decision" },
 
     { "id": "sarthakagrawal-personal", "family": "personal", "tier": "non-product", "repo": null, "deployKind": "pages", "cfProject": "sarthakagrawal", "domains": ["sarthakagrawal.dev"], "inRegistry": false, "status": "live", "notes": "personal site, not a fleet product" }
   ]

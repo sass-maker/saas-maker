@@ -184,20 +184,21 @@ Extends B9. These create the third-party consensus LLMs cite. Order:
   drafts casks for CodeVetter + HeyPace; you tap/submit them.
 - ~~Email capture~~ — SKIPPED for now.
 
-## B-CF — Cloudflare hygiene (dashboard/token; wrangler can't do these)
+## B-CF — Cloudflare hygiene
 
 From the 2026-07-18 CF reconciliation (`cloudflare-inventory-2026-07.md`).
-1. **Rename tinygpt → posttrainllm + drop stray domain.** The Focus app's Pages
-   project is still named `tinygpt` and serves a stray `tinygpt.sarthakagrawal.dev`.
-   Pages can't rename in place. Cleanest during the PT0 redeploy: create a fresh
-   `posttrainllm` Pages project, deploy + verify on its `.pages.dev`, move the
-   `posttrainllm.com` (+ www) custom domain over, then delete `tinygpt`. Remove
-   the `tinygpt.sarthakagrawal.dev` domain entirely. (Or, if you'd rather I do
-   it: give me a `pages:write` API token and I'll script the domain move.)
-2. **Delete today-little-log.** CLI delete is blocked (git-connected + deployment
-   cap). In the CF dashboard → Pages → today-little-log → Settings → delete
-   (the dashboard purges deployments for you). Out-of-fleet, pages.dev only.
-   (`verified-bases-web` already deleted via CLI.)
+Most items DONE via the Infisical CF token; remaining:
+1. **Rename tinygpt → posttrainllm** (project name only — stray domain already
+   removed). Coupled to the PT0 redeploy: create a fresh `posttrainllm` Pages
+   project, deploy + verify on `.pages.dev`, move `posttrainllm.com` (+ www)
+   over, delete `tinygpt`. I can script this end-to-end during PT0 now that I
+   have `pages:write` — greenlight the redeploy and I'll do it.
+2. **Out-of-fleet Workers still live:** `verified-bases-api`, `open-historia`.
+   Delete them too? (Their Pages twins are gone / were never there.) Say the word.
+
+**Done 2026-07-18 (via Infisical token):** deleted `verified-bases-web` +
+`today-little-log` Pages projects; removed stray `tinygpt.sarthakagrawal.dev`;
+enumerated all 25 Workers; set up saas-ideas (domain + repo move).
 
 ## Done / not needed
 
