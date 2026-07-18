@@ -1,8 +1,8 @@
-// Fleet product registry — sourced from fleet-ops/config/agent-surfaces-registry.json.
-// This is the canonical product list; per-product pages and the directory index
-// both derive from it so the hub stays in sync with the registry.
+// Fleet product registry — generated into this repo from
+// fleet-ops/config/agent-surfaces-registry.json. Keeping the checked-in snapshot
+// local makes the showcase buildable from a standalone GitHub checkout.
 
-import registry from '../../../../../fleet-ops/config/agent-surfaces-registry.json';
+import registry from './product-sites.json';
 
 export interface ProductLink {
   title: string;
