@@ -10,7 +10,8 @@ shields, baselines, PostHog, launch kit).
 
 | Runbook | When to use |
 | --- | --- |
-| _None yet as standalone files._ | _Fleet ops procedures currently live in the parent [`operations/`](../) docs and in `scripts/` — see below._ |
+| [`fleet-audit.md`](fleet-audit.md) | Run a full fleet audit (`pnpm fleet:audit`). This is what the `weekly-fleet-ops-audit` cron job runs every Monday. |
+| [`smoke-prod.md`](smoke-prod.md) | Verify SaaS Maker production surfaces are healthy (`pnpm smoke` / `pnpm fleet:prod-smoke`). Includes post-deploy smoke and fleet-wide smoke. |
 
 ## Where the procedures live today
 
@@ -40,6 +41,6 @@ page or is referenced from multiple places.
   `pnpm -F @saas-maker/dashboard run deploy` both run `scripts/smoke-prod.mjs`
   after a successful deploy. Failure = bad release; roll back.
 
-See [`../development/quality-gates.md`](../../development/quality-gates.md) for the
-two-layer gate strategy and [`../../AUDIT.md`](../../../AUDIT.md) for the security
+See [`../../development/quality-gates.md`](../../development/quality-gates.md) for the
+two-layer gate strategy and [`../../../AUDIT.md`](../../../AUDIT.md) for the security
 and quality audit log.
