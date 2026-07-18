@@ -5,6 +5,11 @@ Focus marking so effort lands on the right projects. Tiers are set at the
 exception is noted. Web surfaces map to
 `fleet-ops/config/agent-surfaces-registry.json` (23 products under 8 families).
 
+**Deploy reality:** the actual Cloudflare inventory (20 Pages + Worker-backed
+products) is reconciled in `cloudflare-inventory-2026-07.md` — read it for
+deploy kind, live domains, and hygiene flags (orphan Pages, the `tinygpt`
+project rename, out-of-fleet surfaces still live).
+
 ## Tiers
 
 - **Focus** — the active bets. Default target for planning, proof assets,
@@ -53,7 +58,7 @@ Work only when explicitly asked.
 
 | Repo | What it is |
 |---|---|
-| `ai-game/` | Aliveville — world-sim game (big long-term vision, currently parked) |
+| `ai-game/` | Aliveville — world-sim game (parked, but **live**: aliveville.com + idle.aliveville.com) |
 | `protein-index/` | experimental |
 | `reel-pipeline/` | reel→Rust rewrite (greenlit, not active) |
 | `web-playables/` | experimental |
