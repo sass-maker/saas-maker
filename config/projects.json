@@ -1,0 +1,66 @@
+{
+  "_meta": {
+    "purpose": "Single source of truth for fleet projects: tier + repo + deploy reality. Replaces the scattered split between agent-surfaces-registry.json (web GEO surfaces only), cloudflare.targets.json (partial deploy map), and project-tiers.md (focus marking). Reconciled against the live Cloudflare account 2026-07-18.",
+    "updated": "2026-07-18",
+    "fields": {
+      "id": "stable project/surface id",
+      "family": "top-level product family this belongs to",
+      "tier": "focus | active | secondary | parked | out-of-fleet | non-product",
+      "repo": "child repo dir under fleet root (null if none)",
+      "deployKind": "pages | worker | worker+pages | none | unknown",
+      "cfProject": "Cloudflare Pages project name and/or Worker script name(s)",
+      "domains": "live custom domains (empty = pages.dev only or undeployed)",
+      "inRegistry": "present in agent-surfaces-registry.json",
+      "status": "live | undeployed | orphan | deleted | unverified",
+      "notes": "reconciliation flags / decisions"
+    },
+    "openGaps": [
+      "Full Workers enumeration needs a workers:read API token (OAuth not readable) — worker-only products' liveness confirmed by HTTP 200, not by account listing.",
+      "deployKind 'unknown' for everythingrated + truehire (absent from cloudflare.targets.json)."
+    ]
+  },
+  "projects": [
+    { "id": "codevetter", "family": "codevetter", "tier": "focus", "repo": "codevetter", "deployKind": "pages", "cfProject": "codevetter", "domains": ["codevetter.com"], "app": "tauri", "inRegistry": true, "status": "live", "notes": "" },
+    { "id": "pace", "family": "pace", "tier": "focus", "repo": "pace", "deployKind": "pages", "cfProject": "pace", "domains": ["heypace.app"], "app": "swift", "inRegistry": true, "status": "live", "notes": "" },
+    { "id": "posttrainllm", "family": "posttrainllm", "tier": "focus", "repo": "posttrainllm", "deployKind": "pages", "cfProject": "tinygpt", "domains": ["posttrainllm.com"], "app": "web", "inRegistry": true, "status": "live", "notes": "RENAME PENDING: CF project still named 'tinygpt'; stray domain tinygpt.sarthakagrawal.dev to be removed (dashboard/token). See work-queue B-CF." },
+
+    { "id": "saas-maker-showcase", "family": "saas-maker", "tier": "active", "repo": "saas-maker", "deployKind": "pages", "cfProject": "saas-maker-home", "domains": ["sassmaker.com"], "inRegistry": true, "status": "live", "notes": "the hub" },
+    { "id": "saas-maker-docs", "family": "saas-maker", "tier": "active", "repo": "saas-maker", "deployKind": "pages", "cfProject": "saas-maker-docs", "domains": ["docs.sassmaker.com"], "inRegistry": true, "status": "live", "notes": "" },
+    { "id": "saas-maker-platform", "family": "saas-maker", "tier": "active", "repo": "saas-maker", "deployKind": "worker", "cfProject": "saasmaker-dashboard, saasmaker-api, saasmaker-droid", "domains": [], "inRegistry": false, "status": "live", "notes": "dashboard/API workers behind the platform" },
+    { "id": "drank", "family": "saas-maker", "tier": "active", "repo": "drank", "deployKind": "pages", "cfProject": "drank", "domains": ["domains.sassmaker.com"], "inRegistry": true, "status": "live", "notes": "" },
+    { "id": "email-manager", "family": "saas-maker", "tier": "active", "repo": "email-manager", "deployKind": "worker", "cfProject": "email-manager", "domains": ["mail.sassmaker.com"], "inRegistry": true, "status": "live", "notes": "" },
+    { "id": "free-ai", "family": "saas-maker", "tier": "active", "repo": "free-ai", "deployKind": "worker", "cfProject": "free-ai-gateway", "domains": ["ai-gateway.sassmaker.com"], "inRegistry": true, "status": "live", "notes": "" },
+    { "id": "psi-swarm", "family": "saas-maker", "tier": "active", "repo": "fleet-ops/psi-swarm", "deployKind": "pages", "cfProject": "psi-swarm-web", "domains": ["performance.sassmaker.com"], "inRegistry": true, "status": "live", "notes": "" },
+
+    { "id": "high-signal", "family": "high-signal", "tier": "active", "repo": "high-signal", "deployKind": "worker", "cfProject": "high-signal-web, high-signal-api, high-signal-annotation", "domains": ["highsignal.app"], "inRegistry": true, "status": "live", "notes": "Next/OpenNext on Workers" },
+    { "id": "everythingrated", "family": "high-signal", "tier": "secondary", "repo": "everythingrated", "deployKind": "unknown", "cfProject": "(not in targets.json)", "domains": ["ratings.highsignal.app"], "inRegistry": true, "status": "live", "notes": "canonical = ratings.highsignal.app; everythingrated.com is NOT ours (external) — do not associate" },
+    { "id": "research-papers", "family": "high-signal", "tier": "secondary", "repo": "research-papers", "deployKind": "pages", "cfProject": "research-papers", "domains": ["papers.highsignal.app"], "inRegistry": true, "status": "live", "notes": "" },
+
+    { "id": "materia", "family": "materia", "tier": "active", "repo": "materia", "deployKind": "pages", "cfProject": "materia", "domains": ["materia.significanthobbies.com"], "inRegistry": true, "status": "live", "notes": "own bet; hosted on SH domain" },
+
+    { "id": "knowledge-base", "family": "knowledge-base", "tier": "active", "repo": "knowledge-base", "deployKind": "worker+pages", "cfProject": "knowledgebase-landing (pages) + RAG_SERVICE worker", "domains": [], "inRegistry": false, "status": "live", "notes": "'Private Agent Search' — fleet shared RAG service (Vectorize/D1/R2). Landing has no custom domain yet." },
+
+    { "id": "significanthobbies", "family": "significanthobbies", "tier": "secondary", "repo": "significanthobbies", "deployKind": "worker", "cfProject": "significanthobbies", "domains": ["significanthobbies.com"], "inRegistry": true, "status": "live", "notes": "apex/hub" },
+    { "id": "anime-list", "family": "significanthobbies", "tier": "secondary", "repo": "anime-list", "deployKind": "pages", "cfProject": "anime-list", "domains": ["anime.significanthobbies.com"], "inRegistry": true, "status": "live", "notes": "" },
+    { "id": "chess", "family": "significanthobbies", "tier": "secondary", "repo": "chess", "deployKind": "pages", "cfProject": "chess-9a0", "domains": ["chess.significanthobbies.com"], "inRegistry": true, "status": "live", "notes": "project auto-named chess-9a0" },
+    { "id": "looptv", "family": "significanthobbies", "tier": "secondary", "repo": "looptv", "deployKind": "pages", "cfProject": "looptv", "domains": ["tv.significanthobbies.com"], "inRegistry": true, "status": "live", "notes": "" },
+    { "id": "reader", "family": "significanthobbies", "tier": "secondary", "repo": "reader", "deployKind": "worker", "cfProject": "reader", "domains": ["read.significanthobbies.com"], "inRegistry": true, "status": "live", "notes": "" },
+    { "id": "swe-interview-prep", "family": "significanthobbies", "tier": "secondary", "repo": "swe-interview-prep", "deployKind": "pages", "cfProject": "swe-interview-prep", "domains": ["learn.significanthobbies.com"], "inRegistry": true, "status": "live", "notes": "" },
+
+    { "id": "rolepatch", "family": "rolepatch", "tier": "secondary", "repo": "rolepatch", "deployKind": "worker", "cfProject": "resume-tailor", "domains": ["rolepatch.com"], "inRegistry": true, "status": "live", "notes": "" },
+    { "id": "karte", "family": "karte", "tier": "secondary", "repo": "karte", "deployKind": "worker", "cfProject": "linkchat", "domains": ["karte.cc"], "inRegistry": true, "status": "live", "notes": "name collision risk (PLAID KARTE)" },
+    { "id": "starboard", "family": "codevetter", "tier": "secondary", "repo": "starboard", "deployKind": "worker", "cfProject": "starboard", "domains": ["starboard.codevetter.com"], "inRegistry": true, "status": "live", "notes": "" },
+
+    { "id": "ai-game", "family": "ai-game", "tier": "parked", "repo": "ai-game", "deployKind": "pages", "cfProject": "aliveville, web-playables", "domains": ["aliveville.com", "idle.aliveville.com"], "inRegistry": false, "status": "live", "notes": "Aliveville world-sim; parked but live (user: leave)" },
+    { "id": "reel-pipeline", "family": "reel-pipeline", "tier": "parked", "repo": "reel-pipeline", "deployKind": "worker", "cfProject": "reel-pipeline-artifacts", "domains": [], "inRegistry": false, "status": "unverified", "notes": "reel→Rust rewrite" },
+    { "id": "protein-index", "family": "protein-index", "tier": "parked", "repo": "protein-index", "deployKind": "none", "cfProject": null, "domains": [], "inRegistry": false, "status": "undeployed", "notes": "" },
+    { "id": "mobile-dev-cockpit", "family": "mobile-dev-cockpit", "tier": "parked", "repo": "mobile-dev-cockpit", "deployKind": "none", "cfProject": null, "domains": [], "inRegistry": false, "status": "undeployed", "notes": "tooling/experimental" },
+    { "id": "saas-ideas", "family": "saas-ideas", "tier": "parked", "repo": null, "deployKind": "pages", "cfProject": "saas-ideas", "domains": [], "inRegistry": false, "status": "orphan", "notes": "no repo/registry match; pages.dev only. User: let it be." },
+
+    { "id": "truehire", "family": "rolepatch", "tier": "out-of-fleet", "repo": "truehire", "deployKind": "unknown", "cfProject": "(not in targets.json)", "domains": ["truehire.rolepatch.com"], "inRegistry": true, "status": "live", "notes": "out-of-fleet per AGENTS.md but live + registered" },
+    { "id": "today-little-log", "family": "today-little-log", "tier": "out-of-fleet", "repo": null, "deployKind": "pages", "cfProject": "today-little-log", "domains": [], "inRegistry": false, "status": "live", "notes": "DELETE PENDING: git-connected + deployment cap, needs dashboard delete. See work-queue B-CF." },
+    { "id": "verified-bases", "family": "verified-bases", "tier": "out-of-fleet", "repo": null, "deployKind": "none", "cfProject": "verified-bases-web", "domains": [], "inRegistry": false, "status": "deleted", "notes": "Pages project deleted 2026-07-18" },
+
+    { "id": "sarthakagrawal-personal", "family": "personal", "tier": "non-product", "repo": null, "deployKind": "pages", "cfProject": "sarthakagrawal", "domains": ["sarthakagrawal.dev"], "inRegistry": false, "status": "live", "notes": "personal site, not a fleet product" }
+  ]
+}

@@ -71,6 +71,28 @@ scripts) needs a scoped API token — see "Open gaps."
    research-papers, everythingrated, truehire, psi-swarm, and the saas-maker
    sub-sites are absent. It is not a reliable exhaustive deploy manifest.
 
+## Decisions & actions taken (2026-07-18)
+
+Per user review of the six findings:
+1. **tinygpt → posttrainllm rename + clear stray domain:** APPROVED. wrangler has
+   no Pages custom-domain command, so the domain migration + stray-domain removal
+   need the dashboard or an API token → queued as **B-CF** (browser). Safest cut
+   during the next PostTrainLLM redeploy (PT0) to avoid downtime on the live
+   Focus domain.
+2. **knowledgebase-landing:** IDENTIFIED — it's the landing for `knowledge-base`
+   = "Private Agent Search," the fleet shared **RAG service** (RAG_SERVICE
+   Worker + Vectorize/D1/R2). Reclassified **Parked → Active**. **saas-ideas:**
+   kept (user: let it be).
+3. **verified-bases-web:** DELETED via wrangler. **today-little-log:** delete
+   blocked by CF (git-connected + deployment cap; CLI can't purge cleanly) →
+   queued as **B-CF** dashboard delete.
+4. **ai-game (aliveville.com + idle.aliveville.com):** kept (user: leave).
+5. **everythingrated.com:** NOT the user's domain (external) — removed the
+   association; canonical stays `ratings.highsignal.app`. (Registry already
+   listed only the subdomain.)
+6. **Canonical manifest built:** `fleet-ops/config/projects.json` (33 projects)
+   — the single source of truth merging tier + repo + deploy reality.
+
 ## Open gaps (need a scoped API token to close)
 
 - **Full Workers enumeration** — to catch orphaned/preview Worker scripts (the
@@ -82,12 +104,11 @@ scripts) needs a scoped API token — see "Open gaps."
 - **Deploy kind for everythingrated + truehire** — live but absent from the
   targets map; confirm whether Worker or Pages.
 
-## "Set this up properly" — proposal
+## "Set this up properly" — DONE
 
-Make one **canonical project manifest** the single source of truth, replacing the
-scattered registry/targets/tiers split. Suggested: extend
-`agent-surfaces-registry.json` (or a new `fleet-ops/config/projects.json`) with,
-per project: `tier`, `repo`, `deployKind` (pages|worker|none), `cfProject`,
-`domains[]`, `inRegistry`, `status`. Then `deploy-health.sh`, tier filters, and
-audits all read it. This doc + `project-tiers.md` are the inputs to that
-manifest.
+The canonical manifest now exists: **`fleet-ops/config/projects.json`** (33
+projects, one entry each with `tier`, `repo`, `deployKind`, `cfProject`,
+`domains`, `inRegistry`, `status`, `notes`). It is the single source of truth;
+this doc + `project-tiers.md` are the human-readable narrative on top of it.
+**Next (optional):** point `deploy-health.sh` and audits at the manifest instead
+of the partial `cloudflare.targets.json` so tooling reads one file.

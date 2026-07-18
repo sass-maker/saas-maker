@@ -5,10 +5,10 @@ Focus marking so effort lands on the right projects. Tiers are set at the
 exception is noted. Web surfaces map to
 `fleet-ops/config/agent-surfaces-registry.json` (23 products under 8 families).
 
-**Deploy reality:** the actual Cloudflare inventory (20 Pages + Worker-backed
-products) is reconciled in `cloudflare-inventory-2026-07.md` — read it for
-deploy kind, live domains, and hygiene flags (orphan Pages, the `tinygpt`
-project rename, out-of-fleet surfaces still live).
+**Source of truth:** `fleet-ops/config/projects.json` is the machine-readable
+manifest (tier + repo + deploy kind + CF project + domains for all 33
+projects). This doc is the human narrative; the Cloudflare reconciliation +
+hygiene flags are in `cloudflare-inventory-2026-07.md`.
 
 ## Tiers
 
@@ -42,6 +42,7 @@ tasks: `work-queue-glm-core-2026-07.md`.
 | **saas-maker** | sassmaker.com (+ docs, drank, email-manager, free-ai, psi-swarm) | `saas-maker/`, `fleet-ops/psi-swarm/` | The hub + platform surfaces |
 | **high-signal** | highsignal.app (+ everythingrated, research-papers) | `high-signal/` | |
 | **materia** | materia.significanthobbies.com | `materia/` | Its own bet ("Examine.com of the body"), hosted on the SH domain |
+| **knowledge-base** | knowledgebase-landing.pages.dev (no custom domain yet) | `knowledge-base/` | "Private Agent Search" — fleet shared RAG service (RAG_SERVICE worker) |
 
 ## Secondary — live, low-touch
 
@@ -63,7 +64,6 @@ Work only when explicitly asked.
 | `reel-pipeline/` | reel→Rust rewrite (greenlit, not active) |
 | `web-playables/` | experimental |
 | `mobile-dev-cockpit/` | tooling/experimental |
-| `knowledge-base/` | data/reference, not a product |
 
 ## Out-of-fleet (AGENTS.md — excluded from sweeps)
 

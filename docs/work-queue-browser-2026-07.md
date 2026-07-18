@@ -184,8 +184,24 @@ Extends B9. These create the third-party consensus LLMs cite. Order:
   drafts casks for CodeVetter + HeyPace; you tap/submit them.
 - ~~Email capture~~ — SKIPPED for now.
 
+## B-CF — Cloudflare hygiene (dashboard/token; wrangler can't do these)
+
+From the 2026-07-18 CF reconciliation (`cloudflare-inventory-2026-07.md`).
+1. **Rename tinygpt → posttrainllm + drop stray domain.** The Focus app's Pages
+   project is still named `tinygpt` and serves a stray `tinygpt.sarthakagrawal.dev`.
+   Pages can't rename in place. Cleanest during the PT0 redeploy: create a fresh
+   `posttrainllm` Pages project, deploy + verify on its `.pages.dev`, move the
+   `posttrainllm.com` (+ www) custom domain over, then delete `tinygpt`. Remove
+   the `tinygpt.sarthakagrawal.dev` domain entirely. (Or, if you'd rather I do
+   it: give me a `pages:write` API token and I'll script the domain move.)
+2. **Delete today-little-log.** CLI delete is blocked (git-connected + deployment
+   cap). In the CF dashboard → Pages → today-little-log → Settings → delete
+   (the dashboard purges deployments for you). Out-of-fleet, pages.dev only.
+   (`verified-bases-web` already deleted via CLI.)
+
 ## Done / not needed
 
+- Deleted `verified-bases-web` Pages project (2026-07-18, out-of-fleet).
 - GitHub repo topics: done 2026-07-17 (all 21 repos). (X2 refines the core-three
   topics toward the GEO query terms — verify current topics before re-applying.)
 - IndexNow initial submit: done (1057 URLs, 202s); Crawler Hints (B4)
