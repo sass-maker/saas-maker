@@ -10,7 +10,9 @@
       "stack": "astro-static",
       "headFile": "codevetter/apps/landing-page-astro/src/layouts/Layout.astro",
       "schemaType": "SoftwareApplication",
-      "sameAs": ["https://github.com/Codevetter/codevetter"],
+      "sameAs": [
+        "https://github.com/Codevetter/codevetter"
+      ],
       "applicationCategory": "DeveloperApplication",
       "offers": {
         "@type": "Offer",
@@ -45,7 +47,9 @@
       "stack": "opennext",
       "headFile": "rolepatch/src/app/layout.tsx",
       "schemaType": "SoftwareApplication",
-      "sameAs": ["https://github.com/sarthakagrawal927/rolepatch"],
+      "sameAs": [
+        "https://github.com/sarthakagrawal927/rolepatch"
+      ],
       "worker": "rolepatch/worker.mjs",
       "productLinks": [
         {
@@ -75,7 +79,9 @@
       "stack": "opennext",
       "headFile": "high-signal/apps/web/src/app/layout.tsx",
       "schemaType": "SoftwareApplication",
-      "sameAs": ["https://github.com/High-Signal-App/high-signal"],
+      "sameAs": [
+        "https://github.com/High-Signal-App/high-signal"
+      ],
       "worker": "high-signal/apps/web/worker.mjs",
       "productLinks": [
         {
@@ -105,7 +111,9 @@
       "stack": "opennext",
       "headFile": "karte/src/app/layout.tsx",
       "schemaType": "SoftwareApplication",
-      "sameAs": ["https://github.com/sarthakagrawal927/karte"],
+      "sameAs": [
+        "https://github.com/sarthakagrawal927/karte"
+      ],
       "worker": "karte/worker.mjs",
       "hasDynamicLlms": true,
       "productLinks": [
@@ -136,7 +144,9 @@
       "stack": "opennext",
       "headFile": "significanthobbies/src/app/layout.tsx",
       "schemaType": "SoftwareApplication",
-      "sameAs": ["https://github.com/Significant-Hobbies/significanthobbies"],
+      "sameAs": [
+        "https://github.com/Significant-Hobbies/significanthobbies"
+      ],
       "worker": "significanthobbies/worker.mjs",
       "productLinks": [
         {
@@ -161,7 +171,9 @@
       "stack": "astro-static",
       "headFile": "materia/src/layouts/BaseLayout.astro",
       "schemaType": "WebSite",
-      "sameAs": ["https://github.com/Significant-Hobbies/materia"],
+      "sameAs": [
+        "https://github.com/Significant-Hobbies/materia"
+      ],
       "productLinks": [
         {
           "title": "Home",
@@ -195,7 +207,9 @@
       "stack": "astro-static",
       "headFile": "saas-maker/apps/showcase/src/layouts/Layout.astro",
       "schemaType": "WebSite",
-      "sameAs": ["https://github.com/sass-maker/saas-maker"],
+      "sameAs": [
+        "https://github.com/sass-maker/saas-maker"
+      ],
       "applicationCategory": "DeveloperApplication",
       "offers": {
         "@type": "Offer",
@@ -362,7 +376,9 @@
       "stack": "opennext",
       "headFile": "starboard/src/app/layout.tsx",
       "schemaType": "SoftwareApplication",
-      "sameAs": ["https://github.com/Codevetter/starboard"],
+      "sameAs": [
+        "https://github.com/Codevetter/starboard"
+      ],
       "worker": "starboard/worker.mjs",
       "productLinks": [
         {
@@ -387,7 +403,9 @@
       "stack": "opennext",
       "headFile": "everythingrated/apps/web/src/app/layout.tsx",
       "schemaType": "SoftwareApplication",
-      "sameAs": ["https://github.com/High-Signal-App/everythingrated"],
+      "sameAs": [
+        "https://github.com/High-Signal-App/everythingrated"
+      ],
       "worker": "everythingrated/apps/web/worker.mjs",
       "productLinks": [
         {
@@ -407,7 +425,9 @@
       "stack": "opennext",
       "headFile": "truehire/apps/web/src/app/layout.tsx",
       "schemaType": "SoftwareApplication",
-      "sameAs": ["https://github.com/sarthakagrawal927/truehire"],
+      "sameAs": [
+        "https://github.com/sarthakagrawal927/truehire"
+      ],
       "worker": "truehire/apps/web/worker.mjs",
       "productLinks": [
         {
@@ -432,7 +452,9 @@
       "stack": "astro-static",
       "headFile": "research-papers/web/src/pages/index.astro",
       "schemaType": "WebSite",
-      "sameAs": ["https://github.com/High-Signal-App/research-papers"],
+      "sameAs": [
+        "https://github.com/High-Signal-App/research-papers"
+      ],
       "productLinks": [
         {
           "title": "Home",
@@ -451,7 +473,9 @@
       "stack": "astro-static",
       "headFile": "posttrainllm/browser/src/layouts/Default.astro",
       "schemaType": "SoftwareApplication",
-      "sameAs": ["https://github.com/PostTrainLLM/posttrainllm"],
+      "sameAs": [
+        "https://github.com/PostTrainLLM/posttrainllm"
+      ],
       "applicationCategory": "DeveloperApplication",
       "offers": {
         "@type": "Offer",
@@ -484,7 +508,9 @@
       "stack": "astro-static",
       "headFile": "pace/website/src/layouts/BaseLayout.astro",
       "schemaType": "SoftwareApplication",
-      "sameAs": ["https://github.com/HeyPace/pace"],
+      "sameAs": [
+        "https://github.com/HeyPace/pace"
+      ],
       "applicationCategory": "UtilitiesApplication",
       "offers": {
         "@type": "Offer",
@@ -515,7 +541,9 @@
       "stack": "next-static",
       "headFile": "drank/app/layout.tsx",
       "schemaType": "SoftwareApplication",
-      "sameAs": ["https://github.com/High-Signal-App/drank"],
+      "sameAs": [
+        "https://github.com/High-Signal-App/drank"
+      ],
       "productLinks": [
         {
           "title": "Home",
@@ -534,7 +562,9 @@
       "stack": "next-static",
       "headFile": "looptv/src/app/layout.tsx",
       "schemaType": "SoftwareApplication",
-      "sameAs": ["https://github.com/Significant-Hobbies/looptv"],
+      "sameAs": [
+        "https://github.com/Significant-Hobbies/looptv"
+      ],
       "productLinks": [
         {
           "title": "Home",
@@ -553,7 +583,9 @@
       "stack": "spa-hono",
       "headFile": "anime-list/index.html",
       "schemaType": "WebSite",
-      "sameAs": ["https://github.com/Significant-Hobbies/anime-list"],
+      "sameAs": [
+        "https://github.com/Significant-Hobbies/anime-list"
+      ],
       "applicationCategory": "EntertainmentApplication",
       "offers": {
         "@type": "Offer",
@@ -580,7 +612,9 @@
       "stack": "spa-static",
       "headFile": "chess/index.html",
       "schemaType": "SoftwareApplication",
-      "sameAs": ["https://github.com/Significant-Hobbies/chess"],
+      "sameAs": [
+        "https://github.com/Significant-Hobbies/chess"
+      ],
       "productLinks": [
         {
           "title": "Home",
@@ -599,7 +633,9 @@
       "stack": "spa-hono",
       "headFile": "reader/app.html",
       "schemaType": "SoftwareApplication",
-      "sameAs": ["https://github.com/Significant-Hobbies/reader"],
+      "sameAs": [
+        "https://github.com/Significant-Hobbies/reader"
+      ],
       "worker": "reader/src/worker.ts",
       "productLinks": [
         {
@@ -624,7 +660,9 @@
       "stack": "spa-hono",
       "headFile": "email-manager/index.html",
       "schemaType": "SoftwareApplication",
-      "sameAs": ["https://github.com/sarthakagrawal927/email-manager"],
+      "sameAs": [
+        "https://github.com/sarthakagrawal927/email-manager"
+      ],
       "worker": "email-manager/src/worker.ts",
       "productLinks": [
         {
@@ -644,7 +682,9 @@
       "stack": "spa-hono",
       "headFile": "free-ai/site/src/pages/index.astro",
       "schemaType": "SoftwareApplication",
-      "sameAs": ["https://github.com/sass-maker/free-ai"],
+      "sameAs": [
+        "https://github.com/sass-maker/free-ai"
+      ],
       "applicationCategory": "DeveloperApplication",
       "worker": "free-ai/src/index.ts",
       "productLinks": [
@@ -670,7 +710,9 @@
       "stack": "spa-static",
       "headFile": "swe-interview-prep/index.html",
       "schemaType": "SoftwareApplication",
-      "sameAs": ["https://github.com/Significant-Hobbies/swe-interview-prep"],
+      "sameAs": [
+        "https://github.com/Significant-Hobbies/swe-interview-prep"
+      ],
       "productLinks": [
         {
           "title": "Home",
@@ -703,6 +745,73 @@
         }
       ],
       "indexMd": "# psi-swarm\n\nDistributional Lighthouse performance audits for the fleet.\n\n## Agent entrypoints\n\n- https://performance.sassmaker.com/llms.txt\n- https://performance.sassmaker.com/api/ai\n- https://performance.sassmaker.com/index.md\n"
+    },
+    {
+      "id": "verified-bases",
+      "name": "Verified Bases",
+      "url": "https://shop.sassmaker.com",
+      "summary": "Storefront for verified software bases — curated, verified building blocks with costly signals. Astro + Go on Cloudflare.",
+      "publicDir": "verified-bases/web/public",
+      "stack": "astro-static",
+      "headFile": "verified-bases/web/src/layouts/BaseLayout.astro",
+      "schemaType": "WebSite",
+      "sameAs": [
+        "https://github.com/sass-maker/verified-bases"
+      ],
+      "indexMd": "# Verified Bases\n\nStorefront for verified software bases.\n"
+    },
+    {
+      "id": "protein-index",
+      "name": "Protein Index",
+      "url": "https://protein.significanthobbies.com",
+      "summary": "A searchable index of proteins.",
+      "publicDir": "protein-index/public",
+      "stack": "vite-spa",
+      "headFile": "protein-index/index.html",
+      "schemaType": "WebSite",
+      "indexMd": "# Protein Index\n\nSearchable protein index.\n"
+    },
+    {
+      "id": "open-historia",
+      "name": "Open Historia",
+      "url": "https://historia.aliveville.com",
+      "summary": "AI-powered grand-strategy history game — command nations through natural language.",
+      "publicDir": "open-historia/public",
+      "stack": "vite-spa",
+      "schemaType": "SoftwareApplication",
+      "applicationCategory": "GameApplication",
+      "sameAs": [
+        "https://github.com/sarthakagrawal927/open-historia"
+      ],
+      "indexMd": "# Open Historia\n\nAI grand-strategy history game.\n"
+    },
+    {
+      "id": "knowledgebase-app",
+      "name": "Private Agent Search",
+      "url": "https://search.sassmaker.com",
+      "summary": "Cited search + grounded answers over private, specialized document collections (RAG).",
+      "publicDir": "knowledge-base/app/public",
+      "stack": "next-opennext",
+      "schemaType": "SoftwareApplication",
+      "applicationCategory": "DeveloperApplication",
+      "sameAs": [
+        "https://github.com/sass-maker/knowledge-base"
+      ],
+      "indexMd": "# Private Agent Search\n\nCited RAG search over private collections.\n"
+    },
+    {
+      "id": "saas-ideas",
+      "name": "SaaS Ideas",
+      "url": "https://ideas.sassmaker.com",
+      "summary": "A scored, sortable catalog of SaaS product ideas.",
+      "publicDir": "saas-ideas/docs",
+      "stack": "static",
+      "headFile": "saas-ideas/docs/index.html",
+      "schemaType": "WebSite",
+      "sameAs": [
+        "https://github.com/sass-maker/saas-ideas"
+      ],
+      "indexMd": "# SaaS Ideas\n\nScored catalog of SaaS product ideas.\n"
     }
   ]
 }

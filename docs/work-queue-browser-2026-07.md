@@ -113,9 +113,138 @@ Not computer-use tasks — attention is the product. Queue when assets ready:
 3. Product Hunt for pace/codevetter — only after pricing pages + OG images
    are live (glm G3), otherwise wasted launch.
 
+---
+
+# Core-app GEO/SEO tasks (added 2026-07-18)
+
+Tied to `geo-seo-plan-2026-07.md` + `work-queue-glm-core-2026-07.md`. These are
+the user/browser-only items that gate or complement the glm execution list.
+Named to match the cross-references in the glm doc.
+
+## B-DEPLOY — Redeploy the three core sites · UNBLOCKS a lot
+
+Production deploys are manual. Deploy current `origin/main` for each once the
+matching glm PRs merge:
+1. **PostTrainLLM (do first, standalone win):** the live site is a stale build.
+   A redeploy alone recovers `/data/leaderboard.json`, the RSS feed,
+   extensionless canonicals, and the `Dataset` JSON-LD — no code change needed.
+2. **HeyPace:** redeploy after HP1 merges so the sitemap includes `/pricing` +
+   `/faq` (live sitemap is currently stale at 18 URLs).
+3. **CodeVetter:** redeploy after CV1–CV4 merge.
+Verify each with `curl` on the named surfaces after deploy.
+
+## B-MEASURE — Search Console + Bing + AI-referral segments
+
+Focuses B2/B3 on the three core domains (do these first of the 7):
+- GSC property + sitemap submit for `codevetter.com`, `heypace.app`,
+  `posttrainllm.com`. Request indexing for the homepage + benchmark/leaderboard.
+- Bing Webmaster import for the same three.
+- After AN1 ships analytics, add an "AI referrals" segment
+  (`utm_source=chatgpt.com`, `perplexity.ai`, `gemini`, referrer contains the
+  AI hosts) so you can see which pages answer engines send traffic to.
+
+## B-LAUNCH — First citable third-party URLs (the real GEO lever)
+
+Extends B9. These create the third-party consensus LLMs cite. Order:
+1. **Submit the awesome-list PRs** glm prepared (X1) — one per target list, under
+   your GitHub identity.
+2. **AlternativeTo + Product Hunt** entries for CodeVetter + HeyPace (Pace as an
+   alternative to Superwhisper/Raycast/Siri/Dottie; CodeVetter as a local
+   CodeRabbit/Greptile alternative).
+3. **Populate the HF org** (extends B8): publish the leaderboard models publicly
+   at `huggingface.co/PostTrainLLM` — instant proof + citation surface (currently
+   empty). Upload via `huggingface-cli upload`.
+4. **r/LocalLLaMA** posts — best-fit sub for all three (local/on-device angle).
+5. **Outreach** to roundup authors with the evidence package (X4) — "would you
+   test it for the next update, here's a reproducible benchmark."
+6. **Show HN — ON HOLD (2026-07-18):** not posting to HN for now. Drafts stay
+   ready in the evidence-package doc; unpark when you decide to launch.
+
+## B-INFRA — Product-infra decisions (gate the trust/commerce fixes)
+
+- **Apple Developer signing:** provide `APPLE_ID`, `APPLE_TEAM_ID`,
+  `APPLE_APP_PASSWORD`, and the Developer ID cert as GitHub secrets for
+  CodeVetter (CV7) and Pace (HP6) so CI can ship signed+notarized DMGs.
+  CodeVetter currently ships an **unsigned DMG** → Gatekeeper blocks normal users.
+- ~~CodeVetter telemetry default~~ — **DECIDED 2026-07-18: opt-in (default
+  OFF).** glm (CV7) implements the consent gate; no capture until opt-in.
+- **Pace commerce — DECIDED (Lemon Squeezy):** create a Lemon Squeezy store, add
+  a **$29 one-time** product, enable **license keys**, and get the API key (for
+  HP7's in-app activation). LS is merchant-of-record so it handles global
+  VAT/tax. This replaces the mailto checkout.
+- ~~PostTrainLLM positioning~~ — DECIDED: web-app-first (PT8, glm). No action for
+  you beyond confirming you don't want to build a real Mac app right now.
+- **Apple proof-asset accounts (for CV6):** CodeRabbit trial, Greptile trial,
+  Copilot review (existing sub), Qodo via OSS PR-Agent, Semgrep free — on a test
+  repo. Only needed when we run the competitor benchmark.
+- **HeyPace benchmark rig (for HP5):** a clean Apple-Silicon Mac + Superwhisper/
+  Wispr/Dottie/Shadow installed + Little Snitch. Only needed for the on-device
+  benchmark run.
+- **Homebrew casks:** once signed artifacts exist (post-Apple-account), glm
+  drafts casks for CodeVetter + HeyPace; you tap/submit them.
+- ~~Email capture~~ — SKIPPED for now.
+
+## B-CF-DNS — Finish Cloudflare "green" (browser editor / CF dashboard)
+
+Account: `sarthakagrawal927@gmail.com`. Only one real task left; the rest is
+verify/skip.
+
+**TASK 1 (required — clears the last red domain): add DNS for `ideas.sassmaker.com`**
+1. CF dashboard → **Websites → sassmaker.com → DNS → Records → Add record**.
+2. Type `CNAME` · Name `ideas` · Target `saas-ideas.pages.dev` · Proxy status
+   **Proxied (orange cloud)** · TTL Auto → **Save**.
+3. Then **Workers & Pages → saas-ideas → Custom domains** — `ideas.sassmaker.com`
+   should flip **Active** within ~1 min (hit "Retry/Check" if it doesn't).
+4. Verify `https://ideas.sassmaker.com` returns 200. Done = project no longer red.
+
+**TASK 2 (verify only, no dashboard action): `shop.sassmaker.com`**
+- Already routes to the `verified-bases-api` worker (DNS/routing fine), but
+  returns **404 at `/`** — that's app-level (the storefront worker doesn't serve
+  a homepage yet), NOT a DNS/green problem. Just flag to Sarthak: verified-bases
+  needs a deploy with a root route. No CF dashboard action.
+
+**TASK 3 — REMOVED.** The `tinygpt → posttrainllm` rename was abandoned (kept
+cosmetic per user 2026-07-18); the duplicate `posttrainllm` project was deleted.
+Site stays on the `tinygpt`-named project (users never see the name).
+
+**NOT browser tasks — git-connection (informational):** 4 Pages are CF-native
+git-connected; ~10 deploy via GitHub Actions on push (git-driven already —
+do NOT CF-native-connect them, it double-pipelines); only `web-playables`,
+`knowledgebase-landing`, `saas-ideas` are truly manual — best fixed by adding a
+deploy workflow (code task), not a dashboard connect.
+
+**Not a browser task (needs code deploy, not dashboard):** the 5 newly-registered
+products (verified-bases, protein-index, open-historia, knowledgebase-app,
+saas-ideas) have GEO surfaces committed but not yet deployed — they go live on
+each repo's next deploy. Hand that to Sarthak/CI, not the browser editor.
+
+## B-CF — Cloudflare hygiene (history)
+
+From the 2026-07-18 CF reconciliation (`cloudflare-inventory-2026-07.md`).
+Nearly all DONE via the Infisical CF token. Remaining decision:
+1. **CF project name `tinygpt` → `posttrainllm`** — DEFERRED (not done). The
+   posttrainllm.com **content** is now fresh + green (redeployed from main). But
+   renaming the *project* means recreating it, and a fresh project **522s
+   without tinygpt's env vars / KV bindings** (proven during the attempt), plus
+   the name is never user-visible. Not worth the flagship downtime for a
+   cosmetic change. Revisit only if you want to migrate all bindings + do the
+   domain cutover — tell me and I'll script the binding copy first.
+
+**Done 2026-07-18 (via Infisical token):**
+- Deleted Pages `verified-bases-web` + `today-little-log`; removed stray
+  `tinygpt.sarthakagrawal.dev`; enumerated all 25 Workers.
+- **saas-ideas:** repo → sass-maker org + cloned; `ideas.sassmaker.com` added.
+- **verified-bases:** promoted out of out-of-fleet — repo → sass-maker org +
+  cloned; `shop.sassmaker.com` added to the `verified-bases-api` worker.
+- **open-historia:** confirmed a live product (`historia.aliveville.com`), kept.
+- **posttrainllm.com REDEPLOYED** fresh from main — stale-build fixed
+  (leaderboard JSON, RSS, canonicals), verified green.
+
 ## Done / not needed
 
-- GitHub repo topics: done 2026-07-17 (all 21 repos).
+- Deleted `verified-bases-web` Pages project (2026-07-18, out-of-fleet).
+- GitHub repo topics: done 2026-07-17 (all 21 repos). (X2 refines the core-three
+  topics toward the GEO query terms — verify current topics before re-applying.)
 - IndexNow initial submit: done (1057 URLs, 202s); Crawler Hints (B4)
   automates the future.
 - Google Indexing API: NOT applicable (jobs/livestream only).
