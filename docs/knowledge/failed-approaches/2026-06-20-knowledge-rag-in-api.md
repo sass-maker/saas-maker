@@ -25,6 +25,6 @@ project-scoped corpora.
 
 ## Related
 
-- Decision context: [`../../architecture/decisions/`](../../architecture/decisions/)
+- Decision context: [`../../architecture/decisions/`](../../architecture/decisions/README.md)
   design records around 2026-06-20.
 - Timeline entry: `PROJECT_STATUS.md` → 2026-06-20 — Knowledge/RAG removal.

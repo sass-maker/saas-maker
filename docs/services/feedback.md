@@ -29,11 +29,16 @@ curl -X POST https://api.sassmaker.com/v1/feedback \
 
 ## Status Workflow
 
-All feedback types share three statuses:
+All feedback types share eight statuses:
 
 | Status | Description |
 |--------|-------------|
 | `new` | Just submitted (default) |
+| `acknowledged` | Seen and accepted as valid |
+| `investigating` | Being looked into |
+| `planned` | Scheduled to be worked on |
+| `in_progress` | Actively being worked on |
+| `resolved` | Done / shipped |
 | `dismissed` | Won't act on this |
 | `on_roadmap` | Promoted to the [Roadmap](/services/roadmap) |
 
@@ -206,7 +211,7 @@ curl -X PATCH https://api.sassmaker.com/v1/feedback/abc-123 \
 
 | Status | Message | Cause |
 |--------|---------|-------|
-| `400` | `"Invalid status"` | Status not `new`, `dismissed`, or `on_roadmap` |
+| `400` | `"Invalid status"` | Status not one of `new`, `acknowledged`, `investigating`, `planned`, `in_progress`, `resolved`, `dismissed`, `on_roadmap` |
 | `403` | `"Forbidden"` | Not the project owner |
 | `404` | `"Not found"` | Feedback entry doesn't exist |
 

@@ -4,18 +4,20 @@ Use this when moving local Codex automations to an always-on Mac.
 
 ## Bootstrap the fleet checkout
 
-First clone SaaS Maker itself into the expected fleet path:
+First set the fleet root (the directory that holds all fleet repos) and clone
+SaaS Maker itself into it:
 
 ```bash
-mkdir -p /Users/sarthak/Desktop/fleet
-cd /Users/sarthak/Desktop/fleet
+export FLEET_ROOT="$HOME/Desktop/fleet"   # adjust to your machine
+mkdir -p "$FLEET_ROOT"
+cd "$FLEET_ROOT"
 git clone https://github.com/sass-maker/saas-maker.git
 ```
 
 Then from the SaaS Maker repo on the target machine:
 
 ```bash
-cd /Users/sarthak/Desktop/fleet/saas-maker
+cd "$FLEET_ROOT/saas-maker"
 pnpm install --frozen-lockfile
 pnpm fleet:clone -- --dry-run
 pnpm fleet:clone
@@ -34,7 +36,7 @@ pnpm fleet:clone -- --pull
 ```
 
 The clone command reads `foundry.projects.json`, creates missing project
-directories under `/Users/sarthak/Desktop/fleet`, skips existing repos by
+directories under `$FLEET_ROOT`, skips existing repos by
 default, and does not touch secrets or env files.
 
 ## Required local auth
@@ -71,5 +73,5 @@ pnpm fleet:monitoring-audit -- --json
 pnpm fleet:posthog-verify -- --json   # requires PostHog personal API key in apps/cockpit/.env.local
 ```
 
-If the repo paths differ from `/Users/sarthak/Desktop/fleet`, update the
+If the repo paths differ from `$FLEET_ROOT`, update the
 automation `cwds` and prompts before enabling the schedules.

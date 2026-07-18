@@ -45,7 +45,7 @@ Magic Form is the **schema-driven layer** above single-purpose widgets. Existing
 - No public template marketplace or community sharing.
 - No replacement of Feedback/Testimonial/Waitlist widgets in v1 (optional “migrate to Magic Form” later).
 - No new global rate limits; reuse existing API-key + project patterns.
-- No production cron/AI schedules until a follow-up task approves cost guardrails (mirror [AI Feedback Digest plan](./2026-06-04-ai-feedback-digest-module.md)).
+- No production cron/AI schedules until a follow-up task approves cost guardrails (mirror [AI Feedback Digest plan](./06-04-ai-feedback-digest-module.md)).
 
 ---
 
@@ -349,7 +349,7 @@ Register feature flag in settings form next to feedback/waitlist/testimonials wh
 ## References
 
 - [`docs/product/saas-ideas-consolidation-2026-06-03.md`](../../product/saas-ideas-consolidation-2026-06-03.md)
-- [`docs/architecture/decisions/2026-02-26-feedback-module-design.md`](2026-02-26-feedback-module-design.md)
-- [`docs/architecture/decisions/2026-06-04-ai-feedback-digest-module.md`](2026-06-04-ai-feedback-digest-module.md)
+- [`docs/architecture/decisions/2026-02-26-feedback-module-design.md`](02-26-feedback-module-design.md)
+- [`docs/architecture/decisions/2026-06-04-ai-feedback-digest-module.md`](06-04-ai-feedback-digest-module.md)
 - [`workers/api/migrations/0001_schema.sql`](../../../workers/api/migrations/0001_schema.sql) — waitlist, testimonials, analytics_events
 - Widgets: `packages/widgets/{feedback,waitlist,testimonials}-widget`

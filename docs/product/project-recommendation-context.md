@@ -301,7 +301,7 @@ Primary docs and handoff files:
 - `docs/architecture/symphony.md`
 - `docs/architecture/task-cloud-audit.md`
 - `docs/development/testing-backlog.md`
-- `docs/architecture/decisions/2026-06-20-tooling-plan-superseded.md`
+- `docs/archive/stale-2026-06-20-tooling-plan-superseded.md`
 
 Package manifests:
 - `apps/cockpit/package.json`

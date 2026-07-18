@@ -8,7 +8,9 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "astro build && npm run build:docs",
+    "build:docs": "node scripts/merge-blume-docs.mjs",
+    "build:showcase-only": "astro build",
     "preview": "astro preview",
     "astro": "astro",
     "typecheck": "astro sync && tsc --noEmit"

@@ -2,7 +2,7 @@
 
 What SaaS Maker is, who uses it, what is in and out of scope, and the fleet it
 operates. For the public product surface (API, SDK, widgets, services), see
-[`../getting-started/`](../getting-started/) and [`../services/`](../services/).
+[`../getting-started/`](../getting-started/introduction.md) and [`../services/`](../services/projects.md).
 
 ## Files
 

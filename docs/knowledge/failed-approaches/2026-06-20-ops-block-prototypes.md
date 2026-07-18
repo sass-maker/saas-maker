@@ -26,6 +26,6 @@ boundaries are defined first. Per `PROJECT_STATUS.md` → Planned #2.
 
 ## Related
 
-- Design records: [`../../architecture/decisions/2026-06-04-ai-feedback-digest-module.md`](../../architecture/decisions/2026-06-04-ai-feedback-digest-module.md),
-  [`../../architecture/decisions/2026-06-04-magic-form-block-design.md`](../../architecture/decisions/2026-06-04-magic-form-block-design.md).
+- Design records: [`../../architecture/decisions/2026-06-04-ai-feedback-digest-module.md`](../../architecture/decisions/06-04-ai-feedback-digest-module.md),
+  [`../../architecture/decisions/2026-06-04-magic-form-block-design.md`](../../architecture/decisions/06-04-magic-form-block-design.md).
 - Timeline entry: `PROJECT_STATUS.md` → 2026-06-20.

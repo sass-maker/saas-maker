@@ -7,12 +7,12 @@ architecture that predates the move to Cloudflare D1.
 
 Kept for git rename history and as a record of the LinkChat resource-isolation
 work. Do not use these as a description of SaaS Maker's current architecture;
-see [`../architecture/`](../architecture/) for that.
+see [`../architecture/`](../architecture/README.md) for that.
 
 ## Files
 
-- [`plans/2026-03-14-linkchat-resource-isolation.md`](plans/2026-03-14-linkchat-resource-isolation.md) —
+- [`plans/2026-03-14-linkchat-resource-isolation.md`](plans/03-14-linkchat-resource-isolation.md) —
   implementation plan for a `source` column on `projects` to hide
   LinkChat-created projects from the SaaS Maker dashboard.
-- [`specs/2026-03-14-linkchat-resource-isolation-design.md`](specs/2026-03-14-linkchat-resource-isolation-design.md) —
+- [`specs/2026-03-14-linkchat-resource-isolation-design.md`](specs/03-14-linkchat-resource-isolation-design.md) —
   design spec for the same.

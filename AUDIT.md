@@ -5,7 +5,7 @@ Reviewed: 2026-04-26 (gate hardening pass)
 
 ## Gates
 
-- **Pre-push** (`.husky/pre-push`): lint → typecheck (fleet-wide `tsc --noEmit`) → tests (vitest) → secret scan.
+- **Pre-push** (`.husky/pre-push`): lint (`pnpm run --if-present lint`) + secret scan. Typecheck (`pnpm typecheck`) and vitest (`pnpm test`) are run in CI / manually, not on pre-push. See `docs/development/quality-gates.md`.
 - **Post-deploy smoke** (`scripts/smoke-prod.mjs`): 7 prod checks (API health, CORS, auth rejection, cockpit /login, /projects redirect, sign-in/social returns Google URL, bundled JS does not contain `localhost:8787`). Wired into both `pnpm -F @saas-maker/api run deploy` and `pnpm -F @saas-maker/dashboard run deploy`.
 - **CI tag-pinned** (`@v1`): fleet repos consume `sass-maker/saas-maker/.github/workflows/foundry-ci.yml@v1`. Bad commits to saas-maker `main` no longer break the entire fleet's CI; promotion is explicit via `git tag -f v1`.
 
@@ -19,7 +19,7 @@ Reviewed: 2026-04-26 (gate hardening pass)
 ## MEDIUM Severity
 
 - [x] **CockroachDB binary in git** — Removed in commit `332c334` (sanitize repo). _Fixed._
-- [ ] **FeedbackStatus type too narrow** — `internal/contracts/index.ts` and `@saas-maker/sdk` — DB and routes use up to 8 values; public SDK types still need widening.
+- [ ] **FeedbackStatus type too narrow (SDK only)** — `internal/contracts/index.ts` now lists all 8 values (`new`, `acknowledged`, `investigating`, `planned`, `in_progress`, `resolved`, `dismissed`, `on_roadmap`), matching `workers/api/src/routes/feedback.ts` `VALID_STATUSES`. Only the public `@saas-maker/sdk` types still need widening.
 - [ ] **Session ID not unique per IP** — `workers/api/src/ua.ts:45` — `computeSessionId()` hashes `date|country|device|browser`. Inflates unique-visitor counts. Add IP-hash component.
 
 ## LOW Severity
@@ -30,4 +30,4 @@ Reviewed: 2026-04-26 (gate hardening pass)
 
 ## Open Items (post-Foundry transition)
 
-- [ ] **Split `workers/api/src/db.ts`** (1738 LOC) — Single God file; refactor per domain (feedback / projects / analytics / etc).
+- [ ] **Split `workers/api/src/db.ts`** (~2360 LOC) — Single God file; refactor per domain (feedback / projects / analytics / etc).

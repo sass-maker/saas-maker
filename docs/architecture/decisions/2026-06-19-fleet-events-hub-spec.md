@@ -2,7 +2,7 @@
 
 **Date:** 2026-06-19
 **Status:** Spec / ready to build
-**Companion to:** [2026-06-19-fleet-hub-and-spoke-eval.md](./2026-06-19-fleet-hub-and-spoke-eval.md) — read that for *why*. This is the *how*.
+**Companion to:** [2026-06-19-fleet-hub-and-spoke-eval.md](./06-19-fleet-hub-and-spoke-eval.md) — read that for *why*. This is the *how*.
 
 **Scope:** this spec is the **return path** — the append-only sink where results, fire-and-forget callbacks, and telemetry land, and which Cockpit reads. It is **one half** of the hub. The **outbound** half — saas-maker *assigning tasks* to CodeVetter, *dispatching* to reel-pipeline, and *pulling* high-signal — follows the typed interaction styles in the eval doc's §3 and is sketched in §8 below. The events sink is **not** how the hub invokes a capability; it's where capability *results* come to rest.
 

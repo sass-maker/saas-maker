@@ -5,7 +5,7 @@ Run a full fleet audit from the SaaS Maker repo. This is what the
 
 ## Prerequisites
 
-- `pnpm install` completed in `/Users/sarthak/Desktop/fleet/saas-maker`.
+- `pnpm install` completed in the SaaS Maker repo (`$FLEET_ROOT/saas-maker`).
 - `fnd login` run on this machine (for Symphony task write-back).
 - `gh auth login` run (for GitHub Actions failure checks).
 - PostHog/Cloudflare only needed if you want those checks; never print secrets.

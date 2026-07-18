@@ -4,16 +4,22 @@
 
 - The `@saas-maker/email` package (Resend-based transactional email helper).
 - Resend sends from the feedback and waitlist API routes.
-- The legacy Resend helper that lived in `workers/api/src/email.ts`.
+
+## Not yet removed
+
+- The legacy Resend helper at `workers/api/src/email.ts` still exists. It holds
+  a live `fetch('https://api.resend.com/emails', …)` call, but no route or
+  module imports it — it is present-but-unused (dead code), not deleted. Delete
+  it when the Cloudflare Email Workers path lands (see revisit conditions).
 
 ## Why
 
 The package was orphaned after the decision to migrate to Cloudflare Email
 Workers (see `2026-04-29` memory context: Cloudflare Email confirmed, React
-Email chosen). The Cloudflare Email Workers migration is not complete, so
-keeping the Resend helper in the active codepath blocked cleanup without
-serving production traffic. Owner email notifications for feedback/waitlist
-are parked pending the Cloudflare Email Workers provider work.
+Email chosen). Resend was pulled out of the active feedback/waitlist codepath;
+the standalone `email.ts` helper was left in the tree but disconnected from all
+routes. Owner email notifications for feedback/waitlist are parked pending the
+Cloudflare Email Workers provider work.
 
 ## Revisit conditions
 
