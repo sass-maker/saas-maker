@@ -67,8 +67,14 @@ export default function RootLayout({
         />
         {/* fleet-jsonld:end */}
       </head>
-      <body className="min-h-full flex flex-col">
-        <div id="drank-lcp-shell" className="bg-zinc-950 text-zinc-200" aria-hidden="true">
+      <body className="min-h-full flex flex-col" style={{ contain: 'layout' }}>
+        {/* LCP shell: fixed overlay so it never participates in document flow.
+            Removing it on hydration causes zero layout shift. */}
+        <div
+          id="drank-lcp-shell"
+          className="fixed inset-0 z-40 bg-zinc-950 text-zinc-200"
+          aria-hidden="true"
+        >
           <div className="mx-auto max-w-7xl px-6 pt-10 pb-6">
             <div className="text-6xl font-semibold tracking-[-3.2px] text-white">
               Track Domain Ratings.

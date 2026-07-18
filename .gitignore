@@ -39,3 +39,18 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# blume docs site (generated / local-only)
+# docs-site/ has its own .gitignore; these are belt-and-suspenders so a
+# stray build at repo root never gets committed.
+docs-site/dist/
+docs-site/.blume/
+docs-site/.astro/
+docs-site/docs/
+
+# local agent logs / scratch
+.devin/
+.devin-runs/
+.agent-logs/
+*.agent.log
+

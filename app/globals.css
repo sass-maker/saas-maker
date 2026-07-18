@@ -29,3 +29,14 @@ button {
   outline: 2px solid rgba(163, 163, 172, 0.5);
   outline-offset: 2px;
 }
+
+/* LCP shell fade-out — prevents layout shift by transitioning opacity
+   instead of instantly removing the element from the DOM. */
+#drank-lcp-shell {
+  contain: layout style paint;
+  transition: opacity 180ms ease-out;
+}
+#drank-lcp-shell.drank-lcp-fading {
+  opacity: 0;
+  pointer-events: none;
+}

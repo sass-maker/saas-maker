@@ -1,0 +1,8 @@
+# docs-link-allowlist.txt
+#
+# One entry per line, format: <source-relative-path>::<target-as-written>
+# Blank lines and `#` comments ignored.
+#
+# Use ONLY for genuinely-missing historical targets that are intentionally
+# not recreated. Never use this to silence new breakage — fix the link or
+# create the target instead.

@@ -15,7 +15,10 @@
     "cf:build": "pnpm run build",
     "deploy": "pnpm run build && wrangler pages deploy out --project-name=drank",
     "size": "size-limit",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "docs:check": "bash scripts/validate_docs.sh",
+    "docs:build": "cd docs-site && pnpm run build",
+    "docs:dev": "cd docs-site && pnpm run dev"
   },
   "dependencies": {
     "framer-motion": "^12.40.0",
@@ -34,6 +37,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitest/coverage-v8": "^4.1.9",
+    "blume": "1.0.4",
     "size-limit": "^11.2.0",
     "tailwindcss": "^4",
     "typescript": "^5",

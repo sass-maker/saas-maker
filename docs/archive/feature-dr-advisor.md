@@ -1,5 +1,10 @@
 # Feature: DR Advisor — explain & improve
 
+> **Archived.** This was the original feature proposal. The shipped design
+> and its rationale are recorded in
+> [`../architecture/decisions/0003-dr-advisor-server-side-gateway.md`](../architecture/decisions/0003-dr-advisor-server-side-gateway.md).
+> Kept for history; do not edit here.
+
 **What:** Take a user's list of sites and, next to the historic DR they already
 see, explain **why** each site has its score and **how to raise it**.
 

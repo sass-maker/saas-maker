@@ -106,7 +106,17 @@ export default function Drank() {
   const [belowFold, setBelowFold] = useState(false);
 
   useEffect(() => {
-    document.getElementById('drank-lcp-shell')?.remove();
+    // Fade out the LCP shell smoothly instead of instant removal.
+    // The shell is a fixed overlay (see layout.tsx) so it never affected
+    // document flow — fading it out causes zero layout shift.
+    const shell = document.getElementById('drank-lcp-shell');
+    if (shell) {
+      shell.classList.add('drank-lcp-fading');
+      const removeShell = () => shell.remove();
+      shell.addEventListener('transitionend', removeShell, { once: true });
+      // Fallback in case transitionend doesn't fire
+      setTimeout(removeShell, 300);
+    }
     const run = () => setBelowFold(true);
     if ('requestIdleCallback' in window) {
       const id = requestIdleCallback(run, { timeout: 1200 });
@@ -319,7 +329,7 @@ export default function Drank() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-200">
+    <div className="min-h-screen bg-zinc-950 text-zinc-200" style={{ contain: 'layout' }}>
       {/* Premium sticky header */}
       <div className="sticky top-0 z-50 border-b border-white/10 bg-zinc-950/95 backdrop-blur-xl">
         <div className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
@@ -387,7 +397,8 @@ export default function Drank() {
 
         {!belowFold ? (
           <div
-            className="min-h-[50vh] rounded-3xl border border-white/5 bg-zinc-900/20"
+            className="min-h-[65vh] rounded-3xl border border-white/5 bg-zinc-900/20"
+            style={{ contain: 'layout' }}
             aria-hidden
           />
         ) : (
@@ -538,7 +549,10 @@ export default function Drank() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mb-10">
+            <div
+              className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mb-10"
+              style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 3400px' }}
+            >
               <AnimatePresence>
                 {liveGlobalDomains.map((d, _index) => {
                   const dr = getCurrentDR(d);
