@@ -215,7 +215,7 @@ const OVERRIDES: Record<string, ShowcaseOverride> = {
   },
 };
 
-const SPOTLIGHT_ORDER = ['CodeVetter', 'pace', 'posttrainllm'];
+const SPOTLIGHT_ORDER = ['CodeVetter', 'posttrainllm', 'pace', 'high-signal', 'saas-maker'];
 
 const SUPPORT_ORDER = [
   'saas-maker',

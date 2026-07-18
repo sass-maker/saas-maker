@@ -27,6 +27,9 @@ experimentation.
 
 ## Fleet hub
 
+PostTrainLLM is one of the four spotlight products on Sarthak's personal
+landing page. The broader fleet directory lives at [SaaS Maker](https://sassmaker.com).
+
 PostTrainLLM is part of the [Foundry fleet](https://sassmaker.com) — a personal
 product fleet by Sarthak Agrawal. See the [fleet build log](https://sassmaker.com/build-log)
 for the real git history behind PostTrainLLM and the rest of the fleet.

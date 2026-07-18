@@ -104,3 +104,21 @@ description: "API-first operating layer for SaaS Maker — registry, feedback, c
 If you&rsquo;ve never opened Foundry before, the [**Quickstart**](/getting-started/quickstart/) gets a project registered and your first feedback item created in about three minutes. If you want the bigger picture before touching anything, read [**The Standard**](/getting-started/standard/) — the opinionated shape every fleet project should keep.
 
 For day-to-day work, the [**Foundry CLI**](/sdk/cli/) is the primary interface: every route is validated against the [**API reference**](/api/overview/), so anything you can do in the Cockpit you can also do from the terminal or from an agent.
+
+<div class="fnd-section-marker">
+  <span class="num">§ 04</span>
+  <span class="rule"></span>
+  <span class="label">The Knowledge System</span>
+</div>
+
+Beyond the product surface, this manual is the canonical knowledge base for how
+SaaS Maker is built and operated. These sections are agent- and human-readable;
+Markdown is the source of truth, Blume only renders it.
+
+- [**Architecture**](/architecture/) — Symphony orchestration, the Droid sandbox runner, task-cloud mapping, and dated [design decisions](/architecture/decisions/).
+- [**Operations**](/operations/) — Cloudflare secrets, shields, fleet baselines, PostHog, automation setup, [scheduled jobs](/operations/jobs/), and [runbooks](/operations/runbooks/).
+- [**Development**](/development/) — testing backlog and quality gates.
+- [**Knowledge**](/knowledge/) — durable [learnings](/knowledge/learnings/) and [failed approaches](/knowledge/failed-approaches/) worth remembering.
+- [**Current state**](/current/) — objective, active work, and status pointers.
+
+The full layout and maintenance rules live in [`docs/README.md`](https://github.com/sass-maker/saas-maker/blob/main/docs/README.md).

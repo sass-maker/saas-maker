@@ -1,6 +1,6 @@
 # Foundry (SaaS Maker)
 
-Personal product fleet by Sarthak Agrawal — shipped apps plus the open-source operating layer (CLI, cockpit, deploy tooling) on Cloudflare.
+SaaS Maker is the directory and operating layer for Sarthak Agrawal's product fleet. The public front door is four products — CodeVetter, Post-train LLM, HeyPace, and HiSignal — plus SaaS Maker itself; this page keeps the full catalog available.
 
 ## What it is
 
@@ -8,7 +8,15 @@ Personal product fleet by Sarthak Agrawal — shipped apps plus the open-source 
 - Each product on its own custom domain
 - Agent-readable surfaces: `/llms.txt`, `/api/ai`, `/index.md` on every public origin
 
-## Public products (canonical URLs)
+## Spotlight products
+
+- **CodeVetter** — https://codevetter.com — Desktop-first AI code review workbench for agent-generated code.
+- **Post-train LLM** — https://posttrainllm.com — Mac-local post-training, runtime, and WebGPU learning playground.
+- **HeyPace** — https://heypace.app — On-device Mac voice agent with screen-aware local context.
+- **HiSignal** — https://highsignal.app — Evidence-first daily brief for technology, markets, and infrastructure.
+- **SaaS Maker** — https://sassmaker.com — The broader directory and operating layer for the full fleet.
+
+## Full directory: public products (canonical URLs)
 
 - **CodeVetter** — https://codevetter.com — Desktop-first AI code review workbench for agent-generated code. Local SQLite, Tauri shell, evidence-backed review — your repo never hits a central server.
 - **RolePatch** — https://rolepatch.com — AI-powered resume tailoring. Score fit against a job description, rewrite bullets for the role, and prep interviews.
@@ -32,12 +40,6 @@ Personal product fleet by Sarthak Agrawal — shipped apps plus the open-source 
 - **AI Gateway** — https://ai-gateway.sassmaker.com — OpenAI-compatible LLM gateway fronting free-tier models across multiple providers.
 - **SWE Interview Prep** — https://learn.significanthobbies.com — SWE learning OS with FSRS spaced repetition, drills, and feedback.
 - **psi-swarm** — https://performance.sassmaker.com — Distributional Lighthouse / PageSpeed audits with grounded performance analysis across the fleet.
-
-## Focus products (active marketing)
-
-- **Pace** — https://heypace.app / https://pace-6xg.pages.dev — Mac app for pacing work
-- **CodeVetter** — https://codevetter.com — desktop AI code review
-- **PostTrainLLM** — https://posttrainllm.com — train/run small local models
 
 ## Agent entrypoints
 

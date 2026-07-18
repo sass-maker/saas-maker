@@ -1,6 +1,6 @@
 # SaaS Maker — Long-term PRD
 
-**Status:** Archived program doc (2026-06-20). Phase 1 API contract foundation is shipped. Phases 0, 2–4 and open decisions are a deferred portfolio program — not active PRD tasks. Per-feature work lives in `docs/plans/` and `PROJECT_STATUS.md`.
+**Status:** Archived program doc (2026-06-20). Phase 1 API contract foundation is shipped. Phases 0, 2–4 and open decisions are a deferred portfolio program — not active PRD tasks. Per-feature work lives in `docs/architecture/decisions/` and `PROJECT_STATUS.md`.
 
 _Last updated 2026-06-16._
 
@@ -340,6 +340,6 @@ If we hit these, the factory exists. If we don't, we have 25 products and one ti
 
 ## Appendix B — What this PRD is not
 
-- Not a feature backlog. Per-feature PRDs live in `docs/plans/` with dates.
+- Not a feature backlog. Per-feature PRDs live in `docs/architecture/decisions/` with dates.
 - Not a technical architecture doc. See the API definitions in `docs/openapi/openapi.json` and the Worker source in `workers/api/`.
 - Not a marketing pitch. Note the deliberate absence of language around "the future of SaaS" or "the AI-native developer platform." This is plumbing. The factory framing is private operator language, not customer-facing positioning.

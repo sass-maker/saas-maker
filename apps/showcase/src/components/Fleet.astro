@@ -3,6 +3,7 @@ import { CORE, ACTIVE, PROJECT_COUNT } from '../data/projects';
 import productSites from '../data/product-sites.json';
 
 const publicProducts = productSites.products ?? [];
+const spotlightProducts = publicProducts.filter((p) => p.spotlight);
 ---
 <section class="section" id="fleet">
   <div class="section-head">
@@ -17,15 +18,41 @@ const publicProducts = productSites.products ?? [];
       one shared <em class="italic">operating layer</em>.
     </h2>
     <p class="section-lede">
-      SaaS Maker is the core product. The supporting repositories below extend
-      its model access, search, media, and performance workflows.
+      SaaS Maker is the broader directory and operating layer. The four
+      spotlight products below are the public front door; the full catalog
+      includes their supporting repositories and the rest of the fleet.
     </p>
+  </div>
+
+  <div class="product-directory" style="margin-bottom: 2.5rem">
+    <div class="active-head" style="margin-bottom: 1rem">
+      <span class="section-num">§ 01.00</span>
+      <span class="section-rule short"></span>
+      <span class="section-kw small">Spotlight products</span>
+      <span class="active-count">{spotlightProducts.length - 1} + SaaS Maker</span>
+    </div>
+    <p class="section-lede" style="margin-bottom: 1.25rem; max-width: 40rem">
+      The concise product story: CodeVetter, Post-train LLM, HeyPace, and
+      HiSignal. SaaS Maker is the directory for everything around them.
+    </p>
+    <ul class="product-directory-grid">
+      {spotlightProducts.map((p) => (
+        <li>
+          <a href={`/p/${p.id}`} class="product-link" rel="noopener">
+            <span class="product-link-name">{p.name}</span>
+            <span class="product-link-host">{p.url.replace(/^https?:\/\//, '').replace(/\/$/, '')}</span>
+            <span class="product-link-desc">{p.summary}</span>
+            <span class="product-link-hub">View product page →</span>
+          </a>
+        </li>
+      ))}
+    </ul>
   </div>
 
   <!-- Crawlable dofollow product roots — hub link equity for the fleet. -->
   <div class="product-directory" id="products">
     <div class="active-head" style="margin-bottom: 1rem">
-      <span class="section-num">§ 01.00</span>
+      <span class="section-num">§ 01.01</span>
       <span class="section-rule short"></span>
       <span class="section-kw small">Public product sites</span>
       <span class="active-count">{publicProducts.length} live</span>

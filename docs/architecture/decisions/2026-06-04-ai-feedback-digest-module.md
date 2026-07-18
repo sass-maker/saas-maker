@@ -2,7 +2,7 @@
 
 **Date:** 2026-06-04  
 **Status:** Shelved 2026-06-20 — prototype removed with `packages/blocks/ops/` deletion; no production AI/writeback  
-**Source:** [saas-ideas](https://github.com/sarthakagrawal927/saas-ideas) at `aba1a83`, triaged in [`docs/ideas/saas-ideas-consolidation-2026-06-03.md`](../ideas/saas-ideas-consolidation-2026-06-03.md)  
+**Source:** [saas-ideas](https://github.com/sarthakagrawal927/saas-ideas) at `aba1a83`, triaged in [`docs/product/saas-ideas-consolidation-2026-06-03.md`](../../product/saas-ideas-consolidation-2026-06-03.md)  
 **Symphony task:** `764795a4-23c9-4d61-be31-83c2ddec800d`
 
 ## Prototype Command
@@ -366,7 +366,7 @@ Connector writes `store_reviews` → normalize job → `ingest_signals`. Sync da
 
 ## References
 
-- [`docs/plans/2026-02-26-feedback-module-design.md`](2026-02-26-feedback-module-design.md) — core feedback module  
-- [`docs/plans/2026-02-27-vector-memory-service-design.md`](2026-02-27-vector-memory-service-design.md) — optional semantic upgrade  
-- [`docs/plans/2026-05-02-dynamic-workers-symphony.md`](2026-05-02-dynamic-workers-symphony.md) — tenant automation pattern (“Convert feedback into tasks”)  
-- [`workers/api/src/routes/feedback.ts`](../../workers/api/src/routes/feedback.ts), [`testimonials.ts`](../../workers/api/src/routes/testimonials.ts), [`changelog.ts`](../../workers/api/src/routes/changelog.ts), [`ai.ts`](../../workers/api/src/routes/ai.ts)
+- [`docs/architecture/decisions/2026-02-26-feedback-module-design.md`](2026-02-26-feedback-module-design.md) — core feedback module  
+- [`docs/architecture/decisions/2026-02-27-vector-memory-service-design.md`](2026-02-27-vector-memory-service-design.md) — optional semantic upgrade  
+- [`docs/architecture/decisions/2026-05-02-dynamic-workers-symphony.md`](2026-05-02-dynamic-workers-symphony.md) — tenant automation pattern (“Convert feedback into tasks”)  
+- [`workers/api/src/routes/feedback.ts`](../../../workers/api/src/routes/feedback.ts), [`testimonials.ts`](../../../workers/api/src/routes/testimonials.ts), [`changelog.ts`](../../../workers/api/src/routes/changelog.ts), [`ai.ts`](../../../workers/api/src/routes/ai.ts)
