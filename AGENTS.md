@@ -22,7 +22,7 @@ npm run smoke:mock                  # no-dependency end-to-end smoke
 npm run ready:local                 # top-level generation-cases readiness
 npm run ready:target                # final target-host acceptance gate
 npm run watch:render                # production watcher (reel watch --execute)
-npm run autopilot                   # marketing autopilot (intake → render → post)
+npm run autopilot:dry               # Rust marketing autopilot dry-run (execute: cargo run --manifest-path reel/Cargo.toml -- autopilot --execute --repo-root .)
 npm run render:pro -- <reel-id>     # canonical production render
 npm run post:ready                  # post ready reels (reel post --execute)
 npm run docs:validate               # validate docs structure + internal links

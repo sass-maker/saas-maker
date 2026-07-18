@@ -16,9 +16,11 @@ was spread across ad-hoc scripts with no trait boundaries, making the
 
 Add a single Rust crate (`reel/`) that owns the pure orchestration logic and
 the engine/publisher/poster trait boundaries, with one shell-out impl each.
-The Node implementation stays fully in place and untouched until parity is
-reached; the Rust crate is additive. Heavy work (Chrome, ffmpeg, TTS, R2
-upload, social APIs) stays behind traits — `RenderEngine`, `ArtifactPublisher`,
+The crate was built additively alongside the Node implementation until parity
+was reached; the cutover is now complete and the superseded Node glue scripts
+(`auto-render-watcher.js`, `marketing-autopilot.js`) are deleted. Heavy work
+(Chrome, ffmpeg, TTS, R2 upload, social APIs) stays behind traits —
+`RenderEngine`, `ArtifactPublisher`,
 `MarketingPoster`, `SocialPoster`, `CommandRunner`, `ReelStore`,
 `MarketingClient` — so orchestration is fully unit-tested without
 Chrome/ffmpeg/network by asserting the exact `node`/`wrangler` argv that

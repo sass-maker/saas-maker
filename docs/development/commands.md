@@ -62,7 +62,8 @@ See [`operations/runbooks/generation-readiness.md`](../operations/runbooks/gener
 | --- | --- |
 | `npm run watch:render` | Production watcher (`reel watch --execute`) |
 | `npm run watch:render:once` / `:dry` | One-shot / dry-run watcher |
-| `npm run autopilot` / `:once` / `:dry` | Marketing autopilot intake → render → post |
+| `npm run autopilot:dry` | Rust marketing autopilot dry-run (`reel autopilot`, prints intended actions). Execute with `cargo run --manifest-path reel/Cargo.toml -- autopilot --execute --repo-root .` |
+| `npm run autopilot` / `:once` | Node content-package control tick (`marketing-control.js tick`) — sync-source content flow, not the SaaS Maker reel autopilot |
 | `npm run post:ready` | Post ready reels (`reel post --execute`) |
 | `npm run sync:metrics` | Backfill YouTube/Instagram metrics (`reel metrics --execute`) |
 | `npm run sync:saasmaker` | Sync from SaaS Maker |

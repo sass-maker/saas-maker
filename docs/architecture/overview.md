@@ -51,12 +51,12 @@ Cloudflare Worker (src/worker/index.js, R2ReelStore)
   GET  /reels/:key      → serve MP4 from R2 (byte-range aware)
         │
         ▼
-auto-render-watcher  (Rust `reel watch --execute`; polls /reels?status=approved every 30s)
+Rust watcher  (`reel watch --execute`, reel/src/watcher.rs; polls /reels?status=approved every 30s)
    for each reel where renderJobId == null && variants == []:
         spawn  node scripts/render-pro.js <reelId>     (serial, one at a time)
         │
         ▼
-render-pro.js   (canonical production renderer, ~1600 LOC)
+render-pro.js   (canonical production renderer, ~1680 LOC)
    fetch reel record from worker
    Chrome CDP scroll-tour + live screencast of the product URL  (cdp-capture.js)
    Edge TTS voiceover (uvx) → SRT-synced burned-in captions
@@ -74,30 +74,30 @@ watcher and `config/project-urls.json` loading.
 SaaS Maker Marketing Queue (reel/src/saas_maker.rs)
         │  accepted reel-channel item
         ▼
-reel autopilot → renderAcceptedMarketingPosts
+reel autopilot (reel/src/autopilot.rs → marketing.rs::render_accepted_marketing_posts)
    auto-accept aged intake → render accepted posts
         │
         ▼
-VideoBrief contract (src/video-brief.js / reel/src/brief.rs)  ── normalize + validate
+VideoBrief contract (reel/src/brief.rs)  ── normalize + validate
         │
-   createRenderer(mode):
-     mock              → MockRenderer            (placeholder, tests)
-     stock/moneyprinterturbo → MoneyPrinterTurboAdapter (HTTP API, real MP4)
-     grok-video        → GrokVideoAdapter        (approved local MP4 copy)
-     ascii             → ASCII animation adapter (local MP4)
-     html-composition  → HTML preview exporter   (review artifacts)
-     remotion/reel-maker     → ReelMakerAdapter  (Remotion/product-proof shell-out)
-        │
-        ▼
-   per-variant: buildVariantPlan (reel-templates.js) → render
-                → publishRenderArtifacts (R2 via wrangler, artifact-publisher.js)
-                → scoreVariant (reel-quality.js) → gate
+   create_renderer(mode) (reel/src/engine/factory.rs):
+     mock              → MockEngine           (placeholder, tests)
+     stock/moneyprinterturbo → MoneyPrinterEngine (HTTP API → src/adapters/moneyprinterturbo.js path, real MP4)
+     grok-video        → GrokVideoEngine      (approved local MP4 copy)
+     ascii             → AsciiAnimationEngine (node scripts/render-ascii-animation.js)
+     html-composition  → HtmlCompositionEngine (node scripts/export-html-composition.js)
+     remotion/reel-maker     → ReelMakerEngine (node scripts/render-reel-maker.js)
         │
         ▼
-   SaaSMakerClient.updateMarketingPost  (asset_url, result_url, notes)
+   per-variant: build_variant_plan (reel/src/templates.rs) → render
+                → publisher.rs R2Publisher (R2 via `wrangler r2 object put`)
+                → score_variant (reel/src/quality.rs) → gate
         │
         ▼
-   postReadyMarketingVideos (reel/src/marketing_posting.rs) — gated handoff
+   SaaSMakerClient patches the marketing post (reel/src/saas_maker.rs; asset_url, result_url, notes)
+        │
+        ▼
+   post_ready_marketing_videos (reel/src/marketing_posting.rs) — gated handoff
 ```
 
 Default `REEL_RENDER_MODE` is `mock`. The supported mode and alias matrix is
@@ -114,7 +114,8 @@ success.
 | `src/signal-draft-generator.js` | prototype multi-variant draft bundles with claim/evidence review |
 | `src/reel-intake.js` | create API-submitted reel drafts; record approval decisions |
 | `src/review-ui.js` | plain HTML/CSS/JS swipe review UI |
-| `src/pipeline.js` | create render jobs; sync completed artifacts back |
+| `src/pipeline.js` | JS render orchestration (`createRenderer`/`renderReelVariants`/`renderAcceptedMarketingPosts`) retained for the local dev server (`src/server/index.js`) and the studio / anonymous / significant-content surfaces; the production marketing autopilot and watcher run in Rust (`reel/`) |
+| `reel/src/orchestrator.rs` | Rust render orchestration loop (`render_reel_variants`) driving the production autopilot + watcher paths |
 | `src/adapters/*` | one adapter per render engine (see [`engines.md`](./engines.md)) |
 | `src/artifact-publisher.js` / `reel/src/publisher.rs` | local + R2 artifact publishing |
 | `src/posting.js` / `reel/src/marketing_posting.rs` | gated posting handoff + provider abstraction |
