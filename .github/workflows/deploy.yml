@@ -1,5 +1,12 @@
 name: Deploy artifacts worker
 
+# Artifact-only deploy: this Worker (reel-pipeline-artifacts) has no public
+# custom domain — it is an internal artifacts surface. No post-deploy smoke
+# check is applicable; the Worker is exercised by upstream callers.
+# Rollback: `wrangler versions rollback --config wrangler.jsonc` from the repo
+# root, or via dash.cloudflare.com → Workers → reel-pipeline-artifacts →
+# Versions → "Rollback".
+
 on:
   workflow_dispatch:
 
@@ -13,6 +20,7 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
 
