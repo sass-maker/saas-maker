@@ -100,6 +100,13 @@ Per user review of the six findings:
 - **saas-ideas promoted:** repo transferred `sarthakagrawal927 → sass-maker` org
   + cloned into the fleet; domain **ideas.sassmaker.com** added (provisioning);
   now Secondary under the saas-maker family (was orphan).
+- **verified-bases promoted:** repo → sass-maker org + cloned; `shop.sassmaker.com`
+  added to the `verified-bases-api` worker (out-of-fleet → Secondary).
+- **open-historia:** confirmed live at `historia.aliveville.com` (not an orphan).
+- **posttrainllm.com REDEPLOYED** fresh from `origin/main` (built in an isolated
+  worktree) — stale-build fixed: `/data/leaderboard.json` now JSON, RSS live,
+  canonicals current. CF project **rename deferred** (a fresh project 522s
+  without tinygpt's env/KV bindings; the name is cosmetic/not user-visible).
 - **Green check:** all 18 Pages `latest=success`; all 30 custom domains 200/3xx.
 
 **Live CF counts (2026-07-18): 18 Pages + 25 Workers = 43 deployment units.**

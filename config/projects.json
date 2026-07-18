@@ -16,14 +16,14 @@
     },
     "workers": "25 live Workers (enumerated 2026-07-18 via API): aliveville, codevetter-landing-proxy, email-manager, everythingrated, free-ai-gateway, high-signal-web/-api/-annotation, karte-email, knowledgebase, knowledgebase-app, linkchat, mal-api, open-historia, protein-index, reader, reel-pipeline-artifacts, resume-tailor, saasmaker-dashboard/-api/-droid, significanthobbies, starboard, truehire, verified-bases-api.",
     "openGaps": [
-      "Out-of-fleet Workers still live: open-historia, verified-bases-api (its Pages twin verified-bases-web was deleted). Delete pending user decision.",
-      "tinygpt Pages project rename to posttrainllm still pending (coupled to PT0 redeploy)."
+      "CF project 'tinygpt' name unchanged — full rename to 'posttrainllm' deferred: cosmetic (name not user-visible) and a fresh project 522s without tinygpt's env/KV bindings. posttrainllm.com is on the fresh build + green.",
+      "verified-bases promoted to sass-maker family (shop.sassmaker.com); open-historia confirmed a live product (historia.aliveville.com), not an orphan."
     ]
   },
   "projects": [
     { "id": "codevetter", "family": "codevetter", "tier": "focus", "repo": "codevetter", "deployKind": "pages", "cfProject": "codevetter", "domains": ["codevetter.com"], "app": "tauri", "inRegistry": true, "status": "live", "notes": "" },
     { "id": "pace", "family": "pace", "tier": "focus", "repo": "pace", "deployKind": "pages", "cfProject": "pace", "domains": ["heypace.app"], "app": "swift", "inRegistry": true, "status": "live", "notes": "" },
-    { "id": "posttrainllm", "family": "posttrainllm", "tier": "focus", "repo": "posttrainllm", "deployKind": "pages", "cfProject": "tinygpt", "domains": ["posttrainllm.com"], "app": "web", "inRegistry": true, "status": "live", "notes": "Stray domain tinygpt.sarthakagrawal.dev REMOVED 2026-07-18. CF project still named 'tinygpt' — rename to posttrainllm coupled to PT0 redeploy (needs new project + domain cutover)." },
+    { "id": "posttrainllm", "family": "posttrainllm", "tier": "focus", "repo": "posttrainllm", "deployKind": "pages", "cfProject": "tinygpt", "domains": ["posttrainllm.com"], "app": "web", "inRegistry": true, "status": "live", "notes": "REDEPLOYED fresh from main 2026-07-18 — stale-build fixed (leaderboard now JSON, RSS live, canonicals current). Stray tinygpt.sarthakagrawal.dev removed. CF project stays named 'tinygpt' — full rename deferred: a fresh project 522s without tinygpt's env/KV bindings, and the name is not user-visible (cosmetic)." },
 
     { "id": "saas-maker-showcase", "family": "saas-maker", "tier": "active", "repo": "saas-maker", "deployKind": "pages", "cfProject": "saas-maker-home", "domains": ["sassmaker.com"], "inRegistry": true, "status": "live", "notes": "the hub" },
     { "id": "saas-maker-docs", "family": "saas-maker", "tier": "active", "repo": "saas-maker", "deployKind": "pages", "cfProject": "saas-maker-docs", "domains": ["docs.sassmaker.com"], "inRegistry": true, "status": "live", "notes": "" },
@@ -54,14 +54,14 @@
 
     { "id": "ai-game", "family": "ai-game", "tier": "parked", "repo": "ai-game", "deployKind": "pages", "cfProject": "aliveville, web-playables", "domains": ["aliveville.com", "idle.aliveville.com"], "inRegistry": false, "status": "live", "notes": "Aliveville world-sim; parked but live (user: leave)" },
     { "id": "reel-pipeline", "family": "reel-pipeline", "tier": "parked", "repo": "reel-pipeline", "deployKind": "worker", "cfProject": "reel-pipeline-artifacts", "domains": [], "inRegistry": false, "status": "unverified", "notes": "reel→Rust rewrite" },
-    { "id": "protein-index", "family": "protein-index", "tier": "parked", "repo": "protein-index", "deployKind": "worker", "cfProject": "protein-index", "domains": [], "inRegistry": false, "status": "live", "notes": "worker deployed (no custom domain)" },
+    { "id": "protein-index", "family": "significanthobbies", "tier": "secondary", "repo": "protein-index", "deployKind": "worker", "cfProject": "protein-index", "domains": ["protein.significanthobbies.com"], "inRegistry": false, "status": "live", "notes": "live at protein.significanthobbies.com" },
     { "id": "mobile-dev-cockpit", "family": "mobile-dev-cockpit", "tier": "parked", "repo": "mobile-dev-cockpit", "deployKind": "none", "cfProject": null, "domains": [], "inRegistry": false, "status": "undeployed", "notes": "tooling/experimental" },
     { "id": "saas-ideas", "family": "saas-maker", "tier": "secondary", "repo": "saas-ideas", "deployKind": "pages", "cfProject": "saas-ideas", "domains": ["ideas.sassmaker.com"], "inRegistry": false, "status": "live", "notes": "Scored catalog of SaaS ideas. 2026-07-18: repo moved sarthakagrawal927 -> sass-maker org + cloned into fleet; domain ideas.sassmaker.com added (provisioning)." },
 
     { "id": "truehire", "family": "rolepatch", "tier": "out-of-fleet", "repo": "truehire", "deployKind": "worker", "cfProject": "truehire", "domains": ["truehire.rolepatch.com"], "inRegistry": true, "status": "live", "notes": "out-of-fleet per AGENTS.md but live + registered" },
     { "id": "today-little-log", "family": "today-little-log", "tier": "out-of-fleet", "repo": null, "deployKind": "none", "cfProject": "today-little-log", "domains": [], "inRegistry": false, "status": "deleted", "notes": "Pages project deleted 2026-07-18 (purged 126 deployments then project)" },
-    { "id": "verified-bases", "family": "verified-bases", "tier": "out-of-fleet", "repo": null, "deployKind": "worker", "cfProject": "verified-bases-api (worker still live)", "domains": [], "inRegistry": false, "status": "live", "notes": "Pages project verified-bases-web deleted 2026-07-18; verified-bases-api WORKER still live — delete pending user decision" },
-    { "id": "open-historia", "family": "open-historia", "tier": "out-of-fleet", "repo": null, "deployKind": "worker", "cfProject": "open-historia", "domains": [], "inRegistry": false, "status": "live", "notes": "out-of-fleet worker still live — delete pending user decision" },
+    { "id": "verified-bases", "family": "saas-maker", "tier": "secondary", "repo": "verified-bases", "deployKind": "worker", "cfProject": "verified-bases-api", "domains": ["shop.sassmaker.com"], "inRegistry": false, "status": "live", "notes": "Verified-software storefront (Astro+Go, Dodo Payments). 2026-07-18: promoted out of out-of-fleet — repo moved to sass-maker org + cloned; shop.sassmaker.com added to verified-bases-api worker. (Pages twin verified-bases-web was deleted.)" },
+    { "id": "open-historia", "family": "ai-game", "tier": "parked", "repo": null, "deployKind": "worker", "cfProject": "open-historia", "domains": ["historia.aliveville.com"], "inRegistry": false, "status": "live", "notes": "Live product at historia.aliveville.com (aliveville family) — NOT an orphan; keep." },
 
     { "id": "sarthakagrawal-personal", "family": "personal", "tier": "non-product", "repo": null, "deployKind": "pages", "cfProject": "sarthakagrawal", "domains": ["sarthakagrawal.dev"], "inRegistry": false, "status": "live", "notes": "personal site, not a fleet product" }
   ]

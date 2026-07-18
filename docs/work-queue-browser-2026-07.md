@@ -187,18 +187,24 @@ Extends B9. These create the third-party consensus LLMs cite. Order:
 ## B-CF — Cloudflare hygiene
 
 From the 2026-07-18 CF reconciliation (`cloudflare-inventory-2026-07.md`).
-Most items DONE via the Infisical CF token; remaining:
-1. **Rename tinygpt → posttrainllm** (project name only — stray domain already
-   removed). Coupled to the PT0 redeploy: create a fresh `posttrainllm` Pages
-   project, deploy + verify on `.pages.dev`, move `posttrainllm.com` (+ www)
-   over, delete `tinygpt`. I can script this end-to-end during PT0 now that I
-   have `pages:write` — greenlight the redeploy and I'll do it.
-2. **Out-of-fleet Workers still live:** `verified-bases-api`, `open-historia`.
-   Delete them too? (Their Pages twins are gone / were never there.) Say the word.
+Nearly all DONE via the Infisical CF token. Remaining decision:
+1. **CF project name `tinygpt` → `posttrainllm`** — DEFERRED (not done). The
+   posttrainllm.com **content** is now fresh + green (redeployed from main). But
+   renaming the *project* means recreating it, and a fresh project **522s
+   without tinygpt's env vars / KV bindings** (proven during the attempt), plus
+   the name is never user-visible. Not worth the flagship downtime for a
+   cosmetic change. Revisit only if you want to migrate all bindings + do the
+   domain cutover — tell me and I'll script the binding copy first.
 
-**Done 2026-07-18 (via Infisical token):** deleted `verified-bases-web` +
-`today-little-log` Pages projects; removed stray `tinygpt.sarthakagrawal.dev`;
-enumerated all 25 Workers; set up saas-ideas (domain + repo move).
+**Done 2026-07-18 (via Infisical token):**
+- Deleted Pages `verified-bases-web` + `today-little-log`; removed stray
+  `tinygpt.sarthakagrawal.dev`; enumerated all 25 Workers.
+- **saas-ideas:** repo → sass-maker org + cloned; `ideas.sassmaker.com` added.
+- **verified-bases:** promoted out of out-of-fleet — repo → sass-maker org +
+  cloned; `shop.sassmaker.com` added to the `verified-bases-api` worker.
+- **open-historia:** confirmed a live product (`historia.aliveville.com`), kept.
+- **posttrainllm.com REDEPLOYED** fresh from main — stale-build fixed
+  (leaderboard JSON, RSS, canonicals), verified green.
 
 ## Done / not needed
 
