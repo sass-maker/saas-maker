@@ -155,6 +155,19 @@ async function resolveTarget(fromRel, target) {
       if (await exists(path.join(resolved, idx))) return { ok: true, resolved: path.join(resolved, idx) };
     }
   }
+  // Blume strips a leading 4-digit year prefix (`2026-`) from date-prefixed
+  // filenames when it builds the page slug, so a link such as
+  // `06-04-magic-form-block-design.md` resolves to the on-disk file
+  // `2026-06-04-magic-form-block-design.md`. Accept that mapping so this check
+  // stays consistent with `blume validate`.
+  const targetName = path.basename(resolved);
+  if (/^\d{2}-\d{2}-/.test(targetName)) {
+    const dir = path.dirname(resolved);
+    for (const year of ['2026', '2025', '2024', '2027']) {
+      const yearMatched = path.join(dir, `${year}-${targetName}`);
+      if (await exists(yearMatched)) return { ok: true, resolved: yearMatched };
+    }
+  }
   return { ok: false, resolved };
 }
 
