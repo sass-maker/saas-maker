@@ -1,0 +1,64 @@
+name: Docs
+
+# Validates the repository knowledge system: required files, no empty docs,
+# and no broken relative markdown links. External http(s) links are not
+# checked here. Source of truth: `docs/` tree + root `AGENTS.md`/`STATUS.md`/
+# `PROJECT_STATUS.md`. See `docs/README.md` for the layout.
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - 'AGENTS.md'
+      - 'STATUS.md'
+      - 'PROJECT_STATUS.md'
+      - 'README.md'
+      - 'CONTRIBUTING.md'
+      - 'AUDIT.md'
+      - 'WORKFLOW.md'
+      - 'scripts/check-docs.mjs'
+      - 'apps/docs-blume/blume.config.ts'
+      - '.github/workflows/docs.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - 'AGENTS.md'
+      - 'STATUS.md'
+      - 'PROJECT_STATUS.md'
+      - 'README.md'
+      - 'CONTRIBUTING.md'
+      - 'AUDIT.md'
+      - 'WORKFLOW.md'
+      - 'scripts/check-docs.mjs'
+      - 'apps/docs-blume/blume.config.ts'
+      - '.github/workflows/docs.yml'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Validate docs (links, required files, no empty docs)
+        run: node scripts/check-docs.mjs
+
+  blume-build:
+    name: Blume build (presentation layer)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build Blume from canonical docs/ tree
+        working-directory: apps/docs-blume
+        run: |
+          npm install
+          npm run build

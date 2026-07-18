@@ -191,7 +191,7 @@ Brand note: production domain uses **double-s** `sassmaker.com`; display name re
 2. Revisit Magic Form Builder / AI Feedback Digest only if product ownership, human-review, and integration boundaries are defined (prior ops prototypes removed 2026-06-20).
 3. Tighten Task Workflows after real use: automatic Droid result capture, richer run status/events, clearer artifact lifecycle controls.
 4. Continue reducing stale deploy/docs references when concrete drift is found.
-5. Execute EOY DR plan in `docs/launch-kit.md` — target DR ≥ 20 on all seven owned domains by 2026-12-31.
+5. Execute EOY DR plan in `docs/operations/launch-kit.md` — target DR ≥ 20 on all seven owned domains by 2026-12-31.
 
 ### Deferred
 

@@ -5,7 +5,7 @@ import { requireSession } from '../middleware/auth';
 // Fleet events: the append-only return path where spokes publish results/telemetry
 // up to saas-maker (the system-of-record). Spokes authenticate with the same
 // Bearer token they already use (session or sm_ CLI token); owner_id scopes tenancy.
-// See docs/plans/2026-06-19-fleet-events-hub-spec.md
+// See docs/architecture/decisions/2026-06-19-fleet-events-hub-spec.md
 
 const events = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 

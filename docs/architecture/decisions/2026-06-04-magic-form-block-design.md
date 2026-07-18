@@ -2,7 +2,7 @@
 
 **Date:** 2026-06-04  
 **Status:** Shelved 2026-06-20 — prototype removed with `packages/blocks/ops/` deletion; no production routes/migrations  
-**Source:** [saas-ideas](https://github.com/sarthakagrawal927/saas-ideas) at `aba1a83`, triaged in [`docs/ideas/saas-ideas-consolidation-2026-06-03.md`](../ideas/saas-ideas-consolidation-2026-06-03.md)  
+**Source:** [saas-ideas](https://github.com/sarthakagrawal927/saas-ideas) at `aba1a83`, triaged in [`docs/product/saas-ideas-consolidation-2026-06-03.md`](../../product/saas-ideas-consolidation-2026-06-03.md)  
 **Symphony task:** `58d18a53-e2a6-4f23-b898-5a33cd9f445f`
 
 ## Prototype Command
@@ -106,7 +106,7 @@ Templates are copied into `magic_forms.schema_json` at create time. Cockpit show
 3. `POST /v1/forms/:formId/responses` with `{ answers, submitter_email?, submitter_name?, metadata? }`.
 4. Client-side validation from schema; server re-validates required fields and types.
 
-**Reuse:** Widget CSS variables (`--smw-accent`), theme classes, `createApiClient` pattern from [`packages/widgets/feedback-widget/src/api.ts`](../../packages/widgets/feedback-widget/src/api.ts), `X-Project-Key` auth from [`workers/api/src/middleware/auth.ts`](../../workers/api/src/middleware/auth.ts).
+**Reuse:** Widget CSS variables (`--smw-accent`), theme classes, `createApiClient` pattern from [`packages/widgets/feedback-widget/src/api.ts`](../../../packages/widgets/feedback-widget/src/api.ts), `X-Project-Key` auth from [`workers/api/src/middleware/auth.ts`](../../../workers/api/src/middleware/auth.ts).
 
 ### 4. Response versioning
 
@@ -167,7 +167,7 @@ On `POST .../responses` success:
 - API sends email to submitter via `@saas-maker/email`; stores `magic_form_messages` rows (`author: owner|submitter`, `body`, `created_at`).
 - Submitter reply via **magic link** token in email (`POST /v1/forms/responses/reply/:token`) — no account required.
 
-**Reuse:** Email templates and fire-and-forget pattern from [`workers/api/src/routes/feedback.ts`](../../workers/api/src/routes/feedback.ts) and waitlist owner notify in [`workers/api/src/routes/waitlist.ts`](../../workers/api/src/routes/waitlist.ts).
+**Reuse:** Email templates and fire-and-forget pattern from [`workers/api/src/routes/feedback.ts`](../../../workers/api/src/routes/feedback.ts) and waitlist owner notify in [`workers/api/src/routes/waitlist.ts`](../../../workers/api/src/routes/waitlist.ts).
 
 **Non-goal v1:** In-app chat widget, SMS, or assignee workflows (→ tasks module if conversion needed).
 
@@ -300,7 +300,7 @@ CREATE INDEX idx_magic_form_responses_form_created
 
 **Optional v1.1 (not required for “one form” MVP):** `magic_form_reply_tokens` for expiring submitter reply links.
 
-Add Drizzle entries in [`workers/api/src/schema.ts`](../../workers/api/src/schema.ts) when implementing; mirror migration under `workers/api/migrations/` and `packages/blocks/db/migrations/`.
+Add Drizzle entries in [`workers/api/src/schema.ts`](../../../workers/api/src/schema.ts) when implementing; mirror migration under `workers/api/migrations/` and `packages/blocks/db/migrations/`.
 
 ---
 
@@ -348,8 +348,8 @@ Register feature flag in settings form next to feedback/waitlist/testimonials wh
 
 ## References
 
-- [`docs/ideas/saas-ideas-consolidation-2026-06-03.md`](../ideas/saas-ideas-consolidation-2026-06-03.md)
-- [`docs/plans/2026-02-26-feedback-module-design.md`](2026-02-26-feedback-module-design.md)
-- [`docs/plans/2026-06-04-ai-feedback-digest-module.md`](2026-06-04-ai-feedback-digest-module.md)
-- [`workers/api/migrations/0001_schema.sql`](../../workers/api/migrations/0001_schema.sql) — waitlist, testimonials, analytics_events
+- [`docs/product/saas-ideas-consolidation-2026-06-03.md`](../../product/saas-ideas-consolidation-2026-06-03.md)
+- [`docs/architecture/decisions/2026-02-26-feedback-module-design.md`](2026-02-26-feedback-module-design.md)
+- [`docs/architecture/decisions/2026-06-04-ai-feedback-digest-module.md`](2026-06-04-ai-feedback-digest-module.md)
+- [`workers/api/migrations/0001_schema.sql`](../../../workers/api/migrations/0001_schema.sql) — waitlist, testimonials, analytics_events
 - Widgets: `packages/widgets/{feedback,waitlist,testimonials}-widget`

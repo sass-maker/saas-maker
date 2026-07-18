@@ -57,7 +57,7 @@ Novel Cloudflare primitives and patterns powering The Foundry: Containers, Droid
 ## Symphony orchestration model
 - What: Task-backed orchestration layer — cockpit `/v1/tasks` is the source of truth; `pnpm symphony dispatch` routes a task to an agent (Claude, Gemini, Grok, Droid).
 - Why here: TBD
-- Source: internal — `docs/symphony.md` (full spec); `scripts/symphony-local.mjs` (runner)
+- Source: internal — `docs/architecture/symphony.md` (full spec); `scripts/symphony-local.mjs` (runner)
 
 ## DroidRunRoom (DO as run-queue / pub-sub)
 - What: A second DO class (`DroidRunRoom`) serializes concurrent runs per repo and streams live events to cockpit via WebSockets.

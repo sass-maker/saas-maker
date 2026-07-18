@@ -126,7 +126,7 @@ The CLI validates commands against the generated OpenAPI spec. Prefer `fnd api` 
 
 Droid is the autonomous task runner for SaaS Maker. It starts a Cloudflare Sandbox, hydrates a repo, runs a command or agent, captures logs and patches, and can raise a draft PR.
 
-See [docs/droid.md](docs/droid.md) for the quickstart and API fields, and [docs/droid-roadmap.md](docs/droid-roadmap.md) for what is next before Droid should be treated as a hands-off production employee.
+See [docs/architecture/droid.md](docs/architecture/droid.md) for the quickstart and API fields, and [docs/architecture/droid-roadmap.md](docs/architecture/droid-roadmap.md) for what is next before Droid should be treated as a hands-off production employee.
 
 ## Contributing
 

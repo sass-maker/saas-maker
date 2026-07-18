@@ -11,7 +11,7 @@ Included changes:
 - `scripts/fleet-secret-audit.mjs`
 - `scripts/lib/fleet-secret-audit.mjs`
 - `tests/scripts/fleet-secret-audit.test.ts`
-- `docs/cloudflare-secret-management.md`
+- `docs/operations/cloudflare-secret-management.md`
 
 Observed scope:
 

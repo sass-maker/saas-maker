@@ -5,7 +5,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const fleetRoot = path.resolve(repoRoot, '..');
 const registryPath = path.join(repoRoot, 'foundry.projects.json');
-const canonicalDocsPath = path.join(repoRoot, 'docs/fleet-canonical-projects.md');
+const canonicalDocsPath = path.join(repoRoot, 'docs/product/fleet-registry.md');
 const healthContractsPath = path.join(repoRoot, 'scripts/lib/fleet-health-contracts.mjs');
 
 const outOfFleetDirs = new Set([
@@ -39,7 +39,7 @@ failed =
   reportDiff(
     'foundry.projects.json',
     registryProjects,
-    'docs/fleet-canonical-projects.md',
+    'docs/product/fleet-registry.md',
     canonicalProjects
   ) || failed;
 failed =
