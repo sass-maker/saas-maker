@@ -14,10 +14,10 @@
       "status": "live | undeployed | orphan | deleted | unverified",
       "notes": "reconciliation flags / decisions"
     },
-    "workers": "25 live Workers (enumerated 2026-07-18 via API): aliveville, codevetter-landing-proxy, email-manager, everythingrated, free-ai-gateway, high-signal-web/-api/-annotation, karte-email, knowledgebase, knowledgebase-app, linkchat, mal-api, open-historia, protein-index, reader, reel-pipeline-artifacts, resume-tailor, saasmaker-dashboard/-api/-droid, significanthobbies, starboard, truehire, verified-bases-api.",
+    "workers": "25 live Workers (enumerated 2026-07-18 via API): aliveville, codevetter-landing-proxy, email-manager, everythingrated, free-ai-gateway, high-signal-web/-api/-annotation, karte-email, knowledgebase, knowledgebase-app, linkchat, mal-api, open-historia, protein-index, reader, reel-pipeline-artifacts, resume-tailor, saasmaker-dashboard/-api/-droid, significanthobbies, starboard, truehire.",
     "openGaps": [
       "CF project 'tinygpt' name unchanged — full rename to 'posttrainllm' deferred: cosmetic (name not user-visible) and a fresh project 522s without tinygpt's env/KV bindings. posttrainllm.com is on the fresh build + green.",
-      "verified-bases promoted to sass-maker family (shop.sassmaker.com); open-historia confirmed a live product (historia.aliveville.com), not an orphan."
+      "open-historia confirmed a live product (historia.aliveville.com), not an orphan."
     ]
   },
   "projects": [
@@ -424,17 +424,17 @@
       "notes": "Scored catalog of SaaS ideas. 2026-07-18: repo moved sarthakagrawal927 -> sass-maker org + cloned into fleet; domain ideas.sassmaker.com added (provisioning)."
     },
     {
-      "id": "bodyplay",
-      "family": "bodyplay",
+      "id": "motion",
+      "family": "motion",
       "tier": "active",
-      "repo": "bodyplay",
+      "repo": "motion",
       "deployKind": "none",
       "cfProject": null,
       "domains": [],
       "app": "web+ios",
       "inRegistry": false,
       "status": "undeployed",
-      "notes": "NEW 2026-07-18. Phone-as-full-body-motion-controller for a browser game. Monorepo: protocol/ (v1 wire proto) + server/ (PartyKit relay) + web/ (Vite+Canvas game, playable w/ keyboard-debug controller) + ios/ (SwiftUI+Vision, XcodeGen). MVP=single player, one game (Reach & Dodge). Remote = PERSONAL GitHub, not fleet org. iOS unverified (needs Xcode+device)."
+      "notes": "NEW 2026-07-18 (was 'bodyplay' — renamed to Motion). Body-motion game controller. v1 = SERVERLESS single-device POC: iPhone runs camera+Vision pose → renders the game full-screen in a WKWebView (reuses web/ game via in-process JS pose bridge) → screen-mirror to a TV (AirPlay/Chromecast/QuickTime); recording via ReplayKit (game+camera inset in one video). Monorepo: protocol/ + web/ (Vite game SDK + Game iface, keyboard-debug playable, bridge+socket transports) + ios/ (SwiftUI+Vision+WKWebView+ReplayKit, XcodeGen) + server/ (PartyKit relay, PARKED for v2). v2 = browser display + Chromecast receiver + PartyKit multiplayer. Web+server typecheck+build green; iOS COMPILES + LAUNCHES + renders on iOS-27 Simulator (Xcode 27, verified via screenshot) — device-runtime (real camera/ReplayKit/joint-mapping) still needs a physical iPhone. Repo = PERSONAL GitHub github.com/sarthakagrawal927/motion (private), NOT fleet org."
     },
     {
       "id": "truehire",
@@ -461,20 +461,6 @@
       "inRegistry": false,
       "status": "deleted",
       "notes": "Pages project deleted 2026-07-18 (purged 126 deployments then project)"
-    },
-    {
-      "id": "verified-bases",
-      "family": "saas-maker",
-      "tier": "secondary",
-      "repo": "verified-bases",
-      "deployKind": "worker",
-      "cfProject": "verified-bases-api",
-      "domains": [
-        "shop.sassmaker.com"
-      ],
-      "inRegistry": true,
-      "status": "live",
-      "notes": "Verified-software storefront (Astro+Go, Dodo Payments). 2026-07-18: promoted out of out-of-fleet — repo moved to sass-maker org + cloned; shop.sassmaker.com added to verified-bases-api worker. (Pages twin verified-bases-web was deleted.)"
     },
     {
       "id": "open-historia",
