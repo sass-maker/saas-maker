@@ -32,7 +32,7 @@ function run(cmd, cwd) {
 if (!existsSync(showcaseDist)) {
   console.error(
     `[merge-blume-docs] showcase dist not found at ${showcaseDist}.\n` +
-      'Run `astro build` first — this step must run AFTER the showcase build.',
+      'Run `astro build` first — this step must run AFTER the showcase build.'
   );
   process.exit(1);
 }
@@ -56,7 +56,7 @@ run('npm run build', blumeDir);
 if (!existsSync(join(blumeDist, 'index.html'))) {
   console.error(
     `[merge-blume-docs] expected ${join(blumeDist, 'index.html')} after build; ` +
-      'Blume build did not produce the expected output.',
+      'Blume build did not produce the expected output.'
   );
   process.exit(1);
 }
@@ -67,6 +67,5 @@ mkdirSync(targetDocsDir, { recursive: true });
 cpSync(blumeDist, targetDocsDir, { recursive: true });
 
 console.log(
-  `[merge-blume-docs] merged Blume docs into ${targetDocsDir} ` +
-    `(served at sassmaker.com/docs).`,
+  `[merge-blume-docs] merged Blume docs into ${targetDocsDir} ` + `(served at sassmaker.com/docs).`
 );

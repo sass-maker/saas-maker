@@ -14,9 +14,7 @@ export default defineConfig({
   // source of truth. See `docs/README.md` for the knowledge-system layout.
   content: {
     root: '../../docs',
-    exclude: publicInternal
-      ? ['archive/**']
-      : ['archive/**', 'prds/**', 'openspec/**'],
+    exclude: publicInternal ? ['archive/**'] : ['archive/**', 'prds/**', 'openspec/**'],
   },
   github: {
     owner: 'sass-maker',
