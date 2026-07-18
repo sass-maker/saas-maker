@@ -33,9 +33,9 @@ git submodule status
 
 | Engine | Path | Commit | Ref | Role |
 | --- | --- | --- | --- | --- |
-| MoneyPrinterTurbo | `engines/MoneyPrinterTurbo` | `f229e20012e38f3bf161679fa98894b1e6f6d63` | `v1.2.8` | default cheap stock-footage renderer |
+| MoneyPrinterTurbo | `engines/MoneyPrinterTurbo` | `bf229e20012e38f3bf161679fa98894b1e6f6d63` | `v1.2.8` | default cheap stock-footage renderer |
 | openshorts | `engines/openshorts` | `fe87af6dd599b854e6eab2de0ca247ebafe13885` | `heads/main` | UGC actor + publishing workflow reference (adapter removed) |
-| reel-maker | `engines/reel-maker` | `92b6268e9ccf0f095d609328acc47b6b13882a14` | `heads/main` | internal Remotion + Modal prototype engine |
+| reel-maker | `engines/reel-maker` | `cedeeea002566bb81b2dff7b67ef852957fadbaf` | `heads/main` | internal Remotion + Modal prototype engine |
 
 The pin manifest above is generated from `git submodule status`. Update it
 intentionally, always alongside a passing render canary, and record the new
@@ -138,12 +138,12 @@ commit + artifact URL in the change description.
 
 ## render-pro.js (canonical production renderer)
 
-- Not exposed through `createRenderer`; it is its own production renderer driven
-  by the watcher. `render-pro.js` (~1600 LOC) is self-contained: Chrome CDP
-  scroll-tour + live screencast of the product URL, Edge TTS voiceover
+- Not exposed through the Rust engine factory; it is its own production renderer
+  driven by the watcher. `render-pro.js` (~1680 LOC) is self-contained: Chrome
+  CDP scroll-tour + live screencast of the product URL, Edge TTS voiceover
   (`uvx`) → SRT-synced burned-in captions, ffmpeg scene cards / Ken Burns /
   xfade stitch / ambient bed / SFX, `npx wrangler r2 object put` upload, and
-  Worker reel-record patch. This is the path the Rust CLI drives first via
+  Worker reel-record patch. The Rust CLI drives it via
   `RenderProEngine` → `node scripts/render-pro.js <reelId>`.
 
 ## Cloudflare artifact hosting

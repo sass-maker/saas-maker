@@ -1,14 +1,21 @@
 # Rust orchestrator architecture (`reel/`)
 
-This document maps the existing Node flow and the Phase 1 Rust rewrite that
-replaces the Node *glue*. It does NOT touch the git submodules under `engines/`,
-and it does not reimplement ffmpeg, Chrome capture, TTS, or the render engines —
-those stay behind trait interfaces with one shell-out impl.
+This document maps the two orchestration flows and the Rust crate (`reel/`) that
+now owns them. The Rust cutover is **complete**: the crate owns all production
+orchestration and mode dispatch, and the old Node glue scripts
+(`auto-render-watcher.js`, `marketing-autopilot.js`) are deleted. It does NOT
+touch the git submodules under `engines/`, and it does not reimplement ffmpeg,
+Chrome capture, TTS, or the render engines — those stay behind trait interfaces
+with one shell-out impl each (Node owns the pixels). The JS
+`src/pipeline.js` orchestration is retained only for the local dev server
+(`src/server/index.js`) and the studio / anonymous / significant-content
+surfaces; the production autopilot, watcher, render-accepted, post, and metrics
+entrypoints are the Rust CLI.
 
 ## The two real flows
 
 The pipeline has two non-overlapping orchestration flows (the README and
-current package scripts expose both):
+package scripts expose both):
 
 ### 1. Worker reel flow — the ONE production render path
 
@@ -22,12 +29,12 @@ Cloudflare Worker (src/worker/index.js, R2ReelStore)
   GET  /reels/:key      → serve MP4 from R2 (byte-range aware)
         │
         ▼
-auto-render-watcher.js   (daemon, polls /reels?status=approved every 30s)
+reel watch --execute   (Rust daemon, reel/src/watcher.rs; polls /reels?status=approved every 30s)
    for each reel where renderJobId == null && variants == []:
         spawn  node scripts/render-pro.js <reelId>     (serial, one at a time)
         │
         ▼
-render-pro.js   (the heavy renderer, ~1600 LOC)
+render-pro.js   (the heavy renderer, ~1680 LOC)
    fetch reel record from worker
    Chrome CDP scroll-tour + live screencast of the product URL  (cdp-capture.js)
    Edge TTS voiceover (uvx) → SRT-synced burned-in captions
@@ -36,40 +43,40 @@ render-pro.js   (the heavy renderer, ~1600 LOC)
    PATCH the reel record on the worker with variant asset URLs
 ```
 
-This is the most-developed, real path. `render-pro.js` is self-contained;
-the Node "glue" around it is just `auto-render-watcher.js` (the spawn loop) and
-`config/project-urls.json` loading.
+This is the most-developed, real path. `render-pro.js` is self-contained; the
+glue around it is now the Rust watcher (`reel/src/watcher.rs`, the spawn loop)
+and `config/project-urls.json` loading.
 
 ### 2. Marketing autopilot flow — SaaS Maker queue driven
 
 ```
-SaaS Maker Marketing Queue (saas-maker-client.js)
+SaaS Maker Marketing Queue (reel/src/saas_maker.rs)
         │  accepted reel-channel item
         ▼
-reel autopilot → renderAcceptedMarketingPosts
+reel autopilot (reel/src/autopilot.rs → marketing.rs::render_accepted_marketing_posts)
    auto-accept aged intake → render accepted posts
         │
         ▼
-VideoBrief contract (src/video-brief.js)  ── normalize + validate
+VideoBrief contract (reel/src/brief.rs)  ── normalize + validate
         │
-   createRenderer(mode):
-     mock              → MockRenderer            (placeholder, tests)
-     stock/moneyprinterturbo → MoneyPrinterTurboAdapter (HTTP API, real MP4)
-     grok-video        → GrokVideoAdapter        (approved local MP4 copy)
-     ascii             → ASCII animation adapter (local MP4)
-     html-composition  → HTML preview exporter   (review artifacts)
-     remotion/reel-maker     → ReelMakerAdapter  (Remotion/product-proof shell-out)
-        │
-        ▼
-   per-variant: buildVariantPlan (reel-templates.js) → render
-                → publishRenderArtifacts (R2 via wrangler, artifact-publisher.js)
-                → scoreVariant (reel-quality.js) → gate
+   create_renderer(mode) (reel/src/engine/factory.rs):
+     mock              → MockEngine           (placeholder, tests)
+     stock/moneyprinterturbo → MoneyPrinterEngine (HTTP API, real MP4)
+     grok-video        → GrokVideoEngine      (approved local MP4 copy)
+     ascii             → AsciiAnimationEngine (node scripts/render-ascii-animation.js)
+     html-composition  → HtmlCompositionEngine (node scripts/export-html-composition.js)
+     remotion/reel-maker     → ReelMakerEngine (node scripts/render-reel-maker.js)
         │
         ▼
-   SaaSMakerClient.updateMarketingPost  (asset_url, result_url, notes)
+   per-variant: build_variant_plan (reel/src/templates.rs) → render
+                → R2Publisher (reel/src/publisher.rs, R2 via `wrangler r2 object put`)
+                → score_variant (reel/src/quality.rs) → gate
         │
         ▼
-   postReadyMarketingVideos (posting.js) — gated handoff, default mock
+   SaaSMakerClient patches the marketing post (reel/src/saas_maker.rs; asset_url, result_url, notes)
+        │
+        ▼
+   post_ready_marketing_videos (reel/src/marketing_posting.rs) — gated handoff, default manual
 ```
 
 Default `REEL_RENDER_MODE` is `mock`. The supported mode and alias matrix is
@@ -79,16 +86,17 @@ when a real provider reports success.
 ### Which engines are actually used
 
 - **MoneyPrinterTurbo** — implemented HTTP adapter, real MP4 upload verified.
-  Used by the autopilot `stock` mode. Kept; ported in a later phase.
-- **reel-maker** — Remotion shell-out adapter, the `remotion` mode. Kept as a
-  reference engine; lower priority than render-pro.
+  Used by the autopilot `stock` mode via `MoneyPrinterEngine`.
+- **reel-maker** — Remotion shell-out adapter, the `remotion` mode
+  (`ReelMakerEngine`). Kept as a reference engine; lower priority than
+  render-pro.
 - **Grok local MP4s / ASCII / HTML composition** — local/no-credential modes
   used for approved assets, stylized MP4s, and reviewable preview artifacts.
 - **OpenShorts** — removed from the active renderer factory; the submodule is
   parked as a reference only and remains a dedicated cleanup item.
-- **render-pro.js** — not exposed through `createRenderer`; it is its own
-  production renderer driven by the watcher. **This is the path the Rust CLI
-  replaces first.**
+- **render-pro.js** — not exposed through the Rust engine factory; it is its own
+  production renderer driven by the watcher. **The Rust CLI drives it via
+  `RenderProEngine`.**
 
 ## Rust crate layout (`reel/`)
 
@@ -104,12 +112,19 @@ full and unit-tested; heavy work is behind traits.
 | `artifact.rs` | pure parts of `artifact-publisher.js` + `worker/index.js` | path classification, stable key naming, content-type, key safety, cache-buster URL. |
 | `store.rs` | `src/job-store.js` | `ReelStore` trait + `FileJobStore` (JSON-per-job). R2 store deferred. |
 | `runner.rs` | `execFile`/`spawn` wrappers | `CommandRunner` trait + `ProcessRunner` + recording fake for tests. |
-| `engine/mod.rs` | `createRenderer` contract | `RenderEngine` trait + `RenderResult`/`RenderOptions`. |
-| `engine/render_pro.rs` | `auto-render-watcher.js` spawn glue | shells out to `node scripts/render-pro.js <reelId>` with `REEL_VARIANT_COUNT`. |
+| `engine/mod.rs` + `engine/factory.rs` | `createRenderer` contract (retired JS) | `RenderEngine` trait + `RenderResult`/`RenderOptions`; `create_renderer` mode dispatch. |
+| `engine/render_pro.rs` | render-pro spawn glue (was `auto-render-watcher.js`) | shells out to `node scripts/render-pro.js <reelId>` with `REEL_VARIANT_COUNT`. |
 | `engine/mock.rs` | `src/adapters/mock-renderer.js` | placeholder writer for tests/dry runs. |
 | `publisher.rs` | R2 path of `artifact-publisher.js` | `ArtifactPublisher` trait + `R2Publisher` (`wrangler r2 object put`) + `NoopPublisher`. |
-| `social.rs` | `src/posting.js` (gated) | `SocialPoster` trait + `DryRunPoster` (never posts in Phase 1). |
+| `social.rs` | `src/posting.js` (gated) | `SocialPoster` trait + `DryRunPoster` (never posts). |
 | `orchestrator.rs` | core loop of `src/pipeline.js` | `render_reel_variants`: plan → render → publish → score. |
+| `saas_maker.rs` | `src/saas-maker-client.js` | `SaaSMakerClient` (`ureq` list/patch marketing posts) + `StubMarketingClient`. |
+| `marketing.rs` | `renderAcceptedMarketingPosts` (was `src/pipeline.js`) | `render_accepted_marketing_posts`; artifact-publisher resolution. |
+| `marketing_posting.rs` | `src/posting.js` | `post_ready_marketing_videos`; `ManualPoster`/`ChannelRoutingPoster` (YouTube + Instagram). |
+| `marketing_metrics.rs` | posting metrics backfill | `sync_marketing_post_metrics` via `ChannelRoutingMetricsFetcher`. |
+| `autopilot.rs` + `autopilot_daemon.rs` | `marketing-autopilot.js` (retired) | `run_autopilot_tick`: auto-accept aged intake → render → post; daemon loop. |
+| `watcher.rs` | `auto-render-watcher.js` (retired) | `run_watch`: poll approved+unrendered reels, spawn render-pro serially. |
+| `publishers/` | YouTube/Instagram upload | native `YouTubePublisher` + `InstagramPublisher`. |
 | `cli.rs` + `main.rs` | `package.json` glue scripts | subcommands; live actions default to `--dry-run`. |
 
 ## Trait boundaries (the "heavy lifting stays out of Rust" rule)
@@ -145,6 +160,7 @@ reel watch [--worker-url URL] [--once] [--execute]        # auto-render-watcher 
 reel autopilot [--once] [--execute] [--fixture path]      # marketing-autopilot equivalent
 reel render-accepted [--execute] [--fixture path] [--mode MODE] # render accepted marketing posts
 reel post [--execute] [--posting-provider auto|manual]  # post ready marketing videos
+reel metrics [--execute] [--fixture path]                 # backfill YouTube/Instagram post metrics
 reel plan <brief.json> [--variant-count N]                # preview templates + hooks
 reel validate-brief <brief.json>                          # VideoBrief lint
 reel score <brief.json>                                   # quality heuristics

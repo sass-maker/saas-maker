@@ -113,7 +113,7 @@ IG_ACCOUNT_SLUG=tutoring npm run ig:bootstrap
 #    under "instagram.tutoring" (mirroring the example file).
 
 # 4. Verify
-npm run autopilot:once
+cargo run --quiet --manifest-path reel/Cargo.toml -- autopilot --once --execute --repo-root .
 ```
 
 ### Constraints to know

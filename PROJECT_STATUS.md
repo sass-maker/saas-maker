@@ -71,7 +71,8 @@ Marketing autopilot and posting run in Rust (`reel` CLI). Node remains for `rend
 | `npm run dev` → `/` | Anonymous one-field brand URL → status → reviewed MP4 preview/download |
 | `npm run watch:render` | Production watcher (`reel watch --execute`) |
 | `npm run watch:render:once` / `:dry` | One-shot / dry-run watcher |
-| `npm run autopilot` / `:once` / `:dry` | Marketing autopilot intake → render → post |
+| `npm run autopilot:dry` | Rust marketing autopilot dry-run (`reel autopilot`); execute via `cargo run --manifest-path reel/Cargo.toml -- autopilot --execute --repo-root .` |
+| `npm run autopilot` / `:once` | Node content-package control tick (`marketing-control.js tick`), not the SaaS Maker reel autopilot |
 | `npm run render:pro` | Canonical production render (`node scripts/render-pro.js`) |
 | `npm run moneyprinter:api` | Start MoneyPrinterTurbo API on `127.0.0.1:18080` for canaries |
 | `npm run render:html -- --brief brief.json --artifact-dir artifacts/html` | Export Editframe-inspired HTML/CSS preview artifacts |
@@ -317,7 +318,7 @@ for intentional target-host exclusions.
 
 - All entrypoints on Rust CLI; JS watcher/autopilot/post glue retired with parity validated (`validate-watcher-parity.mjs`).
 - Production watcher: `npm run watch:render` → `reel watch --execute`.
-- Marketing autopilot: intake → render → post in Rust (`npm run autopilot`).
+- Marketing autopilot: intake → render → post in Rust (`reel autopilot --execute`; dry-run via `npm run autopilot:dry`).
 
 ### Native social posting
 

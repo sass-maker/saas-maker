@@ -18,7 +18,10 @@ Pick one. Don't run the autopilot on two hosts simultaneously — both would rac
 
 Independent of OS:
 
-- **Node ≥ 20** (`engines.node` in `package.json`)
+- **Node ≥ 20** (`engines.node` in `package.json`) — runs `render-pro.js`, the
+  media adapters, and the local dev server
+- **Rust stable** (`cargo`) — the autopilot / watch / post / metrics daemons are
+  the `reel` CLI (`reel/Cargo.toml`)
 - **ffmpeg + ffprobe** on PATH (or set `FFMPEG_PATH`/`FFPROBE_PATH` in `.env`)
 - **Disk**: 20GB free for `artifacts/` and `tmp/`. Renders are bursty but get cleaned by the artifact publisher.
 - **Outbound network**: api.openai-compatible.com (DeepSeek), api.elevenlabs.io, api.pexels.com, oauth2.googleapis.com, graph.instagram.com, api.sassmaker.com, R2 endpoint.
@@ -37,6 +40,7 @@ Ubuntu 24.04 image. ~30 minutes from `apt update` to first autopilot tick.
 sudo apt update && sudo apt install -y ffmpeg git curl build-essential
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt install -y nodejs
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y   # cargo for the reel CLI
 
 # 2. App user (don't run as root)
 sudo useradd -m -s /bin/bash reel
@@ -50,7 +54,7 @@ npm ci
 # 4. Drop in .env + config/social-accounts.json (see "Secret sync" below)
 
 # 5. Run one tick to verify
-npm run autopilot:once
+cargo run --quiet --manifest-path reel/Cargo.toml -- autopilot --once --execute --repo-root .
 
 # 6. Install systemd units (see next section)
 ```
@@ -77,7 +81,7 @@ Type=simple
 User=reel
 WorkingDirectory=/home/reel/reel-pipeline
 EnvironmentFile=/home/reel/reel-pipeline/.env
-ExecStart=/usr/bin/node scripts/marketing-autopilot.js
+ExecStart=/usr/bin/cargo run --quiet --manifest-path reel/Cargo.toml -- autopilot --execute --repo-root .
 Restart=always
 RestartSec=10
 StandardOutput=append:/var/log/reel-autopilot.log
@@ -160,11 +164,19 @@ Same pattern as Hetzner but with launchd. `.env` lives in the repo root; node li
   <key>Label</key><string>com.fleet.reel-autopilot</string>
   <key>WorkingDirectory</key><string>/Users/sarthak/Desktop/fleet/reel-pipeline</string>
   <key>EnvironmentVariables</key>
-  <dict><key>PATH</key><string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string></dict>
+  <dict><key>PATH</key><string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/Users/sarthak/.cargo/bin</string></dict>
   <key>ProgramArguments</key>
   <array>
-    <string>/opt/homebrew/bin/node</string>
-    <string>scripts/marketing-autopilot.js</string>
+    <string>/Users/sarthak/.cargo/bin/cargo</string>
+    <string>run</string>
+    <string>--quiet</string>
+    <string>--manifest-path</string>
+    <string>reel/Cargo.toml</string>
+    <string>--</string>
+    <string>autopilot</string>
+    <string>--execute</string>
+    <string>--repo-root</string>
+    <string>.</string>
   </array>
   <key>RunAtLoad</key><true/>
   <key>KeepAlive</key><true/>
@@ -228,11 +240,12 @@ Pin `PIPELINE_RENDER_CONCURRENCY=1` on the M1. Higher will thrash.
 
 ## Temporary M5 validation
 
-For wiring runs only — not a persistent home. Foreground the daemon so it dies when you close iTerm:
+For wiring runs only — not a persistent home. Foreground the Rust autopilot daemon so it dies when you close iTerm:
 
 ```bash
-npm run autopilot              # daemon
-npm run autopilot:once         # one tick, exit
+cargo run --quiet --manifest-path reel/Cargo.toml -- autopilot --execute --repo-root .            # daemon
+cargo run --quiet --manifest-path reel/Cargo.toml -- autopilot --once --execute --repo-root .     # one tick, exit
+npm run autopilot:dry          # dry-run one/loop (prints intended actions, no backend calls)
 ```
 
 Don't install the plist on M5. The point is leaving no resident process.
@@ -310,24 +323,20 @@ ffmpeg -f lavfi -i color=c=black:s=1080x1920:d=2 \
 ### Step 6 — Run the loop once
 
 ```bash
-npm run autopilot:once -- --fixture test/fixtures/saas-maker-pending.json
+cargo run --quiet --manifest-path reel/Cargo.toml -- \
+  autopilot --once --execute --repo-root . \
+  --fixture test/fixtures/saas-maker-pending.json
 ```
 
 ### What success looks like
 
-Console output should resemble:
+The Rust autopilot logs each phase and prints a tick summary, e.g.:
 
 ```
-▸ marketing-autopilot started · interval=60000ms · once · render=mock · fixture=test/fixtures/saas-maker-pending.json
-▸ accounts: yt=tutoring ig=(none)
-▸ fixture seeded with 2 post(s) (live SaaS Maker NOT touched)
-[..] ▸ intake: 1/1 past hold window (30m)
-[..] ▸ render: scanning accepted marketing posts
-[..] ✓ render: scanned=1 eligible=1 results=1
-[..] ▸ post: posting ready marketing videos
-[..] ✓ post: scanned=1 results=1
-▸ fixture state: fixture-aged-yt=sent, fixture-fresh-yt=pending
-▸ tick summary: accepted=1 rendered=1 posted=1
+[..] intake: 1/1 past hold window
+[..] render: scanning accepted marketing posts
+[..] post: posting ready marketing videos
+✓ tick complete: accepted=1 rendered=1 posted=1
 ```
 
 Then on **studio.youtube.com** for the "Reel Pipeline Test" channel: a new video titled "Verify clip: aged pending YT", visibility **Private**.
@@ -385,9 +394,9 @@ Don't commit `.env` or `config/social-accounts.json` to a private GitHub repo ev
 
 When you move from host A → host B (e.g., M5 → Hetzner):
 
-1. **On host A**: `npm run autopilot` is stopped (`launchctl unload …` or `systemctl stop …`).
+1. **On host A**: the autopilot daemon is stopped (`launchctl unload …` or `systemctl stop …`).
 2. **On host B**: clone the repo, `npm ci`, sync `.env` + `config/social-accounts.json` via your chosen strategy.
-3. **On host B**: `npm run autopilot:once` — should report `accepted=0 rendered=0 posted=0` if A finished its queue, or process the remainder.
+3. **On host B**: `cargo run --quiet --manifest-path reel/Cargo.toml -- autopilot --once --execute --repo-root .` — should report `accepted=0 rendered=0 posted=0` if A finished its queue, or process the remainder.
 4. **On host B**: enable the supervisor (systemd or launchd).
 5. **On host A**: leave the repo in place for 1 week as rollback. Then remove.
 
@@ -397,8 +406,8 @@ The pipeline keeps no host-local state that matters. `artifacts/` is regenerable
 
 After install on any host, run in order:
 ```bash
-npm test                       # 123 tests should pass
-npm run autopilot:once         # one full tick against live SaaS Maker
+npm test                       # node --test + cargo test should pass
+cargo run --quiet --manifest-path reel/Cargo.toml -- autopilot --once --execute --repo-root .   # one full tick against live SaaS Maker
 npm run sync:metrics           # backfill latest post metrics into SaaS Maker notes
 sudo journalctl -u reel-autopilot --since "5 minutes ago"   # linux
 tail -50 /tmp/reel-autopilot.log                            # mac

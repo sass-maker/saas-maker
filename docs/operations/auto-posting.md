@@ -6,14 +6,17 @@ How a finished reel reaches YouTube Shorts and Instagram Reels with zero clicks.
 
 | Platform | Mode | Status |
 |---|---|---|
-| YouTube Shorts | API auto-upload, multi-account (`src/publishers/youtube.js`) | Shipped |
-| Instagram Reels | Standard Access API, multi-account (`src/publishers/instagram.js`) | Shipped — see [`instagram-setup.md`](./instagram-setup.md) |
-| Autopilot loop | SaaS Maker → intake hold → render → post (`scripts/marketing-autopilot.js`) | Shipped |
-| Account routing | `config/social-accounts.json` + `AccountRouter` (project_slug → handle) | Shipped |
+| YouTube Shorts | API auto-upload, multi-account (`reel/src/publishers/youtube.rs`) | Shipped |
+| Instagram Reels | Standard Access API, multi-account (`reel/src/publishers/instagram.rs`) | Shipped — see [`instagram-setup.md`](./instagram-setup.md) |
+| Autopilot loop | SaaS Maker → intake hold → render → post (`reel autopilot`, `reel/src/autopilot.rs`) | Shipped |
+| Account routing | `config/social-accounts.json` + channel routing (project_slug → handle) | Shipped |
 | Missed-post recovery | `reel post --missed-only --execute` / `npm run post:ready -- --missed-only` | Shipped |
 | Provider metrics backfill | `reel metrics --execute` / `npm run sync:metrics` patches metrics into SaaS Maker notes | Shipped |
 
-Manual posting via Meta Business Suite or YouTube Studio still works as a backup — the manual provider in `src/posting.js` is unchanged.
+Production posting runs in Rust (`reel post`, `reel/src/marketing_posting.rs`). The
+JS `src/posting.js` / `src/publishers/*.js` clients back the local dev server
+(`src/server/index.js`); manual posting via Meta Business Suite or YouTube Studio
+still works as a backup.
 
 ## End-to-end flow
 
@@ -24,11 +27,11 @@ SaaS Maker draft (status=pending)
         ▼
 auto-accept (status=accepted)
         │
-│  renderAcceptedMarketingPosts → mock / HTML / ASCII / Grok MP4 / reel-maker / MoneyPrinterTurbo
+│  render_accepted_marketing_posts → mock / HTML / ASCII / Grok MP4 / reel-maker / MoneyPrinterTurbo
         ▼
 artifact in R2 + asset_url on the post
         │
-        │  postReadyMarketingVideos with ChannelRoutingProvider
+        │  post_ready_marketing_videos with ChannelRoutingPoster
         ▼
 YT publish ── or ── IG container → poll → publish
         │
@@ -36,7 +39,7 @@ YT publish ── or ── IG container → poll → publish
 status=sent, posted_at set
 ```
 
-One process — `npm run autopilot` — owns the whole loop.
+One process — the Rust `reel autopilot` daemon — owns the whole loop.
 
 ## Hold window (review gate)
 
@@ -84,14 +87,15 @@ do not accumulate stale metrics.
 
 ## Two daemons, not one
 
-The pipeline has two long-running scripts. They are NOT redundant:
+The pipeline has two long-running daemons, both on the Rust `reel` CLI. They are
+NOT redundant:
 
 | Daemon | Polls | When you'd run it |
 |---|---|---|
-| `scripts/auto-render-watcher.js` | the Cloudflare worker for the *reel* flow (swipe UI) | If you use the worker-driven flow |
-| `scripts/marketing-autopilot.js` | SaaS Maker for the *marketing-post* flow | The auto-posting path this doc describes |
+| `reel watch --execute` (`reel/src/watcher.rs`) | the Cloudflare worker for the *reel* flow (swipe UI) | If you use the worker-driven flow |
+| `reel autopilot --execute` (`reel/src/autopilot.rs`) | SaaS Maker for the *marketing-post* flow | The auto-posting path this doc describes |
 
-Both need ffmpeg + Node + a reasonable amount of RAM. Render concurrency knob: `PIPELINE_RENDER_CONCURRENCY` (default 1). See [`deployment.md`](./deployment.md) for which host to run them on.
+Both need ffmpeg + Node (for `render-pro.js` / media adapters) + cargo + a reasonable amount of RAM. Render concurrency knob: `PIPELINE_RENDER_CONCURRENCY` (default 1). See [`deployment.md`](./deployment.md) for which host to run them on.
 
 ## Where to run this
 
@@ -153,7 +157,7 @@ IG_APP_ID=... IG_APP_SECRET=... IG_ACCOUNT_SLUG=tutoring \
 
 Then verify:
 ```bash
-npm run autopilot:once
+cargo run --quiet --manifest-path reel/Cargo.toml -- autopilot --once --execute --repo-root .
 ```
 
 ## Operational details
@@ -170,13 +174,12 @@ npm run autopilot:once
 
 ## Files
 
-- `src/publishers/youtube.js`, `src/publishers/instagram.js` — wire-protocol clients
-- `src/posting.js` — `YouTubePostingProvider`, `InstagramPostingProvider`, `ChannelRoutingProvider`
+- `reel/src/publishers/youtube.rs`, `reel/src/publishers/instagram.rs` — production wire-protocol clients
+- `reel/src/marketing_posting.rs` — `ManualPoster` / `ChannelRoutingPoster` + `post_ready_marketing_videos`
 - `reel/src/marketing_metrics.rs` — metrics target parsing, provider fetch, SaaS Maker note patching
-- `src/config/social-accounts.js` — env-pointer loader + `AccountRouter`
-- `src/autopilot.js` — `runAutopilotTick` + `autoAcceptIntake`
-- `scripts/marketing-autopilot.js` — daemon entry point
-- `scripts/auto-render-watcher.js` — separate, worker-driven reel flow (unchanged)
+- `reel/src/autopilot.rs` + `reel/src/autopilot_daemon.rs` — `run_autopilot_tick` + auto-accept intake + daemon loop
+- `reel/src/config.rs` — env-pointer loader + channel routing
+- `src/posting.js` / `src/publishers/*.js` / `src/config/social-accounts.js` — JS clients backing the local dev server (`src/server/index.js`), not the production path
 - `scripts/{youtube,instagram}-oauth-bootstrap.js` — one-shot OAuth helpers
 - `scripts/refresh-instagram-tokens.js` — daily IG token refresh
 - `config/social-accounts.example.json` — multi-account config template
