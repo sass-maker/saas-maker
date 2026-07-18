@@ -203,18 +203,15 @@ verify/skip.
   a homepage yet), NOT a DNS/green problem. Just flag to Sarthak: verified-bases
   needs a deploy with a root route. No CF dashboard action.
 
-**TASK 3 (rename `tinygpt` → `posttrainllm` — content already deployed; just move the domain):**
-Prep done: a `posttrainllm` Pages project now exists with the current site
-deployed (`posttrainllm.pages.dev` verified 200, leaderboard = JSON). tinygpt has
-no bindings/env, so nothing to migrate — this is purely a domain move. The API
-can't do it (no `Zone.DNS:Edit`); the dashboard can. Steps:
-1. **Workers & Pages → `tinygpt` → Custom domains** → remove `posttrainllm.com`
-   AND `www.posttrainllm.com`.
-2. **Workers & Pages → `posttrainllm` → Custom domains → Add** `posttrainllm.com`,
-   then `www.posttrainllm.com` (dashboard auto-creates the DNS) → wait Active.
-3. Verify `https://posttrainllm.com` = 200 and `/data/leaderboard.json` = JSON.
-4. **Delete the old `tinygpt` project** (its Settings → Delete).
-- Expect ~1 min of downtime on posttrainllm.com during the swap (low-traffic, fine).
+**TASK 3 — REMOVED.** The `tinygpt → posttrainllm` rename was abandoned (kept
+cosmetic per user 2026-07-18); the duplicate `posttrainllm` project was deleted.
+Site stays on the `tinygpt`-named project (users never see the name).
+
+**NOT browser tasks — git-connection (informational):** 4 Pages are CF-native
+git-connected; ~10 deploy via GitHub Actions on push (git-driven already —
+do NOT CF-native-connect them, it double-pipelines); only `web-playables`,
+`knowledgebase-landing`, `saas-ideas` are truly manual — best fixed by adding a
+deploy workflow (code task), not a dashboard connect.
 
 **Not a browser task (needs code deploy, not dashboard):** the 5 newly-registered
 products (verified-bases, protein-index, open-historia, knowledgebase-app,
