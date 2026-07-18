@@ -203,8 +203,18 @@ verify/skip.
   a homepage yet), NOT a DNS/green problem. Just flag to Sarthak: verified-bases
   needs a deploy with a root route. No CF dashboard action.
 
-**DO NOT do:** the `tinygpt → posttrainllm` project rename — deferred on purpose
-(cosmetic; a fresh project 522s without the env/KV bindings).
+**TASK 3 (rename `tinygpt` → `posttrainllm` — content already deployed; just move the domain):**
+Prep done: a `posttrainllm` Pages project now exists with the current site
+deployed (`posttrainllm.pages.dev` verified 200, leaderboard = JSON). tinygpt has
+no bindings/env, so nothing to migrate — this is purely a domain move. The API
+can't do it (no `Zone.DNS:Edit`); the dashboard can. Steps:
+1. **Workers & Pages → `tinygpt` → Custom domains** → remove `posttrainllm.com`
+   AND `www.posttrainllm.com`.
+2. **Workers & Pages → `posttrainllm` → Custom domains → Add** `posttrainllm.com`,
+   then `www.posttrainllm.com` (dashboard auto-creates the DNS) → wait Active.
+3. Verify `https://posttrainllm.com` = 200 and `/data/leaderboard.json` = JSON.
+4. **Delete the old `tinygpt` project** (its Settings → Delete).
+- Expect ~1 min of downtime on posttrainllm.com during the swap (low-traffic, fine).
 
 **Not a browser task (needs code deploy, not dashboard):** the 5 newly-registered
 products (verified-bases, protein-index, open-historia, knowledgebase-app,
