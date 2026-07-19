@@ -20,6 +20,9 @@ human-readable companion.
   artifact sweep findings requiring human review.
 - [`posthog-fleet-dashboards.md`](posthog-fleet-dashboards.md) — the canonical
   `project_id` HogQL coalesce filter for fleet-shared PostHog dashboards.
+- [`foundry-migration-ledger.md`](foundry-migration-ledger.md) — exact source
+  revisions, import boundaries, production identities, and rollback references
+  for the Foundry monorepo consolidation.
 - [`always-on-automation-setup.md`](always-on-automation-setup.md) — bootstrap
   a Mac to run the codex-automations cron jobs against the fleet checkout.
 - [`launch-kit.md`](launch-kit.md) — ready-to-post distribution copy and the
