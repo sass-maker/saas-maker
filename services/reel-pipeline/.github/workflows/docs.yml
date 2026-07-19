@@ -1,0 +1,37 @@
+name: Docs
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - "docs/**"
+      - "README.md"
+      - "AGENTS.md"
+      - "STATUS.md"
+      - "PROJECT_STATUS.md"
+      - "scripts/validate-docs.mjs"
+      - ".github/workflows/docs.yml"
+  pull_request:
+    branches: [main, master]
+    paths:
+      - "docs/**"
+      - "README.md"
+      - "AGENTS.md"
+      - "STATUS.md"
+      - "PROJECT_STATUS.md"
+      - "scripts/validate-docs.mjs"
+      - ".github/workflows/docs.yml"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Validate docs structure + internal links
+        run: node scripts/validate-docs.mjs

@@ -1,0 +1,152 @@
+{
+  "$schema": "reel-pipeline.render-modes.v1",
+  "modes": [
+    {
+      "id": "mock",
+      "provider": "mock",
+      "surface": "render-accepted",
+      "category": "local",
+      "description": "No-dependency placeholder renderer for tests and dry runs.",
+      "smoke": {
+        "type": "renderAccepted"
+      }
+    },
+    {
+      "id": "html-composition",
+      "aliases": [
+        "html",
+        "web-composition"
+      ],
+      "provider": "html-composition",
+      "surface": "render-accepted",
+      "category": "local",
+      "description": "Exports HTML/CSS preview artifacts, timeline JSON, and word-level captions.",
+      "smoke": {
+        "type": "renderAccepted"
+      }
+    },
+    {
+      "id": "ascii",
+      "aliases": [
+        "ascii-animation",
+        "ascii-fable",
+        "askai"
+      ],
+      "provider": "ascii-animation",
+      "surface": "render-accepted",
+      "category": "local",
+      "description": "Generates stylized ASCII/pixel interlude MP4s with local tools.",
+      "smoke": {
+        "type": "renderAccepted"
+      }
+    },
+    {
+      "id": "grok-video",
+      "aliases": [
+        "grok",
+        "grok-videos"
+      ],
+      "provider": "grok-video",
+      "surface": "render-accepted",
+      "category": "local-asset",
+      "description": "Copies approved local Grok/Imagine MP4 exports into the standard artifact flow.",
+      "smoke": {
+        "type": "grokFixture"
+      }
+    },
+    {
+      "id": "reel-maker",
+      "aliases": [
+        "remotion"
+      ],
+      "provider": "reel-maker",
+      "surface": "render-accepted",
+      "category": "local-remotion",
+      "description": "Remotion/product-proof adapter behind the VideoBrief contract.",
+      "smoke": {
+        "type": "renderAccepted",
+        "env": {
+          "REEL_MAKER_SKIP_REMOTION": "1"
+        },
+        "note": "Remotion skipped; adapter/orchestrator path verified."
+      }
+    },
+    {
+      "id": "moneyprinterturbo",
+      "aliases": [
+        "stock"
+      ],
+      "provider": "moneyprinterturbo",
+      "surface": "render-accepted",
+      "category": "service",
+      "description": "Default stock-footage MP4 renderer through a running MoneyPrinterTurbo API.",
+      "smoke": {
+        "type": "service",
+        "urlEnv": "MONEYPRINTER_API_URL",
+        "defaultUrl": "http://127.0.0.1:8080",
+        "path": "/docs",
+        "hint": "Start MoneyPrinterTurbo, then run npm run canary:moneyprinter for a real MP4 canary."
+      }
+    },
+    {
+      "id": "render-pro",
+      "aliases": [
+        "renderpro"
+      ],
+      "provider": "render-pro",
+      "surface": "worker-reel-id",
+      "category": "production",
+      "description": "Canonical production renderer for approved Worker reel ids.",
+      "smoke": {
+        "type": "command",
+        "command": "node",
+        "args": [
+          "--check",
+          "scripts/render-pro.js"
+        ],
+        "hint": "Live render-pro needs Worker/R2/Chrome/ffmpeg/voice environment and real reel ids."
+      }
+    },
+    {
+      "id": "kokoro",
+      "provider": "kokoro",
+      "surface": "faceless-workflow",
+      "category": "local",
+      "aliases": [
+        "kokoro-compose"
+      ],
+      "description": "Fully local faceless renderer: Kokoro-82M narration + Pexels b-roll + FFmpeg compose.",
+      "requires": [
+        "npm run setup:kokoro (one-time ~340MB model download)",
+        "Pexels key (env or MoneyPrinterTurbo config)"
+      ],
+      "smoke": {
+        "type": "command",
+        "command": "node",
+        "args": [
+          "-e",
+          "import('./src/adapters/kokoro.js').then(m => process.exit(m.isKokoroReady() ? 0 : 1))"
+        ],
+        "hint": "run `npm run setup:kokoro` to install the local Kokoro model"
+      }
+    },
+    {
+      "id": "brand-video",
+      "provider": "brand-video-local",
+      "surface": "content-package",
+      "category": "local",
+      "description": "Source-backed brand motion graphics with local Kokoro narration, Chromium frames, and FFmpeg composition.",
+      "requires": [
+        "approved fleet.content-package.v1",
+        "npm run setup:kokoro",
+        "Playwright Chromium (`npx playwright install chromium`)",
+        "ffmpeg"
+      ],
+      "smoke": {
+        "type": "command",
+        "command": "npm",
+        "args": ["run", "render:package", "--", "--file", "test/fixtures/approved-content-package.json", "--out", "tmp/brand-video-smoke"]
+      }
+    }
+  ]
+}

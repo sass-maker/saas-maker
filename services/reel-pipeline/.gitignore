@@ -1,0 +1,23 @@
+node_modules/
+.env
+.env.*
+!.env.example
+artifacts/
+tmp/
+.reel-pipeline/
+.wrangler/
+*.log
+config/social-accounts.json
+test/fixtures/test-clip.mp4
+reel/target/
+tools/kokoro/
+
+# Blume docs site (generated, never committed)
+.blume/
+.blume-verify/
+dist/
+
+# Agent session logs
+.devin/
+.symphony/
+

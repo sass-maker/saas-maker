@@ -1,0 +1,13 @@
+{
+  "$schema": "reel-pipeline.target-host-acceptance.v1",
+  "targetHost": "example-host",
+  "acceptedUnresolved": [
+    {
+      "name": "creator-mvp-reviewed",
+      "reason": "Example only: this host intentionally excludes the manual kids-story channel.",
+      "evidence": "Link to release notes or host runbook section that records the scope exception.",
+      "acceptedBy": "operator@example.com",
+      "acceptedAt": "2026-07-10T00:00:00.000Z"
+    }
+  ]
+}
