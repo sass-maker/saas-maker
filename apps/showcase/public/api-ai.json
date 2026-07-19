@@ -185,6 +185,34 @@
       "md": null,
       "kind": "static",
       "description": "Distributional Lighthouse / PageSpeed audits with grounded performance analysis across the fleet."
+    },
+    {
+      "id": "protein-index",
+      "url": "https://protein.significanthobbies.com",
+      "md": null,
+      "kind": "static",
+      "description": "Source-aware Indian protein product intelligence."
+    },
+    {
+      "id": "open-historia",
+      "url": "https://historia.aliveville.com",
+      "md": null,
+      "kind": "static",
+      "description": "AI-powered grand-strategy history game."
+    },
+    {
+      "id": "private-agent-search",
+      "url": "https://search.sassmaker.com",
+      "md": null,
+      "kind": "static",
+      "description": "Cited search over private project corpora."
+    },
+    {
+      "id": "saas-ideas",
+      "url": "https://ideas.sassmaker.com",
+      "md": null,
+      "kind": "static",
+      "description": "Scored catalog of SaaS product ideas."
     }
   ],
   "auth": {

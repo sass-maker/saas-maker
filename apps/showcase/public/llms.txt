@@ -29,6 +29,10 @@
 - [AI Gateway](https://ai-gateway.sassmaker.com): OpenAI-compatible LLM gateway fronting free-tier models across multiple providers.
 - [SWE Interview Prep](https://learn.significanthobbies.com): SWE learning OS with FSRS spaced repetition, drills, and feedback.
 - [psi-swarm](https://performance.sassmaker.com): Distributional Lighthouse / PageSpeed audits with grounded performance analysis across the fleet.
+- [Protein Index](https://protein.significanthobbies.com): Source-aware Indian protein product intelligence.
+- [Open Historia](https://historia.aliveville.com): AI-powered grand-strategy history game.
+- [Private Agent Search](https://search.sassmaker.com): Cited search over private project corpora.
+- [SaaS Ideas](https://ideas.sassmaker.com): Scored catalog of SaaS product ideas.
 
 ## Machine surfaces
 
