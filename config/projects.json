@@ -21,7 +21,7 @@
       "open-historia confirmed a live product (historia.aliveville.com), not an orphan."
     ],
     "priorities": {
-      "P1": ["codevetter", "pace", "posttrainllm", "saas-maker-showcase", "saas-maker-docs", "saas-maker-platform", "high-signal", "sarthakagrawal-personal"],
+      "P1": ["codevetter", "pace", "posttrainllm", "saas-maker-showcase", "saas-maker-platform", "high-signal", "sarthakagrawal-personal"],
       "P2": ["drank", "free-ai", "psi-swarm", "everythingrated", "research-papers", "knowledge-base", "starboard", "reel-pipeline", "motion"],
       "P3": ["email-manager", "materia", "significanthobbies", "anime-list", "chess", "looptv", "reader", "swe-interview-prep", "rolepatch", "karte", "ai-game", "protein-index", "mobile-dev-cockpit", "saas-ideas", "truehire", "today-little-log", "open-historia"]
     }
@@ -85,20 +85,6 @@
       "inRegistry": true,
       "status": "live",
       "notes": "the hub"
-    },
-    {
-      "id": "saas-maker-docs",
-      "family": "saas-maker",
-      "tier": "active",
-      "repo": "saas-maker",
-      "deployKind": "pages",
-      "cfProject": "saas-maker-docs",
-      "domains": [
-        "docs.sassmaker.com"
-      ],
-      "inRegistry": true,
-      "status": "live",
-      "notes": ""
     },
     {
       "id": "saas-maker-platform",
