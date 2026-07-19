@@ -1,11 +1,12 @@
 {
   "_meta": {
     "purpose": "Single source of truth for fleet projects: tier + repo + deploy reality. Replaces the scattered split between agent-surfaces-registry.json (web GEO surfaces only), cloudflare.targets.json (partial deploy map), and project-tiers.md (focus marking). Reconciled against the live Cloudflare account 2026-07-18.",
-    "updated": "2026-07-18",
+    "updated": "2026-07-19",
     "fields": {
       "id": "stable project/surface id",
       "family": "top-level product family this belongs to",
       "tier": "focus | active | secondary | parked | out-of-fleet | non-product",
+      "priority": "P1 | P2 | P3 current attention level; P1 is core, P2 is support/active, P3 is maintain or park",
       "repo": "child repo dir under fleet root (null if none)",
       "deployKind": "pages | worker | worker+pages | none | unknown",
       "cfProject": "Cloudflare Pages project name and/or Worker script name(s)",
@@ -18,7 +19,12 @@
     "openGaps": [
       "CF project 'tinygpt' name unchanged — cosmetic only and not user-visible. posttrainllm.com is the canonical live domain; the platform-generated tinygpt.pages.dev hostname is not a custom fallback.",
       "open-historia confirmed a live product (historia.aliveville.com), not an orphan."
-    ]
+    ],
+    "priorities": {
+      "P1": ["codevetter", "pace", "posttrainllm", "saas-maker-showcase", "saas-maker-docs", "saas-maker-platform", "high-signal", "sarthakagrawal-personal"],
+      "P2": ["drank", "free-ai", "psi-swarm", "everythingrated", "research-papers", "knowledge-base", "starboard", "reel-pipeline", "motion"],
+      "P3": ["email-manager", "materia", "significanthobbies", "anime-list", "chess", "looptv", "reader", "swe-interview-prep", "rolepatch", "karte", "ai-game", "protein-index", "mobile-dev-cockpit", "saas-ideas", "truehire", "today-little-log", "open-historia"]
+    }
   },
   "projects": [
     {
