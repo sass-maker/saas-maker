@@ -56,7 +56,7 @@ export function redactSecrets(input) {
  */
 export function getAiInfraContract(project) {
   const contract = FLEET_HEALTH_CONTRACTS[project];
-  if (!contract || !contract.automation?.capability) return null;
+  if (!contract?.automation?.capability) return null;
   if (contract.automation.capability !== 'ai-infrastructure-toolbox-automation') return null;
   return contract;
 }
@@ -362,39 +362,53 @@ export function renderAiInfraMarkdown(snapshot) {
   for (const project of snapshot.projects) {
     lines.push(`## ${project.displayName} (\`${project.project}\`)`, '');
     lines.push(`- **Freshness:** ${project.freshness.mode} — ${project.freshness.note}`);
-    lines.push(`- **Privacy:** storesPromptText=${project.privacy.storesPromptText}, storesRequestIds=${project.privacy.storesRequestIds}`);
+    lines.push(
+      `- **Privacy:** storesPromptText=${project.privacy.storesPromptText}, storesRequestIds=${project.privacy.storesRequestIds}`
+    );
     if (project.providerEvidence) {
       lines.push(`- **Provider availability:** ${project.providerEvidence.availability}`);
       lines.push(`- **Provider degradation:** ${project.providerEvidence.degradation}`);
       if (project.providerEvidence.neuronBudget) {
         const nb = project.providerEvidence.neuronBudget;
-        lines.push(`- **Neuron budget:** ${nb.used}/${nb.limit} (${(nb.utilization * 100).toFixed(1)}%), headroom ${nb.headroom}, overCap ${nb.overCap}`);
+        lines.push(
+          `- **Neuron budget:** ${nb.used}/${nb.limit} (${(nb.utilization * 100).toFixed(1)}%), headroom ${nb.headroom}, overCap ${nb.overCap}`
+        );
       }
     }
     if (project.runtimeReadiness) {
       const r = project.runtimeReadiness;
-      lines.push(`- **Runtime readiness:** ok=${r.ok}, d1=${r.d1}, d1Schema=${r.d1Schema}, vectorize=${r.vectorize}, r2=${r.r2}`);
+      lines.push(
+        `- **Runtime readiness:** ok=${r.ok}, d1=${r.d1}, d1Schema=${r.d1Schema}, vectorize=${r.vectorize}, r2=${r.r2}`
+      );
       lines.push(`- **Deploy fingerprint:** ${r.deployFingerprint ?? 'unknown'}`);
     }
     lines.push('', '### Evidence', '');
     lines.push('| Label | Method | Path | Status | OK | Duration (ms) |');
     lines.push('| --- | --- | --- | ---: | :---: | ---: |');
     for (const entry of project.evidence) {
-      lines.push(`| ${entry.label} | ${entry.method} | ${entry.path} | ${entry.status ?? 'null'} | ${entry.ok ? 'yes' : 'no'} | ${entry.durationMs ?? 'null'} |`);
+      lines.push(
+        `| ${entry.label} | ${entry.method} | ${entry.path} | ${entry.status ?? 'null'} | ${entry.ok ? 'yes' : 'no'} | ${entry.durationMs ?? 'null'} |`
+      );
     }
     if (project.protectedEvidence) {
       const p = project.protectedEvidence;
-      lines.push(`| ${p.label} | ${p.method} | ${p.path} | ${p.status ?? 'null'} | ${p.ok ? 'yes' : 'no'} | ${p.durationMs ?? 'null'} |`);
+      lines.push(
+        `| ${p.label} | ${p.method} | ${p.path} | ${p.status ?? 'null'} | ${p.ok ? 'yes' : 'no'} | ${p.durationMs ?? 'null'} |`
+      );
     }
 
     lines.push('', '### Jobs', '');
     if (project.jobs.length === 0) {
       lines.push('None.');
     } else {
-      lines.push('| Job | Trigger | Bounds | Timeout (ms) | Retries | Idempotency | Failure state | Owner |');
+      lines.push(
+        '| Job | Trigger | Bounds | Timeout (ms) | Retries | Idempotency | Failure state | Owner |'
+      );
       lines.push('| --- | --- | --- | ---: | --- | --- | --- | --- |');
       for (const job of project.jobs) {
-        lines.push(`| ${job.name} | ${job.trigger} | ${job.bounds} | ${job.timeoutMs ?? 'null'} | ${job.retries} | ${job.idempotency} | ${job.failureState} | ${job.owner} |`);
+        lines.push(
+          `| ${job.name} | ${job.trigger} | ${job.bounds} | ${job.timeoutMs ?? 'null'} | ${job.retries} | ${job.idempotency} | ${job.failureState} | ${job.owner} |`
+        );
       }
     }
 
@@ -402,7 +416,9 @@ export function renderAiInfraMarkdown(snapshot) {
     lines.push('| Binding | Kind | Owner | Source | Reconstruction | Migration guard |');
     lines.push('| --- | --- | --- | --- | --- | --- |');
     for (const entry of project.storage) {
-      lines.push(`| ${entry.binding} | ${entry.kind} | ${entry.owner} | ${entry.source} | ${entry.reconstruction} | ${entry.migrationGuard} |`);
+      lines.push(
+        `| ${entry.binding} | ${entry.kind} | ${entry.owner} | ${entry.source} | ${entry.reconstruction} | ${entry.migrationGuard} |`
+      );
     }
     lines.push('');
   }

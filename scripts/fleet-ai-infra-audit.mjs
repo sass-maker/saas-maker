@@ -53,7 +53,8 @@ function parseArgs(argv) {
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
     if (arg === '--project') args.project = argv[++i] ?? null;
-    else if (arg === '--timeout-ms') args.timeoutMs = Number.parseInt(argv[++i] ?? '', 10) || args.timeoutMs;
+    else if (arg === '--timeout-ms')
+      args.timeoutMs = Number.parseInt(argv[++i] ?? '', 10) || args.timeoutMs;
     else if (arg === '--json') args.jsonOnly = true;
     else if (arg === '--output-dir') args.outputDir = path.resolve(argv[++i] ?? DEFAULT_OUTPUT_DIR);
     else if (arg === '--no-live') args.noLive = true;
@@ -106,7 +107,11 @@ async function runProbe(baseUrl, probe, timeoutMs) {
     const body = await response.text().catch(() => '');
     return { status: response.status, durationMs: Date.now() - started, body };
   } catch (error) {
-    return { status: null, durationMs: Date.now() - started, body: String(error instanceof Error ? error.message : error) };
+    return {
+      status: null,
+      durationMs: Date.now() - started,
+      body: String(error instanceof Error ? error.message : error),
+    };
   } finally {
     clearTimeout(timeout);
   }
@@ -146,11 +151,18 @@ async function gatherProbeResults(projects, args) {
       probeResults[`${project}:${probe.label}`] = await runProbe(probeBase, probe, args.timeoutMs);
     }
     const protectedProbe = contract.automation.protectedProbe;
-    probeResults[`${project}:${protectedProbe.label}`] = await runProbe(probeBase, protectedProbe, args.timeoutMs);
+    probeResults[`${project}:${protectedProbe.label}`] = await runProbe(
+      probeBase,
+      protectedProbe,
+      args.timeoutMs
+    );
 
     // Higher-fidelity payloads for sanitized evidence.
     if (project === 'free-ai') {
-      payloads[`${project}:routing-status`] = await fetchJson(`${probeBase}/v1/routing/status`, args.timeoutMs);
+      payloads[`${project}:routing-status`] = await fetchJson(
+        `${probeBase}/v1/routing/status`,
+        args.timeoutMs
+      );
       payloads[`${project}:budget`] = await fetchJson(`${probeBase}/v1/budget`, args.timeoutMs);
     }
     if (project === 'knowledge-base') {
@@ -162,7 +174,10 @@ async function gatherProbeResults(projects, args) {
 
 function writeReports(args, snapshot) {
   fs.mkdirSync(args.outputDir, { recursive: true });
-  fs.writeFileSync(path.join(args.outputDir, 'latest.json'), `${JSON.stringify(snapshot, null, 2)}\n`);
+  fs.writeFileSync(
+    path.join(args.outputDir, 'latest.json'),
+    `${JSON.stringify(snapshot, null, 2)}\n`
+  );
   fs.writeFileSync(path.join(args.outputDir, 'latest.md'), renderAiInfraMarkdown(snapshot));
 }
 
@@ -181,8 +196,13 @@ async function main() {
     console.log(JSON.stringify(snapshot, null, 2));
   } else {
     for (const project of snapshot.projects) {
-      const failed = [...project.evidence, ...(project.protectedEvidence ? [project.protectedEvidence] : [])].filter((e) => !e.ok);
-      console.log(`${failed.length === 0 ? 'PASS' : 'FAIL'} ${project.project}: ${project.evidence.length + (project.protectedEvidence ? 1 : 0) - failed.length}/${project.evidence.length + (project.protectedEvidence ? 1 : 0)} probes passed`);
+      const failed = [
+        ...project.evidence,
+        ...(project.protectedEvidence ? [project.protectedEvidence] : []),
+      ].filter((e) => !e.ok);
+      console.log(
+        `${failed.length === 0 ? 'PASS' : 'FAIL'} ${project.project}: ${project.evidence.length + (project.protectedEvidence ? 1 : 0) - failed.length}/${project.evidence.length + (project.protectedEvidence ? 1 : 0)} probes passed`
+      );
     }
     console.log(`\nReport: ${path.join(args.outputDir, 'latest.md')}`);
   }
