@@ -17,6 +17,18 @@ on:
     branches: [main]
   push:
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      release_component:
+        description: Production component to release after CI passes
+        required: true
+        type: choice
+        options:
+          - api
+          - droid
+          - cockpit
+          - showcase
+          - packages
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -42,7 +54,7 @@ jobs:
 
   deploy-api:
     needs: build-and-test
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch' && inputs.release_component == 'api'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -95,7 +107,7 @@ jobs:
 
   deploy-droid:
     needs: build-and-test
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch' && inputs.release_component == 'droid'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     # saasmaker-droid is an internal Worker with no public custom domain.
@@ -147,7 +159,7 @@ jobs:
 
   deploy-cockpit:
     needs: build-and-test
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch' && inputs.release_component == 'cockpit'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -200,7 +212,7 @@ jobs:
 
   deploy-landing:
     needs: build-and-test
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch' && inputs.release_component == 'showcase'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -256,7 +268,7 @@ jobs:
 
   publish-packages:
     needs: build-and-test
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch' && inputs.release_component == 'packages'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
