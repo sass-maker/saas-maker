@@ -1,7 +1,6 @@
 id	enabled	cron	name	cwd	model	effort	prompt_file	lock_minutes	source
-daily-fleet-health-sentinel	yes	0 8 * * 0,2-6	Daily Fleet Health Sentinel	/Users/assistant/Desktop/fleet	gpt-5.2	medium	prompts/daily-fleet-health-sentinel.md	120	~/.codex/automations/daily-fleet-health-sentinel/automation.toml
-weekly-fleet-ops-audit	yes	0 8 * * 1	Weekly Deep Fleet Ops Audit	/Users/assistant/Desktop/fleet	gpt-5.2	high	prompts/weekly-fleet-ops-audit.md	240	~/.codex/automations/weekly-fleet-ops-audit/automation.toml
-biweekly-fleet-audit	yes	0 10 * * 1	Weekly Active-AI Product Review	/Users/assistant/Desktop/fleet	gpt-5.2	high	prompts/biweekly-fleet-audit.md	240	~/.codex/automations/biweekly-fleet-audit/automation.toml
-fleet-backlog-router	yes	0 11 * * 2-5	Fleet Backlog Router	/Users/assistant/Desktop/fleet	gpt-5.2	high	prompts/fleet-backlog-router.md	240	~/.codex/automations/fleet-backlog-router/automation.toml
-marketing-queue-builder	yes	0 15 * * 2,4	Marketing Queue Builder	/Users/assistant/Desktop/fleet	gpt-5.2	medium	prompts/marketing-queue-builder.md	180	~/.codex/automations/marketing-queue-builder/automation.toml
-
+daily-fleet-health-sentinel	yes	0 8 * * 0,2-6	Daily Fleet Health Sentinel	@fleet	gpt-5.2	medium	prompts/daily-fleet-health-sentinel.md	120	~/.codex/automations/daily-fleet-health-sentinel/automation.toml
+weekly-fleet-ops-audit	yes	0 8 * * 1	Weekly Deep Fleet Ops Audit	@fleet	gpt-5.2	high	prompts/weekly-fleet-ops-audit.md	240	~/.codex/automations/weekly-fleet-ops-audit/automation.toml
+biweekly-fleet-audit	yes	0 10 * * 1	Weekly Active-AI Product Review	@fleet	gpt-5.2	high	prompts/biweekly-fleet-audit.md	240	~/.codex/automations/biweekly-fleet-audit/automation.toml
+fleet-backlog-router	yes	0 11 * * 2-5	Fleet Backlog Router	@fleet	gpt-5.2	high	prompts/fleet-backlog-router.md	240	~/.codex/automations/fleet-backlog-router/automation.toml
+marketing-queue-builder	yes	0 15 * * 2,4	Marketing Queue Builder	@fleet	gpt-5.2	medium	prompts/marketing-queue-builder.md	180	~/.codex/automations/marketing-queue-builder/automation.toml

@@ -4,6 +4,10 @@ This is the human source of truth for how Sarthak allocates attention across
 the fleet. It classifies obligations, not repositories or deploy surfaces.
 `fleet-ops/config/projects.json` remains the machine-readable inventory for
 repositories, Cloudflare projects, domains, and deployment status.
+The cross-repository implementation plan lives in the registered OpenSpec Store
+`fleet-automation-closure`; the executable attention and evidence contract is
+`fleet-ops/config/automation-registry.json`. Do not duplicate either plan into
+individual product repositories.
 
 The daily operating view is intentionally small:
 

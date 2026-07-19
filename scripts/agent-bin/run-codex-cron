@@ -3,6 +3,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 FLEET_OPS_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+FLEET_ROOT="$(cd "$FLEET_OPS_DIR/.." && pwd)"
 CRON_DIR="$FLEET_OPS_DIR/automation/codex-cron"
 JOBS_FILE="$CRON_DIR/jobs.tsv"
 LOG_DIR="$CRON_DIR/logs"
@@ -38,6 +39,12 @@ job_row="$(awk -F '\t' -v id="$JOB_ID" 'NR > 1 && $1 == id { print; found=1 } EN
 
 IFS=$'\t' read -r id enabled cron_expr name cwd model effort prompt_file lock_minutes source <<<"$job_row"
 
+if [ "$cwd" = "@fleet" ]; then
+  cwd="$FLEET_ROOT"
+elif [[ "$cwd" == @fleet/* ]]; then
+  cwd="$FLEET_ROOT/${cwd#@fleet/}"
+fi
+
 if [ "$enabled" != "yes" ]; then
   echo "job disabled: $JOB_ID" >&2
   exit 0
@@ -58,14 +65,17 @@ lock_path="$LOCK_DIR/$id.lockdir"
 log_path="$LOG_DIR/$id-$(date +%Y%m%d-%H%M%S).log"
 
 if [ -d "$lock_path" ] && find "$lock_path" -prune -mmin +"$lock_minutes" | grep -q .; then
-  rm -rf "$lock_path"
+  rmdir "$lock_path" 2>/dev/null || {
+    echo "stale lock requires manual inspection: $lock_path" >&2
+    exit 1
+  }
 fi
 
 if ! mkdir "$lock_path" 2>/dev/null; then
   echo "job already running: $id" | tee -a "$log_path"
   exit 0
 fi
-trap 'rm -rf "$lock_path"' EXIT INT TERM
+trap 'rmdir "$lock_path" 2>/dev/null || true' EXIT INT TERM
 
 set +e
 {
@@ -95,6 +105,7 @@ set +e
 } 2>&1 | tee -a "$log_path"
 job_status="${PIPESTATUS[0]}"
 set -e
+printf 'exit_status: %s\n' "$job_status" >> "$log_path"
 
 if [ "$DRY_RUN" != "--dry-run" ] && [ -x "$NOTIFY" ]; then
   if [ "$job_status" -eq 0 ]; then

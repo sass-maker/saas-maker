@@ -40,14 +40,15 @@ test("queues a structured event and suppresses its duplicate", () => {
   }
 });
 
-test("success events page through OpenClaw Telegram by default", () => {
+test("routine success events remain history-only by default", () => {
   const state = mkdtempSync(resolve(tmpdir(), "fleet-notify-"));
   try {
-    const result = run(state, ["emit", "--severity", "success", "--source", "test", "--title", "Done", "--no-drain", "--json"]);
+    const result = run(state, ["emit", "--severity", "success", "--source", "test", "--title", "Done", "--json"]);
     assert.equal(result.status, 0, result.stderr);
-    assert.equal(readdirSync(resolve(state, "pending")).length, 1);
-    const event = JSON.parse(readFileSync(resolve(state, "pending", readdirSync(resolve(state, "pending"))[0]), "utf8"));
-    assert.deepEqual(event.channels, ["openclaw-telegram"]);
+    assert.equal(readdirSync(resolve(state, "pending")).length, 0);
+    assert.equal(readdirSync(resolve(state, "sent")).length, 1);
+    const event = JSON.parse(readFileSync(resolve(state, "sent", readdirSync(resolve(state, "sent"))[0]), "utf8"));
+    assert.deepEqual(event.channels, []);
   } finally {
     rmSync(state, { recursive: true, force: true });
   }

@@ -11,7 +11,7 @@
   "optionalChannels": ["ntfy"],
   "routes": {
     "info": [],
-    "success": ["openclaw-telegram"],
+    "success": [],
     "warning": ["openclaw-telegram"],
     "critical": ["openclaw-telegram", "ntfy"]
   }

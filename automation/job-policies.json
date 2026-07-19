@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "defaults": {
+    "timeoutMinutes": 120,
+    "retryMaximum": 0,
+    "costBudget": "bounded by configured model and one invocation",
+    "dryRun": true,
+    "unresolvedFailure": "durable local log plus deduplicated notification"
+  },
+  "jobs": [
+    { "id": "daily-fleet-health-sentinel", "owner": "foundry", "trigger": "cron", "bounds": "canonical in-scope registry", "timeoutMinutes": 120, "lock": "single machine lock, stale after 120 minutes", "retryMaximum": 0, "idempotency": "read-only audit with dated output", "costBudget": "one medium-effort model run", "dryRun": true, "receipt": "cron log and notification receipt", "failurePath": "deduplicated warning" },
+    { "id": "weekly-fleet-ops-audit", "owner": "foundry", "trigger": "cron", "bounds": "canonical in-scope registry", "timeoutMinutes": 240, "lock": "single machine lock, stale after 240 minutes", "retryMaximum": 0, "idempotency": "evidence-first proposals only", "costBudget": "one high-effort model run", "dryRun": true, "receipt": "cron log and notification receipt", "failurePath": "deduplicated warning" },
+    { "id": "biweekly-fleet-audit", "owner": "foundry", "trigger": "cron", "bounds": "My Work only", "timeoutMinutes": 240, "lock": "single machine lock, stale after 240 minutes", "retryMaximum": 0, "idempotency": "read-only review unless separately authorized", "costBudget": "one high-effort model run", "dryRun": true, "receipt": "cron log and notification receipt", "failurePath": "deduplicated warning" },
+    { "id": "fleet-backlog-router", "owner": "foundry", "trigger": "cron", "bounds": "existing backlog and attention policy", "timeoutMinutes": 240, "lock": "single machine lock, stale after 240 minutes", "retryMaximum": 0, "idempotency": "dedupe against canonical tasks before proposal", "costBudget": "one high-effort model run", "dryRun": true, "receipt": "cron log and resulting task identifiers", "failurePath": "deduplicated warning" },
+    { "id": "marketing-queue-builder", "owner": "foundry", "trigger": "cron", "bounds": "approved marketing registry and review-debt limit", "timeoutMinutes": 180, "lock": "single machine lock, stale after 180 minutes", "retryMaximum": 0, "idempotency": "asset and project dedupe", "costBudget": "one medium-effort model run; no paid distribution", "dryRun": true, "receipt": "cron log and draft identifiers", "failurePath": "deduplicated warning" },
+    { "id": "nightly-learning-sync", "owner": "foundry", "trigger": "cron", "bounds": "configured learning source registry", "timeoutMinutes": 30, "lock": "scheduler single invocation", "retryMaximum": 0, "idempotency": "commit only semantic source changes", "costBudget": "no model", "dryRun": false, "receipt": "system job log", "failurePath": "deduplicated warning" },
+    { "id": "daily-learning-session", "owner": "foundry", "trigger": "cron", "bounds": "one private daily session", "timeoutMinutes": 10, "lock": "scheduler single invocation", "retryMaximum": 0, "idempotency": "daily session identity", "costBudget": "no model", "dryRun": false, "receipt": "system job log and delivery receipt", "failurePath": "deduplicated warning" },
+    { "id": "weekly-domain-intelligence", "owner": "foundry", "trigger": "cron", "bounds": "configured owned domains and three mobile samples each", "timeoutMinutes": 120, "lock": "scheduler single invocation", "retryMaximum": 0, "idempotency": "dated domain sample identity", "costBudget": "bounded provider calls; no paid acquisition", "dryRun": false, "receipt": "system job log and domain snapshot", "failurePath": "deduplicated warning" }
+  ]
+}

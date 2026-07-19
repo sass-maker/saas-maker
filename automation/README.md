@@ -3,6 +3,9 @@
 This directory holds versioned automation intent and helper scripts. Runtime
 credentials, device pairings, and local run logs remain machine-local.
 
+The shared attention, evidence, and action contract is documented in
+[`../docs/fleet-automation-control-plane.md`](../docs/fleet-automation-control-plane.md).
+
 ## Active cron jobs
 
 The deterministic `nightly-learning-sync` job runs at 02:15 local time. It
