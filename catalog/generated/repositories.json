@@ -1,0 +1,203 @@
+{
+  "schemaVersion": 1,
+  "repositories": [
+    {
+      "id": "codevetter",
+      "path": "codevetter",
+      "remote": "https://github.com/Codevetter/codevetter.git",
+      "state": "configured"
+    },
+    {
+      "id": "pace",
+      "path": "pace",
+      "remote": "https://github.com/HeyPace/pace.git",
+      "state": "configured"
+    },
+    {
+      "id": "posttrainllm",
+      "path": "posttrainllm",
+      "remote": "https://github.com/PostTrainLLM/posttrainllm.git",
+      "state": "configured"
+    },
+    {
+      "id": "high-signal",
+      "path": "high-signal",
+      "remote": "https://github.com/High-Signal-App/high-signal.git",
+      "state": "configured"
+    },
+    {
+      "id": "portfolio",
+      "path": null,
+      "remote": "https://github.com/sarthakagrawal927/portfolio.git",
+      "state": "configured"
+    },
+    {
+      "id": "rolepatch",
+      "path": "rolepatch",
+      "remote": "git@github.com:sarthakagrawal927/rolepatch.git",
+      "state": "configured"
+    },
+    {
+      "id": "karte",
+      "path": "karte",
+      "remote": "https://github.com/sarthakagrawal927/karte.git",
+      "state": "configured"
+    },
+    {
+      "id": "significanthobbies",
+      "path": "significanthobbies",
+      "remote": "https://github.com/Significant-Hobbies/significanthobbies.git",
+      "state": "configured"
+    },
+    {
+      "id": "reader",
+      "path": "reader",
+      "remote": "https://github.com/Significant-Hobbies/reader.git",
+      "state": "configured"
+    },
+    {
+      "id": "anime-list",
+      "path": "anime-list",
+      "remote": "https://github.com/Significant-Hobbies/anime-list.git",
+      "state": "configured"
+    },
+    {
+      "id": "swe-interview-prep",
+      "path": "swe-interview-prep",
+      "remote": "https://github.com/Significant-Hobbies/swe-interview-prep.git",
+      "state": "configured"
+    },
+    {
+      "id": "email-manager",
+      "path": "email-manager",
+      "remote": "https://github.com/sarthakagrawal927/email-manager.git",
+      "state": "configured"
+    },
+    {
+      "id": "looptv",
+      "path": "looptv",
+      "remote": "https://github.com/Significant-Hobbies/looptv.git",
+      "state": "configured"
+    },
+    {
+      "id": "chess",
+      "path": "chess",
+      "remote": "https://github.com/Significant-Hobbies/chess.git",
+      "state": "configured"
+    },
+    {
+      "id": "motion",
+      "path": "motion",
+      "remote": "https://github.com/sarthakagrawal927/motion.git",
+      "state": "configured"
+    },
+    {
+      "id": "research-papers",
+      "path": "research-papers",
+      "remote": "https://github.com/High-Signal-App/research-papers.git",
+      "state": "configured"
+    },
+    {
+      "id": "starboard",
+      "path": "starboard",
+      "remote": "https://github.com/Codevetter/starboard.git",
+      "state": "configured"
+    },
+    {
+      "id": "free-ai",
+      "path": "free-ai",
+      "remote": "https://github.com/sass-maker/free-ai.git",
+      "state": "configured"
+    },
+    {
+      "id": "knowledge-base",
+      "path": "knowledge-base",
+      "remote": "https://github.com/sass-maker/knowledge-base.git",
+      "state": "configured"
+    },
+    {
+      "id": "saas-maker",
+      "path": ".",
+      "remote": "https://github.com/sass-maker/saas-maker.git",
+      "state": "configured"
+    },
+    {
+      "id": "fleet-ops/psi-swarm",
+      "path": "tools/psi-swarm",
+      "remote": "https://github.com/sass-maker/psi-swarm.git",
+      "state": "configured"
+    },
+    {
+      "id": "mobile-dev-cockpit",
+      "path": "services/mobile-dev-cockpit",
+      "remote": "https://github.com/sass-maker/mobile-dev-cockpit.git",
+      "state": "configured"
+    },
+    {
+      "id": "drank",
+      "path": "services/drank",
+      "remote": "https://github.com/High-Signal-App/drank.git",
+      "state": "configured"
+    },
+    {
+      "id": "reel-pipeline",
+      "path": "services/reel-pipeline",
+      "remote": "https://github.com/sass-maker/reel-pipeline.git",
+      "state": "configured"
+    },
+    {
+      "id": "ai-game",
+      "path": "ai-game",
+      "remote": "https://github.com/sarthakagrawal927/aliveville.git",
+      "state": "configured"
+    },
+    {
+      "id": "open-historia",
+      "path": "open-historia",
+      "remote": null,
+      "state": "configured"
+    },
+    {
+      "id": "truehire",
+      "path": "truehire",
+      "remote": "https://github.com/sarthakagrawal927/truehire.git",
+      "state": "configured"
+    },
+    {
+      "id": "companion-robot",
+      "path": "companion-robot",
+      "remote": null,
+      "state": "configured"
+    },
+    {
+      "id": "materia",
+      "path": "materia",
+      "remote": "https://github.com/Significant-Hobbies/materia.git",
+      "state": "configured"
+    },
+    {
+      "id": "everythingrated",
+      "path": "everythingrated",
+      "remote": "https://github.com/High-Signal-App/everythingrated.git",
+      "state": "configured"
+    },
+    {
+      "id": "protein-index",
+      "path": "protein-index",
+      "remote": "https://github.com/Significant-Hobbies/protein-index.git",
+      "state": "configured"
+    },
+    {
+      "id": "web-playables",
+      "path": "web-playables",
+      "remote": null,
+      "state": "configured"
+    },
+    {
+      "id": "saas-ideas",
+      "path": "saas-ideas",
+      "remote": null,
+      "state": "configured"
+    }
+  ]
+}
