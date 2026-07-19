@@ -1,6 +1,6 @@
 {
   "comment": "Generated from fleet-ops/config/agent-surfaces-registry.json — public product roots for hub link equity",
-  "generatedAt": "2026-07-17",
+  "generatedAt": "2026-07-19",
   "products": [
     {
       "id": "codevetter",
@@ -144,6 +144,30 @@
       "name": "psi-swarm",
       "url": "https://performance.sassmaker.com",
       "summary": "Distributional Lighthouse / PageSpeed audits with grounded performance analysis across the fleet."
+    },
+    {
+      "id": "protein-index",
+      "name": "Protein Index",
+      "url": "https://protein.significanthobbies.com",
+      "summary": "Source-aware Indian protein product intelligence with nutrition, offers, and value comparisons."
+    },
+    {
+      "id": "open-historia",
+      "name": "Open Historia",
+      "url": "https://historia.aliveville.com",
+      "summary": "Interactive AI world simulator and story experiment."
+    },
+    {
+      "id": "knowledgebase-app",
+      "name": "Private Agent Search",
+      "url": "https://search.sassmaker.com",
+      "summary": "Cited search over project-scoped private corpora."
+    },
+    {
+      "id": "saas-ideas",
+      "name": "SaaS Ideas",
+      "url": "https://ideas.sassmaker.com",
+      "summary": "Scored catalog of SaaS ideas and product opportunities."
     }
   ]
 }

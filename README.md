@@ -9,7 +9,10 @@ The repo is public, but parts of the deployment are still personal/internal. Tre
 
 ## Deployment & External Services
 
-Everything is hosted on Cloudflare. Each deployable ships independently via GitHub Actions (`.github/workflows/ci.yml`) on push to `main`, gated by changed paths.
+Everything is hosted on Cloudflare. Each deployable ships independently through
+the guarded GitHub Actions workflows (`.github/workflows/ci.yml`) after an
+explicit production deploy decision; `main` stays releasable but is not itself
+an automatic production trigger.
 
 | Deployable        | Source          | Host                                                                                             |
 | ----------------- | --------------- | ------------------------------------------------------------------------------------------------ |

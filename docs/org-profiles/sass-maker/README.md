@@ -15,6 +15,8 @@ one CLI, one cockpit, one set of widgets — running on Cloudflare's $5 tier.
 - **[Email Manager](https://mail.sassmaker.com)** — Gmail workspace with local semantic search.
 - **[psi-swarm](https://performance.sassmaker.com)** — distributional Lighthouse / PageSpeed audits with grounded performance analysis across the fleet.
 - **[DRank](https://domains.sassmaker.com)** — Ahrefs Domain Rating tracker for fleet domain marketing.
+- **[Private Agent Search](https://knowledgebase.sassmaker.com)** — cited search over project-scoped private corpora, with the app at [search.sassmaker.com](https://search.sassmaker.com).
+- **[SaaS Ideas](https://ideas.sassmaker.com)** — scored catalog of SaaS ideas and product opportunities.
 
 ## The fleet
 
@@ -47,6 +49,8 @@ orgs — each with its own brand and domain:
 | Email Manager | https://mail.sassmaker.com | Gmail workspace with local semantic search |
 | psi-swarm | https://performance.sassmaker.com | Distributional Lighthouse performance audits |
 | DRank | https://domains.sassmaker.com | Ahrefs Domain Rating tracker |
+| Private Agent Search | https://knowledgebase.sassmaker.com | Cited search over private project corpora; app at https://search.sassmaker.com |
+| SaaS Ideas | https://ideas.sassmaker.com | Scored SaaS idea catalog |
 
 ## Build log
 

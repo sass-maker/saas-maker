@@ -1,6 +1,6 @@
 # Foundry (SaaS Maker)
 
-SaaS Maker is the directory and operating layer for Sarthak Agrawal's product fleet. The public front door is four products — CodeVetter, Post-train LLM, HeyPace, and HiSignal — plus SaaS Maker itself; this page keeps the full catalog available.
+Personal product fleet by Sarthak Agrawal — shipped apps plus the open-source operating layer (CLI, cockpit, deploy tooling) on Cloudflare.
 
 ## What it is
 
@@ -8,15 +8,7 @@ SaaS Maker is the directory and operating layer for Sarthak Agrawal's product fl
 - Each product on its own custom domain
 - Agent-readable surfaces: `/llms.txt`, `/api/ai`, `/index.md` on every public origin
 
-## Spotlight products
-
-- **CodeVetter** — https://codevetter.com — Desktop-first AI code review workbench for agent-generated code.
-- **Post-train LLM** — https://posttrainllm.com — Mac-local post-training, runtime, and WebGPU learning playground.
-- **HeyPace** — https://heypace.app — On-device Mac voice agent with screen-aware local context.
-- **HiSignal** — https://highsignal.app — Evidence-first daily brief for technology, markets, and infrastructure.
-- **SaaS Maker** — https://sassmaker.com — The broader directory and operating layer for the full fleet.
-
-## Full directory: public products (canonical URLs)
+## Public products (canonical URLs)
 
 - **CodeVetter** — https://codevetter.com — Desktop-first AI code review workbench for agent-generated code. Local SQLite, Tauri shell, evidence-backed review — your repo never hits a central server.
 - **RolePatch** — https://rolepatch.com — AI-powered resume tailoring. Score fit against a job description, rewrite bullets for the role, and prep interviews.
@@ -30,7 +22,7 @@ SaaS Maker is the directory and operating layer for Sarthak Agrawal's product fl
 - **TrueHire** — https://truehire.rolepatch.com — Hiring-side companion under RolePatch for evaluating candidates with structured role fit.
 - **researchPapers** — https://papers.highsignal.app — Academic paper platform over a high-citation OpenAlex CS corpus — search, analytics, and RAG demo (~488k papers).
 - **PostTrainLLM** — https://posttrainllm.com — Mac-local LLM specialist factory — post-training and runtime that fits on one Mac, plus WebGPU playground.
-- **Pace** — https://pace-6xg.pages.dev — On-device Mac voice agent that reads your screen and acts with local context.
+- **Pace** — https://heypace.app — On-device Mac voice agent that reads your screen and acts with local context.
 - **DRank** — https://domains.sassmaker.com — Ahrefs Domain Rating tracker feeding High Signal /domains and fleet domain marketing work.
 - **LoopTV** — https://tv.significanthobbies.com — TV-style random video player for lean-back browsing of curated channels.
 - **MAL Explorer** — https://anime.significanthobbies.com — Anime and manga discovery with multi-axis filtering and watchlists.
@@ -40,6 +32,12 @@ SaaS Maker is the directory and operating layer for Sarthak Agrawal's product fl
 - **AI Gateway** — https://ai-gateway.sassmaker.com — OpenAI-compatible LLM gateway fronting free-tier models across multiple providers.
 - **SWE Interview Prep** — https://learn.significanthobbies.com — SWE learning OS with FSRS spaced repetition, drills, and feedback.
 - **psi-swarm** — https://performance.sassmaker.com — Distributional Lighthouse / PageSpeed audits with grounded performance analysis across the fleet.
+
+## Focus products (active marketing)
+
+- **Pace** — https://heypace.app — Mac app for pacing work
+- **CodeVetter** — https://codevetter.com — desktop AI code review
+- **PostTrainLLM** — https://posttrainllm.com — train/run small local models
 
 ## Agent entrypoints
 

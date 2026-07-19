@@ -1,16 +1,8 @@
 # Foundry (SaaS Maker)
 
-> SaaS Maker is the directory and operating layer for Sarthak Agrawal's product fleet. Its public front door is four products plus SaaS Maker itself; this surface also exposes the full catalog.
+> Sarthak Agrawal's personal product fleet showcase — RolePatch, High Signal, CodeVetter, Pace, PostTrainLLM, Karte, Significant Hobbies, and 15+ other shipped apps, plus the open-source Foundry operating layer on Cloudflare.
 
-## Spotlight
-
-- [CodeVetter](https://codevetter.com): Desktop-first AI code review
-- [Post-train LLM](https://posttrainllm.com): Mac-local post-training, runtime, and WebGPU playground
-- [HeyPace](https://heypace.app): On-device Mac voice agent
-- [HiSignal](https://highsignal.app): Evidence-first daily brief for technology, markets, and infrastructure
-- [SaaS Maker](https://sassmaker.com): Broader fleet directory and operating layer
-
-## Full directory
+## Product
 
 - [Home](https://sassmaker.com/): Fleet map
 - [Docs](https://docs.sassmaker.com): Foundry manual
@@ -27,7 +19,7 @@
 - [TrueHire](https://truehire.rolepatch.com): Hiring-side companion under RolePatch for evaluating candidates with structured role fit.
 - [researchPapers](https://papers.highsignal.app): Academic paper platform over a high-citation OpenAlex CS corpus — search, analytics, and RAG demo (~488k papers).
 - [PostTrainLLM](https://posttrainllm.com): Mac-local LLM specialist factory — post-training and runtime that fits on one Mac, plus WebGPU playground.
-- [Pace](https://pace-6xg.pages.dev): On-device Mac voice agent that reads your screen and acts with local context.
+- [Pace](https://heypace.app): On-device Mac voice agent that reads your screen and acts with local context.
 - [DRank](https://domains.sassmaker.com): Ahrefs Domain Rating tracker feeding High Signal /domains and fleet domain marketing work.
 - [LoopTV](https://tv.significanthobbies.com): TV-style random video player for lean-back browsing of curated channels.
 - [MAL Explorer](https://anime.significanthobbies.com): Anime and manga discovery with multi-axis filtering and watchlists.
