@@ -176,6 +176,15 @@ importers:
 
   apps/docs-blume:
     dependencies:
+      '@astrojs/mdx':
+        specifier: ^7.0.3
+        version: 7.0.3(@astrojs/markdown-satteri@0.3.4)(astro@7.1.1(@astrojs/markdown-remark@7.2.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(@types/node@25.6.0)(@vercel/functions@3.7.5(@aws-sdk/credential-provider-web-identity@3.972.35)(ws@8.20.0))(aws4fetch@1.0.20)(jiti@2.7.0)(rollup@4.60.2)(terser@5.16.9)(tsx@4.21.0)(yaml@2.8.3))
+      '@shikijs/twoslash':
+        specifier: ^4.3.1
+        version: 4.3.1(typescript@6.0.3)
+      '@tailwindcss/vite':
+        specifier: ^4.3.3
+        version: 4.3.3(vite@8.1.5(@types/node@25.6.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.16.9)(tsx@4.21.0)(yaml@2.8.3))
       astro:
         specifier: ^7.1.0
         version: 7.1.1(@astrojs/markdown-remark@7.2.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(@types/node@25.6.0)(@vercel/functions@3.7.5(@aws-sdk/credential-provider-web-identity@3.972.35)(ws@8.20.0))(aws4fetch@1.0.20)(jiti@2.7.0)(rollup@4.60.2)(terser@5.16.9)(tsx@4.21.0)(yaml@2.8.3)
@@ -5182,6 +5191,11 @@ packages:
 
   '@tailwindcss/vite@4.3.1':
     resolution: {integrity: sha512-hItDHuIIlEV61R+faXu66s1K36aTurO/Qw0e45Vskz57gXl9pWOT6eg3zmcEui6CZXddbN7zd41bwmvag4JGwQ==}
+    peerDependencies:
+      vite: ^5.2.0 || ^6 || ^7 || ^8
+
+  '@tailwindcss/vite@4.3.3':
+    resolution: {integrity: sha512-yYU8cogLeSh/ms2jh8Fj7jaba/EWa7Ja6GoUqYZaraEuCI5YS6ms6ObZgjjedm+jm6XZjdNRWBpPP6Z86oOxcw==}
     peerDependencies:
       vite: ^5.2.0 || ^6 || ^7 || ^8
 
@@ -11055,9 +11069,9 @@ snapshots:
       '@types/hast': 3.0.4
       '@types/mdast': 4.0.4
       js-yaml: 4.1.1
-      picomatch: 4.0.4
+      picomatch: 4.0.5
       retext-smartypants: 6.2.0
-      shiki: 4.0.2
+      shiki: 4.3.1
       smol-toml: 1.6.1
       unified: 11.0.5
 
@@ -16005,6 +16019,13 @@ snapshots:
       tailwindcss: 4.3.1
       vite: 8.1.5(@types/node@25.6.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.16.9)(tsx@4.21.0)(yaml@2.8.3)
 
+  '@tailwindcss/vite@4.3.3(vite@8.1.5(@types/node@25.6.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.16.9)(tsx@4.21.0)(yaml@2.8.3))':
+    dependencies:
+      '@tailwindcss/node': 4.3.3
+      '@tailwindcss/oxide': 4.3.3
+      tailwindcss: 4.3.3
+      vite: 8.1.5(@types/node@25.6.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.16.9)(tsx@4.21.0)(yaml@2.8.3)
+
   '@takumi-rs/core-darwin-arm64@1.8.7':
     optional: true
 
@@ -17210,7 +17231,7 @@ snapshots:
       '@shikijs/transformers': 4.3.1
       '@shikijs/twoslash': 4.3.1(typescript@6.0.3)
       '@tailwindcss/typography': 0.5.20(tailwindcss@4.3.1)
-      '@tailwindcss/vite': 4.3.1(vite@8.1.5(@types/node@25.6.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.16.9)(tsx@4.21.0)(yaml@2.8.3))
+      '@tailwindcss/vite': 4.3.3(vite@8.1.5(@types/node@25.6.0)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.16.9)(tsx@4.21.0)(yaml@2.8.3))
       '@takumi-rs/core': 1.8.7(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@takumi-rs/helpers': 1.8.7(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@vercel/analytics': 2.0.1(next@16.2.4(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.59.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react@19.2.5)
