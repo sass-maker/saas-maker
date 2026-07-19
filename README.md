@@ -31,7 +31,8 @@ fleet-ops/
 ├── automation/          ← versioned automation intent; runtime schedules stay local
 ├── docs/                ← living docs (runbook, agent-layering, perf-monitoring)
 │   └── archive/         ← dated snapshots (not living reference)
-└── templates/           ← shared code templates (api-timing.ts)
+├── templates/           ← shared code templates (api-timing.ts)
+└── lib/toolbox-automation/ ← Significant Hobbies family registry, evidence, and quiet experiments
 ```
 
 ## Skill discovery model
