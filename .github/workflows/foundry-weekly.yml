@@ -7,253 +7,78 @@ on:
         type: string
         default: '22'
 
+permissions:
+  contents: read
+
 jobs:
   quality:
-    name: Weekly Quality
+    name: Read-only quality evidence
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-
       - uses: pnpm/action-setup@v6
-        with:
-          version: latest
-
       - uses: actions/setup-node@v6
         with:
           node-version: ${{ inputs.node-version }}
           cache: pnpm
-
-      - name: Install Rust (for fallow)
-        uses: dtolnay/rust-toolchain@stable
-
-      - name: Install fallow
-        run: cargo install fallow-cli --quiet
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile --ignore-scripts
-
-      # ── ANALYSIS PHASE (read-only, collect all findings) ─────────────
-
-      - name: Build check
-        id: build
-        run: pnpm build --if-present
-        continue-on-error: true
-
-      - name: Typecheck
-        id: typecheck
+      - name: Install locked dependencies
         run: |
-          pnpm exec tsc --noEmit 2>&1 || \
-          pnpm run typecheck --if-present 2>&1 || \
-          echo "no typecheck script"
-        continue-on-error: true
-
-      - name: Tests + coverage
-        id: tests
+          pnpm install --frozen-lockfile --ignore-scripts
+          pnpm components:install
+      - name: Validate canonical catalog
         run: |
-          # Install coverage provider if vitest is present
-          if pnpm exec vitest --version 2>/dev/null; then
-            pnpm add -D @vitest/coverage-v8 --ignore-scripts 2>/dev/null || true
-            pnpm exec vitest run \
-              --coverage \
-              --coverage.provider=v8 \
-              --coverage.reporter=json \
-              --coverage.reporter=text-summary \
-              --reporter=verbose \
-              2>&1 | tee test-output.txt || true
-          else
-            pnpm test --if-present 2>&1 | tee test-output.txt || true
-          fi
-        continue-on-error: true
-
-      - name: CRAP scores — fallow + coverage
-        id: crap
+          pnpm catalog:validate
+          pnpm catalog:check
+      - name: Verify Foundry safety contracts
+        run: node --test tests/foundry-catalog.test.mjs tests/foundry-observability.test.mjs ops/test/host-foundation.test.mjs
+      - name: Build public surfaces
         run: |
-          # Only runs if coverage JSON was generated
-          COVERAGE_FILE=""
-          for f in coverage/coverage-final.json coverage-final.json coverage/lcov.info; do
-            [ -f "$f" ] && COVERAGE_FILE="$f" && break
-          done
-
-          if [ -n "$COVERAGE_FILE" ]; then
-            echo "Coverage found at $COVERAGE_FILE"
-            fallow health \
-              --coverage "$COVERAGE_FILE" \
-              --score \
-              --top 20 \
-              --hotspots \
-              2>&1 | tee fallow-crap.txt
-          else
-            echo "No coverage file — run vitest with --coverage to enable CRAP scores" | tee fallow-crap.txt
-          fi
-        continue-on-error: true
-
-      - name: Dead code — knip
-        id: knip
+          pnpm build:showcase
+          pnpm build:docs
+          pnpm build:skills
+      - name: Typecheck private cockpit
         run: |
-          pnpm add -D knip --ignore-scripts 2>/dev/null || true
-          pnpm exec knip --reporter=compact --no-exit-code 2>&1 | tee knip-report.txt
-        continue-on-error: true
-
-      - name: Duplicate code — fallow dupes
-        id: fallow_dupes
-        run: |
-          fallow dupes --mode mild --skip-local 2>&1 | tee fallow-dupes.txt
-        continue-on-error: true
-
-      - name: Complexity — fallow health
-        id: fallow_health
-        run: |
-          fallow health --score --top 20 --hotspots 2>&1 | tee fallow-health.txt
-        continue-on-error: true
-
+          pnpm --dir packages/ui build
+          pnpm --dir apps/cockpit typecheck
+      - name: Run imported component checks
+        run: pnpm components:check
+      - name: Run repository tests
+        run: pnpm test
       - name: Dependency audit
-        id: audit
-        run: pnpm audit --prod 2>&1 | tee audit-report.txt
+        run: pnpm audit --prod
         continue-on-error: true
-
-      # ── AUTO-FIX PHASE (safe mechanical fixes only) ─────────────────
-
-      - name: Auto-fix — formatting (Biome or ESLint)
+      - name: Publish summary
+        if: always()
         run: |
-          # Try Biome first, fall back to ESLint --fix
-          if pnpm exec biome check --write --no-errors-on-unmatched 2>/dev/null; then
-            echo "Fixed with Biome"
-          else
-            pnpm exec eslint . --fix --quiet 2>/dev/null || true
-          fi
-        continue-on-error: true
-
-      - name: Auto-fix — unused exports (knip)
-        run: |
-          # Only fix exports, never delete files or remove deps
-          pnpm exec knip --fix --include exports,types --no-exit-code 2>/dev/null || true
-        continue-on-error: true
-
-      # ── PR PHASE (open PR if auto-fix changed anything) ─────────────
-
-      - name: Auto-create changelog entry
-        run: fnd changelog create --version "${{ github.sha }}" --message "Weekly auto-deploy"
-        continue-on-error: true
-
-      - name: Open auto-fix PR if changes exist
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          if [ -n "$(git status --porcelain)" ]; then
-            BRANCH="foundry/weekly-fix-$(date +%Y-%m-%d)"
-            git config user.name "Foundry Bot"
-            git config user.email "foundry-bot@sassmaker.com"
-            git checkout -b "$BRANCH"
-            git add -A
-            git commit -m "chore(foundry): weekly auto-fix — formatting + unused exports"
-            git push origin "$BRANCH"
-
-            # Build PR body from reports
-            BODY_FILE="foundry-weekly-pr-body.md"
-            {
-              echo "## Foundry Weekly Auto-Fix"
-              echo
-              echo "Auto-applied safe fixes: formatting + unused exports (knip)."
-              echo
-              echo "**Manual review needed for the rest:**"
-              echo
-              echo "<details><summary>CRAP scores (complex + uncovered functions)</summary>"
-              echo
-              echo '```'
-              head -40 fallow-crap.txt 2>/dev/null || true
-              echo '```'
-              echo "</details>"
-              echo
-              echo "<details><summary>Dead code (knip)</summary>"
-              echo
-              echo '```'
-              head -50 knip-report.txt 2>/dev/null || true
-              echo '```'
-              echo "</details>"
-              echo
-              echo "<details><summary>Duplicate code (fallow)</summary>"
-              echo
-              echo '```'
-              head -40 fallow-dupes.txt 2>/dev/null || true
-              echo '```'
-              echo "</details>"
-              echo
-              echo "<details><summary>Complexity hotspots (fallow health)</summary>"
-              echo
-              echo '```'
-              head -40 fallow-health.txt 2>/dev/null || true
-              echo '```'
-              echo "</details>"
-              echo
-              echo "<details><summary>Dependency audit</summary>"
-              echo
-              echo '```'
-              head -30 audit-report.txt 2>/dev/null || true
-              echo '```'
-              echo "</details>"
-              echo
-              echo "Generated by Foundry Weekly CI: https://github.com/sarthakagrawal927/saas-maker"
-            } > "$BODY_FILE"
-
-            gh pr create \
-              --title "chore: weekly auto-fix $(date +%Y-%m-%d)" \
-              --body-file "$BODY_FILE" \
-              --label "foundry-weekly" \
-              --base "$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')"
-          else
-            echo "No auto-fixable issues found — no PR needed."
-          fi
+          {
+            echo '## Foundry weekly quality evidence'
+            echo
+            echo '- Read-only: no formatting, dependency additions, commits, pushes, deploys, or migrations.'
+            echo '- Catalog, host safety, observability contracts, public builds, cockpit types, tests, and production dependency audit were evaluated.'
+          } >> "$GITHUB_STEP_SUMMARY"
 
   lighthouse:
-    name: Weekly Lighthouse
+    name: Optional Lighthouse evidence
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: vars.DEPLOYMENT_URL != ''
     steps:
       - uses: actions/checkout@v6
-
-      - name: Install Lighthouse CI
-        run: npm install -g @lhci/cli
-
-      - name: Run Lighthouse
-        if: env.DEPLOYMENT_URL != ''
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Run repository-pinned Lighthouse
         env:
           DEPLOYMENT_URL: ${{ vars.DEPLOYMENT_URL }}
-        run: |
-          lhci autorun \
-            --collect.url="$DEPLOYMENT_URL" \
-            --collect.numberOfRuns=3 \
-            --assert.preset=lighthouse:no-pwa \
-            --assert.assertions.categories:performance.minScore=0 \
-            --output=json \
-            --outputPath=./lighthouse-results.json || true
-
-          # Extract and print scores
-          if [ -f lighthouse-results.json ]; then
-            node -e "
-              const r = require('./lighthouse-results.json');
-              const c = r[0]?.categories || {};
-              console.log('## Lighthouse Scores');
-              Object.entries(c).forEach(([k,v]) => console.log(k+':', Math.round(v.score*100)));
-            " >> $GITHUB_STEP_SUMMARY 2>/dev/null || true
-          fi
-
-      - name: Upload Lighthouse report
-        if: env.DEPLOYMENT_URL != '' && always()
-        uses: actions/upload-artifact@v4
+        run: pnpm exec lighthouse "$DEPLOYMENT_URL" --output=json --output-path=./lighthouse-results.json --chrome-flags='--headless --no-sandbox'
+      - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: lighthouse-report
           path: lighthouse-results.json
+          if-no-files-found: ignore
           retention-days: 30
-        env:
-          DEPLOYMENT_URL: ${{ vars.DEPLOYMENT_URL }}
-
-      - name: Skip notice
-        if: env.DEPLOYMENT_URL == ''
-        run: echo "Set DEPLOYMENT_URL in repo variables to enable Lighthouse CI"
-        env:
-          DEPLOYMENT_URL: ${{ vars.DEPLOYMENT_URL }}

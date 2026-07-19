@@ -46,10 +46,18 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - run: pnpm components:install
+      - run: pnpm catalog:validate
+      - run: pnpm catalog:check
+      - run: node --test tests/foundry-catalog.test.mjs tests/foundry-observability.test.mjs ops/test/host-foundation.test.mjs
       - run: pnpm check:openapi
       - run: pnpm build:widget
       - run: pnpm -F @saas-maker/api typecheck
       - run: pnpm build:cockpit
+      - run: pnpm build:showcase
+      - run: pnpm build:docs
+      - run: pnpm build:skills
+      - run: pnpm components:check
       - run: pnpm test
 
   deploy-api:
@@ -233,7 +241,7 @@ jobs:
           changed=false
           while IFS= read -r path; do
             case "$path" in
-              apps/showcase/*|apps/docs-blume/*|docs/*|foundry.projects.json|packages/blocks/sdk/*|package.json|pnpm-lock.yaml|pnpm-workspace.yaml|.github/workflows/ci.yml)
+              apps/showcase/*|catalog/*|packages/blocks/sdk/*|package.json|pnpm-lock.yaml|pnpm-workspace.yaml|.github/workflows/ci.yml)
                 changed=true
                 break
                 ;;

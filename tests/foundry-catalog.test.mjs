@@ -29,7 +29,7 @@ function assertRejects(fixture, pattern) {
 test('canonical catalog validates and bootstraps every current record class', () => {
   assert.deepEqual(validateCatalog(catalog), []);
   assert.equal(catalog.products.length, 37);
-  assert.equal(catalog.components.length, 33);
+  assert.equal(catalog.components.length, 36);
   assert.equal(catalog.packages.length, 27);
   assert.equal(catalog.skills.length, 23);
   assert.equal(catalog.automations.length, 9);
@@ -52,6 +52,21 @@ test('checked-in compatibility views are deterministic and current', async () =>
     assert.equal(serializeJson(second.get(filename)), expected);
     assert.equal(await readFile(path.join(GENERATED_ROOT, filename), 'utf8'), expected);
   }
+});
+
+test('legacy consumers are generated mirrors rather than independent registries', async () => {
+  assert.equal(
+    await readFile('foundry.projects.json', 'utf8'),
+    await readFile(path.join(GENERATED_ROOT, 'foundry.projects.json'), 'utf8'),
+  );
+  assert.equal(
+    await readFile('ops/config/projects.json', 'utf8'),
+    await readFile(path.join(GENERATED_ROOT, 'ops-config-projects.json'), 'utf8'),
+  );
+  assert.equal(
+    await readFile('ops/config/automation-registry.json', 'utf8'),
+    await readFile(path.join(GENERATED_ROOT, 'automation-registry.json'), 'utf8'),
+  );
 });
 
 test('public projection is allowlisted and omits internal catalog fields', () => {

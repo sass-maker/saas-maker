@@ -1,9 +1,10 @@
 ---
 import { CORE, ACTIVE, PROJECT_COUNT } from '../data/projects';
-import productSites from '../data/product-sites.json';
+import { REGISTRY_PRODUCTS } from '../data/registry';
 
-const publicProducts = productSites.products ?? [];
-const spotlightProducts = publicProducts.filter((p) => p.spotlight);
+const publicProducts = REGISTRY_PRODUCTS;
+const spotlightIds = new Set(CORE.map((project) => project.href.replace('/p/', '')));
+const spotlightProducts = publicProducts.filter((product) => spotlightIds.has(product.id));
 ---
 <section class="section" id="fleet">
   <div class="section-head">
@@ -13,7 +14,7 @@ const spotlightProducts = publicProducts.filter((p) => p.spotlight);
       <span class="section-kw">The Product</span>
     </div>
     <h2 class="section-title">
-      {PROJECT_COUNT} <em class="italic">connected</em> repositories,
+      {PROJECT_COUNT} <em class="italic">maintained</em> products,
       <br />
       one shared <em class="italic">operating layer</em>.
     </h2>
@@ -29,7 +30,7 @@ const spotlightProducts = publicProducts.filter((p) => p.spotlight);
       <span class="section-num">§ 01.00</span>
       <span class="section-rule short"></span>
       <span class="section-kw small">Spotlight products</span>
-      <span class="active-count">{spotlightProducts.length - 1} + SaaS Maker</span>
+      <span class="active-count">{spotlightProducts.length} public anchors</span>
     </div>
     <p class="section-lede" style="margin-bottom: 1.25rem; max-width: 40rem">
       The concise product story: CodeVetter, Post-train LLM, HeyPace, and
@@ -55,11 +56,11 @@ const spotlightProducts = publicProducts.filter((p) => p.spotlight);
       <span class="section-num">§ 01.01</span>
       <span class="section-rule short"></span>
       <span class="section-kw small">Public product sites</span>
-      <span class="active-count">{publicProducts.length} live</span>
+      <span class="active-count">{publicProducts.length} maintained</span>
     </div>
     <p class="section-lede" style="margin-bottom: 1.25rem; max-width: 40rem">
-      Every public surface in the fleet. These are the product URLs to cite,
-      review, and link — not just GitHub mirrors.
+      Every maintained product in the public directory, with its canonical
+      product or source URL, changelog, and roadmap.
     </p>
     <ul class="product-directory-grid">
       {publicProducts.map((p) => (

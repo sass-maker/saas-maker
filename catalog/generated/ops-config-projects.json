@@ -77,10 +77,13 @@
       "repo": "saas-maker",
       "deployKind": "worker",
       "cfProject": "saasmaker-dashboard, saasmaker-api, saasmaker-droid",
-      "domains": [],
+      "domains": [
+        "api.sassmaker.com",
+        "app.sassmaker.com"
+      ],
       "inRegistry": false,
       "status": "live",
-      "notes": "dashboard/API workers behind the platform"
+      "notes": "Current API and legacy cockpit worker domains; fleet.sassmaker.com is the private Foundry target after an explicit parity cutover."
     },
     {
       "id": "drank",
@@ -459,7 +462,7 @@
       "id": "sarthakagrawal-personal",
       "family": "personal",
       "tier": "non-product",
-      "repo": null,
+      "repo": "portfolio",
       "deployKind": "pages",
       "cfProject": "sarthakagrawal",
       "domains": [
@@ -468,6 +471,51 @@
       "inRegistry": false,
       "status": "live",
       "notes": "personal site, not a fleet product"
+    },
+    {
+      "id": "foundry-cockpit",
+      "family": "sass-maker",
+      "tier": "support",
+      "repo": "saas-maker",
+      "deployKind": "worker",
+      "cfProject": "saasmaker-dashboard",
+      "domains": [
+        "fleet.sassmaker.com"
+      ],
+      "app": "apps/cockpit",
+      "inRegistry": false,
+      "status": "live-manual-host; repository parity unverified",
+      "notes": "Private Foundry cockpit; current manual-host parity must be verified before activation from this repository."
+    },
+    {
+      "id": "foundry-package-docs",
+      "family": "sass-maker",
+      "tier": "support",
+      "repo": "saas-maker",
+      "deployKind": "pages",
+      "cfProject": "saas-maker-packages",
+      "domains": [
+        "packages.sassmaker.com"
+      ],
+      "app": "apps/docs-blume",
+      "inRegistry": true,
+      "status": "built locally; not production-verified",
+      "notes": "Blume package documentation; deploy remains an explicit operator action."
+    },
+    {
+      "id": "foundry-skills",
+      "family": "sass-maker",
+      "tier": "support",
+      "repo": "saas-maker",
+      "deployKind": "pages",
+      "cfProject": "saas-maker-skills",
+      "domains": [
+        "skills.sassmaker.com"
+      ],
+      "app": "apps/skills",
+      "inRegistry": true,
+      "status": "built locally; not production-verified",
+      "notes": "Public indexed skill catalog; deploy remains an explicit operator action."
     }
   ]
 }

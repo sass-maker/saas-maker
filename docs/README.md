@@ -7,8 +7,10 @@ and durable learnings. Code and executable configuration remain authoritative
 for implementation details and schedules.
 
 [Blume](https://github.com/sass-maker/saas-maker/tree/main/apps/docs-blume) (`apps/docs-blume/`)
-is the only production presentation and search layer that renders this tree,
-served under `sassmaker.com/docs`. It does not own content. The legacy
+is the only package-documentation presentation and search layer. It renders the
+public package subset at `packages.sassmaker.com` and does not own content.
+Internal architecture, operations, plans, and learnings remain committed but
+are excluded from the public build. The legacy
 Astro/Starlight site at `apps/docs/` is archived and must not be deployed. When
 copies diverge, the `docs/` tree here wins.
 

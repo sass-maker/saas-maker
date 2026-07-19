@@ -1,0 +1,21 @@
+{
+  "name": "@foundry/skills-site",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "typecheck": "astro sync && tsc --noEmit",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.3",
+    "astro": "6.1.9",
+    "typescript": "6.0.3"
+  },
+  "devDependencies": {
+    "lightningcss": "1.32.0",
+    "wrangler": "4.85.0"
+  }
+}

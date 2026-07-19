@@ -48,6 +48,7 @@ const SOURCE_EXTENSIONS = new Set([
   '.yml',
 ]);
 const SKIPPED_FILE_PATTERNS = [
+  /(?:^|\/)catalog\/generated(?:\/|$)/,
   /(?:^|\/)tests?(?:\/|$)/,
   /(?:^|\/)fixtures?(?:\/|$)/,
   /(?:^|\/)scripts\/foundry-observability-[^/]+\.mjs$/,
@@ -90,7 +91,10 @@ function safeJson(file) {
 
 function inside(root, candidate) {
   const relative = path.relative(root, candidate);
-  return relative === '' || (!relative.startsWith(`..${path.sep}`) && relative !== '..' && !path.isAbsolute(relative));
+  return (
+    relative === '' ||
+    (!relative.startsWith(`..${path.sep}`) && relative !== '..' && !path.isAbsolute(relative))
+  );
 }
 
 function findRegistry(scanRoot) {
@@ -101,6 +105,45 @@ function findRegistry(scanRoot) {
     return { registryRoot: path.dirname(nested), manifestPath: nested };
   }
   return null;
+}
+
+function discoverCanonicalProjects(scanRoot) {
+  const catalog = safeJson(path.join(scanRoot, 'catalog', 'foundry.json'));
+  if (!Array.isArray(catalog?.products) || !Array.isArray(catalog?.repositories)) return null;
+  const repositories = new Map(
+    catalog.repositories.map((repository) => [repository.id, repository])
+  );
+  const localProductPaths = new Map([
+    ['sass-maker', '.'],
+    ['fleet-dashboard', 'apps/cockpit'],
+    ['mobile-dev-cockpit', 'services/mobile-dev-cockpit'],
+    ['psi-swarm', 'tools/psi-swarm'],
+    ['drank', 'services/drank'],
+    ['reel-pipeline', 'services/reel-pipeline'],
+  ]);
+
+  return catalog.products
+    .filter((product) => product.lifecycle === 'maintained')
+    .map((product) => {
+      const repositoryPath =
+        localProductPaths.get(product.id) ?? repositories.get(product.repositoryId)?.path;
+      const candidate =
+        typeof repositoryPath === 'string' ? path.resolve(scanRoot, repositoryPath) : null;
+      const directory =
+        candidate &&
+        inside(scanRoot, candidate) &&
+        fs.existsSync(candidate) &&
+        fs.statSync(candidate).isDirectory()
+          ? candidate
+          : null;
+      return {
+        projectId: product.id,
+        maturity: product.lifecycle,
+        directory,
+        notApplicableReason: null,
+      };
+    })
+    .sort((left, right) => left.projectId.localeCompare(right.projectId));
 }
 
 function loadAutomationEntries(registryRoot) {
@@ -124,7 +167,11 @@ function notApplicableReason(slug, entry, automationEntries) {
   const localReason = entry?.observability?.notApplicable?.reason;
   if (typeof localReason === 'string' && localReason.trim()) return localReason.trim();
   const automation = findAutomationEntry(slug, entry, automationEntries);
-  if (!automation || (automation.actionPolicy !== 'excluded' && !['ignored', 'removed'].includes(automation.attention))) {
+  if (
+    !automation ||
+    (automation.actionPolicy !== 'excluded' &&
+      !['ignored', 'removed'].includes(automation.attention))
+  ) {
     return null;
   }
   const exception = Array.isArray(automation.exceptions)
@@ -158,7 +205,11 @@ function resolveProjectPath(scanRoot, registryRoot, slug, entry) {
   }
   for (const candidate of candidates) {
     const resolved = path.resolve(candidate);
-    if (inside(scanRoot, resolved) && fs.existsSync(resolved) && fs.statSync(resolved).isDirectory()) {
+    if (
+      inside(scanRoot, resolved) &&
+      fs.existsSync(resolved) &&
+      fs.statSync(resolved).isDirectory()
+    ) {
       return resolved;
     }
   }
@@ -167,15 +218,19 @@ function resolveProjectPath(scanRoot, registryRoot, slug, entry) {
 
 export function discoverProjects(root) {
   const scanRoot = path.resolve(root);
+  const canonical = discoverCanonicalProjects(scanRoot);
+  if (canonical) return canonical;
   const registry = findRegistry(scanRoot);
   if (!registry) {
     const packageJson = safeJson(path.join(scanRoot, 'package.json'));
-    return [{
-      projectId: packageJson?.name ?? path.basename(scanRoot),
-      maturity: 'maintained',
-      directory: scanRoot,
-      notApplicableReason: null,
-    }];
+    return [
+      {
+        projectId: packageJson?.name ?? path.basename(scanRoot),
+        maturity: 'maintained',
+        directory: scanRoot,
+        notApplicableReason: null,
+      },
+    ];
   }
   const manifest = safeJson(registry.manifestPath) ?? {};
   const automationEntries = loadAutomationEntries(registry.registryRoot);
@@ -235,7 +290,8 @@ function walkFiles(root, limits, excludedRoots = new Set()) {
 function runtimeFor(relative, source) {
   const normalized = relative.toLowerCase();
   if (/\.(?:swift)$/.test(normalized)) return 'mobile';
-  if (/(?:^|\/)workers?\//.test(normalized) || /wrangler\.(?:toml|jsonc?)$/.test(normalized)) return 'worker';
+  if (/(?:^|\/)workers?\//.test(normalized) || /wrangler\.(?:toml|jsonc?)$/.test(normalized))
+    return 'worker';
   if (/(?:cron|scheduled|jobs?)(?:\/|\.|-)/.test(normalized)) return 'background-job';
   if (/['"]use client['"]|\bwindow\.|\bdocument\.|posthog-js/.test(source)) return 'browser';
   if (/(?:^|\/)(?:cli|bin)(?:\/|$)/.test(normalized)) return 'cli';
@@ -245,36 +301,47 @@ function runtimeFor(relative, source) {
 
 function detectProviders(relative, source) {
   const providers = new Set();
-  if (/posthog-js|posthog-node|posthog\.|configurePostHog|POSTHOG_(?:KEY|HOST|PROJECT)/.test(source)) {
+  if (
+    /posthog-js|posthog-node|posthog\.|configurePostHog|POSTHOG_(?:KEY|HOST|PROJECT)/.test(source)
+  ) {
     providers.add('posthog');
   }
   if (/@sentry\/|\bSentry\.(?:init|capture)|SENTRY_DSN/.test(source)) providers.add('sentry');
-  if (/@opentelemetry\/|\bOTEL_[A-Z_]+|\bOpenTelemetry\b/.test(source)) providers.add('opentelemetry');
+  if (/@opentelemetry\/|\bOTEL_[A-Z_]+|\bOpenTelemetry\b/.test(source))
+    providers.add('opentelemetry');
   if (
     /wrangler\.(?:toml|jsonc?)$/.test(relative.toLowerCase()) &&
-    /(?:\[observability\][\s\S]{0,300}?enabled\s*=\s*true|["']observability["']\s*:\s*\{[\s\S]{0,300}?["']enabled["']\s*:\s*true)/.test(source)
+    /(?:\[observability\][\s\S]{0,300}?enabled\s*=\s*true|["']observability["']\s*:\s*\{[\s\S]{0,300}?["']enabled["']\s*:\s*true)/.test(
+      source
+    )
   ) {
     providers.add('cloudflare-workers-observability');
   }
   if (
-    /(?:\bhttp|\bclient|\bapi|this\.http)\.?(?:request)?\s*(?:<[^>]+>)?\s*\([\s\S]{0,160}['"]POST['"][\s\S]{0,80}['"]\/v1\/events\b/.test(source) ||
+    /(?:\bhttp|\bclient|\bapi|this\.http)\.?(?:request)?\s*(?:<[^>]+>)?\s*\([\s\S]{0,160}['"]POST['"][\s\S]{0,80}['"]\/v1\/events\b/.test(
+      source
+    ) ||
     /@saas-maker\/sdk[\s\S]{0,300}\bevents\.(?:emit|emitBatch)\b/.test(source)
   ) {
     providers.add('foundry-events');
   }
   if (
     providers.size === 0 &&
-    (
-      /\b(?:trackEvent|recordEvent|emitTelemetry)\s*\(/.test(source) ||
-      (/(?:telemetry|observability|monitoring|analytics)\.(?:[cm]?[jt]sx?|py|go|rs)$/.test(relative.toLowerCase()) &&
+    (/\b(?:trackEvent|recordEvent|emitTelemetry)\s*\(/.test(source) ||
+      (/(?:telemetry|observability|monitoring|analytics)\.(?:[cm]?[jt]sx?|py|go|rs)$/.test(
+        relative.toLowerCase()
+      ) &&
         /\bcapture\s*\(/.test(source)) ||
-      /from\s+['"][^'"]*(?:telemetry|observability|monitoring|analytics)[^'"]*['"][\s\S]{0,500}\bcapture\s*\(/.test(source)
-    )
+      /from\s+['"][^'"]*(?:telemetry|observability|monitoring|analytics)[^'"]*['"][\s\S]{0,500}\bcapture\s*\(/.test(
+        source
+      ))
   ) {
     providers.add('custom');
   }
   if (
-    /(?:telemetry|observability|monitoring|logger)\.(?:[cm]?[jt]sx?|py|go|rs)$/.test(relative.toLowerCase()) &&
+    /(?:telemetry|observability|monitoring|logger)\.(?:[cm]?[jt]sx?|py|go|rs)$/.test(
+      relative.toLowerCase()
+    ) &&
     /console\.(?:error|warn|info|debug)|\blog(?:ger)?\.(?:error|warn|info)/.test(source)
   ) {
     providers.add('console');
@@ -327,10 +394,15 @@ function extractConsumers(source) {
 function inferPurposes(source, events) {
   const purposes = new Set();
   const joined = [...events].join(' ');
-  if (/error|exception|crash|failure|Sentry\.captureException/.test(`${source}\n${joined}`)) purposes.add('errors');
+  if (/error|exception|crash|failure|Sentry\.captureException/.test(`${source}\n${joined}`))
+    purposes.add('errors');
   if (/trace|span|duration|latency/.test(`${source}\n${joined}`)) purposes.add('traces');
-  if (/performance|web-vitals|LCP|CLS|INP|TTFB|timing/.test(`${source}\n${joined}`)) purposes.add('performance');
-  if (/pageview|signup|activated|returned|core_action|analytics|identify/.test(`${source}\n${joined}`)) purposes.add('analytics');
+  if (/performance|web-vitals|LCP|CLS|INP|TTFB|timing/.test(`${source}\n${joined}`))
+    purposes.add('performance');
+  if (
+    /pageview|signup|activated|returned|core_action|analytics|identify/.test(`${source}\n${joined}`)
+  )
+    purposes.add('analytics');
   if (/audit|verification|receipt/.test(source)) purposes.add('audit');
   if (/cron|scheduled|job[_-]/.test(`${source}\n${joined}`)) purposes.add('jobs');
   if (/health|uptime|availability/.test(`${source}\n${joined}`)) purposes.add('availability');
@@ -350,7 +422,10 @@ function findHardcodedPublicKeys(projectId, relative, source) {
   const findings = [];
   const patterns = [
     { provider: 'posthog', pattern: /\bphc_[A-Za-z0-9]{20,}\b/g },
-    { provider: 'sentry', pattern: /https:\/\/[A-Za-z0-9._-]+@[A-Za-z0-9.-]*ingest\.sentry\.io\/[0-9]+/g },
+    {
+      provider: 'sentry',
+      pattern: /https:\/\/[A-Za-z0-9._-]+@[A-Za-z0-9.-]*ingest\.sentry\.io\/[0-9]+/g,
+    },
     { provider: 'custom', pattern: /\bDD_CLIENT_TOKEN\b\s*[:=]\s*['"][^'"]{12,}['"]/g },
   ];
   for (const { provider, pattern } of patterns) {
@@ -401,7 +476,8 @@ function collectConfigurationKeys(adapter, source) {
   const envPattern = /(?:process\.env\.|env\.)([A-Z][A-Z0-9_]{2,})\b/g;
   let match;
   while ((match = envPattern.exec(source)) !== null) {
-    if (/POSTHOG|SENTRY|OTEL|OBSERV|TELEMETRY/.test(match[1])) adapter.configurationKeys.add(match[1]);
+    if (/POSTHOG|SENTRY|OTEL|OBSERV|TELEMETRY/.test(match[1]))
+      adapter.configurationKeys.add(match[1]);
   }
 }
 
@@ -413,21 +489,30 @@ function collectAdapterSource(adapter, relative, source, runtime, producers, con
   for (const event of consumers) adapter.consumes.add(event);
   collectConfigurationKeys(adapter, source);
   adapter.hasManualCollection ||= /\b(?:capture|track|recordEvent|emitTelemetry)\s*\(/.test(source);
-  adapter.hasAutomaticCollection ||= /autocapture\s*:\s*true|capture_pageview\s*:\s*true|addEventListener\(\s*['"]error/.test(source);
+  adapter.hasAutomaticCollection ||=
+    /autocapture\s*:\s*true|capture_pageview\s*:\s*true|addEventListener\(\s*['"]error/.test(
+      source
+    );
   adapter.hasProjectIdentity ||=
     /\bproject_id\s*:|properties\.project_id|withCanonicalProjectId|\bproject_slug\s*:|\bprojectSlug\s*:|\bproduct\s*:/.test(
       source
     );
-  adapter.hasEmission ||= producers.size > 0 || /\b(?:capture|track|recordEvent|emitTelemetry)\s*\(/.test(source);
+  adapter.hasEmission ||=
+    producers.size > 0 || /\b(?:capture|track|recordEvent|emitTelemetry)\s*\(/.test(source);
   adapter.capturesErrors ||= purposes.has('errors');
   adapter.capturesPerformance ||= purposes.has('performance') || purposes.has('traces');
   adapter.capturesProductEvents ||= purposes.has('analytics');
   adapter.hasBufferedDelivery ||= /batch|queue|flush|waitUntil/.test(source);
-  if (/person_profiles\s*:\s*['"]always|\bidentify\s*\(/.test(source)) adapter.privacyClassification = 'personal';
-  else if (/distinct_id|user_?id|device_?id/.test(source) && adapter.privacyClassification === 'operational') {
+  if (/person_profiles\s*:\s*['"]always|\bidentify\s*\(/.test(source))
+    adapter.privacyClassification = 'personal';
+  else if (
+    /distinct_id|user_?id|device_?id/.test(source) &&
+    adapter.privacyClassification === 'operational'
+  ) {
     adapter.privacyClassification = 'pseudonymous';
   }
-  if (/stack|request\.?body|response\.?body/.test(source)) adapter.privacyClassification = 'sensitive';
+  if (/stack|request\.?body|response\.?body/.test(source))
+    adapter.privacyClassification = 'sensitive';
 }
 
 function candidateEvidence(relative, parsed) {
@@ -439,14 +524,25 @@ function candidateEvidence(relative, parsed) {
     /(?:verification|verify|receipt|audit|report).*(?:observability|monitoring)/.test(name) ||
     name === 'observability.json' ||
     name === '.foundry-observability.json';
-  if (!looksLikeEvidence && !parsed.observabilityVerification && !parsed.verificationState) return null;
+  if (!looksLikeEvidence && !parsed.observabilityVerification && !parsed.verificationState)
+    return null;
   const verification = parsed.observabilityVerification ?? parsed.verification ?? parsed;
   const observedAt =
-    verification.observedAt ?? verification.verifiedAt ?? verification.checkedAt ??
-    parsed.observedAt ?? parsed.verifiedAt ?? parsed.checkedAt ?? parsed.generatedAt;
-  const status = verification.state ?? verification.status ?? parsed.verificationState ?? parsed.status;
-  const auditPath = verification.auditPath ?? verification.audit_path ?? parsed.auditPath ?? parsed.audit_path;
-  const success = verification.ok === true || parsed.ok === true || ['pass', 'passed', 'ok', 'fresh-verified'].includes(status);
+    verification.observedAt ??
+    verification.verifiedAt ??
+    verification.checkedAt ??
+    parsed.observedAt ??
+    parsed.verifiedAt ??
+    parsed.checkedAt ??
+    parsed.generatedAt;
+  const status =
+    verification.state ?? verification.status ?? parsed.verificationState ?? parsed.status;
+  const auditPath =
+    verification.auditPath ?? verification.audit_path ?? parsed.auditPath ?? parsed.audit_path;
+  const success =
+    verification.ok === true ||
+    parsed.ok === true ||
+    ['pass', 'passed', 'ok', 'fresh-verified'].includes(status);
   return { observedAt, status, success, auditPath, file: relative };
 }
 
@@ -463,7 +559,10 @@ function collectAuditReferences(projectId, projectRoot, relative, parsed, findin
       return;
     }
     for (const [key, item] of Object.entries(value)) {
-      if (/^(?:auditPath|audit_path|verificationPath|verification_path)$/.test(key) && typeof item === 'string') {
+      if (
+        /^(?:auditPath|audit_path|verificationPath|verification_path)$/.test(key) &&
+        typeof item === 'string'
+      ) {
         references.push(item);
       } else {
         visit(item, depth + 1);
@@ -488,7 +587,12 @@ function collectAuditReferences(projectId, projectRoot, relative, parsed, findin
 function collectPackageAuditReferences(projectId, projectRoot, relative, parsed, findings) {
   if (path.basename(relative) !== 'package.json' || !parsed?.scripts) return;
   for (const [name, command] of Object.entries(parsed.scripts)) {
-    if (!/(?:observability|monitoring|posthog).*(?:audit|verify)|(?:audit|verify).*(?:observability|monitoring|posthog)/i.test(name)) continue;
+    if (
+      !/(?:observability|monitoring|posthog).*(?:audit|verify)|(?:audit|verify).*(?:observability|monitoring|posthog)/i.test(
+        name
+      )
+    )
+      continue;
     if (typeof command !== 'string') continue;
     const match = command.match(/(?:^|&&|;)\s*node\s+([^\s;&]+)/);
     if (!match) continue;
@@ -511,12 +615,16 @@ function pickVerification(evidence, now, freshnessHours, hasAdapters, findings, 
     return {
       state: hasAdapters ? 'source-configured' : 'unknown',
       freshness: { maxAgeHours: freshnessHours },
-      reason: hasAdapters ? 'Source configuration found; no successful verification receipt was found.' : 'No adapter source or verification receipt was found.',
+      reason: hasAdapters
+        ? 'Source configuration found; no successful verification receipt was found.'
+        : 'No adapter source or verification receipt was found.',
     };
   }
   const valid = evidence
     .map((item) => ({ ...item, timestamp: Date.parse(item.observedAt) }))
-    .filter((item) => item.success && item.auditPathValid !== false && Number.isFinite(item.timestamp))
+    .filter(
+      (item) => item.success && item.auditPathValid !== false && Number.isFinite(item.timestamp)
+    )
     .sort((left, right) => right.timestamp - left.timestamp);
   if (valid.length === 0) {
     findings.push({
@@ -541,7 +649,10 @@ function pickVerification(evidence, now, freshnessHours, hasAdapters, findings, 
       observedAt: new Date(latest.timestamp).toISOString(),
       auditPath: latest.file,
     },
-    reason: ageHours <= freshnessHours ? undefined : 'The newest successful verification receipt is older than the freshness target.',
+    reason:
+      ageHours <= freshnessHours
+        ? undefined
+        : 'The newest successful verification receipt is older than the freshness target.',
   };
 }
 
@@ -561,16 +672,19 @@ function finalizeAdapter(projectId, adapter, verification) {
     privacy: {
       classification: adapter.privacyClassification,
       allowSecrets: false,
-      allowUserIdentity: adapter.privacyClassification === 'personal' || adapter.privacyClassification === 'pseudonymous',
+      allowUserIdentity:
+        adapter.privacyClassification === 'personal' ||
+        adapter.privacyClassification === 'pseudonymous',
       allowPayloadBodies: false,
       redactFields: ['authorization', 'cookie', 'password', 'secret', 'token'],
     },
     collection: {
-      mode: adapter.hasAutomaticCollection && adapter.hasManualCollection
-        ? 'hybrid'
-        : adapter.hasAutomaticCollection
-          ? 'automatic'
-          : 'manual',
+      mode:
+        adapter.hasAutomaticCollection && adapter.hasManualCollection
+          ? 'hybrid'
+          : adapter.hasAutomaticCollection
+            ? 'automatic'
+            : 'manual',
       capturesErrors: adapter.capturesErrors,
       capturesPerformance: adapter.capturesPerformance,
       capturesProductEvents: adapter.capturesProductEvents,
@@ -588,43 +702,48 @@ function addEventFindings(projectId, adapters, producerFiles, consumerFiles, fin
   const producers = new Set(producerFiles.keys());
   const consumers = new Set(consumerFiles.keys());
   for (const event of consumers) {
-    if (!producers.has(event)) findings.push({
-      code: 'event-consumer-without-producer',
-      severity: 'warning',
-      projectId,
-      event,
-      message: `Event consumer ${event} has no source producer in this project.`,
-    });
+    if (!producers.has(event))
+      findings.push({
+        code: 'event-consumer-without-producer',
+        severity: 'warning',
+        projectId,
+        event,
+        message: `Event consumer ${event} has no source producer in this project.`,
+      });
   }
   for (const event of producers) {
-    if (!consumers.has(event) && !event.startsWith('$')) findings.push({
-      code: 'event-producer-without-consumer',
-      severity: 'info',
-      projectId,
-      event,
-      message: `Event producer ${event} has no source consumer in this project.`,
-    });
+    if (!consumers.has(event) && !event.startsWith('$'))
+      findings.push({
+        code: 'event-producer-without-consumer',
+        severity: 'info',
+        projectId,
+        event,
+        message: `Event producer ${event} has no source consumer in this project.`,
+      });
     const owners = producerFiles.get(event);
-    if (owners?.size > 1) findings.push({
-      code: 'duplicate-event-owner',
-      severity: 'warning',
-      projectId,
-      event,
-      message: `Event ${event} is produced by more than one source owner.`,
-    });
+    if (owners?.size > 1)
+      findings.push({
+        code: 'duplicate-event-owner',
+        severity: 'warning',
+        projectId,
+        event,
+        message: `Event ${event} is produced by more than one source owner.`,
+      });
   }
   const familyProviders = new Map();
   for (const adapter of adapters) {
-    for (const event of adapter.produces) addMapSet(familyProviders, eventFamily(event), adapter.provider.id);
+    for (const event of adapter.produces)
+      addMapSet(familyProviders, eventFamily(event), adapter.provider.id);
   }
   for (const [family, providers] of familyProviders) {
-    if (providers.size > 1) findings.push({
-      code: 'duplicate-event-family-owner',
-      severity: 'warning',
-      projectId,
-      eventFamily: family,
-      message: `Event family ${family} is emitted through multiple provider adapters.`,
-    });
+    if (providers.size > 1)
+      findings.push({
+        code: 'duplicate-event-family-owner',
+        severity: 'warning',
+        projectId,
+        eventFamily: family,
+        message: `Event family ${family} is emitted through multiple provider adapters.`,
+      });
   }
 }
 
@@ -701,7 +820,13 @@ function scanProject(project, scanRoot, now, freshnessHours, limits, excludedRoo
         parsed = null;
       }
       collectAuditReferences(project.projectId, project.directory, relative, parsed, findings);
-      collectPackageAuditReferences(project.projectId, project.directory, relative, parsed, findings);
+      collectPackageAuditReferences(
+        project.projectId,
+        project.directory,
+        relative,
+        parsed,
+        findings
+      );
       const receipt = candidateEvidence(relative, parsed);
       if (receipt) {
         if (typeof receipt.auditPath === 'string' && receipt.auditPath.trim()) {
@@ -725,7 +850,11 @@ function scanProject(project, scanRoot, now, freshnessHours, limits, excludedRoo
     for (const event of consumers) addMapSet(consumerFiles, event, relative);
     for (const providerId of providers) {
       if (!adapterState.has(providerId)) adapterState.set(providerId, createAdapter(providerId));
-      const providerProduces = ['cloudflare-workers-observability', 'console', 'foundry-events'].includes(providerId)
+      const providerProduces = [
+        'cloudflare-workers-observability',
+        'console',
+        'foundry-events',
+      ].includes(providerId)
         ? new Set()
         : producers;
       const providerConsumes = ['cloudflare-workers-observability', 'console'].includes(providerId)
@@ -743,19 +872,31 @@ function scanProject(project, scanRoot, now, freshnessHours, limits, excludedRoo
     }
   }
 
-  if (truncated) findings.push({
-    code: 'scan-limit-reached',
-    severity: 'warning',
-    projectId: project.projectId,
-    message: 'The bounded source scan reached a configured file or byte limit.',
-  });
+  if (truncated)
+    findings.push({
+      code: 'scan-limit-reached',
+      severity: 'warning',
+      projectId: project.projectId,
+      message: 'The bounded source scan reached a configured file or byte limit.',
+    });
 
-  const verification = pickVerification(evidence, now, freshnessHours, adapterState.size > 0, findings, project.projectId);
+  const verification = pickVerification(
+    evidence,
+    now,
+    freshnessHours,
+    adapterState.size > 0,
+    findings,
+    project.projectId
+  );
   const adapters = [...adapterState.values()]
     .map((adapter) => finalizeAdapter(project.projectId, adapter, verification))
     .sort((left, right) => left.provider.id.localeCompare(right.provider.id));
   for (const adapter of adapterState.values()) {
-    if (adapter.produces.size > 0 && !adapter.hasProjectIdentity && !['console', 'cloudflare-workers-observability'].includes(adapter.providerId)) {
+    if (
+      adapter.produces.size > 0 &&
+      !adapter.hasProjectIdentity &&
+      !['console', 'cloudflare-workers-observability'].includes(adapter.providerId)
+    ) {
       findings.push({
         code: 'missing-project-identity',
         severity: 'error',
@@ -766,8 +907,10 @@ function scanProject(project, scanRoot, now, freshnessHours, limits, excludedRoo
     }
   }
   addEventFindings(project.projectId, adapters, producerFiles, consumerFiles, findings);
-  findings.sort((left, right) =>
-    left.code.localeCompare(right.code) || String(left.file ?? '').localeCompare(String(right.file ?? ''))
+  findings.sort(
+    (left, right) =>
+      left.code.localeCompare(right.code) ||
+      String(left.file ?? '').localeCompare(String(right.file ?? ''))
   );
   return {
     projectId: project.projectId,
@@ -783,19 +926,25 @@ function scanProject(project, scanRoot, now, freshnessHours, limits, excludedRoo
 function sanitizeString(value) {
   return value
     .replace(/\bphc_[A-Za-z0-9]{8,}\b/g, '[redacted-public-key]')
-    .replace(/https:\/\/[A-Za-z0-9._-]+@[A-Za-z0-9.-]*ingest\.sentry\.io\/[0-9]+/g, '[redacted-dsn]')
+    .replace(
+      /https:\/\/[A-Za-z0-9._-]+@[A-Za-z0-9.-]*ingest\.sentry\.io\/[0-9]+/g,
+      '[redacted-dsn]'
+    )
     .replace(/\b(?:sk|rk|pk)_(?:live|test)_[A-Za-z0-9]{8,}\b/g, '[redacted-key]')
     .replace(/\b(?:ghp|github_pat)_[A-Za-z0-9_]{8,}\b/g, '[redacted-token]')
-    .replace(/Bearer\s+[A-Za-z0-9._~+\/-]{8,}/gi, 'Bearer [redacted]');
+    .replace(/Bearer\s+[A-Za-z0-9._~+/-]{8,}/gi, 'Bearer [redacted]');
 }
 
 export function sanitizeReport(value) {
   if (Array.isArray(value)) return value.map(sanitizeReport);
   if (value && typeof value === 'object') {
-    return Object.fromEntries(Object.entries(value).map(([key, item]) => {
-      if (/^(?:apiKey|api_key|secret|token|authorization|cookie|dsn)$/i.test(key)) return [key, '[redacted]'];
-      return [key, sanitizeReport(item)];
-    }));
+    return Object.fromEntries(
+      Object.entries(value).map(([key, item]) => {
+        if (/^(?:apiKey|api_key|secret|token|authorization|cookie|dsn)$/i.test(key))
+          return [key, '[redacted]'];
+        return [key, sanitizeReport(item)];
+      })
+    );
   }
   return typeof value === 'string' ? sanitizeString(value) : value;
 }
@@ -807,18 +956,21 @@ export function scanFoundryObservability(options = {}) {
   const freshnessHours = Number(options.freshnessHours ?? DEFAULT_FRESHNESS_HOURS);
   const limits = { ...DEFAULT_LIMITS, ...(options.limits ?? {}) };
   for (const [name, value] of Object.entries(limits)) {
-    if (!Number.isInteger(value) || value <= 0) throw new Error(`${name} must be a positive integer`);
+    if (!Number.isInteger(value) || value <= 0)
+      throw new Error(`${name} must be a positive integer`);
   }
-  if (!Number.isFinite(freshnessHours) || freshnessHours <= 0) throw new Error('freshnessHours must be positive');
+  if (!Number.isFinite(freshnessHours) || freshnessHours <= 0)
+    throw new Error('freshnessHours must be positive');
   const discovered = discoverProjects(scanRoot);
   const projects = discovered.map((project) => {
     const excludedRoots = new Set(
       discovered
-        .filter((other) =>
-          other.directory &&
-          project.directory &&
-          other.directory !== project.directory &&
-          inside(project.directory, other.directory)
+        .filter(
+          (other) =>
+            other.directory &&
+            project.directory &&
+            other.directory !== project.directory &&
+            inside(project.directory, other.directory)
         )
         .map((other) => path.resolve(other.directory))
     );
@@ -835,10 +987,12 @@ export function scanFoundryObservability(options = {}) {
       projects: projects.length,
       adapters: projects.reduce((total, project) => total + project.adapters.length, 0),
       findings: findings.length,
-      byVerificationState: Object.fromEntries(states.map((state) => [
-        state,
-        projects.filter((project) => project.verification.state === state).length,
-      ])),
+      byVerificationState: Object.fromEntries(
+        states.map((state) => [
+          state,
+          projects.filter((project) => project.verification.state === state).length,
+        ])
+      ),
     },
     projects,
     findings,
@@ -847,7 +1001,9 @@ export function scanFoundryObservability(options = {}) {
 }
 
 function markdownCell(value) {
-  return sanitizeString(String(value ?? '-')).replace(/\|/g, '\\|').replace(/[\r\n]+/g, ' ');
+  return sanitizeString(String(value ?? '-'))
+    .replace(/\|/g, '\\|')
+    .replace(/[\r\n]+/g, ' ');
 }
 
 export function renderFoundryObservabilityMarkdown(report) {
@@ -864,18 +1020,27 @@ export function renderFoundryObservabilityMarkdown(report) {
   ];
   for (const project of safe.projects) {
     const adapters = project.adapters.map((adapter) => adapter.provider.id).join(', ') || '-';
-    lines.push(`| ${markdownCell(project.projectId)} | ${markdownCell(project.verification.state)} | ${markdownCell(adapters)} | ${project.findings.length} |`);
+    lines.push(
+      `| ${markdownCell(project.projectId)} | ${markdownCell(project.verification.state)} | ${markdownCell(adapters)} | ${project.findings.length} |`
+    );
   }
   lines.push('', '## Findings', '');
   if (safe.findings.length === 0) {
     lines.push('No source-inventory findings.');
   } else {
     for (const finding of safe.findings) {
-      const location = finding.file ? ` (${finding.file}${finding.line ? `:${finding.line}` : ''})` : '';
-      lines.push(`- **${markdownCell(finding.severity)} · ${markdownCell(finding.code)} · ${markdownCell(finding.projectId)}**${markdownCell(location)} — ${markdownCell(finding.message)}`);
+      const location = finding.file
+        ? ` (${finding.file}${finding.line ? `:${finding.line}` : ''})`
+        : '';
+      lines.push(
+        `- **${markdownCell(finding.severity)} · ${markdownCell(finding.code)} · ${markdownCell(finding.projectId)}**${markdownCell(location)} — ${markdownCell(finding.message)}`
+      );
     }
   }
-  lines.push('', '## Interpretation', '',
+  lines.push(
+    '',
+    '## Interpretation',
+    '',
     '- `source-configured` means source was found; it does not prove live delivery.',
     '- `fresh-verified` and `stale` require a successful, timestamped local verification receipt.',
     '- `not-applicable` is only used when the registry supplies a reason.',

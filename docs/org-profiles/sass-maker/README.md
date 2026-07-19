@@ -9,7 +9,7 @@ one CLI, one cockpit, one set of widgets — running on Cloudflare's $5 tier.
 ## What we ship
 
 - **[Foundry (SaaS Maker)](https://sassmaker.com)** — the fleet hub and showcase. Per-product pages, build log, and the fleet map.
-- **[SaaS Maker Docs](https://sassmaker.com/docs)** — drop-in backend services for SaaS apps. API docs for Foundry (feedback, waitlist, testimonials, tasks, analytics, and more).
+- **[SaaS Maker Package Docs](https://packages.sassmaker.com)** — API, SDK, CLI, widgets, and reusable package documentation.
 - **[Cockpit](https://app.sassmaker.com)** — operator dashboard for the fleet. Project registry, feedback, tasks, analytics, changelog.
 - **[AI Gateway](https://ai-gateway.sassmaker.com)** — OpenAI-compatible LLM gateway fronting free-tier models across 30+ providers.
 - **[Email Manager](https://mail.sassmaker.com)** — Gmail workspace with local semantic search.
@@ -43,7 +43,8 @@ orgs — each with its own brand and domain:
 | Product | URL | What it does |
 |---|---|---|
 | Foundry hub | https://sassmaker.com | Fleet showcase and build log |
-| Docs | https://sassmaker.com/docs | API docs for Foundry backend services |
+| Package docs | https://packages.sassmaker.com | API, SDK, CLI, widgets, and package docs |
+| Skills | https://skills.sassmaker.com | Indexed public Foundry skill catalog |
 | Cockpit | https://app.sassmaker.com | Operator dashboard (auth) |
 | AI Gateway | https://ai-gateway.sassmaker.com | OpenAI-compatible free-model gateway |
 | Email Manager | https://mail.sassmaker.com | Gmail workspace with local semantic search |
@@ -66,7 +67,8 @@ the repository's git log.
 The Foundry hub and every product expose machine-readable entrypoints:
 
 - Hub: https://sassmaker.com/llms.txt · https://sassmaker.com/api/ai · https://sassmaker.com/index.md
-- Docs: https://sassmaker.com/docs/llms.txt · https://sassmaker.com/docs/api/ai · https://sassmaker.com/docs/index.md
+- Package docs: https://packages.sassmaker.com/llms.txt · https://packages.sassmaker.com/index.md
+- Skills: https://skills.sassmaker.com/llms.txt · https://skills.sassmaker.com/api/ai · https://skills.sassmaker.com/index.md
 - AI Gateway: https://ai-gateway.sassmaker.com/llms.txt · https://ai-gateway.sassmaker.com/api/ai
 
 ## Source

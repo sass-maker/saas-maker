@@ -15,6 +15,7 @@ Registry classification uses two separate fields:
 | `drank`              | drank                  | Vercel app (drank-sand.vercel.app); shared DR data via GitHub Action.    |
 | `email-manager`      | Email Manager          | Worker-backed product.                                                   |
 | `everythingrated`    | EverythingRated        | High Signal ratings directory at `ratings.highsignal.app`.               |
+| `fleet-dashboard`    | Fleet Dashboard        | Private Foundry cockpit; production cutover remains manual.              |
 | `free-ai`            | Free AI Gateway        | Gateway/API product, not a frontend.                                     |
 | `aliveville`         | AliveVille             | GitHub, local checkout, and public registry use `aliveville`.             |
 | `high-signal`        | High Signal            | Worker frontend.                                                         |
@@ -22,7 +23,10 @@ Registry classification uses two separate fields:
 | `karte`              | Karte                  | Worker frontend at karte.cc.                                             |
 | `looptv`             | LoopTV                 | Keep label as LoopTV even if notes mention Loop TV.                      |
 | `materia`            | Materia                | Significant Hobbies evidence reference at `materia.significanthobbies.com`. |
+| `mobile-dev-cockpit` | Mobile Dev Cockpit     | Native private operations companion; no public deployment.               |
+| `motion`             | Motion                 | Personal iOS product; no public deployment.                              |
 | `pace`               | Pace                   | Local macOS voice agent; previously discussed as Clicky Local / Space.   |
+| `personal-website`   | Personal website       | Public portfolio at `sarthakagrawal.dev`.                                |
 | `posttrainllm`       | PostTrainLLM           | Repository and product organization use `posttrainllm`.                  |
 | `psi-swarm`          | psi-swarm              | Local CLI and browser controller for repeated Lighthouse audits.         |
 | `protein-index`      | Protein Index          | Significant Hobbies nutrition reference at `protein.significanthobbies.com`. |

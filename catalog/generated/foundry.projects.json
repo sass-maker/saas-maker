@@ -201,7 +201,6 @@
     "tier": "core",
     "category": "product",
     "priority": "P1",
-    "spotlight": true,
     "maturity": "internal-first"
   },
   "significanthobbies": {

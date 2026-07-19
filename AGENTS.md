@@ -5,7 +5,7 @@
 Also read and follow the shared fleet-level agent standard at `../AGENTS.md`. Treat this repository as owned product code: protect production stability, keep changes scoped, verify work, and record durable follow-up tasks when something remains incomplete or blocked.
 
 ## Purpose
-The Foundry platform — CLI, SDKs, widgets, CF Workers API, cockpit dashboard, and docs. API-first SaaS scaffolding with feedback, testimonials, task management, analytics, and more.
+The SaaS Maker Foundry — the public product directory plus the private Build, Market, Learn, Visibility, and Control plane. The monorepo also owns packages, indexed skills, fleet operations, imported helpers, the API, cockpit, and docs.
 
 ## Stack
 - Framework: Hono + CF Workers (API at api.sassmaker.com); Next.js (cockpit at app.sassmaker.com); docs authored as Markdown in `docs/`, rendered by Blume
@@ -13,7 +13,7 @@ The Foundry platform — CLI, SDKs, widgets, CF Workers API, cockpit dashboard, 
 - DB: Cloudflare D1 + Drizzle
 - Auth: better-auth (Google OAuth) — cockpit issues opaque session tokens that workers/api validates against the shared D1 `session` table
 - Testing: Vitest (unit), Playwright (e2e)
-- Deploy: Cloudflare Workers (API `saasmaker-api`, cockpit `saasmaker-dashboard` via @opennextjs/cloudflare, droid runner `saasmaker-droid`); Cloudflare Pages (landing `saas-maker-home`, with Blume docs folded into `/docs`)
+- Deploy: Cloudflare Workers (API `saasmaker-api`, cockpit `saasmaker-dashboard` via @opennextjs/cloudflare, droid runner `saasmaker-droid`); Cloudflare Pages (landing `saas-maker-home`; package docs and skills are separate static surfaces)
 - Package manager: pnpm workspace
 
 ## Repo structure
@@ -27,9 +27,10 @@ workers/api/            # Hono CF Worker — core API
     middleware/         # Auth + rate-limit
 workers/droid/          # Experimental Cloudflare Sandbox runner (Containers + DO)
 apps/
-  cockpit/              # Next.js cockpit (app.sassmaker.com)
+  cockpit/              # Next.js private cockpit (current app domain; fleet.sassmaker.com target)
   docs/                 # Archived Astro/Starlight source; not deployed
-  docs-blume/           # Blume presentation layer; renders docs/ (content.root → ../../docs)
+  docs-blume/           # Blume package documentation (packages.sassmaker.com)
+  skills/               # Public indexed skill catalog (skills.sassmaker.com)
   showcase/             # Landing page + showcase (sassmaker.com)
 packages/
   cli/                  # @saas-maker/cli — validates commands against OpenAPI
@@ -40,6 +41,12 @@ packages/
   ui/                   # Shared UI components
   widgets/              # Embeddable widgets (feedback, changelog, testimonials, waitlist)
 internal/contracts/     # API/Cockpit type contracts (@saas-maker/contracts path alias)
+catalog/foundry.json    # Sole hand-edited product/component/package/skill/automation catalog
+catalog/generated/      # Deterministic projections; do not hand edit
+ops/                    # Fleet operations, schedules, host foundation, and runbooks
+skills/                 # Versioned Foundry skills
+services/               # Imported Drank and Reel Pipeline histories
+tools/psi-swarm/        # Imported PSI Swarm history
 tests/
   api/                  # Vitest unit tests (mock DB)
     helpers.ts          # request() helper for Hono app
@@ -65,6 +72,10 @@ pnpm test:integration        # Integration tests (requires SAASMAKER_API_KEY, hi
 pnpm typecheck               # TypeScript check across workspace
 pnpm lint                    # Lint across workspace
 pnpm check:docs              # Validate docs (broken links, empty docs, required files)
+pnpm catalog:validate        # Validate the sole canonical catalog
+pnpm catalog:check           # Regenerate and fail on compatibility-view drift
+pnpm observability:inventory # Refresh the sanitized provider/evidence snapshot
+pnpm host:test               # Verify inert-clone, lease, receipt, and path safety
 
 # REQUIRED when API routes change — run ALL of these:
 node scripts/generate-openapi.mjs   # Regenerate OpenAPI spec (updates 3 files)
@@ -80,7 +91,8 @@ node scripts/generate-openapi.mjs   # Regenerate OpenAPI spec (updates 3 files)
   - Unit tests: mock DB via `vi.mock('../../workers/api/src/db')`. Auth bypass: mock `getProjectByApiKey` (API key routes) or `getCliTokenUser` (`sm_` prefix routes). Use `tests/api/helpers.ts` `request()` helper. Run in CI on every push.
   - Integration tests: hit live `api.sassmaker.com`, require `SAASMAKER_API_KEY`, NOT run in CI.
   - Organize as `tests/api/<module>.test.ts`.
-- **Documentation standard**: concise, recipe-style, every example copy-paste runnable (or mark placeholders like `<projectId>`). Blume is the only production docs presentation layer; do not revive the archived `apps/docs/` deployment.
+- **Catalog standard**: edit `catalog/foundry.json` only. Root `foundry.projects.json`, `ops/config/projects.json`, `ops/config/automation-registry.json`, and `catalog/generated/*` are generated compatibility views.
+- **Documentation standard**: concise, recipe-style, every example copy-paste runnable (or mark placeholders like `<projectId>`). Blume is the only package-docs presentation layer at `packages.sassmaker.com`; do not revive the archived `apps/docs/` deployment.
 - **Pre-push gate**: `pnpm lint` (if a `lint` script exists) + secret scan. Defined in `.husky/pre-push`. Typecheck and vitest are NOT run on pre-push — run `pnpm typecheck` and `pnpm test` manually (they run in CI). See [`docs/development/quality-gates.md`](docs/development/quality-gates.md).
 - **Fleet Cloudflare state**: `cloudflare.targets.json` is the source of truth for Cloudflare target names, required secret names, vars, and bindings. Run `pnpm fleet:secret-audit -- --project <slug> --fail-on-missing` after changing Wrangler config or runtime env requirements. See `docs/operations/cloudflare-secret-management.md`.
 - **Post-deploy gate**: `pnpm smoke` (or implicit via `pnpm -F @saas-maker/{api,dashboard} run deploy`) hits prod; failure = bad release. Source: `scripts/smoke-prod.mjs`.
@@ -91,9 +103,10 @@ node scripts/generate-openapi.mjs   # Regenerate OpenAPI spec (updates 3 files)
 ## Documentation
 
 The canonical knowledge system is the `docs/` tree at the repo root: committed
-Markdown is the source of truth. Blume (`apps/docs-blume/`) renders that tree as
-the only production presentation layer and is folded into the apex site at
-`https://sassmaker.com/docs`. The old Astro/Starlight `apps/docs/` tree is
+Markdown is the source of truth. Blume (`apps/docs-blume/`) renders only the
+public package subset at `https://packages.sassmaker.com`; internal architecture,
+operations, plans, and learnings stay committed but excluded. The old
+Astro/Starlight `apps/docs/` tree is
 archived and must not be deployed. When copies diverge, `docs/` wins.
 
 [`STATUS.md`](STATUS.md) is the short current-state view; [`PROJECT_STATUS.md`](PROJECT_STATUS.md)

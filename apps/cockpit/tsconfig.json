@@ -20,7 +20,8 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@saas-maker/contracts": ["../../internal/contracts/index.ts"]
+      "@saas-maker/contracts": ["../../internal/contracts/index.ts"],
+      "@foundry-catalog/*": ["../../catalog/generated/*"]
     }
   },
   "include": [

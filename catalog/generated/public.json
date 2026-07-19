@@ -309,7 +309,7 @@
       "tier": "core",
       "category": "product",
       "priority": "P1",
-      "spotlight": true,
+      "spotlight": false,
       "maturity": "internal-first",
       "repositoryUrl": "https://github.com/sass-maker/saas-maker",
       "changelogUrl": "https://github.com/sass-maker/saas-maker/commits/main",

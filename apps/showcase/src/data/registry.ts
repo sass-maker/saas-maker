@@ -1,8 +1,4 @@
-// Fleet product registry — generated into this repo from
-// fleet-ops/config/agent-surfaces-registry.json. Keeping the checked-in snapshot
-// local makes the showcase buildable from a standalone GitHub checkout.
-
-import registry from './product-sites.json';
+import publicCatalog from '../../../../catalog/generated/public.json';
 
 export interface ProductLink {
   title: string;
@@ -15,51 +11,77 @@ export interface RegistryProduct {
   name: string;
   url: string;
   summary: string;
-  publicDir?: string;
   stack?: string;
-  headFile?: string;
   schemaType?: string;
   sameAs?: string[];
   applicationCategory?: string;
-  offers?: { '@type': string; price: string; priceCurrency: string; availability?: string };
   productLinks?: ProductLink[];
-  indexMd?: string;
-  hasDynamicLlms?: boolean;
+  pillarId: string;
+  changelogUrl?: string;
+  roadmapUrl?: string;
 }
 
-export const REGISTRY_PRODUCTS: RegistryProduct[] = (registry as { products: RegistryProduct[] })
-  .products;
+interface CatalogProduct {
+  id: string;
+  name: string;
+  description: string;
+  url: string;
+  repositoryUrl?: string;
+  changelogUrl?: string;
+  roadmapUrl?: string;
+  category: string;
+  pillarId: string;
+}
 
-export const REGISTRY_BY_ID: Record<string, RegistryProduct> = Object.fromEntries(
-  REGISTRY_PRODUCTS.map((p) => [p.id, p])
+function adapt(product: CatalogProduct): RegistryProduct {
+  const links: ProductLink[] = [
+    { title: 'Product', url: product.url, description: 'Canonical product surface' },
+    ...(product.changelogUrl
+      ? [{ title: 'Changelog', url: product.changelogUrl, description: 'Changes shipped on main' }]
+      : []),
+    ...(product.roadmapUrl
+      ? [{ title: 'Roadmap', url: product.roadmapUrl, description: 'Planned and deferred work' }]
+      : []),
+    ...(product.repositoryUrl
+      ? [
+          {
+            title: 'Source',
+            url: product.repositoryUrl,
+            description: 'Canonical source repository',
+          },
+        ]
+      : []),
+  ];
+  return {
+    id: product.id,
+    name: product.name,
+    url: product.url,
+    summary: product.description,
+    stack: product.pillarId,
+    schemaType: 'SoftwareApplication',
+    sameAs: product.repositoryUrl ? [product.repositoryUrl] : undefined,
+    applicationCategory: product.category,
+    productLinks: links,
+    pillarId: product.pillarId,
+    changelogUrl: product.changelogUrl,
+    roadmapUrl: product.roadmapUrl,
+  };
+}
+
+export const REGISTRY_PRODUCTS = (publicCatalog.products as CatalogProduct[]).map(adapt);
+export const REGISTRY_BY_ID = Object.fromEntries(
+  REGISTRY_PRODUCTS.map((product) => [product.id, product])
 );
+export const PAGED_PRODUCTS = REGISTRY_PRODUCTS;
 
-// The showcase hub itself is a registry entry but should not get its own /p/<id> page
-// (it IS the hub). Filter it out for per-product page generation.
-const HUB_SELF_ID = 'saas-maker-showcase';
-
-export const PAGED_PRODUCTS: RegistryProduct[] = REGISTRY_PRODUCTS.filter(
-  (p) => p.id !== HUB_SELF_ID
-);
-
-/**
- * Derive the llms.txt URL for a product from its canonical URL.
- * Every public fleet origin exposes /llms.txt per the agent-indexing standard.
- */
 export function llmsTxtUrl(product: RegistryProduct): string {
   return `${product.url.replace(/\/$/, '')}/llms.txt`;
 }
 
-/**
- * Derive the /api/ai endpoint for a product.
- */
 export function apiAiUrl(product: RegistryProduct): string {
   return `${product.url.replace(/\/$/, '')}/api/ai`;
 }
 
-/**
- * Derive the /index.md endpoint for a product.
- */
 export function indexMdUrl(product: RegistryProduct): string {
   return `${product.url.replace(/\/$/, '')}/index.md`;
 }

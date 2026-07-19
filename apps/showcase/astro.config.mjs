@@ -18,7 +18,7 @@ export default defineConfig({
     format: 'file',
     inlineStylesheets: 'always',
   },
-  integrations: [sitemap({ customPages: ['https://sassmaker.com/docs/'] })],
+  integrations: [sitemap()],
   vite: {
     css: { transformer: 'lightningcss' },
     build: { cssMinify: 'lightningcss' },

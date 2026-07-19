@@ -12,7 +12,7 @@ import {
 
 const CLI = path.resolve('scripts/foundry-observability-inventory.mjs');
 const NOW = '2026-07-19T12:00:00.000Z';
-const PUBLIC_KEY = 'phc_' + 'A'.repeat(32);
+const PUBLIC_KEY = `phc_${'A'.repeat(32)}`;
 
 function fixture(t, manifest = { alpha: { maturity: 'maintained' } }) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'foundry-observability-'));
@@ -34,9 +34,11 @@ test('scans provider adapters per file and reports source integrity findings wit
     root,
     'alpha/src/monitoring.ts',
     "import posthog from 'posthog-js';\n" +
-      "const key = '" + PUBLIC_KEY + "';\n" +
+      "const key = '" +
+      PUBLIC_KEY +
+      "';\n" +
       "posthog.capture('checkout_started', { project_id: 'alpha' });\n" +
-      "const query = \"event = 'missing_event'\";\n"
+      'const query = "event = \'missing_event\'";\n'
   );
   write(
     root,
@@ -58,18 +60,44 @@ test('scans provider adapters per file and reports source integrity findings wit
       "';"
   );
   write(root, 'alpha/dist/ignored.js', "posthog.capture('dist_event', { project_id: 'alpha' });");
+  write(
+    root,
+    'alpha/catalog/generated/observability.json',
+    JSON.stringify({ provider: 'posthog', event: 'generated_event' })
+  );
 
   const report = scanFoundryObservability({ root, now: NOW });
   const project = report.projects[0];
   assert.equal(project.verification.state, 'source-configured');
-  assert.deepEqual(project.adapters.map((adapter) => adapter.provider.id), ['opentelemetry', 'posthog']);
-  assert.ok(project.findings.some((finding) => finding.code === 'event-consumer-without-producer' && finding.event === 'missing_event'));
-  assert.ok(project.findings.some((finding) => finding.code === 'duplicate-event-owner' && finding.event === 'checkout_started'));
-  assert.ok(project.findings.some((finding) => finding.code === 'duplicate-event-family-owner' && finding.eventFamily === 'checkout'));
-  assert.equal(project.findings.filter((finding) => finding.code === 'hardcoded-public-key').length, 1);
+  assert.deepEqual(
+    project.adapters.map((adapter) => adapter.provider.id),
+    ['opentelemetry', 'posthog']
+  );
+  assert.ok(
+    project.findings.some(
+      (finding) =>
+        finding.code === 'event-consumer-without-producer' && finding.event === 'missing_event'
+    )
+  );
+  assert.ok(
+    project.findings.some(
+      (finding) => finding.code === 'duplicate-event-owner' && finding.event === 'checkout_started'
+    )
+  );
+  assert.ok(
+    project.findings.some(
+      (finding) =>
+        finding.code === 'duplicate-event-family-owner' && finding.eventFamily === 'checkout'
+    )
+  );
+  assert.equal(
+    project.findings.filter((finding) => finding.code === 'hardcoded-public-key').length,
+    1
+  );
   assert.ok(!JSON.stringify(report).includes(PUBLIC_KEY));
   assert.ok(!JSON.stringify(report).includes('ignored_event'));
   assert.ok(!JSON.stringify(report).includes('dist_event'));
+  assert.ok(!JSON.stringify(report).includes('generated_event'));
 });
 
 test('keeps fresh, stale, unknown, source-configured, and justified not-applicable distinct', (t) => {
@@ -97,18 +125,22 @@ test('keeps fresh, stale, unknown, source-configured, and justified not-applicab
     root,
     'ops/config/automation-registry.json',
     JSON.stringify({
-      entries: [{
-        id: 'retired',
-        repository: 'retired',
-        attention: 'ignored',
-        actionPolicy: 'excluded',
-        exceptions: [{ contract: 'all', reason: 'Frozen by owner decision.' }],
-      }],
+      entries: [
+        {
+          id: 'retired',
+          repository: 'retired',
+          attention: 'ignored',
+          actionPolicy: 'excluded',
+          exceptions: [{ contract: 'all', reason: 'Frozen by owner decision.' }],
+        },
+      ],
     })
   );
 
   const report = scanFoundryObservability({ root, now: NOW, freshnessHours: 24 });
-  const states = Object.fromEntries(report.projects.map((project) => [project.projectId, project.verification.state]));
+  const states = Object.fromEntries(
+    report.projects.map((project) => [project.projectId, project.verification.state])
+  );
   assert.deepEqual(states, {
     configured: 'source-configured',
     fresh: 'fresh-verified',
@@ -116,7 +148,10 @@ test('keeps fresh, stale, unknown, source-configured, and justified not-applicab
     retired: 'not-applicable',
     stale: 'stale',
   });
-  assert.equal(report.projects.find((project) => project.projectId === 'retired').verification.reason, 'Frozen by owner decision.');
+  assert.equal(
+    report.projects.find((project) => project.projectId === 'retired').verification.reason,
+    'Frozen by owner decision.'
+  );
 });
 
 test('detects missing identity and audit paths while remaining inside the project boundary', (t) => {
@@ -164,6 +199,43 @@ test('enforces file and byte bounds without concatenating project source', (t) =
   });
   assert.equal(report.projects[0].scan.truncated, true);
   assert.ok(report.projects[0].findings.some((finding) => finding.code === 'scan-limit-reached'));
+});
+
+test('prefers the canonical catalog and scans only source available inside the monorepo', (t) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'foundry-observability-catalog-'));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  write(
+    root,
+    'catalog/foundry.json',
+    JSON.stringify({
+      products: [
+        { id: 'local-product', lifecycle: 'maintained', repositoryId: 'local-repo' },
+        { id: 'external-product', lifecycle: 'maintained', repositoryId: 'external-repo' },
+        { id: 'retired-product', lifecycle: 'retired', repositoryId: 'retired-repo' },
+      ],
+      repositories: [
+        { id: 'local-repo', path: 'services/local-product' },
+        { id: 'external-repo', path: '../external-product' },
+        { id: 'retired-repo', path: 'services/retired-product' },
+      ],
+    })
+  );
+  write(root, 'services/local-product/src/telemetry.ts', "import posthog from 'posthog-js';");
+  write(root, 'services/retired-product/src/telemetry.ts', "import posthog from 'posthog-js';");
+
+  const report = scanFoundryObservability({ root, now: NOW });
+  assert.deepEqual(
+    report.projects.map((project) => project.projectId),
+    ['external-product', 'local-product']
+  );
+  assert.equal(
+    report.projects.find((project) => project.projectId === 'external-product').verification.state,
+    'unknown'
+  );
+  assert.equal(
+    report.projects.find((project) => project.projectId === 'local-product').verification.state,
+    'source-configured'
+  );
 });
 
 test('CLI writes sanitized JSON and Markdown reports', (t) => {

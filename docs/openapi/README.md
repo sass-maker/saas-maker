@@ -1,4 +1,7 @@
-# OpenAPI Artifact
+---
+title: "OpenAPI Artifact"
+description: "How the generated SaaS Maker OpenAPI artifacts stay current."
+---
 
 This directory holds the generated OpenAPI specification for the SaaS Maker
 API. **Do not edit `openapi.json` by hand** — it is regenerated from the

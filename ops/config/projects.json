@@ -1,30 +1,14 @@
 {
   "_meta": {
-    "purpose": "Single source of truth for fleet projects: tier + repo + deploy reality. Replaces the scattered split between agent-surfaces-registry.json (web GEO surfaces only), cloudflare.targets.json (partial deploy map), and project-tiers.md (focus marking). Reconciled against the live Cloudflare account 2026-07-18.",
-    "updated": "2026-07-19",
-    "fields": {
-      "id": "stable project/surface id",
-      "family": "top-level product family this belongs to",
-      "tier": "focus | active | secondary | parked | out-of-fleet | non-product",
-      "priority": "P1 | P2 | P3 current attention level; P1 is core, P2 is support/active, P3 is maintain or park",
-      "repo": "child repo dir under fleet root (null if none)",
-      "deployKind": "pages | worker | worker+pages | none | unknown",
-      "cfProject": "Cloudflare Pages project name and/or Worker script name(s)",
-      "domains": "live custom domains (empty = pages.dev only or undeployed)",
-      "inRegistry": "present in agent-surfaces-registry.json",
-      "status": "live | undeployed | orphan | deleted | unverified",
-      "notes": "reconciliation flags / decisions"
-    },
-    "workers": "25 live Workers (enumerated 2026-07-18 via API): aliveville, codevetter-landing-proxy, email-manager, everythingrated, free-ai-gateway, high-signal-web/-api/-annotation, karte-email, knowledgebase, knowledgebase-app, linkchat, mal-api, open-historia, protein-index, reader, reel-pipeline-artifacts, resume-tailor, saasmaker-dashboard/-api/-droid, significanthobbies, starboard, truehire.",
-    "openGaps": [
-      "CF project 'tinygpt' name unchanged — cosmetic only and not user-visible. posttrainllm.com is the canonical live domain; the platform-generated tinygpt.pages.dev hostname is not a custom fallback.",
-      "open-historia confirmed a live product (historia.aliveville.com), not an orphan."
-    ],
-    "priorities": {
-      "P1": ["codevetter", "pace", "posttrainllm", "saas-maker-showcase", "saas-maker-platform", "high-signal", "sarthakagrawal-personal"],
-      "P2": ["drank", "free-ai", "psi-swarm", "everythingrated", "research-papers", "knowledge-base", "starboard", "reel-pipeline", "motion"],
-      "P3": ["email-manager", "materia", "significanthobbies", "anime-list", "chess", "looptv", "reader", "swe-interview-prep", "rolepatch", "karte", "ai-game", "protein-index", "mobile-dev-cockpit", "saas-ideas", "truehire", "today-little-log", "open-historia"]
-    }
+    "purpose": "Generated compatibility view. Edit catalog/foundry.json only.",
+    "generatedFrom": "catalog/foundry.json",
+    "evidenceStates": [
+      "configured",
+      "verified",
+      "stale",
+      "unknown",
+      "not-applicable"
+    ]
   },
   "projects": [
     {
@@ -93,10 +77,13 @@
       "repo": "saas-maker",
       "deployKind": "worker",
       "cfProject": "saasmaker-dashboard, saasmaker-api, saasmaker-droid",
-      "domains": [],
+      "domains": [
+        "api.sassmaker.com",
+        "app.sassmaker.com"
+      ],
       "inRegistry": false,
       "status": "live",
-      "notes": "dashboard/API workers behind the platform"
+      "notes": "Current API and legacy cockpit worker domains; fleet.sassmaker.com is the private Foundry target after an explicit parity cutover."
     },
     {
       "id": "drank",
@@ -475,7 +462,7 @@
       "id": "sarthakagrawal-personal",
       "family": "personal",
       "tier": "non-product",
-      "repo": null,
+      "repo": "portfolio",
       "deployKind": "pages",
       "cfProject": "sarthakagrawal",
       "domains": [
@@ -484,6 +471,51 @@
       "inRegistry": false,
       "status": "live",
       "notes": "personal site, not a fleet product"
+    },
+    {
+      "id": "foundry-cockpit",
+      "family": "sass-maker",
+      "tier": "support",
+      "repo": "saas-maker",
+      "deployKind": "worker",
+      "cfProject": "saasmaker-dashboard",
+      "domains": [
+        "fleet.sassmaker.com"
+      ],
+      "app": "apps/cockpit",
+      "inRegistry": false,
+      "status": "live-manual-host; repository parity unverified",
+      "notes": "Private Foundry cockpit; current manual-host parity must be verified before activation from this repository."
+    },
+    {
+      "id": "foundry-package-docs",
+      "family": "sass-maker",
+      "tier": "support",
+      "repo": "saas-maker",
+      "deployKind": "pages",
+      "cfProject": "saas-maker-packages",
+      "domains": [
+        "packages.sassmaker.com"
+      ],
+      "app": "apps/docs-blume",
+      "inRegistry": true,
+      "status": "built locally; not production-verified",
+      "notes": "Blume package documentation; deploy remains an explicit operator action."
+    },
+    {
+      "id": "foundry-skills",
+      "family": "sass-maker",
+      "tier": "support",
+      "repo": "saas-maker",
+      "deployKind": "pages",
+      "cfProject": "saas-maker-skills",
+      "domains": [
+        "skills.sassmaker.com"
+      ],
+      "app": "apps/skills",
+      "inRegistry": true,
+      "status": "built locally; not production-verified",
+      "notes": "Public indexed skill catalog; deploy remains an explicit operator action."
     }
   ]
 }

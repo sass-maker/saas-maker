@@ -1707,11 +1707,11 @@
       "tier": "active",
       "repositoryId": "saas-maker",
       "inPublicRegistry": false,
-      "notes": "dashboard/API workers behind the platform",
+      "notes": "Current API and legacy cockpit worker domains; fleet.sassmaker.com is the private Foundry target after an explicit parity cutover.",
       "deployment": {
         "kind": "worker",
         "target": "saasmaker-dashboard, saasmaker-api, saasmaker-droid",
-        "domains": [],
+        "domains": ["api.sassmaker.com", "app.sassmaker.com"],
         "state": "configured",
         "sourceStatus": "live",
         "verification": {
@@ -2342,7 +2342,7 @@
       "productId": "personal-website",
       "family": "personal",
       "tier": "non-product",
-      "repositoryId": null,
+      "repositoryId": "portfolio",
       "inPublicRegistry": false,
       "notes": "personal site, not a fleet product",
       "deployment": {
@@ -2357,6 +2357,72 @@
           "state": "stale",
           "source": "ops/config/projects.json reconciliation",
           "observedAt": "2026-07-18"
+        }
+      }
+    },
+    {
+      "id": "foundry-cockpit",
+      "productId": "fleet-dashboard",
+      "family": "sass-maker",
+      "tier": "support",
+      "repositoryId": "saas-maker",
+      "app": "apps/cockpit",
+      "inPublicRegistry": false,
+      "notes": "Private Foundry cockpit; current manual-host parity must be verified before activation from this repository.",
+      "deployment": {
+        "kind": "worker",
+        "target": "saasmaker-dashboard",
+        "domains": ["fleet.sassmaker.com"],
+        "state": "configured",
+        "sourceStatus": "live-manual-host; repository parity unverified",
+        "verification": {
+          "state": "configured",
+          "source": "owner-confirmed manual host",
+          "observedAt": "2026-07-19"
+        }
+      }
+    },
+    {
+      "id": "foundry-package-docs",
+      "productId": "sass-maker",
+      "family": "sass-maker",
+      "tier": "support",
+      "repositoryId": "saas-maker",
+      "app": "apps/docs-blume",
+      "inPublicRegistry": true,
+      "notes": "Blume package documentation; deploy remains an explicit operator action.",
+      "deployment": {
+        "kind": "pages",
+        "target": "saas-maker-packages",
+        "domains": ["packages.sassmaker.com"],
+        "state": "configured",
+        "sourceStatus": "built locally; not production-verified",
+        "verification": {
+          "state": "unknown",
+          "source": "local static build",
+          "observedAt": null
+        }
+      }
+    },
+    {
+      "id": "foundry-skills",
+      "productId": "sass-maker",
+      "family": "sass-maker",
+      "tier": "support",
+      "repositoryId": "saas-maker",
+      "app": "apps/skills",
+      "inPublicRegistry": true,
+      "notes": "Public indexed skill catalog; deploy remains an explicit operator action.",
+      "deployment": {
+        "kind": "pages",
+        "target": "saas-maker-skills",
+        "domains": ["skills.sassmaker.com"],
+        "state": "configured",
+        "sourceStatus": "built locally; not production-verified",
+        "verification": {
+          "state": "unknown",
+          "source": "local static build",
+          "observedAt": null
         }
       }
     }
@@ -3399,7 +3465,6 @@
       "tier": "core",
       "category": "product",
       "priority": "P1",
-      "spotlight": true,
       "maturity": "internal-first"
     },
     {

@@ -8,6 +8,38 @@
     "spotlight": true,
     "maturity": "public-ready"
   },
+  "personal-website": {
+    "desc": "Personal portfolio and the concise front door to active work.",
+    "url": "https://github.com/sarthakagrawal927/portfolio.git",
+    "tier": "personal",
+    "category": "personal",
+    "priority": "P3",
+    "maturity": "public-ready"
+  },
+  "motion": {
+    "desc": "A focused iOS product maintained as part of the personal toolbox.",
+    "url": "https://github.com/sarthakagrawal927/motion.git",
+    "tier": "personal",
+    "category": "personal",
+    "priority": "P3",
+    "maturity": "maintained"
+  },
+  "fleet-dashboard": {
+    "desc": "Private visibility and control surface for the Foundry fleet.",
+    "url": "https://github.com/sass-maker/saas-maker.git",
+    "tier": "support",
+    "category": "helper",
+    "priority": "P2",
+    "maturity": "internal-first"
+  },
+  "mobile-dev-cockpit": {
+    "desc": "Native mobile companion for private Foundry operations.",
+    "url": "https://github.com/sass-maker/mobile-dev-cockpit.git",
+    "tier": "support",
+    "category": "helper",
+    "priority": "P2",
+    "maturity": "internal-first"
+  },
   "aliveville": {
     "desc": "Persistent AI world simulator — interactive RPG-style multi-agent game.",
     "url": "https://github.com/sarthakagrawal927/aliveville.git",
@@ -169,7 +201,6 @@
     "tier": "core",
     "category": "product",
     "priority": "P1",
-    "spotlight": true,
     "maturity": "internal-first"
   },
   "significanthobbies": {
