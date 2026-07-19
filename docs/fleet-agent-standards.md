@@ -380,7 +380,6 @@ audits, or standardisation passes; do not write fleet-wide tasks against them.
 - `open-historia` — archived/out-of-fleet
 - `today-little-log` — archived (merged into significanthobbies)
 - `truehire` — retired; RolePatch owns the active resume/proof surface
-- `verified-bases` — archived
 - `companion-robot` — delayed
 - `device-net-test` — scratch network test app
 - `forecast-lab` — delayed

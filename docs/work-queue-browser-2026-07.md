@@ -197,25 +197,19 @@ verify/skip.
    should flip **Active** within ~1 min (hit "Retry/Check" if it doesn't).
 4. Verify `https://ideas.sassmaker.com` returns 200. Done = project no longer red.
 
-**TASK 2 (verify only, no dashboard action): `shop.sassmaker.com`**
-- Already routes to the `verified-bases-api` worker (DNS/routing fine), but
-  returns **404 at `/`** — that's app-level (the storefront worker doesn't serve
-  a homepage yet), NOT a DNS/green problem. Just flag to Sarthak: verified-bases
-  needs a deploy with a root route. No CF dashboard action.
-
-**TASK 3 — REMOVED.** The `tinygpt → posttrainllm` rename was abandoned (kept
+**TASK 2 — REMOVED.** The `tinygpt → posttrainllm` rename was abandoned (kept
 cosmetic per user 2026-07-18); the duplicate `posttrainllm` project was deleted.
 Site stays on the `tinygpt`-named project (users never see the name).
 
 **NOT browser tasks — git-connection (informational):** 4 Pages are CF-native
 git-connected; ~10 deploy via GitHub Actions on push (git-driven already —
 do NOT CF-native-connect them, it double-pipelines); only `web-playables`,
-`knowledgebase-landing`, `saas-ideas` are truly manual — best fixed by adding a
+`saas-ideas` are truly manual — best fixed by adding a
 deploy workflow (code task), not a dashboard connect.
 
-**Not a browser task (needs code deploy, not dashboard):** the 5 newly-registered
-products (verified-bases, protein-index, open-historia, knowledgebase-app,
-saas-ideas) have GEO surfaces committed but not yet deployed — they go live on
+**Not a browser task (needs code deploy, not dashboard):** the 4 newly-registered
+products (protein-index, open-historia, knowledgebase-app, saas-ideas) have GEO
+surfaces committed but not yet deployed — they go live on
 each repo's next deploy. Hand that to Sarthak/CI, not the browser editor.
 
 ## B-CF — Cloudflare hygiene (history)
@@ -231,18 +225,15 @@ Nearly all DONE via the Infisical CF token. Remaining decision:
    domain cutover — tell me and I'll script the binding copy first.
 
 **Done 2026-07-18 (via Infisical token):**
-- Deleted Pages `verified-bases-web` + `today-little-log`; removed stray
-  `tinygpt.sarthakagrawal.dev`; enumerated all 25 Workers.
+- Deleted Pages `today-little-log`; removed stray `tinygpt.sarthakagrawal.dev`;
+  enumerated all 25 Workers.
 - **saas-ideas:** repo → sass-maker org + cloned; `ideas.sassmaker.com` added.
-- **verified-bases:** promoted out of out-of-fleet — repo → sass-maker org +
-  cloned; `shop.sassmaker.com` added to the `verified-bases-api` worker.
 - **open-historia:** confirmed a live product (`historia.aliveville.com`), kept.
 - **posttrainllm.com REDEPLOYED** fresh from main — stale-build fixed
   (leaderboard JSON, RSS, canonicals), verified green.
 
 ## Done / not needed
 
-- Deleted `verified-bases-web` Pages project (2026-07-18, out-of-fleet).
 - GitHub repo topics: done 2026-07-17 (all 21 repos). (X2 refines the core-three
   topics toward the GEO query terms — verify current topics before re-applying.)
 - IndexNow initial submit: done (1057 URLs, 202s); Crawler Hints (B4)

@@ -7,7 +7,7 @@ Self-contained. Goal: get the whole Cloudflare account to a clean state and
 - CF dashboard account: **sarthakagrawal927@gmail.com** (single account).
 - Intended tier + repo + deploy-kind + domains per product: the manifest
   `fleet-ops/config/projects.json` in the `fleet` repo (read it first — it lists
-  all 43 units and each product's *intended* domain).
+  all 43 live deployment units and each product's *intended* domain).
 - Scope today: **18 Pages projects + 25 Workers = 43 units.**
 
 ## The 4 acceptance criteria (what "done" means)
@@ -21,11 +21,11 @@ Self-contained. Goal: get the whole Cloudflare account to a clean state and
    manifest.
 
 ## Already done (do NOT redo)
-- Deleted junk Pages projects: `verified-bases-web`, `today-little-log`, and a
-  duplicate `posttrainllm`.
+- Deleted junk Pages projects: `today-little-log` and a duplicate `posttrainllm`.
 - Removed phantom pending domains: `interview.sassmaker.com`,
   `anime.sassmaker.com`, `tv.sassmaker.com` (were dangling, no DNS).
-- Removed stray `tinygpt.sarthakagrawal.dev`.
+- Removed the stray `tinygpt.sarthakagrawal.dev`; PostTrain now has only its
+  canonical custom domains (`posttrainllm.com` and `www.posttrainllm.com`).
 - `ideas.sassmaker.com` → **already 200/green** (CNAME → saas-ideas.pages.dev).
 - `tinygpt` project stays named `tinygpt` **by decision** (cosmetic; the site is
   posttrainllm.com — do NOT rename it).
@@ -49,9 +49,6 @@ environment/config** issue, not the code.
 ## TASK B — Domains: verify, fix content, remove redundant
 1. **Verify every custom domain** across all Pages + Workers resolves and serves
    2xx. Known non-2xx to resolve:
-   - `shop.sassmaker.com` → **404** (the `verified-bases-api` worker routes but
-     serves no homepage). Either deploy a storefront homepage, or if it's not
-     ready, remove the `shop.sassmaker.com` custom domain from the worker.
    - `api.sassmaker.com` → 404 at `/` is **expected** (API-only worker) — leave.
 2. **Redundant domains** — for each project/worker, review its custom domains and
    remove any that are leftover/unintended or point to the wrong product.
@@ -65,16 +62,13 @@ environment/config** issue, not the code.
 ## TASK C — Git connection
 Current state (verify and complete):
 - **CF-native git-connected (fine):** codevetter, anime-list, saas-maker-docs,
-  swe-interview-prep.
+  swe-interview-prep, knowledgebase-landing, web-playables, saas-ideas.
 - **Deploy via GitHub Actions on push (fine — leave as-is):** tinygpt, chess-9a0,
-  materia, pace, drank, psi-swarm-web, research-papers, looptv, aliveville
-  (verify saas-maker-home too).
-- **Truly manual (no auto-deploy) — fix these:** `web-playables`,
-  `knowledgebase-landing`, `saas-ideas`. For each, either connect it to its
-  GitHub repo in the dashboard (with the correct build command/output dir) **or**
-  tell Sarthak so a deploy workflow can be added in code.
-1. **Accept:** every project is CF-native-connected or Actions-deploying; only
-   the 3 above may need action.
+  materia, pace, drank, psi-swarm-web, research-papers, looptv, aliveville,
+  and saas-maker-home.
+- **Truly manual product surfaces:** none identified. The personal site
+  (`sarthakagrawal`) remains an intentional direct-upload, non-product surface.
+1. **Accept:** every project is CF-native-connected or Actions-deploying.
 
 ## TASK D — Duplicates & final verification
 1. Confirm **no duplicate projects** and **no domain attached to two projects**.

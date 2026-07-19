@@ -53,7 +53,7 @@ Internal (fleet):
 - **2026-06-05** — logged fleet perf-push follow-ups; fleet-wide CF Cache
   Rules deployer; removed one-off Pages-cleanup workflow.
 - **2026-06-09** — evaluated OSS performance-tool integrations
-  (`docs/oss-integration-evaluation.md`).
+  (`docs/architecture/decisions/oss-integration-evaluation.md`).
 - **2026-06-10** — Ahrefs Domain Rating in reports, projects dashboard, and
   weekly idle refresh; hardened with negative caching, fetch timeouts, and
   UI states.
@@ -61,7 +61,7 @@ Internal (fleet):
   trace insight) plus correctness fixes (report-URL decoding, waiting for
   project runs, dashboard run-subscription cleanup).
 - **2026-06-19** — continue-on-error for batch page runs with per-page
-  failure reporting; committed `docs/learning/` notes.
+  failure reporting; committed `docs/knowledge/learnings/` notes.
 - **2026-06-20** — SaaS Maker auth hub (device-flow `connect`/`whoami`, PR #6);
   migrated npm workspaces to pnpm (PR #8).
 - **2026-06-22** — made psi-swarm standalone OSS, decoupled from saas-maker
@@ -87,11 +87,13 @@ Internal (fleet):
   `pnpm --filter psi-swarm-web run build` → `web/dist`. Includes a static
   `/gallery` demo that works without the local agent.
 - **CI/CD** — `.github/workflows/deploy.yml` builds the web workspace with
-  pnpm and deploys `web/dist` via `cloudflare/wrangler-action@v3` on push to
-  `main` (paths `web/**`) + manual dispatch. The action runs from
-  `workingDirectory: web` with the locally pinned wrangler (the action's own
-  install fails inside this pnpm monorepo). Repo-local guarded deploy:
-  `pnpm deploy`.
+  pnpm and deploys `web/dist` via `cloudflare/wrangler-action@v3`. Trigger is
+  **manual dispatch only** (not push) — `main` stays releasable but is not an
+  automatic production trigger. The action runs from `workingDirectory: web`
+  with the locally pinned wrangler (the action's own install fails inside this
+  pnpm monorepo). Repo-local guarded deploy: `pnpm deploy`. A separate
+  `.github/workflows/docs.yml` validates `docs/` + builds the Blume site on
+  docs-path changes.
 - **Installable skill** — `pnpm install:skill` installs the Claude/Codex skill
   documenting usage paths.
 
@@ -110,7 +112,7 @@ Measurement engine:
 - Batch page runs continue on error with per-page failure reporting.
 - OSS integration decision: keep Lighthouse as the engine; prefer an optional
   Chrome DevTools trace-insight adapter before adopting a heavier
-  sitespeed/WebPageTest-style stack (`docs/oss-integration-evaluation.md`).
+  sitespeed/WebPageTest-style stack (`docs/architecture/decisions/oss-integration-evaluation.md`).
 
 History & analysis (SQLite):
 - Local run history with tagged runs and before/after comparisons.

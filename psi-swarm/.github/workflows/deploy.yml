@@ -3,6 +3,9 @@ name: Deploy psi-swarm-web to Cloudflare Pages
 #   pnpm --filter psi-swarm-web run build && wrangler pages deploy web/dist --project-name=psi-swarm-web
 # CI deploy added 2026-06-26; production deploy is manual dispatch only.
 # Before this, psi-swarm had no deploy automation, so merged web fixes never reached the live site.
+# Rollback: Cloudflare Pages preserves every deployment. Roll back via
+# dash.cloudflare.com → Pages → psi-swarm-web → Deployments → "Rollback to
+# this deployment".
 # REQUIRES org secrets CLOUDFLARE_API_TOKEN + CLOUDFLARE_ACCOUNT_ID (now in sarthak-fleet org).
 on:
   workflow_dispatch:
@@ -13,6 +16,7 @@ concurrency:
 jobs:
   deploy-production:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v6
       - uses: pnpm/action-setup@v6

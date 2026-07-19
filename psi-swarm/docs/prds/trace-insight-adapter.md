@@ -1,3 +1,8 @@
+---
+title: Trace Insight Adapter
+description: Optional post-swarm diagnosis from Lighthouse artifacts, with an external adapter hook.
+---
+
 # Trace Insight Adapter
 
 **Status:** Shipped (builtin) · **Release:** v0.4.0 · **Updated:** 2026-06-13
