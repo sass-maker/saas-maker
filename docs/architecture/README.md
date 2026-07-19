@@ -20,6 +20,9 @@ How SaaS Maker is structured and how its parts interact.
 
 ## Files
 
+- [`how-it-works.md`](how-it-works.md) — learning-tier end-to-end walkthrough:
+  the monorepo shape, the Workers API, shared D1, the block/SDK model, auth, and
+  the design decisions behind them. Start here if you're new to the codebase.
 - [`symphony.md`](symphony.md) — Foundry Symphony orchestration layer: task
   tracker, agent dispatch, usage sampling, fleet failure importer.
 - [`droid.md`](droid.md) — Droid sandbox runner quickstart, run request fields,
@@ -31,6 +34,6 @@ How SaaS Maker is structured and how its parts interact.
 
 ## Subdirectories
 
-- [`decisions/`](decisions/) — durable, dated design decisions and plans
+- [`decisions/`](decisions/README.md) — durable, dated design decisions and plans
   (ADR-style). Start there when investigating why a system has its current shape.
-- [`research/`](research/) — research notes that informed decisions.
+- [`research/`](research/README.md) — research notes that informed decisions.

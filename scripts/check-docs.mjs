@@ -90,7 +90,17 @@ async function walkMarkdown(dir, out = []) {
   return out;
 }
 
-const rootMarkdown = ['AGENTS.md', 'STATUS.md', 'PROJECT_STATUS.md', 'README.md', 'WORKFLOW.md', 'AUDIT.md', 'CONTRIBUTING.md', 'SECURITY.md', 'CLAUDE.md'];
+const rootMarkdown = [
+  'AGENTS.md',
+  'STATUS.md',
+  'PROJECT_STATUS.md',
+  'README.md',
+  'WORKFLOW.md',
+  'AUDIT.md',
+  'CONTRIBUTING.md',
+  'SECURITY.md',
+  'CLAUDE.md',
+];
 const docsMarkdown = await walkMarkdown(docsRoot);
 const allMarkdown = [...new Set([...rootMarkdown, ...docsMarkdown])];
 
@@ -109,7 +119,12 @@ const mdExtensions = ['.md', '.mdx', '.markdown'];
 const dirIndexFiles = ['index.mdx', 'index.md', 'README.md', 'readme.md'];
 
 async function exists(p) {
-  try { await access(p); return true; } catch { return false; }
+  try {
+    await access(p);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 // Resolve a link target from a given source file.
@@ -152,7 +167,21 @@ async function resolveTarget(fromRel, target) {
       if (await exists(resolved + ext)) return { ok: true, resolved: resolved + ext };
     }
     for (const idx of dirIndexFiles) {
-      if (await exists(path.join(resolved, idx))) return { ok: true, resolved: path.join(resolved, idx) };
+      if (await exists(path.join(resolved, idx)))
+        return { ok: true, resolved: path.join(resolved, idx) };
+    }
+  }
+  // Blume strips a leading 4-digit year prefix (`2026-`) from date-prefixed
+  // filenames when it builds the page slug, so a link such as
+  // `06-04-magic-form-block-design.md` resolves to the on-disk file
+  // `2026-06-04-magic-form-block-design.md`. Accept that mapping so this check
+  // stays consistent with `blume validate`.
+  const targetName = path.basename(resolved);
+  if (/^\d{2}-\d{2}-/.test(targetName)) {
+    const dir = path.dirname(resolved);
+    for (const year of ['2026', '2025', '2024', '2027']) {
+      const yearMatched = path.join(dir, `${year}-${targetName}`);
+      if (await exists(yearMatched)) return { ok: true, resolved: yearMatched };
     }
   }
   return { ok: false, resolved };
@@ -193,7 +222,8 @@ for (const rel of allMarkdown) {
   }
   // Check image links resolve.
   for (const target of imageTargets) {
-    if (target.startsWith('http://') || target.startsWith('https://') || target.startsWith('/')) continue;
+    if (target.startsWith('http://') || target.startsWith('https://') || target.startsWith('/'))
+      continue;
     const resolved = path.resolve(fileDir, target);
     try {
       await stat(resolved);

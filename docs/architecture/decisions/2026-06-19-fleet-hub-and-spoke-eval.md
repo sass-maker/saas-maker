@@ -133,7 +133,7 @@ This does **not** reverse §2.2's SPOF warning: there the risk was a *local-firs
 
 **Explicitly out of scope:** a synchronous request gateway, Durable-Object service mesh, or routing any product's internal traffic through saas-maker.
 
-**Concrete build spec:** see [2026-06-19-fleet-events-hub-spec.md](./2026-06-19-fleet-events-hub-spec.md) for the D1 table, `POST /v1/events` route, the outbox, and per-service onboarding steps.
+**Concrete build spec:** see [2026-06-19-fleet-events-hub-spec.md](./06-19-fleet-events-hub-spec.md) for the D1 table, `POST /v1/events` route, the outbox, and per-service onboarding steps.
 
 ## 7. Open questions
 

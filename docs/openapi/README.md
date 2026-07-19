@@ -20,7 +20,7 @@ build. The CLI (`packages/cli`) validates all `fnd` commands against
 ## Related
 
 - API reference (human-readable): [`../api/overview.md`](../api/overview.md)
-  and the per-service pages under [`../services/`](../services/).
+  and the per-service pages under [`../services/`](../services/projects.md).
 - CLI docs: [`../sdk/cli.md`](../sdk/cli.md).
 - Required workflow when API routes change:
   [`../development/README.md`](../development/README.md).

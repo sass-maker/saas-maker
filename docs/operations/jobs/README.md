@@ -9,8 +9,8 @@ its cadence changes.
 ## Local Codex automations (`codex-automations/`)
 
 All run locally with `execution_environment = "local"` and read the fleet from
-`/Users/sarthak/Desktop/fleet/saas-maker`. None deploy, migrate, push, or touch
-secrets — they are read-mostly or create tasks/ideas only.
+the SaaS Maker repo (`$FLEET_ROOT/saas-maker`). None deploy, migrate, push, or
+touch secrets — they are read-mostly or create tasks/ideas only.
 
 | ID | Name | Cadence (RRULE) | Model | Purpose |
 | --- | --- | --- | --- | --- |

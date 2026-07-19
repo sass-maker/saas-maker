@@ -3,14 +3,26 @@
 Goal: stop runtime regressions from reaching prod by adding two layers of
 mechanical defense and closing the latent bugs they surface.
 
-## Layer 1 — Pre-push fleet-wide typecheck
+## Layer 1 — Pre-push gate
 
-- Added `typecheck` script (`tsc --noEmit`) to every workspace package that
-  ships TypeScript (19 packages — see `package.json:scripts.typecheck`).
-- Root: `pnpm typecheck` runs `pnpm -r --if-present typecheck`.
-- `.husky/pre-push` now runs lint → typecheck → tests → secret scan.
+`.husky/pre-push` runs two fast checks before every push:
 
-### Latent bugs surfaced by the new gate (all fixed in the same pass)
+1. **Lint** — `pnpm run --if-present lint` (Biome/ESLint, whatever is configured).
+2. **Secret scan** — greps tracked files for token/key patterns and aborts the
+   push if any match.
+
+Typecheck and vitest are **not** run on pre-push (they are slower and run in CI
+instead). Run them manually before pushing when you touch types or logic:
+
+- `pnpm typecheck` — root script runs `pnpm -r --if-present typecheck`. The
+  `typecheck` script (`tsc --noEmit`) is defined on every workspace package that
+  ships TypeScript (see `package.json:scripts.typecheck`).
+- `pnpm test` — Vitest unit run.
+
+The typecheck script was added in this same 2026-04-26 pass, which surfaced the
+latent bugs below.
+
+### Latent bugs surfaced by the typecheck script (all fixed in the same pass)
 
 - `packages/cli/src/commands/fleet.ts` — used `mkdirSync` without importing it.
 - `packages/cli/src/commands/forge.ts` — used `existsSync` without importing it.

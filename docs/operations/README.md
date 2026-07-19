@@ -1,7 +1,7 @@
 # Operations
 
 How SaaS Maker and the fleet are run, verified, and recovered. For the
-executable scripts, see [`../../scripts/`](../../scripts/) — these docs are the
+executable scripts, see [`scripts/`](https://github.com/sass-maker/saas-maker/tree/main/scripts) — these docs are the
 human-readable companion.
 
 ## Files
@@ -29,8 +29,8 @@ human-readable companion.
 
 ## Subdirectories
 
-- [`jobs/`](jobs/) — catalog of scheduled jobs (`codex-automations/`).
-- [`runbooks/`](runbooks/) — step-by-step runbooks for audits, smoke, and
+- [`jobs/`](jobs/README.md) — catalog of scheduled jobs (`codex-automations/`).
+- [`runbooks/`](runbooks/README.md) — step-by-step runbooks for audits, smoke, and
   recovery.
 
 ## Key operational commands

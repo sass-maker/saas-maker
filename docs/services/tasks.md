@@ -15,10 +15,10 @@ Tasks are managed in the Cockpit UI ([app.sassmaker.com](https://app.sassmaker.c
 | `title` | string | Required. Short imperative summary. |
 | `description` | string | Optional. Multi-line markdown. |
 | `project_slug` | string | Optional. Pins the task to a project (filterable). |
-| `status` | enum | `pending`, `in_progress`, `blocked`, `completed`. |
-| `priority` | enum | `low`, `normal`, `high`. |
-| `task_type` | enum | Free-form bucket — e.g. `bug`, `feature`, `chore`. |
-| `size` | enum | `s`, `m`, `l`. |
+| `status` | enum | `todo`, `in_progress`, `done`. |
+| `priority` | enum | `low`, `medium`, `high`. |
+| `task_type` | enum | `feature`, `bug`, `chore`, `docs`, `research`, `cleanup`, `other`. |
+| `size` | enum | `xs`, `s`, `m`, `l`, `xl`. |
 | `dependencies` | string[] | Other task IDs that block this one. |
 | `branch_name` | string | Git branch. |
 | `pr_url`, `pr_status` | string, enum | PR link and one of `none`, `draft`, `open`, `merged`, `closed`. |
@@ -88,8 +88,8 @@ fnd api POST /v1/tasks --auth session \
 | `title` | Yes | Non-empty string. |
 | `description` | No | |
 | `project_slug` | No | Surface the task on the project's task board. |
-| `priority` | No | Defaults to `normal`. |
-| `task_type`, `size` | No | Free-form buckets. |
+| `priority` | No | One of `low`, `medium`, `high`. Defaults to `medium`. |
+| `task_type`, `size` | No | `task_type`: `feature`, `bug`, `chore`, `docs`, `research`, `cleanup`, `other`. `size`: `xs`, `s`, `m`, `l`, `xl`. |
 | `dependencies` | No | Array of other task IDs. |
 | `branch_name`, `pr_url`, `pr_status`, `commit_sha` | No | Git state — usually set by agents as work progresses. |
 | `deployment_url`, `deployment_status`, `blocked_on_user` | No | Deploy state. |

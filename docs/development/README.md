@@ -1,8 +1,8 @@
 # Development
 
 Development workflows, testing, and quality gates. For repo setup and commands,
-see [`../../AGENTS.md`](../../AGENTS.md) (the agent bootloader) and
-[`../../CONTRIBUTING.md`](../../CONTRIBUTING.md).
+see [`AGENTS.md`](https://github.com/sass-maker/saas-maker/blob/main/AGENTS.md) (the agent bootloader) and
+[`CONTRIBUTING.md`](https://github.com/sass-maker/saas-maker/blob/main/CONTRIBUTING.md).
 
 ## Files
 
@@ -25,5 +25,7 @@ see [`../../AGENTS.md`](../../AGENTS.md) (the agent bootloader) and
 
 ## Pre-push gate
 
-Defined in `.husky/pre-push`: lint → fleet-wide `tsc --noEmit` → vitest → secret
-scan. Run `HUSKY=0` only when explicitly bypassing for a documented reason.
+Defined in `.husky/pre-push`: `pnpm run --if-present lint` + secret scan.
+Typecheck (`pnpm typecheck`) and vitest (`pnpm test`) are not run on pre-push —
+they run in CI, or run them manually. Run `HUSKY=0` only when explicitly
+bypassing for a documented reason. See [`quality-gates.md`](quality-gates.md).

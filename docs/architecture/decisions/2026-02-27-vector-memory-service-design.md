@@ -1,5 +1,11 @@
 # Vector Memory Service — Design
 
+> **⚠️ Superseded / historical design (2026-02-27).** Records the original
+> vector-memory-service design. **CockroachDB was not adopted** and is no longer
+> in the stack — the platform runs on Cloudflare D1 (see `AGENTS.md` / `STATUS.md`).
+> Treat the vector-store choice below as historical. The current status of any
+> vector-memory service is not re-confirmed here; see `STATUS.md` for what ships today.
+
 ## Overview
 
 A semantic search API added to the existing saas-maker platform. Users create indexes, send documents (which are automatically chunked and embedded), and run similarity search queries. Use cases include repo search, feedback search, journal entry search, etc.

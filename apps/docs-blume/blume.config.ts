@@ -1,5 +1,10 @@
 import { defineConfig } from 'blume';
 
+// When DOCS_PUBLIC_INTERNAL is unset or anything other than 'false', internal
+// trees (prds/, openspec/) are published alongside the public product docs.
+// Set DOCS_PUBLIC_INTERNAL=false to exclude them for a public-only build.
+const publicInternal = process.env.DOCS_PUBLIC_INTERNAL !== 'false';
+
 export default defineConfig({
   title: 'Foundry Manual',
   description:
@@ -7,7 +12,10 @@ export default defineConfig({
   // The canonical documentation tree lives at the repository root in `docs/`.
   // Blume is only the presentation + search layer; committed Markdown is the
   // source of truth. See `docs/README.md` for the knowledge-system layout.
-  content: { root: '../../docs' },
+  content: {
+    root: '../../docs',
+    exclude: publicInternal ? ['archive/**'] : ['archive/**', 'prds/**', 'openspec/**'],
+  },
   github: {
     owner: 'sass-maker',
     repo: 'saas-maker',
@@ -18,7 +26,8 @@ export default defineConfig({
   ai: { llmsTxt: true },
   seo: { agentReadability: true, sitemap: true, robots: true },
   deployment: {
-    site: 'https://docs.sassmaker.com',
+    site: 'https://sassmaker.com',
+    base: '/docs',
     output: 'static',
   },
 });

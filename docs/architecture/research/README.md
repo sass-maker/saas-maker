@@ -1,7 +1,7 @@
 # Research
 
 Research notes that informed architecture decisions. These are not decisions
-themselves — for those, see [`../decisions/`](../decisions/). Research notes
+themselves — for those, see [`../decisions/`](../decisions/README.md). Research notes
 capture options surveyed, trade-offs, and external references at a point in
 time.
 
@@ -20,4 +20,4 @@ time.
   matters to this project", and a link — do not re-explain material that has
   a definitive source.
 - When research leads to a decision, link the decision record in
-  [`../decisions/`](../decisions/) and vice versa.
+  [`../decisions/`](../decisions/README.md) and vice versa.

@@ -31,8 +31,6 @@ public documentation is consolidated into one local-first knowledge system
 - **Owner email notifications** parked pending Cloudflare Email Workers
   provider work (a 2026-04-29 migration attempt hit a token-permission error
   during domain onboarding — Symphony S250).
-- **Pre-existing API typecheck errors**: `TraceOptions.project` and
-  `SendOptions.template` not in type definitions (noted 2026-04-29).
 
 ## Unresolved questions
 
@@ -57,9 +55,10 @@ public documentation is consolidated into one local-first knowledge system
 
 From [`AUDIT.md`](AUDIT.md):
 
-- [ ] **FeedbackStatus type too narrow** — DB and routes use up to 8 values;
-      public SDK types still need widening.
+- [ ] **FeedbackStatus type too narrow (SDK only)** — routes and
+      `internal/contracts` list all 8 values; only public `@saas-maker/sdk`
+      types still need widening.
 - [ ] **Session ID not unique per IP** — `workers/api/src/ua.ts:45` inflates
       unique-visitor counts.
-- [ ] **Split `workers/api/src/db.ts`** (1738 LOC) — single God file; refactor
+- [ ] **Split `workers/api/src/db.ts`** (~2360 LOC) — single God file; refactor
       per domain.

@@ -3,7 +3,7 @@
 Step-by-step runbooks for fleet operations. Each runbook is a focused,
 copy-pasteable procedure for a recurring operational task. For the catalog of
 scheduled jobs, see [`../jobs/README.md`](../jobs/README.md). For background on
-the operational layer, see the files in [`../`](../) (Cloudflare secrets,
+the operational layer, see the files in [`../`](../README.md) (Cloudflare secrets,
 shields, baselines, PostHog, launch kit).
 
 ## Available runbooks
@@ -35,12 +35,13 @@ page or is referenced from multiple places.
 
 ## Pre-push and post-deploy gates
 
-- **Pre-push** (`.husky/pre-push`): lint → fleet-wide `tsc --noEmit` → vitest →
-  secret scan. Bypass with `HUSKY=0` only for a documented reason.
+- **Pre-push** (`.husky/pre-push`): `pnpm run --if-present lint` + secret scan.
+  Typecheck and vitest run in CI, not on pre-push. Bypass with `HUSKY=0` only
+  for a documented reason.
 - **Post-deploy smoke**: `pnpm -F @saas-maker/api run deploy` and
   `pnpm -F @saas-maker/dashboard run deploy` both run `scripts/smoke-prod.mjs`
   after a successful deploy. Failure = bad release; roll back.
 
 See [`../../development/quality-gates.md`](../../development/quality-gates.md) for the
-two-layer gate strategy and [`../../../AUDIT.md`](../../../AUDIT.md) for the security
+two-layer gate strategy and [`AUDIT.md`](https://github.com/sass-maker/saas-maker/blob/main/AUDIT.md) for the security
 and quality audit log.
