@@ -24,11 +24,13 @@ import path from 'node:path';
 import { promisify } from 'node:util';
 
 import { selectGrokVideoAsset } from '../src/adapters/grok-video.js';
+import { reelWorkerHeaders } from '../src/reel-worker-auth.js';
 import { captureScrollTour, recordScreencast, recordScrollScreencast } from './cdp-capture.js';
 
 const execFileAsync = promisify(execFile);
 
 const BASE = process.env.REEL_WORKER_URL ?? 'https://reel-pipeline-artifacts.sarthakagrawal927.workers.dev';
+const WORKER_HEADERS = reelWorkerHeaders();
 const BUCKET = process.env.REEL_ARTIFACT_R2_BUCKET ?? 'reel-artifacts';
 const WORK_ROOT = path.resolve(process.env.REEL_RENDER_WORK ?? './tmp/render-pro');
 const CHROME = process.env.REEL_RENDER_CHROME ?? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
@@ -1650,7 +1652,9 @@ async function edgeTtsAvailable() {
 
 async function fetchReel(id) {
   for (const status of ['generated', 'approved', 'video_ready', 'needs_review', 'ready_to_post', 'video_rejected']) {
-    const res = await fetch(`${BASE}/reels?status=${status}`);
+    const res = await fetch(`${BASE}/reels?status=${status}`, {
+      headers: WORKER_HEADERS,
+    });
     if (!res.ok) continue;
     const payload = await res.json();
     const match = (payload.data || []).find((entry) => entry.id === id);

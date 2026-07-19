@@ -40,6 +40,9 @@ providers:
 
 - `SAASMAKER_API_URL` (default `https://api.sassmaker.com` — double-s brand)
 - `SAASMAKER_SESSION_TOKEN` for session-auth Marketing Queue access
+- `REEL_INTERNAL_TOKEN` for the deployed Worker's internal review, draft, and
+  render-trigger routes. Use the same value on the designated render host; do
+  not commit it or put it in `wrangler.jsonc`.
 - `MONEYPRINTER_API_URL` (default `http://127.0.0.1:8080`)
 - `GROK_VIDEO_ASSET_DIR` for local Grok/Imagine MP4 inserts
 - Provider-specific keys stored in the relevant engine config, not in this repo
@@ -49,6 +52,11 @@ providers:
 The local Node API stores review drafts under `.reel-pipeline/reels` by
 default. The deployed Cloudflare Worker stores review drafts as JSON objects
 in the configured R2 bucket under `reel-requests/`.
+
+The Worker declares `REEL_INTERNAL_TOKEN` as a required Cloudflare secret, so
+deployment fails closed when it is absent. Set it through Cloudflare's secret
+management during an explicitly approved release. The anonymous brand-video
+service is separate and does not consume this token.
 
 ## First run
 

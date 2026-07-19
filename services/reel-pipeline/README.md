@@ -58,6 +58,12 @@ Testing & verification: [`docs/development/testing.md`](docs/development/testing
 | Tutoring lessons | Tutors | [`docs/product/lesson-video-pipeline.md`](docs/product/lesson-video-pipeline.md) |
 | Artifact Worker | Browsers / integrators | `https://reel-pipeline-artifacts.sarthakagrawal927.workers.dev` |
 
+The Worker's health check and rendered artifacts are public. Its review UI,
+draft listing, draft creation, approval, and render-trigger routes require the
+secret-backed `REEL_INTERNAL_TOKEN`; browser access uses HTTP Basic user
+`foundry`, while scripts and the Rust watcher send the same token as Bearer
+authentication. The separate anonymous brand-reel flow remains unauthenticated.
+
 ## Architecture (one paragraph)
 
 Two non-overlapping flows. **Worker reel flow** (production render path):

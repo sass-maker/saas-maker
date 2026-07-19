@@ -1,11 +1,4 @@
-import {
-  AlertTriangle,
-  Ban,
-  CheckCircle2,
-  CircleDashed,
-  Clock3,
-  Inbox,
-} from 'lucide-react';
+import { AlertTriangle, Ban, CheckCircle2, CircleDashed, Clock3, Inbox } from 'lucide-react';
 import * as React from 'react';
 
 import { cn } from '../lib/utils.js';

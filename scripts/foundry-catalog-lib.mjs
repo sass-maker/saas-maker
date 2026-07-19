@@ -2,7 +2,11 @@ import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-export const CATALOG_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'catalog');
+export const CATALOG_ROOT = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  '..',
+  'catalog'
+);
 export const CATALOG_PATH = path.join(CATALOG_ROOT, 'foundry.json');
 export const GENERATED_ROOT = path.join(CATALOG_ROOT, 'generated');
 
@@ -14,7 +18,8 @@ export const EVIDENCE_STATES = new Set([
   'not-applicable',
 ]);
 
-const SECRET_KEY_PATTERN = /(?:^|[_-])(api[_-]?key|access[_-]?token|auth[_-]?token|password|passwd|secret|credential|private[_-]?key|client[_-]?secret|env(?:ironment)?)(?:$|[_-])/i;
+const SECRET_KEY_PATTERN =
+  /(?:^|[_-])(api[_-]?key|access[_-]?token|auth[_-]?token|password|passwd|secret|credential|private[_-]?key|client[_-]?secret|env(?:ironment)?)(?:$|[_-])/i;
 const SECRET_VALUE_PATTERNS = [
   /-----BEGIN [A-Z ]*PRIVATE KEY-----/,
   /\b(?:sk|pk|ghp|gho|github_pat|xox[baprs])-[_A-Za-z0-9]{12,}\b/,
@@ -49,7 +54,9 @@ function addDuplicateErrors(items, label, valueFor, errors) {
     if (raw === null || raw === undefined || raw === '') continue;
     const value = canonical(raw);
     if (seen.has(value)) {
-      errors.push(`${label} duplicate ${JSON.stringify(raw)} at indexes ${seen.get(value)} and ${index}`);
+      errors.push(
+        `${label} duplicate ${JSON.stringify(raw)} at indexes ${seen.get(value)} and ${index}`
+      );
     } else {
       seen.set(value, index);
     }
@@ -90,10 +97,11 @@ function publicRepositoryUrl(value) {
 
 function publicProduct(catalog, record) {
   const productRecord = catalog.products.find((product) => product.id === record.id);
-  const component = catalog.components.find((candidate) =>
-    candidate.productId === record.id &&
-    candidate.inPublicRegistry === true &&
-    candidate.deployment?.domains?.length > 0
+  const component = catalog.components.find(
+    (candidate) =>
+      candidate.productId === record.id &&
+      candidate.inPublicRegistry === true &&
+      candidate.deployment?.domains?.length > 0
   );
   const repositoryUrl = publicRepositoryUrl(record.url);
   const product = {
@@ -117,8 +125,11 @@ function publicProduct(catalog, record) {
 export function buildPublicProjection(catalog) {
   const visibleProductIds = new Set(
     catalog.products
-      .filter((product) => product.lifecycle === 'maintained' && !['ignored', 'removed'].includes(product.attention))
-      .map((product) => product.id),
+      .filter(
+        (product) =>
+          product.lifecycle === 'maintained' && !['ignored', 'removed'].includes(product.attention)
+      )
+      .map((product) => product.id)
   );
   return {
     schemaVersion: catalog.schemaVersion,
@@ -149,7 +160,17 @@ export function validatePublicProjection(projection) {
 
 export function validateCatalog(catalog) {
   const errors = [];
-  const collections = ['products', 'components', 'packages', 'skills', 'repositories', 'automations', 'pillars', 'publicRecords', 'automationDetails'];
+  const collections = [
+    'products',
+    'components',
+    'packages',
+    'skills',
+    'repositories',
+    'automations',
+    'pillars',
+    'publicRecords',
+    'automationDetails',
+  ];
 
   if (!catalog || typeof catalog !== 'object' || Array.isArray(catalog)) {
     return ['catalog must be a JSON object'];
@@ -159,20 +180,26 @@ export function validateCatalog(catalog) {
   }
   if (errors.length) return errors;
 
-  for (const name of collections) addDuplicateErrors(catalog[name], `${name} id`, (item) => item?.id, errors);
+  for (const name of collections)
+    addDuplicateErrors(catalog[name], `${name} id`, (item) => item?.id, errors);
 
   const domains = catalog.components.flatMap((component) =>
-    (component.deployment?.domains ?? []).map((domain) => ({ domain, componentId: component.id })),
+    (component.deployment?.domains ?? []).map((domain) => ({ domain, componentId: component.id }))
   );
   addDuplicateErrors(domains, 'domain', (item) => item.domain, errors);
   addDuplicateErrors(catalog.packages, 'package name', (item) => item.name, errors);
   addDuplicateErrors(catalog.skills, 'skill id', (item) => item.id, errors);
-  addDuplicateErrors(catalog.automationDetails, 'automation detail product', (item) => item.productId, errors);
+  addDuplicateErrors(
+    catalog.automationDetails,
+    'automation detail product',
+    (item) => item.productId,
+    errors
+  );
   addDuplicateErrors(
     catalog.automations.filter((automation) => automation.schedule),
     'schedule owner',
     (automation) => automation.schedule.ownerId,
-    errors,
+    errors
   );
 
   const pillarIds = new Set(catalog.pillars.map((pillar) => pillar.id));
@@ -191,7 +218,8 @@ export function validateCatalog(catalog) {
 
   for (const product of catalog.products) {
     for (const pillarId of product.pillarIds ?? []) {
-      if (!pillarIds.has(pillarId)) errors.push(`product ${product.id} has invalid pillar assignment ${pillarId}`);
+      if (!pillarIds.has(pillarId))
+        errors.push(`product ${product.id} has invalid pillar assignment ${pillarId}`);
     }
     if (product.repositoryId && !repositoryIds.has(product.repositoryId)) {
       errors.push(`product ${product.id} references unknown repository ${product.repositoryId}`);
@@ -201,16 +229,29 @@ export function validateCatalog(catalog) {
         errors.push(`maintained product ${product.id} requires exactly one primary pillar`);
       }
       const observability = product.observability;
-      if (!observability || !Array.isArray(observability.contracts) || observability.contracts.length === 0) {
+      if (
+        !observability ||
+        !Array.isArray(observability.contracts) ||
+        observability.contracts.length === 0
+      ) {
         errors.push(`maintained product ${product.id} requires observability contracts`);
       }
-      if (!observability || !Array.isArray(observability.evidenceSources) || observability.evidenceSources.length === 0) {
+      if (
+        !observability ||
+        !Array.isArray(observability.evidenceSources) ||
+        observability.evidenceSources.length === 0
+      ) {
         errors.push(`maintained product ${product.id} requires evidence declarations`);
       }
-      if (!observability?.ownerId) errors.push(`maintained product ${product.id} requires evidence ownership`);
+      if (!observability?.ownerId)
+        errors.push(`maintained product ${product.id} requires evidence ownership`);
     }
     if (product.observability?.state) {
-      validateEvidenceState(product.observability.state, `product ${product.id} observability state`, errors);
+      validateEvidenceState(
+        product.observability.state,
+        `product ${product.id} observability state`,
+        errors
+      );
     }
   }
 
@@ -218,11 +259,24 @@ export function validateCatalog(catalog) {
     if (!productIds.has(component.productId)) {
       errors.push(`component ${component.id} references unknown product ${component.productId}`);
     }
-    validateEvidenceState(component.deployment?.state, `component ${component.id} deployment state`, errors);
-    validateEvidenceState(component.deployment?.verification?.state, `component ${component.id} verification state`, errors);
+    validateEvidenceState(
+      component.deployment?.state,
+      `component ${component.id} deployment state`,
+      errors
+    );
+    validateEvidenceState(
+      component.deployment?.verification?.state,
+      `component ${component.id} verification state`,
+      errors
+    );
   }
 
-  for (const item of [...catalog.packages, ...catalog.skills, ...catalog.repositories, ...catalog.automations]) {
+  for (const item of [
+    ...catalog.packages,
+    ...catalog.skills,
+    ...catalog.repositories,
+    ...catalog.automations,
+  ]) {
     if (item.state) validateEvidenceState(item.state, `${item.id} state`, errors);
   }
   for (const automation of catalog.automations) {
@@ -238,7 +292,8 @@ export function validateCatalog(catalog) {
 
 export function assertValidCatalog(catalog) {
   const errors = validateCatalog(catalog);
-  if (errors.length) throw new Error(`Foundry catalog validation failed:\n- ${errors.join('\n- ')}`);
+  if (errors.length)
+    throw new Error(`Foundry catalog validation failed:\n- ${errors.join('\n- ')}`);
   return catalog;
 }
 
@@ -256,9 +311,9 @@ function legacyFoundryProjects(catalog) {
           priority: record.priority,
           spotlight: record.spotlight === true ? true : undefined,
           maturity: record.maturity,
-        }).filter(([, value]) => value !== undefined),
+        }).filter(([, value]) => value !== undefined)
       ),
-    ]),
+    ])
   );
 }
 
@@ -307,7 +362,7 @@ function legacyAutomationRegistry(catalog) {
     [...new Set(entries.map((entry) => entry.attention))].map((attention) => [
       attention,
       entries.filter((entry) => entry.attention === attention).length,
-    ]),
+    ])
   );
   return {
     schemaVersion: 1,
@@ -326,8 +381,14 @@ export function buildCompatibilityViews(catalog) {
     ['automation-registry.json', legacyAutomationRegistry(catalog)],
     ['packages.json', { schemaVersion: catalog.schemaVersion, packages: catalog.packages }],
     ['skills.json', { schemaVersion: catalog.schemaVersion, skills: catalog.skills }],
-    ['repositories.json', { schemaVersion: catalog.schemaVersion, repositories: catalog.repositories }],
-    ['automations.json', { schemaVersion: catalog.schemaVersion, automations: catalog.automations }],
+    [
+      'repositories.json',
+      { schemaVersion: catalog.schemaVersion, repositories: catalog.repositories },
+    ],
+    [
+      'automations.json',
+      { schemaVersion: catalog.schemaVersion, automations: catalog.automations },
+    ],
     ['pillars.json', { schemaVersion: catalog.schemaVersion, pillars: catalog.pillars }],
     ['public.json', buildPublicProjection(catalog)],
   ]);

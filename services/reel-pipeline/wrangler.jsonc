@@ -3,6 +3,10 @@
   "name": "reel-pipeline-artifacts",
   "main": "src/worker/index.js",
   "compatibility_date": "2026-05-28",
+  "compatibility_flags": ["nodejs_compat"],
+  "secrets": {
+    "required": ["REEL_INTERNAL_TOKEN"]
+  },
   "routes": [
     { "pattern": "reels.sassmaker.com/*", "zone_name": "sassmaker.com" }
   ],

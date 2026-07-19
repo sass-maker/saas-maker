@@ -2997,7 +2997,7 @@
     },
     {
       "id": "mobile-dev-cockpit",
-      "path": "services/mobile-dev-cockpit",
+      "path": "apps/mobile-cockpit",
       "remote": "https://github.com/sass-maker/mobile-dev-cockpit.git",
       "state": "configured"
     },

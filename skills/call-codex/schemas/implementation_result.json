@@ -20,7 +20,10 @@
       "properties": {
         "command": { "type": "string", "description": "Exact test command run, or empty if none" },
         "result": { "type": "string", "enum": ["passed", "failed", "not_run"] },
-        "detail": { "type": "string", "description": "Failure output summary if failed, else empty" }
+        "detail": {
+          "type": "string",
+          "description": "Failure output summary if failed, else empty"
+        }
       },
       "required": ["command", "result", "detail"],
       "additionalProperties": false

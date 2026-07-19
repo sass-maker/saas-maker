@@ -30,6 +30,9 @@ Independent of OS:
 Secrets:
 - `.env` (gitignored)
 - `config/social-accounts.json` (gitignored — references env vars by name)
+- `REEL_INTERNAL_TOKEN` in the host `.env` and as a required encrypted secret
+  on the Artifact Worker. The values must match; never put the value in tracked
+  config. Internal Worker clients fail closed when it is absent.
 
 ## Hetzner CCX23 setup (recommended)
 

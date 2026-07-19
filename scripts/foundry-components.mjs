@@ -11,7 +11,7 @@ const commands = {
     [
       'Mobile Dev Cockpit dependencies',
       'pnpm',
-      ['--dir', 'apps/mobile-cockpit', 'install', '--frozen-lockfile', '--ignore-scripts'],
+      ['--dir', 'apps/mobile-cockpit', 'install', '--frozen-lockfile'],
     ],
     [
       'Drank dependencies',
@@ -37,11 +37,34 @@ const commands = {
     ],
   ],
   check: [
-    ['Mobile Dev Cockpit typecheck', 'pnpm', ['--dir', 'apps/mobile-cockpit', 'typecheck']],
+    ['Mobile Dev Cockpit checks', 'pnpm', ['--dir', 'apps/mobile-cockpit', 'check']],
+    ['Mobile Dev Cockpit bridge build', 'pnpm', ['--dir', 'apps/mobile-cockpit', 'build:bridge']],
+    ['Mobile Dev Cockpit web export', 'pnpm', ['--dir', 'apps/mobile-cockpit', 'mobile:export']],
+    [
+      'Mobile Dev Cockpit iOS export',
+      'pnpm',
+      ['--dir', 'apps/mobile-cockpit', 'mobile:export:ios'],
+    ],
+    [
+      'Drank lint and format check',
+      'pnpm',
+      ['--dir', 'services/drank', '--ignore-workspace', 'check'],
+    ],
     ['Drank production build', 'pnpm', ['--dir', 'services/drank', '--ignore-workspace', 'build']],
+    [
+      'Drank documentation check',
+      'pnpm',
+      ['--dir', 'services/drank', '--ignore-workspace', 'docs:check'],
+    ],
     ['PSI Swarm CLI build', 'pnpm', ['--dir', 'tools/psi-swarm', 'build:cli']],
     ['PSI Swarm web build', 'pnpm', ['--dir', 'tools/psi-swarm', 'build:web']],
+    ['PSI Swarm documentation check', 'pnpm', ['--dir', 'tools/psi-swarm', 'docs:check']],
     ['Reel Pipeline Node and Rust tests', 'npm', ['--prefix', 'services/reel-pipeline', 'test']],
+    [
+      'Reel Pipeline documentation check',
+      'npm',
+      ['--prefix', 'services/reel-pipeline', 'run', 'docs:validate'],
+    ],
   ],
 };
 

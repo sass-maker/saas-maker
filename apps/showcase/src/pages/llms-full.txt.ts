@@ -11,6 +11,12 @@ export function GET() {
     `Source: ${product.repositoryUrl}`,
     '',
   ]);
-  const body = ['# SaaS Maker Foundry — full agent index', '', 'Generated from catalog/foundry.json. Configuration and links do not imply fresh production verification.', '', ...products].join('\n');
+  const body = [
+    '# SaaS Maker Foundry — full agent index',
+    '',
+    'Generated from catalog/foundry.json. Configuration and links do not imply fresh production verification.',
+    '',
+    ...products,
+  ].join('\n');
   return new Response(body, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
 }

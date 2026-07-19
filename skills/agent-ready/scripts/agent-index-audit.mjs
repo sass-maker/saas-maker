@@ -88,9 +88,7 @@ async function main() {
 
   const sTier = results.filter((r) => r.tier === 'S').length;
   const failed = results.filter((r) => r.tier !== 'S' && r.tier !== 'error');
-  process.stderr.write(
-    `\n${sTier}/${results.length} S-tier. ${failed.length} need work.\n`
-  );
+  process.stderr.write(`\n${sTier}/${results.length} S-tier. ${failed.length} need work.\n`);
   process.exit(sTier === results.length ? 0 : 1);
 }
 
@@ -255,8 +253,7 @@ async function auditOrigin(target, { indexNowKey } = {}) {
   const passCount = applicable.filter((k) => checks[k]?.status === 'pass').length;
   const failCount = applicable.filter((k) => checks[k]?.status === 'fail').length;
   const score = Math.round((passCount / applicable.length) * 100);
-  const tier =
-    failCount === 0 ? 'S' : passCount >= 5 ? 'A' : passCount >= 3 ? 'B' : 'C';
+  const tier = failCount === 0 ? 'S' : passCount >= 5 ? 'A' : passCount >= 3 ? 'B' : 'C';
 
   return {
     name,
@@ -346,8 +343,7 @@ function gradeHomepageMd(neg, indexMd) {
   const negOk =
     neg.ok &&
     !neg.isHtml &&
-    (isMarkdownType(neg.contentType) ||
-      neg.bodyPreview?.trimStart().startsWith('#'));
+    (isMarkdownType(neg.contentType) || neg.bodyPreview?.trimStart().startsWith('#'));
   const indexOk =
     indexMd.ok &&
     !indexMd.isHtml &&
@@ -385,7 +381,9 @@ function gradeJsonLd(probe) {
     return { status: 'skip', detail: 'homepage is not HTML' };
   }
   const body = probe.bodyFull || probe.bodyPreview || '';
-  const blocks = [...body.matchAll(/<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi)];
+  const blocks = [
+    ...body.matchAll(/<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi),
+  ];
   if (blocks.length === 0) {
     return { status: 'skip', detail: 'no JSON-LD blocks found (bonus, not required)' };
   }
@@ -404,13 +402,20 @@ function gradeJsonLd(probe) {
         hasGraph = true;
         const nodes = Array.isArray(json['@graph']) ? json['@graph'] : [json['@graph']];
         if (nodes.some((n) => n['@type'] === 'Organization')) hasOrg = true;
-        if (nodes.some((n) => ['SoftwareApplication', 'WebSite', 'WebApplication'].includes(n['@type']))) hasApp = true;
+        if (
+          nodes.some((n) =>
+            ['SoftwareApplication', 'WebSite', 'WebApplication'].includes(n['@type'])
+          )
+        )
+          hasApp = true;
       } else if (json['@type'] === 'Organization') {
         hasOrg = true;
       } else if (['SoftwareApplication', 'WebSite', 'WebApplication'].includes(json['@type'])) {
         hasApp = true;
       }
-    } catch { /* invalid JSON in a block — skip it */ }
+    } catch {
+      /* invalid JSON in a block — skip it */
+    }
   }
   const parts = [];
   if (hasFleetMarked) parts.push('fleet-marked');

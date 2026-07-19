@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-19T18:36:07.720Z",
+  "generatedAt": "2026-07-19T18:40:38.759Z",
   "root": ".",
   "limits": {
     "maxFilesPerProject": 4000,
@@ -461,20 +461,20 @@
     {
       "projectId": "mobile-dev-cockpit",
       "maturity": "maintained",
-      "path": null,
+      "path": "apps/mobile-cockpit",
       "verification": {
         "state": "unknown",
         "freshness": {
           "maxAgeHours": 168
         },
-        "reason": "Maintained project source is not present below the scan root."
+        "reason": "No adapter source or verification receipt was found."
       },
       "adapters": [],
       "findings": [],
       "scan": {
-        "filesVisited": 0,
-        "filesScanned": 0,
-        "bytesScanned": 0,
+        "filesVisited": 117,
+        "filesScanned": 60,
+        "bytesScanned": 240327,
         "truncated": false
       }
     },
@@ -969,9 +969,9 @@
         }
       ],
       "scan": {
-        "filesVisited": 1291,
-        "filesScanned": 445,
-        "bytesScanned": 2420516,
+        "filesVisited": 1174,
+        "filesScanned": 385,
+        "bytesScanned": 2180181,
         "truncated": false
       }
     },

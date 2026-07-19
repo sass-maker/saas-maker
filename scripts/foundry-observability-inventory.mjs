@@ -42,7 +42,8 @@ export function parseArgs(argv) {
     else if (arg === '--help' || arg === '-h') args.help = true;
     else throw new Error(`Unknown argument: ${arg}`);
   }
-  if (!['json', 'markdown'].includes(args.format)) throw new Error('--format must be json or markdown');
+  if (!['json', 'markdown'].includes(args.format))
+    throw new Error('--format must be json or markdown');
   return args;
 }
 

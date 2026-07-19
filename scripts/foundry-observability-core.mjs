@@ -116,7 +116,7 @@ function discoverCanonicalProjects(scanRoot) {
   const localProductPaths = new Map([
     ['sass-maker', '.'],
     ['fleet-dashboard', 'apps/cockpit'],
-    ['mobile-dev-cockpit', 'services/mobile-dev-cockpit'],
+    ['mobile-dev-cockpit', 'apps/mobile-cockpit'],
     ['psi-swarm', 'tools/psi-swarm'],
     ['drank', 'services/drank'],
     ['reel-pipeline', 'services/reel-pipeline'],

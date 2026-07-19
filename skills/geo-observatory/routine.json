@@ -8,7 +8,9 @@
       "environment_id": "env_017Zx3L4CDvwkquvq1G33Vzc",
       "session_context": {
         "model": "claude-sonnet-5",
-        "sources": [{ "git_repository": { "url": "https://github.com/sass-maker/fleet-workspace" } }],
+        "sources": [
+          { "git_repository": { "url": "https://github.com/sass-maker/fleet-workspace" } }
+        ],
         "allowed_tools": ["Bash", "Read", "Write", "Edit", "Glob", "Grep", "WebSearch", "WebFetch"]
       },
       "events": [

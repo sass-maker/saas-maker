@@ -12,6 +12,7 @@
  *
  * Env:
  *   SAASMAKER_SESSION_TOKEN   required
+ *   REEL_INTERNAL_TOKEN       required for deployed Worker routes
  *   SAASMAKER_API_URL         optional, defaults to client default
  *   REEL_WORKER_URL           optional, defaults to deployed worker
  *   REEL_PIPELINE_LIMIT       optional, default 20
@@ -19,8 +20,11 @@
  *   REEL_PIPELINE_CHANNEL     optional, restrict to one reel channel
  */
 import { SaaSMakerClient } from '../src/saas-maker-client.js';
+import { reelWorkerHeaders } from '../src/reel-worker-auth.js';
 
 const WORKER = process.env.REEL_WORKER_URL ?? 'https://reel-pipeline-artifacts.sarthakagrawal927.workers.dev';
+const WORKER_HEADERS = reelWorkerHeaders();
+const WORKER_JSON_HEADERS = reelWorkerHeaders({ 'content-type': 'application/json' });
 const LIMIT = Number(process.env.REEL_PIPELINE_LIMIT ?? 20);
 const REEL_CHANNELS = new Set(['tiktok', 'instagram_reels', 'youtube_shorts']);
 
@@ -61,7 +65,7 @@ for (const post of reelPosts) {
   try {
     const res = await fetch(`${WORKER}/reels`, {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: WORKER_JSON_HEADERS,
       body: JSON.stringify(reelInput),
     });
     if (!res.ok) {
@@ -106,7 +110,9 @@ async function fetchAllReels() {
   const seen = new Map();
   for (const status of statuses) {
     try {
-      const res = await fetch(`${WORKER}/reels?status=${status}`);
+      const res = await fetch(`${WORKER}/reels?status=${status}`, {
+        headers: WORKER_HEADERS,
+      });
       if (!res.ok) continue;
       const payload = await res.json();
       for (const reel of (payload.data || [])) {

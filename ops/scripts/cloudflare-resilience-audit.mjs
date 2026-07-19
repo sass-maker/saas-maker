@@ -86,7 +86,8 @@ function wranglerTable(command) {
     maxBuffer: 4 * 1024 * 1024,
   });
   if (result.status !== 0) return { ok: false, error: 'Wrangler inventory command failed.' };
-  const output = `${result.stdout}\n${result.stderr}`.replace(/\u001b\[[0-?]*[ -\/]*[@-~]/g, '');
+  // biome-ignore lint/suspicious/noControlCharactersInRegex: ANSI escape stripping requires ESC.
+  const output = `${result.stdout}\n${result.stderr}`.replace(/\x1b\[[0-?]*[ -/]*[@-~]/g, '');
   const rows = output
     .split('\n')
     .map((line) => line.trim())

@@ -23,7 +23,10 @@ function negativeFixture(mutator) {
 
 function assertRejects(fixture, pattern) {
   const errors = validateCatalog(fixture);
-  assert.ok(errors.some((error) => pattern.test(error)), `expected ${pattern}; got:\n${errors.join('\n')}`);
+  assert.ok(
+    errors.some((error) => pattern.test(error)),
+    `expected ${pattern}; got:\n${errors.join('\n')}`
+  );
 }
 
 test('canonical catalog validates and bootstraps every current record class', () => {
@@ -34,12 +37,22 @@ test('canonical catalog validates and bootstraps every current record class', ()
   assert.equal(catalog.skills.length, 23);
   assert.equal(catalog.automations.length, 9);
   assert.equal(catalog.publicRecords.length, 30);
-  assert.deepEqual(catalog.pillars.map((pillar) => pillar.id), ['build', 'market', 'learn', 'visibility', 'control']);
-  assert.ok(catalog.products.filter((product) => product.lifecycle === 'maintained').every((product) => product.pillarIds.length === 1));
   assert.deepEqual(
-    catalog.sourcePolicy.evidenceStates,
-    ['configured', 'verified', 'stale', 'unknown', 'not-applicable'],
+    catalog.pillars.map((pillar) => pillar.id),
+    ['build', 'market', 'learn', 'visibility', 'control']
   );
+  assert.ok(
+    catalog.products
+      .filter((product) => product.lifecycle === 'maintained')
+      .every((product) => product.pillarIds.length === 1)
+  );
+  assert.deepEqual(catalog.sourcePolicy.evidenceStates, [
+    'configured',
+    'verified',
+    'stale',
+    'unknown',
+    'not-applicable',
+  ]);
 });
 
 test('checked-in compatibility views are deterministic and current', async () => {
@@ -57,15 +70,15 @@ test('checked-in compatibility views are deterministic and current', async () =>
 test('legacy consumers are generated mirrors rather than independent registries', async () => {
   assert.equal(
     await readFile('foundry.projects.json', 'utf8'),
-    await readFile(path.join(GENERATED_ROOT, 'foundry.projects.json'), 'utf8'),
+    await readFile(path.join(GENERATED_ROOT, 'foundry.projects.json'), 'utf8')
   );
   assert.equal(
     await readFile('ops/config/projects.json', 'utf8'),
-    await readFile(path.join(GENERATED_ROOT, 'ops-config-projects.json'), 'utf8'),
+    await readFile(path.join(GENERATED_ROOT, 'ops-config-projects.json'), 'utf8')
   );
   assert.equal(
     await readFile('ops/config/automation-registry.json', 'utf8'),
-    await readFile(path.join(GENERATED_ROOT, 'automation-registry.json'), 'utf8'),
+    await readFile(path.join(GENERATED_ROOT, 'automation-registry.json'), 'utf8')
   );
 });
 
@@ -74,25 +87,37 @@ test('public projection is allowlisted and omits internal catalog fields', () =>
   assert.equal(projection.products.length, 25);
   assert.deepEqual(validatePublicProjection(projection), []);
   const serialized = JSON.stringify(projection);
-  for (const privateField of ['legacyKey', 'path', 'repositoryId', 'ownerId', 'observability', 'deployment']) {
+  for (const privateField of [
+    'legacyKey',
+    'path',
+    'repositoryId',
+    'ownerId',
+    'observability',
+    'deployment',
+  ]) {
     assert.equal(serialized.includes(`"${privateField}"`), false);
   }
   assert.ok(projection.products.every((product) => product.url?.startsWith('https://')));
   assert.ok(projection.products.every((product) => product.changelogUrl && product.roadmapUrl));
-  assert.equal(projection.products.some((product) => ['aliveville', 'everythingrated', 'materia', 'protein-index', 'truehire'].includes(product.id)), false);
+  assert.equal(
+    projection.products.some((product) =>
+      ['aliveville', 'everythingrated', 'materia', 'protein-index', 'truehire'].includes(product.id)
+    ),
+    false
+  );
 });
 
 test('negative fixtures reject duplicate identifiers', () => {
   assertRejects(
     negativeFixture((fixture) => fixture.products.push(structuredClone(fixture.products[0]))),
-    /products id duplicate/,
+    /products id duplicate/
   );
 });
 
 test('negative fixtures reject duplicate domains', () => {
   assertRejects(
     negativeFixture((fixture) => fixture.components[1].deployment.domains.push('CODEVETTER.COM')),
-    /domain duplicate/,
+    /domain duplicate/
   );
 });
 
@@ -101,7 +126,7 @@ test('negative fixtures reject duplicate package names', () => {
     negativeFixture((fixture) => {
       fixture.packages[1].name = fixture.packages[0].name.toUpperCase();
     }),
-    /package name duplicate/,
+    /package name duplicate/
   );
 });
 
@@ -110,7 +135,7 @@ test('negative fixtures reject duplicate skill ids', () => {
     negativeFixture((fixture) => {
       fixture.skills[1].id = fixture.skills[0].id.toUpperCase();
     }),
-    /skills id duplicate|skill id duplicate/,
+    /skills id duplicate|skill id duplicate/
   );
 });
 
@@ -119,7 +144,7 @@ test('negative fixtures reject duplicate schedule owners', () => {
     negativeFixture((fixture) => {
       fixture.automations[1].schedule.ownerId = fixture.automations[0].schedule.ownerId;
     }),
-    /schedule owner duplicate/,
+    /schedule owner duplicate/
   );
 });
 
@@ -128,14 +153,14 @@ test('negative fixtures reject secret-like fields', () => {
     negativeFixture((fixture) => {
       fixture.products[0].api_key = 'placeholder';
     }),
-    /secret-like field/,
+    /secret-like field/
   );
 });
 
 test('negative fixtures reject invalid pillar assignments', () => {
   assertRejects(
     negativeFixture((fixture) => fixture.products[0].pillarIds.push('not-a-pillar')),
-    /invalid pillar assignment/,
+    /invalid pillar assignment/
   );
 });
 
@@ -146,7 +171,7 @@ test('negative fixtures reject maintained products without observability', () =>
       fixture.products[0].observability.evidenceSources = [];
       fixture.products[0].observability.ownerId = '';
     }),
-    /requires observability contracts/,
+    /requires observability contracts/
   );
 });
 

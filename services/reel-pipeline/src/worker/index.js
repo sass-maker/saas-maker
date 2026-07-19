@@ -1,22 +1,24 @@
 import { assertRenderableReel, attachReelRender, createReelDraft, decideRenderedReel, decideReelDraft, listReelDrafts, R2ReelStore } from '../reel-intake.js';
 import { reelDraftInputFromSignal } from '../signal-intake.js';
 import { reviewPageHtml } from '../review-ui.js';
+import { timingSafeEqual } from 'node:crypto';
 
 const JSON_HEADERS = {
   'content-type': 'application/json; charset=utf-8',
-  'access-control-allow-origin': '*',
-  'access-control-allow-methods': 'GET,POST,PATCH,OPTIONS',
-  'access-control-allow-headers': 'content-type',
 };
 
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     if (request.method === 'OPTIONS') {
-      return new Response(null, { status: 204, headers: JSON_HEADERS });
+      return new Response(null, { status: 204 });
     }
     if (request.method === 'GET' && url.pathname === '/health') {
       return json({ ok: true });
+    }
+
+    if (isInternalRoute(request.method, url.pathname) && !(await isAuthorized(request, env))) {
+      return unauthorized();
     }
 
     if (request.method === 'GET' && (url.pathname === '/' || url.pathname === '/review')) {
@@ -84,6 +86,53 @@ export default {
     return json({ error: 'not found' }, 404);
   },
 };
+
+function isInternalRoute(method, pathname) {
+  if (method === 'GET' && ['/', '/review', '/reels'].includes(pathname)) return true;
+  if (method === 'POST' && ['/reels', '/reels/signal'].includes(pathname)) return true;
+  return (
+    (method === 'PATCH' && /^\/reels\/[^/]+\/(?:decision|video-decision)$/.test(pathname)) ||
+    (method === 'POST' && /^\/reels\/[^/]+\/render$/.test(pathname))
+  );
+}
+
+async function isAuthorized(request, env) {
+  const expected = typeof env.REEL_INTERNAL_TOKEN === 'string' ? env.REEL_INTERNAL_TOKEN : '';
+  const provided = internalTokenFrom(request.headers.get('authorization'));
+  if (!expected || !provided) return false;
+
+  const encoder = new TextEncoder();
+  const [expectedDigest, providedDigest] = await Promise.all([
+    crypto.subtle.digest('SHA-256', encoder.encode(expected)),
+    crypto.subtle.digest('SHA-256', encoder.encode(provided)),
+  ]);
+  return timingSafeEqual(new Uint8Array(expectedDigest), new Uint8Array(providedDigest));
+}
+
+function internalTokenFrom(authorization) {
+  if (!authorization) return null;
+  if (authorization.startsWith('Bearer ')) return authorization.slice('Bearer '.length).trim();
+  if (!authorization.startsWith('Basic ')) return null;
+  try {
+    const decoded = atob(authorization.slice('Basic '.length));
+    const separator = decoded.indexOf(':');
+    if (separator === -1 || decoded.slice(0, separator) !== 'foundry') return null;
+    return decoded.slice(separator + 1);
+  } catch {
+    return null;
+  }
+}
+
+function unauthorized() {
+  return new Response(JSON.stringify({ error: 'authentication required' }), {
+    status: 401,
+    headers: {
+      ...JSON_HEADERS,
+      'cache-control': 'no-store',
+      'www-authenticate': 'Basic realm="Foundry Reel Review", charset="UTF-8"',
+    },
+  });
+}
 
 async function renderWorkerMockReel(record, env, reelStore, requestUrl, options = {}) {
   if (!env.REEL_ARTIFACTS) throw new Error('missing REEL_ARTIFACTS binding');
