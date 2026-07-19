@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cd /Users/assistant/Desktop/fleet/saas-maker
+mkdir -p .symphony/fleet-monitoring-audit
+
+pnpm fleet:clone -- --fleet-root /Users/assistant/Desktop/fleet --https --pull
+pnpm fleet:monitoring-audit -- --json > .symphony/fleet-monitoring-audit/latest.json
+pnpm fleet:prod-smoke -- --timeout-ms "${FLEET_SMOKE_TIMEOUT_MS:-45000}" --concurrency "${FLEET_SMOKE_CONCURRENCY:-6}" "$@"

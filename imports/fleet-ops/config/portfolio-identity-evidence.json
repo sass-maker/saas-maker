@@ -1,0 +1,101 @@
+{
+  "$schema": "fleet.portfolio-identity-evidence.v1",
+  "version": 1,
+  "purpose": "Sanitized aggregate status contract for the portfolio-identity Toolbox surfaces (personal website, RolePatch, Karte). Foundry consumes this evidence; it MUST NOT carry resume text, job descriptions, private profile fields, contact/chat bodies, credentials, or user-identifying payloads. No active roadmaps or automatic promotion into My Work.",
+  "surfaces": [
+    {
+      "id": "portfolio",
+      "projectSlug": "sarthakagrawal-personal",
+      "canonicalUrl": "https://sarthakagrawal.dev",
+      "runtime": "astro-static",
+      "deployKind": "pages",
+      "meaningfulCta": "See what I'm building — outbound click to a spotlight product or the SaaS Maker directory.",
+      "activation": {
+        "kind": "outbound_click",
+        "evidenceSource": "none",
+        "sanitizedFields": [],
+        "privatePayloadExcluded": true,
+        "notes": "Static site — no server-side activation event. CTA existence is contract-tested; click evidence is out of scope until an analytics surface is added."
+      },
+      "indexing": ["llms.txt", "sitemap", "robots.txt"],
+      "errorEvidence": "none — fully static, no server runtime",
+      "privacy": "no backend, no auth, no DB, no collected data"
+    },
+    {
+      "id": "rolepatch",
+      "projectSlug": "rolepatch",
+      "canonicalUrl": "https://rolepatch.com",
+      "runtime": "nextjs-opennext",
+      "deployKind": "worker",
+      "meaningfulCta": "Tailor a resume or browse jobs.",
+      "activation": {
+        "kind": "first_successful_tailor",
+        "evidenceSource": "posthog-4-event-taxonomy",
+        "events": ["signup", "activated", "core_action:tailor_completed", "returned"],
+        "sanitizedFields": ["project_id", "action", "distinctId"],
+        "privatePayloadExcluded": true
+      },
+      "indexing": ["llms.txt", "llms-full.txt", "sitemap", "robots.txt", "/api/ai"],
+      "errorEvidence": "foundry-monitoring (captureError, capturePageCrash, captureAuthFailure) + error.tsx + global-error.tsx",
+      "privacy": "resume/JD/stash/cover-letter/apply-packet stored in D1 per user; activation events carry project_id + action + distinctId only"
+    },
+    {
+      "id": "karte",
+      "projectSlug": "karte",
+      "canonicalUrl": "https://karte.cc",
+      "runtime": "nextjs-opennext",
+      "deployKind": "worker",
+      "meaningfulCta": "Create an AI profile.",
+      "activation": {
+        "kind": "first_published_profile_or_generated_mode",
+        "evidenceSource": "posthog-4-event-taxonomy",
+        "events": ["signup", "activated", "core_action:page_published", "core_action:mode_generated", "returned"],
+        "sanitizedFields": ["project_id", "action"],
+        "privatePayloadExcluded": true
+      },
+      "indexing": ["llms.txt", "llms-full.txt", "sitemap", "robots.txt", "/api/ai", "index.md"],
+      "errorEvidence": "foundry-monitoring (captureError, capturePageCrash) + error.tsx + global-error.tsx",
+      "privacy": "profile/chat/contact/mode content stored in Turso/D1/R2 per user; activation events carry project_id + action only"
+    }
+  ],
+  "forbiddenPayloadFields": [
+    "resume",
+    "resumeText",
+    "jd",
+    "jdText",
+    "jobDescription",
+    "stash",
+    "stashContent",
+    "coverLetter",
+    "cover_letter",
+    "fitScore",
+    "fit_score",
+    "companyResearch",
+    "company_research",
+    "profile",
+    "profileFields",
+    "links",
+    "chat",
+    "chatBody",
+    "contact",
+    "contactBody",
+    "email",
+    "phone",
+    "credentials",
+    "apiKey",
+    "token",
+    "userId",
+    "user_id"
+  ],
+  "promotionPolicy": {
+    "mayRecommend": true,
+    "mayNot": [
+      "change portfolio classification",
+      "create a product roadmap",
+      "publish unsupported claims",
+      "deploy production without approval"
+    ],
+    "recommendationSink": "foundry-promotion-recommendation",
+    "decisionOwner": "sarthak"
+  }
+}

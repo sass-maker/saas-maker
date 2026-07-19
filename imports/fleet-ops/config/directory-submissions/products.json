@@ -1,0 +1,219 @@
+{
+  "version": 2,
+  "contact": {
+    "name": "Sarthak Agrawal",
+    "email": "sarthakagrawal@agentmail.to",
+    "makerUrl": "https://sassmaker.com",
+    "twitter": ""
+  },
+  "notes": "Full public fleet for spray-and-pray directory submissions. AgentMail contact on every form.",
+  "products": [
+    {
+      "id": "rolepatch",
+      "name": "RolePatch",
+      "url": "https://rolepatch.com",
+      "tagline": "AI resume tailoring scored against the job description",
+      "description": "RolePatch scores resume fit against a job description, rewrites bullets for the role, and helps with cover letters, company research, and interview prep.",
+      "categories": ["AI", "Career", "Productivity", "SaaS"],
+      "pricing": "Freemium"
+    },
+    {
+      "id": "high-signal",
+      "name": "High Signal",
+      "url": "https://highsignal.app",
+      "tagline": "Daily tech, startup, and finance brief with hit-rates",
+      "description": "High Signal publishes a free daily synthesized brief on technology, startups, and finance with inline hit-rates and a public track record.",
+      "categories": ["News", "Finance", "Startups", "AI"],
+      "pricing": "Free"
+    },
+    {
+      "id": "karte",
+      "name": "Karte",
+      "url": "https://karte.cc",
+      "tagline": "Link-in-bio registry for humans and AI agents",
+      "description": "Karte is a link-in-bio registry for humans and AI agents with public manifests at /{slug}/agent.json.",
+      "categories": ["AI", "Developer Tools", "Social", "SaaS"],
+      "pricing": "Freemium"
+    },
+    {
+      "id": "significanthobbies",
+      "name": "Significant Hobbies",
+      "url": "https://significanthobbies.com",
+      "tagline": "Life planner for private rituals and public living",
+      "description": "Significant Hobbies is a life planner for private daily rituals and public living — hobbies, bucket lists, and side quests.",
+      "categories": ["Lifestyle", "Productivity", "Social"],
+      "pricing": "Freemium"
+    },
+    {
+      "id": "materia",
+      "name": "Materia",
+      "url": "https://materia.significanthobbies.com",
+      "tagline": "Evidence-graded body, remedy, and compound reference",
+      "description": "Materia is an evidence-graded reference for remedies organized by body part with citations. Ad-free; not medical advice.",
+      "categories": ["Health", "Reference", "Education"],
+      "pricing": "Free"
+    },
+    {
+      "id": "posttrainllm",
+      "name": "PostTrainLLM",
+      "url": "https://posttrainllm.com",
+      "tagline": "Mac-local LLM specialist factory and WebGPU playground",
+      "description": "PostTrainLLM is a Mac-local LLM specialist factory and browser WebGPU playground for local model experimentation.",
+      "categories": ["AI", "Developer Tools", "Machine Learning"],
+      "pricing": "Free"
+    },
+    {
+      "id": "saas-maker-showcase",
+      "name": "Foundry (SaaS Maker)",
+      "url": "https://sassmaker.com",
+      "tagline": "Personal product fleet showcase and open operating layer",
+      "description": "Foundry is Sarthak Agrawal's product fleet showcase plus the open operating layer that runs them.",
+      "categories": ["Developer Tools", "SaaS", "Open Source"],
+      "pricing": "Free"
+    },
+    {
+      "id": "saas-maker-docs",
+      "name": "SaaS Maker Docs",
+      "url": "https://docs.sassmaker.com",
+      "tagline": "Drop-in backend services API docs for SaaS apps",
+      "description": "API documentation for Foundry drop-in backend services — feedback, waitlist, testimonials, and more.",
+      "categories": ["Developer Tools", "API", "Documentation"],
+      "pricing": "Free"
+    },
+    {
+      "id": "starboard",
+      "name": "Starboard",
+      "url": "https://starboard.codevetter.com",
+      "tagline": "GitHub stars organizer with semantic search",
+      "description": "Starboard organizes GitHub stars with semantic search so you can find the right starred repo again.",
+      "categories": ["Developer Tools", "GitHub", "Productivity"],
+      "pricing": "Free"
+    },
+    {
+      "id": "codevetter",
+      "name": "CodeVetter",
+      "url": "https://codevetter.com",
+      "tagline": "Desktop-first AI code review for agent-generated code",
+      "description": "CodeVetter is a desktop-first AI code review workbench for agent-generated code — local SQLite, Tauri shell, evidence-backed review.",
+      "categories": ["AI", "Developer Tools", "Code Review"],
+      "pricing": "Free"
+    },
+    {
+      "id": "everythingrated",
+      "name": "EverythingRated",
+      "url": "https://ratings.highsignal.app",
+      "tagline": "Multi-axis ratings for directories and catalogs",
+      "description": "EverythingRated is a multi-axis rating tool for structured directories — decisions with explicit trade-offs, not star averages.",
+      "categories": ["Productivity", "SaaS", "Data"],
+      "pricing": "Free"
+    },
+    {
+      "id": "truehire",
+      "name": "TrueHire",
+      "url": "https://truehire.rolepatch.com",
+      "tagline": "Hiring companion for structured role-fit evaluation",
+      "description": "TrueHire is a hiring-side companion for evaluating candidates with structured role fit.",
+      "categories": ["HR", "AI", "SaaS", "Career"],
+      "pricing": "Freemium"
+    },
+    {
+      "id": "research-papers",
+      "name": "researchPapers",
+      "url": "https://papers.highsignal.app",
+      "tagline": "Search and analytics over ~488k CS papers",
+      "description": "researchPapers is an academic paper platform over a high-citation OpenAlex CS corpus — semantic search, analytics, and answers.",
+      "categories": ["AI", "Research", "Education", "Developer Tools"],
+      "pricing": "Freemium"
+    },
+    {
+      "id": "pace",
+      "name": "Pace",
+      "url": "https://pace-6xg.pages.dev",
+      "tagline": "On-device Mac voice agent that reads your screen",
+      "description": "Pace is an on-device Mac voice agent that reads your screen and acts with local context.",
+      "categories": ["AI", "Productivity", "macOS"],
+      "pricing": "Free"
+    },
+    {
+      "id": "free-ai",
+      "name": "AI Gateway",
+      "url": "https://ai-gateway.sassmaker.com",
+      "tagline": "OpenAI-compatible gateway over free-tier models",
+      "description": "AI Gateway is an OpenAI-compatible LLM gateway fronting free-tier models across multiple providers.",
+      "categories": ["AI", "Developer Tools", "API"],
+      "pricing": "Free"
+    },
+    {
+      "id": "drank",
+      "name": "DRank",
+      "url": "https://domains.sassmaker.com",
+      "tagline": "Ahrefs Domain Rating tracker for product domains",
+      "description": "DRank tracks Ahrefs Domain Rating for fleet and product domains.",
+      "categories": ["SEO", "Marketing", "Developer Tools"],
+      "pricing": "Free"
+    },
+    {
+      "id": "looptv",
+      "name": "LoopTV",
+      "url": "https://tv.significanthobbies.com",
+      "tagline": "TV-style random player for curated video channels",
+      "description": "LoopTV is a lean-back TV-style random video player for curated channels.",
+      "categories": ["Entertainment", "Video"],
+      "pricing": "Free"
+    },
+    {
+      "id": "anime-list",
+      "name": "MAL Explorer",
+      "url": "https://anime.significanthobbies.com",
+      "tagline": "Anime and manga discovery with multi-axis filters",
+      "description": "MAL Explorer helps discover anime and manga with multi-axis filtering and watchlists.",
+      "categories": ["Entertainment", "Anime"],
+      "pricing": "Free"
+    },
+    {
+      "id": "chess",
+      "name": "Chess Coach",
+      "url": "https://chess.significanthobbies.com",
+      "tagline": "AI-coached chess practice in the browser",
+      "description": "Chess Coach is AI-coached chess practice in the browser with coaching feedback.",
+      "categories": ["Games", "Education", "AI"],
+      "pricing": "Free"
+    },
+    {
+      "id": "reader",
+      "name": "Reader",
+      "url": "https://read.significanthobbies.com",
+      "tagline": "Research library: capture, annotate, and AI-chat over reading",
+      "description": "Reader is a research library for capture, annotation, and AI chat over your reading.",
+      "categories": ["Productivity", "AI", "Reading"],
+      "pricing": "Freemium"
+    },
+    {
+      "id": "email-manager",
+      "name": "Email Manager",
+      "url": "https://mail.sassmaker.com",
+      "tagline": "Gmail workspace with local semantic search",
+      "description": "Email Manager is a Gmail workspace with local semantic search for private email tooling.",
+      "categories": ["Productivity", "Email", "AI"],
+      "pricing": "Free"
+    },
+    {
+      "id": "swe-interview-prep",
+      "name": "SWE Interview Prep",
+      "url": "https://learn.significanthobbies.com",
+      "tagline": "SWE learning OS with FSRS spaced repetition",
+      "description": "SWE Interview Prep is a software engineering learning OS with FSRS spaced repetition, drills, and feedback.",
+      "categories": ["Education", "Developer Tools", "Career"],
+      "pricing": "Free"
+    },
+    {
+      "id": "psi-swarm",
+      "name": "psi-swarm",
+      "url": "https://performance.sassmaker.com",
+      "tagline": "Distributional Lighthouse performance audits",
+      "description": "psi-swarm runs distributional Lighthouse / PageSpeed audits with grounded performance analysis.",
+      "categories": ["Developer Tools", "Performance", "SaaS"],
+      "pricing": "Free"
+    }
+  ]
+}

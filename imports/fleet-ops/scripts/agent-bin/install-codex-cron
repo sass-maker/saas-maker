@@ -1,0 +1,142 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+FLEET_OPS_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+CRON_DIR="$FLEET_OPS_DIR/automation/codex-cron"
+JOBS_FILE="$CRON_DIR/jobs.tsv"
+SYSTEM_JOBS_FILE="$CRON_DIR/system-jobs.tsv"
+RUNNER="$SCRIPT_DIR/run-codex-cron"
+SYSTEM_RUNNER="$SCRIPT_DIR/run-system-cron"
+POLICIES_FILE="$FLEET_OPS_DIR/automation/job-policies.json"
+FLEET_ROOT="$(cd "$FLEET_OPS_DIR/.." && pwd)"
+BEGIN="# BEGIN FLEET OPS CODEX CRON"
+END="# END FLEET OPS CODEX CRON"
+
+usage() {
+  cat <<'EOF'
+usage: install-codex-cron [--remove|--print|--check]
+
+Installs, removes, or prints the managed Fleet Ops Codex cron block.
+EOF
+}
+
+if [ ! -x "$RUNNER" ]; then
+  echo "runner is not executable: $RUNNER" >&2
+  exit 1
+fi
+
+if [ ! -x "$SYSTEM_RUNNER" ]; then
+  echo "system runner is not executable: $SYSTEM_RUNNER" >&2
+  exit 1
+fi
+
+validate_registry() {
+  local failed=0
+  while IFS=$'\t' read -r id enabled cron_expr name cwd model effort prompt_file lock_minutes source; do
+    [ "$id" = "id" ] && continue
+    [ -z "$id" ] && continue
+    if [ "$cwd" != "@fleet" ] && [ ! -d "$cwd" ]; then
+      echo "invalid cwd for $id: $cwd" >&2
+      failed=1
+    fi
+    if [ ! -f "$CRON_DIR/$prompt_file" ]; then
+      echo "missing prompt for $id: $prompt_file" >&2
+      failed=1
+    fi
+    if ! grep -q '"id"[[:space:]]*:[[:space:]]*"'"$id"'"' "$POLICIES_FILE"; then
+      echo "missing job policy for $id" >&2
+      failed=1
+    fi
+  done < "$JOBS_FILE"
+  while IFS=$'\t' read -r id enabled cron_expr name command; do
+    [ "$id" = "id" ] && continue
+    [ -z "$id" ] && continue
+    local resolved="${command/@fleet/$FLEET_ROOT}"
+    if [ ! -x "$resolved" ]; then
+      echo "missing system command for $id: $resolved" >&2
+      failed=1
+    fi
+    if ! grep -q '"id"[[:space:]]*:[[:space:]]*"'"$id"'"' "$POLICIES_FILE"; then
+      echo "missing job policy for $id" >&2
+      failed=1
+    fi
+  done < "$SYSTEM_JOBS_FILE"
+  return "$failed"
+}
+
+validate_registry
+
+runtime_path="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+for executable in codex node pnpm bun; do
+  resolved="$(command -v "$executable" 2>/dev/null || true)"
+  if [ -n "$resolved" ]; then
+    executable_dir="$(dirname "$resolved")"
+    case ":$runtime_path:" in
+      *":$executable_dir:"*) ;;
+      *) runtime_path="$executable_dir:$runtime_path" ;;
+    esac
+  fi
+done
+
+managed_block="$(
+  {
+    echo "$BEGIN"
+    echo "SHELL=/bin/zsh"
+    echo "PATH=$runtime_path"
+    printf 'FLEET_ROOT=%q\n' "$FLEET_ROOT"
+    awk -F '\t' -v runner="$RUNNER" '
+      NR == 1 { next }
+      $2 == "yes" {
+        printf "%s %s %s >/dev/null 2>&1\n", $3, runner, $1
+      }
+    ' "$JOBS_FILE"
+    awk -F '\t' -v runner="$SYSTEM_RUNNER" '
+      NR == 1 { next }
+      $2 == "yes" { printf "%s %s %s >/dev/null 2>&1\n", $3, runner, $1 }
+    ' "$SYSTEM_JOBS_FILE"
+    echo "$END"
+  }
+)"
+
+current="$(mktemp "${TMPDIR:-/tmp}/fleet-cron-current.XXXXXX")"
+next="$(mktemp "${TMPDIR:-/tmp}/fleet-cron-next.XXXXXX")"
+trap 'rm -f "$current" "$next"' EXIT
+
+case "${1:-}" in
+  --help|-h|help) usage; exit 0 ;;
+  --check) echo "fleet cron definitions are portable and complete"; exit 0 ;;
+  --print) printf '%s\n' "$managed_block"; exit 0 ;;
+  --remove|"") ;;
+  *)
+    usage >&2
+    exit 2
+    ;;
+esac
+
+crontab -l > "$current" 2>/dev/null || true
+awk -v begin="$BEGIN" -v end="$END" '
+  $0 == begin { skip=1; next }
+  $0 == end { skip=0; next }
+  skip != 1 { print }
+' "$current" > "$next"
+
+if [ "${1:-}" = "--remove" ]; then
+  if [ -s "$next" ]; then
+    crontab "$next"
+  else
+    crontab -r 2>/dev/null || true
+  fi
+  echo "removed fleet Codex cron jobs"
+  exit 0
+fi
+
+if [ -s "$next" ] && [ "$(tail -c 1 "$next" | wc -l | tr -d ' ')" = "0" ]; then
+  printf '\n' >> "$next"
+fi
+
+printf '%s\n' "$managed_block" >> "$next"
+crontab "$next"
+echo "installed fleet Codex cron jobs:"
+awk -F '\t' 'NR > 1 && $2 == "yes" { printf "- %s: %s\n", $1, $3 }' "$JOBS_FILE"
+awk -F '\t' 'NR > 1 && $2 == "yes" { printf "- %s: %s (deterministic)\n", $1, $3 }' "$SYSTEM_JOBS_FILE"

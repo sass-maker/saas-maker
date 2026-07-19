@@ -1,0 +1,4 @@
+id	enabled	cron	name	command
+nightly-learning-sync	yes	15 2 * * *	Nightly Learning Source Sync	@fleet/fleet-ops/scripts/agent-bin/sync-learning-sources
+daily-learning-session	yes	5 8 * * *	Daily Learning Session	@fleet/fleet-ops/scripts/agent-bin/send-daily-learning-session
+weekly-domain-intelligence	yes	30 9 * * 1	Weekly Domain Rating and PSI Swarm	@fleet/fleet-ops/scripts/agent-bin/update-domain-intelligence

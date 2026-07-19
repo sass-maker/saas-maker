@@ -1,0 +1,243 @@
+#!/usr/bin/env bash
+#
+# Deploy readiness gate — verifies a project is safe to deploy before
+# allowing the deploy command to run. Backs the fleet-deploy-guard skill.
+#
+# Usage:
+#   bash fleet-ops/scripts/fleet-deploy-guard.sh <project>
+#   bash fleet-ops/scripts/fleet-deploy-guard.sh saas-maker
+#   bash fleet-ops/scripts/fleet-deploy-guard.sh saas-maker --force  # skip CI check
+
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+FORCE=false
+
+if [[ $# -lt 1 ]]; then
+  echo "Usage: fleet-deploy-guard.sh <project> [--force]" >&2
+  exit 1
+fi
+
+PROJECT="$1"
+shift
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --force) FORCE=true; shift ;;
+    *) echo "Unknown arg: $1" >&2; exit 1 ;;
+  esac
+done
+
+DIR="$ROOT/$PROJECT"
+
+if [[ ! -d "$DIR/.git" ]]; then
+  echo "PROJECT: $PROJECT"
+  echo "  ✗ no .git directory at $DIR"
+  exit 1
+fi
+
+cd "$DIR"
+
+pass=0
+fail=0
+gates=""
+
+check() {
+  local label="$1"
+  local result="$2"
+  local detail="$3"
+  if [[ "$result" == "ok" ]]; then
+    gates+="$(printf '%-20s %s ✓ %s\n' "$label" "" "$detail")\n"
+    pass=$((pass + 1))
+  else
+    gates+="$(printf '%-20s %s ✗ %s\n' "$label" "" "$detail")\n"
+    fail=$((fail + 1))
+  fi
+}
+
+# 1. On main branch?
+branch=$(git branch --show-current 2>/dev/null || echo "DETACHED")
+if [[ "$branch" == "main" ]]; then
+  check "Branch" "ok" "main"
+else
+  check "Branch" "fail" "on $branch (not main)"
+fi
+
+# 2. Clean working tree?
+if [[ -z "$(git status --porcelain 2>/dev/null)" ]]; then
+  check "Git" "ok" "clean"
+else
+  dirty_count=$(git status --porcelain 2>/dev/null | wc -l | tr -d ' ')
+  check "Git" "fail" "dirty ($dirty_count uncommitted files)"
+fi
+
+# 3. Synced with remote?
+upstream=$(git rev-parse --abbrev-ref --symbolic-full-name '@{u}' 2>/dev/null || true)
+if [[ -n "$upstream" ]]; then
+  read -r behind ahead < <(git rev-list --left-right --count "$upstream...HEAD" 2>/dev/null || echo "0 0")
+  if [[ "$ahead" -eq 0 && "$behind" -eq 0 ]]; then
+    check "Remote" "ok" "synced"
+  else
+    check "Remote" "fail" "ahead=$ahead behind=$behind"
+  fi
+else
+  check "Remote" "fail" "no upstream configured"
+fi
+
+# 4. CI green for the exact main commit?
+if [[ "$FORCE" == true ]]; then
+  check "CI" "ok" "skipped (--force)"
+else
+  ci_result="unknown"
+  ci_detail=""
+
+  if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then
+    url=$(git remote get-url origin 2>/dev/null || true)
+    slug=""
+    case "$url" in
+      git@github.com:*) slug="${url#git@github.com:}" ;;
+      https://github.com/*) slug="${url#https://github.com/}" ;;
+    esac
+    slug="${slug%.git}"
+
+    if [[ -n "$slug" ]]; then
+      head_sha=$(git rev-parse HEAD 2>/dev/null || true)
+      conclusion=$(gh run list -R "$slug" --branch main --commit "$head_sha" --event push --limit 1 \
+        --json conclusion -q '.[0].conclusion // "none"' 2>/dev/null || echo "none")
+      case "$conclusion" in
+        success) ci_result="ok"; ci_detail="green for ${head_sha:0:8}" ;;
+        failure|cancelled|timed_out|action_required|startup_failure)
+          ci_result="fail"; ci_detail="red ($conclusion)"
+          ;;
+        *) ci_result="fail"; ci_detail="no completed push CI for ${head_sha:0:8}" ;;
+      esac
+    else
+      ci_result="fail"; ci_detail="no GitHub remote"
+    fi
+  else
+    ci_result="fail"; ci_detail="gh not available"
+  fi
+
+  check "CI" "$ci_result" "$ci_detail"
+fi
+
+# 5. Cloudflare target known?
+# Check root first, then subdirectories (monorepo support)
+cf_target=""
+for f in wrangler.toml wrangler.jsonc wrangler.json; do
+  if [[ -f "$f" ]]; then
+    if [[ "$f" == *.json* ]] && command -v jq >/dev/null 2>&1; then
+      cf_target=$(jq -r '.name // empty' "$f" 2>/dev/null || true)
+    elif [[ "$f" == *.toml ]]; then
+      cf_target=$(grep -E '^\s*name\s*=' "$f" 2>/dev/null | head -1 | sed -E 's/.*=\s*"([^"]+)".*/\1/' || true)
+    fi
+    [[ -n "$cf_target" ]] && break
+  fi
+done
+
+# If not at root, check one level deep (monorepo: workers/, apps/, etc.)
+if [[ -z "$cf_target" ]]; then
+  while IFS= read -r -d '' f; do
+    if [[ "$f" == *.json* ]] && command -v jq >/dev/null 2>&1; then
+      cf_target=$(jq -r '.name // empty' "$f" 2>/dev/null || true)
+    elif [[ "$f" == *.toml ]]; then
+      cf_target=$(grep -E '^\s*name\s*=' "$f" 2>/dev/null | head -1 | sed -E 's/.*=\s*"([^"]+)".*/\1/' || true)
+    fi
+    [[ -n "$cf_target" ]] && break
+  done < <(find . -maxdepth 3 -name "wrangler.*" -not -path '*/node_modules/*' -print0 2>/dev/null)
+  [[ -n "$cf_target" ]] && cf_target="$cf_target (subdir)"
+fi
+
+if [[ -z "$cf_target" && -f "package.json" && "$(command -v node || true)" ]]; then
+  deploy_script=$(node -e "const p=require('./package.json'); process.stdout.write(p.scripts?.deploy || '')" 2>/dev/null || true)
+  if [[ "$deploy_script" == *"wrangler pages deploy"* ]]; then
+    cf_target=$(printf '%s\n' "$deploy_script" | sed -nE 's/.*--project-name[= ]([^ ]+).*/\1/p' | head -1)
+    [[ -z "$cf_target" ]] && cf_target="package deploy script"
+  elif [[ "$deploy_script" == *"manual-deploy"* ]]; then
+    cf_target="package manual deploy script"
+  fi
+fi
+
+# Some products keep a standalone Pages site below the repository root (for
+# example, pace/website). Recognize the same guarded deploy scripts there.
+if [[ -z "$cf_target" && "$(command -v node || true)" ]]; then
+  while IFS= read -r -d '' package_file; do
+    deploy_script=$(node -e '
+      const fs = require("node:fs");
+      const file = process.argv[1];
+      const pkg = JSON.parse(fs.readFileSync(file, "utf8"));
+      process.stdout.write(pkg.scripts?.deploy || "");
+    ' "$package_file" 2>/dev/null || true)
+    if [[ "$deploy_script" == *"wrangler pages deploy"* ]]; then
+      cf_target=$(printf '%s\n' "$deploy_script" | sed -nE 's/.*--project-name[= ]([^ ]+).*/\1/p' | head -1)
+      [[ -z "$cf_target" ]] && cf_target="package deploy script"
+      cf_target="$cf_target (subdir)"
+      break
+    elif [[ "$deploy_script" == *"manual-deploy"* ]]; then
+      cf_target="package manual deploy script (subdir)"
+      break
+    fi
+  done < <(find . -maxdepth 2 -name package.json -not -path './package.json' -not -path '*/node_modules/*' -print0 2>/dev/null)
+fi
+
+if [[ -n "$cf_target" ]]; then
+  check "CF target" "ok" "$cf_target"
+else
+  check "CF target" "fail" "no wrangler config found"
+fi
+
+# 6. Blockers in PROJECT_STATUS.md?
+# Look for actual blocked items (lines starting with - or numbered under a Blocked section),
+# not just the section header "Todo / Planned / Deferred / Blocked"
+blockers=""
+if [[ -f "PROJECT_STATUS.md" ]]; then
+  blockers=$(
+    awk '
+      function inspect_item( line, lower) {
+        if (item == "" || matched) return
+        line=item
+        sub(/^[[:space:]]*[-0-9.)]+[[:space:]]*/, "", line)
+        if (line ~ /^\(?none([[:space:]]|\)|$)/) { item=""; return }
+        lower=tolower(line)
+        if (lower !~ /(^|[^a-z])(deploy|deployment|release|production)([^a-z]|$)/) { item=""; return }
+        if (lower ~ /^production:[[:space:]]/) { item=""; return }
+        if (lower ~ /^deploy:[[:space:]]/) { item=""; return }
+        if (lower ~ /^worker name:[[:space:]]/) { item=""; return }
+        if (lower !~ /(block|blocked|defer|deferred|not ready|cannot|refus|missing|required|pending|approval)/) { item=""; return }
+        print item
+        matched=1
+        item=""
+      }
+      /^#+.*Blocked/ { inspect_item(); found=1; next }
+      /^#+/ { inspect_item(); found=0; next }
+      found && /^[[:space:]]*([-*]|[0-9]+[.)])[[:space:]]+/ {
+        inspect_item()
+        if (matched) exit
+        item=$0
+        next
+      }
+      found && item != "" && /^[[:space:]]+/ { item=item " " $0 }
+      END { inspect_item() }
+    ' PROJECT_STATUS.md 2>/dev/null || true
+  )
+fi
+
+if [[ -z "$blockers" ]]; then
+  check "Blockers" "ok" "none flagged"
+else
+  check "Blockers" "fail" "see PROJECT_STATUS.md"
+fi
+
+# Output
+echo "PROJECT: $PROJECT"
+echo ""
+printf "$gates"
+echo ""
+
+if [[ $fail -gt 0 ]]; then
+  echo "→ NOT READY — fix $fail gate(s) above before deploying"
+  exit 1
+else
+  echo "→ READY TO DEPLOY ($pass gates passed)"
+  exit 0
+fi

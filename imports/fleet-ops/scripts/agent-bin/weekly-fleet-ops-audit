@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cd /Users/assistant/Desktop/fleet/saas-maker
+
+pnpm fleet:clone -- --fleet-root /Users/assistant/Desktop/fleet --https --pull
+pnpm fleet:audit -- \
+  --fleet-root /Users/assistant/Desktop/fleet \
+  --skip-local \
+  --skip-cloudflare-builds \
+  "$@"

@@ -1,0 +1,276 @@
+{
+  "generatedAt": "2026-06-20T18:50:06.905Z",
+  "runs": 5,
+  "partial": [
+    "resume-tailor",
+    "saas-maker",
+    "high-signal",
+    "significanthobbies"
+  ],
+  "results": [
+    {
+      "slug": "CodeVetter",
+      "name": "CodeVetter",
+      "url": "https://codevetter.com",
+      "ok": true,
+      "p50": "1.34s",
+      "p75": "1.34s",
+      "p90": "1.35s",
+      "score": "91",
+      "p90ms": 1350
+    },
+    {
+      "slug": "ai-game",
+      "name": "AI Game",
+      "url": "https://aliveville.com",
+      "ok": true,
+      "p50": "1.33s",
+      "p75": "1.34s",
+      "p90": "1.35s",
+      "score": "90",
+      "p90ms": 1350
+    },
+    {
+      "slug": "significanthobbies",
+      "name": "Significant Hobbies",
+      "url": "https://significanthobbies.com",
+      "ok": true,
+      "p50": "991ms",
+      "p75": "1.02s",
+      "p90": "1.04s",
+      "score": "97",
+      "p90ms": 1040
+    },
+    {
+      "slug": "swe-interview-prep",
+      "name": "Interview Coder",
+      "url": "https://swe-interview-prep.pages.dev",
+      "ok": true,
+      "p50": "846ms",
+      "p75": "851ms",
+      "p90": "903ms",
+      "score": "76",
+      "p90ms": 903
+    },
+    {
+      "slug": "saas-maker",
+      "name": "SaaS Maker",
+      "url": "https://app.sassmaker.com",
+      "ok": true,
+      "p50": "647ms",
+      "p75": "661ms",
+      "p90": "806ms",
+      "score": "100",
+      "p90ms": 806
+    },
+    {
+      "slug": "today-little-log",
+      "name": "Today Little Log",
+      "url": "https://today-little-log.pages.dev",
+      "ok": true,
+      "p50": "738ms",
+      "p75": "761ms",
+      "p90": "761ms",
+      "score": "95",
+      "p90ms": 761
+    },
+    {
+      "slug": "resume-tailor",
+      "name": "RolePatch",
+      "url": "https://rolepatch.com",
+      "ok": true,
+      "p50": "455ms",
+      "p75": "480ms",
+      "p90": "706ms",
+      "score": "99",
+      "p90ms": 706
+    },
+    {
+      "slug": "high-signal",
+      "name": "High Signal",
+      "url": "https://highsignal.app",
+      "ok": true,
+      "p50": "665ms",
+      "p75": "681ms",
+      "p90": "698ms",
+      "score": "100",
+      "p90ms": 698
+    },
+    {
+      "slug": "drank",
+      "name": "drank",
+      "url": "https://drank-sand.vercel.app",
+      "ok": true,
+      "p50": "392ms",
+      "p75": "609ms",
+      "p90": "634ms",
+      "score": "93",
+      "p90ms": 634
+    },
+    {
+      "slug": "taste",
+      "name": "ShipRank",
+      "url": "https://shiprank.dev",
+      "ok": true,
+      "p50": "504ms",
+      "p75": "509ms",
+      "p90": "609ms",
+      "score": "100",
+      "p90ms": 609
+    },
+    {
+      "slug": "email-manager",
+      "name": "Email Manager",
+      "url": "https://email-manager.sarthakagrawal927.workers.dev",
+      "ok": true,
+      "p50": "312ms",
+      "p75": "392ms",
+      "p90": "549ms",
+      "score": "100",
+      "p90ms": 549
+    },
+    {
+      "slug": "everythingrated",
+      "name": "Everything Rated",
+      "url": "https://everythingrated.sarthakagrawal927.workers.dev",
+      "ok": true,
+      "p50": "365ms",
+      "p75": "485ms",
+      "p90": "537ms",
+      "score": "98",
+      "p90ms": 537
+    },
+    {
+      "slug": "verified-bases",
+      "name": "Verified Bases",
+      "url": "https://verified-bases-web.pages.dev",
+      "ok": true,
+      "p50": "510ms",
+      "p75": "530ms",
+      "p90": "534ms",
+      "score": "100",
+      "p90ms": 534
+    },
+    {
+      "slug": "pace",
+      "name": "Pace",
+      "url": "https://pace-6xg.pages.dev",
+      "ok": true,
+      "p50": "409ms",
+      "p75": "457ms",
+      "p90": "481ms",
+      "score": "100",
+      "p90ms": 481
+    },
+    {
+      "slug": "sarthakagrawal",
+      "name": "sarthakagrawal.dev",
+      "url": "https://sarthakagrawal.pages.dev",
+      "ok": true,
+      "p50": "406ms",
+      "p75": "408ms",
+      "p90": "455ms",
+      "score": "100",
+      "p90ms": 455
+    },
+    {
+      "slug": "looptv",
+      "name": "LoopTV",
+      "url": "https://looptv.pages.dev",
+      "ok": true,
+      "p50": "432ms",
+      "p75": "433ms",
+      "p90": "451ms",
+      "score": "100",
+      "p90ms": 451
+    },
+    {
+      "slug": "starboard",
+      "name": "Starboard",
+      "url": "https://starboard.sarthakagrawal927.workers.dev",
+      "ok": true,
+      "p50": "275ms",
+      "p75": "324ms",
+      "p90": "433ms",
+      "score": "100",
+      "p90ms": 433
+    },
+    {
+      "slug": "open-historia",
+      "name": "Open Historia",
+      "url": "https://open-historia.sarthakagrawal927.workers.dev",
+      "ok": true,
+      "p50": "242ms",
+      "p75": "316ms",
+      "p90": "380ms",
+      "score": "100",
+      "p90ms": 380
+    },
+    {
+      "slug": "truehire",
+      "name": "TrueHire",
+      "url": "https://truehire.sarthakagrawal927.workers.dev",
+      "ok": true,
+      "p50": "289ms",
+      "p75": "350ms",
+      "p90": "352ms",
+      "score": "100",
+      "p90ms": 352
+    },
+    {
+      "slug": "linkchat",
+      "name": "Linkchat",
+      "url": "https://linkchat.sarthakagrawal927.workers.dev",
+      "ok": true,
+      "p50": "253ms",
+      "p75": "273ms",
+      "p90": "350ms",
+      "score": "99",
+      "p90ms": 350
+    },
+    {
+      "slug": "reader",
+      "name": "Reader",
+      "url": "https://reader.sarthakagrawal927.workers.dev",
+      "ok": true,
+      "p50": "232ms",
+      "p75": "316ms",
+      "p90": "316ms",
+      "score": "100",
+      "p90ms": 316
+    },
+    {
+      "slug": "tinygpt",
+      "name": "PostTrainLLM",
+      "url": "https://tinygpt.pages.dev",
+      "ok": true,
+      "p50": "288ms",
+      "p75": "305ms",
+      "p90": "307ms",
+      "score": "100",
+      "p90ms": 307
+    },
+    {
+      "slug": "psi-swarm",
+      "name": "psi-swarm",
+      "url": "https://psi-swarm-web.pages.dev",
+      "ok": true,
+      "p50": "246ms",
+      "p75": "247ms",
+      "p90": "251ms",
+      "score": "100",
+      "p90ms": 251
+    },
+    {
+      "slug": "anime_list",
+      "name": "MAL Explorer",
+      "url": "https://anime-list-9lk.pages.dev",
+      "ok": true,
+      "p50": "230ms",
+      "p75": "233ms",
+      "p90": "245ms",
+      "score": "100",
+      "p90ms": 245
+    }
+  ]
+}
