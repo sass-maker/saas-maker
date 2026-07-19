@@ -62,19 +62,22 @@ below point to GitHub:
 2. **Markdown is the source of truth.** Blume and the Astro site are
    presentation layers; never edit content inside `apps/docs-blume/dist/` or
    `apps/docs/dist/`.
-3. **Record why, not what.** Code shows what. Document non-obvious constraints,
+3. **Let Blume own the page title.** Give each page a `title` in frontmatter
+   and start the body at `##`; a leading `#` repeats the title in the rendered
+   page.
+4. **Record why, not what.** Code shows what. Document non-obvious constraints,
    operational procedures, important decisions, and reusable failed approaches.
-4. **Mark unresolved questions explicitly** (e.g., "TBD", "Open question:").
-5. **Prefer preservation over deletion** — superseded plans live under
+5. **Mark unresolved questions explicitly** (e.g., "TBD", "Open question:").
+6. **Prefer preservation over deletion** — superseded plans live under
    `architecture/decisions/` with their original dates so git rename history
    stays intact. Removed/shelved approaches live under
    `knowledge/failed-approaches/`.
-6. **When API routes change**, run `pnpm generate:openapi` (updates
+7. **When API routes change**, run `pnpm generate:openapi` (updates
    `docs/openapi/`, `packages/cli/src/openapi.json`, `apps/docs/public/openapi.json`)
    and update the relevant `services/` or `sdk/` page.
-7. **Validate before pushing**: `node scripts/check-docs.mjs` checks broken
+8. **Validate before pushing**: `node scripts/check-docs.mjs` checks broken
    links, empty docs, and required files. It runs in CI.
-8. **Keep pages focused** (150–300 lines). Split catch-all docs into per-topic
+9. **Keep pages focused** (150–300 lines). Split catch-all docs into per-topic
    pages and link between them.
 
 ## Adding documentation

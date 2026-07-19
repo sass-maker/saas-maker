@@ -22,6 +22,20 @@ export default defineConfig({
     branch: 'main',
     dir: 'docs',
   },
+  theme: {
+    accent: { light: '#c65d28', dark: '#f08a4b' },
+    action: '#b94f20',
+    radius: 'lg',
+    mode: 'system',
+    fonts: {
+      display: 'space-grotesk',
+      body: 'inter',
+      mono: 'ibm-plex-mono',
+    },
+  },
+  navigation: {
+    sidebar: { display: 'group' },
+  },
   search: { provider: 'orama' },
   ai: { llmsTxt: true },
   seo: { agentReadability: true, sitemap: true, robots: true },
