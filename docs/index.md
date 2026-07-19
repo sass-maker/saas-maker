@@ -36,6 +36,9 @@ status and timeline live in [`PROJECT_STATUS.md`](../PROJECT_STATUS.md).
 
 - [`architecture/overview.md`](./architecture/overview.md) — control plane,
   two flows, core modules, safety properties.
+- [`architecture/how-it-works.md`](./architecture/how-it-works.md) —
+  learning-tier walkthrough: what actually runs when one reel is produced,
+  stage by stage, and why it's built that way.
 - [`architecture/engines.md`](./architecture/engines.md) — every render
   engine, pinned submodules, credits/inspiration.
 - [`architecture/render-modes.md`](./architecture/render-modes.md) —
