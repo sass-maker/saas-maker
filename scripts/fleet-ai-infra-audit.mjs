@@ -188,7 +188,10 @@ async function main() {
   // is set, so a partial run still surfaces contract drift in the other
   // project. Live probes are scoped to the selected project(s).
   const { probeResults, payloads } = await gatherProbeResults(projects, args);
-  const snapshot = buildAiInfraSnapshot(probeResults, payloads, { includeBody: true });
+  const snapshot = buildAiInfraSnapshot(probeResults, payloads, {
+    includeBody: true,
+    selectedProjects: projects,
+  });
 
   writeReports(args, snapshot);
 
@@ -200,14 +203,15 @@ async function main() {
         ...project.evidence,
         ...(project.protectedEvidence ? [project.protectedEvidence] : []),
       ].filter((e) => !e.ok);
-      console.log(
-        `${failed.length === 0 ? 'PASS' : 'FAIL'} ${project.project}: ${project.evidence.length + (project.protectedEvidence ? 1 : 0) - failed.length}/${project.evidence.length + (project.protectedEvidence ? 1 : 0)} probes passed`
-      );
+      const total = project.evidence.length + (project.protectedEvidence ? 1 : 0);
+      const status = args.noLive ? 'CONTRACT' : failed.length === 0 && total > 0 ? 'PASS' : 'FAIL';
+      console.log(`${status} ${project.project}: ${total - failed.length}/${total} probes passed`);
     }
     console.log(`\nReport: ${path.join(args.outputDir, 'latest.md')}`);
   }
 
-  const failed = snapshot.summary.failedProbes > 0 || !snapshot.contractOk;
+  const missingLiveEvidence = !args.noLive && snapshot.summary.probes === 0;
+  const failed = snapshot.summary.failedProbes > 0 || !snapshot.contractOk || missingLiveEvidence;
   if (failed && args.failOnFailure) process.exit(1);
 }
 

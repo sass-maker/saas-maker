@@ -22,7 +22,8 @@ export const AI_INFRA_PROJECTS = ['free-ai', 'knowledge-base'];
 
 // Credential-shaped patterns we redact from any response body that slips into
 // evidence. Bodies are normally not captured at all; this is a defense in
-// depth for error payloads.
+// depth for error payloads. The final pattern is deliberately conservative
+// and may also redact opaque non-secret identifiers.
 const SECRET_PATTERNS = [
   /Bearer\s+[A-Za-z0-9._-]+/gi,
   /authorization:\s*bearer\s+[^\s]+/gi,
@@ -37,9 +38,7 @@ const SECRET_PATTERNS = [
 const REDACTED = '[redacted]';
 
 /**
- * Redact credential-shaped substrings from a string. Long-opaque-token
- * pattern is only applied when the string already contains a known marker,
- * to avoid mangling legitimate hashes/ids in error messages.
+ * Redact credential-shaped substrings from a string.
  */
 export function redactSecrets(input) {
   if (typeof input !== 'string') return input;
@@ -89,8 +88,11 @@ export function validateAiInfraContract(project) {
   if (!automation?.freshness?.mode) {
     errors.push('automation.freshness.mode must be declared');
   }
-  if (!providerEvidence?.privacy?.storesPromptText === undefined) {
+  if (typeof providerEvidence?.privacy?.storesPromptText !== 'boolean') {
     errors.push('providerEvidence.privacy.storesPromptText must be declared');
+  }
+  if (typeof providerEvidence?.privacy?.storesRequestIds !== 'boolean') {
+    errors.push('providerEvidence.privacy.storesRequestIds must be declared');
   }
   if (!Array.isArray(storage) || storage.length === 0) {
     errors.push('storage must list at least one store with a reconstruction path');
@@ -243,8 +245,15 @@ export function classifyCorpusFreshness(domainStatus, lastJobAtMs, nowMs = Date.
  */
 export function buildAiInfraSnapshot(probeResults = {}, payloads = {}, options = {}) {
   const generatedAt = new Date().toISOString();
-  const projects = listAiInfraProjects();
-  const contractValidation = projects.map((project) => validateAiInfraContract(project));
+  const allProjects = listAiInfraProjects();
+  const projects = options.selectedProjects ?? allProjects;
+  const unknownProjects = projects.filter((project) => !allProjects.includes(project));
+  if (unknownProjects.length > 0) {
+    throw new Error(`Unknown AI-infrastructure project(s): ${unknownProjects.join(', ')}`);
+  }
+  // A scoped live run still validates every declared contract so drift in the
+  // unselected project cannot disappear from the result.
+  const contractValidation = allProjects.map((project) => validateAiInfraContract(project));
 
   const projectSnapshots = projects.map((project) => {
     const contract = getAiInfraContract(project);

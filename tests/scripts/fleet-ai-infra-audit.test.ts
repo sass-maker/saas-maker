@@ -41,6 +41,20 @@ describe('fleet ai-infra audit helpers', () => {
     expect(kb.errors).toEqual([]);
   });
 
+  it('rejects a contract without explicit privacy booleans', () => {
+    const contract = getAiInfraContract('free-ai');
+    const privacy = contract.providerEvidence.privacy;
+    const original = privacy.storesPromptText;
+    delete privacy.storesPromptText;
+    try {
+      const result = validateAiInfraContract('free-ai');
+      expect(result.ok).toBe(false);
+      expect(result.errors).toContain('providerEvidence.privacy.storesPromptText must be declared');
+    } finally {
+      privacy.storesPromptText = original;
+    }
+  });
+
   it('reports errors for a project without the capability', () => {
     const result = validateAiInfraContract('reader');
     expect(result.ok).toBe(false);
@@ -199,6 +213,15 @@ describe('fleet ai-infra audit helpers', () => {
     expect(freeAi?.providerEvidence).toBeDefined();
     const kb = snapshot.projects.find((p) => p.project === 'knowledge-base');
     expect(kb?.runtimeReadiness).toBeNull(); // no payload provided
+  });
+
+  it('scopes project evidence while validating every AI-infrastructure contract', () => {
+    const snapshot = buildAiInfraSnapshot({}, {}, { selectedProjects: ['free-ai'] });
+    expect(snapshot.projects.map((project) => project.project)).toEqual(['free-ai']);
+    expect(snapshot.contractValidation.map((result) => result.project).sort()).toEqual([
+      'free-ai',
+      'knowledge-base',
+    ]);
   });
 
   it('renders Foundry-friendly markdown with no private data', () => {
