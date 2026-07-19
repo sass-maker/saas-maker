@@ -216,6 +216,36 @@ describe('evidence: background freshness by declared cadence', () => {
 });
 
 describe('evidence: independent failure and digest policy', () => {
+  it('does not report an all-unknown family as passing', () => {
+    const envelopes = valid.products.map((product) =>
+      buildChildEvidence(valid, product.id, {}, NOW)
+    );
+    const snap = buildFamilySnapshot(valid, envelopes, { now: NOW });
+    assert.equal(snap.familyStatus, STATUS.UNKNOWN);
+    assert.deepEqual(snap.digest.unknown.sort(), [...PRODUCT_IDS].sort());
+  });
+
+  it('surfaces a stale family when no child has failed', () => {
+    const envelopes = valid.products.map((product) =>
+      buildChildEvidence(valid, product.id, {
+        build: { status: STATUS.PASS },
+        live: { status: STATUS.PASS },
+        indexing: { status: STATUS.PASS },
+        errors: { status: STATUS.PASS },
+        activation: { status: STATUS.PASS },
+        backgroundJobs: product.backgroundJobs.map((job) => ({
+          id: job.id,
+          lastSuccess: product.id === 'reader'
+            ? '2026-06-01T00:00:00Z'
+            : '2026-07-18T00:00:00Z',
+        })),
+      }, NOW)
+    );
+    const snap = buildFamilySnapshot(valid, envelopes, { now: NOW });
+    assert.equal(snap.familyStatus, 'stale');
+    assert.deepEqual(snap.digest.stale, ['reader']);
+  });
+
   it('scenario: Chess is unavailable — the report names Chess only and preserves other child statuses', () => {
     const envelopes = valid.products.map((p) => {
       if (p.id === 'chess') {
