@@ -18,7 +18,10 @@
     "build:web": "pnpm --filter psi-swarm-web run build",
     "dev:cli": "pnpm --filter psi-swarm run dev",
     "install:skill": "node scripts/install-skill.mjs",
-    "deploy": "node scripts/manual-deploy.mjs deploy.yml deploy.yml"
+    "deploy": "node scripts/manual-deploy.mjs deploy.yml deploy.yml",
+    "docs:check": "node scripts/validate-docs.mjs",
+    "docs:dev": "blume dev",
+    "docs:build": "blume build"
   },
   "engines": {
     "node": ">=20 <24",
@@ -29,5 +32,9 @@
     "url": "https://github.com/sarthakagrawal927/psi-swarm.git"
   },
   "author": "Sarthak Agrawal",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "astro": "5.18.2",
+    "blume": "1.0.4"
+  }
 }

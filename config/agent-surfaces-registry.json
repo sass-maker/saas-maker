@@ -3,6 +3,7 @@
   "products": [
     {
       "id": "codevetter",
+      "spotlight": true,
       "name": "CodeVetter",
       "url": "https://codevetter.com",
       "summary": "Desktop-first AI code review workbench for agent-generated code. Local SQLite, Tauri shell, evidence-backed review — your repo never hits a central server.",
@@ -72,6 +73,7 @@
     },
     {
       "id": "high-signal",
+      "spotlight": true,
       "name": "High Signal",
       "url": "https://highsignal.app",
       "summary": "Daily synthesized brief on technology, startups, and finance — five sections with inline hit-rates, no signup required.",
@@ -200,6 +202,7 @@
     },
     {
       "id": "saas-maker-showcase",
+      "spotlight": true,
       "name": "Foundry (SaaS Maker)",
       "url": "https://sassmaker.com",
       "summary": "Sarthak Agrawal's personal product fleet showcase — RolePatch, High Signal, CodeVetter, Pace, PostTrainLLM, Karte, Significant Hobbies, and 15+ other shipped apps, plus the open-source Foundry operating layer on Cloudflare.",
@@ -466,6 +469,7 @@
     },
     {
       "id": "posttrainllm",
+      "spotlight": true,
       "name": "PostTrainLLM",
       "url": "https://posttrainllm.com",
       "summary": "Mac-local LLM specialist factory — post-training and runtime that fits on one Mac, plus WebGPU playground.",
@@ -501,6 +505,7 @@
     },
     {
       "id": "pace",
+      "spotlight": true,
       "name": "Pace",
       "url": "https://heypace.app",
       "summary": "On-device Mac voice agent that reads your screen and acts with local context.",
@@ -745,20 +750,6 @@
         }
       ],
       "indexMd": "# psi-swarm\n\nDistributional Lighthouse performance audits for the fleet.\n\n## Agent entrypoints\n\n- https://performance.sassmaker.com/llms.txt\n- https://performance.sassmaker.com/api/ai\n- https://performance.sassmaker.com/index.md\n"
-    },
-    {
-      "id": "verified-bases",
-      "name": "Verified Bases",
-      "url": "https://shop.sassmaker.com",
-      "summary": "Storefront for verified software bases — curated, verified building blocks with costly signals. Astro + Go on Cloudflare.",
-      "publicDir": "verified-bases/web/public",
-      "stack": "astro-static",
-      "headFile": "verified-bases/web/src/layouts/BaseLayout.astro",
-      "schemaType": "WebSite",
-      "sameAs": [
-        "https://github.com/sass-maker/verified-bases"
-      ],
-      "indexMd": "# Verified Bases\n\nStorefront for verified software bases.\n"
     },
     {
       "id": "protein-index",

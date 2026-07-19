@@ -42,7 +42,7 @@ tasks: `work-queue-glm-core-2026-07.md`.
 | **saas-maker** | sassmaker.com (+ docs, drank, email-manager, free-ai, psi-swarm) | `saas-maker/`, `fleet-ops/psi-swarm/` | The hub + platform surfaces |
 | **high-signal** | highsignal.app (+ everythingrated, research-papers) | `high-signal/` | |
 | **materia** | materia.significanthobbies.com | `materia/` | Its own bet ("Examine.com of the body"), hosted on the SH domain |
-| **knowledge-base** | knowledgebase-landing.pages.dev (no custom domain yet) | `knowledge-base/` | "Private Agent Search" — fleet shared RAG service (RAG_SERVICE worker) |
+| **knowledge-base** | knowledgebase.sassmaker.com + search.sassmaker.com | `knowledge-base/` | "Private Agent Search" — public landing/app surfaces plus fleet shared RAG service (RAG_SERVICE worker) |
 
 ## Secondary — live, low-touch
 
@@ -68,7 +68,7 @@ Work only when explicitly asked.
 ## Out-of-fleet (AGENTS.md — excluded from sweeps)
 
 `open-historia`, `today-little-log`, `truehire` (also has a registry entry —
-excluded regardless), `verified-bases`, `companion-robot`, `device-net-test`,
+excluded regardless), `companion-robot`, `device-net-test`,
 `forecast-lab`, `elves-hq`, `saas-maker-ci-fix`.
 
 ## Scratch — cleanup candidates (not projects)

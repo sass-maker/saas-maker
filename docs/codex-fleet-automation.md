@@ -128,7 +128,7 @@ community wrappers around `codex exec`. Docs: [mcp](https://developers.openai.co
 #!/usr/bin/env bash
 set -euo pipefail
 FLEET=~/Desktop/fleet
-EXCLUDE="open-historia|today-little-log|truehire|verified-bases|companion-robot|device-net-test|forecast-lab|elves-hq|saas-maker-ci-fix|free-ai"   # out-of-fleet + hands-off (see AGENTS.md)
+EXCLUDE="open-historia|today-little-log|truehire|companion-robot|device-net-test|forecast-lab|elves-hq|saas-maker-ci-fix|free-ai"   # out-of-fleet + hands-off (see AGENTS.md)
 
 for repo in "$FLEET"/*/; do
   name=$(basename "$repo")

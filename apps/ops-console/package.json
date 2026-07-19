@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "astro dev --host 127.0.0.1",
     "build": "astro build && node scripts/build-worker.mjs",
-    "preview": "astro preview --host 127.0.0.1 --allowed-hosts fleet.sassmaker.com"
+    "preview": "astro preview --host 127.0.0.1 --allowed-hosts fleet.sassmaker.com",
+    "test": "node scripts/test-resilience.mjs",
+    "test:resilience": "node scripts/test-resilience.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",

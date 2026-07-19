@@ -1,6 +1,15 @@
+---
+title: New things to learn
+description: Techniques that are genuinely novel in this project, with code-grounded gotchas.
+---
+
 # New things to learn — psi-swarm
 
 Techniques that are genuinely novel in this project, ordered from most unfamiliar to most mainstream.
+
+> Each entry leans on an authoritative external source (linked) for the
+> concept; the gotchas here are the project-specific ones grounded in this
+> codebase.
 
 ---
 
@@ -67,8 +76,8 @@ Techniques that are genuinely novel in this project, ordered from most unfamilia
 
 ---
 
-## npm workspaces monorepo (cli + web)
-- What: Root `package.json` declares `workspaces: ["cli", "web"]`; `npm --workspace cli run build` targets a single package without hoisting conflicts.
+## pnpm workspaces monorepo (cli + web)
+- What: Root `package.json` declares `workspaces: ["cli", "web"]` and `packageManager: pnpm@10.33.2`; `pnpm-workspace.yaml` lists the packages. `pnpm --filter psi-swarm run build` targets a single package without hoisting conflicts.
 - Why here: TBD
-- Gotcha (from code): The project uses **npm workspaces**, not pnpm — there is no `pnpm-workspace.yaml`. Root `package.json:7-10` lists the two workspaces.
-- Source: https://docs.npmjs.com/cli/v10/using-npm/workspaces
+- Gotcha (from code): The project migrated from npm workspaces to pnpm on 2026-06-20 (PR #8). `onlyBuiltDependencies` in `pnpm-workspace.yaml` allow-lists the native builds (`better-sqlite3`, `esbuild`, `sharp`). The `better-sqlite3` native binding must match the Node version — re-run `pnpm install` after switching Node. See [ADR: pnpm migration](../../architecture/decisions/pnpm-migration.md).
+- Source: https://pnpm.io/workspaces

@@ -16,7 +16,7 @@
     },
     "workers": "25 live Workers (enumerated 2026-07-18 via API): aliveville, codevetter-landing-proxy, email-manager, everythingrated, free-ai-gateway, high-signal-web/-api/-annotation, karte-email, knowledgebase, knowledgebase-app, linkchat, mal-api, open-historia, protein-index, reader, reel-pipeline-artifacts, resume-tailor, saasmaker-dashboard/-api/-droid, significanthobbies, starboard, truehire.",
     "openGaps": [
-      "CF project 'tinygpt' name unchanged — full rename to 'posttrainllm' deferred: cosmetic (name not user-visible) and a fresh project 522s without tinygpt's env/KV bindings. posttrainllm.com is on the fresh build + green.",
+      "CF project 'tinygpt' name unchanged — cosmetic only and not user-visible. posttrainllm.com is the canonical live domain; the platform-generated tinygpt.pages.dev hostname is not a custom fallback.",
       "open-historia confirmed a live product (historia.aliveville.com), not an orphan."
     ]
   },
@@ -64,7 +64,7 @@
       "app": "web",
       "inRegistry": true,
       "status": "live",
-      "notes": "REDEPLOYED fresh from main 2026-07-18 — stale-build fixed (leaderboard now JSON, RSS live, canonicals current). Stray tinygpt.sarthakagrawal.dev removed. CF project stays named 'tinygpt' — full rename deferred: a fresh project 522s without tinygpt's env/KV bindings, and the name is not user-visible (cosmetic)."
+      "notes": "REDEPLOYED fresh from main 2026-07-18 — stale-build fixed (leaderboard now JSON, RSS live, canonicals current). Canonical domains are posttrainllm.com and www.posttrainllm.com; the platform-generated tinygpt.pages.dev hostname is not a custom fallback. CF project name stays 'tinygpt' (cosmetic)."
     },
     {
       "id": "saas-maker-showcase",
@@ -224,11 +224,14 @@
       "tier": "active",
       "repo": "knowledge-base",
       "deployKind": "worker+pages",
-      "cfProject": "knowledgebase-landing (pages) + RAG_SERVICE worker",
-      "domains": [],
+      "cfProject": "knowledgebase-landing + knowledgebase-app + RAG_SERVICE workers",
+      "domains": [
+        "search.sassmaker.com",
+        "knowledgebase.sassmaker.com"
+      ],
       "inRegistry": true,
       "status": "live",
-      "notes": "'Private Agent Search' — fleet shared RAG service (Vectorize/D1/R2). Landing has no custom domain yet."
+      "notes": "'Private Agent Search' — public landing at knowledgebase.sassmaker.com, app/search surface at search.sassmaker.com, plus fleet shared RAG service (Vectorize/D1/R2). Pages deployment is Git-connected to sass-maker/knowledge-base."
     },
     {
       "id": "significanthobbies",
@@ -421,7 +424,7 @@
       ],
       "inRegistry": true,
       "status": "live",
-      "notes": "Scored catalog of SaaS ideas. 2026-07-18: repo moved sarthakagrawal927 -> sass-maker org + cloned into fleet; domain ideas.sassmaker.com added (provisioning)."
+      "notes": "Scored catalog of SaaS ideas. 2026-07-18: repo moved sarthakagrawal927 -> sass-maker org + cloned into fleet; Pages project is GitHub-connected and ideas.sassmaker.com is active/200."
     },
     {
       "id": "motion",
