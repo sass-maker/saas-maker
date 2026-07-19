@@ -58,7 +58,14 @@ const commands = {
     ],
     ['PSI Swarm CLI build', 'pnpm', ['--dir', 'tools/psi-swarm', 'build:cli']],
     ['PSI Swarm web build', 'pnpm', ['--dir', 'tools/psi-swarm', 'build:web']],
+    ['PSI Swarm static check', '../../node_modules/.bin/biome', ['check', '.'], 'tools/psi-swarm'],
     ['PSI Swarm documentation check', 'pnpm', ['--dir', 'tools/psi-swarm', 'docs:check']],
+    [
+      'Reel Pipeline static check',
+      '../../node_modules/.bin/biome',
+      ['check', '.'],
+      'services/reel-pipeline',
+    ],
     ['Reel Pipeline Node and Rust tests', 'npm', ['--prefix', 'services/reel-pipeline', 'test']],
     [
       'Reel Pipeline documentation check',
@@ -72,10 +79,10 @@ if (!(mode in commands)) {
   console.error('Usage: node scripts/foundry-components.mjs <install|check>');
   process.exitCode = 2;
 } else {
-  for (const [label, command, args] of commands[mode]) {
+  for (const [label, command, args, commandCwd] of commands[mode]) {
     console.log(`\n[foundry components] ${label}`);
     const result = spawnSync(command, args, {
-      cwd: root,
+      cwd: path.resolve(root, commandCwd ?? '.'),
       env: { ...process.env, CI: process.env.CI ?? '1' },
       stdio: 'inherit',
     });
