@@ -22,23 +22,24 @@ Use this order when working on the Fleet:
 Symphony is the task source of truth. GitHub is the code source of truth.
 Cloudflare, Vercel, and other hosts are deployment targets, not task stores.
 
-## Portfolio Buckets (2026-07-10)
+## Portfolio Attention Model (2026-07-19)
 
-The fleet is managed in four buckets:
+The canonical human allocation model lives in
+[`project-tiers.md`](project-tiers.md). It has five attention classes:
 
-- **Focus:** `pace`, `codevetter`, `posttrainllm`
-- **Support:** `high-signal`, `drank`, `research-papers`, `fleet-ops`, `saas-maker`, `free-ai`, `knowledge-base`, `reel-pipeline`, `aliveville`
-- **Personal use:** `rolepatch`, `karte`, `reader`, `swe-interview-prep`, `significanthobbies`, `looptv`, `anime-list`, `email-manager`
+- **My Work:** CodeVetter, HeyPace, PostTrainLLM, and High Signal. Sarthak leads
+  their product direction.
+- **Toolbox:** mostly finished utilities kept usable, discoverable, and quietly
+  marketed for bounded experiments.
+- **Foundry + Helpers:** one shared factory for planning, building, operating,
+  and marketing the fleet.
+- **Ignored:** frozen or retired projects with no routine obligation.
+- **Removed:** attribution-only records excluded from operations.
 
-Operating rule: any product with a purchased custom domain remains in **Support**
-even when it is not a focus bet. Personal-use products receive maintenance only;
-when they also have a custom domain, that maintenance includes keeping the public
-surface minimally healthy. Known domain-backed surfaces include `aliveville`,
-`karte`, `rolepatch`, `significanthobbies`, and `saas-maker`.
-
-Email Manager is retained in the fleet workspace as a personal-use maintenance
-project.
-TrueHire is retired from the active Fleet; RolePatch owns the resume/proof surface.
+Do not infer attention from repository count, custom-domain ownership, or the
+legacy `focus` / `active` / `secondary` deployment tiers. Use
+`project-tiers.md` for attention and `fleet-ops/config/projects.json` for deploy
+and domain reality.
 
 Local checkout aliases:
 

@@ -1,88 +1,121 @@
-# Fleet project tiers (2026-07-18)
+# Fleet attention model (2026-07-19)
 
-Focus marking so effort lands on the right projects. Tiers are set at the
-**project/family** level; a family's tier applies to its sub-surfaces unless an
-exception is noted. Web surfaces map to
-`fleet-ops/config/agent-surfaces-registry.json` (23 products under 8 families).
+This is the human source of truth for how Sarthak allocates attention across
+the fleet. It classifies obligations, not repositories or deploy surfaces.
+`fleet-ops/config/projects.json` remains the machine-readable inventory for
+repositories, Cloudflare projects, domains, and deployment status.
 
-**Source of truth:** `fleet-ops/config/projects.json` is the machine-readable
-manifest (tier + repo + deploy kind + CF project + domains for all 33
-projects). This doc is the human narrative; the Cloudflare reconciliation +
-hygiene flags are in `cloudflare-inventory-2026-07.md`.
+The daily operating view is intentionally small:
 
-## Tiers
+1. **My Work** — commercial products whose direction and product work are led
+   by Sarthak.
+2. **Toolbox** — finished or mostly finished projects that remain usable and
+   receive quiet, automated marketing and bounded experiments.
+3. **Foundry + Helpers** — one factory for planning, building, operating, and
+   marketing the fleet. Helper surfaces may remain separately deployable while
+   converging on one Foundry workstream.
+4. **Ignored** — frozen or retired work. Preserve it where convenient, but do
+   not create routine maintenance, marketing, or roadmap obligations.
+5. **Removed** — attribution-only records. Exclude them from all operations.
 
-- **Focus** — the active bets. Default target for planning, proof assets,
-  deploys, and my/glm time. Everything non-trivial here gets done first.
-- **Active** — real products getting maintenance + opportunistic improvement,
-  but not the daily focus.
-- **Secondary** — live, stable, low-touch. Fix when broken; don't invest.
-- **Parked / experimental** — repos not in the public registry; work only when
-  explicitly asked.
-- **Out-of-fleet** — excluded from all fleet sweeps (AGENTS.md).
-- **Scratch** — delete/ignore; not projects.
+## My Work — 4
 
----
+- CodeVetter
+- HeyPace
+- PostTrainLLM
+- High Signal
 
-## Focus — the 3 core Mac apps ⭐
+Agents may test, monitor, document, research, and report on these products, but
+Sarthak owns their direction and decides when product work happens.
 
-The current GEO/SEO + product-infra push. Plan: `geo-seo-plan-2026-07.md`;
-tasks: `work-queue-glm-core-2026-07.md`.
+## Toolbox — 15
 
-| Project | Domain | Repo |
-|---|---|---|
-| **CodeVetter** | codevetter.com | `codevetter/` |
-| **HeyPace** | heypace.app | `pace/` |
-| **PostTrainLLM** | posttrainllm.com | `posttrainllm/` |
+- Personal website
+- RolePatch
+- Karte
+- Significant Hobbies
+- Reader
+- Anime List
+- SWE Interview Prep
+- Email Manager
+- LoopTV
+- Chess
+- Motion
+- Research Papers
+- Starboard
+- Free AI
+- Knowledge Base
 
-## Active — real products, maintained
+Toolbox projects should remain usable and discoverable without becoming active
+commitments. Default automation is limited to lightweight build/availability
+checks, basic dependency and domain hygiene, indexing, directory links, and
+quiet marketing experiments. Do not create standing feature roadmaps, manual
+content schedules, paid-acquisition work, or autonomous product expansion.
 
-| Project | Domain | Repo | Note |
-|---|---|---|---|
-| **saas-maker** | sassmaker.com (+ docs, drank, email-manager, free-ai, psi-swarm) | `saas-maker/`, `fleet-ops/psi-swarm/` | The hub + platform surfaces |
-| **high-signal** | highsignal.app (+ everythingrated, research-papers) | `high-signal/` | |
-| **materia** | materia.significanthobbies.com | `materia/` | Its own bet ("Examine.com of the body"), hosted on the SH domain |
-| **knowledge-base** | knowledgebase.sassmaker.com + search.sassmaker.com | `knowledge-base/` | "Private Agent Search" — public landing/app surfaces plus fleet shared RAG service (RAG_SERVICE worker) |
+If a Toolbox project earns attention through real use, traction, or an explicit
+decision, it can move into My Work. Until then, fix it when needed and keep it
+quiet.
 
-## Secondary — live, low-touch
+## Foundry + Helpers — 6
 
-| Project | Domain | Repo |
-|---|---|---|
-| **significanthobbies** cluster: significanthobbies.com, looptv, anime-list, chess, reader, swe-interview-prep | *.significanthobbies.com | `significanthobbies/`, `anime-list/`, `chess/`, `looptv/`, `reader/`, `swe-interview-prep/` |
-| **rolepatch** | rolepatch.com | `rolepatch/` |
-| **karte** | karte.cc | `karte/` |
-| **starboard** | starboard.codevetter.com | `starboard/` |
+- SaaS Maker / Foundry
+- Fleet Dashboard (`fleet.sassmaker.com`)
+- PSI Swarm
+- Mobile Dev Cockpit
+- Drank
+- Reel Pipeline
 
-## Parked / experimental — non-registry repos
+Treat these as one Foundry workstream, not six product bets. Foundry is the
+factory for:
 
-Work only when explicitly asked.
+- **Planning:** portfolio context, priorities, specs, research, documentation,
+  and task routing.
+- **Building:** agent workflows, CI and release readiness, deployment
+  visibility, and fleet health.
+- **Marketing:** domains, landing pages, indexing, performance, content, and
+  distribution.
 
-| Repo | What it is |
+Consolidate ownership, registry data, dashboards, documentation, and workflows
+before physically merging repositories. A helper may remain an independently
+deployed package, Worker, or app when its runtime boundary is useful.
+
+## Ignored — 9
+
+- AliveVille
+- Open Historia
+- TrueHire
+- Companion Robot
+- Materia
+- EverythingRated
+- Protein Index
+- Web Playables
+- SaaS Ideas
+
+These are frozen or retired. Do not include them in routine sweeps, maintenance
+queues, marketing programs, or planning. Work on one only after an explicit
+reactivation decision.
+
+## Removed — 3
+
+- Elves HQ
+- Today Little Log
+- Forecast Lab
+
+Keep only enough history to preserve attribution and explain what happened.
+Removed entries receive no deploy, domain, monitoring, documentation, marketing,
+or maintenance work and should not appear in active fleet counts.
+
+## Automation view
+
+| Attention | Treatment |
 |---|---|
-| `ai-game/` | Aliveville — world-sim game (parked, but **live**: aliveville.com + idle.aliveville.com) |
-| `protein-index/` | experimental |
-| `reel-pipeline/` | reel→Rust rewrite (greenlit, not active) |
-| `web-playables/` | experimental |
-| `mobile-dev-cockpit/` | tooling/experimental |
+| My Work | Human-led product direction; automation provides evidence and guardrails |
+| Toolbox | Maintain usability and ambient discoverability; run bounded experiments |
+| Foundry + Helpers | Improve the shared factory when it reduces work across the fleet |
+| Ignored | No routine work; reactivate explicitly |
+| Removed | Attribution only; exclude everywhere operational |
 
-## Out-of-fleet (AGENTS.md — excluded from sweeps)
-
-`open-historia`, `today-little-log`, `truehire` (also has a registry entry —
-excluded regardless), `companion-robot`, `device-net-test`,
-`forecast-lab`, `elves-hq`, `saas-maker-ci-fix`.
-
-## Scratch — cleanup candidates (not projects)
-
-`codevetter-rebuild-20260715T044829Z/`, `codevetter-series-20260715T044829Z/` —
-timestamped worktree dumps. Safe to delete once confirmed no unmerged work.
-
----
-
-## How to use
-
-- **Planning / delegation:** default to Focus. Only touch Active/Secondary when
-  asked or when a fleet-wide standard requires it.
-- **Fleet sweeps** (`git-health.sh`, audits): exclude Out-of-fleet + Scratch.
-- **Registry mirror (optional):** a `tier` field can be added per product in
-  `agent-surfaces-registry.json` so tooling can filter by tier — not done yet;
-  this doc is the source of truth for now.
+The catalog contains 37 named entries: 4 My Work, 15 Toolbox, 6 Foundry +
+Helpers, 9 Ignored, and 3 Removed. Repository and deploy counts differ because
+some entries are surfaces within a family and some historical entries have no
+active deployment.
