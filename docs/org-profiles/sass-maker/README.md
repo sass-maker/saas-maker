@@ -9,7 +9,7 @@ one CLI, one cockpit, one set of widgets — running on Cloudflare's $5 tier.
 ## What we ship
 
 - **[Foundry (SaaS Maker)](https://sassmaker.com)** — the fleet hub and showcase. Per-product pages, build log, and the fleet map.
-- **[SaaS Maker Docs](https://docs.sassmaker.com)** — drop-in backend services for SaaS apps. API docs for Foundry (feedback, waitlist, testimonials, tasks, analytics, and more).
+- **[SaaS Maker Docs](https://sassmaker.com/docs)** — drop-in backend services for SaaS apps. API docs for Foundry (feedback, waitlist, testimonials, tasks, analytics, and more).
 - **[Cockpit](https://app.sassmaker.com)** — operator dashboard for the fleet. Project registry, feedback, tasks, analytics, changelog.
 - **[AI Gateway](https://ai-gateway.sassmaker.com)** — OpenAI-compatible LLM gateway fronting free-tier models across 30+ providers.
 - **[Email Manager](https://mail.sassmaker.com)** — Gmail workspace with local semantic search.
@@ -43,7 +43,7 @@ orgs — each with its own brand and domain:
 | Product | URL | What it does |
 |---|---|---|
 | Foundry hub | https://sassmaker.com | Fleet showcase and build log |
-| Docs | https://docs.sassmaker.com | API docs for Foundry backend services |
+| Docs | https://sassmaker.com/docs | API docs for Foundry backend services |
 | Cockpit | https://app.sassmaker.com | Operator dashboard (auth) |
 | AI Gateway | https://ai-gateway.sassmaker.com | OpenAI-compatible free-model gateway |
 | Email Manager | https://mail.sassmaker.com | Gmail workspace with local semantic search |
@@ -66,7 +66,7 @@ the repository's git log.
 The Foundry hub and every product expose machine-readable entrypoints:
 
 - Hub: https://sassmaker.com/llms.txt · https://sassmaker.com/api/ai · https://sassmaker.com/index.md
-- Docs: https://docs.sassmaker.com/llms.txt · https://docs.sassmaker.com/api/ai · https://docs.sassmaker.com/index.md
+- Docs: https://sassmaker.com/docs/llms.txt · https://sassmaker.com/docs/api/ai · https://sassmaker.com/docs/index.md
 - AI Gateway: https://ai-gateway.sassmaker.com/llms.txt · https://ai-gateway.sassmaker.com/api/ai
 
 ## Source

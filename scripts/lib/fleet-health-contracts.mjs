@@ -254,7 +254,7 @@ export const FLEET_HEALTH_CONTRACTS = {
     criticalRoutes: [
       'https://app.sassmaker.com/login',
       'https://sassmaker.com',
-      'https://docs.sassmaker.com',
+      'https://sassmaker.com/docs',
     ],
     auth: {
       required: true,

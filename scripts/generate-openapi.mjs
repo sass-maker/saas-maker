@@ -10,7 +10,6 @@ const indexFile = join(repoRoot, 'workers/api/src/index.ts');
 const routesDir = join(repoRoot, 'workers/api/src/routes');
 const cliSpecOut = join(repoRoot, 'packages/cli/src/openapi.json');
 const docsSpecOut = join(repoRoot, 'docs/openapi/openapi.json');
-const docsPublicSpecOut = join(repoRoot, 'apps/docs/public/openapi.json');
 
 const METHOD_ORDER = ['get', 'post', 'put', 'patch', 'delete'];
 
@@ -122,17 +121,14 @@ function main() {
 
   mkdirSync(dirname(cliSpecOut), { recursive: true });
   mkdirSync(dirname(docsSpecOut), { recursive: true });
-  mkdirSync(dirname(docsPublicSpecOut), { recursive: true });
   const json = `${JSON.stringify(spec, null, 2)}\n`;
   writeFileSync(cliSpecOut, json);
   writeFileSync(docsSpecOut, json);
-  writeFileSync(docsPublicSpecOut, json);
 
   const routeCount = Object.keys(paths).length;
   console.log(`Generated OpenAPI spec with ${routeCount} paths.`);
   console.log(`- ${cliSpecOut}`);
   console.log(`- ${docsSpecOut}`);
-  console.log(`- ${docsPublicSpecOut}`);
 }
 
 main();

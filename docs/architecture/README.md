@@ -5,7 +5,7 @@ How SaaS Maker is structured and how its parts interact.
 ## System shape
 
 - **Operator** (browser + `fnd` CLI) → Cockpit (`app.sassmaker.com`), API
-  (`api.sassmaker.com`), showcase/docs (`sassmaker.com`, `docs.sassmaker.com`).
+  (`api.sassmaker.com`), showcase/docs (`sassmaker.com`, `sassmaker.com/docs`).
 - **Hub-and-spoke**: fleet spokes push up to SaaS Maker via `/v1/*` and widgets.
   Spokes do not call each other directly. Reel-pipeline ⇄ marketing queue is the
   reference integration pattern.

@@ -19,7 +19,7 @@ an automatic production trigger.
 | API               | `workers/api`   | Cloudflare Worker `saasmaker-api` (Hono; route `api.sassmaker.com`)                              |
 | Cockpit dashboard | `apps/cockpit`  | Cloudflare Worker `saasmaker-dashboard` via `@opennextjs/cloudflare` (route `app.sassmaker.com`) |
 | Droid runner      | `workers/droid` | Cloudflare Worker `saasmaker-droid` (Containers + Durable Objects)                               |
-| Docs              | `apps/docs`     | Cloudflare Pages `saas-maker-docs` (Astro/Starlight; `docs.sassmaker.com`)                       |
+| Docs              | `apps/docs-blume` + `docs/` | Blume folded into Cloudflare Pages `saas-maker-home` at `sassmaker.com/docs`       |
 | Landing/home      | `apps/showcase` | Cloudflare Pages `saas-maker-home` (Astro static; `sassmaker.com`)                               |
 
 | Concern      | Service                                                                                                              |
@@ -39,7 +39,7 @@ an automatic production trigger.
 - `workers/api` - Hono API on Cloudflare Workers with D1 and Drizzle.
 - `workers/droid` - Experimental Cloudflare Sandbox runner for task execution and PR creation.
 - `apps/cockpit` - Next.js dashboard for projects, tasks, fleet state, and Droid runs.
-- `apps/docs` - Astro/Starlight docs site.
+- `apps/docs-blume` - Blume presentation layer for the canonical root `docs/` tree; served at `sassmaker.com/docs`.
 - `apps/showcase` - Foundry landing page (Astro, pure static; serves `sassmaker.com`).
 - `packages/cli` - `fnd` CLI backed by the generated OpenAPI spec.
 - `internal/contracts/` - Internal API/Cockpit type contracts (`@saas-maker/contracts` path alias).
@@ -50,7 +50,7 @@ an automatic production trigger.
 
 - API, cockpit, docs, widgets, and CLI are actively developed.
 - Droid v1 can run sandboxed tasks and create draft PRs, but it is still experimental.
-- Public docs are being cleaned up as the repository becomes more open-source friendly.
+- Public docs are authored in the root `docs/` tree and served through Blume at `sassmaker.com/docs`.
 
 ## Fleet Registry
 

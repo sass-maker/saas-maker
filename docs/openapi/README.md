@@ -9,8 +9,8 @@ running API by `pnpm generate:openapi` (`scripts/generate-openapi.mjs`).
 When API routes change, run:
 
 ```bash
-pnpm generate:openapi   # updates packages/cli/src/openapi.json, docs/openapi/openapi.json, apps/docs/public/openapi.json
-pnpm check:openapi      # regenerate + git diff --exit-code on the three artifacts
+pnpm generate:openapi   # updates packages/cli/src/openapi.json and docs/openapi/openapi.json
+pnpm check:openapi      # regenerate + git diff --exit-code on the two artifacts
 ```
 
 `pnpm check:openapi` runs in CI on every push/PR, so a stale spec fails the

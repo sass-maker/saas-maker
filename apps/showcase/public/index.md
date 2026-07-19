@@ -16,7 +16,6 @@ Personal product fleet by Sarthak Agrawal — shipped apps plus the open-source 
 - **Karte** — https://karte.cc — Link-in-bio registry for humans and AI agents. Publish trust cards with public manifests at /{slug}/agent.json.
 - **Significant Hobbies** — https://significanthobbies.com — Life planner for private daily rituals and public living — hobbies, bucket lists, and side quests over time.
 - **Materia** — https://materia.significanthobbies.com — Evidence-graded reference for remedies organized by body part — body → condition → remedy → compound → study, with citations.
-- **SaaS Maker Docs** — https://docs.sassmaker.com — Drop-in backend services for SaaS apps. API docs for Foundry (feedback, waitlist, testimonials, and more).
 - **Starboard** — https://starboard.codevetter.com — GitHub stars organizer with semantic search — sub-product of CodeVetter for repo intelligence.
 - **EverythingRated** — https://ratings.highsignal.app — Multi-axis rating tool for structured directories and catalogs — decisions with explicit trade-offs, not star averages.
 - **TrueHire** — https://truehire.rolepatch.com — Hiring-side companion under RolePatch for evaluating candidates with structured role fit.
@@ -49,7 +48,7 @@ Personal product fleet by Sarthak Agrawal — shipped apps plus the open-source 
 - https://sassmaker.com/llms-full.txt
 - https://sassmaker.com/api/ai
 - https://sassmaker.com/index.md
-- https://docs.sassmaker.com/llms.txt
+- https://sassmaker.com/docs/llms.txt
 
 ## Who it is for
 

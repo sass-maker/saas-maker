@@ -16,9 +16,8 @@ public documentation is consolidated into one local-first knowledge system
 
 ## Active work
 
-- **Documentation consolidation** (this branch): unifying the scattered `docs/`
-  tree, the Blume content, and the root status files into one canonical
-  knowledge system with validation and CI checks.
+- **Documentation consolidation**: the root `docs/` tree is canonical and Blume
+  is the only production presentation layer at `sassmaker.com/docs`.
 - **Marketing queue ops**: two-stage approvals and reel-pipeline posting-ops
   summaries are live; continue tightening missed-post and metrics-pending
   visibility.
@@ -34,19 +33,16 @@ public documentation is consolidated into one local-first knowledge system
 
 ## Unresolved questions
 
-- Should the legacy Astro/Starlight docs at `apps/docs/` be cut over to Blume
-  (which now renders `docs/`)? The two currently hold slightly divergent copies
-  of the public product docs. Open: decide the cutover timeline and retire the
-  duplicate.
+- The archived Astro/Starlight tree at `apps/docs/` must remain out of production;
+  all public documentation changes belong in `docs/` and render through Blume.
 - When should Droid graduate from "experimental" to "daily-driver for a defined
   workflow class"? See [`docs/architecture/droid-roadmap.md`](docs/architecture/droid-roadmap.md).
 
 ## Next steps
 
-1. Finish and review the documentation consolidation (validation script, CI
-   check, Blume build verification).
-2. Decide the Astro → Blume docs cutover plan.
-3. Resume the Cloudflare Email Workers migration when the token-permission
+1. Keep the canonical `docs/` tree and Blume build synchronized as part of each
+   docs release.
+2. Resume the Cloudflare Email Workers migration when the token-permission
    blocker is cleared.
 4. Execute the EOY domain-rating (DR ≥ 20) plan in
    [`docs/operations/launch-kit.md`](docs/operations/launch-kit.md).

@@ -73,7 +73,7 @@ const TARGETS = {
   'saas-maker': [
     { label: 'cockpit', url: 'https://app.sassmaker.com/login' },
     { label: 'home', url: 'https://sassmaker.com' },
-    { label: 'docs', url: 'https://docs.sassmaker.com' },
+    { label: 'docs', url: 'https://sassmaker.com/docs' },
   ],
   significanthobbies: [
     {

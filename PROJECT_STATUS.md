@@ -41,7 +41,7 @@ SaaS Maker is the foundry helper for the fleet: a Cloudflare-first monorepo with
 | API | `workers/api` | `saasmaker-api` | `api.sassmaker.com` |
 | Cockpit | `apps/cockpit` | `saasmaker-dashboard` | `app.sassmaker.com` |
 | Droid | `workers/droid` | `saasmaker-droid` | `*.workers.dev` |
-| Docs | `apps/docs` | `saas-maker-docs` (Pages) | `docs.sassmaker.com` |
+| Docs | `docs/` + `apps/docs-blume` | `saas-maker-home` (Pages) | `sassmaker.com/docs` |
 | Showcase | `apps/showcase` | `saas-maker-home` (Pages) | `sassmaker.com` |
 | CLI | `packages/cli` | — | `fnd` command |
 | Blocks | `packages/blocks` | — | SDK (`@saas-maker/sdk`); internal contracts in `internal/contracts/` |
@@ -96,7 +96,7 @@ Brand note: production domain uses **double-s** `sassmaker.com`; display name re
 | API | `https://api.sassmaker.com` |
 | Cockpit | `https://app.sassmaker.com` |
 | Marketing home | `https://sassmaker.com` |
-| Docs | `https://docs.sassmaker.com` |
+| Docs | `https://sassmaker.com/docs` |
 | Droid | `https://saasmaker-droid.sarthakagrawal927.workers.dev` |
 | Health | `GET https://api.sassmaker.com/health` |
 
@@ -104,7 +104,7 @@ Brand note: production domain uses **double-s** `sassmaker.com`; display name re
 
 ### Architecture
 
-- Operator (browser + `fnd` CLI) → Cockpit (`app.sassmaker.com`), API (`api.sassmaker.com`), showcase/docs (`sassmaker.com`, `docs.sassmaker.com`).
+- Operator (browser + `fnd` CLI) → Cockpit (`app.sassmaker.com`), API (`api.sassmaker.com`), showcase/docs (`sassmaker.com`, `sassmaker.com/docs`).
 - Cockpit uses better-auth session; API accepts `X-Project-Key` / Bearer `sm_*` plus session validation against D1.
 - Shared D1 `saasmaker-db` (Drizzle ORM): tasks, projects, marketing, events, workflows.
 - Droid (`saasmaker-droid`): Containers + Durable Objects experimental sandbox runner.
@@ -139,7 +139,7 @@ Brand note: production domain uses **double-s** `sassmaker.com`; display name re
 
 ### Docs & showcase
 
-- Astro/Starlight docs at `docs.sassmaker.com` with OpenAPI mirror.
+- Blume docs at `sassmaker.com/docs`, generated from the canonical root `docs/` tree.
 - Static showcase at `sassmaker.com` — full project list from `foundry.projects.json`, with the canonical four-product spotlight and SaaS Maker front door.
 - Registry includes `knowledgebase`, `pace`, `researchPapers`, `sarthakagrawal`.
 

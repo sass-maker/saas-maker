@@ -253,4 +253,4 @@ Older `foundry.json` files that store only `projectId` as a `pk_...` key are sti
 pnpm generate:openapi
 ```
 
-This refreshes `packages/cli/src/openapi.json`, `apps/docs/public/openapi.json`, and `docs/openapi/openapi.json`. To send a request that isn't in the spec yet, pass `--no-validate`.
+This refreshes `packages/cli/src/openapi.json` and `docs/openapi/openapi.json`. To send a request that isn't in the spec yet, pass `--no-validate`.

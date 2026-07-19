@@ -20,7 +20,7 @@
     },
     {
       "id": "docs",
-      "url": "https://docs.sassmaker.com",
+      "url": "https://sassmaker.com/docs",
       "md": null,
       "kind": "static",
       "description": "Foundry manual"
@@ -73,13 +73,6 @@
       "md": null,
       "kind": "static",
       "description": "Evidence-graded reference for remedies organized by body part — body → condition → remedy → compound → study, with citations."
-    },
-    {
-      "id": "saas-maker-docs",
-      "url": "https://docs.sassmaker.com",
-      "md": null,
-      "kind": "static",
-      "description": "Drop-in backend services for SaaS apps. API docs for Foundry (feedback, waitlist, testimonials, and more)."
     },
     {
       "id": "starboard",

@@ -7,12 +7,10 @@ and durable learnings. Code and executable configuration remain authoritative
 for implementation details and schedules.
 
 [Blume](https://github.com/sass-maker/saas-maker/tree/main/apps/docs-blume) (`apps/docs-blume/`)
-is the presentation and search layer that renders this tree (served under
-`sassmaker.com/docs`). It does not own content. The legacy Astro/Starlight site
-at `apps/docs/` currently serves `docs.sassmaker.com` from its own copy of the
-public product docs; it is retired once the Blume cutover completes (pending —
-see [`STATUS.md`](https://github.com/sass-maker/saas-maker/blob/main/STATUS.md)).
-When the two diverge, the `docs/` tree here wins.
+is the only production presentation and search layer that renders this tree,
+served under `sassmaker.com/docs`. It does not own content. The legacy
+Astro/Starlight site at `apps/docs/` is archived and must not be deployed. When
+copies diverge, the `docs/` tree here wins.
 
 ## Layout
 
@@ -59,9 +57,9 @@ below point to GitHub:
 
 1. **One home per fact.** Do not duplicate a concept in two files. Link from
    secondary surfaces to the canonical home.
-2. **Markdown is the source of truth.** Blume and the Astro site are
-   presentation layers; never edit content inside `apps/docs-blume/dist/` or
-   `apps/docs/dist/`.
+2. **Markdown is the source of truth.** Blume is the production presentation
+   layer; never edit content inside `apps/docs-blume/dist/` or the archived
+   `apps/docs/` tree.
 3. **Let Blume own the page title.** Give each page a `title` in frontmatter
    and start the body at `##`; a leading `#` repeats the title in the rendered
    page.
@@ -73,7 +71,7 @@ below point to GitHub:
    stays intact. Removed/shelved approaches live under
    `knowledge/failed-approaches/`.
 7. **When API routes change**, run `pnpm generate:openapi` (updates
-   `docs/openapi/`, `packages/cli/src/openapi.json`, `apps/docs/public/openapi.json`)
+   `docs/openapi/` and `packages/cli/src/openapi.json`)
    and update the relevant `services/` or `sdk/` page.
 8. **Validate before pushing**: `node scripts/check-docs.mjs` checks broken
    links, empty docs, and required files. It runs in CI.

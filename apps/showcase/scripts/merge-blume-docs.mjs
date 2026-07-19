@@ -3,7 +3,7 @@
 //
 // The apex site is served by this app (CF Pages project "saas-maker-home").
 // The documentation lives in ../docs-blume (Blume, base: '/docs', site:
-// sassmaker.com). Rather than run a separate docs.sassmaker.com deploy, we
+// sassmaker.com). Rather than run a separate docs Pages deployment, we
 // fold the Blume output into this app's `dist/docs/` so `sassmaker.com/docs`
 // is served from the same Pages project.
 //

@@ -48,12 +48,6 @@
       "summary": "Sarthak Agrawal's personal product fleet showcase — RolePatch, High Signal, CodeVetter, Pace, PostTrainLLM, Karte, Signi"
     },
     {
-      "id": "saas-maker-docs",
-      "name": "SaaS Maker Docs",
-      "url": "https://docs.sassmaker.com",
-      "summary": "Drop-in backend services for SaaS apps. API docs for Foundry (feedback, waitlist, testimonials, and more)."
-    },
-    {
       "id": "starboard",
       "name": "Starboard",
       "url": "https://starboard.codevetter.com",

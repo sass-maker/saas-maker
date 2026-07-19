@@ -147,7 +147,7 @@ const PROD_TARGETS = {
     { label: 'cockpit', url: 'https://app.sassmaker.com', ok: [200] },
     { label: 'api-root', url: 'https://api.sassmaker.com', ok: [404] },
     { label: 'home', url: 'https://sassmaker.com', ok: [200] },
-    { label: 'docs', url: 'https://docs.sassmaker.com', ok: [200] },
+    { label: 'docs', url: 'https://sassmaker.com/docs', ok: [200] },
   ],
   significanthobbies: [{ label: 'web', url: 'https://significanthobbies.com', ok: [200] }],
   starboard: [{ label: 'web', url: 'https://starboard.codevetter.com', ok: [200] }],
@@ -178,7 +178,7 @@ const FRONTEND_TARGETS = {
   'saas-maker': [
     { label: 'cockpit', url: 'https://app.sassmaker.com' },
     { label: 'home', url: 'https://sassmaker.com' },
-    { label: 'docs', url: 'https://docs.sassmaker.com' },
+    { label: 'docs', url: 'https://sassmaker.com/docs' },
   ],
   significanthobbies: [{ label: 'web', url: 'https://significanthobbies.com' }],
   starboard: [{ label: 'web', url: 'https://starboard.codevetter.com' }],
