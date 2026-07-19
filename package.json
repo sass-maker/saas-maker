@@ -28,6 +28,7 @@
     "fleet:prod-smoke": "node scripts/fleet-production-smoke.mjs",
     "fleet:secret-audit": "node scripts/fleet-secret-audit.mjs",
     "fleet:monitoring-audit": "node scripts/fleet-monitoring-audit.mjs",
+    "fleet:ai-infra-audit": "node scripts/fleet-ai-infra-audit.mjs",
     "fleet:posthog-verify": "node scripts/fleet-posthog-verify.mjs",
     "fleet:clone": "node scripts/fleet-clone.mjs",
     "fleet:cf-builds": "node scripts/fleet-audit.mjs --skip-local --skip-github --skip-dirty --skip-smoke --fail-on-failure",
