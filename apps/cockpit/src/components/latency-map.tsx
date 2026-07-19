@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Card, CardHeader, CardTitle, CardContent, Badge } from '@saas-maker/ui';
+import { Card, CardHeader, CardTitle, CardContent, Badge } from '@foundry/ui';
 import { Activity, Terminal, RefreshCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 

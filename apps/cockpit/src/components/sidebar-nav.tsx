@@ -1,9 +1,11 @@
 'use client';
 
 import {
+  BarChart3,
   Bot,
   ChevronDown,
-  LayoutDashboard,
+  Eye,
+  FolderKanban,
   LayoutList,
   ListTodo,
   Map,
@@ -12,8 +14,10 @@ import {
   ScrollText,
   Settings,
   ShieldCheck,
+  SlidersHorizontal,
   Star,
   Users,
+  Wrench,
   Zap,
 } from 'lucide-react';
 import Link from 'next/link';
@@ -45,6 +49,46 @@ const projectNavItems = [
   { label: 'AI Gateway', href: '/ai', icon: Zap },
   { label: 'Settings', href: '/settings', icon: Settings },
 ];
+
+const pillarNav = [
+  {
+    label: 'Build',
+    icon: Wrench,
+    items: [
+      { label: 'Projects', href: '/projects', icon: FolderKanban },
+      { label: 'Tasks', href: '/tasks', icon: ListTodo },
+    ],
+  },
+  {
+    label: 'Market',
+    icon: Megaphone,
+    items: [
+      { label: 'Distribution', href: '/marketing', icon: Megaphone },
+      { label: 'Public changes', href: '/fleet/changelog', icon: ScrollText },
+    ],
+  },
+  {
+    label: 'Learn',
+    icon: BarChart3,
+    items: [{ label: 'Feedback', href: '/projects/feedback', icon: MessageSquare }],
+  },
+  {
+    label: 'Visibility',
+    icon: Eye,
+    items: [
+      { label: 'Fleet health', href: '/fleet', icon: LayoutList },
+      { label: 'Observability', href: '/fleet/observability', icon: BarChart3 },
+    ],
+  },
+  {
+    label: 'Control',
+    icon: SlidersHorizontal,
+    items: [
+      { label: 'Activity & jobs', href: '/jobs', icon: Bot },
+      { label: 'Standards', href: '/standards', icon: ShieldCheck },
+    ],
+  },
+] as const;
 
 export function SidebarNav() {
   const pathname = usePathname();
@@ -79,100 +123,37 @@ export function SidebarNav() {
 
   return (
     <nav className="flex flex-col gap-1">
-      <Link
-        href="/projects"
-        className={cn(
-          'flex min-h-11 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors',
-          pathname === '/projects'
-            ? 'bg-muted text-foreground'
-            : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
-        )}
-      >
-        <LayoutDashboard className="h-4 w-4" />
-        Dashboard
-      </Link>
+      {pillarNav.map((pillar, pillarIndex) => (
+        <section key={pillar.label} className={cn(pillarIndex > 0 && 'mt-3')}>
+          <div className="flex items-center gap-2 px-2 pb-1 text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground/60">
+            <pillar.icon className="h-3.5 w-3.5" aria-hidden="true" />
+            {pillar.label}
+          </div>
+          <div className="flex flex-col gap-0.5">
+            {pillar.items.map((item) => {
+              const active =
+                pathname === item.href ||
+                (item.href !== '/projects' && pathname.startsWith(`${item.href}/`));
 
-      <Link
-        href="/fleet"
-        className={cn(
-          'flex min-h-11 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors',
-          pathname === '/fleet'
-            ? 'bg-muted text-foreground'
-            : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
-        )}
-      >
-        <LayoutList className="h-4 w-4" />
-        Fleet
-      </Link>
-
-      <Link
-        href="/standards"
-        className={cn(
-          'flex min-h-11 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors',
-          pathname === '/standards'
-            ? 'bg-muted text-foreground'
-            : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
-        )}
-      >
-        <ShieldCheck className="h-4 w-4" />
-        Standards
-      </Link>
-
-      <Link
-        href="/tasks"
-        className={cn(
-          'flex min-h-11 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors',
-          pathname === '/tasks'
-            ? 'bg-muted text-foreground'
-            : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
-        )}
-      >
-        <ListTodo className="h-4 w-4" />
-        Tasks
-      </Link>
-
-      <Link
-        href="/fleet/changelog"
-        className={cn(
-          'flex min-h-11 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors',
-          pathname.startsWith('/fleet/changelog')
-            ? 'bg-muted text-foreground'
-            : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
-        )}
-      >
-        <ScrollText className="h-4 w-4" />
-        Daily Log
-      </Link>
-
-      <Link
-        href="/marketing"
-        className={cn(
-          'flex min-h-11 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors',
-          pathname.startsWith('/marketing')
-            ? 'bg-muted text-foreground'
-            : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
-        )}
-      >
-        <Megaphone className="h-4 w-4" />
-        Marketing
-      </Link>
-
-      <div className="mt-4 px-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50">
-        Control Plane
-      </div>
-
-      <Link
-        href="/jobs"
-        className={cn(
-          'flex min-h-11 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors',
-          pathname === '/jobs'
-            ? 'bg-muted text-foreground'
-            : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
-        )}
-      >
-        <Bot className="h-4 w-4" />
-        Activity
-      </Link>
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn(
+                    'flex min-h-10 items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-colors',
+                    active
+                      ? 'bg-muted text-foreground'
+                      : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
+                  )}
+                >
+                  <item.icon className="h-4 w-4" aria-hidden="true" />
+                  {item.label}
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+      ))}
 
       {slug && currentProject && (
         <ul className="mt-3 flex flex-col gap-1">

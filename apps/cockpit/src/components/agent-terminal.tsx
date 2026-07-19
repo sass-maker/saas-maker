@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Card, CardHeader, CardTitle, CardContent, Button } from '@saas-maker/ui';
+import { Card, CardHeader, CardTitle, CardContent, Button } from '@foundry/ui';
 import { Terminal, X, Loader2, ShieldCheck } from 'lucide-react';
 
 interface AgentTerminalProps {
