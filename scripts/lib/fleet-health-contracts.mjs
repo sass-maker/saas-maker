@@ -97,6 +97,56 @@ export const FLEET_HEALTH_CONTRACTS = {
     githubWorkflow: 'cloudflare-deploy.yml',
     smokeCommand:
       'pnpm --dir ../free-ai test && curl --fail https://ai-gateway.sassmaker.com/health',
+    // ai-infrastructure-toolbox-automation contract. See
+    // ../free-ai/docs/operations/automation-inventory.md for the canonical
+    // inventory. These fields drive the Foundry coverage audit
+    // (fleet:ai-infra-audit) and MUST stay in sync with that page.
+    automation: {
+      capability: 'ai-infrastructure-toolbox-automation',
+      authority: 'maintenance-only',
+      inventoryDoc: '../free-ai/docs/operations/automation-inventory.md',
+      // No provider tokens spent on any of these routes. /v1/chat/completions
+      // is intentionally omitted — it would spend tokens.
+      authSafeProbes: [
+        { label: 'health', method: 'GET', path: '/health', okStatuses: [200] },
+        { label: 'models', method: 'GET', path: '/v1/models', okStatuses: [200] },
+        { label: 'routing-status', method: 'GET', path: '/v1/routing/status', okStatuses: [200] },
+        { label: 'routing-config', method: 'GET', path: '/v1/routing/config', okStatuses: [200] },
+        { label: 'provider-quotas', method: 'GET', path: '/v1/provider-quotas', okStatuses: [200] },
+        { label: 'budget', method: 'GET', path: '/v1/budget', okStatuses: [200] },
+        { label: 'stats-providers', method: 'GET', path: '/v1/stats/providers', okStatuses: [200] },
+        { label: 'analytics', method: 'GET', path: '/v1/analytics', okStatuses: [200] },
+        { label: 'routing-ledger', method: 'GET', path: '/v1/routing/ledger', okStatuses: [200] },
+      ],
+      protectedProbe: { label: 'chat-completions-rejects-missing-key', method: 'POST', path: '/v1/chat/completions', okStatuses: [401, 503] },
+      freshness: { mode: 'rolling', windowSeconds: null, note: 'HealthStateDO rolling per-model window; no scheduled recompute to go stale.' },
+    },
+    providerEvidence: {
+      costCap: { name: 'workers-ai-neurons', dailyLimit: 9500, source: '/v1/budget' },
+      routingPolicy: { source: '/v1/routing/config', maxAttempts: 2 },
+      degradationRoute: '/v1/routing/status',
+      quotaRoute: '/v1/provider-quotas',
+      privacy: { storesPromptText: false, storesRequestIds: false, source: '/v1/routing/ledger' },
+    },
+    jobs: [
+      {
+        name: 'per-request-provider-fallback',
+        trigger: 'inbound request',
+        bounds: 'max_attempts 2',
+        timeoutMs: 180000,
+        retries: 'bounded by routing policy',
+        idempotency: 'request-scoped (no durable job)',
+        failureState: 'x-degraded-mode header + routing ledger',
+        owner: 'gateway runtime',
+      },
+    ],
+    storage: [
+      { binding: 'GATEWAY_DB', kind: 'D1', owner: 'free-ai', source: 'migrations 0001-0006', reconstruction: 'Cloudflare D1 export; analytics/ledger rebuild from live traffic', migrationGuard: 'pnpm typecheck + pnpm test' },
+      { binding: 'HEALTH_KV', kind: 'KV', owner: 'free-ai', source: 'HealthStateDO writes', reconstruction: 'ephemeral cache; rebuilds from D1 + live provider probes', migrationGuard: 'n/a (cache)' },
+      { binding: 'HEALTH_DO', kind: 'Durable Object', owner: 'free-ai', source: 'per-model state machine', reconstruction: 'rebuilds from live traffic', migrationGuard: 'DO migration tags v1, v2' },
+      { binding: 'RATE_LIMIT_DO', kind: 'Durable Object', owner: 'free-ai', source: 'per-IP token bucket', reconstruction: 'ephemeral; rebuilds from live traffic', migrationGuard: 'DO migration tag v1' },
+      { binding: 'NEURON_BUDGET', kind: 'Durable Object', owner: 'free-ai', source: 'daily Neuron counter', reconstruction: 'resets daily; no backfill needed', migrationGuard: 'DO migration tag v2' },
+    ],
   },
   'high-signal': {
     displayName: 'High Signal',
@@ -119,6 +169,74 @@ export const FLEET_HEALTH_CONTRACTS = {
     deployTarget: 'Cloudflare Workers + D1 + Vectorize + R2',
     githubWorkflow: null,
     smokeCommand: 'curl --fail https://knowledgebase.sarthakagrawal927.workers.dev/v1/healthz',
+    // ai-infrastructure-toolbox-automation contract. See
+    // ../knowledge-base/docs/operations/automation-inventory.md for the
+    // canonical inventory. These fields drive the Foundry coverage audit
+    // (fleet:ai-infra-audit) and MUST stay in sync with that page.
+    automation: {
+      capability: 'ai-infrastructure-toolbox-automation',
+      authority: 'maintenance-only',
+      inventoryDoc: '../knowledge-base/docs/operations/automation-inventory.md',
+      // No corpus queries, no embeddings, no synth. /v1/kb/query is
+      // intentionally omitted — it would issue a private corpus query.
+      authSafeProbes: [
+        { label: 'health', method: 'GET', path: '/v1/healthz', okStatuses: [200] },
+        { label: 'healthz-alias', method: 'GET', path: '/healthz', okStatuses: [200] },
+        { label: 'readyz', method: 'GET', path: '/readyz', okStatuses: [200] },
+        { label: 'metrics', method: 'GET', path: '/metrics', okStatuses: [200] },
+      ],
+      protectedProbe: { label: 'indexes-rejects-missing-key', method: 'GET', path: '/v1/indexes', okStatuses: [401] },
+      freshness: { mode: 'on-demand', windowSeconds: null, note: 'Corpora are opt-in; no scheduled freshness window. A domain in "ingesting" with no recent job progress is stale.' },
+    },
+    providerEvidence: {
+      costCap: null,
+      routingPolicy: null,
+      degradationRoute: null,
+      quotaRoute: null,
+      privacy: { storesPromptText: false, storesRequestIds: false, source: 'classifyIngestFailure + job/trace/eval routes' },
+      note: 'KB has no direct provider spend; embedding/synth delegated to free-ai and reported there.',
+    },
+    jobs: [
+      {
+        name: 'ingest-queue-consumer',
+        trigger: 'POST /v1/kb/ingest/run (default async)',
+        bounds: 'max_batch_size 5, max_batch_timeout 10',
+        timeoutMs: 45000,
+        retries: 'queue max_retries 3; poison-input ack after 5 attempts; per-file retry exponential backoff capped at 300s',
+        idempotency: 'deterministic chunk IDs; D1 INSERT OR REPLACE; Vectorize upsert by vector ID; parse artifact keyed by content hash; idempotency_key + idempotent_replay',
+        failureState: "job status='failed' + last_error + attempts in D1; failure_classification on job detail route",
+        owner: 'cloudflare/worker/src/index.ts processIngestQueue',
+      },
+      {
+        name: 'ingest-workflow',
+        trigger: 'same trigger, Workflow-backed',
+        bounds: '1 enqueue step',
+        timeoutMs: 60000,
+        retries: 'Workflow step retries',
+        idempotency: 'durable run id in kb_ingest_jobs.workflow_id',
+        failureState: 'workflow instance status',
+        owner: 'KbIngestWorkflow',
+      },
+      {
+        name: 'overlap-control-lease',
+        trigger: 'per-file lease',
+        bounds: 'INGEST_JOB_LEASE_MS 5m',
+        timeoutMs: null,
+        retries: 'n/a',
+        idempotency: 'isIngestJobLeaseActive skips files with status=running + locked_by != current + locked_at within 5m',
+        failureState: "skipped → reason: 'lease_active'",
+        owner: 'runKbIngest',
+      },
+    ],
+    storage: [
+      { binding: 'DB', kind: 'D1', owner: 'knowledge-base', source: 'migrations 0001-0007', reconstruction: 'Cloudflare D1 export; metadata reconstructable from R2 raw docs + re-ingest', migrationGuard: 'pnpm check + audit:d1-migrations; wrangler d1 migrations apply is manual' },
+      { binding: 'RAW_DOCS', kind: 'R2', owner: 'knowledge-base', source: 'uploaded source files', reconstruction: 'R2 is the authoritative source for raw documents; re-ingest from R2 rebuilds D1 + Vectorize', migrationGuard: 'n/a (source of truth)' },
+      { binding: 'VECTORIZE', kind: 'Vectorize', owner: 'knowledge-base', source: 'derived from R2 + D1', reconstruction: 'reconstructable: re-ingest from R2 via /v1/kb/files/:file_id/reprocess or /v1/kb/schemas/:domain/reprocess', migrationGuard: 'audit:vectorize-embedding-bindings + audit:vectorize-metadata-indexes' },
+      { binding: 'VECTORIZE_384/768/1024', kind: 'Vectorize', owner: 'knowledge-base', source: 'derived from R2 + D1', reconstruction: 'same reconstruction path', migrationGuard: 'same audit gates' },
+      { binding: 'AI', kind: 'Workers AI', owner: 'knowledge-base', source: 'Cloudflare', reconstruction: 'n/a (managed service)', migrationGuard: 'n/a' },
+      { binding: 'FREE_AI', kind: 'Service binding', owner: 'knowledge-base (consumer)', source: 'free-ai repo', reconstruction: 'n/a (delegated to free-ai)', migrationGuard: 'audit:free-ai-embedding-contract' },
+      { binding: 'RAG_ANALYTICS', kind: 'Analytics Engine', owner: 'knowledge-base', source: 'per-query events', reconstruction: 'ephemeral; not a source of truth', migrationGuard: 'n/a' },
+    ],
   },
   karte: {
     displayName: 'Karte',
