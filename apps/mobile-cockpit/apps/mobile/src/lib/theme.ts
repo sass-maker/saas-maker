@@ -1,0 +1,18 @@
+export const colors = {
+  canvas: "#050A14",
+  panel: "#0B1424",
+  panelRaised: "#111E31",
+  panelSoft: "#0D192A",
+  border: "#20324A",
+  borderBright: "#31506A",
+  text: "#F7FAFE",
+  muted: "#91A3B9",
+  accent: "#7CF8D6",
+  accentDark: "#123C38",
+  accentSoft: "#193F3A",
+  violet: "#93A6FF",
+  warning: "#FFD27A",
+  danger: "#FF8793",
+  success: "#79E7A1",
+  code: "#020711",
+};
