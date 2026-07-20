@@ -1,9 +1,6 @@
 [submodule "services/reel-pipeline/engines/MoneyPrinterTurbo"]
 	path = services/reel-pipeline/engines/MoneyPrinterTurbo
 	url = https://github.com/harry0703/MoneyPrinterTurbo.git
-[submodule "services/reel-pipeline/engines/openshorts"]
-	path = services/reel-pipeline/engines/openshorts
-	url = https://github.com/mutonby/openshorts.git
 [submodule "services/reel-pipeline/engines/reel-maker"]
 	path = services/reel-pipeline/engines/reel-maker
 	url = https://github.com/sarthakagrawal927/reel-maker.git

@@ -16,8 +16,7 @@ Engine facts live here; the adapter code lives under `src/adapters/` and
   request → status → artifact metadata.
 - `MoneyPrinterTurbo`: default cheap renderer for stock-footage + voice +
   subtitles.
-- `OpenShorts`: UGC actor workflow reference and optional premium adapter
-  (adapter removed; submodule parked — see
+- `OpenShorts`: rejected UGC actor workflow; adapter and submodule removed (see
   [`decisions/0002-openshorts-removed-parked.md`](./decisions/0002-openshorts-removed-parked.md)).
 - `reel-maker`: legacy Remotion/Modal engine; reuse pieces after the pipeline
   contract is stable.
@@ -34,16 +33,15 @@ git submodule status
 | Engine | Path | Commit | Ref | Role |
 | --- | --- | --- | --- | --- |
 | MoneyPrinterTurbo | `engines/MoneyPrinterTurbo` | `bf229e20012e38f3bf161679fa98894b1e6f6d63` | `v1.2.8` | default cheap stock-footage renderer |
-| openshorts | `engines/openshorts` | `fe87af6dd599b854e6eab2de0ca247ebafe13885` | `heads/main` | UGC actor + publishing workflow reference (adapter removed) |
 | reel-maker | `engines/reel-maker` | `cedeeea002566bb81b2dff7b67ef852957fadbaf` | `heads/main` | internal Remotion + Modal prototype engine |
 
 The pin manifest above is generated from `git submodule status`. Update it
 intentionally, always alongside a passing render canary, and record the new
 commit + artifact URL in the change description.
 
-> Gotcha: `openshorts` and `reel-maker` float on `heads/main`, while
-> MoneyPrinterTurbo is pinned to a tag. A bare `git submodule update --remote`
-> silently advances the two floating engines without a canary — never run that
+> Gotcha: `reel-maker` floats on `heads/main`, while MoneyPrinterTurbo is
+> pinned to a tag. A bare `git submodule update --remote` silently advances the
+> floating engine without a canary — never run that
 > on `main`. Use the upgrade flow in
 > [`development/submodules.md`](../development/submodules.md).
 
@@ -123,16 +121,14 @@ commit + artifact URL in the change description.
   `reel/src/engine/reel_maker.rs`); the `remotion` mode. Lower priority than
   `render-pro.js`, which is the canonical production renderer.
 
-## OpenShorts (parked)
+## OpenShorts (removed)
 
 - Upstream: `https://github.com/mutonby/openshorts` (MIT).
-- Local path: `engines/openshorts`.
 - Role: UGC actor and publishing workflow reference.
 - Why not default: it assumes more paid/hosted services such as Gemini,
   fal.ai, ElevenLabs, Upload-Post, and optional S3.
-- Current status: adapter removed from the active pipeline; the submodule is
-  parked as a reference only. Removal of the submodule itself is a deferred
-  cleanup item requiring explicit approval. See
+- Current status: adapter and local submodule removed; the upstream link is
+  retained only as historical context. See
   [`knowledge/failed-approaches/openshorts-adapter.md`](../knowledge/failed-approaches/openshorts-adapter.md)
   and [`decisions/0002-openshorts-removed-parked.md`](./decisions/0002-openshorts-removed-parked.md).
 

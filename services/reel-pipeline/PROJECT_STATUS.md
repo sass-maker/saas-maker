@@ -378,13 +378,11 @@ for intentional target-host exclusions.
 
 ### Deferred
 
-- Remove `engines/openshorts` git submodule (explicit approval).
 - Cloudflare Worker rewrite of orchestration (stay on JS + Rust CLI).
 - Make reel-maker/Remotion production-quality if it becomes more than the
   product-proof/reference path (`render-pro` stays canonical production renderer).
 - Product-proof Phases 2–3 (screen recording, multi-variant drafts).
 - Phase 2–3 product-proof PRD work not started.
-- OpenShorts submodule still present though adapter removed.
 - Draft bundle output not yet wired into review UI.
 - Kids-story dashboards, agents, auto-uploaders, custom renderers, and
   analytics scripts until the creator MVP has three manually produced videos.

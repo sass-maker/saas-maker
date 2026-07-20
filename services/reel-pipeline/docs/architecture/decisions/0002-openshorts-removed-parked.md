@@ -1,4 +1,4 @@
-# ADR 0002: OpenShorts adapter removed, submodule parked
+# ADR 0002: OpenShorts removed
 
 - **Status:** Accepted
 - **Date:** 2026-07 (Phase 6 consolidation)
@@ -15,23 +15,16 @@ calls before the pipeline contract was stable.
 ## Decision
 
 Remove the OpenShorts adapter from the active renderer factory
-(`openshorts`/`ugc_actor` render modes now throw). Keep the git submodule at
-`engines/openshorts` parked as a read-only UGC workflow reference. Defer
-deletion of the submodule itself to a dedicated cleanup change requiring
-explicit approval.
+(`openshorts`/`ugc_actor` render modes now throw). The parked git submodule was
+also removed after explicit owner approval on 2026-07-20; upstream history
+remains available at its public repository.
 
 ## Consequences
 
 - The active render-mode matrix no longer includes OpenShorts; UGC actor
   support is a future, separately-gated decision.
-- The submodule still appears in `git submodule status` and consumes disk on
-  fresh clones; this is an explicit, tracked trade-off.
+- Fresh clones no longer download the unused OpenShorts dependency tree.
 - `src/postiz-fixture-adapter.js` and `test/fixtures/postiz-contract.json`
   remain as an inert evaluator proving translation/account-isolation/metrics
   normalization without importing Postiz code — fixture success is not live
   readiness.
-
-## Open follow-up
-
-- Drop `engines/openshorts` git submodule in a dedicated PR after explicit
-  approval. Tracked in `PROJECT_STATUS.md` under Deferred.

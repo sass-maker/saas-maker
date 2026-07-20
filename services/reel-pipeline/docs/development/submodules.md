@@ -10,7 +10,6 @@ git submodule status
 ```
 
 - `engines/MoneyPrinterTurbo` — default cheap stock-footage renderer.
-- `engines/openshorts` — UGC actor and publishing workflow reference.
 - `engines/reel-maker` — internal Remotion/Modal prototype engine.
 
 ## Fresh Clone
