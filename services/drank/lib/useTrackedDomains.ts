@@ -10,7 +10,14 @@ import {
   saveState,
   sortDomains,
 } from './utils';
-import type { HistoryPoint, SortMode, StoredState, Toast, TrackedDomain } from './types';
+import type {
+  HistoryPoint,
+  Prediction,
+  SortMode,
+  StoredState,
+  Toast,
+  TrackedDomain,
+} from './types';
 import globalSitesStatic from '@/data/global-sites.json';
 
 const REFRESH_DELAY_MS = 750; // be polite to the free public endpoint
@@ -53,7 +60,7 @@ interface UseTrackedDomainsReturn {
   customCount: number; // number of user-added sites eligible for auto
 
   // "Predict the top" / submit contenders (local + shareable)
-  predictions: import('./types').Prediction[];
+  predictions: Prediction[];
   addPrediction: (domain: string, note?: string) => void;
   removePrediction: (domain: string) => void;
 }
@@ -89,7 +96,7 @@ export function useTrackedDomains(): UseTrackedDomainsReturn {
   );
 
   // Predictions / "I think this will be at the top" submissions (localStorage only)
-  const [predictions, setPredictions] = useState<import('./types').Prediction[]>(
+  const [predictions, setPredictions] = useState<Prediction[]>(
     () => loadState()?.predictions || []
   );
 

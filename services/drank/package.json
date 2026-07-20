@@ -18,7 +18,9 @@
     "test:coverage": "vitest run --coverage",
     "docs:check": "bash scripts/validate_docs.sh",
     "docs:build": "cd docs-site && pnpm run build",
-    "docs:dev": "cd docs-site && pnpm run dev"
+    "docs:dev": "cd docs-site && pnpm run dev",
+    "knip": "knip --no-exit-code --reporter symbols",
+    "knip:strict": "knip --reporter symbols"
   },
   "dependencies": {
     "framer-motion": "^12.40.0",
@@ -38,6 +40,7 @@
     "@types/react-dom": "^19",
     "@vitest/coverage-v8": "^4.1.9",
     "blume": "1.0.4",
+    "knip": "^6.6.3",
     "size-limit": "^11.2.0",
     "tailwindcss": "^4",
     "typescript": "^5",
