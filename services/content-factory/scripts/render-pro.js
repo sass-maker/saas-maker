@@ -16,62 +16,80 @@
  *    music, demo flow, and dynamic UI motion).
  *
  * Usage:
- *   node scripts/render-pro.js [reelId ...]
+ *   node ../content-factory/scripts/render-pro.js [reelId ...]
  */
 import { execFile } from 'node:child_process';
 import { access, copyFile, mkdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { promisify } from 'node:util';
 
-import { selectGrokVideoAsset } from '../src/adapters/grok-video.js';
-import { reelWorkerHeaders } from '../src/reel-worker-auth.js';
-import { captureScrollTour, recordScreencast, recordScrollScreencast } from './cdp-capture.js';
+import { selectGrokVideoAsset } from '../../reel-pipeline/src/adapters/grok-video.js';
+import {
+  captureScrollTour,
+  recordScreencast,
+  recordScrollScreencast,
+} from '../../reel-pipeline/scripts/cdp-capture.js';
+import { emitArtifactManifest, hashCanonicalJson } from '../src/manifest.js';
 
 const execFileAsync = promisify(execFile);
 
-const BASE = process.env.REEL_WORKER_URL ?? 'https://reel-pipeline-artifacts.sarthakagrawal927.workers.dev';
-const WORKER_HEADERS = reelWorkerHeaders();
+const BASE =
+  process.env.REEL_WORKER_URL ?? 'https://reel-pipeline-artifacts.sarthakagrawal927.workers.dev';
+const WORKER_HEADERS = contentFactoryWorkerHeaders();
 const BUCKET = process.env.REEL_ARTIFACT_R2_BUCKET ?? 'reel-artifacts';
 const WORK_ROOT = path.resolve(process.env.REEL_RENDER_WORK ?? './tmp/render-pro');
-const CHROME = process.env.REEL_RENDER_CHROME ?? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+const CHROME =
+  process.env.REEL_RENDER_CHROME ?? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const VOICE = process.env.REEL_VOICE ?? 'en-US-AvaNeural';
 const VOICE_FALLBACK = process.env.REEL_VOICE_FALLBACK ?? 'en-US-JennyNeural';
+
+function contentFactoryWorkerHeaders() {
+  const token = process.env.REEL_INTERNAL_TOKEN;
+  if (!token) throw new Error('REEL_INTERNAL_TOKEN is required for the Foundry render handoff');
+  return { authorization: `Bearer ${token}` };
+}
 
 // Multi-voice rotation. Different Edge TTS voices per scene mood reduce
 // single-AI-voice fatigue. Map by scene `kind`. Defaults fall back to VOICE.
 const VOICE_BY_KIND = {
-  hook_punch:    'en-US-BrianNeural',   // shouted single word
-  card_pain:     'en-US-BrianNeural',   // male, sincere — grabs attention
-  card_intro:    'en-US-AndrewNeural',  // male, warm, confident — product credibility
-  screenshot:    'en-US-AvaNeural',     // expressive female explainer (default)
-  card_outcome:  'en-US-EmmaNeural',    // female, clear, friendly — payoff line
-  card_cta:      'en-US-GuyNeural',     // male, passion — energetic close
-  brand_close:   'en-US-GuyNeural',     // matches CTA energy
+  hook_punch: 'en-US-BrianNeural', // shouted single word
+  card_pain: 'en-US-BrianNeural', // male, sincere — grabs attention
+  card_intro: 'en-US-AndrewNeural', // male, warm, confident — product credibility
+  screenshot: 'en-US-AvaNeural', // expressive female explainer (default)
+  card_outcome: 'en-US-EmmaNeural', // female, clear, friendly — payoff line
+  card_cta: 'en-US-GuyNeural', // male, passion — energetic close
+  brand_close: 'en-US-GuyNeural', // matches CTA energy
 };
 
 // Single-word hook frame per project — flashes for ~1.2s before the explainer
 // proper begins. Pure attention-grab.
 const PROJECT_HOOK_WORDS = {
-  linkchat:      { word: 'STOP.',       sub: 'Answering the same DM.' },
-  reader:        { word: 'FORGOTTEN.',  sub: 'Everything you saved.' },
-  starboard:     { word: 'LOST.',       sub: 'That repo you starred.' },
-  'high-signal': { word: 'NOISE.',      sub: 'Your last five tweets.' },
-  codevetter:    { word: 'SLOW.',       sub: 'Every code review.' },
-  default:       { word: 'WAIT.',       sub: 'This is worth 30 seconds.' },
+  linkchat: { word: 'STOP.', sub: 'Answering the same DM.' },
+  reader: { word: 'FORGOTTEN.', sub: 'Everything you saved.' },
+  starboard: { word: 'LOST.', sub: 'That repo you starred.' },
+  'high-signal': { word: 'NOISE.', sub: 'Your last five tweets.' },
+  codevetter: { word: 'SLOW.', sub: 'Every code review.' },
+  default: { word: 'WAIT.', sub: 'This is worth 30 seconds.' },
 };
 
 // Outro brand-close per project — shown for ~1.8s at the end. Project name +
 // short URL hint.
 const PROJECT_BRAND_CLOSE = {
-  linkchat:      { primary: 'linkchat',    secondary: 'Build your profile in 60 seconds.' },
-  reader:        { primary: 'reader',      secondary: 'Make saved into learned.' },
-  starboard:     { primary: 'starboard',   secondary: 'Your stars, searchable.' },
+  linkchat: { primary: 'linkchat', secondary: 'Build your profile in 60 seconds.' },
+  reader: { primary: 'reader', secondary: 'Make saved into learned.' },
+  starboard: { primary: 'starboard', secondary: 'Your stars, searchable.' },
   'high-signal': { primary: 'high-signal', secondary: 'Score before you post.' },
-  codevetter:    { primary: 'codevetter',  secondary: 'Auto-review the PR.' },
-  default:       { primary: 'the product', secondary: 'Try it now.' },
+  codevetter: { primary: 'codevetter', secondary: 'Auto-review the PR.' },
+  default: { primary: 'the product', secondary: 'Try it now.' },
 };
 
-const DEFAULT_REELS = ['demo-linkchat-1', 'demo-reader-1', 'demo-starboard-1', 'demo-signalwire-1', 'demo-codevetter-1'];
+const DEFAULT_REELS = [
+  'demo-linkchat-1',
+  'demo-reader-1',
+  'demo-starboard-1',
+  'demo-signalwire-1',
+  'demo-codevetter-1',
+];
 
 const PROJECT_URLS_CONFIG_PATH = path.resolve('./config/project-urls.json');
 const PROJECT_URLS = await loadProjectUrls(PROJECT_URLS_CONFIG_PATH);
@@ -83,7 +101,8 @@ async function loadProjectUrls(configPath) {
     const out = {};
     for (const [slug, entry] of Object.entries(data)) {
       if (slug.startsWith('$')) continue;
-      const productUrl = typeof entry === 'string' ? entry : (entry?.productUrl || entry?.fallbackUrl);
+      const productUrl =
+        typeof entry === 'string' ? entry : entry?.productUrl || entry?.fallbackUrl;
       if (productUrl) out[slug] = productUrl;
     }
     return out;
@@ -94,12 +113,12 @@ async function loadProjectUrls(configPath) {
 }
 
 const PROJECT_PALETTES = {
-  linkchat:      { accent: '#22d3ee', bg: '#082f49', text: '#ecfeff' },
-  reader:        { accent: '#a78bfa', bg: '#1e1b4b', text: '#ede9fe' },
-  starboard:     { accent: '#fbbf24', bg: '#1c1917', text: '#fef3c7' },
+  linkchat: { accent: '#22d3ee', bg: '#082f49', text: '#ecfeff' },
+  reader: { accent: '#a78bfa', bg: '#1e1b4b', text: '#ede9fe' },
+  starboard: { accent: '#fbbf24', bg: '#1c1917', text: '#fef3c7' },
   'high-signal': { accent: '#f87171', bg: '#270a0a', text: '#fee2e2' },
-  codevetter:    { accent: '#34d399', bg: '#052e16', text: '#dcfce7' },
-  default:       { accent: '#7dd3fc', bg: '#0c0c10', text: '#ecfeff' },
+  codevetter: { accent: '#34d399', bg: '#052e16', text: '#dcfce7' },
+  default: { accent: '#7dd3fc', bg: '#0c0c10', text: '#ecfeff' },
 };
 
 /**
@@ -113,44 +132,217 @@ const PROJECT_PALETTES = {
  */
 const PROJECT_SCRIPTS = {
   linkchat: [
-    { kind: 'card_pain',   label: 'Problem',  caption: 'The same DM. Twenty times a day.',           voice: "You're answering the same direct message twenty times a day. Same question. Same energy." },
-    { kind: 'card_intro',  label: 'Why',      caption: 'Your link-in-bio gets repeat asks.',           voice: 'Your link in bio gets the same questions over and over. Visitors leave before you can reply.' },
-    { kind: 'screenshot',  label: 'Linkchat', caption: 'An AI chat profile, right on your link.',       voice: 'Linkchat puts an A I chat profile right under your link in bio. Visitors can ask anything.', zoomFocus: 'top' },
-    { kind: 'screenshot',  label: 'How',      caption: 'Answers from your docs and posts.',             voice: 'It answers from your own docs, posts, and saved replies. Always your voice. Always on.', zoomFocus: 'middle' },
-    { kind: 'card_outcome',label: 'Outcome',  caption: 'DMs drop. Your bio becomes a conversation.',    voice: 'Your inbox quiets down. Your link in bio becomes an actual conversation, not a wall.' },
-    { kind: 'card_cta',    label: 'Try it',   caption: 'Open Linkchat. Build your profile.',            voice: 'Open Linkchat. Build your profile in sixty seconds. Free to start.' },
+    {
+      kind: 'card_pain',
+      label: 'Problem',
+      caption: 'The same DM. Twenty times a day.',
+      voice:
+        "You're answering the same direct message twenty times a day. Same question. Same energy.",
+    },
+    {
+      kind: 'card_intro',
+      label: 'Why',
+      caption: 'Your link-in-bio gets repeat asks.',
+      voice:
+        'Your link in bio gets the same questions over and over. Visitors leave before you can reply.',
+    },
+    {
+      kind: 'screenshot',
+      label: 'Linkchat',
+      caption: 'An AI chat profile, right on your link.',
+      voice:
+        'Linkchat puts an A I chat profile right under your link in bio. Visitors can ask anything.',
+      zoomFocus: 'top',
+    },
+    {
+      kind: 'screenshot',
+      label: 'How',
+      caption: 'Answers from your docs and posts.',
+      voice:
+        'It answers from your own docs, posts, and saved replies. Always your voice. Always on.',
+      zoomFocus: 'middle',
+    },
+    {
+      kind: 'card_outcome',
+      label: 'Outcome',
+      caption: 'DMs drop. Your bio becomes a conversation.',
+      voice: 'Your inbox quiets down. Your link in bio becomes an actual conversation, not a wall.',
+    },
+    {
+      kind: 'card_cta',
+      label: 'Try it',
+      caption: 'Open Linkchat. Build your profile.',
+      voice: 'Open Linkchat. Build your profile in sixty seconds. Free to start.',
+    },
   ],
   reader: [
-    { kind: 'card_pain',   label: 'Problem',  caption: 'Saved. Forgotten.',                              voice: "You save articles. You feel productive. You forget you saved them." },
-    { kind: 'card_intro',  label: 'Why',      caption: 'Your read-it-later became a guilt folder.',     voice: 'Most read it later apps are graveyards. Things go in. Nothing comes back out.' },
-    { kind: 'screenshot',  label: 'Reader',   caption: 'Annotate the web. Keep what matters.',          voice: 'Reader is a web annotator that resurfaces what you saved, with the highlights and notes you actually made.', zoomFocus: 'top' },
-    { kind: 'screenshot',  label: 'How',      caption: 'Highlights, notes, and review sessions.',       voice: 'Every session shows you what is worth re reading, side by side with your notes.', zoomFocus: 'middle' },
-    { kind: 'card_outcome',label: 'Outcome',  caption: 'Saved becomes learned.',                         voice: 'What you save turns into what you remember. Saved becomes learned.' },
-    { kind: 'card_cta',    label: 'Try it',   caption: 'Open Reader. Pick one saved article.',          voice: 'Open Reader. Pick one saved article. Start there.' },
+    {
+      kind: 'card_pain',
+      label: 'Problem',
+      caption: 'Saved. Forgotten.',
+      voice: 'You save articles. You feel productive. You forget you saved them.',
+    },
+    {
+      kind: 'card_intro',
+      label: 'Why',
+      caption: 'Your read-it-later became a guilt folder.',
+      voice: 'Most read it later apps are graveyards. Things go in. Nothing comes back out.',
+    },
+    {
+      kind: 'screenshot',
+      label: 'Reader',
+      caption: 'Annotate the web. Keep what matters.',
+      voice:
+        'Reader is a web annotator that resurfaces what you saved, with the highlights and notes you actually made.',
+      zoomFocus: 'top',
+    },
+    {
+      kind: 'screenshot',
+      label: 'How',
+      caption: 'Highlights, notes, and review sessions.',
+      voice: 'Every session shows you what is worth re reading, side by side with your notes.',
+      zoomFocus: 'middle',
+    },
+    {
+      kind: 'card_outcome',
+      label: 'Outcome',
+      caption: 'Saved becomes learned.',
+      voice: 'What you save turns into what you remember. Saved becomes learned.',
+    },
+    {
+      kind: 'card_cta',
+      label: 'Try it',
+      caption: 'Open Reader. Pick one saved article.',
+      voice: 'Open Reader. Pick one saved article. Start there.',
+    },
   ],
   starboard: [
-    { kind: 'card_pain',   label: 'Problem',  caption: "You starred it. You can't find it.",            voice: "You starred a repo because it mattered. Six months later, you cannot find it." },
-    { kind: 'card_intro',  label: 'Why',      caption: 'GitHub stars are an island of names.',          voice: 'Your starred repos on GitHub are just a wall of names. Search there is brutal.' },
-    { kind: 'screenshot',  label: 'Starboard',caption: 'Search your stars by what they do.',            voice: 'Starboard makes your stars searchable by what each project does, not just its name.', zoomFocus: 'top' },
-    { kind: 'screenshot',  label: 'How',      caption: 'Type "vector db". Find that repo.',             voice: 'Type vector D B. Find that repo you forgot about. Type rate limiter. Same answer.', zoomFocus: 'middle' },
-    { kind: 'card_outcome',label: 'Outcome',  caption: 'Your stars become your library.',               voice: 'Your starred repos turn from a list into an actual library you can use.' },
-    { kind: 'card_cta',    label: 'Try it',   caption: 'Search one thing you starred.',                  voice: 'Open Starboard. Search one thing you starred. Two minutes.' },
+    {
+      kind: 'card_pain',
+      label: 'Problem',
+      caption: "You starred it. You can't find it.",
+      voice: 'You starred a repo because it mattered. Six months later, you cannot find it.',
+    },
+    {
+      kind: 'card_intro',
+      label: 'Why',
+      caption: 'GitHub stars are an island of names.',
+      voice: 'Your starred repos on GitHub are just a wall of names. Search there is brutal.',
+    },
+    {
+      kind: 'screenshot',
+      label: 'Starboard',
+      caption: 'Search your stars by what they do.',
+      voice: 'Starboard makes your stars searchable by what each project does, not just its name.',
+      zoomFocus: 'top',
+    },
+    {
+      kind: 'screenshot',
+      label: 'How',
+      caption: 'Type "vector db". Find that repo.',
+      voice: 'Type vector D B. Find that repo you forgot about. Type rate limiter. Same answer.',
+      zoomFocus: 'middle',
+    },
+    {
+      kind: 'card_outcome',
+      label: 'Outcome',
+      caption: 'Your stars become your library.',
+      voice: 'Your starred repos turn from a list into an actual library you can use.',
+    },
+    {
+      kind: 'card_cta',
+      label: 'Try it',
+      caption: 'Search one thing you starred.',
+      voice: 'Open Starboard. Search one thing you starred. Two minutes.',
+    },
   ],
   'high-signal': [
-    { kind: 'card_pain',   label: 'Problem',  caption: 'Your tweets — smart or spam?',                  voice: 'Your last five tweets. Do they sound smart, or just spammy? Most people never check.' },
-    { kind: 'card_intro',  label: 'Why',      caption: 'No one audits their own writing.',              voice: 'No one audits their own writing. They post. They guess. They add to the noise.' },
-    { kind: 'screenshot',  label: 'High Signal',caption: 'Public signal log for AI infra.',             voice: 'High Signal is a public log that grades posts against the hype word index and concrete claims.', zoomFocus: 'top' },
-    { kind: 'screenshot',  label: 'How',      caption: 'Paste a tweet. See the score and the edit.',     voice: 'Paste a tweet. See the score, the hype ratio, and the rewrite that would make it better.', zoomFocus: 'middle' },
-    { kind: 'card_outcome',label: 'Outcome',  caption: 'Stop adding to the noise.',                      voice: 'Stop adding to the noise. Start a real signal trail your future self will not regret.' },
-    { kind: 'card_cta',    label: 'Try it',   caption: 'Paste one tweet at High Signal.',                voice: 'Paste one tweet. See your score. Then post the rewrite.' },
+    {
+      kind: 'card_pain',
+      label: 'Problem',
+      caption: 'Your tweets — smart or spam?',
+      voice: 'Your last five tweets. Do they sound smart, or just spammy? Most people never check.',
+    },
+    {
+      kind: 'card_intro',
+      label: 'Why',
+      caption: 'No one audits their own writing.',
+      voice: 'No one audits their own writing. They post. They guess. They add to the noise.',
+    },
+    {
+      kind: 'screenshot',
+      label: 'High Signal',
+      caption: 'Public signal log for AI infra.',
+      voice:
+        'High Signal is a public log that grades posts against the hype word index and concrete claims.',
+      zoomFocus: 'top',
+    },
+    {
+      kind: 'screenshot',
+      label: 'How',
+      caption: 'Paste a tweet. See the score and the edit.',
+      voice:
+        'Paste a tweet. See the score, the hype ratio, and the rewrite that would make it better.',
+      zoomFocus: 'middle',
+    },
+    {
+      kind: 'card_outcome',
+      label: 'Outcome',
+      caption: 'Stop adding to the noise.',
+      voice:
+        'Stop adding to the noise. Start a real signal trail your future self will not regret.',
+    },
+    {
+      kind: 'card_cta',
+      label: 'Try it',
+      caption: 'Paste one tweet at High Signal.',
+      voice: 'Paste one tweet. See your score. Then post the rewrite.',
+    },
   ],
   codevetter: [
-    { kind: 'card_pain',   label: 'Problem',  caption: 'Code review is the slow lane.',                 voice: 'Code review is the slowest part of shipping. Pull requests sit for days. Context evaporates.' },
-    { kind: 'card_intro',  label: 'Why',      caption: 'Humans review every diff.',                       voice: 'Every diff gets opened by a human. Most of what they catch is mechanical. Naming. Missing tests. Risky paths.' },
-    { kind: 'screenshot',  label: 'CodeVetter',caption: 'AI code review, desktop-first.',                voice: 'Code vetter is an A I code review platform. Desktop first. Works offline. Reads the diff before a human ever opens it.', zoomFocus: 'top' },
-    { kind: 'screenshot',  label: 'How',      caption: 'Flags risky changes, surfaces tests.',            voice: 'It flags risky changes, missing tests, naming drift. Reviewers see only what actually matters.', zoomFocus: 'middle' },
-    { kind: 'card_outcome',label: 'Outcome',  caption: 'You ship faster. Reviewers stay sharp.',         voice: 'You ship faster. Reviewers spend their attention on the parts that actually need a human eye.' },
-    { kind: 'card_cta',    label: 'Try it',   caption: 'Drop one PR URL into CodeVetter.',                voice: 'Drop one pull request U R L. See the review. Decide what to merge.' },
+    {
+      kind: 'card_pain',
+      label: 'Problem',
+      caption: 'Code review is the slow lane.',
+      voice:
+        'Code review is the slowest part of shipping. Pull requests sit for days. Context evaporates.',
+    },
+    {
+      kind: 'card_intro',
+      label: 'Why',
+      caption: 'Humans review every diff.',
+      voice:
+        'Every diff gets opened by a human. Most of what they catch is mechanical. Naming. Missing tests. Risky paths.',
+    },
+    {
+      kind: 'screenshot',
+      label: 'CodeVetter',
+      caption: 'AI code review, desktop-first.',
+      voice:
+        'Code vetter is an A I code review platform. Desktop first. Works offline. Reads the diff before a human ever opens it.',
+      zoomFocus: 'top',
+    },
+    {
+      kind: 'screenshot',
+      label: 'How',
+      caption: 'Flags risky changes, surfaces tests.',
+      voice:
+        'It flags risky changes, missing tests, naming drift. Reviewers see only what actually matters.',
+      zoomFocus: 'middle',
+    },
+    {
+      kind: 'card_outcome',
+      label: 'Outcome',
+      caption: 'You ship faster. Reviewers stay sharp.',
+      voice:
+        'You ship faster. Reviewers spend their attention on the parts that actually need a human eye.',
+    },
+    {
+      kind: 'card_cta',
+      label: 'Try it',
+      caption: 'Drop one PR URL into CodeVetter.',
+      voice: 'Drop one pull request U R L. See the review. Decide what to merge.',
+    },
   ],
 };
 
@@ -180,20 +372,30 @@ const VARIANT_TRANSFORMS = [
   {
     id: 'v2',
     label: 'POV',
-    transform: (scenes) => scenes.map((scene, idx) => idx === 0 ? {
-      ...scene,
-      caption: `POV: ${scene.caption}`,
-      voice: `POV. ${scene.voice}`,
-    } : scene),
+    transform: (scenes) =>
+      scenes.map((scene, idx) =>
+        idx === 0
+          ? {
+              ...scene,
+              caption: `POV: ${scene.caption}`,
+              voice: `POV. ${scene.voice}`,
+            }
+          : scene
+      ),
   },
   {
     id: 'v3',
     label: 'Question',
-    transform: (scenes) => scenes.map((scene, idx) => idx === 0 ? {
-      ...scene,
-      caption: `Real question: ${scene.caption}`,
-      voice: `Real question. ${scene.voice}`,
-    } : scene),
+    transform: (scenes) =>
+      scenes.map((scene, idx) =>
+        idx === 0
+          ? {
+              ...scene,
+              caption: `Real question: ${scene.caption}`,
+              voice: `Real question. ${scene.voice}`,
+            }
+          : scene
+      ),
   },
 ];
 
@@ -201,12 +403,12 @@ const AMBIENT_CHORDS = {
   // Each project gets a slightly different chord palette so beds feel distinct.
   // Frequencies are sine partials in Hz. All are minor 7 / sus-style — soft,
   // non-distracting under a voiceover.
-  linkchat:      [55, 110, 130.81, 164.81, 246.94],
-  reader:        [49, 98, 116.54, 146.83, 220.00],
-  starboard:     [58.27, 110, 138.59, 174.61, 220.00],
-  'high-signal': [65.41, 130.81, 155.56, 196.00, 246.94],
-  codevetter:    [61.74, 123.47, 146.83, 185.00, 233.08],
-  default:       [55, 110, 138.59, 164.81, 220.00],
+  linkchat: [55, 110, 130.81, 164.81, 246.94],
+  reader: [49, 98, 116.54, 146.83, 220.0],
+  starboard: [58.27, 110, 138.59, 174.61, 220.0],
+  'high-signal': [65.41, 130.81, 155.56, 196.0, 246.94],
+  codevetter: [61.74, 123.47, 146.83, 185.0, 233.08],
+  default: [55, 110, 138.59, 164.81, 220.0],
 };
 
 const reelIds = process.argv.slice(2).length ? process.argv.slice(2) : DEFAULT_REELS;
@@ -294,13 +496,17 @@ async function renderReel(reelId) {
     try {
       tour = await captureProductTour(url, dir);
     } catch (error) {
-      console.warn(`  scroll tour failed (${error.message?.slice(0, 120)}); falling back to single screenshot`);
+      console.warn(
+        `  scroll tour failed (${error.message?.slice(0, 120)}); falling back to single screenshot`
+      );
       try {
         const singlePath = path.join(dir, 'product.png');
         await captureProductScreenshot(url, singlePath);
         tour = { top: singlePath, middle: singlePath, bottom: singlePath };
       } catch (innerError) {
-        console.warn(`  single screenshot also failed (${innerError.message?.slice(0, 120)}); using cards`);
+        console.warn(
+          `  single screenshot also failed (${innerError.message?.slice(0, 120)}); using cards`
+        );
         tour = null;
       }
     }
@@ -309,47 +515,73 @@ async function renderReel(reelId) {
     // so at least one scene shows the product in motion, not zoom-on-still.
     console.log(`  recording live scroll screencast (${url})…`);
     try {
-      const info = await recordScrollScreencast(url, dir, { width: 1080, height: 1920, durationMs: 6000, scrollDeltaPerSec: 320, fps: 24 });
+      const info = await recordScrollScreencast(url, dir, {
+        width: 1080,
+        height: 1920,
+        durationMs: 6000,
+        scrollDeltaPerSec: 320,
+        fps: 24,
+      });
       if (info.frameCount >= 8) {
         screencastPath = path.join(dir, 'screencast.mp4');
-        await run('ffmpeg', [
-          '-y',
-          '-framerate', String(info.fps),
-          '-i', path.join(info.frameDir, 'frame-%05d.png'),
-          '-vf', 'scale=1080:1920:force_original_aspect_ratio=disable,fps=30,setsar=1',
-          '-c:v', 'libx264',
-          '-preset', 'medium',
-          '-pix_fmt', 'yuv420p',
-          '-r', '30',
-          '-movflags', '+faststart',
-          screencastPath,
-        ], undefined, 60_000);
+        await run(
+          'ffmpeg',
+          [
+            '-y',
+            '-framerate',
+            String(info.fps),
+            '-i',
+            path.join(info.frameDir, 'frame-%05d.png'),
+            '-vf',
+            'scale=1080:1920:force_original_aspect_ratio=disable,fps=30,setsar=1',
+            '-c:v',
+            'libx264',
+            '-preset',
+            'medium',
+            '-pix_fmt',
+            'yuv420p',
+            '-r',
+            '30',
+            '-movflags',
+            '+faststart',
+            screencastPath,
+          ],
+          undefined,
+          60_000
+        );
       } else {
         console.warn(`  screencast produced only ${info.frameCount} frames; skipping live motion`);
       }
     } catch (error) {
-      console.warn(`  screencast failed (${error.message?.slice(0, 120)}); proof scenes will stay on still + Ken Burns`);
+      console.warn(
+        `  screencast failed (${error.message?.slice(0, 120)}); proof scenes will stay on still + Ken Burns`
+      );
     }
   }
 
   let grokMotion = null;
   try {
-    grokMotion = await selectGrokVideoAsset({
-      id: reel.id,
-      projectSlug: reel.projectSlug,
-      title: reel.title,
-      hook: reel.hook ?? reel.title,
-      body: reel.body ?? '',
-      cta: reel.cta,
-      audience: reel.audience,
-    }, {
-      sceneHints: script.flatMap((beat) => [beat.label, beat.caption, beat.voice]),
-    });
+    grokMotion = await selectGrokVideoAsset(
+      {
+        id: reel.id,
+        projectSlug: reel.projectSlug,
+        title: reel.title,
+        hook: reel.hook ?? reel.title,
+        body: reel.body ?? '',
+        cta: reel.cta,
+        audience: reel.audience,
+      },
+      {
+        sceneHints: script.flatMap((beat) => [beat.label, beat.caption, beat.voice]),
+      }
+    );
     if (grokMotion) {
       console.log(`  using Grok motion insert ${path.basename(grokMotion.path)}…`);
     }
   } catch (error) {
-    console.warn(`  Grok motion lookup failed (${error.message?.slice(0, 120)}); continuing without generated inserts`);
+    console.warn(
+      `  Grok motion lookup failed (${error.message?.slice(0, 120)}); continuing without generated inserts`
+    );
   }
 
   // Hook frame at the top + brand close at the bottom of every reel.
@@ -379,21 +611,24 @@ async function renderReel(reelId) {
   const middleScenes = script.map((beat) => {
     const isHowScene = beat.kind === 'screenshot' && beat.label === 'How';
     const usesScreencast = isHowScene && screencastPath;
-    const usesGrokMotion = !usesScreencast
-      && !grokInserted
-      && grokMotion
-      && (beat.kind === 'screenshot' || /proof|product|how|visual|outcome/i.test(`${beat.label} ${beat.caption}`));
+    const usesGrokMotion =
+      !usesScreencast &&
+      !grokInserted &&
+      grokMotion &&
+      (beat.kind === 'screenshot' ||
+        /proof|product|how|visual|outcome/i.test(`${beat.label} ${beat.caption}`));
     if (usesGrokMotion) grokInserted = true;
     return {
       ...beat,
       palette,
       project: reel.projectSlug,
-      backgroundPath: beat.kind === 'screenshot' && tour ? (tour[beat.zoomFocus] ?? tour.top) : null,
+      backgroundPath:
+        beat.kind === 'screenshot' && tour ? (tour[beat.zoomFocus] ?? tour.top) : null,
       // The "How" scene gets the real-motion screencast when available — it's
       // the one moment in the reel where we show the product responding,
       // not zooming on a still page.
-      videoBgPath: usesScreencast ? screencastPath : (usesGrokMotion ? grokMotion.path : null),
-      motionSource: usesScreencast ? 'product_screencast' : (usesGrokMotion ? 'grok_video' : null),
+      videoBgPath: usesScreencast ? screencastPath : usesGrokMotion ? grokMotion.path : null,
+      motionSource: usesScreencast ? 'product_screencast' : usesGrokMotion ? 'grok_video' : null,
       screencastBackdrop: usesScreencast ? screencastBackdrop : null,
       screencastMask: usesScreencast ? screencastMask : null,
       screencastShadow: usesScreencast ? screencastShadow : null,
@@ -429,18 +664,73 @@ async function renderReel(reelId) {
 
     const key = `${reelId}-${variantSpec.id}.mp4`;
     console.log('    uploading…');
-    await run('npx', ['wrangler', 'r2', 'object', 'put', `${BUCKET}/${key}`, '--file', finalPath, '--remote', '--content-type', 'video/mp4']);
+    await run('npx', [
+      'wrangler',
+      'r2',
+      'object',
+      'put',
+      `${BUCKET}/${key}`,
+      '--file',
+      finalPath,
+      '--remote',
+      '--content-type',
+      'video/mp4',
+    ]);
     // Append a cache-buster — the worker serves with `cache-control: immutable`
     // so re-rendered MP4s at the same key would otherwise be hidden behind
     // the browser cache.
     const assetUrl = `${BASE}/reels/${key}?v=${Date.now()}`;
-    const totalDuration = scenes.reduce((total, scene) => total + scene.actualDuration, 0) - TRANSITION * (scenes.length - 1);
-    renderedVariants.push({ variantSpec, scenes, assetUrl, totalDuration });
+    const totalDuration =
+      scenes.reduce((total, scene) => total + scene.actualDuration, 0) -
+      TRANSITION * (scenes.length - 1);
+    renderedVariants.push({ variantSpec, scenes, assetUrl, totalDuration, finalPath });
     console.log(`    ✓ ${assetUrl} (${totalDuration.toFixed(1)}s)`);
   }
 
   console.log('  patching reel record with variants…');
-  await patchReelRecordMultiVariant(reel, renderedVariants, dir, useEdgeTts, tour !== null, Boolean(grokMotion && grokInserted));
+  await patchReelRecordMultiVariant(
+    reel,
+    renderedVariants,
+    dir,
+    useEdgeTts,
+    tour !== null,
+    Boolean(grokMotion && grokInserted)
+  );
+
+  const supportedChannel = ['instagram_reels', 'youtube_shorts'].includes(reel.channel)
+    ? [reel.channel]
+    : ['instagram_reels', 'youtube_shorts'];
+  const { manifest, manifestPath } = await emitArtifactManifest({
+    context: {
+      brief: { id: reel.id, version: Number(reel.version ?? 1) || 1 },
+      projectId: reel.projectSlug,
+      campaignId: reel.campaignId ?? reel.marketingPostId ?? `worker-reel:${reel.id}`,
+      experimentId: reel.experimentId ?? null,
+      inputHash: hashCanonicalJson({
+        id: reel.id,
+        projectSlug: reel.projectSlug,
+        title: reel.title,
+        hook: reel.hook,
+        body: reel.body,
+        cta: reel.cta,
+        variantCount: VARIANT_COUNT,
+      }),
+      channelIntent: supportedChannel,
+      provenance: [
+        { kind: 'reel-worker-record', id: reel.id, revision: String(reel.version ?? 1) },
+      ],
+    },
+    render: {
+      provider: 'render-pro',
+      externalTaskId: `render-pro-${reel.id}`,
+      status: 'completed',
+    },
+    variantArtifacts: renderedVariants.map(({ variantSpec, finalPath }) => ({
+      id: `${reel.id}-${variantSpec.id}`,
+      locations: [finalPath],
+      channelIntent: supportedChannel,
+    })),
+  });
 
   const summary = renderedVariants.map(({ variantSpec, assetUrl, totalDuration }) => ({
     variantId: `${reel.id}-${variantSpec.id}`,
@@ -449,10 +739,25 @@ async function renderReel(reelId) {
     duration: Number(totalDuration.toFixed(2)),
   }));
   console.log(`  ✓ ${reelId}: ${renderedVariants.length} variant(s)`);
-  return { reelId, ok: true, variants: summary, scenes: baseScenes.length, voiceProvider: useEdgeTts ? VOICE : 'macos-say' };
+  return {
+    reelId,
+    ok: true,
+    variants: summary,
+    scenes: baseScenes.length,
+    voiceProvider: useEdgeTts ? VOICE : 'macos-say',
+    artifactManifest: manifest,
+    artifactManifestPath: manifestPath,
+  };
 }
 
-async function patchReelRecordMultiVariant(reel, rendered, dir, useEdge, usedCapture, usedGrokMotion = false) {
+async function patchReelRecordMultiVariant(
+  reel,
+  rendered,
+  dir,
+  useEdge,
+  usedCapture,
+  usedGrokMotion = false
+) {
   const variants = rendered.map(({ variantSpec, scenes, assetUrl, totalDuration }) => {
     const scores = scoreVariantHonest({
       usedRealCapture: usedCapture,
@@ -465,7 +770,7 @@ async function patchReelRecordMultiVariant(reel, rendered, dir, useEdge, usedCap
       variantId: `${reel.id}-${variantSpec.id}`,
       template: 'explainer_6_beat',
       templateLabel: `Pain → Why → Product → How → Outcome → CTA (${variantSpec.label})`,
-      proofType: usedGrokMotion ? 'recording' : (usedCapture ? 'screenshot' : 'generated_card'),
+      proofType: usedGrokMotion ? 'recording' : usedCapture ? 'screenshot' : 'generated_card',
       hook: scenes[0].voice,
       cta: scenes[scenes.length - 1].voice,
       captionText: scenes.flatMap((scene) => (scene.cues || []).map((cue) => cue.text)).join(' / '),
@@ -504,7 +809,18 @@ async function patchReelRecordMultiVariant(reel, rendered, dir, useEdge, usedCap
   };
   const recordPath = path.join(dir, 'record.json');
   await writeFile(recordPath, JSON.stringify(updatedReel, null, 2));
-  await run('npx', ['wrangler', 'r2', 'object', 'put', `${BUCKET}/reel-requests/${reel.id}.json`, '--file', recordPath, '--remote', '--content-type', 'application/json; charset=utf-8']);
+  await run('npx', [
+    'wrangler',
+    'r2',
+    'object',
+    'put',
+    `${BUCKET}/reel-requests/${reel.id}.json`,
+    '--file',
+    recordPath,
+    '--remote',
+    '--content-type',
+    'application/json; charset=utf-8',
+  ]);
 }
 
 async function renderScene(scene, index, dir, sceneCount) {
@@ -519,11 +835,12 @@ async function renderScene(scene, index, dir, sceneCount) {
     await copyFile(scene.backgroundPath, bgPath);
   } else {
     const htmlPath = path.join(dir, `card-${tag}.html`);
-    const html = scene.kind === 'hook_punch'
-      ? hookPunchHtml(scene)
-      : scene.kind === 'brand_close'
-        ? brandCloseHtml(scene)
-        : cardHtml(scene, index, sceneCount);
+    const html =
+      scene.kind === 'hook_punch'
+        ? hookPunchHtml(scene)
+        : scene.kind === 'brand_close'
+          ? brandCloseHtml(scene)
+          : cardHtml(scene, index, sceneCount);
     await writeFile(htmlPath, html);
     // brand_close loads a CDN QR library + renders to canvas → needs more time.
     const cardBudget = scene.kind === 'brand_close' ? 5000 : 1500;
@@ -539,7 +856,13 @@ async function renderScene(scene, index, dir, sceneCount) {
 
   // 2. Voice + SRT — voice rotates per scene kind
   const sceneVoice = VOICE_BY_KIND[scene.kind] ?? VOICE;
-  const voiced = await generateVoiceover(scene.voice, audioPath, srtPath, scene.palette, sceneVoice);
+  const voiced = await generateVoiceover(
+    scene.voice,
+    audioPath,
+    srtPath,
+    scene.palette,
+    sceneVoice
+  );
   // Hook punch + brand close scenes already burn the headline into the bg —
   // skip the caption overlay so we don't triple the same text on screen.
   const captionsDisabled = scene.kind === 'hook_punch' || scene.kind === 'brand_close';
@@ -573,9 +896,8 @@ async function renderScene(scene, index, dir, sceneCount) {
         minBytes: 1024,
       });
       const stateStart = cue.startMs + wordIndex * perWordMs;
-      const stateEnd = wordIndex === states - 1
-        ? cue.endMs
-        : cue.startMs + (wordIndex + 1) * perWordMs;
+      const stateEnd =
+        wordIndex === states - 1 ? cue.endMs : cue.startMs + (wordIndex + 1) * perWordMs;
       overlays.push({
         path: captionPath,
         startSec: stateStart / 1000,
@@ -590,9 +912,7 @@ async function renderScene(scene, index, dir, sceneCount) {
   // 4. Segment duration — voice length + 0.5s tail for breathing room.
   // Hook punch holds the headline a beat longer than the voice; brand close
   // gives the URL time to land before the outro fade.
-  const minDuration = scene.kind === 'hook_punch' ? 1.4
-    : scene.kind === 'brand_close' ? 2.2
-    : 4.0;
+  const minDuration = scene.kind === 'hook_punch' ? 1.4 : scene.kind === 'brand_close' ? 2.2 : 4.0;
   const segDuration = Math.max(minDuration, voiceDuration + 0.55);
 
   // Stash cues + paths on the scene BEFORE composeSegment so the avatar
@@ -621,14 +941,24 @@ async function generateVoiceover(text, audioPath, srtPath, palette, voice) {
   const selectedVoice = voice ?? VOICE;
   if (useEdgeTts) {
     try {
-      await run('uvx', [
-        'edge-tts',
-        '--voice', selectedVoice,
-        '--rate', '+4%',
-        '--text', text,
-        '--write-media', audioPath,
-        '--write-subtitles', srtPath,
-      ], undefined, 60_000);
+      await run(
+        'uvx',
+        [
+          'edge-tts',
+          '--voice',
+          selectedVoice,
+          '--rate',
+          '+4%',
+          '--text',
+          text,
+          '--write-media',
+          audioPath,
+          '--write-subtitles',
+          srtPath,
+        ],
+        undefined,
+        60_000
+      );
       const srtRaw = await readFile(srtPath, 'utf8').catch(() => '');
       const cues = parseSrt(srtRaw);
       const duration = await probeDuration(audioPath);
@@ -646,7 +976,20 @@ async function generateVoiceoverSay(text, audioPath, srtPath) {
     await run('say', ['-v', 'Samantha', '-r', '178', '-o', aiff, text], undefined, 30_000);
     await run('ffmpeg', ['-y', '-i', aiff, '-codec:a', 'libmp3lame', '-q:a', '4', audioPath]);
   } catch {
-    await run('ffmpeg', ['-y', '-f', 'lavfi', '-i', 'anullsrc=r=44100:cl=stereo', '-t', '3.0', '-codec:a', 'libmp3lame', '-q:a', '4', audioPath]);
+    await run('ffmpeg', [
+      '-y',
+      '-f',
+      'lavfi',
+      '-i',
+      'anullsrc=r=44100:cl=stereo',
+      '-t',
+      '3.0',
+      '-codec:a',
+      'libmp3lame',
+      '-q:a',
+      '4',
+      audioPath,
+    ]);
   }
   const duration = await probeDuration(audioPath);
   // No SRT — fake a single cue spanning the duration so caption shows for the whole voice
@@ -666,8 +1009,12 @@ function parseSrt(srtRaw) {
     const textLines = lines.slice(lines.indexOf(timing) + 1);
     const match = timing.match(/(\d+):(\d+):(\d+)[,.](\d+)\s*-->\s*(\d+):(\d+):(\d+)[,.](\d+)/);
     if (!match) continue;
-    const startMs = (Number(match[1]) * 3600 + Number(match[2]) * 60 + Number(match[3])) * 1000 + Number(match[4]);
-    const endMs = (Number(match[5]) * 3600 + Number(match[6]) * 60 + Number(match[7])) * 1000 + Number(match[8]);
+    const startMs =
+      (Number(match[1]) * 3600 + Number(match[2]) * 60 + Number(match[3])) * 1000 +
+      Number(match[4]);
+    const endMs =
+      (Number(match[5]) * 3600 + Number(match[6]) * 60 + Number(match[7])) * 1000 +
+      Number(match[8]);
     const text = textLines.join(' ').replace(/\s+/g, ' ').trim();
     if (text) cues.push({ text, startMs, endMs });
   }
@@ -675,7 +1022,12 @@ function parseSrt(srtRaw) {
 }
 
 function srtSerialize(cues) {
-  return cues.map((cue, index) => `${index + 1}\n${formatSrtTime(cue.startMs)} --> ${formatSrtTime(cue.endMs)}\n${cue.text}\n`).join('\n');
+  return cues
+    .map(
+      (cue, index) =>
+        `${index + 1}\n${formatSrtTime(cue.startMs)} --> ${formatSrtTime(cue.endMs)}\n${cue.text}\n`
+    )
+    .join('\n');
 }
 
 function formatSrtTime(ms) {
@@ -695,7 +1047,14 @@ async function captureProductScreenshot(url, outPath) {
   let lastError;
   for (const budget of budgets) {
     try {
-      await chromeScreenshot({ url, outPath, width: 1080, height: 1920, virtualTimeBudget: budget, minBytes: 16 * 1024 });
+      await chromeScreenshot({
+        url,
+        outPath,
+        width: 1080,
+        height: 1920,
+        virtualTimeBudget: budget,
+        minBytes: 16 * 1024,
+      });
       return;
     } catch (error) {
       lastError = error;
@@ -717,12 +1076,21 @@ async function captureProductTour(url, dir) {
   // Sanity: each capture should be reasonably sized.
   for (const p of ordered) {
     const info = await stat(p);
-    if (info.size < 8 * 1024) throw new Error(`scroll-tour capture too small: ${path.basename(p)} = ${info.size} bytes`);
+    if (info.size < 8 * 1024)
+      throw new Error(`scroll-tour capture too small: ${path.basename(p)} = ${info.size} bytes`);
   }
   return paths;
 }
 
-async function chromeScreenshot({ url, outPath, width, height, virtualTimeBudget = 1500, transparent = false, minBytes = 1024 }) {
+async function chromeScreenshot({
+  url,
+  outPath,
+  width,
+  height,
+  virtualTimeBudget = 1500,
+  transparent = false,
+  minBytes = 1024,
+}) {
   const args = [
     '--headless=new',
     '--disable-gpu',
@@ -742,7 +1110,9 @@ async function chromeScreenshot({ url, outPath, width, height, virtualTimeBudget
   try {
     await access(outPath);
   } catch {
-    throw new Error(`chrome did not produce ${path.basename(outPath)} (${chromeError ? chromeError.message.slice(0, 200) : 'no file'})`);
+    throw new Error(
+      `chrome did not produce ${path.basename(outPath)} (${chromeError ? chromeError.message.slice(0, 200) : 'no file'})`
+    );
   }
   const info = await stat(outPath);
   if (info.size < minBytes) {
@@ -755,7 +1125,10 @@ function cardHtml(scene, index, sceneCount) {
   const label = escapeHtml(scene.label);
   const caption = escapeHtml(scene.caption);
   const project = escapeHtml(scene.project ?? '');
-  const dots = Array.from({ length: sceneCount }, (_, idx) => `<span class="dot${idx === index ? ' on' : ''}"></span>`).join('');
+  const dots = Array.from(
+    { length: sceneCount },
+    (_, idx) => `<span class="dot${idx === index ? ' on' : ''}"></span>`
+  ).join('');
   return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8" /><style>
   html, body { margin: 0; padding: 0; width: 1080px; height: 1920px; overflow: hidden; }
@@ -1039,21 +1412,44 @@ async function renderScreencastFrame(palette, backdropPath, maskPath, shadowPath
   // Backdrop: full 1080×1920 with accent radial-gradient on the project's bg.
   const backdropHtml = path.join(path.dirname(backdropPath), 'sc-backdrop.html');
   await writeFile(backdropHtml, screencastBackdropHtml(palette));
-  await chromeScreenshot({ url: `file://${backdropHtml}`, outPath: backdropPath, width: 1080, height: 1920, virtualTimeBudget: 1500, minBytes: 4 * 1024 });
+  await chromeScreenshot({
+    url: `file://${backdropHtml}`,
+    outPath: backdropPath,
+    width: 1080,
+    height: 1920,
+    virtualTimeBudget: 1500,
+    minBytes: 4 * 1024,
+  });
 
   // Mask: white rounded-rect on solid BLACK bg. ffmpeg alphamerge treats the
   // second input's luma as the alpha channel — black = transparent, white =
   // opaque. Saves us from format-negotiation issues with alphaextract.
   const maskHtml = path.join(path.dirname(maskPath), 'sc-mask.html');
   await writeFile(maskHtml, screencastMaskHtml());
-  await chromeScreenshot({ url: `file://${maskHtml}`, outPath: maskPath, width: SC_FRAME.w, height: SC_FRAME.h, virtualTimeBudget: 800, transparent: false, minBytes: 1024 });
+  await chromeScreenshot({
+    url: `file://${maskHtml}`,
+    outPath: maskPath,
+    width: SC_FRAME.w,
+    height: SC_FRAME.h,
+    virtualTimeBudget: 800,
+    transparent: false,
+    minBytes: 1024,
+  });
 
   // Shadow: black rounded-rect blurred, sized slightly larger than the
   // device. Overlaid BEFORE the screencast at a small offset so it reads as
   // a drop shadow under the "device."
   const shadowHtml = path.join(path.dirname(shadowPath), 'sc-shadow.html');
   await writeFile(shadowHtml, screencastShadowHtml());
-  await chromeScreenshot({ url: `file://${shadowHtml}`, outPath: shadowPath, width: SC_FRAME.w + SC_FRAME.shadowPad * 2, height: SC_FRAME.h + SC_FRAME.shadowPad * 2, virtualTimeBudget: 800, transparent: true, minBytes: 1024 });
+  await chromeScreenshot({
+    url: `file://${shadowHtml}`,
+    outPath: shadowPath,
+    width: SC_FRAME.w + SC_FRAME.shadowPad * 2,
+    height: SC_FRAME.h + SC_FRAME.shadowPad * 2,
+    virtualTimeBudget: 800,
+    transparent: true,
+    minBytes: 1024,
+  });
 }
 
 function screencastBackdropHtml(palette) {
@@ -1112,8 +1508,24 @@ async function renderTalkingAvatar(palette, closedPath, openPath) {
   const tmpOpen = openPath.replace(/\.png$/, '.html');
   await writeFile(tmpClosed, avatarHtml(palette, 'closed'));
   await writeFile(tmpOpen, avatarHtml(palette, 'open'));
-  await chromeScreenshot({ url: `file://${tmpClosed}`, outPath: closedPath, width: 360, height: 360, virtualTimeBudget: 800, transparent: true, minBytes: 1024 });
-  await chromeScreenshot({ url: `file://${tmpOpen}`, outPath: openPath, width: 360, height: 360, virtualTimeBudget: 800, transparent: true, minBytes: 1024 });
+  await chromeScreenshot({
+    url: `file://${tmpClosed}`,
+    outPath: closedPath,
+    width: 360,
+    height: 360,
+    virtualTimeBudget: 800,
+    transparent: true,
+    minBytes: 1024,
+  });
+  await chromeScreenshot({
+    url: `file://${tmpOpen}`,
+    outPath: openPath,
+    width: 360,
+    height: 360,
+    virtualTimeBudget: 800,
+    transparent: true,
+    minBytes: 1024,
+  });
 }
 
 function avatarHtml(palette, mouthState) {
@@ -1200,14 +1612,25 @@ async function synthTransitionSfx(outPath) {
   // Bandpass-filtered brown noise burst with quick attack/decay — reads as a
   // soft swoosh. ~0.35s long, mono, low volume so it punctuates without
   // overpowering the voice/music.
-  await run('ffmpeg', [
-    '-y',
-    '-f', 'lavfi', '-i', 'anoisesrc=duration=0.35:color=brown:sample_rate=44100',
-    '-filter_complex',
-    'bandpass=f=600:width_type=h:w=900,volume=0.55,afade=t=in:st=0:d=0.04,afade=t=out:st=0.22:d=0.13,aformat=channel_layouts=mono:sample_rates=44100',
-    '-codec:a', 'libmp3lame', '-q:a', '4',
-    outPath,
-  ], undefined, 15_000);
+  await run(
+    'ffmpeg',
+    [
+      '-y',
+      '-f',
+      'lavfi',
+      '-i',
+      'anoisesrc=duration=0.35:color=brown:sample_rate=44100',
+      '-filter_complex',
+      'bandpass=f=600:width_type=h:w=900,volume=0.55,afade=t=in:st=0:d=0.04,afade=t=out:st=0.22:d=0.13,aformat=channel_layouts=mono:sample_rates=44100',
+      '-codec:a',
+      'libmp3lame',
+      '-q:a',
+      '4',
+      outPath,
+    ],
+    undefined,
+    15_000
+  );
 }
 
 async function synthAmbientBed(outPath, projectSlug) {
@@ -1228,21 +1651,27 @@ async function synthAmbientBed(outPath, projectSlug) {
     'volume=0.22',
     'aformat=channel_layouts=stereo:sample_rates=44100',
   ].join(',');
-  args.push(
-    '-filter_complex', filter,
-    '-codec:a', 'libmp3lame',
-    '-q:a', '5',
-    outPath,
-  );
+  args.push('-filter_complex', filter, '-codec:a', 'libmp3lame', '-q:a', '5', outPath);
   await run('ffmpeg', args, undefined, 30_000);
 }
 
-async function composeSegment({ bgPath, audioPath, overlays, segPath, duration, scene, index, sceneCount }) {
+async function composeSegment({
+  bgPath,
+  audioPath,
+  overlays,
+  segPath,
+  duration,
+  scene,
+  index,
+  sceneCount,
+}) {
   // Force 30 fps on the looped PNG inputs so zoompan's per-input-frame multiplier
   // doesn't blow up segment duration. (Default loop is 25 fps, and zoompan with
   // d>1 multiplies per input frame → 15+ minute segments.)
   const usingVideoBg = Boolean(scene.videoBgPath);
-  const usingScFrame = Boolean(usingVideoBg && scene.screencastBackdrop && scene.screencastMask && scene.screencastShadow);
+  const usingScFrame = Boolean(
+    usingVideoBg && scene.screencastBackdrop && scene.screencastMask && scene.screencastShadow
+  );
   const args = usingVideoBg
     ? ['-y', '-stream_loop', '-1', '-t', String(duration), '-i', scene.videoBgPath]
     : ['-y', '-loop', '1', '-framerate', '30', '-t', String(duration), '-i', bgPath];
@@ -1256,9 +1685,27 @@ async function composeSegment({ bgPath, audioPath, overlays, segPath, duration, 
     scBackdropIndex = 1;
     scMaskIndex = 2;
     scShadowIndex = 3;
-    args.push('-loop', '1', '-framerate', '30', '-t', String(duration), '-i', scene.screencastBackdrop);
+    args.push(
+      '-loop',
+      '1',
+      '-framerate',
+      '30',
+      '-t',
+      String(duration),
+      '-i',
+      scene.screencastBackdrop
+    );
     args.push('-loop', '1', '-framerate', '30', '-t', String(duration), '-i', scene.screencastMask);
-    args.push('-loop', '1', '-framerate', '30', '-t', String(duration), '-i', scene.screencastShadow);
+    args.push(
+      '-loop',
+      '1',
+      '-framerate',
+      '30',
+      '-t',
+      String(duration),
+      '-i',
+      scene.screencastShadow
+    );
   }
   const captionInputStart = usingScFrame ? 4 : 1;
   for (const overlay of overlays) {
@@ -1291,7 +1738,9 @@ async function composeSegment({ bgPath, audioPath, overlays, segPath, duration, 
     // Screencast is scaled to SC_FRAME.w × SC_FRAME.h, alpha-merged with the
     // rounded-rect mask, then overlaid onto the gradient backdrop at the
     // centered offset.
-    filters.push(`[0:v]scale=${SC_FRAME.w}:${SC_FRAME.h}:force_original_aspect_ratio=increase,crop=${SC_FRAME.w}:${SC_FRAME.h},fps=30,setsar=1,trim=duration=${duration},format=yuva420p[scvid]`);
+    filters.push(
+      `[0:v]scale=${SC_FRAME.w}:${SC_FRAME.h}:force_original_aspect_ratio=increase,crop=${SC_FRAME.w}:${SC_FRAME.h},fps=30,setsar=1,trim=duration=${duration},format=yuva420p[scvid]`
+    );
     filters.push(`[${scMaskIndex}:v]scale=${SC_FRAME.w}:${SC_FRAME.h},format=gray[scmask]`);
     filters.push(`[scvid][scmask]alphamerge[scrounded]`);
     filters.push(`[${scBackdropIndex}:v]scale=1080:1920,setsar=1[scbg]`);
@@ -1304,7 +1753,9 @@ async function composeSegment({ bgPath, audioPath, overlays, segPath, duration, 
     filters.push(`[scbgshadow][scrounded]overlay=${SC_FRAME.x}:${SC_FRAME.y}[bg]`);
   } else if (usingVideoBg) {
     // Real screencast already plays back motion — just normalize aspect/fps.
-    filters.push(`[0:v]scale=1080:1920:force_original_aspect_ratio=disable,fps=30,setsar=1,trim=duration=${duration}[bg]`);
+    filters.push(
+      `[0:v]scale=1080:1920:force_original_aspect_ratio=disable,fps=30,setsar=1,trim=duration=${duration}[bg]`
+    );
   } else if (scene.kind === 'screenshot') {
     const totalFrames = Math.max(60, Math.round(duration * 30));
     const focus = scene.zoomFocus || 'top';
@@ -1323,7 +1774,9 @@ async function composeSegment({ bgPath, audioPath, overlays, segPath, duration, 
       xExpr = `(iw-iw/zoom)/2`;
       yExpr = `(ih-ih/zoom)/2`;
     }
-    filters.push(`[0:v]scale=1620:2880,zoompan=z='min(zoom+${zoomStep},1.16)':x='${xExpr}':y='${yExpr}':d=1:s=1080x1920:fps=30,setsar=1[bg]`);
+    filters.push(
+      `[0:v]scale=1620:2880,zoompan=z='min(zoom+${zoomStep},1.16)':x='${xExpr}':y='${yExpr}':d=1:s=1080x1920:fps=30,setsar=1[bg]`
+    );
   } else {
     filters.push(`[0:v]scale=1080:1920,setsar=1,fps=30[bg]`);
   }
@@ -1348,9 +1801,13 @@ async function composeSegment({ bgPath, audioPath, overlays, segPath, duration, 
     } else {
       yExpr = restY;
     }
-    filters.push(`[${inIndex}:v]format=rgba,fade=t=in:st=${start.toFixed(2)}:d=${fadeIn}:alpha=1,fade=t=out:st=${Math.max(start, end - fadeOut).toFixed(2)}:d=${fadeOut}:alpha=1[cap${overlayIndex}]`);
+    filters.push(
+      `[${inIndex}:v]format=rgba,fade=t=in:st=${start.toFixed(2)}:d=${fadeIn}:alpha=1,fade=t=out:st=${Math.max(start, end - fadeOut).toFixed(2)}:d=${fadeOut}:alpha=1[cap${overlayIndex}]`
+    );
     const nextLabel = overlayIndex === overlays.length - 1 ? 'vfinal' : `v${overlayIndex}`;
-    filters.push(`[${lastLabel}][cap${overlayIndex}]overlay=x=(W-w)/2:y='${yExpr}':enable='between(t,${start.toFixed(2)},${end.toFixed(2)})'[${nextLabel}]`);
+    filters.push(
+      `[${lastLabel}][cap${overlayIndex}]overlay=x=(W-w)/2:y='${yExpr}':enable='between(t,${start.toFixed(2)},${end.toFixed(2)})'[${nextLabel}]`
+    );
     lastLabel = nextLabel;
   }
   if (overlays.length === 0) {
@@ -1372,8 +1829,12 @@ async function composeSegment({ bgPath, audioPath, overlays, segPath, duration, 
     // Mouth open visible only when in a cue AND on the "open" half of the
     // 7 Hz alternation.
     const openExpr = `((${inCueExpr})*mod(floor(t*7),2))`;
-    filters.push(`[${avatarClosedIndex}:v]scale=220:220,format=rgba,fade=t=in:st=0:d=0.4:alpha=1[avC]`);
-    filters.push(`[${avatarOpenIndex}:v]scale=220:220,format=rgba,fade=t=in:st=0:d=0.4:alpha=1[avO]`);
+    filters.push(
+      `[${avatarClosedIndex}:v]scale=220:220,format=rgba,fade=t=in:st=0:d=0.4:alpha=1[avC]`
+    );
+    filters.push(
+      `[${avatarOpenIndex}:v]scale=220:220,format=rgba,fade=t=in:st=0:d=0.4:alpha=1[avO]`
+    );
     filters.push(`[${lastLabel}][avC]overlay=W-w-40:H-h-40[vAvC]`);
     filters.push(`[vAvC][avO]overlay=W-w-40:H-h-40:enable='${openExpr}'[vAvOut]`);
     lastLabel = 'vAvOut';
@@ -1391,31 +1852,55 @@ async function composeSegment({ bgPath, audioPath, overlays, segPath, duration, 
     // Voice goes to two paths: (1) the final mix, (2) the sidechain that ducks
     // ambient. Ambient is lowered then ducked when voice is present, then
     // mixed back in at lower weight.
-    filters.push(`[${audioInputIndex}:a]apad=whole_dur=${duration},atrim=0:${duration},afade=t=in:st=0:d=0.12,afade=t=out:st=${(duration - 0.22).toFixed(2)}:d=0.22,asplit=2[voice_mix][voice_sc]`);
-    filters.push(`[${ambientInputIndex}:a]volume=0.55,atrim=0:${duration},afade=t=in:st=0:d=0.6,afade=t=out:st=${(duration - 0.6).toFixed(2)}:d=0.6[amb]`);
-    filters.push(`[amb][voice_sc]sidechaincompress=threshold=0.06:ratio=8:attack=80:release=380:level_sc=0.8[amb_ducked]`);
-    filters.push(`[voice_mix][amb_ducked]amix=inputs=2:weights=1.4 0.6:duration=first:dropout_transition=0[aout]`);
+    filters.push(
+      `[${audioInputIndex}:a]apad=whole_dur=${duration},atrim=0:${duration},afade=t=in:st=0:d=0.12,afade=t=out:st=${(duration - 0.22).toFixed(2)}:d=0.22,asplit=2[voice_mix][voice_sc]`
+    );
+    filters.push(
+      `[${ambientInputIndex}:a]volume=0.55,atrim=0:${duration},afade=t=in:st=0:d=0.6,afade=t=out:st=${(duration - 0.6).toFixed(2)}:d=0.6[amb]`
+    );
+    filters.push(
+      `[amb][voice_sc]sidechaincompress=threshold=0.06:ratio=8:attack=80:release=380:level_sc=0.8[amb_ducked]`
+    );
+    filters.push(
+      `[voice_mix][amb_ducked]amix=inputs=2:weights=1.4 0.6:duration=first:dropout_transition=0[aout]`
+    );
   } else {
-    filters.push(`[${audioInputIndex}:a]apad=whole_dur=${duration},atrim=0:${duration},afade=t=in:st=0:d=0.12,afade=t=out:st=${(duration - 0.22).toFixed(2)}:d=0.22[aout]`);
+    filters.push(
+      `[${audioInputIndex}:a]apad=whole_dur=${duration},atrim=0:${duration},afade=t=in:st=0:d=0.12,afade=t=out:st=${(duration - 0.22).toFixed(2)}:d=0.22[aout]`
+    );
   }
 
   args.push(
-    '-filter_complex', filters.join(';'),
-    '-map', `[${lastLabel}]`,
-    '-map', '[aout]',
-    '-c:v', 'libx264',
-    '-preset', 'medium',
-    '-tune', 'stillimage',
-    '-pix_fmt', 'yuv420p',
-    '-r', '30',
-    '-c:a', 'aac',
-    '-b:a', '160k',
-    '-ar', '44100',
-    '-movflags', '+faststart',
-    segPath,
+    '-filter_complex',
+    filters.join(';'),
+    '-map',
+    `[${lastLabel}]`,
+    '-map',
+    '[aout]',
+    '-c:v',
+    'libx264',
+    '-preset',
+    'medium',
+    '-tune',
+    'stillimage',
+    '-pix_fmt',
+    'yuv420p',
+    '-r',
+    '30',
+    '-c:a',
+    'aac',
+    '-b:a',
+    '160k',
+    '-ar',
+    '44100',
+    '-movflags',
+    '+faststart',
+    segPath
   );
   if (process.env.REEL_RENDER_DEBUG === '1') {
-    console.log(`[debug] map=[${lastLabel}], hasAvatar=${hasAvatar}, cues=${scene.cues?.length ?? 0}, avatarClosedIndex=${avatarClosedIndex}, avatarOpenIndex=${avatarOpenIndex}`);
+    console.log(
+      `[debug] map=[${lastLabel}], hasAvatar=${hasAvatar}, cues=${scene.cues?.length ?? 0}, avatarClosedIndex=${avatarClosedIndex}, avatarOpenIndex=${avatarOpenIndex}`
+    );
     console.log(`[debug] filters:\n${filters.join('\n')}`);
   }
   await run('ffmpeg', args, undefined, 180_000);
@@ -1446,18 +1931,28 @@ async function applyTransitionSfx(stitchedPath, sfxPath, scenes, finalPath) {
     filters.push(`[${inputIndex}:a]adelay=${delayMs}|${delayMs}[sfx${index}]`);
     sfxLabels.push(`[sfx${index}]`);
   }
-  filters.push(`${sfxLabels.join('')}amix=inputs=${sfxLabels.length}:weights=1.0 ${'0.55 '.repeat(transitions.length).trim()}:duration=first:dropout_transition=0[aout]`);
+  filters.push(
+    `${sfxLabels.join('')}amix=inputs=${sfxLabels.length}:weights=1.0 ${'0.55 '.repeat(transitions.length).trim()}:duration=first:dropout_transition=0[aout]`
+  );
 
   args.push(
-    '-filter_complex', filters.join(';'),
-    '-map', '0:v',
-    '-map', '[aout]',
-    '-c:v', 'copy',
-    '-c:a', 'aac',
-    '-b:a', '160k',
-    '-ar', '44100',
-    '-movflags', '+faststart',
-    finalPath,
+    '-filter_complex',
+    filters.join(';'),
+    '-map',
+    '0:v',
+    '-map',
+    '[aout]',
+    '-c:v',
+    'copy',
+    '-c:a',
+    'aac',
+    '-b:a',
+    '160k',
+    '-ar',
+    '44100',
+    '-movflags',
+    '+faststart',
+    finalPath
   );
   await run('ffmpeg', args, undefined, 120_000);
 }
@@ -1480,35 +1975,59 @@ async function stitchScenes(scenes, dir, finalPath) {
     const offset = (cumulative - TRANSITION).toFixed(3);
     const nextVideo = index === sceneCount - 1 ? 'vout' : `v${index}`;
     const nextAudio = index === sceneCount - 1 ? 'aout' : `a${index}`;
-    filters.push(`[${prevVideo}][${index}:v]xfade=transition=fade:duration=${TRANSITION}:offset=${offset}[${nextVideo}]`);
-    filters.push(`[${prevAudio}][${index}:a]acrossfade=d=${TRANSITION}:c1=tri:c2=tri[${nextAudio}]`);
+    filters.push(
+      `[${prevVideo}][${index}:v]xfade=transition=fade:duration=${TRANSITION}:offset=${offset}[${nextVideo}]`
+    );
+    filters.push(
+      `[${prevAudio}][${index}:a]acrossfade=d=${TRANSITION}:c1=tri:c2=tri[${nextAudio}]`
+    );
     prevVideo = nextVideo;
     prevAudio = nextAudio;
     cumulative += scenes[index].actualDuration - TRANSITION;
   }
 
-  await run('ffmpeg', [
-    '-y',
-    ...inputs,
-    '-filter_complex', filters.join(';'),
-    '-map', '[vout]',
-    '-map', '[aout]',
-    '-c:v', 'libx264',
-    '-preset', 'medium',
-    '-pix_fmt', 'yuv420p',
-    '-r', '30',
-    '-c:a', 'aac',
-    '-b:a', '160k',
-    '-ar', '44100',
-    '-movflags', '+faststart',
-    finalPath,
-  ], dir, 360_000);
+  await run(
+    'ffmpeg',
+    [
+      '-y',
+      ...inputs,
+      '-filter_complex',
+      filters.join(';'),
+      '-map',
+      '[vout]',
+      '-map',
+      '[aout]',
+      '-c:v',
+      'libx264',
+      '-preset',
+      'medium',
+      '-pix_fmt',
+      'yuv420p',
+      '-r',
+      '30',
+      '-c:a',
+      'aac',
+      '-b:a',
+      '160k',
+      '-ar',
+      '44100',
+      '-movflags',
+      '+faststart',
+      finalPath,
+    ],
+    dir,
+    360_000
+  );
 }
 
 async function patchReelRecord(reel, scenes, assetUrl, dir, totalDuration) {
-  const usedRealCapture = scenes.some((scene) => scene.kind === 'screenshot' && scene.backgroundPath);
+  const usedRealCapture = scenes.some(
+    (scene) => scene.kind === 'screenshot' && scene.backgroundPath
+  );
   const sceneCount = scenes.length;
-  const captionText = scenes.flatMap((scene) => (scene.cues || []).map((cue) => cue.text)).join(' / ');
+  const captionText = scenes
+    .flatMap((scene) => (scene.cues || []).map((cue) => cue.text))
+    .join(' / ');
 
   // Honest scoring. Even with all upgrades, this is still a slide deck with
   // voice, not a posting-ready UGC reel. Cap accordingly until we have music,
@@ -1544,7 +2063,12 @@ async function patchReelRecord(reel, scenes, assetUrl, dir, totalDuration) {
       `durationSec=${totalDuration.toFixed(2)}`,
       `assetUrl=${assetUrl}`,
     ],
-    status: scores.overall >= 0.7 ? 'video_ready' : scores.overall >= 0.45 ? 'needs_review' : 'video_rejected',
+    status:
+      scores.overall >= 0.7
+        ? 'video_ready'
+        : scores.overall >= 0.45
+          ? 'needs_review'
+          : 'video_rejected',
     provider: 'ffmpeg-pro',
     externalTaskId: `pro_${Date.now()}`,
     createdAt: new Date().toISOString(),
@@ -1561,10 +2085,27 @@ async function patchReelRecord(reel, scenes, assetUrl, dir, totalDuration) {
   };
   const recordPath = path.join(dir, 'record.json');
   await writeFile(recordPath, JSON.stringify(updatedReel, null, 2));
-  await run('npx', ['wrangler', 'r2', 'object', 'put', `${BUCKET}/reel-requests/${reel.id}.json`, '--file', recordPath, '--remote', '--content-type', 'application/json; charset=utf-8']);
+  await run('npx', [
+    'wrangler',
+    'r2',
+    'object',
+    'put',
+    `${BUCKET}/reel-requests/${reel.id}.json`,
+    '--file',
+    recordPath,
+    '--remote',
+    '--content-type',
+    'application/json; charset=utf-8',
+  ]);
 }
 
-function scoreVariantHonest({ usedRealCapture, voiceProvider, syncedCaptions, sceneCount, totalDuration }) {
+function scoreVariantHonest({
+  usedRealCapture,
+  voiceProvider,
+  syncedCaptions,
+  sceneCount,
+  totalDuration,
+}) {
   // Honest dimension-by-dimension self-score. No artificial cap — the human
   // is the final judge during review and can override per-variant.
   const missing = [];
@@ -1572,35 +2113,41 @@ function scoreVariantHonest({ usedRealCapture, voiceProvider, syncedCaptions, sc
   // Value clarity — a 6-beat explainer gives a real arc. Cap below max
   // because the hook still depends on caption + voice, not visible product
   // value in the first frame.
-  const valueClarity = sceneCount >= 5 ? 0.70 : 0.45;
+  const valueClarity = sceneCount >= 5 ? 0.7 : 0.45;
   if (sceneCount < 5) missing.push('script has fewer than 5 beats');
 
   // Product proof — a real GitHub repo page IS product proof, just not the
   // running product. Without capture we're back to generic cards.
-  const productProofStrength = usedRealCapture ? 0.70 : 0.20;
+  const productProofStrength = usedRealCapture ? 0.7 : 0.2;
   if (!usedRealCapture) missing.push('no real product capture (used generated cards)');
   if (usedRealCapture) missing.push('proof is a static GitHub repo page, not the running product');
 
   // Visual trust — real screenshot with Ken Burns motion vs. abstract cards.
-  const visualTrust = usedRealCapture ? 0.70 : 0.35;
+  const visualTrust = usedRealCapture ? 0.7 : 0.35;
 
   // Caption readability — burned-in, safe-area, SRT-synced when Edge TTS is on.
   const captionReadability = syncedCaptions ? 0.82 : 0.55;
   if (!syncedCaptions) missing.push('captions are estimated, not synced to voice timing');
 
   // Mobile composition — 9:16, duration in the 18–45s explainer band.
-  const mobileComposition = totalDuration >= 18 && totalDuration <= 45 ? 0.80 : 0.50;
-  if (totalDuration < 18) missing.push(`duration ${totalDuration.toFixed(1)}s is too short to actually explain a product`);
-  if (totalDuration > 45) missing.push(`duration ${totalDuration.toFixed(1)}s exceeds default short-form ceiling`);
+  const mobileComposition = totalDuration >= 18 && totalDuration <= 45 ? 0.8 : 0.5;
+  if (totalDuration < 18)
+    missing.push(
+      `duration ${totalDuration.toFixed(1)}s is too short to actually explain a product`
+    );
+  if (totalDuration > 45)
+    missing.push(`duration ${totalDuration.toFixed(1)}s exceeds default short-form ceiling`);
 
   // Cringe / spam risk — explainer voice, no rocket-emoji hype.
   const cringeRisk = 0.78;
 
   // Posting readiness — honest gap list. This is where the deck-vs-UGC
   // ceiling lives.
-  const postingReadiness = (usedRealCapture && syncedCaptions && sceneCount >= 5) ? 0.55 : 0.30;
+  const postingReadiness = usedRealCapture && syncedCaptions && sceneCount >= 5 ? 0.55 : 0.3;
   missing.push('no background music bed');
-  missing.push('no live UI motion or screen recording — proof scene is a static page with Ken Burns');
+  missing.push(
+    'no live UI motion or screen recording — proof scene is a static page with Ken Burns'
+  );
   missing.push('no human voice / on-camera presence (the next ceiling lift)');
   missing.push('no b-roll cuts or in-product animation');
 
@@ -1613,11 +2160,12 @@ function scoreVariantHonest({ usedRealCapture, voiceProvider, syncedCaptions, sc
     cringeRisk: round(cringeRisk),
     postingReadiness: round(postingReadiness),
   };
-  const overall = round(Object.values(dimensions).reduce((sum, value) => sum + value, 0) / Object.keys(dimensions).length);
+  const overall = round(
+    Object.values(dimensions).reduce((sum, value) => sum + value, 0) /
+      Object.keys(dimensions).length
+  );
 
-  const reasons = [
-    `${sceneCount}-beat explainer script (${totalDuration.toFixed(1)}s)`,
-  ];
+  const reasons = [`${sceneCount}-beat explainer script (${totalDuration.toFixed(1)}s)`];
   if (usedRealCapture) reasons.push('Real GitHub product capture with multi-region Ken Burns');
   if (syncedCaptions) reasons.push(`Captions SRT-synced to ${voiceProvider} voice timing`);
   reasons.push(`Voice: ${voiceProvider}`);
@@ -1651,7 +2199,14 @@ async function edgeTtsAvailable() {
 }
 
 async function fetchReel(id) {
-  for (const status of ['generated', 'approved', 'video_ready', 'needs_review', 'ready_to_post', 'video_rejected']) {
+  for (const status of [
+    'generated',
+    'approved',
+    'video_ready',
+    'needs_review',
+    'ready_to_post',
+    'video_rejected',
+  ]) {
     const res = await fetch(`${BASE}/reels?status=${status}`, {
       headers: WORKER_HEADERS,
     });
@@ -1665,7 +2220,15 @@ async function fetchReel(id) {
 
 async function probeDuration(filePath) {
   try {
-    const { stdout } = await run('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'default=nw=1:nk=1', filePath]);
+    const { stdout } = await run('ffprobe', [
+      '-v',
+      'error',
+      '-show_entries',
+      'format=duration',
+      '-of',
+      'default=nw=1:nk=1',
+      filePath,
+    ]);
     const seconds = Number(stdout.trim());
     return Number.isFinite(seconds) ? seconds : 0;
   } catch {
@@ -1674,7 +2237,10 @@ async function probeDuration(filePath) {
 }
 
 function escapeHtml(value) {
-  return String(value ?? '').replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+  return String(value ?? '').replace(
+    /[&<>"']/g,
+    (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]
+  );
 }
 
 async function run(command, args, cwd, timeoutMs) {

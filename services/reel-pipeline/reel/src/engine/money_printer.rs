@@ -98,6 +98,8 @@ impl RenderEngine for MoneyPrinterEngine {
             aspect: "9:16".to_string(),
             proof_type: None,
             render_log: Vec::new(),
+            artifact_manifest: None,
+            artifact_manifest_path: None,
         })
     }
 
@@ -149,6 +151,8 @@ impl RenderEngine for MoneyPrinterEngine {
             aspect: "9:16".to_string(),
             proof_type: None,
             render_log: Vec::new(),
+            artifact_manifest: None,
+            artifact_manifest_path: None,
         })
     }
 }

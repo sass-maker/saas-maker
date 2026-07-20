@@ -27,13 +27,52 @@ Create a JSON file outside the checkout with absolute, machine-specific paths:
   "systemRunner": "/path/to/foundry-checkout/ops/scripts/agent-bin/run-system-cron",
   "leaseFile": "/machine/local/foundry-host/primary-lease.json",
   "receiptDir": "/machine/local/foundry-host/receipts",
-  "scheduleOutput": "/machine/local/foundry-host/rendered.schedule"
+  "scheduleOutput": "/machine/local/foundry-host/rendered.schedule",
+  "postizConfigFile": "/machine/local/foundry-host/postiz-readiness.json"
 }
 ```
 
 Unknown fields are rejected so credentials and arbitrary private metadata do
 not accidentally enter output or receipts. The role file, lease, receipts, and
 rendered schedule are all refused when their paths are inside `checkoutRoot`.
+`postizConfigFile` is optional for hosts that do not own Postiz. When present,
+`doctor` also requires the Postiz resource, storage, backup, health, API, and
+private-reachability checks below to pass.
+
+## Inert Postiz deployment contract
+
+[`postiz/images.json`](postiz/images.json) pins official Postiz `v2.21.10` by
+multi-architecture digest and pins every dependency tag. The
+[`postiz/compose.yaml`](postiz/compose.yaml) stack is source-only intent: every
+service is behind the explicit `postiz-manual` profile, published ports bind to
+`127.0.0.1`, state is bind-mounted below a machine-local data root, and required
+configuration comes only from external machine-local env files. No env file,
+secret value, install action, or activation state is checked in.
+
+A machine-local readiness file contains paths and private probe URLs only:
+
+```json
+{
+  "schemaVersion": 1,
+  "dataRoot": "/machine/local/postiz/data",
+  "backupRoot": "/machine/local/postiz/backups",
+  "restoreReceiptFile": "/machine/local/postiz/backups/restore-rehearsal-receipt.json",
+  "healthUrl": "http://127.0.0.1:4007/",
+  "apiCompatibilityUrl": "http://127.0.0.1:4007/api/public/v1/integrations",
+  "privateReachabilityUrl": "http://127.0.0.1:4007/"
+}
+```
+
+The doctor requires two logical CPUs, 2 GiB RAM, 20 GiB free at the data root,
+all six persistent directories, a verified `v2.21.10` restore-rehearsal
+receipt, a successful health response, a present/auth-gated public API route,
+and private reachability. URLs with public hosts or embedded credentials are
+rejected before probing. Tests inject resource, filesystem, HTTP, and
+reachability probes; they do not contact a network.
+
+The checked-in [`../../config/postiz-schedules.json`](../../config/postiz-schedules.json)
+contains disabled evidence-sync and queued-distribution intent only. Neither
+entry is installed or rendered by `hostctl`.
 
 ## Commands
 

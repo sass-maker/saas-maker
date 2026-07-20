@@ -102,7 +102,7 @@
         "command": "node",
         "args": [
           "--check",
-          "scripts/render-pro.js"
+          "../content-factory/scripts/render-pro.js"
         ],
         "hint": "Live render-pro needs Worker/R2/Chrome/ffmpeg/voice environment and real reel ids."
       }

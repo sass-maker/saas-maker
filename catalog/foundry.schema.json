@@ -9,6 +9,7 @@
     "updatedAt",
     "sourcePolicy",
     "defaults",
+    "distributionPolicy",
     "performancePolicy",
     "performanceSurfaces",
     "owners",
@@ -48,6 +49,7 @@
       }
     },
     "defaults": { "type": "object" },
+    "distributionPolicy": { "$ref": "#/$defs/distributionPolicy" },
     "performancePolicy": { "$ref": "#/$defs/performancePolicy" },
     "performanceSurfaces": {
       "type": "array",
@@ -109,6 +111,57 @@
         "ownerId": { "$ref": "#/$defs/id" },
         "contracts": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
         "evidenceSources": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+      }
+    },
+    "distributionPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemaVersion", "state", "ownerId", "contentFactory", "externalServices", "evidence"],
+      "properties": {
+        "schemaVersion": { "type": "integer", "const": 1 },
+        "state": { "$ref": "#/$defs/state" },
+        "ownerId": { "$ref": "#/$defs/id" },
+        "contentFactory": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "path", "sourceProductId", "publishesExternally", "allowedCapabilities"],
+          "properties": {
+            "id": { "const": "content-factory" },
+            "path": { "const": "services/content-factory" },
+            "sourceProductId": { "$ref": "#/$defs/id" },
+            "publishesExternally": { "const": false },
+            "allowedCapabilities": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string" } }
+          }
+        },
+        "externalServices": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "kind", "ownerId", "source", "deployment", "versionPolicy", "state"],
+            "properties": {
+              "id": { "$ref": "#/$defs/id" },
+              "kind": { "type": "string" },
+              "ownerId": { "$ref": "#/$defs/id" },
+              "source": { "type": "string", "format": "uri" },
+              "deployment": { "type": "string" },
+              "versionPolicy": { "type": "string" },
+              "state": { "$ref": "#/$defs/state" }
+            }
+          }
+        },
+        "evidence": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["freshnessHours", "states", "allowlist", "excludedDataClasses"],
+          "properties": {
+            "freshnessHours": { "type": "integer", "minimum": 1, "maximum": 720 },
+            "states": { "type": "array", "minItems": 4, "uniqueItems": true, "items": { "enum": ["fresh", "stale", "failed", "unmeasured"] } },
+            "allowlist": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string" } },
+            "excludedDataClasses": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string" } }
+          }
+        }
       }
     },
     "performancePolicy": {

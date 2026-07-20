@@ -6,17 +6,14 @@
  *
  * Run: SAASMAKER_API_KEY=xxx pnpm test:integration
  */
-import { describe, it, expect, beforeAll } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { SaaSMakerClient } from '../../packages/blocks/sdk/src/index';
 
 const API_KEY = process.env.SAASMAKER_API_KEY ?? '';
 const PROJECT_SLUG = process.env.SAASMAKER_PROJECT_SLUG ?? '';
 
-const client = new SaaSMakerClient({ apiKey: API_KEY });
-
-beforeAll(() => {
-  if (!API_KEY) throw new Error('SAASMAKER_API_KEY env var is required');
-});
+const client = API_KEY ? new SaaSMakerClient({ apiKey: API_KEY }) : null;
+const describeWithApiKey = API_KEY ? describe : describe.skip;
 
 // ─── Health ────────────────────────────────────────────────────────────────
 
@@ -31,11 +28,11 @@ describe('health', () => {
 
 // ─── Feedback ──────────────────────────────────────────────────────────────
 
-describe('feedback', () => {
+describeWithApiKey('feedback', () => {
   let feedbackId: string;
 
   it('submits a feedback item', async () => {
-    const record = await client.feedback.submit({
+    const record = await client!.feedback.submit({
       title: '[test] Dark mode support',
       description: 'Integration test feedback entry',
       type: 'feature',
@@ -48,7 +45,7 @@ describe('feedback', () => {
   });
 
   it.skipIf(!PROJECT_SLUG)('lists feedback by project slug', async () => {
-    const res = await client.feedback.listByProject(PROJECT_SLUG);
+    const res = await client!.feedback.listByProject(PROJECT_SLUG);
     expect(Array.isArray(res.data)).toBe(true);
     const found = res.data.find((f) => f.id === feedbackId);
     expect(found).toBeTruthy();
@@ -57,9 +54,9 @@ describe('feedback', () => {
 
 // ─── Waitlist ──────────────────────────────────────────────────────────────
 
-describe('waitlist', () => {
+describeWithApiKey('waitlist', () => {
   it('joins the waitlist', async () => {
-    const res = await client.waitlist.join({
+    const res = await client!.waitlist.join({
       email: `test-${Date.now()}@sassmaker.com`,
       name: 'Integration Test',
     });
@@ -69,16 +66,16 @@ describe('waitlist', () => {
 
   it('rejects duplicate email', async () => {
     const email = `dup-${Date.now()}@sassmaker.com`;
-    await client.waitlist.join({ email });
-    await expect(client.waitlist.join({ email })).rejects.toThrow();
+    await client!.waitlist.join({ email });
+    await expect(client!.waitlist.join({ email })).rejects.toThrow();
   });
 });
 
 // ─── Testimonials ──────────────────────────────────────────────────────────
 
-describe('testimonials', () => {
+describeWithApiKey('testimonials', () => {
   it('submits a testimonial', async () => {
-    const res = await client.testimonials.submit({
+    const res = await client!.testimonials.submit({
       author_name: 'Test User',
       author_email: 'test@sassmaker.com',
       content: 'SaaS Maker is great — integration test.',
@@ -89,34 +86,34 @@ describe('testimonials', () => {
   });
 
   it('lists testimonials', async () => {
-    const res = await client.testimonials.list();
+    const res = await client!.testimonials.list();
     expect(Array.isArray(res.data)).toBe(true);
   });
 });
 
 // ─── Changelog ─────────────────────────────────────────────────────────────
 
-describe('changelog', () => {
+describeWithApiKey('changelog', () => {
   it('lists changelog entries', async () => {
-    const res = await client.changelog.list();
+    const res = await client!.changelog.list();
     expect(Array.isArray(res.data)).toBe(true);
   });
 });
 
 // ─── Roadmap ───────────────────────────────────────────────────────────────
 
-describe('roadmap', () => {
+describeWithApiKey('roadmap', () => {
   it.skipIf(!PROJECT_SLUG)('lists public roadmap items', async () => {
-    const res = await client.roadmap.listPublic(PROJECT_SLUG);
+    const res = await client!.roadmap.listPublic(PROJECT_SLUG);
     expect(Array.isArray(res.data)).toBe(true);
   });
 });
 
 // ─── Testimonials (by slug) ────────────────────────────────────────────────
 
-describe('testimonials by slug', () => {
+describeWithApiKey('testimonials by slug', () => {
   it.skipIf(!PROJECT_SLUG)('submits a testimonial by project slug', async () => {
-    const res = await client.testimonials.submitBySlug(PROJECT_SLUG, {
+    const res = await client!.testimonials.submitBySlug(PROJECT_SLUG, {
       author_name: 'Slug Test User',
       author_email: 'slug-test@sassmaker.com',
       content: 'Integration test via slug.',

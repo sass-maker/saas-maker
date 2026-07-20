@@ -1,8 +1,16 @@
 import { type CockpitD1Database, getCockpitD1 } from '@/lib/cockpit-tasks-store';
 import {
+  marketingNotesForClient,
   marketingDistributionSummary,
   type MarketingDistributionSummary,
 } from '@/lib/marketing-distribution-envelope';
+import {
+  buildMarketingDistributionView,
+  hydrateAnalyticsEvidence,
+  hydrateProviderReceipt,
+  type MarketingDistributionEvidence,
+  type MarketingDistributionView,
+} from '@/lib/marketing-distribution-view';
 
 export type MarketingPostStatus = 'generated' | 'accepted' | 'rejected' | 'sent';
 export type MarketingPostChannel =
@@ -40,6 +48,7 @@ export type MarketingPostRow = {
   created_at: string;
   updated_at: string;
   distribution?: MarketingDistributionSummary | null;
+  distributionView?: MarketingDistributionView | null;
 };
 
 export type MarketingPostInput = Partial<{
@@ -156,23 +165,112 @@ export async function listMarketingPosts(filters: MarketingQueueFilters = {}, db
     )
     .bind(...values)
     .all<Record<string, unknown>>();
-  return ((results ?? []) as unknown as MarketingPostRow[]).map(withDistributionSummary);
+  const posts = (results ?? []) as unknown as MarketingPostRow[];
+  const evidence = await loadDistributionEvidence(
+    posts.map((post) => post.id),
+    db
+  );
+  return posts.map((post) => withDistributionSummary(post, evidence.get(post.id)));
 }
 
-export async function getMarketingPost(id: string, db = getCockpitD1()) {
-  const post = await db
+export async function getMarketingPostRecord(id: string, db = getCockpitD1()) {
+  return db
     .prepare('SELECT * FROM marketing_posts WHERE id = ?')
     .bind(id)
     .first<MarketingPostRow>();
-  return post ? withDistributionSummary(post) : null;
 }
 
-function withDistributionSummary(post: MarketingPostRow): MarketingPostRow {
+export async function getMarketingPost(id: string, db = getCockpitD1()) {
+  const post = await getMarketingPostRecord(id, db);
+  if (!post) return null;
+  const evidence = await loadDistributionEvidence([post.id], db);
+  return withDistributionSummary(post, evidence.get(post.id));
+}
+
+function withDistributionSummary(
+  post: MarketingPostRow,
+  evidence: MarketingDistributionEvidence = { receipts: [], analytics: [] }
+): MarketingPostRow {
   try {
-    return { ...post, distribution: marketingDistributionSummary(post.notes) };
+    const distribution = marketingDistributionSummary(post.notes);
+    const hasNormalizedEvidence = evidence.receipts.length > 0 || evidence.analytics.length > 0;
+    return {
+      ...post,
+      notes: marketingNotesForClient(post.notes),
+      distribution,
+      distributionView:
+        distribution || hasNormalizedEvidence
+          ? buildMarketingDistributionView(
+              {
+                queueStatus: post.status,
+                channel: post.channel,
+                distribution,
+              },
+              evidence
+            )
+          : null,
+    };
   } catch {
-    return { ...post, distribution: null };
+    return {
+      ...post,
+      notes: marketingNotesForClient(post.notes),
+      distribution: null,
+      distributionView: null,
+    };
   }
+}
+
+const EVIDENCE_QUERY_BATCH_SIZE = 90;
+
+async function loadDistributionEvidence(
+  campaignIds: string[],
+  db: CockpitD1Database
+): Promise<Map<string, MarketingDistributionEvidence>> {
+  const evidence = new Map<string, MarketingDistributionEvidence>();
+  const uniqueIds = [...new Set(campaignIds.filter(Boolean))];
+  for (const id of uniqueIds) evidence.set(id, { receipts: [], analytics: [] });
+
+  try {
+    for (let offset = 0; offset < uniqueIds.length; offset += EVIDENCE_QUERY_BATCH_SIZE) {
+      const batch = uniqueIds.slice(offset, offset + EVIDENCE_QUERY_BATCH_SIZE);
+      const placeholders = batch.map(() => '?').join(', ');
+      const [receipts, analytics] = await Promise.all([
+        db
+          .prepare(
+            `SELECT * FROM distribution_provider_receipts
+             WHERE campaign_id IN (${placeholders})
+             ORDER BY observed_at DESC`
+          )
+          .bind(...batch)
+          .all<Record<string, unknown>>(),
+        db
+          .prepare(
+            `SELECT * FROM distribution_analytics_evidence
+             WHERE campaign_id IN (${placeholders})
+             ORDER BY observed_at DESC`
+          )
+          .bind(...batch)
+          .all<Record<string, unknown>>(),
+      ]);
+
+      for (const row of receipts.results ?? []) {
+        const campaignId = typeof row.campaign_id === 'string' ? row.campaign_id : null;
+        const receipt = hydrateProviderReceipt(row);
+        if (campaignId && receipt) evidence.get(campaignId)?.receipts.push(receipt);
+      }
+      for (const row of analytics.results ?? []) {
+        const campaignId = typeof row.campaign_id === 'string' ? row.campaign_id : null;
+        const item = hydrateAnalyticsEvidence(row);
+        if (campaignId && item) evidence.get(campaignId)?.analytics.push(item);
+      }
+    }
+  } catch {
+    // The Cockpit may be upgraded before the additive evidence migration is applied.
+    // Keep legacy queue data usable, but never infer a successful delivery from it.
+    return new Map(uniqueIds.map((id) => [id, { receipts: [], analytics: [] }]));
+  }
+
+  return evidence;
 }
 
 export async function createMarketingPost(

@@ -170,6 +170,36 @@ function validatePerformancePolicy(policy, errors) {
   }
 }
 
+function validateDistributionPolicy(policy, productIds, ownerIds, errors) {
+  if (!policy || typeof policy !== 'object') {
+    errors.push('$.distributionPolicy must be an object');
+    return;
+  }
+  if (!ownerIds.has(policy.ownerId)) {
+    errors.push(`distribution policy references unknown owner ${policy.ownerId}`);
+  }
+  if (policy.contentFactory?.publishesExternally !== false) {
+    errors.push('content factory must not publish externally');
+  }
+  if (!productIds.has(policy.contentFactory?.sourceProductId)) {
+    errors.push(
+      `content factory references unknown source product ${policy.contentFactory?.sourceProductId}`
+    );
+  }
+  const postiz = policy.externalServices?.find((service) => service.id === 'postiz');
+  if (!postiz || postiz.source !== 'https://github.com/gitroomhq/postiz-app') {
+    errors.push('distribution policy must declare the official external Postiz service');
+  } else if (!ownerIds.has(postiz.ownerId)) {
+    errors.push(`Postiz service references unknown owner ${postiz.ownerId}`);
+  }
+  if (!Number.isInteger(policy.evidence?.freshnessHours)) {
+    errors.push('distribution evidence requires an explicit freshness window');
+  }
+  if (!Array.isArray(policy.evidence?.allowlist) || policy.evidence.allowlist.length === 0) {
+    errors.push('distribution evidence requires a privacy allowlist');
+  }
+}
+
 function publicRepositoryUrl(value) {
   if (typeof value !== 'string') return undefined;
   const normalized = value
@@ -292,6 +322,7 @@ export function validateCatalog(catalog) {
     errors.push(`pillars must be exactly ${requiredPillars.join(', ')}`);
   }
   const productIds = new Set(catalog.products.map((product) => product.id));
+  const ownerIds = new Set(catalog.owners.map((owner) => owner.id));
   const maintainedProductIds = new Set(
     catalog.products
       .filter((product) => product.lifecycle === 'maintained')
@@ -300,6 +331,7 @@ export function validateCatalog(catalog) {
   const repositoryIds = new Set(catalog.repositories.map((repository) => repository.id));
 
   validatePerformancePolicy(catalog.performancePolicy, errors);
+  validateDistributionPolicy(catalog.distributionPolicy, productIds, ownerIds, errors);
   for (const surface of catalog.performanceSurfaces) {
     validatePerformanceSurface(surface, productIds, maintainedProductIds, errors);
   }

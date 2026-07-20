@@ -5,6 +5,7 @@ import path from 'node:path';
 import { buildDistributionRequest, executeDistribution } from '../src/distribution.js';
 import { loadSocialAccountsConfig } from '../src/config/social-accounts.js';
 import { createPostingProvider } from '../src/posting.js';
+import { assertLegacyDistributionDisabled } from '../src/legacy-distribution-guard.js';
 
 const flags = parseFlags(process.argv.slice(2));
 if (!flags.file || !flags.receipt) throw new Error('--file and --receipt are required');
@@ -12,6 +13,7 @@ const contentPackage = JSON.parse(await readFile(path.resolve(flags.file), 'utf8
 const mediaReceipt = JSON.parse(await readFile(path.resolve(flags.receipt), 'utf8'));
 
 if (flags.execute) {
+  assertLegacyDistributionDisabled('direct content-package distribution');
   if (!flags.request) throw new Error('--execute requires an approved --request file');
   const request = JSON.parse(await readFile(path.resolve(flags.request), 'utf8'));
   const options = {};

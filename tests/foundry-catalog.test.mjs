@@ -55,6 +55,10 @@ test('canonical catalog validates and bootstraps every current record class', ()
     'unknown',
     'not-applicable',
   ]);
+  assert.equal(catalog.distributionPolicy.contentFactory.publishesExternally, false);
+  assert.equal(catalog.distributionPolicy.externalServices[0].id, 'postiz');
+  assert.equal(catalog.distributionPolicy.evidence.freshnessHours, 24);
+  assert.ok(catalog.distributionPolicy.evidence.allowlist.includes('postId'));
 });
 
 test('performance projection covers maintained products without a duplicate registry', () => {
@@ -251,6 +255,21 @@ test('negative fixtures keep schedules inert and privacy closed', () => {
       fixture.performancePolicy.privacy.queryValues = true;
     }),
     /privacy policy must forbid/
+  );
+});
+
+test('negative fixtures keep Content Factory generation-only and distribution evidence allowlisted', () => {
+  assertRejects(
+    negativeFixture((fixture) => {
+      fixture.distributionPolicy.contentFactory.publishesExternally = true;
+    }),
+    /content factory must not publish externally/
+  );
+  assertRejects(
+    negativeFixture((fixture) => {
+      fixture.distributionPolicy.evidence.allowlist = [];
+    }),
+    /requires a privacy allowlist/
   );
 });
 

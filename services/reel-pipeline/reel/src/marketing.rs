@@ -42,6 +42,8 @@ pub struct RenderAcceptedResult {
     pub provider: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub artifact_manifest_path: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -122,6 +124,7 @@ where
                 reason: Some("already has render artifact".into()),
                 provider: None,
                 status: None,
+                artifact_manifest_path: None,
             });
             continue;
         }
@@ -135,6 +138,7 @@ where
                     reason: Some(err.to_string()),
                     provider: None,
                     status: None,
+                    artifact_manifest_path: None,
                 });
                 continue;
             }
@@ -142,6 +146,9 @@ where
 
         let mut render = engine.create_video(&brief, &RenderOptions::default())?;
         render = poll_until_complete(engine, render, options.poll_limit, options.poll_interval_ms)?;
+        if render.status == RenderStatus::Completed {
+            crate::content_factory::attach_manifest(&brief, &mut render, repo_root)?;
+        }
 
         if render.status == RenderStatus::Failed {
             results.push(RenderAcceptedResult {
@@ -150,6 +157,10 @@ where
                 reason: Some("render failed".into()),
                 provider: Some(render.provider.clone()),
                 status: Some(render.status.as_str().into()),
+                artifact_manifest_path: render
+                    .artifact_manifest_path
+                    .as_ref()
+                    .map(|path| path.to_string_lossy().into_owned()),
             });
             continue;
         }
@@ -176,6 +187,10 @@ where
             reason: None,
             provider: Some(published_render.provider),
             status: Some(published_render.status.as_str().into()),
+            artifact_manifest_path: published_render
+                .artifact_manifest_path
+                .as_ref()
+                .map(|path| path.to_string_lossy().into_owned()),
         });
     }
 

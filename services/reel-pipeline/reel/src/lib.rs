@@ -19,6 +19,7 @@ pub mod autopilot;
 pub mod autopilot_daemon;
 pub mod brief;
 pub mod config;
+pub mod content_factory;
 pub mod engine;
 pub mod marketing;
 pub mod marketing_metrics;

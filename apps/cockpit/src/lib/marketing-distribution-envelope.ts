@@ -4,20 +4,23 @@ export type MarketingDistributionSummary = {
   packageId: string;
   packageRevision: number;
   variantId: string | null;
+  contentApprovalStatus: 'pending' | 'proposed' | 'approved' | 'rejected';
   mediaStatus: 'pending' | 'rendered';
+  artifactVerificationStatus: 'verified' | 'unmeasured';
   approvalStatus: 'pending' | 'proposed' | 'approved' | 'rejected';
   scheduledFor: string | null;
-  accountSlug: string | null;
   attemptState: string;
   attemptCount: number;
-  lastError: string | null;
   publicationStatus: string | null;
-  externalUrl: string | null;
 };
 
 type Envelope = {
   schema: 'fleet.distribution-envelope.v1';
-  contentPackage: { id: string; revision: number };
+  contentPackage: {
+    id: string;
+    revision: number;
+    approval?: { status?: 'proposed' | 'approved' | 'rejected' };
+  };
   mediaReceipt: { status: 'rendered'; variantId: string } | null;
   distributionRequest: {
     scheduledFor: string | null;
@@ -55,18 +58,31 @@ export function marketingDistributionSummary(
     packageId: envelope.contentPackage.id,
     packageRevision: envelope.contentPackage.revision,
     variantId: envelope.mediaReceipt?.variantId ?? null,
+    contentApprovalStatus: envelope.contentPackage.approval?.status ?? 'pending',
     mediaStatus: envelope.mediaReceipt?.status ?? 'pending',
+    artifactVerificationStatus: 'unmeasured',
     approvalStatus:
       envelope.distributionRequest?.approval.status ??
       (envelope.mediaReceipt ? 'proposed' : 'pending'),
     scheduledFor: envelope.distributionRequest?.scheduledFor ?? null,
-    accountSlug: envelope.distributionRequest?.accountSlug ?? null,
     attemptState: envelope.attempts?.state ?? 'idle',
     attemptCount: envelope.attempts?.count ?? 0,
-    lastError: envelope.attempts?.lastError ?? null,
     publicationStatus: envelope.publicationReceipt?.status ?? null,
-    externalUrl: envelope.publicationReceipt?.externalUrl ?? null,
   };
+}
+
+export function marketingNotesForClient(notes: string | null | undefined) {
+  if (!notes) return null;
+  const retained = notes
+    .split(/\r?\n/)
+    .filter((line) => !line.startsWith(MARKER))
+    .filter((line) => !line.trim().startsWith('posting_error:'))
+    .filter(
+      (line) => !/(authorization|bearer|api[_-]?key|password|secret|access[_-]?token)/i.test(line)
+    )
+    .join('\n')
+    .trim();
+  return retained || null;
 }
 
 export function updateMarketingDistributionApproval(

@@ -1,6 +1,8 @@
 /** Internal API/Cockpit contract types (not an npm package). Public types live in `@saas-maker/sdk`. */
 
 export * from './performance';
+export * from './content-factory';
+export * from './distribution';
 
 export type FeedbackType = 'bug' | 'feature' | 'feedback';
 export type FeedbackStatus =

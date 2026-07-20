@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  marketingNotesForClient,
   marketingDistributionSummary,
   updateMarketingDistributionApproval,
 } from '../apps/cockpit/src/lib/marketing-distribution-envelope';
@@ -27,15 +28,14 @@ describe('marketing distribution envelope', () => {
       packageId: 'high-signal:proof',
       packageRevision: 1,
       variantId: 'youtube-v1',
+      contentApprovalStatus: 'pending',
       mediaStatus: 'rendered',
+      artifactVerificationStatus: 'unmeasured',
       approvalStatus: 'proposed',
       scheduledFor: null,
-      accountSlug: 'high-signal-youtube',
       attemptState: 'idle',
       attemptCount: 0,
       publicationStatus: null,
-      externalUrl: null,
-      lastError: null,
     });
   });
 
@@ -67,5 +67,16 @@ describe('marketing distribution envelope', () => {
         { action: 'approve', actor: 'owner' }
       )
     ).toThrow(/Rendered media/);
+  });
+
+  it('removes the encoded envelope and credential-shaped errors from client notes', () => {
+    const safe = marketingNotesForClient(
+      `${notes()}\nposting_error: Bearer fixture-secret\nposting_error_category: network`
+    );
+
+    expect(safe).toBe('Operator note.\nposting_error_category: network');
+    expect(safe).not.toContain('fleet_distribution_v1');
+    expect(safe).not.toContain('high-signal-youtube');
+    expect(safe).not.toContain('fixture-secret');
   });
 });
