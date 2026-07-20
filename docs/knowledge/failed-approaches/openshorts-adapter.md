@@ -21,8 +21,8 @@ paid-service calls.
 
 ## What we kept
 
-- The submodule stays parked at `engines/openshorts` as a read-only UGC
-  workflow reference (removal is a separate, explicitly-approved cleanup).
+- The upstream repository link remains the read-only UGC workflow reference;
+  the local submodule was removed after explicit approval on 2026-07-20.
 - The pattern knowledge (MediaPipe face detection + YOLOv8 fallback for
   auto-cropping vertical 9:16, "Heavy Tripod" stabilization) is recorded in
   [`learnings/new-things.md`](../learnings/new-things.md) for future reference.
@@ -32,8 +32,8 @@ paid-service calls.
 - Default renderers should be local-first and canary-able without API quota.
 - UGC actor pipelines belong behind a separately-gated, paid-service-aware
   adapter — not the default factory.
-- Parking a submodule as a reference is cheaper than re-cloning later, but it
-  still costs disk on every fresh clone; track its removal explicitly.
+- A public upstream link is sufficient for a rejected engine; a parked
+  submodule makes every fresh clone pay for code the product cannot execute.
 
 ## Decision
 
