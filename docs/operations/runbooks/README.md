@@ -11,6 +11,8 @@ shields, baselines, PostHog, launch kit).
 | Runbook | When to use |
 | --- | --- |
 | [`fleet-audit.md`](fleet-audit.md) | Run a full fleet audit (`pnpm fleet:audit`). This is what the `weekly-fleet-ops-audit` cron job runs every Monday. |
+| [`postiz-backup-restore.md`](postiz-backup-restore.md) | Rehearse Postiz backup and restore against disposable state before any host activation. |
+| [`postiz-upgrade-rehearsal.md`](postiz-upgrade-rehearsal.md) | Rehearse a pinned Postiz upgrade and rollback without treating it as deployment approval. |
 | [`smoke-prod.md`](smoke-prod.md) | Verify SaaS Maker production surfaces are healthy (`pnpm smoke` / `pnpm fleet:prod-smoke`). Includes post-deploy smoke and fleet-wide smoke. |
 
 ## Where the procedures live today

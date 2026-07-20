@@ -35,10 +35,10 @@
 
 ## 6. Host readiness
 
-- [ ] 6.1 Add a pinned official Postiz image/digest manifest and non-secret compose overlay for Postiz, PostgreSQL, Redis, Temporal, and persistent storage.
-- [ ] 6.2 Extend the Foundry host doctor for resources, persistent paths, backups, health endpoints, API compatibility, and private-network reachability.
-- [ ] 6.3 Add backup/restore and upgrade rehearsal runbooks; verify them against disposable local state.
-- [ ] 6.4 Add inert schedules for evidence synchronization and queued distribution; do not install or activate them.
+- [x] 6.1 Add a pinned official Postiz image/digest manifest and non-secret compose overlay for Postiz, PostgreSQL, Redis, Temporal, and persistent storage.
+- [x] 6.2 Extend the Foundry host doctor for resources, persistent paths, backups, health endpoints, API compatibility, and private-network reachability.
+- [x] 6.3 Add backup/restore and upgrade rehearsal runbooks; verify them against disposable local state.
+- [x] 6.4 Add inert schedules for evidence synchronization and queued distribution; do not install or activate them.
 
 ## 7. Verification and owner-gated cutover
 
