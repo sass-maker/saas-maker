@@ -38,7 +38,7 @@ test('canonical catalog validates and bootstraps every current record class', ()
   assert.equal(catalog.skills.length, 23);
   assert.equal(catalog.automations.length, 9);
   assert.equal(catalog.publicRecords.length, 30);
-  assert.equal(catalog.performanceSurfaces.length, 27);
+  assert.equal(catalog.performanceSurfaces.length, 30);
   assert.deepEqual(
     catalog.pillars.map((pillar) => pillar.id),
     ['build', 'market', 'learn', 'visibility', 'control']

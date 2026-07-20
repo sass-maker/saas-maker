@@ -390,6 +390,45 @@
       "budget": null
     },
     {
+      "id": "high-signal-api",
+      "projectId": "high-signal",
+      "name": "High Signal API health",
+      "kind": "api",
+      "url": "https://high-signal-api.sarthakagrawal927.workers.dev/health",
+      "method": "GET",
+      "expectedStatuses": [200],
+      "timeoutMs": 10000,
+      "criticality": "critical",
+      "freshnessHours": 24,
+      "budget": null
+    },
+    {
+      "id": "email-manager-api",
+      "projectId": "email-manager",
+      "name": "Email Manager API health",
+      "kind": "api",
+      "url": "https://mail.sassmaker.com/api/health",
+      "method": "GET",
+      "expectedStatuses": [200],
+      "timeoutMs": 10000,
+      "criticality": "standard",
+      "freshnessHours": 24,
+      "budget": null
+    },
+    {
+      "id": "starboard-api",
+      "projectId": "starboard",
+      "name": "Starboard API health",
+      "kind": "api",
+      "url": "https://starboard.codevetter.com/api/health",
+      "method": "GET",
+      "expectedStatuses": [200],
+      "timeoutMs": 10000,
+      "criticality": "standard",
+      "freshnessHours": 24,
+      "budget": null
+    },
+    {
       "id": "free-ai-api",
       "projectId": "free-ai",
       "name": "Free AI health",
