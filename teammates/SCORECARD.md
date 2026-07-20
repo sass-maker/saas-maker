@@ -34,3 +34,6 @@ Format (one table row per delegation):
 | 2026-07-19 | codex | review | Starboard and Research Papers automation | accepted-with-fixes | independently verified false freshness, weak health probes, unsafe test state, and exact-count analytics leakage |
 | 2026-07-19 | codex | implement | Starboard refresh evidence | accepted | scoped fail-closed evidence, search health, and privacy fixes; 13 focused tests plus typecheck and docs passed |
 | 2026-07-19 | codex | implement | Research Papers refresh evidence | accepted-with-fixes | scoped refresh and health fixes; parent sanitized public asset errors; 28 Python and 3 Pages tests passed |
+| 2026-07-20 | codex | implement | saas-maker performance evidence API | accepted-with-fixes | useful ingestion and query foundation; parent fixed auth middleware interception, bounds, and project scoping |
+| 2026-07-20 | codex | implement | saas-maker synthetic performance runners | accepted | bounded safe-method runner and deterministic tests were directly integrated; 8 runner and adapter tests passed |
+| 2026-07-20 | codex | implement | saas-maker Cockpit Speed workspace | accepted-with-fixes | useful dense workspace structure; parent removed populated demo fallback and wired authenticated evidence reads |
