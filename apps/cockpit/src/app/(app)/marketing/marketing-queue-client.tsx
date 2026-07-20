@@ -11,6 +11,7 @@ import {
   ExternalLink,
   Megaphone,
   Plus,
+  RefreshCcw,
   Send,
   Sparkles,
   Trash2,
@@ -39,6 +40,10 @@ import {
   parseMarketingMetrics,
   parsePostingFailure,
 } from '@/lib/marketing-queue-ops';
+import type {
+  DistributionViewTone,
+  MarketingDistributionView,
+} from '@/lib/marketing-distribution-view';
 import type {
   MarketingPostChannel,
   MarketingPostRow,
@@ -69,6 +74,14 @@ const STATUS_CLASS: Record<MarketingPostStatus, string> = {
   accepted: 'border-emerald-500/40 bg-emerald-500/10 text-emerald-300',
   rejected: 'border-rose-500/40 bg-rose-500/10 text-rose-300',
   sent: 'border-violet-500/40 bg-violet-500/10 text-violet-300',
+};
+
+const DISTRIBUTION_TONE_CLASS: Record<DistributionViewTone, string> = {
+  neutral: 'border-border bg-muted/30 text-muted-foreground',
+  info: 'border-cyan-500/40 bg-cyan-500/10 text-cyan-300',
+  success: 'border-emerald-500/40 bg-emerald-500/10 text-emerald-300',
+  warning: 'border-amber-500/40 bg-amber-500/10 text-amber-300',
+  danger: 'border-rose-500/40 bg-rose-500/10 text-rose-300',
 };
 
 const OPS_FILTERS: Array<{ value: MarketingOpsFilter; label: string }> = [
@@ -166,6 +179,20 @@ export function MarketingQueueClient({ initialPosts }: { initialPosts: Marketing
         .slice(0, 3),
     [opsSummary.metricsReady]
   );
+  const distributionViews = posts.flatMap((post) =>
+    post.distributionView ? [{ post, view: post.distributionView }] : []
+  );
+  const evidenceCounts = {
+    fresh: distributionViews.filter(({ view }) => view.freshness === 'fresh').length,
+    stale: distributionViews.filter(({ view }) => view.freshness === 'stale').length,
+    failed: distributionViews.filter(({ view }) => view.freshness === 'failed').length,
+    unmeasured: distributionViews.filter(({ view }) => view.freshness === 'unmeasured').length,
+  };
+  const recommendations = Array.from(
+    new Map(
+      distributionViews.map(({ view }) => [view.recommendation.title, view.recommendation])
+    ).values()
+  ).slice(0, 3);
 
   async function refresh() {
     const res = await fetch('/api/marketing/queue');
@@ -409,6 +436,47 @@ export function MarketingQueueClient({ initialPosts }: { initialPosts: Marketing
         </button>
       </div>
 
+      {distributionViews.length > 0 && (
+        <Card className="gap-4 p-4">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <h2 className="flex items-center gap-2 font-semibold">
+                <BarChart3 className="h-4 w-4 text-cyan-300" />
+                Distribution outcomes
+              </h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Provider-neutral Postiz delivery and analytics evidence. Recommendations are
+                advisory and never create product tasks.
+              </p>
+            </div>
+            <Badge variant="outline" className="border-border bg-muted/30 text-muted-foreground">
+              24h freshness policy
+            </Badge>
+          </div>
+          <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
+            <OutcomeCount label="Fresh" count={evidenceCounts.fresh} tone="success" />
+            <OutcomeCount label="Stale" count={evidenceCounts.stale} tone="warning" />
+            <OutcomeCount label="Sync failed" count={evidenceCounts.failed} tone="danger" />
+            <OutcomeCount label="Unmeasured" count={evidenceCounts.unmeasured} tone="neutral" />
+          </div>
+          <div className="grid gap-3 lg:grid-cols-3">
+            {recommendations.map((recommendation) => (
+              <div key={recommendation.title} className="rounded-lg border bg-muted/20 p-3">
+                <p className="text-sm font-medium">{recommendation.title}</p>
+                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                  {recommendation.detail}
+                </p>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  {recommendation.evidenceCount === 0
+                    ? 'No normalized evidence attached.'
+                    : `Based on ${recommendation.evidenceCount} normalized evidence record${recommendation.evidenceCount === 1 ? '' : 's'}.`}
+                </p>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
+
       {(opsSummary.missedPosts.length > 0 ||
         opsSummary.postingFailures.length > 0 ||
         topMetrics.length > 0) && (
@@ -417,7 +485,7 @@ export function MarketingQueueClient({ initialPosts }: { initialPosts: Marketing
             <div>
               <h2 className="font-semibold">Posting ops</h2>
               <p className="text-sm text-muted-foreground">
-                Missed posts, publish failures, and top synced metrics from reel-pipeline notes.
+                Missed posts, classified publish failures, and normalized platform metrics.
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -448,7 +516,7 @@ export function MarketingQueueClient({ initialPosts }: { initialPosts: Marketing
               items={opsSummary.postingFailures.slice(0, 4).map(({ post, failure }) => ({
                 id: post.id,
                 title: post.title,
-                detail: `${failure.category ?? 'unknown'} · ${failure.message ?? 'No error message'}`,
+                detail: `${failure.category ?? 'unknown'} · ${failure.retryable ? 'bounded retry eligible' : 'operator review required'}`,
               }))}
             />
             <OpsList
@@ -751,6 +819,7 @@ export function MarketingQueueClient({ initialPosts }: { initialPosts: Marketing
                   <pre className="max-h-72 overflow-auto whitespace-pre-wrap rounded-lg border bg-muted/30 p-3 text-sm leading-relaxed text-muted-foreground">
                     {postText(post)}
                   </pre>
+                  {post.distributionView && <DistributionStatePanel view={post.distributionView} />}
                   {hasMetrics(post) && (
                     <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
                       {metricLine(post, 'views')}
@@ -866,6 +935,111 @@ export function MarketingQueueClient({ initialPosts }: { initialPosts: Marketing
   );
 }
 
+function OutcomeCount({
+  label,
+  count,
+  tone,
+}: {
+  label: string;
+  count: number;
+  tone: DistributionViewTone;
+}) {
+  return (
+    <div className={`rounded-lg border px-3 py-2 ${DISTRIBUTION_TONE_CLASS[tone]}`}>
+      <p className="text-xs uppercase tracking-widest">{label}</p>
+      <p className="mt-1 text-2xl font-semibold">{count}</p>
+    </div>
+  );
+}
+
+function DistributionStatePanel({ view }: { view: MarketingDistributionView }) {
+  const freshnessTone: DistributionViewTone =
+    view.freshness === 'fresh'
+      ? 'success'
+      : view.freshness === 'failed'
+        ? 'danger'
+        : view.freshness === 'stale'
+          ? 'warning'
+          : 'neutral';
+
+  return (
+    <section
+      className="space-y-3 rounded-lg border bg-muted/15 p-3"
+      aria-label="Distribution state"
+    >
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <h3 className="flex items-center gap-2 text-sm font-medium">
+          <RefreshCcw className="h-4 w-4 text-cyan-300" />
+          Distribution pipeline
+        </h3>
+        <Badge variant="outline" className={DISTRIBUTION_TONE_CLASS[freshnessTone]}>
+          Analytics {view.freshness}
+        </Badge>
+      </div>
+      <dl className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+        {view.stages.map((stage) => (
+          <div
+            key={stage.key}
+            className={`rounded-md border p-2 ${DISTRIBUTION_TONE_CLASS[stage.tone]}`}
+          >
+            <dt className="text-[11px] uppercase tracking-wider opacity-80">{stage.label}</dt>
+            <dd className="mt-1 text-sm font-medium">{stage.value}</dd>
+          </div>
+        ))}
+      </dl>
+      <div className="grid gap-3 border-t pt-3 lg:grid-cols-[minmax(0,1fr)_minmax(220px,0.7fr)]">
+        <div>
+          <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+            <span>{view.platform}</span>
+            <span aria-hidden="true">·</span>
+            <span>{view.deliveryState}</span>
+            <span aria-hidden="true">·</span>
+            <span>
+              {view.freshnessObservedAt
+                ? `observed ${formatDateTime(view.freshnessObservedAt)}`
+                : 'analytics not measured'}
+            </span>
+          </div>
+          {view.metrics.length > 0 ? (
+            <div className="mt-2 flex flex-wrap gap-2">
+              {view.metrics.map((metric) => (
+                <span
+                  key={`${metric.providerLabel}:${metric.label}`}
+                  className="rounded-md border bg-background/50 px-2 py-1 text-xs"
+                  title={
+                    metric.label === metric.providerLabel
+                      ? metric.providerLabel
+                      : `Provider label: ${metric.providerLabel}`
+                  }
+                >
+                  {metric.label}: {metric.value.toLocaleString()}
+                </span>
+              ))}
+            </div>
+          ) : (
+            <p className="mt-2 text-xs text-muted-foreground">
+              No allowlisted platform metrics are available.
+            </p>
+          )}
+          {view.failure && (
+            <p className="mt-2 text-xs text-rose-300">
+              {view.failure.category} failure ·{' '}
+              {view.failure.retryable ? 'bounded retry eligible' : 'operator review required'}
+            </p>
+          )}
+        </div>
+        <div className="rounded-md border bg-background/40 p-2">
+          <p className="text-xs uppercase tracking-wider text-muted-foreground">Recommendation</p>
+          <p className="mt-1 text-sm font-medium">{view.recommendation.title}</p>
+          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+            {view.recommendation.detail}
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function OpsList({
   title,
   empty,
@@ -899,15 +1073,24 @@ function isMissedPost(post: MarketingPostRow) {
 }
 
 function hasPostingFailure(post: MarketingPostRow) {
-  return Boolean(parsePostingFailure(post.notes));
+  return Boolean(post.distributionView?.failure ?? parsePostingFailure(post.notes));
 }
 
 function hasMetrics(post: MarketingPostRow) {
+  if (post.distributionView?.metrics.length) return true;
   const snapshot = parseMarketingMetrics(post.notes);
   return Boolean(snapshot.syncedAt && Object.keys(snapshot.metrics).length > 0);
 }
 
 function metricLine(post: MarketingPostRow, key: string) {
+  const normalized = post.distributionView?.metrics.find((metric) => metric.label === key);
+  if (normalized) {
+    return (
+      <span key={key} className="rounded-md border bg-muted/30 px-2 py-1">
+        {key}: {normalized.value.toLocaleString()}
+      </span>
+    );
+  }
   const value = parseMarketingMetrics(post.notes).metrics[key];
   if (value === undefined || value === null) return null;
   return (
