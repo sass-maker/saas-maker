@@ -31,8 +31,9 @@ The canonical human allocation model lives in
   their product direction.
 - **Toolbox:** mostly finished utilities kept usable, discoverable, and quietly
   marketed for bounded experiments.
-- **Foundry + Helpers:** one shared factory for planning, building, operating,
-  and marketing the fleet.
+- **Foundry + Helpers:** the shared post-ship system that measures verified
+  products, markets them, and turns feedback into evidence-backed
+  recommendations.
 - **Ignored:** frozen or retired projects with no routine obligation.
 - **Removed:** attribution-only records excluded from operations.
 
@@ -40,6 +41,21 @@ Do not infer attention from repository count, custom-domain ownership, or the
 legacy `focus` / `active` / `secondary` deployment tiers. Use
 `project-tiers.md` for attention and `fleet-ops/config/projects.json` for deploy
 and domain reality.
+
+### Foundry handoff boundary
+
+Foundry begins after product work is complete and verified:
+
+1. The change is merged into the product's stable branch.
+2. Required CI checks pass.
+3. The intended artifact is deployed.
+4. Production smoke verification passes.
+
+After handoff, Foundry measures product and API outcomes, runs approved or
+bounded marketing, and synthesizes user feedback and behavioral evidence. It
+may recommend the next action or create a reviewable task, but it does not own
+product direction or autonomously implement product features. The product owner
+decides whether evidence becomes new product work.
 
 Local checkout aliases:
 

@@ -15,9 +15,10 @@ The daily operating view is intentionally small:
    by Sarthak.
 2. **Toolbox** — finished or mostly finished projects that remain usable and
    receive quiet, automated marketing and bounded experiments.
-3. **Foundry + Helpers** — one factory for planning, building, operating, and
-   marketing the fleet. Helper surfaces may remain separately deployable while
-   converging on one Foundry workstream.
+3. **Foundry + Helpers** — one post-ship system for measuring products,
+   marketing them, and understanding feedback after work is done and verified.
+   Helper surfaces may remain separately deployable while converging on one
+   Foundry workstream.
 4. **Ignored** — frozen or retired work. Preserve it where convenient, but do
    not create routine maintenance, marketing, or roadmap obligations.
 5. **Removed** — attribution-only records. Exclude them from all operations.
@@ -69,15 +70,22 @@ quiet.
 - Drank
 - Reel Pipeline
 
-Treat these as one Foundry workstream, not six product bets. Foundry is the
-factory for:
+Treat these as one Foundry workstream, not six product bets. A product enters
+the Foundry loop only after its change is merged, CI is green, it is deployed,
+and production smoke verification passes. Foundry then owns:
 
-- **Planning:** portfolio context, priorities, specs, research, documentation,
-  and task routing.
-- **Building:** agent workflows, CI and release readiness, deployment
-  visibility, and fleet health.
-- **Marketing:** domains, landing pages, indexing, performance, content, and
-  distribution.
+- **Measure:** availability, speed, activation, usage, errors, retention,
+  background jobs, API behavior, and marketing attribution.
+- **Market:** indexing, directory presence, reusable campaigns, content,
+  distribution, and bounded experiments appropriate to the project's attention
+  tier.
+- **Understand feedback:** combine explicit feedback, support signals, product
+  behavior, and experiment results into themes, evidence, and recommendations.
+
+Foundry does not autonomously choose or implement the next product feature.
+It returns evidence-backed recommendations to the product owner, who decides
+what becomes product work. Foundry may build and maintain its own shared
+measurement, marketing, feedback, and control-plane capabilities.
 
 Consolidate ownership, registry data, dashboards, documentation, and workflows
 before physically merging repositories. A helper may remain an independently
@@ -115,7 +123,7 @@ or maintenance work and should not appear in active fleet counts.
 |---|---|
 | My Work | Human-led product direction; automation provides evidence and guardrails |
 | Toolbox | Maintain usability and ambient discoverability; run bounded experiments |
-| Foundry + Helpers | Improve the shared factory when it reduces work across the fleet |
+| Foundry + Helpers | Run the verified post-ship measure, market, and feedback loop |
 | Ignored | No routine work; reactivate explicitly |
 | Removed | Attribution only; exclude everywhere operational |
 
