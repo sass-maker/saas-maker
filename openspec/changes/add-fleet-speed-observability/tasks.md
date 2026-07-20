@@ -48,5 +48,5 @@
 - [ ] 6.3 Verify via browser that empty, stale, partial, fresh, failing, high-volume, and narrow-screen Speed states are scannable and accessible
 - [x] 6.4 Verify stored and returned fixtures contain no secrets, raw query values, payload bodies, user identity, or unbounded labels
 - [x] 6.5 Update `PROJECT_STATUS.md`, observability/performance runbooks, catalog-generated views, and the designated-host activation checklist
-- [ ] 6.6 Open and merge the Foundry implementation PR only after exact-head CI is green; keep schedules disabled
+- [x] 6.6 Open and merge the Foundry implementation PR only after exact-head CI is green; keep schedules disabled
 - [ ] 6.7 After separate production and host approval, activate collection in observation-only mode and review 14 days of baselines with the owner before enabling alerts
