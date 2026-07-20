@@ -24,7 +24,7 @@ export default async function MarketingPage() {
     <div className="space-y-6">
       <PageHeader
         title="Marketing Queue"
-        description="Review agent-created post ideas, accept or reject them, then track what has actually been sent."
+        description="Review content, approve distribution, and inspect Postiz delivery plus evidence-backed outcomes in one operator queue."
       />
       {error ? (
         <div className="rounded-lg border border-yellow-800 bg-yellow-950/20 p-4 text-sm text-yellow-400">

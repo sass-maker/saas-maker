@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 import { updateMarketingDistributionApproval } from '@/lib/marketing-distribution-envelope';
-import { getMarketingPost, updateMarketingPost } from '@/lib/marketing-queue-store';
+import { getMarketingPostRecord, updateMarketingPost } from '@/lib/marketing-queue-store';
 import { getDashboardSession } from '@/lib/server-session';
 
 export const dynamic = 'force-dynamic';
@@ -11,7 +11,7 @@ export async function POST(req: Request, context: RouteContext) {
   const session = await getDashboardSession(req.headers);
   if (!session?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const { id } = await context.params;
-  const post = await getMarketingPost(id);
+  const post = await getMarketingPostRecord(id);
   if (!post) return NextResponse.json({ error: 'Not found' }, { status: 404 });
   const body = (await req.json().catch(() => null)) as {
     action?: unknown;

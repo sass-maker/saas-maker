@@ -84,6 +84,7 @@ export function parsePostingFailure(
 }
 
 export function hasPublishReleaseId(post: MarketingPostRow) {
+  if (post.distributionView?.deliveryState === 'published') return true;
   const provider = marketingNoteValue(post.notes, 'posting_provider');
   const externalId = marketingNoteValue(post.notes, 'external_id');
   return Boolean(externalId && (provider === 'youtube' || provider === 'instagram'));
@@ -112,13 +113,30 @@ export function buildMarketingOpsSummary(
   const metricsPending: MarketingPostRow[] = [];
 
   for (const post of posts) {
-    const failure =
-      post.distribution?.attemptState === 'failed'
-        ? { category: 'distribution', retryable: false, message: post.distribution.lastError }
-        : parsePostingFailure(post.notes);
+    const failure = post.distributionView?.failure
+      ? {
+          category: post.distributionView.failure.category,
+          retryable: post.distributionView.failure.retryable,
+          message: null,
+        }
+      : parsePostingFailure(post.notes);
     if (failure) postingFailures.push({ post, failure });
 
     if (post.status !== 'sent') continue;
+    if (post.distributionView?.metrics.length) {
+      metricsReady.push({
+        post,
+        snapshot: {
+          provider: post.distributionView.platform,
+          externalId: null,
+          syncedAt: post.distributionView.freshnessObservedAt,
+          metrics: Object.fromEntries(
+            post.distributionView.metrics.map((metric) => [metric.label, metric.value])
+          ),
+        },
+      });
+      continue;
+    }
     const snapshot = parseMarketingMetrics(post.notes);
     if (snapshot.syncedAt && Object.keys(snapshot.metrics).length > 0) {
       metricsReady.push({ post, snapshot });
@@ -147,7 +165,9 @@ export function matchesMarketingOpsFilter(
 ) {
   if (filter === 'all') return true;
   if (filter === 'missed') return isMissedMarketingPost(post, now);
-  if (filter === 'errors') return Boolean(parsePostingFailure(post.notes));
+  if (filter === 'errors') {
+    return Boolean(post.distributionView?.failure ?? parsePostingFailure(post.notes));
+  }
   if (filter === 'metrics_pending') {
     return post.status === 'sent' && hasPublishReleaseId(post) && !hasSyncedMetrics(post);
   }
@@ -156,6 +176,7 @@ export function matchesMarketingOpsFilter(
 }
 
 function hasSyncedMetrics(post: MarketingPostRow) {
+  if (post.distributionView?.metrics.length) return true;
   const snapshot = parseMarketingMetrics(post.notes);
   return Boolean(snapshot.syncedAt && Object.keys(snapshot.metrics).length > 0);
 }
