@@ -44,3 +44,9 @@ Format (one table row per delegation):
 | 2026-07-20 | codex | refactor | saas-maker Content Factory separation | accepted-with-fixes | generation boundary and manifests were sound; parent bounded remote artifact reads and included primary video artifacts |
 | 2026-07-20 | codex | implement | saas-maker Cockpit distribution outcomes | accepted-with-fixes | useful operator states and safe evidence projection; parent wired persisted D1 evidence instead of permanent unmeasured fallback |
 | 2026-07-20 | codex | review | CodeVetter stash recovery | accepted-with-fixes | retained synthetic QA timing and RSS evidence across JavaScript, TypeScript, and Rust while discarding obsolete stash work |
+| 2026-07-20 | devin | implement | app-health V0 foundation | accepted-with-fixes | useful workspace and contracts; parent tightened strict validation, windows, histogram boundaries, fixtures, and CI |
+| 2026-07-20 | devin | implement | app-health ingest backend | accepted-with-fixes | strong local API foundation; parent removed raw-key retention and scoped dedupe plus rollback behavior |
+| 2026-07-20 | devin | implement | app-health Node SDK | accepted-with-fixes | complete middleware lane; parent bounded configuration, rejected credential URLs, separated delivery drops, and fixed live auto-flush |
+| 2026-07-20 | devin | implement | app-health Go SDK | accepted-with-fixes | complete stdlib lane; parent fixed synchronous flush, repeat-close errors, route collisions, and Go 1.22 pattern compatibility |
+| 2026-07-20 | devin | implement | app-health endpoint dashboard | blocked | repeated CLI startup pruned isolated worktrees before edits; parent implemented and browser-reviewed the UI |
+| 2026-07-20 | codex | review | app-health Go SDK hardening | accepted | isolated review fixed flush handshake, close races, oversized routes, and build-tagged pattern access; 44 race-tested cases passed |
