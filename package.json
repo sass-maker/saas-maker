@@ -23,7 +23,7 @@
     "catalog:check": "pnpm catalog:generate && git diff --exit-code -- catalog/generated foundry.projects.json ops/config/projects.json ops/config/automation-registry.json",
     "observability:inventory": "node scripts/foundry-observability-inventory.mjs --root . --output catalog/generated/observability.json --format json",
     "observability:test": "node --test tests/foundry-observability.test.mjs",
-    "host:test": "node --test ops/test/host-foundation.test.mjs",
+    "host:test": "node --test ops/test/host-foundation.test.mjs ops/test/postiz-host.test.mjs",
     "host:doctor": "node ops/host/hostctl.mjs doctor",
     "generate:openapi": "node scripts/generate-openapi.mjs",
     "check:openapi": "pnpm generate:openapi && git diff --exit-code -- packages/cli/src/openapi.json docs/openapi/openapi.json",
