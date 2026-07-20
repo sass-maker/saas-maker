@@ -6,6 +6,7 @@ import {
   ChevronDown,
   Eye,
   FolderKanban,
+  Gauge,
   LayoutList,
   ListTodo,
   Map,
@@ -78,6 +79,7 @@ const pillarNav = [
     items: [
       { label: 'Fleet health', href: '/fleet', icon: LayoutList },
       { label: 'Observability', href: '/fleet/observability', icon: BarChart3 },
+      { label: 'Speed', href: '/fleet/speed', icon: Gauge },
     ],
   },
   {

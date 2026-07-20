@@ -1,0 +1,394 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-20",
+  "generatedFrom": "catalog/foundry.json",
+  "canary": {
+    "projectId": "sass-maker",
+    "surfaceId": "sass-maker-api",
+    "status": "instrumented-reference",
+    "adapter": "packages/performance-runtime"
+  },
+  "categories": {
+    "instrumented": [
+      "sass-maker"
+    ],
+    "synthetic-only": [
+      "codevetter",
+      "pace",
+      "posttrainllm",
+      "high-signal",
+      "personal-website",
+      "rolepatch",
+      "karte",
+      "significant-hobbies",
+      "reader",
+      "anime-list",
+      "swe-interview-prep",
+      "email-manager",
+      "looptv",
+      "chess",
+      "research-papers",
+      "starboard",
+      "free-ai",
+      "knowledge-base",
+      "fleet-dashboard",
+      "psi-swarm",
+      "drank"
+    ],
+    "unmeasured": [],
+    "not-applicable": [
+      "motion",
+      "mobile-dev-cockpit",
+      "reel-pipeline"
+    ]
+  },
+  "items": [
+    {
+      "projectId": "codevetter",
+      "name": "CodeVetter",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "codevetter-web",
+          "kind": "web",
+          "url": "https://codevetter.com"
+        }
+      ],
+      "runtimeAdapter": null
+    },
+    {
+      "projectId": "pace",
+      "name": "HeyPace",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "pace-web",
+          "kind": "web",
+          "url": "https://heypace.app"
+        }
+      ],
+      "runtimeAdapter": null
+    },
+    {
+      "projectId": "posttrainllm",
+      "name": "PostTrainLLM",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "posttrainllm-web",
+          "kind": "web",
+          "url": "https://posttrainllm.com"
+        }
+      ],
+      "runtimeAdapter": null
+    },
+    {
+      "projectId": "high-signal",
+      "name": "High Signal",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "high-signal-web",
+          "kind": "web",
+          "url": "https://highsignal.app"
+        },
+        {
+          "id": "high-signal-api",
+          "kind": "api",
+          "url": "https://high-signal-api.sarthakagrawal927.workers.dev/health"
+        }
+      ],
+      "runtimeAdapter": null
+    },
+    {
+      "projectId": "personal-website",
+      "name": "Personal website",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "personal-website-web",
+          "kind": "web",
+          "url": "https://sarthakagrawal.dev"
+        }
+      ],
+      "runtimeAdapter": null
+    },
+    {
+      "projectId": "rolepatch",
+      "name": "RolePatch",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "rolepatch-web",
+          "kind": "web",
+          "url": "https://rolepatch.com"
+        }
+      ],
+      "runtimeAdapter": null
+    },
+    {
+      "projectId": "karte",
+      "name": "Karte",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "karte-web",
+          "kind": "web",
+          "url": "https://karte.cc"
+        }
+      ],
+      "runtimeAdapter": null
+    },
+    {
+      "projectId": "significant-hobbies",
+      "name": "Significant Hobbies",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "significant-hobbies-web",
+          "kind": "web",
+          "url": "https://significanthobbies.com"
+        }
+      ],
+      "runtimeAdapter": null
+    },
+    {
+      "projectId": "reader",
+      "name": "Reader",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "reader-web",
+          "kind": "web",
+          "url": "https://read.significanthobbies.com"
+        }
+      ],
+      "runtimeAdapter": null
+    },
+    {
+      "projectId": "anime-list",
+      "name": "Anime List",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "anime-list-web",
+          "kind": "web",
+          "url": "https://anime.significanthobbies.com"
+        }
+      ],
+      "runtimeAdapter": null
+    },
+    {
+      "projectId": "swe-interview-prep",
+      "name": "SWE Interview Prep",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "swe-interview-prep-web",
+          "kind": "web",
+          "url": "https://learn.significanthobbies.com"
+        }
+      ],
+      "runtimeAdapter": null
+    },
+    {
+      "projectId": "email-manager",
+      "name": "Email Manager",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "email-manager-web",
+          "kind": "web",
+          "url": "https://mail.sassmaker.com"
+        },
+        {
+          "id": "email-manager-api",
+          "kind": "api",
+          "url": "https://mail.sassmaker.com/api/health"
+        }
+      ],
+      "runtimeAdapter": null
+    },
+    {
+      "projectId": "looptv",
+      "name": "LoopTV",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "looptv-web",
+          "kind": "web",
+          "url": "https://tv.significanthobbies.com"
+        }
+      ],
+      "runtimeAdapter": null
+    },
+    {
+      "projectId": "chess",
+      "name": "Chess",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "chess-web",
+          "kind": "web",
+          "url": "https://chess.significanthobbies.com"
+        }
+      ],
+      "runtimeAdapter": null
+    },
+    {
+      "projectId": "motion",
+      "name": "Motion",
+      "status": "not-applicable",
+      "surfaces": [],
+      "runtimeAdapter": null
+    },
+    {
+      "projectId": "research-papers",
+      "name": "Research Papers",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "research-papers-web",
+          "kind": "web",
+          "url": "https://papers.highsignal.app"
+        }
+      ],
+      "runtimeAdapter": null
+    },
+    {
+      "projectId": "starboard",
+      "name": "Starboard",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "starboard-web",
+          "kind": "web",
+          "url": "https://starboard.codevetter.com"
+        },
+        {
+          "id": "starboard-api",
+          "kind": "api",
+          "url": "https://starboard.codevetter.com/api/health"
+        }
+      ],
+      "runtimeAdapter": null
+    },
+    {
+      "projectId": "free-ai",
+      "name": "Free AI",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "free-ai-api",
+          "kind": "api",
+          "url": "https://ai-gateway.sassmaker.com/health"
+        }
+      ],
+      "runtimeAdapter": null
+    },
+    {
+      "projectId": "knowledge-base",
+      "name": "Knowledge Base",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "knowledge-base-web",
+          "kind": "web",
+          "url": "https://knowledgebase.sassmaker.com"
+        },
+        {
+          "id": "knowledge-base-api",
+          "kind": "api",
+          "url": "https://search.sassmaker.com/v1/healthz"
+        }
+      ],
+      "runtimeAdapter": null
+    },
+    {
+      "projectId": "sass-maker",
+      "name": "SaaS Maker / Foundry",
+      "status": "instrumented",
+      "surfaces": [
+        {
+          "id": "sass-maker-web",
+          "kind": "web",
+          "url": "https://sassmaker.com"
+        },
+        {
+          "id": "sass-maker-cockpit-web",
+          "kind": "web",
+          "url": "https://app.sassmaker.com"
+        },
+        {
+          "id": "sass-maker-packages-web",
+          "kind": "web",
+          "url": "https://packages.sassmaker.com"
+        },
+        {
+          "id": "sass-maker-skills-web",
+          "kind": "web",
+          "url": "https://skills.sassmaker.com"
+        },
+        {
+          "id": "sass-maker-api",
+          "kind": "api",
+          "url": "https://api.sassmaker.com/health"
+        }
+      ],
+      "runtimeAdapter": "packages/performance-runtime"
+    },
+    {
+      "projectId": "fleet-dashboard",
+      "name": "Fleet Dashboard",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "fleet-dashboard-web",
+          "kind": "web",
+          "url": "https://fleet.sassmaker.com"
+        }
+      ],
+      "runtimeAdapter": null
+    },
+    {
+      "projectId": "psi-swarm",
+      "name": "PSI Swarm",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "psi-swarm-web",
+          "kind": "web",
+          "url": "https://performance.sassmaker.com"
+        }
+      ],
+      "runtimeAdapter": null
+    },
+    {
+      "projectId": "mobile-dev-cockpit",
+      "name": "Mobile Dev Cockpit",
+      "status": "not-applicable",
+      "surfaces": [],
+      "runtimeAdapter": null
+    },
+    {
+      "projectId": "drank",
+      "name": "Drank",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "drank-web",
+          "kind": "web",
+          "url": "https://domains.sassmaker.com"
+        }
+      ],
+      "runtimeAdapter": null
+    },
+    {
+      "projectId": "reel-pipeline",
+      "name": "Reel Pipeline",
+      "status": "not-applicable",
+      "surfaces": [],
+      "runtimeAdapter": null
+    }
+  ]
+}

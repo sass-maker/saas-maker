@@ -1,6 +1,6 @@
 # saas-maker — PROJECT STATUS
 
-Last updated: 2026-07-19
+Last updated: 2026-07-20
 
 ## Why / What
 
@@ -66,6 +66,8 @@ SaaS Maker is the Foundry for the fleet: a Cloudflare-first monorepo with the pu
 Brand note: production domain uses **double-s** `sassmaker.com`; display name remains SaaS Maker.
 
 ## Timeline
+
+- **2026-07-20 — Fleet speed observability (observation-only):** Implemented provider-neutral performance contracts, D1 evidence tables, authenticated receipt/span ingestion and private query routes, catalog-declared performance surfaces, synthetic API probe + PSI Swarm receipt adapters, reference runtime timing adapter (SaaS Maker API canary, opt-in), inert schedule definitions, rollout inventory, and the Cockpit `/fleet/speed` workspace with fixture fallback. OpenSpec change `add-fleet-speed-observability`. **Not yet activated:** production migration, scheduler enablement, budget/alert enforcement, OpenAPI regen, browser UI sign-off, and host cutover.
 
 - **2026-07-19 — Foundry source consolidation:** Imported Mobile Dev Cockpit, Drank, Reel Pipeline, Fleet Ops, and PSI Swarm with provenance-preserving history; established `catalog/foundry.json` as the sole hand-edited catalog; generated public and compatibility projections; added the provider-neutral observability contract and Cockpit coverage page; added an inert operations-host lease foundation; separated Blume package docs from the apex; and added the indexed skills site. Local source validation is complete. Production deployment, DNS, manual-host parity, shared lease storage, scheduler installation, and old-repository archival remain separate explicit cutover decisions.
 

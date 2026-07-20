@@ -3,11 +3,19 @@
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": "../..",
-    "types": ["@cloudflare/workers-types"],
+    "types": [
+      "@cloudflare/workers-types"
+    ],
     "noImplicitAny": false,
     "paths": {
-      "@saas-maker/contracts": ["../../internal/contracts/index.ts"]
+      "@saas-maker/contracts": [
+        "../../internal/contracts/index.ts"
+      ]
     }
   },
-  "include": ["src/**/*", "../../internal/contracts/index.ts"]
+  "include": [
+    "src/**/*",
+    "../../internal/contracts/index.ts",
+    "../../internal/performance-runtime/index.ts"
+  ]
 }

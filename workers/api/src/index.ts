@@ -21,10 +21,12 @@ import { taskWorkflows } from './routes/task-workflows';
 import { symphony } from './routes/symphony';
 import { marketing } from './routes/marketing';
 import { events } from './routes/events';
+import { performance } from './routes/performance';
 import { test as testRoutes } from './routes/test';
 import { requireApiKey } from './middleware/auth';
 import { rateLimit } from './middleware/rate-limit';
 import { getDb } from './db';
+import { maybeRecordCanarySpan } from './lib/performance-canary';
 
 const app = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
@@ -80,7 +82,15 @@ app.use('*', async (c, next) => {
 
 app.use('*', async (c, next) => {
   c.set('requestId', crypto.randomUUID());
+  const started = performance.now();
   await next();
+  const delivery = maybeRecordCanarySpan(c.env as any, {
+    method: c.req.method,
+    path: c.req.path,
+    status: c.res.status,
+    durationMs: performance.now() - started,
+  });
+  if (delivery) c.executionCtx.waitUntil(delivery);
 });
 
 let posthogConfigured = false;
@@ -138,6 +148,7 @@ app.route('/v1/task-workflows', taskWorkflows);
 app.route('/v1/symphony', symphony);
 app.route('/v1/marketing', marketing);
 app.route('/v1/events', events);
+app.route('/v1/performance', performance);
 app.route('/v1/test', testRoutes);
 
 export default app;
