@@ -41,6 +41,62 @@
       ]
     }
   },
+  "distributionPolicy": {
+    "schemaVersion": 1,
+    "state": "configured",
+    "ownerId": "foundry",
+    "contentFactory": {
+      "id": "content-factory",
+      "path": "services/content-factory",
+      "sourceProductId": "reel-pipeline",
+      "publishesExternally": false,
+      "allowedCapabilities": [
+        "brief-intake",
+        "generation",
+        "rendering",
+        "quality-evidence",
+        "artifact-manifest"
+      ]
+    },
+    "externalServices": [
+      {
+        "id": "postiz",
+        "kind": "scheduler-publisher",
+        "ownerId": "foundry",
+        "source": "https://github.com/gitroomhq/postiz-app",
+        "deployment": "designated-host-private",
+        "versionPolicy": "pinned-version-and-digest",
+        "state": "configured"
+      }
+    ],
+    "evidence": {
+      "freshnessHours": 24,
+      "states": ["fresh", "stale", "failed", "unmeasured"],
+      "allowlist": [
+        "projectId",
+        "campaignId",
+        "briefId",
+        "artifactId",
+        "experimentId",
+        "integrationId",
+        "platform",
+        "postId",
+        "releaseId",
+        "releaseStatus",
+        "metricLabel",
+        "metricValue",
+        "observedAt",
+        "freshness"
+      ],
+      "excludedDataClasses": [
+        "authentication-material",
+        "comments",
+        "direct-messages",
+        "follower-identities",
+        "unrelated-account-content"
+      ]
+    }
+  },
   "performancePolicy": {
     "schemaVersion": 1,
     "mode": "observation",
