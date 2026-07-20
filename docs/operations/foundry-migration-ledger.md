@@ -16,11 +16,11 @@ these imports.
 | Component | Source and frozen revision | Canonical path | Import evidence | Existing production identity | Rollback before cutover |
 | --- | --- | --- | --- | --- | --- |
 | SaaS Maker | `https://github.com/sass-maker/saas-maker.git`, `main` at `516a625` | repository root | consolidation branch starts from the reviewed AI-infrastructure main revision | API `saasmaker-api`; Cockpit `saasmaker-dashboard`; Pages `saas-maker-home`; Droid `saasmaker-droid` | deploy the last known-good component revision from SaaS Maker `main` |
-| Mobile Dev Cockpit | `https://github.com/sass-maker/mobile-dev-cockpit.git`, `main` at `3224f6662580fbff11023214fc19cc30d7450623` | `apps/mobile-cockpit/` | unsquashed subtree import `438e066`; second parent is the frozen source revision | local Apple/Expo control client; no hosted production identity | build or distribute from the frozen source repository revision |
-| Drank | `https://github.com/High-Signal-App/drank.git`, `main` at `f0c347c58e6cd731bf583545774c19959f24d57a` | `services/drank/` | unsquashed subtree import `a416c50`; second parent is the frozen source revision | Cloudflare Pages project `drank`; `domains.sassmaker.com` | deploy the frozen source revision with its existing `pnpm deploy` path |
-| Reel Pipeline | `https://github.com/sass-maker/reel-pipeline.git`, `main` at `e61f8d37e645af5d6a6435cd6926f5a57d1de1c1` | `services/reel-pipeline/` | unsquashed subtree import `c07d7dd`; root submodule paths normalized by `e7c2207` | Worker `reel-pipeline-artifacts`; route `reels.sassmaker.com/*` | deploy the frozen source revision and its recorded Worker config |
-| Fleet Ops | `https://github.com/sass-maker/fleet-workspace.git`, `main` at `fb41554` | `ops/` and `skills/` | `fleet-ops/` history split at `42f79ce2b4d0cf43867f05021c25d96c2d343531`; unsquashed import `2c69354`; path normalization `c208b0e` | source tooling only; the private Cockpit remains a separate manual production cutover | run the frozen Fleet workspace revision; no production owner is disabled by this import |
-| PSI Swarm | `https://github.com/sass-maker/psi-swarm.git`, `main` at `3b74ce64aff2116013c9c25968410b9daceb945e` plus the newer Fleet Ops snapshot at `fb41554` | `tools/psi-swarm/` | standalone history graft `20dbea3`; current tree comes from the Fleet Ops import; normalized by `c208b0e` | Pages project `psi-swarm-web`; `performance.sassmaker.com` | deploy standalone `3b74ce6` or the prior Fleet-owned known-good source revision |
+| Mobile Dev Cockpit | `https://github.com/sass-maker/mobile-dev-cockpit.git`, `main` at `228d9bd99048a468ce597ef8a2d0005f06bdd280` | `apps/mobile-cockpit/` | initial unsquashed import `438e066`; latest source sync `aa1119c` | local Apple/Expo control client; no hosted production identity | build or distribute from the recorded standalone source revision |
+| Drank | `https://github.com/High-Signal-App/drank.git`, `main` at `e97fa60d417e065209937102857b1f8f579b2fde` | `services/drank/` | initial unsquashed import `a416c50`; latest source sync `a2f1d6c` | Cloudflare Pages project `drank`; `domains.sassmaker.com` | deploy the recorded standalone source revision with its existing `pnpm deploy` path |
+| Reel Pipeline | `https://github.com/sass-maker/reel-pipeline.git`, `main` at `fc9c26f37b783d2143d701f03f997aba0998e9cb` | `services/reel-pipeline/` | initial unsquashed import `c07d7dd`; latest source sync `d679e6b`; root submodule paths normalized by `e7c2207` | Worker `reel-pipeline-artifacts`; route `reels.sassmaker.com/*` | deploy the recorded standalone source revision and its Worker config |
+| Fleet Ops | `https://github.com/sass-maker/fleet-workspace.git`, Fleet root `main` at `77fbcd911ed33a05fce5f65a3b75a2317fd69000` | `ops/` and `skills/` | initial `fleet-ops/` history split `42f79ce`; latest split `9d6b439` merged by `c4e7f09`; path normalization `c208b0e` | source tooling only; the private Cockpit remains a separate manual production cutover | run the recorded Fleet workspace revision; no production owner is disabled by this import |
+| PSI Swarm | `https://github.com/sass-maker/psi-swarm.git`, historical standalone `main` at `3b74ce64aff2116013c9c25968410b9daceb945e` plus Fleet root `main` at `77fbcd911ed33a05fce5f65a3b75a2317fd69000` | `tools/psi-swarm/` | standalone history graft `20dbea3`; current tree comes from the Fleet Ops sync `c4e7f09` and remains normalized under `tools/` | Pages project `psi-swarm-web`; `performance.sassmaker.com` | deploy standalone `3b74ce6` or the recorded Fleet-owned known-good source revision |
 
 The source URLs and revisions remain available in Git history. Old repositories
 are not archived or made read-only
@@ -35,7 +35,6 @@ root `.gitmodules` file:
 | Path | Frozen gitlink |
 | --- | --- |
 | `services/reel-pipeline/engines/MoneyPrinterTurbo` | `bf229e20012e38f3bf161679fa98894b1e6f6d63` |
-| `services/reel-pipeline/engines/openshorts` | `fe87af6dd599b854e6eab2de0ca247ebafe13885` |
 | `services/reel-pipeline/engines/reel-maker` | `cedeeea002566bb81b2dff7b67ef852957fadbaf` |
 
 Submodules are intentionally uninitialized in a fresh clone. Host bootstrap
@@ -45,16 +44,13 @@ update them implicitly.
 ## Source-state exclusions
 
 - The frozen Mobile Dev Cockpit source was clean on `main` and had no stash.
-- Drank was imported from its pushed `main` revision. A later local
-  `chore/knip-dead-code-cleanup` worktree contains uncommitted dependency and
-  dead-code experiments; those files were deliberately excluded and remain
-  owned by that separate worktree.
-- Reel Pipeline was imported from pushed `main`. A locally initialized
-  `engines/openshorts` checkout was dirty relative to its gitlink; no nested
-  checkout content entered the monorepo.
-- Fleet Ops was imported from the clean control-plane worktree at `fb41554`,
-  not from the concurrently dirty Fleet checkout. Two untracked tooling-standard
-  drafts in the latter were excluded.
+- Drank's reviewed dead-code cleanup and latest weekly public DR snapshot are
+  included through its recorded pushed `main` revision.
+- Reel Pipeline's obsolete OpenShorts adapter and submodule are removed. The
+  remaining engine gitlinks stay pinned at the repository root.
+- Fleet Ops is synchronized from the clean Fleet root `main` revision recorded
+  above. Fleet-owned PSI source remains normalized under `tools/psi-swarm/`;
+  it is not duplicated under `ops/`.
 - Retired Fleet snapshots remain isolated under `ops/` as historical input.
   They are outside root workspaces, catalog generation, schedules, and public
   projections; retaining them does not reactivate removed products.
