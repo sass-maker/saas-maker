@@ -510,6 +510,136 @@
         }
       }
     },
+    "/v1/performance/budgets": {
+      "get": {
+        "tags": [
+          "performance"
+        ],
+        "summary": "GET /v1/performance/budgets",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/performance/budgets/approve": {
+      "post": {
+        "tags": [
+          "performance"
+        ],
+        "summary": "POST /v1/performance/budgets/approve",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/performance/cleanup": {
+      "post": {
+        "tags": [
+          "performance"
+        ],
+        "summary": "POST /v1/performance/cleanup",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/performance/receipts": {
+      "post": {
+        "tags": [
+          "performance"
+        ],
+        "summary": "POST /v1/performance/receipts",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/performance/routes": {
+      "get": {
+        "tags": [
+          "performance"
+        ],
+        "summary": "GET /v1/performance/routes",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/performance/spans": {
+      "post": {
+        "tags": [
+          "performance"
+        ],
+        "summary": "POST /v1/performance/spans",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/performance/spans/recent": {
+      "get": {
+        "tags": [
+          "performance"
+        ],
+        "summary": "GET /v1/performance/spans/recent",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/performance/summary": {
+      "get": {
+        "tags": [
+          "performance"
+        ],
+        "summary": "GET /v1/performance/summary",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/performance/traces/{traceId}": {
+      "get": {
+        "tags": [
+          "performance"
+        ],
+        "summary": "GET /v1/performance/traces/{traceId}",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/performance/volume": {
+      "get": {
+        "tags": [
+          "performance"
+        ],
+        "summary": "GET /v1/performance/volume",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/v1/projects": {
       "get": {
         "tags": [

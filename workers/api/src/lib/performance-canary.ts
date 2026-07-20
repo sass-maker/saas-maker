@@ -4,25 +4,20 @@
  * Delivery is always asynchronous and never fails the product request.
  */
 
-import { createRuntimeAdapter, normalizeRouteTemplate } from '../../../../internal/performance-runtime/index';
-
-type Adapter = ReturnType<typeof createRuntimeAdapter>;
-
-let adapter: Adapter | null | undefined;
+import {
+  createRuntimeAdapter,
+  normalizeRouteTemplate,
+} from '../../../../internal/performance-runtime/index';
 
 function getAdapter(env: {
   PERFORMANCE_CANARY_INGEST_URL?: string;
   PERFORMANCE_CANARY_API_KEY?: string;
   PERFORMANCE_CANARY_PROJECT_ID?: string;
-}): Adapter | null {
-  if (adapter !== undefined) return adapter;
+}): ReturnType<typeof createRuntimeAdapter> | null {
   const base = env.PERFORMANCE_CANARY_INGEST_URL;
   const key = env.PERFORMANCE_CANARY_API_KEY;
-  if (!base || !key) {
-    adapter = null;
-    return null;
-  }
-  adapter = createRuntimeAdapter({
+  if (!base || !key) return null;
+  return createRuntimeAdapter({
     projectId: env.PERFORMANCE_CANARY_PROJECT_ID || 'sass-maker',
     surface: 'sass-maker-api',
     environment: 'production',
@@ -30,12 +25,6 @@ function getAdapter(env: {
     apiKey: key,
     successSampleRate: 0.1,
   });
-  return adapter;
-}
-
-/** Reset cached adapter (tests). */
-export function resetPerformanceCanary(): void {
-  adapter = undefined;
 }
 
 export function maybeRecordCanarySpan(

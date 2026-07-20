@@ -3,22 +3,9 @@
  * Telemetry delivery failures never delay or fail the product request.
  */
 
-export type RuntimeEnvironment =
-  | 'production'
-  | 'staging'
-  | 'preview'
-  | 'development'
-  | 'local';
+export type RuntimeEnvironment = 'production' | 'staging' | 'preview' | 'development' | 'local';
 
-export type OperationKind =
-  | 'd1'
-  | 'sql'
-  | 'kv'
-  | 'r2'
-  | 'external-http'
-  | 'ai'
-  | 'queue'
-  | 'other';
+export type OperationKind = 'd1' | 'sql' | 'kv' | 'r2' | 'external-http' | 'ai' | 'queue' | 'other';
 
 export interface RuntimeAdapterOptions {
   projectId: string;
@@ -35,12 +22,12 @@ export interface RuntimeAdapterOptions {
   sampleErrors?: boolean;
   /** Always sample requests slower than this ms (default 1000) */
   slowThresholdMs?: number;
-  /** Cap emitted spans per route template per minute (default 120) */
-  perRoutePerMinuteCap?: number;
   /** Optional fetch implementation (defaults to global fetch) */
   fetchImpl?: typeof fetch;
   /** Optional clock */
   now?: () => number;
+  /** Optional deterministic sampler for tests. Production uses crypto randomness. */
+  random?: () => number;
 }
 
 export interface DownstreamOperation {
@@ -60,8 +47,7 @@ export interface RequestTimingInput {
   operations?: DownstreamOperation[];
 }
 
-const UUID_RE =
-  /[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/gi;
+const UUID_RE = /[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/gi;
 const LONG_HEX_RE = /\/[0-9a-f]{12,}(?=\/|$)/gi;
 const LONG_NUM_RE = /\/\d{4,}(?=\/|$)/g;
 
@@ -100,10 +86,10 @@ export async function hashFingerprint(parts: string[]): Promise<string> {
   const data = new TextEncoder().encode(parts.join('|'));
   if (typeof crypto !== 'undefined' && crypto.subtle) {
     const digest = await crypto.subtle.digest('SHA-256', data);
-    return [...new Uint8Array(digest)]
+    return `fp_${[...new Uint8Array(digest)]
       .map((b) => b.toString(16).padStart(2, '0'))
       .join('')
-      .slice(0, 32);
+      .slice(0, 32)}`;
   }
   // Fallback for environments without subtle crypto
   let h = 0;
@@ -111,16 +97,36 @@ export async function hashFingerprint(parts: string[]): Promise<string> {
   return `fp_${h.toString(16)}`;
 }
 
+function secureRandomUnit(): number {
+  const value = new Uint32Array(1);
+  crypto.getRandomValues(value);
+  return value[0]! / 0x1_0000_0000;
+}
+
+function normalizedFingerprint(value: string): string {
+  const fingerprint = value.trim().toLowerCase();
+  if (!/^fp_[a-f0-9]{8,64}$/.test(fingerprint)) {
+    throw new Error('operation fingerprint must be a sanitized fp_ hash');
+  }
+  return fingerprint;
+}
+
 export function createRuntimeAdapter(options: RuntimeAdapterOptions) {
   const successRate = options.successSampleRate ?? 0.1;
   const sampleErrors = options.sampleErrors ?? true;
   const slowThresholdMs = options.slowThresholdMs ?? 1000;
-  const cap = options.perRoutePerMinuteCap ?? 120;
   const fetchImpl = options.fetchImpl ?? fetch;
   const now = options.now ?? (() => Date.now());
-  const minuteBuckets = new Map<string, { minute: number; count: number }>();
+  const random = options.random ?? secureRandomUnit;
 
-  function shouldSample(status: number, durationMs: number, route: string): {
+  if (successRate < 0 || successRate > 1) {
+    throw new Error('successSampleRate must be between 0 and 1');
+  }
+
+  function shouldSample(
+    status: number,
+    durationMs: number
+  ): {
     sample: boolean;
     rate: number;
   } {
@@ -130,16 +136,7 @@ export function createRuntimeAdapter(options: RuntimeAdapterOptions) {
     if (isError && sampleErrors) rate = 1;
     else if (isSlow) rate = 1;
 
-    const minute = Math.floor(now() / 60_000);
-    const bucket = minuteBuckets.get(route);
-    if (!bucket || bucket.minute !== minute) {
-      minuteBuckets.set(route, { minute, count: 0 });
-    }
-    const current = minuteBuckets.get(route)!;
-    if (current.count >= cap) return { sample: false, rate };
-
-    if (Math.random() > rate) return { sample: false, rate };
-    current.count += 1;
+    if (random() >= rate) return { sample: false, rate };
     return { sample: true, rate };
   }
 
@@ -165,7 +162,7 @@ export function createRuntimeAdapter(options: RuntimeAdapterOptions) {
      */
     recordRequest(input: RequestTimingInput): Promise<void> | null {
       const route = normalizeRouteTemplate(input.routeTemplate);
-      const { sample, rate } = shouldSample(input.status, input.durationMs, route);
+      const { sample, rate } = shouldSample(input.status, input.durationMs);
       if (!sample) return null;
 
       const span = {
@@ -187,7 +184,7 @@ export function createRuntimeAdapter(options: RuntimeAdapterOptions) {
         operations: (input.operations ?? []).map((op) => ({
           kind: op.kind,
           label: fingerprintLabel(op.kind, op.label),
-          fingerprint: op.fingerprint,
+          fingerprint: normalizedFingerprint(op.fingerprint),
           duration_ms: op.duration_ms,
           success: op.success,
         })),

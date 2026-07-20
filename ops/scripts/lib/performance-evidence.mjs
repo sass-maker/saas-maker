@@ -7,7 +7,13 @@ function finiteNonNegative(value) {
 }
 
 function boundedString(value, field, maximum = 160) {
-  if (typeof value !== "string" || value.length === 0 || value.length > maximum || /[\u0000-\u001f\u007f]/.test(value)) {
+  const hasControlCharacter =
+    typeof value === "string" &&
+    [...value].some((character) => {
+      const code = character.charCodeAt(0);
+      return code <= 31 || code === 127;
+    });
+  if (typeof value !== "string" || value.length === 0 || value.length > maximum || hasControlCharacter) {
     throw new Error(`${field} must be a non-empty string of at most ${maximum} characters`);
   }
   return value;

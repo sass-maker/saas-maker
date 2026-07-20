@@ -75,6 +75,19 @@ test('performance projection covers maintained products without a duplicate regi
   );
 });
 
+test('performance rollout inventory tracks every maintained runtime without a second registry', () => {
+  const views = buildCompatibilityViews(catalog);
+  const projection = buildPerformanceProjection(catalog);
+  const inventory = views.get('performance-rollout-inventory.json');
+  assert.equal(inventory.items.length, projection.projects.length);
+  assert.equal(inventory.canary.adapter, 'internal/performance-runtime');
+  assert.ok(
+    inventory.items
+      .filter((item) => item.runtimeRequired && item.projectId !== 'sass-maker')
+      .every((item) => item.rolloutAction === 'instrument-runtime-adapter')
+  );
+});
+
 test('checked-in compatibility views are deterministic and current', async () => {
   const first = buildCompatibilityViews(catalog);
   const second = buildCompatibilityViews(structuredClone(catalog));

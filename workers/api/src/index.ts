@@ -21,7 +21,7 @@ import { taskWorkflows } from './routes/task-workflows';
 import { symphony } from './routes/symphony';
 import { marketing } from './routes/marketing';
 import { events } from './routes/events';
-import { performance } from './routes/performance';
+import { performanceRoutes } from './routes/performance';
 import { test as testRoutes } from './routes/test';
 import { requireApiKey } from './middleware/auth';
 import { rateLimit } from './middleware/rate-limit';
@@ -84,7 +84,7 @@ app.use('*', async (c, next) => {
   c.set('requestId', crypto.randomUUID());
   const started = performance.now();
   await next();
-  const delivery = maybeRecordCanarySpan(c.env as any, {
+  const delivery = maybeRecordCanarySpan(c.env, {
     method: c.req.method,
     path: c.req.path,
     status: c.res.status,
@@ -148,7 +148,7 @@ app.route('/v1/task-workflows', taskWorkflows);
 app.route('/v1/symphony', symphony);
 app.route('/v1/marketing', marketing);
 app.route('/v1/events', events);
-app.route('/v1/performance', performance);
+app.route('/v1/performance', performanceRoutes);
 app.route('/v1/test', testRoutes);
 
 export default app;

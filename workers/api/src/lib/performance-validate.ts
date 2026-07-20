@@ -54,6 +54,15 @@ const MAX_SAMPLES = 100_000;
 
 export type ValidationError = { error: string };
 
+function isValidationError(value: unknown): value is ValidationError {
+  return Boolean(
+    value &&
+      typeof value === 'object' &&
+      'error' in value &&
+      typeof (value as { error?: unknown }).error === 'string'
+  );
+}
+
 function isObject(value: unknown): value is Record<string, unknown> {
   return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
 }
@@ -62,7 +71,14 @@ function cleanString(value: unknown, field: string, max = MAX_LABEL): string | V
   if (typeof value !== 'string' || !value.trim()) return { error: `${field} is required` };
   const trimmed = value.trim();
   if (trimmed.length > max) return { error: `${field} exceeds ${max} characters` };
-  if (/[\u0000-\u001f\u007f]/.test(trimmed)) return { error: `${field} contains control characters` };
+  if (
+    [...trimmed].some((character) => {
+      const code = character.charCodeAt(0);
+      return code <= 31 || code === 127;
+    })
+  ) {
+    return { error: `${field} contains control characters` };
+  }
   return trimmed;
 }
 
@@ -88,7 +104,10 @@ function parseIso(value: unknown, field: string): string | ValidationError {
   return new Date(s).toISOString();
 }
 
-function parsePercentiles(value: unknown, field: string): Record<string, number | null> | null | ValidationError {
+function parsePercentiles(
+  value: unknown,
+  field: string
+): Record<string, number | null> | null | ValidationError {
   if (value == null) return null;
   if (!isObject(value)) return { error: `${field} must be an object` };
   const out: Record<string, number | null> = {};
@@ -133,6 +152,7 @@ export interface NormalizedReceipt {
   error_count: number;
   sampling_rate: number | null;
   probe_mode: string | null;
+  probe_origin: string | null;
   method: string | null;
   route_template: string | null;
   latency_ms: Record<string, number | null> | null;
@@ -217,7 +237,9 @@ export function normalizeReceipt(raw: unknown): NormalizedReceipt | ValidationEr
   const error_count =
     raw.error_count == null
       ? 0
-      : typeof raw.error_count === 'number' && Number.isInteger(raw.error_count) && raw.error_count >= 0
+      : typeof raw.error_count === 'number' &&
+          Number.isInteger(raw.error_count) &&
+          raw.error_count >= 0
         ? raw.error_count
         : -1;
   if (error_count < 0) return { error: 'error_count must be a non-negative integer' };
@@ -240,7 +262,7 @@ export function normalizeReceipt(raw: unknown): NormalizedReceipt | ValidationEr
   }
 
   const latency_ms = parsePercentiles(raw.latency_ms, 'latency_ms');
-  if (latency_ms && 'error' in latency_ms) return latency_ms;
+  if (isValidationError(latency_ms)) return latency_ms;
 
   let probe_mode: string | null = null;
   if (raw.probe_mode != null) {
@@ -248,6 +270,16 @@ export function normalizeReceipt(raw: unknown): NormalizedReceipt | ValidationEr
     if (typeof pm !== 'string') return pm;
     if (!PROBE_MODES.has(pm)) return { error: 'invalid probe_mode' };
     probe_mode = pm;
+  }
+
+  let probe_origin: string | null = null;
+  if (raw.probe_origin != null) {
+    const origin = cleanString(raw.probe_origin, 'probe_origin', 80);
+    if (typeof origin !== 'string') return origin;
+    if (!/^[a-z0-9][a-z0-9._-]*$/.test(origin)) {
+      return { error: 'probe_origin must be a bounded low-cardinality label' };
+    }
+    probe_origin = origin;
   }
 
   let diagnostic_ref: string | null = null;
@@ -292,6 +324,7 @@ export function normalizeReceipt(raw: unknown): NormalizedReceipt | ValidationEr
     error_count,
     sampling_rate,
     probe_mode,
+    probe_origin,
     method,
     route_template,
     latency_ms: latency_ms as Record<string, number | null> | null,
@@ -312,17 +345,29 @@ function normalizeOperation(raw: unknown, index: number): NormalizedOperation | 
 
   const label = cleanString(raw.label, `operations[${index}].label`);
   if (typeof label !== 'string') return label;
-  if (label.includes('?') || /^(https?|file):/i.test(label) || /\bselect\b|\binsert\b/i.test(label)) {
+  if (
+    label.includes('?') ||
+    /^(https?|file):/i.test(label) ||
+    /\bselect\b|\binsert\b/i.test(label)
+  ) {
     return { error: `operations[${index}].label must be an allowlisted fingerprint label` };
   }
 
   const fingerprint = cleanString(raw.fingerprint, `operations[${index}].fingerprint`, 128);
   if (typeof fingerprint !== 'string') return fingerprint;
+  if (!/^fp_[a-f0-9]{8,64}$/.test(fingerprint)) {
+    return { error: `operations[${index}].fingerprint must be a sanitized fp_ hash` };
+  }
 
-  if (typeof raw.duration_ms !== 'number' || !Number.isFinite(raw.duration_ms) || raw.duration_ms < 0) {
+  if (
+    typeof raw.duration_ms !== 'number' ||
+    !Number.isFinite(raw.duration_ms) ||
+    raw.duration_ms < 0
+  ) {
     return { error: `operations[${index}].duration_ms must be non-negative` };
   }
-  if (typeof raw.success !== 'boolean') return { error: `operations[${index}].success must be boolean` };
+  if (typeof raw.success !== 'boolean')
+    return { error: `operations[${index}].success must be boolean` };
 
   return {
     kind,
@@ -374,7 +419,11 @@ export function normalizeSpan(raw: unknown): NormalizedSpan | ValidationError {
   if (typeof status_class !== 'string') return status_class;
   if (!STATUS_CLASSES.has(status_class)) return { error: 'invalid status_class' };
 
-  if (typeof raw.duration_ms !== 'number' || !Number.isFinite(raw.duration_ms) || raw.duration_ms < 0) {
+  if (
+    typeof raw.duration_ms !== 'number' ||
+    !Number.isFinite(raw.duration_ms) ||
+    raw.duration_ms < 0
+  ) {
     return { error: 'duration_ms must be a non-negative number' };
   }
 
@@ -418,7 +467,7 @@ export function normalizeSpan(raw: unknown): NormalizedSpan | ValidationError {
   const operations: NormalizedOperation[] = [];
   for (let i = 0; i < opsRaw.length; i++) {
     const op = normalizeOperation(opsRaw[i], i);
-    if ('error' in op) return op;
+    if (isValidationError(op)) return op;
     operations.push(op);
   }
 

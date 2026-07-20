@@ -109,8 +109,10 @@ function validatePerformanceSurface(surface, productIds, maintainedProductIds, e
     return;
   }
   if (parsed.protocol !== 'https:') errors.push(`${location} URL must use https`);
-  if (parsed.username || parsed.password) errors.push(`${location} URL must not contain credentials`);
-  if (parsed.search || parsed.hash) errors.push(`${location} URL must not contain query or fragment`);
+  if (parsed.username || parsed.password)
+    errors.push(`${location} URL must not contain credentials`);
+  if (parsed.search || parsed.hash)
+    errors.push(`${location} URL must not contain query or fragment`);
   if (PRIVATE_PROBE_HOST_PATTERN.test(parsed.hostname)) {
     errors.push(`${location} URL must not target a private or local host`);
   }
@@ -123,7 +125,11 @@ function validatePerformanceSurface(surface, productIds, maintainedProductIds, e
   ) {
     errors.push(`${location} expected statuses must be 2xx or 3xx integers`);
   }
-  if (!Number.isInteger(surface.timeoutMs) || surface.timeoutMs < 250 || surface.timeoutMs > 30_000) {
+  if (
+    !Number.isInteger(surface.timeoutMs) ||
+    surface.timeoutMs < 250 ||
+    surface.timeoutMs > 30_000
+  ) {
     errors.push(`${location} timeoutMs must be between 250 and 30000`);
   }
 }
@@ -136,7 +142,8 @@ function validatePerformancePolicy(policy, errors) {
   if (policy.mode !== 'observation') {
     errors.push('performance policy must remain observation-only until separately approved');
   }
-  if (policy.observationDays < 14) errors.push('performance observation window must be at least 14 days');
+  if (policy.observationDays < 14)
+    errors.push('performance observation window must be at least 14 days');
   if (policy.retention?.spanDays !== 7 || policy.retention?.rollupMonths !== 13) {
     errors.push('performance retention must match the owner-approved 7-day/13-month contract');
   }
@@ -150,20 +157,16 @@ function validatePerformancePolicy(policy, errors) {
   if (policy.synthetic?.api?.coldSamples !== 5 || policy.synthetic?.api?.warmSamples !== 15) {
     errors.push('synthetic API samples must remain 5 cold and 15 warm');
   }
-  if (
-    policy.synthetic?.web?.desktopSamples !== 5 ||
-    policy.synthetic?.web?.mobileSamples !== 5
-  ) {
+  if (policy.synthetic?.web?.desktopSamples !== 5 || policy.synthetic?.web?.mobileSamples !== 5) {
     errors.push('synthetic web samples must remain 5 desktop and 5 mobile');
   }
   if (policy.synthetic?.schedulesActive !== false) {
     errors.push('performance schedules must remain inert until separately approved');
   }
-  if (
-    !policy.privacy ||
-    Object.values(policy.privacy).some((allowed) => allowed !== false)
-  ) {
-    errors.push('performance privacy policy must forbid raw queries, values, payloads, auth, and identity');
+  if (!policy.privacy || Object.values(policy.privacy).some((allowed) => allowed !== false)) {
+    errors.push(
+      'performance privacy policy must forbid raw queries, values, payloads, auth, and identity'
+    );
   }
 }
 
@@ -494,6 +497,57 @@ export function buildPerformanceProjection(catalog) {
   };
 }
 
+export function buildPerformanceRolloutInventory(catalog) {
+  const projection = buildPerformanceProjection(catalog);
+  const apiRuntimes = new Set(['api', 'server', 'worker']);
+  const productsById = new Map(catalog.products.map((product) => [product.id, product]));
+  const items = projection.projects.map((project) => {
+    const product = productsById.get(project.projectId);
+    const expectsRuntime = product?.runtimes.some((runtime) => apiRuntimes.has(runtime)) ?? false;
+    const status =
+      project.projectId === 'sass-maker'
+        ? 'instrumented'
+        : project.surfaces.length > 0
+          ? 'synthetic-only'
+          : expectsRuntime
+            ? 'unmeasured'
+            : 'not-applicable';
+    return {
+      projectId: project.projectId,
+      name: project.name,
+      status,
+      surfaces: project.surfaces.map(({ id, kind, url }) => ({ id, kind, url })),
+      runtimeAdapter: status === 'instrumented' ? 'internal/performance-runtime' : null,
+      runtimeRequired: expectsRuntime,
+      rolloutAction:
+        status === 'instrumented'
+          ? 'verify-fresh-delivery'
+          : expectsRuntime
+            ? 'instrument-runtime-adapter'
+            : 'none',
+    };
+  });
+  const statuses = ['instrumented', 'synthetic-only', 'unmeasured', 'not-applicable'];
+  return {
+    schemaVersion: 1,
+    generatedAt: catalog.updatedAt,
+    generatedFrom: 'catalog/foundry.json',
+    canary: {
+      projectId: 'sass-maker',
+      surfaceId: 'sass-maker-api',
+      status: 'instrumented',
+      adapter: 'internal/performance-runtime',
+    },
+    categories: Object.fromEntries(
+      statuses.map((status) => [
+        status,
+        items.filter((item) => item.status === status).map((item) => item.projectId),
+      ])
+    ),
+    items,
+  };
+}
+
 export function buildCompatibilityViews(catalog) {
   assertValidCatalog(catalog);
   return new Map([
@@ -512,6 +566,7 @@ export function buildCompatibilityViews(catalog) {
     ],
     ['pillars.json', { schemaVersion: catalog.schemaVersion, pillars: catalog.pillars }],
     ['performance-surfaces.json', buildPerformanceProjection(catalog)],
+    ['performance-rollout-inventory.json', buildPerformanceRolloutInventory(catalog)],
     ['public.json', buildPublicProjection(catalog)],
   ]);
 }

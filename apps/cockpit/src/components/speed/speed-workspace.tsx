@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import {
   Badge,
+  Button,
   Card,
   CardContent,
   CardHeader,
@@ -22,6 +23,7 @@ import {
 } from '@foundry/ui';
 import type {
   ApiRouteRollup,
+  BudgetSuggestion,
   RecentRequestSpan,
   SpeedFreshness,
   SpeedSnapshot,
@@ -32,7 +34,7 @@ function freshnessTone(state: SpeedFreshness) {
   if (state === 'fresh') return 'success' as const;
   if (state === 'stale') return 'stale' as const;
   if (state === 'failing') return 'error' as const;
-  if (state === 'partial') return 'warning' as const;
+  if (state === 'partial') return 'stale' as const;
   return 'empty' as const;
 }
 
@@ -55,14 +57,27 @@ export function SpeedWorkspace({ snapshot }: { snapshot: SpeedSnapshot }) {
   const [project, setProject] = useState<string>('all');
   const [windowKey, setWindowKey] = useState<SpeedWindow>('24h');
   const [source, setSource] = useState<string>('all');
-  const [selectedRoute, setSelectedRoute] = useState<string | null>(
-    snapshot.routes[0]?.id ?? null
-  );
+  const [selectedRoute, setSelectedRoute] = useState<string | null>(snapshot.routes[0]?.id ?? null);
   const [percentile, setPercentile] = useState<'p75' | 'p95' | 'p99'>('p95');
+  const [pendingBudget, setPendingBudget] = useState<{
+    surface: SpeedSnapshot['surfaces'][number];
+    budget: BudgetSuggestion;
+  } | null>(null);
+  const [budgetStatus, setBudgetStatus] = useState<string | null>(null);
 
   const projects = useMemo(
     () => [...new Set(snapshot.surfaces.map((s) => s.projectId))].sort(),
     [snapshot.surfaces]
+  );
+  const sources = useMemo(
+    () =>
+      [
+        ...new Set([
+          ...snapshot.routes.map((route) => route.source),
+          ...snapshot.recentRequests.map((request) => request.source),
+        ]),
+      ].sort(),
+    [snapshot.recentRequests, snapshot.routes]
   );
 
   const filteredSurfaces = snapshot.surfaces.filter(
@@ -80,12 +95,15 @@ export function SpeedWorkspace({ snapshot }: { snapshot: SpeedSnapshot }) {
     if (source !== 'all' && r.source !== source) return false;
     return true;
   });
+  const filteredWebDiagnostics = snapshot.webDiagnostics.filter(
+    (diagnostic) => project === 'all' || diagnostic.projectId === project
+  );
 
   const topVolume = [...filteredRoutes].sort(
     (a, b) => b.metrics[windowKey].requestCount - a.metrics[windowKey].requestCount
   );
   const slowest = [...filteredRoutes].sort(
-    (a, b) => b.metrics[windowKey][percentile] - a.metrics[windowKey][percentile]
+    (a, b) => (b.metrics[windowKey][percentile] ?? -1) - (a.metrics[windowKey][percentile] ?? -1)
   );
   const highestError = [...filteredRoutes].sort(
     (a, b) => b.metrics[windowKey].errorRate - a.metrics[windowKey].errorRate
@@ -104,8 +122,7 @@ export function SpeedWorkspace({ snapshot }: { snapshot: SpeedSnapshot }) {
           <div className="flex flex-wrap items-center gap-2">
             <Badge variant="outline">Mode {snapshot.boundary.mode}</Badge>
             <Badge variant="outline">
-              Observation day {snapshot.observation.elapsedDays}/
-              {snapshot.observation.minimumDays}
+              Observation day {snapshot.observation.elapsedDays}/{snapshot.observation.minimumDays}
             </Badge>
             <Link
               href="/fleet/observability"
@@ -149,8 +166,8 @@ export function SpeedWorkspace({ snapshot }: { snapshot: SpeedSnapshot }) {
             tone: 'text-amber-400',
           },
           {
-            label: 'Unmeasured',
-            value: countByState(snapshot, 'unmeasured'),
+            label: 'Unmeasured / N/A',
+            value: countByState(snapshot, 'unmeasured') + countByState(snapshot, 'not-applicable'),
             icon: RadioTower,
             tone: 'text-slate-400',
           },
@@ -210,11 +227,11 @@ export function SpeedWorkspace({ snapshot }: { snapshot: SpeedSnapshot }) {
               onChange={(e) => setSource(e.target.value)}
             >
               <option value="all">All sources</option>
-              <option value="foundry-runtime">foundry-runtime</option>
-              <option value="synthetic">synthetic</option>
-              <option value="psi-swarm">psi-swarm</option>
-              <option value="browser-rum">browser-rum</option>
-              <option value="posthog-import">posthog-import</option>
+              {sources.map((sourceName) => (
+                <option key={sourceName} value={sourceName}>
+                  {sourceName}
+                </option>
+              ))}
             </select>
           </label>
           <label className="space-y-1 text-xs">
@@ -284,9 +301,7 @@ export function SpeedWorkspace({ snapshot }: { snapshot: SpeedSnapshot }) {
                     {surface.api ? fmtPct(surface.api.metrics.errorRate) : '—'}
                   </td>
                   <td className="py-3 pr-3 text-xs text-muted-foreground">
-                    {(surface.api?.provenance.source ??
-                      surface.web?.provenance.source ??
-                      '—') +
+                    {(surface.api?.provenance.source ?? surface.web?.provenance.source ?? '—') +
                       (surface.api?.provenance.revision || surface.web?.provenance.revision
                         ? ` · ${(surface.api?.provenance.revision ?? surface.web?.provenance.revision)?.slice(0, 7)}`
                         : '')}
@@ -294,21 +309,32 @@ export function SpeedWorkspace({ snapshot }: { snapshot: SpeedSnapshot }) {
                   <td className="py-3 text-xs">
                     {surface.regression ? (
                       <span className="text-rose-400">
-                        {surface.regression.metric}{' '}
-                        {surface.regression.deltaPercent > 0 ? '+' : ''}
+                        {surface.regression.metric} {surface.regression.deltaPercent > 0 ? '+' : ''}
                         {surface.regression.deltaPercent.toFixed(1)}%
                       </span>
                     ) : surface.budget ? (
-                      <span className="text-muted-foreground">
-                        Budget suggestion inactive ({surface.budget.threshold}
-                        {surface.budget.unit})
-                      </span>
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setPendingBudget({ surface, budget: surface.budget! })}
+                      >
+                        Review {surface.budget.threshold}
+                        {surface.budget.unit} alert
+                      </Button>
                     ) : (
-                      surface.note ?? '—'
+                      (surface.note ?? '—')
                     )}
                   </td>
                 </tr>
               ))}
+              {filteredSurfaces.length === 0 && (
+                <tr>
+                  <td colSpan={9} className="py-8 text-center text-muted-foreground">
+                    No surfaces match these filters.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </CardContent>
@@ -367,6 +393,13 @@ export function SpeedWorkspace({ snapshot }: { snapshot: SpeedSnapshot }) {
                 {filteredRecent.map((span) => (
                   <RecentRow key={span.traceId} span={span} />
                 ))}
+                {filteredRecent.length === 0 && (
+                  <tr>
+                    <td colSpan={5} className="py-8 text-center text-muted-foreground">
+                      No sampled API requests in this window.
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </CardContent>
@@ -375,7 +408,10 @@ export function SpeedWorkspace({ snapshot }: { snapshot: SpeedSnapshot }) {
         <Card className="border-border/70 bg-card/70">
           <CardHeader>
             <CardTitle className="text-base">
-              Route detail{selectedRouteMeta ? `: ${selectedRouteMeta.method} ${selectedRouteMeta.routeTemplate}` : ''}
+              Route detail
+              {selectedRouteMeta
+                ? `: ${selectedRouteMeta.method} ${selectedRouteMeta.routeTemplate}`
+                : ''}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 text-sm">
@@ -417,7 +453,9 @@ export function SpeedWorkspace({ snapshot }: { snapshot: SpeedSnapshot }) {
                         >
                           <div className="text-xs text-muted-foreground">{point.label}</div>
                           <div>p95 {fmtMs(point.p95)}</div>
-                          <div className="text-xs">{point.requests} req · {fmtPct(point.errorRate)}</div>
+                          <div className="text-xs">
+                            {point.requests} req · {fmtPct(point.errorRate)}
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -434,39 +472,42 @@ export function SpeedWorkspace({ snapshot }: { snapshot: SpeedSnapshot }) {
           <CardTitle className="text-base">Web diagnostics</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          {snapshot.webDiagnostics
-            .filter((d) => project === 'all' || d.projectId === project)
-            .map((diag) => (
-              <div
-                key={diag.id}
-                className="flex flex-wrap items-start justify-between gap-3 rounded-md border border-border/60 p-3"
-              >
-                <div>
-                  <div className="font-medium">
-                    {diag.surfaceLabel}{' '}
-                    <Badge variant="outline" className="ml-1 capitalize">
-                      {diag.state}
-                    </Badge>
-                  </div>
-                  <p className="mt-1 text-sm text-muted-foreground">{diag.finding}</p>
-                  <p className="mt-1 text-xs tabular-nums text-muted-foreground">
-                    LCP p75 {fmtMs(diag.current.lcpP75)}
-                    {diag.previous ? ` ← ${fmtMs(diag.previous.lcpP75)}` : ''} ·{' '}
-                    {diag.provenance.source} · n={diag.provenance.sampleCount}
-                  </p>
+          {filteredWebDiagnostics.map((diag) => (
+            <div
+              key={diag.id}
+              className="flex flex-wrap items-start justify-between gap-3 rounded-md border border-border/60 p-3"
+            >
+              <div>
+                <div className="font-medium">
+                  {diag.surfaceLabel}{' '}
+                  <Badge variant="outline" className="ml-1 capitalize">
+                    {diag.state}
+                  </Badge>
                 </div>
-                {diag.artifactHref && (
-                  <a
-                    href={diag.artifactHref}
-                    className="text-xs font-medium text-cyan-400 hover:underline"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    {diag.artifactLabel ?? 'PSI artifact'} →
-                  </a>
-                )}
+                <p className="mt-1 text-sm text-muted-foreground">{diag.finding}</p>
+                <p className="mt-1 text-xs tabular-nums text-muted-foreground">
+                  LCP p75 {fmtMs(diag.current.lcpP75)}
+                  {diag.previous ? ` ← ${fmtMs(diag.previous.lcpP75)}` : ''} ·{' '}
+                  {diag.provenance.source} · n={diag.provenance.sampleCount}
+                </p>
               </div>
-            ))}
+              {diag.artifactHref && (
+                <a
+                  href={diag.artifactHref}
+                  className="text-xs font-medium text-cyan-400 hover:underline"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {diag.artifactLabel ?? 'PSI artifact'} →
+                </a>
+              )}
+            </div>
+          ))}
+          {filteredWebDiagnostics.length === 0 && (
+            <p className="py-6 text-center text-sm text-muted-foreground">
+              No web performance evidence for this selection.
+            </p>
+          )}
         </CardContent>
       </Card>
 
@@ -476,6 +517,54 @@ export function SpeedWorkspace({ snapshot }: { snapshot: SpeedSnapshot }) {
         description="Suggested thresholds appear on surfaces with enough samples. Activate alerting only after explicit owner confirmation; deploy-blocking enforcement is a later decision."
         meta={`Observation started ${new Date(snapshot.observation.startedAt).toLocaleDateString()}`}
       />
+
+      {pendingBudget && (
+        <Card className="border-amber-500/40 bg-amber-500/5">
+          <CardHeader>
+            <CardTitle className="text-base">Confirm alert-only budget</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3 text-sm">
+            <p>
+              Activate {pendingBudget.budget.metric} at {pendingBudget.budget.threshold}
+              {pendingBudget.budget.unit} for {pendingBudget.surface.projectName}. This enables
+              alerting only; it cannot block a deploy.
+            </p>
+            <p className="text-muted-foreground">{pendingBudget.budget.rationale}</p>
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                onClick={async () => {
+                  setBudgetStatus('Saving…');
+                  const response = await fetch('/api/fleet/speed', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      project_id: pendingBudget.surface.projectId,
+                      surface: pendingBudget.surface.id,
+                      environment: 'production',
+                      mode: 'alerting',
+                      latency_p95_ms:
+                        pendingBudget.budget.unit === 'ms' ? pendingBudget.budget.threshold : null,
+                      error_rate:
+                        pendingBudget.budget.unit === '%' ? pendingBudget.budget.threshold : null,
+                    }),
+                  });
+                  setBudgetStatus(
+                    response.ok ? 'Alert budget activated.' : 'Budget activation failed.'
+                  );
+                  if (response.ok) setPendingBudget(null);
+                }}
+              >
+                Confirm alerting
+              </Button>
+              <Button type="button" variant="outline" onClick={() => setPendingBudget(null)}>
+                Cancel
+              </Button>
+            </div>
+            {budgetStatus && <p aria-live="polite">{budgetStatus}</p>}
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
@@ -531,6 +620,9 @@ function RouteTable({
             </span>
           </button>
         ))}
+        {routes.length === 0 && (
+          <p className="py-6 text-center text-sm text-muted-foreground">No route evidence.</p>
+        )}
       </CardContent>
     </Card>
   );
@@ -555,9 +647,7 @@ function RecentRow({ span }: { span: RecentRequestSpan }) {
       <td className="py-2 text-xs text-muted-foreground">
         {span.operations.length === 0
           ? '—'
-          : span.operations
-              .map((op) => `${op.label} ${fmtMs(op.durationMs)}`)
-              .join(' · ')}
+          : span.operations.map((op) => `${op.label} ${fmtMs(op.durationMs)}`).join(' · ')}
       </td>
     </tr>
   );

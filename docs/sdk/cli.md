@@ -144,6 +144,29 @@ fnd api GET /v1/symphony/audit --auth session --output table
 fnd api GET /v1/symphony/runs --auth session --output table
 ```
 
+### Fleet speed evidence
+
+Performance reads require owner/session auth. Runtime and synthetic writers use
+the linked project's key and may submit only sanitized, project-scoped evidence.
+
+```bash
+# Latest sampled API requests
+fnd api GET /v1/performance/spans/recent --auth session --query limit=25 --output table
+
+# Top routes in the last day; use order=slow or order=error for the other views
+fnd api GET /v1/performance/routes --auth session \
+  --query order=volume --query percentile=p95 --output table
+
+# Inspect sanitized downstream operation fingerprints for one trace
+fnd api GET /v1/performance/traces/<traceId> --auth session
+
+# Inspect ingestion volume and the most recent bounded cleanup receipt
+fnd api GET /v1/performance/volume --auth session --query days=7
+```
+
+The CLI never sends raw URLs, query values, request/response bodies, SQL text,
+bind values, authorization data, or user identity as performance evidence.
+
 ### Marketing queue
 
 Agents should add publishable marketing ideas directly to the queue, then the

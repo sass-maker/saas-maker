@@ -65,6 +65,7 @@ export function buildPsiSwarmReceipt(input) {
     error_count: runs.filter((r) => r.failed || r.error).length,
     sampling_rate: 1,
     probe_mode: null,
+    probe_origin: input.probeOrigin ?? 'psi-swarm',
     method: 'GET',
     route_template: input.routeTemplate ?? '/',
     latency_ms: totals.length ? percentileSet(totals, [90]) : null,

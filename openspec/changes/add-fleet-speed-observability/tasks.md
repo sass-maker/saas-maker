@@ -11,7 +11,7 @@
 - [x] 2.2 Implement authenticated project-scoped performance receipt ingestion with idempotency, size limits, redaction validation, and source provenance
 - [x] 2.3 Implement private summary, trend, recent-span, top-route, slow-route, error-route, and trace-operation query endpoints
 - [x] 2.4 Implement bounded retention cleanup and ingestion-volume reporting without putting cleanup on the product request path
-- [ ] 2.5 Regenerate OpenAPI artifacts and update CLI/SDK docs and examples for the new endpoints
+- [x] 2.5 Regenerate OpenAPI artifacts and update CLI/SDK docs and examples for the new endpoints
 - [x] 2.6 Add API unit tests covering authorization, idempotency, aggregation, source separation, retention, and privacy rejection
 
 ## 3. Synthetic Web And API Measurement
@@ -29,7 +29,7 @@
 - [x] 4.3 Add compatibility adapters for existing `api_call_timing` and `foundry_trace` evidence with explicit source semantics
 - [x] 4.4 Instrument SaaS Maker API as the canary and test telemetry overhead, cardinality bounds, error sampling, redaction, and product-request isolation
 - [x] 4.5 Generate a maintained-API rollout inventory showing instrumented, synthetic-only, unmeasured, and not-applicable surfaces
-- [ ] 4.6 Prepare bounded per-project rollout patches or tracker items for every maintained API that requires runtime instrumentation
+- [x] 4.6 Prepare bounded per-project rollout patches or tracker items for every maintained API that requires runtime instrumentation
 
 ## 5. Cockpit Speed Workspace
 
@@ -39,7 +39,7 @@
 - [x] 5.4 Add route detail with latency/throughput/error trends, cold/warm comparison, recent spans, and downstream-operation contribution summaries
 - [x] 5.5 Add web detail with Core Web Vitals distributions, comparable revisions, regressions, and safe PSI Swarm diagnostic links
 - [x] 5.6 Add explicit observation/alert/enforcement state and an owner confirmation flow for activating suggested budgets
-- [x] 5.7 Link configuration inventory and Speed, then retire the PostHog-only latency card only after functional parity tests pass
+- [ ] 5.7 Link configuration inventory and Speed, then retire the PostHog-only latency card only after functional parity tests pass
 
 ## 6. Validation And Controlled Rollout
 
@@ -47,6 +47,6 @@
 - [x] 6.2 Run local synthetic canaries and confirm no mutating/authenticated business endpoint is probed
 - [ ] 6.3 Verify via browser that empty, stale, partial, fresh, failing, high-volume, and narrow-screen Speed states are scannable and accessible
 - [x] 6.4 Verify stored and returned fixtures contain no secrets, raw query values, payload bodies, user identity, or unbounded labels
-- [ ] 6.5 Update `PROJECT_STATUS.md`, observability/performance runbooks, catalog-generated views, and the designated-host activation checklist
+- [x] 6.5 Update `PROJECT_STATUS.md`, observability/performance runbooks, catalog-generated views, and the designated-host activation checklist
 - [ ] 6.6 Open and merge the Foundry implementation PR only after exact-head CI is green; keep schedules disabled
 - [ ] 6.7 After separate production and host approval, activate collection in observation-only mode and review 14 days of baselines with the owner before enabling alerts

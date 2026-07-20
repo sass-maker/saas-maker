@@ -62,6 +62,28 @@ path if installation is ever desired.
 `--now <ISO-8601>` is a deterministic fixture/testing override. Normal operator
 commands should use the system clock.
 
+## Performance schedule activation gate
+
+`ops/config/performance-schedules.json` is checked-in intent, not an installed
+schedule. Its top-level `schedulesActive` and every schedule's `enabled` field
+must remain `false` until a separate owner-approved host cutover. Before any
+activation, attach evidence that:
+
+1. the canonical catalog and generated performance surfaces validate;
+2. the API migration and API/Cockpit deploy were separately approved, applied,
+   and smoke-tested;
+3. `doctor`, `render`, and `dry-run` pass for the designated host;
+4. the shared lease prevents a second host from running the same schedule;
+5. the rendered API lane is five cold plus fifteen warm anonymous GET/HEAD
+   probes, and the web lane is five desktop plus five mobile runs;
+6. ingestion volume, seven-day span retention, thirteen-month rollup retention,
+   rollback, and receipt delivery were reviewed; and
+7. a final explicit approval identifies the host and activation timestamp.
+
+Do not copy these definitions into another cron registry. The catalog,
+generated projection, inert schedule file, and host receipt are the auditable
+chain of custody.
+
 ## Lease behavior
 
 - `promote` creates the primary lease only when none exists or the prior lease

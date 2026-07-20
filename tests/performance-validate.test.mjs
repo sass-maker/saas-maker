@@ -35,6 +35,14 @@ describe('performance validation', () => {
     assert.deepEqual(result, { error: 'synthetic-api receipts may only use GET or HEAD' });
   });
 
+  it('rejects high-cardinality probe origins', () => {
+    const result = normalizeReceipt({
+      ...baseReceipt,
+      probe_origin: 'host/user@example.com',
+    });
+    assert.equal('error' in result, true);
+  });
+
   it('rejects query strings in routes', () => {
     const result = normalizeReceipt({
       ...baseReceipt,
@@ -115,7 +123,7 @@ describe('performance validation', () => {
         {
           kind: 'd1',
           label: 'projects.list',
-          fingerprint: 'fp_abc',
+          fingerprint: 'fp_abcdef12',
           duration_ms: 12,
           success: true,
         },

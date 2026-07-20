@@ -9,11 +9,34 @@ import {
   type NormalizedSpan,
 } from '../lib/performance-validate';
 
-const performance = new Hono<{ Bindings: Bindings; Variables: Variables }>();
+const performanceRoutes = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
 const SPAN_RETENTION_DAYS = 7;
 const ROLLUP_RETENTION_MONTHS = 13;
 const CLEANUP_BATCH = 500;
+const MAX_BODY_BYTES = 256 * 1024;
+const MAX_QUERY_ROWS = 5_000;
+const PER_ROUTE_PER_MINUTE_CAP = 120;
+
+async function readBoundedJson(
+  request: Request
+): Promise<
+  { value: unknown; error?: never } | { value?: never; error: string; status: 400 | 413 }
+> {
+  const declaredLength = Number(request.headers.get('content-length') ?? 0);
+  if (Number.isFinite(declaredLength) && declaredLength > MAX_BODY_BYTES) {
+    return { error: `request body exceeds ${MAX_BODY_BYTES} bytes`, status: 413 };
+  }
+  const text = await request.text();
+  if (new TextEncoder().encode(text).byteLength > MAX_BODY_BYTES) {
+    return { error: `request body exceeds ${MAX_BODY_BYTES} bytes`, status: 413 };
+  }
+  try {
+    return { value: JSON.parse(text) };
+  } catch {
+    return { error: 'invalid JSON body', status: 400 };
+  }
+}
 
 function json(value: unknown): string | null {
   if (value == null) return null;
@@ -49,9 +72,9 @@ async function insertReceipt(
       `INSERT INTO performance_rollups (
         id, owner_id, project_id, idempotency_key, schema_version, kind, surface,
         environment, source, revision, window_start, window_end, sample_count, error_count,
-        sampling_rate, probe_mode, method, route_template, latency_json, phases_json,
+        sampling_rate, probe_mode, probe_origin, method, route_template, latency_json, phases_json,
         web_vitals_json, diagnostic_ref
-      ) VALUES (?, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ) VALUES (?, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       ON CONFLICT(owner_id, project_id, idempotency_key) DO NOTHING`
     )
     .bind(
@@ -70,6 +93,7 @@ async function insertReceipt(
       receipt.error_count,
       receipt.sampling_rate,
       receipt.probe_mode,
+      receipt.probe_origin,
       receipt.method,
       receipt.route_template,
       json(receipt.latency_ms),
@@ -85,15 +109,24 @@ async function insertSpan(
   db: D1Database,
   ownerId: string,
   span: NormalizedSpan
-): Promise<'accepted' | 'deduped'> {
+): Promise<'accepted' | 'deduped' | 'capped'> {
   const spanId = crypto.randomUUID();
+  const minuteStart = new Date(
+    Math.floor(Date.parse(span.observed_at) / 60_000) * 60_000
+  ).toISOString();
+  const minuteEnd = new Date(Date.parse(minuteStart) + 60_000).toISOString();
   const result = await db
     .prepare(
       `INSERT INTO performance_spans (
         id, owner_id, project_id, idempotency_key, schema_version, surface, environment,
         source, revision, observed_at, trace_id, method, route_template, status_class,
         duration_ms, ttfb_ms, probe_mode, sampling_rate
-      ) VALUES (?, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ) SELECT ?, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+      WHERE (
+        SELECT COUNT(*) FROM performance_spans
+        WHERE owner_id = ? AND project_id = ? AND route_template = ?
+          AND observed_at >= ? AND observed_at < ?
+      ) < ?
       ON CONFLICT(owner_id, project_id, idempotency_key) DO NOTHING`
     )
     .bind(
@@ -113,11 +146,26 @@ async function insertSpan(
       span.duration_ms,
       span.ttfb_ms,
       span.probe_mode,
-      span.sampling_rate
+      span.sampling_rate,
+      ownerId,
+      span.project_id,
+      span.route_template,
+      minuteStart,
+      minuteEnd,
+      PER_ROUTE_PER_MINUTE_CAP
     )
     .run();
 
-  if ((result.meta?.changes ?? 0) === 0) return 'deduped';
+  if ((result.meta?.changes ?? 0) === 0) {
+    const duplicate = await db
+      .prepare(
+        `SELECT 1 FROM performance_spans
+         WHERE owner_id = ? AND project_id = ? AND idempotency_key = ? LIMIT 1`
+      )
+      .bind(ownerId, span.project_id, span.idempotency_key)
+      .first();
+    return duplicate ? 'deduped' : 'capped';
+  }
 
   if (span.operations.length > 0) {
     const statements = span.operations.map((op) =>
@@ -151,12 +199,14 @@ async function insertSpan(
 // --- Ingestion (project API key) ------------------------------------------------
 
 const ingest = new Hono<{ Bindings: Bindings; Variables: Variables }>();
-ingest.use('*', requireApiKey);
+ingest.use('/receipts', requireApiKey);
+ingest.use('/spans', requireApiKey);
 
 ingest.post('/receipts', async (c) => {
   const project = c.get('project') as { id: string; owner_id: string; slug: string };
-  const body = await c.req.json().catch(() => null);
-  if (body === null) return c.json({ error: 'invalid JSON body' }, 400);
+  const parsed = await readBoundedJson(c.req.raw);
+  if (parsed.error) return c.json({ error: parsed.error }, parsed.status);
+  const body = parsed.value as any;
 
   const items = Array.isArray(body) ? body : Array.isArray(body?.receipts) ? body.receipts : [body];
   if (items.length === 0) return c.json({ error: 'no receipts provided' }, 400);
@@ -170,7 +220,10 @@ ingest.post('/receipts', async (c) => {
     if ('error' in result) return c.json({ error: `receipt[${i}]: ${result.error}` }, 400);
     // API-key scope: project_id must match this project's slug or id
     if (result.project_id !== project.slug && result.project_id !== project.id) {
-      return c.json({ error: `receipt[${i}]: project_id outside authenticated project scope` }, 403);
+      return c.json(
+        { error: `receipt[${i}]: project_id outside authenticated project scope` },
+        403
+      );
     }
     normalized.push(result);
   }
@@ -188,13 +241,14 @@ ingest.post('/receipts', async (c) => {
     }
   }
 
-  return c.json({ accepted, deduped, received: normalized.length, ids }, 201);
+  return c.json({ accepted, deduped, capped: 0, received: normalized.length, ids }, 201);
 });
 
 ingest.post('/spans', async (c) => {
   const project = c.get('project') as { id: string; owner_id: string; slug: string };
-  const body = await c.req.json().catch(() => null);
-  if (body === null) return c.json({ error: 'invalid JSON body' }, 400);
+  const parsed = await readBoundedJson(c.req.raw);
+  if (parsed.error) return c.json({ error: parsed.error }, parsed.status);
+  const body = parsed.value as any;
 
   const items = Array.isArray(body) ? body : Array.isArray(body?.spans) ? body.spans : [body];
   if (items.length === 0) return c.json({ error: 'no spans provided' }, 400);
@@ -214,24 +268,34 @@ ingest.post('/spans', async (c) => {
 
   let accepted = 0;
   let deduped = 0;
+  let capped = 0;
   const ids: string[] = [];
   for (const span of normalized) {
     const status = await insertSpan(c.env.DB, project.owner_id, span);
     if (status === 'accepted') {
       accepted += 1;
       ids.push(span.idempotency_key);
-    } else {
+    } else if (status === 'deduped') {
       deduped += 1;
+    } else {
+      capped += 1;
     }
   }
 
-  return c.json({ accepted, deduped, received: normalized.length, ids }, 201);
+  return c.json({ accepted, deduped, capped, received: normalized.length, ids }, 201);
 });
 
 // --- Private queries (session) -------------------------------------------------
 
 const query = new Hono<{ Bindings: Bindings; Variables: Variables }>();
-query.use('*', requireSession);
+query.use('/summary', requireSession);
+query.use('/spans/recent', requireSession);
+query.use('/routes', requireSession);
+query.use('/traces/*', requireSession);
+query.use('/volume', requireSession);
+query.use('/cleanup', requireSession);
+query.use('/budgets', requireSession);
+query.use('/budgets/approve', requireSession);
 
 function filterClause(params: {
   project_id?: string | null;
@@ -290,7 +354,7 @@ query.get('/summary', async (c) => {
   const { results } = await c.env.DB.prepare(
     `SELECT id, project_id, kind, surface, environment, source, revision,
             window_start, window_end, sample_count, error_count, sampling_rate,
-            probe_mode, method, route_template, latency_json, phases_json,
+            probe_mode, probe_origin, method, route_template, latency_json, phases_json,
             web_vitals_json, diagnostic_ref, ingested_at
      FROM performance_rollups
      WHERE ${sql.replace('owner_id = ?', 'owner_id = ?')}
@@ -346,7 +410,7 @@ query.get('/routes', async (c) => {
   const userId = c.get('userId')!;
   const project_id = c.req.query('project_id') ?? null;
   const source = c.req.query('source') ?? null;
-  const since = c.req.query('since') ?? null;
+  const since = c.req.query('since') ?? new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
   const order = c.req.query('order') ?? 'volume'; // volume | slow | error
   const percentileKey = c.req.query('percentile') ?? 'p95';
   const limit = parseLimit(c.req.query('limit'), 25, 100);
@@ -362,9 +426,11 @@ query.get('/routes', async (c) => {
     `SELECT project_id, surface, environment, source, method, route_template,
             duration_ms, status_class, sampling_rate
      FROM performance_spans
-     WHERE ${sql}`
+     WHERE ${sql}
+     ORDER BY observed_at DESC
+     LIMIT ?`
   )
-    .bind(userId, ...values)
+    .bind(userId, ...values, MAX_QUERY_ROWS)
     .all();
 
   type Agg = {
@@ -417,7 +483,10 @@ query.get('/routes', async (c) => {
   }
 
   const pNum = Number(String(percentileKey).replace(/^p/i, '')) || 95;
-  let data = [...map.values()].map((agg) => ({
+  if (![50, 75, 95, 99].includes(pNum)) {
+    return c.json({ error: 'percentile must be p50, p75, p95, or p99' }, 400);
+  }
+  const ranked = [...map.values()].map((agg) => ({
     project_id: agg.project_id,
     surface: agg.surface,
     environment: agg.environment,
@@ -445,15 +514,24 @@ query.get('/routes', async (c) => {
           : agg.sample_count,
   }));
 
-  data.sort((a, b) => b._sort - a._sort);
-  data = data.slice(0, limit).map(({ _sort, ...rest }) => rest);
+  ranked.sort((a, b) => b._sort - a._sort);
+  const data = ranked.slice(0, limit).map(({ _sort, ...rest }) => rest);
 
-  return c.json({ data, order, percentile: `p${pNum}` });
+  return c.json({
+    data,
+    order,
+    percentile: `p${pNum}`,
+    sampled_rows: results?.length ?? 0,
+    truncated: (results?.length ?? 0) === MAX_QUERY_ROWS,
+  });
 });
 
 query.get('/traces/:traceId', async (c) => {
   const userId = c.get('userId')!;
   const traceId = c.req.param('traceId');
+  if (!/^[A-Za-z0-9._:-]{1,128}$/.test(traceId)) {
+    return c.json({ error: 'invalid trace id' }, 400);
+  }
 
   const { results: spans } = await c.env.DB.prepare(
     `SELECT id, project_id, surface, environment, source, revision, observed_at,
@@ -543,9 +621,7 @@ query.get('/volume', async (c) => {
     retention: { spans_days: SPAN_RETENTION_DAYS, rollups_months: ROLLUP_RETENTION_MONTHS },
     days,
     buckets,
-    latest_cleanup: latestCleanup
-      ? { ...latestCleanup, bounded: true }
-      : null,
+    latest_cleanup: latestCleanup ? { ...latestCleanup, bounded: true } : null,
   });
 });
 
@@ -642,15 +718,46 @@ query.get('/budgets', async (c) => {
 
 query.post('/budgets/approve', async (c) => {
   const userId = c.get('userId')!;
-  const body = await c.req.json().catch(() => null);
+  const parsed = await readBoundedJson(c.req.raw);
+  if (parsed.error) return c.json({ error: parsed.error }, parsed.status);
+  const body = parsed.value as any;
   if (!body || typeof body !== 'object') return c.json({ error: 'invalid JSON body' }, 400);
 
   const project_id = typeof body.project_id === 'string' ? body.project_id.trim() : '';
   const surface = typeof body.surface === 'string' ? body.surface.trim() : '';
-  const environment =
-    typeof body.environment === 'string' ? body.environment.trim() : 'production';
+  const environment = typeof body.environment === 'string' ? body.environment.trim() : 'production';
   const mode = body.mode === 'alerting' || body.mode === 'enforcing' ? body.mode : 'alerting';
   if (!project_id || !surface) return c.json({ error: 'project_id and surface are required' }, 400);
+  if (!/^[a-z0-9][a-z0-9._-]{0,159}$/.test(project_id)) {
+    return c.json({ error: 'invalid project_id' }, 400);
+  }
+  if (!/^[a-z0-9][a-z0-9._-]{0,159}$/.test(surface)) {
+    return c.json({ error: 'invalid surface' }, 400);
+  }
+  if (!['production', 'staging', 'preview', 'development', 'local'].includes(environment)) {
+    return c.json({ error: 'invalid environment' }, 400);
+  }
+
+  const latencyP95 =
+    typeof body.latency_p95_ms === 'number' &&
+    Number.isFinite(body.latency_p95_ms) &&
+    body.latency_p95_ms > 0 &&
+    body.latency_p95_ms <= 600_000
+      ? body.latency_p95_ms
+      : null;
+  const errorRate =
+    typeof body.error_rate === 'number' &&
+    Number.isFinite(body.error_rate) &&
+    body.error_rate >= 0 &&
+    body.error_rate <= 100
+      ? body.error_rate
+      : null;
+  if (body.latency_p95_ms != null && latencyP95 === null) {
+    return c.json({ error: 'latency_p95_ms must be between 0 and 600000' }, 400);
+  }
+  if (body.error_rate != null && errorRate === null) {
+    return c.json({ error: 'error_rate must be between 0 and 100' }, 400);
+  }
 
   // Observation-only default: never jump straight to enforcing without explicit mode.
   if (mode === 'enforcing') {
@@ -676,24 +783,14 @@ query.post('/budgets/approve', async (c) => {
       approved_at = excluded.approved_at,
       updated_at = datetime('now')`
   )
-    .bind(
-      id,
-      userId,
-      project_id,
-      surface,
-      environment,
-      mode,
-      typeof body.latency_p95_ms === 'number' ? body.latency_p95_ms : null,
-      typeof body.error_rate === 'number' ? body.error_rate : null,
-      approvedAt
-    )
+    .bind(id, userId, project_id, surface, environment, mode, latencyP95, errorRate, approvedAt)
     .run();
 
   return c.json({ ok: true, mode, approved_at: approvedAt });
 });
 
 // Mount
-performance.route('/', ingest);
-performance.route('/', query);
+performanceRoutes.route('/', ingest);
+performanceRoutes.route('/', query);
 
-export { performance };
+export { performanceRoutes };

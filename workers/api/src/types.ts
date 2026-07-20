@@ -15,6 +15,10 @@ export type Bindings = {
   SAASMAKER_LOCAL_SESSION_TOKEN?: string;
   /** Set in prod to enable POST /v1/test/mint-session for e2e session minting. Unset = endpoint returns 404. */
   FOUNDRY_E2E_SECRET?: string;
+  /** Optional self-canary delivery. Inert until both values are explicitly configured. */
+  PERFORMANCE_CANARY_INGEST_URL?: string;
+  PERFORMANCE_CANARY_API_KEY?: string;
+  PERFORMANCE_CANARY_PROJECT_ID?: string;
 };
 
 export type Variables = {

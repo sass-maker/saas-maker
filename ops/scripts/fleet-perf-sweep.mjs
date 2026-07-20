@@ -10,24 +10,30 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+// biome-ignore lint/suspicious/noUndeclaredEnvVars: this host-only CLI override must not affect builds.
 const PSI_CLI = process.env.PSI_SWARM_CLI ?? `${__dirname}/../psi-swarm/cli/dist/cli.js`;
 
-const arg = (flag) => process.argv.find((a, i) => process.argv[i - 1] === flag);
+const arg = (flag) => process.argv.find((_argument, i) => process.argv[i - 1] === flag);
 
 const runs = Number(arg('--runs') ?? 2);
 const concurrency = Number(arg('--concurrency') ?? 1);
 const onlySlugs = arg('--only')?.split(',').map((s) => s.trim()).filter(Boolean) ?? null;
 const mergePath = arg('--merge') ?? null;
 
-const { FLEET_HEALTH_CONTRACTS } = await import(
-  join(__dirname, '../../saas-maker/scripts/lib/fleet-health-contracts.mjs')
+const performanceCatalog = JSON.parse(
+  readFileSync(join(__dirname, '../../catalog/generated/performance-surfaces.json'), 'utf8')
 );
 
-const SKIP = new Set(['free-ai', 'reel-pipeline']);
-
-let entries = Object.entries(FLEET_HEALTH_CONTRACTS)
-  .filter(([slug, c]) => c.prodUrl && !SKIP.has(slug))
-  .map(([slug, c]) => ({ slug, name: c.displayName, url: c.prodUrl }));
+let entries = performanceCatalog.projects.flatMap((project) =>
+  project.surfaces
+    .filter((surface) => surface.kind === 'web')
+    .map((surface) => ({
+      slug: project.projectId,
+      surfaceId: surface.id,
+      name: project.name,
+      url: surface.url,
+    }))
+);
 
 if (onlySlugs?.length) {
   const wanted = new Set(onlySlugs);

@@ -5,8 +5,8 @@
   "canary": {
     "projectId": "sass-maker",
     "surfaceId": "sass-maker-api",
-    "status": "instrumented-reference",
-    "adapter": "packages/performance-runtime"
+    "status": "instrumented",
+    "adapter": "internal/performance-runtime"
   },
   "categories": {
     "instrumented": [
@@ -35,11 +35,12 @@
       "psi-swarm",
       "drank"
     ],
-    "unmeasured": [],
+    "unmeasured": [
+      "reel-pipeline"
+    ],
     "not-applicable": [
       "motion",
-      "mobile-dev-cockpit",
-      "reel-pipeline"
+      "mobile-dev-cockpit"
     ]
   },
   "items": [
@@ -54,7 +55,9 @@
           "url": "https://codevetter.com"
         }
       ],
-      "runtimeAdapter": null
+      "runtimeAdapter": null,
+      "runtimeRequired": false,
+      "rolloutAction": "none"
     },
     {
       "projectId": "pace",
@@ -67,7 +70,9 @@
           "url": "https://heypace.app"
         }
       ],
-      "runtimeAdapter": null
+      "runtimeAdapter": null,
+      "runtimeRequired": false,
+      "rolloutAction": "none"
     },
     {
       "projectId": "posttrainllm",
@@ -80,7 +85,9 @@
           "url": "https://posttrainllm.com"
         }
       ],
-      "runtimeAdapter": null
+      "runtimeAdapter": null,
+      "runtimeRequired": false,
+      "rolloutAction": "none"
     },
     {
       "projectId": "high-signal",
@@ -98,7 +105,9 @@
           "url": "https://high-signal-api.sarthakagrawal927.workers.dev/health"
         }
       ],
-      "runtimeAdapter": null
+      "runtimeAdapter": null,
+      "runtimeRequired": true,
+      "rolloutAction": "instrument-runtime-adapter"
     },
     {
       "projectId": "personal-website",
@@ -111,7 +120,9 @@
           "url": "https://sarthakagrawal.dev"
         }
       ],
-      "runtimeAdapter": null
+      "runtimeAdapter": null,
+      "runtimeRequired": false,
+      "rolloutAction": "none"
     },
     {
       "projectId": "rolepatch",
@@ -124,7 +135,9 @@
           "url": "https://rolepatch.com"
         }
       ],
-      "runtimeAdapter": null
+      "runtimeAdapter": null,
+      "runtimeRequired": true,
+      "rolloutAction": "instrument-runtime-adapter"
     },
     {
       "projectId": "karte",
@@ -137,7 +150,9 @@
           "url": "https://karte.cc"
         }
       ],
-      "runtimeAdapter": null
+      "runtimeAdapter": null,
+      "runtimeRequired": true,
+      "rolloutAction": "instrument-runtime-adapter"
     },
     {
       "projectId": "significant-hobbies",
@@ -150,7 +165,9 @@
           "url": "https://significanthobbies.com"
         }
       ],
-      "runtimeAdapter": null
+      "runtimeAdapter": null,
+      "runtimeRequired": true,
+      "rolloutAction": "instrument-runtime-adapter"
     },
     {
       "projectId": "reader",
@@ -163,7 +180,9 @@
           "url": "https://read.significanthobbies.com"
         }
       ],
-      "runtimeAdapter": null
+      "runtimeAdapter": null,
+      "runtimeRequired": true,
+      "rolloutAction": "instrument-runtime-adapter"
     },
     {
       "projectId": "anime-list",
@@ -176,7 +195,9 @@
           "url": "https://anime.significanthobbies.com"
         }
       ],
-      "runtimeAdapter": null
+      "runtimeAdapter": null,
+      "runtimeRequired": false,
+      "rolloutAction": "none"
     },
     {
       "projectId": "swe-interview-prep",
@@ -189,7 +210,9 @@
           "url": "https://learn.significanthobbies.com"
         }
       ],
-      "runtimeAdapter": null
+      "runtimeAdapter": null,
+      "runtimeRequired": false,
+      "rolloutAction": "none"
     },
     {
       "projectId": "email-manager",
@@ -207,7 +230,9 @@
           "url": "https://mail.sassmaker.com/api/health"
         }
       ],
-      "runtimeAdapter": null
+      "runtimeAdapter": null,
+      "runtimeRequired": true,
+      "rolloutAction": "instrument-runtime-adapter"
     },
     {
       "projectId": "looptv",
@@ -220,7 +245,9 @@
           "url": "https://tv.significanthobbies.com"
         }
       ],
-      "runtimeAdapter": null
+      "runtimeAdapter": null,
+      "runtimeRequired": false,
+      "rolloutAction": "none"
     },
     {
       "projectId": "chess",
@@ -233,14 +260,18 @@
           "url": "https://chess.significanthobbies.com"
         }
       ],
-      "runtimeAdapter": null
+      "runtimeAdapter": null,
+      "runtimeRequired": false,
+      "rolloutAction": "none"
     },
     {
       "projectId": "motion",
       "name": "Motion",
       "status": "not-applicable",
       "surfaces": [],
-      "runtimeAdapter": null
+      "runtimeAdapter": null,
+      "runtimeRequired": false,
+      "rolloutAction": "none"
     },
     {
       "projectId": "research-papers",
@@ -253,7 +284,9 @@
           "url": "https://papers.highsignal.app"
         }
       ],
-      "runtimeAdapter": null
+      "runtimeAdapter": null,
+      "runtimeRequired": false,
+      "rolloutAction": "none"
     },
     {
       "projectId": "starboard",
@@ -271,7 +304,9 @@
           "url": "https://starboard.codevetter.com/api/health"
         }
       ],
-      "runtimeAdapter": null
+      "runtimeAdapter": null,
+      "runtimeRequired": true,
+      "rolloutAction": "instrument-runtime-adapter"
     },
     {
       "projectId": "free-ai",
@@ -284,7 +319,9 @@
           "url": "https://ai-gateway.sassmaker.com/health"
         }
       ],
-      "runtimeAdapter": null
+      "runtimeAdapter": null,
+      "runtimeRequired": true,
+      "rolloutAction": "instrument-runtime-adapter"
     },
     {
       "projectId": "knowledge-base",
@@ -302,7 +339,9 @@
           "url": "https://search.sassmaker.com/v1/healthz"
         }
       ],
-      "runtimeAdapter": null
+      "runtimeAdapter": null,
+      "runtimeRequired": true,
+      "rolloutAction": "instrument-runtime-adapter"
     },
     {
       "projectId": "sass-maker",
@@ -335,7 +374,9 @@
           "url": "https://api.sassmaker.com/health"
         }
       ],
-      "runtimeAdapter": "packages/performance-runtime"
+      "runtimeAdapter": "internal/performance-runtime",
+      "runtimeRequired": true,
+      "rolloutAction": "verify-fresh-delivery"
     },
     {
       "projectId": "fleet-dashboard",
@@ -348,7 +389,9 @@
           "url": "https://fleet.sassmaker.com"
         }
       ],
-      "runtimeAdapter": null
+      "runtimeAdapter": null,
+      "runtimeRequired": true,
+      "rolloutAction": "instrument-runtime-adapter"
     },
     {
       "projectId": "psi-swarm",
@@ -361,14 +404,18 @@
           "url": "https://performance.sassmaker.com"
         }
       ],
-      "runtimeAdapter": null
+      "runtimeAdapter": null,
+      "runtimeRequired": false,
+      "rolloutAction": "none"
     },
     {
       "projectId": "mobile-dev-cockpit",
       "name": "Mobile Dev Cockpit",
       "status": "not-applicable",
       "surfaces": [],
-      "runtimeAdapter": null
+      "runtimeAdapter": null,
+      "runtimeRequired": false,
+      "rolloutAction": "none"
     },
     {
       "projectId": "drank",
@@ -381,14 +428,18 @@
           "url": "https://domains.sassmaker.com"
         }
       ],
-      "runtimeAdapter": null
+      "runtimeAdapter": null,
+      "runtimeRequired": false,
+      "rolloutAction": "none"
     },
     {
       "projectId": "reel-pipeline",
       "name": "Reel Pipeline",
-      "status": "not-applicable",
+      "status": "unmeasured",
       "surfaces": [],
-      "runtimeAdapter": null
+      "runtimeAdapter": null,
+      "runtimeRequired": true,
+      "rolloutAction": "instrument-runtime-adapter"
     }
   ]
 }

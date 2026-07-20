@@ -72,6 +72,12 @@ const EXAMPLES: ExampleRow[] = [
     description: 'Proxy a chat completion through the linked project',
   },
   {
+    category: 'Performance',
+    command:
+      'fnd api GET /v1/performance/routes --auth session --query order=slow --query percentile=p95 --output table',
+    description: 'Inspect the slowest sampled API route templates',
+  },
+  {
     category: 'Raw API',
     command: 'fnd api GET /v1/projects --auth session',
     description: 'Call any endpoint directly',

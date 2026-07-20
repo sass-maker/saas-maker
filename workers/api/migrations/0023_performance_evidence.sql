@@ -19,6 +19,7 @@ CREATE TABLE performance_rollups (
   error_count INTEGER NOT NULL DEFAULT 0 CHECK (error_count >= 0),
   sampling_rate REAL,
   probe_mode TEXT,
+  probe_origin TEXT,
   method TEXT,
   route_template TEXT,
   latency_json TEXT,

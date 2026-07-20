@@ -140,6 +140,13 @@ operationally sensitive even when credentials are absent.
 
 ## Relationship to existing monitoring
 
+Performance measurement has a separate canonical contract in
+[`performance-observability.md`](performance-observability.md). This source
+inventory answers whether adapters are configured and freshly verified; the
+Speed contract answers web/API latency, traffic, errors, regressions, and
+sanitized operation timing. The two surfaces link to each other but do not
+collapse configuration into runtime proof.
+
 The existing Cockpit browser and server readers remain PostHog adapters. Worker
 observability blocks remain Cloudflare adapters. Foundry Events and other local
 telemetry paths are separate adapters. None is promoted to a universal

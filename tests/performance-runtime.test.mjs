@@ -33,6 +33,7 @@ describe('runtime adapter', () => {
       ingestBaseUrl: 'https://api.sassmaker.com',
       apiKey: 'pk_test',
       successSampleRate: 1,
+      random: () => 0,
       fetchImpl,
     });
 
@@ -61,6 +62,7 @@ describe('runtime adapter', () => {
       successSampleRate: 0,
       sampleErrors: true,
       slowThresholdMs: 100,
+      random: () => 0.5,
       fetchImpl,
     });
 
@@ -84,5 +86,35 @@ describe('runtime adapter', () => {
     });
     assert.equal(skipped, null);
     assert.equal(called, 2);
+  });
+
+  it('rejects unsanitized downstream fingerprints before delivery', () => {
+    const adapter = createRuntimeAdapter({
+      projectId: 'sass-maker',
+      surface: 'sass-maker-api',
+      ingestBaseUrl: 'https://api.sassmaker.com',
+      apiKey: 'pk_test',
+      successSampleRate: 1,
+      random: () => 0,
+    });
+    assert.throws(
+      () =>
+        adapter.recordRequest({
+          method: 'GET',
+          routeTemplate: '/v1/projects',
+          status: 200,
+          durationMs: 42,
+          operations: [
+            {
+              kind: 'd1',
+              label: 'projects.list',
+              fingerprint: 'SELECT * FROM projects',
+              duration_ms: 10,
+              success: true,
+            },
+          ],
+        }),
+      /sanitized fp_ hash/
+    );
   });
 });

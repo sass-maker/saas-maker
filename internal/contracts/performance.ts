@@ -3,12 +3,7 @@
 export const PERFORMANCE_SCHEMA_VERSION = 1 as const;
 
 export type PerformanceEvidenceKind = 'api' | 'web';
-export type PerformanceEnvironment =
-  | 'production'
-  | 'staging'
-  | 'preview'
-  | 'development'
-  | 'local';
+export type PerformanceEnvironment = 'production' | 'staging' | 'preview' | 'development' | 'local';
 export type PerformanceEvidenceSource =
   | 'synthetic-api'
   | 'psi-swarm'
@@ -58,6 +53,7 @@ export interface PerformanceReceiptInput {
   error_count?: number;
   sampling_rate?: number | null;
   probe_mode?: PerformanceProbeMode | null;
+  probe_origin?: string | null;
   method?: 'GET' | 'HEAD' | null;
   route_template?: string | null;
   latency_ms?: PerformancePercentiles | null;
@@ -130,6 +126,7 @@ export interface PerformanceOperationRecord extends PerformanceOperationInput {
 export interface PerformanceIngestionResult {
   accepted: number;
   deduped: number;
+  capped: number;
   received: number;
   ids: string[];
 }

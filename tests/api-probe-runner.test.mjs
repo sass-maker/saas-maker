@@ -1,9 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import {
-  probeOnce,
-  runSurfaceProbe,
-} from '../ops/scripts/lib/api-probe-runner.mjs';
+import { probeOnce, runSurfaceProbe } from '../ops/scripts/lib/api-probe-runner.mjs';
 import { buildPsiSwarmReceipt } from '../ops/scripts/lib/psi-swarm-receipt.mjs';
 import {
   mapLegacyPerformanceEvent,
@@ -12,13 +9,8 @@ import {
 
 describe('api probe runner', () => {
   it('records timeout and omits fabricated DNS phases', async () => {
-    const fetchImpl = async () => {
-      await new Promise((resolve) => setTimeout(resolve, 50));
-      throw Object.assign(new Error('aborted'), { name: 'AbortError' });
-    };
-    // Use a tiny timeout via controller in probeOnce
     const sample = await probeOnce('https://example.com/health', {
-      timeoutMs: 1,
+      timeoutMs: 250,
       fetchImpl: async (_url, init) => {
         await new Promise((_, reject) => {
           init.signal.addEventListener('abort', () => {
@@ -46,6 +38,50 @@ describe('api probe runner', () => {
     );
   });
 
+  it('refuses private destinations and unbounded sample plans', async () => {
+    await assert.rejects(
+      () =>
+        runSurfaceProbe({
+          id: 'private',
+          projectId: 'x',
+          url: 'https://127.0.0.1/health',
+          method: 'GET',
+          expectedStatuses: [200],
+        }),
+      /public hostname/
+    );
+    await assert.rejects(
+      () =>
+        runSurfaceProbe(
+          {
+            id: 'too-many',
+            projectId: 'x',
+            url: 'https://example.com/health',
+            method: 'GET',
+            expectedStatuses: [200],
+          },
+          { coldSamples: 10, warmSamples: 31 }
+        ),
+      /warmSamples/
+    );
+  });
+
+  it('bounds response bodies and does not follow redirects', async () => {
+    const oversized = await probeOnce('https://example.com/health', {
+      maximumResponseBytes: 4,
+      fetchImpl: async () => new Response('too-large', { status: 200 }),
+    });
+    assert.equal(oversized.ok, false);
+    assert.equal(oversized.errorCode, 'response_too_large');
+
+    const redirected = await probeOnce('https://example.com/health', {
+      fetchImpl: async () =>
+        new Response(null, { status: 302, headers: { location: 'https://example.org' } }),
+    });
+    assert.equal(redirected.ok, false);
+    assert.equal(redirected.status, 302);
+  });
+
   it('builds cold/warm receipt via fixture fetch', async () => {
     let calls = 0;
     const fetchImpl = async () => {
@@ -65,6 +101,7 @@ describe('api probe runner', () => {
     );
     assert.equal(calls, 5);
     assert.equal(result.receipt.source, 'synthetic-api');
+    assert.equal(result.receipt.probe_origin, 'local-ops');
     assert.equal(result.receipt.sample_count, 5);
     assert.equal(result.cold.sampleCount, 2);
     assert.equal(result.warm.sampleCount, 3);
@@ -88,6 +125,7 @@ describe('psi swarm receipt adapter', () => {
     assert.equal(receipt.source, 'psi-swarm');
     assert.equal(receipt.sample_count, 3);
     assert.equal(receipt.diagnostic_ref, 'swarm_01TEST');
+    assert.equal(receipt.probe_origin, 'psi-swarm');
     assert.ok(receipt.web_vitals.lcp_ms.p75 != null);
   });
 });
