@@ -41,9 +41,9 @@ Node and Go clients use a bounded in-memory queue, fixed maximum batch size, sho
 
 Alternative considered: send every event inline. Rejected because SaaS Maker availability must never affect application latency or correctness.
 
-### 4. Route templates are preferred; concrete values are normalized conservatively
+### 4. Route templates are required; unsafe concrete paths are dropped
 
-Express middleware uses `baseUrl + route.path`; Go uses `Request.Pattern` where available and accepts an optional router resolver. When no framework template exists, numeric and UUID-like path segments become placeholders. Raw query strings are never inspected or sent.
+Express middleware uses `baseUrl + route.path`; Go uses `Request.Pattern` where available and accepts an optional router resolver. Non-Express callers may record an explicit trusted template. When no valid framework template or resolver result exists, the SDK drops the summary instead of falling back to a concrete request path. Raw query strings are never inspected or sent.
 
 ### 5. The focused UI derives health from evidence, not catalog declarations
 
@@ -60,7 +60,7 @@ Source changes can be committed after local checks. Cloudflare deploy follows th
 ## Risks / Trade-offs
 
 - [Every-request spans can create storage volume] -> Existing per-route caps, bounded SDK queues, seven-day span retention, and server validation remain active.
-- [Fallback route normalization can merge distinct routes] -> Prefer framework templates and document router-specific resolvers; merging is safer than leaking identifiers or creating unbounded cardinality.
+- [Strict template requirements can omit unmatched routes] -> Document middleware placement and router-specific resolvers; missing evidence is safer than leaking identifiers or creating unbounded cardinality.
 - [SDK delivery failures hide monitoring gaps] -> Expose local diagnostics and show stale/unavailable evidence clearly in Cockpit; never fail the product request.
 - [The npm docs can outrun package publication] -> Do not deploy registry install claims as shipped until the exact package version exists; validate the packed tarball first and report publication as a release boundary.
 - [Pending production migrations span other features] -> Inspect the ordered migration set and request explicit approval instead of selectively bypassing Wrangler's migration ledger.
@@ -76,5 +76,5 @@ Source changes can be committed after local checks. Cloudflare deploy follows th
 
 ## Open Questions
 
-- Production D1 migration approval is not yet granted; three ordered migrations are currently pending.
+- Production D1 migration approval is not yet granted; four ordered migrations are currently pending (`0022` through `0025`), including unrelated migration `0025_foundry_operational_tables.sql`.
 - npm publication approval is not yet granted. The source and packed artifact can be completed without publishing.

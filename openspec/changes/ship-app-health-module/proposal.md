@@ -30,5 +30,5 @@ None.
 
 - Affects `packages/blocks/sdk`, a new Go module under `packages/`, the Hono performance route, internal performance contracts, Cockpit navigation/components, public Blume docs, agent-indexing surfaces, OpenAPI artifacts, tests, and `PROJECT_STATUS.md`.
 - Reuses D1 migration `0023_performance_evidence.sql`; this change adds no new production database or production dependency.
-- The public Node package requires a normal semver release before the documented registry install exposes App Health. The Go module becomes installable from the public repository after the source is pushed.
+- The public Node package requires a normal semver release before the documented registry install exposes App Health. The nested Go module requires both pushed source and a stable module tag before the documented `@latest` install becomes active.
 - Production activation remains fail-closed until the required D1 migration and exact-head deploy checks are explicitly satisfied.

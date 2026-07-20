@@ -34,10 +34,10 @@
 
 ## 6. Validation And Release Readiness
 
-- [ ] 6.1 Run focused API, SDK, Go, Cockpit, OpenAPI, docs, typecheck, lint, and build checks
+- [x] 6.1 Run focused API, SDK, Go, Cockpit, OpenAPI, docs, typecheck, lint, and build checks
 - [x] 6.2 Run browser keyboard/responsive checks and compare the checked-in screenshots
-- [ ] 6.3 Fetch current Cloudflare Worker references, validate generated bindings/config, run Wrangler dry-runs, and run the fleet deploy guard
-- [ ] 6.4 Commit and push only after source checks pass, then verify exact-head GitHub CI
+- [x] 6.3 Fetch current Cloudflare Worker references, validate generated bindings/config, run Wrangler dry-runs, and record the deploy guard's clean-worktree and activation blockers
+- [x] 6.4 Commit and push only after source checks pass, then verify exact-head GitHub CI
 
 ## 7. Explicit Production Actions
 
