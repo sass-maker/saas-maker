@@ -55,7 +55,9 @@
     "symphony:normalize-weekly": "node scripts/fleet-weekly-normalize.mjs",
     "prepare": "husky",
     "format": "biome format --write .",
-    "format:check": "biome format ."
+    "format:check": "biome format .",
+    "performance:probe-fixture": "node ops/scripts/lib/api-probe-runner.mjs --fixture",
+    "performance:test": "node --test tests/api-probe-runner.test.mjs && node --experimental-strip-types --test tests/performance-validate.test.mjs tests/performance-runtime.test.mjs"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.1",

@@ -17,6 +17,10 @@ export const EVIDENCE_STATES = new Set([
   'unknown',
   'not-applicable',
 ]);
+export const SAFE_PERFORMANCE_METHODS = new Set(['GET', 'HEAD']);
+
+const PRIVATE_PROBE_HOST_PATTERN =
+  /^(?:localhost|0\.0\.0\.0|127(?:\.\d{1,3}){3}|10(?:\.\d{1,3}){3}|192\.168(?:\.\d{1,3}){2}|172\.(?:1[6-9]|2\d|3[01])(?:\.\d{1,3}){2}|\[?::1\]?|.*\.local)$/i;
 
 const SECRET_KEY_PATTERN =
   /(?:^|[_-])(api[_-]?key|access[_-]?token|auth[_-]?token|password|passwd|secret|credential|private[_-]?key|client[_-]?secret|env(?:ironment)?)(?:$|[_-])/i;
@@ -84,6 +88,85 @@ function scanSecretLikeFields(value, location, errors) {
 function validateEvidenceState(value, location, errors) {
   if (!EVIDENCE_STATES.has(value)) {
     errors.push(`${location} must be one of ${[...EVIDENCE_STATES].join(', ')}`);
+  }
+}
+
+function validatePerformanceSurface(surface, productIds, maintainedProductIds, errors) {
+  const location = `performance surface ${surface?.id ?? '<missing-id>'}`;
+  if (!productIds.has(surface?.projectId)) {
+    errors.push(`${location} references unknown product ${surface?.projectId}`);
+  } else if (!maintainedProductIds.has(surface.projectId)) {
+    errors.push(`${location} references non-maintained product ${surface.projectId}`);
+  }
+  if (!SAFE_PERFORMANCE_METHODS.has(surface?.method)) {
+    errors.push(`${location} method must be GET or HEAD`);
+  }
+  let parsed;
+  try {
+    parsed = new URL(surface?.url);
+  } catch {
+    errors.push(`${location} requires a valid URL`);
+    return;
+  }
+  if (parsed.protocol !== 'https:') errors.push(`${location} URL must use https`);
+  if (parsed.username || parsed.password)
+    errors.push(`${location} URL must not contain credentials`);
+  if (parsed.search || parsed.hash)
+    errors.push(`${location} URL must not contain query or fragment`);
+  if (PRIVATE_PROBE_HOST_PATTERN.test(parsed.hostname)) {
+    errors.push(`${location} URL must not target a private or local host`);
+  }
+  if (!Array.isArray(surface.expectedStatuses) || surface.expectedStatuses.length === 0) {
+    errors.push(`${location} requires expected statuses`);
+  } else if (
+    surface.expectedStatuses.some(
+      (status) => !Number.isInteger(status) || status < 200 || status > 399
+    )
+  ) {
+    errors.push(`${location} expected statuses must be 2xx or 3xx integers`);
+  }
+  if (
+    !Number.isInteger(surface.timeoutMs) ||
+    surface.timeoutMs < 250 ||
+    surface.timeoutMs > 30_000
+  ) {
+    errors.push(`${location} timeoutMs must be between 250 and 30000`);
+  }
+}
+
+function validatePerformancePolicy(policy, errors) {
+  if (!policy || typeof policy !== 'object') {
+    errors.push('$.performancePolicy must be an object');
+    return;
+  }
+  if (policy.mode !== 'observation') {
+    errors.push('performance policy must remain observation-only until separately approved');
+  }
+  if (policy.observationDays < 14)
+    errors.push('performance observation window must be at least 14 days');
+  if (policy.retention?.spanDays !== 7 || policy.retention?.rollupMonths !== 13) {
+    errors.push('performance retention must match the owner-approved 7-day/13-month contract');
+  }
+  if (
+    policy.sampling?.successRate !== 0.1 ||
+    policy.sampling?.errorsRate !== 1 ||
+    policy.sampling?.slowRate !== 1
+  ) {
+    errors.push('performance sampling must match the owner-approved 10%/100%/100% contract');
+  }
+  if (policy.synthetic?.api?.coldSamples !== 5 || policy.synthetic?.api?.warmSamples !== 15) {
+    errors.push('synthetic API samples must remain 5 cold and 15 warm');
+  }
+  if (policy.synthetic?.web?.desktopSamples !== 5 || policy.synthetic?.web?.mobileSamples !== 5) {
+    errors.push('synthetic web samples must remain 5 desktop and 5 mobile');
+  }
+  if (policy.synthetic?.schedulesActive !== false) {
+    errors.push('performance schedules must remain inert until separately approved');
+  }
+  if (!policy.privacy || Object.values(policy.privacy).some((allowed) => allowed !== false)) {
+    errors.push(
+      'performance privacy policy must forbid raw queries, values, payloads, auth, and identity'
+    );
   }
 }
 
@@ -170,6 +253,7 @@ export function validateCatalog(catalog) {
     'pillars',
     'publicRecords',
     'automationDetails',
+    'performanceSurfaces',
   ];
 
   if (!catalog || typeof catalog !== 'object' || Array.isArray(catalog)) {
@@ -208,7 +292,17 @@ export function validateCatalog(catalog) {
     errors.push(`pillars must be exactly ${requiredPillars.join(', ')}`);
   }
   const productIds = new Set(catalog.products.map((product) => product.id));
+  const maintainedProductIds = new Set(
+    catalog.products
+      .filter((product) => product.lifecycle === 'maintained')
+      .map((product) => product.id)
+  );
   const repositoryIds = new Set(catalog.repositories.map((repository) => repository.id));
+
+  validatePerformancePolicy(catalog.performancePolicy, errors);
+  for (const surface of catalog.performanceSurfaces) {
+    validatePerformanceSurface(surface, productIds, maintainedProductIds, errors);
+  }
 
   for (const detail of catalog.automationDetails) {
     if (!productIds.has(detail.productId)) {
@@ -373,6 +467,87 @@ function legacyAutomationRegistry(catalog) {
   };
 }
 
+export function buildPerformanceProjection(catalog) {
+  const maintainedProducts = catalog.products.filter(
+    (product) => product.lifecycle === 'maintained'
+  );
+  const surfacesByProject = new Map();
+  for (const surface of catalog.performanceSurfaces) {
+    const surfaces = surfacesByProject.get(surface.projectId) ?? [];
+    surfaces.push(surface);
+    surfacesByProject.set(surface.projectId, surfaces);
+  }
+  const apiRuntimes = new Set(['api', 'server', 'worker']);
+  return {
+    schemaVersion: 1,
+    generatedFrom: 'catalog/foundry.json',
+    policy: catalog.performancePolicy,
+    projects: maintainedProducts.map((product) => {
+      const surfaces = surfacesByProject.get(product.id) ?? [];
+      const expectsRuntimeEvidence = product.runtimes.some((runtime) => apiRuntimes.has(runtime));
+      return {
+        projectId: product.id,
+        name: product.name,
+        attention: product.attention,
+        surfaces,
+        syntheticStatus: surfaces.length > 0 ? 'configured' : 'unmeasured',
+        runtimeStatus: expectsRuntimeEvidence ? 'unmeasured' : 'not-applicable',
+      };
+    }),
+  };
+}
+
+export function buildPerformanceRolloutInventory(catalog) {
+  const projection = buildPerformanceProjection(catalog);
+  const apiRuntimes = new Set(['api', 'server', 'worker']);
+  const productsById = new Map(catalog.products.map((product) => [product.id, product]));
+  const items = projection.projects.map((project) => {
+    const product = productsById.get(project.projectId);
+    const expectsRuntime = product?.runtimes.some((runtime) => apiRuntimes.has(runtime)) ?? false;
+    const status =
+      project.projectId === 'sass-maker'
+        ? 'instrumented'
+        : project.surfaces.length > 0
+          ? 'synthetic-only'
+          : expectsRuntime
+            ? 'unmeasured'
+            : 'not-applicable';
+    return {
+      projectId: project.projectId,
+      name: project.name,
+      status,
+      surfaces: project.surfaces.map(({ id, kind, url }) => ({ id, kind, url })),
+      runtimeAdapter: status === 'instrumented' ? 'internal/performance-runtime' : null,
+      runtimeRequired: expectsRuntime,
+      rolloutAction:
+        status === 'instrumented'
+          ? 'verify-fresh-delivery'
+          : expectsRuntime
+            ? 'instrument-runtime-adapter'
+            : 'none',
+    };
+  });
+  const statuses = ['instrumented', 'synthetic-only', 'unmeasured', 'not-applicable'];
+  return {
+    schemaVersion: 1,
+    generatedAt: catalog.updatedAt,
+    generatedFrom: 'catalog/foundry.json',
+    canary: {
+      projectId: 'sass-maker',
+      surfaceId: 'sass-maker-api',
+      status: 'instrumented',
+      adapter: 'internal/performance-runtime',
+    },
+    categories: Object.fromEntries(
+      statuses.map((status) => [
+        status,
+        items.filter((item) => item.status === status).map((item) => item.projectId),
+      ])
+    ),
+    items,
+  };
+}
+
 export function buildCompatibilityViews(catalog) {
   assertValidCatalog(catalog);
   return new Map([
@@ -390,6 +565,8 @@ export function buildCompatibilityViews(catalog) {
       { schemaVersion: catalog.schemaVersion, automations: catalog.automations },
     ],
     ['pillars.json', { schemaVersion: catalog.schemaVersion, pillars: catalog.pillars }],
+    ['performance-surfaces.json', buildPerformanceProjection(catalog)],
+    ['performance-rollout-inventory.json', buildPerformanceRolloutInventory(catalog)],
     ['public.json', buildPublicProjection(catalog)],
   ]);
 }

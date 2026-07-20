@@ -85,4 +85,5 @@ Returns `{ "status": "ok" }` if the API is running. No authentication required.
 | Standards | `/v1/standards` | Fleet standards (CLI-driven) |
 | Tasks | `/v1/tasks` | Cockpit tasks |
 | Jobs | `/v1/jobs` | Cockpit jobs |
+| Performance | `/v1/performance` | Private speed summaries, recent sampled requests, route percentiles, traces, retention, and project-scoped receipt ingestion |
 | Auth | `/v1/auth` / `/v1/cli` | Sessions and CLI auth |

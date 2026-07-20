@@ -1,5 +1,13 @@
 # Fleet Performance + Error Handling Monitoring
 
+> **Historical coverage snapshot.** The per-project table below was verified on
+> 2026-07-03 and is retained as migration evidence, not current fleet truth. The
+> canonical declarations now live in `catalog/foundry.json`, the generated
+> coverage/runner input lives in `catalog/generated/performance-surfaces.json`,
+> and the current operational contract is
+> `docs/operations/performance-observability.md`. Do not update this table as a
+> second registry.
+
 > **Verified 2026-07-03.** Coverage tables reflect actual code state, not aspirations.
 
 ## Overview

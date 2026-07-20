@@ -23,6 +23,9 @@ human-readable companion.
 - [`foundry-migration-ledger.md`](foundry-migration-ledger.md) — exact source
   revisions, import boundaries, production identities, and rollback references
   for the Foundry monorepo consolidation.
+- [`performance-observability.md`](performance-observability.md) — canonical
+  provider-neutral web/API speed evidence, privacy, retention, and activation
+  contract.
 - [`always-on-automation-setup.md`](always-on-automation-setup.md) — bootstrap
   a Mac to run the codex-automations cron jobs against the fleet checkout.
 - [`launch-kit.md`](launch-kit.md) — ready-to-post distribution copy and the
@@ -46,4 +49,5 @@ human-readable companion.
 | `pnpm fleet:secret-audit` | Cloudflare secret/vars/bindings audit. |
 | `pnpm fleet:monitoring-audit` | Monitoring coverage audit. |
 | `pnpm fleet:posthog-verify` | PostHog `project_id` coalesce verification. |
+| `pnpm catalog:generate` | Generate performance surfaces and the other canonical catalog views. |
 | `pnpm check:fleet-contracts` | Registry vs docs vs `PROJECT_STATUS.md` sync. |

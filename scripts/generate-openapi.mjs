@@ -64,6 +64,19 @@ function collectRouteFileOperations(source, routerVarName) {
   while ((match = regex.exec(source)) !== null) {
     ops.push({ method: match[1].toLowerCase(), path: match[2] });
   }
+  const mountRegex = new RegExp(
+    `\\b${routerVarName}\\.route\\('([^']+)',\\s*([A-Za-z0-9_]+)\\)`,
+    'g'
+  );
+  while ((match = mountRegex.exec(source)) !== null) {
+    const mountPath = normalizePath(match[1]);
+    const childRouter = match[2];
+    const childOps = collectRouteFileOperations(source, childRouter);
+    for (const child of childOps) {
+      const suffix = child.path === '/' ? '' : child.path;
+      ops.push({ method: child.method, path: normalizePath(`${mountPath}${suffix}`) });
+    }
+  }
   return ops;
 }
 

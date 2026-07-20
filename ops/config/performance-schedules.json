@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "status": "inert",
+  "note": "Schedules remain disabled until designated-host activation is explicitly approved. Do not enable cron on the operations host without owner sign-off.",
+  "schedulesActive": false,
+  "schedules": [
+    {
+      "id": "performance-api-daily",
+      "kind": "api-synthetic",
+      "cadence": "daily",
+      "cron": "17 6 * * *",
+      "enabled": false,
+      "runner": "ops/scripts/lib/api-probe-runner.mjs",
+      "coldSamples": 5,
+      "warmSamples": 15
+    },
+    {
+      "id": "performance-web-weekly",
+      "kind": "web-psi-swarm",
+      "cadence": "weekly",
+      "cron": "23 7 * * 1",
+      "enabled": false,
+      "runner": "ops/scripts/fleet-perf-sweep.mjs",
+      "desktopSamples": 5,
+      "mobileSamples": 5
+    },
+    {
+      "id": "performance-release-on-demand",
+      "kind": "release-scoped",
+      "cadence": "on-demand",
+      "cron": null,
+      "enabled": false,
+      "runner": "ops/scripts/lib/api-probe-runner.mjs",
+      "note": "Operator-triggered for changed surfaces only"
+    }
+  ]
+}

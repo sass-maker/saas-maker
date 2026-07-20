@@ -52,9 +52,14 @@ export default async function ObservabilityPage() {
         title="Fleet observability"
         description="Provider-neutral coverage from the canonical catalog. Source configuration and recent live proof remain separate claims."
         actions={
-          <Badge variant="outline">
-            Snapshot {new Date(inventory.generatedAt).toLocaleString()}
-          </Badge>
+          <div className="flex items-center gap-2">
+            <Badge variant="outline">
+              Snapshot {new Date(inventory.generatedAt).toLocaleString()}
+            </Badge>
+            <a href="/fleet/speed" className="text-xs font-medium text-cyan-400 hover:underline">
+              Speed workspace →
+            </a>
+          </div>
         }
       />
 

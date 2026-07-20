@@ -1,0 +1,445 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-20",
+  "generatedFrom": "catalog/foundry.json",
+  "canary": {
+    "projectId": "sass-maker",
+    "surfaceId": "sass-maker-api",
+    "status": "instrumented",
+    "adapter": "internal/performance-runtime"
+  },
+  "categories": {
+    "instrumented": [
+      "sass-maker"
+    ],
+    "synthetic-only": [
+      "codevetter",
+      "pace",
+      "posttrainllm",
+      "high-signal",
+      "personal-website",
+      "rolepatch",
+      "karte",
+      "significant-hobbies",
+      "reader",
+      "anime-list",
+      "swe-interview-prep",
+      "email-manager",
+      "looptv",
+      "chess",
+      "research-papers",
+      "starboard",
+      "free-ai",
+      "knowledge-base",
+      "fleet-dashboard",
+      "psi-swarm",
+      "drank"
+    ],
+    "unmeasured": [
+      "reel-pipeline"
+    ],
+    "not-applicable": [
+      "motion",
+      "mobile-dev-cockpit"
+    ]
+  },
+  "items": [
+    {
+      "projectId": "codevetter",
+      "name": "CodeVetter",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "codevetter-web",
+          "kind": "web",
+          "url": "https://codevetter.com"
+        }
+      ],
+      "runtimeAdapter": null,
+      "runtimeRequired": false,
+      "rolloutAction": "none"
+    },
+    {
+      "projectId": "pace",
+      "name": "HeyPace",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "pace-web",
+          "kind": "web",
+          "url": "https://heypace.app"
+        }
+      ],
+      "runtimeAdapter": null,
+      "runtimeRequired": false,
+      "rolloutAction": "none"
+    },
+    {
+      "projectId": "posttrainllm",
+      "name": "PostTrainLLM",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "posttrainllm-web",
+          "kind": "web",
+          "url": "https://posttrainllm.com"
+        }
+      ],
+      "runtimeAdapter": null,
+      "runtimeRequired": false,
+      "rolloutAction": "none"
+    },
+    {
+      "projectId": "high-signal",
+      "name": "High Signal",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "high-signal-web",
+          "kind": "web",
+          "url": "https://highsignal.app"
+        },
+        {
+          "id": "high-signal-api",
+          "kind": "api",
+          "url": "https://high-signal-api.sarthakagrawal927.workers.dev/health"
+        }
+      ],
+      "runtimeAdapter": null,
+      "runtimeRequired": true,
+      "rolloutAction": "instrument-runtime-adapter"
+    },
+    {
+      "projectId": "personal-website",
+      "name": "Personal website",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "personal-website-web",
+          "kind": "web",
+          "url": "https://sarthakagrawal.dev"
+        }
+      ],
+      "runtimeAdapter": null,
+      "runtimeRequired": false,
+      "rolloutAction": "none"
+    },
+    {
+      "projectId": "rolepatch",
+      "name": "RolePatch",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "rolepatch-web",
+          "kind": "web",
+          "url": "https://rolepatch.com"
+        }
+      ],
+      "runtimeAdapter": null,
+      "runtimeRequired": true,
+      "rolloutAction": "instrument-runtime-adapter"
+    },
+    {
+      "projectId": "karte",
+      "name": "Karte",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "karte-web",
+          "kind": "web",
+          "url": "https://karte.cc"
+        }
+      ],
+      "runtimeAdapter": null,
+      "runtimeRequired": true,
+      "rolloutAction": "instrument-runtime-adapter"
+    },
+    {
+      "projectId": "significant-hobbies",
+      "name": "Significant Hobbies",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "significant-hobbies-web",
+          "kind": "web",
+          "url": "https://significanthobbies.com"
+        }
+      ],
+      "runtimeAdapter": null,
+      "runtimeRequired": true,
+      "rolloutAction": "instrument-runtime-adapter"
+    },
+    {
+      "projectId": "reader",
+      "name": "Reader",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "reader-web",
+          "kind": "web",
+          "url": "https://read.significanthobbies.com"
+        }
+      ],
+      "runtimeAdapter": null,
+      "runtimeRequired": true,
+      "rolloutAction": "instrument-runtime-adapter"
+    },
+    {
+      "projectId": "anime-list",
+      "name": "Anime List",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "anime-list-web",
+          "kind": "web",
+          "url": "https://anime.significanthobbies.com"
+        }
+      ],
+      "runtimeAdapter": null,
+      "runtimeRequired": false,
+      "rolloutAction": "none"
+    },
+    {
+      "projectId": "swe-interview-prep",
+      "name": "SWE Interview Prep",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "swe-interview-prep-web",
+          "kind": "web",
+          "url": "https://learn.significanthobbies.com"
+        }
+      ],
+      "runtimeAdapter": null,
+      "runtimeRequired": false,
+      "rolloutAction": "none"
+    },
+    {
+      "projectId": "email-manager",
+      "name": "Email Manager",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "email-manager-web",
+          "kind": "web",
+          "url": "https://mail.sassmaker.com"
+        },
+        {
+          "id": "email-manager-api",
+          "kind": "api",
+          "url": "https://mail.sassmaker.com/api/health"
+        }
+      ],
+      "runtimeAdapter": null,
+      "runtimeRequired": true,
+      "rolloutAction": "instrument-runtime-adapter"
+    },
+    {
+      "projectId": "looptv",
+      "name": "LoopTV",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "looptv-web",
+          "kind": "web",
+          "url": "https://tv.significanthobbies.com"
+        }
+      ],
+      "runtimeAdapter": null,
+      "runtimeRequired": false,
+      "rolloutAction": "none"
+    },
+    {
+      "projectId": "chess",
+      "name": "Chess",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "chess-web",
+          "kind": "web",
+          "url": "https://chess.significanthobbies.com"
+        }
+      ],
+      "runtimeAdapter": null,
+      "runtimeRequired": false,
+      "rolloutAction": "none"
+    },
+    {
+      "projectId": "motion",
+      "name": "Motion",
+      "status": "not-applicable",
+      "surfaces": [],
+      "runtimeAdapter": null,
+      "runtimeRequired": false,
+      "rolloutAction": "none"
+    },
+    {
+      "projectId": "research-papers",
+      "name": "Research Papers",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "research-papers-web",
+          "kind": "web",
+          "url": "https://papers.highsignal.app"
+        }
+      ],
+      "runtimeAdapter": null,
+      "runtimeRequired": false,
+      "rolloutAction": "none"
+    },
+    {
+      "projectId": "starboard",
+      "name": "Starboard",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "starboard-web",
+          "kind": "web",
+          "url": "https://starboard.codevetter.com"
+        },
+        {
+          "id": "starboard-api",
+          "kind": "api",
+          "url": "https://starboard.codevetter.com/api/health"
+        }
+      ],
+      "runtimeAdapter": null,
+      "runtimeRequired": true,
+      "rolloutAction": "instrument-runtime-adapter"
+    },
+    {
+      "projectId": "free-ai",
+      "name": "Free AI",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "free-ai-api",
+          "kind": "api",
+          "url": "https://ai-gateway.sassmaker.com/health"
+        }
+      ],
+      "runtimeAdapter": null,
+      "runtimeRequired": true,
+      "rolloutAction": "instrument-runtime-adapter"
+    },
+    {
+      "projectId": "knowledge-base",
+      "name": "Knowledge Base",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "knowledge-base-web",
+          "kind": "web",
+          "url": "https://knowledgebase.sassmaker.com"
+        },
+        {
+          "id": "knowledge-base-api",
+          "kind": "api",
+          "url": "https://search.sassmaker.com/v1/healthz"
+        }
+      ],
+      "runtimeAdapter": null,
+      "runtimeRequired": true,
+      "rolloutAction": "instrument-runtime-adapter"
+    },
+    {
+      "projectId": "sass-maker",
+      "name": "SaaS Maker / Foundry",
+      "status": "instrumented",
+      "surfaces": [
+        {
+          "id": "sass-maker-web",
+          "kind": "web",
+          "url": "https://sassmaker.com"
+        },
+        {
+          "id": "sass-maker-cockpit-web",
+          "kind": "web",
+          "url": "https://app.sassmaker.com"
+        },
+        {
+          "id": "sass-maker-packages-web",
+          "kind": "web",
+          "url": "https://packages.sassmaker.com"
+        },
+        {
+          "id": "sass-maker-skills-web",
+          "kind": "web",
+          "url": "https://skills.sassmaker.com"
+        },
+        {
+          "id": "sass-maker-api",
+          "kind": "api",
+          "url": "https://api.sassmaker.com/health"
+        }
+      ],
+      "runtimeAdapter": "internal/performance-runtime",
+      "runtimeRequired": true,
+      "rolloutAction": "verify-fresh-delivery"
+    },
+    {
+      "projectId": "fleet-dashboard",
+      "name": "Fleet Dashboard",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "fleet-dashboard-web",
+          "kind": "web",
+          "url": "https://fleet.sassmaker.com"
+        }
+      ],
+      "runtimeAdapter": null,
+      "runtimeRequired": true,
+      "rolloutAction": "instrument-runtime-adapter"
+    },
+    {
+      "projectId": "psi-swarm",
+      "name": "PSI Swarm",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "psi-swarm-web",
+          "kind": "web",
+          "url": "https://performance.sassmaker.com"
+        }
+      ],
+      "runtimeAdapter": null,
+      "runtimeRequired": false,
+      "rolloutAction": "none"
+    },
+    {
+      "projectId": "mobile-dev-cockpit",
+      "name": "Mobile Dev Cockpit",
+      "status": "not-applicable",
+      "surfaces": [],
+      "runtimeAdapter": null,
+      "runtimeRequired": false,
+      "rolloutAction": "none"
+    },
+    {
+      "projectId": "drank",
+      "name": "Drank",
+      "status": "synthetic-only",
+      "surfaces": [
+        {
+          "id": "drank-web",
+          "kind": "web",
+          "url": "https://domains.sassmaker.com"
+        }
+      ],
+      "runtimeAdapter": null,
+      "runtimeRequired": false,
+      "rolloutAction": "none"
+    },
+    {
+      "projectId": "reel-pipeline",
+      "name": "Reel Pipeline",
+      "status": "unmeasured",
+      "surfaces": [],
+      "runtimeAdapter": null,
+      "runtimeRequired": true,
+      "rolloutAction": "instrument-runtime-adapter"
+    }
+  ]
+}
