@@ -1,0 +1,52 @@
+{
+  "$schema": "reel-pipeline.generation-cases.v1",
+  "cases": [
+    {
+      "id": "marketing-render-modes",
+      "description": "Accepted marketing posts through the supported render-mode matrix.",
+      "smoke": {
+        "type": "command",
+        "command": "npm",
+        "args": ["run", "smoke:render-modes"],
+        "report": "tmp/render-mode-smoke/report.json"
+      }
+    },
+    {
+      "id": "worker-render-pro",
+      "description": "Approved Worker reel ids through the canonical render-pro production renderer.",
+      "smoke": {
+        "type": "command",
+        "command": "node",
+        "args": ["--check", "scripts/render-pro.js"],
+        "hint": "Syntax smoke only; live Worker/R2 render proof needs a real approved reel id."
+      }
+    },
+    {
+      "id": "lesson-video",
+      "description": "Animated tutoring lesson generator.",
+      "smoke": {
+        "type": "command",
+        "command": "npm",
+        "args": ["run", "smoke:lesson-local"],
+        "report": "tmp/lesson-local-smoke/report.json",
+        "hint": "Local smoke uses fake adapters; live lesson render still needs DeepSeek, ElevenLabs, Pexels, and ffmpeg."
+      }
+    },
+    {
+      "id": "creator-mvp",
+      "description": "Manual kids-story creator MVP packets.",
+      "smoke": {
+        "type": "files",
+        "status": "manual",
+        "paths": [
+          "docs/product/creator-mvp.md",
+          "docs/product/creator-mvp-packs/README.md",
+          "docs/product/creator-mvp-packs/lion-and-mouse.md",
+          "docs/product/creator-mvp-packs/tortoise-and-hare.md",
+          "docs/product/creator-mvp-packs/crow-and-pitcher.md"
+        ],
+        "hint": "Manual videos are not software-rendered; produce and review the three packets before adding automation."
+      }
+    }
+  ]
+}

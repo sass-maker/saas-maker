@@ -1,0 +1,37 @@
+#!/usr/bin/env node
+
+import { execFileSync } from 'node:child_process';
+import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
+
+import { buildMarketingDryRun } from '../../lib/marketing-dry-run.mjs';
+import { loadMarketingProgram } from '../../lib/marketing-program.mjs';
+import { buildMarketingSnapshot } from '../../lib/marketing-snapshot.mjs';
+
+const fleetRoot = resolve(import.meta.dirname, '../../..');
+const fleetOpsRoot = resolve(fleetRoot, 'fleet-ops');
+const saasMakerRoot = resolve(fleetRoot, 'saas-maker');
+const registry = loadMarketingProgram(resolve(fleetOpsRoot, 'config/marketing-program.json'));
+const cli = resolve(saasMakerRoot, 'packages/cli/dist/index.js');
+if (!existsSync(cli)) throw new Error('SaaS Maker CLI build is unavailable');
+
+function run(command, args, cwd, timeout = 30_000) {
+  return execFileSync(command, args, {
+    cwd,
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'pipe'],
+    timeout,
+  }).trim();
+}
+
+const rawPosts = run(process.execPath, [cli, 'api', 'GET', '/v1/marketing/posts', '--auth', 'session', '--query', 'limit=500', '--raw', '--quiet'], saasMakerRoot, 20_000);
+const postStart = rawPosts.indexOf('{');
+if (postStart < 0) throw new Error('authenticated marketing backlog is unavailable');
+const posts = JSON.parse(rawPosts.slice(postStart)).data;
+if (!Array.isArray(posts)) throw new Error('marketing backlog response is invalid');
+
+const rawTasks = run(process.execPath, ['scripts/symphony-local.mjs', '--json', '--no-cache'], saasMakerRoot, 30_000);
+const tasks = JSON.parse(rawTasks);
+const snapshot = buildMarketingSnapshot(posts, registry);
+const report = buildMarketingDryRun(snapshot, tasks, registry);
+process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);

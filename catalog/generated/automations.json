@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "automations": [
+    {
+      "id": "biweekly-fleet-audit",
+      "name": "Weekly Active-AI Product Review",
+      "kind": "codex-cron",
+      "ownerId": "foundry",
+      "evidenceOwnerId": "foundry",
+      "state": "configured",
+      "schedule": {
+        "ownerId": "codex-local:biweekly-fleet-audit",
+        "expression": "FREQ=WEEKLY;INTERVAL=1;BYDAY=MO;BYHOUR=10;BYMINUTE=0;BYSECOND=0",
+        "format": "rrule"
+      }
+    },
+    {
+      "id": "daily-fleet-health-sentinel",
+      "name": "Daily Fleet Health Sentinel",
+      "kind": "codex-cron",
+      "ownerId": "foundry",
+      "evidenceOwnerId": "foundry",
+      "state": "configured",
+      "schedule": {
+        "ownerId": "codex-local:daily-fleet-health-sentinel",
+        "expression": "FREQ=WEEKLY;INTERVAL=1;BYDAY=TU,WE,TH,FR,SA,SU;BYHOUR=8;BYMINUTE=0;BYSECOND=0",
+        "format": "rrule"
+      }
+    },
+    {
+      "id": "fleet-backlog-router",
+      "name": "Fleet Backlog Router",
+      "kind": "codex-cron",
+      "ownerId": "foundry",
+      "evidenceOwnerId": "foundry",
+      "state": "configured",
+      "schedule": {
+        "ownerId": "codex-local:fleet-backlog-router",
+        "expression": "FREQ=WEEKLY;INTERVAL=1;BYDAY=TU,WE,TH,FR;BYHOUR=11;BYMINUTE=0;BYSECOND=0",
+        "format": "rrule"
+      }
+    },
+    {
+      "id": "marketing-queue-builder",
+      "name": "Marketing Queue Builder",
+      "kind": "codex-cron",
+      "ownerId": "foundry",
+      "evidenceOwnerId": "foundry",
+      "state": "configured",
+      "schedule": {
+        "ownerId": "codex-local:marketing-queue-builder",
+        "expression": "FREQ=WEEKLY;INTERVAL=1;BYDAY=TU,TH;BYHOUR=15;BYMINUTE=0;BYSECOND=0",
+        "format": "rrule"
+      }
+    },
+    {
+      "id": "weekly-fleet-ops-audit",
+      "name": "Weekly Deep Fleet Ops Audit",
+      "kind": "codex-cron",
+      "ownerId": "foundry",
+      "evidenceOwnerId": "foundry",
+      "state": "configured",
+      "schedule": {
+        "ownerId": "codex-local:weekly-fleet-ops-audit",
+        "expression": "FREQ=WEEKLY;INTERVAL=1;BYDAY=MO;BYHOUR=8;BYMINUTE=0;BYSECOND=0",
+        "format": "rrule"
+      }
+    },
+    {
+      "id": "nightly-learning-sync",
+      "name": "Nightly Learning Source Sync",
+      "kind": "system-cron",
+      "ownerId": "foundry",
+      "evidenceOwnerId": "foundry",
+      "state": "configured",
+      "schedule": {
+        "ownerId": "system-cron:nightly-learning-sync",
+        "expression": "15 2 * * *",
+        "format": "cron"
+      }
+    },
+    {
+      "id": "daily-learning-session",
+      "name": "Daily Learning Session",
+      "kind": "system-cron",
+      "ownerId": "foundry",
+      "evidenceOwnerId": "foundry",
+      "state": "configured",
+      "schedule": {
+        "ownerId": "system-cron:daily-learning-session",
+        "expression": "5 8 * * *",
+        "format": "cron"
+      }
+    },
+    {
+      "id": "weekly-domain-intelligence",
+      "name": "Weekly Domain Rating and PSI Swarm",
+      "kind": "system-cron",
+      "ownerId": "foundry",
+      "evidenceOwnerId": "foundry",
+      "state": "configured",
+      "schedule": {
+        "ownerId": "system-cron:weekly-domain-intelligence",
+        "expression": "30 9 * * 1",
+        "format": "cron"
+      }
+    },
+    {
+      "id": "weekly-quality-check",
+      "name": "Weekly Quality Check",
+      "kind": "github-actions",
+      "ownerId": "foundry",
+      "evidenceOwnerId": "foundry",
+      "state": "configured",
+      "schedule": {
+        "ownerId": "github-actions:weekly-quality-check",
+        "expression": "0 9 * * 1",
+        "format": "cron"
+      }
+    }
+  ]
+}

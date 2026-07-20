@@ -1,0 +1,20 @@
+{
+  "topic": "JavaScript closures",
+  "learningObjective": "Understand how a function keeps access to its outer scope variables after the outer function returns",
+  "audience": "self-taught beginners 4-12 months into JS",
+  "keyPoints": [
+    "A closure is a function plus the scope it was defined in",
+    "Inner functions can still read outer variables after the outer function returns",
+    "Each call to the outer function creates a new, independent scope"
+  ],
+  "example": {
+    "setup": "function makeCounter() returns an inner increment function",
+    "problem": "What happens when you call makeCounter() twice?",
+    "solution": "Each counter keeps its own count because each call captures a fresh scope"
+  },
+  "recap": "A closure = the inner function + the variables it captured.",
+  "cta": "Follow for daily JS lessons.",
+  "channel": "tiktok",
+  "durationSeconds": 50,
+  "variantCount": 2
+}

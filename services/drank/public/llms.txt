@@ -1,0 +1,17 @@
+# DRank
+
+> Ahrefs Domain Rating tracker feeding High Signal /domains and fleet domain marketing work.
+
+## Product
+
+- [Home](https://domains.sassmaker.com/): Domain rating tracker
+
+## Machine surfaces
+
+- [Agent catalog](https://domains.sassmaker.com/api/ai): JSON inventory of public surfaces
+- [Homepage markdown](https://domains.sassmaker.com/index.md): Product brief without JS
+- [This index](https://domains.sassmaker.com/llms.txt)
+
+## Optional
+
+- [Foundry](https://sassmaker.com): Parent fleet showcase

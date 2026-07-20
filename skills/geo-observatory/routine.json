@@ -1,0 +1,32 @@
+{
+  "$comment": "Ready-to-create cloud routine for the weekly observatory run. Blocked on: (1) connect GitHub at claude.ai settings, (2) install the Claude GitHub App on sass-maker/fleet-workspace (https://claude.ai/code/onboarding?magic=github-app-setup). Then any Claude Code session can create it via the /schedule skill using this body (generate a fresh events[].data.uuid). Cron 30 2 * * 1 = Monday 08:00 IST.",
+  "name": "GEO Observatory — weekly run",
+  "cron_expression": "30 2 * * 1",
+  "enabled": true,
+  "job_config": {
+    "ccr": {
+      "environment_id": "env_017Zx3L4CDvwkquvq1G33Vzc",
+      "session_context": {
+        "model": "claude-sonnet-5",
+        "sources": [
+          { "git_repository": { "url": "https://github.com/sass-maker/fleet-workspace" } }
+        ],
+        "allowed_tools": ["Bash", "Read", "Write", "Edit", "Glob", "Grep", "WebSearch", "WebFetch"]
+      },
+      "events": [
+        {
+          "data": {
+            "uuid": "REPLACE-WITH-FRESH-LOWERCASE-V4-UUID",
+            "session_id": "",
+            "type": "user",
+            "parent_tool_use_id": null,
+            "message": {
+              "role": "user",
+              "content": "Run the fleet GEO Observatory weekly measurement.\n\nYou are in a checkout of sass-maker/fleet-workspace. Read fleet-ops/skills/geo-observatory/SKILL.md and follow its protocol exactly:\n\n1. Load fleet-ops/config/geo-observatory.json. For every product query, run live WebSearch and classify A/B/C per the rubric in the skill (A = product's own origin in top 3 organic results; B = reachable on page 1 only via sassmaker.com/GitHub/directories; C = absent from page 1). Capture top 2-3 evidence URLs and a one-line note per query.\n2. Write all observations to a temp JSON file (fields: date = today YYYY-MM-DD, product, qid, class, top, notes) and run: node fleet-ops/scripts/geo-observatory-record.mjs <file>\n3. If the script rejects entries, fix them and re-run; never edit the ledger or report by hand.\n4. Commit fleet-ops/data/geo-observatory and fleet-ops/docs/geo-observatory-latest.md with message 'geo-observatory: <date> run (<n> observations)' and push to main.\n5. End your session with a short summary: the Movers section verbatim, plus flags where a class contradicts shipped work (likely causes: not deployed / not indexed / robots-blocked).\n\nRules: never rephrase configured queries; evidence URLs required for every classification; a one-run class change is noted as tentative, not announced as a win; do not scrape AI-engine UIs; keep it to one focused pass — no scope expansion."
+            }
+          }
+        }
+      ]
+    }
+  }
+}

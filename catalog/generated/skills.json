@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "skills": [
+    {
+      "id": "fleet-deploy-guard",
+      "name": "fleet-deploy-guard",
+      "path": "skills/fleet-deploy-guard/SKILL.md",
+      "description": "Guard a fleet project deploy with branch, CI, target, and worktree checks.",
+      "state": "configured"
+    },
+    {
+      "id": "fleet-audit",
+      "name": "fleet-audit",
+      "path": "skills/fleet-audit/SKILL.md",
+      "description": "Audit fleet git, CI, project status, and recurring health.",
+      "state": "configured"
+    },
+    {
+      "id": "call-teammate",
+      "name": "call-teammate",
+      "path": "skills/call-teammate/SKILL.md",
+      "description": "Delegate bounded work to available teammate agents.",
+      "state": "configured"
+    },
+    {
+      "id": "daily-learning",
+      "name": "daily-learning",
+      "path": "skills/daily-learning/SKILL.md",
+      "description": "Create a private Fleet learning session.",
+      "state": "configured"
+    },
+    {
+      "id": "call-hermes",
+      "name": "call-hermes",
+      "path": "skills/call-hermes/SKILL.md",
+      "description": "Delegate bounded specialist work to Hermes Agent.",
+      "state": "configured"
+    },
+    {
+      "id": "evidence-research",
+      "name": "evidence-research",
+      "path": "ops/agents/research/skills/evidence-research/SKILL.md",
+      "description": "Produce decision-ready evidence-first research.",
+      "state": "configured"
+    },
+    {
+      "id": "call-claude-code",
+      "name": "call-claude-code",
+      "path": "skills/call-claude-code/SKILL.md",
+      "description": "Delegate work to a fresh headless Claude Code instance.",
+      "state": "configured"
+    },
+    {
+      "id": "spec-driven",
+      "name": "spec-driven",
+      "path": "skills/spec-driven/SKILL.md",
+      "description": "Run the OpenSpec workflow for non-trivial fleet feature work.",
+      "state": "configured"
+    },
+    {
+      "id": "agent-ready",
+      "name": "agent-ready",
+      "path": "skills/agent-ready/SKILL.md",
+      "description": "Audit AI and agent indexing readiness.",
+      "state": "configured"
+    },
+    {
+      "id": "token-budget",
+      "name": "token-budget",
+      "path": "skills/token-budget/SKILL.md",
+      "description": "Audit and reduce Codex token and context waste.",
+      "state": "configured"
+    },
+    {
+      "id": "call-grok",
+      "name": "call-grok",
+      "path": "skills/call-grok/SKILL.md",
+      "description": "Delegate coding work to Grok CLI.",
+      "state": "configured"
+    },
+    {
+      "id": "fleet-init",
+      "name": "fleet-init",
+      "path": "skills/fleet-init/SKILL.md",
+      "description": "Scaffold a new fleet project and its required contracts.",
+      "state": "configured"
+    },
+    {
+      "id": "fleet-workspace",
+      "name": "fleet-workspace",
+      "path": "skills/fleet-workspace/SKILL.md",
+      "description": "Route work across the Fleet workspace and project boundaries.",
+      "state": "configured"
+    },
+    {
+      "id": "call-devin",
+      "name": "call-devin",
+      "path": "skills/call-devin/SKILL.md",
+      "description": "Optionally delegate approved work to Devin.",
+      "state": "configured"
+    },
+    {
+      "id": "site-health",
+      "name": "site-health",
+      "path": "skills/site-health/SKILL.md",
+      "description": "Route site health work across indexing, SEO, performance, and GEO checks.",
+      "state": "configured"
+    },
+    {
+      "id": "name-domains",
+      "name": "name-domains",
+      "path": "skills/name-domains/SKILL.md",
+      "description": "Generate and verify a tasteful domain shortlist.",
+      "state": "configured"
+    },
+    {
+      "id": "geo-observatory",
+      "name": "geo-observatory",
+      "path": "skills/geo-observatory/SKILL.md",
+      "description": "Observe answer-engine visibility and GEO trends.",
+      "state": "configured"
+    },
+    {
+      "id": "call-cursor",
+      "name": "call-cursor",
+      "path": "skills/call-cursor/SKILL.md",
+      "description": "Delegate scoped work to Cursor Agent CLI.",
+      "state": "configured"
+    },
+    {
+      "id": "mobile-task-control",
+      "name": "mobile-task-control",
+      "path": "skills/mobile-task-control/SKILL.md",
+      "description": "Start, supervise, and report durable Fleet work from chat surfaces.",
+      "state": "configured"
+    },
+    {
+      "id": "fleet-ops",
+      "name": "fleet-ops",
+      "path": "skills/fleet-ops/SKILL.md",
+      "description": "Route fleet audit, initialization, deploy, and workspace operations.",
+      "state": "configured"
+    },
+    {
+      "id": "call-codex",
+      "name": "call-codex",
+      "path": "skills/call-codex/SKILL.md",
+      "description": "Delegate repo-local coding work to Codex CLI.",
+      "state": "configured"
+    },
+    {
+      "id": "seo-audit",
+      "name": "seo-audit",
+      "path": "skills/seo-audit/SKILL.md",
+      "description": "Audit on-page SEO across a URL list.",
+      "state": "configured"
+    },
+    {
+      "id": "psi-swarm",
+      "name": "psi-swarm",
+      "path": "tools/psi-swarm/SKILL.md",
+      "description": "Run distributional Lighthouse audits with grounded reasoning.",
+      "state": "configured"
+    }
+  ]
+}

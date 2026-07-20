@@ -1,0 +1,12 @@
+.codex/
+.expo/
+node_modules/
+dist/
+dist-*/
+apps/mobile/ios/
+apps/mobile/android/
+apps/mobile/expo-env.d.ts
+apps/mobile/assets/expo.icon/icon.json
+pnpm-lock.yaml
+apps/mobile/modules/**/*.podspec
+apps/mobile/modules/**/*.swift

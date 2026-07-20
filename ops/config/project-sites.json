@@ -1,0 +1,26 @@
+{
+  "$schema": "fleet.project-sites.v1",
+  "verifiedAt": "2026-07-13T12:48:45Z",
+  "projects": {
+    "aliveville": { "url": "https://aliveville.com", "platform": "Cloudflare Pages" },
+    "anime-list": { "url": "https://anime.significanthobbies.com", "platform": "Cloudflare Pages" },
+    "codevetter": { "url": "https://codevetter.com", "platform": "Cloudflare Pages" },
+    "drank": { "url": "https://domains.sassmaker.com", "platform": "Cloudflare Pages" },
+    "email-manager": { "url": "https://mail.sassmaker.com", "platform": "Cloudflare Workers" },
+    "free-ai": { "url": "https://ai-gateway.sassmaker.com", "platform": "Cloudflare Workers" },
+    "high-signal": { "url": "https://highsignal.app", "platform": "Cloudflare Workers" },
+    "karte": { "url": "https://karte.cc", "platform": "Cloudflare Workers" },
+    "knowledge-base": { "url": "https://search.sassmaker.com", "platform": "Cloudflare Workers" },
+    "looptv": { "url": "https://tv.significanthobbies.com", "platform": "Cloudflare Pages" },
+    "pace": { "url": "https://heypace.app", "platform": "Cloudflare Pages" },
+    "posttrainllm": { "url": "https://posttrainllm.com", "platform": "Cloudflare Pages" },
+    "reader": { "url": "https://read.significanthobbies.com", "platform": "Cloudflare Workers" },
+    "reel-pipeline": { "url": "https://fleet.sassmaker.com/marketing", "platform": "Cloudflare Workers" },
+    "research-papers": { "url": "https://papers.highsignal.app", "platform": "Cloudflare Pages" },
+    "rolepatch": { "url": "https://rolepatch.com", "platform": "Cloudflare Workers" },
+    "saas-maker": { "url": "https://sassmaker.com", "platform": "Cloudflare Pages" },
+    "significanthobbies": { "url": "https://significanthobbies.com", "platform": "Cloudflare Workers" },
+    "starboard": { "url": "https://starboard.codevetter.com", "platform": "Cloudflare Workers" },
+    "swe-interview-prep": { "url": "https://learn.significanthobbies.com", "platform": "Cloudflare Pages" }
+  }
+}

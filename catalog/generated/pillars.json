@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "pillars": [
+    {
+      "id": "build",
+      "name": "Build",
+      "description": "Plan, implement, validate, package, and release products."
+    },
+    {
+      "id": "market",
+      "name": "Market",
+      "description": "Position, publish, distribute, and grow products with explicit approval gates."
+    },
+    {
+      "id": "learn",
+      "name": "Learn",
+      "description": "Collect product evidence, research, feedback, and experiments."
+    },
+    {
+      "id": "visibility",
+      "name": "Visibility",
+      "description": "Observe builds, runtime health, analytics, indexing, jobs, and outcomes."
+    },
+    {
+      "id": "control",
+      "name": "Control",
+      "description": "Coordinate the fleet, enforce policy, schedule work, and retain operator authority."
+    }
+  ]
+}

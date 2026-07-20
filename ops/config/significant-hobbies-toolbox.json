@@ -1,0 +1,324 @@
+{
+  "$schema": "fleet.significant-hobbies-toolbox.v1",
+  "version": 1,
+  "family": {
+    "id": "significanthobbies",
+    "name": "Significant Hobbies Toolbox",
+    "identity": "Significant Hobbies family — six personal utilities sharing one family identity, kept usable and quietly discoverable with minimal maintenance.",
+    "foundrySlug": "significanthobbies-modh3b6q",
+    "outOfScope": [
+      "materia",
+      "protein-index"
+    ],
+    "nonGoals": [
+      "family monorepo migration",
+      "shared product roadmap",
+      "content-policy change",
+      "paid marketing",
+      "production auto-deploy",
+      "unnecessary shared runtime SDK"
+    ]
+  },
+  "products": [
+    {
+      "id": "significanthobbies",
+      "name": "Significant Hobbies",
+      "runtime": "opennext-worker",
+      "repo": "significanthobbies",
+      "domain": "https://significanthobbies.com",
+      "cfProject": "significanthobbies",
+      "deployKind": "worker",
+      "owner": "significanthobbies",
+      "activation": {
+        "type": "hobby-public-item",
+        "definition": "A signed-in user creates or completes a Living-dimension public item (hobby path, bucket-list entry, side quest, timeline event, or public profile) — not a Daily private journal entry.",
+        "notApplicable": false
+      },
+      "backgroundJobs": [],
+      "privacy": {
+        "excludedCategories": [
+          "daily-journal-bodies",
+          "habit-checkin-answers",
+          "private-notes",
+          "user-identifying-state",
+          "credentials"
+        ]
+      },
+      "evidenceSources": {
+        "build": "github-actions:significanthobbies/ci.yml",
+        "live": "https://significanthobbies.com/ (anonymous GET /)",
+        "indexing": "agent-surfaces-registry:significanthobbies",
+        "errors": "Cloudflare Workers logs + PostHog sanitized events",
+        "revision": "git:significanthobbies@origin/main"
+      },
+      "experimentMode": "evergreen",
+      "notes": "Family apex/hub. Daily dimension is private; only Living-dimension public actions count as activation."
+    },
+    {
+      "id": "reader",
+      "name": "Reader",
+      "runtime": "spa-hono-worker",
+      "repo": "reader",
+      "domain": "https://read.significanthobbies.com",
+      "cfProject": "reader",
+      "deployKind": "worker",
+      "owner": "reader",
+      "activation": {
+        "type": "reading-library-action",
+        "definition": "A signed-in user saves an article or PDF, or completes an annotation/AI-chat turn over saved material. Aggregate count only — never article bodies, annotations, or chat content.",
+        "notApplicable": false
+      },
+      "backgroundJobs": [
+        {
+          "id": "reader-weekly-quality",
+          "workflow": "weekly.yml",
+          "cadence": "weekly",
+          "bounds": "single GH Actions run, 6h timeout, no concurrency",
+          "declaredFreshnessDays": 9,
+          "owner": "reader"
+        }
+      ],
+      "privacy": {
+        "excludedCategories": [
+          "article-bodies",
+          "pdf-content",
+          "annotations",
+          "ai-chat-prompts",
+          "ai-chat-completions",
+          "retrieved-chunks",
+          "user-library-contents",
+          "credentials"
+        ]
+      },
+      "evidenceSources": {
+        "build": "github-actions:reader/ci.yml",
+        "live": "https://read.significanthobbies.com/ (auth-safe metadata probe)",
+        "indexing": "agent-surfaces-registry:reader",
+        "errors": "Cloudflare Workers logs (sanitized)",
+        "revision": "git:reader@origin/main"
+      },
+      "experimentMode": "evergreen",
+      "notes": "Personal research library. Private reading content is the highest-sensitivity surface in the family."
+    },
+    {
+      "id": "anime-list",
+      "name": "MAL Explorer (Shelf)",
+      "runtime": "spa-hono-pages",
+      "repo": "anime-list",
+      "domain": "https://anime.significanthobbies.com",
+      "cfProject": "anime-list",
+      "deployKind": "pages",
+      "owner": "anime-list",
+      "activation": {
+        "type": "discovery-list-action",
+        "definition": "A signed-in user adds a title to a personal watchlist, saves a search, or adds a title to a collection. Aggregate count only — never the titles on a personal watchlist.",
+        "notApplicable": false
+      },
+      "backgroundJobs": [
+        {
+          "id": "anime-daily-sync",
+          "workflow": "update-anime-data.yml",
+          "cadence": "daily",
+          "bounds": "single GH Actions run, Jikan rate-limited, retry bounded by workflow",
+          "declaredFreshnessDays": 2,
+          "owner": "anime-list"
+        },
+        {
+          "id": "anime-quarterly-full-refresh",
+          "workflow": "quarterly-anime-sync.yml",
+          "cadence": "quarterly",
+          "bounds": "single GH Actions run, full catalog rebuild, 6h timeout",
+          "declaredFreshnessDays": 95,
+          "owner": "anime-list"
+        },
+        {
+          "id": "manga-quarterly-full-refresh",
+          "workflow": "quarterly-manga-sync.yml",
+          "cadence": "quarterly",
+          "bounds": "single GH Actions run, full manga catalog rebuild, 6h timeout",
+          "declaredFreshnessDays": 95,
+          "owner": "anime-list"
+        }
+      ],
+      "privacy": {
+        "excludedCategories": [
+          "personal-watchlists",
+          "saved-searches",
+          "collections-contents",
+          "user-identifying-state",
+          "credentials"
+        ]
+      },
+      "evidenceSources": {
+        "build": "github-actions:anime-list/ci.yml",
+        "live": "https://anime.significanthobbies.com/ (anonymous catalog probe)",
+        "indexing": "agent-surfaces-registry:anime-list",
+        "errors": "Cloudflare Pages Functions logs + Worker mal-api logs (sanitized)",
+        "revision": "git:anime-list@origin/main"
+      },
+      "experimentMode": "evergreen",
+      "notes": "Quarterly catalog refresh MUST be evaluated against its quarterly window, not a daily expectation."
+    },
+    {
+      "id": "swe-interview-prep",
+      "name": "SWE Interview Prep",
+      "runtime": "spa-pages-functions",
+      "repo": "swe-interview-prep",
+      "domain": "https://learn.significanthobbies.com",
+      "cfProject": "swe-interview-prep",
+      "deployKind": "pages",
+      "owner": "swe-interview-prep",
+      "activation": {
+        "type": "learning-drill-action",
+        "definition": "A signed-in user completes a drill, a Playground run with a Feynman Gate pass, or a spaced-repetition review. Aggregate count and FSRS mastery delta only — never answers, notes, or prompts.",
+        "notApplicable": false
+      },
+      "backgroundJobs": [
+        {
+          "id": "swe-library-refresh",
+          "workflow": "fetch-library.yml",
+          "cadence": "weekly",
+          "bounds": "single GH Actions run, source registry refresh, machine-local checkout",
+          "declaredFreshnessDays": 9,
+          "owner": "swe-interview-prep"
+        }
+      ],
+      "privacy": {
+        "excludedCategories": [
+          "learning-answers",
+          "drill-submissions",
+          "notes",
+          "ai-prompts",
+          "ai-completions",
+          "progress-per-user",
+          "credentials"
+        ]
+      },
+      "evidenceSources": {
+        "build": "github-actions:swe-interview-prep/ci.yml",
+        "live": "https://learn.significanthobbies.com/ (auth-safe app probe)",
+        "indexing": "agent-surfaces-registry:swe-interview-prep",
+        "errors": "Cloudflare Pages Functions logs (sanitized)",
+        "revision": "git:swe-interview-prep@origin/main"
+      },
+      "experimentMode": "evergreen",
+      "notes": "Personal learning OS. Per-user progress and answers are the highest-sensitivity surfaces."
+    },
+    {
+      "id": "looptv",
+      "name": "LoopTV",
+      "runtime": "next-static-pages",
+      "repo": "looptv",
+      "domain": "https://tv.significanthobbies.com",
+      "cfProject": "looptv",
+      "deployKind": "pages",
+      "owner": "looptv",
+      "activation": {
+        "type": "playback-action",
+        "definition": "A visitor starts playback on a station and the player reaches a meaningful watch threshold (e.g. 30s sustained play). Page availability alone is NOT activation — see spec scenario 'LoopTV loads but cannot play'.",
+        "notApplicable": false
+      },
+      "backgroundJobs": [
+        {
+          "id": "looptv-biweekly-catalog-fetch",
+          "workflow": "fetch-catalog-sources.yml",
+          "cadence": "biweekly",
+          "bounds": "single GH Actions run, YouTube Data API + yt-dlp fallback, 1h timeout",
+          "declaredFreshnessDays": 17,
+          "owner": "looptv"
+        },
+        {
+          "id": "looptv-biweekly-catalog-build",
+          "workflow": "build-catalog.yml",
+          "cadence": "biweekly",
+          "bounds": "single GH Actions run, catalog manifest build, 1h timeout",
+          "declaredFreshnessDays": 17,
+          "owner": "looptv"
+        }
+      ],
+      "privacy": {
+        "excludedCategories": [
+          "watched-state-localStorage",
+          "user-identifying-state",
+          "credentials"
+        ]
+      },
+      "evidenceSources": {
+        "build": "github-actions:looptv/ci.yml",
+        "live": "https://tv.significanthobbies.com/ (anonymous page probe + playback-start probe)",
+        "indexing": "agent-surfaces-registry:looptv",
+        "errors": "Cloudflare Pages logs (sanitized)",
+        "revision": "git:looptv@origin/main"
+      },
+      "experimentMode": "evergreen",
+      "notes": "No DB, no auth. localStorage watched state is private and never enters fleet evidence."
+    },
+    {
+      "id": "chess",
+      "name": "Chess Coach",
+      "runtime": "spa-static-pages",
+      "repo": "chess",
+      "domain": "https://chess.significanthobbies.com",
+      "cfProject": "chess-9a0",
+      "deployKind": "pages",
+      "owner": "chess",
+      "activation": {
+        "type": "game-coaching-action",
+        "definition": "A visitor completes a game (checkmate, draw, or resignation) OR requests and receives at least one AI coaching explanation. Aggregate count only — never PGN move history, saved games, or coaching conversation bodies.",
+        "notApplicable": false
+      },
+      "backgroundJobs": [],
+      "privacy": {
+        "excludedCategories": [
+          "saved-games",
+          "pgn-move-history",
+          "coaching-conversation-bodies",
+          "localStorage-state",
+          "credentials"
+        ]
+      },
+      "evidenceSources": {
+        "build": "github-actions:chess/ci.yml",
+        "live": "https://chess.significanthobbies.com/ (anonymous page probe)",
+        "indexing": "agent-surfaces-registry:chess",
+        "errors": "Cloudflare Pages logs (sanitized)",
+        "revision": "git:chess@origin/main"
+      },
+      "experimentMode": "evergreen",
+      "notes": "No-account browser tool. No package deploy/test/lint scripts — CI runs `pnpm build` only. Background jobs not applicable."
+    }
+  ],
+  "experiments": {
+    "policy": "bounded-quiet",
+    "requireApproval": true,
+    "autoExpiry": true,
+    "noAutomaticReplacement": true,
+    "noAutomaticPromotion": true,
+    "noPaidMarketing": true,
+    "requiredFields": [
+      "hypothesis",
+      "approvedAsset",
+      "attributionKey",
+      "start",
+      "expiry",
+      "budget",
+      "successMetric",
+      "stopRule",
+      "owner"
+    ],
+    "inconclusiveConditions": [
+      "missing-attribution",
+      "threshold-unmet-at-expiry",
+      "no-review-approval"
+    ]
+  },
+  "digest": {
+    "policy": "deduplicate-routine-failures",
+    "pageOnlyOn": [
+      "data-risk",
+      "security-risk",
+      "prolonged-outage"
+    ],
+    "oneChildFailureDoesNotMarkFamilyFailed": true
+  }
+}

@@ -1,0 +1,1122 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-19T18:40:38.759Z",
+  "root": ".",
+  "limits": {
+    "maxFilesPerProject": 4000,
+    "maxFileBytes": 1048576,
+    "maxTotalBytesPerProject": 33554432
+  },
+  "summary": {
+    "projects": 25,
+    "adapters": 7,
+    "findings": 11,
+    "byVerificationState": {
+      "source-configured": 3,
+      "fresh-verified": 0,
+      "stale": 0,
+      "unknown": 22,
+      "not-applicable": 0
+    }
+  },
+  "projects": [
+    {
+      "projectId": "anime-list",
+      "maturity": "maintained",
+      "path": null,
+      "verification": {
+        "state": "unknown",
+        "freshness": {
+          "maxAgeHours": 168
+        },
+        "reason": "Maintained project source is not present below the scan root."
+      },
+      "adapters": [],
+      "findings": [],
+      "scan": {
+        "filesVisited": 0,
+        "filesScanned": 0,
+        "bytesScanned": 0,
+        "truncated": false
+      }
+    },
+    {
+      "projectId": "chess",
+      "maturity": "maintained",
+      "path": null,
+      "verification": {
+        "state": "unknown",
+        "freshness": {
+          "maxAgeHours": 168
+        },
+        "reason": "Maintained project source is not present below the scan root."
+      },
+      "adapters": [],
+      "findings": [],
+      "scan": {
+        "filesVisited": 0,
+        "filesScanned": 0,
+        "bytesScanned": 0,
+        "truncated": false
+      }
+    },
+    {
+      "projectId": "codevetter",
+      "maturity": "maintained",
+      "path": null,
+      "verification": {
+        "state": "unknown",
+        "freshness": {
+          "maxAgeHours": 168
+        },
+        "reason": "Maintained project source is not present below the scan root."
+      },
+      "adapters": [],
+      "findings": [],
+      "scan": {
+        "filesVisited": 0,
+        "filesScanned": 0,
+        "bytesScanned": 0,
+        "truncated": false
+      }
+    },
+    {
+      "projectId": "drank",
+      "maturity": "maintained",
+      "path": "services/drank",
+      "verification": {
+        "state": "source-configured",
+        "freshness": {
+          "maxAgeHours": 168
+        },
+        "reason": "Source configuration found; no successful verification receipt was found."
+      },
+      "adapters": [
+        {
+          "id": "drank:posthog",
+          "projectId": "drank",
+          "provider": {
+            "id": "posthog",
+            "name": "PostHog",
+            "deployment": "hosted",
+            "configurationKeys": [
+              "NEXT_PUBLIC_POSTHOG_KEY"
+            ]
+          },
+          "purposes": [
+            "analytics",
+            "errors",
+            "logs",
+            "performance",
+            "traces"
+          ],
+          "runtimes": [
+            "browser"
+          ],
+          "privacy": {
+            "classification": "sensitive",
+            "allowSecrets": false,
+            "allowUserIdentity": false,
+            "allowPayloadBodies": false,
+            "redactFields": [
+              "authorization",
+              "cookie",
+              "password",
+              "secret",
+              "token"
+            ]
+          },
+          "collection": {
+            "mode": "hybrid",
+            "capturesErrors": true,
+            "capturesPerformance": true,
+            "capturesProductEvents": true,
+            "delivery": "buffered"
+          },
+          "verification": {
+            "state": "source-configured",
+            "freshness": {
+              "maxAgeHours": 168
+            },
+            "reason": "Source configuration found; no successful verification receipt was found."
+          },
+          "sourceFiles": [
+            "lib/api-timing.ts",
+            "lib/foundry-monitoring.ts",
+            "package.json"
+          ],
+          "produces": [
+            "api_call_timing",
+            "error_captured",
+            "foundry_page_crash"
+          ],
+          "consumes": [],
+          "eventFamilies": [
+            "api",
+            "error",
+            "foundry"
+          ]
+        }
+      ],
+      "findings": [
+        {
+          "code": "event-producer-without-consumer",
+          "severity": "info",
+          "projectId": "drank",
+          "event": "foundry_page_crash",
+          "message": "Event producer foundry_page_crash has no source consumer in this project."
+        },
+        {
+          "code": "event-producer-without-consumer",
+          "severity": "info",
+          "projectId": "drank",
+          "event": "error_captured",
+          "message": "Event producer error_captured has no source consumer in this project."
+        },
+        {
+          "code": "event-producer-without-consumer",
+          "severity": "info",
+          "projectId": "drank",
+          "event": "api_call_timing",
+          "message": "Event producer api_call_timing has no source consumer in this project."
+        },
+        {
+          "code": "hardcoded-public-key",
+          "severity": "warning",
+          "projectId": "drank",
+          "provider": "posthog",
+          "file": "lib/foundry-monitoring.ts",
+          "line": 7,
+          "message": "Hardcoded posthog public client key detected; the value was omitted."
+        }
+      ],
+      "scan": {
+        "filesVisited": 109,
+        "filesScanned": 46,
+        "bytesScanned": 223155,
+        "truncated": false
+      }
+    },
+    {
+      "projectId": "email-manager",
+      "maturity": "maintained",
+      "path": null,
+      "verification": {
+        "state": "unknown",
+        "freshness": {
+          "maxAgeHours": 168
+        },
+        "reason": "Maintained project source is not present below the scan root."
+      },
+      "adapters": [],
+      "findings": [],
+      "scan": {
+        "filesVisited": 0,
+        "filesScanned": 0,
+        "bytesScanned": 0,
+        "truncated": false
+      }
+    },
+    {
+      "projectId": "fleet-dashboard",
+      "maturity": "maintained",
+      "path": "apps/cockpit",
+      "verification": {
+        "state": "source-configured",
+        "freshness": {
+          "maxAgeHours": 168
+        },
+        "reason": "Source configuration found; no successful verification receipt was found."
+      },
+      "adapters": [
+        {
+          "id": "fleet-dashboard:posthog",
+          "projectId": "fleet-dashboard",
+          "provider": {
+            "id": "posthog",
+            "name": "PostHog",
+            "deployment": "hosted",
+            "configurationKeys": [
+              "NEXT_PUBLIC_POSTHOG_KEY",
+              "POSTHOG_HOST",
+              "POSTHOG_PERSONAL_API_KEY",
+              "POSTHOG_PROJECT_ID"
+            ]
+          },
+          "purposes": [
+            "analytics",
+            "errors",
+            "logs",
+            "performance",
+            "traces"
+          ],
+          "runtimes": [
+            "browser",
+            "server",
+            "unknown"
+          ],
+          "privacy": {
+            "classification": "sensitive",
+            "allowSecrets": false,
+            "allowUserIdentity": false,
+            "allowPayloadBodies": false,
+            "redactFields": [
+              "authorization",
+              "cookie",
+              "password",
+              "secret",
+              "token"
+            ]
+          },
+          "collection": {
+            "mode": "hybrid",
+            "capturesErrors": true,
+            "capturesPerformance": true,
+            "capturesProductEvents": true,
+            "delivery": "buffered"
+          },
+          "verification": {
+            "state": "source-configured",
+            "freshness": {
+              "maxAgeHours": 168
+            },
+            "reason": "Source configuration found; no successful verification receipt was found."
+          },
+          "sourceFiles": [
+            "package.json",
+            "src/app/(app)/fleet/page.tsx",
+            "src/lib/api-timing.ts",
+            "src/lib/foundry-monitoring.ts",
+            "src/lib/posthog-server.ts"
+          ],
+          "produces": [
+            "api_call_timing",
+            "error_captured",
+            "foundry_page_crash"
+          ],
+          "consumes": [
+            "foundry_error",
+            "foundry_trace"
+          ],
+          "eventFamilies": [
+            "api",
+            "error",
+            "foundry"
+          ]
+        }
+      ],
+      "findings": [
+        {
+          "code": "event-consumer-without-producer",
+          "severity": "warning",
+          "projectId": "fleet-dashboard",
+          "event": "foundry_error",
+          "message": "Event consumer foundry_error has no source producer in this project."
+        },
+        {
+          "code": "event-consumer-without-producer",
+          "severity": "warning",
+          "projectId": "fleet-dashboard",
+          "event": "foundry_trace",
+          "message": "Event consumer foundry_trace has no source producer in this project."
+        },
+        {
+          "code": "event-producer-without-consumer",
+          "severity": "info",
+          "projectId": "fleet-dashboard",
+          "event": "foundry_page_crash",
+          "message": "Event producer foundry_page_crash has no source consumer in this project."
+        },
+        {
+          "code": "event-producer-without-consumer",
+          "severity": "info",
+          "projectId": "fleet-dashboard",
+          "event": "error_captured",
+          "message": "Event producer error_captured has no source consumer in this project."
+        },
+        {
+          "code": "event-producer-without-consumer",
+          "severity": "info",
+          "projectId": "fleet-dashboard",
+          "event": "api_call_timing",
+          "message": "Event producer api_call_timing has no source consumer in this project."
+        },
+        {
+          "code": "hardcoded-public-key",
+          "severity": "warning",
+          "projectId": "fleet-dashboard",
+          "provider": "posthog",
+          "file": "src/lib/foundry-monitoring.ts",
+          "line": 7,
+          "message": "Hardcoded posthog public client key detected; the value was omitted."
+        }
+      ],
+      "scan": {
+        "filesVisited": 189,
+        "filesScanned": 178,
+        "bytesScanned": 809543,
+        "truncated": false
+      }
+    },
+    {
+      "projectId": "free-ai",
+      "maturity": "maintained",
+      "path": null,
+      "verification": {
+        "state": "unknown",
+        "freshness": {
+          "maxAgeHours": 168
+        },
+        "reason": "Maintained project source is not present below the scan root."
+      },
+      "adapters": [],
+      "findings": [],
+      "scan": {
+        "filesVisited": 0,
+        "filesScanned": 0,
+        "bytesScanned": 0,
+        "truncated": false
+      }
+    },
+    {
+      "projectId": "high-signal",
+      "maturity": "maintained",
+      "path": null,
+      "verification": {
+        "state": "unknown",
+        "freshness": {
+          "maxAgeHours": 168
+        },
+        "reason": "Maintained project source is not present below the scan root."
+      },
+      "adapters": [],
+      "findings": [],
+      "scan": {
+        "filesVisited": 0,
+        "filesScanned": 0,
+        "bytesScanned": 0,
+        "truncated": false
+      }
+    },
+    {
+      "projectId": "karte",
+      "maturity": "maintained",
+      "path": null,
+      "verification": {
+        "state": "unknown",
+        "freshness": {
+          "maxAgeHours": 168
+        },
+        "reason": "Maintained project source is not present below the scan root."
+      },
+      "adapters": [],
+      "findings": [],
+      "scan": {
+        "filesVisited": 0,
+        "filesScanned": 0,
+        "bytesScanned": 0,
+        "truncated": false
+      }
+    },
+    {
+      "projectId": "knowledge-base",
+      "maturity": "maintained",
+      "path": null,
+      "verification": {
+        "state": "unknown",
+        "freshness": {
+          "maxAgeHours": 168
+        },
+        "reason": "Maintained project source is not present below the scan root."
+      },
+      "adapters": [],
+      "findings": [],
+      "scan": {
+        "filesVisited": 0,
+        "filesScanned": 0,
+        "bytesScanned": 0,
+        "truncated": false
+      }
+    },
+    {
+      "projectId": "looptv",
+      "maturity": "maintained",
+      "path": null,
+      "verification": {
+        "state": "unknown",
+        "freshness": {
+          "maxAgeHours": 168
+        },
+        "reason": "Maintained project source is not present below the scan root."
+      },
+      "adapters": [],
+      "findings": [],
+      "scan": {
+        "filesVisited": 0,
+        "filesScanned": 0,
+        "bytesScanned": 0,
+        "truncated": false
+      }
+    },
+    {
+      "projectId": "mobile-dev-cockpit",
+      "maturity": "maintained",
+      "path": "apps/mobile-cockpit",
+      "verification": {
+        "state": "unknown",
+        "freshness": {
+          "maxAgeHours": 168
+        },
+        "reason": "No adapter source or verification receipt was found."
+      },
+      "adapters": [],
+      "findings": [],
+      "scan": {
+        "filesVisited": 117,
+        "filesScanned": 60,
+        "bytesScanned": 240327,
+        "truncated": false
+      }
+    },
+    {
+      "projectId": "motion",
+      "maturity": "maintained",
+      "path": null,
+      "verification": {
+        "state": "unknown",
+        "freshness": {
+          "maxAgeHours": 168
+        },
+        "reason": "Maintained project source is not present below the scan root."
+      },
+      "adapters": [],
+      "findings": [],
+      "scan": {
+        "filesVisited": 0,
+        "filesScanned": 0,
+        "bytesScanned": 0,
+        "truncated": false
+      }
+    },
+    {
+      "projectId": "pace",
+      "maturity": "maintained",
+      "path": null,
+      "verification": {
+        "state": "unknown",
+        "freshness": {
+          "maxAgeHours": 168
+        },
+        "reason": "Maintained project source is not present below the scan root."
+      },
+      "adapters": [],
+      "findings": [],
+      "scan": {
+        "filesVisited": 0,
+        "filesScanned": 0,
+        "bytesScanned": 0,
+        "truncated": false
+      }
+    },
+    {
+      "projectId": "personal-website",
+      "maturity": "maintained",
+      "path": null,
+      "verification": {
+        "state": "unknown",
+        "freshness": {
+          "maxAgeHours": 168
+        },
+        "reason": "Maintained project source is not present below the scan root."
+      },
+      "adapters": [],
+      "findings": [],
+      "scan": {
+        "filesVisited": 0,
+        "filesScanned": 0,
+        "bytesScanned": 0,
+        "truncated": false
+      }
+    },
+    {
+      "projectId": "posttrainllm",
+      "maturity": "maintained",
+      "path": null,
+      "verification": {
+        "state": "unknown",
+        "freshness": {
+          "maxAgeHours": 168
+        },
+        "reason": "Maintained project source is not present below the scan root."
+      },
+      "adapters": [],
+      "findings": [],
+      "scan": {
+        "filesVisited": 0,
+        "filesScanned": 0,
+        "bytesScanned": 0,
+        "truncated": false
+      }
+    },
+    {
+      "projectId": "psi-swarm",
+      "maturity": "maintained",
+      "path": "tools/psi-swarm",
+      "verification": {
+        "state": "unknown",
+        "freshness": {
+          "maxAgeHours": 168
+        },
+        "reason": "No adapter source or verification receipt was found."
+      },
+      "adapters": [],
+      "findings": [],
+      "scan": {
+        "filesVisited": 108,
+        "filesScanned": 48,
+        "bytesScanned": 335116,
+        "truncated": false
+      }
+    },
+    {
+      "projectId": "reader",
+      "maturity": "maintained",
+      "path": null,
+      "verification": {
+        "state": "unknown",
+        "freshness": {
+          "maxAgeHours": 168
+        },
+        "reason": "Maintained project source is not present below the scan root."
+      },
+      "adapters": [],
+      "findings": [],
+      "scan": {
+        "filesVisited": 0,
+        "filesScanned": 0,
+        "bytesScanned": 0,
+        "truncated": false
+      }
+    },
+    {
+      "projectId": "reel-pipeline",
+      "maturity": "maintained",
+      "path": "services/reel-pipeline",
+      "verification": {
+        "state": "unknown",
+        "freshness": {
+          "maxAgeHours": 168
+        },
+        "reason": "No adapter source or verification receipt was found."
+      },
+      "adapters": [],
+      "findings": [],
+      "scan": {
+        "filesVisited": 355,
+        "filesScanned": 195,
+        "bytesScanned": 1167707,
+        "truncated": false
+      }
+    },
+    {
+      "projectId": "research-papers",
+      "maturity": "maintained",
+      "path": null,
+      "verification": {
+        "state": "unknown",
+        "freshness": {
+          "maxAgeHours": 168
+        },
+        "reason": "Maintained project source is not present below the scan root."
+      },
+      "adapters": [],
+      "findings": [],
+      "scan": {
+        "filesVisited": 0,
+        "filesScanned": 0,
+        "bytesScanned": 0,
+        "truncated": false
+      }
+    },
+    {
+      "projectId": "rolepatch",
+      "maturity": "maintained",
+      "path": null,
+      "verification": {
+        "state": "unknown",
+        "freshness": {
+          "maxAgeHours": 168
+        },
+        "reason": "Maintained project source is not present below the scan root."
+      },
+      "adapters": [],
+      "findings": [],
+      "scan": {
+        "filesVisited": 0,
+        "filesScanned": 0,
+        "bytesScanned": 0,
+        "truncated": false
+      }
+    },
+    {
+      "projectId": "sass-maker",
+      "maturity": "maintained",
+      "path": ".",
+      "verification": {
+        "state": "source-configured",
+        "freshness": {
+          "maxAgeHours": 168
+        },
+        "reason": "Source configuration found; no successful verification receipt was found."
+      },
+      "adapters": [
+        {
+          "id": "sass-maker:cloudflare-workers-observability",
+          "projectId": "sass-maker",
+          "provider": {
+            "id": "cloudflare-workers-observability",
+            "name": "Cloudflare Workers Observability",
+            "deployment": "hosted"
+          },
+          "purposes": [
+            "logs"
+          ],
+          "runtimes": [
+            "worker"
+          ],
+          "privacy": {
+            "classification": "operational",
+            "allowSecrets": false,
+            "allowUserIdentity": false,
+            "allowPayloadBodies": false,
+            "redactFields": [
+              "authorization",
+              "cookie",
+              "password",
+              "secret",
+              "token"
+            ]
+          },
+          "collection": {
+            "mode": "manual",
+            "capturesErrors": false,
+            "capturesPerformance": false,
+            "capturesProductEvents": false,
+            "delivery": "best-effort"
+          },
+          "verification": {
+            "state": "source-configured",
+            "freshness": {
+              "maxAgeHours": 168
+            },
+            "reason": "Source configuration found; no successful verification receipt was found."
+          },
+          "sourceFiles": [
+            "workers/api/wrangler.toml",
+            "workers/droid/wrangler.jsonc"
+          ],
+          "produces": [],
+          "consumes": [],
+          "eventFamilies": []
+        },
+        {
+          "id": "sass-maker:console",
+          "projectId": "sass-maker",
+          "provider": {
+            "id": "console",
+            "name": "Runtime console",
+            "deployment": "local"
+          },
+          "purposes": [
+            "analytics",
+            "errors",
+            "logs",
+            "performance",
+            "traces"
+          ],
+          "runtimes": [
+            "worker"
+          ],
+          "privacy": {
+            "classification": "personal",
+            "allowSecrets": false,
+            "allowUserIdentity": true,
+            "allowPayloadBodies": false,
+            "redactFields": [
+              "authorization",
+              "cookie",
+              "password",
+              "secret",
+              "token"
+            ]
+          },
+          "collection": {
+            "mode": "manual",
+            "capturesErrors": true,
+            "capturesPerformance": true,
+            "capturesProductEvents": true,
+            "delivery": "buffered"
+          },
+          "verification": {
+            "state": "source-configured",
+            "freshness": {
+              "maxAgeHours": 168
+            },
+            "reason": "Source configuration found; no successful verification receipt was found."
+          },
+          "sourceFiles": [
+            "workers/api/src/lib/telemetry.ts"
+          ],
+          "produces": [],
+          "consumes": [],
+          "eventFamilies": []
+        },
+        {
+          "id": "sass-maker:custom",
+          "projectId": "sass-maker",
+          "provider": {
+            "id": "custom",
+            "name": "Custom telemetry adapter",
+            "deployment": "self-hosted"
+          },
+          "purposes": [
+            "analytics",
+            "errors",
+            "logs",
+            "traces"
+          ],
+          "runtimes": [
+            "worker"
+          ],
+          "privacy": {
+            "classification": "operational",
+            "allowSecrets": false,
+            "allowUserIdentity": false,
+            "allowPayloadBodies": false,
+            "redactFields": [
+              "authorization",
+              "cookie",
+              "password",
+              "secret",
+              "token"
+            ]
+          },
+          "collection": {
+            "mode": "manual",
+            "capturesErrors": true,
+            "capturesPerformance": true,
+            "capturesProductEvents": true,
+            "delivery": "buffered"
+          },
+          "verification": {
+            "state": "source-configured",
+            "freshness": {
+              "maxAgeHours": 168
+            },
+            "reason": "Source configuration found; no successful verification receipt was found."
+          },
+          "sourceFiles": [
+            "workers/droid/src/acceptance.ts",
+            "workers/droid/src/browser-acceptance.ts",
+            "workers/droid/src/executor.ts",
+            "workers/droid/src/patch.ts",
+            "workers/droid/src/preflight.ts",
+            "workers/droid/src/run-room-client.ts",
+            "workers/droid/src/run-room.ts"
+          ],
+          "produces": [],
+          "consumes": [],
+          "eventFamilies": []
+        },
+        {
+          "id": "sass-maker:foundry-events",
+          "projectId": "sass-maker",
+          "provider": {
+            "id": "foundry-events",
+            "name": "Foundry Events",
+            "deployment": "foundry"
+          },
+          "purposes": [
+            "audit",
+            "errors",
+            "jobs",
+            "logs",
+            "performance"
+          ],
+          "runtimes": [
+            "unknown"
+          ],
+          "privacy": {
+            "classification": "operational",
+            "allowSecrets": false,
+            "allowUserIdentity": false,
+            "allowPayloadBodies": false,
+            "redactFields": [
+              "authorization",
+              "cookie",
+              "password",
+              "secret",
+              "token"
+            ]
+          },
+          "collection": {
+            "mode": "manual",
+            "capturesErrors": true,
+            "capturesPerformance": true,
+            "capturesProductEvents": false,
+            "delivery": "buffered"
+          },
+          "verification": {
+            "state": "source-configured",
+            "freshness": {
+              "maxAgeHours": 168
+            },
+            "reason": "Source configuration found; no successful verification receipt was found."
+          },
+          "sourceFiles": [
+            "packages/blocks/sdk/src/services/events.ts",
+            "scripts/e2e-fleet-local.mjs"
+          ],
+          "produces": [],
+          "consumes": [],
+          "eventFamilies": []
+        },
+        {
+          "id": "sass-maker:posthog",
+          "projectId": "sass-maker",
+          "provider": {
+            "id": "posthog",
+            "name": "PostHog",
+            "deployment": "hosted",
+            "configurationKeys": [
+              "POSTHOG_API_KEY",
+              "POSTHOG_HOST",
+              "POSTHOG_PERSONAL_API_KEY",
+              "POSTHOG_PROJECT_ID"
+            ]
+          },
+          "purposes": [
+            "analytics",
+            "audit",
+            "availability",
+            "errors",
+            "logs",
+            "performance",
+            "security",
+            "traces"
+          ],
+          "runtimes": [
+            "browser",
+            "cli",
+            "unknown",
+            "worker"
+          ],
+          "privacy": {
+            "classification": "personal",
+            "allowSecrets": false,
+            "allowUserIdentity": true,
+            "allowPayloadBodies": false,
+            "redactFields": [
+              "authorization",
+              "cookie",
+              "password",
+              "secret",
+              "token"
+            ]
+          },
+          "collection": {
+            "mode": "manual",
+            "capturesErrors": true,
+            "capturesPerformance": true,
+            "capturesProductEvents": true,
+            "delivery": "buffered"
+          },
+          "verification": {
+            "state": "source-configured",
+            "freshness": {
+              "maxAgeHours": 168
+            },
+            "reason": "Source configuration found; no successful verification receipt was found."
+          },
+          "sourceFiles": [
+            "packages/cli/src/commands/supervise.ts",
+            "scripts/fleet-monitoring-audit.mjs",
+            "scripts/fleet-posthog-verify.mjs",
+            "workers/api/src/index.ts",
+            "workers/api/src/lib/telemetry.ts"
+          ],
+          "produces": [
+            "$exception",
+            "$identify"
+          ],
+          "consumes": [
+            "foundry_error"
+          ],
+          "eventFamilies": [
+            "$exception",
+            "$identify",
+            "foundry"
+          ]
+        }
+      ],
+      "findings": [
+        {
+          "code": "event-consumer-without-producer",
+          "severity": "warning",
+          "projectId": "sass-maker",
+          "event": "foundry_error",
+          "message": "Event consumer foundry_error has no source producer in this project."
+        }
+      ],
+      "scan": {
+        "filesVisited": 1174,
+        "filesScanned": 385,
+        "bytesScanned": 2180181,
+        "truncated": false
+      }
+    },
+    {
+      "projectId": "significant-hobbies",
+      "maturity": "maintained",
+      "path": null,
+      "verification": {
+        "state": "unknown",
+        "freshness": {
+          "maxAgeHours": 168
+        },
+        "reason": "Maintained project source is not present below the scan root."
+      },
+      "adapters": [],
+      "findings": [],
+      "scan": {
+        "filesVisited": 0,
+        "filesScanned": 0,
+        "bytesScanned": 0,
+        "truncated": false
+      }
+    },
+    {
+      "projectId": "starboard",
+      "maturity": "maintained",
+      "path": null,
+      "verification": {
+        "state": "unknown",
+        "freshness": {
+          "maxAgeHours": 168
+        },
+        "reason": "Maintained project source is not present below the scan root."
+      },
+      "adapters": [],
+      "findings": [],
+      "scan": {
+        "filesVisited": 0,
+        "filesScanned": 0,
+        "bytesScanned": 0,
+        "truncated": false
+      }
+    },
+    {
+      "projectId": "swe-interview-prep",
+      "maturity": "maintained",
+      "path": null,
+      "verification": {
+        "state": "unknown",
+        "freshness": {
+          "maxAgeHours": 168
+        },
+        "reason": "Maintained project source is not present below the scan root."
+      },
+      "adapters": [],
+      "findings": [],
+      "scan": {
+        "filesVisited": 0,
+        "filesScanned": 0,
+        "bytesScanned": 0,
+        "truncated": false
+      }
+    }
+  ],
+  "findings": [
+    {
+      "code": "event-producer-without-consumer",
+      "severity": "info",
+      "projectId": "drank",
+      "event": "foundry_page_crash",
+      "message": "Event producer foundry_page_crash has no source consumer in this project."
+    },
+    {
+      "code": "event-producer-without-consumer",
+      "severity": "info",
+      "projectId": "drank",
+      "event": "error_captured",
+      "message": "Event producer error_captured has no source consumer in this project."
+    },
+    {
+      "code": "event-producer-without-consumer",
+      "severity": "info",
+      "projectId": "drank",
+      "event": "api_call_timing",
+      "message": "Event producer api_call_timing has no source consumer in this project."
+    },
+    {
+      "code": "hardcoded-public-key",
+      "severity": "warning",
+      "projectId": "drank",
+      "provider": "posthog",
+      "file": "lib/foundry-monitoring.ts",
+      "line": 7,
+      "message": "Hardcoded posthog public client key detected; the value was omitted."
+    },
+    {
+      "code": "event-consumer-without-producer",
+      "severity": "warning",
+      "projectId": "fleet-dashboard",
+      "event": "foundry_error",
+      "message": "Event consumer foundry_error has no source producer in this project."
+    },
+    {
+      "code": "event-consumer-without-producer",
+      "severity": "warning",
+      "projectId": "fleet-dashboard",
+      "event": "foundry_trace",
+      "message": "Event consumer foundry_trace has no source producer in this project."
+    },
+    {
+      "code": "event-producer-without-consumer",
+      "severity": "info",
+      "projectId": "fleet-dashboard",
+      "event": "foundry_page_crash",
+      "message": "Event producer foundry_page_crash has no source consumer in this project."
+    },
+    {
+      "code": "event-producer-without-consumer",
+      "severity": "info",
+      "projectId": "fleet-dashboard",
+      "event": "error_captured",
+      "message": "Event producer error_captured has no source consumer in this project."
+    },
+    {
+      "code": "event-producer-without-consumer",
+      "severity": "info",
+      "projectId": "fleet-dashboard",
+      "event": "api_call_timing",
+      "message": "Event producer api_call_timing has no source consumer in this project."
+    },
+    {
+      "code": "hardcoded-public-key",
+      "severity": "warning",
+      "projectId": "fleet-dashboard",
+      "provider": "posthog",
+      "file": "src/lib/foundry-monitoring.ts",
+      "line": 7,
+      "message": "Hardcoded posthog public client key detected; the value was omitted."
+    },
+    {
+      "code": "event-consumer-without-producer",
+      "severity": "warning",
+      "projectId": "sass-maker",
+      "event": "foundry_error",
+      "message": "Event consumer foundry_error has no source producer in this project."
+    }
+  ]
+}

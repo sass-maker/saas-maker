@@ -1,0 +1,19 @@
+{
+  "name": "fleet-ops-console",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --host 127.0.0.1",
+    "build": "astro build && node scripts/build-worker.mjs",
+    "preview": "astro preview --host 127.0.0.1 --allowed-hosts fleet.sassmaker.com",
+    "test": "node scripts/test-resilience.mjs",
+    "test:resilience": "node scripts/test-resilience.mjs"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.4",
+    "astro": "^5.12.0",
+    "typescript": "^5.8.3"
+  },
+  "devDependencies": {}
+}

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, Badge } from '@saas-maker/ui';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, Badge } from '@foundry/ui';
 import {
   AlertTriangle,
   CheckCircle2,

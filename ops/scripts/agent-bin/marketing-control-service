@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+LABEL="com.assistant.fleet-marketing-control"
+PLIST="$HOME/Library/LaunchAgents/$LABEL.plist"
+LOG_DIR="$HOME/Library/Logs/Fleet Ops"
+UID_VALUE="$(id -u)"
+NODE_BIN="$(command -v node)"
+REEL_DIR="/Users/assistant/Desktop/fleet/reel-pipeline"
+
+usage() { echo "usage: marketing-control-service <start|stop|restart|status>"; }
+
+start() {
+  mkdir -p "$(dirname "$PLIST")" "$LOG_DIR"
+  cat >"$PLIST" <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+  <key>Label</key><string>$LABEL</string>
+  <key>ProgramArguments</key><array><string>$NODE_BIN</string><string>$REEL_DIR/scripts/marketing-daemon.js</string></array>
+  <key>EnvironmentVariables</key><dict>
+    <key>PATH</key><string>/opt/homebrew/bin:/opt/homebrew/opt/node@22/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+  </dict>
+  <key>StartInterval</key><integer>60</integer>
+  <key>RunAtLoad</key><true/>
+  <key>ProcessType</key><string>Background</string>
+  <key>WorkingDirectory</key><string>$REEL_DIR</string>
+  <key>StandardOutPath</key><string>$LOG_DIR/marketing-control-service.log</string>
+  <key>StandardErrorPath</key><string>$LOG_DIR/marketing-control-service.error.log</string>
+</dict></plist>
+EOF
+  plutil -lint "$PLIST" >/dev/null
+  launchctl bootout "gui/$UID_VALUE/$LABEL" 2>/dev/null || true
+  launchctl bootstrap "gui/$UID_VALUE" "$PLIST"
+  launchctl enable "gui/$UID_VALUE/$LABEL" >/dev/null 2>&1 || true
+  launchctl kickstart -k "gui/$UID_VALUE/$LABEL"
+  echo "marketing control service started"
+}
+
+stop() {
+  launchctl bootout "gui/$UID_VALUE/$LABEL" 2>/dev/null || true
+  echo "marketing control service stopped"
+}
+
+case "${1:-}" in
+  start) start ;;
+  stop) stop ;;
+  restart) stop; start ;;
+  status) launchctl print "gui/$UID_VALUE/$LABEL" 2>/dev/null | sed -n '1,55p' || echo "marketing control service is stopped" ;;
+  *) usage >&2; exit 2 ;;
+esac

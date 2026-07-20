@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@saas-maker/ui';
+import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@foundry/ui';
 import { CreateProjectDialog } from '@/components/create-project-dialog';
 import { PageHeader } from '@/components/page-header';
 import { FleetMonitor } from '@/components/fleet-monitor';

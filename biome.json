@@ -21,10 +21,21 @@
       "!**/packages/cli/templates",
       "!**/openapi.json",
       "!**/design.html",
+      "!ops/assets",
+      "!apps/mobile-cockpit",
+      "!services/drank",
+      "!services/reel-pipeline",
+      "!tools/psi-swarm",
       "!**/*.css",
       "!**/*.astro"
     ]
   },
+  "overrides": [
+    {
+      "includes": ["catalog/**", "ops/**"],
+      "formatter": { "enabled": false }
+    }
+  ],
   "formatter": {
     "enabled": true,
     "indentStyle": "space",

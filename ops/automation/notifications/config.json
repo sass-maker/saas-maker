@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "timezone": "Asia/Kolkata",
+  "quietHours": {
+    "start": "22:30",
+    "end": "08:00"
+  },
+  "dedupeWindowMinutes": 60,
+  "retentionDays": 30,
+  "maxAttempts": 8,
+  "optionalChannels": ["ntfy"],
+  "routes": {
+    "info": [],
+    "success": [],
+    "warning": ["openclaw-telegram"],
+    "critical": ["openclaw-telegram", "ntfy"]
+  }
+}

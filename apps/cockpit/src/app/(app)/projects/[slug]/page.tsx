@@ -1,5 +1,5 @@
 import { PageHeader } from '@/components/page-header';
-import { Card, CardHeader, CardTitle, CardContent, Badge, Button } from '@saas-maker/ui';
+import { Card, CardHeader, CardTitle, CardContent, Badge, Button } from '@foundry/ui';
 import {
   Activity,
   Clock,

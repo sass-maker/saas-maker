@@ -61,7 +61,9 @@ Pages config (`pages_build_output_dir`) does **not** support `[limits]` or `[[un
 - anime_list (`anime-list-web` Pages project)
 - today-little-log (`today-little-log` Pages project)
 - swe-interview-prep (Pages, no wrangler)
-- `sassmaker.com/docs` (Blume output folded into the `saas-maker-home` Pages deployment)
+- `sassmaker.com/docs` (legacy folded deployment recorded by this historical audit;
+  current source target is the separate `packages.sassmaker.com` surface, with
+  no DNS or production cutover performed by the consolidation)
 - codevetter (Pages)
 - personalsite (Pages)
 

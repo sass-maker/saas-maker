@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Org logos (owned only)</title>
+  <style>
+    :root { color-scheme: dark; }
+    body { margin:0; font-family: ui-sans-serif, system-ui, sans-serif; background:#0b0d10; color:#e8eaed; padding:32px 24px 64px; }
+    h1 { font-size:1.25rem; margin:0 0 6px; }
+    p { color:#9aa3af; margin:0 0 28px; max-width:40rem; line-height:1.5; font-size:.95rem; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:18px; }
+    .card { background:#14181f; border:1px solid #232a35; border-radius:14px; padding:16px; text-align:center; }
+    .card img.sq { width:128px; height:128px; border-radius:24px; object-fit:cover; }
+    .card img.sm { width:40px; height:40px; border-radius:8px; object-fit:cover; margin-top:10px; }
+    .card strong { display:block; margin-top:12px; font-size:.9rem; }
+    .card span { color:#8b95a5; font-size:.75rem; }
+    a { color:#7dd3fc; font-size:.78rem; text-decoration:none; }
+    a:hover { text-decoration:underline; }
+  </style>
+</head>
+<body>
+  <h1>Owned org logos</h1>
+  <p>Flat geometric marks — sole-admin orgs only. Upload the 1024px PNG on each org’s profile settings.</p>
+  <div class="grid" id="g"></div>
+  <script>
+    const items = [["Codevetter","Nested diamond — code gem"],["High-Signal-App","Waveform + baseline"],["Significant-Hobbies","Soft life stamp — single ring + center"],["HeyPace","Four pace bars"],["PostTrainLLM","Training curve"],["sass-maker","Copper F — matches sassmaker.com brand mark"]];
+    document.getElementById('g').innerHTML = items.map(([org, note]) => `
+      <article class="card">
+        <img class="sq" src="${org}-avatar-512.png" alt="${org}" />
+        <img class="sm" src="${org}-avatar-512.png" alt="" />
+        <strong>${org}</strong>
+        <span>${note}</span><br/>
+        <a href="https://github.com/organizations/${org}/settings/profile" target="_blank" rel="noreferrer">Upload →</a>
+      </article>`).join('');
+  </script>
+</body>
+</html>

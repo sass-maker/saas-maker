@@ -1,0 +1,1 @@
+../../tools/psi-swarm/SKILL.md

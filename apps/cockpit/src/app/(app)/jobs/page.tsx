@@ -9,7 +9,7 @@ import {
   CardContent,
   Badge,
   Button,
-} from '@saas-maker/ui';
+} from '@foundry/ui';
 import { PageHeader } from '@/components/page-header';
 import { Bot, Clock, CheckCircle2, XCircle, Loader2, ArrowRight } from 'lucide-react';
 import { apiFetchClient, getClientToken } from '@/lib/api-client';

@@ -1,0 +1,27 @@
+{
+  "name": "mobile-dev-cockpit",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@10.33.2",
+  "scripts": {
+    "postinstall": "node scripts/prepare-node-pty.mjs",
+    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test",
+    "build:bridge": "pnpm --filter @mobile-dev-cockpit/bridge build",
+    "format:check": "prettier --check .",
+    "lint": "pnpm --recursive --if-present lint",
+    "typecheck": "pnpm --recursive --if-present typecheck",
+    "test": "pnpm --filter @mobile-dev-cockpit/protocol build && pnpm --recursive --if-present test",
+    "bridge": "pnpm --filter @mobile-dev-cockpit/bridge dev",
+    "discover": "pnpm --filter @mobile-dev-cockpit/bridge dev -- discover",
+    "mobile": "pnpm --filter @mobile-dev-cockpit/mobile start",
+    "mobile:web": "pnpm --filter @mobile-dev-cockpit/mobile web",
+    "mobile:export": "pnpm --filter @mobile-dev-cockpit/mobile export:web",
+    "mobile:export:ios": "pnpm --filter @mobile-dev-cockpit/mobile export:ios",
+    "knip": "knip --no-exit-code --reporter symbols",
+    "knip:strict": "knip --reporter symbols"
+  },
+  "devDependencies": {
+    "knip": "^6.6.3",
+    "prettier": "3.8.3"
+  }
+}

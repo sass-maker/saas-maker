@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.blume/
+.astro/
+.DS_Store
+
+# Blume reads the canonical docs tree directly (content.root: '../docs').
+# This local-only scratch dir must never be committed — the source of truth
+# is ../docs/, not a copy.
+docs/

@@ -275,7 +275,7 @@ Good matches:
 - Repos that strengthen search and discovery without replacing already-installed libraries.
 - Tools with concrete support for api, workers, src, github.com, sarthak-fleet, product, cloudflare, routes.
 - Implementation repos, SDKs, CLIs, testing utilities, adapters, and focused libraries are higher value than generic awesome lists.
-- Treat `foundry.projects.json` as the fleet registry source of truth and run `pnpm check:fleet-contracts` after adding or retiring active project roots.
+- Treat `catalog/foundry.json` as the sole hand-edited fleet catalog and run `pnpm catalog:check` plus `pnpm check:fleet-contracts` after adding or retiring active project roots.
 
 Avoid recommending:
 - Do not recommend packages already listed under direct or development dependencies unless the task is migration research.

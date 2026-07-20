@@ -17,6 +17,18 @@ on:
     branches: [main]
   push:
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      release_component:
+        description: Production component to release after CI passes
+        required: true
+        type: choice
+        options:
+          - api
+          - droid
+          - cockpit
+          - showcase
+          - packages
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -25,7 +37,7 @@ concurrency:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v6
       - uses: pnpm/action-setup@v6
@@ -34,15 +46,25 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - run: pnpm components:install
+      - run: pnpm catalog:validate
+      - run: pnpm catalog:check
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: node --test tests/foundry-catalog.test.mjs tests/foundry-observability.test.mjs ops/test/host-foundation.test.mjs
       - run: pnpm check:openapi
       - run: pnpm build:widget
       - run: pnpm -F @saas-maker/api typecheck
       - run: pnpm build:cockpit
+      - run: pnpm build:showcase
+      - run: pnpm build:docs
+      - run: pnpm build:skills
+      - run: pnpm components:check
       - run: pnpm test
 
   deploy-api:
     needs: build-and-test
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch' && inputs.release_component == 'api'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -95,7 +117,7 @@ jobs:
 
   deploy-droid:
     needs: build-and-test
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch' && inputs.release_component == 'droid'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     # saasmaker-droid is an internal Worker with no public custom domain.
@@ -147,7 +169,7 @@ jobs:
 
   deploy-cockpit:
     needs: build-and-test
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch' && inputs.release_component == 'cockpit'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -200,7 +222,7 @@ jobs:
 
   deploy-landing:
     needs: build-and-test
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch' && inputs.release_component == 'showcase'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -221,7 +243,7 @@ jobs:
           changed=false
           while IFS= read -r path; do
             case "$path" in
-              apps/showcase/*|apps/docs-blume/*|docs/*|foundry.projects.json|packages/blocks/sdk/*|package.json|pnpm-lock.yaml|pnpm-workspace.yaml|.github/workflows/ci.yml)
+              apps/showcase/*|catalog/*|packages/blocks/sdk/*|package.json|pnpm-lock.yaml|pnpm-workspace.yaml|.github/workflows/ci.yml)
                 changed=true
                 break
                 ;;
@@ -256,7 +278,7 @@ jobs:
 
   publish-packages:
     needs: build-and-test
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch' && inputs.release_component == 'packages'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:

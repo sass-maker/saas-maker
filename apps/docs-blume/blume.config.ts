@@ -1,20 +1,30 @@
 import { defineConfig } from 'blume';
 
-// When DOCS_PUBLIC_INTERNAL is unset or anything other than 'false', internal
-// trees (prds/, openspec/) are published alongside the public product docs.
-// Set DOCS_PUBLIC_INTERNAL=false to exclude them for a public-only build.
-const publicInternal = process.env.DOCS_PUBLIC_INTERNAL !== 'false';
-
 export default defineConfig({
-  title: 'Foundry Manual',
-  description:
-    'Drop-in backend services for SaaS apps — API, SDK, widgets, and Foundry operations.',
+  title: 'SaaS Maker Packages',
+  description: 'Install and use the SaaS Maker API, SDK, CLI, widgets, and reusable packages.',
   // The canonical documentation tree lives at the repository root in `docs/`.
   // Blume is only the presentation + search layer; committed Markdown is the
   // source of truth. See `docs/README.md` for the knowledge-system layout.
   content: {
     root: '../../docs',
-    exclude: publicInternal ? ['archive/**'] : ['archive/**', 'prds/**', 'openspec/**'],
+    // Blume exposes only package/product documentation. Foundry architecture,
+    // operations, plans, private status, and learnings stay committed but are
+    // never part of this public build.
+    exclude: [
+      'README.md',
+      'archive/**',
+      'architecture/**',
+      'current/**',
+      'development/**',
+      'knowledge/**',
+      'operations/**',
+      'org-profiles/**',
+      'product/**',
+      'superpowers/**',
+      'prds/**',
+      'openspec/**',
+    ],
   },
   github: {
     owner: 'sass-maker',
@@ -40,8 +50,8 @@ export default defineConfig({
   ai: { llmsTxt: true },
   seo: { agentReadability: true, sitemap: true, robots: true },
   deployment: {
-    site: 'https://sassmaker.com',
-    base: '/docs',
+    site: 'https://packages.sassmaker.com',
+    base: '/',
     output: 'static',
   },
 });
