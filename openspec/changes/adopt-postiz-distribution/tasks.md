@@ -42,7 +42,7 @@
 
 ## 7. Verification and owner-gated cutover
 
-- [ ] 7.1 Run unit, integration, typecheck, lint, build, catalog, host, and fake-Postiz acceptance checks.
+- [x] 7.1 Run unit, integration, typecheck, lint, build, catalog, host, and fake-Postiz acceptance checks.
 - [ ] 7.2 Obtain owner approval for host identity, private hostname, backup retention, initial channel, credentials, migration, and production activation.
 - [ ] 7.3 Install the pinned Postiz stack on the designated host and verify health, persistence, backup, private access, and rollback without exposing secrets.
 - [ ] 7.4 Connect one non-critical channel and complete draft-only shadow parity with Foundry.

@@ -26,9 +26,7 @@ test('legacy distribution commands fail closed with a stable machine-readable co
 });
 
 test('mutating Reel package commands all route through the disabled shim', async () => {
-  const packageJson = JSON.parse(
-    await readFile('services/reel-pipeline/package.json', 'utf8')
-  );
+  const packageJson = JSON.parse(await readFile('services/reel-pipeline/package.json', 'utf8'));
   for (const command of [
     'marketing',
     'post:ready',
