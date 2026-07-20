@@ -12,12 +12,18 @@ SDK a project API key, install one middleware, and make a request. Normalized
 routes and bounded performance samples then appear in the private Cockpit at
 `app.sassmaker.com/fleet/app-health`.
 
-![App Health endpoint inventory](../screenshots/app-health/app-health-desktop.jpg)
+<img
+  src="/screenshots/app-health/app-health-desktop.jpg"
+  alt="App Health endpoint inventory"
+/>
 
 The narrow layout keeps the same endpoint inventory available through horizontal
 table scrolling:
 
-![App Health narrow layout](../screenshots/app-health/app-health-mobile.jpg)
+<img
+  src="/screenshots/app-health/app-health-mobile.jpg"
+  alt="App Health narrow layout"
+/>
 
 ## Choose your runtime
 
