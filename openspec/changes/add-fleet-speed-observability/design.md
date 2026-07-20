@@ -10,7 +10,9 @@ The Foundry now owns the canonical fleet catalog, operations tooling, PSI Swarm,
 
 The fleet is hub-and-spoke: products may push evidence to Foundry, but they must not call one another. The designated operations host will run scheduled synthetic checks after a separately approved host cutover. The owner is the only current Cockpit user, so the interface can expose dense operational detail, but it must still avoid collecting sensitive payloads.
 
-This design records proposed defaults. Implementation MUST NOT begin until the owner approves the decision table in Open Questions.
+The owner approved all seven defaults on 2026-07-20. Implementation may proceed,
+but deployment, scheduler activation, production migration, and alert activation
+remain separate explicit approvals.
 
 ## Goals / Non-Goals
 
@@ -143,7 +145,7 @@ Rollback is additive: disable schedules and adapters, retain existing provider t
 
 ## Open Questions
 
-Owner approval is required for these proposed defaults before implementation:
+The owner approved these defaults on 2026-07-20:
 
 1. Canonical store: Foundry D1 receipts, with PostHog/Cloudflare as optional enrichments.
 2. Probe scope: anonymous health and explicitly declared read-only endpoints only; no authenticated business probes initially.
@@ -152,4 +154,3 @@ Owner approval is required for these proposed defaults before implementation:
 5. Sampling: 10% successes, 100% errors/slow requests, with per-route caps.
 6. Enforcement: 14 observation-only days, then alerts only after owner-approved budgets; no deploy blocking.
 7. Query detail: fingerprints and allowlisted operation labels only, never raw query text or values.
-
