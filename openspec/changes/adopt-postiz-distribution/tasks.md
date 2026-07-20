@@ -1,16 +1,16 @@
 ## 1. Contracts and boundaries
 
-- [ ] 1.1 Add versioned Content Factory brief, artifact-manifest, quality, and approval contracts with fixture-backed validation tests.
-- [ ] 1.2 Add provider-neutral distribution request, delivery mapping, provider receipt, and analytics evidence contracts.
+- [x] 1.1 Add versioned Content Factory brief, artifact-manifest, quality, and approval contracts with fixture-backed validation tests.
+- [x] 1.2 Add provider-neutral distribution request, delivery mapping, provider receipt, and analytics evidence contracts.
 - [ ] 1.3 Add catalog declarations for Content Factory, the external Postiz service, privacy allowlists, ownership, and evidence freshness.
-- [ ] 1.4 Add architecture tests proving Content Factory imports no social publisher or provider credential modules.
+- [x] 1.4 Add architecture tests proving Content Factory imports no social publisher or provider credential modules.
 
 ## 2. Postiz adapter
 
-- [ ] 2.1 Implement a server-only Postiz client for health, integrations, post creation/listing/status, and post/platform analytics.
-- [ ] 2.2 Implement platform payload translation and fixture tests for the initial Instagram Reels and YouTube Shorts formats.
-- [ ] 2.3 Implement classified errors, timeouts, bounded retries, redaction, and instance-rate-budget handling.
-- [ ] 2.4 Add an inert fake-Postiz integration harness that proves draft, schedule, list, status, and analytics flows without credentials or external writes.
+- [x] 2.1 Implement a server-only Postiz client for health, integrations, post creation/listing/status, and post/platform analytics.
+- [x] 2.2 Implement platform payload translation and fixture tests for the initial Instagram Reels and YouTube Shorts formats.
+- [x] 2.3 Implement classified errors, timeouts, bounded retries, redaction, and instance-rate-budget handling.
+- [x] 2.4 Add an inert fake-Postiz integration harness that proves draft, schedule, list, status, and analytics flows without credentials or external writes.
 
 ## 3. Idempotency and approval
 
