@@ -94,7 +94,7 @@
       "generationCases": ["worker-render-pro"],
       "type": "command",
       "command": "node",
-      "args": ["--check", "scripts/render-pro.js"],
+      "args": ["--check", "../content-factory/scripts/render-pro.js"],
       "requiredForFullReadiness": true
     },
     {

@@ -14,6 +14,7 @@ import { ProductProofCapture, loadPlaywrightFactory } from './product-proof-capt
 import { buildVariantPlan } from './reel-templates.js';
 import { scoreVariant } from './reel-quality.js';
 import { selfReviewRender } from './reel-self-review.js';
+import { wrapLegacyRenderer } from '../../content-factory/src/manifest.js';
 
 let cachedProductProofCapture = null;
 
@@ -32,25 +33,29 @@ export async function resolveProductProofCapture(options = {}) {
 }
 
 export function createRenderer(mode = 'mock', options = {}) {
-  if (mode === 'stock') return new MoneyPrinterTurboAdapter(options.moneyprinterturbo);
-  if (mode === 'moneyprinterturbo') return new MoneyPrinterTurboAdapter(options.moneyprinterturbo);
-  if (mode === 'grok' || mode === 'grok-video' || mode === 'grok-videos') return new GrokVideoAdapter(options.grokVideo ?? options.grok ?? {});
-  if (mode === 'ascii' || mode === 'ascii-animation' || mode === 'ascii-fable' || mode === 'askai') return new AsciiAnimationAdapter(options.asciiAnimation ?? options.ascii ?? options.askai ?? {});
-  if (mode === 'html' || mode === 'html-composition' || mode === 'web-composition') return new HtmlCompositionAdapter(options.htmlComposition ?? options.html ?? {});
-  if (mode === 'kokoro' || mode === 'kokoro-compose') return new KokoroComposeAdapter(options.kokoroCompose ?? options.kokoro ?? {});
+  if (mode === 'stock') return contentFactoryAdapter(new MoneyPrinterTurboAdapter(options.moneyprinterturbo));
+  if (mode === 'moneyprinterturbo') return contentFactoryAdapter(new MoneyPrinterTurboAdapter(options.moneyprinterturbo));
+  if (mode === 'grok' || mode === 'grok-video' || mode === 'grok-videos') return contentFactoryAdapter(new GrokVideoAdapter(options.grokVideo ?? options.grok ?? {}));
+  if (mode === 'ascii' || mode === 'ascii-animation' || mode === 'ascii-fable' || mode === 'askai') return contentFactoryAdapter(new AsciiAnimationAdapter(options.asciiAnimation ?? options.ascii ?? options.askai ?? {}));
+  if (mode === 'html' || mode === 'html-composition' || mode === 'web-composition') return contentFactoryAdapter(new HtmlCompositionAdapter(options.htmlComposition ?? options.html ?? {}));
+  if (mode === 'kokoro' || mode === 'kokoro-compose') return contentFactoryAdapter(new KokoroComposeAdapter(options.kokoroCompose ?? options.kokoro ?? {}));
   if (mode === 'openshorts' || mode === 'ugc_actor') {
     throw new Error('openshorts/ugc_actor was removed; use mock or stock (MoneyPrinterTurbo)');
   }
   if (mode === 'remotion' || mode === 'reel-maker') {
-    return new ReelMakerAdapter({
+    return contentFactoryAdapter(new ReelMakerAdapter({
       ...(options.reelMaker ?? options.reelmaker ?? {}),
       productProofCapture: options.productProofCapture
         ?? options.reelMaker?.productProofCapture
         ?? null,
-    });
+    }));
   }
-  if (mode === 'mock') return new MockRenderer(options.mock);
+  if (mode === 'mock') return contentFactoryAdapter(new MockRenderer(options.mock));
   throw new Error(`unsupported renderer mode: ${mode}`);
+}
+
+function contentFactoryAdapter(renderer) {
+  return wrapLegacyRenderer(renderer, { rendererVersion: 'reel-pipeline-adapter-v1' });
 }
 
 export async function renderReelVariants(brief, options = {}) {
@@ -193,7 +198,7 @@ export async function getDraftVideoStatus(id, options = {}) {
     }
     return job;
   }
-  const render = await renderer.getStatus(job.render.externalTaskId);
+  const render = await renderer.getStatus(job.render.externalTaskId, { brief: job.brief });
   const updatedJob = await store.save({
     ...job,
     render,

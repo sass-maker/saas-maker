@@ -5,14 +5,14 @@ const roots = ['internal/contracts/content-factory.ts', 'services/content-factor
 const sourceFiles = roots.flatMap((root) => collectSourceFiles(root));
 
 describe('Content Factory architecture boundary', () => {
-  it('imports no social publishers, Postiz adapter, OAuth, or credential modules', () => {
+  it('imports no social publishers, Postiz adapter, OAuth, credential, scheduler, or analytics modules', () => {
     expect(sourceFiles.length).toBeGreaterThan(0);
     const violations: string[] = [];
     for (const file of sourceFiles) {
       const source = readFileSync(file, 'utf8');
       for (const specifier of importSpecifiers(source)) {
         if (
-          /(?:^|\/)(?:publishers?|posting|social-publishers?|oauth|credentials?|secrets?|tokens?)(?:\/|$)/i.test(
+          /(?:^|\/)(?:publishers?|posting|social-publishers?|oauth|credentials?|secrets?|tokens?|schedulers?|analytics|metrics)(?:\/|$)/i.test(
             specifier
           ) ||
           specifier.includes('workers/api/src/adapters/postiz') ||

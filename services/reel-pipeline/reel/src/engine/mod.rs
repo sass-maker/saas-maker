@@ -55,6 +55,9 @@ pub struct RenderResult {
     pub aspect: String,
     pub proof_type: Option<String>,
     pub render_log: Vec<String>,
+    /// Validated Content Factory manifest emitted for completed local artifacts.
+    pub artifact_manifest: Option<serde_json::Value>,
+    pub artifact_manifest_path: Option<PathBuf>,
 }
 
 impl RenderResult {
@@ -70,6 +73,8 @@ impl RenderResult {
             aspect: "9:16".to_string(),
             proof_type: None,
             render_log: Vec::new(),
+            artifact_manifest: None,
+            artifact_manifest_path: None,
         }
     }
 }

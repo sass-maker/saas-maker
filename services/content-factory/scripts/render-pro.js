@@ -16,26 +16,32 @@
  *    music, demo flow, and dynamic UI motion).
  *
  * Usage:
- *   node scripts/render-pro.js [reelId ...]
+ *   node ../content-factory/scripts/render-pro.js [reelId ...]
  */
 import { execFile } from 'node:child_process';
 import { access, copyFile, mkdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { promisify } from 'node:util';
 
-import { selectGrokVideoAsset } from '../src/adapters/grok-video.js';
-import { reelWorkerHeaders } from '../src/reel-worker-auth.js';
-import { captureScrollTour, recordScreencast, recordScrollScreencast } from './cdp-capture.js';
+import { selectGrokVideoAsset } from '../../reel-pipeline/src/adapters/grok-video.js';
+import { captureScrollTour, recordScreencast, recordScrollScreencast } from '../../reel-pipeline/scripts/cdp-capture.js';
+import { emitArtifactManifest, hashCanonicalJson } from '../src/manifest.js';
 
 const execFileAsync = promisify(execFile);
 
 const BASE = process.env.REEL_WORKER_URL ?? 'https://reel-pipeline-artifacts.sarthakagrawal927.workers.dev';
-const WORKER_HEADERS = reelWorkerHeaders();
+const WORKER_HEADERS = contentFactoryWorkerHeaders();
 const BUCKET = process.env.REEL_ARTIFACT_R2_BUCKET ?? 'reel-artifacts';
 const WORK_ROOT = path.resolve(process.env.REEL_RENDER_WORK ?? './tmp/render-pro');
 const CHROME = process.env.REEL_RENDER_CHROME ?? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const VOICE = process.env.REEL_VOICE ?? 'en-US-AvaNeural';
 const VOICE_FALLBACK = process.env.REEL_VOICE_FALLBACK ?? 'en-US-JennyNeural';
+
+function contentFactoryWorkerHeaders() {
+  const token = process.env.REEL_INTERNAL_TOKEN;
+  if (!token) throw new Error('REEL_INTERNAL_TOKEN is required for the Foundry render handoff');
+  return { authorization: `Bearer ${token}` };
+}
 
 // Multi-voice rotation. Different Edge TTS voices per scene mood reduce
 // single-AI-voice fatigue. Map by scene `kind`. Defaults fall back to VOICE.
@@ -435,12 +441,45 @@ async function renderReel(reelId) {
     // the browser cache.
     const assetUrl = `${BASE}/reels/${key}?v=${Date.now()}`;
     const totalDuration = scenes.reduce((total, scene) => total + scene.actualDuration, 0) - TRANSITION * (scenes.length - 1);
-    renderedVariants.push({ variantSpec, scenes, assetUrl, totalDuration });
+    renderedVariants.push({ variantSpec, scenes, assetUrl, totalDuration, finalPath });
     console.log(`    ✓ ${assetUrl} (${totalDuration.toFixed(1)}s)`);
   }
 
   console.log('  patching reel record with variants…');
   await patchReelRecordMultiVariant(reel, renderedVariants, dir, useEdgeTts, tour !== null, Boolean(grokMotion && grokInserted));
+
+  const supportedChannel = ['instagram_reels', 'youtube_shorts'].includes(reel.channel)
+    ? [reel.channel]
+    : ['instagram_reels', 'youtube_shorts'];
+  const { manifest, manifestPath } = await emitArtifactManifest({
+    context: {
+      brief: { id: reel.id, version: Number(reel.version ?? 1) || 1 },
+      projectId: reel.projectSlug,
+      campaignId: reel.campaignId ?? reel.marketingPostId ?? `worker-reel:${reel.id}`,
+      experimentId: reel.experimentId ?? null,
+      inputHash: hashCanonicalJson({
+        id: reel.id,
+        projectSlug: reel.projectSlug,
+        title: reel.title,
+        hook: reel.hook,
+        body: reel.body,
+        cta: reel.cta,
+        variantCount: VARIANT_COUNT,
+      }),
+      channelIntent: supportedChannel,
+      provenance: [{ kind: 'reel-worker-record', id: reel.id, revision: String(reel.version ?? 1) }],
+    },
+    render: {
+      provider: 'render-pro',
+      externalTaskId: `render-pro-${reel.id}`,
+      status: 'completed',
+    },
+    variantArtifacts: renderedVariants.map(({ variantSpec, finalPath }) => ({
+      id: `${reel.id}-${variantSpec.id}`,
+      locations: [finalPath],
+      channelIntent: supportedChannel,
+    })),
+  });
 
   const summary = renderedVariants.map(({ variantSpec, assetUrl, totalDuration }) => ({
     variantId: `${reel.id}-${variantSpec.id}`,
@@ -449,7 +488,15 @@ async function renderReel(reelId) {
     duration: Number(totalDuration.toFixed(2)),
   }));
   console.log(`  ✓ ${reelId}: ${renderedVariants.length} variant(s)`);
-  return { reelId, ok: true, variants: summary, scenes: baseScenes.length, voiceProvider: useEdgeTts ? VOICE : 'macos-say' };
+  return {
+    reelId,
+    ok: true,
+    variants: summary,
+    scenes: baseScenes.length,
+    voiceProvider: useEdgeTts ? VOICE : 'macos-say',
+    artifactManifest: manifest,
+    artifactManifestPath: manifestPath,
+  };
 }
 
 async function patchReelRecordMultiVariant(reel, rendered, dir, useEdge, usedCapture, usedGrokMotion = false) {

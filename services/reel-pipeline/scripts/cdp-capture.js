@@ -68,8 +68,13 @@ export async function withChrome({ width, height }, body) {
   proc.stderr.on('data', () => {});
 
   const cleanup = async () => {
-    try { proc.kill('SIGTERM'); } catch {}
-    await new Promise((resolve) => proc.once('exit', resolve));
+    if (proc.exitCode === null && proc.signalCode === null) {
+      try { proc.kill('SIGTERM'); } catch {}
+      await new Promise((resolve) => {
+        proc.once('exit', resolve);
+        setTimeout(resolve, 5_000);
+      });
+    }
     try { await rm(userDataDir, { recursive: true, force: true }); } catch {}
   };
 

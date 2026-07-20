@@ -792,6 +792,10 @@ function clampDuration(value) {
   return Math.max(5, Math.min(12, number));
 }
 
+function formatError(error) {
+  return error instanceof Error ? error.message : String(error);
+}
+
 function stableSlug(value) {
   return String(value)
     .toLowerCase()
