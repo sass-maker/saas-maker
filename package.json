@@ -16,9 +16,12 @@
     "mobile": "pnpm --filter @mobile-dev-cockpit/mobile start",
     "mobile:web": "pnpm --filter @mobile-dev-cockpit/mobile web",
     "mobile:export": "pnpm --filter @mobile-dev-cockpit/mobile export:web",
-    "mobile:export:ios": "pnpm --filter @mobile-dev-cockpit/mobile export:ios"
+    "mobile:export:ios": "pnpm --filter @mobile-dev-cockpit/mobile export:ios",
+    "knip": "knip --no-exit-code --reporter symbols",
+    "knip:strict": "knip --reporter symbols"
   },
   "devDependencies": {
+    "knip": "^6.6.3",
     "prettier": "^3.6.2"
   }
 }

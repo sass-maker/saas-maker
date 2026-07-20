@@ -1,4 +1,4 @@
-export type VoicePhase =
+type VoicePhase =
   | "unsupported"
   | "idle"
   | "permissionRequired"

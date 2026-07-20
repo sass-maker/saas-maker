@@ -1,6 +1,6 @@
 import { execFileSync } from "node:child_process";
 
-export const TAILSCALE_SERVE_PATH = "/mobile-dev-cockpit";
+const TAILSCALE_SERVE_PATH = "/mobile-dev-cockpit";
 
 export type TailscaleRunner = (args: string[]) => string;
 

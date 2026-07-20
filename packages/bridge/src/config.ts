@@ -3,7 +3,7 @@ import { homedir, hostname } from "node:os";
 import { dirname, isAbsolute, resolve } from "node:path";
 import type { OperationName } from "@mobile-dev-cockpit/protocol";
 
-export type CommandName = OperationName | "agentResume";
+type CommandName = OperationName | "agentResume";
 export type CommandMap = Partial<
   Record<CommandName, readonly [string, ...string[]]>
 >;

@@ -1,4 +1,4 @@
-export type CockpitLayoutMode = "compact" | "intermediate" | "regular";
+type CockpitLayoutMode = "compact" | "intermediate" | "regular";
 
 export interface CockpitLayout {
   mode: CockpitLayoutMode;

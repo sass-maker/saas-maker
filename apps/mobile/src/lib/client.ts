@@ -36,7 +36,7 @@ export interface ClientCallbacks {
   onError: (message: string) => void;
 }
 
-export class BridgeRequestError extends Error {
+class BridgeRequestError extends Error {
   constructor(
     public readonly code: string,
     message: string,
