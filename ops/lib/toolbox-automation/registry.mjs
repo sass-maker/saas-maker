@@ -19,15 +19,13 @@
  *     and explicit stop rules)
  */
 import { readFileSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-// lib/toolbox-automation → lib → fleet-ops → fleet root
-const FLEET_ROOT = resolve(__dirname, '../../..');
-export const REGISTRY_PATH = join(
-  FLEET_ROOT,
-  'fleet-ops/config/significant-hobbies-toolbox.json'
+export const REGISTRY_PATH = resolve(
+  __dirname,
+  '../../config/significant-hobbies-toolbox.json'
 );
 
 export const SCHEMA = 'fleet.significant-hobbies-toolbox.v1';

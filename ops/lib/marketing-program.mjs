@@ -25,12 +25,23 @@ export function validateMarketingProgram(input, options = {}) {
       owners.set(key, project.slug);
     }
   }
+  const exclusions = new Set();
+  for (const exclusion of input.catalogExclusions ?? []) {
+    if (!SLUG.test(exclusion?.slug ?? '') || !exclusion.reason?.trim()) {
+      throw new MarketingProgramError('catalogExclusions require a valid slug and reason');
+    }
+    const key = normalizeIdentity(exclusion.slug);
+    if (exclusions.has(key)) throw new MarketingProgramError(`duplicate catalog exclusion: ${exclusion.slug}`);
+    if (owners.has(key)) throw new MarketingProgramError(`catalog exclusion is also a project identity: ${exclusion.slug}`);
+    exclusions.add(key);
+  }
   const focusModes = input.projects.filter((project) => project.mode === 'focus').map((project) => project.slug).sort();
   const focusSet = [...new Set(input.focusSet)].sort();
   if (focusSet.length !== input.focusSet.length || JSON.stringify(focusSet) !== JSON.stringify(focusModes)) {
     throw new MarketingProgramError('focusSet must contain every and only focus-mode project exactly once');
   }
-  for (const slug of options.activeSlugs ?? []) {
+  for (const slug of options.catalogSlugs ?? options.activeSlugs ?? []) {
+    if (exclusions.has(normalizeIdentity(slug))) continue;
     if (!owners.has(normalizeIdentity(slug))) throw new MarketingProgramError(`active Fleet project is missing from registry: ${slug}`);
   }
   const defaults = input.defaults ?? {};
