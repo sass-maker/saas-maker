@@ -1,0 +1,22 @@
+{
+  "name": "SaaS Maker Packages",
+  "description": "SaaS Maker API, SDK, CLI, widgets, and source-ready App Health documentation.",
+  "llms": "https://packages.sassmaker.com/llms.txt",
+  "llmsFull": "https://packages.sassmaker.com/llms-full.txt",
+  "surfaces": [
+    {
+      "id": "docs",
+      "name": "Package documentation",
+      "url": "https://packages.sassmaker.com/",
+      "md": "https://packages.sassmaker.com/index.md"
+    },
+    {
+      "id": "app-health",
+      "name": "App Health SDK installation",
+      "url": "https://packages.sassmaker.com/sdk/app-health/",
+      "md": "https://packages.sassmaker.com/sdk/app-health.md",
+      "manifest": "https://packages.sassmaker.com/app-health/install.json",
+      "runtimes": ["node", "go"]
+    }
+  ]
+}

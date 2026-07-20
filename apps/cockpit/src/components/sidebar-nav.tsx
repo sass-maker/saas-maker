@@ -7,6 +7,7 @@ import {
   Eye,
   FolderKanban,
   Gauge,
+  HeartPulse,
   LayoutList,
   ListTodo,
   Map,
@@ -78,6 +79,7 @@ const pillarNav = [
     icon: Eye,
     items: [
       { label: 'Fleet health', href: '/fleet', icon: LayoutList },
+      { label: 'App Health', href: '/fleet/app-health', icon: HeartPulse },
       { label: 'Observability', href: '/fleet/observability', icon: BarChart3 },
       { label: 'Speed', href: '/fleet/speed', icon: Gauge },
     ],

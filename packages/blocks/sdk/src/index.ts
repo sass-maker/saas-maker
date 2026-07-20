@@ -1,5 +1,14 @@
 export { SaaSMakerClient, type SaaSMakerConfig } from './client';
 export { SaaSMakerError } from './http';
+export {
+  createAppHealth,
+  normalizeAppHealthRoute,
+  type AppHealthClient,
+  type AppHealthDiagnostics,
+  type AppHealthOptions,
+  type AppHealthRecord,
+  type ExpressCompatibleMiddleware,
+} from './app-health';
 
 export type {
   FeedbackRecord,

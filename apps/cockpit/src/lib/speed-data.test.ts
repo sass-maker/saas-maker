@@ -45,10 +45,12 @@ describe('speed evidence adapter', () => {
               error_count: 1,
               error_rate: 0.1,
               latency_ms: { p50: 20, p75: 30, p95: 90, p99: 150 },
+              last_seen: '2026-07-20T11:30:00.000Z',
             },
           ],
           '7d': [],
         },
+        truncatedWindows: ['24h'],
         spans: [
           {
             project_id: 'sass-maker',
@@ -76,9 +78,12 @@ describe('speed evidence adapter', () => {
       NOW
     );
     expect(snapshot.boundary.mode).toBe('provider-api');
+    expect(snapshot.boundary.truncatedWindows).toEqual(['24h']);
+    expect(snapshot.boundary.message).toContain('newest query slice');
     expect(snapshot.routes).toHaveLength(1);
     expect(snapshot.routes[0]?.source).toBe('foundry-runtime');
     expect(snapshot.routes[0]?.metrics['24h'].errorRate).toBe(10);
+    expect(snapshot.routes[0]?.lastSeen).toBe('2026-07-20T11:30:00.000Z');
     expect(snapshot.recentRequests[0]?.operations[0]).toMatchObject({
       label: 'projects.by-id',
       fingerprint: 'fp_12345678',

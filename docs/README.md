@@ -21,7 +21,7 @@ copies diverge, the `docs/` tree here wins.
 | [`index.mdx`](index.mdx) | Public landing page (rendered by Blume). |
 | [`getting-started/`](getting-started/introduction.md) | First-touch guides: intro, quickstart, auth, integration, the Standard. |
 | [`api/`](api/overview.md) | REST API reference (OpenAPI-derived). |
-| [`sdk/`](sdk/cli.md) | `fnd` CLI and TypeScript SDK usage. |
+| [`sdk/`](sdk/cli.md) | `fnd` CLI, TypeScript SDK, and Node.js/Go App Health installation. |
 | [`services/`](services/projects.md) | Product services: projects, tasks, feedback, changelog, waitlist, testimonials, roadmap. |
 | [`widgets/`](widgets/feedback.md) | Embeddable widget recipes. |
 | [`current/`](current/README.md) | Current objective, active work, and status pointers. |

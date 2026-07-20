@@ -5,6 +5,9 @@ description: "Use the Foundry JavaScript SDK to integrate services into your app
 
 The JavaScript SDK provides a typed client for all Foundry API endpoints.
 
+For automatic Node.js endpoint monitoring, use the focused
+[App Health for Node.js guide](/sdk/app-health-node/).
+
 ## Installation
 
 ```bash

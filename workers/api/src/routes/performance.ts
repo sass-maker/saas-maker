@@ -258,12 +258,17 @@ ingest.post('/spans', async (c) => {
 
   const normalized: NormalizedSpan[] = [];
   for (let i = 0; i < items.length; i++) {
-    const result = normalizeSpan(items[i]);
+    const item = items[i];
+    const scopedItem =
+      item && typeof item === 'object' && !Array.isArray(item) && item.project_id == null
+        ? { ...item, project_id: project.slug }
+        : item;
+    const result = normalizeSpan(scopedItem);
     if ('error' in result) return c.json({ error: `span[${i}]: ${result.error}` }, 400);
     if (result.project_id !== project.slug && result.project_id !== project.id) {
       return c.json({ error: `span[${i}]: project_id outside authenticated project scope` }, 403);
     }
-    normalized.push(result);
+    normalized.push({ ...result, project_id: project.slug });
   }
 
   let accepted = 0;
@@ -424,7 +429,7 @@ query.get('/routes', async (c) => {
 
   const { results } = await c.env.DB.prepare(
     `SELECT project_id, surface, environment, source, method, route_template,
-            duration_ms, status_class, sampling_rate
+            duration_ms, status_class, sampling_rate, observed_at
      FROM performance_spans
      WHERE ${sql}
      ORDER BY observed_at DESC
@@ -444,6 +449,7 @@ query.get('/routes', async (c) => {
     sample_count: number;
     error_count: number;
     sampling_rates: number[];
+    last_seen: string | null;
   };
 
   const map = new Map<string, Agg>();
@@ -469,6 +475,7 @@ query.get('/routes', async (c) => {
         sample_count: 0,
         error_count: 0,
         sampling_rates: [],
+        last_seen: null,
       };
       map.set(key, agg);
     }
@@ -479,6 +486,10 @@ query.get('/routes', async (c) => {
     if (status === '5xx' || status === '4xx') agg.error_count += 1;
     if (row.sampling_rate != null && Number.isFinite(Number(row.sampling_rate))) {
       agg.sampling_rates.push(Number(row.sampling_rate));
+    }
+    const observedAt = typeof row.observed_at === 'string' ? row.observed_at : null;
+    if (observedAt && (!agg.last_seen || Date.parse(observedAt) > Date.parse(agg.last_seen))) {
+      agg.last_seen = observedAt;
     }
   }
 
@@ -500,6 +511,7 @@ query.get('/routes', async (c) => {
       agg.sampling_rates.length === 0
         ? null
         : agg.sampling_rates.reduce((a, b) => a + b, 0) / agg.sampling_rates.length,
+    last_seen: agg.last_seen,
     latency_ms: {
       p50: percentile(agg.durations, 50),
       p75: percentile(agg.durations, 75),

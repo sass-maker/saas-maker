@@ -89,6 +89,7 @@ export interface ApiRouteRollup {
   routeTemplate: string;
   source: SpeedSource;
   revision?: string;
+  lastSeen?: string;
   metrics: Record<SpeedWindow, RouteWindowMetrics>;
 }
 
@@ -150,6 +151,8 @@ export interface SpeedSnapshot {
     mode: 'provider-api' | 'unavailable';
     providerEnrichment: 'available' | 'unavailable' | 'partial';
     message: string;
+    sampled?: boolean;
+    truncatedWindows?: SpeedWindow[];
   };
   retention: { spansDays: number; rollupsMonths: number };
   observation: { startedAt: string; minimumDays: number; elapsedDays: number };
@@ -189,6 +192,7 @@ interface RouteRow {
   error_count: number;
   error_rate: number;
   latency_ms: Record<string, number | null>;
+  last_seen?: string | null;
 }
 
 interface SpanRow {
@@ -217,6 +221,7 @@ interface TraceResponse {
 interface SpeedEvidenceInput {
   receipts: ReceiptRow[];
   routeWindows: Record<SpeedWindow, RouteRow[]>;
+  truncatedWindows?: SpeedWindow[];
   spans: SpanRow[];
   operationsByTrace?: Record<string, TraceResponse['operations']>;
 }
@@ -410,6 +415,7 @@ export function buildSpeedSnapshot(input: SpeedEvidenceInput, now = new Date()):
       method: representative.method,
       routeTemplate: representative.route_template,
       source: sourceName(representative.source),
+      ...(representative.last_seen ? { lastSeen: representative.last_seen } : {}),
       metrics,
     } satisfies ApiRouteRollup;
   });
@@ -512,8 +518,11 @@ export function buildSpeedSnapshot(input: SpeedEvidenceInput, now = new Date()):
     boundary: {
       mode: 'provider-api',
       providerEnrichment: 'partial',
-      message:
-        'Live provider-neutral receipts and sampled spans. Provider evidence remains separate and may be unavailable.',
+      sampled: true,
+      ...(input.truncatedWindows?.length ? { truncatedWindows: input.truncatedWindows } : {}),
+      message: input.truncatedWindows?.length
+        ? `Live bounded span samples. The ${input.truncatedWindows.join(', ')} route windows use the newest query slice.`
+        : 'Live bounded span samples. Provider evidence remains separate and may be unavailable.',
     },
     retention: { spansDays: 7, rollupsMonths: 13 },
     observation: {
@@ -576,6 +585,9 @@ export async function getSpeedSnapshot(): Promise<SpeedSnapshot> {
           '24h': routes24h.data ?? [],
           '7d': routes7d.data ?? [],
         },
+        truncatedWindows: (['1h', '24h', '7d'] as const).filter(
+          (window) => ({ '1h': routes1h, '24h': routes24h, '7d': routes7d })[window].truncated
+        ),
         spans: spanRows,
         operationsByTrace: Object.fromEntries(traceRows),
       },

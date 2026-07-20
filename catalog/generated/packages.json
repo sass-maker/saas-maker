@@ -149,9 +149,9 @@
       "id": "pkg-sdk",
       "name": "@saas-maker/sdk",
       "path": "packages/blocks/sdk/package.json",
-      "version": "0.3.1",
+      "version": "0.4.0",
       "private": false,
-      "description": "Official SDK for SaaS Maker — drop-in backend services for SaaS apps. Feedback, waitlist, testimonials, changelog, roadmap, chatbot, AI gateway, and directory.",
+      "description": "Official SaaS Maker SDK with key-only App Health instrumentation and drop-in backend services for SaaS applications.",
       "bin": null,
       "state": "configured"
     },

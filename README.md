@@ -41,6 +41,7 @@ apps/skills/                public indexed skill catalog
 catalog/                    canonical catalog + generated projections
 workers/                    API and Droid Workers
 packages/                   local and publishable packages + @foundry/ui
+packages/app-health-go/     dependency-free Go endpoint instrumentation
 internal/contracts/         provider-neutral application contracts
 ops/                        Fleet operations, schedules, host foundation
 skills/                     versioned agent skills
@@ -92,6 +93,12 @@ The private Cockpit distinguishes:
 - `not-applicable`: an explicit exception with a reason.
 
 That distinction prevents a configured SDK or Cloudflare toggle from being misreported as complete analytics coverage.
+
+App Health is the focused application view of that evidence: add the key-only
+Node.js or Go middleware, then inspect normalized endpoint traffic, latency,
+error rate, and last-seen time at `/fleet/app-health`. Installation starts at
+[`docs/sdk/app-health.md`](docs/sdk/app-health.md); no raw URL, query value, or
+request body is part of the span contract.
 
 ## Design and operating rules
 

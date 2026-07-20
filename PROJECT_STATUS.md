@@ -67,6 +67,7 @@ Brand note: production domain uses **double-s** `sassmaker.com`; display name re
 
 ## Timeline
 
+- **2026-07-20 — App Health V0 (source ready, activation pending):** Added key-only Node.js/Express and Go `net/http` SDKs over the existing authenticated performance-span contract, derived project identity from the API key, added the private `/fleet/app-health` endpoint inventory, and prepared human plus machine-readable package documentation with checked-in desktop/mobile screenshots. Local source, privacy, race, UI, docs, and browser checks are complete. Production activation still requires explicit approval for the ordered pending D1 migrations and SDK publication/tagging before API, Cockpit, and package-docs deployment and canary verification.
 - **2026-07-20 — CodeVetter Work evidence spoke (local, release pending):** CodeVetter now attaches compatible live or indexed Codex/Claude sessions to local Work items without launching another provider process, focuses an already-running linked conversation, and renders direct bounded PTY output separately from structured lifecycle evidence. The spoke remains local-first and reports outcomes upward; SaaS Maker does not enter its runtime path. Source validation is complete. Native provider launch qualification, signed CodeVetter release publication, and any production fleet receipt remain explicit follow-ups.
 - **2026-07-20 — Fleet speed observability (observation-only):** Merged PR #43 after exact-head CI passed. Implemented provider-neutral performance contracts, additive D1 evidence tables, bounded authenticated receipt/span ingestion and private query routes, catalog-declared performance surfaces, synthetic API probe + PSI Swarm receipt adapters, a stateless reference runtime timing adapter (SaaS Maker API canary, opt-in), inert schedule definitions, generated rollout actions, regenerated OpenAPI/CLI recipes, and the Cockpit `/fleet/speed` workspace. Missing evidence renders honestly as unavailable/unmeasured; populated demo data is never substituted. OpenSpec change `add-fleet-speed-observability`. **Not yet activated:** production migration/deploy, scheduler enablement, alert budgets, PostHog latency-card retirement, browser sign-off, and host cutover.
 
@@ -200,11 +201,12 @@ Brand note: production domain uses **double-s** `sassmaker.com`; display name re
 
 ### Planned
 
-1. Perform an explicitly approved production cutover for package docs, skills, and the private Foundry cockpit only after deploy-identity, binding, live parity, smoke, and rollback evidence is attached.
-2. Replace the local-file-only host lease with a central/shared lease adapter before promoting the other machine or installing any scheduler.
-3. Keep `catalog/foundry.json`, README, AGENTS guidance, project status, health contracts, and public views synchronized through the generator rather than duplicate editing.
-4. Tighten Task Workflows after real use: automatic Droid result capture, richer run status/events, clearer artifact lifecycle controls.
-5. Continue reducing stale deploy/docs references when concrete drift is found.
+1. Activate App Health only after explicit D1 migration and SDK release approval, then deploy API/Cockpit/package docs together and attach production ingest plus dashboard canary evidence.
+2. Perform an explicitly approved production cutover for package docs, skills, and the private Foundry cockpit only after deploy-identity, binding, live parity, smoke, and rollback evidence is attached.
+3. Replace the local-file-only host lease with a central/shared lease adapter before promoting the other machine or installing any scheduler.
+4. Keep `catalog/foundry.json`, README, AGENTS guidance, project status, health contracts, and public views synchronized through the generator rather than duplicate editing.
+5. Tighten Task Workflows after real use: automatic Droid result capture, richer run status/events, clearer artifact lifecycle controls.
+6. Continue reducing stale deploy/docs references when concrete drift is found.
 
 ### Deferred
 

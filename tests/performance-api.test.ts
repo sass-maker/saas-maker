@@ -312,6 +312,10 @@ const SPAN = {
   ],
 };
 
+const KEY_ONLY_SPAN = Object.fromEntries(
+  Object.entries(SPAN).filter(([key]) => key !== 'project_id')
+);
+
 function request(db: FakeD1, path: string, init?: RequestInit) {
   return performanceRoutes.request(path, init, { DB: db } as never);
 }
@@ -331,6 +335,54 @@ beforeEach(() => {
 });
 
 describe('performance evidence API', () => {
+  it('derives project scope from the API key when the SDK omits project_id', async () => {
+    const response = await request(db, '/spans', {
+      method: 'POST',
+      headers: projectHeaders(),
+      body: JSON.stringify(KEY_ONLY_SPAN),
+    });
+
+    expect(response.status).toBe(201);
+    expect(await response.json()).toMatchObject({ accepted: 1, received: 1 });
+    expect(db.spans[0]).toMatchObject({ project_id: PROJECT.slug });
+
+    const explicitId = await request(db, '/spans', {
+      method: 'POST',
+      headers: projectHeaders(),
+      body: JSON.stringify({
+        ...SPAN,
+        idempotency_key: 'explicit-project-id',
+        project_id: PROJECT.id,
+      }),
+    });
+    expect(explicitId.status).toBe(201);
+    expect(db.spans[1]).toMatchObject({ project_id: PROJECT.slug });
+  });
+
+  it('keeps validation and project isolation after deriving key scope', async () => {
+    const matching = await request(db, '/spans', {
+      method: 'POST',
+      headers: projectHeaders(),
+      body: JSON.stringify(SPAN),
+    });
+    expect(matching.status).toBe(201);
+
+    const mismatched = await request(db, '/spans', {
+      method: 'POST',
+      headers: projectHeaders(),
+      body: JSON.stringify({ ...SPAN, idempotency_key: 'other-project', project_id: 'other' }),
+    });
+    expect(mismatched.status).toBe(403);
+
+    const sensitive = await request(db, '/spans', {
+      method: 'POST',
+      headers: projectHeaders(),
+      body: JSON.stringify({ ...KEY_ONLY_SPAN, idempotency_key: 'unsafe', headers: {} }),
+    });
+    expect(sensitive.status).toBe(400);
+    expect(db.spans).toHaveLength(1);
+  });
+
   it('requires authentication and rejects cross-project or sensitive evidence', async () => {
     expect((await request(db, '/summary')).status).toBe(401);
     const crossProject = await request(db, '/receipts', {
@@ -389,7 +441,14 @@ describe('performance evidence API', () => {
       headers: ownerHeaders(),
     });
     expect(await routes.json()).toMatchObject({
-      data: [{ route_template: '/v1/projects/:id', sample_count: 2, error_count: 1 }],
+      data: [
+        {
+          route_template: '/v1/projects/:id',
+          sample_count: 2,
+          error_count: 1,
+          last_seen: SPAN.observed_at,
+        },
+      ],
     });
     const recent = await request(db, '/spans/recent', { headers: ownerHeaders() });
     const recentBody = (await recent.json()) as { data: Array<{ trace_id: string }> };
