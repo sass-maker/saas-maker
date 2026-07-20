@@ -1,0 +1,28 @@
+schema: spec-driven
+
+context: |
+  SaaS Maker is the Cloudflare-first Foundry monorepo and fleet system of record.
+  Stack: TypeScript, pnpm workspaces, Hono Workers API, D1/Drizzle, Next.js Cockpit,
+  Blume docs, Astro showcase, Vitest, and Playwright.
+  catalog/foundry.json is the sole hand-edited fleet catalog; generated registries
+  must not become competing sources of truth.
+  The architecture is hub-and-spoke: products push evidence to Foundry and do not
+  call one another directly.
+  Production deploys, schedules, migrations, and host activation require explicit
+  owner approval. The owner wants sign-off on consequential Foundry architecture.
+  Prefer provider-neutral contracts, bounded collection, small diffs, existing
+  dependencies, and explicit fresh/stale/unmeasured evidence states.
+
+rules:
+  proposal:
+    - State owner decisions and production authorization boundaries explicitly.
+    - Name the canonical source of truth and avoid duplicate registries.
+  design:
+    - Include privacy, failure isolation, rollback, and provider-independence decisions.
+    - Separate checked-in readiness from production activation.
+  specs:
+    - Make evidence freshness, provenance, and unknown states testable.
+    - Forbid credentials, secret values, and raw sensitive payload collection by default.
+  tasks:
+    - Put owner approval gates before production behavior changes.
+    - Keep production activation as a separate final task.
