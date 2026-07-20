@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="favicon">
-  <rect width="32" height="32" rx="7" fill="#0b0f14"/>
+  <rect width="32" height="32" fill="#0b0f14"/>
   <path fill="#4ea1ff" d="M9 5.5h11l4 4v17H9z"/>
       <path fill="#0b0f14" d="M19 6.5v5h5z"/>
       <path fill="none" stroke="#e7eef7" stroke-width="2" stroke-linecap="round" d="M12.5 16h9M12.5 20h7.5M12.5 24h5.5"/>

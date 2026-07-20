@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="favicon">
-  <rect width="32" height="32" rx="7" fill="#0c0a06"/>
+  <rect width="32" height="32" fill="#0c0a06"/>
   <path fill="#f5c542" d="M16 5.5 L26.25 10.5 L16 15.5 L5.75 10.5 Z"/>
       <path fill="#f0d878" d="M16 11.75 L26.25 16.75 L16 21.75 L5.75 16.75 Z"/>
       <path fill="#d4a017" d="M16 18 L26.25 23 L16 28 L5.75 23 Z"/>

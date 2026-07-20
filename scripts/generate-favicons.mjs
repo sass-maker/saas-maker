@@ -371,11 +371,10 @@ const TARGETS = {
 };
 
 function wrapSvg(spec) {
-  // Drop nested <defs> if mark already has them — put everything in one svg
-  const hasDefs = spec.mark.includes("<defs>");
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="favicon">
-  <rect width="32" height="32" rx="7" fill="${spec.bg}"/>
+  // Full-bleed square tile: no outer corner radius. Rounded rects leave
+  // transparent corners on a square favicon canvas (looks like "blank space").
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="favicon">
+  <rect width="32" height="32" fill="${spec.bg}"/>
   ${spec.mark.trim()}
 </svg>
 `;
