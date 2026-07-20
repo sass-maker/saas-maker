@@ -21,7 +21,11 @@
       "minimum": "1.22 with WithRouteResolver; 1.23 for automatic ServeMux discovery",
       "module": "github.com/sass-maker/saas-maker/packages/app-health-go",
       "install": "go get github.com/sass-maker/saas-maker/packages/app-health-go@latest",
-      "middleware": ["net/http", "Go 1.23+ ServeMux Request.Pattern", "Go 1.22 route resolver required for non-root routes"],
+      "middleware": [
+        "net/http",
+        "Go 1.23+ ServeMux Request.Pattern",
+        "Go 1.22 route resolver required for non-root routes"
+      ],
       "guide": "https://packages.sassmaker.com/sdk/app-health-go.md"
     }
   },
