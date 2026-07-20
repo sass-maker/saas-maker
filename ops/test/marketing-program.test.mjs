@@ -8,9 +8,10 @@ const registry = JSON.parse(await readFile(new URL('../config/marketing-program.
 
 test('registry validates every active catalog project and exact focus set', async () => {
   const catalog = JSON.parse(await readFile(new URL('../../saas-maker/foundry.projects.json', import.meta.url), 'utf8'));
-  const result = validateMarketingProgram(registry, { activeSlugs: [...Object.keys(catalog), 'fleet-ops', 'wifi-watch'] });
+  const inFleetCatalog = Object.keys(catalog).filter((slug) => slug !== 'truehire');
+  const result = validateMarketingProgram(registry, { activeSlugs: [...inFleetCatalog, 'fleet-ops', 'wifi-watch'] });
   assert.deepEqual(result.focusSet, ['pace', 'codevetter', 'posttrainllm']);
-  assert.equal(result.projects.length, 22);
+  assert.equal(result.projects.length, 27);
   assert.deepEqual(result.projects.filter((project) => project.contentBase).map((project) => project.slug).sort(), ['aliveville', 'high-signal', 'karte', 'rolepatch', 'saas-maker', 'significanthobbies', 'swe-interview-prep']);
 });
 

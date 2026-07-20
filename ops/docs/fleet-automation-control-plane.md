@@ -4,6 +4,27 @@ The Fleet automation layer exists to make the 25 maintained entries observable
 and safely operable without turning the 12 Ignored or Removed entries back into
 obligations. It does not auto-deploy or broaden an agent's authority.
 
+## Mission and handoff
+
+The control plane is a post-ship loop. It accepts a product change only after
+the change is merged, required CI is green, the intended artifact is deployed,
+and production smoke verification passes. Before that gate, the product repo
+and its owner remain responsible for completing the work.
+
+After handoff, the control plane has three responsibilities:
+
+1. **Measure** product health and outcomes: availability, speed, activation,
+   usage, errors, retention, jobs, API behavior, and attribution.
+2. **Market** verified products through indexing, directories, reusable
+   content, approved distribution, and bounded experiments.
+3. **Understand feedback** by combining explicit feedback, support signals,
+   behavioral evidence, and experiment results into themes and recommendations.
+
+Recommendations and reviewable tasks flow back to the product owner. The
+control plane does not autonomously choose or implement product features.
+Foundry may change its own shared infrastructure when required to operate this
+measurement, marketing, and feedback loop.
+
 ## Canonical inputs
 
 - `fleet-ops/config/automation-registry.json` is the current executable source

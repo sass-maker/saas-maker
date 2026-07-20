@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="favicon">
-  <rect width="32" height="32" rx="7" fill="#2f6b4f"/>
+  <rect width="32" height="32" fill="#2f6b4f"/>
   <path fill="#faf8f3" d="M8 23V9.5h3.1L16 17l4.9-7.5H24V23h-3.2v-8.3L16.6 21h-1.2L11.2 14.7V23H8Z"/>
 </svg>

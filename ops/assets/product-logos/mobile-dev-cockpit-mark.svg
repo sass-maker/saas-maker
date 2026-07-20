@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="mobile-dev-cockpit">
-  <rect width="32" height="32" rx="7" fill="#0b1220"/>
+  <rect width="32" height="32" fill="#0b1220"/>
   
       <rect x="10" y="5" width="12" height="22" rx="2.5" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
       <rect x="12" y="9" width="8" height="12" rx="1" fill="#0f172a"/>
