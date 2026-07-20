@@ -74,9 +74,14 @@ echo ""
 echo "1. Creating GitHub repo $GITHUB_OWNER/$NAME..."
 gh repo create "$GITHUB_OWNER/$NAME" $VISIBILITY \
   --description "$DESC" \
-  --clone "$DIR" \
   2>/dev/null || {
     echo "  gh repo create failed — repo may already exist" >&2
+    exit 1
+  }
+
+gh repo clone "$GITHUB_OWNER/$NAME" "$DIR" \
+  2>/dev/null || {
+    echo "  gh repo clone failed — remote was created but local checkout was not" >&2
     exit 1
   }
 
