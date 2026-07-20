@@ -14,9 +14,9 @@
 
 ## 3. Idempotency and approval
 
-- [ ] 3.1 Add the delivery-mapping persistence migration and repository keyed by distribution request, content hash, and integration.
-- [ ] 3.2 Enforce content approval, verified artifact receipt, distribution approval, host lease, and delivery mapping before every Postiz create call.
-- [ ] 3.3 Implement ambiguous-result reconciliation and explicit replacement approval.
+- [x] 3.1 Add the delivery-mapping persistence migration and repository keyed by distribution request, content hash, and integration.
+- [x] 3.2 Enforce content approval, verified artifact receipt, distribution approval, host lease, and delivery mapping before every Postiz create call.
+- [x] 3.3 Implement ambiguous-result reconciliation and explicit replacement approval.
 - [ ] 3.4 Extend the Cockpit distribution view to show generation, approval, Postiz draft/schedule/release, retry, and evidence freshness states.
 
 ## 4. Content Factory separation
@@ -28,8 +28,8 @@
 
 ## 5. Evidence and feedback loop
 
-- [ ] 5.1 Implement bounded Postiz post and analytics synchronization with cursor, freshness, and allowlisted persistence.
-- [ ] 5.2 Link every normalized receipt to project, campaign, brief, artifact, integration, and experiment identifiers.
+- [x] 5.1 Implement bounded Postiz post and analytics synchronization with cursor, freshness, and allowlisted persistence.
+- [x] 5.2 Link every normalized receipt to project, campaign, brief, artifact, integration, and experiment identifiers.
 - [ ] 5.3 Add Cockpit marketing outcome views for platform metrics, freshness, failures, and evidence-backed recommendations without automatic product-task creation.
 - [ ] 5.4 Add synthetic/fake evidence tests proving unavailable Postiz state renders stale or unmeasured rather than green.
 

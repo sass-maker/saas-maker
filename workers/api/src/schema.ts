@@ -254,3 +254,82 @@ export const changelog = sqliteTable('changelog', {
   source: text('source'), // e.g., 'claude-work', 'gemini-cli', 'manual'
   created_at: text('created_at').notNull().default(sql`(datetime('now'))`),
 });
+
+export const distribution_delivery_mappings = sqliteTable(
+  'distribution_delivery_mappings',
+  {
+    id: text('id').primaryKey(),
+    distribution_request_id: text('distribution_request_id').notNull(),
+    content_hash: text('content_hash').notNull(),
+    integration_id: text('integration_id').notNull(),
+    project_id: text('project_id').notNull(),
+    campaign_id: text('campaign_id').notNull(),
+    brief_id: text('brief_id').notNull(),
+    artifact_manifest_id: text('artifact_manifest_id').notNull(),
+    experiment_id: text('experiment_id'),
+    platform: text('platform').notNull(),
+    provider: text('provider').notNull().default('postiz'),
+    provider_post_id: text('provider_post_id'),
+    previous_provider_post_id: text('previous_provider_post_id'),
+    state: text('state').notNull(),
+    replacement_count: integer('replacement_count').notNull().default(0),
+    replacement_approved_by: text('replacement_approved_by'),
+    replacement_approved_at: text('replacement_approved_at'),
+    replacement_evidence_ref: text('replacement_evidence_ref'),
+    last_reconciled_at: text('last_reconciled_at'),
+    created_at: text('created_at').notNull().default(sql`(datetime('now'))`),
+    updated_at: text('updated_at').notNull().default(sql`(datetime('now'))`),
+  },
+  (t) => ({
+    uniqRequestContentIntegration: unique().on(
+      t.distribution_request_id,
+      t.content_hash,
+      t.integration_id
+    ),
+    uniqProviderPost: unique().on(t.provider, t.provider_post_id),
+  })
+);
+
+export const distribution_provider_receipts = sqliteTable('distribution_provider_receipts', {
+  id: text('id').primaryKey(),
+  distribution_request_id: text('distribution_request_id').notNull(),
+  project_id: text('project_id').notNull(),
+  campaign_id: text('campaign_id').notNull(),
+  brief_id: text('brief_id').notNull(),
+  artifact_manifest_id: text('artifact_manifest_id').notNull(),
+  experiment_id: text('experiment_id'),
+  integration_id: text('integration_id').notNull(),
+  platform: text('platform').notNull(),
+  provider_post_id: text('provider_post_id').notNull(),
+  provider_release_id: text('provider_release_id'),
+  release_status: text('release_status').notNull(),
+  source: text('source').notNull(),
+  observed_at: text('observed_at').notNull(),
+  freshness: text('freshness').notNull(),
+  created_at: text('created_at').notNull().default(sql`(datetime('now'))`),
+});
+
+export const distribution_analytics_evidence = sqliteTable('distribution_analytics_evidence', {
+  id: text('id').primaryKey(),
+  distribution_request_id: text('distribution_request_id').notNull(),
+  project_id: text('project_id').notNull(),
+  campaign_id: text('campaign_id').notNull(),
+  brief_id: text('brief_id').notNull(),
+  artifact_manifest_id: text('artifact_manifest_id').notNull(),
+  experiment_id: text('experiment_id'),
+  integration_id: text('integration_id').notNull(),
+  platform: text('platform').notNull(),
+  provider_post_id: text('provider_post_id').notNull(),
+  source: text('source').notNull(),
+  observed_at: text('observed_at').notNull(),
+  freshness: text('freshness').notNull(),
+  metrics_json: text('metrics_json').notNull().default('[]'),
+  created_at: text('created_at').notNull().default(sql`(datetime('now'))`),
+});
+
+export const distribution_sync_cursors = sqliteTable('distribution_sync_cursors', {
+  source: text('source').primaryKey(),
+  cursor: text('cursor'),
+  observed_at: text('observed_at').notNull(),
+  updated_at: text('updated_at').notNull().default(sql`(datetime('now'))`),
+});
