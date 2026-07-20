@@ -6,7 +6,7 @@ It replaces `depcheck` and ad-hoc dead-code searches with one static-analysis
 pass.
 
 This doc defines:
-1. The shared `knip.json` template every TS project should adopt.
+1. A shared `knip.json` starting point that each project must narrow.
 2. Per-project adoption order based on code size and stack.
 3. CI integration pattern (non-blocking first, blocking later).
 4. How to triage common false positives in fleet stacks (Next.js server
@@ -31,12 +31,13 @@ ghost dependencies on a single read-only pass. The same pattern is
 expected across the other ~20 TS projects that currently have no knip
 config.
 
-## Shared `knip.json` template
+## Shared `knip.json` starting point
 
-Drop this at project root as `knip.json`. Tune the `ignore` and
-`ignoreDependencies` arrays per project; everything else should stay
-identical so a fleet-wide `pnpm -r knip` or a future workspace script
-works uniformly.
+Start from this at project root as `knip.json`, then add only exceptions that
+are demonstrated by that project's runtime or build system. Do not copy a
+fleet-wide ignore list wholesale: irrelevant rules produce configuration
+hints and can hide real findings. A project is not ready for `knip:strict`
+until Knip reports neither findings nor configuration hints.
 
 ```jsonc
 {
@@ -44,77 +45,23 @@ works uniformly.
   // Entry points are auto-detected from package.json (main, bin, exports,
   // scripts). Only add explicit `entry` if auto-detection misses something.
   "entry": [],
-  "project": ["**/*.{ts,tsx,js,jsx,mjs,cjs}"],
-  "ignore": [
-    "**/dist/**",
-    "**/build/**",
-    "**/.next/**",
-    "**/.astro/**",
-    "**/.output/**",
-    "**/node_modules/**",
-    "**/*.config.{js,ts,mjs,cjs}",
-    "scripts/**",          // fleet scripts are often run by name, not imported
-    "tests/e2e/**",        // playwright fixtures are wired by config, not imports
-    "**/*.test.{ts,tsx,js}",
-    "**/*.spec.{ts,tsx,js}",
-    "**/__tests__/**"
-  ],
-  "ignoreDependencies": [
-    // Build tools that don't appear in import graphs
-    "typescript",
-    "@types/*",
-    "biome",
-    "@biomejs/biome",
-    "prettier",
-    "prettier-plugin-tailwindcss",
-    "husky",
-    "lint-staged",
-    "vitest",
-    "@vitest/*",
-    "playwright",
-    "@playwright/test",
-    "drizzle-kit",
-    "wrangler",
-    "opennextjs-cloudflare",
-    "tailwindcss",
-    "@tailwindcss/*",
-    "lightningcss",
-    "tsx",
-    "size-limit",
-    "knip"
-  ],
-  "ignoreBinaries": [
-    // Scripts invoked via package.json scripts or CI, not importable
-    "next",
-    "astro",
-    "vite",
-    "wrangler",
-    "drizzle-kit",
-    "tsx",
-    "biome",
-    "playwright",
-    "vitest",
-    "knip",
-    "eslint",
-    "prettier"
-  ],
-  "ignoreExports": [
-    // Next.js server actions are dispatched by string, not imported
-    "src/app/api/**/route.ts",
-    "src/lib/actions/**",
-    // Drizzle schema exports are consumed by the ORM, not imported
-    "**/schema.ts",
-    "**/db/schema*.ts",
-    // CLI command files are dispatched by name
-    "**/commands/**"
-  ]
+  "project": ["**/*.{ts,tsx,js,jsx,mjs,cjs,mts,cts}"],
+  "ignore": [],
+  "ignoreDependencies": [],
+  "ignoreBinaries": [],
+  "ignoreIssues": {}
 }
 ```
 
+Knip already excludes common generated and dependency directories. Package
+scripts, tests, framework plugins, and workspace manifests are usually
+auto-detected; suppress them only after checking why a reported path is not a
+real entry point.
+
 ### When to extend the template
 
-- **Astro content collections** — add `src/content/**` to `ignoreExports`
-  if collection entries are queried by glob, not imported.
+- **Astro content collections** — add a scoped `ignoreIssues` entry for
+  `src/content/**` if collection entries are queried by glob, not imported.
 - **OpenNext / Cloudflare** — add `open-next.config.ts`,
   `wrangler.toml`/`wrangler.jsonc` referenced bindings to `entry` if knip
   flags them as unused files.
@@ -137,22 +84,19 @@ tuned before rolling out widely.
 |---|---:|---|---|
 | materia | 23 | Astro + React | validates Astro path |
 | drank | 61 | Next.js | validates Next.js path |
-| open-historia | 75 | Vite + React | already has eslint — keep both |
 | protein-index-resilience | 101 | Vite + React | |
 | protein-index | 104 | Vite + React | |
-| free-ai | 107 | Vite + React | |
+| free-ai | 107 | Vite + React | baseline adopted 2026-07-20; remove configuration hints before blocking CI |
 
 ### Tier 2 — medium (after Tier 1 template is stable)
 
 | Project | src files | stack |
 |---|---:|---|
-| today-little-log | 119 | Vite + React (knip already installed, no config) |
 | looptv | 129 | Next.js + React |
 | pace | 143 | (verify stack) |
 | email-manager | 176 | Vite + React |
 | swe-interview-prep | 196 | Astro + Vite + React |
 | ai-game | 225 | Vite + React |
-| truehire | 279 | Next.js |
 | reader | 281 | Vite + React |
 | starboard | 288 | Next.js + React |
 | anime-list | 316 | Vite + React |
@@ -177,13 +121,13 @@ Skip in any fleet-wide rollout unless explicitly asked: `open-historia`,
 `elves-hq`. (today-little-log already has knip installed; the others are
 listed for completeness.)
 
-### Projects without TypeScript
+### Non-Node and mixed-language projects
 
-`companion-robot`, `forecast-lab`, `motion`, `pace`, `posttrainllm`,
-`reel-pipeline`, `research-papers`, `saas-ideas`, `knowledge-base`,
-`mobile-dev-cockpit`, `web-playables` — knip works on plain JS too, but
-the value is lower without type information. Defer until they migrate to
-TS or until a specific dead-code concern surfaces.
+Knip can still inspect JavaScript inside mixed-language projects, but it is not
+a useful fleet gate for Python-, Rust-, Swift-, or content-only surfaces unless
+there is a meaningful Node package to analyze. `knowledge-base` and
+`mobile-dev-cockpit` both contain substantial TypeScript and are valid Knip
+targets; do not classify them as non-TypeScript projects.
 
 ## CI integration pattern
 
@@ -220,7 +164,7 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 20, cache: pnpm }
       - run: pnpm install --frozen-lockfile
-      - run: pnpm knip
+      - run: pnpm exec knip --no-exit-code --reporter json > knip-report.json
       - if: always()
         uses: actions/upload-artifact@v4
         with: { name: knip-report, path: knip-report.json }
@@ -228,7 +172,8 @@ jobs:
 
 ### Phase 2 — blocking (per-project opt-in)
 
-Once a project's `knip` output is clean, switch the CI job to
+Once a project's `knip` output is clean and emits no configuration hints,
+switch the CI job to
 `pnpm knip:strict` (exit code 1 on findings). New dead code introduced in
 a PR will then fail CI. Do not flip this until the project has been clean
 for two consecutive main runs.
@@ -246,15 +191,15 @@ show up across the fleet and need template-level handling, not per-PR
 
 | Pattern | Symptom | Fix |
 |---|---|---|
-| Next.js server actions | `src/lib/actions/*.ts` flagged as unused file or unused exports | Add `src/lib/actions/**` and `src/app/api/**/route.ts` to `ignoreExports` (template already does this) |
-| Drizzle schemas | `schema.ts` exports flagged unused | Add `**/schema.ts` and `**/db/schema*.ts` to `ignoreExports` |
-| CLI command dispatchers | `packages/cli/src/commands/*.ts` exports flagged unused | Add `**/commands/**` to `ignoreExports`; if there's a central `commands/index.ts`, add it to `entry` |
+| Next.js server actions | `src/lib/actions/*.ts` flagged as unused file or unused exports | Add scoped `ignoreIssues` entries for verified framework entry points |
+| Drizzle schemas | `schema.ts` exports flagged unused | Add a scoped `ignoreIssues` entry for the schema paths actually loaded by the ORM |
+| CLI command dispatchers | `packages/cli/src/commands/*.ts` exports flagged unused | Add scoped `ignoreIssues`; if there's a central `commands/index.ts`, add it to `entry` |
 | OpenNext / Cloudflare configs | `open-next.config.ts`, `wrangler.toml` flagged as unused file | Add to `entry` |
 | Husky / lint-staged configs | `.husky/*`, `lint-staged.config.js` flagged | Add to `ignore` |
-| Playwright fixtures | `tests/e2e/fixtures/**` flagged | Add `tests/e2e/**` to `ignore` (template already does this) |
+| Playwright fixtures | `tests/e2e/fixtures/**` flagged | Add only the framework-loaded fixture paths to `ignore` |
 | Storybook stories | `*.stories.tsx` flagged | Add `**/*.stories.{ts,tsx}` to `ignore` |
-| Astro content collections | `src/content/**` flagged | Add `src/content/**` to `ignoreExports` |
-| Generated OpenAPI / contracts | `internal/contracts/index.ts` types flagged unused | Add `internal/contracts/**` to `ignoreExports`, or add the file to `entry` if downstream packages import it |
+| Astro content collections | `src/content/**` flagged | Add a scoped `ignoreIssues` entry only for framework-loaded content |
+| Generated OpenAPI / contracts | `internal/contracts/index.ts` types flagged unused | Add scoped `ignoreIssues`, or add the file to `entry` if downstream packages import it |
 | Build-time CSS | `*.css`, `tailwind.css` flagged | Add `**/*.css` to `ignore` |
 
 If a finding is a true positive: delete the file, drop the export, or
@@ -286,12 +231,12 @@ is the React-specific lint rules.
 
 ## Adoption checklist (per project)
 
-- [ ] Add `knip.json` from the shared template.
+- [ ] Add a minimal `knip.json` from the shared starting point.
 - [ ] Add `knip` devDep and `knip` / `knip:strict` scripts to
       `package.json`.
 - [ ] Run `pnpm knip` locally and triage findings:
   - true positives → delete in the same PR
-  - false positives → extend `ignore` / `ignoreExports` /
+  - false positives → extend `ignore` / `ignoreIssues` /
     `ignoreDependencies` in `knip.json`
 - [ ] Add `.github/workflows/knip.yml` (Phase 1, non-blocking).
 - [ ] Open PR with title `chore: adopt knip for dead-code analysis`.

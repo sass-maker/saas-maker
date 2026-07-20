@@ -1,16 +1,28 @@
-# Fleet free/OSS tooling standard (2026)
+# Fleet free/OSS tooling options (2026 snapshot)
 
-This is the canonical reference for which external tools the fleet should use
-to stay **cost-free, OSS-first, and lock-in-resistant**. It covers hosting,
-databases, auth, email, observability, feature flags, CMS, secrets, CI/CD,
-code health, and security scanning. For each category:
+This is a decision-support snapshot for keeping the fleet **cost-conscious,
+OSS-first, and lock-in-resistant**. It is not a live pricing sheet, an adoption
+inventory, or authorization to introduce a new service. Vendor limits and
+licenses change frequently; verify them against the vendor's official source
+at decision time.
 
-- **Adopt** = the fleet default. Already in use or recommended for new work.
+The enforceable defaults remain `AGENTS.md`, project manifests, and approved
+architecture decisions. In particular, the suggested observability products
+in this document (including PostHog, Sentry-compatible backends, Axiom, and
+Uptime Kuma) are options until the fleet owner explicitly approves a common
+stack. This file must not be used to infer that every project is instrumented
+or that Cloudflare plus PostHog provides complete fleet visibility.
+
+It covers hosting, databases, auth, email, observability, feature flags, CMS,
+secrets, CI/CD, code health, and security scanning. For each category:
+
+- **Adopt** = an existing approved default, or a proposal that still requires
+  owner approval before new rollout.
 - **Acceptable** = fine to use when the default doesn't fit, with a stated reason.
 - **Avoid** = known trap (paid-only, killed free tier, license risk, or lock-in).
 
-Current fleet adoption is noted per category so this doubles as an audit of
-what's already standardized vs. what's still ad-hoc.
+Adoption notes are a dated snapshot, not audit evidence. The generated Foundry
+catalog and per-project manifests own current integration state.
 
 Companion docs:
 - `knip-adoption-standard.md` — dead-code analysis rollout.
@@ -402,7 +414,7 @@ free tier. Use when you want a managed status page without self-hosting.
 
 ---
 
-## Summary: the free fleet stack
+## Summary: candidate free fleet stack
 
 | Category | Tool | License | Free tier |
 |---|---|---|---|
@@ -428,8 +440,9 @@ free tier. Use when you want a managed status page without self-hosting.
 | Bundle size | size-limit | MIT | n/a (library) |
 | Perf audits | psi-swarm skill + Lighthouse CI | Apache 2.0 | n/a |
 
-**Total fleet tooling cost at current scale: $0/mo**, with the option to
-add Workers Paid ($5/mo) per project when a project exceeds free quotas.
+The target is a near-zero fixed tooling cost at current scale. Do not rely on
+this snapshot for a dollar total; calculate cost from current vendor pricing
+and actual usage before approving a rollout.
 
 ---
 
@@ -450,10 +463,10 @@ add Workers Paid ($5/mo) per project when a project exceeds free quotas.
 
 ## Maintenance
 
-This doc is the canonical source for fleet tooling decisions. When a
-vendor changes their free tier (they do, often), update this doc in the
-same PR that documents the change. Do not maintain a separate "tools
-spreadsheet" — this is it.
+This doc is a shortlist of options. Approved decisions belong in `AGENTS.md`
+or a relevant architecture decision, while current adoption belongs in the
+generated Foundry catalog and project manifests. When a vendor changes its
+free tier, update or remove the affected snapshot claim.
 
 Re-audit quarterly against:
 1. Free tier changes (PlanetScale and SendGrid are recent cautionary
