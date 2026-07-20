@@ -1,0 +1,668 @@
+{
+  "schemaVersion": 1,
+  "generatedFrom": "catalog/foundry.json",
+  "policy": {
+    "schemaVersion": 1,
+    "mode": "observation",
+    "observationDays": 14,
+    "retention": {
+      "spanDays": 7,
+      "rollupMonths": 13
+    },
+    "sampling": {
+      "successRate": 0.1,
+      "errorsRate": 1,
+      "slowRate": 1,
+      "perRoutePerMinuteCap": 120
+    },
+    "synthetic": {
+      "api": {
+        "coldSamples": 5,
+        "warmSamples": 15,
+        "cadence": "daily"
+      },
+      "web": {
+        "desktopSamples": 5,
+        "mobileSamples": 5,
+        "cadence": "weekly"
+      },
+      "schedulesActive": false
+    },
+    "privacy": {
+      "rawQueries": false,
+      "queryValues": false,
+      "payloadBodies": false,
+      "authorization": false,
+      "userIdentity": false
+    }
+  },
+  "projects": [
+    {
+      "projectId": "codevetter",
+      "name": "CodeVetter",
+      "attention": "my-work",
+      "surfaces": [
+        {
+          "id": "codevetter-web",
+          "projectId": "codevetter",
+          "name": "CodeVetter web",
+          "kind": "web",
+          "url": "https://codevetter.com",
+          "method": "GET",
+          "expectedStatuses": [
+            200
+          ],
+          "timeoutMs": 15000,
+          "criticality": "critical",
+          "freshnessHours": 168,
+          "budget": null
+        }
+      ],
+      "syntheticStatus": "configured",
+      "runtimeStatus": "not-applicable"
+    },
+    {
+      "projectId": "pace",
+      "name": "HeyPace",
+      "attention": "my-work",
+      "surfaces": [
+        {
+          "id": "pace-web",
+          "projectId": "pace",
+          "name": "HeyPace web",
+          "kind": "web",
+          "url": "https://heypace.app",
+          "method": "GET",
+          "expectedStatuses": [
+            200
+          ],
+          "timeoutMs": 15000,
+          "criticality": "critical",
+          "freshnessHours": 168,
+          "budget": null
+        }
+      ],
+      "syntheticStatus": "configured",
+      "runtimeStatus": "not-applicable"
+    },
+    {
+      "projectId": "posttrainllm",
+      "name": "PostTrainLLM",
+      "attention": "my-work",
+      "surfaces": [
+        {
+          "id": "posttrainllm-web",
+          "projectId": "posttrainllm",
+          "name": "PostTrainLLM web",
+          "kind": "web",
+          "url": "https://posttrainllm.com",
+          "method": "GET",
+          "expectedStatuses": [
+            200
+          ],
+          "timeoutMs": 15000,
+          "criticality": "critical",
+          "freshnessHours": 168,
+          "budget": null
+        }
+      ],
+      "syntheticStatus": "configured",
+      "runtimeStatus": "not-applicable"
+    },
+    {
+      "projectId": "high-signal",
+      "name": "High Signal",
+      "attention": "my-work",
+      "surfaces": [
+        {
+          "id": "high-signal-web",
+          "projectId": "high-signal",
+          "name": "High Signal web",
+          "kind": "web",
+          "url": "https://highsignal.app",
+          "method": "GET",
+          "expectedStatuses": [
+            200
+          ],
+          "timeoutMs": 15000,
+          "criticality": "critical",
+          "freshnessHours": 168,
+          "budget": null
+        }
+      ],
+      "syntheticStatus": "configured",
+      "runtimeStatus": "unmeasured"
+    },
+    {
+      "projectId": "personal-website",
+      "name": "Personal website",
+      "attention": "toolbox",
+      "surfaces": [
+        {
+          "id": "personal-website-web",
+          "projectId": "personal-website",
+          "name": "Personal website",
+          "kind": "web",
+          "url": "https://sarthakagrawal.dev",
+          "method": "GET",
+          "expectedStatuses": [
+            200
+          ],
+          "timeoutMs": 15000,
+          "criticality": "standard",
+          "freshnessHours": 168,
+          "budget": null
+        }
+      ],
+      "syntheticStatus": "configured",
+      "runtimeStatus": "not-applicable"
+    },
+    {
+      "projectId": "rolepatch",
+      "name": "RolePatch",
+      "attention": "toolbox",
+      "surfaces": [
+        {
+          "id": "rolepatch-web",
+          "projectId": "rolepatch",
+          "name": "RolePatch web",
+          "kind": "web",
+          "url": "https://rolepatch.com",
+          "method": "GET",
+          "expectedStatuses": [
+            200
+          ],
+          "timeoutMs": 15000,
+          "criticality": "standard",
+          "freshnessHours": 168,
+          "budget": null
+        }
+      ],
+      "syntheticStatus": "configured",
+      "runtimeStatus": "unmeasured"
+    },
+    {
+      "projectId": "karte",
+      "name": "Karte",
+      "attention": "toolbox",
+      "surfaces": [
+        {
+          "id": "karte-web",
+          "projectId": "karte",
+          "name": "Karte web",
+          "kind": "web",
+          "url": "https://karte.cc",
+          "method": "GET",
+          "expectedStatuses": [
+            200
+          ],
+          "timeoutMs": 15000,
+          "criticality": "standard",
+          "freshnessHours": 168,
+          "budget": null
+        }
+      ],
+      "syntheticStatus": "configured",
+      "runtimeStatus": "unmeasured"
+    },
+    {
+      "projectId": "significant-hobbies",
+      "name": "Significant Hobbies",
+      "attention": "toolbox",
+      "surfaces": [
+        {
+          "id": "significant-hobbies-web",
+          "projectId": "significant-hobbies",
+          "name": "Significant Hobbies web",
+          "kind": "web",
+          "url": "https://significanthobbies.com",
+          "method": "GET",
+          "expectedStatuses": [
+            200
+          ],
+          "timeoutMs": 15000,
+          "criticality": "standard",
+          "freshnessHours": 168,
+          "budget": null
+        }
+      ],
+      "syntheticStatus": "configured",
+      "runtimeStatus": "unmeasured"
+    },
+    {
+      "projectId": "reader",
+      "name": "Reader",
+      "attention": "toolbox",
+      "surfaces": [
+        {
+          "id": "reader-web",
+          "projectId": "reader",
+          "name": "Reader web",
+          "kind": "web",
+          "url": "https://read.significanthobbies.com",
+          "method": "GET",
+          "expectedStatuses": [
+            200
+          ],
+          "timeoutMs": 15000,
+          "criticality": "standard",
+          "freshnessHours": 168,
+          "budget": null
+        }
+      ],
+      "syntheticStatus": "configured",
+      "runtimeStatus": "unmeasured"
+    },
+    {
+      "projectId": "anime-list",
+      "name": "Anime List",
+      "attention": "toolbox",
+      "surfaces": [
+        {
+          "id": "anime-list-web",
+          "projectId": "anime-list",
+          "name": "Anime List web",
+          "kind": "web",
+          "url": "https://anime.significanthobbies.com",
+          "method": "GET",
+          "expectedStatuses": [
+            200
+          ],
+          "timeoutMs": 15000,
+          "criticality": "standard",
+          "freshnessHours": 168,
+          "budget": null
+        }
+      ],
+      "syntheticStatus": "configured",
+      "runtimeStatus": "not-applicable"
+    },
+    {
+      "projectId": "swe-interview-prep",
+      "name": "SWE Interview Prep",
+      "attention": "toolbox",
+      "surfaces": [
+        {
+          "id": "swe-interview-prep-web",
+          "projectId": "swe-interview-prep",
+          "name": "SWE Interview Prep web",
+          "kind": "web",
+          "url": "https://learn.significanthobbies.com",
+          "method": "GET",
+          "expectedStatuses": [
+            200
+          ],
+          "timeoutMs": 15000,
+          "criticality": "standard",
+          "freshnessHours": 168,
+          "budget": null
+        }
+      ],
+      "syntheticStatus": "configured",
+      "runtimeStatus": "not-applicable"
+    },
+    {
+      "projectId": "email-manager",
+      "name": "Email Manager",
+      "attention": "toolbox",
+      "surfaces": [
+        {
+          "id": "email-manager-web",
+          "projectId": "email-manager",
+          "name": "Email Manager web",
+          "kind": "web",
+          "url": "https://mail.sassmaker.com",
+          "method": "GET",
+          "expectedStatuses": [
+            200
+          ],
+          "timeoutMs": 15000,
+          "criticality": "standard",
+          "freshnessHours": 168,
+          "budget": null
+        }
+      ],
+      "syntheticStatus": "configured",
+      "runtimeStatus": "unmeasured"
+    },
+    {
+      "projectId": "looptv",
+      "name": "LoopTV",
+      "attention": "toolbox",
+      "surfaces": [
+        {
+          "id": "looptv-web",
+          "projectId": "looptv",
+          "name": "LoopTV web",
+          "kind": "web",
+          "url": "https://tv.significanthobbies.com",
+          "method": "GET",
+          "expectedStatuses": [
+            200
+          ],
+          "timeoutMs": 15000,
+          "criticality": "standard",
+          "freshnessHours": 168,
+          "budget": null
+        }
+      ],
+      "syntheticStatus": "configured",
+      "runtimeStatus": "not-applicable"
+    },
+    {
+      "projectId": "chess",
+      "name": "Chess",
+      "attention": "toolbox",
+      "surfaces": [
+        {
+          "id": "chess-web",
+          "projectId": "chess",
+          "name": "Chess web",
+          "kind": "web",
+          "url": "https://chess.significanthobbies.com",
+          "method": "GET",
+          "expectedStatuses": [
+            200
+          ],
+          "timeoutMs": 15000,
+          "criticality": "low",
+          "freshnessHours": 168,
+          "budget": null
+        }
+      ],
+      "syntheticStatus": "configured",
+      "runtimeStatus": "not-applicable"
+    },
+    {
+      "projectId": "motion",
+      "name": "Motion",
+      "attention": "toolbox",
+      "surfaces": [],
+      "syntheticStatus": "unmeasured",
+      "runtimeStatus": "not-applicable"
+    },
+    {
+      "projectId": "research-papers",
+      "name": "Research Papers",
+      "attention": "toolbox",
+      "surfaces": [
+        {
+          "id": "research-papers-web",
+          "projectId": "research-papers",
+          "name": "Research Papers web",
+          "kind": "web",
+          "url": "https://papers.highsignal.app",
+          "method": "GET",
+          "expectedStatuses": [
+            200
+          ],
+          "timeoutMs": 15000,
+          "criticality": "standard",
+          "freshnessHours": 168,
+          "budget": null
+        }
+      ],
+      "syntheticStatus": "configured",
+      "runtimeStatus": "not-applicable"
+    },
+    {
+      "projectId": "starboard",
+      "name": "Starboard",
+      "attention": "toolbox",
+      "surfaces": [
+        {
+          "id": "starboard-web",
+          "projectId": "starboard",
+          "name": "Starboard web",
+          "kind": "web",
+          "url": "https://starboard.codevetter.com",
+          "method": "GET",
+          "expectedStatuses": [
+            200
+          ],
+          "timeoutMs": 15000,
+          "criticality": "standard",
+          "freshnessHours": 168,
+          "budget": null
+        }
+      ],
+      "syntheticStatus": "configured",
+      "runtimeStatus": "unmeasured"
+    },
+    {
+      "projectId": "free-ai",
+      "name": "Free AI",
+      "attention": "toolbox",
+      "surfaces": [
+        {
+          "id": "free-ai-api",
+          "projectId": "free-ai",
+          "name": "Free AI health",
+          "kind": "api",
+          "url": "https://ai-gateway.sassmaker.com/health",
+          "method": "GET",
+          "expectedStatuses": [
+            200
+          ],
+          "timeoutMs": 10000,
+          "criticality": "standard",
+          "freshnessHours": 24,
+          "budget": null
+        }
+      ],
+      "syntheticStatus": "configured",
+      "runtimeStatus": "unmeasured"
+    },
+    {
+      "projectId": "knowledge-base",
+      "name": "Knowledge Base",
+      "attention": "toolbox",
+      "surfaces": [
+        {
+          "id": "knowledge-base-web",
+          "projectId": "knowledge-base",
+          "name": "Knowledge Base docs",
+          "kind": "web",
+          "url": "https://knowledgebase.sassmaker.com",
+          "method": "GET",
+          "expectedStatuses": [
+            200
+          ],
+          "timeoutMs": 15000,
+          "criticality": "standard",
+          "freshnessHours": 168,
+          "budget": null
+        },
+        {
+          "id": "knowledge-base-api",
+          "projectId": "knowledge-base",
+          "name": "Knowledge Base health",
+          "kind": "api",
+          "url": "https://search.sassmaker.com/v1/healthz",
+          "method": "GET",
+          "expectedStatuses": [
+            200
+          ],
+          "timeoutMs": 10000,
+          "criticality": "standard",
+          "freshnessHours": 24,
+          "budget": null
+        }
+      ],
+      "syntheticStatus": "configured",
+      "runtimeStatus": "unmeasured"
+    },
+    {
+      "projectId": "sass-maker",
+      "name": "SaaS Maker / Foundry",
+      "attention": "foundry",
+      "surfaces": [
+        {
+          "id": "sass-maker-web",
+          "projectId": "sass-maker",
+          "name": "SaaS Maker directory",
+          "kind": "web",
+          "url": "https://sassmaker.com",
+          "method": "GET",
+          "expectedStatuses": [
+            200
+          ],
+          "timeoutMs": 15000,
+          "criticality": "critical",
+          "freshnessHours": 168,
+          "budget": null
+        },
+        {
+          "id": "sass-maker-cockpit-web",
+          "projectId": "sass-maker",
+          "name": "SaaS Maker Cockpit",
+          "kind": "web",
+          "url": "https://app.sassmaker.com",
+          "method": "GET",
+          "expectedStatuses": [
+            200
+          ],
+          "timeoutMs": 15000,
+          "criticality": "critical",
+          "freshnessHours": 168,
+          "budget": null
+        },
+        {
+          "id": "sass-maker-packages-web",
+          "projectId": "sass-maker",
+          "name": "SaaS Maker package docs",
+          "kind": "web",
+          "url": "https://packages.sassmaker.com",
+          "method": "GET",
+          "expectedStatuses": [
+            200
+          ],
+          "timeoutMs": 15000,
+          "criticality": "standard",
+          "freshnessHours": 168,
+          "budget": null
+        },
+        {
+          "id": "sass-maker-skills-web",
+          "projectId": "sass-maker",
+          "name": "SaaS Maker skills",
+          "kind": "web",
+          "url": "https://skills.sassmaker.com",
+          "method": "GET",
+          "expectedStatuses": [
+            200
+          ],
+          "timeoutMs": 15000,
+          "criticality": "standard",
+          "freshnessHours": 168,
+          "budget": null
+        },
+        {
+          "id": "sass-maker-api",
+          "projectId": "sass-maker",
+          "name": "SaaS Maker API health",
+          "kind": "api",
+          "url": "https://api.sassmaker.com/health",
+          "method": "GET",
+          "expectedStatuses": [
+            200
+          ],
+          "timeoutMs": 10000,
+          "criticality": "critical",
+          "freshnessHours": 24,
+          "budget": null
+        }
+      ],
+      "syntheticStatus": "configured",
+      "runtimeStatus": "unmeasured"
+    },
+    {
+      "projectId": "fleet-dashboard",
+      "name": "Fleet Dashboard",
+      "attention": "foundry",
+      "surfaces": [
+        {
+          "id": "fleet-dashboard-web",
+          "projectId": "fleet-dashboard",
+          "name": "Foundry Cockpit",
+          "kind": "web",
+          "url": "https://fleet.sassmaker.com",
+          "method": "GET",
+          "expectedStatuses": [
+            200
+          ],
+          "timeoutMs": 15000,
+          "criticality": "critical",
+          "freshnessHours": 168,
+          "budget": null
+        }
+      ],
+      "syntheticStatus": "configured",
+      "runtimeStatus": "unmeasured"
+    },
+    {
+      "projectId": "psi-swarm",
+      "name": "PSI Swarm",
+      "attention": "foundry",
+      "surfaces": [
+        {
+          "id": "psi-swarm-web",
+          "projectId": "psi-swarm",
+          "name": "PSI Swarm web",
+          "kind": "web",
+          "url": "https://performance.sassmaker.com",
+          "method": "GET",
+          "expectedStatuses": [
+            200
+          ],
+          "timeoutMs": 15000,
+          "criticality": "standard",
+          "freshnessHours": 168,
+          "budget": null
+        }
+      ],
+      "syntheticStatus": "configured",
+      "runtimeStatus": "not-applicable"
+    },
+    {
+      "projectId": "mobile-dev-cockpit",
+      "name": "Mobile Dev Cockpit",
+      "attention": "foundry",
+      "surfaces": [],
+      "syntheticStatus": "unmeasured",
+      "runtimeStatus": "not-applicable"
+    },
+    {
+      "projectId": "drank",
+      "name": "Drank",
+      "attention": "foundry",
+      "surfaces": [
+        {
+          "id": "drank-web",
+          "projectId": "drank",
+          "name": "Drank domain intelligence",
+          "kind": "web",
+          "url": "https://domains.sassmaker.com",
+          "method": "GET",
+          "expectedStatuses": [
+            200
+          ],
+          "timeoutMs": 15000,
+          "criticality": "standard",
+          "freshnessHours": 168,
+          "budget": null
+        }
+      ],
+      "syntheticStatus": "configured",
+      "runtimeStatus": "not-applicable"
+    },
+    {
+      "projectId": "reel-pipeline",
+      "name": "Reel Pipeline",
+      "attention": "foundry",
+      "surfaces": [],
+      "syntheticStatus": "unmeasured",
+      "runtimeStatus": "unmeasured"
+    }
+  ]
+}

@@ -9,6 +9,8 @@
     "updatedAt",
     "sourcePolicy",
     "defaults",
+    "performancePolicy",
+    "performanceSurfaces",
     "owners",
     "attention",
     "automationDetails",
@@ -46,6 +48,11 @@
       }
     },
     "defaults": { "type": "object" },
+    "performancePolicy": { "$ref": "#/$defs/performancePolicy" },
+    "performanceSurfaces": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/performanceSurface" }
+    },
     "owners": { "type": "array", "items": { "$ref": "#/$defs/owner" } },
     "attention": { "type": "array", "items": { "$ref": "#/$defs/namedId" } },
     "automationDetails": { "type": "array", "items": { "$ref": "#/$defs/automationDetail" } },
@@ -102,6 +109,115 @@
         "ownerId": { "$ref": "#/$defs/id" },
         "contracts": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
         "evidenceSources": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+      }
+    },
+    "performancePolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemaVersion", "mode", "observationDays", "retention", "sampling", "synthetic", "privacy"],
+      "properties": {
+        "schemaVersion": { "type": "integer", "const": 1 },
+        "mode": { "enum": ["observation", "alerting", "enforcing"] },
+        "observationDays": { "type": "integer", "minimum": 14 },
+        "retention": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["spanDays", "rollupMonths"],
+          "properties": {
+            "spanDays": { "type": "integer", "minimum": 1, "maximum": 30 },
+            "rollupMonths": { "type": "integer", "minimum": 1, "maximum": 24 }
+          }
+        },
+        "sampling": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["successRate", "errorsRate", "slowRate", "perRoutePerMinuteCap"],
+          "properties": {
+            "successRate": { "type": "number", "minimum": 0, "maximum": 1 },
+            "errorsRate": { "type": "number", "minimum": 0, "maximum": 1 },
+            "slowRate": { "type": "number", "minimum": 0, "maximum": 1 },
+            "perRoutePerMinuteCap": { "type": "integer", "minimum": 1, "maximum": 1000 }
+          }
+        },
+        "synthetic": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["api", "web", "schedulesActive"],
+          "properties": {
+            "api": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["coldSamples", "warmSamples", "cadence"],
+              "properties": {
+                "coldSamples": { "type": "integer", "minimum": 1, "maximum": 20 },
+                "warmSamples": { "type": "integer", "minimum": 1, "maximum": 100 },
+                "cadence": { "const": "daily" }
+              }
+            },
+            "web": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["desktopSamples", "mobileSamples", "cadence"],
+              "properties": {
+                "desktopSamples": { "type": "integer", "minimum": 1, "maximum": 20 },
+                "mobileSamples": { "type": "integer", "minimum": 1, "maximum": 20 },
+                "cadence": { "const": "weekly" }
+              }
+            },
+            "schedulesActive": { "const": false }
+          }
+        },
+        "privacy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["rawQueries", "queryValues", "payloadBodies", "authorization", "userIdentity"],
+          "properties": {
+            "rawQueries": { "const": false },
+            "queryValues": { "const": false },
+            "payloadBodies": { "const": false },
+            "authorization": { "const": false },
+            "userIdentity": { "const": false }
+          }
+        }
+      }
+    },
+    "performanceSurface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "projectId", "name", "kind", "url", "method", "expectedStatuses", "timeoutMs", "criticality", "freshnessHours", "budget"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "projectId": { "$ref": "#/$defs/id" },
+        "name": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["web", "api"] },
+        "url": { "type": "string", "format": "uri", "pattern": "^https://" },
+        "method": { "enum": ["GET", "HEAD"] },
+        "expectedStatuses": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "integer", "minimum": 200, "maximum": 399 }
+        },
+        "timeoutMs": { "type": "integer", "minimum": 250, "maximum": 30000 },
+        "criticality": { "enum": ["critical", "standard", "low"] },
+        "freshnessHours": { "type": "integer", "minimum": 1, "maximum": 720 },
+        "budget": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["metric", "percentile", "limitMs", "mode", "approvedAt"],
+              "properties": {
+                "metric": { "enum": ["lcp", "total", "ttfb"] },
+                "percentile": { "enum": ["p50", "p75", "p90", "p95", "p99"] },
+                "limitMs": { "type": "integer", "minimum": 1 },
+                "mode": { "enum": ["alerting", "enforcing"] },
+                "approvedAt": { "type": "string", "format": "date-time" }
+              }
+            }
+          ]
+        }
       }
     },
     "automationDetail": {

@@ -2,7 +2,7 @@
 
 - [x] 1.1 Record owner approval or revisions for the seven defaults in `design.md` Open Questions before changing product behavior
 - [ ] 1.2 Add versioned performance receipt, rollup, span, downstream-operation, freshness, and query contracts under `internal/contracts/`
-- [ ] 1.3 Extend `catalog/foundry.json` and its validator/generator with web/API performance surface declarations and no duplicate hand-edited registry
+- [x] 1.3 Extend `catalog/foundry.json` and its validator/generator with web/API performance surface declarations and no duplicate hand-edited registry
 - [ ] 1.4 Add contract tests for invalid methods, unsafe URLs, missing provenance, unknown projects, high-cardinality labels, and prohibited sensitive fields
 
 ## 2. Durable Foundry Evidence API

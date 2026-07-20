@@ -5,6 +5,7 @@ import test from 'node:test';
 
 import {
   buildCompatibilityViews,
+  buildPerformanceProjection,
   buildPublicProjection,
   GENERATED_ROOT,
   readCatalog,
@@ -37,6 +38,7 @@ test('canonical catalog validates and bootstraps every current record class', ()
   assert.equal(catalog.skills.length, 23);
   assert.equal(catalog.automations.length, 9);
   assert.equal(catalog.publicRecords.length, 30);
+  assert.equal(catalog.performanceSurfaces.length, 27);
   assert.deepEqual(
     catalog.pillars.map((pillar) => pillar.id),
     ['build', 'market', 'learn', 'visibility', 'control']
@@ -53,6 +55,24 @@ test('canonical catalog validates and bootstraps every current record class', ()
     'unknown',
     'not-applicable',
   ]);
+});
+
+test('performance projection covers maintained products without a duplicate registry', () => {
+  const projection = buildPerformanceProjection(catalog);
+  const maintained = catalog.products.filter((product) => product.lifecycle === 'maintained');
+  assert.equal(projection.projects.length, maintained.length);
+  assert.equal(projection.policy.synthetic.schedulesActive, false);
+  assert.equal(projection.policy.mode, 'observation');
+  assert.ok(
+    projection.projects.some(
+      (project) => project.projectId === 'sass-maker' && project.surfaces.length >= 4
+    )
+  );
+  assert.equal(
+    projection.projects.find((project) => project.projectId === 'mobile-dev-cockpit')
+      ?.runtimeStatus,
+    'not-applicable'
+  );
 });
 
 test('checked-in compatibility views are deterministic and current', async () => {
@@ -172,6 +192,52 @@ test('negative fixtures reject maintained products without observability', () =>
       fixture.products[0].observability.ownerId = '';
     }),
     /requires observability contracts/
+  );
+});
+
+test('negative fixtures reject unsafe performance methods and URLs', () => {
+  assertRejects(
+    negativeFixture((fixture) => {
+      fixture.performanceSurfaces[0].method = 'POST';
+      fixture.performanceSurfaces[0].url = 'http://localhost:8787/probe?token=value';
+    }),
+    /method must be GET or HEAD/
+  );
+  assertRejects(
+    negativeFixture((fixture) => {
+      fixture.performanceSurfaces[0].url = 'https://example.com/probe?token=value';
+    }),
+    /must not contain query or fragment/
+  );
+});
+
+test('negative fixtures reject unknown performance projects and missing provenance', () => {
+  assertRejects(
+    negativeFixture((fixture) => {
+      fixture.performanceSurfaces[0].projectId = 'unknown-project';
+    }),
+    /references unknown product/
+  );
+  assertRejects(
+    negativeFixture((fixture) => {
+      fixture.performanceSurfaces[0].expectedStatuses = [];
+    }),
+    /requires expected statuses/
+  );
+});
+
+test('negative fixtures keep schedules inert and privacy closed', () => {
+  assertRejects(
+    negativeFixture((fixture) => {
+      fixture.performancePolicy.synthetic.schedulesActive = true;
+    }),
+    /schedules must remain inert/
+  );
+  assertRejects(
+    negativeFixture((fixture) => {
+      fixture.performancePolicy.privacy.queryValues = true;
+    }),
+    /privacy policy must forbid/
   );
 });
 
