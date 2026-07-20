@@ -1,4 +1,4 @@
-export type AdvisorTrend = {
+type AdvisorTrend = {
   direction: 'up' | 'down' | 'flat' | 'unknown';
   delta: number | null;
   periodDays: number | null;
@@ -10,7 +10,7 @@ export type DrAdvisorRequest = {
   trend: AdvisorTrend;
 };
 
-export type DrAdvisorAction = {
+type DrAdvisorAction = {
   priority: number;
   title: string;
   reason: string;
