@@ -120,15 +120,18 @@ scan_repo() {
   fi
 
   local upstream
-  upstream="$(git -C "$repo" rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null || true)"
+  upstream="$(git -C "$repo" for-each-ref --format='%(upstream:short)' "refs/heads/$branch")"
 
   if [[ -n "$upstream" ]]; then
-    read -r behind ahead < <(
-      git -C "$repo" rev-list --left-right --count "$upstream"...HEAD 2>/dev/null
-    )
-
     echo "Upstream: $upstream"
-    echo "Remote gap: ahead $ahead, behind $behind"
+    if git -C "$repo" rev-parse --verify --quiet "$upstream^{commit}" >/dev/null; then
+      read -r behind ahead < <(
+        git -C "$repo" rev-list --left-right --count "$upstream"...HEAD 2>/dev/null
+      )
+      echo "Remote gap: ahead $ahead, behind $behind"
+    else
+      echo "Remote gap: upstream branch is gone"
+    fi
   else
     echo "Upstream: none"
     echo "Remote gap: no upstream configured"

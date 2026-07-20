@@ -37,3 +37,4 @@ Format (one table row per delegation):
 | 2026-07-20 | codex | implement | saas-maker performance evidence API | accepted-with-fixes | useful ingestion and query foundation; parent fixed auth middleware interception, bounds, and project scoping |
 | 2026-07-20 | codex | implement | saas-maker synthetic performance runners | accepted | bounded safe-method runner and deterministic tests were directly integrated; 8 runner and adapter tests passed |
 | 2026-07-20 | codex | implement | saas-maker Cockpit Speed workspace | accepted-with-fixes | useful dense workspace structure; parent removed populated demo fallback and wired authenticated evidence reads |
+| 2026-07-20 | codex | review | 12 maintained cleanup PRs | accepted-with-fixes | correctly cleared 10 PRs and caught Starboard rate-limit plus Email Manager triage regressions; parent had already fixed Starboard |
