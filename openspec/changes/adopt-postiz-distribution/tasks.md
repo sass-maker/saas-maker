@@ -24,7 +24,7 @@
 - [x] 4.1 Inventory Reel Pipeline modules as generation, distribution, mixed, or obsolete and lock the inventory with a static test.
 - [ ] 4.2 Establish `services/content-factory` with the generation-only contract and migrate the canonical render/package entrypoints while preserving history.
 - [ ] 4.3 Route existing render engines through Content Factory manifests and verify current local generation smoke cases.
-- [ ] 4.4 Add fail-closed compatibility shims for direct Reel scheduling, posting, OAuth, and metrics commands; keep them disabled until final deletion.
+- [x] 4.4 Add fail-closed compatibility shims for direct Reel scheduling, posting, OAuth, and metrics commands; keep them disabled until final deletion.
 
 ## 5. Evidence and feedback loop
 

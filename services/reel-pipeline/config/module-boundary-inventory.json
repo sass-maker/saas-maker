@@ -93,11 +93,13 @@
     ],
     "distribution": [
       "scripts/instagram-oauth-bootstrap.js",
+      "scripts/legacy-distribution-disabled.js",
       "scripts/refresh-instagram-tokens.js",
       "scripts/social-readiness.js",
       "scripts/youtube-oauth-bootstrap.js",
       "src/config/social-accounts.js",
       "src/distribution.js",
+      "src/legacy-distribution-guard.js",
       "src/posting.js",
       "src/publication-ledger.js",
       "src/publishers/instagram.js",
