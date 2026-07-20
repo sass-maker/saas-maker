@@ -84,7 +84,7 @@ fn recording_runner_captures_render_pro_invocation() {
     assert_eq!(calls.len(), 1);
     assert_eq!(
         calls[0].args,
-        vec!["scripts/render-pro.js", "demo-reader-1"]
+        vec!["../content-factory/scripts/render-pro.js", "demo-reader-1"]
     );
     assert_eq!(
         calls[0].env.get("REEL_VARIANT_COUNT").map(String::as_str),

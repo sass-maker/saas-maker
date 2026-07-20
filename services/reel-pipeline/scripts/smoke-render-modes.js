@@ -130,6 +130,7 @@ function runRenderAccepted(mode, options = {}) {
   const payload = parseLastJson(result.stdout);
   const provider = payload?.results?.[0]?.provider ?? 'unknown';
   const status = payload?.results?.[0]?.status ?? 'unknown';
+  const manifestPath = payload?.results?.[0]?.artifact_manifest_path ?? null;
   if (options.expectedProvider && provider !== options.expectedProvider) {
     return {
       name: mode,
@@ -138,10 +139,18 @@ function runRenderAccepted(mode, options = {}) {
       hint: options.note,
     };
   }
+  if (status === 'completed' && !manifestPath) {
+    return {
+      name: mode,
+      status: 'fail',
+      detail: `provider=${provider} completed without Content Factory manifest`,
+      hint: options.note,
+    };
+  }
   return {
     name: mode,
     status: 'ok',
-    detail: `provider=${provider} status=${status}`,
+    detail: `provider=${provider} status=${status} manifest=${manifestPath ?? 'pending'}`,
     hint: options.note,
   };
 }

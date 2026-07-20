@@ -1,0 +1,14 @@
+{
+  "schema": "content-factory.render-engine-fixtures.v1",
+  "engines": [
+    { "mode": "mock", "provider": "mock", "file": "mock.mp4", "content": "mock-video" },
+    { "mode": "html-composition", "provider": "html-composition", "file": "composition.html", "content": "<main>preview</main>" },
+    { "mode": "ascii", "provider": "ascii-animation", "file": "ascii.mp4", "content": "ascii-video" },
+    { "mode": "grok-video", "provider": "grok-video", "file": "grok.mp4", "content": "grok-video" },
+    { "mode": "reel-maker", "provider": "reel-maker", "file": "reel-maker.mp4", "content": "reel-maker-video" },
+    { "mode": "moneyprinterturbo", "provider": "moneyprinterturbo", "file": "moneyprinter.mp4", "content": "moneyprinter-video" },
+    { "mode": "render-pro", "provider": "render-pro", "file": "render-pro.mp4", "content": "render-pro-video" },
+    { "mode": "kokoro", "provider": "kokoro", "file": "kokoro.mp4", "content": "kokoro-video" },
+    { "mode": "brand-video", "provider": "brand-video-local", "file": "brand-video.mp4", "content": "brand-video" }
+  ]
+}
