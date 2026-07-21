@@ -67,6 +67,21 @@
       "pillarId": "build"
     },
     {
+      "id": "saas-maker",
+      "name": "SaaS Maker",
+      "description": "Public product directory, maintained package catalogue, and shared feedback layer.",
+      "url": "https://sassmaker.com",
+      "tier": "active",
+      "category": "product",
+      "priority": "P1",
+      "spotlight": true,
+      "maturity": "maintained",
+      "repositoryUrl": "https://github.com/sass-maker/saas-maker",
+      "changelogUrl": "https://github.com/sass-maker/saas-maker/commits/main",
+      "roadmapUrl": "https://github.com/sass-maker/saas-maker/blob/main/PROJECT_STATUS.md",
+      "pillarId": "market"
+    },
+    {
       "id": "anime-list",
       "name": "Anime List",
       "description": "Anime and manga discovery with multi-axis filtering and personal watchlists.",
@@ -215,21 +230,6 @@
       "changelogUrl": "https://github.com/sarthakagrawal927/rolepatch/commits/main",
       "roadmapUrl": "https://github.com/sarthakagrawal927/rolepatch/blob/main/PROJECT_STATUS.md",
       "pillarId": "build"
-    },
-    {
-      "id": "sass-maker",
-      "name": "SaaS Maker",
-      "description": "Public product directory, maintained package catalogue, and shared feedback layer.",
-      "url": "https://sassmaker.com",
-      "tier": "active",
-      "category": "product",
-      "priority": "P1",
-      "spotlight": false,
-      "maturity": "maintained",
-      "repositoryUrl": "https://github.com/sass-maker/saas-maker",
-      "changelogUrl": "https://github.com/sass-maker/saas-maker/commits/main",
-      "roadmapUrl": "https://github.com/sass-maker/saas-maker/blob/main/PROJECT_STATUS.md",
-      "pillarId": "market"
     },
     {
       "id": "personal-website",
