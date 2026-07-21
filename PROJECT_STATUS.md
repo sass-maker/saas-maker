@@ -22,6 +22,11 @@ CodeVetter and App Health remain independent.
 
 ## Timeline
 
+- **2026-07-22 — Feedback package 0.3.0 prepared:** Versioned the current
+  page-element anchoring release, restored React 18 and 19 peer compatibility,
+  completed npm metadata and quickstart styling instructions, and verified the
+  packed artifact in clean React 18 and React 19 consumers. Publishing remains
+  a separate manual release action.
 - **2026-07-21 — Narrow production deployed:** Directory, feedback API,
   feedback inbox, and Blume package docs are live. The directory consumes the
   synchronized Fleet projection, shows the five approved spotlight entries,
@@ -70,6 +75,7 @@ CodeVetter and App Health remain independent.
 
 - Keep the API, Cockpit, directory, and package docs green through the shared
   post-deploy smoke gate.
+- Publish `@saas-maker/feedback@0.3.0` after the manual npm release is approved.
 - Decide separately whether historical npm packages should be deprecated; this
   cleanup does not change npm registry state.
 

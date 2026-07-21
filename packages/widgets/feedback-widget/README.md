@@ -14,6 +14,7 @@ pnpm add @saas-maker/feedback
 
 ```tsx
 import { FeedbackWidget } from '@saas-maker/feedback'
+import '@saas-maker/feedback/dist/index.css'
 
 function App() {
   return (
