@@ -22,6 +22,11 @@ CodeVetter and App Health remain independent.
 
 ## Timeline
 
+- **2026-07-21 — Narrow production deployed:** Directory, feedback API,
+  feedback inbox, and Blume package docs are live. The directory consumes the
+  synchronized Fleet projection, shows the five approved spotlight entries,
+  and links package docs to their live Pages origin until the vanity domain is
+  attached. Shared production smoke passes 9/9.
 - **2026-07-21 — Production cutover authorized:** The narrowed source, four
   canonical Cloudflare targets, and manual deploy commands are the approved
   production state. Every deploy remains gated on clean, synchronized `main`,
@@ -77,4 +82,11 @@ CodeVetter and App Health remain independent.
 
 ### Blocked
 
-- None.
+- `packages.sassmaker.com` still needs authenticated Cloudflare Pages custom-
+  domain attachment and DNS verification. Public links use the healthy Pages
+  origin in the meantime.
+- A zone-level cache policy on `sassmaker.com` still overrides the tracked
+  revalidation headers with a 24-hour edge TTL and seven-day stale window.
+  Purge the existing homepage object and remove/adjust that override in the
+  authenticated Cloudflare dashboard; source-level HTML caching is already
+  corrected.
