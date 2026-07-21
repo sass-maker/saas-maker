@@ -16,6 +16,7 @@
     "build:docs": "pnpm -F @saas-maker/docs-blume build",
     "catalog:sync-public": "node scripts/sync-fleet-public-products.mjs",
     "catalog:check-public": "node scripts/sync-fleet-public-products.mjs --check",
+    "catalog:validate-public": "node scripts/sync-fleet-public-products.mjs --validate",
     "check:docs": "node scripts/check-docs.mjs",
     "test": "vitest run tests/api/*.test.ts",
     "lint": "biome check .",

@@ -17,21 +17,13 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v6
-      - name: Check out Fleet public projection
-        uses: actions/checkout@v6
-        with:
-          repository: sass-maker/fleet-workspace
-          path: fleet-workspace
-          sparse-checkout: fleet-ops/public/products.json
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v6
         with:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm catalog:check-public
-        env:
-          FLEET_PUBLIC_PRODUCTS_PATH: ${{ github.workspace }}/fleet-workspace/fleet-ops/public/products.json
+      - run: pnpm catalog:validate-public
       - run: pnpm check:docs
       - run: pnpm test
       - run: pnpm typecheck
