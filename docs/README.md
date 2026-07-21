@@ -1,6 +1,6 @@
 # SaaS Maker documentation
 
-This tree is the source for packages.sassmaker.com. Blume is the only
+This tree is the source for saas-maker-packages.pages.dev. Blume is the only
 presentation layer.
 
 The public documentation covers @saas-maker/feedback, its project keys, and its

@@ -34,7 +34,7 @@ export default defineConfig({
   ai: { llmsTxt: true },
   seo: { agentReadability: true, sitemap: true, robots: true },
   deployment: {
-    site: 'https://packages.sassmaker.com',
+    site: 'https://saas-maker-packages.pages.dev',
     base: '/',
     output: 'static',
   },

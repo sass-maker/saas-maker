@@ -1,20 +1,20 @@
 {
   "name": "SaaS Maker Packages",
   "description": "Documentation for the SaaS Maker feedback package, project keys, and feedback API.",
-  "llms": "https://packages.sassmaker.com/llms.txt",
-  "llmsFull": "https://packages.sassmaker.com/llms-full.txt",
+  "llms": "https://saas-maker-packages.pages.dev/llms.txt",
+  "llmsFull": "https://saas-maker-packages.pages.dev/llms-full.txt",
   "surfaces": [
     {
       "id": "docs",
       "name": "Package documentation",
-      "url": "https://packages.sassmaker.com/",
-      "md": "https://packages.sassmaker.com/index.md"
+      "url": "https://saas-maker-packages.pages.dev/",
+      "md": "https://saas-maker-packages.pages.dev/index.md"
     },
     {
       "id": "feedback",
       "name": "Feedback package",
-      "url": "https://packages.sassmaker.com/widgets/feedback/",
-      "md": "https://packages.sassmaker.com/widgets/feedback.md"
+      "url": "https://saas-maker-packages.pages.dev/widgets/feedback/",
+      "md": "https://saas-maker-packages.pages.dev/widgets/feedback.md"
     }
   ]
 }

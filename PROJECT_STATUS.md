@@ -48,7 +48,7 @@ CodeVetter and App Health remain independent.
 | Surface | Purpose |
 | --- | --- |
 | sassmaker.com | Public product directory |
-| saas-maker-packages.pages.dev | Feedback package documentation (vanity domain pending) |
+| saas-maker-packages.pages.dev | Canonical Blume documentation for the feedback package |
 | api.sassmaker.com | Feedback and project-key API |
 | app.sassmaker.com | Private feedback inbox |
 | @saas-maker/feedback | Maintained public runtime package |
@@ -82,9 +82,6 @@ CodeVetter and App Health remain independent.
 
 ### Blocked
 
-- `packages.sassmaker.com` still needs authenticated Cloudflare Pages custom-
-  domain attachment and DNS verification. Public links use the healthy Pages
-  origin in the meantime.
 - A zone-level cache policy on `sassmaker.com` still overrides the tracked
   revalidation headers with a 24-hour edge TTL and seven-day stale window.
   Purge the existing homepage object and remove/adjust that override in the

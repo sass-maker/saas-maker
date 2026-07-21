@@ -11,7 +11,7 @@ product repositories.
 ## Surfaces
 
 - https://sassmaker.com — public product directory built from Fleet's checked-in public projection.
-- https://packages.sassmaker.com — Blume documentation for @saas-maker/feedback.
+- https://saas-maker-packages.pages.dev — Blume documentation for @saas-maker/feedback.
 - https://api.sassmaker.com — feedback submission, image upload, project-key management, and feedback review API.
 - https://app.sassmaker.com — private feedback inbox and project-key manager.
 

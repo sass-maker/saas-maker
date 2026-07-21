@@ -10,7 +10,7 @@ author content inside this package — edit `docs/` and rebuild.
 only the feedback package, project keys, and retained API. Fleet operations and
 other products are documented in their owning repositories.
 
-The production target is `https://packages.sassmaker.com`. Deployment remains
+The canonical production target is `https://saas-maker-packages.pages.dev`. Deployment remains
 manual and requires the normal release gate; a build does not publish anything.
 
 ```bash

@@ -18,7 +18,7 @@
 const API = process.env.SAAS_MAKER_API ?? 'https://api.sassmaker.com';
 const APP = process.env.SAAS_MAKER_APP ?? 'https://app.sassmaker.com';
 const DIRECTORY = process.env.SAAS_MAKER_DIRECTORY ?? 'https://sassmaker.com';
-const DOCS = process.env.SAAS_MAKER_DOCS ?? 'https://packages.sassmaker.com';
+const DOCS = process.env.SAAS_MAKER_DOCS ?? 'https://saas-maker-packages.pages.dev';
 
 const checks = [
   {
