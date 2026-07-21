@@ -1,7 +1,5 @@
-# Cache the HTML envelope at the CF edge so repeat hits skip the origin.
-# CF Pages was returning cf-cache-status: DYNAMIC with just s-maxage;
-# adding explicit max-age (browser cache) is the tell CF Pages needs to
-# mark HTML responses as cacheable at edge too.
+# Revalidate HTML so a successful Pages deployment becomes visible promptly.
+# Hash-stable Astro bundles remain immutable below.
 /*
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
@@ -9,10 +7,13 @@
   Permissions-Policy: geolocation=(), microphone=(), camera=()
 
 /
-  Cache-Control: public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800
+  Cache-Control: public, max-age=0, must-revalidate
 
 /*.html
-  Cache-Control: public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800
+  Cache-Control: public, max-age=0, must-revalidate
+
+/p/*
+  Cache-Control: public, max-age=0, must-revalidate
 
 # Astro emits hash-stable bundles under /_astro/.
 /_astro/*
