@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-set -euo pipefail
-
-cd /Users/assistant/Desktop/fleet/saas-maker
-exec node /Users/assistant/Desktop/fleet/saas-maker/packages/cli/dist/index.js "$@"

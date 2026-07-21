@@ -23,7 +23,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         {/* Logo */}
         <div className="border-b border-border/70 p-4">
           <div className="flex items-center justify-between">
-            <Link href="/projects" className="group flex min-w-0 items-center gap-2">
+            <Link href="/projects/feedback" className="group flex min-w-0 items-center gap-2">
               <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-cyan-400/30 bg-cyan-400/10 text-cyan-200 shadow-[0_0_28px_-16px_rgba(125,211,252,0.95)]">
                 <ShieldCheck className="h-4 w-4" />
               </span>
@@ -32,7 +32,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
                   SaaS Maker
                 </span>
                 <span className="block truncate font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                  Fleet cockpit
+                  Feedback inbox
                 </span>
               </span>
             </Link>
@@ -40,7 +40,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           </div>
           <div className="mt-4 flex items-center gap-2 rounded-md border border-border/60 bg-muted/25 px-3 py-2 text-xs text-muted-foreground">
             <Activity className="h-3.5 w-3.5 text-emerald-400" />
-            <span className="truncate">Prod-first operations</span>
+            <span className="truncate">Customer feedback</span>
           </div>
         </div>
 
@@ -61,7 +61,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         <header className="md:hidden sticky top-0 z-50 border-b border-border/70 bg-background/90 px-4 h-14 flex items-center justify-between backdrop-blur-xl">
           <div className="flex items-center gap-2">
             <MobileNav />
-            <Link href="/projects" className="text-base font-semibold">
+            <Link href="/projects/feedback" className="text-base font-semibold">
               SaaS Maker
             </Link>
           </div>

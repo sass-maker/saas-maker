@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Post-deploy smoke test for Foundry production.
+ * Post-deploy smoke test for SaaS Maker production.
  *
  * Hits a fixed set of endpoints that, if any single one breaks, indicate
  * a broken release. Used as the final gate after `wrangler deploy` for
@@ -12,11 +12,11 @@
  *
  * Run:
  *   node scripts/smoke-prod.mjs
- *   FOUNDRY_API=https://api.sassmaker.com FOUNDRY_APP=https://app.sassmaker.com node scripts/smoke-prod.mjs
+ *   SAAS_MAKER_API=https://api.sassmaker.com SAAS_MAKER_APP=https://app.sassmaker.com node scripts/smoke-prod.mjs
  */
 
-const API = process.env.FOUNDRY_API ?? 'https://api.sassmaker.com';
-const APP = process.env.FOUNDRY_APP ?? 'https://app.sassmaker.com';
+const API = process.env.SAAS_MAKER_API ?? 'https://api.sassmaker.com';
+const APP = process.env.SAAS_MAKER_APP ?? 'https://app.sassmaker.com';
 
 const checks = [
   {

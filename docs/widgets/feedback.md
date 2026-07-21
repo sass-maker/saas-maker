@@ -1,69 +1,34 @@
 ---
-title: "Feedback Widget"
-description: "Embed a feedback button and modal in your React app."
+title: Feedback widget
+description: Configure the React feedback widget.
 ---
 
-Drop-in React component that adds a floating feedback button to your app. Users can submit bugs, feature requests, and general feedback without leaving your site.
+FeedbackWidget accepts:
 
-## Installation
+| Prop | Purpose |
+| --- | --- |
+| projectId | Required public project key |
+| apiBaseUrl | Optional API override; defaults to api.sassmaker.com |
+| userEmail | Pre-fill and lock the submitter email |
+| userName | Pre-fill the submitter name |
+| types | Allow bug, feature, feedback, or a subset |
+| position | bottom-right or bottom-left |
+| theme | light, dark, or auto |
+| accentColor | Brand colour used by the widget |
+| triggerText | Trigger-button copy |
+| enablePointing | Let the user attach a page element; enabled by default |
 
-```bash
-npm install @saas-maker/feedback
-```
+The stylesheet is scoped under the widget root and does not intentionally style
+the host application.
 
-## Usage
-
-```tsx
-import { FeedbackWidget } from '@saas-maker/feedback';
-
-function App() {
-  return (
-    <FeedbackWidget
-      projectId="pk_your_api_key"
-      apiBaseUrl="https://api.sassmaker.com"
-    />
-  );
-}
-```
-
-The widget renders a floating trigger button. Clicking it opens a modal where users can submit feedback with a title, description, type selector, and optional screenshot upload.
-
-## Props
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `projectId` | `string` | -- | Your project API key (required) |
-| `apiBaseUrl` | `string` | -- | API base URL (required) |
-| `userEmail` | `string` | -- | Pre-fill the submitter email |
-| `userName` | `string` | -- | Pre-fill the submitter name |
-| `types` | `FeedbackType[]` | `['bug', 'feature', 'feedback']` | Which feedback types to show |
-| `position` | `'bottom-right' \| 'bottom-left'` | `'bottom-right'` | Trigger button position |
-| `theme` | `'light' \| 'dark' \| 'auto'` | `'auto'` | Color theme |
-| `accentColor` | `string` | `'#1464ff'` | Brand accent color |
-| `triggerText` | `string` | `'Feedback'` | Text on the trigger button |
-
-## Pre-filling user info
-
-If your users are already signed in, pass their email and name to skip those fields in the form:
-
-```tsx
+~~~tsx
 <FeedbackWidget
-  projectId="pk_your_api_key"
-  apiBaseUrl="https://api.sassmaker.com"
-  userEmail={currentUser.email}
-  userName={currentUser.name}
+  projectId="pk_example"
+  types={['bug', 'feature']}
+  position="bottom-left"
+  accentColor="#7c3aed"
+  triggerText="Send feedback"
 />
-```
+~~~
 
-## Theming
-
-The widget supports light, dark, and auto themes. The `auto` theme follows the user's system preference. You can also set a custom accent color:
-
-```tsx
-<FeedbackWidget
-  projectId="pk_your_api_key"
-  apiBaseUrl="https://api.sassmaker.com"
-  theme="dark"
-  accentColor="#ff6b00"
-/>
-```
+Screenshots accept JPEG, PNG, GIF, and WebP files up to 5 MB.

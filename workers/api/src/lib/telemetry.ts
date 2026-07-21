@@ -7,7 +7,7 @@
  * This reduces N individual HTTP requests per request cycle to 1 batch call.
  */
 
-const LEGACY_PROJECT_ID_KEYS = ['project_slug', 'project', 'foundry_project_id'] as const;
+const LEGACY_PROJECT_ID_KEYS = ['project_slug', 'project'] as const;
 
 /** Normalize fleet project identity to a canonical `project_id` property. */
 function withCanonicalProjectId(properties: Record<string, unknown> = {}): Record<string, unknown> {

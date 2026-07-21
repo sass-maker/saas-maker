@@ -1,10 +1,4 @@
-export {
-  LOCAL_ACCESS_COOKIE,
-  getLocalProtectionToken,
-  isLocalAuthBypassEnabled,
-  isLocalHost,
-  isLocalProtectionEnabled,
-} from './local-auth-edge';
+export { isLocalAuthBypassEnabled } from './local-auth-edge';
 
 export const LOCAL_DEV_SESSION_TOKEN = 'local-dev-session';
 
@@ -43,13 +37,9 @@ function readConfigToken(filePath: string): string | undefined {
 
 export function getLocalSessionToken(): string {
   const home = process.env.HOME;
-  const configCandidates = home
-    ? [`${home}/.foundry/config.json`, `${home}/.saasmaker/config.json`]
-    : [];
+  const configCandidates = home ? [`${home}/.saasmaker/config.json`] : [];
   const configuredToken =
     process.env.SAASMAKER_LOCAL_SESSION_TOKEN ||
-    process.env.FOUNDRY_API_KEY ||
-    process.env.FOUNDRY_SESSION_TOKEN ||
     configCandidates.map(readConfigToken).find(Boolean);
 
   return configuredToken || LOCAL_DEV_SESSION_TOKEN;

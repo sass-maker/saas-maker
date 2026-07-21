@@ -35,15 +35,9 @@ interface FeedbackTableProps {
   feedback: FeedbackRecord[];
   onStatusChange?: (item: FeedbackRecord, status: AnyFeedbackStatus) => Promise<void>;
   onDelete?: (id: string) => Promise<void>;
-  onMoveToRoadmap?: (item: FeedbackRecord) => Promise<void>;
 }
 
-export function FeedbackTable({
-  feedback,
-  onStatusChange,
-  onDelete,
-  onMoveToRoadmap,
-}: FeedbackTableProps) {
+export function FeedbackTable({ feedback, onStatusChange, onDelete }: FeedbackTableProps) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selected = feedback.find((f) => f.id === selectedId) ?? null;
 
@@ -121,7 +115,6 @@ export function FeedbackTable({
           if (onDelete) await onDelete(id);
           setSelectedId(null);
         }}
-        onMoveToRoadmap={onMoveToRoadmap}
       />
     </>
   );

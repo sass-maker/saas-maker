@@ -26,7 +26,7 @@
 
   <!-- top tag row -->
   <g font-family="JetBrains Mono, ui-monospace, monospace" font-size="16" fill="#7a7568" letter-spacing="2">
-    <text x="80" y="100">FOUNDRY · WORKSHOP DOSSIER</text>
+    <text x="80" y="100">SAAS MAKER · PRODUCT DIRECTORY</text>
     <text x="1120" y="100" text-anchor="end">sassmaker.com</text>
   </g>
 
@@ -34,16 +34,16 @@
   <rect x="80" y="200" width="64" height="6" rx="3" fill="url(#copper)"/>
 
   <!-- main wordmark -->
-  <text x="80" y="300" font-size="120" font-weight="800" fill="#ede8dd" letter-spacing="-2">Foundry</text>
+  <text x="80" y="300" font-size="112" font-weight="800" fill="#ede8dd" letter-spacing="-2">SaaS Maker</text>
 
   <!-- tagline -->
   <text x="80" y="380" font-size="34" font-weight="500" fill="#b9b3a6">
-    A workshop of <tspan fill="url(#copper)" font-weight="700">29 projects</tspan>, one shared operating layer
+    Maintained products, <tspan fill="url(#copper)" font-weight="700">clearly mapped</tspan>
   </text>
 
   <!-- subtitle / description -->
   <text x="80" y="440" font-size="22" font-weight="400" fill="#7a7568">
-    Twenty-something products, forged by one builder — open-source underneath.
+    Canonical sites, source, changelogs, roadmaps, and a focused feedback package.
   </text>
 
   <!-- bottom meta row -->

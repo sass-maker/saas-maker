@@ -1,8 +1,4 @@
-/* Foundry's editorial landing page sits on top of Blume's normal prose theme. */
-
-article.prose > h1[id] {
-  display: none;
-}
+/* SaaS Maker's editorial package page sits on top of Blume's prose theme. */
 
 article.prose .fnd-meta {
   align-items: center;

@@ -12,9 +12,9 @@ export function GET() {
     '',
   ]);
   const body = [
-    '# SaaS Maker Foundry — full agent index',
+    '# SaaS Maker — full product index',
     '',
-    'Generated from catalog/foundry.json. Configuration and links do not imply fresh production verification.',
+    'Generated from the checked-in Fleet public projection. Configuration and links do not imply fresh production verification.',
     '',
     ...products,
   ].join('\n');

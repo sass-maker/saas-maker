@@ -12,8 +12,8 @@ export default async function FeedbackBoardPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Feature Requests"
-        description="All feature requests across your projects"
+        title="Feedback inbox"
+        description="Review customer requests across products using the SaaS Maker feedback package."
       />
       <FeedbackBoard />
     </div>

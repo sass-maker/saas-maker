@@ -1,10 +1,7 @@
 import Link from 'next/link';
-import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@foundry/ui';
+import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@saas-maker/ui';
 import { CreateProjectDialog } from '@/components/create-project-dialog';
 import { PageHeader } from '@/components/page-header';
-import { FleetMonitor } from '@/components/fleet-monitor';
-import { ErrorFeed } from '@/components/error-feed';
-import { LatencyMap } from '@/components/latency-map';
 import { OnboardingFlow } from '@/components/onboarding/OnboardingFlow';
 import { getDashboardSession } from '@/lib/server-session';
 import { redirect } from 'next/navigation';
@@ -16,7 +13,6 @@ import {
   Boxes,
   CalendarDays,
   Cloud,
-  Database,
   KeyRound,
   NotebookText,
   AlertCircle,
@@ -50,26 +46,19 @@ export default async function ProjectsPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Fleet"
-        description="Monitor and manage your project fleet."
+        title="Project keys"
+        description="Manage the product identities accepted by the SaaS Maker feedback package."
         action={<CreateProjectDialog />}
       />
-
-      <FleetMonitor />
-
-      <div className="grid gap-6 md:grid-cols-2">
-        <ErrorFeed />
-        <LatencyMap />
-      </div>
 
       <div className="flex flex-col gap-3 pt-8 sm:flex-row sm:items-end sm:justify-between">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <Cloud className="h-5 w-5 text-muted-foreground" />
-            <h2 className="text-lg font-semibold tracking-tight">Cloud Blocks</h2>
+            <h2 className="text-lg font-semibold tracking-tight">Feedback projects</h2>
           </div>
           <p className="text-sm text-muted-foreground">
-            Active API projects connected to this cockpit.
+            Each project has a key used only to submit and review feedback.
           </p>
         </div>
         {!error && projects.length > 0 && (
@@ -135,10 +124,6 @@ export default async function ProjectsPage() {
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <CalendarDays className="h-3.5 w-3.5" />
                     <span>Created {formatDate(project.created_at)}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <Database className="h-3.5 w-3.5" />
-                    <span>{project.embedding_model ?? 'Default model'}</span>
                   </div>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <NotebookText className="h-3.5 w-3.5" />

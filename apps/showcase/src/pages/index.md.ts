@@ -13,9 +13,9 @@ export function GET() {
     '',
   ]);
   const body = [
-    '# SaaS Maker Foundry',
+    '# SaaS Maker',
     '',
-    'Public directory for the maintained product fleet. Ignored, frozen, retired, and removed products are excluded.',
+    'Public directory for maintained products and home of the @saas-maker/feedback package. Ignored, frozen, retired, and removed products are excluded.',
     '',
     ...products,
   ].join('\n');

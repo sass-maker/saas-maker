@@ -15,10 +15,9 @@ on:
       - 'PROJECT_STATUS.md'
       - 'README.md'
       - 'CONTRIBUTING.md'
-      - 'AUDIT.md'
-      - 'WORKFLOW.md'
       - 'scripts/check-docs.mjs'
       - 'apps/docs-blume/blume.config.ts'
+      - 'apps/docs-blume/package.json'
       - '.github/workflows/docs.yml'
   push:
     branches: [main]
@@ -29,10 +28,9 @@ on:
       - 'PROJECT_STATUS.md'
       - 'README.md'
       - 'CONTRIBUTING.md'
-      - 'AUDIT.md'
-      - 'WORKFLOW.md'
       - 'scripts/check-docs.mjs'
       - 'apps/docs-blume/blume.config.ts'
+      - 'apps/docs-blume/package.json'
       - '.github/workflows/docs.yml'
 
 jobs:

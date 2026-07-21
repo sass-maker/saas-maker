@@ -1,5 +1,5 @@
 /* ──────────────────────────────────────────────────────────────
-   Foundry — workshop dossier
+   SaaS Maker — product directory
    industrial · editorial · warm-dark
    ────────────────────────────────────────────────────────────── */
 
@@ -29,7 +29,7 @@
   --line-bright: #2c313c;
   --line-glow: rgba(224, 123, 58, 0.35);
 
-  /* foundry accents */
+  /* warm directory accents */
   --copper: #e07b3a;
   --copper-hi: #f4965a;
   --copper-glow: rgba(224, 123, 58, 0.18);

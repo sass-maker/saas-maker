@@ -1,11 +1,11 @@
 packages:
-  - 'packages/blocks/*'
-  - 'packages/widgets/*'
-  - 'packages/cli'
+  - 'packages/widgets/feedback-widget'
   - 'packages/ui'
-  - 'apps/*'
+  - 'apps/cockpit'
+  - 'apps/docs-blume'
+  - 'apps/showcase'
   - 'apps/cockpit/landing-astro'
-  - 'workers/*'
+  - 'workers/api'
 allowBuilds:
   core-js: true
   esbuild: true

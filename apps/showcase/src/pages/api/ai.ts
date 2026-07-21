@@ -4,7 +4,7 @@ export function GET() {
   return new Response(
     JSON.stringify(
       {
-        name: 'SaaS Maker Foundry',
+        name: 'SaaS Maker',
         schemaVersion: 1,
         version: '1',
         url: 'https://sassmaker.com',
@@ -13,7 +13,7 @@ export function GET() {
         sitemap: 'https://sassmaker.com/sitemap-index.xml',
         markdown: { suffix: '.md', negotiation: false },
         canonical: 'https://sassmaker.com',
-        sourceOfTruth: 'catalog/foundry.json',
+        sourceOfTruth: 'sass-maker/fleet-workspace: fleet-ops/public/products.json',
         surfaces: [
           {
             id: 'directory',
@@ -30,11 +30,11 @@ export function GET() {
             description: 'Public package documentation',
           },
           {
-            id: 'skills',
-            url: 'https://skills.sassmaker.com/',
-            md: 'https://skills.sassmaker.com/index.md',
-            kind: 'collection',
-            description: 'Public Foundry skill catalog',
+            id: 'feedback',
+            url: 'https://packages.sassmaker.com/widgets/feedback/',
+            md: 'https://packages.sassmaker.com/widgets/feedback.md',
+            kind: 'documentation',
+            description: 'Published feedback package documentation',
           },
         ],
         auth: { public: true, notes: 'Private cockpit routes are intentionally excluded.' },

@@ -5,16 +5,15 @@ export function GET() {
     (product) => `- [${product.name}](${product.url}): ${product.description}`
   );
   const body = [
-    '# SaaS Maker Foundry',
+    '# SaaS Maker',
     '',
-    "> Public directory and operating layer for Sarthak Agrawal's maintained product fleet.",
+    "> Public directory for Sarthak Agrawal's maintained products and home of the @saas-maker/feedback package.",
     '',
     '## Core surfaces',
     '',
     '- [Directory](https://sassmaker.com)',
     '- [Package docs](https://packages.sassmaker.com)',
-    '- [Skills](https://skills.sassmaker.com)',
-    '- [Private cockpit](https://fleet.sassmaker.com): authenticated operator surface',
+    '- [Feedback inbox](https://app.sassmaker.com): authenticated owner surface',
     '',
     '## Maintained products',
     '',

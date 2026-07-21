@@ -2,14 +2,14 @@
   "schema_version": "v1",
   "name_for_human": "SaaS Maker",
   "name_for_model": "saas_maker",
-  "description_for_human": "Drop-in backend services for SaaS apps — feedback, waitlist, testimonials, changelog, analytics, forms, roadmap, AI gateway, chatbot, and directory.",
-  "description_for_model": "SaaS Maker provides drop-in backend services for SaaS applications. It offers feedback collection, waitlists, testimonials, changelogs, analytics, forms, roadmaps, AI gateway, chatbot, and a product directory. Developers integrate via REST API or the @saas-maker/sdk npm package. Base API URL: https://api.sassmaker.com. Documentation: https://docs.sassmaker.com. LLM-optimized docs: https://docs.sassmaker.com/llms.txt",
+  "description_for_human": "Public product directory and a focused React feedback package.",
+  "description_for_model": "SaaS Maker is a public directory for Sarthak Agrawal's maintained products and the home of the @saas-maker/feedback React package. Package documentation is at https://packages.sassmaker.com and the public feedback API is hosted at https://api.sassmaker.com.",
   "auth": {
     "type": "none"
   },
   "api": {
     "type": "openapi",
-    "url": "https://docs.sassmaker.com/openapi.json"
+    "url": "https://packages.sassmaker.com/openapi.json"
   },
   "logo_url": "https://sassmaker.com/favicon.ico",
   "contact_email": "sarthakagrawal927@gmail.com",

@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://skills.sassmaker.com/sitemap-index.xml

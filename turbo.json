@@ -2,7 +2,15 @@
   "$schema": "https://turbo.build/schema.json",
   "ui": "stream",
   "globalDependencies": ["pnpm-lock.yaml", "tsconfig.base.json", "tsconfig.json"],
-  "globalEnv": ["NEXT_PUBLIC_API_URL", "NODE_ENV"],
+  "globalEnv": [
+    "COCKPIT_PORT",
+    "FLEET_PUBLIC_PRODUCTS_PATH",
+    "NEXT_PUBLIC_API_URL",
+    "NODE_ENV",
+    "SAASMAKER_LOCAL_SESSION_TOKEN",
+    "SAAS_MAKER_API",
+    "SAAS_MAKER_APP"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],

@@ -1,9 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://domains.sassmaker.com/sitemap.xml
-# Agent indexing
-Allow: /llms.txt
-Allow: /index.md
-Allow: /api/ai
-Allow: /llms-full.txt

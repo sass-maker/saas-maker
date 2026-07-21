@@ -1,7 +1,0 @@
-# DEPRECATED: docs.sassmaker.com is superseded by sassmaker.com/docs (Blume).
-# Keep the specific /api/ai rewrite first, then 301 everything else to the new
-# docs home. This is a fallback for as long as this Pages project still
-# deploys; the canonical retirement is a CF-dashboard 301 + project removal
-# (see README.md).
-/api/ai /api-ai.json 200
-/* https://sassmaker.com/docs 301

@@ -6,7 +6,7 @@ updates:
       interval: weekly
       day: monday
     allow:
-      - dependency-name: "@saas-maker/sdk"
+      - dependency-name: "@saas-maker/feedback"
     commit-message:
       prefix: "deps"
     open-pull-requests-limit: 1

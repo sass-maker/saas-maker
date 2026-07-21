@@ -18,7 +18,7 @@ const SITE_URL = 'https://app.sassmaker.com';
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="application-name" content="SaaS Maker Cockpit" />
+    <meta name="application-name" content="SaaS Maker Feedback Inbox" />
     <link rel="canonical" href={SITE_URL} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={SITE_URL} />
@@ -43,7 +43,7 @@ const SITE_URL = 'https://app.sassmaker.com';
           c.indexOf('__Secure-better-auth.session_token') !== -1 ||
           c.indexOf('better-auth') !== -1
         ) {
-          location.replace('/tasks');
+          location.replace('/projects/feedback');
         }
       })();
     </script>

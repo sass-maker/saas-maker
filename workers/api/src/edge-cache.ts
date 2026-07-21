@@ -1,8 +1,8 @@
 import type { AppContext } from './types';
 
 // Shared `caches.default` wrapper for read-heavy GET handlers. Used by
-// changelog / testimonials / feedback / fleet-metadata list endpoints
-// where the underlying D1 query is the warm-path bottleneck.
+// feedback and project list endpoints where the underlying D1 query is the
+// warm-path bottleneck.
 //
 // Constraints:
 // - NEVER cache responses that depend on a per-user session unless the

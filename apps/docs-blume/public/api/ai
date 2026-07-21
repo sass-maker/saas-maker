@@ -1,6 +1,6 @@
 {
   "name": "SaaS Maker Packages",
-  "description": "SaaS Maker API, SDK, CLI, widgets, and source-ready App Health documentation.",
+  "description": "Documentation for the SaaS Maker feedback package, project keys, and feedback API.",
   "llms": "https://packages.sassmaker.com/llms.txt",
   "llmsFull": "https://packages.sassmaker.com/llms-full.txt",
   "surfaces": [
@@ -11,12 +11,10 @@
       "md": "https://packages.sassmaker.com/index.md"
     },
     {
-      "id": "app-health",
-      "name": "App Health SDK installation",
-      "url": "https://packages.sassmaker.com/sdk/app-health/",
-      "md": "https://packages.sassmaker.com/sdk/app-health.md",
-      "manifest": "https://packages.sassmaker.com/app-health/install.json",
-      "runtimes": ["node", "go"]
+      "id": "feedback",
+      "name": "Feedback package",
+      "url": "https://packages.sassmaker.com/widgets/feedback/",
+      "md": "https://packages.sassmaker.com/widgets/feedback.md"
     }
   ]
 }

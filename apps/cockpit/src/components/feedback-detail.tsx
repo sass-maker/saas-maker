@@ -26,7 +26,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Map, ThumbsUp, Trash2 } from 'lucide-react';
+import { ThumbsUp, Trash2 } from 'lucide-react';
 import type { FeedbackRecord, AnyFeedbackStatus, FeedbackStatus } from '@saas-maker/contracts';
 
 const TYPE_STYLES: Record<
@@ -44,7 +44,6 @@ interface FeedbackDetailProps {
   onClose: () => void;
   onStatusChange?: (item: FeedbackRecord, status: AnyFeedbackStatus) => Promise<void>;
   onDelete?: (id: string) => Promise<void>;
-  onMoveToRoadmap?: (item: FeedbackRecord) => Promise<void>;
 }
 
 export function FeedbackDetail({
@@ -53,13 +52,11 @@ export function FeedbackDetail({
   onClose,
   onStatusChange,
   onDelete,
-  onMoveToRoadmap,
 }: FeedbackDetailProps) {
   const [status, setStatus] = useState<AnyFeedbackStatus>(item?.status ?? 'new');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [updating, setUpdating] = useState(false);
-  const [movingToRoadmap, setMovingToRoadmap] = useState(false);
 
   // Sync status when item changes
   if (item && item.status !== status && !open) {
@@ -190,29 +187,6 @@ export function FeedbackDetail({
                 </SelectContent>
               </Select>
             </div>
-
-            {/* Move to Roadmap */}
-            {item.status !== 'on_roadmap' && onMoveToRoadmap && (
-              <div className="border-t pt-4">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={async () => {
-                    setMovingToRoadmap(true);
-                    try {
-                      await onMoveToRoadmap(currentItem);
-                    } finally {
-                      setMovingToRoadmap(false);
-                    }
-                  }}
-                  disabled={movingToRoadmap}
-                  className="gap-2"
-                >
-                  <Map className="h-4 w-4" />
-                  {movingToRoadmap ? 'Moving...' : 'Move to Roadmap'}
-                </Button>
-              </div>
-            )}
 
             {/* Delete */}
             <div className="border-t pt-4">

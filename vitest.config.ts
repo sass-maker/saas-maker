@@ -8,10 +8,6 @@ export default defineConfig({
         find: /^@\//,
         replacement: `${fileURLToPath(new URL('./apps/cockpit/src/', import.meta.url))}`,
       },
-      {
-        find: '@foundry-catalog',
-        replacement: fileURLToPath(new URL('./catalog/generated', import.meta.url)),
-      },
     ],
   },
   test: {

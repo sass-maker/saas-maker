@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "private": true,
   "homepage": "https://sassmaker.com",
-  "description": "Foundry — workshop dossier landing page (sassmaker.com). Pure static Astro port of the original Next.js site.",
+  "description": "Public SaaS Maker product directory built from Fleet's allowlisted projection.",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",

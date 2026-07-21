@@ -28,7 +28,6 @@ export function CreateProjectDialog() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
-  const [gitUrl, setGitUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -41,9 +40,7 @@ export function CreateProjectDialog() {
 
     try {
       const token = await getToken();
-      const trimmedGit = gitUrl.trim();
       const payload: Record<string, string> = { name: name.trim() };
-      if (trimmedGit) payload.git_url = trimmedGit;
       const project = await apiFetch(
         '/v1/projects',
         { method: 'POST', body: JSON.stringify(payload) },
@@ -51,7 +48,6 @@ export function CreateProjectDialog() {
       );
       setOpen(false);
       setName('');
-      setGitUrl('');
       // Navigate to the new project or refresh the list
       if (project?.slug) {
         router.push(`/projects/${project.slug}`);
@@ -91,21 +87,6 @@ export function CreateProjectDialog() {
                 onChange={(e) => setName(e.target.value)}
                 required
               />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="project-git-url">
-                Git URL <span className="text-muted-foreground">(optional)</span>
-              </Label>
-              <Input
-                id="project-git-url"
-                placeholder="https://github.com/owner/repo"
-                value={gitUrl}
-                onChange={(e) => setGitUrl(e.target.value)}
-              />
-              <p className="text-xs text-muted-foreground">
-                Fleet clients (e.g. CodeVetter) use this to auto-link local repos to the right
-                project.
-              </p>
             </div>
             {error && <p className="text-sm text-destructive">{error}</p>}
           </div>

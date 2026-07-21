@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "scripts": {
     "dev": "blume dev",
-    "build": "blume build && node scripts/finalize-agent-surfaces.mjs",
+    "build": "blume build",
     "preview": "blume preview",
     "doctor": "blume doctor"
   },

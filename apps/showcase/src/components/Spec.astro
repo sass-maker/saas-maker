@@ -1,53 +1,51 @@
 ---
-import { SPEC } from '../data/projects';
+const PACKAGE_SPEC: Array<[string, string]> = [
+  ['Package', '@saas-maker/feedback'],
+  ['Runtime', 'React 19'],
+  ['Inputs', 'Project key · optional user context'],
+  ['Feedback', 'Bug · feature request · general'],
+  ['Attachments', 'JPEG · PNG · GIF · WebP'],
+  ['Inbox', 'app.sassmaker.com'],
+  ['Docs', 'packages.sassmaker.com'],
+];
 
-// The terminal block is a verbatim transcript — preserved exactly,
-// including the trailing newline and the line wrap on the `fnd api`
-// command. <pre> respects whitespace so we leave it as-is.
-const TERMINAL = `$ npm i -g @saas-maker/cli
-$ fnd login
-   ✓ authenticated as @sarthakagrawal927
+const TERMINAL = `$ pnpm add @saas-maker/feedback
 
-$ fnd projects list
-   001  SaaS Maker       core      product platform
-   002  Free AI          support   model gateway
-   003  Knowledge Base   support   private search
-   004  Reel Pipeline    support   media tooling
-   005  psi-swarm        support   performance tooling
-   ... 15 more
+import { FeedbackWidget } from '@saas-maker/feedback'
 
-$ fnd api POST /v1/feedback \\
-    --body '{"project":"high-signal","title":"add RSS"}'
-   → feedback #142 created`;
+export function App() {
+  return <FeedbackWidget projectId="pk_your_project_key" />
+}`;
 ---
 <section class="section" id="spec">
   <div class="section-head">
     <div class="section-marker">
       <span class="section-num">§ 02</span>
       <span class="section-rule"></span>
-      <span class="section-kw">The Foundry</span>
+      <span class="section-kw">The Package</span>
     </div>
     <h2 class="section-title">
-      One <em class="italic">backend</em>
+      One focused way
       <br />
-      for the entire <em class="italic">workshop</em>.
+      to collect <em class="italic">feedback</em>.
     </h2>
     <p class="section-lede">
-      Every project on this page hits the same API. Same registry, same feedback boards,
-      same changelog, same task queue. New product, day one: it&apos;s already integrated.
+      SaaS Maker publishes a small React widget for bugs, feature requests,
+      screenshots, and page-specific feedback. Product operations stay in
+      their own repositories; the feedback inbox does one job.
     </p>
   </div>
 
   <div class="spec-layout">
     <dl class="spec-sheet">
       <div class="spec-head">
-        <span class="spec-stamp">SPECIFICATION</span>
+        <span class="spec-stamp">PACKAGE NOTES</span>
         <span class="spec-rule"></span>
       </div>
-      {SPEC.map(([k, v]) => (
+      {PACKAGE_SPEC.map(([key, value]) => (
         <div class="spec-row">
-          <dt>{k}</dt>
-          <dd>{v}</dd>
+          <dt>{key}</dt>
+          <dd>{value}</dd>
         </div>
       ))}
       <div class="spec-foot">
@@ -61,7 +59,7 @@ $ fnd api POST /v1/feedback \\
         <span class="t-dot t-r"></span>
         <span class="t-dot t-y"></span>
         <span class="t-dot t-g"></span>
-        <span class="terminal-title">~/fleet: fnd CLI</span>
+        <span class="terminal-title">feedback-widget.tsx</span>
       </div>
       <pre class="terminal-body">{TERMINAL}</pre>
     </div>

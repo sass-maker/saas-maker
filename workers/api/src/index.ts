@@ -6,27 +6,7 @@ import { auth } from './routes/auth';
 import { projects } from './routes/projects';
 import { feedback } from './routes/feedback';
 import { upload } from './routes/upload';
-import { waitlist } from './routes/waitlist';
-import { ai } from './routes/ai';
-import { testimonials } from './routes/testimonials';
-import { changelog } from './routes/changelog';
-import { cliAuth } from './routes/cli-auth';
-import { secrets } from './routes/secrets';
-import { jobs } from './routes/jobs';
-import { roadmap } from './routes/roadmap';
-import { standards } from './routes/standards';
-import { fleetMetadata } from './routes/fleet-metadata';
-import { tasks } from './routes/tasks';
-import { taskWorkflows } from './routes/task-workflows';
-import { symphony } from './routes/symphony';
-import { marketing } from './routes/marketing';
-import { events } from './routes/events';
-import { performanceRoutes } from './routes/performance';
-import { test as testRoutes } from './routes/test';
-import { requireApiKey } from './middleware/auth';
 import { rateLimit } from './middleware/rate-limit';
-import { getDb } from './db';
-import { maybeRecordCanarySpan } from './lib/performance-canary';
 
 const app = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
@@ -82,15 +62,7 @@ app.use('*', async (c, next) => {
 
 app.use('*', async (c, next) => {
   c.set('requestId', crypto.randomUUID());
-  const started = performance.now();
   await next();
-  const delivery = maybeRecordCanarySpan(c.env, {
-    method: c.req.method,
-    path: c.req.path,
-    status: c.res.status,
-    durationMs: performance.now() - started,
-  });
-  if (delivery) c.executionCtx.waitUntil(delivery);
 });
 
 let posthogConfigured = false;
@@ -109,46 +81,11 @@ app.use('*', async (c, next) => {
 
 app.get('/health', (c) => c.json({ status: 'ok' }));
 
-app.use('/v1/*', rateLimit({ limit: 100, period: 60, skipPrefixes: ['/v1/ai'] }));
-
-// API-key project readme routes (for SDK access)
-app.get('/v1/projects/readme', requireApiKey, async (c) => {
-  const projectId = c.get('projectId')!;
-  const db = getDb(c.env.DB);
-  const project = await db.getProjectById(projectId);
-  if (!project) return c.json({ error: 'Not found' }, 404);
-  return c.json({ readme: project.readme || '' });
-});
-
-app.put('/v1/projects/readme', requireApiKey, async (c) => {
-  const projectId = c.get('projectId')!;
-  const body = (await c.req.json()) as { content: string };
-  if (typeof body.content !== 'string') return c.json({ error: 'content is required' }, 400);
-  const db = getDb(c.env.DB);
-  await db.updateProject(projectId, { readme: body.content });
-  return c.json({ ok: true });
-});
+app.use('/v1/*', rateLimit({ limit: 100, period: 60 }));
 
 app.route('/v1/auth', auth);
 app.route('/v1/projects', projects);
 app.route('/v1/feedback', feedback);
 app.route('/v1/upload', upload);
-app.route('/v1/waitlist', waitlist);
-app.route('/v1/ai', ai);
-app.route('/v1/testimonials', testimonials);
-app.route('/v1/changelog', changelog);
-app.route('/v1/cli', cliAuth);
-app.route('/v1/roadmap', roadmap);
-app.route('/v1/standards', standards);
-app.route('/v1/fleet/metadata', fleetMetadata);
-app.route('/v1/secrets', secrets);
-app.route('/v1/jobs', jobs);
-app.route('/v1/tasks', tasks);
-app.route('/v1/task-workflows', taskWorkflows);
-app.route('/v1/symphony', symphony);
-app.route('/v1/marketing', marketing);
-app.route('/v1/events', events);
-app.route('/v1/performance', performanceRoutes);
-app.route('/v1/test', testRoutes);
 
 export default app;

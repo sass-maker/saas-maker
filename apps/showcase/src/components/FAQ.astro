@@ -1,38 +1,24 @@
 ---
-// FAQ section — Generative Engine Optimization (GEO).
-// AI search engines lift 35-60 word passages from pages, so each
-// answer is kept factual, self-contained, and within that band.
-// FAQPage JSON-LD is emitted alongside the visible markup so crawlers
-// can index the same Q&A pairs verbatim.
-
 const FAQ = [
   {
-    q: 'What is Foundry?',
-    a: 'Foundry is the operating system inside SaaS Maker: its registry, cockpit, CLI, tasks, audits, and deploy tooling. It can track a wider product fleet internally, but SaaS Maker is the core public product rather than the parent brand for every tracked project.',
-  },
-  {
     q: 'What is SaaS Maker?',
-    a: 'SaaS Maker is the operating layer behind Foundry. It provides drop-in backend services for SaaS products: feedback, waitlist, analytics, AI gateway, chatbot, testimonials, changelog, and forms. These packages are shared infrastructure used across the entire fleet of apps.',
+    a: 'SaaS Maker is a public directory for Sarthak Agrawal’s maintained products and the home of the @saas-maker/feedback package. It links each product to its canonical site, repository, changelog, and roadmap without merging their identities or release boundaries.',
   },
   {
-    q: 'Is Foundry open source?',
-    a: 'SaaS Maker and its public supporting repositories are available under the sass-maker GitHub organization. Individual products tracked by Cockpit live in their own organizations and keep their own product identity, repositories, domains, and release boundaries.',
+    q: 'What does the feedback package do?',
+    a: 'The React package collects bugs, feature requests, general feedback, screenshots, and optional page-element context. Each installation uses a public project key, while submissions are reviewed in the private feedback inbox at app.sassmaker.com.',
   },
   {
-    q: 'What products are in the Foundry fleet?',
-    a: 'SaaS Maker is the core product. Its public supporting repositories include Free AI, Knowledge Base, Reel Pipeline, and psi-swarm. The wider product fleet is tracked operationally in the authenticated Cockpit, not presented as one SaaS Maker product family.',
+    q: 'Does SaaS Maker run the product fleet?',
+    a: 'No. Internal automation, marketing pipelines, schedules, skills, and host operations live in the separate private Fleet Workspace. SaaS Maker receives only an allowlisted public product projection for the directory.',
   },
   {
-    q: 'What tech stack does Foundry use?',
-    a: 'Foundry uses Cloudflare Workers and Pages for hosting, Next.js and Astro for web, Turso and D1 for databases, better-auth for authentication, and the free-ai gateway for LLM access. The monorepo is managed with pnpm workspaces, and deploys ship through Cloudflare\u2019s edge network.',
+    q: 'Are CodeVetter and App Health part of SaaS Maker?',
+    a: 'No. CodeVetter and App Health are independent products with their own repositories, interfaces, and release boundaries. SaaS Maker may link to them in the directory, but it does not contain or operate their runtimes.',
   },
   {
-    q: 'Can I use SaaS Maker for my own project?',
-    a: 'Yes. SaaS Maker packages are designed as drop-in backend services. Install the SDK, configure your project, and get feedback, waitlist, analytics, AI gateway, and forms out of the box. The CLI (@saas-maker/cli) provides API-first access to every feature without writing server code.',
-  },
-  {
-    q: 'How fast are Foundry sites?',
-    a: 'Fleet sites target sub-500ms desktop LCP at the p75 percentile. The case study at sassmaker.com/case-study/fleet-performance documents how 23 sites were optimized toward that target using edge hosting, non-blocking font loading, and minimal JavaScript on the critical render path.',
+    q: 'Where are the package docs?',
+    a: 'The Blume documentation site at packages.sassmaker.com covers installation, project keys, widget options, the feedback API, and submission handling. It is the canonical technical reference for the published feedback package.',
   },
 ];
 
@@ -60,8 +46,7 @@ const FAQ_JSONLD = {
       <em class="italic">straight answers.</em>
     </h2>
     <p class="section-lede">
-      The basics on SaaS Maker, Foundry, and the supporting repositories
-      that fit together &mdash; in plain language.
+      The boundary is intentionally small: directory, package docs, and feedback.
     </p>
   </div>
 

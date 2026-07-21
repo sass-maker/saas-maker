@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-set -euo pipefail
-
-cd /Users/assistant/Desktop/fleet/saas-maker
-
-pnpm symphony --commands "$@"

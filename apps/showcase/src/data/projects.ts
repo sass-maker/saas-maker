@@ -94,9 +94,9 @@ export const TICKER = publicCatalog.products.map((product) => product.name);
 export const SPEC: Array<[string, string]> = [
   ['Operator', 'Sarthak Agrawal'],
   ['Pillars', 'Build · Market · Learn · Visibility · Control'],
-  ['Interfaces', 'Public directory · Private cockpit · Packages · Skills'],
+  ['Interfaces', 'Public directory · Package catalogue · Feedback'],
   ['Projects', String(PROJECT_COUNT)],
-  ['Source of truth', 'catalog/foundry.json'],
-  ['Operations', 'One designated host · inert clones · explicit leases'],
+  ['Source of truth', 'Fleet public projection'],
+  ['Operations', 'Owned by the independent Fleet Workspace'],
   ['Source', 'github.com/sass-maker/saas-maker'],
 ];

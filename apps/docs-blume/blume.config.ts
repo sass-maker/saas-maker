@@ -2,29 +2,13 @@ import { defineConfig } from 'blume';
 
 export default defineConfig({
   title: 'SaaS Maker Packages',
-  description: 'Install and use the SaaS Maker API, SDK, CLI, widgets, and reusable packages.',
+  description: 'Install and use the SaaS Maker feedback package and API.',
   // The canonical documentation tree lives at the repository root in `docs/`.
   // Blume is only the presentation + search layer; committed Markdown is the
   // source of truth. See `docs/README.md` for the knowledge-system layout.
   content: {
     root: '../../docs',
-    // Blume exposes only package/product documentation. Foundry architecture,
-    // operations, plans, private status, and learnings stay committed but are
-    // never part of this public build.
-    exclude: [
-      'README.md',
-      'archive/**',
-      'architecture/**',
-      'current/**',
-      'development/**',
-      'knowledge/**',
-      'operations/**',
-      'org-profiles/**',
-      'product/**',
-      'superpowers/**',
-      'prds/**',
-      'openspec/**',
-    ],
+    exclude: ['README.md'],
   },
   github: {
     owner: 'sass-maker',

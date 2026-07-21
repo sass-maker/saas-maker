@@ -3,7 +3,6 @@ import { Bindings, Variables } from '../types';
 import { requireSession } from '../middleware/auth';
 import { getDb } from '../db';
 import { trace, capture } from '../lib/telemetry';
-import { maskProviderKey } from '../ai-gateway';
 import { buildCacheKey, tryCacheMatch, withCachePut } from '../edge-cache';
 import type { ProjectRecord } from '@saas-maker/contracts';
 
@@ -29,18 +28,21 @@ function slugify(name: string): string {
 }
 
 type ProjectRow = ProjectRecord & {
+  embedding_model?: string | null;
   ai_base_url?: string | null;
   ai_api_key?: string | null;
   ai_model?: string | null;
 };
 
 function toPublicProject(project: ProjectRow) {
-  const { ai_api_key, ...safeProject } = project;
-  return {
-    ...safeProject,
-    ai_api_key_configured: Boolean(ai_api_key),
-    ai_api_key_preview: maskProviderKey(ai_api_key),
-  };
+  const {
+    ai_api_key: _apiKey,
+    ai_base_url: _baseUrl,
+    ai_model: _model,
+    embedding_model: _embeddingModel,
+    ...safeProject
+  } = project;
+  return safeProject;
 }
 
 projects.get('/', async (c) => {
@@ -127,31 +129,9 @@ projects.patch('/:id', async (c) => {
     readme: body.readme,
     git_url: gitUrl,
   });
+  if (!updated) return c.json({ error: 'Project not found' }, 404);
   capture({ distinctId: userId, event: 'project_updated', properties: { project_id: projectId } });
   return c.json(toPublicProject(updated));
-});
-
-// GET /:id/readme (session auth, ownership check)
-projects.get('/:id/readme', async (c) => {
-  const userId = c.get('userId')!;
-  const projectId = c.req.param('id');
-  const db = getDb(c.env.DB);
-  const project = await db.getProjectById(projectId);
-  if (!project || project.owner_id !== userId) return c.json({ error: 'Not found' }, 404);
-  return c.json({ readme: project.readme || '' });
-});
-
-// PUT /:id/readme (session auth, ownership check)
-projects.put('/:id/readme', async (c) => {
-  const userId = c.get('userId')!;
-  const projectId = c.req.param('id');
-  const body = (await c.req.json()) as { content: string };
-  if (typeof body.content !== 'string') return c.json({ error: 'content is required' }, 400);
-  const db = getDb(c.env.DB);
-  const project = await db.getProjectById(projectId);
-  if (!project || project.owner_id !== userId) return c.json({ error: 'Not found' }, 404);
-  await db.updateProject(projectId, { readme: body.content });
-  return c.json({ ok: true });
 });
 
 projects.delete('/:id', async (c) => {

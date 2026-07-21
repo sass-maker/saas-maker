@@ -60,8 +60,7 @@ async function resolveBetterAuthSession(
 }
 
 /**
- * Resolve any Bearer token the API accepts to a user id, or null. Tries CLI
- * tokens (`sm_` prefix) then better-auth opaque session tokens.
+ * Resolve a better-auth session token to a user id, or null.
  */
 export async function resolveBearerUserId(
   c: { env: Bindings },
@@ -70,11 +69,6 @@ export async function resolveBearerUserId(
   const localUserId = await resolveLocalSession(c, token);
   if (localUserId) return localUserId;
 
-  if (token.startsWith('sm_')) {
-    const db = getDb(c.env.DB);
-    const cliToken = await db.getCliTokenUser(token);
-    return cliToken?.user_id ?? null;
-  }
   return resolveBetterAuthSession(c, token);
 }
 
