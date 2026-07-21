@@ -27,6 +27,10 @@ CodeVetter and App Health remain independent.
   completed npm metadata and quickstart styling instructions, and verified the
   packed artifact in clean React 18 and React 19 consumers. Publishing remains
   a separate manual release action.
+- **2026-07-22 — Public directory links hardened:** Fleet's public projection
+  now omits unavailable roadmaps and private source links instead of rendering
+  dead GitHub URLs. Human-readable and agent-readable directory surfaces both
+  render only links that are actually public.
 - **2026-07-21 — Narrow production deployed:** Directory, feedback API,
   feedback inbox, and Blume package docs are live. The directory consumes the
   synchronized Fleet projection, shows the five approved spotlight entries,

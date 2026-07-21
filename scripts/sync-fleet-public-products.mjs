@@ -24,15 +24,7 @@ const PUBLIC_FIELDS = new Set([
   'roadmapUrl',
   'pillarId',
 ]);
-const REQUIRED_FIELDS = [
-  'id',
-  'name',
-  'description',
-  'url',
-  'repositoryUrl',
-  'changelogUrl',
-  'roadmapUrl',
-];
+const REQUIRED_FIELDS = ['id', 'name', 'description', 'url'];
 const FORBIDDEN_KEYS =
   /(?:secret|token|password|credential|private|owner|cfProject|notes|dependencies|evidenceSources|contracts)/i;
 const CREDENTIAL_VALUE =
