@@ -1,4 +1,6 @@
 ---
+import { PACKAGE_DOCS_HOST } from '../data/links';
+
 const PACKAGE_SPEC: Array<[string, string]> = [
   ['Package', '@saas-maker/feedback'],
   ['Runtime', 'React 19'],
@@ -6,7 +8,7 @@ const PACKAGE_SPEC: Array<[string, string]> = [
   ['Feedback', 'Bug · feature request · general'],
   ['Attachments', 'JPEG · PNG · GIF · WebP'],
   ['Inbox', 'app.sassmaker.com'],
-  ['Docs', 'packages.sassmaker.com'],
+  ['Docs', PACKAGE_DOCS_HOST],
 ];
 
 const TERMINAL = `$ pnpm add @saas-maker/feedback

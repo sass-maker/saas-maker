@@ -1,7 +1,6 @@
 ---
 import { PROJECT_COUNT } from '../data/projects';
-
-const PACKAGES_URL = 'https://packages.sassmaker.com';
+import { PACKAGE_DOCS_URL } from '../data/links';
 
 // Build-time year. The original Next.js page used `new Date().getFullYear()`
 // on every render; for a static site we freeze it at build. The whole
@@ -41,7 +40,7 @@ const YEAR = new Date().getFullYear();
 
   <div class="hero-actions hero-anim" style="--delay: 520ms">
     <a href="#fleet" class="btn btn-primary btn-lg">Open the catalog</a>
-    <a href={PACKAGES_URL} target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-lg">
+    <a href={PACKAGE_DOCS_URL} target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-lg">
       <span>Browse packages</span>
       <span class="btn-arrow">↗</span>
     </a>

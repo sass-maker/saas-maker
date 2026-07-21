@@ -43,7 +43,7 @@ CodeVetter and App Health remain independent.
 | Surface | Purpose |
 | --- | --- |
 | sassmaker.com | Public product directory |
-| packages.sassmaker.com | Feedback package documentation |
+| saas-maker-packages.pages.dev | Feedback package documentation (vanity domain pending) |
 | api.sassmaker.com | Feedback and project-key API |
 | app.sassmaker.com | Private feedback inbox |
 | @saas-maker/feedback | Maintained public runtime package |

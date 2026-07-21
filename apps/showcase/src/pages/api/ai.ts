@@ -1,4 +1,5 @@
 import publicCatalog from '../../../../../catalog/generated/public.json';
+import { PACKAGE_DOCS_URL } from '../../data/links';
 export const prerender = true;
 export function GET() {
   return new Response(
@@ -24,15 +25,15 @@ export function GET() {
           },
           {
             id: 'packages',
-            url: 'https://packages.sassmaker.com/',
-            md: 'https://packages.sassmaker.com/index.md',
+            url: `${PACKAGE_DOCS_URL}/`,
+            md: `${PACKAGE_DOCS_URL}/index.md`,
             kind: 'collection',
             description: 'Public package documentation',
           },
           {
             id: 'feedback',
-            url: 'https://packages.sassmaker.com/widgets/feedback/',
-            md: 'https://packages.sassmaker.com/widgets/feedback.md',
+            url: `${PACKAGE_DOCS_URL}/widgets/feedback/`,
+            md: `${PACKAGE_DOCS_URL}/widgets/feedback.md`,
             kind: 'documentation',
             description: 'Published feedback package documentation',
           },

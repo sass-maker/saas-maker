@@ -1,4 +1,5 @@
 import publicCatalog from '../../../../catalog/generated/public.json';
+import { PACKAGE_DOCS_URL } from '../data/links';
 export const prerender = true;
 export function GET() {
   const products = publicCatalog.products.map(
@@ -12,7 +13,7 @@ export function GET() {
     '## Core surfaces',
     '',
     '- [Directory](https://sassmaker.com)',
-    '- [Package docs](https://packages.sassmaker.com)',
+    `- [Package docs](${PACKAGE_DOCS_URL})`,
     '- [Feedback inbox](https://app.sassmaker.com): authenticated owner surface',
     '',
     '## Maintained products',
