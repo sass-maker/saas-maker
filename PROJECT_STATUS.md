@@ -22,6 +22,10 @@ CodeVetter and App Health remain independent.
 
 ## Timeline
 
+- **2026-07-21 — Production cutover authorized:** The narrowed source, four
+  canonical Cloudflare targets, and manual deploy commands are the approved
+  production state. Every deploy remains gated on clean, synchronized `main`,
+  green CI for the exact commit, and live smoke verification of all surfaces.
 - **2026-07-21 — Narrow-source cleanup completed locally:** Removed duplicated
   Fleet services, operational Cockpit pillars, non-feedback API routes, Droid,
   App Health copies, SDK/CLI, retired widgets, skills, host automation, and stale
@@ -59,9 +63,8 @@ CodeVetter and App Health remain independent.
 
 ### Planned
 
-- Review the source diff and push it after all repository checks pass.
-- Perform a separately approved API/Cockpit/directory/docs cutover with rollback
-  and live smoke evidence.
+- Keep the API, Cockpit, directory, and package docs green through the shared
+  post-deploy smoke gate.
 - Decide separately whether historical npm packages should be deprecated; this
   cleanup does not change npm registry state.
 
@@ -74,4 +77,4 @@ CodeVetter and App Health remain independent.
 
 ### Blocked
 
-- Production state remains unchanged until explicit deploy/migration approval.
+- None.

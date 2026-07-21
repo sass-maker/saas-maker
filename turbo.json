@@ -9,7 +9,9 @@
     "NODE_ENV",
     "SAASMAKER_LOCAL_SESSION_TOKEN",
     "SAAS_MAKER_API",
-    "SAAS_MAKER_APP"
+    "SAAS_MAKER_APP",
+    "SAAS_MAKER_DIRECTORY",
+    "SAAS_MAKER_DOCS"
   ],
   "tasks": {
     "build": {

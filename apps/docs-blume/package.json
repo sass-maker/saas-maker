@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "blume dev",
     "build": "blume build",
+    "deploy": "pnpm build && wrangler pages deploy dist --project-name saas-maker-packages --branch main && node ../../scripts/smoke-prod.mjs",
     "preview": "blume preview",
     "doctor": "blume doctor"
   },
@@ -18,5 +19,8 @@
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.1.0",
     "blume": "^1.0.4"
+  },
+  "devDependencies": {
+    "wrangler": "4.85.0"
   }
 }

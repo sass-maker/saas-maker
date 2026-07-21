@@ -17,8 +17,28 @@
 
 const API = process.env.SAAS_MAKER_API ?? 'https://api.sassmaker.com';
 const APP = process.env.SAAS_MAKER_APP ?? 'https://app.sassmaker.com';
+const DIRECTORY = process.env.SAAS_MAKER_DIRECTORY ?? 'https://sassmaker.com';
+const DOCS = process.env.SAAS_MAKER_DOCS ?? 'https://packages.sassmaker.com';
 
 const checks = [
+  {
+    name: 'Public directory renders',
+    fn: async () => {
+      const res = await fetch(DIRECTORY);
+      if (res.status !== 200) throw new Error(`status ${res.status}`);
+      const body = await res.text();
+      if (!body.includes('SaaS Maker')) throw new Error('missing SaaS Maker identity');
+    },
+  },
+  {
+    name: 'Package docs render',
+    fn: async () => {
+      const res = await fetch(DOCS);
+      if (res.status !== 200) throw new Error(`status ${res.status}`);
+      const body = await res.text();
+      if (!body.includes('SaaS Maker Packages')) throw new Error('missing package docs identity');
+    },
+  },
   {
     name: 'API /health returns ok',
     fn: async () => {
