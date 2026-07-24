@@ -1,66 +1,27 @@
-# SaaS Maker
+# SaaS Maker (archived)
 
-SaaS Maker is the public catalogue for Sarthak's products and the home of one
-shared product primitive: customer feedback.
-
-It deliberately does not own fleet operations, task queues, marketing
-automation, observability, App Health, CodeVetter, Drank, Reel Pipeline, PSI
-Swarm, or machine schedules. Those live in Fleet Workspace or their independent
-product repositories.
-
-## Surfaces
-
-- https://sassmaker.com — public product directory built from Fleet's checked-in public projection.
-- https://saas-maker-packages.pages.dev — Blume documentation for @saas-maker/feedback.
-- https://api.sassmaker.com — feedback submission, image upload, project-key management, and feedback review API.
-- https://app.sassmaker.com — private feedback inbox and project-key manager.
-
-## Maintained package
-
-~~~bash
-pnpm add @saas-maker/feedback
-~~~
-
-~~~tsx
-import { FeedbackWidget } from '@saas-maker/feedback';
-import '@saas-maker/feedback/dist/index.css';
-
-export function AppFeedback() {
-  return <FeedbackWidget projectId="pk_your_project_key" />;
-}
-~~~
-
-## Repository
-
-~~~text
-apps/showcase/                         public directory
-apps/docs-blume/                       package documentation
-apps/cockpit/                          private feedback inbox
-packages/widgets/feedback-widget/      @saas-maker/feedback
-packages/ui/                           private Cockpit UI primitives
-workers/api/                           feedback API
-internal/contracts/                    private feedback contracts
-catalog/generated/public.json          checked-in Fleet public projection
-~~~
-
-## Development
-
-~~~bash
-pnpm install
-pnpm test
-pnpm typecheck
-pnpm build:widget
-pnpm build:showcase
-pnpm build:docs
-pnpm build:cockpit
-~~~
-
-Production deploys, database migrations, npm publication/deprecation, DNS
-changes, and repository archival remain explicit manual actions.
 > [!IMPORTANT]
-> This repository was merged into
-> [`sass-maker/fleet-workspace`](https://github.com/sass-maker/fleet-workspace).
-> The maintained public directory is at `fleet-ops/apps/public-directory/` and
-> the feedback package is at `fleet-ops/packages/feedback/`. This repository is
-> retained for history and attribution only; do not clone it for Fleet setup or
-> development.
+> This standalone repository is deprecated and preserved only for history and
+> attribution. It is not the source of the current website or package, and it
+> should not be cloned for active Fleet development.
+
+SaaS Maker now has a deliberately small public role:
+
+- [sassmaker.com](https://sassmaker.com) is the maintained static directory for
+  Sarthak Agrawal's products.
+- [`@saas-maker/feedback`](https://www.npmjs.com/package/@saas-maker/feedback)
+  is the maintained backend-free feedback package.
+
+Both are maintained from the private Fleet Workspace monorepo. Fleet owns the
+product registry, privacy-checked public projection, static directory source,
+and package source. The old API, feedback inbox, package documentation site,
+task queue, and operational control-plane code in this repository are retired.
+
+## Historical contents
+
+This repository records the former standalone SaaS Maker implementation,
+including its showcase, package documentation, feedback inbox, API Worker,
+shared UI, and internal contracts. Those paths are retained as historical
+context only and may no longer build, deploy, or describe current production.
+
+For current public product information, use [sassmaker.com](https://sassmaker.com).
