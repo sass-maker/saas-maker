@@ -57,3 +57,10 @@ pnpm build:cockpit
 
 Production deploys, database migrations, npm publication/deprecation, DNS
 changes, and repository archival remain explicit manual actions.
+> [!IMPORTANT]
+> This repository was merged into
+> [`sass-maker/fleet-workspace`](https://github.com/sass-maker/fleet-workspace).
+> The maintained public directory is at `fleet-ops/apps/public-directory/` and
+> the feedback package is at `fleet-ops/packages/feedback/`. This repository is
+> retained for history and attribution only; do not clone it for Fleet setup or
+> development.
