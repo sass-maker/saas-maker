@@ -19,14 +19,22 @@ describe('verified public Fleet directory', () => {
     );
 
     expect(catalog.schemaVersion).toBe(5);
-    expect(catalog.directory).toHaveLength(15);
-    expect(new Set(ids).size).toBe(15);
+    expect(catalog.directory).toHaveLength(16);
+    expect(new Set(ids).size).toBe(16);
     expect(counts.current).toBe(4);
     expect(counts.featured).toBe(1);
-    expect(counts.past).toBe(10);
+    expect(counts.past).toBe(11);
     expect(
       catalog.directory.find((project: { id: string }) => project.id === 'web-playables')
     ).toMatchObject({ lifecycle: 'inactive', shareable: true, group: 'past' });
+    expect(
+      catalog.directory.find((project: { id: string }) => project.id === 'psi-swarm')
+    ).toMatchObject({
+      lifecycle: 'inactive',
+      shareable: true,
+      group: 'past',
+      description: expect.stringContaining('Source-installed local Lighthouse'),
+    });
     expect(ids).not.toContain('chess');
     expect(ids).not.toContain('journal');
     expect(ids).not.toContain('nomad-data-adventure');
