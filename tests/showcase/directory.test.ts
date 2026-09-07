@@ -35,10 +35,14 @@ describe('verified public Fleet directory', () => {
       group: 'past',
       description: expect.stringContaining('Source-installed local Lighthouse'),
     });
-    const rolepatch = catalog.directory.find((project: { id: string }) => project.id === 'rolepatch');
+    const rolepatch = catalog.directory.find(
+      (project: { id: string }) => project.id === 'rolepatch'
+    );
     expect(rolepatch).toMatchObject({ lifecycle: 'inactive', shareable: true, group: 'past' });
     expect(rolepatch.description).toContain('guest resume-tailoring experiment');
-    expect(rolepatch.purposeContract.proof).toContain('Account sync and broader application tools remain unqualified');
+    expect(rolepatch.purposeContract.proof).toContain(
+      'Account sync and broader application tools remain unqualified'
+    );
     expect(ids).not.toContain('chess');
     expect(ids).not.toContain('journal');
     expect(ids).not.toContain('nomad-data-adventure');
