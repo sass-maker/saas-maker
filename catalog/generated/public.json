@@ -86,7 +86,7 @@
       "changelogUrl": "https://live.significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/live/issues",
       "firstCommitAt": "2026-03-01",
-      "latestCommitAt": "2026-09-06"
+      "latestCommitAt": "2026-09-07"
     },
     {
       "id": "saas-maker",
@@ -212,7 +212,7 @@
       "changelogUrl": "https://podcasts.highsignal.app/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/on-record/issues",
       "firstCommitAt": "2026-08-24",
-      "latestCommitAt": "2026-09-06"
+      "latestCommitAt": "2026-09-07"
     },
     {
       "id": "issue-pages",
@@ -254,7 +254,7 @@
       "changelogUrl": "https://issues.sarthakagrawal.dev/changelog",
       "roadmapUrl": "https://github.com/sarthakagrawal927/issue-pages/issues",
       "firstCommitAt": "2026-08-25",
-      "latestCommitAt": "2026-09-06"
+      "latestCommitAt": "2026-09-07"
     },
     {
       "id": "research-papers",
@@ -420,7 +420,7 @@
       "changelogUrl": "https://starboard.codevetter.com/changelog",
       "roadmapUrl": "https://github.com/Codevetter/starboard/issues",
       "firstCommitAt": "2026-02-22",
-      "latestCommitAt": "2026-09-06"
+      "latestCommitAt": "2026-09-07"
     },
     {
       "id": "veg-protein-food",
@@ -499,7 +499,7 @@
       "repositoryUrl": "https://github.com/sarthakagrawal927/web-playables",
       "roadmapUrl": "https://github.com/sarthakagrawal927/web-playables/issues",
       "firstCommitAt": "2026-07-10",
-      "latestCommitAt": "2026-09-06"
+      "latestCommitAt": "2026-09-07"
     },
     {
       "id": "what-it-takes-to-win",
@@ -580,7 +580,7 @@
       "changelogUrl": "https://sarthakagrawal.dev/changelog",
       "roadmapUrl": "https://github.com/sarthakagrawal927/portfolio/issues",
       "firstCommitAt": "2026-05-22",
-      "latestCommitAt": "2026-09-06"
+      "latestCommitAt": "2026-09-07"
     },
     {
       "id": "field-track",
@@ -623,7 +623,7 @@
       "changelogUrl": "https://field-track.sassmaker.com/changelog",
       "roadmapUrl": "https://github.com/sass-maker/field-track/issues",
       "firstCommitAt": "2026-08-12",
-      "latestCommitAt": "2026-09-06"
+      "latestCommitAt": "2026-09-07"
     }
   ],
   "products": [
