@@ -462,6 +462,46 @@
       "latestCommitAt": "2026-09-06"
     },
     {
+      "id": "web-playables",
+      "name": "Web Playables",
+      "description": "Small browser-playable game experiments.",
+      "makerNote": "I built this laboratory to understand how idle and HTML-based games are designed, shipped, and distributed.",
+      "purposeContract": {
+        "purpose": "Web Playables is a small laboratory for learning how browser and YouTube-ready games are designed, packaged, and distributed.",
+        "audience": "A builder studying reusable HTML5 game mechanics and portable distribution constraints.",
+        "outcome": "Prototype a mechanic once and ship it as a normal web game and a submission-ready playable package.",
+        "mechanism": "A reusable gamekit supplies loops, saves, offline progress, platform adapters, and builds for a small games hub.",
+        "proof": "The research goal produced a working gamekit, a live idle game, and YouTube-compatible packaging; the project is now parked.",
+        "nextAction": "Play the retained game or inspect the kit; add another game only when a specific mechanic is worth studying."
+      },
+      "kind": "experiment",
+      "form": "Game collection",
+      "platforms": [
+        "Web",
+        "YouTube Playables"
+      ],
+      "technologies": [
+        "TypeScript",
+        "Vite",
+        "Cloudflare Pages"
+      ],
+      "group": "past",
+      "lifecycle": "inactive",
+      "shareable": true,
+      "deployed": true,
+      "deploymentProviders": [
+        "Cloudflare Pages"
+      ],
+      "domains": [
+        "idle.aliveville.com"
+      ],
+      "url": "https://idle.aliveville.com",
+      "repositoryUrl": "https://github.com/sarthakagrawal927/web-playables",
+      "roadmapUrl": "https://github.com/sarthakagrawal927/web-playables/issues",
+      "firstCommitAt": "2026-07-10",
+      "latestCommitAt": "2026-09-06"
+    },
+    {
       "id": "what-it-takes-to-win",
       "name": "Look Sideways",
       "description": "Explore sourced career turning points with explicit survivorship and forecasting limits.",
@@ -936,5 +976,21 @@
       }
     }
   ],
-  "pastProjects": []
+  "pastProjects": [
+    {
+      "id": "web-playables",
+      "name": "Web Playables",
+      "description": "Small browser-playable game experiments.",
+      "lifecycle": "inactive",
+      "repositoryUrl": "https://github.com/sarthakagrawal927/web-playables",
+      "purposeContract": {
+        "purpose": "Web Playables is a small laboratory for learning how browser and YouTube-ready games are designed, packaged, and distributed.",
+        "audience": "A builder studying reusable HTML5 game mechanics and portable distribution constraints.",
+        "outcome": "Prototype a mechanic once and ship it as a normal web game and a submission-ready playable package.",
+        "mechanism": "A reusable gamekit supplies loops, saves, offline progress, platform adapters, and builds for a small games hub.",
+        "proof": "The research goal produced a working gamekit, a live idle game, and YouTube-compatible packaging; the project is now parked.",
+        "nextAction": "Play the retained game or inspect the kit; add another game only when a specific mechanic is worth studying."
+      }
+    }
+  ]
 }
