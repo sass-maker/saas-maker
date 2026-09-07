@@ -173,6 +173,48 @@
       "latestCommitAt": "2026-09-06"
     },
     {
+      "id": "psi-swarm",
+      "name": "PSI Swarm",
+      "description": "Source-installed local Lighthouse audits with saved history; use the documented source setup, not the older packaged release.",
+      "makerNote": "I wanted repeatable evidence of how my products perform under real Lighthouse conditions, not a single flattering test.",
+      "purposeContract": {
+        "purpose": "PSI Swarm measures website performance as repeated distributions instead of a single flattering Lighthouse run.",
+        "audience": "The Fleet operator and developers who need trustworthy performance evidence across public products.",
+        "outcome": "See typical performance, variability, and regressions under repeated real measurement conditions.",
+        "mechanism": "An operational CLI runs and aggregates multiple PageSpeed and Lighthouse observations for Site Health.",
+        "proof": "The completed measurement tool already feeds repeated performance evidence into the portfolio dashboard.",
+        "nextAction": "Run it for a concrete performance investigation or consume its evidence in Site Health; keep the tool operationally narrow."
+      },
+      "kind": "platform",
+      "form": "Local performance tool",
+      "platforms": [
+        "Web",
+        "CLI"
+      ],
+      "technologies": [
+        "TypeScript",
+        "Lighthouse",
+        "SQLite",
+        "Astro"
+      ],
+      "group": "past",
+      "lifecycle": "inactive",
+      "shareable": true,
+      "deployed": true,
+      "deploymentProviders": [
+        "Cloudflare Pages"
+      ],
+      "domains": [
+        "performance.sassmaker.com"
+      ],
+      "url": "https://performance.sassmaker.com",
+      "repositoryUrl": "https://github.com/sass-maker/psi-swarm",
+      "changelogUrl": "https://performance.sassmaker.com/changelog",
+      "roadmapUrl": "https://github.com/sass-maker/psi-swarm/issues",
+      "firstCommitAt": "2026-06-03",
+      "latestCommitAt": "2026-09-07"
+    },
+    {
       "id": "on-record",
       "name": "High Signal Podcasts",
       "description": "Search evidenced podcast claims and follow links back to the original episode or publication.",
@@ -848,6 +890,31 @@
         "mechanism": "An interactive body-system model links concerns to structured remedy pages with explicit evidence grades and safety limits.",
         "proof": "A technically ambitious reference exists, but sustained evidence quality, medical safety, and content maintenance are unresolved.",
         "nextAction": "Use the retained material as an educational experiment only; reopen publication work after defining a medical-safety and evidence standard."
+      }
+    },
+    {
+      "id": "psi-swarm",
+      "name": "PSI Swarm",
+      "description": "Source-installed local Lighthouse audits with saved history; use the documented source setup, not the older packaged release.",
+      "url": "https://performance.sassmaker.com",
+      "tier": "active",
+      "category": "helper",
+      "priority": "P4",
+      "spotlight": false,
+      "lifecycle": "inactive",
+      "shareable": true,
+      "maturity": "maintained",
+      "changelogUrl": "https://performance.sassmaker.com/changelog",
+      "repositoryUrl": "https://github.com/sass-maker/psi-swarm",
+      "roadmapUrl": "https://github.com/sass-maker/psi-swarm/issues",
+      "pillarId": "visibility",
+      "purposeContract": {
+        "purpose": "PSI Swarm measures website performance as repeated distributions instead of a single flattering Lighthouse run.",
+        "audience": "The Fleet operator and developers who need trustworthy performance evidence across public products.",
+        "outcome": "See typical performance, variability, and regressions under repeated real measurement conditions.",
+        "mechanism": "An operational CLI runs and aggregates multiple PageSpeed and Lighthouse observations for Site Health.",
+        "proof": "The completed measurement tool already feeds repeated performance evidence into the portfolio dashboard.",
+        "nextAction": "Run it for a concrete performance investigation or consume its evidence in Site Health; keep the tool operationally narrow."
       }
     },
     {
