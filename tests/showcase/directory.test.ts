@@ -19,11 +19,11 @@ describe('verified public Fleet directory', () => {
     );
 
     expect(catalog.schemaVersion).toBe(5);
-    expect(catalog.directory).toHaveLength(21);
-    expect(new Set(ids).size).toBe(21);
+    expect(catalog.directory).toHaveLength(22);
+    expect(new Set(ids).size).toBe(22);
     expect(counts.current).toBe(4);
     expect(counts.featured).toBe(1);
-    expect(counts.past).toBe(16);
+    expect(counts.past).toBe(17);
     expect(
       catalog.directory.find((project: { id: string }) => project.id === 'web-playables')
     ).toMatchObject({ lifecycle: 'inactive', shareable: true, group: 'past' });
@@ -35,6 +35,10 @@ describe('verified public Fleet directory', () => {
       group: 'past',
       description: expect.stringContaining('Source-installed local Lighthouse'),
     });
+    const rolepatch = catalog.directory.find((project: { id: string }) => project.id === 'rolepatch');
+    expect(rolepatch).toMatchObject({ lifecycle: 'inactive', shareable: true, group: 'past' });
+    expect(rolepatch.description).toContain('guest resume-tailoring experiment');
+    expect(rolepatch.purposeContract.proof).toContain('Account sync and broader application tools remain unqualified');
     expect(ids).not.toContain('chess');
     expect(ids).not.toContain('journal');
     expect(ids).not.toContain('nomad-data-adventure');

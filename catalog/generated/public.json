@@ -503,6 +503,48 @@
       "latestCommitAt": "2026-09-07"
     },
     {
+      "id": "rolepatch",
+      "name": "RolePatch",
+      "description": "A guest resume-tailoring experiment with a reviewable diff and browser-local document exports.",
+      "makerNote": "I wanted a focused way to tailor a resume and its supporting material to the actual job description.",
+      "purposeContract": {
+        "purpose": "RolePatch tailors a resume and supporting application material to the evidence and language of a specific job.",
+        "audience": "A job seeker preparing a serious application for a particular role.",
+        "outcome": "Present relevant experience more clearly and prepare for the role without inventing qualifications.",
+        "mechanism": "Paste a resume and job description, review the generated changes, save in the browser, and export the current document.",
+        "proof": "The guest resume, tailoring, review, save/reload and local document-export path has been verified with synthetic examples. Account sync and broader application tools remain unqualified.",
+        "nextAction": "Try the guest workflow for one job, review every proposed claim, and export the version you want to use."
+      },
+      "kind": "product",
+      "form": "Web app",
+      "platforms": [
+        "Web",
+        "API"
+      ],
+      "technologies": [
+        "Next.js",
+        "React",
+        "Cloudflare Workers",
+        "D1"
+      ],
+      "group": "past",
+      "lifecycle": "inactive",
+      "shareable": true,
+      "deployed": true,
+      "deploymentProviders": [
+        "Cloudflare Workers"
+      ],
+      "domains": [
+        "rolepatch.com"
+      ],
+      "url": "https://rolepatch.com",
+      "repositoryUrl": "https://github.com/Significant-Hobbies/rolepatch",
+      "changelogUrl": "https://rolepatch.com/changelog",
+      "roadmapUrl": "https://github.com/Significant-Hobbies/rolepatch/issues",
+      "firstCommitAt": "2026-02-23",
+      "latestCommitAt": "2026-09-07"
+    },
+    {
       "id": "starboard",
       "name": "Starboard",
       "description": "Explore public GitHub repositories and related projects through a searchable discovery experiment.",
@@ -1194,6 +1236,31 @@
         "mechanism": "A curated research dataset is indexed for search and retrieval-assisted analysis with source structure intact.",
         "proof": "The corpus and discovery system are essentially complete and available when a real research question appears.",
         "nextAction": "Use the library for a named research question; maintain the corpus rather than expanding it speculatively."
+      }
+    },
+    {
+      "id": "rolepatch",
+      "name": "RolePatch",
+      "description": "A guest resume-tailoring experiment with a reviewable diff and browser-local document exports.",
+      "url": "https://rolepatch.com",
+      "tier": "secondary",
+      "category": "personal",
+      "priority": "P2",
+      "spotlight": false,
+      "lifecycle": "inactive",
+      "shareable": true,
+      "maturity": "maintained",
+      "changelogUrl": "https://rolepatch.com/changelog",
+      "repositoryUrl": "https://github.com/Significant-Hobbies/rolepatch",
+      "roadmapUrl": "https://github.com/Significant-Hobbies/rolepatch/issues",
+      "pillarId": "build",
+      "purposeContract": {
+        "purpose": "RolePatch tailors a resume and supporting application material to the evidence and language of a specific job.",
+        "audience": "A job seeker preparing a serious application for a particular role.",
+        "outcome": "Present relevant experience more clearly and prepare for the role without inventing qualifications.",
+        "mechanism": "Paste a resume and job description, review the generated changes, save in the browser, and export the current document.",
+        "proof": "The guest resume, tailoring, review, save/reload and local document-export path has been verified with synthetic examples. Account sync and broader application tools remain unqualified.",
+        "nextAction": "Try the guest workflow for one job, review every proposed claim, and export the version you want to use."
       }
     },
     {
