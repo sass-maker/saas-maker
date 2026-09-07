@@ -19,11 +19,11 @@ describe('verified public Fleet directory', () => {
     );
 
     expect(catalog.schemaVersion).toBe(5);
-    expect(catalog.directory).toHaveLength(16);
-    expect(new Set(ids).size).toBe(16);
+    expect(catalog.directory).toHaveLength(21);
+    expect(new Set(ids).size).toBe(21);
     expect(counts.current).toBe(4);
     expect(counts.featured).toBe(1);
-    expect(counts.past).toBe(11);
+    expect(counts.past).toBe(16);
     expect(
       catalog.directory.find((project: { id: string }) => project.id === 'web-playables')
     ).toMatchObject({ lifecycle: 'inactive', shareable: true, group: 'past' });
@@ -38,6 +38,26 @@ describe('verified public Fleet directory', () => {
     expect(ids).not.toContain('chess');
     expect(ids).not.toContain('journal');
     expect(ids).not.toContain('nomad-data-adventure');
+    for (const heldId of [
+      'reel-pipeline',
+      'forecast-lab',
+      'companion-robot',
+      'ai-game',
+      'open-historia',
+      'motion',
+      'truehire',
+      'mobile-dev-cockpit',
+    ]) {
+      expect(ids).not.toContain(heldId);
+    }
+    expect(
+      catalog.directory.find((project: { id: string }) => project.id === 'everythingrated')
+        .purposeContract.proof
+    ).toContain('early opinions, not benchmarks or consensus');
+    expect(
+      catalog.directory.find((project: { id: string }) => project.id === 'chatgpt-memory-insights')
+        .description
+    ).toContain('browser-local experiment');
 
     for (const project of catalog.directory) {
       expect(project.shareable).toBe(true);

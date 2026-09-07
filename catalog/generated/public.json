@@ -173,6 +173,46 @@
       "latestCommitAt": "2026-09-06"
     },
     {
+      "id": "chatgpt-memory-insights",
+      "name": "Memory Map",
+      "description": "A browser-local experiment for importing a ChatGPT export, exploring semantic themes and search, and optionally saving analysis on your device.",
+      "makerNote": "I wanted to learn what my exported AI conversations reveal about my themes, emotions, memory, and personal change.",
+      "purposeContract": {
+        "purpose": "Memory Map turns an exported AI conversation history into a private map of recurring themes, facts, emotions, and change.",
+        "audience": "People curious about patterns across their own ChatGPT history who do not want to upload the archive to a service.",
+        "outcome": "Recognize recurring concerns and how interests, language, and personal themes changed over time.",
+        "mechanism": "The browser computes structured conversation analysis locally from an imported export and presents linked historical views.",
+        "proof": "A useful browser-local dashboard exists today; deeper shift analysis and additional export sources remain active work.",
+        "nextAction": "Import a ChatGPT export locally and explore the resulting private map; the source archive stays in the browser."
+      },
+      "kind": "product",
+      "form": "Web app",
+      "platforms": [
+        "Web"
+      ],
+      "technologies": [
+        "Astro",
+        "TypeScript",
+        "Cloudflare Pages"
+      ],
+      "group": "past",
+      "lifecycle": "inactive",
+      "shareable": true,
+      "deployed": true,
+      "deploymentProviders": [
+        "Cloudflare Pages"
+      ],
+      "domains": [
+        "chatgpt.significanthobbies.com"
+      ],
+      "url": "https://chatgpt.significanthobbies.com",
+      "repositoryUrl": "https://github.com/Significant-Hobbies/chatgpt-memory-insights",
+      "changelogUrl": "https://chatgpt.significanthobbies.com/changelog",
+      "roadmapUrl": "https://github.com/Significant-Hobbies/chatgpt-memory-insights/issues",
+      "firstCommitAt": "2026-07-28",
+      "latestCommitAt": "2026-09-07"
+    },
+    {
       "id": "psi-swarm",
       "name": "PSI Swarm",
       "description": "Source-installed local Lighthouse audits with saved history; use the documented source setup, not the older packaged release.",
@@ -299,6 +339,46 @@
       "latestCommitAt": "2026-09-07"
     },
     {
+      "id": "everythingrated",
+      "name": "EverythingRated",
+      "description": "A ratings experiment for comparing AI developer tools, with visible small-sample counts and shareable weighting.",
+      "makerNote": "I have long wanted a place where people can make lists and rate anything, while recognizing that its social loop needs real care.",
+      "purposeContract": {
+        "purpose": "EverythingRated makes anonymous opinions about AI developer tools visible axis by axis.",
+        "audience": "Developers and technical operators comparing AI development tools for real projects.",
+        "outcome": "Inspect trade-offs across Speed, Accuracy, Cost, Ergonomics and Integration depth, with the sample size visible.",
+        "mechanism": "A public directory combines per-axis rating counts with weighted comparison links; unrated axes remain visibly unavailable.",
+        "proof": "The hosted guest comparison covers a 24-tool directory with five axes. Initial owner ratings and small samples are early opinions, not benchmarks or consensus.",
+        "nextAction": "Compare tools, inspect the per-axis evidence counts, and share a weighted comparison as an experiment. Rating submission is outside the verified guest workflow."
+      },
+      "kind": "experiment",
+      "form": "Ratings experiment",
+      "platforms": [
+        "Web"
+      ],
+      "technologies": [
+        "Astro",
+        "Next.js",
+        "Cloudflare Workers",
+        "D1"
+      ],
+      "group": "past",
+      "lifecycle": "inactive",
+      "shareable": true,
+      "deployed": true,
+      "deploymentProviders": [
+        "Cloudflare Workers"
+      ],
+      "domains": [
+        "ratings.highsignal.app"
+      ],
+      "url": "https://ratings.highsignal.app",
+      "repositoryUrl": "https://github.com/High-Signal-App/everythingrated",
+      "roadmapUrl": "https://github.com/High-Signal-App/everythingrated/issues",
+      "firstCommitAt": "2026-04-26",
+      "latestCommitAt": "2026-09-07"
+    },
+    {
       "id": "research-papers",
       "name": "Research Papers",
       "description": "Search academic papers and follow original sources; account-based research chat is not yet qualified.",
@@ -420,7 +500,7 @@
       "changelogUrl": "https://tv.significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/looptv/issues",
       "firstCommitAt": "2026-04-04",
-      "latestCommitAt": "2026-09-06"
+      "latestCommitAt": "2026-09-07"
     },
     {
       "id": "starboard",
@@ -465,6 +545,47 @@
       "latestCommitAt": "2026-09-07"
     },
     {
+      "id": "protein-index",
+      "name": "Protein Index",
+      "description": "Explore dated nutrition records with original label links, observation dates and explicit verification limits.",
+      "makerNote": "I wanted a clear catalog for comparing the protein products available in India, despite the difficulty of reliable data.",
+      "purposeContract": {
+        "purpose": "Protein Index was built to catalogue and compare protein products available in India using trustworthy nutrition data.",
+        "audience": "Indian shoppers comparing packaged protein sources on nutrition, price, and practical fit.",
+        "outcome": "Inspect recorded nutrition alongside its source, observation date and verification authority.",
+        "mechanism": "A product catalogue normalizes nutrition and comparison fields across available Indian protein products.",
+        "proof": "Hosted search and detail expose dated source and authority labels; one original nutrition label and its density calculation were independently checked. This does not verify the entire catalogue.",
+        "nextAction": "Explore dated records and inspect original labels; current product identity and packaging require separate verification."
+      },
+      "kind": "experiment",
+      "form": "Data API and web app",
+      "platforms": [
+        "Web",
+        "API"
+      ],
+      "technologies": [
+        "React",
+        "Hono",
+        "Cloudflare Workers",
+        "D1"
+      ],
+      "group": "past",
+      "lifecycle": "inactive",
+      "shareable": true,
+      "deployed": true,
+      "deploymentProviders": [
+        "Cloudflare Workers"
+      ],
+      "domains": [
+        "protein.significanthobbies.com"
+      ],
+      "url": "https://protein.significanthobbies.com",
+      "repositoryUrl": "https://github.com/Significant-Hobbies/protein-index-resilience",
+      "roadmapUrl": "https://github.com/Significant-Hobbies/protein-index-resilience/issues",
+      "firstCommitAt": "2026-07-15",
+      "latestCommitAt": "2026-09-07"
+    },
+    {
       "id": "veg-protein-food",
       "name": "Recipe Index",
       "description": "Search vegetarian recipes by protein and calories, with links to the original recipe publishers.",
@@ -502,6 +623,48 @@
       "roadmapUrl": "https://github.com/Significant-Hobbies/veg-protein-food/issues",
       "firstCommitAt": "2026-08-15",
       "latestCommitAt": "2026-09-06"
+    },
+    {
+      "id": "mashup",
+      "name": "Mashup",
+      "description": "Two playable examples of a local media-editing pipeline, with captions and inspectable source and approval receipts.",
+      "makerNote": "I wanted a creator’s archive to become coherent topic-specific compilations instead of a pile of isolated clips.",
+      "purposeContract": {
+        "purpose": "Mashup turns an owned creator archive into coherent topic-specific compilations while keeping every edit inspectable.",
+        "audience": "A creator or operator assembling comedy, motivation, podcast, or clipping compilations from approved media.",
+        "outcome": "Find, approve, sequence, and render useful clips without losing source provenance or editorial control.",
+        "mechanism": "A local pipeline combines archive analysis, clipping, editable EDLs, source receipts, approval boundaries, and deterministic rendering.",
+        "proof": "The first public Startups proof assembles a source-faithful 47-second argument from four beats across three Creative Commons podcast episodes, with captions and media receipts.",
+        "nextAction": "Watch the public examples and inspect their source receipts. The local operator workflow and creator pilot remain separate from this showcase."
+      },
+      "kind": "experiment",
+      "form": "Local media tool with public proof",
+      "platforms": [
+        "Web",
+        "CLI",
+        "Local"
+      ],
+      "technologies": [
+        "Python",
+        "FFmpeg",
+        "Astro",
+        "Cloudflare Pages"
+      ],
+      "group": "past",
+      "lifecycle": "inactive",
+      "shareable": true,
+      "deployed": true,
+      "deploymentProviders": [
+        "Cloudflare Pages"
+      ],
+      "domains": [
+        "mashup.highsignal.app"
+      ],
+      "url": "https://mashup.highsignal.app",
+      "repositoryUrl": "https://github.com/sass-maker/mashup",
+      "roadmapUrl": "https://github.com/sass-maker/mashup/issues",
+      "firstCommitAt": "2026-07-25",
+      "latestCommitAt": "2026-09-07"
     },
     {
       "id": "web-playables",
@@ -665,6 +828,47 @@
       "changelogUrl": "https://field-track.sassmaker.com/changelog",
       "roadmapUrl": "https://github.com/sass-maker/field-track/issues",
       "firstCommitAt": "2026-08-12",
+      "latestCommitAt": "2026-09-07"
+    },
+    {
+      "id": "reddit-insights",
+      "name": "Reddit Insights",
+      "description": "Search a dated snapshot of 93 Reddit communities in your browser, with links to original posts and explicit provenance limits.",
+      "makerNote": "I wanted to understand how the signals and emotions inside a subreddit change over time, even though historical data is difficult to obtain.",
+      "purposeContract": {
+        "purpose": "Reddit Insights studies how topics, signals, and emotional tone inside a subreddit change over time.",
+        "audience": "A researcher or product operator following a specific community longitudinally.",
+        "outcome": "Recognize recurring shifts and emerging concerns from a retained body of subreddit evidence.",
+        "mechanism": "A bounded collector stores attributable snapshots and derives recurring insight views without claiming unavailable history.",
+        "proof": "The collector and snapshot model exist, but reliable lawful access to historical Reddit data remains the central blocker.",
+        "nextAction": "Use it for forward collection or retained snapshots; historical claims must wait for a lawful dependable source."
+      },
+      "kind": "experiment",
+      "form": "Research collector",
+      "platforms": [
+        "Web",
+        "API"
+      ],
+      "technologies": [
+        "TypeScript",
+        "Cloudflare Workers",
+        "R2"
+      ],
+      "group": "past",
+      "lifecycle": "inactive",
+      "shareable": true,
+      "deployed": true,
+      "deploymentProviders": [
+        "Cloudflare Pages",
+        "Cloudflare Workers"
+      ],
+      "domains": [
+        "reddit-insights.highsignal.app"
+      ],
+      "url": "https://reddit-insights.highsignal.app",
+      "repositoryUrl": "https://github.com/High-Signal-App/research-subreddit",
+      "roadmapUrl": "https://github.com/High-Signal-App/research-subreddit/issues",
+      "firstCommitAt": "2026-08-07",
       "latestCommitAt": "2026-09-07"
     }
   ],
@@ -893,6 +1097,31 @@
       }
     },
     {
+      "id": "chatgpt-memory-insights",
+      "name": "Memory Map",
+      "description": "A browser-local experiment for importing a ChatGPT export, exploring semantic themes and search, and optionally saving analysis on your device.",
+      "url": "https://chatgpt.significanthobbies.com",
+      "tier": "secondary",
+      "category": "personal",
+      "priority": "P2",
+      "spotlight": false,
+      "lifecycle": "inactive",
+      "shareable": true,
+      "maturity": "experiment",
+      "changelogUrl": "https://chatgpt.significanthobbies.com/changelog",
+      "repositoryUrl": "https://github.com/Significant-Hobbies/chatgpt-memory-insights",
+      "roadmapUrl": "https://github.com/Significant-Hobbies/chatgpt-memory-insights/issues",
+      "pillarId": "learn",
+      "purposeContract": {
+        "purpose": "Memory Map turns an exported AI conversation history into a private map of recurring themes, facts, emotions, and change.",
+        "audience": "People curious about patterns across their own ChatGPT history who do not want to upload the archive to a service.",
+        "outcome": "Recognize recurring concerns and how interests, language, and personal themes changed over time.",
+        "mechanism": "The browser computes structured conversation analysis locally from an imported export and presents linked historical views.",
+        "proof": "A useful browser-local dashboard exists today; deeper shift analysis and additional export sources remain active work.",
+        "nextAction": "Import a ChatGPT export locally and explore the resulting private map; the source archive stays in the browser."
+      }
+    },
+    {
       "id": "psi-swarm",
       "name": "PSI Swarm",
       "description": "Source-installed local Lighthouse audits with saved history; use the documented source setup, not the older packaged release.",
@@ -1044,6 +1273,66 @@
     }
   ],
   "pastProjects": [
+    {
+      "id": "everythingrated",
+      "name": "EverythingRated",
+      "description": "A ratings experiment for comparing AI developer tools, with visible small-sample counts and shareable weighting.",
+      "lifecycle": "inactive",
+      "repositoryUrl": "https://github.com/High-Signal-App/everythingrated",
+      "purposeContract": {
+        "purpose": "EverythingRated makes anonymous opinions about AI developer tools visible axis by axis.",
+        "audience": "Developers and technical operators comparing AI development tools for real projects.",
+        "outcome": "Inspect trade-offs across Speed, Accuracy, Cost, Ergonomics and Integration depth, with the sample size visible.",
+        "mechanism": "A public directory combines per-axis rating counts with weighted comparison links; unrated axes remain visibly unavailable.",
+        "proof": "The hosted guest comparison covers a 24-tool directory with five axes. Initial owner ratings and small samples are early opinions, not benchmarks or consensus.",
+        "nextAction": "Compare tools, inspect the per-axis evidence counts, and share a weighted comparison as an experiment. Rating submission is outside the verified guest workflow."
+      }
+    },
+    {
+      "id": "mashup",
+      "name": "Mashup",
+      "description": "Two playable examples of a local media-editing pipeline, with captions and inspectable source and approval receipts.",
+      "lifecycle": "inactive",
+      "repositoryUrl": "https://github.com/sass-maker/mashup",
+      "purposeContract": {
+        "purpose": "Mashup turns an owned creator archive into coherent topic-specific compilations while keeping every edit inspectable.",
+        "audience": "A creator or operator assembling comedy, motivation, podcast, or clipping compilations from approved media.",
+        "outcome": "Find, approve, sequence, and render useful clips without losing source provenance or editorial control.",
+        "mechanism": "A local pipeline combines archive analysis, clipping, editable EDLs, source receipts, approval boundaries, and deterministic rendering.",
+        "proof": "The first public Startups proof assembles a source-faithful 47-second argument from four beats across three Creative Commons podcast episodes, with captions and media receipts.",
+        "nextAction": "Watch the public examples and inspect their source receipts. The local operator workflow and creator pilot remain separate from this showcase."
+      }
+    },
+    {
+      "id": "protein-index",
+      "name": "Protein Index",
+      "description": "Explore dated nutrition records with original label links, observation dates and explicit verification limits.",
+      "lifecycle": "inactive",
+      "repositoryUrl": "https://github.com/Significant-Hobbies/protein-index-resilience",
+      "purposeContract": {
+        "purpose": "Protein Index was built to catalogue and compare protein products available in India using trustworthy nutrition data.",
+        "audience": "Indian shoppers comparing packaged protein sources on nutrition, price, and practical fit.",
+        "outcome": "Inspect recorded nutrition alongside its source, observation date and verification authority.",
+        "mechanism": "A product catalogue normalizes nutrition and comparison fields across available Indian protein products.",
+        "proof": "Hosted search and detail expose dated source and authority labels; one original nutrition label and its density calculation were independently checked. This does not verify the entire catalogue.",
+        "nextAction": "Explore dated records and inspect original labels; current product identity and packaging require separate verification."
+      }
+    },
+    {
+      "id": "reddit-insights",
+      "name": "Reddit Insights",
+      "description": "Search a dated snapshot of 93 Reddit communities in your browser, with links to original posts and explicit provenance limits.",
+      "lifecycle": "inactive",
+      "repositoryUrl": "https://github.com/High-Signal-App/research-subreddit",
+      "purposeContract": {
+        "purpose": "Reddit Insights studies how topics, signals, and emotional tone inside a subreddit change over time.",
+        "audience": "A researcher or product operator following a specific community longitudinally.",
+        "outcome": "Recognize recurring shifts and emerging concerns from a retained body of subreddit evidence.",
+        "mechanism": "A bounded collector stores attributable snapshots and derives recurring insight views without claiming unavailable history.",
+        "proof": "The collector and snapshot model exist, but reliable lawful access to historical Reddit data remains the central blocker.",
+        "nextAction": "Use it for forward collection or retained snapshots; historical claims must wait for a lawful dependable source."
+      }
+    },
     {
       "id": "web-playables",
       "name": "Web Playables",
