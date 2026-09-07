@@ -231,9 +231,9 @@ function directoryMarkdown(): string {
   ]);
 
   return [
-    '# SaaS Maker complete project directory',
+    '# SaaS Maker shareable projects',
     '',
-    `${publicCatalog.directory.length} Fleet identities, including current, supporting, parked, and past work. Inclusion is inventory, not a maintenance or deployment claim.`,
+    `${publicCatalog.directory.length} shareable projects and experiments. Paused entries have no active development commitment; inclusion does not mean a finished product.`,
     '',
     publicCatalog.historySemantics,
     '',
@@ -318,7 +318,7 @@ const fixedRoutes: PublicRoute[] = [
   {
     id: 'projects',
     path: '/projects',
-    description: 'Complete public directory of all Fleet project identities',
+    description: 'Public directory of shareable Fleet projects and experiments',
     kind: 'collection',
     markdown: directoryMarkdown(),
   },

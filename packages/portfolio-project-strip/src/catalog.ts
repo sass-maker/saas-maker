@@ -3,59 +3,14 @@ import type { PortfolioProject } from './types';
 
 export const DEFAULT_PROJECTS: readonly PortfolioProject[] = [
   {
-    "id": "codevetter",
-    "name": "CodeVetter",
-    "url": "https://codevetter.com",
-    "description": "Execution-backed verification for AI-written software changes — local-first and inspectable.",
-    "tier": "focus",
-    "priority": "P1",
-    "category": "product",
-    "maturity": "public-ready",
-    "spotlight": true,
-    "pillarId": "build",
-    "domains": [
-      "codevetter.com"
-    ]
-  },
-  {
-    "id": "pace",
-    "name": "HeyPace",
-    "url": "https://heypace.app",
-    "description": "Local-only macOS voice agent that can understand what is on your screen.",
-    "tier": "focus",
-    "priority": "P1",
-    "category": "product",
-    "maturity": "public-ready",
-    "spotlight": true,
-    "pillarId": "build",
-    "domains": [
-      "heypace.app"
-    ]
-  },
-  {
-    "id": "high-signal",
-    "name": "High Signal",
-    "url": "https://highsignal.app",
-    "description": "Evidence-backed daily intelligence across technology, startups, finance, and public markets.",
-    "tier": "active",
-    "priority": "P2",
-    "category": "product",
-    "maturity": "public-ready",
-    "spotlight": true,
-    "pillarId": "learn",
-    "domains": [
-      "highsignal.app"
-    ]
-  },
-  {
     "id": "posttrainllm",
     "name": "PostTrainLLM",
     "url": "https://posttrainllm.com",
-    "description": "A local factory for training, evaluating, and running specialist language models.",
+    "description": "An experimental browser model playground: run small language models locally with visible generation metrics.",
     "tier": "focus",
     "priority": "P1",
     "category": "product",
-    "maturity": "public-ready",
+    "maturity": "experiment",
     "spotlight": true,
     "pillarId": "build",
     "domains": [
@@ -63,104 +18,14 @@ export const DEFAULT_PROJECTS: readonly PortfolioProject[] = [
     ]
   },
   {
-    "id": "anchor",
-    "name": "Anchor",
-    "url": "https://anchor.significanthobbies.com",
-    "description": "A local-first day planner and focus timer for Mac, iPhone, and Apple Watch that explains the gap between the schedule you planned and the day you lived.",
-    "tier": "active",
-    "priority": "P2",
-    "category": "personal",
-    "maturity": "in-progress",
-    "spotlight": false,
-    "pillarId": "learn",
-    "domains": [
-      "anchor.significanthobbies.com"
-    ]
-  },
-  {
-    "id": "anime-list",
-    "name": "Anime List",
-    "url": "https://anime.significanthobbies.com",
-    "description": "Anime and manga discovery with multi-axis filtering and personal watchlists.",
-    "tier": "secondary",
-    "priority": "P4",
-    "category": "personal",
-    "maturity": "maintained",
-    "spotlight": false,
-    "pillarId": "learn",
-    "domains": [
-      "anime.significanthobbies.com"
-    ]
-  },
-  {
-    "id": "app-health",
-    "name": "App Health",
-    "url": "https://health.sassmaker.com",
-    "description": "Privacy-first endpoint health for Node, Go, and OpenTelemetry services.",
-    "tier": "active",
-    "priority": "P2",
-    "category": "product",
-    "maturity": "public-ready",
-    "spotlight": false,
-    "pillarId": "visibility",
-    "domains": [
-      "health.sassmaker.com"
-    ]
-  },
-  {
-    "id": "calorie",
-    "name": "Calorie",
-    "url": "https://calorie.significanthobbies.com",
-    "description": "A private, local-first food, water, and weight journal with transparent timing guidance.",
-    "tier": "secondary",
-    "priority": "P2",
-    "category": "personal",
-    "maturity": "maintained",
-    "spotlight": false,
-    "pillarId": "learn",
-    "domains": [
-      "calorie.significanthobbies.com"
-    ]
-  },
-  {
-    "id": "drank",
-    "name": "Drank",
-    "url": "https://domains.sassmaker.com",
-    "description": "Domain Rating intelligence for product, SEO, and market research.",
-    "tier": "active",
-    "priority": "P4",
-    "category": "helper",
-    "maturity": "maintained",
-    "spotlight": false,
-    "pillarId": "market",
-    "domains": [
-      "domains.sassmaker.com"
-    ]
-  },
-  {
-    "id": "email-manager",
-    "name": "Email Manager",
-    "url": "https://mail.significanthobbies.com",
-    "description": "A private Gmail workspace for local semantic search, sender insights, and explicit unsubscribe workflows.",
-    "tier": "active",
-    "priority": "P4",
-    "category": "personal",
-    "maturity": "maintained",
-    "spotlight": false,
-    "pillarId": "learn",
-    "domains": [
-      "mail.significanthobbies.com"
-    ]
-  },
-  {
     "id": "field-track",
     "name": "Field Track",
     "url": "https://field-track.sassmaker.com",
-    "description": "A synthetic manager dashboard for continuous, administrator-enrolled Android field tracking, freshness-aware locations, and retained route review.",
+    "description": "A labelled synthetic field-team demo for exploring routes, visits and agent summaries; Android tracking is not qualified.",
     "tier": "active",
     "priority": "P2",
     "category": "product",
-    "maturity": "in-progress",
+    "maturity": "experiment",
     "spotlight": false,
     "pillarId": "build",
     "domains": [
@@ -168,29 +33,29 @@ export const DEFAULT_PROJECTS: readonly PortfolioProject[] = [
     ]
   },
   {
-    "id": "free-ai",
-    "name": "Free AI",
-    "url": "https://ai-gateway.sassmaker.com",
-    "description": "OpenAI-compatible gateway across free-tier model providers.",
-    "tier": "active",
-    "priority": "P4",
+    "id": "gitstat",
+    "name": "GitStat",
+    "url": "https://git.significanthobbies.com",
+    "description": "An experimental public GitHub analysis tool for repository activity, contributions and code churn.",
+    "tier": "secondary",
+    "priority": "P2",
     "category": "product",
-    "maturity": "maintained",
+    "maturity": "experiment",
     "spotlight": false,
     "pillarId": "build",
     "domains": [
-      "ai-gateway.sassmaker.com"
+      "git.significanthobbies.com"
     ]
   },
   {
     "id": "on-record",
     "name": "High Signal Podcasts",
     "url": "https://podcasts.highsignal.app",
-    "description": "Source-backed podcast intelligence with attributable claims and recommendations linked to the original episode.",
+    "description": "Search evidenced podcast claims and follow links back to the original episode or publication.",
     "tier": "active",
     "priority": "P2",
     "category": "product",
-    "maturity": "public-ready",
+    "maturity": "experiment",
     "spotlight": false,
     "pillarId": "learn",
     "domains": [
@@ -198,89 +63,29 @@ export const DEFAULT_PROJECTS: readonly PortfolioProject[] = [
     ]
   },
   {
-    "id": "india-standards",
-    "name": "India Standards",
-    "url": "https://india-standards.significanthobbies.com",
-    "description": "A transparent India demographic standards calculator using aggregate PLFS data, explicit uncertainty ranges, and clear source limits.",
-    "tier": "secondary",
-    "priority": "P4",
-    "category": "personal",
-    "maturity": "maintained",
-    "spotlight": false,
-    "pillarId": "learn",
-    "domains": [
-      "india-standards.significanthobbies.com"
-    ]
-  },
-  {
-    "id": "journal",
-    "name": "Journal",
-    "url": "https://journal.significanthobbies.com",
-    "description": "A private iPhone journal for daily writing, reflection, and a personal archive that stays under the owner's control.",
-    "tier": "secondary",
-    "priority": "P2",
-    "category": "personal",
-    "maturity": "in-progress",
-    "spotlight": false,
-    "pillarId": "learn",
-    "domains": [
-      "journal.significanthobbies.com"
-    ]
-  },
-  {
-    "id": "karte",
-    "name": "Karte",
-    "url": "https://karte.cc",
-    "description": "A creator-owned public profile that answers visitor questions and preserves context for better inbound.",
-    "tier": "secondary",
-    "priority": "P2",
-    "category": "personal",
-    "maturity": "public-ready",
-    "spotlight": false,
-    "pillarId": "build",
-    "domains": [
-      "karte.cc"
-    ]
-  },
-  {
-    "id": "kith",
-    "name": "Kith",
-    "url": "https://kith.significanthobbies.com",
-    "description": "A private iPhone app for the people you actually want to stay close to — closeness-weighted constellation home, standing notes, and a chronological log per person.",
-    "tier": "secondary",
-    "priority": "P2",
-    "category": "personal",
-    "maturity": "in-progress",
-    "spotlight": false,
-    "pillarId": "learn",
-    "domains": [
-      "kith.significanthobbies.com"
-    ]
-  },
-  {
-    "id": "knowledge-base",
-    "name": "Knowledge Base",
-    "url": "https://knowledgebase.sassmaker.com",
-    "description": "Private agent search over specialized corpora with ranked citations, provenance, and schema-aware retrieval.",
+    "id": "issue-pages",
+    "name": "IssuePages",
+    "url": "https://issues.sarthakagrawal.dev",
+    "description": "Read public GitHub issues as focused articles; publishing requires repository-owner access.",
     "tier": "active",
-    "priority": "P2",
-    "category": "product",
-    "maturity": "maintained",
+    "priority": "P4",
+    "category": "experiment",
+    "maturity": "experiment",
     "spotlight": false,
     "pillarId": "build",
     "domains": [
-      "knowledgebase.sassmaker.com"
+      "issues.sarthakagrawal.dev"
     ]
   },
   {
     "id": "live",
     "name": "Live",
     "url": "https://live.significanthobbies.com",
-    "description": "The long-running Significant Hobbies experience for recording, exploring, and acting on a life lived beyond passive consumption.",
+    "description": "A free personality and hobby quiz that suggests a small experiment to try; account planning is not yet qualified.",
     "tier": "active",
     "priority": "P2",
     "category": "personal",
-    "maturity": "maintained",
+    "maturity": "experiment",
     "spotlight": false,
     "pillarId": "learn",
     "domains": [
@@ -288,29 +93,29 @@ export const DEFAULT_PROJECTS: readonly PortfolioProject[] = [
     ]
   },
   {
-    "id": "local-ai-video-studio",
-    "name": "Local AI Video Studio",
-    "url": "https://local-ai-video-studio.sassmaker.com",
-    "description": "A local-first Mac studio for comparing reproducible video-effect variants before export.",
-    "tier": "active",
-    "priority": "P2",
-    "category": "product",
-    "maturity": "maintained",
+    "id": "what-it-takes-to-win",
+    "name": "Look Sideways",
+    "url": "https://paths.significanthobbies.com",
+    "description": "Explore sourced career turning points with explicit survivorship and forecasting limits.",
+    "tier": "secondary",
+    "priority": "P4",
+    "category": "personal",
+    "maturity": "experiment",
     "spotlight": false,
-    "pillarId": "build",
+    "pillarId": "learn",
     "domains": [
-      "local-ai-video-studio.sassmaker.com"
+      "paths.significanthobbies.com"
     ]
   },
   {
     "id": "looptv",
     "name": "LoopTV",
     "url": "https://tv.significanthobbies.com",
-    "description": "A lean-back, TV-style random video player for curated channels.",
+    "description": "An experimental lean-back queue of curated science and other videos.",
     "tier": "secondary",
     "priority": "P4",
     "category": "personal",
-    "maturity": "maintained",
+    "maturity": "experiment",
     "spotlight": false,
     "pillarId": "learn",
     "domains": [
@@ -318,89 +123,44 @@ export const DEFAULT_PROJECTS: readonly PortfolioProject[] = [
     ]
   },
   {
-    "id": "chatgpt-memory-insights",
-    "name": "Memory Map",
-    "url": "https://chatgpt.significanthobbies.com",
-    "description": "Turn a ChatGPT export into a private, browser-computed map of recurring themes, facts, and conversations.",
-    "tier": "secondary",
-    "priority": "P2",
-    "category": "personal",
-    "maturity": "maintained",
-    "spotlight": false,
-    "pillarId": "learn",
-    "domains": [
-      "chatgpt.significanthobbies.com"
-    ]
-  },
-  {
-    "id": "motion",
-    "name": "Motion",
-    "url": "https://motion.significanthobbies.com",
-    "description": "Use your body as the controller for an iPhone-hosted game that can mirror to a larger screen.",
-    "tier": "active",
-    "priority": "P2",
-    "category": "personal",
-    "maturity": "maintained",
-    "spotlight": false,
-    "pillarId": "build",
-    "domains": [
-      "motion.significanthobbies.com"
-    ]
-  },
-  {
-    "id": "agent-office",
-    "name": "Office OS",
-    "url": "https://office-os.sassmaker.com",
-    "description": "A local-first Mac workplace where named AI employees have bounded responsibilities and their work stays inspectable.",
-    "tier": "active",
-    "priority": "P1",
-    "category": "product",
-    "maturity": "maintained",
-    "spotlight": false,
-    "pillarId": "build",
-    "domains": [
-      "office-os.sassmaker.com"
-    ]
-  },
-  {
-    "id": "psi-swarm",
-    "name": "PSI Swarm",
-    "url": "https://performance.sassmaker.com",
-    "description": "Repeated Lighthouse distributions for honest website performance tracking.",
+    "id": "materia",
+    "name": "Materia",
+    "url": "https://materia.significanthobbies.com",
+    "description": "An educational body-and-remedy reference with condition-specific research citations and explicit uncertainty.",
     "tier": "active",
     "priority": "P4",
-    "category": "helper",
-    "maturity": "maintained",
+    "category": "experiment",
+    "maturity": "experiment",
     "spotlight": false,
-    "pillarId": "visibility",
+    "pillarId": "build",
     "domains": [
-      "performance.sassmaker.com"
+      "materia.significanthobbies.com"
     ]
   },
   {
-    "id": "reader",
-    "name": "Reader",
-    "url": "https://read.significanthobbies.com",
-    "description": "Capture, annotate, revisit, and discuss saved reading.",
-    "tier": "secondary",
-    "priority": "P2",
-    "category": "personal",
-    "maturity": "maintained",
+    "id": "veg-protein-food",
+    "name": "Recipe Index",
+    "url": "https://veg-protein-food.significanthobbies.com",
+    "description": "Search vegetarian recipes by protein and calories, with links to the original recipe publishers.",
+    "tier": "active",
+    "priority": "P4",
+    "category": "experiment",
+    "maturity": "experiment",
     "spotlight": false,
-    "pillarId": "learn",
+    "pillarId": "build",
     "domains": [
-      "read.significanthobbies.com"
+      "veg-protein-food.significanthobbies.com"
     ]
   },
   {
     "id": "research-papers",
     "name": "Research Papers",
     "url": "https://papers.highsignal.app",
-    "description": "Academic paper discovery and a structured research data asset.",
+    "description": "Search academic papers and follow original sources; account-based research chat is not yet qualified.",
     "tier": "secondary",
     "priority": "P2",
     "category": "product",
-    "maturity": "maintained",
+    "maturity": "experiment",
     "spotlight": false,
     "pillarId": "learn",
     "domains": [
@@ -408,29 +168,14 @@ export const DEFAULT_PROJECTS: readonly PortfolioProject[] = [
     ]
   },
   {
-    "id": "rolepatch",
-    "name": "RolePatch",
-    "url": "https://rolepatch.com",
-    "description": "Evidence-bound resume tailoring and review-first application preparation for one specific job.",
-    "tier": "secondary",
-    "priority": "P2",
-    "category": "personal",
-    "maturity": "maintained",
-    "spotlight": false,
-    "pillarId": "build",
-    "domains": [
-      "rolepatch.com"
-    ]
-  },
-  {
     "id": "saas-maker",
     "name": "SaaS Maker",
     "url": "https://sassmaker.com",
-    "description": "Software as a specialized service: a living studio of focused products built for particular problems and maintained in public.",
+    "description": "A public directory of working experiments, reference projects and reusable tooling.",
     "tier": "active",
     "priority": "P2",
     "category": "product",
-    "maturity": "public-ready",
+    "maturity": "experiment",
     "spotlight": false,
     "pillarId": "build",
     "domains": [
@@ -441,11 +186,11 @@ export const DEFAULT_PROJECTS: readonly PortfolioProject[] = [
     "id": "sarthakagrawal-personal",
     "name": "Sarthak Agrawal",
     "url": "https://sarthakagrawal.dev",
-    "description": "Personal portfolio of Sarthak Agrawal — AI infrastructure and product engineer.",
+    "description": "Selected engineering case studies, technical writing and working project demonstrations.",
     "tier": "secondary",
     "priority": "P4",
     "category": "personal",
-    "maturity": "maintained",
+    "maturity": "experiment",
     "spotlight": false,
     "pillarId": "personal",
     "domains": [
@@ -453,78 +198,18 @@ export const DEFAULT_PROJECTS: readonly PortfolioProject[] = [
     ]
   },
   {
-    "id": "setline",
-    "name": "Setline",
-    "url": "https://setline.significanthobbies.com",
-    "description": "An iOS-native training tracker that runs a written strength, cardio and mobility programme one set at a time and measures each exercise against an authored target.",
-    "tier": "secondary",
-    "priority": "P2",
-    "category": "personal",
-    "maturity": "maintained",
-    "spotlight": false,
-    "pillarId": "learn",
-    "domains": [
-      "setline.significanthobbies.com"
-    ]
-  },
-  {
-    "id": "significanthobbies",
-    "name": "Significant Hobbies",
-    "url": "https://significanthobbies.com",
-    "description": "The shared Hub for Live, Journal, Calorie, Setline, Kith, and Anchor, backed by one privacy-aware control plane.",
-    "tier": "secondary",
-    "priority": "P2",
-    "category": "personal",
-    "maturity": "public-ready",
-    "spotlight": false,
-    "pillarId": "learn",
-    "domains": [
-      "significanthobbies.com"
-    ]
-  },
-  {
     "id": "starboard",
     "name": "Starboard",
     "url": "https://starboard.codevetter.com",
-    "description": "Organize and semantically search your GitHub stars.",
+    "description": "Explore public GitHub repositories and related projects through a searchable discovery experiment.",
     "tier": "secondary",
     "priority": "P2",
     "category": "product",
-    "maturity": "maintained",
+    "maturity": "experiment",
     "spotlight": false,
     "pillarId": "learn",
     "domains": [
       "starboard.codevetter.com"
-    ]
-  },
-  {
-    "id": "swe-interview-prep",
-    "name": "SWE Interview Prep",
-    "url": "https://learn.significanthobbies.com",
-    "description": "A learning OS for software-engineering interview practice.",
-    "tier": "secondary",
-    "priority": "P2",
-    "category": "personal",
-    "maturity": "maintained",
-    "spotlight": false,
-    "pillarId": "learn",
-    "domains": [
-      "learn.significanthobbies.com"
-    ]
-  },
-  {
-    "id": "what-it-takes-to-win",
-    "name": "What It Takes to Win",
-    "url": "https://paths.significanthobbies.com",
-    "description": "Explore 2,585 documented early-breakthrough paths without pretending success follows a formula.",
-    "tier": "secondary",
-    "priority": "P4",
-    "category": "personal",
-    "maturity": "maintained",
-    "spotlight": false,
-    "pillarId": "learn",
-    "domains": [
-      "paths.significanthobbies.com"
     ]
   }
 ];

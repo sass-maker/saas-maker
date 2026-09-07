@@ -140,7 +140,7 @@ describe('SaaS Maker public source boundary', () => {
     expect(routes).toMatch(/# Complete directory/);
     expect(routes).toMatch(/CORE\.flatMap/);
     expect(routes).not.toMatch(/publicCatalog\.pastProjects\.flatMap/);
-    expect(projects).toMatch(/throw new Error\(`Homepage spotlight is missing/);
+    expect(projects).toMatch(/products\.filter\(\(product\) => product\.spotlight\)/);
     expect(projects).not.toMatch(/ACTIVE_GROUPS|PAST_PROJECTS/);
   });
 
@@ -152,7 +152,7 @@ describe('SaaS Maker public source boundary', () => {
     ]);
     const catalog = JSON.parse(catalogSource);
 
-    expect(catalog.directory).toHaveLength(56);
+    expect(catalog.directory).toHaveLength(14);
     expect(detailPage).toMatch(/DIRECTORY_PROJECTS\.filter/);
     expect(detailPage).toMatch(/Why I made this\./);
     expect(detailPage).toMatch(/Public anatomy/);

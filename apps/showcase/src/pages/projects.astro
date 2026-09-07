@@ -45,7 +45,7 @@ const searchableText = (project: DirectoryProject) =>
     .toLocaleLowerCase();
 
 const currentCount = DIRECTORY_GROUPS.find((group) => group.id === 'current')?.projects.length ?? 0;
-const supportingCount = DIRECTORY_GROUPS.find((group) => group.id === 'supporting')?.projects.length ?? 0;
+const featuredCount = DIRECTORY_GROUPS.find((group) => group.id === 'featured')?.projects.length ?? 0;
 const pastCount = DIRECTORY_GROUPS.find((group) => group.id === 'past')?.projects.length ?? 0;
 const projectProfilePath = (project: DirectoryProject) =>
   project.id === 'saas-maker' ? '/' : `/p/${project.id}`;
@@ -53,7 +53,7 @@ const projectProfilePath = (project: DirectoryProject) =>
 
 <Layout
   title={`${DIRECTORY_COUNT} projects — SaaS Maker directory`}
-  description="The complete public Fleet project directory: current products, supporting tools, parked work, and past experiments with platforms, technology, deployment links, and Git history."
+  description="Working Fleet experiments and reference projects, grouped by current focus and paused work."
 >
   <!--
   THESIS: A complete portfolio is clearest as a working register, not a promotional card grid.
@@ -67,17 +67,17 @@ const projectProfilePath = (project: DirectoryProject) =>
     <main id="main-content" class="directory-shell">
       <header class="directory-intro">
         <div class="directory-intro-copy">
-          <p class="directory-kicker">The complete register</p>
-          <h1>Everything in Fleet.<br />Nothing hidden by focus.</h1>
+          <p class="directory-kicker">Selected work and experiments</p>
+          <h1>Useful things to try.<br />Experiments welcome.</h1>
           <p>
-            Current products, supporting tools, local work, and past experiments—each shown once
-            with what it is, where it runs, what it uses, and the public evidence available.
+            Working experiments and reference projects, with their scope and limits explained.
+            Paused work can still be useful; inclusion does not imply a finished product.
           </p>
         </div>
-        <div class="directory-count-pane" aria-label={`${DIRECTORY_COUNT} project identities`}>
+        <div class="directory-count-pane" aria-label={`${DIRECTORY_COUNT} projects`}>
           <strong>{DIRECTORY_COUNT}</strong>
-          <span>project identities</span>
-          <small>{currentCount} current · {supportingCount} supporting · {pastCount} past</small>
+          <span>projects</span>
+          <small>{featuredCount} featured · {currentCount} current · {pastCount} paused</small>
         </div>
       </header>
 
@@ -127,7 +127,7 @@ const projectProfilePath = (project: DirectoryProject) =>
         </div>
 
         <div class="directory-result-line">
-          <p id="directory-result-count" aria-live="polite">Showing all {DIRECTORY_COUNT} identities</p>
+          <p id="directory-result-count" aria-live="polite">Showing all {DIRECTORY_COUNT} projects</p>
           <button id="directory-reset" type="button">Reset filters</button>
         </div>
       </section>
@@ -137,7 +137,7 @@ const projectProfilePath = (project: DirectoryProject) =>
           <section class="directory-section" data-directory-section={group.id} aria-labelledby={`directory-${group.id}`}>
             <header class="directory-section-head">
               <div>
-                <p>{group.projects.length} identities</p>
+                <p>{group.projects.length} projects</p>
                 <h2 id={`directory-${group.id}`}>{group.label}</h2>
               </div>
               <p>{group.description}</p>
@@ -167,7 +167,7 @@ const projectProfilePath = (project: DirectoryProject) =>
                         <span class="directory-project-name">{project.name}</span>
                       </span>
                       <span class="directory-identity-description">
-                        {project.purposeContract?.purpose ?? project.description}
+                        {project.description}
                       </span>
                     </h3>
 
@@ -270,7 +270,7 @@ const projectProfilePath = (project: DirectoryProject) =>
       </div>
 
       <section class="directory-empty" data-directory-empty hidden aria-live="polite">
-        <strong>No identities match those filters.</strong>
+        <strong>No projects match those filters.</strong>
         <p>Clear the filters to return to the complete register.</p>
         <button type="button" data-empty-reset>Show all {DIRECTORY_COUNT}</button>
       </section>
@@ -278,12 +278,12 @@ const projectProfilePath = (project: DirectoryProject) =>
       <aside class="directory-provenance" aria-labelledby="directory-provenance-title">
         <div>
           <p class="directory-kicker">How to read this</p>
-          <h2 id="directory-provenance-title">Inventory is not promotion.</h2>
+          <h2 id="directory-provenance-title">Shareable does not mean finished.</h2>
         </div>
         <div>
           <p>
-            Inclusion means the identity remains accounted for. “Current” is the working set;
-            supporting and past projects stay visible so the portfolio does not become revisionist.
+            These projects have a useful public surface. “Current” marks active work; paused
+            experiments remain available without a promise of ongoing development.
           </p>
           <p>Deployment labels reflect catalog ownership, not a real-time availability check.</p>
           <p>{HISTORY_SEMANTICS}</p>
@@ -350,7 +350,7 @@ const projectProfilePath = (project: DirectoryProject) =>
 
     if (resultCount) {
       resultCount.textContent =
-        visible === rows.length ? `Showing all ${visible} identities` : `Showing ${visible} of ${rows.length} identities`;
+        visible === rows.length ? `Showing all ${visible} projects` : `Showing ${visible} of ${rows.length} projects`;
     }
     if (filterReturnCount) filterReturnCount.textContent = String(visible);
     if (empty) empty.hidden = visible !== 0;

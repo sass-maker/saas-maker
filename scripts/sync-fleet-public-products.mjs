@@ -21,6 +21,8 @@ const PUBLIC_FIELDS = new Set([
   'category',
   'priority',
   'spotlight',
+  'lifecycle',
+  'shareable',
   'maturity',
   'repositoryUrl',
   'changelogUrl',
@@ -30,6 +32,7 @@ const PUBLIC_FIELDS = new Set([
 ]);
 const REQUIRED_FIELDS = ['id', 'name', 'description', 'url'];
 const DIRECTORY_FIELDS = new Set([
+  'shareable',
   'id',
   'name',
   'description',

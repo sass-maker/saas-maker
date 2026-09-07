@@ -23,7 +23,7 @@ interface PublicProduct {
 const products = (publicCatalog.products as PublicProduct[]).filter(
   (product) => !['personal-website', 'saas-maker'].includes(product.id)
 );
-const spotlightOrder = ['codevetter', 'posttrainllm', 'pace', 'high-signal'];
+
 
 function toCore(product: PublicProduct): CoreProject {
   return {
@@ -34,14 +34,6 @@ function toCore(product: PublicProduct): CoreProject {
   };
 }
 
-const spotlight = spotlightOrder.map((id) => {
-  const product = products.find((candidate) => candidate.id === id);
-
-  if (!product?.spotlight) {
-    throw new Error(`Homepage spotlight is missing the public catalog entry for ${id}`);
-  }
-
-  return product;
-});
+const spotlight = products.filter((product) => product.spotlight);
 
 export const CORE = spotlight.map(toCore);

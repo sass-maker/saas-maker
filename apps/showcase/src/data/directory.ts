@@ -1,6 +1,6 @@
 import publicCatalog from '../../../../catalog/generated/public.json';
 
-export type DirectoryGroupId = 'current' | 'supporting' | 'past';
+export type DirectoryGroupId = 'featured' | 'current' | 'past';
 
 export interface PurposeContract {
   purpose: string;
@@ -37,22 +37,22 @@ export interface DirectoryProject {
 export const DIRECTORY_PROJECTS = publicCatalog.directory as DirectoryProject[];
 
 const GROUP_COPY: Record<DirectoryGroupId, { label: string; description: string }> = {
+  featured: {
+    label: 'Featured',
+    description: 'Shareable work from the primary focus.',
+  },
   current: {
     label: 'Current work',
     description: 'Products and platforms inside the current Fleet working set.',
   },
-  supporting: {
-    label: 'Supporting and parked',
-    description: 'Useful tools, local surfaces, and retained work outside the current focus set.',
-  },
   past: {
-    label: 'Past projects',
+    label: 'More experiments · paused',
     description:
-      'Archived experiments and source history, kept visible without implying maintenance.',
+      'Useful experiments and retained work, shared without an active development commitment.',
   },
 };
 
-export const DIRECTORY_GROUPS = (['current', 'supporting', 'past'] as const).map((id) => ({
+export const DIRECTORY_GROUPS = (['featured', 'current', 'past'] as const).map((id) => ({
   id,
   ...GROUP_COPY[id],
   projects: DIRECTORY_PROJECTS.filter((project) => project.group === id),

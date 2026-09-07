@@ -7,6 +7,8 @@ const PRODUCT_FIELDS = new Set([
   'category',
   'priority',
   'spotlight',
+  'lifecycle',
+  'shareable',
   'maturity',
   'repositoryUrl',
   'changelogUrl',
@@ -24,6 +26,7 @@ const PAST_PROJECT_FIELDS = new Set([
   'purposeContract',
 ]);
 const DIRECTORY_FIELDS = new Set([
+  'shareable',
   'id',
   'name',
   'description',
@@ -70,7 +73,7 @@ export function buildPublicProducts(catalog) {
 
   for (const project of catalog.projects) {
     const metadata = project.public ?? { listing: 'hidden' };
-    if (metadata.listing === 'hidden') continue;
+    if (metadata.listing === 'hidden' || project.lifecycle?.shareable !== true) continue;
 
     if (metadata.listing === 'maintained') {
       const url = canonicalPublicUrl(project);
@@ -82,7 +85,9 @@ export function buildPublicProducts(catalog) {
         tier: project.tier === 'focus' ? 'core' : project.tier,
         category: metadata.category,
         priority: project.portfolio.priority,
-        spotlight: metadata.spotlight ?? false,
+        spotlight: lifecycleStatus(project) === 'primary',
+        lifecycle: lifecycleStatus(project),
+        shareable: true,
         maturity: metadata.maturity,
         ...(metadata.hasChangelog === false ? {} : { changelogUrl: `${url}/changelog` }),
         ...(metadata.repositoryUrl
@@ -116,7 +121,7 @@ export function buildPublicProducts(catalog) {
         id: metadata.id ?? project.id,
         name: metadata.name ?? project.name,
         description: metadata.description,
-        lifecycle: 'past',
+        lifecycle: 'inactive',
         repositoryUrl: metadata.repositoryUrl,
         purposeContract: directoryMetadata[project.id].purposeContract,
       };
@@ -135,6 +140,7 @@ export function buildPublicProducts(catalog) {
   }
 
   for (const project of catalog.projects) {
+    if (project.lifecycle?.shareable !== true || project.public?.listing === 'hidden') continue;
     const metadata = directoryMetadata[project.id];
     const repositoryUrl = publicRepositoryUrl(project);
     const domains = project.domains ?? [];
@@ -150,6 +156,7 @@ export function buildPublicProducts(catalog) {
       technologies: metadata.technologies,
       group: directoryGroup(project),
       lifecycle: lifecycleStatus(project),
+      shareable: true,
       deployed: project.portfolio.deployed,
       deploymentProviders: publicDeploymentProviders(
         catalog.infrastructure.projects[project.id]?.deployments ?? []
@@ -214,16 +221,8 @@ export function buildPublicProducts(catalog) {
 
 function directoryGroup(project) {
   const status = lifecycleStatus(project);
+  if (status === 'primary') return 'featured';
   if (status === 'inactive') return 'past';
-  if (
-    project.status === 'orphan' ||
-    status === 'non-product' ||
-    project.attention === 'ignored' ||
-    project.tier === 'out-of-fleet' ||
-    project.portfolio.priority === 'P4'
-  ) {
-    return 'supporting';
-  }
   return 'current';
 }
 

@@ -61,11 +61,9 @@ function toProof(project: PublicProject): StudioProof {
   };
 }
 
-const representativeWork = Object.keys(representativeSignals).map((id) => {
-  const project = publicCatalog.directory.find((candidate) => candidate.id === id);
-  if (!project) throw new Error(`Studio proof is missing the public catalog entry for ${id}`);
-  return toProof(project);
-});
+const representativeWork = publicCatalog.directory
+  .filter((project) => Object.hasOwn(representativeSignals, project.id))
+  .map(toProof);
 
 export const STUDIO_PROFILE: StudioProfile = {
   name: 'SaaS Maker',

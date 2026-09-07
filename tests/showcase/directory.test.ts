@@ -6,8 +6,8 @@ async function readRepository(relativePath: string) {
   return readFile(new URL(`../../${relativePath}`, import.meta.url), 'utf8');
 }
 
-describe('complete public Fleet directory', () => {
-  it('projects all 56 identities exactly once with privacy-safe anatomy', async () => {
+describe('verified public Fleet directory', () => {
+  it('projects only shareable identities with privacy-safe anatomy', async () => {
     const catalog = JSON.parse(await readRepository('catalog/generated/public.json'));
     const ids = catalog.directory.map((project: { id: string }) => project.id);
     const counts = (catalog.directory as Array<{ group: string }>).reduce<Record<string, number>>(
@@ -19,13 +19,17 @@ describe('complete public Fleet directory', () => {
     );
 
     expect(catalog.schemaVersion).toBe(5);
-    expect(catalog.directory).toHaveLength(56);
-    expect(new Set(ids).size).toBe(56);
-    expect(counts.current).toBe(17);
-    expect(counts.supporting).toBe(3);
-    expect(counts.past).toBe(36);
+    expect(catalog.directory).toHaveLength(14);
+    expect(new Set(ids).size).toBe(14);
+    expect(counts.current).toBe(4);
+    expect(counts.featured).toBe(1);
+    expect(counts.past).toBe(9);
+    expect(ids).not.toContain('chess');
+    expect(ids).not.toContain('journal');
+    expect(ids).not.toContain('nomad-data-adventure');
 
     for (const project of catalog.directory) {
+      expect(project.shareable).toBe(true);
       expect(project.name).toBeTruthy();
       expect(project.description).toBeTruthy();
       expect(project.makerNote).toMatch(/\b(?:I|me|my)\b/);
@@ -65,7 +69,7 @@ describe('complete public Fleet directory', () => {
     expect(page).toMatch(/Latest retained commit/);
     expect(page).toMatch(/Prominent tools/);
     expect(page).toMatch(/data-directory-filter-return/);
-    expect(page).toMatch(/Inventory is not promotion/);
+    expect(page).toMatch(/Shareable does not mean finished/);
     expect(data).toMatch(/publicCatalog\.directory/);
     expect(nav).toMatch(/href="\/projects"/);
     expect(routes).toMatch(/path: '\/projects'/);
@@ -73,7 +77,7 @@ describe('complete public Fleet directory', () => {
   });
 
   it('keeps established web identities discoverable through the public form families', () => {
-    for (const projectId of ['significanthobbies', 'veg-protein-food', 'truehire']) {
+    for (const projectId of ['starboard', 'veg-protein-food', 'research-papers']) {
       const project = DIRECTORY_PROJECTS.find((candidate) => candidate.id === projectId);
       expect(project).toBeDefined();
       expect(directoryFormFamilies(project!)).toContain('Web');

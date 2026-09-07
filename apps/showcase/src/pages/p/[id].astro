@@ -61,7 +61,7 @@ const formatDate = (date: string | null) =>
       }).format(new Date(`${date}T00:00:00Z`))
     : 'Not retained';
 const hasPublicEvidence = publicLinks.length > 0;
-const productSummary = product.purposeContract?.purpose ?? product.description;
+const productSummary = product.description;
 const productJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',

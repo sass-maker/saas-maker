@@ -46,3 +46,14 @@ pnpm build:cockpit
 Production deployment and npm publication remain separate manual actions.
 See [`PROJECT_STATUS.md`](PROJECT_STATUS.md) for durable product status and
 [GitHub Issues](https://github.com/sass-maker/saas-maker/issues) for work.
+
+<!-- portfolio-retained-work:2026-09-07 -->
+## Retained work from the portfolio review
+
+These are unresolved requirements retained at the owner’s request. They are not completed features. Work should follow a concrete need and fresh evidence.
+
+### Cleanup repos and migrate unused projects to personal org
+
+Reconcile project ownership and retained history; any organization transfer requires a concrete migration review.
+
+Original requirements and discussion: [#91](https://github.com/sass-maker/saas-maker/issues/91).
