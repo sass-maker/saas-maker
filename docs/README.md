@@ -11,3 +11,8 @@ belong to SaaS Maker Tooling; App Health and CodeVetter remain independent
 products. Those surfaces must not be documented here.
 
 Start with [the quickstart](getting-started/quickstart.md).
+
+## Release evidence
+
+- [2026-09-07 public directory](releases/2026-09-07-public-directory/README.md) —
+  hosted directory and shared-asset acceptance, with rollback reference.

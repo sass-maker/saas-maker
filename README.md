@@ -13,8 +13,8 @@ private Fleet state at runtime. Reusable public automation is canonical under
 ## Products
 
 - [sassmaker.com](https://sassmaker.com) — public product directory.
-- [sassmaker.com/projects](https://sassmaker.com/projects) — complete 54-project
-  register with expanded human and Markdown profiles for each identity.
+- [sassmaker.com/projects](https://sassmaker.com/projects) — filtered shareable public
+  directory with expanded human and Markdown profiles for each identity.
 - [sassmaker.com/ideas](https://sassmaker.com/ideas) — scored product-idea
   decision ledger.
 - [sassmaker.com/tools](https://sassmaker.com/tools) — reusable skills,
@@ -44,6 +44,9 @@ pnpm build:cockpit
 ```
 
 Production deployment and npm publication remain separate manual actions.
+The [2026-09-07 hosted release receipt](docs/releases/2026-09-07-public-directory/README.md)
+records the 21-entry directory, desktop/phone navigation, shared-asset parity
+and rollback reference.
 See [`PROJECT_STATUS.md`](PROJECT_STATUS.md) for durable product status and
 [GitHub Issues](https://github.com/sass-maker/saas-maker/issues) for work.
 

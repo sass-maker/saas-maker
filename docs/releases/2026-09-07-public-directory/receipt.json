@@ -1,0 +1,91 @@
+{
+  "observedAt": "2026-09-07T14:00:34.627Z",
+  "sourceRevision": "6508136de51d86d9f03bb66cbaa98f5edf0e82a4",
+  "deploymentId": "021f041d-7f23-4df9-80b1-7092acf6edcd",
+  "origin": "https://sassmaker.com",
+  "rows": [
+    {
+      "width": 1440,
+      "directoryCount": 21,
+      "search": "Memory Map",
+      "matchedCount": 1,
+      "profileNavigation": true,
+      "pastCount": 16,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "directoryCount": 21,
+      "search": "Memory Map",
+      "matchedCount": 1,
+      "profileNavigation": true,
+      "pastCount": 16,
+      "overflow": false
+    }
+  ],
+  "strip": {
+    "hidden": false,
+    "links": [
+      "https://posttrainllm.com/?ref=looptv",
+      "https://live.significanthobbies.com/?ref=looptv",
+      "https://sassmaker.com/?ref=looptv",
+      "https://git.significanthobbies.com/?ref=looptv",
+      "https://chatgpt.significanthobbies.com/?ref=looptv",
+      "https://performance.sassmaker.com/?ref=looptv",
+      "https://podcasts.highsignal.app/?ref=looptv",
+      "https://issues.sarthakagrawal.dev/?ref=looptv",
+      "https://ratings.highsignal.app/?ref=looptv",
+      "https://papers.highsignal.app/?ref=looptv",
+      "https://materia.significanthobbies.com/?ref=looptv",
+      "https://starboard.codevetter.com/?ref=looptv",
+      "https://protein.significanthobbies.com/?ref=looptv",
+      "https://veg-protein-food.significanthobbies.com/?ref=looptv",
+      "https://mashup.highsignal.app/?ref=looptv",
+      "https://idle.aliveville.com/?ref=looptv",
+      "https://paths.significanthobbies.com/?ref=looptv",
+      "https://sarthakagrawal.dev/?ref=looptv",
+      "https://field-track.sassmaker.com/?ref=looptv",
+      "https://reddit-insights.highsignal.app/?ref=looptv",
+      "https://posttrainllm.com/?ref=looptv",
+      "https://live.significanthobbies.com/?ref=looptv",
+      "https://sassmaker.com/?ref=looptv",
+      "https://git.significanthobbies.com/?ref=looptv",
+      "https://chatgpt.significanthobbies.com/?ref=looptv",
+      "https://performance.sassmaker.com/?ref=looptv",
+      "https://podcasts.highsignal.app/?ref=looptv",
+      "https://issues.sarthakagrawal.dev/?ref=looptv",
+      "https://ratings.highsignal.app/?ref=looptv",
+      "https://papers.highsignal.app/?ref=looptv",
+      "https://materia.significanthobbies.com/?ref=looptv",
+      "https://starboard.codevetter.com/?ref=looptv",
+      "https://protein.significanthobbies.com/?ref=looptv",
+      "https://veg-protein-food.significanthobbies.com/?ref=looptv",
+      "https://mashup.highsignal.app/?ref=looptv",
+      "https://idle.aliveville.com/?ref=looptv",
+      "https://paths.significanthobbies.com/?ref=looptv",
+      "https://sarthakagrawal.dev/?ref=looptv",
+      "https://field-track.sassmaker.com/?ref=looptv",
+      "https://reddit-insights.highsignal.app/?ref=looptv"
+    ]
+  },
+  "assets": [
+    {
+      "file": "projects.json",
+      "status": 200,
+      "sha256": "bde7bc0c840e6aca916e0b70e7e57ab7cc5d231230e08956cc2df96c1f68b2c7",
+      "matchesBuild": true
+    },
+    {
+      "file": "project-strip.js",
+      "status": 200,
+      "sha256": "1df886a0d0708950ed322b456ce66f0e60904e0ce26689ac320ba7dbdc5169e3",
+      "matchesBuild": true
+    },
+    {
+      "file": "ai-chat-footer.js",
+      "status": 200,
+      "sha256": "6f6e4b7d2974fad70c0df18526ab7b64ef50a4f7b9ab740384b5993b48b78ce6",
+      "matchesBuild": true
+    }
+  ]
+}
