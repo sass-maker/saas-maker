@@ -186,3 +186,15 @@ test('informational CLI flags do not establish build/test validation', () => {
     rejected({ scripts: { quality } }, /no successful source-backed/);
   }
 });
+
+test('unconditional success-dependent quality chains qualify without accepting background commands', () => {
+  const result = exercise({ scripts: {
+    quality: 'pnpm check && pnpm typecheck && pnpm test:coverage && pnpm docs:check',
+    check: 'biome check .', typecheck: 'tsc --noEmit',
+    'test:coverage': 'vitest run --coverage', 'docs:check': 'node scripts/check-docs.mjs',
+  } });
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  for (const quality of ['vitest run &&& true', 'vitest run & true', 'vitest run && true &']) {
+    rejected({ scripts: { quality } }, /no successful source-backed/);
+  }
+});

@@ -153,7 +153,7 @@ try {
   function validates(command, allowScripts, seen = new Set()) {
     // Reject quoting/comments rather than interpreting an echo containing a
     // convincing-looking command, interpolation, or a commented-out validator.
-    if (/["'`#;|<>$\\]/.test(command) || /&(?!&)|(?<!&)&/.test(command)) return false;
+    if (/["'`#;|<>$\\]/.test(command) || /&/.test(command.replaceAll('&&', ''))) return false;
     return command.split(/&&|\n/).some(raw => {
       const line = raw.trim();
       if (/(?:^|\s)(?:--help|--version|-h|-V)(?:\s|$)/.test(line)) return false;
