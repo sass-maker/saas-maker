@@ -8,9 +8,6 @@ export function GET() {
   const products = publicCatalog.products.map(
     (product) => `- [${product.name}](${product.url}): ${product.description}`
   );
-  const pastProjects = publicCatalog.pastProjects.map(
-    (project) => `- [${project.name}](${project.repositoryUrl}): ${project.description}`
-  );
   const body = [
     '# SaaS Maker',
     '',
@@ -47,7 +44,7 @@ export function GET() {
     '',
     '- [Studio home](https://sassmaker.com)',
     '- [Studio thesis](https://sassmaker.com/studio): owner position, operating principles, representative work, and boundaries',
-    `- [Complete project directory](https://sassmaker.com/projects): ${publicCatalog.directory.length} current, supporting, parked, and past identities`,
+    `- [Shareable project directory](https://sassmaker.com/projects): ${publicCatalog.directory.length} working public experiments and reference projects`,
     '- [Scored ideas](https://sassmaker.com/ideas): 140 tech-heavy product ideas with transparent Money, Fun, feasibility, competition, source, and customer context',
     `- [Reusable tooling](https://sassmaker.com/tools): ${TOOLING_CAPABILITIES.length} public skills, scripts, templates, and guides`,
     '- [Learnings](https://sassmaker.com/learnings): first-party notes from building products and agent workflows',
@@ -57,13 +54,9 @@ export function GET() {
     ),
     `- [Feedback package](${PACKAGE_URL}): callback-only React package`,
     '',
-    '## Maintained products',
+    '## Shareable projects and experiments',
     '',
     ...products,
-    '',
-    '## Past public repositories',
-    '',
-    ...pastProjects,
     '',
     '## Machine surfaces',
     '',
