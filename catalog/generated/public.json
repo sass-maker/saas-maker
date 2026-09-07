@@ -503,6 +503,47 @@
       "latestCommitAt": "2026-09-07"
     },
     {
+      "id": "swe-interview-prep",
+      "name": "SWE Interview Prep",
+      "description": "A learning OS for software-engineering interview practice.",
+      "makerNote": "I built this as a learning-by-doing system that combines Pomodoro, Feynman, retrieval practice, and practical roadmaps.",
+      "purposeContract": {
+        "purpose": "SWE Interview Prep is a personal learning OS that turns software-engineering study into retained, artifact-backed understanding.",
+        "audience": "Software engineers preparing for interviews or strengthening practical technical judgment through active study.",
+        "outcome": "Build causal understanding that survives recall and can be demonstrated through code, diagrams, explanations, or projects.",
+        "mechanism": "An evidence-gated Concept → Drill → Build → Review → Apply loop combines retrieval practice, Feynman explain-backs, roadmaps, and adaptive review.",
+        "proof": "A fresh guest can complete a graded TypeScript drill and return to saved code in the same browser. Account sync and AI-graded mastery require sign-in and remain separately unqualified.",
+        "nextAction": "Try a coding drill as a guest; progress stays in this browser. Use the issue tracker for account-sync qualification limits."
+      },
+      "kind": "product",
+      "form": "Learning web app",
+      "platforms": [
+        "Web"
+      ],
+      "technologies": [
+        "React",
+        "Vite",
+        "TypeScript",
+        "Cloudflare Pages"
+      ],
+      "group": "current",
+      "lifecycle": "active",
+      "shareable": true,
+      "deployed": true,
+      "deploymentProviders": [
+        "Cloudflare Pages"
+      ],
+      "domains": [
+        "learn.significanthobbies.com"
+      ],
+      "url": "https://learn.significanthobbies.com",
+      "repositoryUrl": "https://github.com/Significant-Hobbies/swe-interview-prep",
+      "changelogUrl": "https://learn.significanthobbies.com/changelog",
+      "roadmapUrl": "https://github.com/Significant-Hobbies/swe-interview-prep/issues",
+      "firstCommitAt": "2026-02-08",
+      "latestCommitAt": "2026-09-07"
+    },
+    {
       "id": "rolepatch",
       "name": "RolePatch",
       "description": "A guest resume-tailoring experiment with a reviewable diff and browser-local document exports.",
@@ -1336,6 +1377,31 @@
         "mechanism": "Synchronization, search, tags, lists, semantic retrieval, and project-aware recommendations operate over the user’s saved repositories.",
         "proof": "Core sync, search, organization, and project-aware discovery are largely complete and under focused active improvement.",
         "nextAction": "Connect or explore a Stars collection and use a current project question to drive discovery; avoid unrelated alert or reporting scope."
+      }
+    },
+    {
+      "id": "swe-interview-prep",
+      "name": "SWE Interview Prep",
+      "description": "A learning OS for software-engineering interview practice.",
+      "url": "https://learn.significanthobbies.com",
+      "tier": "secondary",
+      "category": "personal",
+      "priority": "P2",
+      "spotlight": false,
+      "lifecycle": "active",
+      "shareable": true,
+      "maturity": "maintained",
+      "changelogUrl": "https://learn.significanthobbies.com/changelog",
+      "repositoryUrl": "https://github.com/Significant-Hobbies/swe-interview-prep",
+      "roadmapUrl": "https://github.com/Significant-Hobbies/swe-interview-prep/issues",
+      "pillarId": "learn",
+      "purposeContract": {
+        "purpose": "SWE Interview Prep is a personal learning OS that turns software-engineering study into retained, artifact-backed understanding.",
+        "audience": "Software engineers preparing for interviews or strengthening practical technical judgment through active study.",
+        "outcome": "Build causal understanding that survives recall and can be demonstrated through code, diagrams, explanations, or projects.",
+        "mechanism": "An evidence-gated Concept → Drill → Build → Review → Apply loop combines retrieval practice, Feynman explain-backs, roadmaps, and adaptive review.",
+        "proof": "A fresh guest can complete a graded TypeScript drill and return to saved code in the same browser. Account sync and AI-graded mastery require sign-in and remain separately unqualified.",
+        "nextAction": "Try a coding drill as a guest; progress stays in this browser. Use the issue tracker for account-sync qualification limits."
       }
     }
   ],

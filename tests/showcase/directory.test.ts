@@ -19,9 +19,9 @@ describe('verified public Fleet directory', () => {
     );
 
     expect(catalog.schemaVersion).toBe(5);
-    expect(catalog.directory).toHaveLength(22);
-    expect(new Set(ids).size).toBe(22);
-    expect(counts.current).toBe(4);
+    expect(catalog.directory).toHaveLength(23);
+    expect(new Set(ids).size).toBe(23);
+    expect(counts.current).toBe(5);
     expect(counts.featured).toBe(1);
     expect(counts.past).toBe(17);
     expect(
