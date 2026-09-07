@@ -88,6 +88,111 @@ read_wrangler_name() {
   printf '%s' "$name"
 }
 
+inspect_push_ci() {
+  node - "$1" "$2" "$3" <<'NODE'
+const fs = require('node:fs');
+const path = require('node:path');
+const [sha, runsInput, workflowsInput] = process.argv.slice(2);
+function fail(detail) { console.log(detail); process.exit(1); }
+try {
+  const pages = JSON.parse(runsInput);
+  const workflowPages = JSON.parse(workflowsInput);
+  if (!Array.isArray(pages) || !Array.isArray(workflowPages) ||
+      pages.some(p => !Array.isArray(p.workflow_runs)) ||
+      workflowPages.some(p => !Array.isArray(p.workflows))) {
+    fail('unknown: invalid GitHub Actions response');
+  }
+  const runs = pages.flatMap(p => p.workflow_runs);
+  if (pages.some(p => !Number.isSafeInteger(p.total_count) || p.total_count > runs.length) ||
+      workflowPages.some(p => !Number.isSafeInteger(p.total_count) ||
+        p.total_count > workflowPages.flatMap(page => page.workflows).length)) {
+    fail('unknown: incomplete GitHub Actions response');
+  }
+  const definitions = new Map(workflowPages.flatMap(p => p.workflows).map(w => [w.id, w]));
+  const latest = new Map();
+  for (const run of runs) {
+    if (run.head_sha !== sha || run.head_branch !== 'main' || run.event !== 'push') {
+      fail('unknown: GitHub returned non-exact push evidence');
+    }
+    if (!Number.isSafeInteger(run.workflow_id) || !Number.isSafeInteger(run.id) ||
+        !Number.isSafeInteger(run.run_attempt)) fail('unknown: missing workflow/run identity');
+    const previous = latest.get(run.workflow_id);
+    if (!previous || run.id > previous.id ||
+        (run.id === previous.id && run.run_attempt > previous.run_attempt)) {
+      latest.set(run.workflow_id, run);
+    }
+  }
+  if (!latest.size) fail(`no push CI for ${sha.slice(0, 8)}`);
+
+  // This is deliberately a narrow source recognizer, not a YAML/shell interpreter.
+  // Only literal run steps and simple unquoted commands qualify. Never execute
+  // a workflow or package script to discover its meaning. Unknown wrappers,
+  // reusable actions and directory-dependent package scripts cannot prove CI.
+  function runBlocks(source) {
+    const lines = source.split(/\r?\n/);
+    const blocks = [];
+    for (let i = 0; i < lines.length; i++) {
+      const match = lines[i].match(/^(\s*)(?:-\s+)?run:\s*(.*)$/);
+      if (!match) continue;
+      const value = match[2].trim();
+      const headerIndent = lines[i].search(/run:/);
+      if (/^[|>][-+]?$/.test(value)) {
+        const block = [];
+        while (i + 1 < lines.length) {
+          const next = lines[i + 1];
+          if (next.trim() && next.search(/\S/) <= headerIndent) break;
+          i++; block.push(next.trim());
+        }
+        blocks.push(block.join('\n'));
+      } else blocks.push(value);
+    }
+    return blocks;
+  }
+  let scripts = {};
+  if (fs.existsSync('package.json')) scripts = JSON.parse(fs.readFileSync('package.json', 'utf8')).scripts || {};
+  function validates(command, allowScripts, seen = new Set()) {
+    // Reject quoting/comments rather than interpreting an echo containing a
+    // convincing-looking command, interpolation, or a commented-out validator.
+    if (/["'`#;|<>$\\]/.test(command) || /&(?!&)|(?<!&)&/.test(command)) return false;
+    return command.split(/&&|\n/).some(raw => {
+      const line = raw.trim();
+      if (/(?:^|\s)(?:--help|--version|-h|-V)(?:\s|$)/.test(line)) return false;
+      if (/^(?:uv run )?(?:pytest(?:\s|$)|python(?:3)? -m pytest(?:\s|$))/.test(line) ||
+          /^(?:cargo|swift|go) test(?:\s|$)/.test(line) ||
+          /^node --test(?:\s|$)/.test(line) ||
+          /^(?:vitest|jest)(?:\s|$)/.test(line) ||
+          /^(?:astro|vite|next) build(?:\s|$)/.test(line)) return true;
+      const invocation = line.match(/^(?:pnpm|npm|yarn) (?:run )?([a-zA-Z0-9:_-]+)(?:\s|$)/);
+      if (!allowScripts || !invocation || seen.has(invocation[1])) return false;
+      const name = invocation[1];
+      return typeof scripts[name] === 'string' && validates(scripts[name], true, new Set([...seen, name]));
+    });
+  }
+  let validationCount = 0;
+  for (const run of latest.values()) {
+    const definition = definitions.get(run.workflow_id);
+    if (!definition || definition.state !== 'active') fail(`unknown: workflow ${run.workflow_id} missing or disabled`);
+    const file = definition.path;
+    if (typeof file !== 'string' || !/^\.github\/workflows\/[^/]+\.ya?ml$/.test(file) || file.includes('..')) {
+      fail(`unknown: workflow ${run.workflow_id} has no local source identity`);
+    }
+    if (run.status !== 'completed' || run.conclusion !== 'success') {
+      fail(`${file}: ${run.status || 'unknown'}/${run.conclusion || 'none'} (run ${run.id})`);
+    }
+    const source = fs.readFileSync(path.resolve(file), 'utf8');
+    // Conditional or error-tolerant definitions cannot establish validation.
+    // Reject the whole definition instead of guessing job/step YAML scope.
+    const conditional = /(?:^|\n)\s*(?:-\s+)?(?:if|continue-on-error)\s*:/.test(source);
+    if (!conditional && runBlocks(source).some(block => validates(block, !/working-directory\s*:/.test(source)))) validationCount++;
+  }
+  if (!validationCount) fail('unknown: no successful source-backed build/test push workflow');
+  console.log(`green for ${sha.slice(0, 8)}: ${latest.size} push workflows, ${validationCount} build/test definitions`);
+} catch {
+  fail('unknown: could not inspect exact-source CI definitions');
+}
+NODE
+}
+
 # 1. On main branch?
 branch=$(git branch --show-current 2>/dev/null || echo "DETACHED")
 if [[ "$branch" == "main" ]]; then
@@ -135,15 +240,20 @@ else
 
     if [[ -n "$slug" ]]; then
       head_sha=$(git rev-parse HEAD 2>/dev/null || true)
-      conclusion=$(gh run list -R "$slug" --branch main --commit "$head_sha" --event push --limit 1 \
-        --json conclusion -q '.[0].conclusion // "none"' 2>/dev/null || echo "none")
-      case "$conclusion" in
-        success) ci_result="ok"; ci_detail="green for ${head_sha:0:8}" ;;
-        failure|cancelled|timed_out|action_required|startup_failure)
-          ci_result="fail"; ci_detail="red ($conclusion)"
-          ;;
-        *) ci_result="fail"; ci_detail="no completed push CI for ${head_sha:0:8}" ;;
-      esac
+      # Query every exact-source push run, not whichever workflow finished last.
+      # Slurped pagination prevents a later page from hiding pending/red CI.
+      if ! command -v node >/dev/null 2>&1; then
+        ci_result="fail"; ci_detail="unknown: node is required to inspect CI evidence"
+      elif ! runs_json=$(gh api --paginate --slurp \
+        "repos/$slug/actions/runs?branch=main&head_sha=$head_sha&event=push&per_page=100" 2>/dev/null) ||
+        ! workflows_json=$(gh api --paginate --slurp \
+          "repos/$slug/actions/workflows?per_page=100" 2>/dev/null); then
+        ci_result="fail"; ci_detail="unknown: GitHub Actions query failed"
+      elif ci_detail=$(inspect_push_ci "$head_sha" "$runs_json" "$workflows_json"); then
+        ci_result="ok"
+      else
+        ci_result="fail"
+      fi
     else
       ci_result="fail"; ci_detail="no GitHub remote"
     fi

@@ -21,7 +21,7 @@ to run. Enforces the fleet deployment standard from AGENTS.md.
 1. **On main branch** — not a feature branch
 2. **Clean working tree** — no uncommitted changes
 3. **Synced with remote** — not ahead or behind
-4. **CI green for current main** — the exact `HEAD` commit has a successful push workflow; unrelated manual or scheduled workflows do not mask that signal
+4. **CI green for current main** — every observed exact-`HEAD`/`main` push workflow has a completed, successful latest run/attempt. At least one successful workflow must have a source-backed build/test command; a Docs-only result cannot establish readiness. Manual and scheduled runs never substitute for push evidence.
 5. **Cloudflare target known** — wrangler.toml/jsonc exists and names a Worker/Pages project
 6. **No known regressions** — check PROJECT_STATUS.md for any flagged blockers
 
@@ -36,6 +36,28 @@ bash ~/Desktop/fleet/saas-maker/tooling/scripts/fleet-deploy-guard.sh codevetter
 The script checks all 6 gates and exits non-zero if any fail. Use `--force` to
 skip the CI gate (only when CI is red for unrelated reasons — name the exception
 in the handoff).
+
+## CI evidence limits
+
+The gate reads all pages of GitHub run and workflow metadata, matches workflow
+IDs to their checked-in paths, and inspects literal `run` steps without
+executing them. Simple package-script calls are resolved from the owning root
+`package.json`; direct test/build commands are recognized independently of
+workflow display names. Node.js is required for this read-only inspection.
+
+Pending, failed, cancelled, skipped, missing/disabled, non-exact or malformed
+workflow evidence fails closed. The recognizer intentionally does not interpret
+arbitrary YAML/shell, quoted commands, reusable actions, or package scripts with
+workflow working-directory overrides. Unrecognized source is **unknown**, not
+green. This is a workflow-completion/source-definition gate, not proof that
+every conditionally skipped step actually executed. Review product-specific
+acceptance separately. The existing explicitly approved `--force` exception is
+unchanged; this repair adds no bypass or ancestor-run inheritance.
+
+Conditional (`if`) or error-tolerant (`continue-on-error`) workflow definitions
+cannot establish build/test identity. Shell failure masking, pipelines,
+redirection, interpolation and opaque/reusable validation are unsupported and
+fail closed; the guard does not interpret arbitrary YAML or shell programs.
 
 ## Output
 
