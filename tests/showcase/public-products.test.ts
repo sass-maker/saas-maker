@@ -10,7 +10,8 @@ function catalog() {
     lifecycle: {
       status: id === 'unverified' ? 'active' : id,
       shareable: id !== 'unverified',
-      resumeCondition: 'private decision',
+      resumeCondition:
+        id === 'inactive' ? 'Three named pilot users request a supported release.' : null,
     },
     public: {
       listing: 'maintained',
@@ -51,7 +52,7 @@ describe('shareability projection boundary', () => {
       result.products.filter((project) => project.spotlight).map((project) => project.id)
     ).toEqual(['primary']);
     expect(JSON.stringify(result)).not.toContain('resumeCondition');
-    expect(JSON.stringify(result)).not.toContain('private decision');
+    expect(JSON.stringify(result)).not.toContain('Three named pilot users');
   });
 
   it('fails closed for legacy lifecycle flags and explicit hidden listings', () => {
@@ -61,5 +62,25 @@ describe('shareability projection boundary', () => {
     const result = buildPublicProducts(input);
     expect(result.directory.map((project) => project.id)).toEqual(['inactive']);
     expect(result.products.map((project) => project.id)).toEqual(['inactive']);
+  });
+
+  it('keeps all four inactive flag combinations independent without publishing restart conditions', () => {
+    for (const shareable of [false, true]) {
+      for (const resumeCondition of [
+        null,
+        'Three named pilot users request a supported release.',
+      ]) {
+        const input = catalog();
+        const project = input.projects.find(({ id }) => id === 'inactive')!;
+        project.lifecycle = { status: 'inactive', shareable, resumeCondition };
+        const before = structuredClone(input);
+        const result = buildPublicProducts(input);
+        expect(result.directory.some(({ id }) => id === 'inactive')).toBe(shareable);
+        expect(result.products.some(({ id }) => id === 'inactive')).toBe(shareable);
+        expect(JSON.stringify(result)).not.toContain('resumeCondition');
+        expect(JSON.stringify(result)).not.toContain('Three named pilot users');
+        expect(input).toEqual(before);
+      }
+    }
   });
 });
