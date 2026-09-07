@@ -24,7 +24,6 @@ const products = (publicCatalog.products as PublicProduct[]).filter(
   (product) => !['personal-website', 'saas-maker'].includes(product.id)
 );
 
-
 function toCore(product: PublicProduct): CoreProject {
   return {
     name: product.name,
