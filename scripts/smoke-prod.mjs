@@ -16,6 +16,13 @@
  *   SAAS_MAKER_API=https://api.sassmaker.com SAAS_MAKER_APP=https://app.sassmaker.com node scripts/smoke-prod.mjs
  */
 
+import { readFile } from 'node:fs/promises';
+
+const projection = JSON.parse(
+  await readFile(new URL('../catalog/generated/public.json', import.meta.url), 'utf8')
+);
+const expectedDirectoryIds = projection.directory.map(({ id }) => id).sort();
+
 const API = process.env.SAAS_MAKER_API ?? 'https://api.sassmaker.com';
 const APP = process.env.SAAS_MAKER_APP ?? 'https://app.sassmaker.com';
 const DIRECTORY = process.env.SAAS_MAKER_DIRECTORY ?? 'https://sassmaker.com';
@@ -32,27 +39,31 @@ const directoryChecks = [
     },
   },
   {
-    name: 'Complete project directory renders 56 identities',
+    name: 'Public directory renders the checked-in shareable identities',
     fn: async () => {
       const res = await fetch(`${DIRECTORY}/projects`);
       if (res.status !== 200) throw new Error(`status ${res.status}`);
       const body = await res.text();
       const rows = body.match(/<details class="directory-row" data-directory-row/g)?.length ?? 0;
-      if (rows !== 56) throw new Error(`expected 56 directory rows, got ${rows}`);
+      if (rows !== expectedDirectoryIds.length) {
+        throw new Error(`expected ${expectedDirectoryIds.length} directory rows, got ${rows}`);
+      }
       if (!body.includes('First retained commit') || !body.includes('Latest retained commit')) {
         throw new Error('missing Git-history bounds');
       }
     },
   },
   {
-    name: 'Machine-readable directory exposes 56 identities',
+    name: 'Machine-readable directory matches the checked-in shareable identities',
     fn: async () => {
       const res = await fetch(`${DIRECTORY}/projects.json`);
       if (res.status !== 200) throw new Error(`status ${res.status}`);
       const body = await res.json();
-      if (!Array.isArray(body) || body.length !== 56) {
+      if (!Array.isArray(body)) throw new Error('expected a directory JSON array');
+      const actualIds = body.map(({ id }) => id).sort();
+      if (JSON.stringify(actualIds) !== JSON.stringify(expectedDirectoryIds)) {
         throw new Error(
-          `expected 56 JSON entries, got ${Array.isArray(body) ? body.length : 'non-array'}`
+          `directory IDs differ: expected ${expectedDirectoryIds.join(',')}; got ${actualIds.join(',')}`
         );
       }
     },
