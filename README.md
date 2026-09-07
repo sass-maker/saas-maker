@@ -57,3 +57,10 @@ These are unresolved requirements retained at the owner’s request. They are no
 Reconcile project ownership and retained history; any organization transfer requires a concrete migration review.
 
 Original requirements and discussion: [#91](https://github.com/sass-maker/saas-maker/issues/91).
+
+### Bounded web, media and SEO research skills
+
+Retain the routing, receipt and validation requirements in
+[#103](https://github.com/sass-maker/saas-maker/issues/103). Its implementation
+is in progress in the local checkout; task reconciliation does not establish
+that those changes have been committed, pushed or validated at the remote head.
