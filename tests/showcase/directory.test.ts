@@ -19,11 +19,14 @@ describe('verified public Fleet directory', () => {
     );
 
     expect(catalog.schemaVersion).toBe(5);
-    expect(catalog.directory).toHaveLength(14);
-    expect(new Set(ids).size).toBe(14);
+    expect(catalog.directory).toHaveLength(15);
+    expect(new Set(ids).size).toBe(15);
     expect(counts.current).toBe(4);
     expect(counts.featured).toBe(1);
-    expect(counts.past).toBe(9);
+    expect(counts.past).toBe(10);
+    expect(
+      catalog.directory.find((project: { id: string }) => project.id === 'web-playables')
+    ).toMatchObject({ lifecycle: 'inactive', shareable: true, group: 'past' });
     expect(ids).not.toContain('chess');
     expect(ids).not.toContain('journal');
     expect(ids).not.toContain('nomad-data-adventure');
