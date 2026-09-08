@@ -54,10 +54,17 @@ every conditionally skipped step actually executed. Review product-specific
 acceptance separately. The existing explicitly approved `--force` exception is
 unchanged; this repair adds no bypass or ancestor-run inheritance.
 
-Conditional (`if`) or error-tolerant (`continue-on-error`) workflow definitions
-cannot establish build/test identity. Shell failure masking, pipelines,
-redirection, interpolation and opaque/reusable validation are unsupported and
-fail closed; the guard does not interpret arbitrary YAML or shell programs.
+Conditional (`if`) or error-tolerant (`continue-on-error`) jobs/steps cannot
+establish build/test identity. An independent unconditional step in another job
+or beside an optional step may qualify. The source recognizer accepts only
+conventional block mappings: `jobs` at column 0, literal job IDs at 2, job fields
+at 4, step list items at 6 and step fields at 8. Dependency-gated jobs (`needs`),
+matrices, aliases/merge keys, quoted mapping keys, custom shells and unsupported
+layouts remain unknown. Directory-dependent package scripts remain unsupported.
+Shell early exits, conditional programs, failure masking, pipelines, redirection,
+interpolation and opaque/reusable validation fail closed. This remains a narrow
+source-definition check, not a general YAML/shell interpreter or runtime test
+coverage guarantee.
 
 ## Output
 

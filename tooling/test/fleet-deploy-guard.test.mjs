@@ -198,3 +198,58 @@ test('unconditional success-dependent quality chains qualify without accepting b
     rejected({ scripts: { quality } }, /no successful source-backed/);
   }
 });
+
+
+test('independent unconditional validation survives unrelated conditional jobs and steps', () => {
+  const source = `name: CI
+on: [push]
+jobs:
+  optional:
+    if: false
+    uses: ./.github/workflows/native.yml
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Optional fetch
+        if: false
+        run: git fetch origin main
+      - name: Rust contracts
+        run: cargo test --manifest-path crates/core/Cargo.toml
+`;
+  const result = exercise({ ciSource: source });
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+});
+
+test('conditional validator cannot borrow eligibility from an unconditional non-test step', () => {
+  const source = ciSource.replace('- run: pnpm quality', '- run: echo setup\n      - run: pnpm quality\n        if: false');
+  rejected({ ciSource: source }, /no successful source-backed/);
+});
+
+test('dependency-gated jobs and YAML inheritance stay unknown', () => {
+  for (const directive of ['needs: optional', 'strategy: {}', '<<: *defaults']) {
+    rejected({ ciSource: ciSource.replace('    steps:', `    ${directive}\n    steps:`) }, /no successful source-backed/);
+  }
+});
+
+
+test('alternate control-key whitespace and duplicate run keys fail closed', () => {
+  for (const directive of ['if : false', 'continue-on-error : true']) {
+    rejected({ ciSource: ciSource.replace('    steps:', `    ${directive}\n    steps:`) }, /no successful source-backed/);
+    rejected({ ciSource: ciSource.replace('- run: pnpm quality', `- run: pnpm quality\n        ${directive}`) }, /no successful source-backed/);
+  }
+  rejected({ ciSource: ciSource.replace('- run: pnpm quality', '- run: pnpm quality\n        run: echo no-test') }, /no successful source-backed/);
+});
+
+test('shell early exit and multiline conditionals cannot advertise unreachable tests', () => {
+  for (const quality of ['exit 0\nvitest run', 'echo setup && exit 0 && vitest run', 'if false\nthen\nvitest run\nfi', 'check() {\nvitest run\n}', 'command exit 0\nvitest run']) {
+    rejected({ scripts: { quality } }, /no successful source-backed/);
+  }
+});
+
+
+test('quoted control keys, custom shells and duplicate job ids remain unknown', () => {
+  for (const directive of ['"if": false', 'shell: bash {0}']) {
+    rejected({ ciSource: ciSource.replace('- run: pnpm quality', `- run: pnpm quality\n        ${directive}`) }, /no successful source-backed/);
+  }
+  rejected({ ciSource: ciSource + '  validate:\n    if: false\n    steps:\n      - run: pnpm quality\n' }, /no successful source-backed/);
+});

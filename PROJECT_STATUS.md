@@ -24,6 +24,13 @@ Cockpit, CodeVetter, and App Health remain independent repositories.
 
 ## Timeline
 
+- **2026-09-09 — Scoped deploy-guard CI recognition:**
+  Independent unconditional build/test steps can establish CI evidence beside
+  optional jobs or steps. Conditional/error-tolerant validators, dependency-gated
+  jobs, unsupported YAML inheritance and shell early exits remain rejected.
+  Exact-source successful push requirements are unchanged. See #104 and
+  `tooling/skills/fleet-deploy-guard/SKILL.md` for the supported source boundary.
+
 - **2026-09-01 — Fleet-wide Clarity health skill:** Added the discoverable
   `clarity-fleet-health` skill with separate credential-free source, cached
   health, explicit live refresh, and focused MCP investigation modes. Its first

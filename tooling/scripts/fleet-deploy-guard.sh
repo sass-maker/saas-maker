@@ -154,6 +154,7 @@ try {
     // Reject quoting/comments rather than interpreting an echo containing a
     // convincing-looking command, interpolation, or a commented-out validator.
     if (/["'`#;|<>$\\]/.test(command) || /&/.test(command.replaceAll('&&', ''))) return false;
+    if (/[(){}]/.test(command) || /(?:^|&&|\n)\s*(?:if|then|else|elif|fi|for|while|until|do|done|case|esac|exit|return|exec|trap|set|source|eval|command|builtin|\.)(?:\s|$)/.test(command)) return false;
     return command.split(/&&|\n/).some(raw => {
       const line = raw.trim();
       if (/(?:^|\s)(?:--help|--version|-h|-V)(?:\s|$)/.test(line)) return false;
@@ -168,6 +169,53 @@ try {
       return typeof scripts[name] === 'string' && validates(scripts[name], true, new Set([...seen, name]));
     });
   }
+  function unconditionalRunBlocks(source) {
+    // Recognize only conventional block mappings: jobs at column 0, job ids
+    // at 2, job fields at 4, steps at 6 and step fields at 8. Unsupported YAML
+    // stays unknown; this is not a general YAML parser or expression evaluator.
+    if (/\t|(?:^|\n)\s*<<\s*:|(?:^|\s)[&*][A-Za-z_]/.test(source) ||
+        /(?:^|\n)\s*(?:-\s*)?["'][^\n]+["']\s*:/.test(source) ||
+        /(?:^|\n)\s*(?:-\s*)?shell\s*:/.test(source)) return [];
+    const lines = source.split(/\r?\n/);
+    const headers = lines.flatMap((line, i) => /^jobs:\s*(?:#.*)?$/.test(line) ? [i] : []);
+    if (headers.length !== 1) return [];
+    const jobs = [];
+    const jobIds = new Set();
+    let job;
+    for (const line of lines.slice(headers[0] + 1)) {
+      if (!line.trim() || line.trimStart().startsWith('#')) continue;
+      if (/^\S/.test(line)) break;
+      if (/^  \S/.test(line)) {
+        job = /^  [A-Za-z_][A-Za-z0-9_-]*:\s*(?:#.*)?$/.test(line) ? [] : null;
+        if (job) {
+          const id = line.trim().split(':')[0];
+          if (jobIds.has(id)) return [];
+          jobIds.add(id); jobs.push(job);
+        }
+      } else if (job) job.push(line);
+    }
+    const eligible = [];
+    for (const body of jobs) {
+      // A dependency can implicitly skip a job even without an explicit if.
+      if (body.some(line => /^    (?:if|continue-on-error|needs|strategy|uses|defaults)\s*:/.test(line))) continue;
+      const starts = body.flatMap((line, i) => /^    steps:\s*(?:#.*)?$/.test(line) ? [i] : []);
+      if (starts.length !== 1) continue;
+      const steps = [];
+      let step;
+      for (const line of body.slice(starts[0] + 1)) {
+        if (/^ {0,4}\S/.test(line)) break;
+        if (/^      - /.test(line)) { step = []; steps.push(step); }
+        else if (!/^        /.test(line)) { step = null; continue; }
+        if (step) step.push(line);
+      }
+      for (const block of steps) {
+        if (block.some(line => /^(?:      - |        )(?:if|continue-on-error|uses)\s*:/.test(line))) continue;
+        const commands = runBlocks(block.join('\n'));
+        if (commands.length === 1) eligible.push(commands[0]);
+      }
+    }
+    return eligible;
+  }
   let validationCount = 0;
   for (const run of latest.values()) {
     const definition = definitions.get(run.workflow_id);
@@ -180,10 +228,7 @@ try {
       fail(`${file}: ${run.status || 'unknown'}/${run.conclusion || 'none'} (run ${run.id})`);
     }
     const source = fs.readFileSync(path.resolve(file), 'utf8');
-    // Conditional or error-tolerant definitions cannot establish validation.
-    // Reject the whole definition instead of guessing job/step YAML scope.
-    const conditional = /(?:^|\n)\s*(?:-\s+)?(?:if|continue-on-error)\s*:/.test(source);
-    if (!conditional && runBlocks(source).some(block => validates(block, !/working-directory\s*:/.test(source)))) validationCount++;
+    if (unconditionalRunBlocks(source).some(block => validates(block, !/working-directory\s*:/.test(source)))) validationCount++;
   }
   if (!validationCount) fail('unknown: no successful source-backed build/test push workflow');
   console.log(`green for ${sha.slice(0, 8)}: ${latest.size} push workflows, ${validationCount} build/test definitions`);
