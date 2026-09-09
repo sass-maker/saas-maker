@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { chmodSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { chmodSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import test from 'node:test';
@@ -25,8 +25,19 @@ export function exercise(options = {}) {
   try {
     writeFileSync(join(project, 'wrangler.json'), '{"name":"synthetic-target"}');
     writeFileSync(join(project, 'package.json'), JSON.stringify({ scripts: options.scripts || { quality: 'pnpm test', test: 'vitest run' } }));
+    for (const [directory, scripts] of Object.entries(options.packages || {})) {
+      mkdirSync(join(project, directory), { recursive: true });
+      writeFileSync(join(project, directory, 'package.json'), JSON.stringify({ scripts }));
+    }
+    if (options.externalPackage) {
+      const external = join(root, 'outside');
+      mkdirSync(external);
+      writeFileSync(join(external, 'package.json'), JSON.stringify({ scripts: { build: 'astro build' } }));
+      symlinkSync(external, join(project, 'website'));
+    }
     writeFileSync(join(project, ci.path), options.ciSource ?? ciSource);
     writeFileSync(join(project, docs.path), docsSource);
+    if (options.ignoredPackage) writeFileSync(join(project, '.gitignore'), 'website/package.json\n');
     git('init', '-b', 'main');
     git('add', '.');
     git('-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.invalid', 'commit', '-m', 'synthetic fixture');
@@ -305,4 +316,47 @@ test('an unrelated step directory does not disable a root package validator', ()
 test('workflow defaults remain unknown rather than assuming root scripts', () => {
   const source = ciSource.replace('jobs:', 'defaults:\n  run:\n    working-directory: python/ingest\njobs:');
   rejected({ ciSource: source }, /no successful source-backed/);
+});
+
+
+const websiteDirectorySource = 'name: CI\non: [push]\njobs:\n' + pythonDirectoryJob
+  .replace('python/ingest', 'website')
+  .replace('uv run pytest -q --cov=example --cov-fail-under=55', 'pnpm run build');
+
+test('literal job package scripts resolve against that package, including required build chains', () => {
+  const result = exercise({ ciSource: websiteDirectorySource,
+    scripts: { build: 'echo root is not evidence' },
+    packages: { website: { build: 'pnpm run docs && astro build', docs: 'node merge-docs.mjs' } } });
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+});
+
+test('literal step directory overrides job directory without borrowing another manifest', () => {
+  const source = websiteDirectorySource.replace('      - run: pnpm run build', '      - run: pnpm run build\n        working-directory: packages/site');
+  const result = exercise({ ciSource: source, packages: {
+    website: { build: 'echo no validation' }, 'packages/site': { build: 'vite build' },
+  } });
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  rejected({ ciSource: source, packages: { website: { build: 'astro build' } } }, /no successful source-backed/);
+});
+
+test('scoped manifests cannot prove commands from root, another directory or an unsafe wrapper', () => {
+  for (const build of ['echo astro build', 'astro build || true', 'pnpm run build', 'cd ../other && astro build']) {
+    rejected({ ciSource: websiteDirectorySource, scripts: { build: 'astro build' },
+      packages: { website: { build } } }, /no successful source-backed/);
+  }
+  rejected({ ciSource: websiteDirectorySource, scripts: { build: 'astro build' } }, /no successful source-backed/);
+});
+
+test('absolute, parent and external symlink package paths stay unknown', () => {
+  for (const directory of ['/tmp/website', '../outside', 'website/../website']) {
+    rejected({ ciSource: websiteDirectorySource.replace('working-directory: website', `working-directory: ${directory}`),
+      packages: { website: { build: 'astro build' } } }, /no successful source-backed/);
+  }
+  rejected({ ciSource: websiteDirectorySource, externalPackage: true }, /no successful source-backed/);
+});
+
+
+test('ignored package manifests cannot supply exact-source build evidence', () => {
+  rejected({ ciSource: websiteDirectorySource, ignoredPackage: true,
+    packages: { website: { build: 'astro build' } } }, /no successful source-backed/);
 });
