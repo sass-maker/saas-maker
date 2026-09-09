@@ -150,7 +150,7 @@ try {
   }
   let scripts = {};
   if (fs.existsSync('package.json')) scripts = JSON.parse(fs.readFileSync('package.json', 'utf8')).scripts || {};
-  function validates(command, allowScripts, seen = new Set()) {
+  function validates(command, allowScripts, seen = new Set(), pytestOnly = false) {
     // Reject quoting/comments rather than interpreting an echo containing a
     // convincing-looking command, interpolation, or a commented-out validator.
     if (/["'`#;|<>$\\]/.test(command) || /&/.test(command.replaceAll('&&', ''))) return false;
@@ -158,8 +158,9 @@ try {
     return command.split(/&&|\n/).some(raw => {
       const line = raw.trim();
       if (/(?:^|\s)(?:--help|--version|-h|-V)(?:\s|$)/.test(line)) return false;
-      if (/^(?:uv run )?(?:pytest(?:\s|$)|python(?:3)? -m pytest(?:\s|$))/.test(line) ||
-          /^(?:cargo|swift|go) test(?:\s|$)/.test(line) ||
+      if (/^(?:uv run )?(?:pytest(?:\s|$)|python(?:3)? -m pytest(?:\s|$))/.test(line)) return true;
+      if (pytestOnly) return false;
+      if (/^(?:cargo|swift|go) test(?:\s|$)/.test(line) ||
           /^node --test(?:\s|$)/.test(line) ||
           /^(?:vitest|jest)(?:\s|$)/.test(line) ||
           /^(?:astro|vite|next) build(?:\s|$)/.test(line)) return true;
@@ -178,7 +179,7 @@ try {
         /(?:^|\n)\s*(?:-\s*)?shell\s*:/.test(source)) return [];
     const lines = source.split(/\r?\n/);
     const headers = lines.flatMap((line, i) => /^jobs:\s*(?:#.*)?$/.test(line) ? [i] : []);
-    if (headers.length !== 1) return [];
+    if (headers.length !== 1 || lines.slice(0, headers[0]).some(line => /^defaults\s*:/.test(line))) return [];
     const jobs = [];
     const jobIds = new Set();
     let job;
@@ -197,7 +198,22 @@ try {
     const eligible = [];
     for (const body of jobs) {
       // A dependency can implicitly skip a job even without an explicit if.
-      if (body.some(line => /^    (?:if|continue-on-error|needs|strategy|uses|defaults)\s*:/.test(line))) continue;
+      if (body.some(line => /^    (?:if|continue-on-error|needs|strategy|uses)\s*:/.test(line))) continue;
+      // Only this literal defaults mapping is understood. Directory-scoped
+      // jobs can prove direct pytest, never scripts from the root package.json.
+      const defaults = body.flatMap((line, i) => /^    defaults\s*:/.test(line) ? [i] : []);
+      let jobDirectory = false;
+      if (defaults.length) {
+        if (defaults.length !== 1) continue;
+        const start = defaults[0];
+        let end = start + 1;
+        while (end < body.length && !/^    \S/.test(body[end])) end++;
+        const mapping = body.slice(start, end);
+        if (mapping.length !== 3 || !/^    defaults:\s*$/.test(mapping[0]) ||
+            !/^      run:\s*$/.test(mapping[1]) ||
+            !/^        working-directory:\s*[A-Za-z0-9_./-]+\s*$/.test(mapping[2])) continue;
+        jobDirectory = true;
+      }
       const starts = body.flatMap((line, i) => /^    steps:\s*(?:#.*)?$/.test(line) ? [i] : []);
       if (starts.length !== 1) continue;
       const steps = [];
@@ -210,8 +226,12 @@ try {
       }
       for (const block of steps) {
         if (block.some(line => /^(?:      - |        )(?:if|continue-on-error|uses)\s*:/.test(line))) continue;
+        const directories = block.filter(line => /^(?:      - |        )working-directory\s*:/.test(line));
+        if (directories.length > 1 || directories.some(line =>
+            !/^(?:      - |        )working-directory:\s*[A-Za-z0-9_./-]+\s*$/.test(line))) continue;
+        const directoryScoped = jobDirectory || directories.length === 1;
         const commands = runBlocks(block.join('\n'));
-        if (commands.length === 1) eligible.push(commands[0]);
+        if (commands.length === 1) eligible.push({ command: commands[0], directoryScoped });
       }
     }
     return eligible;
@@ -228,7 +248,8 @@ try {
       fail(`${file}: ${run.status || 'unknown'}/${run.conclusion || 'none'} (run ${run.id})`);
     }
     const source = fs.readFileSync(path.resolve(file), 'utf8');
-    if (unconditionalRunBlocks(source).some(block => validates(block, !/working-directory\s*:/.test(source)))) validationCount++;
+    if (unconditionalRunBlocks(source).some(block =>
+        validates(block.command, !block.directoryScoped, new Set(), block.directoryScoped))) validationCount++;
   }
   if (!validationCount) fail('unknown: no successful source-backed build/test push workflow');
   console.log(`green for ${sha.slice(0, 8)}: ${latest.size} push workflows, ${validationCount} build/test definitions`);

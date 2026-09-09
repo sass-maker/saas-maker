@@ -61,6 +61,12 @@ conventional block mappings: `jobs` at column 0, literal job IDs at 2, job field
 at 4, step list items at 6 and step fields at 8. Dependency-gated jobs (`needs`),
 matrices, aliases/merge keys, quoted mapping keys, custom shells and unsupported
 layouts remain unknown. Directory-dependent package scripts remain unsupported.
+A conventional job `defaults.run.working-directory` containing one unquoted,
+literal path can qualify a direct `pytest`, `python -m pytest` or `uv run pytest`
+command. Its root package scripts are never inferred. Literal step directories
+use the same restriction. Directory scope stays within its job/step, so an
+unrelated Python job cannot disable root package-script evidence. Dynamic paths,
+unknown default mappings and workflow-level defaults remain unknown.
 Shell early exits, conditional programs, failure masking, pipelines, redirection,
 interpolation and opaque/reusable validation fail closed. This remains a narrow
 source-definition check, not a general YAML/shell interpreter or runtime test
