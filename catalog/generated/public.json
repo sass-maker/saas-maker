@@ -6,6 +6,48 @@
   "historySemantics": "firstCommitAt and latestCommitAt are dates from the currently retained Git history. They are not incorporation, launch, or retirement dates.",
   "directory": [
     {
+      "id": "codevetter",
+      "name": "CodeVetter",
+      "description": "Execution-backed verification for AI-written software changes — local-first and inspectable.",
+      "makerNote": "I built CodeVetter to make reviewing AI-generated code rigorous without giving up a local-first workflow.",
+      "purposeContract": {
+        "purpose": "CodeVetter verifies whether AI-written software changes actually satisfy their task, not merely whether the diff looks plausible.",
+        "audience": "Developers and teams shipping code produced with AI agents.",
+        "outcome": "Higher confidence that an agent completed the requested change correctly and safely.",
+        "mechanism": "Local-first review combines repository context, executable checks, targeted evaluation, and inspectable verification receipts.",
+        "proof": "Published macOS 1.13.9 is signed and notarized. Its CLI has verified real Codex review, passing and failing executable checks, and persisted receipts on a bounded Node fixture.",
+        "nextAction": "Try the developer preview on a small local repository. Use the documented manual update path; in-app updating and other review providers remain unqualified."
+      },
+      "kind": "product",
+      "form": "Desktop app",
+      "platforms": [
+        "macOS"
+      ],
+      "technologies": [
+        "Swift",
+        "SwiftUI",
+        "Rust",
+        "SQLite"
+      ],
+      "group": "featured",
+      "lifecycle": "primary",
+      "shareable": true,
+      "deployed": true,
+      "deploymentProviders": [
+        "Cloudflare Pages",
+        "Cloudflare Workers"
+      ],
+      "domains": [
+        "codevetter.com"
+      ],
+      "url": "https://codevetter.com",
+      "repositoryUrl": "https://github.com/Codevetter/codevetter",
+      "changelogUrl": "https://codevetter.com/changelog",
+      "roadmapUrl": "https://github.com/Codevetter/codevetter/issues",
+      "firstCommitAt": "2025-11-30",
+      "latestCommitAt": "2026-09-07"
+    },
+    {
       "id": "posttrainllm",
       "name": "PostTrainLLM",
       "description": "An experimental browser model playground: run small language models locally with visible generation metrics.",
@@ -956,6 +998,31 @@
     }
   ],
   "products": [
+    {
+      "id": "codevetter",
+      "name": "CodeVetter",
+      "description": "Execution-backed verification for AI-written software changes — local-first and inspectable.",
+      "url": "https://codevetter.com",
+      "tier": "core",
+      "category": "product",
+      "priority": "P1",
+      "spotlight": true,
+      "lifecycle": "primary",
+      "shareable": true,
+      "maturity": "experiment",
+      "changelogUrl": "https://codevetter.com/changelog",
+      "repositoryUrl": "https://github.com/Codevetter/codevetter",
+      "roadmapUrl": "https://github.com/Codevetter/codevetter/issues",
+      "pillarId": "build",
+      "purposeContract": {
+        "purpose": "CodeVetter verifies whether AI-written software changes actually satisfy their task, not merely whether the diff looks plausible.",
+        "audience": "Developers and teams shipping code produced with AI agents.",
+        "outcome": "Higher confidence that an agent completed the requested change correctly and safely.",
+        "mechanism": "Local-first review combines repository context, executable checks, targeted evaluation, and inspectable verification receipts.",
+        "proof": "Published macOS 1.13.9 is signed and notarized. Its CLI has verified real Codex review, passing and failing executable checks, and persisted receipts on a bounded Node fixture.",
+        "nextAction": "Try the developer preview on a small local repository. Use the documented manual update path; in-app updating and other review providers remain unqualified."
+      }
+    },
     {
       "id": "posttrainllm",
       "name": "PostTrainLLM",
