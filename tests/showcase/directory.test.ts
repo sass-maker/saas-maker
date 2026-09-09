@@ -19,10 +19,10 @@ describe('verified public Fleet directory', () => {
     );
 
     expect(catalog.schemaVersion).toBe(5);
-    expect(catalog.directory).toHaveLength(23);
-    expect(new Set(ids).size).toBe(23);
+    expect(catalog.directory).toHaveLength(24);
+    expect(new Set(ids).size).toBe(24);
     expect(counts.current).toBe(5);
-    expect(counts.featured).toBe(1);
+    expect(counts.featured).toBe(2);
     expect(counts.past).toBe(17);
     expect(
       catalog.directory.find((project: { id: string }) => project.id === 'web-playables')
