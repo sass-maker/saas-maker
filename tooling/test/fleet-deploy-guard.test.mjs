@@ -253,3 +253,56 @@ test('quoted control keys, custom shells and duplicate job ids remain unknown', 
   }
   rejected({ ciSource: ciSource + '  validate:\n    if: false\n    steps:\n      - run: pnpm quality\n' }, /no successful source-backed/);
 });
+
+
+const pythonDirectoryJob = `  python:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: python/ingest
+    steps:
+      - run: uv run pytest -q --cov=example --cov-fail-under=55
+`;
+
+test('unrelated job directory does not disable root package script evidence', () => {
+  const source = ciSource + pythonDirectoryJob.replace('uv run pytest -q --cov=example --cov-fail-under=55', 'echo setup');
+  const result = exercise({ ciSource: source });
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+});
+
+test('literal job directory admits direct pytest without interpreting package wrappers', () => {
+  const source = 'name: CI\non: [push]\njobs:\n' + pythonDirectoryJob;
+  const result = exercise({ ciSource: source });
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  for (const command of ['pnpm quality', 'node scripts/run-tests.mjs', 'cargo test', 'echo pytest']) {
+    rejected({ ciSource: source.replace('uv run pytest -q --cov=example --cov-fail-under=55', command) }, /no successful source-backed/);
+  }
+});
+
+test('unknown directories and default mappings cannot establish test evidence', () => {
+  const source = 'name: CI\non: [push]\njobs:\n' + pythonDirectoryJob;
+  for (const value of ['${{ matrix.path }}', '|', '{ path: python }', 'python/ingest\n        unknown: value', 'python/ingest\n        working-directory: other']) {
+    rejected({ ciSource: source.replace('python/ingest', value) }, /no successful source-backed/);
+  }
+  for (const directive of ['if: false', 'continue-on-error: true', 'needs: setup']) {
+    rejected({ ciSource: source.replace('    defaults:', `    ${directive}\n    defaults:`) }, /no successful source-backed/);
+  }
+  rejected({ ciSource: source.replace('        working-directory: python/ingest', '        shell: bash {0}') }, /no successful source-backed/);
+});
+
+test('step directory cannot borrow root package scripts or accept a dynamic path', () => {
+  rejected({ ciSource: ciSource.replace('- run: pnpm quality', '- run: pnpm quality\n        working-directory: python/ingest') }, /no successful source-backed/);
+  rejected({ ciSource: ciSource.replace('- run: pnpm quality', '- run: uv run pytest -q\n        working-directory: ${{ matrix.path }}') }, /no successful source-backed/);
+});
+
+
+test('an unrelated step directory does not disable a root package validator', () => {
+  const source = ciSource.replace('      - run: pnpm quality', '      - run: echo setup\n        working-directory: python/ingest\n      - run: pnpm quality');
+  const result = exercise({ ciSource: source });
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+});
+
+test('workflow defaults remain unknown rather than assuming root scripts', () => {
+  const source = ciSource.replace('jobs:', 'defaults:\n  run:\n    working-directory: python/ingest\njobs:');
+  rejected({ ciSource: source }, /no successful source-backed/);
+});
