@@ -92,6 +92,7 @@ inspect_push_ci() {
   node - "$1" "$2" "$3" <<'NODE'
 const fs = require('node:fs');
 const path = require('node:path');
+const { execFileSync } = require('node:child_process');
 const [sha, runsInput, workflowsInput] = process.argv.slice(2);
 function fail(detail) { console.log(detail); process.exit(1); }
 try {
@@ -127,7 +128,7 @@ try {
   // This is deliberately a narrow source recognizer, not a YAML/shell interpreter.
   // Only literal run steps and simple unquoted commands qualify. Never execute
   // a workflow or package script to discover its meaning. Unknown wrappers,
-  // reusable actions and directory-dependent package scripts cannot prove CI.
+  // reusable actions and dynamic directories cannot prove CI.
   function runBlocks(source) {
     const lines = source.split(/\r?\n/);
     const blocks = [];
@@ -148,26 +149,38 @@ try {
     }
     return blocks;
   }
-  let scripts = {};
-  if (fs.existsSync('package.json')) scripts = JSON.parse(fs.readFileSync('package.json', 'utf8')).scripts || {};
-  function validates(command, allowScripts, seen = new Set(), pytestOnly = false) {
+  const checkout = fs.realpathSync(process.cwd());
+  function packageScripts(directory = '.') {
+    // Resolve only literal in-checkout manifests; never read a sibling project,
+    // a dynamic path or a manifest symlink escaping the checked source.
+    if (path.isAbsolute(directory) || directory.split('/').includes('..')) return {};
+    try {
+      const file = path.join(checkout, directory, 'package.json');
+      const real = fs.realpathSync(file);
+      if (!real.startsWith(checkout + path.sep) || !fs.lstatSync(file).isFile()) return {};
+      const relative = path.relative(checkout, file);
+      const source = execFileSync('git', ['show', `${sha}:${relative}`], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
+      const scripts = JSON.parse(source).scripts;
+      return scripts && typeof scripts === 'object' && !Array.isArray(scripts) ? scripts : {};
+    } catch { return {}; }
+  }
+  function validates(command, scripts, seen = new Set(), pytestOnly = false) {
     // Reject quoting/comments rather than interpreting an echo containing a
     // convincing-looking command, interpolation, or a commented-out validator.
     if (/["'`#;|<>$\\]/.test(command) || /&/.test(command.replaceAll('&&', ''))) return false;
-    if (/[(){}]/.test(command) || /(?:^|&&|\n)\s*(?:if|then|else|elif|fi|for|while|until|do|done|case|esac|exit|return|exec|trap|set|source|eval|command|builtin|\.)(?:\s|$)/.test(command)) return false;
+    if (/[(){}]/.test(command) || /(?:^|&&|\n)\s*(?:if|then|else|elif|fi|for|while|until|do|done|case|esac|exit|return|exec|trap|set|source|eval|command|builtin|cd|pushd|popd|\.)(?:\s|$)/.test(command)) return false;
     return command.split(/&&|\n/).some(raw => {
       const line = raw.trim();
       if (/(?:^|\s)(?:--help|--version|-h|-V)(?:\s|$)/.test(line)) return false;
       if (/^(?:uv run )?(?:pytest(?:\s|$)|python(?:3)? -m pytest(?:\s|$))/.test(line)) return true;
-      if (pytestOnly) return false;
-      if (/^(?:cargo|swift|go) test(?:\s|$)/.test(line) ||
+      if (!pytestOnly && (/^(?:cargo|swift|go) test(?:\s|$)/.test(line) ||
           /^node --test(?:\s|$)/.test(line) ||
           /^(?:vitest|jest)(?:\s|$)/.test(line) ||
-          /^(?:astro|vite|next) build(?:\s|$)/.test(line)) return true;
+          /^(?:astro|vite|next) build(?:\s|$)/.test(line))) return true;
       const invocation = line.match(/^(?:pnpm|npm|yarn) (?:run )?([a-zA-Z0-9:_-]+)(?:\s|$)/);
-      if (!allowScripts || !invocation || seen.has(invocation[1])) return false;
+      if (!invocation || seen.has(invocation[1])) return false;
       const name = invocation[1];
-      return typeof scripts[name] === 'string' && validates(scripts[name], true, new Set([...seen, name]));
+      return typeof scripts[name] === 'string' && validates(scripts[name], scripts, new Set([...seen, name]));
     });
   }
   function unconditionalRunBlocks(source) {
@@ -200,9 +213,9 @@ try {
       // A dependency can implicitly skip a job even without an explicit if.
       if (body.some(line => /^    (?:if|continue-on-error|needs|strategy|uses)\s*:/.test(line))) continue;
       // Only this literal defaults mapping is understood. Directory-scoped
-      // jobs can prove direct pytest, never scripts from the root package.json.
+      // jobs resolve package scripts only from their own literal manifest.
       const defaults = body.flatMap((line, i) => /^    defaults\s*:/.test(line) ? [i] : []);
-      let jobDirectory = false;
+      let jobDirectory = null;
       if (defaults.length) {
         if (defaults.length !== 1) continue;
         const start = defaults[0];
@@ -212,7 +225,7 @@ try {
         if (mapping.length !== 3 || !/^    defaults:\s*$/.test(mapping[0]) ||
             !/^      run:\s*$/.test(mapping[1]) ||
             !/^        working-directory:\s*[A-Za-z0-9_./-]+\s*$/.test(mapping[2])) continue;
-        jobDirectory = true;
+        jobDirectory = mapping[2].split(':').slice(1).join(':').trim();
       }
       const starts = body.flatMap((line, i) => /^    steps:\s*(?:#.*)?$/.test(line) ? [i] : []);
       if (starts.length !== 1) continue;
@@ -229,9 +242,10 @@ try {
         const directories = block.filter(line => /^(?:      - |        )working-directory\s*:/.test(line));
         if (directories.length > 1 || directories.some(line =>
             !/^(?:      - |        )working-directory:\s*[A-Za-z0-9_./-]+\s*$/.test(line))) continue;
-        const directoryScoped = jobDirectory || directories.length === 1;
+        const directory = directories.length ? directories[0].split(':').slice(1).join(':').trim() : jobDirectory;
+        if (directory && (path.isAbsolute(directory) || directory.split('/').includes('..'))) continue;
         const commands = runBlocks(block.join('\n'));
-        if (commands.length === 1) eligible.push({ command: commands[0], directoryScoped });
+        if (commands.length === 1) eligible.push({ command: commands[0], directory });
       }
     }
     return eligible;
@@ -249,7 +263,7 @@ try {
     }
     const source = fs.readFileSync(path.resolve(file), 'utf8');
     if (unconditionalRunBlocks(source).some(block =>
-        validates(block.command, !block.directoryScoped, new Set(), block.directoryScoped))) validationCount++;
+        validates(block.command, packageScripts(block.directory ?? '.'), new Set(), block.directory !== null))) validationCount++;
   }
   if (!validationCount) fail('unknown: no successful source-backed build/test push workflow');
   console.log(`green for ${sha.slice(0, 8)}: ${latest.size} push workflows, ${validationCount} build/test definitions`);

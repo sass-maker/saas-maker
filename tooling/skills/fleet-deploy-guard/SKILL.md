@@ -41,14 +41,14 @@ in the handoff).
 
 The gate reads all pages of GitHub run and workflow metadata, matches workflow
 IDs to their checked-in paths, and inspects literal `run` steps without
-executing them. Simple package-script calls are resolved from the owning root
-`package.json`; direct test/build commands are recognized independently of
+executing them. Simple package-script calls are resolved from the owning
+`package.json` at the exact checked Git revision; direct test/build commands are recognized independently of
 workflow display names. Node.js is required for this read-only inspection.
 
 Pending, failed, cancelled, skipped, missing/disabled, non-exact or malformed
 workflow evidence fails closed. The recognizer intentionally does not interpret
-arbitrary YAML/shell, quoted commands, reusable actions, or package scripts with
-workflow working-directory overrides. Unrecognized source is **unknown**, not
+arbitrary YAML/shell, quoted commands, reusable actions, or dynamic
+working-directory overrides. Unrecognized source is **unknown**, not
 green. This is a workflow-completion/source-definition gate, not proof that
 every conditionally skipped step actually executed. Review product-specific
 acceptance separately. The existing explicitly approved `--force` exception is
@@ -60,11 +60,14 @@ or beside an optional step may qualify. The source recognizer accepts only
 conventional block mappings: `jobs` at column 0, literal job IDs at 2, job fields
 at 4, step list items at 6 and step fields at 8. Dependency-gated jobs (`needs`),
 matrices, aliases/merge keys, quoted mapping keys, custom shells and unsupported
-layouts remain unknown. Directory-dependent package scripts remain unsupported.
-A conventional job `defaults.run.working-directory` containing one unquoted,
-literal path can qualify a direct `pytest`, `python -m pytest` or `uv run pytest`
-command. Its root package scripts are never inferred. Literal step directories
-use the same restriction. Directory scope stays within its job/step, so an
+layouts remain unknown. A conventional job `defaults.run.working-directory`
+containing one unquoted literal path can qualify direct `pytest`, `python -m
+pytest` or `uv run pytest`, or a simple package-script call resolved from that
+directory's tracked manifest. A literal step directory overrides its job default;
+neither can borrow scripts from a different package. Absolute paths, parent
+traversal, ignored manifests and symlinks escaping the checkout are rejected.
+Directory-changing shell commands are not interpreted. Directory scope stays
+within its job/step, so an
 unrelated Python job cannot disable root package-script evidence. Dynamic paths,
 unknown default mappings and workflow-level defaults remain unknown.
 Shell early exits, conditional programs, failure masking, pipelines, redirection,
