@@ -304,49 +304,6 @@
       "latestCommitAt": "2026-09-07"
     },
     {
-      "id": "high-signal",
-      "name": "High Signal",
-      "description": "Evidence-backed daily intelligence across technology, startups, finance, and public markets.",
-      "makerNote": "I built High Signal to combine scattered news and data sources and extract the signals that are actually useful.",
-      "purposeContract": {
-        "purpose": "High Signal turns scattered technology, startup, finance, and market sources into an evidence-backed daily intelligence brief.",
-        "audience": "A curious operator who wants decision-relevant signals without reading every feed and article.",
-        "outcome": "Understand what changed, why it may matter, and which source supports each signal.",
-        "mechanism": "The product collects multiple sources, groups related events, and derives a concise brief with visible evidence.",
-        "proof": "The product focus and daily-brief surface exist, but regular owner use has not yet validated what deserves continued investment.",
-        "nextAction": "Read and dogfood the Daily Brief; resume feature work only when repeated use exposes a concrete deficiency."
-      },
-      "kind": "product",
-      "category": "media",
-      "form": "Intelligence web app",
-      "platforms": [
-        "Web",
-        "API"
-      ],
-      "technologies": [
-        "Next.js",
-        "React",
-        "Hono",
-        "Cloudflare"
-      ],
-      "group": "current",
-      "lifecycle": "active",
-      "shareable": true,
-      "deployed": true,
-      "deploymentProviders": [
-        "Cloudflare Workers"
-      ],
-      "domains": [
-        "highsignal.app"
-      ],
-      "url": "https://highsignal.app",
-      "repositoryUrl": "https://github.com/High-Signal-App/high-signal",
-      "changelogUrl": "https://highsignal.app/changelog",
-      "roadmapUrl": "https://github.com/High-Signal-App/high-signal/issues",
-      "firstCommitAt": "2026-04-25",
-      "latestCommitAt": "2026-09-09"
-    },
-    {
       "id": "on-record",
       "name": "High Signal Podcasts",
       "description": "Search evidenced podcast claims and follow links back to the original episode or publication.",
@@ -1035,31 +992,6 @@
         "mechanism": "A GitHub analytics dashboard aggregates commits, churn, collaboration, and AI-assisted work across the portfolio.",
         "proof": "The maintained dashboard answers the owner’s recurring repository-distribution questions and is considered functionally complete.",
         "nextAction": "Use the dashboard for a concrete portfolio question; request new analysis only when an unanswered recurring question appears."
-      }
-    },
-    {
-      "id": "high-signal",
-      "name": "High Signal",
-      "description": "Evidence-backed daily intelligence across technology, startups, finance, and public markets.",
-      "url": "https://highsignal.app",
-      "tier": "active",
-      "category": "media",
-      "priority": "P2",
-      "spotlight": false,
-      "lifecycle": "active",
-      "shareable": true,
-      "maturity": "public-ready",
-      "changelogUrl": "https://highsignal.app/changelog",
-      "repositoryUrl": "https://github.com/High-Signal-App/high-signal",
-      "roadmapUrl": "https://github.com/High-Signal-App/high-signal/issues",
-      "pillarId": "learn",
-      "purposeContract": {
-        "purpose": "High Signal turns scattered technology, startup, finance, and market sources into an evidence-backed daily intelligence brief.",
-        "audience": "A curious operator who wants decision-relevant signals without reading every feed and article.",
-        "outcome": "Understand what changed, why it may matter, and which source supports each signal.",
-        "mechanism": "The product collects multiple sources, groups related events, and derives a concise brief with visible evidence.",
-        "proof": "The product focus and daily-brief surface exist, but regular owner use has not yet validated what deserves continued investment.",
-        "nextAction": "Read and dogfood the Daily Brief; resume feature work only when repeated use exposes a concrete deficiency."
       }
     },
     {

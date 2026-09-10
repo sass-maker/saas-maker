@@ -19,22 +19,14 @@ describe('verified public Fleet directory', () => {
     );
 
     expect(catalog.schemaVersion).toBe(5);
-    expect(catalog.directory).toHaveLength(24);
-    expect(new Set(ids).size).toBe(24);
+    expect(catalog.directory).toHaveLength(21);
+    expect(new Set(ids).size).toBe(21);
     expect(counts.current).toBe(5);
     expect(counts.featured).toBe(2);
-    expect(counts.past).toBe(17);
+    expect(counts.past).toBe(14);
     expect(
       catalog.directory.find((project: { id: string }) => project.id === 'web-playables')
     ).toMatchObject({ lifecycle: 'inactive', shareable: true, group: 'past' });
-    expect(
-      catalog.directory.find((project: { id: string }) => project.id === 'psi-swarm')
-    ).toMatchObject({
-      lifecycle: 'inactive',
-      shareable: true,
-      group: 'past',
-      description: expect.stringContaining('Source-installed local Lighthouse'),
-    });
     const rolepatch = catalog.directory.find(
       (project: { id: string }) => project.id === 'rolepatch'
     );
@@ -47,6 +39,10 @@ describe('verified public Fleet directory', () => {
     expect(ids).not.toContain('journal');
     expect(ids).not.toContain('nomad-data-adventure');
     for (const heldId of [
+      'psi-swarm',
+      'everythingrated',
+      'veg-protein-food',
+      'high-signal',
       'reel-pipeline',
       'forecast-lab',
       'companion-robot',
@@ -58,10 +54,6 @@ describe('verified public Fleet directory', () => {
     ]) {
       expect(ids).not.toContain(heldId);
     }
-    expect(
-      catalog.directory.find((project: { id: string }) => project.id === 'everythingrated')
-        .purposeContract.proof
-    ).toContain('early opinions, not benchmarks or consensus');
     expect(
       catalog.directory.find((project: { id: string }) => project.id === 'chatgpt-memory-insights')
         .description
@@ -116,7 +108,7 @@ describe('verified public Fleet directory', () => {
   });
 
   it('keeps established web identities discoverable through the public form families', () => {
-    for (const projectId of ['starboard', 'veg-protein-food', 'research-papers']) {
+    for (const projectId of ['starboard', 'on-record', 'research-papers']) {
       const project = DIRECTORY_PROJECTS.find((candidate) => candidate.id === projectId);
       expect(project).toBeDefined();
       expect(directoryFormFamilies(project!)).toContain('Web');
