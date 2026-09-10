@@ -215,7 +215,7 @@ const source = String.raw`(() => {
       const controller = new AbortController();
       const timeout = window.setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
       try {
-        const response = await fetch(CATALOG_URL, { headers: { accept: 'application/json' }, cache: 'force-cache', signal: controller.signal });
+        const response = await fetch(CATALOG_URL, { headers: { accept: 'application/json' }, cache: 'no-cache', signal: controller.signal });
         if (!response.ok) return;
         const projects = validProjects(await response.json());
         if (projects.length) { this.projects = projects; this.render(); }

@@ -107,6 +107,15 @@ describe('verified public Fleet directory', () => {
     expect(jsonRoute).toMatch(/JSON\.stringify\(directoryProjects\)/);
   });
 
+  it('revalidates the shared project strip catalog', async () => {
+    const script = await readRepository('apps/showcase/src/pages/project-strip.js.ts');
+
+    expect(script).toMatch(
+      /fetch\(CATALOG_URL, \{ headers: \{ accept: 'application\/json' \}, cache: 'no-cache'/
+    );
+    expect(script).not.toContain("cache: 'force-cache'");
+  });
+
   it('keeps established web identities discoverable through the public form families', () => {
     for (const projectId of ['starboard', 'on-record', 'research-papers']) {
       const project = DIRECTORY_PROJECTS.find((candidate) => candidate.id === projectId);
