@@ -32,6 +32,7 @@ const PUBLIC_FIELDS = new Set([
 ]);
 const REQUIRED_FIELDS = ['id', 'name', 'description', 'url'];
 const DIRECTORY_FIELDS = new Set([
+  'category',
   'shareable',
   'id',
   'name',

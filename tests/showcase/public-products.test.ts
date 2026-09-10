@@ -5,6 +5,7 @@ function catalog() {
   const projects = ['primary', 'active', 'inactive', 'unverified'].map((id) => ({
     id,
     name: id,
+    category: 'utility',
     domains: [`${id}.example`],
     repositoryVisibility: 'private',
     lifecycle: {
@@ -40,6 +41,17 @@ function catalog() {
 }
 
 describe('shareability projection boundary', () => {
+  it('projects the canonical purpose category instead of legacy presentation labels', () => {
+    const input = catalog();
+    input.projects[0].category = 'media';
+    Reflect.set(input.projects[0].public, 'category', 'personal');
+    const result = buildPublicProducts(input);
+    expect(result.products.find(({ id }) => id === 'primary')?.category).toBe('media');
+    expect(result.directory.find(({ id }) => id === 'primary')?.category).toBe('media');
+    input.projects[0].category = 'personal';
+    expect(() => buildPublicProducts(input)).toThrow('invalid canonical category');
+  });
+
   it('excludes unverified entries from every promotional surface and keeps paused experiments', () => {
     const result = buildPublicProducts(catalog());
     expect(result.directory.map((project) => [project.id, project.group])).toEqual([

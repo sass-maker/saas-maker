@@ -18,6 +18,7 @@ export interface DirectoryProject {
   makerNote: string;
   purposeContract?: PurposeContract;
   kind: 'product' | 'platform' | 'experiment';
+  category: 'utility' | 'media' | 'experimental';
   form: string;
   platforms: string[];
   technologies: string[];

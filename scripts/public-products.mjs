@@ -18,6 +18,8 @@ const PRODUCT_FIELDS = new Set([
 ]);
 
 const PAST_PROJECT_FIELDS = new Set([
+  'category',
+  'shareable',
   'id',
   'name',
   'description',
@@ -26,6 +28,7 @@ const PAST_PROJECT_FIELDS = new Set([
   'purposeContract',
 ]);
 const DIRECTORY_FIELDS = new Set([
+  'category',
   'shareable',
   'id',
   'name',
@@ -74,6 +77,9 @@ export function buildPublicProducts(catalog) {
   for (const project of catalog.projects) {
     const metadata = project.public ?? { listing: 'hidden' };
     if (metadata.listing === 'hidden' || project.lifecycle?.shareable !== true) continue;
+    if (!['utility', 'media', 'experimental'].includes(project.category)) {
+      throw new Error(`${project.id}: invalid canonical category`);
+    }
 
     if (metadata.listing === 'maintained') {
       const url = canonicalPublicUrl(project);
@@ -83,7 +89,7 @@ export function buildPublicProducts(catalog) {
         description: metadata.description,
         url,
         tier: project.tier === 'focus' ? 'core' : project.tier,
-        category: metadata.category,
+        category: project.category,
         priority: project.portfolio.priority,
         spotlight: lifecycleStatus(project) === 'primary',
         lifecycle: lifecycleStatus(project),
@@ -122,6 +128,8 @@ export function buildPublicProducts(catalog) {
         name: metadata.name ?? project.name,
         description: metadata.description,
         lifecycle: 'inactive',
+        category: project.category,
+        shareable: true,
         repositoryUrl: metadata.repositoryUrl,
         purposeContract: directoryMetadata[project.id].purposeContract,
       };
@@ -151,6 +159,7 @@ export function buildPublicProducts(catalog) {
       makerNote: metadata.makerNote,
       ...(metadata.purposeContract ? { purposeContract: metadata.purposeContract } : {}),
       kind: project.portfolio.kind,
+      category: project.category,
       form: metadata.form,
       platforms: metadata.platforms,
       technologies: metadata.technologies,
