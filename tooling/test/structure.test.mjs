@@ -36,6 +36,7 @@ const activeScripts = new Set([
   'link-project-agent-assets.sh',
   'psi-portfolio-delta.mjs',
   'psi-swarm-fleet.mjs',
+  'public-profile.mjs',
   'reporting-loop-preflight.mjs',
   'unlink-project-agent-assets.sh',
   'validate-tooling.mjs',
