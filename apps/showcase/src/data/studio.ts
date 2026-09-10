@@ -38,15 +38,6 @@ export type StudioProfile = {
 type PublicProject = (typeof publicCatalog.directory)[number];
 
 const SITE_URL = 'https://sassmaker.com';
-const representativeSignals: Record<string, string> = {
-  codevetter: 'AI with rigor: useful model assistance without surrendering a local-first workflow.',
-  posttrainllm:
-    'Deep technical practice turned into repeatable infrastructure for specialist models.',
-  'high-signal':
-    'Evidence is the product: scattered inputs become a source-backed daily decision surface.',
-  anchor:
-    'The studio is broader than AI: personal software can still be ambitious, local, and deeply considered.',
-};
 
 function toProof(project: PublicProject): StudioProof {
   return {
@@ -57,12 +48,12 @@ function toProof(project: PublicProject): StudioProof {
     profileUrl: `${SITE_URL}/p/${project.id}`,
     destinationUrl: project.domains[0] ? `https://${project.domains[0]}` : null,
     repositoryUrl: project.repositoryUrl ?? null,
-    studioSignal: representativeSignals[project.id],
+    studioSignal: project.purposeContract.outcome,
   };
 }
 
 const representativeWork = publicCatalog.directory
-  .filter((project) => Object.hasOwn(representativeSignals, project.id))
+  .filter((project) => project.group === 'featured')
   .map(toProof);
 
 export const STUDIO_PROFILE: StudioProfile = {
