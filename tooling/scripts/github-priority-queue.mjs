@@ -39,6 +39,8 @@ Options:
                          drift. Defaults to: ${DEFAULT_SKIP_REPO_LABELS.join(', ')}
   --skip-label LABEL     Global label that excludes an issue from the queue
                          (repeatable; adds to defaults ${DEFAULT_SKIP_LABELS.join(', ')})
+  Open-issue discovery excludes archived repositories so their issues are not
+  re-added to the queue; closed-issue lookup still reconciles existing items.
   --apply                Add missing issues and reconcile status; without this
                          flag the command is read-only
   --help                 Show this help
@@ -107,7 +109,7 @@ export function buildIssueSearchArgs(author, limit = DEFAULT_LIMIT, state = 'ope
   if (!['open', 'closed'].includes(state)) {
     throw new Error(`Unsupported issue state: ${state}`);
   }
-  return [
+  const args = [
     'search',
     'issues',
     '--author',
@@ -119,6 +121,8 @@ export function buildIssueSearchArgs(author, limit = DEFAULT_LIMIT, state = 'ope
     '--json',
     'url,labels,repository',
   ];
+  if (state === 'open') args.push('--archived=false');
+  return args;
 }
 
 export function sanitizeError(value) {

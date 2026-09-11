@@ -95,7 +95,9 @@ test('parseArgs accepts the status reconciliation flags and defaults them', () =
 test('buildIssueSearchArgs searches one state at a time', () => {
   assert.deepEqual(buildIssueSearchArgs('a', 5, 'closed').join(' '),
     'search issues --author a --state closed --limit 5 --json url,labels,repository');
-  assert.equal(buildIssueSearchArgs('a').includes('open'), true);
+  const openArgs = buildIssueSearchArgs('a');
+  assert.equal(openArgs.includes('open'), true);
+  assert.equal(openArgs.includes('--archived=false'), true);
   assert.throws(() => buildIssueSearchArgs('a', 5, 'all'), /Unsupported issue state/);
 });
 
