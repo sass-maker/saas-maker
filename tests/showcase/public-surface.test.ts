@@ -152,7 +152,7 @@ describe('SaaS Maker public source boundary', () => {
     ]);
     const catalog = JSON.parse(catalogSource);
 
-    expect(catalog.directory).toHaveLength(21);
+    expect(catalog.directory).toHaveLength(22);
     expect(detailPage).toMatch(/DIRECTORY_PROJECTS\.filter/);
     expect(detailPage).toMatch(/Why I made this\./);
     expect(detailPage).toMatch(/Public anatomy/);
