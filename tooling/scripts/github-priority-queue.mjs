@@ -7,13 +7,14 @@ const DEFAULT_LIMIT = 1_000;
 const DEFAULT_STATUS_FIELD = 'Status';
 const DEFAULT_DONE_VALUE = 'Done';
 const DEFAULT_SKIP_REPO_LABELS = ['sarthakagrawal927/portfolio:issues'];
+const DEFAULT_SKIP_LABELS = ['deferred: portfolio-cut', 'queue: excluded'];
 const TOKEN_PATTERNS = [
   /\bgh[opsu]_[A-Za-z0-9_]+\b/g,
   /\bgithub_pat_[A-Za-z0-9_]+\b/g,
   /\bBearer\s+[^\s]+/gi,
 ];
 const VALUED_ARGUMENTS = ['owner', 'project', 'author', 'limit', 'status-field', 'done-value'];
-const REPEATABLE_ARGUMENTS = ['skip-repo-label'];
+const REPEATABLE_ARGUMENTS = ['skip-repo-label', 'skip-label'];
 
 function usage() {
   return `Usage:
@@ -36,6 +37,8 @@ Options:
                          (repeatable, e.g. owner/repo:label). Issues in that repo
                          carrying that label are never added and never flagged as
                          drift. Defaults to: ${DEFAULT_SKIP_REPO_LABELS.join(', ')}
+  --skip-label LABEL     Global label that excludes an issue from the queue
+                         (repeatable; adds to defaults ${DEFAULT_SKIP_LABELS.join(', ')})
   --apply                Add missing issues and reconcile status; without this
                          flag the command is read-only
   --help                 Show this help
@@ -49,6 +52,7 @@ export function parseArgs(argv) {
     statusField: DEFAULT_STATUS_FIELD,
     doneValue: DEFAULT_DONE_VALUE,
     skipRepoLabels: [...DEFAULT_SKIP_REPO_LABELS],
+    skipLabels: [...DEFAULT_SKIP_LABELS],
   };
   for (let index = 0; index < argv.length; index += 1) {
     const argument = argv[index];
@@ -66,7 +70,8 @@ export function parseArgs(argv) {
       if (!value || value.startsWith('--')) {
         throw new Error(`Missing value for ${argument}`);
       }
-      options.skipRepoLabels.push(value);
+      if (key === 'skip-label') options.skipLabels.push(value);
+      else options.skipRepoLabels.push(value);
       index += 1;
       continue;
     }
@@ -145,6 +150,14 @@ export function parseSkipRepoLabels(entries) {
   return map;
 }
 
+export function parseSkipLabels(entries) {
+  return new Set(
+    entries
+      .map((entry) => String(entry ?? '').trim().toLowerCase())
+      .filter(Boolean),
+  );
+}
+
 export function extractIssueRecords(payload) {
   const rows = Array.isArray(payload) ? payload : [];
   const records = [];
@@ -160,13 +173,18 @@ export function extractIssueRecords(payload) {
   return records;
 }
 
-export function extractSkippedUrls(records, skipRepoLabels) {
-  if (!skipRepoLabels || skipRepoLabels.size === 0) return new Set();
+export function extractSkippedUrls(records, skipRepoLabels, skipLabels = new Set()) {
+  if ((!skipRepoLabels || skipRepoLabels.size === 0) && skipLabels.size === 0) return new Set();
   const skipped = new Set();
   for (const { url, repo, labels } of records) {
-    const labelSet = skipRepoLabels.get(repo);
+    const normalizedLabels = labels.map((label) => String(label).trim().toLowerCase());
+    if (normalizedLabels.some((label) => skipLabels.has(label))) {
+      skipped.add(url);
+      continue;
+    }
+    const labelSet = skipRepoLabels?.get(repo);
     if (!labelSet) continue;
-    if (labels.some((label) => labelSet.has(label))) skipped.add(url);
+    if (normalizedLabels.some((label) => labelSet.has(label))) skipped.add(url);
   }
   return skipped;
 }
@@ -205,7 +223,10 @@ export function isTerminalStatus(status, doneValue = DEFAULT_DONE_VALUE) {
   return String(status ?? '').trim().toLowerCase() === String(doneValue).trim().toLowerCase();
 }
 
-export function auditProjectItems(payload, { doneValue = DEFAULT_DONE_VALUE } = {}) {
+export function auditProjectItems(
+  payload,
+  { doneValue = DEFAULT_DONE_VALUE, skipUrls = new Set() } = {},
+) {
   const findings = {
     missingPriority: [],
     missingReasoningComplexity: [],
@@ -214,6 +235,7 @@ export function auditProjectItems(payload, { doneValue = DEFAULT_DONE_VALUE } = 
   };
 
   for (const item of normalizeProjectItems(payload)) {
+    if (skipUrls.has(item.url)) continue;
     if (isTerminalStatus(item.status, doneValue)) continue;
     if (!item.priority) findings.missingPriority.push(item.url);
     if (!item.reasoningComplexity) findings.missingReasoningComplexity.push(item.url);
@@ -350,9 +372,10 @@ export function syncPriorityQueue(
   const closedUrls = new Set(closedRecords.map((record) => record.url));
 
   const skipRepoLabels = parseSkipRepoLabels(options.skipRepoLabels ?? DEFAULT_SKIP_REPO_LABELS);
+  const skipLabels = parseSkipLabels(options.skipLabels ?? DEFAULT_SKIP_LABELS);
   const skippedUrls = new Set([
-    ...extractSkippedUrls(openRecords, skipRepoLabels),
-    ...extractSkippedUrls(closedRecords, skipRepoLabels),
+    ...extractSkippedUrls(openRecords, skipRepoLabels, skipLabels),
+    ...extractSkippedUrls(closedRecords, skipRepoLabels, skipLabels),
   ]);
 
   const itemsResult = runGh(run, [
@@ -368,7 +391,7 @@ export function syncPriorityQueue(
   ]);
   const projectItems = parseJson(itemsResult, 'Project item lookup failed');
   const projectUrls = extractProjectUrls(projectItems);
-  const audit = auditProjectItems(projectItems, { doneValue });
+  const audit = auditProjectItems(projectItems, { doneValue, skipUrls: skippedUrls });
   const plan = planQueueSync(discoveredUrls, projectUrls, skippedUrls);
   const reconciliation = planStatusReconciliation(projectItems, {
     closedUrls,

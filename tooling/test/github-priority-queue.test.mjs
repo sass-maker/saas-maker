@@ -9,6 +9,7 @@ import {
   isTerminalStatus,
   normalizeProjectItems,
   parseArgs,
+  parseSkipLabels,
   parseSkipRepoLabels,
   planQueueSync,
   planStatusReconciliation,
@@ -62,12 +63,15 @@ test('parseArgs accepts the status reconciliation flags and defaults them', () =
   assert.equal(defaults.doneValue, 'Done');
   assert.equal(defaults.apply, false);
   assert.deepEqual(defaults.skipRepoLabels, ['sarthakagrawal927/portfolio:issues']);
+  assert.deepEqual(defaults.skipLabels, ['deferred: portfolio-cut', 'queue: excluded']);
 
   const custom = parseArgs([
     '--owner', 'o', '--project', '3', '--author', 'a',
     '--status-field', 'State', '--done-value', 'Shipped', '--apply',
     '--skip-repo-label', 'org/repo:do-not-queue',
     '--skip-repo-label', 'org/other:skip',
+    '--skip-label', 'manual: hold',
+    '--skip-label', 'another-skip',
   ]);
   assert.equal(custom.statusField, 'State');
   assert.equal(custom.doneValue, 'Shipped');
@@ -76,6 +80,12 @@ test('parseArgs accepts the status reconciliation flags and defaults them', () =
     'sarthakagrawal927/portfolio:issues',
     'org/repo:do-not-queue',
     'org/other:skip',
+  ]);
+  assert.deepEqual(custom.skipLabels, [
+    'deferred: portfolio-cut',
+    'queue: excluded',
+    'manual: hold',
+    'another-skip',
   ]);
 
   assert.throws(() => parseArgs(['--owner', 'o', '--project', '3', '--author', 'a', '--nope', 'x']),
@@ -149,6 +159,21 @@ test('auditProjectItems still flags blocked or deferred P0 work', () => {
   });
   assert.deepEqual(audit.blockedOrDeferredP0, [OPEN_URL]);
   assert.equal(audit.reviewRequired, 0);
+});
+
+test('auditProjectItems ignores globally skipped labels in drift checks', () => {
+  const audit = auditProjectItems(
+    {
+      items: [
+        { id: 'skipped', status: 'Todo', content: { url: OPEN_URL } },
+        { id: 'ordinary', status: 'Todo', content: { url: MISSING_URL } },
+      ],
+    },
+    { skipUrls: new Set([OPEN_URL]) },
+  );
+  assert.deepEqual(audit.missingPriority, [MISSING_URL]);
+  assert.deepEqual(audit.missingSize, [MISSING_URL]);
+  assert.equal(audit.reviewRequired, 1);
 });
 
 test('planQueueSync only reports issues absent from the project', () => {
@@ -266,6 +291,8 @@ test('a failed status edit is reported and sets a nonzero exit code', () => {
 });
 
 const PORTFOLIO_URL = 'https://github.com/sarthakagrawal927/portfolio/issues/28';
+const DEFERRED_URL = 'https://github.com/owner/repo/issues/4';
+const EXCLUDED_URL = 'https://github.com/owner/repo/issues/5';
 
 test('parseSkipRepoLabels builds a repo-scoped label map and rejects bad entries', () => {
   const map = parseSkipRepoLabels(['Owner/Repo:Issues', 'org/other:skip']);
@@ -299,6 +326,23 @@ test('extractSkippedUrls matches repo and label case-insensitively', () => {
   const skipped = extractSkippedUrls(records, parseSkipRepoLabels(['sarthakagrawal927/portfolio:issues']));
   assert.deepEqual([...skipped], [PORTFOLIO_URL]);
   assert.equal(extractSkippedUrls(records, new Map()).size, 0);
+});
+
+test('parseSkipLabels and extractSkippedUrls match global labels case-insensitively', () => {
+  assert.deepEqual([...parseSkipLabels(['Deferred: Portfolio-Cut', ' queue: excluded '])], [
+    'deferred: portfolio-cut',
+    'queue: excluded',
+  ]);
+  const skipped = extractSkippedUrls(
+    [
+      { url: OPEN_URL, repo: 'owner/repo', labels: ['deferred: portfolio-cut'] },
+      { url: CLOSED_URL, repo: 'owner/repo', labels: ['QUEUE: EXCLUDED'] },
+      { url: MISSING_URL, repo: 'owner/repo', labels: ['ordinary'] },
+    ],
+    new Map(),
+    parseSkipLabels(['deferred: portfolio-cut', 'queue: excluded']),
+  );
+  assert.deepEqual([...skipped], [OPEN_URL, CLOSED_URL]);
 });
 
 test('planQueueSync excludes skipped urls and reports the skipped count', () => {
@@ -346,6 +390,16 @@ function createSkipRunner() {
             repository: { nameWithOwner: 'sarthakagrawal927/portfolio' },
             labels: [{ name: 'issues' }],
           },
+          {
+            url: DEFERRED_URL,
+            repository: { nameWithOwner: 'owner/repo' },
+            labels: [{ name: 'deferred: portfolio-cut' }],
+          },
+          {
+            url: EXCLUDED_URL,
+            repository: { nameWithOwner: 'owner/repo' },
+            labels: [{ name: 'queue: excluded' }],
+          },
         ]),
       };
     }
@@ -371,7 +425,7 @@ test('apply skips repo-scoped label issues: never adds them and never flags drif
     { run, write: (l) => lines.push(l) },
   );
 
-  assert.equal(result.summary.skipped, 1);
+  assert.equal(result.summary.skipped, 3);
   assert.equal(result.summary.discovered, 1);
   assert.equal(result.summary.missing, 1);
   assert.equal(result.summary.added, 1);
@@ -379,11 +433,13 @@ test('apply skips repo-scoped label issues: never adds them and never flags drif
   assert.equal(result.summary.closedPending, 0);
   assert.equal(result.exitCode, 0);
   assert.equal(calls.some((call) => call.includes('portfolio/issues/28')), false);
+  assert.equal(calls.some((call) => call.includes('/issues/4')), false);
+  assert.equal(calls.some((call) => call.includes('/issues/5')), false);
   assert.equal(
     calls.filter((call) => call.startsWith('project item-add')).length,
     1,
   );
-  assert.match(lines.join('\n'), /skipped=1/);
+  assert.match(lines.join('\n'), /skipped=3/);
 });
 
 test('dry run reports skipped portfolio notes without attempting to add them', () => {
@@ -395,7 +451,7 @@ test('dry run reports skipped portfolio notes without attempting to add them', (
   );
 
   assert.equal(result.summary.mode, 'dry-run');
-  assert.equal(result.summary.skipped, 1);
+  assert.equal(result.summary.skipped, 3);
   assert.equal(result.summary.missing, 1);
   assert.equal(result.summary.added, 0);
   assert.equal(calls.some((call) => call.startsWith('project item-add')), false);
