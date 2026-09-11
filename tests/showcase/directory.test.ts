@@ -19,11 +19,25 @@ describe('verified public Fleet directory', () => {
     );
 
     expect(catalog.schemaVersion).toBe(5);
-    expect(catalog.directory).toHaveLength(21);
-    expect(new Set(ids).size).toBe(21);
-    expect(counts.current).toBe(5);
+    expect(catalog.directory).toHaveLength(22);
+    expect(new Set(ids).size).toBe(22);
+    expect(counts.current).toBe(6);
     expect(counts.featured).toBe(2);
     expect(counts.past).toBe(14);
+    const storagedaddy = catalog.directory.find(
+      (project: { id: string }) => project.id === 'storagedaddy'
+    );
+    expect(storagedaddy).toMatchObject({
+      lifecycle: 'active',
+      shareable: true,
+      category: 'utility',
+      group: 'current',
+      form: 'macOS app',
+      url: 'https://storagedaddy.significanthobbies.com/',
+    });
+    expect(storagedaddy).not.toHaveProperty('repositoryUrl');
+    expect(storagedaddy).not.toHaveProperty('roadmapUrl');
+    expect(storagedaddy).not.toHaveProperty('changelogUrl');
     expect(
       catalog.directory.find((project: { id: string }) => project.id === 'web-playables')
     ).toMatchObject({ lifecycle: 'inactive', shareable: true, group: 'past' });

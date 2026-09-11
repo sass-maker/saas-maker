@@ -95,7 +95,7 @@ export function buildPublicProducts(catalog) {
         lifecycle: lifecycleStatus(project),
         shareable: true,
         maturity: metadata.maturity,
-        ...(metadata.hasChangelog === false ? {} : { changelogUrl: `${url}/changelog` }),
+        ...(metadata.hasChangelog === false ? {} : { changelogUrl: publicChangelogUrl(url) }),
         ...(metadata.repositoryUrl
           ? {
               repositoryUrl: metadata.repositoryUrl,
@@ -171,12 +171,12 @@ export function buildPublicProducts(catalog) {
         catalog.infrastructure.projects[project.id]?.deployments ?? []
       ),
       domains,
-      ...(domains[0] ? { url: `https://${domains[0]}` } : {}),
+      ...(domains[0] ? { url: canonicalPublicUrl(project) } : {}),
       ...(repositoryUrl ? { repositoryUrl } : {}),
       ...(project.public?.listing === 'maintained' &&
       project.public?.hasChangelog !== false &&
       domains[0]
-        ? { changelogUrl: `https://${domains[0]}/changelog` }
+        ? { changelogUrl: publicChangelogUrl(canonicalPublicUrl(project)) }
         : {}),
       ...(repositoryUrl ? { roadmapUrl: `${repositoryUrl}/issues` } : {}),
       firstCommitAt: metadata.firstCommitAt,
@@ -266,10 +266,12 @@ export function assertEvidenceLinks(product) {
   const productUrl = new URL(product.url);
   if (product.changelogUrl) {
     const changelogUrl = new URL(product.changelogUrl);
-    if (changelogUrl.origin !== productUrl.origin || changelogUrl.pathname !== '/changelog') {
-      throw new Error(
-        `${product.id}: changelogUrl must be the canonical product origin /changelog`
-      );
+    const productPath = productUrl.pathname.replace(/\/+$/, '');
+    if (
+      changelogUrl.origin !== productUrl.origin ||
+      changelogUrl.pathname !== `${productPath}/changelog`
+    ) {
+      throw new Error(`${product.id}: changelogUrl must be the canonical product path /changelog`);
     }
   }
 
@@ -310,7 +312,37 @@ function canonicalPublicUrl(project) {
   if (!domain) {
     throw new Error(`${project.id}: maintained public listing requires a canonical domain`);
   }
-  return `https://${domain}`;
+  const override = project.public?.url;
+  if (override == null) return `https://${domain}`;
+
+  let parsed;
+  try {
+    parsed = new URL(override);
+  } catch {
+    throw new Error(
+      `${project.id}: public.url must be an absolute HTTPS URL on the canonical domain`
+    );
+  }
+  if (
+    parsed.protocol !== 'https:' ||
+    parsed.hostname.toLowerCase() !== domain.toLowerCase() ||
+    parsed.port ||
+    parsed.username ||
+    parsed.password
+  ) {
+    throw new Error(
+      `${project.id}: public.url must be an absolute HTTPS URL on the canonical domain`
+    );
+  }
+  return parsed.toString();
+}
+
+function publicChangelogUrl(url) {
+  const parsed = new URL(url);
+  parsed.pathname = `${parsed.pathname.replace(/\/+$/, '')}/changelog`;
+  parsed.search = '';
+  parsed.hash = '';
+  return parsed.toString();
 }
 
 function assertShape(value, allowed, required) {

@@ -52,6 +52,34 @@ describe('shareability projection boundary', () => {
     expect(() => buildPublicProducts(input)).toThrow('invalid canonical category');
   });
 
+  it('preserves an explicit canonical subpath across product and directory URLs', () => {
+    const input = catalog();
+    input.projects[0].public.url = 'https://primary.example/storagedaddy/';
+    const result = buildPublicProducts(input);
+    expect(result.products.find(({ id }) => id === 'primary')).toMatchObject({
+      url: 'https://primary.example/storagedaddy/',
+      changelogUrl: 'https://primary.example/storagedaddy/changelog',
+    });
+    expect(result.directory.find(({ id }) => id === 'primary')).toMatchObject({
+      url: 'https://primary.example/storagedaddy/',
+      changelogUrl: 'https://primary.example/storagedaddy/changelog',
+    });
+  });
+
+  it('rejects public URL overrides without the canonical HTTPS host', () => {
+    for (const url of [
+      'http://primary.example/storagedaddy/',
+      'https://other.example/storagedaddy/',
+      'https://user:pass@primary.example/storagedaddy/',
+    ]) {
+      const input = catalog();
+      input.projects[0].public.url = url;
+      expect(() => buildPublicProducts(input)).toThrow(
+        'primary: public.url must be an absolute HTTPS URL on the canonical domain'
+      );
+    }
+  });
+
   it('excludes unverified entries from every promotional surface and keeps paused experiments', () => {
     const result = buildPublicProducts(catalog());
     expect(result.directory.map((project) => [project.id, project.group])).toEqual([
