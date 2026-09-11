@@ -31,6 +31,15 @@ Cockpit, CodeVetter, and App Health remain independent repositories.
   Exact-source successful push requirements are unchanged. See #104 and
   `tooling/skills/fleet-deploy-guard/SKILL.md` for the supported source boundary.
 
+- **2026-09-07 — Bounded acquisition and SEO research skills added locally:**
+  Added Fleet-owned `web-extraction`, `media-acquisition`, and `seo-research`
+  skills with explicit source selection, authorization boundaries, unavailable
+  states, and evidence receipts. Scrapling and OpenSEO remain optional backends;
+  no packages, browsers, MCP servers, credentials, or provider projects were
+  installed or connected. The existing technical `seo-audit` and product-local
+  ingestion pipelines remain authoritative. Tracked in #103; no deployment or
+  publication ran.
+
 - **2026-09-01 — Fleet-wide Clarity health skill:** Added the discoverable
   `clarity-fleet-health` skill with separate credential-free source, cached
   health, explicit live refresh, and focused MCP investigation modes. Its first

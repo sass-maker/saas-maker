@@ -1,0 +1,4 @@
+interface:
+  display_name: "Web Extraction"
+  short_description: "Extract bounded structured public web data"
+  default_prompt: "Use $web-extraction to collect a small, reproducible public-web dataset with a clear validation receipt."

@@ -12,6 +12,7 @@ one you need, not all of them.
 |---|---|
 | AI/agent readiness: llms.txt, /api/ai, index.md, robots vs AI crawlers, GEO surfaces | `skills/agent-ready/SKILL.md` |
 | On-page SEO: title/meta/canonical/OG/JSON-LD/hreflang/sitemap coverage | `skills/seo-audit/SKILL.md` |
+| SEO market research: keywords, search competitors, backlink prospects, local-search opportunities, optional provider metrics | `skills/seo-research/SKILL.md` |
 | SEO content sufficiency: article inventory, competitive intent/page gaps, comparison/alternative/use-case pages, create or publish missing pages | `skills/content-coverage/SKILL.md` |
 | Performance: Core Web Vitals, Lighthouse distributions, "why is X slow" | `psi-swarm/SKILL.md` (standalone product; exposed through the skill symlink) |
 | Outcome trends: SERP classes over time, "did results move", weekly run | `skills/geo-observatory/SKILL.md` |

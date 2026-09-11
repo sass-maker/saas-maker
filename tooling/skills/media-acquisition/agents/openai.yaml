@@ -1,0 +1,4 @@
+interface:
+  display_name: "Media Acquisition"
+  short_description: "Inspect and acquire authorized public media"
+  default_prompt: "Use $media-acquisition to inspect this public media source and acquire only the authorized artifacts I need."
