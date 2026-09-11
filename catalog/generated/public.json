@@ -94,7 +94,7 @@
     {
       "id": "live",
       "name": "Live",
-      "description": "Explore hobbies and possibilities, build a personal bucket list, and keep progress on this device; account sync is not yet qualified.",
+      "description": "Explore hobbies and possibilities, build a personal bucket list, and save your progress on this device or in your account.",
       "makerNote": "I wanted a product that helps people live more intentionally through goals, possibilities, and things worth anticipating.",
       "purposeContract": {
         "purpose": "Live helps a person turn passive wanting into a life they can deliberately imagine, plan, and experience.",
@@ -1022,7 +1022,7 @@
     {
       "id": "live",
       "name": "Live",
-      "description": "Explore hobbies and possibilities, build a personal bucket list, and keep progress on this device; account sync is not yet qualified.",
+      "description": "Explore hobbies and possibilities, build a personal bucket list, and save your progress on this device or in your account.",
       "url": "https://live.significanthobbies.com",
       "tier": "active",
       "category": "media",
