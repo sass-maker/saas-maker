@@ -901,7 +901,7 @@
         "purpose": "StorageDaddy helps developers understand and review local storage through a native visual scanner, developer classifications and verified, deliberate cleanup.",
         "audience": "Developers whose Mac builds, dependencies, caches and AI session histories consume storage.",
         "outcome": "Find large storage consumers and review what to archive or move to Trash.",
-        "mechanism": "A local SwiftUI and AppKit scanner provides visual exploration, developer classifications, duplicate review and compact AI conversation exports with separately verified original cleanup.",
+        "mechanism": "A local SwiftUI and AppKit scanner provides visual exploration, developer insights, reviewed cache cleanup and compact AI conversation exports. Sparkle provides signed macOS update checks.",
         "proof": "Signed and notarized macOS 14+ Apple-silicon beta, measured scans, tested cancellation, verified archive cleanup and restoration, and a publicly downloaded DMG with matching checksum.",
         "nextAction": "Download the free beta at storagedaddy.significanthobbies.com, scan a folder, and review what to archive or move to Trash."
       },
@@ -913,10 +913,10 @@
         "Web"
       ],
       "technologies": [
-        "Swift",
         "SwiftUI",
         "Rust",
-        "Cloudflare Workers"
+        "Cloudflare Workers",
+        "Sparkle"
       ],
       "group": "current",
       "lifecycle": "active",
@@ -1251,7 +1251,7 @@
         "purpose": "StorageDaddy helps developers understand and review local storage through a native visual scanner, developer classifications and verified, deliberate cleanup.",
         "audience": "Developers whose Mac builds, dependencies, caches and AI session histories consume storage.",
         "outcome": "Find large storage consumers and review what to archive or move to Trash.",
-        "mechanism": "A local SwiftUI and AppKit scanner provides visual exploration, developer classifications, duplicate review and compact AI conversation exports with separately verified original cleanup.",
+        "mechanism": "A local SwiftUI and AppKit scanner provides visual exploration, developer insights, reviewed cache cleanup and compact AI conversation exports. Sparkle provides signed macOS update checks.",
         "proof": "Signed and notarized macOS 14+ Apple-silicon beta, measured scans, tested cancellation, verified archive cleanup and restoration, and a publicly downloaded DMG with matching checksum.",
         "nextAction": "Download the free beta at storagedaddy.significanthobbies.com, scan a folder, and review what to archive or move to Trash."
       }
