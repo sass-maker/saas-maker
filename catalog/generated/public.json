@@ -1373,6 +1373,44 @@
       "latestCommitAt": "2026-09-09"
     },
     {
+      "id": "nomad-data-adventure",
+      "name": "Nomad Data Adventure",
+      "description": "A small city-comparison experiment with fictional sample data, sortable trade-offs and a budget filter.",
+      "makerNote": "I am keeping Nomad Data Adventure active for now as a data exploration experiment.",
+      "purposeContract": {
+        "purpose": "Explore city data through a bounded local experiment.",
+        "audience": "A viewer exploring a small city-comparison interface.",
+        "outcome": "Compare fictional city trade-offs and narrow a sample shortlist by budget.",
+        "mechanism": "A self-contained HTML page sorts and filters original fictional records in the browser.",
+        "proof": "Public synthetic demo, mobile layout, offline use, sorting, budget filtering and empty state verified on September 12.",
+        "nextAction": "Try the sample; the full collected dataset remains private pending redistribution rights."
+      },
+      "kind": "experiment",
+      "category": "experimental",
+      "form": "Browser experiment",
+      "platforms": [
+        "Web"
+      ],
+      "technologies": [
+        "HTML",
+        "CSS",
+        "JavaScript"
+      ],
+      "group": "current",
+      "lifecycle": "active",
+      "shareable": true,
+      "deployed": true,
+      "deploymentProviders": [],
+      "domains": [
+        "sarthakagrawal927.github.io"
+      ],
+      "url": "https://sarthakagrawal927.github.io/nomad-data-adventure/",
+      "repositoryUrl": "https://github.com/sarthakagrawal927/nomad-data-adventure",
+      "roadmapUrl": "https://github.com/sarthakagrawal927/nomad-data-adventure/issues",
+      "firstCommitAt": null,
+      "latestCommitAt": null
+    },
+    {
       "id": "storagedaddy",
       "name": "StorageDaddy",
       "description": "A native Mac storage analyzer for developer caches, builds, dependencies and AI session archives, with reviewed cleanup.",
@@ -2003,6 +2041,30 @@
         "mechanism": "The browser computes structured conversation analysis locally from an imported export and presents linked historical views.",
         "proof": "A useful browser-local dashboard exists today; deeper shift analysis and additional export sources remain active work.",
         "nextAction": "Import a ChatGPT export locally and explore the resulting private map; the source archive stays in the browser."
+      }
+    },
+    {
+      "id": "nomad-data-adventure",
+      "name": "Nomad Data Adventure",
+      "description": "A small city-comparison experiment with fictional sample data, sortable trade-offs and a budget filter.",
+      "url": "https://sarthakagrawal927.github.io/nomad-data-adventure/",
+      "tier": "active",
+      "category": "experimental",
+      "priority": "P2",
+      "spotlight": false,
+      "lifecycle": "active",
+      "shareable": true,
+      "maturity": "experiment",
+      "repositoryUrl": "https://github.com/sarthakagrawal927/nomad-data-adventure",
+      "roadmapUrl": "https://github.com/sarthakagrawal927/nomad-data-adventure/issues",
+      "pillarId": "build",
+      "purposeContract": {
+        "purpose": "Explore city data through a bounded local experiment.",
+        "audience": "A viewer exploring a small city-comparison interface.",
+        "outcome": "Compare fictional city trade-offs and narrow a sample shortlist by budget.",
+        "mechanism": "A self-contained HTML page sorts and filters original fictional records in the browser.",
+        "proof": "Public synthetic demo, mobile layout, offline use, sorting, budget filtering and empty state verified on September 12.",
+        "nextAction": "Try the sample; the full collected dataset remains private pending redistribution rights."
       }
     },
     {

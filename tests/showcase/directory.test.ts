@@ -63,7 +63,13 @@ describe('verified public Fleet directory', () => {
     );
     expect(ids).not.toContain('chess');
     expect(ids).not.toContain('journal');
-    expect(ids).not.toContain('nomad-data-adventure');
+    expect(
+      catalog.directory.find((project: { id: string }) => project.id === 'nomad-data-adventure')
+    ).toMatchObject({
+      lifecycle: 'active',
+      category: 'experimental',
+      url: 'https://sarthakagrawal927.github.io/nomad-data-adventure/',
+    });
     for (const heldId of [
       'psi-swarm',
       'everythingrated',
