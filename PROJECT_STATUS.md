@@ -8,14 +8,15 @@ It exists to make the portfolio discoverable, provide one consistent way to
 collect and review customer feedback, and package reusable public-facing
 components without pulling product code into Foundry.
 
-It is not the Fleet control plane. Site Health is the source of truth for the
-private project catalog and portfolio health. SaaS Maker Tooling owns shared
+It is not the Fleet control plane. SaaS Maker's owner-local `catalog/projects.json`
+is the single source for project and repository classifications. Site Health
+reads its generated compatibility view and owns portfolio health. SaaS Maker Tooling owns shared
 automation and agent skills under `tooling/`. Drank, Reel Pipeline, PSI Swarm, Mobile Dev
 Cockpit, CodeVetter, and App Health remain independent repositories.
 
 ## Dependencies
 
-- Site Health's canonical `apps/backend/config/projects.json`, projected into
+- Owner-local `catalog/projects.json`, projected into
   `catalog/generated/public.json` before a directory release.
 - Cloudflare Workers, D1, and R2 for the feedback API and image uploads.
 - better-auth for the private inbox.
@@ -23,6 +24,31 @@ Cockpit, CodeVetter, and App Health remain independent repositories.
 - React as the peer runtime for the AI Chat Footer and Portfolio Project Strip.
 
 ## Timeline
+
+- **2026-09-12 — Minimum shareable variants:**
+  Verified nine existing public variants and the existing notarized Anchor Mac
+  download. Added public projection support for five owner-approved standalone
+  experiments, with explicit public-repository verification and neutral scope
+  descriptions. PH Catalog now has a published safe synthetic offline demo
+  (f57cdba; 88 tests). The generated directory contains 38 shareable entries.
+  External TestFlight access remains pending for Calorie, Setline and Kith;
+  HeyPace and Nomad are proposed for deferral. No owner classification is
+  silently changed by verification gaps.
+
+- **2026-09-12 — Lossless catalog structure (local):**
+  Grouped product fields into classification, purpose, lifecycle, sharing, owner
+  notes, repositories, deployment and presentation. Preserved all 5,916 original
+  leaf values, 59 product identities and 82 repository-review rows against a
+  byte-for-byte backup; the public export is unchanged. Site Health reads a
+  generated compatibility view. Maintenance writers now update the structured
+  source and reject stale or lossy saves. No deployment or classification changes.
+
+- **2026-09-12 — One editable portfolio catalog:**
+  Moved the complete private source to `catalog/projects.json`, retaining all 59
+  product records and the original 82-repository cohort. Site Health's former
+  path is a symlink. Linked repositories inherit project classifications; the
+  full table and public export are generated. Raw private data stays local and
+  ignored by Git; public builds use the allowlisted projection only.
 
 - **2026-09-09 — Scoped deploy-guard CI recognition:**
   Independent unconditional build/test steps can establish CI evidence beside

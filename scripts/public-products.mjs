@@ -1,3 +1,5 @@
+import { compatibilityCatalog } from './catalog-schema.mjs';
+
 const PRODUCT_FIELDS = new Set([
   'id',
   'name',
@@ -65,6 +67,7 @@ function lifecycleStatus(project) {
 }
 
 export function buildPublicProducts(catalog) {
+  catalog = compatibilityCatalog(catalog);
   const products = [];
   const pastProjects = [];
   const directory = [];
@@ -203,12 +206,109 @@ export function buildPublicProducts(catalog) {
     directory.push(output);
   }
 
+  for (const repository of catalog.repositoryReview?.repositories ?? []) {
+    if (repository.projectId || repository.lifecycle?.shareable !== true) continue;
+    const publicMetadata = repository.presentation?.public;
+    const directoryMetadata = repository.presentation?.directory;
+    if (!publicMetadata || !directoryMetadata || publicMetadata.listing === 'hidden') continue;
+    if (!['utility', 'media', 'experimental'].includes(repository.category)) {
+      throw new Error(`${repository.originalRepository}: invalid canonical category`);
+    }
+
+    const repositoryUrl = standaloneRepositoryUrl(repository);
+    if (!repositoryUrl) continue;
+    const id = publicMetadata.id;
+    const lifecycle = repository.lifecycle.status;
+    const common = {
+      id,
+      name: publicMetadata.name,
+      description: publicMetadata.description,
+      category: repository.category,
+      shareable: true,
+      repositoryUrl,
+      purposeContract: directoryMetadata.purposeContract,
+    };
+
+    if (publicMetadata.listing === 'maintained') {
+      if (lifecycle === 'inactive') {
+        throw new Error(`${id}: maintained standalone listing cannot be inactive`);
+      }
+      const output = {
+        ...common,
+        url: repositoryUrl,
+        lifecycle,
+        spotlight: false,
+        ...(publicMetadata.maturity ? { maturity: publicMetadata.maturity } : {}),
+        roadmapUrl: `${repositoryUrl}/issues`,
+        ...(publicMetadata.pillarId ? { pillarId: publicMetadata.pillarId } : {}),
+      };
+      assertShape(output, PRODUCT_FIELDS, ['id', 'name', 'description', 'url']);
+      assertEvidenceLinks(output);
+      products.push(output);
+    } else if (publicMetadata.listing === 'past') {
+      if (lifecycle !== 'inactive') {
+        throw new Error(`${id}: past standalone listing requires lifecycle status inactive`);
+      }
+      const output = { ...common, lifecycle: 'inactive' };
+      assertShape(output, PAST_PROJECT_FIELDS, ['id', 'name', 'description', 'repositoryUrl']);
+      pastProjects.push(output);
+    } else {
+      throw new Error(`${id}: unsupported public listing ${publicMetadata.listing}`);
+    }
+
+    const output = {
+      id,
+      name: publicMetadata.name,
+      description: directoryMetadata.description ?? publicMetadata.description,
+      makerNote: directoryMetadata.makerNote,
+      ...(directoryMetadata.purposeContract
+        ? { purposeContract: directoryMetadata.purposeContract }
+        : {}),
+      kind: standaloneKind(repository.futureForm),
+      category: repository.category,
+      form: directoryMetadata.form,
+      platforms: directoryMetadata.platforms,
+      technologies: directoryMetadata.technologies,
+      group: lifecycle === 'inactive' ? 'past' : 'current',
+      lifecycle,
+      shareable: true,
+      deployed: false,
+      deploymentProviders: [],
+      domains: [],
+      url: repositoryUrl,
+      repositoryUrl,
+      roadmapUrl: `${repositoryUrl}/issues`,
+      firstCommitAt: directoryMetadata.firstCommitAt,
+      latestCommitAt: directoryMetadata.latestCommitAt,
+    };
+    assertShape(output, DIRECTORY_FIELDS, [
+      'id',
+      'name',
+      'description',
+      'makerNote',
+      'kind',
+      'form',
+      'platforms',
+      'technologies',
+      'group',
+      'lifecycle',
+    ]);
+    if (!Array.isArray(output.platforms) || output.platforms.length === 0) {
+      throw new Error(`${id}: directory platforms are required`);
+    }
+    if (!Array.isArray(output.technologies) || output.technologies.length === 0) {
+      throw new Error(`${id}: directory technologies are required`);
+    }
+    directory.push(output);
+  }
+
   assertUnique(products, 'maintained product');
   assertUnique(pastProjects, 'past project');
   const allIds = [...products, ...pastProjects].map((project) => project.id);
   if (new Set(allIds).size !== allIds.length) {
     throw new Error('public ids must be unique across maintained and past projects');
   }
+  assertUnique(directory, 'directory project');
 
   products.sort(
     (left, right) =>
@@ -218,7 +318,7 @@ export function buildPublicProducts(catalog) {
 
   const projection = {
     schemaVersion: 5,
-    generatedFrom: ['site-health/apps/backend/config/projects.json'],
+    generatedFrom: ['saas-maker/catalog/projects.json'],
     historySemantics: catalog.publicDirectory.historySemantics,
     directory,
     products,
@@ -233,6 +333,25 @@ function directoryGroup(project) {
   if (status === 'primary') return 'featured';
   if (status === 'inactive') return 'past';
   return 'current';
+}
+
+function standaloneKind(futureForm) {
+  if (futureForm === 'active-product') return 'product';
+  if (futureForm?.includes('experiment')) return 'experiment';
+  if (futureForm === 'personal-tool') return 'utility';
+  return 'project';
+}
+
+function standaloneRepositoryUrl(repository) {
+  if (repository.repositoryVisibility !== 'public') return undefined;
+  if (!/^[^/]+\/[^/]+$/.test(repository.currentRepository ?? '')) {
+    throw new Error(`${repository.originalRepository}: invalid current GitHub repository`);
+  }
+  const repositoryUrl = `https://github.com/${repository.currentRepository}`;
+  if (repository.githubVerification?.url && repository.githubVerification.url !== repositoryUrl) {
+    throw new Error(`${repository.originalRepository}: GitHub verification URL mismatch`);
+  }
+  return repositoryUrl;
 }
 
 function publicRepositoryUrl(project) {

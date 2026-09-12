@@ -7,8 +7,7 @@ import { buildPublicProducts } from './public-products.mjs';
 
 const repoRoot = path.resolve(import.meta.dirname, '..');
 const fleetCatalog = path.resolve(
-  process.env.FLEET_PUBLIC_PRODUCTS_PATH ??
-    path.join(repoRoot, '../site-health/apps/backend/config/projects.json')
+  process.env.FLEET_PUBLIC_PRODUCTS_PATH ?? path.join(repoRoot, 'catalog/projects.json')
 );
 const destination = path.join(repoRoot, 'catalog/generated/public.json');
 
@@ -160,12 +159,12 @@ if (process.argv.includes('--check')) {
     process.exitCode = 1;
   } else {
     console.log(
-      `SaaS Maker public catalog matches Site Health (${projection.directory?.length ?? projection.products.length} identities)`
+      `SaaS Maker public catalog matches catalog/projects.json (${projection.directory?.length ?? projection.products.length} identities)`
     );
   }
 } else {
   await writeFile(destination, rendered);
   console.log(
-    `Synced ${projection.directory?.length ?? projection.products.length} public identities from Site Health`
+    `Synced ${projection.directory?.length ?? projection.products.length} public identities from catalog/projects.json`
   );
 }

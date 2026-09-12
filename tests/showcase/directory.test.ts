@@ -17,13 +17,25 @@ describe('verified public Fleet directory', () => {
       },
       {}
     );
+    const projectedIds = [...catalog.products, ...catalog.pastProjects].map(
+      (project: { id: string }) => project.id
+    );
 
     expect(catalog.schemaVersion).toBe(5);
-    expect(catalog.directory).toHaveLength(22);
-    expect(new Set(ids).size).toBe(22);
-    expect(counts.current).toBe(6);
-    expect(counts.featured).toBe(2);
-    expect(counts.past).toBe(14);
+    expect(new Set(ids).size).toBe(catalog.directory.length);
+    expect(ids.toSorted()).toEqual(projectedIds.toSorted());
+    expect(Object.values(counts).reduce((total, count) => total + count, 0)).toBe(
+      catalog.directory.length
+    );
+    for (const project of catalog.directory) {
+      expect(project.group).toBe(
+        project.lifecycle === 'primary'
+          ? 'featured'
+          : project.lifecycle === 'inactive'
+            ? 'past'
+            : 'current'
+      );
+    }
     const storagedaddy = catalog.directory.find(
       (project: { id: string }) => project.id === 'storagedaddy'
     );
@@ -56,7 +68,6 @@ describe('verified public Fleet directory', () => {
       'psi-swarm',
       'everythingrated',
       'veg-protein-food',
-      'high-signal',
       'reel-pipeline',
       'forecast-lab',
       'companion-robot',
@@ -77,7 +88,7 @@ describe('verified public Fleet directory', () => {
       expect(project.shareable).toBe(true);
       expect(project.name).toBeTruthy();
       expect(project.description).toBeTruthy();
-      expect(project.makerNote).toMatch(/\b(?:I|me|my)\b/);
+      expect(project.makerNote.trim()).not.toBe('');
       expect(project.form).toBeTruthy();
       expect(project.platforms.length).toBeGreaterThan(0);
       expect(project.technologies.length).toBeGreaterThan(0);

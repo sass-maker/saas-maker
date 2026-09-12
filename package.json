@@ -26,6 +26,9 @@
     "catalog:sync-public": "node scripts/sync-fleet-public-products.mjs",
     "catalog:check-public": "node scripts/sync-fleet-public-products.mjs --check",
     "catalog:validate-public": "node scripts/sync-fleet-public-products.mjs --validate",
+    "catalog:check-source": "node scripts/check-catalog-source.mjs",
+    "catalog:table": "node scripts/generate-repository-classifications.mjs",
+    "catalog:check-table": "node scripts/generate-repository-classifications.mjs --check",
     "check:docs": "node scripts/check-docs.mjs",
     "test": "vitest run tests",
     "lint": "biome check .",
@@ -33,7 +36,11 @@
     "smoke": "node scripts/smoke-prod.mjs",
     "prepare": "husky",
     "format": "biome format --write .",
-    "format:check": "biome format ."
+    "format:check": "biome format .",
+    "catalog:sync-operations": "node scripts/sync-catalog-compatibility.mjs",
+    "catalog:check-operations": "node scripts/sync-catalog-compatibility.mjs --check",
+    "catalog:test-schema": "node --test scripts/catalog-schema.test.mjs",
+    "catalog:sync": "pnpm catalog:sync-operations && pnpm catalog:sync-public && pnpm catalog:table && pnpm catalog:check-source"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.1",

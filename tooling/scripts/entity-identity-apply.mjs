@@ -2,7 +2,7 @@
 /**
  * entity-identity-apply — write the canonical identity decisions from
  * tooling/config/entity-identity-canonical.json into the fleet catalog
- * (site-health/apps/backend/config/projects.json).
+ * (catalog/projects.json).
  *
  * Companion to entity-identity-diff.mjs, which reports disagreement. This one
  * resolves it, from a reviewed decision record rather than from a hand edit,
@@ -27,11 +27,9 @@
  * And, when rules.registryDescriptionMirrorsPublic is on, for every identity:
  *   geoIdentities[id].description  mirrored from projects[id].public.description
  *
- * The catalog is biome-formatted, not JSON.stringify-formatted: short objects
- * are compacted onto one line. Reserializing it would produce a ~900-line
- * whitespace diff that buries the change. So every edit here is line-anchored
- * text surgery inside the target block, and the result is re-parsed and
- * deep-compared against the intended object before it is written.
+ * Edits use the compatibility shape in memory, then save through the lossless
+ * schema adapter into the one structured source. Unmapped data and concurrent
+ * source changes cause a refusal rather than a lossy overwrite.
  *
  * Usage:
  *   node tooling/scripts/entity-identity-apply.mjs           # apply
@@ -39,14 +37,15 @@
  *   node tooling/scripts/entity-identity-apply.mjs --diff     # show planned edits
  */
 
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import path from 'node:path';
+import { compatibilityCatalog } from '../../scripts/catalog-schema.mjs';
+import { saveCatalog } from '../../scripts/catalog-store.mjs';
 
 const repoRoot = path.resolve(import.meta.dirname, '../..');
-const fleetRoot = path.resolve(repoRoot, '..');
 const catalogPath = path.resolve(
   process.env.FLEET_PUBLIC_PRODUCTS_PATH ??
-    path.join(fleetRoot, 'site-health/apps/backend/config/projects.json')
+    path.join(repoRoot, 'catalog/projects.json')
 );
 const decisionsPath = path.join(repoRoot, 'tooling/config/entity-identity-canonical.json');
 
@@ -230,8 +229,9 @@ function setPricing(lines, block, indent, pricing) {
 const PRICING_STATES = new Set(['free', 'published', 'not-declared', 'not-applicable']);
 
 const decisions = JSON.parse(await readFile(decisionsPath, 'utf8'));
-const raw = await readFile(catalogPath, 'utf8');
-const catalog = JSON.parse(raw);
+const sourceRaw = await readFile(catalogPath, 'utf8');
+const catalog = compatibilityCatalog(JSON.parse(sourceRaw));
+const raw = JSON.stringify(catalog, null, 2) + '\n';
 const lines = raw.split('\n');
 
 const publicById = new Map(catalog.projects.map((p) => [p.id, p.public ?? null]));
@@ -369,5 +369,5 @@ if (checkOnly) {
   process.exit(1);
 }
 
-await writeFile(catalogPath, next);
+await saveCatalog(catalogPath, reparsed, sourceRaw);
 console.log(`entity-identity-apply: applied ${changed} field change(s) to ${catalogPath}`);

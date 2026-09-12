@@ -1,7 +1,7 @@
 {
   "schemaVersion": 5,
   "generatedFrom": [
-    "site-health/apps/backend/config/projects.json"
+    "saas-maker/catalog/projects.json"
   ],
   "historySemantics": "firstCommitAt and latestCommitAt are dates from the currently retained Git history. They are not incorporation, launch, or retirement dates.",
   "directory": [
@@ -46,6 +46,49 @@
       "changelogUrl": "https://codevetter.com/changelog",
       "roadmapUrl": "https://github.com/Codevetter/codevetter/issues",
       "firstCommitAt": "2025-11-30",
+      "latestCommitAt": "2026-09-09"
+    },
+    {
+      "id": "pace",
+      "name": "HeyPace",
+      "description": "Local-only macOS voice agent that can understand what is on your screen.",
+      "makerNote": "I wanted a fast, privacy-first Mac assistant that could understand what is on my screen while keeping the work local.",
+      "purposeContract": {
+        "purpose": "HeyPace is a private Mac assistant for fast voice-driven help grounded in what is currently on screen.",
+        "audience": "A Mac user who wants contextual assistance without sending their desktop workflow to a hosted service.",
+        "outcome": "Get useful help in the moment with less typing and less context switching.",
+        "mechanism": "A local macOS agent combines voice interaction, screen context, and device-side tools.",
+        "proof": "The public 0.3.19 preview is downloadable and the native implementation includes voice, screen context, local planning, and macOS actions; signed-release hardware smoke and sustained daily use remain unproven.",
+        "nextAction": "Download the current Mac preview, test one recurring voice-and-screen workflow, and judge it against Pace's visible local and off-device trust boundary."
+      },
+      "kind": "product",
+      "category": "experimental",
+      "form": "macOS app",
+      "platforms": [
+        "macOS",
+        "Web"
+      ],
+      "technologies": [
+        "Swift",
+        "SwiftUI",
+        "Astro",
+        "Cloudflare Pages"
+      ],
+      "group": "current",
+      "lifecycle": "active",
+      "shareable": true,
+      "deployed": true,
+      "deploymentProviders": [
+        "Cloudflare Pages"
+      ],
+      "domains": [
+        "heypace.app"
+      ],
+      "url": "https://heypace.app",
+      "repositoryUrl": "https://github.com/HeyPace/pace",
+      "changelogUrl": "https://heypace.app/changelog",
+      "roadmapUrl": "https://github.com/HeyPace/pace/issues",
+      "firstCommitAt": "2026-07-13",
       "latestCommitAt": "2026-09-09"
     },
     {
@@ -304,6 +347,92 @@
       "latestCommitAt": "2026-09-07"
     },
     {
+      "id": "free-ai",
+      "name": "Free AI",
+      "description": "An OpenAI-compatible free-tier model gateway with operator-provisioned project access.",
+      "makerNote": "I built Free AI to make genuinely useful free model capacity easier to discover and use through one resilient interface.",
+      "purposeContract": {
+        "purpose": "Free AI makes useful free-tier language-model capacity available through one resilient, OpenAI-compatible interface.",
+        "audience": "Fleet applications and developers who need low-cost model access without hard-coding one free provider.",
+        "outcome": "Keep AI-dependent workflows available as provider limits, models, and free capacity change.",
+        "mechanism": "A capability-aware gateway routes compatible requests across supported free-tier providers with fallback behavior.",
+        "proof": "The gateway works for internal consumers and is maintained as shared infrastructure rather than an independent feature product.",
+        "nextAction": "Use the compatible gateway from a named consumer; add providers only when they improve capability, reliability, or capacity."
+      },
+      "kind": "platform",
+      "category": "utility",
+      "form": "API gateway",
+      "platforms": [
+        "API",
+        "Web"
+      ],
+      "technologies": [
+        "Hono",
+        "TypeScript",
+        "Cloudflare Workers",
+        "D1"
+      ],
+      "group": "current",
+      "lifecycle": "active",
+      "shareable": true,
+      "deployed": true,
+      "deploymentProviders": [
+        "Cloudflare Workers"
+      ],
+      "domains": [
+        "ai-gateway.sassmaker.com"
+      ],
+      "url": "https://ai-gateway.sassmaker.com",
+      "repositoryUrl": "https://github.com/sass-maker/free-ai",
+      "changelogUrl": "https://ai-gateway.sassmaker.com/changelog",
+      "roadmapUrl": "https://github.com/sass-maker/free-ai/issues",
+      "firstCommitAt": "2026-02-15",
+      "latestCommitAt": "2026-09-09"
+    },
+    {
+      "id": "high-signal",
+      "name": "High Signal",
+      "description": "Evidence-backed daily intelligence across technology, startups, finance, and public markets.",
+      "makerNote": "I built High Signal to combine scattered news and data sources and extract the signals that are actually useful.",
+      "purposeContract": {
+        "purpose": "High Signal turns scattered technology, startup, finance, and market sources into an evidence-backed daily intelligence brief.",
+        "audience": "A curious operator who wants decision-relevant signals without reading every feed and article.",
+        "outcome": "Understand what changed, why it may matter, and which source supports each signal.",
+        "mechanism": "The product collects multiple sources, groups related events, and derives a concise brief with visible evidence.",
+        "proof": "The product focus and daily-brief surface exist, but regular owner use has not yet validated what deserves continued investment.",
+        "nextAction": "Read and dogfood the Daily Brief; resume feature work only when repeated use exposes a concrete deficiency."
+      },
+      "kind": "product",
+      "category": "media",
+      "form": "Intelligence web app",
+      "platforms": [
+        "Web",
+        "API"
+      ],
+      "technologies": [
+        "Next.js",
+        "React",
+        "Hono",
+        "Cloudflare"
+      ],
+      "group": "current",
+      "lifecycle": "active",
+      "shareable": true,
+      "deployed": true,
+      "deploymentProviders": [
+        "Cloudflare Workers"
+      ],
+      "domains": [
+        "highsignal.app"
+      ],
+      "url": "https://highsignal.app",
+      "repositoryUrl": "https://github.com/High-Signal-App/high-signal",
+      "changelogUrl": "https://highsignal.app/changelog",
+      "roadmapUrl": "https://github.com/High-Signal-App/high-signal/issues",
+      "firstCommitAt": "2026-04-25",
+      "latestCommitAt": "2026-09-09"
+    },
+    {
       "id": "on-record",
       "name": "High Signal Podcasts",
       "description": "Search evidenced podcast claims and follow links back to the original episode or publication.",
@@ -470,6 +599,95 @@
       "latestCommitAt": "2026-09-06"
     },
     {
+      "id": "knowledge-base",
+      "name": "Knowledge Base",
+      "description": "Private agent search over specialized corpora with ranked citations, provenance, and schema-aware retrieval.",
+      "makerNote": "I built Knowledge Base as the private, cited retrieval layer that other Fleet applications can rely on.",
+      "purposeContract": {
+        "purpose": "Knowledge Base supplies private, cited retrieval over specialized corpora to other Fleet applications and agents.",
+        "audience": "Named internal products and agents that need grounded answers from controlled source collections.",
+        "outcome": "Retrieve relevant context with ranked citations, provenance, and a schema the consuming product can trust.",
+        "mechanism": "A shared RAG service performs corpus-aware search, ranking, citation, and schema-constrained retrieval behind a private boundary.",
+        "proof": "The service has healthy Fleet consumers and already operates as the shared cited-retrieval layer.",
+        "nextAction": "Connect it only for a concrete consumer need; change the infrastructure when retrieval evidence shows a real failure."
+      },
+      "kind": "platform",
+      "category": "utility",
+      "form": "Knowledge platform",
+      "platforms": [
+        "Web",
+        "API"
+      ],
+      "technologies": [
+        "Astro",
+        "Hono",
+        "Cloudflare Workers",
+        "D1"
+      ],
+      "group": "current",
+      "lifecycle": "active",
+      "shareable": true,
+      "deployed": true,
+      "deploymentProviders": [
+        "Cloudflare Pages",
+        "Cloudflare Workers"
+      ],
+      "domains": [
+        "knowledgebase.sassmaker.com",
+        "search.sassmaker.com"
+      ],
+      "url": "https://knowledgebase.sassmaker.com",
+      "repositoryUrl": "https://github.com/sass-maker/knowledge-base",
+      "changelogUrl": "https://knowledgebase.sassmaker.com/changelog",
+      "roadmapUrl": "https://github.com/sass-maker/knowledge-base/issues",
+      "firstCommitAt": "2026-05-27",
+      "latestCommitAt": "2026-09-09"
+    },
+    {
+      "id": "significanthobbies",
+      "name": "Significant Hobbies",
+      "description": "The shared Hub for Live, Calorie, Setline, Kith, and Anchor, backed by one privacy-aware control plane.",
+      "makerNote": "I wanted one Hub for my maintained personal apps while letting every app keep ownership of its own data.",
+      "purposeContract": {
+        "purpose": "Significant Hobbies is the shared home and privacy-aware control plane for five independently owned personal applications.",
+        "audience": "One person using Live, Calorie, Setline, Kith, and Anchor as a connected personal system.",
+        "outcome": "See and act across the five apps without collapsing their data ownership or product identities.",
+        "mechanism": "A Hub, backend, and typed sync contracts exchange privacy-safe summaries and semantic actions while each app keeps its own source and data.",
+        "proof": "The canonical Hub lists five maintained apps. Journal is removed from the product lineup; Journal and Habits source/data compatibility history remains retained. Private cross-app use still needs hosted qualification.",
+        "nextAction": "Open the Hub to reach the five apps; current work focuses on unified authentication and safe cross-app summaries."
+      },
+      "kind": "product",
+      "category": "utility",
+      "form": "Personal-app Hub",
+      "platforms": [
+        "Web",
+        "API",
+        "Swift package"
+      ],
+      "technologies": [
+        "TypeScript",
+        "Cloudflare Workers",
+        "D1",
+        "Swift"
+      ],
+      "group": "current",
+      "lifecycle": "active",
+      "shareable": true,
+      "deployed": true,
+      "deploymentProviders": [
+        "Cloudflare Workers"
+      ],
+      "domains": [
+        "significanthobbies.com"
+      ],
+      "url": "https://significanthobbies.com",
+      "repositoryUrl": "https://github.com/Significant-Hobbies/significanthobbies",
+      "changelogUrl": "https://significanthobbies.com/changelog",
+      "roadmapUrl": "https://github.com/Significant-Hobbies/significanthobbies/issues",
+      "firstCommitAt": "2026-03-01",
+      "latestCommitAt": "2026-09-09"
+    },
+    {
       "id": "anime-list",
       "name": "Anime List",
       "description": "Anime and manga discovery with multi-axis filtering and personal watchlists.",
@@ -599,6 +817,134 @@
       "latestCommitAt": "2026-09-08"
     },
     {
+      "id": "calorie",
+      "name": "Calorie",
+      "description": "A private, local-first food, water, and weight journal with transparent timing guidance.",
+      "makerNote": "I wanted one personal system for weight loss that connects food logging, fasting, exercise timing, and daily performance.",
+      "purposeContract": {
+        "purpose": "Calorie is a private food and body journal that turns lightweight logging into transparent daily and timing guidance.",
+        "audience": "A person pursuing weight loss who logs food with one hand and checks progress in short daily moments.",
+        "outcome": "Track intake, hydration, weight, and routines quickly, then understand practical training, fasting, and sleep timing.",
+        "mechanism": "A local-first iPhone journal records food and four core nutrients, applies visible formulas, and offers optional private sync.",
+        "proof": "The maintained app is functionally complete, connected to the Hub family, and designed so recommendations trace to visible rules.",
+        "nextAction": "Log a meal or daily measurement in the app; change the product only when repeated use reveals a concrete gap."
+      },
+      "kind": "product",
+      "category": "utility",
+      "form": "iOS app",
+      "platforms": [
+        "iOS",
+        "API"
+      ],
+      "technologies": [
+        "SwiftUI",
+        "Hono",
+        "Cloudflare Workers",
+        "D1"
+      ],
+      "group": "current",
+      "lifecycle": "active",
+      "shareable": true,
+      "deployed": true,
+      "deploymentProviders": [
+        "Cloudflare Workers",
+        "Apple App Store Connect"
+      ],
+      "domains": [
+        "calorie.significanthobbies.com"
+      ],
+      "url": "https://calorie.significanthobbies.com",
+      "repositoryUrl": "https://github.com/Significant-Hobbies/calorie",
+      "changelogUrl": "https://calorie.significanthobbies.com/changelog",
+      "roadmapUrl": "https://github.com/Significant-Hobbies/calorie/issues",
+      "firstCommitAt": "2026-07-25",
+      "latestCommitAt": "2026-09-09"
+    },
+    {
+      "id": "setline",
+      "name": "Setline",
+      "description": "An iOS-native training tracker that runs a written strength, cardio and mobility programme one set at a time and measures each exercise against an authored target.",
+      "makerNote": "I built Setline to make workouts easier to execute one set at a time, with timing and performance kept accurate.",
+      "purposeContract": {
+        "purpose": "Setline runs a written workout one set at a time and measures each exercise against its authored target.",
+        "audience": "A person following a structured strength, cardio, or mobility programme during real sessions.",
+        "outcome": "Stay focused on the current set, keep rest timing accurate, and understand performance against the plan.",
+        "mechanism": "A native iOS workout player sequences exercises, timers, targets, and completed performance without turning the session into data entry.",
+        "proof": "The focused workout loop is under active native development and is being validated through real sessions.",
+        "nextAction": "Run an authored workout in Setline and let actual session friction determine the next product change."
+      },
+      "kind": "product",
+      "category": "utility",
+      "form": "iOS app",
+      "platforms": [
+        "iOS"
+      ],
+      "technologies": [
+        "SwiftUI",
+        "CloudKit",
+        "PersonalSyncKit"
+      ],
+      "group": "current",
+      "lifecycle": "active",
+      "shareable": true,
+      "deployed": true,
+      "deploymentProviders": [
+        "Cloudflare Pages",
+        "Apple App Store Connect"
+      ],
+      "domains": [
+        "setline.significanthobbies.com"
+      ],
+      "url": "https://setline.significanthobbies.com",
+      "repositoryUrl": "https://github.com/Significant-Hobbies/setline",
+      "changelogUrl": "https://setline.significanthobbies.com/changelog",
+      "roadmapUrl": "https://github.com/Significant-Hobbies/setline/issues",
+      "firstCommitAt": "2026-07-27",
+      "latestCommitAt": "2026-09-09"
+    },
+    {
+      "id": "kith",
+      "name": "Kith",
+      "description": "A private iPhone app for the people you actually want to stay close to — closeness-weighted constellation home, standing notes, and a chronological log per person.",
+      "makerNote": "I wanted a beautiful personal relationship-memory app that helps me stay more thoughtful about the people in my life.",
+      "purposeContract": {
+        "purpose": "Kith helps a person remember the people they genuinely want to stay close to and act with more thoughtfulness.",
+        "audience": "An iPhone user who values a small set of relationships and dislikes treating them like a sales CRM.",
+        "outcome": "Retain meaningful context, notice who needs attention, and show up better in important relationships.",
+        "mechanism": "A private constellation home organizes closeness, standing notes, and a chronological memory log for each person.",
+        "proof": "The device-first native product is built around a distinctive constellation model and is in active personal use validation.",
+        "nextAction": "Use Kith with real relationships and let recurring memory and follow-through needs guide improvements."
+      },
+      "kind": "product",
+      "category": "utility",
+      "form": "iOS app",
+      "platforms": [
+        "iOS"
+      ],
+      "technologies": [
+        "SwiftUI",
+        "CloudKit",
+        "PersonalSyncKit"
+      ],
+      "group": "current",
+      "lifecycle": "active",
+      "shareable": true,
+      "deployed": true,
+      "deploymentProviders": [
+        "Cloudflare Pages",
+        "Apple App Store Connect"
+      ],
+      "domains": [
+        "kith.significanthobbies.com"
+      ],
+      "url": "https://kith.significanthobbies.com",
+      "repositoryUrl": "https://github.com/Significant-Hobbies/kith",
+      "changelogUrl": "https://kith.significanthobbies.com/changelog",
+      "roadmapUrl": "https://github.com/Significant-Hobbies/kith/issues",
+      "firstCommitAt": "2026-08-16",
+      "latestCommitAt": "2026-09-09"
+    },
+    {
       "id": "rolepatch",
       "name": "RolePatch",
       "description": "A guest resume-tailoring experiment with a reviewable diff and browser-local document exports.",
@@ -639,6 +985,50 @@
       "changelogUrl": "https://rolepatch.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/rolepatch/issues",
       "firstCommitAt": "2026-02-23",
+      "latestCommitAt": "2026-09-07"
+    },
+    {
+      "id": "karte",
+      "name": "Karte",
+      "description": "A creator-owned public profile that answers visitor questions and preserves context for better inbound.",
+      "makerNote": "I wanted a link-in-bio surface that could grow into something more personal: a greeting card, profile, and small agent.",
+      "purposeContract": {
+        "purpose": "Karte gives a creator or independent operator a public profile that answers visitor questions and preserves context for better inbound.",
+        "audience": "An individual or small company that wants visitors to understand and explore who they are through one compact page.",
+        "outcome": "Help a visitor find relevant links, context, and answers instead of scanning an undifferentiated list.",
+        "mechanism": "A designed profile combines greeting-card presentation, owner-published context, structured links, visitor questions, contact handoff, and a small grounded agent.",
+        "proof": "The individual profile and conversational foundation are strong; company positioning and repeated company use remain the next validation.",
+        "nextAction": "Explore the existing profile experience; company adoption should wait for a focused workflow and a real company test."
+      },
+      "kind": "product",
+      "category": "utility",
+      "form": "Web app",
+      "platforms": [
+        "Web",
+        "API"
+      ],
+      "technologies": [
+        "Next.js",
+        "React",
+        "Cloudflare Workers",
+        "D1"
+      ],
+      "group": "current",
+      "lifecycle": "active",
+      "shareable": true,
+      "deployed": true,
+      "deploymentProviders": [
+        "Cloudflare Workers",
+        "Cloudflare Email Workers"
+      ],
+      "domains": [
+        "karte.cc"
+      ],
+      "url": "https://karte.cc",
+      "repositoryUrl": "https://github.com/Significant-Hobbies/karte",
+      "changelogUrl": "https://karte.cc/changelog",
+      "roadmapUrl": "https://github.com/Significant-Hobbies/karte/issues",
+      "firstCommitAt": "2026-03-05",
       "latestCommitAt": "2026-09-07"
     },
     {
@@ -683,6 +1073,50 @@
       "roadmapUrl": "https://github.com/Codevetter/starboard/issues",
       "firstCommitAt": "2026-02-22",
       "latestCommitAt": "2026-09-07"
+    },
+    {
+      "id": "app-health",
+      "name": "App Health",
+      "description": "Privacy-first endpoint health for Node, Go, and OpenTelemetry services.",
+      "makerNote": "I built App Health because checking Sentry, PostHog, Slack, and cloud consoles separately made basic product health too fragmented.",
+      "purposeContract": {
+        "purpose": "App Health helps product teams understand web traffic, intentional user actions, and application health across their projects.",
+        "audience": "Product managers, founders, and product teams; developers connect the instrumentation.",
+        "outcome": "See who is active as browser-session counts, which pages and named events are used, and whether backend failures explain product friction.",
+        "mechanism": "A small browser tracker and explicit named events feed workspace-scoped analytics; service SDKs and OTLP add aggregate endpoint health in the same dashboard.",
+        "proof": "The endpoint-health V0 has a production SDK canary. Google accounts, browser analytics, named-event reports, and workspace presence are implemented and tested locally; production activation and a real Google callback remain unverified.",
+        "nextAction": "Explore the illustrative product preview or connect a project in the locally configured workspace; activate and verify Google accounts and analytics before public onboarding."
+      },
+      "kind": "product",
+      "category": "utility",
+      "form": "Monitoring service",
+      "platforms": [
+        "Web",
+        "API"
+      ],
+      "technologies": [
+        "React",
+        "shadcn/ui",
+        "Cloudflare Workers",
+        "D1"
+      ],
+      "group": "current",
+      "lifecycle": "active",
+      "shareable": true,
+      "deployed": true,
+      "deploymentProviders": [
+        "Cloudflare Workers"
+      ],
+      "domains": [
+        "health.sassmaker.com",
+        "ingest.sassmaker.com"
+      ],
+      "url": "https://health.sassmaker.com",
+      "repositoryUrl": "https://github.com/sass-maker/app-health",
+      "changelogUrl": "https://health.sassmaker.com/changelog",
+      "roadmapUrl": "https://github.com/sass-maker/app-health/issues",
+      "firstCommitAt": "2026-07-20",
+      "latestCommitAt": "2026-09-08"
     },
     {
       "id": "mashup",
@@ -893,6 +1327,52 @@
       "latestCommitAt": "2026-09-07"
     },
     {
+      "id": "anchor",
+      "name": "Anchor",
+      "description": "A local-first day planner and focus timer for Mac, iPhone, and Apple Watch that explains the gap between the schedule you planned and the day you lived.",
+      "makerNote": "I wanted a realistic daily planner that could help me follow the day and explain why the lived plan diverged from the intended one.",
+      "purposeContract": {
+        "purpose": "Anchor helps a person plan a realistic day, follow the current intention, and learn why the day lived differed from the day planned.",
+        "audience": "A person moving between Mac, iPhone, and Apple Watch who wants a deliberate day rather than another task list.",
+        "outcome": "Make more realistic plans, recover from interruptions, and protect activities that genuinely matter without moralizing imperfect adherence.",
+        "mechanism": "Native apps combine schedule blocks, recurring routines, wall-clock focus sessions, interruption evidence, and an end-of-day divergence review.",
+        "proof": "The maintained successor to Indulge and Habits has signed native builds and an integrated schedule → focus → interruption → review loop under dogfooding.",
+        "nextAction": "Use Anchor through a real day and review the divergence evidence; let repeated lived patterns decide the next change."
+      },
+      "kind": "product",
+      "category": "utility",
+      "form": "Apple app",
+      "platforms": [
+        "macOS",
+        "iOS",
+        "watchOS",
+        "Web"
+      ],
+      "technologies": [
+        "SwiftUI",
+        "SwiftData",
+        "CloudKit",
+        "Foundation Models"
+      ],
+      "group": "current",
+      "lifecycle": "active",
+      "shareable": true,
+      "deployed": true,
+      "deploymentProviders": [
+        "Cloudflare Pages",
+        "Apple App Store Connect"
+      ],
+      "domains": [
+        "anchor.significanthobbies.com"
+      ],
+      "url": "https://anchor.significanthobbies.com",
+      "repositoryUrl": "https://github.com/Significant-Hobbies/anchor",
+      "changelogUrl": "https://anchor.significanthobbies.com/changelog",
+      "roadmapUrl": "https://github.com/Significant-Hobbies/anchor/issues",
+      "firstCommitAt": "2026-08-16",
+      "latestCommitAt": "2026-09-09"
+    },
+    {
       "id": "storagedaddy",
       "name": "StorageDaddy",
       "description": "A native Mac storage analyzer for developer caches, builds, dependencies and AI session archives, with reviewed cleanup.",
@@ -931,6 +1411,174 @@
       "url": "https://storagedaddy.significanthobbies.com/",
       "firstCommitAt": null,
       "latestCommitAt": null
+    },
+    {
+      "id": "ai-badges",
+      "name": "AI Badges",
+      "description": "Embeddable README badges for declaring AI contribution and welcoming AI-assisted pull requests.",
+      "makerNote": "Finished experiment; the existing badge endpoints remain available to try.",
+      "purposeContract": {
+        "purpose": "Embeddable README badges for declaring AI contribution and welcoming AI-assisted pull requests.",
+        "audience": "Maintainers who want visible AI-use declarations in repository READMEs.",
+        "outcome": "Embed a badge representing an explicit AI-use declaration.",
+        "mechanism": "Public HTTP endpoints render the requested declaration as SVG.",
+        "proof": "The public homepage and documented percentage and AI-PR SVG endpoints returned successful responses.",
+        "nextAction": "Copy a documented badge example into a README."
+      },
+      "kind": "experiment",
+      "category": "utility",
+      "form": "Badge service",
+      "platforms": [
+        "Web"
+      ],
+      "technologies": [
+        "HTML",
+        "SVG"
+      ],
+      "group": "past",
+      "lifecycle": "inactive",
+      "shareable": true,
+      "deployed": false,
+      "deploymentProviders": [],
+      "domains": [],
+      "url": "https://github.com/sarthakagrawal927/ai-badges",
+      "repositoryUrl": "https://github.com/sarthakagrawal927/ai-badges",
+      "roadmapUrl": "https://github.com/sarthakagrawal927/ai-badges/issues"
+    },
+    {
+      "id": "ph-catalog",
+      "name": "PH Catalog",
+      "description": "An offline catalogue experiment that parses fictional product pages, checks completeness and exports a local snapshot.",
+      "makerNote": "Synthetic sample data only; no redistribution of a scraped Product Hunt dataset is claimed.",
+      "purposeContract": {
+        "purpose": "An offline catalogue experiment that parses fictional product pages, checks completeness and exports a local snapshot.",
+        "audience": "Developers exploring a reproducible product catalogue pipeline.",
+        "outcome": "Parse three fictional products and export a verified local catalogue.",
+        "mechanism": "The existing parser and DuckDB pipeline run against bundled synthetic HTML fixtures.",
+        "proof": "88 tests pass, including refusal to alter an existing non-sample catalogue; the three-record offline demo passes.",
+        "nextAction": "Run the offline sample instructions in the README."
+      },
+      "kind": "experiment",
+      "category": "experimental",
+      "form": "CLI experiment",
+      "platforms": [
+        "CLI",
+        "Local"
+      ],
+      "technologies": [
+        "Python",
+        "DuckDB"
+      ],
+      "group": "past",
+      "lifecycle": "inactive",
+      "shareable": true,
+      "deployed": false,
+      "deploymentProviders": [],
+      "domains": [],
+      "url": "https://github.com/sarthakagrawal927/ph-catalog",
+      "repositoryUrl": "https://github.com/sarthakagrawal927/ph-catalog",
+      "roadmapUrl": "https://github.com/sarthakagrawal927/ph-catalog/issues"
+    },
+    {
+      "id": "pinpoint",
+      "name": "Pinpoint",
+      "description": "A local developer preview for selecting an app element, attaching a comment and handing context to a coding agent.",
+      "makerNote": "Finished experiment shared through its runnable local demo and source.",
+      "purposeContract": {
+        "purpose": "A local developer preview for selecting an app element, attaching a comment and handing context to a coding agent.",
+        "audience": "Developers giving UI-specific feedback to coding agents.",
+        "outcome": "Attach feedback to a selected element in a running demo.",
+        "mechanism": "A browser feedback surface connects element context with a local development workflow.",
+        "proof": "16 tests pass and the documented local demo serves successfully; broad framework support is not claimed.",
+        "nextAction": "Install the repository dependencies and run the documented demo."
+      },
+      "kind": "experiment",
+      "category": "utility",
+      "form": "Developer tool",
+      "platforms": [
+        "Web",
+        "Local"
+      ],
+      "technologies": [
+        "JavaScript",
+        "Node.js"
+      ],
+      "group": "past",
+      "lifecycle": "inactive",
+      "shareable": true,
+      "deployed": false,
+      "deploymentProviders": [],
+      "domains": [],
+      "url": "https://github.com/sarthakagrawal927/pinpoint",
+      "repositoryUrl": "https://github.com/sarthakagrawal927/pinpoint",
+      "roadmapUrl": "https://github.com/sarthakagrawal927/pinpoint/issues"
+    },
+    {
+      "id": "port-whisperer",
+      "name": "Port Whisperer",
+      "description": "A command-line port scanner with framework detection and structured output for local development.",
+      "makerNote": "Finished utility experiment shared through its source and reproducible CLI workflow.",
+      "purposeContract": {
+        "purpose": "A command-line port scanner with framework detection and structured output for local development.",
+        "audience": "Developers identifying services listening on their own machine.",
+        "outcome": "Inspect listening ports and retrieve structured service information.",
+        "mechanism": "A Rust command-line scanner produces human-readable and JSON port data.",
+        "proof": "62 tests pass and the JSON command produced live local port data.",
+        "nextAction": "Follow the README installation instructions and run a local scan."
+      },
+      "kind": "experiment",
+      "category": "utility",
+      "form": "CLI tool",
+      "platforms": [
+        "CLI",
+        "Local"
+      ],
+      "technologies": [
+        "Rust"
+      ],
+      "group": "past",
+      "lifecycle": "inactive",
+      "shareable": true,
+      "deployed": false,
+      "deploymentProviders": [],
+      "domains": [],
+      "url": "https://github.com/sarthakagrawal927/port-whisperer",
+      "repositoryUrl": "https://github.com/sarthakagrawal927/port-whisperer",
+      "roadmapUrl": "https://github.com/sarthakagrawal927/port-whisperer/issues"
+    },
+    {
+      "id": "society-relay",
+      "name": "Society Relay",
+      "description": "A fixture-driven community repair-planning experiment with human approval, work orders and calendar export.",
+      "makerNote": "Finished experiment shared as a reproducible demo; it is not a production resident-management service.",
+      "purposeContract": {
+        "purpose": "A fixture-driven community repair-planning experiment with human approval, work orders and calendar export.",
+        "audience": "Builders exploring human-approved coordination for apartment communities.",
+        "outcome": "Walk a fixture repair request through approval, a work order and calendar export.",
+        "mechanism": "A Strands agent coordinates the workflow with explicit human approval steps.",
+        "proof": "55 tests and fixture-mode end-to-end approval, work-order and calendar export checks passed.",
+        "nextAction": "Run the documented fixture demo from the public repository."
+      },
+      "kind": "experiment",
+      "category": "experimental",
+      "form": "Agent demo",
+      "platforms": [
+        "Web",
+        "Local"
+      ],
+      "technologies": [
+        "Python",
+        "Strands Agents"
+      ],
+      "group": "past",
+      "lifecycle": "inactive",
+      "shareable": true,
+      "deployed": false,
+      "deploymentProviders": [],
+      "domains": [],
+      "url": "https://github.com/sarthakagrawal927/society-relay",
+      "repositoryUrl": "https://github.com/sarthakagrawal927/society-relay",
+      "roadmapUrl": "https://github.com/sarthakagrawal927/society-relay/issues"
     }
   ],
   "products": [
@@ -985,6 +1633,29 @@
       }
     },
     {
+      "id": "anchor",
+      "name": "Anchor",
+      "description": "A local-first day planner and focus timer for Mac, iPhone, and Apple Watch that explains the gap between the schedule you planned and the day you lived.",
+      "url": "https://anchor.significanthobbies.com",
+      "tier": "active",
+      "category": "utility",
+      "priority": "P2",
+      "spotlight": false,
+      "lifecycle": "active",
+      "shareable": true,
+      "maturity": "in-progress",
+      "changelogUrl": "https://anchor.significanthobbies.com/changelog",
+      "pillarId": "learn",
+      "purposeContract": {
+        "purpose": "Anchor helps a person plan a realistic day, follow the current intention, and learn why the day lived differed from the day planned.",
+        "audience": "A person moving between Mac, iPhone, and Apple Watch who wants a deliberate day rather than another task list.",
+        "outcome": "Make more realistic plans, recover from interruptions, and protect activities that genuinely matter without moralizing imperfect adherence.",
+        "mechanism": "Native apps combine schedule blocks, recurring routines, wall-clock focus sessions, interruption evidence, and an end-of-day divergence review.",
+        "proof": "The maintained successor to Indulge and Habits has signed native builds and an integrated schedule → focus → interruption → review loop under dogfooding.",
+        "nextAction": "Use Anchor through a real day and review the divergence evidence; let repeated lived patterns decide the next change."
+      }
+    },
+    {
       "id": "anime-list",
       "name": "Anime List",
       "description": "Anime and manga discovery with multi-axis filtering and personal watchlists.",
@@ -1007,6 +1678,81 @@
         "mechanism": "Multi-field search, shareable filters, seasonal discovery, taste tools, schedules, and signed-in watchlists operate over a large synced catalogue.",
         "proof": "The production app serves roughly 35,000 titles and is frequently used; broader community features are intentionally out of scope.",
         "nextAction": "Search the catalogue or use the watchlist; maintenance focuses on data quality and core discovery reliability."
+      }
+    },
+    {
+      "id": "app-health",
+      "name": "App Health",
+      "description": "Privacy-first endpoint health for Node, Go, and OpenTelemetry services.",
+      "url": "https://health.sassmaker.com",
+      "tier": "active",
+      "category": "utility",
+      "priority": "P2",
+      "spotlight": false,
+      "lifecycle": "active",
+      "shareable": true,
+      "maturity": "public-ready",
+      "changelogUrl": "https://health.sassmaker.com/changelog",
+      "repositoryUrl": "https://github.com/sass-maker/app-health",
+      "roadmapUrl": "https://github.com/sass-maker/app-health/issues",
+      "pillarId": "visibility",
+      "purposeContract": {
+        "purpose": "App Health helps product teams understand web traffic, intentional user actions, and application health across their projects.",
+        "audience": "Product managers, founders, and product teams; developers connect the instrumentation.",
+        "outcome": "See who is active as browser-session counts, which pages and named events are used, and whether backend failures explain product friction.",
+        "mechanism": "A small browser tracker and explicit named events feed workspace-scoped analytics; service SDKs and OTLP add aggregate endpoint health in the same dashboard.",
+        "proof": "The endpoint-health V0 has a production SDK canary. Google accounts, browser analytics, named-event reports, and workspace presence are implemented and tested locally; production activation and a real Google callback remain unverified.",
+        "nextAction": "Explore the illustrative product preview or connect a project in the locally configured workspace; activate and verify Google accounts and analytics before public onboarding."
+      }
+    },
+    {
+      "id": "calorie",
+      "name": "Calorie",
+      "description": "A private, local-first food, water, and weight journal with transparent timing guidance.",
+      "url": "https://calorie.significanthobbies.com",
+      "tier": "secondary",
+      "category": "utility",
+      "priority": "P2",
+      "spotlight": false,
+      "lifecycle": "active",
+      "shareable": true,
+      "maturity": "maintained",
+      "changelogUrl": "https://calorie.significanthobbies.com/changelog",
+      "repositoryUrl": "https://github.com/Significant-Hobbies/calorie",
+      "roadmapUrl": "https://github.com/Significant-Hobbies/calorie/issues",
+      "pillarId": "learn",
+      "purposeContract": {
+        "purpose": "Calorie is a private food and body journal that turns lightweight logging into transparent daily and timing guidance.",
+        "audience": "A person pursuing weight loss who logs food with one hand and checks progress in short daily moments.",
+        "outcome": "Track intake, hydration, weight, and routines quickly, then understand practical training, fasting, and sleep timing.",
+        "mechanism": "A local-first iPhone journal records food and four core nutrients, applies visible formulas, and offers optional private sync.",
+        "proof": "The maintained app is functionally complete, connected to the Hub family, and designed so recommendations trace to visible rules.",
+        "nextAction": "Log a meal or daily measurement in the app; change the product only when repeated use reveals a concrete gap."
+      }
+    },
+    {
+      "id": "free-ai",
+      "name": "Free AI",
+      "description": "An OpenAI-compatible free-tier model gateway with operator-provisioned project access.",
+      "url": "https://ai-gateway.sassmaker.com",
+      "tier": "active",
+      "category": "utility",
+      "priority": "P4",
+      "spotlight": false,
+      "lifecycle": "active",
+      "shareable": true,
+      "maturity": "maintained",
+      "changelogUrl": "https://ai-gateway.sassmaker.com/changelog",
+      "repositoryUrl": "https://github.com/sass-maker/free-ai",
+      "roadmapUrl": "https://github.com/sass-maker/free-ai/issues",
+      "pillarId": "build",
+      "purposeContract": {
+        "purpose": "Free AI makes useful free-tier language-model capacity available through one resilient, OpenAI-compatible interface.",
+        "audience": "Fleet applications and developers who need low-cost model access without hard-coding one free provider.",
+        "outcome": "Keep AI-dependent workflows available as provider limits, models, and free capacity change.",
+        "mechanism": "A capability-aware gateway routes compatible requests across supported free-tier providers with fallback behavior.",
+        "proof": "The gateway works for internal consumers and is maintained as shared infrastructure rather than an independent feature product.",
+        "nextAction": "Use the compatible gateway from a named consumer; add providers only when they improve capability, reliability, or capacity."
       }
     },
     {
@@ -1035,6 +1781,81 @@
       }
     },
     {
+      "id": "pace",
+      "name": "HeyPace",
+      "description": "Local-only macOS voice agent that can understand what is on your screen.",
+      "url": "https://heypace.app",
+      "tier": "core",
+      "category": "experimental",
+      "priority": "P1",
+      "spotlight": false,
+      "lifecycle": "active",
+      "shareable": true,
+      "maturity": "public-ready",
+      "changelogUrl": "https://heypace.app/changelog",
+      "repositoryUrl": "https://github.com/HeyPace/pace",
+      "roadmapUrl": "https://github.com/HeyPace/pace/issues",
+      "pillarId": "build",
+      "purposeContract": {
+        "purpose": "HeyPace is a private Mac assistant for fast voice-driven help grounded in what is currently on screen.",
+        "audience": "A Mac user who wants contextual assistance without sending their desktop workflow to a hosted service.",
+        "outcome": "Get useful help in the moment with less typing and less context switching.",
+        "mechanism": "A local macOS agent combines voice interaction, screen context, and device-side tools.",
+        "proof": "The public 0.3.19 preview is downloadable and the native implementation includes voice, screen context, local planning, and macOS actions; signed-release hardware smoke and sustained daily use remain unproven.",
+        "nextAction": "Download the current Mac preview, test one recurring voice-and-screen workflow, and judge it against Pace's visible local and off-device trust boundary."
+      }
+    },
+    {
+      "id": "high-signal",
+      "name": "High Signal",
+      "description": "Evidence-backed daily intelligence across technology, startups, finance, and public markets.",
+      "url": "https://highsignal.app",
+      "tier": "active",
+      "category": "media",
+      "priority": "P2",
+      "spotlight": false,
+      "lifecycle": "active",
+      "shareable": true,
+      "maturity": "public-ready",
+      "changelogUrl": "https://highsignal.app/changelog",
+      "repositoryUrl": "https://github.com/High-Signal-App/high-signal",
+      "roadmapUrl": "https://github.com/High-Signal-App/high-signal/issues",
+      "pillarId": "learn",
+      "purposeContract": {
+        "purpose": "High Signal turns scattered technology, startup, finance, and market sources into an evidence-backed daily intelligence brief.",
+        "audience": "A curious operator who wants decision-relevant signals without reading every feed and article.",
+        "outcome": "Understand what changed, why it may matter, and which source supports each signal.",
+        "mechanism": "The product collects multiple sources, groups related events, and derives a concise brief with visible evidence.",
+        "proof": "The product focus and daily-brief surface exist, but regular owner use has not yet validated what deserves continued investment.",
+        "nextAction": "Read and dogfood the Daily Brief; resume feature work only when repeated use exposes a concrete deficiency."
+      }
+    },
+    {
+      "id": "karte",
+      "name": "Karte",
+      "description": "A creator-owned public profile that answers visitor questions and preserves context for better inbound.",
+      "url": "https://karte.cc",
+      "tier": "secondary",
+      "category": "utility",
+      "priority": "P2",
+      "spotlight": false,
+      "lifecycle": "active",
+      "shareable": true,
+      "maturity": "public-ready",
+      "changelogUrl": "https://karte.cc/changelog",
+      "repositoryUrl": "https://github.com/Significant-Hobbies/karte",
+      "roadmapUrl": "https://github.com/Significant-Hobbies/karte/issues",
+      "pillarId": "build",
+      "purposeContract": {
+        "purpose": "Karte gives a creator or independent operator a public profile that answers visitor questions and preserves context for better inbound.",
+        "audience": "An individual or small company that wants visitors to understand and explore who they are through one compact page.",
+        "outcome": "Help a visitor find relevant links, context, and answers instead of scanning an undifferentiated list.",
+        "mechanism": "A designed profile combines greeting-card presentation, owner-published context, structured links, visitor questions, contact handoff, and a small grounded agent.",
+        "proof": "The individual profile and conversational foundation are strong; company positioning and repeated company use remain the next validation.",
+        "nextAction": "Explore the existing profile experience; company adoption should wait for a focused workflow and a real company test."
+      }
+    },
+    {
       "id": "email-manager",
       "name": "Kinetic",
       "description": "A private Gmail workspace for local semantic search, sender insights, and explicit unsubscribe workflows.",
@@ -1057,6 +1878,56 @@
         "mechanism": "A private Gmail workspace combines local semantic search, sender aggregation, and user-confirmed unsubscribe workflows.",
         "proof": "The maintained application performs its intended search, sender-insight, and unsubscribe jobs in regular use.",
         "nextAction": "Open the private workspace and investigate a sender or search question; no speculative feature expansion is planned."
+      }
+    },
+    {
+      "id": "kith",
+      "name": "Kith",
+      "description": "A private iPhone app for the people you actually want to stay close to — closeness-weighted constellation home, standing notes, and a chronological log per person.",
+      "url": "https://kith.significanthobbies.com",
+      "tier": "secondary",
+      "category": "utility",
+      "priority": "P2",
+      "spotlight": false,
+      "lifecycle": "active",
+      "shareable": true,
+      "maturity": "in-progress",
+      "changelogUrl": "https://kith.significanthobbies.com/changelog",
+      "repositoryUrl": "https://github.com/Significant-Hobbies/kith",
+      "roadmapUrl": "https://github.com/Significant-Hobbies/kith/issues",
+      "pillarId": "learn",
+      "purposeContract": {
+        "purpose": "Kith helps a person remember the people they genuinely want to stay close to and act with more thoughtfulness.",
+        "audience": "An iPhone user who values a small set of relationships and dislikes treating them like a sales CRM.",
+        "outcome": "Retain meaningful context, notice who needs attention, and show up better in important relationships.",
+        "mechanism": "A private constellation home organizes closeness, standing notes, and a chronological memory log for each person.",
+        "proof": "The device-first native product is built around a distinctive constellation model and is in active personal use validation.",
+        "nextAction": "Use Kith with real relationships and let recurring memory and follow-through needs guide improvements."
+      }
+    },
+    {
+      "id": "knowledge-base",
+      "name": "Knowledge Base",
+      "description": "Private agent search over specialized corpora with ranked citations, provenance, and schema-aware retrieval.",
+      "url": "https://knowledgebase.sassmaker.com",
+      "tier": "active",
+      "category": "utility",
+      "priority": "P2",
+      "spotlight": false,
+      "lifecycle": "active",
+      "shareable": true,
+      "maturity": "maintained",
+      "changelogUrl": "https://knowledgebase.sassmaker.com/changelog",
+      "repositoryUrl": "https://github.com/sass-maker/knowledge-base",
+      "roadmapUrl": "https://github.com/sass-maker/knowledge-base/issues",
+      "pillarId": "build",
+      "purposeContract": {
+        "purpose": "Knowledge Base supplies private, cited retrieval over specialized corpora to other Fleet applications and agents.",
+        "audience": "Named internal products and agents that need grounded answers from controlled source collections.",
+        "outcome": "Retrieve relevant context with ranked citations, provenance, and a schema the consuming product can trust.",
+        "mechanism": "A shared RAG service performs corpus-aware search, ranking, citation, and schema-constrained retrieval behind a private boundary.",
+        "proof": "The service has healthy Fleet consumers and already operates as the shared cited-retrieval layer.",
+        "nextAction": "Connect it only for a concrete consumer need; change the infrastructure when retrieval evidence shows a real failure."
       }
     },
     {
@@ -1210,6 +2081,56 @@
       }
     },
     {
+      "id": "setline",
+      "name": "Setline",
+      "description": "An iOS-native training tracker that runs a written strength, cardio and mobility programme one set at a time and measures each exercise against an authored target.",
+      "url": "https://setline.significanthobbies.com",
+      "tier": "secondary",
+      "category": "utility",
+      "priority": "P2",
+      "spotlight": false,
+      "lifecycle": "active",
+      "shareable": true,
+      "maturity": "maintained",
+      "changelogUrl": "https://setline.significanthobbies.com/changelog",
+      "repositoryUrl": "https://github.com/Significant-Hobbies/setline",
+      "roadmapUrl": "https://github.com/Significant-Hobbies/setline/issues",
+      "pillarId": "learn",
+      "purposeContract": {
+        "purpose": "Setline runs a written workout one set at a time and measures each exercise against its authored target.",
+        "audience": "A person following a structured strength, cardio, or mobility programme during real sessions.",
+        "outcome": "Stay focused on the current set, keep rest timing accurate, and understand performance against the plan.",
+        "mechanism": "A native iOS workout player sequences exercises, timers, targets, and completed performance without turning the session into data entry.",
+        "proof": "The focused workout loop is under active native development and is being validated through real sessions.",
+        "nextAction": "Run an authored workout in Setline and let actual session friction determine the next product change."
+      }
+    },
+    {
+      "id": "significanthobbies",
+      "name": "Significant Hobbies",
+      "description": "The shared Hub for Live, Calorie, Setline, Kith, and Anchor, backed by one privacy-aware control plane.",
+      "url": "https://significanthobbies.com",
+      "tier": "secondary",
+      "category": "utility",
+      "priority": "P2",
+      "spotlight": false,
+      "lifecycle": "active",
+      "shareable": true,
+      "maturity": "public-ready",
+      "changelogUrl": "https://significanthobbies.com/changelog",
+      "repositoryUrl": "https://github.com/Significant-Hobbies/significanthobbies",
+      "roadmapUrl": "https://github.com/Significant-Hobbies/significanthobbies/issues",
+      "pillarId": "learn",
+      "purposeContract": {
+        "purpose": "Significant Hobbies is the shared home and privacy-aware control plane for five independently owned personal applications.",
+        "audience": "One person using Live, Calorie, Setline, Kith, and Anchor as a connected personal system.",
+        "outcome": "See and act across the five apps without collapsing their data ownership or product identities.",
+        "mechanism": "A Hub, backend, and typed sync contracts exchange privacy-safe summaries and semantic actions while each app keeps its own source and data.",
+        "proof": "The canonical Hub lists five maintained apps. Journal is removed from the product lineup; Journal and Habits source/data compatibility history remains retained. Private cross-app use still needs hosted qualification.",
+        "nextAction": "Open the Hub to reach the five apps; current work focuses on unified authentication and safe cross-app summaries."
+      }
+    },
+    {
       "id": "starboard",
       "name": "Starboard",
       "description": "Explore public GitHub repositories and related projects through a searchable discovery experiment.",
@@ -1283,6 +2204,23 @@
     }
   ],
   "pastProjects": [
+    {
+      "id": "ai-badges",
+      "name": "AI Badges",
+      "description": "Embeddable README badges for declaring AI contribution and welcoming AI-assisted pull requests.",
+      "category": "utility",
+      "shareable": true,
+      "repositoryUrl": "https://github.com/sarthakagrawal927/ai-badges",
+      "purposeContract": {
+        "purpose": "Embeddable README badges for declaring AI contribution and welcoming AI-assisted pull requests.",
+        "audience": "Maintainers who want visible AI-use declarations in repository READMEs.",
+        "outcome": "Embed a badge representing an explicit AI-use declaration.",
+        "mechanism": "Public HTTP endpoints render the requested declaration as SVG.",
+        "proof": "The public homepage and documented percentage and AI-PR SVG endpoints returned successful responses.",
+        "nextAction": "Copy a documented badge example into a README."
+      },
+      "lifecycle": "inactive"
+    },
     {
       "id": "on-record",
       "name": "High Signal Podcasts",
@@ -1369,6 +2307,57 @@
       }
     },
     {
+      "id": "ph-catalog",
+      "name": "PH Catalog",
+      "description": "An offline catalogue experiment that parses fictional product pages, checks completeness and exports a local snapshot.",
+      "category": "experimental",
+      "shareable": true,
+      "repositoryUrl": "https://github.com/sarthakagrawal927/ph-catalog",
+      "purposeContract": {
+        "purpose": "An offline catalogue experiment that parses fictional product pages, checks completeness and exports a local snapshot.",
+        "audience": "Developers exploring a reproducible product catalogue pipeline.",
+        "outcome": "Parse three fictional products and export a verified local catalogue.",
+        "mechanism": "The existing parser and DuckDB pipeline run against bundled synthetic HTML fixtures.",
+        "proof": "88 tests pass, including refusal to alter an existing non-sample catalogue; the three-record offline demo passes.",
+        "nextAction": "Run the offline sample instructions in the README."
+      },
+      "lifecycle": "inactive"
+    },
+    {
+      "id": "pinpoint",
+      "name": "Pinpoint",
+      "description": "A local developer preview for selecting an app element, attaching a comment and handing context to a coding agent.",
+      "category": "utility",
+      "shareable": true,
+      "repositoryUrl": "https://github.com/sarthakagrawal927/pinpoint",
+      "purposeContract": {
+        "purpose": "A local developer preview for selecting an app element, attaching a comment and handing context to a coding agent.",
+        "audience": "Developers giving UI-specific feedback to coding agents.",
+        "outcome": "Attach feedback to a selected element in a running demo.",
+        "mechanism": "A browser feedback surface connects element context with a local development workflow.",
+        "proof": "16 tests pass and the documented local demo serves successfully; broad framework support is not claimed.",
+        "nextAction": "Install the repository dependencies and run the documented demo."
+      },
+      "lifecycle": "inactive"
+    },
+    {
+      "id": "port-whisperer",
+      "name": "Port Whisperer",
+      "description": "A command-line port scanner with framework detection and structured output for local development.",
+      "category": "utility",
+      "shareable": true,
+      "repositoryUrl": "https://github.com/sarthakagrawal927/port-whisperer",
+      "purposeContract": {
+        "purpose": "A command-line port scanner with framework detection and structured output for local development.",
+        "audience": "Developers identifying services listening on their own machine.",
+        "outcome": "Inspect listening ports and retrieve structured service information.",
+        "mechanism": "A Rust command-line scanner produces human-readable and JSON port data.",
+        "proof": "62 tests pass and the JSON command produced live local port data.",
+        "nextAction": "Follow the README installation instructions and run a local scan."
+      },
+      "lifecycle": "inactive"
+    },
+    {
       "id": "reddit-insights",
       "name": "Reddit Insights",
       "description": "Search a dated snapshot of 93 Reddit communities in your browser, with links to original posts and explicit provenance limits.",
@@ -1401,6 +2390,23 @@
         "proof": "The corpus and discovery system are essentially complete and available when a real research question appears.",
         "nextAction": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
       }
+    },
+    {
+      "id": "society-relay",
+      "name": "Society Relay",
+      "description": "A fixture-driven community repair-planning experiment with human approval, work orders and calendar export.",
+      "category": "experimental",
+      "shareable": true,
+      "repositoryUrl": "https://github.com/sarthakagrawal927/society-relay",
+      "purposeContract": {
+        "purpose": "A fixture-driven community repair-planning experiment with human approval, work orders and calendar export.",
+        "audience": "Builders exploring human-approved coordination for apartment communities.",
+        "outcome": "Walk a fixture repair request through approval, a work order and calendar export.",
+        "mechanism": "A Strands agent coordinates the workflow with explicit human approval steps.",
+        "proof": "55 tests and fixture-mode end-to-end approval, work-order and calendar export checks passed.",
+        "nextAction": "Run the documented fixture demo from the public repository."
+      },
+      "lifecycle": "inactive"
     },
     {
       "id": "web-playables",

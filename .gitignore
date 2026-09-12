@@ -39,3 +39,9 @@ project-idea-dump.md
 .fallow/
 # Local harness state (Paperclip spend-guard, run scratch) - not a work product
 .fleet-local/
+
+# Owner-local source catalog contains private decisions and infrastructure evidence.
+# Publish only the allowlisted catalog/generated/public.json projection.
+/catalog/projects.json
+/catalog/generated/operations.json
+/catalog/generated/repository-classifications.md
