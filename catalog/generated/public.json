@@ -51,7 +51,7 @@
     {
       "id": "pace",
       "name": "HeyPace",
-      "description": "Local-only macOS voice agent that can understand what is on your screen.",
+      "description": "An experimental macOS voice-agent preview; installation and permission-dependent workflows are still being qualified.",
       "makerNote": "I wanted a fast, privacy-first Mac assistant that could understand what is on my screen while keeping the work local.",
       "purposeContract": {
         "purpose": "HeyPace is a private Mac assistant for fast voice-driven help grounded in what is currently on screen.",
@@ -1783,7 +1783,7 @@
     {
       "id": "pace",
       "name": "HeyPace",
-      "description": "Local-only macOS voice agent that can understand what is on your screen.",
+      "description": "An experimental macOS voice-agent preview; installation and permission-dependent workflows are still being qualified.",
       "url": "https://heypace.app",
       "tier": "core",
       "category": "experimental",
@@ -1791,7 +1791,7 @@
       "spotlight": false,
       "lifecycle": "active",
       "shareable": true,
-      "maturity": "public-ready",
+      "maturity": "experiment",
       "changelogUrl": "https://heypace.app/changelog",
       "repositoryUrl": "https://github.com/HeyPace/pace",
       "roadmapUrl": "https://github.com/HeyPace/pace/issues",
