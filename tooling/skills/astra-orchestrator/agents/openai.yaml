@@ -1,0 +1,4 @@
+interface:
+  display_name: "Astra-Luna Orchestrator"
+  short_description: "Coordinate bounded Astra and Luna agent work"
+  default_prompt: "Use $astra-orchestrator to delegate this task across bounded Astra and Luna roles, then integrate and verify the result."

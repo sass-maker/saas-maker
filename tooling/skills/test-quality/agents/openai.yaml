@@ -1,0 +1,4 @@
+interface:
+  display_name: "Test Quality"
+  short_description: "Find meaningful test gaps and review regression signal"
+  default_prompt: "Use $test-quality to inspect this change and identify the highest-value regression tests."

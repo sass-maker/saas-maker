@@ -1,0 +1,7 @@
+interface:
+  display_name: "Glyph Art"
+  short_description: "Build material-based artwork from an existing logo"
+  default_prompt: "Use $glyph-art to turn my supplied logo into an archival object-collage treatment while preserving its geometry."
+
+policy:
+  allow_implicit_invocation: false

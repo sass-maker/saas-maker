@@ -128,6 +128,19 @@ relative Fleet root.
   `../design-inspiration/SKILL.md`; research, probes, or generated boards are
   direction evidence, not a prerequisite for ordinary implementation.
 
+### When comparing design instructions or models
+
+Borrow the same-brief comparison approach from [WhichAI](https://www.whichai.dev/)
+only when an evaluation or exploration is requested. Hold the product brief,
+content, assets, framework, viewport, and effort budget constant; vary one
+instruction set or model at a time and record the configuration. Judge outputs
+without model labels where practical, using the existing purpose, visual,
+accessibility, interaction, and performance gates—not screenshots alone.
+Record useful differences and recurring failures in the existing receipt.
+One brief is directional evidence, not a general model ranking. WhichAI's
+personal taste rankings do not change Fleet's model defaults, and this method
+does not add a routine multi-variant step or authorize extra agents or spend.
+
 ## 3. Review
 
 Before completion:

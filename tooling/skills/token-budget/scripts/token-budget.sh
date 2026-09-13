@@ -42,7 +42,7 @@ echo "Target: $target"
 echo "Codex home: $codex_home"
 echo
 
-echo "Always-loaded / frequently loaded surfaces"
+echo "Instruction and lookup files (disk size is not startup token cost)"
 row "global AGENTS" "$codex_home/AGENTS.md" 12000 6000
 row "target AGENTS" "$target/AGENTS.md" 12000 6000
 row "fleet AGENTS" "$fleet_root/AGENTS.md" 12000 6000
@@ -68,15 +68,23 @@ roots = [
     ("Fleet exposed", fleet_root / ".agents" / "skills"),
     ("Target OpenSpec", target / ".codex" / "skills"),
     ("Plugin disk cache (not startup)", codex_home / "plugins" / "cache"),
-    ("Fleet catalog", fleet_root / "foundry" / "ops" / "skills"),
-    ("Fleet teammates", fleet_root / "foundry" / "ops" / "teammates" / "skills"),
+    ("Fleet catalog (not exposure)", fleet_root / "saas-maker" / "tooling" / "skills"),
 ]
 
-def skill_files(root):
+def skill_files(root, recursive=False):
     found = []
     if not root.is_dir():
         return found
+    if not recursive:
+        return sorted(path / "SKILL.md" for path in root.iterdir()
+                      if (path / "SKILL.md").is_file())
+    visited = set()
     for current, dirs, files in os.walk(root, followlinks=True):
+        real = os.path.realpath(current)
+        if real in visited:
+            dirs[:] = []
+            continue
+        visited.add(real)
         dirs[:] = [name for name in dirs if name not in {".git", "node_modules"}]
         if "SKILL.md" in files:
             found.append(Path(current) / "SKILL.md")
@@ -91,11 +99,15 @@ def description(text):
 
 records = []
 for label, root in roots:
-    files = skill_files(root)
+    files = skill_files(root, recursive=label.startswith("Plugin disk cache"))
+    if label == "Codex user":
+        files += skill_files(root / ".system")
     broken = []
     if root.is_dir():
         broken = [path for path in root.iterdir() if path.is_symlink() and not path.exists()]
     descriptions = 0
+    implicit_descriptions = 0
+    explicit_only = 0
     total_bytes = 0
     for path in files:
         try:
@@ -105,23 +117,32 @@ for label, root in roots:
             continue
         desc = description(text)
         descriptions += len(desc)
+        policy_path = path.parent / "agents" / "openai.yaml"
+        policy = policy_path.read_text() if policy_path.is_file() else ""
+        explicit = bool(re.search(r"(?m)^\s*allow_implicit_invocation:\s*false\s*$", policy))
+        explicit_only += int(explicit)
+        if not explicit:
+            implicit_descriptions += len(desc)
         total_bytes += len(text.encode())
         name_match = re.search(r"(?m)^name:\s*[\"']?([^\"'\n]+)", text)
         name = name_match.group(1).strip() if name_match else path.parent.name
         records.append((name, label, str(path), str(resolved), len(desc)))
     print(f"{label:31} {len(files):3} skills  {descriptions:6} description chars  {total_bytes:8} B  {len(broken):2} broken links")
+    print(f"  Explicit-only: {explicit_only}; implicit-eligible description chars: {implicit_descriptions}")
     for path in broken:
         print(f"  BROKEN {path} -> {os.readlink(path)}")
 
 by_name = defaultdict(list)
 for record in records:
+    if record[1].startswith(("Plugin disk cache", "Fleet catalog")):
+        continue
     by_name[record[0]].append(record)
 duplicates = {
     name: values for name, values in by_name.items()
     if len({value[1] for value in values}) > 1
     and len({value[3] for value in values}) > 1
 }
-print(f"Duplicate names exposed by multiple roots: {len(duplicates)}")
+print(f"Duplicate names across local exposure roots (excluding cache/catalog): {len(duplicates)}")
 for name, values in sorted(duplicates.items()):
     locations = ", ".join(sorted({value[1] for value in values}))
     print(f"  DUPLICATE {name}: {locations}")
@@ -129,6 +150,8 @@ for name, values in sorted(duplicates.items()):
 print("Largest descriptions:")
 for name, label, path, _, chars in sorted(records, key=lambda item: item[4], reverse=True)[:8]:
     print(f"  {chars:5} chars  {name} ({label})")
+print("Counts are filesystem inventory, not the session's effective skill catalog.")
+print("Descriptions are character counts, not measured tokenizer usage; bodies load on demand.")
 PY
 echo
 

@@ -1,0 +1,7 @@
+{
+  "schema": "fleet.skill-execution-profile.v1",
+  "recommended": { "intelligence": "frontier", "reasoning": "high" },
+  "minimum": { "intelligence": "balanced", "reasoning": "medium" },
+  "degradation": "allow",
+  "rationale": "Geometry fidelity, material composition, and visual inspection require judgment; prompt-only work can use a balanced model."
+}

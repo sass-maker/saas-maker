@@ -7,11 +7,13 @@ FLEET_ROOT="${FLEET_WORKSPACE_ROOT:-$(cd "$FLEET_OPS_DIR/../.." && pwd)}"
 LEGACY_FLEET_OPS_DIR="$FLEET_ROOT/fleet-ops"
 EXPOSED_FLEET_SKILLS=(
   analyze-storage
+  astra-orchestrator
   daily-learning
   design-engineering
   design-workflow
   fleet-deploy-parity
   fleet-ops
+  glyph-art
   ian-xiaohei-illustrations
   ios-app-growth
   code-cleanup
@@ -20,10 +22,12 @@ EXPOSED_FLEET_SKILLS=(
   media-acquisition
   mobile-task-control
   name-domains
+  screenmap
   seo-research
   site-health
   spec-driven
   token-budget
+  test-quality
   web-extraction
 )
 
@@ -136,6 +140,15 @@ link_fleet_skills() {
       printf 'Missing exposed Fleet skill: %s\n' "$source" >&2
       return 1
     }
+    # Do not let repeated installation descend through an existing directory
+    # link and create a self-link inside the canonical skill.
+    if [[ -L "$destination/$name" && "$(readlink "$destination/$name")" == "$source" ]]; then
+      continue
+    fi
+    if [[ -e "$destination/$name" && ! -L "$destination/$name" ]]; then
+      printf 'Refusing to replace non-symlink skill: %s\n' "$destination/$name" >&2
+      return 1
+    fi
     ln -sfn "$source" "$destination/$name"
   done
 }

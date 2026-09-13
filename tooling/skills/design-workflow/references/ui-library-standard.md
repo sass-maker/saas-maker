@@ -57,6 +57,39 @@ Composing, styling, and adapting upstream parts to the product is expected.
 Reinventing standard navigation, forms, dialogs, disclosure, tables, cards,
 footers, pricing, FAQs, or other common UI is not.
 
+## Curated supplementary sources
+
+Owner-approved source shortlist (2026-09-11). These are discovery and reuse
+candidates, not installed dependencies, new defaults, or blanket production
+approvals. Use the selection order above; do not browse every source for every
+task. Preserve the project's framework and visual language.
+
+### Active sources
+
+| Source | Use when | Adoption boundary |
+| --- | --- | --- |
+| [coss UI](https://coss.com/ui/docs/get-started) | A React application needs forms, controls, menus, or dialogs built on Base UI. | Check Tailwind v4 compatibility and token requirements; select individual components rather than migrating a healthy system. |
+| [shadcnblocks](https://www.shadcnblocks.com/) | A shadcn-based surface needs marketing sections, application shells, dashboards, or tables. | Check the selected block's free/paid access and license; no assumed paid entitlement. |
+| [21st.dev](https://21st.dev/) | Discovering a specific pattern across multiple authors and libraries. | Treat it as a registry, not one consistent system; inspect the original component source, license, and dependencies. |
+| [React Bits](https://reactbits.dev/) | A product-specific visual signature needs animated text, backgrounds, or effects. | Check the [upstream license](https://github.com/DavidHDev/react-bits/blob/main/LICENSE.md); the reviewed project uses MIT + Commons Clause, not plain MIT. Avoid routine dashboard decoration. |
+| [beUI](https://beui.dev/) | A selected control needs purposeful motion, such as tabs, drawers, pickers, or swipe actions. | Validate keyboard, touch, focus, and reduced-motion behavior; do not replace proven behavior primitives for animation alone. |
+
+### Situational references
+
+| Source | Use when | Adoption boundary |
+| --- | --- | --- |
+| [Spectrum UI](https://ui.spectrumhq.in/) | An animated shadcn component or composed card fills a specific gap. | Secondary source with substantial overlap; inspect source and license without connecting its MCP by default. |
+| [Evil Charts](https://evilcharts.com/) | Exploring animated chart presentation for React/shadcn. | Implementation and licensing were not established in the shortlist review. Verify both before reuse, plus scale integrity, missing-data states, accessible alternatives, and motion controls. |
+| [Rare UI](https://www.rareui.com/) | A distinctive interaction such as a folder or duration picker fits the product. | Narrow inspiration/reuse source, not a general UI foundation; check the selected component's license and behavior. |
+| [8bitcn](https://www.8bitcn.com/) | The approved product direction deliberately uses retro pixel styling. | Do not apply its visual language to unrelated operational interfaces. |
+
+Before copying or running a registry installer, inspect the exact source,
+license, dependencies, and proposed file changes. Recheck changeable upstream
+requirements at adoption time. Record the chosen URL and fit in the existing
+design receipt. Inclusion here does not authorize purchases, MCP connections,
+bulk installs, or relaxed accessibility/performance checks. Do not add React
+to a static surface solely to use one of these sources.
+
 ## Runtime and dependency rules
 
 - Prefer copied/adapted static markup when no JavaScript behavior is needed.

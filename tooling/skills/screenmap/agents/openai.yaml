@@ -1,0 +1,4 @@
+interface:
+  display_name: "Screenmap"
+  short_description: "Map and diff Expo or React Native screens"
+  default_prompt: "Use $screenmap to build a static-first visual navigation map of this Expo or React Native app and report coverage gaps."
