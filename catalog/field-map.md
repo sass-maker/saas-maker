@@ -45,7 +45,6 @@ This is documentation of the reversible mapping, not project data. All values ar
 | `publicDir` | `deployment.publicDir` |
 | `inRegistry` | `deployment.inRegistry` |
 | `d1Databases` | `deployment.d1Databases` |
-| `tursoDatabases` | `deployment.tursoDatabases` |
 | `databaseResources` | `deployment.databaseResources` |
 | `metrics` | `deployment.metrics` |
 | `public` | `presentation.public` |

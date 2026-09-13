@@ -42,7 +42,6 @@ export const fieldMap = {
   publicDir: 'deployment.publicDir',
   inRegistry: 'deployment.inRegistry',
   d1Databases: 'deployment.d1Databases',
-  tursoDatabases: 'deployment.tursoDatabases',
   databaseResources: 'deployment.databaseResources',
   metrics: 'deployment.metrics',
   public: 'presentation.public',

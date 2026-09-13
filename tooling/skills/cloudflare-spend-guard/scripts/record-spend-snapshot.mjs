@@ -19,7 +19,7 @@ const defaultStateDir = resolve(
   '.fleet-local/spend-guard',
 );
 
-const PROVIDERS = new Set(['cloudflare', 'turso']);
+const PROVIDERS = new Set(['cloudflare']);
 const SPEND_STATES = new Set([
   'paying-now',
   'likely-this-cycle',

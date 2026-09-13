@@ -123,7 +123,7 @@ percentage must never be shown without its checked and total denominators.
 |---|---|---|
 | **A Static marketing** | Few routes, Astro/Pages | Build-emitted `public/**/*.md` |
 | **B Content collection** | Astro collections / MDX | Source MD/MDX (not HTML scrape) |
-| **C DB-dynamic** | OpenNext/Hono + D1/Turso | Same loaders as HTML; cache aggressively |
+| **C DB-dynamic** | OpenNext/Hono + D1 | Same loaders as HTML; cache aggressively |
 | **D SPA + API** | Vite SPA shells | Curated `llms.txt` + API resource MD — never empty shells |
 
 Detect: collections → B; OpenNext/Hono HTML → C; pure static → A; Vite SPA → D.

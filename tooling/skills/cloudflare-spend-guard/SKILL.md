@@ -1,30 +1,24 @@
 ---
 name: cloudflare-spend-guard
-description: Audit Cloudflare and Turso costs, billable usage, free-tier or paid-plan exposure, quota exhaustion, project necessity, and safe optimization opportunities for Fleet. Use when the user asks whether Cloudflare or Turso is charging them, how likely a project is to cost real money or hit a database limit, what is driving a bill or Turso row usage, whether current Workers/Pages/D1/R2/KV/Queues/Durable Objects/AI/Turso usage is needed, which resources look wasteful, what can be optimized, or how to prevent surprise cloud spend or quota-blocked database queries.
+description: Audit Cloudflare costs, billable usage, free-tier or paid-plan exposure, quota exhaustion, project necessity, and safe optimization opportunities for Fleet. Use when the user asks whether Cloudflare is charging them, how likely a project is to cost real money, what is driving a bill, whether current Workers/Pages/D1/R2/KV/Queues/Durable Objects/AI usage is needed, which resources look wasteful, what can be optimized, or how to prevent surprise cloud spend.
 ---
 
-# Cloudflare + Turso Spend Guard
+# Cloudflare Spend Guard
 
 Answer the money question first, then explain which usage is necessary and what
 can be optimized. Compose current provider evidence with Fleet's project
 inventory; do not infer a bill or a quota state from configuration alone.
 
-## Provider companions
+## Provider companion
 
-- For Cloudflare, load the installed official `cloudflare` skill before
-  querying the provider. Follow its retrieval-first rule for pricing, limits,
-  changelog entries, API schemas, and product analytics.
-- For Turso, retrieve current official pricing, usage-and-billing, CLI, and
-  Platform API documentation before quoting plan or quota behavior.
+For Cloudflare, load the installed official `cloudflare` skill before
+querying the provider. Follow its retrieval-first rule for pricing, limits,
+changelog entries, API schemas, and product analytics.
 
 Read the provider reference needed for the scope:
 
 - [references/evidence-playbook.md](references/evidence-playbook.md) for
   Cloudflare.
-- [references/turso-evidence-playbook.md](references/turso-evidence-playbook.md)
-  for Turso.
-
-Read both before a full Fleet audit.
 
 For the optional recurring Fleet run, also read
 [references/recurring-run.md](references/recurring-run.md). The checked-in
@@ -36,7 +30,7 @@ the operator explicitly asks.
 Keep the audit read-only.
 
 - Do not deploy, delete, pause, migrate, resize, query application data, or
-  change a Cloudflare or Turso resource.
+  change a Cloudflare resource.
 - Do not change a subscription, payment method, budget alert, usage limit,
   overage setting, plan, credential, DNS record, route, schema, index, group,
   location, or production config.
@@ -45,8 +39,6 @@ Keep the audit read-only.
   hidden.
 - Do not persist raw billing responses by default. Report only the aggregates
   needed for the decision.
-- Do not persist or quote raw Turso SQL, literals, database URLs, dumps, or
-  application rows.
 - Treat every proposed mutation as a separate task requiring explicit approval.
 
 ## Choose scope
@@ -54,13 +46,13 @@ Keep the audit read-only.
 Use the narrowest mode that answers the request:
 
 - **Project:** one Fleet project or provider resource.
-- **Fleet:** all registered Cloudflare- or Turso-backed projects plus unowned
+- **Fleet:** all registered Cloudflare-backed projects plus unowned
   live resources.
 - **Decision:** compare a specific cost driver or optimization.
 
-Default to each provider's current billing/reset period. State exact dates and
-timezone separately; do not force Cloudflare and Turso into one period. Use a
-comparison period only when it distinguishes a spike from a steady baseline.
+Default to Cloudflare's current billing/reset period. State exact dates and
+timezone. Use a comparison period only when it distinguishes a spike from a
+steady baseline.
 
 ## Workflow
 
@@ -91,11 +83,9 @@ question. Do not rerun broad live checks only to answer a narrow cost question.
 Before quoting any price, allowance, threshold, projection, or saving:
 
 1. Retrieve current pricing, quota, usage, and billing documentation for every
-   provider and product in scope.
-2. For Cloudflare, search the changelog and current OpenAPI schema before
-   calling billing endpoints.
-3. For Turso, verify current CLI help or Platform API schema plus plan,
-   overage, and reset semantics.
+   product in scope.
+2. Search the changelog and current OpenAPI schema before calling billing
+   endpoints.
 
 If current documentation is unavailable, continue the exposure inventory but
 do not quote monetary estimates.
@@ -112,11 +102,6 @@ Keep these separate:
 Prefer the provider's invoice-aligned Billable Usage surface for usage costs.
 It may exclude fixed subscription fees. Retrieve subscriptions or invoice
 history separately when permitted.
-
-For Turso, gather plan, overage mode, used/limit values, and reset time
-together. A free plan with overages disabled can create a fail-closed
-availability risk without creating a charge. A paid plan or confirmed positive
-overage cost is money evidence.
 
 If billing or plan access is missing or restricted:
 
@@ -140,7 +125,7 @@ The normalizer never calls Cloudflare. Missing cost fields stay missing.
 ### 4. Gather runtime evidence and attribute it
 
 Use the shortest provider query that covers the observed products. Attribute by
-exact script, zone, bucket, Turso database, namespace, queue, workflow, index,
+exact script, zone, bucket, namespace, queue, workflow, index,
 or other resource identifier.
 
 Do not allocate shared account-level cost proportionally from request counts.
@@ -153,13 +138,6 @@ Use runtime evidence to answer:
 - Is storage retained while requests are near zero?
 - Are cron, queue, Workflow, or retry paths doing duplicate or avoidable work?
 - Is an AI/media request cached, batched, bounded, and required by the product?
-- Are Turso rows read caused by full scans, repeated aggregates, missing-index
-  candidates, duplicate schedules, or unnecessary refreshes?
-
-For Turso, start with organization totals and database inspection. Use query
-statistics only when one database materially drives usage and the result can
-change an optimization decision. Sanitize query shape; never report raw SQL or
-literals.
 
 ### 5. Judge necessity independently from cost
 
@@ -209,11 +187,8 @@ use exposure risk as a substitute for monetary evidence.
 
 ## Calculation rules
 
-- Use each provider's billing/reset cycle. Turso currently uses a calendar-month
-  reset for quota evidence; verify it during every audit.
+- Use Cloudflare's billing/reset cycle.
 - Keep fixed fees, usage charges, credits, and taxes separate.
-- Keep rows read, rows written, storage, syncs, databases, groups, and locations
-  separate; never add incompatible units.
 - Never convert missing, null, restricted, or stale cost data to zero.
 - Never add incompatible usage units.
 - Project future spend only when plan, included allowance, price, elapsed
@@ -241,9 +216,6 @@ Lead with:
 5. **Safety:** confirm that no Cloudflare or production mutation occurred.
 
 Keep confirmed charges distinct from estimates and configuration exposure.
-When Turso is in scope, also confirm that no plan, overage, database, SQL,
-schema, index, group, location, token, migration, or production mutation
-occurred.
 
 ## Recurring mode
 
@@ -252,8 +224,7 @@ manual dry run.
 
 - Record sanitized aggregates through
   `scripts/record-spend-snapshot.mjs`; never edit its ledger or projections.
-- Keep Cloudflare and Turso periods separate and leave missing monetary evidence
-  `unknown`.
+- Leave missing monetary evidence `unknown`.
 - Page only when the recorder returns `warning` or `critical`. Routine
   successful `ok` runs remain notification history only.
 - Do not expand the cadence beyond weekly without evidence that a faster-moving

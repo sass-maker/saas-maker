@@ -133,6 +133,6 @@ an unambiguous comparison.
 
 - Single-project deploy readiness gate → `fleet-deploy-guard`
 - Full fleet audit (git health, PROJECT_STATUS sync, resilience) → `fleet-audit`
-- Cloudflare/Turso spend → `cloudflare-spend-guard`
+- Cloudflare spend → `cloudflare-spend-guard`
 - Public product browser journeys → `public-product-smoke`
 - Actually deploying anything → this skill is read-only

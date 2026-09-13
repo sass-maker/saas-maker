@@ -10,8 +10,7 @@ const DEFAULT_FLEET_ROOT = resolve(SCRIPT_DIR, '../../../..');
 const CONFIG_PATTERN = /(^|\/)wrangler\.(toml|json|jsonc)$/;
 const PACKAGE_PATTERN = /(^|\/)package\.json$/;
 const SAFE_ENV_EXAMPLE_PATTERN = /(^|\/)(?:\.env(?:\.[^/]+)?\.example|\.dev\.vars\.example)$/;
-const TURSO_PACKAGE_PATTERN = /^(?:@libsql\/|@tursodatabase\/|libsql$)/;
-const DATABASE_PROVIDERS = new Set(['cloudflare-d1', 'turso']);
+const DATABASE_PROVIDERS = new Set(['cloudflare-d1']);
 const DATABASE_STATES = new Set(['prepared', 'authoritative', 'rollback-held']);
 
 const SURFACE_DEFINITIONS = [
@@ -228,55 +227,6 @@ function declaredDatabaseResources(project) {
     left.provider.localeCompare(right.provider) || left.name.localeCompare(right.name));
 }
 
-function scanTursoSurface(project, repoPath, files) {
-  const packageFiles = files.filter((file) => PACKAGE_PATTERN.test(file));
-  const dependencyFiles = [];
-  for (const file of packageFiles) {
-    try {
-      const manifest = readJson(join(repoPath, file));
-      const dependencyNames = [
-        ...Object.keys(manifest.dependencies ?? {}),
-        ...Object.keys(manifest.devDependencies ?? {}),
-        ...Object.keys(manifest.optionalDependencies ?? {}),
-      ];
-      if (dependencyNames.some((name) => TURSO_PACKAGE_PATTERN.test(name))) {
-        dependencyFiles.push(file);
-      }
-    } catch {
-      // Invalid package manifests are reported by their owning project checks.
-    }
-  }
-  if (dependencyFiles.length === 0) return null;
-
-  const envKeys = new Set();
-  const envFiles = [];
-  for (const file of files.filter((candidate) => SAFE_ENV_EXAMPLE_PATTERN.test(candidate))) {
-    const text = readFileSync(join(repoPath, file), 'utf8');
-    let matched = false;
-    for (const line of text.split(/\r?\n/)) {
-      const match = line.match(/^\s*(?:export\s+)?([A-Z][A-Z0-9_]*)\s*=/);
-      if (!match) continue;
-      const name = match[1];
-      if (/TURSO|LIBSQL/.test(name) || name === 'DATABASE_URL') {
-        envKeys.add(name);
-        matched = true;
-      }
-    }
-    if (matched) envFiles.push(file);
-  }
-
-  const sourceFiles = [...new Set([...dependencyFiles, ...envFiles])]
-    .map((file) => project.repo && project.repo !== '.'
-      ? `${project.repo.replace(/\/$/, '')}/${file}`
-      : file)
-    .sort();
-  return {
-    product: 'turso',
-    sourceFiles,
-    identifiers: [...envKeys].sort(),
-  };
-}
-
 function scanConfig(project, repoPath, configFile) {
   const text = readFileSync(join(repoPath, configFile), 'utf8');
   const configObject = parseConfigObject(text, configFile);
@@ -387,17 +337,14 @@ export function scanFleetCostSurfaces({ fleetRoot = DEFAULT_FLEET_ROOT, projectI
     } else if (project.repo) {
       warnings.push(`Repository not found: ${project.repo}`);
     }
-    const tursoSurface = repoPath && existsSync(repoPath)
-      ? scanTursoSurface(project, repoPath, files)
-      : null;
     const databaseResources = declaredDatabaseResources(project);
     const declaredDatabaseSurfaces = databaseResources.map((resource) => ({
-      product: resource.provider === 'cloudflare-d1' ? 'd1' : 'turso',
+      product: 'd1',
       sourceFiles: ['projects.json'],
       identifiers: [resource.name],
     }));
     const declaredInfrastructureSurfaces = infrastructure.resources.map((resource) => ({
-      product: resource.provider === 'turso' ? 'turso' : resource.kind,
+      product: resource.kind,
       sourceFiles: ['projects.json'],
       identifiers: [resource.name],
     }));
@@ -414,7 +361,6 @@ export function scanFleetCostSurfaces({ fleetRoot = DEFAULT_FLEET_ROOT, projectI
         cloudflareProject: project.cfProject ?? null,
         pagesProjects: [...(project.cfPages ?? [])].sort(),
         d1Databases: [...(project.d1Databases ?? [])].sort(),
-        tursoDatabases: [...(project.tursoDatabases ?? [])].sort(),
         databaseResources,
         deployments: infrastructure.deployments,
         cloudResources: infrastructure.resources,
@@ -423,7 +369,7 @@ export function scanFleetCostSurfaces({ fleetRoot = DEFAULT_FLEET_ROOT, projectI
       costSurfaces: mergeSurfaces(
         configs,
         declaredProducts(project.deployKind, files),
-        [tursoSurface, ...declaredDatabaseSurfaces, ...declaredInfrastructureSurfaces],
+        [...declaredDatabaseSurfaces, ...declaredInfrastructureSurfaces],
       ),
       configs: configs.map((config) => ({
         path: config.path,
@@ -449,7 +395,7 @@ function renderHuman(report) {
     return `${project.id}\t${project.status}\t${project.deployKind}\t${products}`;
   });
   return [
-    'Cloudflare + Turso cost-surface inventory (configuration only; not usage or billing)',
+    'Cloudflare cost-surface inventory (configuration only; not usage or billing)',
     'PROJECT\tSTATUS\tDEPLOY\tCONFIGURED SURFACES',
     ...rows,
   ].join('\n');

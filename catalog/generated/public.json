@@ -413,7 +413,8 @@
         "Next.js",
         "React",
         "Hono",
-        "Cloudflare"
+        "Cloudflare",
+        "App Health"
       ],
       "group": "current",
       "lifecycle": "active",
@@ -430,7 +431,7 @@
       "changelogUrl": "https://highsignal.app/changelog",
       "roadmapUrl": "https://github.com/High-Signal-App/high-signal/issues",
       "firstCommitAt": "2026-04-25",
-      "latestCommitAt": "2026-09-09"
+      "latestCommitAt": "2026-09-12"
     },
     {
       "id": "on-record",
@@ -1077,19 +1078,19 @@
     {
       "id": "app-health",
       "name": "App Health",
-      "description": "Privacy-first endpoint health for Node, Go, and OpenTelemetry services.",
+      "description": "Web analytics, product events, logs, and endpoint health in one workspace.",
       "makerNote": "I built App Health because checking Sentry, PostHog, Slack, and cloud consoles separately made basic product health too fragmented.",
       "purposeContract": {
         "purpose": "App Health helps product teams understand web traffic, intentional user actions, and application health across their projects.",
         "audience": "Product managers, founders, and product teams; developers connect the instrumentation.",
         "outcome": "See who is active as browser-session counts, which pages and named events are used, and whether backend failures explain product friction.",
         "mechanism": "A small browser tracker and explicit named events feed workspace-scoped analytics; service SDKs and OTLP add aggregate endpoint health in the same dashboard.",
-        "proof": "The endpoint-health V0 has a production SDK canary. Google accounts, browser analytics, named-event reports, and workspace presence are implemented and tested locally; production activation and a real Google callback remain unverified.",
-        "nextAction": "Explore the illustrative product preview or connect a project in the locally configured workspace; activate and verify Google accounts and analytics before public onboarding."
+        "proof": "Production Google signup, returning login, sign-out and project creation verified; own signup/project milestone logs remain exactly one each. Known analytics traffic returned 3 sessions, 4 page views and 2 named events without duplicate-batch inflation, with correct 1h/24h boundaries and referral sources. Public live page and revocation verified. JavaScript SDK 0.4.0 published and artifact integrity checked. See app-health/docs/release-2026-09-12.md; broader analytics parity and remotely published Swift package remain follow-up work.",
+        "nextAction": "Sign in with Google, add a project and environment, then install only the analytics, endpoint, or logging capability you need."
       },
       "kind": "product",
       "category": "utility",
-      "form": "Monitoring service",
+      "form": "Product analytics and monitoring service",
       "platforms": [
         "Web",
         "API"
@@ -1098,7 +1099,8 @@
         "React",
         "shadcn/ui",
         "Cloudflare Workers",
-        "D1"
+        "Analytics Engine",
+        "Swift"
       ],
       "group": "current",
       "lifecycle": "active",
@@ -1116,7 +1118,7 @@
       "changelogUrl": "https://health.sassmaker.com/changelog",
       "roadmapUrl": "https://github.com/sass-maker/app-health/issues",
       "firstCommitAt": "2026-07-20",
-      "latestCommitAt": "2026-09-08"
+      "latestCommitAt": "2026-09-12"
     },
     {
       "id": "mashup",
@@ -1226,8 +1228,8 @@
         "TypeScript",
         "Cloudflare Pages"
       ],
-      "group": "past",
-      "lifecycle": "inactive",
+      "group": "current",
+      "lifecycle": "active",
       "shareable": true,
       "deployed": true,
       "deploymentProviders": [
@@ -1238,6 +1240,7 @@
       ],
       "url": "https://paths.significanthobbies.com",
       "repositoryUrl": "https://github.com/Significant-Hobbies/what-it-takes-to-win",
+      "changelogUrl": "https://paths.significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/what-it-takes-to-win/issues",
       "firstCommitAt": "2026-07-21",
       "latestCommitAt": "2026-09-07"
@@ -1412,16 +1415,16 @@
     },
     {
       "id": "storagedaddy",
-      "name": "StorageDaddy",
-      "description": "A native Mac storage analyzer for developer caches, builds, dependencies and AI session archives, with reviewed cleanup.",
+      "name": "storagedaddy",
+      "description": "An open-source native Mac storage analyzer for developer caches, builds, dependencies and AI session archives, with reviewed cleanup. Free during early access.",
       "makerNote": "I am building a native Mac storage analyzer that makes disk usage clear and cleanup easy to review.",
       "purposeContract": {
-        "purpose": "StorageDaddy helps developers understand and review local storage through a native visual scanner, developer classifications and verified, deliberate cleanup.",
+        "purpose": "storagedaddy helps developers understand and review local storage through a native visual scanner, developer classifications and verified, deliberate cleanup.",
         "audience": "Developers whose Mac builds, dependencies, caches and AI session histories consume storage.",
         "outcome": "Find large storage consumers and review what to archive or move to Trash.",
         "mechanism": "A local SwiftUI and AppKit scanner provides visual exploration, developer insights, reviewed cache cleanup and compact AI conversation exports. Sparkle provides signed macOS update checks.",
-        "proof": "Signed and notarized macOS 14+ Apple-silicon beta, measured scans, tested cancellation, verified archive cleanup and restoration, and a publicly downloaded DMG with matching checksum.",
-        "nextAction": "Download the free beta at storagedaddy.significanthobbies.com, scan a folder, and review what to archive or move to Trash."
+        "proof": "MIT-licensed source, signed and notarized macOS 14+ Apple-silicon beta, tested scanner and archive cleanup, and a publicly downloaded DMG with matching checksum.",
+        "nextAction": "Download during free early access at storagedaddy.significanthobbies.com, scan a folder, and review what to archive or move to Trash."
       },
       "kind": "experiment",
       "category": "utility",
@@ -1447,8 +1450,10 @@
         "storagedaddy.significanthobbies.com"
       ],
       "url": "https://storagedaddy.significanthobbies.com/",
-      "firstCommitAt": null,
-      "latestCommitAt": null
+      "repositoryUrl": "https://github.com/sarthakagrawal927/storagedaddy",
+      "roadmapUrl": "https://github.com/sarthakagrawal927/storagedaddy/issues",
+      "firstCommitAt": "2026-09-13",
+      "latestCommitAt": "2026-09-13"
     },
     {
       "id": "ai-badges",
@@ -1721,7 +1726,7 @@
     {
       "id": "app-health",
       "name": "App Health",
-      "description": "Privacy-first endpoint health for Node, Go, and OpenTelemetry services.",
+      "description": "Web analytics, product events, logs, and endpoint health in one workspace.",
       "url": "https://health.sassmaker.com",
       "tier": "active",
       "category": "utility",
@@ -1739,8 +1744,8 @@
         "audience": "Product managers, founders, and product teams; developers connect the instrumentation.",
         "outcome": "See who is active as browser-session counts, which pages and named events are used, and whether backend failures explain product friction.",
         "mechanism": "A small browser tracker and explicit named events feed workspace-scoped analytics; service SDKs and OTLP add aggregate endpoint health in the same dashboard.",
-        "proof": "The endpoint-health V0 has a production SDK canary. Google accounts, browser analytics, named-event reports, and workspace presence are implemented and tested locally; production activation and a real Google callback remain unverified.",
-        "nextAction": "Explore the illustrative product preview or connect a project in the locally configured workspace; activate and verify Google accounts and analytics before public onboarding."
+        "proof": "Production Google signup, returning login, sign-out and project creation verified; own signup/project milestone logs remain exactly one each. Known analytics traffic returned 3 sessions, 4 page views and 2 named events without duplicate-batch inflation, with correct 1h/24h boundaries and referral sources. Public live page and revocation verified. JavaScript SDK 0.4.0 published and artifact integrity checked. See app-health/docs/release-2026-09-12.md; broader analytics parity and remotely published Swift package remain follow-up work.",
+        "nextAction": "Sign in with Google, add a project and environment, then install only the analytics, endpoint, or logging capability you need."
       }
     },
     {
@@ -1994,6 +1999,31 @@
       }
     },
     {
+      "id": "what-it-takes-to-win",
+      "name": "Look Sideways",
+      "description": "Explore sourced career turning points with explicit survivorship and forecasting limits.",
+      "url": "https://paths.significanthobbies.com",
+      "tier": "active",
+      "category": "media",
+      "priority": "P4",
+      "spotlight": false,
+      "lifecycle": "active",
+      "shareable": true,
+      "maturity": "experiment",
+      "changelogUrl": "https://paths.significanthobbies.com/changelog",
+      "repositoryUrl": "https://github.com/Significant-Hobbies/what-it-takes-to-win",
+      "roadmapUrl": "https://github.com/Significant-Hobbies/what-it-takes-to-win/issues",
+      "pillarId": "learn",
+      "purposeContract": {
+        "purpose": "Look Sideways shows why visible success cannot be reduced to a simple formula or a fair comparison with your own path.",
+        "audience": "Readers who turn another person’s visible outcome into a judgment about their own pace, ability, or worth.",
+        "outcome": "Replace flattened comparison with a more humane, evidence-bounded understanding of conditions, sequence, perseverance, and luck.",
+        "mechanism": "A guided research exhibit connects source-linked life events and early-breakthrough paths through what people brought, were handed, and were surrounded by.",
+        "proof": "The publication contains thousands of documented early-breakthrough paths, visible methodology, and ongoing source-linked profile coverage.",
+        "nextAction": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
+      }
+    },
+    {
       "id": "looptv",
       "name": "LoopTV",
       "description": "An experimental lean-back queue of curated science and other videos.",
@@ -2219,8 +2249,8 @@
     },
     {
       "id": "storagedaddy",
-      "name": "StorageDaddy",
-      "description": "A native Mac storage analyzer for developer caches, builds, dependencies and AI session archives, with reviewed cleanup.",
+      "name": "storagedaddy",
+      "description": "An open-source native Mac storage analyzer for developer caches, builds, dependencies and AI session archives, with reviewed cleanup. Free during early access.",
       "url": "https://storagedaddy.significanthobbies.com/",
       "tier": "active",
       "category": "utility",
@@ -2231,12 +2261,12 @@
       "maturity": "beta",
       "pillarId": "build",
       "purposeContract": {
-        "purpose": "StorageDaddy helps developers understand and review local storage through a native visual scanner, developer classifications and verified, deliberate cleanup.",
+        "purpose": "storagedaddy helps developers understand and review local storage through a native visual scanner, developer classifications and verified, deliberate cleanup.",
         "audience": "Developers whose Mac builds, dependencies, caches and AI session histories consume storage.",
         "outcome": "Find large storage consumers and review what to archive or move to Trash.",
         "mechanism": "A local SwiftUI and AppKit scanner provides visual exploration, developer insights, reviewed cache cleanup and compact AI conversation exports. Sparkle provides signed macOS update checks.",
-        "proof": "Signed and notarized macOS 14+ Apple-silicon beta, measured scans, tested cancellation, verified archive cleanup and restoration, and a publicly downloaded DMG with matching checksum.",
-        "nextAction": "Download the free beta at storagedaddy.significanthobbies.com, scan a folder, and review what to archive or move to Trash."
+        "proof": "MIT-licensed source, signed and notarized macOS 14+ Apple-silicon beta, tested scanner and archive cleanup, and a publicly downloaded DMG with matching checksum.",
+        "nextAction": "Download during free early access at storagedaddy.significanthobbies.com, scan a folder, and review what to archive or move to Trash."
       }
     },
     {
@@ -2314,23 +2344,6 @@
         "outcome": "Publish and update a durable page without adopting a separate CMS.",
         "mechanism": "An owner-approved issue is rendered into a public page with edit, archive, search, and source-link behavior.",
         "proof": "The owner-only production pilot has proven the issue-to-page loop at issues.sarthakagrawal.dev.",
-        "nextAction": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
-      }
-    },
-    {
-      "id": "what-it-takes-to-win",
-      "name": "Look Sideways",
-      "description": "Explore sourced career turning points with explicit survivorship and forecasting limits.",
-      "lifecycle": "inactive",
-      "category": "media",
-      "shareable": true,
-      "repositoryUrl": "https://github.com/Significant-Hobbies/what-it-takes-to-win",
-      "purposeContract": {
-        "purpose": "Look Sideways shows why visible success cannot be reduced to a simple formula or a fair comparison with your own path.",
-        "audience": "Readers who turn another person’s visible outcome into a judgment about their own pace, ability, or worth.",
-        "outcome": "Replace flattened comparison with a more humane, evidence-bounded understanding of conditions, sequence, perseverance, and luck.",
-        "mechanism": "A guided research exhibit connects source-linked life events and early-breakthrough paths through what people brought, were handed, and were surrounded by.",
-        "proof": "The publication contains thousands of documented early-breakthrough paths, visible methodology, and ongoing source-linked profile coverage.",
         "nextAction": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
       }
     },

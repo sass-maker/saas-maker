@@ -22,10 +22,8 @@ test('maps tracked Wrangler bindings as configuration-only exposure', () => {
         deployKind: 'worker+pages',
         cfProject: 'example-worker',
         d1Databases: ['example-db'],
-        tursoDatabases: ['example-db'],
         databaseResources: [
           { provider: 'cloudflare-d1', name: 'example-db', state: 'prepared' },
-          { provider: 'turso', name: 'example-db', state: 'authoritative' },
         ],
         domains: ['example.com'],
       }],
@@ -39,26 +37,12 @@ test('maps tracked Wrangler bindings as configuration-only exposure', () => {
       "triggers": { "crons": ["0 * * * *"] },
       "limits": { "cpu_ms": 1000 },
     }\n`);
-    writeFileSync(join(root, 'app/package.json'), JSON.stringify({
-      dependencies: {
-        '@libsql/client': '0.17.3',
-      },
-    }));
-    writeFileSync(join(root, 'app/.env.example'), [
-      'TURSO_DATABASE_URL=libsql://example.invalid',
-      'TURSO_AUTH_TOKEN=fixture-secret-must-not-appear',
-      'TURSO_MANGA_DATABASE_URL=',
-      'DATABASE_URL=',
-      '',
-    ].join('\n'));
     mkdirSync(join(root, 'app/functions'), { recursive: true });
     writeFileSync(join(root, 'app/functions/api.ts'), 'export const onRequest = () => new Response("ok");\n');
     execFileSync('git', ['init', '-q'], { cwd: root });
     execFileSync('git', [
       'add',
       'site-health/apps/backend/config/projects.json',
-      'app/.env.example',
-      'app/package.json',
       'app/wrangler.jsonc',
       'app/functions/api.ts',
     ], { cwd: root });
@@ -74,32 +58,19 @@ test('maps tracked Wrangler bindings as configuration-only exposure', () => {
       'pages-functions',
       'queues',
       'r2',
-      'turso',
       'workers',
       'workers-ai',
     ]);
     assert.equal(project.configs[0].signals.scheduled, true);
     assert.equal(project.configs[0].signals.cpuLimitConfigured, true);
     assert.deepEqual(project.declared.d1Databases, ['example-db']);
-    assert.deepEqual(project.declared.tursoDatabases, ['example-db']);
     assert.deepEqual(project.declared.databaseResources, [
       { provider: 'cloudflare-d1', name: 'example-db', state: 'prepared' },
-      { provider: 'turso', name: 'example-db', state: 'authoritative' },
     ]);
     assert.deepEqual(
       project.costSurfaces.find((surface) => surface.product === 'd1').identifiers,
       ['DB', 'example-db'],
     );
-    const turso = project.costSurfaces.find((surface) => surface.product === 'turso');
-    assert.deepEqual(turso.sourceFiles, ['app/.env.example', 'app/package.json', 'projects.json']);
-    assert.deepEqual(turso.identifiers, [
-      'DATABASE_URL',
-      'TURSO_AUTH_TOKEN',
-      'TURSO_DATABASE_URL',
-      'TURSO_MANGA_DATABASE_URL',
-      'example-db',
-    ]);
-    assert.equal(JSON.stringify(report).includes('fixture-secret-must-not-appear'), false);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
@@ -126,7 +97,7 @@ test('rejects invalid database resource states', () => {
     writeFileSync(join(root, 'site-health/apps/backend/config/projects.json'), JSON.stringify({
       projects: [{
         id: 'invalid',
-        databaseResources: [{ provider: 'turso', name: 'example-db', state: 'retired' }],
+        databaseResources: [{ provider: 'cloudflare-d1', name: 'example-db', state: 'retired' }],
       }],
     }));
     assert.throws(

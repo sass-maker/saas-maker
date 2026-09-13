@@ -25,16 +25,6 @@ function snapshot(overrides = {}) {
         quotas: [{ metric: 'Workers requests', used: 10, limit: 100, unit: 'requests' }],
         evidenceGaps: [],
       },
-      {
-        provider: 'turso',
-        spendState: 'unlikely-on-current-evidence',
-        evidenceStatus: 'available',
-        confidence: 'high',
-        period: { label: 'July 2026', resetAt: '2026-08-01T00:00:00.000Z' },
-        costs: [],
-        quotas: [{ metric: 'Rows read', used: 20, limit: 100, unit: 'rows' }],
-        evidenceGaps: [],
-      },
     ],
     recommendations: [],
     ...overrides,
@@ -64,11 +54,11 @@ test('classifies 85 percent as warning and 95 percent as critical', () => {
   const criticalDir = mkdtempSync(join(tmpdir(), 'spend-critical-'));
   try {
     const warning = snapshot();
-    warning.providers[1].quotas[0].used = 85;
+    warning.providers[0].quotas[0].used = 85;
     assert.equal(recordSpendSnapshot(warning, { stateDir: warningDir }).snapshot.alert.severity, 'warning');
 
     const critical = snapshot({ runId: '2026-07-25-critical' });
-    critical.providers[1].quotas[0].used = 95;
+    critical.providers[0].quotas[0].used = 95;
     assert.equal(recordSpendSnapshot(critical, { stateDir: criticalDir }).snapshot.alert.severity, 'critical');
   } finally {
     rmSync(warningDir, { recursive: true, force: true });
