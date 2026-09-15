@@ -19,6 +19,7 @@ EXPOSED_FLEET_SKILLS=(
   code-cleanup
   clarity-fleet-health
   local-ports-cleanup
+  marketing
   media-acquisition
   mobile-task-control
   name-domains
