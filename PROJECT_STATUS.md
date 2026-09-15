@@ -25,6 +25,15 @@ Cockpit, CodeVetter, and App Health remain independent repositories.
 
 ## Timeline
 
+- **2026-09-15 — Marketing and decision handoff adapters (local):**
+  Added one Fleet marketing entrypoint with on-demand positioning, customer
+  research, copy and launch references. Existing mobile-task-control and
+  fleet-ops handoffs now link a concise, artifact-specific decision guide.
+  Upstream revision links preserve access to the broader collections without
+  installing their runtimes or duplicate skill sets. PRODUCT.md, design selection
+  and external-action permissions remain authoritative. Tracked in #109;
+  no application, dependency, connector, schedule or deployment added.
+
 - **2026-09-12 — Minimum shareable variants:**
   Verified nine existing public variants and the existing notarized Anchor Mac
   download. Added public projection support for five owner-approved standalone

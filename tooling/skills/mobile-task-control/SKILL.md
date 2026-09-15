@@ -17,6 +17,10 @@ Use OpenClaw's task ledger as the source of truth.
 
 The operator can use `/tasks`, `/subagents list`, and `/status` from Telegram.
 
+For a substantive completed artifact or pending approval, read
+[decision-ready handoffs](references/decision-cards.md). Keep simple status
+answers short; this does not install an Agency app or change task permissions.
+
 ## End-to-end control test
 
 When asked to test the complete mobile flow:
