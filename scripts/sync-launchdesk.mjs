@@ -10,10 +10,7 @@ import { fileURLToPath } from 'node:url';
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const fleetRoot = resolve(repositoryRoot, '..');
 const sourcePath = resolve(fleetRoot, 'launchdesk', 'data', 'catalog.json');
-const targetPath = resolve(
-  repositoryRoot,
-  'apps/showcase/src/data/launchdesk.json',
-);
+const targetPath = resolve(repositoryRoot, 'apps/showcase/src/data/launchdesk.json');
 
 if (!existsSync(sourcePath)) {
   console.error(`LaunchDesk catalog not found at ${sourcePath}; snapshot left unchanged.`);
@@ -54,8 +51,8 @@ const destinations = catalog.map((row) => ({
 
 writeFileSync(
   targetPath,
-  `${JSON.stringify({ snapshot: retrieved ?? null, destinations }, null, 2)}\n`,
+  `${JSON.stringify({ snapshot: retrieved ?? null, destinations }, null, 2)}\n`
 );
 console.log(
-  `Synced ${destinations.length} LaunchDesk destinations (snapshot ${retrieved ?? 'unknown'})`,
+  `Synced ${destinations.length} LaunchDesk destinations (snapshot ${retrieved ?? 'unknown'})`
 );
