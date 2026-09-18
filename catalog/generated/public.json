@@ -413,8 +413,7 @@
         "Next.js",
         "React",
         "Hono",
-        "Cloudflare",
-        "App Health"
+        "Cloudflare"
       ],
       "group": "current",
       "lifecycle": "active",
@@ -1099,7 +1098,6 @@
         "React",
         "shadcn/ui",
         "Cloudflare Workers",
-        "Analytics Engine",
         "Swift"
       ],
       "group": "current",
@@ -1206,7 +1204,7 @@
     },
     {
       "id": "what-it-takes-to-win",
-      "name": "Look Sideways",
+      "name": "Paths",
       "description": "Explore sourced career turning points with explicit survivorship and forecasting limits.",
       "makerNote": "I wanted to study the real advantages behind success and replace unhelpful comparison with evidence-based understanding.",
       "purposeContract": {
@@ -1378,36 +1376,40 @@
     {
       "id": "nomad-data-adventure",
       "name": "Nomad Data Adventure",
-      "description": "A small city-comparison experiment with fictional sample data, sortable trade-offs and a budget filter.",
-      "makerNote": "I am keeping Nomad Data Adventure active for now as a data exploration experiment.",
+      "description": "Nomad Atlas explores 1,374 terrestrial places with living-cost profiles, lifestyle filters, city comparisons and downloadable source data credited to Nomads.com.",
+      "makerNote": "A completed, shareable city-data experiment. Explore the saved dataset, compare places and download your shortlist.",
       "purposeContract": {
-        "purpose": "Explore city data through a bounded local experiment.",
-        "audience": "A viewer exploring a small city-comparison interface.",
-        "outcome": "Compare fictional city trade-offs and narrow a sample shortlist by budget.",
-        "mechanism": "A self-contained HTML page sorts and filters original fictional records in the browser.",
-        "proof": "Public synthetic demo, mobile layout, offline use, sorting, budget filtering and empty state verified on September 12.",
-        "nextAction": "Try the sample; the full collected dataset remains private pending redistribution rights."
+        "purpose": "Help people explore and compare places to live using a saved city dataset.",
+        "audience": "People comparing destinations by budget, connectivity and everyday life.",
+        "outcome": "Filter 1,374 terrestrial places, compare up to three across 22 metrics, and export matching records.",
+        "mechanism": "Static HTML, CSS, JavaScript and JSON served by Cloudflare Pages; all filtering and comparisons run in the browser.",
+        "proof": "Completed experiment verified at https://nomad.significanthobbies.com/ on September 13, commit e763b02. Six data tests, exact-commit CI and six release gates passed. Live search, comparison and downloads verified; 390px mobile layout checked. GitHub Pages disabled.",
+        "nextAction": "Share and use the completed explorer at nomad.significanthobbies.com; no active expansion or collection roadmap."
       },
       "kind": "experiment",
       "category": "experimental",
-      "form": "Browser experiment",
+      "form": "Static city explorer",
       "platforms": [
         "Web"
       ],
       "technologies": [
+        "Cloudflare Pages",
+        "JavaScript",
         "HTML",
-        "CSS",
-        "JavaScript"
+        "CSS"
       ],
-      "group": "current",
-      "lifecycle": "active",
+      "group": "past",
+      "lifecycle": "inactive",
       "shareable": true,
       "deployed": true,
-      "deploymentProviders": [],
-      "domains": [
-        "sarthakagrawal927.github.io"
+      "deploymentProviders": [
+        "Cloudflare Pages"
       ],
-      "url": "https://sarthakagrawal927.github.io/nomad-data-adventure/",
+      "domains": [
+        "nomad.significanthobbies.com",
+        "nomad-data-adventure.pages.dev"
+      ],
+      "url": "https://nomad.significanthobbies.com/",
       "repositoryUrl": "https://github.com/sarthakagrawal927/nomad-data-adventure",
       "roadmapUrl": "https://github.com/sarthakagrawal927/nomad-data-adventure/issues",
       "firstCommitAt": null,
@@ -1454,6 +1456,46 @@
       "roadmapUrl": "https://github.com/sarthakagrawal927/storagedaddy/issues",
       "firstCommitAt": "2026-09-13",
       "latestCommitAt": "2026-09-13"
+    },
+    {
+      "id": "launchdesk",
+      "name": "LaunchDesk",
+      "description": "A local-first launch workspace with a provenance-bearing catalog of 966 submission destinations, per-product queues and source-attributed metrics. Your workspace stays in your browser.",
+      "makerNote": "A launch-submission tracker built from attributed public source lists. It keeps reported metrics honest — unknown stays blank, never zero — and stores your queue in your own browser.",
+      "purposeContract": {
+        "purpose": "LaunchDesk helps builders choose where to submit a product and track each launch across destinations.",
+        "audience": "Indie makers and small teams launching software products.",
+        "outcome": "A filtered, queued and tracked set of real submission destinations instead of a stale copy-pasted list.",
+        "mechanism": "A deduplicated catalog of 966 prospects with source history, reported DR and link types, per-product queues and statuses; visitor state lives in browser storage, with an optional local Python/SQLite mode for live link checks.",
+        "proof": "Public site at launchdesk.significanthobbies.com, 36 passing unit tests, source attribution in data/sources, and explicit unknowns rather than invented metrics.",
+        "nextAction": "Open the directory, set your product brief, and queue a small set of fitting destinations."
+      },
+      "kind": "product",
+      "category": "utility",
+      "form": "Web app",
+      "platforms": [
+        "Web"
+      ],
+      "technologies": [
+        "Cloudflare Workers",
+        "Python",
+        "SQLite"
+      ],
+      "group": "current",
+      "lifecycle": "active",
+      "shareable": true,
+      "deployed": true,
+      "deploymentProviders": [
+        "Cloudflare Workers"
+      ],
+      "domains": [
+        "launchdesk.significanthobbies.com"
+      ],
+      "url": "https://launchdesk.significanthobbies.com/",
+      "repositoryUrl": "https://github.com/Significant-Hobbies/launchdesk",
+      "roadmapUrl": "https://github.com/Significant-Hobbies/launchdesk/issues",
+      "firstCommitAt": "2026-09-18",
+      "latestCommitAt": "2026-09-18"
     },
     {
       "id": "ai-badges",
@@ -1974,6 +2016,28 @@
       }
     },
     {
+      "id": "launchdesk",
+      "name": "LaunchDesk",
+      "description": "A local-first launch workspace with a provenance-bearing catalog of 966 submission destinations, per-product queues and source-attributed metrics. Your workspace stays in your browser.",
+      "url": "https://launchdesk.significanthobbies.com/",
+      "tier": "active",
+      "category": "utility",
+      "priority": "P2",
+      "spotlight": false,
+      "lifecycle": "active",
+      "shareable": true,
+      "maturity": "beta",
+      "pillarId": "visibility",
+      "purposeContract": {
+        "purpose": "LaunchDesk helps builders choose where to submit a product and track each launch across destinations.",
+        "audience": "Indie makers and small teams launching software products.",
+        "outcome": "A filtered, queued and tracked set of real submission destinations instead of a stale copy-pasted list.",
+        "mechanism": "A deduplicated catalog of 966 prospects with source history, reported DR and link types, per-product queues and statuses; visitor state lives in browser storage, with an optional local Python/SQLite mode for live link checks.",
+        "proof": "Public site at launchdesk.significanthobbies.com, 36 passing unit tests, source attribution in data/sources, and explicit unknowns rather than invented metrics.",
+        "nextAction": "Open the directory, set your product brief, and queue a small set of fitting destinations."
+      }
+    },
+    {
       "id": "live",
       "name": "Live",
       "description": "Explore hobbies and possibilities, build a personal bucket list, and save your progress on this device or in your account.",
@@ -1996,31 +2060,6 @@
         "mechanism": "The independent app combines a bucket list, goals, discovery, search, and suggestions around one private life catalogue.",
         "proof": "The product is independently owned, in active dogfooding, and retains its established data and authentication boundary.",
         "nextAction": "Open Live and use the catalogue, search, and suggestions to add or act on something you genuinely want to experience."
-      }
-    },
-    {
-      "id": "what-it-takes-to-win",
-      "name": "Look Sideways",
-      "description": "Explore sourced career turning points with explicit survivorship and forecasting limits.",
-      "url": "https://paths.significanthobbies.com",
-      "tier": "active",
-      "category": "media",
-      "priority": "P4",
-      "spotlight": false,
-      "lifecycle": "active",
-      "shareable": true,
-      "maturity": "experiment",
-      "changelogUrl": "https://paths.significanthobbies.com/changelog",
-      "repositoryUrl": "https://github.com/Significant-Hobbies/what-it-takes-to-win",
-      "roadmapUrl": "https://github.com/Significant-Hobbies/what-it-takes-to-win/issues",
-      "pillarId": "learn",
-      "purposeContract": {
-        "purpose": "Look Sideways shows why visible success cannot be reduced to a simple formula or a fair comparison with your own path.",
-        "audience": "Readers who turn another person’s visible outcome into a judgment about their own pace, ability, or worth.",
-        "outcome": "Replace flattened comparison with a more humane, evidence-bounded understanding of conditions, sequence, perseverance, and luck.",
-        "mechanism": "A guided research exhibit connects source-linked life events and early-breakthrough paths through what people brought, were handed, and were surrounded by.",
-        "proof": "The publication contains thousands of documented early-breakthrough paths, visible methodology, and ongoing source-linked profile coverage.",
-        "nextAction": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
       }
     },
     {
@@ -2076,25 +2115,50 @@
     {
       "id": "nomad-data-adventure",
       "name": "Nomad Data Adventure",
-      "description": "A small city-comparison experiment with fictional sample data, sortable trade-offs and a budget filter.",
-      "url": "https://sarthakagrawal927.github.io/nomad-data-adventure/",
-      "tier": "active",
+      "description": "Nomad Atlas explores 1,374 terrestrial places with living-cost profiles, lifestyle filters, city comparisons and downloadable source data credited to Nomads.com.",
+      "url": "https://nomad.significanthobbies.com/",
+      "tier": "secondary",
       "category": "experimental",
       "priority": "P2",
       "spotlight": false,
-      "lifecycle": "active",
+      "lifecycle": "inactive",
       "shareable": true,
       "maturity": "experiment",
       "repositoryUrl": "https://github.com/sarthakagrawal927/nomad-data-adventure",
       "roadmapUrl": "https://github.com/sarthakagrawal927/nomad-data-adventure/issues",
       "pillarId": "build",
       "purposeContract": {
-        "purpose": "Explore city data through a bounded local experiment.",
-        "audience": "A viewer exploring a small city-comparison interface.",
-        "outcome": "Compare fictional city trade-offs and narrow a sample shortlist by budget.",
-        "mechanism": "A self-contained HTML page sorts and filters original fictional records in the browser.",
-        "proof": "Public synthetic demo, mobile layout, offline use, sorting, budget filtering and empty state verified on September 12.",
-        "nextAction": "Try the sample; the full collected dataset remains private pending redistribution rights."
+        "purpose": "Help people explore and compare places to live using a saved city dataset.",
+        "audience": "People comparing destinations by budget, connectivity and everyday life.",
+        "outcome": "Filter 1,374 terrestrial places, compare up to three across 22 metrics, and export matching records.",
+        "mechanism": "Static HTML, CSS, JavaScript and JSON served by Cloudflare Pages; all filtering and comparisons run in the browser.",
+        "proof": "Completed experiment verified at https://nomad.significanthobbies.com/ on September 13, commit e763b02. Six data tests, exact-commit CI and six release gates passed. Live search, comparison and downloads verified; 390px mobile layout checked. GitHub Pages disabled.",
+        "nextAction": "Share and use the completed explorer at nomad.significanthobbies.com; no active expansion or collection roadmap."
+      }
+    },
+    {
+      "id": "what-it-takes-to-win",
+      "name": "Paths",
+      "description": "Explore sourced career turning points with explicit survivorship and forecasting limits.",
+      "url": "https://paths.significanthobbies.com",
+      "tier": "active",
+      "category": "media",
+      "priority": "P4",
+      "spotlight": false,
+      "lifecycle": "active",
+      "shareable": true,
+      "maturity": "experiment",
+      "changelogUrl": "https://paths.significanthobbies.com/changelog",
+      "repositoryUrl": "https://github.com/Significant-Hobbies/what-it-takes-to-win",
+      "roadmapUrl": "https://github.com/Significant-Hobbies/what-it-takes-to-win/issues",
+      "pillarId": "learn",
+      "purposeContract": {
+        "purpose": "Look Sideways shows why visible success cannot be reduced to a simple formula or a fair comparison with your own path.",
+        "audience": "Readers who turn another person’s visible outcome into a judgment about their own pace, ability, or worth.",
+        "outcome": "Replace flattened comparison with a more humane, evidence-bounded understanding of conditions, sequence, perseverance, and luck.",
+        "mechanism": "A guided research exhibit connects source-linked life events and early-breakthrough paths through what people brought, were handed, and were surrounded by.",
+        "proof": "The publication contains thousands of documented early-breakthrough paths, visible methodology, and ongoing source-linked profile coverage.",
+        "nextAction": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
       }
     },
     {
