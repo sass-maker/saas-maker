@@ -7,6 +7,7 @@
   "description": "Public SaaS Maker product directory built from Fleet's allowlisted projection.",
   "scripts": {
     "build:ideas": "python3 ideas/build.py",
+    "sync:launchdesk": "node ../../scripts/sync-launchdesk.mjs",
     "dev": "astro dev",
     "start": "astro dev",
     "build": "pnpm build:ideas && astro build",

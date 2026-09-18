@@ -337,6 +337,23 @@ const fixedRoutes: PublicRoute[] = [
     markdown: toolsMarkdown(),
   },
   {
+    id: 'launchdesk',
+    path: '/launchdesk',
+    description: 'LaunchDesk launch-destination workspace (vendored app)',
+    kind: 'static',
+    markdown: [
+      '# LaunchDesk',
+      '',
+      'A local-first launch workspace: a provenance-bearing catalog of 966 submission destinations with per-product queues, statuses, notes and follow-up dates.',
+      '',
+      'The app is a self-contained static bundle vendored from the `launchdesk` checkout. Visitor state lives in browser storage; there is no account and no server-side workspace.',
+      '',
+      `- App: ${SITE_URL}/launchdesk/`,
+      `- Source: https://github.com/Significant-Hobbies/launchdesk`,
+      '',
+    ].join('\n'),
+  },
+  {
     id: 'privacy',
     path: '/privacy',
     description: 'Privacy policy for the SaaS Maker product directory',

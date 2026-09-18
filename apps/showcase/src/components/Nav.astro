@@ -6,6 +6,7 @@ const isLearnings = Astro.url.pathname.startsWith('/learnings');
 const isProjects =
   Astro.url.pathname.startsWith('/projects') || Astro.url.pathname.startsWith('/p/');
 const isIdeas = Astro.url.pathname.startsWith('/ideas');
+const isLaunchDesk = Astro.url.pathname.startsWith('/launchdesk');
 const isTools = Astro.url.pathname.startsWith('/tools');
 ---
 <nav class="nav" aria-label="Primary navigation">
@@ -16,6 +17,7 @@ const isTools = Astro.url.pathname.startsWith('/tools');
   <div class="nav-links">
     <a href="/projects" aria-current={isProjects ? 'page' : undefined}>Products</a>
     <a href="/ideas" aria-current={isIdeas ? 'page' : undefined}>Ideas</a>
+    <a href="/launchdesk/" aria-current={isLaunchDesk ? 'page' : undefined}>LaunchDesk</a>
     <a href="/tools" aria-current={isTools ? 'page' : undefined}>Tools</a>
     <a href="/learnings" aria-current={isLearnings ? 'page' : undefined}>Learnings</a>
     <a

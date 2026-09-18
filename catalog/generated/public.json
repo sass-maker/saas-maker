@@ -1468,7 +1468,7 @@
         "outcome": "A filtered, queued and tracked set of real submission destinations instead of a stale copy-pasted list.",
         "mechanism": "A deduplicated catalog of 966 prospects with source history, reported DR and link types, per-product queues and statuses; visitor state lives in browser storage, with an optional local Python/SQLite mode for live link checks.",
         "proof": "Public site at launchdesk.significanthobbies.com, 36 passing unit tests, source attribution in data/sources, and explicit unknowns rather than invented metrics.",
-        "nextAction": "Open the directory, set your product brief, and queue a small set of fitting destinations."
+        "nextAction": "Open sassmaker.com/launchdesk, set your product brief, and queue a small set of fitting destinations."
       },
       "kind": "product",
       "category": "utility",
@@ -1477,7 +1477,7 @@
         "Web"
       ],
       "technologies": [
-        "Cloudflare Workers",
+        "Cloudflare Pages",
         "Python",
         "SQLite"
       ],
@@ -1486,12 +1486,12 @@
       "shareable": true,
       "deployed": true,
       "deploymentProviders": [
-        "Cloudflare Workers"
+        "Cloudflare Pages"
       ],
       "domains": [
-        "launchdesk.significanthobbies.com"
+        "sassmaker.com"
       ],
-      "url": "https://launchdesk.significanthobbies.com/",
+      "url": "https://sassmaker.com/launchdesk/",
       "repositoryUrl": "https://github.com/Significant-Hobbies/launchdesk",
       "roadmapUrl": "https://github.com/Significant-Hobbies/launchdesk/issues",
       "firstCommitAt": "2026-09-18",
@@ -2019,7 +2019,7 @@
       "id": "launchdesk",
       "name": "LaunchDesk",
       "description": "A local-first launch workspace with a provenance-bearing catalog of 966 submission destinations, per-product queues and source-attributed metrics. Your workspace stays in your browser.",
-      "url": "https://launchdesk.significanthobbies.com/",
+      "url": "https://sassmaker.com/launchdesk/",
       "tier": "active",
       "category": "utility",
       "priority": "P2",
@@ -2034,7 +2034,7 @@
         "outcome": "A filtered, queued and tracked set of real submission destinations instead of a stale copy-pasted list.",
         "mechanism": "A deduplicated catalog of 966 prospects with source history, reported DR and link types, per-product queues and statuses; visitor state lives in browser storage, with an optional local Python/SQLite mode for live link checks.",
         "proof": "Public site at launchdesk.significanthobbies.com, 36 passing unit tests, source attribution in data/sources, and explicit unknowns rather than invented metrics.",
-        "nextAction": "Open the directory, set your product brief, and queue a small set of fitting destinations."
+        "nextAction": "Open sassmaker.com/launchdesk, set your product brief, and queue a small set of fitting destinations."
       }
     },
     {
