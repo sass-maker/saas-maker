@@ -70,9 +70,9 @@ describe('verified public Fleet directory', () => {
     expect(
       catalog.directory.find((project: { id: string }) => project.id === 'nomad-data-adventure')
     ).toMatchObject({
-      lifecycle: 'active',
+      lifecycle: 'inactive',
       category: 'experimental',
-      url: 'https://sarthakagrawal927.github.io/nomad-data-adventure/',
+      url: 'https://nomad.significanthobbies.com/',
     });
     for (const heldId of [
       'psi-swarm',
