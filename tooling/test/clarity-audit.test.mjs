@@ -83,14 +83,13 @@ test('the shipped journey registry covers every wired surface with live-root evi
   assert.deepEqual(problems, []);
   assert.equal(valid, true);
   assert.equal(journeys.projects.length, 42);
-  assert.equal(journeys.projects.filter((entry) => entry.state === 'ready').length, 38);
-  assert.equal(journeys.projects.filter((entry) => entry.state === 'discovery-required').length, 4);
+  assert.equal(journeys.projects.filter((entry) => entry.state === 'ready').length, 42);
+  assert.equal(journeys.projects.filter((entry) => entry.state === 'discovery-required').length, 0);
 });
 
 test('journey registry rejects invented ready journeys and missing wired products', () => {
   const invented = structuredClone(journeys);
-  invented.projects.find((entry) => entry.id === 'drank').state = 'ready';
-  delete invented.projects.find((entry) => entry.id === 'drank').reason;
+  invented.projects.find((entry) => entry.id === 'drank').event.name = 'not a stable id';
   assert.match(validateJourneyRegistry(invented, shipped).problems.join('\n'), /event.name/u);
 
   const missing = structuredClone(journeys);
