@@ -50,20 +50,22 @@
     },
     {
       "id": "what-it-takes-to-win",
-      "decidedAt": "2026-09-05",
-      "decidedBy": "SAR-9",
-      "name": "Look Sideways",
+      "decidedAt": "2026-09-18",
+      "decidedBy": "SEO fleet sweep",
+      "name": "Paths",
       "retireNameToAlias": true,
       "canonicalUrl": "https://paths.significanthobbies.com",
       "authority": "deployed public surface",
       "evidence": [
-        "https://paths.significanthobbies.com returns <title>Look Sideways — The Path You Remember Is One of Many</title> (probed 2026-09-05)",
-        "what-it-takes-to-win/README.md opens '# Look Sideways'",
-        "commits e9fbf2c 'feat: refocus Look Sideways journey' and e19dd40 'Polish Look Sideways research surfaces'"
+        "https://paths.significanthobbies.com returns <title>Paths — Same age. Different starting lines.</title> (probed 2026-09-18)",
+        "JSON-LD WebSite node declares name \"Paths\"; og:site_name and data-name agree (probed 2026-09-18)",
+        "src/layouts/Base.astro renders every title through title.replaceAll(\"Look Sideways\", \"Paths\") — code comment: 'the shared shell owns the current brand'",
+        "commit c60f508 'feat: release Paths guided journey and turning-point stories' (2026-09-14) is the deliberate rename",
+        "/llms.txt and /api/ai still served 'Look Sideways' on 2026-09-18 — agent surfaces lagged the HTML rename"
       ],
-      "rationale": "Same shape as email-manager: a deliberate, committed, deployed rename that the registry and directory never followed. The repo directory name and GitHub repo slug stay what-it-takes-to-win — a repo slug is not a product name, and renaming the repo would break the repoUrl that currently agrees across all four sources.",
-      "note": "Found by this pass, not present in the SAR-7 handoff list.",
-      "externalWork": "None. SAR-7 confirmed that neither what-it-takes-to-win nor on-record appears anywhere in the recovered 2026-07-17 submission log — that payload was 23 products and included neither. There is no external listing asserting the retired name, so this rename carries no outreach work. Recorded 2026-09-05 so nobody goes looking for it."
+      "rationale": "Second rename in the same shape as 2026-09-05: a deliberate, committed, deployed rename that the registry and agent surfaces never followed. 'Paths' joins 'What It Takes to Win' and 'Look Sideways' in the name history; repo slug stays what-it-takes-to-win.",
+      "note": "Supersedes the 2026-09-05 Look Sideways decision. Caught by the agent-ready name_agreement floor at C.",
+      "externalWork": "None. No external listing asserted either retired name when checked 2026-09-05."
     },
     {
       "id": "saas-maker",
