@@ -5,9 +5,13 @@ export function isVisibilityProject(project) {
     project?.public?.listing === 'maintained' ||
     project?.metrics?.publicSite === true;
 
+  const lc =
+    project?.lifecycle && typeof project.lifecycle === 'object'
+      ? project.lifecycle.status
+      : project?.lifecycle;
+
   return (
-    project?.lifecycle === 'maintained' &&
-    project?.tier !== 'non-product' &&
+    (lc === 'primary' || lc === 'active') &&
     hasCanonicalDomain &&
     publicMetricSurface
   );
