@@ -47,8 +47,12 @@ describe('verified public Fleet directory', () => {
       form: 'macOS app',
       url: 'https://storagedaddy.significanthobbies.com/',
     });
-    expect(storagedaddy).not.toHaveProperty('repositoryUrl');
-    expect(storagedaddy).not.toHaveProperty('roadmapUrl');
+    // StorageDaddy is intentionally MIT open-source: its public repository
+    // link is shareable anatomy, not private state.
+    expect(storagedaddy).toMatchObject({
+      repositoryUrl: 'https://github.com/sarthakagrawal927/storagedaddy',
+      roadmapUrl: 'https://github.com/sarthakagrawal927/storagedaddy/issues',
+    });
     expect(storagedaddy).not.toHaveProperty('changelogUrl');
     expect(
       catalog.directory.find((project: { id: string }) => project.id === 'web-playables')
