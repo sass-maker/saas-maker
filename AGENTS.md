@@ -15,10 +15,10 @@ SaaS Maker owns only:
 - the feedback API, image upload, project keys, narrow auth, and private inbox.
 - public, credential-free reusable workflows, Fleet-owned skills, operator
   scripts, templates, and their capability directory under `tooling/`;
-- the vendored LaunchDesk static bundle under
-  `apps/showcase/public/launchdesk/`, served at `/launchdesk`. Its source lives
+- the LaunchDesk catalog section at `/launchdesk`, rendered natively from the
+  generated dataset `apps/showcase/src/data/launchdesk.json`. Its source lives
   in the sibling `launchdesk` checkout; refresh it with
-  `pnpm sync:launchdesk` in `apps/showcase`, not by hand-editing the copy.
+  `pnpm sync:launchdesk` in `apps/showcase`, not by hand-editing the JSON.
 
 SaaS Maker Tooling owns shared schedules, skills, and host automation. Site
 Health owns portfolio operations and reads the SaaS Maker catalog through a

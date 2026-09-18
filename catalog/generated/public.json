@@ -1463,12 +1463,12 @@
       "description": "A local-first launch workspace with a provenance-bearing catalog of 966 submission destinations, per-product queues and source-attributed metrics. Your workspace stays in your browser.",
       "makerNote": "A launch-submission tracker built from attributed public source lists. It keeps reported metrics honest — unknown stays blank, never zero — and stores your queue in your own browser.",
       "purposeContract": {
-        "purpose": "LaunchDesk helps builders choose where to submit a product and track each launch across destinations.",
-        "audience": "Indie makers and small teams launching software products.",
-        "outcome": "A filtered, queued and tracked set of real submission destinations instead of a stale copy-pasted list.",
-        "mechanism": "A deduplicated catalog of 966 prospects with source history, reported DR and link types, per-product queues and statuses; visitor state lives in browser storage, with an optional local Python/SQLite mode for live link checks.",
-        "proof": "Public site at launchdesk.significanthobbies.com, 36 passing unit tests, source attribution in data/sources, and explicit unknowns rather than invented metrics.",
-        "nextAction": "Open sassmaker.com/launchdesk, set your product brief, and queue a small set of fitting destinations."
+        "purpose": "Give makers a provenance-honest catalog of launch destinations with per-product submission tracking.",
+        "audience": "Builders planning a deliberate launch or backlink campaign.",
+        "outcome": "Filter and compare 966 destinations by category, reported DR, link type, price and recorded submission routes.",
+        "mechanism": "A static catalog page on the SaaS Maker site renders the attributed dataset with per-row source claims; the local Python/SQLite app adds per-product queues, statuses, notes and a link checker.",
+        "proof": "Live catalog at sassmaker.com/launchdesk rendering 966 destinations, 36 passing unit tests, source attribution in data/sources, and explicit unknowns rather than invented metrics.",
+        "nextAction": "Open sassmaker.com/launchdesk, filter to a fitting set, and check each row's source history before submitting."
       },
       "kind": "product",
       "category": "utility",
@@ -1477,6 +1477,7 @@
         "Web"
       ],
       "technologies": [
+        "Astro",
         "Cloudflare Pages",
         "Python",
         "SQLite"
@@ -1491,7 +1492,7 @@
       "domains": [
         "sassmaker.com"
       ],
-      "url": "https://sassmaker.com/launchdesk/",
+      "url": "https://sassmaker.com/launchdesk",
       "repositoryUrl": "https://github.com/Significant-Hobbies/launchdesk",
       "roadmapUrl": "https://github.com/Significant-Hobbies/launchdesk/issues",
       "firstCommitAt": "2026-09-18",
@@ -2018,8 +2019,8 @@
     {
       "id": "launchdesk",
       "name": "LaunchDesk",
-      "description": "A local-first launch workspace with a provenance-bearing catalog of 966 submission destinations, per-product queues and source-attributed metrics. Your workspace stays in your browser.",
-      "url": "https://sassmaker.com/launchdesk/",
+      "description": "A provenance-honest catalog of 966 launch and submission destinations — reported DR, link type, pricing and routes shown with their source claims, browsable at sassmaker.com/launchdesk. A local workspace app adds per-product queues and tracking.",
+      "url": "https://sassmaker.com/launchdesk",
       "tier": "active",
       "category": "utility",
       "priority": "P2",
@@ -2029,12 +2030,12 @@
       "maturity": "beta",
       "pillarId": "visibility",
       "purposeContract": {
-        "purpose": "LaunchDesk helps builders choose where to submit a product and track each launch across destinations.",
-        "audience": "Indie makers and small teams launching software products.",
-        "outcome": "A filtered, queued and tracked set of real submission destinations instead of a stale copy-pasted list.",
-        "mechanism": "A deduplicated catalog of 966 prospects with source history, reported DR and link types, per-product queues and statuses; visitor state lives in browser storage, with an optional local Python/SQLite mode for live link checks.",
-        "proof": "Public site at launchdesk.significanthobbies.com, 36 passing unit tests, source attribution in data/sources, and explicit unknowns rather than invented metrics.",
-        "nextAction": "Open sassmaker.com/launchdesk, set your product brief, and queue a small set of fitting destinations."
+        "purpose": "Give makers a provenance-honest catalog of launch destinations with per-product submission tracking.",
+        "audience": "Builders planning a deliberate launch or backlink campaign.",
+        "outcome": "Filter and compare 966 destinations by category, reported DR, link type, price and recorded submission routes.",
+        "mechanism": "A static catalog page on the SaaS Maker site renders the attributed dataset with per-row source claims; the local Python/SQLite app adds per-product queues, statuses, notes and a link checker.",
+        "proof": "Live catalog at sassmaker.com/launchdesk rendering 966 destinations, 36 passing unit tests, source attribution in data/sources, and explicit unknowns rather than invented metrics.",
+        "nextAction": "Open sassmaker.com/launchdesk, filter to a fitting set, and check each row's source history before submitting."
       }
     },
     {

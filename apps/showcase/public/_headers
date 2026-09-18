@@ -15,12 +15,6 @@
 /p/*
   Cache-Control: public, max-age=0, must-revalidate
 
-# LaunchDesk is a self-contained vendored app (from the launchdesk checkout).
-/launchdesk/*
-  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'self'; frame-ancestors 'none'
-  Referrer-Policy: no-referrer
-  Cache-Control: public, max-age=0, must-revalidate
-
 /projects.json
   Access-Control-Allow-Origin: *
   Cache-Control: public, max-age=60, s-maxage=300, stale-while-revalidate=86400

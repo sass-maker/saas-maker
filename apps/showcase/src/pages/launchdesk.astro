@@ -1,0 +1,1164 @@
+---
+/**
+ * THESIS: Launch destinations are working material, like the idea ledger — the value is
+ * comparing provenance and tradeoffs, not scrolling a wall of links.
+ * OWN-WORLD: Same workshop interior as /ideas; the catalog renders as an operator ledger.
+ * STORY: See the honest headline numbers, narrow by route/link/category, read each row's
+ * source history before trusting its metrics.
+ * FIRST VIEWPORT: Studio navigation, identity bay with counts, then the controls and ledger.
+ * FORM: Operator ledger within the established workshop wall; no new visual world.
+ */
+import Footer from '../components/Footer.astro';
+import Nav from '../components/Nav.astro';
+import launchdeskData from '../data/launchdesk.json';
+import Layout from '../layouts/Layout.astro';
+
+type Claim = { source: string | null; dr: number | null; link: string | null; pricing: string | null };
+type Destination = {
+  name: string;
+  domain: string;
+  website: string;
+  submissionUrl: string | null;
+  category: string;
+  pricing: string;
+  dr: number | null;
+  link: string;
+  eligibility: string | null;
+  flags: string[];
+  route: string;
+  provider: string | null;
+  sourceUrl: string | null;
+  retrieved: string | null;
+  measured: string | null;
+  quarantined: boolean;
+  claims: Claim[];
+};
+
+const allDestinations = launchdeskData.destinations as Destination[];
+const destinations = allDestinations.filter((row) => !row.quarantined);
+const quarantined = allDestinations.filter((row) => row.quarantined);
+const categories = [...new Set(destinations.map((row) => row.category))].sort();
+const routeCount = destinations.filter((row) => row.submissionUrl).length;
+const followCount = destinations.filter((row) => row.link === 'follow').length;
+const drReportedCount = destinations.filter((row) => row.dr != null).length;
+
+const LINK_LABELS: Record<string, string> = {
+  follow: 'follow',
+  nofollow: 'nofollow',
+  unknown: 'unreported',
+};
+
+const PRICING_LABELS: Record<string, string> = {
+  free: 'free',
+  freemium: 'freemium',
+  paid: 'paid',
+  unknown: 'unreported',
+};
+---
+
+<Layout
+  title={`LaunchDesk — ${destinations.length} launch destinations with source-attributed metrics`}
+  description={`Browse ${destinations.length} launch and submission destinations with reported DR, link type, pricing, and source history. Every metric shows its provenance.`}
+>
+  <div class="workshop-world interior-world launchdesk-world">
+    <Nav />
+    <main id="main-content" class="launchdesk-page">
+    <header class="launchdesk-hero">
+      <div class="launchdesk-identity">
+        <p class="launchdesk-kicker">SaaS Maker / LaunchDesk</p>
+        <h1>Your next place to launch.</h1>
+        <p>
+          {destinations.length} submission destinations with their metrics left on the source's
+          name tag. DR is reported, not measured — read the history before you trust a row.
+        </p>
+      </div>
+      <dl class="launchdesk-summary" aria-label="Catalog summary">
+        <div>
+          <dt>Destinations</dt>
+          <dd>{destinations.length}</dd>
+        </div>
+        <div>
+          <dt>Submission routes</dt>
+          <dd>{routeCount}</dd>
+        </div>
+        <div>
+          <dt>Reported follow</dt>
+          <dd>{followCount}</dd>
+        </div>
+      </dl>
+    </header>
+
+    <section class="launchdesk-workbench" aria-labelledby="launchdesk-catalog-title">
+      <div class="launchdesk-intro">
+        <div>
+          <p class="launchdesk-kicker">Destination workbench</p>
+          <h2 id="launchdesk-catalog-title">Narrow by fit, verify the paper trail.</h2>
+        </div>
+        <details>
+          <summary>How to read the numbers</summary>
+          <p>
+            <strong>Reported DR</strong> is what a source claimed, not a fresh measurement.
+            Blank means the source didn't report one — it never means zero.
+          </p>
+          <p>
+            <strong>Route</strong> is a submission URL the source published. Rows marked
+            "research needed" still merit a look — the route just isn't recorded yet.
+          </p>
+          <p>
+            When sources disagree on DR or link type, every claim is listed under
+            the row's source history. Snapshot: {launchdeskData.snapshot}.
+          </p>
+        </details>
+      </div>
+
+      <form class="launchdesk-controls" data-ld-controls>
+        <label class="launchdesk-search">
+          <span>Search destinations</span>
+          <input
+            type="search"
+            name="query"
+            placeholder="Name or domain…"
+            autocomplete="off"
+            data-ld-query
+          />
+        </label>
+
+        <label>
+          <span>Category</span>
+          <select name="category" data-ld-category>
+            <option value="">All categories</option>
+            {categories.map((category) => <option value={category}>{category}</option>)}
+          </select>
+        </label>
+
+        <label>
+          <span>Link type</span>
+          <select name="link" data-ld-link>
+            <option value="">Any link</option>
+            <option value="follow">follow</option>
+            <option value="nofollow">nofollow</option>
+            <option value="unknown">unreported</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Price</span>
+          <select name="pricing" data-ld-pricing>
+            <option value="">Any price</option>
+            <option value="free">free</option>
+            <option value="freemium">freemium</option>
+            <option value="paid">paid</option>
+            <option value="unknown">unreported</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Min reported DR</span>
+          <input type="number" name="dr" min="0" max="100" value="0" step="5" data-ld-dr />
+        </label>
+
+        <label class="launchdesk-sort-mobile">
+          <span>Sort</span>
+          <select name="sort" data-ld-sort>
+            <option value="dr:desc">Reported DR, high to low</option>
+            <option value="name:asc">Name, A–Z</option>
+            <option value="category:asc">Category, A–Z</option>
+            <option value="link:asc">Link type, A–Z</option>
+          </select>
+        </label>
+
+        <label class="launchdesk-route-toggle">
+          <input type="checkbox" name="route" data-ld-route />
+          <span>Has submission route</span>
+        </label>
+
+        <div class="launchdesk-result-line">
+          <output data-ld-count aria-live="polite">Showing all {destinations.length} destinations</output>
+          <button type="reset" data-ld-reset>Reset</button>
+        </div>
+      </form>
+
+      <div class="launchdesk-table-wrap">
+        <table class="launchdesk-table">
+          <thead>
+            <tr>
+              <th scope="col" data-sort-heading="dr" aria-sort="descending">
+                <button type="button" data-sort="dr">Reported DR</button>
+              </th>
+              <th scope="col" data-sort-heading="name">
+                <button type="button" data-sort="name">Destination</button>
+              </th>
+              <th scope="col" data-sort-heading="link">
+                <button type="button" data-sort="link">Link</button>
+              </th>
+              <th scope="col" data-sort-heading="category">
+                <button type="button" data-sort="category">Category</button>
+              </th>
+              <th scope="col">Price</th>
+              <th scope="col">Route</th>
+            </tr>
+          </thead>
+          <tbody data-ld-body>
+            {destinations.map((row) => (
+              <tr
+                data-ld-row
+                data-dr={row.dr ?? -1}
+                data-name={`${row.name} ${row.domain}`.toLowerCase()}
+                data-namekey={row.name.toLowerCase()}
+                data-link={row.link}
+                data-category={row.category}
+                data-pricing={row.pricing}
+                data-route={row.submissionUrl ? '1' : '0'}
+              >
+                <td class:list={['ld-dr', { 'ld-dr--reported': row.dr != null }]} data-label="Reported DR">
+                  {row.dr ?? <span class="ld-blank" title="Not reported by the source">—</span>}
+                </td>
+                <td class="ld-destination" data-label="Destination">
+                  <details class="ld-disclosure" data-ld-disclosure>
+                    <summary>
+                      <span class="ld-name">{row.name}</span>
+                      <span class="ld-domain">{row.domain}</span>
+                    </summary>
+                    <div class="ld-detail">
+                      <p>
+                        <a href={row.website} target="_blank" rel="noopener noreferrer">{row.website}</a>
+                      </p>
+                      {row.eligibility && <p>{row.eligibility}</p>}
+                      {row.provider && <p class="ld-provider">Metric provenance: {row.provider}</p>}
+                      {row.claims.length > 1 && (
+                        <p class="ld-provider">
+                          Sources disagree — {row.claims.length} claims on file.
+                        </p>
+                      )}
+                      <ul class="ld-claims">
+                        {row.claims.map((claim) => (
+                          <li>
+                            <code>{claim.source}</code>
+                            <span>
+                              {claim.dr != null ? 'DR ' + claim.dr : 'DR unreported'} · {claim.link} · {claim.pricing}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                      <p class="ld-provider">
+                        Retrieved {row.retrieved}
+                        {row.measured ? ` · measured ${row.measured}` : ' · never independently measured'}
+                      </p>
+                    </div>
+                  </details>
+                </td>
+                <td class="ld-tag" data-label="Link">
+                  <span class={`ld-pill ld-pill--${row.link}`}>{LINK_LABELS[row.link] ?? row.link}</span>
+                </td>
+                <td class="ld-tag" data-label="Category">{row.category}</td>
+                <td class="ld-tag" data-label="Price">
+                  <span class={`ld-pill ld-pill--price-${row.pricing}`}>{PRICING_LABELS[row.pricing] ?? row.pricing}</span>
+                </td>
+                <td class="ld-route" data-label="Route">
+                  {row.submissionUrl ? (
+                    <a href={row.submissionUrl} target="_blank" rel="noopener noreferrer" class="ld-route-link">Submit ↗</a>
+                  ) : (
+                    <span class="ld-blank">research needed</span>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="launchdesk-empty" data-ld-empty hidden>
+        <strong>No destinations match this cut.</strong>
+        <p>Reset the controls to return to the complete ledger.</p>
+        <button type="button" data-ld-empty-reset>Show all destinations</button>
+      </div>
+
+      <details class="launchdesk-quarantined">
+        <summary>{quarantined.length} rows held back for review</summary>
+        <p>
+          These source rows looked like non-destinations or carried suspect data. They stay
+          in the audit record but out of the active catalog.
+        </p>
+        <ul>
+          {quarantined.map((row) => (
+            <li>
+              <span class="ld-name">{row.name}</span>
+              <span class="ld-domain">{row.domain}</span>
+              <small>{row.flags.join(' · ')}</small>
+            </li>
+          ))}
+        </ul>
+      </details>
+    </section>
+
+    <aside class="launchdesk-method" aria-labelledby="launchdesk-method-title">
+      <div>
+        <p class="launchdesk-kicker">Provenance</p>
+        <h2 id="launchdesk-method-title">Every metric keeps its source's name.</h2>
+      </div>
+      <div>
+        <p>
+          The catalog was assembled {launchdeskData.snapshot} from {destinations.length + quarantined.length} deduplicated
+          source-backed records. Metrics are source-reported and may disagree between providers —
+          the raw claims ship with each row rather than being smoothed away. The full local app
+          adds per-product queues, submission tracking, and a link checker.
+        </p>
+        <a href="/launchdesk.json">Open the complete JSON dataset <span aria-hidden="true">→</span></a>
+        <a href="https://github.com/Significant-Hobbies/launchdesk" target="_blank" rel="noopener noreferrer">
+          Source repository and local workspace app <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </aside>
+    </main>
+    <Footer />
+  </div>
+</Layout>
+
+<script>
+  const controls = document.querySelector('[data-ld-controls]');
+  const body = document.querySelector('[data-ld-body]');
+  const rows = Array.from(document.querySelectorAll('[data-ld-row]'));
+  const query = document.querySelector('[data-ld-query]');
+  const category = document.querySelector('[data-ld-category]');
+  const link = document.querySelector('[data-ld-link]');
+  const pricing = document.querySelector('[data-ld-pricing]');
+  const minimumDr = document.querySelector('[data-ld-dr]');
+  const routeOnly = document.querySelector('[data-ld-route]');
+  const mobileSort = document.querySelector('[data-ld-sort]');
+  const count = document.querySelector('[data-ld-count]');
+  const empty = document.querySelector('[data-ld-empty]');
+  const disclosures = Array.from(document.querySelectorAll('[data-ld-disclosure]'));
+  const mobileLayout = window.matchMedia('(max-width: 47.99rem)');
+  let sortKey = 'dr';
+  let sortDirection = 'desc';
+
+  function syncDisclosures() {
+    for (const disclosure of disclosures) {
+      if (mobileLayout.matches) disclosure.removeAttribute('open');
+    }
+  }
+
+  function valueFor(row, key) {
+    if (key === 'dr') return Number(row.dataset.dr);
+    if (key === 'name') return row.dataset.namekey ?? '';
+    return row.dataset[key] ?? '';
+  }
+
+  function applyDestinations() {
+    if (!body || !count || !empty) return;
+    const search = query?.value.trim().toLowerCase() ?? '';
+    const minimumDrValue = Number(minimumDr?.value ?? 0);
+
+    const ordered = rows.toSorted((left, right) => {
+      const leftValue = valueFor(left, sortKey);
+      const rightValue = valueFor(right, sortKey);
+      const comparison =
+        typeof leftValue === 'number'
+          ? leftValue - rightValue
+          : String(leftValue).localeCompare(String(rightValue));
+      return sortDirection === 'desc' ? -comparison : comparison;
+    });
+
+    let visibleCount = 0;
+    for (const row of ordered) {
+      const matches =
+        (!routeOnly?.checked || row.dataset.route === '1') &&
+        (!category?.value || row.dataset.category === category.value) &&
+        (!link?.value || row.dataset.link === link.value) &&
+        (!pricing?.value || row.dataset.pricing === pricing.value) &&
+        Number(row.dataset.dr) >= minimumDrValue &&
+        (!search || row.dataset.name?.includes(search));
+      row.hidden = !matches;
+      if (matches) visibleCount += 1;
+      body.append(row);
+    }
+
+    count.textContent =
+      visibleCount === rows.length
+        ? `Showing all ${rows.length} destinations`
+        : `Showing ${visibleCount} of ${rows.length} destinations`;
+    empty.hidden = visibleCount > 0;
+
+    document.querySelectorAll('[data-sort-heading]').forEach((heading) => {
+      if (heading.dataset.sortHeading === sortKey) {
+        heading.setAttribute('aria-sort', sortDirection === 'desc' ? 'descending' : 'ascending');
+      } else {
+        heading.removeAttribute('aria-sort');
+      }
+    });
+  }
+
+  controls?.addEventListener('input', applyDestinations);
+  controls?.addEventListener('change', applyDestinations);
+  controls?.addEventListener('reset', () => {
+    sortKey = 'dr';
+    sortDirection = 'desc';
+    requestAnimationFrame(applyDestinations);
+  });
+
+  document.querySelectorAll('[data-sort]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const nextKey = button.dataset.sort;
+      if (!nextKey) return;
+      if (nextKey === sortKey) sortDirection = sortDirection === 'desc' ? 'asc' : 'desc';
+      else {
+        sortKey = nextKey;
+        sortDirection = nextKey === 'dr' ? 'desc' : 'asc';
+      }
+      if (mobileSort) mobileSort.value = `${sortKey}:${sortDirection}`;
+      applyDestinations();
+    });
+  });
+
+  mobileSort?.addEventListener('change', () => {
+    [sortKey, sortDirection] = mobileSort.value.split(':');
+    applyDestinations();
+  });
+
+  document.querySelector('[data-ld-empty-reset]')?.addEventListener('click', () => {
+    controls?.reset();
+    sortKey = 'dr';
+    sortDirection = 'desc';
+    applyDestinations();
+    query?.focus();
+  });
+
+  syncDisclosures();
+  mobileLayout.addEventListener('change', syncDisclosures);
+</script>
+
+<style>
+  .launchdesk-page {
+    width: var(--workshop-frame-width);
+    margin-inline: auto;
+    padding-bottom: clamp(5rem, 9vw, 8rem);
+  }
+
+  .launchdesk-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(19rem, 0.7fr);
+    gap: 0.375rem;
+    padding: 0.375rem;
+    padding-top: 0;
+    background: var(--workshop-steel);
+  }
+
+  .launchdesk-identity,
+  .launchdesk-summary {
+    border: 0;
+    background: var(--surface);
+  }
+
+  .launchdesk-identity {
+    padding: clamp(3rem, 6vw, 6rem);
+  }
+
+  .launchdesk-kicker {
+    color: var(--copper-hi);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .launchdesk-identity h1 {
+    max-width: 10ch;
+    margin-top: 1.25rem;
+    font-size: clamp(3.5rem, 7vw, 6.5rem);
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    line-height: 0.96;
+    text-wrap: balance;
+  }
+
+  .launchdesk-identity > p:last-child {
+    max-width: 42rem;
+    margin-top: clamp(1.5rem, 3vw, 2.5rem);
+    color: var(--ink-soft);
+    font-size: clamp(1rem, 1.7vw, 1.25rem);
+  }
+
+  .launchdesk-summary {
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    list-style: none;
+  }
+
+  .launchdesk-summary > div {
+    min-height: 8.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1.5rem;
+    border-bottom: 0.375rem solid var(--workshop-steel);
+  }
+
+  .launchdesk-summary > div:nth-child(2) {
+    background: var(--workshop-seeded);
+  }
+
+  .launchdesk-summary > div:last-child {
+    border-bottom: 0;
+    background: var(--workshop-amber);
+    color: #130d08;
+  }
+
+  .launchdesk-summary dt {
+    color: var(--ink-muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .launchdesk-summary > div:last-child dt {
+    color: #130d08;
+  }
+
+  .launchdesk-summary dd {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+
+  .launchdesk-workbench {
+    width: min(86rem, calc(100% - 3rem));
+    margin-inline: auto;
+    padding-top: clamp(4rem, 8vw, 7rem);
+  }
+
+  .launchdesk-intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.55fr);
+    gap: clamp(2rem, 6vw, 6rem);
+    align-items: end;
+    margin-bottom: 2rem;
+  }
+
+  .launchdesk-intro h2,
+  .launchdesk-method h2 {
+    max-width: 16ch;
+    margin-top: 0.75rem;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    line-height: 1.02;
+    text-wrap: balance;
+  }
+
+  .launchdesk-intro details {
+    border-block: 1px solid var(--line-strong);
+  }
+
+  .launchdesk-intro summary {
+    min-height: 3.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    color: var(--ink-soft);
+    font-weight: 600;
+  }
+
+  .launchdesk-intro summary::after {
+    content: '+';
+    color: var(--copper-hi);
+    font-size: 1.25rem;
+  }
+
+  .launchdesk-intro details[open] summary::after {
+    content: '−';
+  }
+
+  .launchdesk-intro details p {
+    margin-bottom: 1rem;
+    color: var(--ink-muted);
+    font-size: 0.9rem;
+  }
+
+  .launchdesk-controls {
+    display: grid;
+    grid-template-columns: minmax(16rem, 1.6fr) repeat(4, minmax(8rem, 0.7fr));
+    border: 1px solid var(--line-strong);
+    background: var(--surface);
+  }
+
+  .launchdesk-controls label {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    padding: 1rem;
+    border-right: 1px solid var(--line);
+  }
+
+  .launchdesk-controls label > span {
+    color: var(--ink-muted);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+
+  .launchdesk-controls input,
+  .launchdesk-controls select,
+  .launchdesk-controls button,
+  .launchdesk-empty button {
+    min-height: 2.75rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: inherit;
+  }
+
+  .launchdesk-controls input,
+  .launchdesk-controls select {
+    width: 100%;
+    padding: 0.65rem 0.75rem;
+  }
+
+  .launchdesk-controls input::placeholder {
+    color: var(--ink-muted);
+  }
+
+  .launchdesk-route-toggle {
+    grid-column: 1 / 3;
+    flex-direction: row !important;
+    align-items: center;
+    gap: 0.75rem !important;
+    cursor: pointer;
+  }
+
+  .launchdesk-route-toggle input {
+    width: 1.25rem;
+    min-height: 1.25rem;
+    accent-color: var(--copper-hi);
+  }
+
+  .launchdesk-route-toggle span {
+    color: var(--ink-soft) !important;
+    font-size: 0.8rem !important;
+  }
+
+  .launchdesk-sort-mobile {
+    display: none !important;
+  }
+
+  .launchdesk-result-line {
+    grid-column: 3 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1.25rem;
+    padding: 0.75rem 1rem;
+    color: var(--ink-muted);
+    font-size: 0.82rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .launchdesk-result-line button,
+  .launchdesk-empty button {
+    padding: 0.55rem 0.9rem;
+    cursor: pointer;
+    color: var(--copper-hi);
+    font-weight: 600;
+  }
+
+  .launchdesk-table-wrap {
+    overflow-x: auto;
+    border-inline: 1px solid var(--line-strong);
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  .launchdesk-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+
+  .launchdesk-table th,
+  .launchdesk-table td {
+    padding: 0.85rem 1rem;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+
+  .launchdesk-table th:last-child,
+  .launchdesk-table td:last-child {
+    border-right: 0;
+  }
+
+  .launchdesk-table th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: var(--bg);
+    text-align: left;
+  }
+
+  .launchdesk-table th button {
+    min-height: 2.75rem;
+    border: 0;
+    background: transparent;
+    color: var(--ink-muted);
+    font: inherit;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .launchdesk-table th[aria-sort] button {
+    color: var(--copper-hi);
+  }
+
+  .launchdesk-table th[aria-sort='ascending'] button::after {
+    content: ' ↑';
+  }
+
+  .launchdesk-table th[aria-sort='descending'] button::after {
+    content: ' ↓';
+  }
+
+  .launchdesk-table tbody tr {
+    background: var(--bg);
+    transition: background 160ms ease;
+  }
+
+  .launchdesk-table tbody tr[hidden] {
+    display: none !important;
+  }
+
+  .launchdesk-table tbody tr:hover {
+    background: var(--surface);
+  }
+
+  .ld-dr {
+    width: 6rem;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-soft);
+    font-weight: 600;
+  }
+
+  .ld-dr--reported {
+    background: var(--workshop-seeded);
+  }
+
+  .ld-blank {
+    color: var(--ink-muted);
+    font-weight: 400;
+  }
+
+  .ld-destination {
+    min-width: 20rem;
+    max-width: 34rem;
+  }
+
+  .ld-disclosure > summary {
+    min-height: 2.75rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .ld-disclosure > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .ld-name {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .ld-domain {
+    display: block;
+    color: var(--ink-muted);
+    font-size: 0.78rem;
+  }
+
+  .ld-disclosure[open] > summary .ld-name::after {
+    content: ' −';
+    color: var(--copper-hi);
+    font-weight: 400;
+  }
+
+  .ld-disclosure > summary .ld-name::after {
+    content: ' +';
+    color: var(--copper-hi);
+    font-weight: 400;
+  }
+
+  .ld-detail {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--line);
+    color: var(--ink-muted);
+    font-size: 0.82rem;
+    line-height: 1.6;
+  }
+
+  .ld-detail a {
+    color: var(--copper-hi);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+    word-break: break-all;
+  }
+
+  .ld-provider {
+    color: var(--ink-muted);
+  }
+
+  .ld-claims {
+    margin: 0.5rem 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .ld-claims li {
+    display: flex;
+    gap: 0.75rem;
+    align-items: baseline;
+    padding: 0.3rem 0;
+    border-bottom: 1px dashed var(--line);
+  }
+
+  .ld-claims li:last-child {
+    border-bottom: 0;
+  }
+
+  .ld-claims code {
+    min-width: 8rem;
+    padding: 0.08rem 0.3rem;
+    background: var(--surface);
+    color: var(--ink);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.85em;
+  }
+
+  .ld-tag {
+    width: 8rem;
+    color: var(--ink-soft);
+  }
+
+  .ld-pill {
+    display: inline-block;
+    padding: 0.15rem 0.55rem;
+    border: 1px solid var(--line-strong);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+  }
+
+  .ld-pill--follow {
+    background: var(--workshop-seeded);
+    color: var(--workshop-ink);
+  }
+
+  .ld-pill--price-free {
+    background: var(--workshop-seeded);
+    color: var(--workshop-ink);
+  }
+
+  .ld-route {
+    width: 9rem;
+  }
+
+  .ld-route-link {
+    color: var(--copper-hi);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+
+  .launchdesk-empty {
+    padding: 4rem 1.5rem;
+    border: 1px solid var(--line-strong);
+    border-top: 0;
+    text-align: center;
+  }
+
+  .launchdesk-empty p {
+    margin: 0.5rem 0 1.25rem;
+    color: var(--ink-muted);
+  }
+
+  .launchdesk-quarantined {
+    margin-top: 2rem;
+    border-block: 1px solid var(--line-strong);
+  }
+
+  .launchdesk-quarantined summary {
+    min-height: 3.5rem;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: var(--ink-soft);
+    font-weight: 600;
+  }
+
+  .launchdesk-quarantined > p {
+    max-width: 46rem;
+    margin-bottom: 1rem;
+    color: var(--ink-muted);
+    font-size: 0.9rem;
+  }
+
+  .launchdesk-quarantined ul {
+    margin: 0 0 1.5rem;
+    padding: 0;
+    list-style: none;
+    columns: 2;
+    column-gap: 2rem;
+  }
+
+  .launchdesk-quarantined li {
+    padding: 0.4rem 0;
+    border-bottom: 1px dashed var(--line);
+    font-size: 0.85rem;
+  }
+
+  .launchdesk-quarantined li small {
+    display: block;
+    color: var(--ink-muted);
+    font-size: 0.75rem;
+  }
+
+  .launchdesk-method {
+    width: min(86rem, calc(100% - 3rem));
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.7fr);
+    gap: clamp(2rem, 7vw, 7rem);
+    margin: clamp(4rem, 9vw, 8rem) auto 0;
+    padding: clamp(2rem, 5vw, 4rem);
+    border: 1px solid var(--line-strong);
+    background: var(--surface);
+  }
+
+  .launchdesk-method > div:last-child {
+    align-self: end;
+  }
+
+  .launchdesk-method > div:last-child p {
+    color: var(--ink-muted);
+  }
+
+  .launchdesk-method a {
+    min-height: 2.75rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    margin-right: 1.5rem;
+    color: var(--copper-hi);
+    font-weight: 600;
+  }
+
+  @media (max-width: 62rem) {
+    .launchdesk-controls {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .launchdesk-search {
+      grid-column: 1 / -1;
+    }
+
+    .launchdesk-route-toggle {
+      grid-column: 1 / 2;
+    }
+
+    .launchdesk-result-line {
+      grid-column: 2 / -1;
+    }
+  }
+
+  @media (max-width: 47.99rem) {
+    .launchdesk-page {
+      width: 100%;
+    }
+
+    .launchdesk-hero,
+    .launchdesk-intro,
+    .launchdesk-method {
+      grid-template-columns: 1fr;
+    }
+
+    .launchdesk-hero {
+      gap: 0.375rem;
+    }
+
+    .launchdesk-identity h1 {
+      margin-top: 1rem;
+      font-size: clamp(2.75rem, 13vw, 4.5rem);
+    }
+
+    .launchdesk-identity {
+      padding: 2.25rem 1.5rem;
+    }
+
+    .launchdesk-identity > p:last-child {
+      margin-top: 1.25rem;
+    }
+
+    .launchdesk-workbench {
+      padding-top: 2.5rem;
+    }
+
+    .launchdesk-intro {
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .launchdesk-summary {
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: 1fr;
+    }
+
+    .launchdesk-summary > div {
+      min-height: 7rem;
+      padding: 1rem;
+      border-right: 0.375rem solid var(--workshop-steel);
+      border-bottom: 0;
+    }
+
+    .launchdesk-summary > div:last-child {
+      border-right: 0;
+    }
+
+    .launchdesk-controls {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .launchdesk-search,
+    .launchdesk-sort-mobile,
+    .launchdesk-result-line {
+      grid-column: 1 / -1;
+    }
+
+    .launchdesk-sort-mobile {
+      display: flex !important;
+    }
+
+    .launchdesk-route-toggle {
+      grid-column: 1 / -1;
+    }
+
+    .launchdesk-result-line {
+      justify-content: space-between;
+    }
+
+    .launchdesk-table-wrap {
+      overflow: visible;
+      border-inline: 0;
+    }
+
+    .launchdesk-table,
+    .launchdesk-table tbody {
+      display: block;
+    }
+
+    .launchdesk-table thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .launchdesk-table tbody {
+      padding-top: 0.75rem;
+    }
+
+    .launchdesk-table tbody tr {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-bottom: 0.75rem;
+      border: 1px solid var(--line-strong);
+    }
+
+    .launchdesk-table tbody tr:hover {
+      background: var(--bg);
+    }
+
+    .launchdesk-table td,
+    .ld-dr,
+    .ld-tag,
+    .ld-route,
+    .ld-destination {
+      width: auto;
+      min-width: 0;
+      max-width: none;
+      padding: 0.8rem;
+      border-right: 1px solid var(--line);
+      text-align: left;
+    }
+
+    .launchdesk-table td::before {
+      content: attr(data-label);
+      display: block;
+      margin-bottom: 0.25rem;
+      color: var(--ink-muted);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    .ld-destination {
+      grid-column: 1 / -1;
+      grid-row: 1;
+      border-right: 0 !important;
+      border-bottom: 1px solid var(--line);
+      font-size: 0.98rem;
+    }
+
+    .launchdesk-quarantined ul {
+      columns: 1;
+    }
+
+    .launchdesk-method {
+      padding: 1.5rem;
+    }
+
+    .launchdesk-workbench,
+    .launchdesk-method {
+      width: min(100% - 1.5rem, 86rem);
+    }
+  }
+
+  @media (max-width: 31rem) {
+    .launchdesk-controls {
+      grid-template-columns: 1fr;
+    }
+
+    .launchdesk-controls label,
+    .launchdesk-search,
+    .launchdesk-route-toggle,
+    .launchdesk-sort-mobile,
+    .launchdesk-result-line {
+      grid-column: 1;
+    }
+
+    .launchdesk-summary dd {
+      font-size: 1.75rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .launchdesk-table tbody tr {
+      transition: none;
+    }
+  }
+</style>
