@@ -1,0 +1,4 @@
+.env.local
+config.yaml
+state/jules.sqlite*
+__pycache__/

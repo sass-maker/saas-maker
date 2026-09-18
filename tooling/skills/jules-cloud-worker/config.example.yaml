@@ -1,0 +1,30 @@
+# jules-cloud-worker — example config.
+# Copy to state/config.yaml. Everything here is optional; the CLI runs on
+# env vars alone. Secrets NEVER live in this file — use .env.local / Keychain /
+# 1Password refs (see SKILL.md "Secrets").
+
+accounts:
+  A: {}   # key comes from JULES_API_KEY_A
+  B: {}   # key comes from JULES_API_KEY_B
+  C: {}   # key comes from JULES_API_KEY_C
+
+# Ultra plan limits. The API does not report remaining quota; the local
+# ledger tracks only sessions this skill created.
+limits:
+  daily_tasks_per_account: 300
+  concurrent_per_account: 60
+
+guardrails:
+  max_tasks_per_repo_per_sweep: 3
+  max_outstanding_unreviewed_prs: 20
+  dedupe_window_days: 14
+
+# Default branch overrides per repo (owner/name) — used when a source's
+# recorded default branch is wrong or missing.
+repos:
+  # sarthak/codevetter:
+  #   branch: main
+
+defaults:
+  require_plan_approval: false
+  automation_mode: AUTO_CREATE_PR

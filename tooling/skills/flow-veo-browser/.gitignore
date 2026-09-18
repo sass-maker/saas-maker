@@ -1,0 +1,5 @@
+# Browser profiles contain cookies/credentials — never commit.
+state/profiles/
+# Runtime ledger.
+state/ledger.json
+__pycache__/

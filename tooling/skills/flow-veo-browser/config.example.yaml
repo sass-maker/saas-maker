@@ -1,0 +1,23 @@
+# flow-veo-browser — example config.
+# Informational; the CLI runs on env vars + state/ledger.json.
+
+accounts:
+  A: { profile: state/profiles/FLOW-A }   # one persistent Chrome profile each
+  B: { profile: state/profiles/FLOW-B }
+  C: { profile: state/profiles/FLOW-C }
+# The owner's normal Pro account is never used.
+
+# Reference per-generation costs. ALWAYS verify in the live Flow UI —
+# promotions differ per account and Google reprices.
+model_costs:
+  veo-3.1-lite: 5
+  veo-3.1-fast: 10
+  veo-3.1-quality: 100
+
+media_root: ~/Google-AI-Experiments   # override with FLOW_MEDIA_ROOT
+flow_url: https://labs.google/flow
+
+defaults:
+  flow_project: "Flow Automation"     # created/reused inside each account
+  archive_drive_account: A            # single Drive archive target
+  archive_folder: "AI Generated Media"
