@@ -175,9 +175,9 @@ is_local_only_project() {
 is_parked_project() {
   # A parked project is paused, not broken: the owner has stopped developing it
   # but left its Cloudflare resources running. Holding it to deploy standards
-  # produces permanent failures for work nobody intends to do. Cloudflare
-  # parity is deliberately still checked, so a parked project's live surfaces
-  # remain visible.
+  # produces permanent failures for work nobody intends to do. The Cloudflare
+  # audit reports these retained live surfaces as explicitly skipped until the
+  # catalog lifecycle is reactivated.
   local repo="$1"
   local relative_repo
 
@@ -725,9 +725,13 @@ check_cloudflare_targets() {
         [.projects[]
           | . as $project
           | select(
-              any($ignored[];
-                .id == $project.id
-                or (.repository != null and .repository == $project.repo)
+              .status == "live"
+              and (
+                .lifecycle.status == "inactive"
+                or any($ignored[];
+                    .id == $project.id
+                    or (.repository != null and .repository == $project.repo)
+                  )
               )
             )
           | $project.id
@@ -766,6 +770,7 @@ check_cloudflare_targets() {
       | . as $project
       | select(
           .status == "live"
+          and .lifecycle.status != "inactive"
           and .tier != "out-of-fleet"
           and .tier != "non-product"
           and (
