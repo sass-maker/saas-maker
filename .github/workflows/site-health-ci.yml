@@ -32,4 +32,7 @@ jobs:
       - name: Install AI Awareness package dependencies
         working-directory: apps/backend/packages/ai-visibility
         run: pnpm install --frozen-lockfile
-      - run: pnpm run check
+      # Site Health's canonical catalog is intentionally owner-local and
+      # gitignored. Its public CI path builds a bounded fixture from the
+      # checked-in dossiers instead of expecting that private source.
+      - run: pnpm run check:ci
