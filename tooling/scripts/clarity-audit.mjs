@@ -424,7 +424,17 @@ export function findRegistryViolations(registry) {
 
 // Verifies each claim against the checkout the registry names. A missing
 // checkout is reported as unverified, never as a pass.
-export function verifyWiring(registry, fleetRoot) {
+function resolveSurfaceSource(entry, surface, fleetRoot, projectPaths) {
+  const directPath = resolve(fleetRoot, surface.file);
+  const projectPath = projectPaths.get(entry.id);
+  const prefix = `${entry.repo}/`;
+  if (!projectPath || !surface.file.startsWith(prefix)) return directPath;
+
+  const projectRoot = resolve(fleetRoot, projectPath);
+  return resolve(projectRoot, surface.file.slice(prefix.length));
+}
+
+export function verifyWiring(registry, fleetRoot, projectPaths = new Map()) {
   const findings = [];
   const results = [];
 
@@ -433,7 +443,7 @@ export function verifyWiring(registry, fleetRoot) {
     const files = [];
     for (const surface of browserSurfaces) {
       const file = surface.file;
-      const path = resolve(fleetRoot, file);
+      const path = resolveSurfaceSource(entry, surface, fleetRoot, projectPaths);
       if (!existsSync(path)) {
         files.push({ kind: surface.kind, path: file, present: false, wired: false, legacy: false });
         findings.push(
@@ -577,18 +587,27 @@ export function scanFleetForUndeclared(registry, fleetRoot) {
   return hits;
 }
 
-function catalogVisibility(projectsPath) {
-  const visibility = new Map();
-  if (!projectsPath || !existsSync(projectsPath)) return visibility;
+function catalogMetadata(projectsPath) {
+  const metadata = new Map();
+  if (!projectsPath || !existsSync(projectsPath)) return metadata;
   try {
     const catalog = JSON.parse(readFileSync(projectsPath, 'utf8'));
     for (const entry of catalog.projects ?? []) {
-      if (entry?.id) visibility.set(entry.id, entry.repositoryVisibility ?? 'unknown');
+      if (entry?.id) {
+        metadata.set(entry.id, {
+          visibility: entry.repositoryVisibility ?? entry.repositories?.visibility ?? 'unknown',
+          localPath: entry.repositories?.localPath ?? entry.localPath ?? entry.sourcePath ?? entry.repo ?? null,
+        });
+      }
     }
   } catch {
-    return visibility;
+    return metadata;
   }
-  return visibility;
+  return metadata;
+}
+
+function catalogVisibility(metadata) {
+  return new Map([...metadata].map(([id, entry]) => [id, entry.visibility]));
 }
 
 export function auditClarity({
@@ -596,6 +615,7 @@ export function auditClarity({
   capabilityPolicy = null,
   journeys = null,
   fleetRoot,
+  projectPaths = new Map(),
   selfRoot = SELF_ROOT,
   visibility = new Map(),
   now = Date.now(),
@@ -609,7 +629,7 @@ export function auditClarity({
   const fleetPresent = Boolean(fleetRoot) && existsSync(fleetRoot);
   let wiring = { findings: [], results: [] };
   if (fleetPresent) {
-    wiring = verifyWiring(registry, fleetRoot);
+    wiring = verifyWiring(registry, fleetRoot, projectPaths);
     findings.push(...wiring.findings);
   } else {
     warnings.push(
@@ -837,6 +857,7 @@ export async function main(argv = process.argv.slice(2)) {
 
   const fleetRoot = resolve(options['--fleet-root'] ?? DEFAULT_FLEET_ROOT);
   const projectsPath = resolve(options['--projects'] ?? join(fleetRoot, DEFAULT_PROJECTS_RELATIVE));
+  const catalog = catalogMetadata(projectsPath);
 
   const report = auditClarity({
     registry,
@@ -844,7 +865,12 @@ export async function main(argv = process.argv.slice(2)) {
     journeys,
     fleetRoot,
     selfRoot: resolve(options['--self-root'] ?? SELF_ROOT),
-    visibility: catalogVisibility(projectsPath),
+    projectPaths: new Map(
+      [...catalog]
+        .filter(([, entry]) => entry.localPath)
+        .map(([id, entry]) => [id, entry.localPath])
+    ),
+    visibility: catalogVisibility(catalog),
     strict: argv.includes('--strict'),
     omitPrivate: argv.includes('--omit-private'),
     scanFleet: argv.includes('--scan-fleet'),

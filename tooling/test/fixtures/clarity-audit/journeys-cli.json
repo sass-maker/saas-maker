@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "schema": "fleet.clarity-journeys.v1",
+  "observedAt": "2026-08-30",
+  "projects": [
+    {
+      "id": "alpha",
+      "state": "ready",
+      "event": { "name": "open_alpha", "text": "Open Alpha", "href": "/alpha" },
+      "funnel": { "name": "alpha journey", "steps": ["open", "finish"] }
+    },
+    {
+      "id": "beta",
+      "state": "ready",
+      "event": { "name": "open_beta", "text": "Open Beta", "href": "/beta" },
+      "funnel": { "name": "beta journey", "steps": ["open", "finish"] }
+    }
+  ]
+}
