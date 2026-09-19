@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import test from 'node:test';
@@ -165,6 +166,70 @@ test('a clean registry over a matching checkout has nothing to report', () => {
   assert.equal(report.summary.verifiedAgainstSource, true);
   assert.equal(report.registry.distinctClarityIds, 2);
   assert.equal(report.registry.noSurface, 1);
+});
+
+test('catalog repository paths resolve relocated product surfaces', () => {
+  const relocated = structuredClone(base);
+  relocated.projects[0].repo = 'relocated';
+  relocated.projects[0].wiredFiles = ['relocated/index.html'];
+  relocated.projects[0].browserSurfaces = [{ kind: 'landing', file: 'relocated/index.html' }];
+
+  const report = audit(relocated, {
+    projectPaths: new Map([['alpha', '../archive/alpha']]),
+  });
+
+  assert.deepEqual(report.findings, []);
+  assert.equal(report.results.find((entry) => entry.id === 'alpha').files[0].wired, true);
+
+  const sharedSurface = structuredClone(base);
+  sharedSurface.projects[1].repo = 'other';
+  const directSurface = audit(sharedSurface, {
+    projectPaths: new Map([['beta', '../archive/alpha']]),
+  });
+  assert.deepEqual(directSurface.findings, []);
+});
+
+test('catalog-resolved surfaces still fail when the claimed ID is absent', () => {
+  const relocated = structuredClone(base);
+  relocated.projects[0].repo = 'relocated';
+  relocated.projects[0].clarityId = 'y6cccccccc';
+  relocated.projects[0].wiredFiles = ['relocated/index.html'];
+  relocated.projects[0].browserSurfaces = [{ kind: 'landing', file: 'relocated/index.html' }];
+
+  const report = audit(relocated, {
+    projectPaths: new Map([['alpha', '../archive/alpha']]),
+  });
+
+  assert.deepEqual(codesFor(report, 'alpha'), ['UNWIRED_CLAIM']);
+  assert.match(report.findings.find((entry) => entry.project === 'alpha').message, /y6cccccccc/u);
+});
+
+test('a stale direct copy cannot pass when the canonical checkout is missing', () => {
+  const report = audit(base, {
+    projectPaths: new Map([['alpha', '../archive/missing-alpha']]),
+  });
+
+  assert.deepEqual(codesFor(report, 'alpha'), ['UNWIRED_CLAIM']);
+});
+
+test('CLI loads canonical repositories.localPath before checking a direct stale copy', () => {
+  const result = spawnSync(
+    process.execPath,
+    [
+      join(repositoryRoot, 'scripts', 'clarity-audit.mjs'),
+      '--registry', join(fixtures, 'registry-cli.json'),
+      '--capabilities', join(fixtures, 'capabilities-cli.json'),
+      '--journeys', join(fixtures, 'journeys-cli.json'),
+      '--fleet-root', fleetRoot,
+      '--projects', join(fixtures, 'catalog-cli.json'),
+      '--self-root', cleanSelfRoot,
+      '--json',
+    ],
+    { encoding: 'utf8' }
+  );
+
+  assert.equal(result.status, 1);
+  assert.match(result.stdout, /claims Clarity project y6aaaaaaaa in alpha\/index\.html, but that ID is not present/u);
 });
 
 test('the shipped receipt declares separate landing and browser-app surfaces where required', () => {

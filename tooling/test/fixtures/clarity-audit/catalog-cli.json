@@ -1,0 +1,11 @@
+{
+  "projects": [
+    {
+      "id": "alpha",
+      "repositoryVisibility": "public",
+      "repositories": { "localPath": "../archive/canonical-alpha" }
+    },
+    { "id": "beta", "repositoryVisibility": "public", "repositories": { "localPath": "beta" } },
+    { "id": "epsilon", "repositoryVisibility": "private", "repositories": { "localPath": "epsilon" } }
+  ]
+}

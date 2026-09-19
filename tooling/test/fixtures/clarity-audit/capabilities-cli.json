@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "schema": "fleet.clarity-capabilities.v1",
+  "updatedAt": "2026-08-30",
+  "capabilities": [
+    { "id": "recordings", "label": "Recordings", "mode": "automatic", "defaultState": "desired" }
+  ]
+}
