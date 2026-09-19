@@ -47,6 +47,72 @@ test('worker skills use the Fleet catalog contract', () => {
   }
 });
 
+test('Flow credit ledger invariants and routing helper', () => {
+  const temp = mkdtempSync(path.join(os.tmpdir(), 'flow-ledger-test-'));
+  mkdirSync(path.join(temp, 'scripts'), { recursive: true });
+  mkdirSync(path.join(temp, 'state'), { recursive: true });
+  copyFileSync(flowScript, path.join(temp, 'scripts/flow.py'));
+
+  const ledgerPath = path.join(temp, 'state/ledger.json');
+  const readLedger = () => JSON.parse(readFileSync(ledgerPath, 'utf8'));
+
+  assert.equal(flow(temp, 'budget', 'set', '100').status, 0);
+  assert.equal(flow(temp, 'balance', 'set', 'A', '50').status, 0);
+  assert.equal(flow(temp, 'balance', 'set', 'B', '30').status, 0);
+  assert.equal(flow(temp, 'balance', 'set', 'C', '20').status, 0);
+
+  // 1. A successful debit reduces selected account balance and increases batch spend by same amount
+  const initialLedger = readLedger();
+  assert.equal(initialLedger.accounts.A.balance, 50);
+  assert.equal(initialLedger.batch.spent, 0);
+
+  const debitRes = flow(temp, 'debit', 'A', '15');
+  assert.equal(debitRes.status, 0);
+  assert.match(debitRes.stdout, /A: -15 → balance 35 \(batch spent 15\)/);
+
+  const afterDebitLedger = readLedger();
+  assert.equal(afterDebitLedger.accounts.A.balance, 35);
+  assert.equal(afterDebitLedger.batch.spent, 15);
+  assert.equal(afterDebitLedger.accounts.B.balance, 30);
+  assert.equal(afterDebitLedger.accounts.C.balance, 20);
+
+  // 2. Debit rejected due to insufficient account balance does not change persisted ledger
+  const rejectedOverdraft = flow(temp, 'debit', 'B', '40');
+  assert.notEqual(rejectedOverdraft.status, 0);
+  assert.match(`${rejectedOverdraft.stdout}${rejectedOverdraft.stderr}`, /refusing debit: balance 30 < credits 40/);
+  assert.deepEqual(readLedger(), afterDebitLedger);
+
+  // 3. Debit rejected due to exceeding remaining batch budget does not change persisted ledger
+  assert.equal(flow(temp, 'balance', 'set', 'B', '90').status, 0);
+  const ledgerBeforeBudgetExceeded = readLedger();
+
+  const rejectedBudgetExceeded = flow(temp, 'debit', 'B', '86');
+  assert.notEqual(rejectedBudgetExceeded.status, 0);
+  assert.match(`${rejectedBudgetExceeded.stdout}${rejectedBudgetExceeded.stderr}`, /refusing debit: 86 exceeds remaining budget 85/);
+  assert.deepEqual(readLedger(), ledgerBeforeBudgetExceeded);
+
+  // 4. Routing selects an eligible READY account with sufficient credits and honors --prefer when eligible
+  const routeHighest = flow(temp, 'route', '--cost', '10');
+  assert.equal(routeHighest.status, 0);
+  assert.match(routeHighest.stdout, /route → B \(balance 90, post-cost 80\)/);
+
+  const routePrefer = flow(temp, 'route', '--cost', '10', '--prefer', 'A');
+  assert.equal(routePrefer.status, 0);
+  assert.match(routePrefer.stdout, /route → A \(preferred; balance 35, post-cost 25\)/);
+
+  // 5. Routing falls back safely when preferred account is ineligible
+  const fallbackBalance = flow(temp, 'route', '--cost', '25', '--prefer', 'C');
+  assert.equal(fallbackBalance.status, 0);
+  assert.match(fallbackBalance.stderr, /note: preferred account C ineligible; falling back/);
+  assert.match(fallbackBalance.stdout, /route → B \(balance 90, post-cost 65\)/);
+
+  assert.equal(flow(temp, 'state', 'A', 'EXHAUSTED').status, 0);
+  const fallbackState = flow(temp, 'route', '--cost', '10', '--prefer', 'A');
+  assert.equal(fallbackState.status, 0);
+  assert.match(fallbackState.stderr, /note: preferred account A ineligible; falling back/);
+  assert.match(fallbackState.stdout, /route → B \(balance 90, post-cost 80\)/);
+});
+
 test('Flow rejects overdrafts, negative costs, and project traversal', () => {
   const temp = mkdtempSync(path.join(os.tmpdir(), 'flow-worker-test-'));
   mkdirSync(path.join(temp, 'scripts'), { recursive: true });
