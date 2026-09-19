@@ -31,6 +31,10 @@ repository; its former implementation is retained only under
 
 ## Conventions (all subskills)
 
+- Before turning search/AI measurements into content changes or outcome claims,
+  read [evidence and exact-edit review](../seo-research/references/opportunity-review.md).
+  This preserves collector ownership and permits an explicit leave-alone result.
+
 - Targets resolve via `scripts/lib/registry.mjs`.
   `../site-health/apps/backend/config/projects.json` is the canonical product
   list. Optional agent-surface metadata may enrich it but does not replace it.

@@ -17,7 +17,11 @@ sitemap, structured-data, crawl-error, and other technical checks to
 - **Competitive landscape:** competitors visible for the relevant search
   intent, the pages earning visibility, and defensible coverage gaps.
 - **Link prospecting:** relevant public sites, why the relationship is
-  plausible, and the evidence needed before outreach. Do not send outreach.
+  plausible, and the evidence needed before outreach. Read
+  [prospecting and outcomes](references/prospecting.md). Do not send outreach.
+- **SEO/GEO opportunities and refresh proposals:** read
+  [evidence, exact edits and measurement](references/opportunity-review.md)
+  before interpreting Search Console/AI observations or proposing page changes.
 - **Local search:** service/location intent, visible local competitors, local
   result types, and profile/content gaps.
 
@@ -89,3 +93,8 @@ claims. Then report:
 
 Research does not authorize saving provider records, changing a site, sending
 outreach, publishing content, or deploying anything.
+
+These references define reviewable records, not a new queue service or an
+automatic publishing system. Keep task output in its authorized owning product
+or private workspace, never this shared tooling repository. Existing Site Health
+collectors remain authoritative; do not create a second measurement pipeline.
