@@ -1477,7 +1477,8 @@
         "SwiftUI",
         "Rust",
         "Cloudflare Workers",
-        "Sparkle"
+        "Sparkle",
+        "Astro"
       ],
       "group": "current",
       "lifecycle": "active",
@@ -1494,6 +1495,82 @@
       "roadmapUrl": "https://github.com/sarthakagrawal927/storagedaddy/issues",
       "firstCommitAt": "2026-09-13",
       "latestCommitAt": "2026-09-13"
+    },
+    {
+      "id": "browserdaddy",
+      "name": "BrowserDaddy",
+      "description": "A local-first Mac browsing intelligence app for a unified history archive and real attention tracking.",
+      "makerNote": "I am building a local-first Mac browsing intelligence app that turns browser history and attention into an inspectable archive.",
+      "purposeContract": {
+        "purpose": "BrowserDaddy helps people understand their browsing history and attention locally across browsers.",
+        "audience": "Mac users who want a unified, inspectable record of browsing and attention.",
+        "outcome": "Review browsing history and attention without sending the archive to a hosted service.",
+        "mechanism": "A native local Mac app extracts browser archives, watches focus and classifies topics only after explicit opt-in.",
+        "proof": "Private native macOS repository and local-first product surface; public distribution is not claimed yet.",
+        "nextAction": "Read the public BrowserDaddy landing and release status; no native download is available."
+      },
+      "kind": "experiment",
+      "category": "utility",
+      "form": "macOS app",
+      "platforms": [
+        "macOS",
+        "Web"
+      ],
+      "technologies": [
+        "SwiftUI",
+        "SQLite",
+        "Astro",
+        "Cloudflare Pages"
+      ],
+      "group": "current",
+      "lifecycle": "active",
+      "shareable": true,
+      "deployed": true,
+      "deploymentProviders": [
+        "Cloudflare Pages"
+      ],
+      "domains": [
+        "browserdaddy.significanthobbies.com"
+      ],
+      "url": "https://browserdaddy.significanthobbies.com/"
+    },
+    {
+      "id": "performancedaddy",
+      "name": "PerformanceDaddy",
+      "description": "A local Mac performance investigator for background apps, helpers and developer workloads, with measured evidence and reviewed actions.",
+      "makerNote": "I am building a local Mac performance investigator that makes process, port and slowdown evidence easier to review.",
+      "purposeContract": {
+        "purpose": "PerformanceDaddy helps developers inspect local processes, ports and measured slowdown signals before taking action.",
+        "audience": "Developers running local servers, coding agents and other moving parts on a Mac.",
+        "outcome": "Find the process or port evidence behind a slowdown and choose the next check deliberately.",
+        "mechanism": "A native local Mac app records bounded CPU, memory, thermal, process and socket observations with reviewed stop controls.",
+        "proof": "Private native macOS repository and local preview surface; no public download or guaranteed root-cause diagnosis is claimed.",
+        "nextAction": "Read the public PerformanceDaddy landing and release status; no native download is available."
+      },
+      "kind": "experiment",
+      "category": "utility",
+      "form": "macOS app",
+      "platforms": [
+        "macOS",
+        "Web"
+      ],
+      "technologies": [
+        "SwiftUI",
+        "AppKit",
+        "Astro",
+        "Cloudflare Pages"
+      ],
+      "group": "current",
+      "lifecycle": "active",
+      "shareable": true,
+      "deployed": true,
+      "deploymentProviders": [
+        "Cloudflare Pages"
+      ],
+      "domains": [
+        "performancedaddy.significanthobbies.com"
+      ],
+      "url": "https://performancedaddy.significanthobbies.com/"
     },
     {
       "id": "launchdesk",
@@ -1793,6 +1870,28 @@
         "mechanism": "A small browser tracker and explicit named events feed workspace-scoped analytics; service SDKs and OTLP add aggregate endpoint health in the same dashboard.",
         "proof": "Production Google signup, returning login, sign-out and project creation verified; own signup/project milestone logs remain exactly one each. Known analytics traffic returned 3 sessions, 4 page views and 2 named events without duplicate-batch inflation, with correct 1h/24h boundaries and referral sources. Public live page and revocation verified. JavaScript SDK 0.4.0 published and artifact integrity checked. See app-health/docs/release-2026-09-12.md; broader analytics parity and remotely published Swift package remain follow-up work.",
         "nextAction": "Sign in with Google, add a project and environment, then install only the analytics, endpoint, or logging capability you need."
+      }
+    },
+    {
+      "id": "browserdaddy",
+      "name": "BrowserDaddy",
+      "description": "A local-first Mac browsing intelligence app for a unified history archive and real attention tracking.",
+      "url": "https://browserdaddy.significanthobbies.com/",
+      "tier": "active",
+      "category": "utility",
+      "priority": "P2",
+      "spotlight": false,
+      "lifecycle": "active",
+      "shareable": true,
+      "maturity": "preview",
+      "pillarId": "build",
+      "purposeContract": {
+        "purpose": "BrowserDaddy helps people understand their browsing history and attention locally across browsers.",
+        "audience": "Mac users who want a unified, inspectable record of browsing and attention.",
+        "outcome": "Review browsing history and attention without sending the archive to a hosted service.",
+        "mechanism": "A native local Mac app extracts browser archives, watches focus and classifies topics only after explicit opt-in.",
+        "proof": "Private native macOS repository and local-first product surface; public distribution is not claimed yet.",
+        "nextAction": "Read the public BrowserDaddy landing and release status; no native download is available."
       }
     },
     {
@@ -2164,6 +2263,28 @@
         "mechanism": "A guided research exhibit connects source-linked life events and early-breakthrough paths through what people brought, were handed, and were surrounded by.",
         "proof": "The publication contains thousands of documented early-breakthrough paths, visible methodology, and ongoing source-linked profile coverage.",
         "nextAction": "Explore the finished experiment; no ongoing roadmap or maintenance promise."
+      }
+    },
+    {
+      "id": "performancedaddy",
+      "name": "PerformanceDaddy",
+      "description": "A local Mac performance investigator for background apps, helpers and developer workloads, with measured evidence and reviewed actions.",
+      "url": "https://performancedaddy.significanthobbies.com/",
+      "tier": "active",
+      "category": "utility",
+      "priority": "P2",
+      "spotlight": false,
+      "lifecycle": "active",
+      "shareable": true,
+      "maturity": "preview",
+      "pillarId": "build",
+      "purposeContract": {
+        "purpose": "PerformanceDaddy helps developers inspect local processes, ports and measured slowdown signals before taking action.",
+        "audience": "Developers running local servers, coding agents and other moving parts on a Mac.",
+        "outcome": "Find the process or port evidence behind a slowdown and choose the next check deliberately.",
+        "mechanism": "A native local Mac app records bounded CPU, memory, thermal, process and socket observations with reviewed stop controls.",
+        "proof": "Private native macOS repository and local preview surface; no public download or guaranteed root-cause diagnosis is claimed.",
+        "nextAction": "Read the public PerformanceDaddy landing and release status; no native download is available."
       }
     },
     {
