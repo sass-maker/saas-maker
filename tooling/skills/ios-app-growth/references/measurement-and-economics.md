@@ -26,6 +26,12 @@ Start with only the events that support a decision:
 Add activation and retained-value events specific to the product. A subscription
 is a revenue event; it is not proof that the promised outcome occurred.
 
+Distinguish trial start, first successful paid purchase and renewal. A renewal
+is not a new payer. Preserve transaction identifiers where available for
+deduplication without uploading unnecessary personal data. Separate test/live
+events and verify transaction status, amount, currency and purchase type at
+both the purchase source and the receiving ad-platform mapping.
+
 ## Attribution topology
 
 Draw the actual path before installing anything:
@@ -66,7 +72,24 @@ renewal rate_n = subscriptions renewed at period n / subscriptions eligible at p
 Provider dashboards can use different attribution windows and denominators.
 Reconcile definitions instead of comparing labels.
 
+Label platform-reported, independently reconciled and blended acquisition
+figures separately. Observed transactions, attributed conversions and modeled
+conversions are different evidence; aggregate or delayed data does not justify
+invented person-level matches. Compare cohorts at comparable ages and keep
+channel, country, offer, currency and observation horizon consistent.
+
 ## Unit economics
+
+Define a new payer as a distinct customer making their first successful paid
+purchase. Media CAC uses attributable ad spend divided by attributed new payers;
+fully loaded CAC also includes declared creative/labor acquisition costs.
+Blended spend per new payer includes a different population and must be labelled.
+Zero payers means undefined/non-finite CAC, never zero; missing inputs stay unknown.
+At horizon H, pre-acquisition contribution is net cohort proceeds less variable
+delivery cost; post-acquisition contribution also subtracts acquisition cost.
+Contribution per payer uses the pre-acquisition amount. State cost inclusions
+and avoid subtracting acquisition twice when comparing contribution with CAC.
+These are not full business profit unless all relevant overhead is included.
 
 Use realized cohort data where possible. Make the money source explicit:
 

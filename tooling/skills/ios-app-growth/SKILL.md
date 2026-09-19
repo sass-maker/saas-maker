@@ -1,13 +1,13 @@
 ---
 name: ios-app-growth
-description: Plan, instrument, audit, and improve paid growth for consumer iOS subscription apps across positioning, App Store conversion, onboarding, paywalls, attribution, Apple Ads, paid social, and cohort economics. Use for iOS app growth plans or experiments, not ordinary feature implementation or generic marketing copy.
+description: Research, plan, prepare and review growth experiments for consumer iOS apps across competitors, organic distribution, paid acquisition, onboarding and cohort economics. Use for app growth decisions, not ordinary feature implementation or generic marketing copy.
 ---
 
 # iOS App Growth
 
 Build an evidence-backed growth system, not a promise that ads will print money.
-Treat the source article as a useful set of hypotheses from one operator's
-experience. Verify platform behavior, policy, pricing, and benchmarks before
+Treat supplied playbooks as hypotheses, not proven results or mandatory defaults.
+Verify platform behavior, policy, pricing, and benchmarks before
 using them in a current plan.
 
 ## Start here
@@ -17,11 +17,20 @@ using them in a current plan.
 2. Establish the requested mode:
    - **audit**: diagnose the product, funnel, measurement, or economics;
    - **plan**: produce a staged growth plan and experiment manifest;
+   - **prepare**: draft requested local changes, creatives or campaign settings
+     and run local checks, without publishing or spending;
+   - **review**: reconcile supplied results and recommend a bounded next action;
    - **implement**: make explicitly requested app-side instrumentation or
      funnel changes;
    - **operate**: change provider or ad-platform state only with explicit
      authorization, an exact account/app, and a hard spend cap.
+   Default to planning when execution was not requested. Unset budgets do not
+   block a useful proposal. Do not imply ongoing monitoring without an actual
+   authorized scheduler. Monetization follows the product's job; subscriptions
+   are not a requirement.
 3. Read only the references needed for that mode:
+   - Competitor teardown, organic distribution, or a compact single experiment:
+     [competitor-to-experiment.md](references/competitor-to-experiment.md)
    - Product, App Store page, onboarding, paywall, pricing, and review:
      [product-and-funnel.md](references/product-and-funnel.md)
    - Events, attribution, experiment analysis, unit economics, and cash flow:
@@ -68,6 +77,8 @@ using them in a current plan.
 3. **Choose one constraint.** Product-market fit, store-page conversion,
    onboarding completion, paywall conversion, retention, attribution quality,
    creative performance, or channel scale. Do not default to buying traffic.
+   Check upstream audience/promise alignment before attributing a drop-off to
+   the screen where it appears. More installs alone do not prove marketing worked.
 4. **Define an experiment.** State the hypothesis, primary metric, guardrails,
    audience/cohort, control, changed variable, budget and loss cap, minimum
    observation rule, stop conditions, and decision rule before launch.
@@ -114,3 +125,11 @@ Return the smallest useful artifact for the request. For a full plan include:
 
 Never report projected revenue, an enabled integration, campaign delivery, or
 provider-reported conversions as realized profit.
+
+For a focused review, return one decision—test, iterate, scale candidate, stop,
+or insufficient evidence (hold for delayed data)—with at most five useful borrow/verify/avoid comparisons
+and one next experiment. Use the compact reference above rather than expanding
+every review into a full growth plan. Meaningful visual changes still require
+`design-workflow` and owner selection; growth approval does not select a design.
+For paid campaign reviews, use the more specific readiness/hold/stop/iterate/scale
+decision rules in the paid-acquisition reference. A recommendation is not execution.

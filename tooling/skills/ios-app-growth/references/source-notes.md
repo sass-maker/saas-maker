@@ -1,5 +1,24 @@
 # Source notes
 
+## Additional supplied playbook
+
+On 2026-09-18 the operator supplied an `app-growth-playbook` SKILL.md. Its
+decision-relevant additions are adapted in
+[competitor-to-experiment.md](competitor-to-experiment.md). Its cited
+`Pasted markdown(10).md` was not provided; do not conflate that unverified source
+with the separate article described below. No deadline, competitor-count quota,
+vendor default or reported business result was adopted as a requirement.
+
+## Earlier subscription-app article
+
+The operator also supplied an `ios-paid-acquisition` SKILL.md on 2026-09-18,
+attributed to an adaptation of the Frederick James guide. Its referenced
+`references/source-and-verification.md` and `templates/experiment.md` were not
+supplied. Useful additional safeguards were merged into this skill's existing
+paid-acquisition and measurement references; those missing files are not runtime
+dependencies. Paid-social-first and a fixed five-format batch were not adopted
+as universal defaults. No separate ios-paid-acquisition skill was installed.
+
 The operator supplied an article attributed in the pasted text to Frederick
 James. No canonical URL or publication date was provided. This file preserves
 its decision-relevant ideas without treating a third-party article as current
