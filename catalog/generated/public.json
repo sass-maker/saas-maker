@@ -1165,7 +1165,7 @@
       "id": "ph-catalog",
       "name": "PH Catalog",
       "description": "A resumable local Product Hunt catalogue and analytics experiment with a privacy-safe synthetic demo.",
-      "makerNote": "The full catalogue and analytics data stay local; the public repository demonstrates the real pipeline using original fictional fixtures.",
+      "makerNote": "I keep the full catalogue and analytics data local; the public repository demonstrates the real pipeline using original fictional fixtures.",
       "purposeContract": {
         "purpose": "Build one resumable, deduplicated local product catalogue with explicit provenance and bounded analytical enrichment.",
         "audience": "Developers and product researchers exploring reproducible catalogue and market-analysis workflows.",
@@ -1415,7 +1415,7 @@
       "id": "nomad-data-adventure",
       "name": "Nomad Data Adventure",
       "description": "Nomad Atlas explores 1,374 terrestrial places with living-cost profiles, lifestyle filters, city comparisons and downloadable source data credited to Nomads.com.",
-      "makerNote": "A completed, shareable city-data experiment. Explore the saved dataset, compare places and download your shortlist.",
+      "makerNote": "I keep this as a completed, shareable city-data experiment for exploring the saved dataset, comparing places and downloading a shortlist.",
       "purposeContract": {
         "purpose": "Help people explore and compare places to live using a saved city dataset.",
         "audience": "People comparing destinations by budget, connectivity and everyday life.",
@@ -1499,7 +1499,7 @@
       "id": "launchdesk",
       "name": "LaunchDesk",
       "description": "A local-first launch workspace with a provenance-bearing catalog of 966 submission destinations, per-product queues and source-attributed metrics. Your workspace stays in your browser.",
-      "makerNote": "A launch-submission tracker built from attributed public source lists. It keeps reported metrics honest — unknown stays blank, never zero — and stores your queue in your own browser.",
+      "makerNote": "I built this launch-submission tracker from attributed public source lists. It keeps reported metrics honest — unknown stays blank, never zero — and stores your queue in your own browser.",
       "purposeContract": {
         "purpose": "Give makers a provenance-honest catalog of launch destinations with per-product submission tracking.",
         "audience": "Builders planning a deliberate launch or backlink campaign.",
