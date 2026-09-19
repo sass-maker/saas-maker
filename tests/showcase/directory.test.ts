@@ -74,6 +74,16 @@ describe('verified public Fleet directory', () => {
       category: 'experimental',
       url: 'https://nomad.significanthobbies.com/',
     });
+    expect(
+      catalog.directory.find((project: { id: string }) => project.id === 'ph-catalog')
+    ).toMatchObject({
+      lifecycle: 'active',
+      category: 'experimental',
+      group: 'current',
+      deployed: false,
+      url: 'https://github.com/sarthakagrawal927/ph-catalog',
+      repositoryUrl: 'https://github.com/sarthakagrawal927/ph-catalog',
+    });
     for (const heldId of [
       'psi-swarm',
       'everythingrated',

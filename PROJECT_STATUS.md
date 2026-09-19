@@ -25,6 +25,16 @@ Cockpit, CodeVetter, and App Health remain independent repositories.
 
 ## Timeline
 
+- **2026-09-19 — PH Catalog promoted without absorbing its code:**
+  Registered PH Catalog as a canonical active, bounded finishing project while
+  preserving `ph-catalog` as its independent Python/DuckDB repository and local
+  data owner. SaaS Maker now publishes the privacy-safe synthetic-demo profile
+  and may use a public repository as the canonical destination for a maintained,
+  intentionally undeployed project. The 63-project catalog, 40-identity public
+  projection, 63 Site Health dossiers, 61 SaaS Maker tests, showcase build and
+  PH Catalog's 88 tests pass. Tracked in #113; no PH source, catalogue data,
+  dependency, cloud resource or hosted service moved into SaaS Maker.
+
 - **2026-09-15 — Marketing and decision handoff adapters (local):**
   Added one Fleet marketing entrypoint with on-demand positioning, customer
   research, copy and launch references. Existing mobile-task-control and

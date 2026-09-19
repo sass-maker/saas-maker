@@ -1162,6 +1162,44 @@
       "latestCommitAt": "2026-09-07"
     },
     {
+      "id": "ph-catalog",
+      "name": "PH Catalog",
+      "description": "A resumable local Product Hunt catalogue and analytics experiment with a privacy-safe synthetic demo.",
+      "makerNote": "The full catalogue and analytics data stay local; the public repository demonstrates the real pipeline using original fictional fixtures.",
+      "purposeContract": {
+        "purpose": "Build one resumable, deduplicated local product catalogue with explicit provenance and bounded analytical enrichment.",
+        "audience": "Developers and product researchers exploring reproducible catalogue and market-analysis workflows.",
+        "outcome": "Import, verify, snapshot and explore a local catalogue without publishing third-party product data.",
+        "mechanism": "A Python pipeline normalizes public product records into DuckDB and Parquet, while a read-only local UI serves aggregate analytics.",
+        "proof": "All 88 tests pass. The three-record fictional offline demo exercises the real parser and database path, produces a verified Zstandard-compressed Parquet snapshot and refuses to overwrite an existing non-sample catalogue.",
+        "nextAction": "Finish the bounded experiment, document the repeatable local workflow and then mark the project inactive as a completed experiment."
+      },
+      "kind": "experiment",
+      "category": "experimental",
+      "form": "Local catalogue and analytics toolkit",
+      "platforms": [
+        "CLI",
+        "Local",
+        "Web"
+      ],
+      "technologies": [
+        "Python",
+        "DuckDB",
+        "Parquet"
+      ],
+      "group": "current",
+      "lifecycle": "active",
+      "shareable": true,
+      "deployed": false,
+      "deploymentProviders": [],
+      "domains": [],
+      "url": "https://github.com/sarthakagrawal927/ph-catalog",
+      "repositoryUrl": "https://github.com/sarthakagrawal927/ph-catalog",
+      "roadmapUrl": "https://github.com/sarthakagrawal927/ph-catalog/issues",
+      "firstCommitAt": "2026-08-31",
+      "latestCommitAt": "2026-09-12"
+    },
+    {
       "id": "web-playables",
       "name": "Web Playables",
       "description": "Small browser-playable game experiments.",
@@ -1530,40 +1568,6 @@
       "url": "https://github.com/sarthakagrawal927/ai-badges",
       "repositoryUrl": "https://github.com/sarthakagrawal927/ai-badges",
       "roadmapUrl": "https://github.com/sarthakagrawal927/ai-badges/issues"
-    },
-    {
-      "id": "ph-catalog",
-      "name": "PH Catalog",
-      "description": "An offline catalogue experiment that parses fictional product pages, checks completeness and exports a local snapshot.",
-      "makerNote": "Synthetic sample data only; no redistribution of a scraped Product Hunt dataset is claimed.",
-      "purposeContract": {
-        "purpose": "An offline catalogue experiment that parses fictional product pages, checks completeness and exports a local snapshot.",
-        "audience": "Developers exploring a reproducible product catalogue pipeline.",
-        "outcome": "Parse three fictional products and export a verified local catalogue.",
-        "mechanism": "The existing parser and DuckDB pipeline run against bundled synthetic HTML fixtures.",
-        "proof": "88 tests pass, including refusal to alter an existing non-sample catalogue; the three-record offline demo passes.",
-        "nextAction": "Run the offline sample instructions in the README."
-      },
-      "kind": "experiment",
-      "category": "experimental",
-      "form": "CLI experiment",
-      "platforms": [
-        "CLI",
-        "Local"
-      ],
-      "technologies": [
-        "Python",
-        "DuckDB"
-      ],
-      "group": "past",
-      "lifecycle": "inactive",
-      "shareable": true,
-      "deployed": false,
-      "deploymentProviders": [],
-      "domains": [],
-      "url": "https://github.com/sarthakagrawal927/ph-catalog",
-      "repositoryUrl": "https://github.com/sarthakagrawal927/ph-catalog",
-      "roadmapUrl": "https://github.com/sarthakagrawal927/ph-catalog/issues"
     },
     {
       "id": "pinpoint",
@@ -2163,6 +2167,30 @@
       }
     },
     {
+      "id": "ph-catalog",
+      "name": "PH Catalog",
+      "description": "A resumable local Product Hunt catalogue and analytics experiment with a privacy-safe synthetic demo.",
+      "url": "https://github.com/sarthakagrawal927/ph-catalog",
+      "tier": "secondary",
+      "category": "experimental",
+      "priority": "P2",
+      "spotlight": false,
+      "lifecycle": "active",
+      "shareable": true,
+      "maturity": "experiment",
+      "repositoryUrl": "https://github.com/sarthakagrawal927/ph-catalog",
+      "roadmapUrl": "https://github.com/sarthakagrawal927/ph-catalog/issues",
+      "pillarId": "build",
+      "purposeContract": {
+        "purpose": "Build one resumable, deduplicated local product catalogue with explicit provenance and bounded analytical enrichment.",
+        "audience": "Developers and product researchers exploring reproducible catalogue and market-analysis workflows.",
+        "outcome": "Import, verify, snapshot and explore a local catalogue without publishing third-party product data.",
+        "mechanism": "A Python pipeline normalizes public product records into DuckDB and Parquet, while a read-only local UI serves aggregate analytics.",
+        "proof": "All 88 tests pass. The three-record fictional offline demo exercises the real parser and database path, produces a verified Zstandard-compressed Parquet snapshot and refuses to overwrite an existing non-sample catalogue.",
+        "nextAction": "Finish the bounded experiment, document the repeatable local workflow and then mark the project inactive as a completed experiment."
+      }
+    },
+    {
       "id": "rolepatch",
       "name": "RolePatch",
       "description": "A guest resume-tailoring experiment with a reviewable diff and browser-local document exports.",
@@ -2445,23 +2473,6 @@
         "proof": "A technically ambitious reference exists, but sustained evidence quality, medical safety, and content maintenance are unresolved.",
         "nextAction": "Preserved experiment; no current work or obligation to resume."
       }
-    },
-    {
-      "id": "ph-catalog",
-      "name": "PH Catalog",
-      "description": "An offline catalogue experiment that parses fictional product pages, checks completeness and exports a local snapshot.",
-      "category": "experimental",
-      "shareable": true,
-      "repositoryUrl": "https://github.com/sarthakagrawal927/ph-catalog",
-      "purposeContract": {
-        "purpose": "An offline catalogue experiment that parses fictional product pages, checks completeness and exports a local snapshot.",
-        "audience": "Developers exploring a reproducible product catalogue pipeline.",
-        "outcome": "Parse three fictional products and export a verified local catalogue.",
-        "mechanism": "The existing parser and DuckDB pipeline run against bundled synthetic HTML fixtures.",
-        "proof": "88 tests pass, including refusal to alter an existing non-sample catalogue; the three-record offline demo passes.",
-        "nextAction": "Run the offline sample instructions in the README."
-      },
-      "lifecycle": "inactive"
     },
     {
       "id": "pinpoint",

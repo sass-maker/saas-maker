@@ -174,7 +174,9 @@ export function buildPublicProducts(catalog) {
         catalog.infrastructure.projects[project.id]?.deployments ?? []
       ),
       domains,
-      ...(domains[0] ? { url: canonicalPublicUrl(project) } : {}),
+      ...(domains[0] || project.public?.listing === 'maintained'
+        ? { url: canonicalPublicUrl(project) }
+        : {}),
       ...(repositoryUrl ? { repositoryUrl } : {}),
       ...(project.public?.listing === 'maintained' &&
       project.public?.hasChangelog !== false &&
@@ -429,6 +431,13 @@ export function assertNoPrivateData(value, trail = 'projection') {
 function canonicalPublicUrl(project) {
   const domain = project.domains?.[0];
   if (!domain) {
+    if (
+      project.deployKind === 'none' &&
+      project.repositoryVisibility === 'public' &&
+      project.repositoryUrl
+    ) {
+      return project.repositoryUrl;
+    }
     throw new Error(`${project.id}: maintained public listing requires a canonical domain`);
   }
   const override = project.public?.url;
