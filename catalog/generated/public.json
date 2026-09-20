@@ -1573,47 +1573,6 @@
       "url": "https://performancedaddy.significanthobbies.com/"
     },
     {
-      "id": "launchdesk",
-      "name": "LaunchDesk",
-      "description": "A local-first launch workspace with a provenance-bearing catalog of 966 submission destinations, per-product queues and source-attributed metrics. Your workspace stays in your browser.",
-      "makerNote": "I built this launch-submission tracker from attributed public source lists. It keeps reported metrics honest — unknown stays blank, never zero — and stores your queue in your own browser.",
-      "purposeContract": {
-        "purpose": "Give makers a provenance-honest catalog of launch destinations with per-product submission tracking.",
-        "audience": "Builders planning a deliberate launch or backlink campaign.",
-        "outcome": "Filter and compare 966 destinations by category, reported DR, link type, price and recorded submission routes.",
-        "mechanism": "A static catalog page on the SaaS Maker site renders the attributed dataset with per-row source claims; the local Python/SQLite app adds per-product queues, statuses, notes and a link checker.",
-        "proof": "Live catalog at sassmaker.com/launchdesk rendering 966 destinations, 36 passing unit tests, source attribution in data/sources, and explicit unknowns rather than invented metrics.",
-        "nextAction": "Open sassmaker.com/launchdesk, filter to a fitting set, and check each row's source history before submitting."
-      },
-      "kind": "product",
-      "category": "utility",
-      "form": "Web app",
-      "platforms": [
-        "Web"
-      ],
-      "technologies": [
-        "Astro",
-        "Cloudflare Pages",
-        "Python",
-        "SQLite"
-      ],
-      "group": "current",
-      "lifecycle": "active",
-      "shareable": true,
-      "deployed": true,
-      "deploymentProviders": [
-        "Cloudflare Pages"
-      ],
-      "domains": [
-        "sassmaker.com"
-      ],
-      "url": "https://sassmaker.com/launchdesk",
-      "repositoryUrl": "https://github.com/Significant-Hobbies/launchdesk",
-      "roadmapUrl": "https://github.com/Significant-Hobbies/launchdesk/issues",
-      "firstCommitAt": "2026-09-18",
-      "latestCommitAt": "2026-09-18"
-    },
-    {
       "id": "ai-badges",
       "name": "AI Badges",
       "description": "Embeddable README badges for declaring AI contribution and welcoming AI-assisted pull requests.",
@@ -2117,28 +2076,6 @@
         "mechanism": "A shared RAG service performs corpus-aware search, ranking, citation, and schema-constrained retrieval behind a private boundary.",
         "proof": "The service has healthy Fleet consumers and already operates as the shared cited-retrieval layer.",
         "nextAction": "Connect it only for a concrete consumer need; change the infrastructure when retrieval evidence shows a real failure."
-      }
-    },
-    {
-      "id": "launchdesk",
-      "name": "LaunchDesk",
-      "description": "A provenance-honest catalog of 966 launch and submission destinations — reported DR, link type, pricing and routes shown with their source claims, browsable at sassmaker.com/launchdesk. A local workspace app adds per-product queues and tracking.",
-      "url": "https://sassmaker.com/launchdesk",
-      "tier": "active",
-      "category": "utility",
-      "priority": "P2",
-      "spotlight": false,
-      "lifecycle": "active",
-      "shareable": true,
-      "maturity": "beta",
-      "pillarId": "visibility",
-      "purposeContract": {
-        "purpose": "Give makers a provenance-honest catalog of launch destinations with per-product submission tracking.",
-        "audience": "Builders planning a deliberate launch or backlink campaign.",
-        "outcome": "Filter and compare 966 destinations by category, reported DR, link type, price and recorded submission routes.",
-        "mechanism": "A static catalog page on the SaaS Maker site renders the attributed dataset with per-row source claims; the local Python/SQLite app adds per-product queues, statuses, notes and a link checker.",
-        "proof": "Live catalog at sassmaker.com/launchdesk rendering 966 destinations, 36 passing unit tests, source attribution in data/sources, and explicit unknowns rather than invented metrics.",
-        "nextAction": "Open sassmaker.com/launchdesk, filter to a fitting set, and check each row's source history before submitting."
       }
     },
     {
