@@ -1,6 +1,6 @@
 # SaaS Maker Tooling — PROJECT STATUS
 
-Last updated: 2026-09-20
+Last updated: 2026-09-06
 
 ## Why / What
 
@@ -33,14 +33,6 @@ owned by individual products.
 
 ## Timeline
 
-- 2026-09-20 — Added the dependency-free local agent-testing benchmark runner:
-  strict product-owned command manifests, bounded warm/cold execution,
-  sanitized receipts, verified-outcome qualification, timing/cost/correctness
-  summaries, and a deliberately broken fixture that proves a green driver
-  cannot mask a failed oracle. Registered the CLI in Fleet capability
-  discovery and validated the first Vaultwealth adapter without rerunning or
-  relabeling its historical evidence. Verified: 266 tooling tests, 7 focused
-  runner tests, both manifests, and the tooling validator. Refs #132.
 - 2026-09-06 — Gave the Clarity Fleet Health skill four explicit modes:
   `source-audit` (credential-free), `cached-health` (no network),
   `provider-refresh` (explicit live Data Export sweep), and optional
@@ -179,12 +171,9 @@ owned by individual products.
 - Forty-seven agent skills with validated provider-neutral execution profiles,
   including the attributed English Xiaohei illustration adaptation, the Clarity
   fleet rollout skill, and the local-verification qualification skill.
-- Standalone operator entrypoints exposed through the capability catalog,
+- Nine standalone operator entrypoints exposed through the capability catalog,
   with retired product/control-plane sources physically isolated as
   noncanonical history and still covered by shell and Node syntax validation.
-- Credential-free local application-agent benchmark runner with strict
-  manifests, bounded warm/cold phases, sanitized receipts, independent product
-  oracles, and comparable speed, cost, correctness, and intervention metrics.
 - Cross-project sub-five-minute local verification qualification with
   observable readiness probing (HTTP, TCP, log, command), failure injection,
   exact-patch selection checks, a reusable GitHub Actions workflow, and

@@ -63,7 +63,6 @@ The repository also runs checks whose source and inputs are already public:
 
 ```bash
 node scripts/audit.mjs --validate-only
-node scripts/agent-testing.mjs validate --manifest <product-benchmark.manifest.json>
 node --test test/*.test.mjs
 node scripts/validate-tooling.mjs
 node scripts/audit.mjs --mode availability --runs 1
