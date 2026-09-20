@@ -8,6 +8,7 @@ import type {
 } from '@saas-maker/contracts';
 import { Hono, type Context } from 'hono';
 import { getDb } from '../db';
+import { buildCacheKey, tryCacheMatch, withCachePut } from '../edge-cache';
 import { apiError } from '../lib/errors';
 import { storeScreenshot } from '../lib/screenshots';
 import { requireApiKey, requireInboxAuth } from '../middleware/auth';
@@ -153,6 +154,13 @@ async function listAuthorizedFeedback(
     });
   }
 
+  const cacheKey = buildCacheKey(
+    'feedback/aggregate',
+    `${userId}:${type ?? ''}:${status ?? ''}:${since ?? ''}:${until ?? ''}:${page}:v1`
+  );
+  const hit = await tryCacheMatch(cacheKey);
+  if (hit) return hit;
+
   const projects = await db.listProjectsByOwner(userId, 'dashboard');
   const perProject = await Promise.all(
     projects.map((project) =>
@@ -172,13 +180,14 @@ async function listAuthorizedFeedback(
   data.sort((left, right) => Date.parse(right.created_at) - Date.parse(left.created_at));
   const offset = (page - 1) * PAGE_SIZE;
   const pageData = data.slice(offset, offset + PAGE_SIZE);
-  return c.json({
+  const response = c.json({
     data: pageData,
     total: data.length,
     page,
     limit: PAGE_SIZE,
     next_cursor: null,
   });
+  return withCachePut(c, cacheKey, response, 60);
 }
 
 // Public submission endpoint. A project key identifies the destination but
