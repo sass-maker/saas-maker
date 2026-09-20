@@ -1,0 +1,18 @@
+--- marketing/articles/saas-maker/how-to-identify-real-submission-routes-in-launch-directories.md
++++ marketing/articles/saas-maker/how-to-identify-real-submission-routes-in-launch-directories.md
+@@ -19,6 +19,15 @@
+
+ This guide details a methodology for evaluating launch directories, spotting broken links, and confirming active submission paths, avoiding the trap of unverified aggregate lists.
+
++## Outline
++*   **The Problem with Aggregated Directory Data**: Why large lists fail and how mismatched intent wastes time.
++*   **Classifying and Verifying Submission Routes**: Differentiating between "source-reported" links and those that "need research."
++*   **Investigating Missing Routes**: Practical techniques for finding submission paths when they aren't explicitly provided.
++*   **Pricing Flags and Their Implications**: Understanding why "unknown" pricing is a red flag.
++*   **Evaluating Domain Authority (DR) Claims**: Why you shouldn't blindly trust DR scores.
++*   **The Myth of the Automated Blast**: Why manual submission remains the only reliable method.
++*   **Building Your Own Verified List**: Transitioning from scraping to curating actionable directory assets.
++
+ ## The Problem with Aggregated Directory Data
+
+ Many widespread lists of launch directories suffer from severe data decay. They are assembled by scraping other lists, leading to a compounding effect of outdated information. A domain might change ownership, drop its submission form, or alter its focus, but the directory entry in the aggregate list remains static.
