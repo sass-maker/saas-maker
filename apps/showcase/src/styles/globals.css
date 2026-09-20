@@ -1008,6 +1008,91 @@ a {
   font-size: 0.9rem;
 }
 
+/* Generated learnings articles (learnings/[slug].astro) reuse the workshop
+   hero and prose tokens but render the checked-in markdown mirror directly,
+   so they take a single-column hero and a centered reading column. */
+.article-hero.generated-hero {
+  min-height: min(32rem, calc(100svh - 12rem));
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.generated-hero .article-deck {
+  max-width: 52ch;
+}
+
+.generated-body {
+  width: min(72ch, calc(100% - 3rem));
+  margin-inline: auto;
+  padding: clamp(4rem, 8vw, 7rem) 0;
+}
+
+/* The markdown mirror leads with `# title` plus a published/author/canonical
+   list so the `/learnings/<slug>.md` endpoint stays self-describing. The hero
+   already presents those facts, so the duplicate block is hidden here. */
+.generated-body > h1:first-child,
+.generated-body > h1:first-child + ul {
+  display: none;
+}
+
+.generated-body > h1:first-child + ul + * {
+  margin-top: 0;
+}
+
+.generated-body h2,
+.generated-body h3,
+.generated-body h4 {
+  color: var(--ink);
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+.generated-body h2 {
+  margin: clamp(3rem, 6vw, 4.5rem) 0 0;
+  font-size: clamp(1.9rem, 4vw, 3rem);
+  font-weight: 500;
+}
+
+.generated-body h2::after {
+  width: 1.5rem;
+  height: 2px;
+  display: block;
+  margin-top: 1.25rem;
+  background: var(--copper);
+  content: "";
+}
+
+.generated-body h3 {
+  margin: 2.5rem 0 0;
+  font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+  font-weight: 600;
+}
+
+.generated-body h4 {
+  margin: 2rem 0 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.generated-body h2 + *,
+.generated-body h3 + *,
+.generated-body h4 + * {
+  margin-top: 1.35rem;
+}
+
+.generated-body blockquote {
+  margin: 1.75rem 0;
+  padding-left: 1.25rem;
+  border-left: 2px solid var(--copper);
+  color: var(--ink);
+}
+
+.generated-body hr {
+  margin: clamp(3rem, 6vw, 4.5rem) 0 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
 @media (max-width: 760px) {
   .nav,
   .hero,

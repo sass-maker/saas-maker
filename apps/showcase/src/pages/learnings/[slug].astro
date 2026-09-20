@@ -1,0 +1,89 @@
+---
+import type { AstroComponentFactory, GetStaticPaths } from 'astro';
+import Footer from '../../components/Footer.astro';
+import Nav from '../../components/Nav.astro';
+import { LEARNINGS } from '../../data/learnings';
+import Layout from '../../layouts/Layout.astro';
+
+type Learning = (typeof LEARNINGS)[number];
+type ArticleModule = { Content: AstroComponentFactory };
+
+// getStaticPaths runs in its own module context, so everything it uses must
+// be imported or declared inside the function.
+export const getStaticPaths = (() => {
+  // The skills essay keeps its bespoke hand-designed page. Emitting the same
+  // path from this route would conflict with the static file, so it is skipped.
+  const bespokeSlugs = new Set(['skills-should-declare-capabilities-not-model-names']);
+  return LEARNINGS.filter((learning) => !bespokeSlugs.has(learning.slug)).map((learning) => ({
+    params: { slug: learning.slug },
+    props: { learning },
+  }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  learning: Learning;
+}
+
+const articleModules = import.meta.glob<ArticleModule>('../../data/articles/*.md', {
+  eager: true,
+});
+
+const { learning } = Astro.props;
+const article = articleModules[`../../data/articles/${learning.slug}.md`];
+if (!article?.Content) {
+  throw new Error(
+    `Missing markdown mirror for learning "${learning.slug}". ` +
+      `Available keys: ${Object.keys(articleModules).join(', ')}`
+  );
+}
+const Content = article.Content;
+const canonicalUrl = `https://sassmaker.com${learning.href}`;
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: learning.title,
+  description: learning.description,
+  datePublished: learning.publishedAt,
+  dateModified: learning.publishedAt,
+  mainEntityOfPage: canonicalUrl,
+  author: {
+    '@id': 'https://sarthakagrawal.dev/#person',
+  },
+  publisher: {
+    '@id': 'https://sarthakagrawal.dev/#person',
+  },
+};
+---
+
+<Layout
+  title={`${learning.title} | SaaS Maker`}
+  description={learning.description}
+  type="article"
+  publishedTime={learning.publishedAt}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+  <div class="workshop-world interior-world learning-article-world">
+    <Nav />
+    <main class="learning-article" id="main-content">
+    <article>
+      <header class="article-hero generated-hero">
+        <div class="article-intro">
+          <p class="eyebrow">Learnings</p>
+          <h1>{learning.title}</h1>
+          <p class="article-deck">{learning.description}</p>
+          <div class="article-byline">
+            <span>{learning.author}</span>
+            <time datetime={learning.publishedAt}>{learning.publishedLabel}</time>
+            <span>{learning.readingTime}</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="generated-body prose">
+        <Content />
+      </div>
+    </article>
+    </main>
+    <Footer />
+  </div>
+</Layout>

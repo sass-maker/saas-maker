@@ -4,7 +4,12 @@ import Nav from '../../components/Nav.astro';
 import { LEARNINGS } from '../../data/learnings';
 import Layout from '../../layouts/Layout.astro';
 
-const article = LEARNINGS[0];
+const article = LEARNINGS.find(
+  (learning) => learning.slug === 'skills-should-declare-capabilities-not-model-names'
+);
+if (!article) {
+  throw new Error('Missing learnings entry for the skills essay page.');
+}
 const canonicalUrl = `https://sassmaker.com${article.href}`;
 const profileCode = `{
   "recommended": {
