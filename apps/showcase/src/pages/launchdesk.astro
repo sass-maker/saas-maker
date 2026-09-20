@@ -57,7 +57,7 @@ const PRICING_LABELS: Record<string, string> = {
 ---
 
 <Layout
-  title={`LaunchDesk — ${destinations.length} launch destinations with source-attributed metrics`}
+  title={`Launch catalog — ${destinations.length} source-attributed destinations`}
   description={`Browse ${destinations.length} launch and submission destinations with reported DR, link type, pricing, and source history. Every metric shows its provenance.`}
 >
   <div class="workshop-world interior-world launchdesk-world">
@@ -65,7 +65,7 @@ const PRICING_LABELS: Record<string, string> = {
     <main id="main-content" class="launchdesk-page">
     <header class="launchdesk-hero">
       <div class="launchdesk-identity">
-        <p class="launchdesk-kicker">SaaS Maker / LaunchDesk</p>
+        <p class="launchdesk-kicker">SaaS Maker / Launch catalog</p>
         <h1>Your next place to launch.</h1>
         <p>
           {destinations.length} submission destinations with their metrics left on the source's
@@ -300,12 +300,11 @@ const PRICING_LABELS: Record<string, string> = {
         <p>
           The catalog was assembled {launchdeskData.snapshot} from {destinations.length + quarantined.length} deduplicated
           source-backed records. Metrics are source-reported and may disagree between providers —
-          the raw claims ship with each row rather than being smoothed away. The full local app
-          adds per-product queues, submission tracking, and a link checker.
+          the raw claims ship with each row rather than being smoothed away.
         </p>
         <a href="/launchdesk.json">Open the complete JSON dataset <span aria-hidden="true">→</span></a>
-        <a href="https://github.com/Significant-Hobbies/launchdesk" target="_blank" rel="noopener noreferrer">
-          Source repository and local workspace app <span aria-hidden="true">→</span>
+        <a href="https://github.com/sass-maker/saas-maker" target="_blank" rel="noopener noreferrer">
+          SaaS Maker source <span aria-hidden="true">→</span>
         </a>
       </div>
     </aside>
