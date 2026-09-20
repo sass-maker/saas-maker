@@ -36,6 +36,7 @@ test('standalone capability catalog has valid roots and execution profiles', () 
       .map((item) => item.path),
     [
       'scripts/agent-stack.sh',
+      'scripts/agent-testing.mjs',
       'scripts/apply-clarity-id.sh',
       'scripts/audit.mjs',
       'scripts/check-github-actions-policy.mjs',
