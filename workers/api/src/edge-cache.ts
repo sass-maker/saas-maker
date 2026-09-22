@@ -11,6 +11,7 @@ import type { AppContext } from './types';
 //   the suffix to invalidate stale entries after shape changes.
 
 const DEFAULT_TTL_SECONDS = 60;
+const PRIVATE_RESPONSE_CACHE_CONTROL = 'private, no-store';
 
 function getEdgeCache(): Cache | undefined {
   if (typeof caches === 'undefined') return undefined;
@@ -29,6 +30,7 @@ export async function tryCacheMatch(cacheKey: string): Promise<Response | null> 
     const cached = await edgeCache.match(cacheKey);
     if (!cached) return null;
     const hit = new Response(cached.body, cached);
+    hit.headers.set('Cache-Control', PRIVATE_RESPONSE_CACHE_CONTROL);
     hit.headers.set('X-Edge-Cache', 'HIT');
     return hit;
   } catch {
@@ -37,10 +39,14 @@ export async function tryCacheMatch(cacheKey: string): Promise<Response | null> 
 }
 
 /**
- * Store `response` in `caches.default` under `cacheKey` with a public
- * `s-maxage`. Uses `ctx.waitUntil` so the put doesn't block the
- * response. Returns a fresh `Response` clone the caller should send
- * back to the client (with `X-Edge-Cache: MISS`).
+ * Store a clone of `response` in `caches.default` under `cacheKey` with a
+ * public `s-maxage`. The internal key is user-scoped by each caller, but the
+ * response sent to the client must remain private so a browser-facing shared
+ * intermediary cannot cache an authenticated inbox or project list.
+ *
+ * Uses `ctx.waitUntil` so the put doesn't block the response. Returns a fresh
+ * response the caller should send back to the client (with
+ * `X-Edge-Cache: MISS`).
  */
 export function withCachePut(
   c: AppContext,
@@ -49,9 +55,8 @@ export function withCachePut(
   ttlSeconds: number = DEFAULT_TTL_SECONDS
 ): Response {
   const edgeCache = getEdgeCache();
-  const cacheable = new Response(response.body, response);
+  const cacheable = response.clone();
   cacheable.headers.set('Cache-Control', `public, max-age=0, s-maxage=${ttlSeconds}`);
-  cacheable.headers.set('X-Edge-Cache', 'MISS');
   if (edgeCache) {
     try {
       c.executionCtx.waitUntil(edgeCache.put(cacheKey, cacheable.clone()));
@@ -59,7 +64,10 @@ export function withCachePut(
       // Non-fatal — serving the response without caching.
     }
   }
-  return cacheable;
+  const outbound = new Response(response.body, response);
+  outbound.headers.set('Cache-Control', PRIVATE_RESPONSE_CACHE_CONTROL);
+  outbound.headers.set('X-Edge-Cache', 'MISS');
+  return outbound;
 }
 
 /**
