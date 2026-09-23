@@ -86,6 +86,15 @@ const OG_IMAGE = `${SITE_URL}/og-image.svg`;
 
     {/* Canonical Person → Studio → WebSite graph from the public studio profile. */}
     <script type="application/ld+json" set:html={JSON.stringify(STUDIO_JSON_LD)} />
+    <script
+      is:inline
+      defer
+      src="https://health.sassmaker.com/tracker.js"
+      data-key="ahk_pub_3abfb8cb6ceec20b3f64d0314f110e6d3f82889592fccf3cc8a87f5ac8341f4d"
+      data-project="app-23e1f349-eb71-4030-83f6-91b572dbc534"
+      data-identity="persistent"
+      data-endpoint="https://ingest.sassmaker.com/v1/browser"
+    ></script>
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
