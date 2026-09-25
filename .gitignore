@@ -29,6 +29,7 @@ agent-*.log
 
 # Test artifacts
 test-results/
+__pycache__/
 
 # Binaries
 cockroach-sql-*/
