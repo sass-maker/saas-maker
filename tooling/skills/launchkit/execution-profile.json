@@ -1,0 +1,7 @@
+{
+  "schema": "fleet.skill-execution-profile.v1",
+  "recommended": { "intelligence": "balanced", "reasoning": "medium" },
+  "minimum": { "intelligence": "economy", "reasoning": "low" },
+  "degradation": "allow",
+  "rationale": "Planning is a deterministic script and the run prompt is mechanical; intelligence matters mainly for judging platform fit and writing claim-safe copy."
+}
