@@ -5,7 +5,7 @@ single source of classification and owner decisions. Its schema version is 2.
 
 ## Project structure
 
-Each of the 59 product identities has these sections (optional fields stay absent):
+Each of the 72 product identities has these sections (optional fields stay absent):
 
 | Section | Meaning |
 | --- | --- |
