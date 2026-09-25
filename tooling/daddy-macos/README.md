@@ -6,6 +6,19 @@ This directory owns the credential-free parts of the four Daddy macOS app contra
 
 The callable workflow is `.github/workflows/daddy-macos-candidate.yml`. It checks out the caller and this public tooling at an immutable commit SHA. It has read-only repository permission and no signing or publishing secrets. `release_preflight.py` checks an exact release tag against `main` before a protected app-owned job proceeds. The preflight is a source gate, not a signed release. App-owned jobs remain responsible for signing, notarization, publication, and installed-app acceptance.
 
+## Protected release preflight
+
+Each app's manual `.github/workflows/release.yml` uses a `production-release` environment that requires owner review and accepts only `main`. It resolves the requested tag to an immutable commit reachable from `main`, reruns the shared candidate checks at that commit, and records the exact source SHA. It checks that these protected inputs are available without printing their values:
+
+- `DEVELOPER_ID_CERT_P12_BASE64`
+- `DEVELOPER_ID_CERT_PASSWORD`
+- `DEVELOPER_ID_IDENTITY`
+- `APPLE_NOTARY_API_KEY_P8_BASE64`
+- `APPLE_NOTARY_KEY_ID`
+- `APPLE_NOTARY_ISSUER_ID`
+
+Configure the values directly in each app's GitHub `production-release` environment. The current workflow stops after preflight; it does not import a certificate, sign, notarize, publish, or install. Enable those gates only after the app's packaging adapter, architecture, resources, and product acceptance can be checked on the GitHub-hosted runner.
+
 ## Maintained copies
 
 The `shared/` files are the canonical sources. App copies keep local packaging independently runnable:
