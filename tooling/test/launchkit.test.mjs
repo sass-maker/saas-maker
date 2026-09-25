@@ -8,6 +8,7 @@ import test from 'node:test';
 const PLANNER = resolve(import.meta.dirname, '../launchkit/scripts/plan-run.mjs');
 const REPORT = resolve(import.meta.dirname, '../launchkit/scripts/report.mjs');
 const LAUNCHKIT = resolve(import.meta.dirname, '../launchkit');
+const REPO_ROOT = resolve(import.meta.dirname, '../..');
 
 function plan(args) {
   const out = execFileSync('node', [PLANNER, ...args, '--json'], { encoding: 'utf8' });
@@ -67,4 +68,32 @@ test('report summarizes states and flags evidence-free submitted entries', () =>
   assert.match(out, /submitted\s+1/);
   assert.match(out, /b\.com — submitted with no evidence/);
   rmSync(dir, { recursive: true, force: true });
+});
+
+test('coverage ledger only references public projects and real domains', () => {
+  const ledger = JSON.parse(
+    readFileSync(resolve(REPO_ROOT, 'apps/showcase/src/data/launch-coverage.json'), 'utf8')
+  );
+  const launchdesk = JSON.parse(
+    readFileSync(resolve(REPO_ROOT, 'apps/showcase/src/data/launchdesk.json'), 'utf8')
+  );
+  const catalog = JSON.parse(
+    readFileSync(resolve(REPO_ROOT, 'catalog/generated/public.json'), 'utf8')
+  );
+  const domains = new Set((launchdesk.destinations ?? launchdesk).map((r) => r.domain));
+  const publicIds = new Set((catalog.directory ?? []).map((p) => p.id));
+  const states = new Set(['prepared', 'submitted', 'scheduled', 'queued', 'live', 'skipped']);
+  const covered = new Set(ledger.coveredStates);
+  assert.ok(covered.isSubsetOf(states));
+  for (const [id, project] of Object.entries(ledger.projects)) {
+    assert.ok(publicIds.has(id), `ledger references non-public project ${id}`);
+    for (const [domain, entry] of Object.entries(project.destinations)) {
+      assert.ok(domains.has(domain), `unknown launchdesk domain ${domain}`);
+      assert.ok(states.has(entry.state), `bad state ${entry.state}`);
+      assert.ok(!('evidence' in entry), 'ledger must not leak private evidence paths');
+    }
+    for (const entry of Object.values(project.externalTargets ?? {})) {
+      assert.ok(states.has(entry.state), `bad external state ${entry.state}`);
+    }
+  }
 });

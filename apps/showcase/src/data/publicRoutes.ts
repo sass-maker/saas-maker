@@ -349,6 +349,7 @@ const fixedRoutes: PublicRoute[] = [
       `- Catalog: ${SITE_URL}/launchdesk`,
       `- JSON: ${SITE_URL}/launchdesk.json`,
       `- Per-platform playbooks: ${SITE_URL}/launchdesk-playbooks.json (index) and ${SITE_URL}/launchdesk/<domain>.json`,
+      `- Per-project coverage ledger: ${SITE_URL}/launch-coverage.json`,
       `- Free agent-executable toolkit: ${SITE_URL}/launchkit`,
       `- Source: https://github.com/sass-maker/saas-maker`,
       '',

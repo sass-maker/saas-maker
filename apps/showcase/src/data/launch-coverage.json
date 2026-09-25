@@ -1,0 +1,2164 @@
+{
+  "$schema": "fleet.launch-coverage.v1",
+  "updated": "2026-09-25",
+  "note": "Public projection of the owner-local submission ledger. Agents mark destinations here as submissions are posted; private receipts stay in tooling/config/directory-submissions/.",
+  "coveredStates": ["submitted", "scheduled", "queued", "live"],
+  "denominator": {
+    "destinations": 912
+  },
+  "projects": {
+    "agent-testing": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        }
+      }
+    },
+    "ai-badges": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        }
+      },
+      "externalTargets": {
+        "github.com/chetanraj/awesome-github-badges": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        }
+      }
+    },
+    "anchor": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "curated.design": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "fivetaco.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Held after account gate / unresolved prior indeterminate"
+        },
+        "lachief.io": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Required verified 540x540 square logo unavailable"
+        },
+        "pitchwall.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupplug.com.ng": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupproject.org": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "backlink_required"
+        },
+        "viesearch.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "email_verification_serial_gate"
+        }
+      },
+      "externalTargets": {
+        "github.com/dkhamsing/open-source-ios-apps": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        }
+      }
+    },
+    "anime-list": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "curated.design": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "lachief.io": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "pitchwall.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupplug.com.ng": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupproject.org": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "backlink_required"
+        },
+        "viesearch.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "email_verification_serial_gate"
+        }
+      }
+    },
+    "app-health": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "devpages.io": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "lachief.io": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Required verified 540x540 square logo unavailable"
+        },
+        "pitchwall.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "readysaasgo.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "HTTP 301 redirected to the site root with no provider acknowledgement; no retry"
+        },
+        "siteswebdirectory.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Root POST referenced as indeterminate; no retry"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupplug.com.ng": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupproject.org": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "backlink_required"
+        },
+        "startupsea.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "viesearch.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "email_verification_serial_gate"
+        }
+      },
+      "externalTargets": {
+        "github.com/oxnr/awesome-analytics": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        }
+      }
+    },
+    "browserdaddy": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "devpages.io": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "fivetaco.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Held after account gate / unresolved prior indeterminate"
+        },
+        "lachief.io": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "pitchwall.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupplug.com.ng": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupproject.org": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "backlink_required"
+        },
+        "startupsea.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "viesearch.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "email_verification_serial_gate"
+        }
+      }
+    },
+    "calorie": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "fivetaco.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Held after account gate / unresolved prior indeterminate"
+        },
+        "lachief.io": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "pitchwall.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupplug.com.ng": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupproject.org": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "backlink_required"
+        },
+        "viesearch.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "email_verification_serial_gate"
+        }
+      },
+      "externalTargets": {
+        "github.com/dkhamsing/open-source-ios-apps": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        }
+      }
+    },
+    "chatgpt-memory-insights": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "ainavhub.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "aitoolspin.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "bai.tools": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "dynamite-ai.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "fivetaco.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Held after account gate / unresolved prior indeterminate"
+        },
+        "flowtools.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Deferred after first provider rate limit"
+        },
+        "futuretools.io": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Live form requires CAPTCHA; stopped without attempting bypass or recording a submission."
+        },
+        "insidr.ai": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "lachief.io": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Required verified 540x540 square logo unavailable"
+        },
+        "pitchwall.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "rankmyai.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "spiff.store": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupplug.com.ng": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupproject.org": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "backlink_required"
+        },
+        "startupsea.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "viesearch.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "email_verification_serial_gate"
+        }
+      }
+    },
+    "codevetter": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "ainavhub.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "aitoolshunt.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "HTTP 500 with no acknowledgement; do not retry"
+        },
+        "aitoolspin.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "bai.tools": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "curated.design": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "devpages.io": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "flowtools.co": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "insidr.ai": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "lachief.io": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "pitchwall.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "rankmyai.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "spiff.store": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupplug.com.ng": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupproject.org": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "backlink_required"
+        },
+        "startupsea.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "viesearch.com": {
+          "state": "queued",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        }
+      },
+      "externalTargets": {
+        "github.com/jamesmurdza/awesome-ai-devtools": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "github.com/jaywcjlove/awesome-swift-macos-apps": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        }
+      }
+    },
+    "email-manager": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "aitoolspin.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "flowtools.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Deferred after first provider rate limit"
+        },
+        "lachief.io": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Required verified 540x540 square logo unavailable"
+        },
+        "pitchwall.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "spiff.store": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupplug.com.ng": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "provider_closed"
+        },
+        "startupproject.org": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "backlink_required"
+        },
+        "viesearch.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "email_verification_serial_gate"
+        }
+      }
+    },
+    "free-ai": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "ainavhub.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "aitoolspin.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "bai.tools": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "devpages.io": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "flowtools.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Deferred after first provider rate limit"
+        },
+        "lachief.io": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Required verified 540x540 square logo unavailable"
+        },
+        "pitchwall.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "rankmyai.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "spiff.store": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupplug.com.ng": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "provider_closed"
+        },
+        "startupproject.org": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "backlink_required"
+        },
+        "viesearch.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "email_verification_serial_gate"
+        }
+      },
+      "externalTargets": {
+        "github.com/irazasyed/awesome-cloudflare": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        }
+      }
+    },
+    "gitstat": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "devpages.io": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "fivetaco.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Held after account gate / unresolved prior indeterminate"
+        },
+        "lachief.io": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Required verified 540x540 square logo unavailable"
+        },
+        "pitchwall.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupplug.com.ng": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "provider_closed"
+        },
+        "startupproject.org": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "backlink_required"
+        },
+        "startupsea.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "viesearch.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "email_verification_serial_gate"
+        }
+      }
+    },
+    "high-signal": {
+      "destinations": {
+        "ainavhub.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "bai.tools": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "curated.design": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "flowtools.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Deferred after first provider rate limit"
+        },
+        "pitchwall.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "rankmyai.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupplug.com.ng": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "provider_closed"
+        },
+        "startupproject.org": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "backlink_required"
+        },
+        "viesearch.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "email_verification_serial_gate"
+        }
+      }
+    },
+    "issue-pages": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        }
+      }
+    },
+    "karte": {
+      "destinations": {
+        "ainavhub.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "aitoolspin.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "bai.tools": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "curated.design": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "devpages.io": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "flowtools.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Deferred after first provider rate limit"
+        },
+        "lachief.io": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Required verified 540x540 square logo unavailable"
+        },
+        "pitchwall.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "rankmyai.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "spiff.store": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupplug.com.ng": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "provider_closed"
+        },
+        "startupproject.org": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "backlink_required"
+        },
+        "viesearch.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "email_verification_serial_gate"
+        }
+      }
+    },
+    "kith": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "fivetaco.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Held after account gate / unresolved prior indeterminate"
+        },
+        "lachief.io": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Required verified 540x540 square logo unavailable"
+        },
+        "pitchwall.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupplug.com.ng": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "provider_closed"
+        },
+        "startupproject.org": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "backlink_required"
+        },
+        "viesearch.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "email_verification_serial_gate"
+        }
+      },
+      "externalTargets": {
+        "github.com/dkhamsing/open-source-ios-apps": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        }
+      }
+    },
+    "knowledge-base": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "ainavhub.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "bai.tools": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "devpages.io": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "fivetaco.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Held after account gate / unresolved prior indeterminate"
+        },
+        "insidr.ai": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "lachief.io": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Required verified 540x540 square logo unavailable"
+        },
+        "pitchwall.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "rankmyai.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupplug.com.ng": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "provider_closed"
+        },
+        "startupproject.org": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "backlink_required"
+        },
+        "viesearch.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "email_verification_serial_gate"
+        }
+      }
+    },
+    "live": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "curated.design": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "fivetaco.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Held after account gate / unresolved prior indeterminate"
+        },
+        "lachief.io": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Required verified 540x540 square logo unavailable"
+        },
+        "pitchwall.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupplug.com.ng": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "provider_closed"
+        },
+        "startupproject.org": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "backlink_required"
+        },
+        "startupsea.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "viesearch.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "email_verification_serial_gate"
+        }
+      }
+    },
+    "looptv": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "pitchwall.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupplug.com.ng": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "provider_closed"
+        },
+        "startupproject.org": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "backlink_required"
+        },
+        "startupsea.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "viesearch.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "email_verification_serial_gate"
+        }
+      }
+    },
+    "mashup": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        }
+      }
+    },
+    "materia": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        }
+      }
+    },
+    "nomad-data-adventure": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "curated.design": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "devpages.io": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Deferred after HTTP 429"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "fivetaco.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Held after account gate / unresolved prior indeterminate"
+        },
+        "lachief.io": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Required verified 540x540 square logo unavailable"
+        },
+        "pitchwall.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupplug.com.ng": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "provider_closed"
+        },
+        "startupproject.org": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "backlink_required"
+        },
+        "viesearch.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "email_verification_serial_gate"
+        }
+      }
+    },
+    "on-record": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        }
+      }
+    },
+    "pace": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "aiagentsdirectory.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "account-gate"
+        },
+        "ainavhub.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "aitoolspin.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "bai.tools": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "devpages.io": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Deferred after HTTP 429"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "flowtools.co": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "lachief.io": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Required verified 540x540 square logo unavailable"
+        },
+        "pitchwall.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "rankmyai.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "spiff.store": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupplug.com.ng": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "provider_closed"
+        },
+        "startupproject.org": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "backlink_required"
+        },
+        "viesearch.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "email_verification_serial_gate"
+        }
+      },
+      "externalTargets": {
+        "github.com/linsa-io/macos-apps": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        }
+      }
+    },
+    "performancedaddy": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "devpages.io": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "fivetaco.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Held after account gate / unresolved prior indeterminate"
+        },
+        "lachief.io": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "pitchwall.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "siteswebdirectory.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Root POST referenced as indeterminate; no retry"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupplug.com.ng": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "provider_closed"
+        },
+        "startupproject.org": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "backlink_required"
+        },
+        "startupsea.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "viesearch.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "email_verification_serial_gate"
+        }
+      }
+    },
+    "ph-catalog": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "viesearch.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "email_verification_serial_gate"
+        }
+      },
+      "externalTargets": {
+        "github.com/davidgasquez/awesome-duckdb": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        }
+      }
+    },
+    "pinpoint": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        }
+      }
+    },
+    "port-whisperer": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        }
+      },
+      "externalTargets": {
+        "github.com/toolleeo/awesome-cli-apps-in-a-csv": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        }
+      }
+    },
+    "posttrainllm": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "ainavhub.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "aitoolspin.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "bai.tools": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "curated.design": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "devpages.io": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "flowtools.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Too many submissions. Please try again later."
+        },
+        "lachief.io": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Required verified 540x540 square logo unavailable"
+        },
+        "pitchwall.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Invalid or expired submit session; not retried"
+        },
+        "rankmyai.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "spiff.store": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupplug.com.ng": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupproject.org": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "backlink_required"
+        },
+        "startupsea.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "viesearch.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "email_verification_serial_gate"
+        }
+      }
+    },
+    "reddit-insights": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        }
+      }
+    },
+    "research-papers": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        }
+      }
+    },
+    "rolepatch": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "ainavhub.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "aitoolspin.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "bai.tools": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "devpages.io": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Deferred after HTTP 429"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "flowtools.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Deferred after first provider rate limit"
+        },
+        "lachief.io": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Required verified 540x540 square logo unavailable"
+        },
+        "pitchwall.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "rankmyai.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "spiff.store": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupplug.com.ng": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "provider_closed"
+        },
+        "startupproject.org": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "backlink_required"
+        },
+        "startupsea.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "viesearch.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "email_verification_serial_gate"
+        }
+      }
+    },
+    "saas-maker": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "curated.design": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "flowtools.co": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "pitchwall.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "readysaasgo.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "HTTP 200 returned the unchanged blank form with no provider acknowledgement; no retry"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupplug.com.ng": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "provider_closed"
+        },
+        "startupproject.org": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "backlink_required"
+        },
+        "startupsea.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "viesearch.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "email_verification_serial_gate"
+        }
+      }
+    },
+    "sarthakagrawal-personal": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "curated.design": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "viesearch.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "email_verification_serial_gate"
+        }
+      }
+    },
+    "setline": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "fivetaco.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Held after account gate / unresolved prior indeterminate"
+        },
+        "lachief.io": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Required verified 540x540 square logo unavailable"
+        },
+        "pitchwall.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupplug.com.ng": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "provider_closed"
+        },
+        "startupproject.org": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "backlink_required"
+        },
+        "viesearch.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "email_verification_serial_gate"
+        }
+      },
+      "externalTargets": {
+        "github.com/dkhamsing/open-source-ios-apps": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        }
+      }
+    },
+    "significanthobbies": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "curated.design": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "lachief.io": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Required verified 540x540 square logo unavailable"
+        },
+        "pitchwall.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupplug.com.ng": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "provider_closed"
+        },
+        "startupproject.org": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "backlink_required"
+        },
+        "viesearch.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "email_verification_serial_gate"
+        }
+      }
+    },
+    "society-relay": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        }
+      },
+      "externalTargets": {
+        "github.com/cagataycali/awesome-strands-agents": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        }
+      }
+    },
+    "starboard": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "ainavhub.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "aitoolspin.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "bai.tools": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "curated.design": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "devpages.io": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Deferred after HTTP 429"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "flowtools.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Deferred after first provider rate limit"
+        },
+        "lachief.io": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Required verified 540x540 square logo unavailable"
+        },
+        "pitchwall.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "spiff.store": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupplug.com.ng": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "provider_closed"
+        },
+        "startupproject.org": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "backlink_required"
+        },
+        "startupsea.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "viesearch.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "email_verification_serial_gate"
+        }
+      },
+      "externalTargets": {
+        "github.com/fffaraz/awesome-github": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        }
+      }
+    },
+    "storagedaddy": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "devpages.io": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Deferred after HTTP 429"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "fivetaco.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Held after account gate / unresolved prior indeterminate"
+        },
+        "lachief.io": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Required verified 540x540 square logo unavailable"
+        },
+        "pitchwall.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupplug.com.ng": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "provider_closed"
+        },
+        "startupproject.org": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "backlink_required"
+        },
+        "startupsea.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "viesearch.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "email_verification_serial_gate"
+        }
+      },
+      "externalTargets": {
+        "github.com/serhii-londar/open-source-mac-os-apps": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        }
+      }
+    },
+    "swe-interview-prep": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "aitoolspin.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "curated.design": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "devpages.io": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Deferred after HTTP 429"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "flowtools.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Deferred after first provider rate limit"
+        },
+        "lachief.io": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "Required verified 540x540 square logo unavailable"
+        },
+        "pitchwall.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "spiff.store": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupplug.com.ng": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "provider_closed"
+        },
+        "startupproject.org": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "backlink_required"
+        },
+        "startupsea.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "viesearch.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "email_verification_serial_gate"
+        }
+      }
+    },
+    "web-playables": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        }
+      }
+    },
+    "what-it-takes-to-win": {
+      "destinations": {
+        "activesearchresults.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "curated.design": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "directorywebpromotion.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "pitchwall.co": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "authentication_required"
+        },
+        "qualityinternetdirectory.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupcollections.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "startupplug.com.ng": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "provider_closed"
+        },
+        "startupproject.org": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "backlink_required"
+        },
+        "startupsea.com": {
+          "state": "submitted",
+          "recordedAt": "2026-09-22T19:24:53Z"
+        },
+        "viesearch.com": {
+          "state": "skipped",
+          "recordedAt": "2026-09-22T19:24:53Z",
+          "reason": "email_verification_serial_gate"
+        }
+      }
+    }
+  }
+}

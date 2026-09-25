@@ -10,6 +10,8 @@
  */
 import Footer from '../components/Footer.astro';
 import Nav from '../components/Nav.astro';
+import coverageData from '../data/launch-coverage.json';
+import { DIRECTORY_PROJECTS } from '../data/directory';
 import launchdeskData from '../data/launchdesk.json';
 import Layout from '../layouts/Layout.astro';
 
@@ -69,6 +71,27 @@ const PRICING_LABELS: Record<string, string> = {
   paid: 'paid',
   unknown: 'unreported',
 };
+
+type CoverageEntry = { state: string; recordedAt: string; reason?: string };
+type CoverageRecord = {
+  destinations: Record<string, CoverageEntry>;
+  externalTargets?: Record<string, CoverageEntry>;
+};
+const coverageProjects = coverageData.projects as Record<string, CoverageRecord>;
+const coveredStates = new Set(coverageData.coveredStates);
+const coverageRows = DIRECTORY_PROJECTS.map((project) => {
+  const record = coverageProjects[project.id];
+  const entries = Object.values(record?.destinations ?? {});
+  return {
+    id: project.id,
+    name: project.name,
+    covered: entries.filter((entry) => coveredStates.has(entry.state)).length,
+    attempted: entries.length,
+    external: Object.keys(record?.externalTargets ?? {}).length,
+  };
+}).sort(
+  (a, b) => b.covered - a.covered || b.attempted - a.attempted || a.name.localeCompare(b.name)
+);
 ---
 
 <Layout
@@ -329,6 +352,65 @@ const PRICING_LABELS: Record<string, string> = {
       </details>
     </section>
 
+    <section class="launchdesk-coverage" aria-labelledby="launchdesk-coverage-title">
+      <div class="launchdesk-intro">
+        <div>
+          <p class="launchdesk-kicker">Coverage by project</p>
+          <h2 id="launchdesk-coverage-title">How far each product has been posted.</h2>
+        </div>
+        <details>
+          <summary>How coverage is counted</summary>
+          <p>
+            <strong>Covered</strong> counts destinations recorded as submitted, queued,
+            scheduled, or live for that project. Skipped and prepared rows stay in the
+            ledger but do not move the bar.
+          </p>
+          <p>
+            Agents mark the ledger as submissions post;
+            <code>tooling/launchkit/scripts/sync-coverage.mjs</code> projects the private
+            receipts into the checked-in public file. Machine-readable at
+            <a href="/launch-coverage.json">/launch-coverage.json</a>.
+          </p>
+        </details>
+      </div>
+      <div class="launchdesk-table-wrap">
+        <table class="launchdesk-table coverage-table">
+          <thead>
+            <tr>
+              <th scope="col">Project</th>
+              <th scope="col">Covered</th>
+              <th scope="col">Attempted</th>
+              <th scope="col">List PRs</th>
+              <th scope="col" class="coverage-share-head">Coverage</th>
+            </tr>
+          </thead>
+          <tbody>
+            {coverageRows.map((row) => {
+              const pct = (row.covered / destinations.length) * 100;
+              return (
+                <tr>
+                  <td class="coverage-project" data-label="Project">
+                    <a href={`/p/${row.id}`}>{row.name}</a>
+                  </td>
+                  <td class="ld-tag" data-label="Covered">{row.covered}</td>
+                  <td class="ld-tag" data-label="Attempted">{row.attempted}</td>
+                  <td class="ld-tag" data-label="List PRs">
+                    {row.external > 0 ? row.external : <span class="ld-blank">—</span>}
+                  </td>
+                  <td class="coverage-share" data-label="Coverage">
+                    <span class="coverage-bar" role="img" aria-label={`${pct.toFixed(1)}% covered`}>
+                      <span style={`width: ${Math.max(pct, 0.4)}%`} />
+                    </span>
+                    <span class="coverage-num">{pct.toFixed(1)}%</span>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
     <aside class="launchdesk-method" aria-labelledby="launchdesk-method-title">
       <div>
         <p class="launchdesk-kicker">Provenance</p>
@@ -559,7 +641,8 @@ const PRICING_LABELS: Record<string, string> = {
     line-height: 1;
   }
 
-  .launchdesk-workbench {
+  .launchdesk-workbench,
+  .launchdesk-coverage {
     width: min(86rem, calc(100% - 3rem));
     margin-inline: auto;
     padding-top: clamp(4rem, 8vw, 7rem);
@@ -772,6 +855,42 @@ const PRICING_LABELS: Record<string, string> = {
 
   .launchdesk-table tbody tr:hover {
     background: var(--surface);
+  }
+
+  .coverage-project a {
+    color: inherit;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .coverage-project a:hover {
+    color: var(--copper-hi);
+    text-decoration: underline;
+  }
+
+  .coverage-share {
+    min-width: 11rem;
+    white-space: nowrap;
+  }
+
+  .coverage-bar {
+    display: inline-block;
+    width: 7rem;
+    height: 0.45rem;
+    margin-right: 0.6rem;
+    vertical-align: middle;
+    background: var(--workshop-steel);
+  }
+
+  .coverage-bar > span {
+    display: block;
+    height: 100%;
+    background: var(--copper-hi);
+  }
+
+  .coverage-num {
+    color: var(--ink-muted);
+    font-variant-numeric: tabular-nums;
   }
 
   .ld-dr {
@@ -1153,12 +1272,22 @@ const PRICING_LABELS: Record<string, string> = {
       text-transform: uppercase;
     }
 
-    .ld-destination {
+    .ld-destination,
+    .coverage-project {
       grid-column: 1 / -1;
       grid-row: 1;
       border-right: 0 !important;
       border-bottom: 1px solid var(--line);
       font-size: 0.98rem;
+    }
+
+    .coverage-share {
+      grid-column: 1 / -1;
+      min-width: 0;
+    }
+
+    .coverage-bar {
+      width: min(10rem, 45vw);
     }
 
     .launchdesk-quarantined ul {

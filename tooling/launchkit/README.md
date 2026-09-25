@@ -17,6 +17,7 @@ including the difference between *submitted*, *scheduled*, and *live*.
 | Run prompt | `prompts/run.prompt.md` | Paste-ready instructions for the executing agent. |
 | Tracker | `tracker.template.json` + `tracker.schema.json` | Per-route state ledger with evidence fields. |
 | Report | `scripts/report.mjs` | Console summary of tracker state and next actions. |
+| Coverage | `scripts/sync-coverage.mjs` | Projects the private submission ledger into the public `launch-coverage.json` behind the /launchdesk coverage table. |
 | Playbooks | `apps/showcase/src/data/launchdesk-playbooks/` | 330 researched per-platform submission guides (schema `fleet.launchdesk-playbook.v1`). |
 | Catalog | `apps/showcase/src/data/launchdesk.json` | 1,100+ destinations with provenance-honest metrics. |
 
@@ -53,3 +54,18 @@ node tooling/launchkit/scripts/report.mjs --tracker tracker.json
 Everything here is public and credential-free. Registration, publication,
 and human gates stay with the operator unless the brief explicitly delegates
 them.
+
+## Coverage tracking
+
+`/launchdesk` shows each public project's coverage percentage — destinations
+marked `submitted`, `queued`, `scheduled`, or `live` over the active catalog.
+Record outcomes in `tooling/config/directory-submissions/submissions.json`
+(owner-local, keeps private evidence paths), then refresh the public ledger:
+
+```bash
+node tooling/launchkit/scripts/sync-coverage.mjs          # write
+node tooling/launchkit/scripts/sync-coverage.mjs --check  # verify freshness
+```
+
+The projection drops evidence paths and withholds projects that are not in
+the public directory.
