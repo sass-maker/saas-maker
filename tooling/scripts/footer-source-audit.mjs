@@ -11,7 +11,7 @@ const ENTRY_FIELDS = new Set(['allows', 'files', 'id', 'kind', 'reason', 'record
 const MANIFEST_FIELDS = new Set(['schemaVersion', 'surfaces', 'updatedAt']);
 const STATES = new Set(['required', 'retired-exception']);
 const KINDS = new Set(['visual', 'factory']);
-const ACKNOWLEDGEABLE_CODES = new Set(['COMPOSE_OPT_OUT']);
+const ACKNOWLEDGEABLE_CODES = new Set(['COMPOSE_OPT_OUT', 'MISSING_PROJECT_STRIP', 'MISSING_AI_FOOTER']);
 const PROJECT_STRIP = /(?:https:\/\/sassmaker\.com)?\/(?:portfolio-)?project-strip\.js\b/gu;
 const AI_FOOTER = /(?:https:\/\/sassmaker\.com)?\/ai-chat-footer\.js\b/gu;
 const COMPOSE_OPT_OUT = /data-compose\s*=\s*(?:["']false["']|\{false\}|false\b)/iu;
