@@ -36,6 +36,25 @@ def resource_hashes(bundle: Path) -> dict[str, str]:
     return result
 
 
+def copy_resource_bundle(source: Path, destination: Path) -> dict[str, str]:
+    hashes = resource_hashes(source)
+    if (source / "Contents/Resources").is_dir():
+        shutil.copytree(source, destination)
+        expected = hashes
+    elif all("/" not in path for path in hashes):
+        resources = destination / "Contents/Resources"
+        resources.mkdir(parents=True)
+        for path in hashes:
+            shutil.copy2(source / path, resources / path)
+        expected = {f"Contents/Resources/{path}": digest for path, digest in hashes.items()}
+    else:
+        raise ValueError(f"Unexpected Release resource bundle layout: {source}")
+    copied = resource_hashes(destination)
+    if copied != expected:
+        raise ValueError("Copied Release resources do not match the verified source")
+    return copied
+
+
 def architectures(path: Path) -> set[str]:
     if not path.is_file():
         raise ValueError(f"Missing Release executable: {path}")
@@ -83,7 +102,7 @@ def make_universal(app: str, repository: str, root: Path, output: Path) -> dict:
     binary.chmod(stat.S_IMODE((products["arm64"] / executable).stat().st_mode))
     if architectures(binary) != set(ARCHITECTURES):
         raise ValueError("Universal Release executable is missing an architecture")
-    shutil.copytree(arm_bundle, output / bundle_name)
+    copied_hashes = copy_resource_bundle(arm_bundle, output / bundle_name)
     source_sha = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip()
     receipt = {
         "schemaVersion": 1,
@@ -95,7 +114,7 @@ def make_universal(app: str, repository: str, root: Path, output: Path) -> dict:
         "executable": executable,
         "executableSha256": hashlib.sha256(binary.read_bytes()).hexdigest(),
         "resourceBundle": bundle_name,
-        "resourceHashes": hashes,
+        "resourceHashes": copied_hashes,
     }
     (output.parent / "universal-products-receipt.json").write_text(json.dumps(receipt, indent=2) + "\n")
     return receipt
