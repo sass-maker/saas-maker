@@ -15,8 +15,8 @@
         "audience": "Developers and teams shipping code produced with AI agents.",
         "outcome": "Higher confidence that an agent completed the requested change correctly and safely.",
         "mechanism": "Local-first review combines repository context, executable checks, targeted evaluation, and inspectable verification receipts.",
-        "proof": "Published macOS 1.13.9 is signed and notarized. Its CLI has verified real Codex review, passing and failing executable checks, and persisted receipts on a bounded Node fixture.",
-        "nextAction": "Try the developer preview on a small local repository. Use the documented manual update path; in-app updating and other review providers remain unqualified."
+        "proof": "Published macOS 1.14.3 is signed and notarized; its DMG hash and local installation were verified. An earlier bounded CLI fixture demonstrated real Codex review, pass/fail checks and persisted receipts.",
+        "nextAction": "Try the current Mac release on a small local repository. Use the documented manual update path until in-app installation is qualified."
       },
       "kind": "product",
       "category": "utility",
@@ -46,7 +46,7 @@
       "changelogUrl": "https://codevetter.com/changelog",
       "roadmapUrl": "https://github.com/Codevetter/codevetter/issues",
       "firstCommitAt": "2025-11-30",
-      "latestCommitAt": "2026-09-09"
+      "latestCommitAt": "2026-09-23"
     },
     {
       "id": "pace",
@@ -89,7 +89,7 @@
       "changelogUrl": "https://heypace.app/changelog",
       "roadmapUrl": "https://github.com/HeyPace/pace/issues",
       "firstCommitAt": "2026-07-13",
-      "latestCommitAt": "2026-09-09"
+      "latestCommitAt": "2026-09-18"
     },
     {
       "id": "posttrainllm",
@@ -132,7 +132,7 @@
       "changelogUrl": "https://posttrainllm.com/changelog",
       "roadmapUrl": "https://github.com/PostTrainLLM/posttrainllm/issues",
       "firstCommitAt": "2026-05-21",
-      "latestCommitAt": "2026-09-07"
+      "latestCommitAt": "2026-09-23"
     },
     {
       "id": "live",
@@ -174,7 +174,7 @@
       "changelogUrl": "https://live.significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/live/issues",
       "firstCommitAt": "2026-03-01",
-      "latestCommitAt": "2026-09-09"
+      "latestCommitAt": "2026-09-22"
     },
     {
       "id": "saas-maker",
@@ -218,7 +218,7 @@
       "changelogUrl": "https://sassmaker.com/changelog",
       "roadmapUrl": "https://github.com/sass-maker/saas-maker/issues",
       "firstCommitAt": "2026-02-26",
-      "latestCommitAt": "2026-09-09"
+      "latestCommitAt": "2026-09-22"
     },
     {
       "id": "gitstat",
@@ -260,7 +260,7 @@
       "changelogUrl": "https://git.significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/sass-maker/gitstat/issues",
       "firstCommitAt": "2026-08-21",
-      "latestCommitAt": "2026-09-06"
+      "latestCommitAt": "2026-09-12"
     },
     {
       "id": "email-manager",
@@ -303,7 +303,7 @@
       "changelogUrl": "https://mail.significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/email-manager/issues",
       "firstCommitAt": "2026-02-24",
-      "latestCommitAt": "2026-09-09"
+      "latestCommitAt": "2026-09-10"
     },
     {
       "id": "chatgpt-memory-insights",
@@ -344,7 +344,7 @@
       "changelogUrl": "https://chatgpt.significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/chatgpt-memory-insights/issues",
       "firstCommitAt": "2026-07-28",
-      "latestCommitAt": "2026-09-07"
+      "latestCommitAt": "2026-09-19"
     },
     {
       "id": "free-ai",
@@ -387,7 +387,7 @@
       "changelogUrl": "https://ai-gateway.sassmaker.com/changelog",
       "roadmapUrl": "https://github.com/sass-maker/free-ai/issues",
       "firstCommitAt": "2026-02-15",
-      "latestCommitAt": "2026-09-09"
+      "latestCommitAt": "2026-09-20"
     },
     {
       "id": "high-signal",
@@ -430,7 +430,7 @@
       "changelogUrl": "https://highsignal.app/changelog",
       "roadmapUrl": "https://github.com/High-Signal-App/high-signal/issues",
       "firstCommitAt": "2026-04-25",
-      "latestCommitAt": "2026-09-12"
+      "latestCommitAt": "2026-09-22"
     },
     {
       "id": "on-record",
@@ -472,7 +472,7 @@
       "repositoryUrl": "https://github.com/Significant-Hobbies/on-record",
       "roadmapUrl": "https://github.com/Significant-Hobbies/on-record/issues",
       "firstCommitAt": "2026-08-24",
-      "latestCommitAt": "2026-09-07"
+      "latestCommitAt": "2026-09-22"
     },
     {
       "id": "issue-pages",
@@ -555,7 +555,7 @@
       "repositoryUrl": "https://github.com/High-Signal-App/research-papers",
       "roadmapUrl": "https://github.com/High-Signal-App/research-papers/issues",
       "firstCommitAt": "2026-05-30",
-      "latestCommitAt": "2026-09-06"
+      "latestCommitAt": "2026-09-10"
     },
     {
       "id": "materia",
@@ -641,7 +641,7 @@
       "changelogUrl": "https://knowledgebase.sassmaker.com/changelog",
       "roadmapUrl": "https://github.com/sass-maker/knowledge-base/issues",
       "firstCommitAt": "2026-05-27",
-      "latestCommitAt": "2026-09-09"
+      "latestCommitAt": "2026-09-19"
     },
     {
       "id": "significanthobbies",
@@ -685,7 +685,7 @@
       "changelogUrl": "https://significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/significanthobbies/issues",
       "firstCommitAt": "2026-03-01",
-      "latestCommitAt": "2026-09-09"
+      "latestCommitAt": "2026-09-22"
     },
     {
       "id": "anime-list",
@@ -729,7 +729,7 @@
       "changelogUrl": "https://anime.significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/anime-list/issues",
       "firstCommitAt": "2025-02-16",
-      "latestCommitAt": "2026-09-08"
+      "latestCommitAt": "2026-09-22"
     },
     {
       "id": "looptv",
@@ -814,13 +814,14 @@
       "changelogUrl": "https://learn.significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/swe-interview-prep/issues",
       "firstCommitAt": "2026-02-08",
-      "latestCommitAt": "2026-09-08"
+      "latestCommitAt": "2026-09-20"
     },
     {
       "id": "calorie",
       "name": "Calorie",
       "description": "A private, local-first food, water, and weight journal with transparent timing guidance.",
       "makerNote": "I wanted one personal system for weight loss that connects food logging, fasting, exercise timing, and daily performance.",
+      "logoUrl": "/images/project-icons/calorie.png",
       "purposeContract": {
         "purpose": "Calorie is a private food and body journal that turns lightweight logging into transparent daily and timing guidance.",
         "audience": "A person pursuing weight loss who logs food with one hand and checks progress in short daily moments.",
@@ -858,13 +859,14 @@
       "changelogUrl": "https://calorie.significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/calorie/issues",
       "firstCommitAt": "2026-07-25",
-      "latestCommitAt": "2026-09-09"
+      "latestCommitAt": "2026-09-22"
     },
     {
       "id": "setline",
       "name": "Setline",
       "description": "An iOS-native training tracker that runs a written strength, cardio and mobility programme one set at a time and measures each exercise against an authored target.",
       "makerNote": "I built Setline to make workouts easier to execute one set at a time, with timing and performance kept accurate.",
+      "logoUrl": "/images/project-icons/setline.png",
       "purposeContract": {
         "purpose": "Setline runs a written workout one set at a time and measures each exercise against its authored target.",
         "audience": "A person following a structured strength, cardio, or mobility programme during real sessions.",
@@ -900,13 +902,14 @@
       "changelogUrl": "https://setline.significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/setline/issues",
       "firstCommitAt": "2026-07-27",
-      "latestCommitAt": "2026-09-09"
+      "latestCommitAt": "2026-09-22"
     },
     {
       "id": "kith",
       "name": "Kith",
       "description": "A private iPhone app for the people you actually want to stay close to — closeness-weighted constellation home, standing notes, and a chronological log per person.",
       "makerNote": "I wanted a beautiful personal relationship-memory app that helps me stay more thoughtful about the people in my life.",
+      "logoUrl": "/images/project-icons/kith.png",
       "purposeContract": {
         "purpose": "Kith helps a person remember the people they genuinely want to stay close to and act with more thoughtfulness.",
         "audience": "An iPhone user who values a small set of relationships and dislikes treating them like a sales CRM.",
@@ -942,7 +945,7 @@
       "changelogUrl": "https://kith.significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/kith/issues",
       "firstCommitAt": "2026-08-16",
-      "latestCommitAt": "2026-09-09"
+      "latestCommitAt": "2026-09-19"
     },
     {
       "id": "rolepatch",
@@ -985,7 +988,7 @@
       "changelogUrl": "https://rolepatch.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/rolepatch/issues",
       "firstCommitAt": "2026-02-23",
-      "latestCommitAt": "2026-09-07"
+      "latestCommitAt": "2026-09-22"
     },
     {
       "id": "karte",
@@ -1029,7 +1032,7 @@
       "changelogUrl": "https://karte.cc/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/karte/issues",
       "firstCommitAt": "2026-03-05",
-      "latestCommitAt": "2026-09-07"
+      "latestCommitAt": "2026-09-22"
     },
     {
       "id": "starboard",
@@ -1072,7 +1075,7 @@
       "changelogUrl": "https://starboard.codevetter.com/changelog",
       "roadmapUrl": "https://github.com/Codevetter/starboard/issues",
       "firstCommitAt": "2026-02-22",
-      "latestCommitAt": "2026-09-07"
+      "latestCommitAt": "2026-09-22"
     },
     {
       "id": "app-health",
@@ -1116,7 +1119,7 @@
       "changelogUrl": "https://health.sassmaker.com/changelog",
       "roadmapUrl": "https://github.com/sass-maker/app-health/issues",
       "firstCommitAt": "2026-07-20",
-      "latestCommitAt": "2026-09-12"
+      "latestCommitAt": "2026-09-19"
     },
     {
       "id": "mashup",
@@ -1279,7 +1282,7 @@
       "changelogUrl": "https://paths.significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/what-it-takes-to-win/issues",
       "firstCommitAt": "2026-07-21",
-      "latestCommitAt": "2026-09-07"
+      "latestCommitAt": "2026-09-22"
     },
     {
       "id": "sarthakagrawal-personal",
@@ -1321,7 +1324,7 @@
       "changelogUrl": "https://sarthakagrawal.dev/changelog",
       "roadmapUrl": "https://github.com/sarthakagrawal927/portfolio/issues",
       "firstCommitAt": "2026-05-22",
-      "latestCommitAt": "2026-09-07"
+      "latestCommitAt": "2026-09-19"
     },
     {
       "id": "reddit-insights",
@@ -1363,19 +1366,20 @@
       "repositoryUrl": "https://github.com/High-Signal-App/research-subreddit",
       "roadmapUrl": "https://github.com/High-Signal-App/research-subreddit/issues",
       "firstCommitAt": "2026-08-07",
-      "latestCommitAt": "2026-09-07"
+      "latestCommitAt": "2026-09-18"
     },
     {
       "id": "anchor",
       "name": "Anchor",
       "description": "A local-first day planner and focus timer for Mac, iPhone, and Apple Watch that explains the gap between the schedule you planned and the day you lived.",
       "makerNote": "I wanted a realistic daily planner that could help me follow the day and explain why the lived plan diverged from the intended one.",
+      "logoUrl": "/images/project-icons/anchor.png",
       "purposeContract": {
         "purpose": "Anchor helps a person plan a realistic day, follow the current intention, and learn why the day lived differed from the day planned.",
         "audience": "A person moving between Mac, iPhone, and Apple Watch who wants a deliberate day rather than another task list.",
         "outcome": "Make more realistic plans, recover from interruptions, and protect activities that genuinely matter without moralizing imperfect adherence.",
         "mechanism": "Native apps combine schedule blocks, recurring routines, wall-clock focus sessions, interruption evidence, and an end-of-day divergence review.",
-        "proof": "The maintained successor to Indulge and Habits has signed native builds and an integrated schedule → focus → interruption → review loop under dogfooding.",
+        "proof": "Public notarized Mac build 20 remains available; local build 25 has passed a bounded personal workflow but Gatekeeper rejects it as unnotarized, so it is not a public update.",
         "nextAction": "Use Anchor through a real day and review the divergence evidence; let repeated lived patterns decide the next change."
       },
       "kind": "product",
@@ -1409,7 +1413,7 @@
       "changelogUrl": "https://anchor.significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/anchor/issues",
       "firstCommitAt": "2026-08-16",
-      "latestCommitAt": "2026-09-09"
+      "latestCommitAt": "2026-09-18"
     },
     {
       "id": "nomad-data-adventure",
@@ -1450,8 +1454,8 @@
       "url": "https://nomad.significanthobbies.com/",
       "repositoryUrl": "https://github.com/sarthakagrawal927/nomad-data-adventure",
       "roadmapUrl": "https://github.com/sarthakagrawal927/nomad-data-adventure/issues",
-      "firstCommitAt": null,
-      "latestCommitAt": null
+      "firstCommitAt": "2026-09-12",
+      "latestCommitAt": "2026-09-22"
     },
     {
       "id": "storagedaddy",
@@ -1463,8 +1467,8 @@
         "audience": "Developers whose Mac builds, dependencies, caches and AI session histories consume storage.",
         "outcome": "Find large storage consumers and review what to archive or move to Trash.",
         "mechanism": "A local SwiftUI and AppKit scanner provides visual exploration, developer insights, reviewed cache cleanup and compact AI conversation exports. Sparkle provides signed macOS update checks.",
-        "proof": "MIT-licensed source, signed and notarized macOS 14+ Apple-silicon beta, tested scanner and archive cleanup, and a publicly downloaded DMG with matching checksum.",
-        "nextAction": "Download during free early access at storagedaddy.significanthobbies.com, scan a folder, and review what to archive or move to Trash."
+        "proof": "The public signed feed advertises macOS 0.1.2 build80, matching the locally installed notarized app; earlier scanner and reviewed-cleanup qualification remains bounded to its recorded release.",
+        "nextAction": "Download during free early access at storage.daddyrad.com, scan a folder, and review what to archive or move to Trash."
       },
       "kind": "experiment",
       "category": "utility",
@@ -1488,13 +1492,14 @@
         "Cloudflare Workers"
       ],
       "domains": [
+        "storage.daddyrad.com",
         "storagedaddy.significanthobbies.com"
       ],
-      "url": "https://storagedaddy.significanthobbies.com/",
+      "url": "https://storage.daddyrad.com/",
       "repositoryUrl": "https://github.com/sarthakagrawal927/storagedaddy",
       "roadmapUrl": "https://github.com/sarthakagrawal927/storagedaddy/issues",
       "firstCommitAt": "2026-09-13",
-      "latestCommitAt": "2026-09-13"
+      "latestCommitAt": "2026-09-20"
     },
     {
       "id": "browserdaddy",
@@ -1506,8 +1511,8 @@
         "audience": "Mac users who want a unified, inspectable record of browsing and attention.",
         "outcome": "Review browsing history and attention without sending the archive to a hosted service.",
         "mechanism": "A native local Mac app extracts browser archives, watches focus and classifies topics only after explicit opt-in.",
-        "proof": "Private native macOS repository and local-first product surface; public distribution is not claimed yet.",
-        "nextAction": "Read the public BrowserDaddy landing and release status; no native download is available."
+        "proof": "Native 0.3.1 build4 is signed, notarized and installed locally; the public Sparkle feed matches it. The GitHub release is private and the public landing does not link a first-install DMG.",
+        "nextAction": "Read the public landing; an existing installation can use the live update feed. First-install distribution remains private."
       },
       "kind": "experiment",
       "category": "utility",
@@ -1527,12 +1532,16 @@
       "shareable": true,
       "deployed": true,
       "deploymentProviders": [
-        "Cloudflare Pages"
+        "Cloudflare Pages",
+        "Cloudflare Workers"
       ],
       "domains": [
+        "browser.daddyrad.com",
         "browserdaddy.significanthobbies.com"
       ],
-      "url": "https://browserdaddy.significanthobbies.com/"
+      "url": "https://browser.daddyrad.com/",
+      "firstCommitAt": "2026-09-19",
+      "latestCommitAt": "2026-09-22"
     },
     {
       "id": "performancedaddy",
@@ -1544,8 +1553,8 @@
         "audience": "Developers running local servers, coding agents and other moving parts on a Mac.",
         "outcome": "Find the process or port evidence behind a slowdown and choose the next check deliberately.",
         "mechanism": "A native local Mac app records bounded CPU, memory, thermal, process and socket observations with reviewed stop controls.",
-        "proof": "Private native macOS repository and local preview surface; no public download or guaranteed root-cause diagnosis is claimed.",
-        "nextAction": "Read the public PerformanceDaddy landing and release status; no native download is available."
+        "proof": "The public 0.2.3 build3 native release is signed and notarized; the installed app matches its live Sparkle feed. This does not prove a particular slowdown diagnosis.",
+        "nextAction": "Read the public landing and use the current GitHub release for a Mac install; review measured evidence before acting on a diagnosis."
       },
       "kind": "experiment",
       "category": "utility",
@@ -1565,14 +1574,18 @@
       "shareable": true,
       "deployed": true,
       "deploymentProviders": [
-        "Cloudflare Pages"
+        "Cloudflare Pages",
+        "Cloudflare Workers"
       ],
       "domains": [
+        "performance.daddyrad.com",
         "performancedaddy.significanthobbies.com"
       ],
-      "url": "https://performancedaddy.significanthobbies.com/",
+      "url": "https://performance.daddyrad.com/",
       "repositoryUrl": "https://github.com/sarthakagrawal927/performancedaddy",
-      "roadmapUrl": "https://github.com/sarthakagrawal927/performancedaddy/issues"
+      "roadmapUrl": "https://github.com/sarthakagrawal927/performancedaddy/issues",
+      "firstCommitAt": "2026-09-20",
+      "latestCommitAt": "2026-09-23"
     },
     {
       "id": "agent-testing",
@@ -1616,6 +1629,87 @@
       "roadmapUrl": "https://github.com/sarthakagrawal927/agent-testing/issues",
       "firstCommitAt": "2026-09-20",
       "latestCommitAt": "2026-09-20"
+    },
+    {
+      "id": "contextdaddy",
+      "name": "ContextDaddy",
+      "description": "A read-only native Mac app for coding-agent context: per-runtime skill access, project context inventory, local usage history and verified OpenTelemetry signals.",
+      "makerNote": "ContextDaddy is supposed to handle all things AI agents locally (context, skills, usage, otel etc) to help debug/speed up",
+      "purposeContract": {
+        "purpose": "Help developers inspect coding-agent context, skill exposure, usage, and available local telemetry.",
+        "audience": "Developers using multiple coding agents on a Mac.",
+        "outcome": "Find actionable context and usage problems with evidence and explicit measurement limits.",
+        "mechanism": "A native read-only Mac app combines bounded skill discovery, offline usage history, and local OpenTelemetry views.",
+        "proof": "The public 0.1.0 build1 DMG is Developer ID signed, notarized and stapled; /download on context.daddyrad.com serves the exact receipt checksum. Discovery evidence still does not prove live prompt use.",
+        "nextAction": "Read the public landing and install the signed 0.1.0 beta; new builds are manual downloads until an updater ships."
+      },
+      "kind": "product",
+      "category": "utility",
+      "form": "macOS app",
+      "platforms": [
+        "macOS",
+        "Web"
+      ],
+      "technologies": [
+        "SwiftUI",
+        "Astro",
+        "Cloudflare Pages",
+        "Cloudflare Workers"
+      ],
+      "group": "current",
+      "lifecycle": "active",
+      "shareable": true,
+      "deployed": true,
+      "deploymentProviders": [
+        "Cloudflare Pages",
+        "Cloudflare Workers"
+      ],
+      "domains": [
+        "context.daddyrad.com"
+      ],
+      "url": "https://context.daddyrad.com/",
+      "repositoryUrl": "https://github.com/sarthakagrawal927/contextdaddy",
+      "roadmapUrl": "https://github.com/sarthakagrawal927/contextdaddy/issues",
+      "firstCommitAt": "2026-09-13",
+      "latestCommitAt": "2026-09-23"
+    },
+    {
+      "id": "daddyrad",
+      "name": "DaddyRad",
+      "description": "Umbrella landing for the daddy series of native Mac utilities.",
+      "makerNote": "I moved the daddy series onto its own domain so the apps read as one family.",
+      "purposeContract": {
+        "purpose": "DaddyRad is the umbrella home for the daddy series of native macOS utilities.",
+        "audience": "Mac users and developers discovering the daddy-series apps.",
+        "outcome": "One domain introduces all four apps and routes to each product's site.",
+        "mechanism": "A small Cloudflare Worker serves a static landing on the apex and redirects www and context subdomains.",
+        "proof": "HTTPS 200 at daddyrad.com with 301s from www and context.daddyrad.com verified 2026-09-25.",
+        "nextAction": "Visit daddyrad.com and pick an app."
+      },
+      "kind": "platform",
+      "category": "utility",
+      "form": "website",
+      "platforms": [
+        "Web"
+      ],
+      "technologies": [
+        "Cloudflare Workers"
+      ],
+      "group": "current",
+      "lifecycle": "active",
+      "shareable": true,
+      "deployed": true,
+      "deploymentProviders": [
+        "Cloudflare Workers"
+      ],
+      "domains": [
+        "daddyrad.com",
+        "www.daddyrad.com",
+        "context.daddyrad.com"
+      ],
+      "url": "https://daddyrad.com/",
+      "firstCommitAt": "2026-09-25",
+      "latestCommitAt": "2026-09-25"
     },
     {
       "id": "ai-badges",
@@ -1774,8 +1868,8 @@
         "audience": "Developers and teams shipping code produced with AI agents.",
         "outcome": "Higher confidence that an agent completed the requested change correctly and safely.",
         "mechanism": "Local-first review combines repository context, executable checks, targeted evaluation, and inspectable verification receipts.",
-        "proof": "Published macOS 1.13.9 is signed and notarized. Its CLI has verified real Codex review, passing and failing executable checks, and persisted receipts on a bounded Node fixture.",
-        "nextAction": "Try the developer preview on a small local repository. Use the documented manual update path; in-app updating and other review providers remain unqualified."
+        "proof": "Published macOS 1.14.3 is signed and notarized; its DMG hash and local installation were verified. An earlier bounded CLI fixture demonstrated real Codex review, pass/fail checks and persisted receipts.",
+        "nextAction": "Try the current Mac release on a small local repository. Use the documented manual update path until in-app installation is qualified."
       }
     },
     {
@@ -1822,7 +1916,7 @@
         "audience": "A person moving between Mac, iPhone, and Apple Watch who wants a deliberate day rather than another task list.",
         "outcome": "Make more realistic plans, recover from interruptions, and protect activities that genuinely matter without moralizing imperfect adherence.",
         "mechanism": "Native apps combine schedule blocks, recurring routines, wall-clock focus sessions, interruption evidence, and an end-of-day divergence review.",
-        "proof": "The maintained successor to Indulge and Habits has signed native builds and an integrated schedule → focus → interruption → review loop under dogfooding.",
+        "proof": "Public notarized Mac build 20 remains available; local build 25 has passed a bounded personal workflow but Gatekeeper rejects it as unnotarized, so it is not a public update.",
         "nextAction": "Use Anchor through a real day and review the divergence evidence; let repeated lived patterns decide the next change."
       }
     },
@@ -1880,7 +1974,7 @@
       "id": "browserdaddy",
       "name": "BrowserDaddy",
       "description": "A local-first Mac browsing intelligence app for a unified history archive and real attention tracking.",
-      "url": "https://browserdaddy.significanthobbies.com/",
+      "url": "https://browser.daddyrad.com/",
       "tier": "active",
       "category": "utility",
       "priority": "P2",
@@ -1894,8 +1988,8 @@
         "audience": "Mac users who want a unified, inspectable record of browsing and attention.",
         "outcome": "Review browsing history and attention without sending the archive to a hosted service.",
         "mechanism": "A native local Mac app extracts browser archives, watches focus and classifies topics only after explicit opt-in.",
-        "proof": "Private native macOS repository and local-first product surface; public distribution is not claimed yet.",
-        "nextAction": "Read the public BrowserDaddy landing and release status; no native download is available."
+        "proof": "Native 0.3.1 build4 is signed, notarized and installed locally; the public Sparkle feed matches it. The GitHub release is private and the public landing does not link a first-install DMG.",
+        "nextAction": "Read the public landing; an existing installation can use the live update feed. First-install distribution remains private."
       }
     },
     {
@@ -1921,6 +2015,49 @@
         "mechanism": "A local-first iPhone journal records food and four core nutrients, applies visible formulas, and offers optional private sync.",
         "proof": "The maintained app is functionally complete, connected to the Hub family, and designed so recommendations trace to visible rules.",
         "nextAction": "Log a meal or daily measurement in the app; change the product only when repeated use reveals a concrete gap."
+      }
+    },
+    {
+      "id": "contextdaddy",
+      "name": "ContextDaddy",
+      "description": "A local Mac desk for agent context, skills, usage, and observed telemetry.",
+      "url": "https://context.daddyrad.com/",
+      "tier": "active",
+      "category": "utility",
+      "spotlight": false,
+      "lifecycle": "active",
+      "shareable": true,
+      "maturity": "beta",
+      "pillarId": "build",
+      "purposeContract": {
+        "purpose": "Help developers inspect coding-agent context, skill exposure, usage, and available local telemetry.",
+        "audience": "Developers using multiple coding agents on a Mac.",
+        "outcome": "Find actionable context and usage problems with evidence and explicit measurement limits.",
+        "mechanism": "A native read-only Mac app combines bounded skill discovery, offline usage history, and local OpenTelemetry views.",
+        "proof": "The public 0.1.0 build1 DMG is Developer ID signed, notarized and stapled; /download on context.daddyrad.com serves the exact receipt checksum. Discovery evidence still does not prove live prompt use.",
+        "nextAction": "Read the public landing and install the signed 0.1.0 beta; new builds are manual downloads until an updater ships."
+      }
+    },
+    {
+      "id": "daddyrad",
+      "name": "DaddyRad",
+      "description": "Umbrella landing for the daddy series: native Mac utilities for performance evidence, storage cleanup, browsing attention and agent context.",
+      "url": "https://daddyrad.com/",
+      "tier": "active",
+      "category": "utility",
+      "priority": "P3",
+      "spotlight": false,
+      "lifecycle": "active",
+      "shareable": true,
+      "maturity": "beta",
+      "pillarId": "build",
+      "purposeContract": {
+        "purpose": "DaddyRad is the umbrella home for the daddy series of native macOS utilities.",
+        "audience": "Mac users and developers discovering the daddy-series apps.",
+        "outcome": "One domain introduces all four apps and routes to each product's site.",
+        "mechanism": "A small Cloudflare Worker serves a static landing on the apex and redirects www and context subdomains.",
+        "proof": "HTTPS 200 at daddyrad.com with 301s from www and context.daddyrad.com verified 2026-09-25.",
+        "nextAction": "Visit daddyrad.com and pick an app."
       }
     },
     {
@@ -2251,7 +2388,7 @@
       "id": "performancedaddy",
       "name": "PerformanceDaddy",
       "description": "A local Mac performance investigator for background apps, helpers and developer workloads, with measured evidence and reviewed actions.",
-      "url": "https://performancedaddy.significanthobbies.com/",
+      "url": "https://performance.daddyrad.com/",
       "tier": "active",
       "category": "utility",
       "priority": "P2",
@@ -2265,8 +2402,8 @@
         "audience": "Developers running local servers, coding agents and other moving parts on a Mac.",
         "outcome": "Find the process or port evidence behind a slowdown and choose the next check deliberately.",
         "mechanism": "A native local Mac app records bounded CPU, memory, thermal, process and socket observations with reviewed stop controls.",
-        "proof": "Private native macOS repository and local preview surface; no public download or guaranteed root-cause diagnosis is claimed.",
-        "nextAction": "Read the public PerformanceDaddy landing and release status; no native download is available."
+        "proof": "The public 0.2.3 build3 native release is signed and notarized; the installed app matches its live Sparkle feed. This does not prove a particular slowdown diagnosis.",
+        "nextAction": "Read the public landing and use the current GitHub release for a Mac install; review measured evidence before acting on a diagnosis."
       }
     },
     {
@@ -2447,7 +2584,7 @@
       "id": "storagedaddy",
       "name": "storagedaddy",
       "description": "An open-source native Mac storage analyzer for developer caches, builds, dependencies and AI session archives, with reviewed cleanup. Free during early access.",
-      "url": "https://storagedaddy.significanthobbies.com/",
+      "url": "https://storage.daddyrad.com/",
       "tier": "active",
       "category": "utility",
       "priority": "P2",
@@ -2461,8 +2598,8 @@
         "audience": "Developers whose Mac builds, dependencies, caches and AI session histories consume storage.",
         "outcome": "Find large storage consumers and review what to archive or move to Trash.",
         "mechanism": "A local SwiftUI and AppKit scanner provides visual exploration, developer insights, reviewed cache cleanup and compact AI conversation exports. Sparkle provides signed macOS update checks.",
-        "proof": "MIT-licensed source, signed and notarized macOS 14+ Apple-silicon beta, tested scanner and archive cleanup, and a publicly downloaded DMG with matching checksum.",
-        "nextAction": "Download during free early access at storagedaddy.significanthobbies.com, scan a folder, and review what to archive or move to Trash."
+        "proof": "The public signed feed advertises macOS 0.1.2 build80, matching the locally installed notarized app; earlier scanner and reviewed-cleanup qualification remains bounded to its recorded release.",
+        "nextAction": "Download during free early access at storage.daddyrad.com, scan a folder, and review what to archive or move to Trash."
       }
     },
     {

@@ -183,18 +183,23 @@ manifests = {
 
 try:
     import tomllib
-    with (codex_home / "config.toml").open("rb") as handle:
-        config = tomllib.load(handle)
-    for plugin_id, details in config.get("plugins", {}).items():
-        if not isinstance(details, dict) or not details.get("enabled"):
-            continue
-        plugin, _, marketplace = plugin_id.partition("@")
-        cache_root = codex_home / "plugins" / "cache" / marketplace / plugin
-        candidates = sorted(cache_root.glob("*/hooks/hooks.json"))
-        if candidates:
-            manifests.add(candidates[-1])
-except (FileNotFoundError, OSError, ValueError):
-    pass
+except ModuleNotFoundError:
+    tomllib = None
+
+if tomllib is not None:
+    try:
+        with (codex_home / "config.toml").open("rb") as handle:
+            config = tomllib.load(handle)
+        for plugin_id, details in config.get("plugins", {}).items():
+            if not isinstance(details, dict) or not details.get("enabled"):
+                continue
+            plugin, _, marketplace = plugin_id.partition("@")
+            cache_root = codex_home / "plugins" / "cache" / marketplace / plugin
+            candidates = sorted(cache_root.glob("*/hooks/hooks.json"))
+            if candidates:
+                manifests.add(candidates[-1])
+    except (FileNotFoundError, OSError, ValueError):
+        pass
 
 total_events = 0
 total_commands = 0

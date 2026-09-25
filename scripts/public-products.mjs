@@ -36,6 +36,7 @@ const DIRECTORY_FIELDS = new Set([
   'name',
   'description',
   'makerNote',
+  'logoUrl',
   'purposeContract',
   'kind',
   'form',
@@ -160,6 +161,7 @@ export function buildPublicProducts(catalog) {
       name: project.public?.name ?? project.name,
       description: metadata.description ?? project.public?.description,
       makerNote: metadata.makerNote,
+      ...(metadata.logoUrl ? { logoUrl: metadata.logoUrl } : {}),
       ...(metadata.purposeContract ? { purposeContract: metadata.purposeContract } : {}),
       kind: project.portfolio.kind,
       category: project.category,
@@ -263,6 +265,7 @@ export function buildPublicProducts(catalog) {
       name: publicMetadata.name,
       description: directoryMetadata.description ?? publicMetadata.description,
       makerNote: directoryMetadata.makerNote,
+      ...(directoryMetadata.logoUrl ? { logoUrl: directoryMetadata.logoUrl } : {}),
       ...(directoryMetadata.purposeContract
         ? { purposeContract: directoryMetadata.purposeContract }
         : {}),

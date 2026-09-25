@@ -1,7 +1,7 @@
 {
  "schemaVersion": 1,
  "schema": "fleet.clarity-journeys.v1",
- "observedAt": "2026-09-18",
+ "observedAt": "2026-09-22",
  "note": "Credential-free candidates observed from each wired public root. Provider state remains unverified until the saved Smart Event and funnel are reread in Clarity.",
  "projects": [
   {
@@ -677,6 +677,102 @@
     "steps": [
      "page:/",
      "event:mac_beta_downloaded"
+    ]
+   }
+  },
+  {
+   "id": "storagedaddy",
+   "state": "ready",
+   "event": {
+    "name": "source_opened",
+    "text": "View source",
+    "href": "https://github.com/sarthakagrawal927/storagedaddy"
+   },
+   "funnel": {
+    "name": "discover_to_source",
+    "steps": [
+     "page:/",
+     "event:source_opened"
+    ]
+   }
+  },
+  {
+   "id": "browserdaddy",
+   "state": "ready",
+   "event": {
+    "name": "release_status_opened",
+    "text": "Release status",
+    "href": "/release/"
+   },
+   "funnel": {
+    "name": "discover_to_release_status",
+    "steps": [
+     "page:/",
+     "event:release_status_opened"
+    ]
+   }
+  },
+  {
+   "id": "performancedaddy",
+   "state": "ready",
+   "event": {
+    "name": "source_opened",
+    "text": "PerformanceDaddy source code on GitHub",
+    "href": "https://github.com/sarthakagrawal927/performancedaddy"
+   },
+   "funnel": {
+    "name": "discover_to_source",
+    "steps": [
+     "page:/",
+     "event:source_opened"
+    ]
+   }
+  },
+  {
+   "id": "meme-lab",
+   "state": "ready",
+   "event": {
+    "name": "paired_run_started",
+    "text": "Run blind A/B",
+    "selector": "#run-paired"
+   },
+   "funnel": {
+    "name": "discover_to_paired_run",
+    "steps": [
+     "page:/",
+     "event:paired_run_started"
+    ]
+   }
+  },
+  {
+   "id": "nutrition-formula-engine",
+   "state": "ready",
+   "event": {
+    "name": "formula_checked",
+    "text": "Check formula",
+    "selector": "#prepare-button"
+   },
+   "funnel": {
+    "name": "discover_to_formula_check",
+    "steps": [
+     "page:/",
+     "event:formula_checked"
+    ]
+   }
+  },
+  {
+   "id": "every-song-is-a-website",
+   "state": "ready",
+   "event": {
+    "name": "song_world_opened",
+    "text": "enter →",
+    "selector": ".door"
+   },
+   "funnel": {
+    "name": "gallery_to_song_world",
+    "steps": [
+     "page:/",
+     "event:song_world_opened"
     ]
    }
   }

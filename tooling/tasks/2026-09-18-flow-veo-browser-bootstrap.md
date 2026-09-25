@@ -86,7 +86,27 @@ max 3 keys per account).
 
 ## Outcome
 
-Skipped at the owner's direction on 2026-09-18 because all three Flow profiles
-require manual Google sign-in/MFA and Jules setup requires creating API keys.
-The profiles were opened once and recorded as `NEEDS_USER`; no credits were
-spent, no key was created, and no GitHub authorization was changed.
+Re-attempted with the owner present on 2026-09-19 using the regular Chrome
+profile. Accounts A/B/C were verified as Google Pro accounts with 1,050 Flow
+credits each, a `Flow Automation` project was created in each account, and the
+local ledger completed a zero-credit dry lifecycle. No generation credits were
+spent.
+
+One Jules key per account was created and stored in the Fleet Infisical project
+under `dev/jules`; no key was written to the repository. `jules-worker setup`
+reached the documented `GET /v1alpha/sources` endpoint but all three new-format
+Google authorization keys returned HTTP 401. An independent check with Google's
+official Jules CLI reproduced the provider-side auth failure: OAuth login
+succeeded, but the CLI's `aida` token was rejected by the Jules API for
+insufficient scope. The worker therefore remains `AUTH_FAILED` for A/B/C and
+this task stays blocked until Google accepts its currently issued Jules keys or
+ships a working OAuth scope. The owner should rotate the key exposed during
+interactive setup before it is used again.
+
+The API blocker was bypassed with Jules' supported GitHub Issues integration.
+The Google Labs Jules GitHub App is installed on the `sass-maker` organization
+with access limited to `sass-maker/saas-maker`; all three Pro accounts can see
+that repository in Jules. Account A is the verified owner of issue-label tasks.
+Issue #114 was dispatched by applying the `jules` label, acknowledged by the
+`google-labs-jules` bot, and entered remote repository setup in Jules session
+`16613944077704222315`. No pull request has been merged.

@@ -1,4 +1,7 @@
 interface:
-  display_name: "Fleet Design Workflow"
-  short_description: "Ship Fleet UI with evidence and owner alignment"
-  default_prompt: "Use $design-workflow to classify, implement, and verify this meaningful Fleet UI change."
+  display_name: "Fleet Design Director"
+  short_description: "Direct serious Fleet UI through owner selection"
+  default_prompt: "Use $design-workflow to develop visual directions, get my selection, implement the chosen system, and verify the result."
+
+policy:
+  allow_implicit_invocation: true

@@ -25,6 +25,16 @@ Cockpit, CodeVetter, and App Health remain independent repositories.
 
 ## Timeline
 
+- **2026-09-25 — Launchkit shipped: free agent-executable launch toolkit.**
+  `tooling/launchkit/` (product brief, truthful run planner, evidence tracker,
+  run prompt, report script) plus 330 researched per-platform submission
+  playbooks at `apps/showcase/src/data/launchdesk-playbooks/`, rendered
+  publicly at `/launchdesk/<domain>` with JSON twins, a `/launchkit` page,
+  `/launchkit.json` manifest, `/launchdesk-playbooks.json` index, and llms.txt
+  entries. launchdesk.json grew to 1,163 destinations (+32 found auditing
+  launchrepo.dev). Playbooks carry `grade: "researched"` — assembled from
+  cited public pages, never claimed as observed submissions. Tracked in #144.
+
 - **2026-09-19 — PH Catalog promoted without absorbing its code:**
   Registered PH Catalog as a canonical active, bounded finishing project while
   preserving `ph-catalog` as its independent Python/DuckDB repository and local

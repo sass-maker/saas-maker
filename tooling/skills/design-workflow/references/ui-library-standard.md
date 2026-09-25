@@ -68,6 +68,7 @@ task. Preserve the project's framework and visual language.
 
 | Source | Use when | Adoption boundary |
 | --- | --- | --- |
+| [Transitions.dev](https://transitions.dev/) | An existing UI needs focused CSS motion: open/close, state swaps, feedback, loading, or resizing. | Reuse the installed `transitions-dev` skill when available and read only the chosen transition reference. Preserve project motion tokens, behavior, and reduced-motion support; verify the selected snippet's license/access and do not assume Pro entitlement. No duplicate skill or motion-library install. |
 | [coss UI](https://coss.com/ui/docs/get-started) | A React application needs forms, controls, menus, or dialogs built on Base UI. | Check Tailwind v4 compatibility and token requirements; select individual components rather than migrating a healthy system. |
 | [shadcnblocks](https://www.shadcnblocks.com/) | A shadcn-based surface needs marketing sections, application shells, dashboards, or tables. | Check the selected block's free/paid access and license; no assumed paid entitlement. |
 | [21st.dev](https://21st.dev/) | Discovering a specific pattern across multiple authors and libraries. | Treat it as a registry, not one consistent system; inspect the original component source, license, and dependencies. |

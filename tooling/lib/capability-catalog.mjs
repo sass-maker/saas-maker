@@ -40,6 +40,7 @@ const DEGRADATION_POLICIES = Object.freeze([
 ]);
 const ACTIVE_OPERATOR_SCRIPTS = new Set([
   'agent-stack.sh',
+  'agent-testing.mjs',
   'apply-clarity-id.sh',
   'audit.mjs',
   'check-github-actions-policy.mjs',

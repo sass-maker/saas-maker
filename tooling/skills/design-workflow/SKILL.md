@@ -1,13 +1,14 @@
 ---
 name: design-workflow
-description: Primary Fleet entry point for meaningful frontend design work that creates or changes visual language, layout, navigation, interaction patterns, responsive behavior, theming, reusable components, landing pages, dashboards, app shells, or substantial UI polish. Owns product clarity, visual direction, implementation alignment, browser evidence, quality gates, and owner feedback; use Impeccable as a supporting mechanics playbook. Skip copy-only edits, invisible refactors, and trivial CSS corrections.
+description: Automatically use for meaningful Fleet visual or frontend design, including requests to design, redesign, beautify, modernize, polish, critique, or substantially improve a website, landing page, dashboard, app shell, onboarding flow, product UI, visual identity, layout, navigation, interaction, responsive system, theme, or component; also use when an interface is called ugly, generic, bland, template-like, amateur, or visually weak. Owns the required owner selection among three or four visual systems before overhaul implementation, plus product clarity, browser evidence, quality gates, and completion. Skip copy-only edits, invisible refactors, accessibility-only corrections, and trivial deterministic CSS fixes.
 ---
 
 # Fleet design workflow
 
-Use Impeccable for design mechanics. Use this skill for Fleet's approval and
-shipping contract. Project `PRODUCT.md` and `DESIGN.md` outrank generic
-component, palette, or detector recommendations.
+This is Fleet's single implicit entry point for meaningful design work. Use
+Impeccable only as a supporting mechanics playbook. This skill owns direction,
+approval, implementation alignment, and completion. Project `PRODUCT.md` and
+`DESIGN.md` outrank generic component, palette, or detector recommendations.
 
 ## 0. Product-purpose gate
 
@@ -40,14 +41,31 @@ lifecycle, or next action cannot pass comprehension regardless of visual score.
 
 Choose exactly one lane before implementation:
 
-- `preserve`: keep the established visual language. Capture a before
-  screenshot, follow existing design context, and do not manufacture alternate
+- `preserve`: keep the established visual language for a narrow, bounded change
+  whose direction is already settled. Capture a before screenshot and follow
+  existing design context. Copy-only edits, invisible refactors, accessibility
+  corrections, and trivial deterministic CSS fixes do not need alternate
   directions.
-- `overhaul`: create or materially replace a visual language. Define one
-  subject-specific direction and implement it in the first pass. Record one to
-  three references only when they materially informed the direction. Generate
-  comparison probes only when the user requests exploration or the decision is
-  genuinely ambiguous; do not block ordinary work on owner approval.
+- `overhaul`: use for a new surface or a meaningful change to visual language,
+  composition, hierarchy, navigation, interaction, identity, or responsive
+  behavior. Also use when the owner rejects the current design as ugly,
+  generic, bland, template-like, amateur, or visually weak. Before writing UI
+  code, present three or four materially different, polished, system-level
+  directions using representative real product content. Each direction must
+  define purpose, audience, screen job, visual thesis, layout and typography
+  system, semantic color roles, interaction thesis, memorable product-native
+  signature, and deliberate risk. Show a visual preview for every direction;
+  text descriptions alone are insufficient. Vary the whole system rather than
+  offering palette swaps, isolated hero art, or the same component template.
+  Ask the owner to select a direction and stop before implementation until they
+  answer. If the owner explicitly delegates the choice, select one, explain the
+  decision, and record it as `delegated`.
+
+When the requested scope could plausibly replace or materially change the
+visual language, choose `overhaul`. The direction-selection gate is mandatory
+for overhaul work even when one direction appears obviously strongest. Skip it
+only when the owner already supplied a sufficiently complete direction or
+explicitly delegated the choice in the current request.
 
 If `PRODUCT.md` or `DESIGN.md` is missing, run `$impeccable init` before
 meaningful work. Do not initialize untouched projects fleet-wide.
@@ -69,16 +87,19 @@ relative Fleet root.
 ## 2. Shape and build
 
 - Preserve: use the tracked system and before evidence as the contract.
-- Overhaul: record reference names, probe ids/paths, selected probe, and
-  `agent-selected`, `approved`, or `delegated` in `.fleet/design-review.json`.
+- Overhaul: record reference names, direction ids or probe paths, the owner's
+  selected direction, and `approved` or `delegated` in
+  `.fleet/design-review.json`. Do not record `agent-selected` unless an older
+  receipt requires the field; the owner-selection gate controls new work.
 - Before coding, fill the receipt's direction contract: purpose, audience,
   screen job, visual thesis, role-based color/type/spacing/layout system, one
   memorable signature drawn from the product's world, and one deliberate risk
   with a reason. Run a subject-swap test and revise any choice that would work
   unchanged for an unrelated product.
-- Use a specialist only when the task genuinely needs it: use
-  `../design-inspiration/SKILL.md` for external reference research or direction
-  evidence, `../component-pattern-mine/SKILL.md` for an unfamiliar component,
+- Use a specialist only when the task genuinely needs it. For the mandatory
+  overhaul direction set, read `../design-inspiration/SKILL.md` and use its
+  direction-set contract; external reference research remains optional. Use
+  `../component-pattern-mine/SKILL.md` for an unfamiliar component,
   `../web-3d-pipeline/SKILL.md` for real-time 3D, or
   `../creative-web-effects/SKILL.md` for a browser effect. Treat specialist
   output as evidence and implementation guidance; this skill remains the single
@@ -105,10 +126,9 @@ relative Fleet root.
   never lowers the product-purpose, lifecycle truth, accessibility, responsive,
   or primary-action requirements.
 - Invoke the narrowest Impeccable workflow that owns the job:
-  - new UI: resolve the brief with this skill's direction contract and proceed
-    in one pass. Use `$impeccable shape` only when the user explicitly requests
-    a concept round or when an unresolved product-identity decision materially
-    changes scope; never make its approval flow a routine dependency;
+  - new UI: resolve the brief and complete this skill's mandatory direction
+    selection before implementation. Use `$impeccable shape` only when the
+    brief itself is unresolved; direction approval remains owned by this skill;
   - reusable components or tokens: use `$impeccable extract`, preserve rendered
     behavior and public APIs, migrate every caller, and run focused checks;
   - dark mode: use `$impeccable colorize`, define semantic roles for surfaces,
@@ -174,11 +194,12 @@ Detector findings are advisory. Record them, but never rewrite an intentional
 
 ## 4. Close with a decision record
 
-Record `agent-selected` when the agent made the direction call, `keep` when the
-owner accepted it, or `delegated` when the owner explicitly delegated judgment.
-Ask only when a material ambiguity or a clearly wrong lane would change the
-scope or product identity; do not create a routine approval dependency.
-Preserve the note in the receipt so the next design pass can learn from it.
+For overhaul work, owner selection is a required approval gate. Record `keep`
+when the owner selects or accepts a direction, or `delegated` when the owner
+explicitly delegates judgment. Do not infer delegation from a broad request to
+finish, improve, beautify, or release a product. Preserve the decision and note
+in the receipt so the next design pass can learn from it. Preserve work needs a
+question only when a material ambiguity would change product identity or scope.
 
 Validate:
 

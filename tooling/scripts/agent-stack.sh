@@ -6,16 +6,27 @@ FLEET_OPS_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 FLEET_ROOT="${FLEET_WORKSPACE_ROOT:-$(cd "$FLEET_OPS_DIR/../.." && pwd)}"
 LEGACY_FLEET_OPS_DIR="$FLEET_ROOT/fleet-ops"
 EXPOSED_FLEET_SKILLS=(
+  adversarial-code-review
   analyze-storage
   astra-orchestrator
+  bug-finder
+  but-for-real
+  clarity-audit
   daily-learning
   design-engineering
   design-workflow
+  error-message-audit
+  favicon
+  feature-image
   fleet-deploy-parity
   fleet-ops
+  flow-veo-browser
   glyph-art
   ian-xiaohei-illustrations
   ios-app-growth
+  jules-cloud-worker
+  learnings
+  llm-cost-audit
   code-cleanup
   clarity-fleet-health
   local-ports-cleanup
@@ -23,13 +34,22 @@ EXPOSED_FLEET_SKILLS=(
   media-acquisition
   mobile-task-control
   name-domains
+  readme
+  recap
   screenmap
+  search-indexing
+  security-audit
+  seo
+  seo-content
   seo-research
+  seo-sprint
+  ship-check
   site-health
   spec-driven
   token-budget
   test-quality
   web-extraction
+  whimsy
 )
 
 usage() {

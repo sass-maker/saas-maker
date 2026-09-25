@@ -1,7 +1,7 @@
 {
   "$schema": "fleet.platform-accreditation-state.v1",
   "version": 1,
-  "updated": "2026-07-17",
+  "updated": "2026-09-22",
   "ownerExclusions": [
     "hacker-news",
     "linkedin",
@@ -20,12 +20,32 @@
       ],
       "submitUrl": null,
       "home": "https://news.ycombinator.com/submit",
-      "currentState": "seed",
+      "currentState": "rejected",
       "verifiedAt": null,
       "qualityGate": "protected",
       "blocker": null,
-      "rejectionReason": null,
-      "transitions": [],
+      "rejectionReason": "Owner explicitly excluded this channel from Fleet distribution on 2026-09-22.",
+      "transitions": [
+        {
+          "$schema": "fleet.platform-accreditation-evidence.v1",
+          "fromState": "seed",
+          "toState": "rejected",
+          "applied": true,
+          "observedAt": "2026-09-22T18:22:18.093Z",
+          "evidence": {
+            "liveUrl": null,
+            "httpStatus": null,
+            "finalStatus": null,
+            "formDetected": null,
+            "captchaDetected": null,
+            "signinRequired": null,
+            "paymentRequired": null,
+            "screenshotPath": null
+          },
+          "outcome": "confirmed",
+          "note": null
+        }
+      ],
       "transitionsArchive": []
     },
     {
@@ -39,12 +59,32 @@
       ],
       "submitUrl": null,
       "home": "https://www.linkedin.com/",
-      "currentState": "seed",
+      "currentState": "rejected",
       "verifiedAt": null,
       "qualityGate": "protected",
       "blocker": null,
-      "rejectionReason": null,
-      "transitions": [],
+      "rejectionReason": "Owner explicitly excluded this channel from Fleet distribution on 2026-09-22.",
+      "transitions": [
+        {
+          "$schema": "fleet.platform-accreditation-evidence.v1",
+          "fromState": "seed",
+          "toState": "rejected",
+          "applied": true,
+          "observedAt": "2026-09-22T18:22:18.587Z",
+          "evidence": {
+            "liveUrl": null,
+            "httpStatus": null,
+            "finalStatus": null,
+            "formDetected": null,
+            "captchaDetected": null,
+            "signinRequired": null,
+            "paymentRequired": null,
+            "screenshotPath": null
+          },
+          "outcome": "confirmed",
+          "note": null
+        }
+      ],
       "transitionsArchive": []
     },
     {

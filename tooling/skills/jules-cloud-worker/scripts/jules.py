@@ -346,7 +346,8 @@ def set_account_state(conn: sqlite3.Connection, account: str, state: str) -> Non
 def repo_accessible(conn: sqlite3.Connection, account: str, repo: str) -> bool:
     owner_repo = norm_repo(repo)
     row = conn.execute(
-        "SELECT 1 FROM sources WHERE account=? AND owner || '/' || repo = ?",
+        "SELECT 1 FROM sources WHERE account=? "
+        "AND lower(owner || '/' || repo) = lower(?)",
         (account, owner_repo),
     ).fetchone()
     return row is not None
@@ -761,7 +762,7 @@ def cmd_dispatch(args) -> None:
         attempted.append(account)
         source_name = conn.execute(
             "SELECT source_name FROM sources WHERE account=? "
-            "AND owner || '/' || repo = ?",
+            "AND lower(owner || '/' || repo) = lower(?)",
             (account, repo),
         ).fetchone()
         if not source_name:

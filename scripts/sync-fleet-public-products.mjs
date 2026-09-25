@@ -37,6 +37,7 @@ const DIRECTORY_FIELDS = new Set([
   'name',
   'description',
   'makerNote',
+  'logoUrl',
   'purposeContract',
   'kind',
   'form',
