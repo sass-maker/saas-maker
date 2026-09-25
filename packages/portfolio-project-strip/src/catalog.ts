@@ -3,13 +3,28 @@ import type { PortfolioProject } from './types';
 
 export const DEFAULT_PROJECTS: readonly PortfolioProject[] = [
   {
+    "id": "codevetter",
+    "name": "CodeVetter",
+    "url": "https://codevetter.com",
+    "description": "Execution-backed verification for AI-written software changes — local-first and inspectable.",
+    "tier": "focus",
+    "priority": "P1",
+    "category": "utility",
+    "maturity": "experiment",
+    "spotlight": true,
+    "pillarId": "build",
+    "domains": [
+      "codevetter.com"
+    ]
+  },
+  {
     "id": "posttrainllm",
     "name": "PostTrainLLM",
     "url": "https://posttrainllm.com",
     "description": "An experimental browser model playground: run small language models locally with visible generation metrics.",
     "tier": "focus",
     "priority": "P1",
-    "category": "product",
+    "category": "utility",
     "maturity": "experiment",
     "spotlight": true,
     "pillarId": "build",
@@ -18,18 +33,122 @@ export const DEFAULT_PROJECTS: readonly PortfolioProject[] = [
     ]
   },
   {
-    "id": "field-track",
-    "name": "Field Track",
-    "url": "https://field-track.sassmaker.com",
-    "description": "A labelled synthetic field-team demo for exploring routes, visits and agent summaries; Android tracking is not qualified.",
+    "id": "anchor",
+    "name": "Anchor",
+    "url": "https://anchor.significanthobbies.com",
+    "description": "A local-first day planner and focus timer for Mac, iPhone, and Apple Watch that explains the gap between the schedule you planned and the day you lived.",
     "tier": "active",
     "priority": "P2",
-    "category": "product",
-    "maturity": "experiment",
+    "category": "utility",
+    "maturity": "in-progress",
+    "spotlight": false,
+    "pillarId": "learn",
+    "domains": [
+      "anchor.significanthobbies.com"
+    ]
+  },
+  {
+    "id": "anime-list",
+    "name": "Anime List",
+    "url": "https://anime.significanthobbies.com",
+    "description": "Anime and manga discovery with multi-axis filtering and personal watchlists.",
+    "tier": "secondary",
+    "priority": "P4",
+    "category": "media",
+    "maturity": "maintained",
+    "spotlight": false,
+    "pillarId": "learn",
+    "domains": [
+      "anime.significanthobbies.com"
+    ]
+  },
+  {
+    "id": "app-health",
+    "name": "App Health",
+    "url": "https://health.sassmaker.com",
+    "description": "Web analytics, product events, logs, and endpoint health in one workspace.",
+    "tier": "active",
+    "priority": "P2",
+    "category": "utility",
+    "maturity": "public-ready",
+    "spotlight": false,
+    "pillarId": "visibility",
+    "domains": [
+      "health.sassmaker.com"
+    ]
+  },
+  {
+    "id": "browserdaddy",
+    "name": "BrowserDaddy",
+    "url": "https://browser.daddyrad.com/",
+    "description": "A local-first Mac browsing intelligence app for a unified history archive and real attention tracking.",
+    "tier": "active",
+    "priority": "P2",
+    "category": "utility",
+    "maturity": "preview",
     "spotlight": false,
     "pillarId": "build",
     "domains": [
-      "field-track.sassmaker.com"
+      "browser.daddyrad.com"
+    ]
+  },
+  {
+    "id": "calorie",
+    "name": "Calorie",
+    "url": "https://calorie.significanthobbies.com",
+    "description": "A private, local-first food, water, and weight journal with transparent timing guidance.",
+    "tier": "secondary",
+    "priority": "P2",
+    "category": "utility",
+    "maturity": "maintained",
+    "spotlight": false,
+    "pillarId": "learn",
+    "domains": [
+      "calorie.significanthobbies.com"
+    ]
+  },
+  {
+    "id": "contextdaddy",
+    "name": "ContextDaddy",
+    "url": "https://context.daddyrad.com/",
+    "description": "A local Mac desk for agent context, skills, usage, and observed telemetry.",
+    "tier": "active",
+    "category": "utility",
+    "maturity": "beta",
+    "spotlight": false,
+    "pillarId": "build",
+    "domains": [
+      "context.daddyrad.com"
+    ]
+  },
+  {
+    "id": "daddyrad",
+    "name": "DaddyRad",
+    "url": "https://daddyrad.com/",
+    "description": "Umbrella landing for the daddy series: native Mac utilities for performance evidence, storage cleanup, browsing attention and agent context.",
+    "tier": "active",
+    "priority": "P3",
+    "category": "utility",
+    "maturity": "beta",
+    "spotlight": false,
+    "pillarId": "build",
+    "domains": [
+      "daddyrad.com"
+    ]
+  },
+  {
+    "id": "free-ai",
+    "name": "Free AI",
+    "url": "https://ai-gateway.sassmaker.com",
+    "description": "An OpenAI-compatible free-tier model gateway with operator-provisioned project access.",
+    "tier": "active",
+    "priority": "P4",
+    "category": "utility",
+    "maturity": "maintained",
+    "spotlight": false,
+    "pillarId": "build",
+    "domains": [
+      "ai-gateway.sassmaker.com"
     ]
   },
   {
@@ -39,7 +158,7 @@ export const DEFAULT_PROJECTS: readonly PortfolioProject[] = [
     "description": "An experimental public GitHub analysis tool for repository activity, contributions and code churn.",
     "tier": "secondary",
     "priority": "P2",
-    "category": "product",
+    "category": "experimental",
     "maturity": "experiment",
     "spotlight": false,
     "pillarId": "build",
@@ -48,63 +167,108 @@ export const DEFAULT_PROJECTS: readonly PortfolioProject[] = [
     ]
   },
   {
-    "id": "on-record",
-    "name": "High Signal Podcasts",
-    "url": "https://podcasts.highsignal.app",
-    "description": "Search evidenced podcast claims and follow links back to the original episode or publication.",
-    "tier": "active",
-    "priority": "P2",
-    "category": "product",
-    "maturity": "experiment",
-    "spotlight": false,
-    "pillarId": "learn",
-    "domains": [
-      "podcasts.highsignal.app"
-    ]
-  },
-  {
-    "id": "issue-pages",
-    "name": "IssuePages",
-    "url": "https://issues.sarthakagrawal.dev",
-    "description": "Read public GitHub issues as focused articles; publishing requires repository-owner access.",
-    "tier": "active",
+    "id": "pace",
+    "name": "HeyPace",
+    "url": "https://heypace.app",
+    "description": "An experimental macOS voice-agent preview; installation and permission-dependent workflows are still being qualified.",
+    "tier": "focus",
     "priority": "P4",
-    "category": "experiment",
+    "category": "experimental",
     "maturity": "experiment",
     "spotlight": false,
     "pillarId": "build",
     "domains": [
-      "issues.sarthakagrawal.dev"
+      "heypace.app"
+    ]
+  },
+  {
+    "id": "high-signal",
+    "name": "High Signal",
+    "url": "https://highsignal.app",
+    "description": "Evidence-backed daily intelligence across technology, startups, finance, and public markets.",
+    "tier": "active",
+    "priority": "P2",
+    "category": "media",
+    "maturity": "public-ready",
+    "spotlight": false,
+    "pillarId": "learn",
+    "domains": [
+      "highsignal.app"
+    ]
+  },
+  {
+    "id": "karte",
+    "name": "Karte",
+    "url": "https://karte.cc",
+    "description": "A creator-owned public profile that answers visitor questions and preserves context for better inbound.",
+    "tier": "secondary",
+    "priority": "P2",
+    "category": "utility",
+    "maturity": "public-ready",
+    "spotlight": false,
+    "pillarId": "build",
+    "domains": [
+      "karte.cc"
+    ]
+  },
+  {
+    "id": "email-manager",
+    "name": "Kinetic",
+    "url": "https://mail.significanthobbies.com",
+    "description": "A private Gmail workspace for local semantic search, sender insights, and explicit unsubscribe workflows.",
+    "tier": "active",
+    "priority": "P4",
+    "category": "utility",
+    "maturity": "maintained",
+    "spotlight": false,
+    "pillarId": "learn",
+    "domains": [
+      "mail.significanthobbies.com"
+    ]
+  },
+  {
+    "id": "kith",
+    "name": "Kith",
+    "url": "https://kith.significanthobbies.com",
+    "description": "A private iPhone app for the people you actually want to stay close to — closeness-weighted constellation home, standing notes, and a chronological log per person.",
+    "tier": "secondary",
+    "priority": "P2",
+    "category": "utility",
+    "maturity": "in-progress",
+    "spotlight": false,
+    "pillarId": "learn",
+    "domains": [
+      "kith.significanthobbies.com"
+    ]
+  },
+  {
+    "id": "knowledge-base",
+    "name": "Knowledge Base",
+    "url": "https://knowledgebase.sassmaker.com",
+    "description": "Private agent search over specialized corpora with ranked citations, provenance, and schema-aware retrieval.",
+    "tier": "active",
+    "priority": "P2",
+    "category": "utility",
+    "maturity": "maintained",
+    "spotlight": false,
+    "pillarId": "build",
+    "domains": [
+      "knowledgebase.sassmaker.com"
     ]
   },
   {
     "id": "live",
     "name": "Live",
     "url": "https://live.significanthobbies.com",
-    "description": "A free personality and hobby quiz that suggests a small experiment to try; account planning is not yet qualified.",
+    "description": "Explore hobbies and possibilities, build a personal bucket list, and save your progress on this device or in your account.",
     "tier": "active",
     "priority": "P2",
-    "category": "personal",
+    "category": "media",
     "maturity": "experiment",
     "spotlight": false,
     "pillarId": "learn",
     "domains": [
       "live.significanthobbies.com"
-    ]
-  },
-  {
-    "id": "what-it-takes-to-win",
-    "name": "Look Sideways",
-    "url": "https://paths.significanthobbies.com",
-    "description": "Explore sourced career turning points with explicit survivorship and forecasting limits.",
-    "tier": "secondary",
-    "priority": "P4",
-    "category": "personal",
-    "maturity": "experiment",
-    "spotlight": false,
-    "pillarId": "learn",
-    "domains": [
-      "paths.significanthobbies.com"
     ]
   },
   {
@@ -114,7 +278,7 @@ export const DEFAULT_PROJECTS: readonly PortfolioProject[] = [
     "description": "An experimental lean-back queue of curated science and other videos.",
     "tier": "secondary",
     "priority": "P4",
-    "category": "personal",
+    "category": "media",
     "maturity": "experiment",
     "spotlight": false,
     "pillarId": "learn",
@@ -123,58 +287,103 @@ export const DEFAULT_PROJECTS: readonly PortfolioProject[] = [
     ]
   },
   {
-    "id": "materia",
-    "name": "Materia",
-    "url": "https://materia.significanthobbies.com",
-    "description": "An educational body-and-remedy reference with condition-specific research citations and explicit uncertainty.",
-    "tier": "active",
-    "priority": "P4",
-    "category": "experiment",
-    "maturity": "experiment",
-    "spotlight": false,
-    "pillarId": "build",
-    "domains": [
-      "materia.significanthobbies.com"
-    ]
-  },
-  {
-    "id": "veg-protein-food",
-    "name": "Recipe Index",
-    "url": "https://veg-protein-food.significanthobbies.com",
-    "description": "Search vegetarian recipes by protein and calories, with links to the original recipe publishers.",
-    "tier": "active",
-    "priority": "P4",
-    "category": "experiment",
-    "maturity": "experiment",
-    "spotlight": false,
-    "pillarId": "build",
-    "domains": [
-      "veg-protein-food.significanthobbies.com"
-    ]
-  },
-  {
-    "id": "research-papers",
-    "name": "Research Papers",
-    "url": "https://papers.highsignal.app",
-    "description": "Search academic papers and follow original sources; account-based research chat is not yet qualified.",
+    "id": "chatgpt-memory-insights",
+    "name": "Memory Map",
+    "url": "https://chatgpt.significanthobbies.com",
+    "description": "A browser-local experiment for importing a ChatGPT export, exploring semantic themes and search, and optionally saving analysis on your device.",
     "tier": "secondary",
     "priority": "P2",
-    "category": "product",
+    "category": "utility",
     "maturity": "experiment",
     "spotlight": false,
     "pillarId": "learn",
     "domains": [
-      "papers.highsignal.app"
+      "chatgpt.significanthobbies.com"
+    ]
+  },
+  {
+    "id": "nomad-data-adventure",
+    "name": "Nomad Data Adventure",
+    "url": "https://nomad.significanthobbies.com/",
+    "description": "Nomad Atlas explores 1,374 terrestrial places with living-cost profiles, lifestyle filters, city comparisons and downloadable source data credited to Nomads.com.",
+    "tier": "secondary",
+    "priority": "P2",
+    "category": "experimental",
+    "maturity": "experiment",
+    "spotlight": false,
+    "pillarId": "build",
+    "domains": [
+      "nomad.significanthobbies.com"
+    ]
+  },
+  {
+    "id": "what-it-takes-to-win",
+    "name": "Paths",
+    "url": "https://paths.significanthobbies.com",
+    "description": "Explore sourced career turning points with explicit survivorship and forecasting limits.",
+    "tier": "active",
+    "priority": "P4",
+    "category": "media",
+    "maturity": "experiment",
+    "spotlight": false,
+    "pillarId": "learn",
+    "domains": [
+      "paths.significanthobbies.com"
+    ]
+  },
+  {
+    "id": "performancedaddy",
+    "name": "PerformanceDaddy",
+    "url": "https://performance.daddyrad.com/",
+    "description": "A local Mac performance investigator for background apps, helpers and developer workloads, with measured evidence and reviewed actions.",
+    "tier": "active",
+    "priority": "P2",
+    "category": "utility",
+    "maturity": "preview",
+    "spotlight": false,
+    "pillarId": "build",
+    "domains": [
+      "performance.daddyrad.com"
+    ]
+  },
+  {
+    "id": "ph-catalog",
+    "name": "PH Catalog",
+    "url": "https://github.com/sarthakagrawal927/ph-catalog",
+    "description": "A resumable local Product Hunt catalogue and analytics experiment with a privacy-safe synthetic demo.",
+    "tier": "secondary",
+    "priority": "P2",
+    "category": "experimental",
+    "maturity": "experiment",
+    "spotlight": false,
+    "pillarId": "build",
+    "domains": [
+      "github.com"
+    ]
+  },
+  {
+    "id": "rolepatch",
+    "name": "RolePatch",
+    "url": "https://rolepatch.com",
+    "description": "A guest resume-tailoring experiment with a reviewable diff and browser-local document exports.",
+    "tier": "secondary",
+    "priority": "P2",
+    "category": "utility",
+    "maturity": "maintained",
+    "spotlight": false,
+    "pillarId": "build",
+    "domains": [
+      "rolepatch.com"
     ]
   },
   {
     "id": "saas-maker",
     "name": "SaaS Maker",
     "url": "https://sassmaker.com",
-    "description": "A public directory of working experiments, reference projects and reusable tooling.",
+    "description": "A public directory of working experiments, launch destinations, reference projects and reusable tooling.",
     "tier": "active",
     "priority": "P2",
-    "category": "product",
+    "category": "media",
     "maturity": "experiment",
     "spotlight": false,
     "pillarId": "build",
@@ -189,12 +398,42 @@ export const DEFAULT_PROJECTS: readonly PortfolioProject[] = [
     "description": "Selected engineering case studies, technical writing and working project demonstrations.",
     "tier": "secondary",
     "priority": "P4",
-    "category": "personal",
+    "category": "media",
     "maturity": "experiment",
     "spotlight": false,
     "pillarId": "personal",
     "domains": [
       "sarthakagrawal.dev"
+    ]
+  },
+  {
+    "id": "setline",
+    "name": "Setline",
+    "url": "https://setline.significanthobbies.com",
+    "description": "An iOS-native training tracker that runs a written strength, cardio and mobility programme one set at a time and measures each exercise against an authored target.",
+    "tier": "secondary",
+    "priority": "P2",
+    "category": "utility",
+    "maturity": "maintained",
+    "spotlight": false,
+    "pillarId": "learn",
+    "domains": [
+      "setline.significanthobbies.com"
+    ]
+  },
+  {
+    "id": "significanthobbies",
+    "name": "Significant Hobbies",
+    "url": "https://significanthobbies.com",
+    "description": "The shared Hub for Live, Calorie, Setline, Kith, and Anchor, backed by one privacy-aware control plane.",
+    "tier": "secondary",
+    "priority": "P2",
+    "category": "utility",
+    "maturity": "public-ready",
+    "spotlight": false,
+    "pillarId": "learn",
+    "domains": [
+      "significanthobbies.com"
     ]
   },
   {
@@ -204,12 +443,42 @@ export const DEFAULT_PROJECTS: readonly PortfolioProject[] = [
     "description": "Explore public GitHub repositories and related projects through a searchable discovery experiment.",
     "tier": "secondary",
     "priority": "P2",
-    "category": "product",
+    "category": "utility",
     "maturity": "experiment",
     "spotlight": false,
     "pillarId": "learn",
     "domains": [
       "starboard.codevetter.com"
+    ]
+  },
+  {
+    "id": "storagedaddy",
+    "name": "storagedaddy",
+    "url": "https://storage.daddyrad.com/",
+    "description": "An open-source native Mac storage analyzer for developer caches, builds, dependencies and AI session archives, with reviewed cleanup. Free during early access.",
+    "tier": "active",
+    "priority": "P2",
+    "category": "utility",
+    "maturity": "beta",
+    "spotlight": false,
+    "pillarId": "build",
+    "domains": [
+      "storage.daddyrad.com"
+    ]
+  },
+  {
+    "id": "swe-interview-prep",
+    "name": "SWE Interview Prep",
+    "url": "https://learn.significanthobbies.com",
+    "description": "A learning OS for software-engineering interview practice.",
+    "tier": "secondary",
+    "priority": "P2",
+    "category": "media",
+    "maturity": "maintained",
+    "spotlight": false,
+    "pillarId": "learn",
+    "domains": [
+      "learn.significanthobbies.com"
     ]
   }
 ];
