@@ -1,0 +1,56 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "ideakiln.com",
+  "name": "IdeaKiln",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://ideakiln.com/",
+      "title": "IdeaKiln homepage — build-in-public launch platform for makers"
+    },
+    {
+      "url": "https://ideakiln.com/pricing",
+      "title": "Pricing page — free badge route plus paid visibility boosts"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Account (sign-in) required — submissions go through /dashboard/submit-idea",
+    "Free submission is possible; the $0 'Badge & Dofollow backlink' option requires adding IdeaKiln's badge to your site and your domain must have DR above 10",
+    "All ideas go through a review queue unless a paid 'Queue Skipper' boost ($5) is added"
+  ],
+  "requirements": [
+    "Indie-maker/build-in-public orientation — ideas can be listed at concept, MVP or launched stage",
+    "Badge route: 'Domain rating above 10' and the badge must stay up to keep the dofollow link",
+    "Paid boosts: Queue Skipper $5 (published within 2 days), Promoted $19 (dofollow + promoted placement), Premium $29 (landing page + idea page features)"
+  ],
+  "preparation": [
+    "Account on ideakiln.com",
+    "Idea/product name, tagline, description, category (AI, productivity, marketing, BI, SEO tools etc.)",
+    "Stage selection (concept / mvp / launched)",
+    "If taking the badge route: a site location for the IdeaKiln badge and a domain with DR > 10"
+  ],
+  "workflow": [
+    "Sign in at ideakiln.com",
+    "Open /dashboard/submit-idea",
+    "Fill in the idea details and stage",
+    "Optionally add a boost (badge/dofollow, queue skip, promoted, premium)",
+    "Submit into the review queue; track on your dashboard/timeline",
+    "Idea appears in 'Today's trending' / weekly / monthly boards after approval"
+  ],
+  "watchFor": [
+    "The dofollow link on the free route is badge-gated AND gated on your domain having DR > 10 — a genuine DR floor",
+    "'Stays dofollow as long as the badge stays up' — removing the badge reverts the link",
+    "Free submissions 'still go through the review queue' — no guaranteed timeline published",
+    "20%-off boost promotions appear periodically (e.g. SEP20 code seen at retrieval)"
+  ],
+  "countsAsLive": "The idea has a public page on ideakiln.com (/ideas/<slug>) and appears in the daily/weekly boards or category listings",
+  "unknowns": [
+    "Free-tier queue length (not published)",
+    "What the base free listing looks like without the badge (link type unstated)",
+    "Submission limits per account ('What's my submission limit?' FAQ entry exists but was collapsed)",
+    "Whether rejected submissions get feedback"
+  ]
+}

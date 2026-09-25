@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "saasbison.com",
+  "name": "SaaSBison",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://saasbison.com/submit",
+      "title": "SaaSBison submit page — Free vs Premium listing plans"
+    },
+    { "url": "https://saasbison.com/", "title": "SaaSBison homepage — curated software directory" }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free listing requires displaying the SaaSBison badge on your site",
+    "Free listings sit in a 'slow manual review queue' with no stated SLA"
+  ],
+  "requirements": [
+    "Software/SaaS product with a live website",
+    "Curated directory: no crypto, adult, gambling or illegal content (removed with full refund if paid)",
+    "Free tier listing copy is limited to roughly 1,500 characters"
+  ],
+  "preparation": [
+    "Product name, URL and ~1,500-char description (free tier)",
+    "Logo/screenshot and category/tags selection",
+    "A page on your site where the SaaSBison badge can be embedded",
+    "Decide Free vs Premium ($9.99 one-time, advertised down from $29.99) before starting the 3-step form"
+  ],
+  "workflow": [
+    "Open https://saasbison.com/submit (multi-step form, 'Step 1 of 3')",
+    "Choose the Free Listing plan",
+    "Fill in product details",
+    "Embed the SaaSBison badge on your site",
+    "Wait for manual review; listing goes live after approval"
+  ],
+  "watchFor": [
+    "Premium ($9.99 one-time) buys instant approval, 3 dofollow backlinks, an AI-written ~3,500-char listing and removes the badge requirement",
+    "Checkout cross-sells a $149 '60+ directories' done-for-you service via partner LaunchDirectories",
+    "Badge must stay on the site for the free listing to remain valid",
+    "Paid checkout handled by Polar as merchant of record"
+  ],
+  "countsAsLive": "A public product detail page at saasbison.com/item/<slug> that also appears under its chosen category.",
+  "unknowns": [
+    "Exact free-tier review time ('slow manual review queue' is not quantified)",
+    "Specific form fields inside the 3-step submit flow (JS-rendered)",
+    "Whether an account is required before submitting"
+  ]
+}

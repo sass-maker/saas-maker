@@ -1,0 +1,58 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "apps.shopify.com",
+  "name": "Shopify App Store",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://shopify.dev/docs/apps/launch/app-store-review/submit-app-for-review",
+      "title": "Submit your app for review — official review flow"
+    },
+    {
+      "url": "https://shopify.dev/docs/apps/launch/app-requirements-checklist",
+      "title": "App requirements checklist — icon 1200x1200 JPEG/PNG, listing requirements"
+    },
+    { "url": "https://apps.shopify.com/", "title": "Shopify App Store public catalog" }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "You must build a real Shopify app (OAuth install, app URLs, compliance webhooks subscribed) — this is not a listing-only directory",
+    "A Shopify Partner account is required to create and submit apps",
+    "App icon must be exactly 1200x1200 px JPEG or PNG",
+    "Compliance webhooks (privacy-law data callbacks) are mandatory for App Store distribution",
+    "Domains and the API contact email must not contain 'Shopify' or misspellings/abbreviations of it",
+    "Every submission needs a primary language and at least one complete App Store listing",
+    "Automated checks on the review page must pass before submission is allowed",
+    "If the app uses protected customer data, that request must be completed BEFORE review starts — it cannot be applied for while under review"
+  ],
+  "preparation": [
+    "Working Shopify app deployed at stable URLs with OAuth install flow",
+    "App icon 1200x1200 JPEG/PNG, listing copy, screenshots per the requirements checklist",
+    "Compliance webhook subscriptions implemented (customers/data_request, customers/redact, shop/redact)",
+    "Emergency contact email + phone number for critical technical issues",
+    "A monitored submission email — whitelist noreply@shopify.com",
+    "Protected customer data request form completed beforehand if needed"
+  ],
+  "workflow": [
+    "In the Partner Dashboard / Dev Dashboard, open the 'Shopify App Store review' page for your app",
+    "Complete Configuration: URLs, compliance webhooks, icon, API contact, emergency contact",
+    "Create the App Store listing (primary language + at least one listing)",
+    "Run the automated checks and fix every failure",
+    "Submit for review; Shopify emails the submission contact during review",
+    "Respond promptly to reviewer questions — repeated non-response or unresolved issues leads to temporary suspension"
+  ],
+  "watchFor": [
+    "Two or more unresolved reviewer exchanges, growing issue counts, or ignoring review emails gets the app Suspended — each repeat lengthens the suspension",
+    "Submitting beta versions or incomplete submissions can delay or forfeit approval",
+    "You cannot request protected customer data access while the app is under review — sequence it first",
+    "Using 'Shopify' (or lookalike spellings) in domains/emails violates the Partner Program Agreement",
+    "Suspension applies per-app only, not to the whole Partner account"
+  ],
+  "countsAsLive": "App passes review and its public listing resolves at apps.shopify.com/<handle> with install button and reviews enabled",
+  "unknowns": [
+    "Typical review duration — not stated on the submission page",
+    "Exact contents of the automated check suite"
+  ]
+}

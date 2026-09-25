@@ -1,0 +1,30 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "webspot.com",
+  "name": "webspot.com",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "other",
+  "zeroCostRoute": "unknown",
+  "sources": [
+    {
+      "url": "https://webspot.com/",
+      "title": "webspot.com — parked domain page ('This domain may be for sale')"
+    }
+  ],
+  "requirements": [
+    "None — the domain is parked and offers no directory, listing, or submission functionality"
+  ],
+  "preparation": [],
+  "workflow": [
+    "Do not plan a submission. As of 2026-09-25 the domain serves only a generic parked page ('Find information, resources and relevant links for webspot.com. This domain may be for sale.') with no product, signup, or submit surface"
+  ],
+  "watchFor": [
+    "Parked-domain pages can host ads/malvertising-style links — do not follow sponsored links on the page",
+    "If a tool claims it can 'submit to webspot.com', that claim is stale or fabricated"
+  ],
+  "countsAsLive": "N/A — no listing surface exists",
+  "unknowns": [
+    "Whether a real 'Webspot' directory ever existed at this domain or the catalog entry refers to a different site (e.g., webspot on a different TLD)"
+  ]
+}

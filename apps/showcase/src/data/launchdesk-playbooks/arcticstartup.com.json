@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "arcticstartup.com",
+  "name": "ArcticStartup",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://arcticstartup.com/about-us/",
+      "title": "About page — contact emails for tips and press"
+    },
+    {
+      "url": "https://linkedin.com/company/arcticstartup",
+      "title": "LinkedIn profile — 'send us a tip through editor@arcticstartup.com'"
+    },
+    {
+      "url": "https://arcticstartup.com/add-to-the-arcticrumor-hashtag-fresh-rumors-from-the-region/",
+      "title": "#ArcticRumor tip channel description"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Nordic/Baltic startup focus — ArcticStartup covers the region's tech ecosystem (Helsinki-based)",
+    "No self-serve listing: coverage is editorial via tips, or paid via advertorial",
+    "Contributed articles are possible — they accept outside contributions and have freelancers on retainer"
+  ],
+  "preparation": [
+    "A short news tip or press release with a clear Nordic/Baltic angle",
+    "Company facts: location, funding, traction, founders",
+    "For contributed articles: a draft and author background"
+  ],
+  "workflow": [
+    "Email your tip/press release to editor@arcticstartup.com (per About page and LinkedIn)",
+    "For event-related items (Arctic15, Nordeep, Tonic), use events@arcticstartup.com; general inquiries go to hello@arcticstartup.com",
+    "Alternative lightweight channel: post the news on X/Twitter with the #ArcticRumor hashtag for their rumors column",
+    "Coverage, if picked up, publishes as an article on arcticstartup.com"
+  ],
+  "watchFor": [
+    "The batch URL '/become-a' was truncated — no self-serve submission page could be confirmed; the real routes are the email tips + #ArcticRumor hashtag",
+    "Advertorial opportunities exist — clarify upfront whether you want editorial coverage or paid placement",
+    "Site returned 403 to automated fetching; it's bot-protected, not dead",
+    "Non-Nordic startups are unlikely to get coverage"
+  ],
+  "countsAsLive": "An article mentioning or profiling the startup published on arcticstartup.com",
+  "unknowns": [
+    "What the truncated '/become-a' URL was (likely 'become-a-contributor' — unverified)",
+    "Whether a formal contributor program page still exists",
+    "Advertorial pricing",
+    "Editorial response time"
+  ]
+}

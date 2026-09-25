@@ -1,0 +1,63 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "victrays.com",
+  "name": "Victrays",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://victrays.com/",
+      "title": "Victrays homepage - AI tools, prompts, ChatGPT plugins directory"
+    },
+    {
+      "url": "https://victrays.com/submit-ai-tool/",
+      "title": "Submit Your AI Tool to Victrays - listing options, requirements, FAQ"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "FAQ states 'you can submit your AI tool' for free, but the two published listing options are paid: Standard Listing $9.99 (72h review) and Priority Listing $29 (36h review, verified badge, boosted ranking)",
+    "Sign-in is required to submit ('Sign in to submit now' — Google login)",
+    "Free submission, if available, has no stated review time — the published SLAs belong to the paid tiers"
+  ],
+  "requirements": [
+    "AI-powered products only — 'AI must be an important part of the product'",
+    "Product must be live and publicly accessible with a working website and signup flow",
+    "Website must clearly explain what the product does and use HTTPS",
+    "Information must be accurate and original — copied descriptions risk rejection or slower review",
+    "No malware, deceptive claims, or prohibited/NSFW content",
+    "Submit each product separately — one listing per tool"
+  ],
+  "preparation": [
+    "Tool name and website URL",
+    "Original short product description (do not copy homepage copy)",
+    "Pricing information",
+    "Most relevant category",
+    "Screenshot of the tool's website at 1024x768, JPG or PNG only",
+    "A valid founder or company email address",
+    "Google account for sign-in"
+  ],
+  "workflow": [
+    "Go to https://victrays.com/submit-ai-tool/ ('Submit Your Tool' in nav)",
+    "Sign in (Google login offered)",
+    "Enter tool name, website, original description, pricing, categories, and the 1024x768 screenshot",
+    "Choose a listing option: Standard ($9.99, 72h) or Priority ($29, 36h + verified badge + boosted ranking + 'instant indexing'); the FAQ implies a free submit exists but no free tier is shown in the options",
+    "Wait for review — Victrays checks the product is live, genuinely AI, and meets guidelines",
+    "On approval the tool gets a dedicated page + category placement and you get a confirmation email",
+    "To update the listing later, contact the Victrays team with the listing URL"
+  ],
+  "watchFor": [
+    "Contradictory pricing: FAQ says submission is free but both named 'listing options' are paid — treat the free path as a slow/unscheduled queue at best",
+    "Login is via Google OAuth only (popup)",
+    "Screenshot spec is strict: 1024x768 JPG/PNG",
+    "Category page copy heavily promotes 'featured badge' — the paid Priority tier is pushed hard",
+    "Updates are manual via email contact, not a dashboard"
+  ],
+  "countsAsLive": "A dedicated tool page exists under victrays.com (linked from /ai-tools/ and category pages) with description, pricing, and screenshot",
+  "unknowns": [
+    "Whether a genuinely free listing tier still exists and its review time (FAQ and pricing blocks contradict)",
+    "Whether listing links are dofollow (catalog note says follow; unconfirmed)",
+    "Whether the verified badge is paid-only"
+  ]
+}

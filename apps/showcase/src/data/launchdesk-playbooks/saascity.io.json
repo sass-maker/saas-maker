@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "saascity.io",
+  "name": "SaaSCity",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://saascity.io/pricing",
+      "title": "SaaSCity pricing — Free / Quick Pass / Premium / Max tiers"
+    },
+    {
+      "url": "https://saascity.io/saascity?submit=1",
+      "title": "SaaSCity interactive map with 'Submit my project' entry point"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free plan requires embedding the SaaSCity badge on your site (verified during submission)",
+    "Free listings face a ~203-day review queue and publish on scheduled Monday drops"
+  ],
+  "requirements": [
+    "SaaS/startup product suitable for a public listing",
+    "Human review applies to every listing; paid plans get priority review within 24h",
+    "A live site where the badge can be placed (free path only)"
+  ],
+  "preparation": [
+    "Product name, URL, tagline/description and logo",
+    "Badge HTML ready to embed on the site footer/homepage for the free path",
+    "A preferred spot in mind for the isometric city map placement (included on all plans once approved)"
+  ],
+  "workflow": [
+    "Open https://saascity.io/saascity?submit=1 (Submit my project / Add Project)",
+    "Choose Free, Quick Pass ($19.99), Premium ($39.99) or Max ($99) — all one-time",
+    "On Free: add the site badge and wait for verification during submission",
+    "Join the queue (free) or get priority review within 24h (paid)",
+    "After approval, pick the building's map placement"
+  ],
+  "watchFor": [
+    "~203-day stated wait on the free queue — the paid Quick Pass exists specifically to skip it",
+    "Premium adds an editor-written launch blog post (3 dofollow links); Max adds a 2x2 map building, 5-link post, and 30-day billboard/ticker/homepage ads",
+    "Badge verification happens during submission on the free path",
+    "Site offers an MCP server for agents at /mcp and an llms.txt"
+  ],
+  "countsAsLive": "The product's building is visible on the SaaSCity interactive map and its listing page on saascity.io resolves with a followed link.",
+  "unknowns": [
+    "Exact submit-form fields (submission surface is a JS-rendered map app)",
+    "Whether an account is required before the submit flow",
+    "Actual vs stated queue time for free listings"
+  ]
+}

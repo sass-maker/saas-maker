@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "brownbook.net",
+  "name": "Brownbook",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.brownbook.net/add-business",
+      "title": "Brownbook - Add a business (step 1 of 2)"
+    },
+    {
+      "url": "https://www.brownbook.net/about",
+      "title": "Brownbook - The Global Business Listing Database (about page)"
+    },
+    {
+      "url": "https://www.brightlocal.com/learn/how-to-add-or-claim-your-brownbook-net-business-listing/",
+      "title": "BrightLocal - How to Add or Claim Your Brownbook.net Business Listing"
+    },
+    {
+      "url": "https://brownbookblog.wordpress.com/help-index/",
+      "title": "Brownbook help index (official blog)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Open to any business; Brownbook is a free global business listing database anyone can edit",
+    "Search for the business name and town first to check whether a listing already exists before adding a new one",
+    "A free account is required to add a business; account creation requires email validation"
+  ],
+  "preparation": [
+    "Business name, address, and contact details",
+    "Business tags (categories) and location tags to apply to the listing",
+    "An email address you can access for the account activation link",
+    "Optional: logo, photos, videos, and marketing copy to enrich the listing after claiming it"
+  ],
+  "workflow": [
+    "Go to https://www.brownbook.net/account/signup (or /register/) and create a free account",
+    "Open the validation email and click 'Activate Account' to confirm the account",
+    "Log in, then click the '+' at top right or choose 'Add a business' from the account dropdown",
+    "Complete the 2-step add-business form (business details, business tags, location tags), tick the 'I'm not a robot' checkbox, and click 'Add'",
+    "The listing appears on brownbook.net almost immediately; then click 'Claim this listing for FREE' to verify ownership and unlock editing"
+  ],
+  "watchFor": [
+    "The signup page returned HTTP 403 to automated fetching (bot protection) - expect to complete the form manually",
+    "Listings go live near-instantly but remain claimable by the owner; claim the listing so details cannot be edited by third parties",
+    "Duplicate listings are a known risk - always search first instead of blindly adding"
+  ],
+  "countsAsLive": "The business page is publicly reachable on brownbook.net and appears in site search; claiming the listing shows a confirmation banner",
+  "unknowns": [
+    "Whether any paid tier still exists for enriched listings (help docs mention 'practically free' promotion features; no current pricing page was verified)",
+    "Exact review/moderation SLA for flagged or duplicate listings"
+  ]
+}

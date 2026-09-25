@@ -1,0 +1,54 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "bizcommunity.com",
+  "name": "Bizcommunity",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.bizcommunity.com/",
+      "title": "Bizcommunity homepage - South African multi-industry business news site"
+    },
+    {
+      "url": "https://www.bizcommunity.com/ListCompany.aspx?l=196&c=11",
+      "title": "Bizcommunity - Get a Biz listing page (Free R0 / Biz Listing R3500 p.a. / Biz Press Office)"
+    },
+    {
+      "url": "https://www.bizcommunity.com/SubmitNews.aspx",
+      "title": "Bizcommunity - Publish your news / Submit news page"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Bizcommunity is a South Africa / Africa-focused multi-industry business news and company directory (19 industries)",
+    "Free listing tier (R0): entry-level - name-only search appearance, 1 search category, 3 services listed, 30-word profile, no email/logo/press releases shown in the free tier",
+    "Paid tiers: 'Biz Listing' R3,500/year (full-page showcase, bold name, 3 categories, 10 services, logo, images); 'Biz Press Office' / 'Platinum Press Office' (12-50 press releases, first in search) - priced on enquiry",
+    "Company news/press releases are a separate 'Publish your news on Biz' flow at /SubmitNews.aspx"
+  ],
+  "preparation": [
+    "Company name, 30-word profile, and up to 3 services (free-tier caps)",
+    "Pick the single most relevant industry category (free tier allows 1 search category)",
+    "Regional relevance: the directory is SA/Africa-centric - companies outside the region should confirm eligibility",
+    "For paid tiers: logo, images, company details; for Press Office: press release pipeline"
+  ],
+  "workflow": [
+    "From bizcommunity.com go to Companies -> 'Get a Biz listing' (/ListCompany.aspx; l/c params vary by industry/region)",
+    "Choose 'Free listing' (R0) and click 'Setup'",
+    "Complete company details within free-tier limits (30-word profile, 3 services, 1 category)",
+    "Alternatively use 'Publish your news on Biz' (/SubmitNews.aspx) for a news submission rather than a company listing",
+    "For Biz Listing/Press Office tiers, use 'Setup'/'Enquire' or contact sales@bizcommunity.com / +27 21 404 1460"
+  ],
+  "watchFor": [
+    "The free tier is minimal - name-only in search, no logo, no press releases; value is the profile page itself",
+    "Page still shows an expired promo ('Order before 31 Dec 2021...') - pricing may be stale; confirm current prices with sales before paying",
+    "Don't confuse 'Get a Biz listing' (company directory) with 'Submit news' (editorial news submission) - different flows",
+    "Industry/region params (l=196&c=11) change the landing page context; navigate from the Companies menu to get the right one"
+  ],
+  "countsAsLive": "The company appears in the public company listings under its industry (e.g. /Companies/196/11.html) with at least a name-level entry",
+  "unknowns": [
+    "Whether free listings require an account signup or verification",
+    "Whether non-African companies are accepted in the free tier",
+    "Whether the free listing includes any outbound link (free tier shows no profile page with link - only 'name' in search)"
+  ]
+}

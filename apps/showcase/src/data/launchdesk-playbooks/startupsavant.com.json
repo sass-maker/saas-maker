@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startupsavant.com",
+  "name": "Startup Savant",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://startupsavant.com/advertise",
+      "title": "Startup Savant advertising page — sponsored editorial packages"
+    },
+    {
+      "url": "https://startupsavant.com/images/downloads/media-kit.pdf",
+      "title": "Startup Savant media kit (Branded Guide and Spotlight Feature)"
+    },
+    { "url": "https://startupsavant.com/contact", "title": "Contact page" },
+    {
+      "url": "https://ideaproof.io/launch-directories/startup-savant",
+      "title": "Third-party guide claiming a free submission form exists (unverified)"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "The site's own advertise page offers only sponsored editorial packages written by their team: 'Spotlight Feature' (profile article about you/your company, $3,750) and 'Branded Guide' (topic article with brand mention)",
+    "Every sponsored piece is written by Startup Savant's editorial team, not submitted by you",
+    "They respond within 3-5 business days 'if your inquiry is a good fit' — selectivity applies even to paid placements"
+  ],
+  "preparation": [
+    "Budget approval — Spotlight Feature is listed at $3,750; Branded Guide pricing in the media kit",
+    "A brief describing your business, audience and goals",
+    "For Spotlight: availability for an interview with their editorial team",
+    "Company details for the contact form"
+  ],
+  "workflow": [
+    "Review packages at https://startupsavant.com/advertise",
+    "Fill in the contact form or email to inquire",
+    "If accepted, align on topic/angle/deliverables with their team",
+    "Their writers produce the article; you get draft review with one round of revisions",
+    "Article publishes on the Startup Savant News section with newsletter + social promotion; FTC-compliant sponsored labeling applied"
+  ],
+  "watchFor": [
+    "Third-party directory guides claim free submissions exist — the current site shows no free listing path; treat free-route claims as stale",
+    "All placements carry FTC-compliant sponsored labeling — no disguised editorial",
+    "Only one round of revisions is included",
+    "12-month minimum live guarantee — but confirm removal terms after that period"
+  ],
+  "countsAsLive": "A published article on startupsavant.com (News section) about or featuring the company",
+  "unknowns": [
+    "Branded Guide exact price (media kit says 'for pricing visit /advertise' — Spotlight is $3,750)",
+    "Whether any genuinely free submission/listing route survives",
+    "Whether links in sponsored articles are dofollow or carry rel=sponsored",
+    "Current turnaround from inquiry to publication"
+  ]
+}

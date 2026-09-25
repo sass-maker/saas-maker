@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "feedmystartup.com",
+  "name": "Feed My Startup",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://feedmystartup.com/submit-your-startup/",
+      "title": "Submit Your Startup — form or 700-word unique article by email"
+    },
+    {
+      "url": "https://feedmystartup.com/write-for-us/",
+      "title": "Write for Us — guest article guidelines"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Startup/entrepreneurship content for a small WordPress blog audience",
+    "Two free routes: fill the submit-startup form, or email a 700-word unique article covering the startup with two images to contact@feedmystartup.com",
+    "Guest articles must be 700+ words, unique, include relevant images, and must not link to promotional websites (promotional articles are rejected)",
+    "Guest-post route requires registering a profile via wp-login.php"
+  ],
+  "preparation": [
+    "Startup details for the form, or a finished 700+ word unique article with two images",
+    "Contact emails: contact@feedmystartup.com or feedthestartup@gmail.com",
+    "For articles: a registered account via https://feedmystartup.com//wp-login.php"
+  ],
+  "workflow": [
+    "Startup showcase: open https://feedmystartup.com/submit-your-startup/ and fill the form, or email the 700-word article + two images",
+    "Guest post: register at wp-login, create a profile, submit the article for review",
+    "Wait for editorial review — no stated turnaround"
+  ],
+  "watchFor": [
+    "Promotional links inside articles get the piece rejected — keep the body editorial",
+    "The site is a small, lightly maintained WordPress blog (© 2021 footer); set low traffic expectations",
+    "The submit form's fields did not render in a text fetch — the email route is a reliable fallback",
+    "Also offers a separate /submit-your-app/ page"
+  ],
+  "countsAsLive": "A post about the startup/app is published on feedmystartup.com under Startups or Technology",
+  "unknowns": [
+    "Review turnaround and acceptance rate",
+    "Exact fields on the submit-startup form",
+    "Whether published posts carry dofollow links"
+  ]
+}

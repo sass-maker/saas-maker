@@ -1,0 +1,56 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "lachief.io",
+  "name": "Lachief",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    { "url": "https://lachief.io/", "title": "Lachief.io - AI Tools Directory homepage" },
+    {
+      "url": "https://tally.so/r/w4Jb4b",
+      "title": "Submit A Tool - Lachief.io Tally submission form"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Only useful AI or software tools are accepted; other submissions are rejected",
+    "Newsletters and other tool directories are explicitly rejected",
+    "Submissions with affiliate URLs or bit.ly links are rejected",
+    "Maximum of 1 listing per submitted tool",
+    "Every tool is reviewed manually before going live"
+  ],
+  "preparation": [
+    "Submitter name, last name, company, and email",
+    "Tool name, tagline, and full description",
+    "Canonical tool URL (no affiliate or shortened links)",
+    "Up to 3 categories and up to 6 topics to select",
+    "Square tool logo 540x540 with background color, JPG or PNG, max 2MB",
+    "Tool pricing model (free/freemium/paid)",
+    "Optional: affiliate program application link, promo code, message"
+  ],
+  "workflow": [
+    "Open the Tally submission form at https://tally.so/r/w4Jb4b (linked from the 'Submit Tool' nav item on lachief.io)",
+    "Fill in submitter details (name, last name, company, email)",
+    "Fill in tool name, tagline, and description",
+    "Enter the tool URL",
+    "Pick up to 3 categories and up to 6 topics",
+    "Upload the 540x540 logo (JPG/PNG, max 2MB)",
+    "Select the tool pricing model",
+    "In the 'Listing details' checkboxes, select 'Listing only (Free)' — or 'Update Listing (Free)' if the tool is already listed",
+    "Submit the form and wait for manual review; approved free listings can take up to 7 days to go live"
+  ],
+  "watchFor": [
+    "Checkbox field defaults toward paid options: 'Featured listing (7-days $250)' and 'Video promo + Featured listing' are upsells — select the free checkbox deliberately",
+    "To promote an already-listed tool a separate Tally form (https://tally.so/r/nraXLl) must be used instead",
+    "For updates to an existing listing, choose 'Update Listing' rather than submitting a new listing (duplicates are rejected)",
+    "Affiliate or bit.ly URLs in the tool URL field cause rejection",
+    "Featured placement only lasts 7 days even when paid"
+  ],
+  "countsAsLive": "The tool appears as a public page under lachief.io/tool-posts/<slug> and/or surfaces in Browse Tools / category pages and the 'New AI Tools' section",
+  "unknowns": [
+    "Whether rejection is communicated by email or silent",
+    "Exact review criteria beyond the published acceptance rules",
+    "Whether the free listing link is dofollow (catalog note says follow, not confirmed on site)"
+  ]
+}

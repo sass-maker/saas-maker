@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "semfirms.com",
+  "name": "Semfirms",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    { "url": "https://www.semfirms.com/add-user/", "title": "User Registration - SEM Firms" },
+    { "url": "https://semfirms.com/", "title": "Semfirms homepage - agency directory" },
+    { "url": "https://www.semfirms.com/apply-for-sponsorship", "title": "Apply For Sponsorship" },
+    { "url": "https://www.semfirms.com/faq", "title": "SEM Firms FAQ" }
+  ],
+  "category": "review",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "B2B service providers / agencies only - SEO, PPC, digital marketing, web design/development, IT services; NOT a product/SaaS directory",
+    "Register a user account at /add-user/ (email + generated password) then create a free profile",
+    "Listings are editorially vetted: SEMfirms 'carries out an in-depth research' and an analysis before listing a firm",
+    "The catalog's listed submit URL (/submit-a-listing) is 404; real entry points are Register (/add-user/) and Apply For Sponsorship"
+  ],
+  "preparation": [
+    "Agency details: name, website, location, service categories (very long taxonomy from SEO to Shopify development)",
+    "Client reviews/portfolio evidence - verified client reviews are part of the value prop",
+    "For sponsored tier: budget and chosen service categories/countries"
+  ],
+  "workflow": [
+    "Register at https://www.semfirms.com/add-user/ (enter email, generate password)",
+    "Create a free profile for the agency from the account dashboard",
+    "Optionally apply for 'Verified Sponsored Listing' via /apply-for-sponsorship for priority placement",
+    "Free members can also post blogs, jobs, photos, and videos from the dashboard at no charge"
+  ],
+  "watchFor": [
+    "Do not submit a SaaS product - this directory lists service firms/agencies only",
+    "The catalog's submission URL is dead; use the Register flow instead",
+    "Sponsorship tiers control ranking placement; organic rankings are 'based on client reviews'",
+    "A paid 'Verified Listing Registration' path exists at /paiduser"
+  ],
+  "countsAsLive": "The agency has a public profile page on semfirms.com reachable from its country/service listing pages, with reviews enabled.",
+  "unknowns": [
+    "Exact free-profile form fields after registration",
+    "Sponsored listing pricing (not published publicly)",
+    "Verification criteria and turnaround for the free profile"
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "betapage.co",
+  "name": "BetaPage",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://betapage.co/",
+      "title": "BetaPage homepage — now branded 'PitchWall', AI products directory"
+    },
+    {
+      "url": "https://betapage.co/submit",
+      "title": "Submit page with Free/Pro/Premium launch plans"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free Launch plan has a minimum 30-day waiting period and only 1-day homepage visibility",
+    "Newsletter mention on the free plan is explicitly 'not guaranteed'"
+  ],
+  "requirements": [
+    "Product/startup launch — site is a daily products directory (now AI-heavy) operated under the 'PitchWall' brand on the betapage.co domain",
+    "Free plan: 1-day homepage visibility, 30+ day queue, dofollow backlink (site claims DR 70), possible newsletter mention, a tweet",
+    "Pro plan $49: 2-day homepage visibility, 2-week queue, dofollow, guaranteed newsletter mention + tweet",
+    "Premium plan $99: 2-day homepage visibility, featured on your chosen date (or next day), dofollow, newsletter + tweet"
+  ],
+  "preparation": [
+    "Product name, tagline/description, website URL",
+    "Logo/product image",
+    "Category/tag fit (AI, productivity, marketing, design, dev, SaaS)",
+    "Launch-date preference if buying Premium"
+  ],
+  "workflow": [
+    "Open https://betapage.co/submit",
+    "Pick a plan — Free Launch, Pro ($49), or Premium ($99); each 'Select Plan' links to /product/submit?plan=...",
+    "Complete the product submission form for the chosen plan",
+    "Free: wait out the 30-day queue; paid: wait the stated shorter window",
+    "Product publishes on the homepage/products feed on its scheduled day"
+  ],
+  "watchFor": [
+    "Brand transition: the domain is betapage.co but the site brands itself 'PitchWall' — the same operator appears to have renamed it",
+    "Free newsletter mention is NOT guaranteed (paid plans promise it)",
+    "Claimed metrics (500k monthly visitors, 50k subscribers, DR 70) are self-reported on the submit page",
+    "A 'Write a Guest Post' route exists separately at /pages/write-a-guest-post"
+  ],
+  "countsAsLive": "The product's detail page is live at betapage.co/product/<slug> and appears in the New Products/Featured feed",
+  "unknowns": [
+    "Exact form fields behind /product/submit?plan=free",
+    "Whether account creation is required",
+    "Whether the PitchWall rebrand affects older BetaPage listings or the domain's future",
+    "Rejection/refund policy for paid plans"
+  ]
+}

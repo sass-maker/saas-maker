@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "nextdoor.com",
+  "name": "Nextdoor",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "community",
+  "zeroCostRoute": "free",
+  "sources": [
+    {
+      "url": "https://business.nextdoor.com/en-us/getting-started/business-page",
+      "title": "Nextdoor for Business — free Business Page: claim flow, eligibility, posting to neighborhood newsfeed"
+    }
+  ],
+  "requirements": [
+    "You must be an owner, employee, or authorized representative of the business",
+    "Local businesses, casual service providers, and home service providers are eligible",
+    "Casual goods/services providers (e.g., dog walking, babysitting) need official business documents to verify the page before posting to the neighborhood newsfeed; without documents they can only use 'Neighbor Made'/'Neighbor Services' options from a member account",
+    "Business Pages may already exist (data comes from third-party public sources) — search by name + location before creating a new page"
+  ],
+  "preparation": [
+    "Business name, category, service area, contact info, photos",
+    "A Nextdoor account — either a new business account or your existing personal member account to link",
+    "Business verification documents if you're a casual/home service provider"
+  ],
+  "workflow": [
+    "Go to business.nextdoor.com/local and choose 'Sign up for Free' / 'Claim Your Free Business Page'",
+    "Create an account or log in (optionally link your personal Nextdoor account — don't link if employees will share the business login)",
+    "Search for your business by name + location; claim the existing page, or click 'Not here? Create your Business Page.'",
+    "Complete the page: contact info, photos, story",
+    "Post to the neighborhood newsfeed from the Content tab ('Create Post or Local Deal'); choose audience radius/neighborhoods"
+  ],
+  "watchFor": [
+    "If you don't select your own neighborhood for a post, you won't see it from your member account",
+    "Duplicate pages are common because pages are auto-generated — always search before creating",
+    "Nextdoor is a local neighborhood network: best fit for local services, not global SaaS launches",
+    "Verification documents are required before casual providers can post to the newsfeed"
+  ],
+  "countsAsLive": "The claimed Business Page is publicly visible on nextdoor.com with correct name/info, and (if posting) your posts appear in the selected neighborhoods' feeds",
+  "unknowns": [
+    "Exact verification document types accepted for casual providers",
+    "Whether Business Pages are publicly indexable by search engines or login-gated"
+  ]
+}

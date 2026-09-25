@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "launchigniter.com",
+  "name": "LaunchIgniter",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://launchigniter.com/submit",
+      "title": "Submit entry (form behind flow; pricing page holds the rules)"
+    },
+    {
+      "url": "https://launchigniter.com/pricing",
+      "title": "Launch your product — Free vs Basic $12 vs Pro $15 with full FAQ"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free launch requires the LaunchIgniter badge on your product homepage (compulsory verification; manual-confirmation fallback if Cloudflare blocks their checker)",
+    "Free launches pass manual review ('unique, high quality products' only) and the chosen launch date can move if free slots run out",
+    "Free tier gets a dofollow backlink only if it finishes top 3 of the launch week"
+  ],
+  "requirements": [
+    "Each product can be launched only once — submit when ready",
+    "Launches start 00:00 Monday UTC and run exactly 7 days on the homepage"
+  ],
+  "preparation": [
+    "Product details and a chosen launch week",
+    "LaunchIgniter badge embedded on your homepage (free route), plus a note of which page hosts it for manual confirmation if needed",
+    "Paid options: Basic $12 one-time (lifetime DR75 dofollow, guaranteed date, no review queue) or Pro $15 one-time (adds dofollow backlinks from StartupTrusted DR57 and SaaSGrow DR59)"
+  ],
+  "workflow": [
+    "Open /submit and pick Free, Basic, or Pro",
+    "Submit product details and choose a launch week",
+    "Free: complete badge verification (or tick manual confirmation) and wait for admin review",
+    "Launch goes live 00:00 Monday UTC for 7 days of homepage visibility",
+    "Top 3 by upvotes earn the Winner badge (and, for Free, the dofollow backlink)"
+  ],
+  "watchFor": [
+    "Free launch date is not guaranteed — it can shift if the week's free slots fill",
+    "One launch per product ever — no relaunches",
+    "Cloudflare/bot protection on your site can break automated badge verification; use the manual confirmation checkbox",
+    "Pricing page cross-promotes a paid 'Directory Submission' service from $99 — separate upsell, not needed to launch",
+    "Sidebar 'permanent featured spot' is another paid option"
+  ],
+  "countsAsLive": "Product appears on the LaunchIgniter homepage for its 7-day window starting Monday 00:00 UTC with upvotes enabled; winners later appear under /weekly-winners",
+  "unknowns": [
+    "Whether an account is required before /submit",
+    "Current free-queue wait length",
+    "Whether paid launches are also manually reviewed (page implies instant/no review queue)"
+  ]
+}

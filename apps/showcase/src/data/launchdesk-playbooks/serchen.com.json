@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "serchen.com",
+  "name": "Serchen",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.serchen.com/get-listed/",
+      "title": "Serchen - Get Listed page (returned 403 to automated fetch)"
+    },
+    {
+      "url": "https://www.serchen.com/",
+      "title": "Serchen homepage - business software marketplace (8,600+ apps, 138 categories, ~1M reviews)"
+    },
+    {
+      "url": "https://launchpointzeroror-production.up.railway.app/launchsites/serchen",
+      "title": "Launch Point Zero - Serchen profile ('submitting is labor intensive and you'll get spammed for paid upgrades'; pay-to-submit: false)"
+    },
+    {
+      "url": "https://ideaproof.io/launch-directories/serchen",
+      "title": "ideaproof - Serchen submission profile (free, dofollow per their data)"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free company listing for business software vendors via https://www.serchen.com/get-listed/",
+    "Multi-step submission described by an independent submitter as 'labor intensive' - expect more than a single form",
+    "Company verification step exists; after verification Serchen offers a paid upgrade plan"
+  ],
+  "preparation": [
+    "Standard submission kit: product name, live URL, ~60-char tagline, ~250-char short description, square logo 512px+, 2-3 screenshots, pricing model, category",
+    "Company details for verification (website, contact info)",
+    "An email address you monitor - verification and upsell contact come by email"
+  ],
+  "workflow": [
+    "Open https://www.serchen.com/get-listed/ in a real browser (blocked automated fetches)",
+    "Complete the multi-step listing application with company and product details",
+    "Complete whatever verification Serchen requests (independent report: the company 'will offer you paid plan when you are verified')",
+    "Decline the paid upgrade if only the free listing is wanted; the free listing still creates a public company page (e.g. serchen.com/company/<slug>/)"
+  ],
+  "watchFor": [
+    "Expect persistent paid-upgrade solicitation after verification - third-party experience report calls it 'spamming you afterwards to pay to upgrade'",
+    "The 403 on automated fetch means the flow is browser-only; plan a manual session",
+    "Independent reviewer noted 'no actual improvement in web traffic' - treat the dofollow link/profile as the value, not referral traffic",
+    "The same site operates lead-gen contact forms for advertising - don't fill the wrong form"
+  ],
+  "countsAsLive": "A public company page exists at serchen.com/company/<slug>/ visible without login",
+  "unknowns": [
+    "Exact fields/steps of the get-listed flow (page did not render publicly)",
+    "Verification mechanism and approval SLA",
+    "Current prices of the paid upgrade plans"
+  ]
+}

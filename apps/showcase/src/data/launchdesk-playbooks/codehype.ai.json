@@ -1,0 +1,56 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "codehype.ai",
+  "name": "CodeHype",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free Launch ($0) is a community listing in the standard queue; the product page links dofollow only while the CodeHype badge stays verified on your site (re-checked automatically every 3 days).",
+    "Every launch — free or paid — goes through human review; paid plans do not bypass moderation."
+  ],
+  "requirements": [
+    "Startups/SaaS/AI tools; weekly launch board with upvote rankings and winners.",
+    "Login required to launch ('Launch your startup' at /submit).",
+    "Free tier: install the CodeHype badge to verify ownership and unlock the dofollow backlink; verify it from 'My launches' → embed section."
+  ],
+  "preparation": [
+    "Product website URL (the homepage has a 'Product website URL → Launch your startup for free' quick-start).",
+    "Logo, tagline, description, category (AI Agents, AI Marketing, Developer Tools, etc.).",
+    "CodeHype badge embed if using the free tier.",
+    "Plan choice: Free / Plus $15 (instant publish, no badge, permanent dofollow, premium badge) / Pro $25 (7 days homepage featured, +2 backlinks, 1500-word blog).",
+    "Optional upsells to pre-decide on: homepage center ad $20/wk, sidebar ad $15/wk, Instagram feature from $250, done-for-you directory submissions $49–149."
+  ],
+  "workflow": [
+    "Sign in, then open /submit (or paste the product URL into the homepage launcher).",
+    "Choose plan: Free Launch, Plus ($15 one-time), or Pro ($25 one-time).",
+    "Complete the launch form; paid plans let you choose the launch date.",
+    "Free tier: embed badge and click Verify in My launches → embed section.",
+    "Human review applies to all plans; once approved the product appears in the weekly launch board."
+  ],
+  "watchFor": [
+    "Free-tier dofollow is conditional and re-verified every 3 days — removing the badge flips the link to nofollow.",
+    "Heavy upsell surface: homepage ads, Instagram features, directory-submission service — none required for a listing.",
+    "Weekly leaderboard competition; 'New launches in' countdown gates visibility.",
+    "FAQ explicitly: paid plans do NOT skip human review.",
+    "Unusually agent-friendly: llms.txt, OpenAPI, MCP server card and public REST listed in footer."
+  ],
+  "countsAsLive": "The product appears on codehype.ai/launches for its week with a public product page and (if badge verified or paid) a dofollow link.",
+  "unknowns": [
+    "Exact free-queue wait time.",
+    "Submit form field list behind login.",
+    "Whether badge verification failure merely nofollows the link or delists."
+  ],
+  "sources": [
+    {
+      "url": "https://codehype.ai/pricing",
+      "title": "CodeHype Pricing — Free (badge-verified dofollow, 3-day recheck), Plus $15, Pro $25, ads, directory service; 'paid does not skip review'"
+    },
+    { "url": "https://codehype.ai/", "title": "CodeHype homepage — launch board, weekly winners" },
+    {
+      "url": "https://codehype.ai/guidelines",
+      "title": "Launch guidelines (linked from pricing FAQ)"
+    }
+  ]
+}

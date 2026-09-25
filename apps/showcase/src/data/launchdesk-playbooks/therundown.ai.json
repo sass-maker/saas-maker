@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "therundown.ai",
+  "name": "The Rundown",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.therundown.ai/",
+      "title": "The Rundown AI homepage - AI newsletter and media publisher (2M+ readers)"
+    },
+    {
+      "url": "https://www.therundown.ai/tools",
+      "title": "Tools directory ('Supertools') - 1,347 tools across categories, editorially curated"
+    },
+    {
+      "url": "https://www.therundown.ai/advertise-with-us",
+      "title": "Advertise page - newsletter ad formats booked via Typeform"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "unknown",
+  "conditions": [],
+  "requirements": [
+    "The /tools directory (1,347 entries) shows no public submission form — listings appear editorially curated by The Rundown's team",
+    "The only documented paid route is newsletter advertising: Main Ad, Secondary Ad, and Full Email Takeover formats booked through a Typeform intake (therundownai.typeform.com/to/kraZ1TSO)",
+    "No eligibility criteria, submission URL, or free-listing path is published"
+  ],
+  "preparation": [
+    "If pursuing advertising: product details, budget, and goals for the Typeform intake",
+    "If pursuing an editorial tools listing: a notable AI product and a pitch to support@therundown.ai (contact listed in footer)"
+  ],
+  "workflow": [
+    "Check the tools directory at https://www.therundown.ai/tools for whether your product is already covered",
+    "For paid exposure: open the 'Get in touch' Typeform at https://therundownai.typeform.com/to/kraZ1TSO and submit product, budget, and goals — they reply within ~24 hours",
+    "For an editorial listing there is no documented process — contact support@therundown.ai"
+  ],
+  "watchFor": [
+    "This is primarily a newsletter/media business — ads are typically 'booked out months in advance'",
+    "Ads permanently live on the website article pages, which is the closest thing to a listing",
+    "Do not assume a directory submission exists — none was found on public pages",
+    "Sponsored placements in the newsletter are labeled ads; an editorial tool listing is separate and not purchasable via the advertised flow"
+  ],
+  "countsAsLive": "For a listing: a public page at therundown.ai/tools/<slug>. For ads: the sponsored section appearing in a newsletter issue and its permanent web version",
+  "unknowns": [
+    "Whether the tools directory accepts submissions at all (no submit link found)",
+    "Any free listing path",
+    "Ad pricing (not published; custom plans after intake)"
+  ]
+}

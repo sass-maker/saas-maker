@@ -1,0 +1,60 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "600.tools",
+  "name": "600.tools",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://600.tools/",
+      "title": "Homepage — curated tools directory with Submit nav link"
+    },
+    {
+      "url": "https://600.tools/pricing",
+      "title": "Pricing — free (180+ day queue), $9.9 listing, $19.9 featured"
+    },
+    {
+      "url": "https://600.tools/submit",
+      "title": "Submit — redirects to a sign-in wall (Login with Google / GitHub)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free plan requires signing in with a Google or GitHub account",
+    "Free submissions join a queue with a stated '180+ days wait at current pace'",
+    "Free listings 'may be rejected due to limited free slots'",
+    "Free plan grants a permanent link only 'with backlink maintenance' — a reciprocal backlink appears to be required to keep it"
+  ],
+  "requirements": [
+    "Online tool/website to list; directory is general-purpose (AI, Business, Productivity, Development, Design, etc.)",
+    "Google or GitHub account for authentication",
+    "Free tier promises '3 dofollow links' — categories/tags chosen at submission affect link count"
+  ],
+  "preparation": [
+    "A Google or GitHub account",
+    "Product name, URL, description, logo/screenshot",
+    "Category and tag selections from the site's taxonomy",
+    "A backlink placement plan if using the free tier (backlink maintenance clause)"
+  ],
+  "workflow": [
+    "Open https://600.tools/submit",
+    "Authenticate via Login with Google or Login with GitHub",
+    "Choose plan: free (queue) / $9.9 listing (instant) / $19.9 featured (instant + 7 days on top)",
+    "Complete the submission form inside the signed-in area",
+    "Free route: wait in queue (180+ days stated); paid route: published immediately"
+  ],
+  "watchFor": [
+    "The submit page is a login wall — the actual form is not publicly visible, so field list is unknown",
+    "Free tier explicitly warns of 180+ day wait and possible rejection — budget time or expect to pay $9.9",
+    "'Backlink maintenance' wording on the free plan implies you must keep a link back to 600.tools; failure may remove the listing",
+    "Strike-through prices ($14.9→$9.9, $39.9→$19.9) are perpetual-sale framing, not real deadlines",
+    "Same operator/template as featuredtool.com and dirs.cc (shared @blankwebdev X handle) — identical pricing structure"
+  ],
+  "countsAsLive": "Product has a public item page at 600.tools/item/<slug> appearing in category/tag listings",
+  "unknowns": [
+    "Exact fields on the authenticated submission form",
+    "Whether the free tier formally requires a reciprocal backlink or only 'maintains' it conditionally",
+    "Rejection criteria and notification process for free submissions"
+  ]
+}

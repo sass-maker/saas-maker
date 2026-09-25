@@ -1,0 +1,59 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "dirs.cc",
+  "name": "Dirs.cc",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://dirs.cc/",
+      "title": "Homepage — 'The Best Websites & Tools Directory' with Submit nav link"
+    },
+    {
+      "url": "https://dirs.cc/pricing",
+      "title": "Pricing — free (180+ day queue), $9.9 listing, $19.9 featured"
+    },
+    {
+      "url": "https://submitdirs.com/",
+      "title": "'Submit Dirs' footer link — companion directory-submission service by the same operator"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free plan requires signing in (Sign In flow shown in nav; submit is gated)",
+    "Free submissions join a queue with a stated '180+ days wait at current pace'",
+    "Free listings 'may be rejected due to limited free slots'",
+    "Free plan grants a permanent link only 'with backlink maintenance' — a reciprocal backlink appears to be required to keep it"
+  ],
+  "requirements": [
+    "Website or tool to list; directory is general-purpose (3D, AI, Business, Productivity, Development, Design, etc.)",
+    "Account sign-in before the submission form is reachable",
+    "Free tier advertises '3 dofollow links' — category/tag choices affect link count"
+  ],
+  "preparation": [
+    "Sign-in credentials for the site",
+    "Product name, URL, description, logo/screenshot",
+    "Category and tag selections from the site taxonomy",
+    "A backlink placement plan if using the free tier"
+  ],
+  "workflow": [
+    "Open https://dirs.cc/submit (Sign In first)",
+    "Choose plan: free (queue) / $9.9 listing (instant) / $19.9 featured (instant + 7 days top placement)",
+    "Complete the submission form in the signed-in area",
+    "Free route: wait in queue (180+ days stated); paid route: immediate publication"
+  ],
+  "watchFor": [
+    "Catalog note said 'pricing=free' but the live site runs the same freemium pricing as sister sites — do not assume a fast free lane",
+    "Free tier warns of 180+ day wait and possible rejection",
+    "'Backlink maintenance' on the free plan implies an ongoing reciprocal-link requirement",
+    "Footer 'Submit Dirs' links out to submitdirs.com — a separate paid directory-submission service, not part of this listing flow",
+    "Same operator/template as 600.tools and featuredtool.com (shared @blankwebdev X handle)"
+  ],
+  "countsAsLive": "Product has a public item page at dirs.cc/item/<slug> appearing in category/tag listings",
+  "unknowns": [
+    "Exact fields on the authenticated submission form",
+    "Whether the free tier formally requires a reciprocal backlink",
+    "Rejection criteria and notification process for free submissions"
+  ]
+}

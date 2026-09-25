@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "shipybara.com",
+  "name": "Shipybara",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://shipybara.com/projects/submit",
+      "title": "Submit project page (sign-in gate)"
+    },
+    {
+      "url": "https://shipybara.com/pricing",
+      "title": "Shipybara pricing — Free, Premium $50, SEO Package $69, directory submission service"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free plan is capped at 18 slots per week with launches batched every Monday at midnight UTC",
+    "Free plan only yields a dofollow backlink if the project finishes top 3 or the Shipybara badge is displayed; otherwise the link is not guaranteed dofollow",
+    "Free scheduling horizon up to 180 days vs 30 days on Premium",
+    "Account sign-in (Google or GitHub) required to submit"
+  ],
+  "requirements": [
+    "A launched or launchable product with a public URL",
+    "Account via Google or GitHub OAuth"
+  ],
+  "preparation": [
+    "Product name, URL, tagline/description, logo",
+    "Preferred launch Monday (all launches happen Mondays at midnight UTC)",
+    "Shipybara badge embed plan if relying on the free tier for a dofollow link"
+  ],
+  "workflow": [
+    "Sign in at https://shipybara.com/projects/submit",
+    "Fill the project form and choose Free ($0) or Premium ($50)",
+    "Schedule into an available Monday launch slot",
+    "Product goes live on the homepage in the weekly batch"
+  ],
+  "watchFor": [
+    "Premium checkout goes through DodoPayments (checkout.dodopayments.com)",
+    "Aggressive upsells: $69 SEO article package and a $99-$249 directory-submission service run by LaunchDirectories.com",
+    "Free-tier dofollow is conditional — read 'Dofollow backlink (Top 3 or badge)' literally"
+  ],
+  "countsAsLive": "Project appears in the Monday homepage batch and on /trending with its own project page",
+  "unknowns": [
+    "Exact badge requirements for the free-tier dofollow link",
+    "Whether free submissions can be rejected outright or only queued"
+  ]
+}

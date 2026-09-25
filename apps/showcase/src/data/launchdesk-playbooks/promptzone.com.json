@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "promptzone.com",
+  "name": "PromptZone",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://promptzone.com/",
+      "title": "PromptZone homepage - community site for AI builders: posts, prompts library, guides, resources"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Posting is free but requires creating an account ('Log in' / 'Create account' in nav)",
+    "This is a community posting surface, not a product listing — visibility comes from writing a post (e.g. a tool announcement, tutorial, or tested prompt) that the community reads"
+  ],
+  "requirements": [
+    "Audience is AI builders, prompt engineers, and creators — content must fit that niche",
+    "PromptZone positions its prompts as 'run in a sandbox against the target model, with the output shown' — prompts shared are expected to be tested",
+    "Governed by a Code of Conduct (linked in footer)"
+  ],
+  "preparation": [
+    "Email for account creation",
+    "A post worth publishing: tool launch write-up, guide, or a tested prompt with real output",
+    "Relevant tags (ai, tutorial, tools, llm, imagegeneration, etc.)"
+  ],
+  "workflow": [
+    "Create an account on promptzone.com",
+    "Write a post introducing the product — a tutorial or 'how we built it' angle will outperform a bare link drop",
+    "Tag it appropriately and publish",
+    "Engage with comments; posts are sorted by Relevant/Latest/Top"
+  ],
+  "watchFor": [
+    "Not a directory — there is no 'submit product' form; the asset is a community post that links out",
+    "Pure self-promotion without substance will likely underperform or be moderated",
+    "An 'Advertise' link in the footer offers a paid route if organic posting is not enough",
+    "Many top posts are prompt/tutorial content — product launches compete with educational posts"
+  ],
+  "countsAsLive": "The post is publicly visible on promptzone.com in the Latest feed and under its tags",
+  "unknowns": [
+    "Whether profile/post links are dofollow (catalog note says follow; unconfirmed)",
+    "Moderation strictness for launch announcements",
+    "Advertise pricing (behind the Advertise page)"
+  ]
+}

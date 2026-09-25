@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "10words.io",
+  "name": "10 Words",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://10words.io/",
+      "title": "Homepage — 'Get your 10 words ready and submit it for free'; submission lives at app.10words.io/submit"
+    },
+    {
+      "url": "https://portal.10words.io/submission",
+      "title": "Batch-provided submission URL — returned no content"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Description must fit the site's format: the startup explained in 10 words or less",
+    "Submission is explicitly free ('Get your 10 words ready and submit it for free')",
+    "Real submission endpoint is https://app.10words.io/submit (linked from homepage); the batch's portal.10words.io/submission URL returned an empty shell"
+  ],
+  "preparation": [
+    "A ≤10-word description of the product — this is the entire pitch format",
+    "Product name and URL",
+    "Possibly a Twitter/X account — on-site voting is tied to Twitter identity ('Voting as: @username')"
+  ],
+  "workflow": [
+    "Draft a ≤10-word description",
+    "Open https://app.10words.io/submit and submit the startup",
+    "Accepted entries appear in the collection and the periodic email digest (daily or weekly top picks)"
+  ],
+  "watchFor": [
+    "portal.10words.io/submission rendered nothing — use app.10words.io/submit instead",
+    "Ultra-short format means no room for marketing copy; the 10-word line is the listing",
+    "Site feels dormant-era (IndieHackers-inspired side project); engagement may be low"
+  ],
+  "countsAsLive": "The entry appears on discover.10words.io / the 10words collection and is eligible for the newsletter digest",
+  "unknowns": [
+    "Review/acceptance process and turnaround",
+    "Whether the submit endpoint still functions — site shows older tooling (AngularJS templates visible)"
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startuplister.com",
+  "name": "Startuplister",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    { "url": "https://startuplister.com/", "title": "startuplister.com - returned HTTP 404" },
+    {
+      "url": "https://www.startuplister.com/",
+      "title": "www.startuplister.com - returned HTTP 404"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "Site is unreachable: both https://startuplister.com/ and https://www.startuplister.com/ return HTTP 404 (likely decommissioned or a bare misconfigured host)"
+  ],
+  "preparation": [],
+  "workflow": [
+    "No viable submission path — the domain serves a 404 page",
+    "Re-check periodically in a browser; a submission service by this name historically sold done-for-you directory submissions"
+  ],
+  "watchFor": [
+    "Do not pay any third-party service claiming to submit 'to Startuplister' — the destination itself is down",
+    "The catalog entry (DR 34, freemium) appears stale; the site may have shut down"
+  ],
+  "countsAsLive": "Not verifiable — the site is down",
+  "unknowns": [
+    "Whether the outage is temporary or permanent",
+    "Any submission mechanism (none visible)",
+    "Whether prior listings still resolve on any subdomain"
+  ]
+}

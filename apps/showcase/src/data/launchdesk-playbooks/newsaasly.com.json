@@ -1,0 +1,38 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "newsaasly.com",
+  "name": "New SaaSly",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    { "url": "https://newsaasly.com/pricing", "title": "Get listed on New SaaSly" },
+    { "url": "https://newsaasly.com/", "title": "New SaaSly gallery homepage" }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "SaaS products for a curated gallery (~92 listings observed across broad categories)",
+    "Single paid tier only: $20 one-time 'Gallery Listing'"
+  ],
+  "preparation": [
+    "Product name, URL, logo, short description, and category (broad list: crypto to productivity)",
+    "$20 one-time payment"
+  ],
+  "workflow": [
+    "Open https://newsaasly.com/pricing",
+    "Click 'Submit for $20' - redirects to a Tally form (https://tally.so/r/3jK4R6)",
+    "Complete the Tally form and pay",
+    "Listing is a permanent directory page with a do-follow backlink per the pricing copy"
+  ],
+  "watchFor": [
+    "No free tier - the catalog 'pricing=free' note does not match the current site (only $20/once is offered)",
+    "Submission and payment happen on a third-party Tally form, not on newsaasly.com itself",
+    "The catalog's submissionUrl (/submit) returns 404; the real path is /pricing → Tally"
+  ],
+  "countsAsLive": "The product appears as a card in the New SaaSly gallery with a /listing/<slug> page and a do-follow outbound link.",
+  "unknowns": [
+    "Review/approval criteria and turnaround",
+    "Exact Tally form fields",
+    "Whether rejected submissions are refunded"
+  ]
+}

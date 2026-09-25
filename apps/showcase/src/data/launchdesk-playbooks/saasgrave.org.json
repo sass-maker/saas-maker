@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "saasgrave.org",
+  "name": "SaaSGrave",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://saasgrave.org/",
+      "title": "SaaSGrave homepage — marketplace for startups that didn't make it"
+    },
+    {
+      "url": "https://saasgrave.org/pricing",
+      "title": "SaaSGrave pricing — free listing, $9 sale unlock, 3% commission"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Only for dead, stalled or abandoned startups — this is a post-mortem archive and sale marketplace, not a launch board for live products",
+    "Zero-revenue products explicitly welcome",
+    "An account is required to list (browsing is open without one)",
+    "Honest post-mortem expected: real metrics and an account of what went wrong"
+  ],
+  "preparation": [
+    "Startup name, logo and screenshots",
+    "Real metrics (users, MRR, downloads) and an honest failure write-up",
+    "Optional: read-only API key from Stripe, Paddle, Lemon Squeezy or Dodo for revenue verification (key is discarded after MRR computation; unverified numbers stay flagged)",
+    "Decide the end-state: keep the public record, sell ($9 unlock + 3% on sale), or revive via SaaSGrave Launches (free)"
+  ],
+  "workflow": [
+    "Create an account / sign in",
+    "Open /sell ('List a startup — free')",
+    "Fill the listing: story, metrics, screenshots",
+    "Optionally connect a read-only billing key for the verified-revenue badge",
+    "Publish the free public post-mortem",
+    "Post-publish, choose to unlock buyer offers ($9 once) or hand the product URL to SaaSGrave Launches for a free relaunch"
+  ],
+  "watchFor": [
+    "Do not submit a healthy live product here — the directory is explicitly a graveyard; live relaunches go to ls.saasgrave.org",
+    "$9 sale unlock and 3% commission only apply if you open the listing to buyers",
+    "Sponsored placement ($29/month for a highlighted row) is an optional upsell",
+    "Transfers are handled directly between buyer and seller — escrow/assisted transfer still 'planned'"
+  ],
+  "countsAsLive": "The startup appears in saasgrave.org/browse ('the graveyard') with a public post-mortem page and dofollow link.",
+  "unknowns": [
+    "Whether free listings pass a moderation review before appearing",
+    "Listing approval/publish latency",
+    "Whether a dead product without a live URL can still be listed (listings link out to the site)"
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "textlinkdirectory.com",
+  "name": "Text Link Directory",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.textlinkdirectory.com/",
+      "title": "Text Link Directory homepage - free human-edited web directory, online since 2005"
+    },
+    {
+      "url": "https://www.textlinkdirectory.com/submission_guidelines.html",
+      "title": "Submission Guidelines - 3 submission types, URL/title/description rules"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free submission is reviewed in 30-60 days",
+    "Free + reciprocal link to textlinkdirectory.com is reviewed within 30 days; their robot checks for the link",
+    "'Top Websites' paid option: $5 one-time, review within 24h, link placed at top of category page above free and reciprocal listings"
+  ],
+  "requirements": [
+    "Pick the most specific category/sub-category — many rejections are for wrong category",
+    "Not accepted: sites with illegal content, redirects to another URL, under-construction sites, mirror sites with identical content, and sites that are mostly affiliate links",
+    "Title: must be the company/site name, max 55 characters including spaces",
+    "Description: minimum 150 and max 300 characters, no superlatives ('best', 'great'), no '#1' or '$' signs, no promotional advertising copy"
+  ],
+  "preparation": [
+    "Homepage URL (no redirect)",
+    "Title ≤55 chars — the company/website name",
+    "Description 150-300 chars, factual and non-promotional",
+    "Best-fit category (the 'Add URL' link lives inside each category page)",
+    "If going reciprocal: a link 'Text Link Directory' → https://www.textlinkdirectory.com/ no more than one click from your homepage"
+  ],
+  "workflow": [
+    "Browse https://www.textlinkdirectory.com/ to the most specific category/sub-category",
+    "Click the 'Add URL' link on that category page",
+    "Choose submission type: Free / Free+Reciprocal / Top Websites ($5)",
+    "Enter URL, title (≤55 chars), and description (150-300 chars, no promo language)",
+    "If reciprocal: place the return link — their robot verifies it",
+    "Wait: 30-60 days free, ~30 days reciprocal, ~24h paid"
+  ],
+  "watchFor": [
+    "Human-edited with strict copy rules — promotional descriptions are rejected; keep it factual",
+    "The submit entry point is per-category, not a global form — submitting from the wrong category is a stated rejection reason",
+    "Sites heavy on affiliate links are explicitly banned — an affiliate-heavy landing page will fail",
+    "Reciprocal link must stay live; the robot re-checks",
+    "Copyright footer says 2005-2011 — the guidelines page is old; verify the queue is still processed before investing effort"
+  ],
+  "countsAsLive": "The site appears as a link entry on its category page (and at top-of-category for paid 'Top Websites')",
+  "unknowns": [
+    "Whether the directory still actively reviews (guidelines page is dated; homepage content unchanged since ~2011)",
+    "Whether listing links are dofollow (catalog note says follow; unconfirmed)",
+    "Payment mechanism for the $5 tier"
+  ]
+}

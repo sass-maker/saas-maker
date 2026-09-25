@@ -1,0 +1,43 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "indiehackers.com",
+  "name": "Indie Hackers",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.indiehackers.com/products",
+      "title": "Products page — Products Database with 'Add Your Product' and 'Submit an Update' (Build Board)"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "conditions": [],
+  "requirements": [
+    "Free Indie Hackers account (Sign up / Sign in required; full directory access itself is gated behind a free account)",
+    "Products are listed with self-reported monthly revenue — be prepared to state a revenue figure publicly"
+  ],
+  "preparation": [
+    "Product name, URL, description, category (one of ~80 listed categories) and business model (Free, Advertising, Affiliate/Commission, Transactional, Subscription-Based)",
+    "Self-reported monthly revenue figure — displayed publicly on the listing (e.g. '$0/month self-reported revenue')",
+    "Optional: updates/posts for the Build Board Beta voting surface"
+  ],
+  "workflow": [
+    "Create a free account at /sign-up",
+    "Go to /products and click 'Add Your Product' (/products/new or /products/submit)",
+    "Fill in product profile including category, business model, and revenue",
+    "Publish; the product then appears in the Products Database filters and your profile"
+  ],
+  "watchFor": [
+    "Revenue is self-reported and public — list a figure you are comfortable displaying",
+    "The Products Database is a long-lived profile, not a launch event; the 'Build Board Beta' is a separate daily voting surface with 'Submit an Update'",
+    "Browsing the full directory requires a free account — low-friction but account-walled",
+    "IH+ subscription is an upsell for content/community features, not required to list"
+  ],
+  "countsAsLive": "Product page at /product/<slug> exists and appears in the Products Database under its category/business-model filters",
+  "unknowns": [
+    "Whether new products go through any manual approval",
+    "Build Board submission mechanics (eligibility, cadence) beyond the visible 'Submit an Update' link",
+    "Whether revenue figures can be kept private while still listing"
+  ]
+}

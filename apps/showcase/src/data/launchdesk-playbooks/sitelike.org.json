@@ -1,0 +1,54 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "sitelike.org",
+  "name": "Sitelike",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.sitelike.org/add-site",
+      "title": "sitelike.org - Add&Submit Website instructions (returned 403 to automated fetch; text verified via search index)"
+    },
+    {
+      "url": "https://www.sitelike.org/",
+      "title": "sitelike.org homepage - similar-sites finder tool"
+    },
+    {
+      "url": "https://abun.com/how-to-get-free-backlinks-from-sitelike-dr-71",
+      "title": "Abun - step-by-step Sitelike submission walkthrough (no login required)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Completely free and no login required",
+    "Unusual flow: do NOT go straight to /add-site - the official instructions say go to the homepage, type your website URL, and click Search",
+    "If the site is already in the system you are taken to its page; only if NOT found does the system offer the 'Add new website' details form",
+    "Prohibited content: adult, gambling, phishing, and 'any websites not suitable for kids'",
+    "A second route exists: suggest your site as a similar/related entry at the bottom of an existing site's page (e.g. under google.com); 'only approve if it's completely similar'"
+  ],
+  "preparation": [
+    "Website URL (enter domain in the homepage search first)",
+    "Category, site name, and a one-sentence short description",
+    "No account needed"
+  ],
+  "workflow": [
+    "Go to https://www.sitelike.org/ and enter your website domain in the search bar",
+    "If the site is already defined you land on its page (nothing to do); if absent you are offered the 'Add new website' form",
+    "Click 'Check First' to validate the URL, then 'Submit' once verified",
+    "Fill URL, category, and short description; submit - 'our system will check & validate and approve immediately' per the official instructions",
+    "Optional: on a highly-similar existing site's page, use the form at the bottom to suggest yours as an alternative"
+  ],
+  "watchFor": [
+    "The /add-site page is instructions, not the form itself - the actual add form is reached via the homepage search miss path",
+    "The /add-site URL returned 403 to automated fetch; the flow is browser-oriented",
+    "Listings are claimed to approve 'immediately' after automated validation - verify the page exists after submitting",
+    "Similar-site suggestions on existing pages are manually checked and approved only if 'completely similar' - don't spam unrelated sites"
+  ],
+  "countsAsLive": "A dedicated public page for the domain exists on sitelike.org (reachable by searching the domain), with its description and link",
+  "unknowns": [
+    "Whether automated 'immediate' approval still applies or a manual queue has been added",
+    "Whether the outbound link on live pages is dofollow (a third-party guide claims dofollow)",
+    "Whether a site already auto-crawled into the system can still be claimed/enriched by the owner"
+  ]
+}

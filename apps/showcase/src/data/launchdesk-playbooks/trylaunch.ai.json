@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "trylaunch.ai",
+  "name": "Launch",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://trylaunch.ai/submit",
+      "title": "Submit page — 'Please sign up to submit a product'"
+    },
+    {
+      "url": "https://trylaunch.ai/pricing",
+      "title": "Pricing — Free $0, Pro $39, Grow $199, Pass $99/year"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free plan sits in a standard launch queue — 'Current queue estimate shown before submitting'",
+    "Free plan includes homepage listing, social promotion, newsletter feature, chosen launch date, and verified badge, but no guaranteed dofollow backlink",
+    "Pro ($39) adds a guaranteed high-authority backlink and skips the queue entirely",
+    "Account sign-up required (Google, GitHub, or email+password)",
+    "Maximum 1 launch per week across all plans"
+  ],
+  "requirements": [
+    "A product to launch — the platform targets 'vibe coders'/indie builders",
+    "Account via Google, GitHub, or email"
+  ],
+  "preparation": [
+    "Product name, URL, tagline/description, logo/icon, screenshots",
+    "Preferred launch date",
+    "Payment method (Stripe) only if choosing a paid tier"
+  ],
+  "workflow": [
+    "Sign up at https://trylaunch.ai/submit (Google, GitHub, or email)",
+    "Choose plan — Free is reachable via /submit?plan=free",
+    "Fill the launch form and pick a launch date",
+    "Free launches wait out the queue; Pro launches same-day",
+    "Product page goes live under /launch/<slug> and enters the homepage New Launches feed"
+  ],
+  "watchFor": [
+    "Default /submit CTAs steer to paid Pro/Grow — the free lane is the /submit?plan=free link",
+    "Grow ($199) is a directory-submission service, not a better listing",
+    "Pass ($99/yr) covers unlimited launches but the 1-launch-per-week cap still applies",
+    "Guaranteed dofollow backlink is paid-only"
+  ],
+  "countsAsLive": "A public launch page exists at trylaunch.ai/launch/<slug> and the product appears in the New Launches feed",
+  "unknowns": [
+    "Current length of the free launch queue",
+    "Whether free-tier outbound links are dofollow or nofollow"
+  ]
+}

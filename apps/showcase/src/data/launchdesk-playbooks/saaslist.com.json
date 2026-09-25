@@ -1,0 +1,42 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "saaslist.com",
+  "name": "SaaSList",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://saaslist.com/",
+      "title": "SaaSList homepage — business software comparison with QuoteMatch tool"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "B2B SaaS only — categories are business software (CRM, helpdesk, VoIP, call center, conferencing, project management, etc.)",
+    "No public vendor submission form was found on the homepage; the product appears to be a buyer-side comparison/quote-matching service",
+    "Listings likely curated by the operator ('Prescreened Matches' via QuoteMatch) — vendor inclusion path is unpublished"
+  ],
+  "preparation": [
+    "Vendor/company details and category fit if a contact route is located",
+    "Published pricing and review-worthy product information (they surface provider counts and user reviews per category)"
+  ],
+  "workflow": [
+    "Search saaslist.com categories for your product — it may already be listed as a provider",
+    "If absent, look for a vendor/contact route (none surfaced on the homepage at retrieval) or reach the operator via any contact page/social profile",
+    "Inclusion appears editorial/curated rather than self-serve"
+  ],
+  "watchFor": [
+    "Lead-gen model ('Get Quotes', 'Prescreened Matches') — vendors likely pay per lead or are invited, not submitted",
+    "Do not confuse with similarly named SaaS directories — this is a comparison engine",
+    "No submission CTA exists on the homepage; third-party launch lists may be overstating its openness",
+    "User reviews per category suggest a claimed/vendored listing model"
+  ],
+  "countsAsLive": "A provider profile within a SaaSList category (e.g., CRM Software) with user reviews displayed",
+  "unknowns": [
+    "Whether vendors can request a listing at all, and via what channel",
+    "Free vs paid placement for vendors",
+    "Whether outbound links exist on provider profiles",
+    "Whether the site is actively maintained"
+  ]
+}

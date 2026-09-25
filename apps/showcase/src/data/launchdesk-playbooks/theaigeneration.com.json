@@ -1,0 +1,41 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "theaigeneration.com",
+  "name": "AI Generation",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    { "url": "https://www.theaigeneration.com/add/", "title": "Add Listing / Contact Us" },
+    {
+      "url": "https://www.theaigeneration.com/",
+      "title": "The Largest Directory of Generative AI Tools"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "Directory of generative-AI tools only; categories are Audio, Code, Data, Image, Other, Platforms, Popular, Text, Video",
+    "The catalog's listed submit URL (/submit) returns 404; the live entry point is the nav's 'Add Listing / Contact Us' at /add/",
+    "Site supports user registration/login, but whether listings are self-serve or contact-mediated is unclear"
+  ],
+  "preparation": [
+    "Tool name, URL, category (Audio/Code/Data/Image/Other/Platforms/Text/Video), and relevant tags",
+    "Contact name, email, and a short pitch - the /add/ page renders a Name/Email/Message 'Request Info' contact form"
+  ],
+  "workflow": [
+    "Open https://www.theaigeneration.com/add/ (the /submit URL in the catalog is dead)",
+    "The page loads a contact/request form ('Loading…' placeholder rendered via JS); fill name, email, and a message requesting the tool be listed",
+    "Alternatively register an account via the Sign Up modal and look for an in-account add-listing flow"
+  ],
+  "watchFor": [
+    "Footer advertises 'Forever free' (refers to the newsletter/directory, not confirmed for listings)",
+    "Site is a WordPress-style directory; the /add/ page is primarily a contact form, so submission may be manual/email-mediated rather than a structured listing form",
+    "No published pricing or review-time information found"
+  ],
+  "countsAsLive": "A dedicated listing page under /directory/<tool-slug>/ exists and is reachable from category/tag filters.",
+  "unknowns": [
+    "Whether there is a true self-serve listing form behind account registration",
+    "Cost of listing (no pricing page found; 'freemium' per third-party catalogs is unconfirmed)",
+    "Review process and turnaround"
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aiparabellum.com",
+  "name": "AI Parabellum",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://aiparabellum.com/submit-your-ai-tool/",
+      "title": "Submit Your AI Tool — plans, eligibility check, FAQ"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "AI tools only; any type of AI tool accepted",
+    "No adult/explicit/NSFW content",
+    "AI tool directories themselves are explicitly not allowed",
+    "One-time payment, listing is permanent and Google-indexed; reviewed within 24 hours with full refund if not approved"
+  ],
+  "preparation": [
+    "AI tool URL (a free automated 'Check Your Tool Eligibility' pre-check is offered before paying)",
+    "Payment method — Basic $39 (was $99) or Featured $89 (was $199) one-time; Gumroad checkout available as an alternative",
+    "Tool details to supply at checkout"
+  ],
+  "workflow": [
+    "Open https://aiparabellum.com/submit-your-ai-tool/",
+    "Optionally run the free 'Check Your Tool Eligibility' pre-check on your URL",
+    "Choose Basic ($39) or Featured ($89, 30 days site-wide + newsletter mention + verified badge)",
+    "Pay securely (or via the Gumroad link), providing the tool URL at checkout",
+    "Manual review within 24h; tool published as a dedicated article page, or full refund"
+  ],
+  "watchFor": [
+    "Edit requests after publication cost a $20 alteration fee — get details right the first time",
+    "Post-hoc upgrade to Verified/Featured is a separate $199 'promote' package at /promote-ai-tool/",
+    "Prices shown are 'limited-time' discounts off $99/$199 list prices",
+    "Do not submit if the product is another AI directory — explicitly banned"
+  ],
+  "countsAsLive": "A dedicated, Google-indexed article page for the tool exists on aiparabellum.com and appears in the New Tools / index sections",
+  "unknowns": [
+    "How long featured-site-wide exposure persists beyond the stated 30 days",
+    "Whether the discounted $39/$89 prices are stable"
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "ebool.com",
+  "name": "eBool",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    { "url": "https://www.ebool.com/", "title": "eBool - business software directory homepage" },
+    {
+      "url": "https://www.ebool.com/submit",
+      "title": "Submit a Listing (403 to automated fetch; details via third party)"
+    },
+    {
+      "url": "https://submitmap.com/platform/ebool/",
+      "title": "eBool: requirements, how to submit, and what you actually get (SubmitMap)"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free tier exists but carries a ~6-month review queue (stated on the free card itself, per third-party teardown)",
+    "Paid one-time tiers shorten review: Premium $47 (2-3 business days, top-5 in one category), Pro $117 (#1 in up to 3 categories for 2 years), Super $197 (adds homepage featured rotation)"
+  ],
+  "requirements": [
+    "Business software/products only - directory of ~159k products across ~2,000 B2B categories",
+    "reCAPTCHA-protected site; /submit blocked automated fetch with 403"
+  ],
+  "preparation": [
+    "Product name, website URL, description, logo, and the correct software category (e.g. CRM Software, Email Marketing)",
+    "Decide free vs. one-time paid placement before opening the form",
+    "A vendor account exists ('Vendor Portal' login) - check whether listing management requires it"
+  ],
+  "workflow": [
+    "Open https://www.ebool.com/submit in a normal browser (automated fetch is blocked)",
+    "Pick a tier card: Free / Premium $47 / Pro $117 / Super $197 and click 'Submit Free Listing' (or the paid equivalent)",
+    "Complete the listing form with product and category details",
+    "Free: expect roughly a 6-month queue; paid: 2-3 business days review"
+  ],
+  "watchFor": [
+    "All paid tiers are one-time payments and advertise a full refund if the listing is not accepted (per third-party teardown)",
+    "The free queue is extremely long (~6 months) - plan accordingly",
+    "Homepage 'Get Listed' copy sells one-time permanent placement; confirm the free path is still offered on the live form",
+    "Featured placements ($47+) buy position, not guaranteed inclusion - editorial review still applies"
+  ],
+  "countsAsLive": "A public product page exists under the relevant eBool category (e.g. /crm-software/<product>) and is reachable from category listings.",
+  "unknowns": [
+    "Exact form fields (submit page 403'd to automated fetch)",
+    "Whether a vendor account is required to submit",
+    "Whether listing links are dofollow",
+    "Free-tier acceptance rate"
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "weliketools.com",
+  "name": "We Like Tools",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://weliketools.com/submit",
+      "title": "Submit page — 'Log in to Submit' with Google OAuth only"
+    },
+    {
+      "url": "https://weliketools.com/",
+      "title": "We Like Tools homepage — software tools directory"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "Directory for productivity, marketing, design, and developer software",
+    "Google account sign-in is mandatory before the submission form is shown"
+  ],
+  "preparation": [
+    "Google account for OAuth sign-in",
+    "Tool name, URL, description, logo, and category"
+  ],
+  "workflow": [
+    "Open https://weliketools.com/submit",
+    "Log in with Google or create an account via /signup",
+    "Complete the post-login submission form (not publicly visible)",
+    "Await listing publication"
+  ],
+  "watchFor": [
+    "No pricing or guidelines page is public; the form is entirely behind the login wall",
+    "Identical template/categories as aitechviral.com, unitelist.com, appalist.com, aixcollection.com — same likely operator; SubmitSaaS ad present",
+    "Whether listing is free or paid could not be verified without logging in"
+  ],
+  "countsAsLive": "Tool page appears on weliketools.com under /latest or a category and is reachable without login",
+  "unknowns": [
+    "Whether submission is free or paid after login",
+    "Form fields, review process, and turnaround time",
+    "Whether a badge or backlink is required"
+  ]
+}

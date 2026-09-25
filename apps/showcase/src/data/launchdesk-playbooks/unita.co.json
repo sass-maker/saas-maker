@@ -1,0 +1,42 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "unita.co",
+  "name": "Unita",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    { "url": "https://unita.co/add-community/", "title": "Add a Listing - Unita" },
+    { "url": "https://unita.co/", "title": "Unita - discover, compare and review communities" }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Only online communities, masterminds, or groups - either ones you own or ones you participate in",
+    "Account required: 'You must be logged in to post new listings' (sign in or register at /my-account/)",
+    "Listing is free per the page title/meta: 'Add your online community to our directory... For free!'",
+    "Platform-aware: listings are organized by Slack, Discord, Telegram, Circle, Reddit, LinkedIn, Twitter, etc."
+  ],
+  "preparation": [
+    "Register a Unita account at /my-account/?register",
+    "Community name, join URL, description, platform (Slack/Discord/Telegram/etc.), and category (Business, Design, Marketing, No Code, Crypto, etc.)",
+    "Logo/image assets for the listing"
+  ],
+  "workflow": [
+    "Register/sign in at https://unita.co/my-account/",
+    "Open https://unita.co/add-community/",
+    "Complete the listing form (rendered behind the login state)",
+    "Submit for review; listing appears in the communities directory"
+  ],
+  "watchFor": [
+    "The form area is JS-rendered and only appears when logged in - fields are not publicly visible",
+    "This is a communities directory, not a product directory - submitting a SaaS product itself is off-topic",
+    "A separate Sponsorship page exists for paid promotion - not required to list",
+    "WordPress-based (wp-content paths); some pages may be slow"
+  ],
+  "countsAsLive": "The community appears in Unita's explore-communities listings under its platform and category pages.",
+  "unknowns": [
+    "Exact listing form fields behind login",
+    "Review time and moderation criteria",
+    "Whether listing links are dofollow"
+  ]
+}

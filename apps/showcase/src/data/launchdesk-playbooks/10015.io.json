@@ -1,0 +1,58 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "10015.io",
+  "name": "10015 Tools",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://10015.io/",
+      "title": "10015.io homepage - all-in-one online tools site hosting 'Product Finder' directory"
+    },
+    { "url": "https://10015.io/product-finder/", "title": "Product Finder directory (beta)" },
+    {
+      "url": "https://10015.io/product-finder/submit/",
+      "title": "Submit your product - URL-driven submission form with pricing FAQ"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free submission is allowed but joins a standard review queue of 3-4 months",
+    "Priority review is a one-time $9.99 fee for listing within 24 hours",
+    "Free listings get a NOFOLLOW link — a Google-indexed page with a dofollow backlink requires the featured upgrade (from $2.99/month)"
+  ],
+  "requirements": [
+    "Accepts products, tools, SaaS, mobile and desktop apps, browser extensions, add-ons — 'anything with a live website'",
+    "Every submission passes a manual quality review before publication",
+    "Submission starts by entering the product URL — the site auto-fetches page data to pre-fill the form, so the target page must be fetchable"
+  ],
+  "preparation": [
+    "Canonical product URL with good title/meta (the form scrapes it for pre-fill)",
+    "Category selection (Productivity, Development, Design, Marketing, Business, Finance, AI, Social Media, Lifestyle) and tags",
+    "Pricing model of the product",
+    "Images/description to review in the pre-filled form",
+    "Contact email for the 'your product is live' notification"
+  ],
+  "workflow": [
+    "Open https://10015.io/product-finder/submit/ ('Submit' on the Product Finder page)",
+    "Enter the product URL — site data is fetched and used to pre-fill the submission form",
+    "Review the pre-filled fields, choose categories and tags, and submit",
+    "Optionally purchase the $9.99 priority review right after submitting to skip the 3-4 month queue",
+    "Wait for the email confirming the product is live",
+    "To update the listing later, email support (per FAQ: reach out with changes)"
+  ],
+  "watchFor": [
+    "Free-tier trap: the free listing link is explicitly NOFOLLOW — the catalog's 'link=follow' assumption does not hold on the free route; dofollow requires featured ($2.99/mo)",
+    "3-4 month free review queue — the $9.99 priority-review upsell is offered immediately after submitting",
+    "Auto-fetch pre-fill means a missing/weak title or og:description on your page produces a weak listing",
+    "Site requires JavaScript to display properly",
+    "Updates are manual via email, not a self-serve dashboard"
+  ],
+  "countsAsLive": "A public product card/page appears on 10015.io/product-finder/ and in its category/tag pages, with a Visit link to the product",
+  "unknowns": [
+    "Exact form fields beyond the URL entry (pre-fill flow)",
+    "Whether the $9.99 priority review also changes link type to dofollow or only the monthly featured plan does",
+    "Rejection criteria for the manual quality review"
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "saaspo.com",
+  "name": "SaaSpo",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://saaspo.com/submit",
+      "title": "Saaspo | Submit your website (indexed content)"
+    },
+    { "url": "https://saaspo.com/", "title": "Saaspo - SaaS web design inspiration" },
+    {
+      "url": "https://www.submission.directory/site/saaspo",
+      "title": "Saaspo entry on Submission.Directory"
+    },
+    {
+      "url": "https://www.producthunt.com/products/saaspo",
+      "title": "Saaspo on Product Hunt (maker comments about the submit form)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "This is a SaaS website/landing-page DESIGN inspiration gallery, not a product directory - you are nominating a site's design (yours or one you found) to be featured",
+    "Submissions are reviewed manually before being featured"
+  ],
+  "preparation": [
+    "URL of the SaaS website/page whose design you want featured",
+    "Direct fetch of saaspo.com/submit returned 403 during research, so confirm the live form fields in a browser"
+  ],
+  "workflow": [
+    "Open https://saaspo.com/submit",
+    "Fill the submit form (indexed copy: 'Know a great design you think we should feature? Fill out the form below and we'll review it ASAP!')",
+    "Submit and optionally follow @saaspo_ on X/Twitter to be notified if featured"
+  ],
+  "watchFor": [
+    "Site blocks some automated fetches (403) - submit through a normal browser session",
+    "Third-party data (submission.directory) lists the link type as nofollow and cost as freemium, so do not expect SEO link equity",
+    "Fit matters: this showcases landing-page design quality, so a weak marketing page may be declined even if the product is good",
+    "The submit link was deliberately 'hidden in the footer' historically because of spam"
+  ],
+  "countsAsLive": "The submitted site appears as a screenshot card in the Saaspo gallery (browsable under page-type filters).",
+  "unknowns": [
+    "Exact form fields (page 403'd to automated fetch)",
+    "What the paid/freemium tier buys (third-party listing says 'freemium')",
+    "Review turnaround time"
+  ]
+}

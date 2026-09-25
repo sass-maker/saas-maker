@@ -1,0 +1,56 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "unodirectory.com",
+  "name": "Uno Directory",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free listing requires adding their verification badge ('<a href=\"https://uno.directory\">Listed on uno directory</a>') to your website homepage and clicking verify so their system confirms it",
+    "Account required (email signup with verification) before submitting"
+  ],
+  "sources": [
+    {
+      "url": "https://uno.directory/submit-tool",
+      "title": "Uno Directory submit-tool page — free vs $10 paid listing, badge verification, step-by-step guide"
+    },
+    {
+      "url": "https://uno.directory/terms",
+      "title": "Uno Directory Terms of Use — submission requirements and account rules"
+    },
+    {
+      "url": "https://unodirectory.com/",
+      "title": "Batched domain unodirectory.com — unreachable at retrieval time; see unknowns"
+    }
+  ],
+  "requirements": [
+    "Functional, legitimate tool providing real value; no adult content, scams, IP violations, malware, or duplicates",
+    "Required fields: tool name, website URL, category; recommended: tagline, 600–800 word description, featured image >=1200x630, subcategory, tags",
+    "For the free route: verification badge must be visible on your homepage"
+  ],
+  "preparation": [
+    "Account on uno.directory",
+    "Tool name, URL, tagline, long description, featured image >=1200x630px, category/subcategory, tags",
+    "Ability to edit your homepage HTML for the badge (free route) or $10 one-time for the paid route"
+  ],
+  "workflow": [
+    "Create an account on uno.directory and verify email",
+    "Open https://uno.directory/submit-tool and choose Free or Paid listing",
+    "Fill the submission form (name, URL, tagline, description, image, category, tags)",
+    "Free: paste the badge code on your homepage and click verify; Paid: complete the $10 payment",
+    "Approval is advertised as instant — confirm the listing page is live in the directory"
+  ],
+  "watchFor": [
+    "The domain in the batch list (unodirectory.com) did not resolve; the live product is 'Uno Directory' at uno.directory — verify which domain you actually want before acting",
+    "Each free listing needs its own badge; multiple tools each require a separate submission",
+    "Minor edits post-live don't need re-approval, but paid payment is processed immediately on submission",
+    "A 'Premium Launcher' subscription upsell claims one license unlocks premium submissions across six partner platforms (Aura++, EarlyHunt, IndieHunt, MakerHunt, SideHunt, Uno Directory)"
+  ],
+  "countsAsLive": "A public listing page on uno.directory/listings/... reachable without login, with a working outbound link to the tool",
+  "unknowns": [
+    "Whether unodirectory.com is a defunct alias of uno.directory or a different property — the batch domain failed to resolve entirely",
+    "Whether the badge is periodically re-verified after approval",
+    "Link type (dofollow vs tracked redirect) on the free tier — a third-party directory (BacklinkBot) calls it dofollow but that is not confirmed on uno.directory's own pages"
+  ]
+}

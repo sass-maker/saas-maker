@@ -1,0 +1,61 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "saasbrowser.io",
+  "name": "SaaS Browser",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.saasbrowser.io/",
+      "title": "saasbrowser.io landing page — links out to saasbrowser.com"
+    },
+    {
+      "url": "https://saasbrowser.com/en",
+      "title": "SaaS Browser — SaaS database & search engine (455k+ products)"
+    },
+    {
+      "url": "https://help.saasbrowser.com/portal/en/kb/articles/how",
+      "title": "Help: How can I add my SaaS to SaaS Browser?"
+    },
+    {
+      "url": "https://help.saasbrowser.com/portal/en/kb/articles/which-types-of-saas-are-added-to-saas-browser",
+      "title": "Help: Which types of SaaS are added to SaaS Browser?"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "A saasbrowser.com account is required to submit",
+    "Submission form asks for a work email that matches the company domain"
+  ],
+  "requirements": [
+    "Must be a real SaaS: value delivered automatically without heavy one-to-one human work",
+    "Live landing page where visitors can sign up, buy, or book a demo today — 'coming soon' pages are rejected",
+    "Web and mobile apps both qualify",
+    "Product may already be indexed — the SaaS Browser Bot crawls the web and adds products without submission"
+  ],
+  "preparation": [
+    "Product name and website URL",
+    "One-line description",
+    "A work email address on the product's own domain",
+    "Optional product icon/logo to complete the listing"
+  ],
+  "workflow": [
+    "Search saasbrowser.com first — the crawler may already list the product",
+    "Sign in / create an account at saasbrowser.com/users/sign_in",
+    "Open https://saasbrowser.com/add-your-saas",
+    "Fill the short form (name, URL, one-line description, work email) and submit",
+    "Optionally add product icon and details like pricing model, category, affiliate/bug-bounty flags"
+  ],
+  "watchFor": [
+    "saasbrowser.io itself is a thin gateway page — all real submission happens on saasbrowser.com",
+    "Outbound links reported as nofollow by third-party launch guides, so value is discovery/leads rather than SEO",
+    "Products can appear via crawling even without submitting; claiming/verifying may be separate from adding"
+  ],
+  "countsAsLive": "The product is searchable in the saasbrowser.com index and shows a detail entry under its category.",
+  "unknowns": [
+    "Review/approval timeline for manually submitted products",
+    "Whether the .io domain will keep operating as a gateway or be retired",
+    "Exact verification flow for claiming an already-crawled listing"
+  ]
+}

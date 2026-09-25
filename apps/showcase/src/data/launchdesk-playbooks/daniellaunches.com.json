@@ -1,0 +1,57 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "daniellaunches.com",
+  "name": "DanielLaunches",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Standard launch is free but requires the DanielLaunches badge active on your site; removing it takes the listing AND both backlinks offline (automatic verification can restore them).",
+    "Standard launches sit in a queue for the daily board — 8 launches per day."
+  ],
+  "requirements": [
+    "Sign-in required before submitting ('Sign in first, so your launch has an owner').",
+    "Approved launches earn 2 backlinks: one from DanielLaunches (DR 52) and one from VerifiedDR (DR 64).",
+    "Public voting during each launch cycle; category winners get placed inside matching marketing guides."
+  ],
+  "preparation": [
+    "Account / sign-in on daniellaunches.com.",
+    "Product name, tagline, URL, category (Marketing & SEO, Developer Tools, AI, Health & Fitness, Other, etc.).",
+    "Badge embed for the free Standard launch.",
+    "Plan choice: Standard free (badge, standard queue) / Pro $9.99 one-time (no badge, priority featured placement, one of 4 daily featured spots)."
+  ],
+  "workflow": [
+    "Sign in at daniellaunches.com/login, then open /submit ('Submit your launch').",
+    "Fill launch details and choose Standard or Pro.",
+    "Standard: install and keep the badge; pass review; your launch enters the daily board queue.",
+    "On launch day, collect votes; category leaders may be featured inside the site's marketing guides."
+  ],
+  "watchFor": [
+    "Badge is a hard, continuously enforced condition: 'What if I remove the badge? Your free listing and backlinks go offline.'",
+    "Pro upgrades launch day only — after launch day the permanent page/backlinks/stats are identical to Standard.",
+    "The two backlinks come from DanielLaunches + its sister site VerifiedDR — same operator family.",
+    "8 launches/day cap means standard queue may schedule out; Pro buys one of 4 featured spots.",
+    "Site is transparent about modest traffic (~1.3k visitors/30d displayed live) — calibrate expectations."
+  ],
+  "countsAsLive": "The product appears on daniellaunches.com under 'Today's top launches' (or its launch date) with a permanent page and the two live backlinks.",
+  "unknowns": [
+    "Submit form field list behind login.",
+    "Standard queue wait time in days.",
+    "Whether re-verification timing is immediate after badge removal."
+  ],
+  "sources": [
+    {
+      "url": "https://daniellaunches.com/pricing",
+      "title": "Launch pricing — Standard free (badge required, 2 backlinks DR64+DR52), Pro $9.99"
+    },
+    {
+      "url": "https://daniellaunches.com/submit",
+      "title": "Submit your launch — sign-in required"
+    },
+    {
+      "url": "https://daniellaunches.com/",
+      "title": "DanielLaunches homepage — daily launch board, how-it-works, live stats"
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "alternativeto.net",
+  "name": "AlternativeTo",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free submission requires an account with a verified email — 'You need to verify your email address before you can submit a new app' (their FAQ, via third-party guide).",
+    "The free review queue is reported as 'at least a few months'; a ~$5 paid option gets review in 'usually 1-2 business days' (per third-party guides)."
+  ],
+  "requirements": [
+    "Crowd-sourced software directory — any app/software product; the form links a 'What we don't accept' decline list naming ~60 prohibited categories.",
+    "Account required (Google/GitHub/Apple or email+password); email must be verified before submitting.",
+    "Strict naming: 'Name only, no tagline or domain. Use the official name with correct spelling and letter case.'",
+    "Closed tag vocabulary; platform field uses 'Online' for web apps."
+  ],
+  "preparation": [
+    "Account with verified email (note: Google signup was reported disabled at one point — GitHub, Apple, or email).",
+    "Check the catalog first — your app may already be listed; if so, edit/claim rather than re-submit.",
+    "Official product name (exact spelling/case, no tagline), official URL.",
+    "One-sentence short description + full description.",
+    "Pricing model (free/freemium/free-for-personal/commercial) and optional purchase/subscription prices.",
+    "Tags from their closed vocabulary; platforms list.",
+    "Company/author record (can be created in the form).",
+    "Square icon 128x128 or larger, plus screenshots (captions optional).",
+    "A list of real competitor apps to name as 'alternatives' — submissions with no alternatives are nearly invisible."
+  ],
+  "workflow": [
+    "Create an account and verify the email address.",
+    "Search the catalog for your app first; if it exists, edit that entry instead.",
+    "Open user menu → 'Suggest new application' (route: /manage-item/).",
+    "Fill the multi-section form: name, short + full descriptions, languages, pricing, tags, platforms, author record, icon, screenshots.",
+    "Suggest alternatives: search one real competitor, then select across its alternatives — this determines internal discoverability.",
+    "Submit; the page is visible only to you while queued (free queue reportedly months; paid review ~1-2 business days)."
+  ],
+  "watchFor": [
+    "Name field rejects taglines/domains — the single most common rejection cause per third-party guides.",
+    "Skipping the alternatives step makes the listing effectively invisible in search.",
+    "Anyone can edit any listing once live — monitor it afterward.",
+    "Free queue can run to months; the ~$5 expedite exists but is easy to miss.",
+    "Site is behind Cloudflare bot checks — /manage-item/ returned 403 to non-browser fetches; use a real browser session.",
+    "Most outbound links are nofollow per third-party crawl analysis — value is the listing, not the link."
+  ],
+  "countsAsLive": "A public app page at alternativeto.net/software/<slug>/ visible while logged out, with alternative relationships attached.",
+  "unknowns": [
+    "Exact current price of the expedited review (reported as $5 by a third party; not confirmed on-site due to bot check).",
+    "Current state of Google OAuth signup.",
+    "The full 60-category decline list contents."
+  ],
+  "sources": [
+    {
+      "url": "https://alternativeto.net/manage-item/",
+      "title": "Suggest new application route (returned 403 to fetcher — Cloudflare-protected)"
+    },
+    {
+      "url": "https://submitator.com/submit-to-alternativeto",
+      "title": "How to Submit Your App to AlternativeTo — Submitator (account + verified email, free months-long queue vs $5 expedite, naming rules, alternatives step)"
+    },
+    {
+      "url": "https://submitmap.com/platform/alternativeto/",
+      "title": "How to submit to AlternativeTo — SubmitMap (decline list, field inventory, alternatives guidance)"
+    },
+    {
+      "url": "https://buttondown.com/where-to-post/archive/submitting-on-alternativetonet/",
+      "title": "Submitting on AlternativeTo.net — four-step form walkthrough"
+    }
+  ]
+}

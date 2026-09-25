@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "starterstory.com",
+  "name": "Starter Story",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.starterstory.com/share",
+      "title": "Starter Story — Share Your Founder Story page"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free to be featured, but requires creating a Starter Story account (login/signup before submitting)",
+    "Editorial selection: Starter Story interviews founders — submission is an application, not an automatic listing"
+  ],
+  "requirements": [
+    "Must be a founder with a real business story to tell — this is an interview/case-study format, not a directory listing",
+    "Story should be 'real and raw' — how the business was started and grown",
+    "Site is owned by HubSpot Media; account signup accepts HubSpot's data-sharing terms"
+  ],
+  "preparation": [
+    "Founder story details: how you started, revenue numbers if shareable, growth tactics, lessons",
+    "A willingness to be interviewed (text/video) — testimonials on the page reference video interviews",
+    "Email for account creation (Google OAuth or passwordless email link also offered)"
+  ],
+  "workflow": [
+    "Go to https://www.starterstory.com/share",
+    "Create an account or log in (email, Google, or passwordless link)",
+    "Submit your founder/business information through the post-login flow",
+    "If selected, complete the interview process with the Starter Story team",
+    "Feature publishes as a case study/interview on starterstory.com (and potentially their YouTube/newsletter)"
+  ],
+  "watchFor": [
+    "Account wall: the actual submission form only appears after signup",
+    "Signup opts you into HubSpot/Starter Story marketing emails (disclosed on the form)",
+    "Selection is editorial — there is no guarantee or published timeline for being featured",
+    "This is not a dofollow-link directory; the SEO benefit comes only if they publish your story"
+  ],
+  "countsAsLive": "A published founder interview/case-study page on starterstory.com featuring the business",
+  "unknowns": [
+    "What fields the post-login submission form asks for",
+    "Selection criteria and acceptance rate",
+    "Typical time from submission to feature",
+    "Whether outbound links in published stories are dofollow"
+  ]
+}

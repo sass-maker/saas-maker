@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "tekpon.com",
+  "name": "Tekpon",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://tekpon.com/get-listed/",
+      "title": "Get Listed — $249 one-time, 5-step form (category, software details, contact, promo code, payment); full refund if rejected"
+    },
+    { "url": "https://tekpon.com/", "title": "Homepage — SaaS/software review directory" }
+  ],
+  "category": "review",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Software/SaaS product only — one category chosen from Tekpon's large fixed taxonomy",
+    "$249 one-time fee, paid through the 5-step form (Step 1/5 shown, ending at 'Go to Pay Complete Payment')",
+    "Required fields: category, software name, software website, unique selling proposition, short description, your name, business email, company name, company position; country optional",
+    "Tekpon reserves the right to reject any application — rejection triggers a full refund",
+    "A Tekpon account (email signup or LinkedIn/Google) exists on the page for claiming software profiles"
+  ],
+  "preparation": [
+    "Category pick from ~130 fixed software categories",
+    "Software name, website URL, unique selling proposition, short description (max 300 words per profile spec)",
+    "Contact details: name, business email, company name, position, country",
+    "Any promotional code (there is a promo-code field)",
+    "$249 budget"
+  ],
+  "workflow": [
+    "Open https://tekpon.com/get-listed/",
+    "Step through the wizard: pick your software category",
+    "Enter software details (name, URL, USP, short description)",
+    "Enter contact info; add promotional code if you have one",
+    "Complete payment ($249 one-time)",
+    "Tekpon builds a 'fully optimized profile' — short description, best-for, recommended company sizes, FAQs, pricing/features/integrations — and places it in the chosen category"
+  ],
+  "watchFor": [
+    "No free tier at all — the only route is the $249 one-time listing",
+    "The disclaimer says rejection = full refund, so the fee is at-risk only if you misrepresent the product",
+    "A promo code field exists — search for a current code before paying full price",
+    "After listing, the profile supports user reviews — encourage real users to review, since reviews differentiate rankings",
+    "The same page tries to sign visitors up for accounts — account creation is separate from the paid listing"
+  ],
+  "countsAsLive": "Software has a public profile page on tekpon.com in the selected category with description, FAQs and a review section",
+  "unknowns": [
+    "How long between payment and the profile going live",
+    "Who writes the profile content (their editors vs. your submission text)",
+    "Whether the listing can be edited or claimed afterward without extra cost"
+  ]
+}

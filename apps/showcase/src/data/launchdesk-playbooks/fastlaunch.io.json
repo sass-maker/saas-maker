@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "fastlaunch.io",
+  "name": "FastLaunch",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free Launch is $0 but limited to 5 slots per day with up to a 180-day scheduling window — a queue.",
+    "Free-tier dofollow backlink is conditional: only if the project ranks Top 3 in its daily ranking."
+  ],
+  "requirements": [
+    "Account required — /projects/submit redirects to sign-in (Google or GitHub OAuth shown).",
+    "All launches happen at 8:00 AM UTC; a limited number launch each day.",
+    "Tech products/projects broadly (AI, SaaS, design tools, e-commerce, etc.)."
+  ],
+  "preparation": [
+    "Account (Google/GitHub).",
+    "Project name, logo, tagline, description, categories.",
+    "A launch-date strategy: free slots schedule up to 180 days out.",
+    "Vote mobilization plan if you want the free-tier dofollow (Top 3 daily).",
+    "Plan choice: Free / Premium $9.9 (guaranteed dofollow, 12 premium slots/day, earlier dates, homepage feature for one year) / Sponsor $149."
+  ],
+  "workflow": [
+    "Sign in, then open https://fastlaunch.io/projects/submit.",
+    "Choose Free or Premium ($9.9) launch.",
+    "Complete the submission and pick a launch date (free: next available shown on site, e.g. '5 slots').",
+    "On launch day (8:00 AM UTC), compete in 'Top Projects Launching Today' — Top 3 earns the free dofollow; Premium's is guaranteed."
+  ],
+  "watchFor": [
+    "Free-tier dofollow depends on a Top-3 daily finish — not guaranteed.",
+    "Free scheduling can push months out (180-day window, 5 slots/day); Premium's earlier dates are the upsell.",
+    "Sponsor is a $149 one-year homepage spot — separate product, not a listing requirement.",
+    "Same DirEasy boilerplate family as devtoolsdir.com — shared launch mechanics.",
+    "After sponsor payment you must 'contact support@fastlaunch.io' — manual fulfillment."
+  ],
+  "countsAsLive": "The project appears in fastlaunch.io's daily launch listing on its scheduled date with a public detail page; Premium listings also show on the homepage feature slot.",
+  "unknowns": [
+    "Submit form fields behind sign-in.",
+    "Exact free wait time at current queue depth.",
+    "Whether votes can be solicited externally without restriction."
+  ],
+  "sources": [
+    {
+      "url": "https://fastlaunch.io/pricing",
+      "title": "FastLaunch Pricing — Free (5 slots/day, 180-day window, dofollow iff Top 3), Premium $9.9, Sponsor $149"
+    },
+    {
+      "url": "https://fastlaunch.io/projects/submit",
+      "title": "Submit Project — sign-in required (Google/GitHub)"
+    },
+    { "url": "https://fastlaunch.io/", "title": "FastLaunch homepage — daily launch board" }
+  ]
+}

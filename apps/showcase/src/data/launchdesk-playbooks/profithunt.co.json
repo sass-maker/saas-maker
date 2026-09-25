@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "profithunt.co",
+  "name": "Profit Hunt",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://profithunt.co/",
+      "title": "Homepage — JS app shell ('curated list of online projects that generate revenue')"
+    },
+    { "url": "https://profithunt.co/submit", "title": "Submit route — JS app shell only" },
+    {
+      "url": "https://backlinks.fyi/directories/profithunt",
+      "title": "backlinks.fyi guide — free, dofollow, manual review ~3-5 days, account required"
+    },
+    {
+      "url": "https://launchpointzero.com/launchsites/profit_hunt",
+      "title": "Launch Point Zero profile — flags 'last project submitted January 2023, appears no longer actively maintained'"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Niche fit: the directory curates online projects that generate revenue — indie/bootstrapped SaaS with visible monetization",
+    "Account registration required (per third-party guides)",
+    "Third-party reports: no backlink/badge required, no CAPTCHA, manual review ~3-5 days, free"
+  ],
+  "preparation": [
+    "Product name, URL, description, and evidence/angle of revenue generation",
+    "Account credentials for the JS app"
+  ],
+  "workflow": [
+    "Open https://profithunt.co/submit in a real browser (site is JS-only — returns 'You need to enable JavaScript' to fetchers)",
+    "Register an account and complete the submit form",
+    "Await manual review (third-party estimate 3-5 days)"
+  ],
+  "watchFor": [
+    "Site may be unmaintained: a launch-directory profile notes the last visible project was added January 2023 — verify recent additions before spending effort",
+    "Fully client-rendered; no public form fields visible without JS",
+    "All cost/field details come from third-party guides, not the site itself"
+  ],
+  "countsAsLive": "The project appears in the Profit Hunt list on profithunt.co",
+  "unknowns": [
+    "Whether submissions are still accepted/reviewed at all",
+    "Actual form fields behind the JS app",
+    "Current link follow status"
+  ]
+}

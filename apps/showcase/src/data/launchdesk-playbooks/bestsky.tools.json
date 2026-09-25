@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "bestsky.tools",
+  "name": "BestskyTools",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free Listing ($0) requires embedding their 'Featured' badge on your website.",
+    "Free review takes up to 2 weeks; free tier gets 1 dofollow backlink."
+  ],
+  "requirements": [
+    "AI and SaaS tools; the directory spans AI tools plus niche categories like Bluesky tools.",
+    "Sign-in is offered on the site (/auth/login) — the Submit flow likely requires an account.",
+    "SEO Growth Package explicitly requires 'Free product access for testing' for their review article."
+  ],
+  "preparation": [
+    "Product name, URL, description, category, logo/screenshot assets.",
+    "The 'Featured' badge embed on your site if using the free tier.",
+    "Plan choice: Free (badge, ~2 weeks) / Premium $14.9 one-time (4 dofollow, 24h review, no badge, lifetime) / SEO Growth $59 (review article + 5+ backlinks; requires free product access for testing).",
+    "An account (sign-in link present beside Submit)."
+  ],
+  "workflow": [
+    "Go to https://bestsky.tools/submit (sign in first if prompted).",
+    "Choose the plan on /pricing.",
+    "Submit tool details; free tier: keep the Featured badge live and wait ~2 weeks for review.",
+    "Premium: reviewed within 24h, no badge, lifetime listing."
+  ],
+  "watchFor": [
+    "Badge requirement on the free tier is the gate; badge persistence rules are not spelled out.",
+    "SEO Growth's 'requirement: free product access for testing' means handing over product access if you buy the article tier.",
+    "Premium price shown as $14.9 one-time; SEO Growth shown $59 struck from $99 — promotional pricing.",
+    "Site also runs a paid 'boost domain rating' cross-promo (FrogDR badge in header)."
+  ],
+  "countsAsLive": "A public tool page at bestsky.tools/<slug> listed in All Tools and its category.",
+  "unknowns": [
+    "Exact submit form fields (not fetched — likely behind sign-in).",
+    "Whether badge removal auto-delists the free listing."
+  ],
+  "sources": [
+    {
+      "url": "https://bestsky.tools/pricing",
+      "title": "BestskyTools Pricing — Free (badge, 2-week review), Premium $14.9, SEO Growth $59"
+    },
+    {
+      "url": "https://bestsky.tools/",
+      "title": "BestskyTools homepage — discover and launch AI/SaaS tools"
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "saasgenius.com",
+  "name": "SaaS Genius",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.saasgenius.com/free-listing",
+      "title": "Get Listed page — eligibility rules and free-listing suspension notice"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Free listings are explicitly suspended: 'we aren't currently accepting free listings due to the large number of requests' — paid listing service via email",
+    "Ineligible products: mobile-only apps without a desktop component, B2C-only products, products with no US customers, software in alpha/beta",
+    "Check for an existing listing via the site search bar before requesting"
+  ],
+  "preparation": [
+    "Company information and social media page URLs",
+    "The category you want to be listed in (CRM, Email Marketing, Help Desk, HR, PM, Marketing Automation, etc.)",
+    "Confirmation the product is desktop-usable, B2B-compatible, has US customers, and is past beta"
+  ],
+  "workflow": [
+    "Search saasgenius.com to confirm the product isn't already listed",
+    "Email the published contact (on the Get Listed page) with company info + socials + desired category",
+    "Receive pricing for the listing service and pay if acceptable",
+    "Listing publishes in the chosen software category"
+  ],
+  "watchFor": [
+    "The 'free-listing' URL is misleading — free is suspended; everything routes to a paid listing",
+    "Eligibility rules are unusually specific (US customers required, no alpha/beta) — screen yourself before paying",
+    "Price only disclosed over email ('small and very affordable fee' is the only characterization)",
+    "Site runs a large casino/sweepstakes section — consider brand adjacency"
+  ],
+  "countsAsLive": "A product entry in the chosen SaaSGenius category list (e.g., /best-crm-software/) with company details",
+  "unknowns": [
+    "Listing fee amount",
+    "Whether listing links are dofollow",
+    "Turnaround after payment",
+    "Whether free listings ever reopen"
+  ]
+}

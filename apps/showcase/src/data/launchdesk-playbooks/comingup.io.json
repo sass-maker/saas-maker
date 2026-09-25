@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "comingup.io",
+  "name": "ComingUp",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "launch-board",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free daily launch board ranked by votes — no paid tier anywhere.",
+    "Account required: email + password (≥8 chars with upper, lower, number, special char) verified by a 6-digit code, or SideProjectors OAuth.",
+    "Rate limit: one product per account per day.",
+    "Vote counts are revealed at 12:00 UTC; voting itself requires an account at least 24 hours old."
+  ],
+  "preparation": [
+    "Account (email verification code or SideProjectors).",
+    "The 8-field form (~6 required): product name, tagline/description, URL, category, tags, and images — images effectively required since all listed products carry one.",
+    "A chosen launch date — you can pick today or later.",
+    "A voting plan: top-of-day typically takes ~12–16 votes."
+  ],
+  "workflow": [
+    "Register at comingup.io (email + password, then the 6-digit verification code) or sign in via SideProjectors.",
+    "Open /submit while signed in.",
+    "Fill the ~8-field form including images.",
+    "Pick the launch date and submit — product sits in that day's ranking ordered by votes.",
+    "Rally voters (note the 24h account-age requirement for voters)."
+  ],
+  "watchFor": [
+    "The /submit page returns only shell to a plain fetch — the form requires an authenticated browser session.",
+    "Outbound link is reported nofollow (~97% of listings) — value is the launch-day exposure, not SEO.",
+    "Domain DR is ~0 per third-party measurement — zero link authority; this is a community board.",
+    "One product per account per day; voter accounts must be ≥24h old — plan voting brigade lead time.",
+    "Vote counts hidden until 12:00 UTC."
+  ],
+  "countsAsLive": "The product appears on the ComingUp homepage under the chosen day's 'Top Products Launching' list and gets a public /p/<slug> page.",
+  "unknowns": [
+    "Exact required vs optional form fields (third-party says 8 fields, ~6 required).",
+    "Whether listings persist permanently or only per-day."
+  ],
+  "sources": [
+    {
+      "url": "https://www.comingup.io/",
+      "title": "ComingUp homepage — daily 'Top Products Launching Today' board"
+    },
+    { "url": "https://www.comingup.io/submit", "title": "Submit Product (JS/auth-gated form)" },
+    {
+      "url": "https://submitator.com/submit-to-comingup",
+      "title": "How to Submit to ComingUp — Submitator (free, account + 6-digit code, 8 fields, one product/day, nofollow)"
+    }
+  ]
+}

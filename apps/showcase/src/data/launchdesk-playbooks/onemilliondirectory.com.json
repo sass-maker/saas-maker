@@ -1,0 +1,62 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "onemilliondirectory.com",
+  "name": "OneMillionDirectory",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://onemilliondirectory.com/",
+      "title": "OneMillionDirectory homepage - hand-reviewed general web directory since 2005, 67,160 listings"
+    },
+    {
+      "url": "https://onemilliondirectory.com/submit",
+      "title": "Submit Listing - 3-step flow: category, listing type, details (account required)"
+    },
+    {
+      "url": "https://onemilliondirectory.com/rules",
+      "title": "Submission Rules - content, popup, parked-domain, and refund policies"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Account required: 'Create Free Account' / sign-in gates the submit flow",
+    "Listing types include paid tiers (Basic Plus, Featured, Premium, Article) alongside an implied free/basic type chosen at step 2 — paid submissions are refunded if not approved",
+    "Hand-reviewed; acceptance is not guaranteed ('we cannot always accept every submission')"
+  ],
+  "requirements": [
+    "Accurate, grammatically correct title and description reflecting the site's actual content",
+    "Site must not show popups or attempt software installs; must have real content",
+    "No empty sites, expired or parked domains",
+    "No illegal content, no content unlawful for children, no adult/erotic/escort material",
+    "Listings are re-verified: if the linked site dies, expires, or is parked, the listing is suspended (contact them to reactivate; no deletion)"
+  ],
+  "preparation": [
+    "Account registration email",
+    "Business/site name, URL, clean title and description (grammar-checked)",
+    "Best-fit category from the 20 top-level categories (Business, Computer, Internet, Shopping, etc.)",
+    "Decide the listing type (free/basic vs Basic Plus / Featured / Premium / Article paid tiers)"
+  ],
+  "workflow": [
+    "Create a free account at https://onemilliondirectory.com/user/register and sign in",
+    "Open https://onemilliondirectory.com/submit — Step 1: pick the category",
+    "Step 2: choose the listing type (paid tiers named Basic Plus, Featured, Premium, Article)",
+    "Step 3: enter listing details and submit",
+    "Wait for human review; if a paid listing is declined, payment is refunded",
+    "After approval, keep the site healthy — dead/parked links get the listing suspended"
+  ],
+  "watchFor": [
+    "Post-approval trap: if you later change the site into non-compliant content or let the domain lapse, the paid listing is disabled with NO refund (though reactivation is possible once fixed)",
+    "The listing-type step (step 2) is where paid upsells appear — verify which type is free before entering details",
+    "General directory — the link is a citation more than qualified SaaS traffic",
+    "Featured/Premium listings get homepage and 'Premium Business' visibility that free listings do not"
+  ],
+  "countsAsLive": "A public detail page exists at onemilliondirectory.com/detail/<slug>-link-<id> and the listing appears in its category and Latest feed",
+  "unknowns": [
+    "Whether a truly free listing type exists at step 2 and what it includes (page behind account wall)",
+    "Paid tier prices",
+    "Whether free-tier links are dofollow (catalog note says follow; unconfirmed)",
+    "Review turnaround time"
+  ]
+}

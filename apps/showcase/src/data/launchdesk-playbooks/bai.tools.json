@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "bai.tools",
+  "name": "BAI.tools",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    { "url": "https://bai.tools/submit-ai-tools", "title": "Submit AI Tools - BAI.tools" },
+    { "url": "https://bai.tools/", "title": "BAI.tools homepage" }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free listing requires no backlink but a long queue: 'Listing live in at least 1 month (up to 6 months)'",
+    "Paid tiers skip the queue: Standard $19.9 (live within 24h, featured 7 days, do-follow) and Pro $29.9 (live within 24h, featured 30 days, do-follow)"
+  ],
+  "requirements": [
+    "AI tools only ('Submit your AI tools, get more traffic')",
+    "Form fields: AI Tool Name and website URL, then plan selection",
+    "A login link exists but the submit page does not visibly gate on it"
+  ],
+  "preparation": [
+    "AI tool name and website URL",
+    "Decide free (1-6 month wait) vs Standard $19.9 vs Pro $29.9",
+    "Paid plans include do-follow backlinks and temporary homepage/category-top featuring"
+  ],
+  "workflow": [
+    "Open https://bai.tools/submit-ai-tools",
+    "Enter AI Tool Name and website URL",
+    "Select Free / Standard / Pro plan",
+    "Click 'Submit your AI Tool'; pay if a paid plan was chosen",
+    "Paid listings go live within 24 hours; free listings within 1-6 months"
+  ],
+  "watchFor": [
+    "Free tier's real wait can be as long as 6 months",
+    "Only paid tiers explicitly promise do-follow links - free-tier link type is unspecified",
+    "Featuring (homepage/top-of-category) is time-boxed: 7 days Standard, 30 days Pro",
+    "Site is localized into 18 languages - make sure you are on the English path (/submit-ai-tools)"
+  ],
+  "countsAsLive": "The tool has a public page on bai.tools and appears in /explore or its category; for paid tiers it also shows in featured/homepage slots during the purchased window.",
+  "unknowns": [
+    "Whether free listings get do-follow links",
+    "Whether an account is required in practice",
+    "Review/rejection criteria beyond the AI-tools scope"
+  ]
+}

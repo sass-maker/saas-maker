@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "tinyshelf.co",
+  "name": "TinyShelf",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://tinyshelf.co/",
+      "title": "TinyShelf homepage — 'tiny, curated directory of good software', every listing reviewed"
+    },
+    {
+      "url": "https://tinyshelf.co/submit",
+      "title": "Submit page — redirects to Google OAuth sign-in"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Google account required — /submit redirects straight to a Google OAuth sign-in; no other auth provider shown",
+    "Human curation: 'Every listing is reviewed before it goes live'",
+    "Broad software taxonomy accepted — categories from Productivity and AI/ML to CLI Tools, Databases, Editors/IDEs; tags mark platform (iOS/Mac/Android/Windows/Linux/browser-extension) and pricing model (free/freemium/subscription/one-time/open-source/self-hosted)"
+  ],
+  "preparation": [
+    "A Google account",
+    "Tool name, URL, one-line description, category and tags",
+    "Logo/icon"
+  ],
+  "workflow": [
+    "Open https://tinyshelf.co/submit ('+ submit' in nav)",
+    "Sign in with Google (OAuth consent screen — app name tinyshelf.co)",
+    "Complete the submission form",
+    "Listing is held for human review, then appears under categories/tags and the 'newest tools' feed"
+  ],
+  "watchFor": [
+    "OAuth consent shows the operator's personal Gmail — hobby-scale directory; review turnaround may vary",
+    "No pricing page, badge requirement, or paid tier visible anywhere on the public site",
+    "Curated means rejection is possible — thin/low-quality submissions likely declined"
+  ],
+  "countsAsLive": "The tool has a public page at tinyshelf.co/tools/<slug> reachable from its category and tag pages.",
+  "unknowns": [
+    "Submit-form fields behind the Google sign-in",
+    "Review latency and rejection criteria detail",
+    "Whether outbound links are dofollow",
+    "Whether the free model is permanent (no monetization surface visible)"
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "openclawdir.com",
+  "name": "OpenClawDir",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://openclawdir.com/submit/plugin",
+      "title": "Submit a Plugin - OpenClaw Directory"
+    },
+    { "url": "https://openclawdir.com/pricing", "title": "Pricing - OpenClaw Directory" }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Niche directory for OpenClaw (AI agent) skills, plugins/extensions, and jobs - only relevant if you ship an OpenClaw plugin or skill",
+    "Google sign-in required: 'You need to sign in to submit a plugin'; Continue with Google is the only auth shown",
+    "Per pricing page: 'Submitting skills and plugins is free. Only job postings and featured placements require payment.'"
+  ],
+  "preparation": [
+    "A Google account",
+    "Plugin/skill name, description, install/repo URL, and category (Tools, Channels, Integration, Voice, General, Finance for plugins; Automation, Productivity, Browser, etc. for skills)"
+  ],
+  "workflow": [
+    "Open https://openclawdir.com/submit/plugin (or /submit/skill for skills)",
+    "Sign in with Google",
+    "Complete the plugin submission form",
+    "Listing goes into the plugins/skills directory; optional $49 'Featured Plugin' for 30-day homepage/priority placement"
+  ],
+  "watchFor": [
+    "Very niche fit: not affiliated with OpenClaw itself ('Not affiliated with OpenClaw' in footer)",
+    "Paid items exist and are unrelated to listing: Job $99, Featured Job $199, Featured Plugin $49 - all one-time, 30-day placements",
+    "Only Google OAuth offered - no email signup"
+  ],
+  "countsAsLive": "The plugin/skill appears in the openclawdir.com directory under /plugins or /skills with its own entry.",
+  "unknowns": [
+    "Exact submit form fields behind sign-in",
+    "Review process/turnaround for free submissions",
+    "Whether listing links are dofollow"
+  ]
+}

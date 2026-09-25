@@ -1,0 +1,58 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "toolfame.com",
+  "name": "ToolFame",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free plan requires a permanent 'Featured on ToolFame' badge on your website; automated checks unpublish the listing immediately if the badge is removed",
+    "Free queue is long: site stated 874 tools waiting and review 'within 180 days'",
+    "An account is required — /submit renders a login/signup form (email, Google, or GitHub) before any submission fields are shown"
+  ],
+  "sources": [
+    {
+      "url": "https://toolfame.com/pricing",
+      "title": "ToolFame pricing — free/basic/pro/guest post/sponsor/directory-submission plans and badge rules"
+    },
+    {
+      "url": "https://toolfame.com/submit",
+      "title": "ToolFame submit page — redirects to login/signup"
+    },
+    {
+      "url": "https://toolfame.com/",
+      "title": "ToolFame homepage — categories and directory scope"
+    }
+  ],
+  "requirements": [
+    "AI, SaaS, or online tool fitting one of ~40 categories",
+    "Must be willing to keep the ToolFame badge live on your site permanently for the free tier",
+    "Free listings 'may be rejected for listing' per pricing page"
+  ],
+  "preparation": [
+    "Account on toolfame.com (email, Google, or GitHub login)",
+    "Product name, URL, description, logo/screenshot assets",
+    "Ability to embed the ToolFame badge HTML on your homepage for the free route",
+    "Decide free vs paid: Basic $14.9 one-time (3 dofollow links, no badge, listed immediately), Pro $49.9 (5 dofollow links, featured spots)"
+  ],
+  "workflow": [
+    "Create an account at toolfame.com (Sign up link on the login page)",
+    "Open https://toolfame.com/submit and complete the listing form",
+    "For the free plan: copy the badge code, place it on your site, and pass badge verification",
+    "Wait for review — free queue is advertised as up to 180 days",
+    "Verify the listing appears on a public toolfame.com detail page"
+  ],
+  "watchFor": [
+    "Badge removal triggers automated checks and instant delisting — no warning is sent; restoring requires upgrading to a paid plan",
+    "Checkout upsells: Guest Post $79.9, Sponsor $79.9/30 days, 'Directory Submissions' $149 which pays ToolFame to submit to 100+ directories",
+    "Free tier gives only 1 dofollow link vs 3 (Basic) or 5 (Pro)",
+    "Pricing FAQ explicitly frames the free plan as for 'bootstrapped founders' and pushes paid plans"
+  ],
+  "countsAsLive": "A public listing detail page on toolfame.com with a 'Visit Website'/dofollow link, reachable without login",
+  "unknowns": [
+    "Exact form fields after login (submit page was gated behind auth)",
+    "How badge verification works (crawl of homepage vs specified URL)",
+    "Whether the 874-tool free queue translates to an actual ~180-day wait in practice"
+  ]
+}

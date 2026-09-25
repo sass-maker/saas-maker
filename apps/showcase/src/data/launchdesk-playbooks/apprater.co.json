@@ -1,0 +1,40 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "apprater.co",
+  "name": "apprater.co",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "other",
+  "zeroCostRoute": "unknown",
+  "requirements": [],
+  "preparation": [
+    "Verify the domain is actually live before preparing anything — apprater.co failed to respond on both https://apprater.co/ and https://www.apprater.co/ during research."
+  ],
+  "workflow": [
+    "No verified submission workflow — the domain was unreachable.",
+    "Note: a similarly named but separate site, apprater.net ('AppRater — Discover Apps Worth Your Time'), is live and accepts free submissions via a homepage form plus apprater.net/add — do NOT assume it is the same operator; verify any relationship before treating it as this destination."
+  ],
+  "watchFor": [
+    "apprater.co appears dead/unreachable; do not submit credentials or payments to lookalike domains.",
+    "apprater.net is a distinct domain with its own free 8-field submission form — submitting there would not list you on apprater.co."
+  ],
+  "countsAsLive": "Not determinable — no live site observed on this domain.",
+  "unknowns": [
+    "Whether apprater.co ever hosted a directory, is parked, or is permanently dead.",
+    "Whether apprater.co and apprater.net are related."
+  ],
+  "sources": [
+    {
+      "url": "https://apprater.co/",
+      "title": "Fetch failed — site unreachable (also failed on www subdomain)"
+    },
+    {
+      "url": "https://apprater.net/",
+      "title": "AppRater (apprater.net) — a live but separate 'discover apps' archive; relationship to apprater.co unverified"
+    },
+    {
+      "url": "https://submitator.com/submit-to-apprater",
+      "title": "Submitator guide for apprater.net — free 8-field homepage form, no account, review before listing"
+    }
+  ]
+}

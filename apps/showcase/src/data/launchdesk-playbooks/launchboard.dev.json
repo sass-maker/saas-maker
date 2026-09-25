@@ -1,0 +1,56 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "launchboard.dev",
+  "name": "LaunchBoard",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.launchboard.dev/",
+      "title": "LaunchBoard homepage — weekly launch competition, live board"
+    },
+    {
+      "url": "https://www.launchboard.dev/how-it-works",
+      "title": "How LaunchBoard Works — 3-step process, weekly cycle, winner rules"
+    },
+    {
+      "url": "https://www.launchboard.dev/pricing",
+      "title": "Pricing — Free (badge), Single Launch $19, Launch Pack $39/5 credits"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free listing requires embedding the LaunchBoard badge on your site",
+    "Free tier gets homepage placement for launch week but a dofollow backlink only if the product wins the weekly #1",
+    "No AI blog generation on the free plan; launch is queued into the weekly batch (max 25/week) after a quality review"
+  ],
+  "requirements": [
+    "Indie maker / SaaS product with a working website",
+    "Badge embed for free launches",
+    "Products launch in weekly batches every Monday at 03:30 UTC"
+  ],
+  "preparation": [
+    "Product name, description, category, tags, website URL, and maker info",
+    "LaunchBoard badge placed on your site (free route)",
+    "Optional: $19 Single Launch (instant approval, permanent DR50+ dofollow, 1 AI blog post ~1,500 words) or $39 Launch Pack (5 credits, never expire)"
+  ],
+  "workflow": [
+    "Submit the product with name/description/category/tags/site/maker info and choose free or paid",
+    "Get queued into the next weekly batch (max 25 products/week); quality review happens before launch",
+    "Launch Monday 03:30 UTC on the homepage leaderboard",
+    "Winner = upvotes + comments; ties break on upvotes then earliest launch time"
+  ],
+  "watchFor": [
+    "Free-plan dofollow only materialises if you win the week — otherwise the badge is a one-way link",
+    "No refunds after submission; unused Launch Pack credits stay in the account",
+    "Paid plans are one-time payments (no subscription)",
+    "Site is unusually agent-friendly: llms.txt, llms-full.txt, /api/ai JSON snapshot, and Accept: text/markdown or .md on any URL"
+  ],
+  "countsAsLive": "Product page at /launch/<slug> live and listed in the current week's 'Top product launches' board with upvote count",
+  "unknowns": [
+    "Whether an account is required to submit (submission flow not detailed on public pages)",
+    "Exact badge markup and verification method",
+    "How far ahead the free queue is booked"
+  ]
+}

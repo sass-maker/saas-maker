@@ -1,0 +1,56 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "ecomm.design",
+  "name": "Ecomm Design",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://ecomm.design/submit/",
+      "title": "ecomm.design - Submit Your eCommerce Store (returned 403 to automated fetch; copy verified via search index)"
+    },
+    {
+      "url": "https://ecomm.design/about/",
+      "title": "ecomm.design - About ('if you want to submit an online shop to our gallery, please use this form')"
+    },
+    {
+      "url": "https://ecomm.design/",
+      "title": "ecomm.design - eCommerce Website Design Gallery (4,000+ stores by platform/category/tech)"
+    },
+    {
+      "url": "https://backlinkbot.ai/directories/ecomm-design",
+      "title": "BacklinkBot - ecomm.design submission profile (free, dofollow)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "STRICT eligibility: only actual online shops/e-commerce stores are accepted - the submit page explicitly says 'please don't submit portfolio / studio websites. We can only accept online shops'",
+    "The store should be design-worthy: the gallery curates 'top eCommerce website designs' browsable by platform, category, technology, and traffic",
+    "A SaaS marketing site or agency portfolio does not qualify - the submitter's own store or a client's live storefront does"
+  ],
+  "preparation": [
+    "URL of a live e-commerce store (working checkout, real products)",
+    "Store name and a short pitch",
+    "Optional detail that helps the gallery entry: ecommerce platform (Shopify, BigCommerce, custom...), category, notable tech",
+    "Contact email for the form"
+  ],
+  "workflow": [
+    "Open https://ecomm.design/submit/ in a real browser (the page embeds a 'Fill out my online form' widget and blocked automated fetches)",
+    "Complete the form with the store URL and details",
+    "Submit and wait - acceptance is curated; no review SLA is published",
+    "If featured, the store joins the public gallery browsable by platform/category/tech"
+  ],
+  "watchFor": [
+    "Do not submit non-store sites - the eligibility bar is stated bluntly and rejections for portfolios/studios are explicit",
+    "The form is an embedded third-party widget; a script-less fetch shows only the eligibility warning",
+    "ecomm.design also sells agency services (store audits, migrations, setup) - those pages are unrelated to the free gallery submission",
+    "No paid submission tier is advertised for the gallery itself"
+  ],
+  "countsAsLive": "The store appears as a public entry in the ecomm.design gallery with its own detail page (platform/category/tech attributes)",
+  "unknowns": [
+    "Review time and acceptance rate",
+    "Whether the outbound store link is dofollow on live entries (one third-party source claims dofollow)",
+    "Whether account creation is needed or the form is anonymous"
+  ]
+}

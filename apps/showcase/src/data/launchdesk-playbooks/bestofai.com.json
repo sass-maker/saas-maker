@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "bestofai.com",
+  "name": "BestofAI",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://bestofai.com/",
+      "title": "BestofAI homepage - 'Largest Curated AI Directory', 15,135 tools, with Submit a Tool button and Sponsor option"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free submission exists via the 'Submit a Tool' button, but the button is not a public URL — it appears to require the free 'Join Free' account / sign-in",
+    "Guaranteed visibility is paid: 'Sponsor Your Tool — $250/mo' at bestofai.com/sponsor for featured placement"
+  ],
+  "requirements": [
+    "AI tools only — curated directory of ~15,000 'vetted' products across 102 categories",
+    "Account required: nav shows 'Sign In' and 'Join Free'; the submit CTA is rendered as a button, not a link",
+    "Do not confuse with the unrelated best-of-ai GitHub repository, which takes submissions via GitHub issue template"
+  ],
+  "preparation": [
+    "Email for the free account",
+    "Tool name, website URL (https), category, pricing model, short description, logo",
+    "Differentiated description — tools carry star ratings, like counts, and category tags"
+  ],
+  "workflow": [
+    "Go to https://bestofai.com/ and click 'Join Free' / 'Sign In' to create an account",
+    "Use the 'Add Tool' nav item or 'Submit a Tool' button to open the submission flow",
+    "Fill in tool name, URL, category, pricing, and description",
+    "Submit for editorial vetting",
+    "Optional: sponsor at $250/month for featured placement"
+  ],
+  "watchFor": [
+    "The submit entry point is a JS button — no public submission URL exists for direct linking; an account is required first",
+    "Sponsorship is steep ($250/mo) and clearly separated from the free submit",
+    "Listings carry public star ratings and like counts — a poorly received tool gets visible low scores",
+    "A similarly named GitHub repo (github.com/best-of-ai/best-of-ai) accepts submissions via issue template — it is a different property; submitting there does not list you on bestofai.com"
+  ],
+  "countsAsLive": "The tool has a card/page on bestofai.com visible in its category listing with rating and like widgets",
+  "unknowns": [
+    "The exact submit URL / form fields behind the account wall",
+    "Review time and rejection criteria",
+    "Whether the free listing link is dofollow (catalog note says follow; unconfirmed)",
+    "Whether 'vetted' implies manual testing of every tool"
+  ]
+}

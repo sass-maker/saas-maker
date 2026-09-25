@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "activesearchresults.com",
+  "name": "Active Search Results",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.activesearchresults.com/addwebsite.php",
+      "title": "Active Search Results - Add Your WebSite"
+    },
+    {
+      "url": "https://www.activesearchresults.com/help/indexschedule.php",
+      "title": "Active Search Results - indexing schedule page (linked from submission form)"
+    },
+    {
+      "url": "https://www.activesearchresults.com/help/about.php",
+      "title": "Active Search Results - About ASR / ranking activity points"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Only a valid URL and a valid email address are required - the form explicitly states 'No sign in or activation process is required'",
+    "Open submission: the form accepts both POST and GET requests with field names 'url' and 'email' (documented for search-engine submission companies)"
+  ],
+  "preparation": [
+    "The full URL to submit (e.g. https://www.example.com/mypage.html)",
+    "A valid email address",
+    "Optional: check the Schedule page (/help/indexschedule.php) for the current index-update timing"
+  ],
+  "workflow": [
+    "Open https://www.activesearchresults.com/addwebsite.php",
+    "Enter the website URL in the 'Web Site Address' field and a valid email in 'Email'",
+    "Submit the form - no account, login, or activation step exists",
+    "Check the Schedule page to see when the site will be searchable in the index"
+  ],
+  "watchFor": [
+    "This is a search-engine index submission, not a guaranteed permanent listing - inclusion follows ASR's crawl/index schedule",
+    "ASR ranking is activity-based (see 'How To Earn a Higher ASR Ranking'); a bare submission may rank poorly",
+    "Do not assume indexing equals a followed backlink - verify the live listing separately"
+  ],
+  "countsAsLive": "The submitted URL is returned as a result when searched on activesearchresults.com after the published index-update schedule has elapsed",
+  "unknowns": [
+    "Exact lag between submission and index inclusion (published on the Schedule page but not captured verbatim)",
+    "Whether any paid tier affects ranking or indexing speed",
+    "Whether the listing link is dofollow on live result pages"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "marketplace.microsoft.com",
+  "name": "Microsoft Marketplace",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "sources": [
+    {
+      "url": "https://learn.microsoft.com/en-us/partner-center/marketplace-offers/submit-to-appsource-via-partner-center",
+      "title": "Microsoft Learn — 'Make your solutions available in Microsoft Marketplace and within Office' (submission + certification process)"
+    }
+  ],
+  "requirements": [
+    "A supported offer type: Office Add-ins, apps and agents for Microsoft 365 and Copilot, Power BI visuals, SharePoint Framework solutions (SharePoint Add-ins are deprecated; VSTO/COM add-ins cannot be submitted)",
+    "A Partner Center developer account, which itself goes through an approval process",
+    "Submission must be virus-free, stable/functional, free of inadmissible material, with accurate descriptions and support docs",
+    "Provide detailed test notes (sample data, configuration instructions, a test/demo account) — and don't gate test accounts behind manual developer interaction since the validation team is global"
+  ],
+  "preparation": [
+    "Microsoft account + Partner Center company developer account",
+    "Payout information if the offer is paid",
+    "App package/manifest, listing metadata (description, screenshots), support documentation",
+    "Test notes and a ready-to-use demo account for the validation team"
+  ],
+  "workflow": [
+    "Create a developer account at partner.microsoft.com (Office enrollment) and wait for account approval",
+    "Create the marketplace offer in Partner Center and fill all required sections",
+    "Submit the solution — it passes automated checks, then human validation (3–5 working days; Teams/SPFx submissions ~24 hours)",
+    "If 'Attention needed', open the report, fix issues, resubmit",
+    "After certification, the product typically appears in Microsoft Marketplace within one hour",
+    "Optionally enroll in the Microsoft 365 App Compliance program (Publisher Attestation)"
+  ],
+  "watchFor": [
+    "You can't publish changes while a submission is in-flight — wait for the current submission to complete",
+    "Any post-certification change triggers re-certification",
+    "Free apps containing in-app purchases are labeled 'Additional purchase might be required' on the listing",
+    "Localizing into additional language stores requires descriptions for each language and matching manifest/service updates",
+    "Different offer types follow different submission docs — Teams apps and SPFx solutions have their own pipelines"
+  ],
+  "countsAsLive": "Partner Center shows the offer status as 'Published' and the listing is reachable in marketplace.microsoft.com / in-product Office experiences",
+  "unknowns": [
+    "Whether the Partner Center account currently carries a registration fee for this offer type (not stated on the fetched page)",
+    "Whether the marketplace listing backlink to the publisher site is dofollow"
+  ]
+}

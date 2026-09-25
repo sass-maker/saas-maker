@@ -1,0 +1,59 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "devtoolsdir.com",
+  "name": "Dev Tools Dir",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free Launch requires BOTH: adding their badge to your site and verifying the backlink, AND your site's Domain Rating must be at least 10 at submission time.",
+    "Free listings are 'reviewed and listed within up to 30 days'."
+  ],
+  "requirements": [
+    "Developer tools focus: curated directory of dev tools, APIs, SDKs, infrastructure, backend services (though category list is broad — 100+ categories).",
+    "Account required: /projects/submit redirects to sign-in (Google, GitHub, or email/password).",
+    "Your site's DR ≥ 10 is a hard floor for the free plan — new domains are ineligible without paying.",
+    "Launches happen at 8:00 AM UTC."
+  ],
+  "preparation": [
+    "Check your domain's Ahrefs DR — must be ≥10 for the free plan.",
+    "Account (Google/GitHub/email).",
+    "Project name, URL, description, category, logo.",
+    "Badge embed ready for free-tier verification.",
+    "Plan choice: Free (badge + DR≥10, ~30 days) / Premium $9.9 (priority, guaranteed dofollow, 10 slots/day) / Premium Plus $12.9 (featured styling 14 days, spotlight, 3/day) / DR Booster $50 (10 network backlinks)."
+  ],
+  "workflow": [
+    "Sign in at devtoolsdir.com, then open /projects/submit.",
+    "Choose launch plan.",
+    "Complete the form; free tier additionally installs the badge and verifies the backlink.",
+    "Wait for review — up to 30 days on free; premium tiers get earlier 8:00 AM UTC launch dates."
+  ],
+  "watchFor": [
+    "The DR ≥ 10 floor on the free plan is unusual — brand-new sites literally cannot use the free lane.",
+    "Badge + verified backlink requirement stacks with the DR floor on free.",
+    "DR Booster ($50 for 10 backlinks across their niche-directory network) is a paid link scheme — evaluate carefully; the page markets real-customer Ahrefs charts.",
+    "Same DirEasy boilerplate family as fastlaunch.io — identical 'Choose Your Launch Plan' framing and 8:00 AM UTC launch time.",
+    "Heavy footer badge/link farm (20+ 'Featured on' badges, many duplicated)."
+  ],
+  "countsAsLive": "A public project page on devtoolsdir.com listed under its category after an 8:00 AM UTC launch cycle.",
+  "unknowns": [
+    "Submit form field list behind sign-in.",
+    "Whether DR is re-checked after approval.",
+    "Exact queue length for free vs premium."
+  ],
+  "sources": [
+    {
+      "url": "https://devtoolsdir.com/pricing",
+      "title": "Dev Tools Dir pricing — Free (badge + DR≥10, ~30d), Premium $9.9, Premium Plus $12.9, DR Booster $50"
+    },
+    {
+      "url": "https://devtoolsdir.com/projects/submit",
+      "title": "Submit Project — redirects to sign-in (Google/GitHub/email)"
+    },
+    {
+      "url": "https://devtoolsdir.com/",
+      "title": "Dev Tools Dir homepage — curated developer tools directory"
+    }
+  ]
+}

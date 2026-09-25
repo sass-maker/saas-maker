@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "alternative.me",
+  "name": "Alternative.me",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://alternative.me/how-to/submit-software/",
+      "title": "Alternative.me - How-To: Submit a Software"
+    },
+    {
+      "url": "https://alternative.me/signup/",
+      "title": "Alternative.me - sign up page (linked from the how-to)"
+    },
+    {
+      "url": "https://alternative.me/how-to/suggest-alternatives/",
+      "title": "Alternative.me - How-To: Suggest Alternatives"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Submission of new software is open to everyone, but a user account is required",
+    "Product should be software/app-like so alternatives can be attached to it"
+  ],
+  "preparation": [
+    "Email address for account registration",
+    "Product name, website URL, and a clear description of what the software does",
+    "Logo/icon and screenshots if the submission form offers uploads",
+    "Knowledge of which existing alternative.me entries your product is an alternative to (helps categorization)"
+  ],
+  "workflow": [
+    "Register at https://alternative.me/signup/ with an email address",
+    "Log in and open the account dashboard",
+    "Click 'submit new software' and complete the entry form",
+    "Manage or edit the submission later from the same dashboard"
+  ],
+  "watchFor": [
+    "The how-to documents only the account + dashboard flow; the exact field list inside the submit form was not publicly visible without an account",
+    "Separate 'Suggest Alternatives' flow exists for linking your product as an alternative to existing entries - don't confuse it with the new-software submission",
+    "No paid submission route is advertised on the how-to page"
+  ],
+  "countsAsLive": "The software has its own public entry page on alternative.me and appears in software/alternatives browsing",
+  "unknowns": [
+    "Whether submissions are reviewed before going live, and the review SLA",
+    "Exact required fields inside the authenticated submit form",
+    "Whether the outbound product link is dofollow"
+  ]
+}

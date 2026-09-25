@@ -1,0 +1,54 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "navfolders.com",
+  "name": "NavFolders",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://navfolders.com/",
+      "title": "NavFolders homepage — curated collections directory"
+    },
+    {
+      "url": "https://navfolders.com/pricing",
+      "title": "Pricing — Free $0 (badge required), Pro $9.9, Sponsor $19.9/week"
+    },
+    {
+      "url": "https://navfolders.com/submit",
+      "title": "Submit page — sign-in wall (Google/GitHub)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free submission requires adding a NavFolders badge (dofollow backlink) to your website footer BEFORE submitting — 'We verify the backlink when you click the free submit button; without it, your product will not enter review'",
+    "Free plan: reviewed and listed within 72 hours, no customer support, link includes 'backlink maintenance'"
+  ],
+  "requirements": [
+    "Account required — /submit shows Google/GitHub sign-in (or /auth/register)",
+    "Broad product scope: tools across image, video, productivity, AI, SaaS, games, business, education categories, with platform tags (Web, iOS, Android, Mac, Windows)"
+  ],
+  "preparation": [
+    "NavFolders badge (Dark/Light/Transparent variants provided on the pricing page) embedded in your footer before hitting submit",
+    "Product name, URL, description, category and platform tags, logo/screenshot",
+    "Plan choice: Free $0 / Pro $9.9 (>=3 dofollow links, publish on your chosen day, featured placement, support) / Sponsor $19.9 per week (site-wide promotion, one ad per period)"
+  ],
+  "workflow": [
+    "Embed the badge if going free",
+    "Create an account via Google/GitHub or /auth/register",
+    "Open /submit, pick the plan, fill in product details",
+    "Free listings enter review and are listed within ~72 hours; Pro can publish immediately and schedule the publish day"
+  ],
+  "watchFor": [
+    "Badge verification happens at click time on the free submit button — the badge must already be deployed",
+    "'3 dofollow links' on free/Pro refers to links inside the listing package — count does not equal DR quality",
+    "Sponsor is weekly recurring ($19.9/week), not one-time",
+    "Badge must stay live ('Permanent link with backlink maintenance')"
+  ],
+  "countsAsLive": "Product detail page on navfolders.com reachable from Search/Category browsing with its platform and category tags",
+  "unknowns": [
+    "Exact form fields behind the sign-in wall",
+    "Whether the free listing itself is dofollow or only the '3 links' bundle",
+    "Rejection/refund policy"
+  ]
+}

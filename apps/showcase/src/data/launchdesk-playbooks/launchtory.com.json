@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "launchtory.com",
+  "name": "Launchtory",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://launchtory.com/",
+      "title": "Launchtory homepage — niche project directory with Featured/New/Recently submitted sections (Ahrefs DR 56)"
+    },
+    {
+      "url": "https://launchtory.com/pricing",
+      "title": "Pricing — $19 one-time Featured publishing for approved projects; free self-serve options mentioned"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "All submissions must pass a safety and quality review before anything (free or paid) is published",
+    "Free publishing happens 'through free self-serve options, including community votes or website link verification, when available from the project status page' — availability is not guaranteed"
+  ],
+  "requirements": [
+    "Niche website/project with a real domain (listings key off the site's domain and stack)",
+    "Rejected content: adult, gambling, phishing, scams, malware, illegal activity, and harmful/misleading sites",
+    "Account required (Login/Signup in nav; submit at /projects/new)"
+  ],
+  "preparation": [
+    "Project name, domain/URL, description, topic tags, and tech stack (Stacks is a first-class browse facet: Next.js, Cloudflare, WordPress, etc.)",
+    "Optional $19 for Featured placement (one year) — 'does not guarantee traffic, clicks, rankings, leads, or sales'"
+  ],
+  "workflow": [
+    "Create an account at /signup",
+    "Go to /projects/new and submit the project",
+    "Pass the safety/quality review",
+    "Publish free via community votes or link verification (from the project status page when available), or pay $19 for Featured placement (one year)"
+  ],
+  "watchFor": [
+    "Free publish options are 'when available' — the guaranteed path is review + $19",
+    "Featured placement lasts one year, not permanent",
+    "Directory mixes topics and stacks — accurate stack tagging affects discoverability",
+    "Contact: support@launchtory.com (obfuscated on the page)"
+  ],
+  "countsAsLive": "Project appears in 'Recently submitted'/'Latest projects' or its topic/stack page on launchtory.com with a details link",
+  "unknowns": [
+    "Exact free-verification mechanics (what 'community votes' or 'link verification' concretely require)",
+    "Review timeline",
+    "Whether free listings are dofollow"
+  ]
+}

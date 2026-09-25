@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "biosites.com",
+  "name": "Biosites",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://biosites.com/",
+      "title": "Bio Sites homepage - Squarespace's free link-in-bio tool"
+    },
+    {
+      "url": "https://biosites.com/signup",
+      "title": "Bio Sites - signup (redirects into the /editor app)"
+    },
+    {
+      "url": "https://biosites.com/editor",
+      "title": "Bio Sites - editor / create a free Bio Site"
+    }
+  ],
+  "category": "profile",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Not a directory: biosites.com is Squarespace's 'Bio Sites' link-in-bio product - 'Create a free Bio Site' gives a public bio.site/<yourname> page",
+    "A free account is created inside the /editor app (signup URL forwards there)",
+    "Aimed at creators/brands for Instagram/TikTok/YouTube link-in-bio use - selling, tips, and email capture are built in"
+  ],
+  "preparation": [
+    "Desired bio.site handle (bio.site/Yourname)",
+    "Brand assets: template pick, layout, fonts, colors",
+    "Links to feature (product URL, socials); optional Stripe/PayPal if monetization features are wanted"
+  ],
+  "workflow": [
+    "Open https://biosites.com/signup (enters the /editor app)",
+    "Create a free account and pick a template",
+    "Claim the bio.site/<yourname> handle",
+    "Add links/content in the drag-and-drop editor and publish",
+    "The public bio.site page is the deliverable - there is no directory listing to wait for"
+  ],
+  "watchFor": [
+    "Expectation mismatch: this produces a hosted link-in-bio page, not a dofollow directory listing - the SEO value is the bio.site page itself linking out",
+    "Monetization features (Stripe/PayPal, affiliates, tips) are optional - core page is free",
+    "Owned by Squarespace/Unfold; help routes to help.unfold.com",
+    "Signup page is a JS app - empty render on text-only fetch"
+  ],
+  "countsAsLive": "A public page at bio.site/<handle> resolves and shows your links",
+  "unknowns": [
+    "Whether bio.site pages pass any link equity to the target site",
+    "Whether any paid tier gates features (none advertised on the homepage - 'free' is the pitch)"
+  ]
+}

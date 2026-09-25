@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "appagg.com",
+  "name": "AppAgg",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    { "url": "https://appagg.com/add/?hl=en", "title": "Add to AppAgg" },
+    { "url": "https://appagg.com/faq/?hl=en", "title": "AppAgg FAQ" },
+    {
+      "url": "https://backlinks.fyi/directories/appagg",
+      "title": "Submit to AppAgg (third-party guide)"
+    },
+    { "url": "https://appagg.com/about-us/?hl=en", "title": "About AppAgg" }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Only store-distributed apps/games: the app must already exist on a supported store - Google Play, App Store (iOS/macOS), Microsoft Store, Steam, GOG, Epic, Meta, Nintendo, PlayStation, or Xbox",
+    "Submission is by store-page URL only: 'Paste the link to the app's store page and click Submit'; AppAgg fetches details from the store",
+    "Account sign-in is required before submitting (per third-party guide and site FAQ flows)"
+  ],
+  "preparation": [
+    "A live store listing URL for the app on one of the supported stores",
+    "Polish the store page first - AppAgg pulls title/description/metadata from it",
+    "An AppAgg account (sign in before submitting)"
+  ],
+  "workflow": [
+    "Sign in / create an AppAgg account",
+    "Open https://appagg.com/add/?hl=en",
+    "Paste the app's store page URL and click Submit",
+    "AppAgg creates or updates the app page by fetching store details",
+    "Manual review typically 3-7 days (per third-party guide); verify the created page afterward and report mismatched metadata via site contact"
+  ],
+  "watchFor": [
+    "Web SaaS with no app-store presence cannot be listed - the store URL is the entry ticket",
+    "The /add/ page is JS-rendered and returned almost no content to a plain fetch; drive it in a browser",
+    "Metadata is scraped from the store listing, so errors on the store page propagate to AppAgg",
+    "Use ?hl=en to get the English UI"
+  ],
+  "countsAsLive": "A public app page exists on appagg.com with price history/AppAgg Score sections and a link back to the store listing.",
+  "unknowns": [
+    "Exact review criteria and whether non-game web services are ever accepted",
+    "Whether the outbound store link is the only link, or a developer website link is also exposed",
+    "Review turnaround confirmed only by third-party sources (3-7 days), not stated on the site"
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "alphadigits.com",
+  "name": "Alpha Digits",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://alphadigits.com/submit",
+      "title": "Submit App For Review — form and requirements"
+    },
+    { "url": "https://alphadigits.com/", "title": "AlphaDigits homepage — app review blog" }
+  ],
+  "category": "review",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "iOS and Android apps only — this is an app review blog, not a SaaS directory",
+    "For paid apps, developers must provide a promo code (iOS) or .APK file (Android) so reviewers can test",
+    "Reviews are editorial: 'we let the quality of the application speak for itself' — expect honest critique, positives and negatives"
+  ],
+  "preparation": [
+    "Form fields: your name, email, app name, message/description, company name, country, App Store/Play Store link",
+    "Promo code (iOS) or APK link (Android) if the app is paid",
+    "Note the honeypot: 'If you are human, leave this field blank.'"
+  ],
+  "workflow": [
+    "Open https://alphadigits.com/submit (canonical slug /submit-app-for-review/)",
+    "Fill all fields, leave the honeypot empty, submit",
+    "Team reviews the app; if published, the review runs in the homepage featured section and is pushed to Facebook/Twitter/social bookmarking",
+    "Issues → mail info(at)alphadigits(.)com"
+  ],
+  "watchFor": [
+    "A paid 'featured review service for a small fee' is mentioned — the standard submit form itself has no price field",
+    "The review is genuinely critical — do not submit expecting pure promotion",
+    "Web SaaS without a mobile app does not fit this site"
+  ],
+  "countsAsLive": "A review post for the app is published on alphadigits.com (homepage featured section / App Reviews category)",
+  "unknowns": [
+    "Price of the paid featured review service",
+    "Review turnaround time",
+    "Whether all free submissions get reviewed or only selected ones"
+  ]
+}

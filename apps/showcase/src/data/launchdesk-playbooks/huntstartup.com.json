@@ -1,0 +1,57 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "huntstartup.com",
+  "name": "Hunt Startup",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://huntstartup.com/",
+      "title": "Hunt.Startup homepage — curated startup directory"
+    },
+    {
+      "url": "https://huntstartup.com/submit",
+      "title": "Submit page — renders the 'Join the Club' signup/signin wall"
+    },
+    {
+      "url": "https://huntstartup.com/get-featured",
+      "title": "Pricing page — Starter $0 (badge for dofollow), Featured $10/week, Premium $7 one-time"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free Starter listing requires account creation and publishes a nofollow link; embedding the Hunt Startup badge on your site upgrades it to a dofollow backlink",
+    "Free listings are 'Processed within 24 hours' per the pricing page"
+  ],
+  "requirements": [
+    "Early-stage startups, SaaS, AI tools and tech products (site positioning)",
+    "Account required: /submit shows a signup form (Google or full name + email + password)",
+    "For a dofollow link on the free plan: embed their badge on your site"
+  ],
+  "preparation": [
+    "Startup name, URL, category (SaaS, AI, Marketing, Productivity, DevTools, Fintech, etc.) and description",
+    "Logo (cards show a logo tile)",
+    "Ability to add an HTML badge to your site footer if you want the free dofollow link",
+    "Decide plan: Starter $0 / Featured $10 per week (8 spots, 7 days homepage) / Premium $7 one-time (permanent dofollow, no badge, fast approval)"
+  ],
+  "workflow": [
+    "Create an account at /auth?mode=signup (or sign in with Google)",
+    "Open /submit (optionally /submit?plan=featured or /submit?plan=premium)",
+    "Enter startup details and choose the plan",
+    "For Starter+dofollow: add the badge to your site so it verifies",
+    "Submit; Starter claims processing within 24 hours"
+  ],
+  "watchFor": [
+    "Free tier link is nofollow unless the badge stays embedded — treat badge as a permanent obligation if you want dofollow",
+    "Featured is billed weekly ($10/week, cancel anytime) — it is not a one-time charge",
+    "Featured placement limited to 8 spots",
+    "Footer carries dozens of reciprocal directory badges — classic badge-exchange directory network; expect the free tier to exist mainly for the badge link"
+  ],
+  "countsAsLive": "A startup detail page at /startups/<slug> linked from the directory with name, description, category and 'Visit Website' link",
+  "unknowns": [
+    "Whether free listings are manually reviewed or auto-approved",
+    "Exact badge embed code location (behind the account wall)",
+    "Refund/removal policy"
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "rundown.ai",
+  "name": "The Rundown Tools",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    { "url": "https://www.rundown.ai/submit", "title": "Submit your AI tool - The Rundown AI" },
+    { "url": "https://rundown.ai/", "title": "The Rundown AI homepage" }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "AI tools for the 'Supertools' directory, curated by The Rundown AI team",
+    "Free route is email-only: 'Email support@therundown.ai with your tool's name, URL, category, and a one-sentence description'",
+    "A paid route exists separately: newsletter feature via /advertise-with-us"
+  ],
+  "preparation": [
+    "Tool name, URL, category, and a one-sentence description - exactly the four things the page asks for",
+    "Send from an email address you monitor; the team reviews recommendations manually"
+  ],
+  "workflow": [
+    "Open https://www.rundown.ai/submit",
+    "Click the mailto link (subject pre-filled 'Tool Submission') or email support@therundown.ai directly",
+    "Include tool name, URL, category, and one-sentence description",
+    "Wait for the team's review; no on-page form is used"
+  ],
+  "watchFor": [
+    "This is an editorial recommendation, not a self-serve listing - acceptance is entirely discretionary",
+    "Do not confuse 'Recommend a Tool' (free) with 'Newsletter Feature' (paid advertising)",
+    "The audience is 2M+ newsletter readers; the bar for inclusion is presumably high",
+    "No stated review time or confirmation process"
+  ],
+  "countsAsLive": "The tool appears in the Rundown/Supertools tools section at rundown.ai/tools (or its app subdomain) with a public entry.",
+  "unknowns": [
+    "Review turnaround and whether rejections are communicated",
+    "Whether the tools link is dofollow",
+    "Whether paid newsletter features also produce a permanent directory listing"
+  ]
+}

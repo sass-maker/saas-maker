@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "dododirectory.com",
+  "name": "DodoDirectory",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free Listing requires a backlink to dododirectory.com; the badge must stay on your site permanently — 'removal = instant delisting'.",
+    "Free queue: reviewed and listed within 2 weeks; ~3,000-character listing; no AI-written SEO description; no support."
+  ],
+  "requirements": [
+    "Any website/business — a general business directory (359+ listed; categories from SaaS/AI to Local Business).",
+    "Content restrictions at checkout: no crypto, adult, gambling, or illegal content (processed by Polar).",
+    "Every plan includes a permanent dofollow backlink and a dedicated review page."
+  ],
+  "preparation": [
+    "Website name, URL, description, category.",
+    "Badge/backlink to dododirectory.com placed permanently for the free tier.",
+    "Plan choice: Free $0 / Premium $9.99 one-time (instant approval, 3 dofollow, AI-written ~6000-char listing) / Review Article $49.99 (10k-char AI review blog post) / Press Coverage $299 (third-party CoveragePush)."
+  ],
+  "workflow": [
+    "Go to https://dododirectory.com/submit ('Submit your Website').",
+    "Pick Free or a paid tier on /pricing.",
+    "Free: install the badge, submit, wait up to 2 weeks.",
+    "Premium: instant approval and listing — skips the 14-day wait."
+  ],
+  "watchFor": [
+    "Harshest badge enforcement seen: permanent badge required, 'removal = instant delisting' for free listings.",
+    "Free listings explicitly get no AI-written description — your ~3000-char copy is all you get.",
+    "'AI-powered review' language means listing copy may be machine-generated on paid tiers.",
+    "The $299 press-coverage block is a third-party service (CoveragePush) embedded as an upsell — not needed for the listing.",
+    "Prohibited-content list comes from the payment processor (Polar) — crypto/adult/gambling rejected."
+  ],
+  "countsAsLive": "A dedicated listing/review page at dododirectory.com/item/<slug> linked from category pages.",
+  "unknowns": [
+    "Whether account registration is required to submit.",
+    "Exact submit form fields.",
+    "How 'instant approval' interacts with content moderation on paid tiers."
+  ],
+  "sources": [
+    {
+      "url": "https://dododirectory.com/pricing",
+      "title": "DodoDirectory Pricing — Free (permanent badge, 2-week review), Premium $9.99, Review Article $49.99, Press $299"
+    },
+    {
+      "url": "https://dododirectory.com/",
+      "title": "DodoDirectory homepage — business directory with permanent dofollow backlinks and AI-powered reviews"
+    }
+  ]
+}

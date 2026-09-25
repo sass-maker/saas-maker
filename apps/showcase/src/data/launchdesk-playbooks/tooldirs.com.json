@@ -1,0 +1,61 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "tooldirs.com",
+  "name": "ToolDirs",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free listing requires adding a dofollow backlink to tooldirs.com in your website footer and displaying one of their badge embeds (dark/light/transparent variants provided on the pricing page)",
+    "Free submissions are reviewed within 2 days"
+  ],
+  "sources": [
+    {
+      "url": "https://tooldirs.com/submit",
+      "title": "ToolDirs submit page — form fields and requirements"
+    },
+    {
+      "url": "https://tooldirs.com/pricing",
+      "title": "ToolDirs pricing — free vs paid listing tiers"
+    },
+    {
+      "url": "https://tooldirs.com/",
+      "title": "ToolDirs homepage — categories and directory scope"
+    }
+  ],
+  "requirements": [
+    "Tool, SaaS service, or software application (26 categories, AI/Directory/Productivity heavy)",
+    "Description must be at least 500 characters (max 5000), markdown supported",
+    "Tagline limited to 160 characters",
+    "Logo required: PNG, JPG, WEBP or SVG, max 500kb",
+    "Maximum 3 categories per listing"
+  ],
+  "preparation": [
+    "Product URL (form has an AI auto-fill button that scrapes the page)",
+    "Tagline <=160 chars and a 500+ character markdown description",
+    "Logo file under 500kb; up to 4 screenshots under 5MB each",
+    "Pricing model, platforms, up to 3 categories",
+    "Optional: discount code, founded year, YouTube demo URL, GitHub repo, founder Twitter, affiliate program info",
+    "For the free route: ability to edit your site's footer HTML to add the dofollow backlink/badge"
+  ],
+  "workflow": [
+    "Open https://tooldirs.com/submit",
+    "Enter the tool URL and click the AI button to auto-fill the form",
+    "Fill Tool Information step: name, tagline, description, logo, screenshots, categories, pricing model, platforms, optional fields",
+    "Choose submission type on step 2: Free (badge/backlink) or paid ($9.99 one-time lifetime, or Featured $14.99/first month)",
+    "If free: embed the badge code copied from the pricing page into your site footer, then submit",
+    "Wait for review (free tier states review within 2 days) and confirm the listing appears at tooldirs.com/product/<slug>"
+  ],
+  "watchFor": [
+    "The 'EARLY1' code on the pricing page offers 40% off the $9.99 one-time plan — the paid route is intentionally cheap to nudge you off the free/badge path",
+    "FAQ questions about review time and edit-after-submission exist on the submit page but answers were not expanded in the fetched HTML",
+    "Free tier requires the backlink to stay in your footer; removal likely delists you (standard for badge-gated directories, though ToolDirs' enforcement cadence is not documented)"
+  ],
+  "countsAsLive": "A public product page at tooldirs.com/product/<slug> reachable without login, appearing in category listings and/or the homepage Latest section",
+  "unknowns": [
+    "Whether the badge/backlink is re-verified periodically and how removals are handled",
+    "Exact review rejection criteria for the free tier",
+    "Whether an account is required — the submit page showed a 'Sign In' link but the form itself appeared accessible"
+  ]
+}

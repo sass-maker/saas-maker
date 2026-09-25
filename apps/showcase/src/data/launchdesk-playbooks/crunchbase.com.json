@@ -1,0 +1,58 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "crunchbase.com",
+  "name": "Crunchbase",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "profile",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free registered account required to add or edit profiles.",
+    "Registered users must additionally complete social authentication (connect LinkedIn/Facebook/Twitter, or Google) before adding profiles.",
+    "Search first — if the company already has an auto-generated profile, claim/edit it instead of creating a duplicate.",
+    "Company profile tone: 3rd person, no marketing language ('best', 'most comprehensive'), no dating language ('new' → 'launched April 2008')."
+  ],
+  "preparation": [
+    "Registered account (email or Google/LinkedIn) + at least one connected social account for authentication.",
+    "Company logo.",
+    "Founded date; headquarters location (use a business/registered address, not a home address).",
+    "Website URL and social media links.",
+    "Short and long company descriptions (3rd person).",
+    "Industries (3–5 recommended).",
+    "Founders, funding rounds, employees/board/advisors details for completeness.",
+    "Employee-count range; business contact email."
+  ],
+  "workflow": [
+    "Register at crunchbase.com (Log In → Register tab) or via Google One Tap.",
+    "Complete social authentication in Account Settings.",
+    "Search for the company; if a profile exists use 'Claim'/Edit via Actions menu.",
+    "Otherwise: Resources → Create Profile (or /add-new) → select Company → enter details → 'Save All Edits'.",
+    "Fill overview fields (logo, website, socials, founded date, HQ, industries, founders, funding) to maximize Crunchbase Rank."
+  ],
+  "watchFor": [
+    "Social authentication is a hard gate — a bare email registration cannot add profiles.",
+    "Profiles are editable by the community — monitor for unwanted edits.",
+    "Marketing language violates guidelines and can be reverted.",
+    "Paid subscriptions exist but are NOT required for a basic profile — avoid upgrade prompts.",
+    "Contact email may be publicly visible depending on settings."
+  ],
+  "countsAsLive": "A public crunchbase.com/organization/<slug> page reachable while logged out, showing the company overview fields.",
+  "unknowns": [
+    "Whether new profiles go through any moderation delay before being publicly visible.",
+    "Current list of accepted social-auth providers."
+  ],
+  "sources": [
+    {
+      "url": "https://support.crunchbase.com/hc/en-us/articles/115011823988-How-do-I-create-a-Crunchbase-profile",
+      "title": "Crunchbase Knowledge Center — How do I create a Crunchbase profile?"
+    },
+    {
+      "url": "https://support.crunchbase.com/hc/en-us/articles/115011824028-How-do-I-register-for-a-Crunchbase-account",
+      "title": "Crunchbase Knowledge Center — account registration"
+    },
+    {
+      "url": "https://support.crunchbase.com/hc/en-us/articles/115011260567-What-are-best-practices-to-follow-when-adding-content-to-Crunchbase",
+      "title": "Crunchbase best practices — 3rd person, no marketing language"
+    }
+  ]
+}

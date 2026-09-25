@@ -1,0 +1,56 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "microlaunch.net",
+  "name": "Microlaunch",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://microlaunch.net/premium",
+      "title": "Premium page — Launch Pro $39 (code LAUNCH20), Launch Plus $79 (code LAUNCH-PLUS-20), product-review add-on $129; 'Skip the Queue — Launch Anytime'"
+    },
+    {
+      "url": "https://microlaunch.net/",
+      "title": "Homepage — 30-day launch program, leaderboard, deals, community"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "A regular (free) launch exists — Premium is framed as 'Skip the Queue', implying a free queue — but the free tier's details are not published on the premium page",
+    "Signup/account required to launch",
+    "Launch Pro ($39 with LAUNCH20) buys anytime-launch, 2 boosts, Product-of-Day eligibility, 4+ SEO pages, marketplace/deals spot, verified badge, DR64+ dofollow backlinks",
+    "Launch Plus ($79 with LAUNCH-PLUS-20) adds 4 more SEO pages, 3 automated boosts, X mention (10.2k) and Reddit post (1.3k)"
+  ],
+  "requirements": [
+    "A startup/product to launch — the program runs a 30-day exposure campaign",
+    "Account signup on microlaunch.net",
+    "Re-launches allowed 'for major feature releases only'"
+  ],
+  "preparation": [
+    "Product name, URL, tagline, description, logo/screenshots",
+    "Deal terms if you want a marketplace/deals placement",
+    "Choose tier: free queue (details scarce) / Launch Pro $39 / Launch Plus $79 / +$129 review-and-action-plan add-on",
+    "Plan for 30 days of engagement — feedback, roasts and testimonial collection are part of the program"
+  ],
+  "workflow": [
+    "Sign up on microlaunch.net",
+    "Submit the product ('Launch Now') — free queue or paid tier",
+    "Paid: check out with the pre-published discount codes (LAUNCH20 / LAUNCH-PLUS-20)",
+    "Launch runs a 30-day campaign: leaderboard, boosts, deals marketplace, reviews/roasts",
+    "Product lives at a product page plus 4+ SEO-optimized pages under /alt/ and similar"
+  ],
+  "watchFor": [
+    "Discount codes are printed on the page — never pay the struck-through price ($49/$99)",
+    "Re-launch limited to major feature releases",
+    "The 'lifetime launch pack' language implies one-time pricing, but confirm at checkout",
+    "Free-tier mechanics (queue length, backlink policy) are not described on public pages",
+    "Expert review add-on ($129) is limited to 2 startup slots/week and is a separate upsell"
+  ],
+  "countsAsLive": "Product appears on microlaunch.net/browse and the leaderboard with a public product page during its 30-day campaign",
+  "unknowns": [
+    "Free launch queue length and what the free tier includes",
+    "Whether paid tiers are one-time or recurring",
+    "How 'boosts' and 'Product of the Day' are awarded"
+  ]
+}

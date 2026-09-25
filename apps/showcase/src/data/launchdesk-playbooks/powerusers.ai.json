@@ -1,0 +1,45 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "powerusers.ai",
+  "name": "Powerusers AI",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://powerusers.ai/submit-ai-tool/",
+      "title": "Submit AI Tool — rules, $69 PayPal flow, FAQ"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "AI tools only — libraries, newsletters, and non-AI content are rejected",
+    "Direct https:// URL only — shortened URLs, redirects, and affiliate links are auto-discarded",
+    "No closed-beta or waitlist tools",
+    "No explicit pornographic content; NSFW tools may be declined (refunded) or listed without homepage exposure",
+    "Low-quality or highly duplicative tools rejected; 'websites named after certain AI models' no longer accepted",
+    "Check the existing directory first — duplicates won't be listed",
+    "$69 one-time via PayPal; listed forever, done-for-you listing, ~48h turnaround, full refund if declined"
+  ],
+  "preparation": [
+    "Direct https:// product URL",
+    "Submitter name, email, and PayPal email (used for submission reference)",
+    "Tool name and optional extra info for the listing",
+    "PayPal account for the $69 payment redirect"
+  ],
+  "workflow": [
+    "Search the directory to confirm the tool is not already listed",
+    "Open https://powerusers.ai/submit-ai-tool/ and fill the form (Name, Email, PayPal Email, Tool Name, Tool URL, optional details)",
+    "Submit — you are redirected to PayPal to pay $69",
+    "Editorial team reviews (up to ~48h), maps tool capabilities, and builds the listing",
+    "On approval you get a confirmation email with the listing link; request a content revision if needed"
+  ],
+  "watchFor": [
+    "Payment is via PayPal redirect after form submit — a PayPal email field is required up front",
+    "NSFW submissions risk a decline (refunded) or a listing that never appears on the homepage",
+    "Homepage featuring is a separate ask — contact dave[at]powerusers.ai, subject to availability",
+    "Site pushes a 'free login' modal for browsing but the listing itself is paid — don't confuse the two"
+  ],
+  "countsAsLive": "The tool has a live listing page on powerusers.ai with a custom (dark/light) banner and appears in its capability categories",
+  "unknowns": ["Whether the $69 price ever varies", "Whether listing links are dofollow"]
+}

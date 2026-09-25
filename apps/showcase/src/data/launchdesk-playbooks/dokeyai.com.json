@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "dokeyai.com",
+  "name": "DokeyAI",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    { "url": "https://dokeyai.com/submit", "title": "Submit Tool - DokeyAI" },
+    { "url": "https://dokeyai.com/", "title": "DokeyAI homepage" }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free Pack requires adding a DokeyAI link to your website footer before submission: <a href=\"https://dokeyai.com/\" title=\"Dokey AI Tools Directory\">DokeyAI</a>",
+    "Free submissions are reviewed within 48 hours per the submit page"
+  ],
+  "requirements": [
+    "AI tools directory - the submitted product should be an AI tool/website",
+    "Footer backlink to dokeyai.com required for the free tier"
+  ],
+  "preparation": [
+    "Website URL to submit (submit form is a single Website field)",
+    "Embed the required footer anchor on your site before submitting",
+    "Optional: pricing page offers a paid 'Submit Pack' if you do not want the backlink"
+  ],
+  "workflow": [
+    "Add the DokeyAI footer link to your site",
+    "Open https://dokeyai.com/submit",
+    "Enter the website URL and press Submit under the Free Pack",
+    "Wait for review (~48 hours advertised)",
+    "Bonus: accepted sites are also listed in the public DokeyAI Data GitHub repo (github.com/dokeyai/dokeyai-data)"
+  ],
+  "watchFor": [
+    "Removing the footer backlink after approval presumably risks delisting (not stated, but standard for this exchange model)",
+    "Login/EN locale exists but the submit page itself is a single URL field",
+    "Paid 'Submit Pack' details live on /pricing - check current price there before assuming"
+  ],
+  "countsAsLive": "The tool appears in the DokeyAI directory (discover/category pages) and ideally in the dokeyai-data GitHub repository.",
+  "unknowns": [
+    "Price and exact contents of the paid Submit Pack",
+    "Whether free listings are dofollow",
+    "Whether the footer link is re-checked after approval"
+  ]
+}

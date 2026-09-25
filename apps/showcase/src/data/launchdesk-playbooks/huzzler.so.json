@@ -1,0 +1,57 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "huzzler.so",
+  "name": "Huzzler",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://huzzler.so/submit-product",
+      "title": "Submit your startup — Free vs Launch Boost comparison table and FAQ"
+    },
+    {
+      "url": "https://huzzler.so/products/create",
+      "title": "Product creation entry point (account required)"
+    },
+    {
+      "url": "https://huzzler.so/",
+      "title": "Huzzler homepage — software reviews and founder directory"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free listing requires the Huzzler badge on your homepage — they check it every day while you are in the queue; removing it drops you from the queue",
+    "Free queue wait is stated as about 72 days, with manual review before going live",
+    "Free listings carry a noindex tag — Google will not show the product page"
+  ],
+  "requirements": [
+    "Any real product being built: SaaS, apps, developer tools, AI tools",
+    "Hand-reviewed — spam and 'empty promo pages' are rejected",
+    "Account creation required before submitting at /products/create"
+  ],
+  "preparation": [
+    "Product name, website URL, description and category",
+    "Huzzler badge embedded on your homepage before choosing the free plan",
+    "$39 budget if you want Launch Boost (instant publish, indexing, homepage Recently Boosted slot)"
+  ],
+  "workflow": [
+    "Create an account (Login/Sign up in nav)",
+    "Go to /products/create",
+    "Enter name, website, description, category",
+    "Pick Free (badge + ~72 day queue) or Launch Boost ($39 one-time)",
+    "For Free: keep the badge live — it is checked daily until the listing goes live"
+  ],
+  "watchFor": [
+    "The ~72-day free queue is unusually long — plan around it or pay $39",
+    "Free product pages are noindexed, so the free tier's SEO value is limited to the dofollow link itself, not search visibility of the listing",
+    "Badge is verified daily — a deploy that drops it resets/voids your queue spot",
+    "Launch Boost is one-time, not a subscription"
+  ],
+  "countsAsLive": "The product's own page on huzzler.so is public and linked from its category; for Launch Boost it also appears in the 'Recently boosted' homepage section",
+  "unknowns": [
+    "Exact badge markup/placement requirements (behind account wall)",
+    "Whether free-tier dofollow is permanent after the queue or badge-dependent forever",
+    "Refund policy for Launch Boost"
+  ]
+}

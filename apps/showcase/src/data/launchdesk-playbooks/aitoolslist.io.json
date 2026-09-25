@@ -1,0 +1,58 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aitoolslist.io",
+  "name": "AI Tools List",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://aitoolslist.io/",
+      "title": "AI Tools List homepage - 'Best AI Tools Rated', listicle-style directory by category"
+    },
+    {
+      "url": "https://aitoolslist.io/submit-ai-tool/",
+      "title": "Submit your AI tool - 'we will try to add it as soon as we can if it fits our criteria'"
+    },
+    {
+      "url": "https://submitmap.com/platform/aitoolslist/",
+      "title": "SubmitMap field report: 7-field embedded Tally form, no account; operator swaps in their own affiliate URL where a program exists"
+    },
+    {
+      "url": "https://aitoolslist.io/sponsor-ai-tools-list/",
+      "title": "Sponsor page - promotional services and AI-tools marketing agency upsell"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "AI tools only, editorially curated ('if it fits our criteria' — criteria are never published)",
+    "Open form, no account: a 7-field embedded Tally form — your name, email, tool name, tool link, category (free text), short description, and additional notes",
+    "No login and no captcha"
+  ],
+  "preparation": [
+    "Tool name, URL, category suggestion, short description",
+    "Your name and a contact email",
+    "IMPORTANT: decide in advance whether you run an affiliate program — if you do, the operator historically links YOUR entry to THEIR affiliate URL rather than your domain"
+  ],
+  "workflow": [
+    "Go to https://aitoolslist.io/submit-ai-tool/ (linked from the site's footer/navigation)",
+    "Fill all seven Tally fields — including 'Additional Notes', which looks optional but is REQUIRED: submitting without it fails with a generic '1 question needs your attention' error",
+    "Submit; Tally shows 'Form submitted / Thanks for completing this form!' — no email confirmation and no reference ID is issued",
+    "Wait for the editor to add the tool to a category listicle page (entries get a 'Try it!' outbound button)",
+    "Optional paid route: the Sponsor page offers promotional packages and a full-service AI-tools marketing agency"
+  ],
+  "watchFor": [
+    "Affiliate-swap trap (documented by third-party field report): where a submitted tool runs an affiliate program, the operator may publish the entry linking to their own affiliate URL instead of your domain — you may get a 'followed' link that earns THEM commission",
+    "The 'Additional Notes' field is required despite appearing optional — the most common silent form failure",
+    "Criteria for acceptance are never stated — rejection is silent",
+    "Sponsor page reveals the operator also runs a paid marketing agency — expect an upsell pitch",
+    "Listicle format: you land inside a category roundup (e.g. 'Best AI Copywriting Tools'), not a dedicated product page"
+  ],
+  "countsAsLive": "The tool appears as a named entry with a 'Try it!' button inside one of the category listicle pages on aitoolslist.io",
+  "unknowns": [
+    "Acceptance criteria (unpublished)",
+    "Review timeline",
+    "Whether the link reliably points to your domain when no affiliate program exists",
+    "Whether you can correct an entry that used the operator's affiliate URL"
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "dayslaunch.com",
+  "name": "Days Launch",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free $0 plan requires a backlink to dayslaunch.com on your site.",
+    "Free tier is throttled: 'Reviewed only 5 listed every day' — a daily listing quota creates a queue."
+  ],
+  "requirements": [
+    "Product/tool listings; the site is a Mkdirs-boilerplate directory with categories, collections, and tags.",
+    "Account required: /submit redirects to a login page (email/password plus Google and GitHub OAuth)."
+  ],
+  "preparation": [
+    "Account (email, Google, or GitHub).",
+    "Product name, URL, description, category/tags.",
+    "Backlink to dayslaunch.com live on your site for the free plan.",
+    "Plan choice: free $0 (backlink, ~5 listings/day cap) / pro $9.9 (no backlink, list right now, featured top placement, social+newsletter share) / sponsor $19.9/week."
+  ],
+  "workflow": [
+    "Go to https://dayslaunch.com/submit — register/log in first.",
+    "Choose plan per /pricing.",
+    "Fill the submission form.",
+    "Free: with the backlink live, wait for review — only ~5 free listings publish per day.",
+    "Pro: 'list right now, publish whenever you want' with featured placement."
+  ],
+  "watchFor": [
+    "Daily cap on free listings ('only 5 listed every day') creates a real queue — pro's instant listing is the counter-upsell.",
+    "'Permanent link with backlink maintenance' — free listing likely conditioned on the backlink persisting.",
+    "Sponsor is $19.9/week recurring.",
+    "Identical pricing copy to aibesttop.com and collectai.tools — shared boilerplate; verify any specific promises on this site itself.",
+    "Heavy badge/bek link exchange farm visible in footer — directory-of-directories economics."
+  ],
+  "countsAsLive": "A public item page on dayslaunch.com visible under Explore/categories while logged out.",
+  "unknowns": [
+    "Exact submit form fields behind login.",
+    "Whether badge removal is auto-detected.",
+    "Real free-queue wait given the 5/day cap."
+  ],
+  "sources": [
+    {
+      "url": "https://dayslaunch.com/pricing",
+      "title": "Days Launch Pricing — free (backlink, ~5 listed/day), pro $9.9, sponsor $19.9/week"
+    },
+    {
+      "url": "https://dayslaunch.com/submit",
+      "title": "Submit — login wall (email, Google, GitHub)"
+    },
+    { "url": "https://dayslaunch.com/", "title": "Days Launch homepage" }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "capterra.com",
+  "name": "Capterra",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "review",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "B2B software products — Capterra is a business software marketplace.",
+    "Free basic listing via the G2 Digital Markets vendor portal (Capterra, GetApp, Software Advice, and UpCity are now under G2 Digital Markets after G2's acquisition closed Feb 2026).",
+    "Vendor account required at app.g2digitalmarkets.com (formerly digitalmarkets.gartner.com — now 301-redirects to app.g2digitalmarkets.com).",
+    "Search Capterra first — listings are often auto-created for known SaaS; claim the existing listing rather than creating a duplicate."
+  ],
+  "preparation": [
+    "Product name and short description (~150 chars) plus a longer definition-first description (what it does, who for, outcome).",
+    "Category selection — Capterra's taxonomy differs from G2's; pick the category buyers actually search.",
+    "Logo, 3–5 screenshots, optional video.",
+    "Pricing type (Free/Freemium/Subscription/One-time), starting price, free-trial flag, deployment options (cloud/SaaS/web/iOS/Android).",
+    "Business email for vendor verification.",
+    "Standardized feature checklist for your category — check all applicable features."
+  ],
+  "workflow": [
+    "Go to https://www.capterra.com/vendors/sign-up/ or the batch URL https://app.g2digitalmarkets.com/get-listed/start.",
+    "Create/claim the product listing in the G2 Digital Markets vendor portal.",
+    "Claim each site separately from the same cabinet — Capterra, GetApp, and Software Advice are separate listings with separate descriptions/screenshots.",
+    "Complete profile fields, upload assets, verify via company email.",
+    "After approval, collect reviews (Capterra Review Collector tool; ~5 reviews targets category-listing inclusion). Optional PPC campaigns are managed in the same cabinet."
+  ],
+  "watchFor": [
+    "vendor portal domain changed: digitalmarkets.gartner.com now redirects to app.g2digitalmarkets.com — old bookmarks dead.",
+    "PPC upsell in the same cabinet — third-party notes cite ~$500/mo minimum budgets; the basic listing itself is free.",
+    "Duplicate listings happen if you don't search/claim first.",
+    "Reviews are shared across the Capterra/GetApp/Software Advice network but NOT with G2 (no shared review pool).",
+    "The get-listed app page returned 403 to a plain fetch — use a real browser."
+  ],
+  "countsAsLive": "A public product page on capterra.com (and optionally GetApp/Software Advice) showing description, pricing model, screenshots, and a reviews section — marked claimed once vendor verification completes.",
+  "unknowns": [
+    "Exact review/approval timeline for new listings.",
+    "Current PPC minimums and pricing (third-party figures only).",
+    "Whether single sign-on or shared billing with G2 exists post-acquisition (reported: none)."
+  ],
+  "sources": [
+    {
+      "url": "https://www.capterra.com/vendors/sign-up/",
+      "title": "Request a free basic listing — Capterra vendor sign-up"
+    },
+    {
+      "url": "https://www.capterra.com/vendors/",
+      "title": "Capterra for Vendors — 'powered by G2 Digital Markets'"
+    },
+    {
+      "url": "https://app.g2digitalmarkets.com/get-listed/start",
+      "title": "G2 Digital Markets get-listed flow (403 to fetcher)"
+    },
+    {
+      "url": "https://blastra.io/guides/how-to-navigate-g2-and-capterra/",
+      "title": "G2 and Capterra vendor guide post-acquisition — shared cabinet, separate site listings, free claim"
+    },
+    {
+      "url": "https://saasairank.com/blog/how-to-get-listed-g2-capterra-geo",
+      "title": "How to Get Listed on G2 and Capterra — claim-first guidance and profile requirements"
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "findyoursaas.com",
+  "name": "FindYourSaaS",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.findyoursaas.com/",
+      "title": "FindYourSaaS homepage — SaaS directory (3980+ tools, 255+ categories)"
+    },
+    {
+      "url": "https://www.findyoursaas.com/onboard",
+      "title": "Onboard/submit route — client-rendered shell"
+    },
+    {
+      "url": "https://findyoursaas.com/pricing",
+      "title": "Pricing & FAQ page (loads client-side)"
+    },
+    {
+      "url": "https://submitmap.com/platform/findyoursaas/",
+      "title": "Submitmap profile — community gate and flow details"
+    },
+    {
+      "url": "https://submitator.com/submit-to-findyoursaas",
+      "title": "Submitator profile — logo <200KB and 50+ word description rejection rules; nofollow link sampling"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Community gate: the onboard flow reportedly requires three comments and three likes on other people's tools (with live counters) before the listing form unlocks",
+    "Standard Listing is $0 only as a 'limited-time offer' against a $15 list price — the free lane is not guaranteed to persist",
+    "Free-tier listing links were sampled as nofollow; the $9/month Featured tier is reportedly the only one carrying a backlink",
+    "Sign-in is required; the /pricing 'Submit Your Tool' button silently does nothing — navigate directly to /onboard"
+  ],
+  "requirements": [
+    "SaaS/software tools for a general SaaS directory (3,980+ tools, 255+ categories)",
+    "Account sign-in required before onboarding",
+    "Stated rejection rules: logo must be under 200KB; description must be 50+ words"
+  ],
+  "preparation": [
+    "Logo under 200KB and a description of 50+ words — both are stated rejection rules",
+    "Tool name, URL, card image, category, pricing model, use-case and 'best for' audience tags",
+    "Willingness to leave 3 comments and 3 likes on other listings first"
+  ],
+  "workflow": [
+    "Create an account / sign in (the button opens an auth modal; /sign-in itself is 404)",
+    "Go to /pricing and click 'Submit Your Tool' — if the client-side navigation does nothing, open /onboard directly",
+    "Clear the community gate (3 comments + 3 likes on other tools)",
+    "Fill the listing form: logo, card image, 50+ word description",
+    "Submit; third-party reports approval within ~7 days"
+  ],
+  "watchFor": [
+    "Description under 50 words or logo over 200KB = reported rejection",
+    "Free listing links sampled as rel=nofollow — don't count this submission for link equity",
+    "$0 price is flagged limited-time; it may revert to $15",
+    "The onboard page is fully client-rendered; a text fetch shows only 'Loading…'"
+  ],
+  "countsAsLive": "Tool card appears on findyoursaas.com (Recently Listed / its category) with Save/Share/Visit actions",
+  "unknowns": [
+    "First-party confirmation of the comment/like gate and current pricing — pricing page renders client-side only",
+    "Whether paid featured upgrades change link follow status"
+  ]
+}

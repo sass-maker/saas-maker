@@ -1,0 +1,61 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "saasbaba.com",
+  "name": "SaaSBaba",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://saasbaba.com/",
+      "title": "SaaSBaba homepage - 'The best generative AI & MicroSaaS directory' (returned empty body — JS-rendered)"
+    },
+    {
+      "url": "https://www.indiehackers.com/post/list-your-microsaas-ai-tool-at-saasbaba-aabab84a8e",
+      "title": "Founder's Indie Hackers post: free directory for MicroSaaS and AI tools"
+    },
+    {
+      "url": "https://navifyai.com/link/saasbaba-com",
+      "title": "NavifyAI profile: free submission with a requested backlink; ~$9 to skip a 45-60 day queue"
+    },
+    {
+      "url": "https://indietion.com/posts/marketing/100-general-directories/",
+      "title": "Indietion directory list citing submit URL https://saasbaba.com/add-ai-tool/ (returned 404 at fetch time)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Submission is free but SaaSBaba reportedly asks for a backlink to saasbaba.com on your site as collaboration",
+    "Free submissions sit in a long queue (third-party sources cite 45-60 days, and one guide claims 180+ days)",
+    "A paid skip-the-queue option (~$9-19, sources disagree) promises listing within 24 hours"
+  ],
+  "requirements": [
+    "Focused on MicroSaaS and AI/generative-AI products",
+    "Submission is a question-based form ('answer a few questions about your product')",
+    "Site is JavaScript-rendered — the homepage returns an empty body to plain HTTP fetchers"
+  ],
+  "preparation": [
+    "Product name, URL, description, and category",
+    "Willingness to add a SaaSBaba backlink/badge to your site",
+    "Decision on whether to pay the queue-skip fee"
+  ],
+  "workflow": [
+    "Open https://saasbaba.com/ in a browser (JS-rendered)",
+    "Find the 'Add Your App' / submit section — the historically cited submit URL https://saasbaba.com/add-ai-tool/ returned 404 during research",
+    "Complete the product questions form",
+    "Either wait out the free queue or pay the small fee for 24-hour listing"
+  ],
+  "watchFor": [
+    "Conflicting third-party numbers: queue-skip fee quoted at both $9 and $19, queue at 45-60 vs 180+ days — verify on the live site",
+    "The reciprocal-backlink request makes the 'free' listing a link exchange",
+    "The documented submit URL (add-ai-tool) is dead — the submission path may have moved or been removed",
+    "Very low domain authority per third-party profiles — modest SEO value"
+  ],
+  "countsAsLive": "The product appears as a public listing on saasbaba.com's tool directory",
+  "unknowns": [
+    "Current working submission URL and form fields",
+    "Whether the backlink request is mandatory or optional",
+    "Actual queue length and skip-fee amount",
+    "Whether listings are dofollow (catalog note says follow; unconfirmed)"
+  ]
+}

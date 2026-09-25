@@ -1,0 +1,57 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "goodfirms.co",
+  "name": "GoodFirms",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.goodfirms.co/get-listed",
+      "title": "Get Listed page (returned 403 to fetch; referenced by help docs)"
+    },
+    {
+      "url": "https://help.goodfirms.co/how-can-my-business-get-listed-on-goodfirms/",
+      "title": "GoodFirms help: How can my business get listed on GoodFirms"
+    },
+    {
+      "url": "https://help.goodfirms.co/what-to-do-if-i-cant-find-a-suitable-service-or-industry-category-for-my-company/",
+      "title": "GoodFirms help: category selection guidance"
+    },
+    {
+      "url": "https://blastra.io/directories/good-firms/",
+      "title": "Blastra directory profile of GoodFirms: free listings + paid upgrades, accepts SaaS/software product listings"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "free",
+  "conditions": [],
+  "requirements": [
+    "B2B-oriented: company profile with services/software details; accepts software products (SaaS, AI tools, hardware) and service/agency listings",
+    "Service categories chosen at submission cannot be edited later — pick carefully",
+    "Submission goes through manual approval before the listing appears"
+  ],
+  "preparation": [
+    "Company name, website, contact details, and company description",
+    "Service categories that best match the product (irreversible choice)",
+    "Logo and portfolio/case-study material for a fuller profile",
+    "Client references that can later leave reviews (ranking factors in review quality/quantity)"
+  ],
+  "workflow": [
+    "Go to https://www.goodfirms.co/get-listed",
+    "Fill in the company details form",
+    "Choose the appropriate Service Categories — this cannot be changed later",
+    "Submit the form and await approval",
+    "After approval, encourage clients/users to leave reviews to improve ranking"
+  ],
+  "watchFor": [
+    "Category selection is permanent — the help centre explicitly warns it cannot be edited later",
+    "Paid upgrades (featured placement, enhanced profiles, research-report inclusion) are upsold but not required for a listing",
+    "Questions go to listing@goodfirms.com"
+  ],
+  "countsAsLive": "The company profile page on goodfirms.co is publicly reachable and the company appears in its chosen category listing",
+  "unknowns": [
+    "Exact form fields on the get-listed page (page returned 403 during research)",
+    "Approval timeline",
+    "Current pricing of paid upgrade tiers"
+  ]
+}

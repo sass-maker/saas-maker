@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startupfa.me",
+  "name": "Startup Fame",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://startupfa.me/pricing",
+      "title": "Startup Fame pricing — Verified (free, badge) / Highlight $19/mo / Spotlight $149/mo"
+    },
+    {
+      "url": "https://startupfa.me/dashboard",
+      "title": "Startup Fame dashboard — redirects to /login"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free 'Verified' plan requires a Startup Fame badge on your homepage, checked by their verification bot",
+    "Free listings are reviewed and published within ~7 days"
+  ],
+  "requirements": [
+    "Account required — the dashboard and submit flow sit behind /login",
+    "Homepage (not just any page) badge placement for the free plan",
+    "Startup suitable for a reviewed DR 80+ directory"
+  ],
+  "preparation": [
+    "Account credentials",
+    "Startup name, tagline, description, visuals, category",
+    "Badge HTML placed on the homepage before/with submission (bot verifies)",
+    "Decide Verified (free) vs Highlight $19/mo vs Spotlight $149/mo — paid plans skip badge and publish in <30s"
+  ],
+  "workflow": [
+    "Create an account / log in (submit CTAs route through /login?plan=Verified)",
+    "Submit the startup from the dashboard",
+    "Add the Startup Fame badge to your homepage",
+    "Verification bot checks the badge; team reviews within ~7 days",
+    "Startup gets a dedicated page with do-follow backlinks and a 'Featured' badge asset"
+  ],
+  "watchFor": [
+    "Badge must go on the HOMEPAGE specifically, and their bot verifies it — footer-only subpages may not count",
+    "Highlight/Spotlight are subscriptions, not one-time — cancel from the Promote page",
+    "Dofollow link persists only while the startup stays listed (Verified after approval, or while a paid plan is active) — no 'lifetime' claim",
+    "Positioning is quality-over-volume: they explicitly discourage bulk directory submissions"
+  ],
+  "countsAsLive": "A dedicated startup page under startupfa.me/s/<slug> listed in /startups with a dofollow outbound link.",
+  "unknowns": [
+    "Exact badge HTML/placement spec beyond 'homepage'",
+    "Submit-form fields behind login",
+    "Whether rejections happen after badge verification"
+  ]
+}

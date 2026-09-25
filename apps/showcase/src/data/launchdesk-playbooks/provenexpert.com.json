@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "provenexpert.com",
+  "name": "ProvenExpert",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "review",
+  "zeroCostRoute": "free",
+  "sources": [
+    {
+      "url": "https://www.provenexpert.com/en-us/",
+      "title": "ProvenExpert homepage — 'register a free ProvenExpert account', aggregated review profile"
+    },
+    {
+      "url": "https://www.provenexpert.com/en-us/register/",
+      "title": "ProvenExpert registration page (JS-rendered; returns minimal HTML)"
+    }
+  ],
+  "requirements": [
+    "A business or service provider — ProvenExpert aggregates customer reviews (Google, Facebook, and its own surveys) into one public profile",
+    "Registration is by email address from the homepage form"
+  ],
+  "preparation": [
+    "Business email for the free account",
+    "Company profile info: name, industry, logo, description",
+    "A plan to collect real customer reviews — the profile is populated by reviews and survey responses, not self-written content"
+  ],
+  "workflow": [
+    "Enter your email in the registration form on provenexpert.com/en-us/ ('register a free ProvenExpert account')",
+    "Complete the JS signup flow at /en-us/register/",
+    "Fill in the company profile",
+    "Send customer surveys / import existing reviews from connected platforms",
+    "Verify the public ProvenExpert profile page renders with your rating"
+  ],
+  "watchFor": [
+    "The register page is JS-rendered — headless fetches return a nearly empty document",
+    "Free vs paid plan feature split is not documented on the fetched pages (a Pricing nav item exists); review seals/widgets may be gated",
+    "ProvenExpert claims reviews are not algorithmically blocked — but fabricated self-reviews would still violate terms"
+  ],
+  "countsAsLive": "A public ProvenExpert profile page for the company showing aggregate rating/review count, reachable without login",
+  "unknowns": [
+    "Free-plan feature limits (the pricing page was not fetched in detail)",
+    "Whether free profiles are publicly indexed or require paid tier for SEO visibility",
+    "Whether profile links to the company site are dofollow"
+  ]
+}

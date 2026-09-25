@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "saasgrow.app",
+  "name": "SaaSGrow",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://saasgrow.app/pricing",
+      "title": "SaaSGrow pricing — Free (badge) / Basic $9 / Pro $9/mo"
+    },
+    {
+      "url": "https://saasgrow.app/",
+      "title": "SaaSGrow homepage — build-in-public startup leaderboard"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free listing requires embedding the SaaSGrow badge on your website",
+    "Free listing is approved only after the badge is verified on your site"
+  ],
+  "requirements": [
+    "A startup/indie project with a public website that can carry the badge (free path)",
+    "Leaderboard is activity-driven — value comes from posting build-in-public updates, not just listing"
+  ],
+  "preparation": [
+    "Product name, URL, description, logo",
+    "Badge HTML ready to deploy before submitting (free path)",
+    "Founder profile details (leaderboard rows display the founder name)",
+    "Decide Free vs Basic ($9 one-time, instant approval + dofollow, no badge) vs Pro ($9/mo, up to 10 listings, X cross-posting)"
+  ],
+  "workflow": [
+    "Open https://saasgrow.app/submit (Submit your Startup)",
+    "Pick the Free plan ('Submit Free Listing') or a paid tier",
+    "Add the SaaSGrow badge to your site (free path) and wait for verification",
+    "Once approved, publish posts/updates — they rank the leaderboard and can cross-post to Threads, Bluesky, LinkedIn, Instagram, Facebook (Basic+)"
+  ],
+  "watchFor": [
+    "Free tier does NOT include the dofollow backlink — the pricing page only grants 'DoFollow Backlink' on the $9 Basic tier and up",
+    "X cross-posting is Pro-only; Basic covers Threads/Bluesky/LinkedIn/Instagram/Facebook",
+    "FAQ inconsistency: canceling Pro is described as making new submissions cost '$5 per listing' while the Basic tier is sold at $9 — confirm at checkout",
+    "Payments via Dodo Payments"
+  ],
+  "countsAsLive": "A public startup profile page under saasgrow.app/startups, visible in 'Recently added' and eligible for the leaderboard once posts are published.",
+  "unknowns": [
+    "Badge verification mechanics (crawler vs manual)",
+    "Account/sign-in requirements for the submit flow",
+    "Whether the free listing includes any link (dofollow excluded per pricing page)"
+  ]
+}

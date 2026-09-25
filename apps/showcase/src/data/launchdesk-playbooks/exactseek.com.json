@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "exactseek.com",
+  "name": "ExactSeek",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.exactseek.com/",
+      "title": "ExactSeek homepage - search engine / web directory"
+    },
+    {
+      "url": "https://www.exactseek.com/add.html",
+      "title": "Submit Your Website to ExactSeek - free Add URL form"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free submission requires the submitted site to have proper Title and Meta Description tags",
+    "Submitter must respond to a verification email sent after Membership Signup — no response means the site is not added",
+    "Submitting implies consent to receive the free SiteProNews webmaster newsletter"
+  ],
+  "requirements": [
+    "Site must have proper Title and Meta Description tags or it will not be added",
+    "Submitter must agree to the Terms of Service (checkbox on the form)",
+    "Email verification after member signup is mandatory",
+    "A separate 'Add Local USA Listing' path exists at local.exactseek.com for US local businesses"
+  ],
+  "preparation": [
+    "Website URL with valid Title and Meta Description already in place",
+    "Submitter name and a monitored email address",
+    "Readiness to receive the SiteProNews newsletter (bundled consent)"
+  ],
+  "workflow": [
+    "Go to https://www.exactseek.com/add.html ('Add URL' in the nav)",
+    "Enter URL, name, and email; tick the Terms of Service agreement",
+    "Submit the form",
+    "Watch for the membership/verification email and respond to it — the site is not added otherwise",
+    "Optionally, US local businesses can use 'Add Local USA Listing' at local.exactseek.com"
+  ],
+  "watchFor": [
+    "The form auto-consents you to the SiteProNews newsletter — use an email you control",
+    "Missing Title/Meta Description on the target page silently disqualifies the submission",
+    "Heavy upsell environment: Featured Website Listing ($14.95/3mo top-10 exposure), Rapid Search Engine Inclusion (24h), Web Traffic Program, Video Boost — none required for the free listing",
+    "This is a general web directory/search engine, not a SaaS-specific launch — link value is modest and listing is not instant",
+    "Also listed as part of the Jayde Online network; sister services (FreeWebSubmission, SonicRun) are cross-promoted"
+  ],
+  "countsAsLive": "The submitted URL appears in ExactSeek search results (site: or keyword query returns the listing)",
+  "unknowns": [
+    "Time from verified submission to appearing in search results",
+    "Whether the directory entry links dofollow to the submitted site (catalog note says follow; not confirmed on site)",
+    "Whether the member signup requires a full account before the URL is queued"
+  ]
+}

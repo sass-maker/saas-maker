@@ -1,0 +1,54 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "webwiki.com",
+  "name": "Webwiki",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.webwiki.com/info/add-website.html",
+      "title": "Webwiki - Add Website page (returned 403 to automated fetch; content corroborated via mirrors and guides)"
+    },
+    {
+      "url": "https://abun.com/how-to-get-high-quality-backlinks-for-free-from-webwiki",
+      "title": "Abun - How to Get High-Quality Backlinks for Free from Webwiki (step-by-step)"
+    },
+    {
+      "url": "https://www.webwiki.fr/info/ajouter-un-site.html",
+      "title": "Webwiki FR - add-a-site page showing 'submission temporarily deactivated' banner"
+    },
+    {
+      "url": "https://launchpointzero.com/launchsites/web_wiki",
+      "title": "Launch Point Zero - Webwiki profile (pay to submit: false)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free website submission into Webwiki's site search engine",
+    "Website data form asks for URL plus optional title and description - if title/description are omitted the site's own meta data is used",
+    "A confirmation checkbox must be ticked before clicking 'Add Your Website'"
+  ],
+  "preparation": [
+    "Website URL",
+    "Preferred title and description (otherwise Webwiki pulls your site's meta tags)",
+    "Keywords, images, and social links for enriching the listing afterwards via 'Update Profile'"
+  ],
+  "workflow": [
+    "Go to https://www.webwiki.com/info/add-website.html ('Add Website')",
+    "Enter URL, title, and description; tick the confirmation checkbox; click 'Add Your Website'",
+    "On the confirmation screen, click the provided link to view the new listing",
+    "Click 'Update Profile' on the listing to add keywords, images, and social media links"
+  ],
+  "watchFor": [
+    "The add-website page returned HTTP 403 to automated fetches - the flow is browser-oriented",
+    "The French locale (webwiki.fr) displayed 'La soumission du site Web est temporairement désactivée' - submissions may be temporarily deactivated on some locales; verify the form actually accepts input on webwiki.com before preparing assets",
+    "Webwiki describes itself as a search engine, not a launch board - a listing may surface automatically even without submission"
+  ],
+  "countsAsLive": "A dedicated Webwiki page for the domain exists and is reachable via the link on the post-submit confirmation screen, showing title/description",
+  "unknowns": [
+    "Whether submission is currently enabled on the English site (the FR locale showed a temporary deactivation notice)",
+    "Whether listing links are dofollow on current pages",
+    "Review or moderation process, if any, after submission"
+  ]
+}

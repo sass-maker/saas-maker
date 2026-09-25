@@ -166,4 +166,27 @@ describe('SaaS Maker public source boundary', () => {
     expect(routesSource).toMatch(/path: `\/p\/\$\{product\.id\}`/);
     expect(routesSource).toMatch(/This profile is generated from reviewed public facts/);
   });
+
+  it('reuses the existing iOS identities as directory logos', async () => {
+    const [catalogSource, directoryPage, detailPage] = await Promise.all([
+      readFile(new URL('../../catalog/generated/public.json', import.meta.url), 'utf8'),
+      readShowcase('src/pages/projects.astro'),
+      readShowcase('src/pages/p/[id].astro'),
+    ]);
+    const directory = JSON.parse(catalogSource).directory as Array<{
+      id: string;
+      logoUrl?: string;
+    }>;
+
+    for (const id of ['anchor', 'calorie', 'setline', 'kith']) {
+      const project = directory.find((entry) => entry.id === id);
+      expect(project?.logoUrl).toBe(`/images/project-icons/${id}.png`);
+      const icon = await readFile(
+        new URL(`../../apps/showcase/public${project?.logoUrl}`, import.meta.url)
+      );
+      expect(icon.subarray(0, 8)).toEqual(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]));
+    }
+    expect(directoryPage).toMatch(/project\.logoUrl/);
+    expect(detailPage).toMatch(/product\.logoUrl/);
+  });
 });

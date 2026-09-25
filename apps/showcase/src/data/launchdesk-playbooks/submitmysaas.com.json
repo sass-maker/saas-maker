@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "submitmysaas.com",
+  "name": "SubmitMySaaS",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.submitmysaas.com/pricing",
+      "title": "SubmitMySaaS pricing — Free vs $19 Premium weekly launches"
+    },
+    {
+      "url": "https://www.submitmysaas.com/projects/submit",
+      "title": "Submit page — redirects to sign-in (Google, GitHub, email)"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Only 10 free launch slots per week; free launches queue to an available Monday",
+    "The free tier's dofollow backlink is conditional: must finish Top 3 in the weekly ranking AND display the SubmitMySaaS badge"
+  ],
+  "requirements": [
+    "Account required — sign-in via Google, GitHub, or email/password",
+    "Weekly cohort launches every Monday at 8:00 AM UTC — all products scheduled for that week go live together"
+  ],
+  "preparation": [
+    "Account credentials (Google/GitHub/email)",
+    "Product name, tagline, description, logo, category",
+    "Badge HTML for the free path, plus a plan to compete for Top 3 weekly votes if you want the dofollow link"
+  ],
+  "workflow": [
+    "Sign in at submitmysaas.com",
+    "Open /projects/submit and choose Free or Premium ($19/launch)",
+    "Pick an available Monday launch slot",
+    "Product goes live in the Monday 8:00 AM UTC cohort",
+    "On free: display the badge and rank Top 3 that week to earn the dofollow backlink"
+  ],
+  "watchFor": [
+    "Free dofollow is a ranking prize, not included by default — Top 3 weekly AND badge required",
+    "Premium ($19) skips the weekly slot cap, gets priority placement, and guarantees the dofollow link",
+    "Separate 'Sponsors' and 'Attribution Badges' pages — sponsorship is an additional paid surface",
+    "Submit page is a full auth wall — form fields not publicly visible"
+  ],
+  "countsAsLive": "The product appears on the weekly launch board (Monday 8AM UTC cohort) and in trending/categories with a detail page.",
+  "unknowns": [
+    "Submit-form fields behind authentication",
+    "How far out free Monday slots are booked",
+    "Whether non-Top-3 free listings retain any link (nofollow or none)"
+  ]
+}

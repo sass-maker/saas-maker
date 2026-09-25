@@ -1,0 +1,63 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aiagentsdirectory.com",
+  "name": "AI Agents Directory",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free $0/forever listing requires placing the AI Agents Directory badge with a backlink on your site; the listing goes live permanently only after badge verification.",
+    "Free tier includes a dedicated product page and 1 category placement, but the outbound link is no-follow."
+  ],
+  "requirements": [
+    "Product must be an AI agent or agent-related tool; the directory is organized by categories such as Coding, Sales, Marketing, SEO, Video, Voice.",
+    "Submission must fit one of the directory's categories (free tier gets 1 category placement).",
+    "Site describes itself as a curated marketplace with verified listings — expect editorial review before publication."
+  ],
+  "preparation": [
+    "Agent name, website URL, description, use cases, and pricing model (the submit form asks for agent name, what it does, use cases, pricing, and link).",
+    "Logo/product imagery for the dedicated product page.",
+    "Decide free vs paid first: free requires the AAD badge already live on your site for verification; Fast Track $19 skips the badge and review wait.",
+    "An email for contact (hello@aiagentsdirectory.com is their listed contact)."
+  ],
+  "workflow": [
+    "Open https://aiagentsdirectory.com/submit-agent (linked as 'Submit' in nav and footer).",
+    "Fill the submission form: agent name, what it does, use cases, pricing, and link.",
+    "If on the free plan, embed the AAD badge with backlink on your site so it can be verified.",
+    "For paid routes, choose a plan on /sponsor (Fast Track $19 one-time; featuring packages with newsletter/social promotion) and pay via Stripe.",
+    "Wait for editorial review; paid plans advertise skipping the review wait."
+  ],
+  "watchFor": [
+    "The /submit-agent page is JS-rendered — form fields were not visible to a plain HTML fetch; expect a client-side form.",
+    "Free listing's outbound link is explicitly no-follow; do-follow requires a paid plan.",
+    "Badge must remain on your site for the free listing to stay live (badge verification is the gate).",
+    "The /sponsor page shows upsells: 'Skip badge requirement', 'Skip review wait time', 5-day website featuring, newsletter promotions, social promotion.",
+    "Header shows 'Advertise · 6/6 left' — limited sponsor slots is a scarcity upsell, not a requirement."
+  ],
+  "countsAsLive": "A dedicated agent profile page is publicly reachable under the directory (e.g. under /agents or /category/<cat>) and the listing appears in browse/search without a pending state.",
+  "unknowns": [
+    "Exact field list and validation rules of the submit form (JS-rendered; not observable without a browser).",
+    "Whether an account is required to submit.",
+    "Review duration for free submissions (only that paid 'skips review wait time' is stated).",
+    "Full price list of sponsor/featuring packages beyond the $19 Fast Track."
+  ],
+  "sources": [
+    {
+      "url": "https://aiagentsdirectory.com/submit-agent",
+      "title": "Submit AI Agent — AI Agents Directory"
+    },
+    {
+      "url": "https://aiagentsdirectory.com/sponsor",
+      "title": "Promote your AI Agent — sponsor/pricing page listing free (badge required), Fast Track $19, and featuring packages"
+    },
+    {
+      "url": "https://aiagentsdirectory.com/",
+      "title": "AI Agents Directory homepage — curated AI agent marketplace"
+    },
+    {
+      "url": "https://wheretosubmit.org/sites/aiagentsdirectory-com",
+      "title": "How to submit to AI Agents Directory (third-party guide)"
+    }
+  ]
+}

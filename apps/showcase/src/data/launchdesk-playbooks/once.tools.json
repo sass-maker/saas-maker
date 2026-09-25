@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "once.tools",
+  "name": "Once.tools",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://once.tools/",
+      "title": "Once.tools homepage - 'Your guide to software you only have to pay for once', 172 tools across 14 categories"
+    },
+    {
+      "url": "https://once.tools/submit",
+      "title": "Submit a tool - simple open form (name, email, tool name, URL, tagline, description, price, video)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Niche directory: the site curates 'software you only have to pay for once' — a subscription-priced SaaS is a poor fit; a one-time-payment or lifetime-deal product is the intended submission",
+    "Submission is an open public form — no account or payment fields are shown",
+    "Listed across 14 categories (AI, Collaboration, Design, Developer Tools, E-Commerce, Form Builders, Marketing, Productivity, Screenshots, SEO, Social Media, Task Management, Video, Writing)"
+  ],
+  "preparation": [
+    "Your name and email",
+    "Tool name, URL, tagline, and description",
+    "Price field — prepare the one-time price (this directory's whole premise)",
+    "Optional: YouTube demo video link",
+    "One of the 14 fixed categories"
+  ],
+  "workflow": [
+    "Go to https://once.tools/submit ('Submit' in the header)",
+    "Fill 'About you': name and email",
+    "Fill 'About the tool': name, URL, tagline, description, price, optional YouTube video",
+    "Submit the form — editorial review follows (no timeline published)"
+  ],
+  "watchFor": [
+    "Fit matters: the directory's premise is pay-once software — a monthly-subscription product may be declined or mislead the audience",
+    "No account system — updates presumably go through the same form or email",
+    "No published review timeline or notification promise",
+    "Small curated directory (~172 tools) — acceptance is selective, not a bulk-SEO play"
+  ],
+  "countsAsLive": "The tool appears in the once.tools grid and its category page with logo, name, and tagline",
+  "unknowns": [
+    "Review timeline and whether approval/rejection is emailed",
+    "Whether the listing link is dofollow (catalog note says follow; unconfirmed)",
+    "Whether purely-free tools qualify alongside pay-once ones"
+  ]
+}

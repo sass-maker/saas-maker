@@ -1,0 +1,36 @@
+{
+  "$schema": "fleet.launchdesk-playbook.schema.v1",
+  "description": "Per-platform submission playbook for the launchdesk destination catalog. One JSON file per destination, named <registrable-domain>.json (e.g. producthunt.com.json). All claims must come from public pages cited in sources[]; never assert an observed submission. Grade vocabulary: 'researched' = assembled from public docs/submission pages read on `retrieved`; 'observed' = a real submission run was witnessed (only set by the owning pipeline, never by research agents).",
+  "required": [
+    "$schema",
+    "domain",
+    "name",
+    "grade",
+    "retrieved",
+    "sources",
+    "zeroCostRoute",
+    "requirements",
+    "preparation",
+    "workflow",
+    "watchFor",
+    "countsAsLive",
+    "unknowns"
+  ],
+  "fields": {
+    "$schema": "literal 'fleet.launchdesk-playbook.v1'",
+    "domain": "registrable domain, lowercase, no www",
+    "name": "display name",
+    "grade": "'researched' | 'observed'",
+    "retrieved": "ISO date the sources were read",
+    "sources": [{ "url": "https://...", "title": "page title or description" }],
+    "category": "launch-board | directory | ai-directory | review | community | profile | other",
+    "zeroCostRoute": "free | conditional | paid | unknown — conditional means the free path has a gate (badge, DR floor, account age, queue)",
+    "conditions": ["only when zeroCostRoute=conditional: what the free path requires"],
+    "requirements": ["eligibility/fit rules found on the site (B2B only, working product, etc.)"],
+    "preparation": ["assets/facts to gather before opening the form"],
+    "workflow": ["ordered submission steps an agent can follow"],
+    "watchFor": ["form quirks, upsells, traps, honesty constraints"],
+    "countsAsLive": "the observable condition proving the listing is live (not draft/scheduled)",
+    "unknowns": ["things public pages did not answer — keep honest, never guess"]
+  }
+}

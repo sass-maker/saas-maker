@@ -1,0 +1,56 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "newaiforyou.com",
+  "name": "NewAIForYou",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    { "url": "https://newaiforyou.com/", "title": "Homepage — AI tools directory updated daily" },
+    {
+      "url": "https://newaiforyou.com/submit",
+      "title": "Submit your AI Tool — minimal form (Tool Name, Tool Website URL) plus FAQ describing free badge-code route"
+    },
+    {
+      "url": "https://newaiforyou.com/pricing",
+      "title": "Pricing — Premium Plan $49.9 (marked down from a struck 'Free' label), dofollow backlink, permanent listing"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free submission requires copying a code/badge snippet from the submission page and adding it to your website's homepage (per the submit FAQ)",
+    "Only AI-related tools are accepted — 'Currently, we only accept AI-related tools'",
+    "Review takes 'typically 1-2 business days' before publication"
+  ],
+  "requirements": [
+    "Tool must be AI-related with a valid website URL",
+    "One tool per submission — 'you can submit one ai at a time'",
+    "Free route requires embedding their code on your homepage (badge/link exchange)",
+    "Pricing page lists a single Premium plan at $49.9 promising dofollow backlink, multilingual introduction, permanent listing"
+  ],
+  "preparation": [
+    "Tool name and website URL — that is all the public form asks for",
+    "Ability to edit your homepage HTML to paste their badge/code for the free route",
+    "Decide free badge route vs $49.9 Premium (traffic, dofollow link, multilingual writeup)"
+  ],
+  "workflow": [
+    "Open https://newaiforyou.com/submit",
+    "For free submission: copy the provided code and place it on your site's homepage first",
+    "Fill Tool Name and Tool Website URL, click Submit",
+    "Wait for review — stated 1–2 business days",
+    "To edit a listing later, contact the support team — there is no self-serve editing"
+  ],
+  "watchFor": [
+    "Pricing page shows 'Free $49.9' with a struck-through label and 'Save $49.9 today!' — perpetual-sale framing; the paid plan is $49.9, not free",
+    "Free path is a badge/link exchange — the badge must live on your homepage, and removal may cost the listing",
+    "No self-serve editing: changes go through support",
+    "No submission statistics are provided ('we do not provide statistics for submitted tools')",
+    "Site is part of a footer-linked family of AI directories (Woy AI, Toolsapp, Tap4 AI, DokeyAI, AIStage, etc.)"
+  ],
+  "countsAsLive": "Tool appears on a public detail page under newaiforyou.com/ai/<slug> and in the 'Just Launched' or category listings",
+  "unknowns": [
+    "Whether account login is required to submit (a Log In button exists but the public form only asks name + URL)",
+    "Whether the badge code is verified automatically or manually",
+    "Rejection criteria and whether submitters are notified"
+  ]
+}

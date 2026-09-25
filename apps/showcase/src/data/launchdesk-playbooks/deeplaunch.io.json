@@ -1,0 +1,60 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "deeplaunch.io",
+  "name": "DeepLaunch",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free listing requires adding a dofollow backlink to deeplaunch.io in your website footer.",
+    "Free submissions are reviewed within 2 days (48h); paid submissions get immediate review."
+  ],
+  "requirements": [
+    "Digital tools welcomed broadly: AI image generators, video tools, chatbots, productivity apps, SaaS, developer tools, design apps — 'functional, accessible, genuine value'.",
+    "Sign-in required: Google or GitHub OAuth only (no email option shown on /login).",
+    "Two-step form: (1) Tool Information, (2) Submission Type.",
+    "Hard form limits: tagline ≤160 chars; description min 500 / max 3000 chars in markdown; logo SVG/WEBP/PNG/JPG ≤500kb; up to 4 screenshots <5MB each; max 3 categories."
+  ],
+  "preparation": [
+    "Google or GitHub account for sign-in.",
+    "Tool URL, name, tagline (≤160 chars), markdown description (≥500 chars).",
+    "Square logo file ≤500kb; up to 4 screenshots <5MB each.",
+    "Up to 3 categories; pricing model; platforms.",
+    "Optional: discount code, founded year, YouTube demo, founder Twitter, affiliate program flag.",
+    "Footer backlink to deeplaunch.io for the free lane.",
+    "Plan choice: Free / One-Time Pro $9.90 / Monthly Promotion $5 first month / Featured $29.90/mo / Ultimate $199/yr."
+  ],
+  "workflow": [
+    "Sign in via Google or GitHub at deeplaunch.io/login.",
+    "Open /submit and complete Step 1 (Tool Information): URL, name, tagline, markdown description, logo upload, screenshots, ≤3 categories, pricing model, platforms, optional fields.",
+    "Step 2: choose Submission Type — Free (footer backlink, 48h review) or a paid plan.",
+    "Free: place the dofollow backlink in your site footer and wait ~2 days.",
+    "Post-approval: listings editable from the dashboard (changes re-reviewed)."
+  ],
+  "watchFor": [
+    "Description minimum of 500 characters in markdown — short blurbs are rejected by the form.",
+    "Only Google/GitHub OAuth — no email/password registration.",
+    "Free tier explicitly asks for a dofollow footer backlink; paid tiers say 'no badge/backlink required'.",
+    "Aggressive discount strikethroughs ($19.90→$9.90 etc.) and a 'Most Popular' badge on Monthly Promotion — a subscription that keeps the tool refreshed to top monthly; cancelling reverts to basic listing.",
+    "Featured Listing bundles '10 SEO-friendly blog posts per month' — content-farm upsell.",
+    "14-day money-back guarantee on paid plans."
+  ],
+  "countsAsLive": "The tool has a public listing page on deeplaunch.io, visible in directory browsing and (per plan) highlighted/featured surfaces.",
+  "unknowns": [
+    "Whether footer-backlink removal is re-checked post-approval.",
+    "Exact free-lane link type (the pricing copy implies the free listing itself is a 'basic directory listing'; dofollow status of the outbound link unstated).",
+    "Whether the strikethrough prices are permanent."
+  ],
+  "sources": [
+    {
+      "url": "https://deeplaunch.io/submit",
+      "title": "Submit form — field limits, upload constraints, category caps, FAQ"
+    },
+    {
+      "url": "https://deeplaunch.io/pricing",
+      "title": "Pricing — Free (footer backlink, 48h), One-Time Pro $9.90, Monthly $5 first month, Featured $29.90/mo, Ultimate $199/yr"
+    },
+    { "url": "https://deeplaunch.io/login", "title": "Login — Google/GitHub OAuth only" }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "whattheai.tech",
+  "name": "WhatTheAI",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    { "url": "https://whattheai.tech/submit", "title": "Submit Tool - WhatTheAI" },
+    {
+      "url": "https://whattheai.tech/advertise",
+      "title": "Advertise Your AI Tool - sponsorships & featured listings"
+    },
+    {
+      "url": "https://www.submission.directory/site/whattheai",
+      "title": "WhatTheAI on Submission.Directory"
+    },
+    {
+      "url": "https://firsto.co/sites/whattheai",
+      "title": "WhatTheAI entry on Firsto (third-party metadata)"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "AI tools only - huge taxonomy (34k+ tools, 278 categories per third-party listing)",
+    "Account required to submit and manage listings (per third-party sources; submit page itself is JS-rendered)",
+    "Manual review process; freemium model - free standard listing, paid featured placement via /advertise"
+  ],
+  "preparation": [
+    "Tool name, URL, description, category from their taxonomy, and logo/screenshots",
+    "Create an account before/at submission",
+    "Have the marketing copy reflect real AI functionality"
+  ],
+  "workflow": [
+    "Open https://whattheai.tech/submit",
+    "Create/sign in to an account",
+    "Complete the tool submission form (name, link, description, category)",
+    "Wait for manual approval; paid featured options live under /advertise"
+  ],
+  "watchFor": [
+    "The /submit page did not render its form to a plain fetch (JS app) - use a browser",
+    "Dofollow status of free links is not disclosed; third-party catalogs disagree",
+    "Featured/paid placement is a separate product - do not confuse advertising checkout with the free submission",
+    "Approval time is unspecified; allow for manual review delays"
+  ],
+  "countsAsLive": "The tool has a public /tools/<slug> page on whattheai.tech reachable from its category listing.",
+  "unknowns": [
+    "Exact form fields and whether submission is gated differently post-login",
+    "Review turnaround",
+    "Whether free listings are dofollow",
+    "Pricing details of the featured options (advertise page exists but prices unverified)"
+  ]
+}

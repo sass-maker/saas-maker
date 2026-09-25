@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "thesaasdir.com",
+  "name": "TheSaaSDir",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://thesaasdir.com/",
+      "title": "TheSaaSDir homepage — curated SaaS/AI directory, 300+ products, submit offers"
+    },
+    {
+      "url": "https://thedevtoolsdir.com/submit/",
+      "title": "Sister site submit form — identical 4-step flow incl. badge verification and plan tiers"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free submission is a badge exchange — embed their dofollow badge on your site (the sister site's identical flow verifies the badge inside the submit form)"
+  ],
+  "requirements": [
+    "SaaS/AI products — categories include AI, NoCode, DevTools, API, CRM, Marketing, Finance, etc.",
+    "No account needed — 'Submit for free with a badge exchange ... No account needed' per the homepage",
+    "Up to 3 categories per product (per the sister form)"
+  ],
+  "preparation": [
+    "Product URL (the form auto-fills details from it)",
+    "Name, tagline, description, screenshot, tags, contact email",
+    "Badge HTML deployed on your site before submitting (verification is part of the flow)"
+  ],
+  "workflow": [
+    "Open https://thesaasdir.com/submit/",
+    "Enter the product URL and let auto-fill populate details",
+    "Confirm product details, categories and email",
+    "Choose Free / Get Featured $19 / Multiple Listings $29",
+    "Free: embed badge, verify, submit; paid tiers skip the badge"
+  ],
+  "watchFor": [
+    "Multiple Listings ($29) publishes on BOTH TheSaaSDir and TheAIToolsDir for one price — different sibling pairing than TheDevToolsDir's bundle",
+    "Badge link must be dofollow for verification (same badge pattern as thedevtoolsdir.com)",
+    "Same operator runs TheDevToolsDir — don't pay for both single listings if the $29 dual option covers your target",
+    "Expect a honeypot field in the form (sister form has 'Leave this field empty')"
+  ],
+  "countsAsLive": "A public product page at thesaasdir.com/product/<slug>/ appearing under its categories.",
+  "unknowns": [
+    "Exact form fields and review latency — the submit page wasn't fetched directly (sister site's form used as reference)",
+    "Whether free outbound links are dofollow before/without badge verification",
+    "Whether paid plans undergo review"
+  ]
+}

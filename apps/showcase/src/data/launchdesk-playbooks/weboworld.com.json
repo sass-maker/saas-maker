@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "weboworld.com",
+  "name": "Weboworld",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    { "url": "https://www.weboworld.com/", "title": "Weboworld Business Directory homepage" },
+    {
+      "url": "https://weboworld.com/user/register",
+      "title": "Weboworld 'Create an Account' registration page (Get Listed Today link)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "General business directory — listings organized by category and city/location (not software-specific)",
+    "Account registration required before creating a listing (simple registration process)",
+    "Site claims 'instant approvals' for listings",
+    "Listing supports NAP (Name, Address, Phone) local-SEO fields"
+  ],
+  "preparation": [
+    "Account email and password for registration",
+    "Business name and logo",
+    "Address (with map integration) — a real or plausible locality, since listings are filed under state/city paths",
+    "Phone number and email ID",
+    "Short and long business descriptions",
+    "Website URL and social profile links",
+    "Photos/videos and business hours"
+  ],
+  "workflow": [
+    "Go to https://weboworld.com/user/register ('Get Listed Today' in the nav) and create an account",
+    "Sign in and create a business listing: name, logo, address, phone, email, descriptions, website URL, social links, media, hours",
+    "Pick the category (e.g. 'Computer and IT Services' or 'Advertising and Media' for software/consulting) and location",
+    "Submit — the site advertises instant approvals",
+    "Optionally choose the paid featured-listing option for prominent placement"
+  ],
+  "watchFor": [
+    "Registration form is JS-rendered — the fetched HTML shows no input fields",
+    "Featured listings are a paid upgrade; standard listing is free",
+    "Site disclaimer: listings are 'not verified or guaranteed' — low editorial bar, so the link value is mostly NAP/citation",
+    "Footer sells 'Your Link Here' sitewide link slots — SEO-link-farm signals; keep expectations modest",
+    "Operator is India-based (Pune) with US/India listings mixed — choose location fields honestly"
+  ],
+  "countsAsLive": "The business has a public listing page under weboworld.com/listing/<state>/<city>/<category>/<slug> reachable without login",
+  "unknowns": [
+    "Exact listing-form fields (behind login)",
+    "Whether free listings carry a dofollow website link (catalog note says follow; unconfirmed)",
+    "Pricing of the featured-listing upgrade"
+  ]
+}

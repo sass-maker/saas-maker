@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "findmyaitool.com",
+  "name": "Find My AI Tool",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://findmyaitool.com/submit-tool",
+      "title": "Submit AI Tool — plans, FAQ, and pay-first flow"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "AI tools only; every submission is reviewed by the team before going live",
+    "Payment comes first: 'Choose a listing plan and complete the payment. You will then receive an email with a link to submit your AI tool's details.'",
+    "Full refund promised if the tool does not pass listing criteria",
+    "Plans: Basic $79.99 (permanent listing), Featured $99.99, Standard $149.99, Premium $499.99/mo-style exposure package"
+  ],
+  "preparation": [
+    "AI tool name, URL, description, logo",
+    "Payment method for chosen plan",
+    "Email inbox access — the submission-details link arrives by email after payment"
+  ],
+  "workflow": [
+    "Open https://findmyaitool.com/submit-tool",
+    "Choose a plan (Basic $79.99 / Featured $99.99 / Standard $149.99 / Premium $499.99) and pay",
+    "Log in when prompted (login wall appears around plan selection)",
+    "Open the emailed submission link and enter tool details",
+    "Team reviews; you are notified by email when the tool is live"
+  ],
+  "watchFor": [
+    "No free tier at all — even the Basic permanent listing is $79.99",
+    "Sponsored/Featured plans cannot be purchased before a Basic or Standard submission exists ('Submission Required' notices)",
+    "Premium plan is marketed as limited to 10 companies",
+    "Update requests go to info@findmyaitool.com with subject 'Update listing – [Tool Name]'"
+  ],
+  "countsAsLive": "AI tool page exists on findmyaitool.com and the tool appears in its category",
+  "unknowns": [
+    "Whether paid placements expire and need renewal",
+    "Exact listing criteria used in review"
+  ]
+}

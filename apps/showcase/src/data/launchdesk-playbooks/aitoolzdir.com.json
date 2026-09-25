@@ -1,0 +1,56 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aitoolzdir.com",
+  "name": "AI Toolz Dir",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free $0 listing requires a backlink on your site: <a href=\"https://www.aitoolzdir.com\" target=\"_blank\">AI Toolz Dir</a> — add it before submitting.",
+    "Free listings are listed within 48 hours after manual review; the listing stays permanent only as long as the backlink remains on your site."
+  ],
+  "requirements": [
+    "AI tools; categories include Text Generation, Image Generation, Audio Generation, Video Generation, Chat Bots, Agents, Copilots, Free Tools.",
+    "All listings are manually reviewed; you get a confirmation email once approved.",
+    "Logo must be a direct link to a square image."
+  ],
+  "preparation": [
+    "Tool Name and Tool URL.",
+    "Logo URL — direct link to a square image.",
+    "Category selection.",
+    "Short Description (max 200 chars) and Full Description (max 500 chars).",
+    "Your email for the approval notification.",
+    "For the free lane: the specified anchor link already on your site; for paid: $25 one-time (no backlink, listed within 24h)."
+  ],
+  "workflow": [
+    "Open https://www.aitoolzdir.com/submit.",
+    "Fill Tool Name, Tool URL, Logo URL, Category, Short Description (0/200), Full Description (0/500), and Your Email.",
+    "Choose 'Get listed for free' (backlink required, ~48h) or 'Get listed for $25' (one-time, ~24h, no backlink).",
+    "Free: confirm the anchor link is live on your site before submitting.",
+    "Wait for the manual review and approval confirmation email."
+  ],
+  "watchFor": [
+    "Free listing is permanently conditional — 'Listing stays permanent as long as the backlink remains on your site.'",
+    "Both tiers advertise a 'DR 63 do-follow backlink'; the free link's persistence depends on your badge staying up.",
+    "Character limits are tight: 200-char short description and 500-char full description.",
+    "Logo must be a hosted square image URL — have one ready; there is no upload widget described.",
+    "Paid 'listed within 24 hours' vs free 'within 48 hours' — a mild queue nudge."
+  ],
+  "countsAsLive": "The tool has a public detail page under aitoolzdir.com/toolz/<slug> (or category listing) and you received the approval confirmation email.",
+  "unknowns": [
+    "Whether an account is required (the form showed email capture but no visible login gate).",
+    "How often the reciprocal backlink is re-checked.",
+    "What happens to the listing if the tool is later discontinued."
+  ],
+  "sources": [
+    {
+      "url": "https://www.aitoolzdir.com/submit",
+      "title": "Submit AI Tool — free (backlink required, 48h) vs $25 one-time (24h), form fields listed"
+    },
+    {
+      "url": "https://www.aitoolzdir.com/",
+      "title": "AI Toolz Dir homepage — DR 63 do-follow directory"
+    }
+  ]
+}

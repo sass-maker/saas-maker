@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "webrazzi.com",
+  "name": "Webrazzi",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://webrazzi.com/en/startup-form/",
+      "title": "Webrazzi - Pitch Your Startup form page"
+    },
+    {
+      "url": "https://webrazzi.com/en/contact/",
+      "title": "Webrazzi - Contact page"
+    },
+    {
+      "url": "https://webrazzi.com/en/",
+      "title": "Webrazzi English edition homepage (Turkish tech/startup media)"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "This is an editorial pitch, not a guaranteed listing: 'If you would like your startup to be featured on Webrazzi, you can fill out this form'",
+    "The form is explicitly 'used for new startup review only' - news tips about an already-covered startup go to the authors by email instead",
+    "Webrazzi is a Turkish tech media outlet with an English edition; Turkish-language page equivalent exists at /girisim-formu"
+  ],
+  "preparation": [
+    "Startup name, website, and a concise pitch suitable for editorial review",
+    "Founder/contact details and any traction metrics the form asks for",
+    "Have a Turkish-friendly angle or regional relevance ready - Webrazzi's core audience is the Turkish/EMEA startup ecosystem",
+    "For news (not first-time review): use the editorial contact email shown on the form page instead"
+  ],
+  "workflow": [
+    "Open https://webrazzi.com/en/startup-form/ ('Pitch Your Startup')",
+    "Wait for the embedded form to load - the page renders 'Form yükleniyor...' (Turkish for 'form loading') while the form iframe/JS initializes",
+    "Complete and submit the startup review form",
+    "If pitching news about an existing startup rather than a first review, email the editorial contact instead (address on the form page, Cloudflare-obfuscated)"
+  ],
+  "watchFor": [
+    "The form body is JS-loaded ('Form yükleniyor...') - a non-JS fetch shows no fields; use a real browser",
+    "Submitting through this form does NOT guarantee coverage - it enters an editorial review queue",
+    "Do not use this form for press-release-style news; the page routes those to a different contact",
+    "No paid option is advertised on the form page; advertising enquiries go through /en/advertise/"
+  ],
+  "countsAsLive": "An editorial article or startup profile about the company is published on webrazzi.com (news or startups section) - there is no self-serve listing page",
+  "unknowns": [
+    "Exact form fields (rendered by JS and not publicly inspectable without running the page)",
+    "Editorial response time and acceptance rate",
+    "Whether an English-language pitch is acceptable or Turkish is preferred"
+  ]
+}

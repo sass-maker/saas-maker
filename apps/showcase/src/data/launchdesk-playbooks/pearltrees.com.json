@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "pearltrees.com",
+  "name": "Pearltrees",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "community",
+  "zeroCostRoute": "free",
+  "sources": [
+    {
+      "url": "https://www.pearltrees.com/",
+      "title": "Pearltrees homepage — 'Create your account', Facebook/X/Google signup, 'It's quick and it's free'"
+    },
+    {
+      "url": "https://www.pearltrees.com/s/register",
+      "title": "Batched register URL — returns 'Sorry, this page no longer exists'; signup happens from the homepage form"
+    }
+  ],
+  "requirements": [
+    "A free account (email or Facebook/X/Google)",
+    "Pearltrees is a curation platform — the 'listing' is a public collection ('pearltree') containing a pearl (link) to your product"
+  ],
+  "preparation": [
+    "Account credentials",
+    "Product URL and a title/description for the pearl",
+    "A themed collection name related to your product's niche"
+  ],
+  "workflow": [
+    "Create an account from the pearltrees.com homepage form (the /s/register deep link is dead)",
+    "Create a collection and add your product URL as a pearl with title/description",
+    "Keep the collection public so it appears in Pearltrees' public pages/search",
+    "Verify the collection URL renders logged-out"
+  ],
+  "watchFor": [
+    "The register deep link in the batch (pearltrees.com/s/register) is dead — go through the homepage signup",
+    "Premium and Education tiers exist; the free tier is sufficient for a public collection",
+    "Low-activity curation platforms provide modest SEO value — don't expect review-queue style exposure"
+  ],
+  "countsAsLive": "A public Pearltrees collection containing the product pearl, reachable at its public URL without login",
+  "unknowns": [
+    "Whether pearl links are dofollow",
+    "Whether public collections are indexed/discoverable without engagement"
+  ]
+}

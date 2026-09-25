@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "peerpush.com",
+  "name": "PeerPush",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://peerpush.com/",
+      "title": "PeerPush homepage + FAQ — free queue, paid instant-publish tiers, structured data for AI discovery"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free submissions join a publishing queue (no stated wait length); paid plans publish instantly",
+    "Account required to submit"
+  ],
+  "requirements": [
+    "Free account creation",
+    "Structured product data model: use cases, audiences, platforms, pricing, alternatives — fill these for AI-search visibility",
+    "Community-engagement scoring (PeerPush score from upvotes/comments/shares/mutual support) drives directory visibility"
+  ],
+  "preparation": [
+    "URL for AI auto-fill of product details (or manual entry)",
+    "Use cases, target audiences, platforms (Web/iOS/Android/MCP), pricing, alternatives, screenshots, description",
+    "Plan choice: Free queue / Basic $39 instant publish / Boosted $89 (7-day promotion, 20k+ impressions) / Max-Boosted $229 (30-day, 100k+ impressions)"
+  ],
+  "workflow": [
+    "Create a free account",
+    "Click 'Submit Your Product' — provide URL for AI auto-fill or enter details manually",
+    "Complete structured fields (use cases, audiences, platforms, pricing, alternatives, screenshots)",
+    "Free: wait in the publishing queue; Paid: publish instantly",
+    "Earn PeerPush score via engagement to compete for Product of Day/Week/Month Hall of Fame"
+  ],
+  "watchFor": [
+    "Free queue length is unstated — paid Basic ($39) is the only documented instant route",
+    "Boosted/Max-Boosted are promotion packages (impressions), not just listing upgrades",
+    "Strong agent surface: MCP server and public API exist for AI integration",
+    "'Submit to 100 directories' banner links a separate done-for-you submission service — optional upsell",
+    "Site advertises 10.8M AI-assistant reads/30d and 1.08M monthly visitors — self-reported"
+  ],
+  "countsAsLive": "Product page live in the PeerPush directory (searchable via category/use-case browse), accruing upvotes/comments and PeerPush score",
+  "unknowns": [
+    "Free queue duration",
+    "Whether free listings include a dofollow link",
+    "Manual review criteria before publishing"
+  ]
+}

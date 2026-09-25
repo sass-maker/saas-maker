@@ -1,0 +1,59 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "financesonline.com",
+  "name": "FinancesOnline",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://financesonline.com/",
+      "title": "FinancesOnline homepage - B2B software review platform"
+    },
+    {
+      "url": "https://financesonline.com/add-product/",
+      "title": "Add Your B2B or SaaS Product To Our Software Review Platform"
+    },
+    {
+      "url": "https://www.applauncher.io/review-platform/finances-online",
+      "title": "App Launcher third-party profile describing FinancesOnline submission (free to submit)"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Listing requires editorial acceptance into a B2B software category; the product must be a B2B/SaaS or financial product",
+    "The add-product page exposes a vendor listing form that requires JavaScript; no public pricing for the base listing is shown on the page",
+    "Third-party directory profiles describe the submission as free with paid upgrades, but FinancesOnline's own page does not confirm a free tier"
+  ],
+  "requirements": [
+    "Product must fit one of the B2B software categories (CRM, help desk, accounting, project management, marketing software, etc.) — this is a B2B/SaaS review platform, not a general directory",
+    "Platform positions itself around expert reviews plus real user reviews; a listing implies readiness for public user ratings",
+    "The listing form on /add-product/ requires JavaScript and could not be inspected from static HTML"
+  ],
+  "preparation": [
+    "Product name, vendor/company details, and product website URL",
+    "Category selection from the FinancesOnline taxonomy",
+    "Product description, key features, and pricing details",
+    "Logo and product screenshots (standard vendor-kit assets; exact specs not published on the page)",
+    "Contact details for follow-up from their review/marketing team"
+  ],
+  "workflow": [
+    "Go to https://financesonline.com/add-product/ (linked as 'GET LISTED' in the site header)",
+    "Complete the 'Create a Listing for Your Product' form (JavaScript-rendered; use a real browser)",
+    "Submit and wait for the FinancesOnline team to review and create the product profile",
+    "Expect follow-up contact — vendor testimonials describe an assigned account manager and paid marketing cooperation"
+  ],
+  "watchFor": [
+    "The platform's business model is paid B2B marketing — expect outreach pitching premium placement, PPC-style lead programs, and review acceleration after a free listing request",
+    "The form is JS-gated: plain HTML fetches show 'JavaScript is required for this content' instead of fields",
+    "There is also a /write-for-us/ guest-post channel — do not confuse it with product listing",
+    "A listing subjects the product to public expert scoring and user reviews that are hard to remove later"
+  ],
+  "countsAsLive": "A public product review page exists under reviews.financesonline.com or the product appears in its category listing with a score and 'Visit Website' link",
+  "unknowns": [
+    "Exact fields in the JS-rendered listing form",
+    "Whether a genuinely free permanent listing exists or all listings route into paid vendor programs",
+    "Review turnaround time and rejection criteria",
+    "Whether the outbound link is dofollow (catalog note says follow; not confirmed on site)"
+  ]
+}

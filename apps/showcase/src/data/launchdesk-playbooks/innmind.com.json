@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "innmind.com",
+  "name": "InnMind",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://innmind.com/",
+      "title": "InnMind homepage — Web3/AI startup fundraising platform with free startup profiles"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Startup profile platform oriented to Web3, crypto and AI fundraising — strongest fit for those sectors",
+    "Free tier: create a startup profile, be discoverable to investors, access free templates and perks",
+    "Core and Pro paid plans add expanded investor discovery, outreach workflow, priority support (prices shown on /pricing)"
+  ],
+  "preparation": [
+    "An account (Sign Up) on innmind.com",
+    "Investor-ready profile content: market, traction, team, round details, roadmap, token model if relevant",
+    "Pitch deck and financial materials to attach (their templates: pitch deck, SAFE + token warrant, tokenomics)"
+  ],
+  "workflow": [
+    "Sign up and choose the free plan",
+    "Create the startup profile — market, traction, team, round details",
+    "Publish so the profile is discoverable to InnMind's VC/angel user base (36K+ registered startup profiles claimed)",
+    "Optionally upgrade to Core/Pro for deeper investor discovery and outreach tools"
+  ],
+  "watchFor": [
+    "This is a fundraising platform, not a launch board — 'live' means your profile is discoverable to investors, not a public directory page with a link",
+    "Heavy upsell surface: templates, investor databases, Premium membership",
+    "Web3/AI tilt — a generic SaaS may see limited investor relevance",
+    "Investor 'Verified' badge exists for profiles confirmed through their manual process"
+  ],
+  "countsAsLive": "The startup profile is published on innmind.com and discoverable to registered investors",
+  "unknowns": [
+    "Whether the public web exposes a crawlable profile page/URL with an outbound link",
+    "Core/Pro pricing specifics (page referenced but amounts not captured)",
+    "Whether any profile data becomes public vs investor-only",
+    "Whether profiles get an outbound dofollow link"
+  ]
+}

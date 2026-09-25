@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "starterbest.com",
+  "name": "Starter Best",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    { "url": "https://starterbest.com/pricing", "title": "Starter Best pricing" },
+    { "url": "https://starterbest.com/submit", "title": "Submit page (shows login wall)" },
+    { "url": "https://starterbest.com/", "title": "Starter Best homepage" }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free plan requires a backlink to starterbest.com from your site",
+    "Free listings are queued: 'Reviewed only 5 listed every day'",
+    "Free tier offers 3 dofollow links, permanent link with 'backlink maintenance', and no customer support"
+  ],
+  "requirements": [
+    "Account required: /submit renders a login wall (email/password, Google, or GitHub via /auth/register)",
+    "Product launch/showcase directory - SaaS and indie products"
+  ],
+  "preparation": [
+    "Register an account (email, Google, or GitHub)",
+    "Product name, URL, description, logo/screenshots, category and tags",
+    "For the free plan: place a backlink to starterbest.com on your site",
+    "Paid alternatives: Pro $9.9 one-time (no backlink, featured placement, publish whenever), Sponsor $19.9/week"
+  ],
+  "workflow": [
+    "Create an account at /auth/register",
+    "Open /submit (choose plan: free / pro / sponsor)",
+    "Complete the product form and submit",
+    "Free tier: wait in the ~5-per-day review queue; keep the required backlink live"
+  ],
+  "watchFor": [
+    "Free plan's 'permanent link with backlink maintenance' implies the listing can lapse if your backlink is removed",
+    "Mkdirs-template site; the actual submit form is behind auth and its exact fields are not publicly visible",
+    "Sponsor plan is weekly recurring-style exposure, not a permanent upgrade"
+  ],
+  "countsAsLive": "The product appears under /explore (or its category/tag pages) with a public details page.",
+  "unknowns": [
+    "Exact free-tier form fields behind the login wall",
+    "How the '3 dofollow links' on the free plan are distributed",
+    "Typical real wait time given the 5-per-day review rate"
+  ]
+}

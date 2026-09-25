@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "indiehustles.com",
+  "name": "Indie Hustles",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://indiehustles.com/submit",
+      "title": "Submit Your Product — form with Free $0 (8-10 week queue) vs Priority $9 (48h)"
+    },
+    { "url": "https://indiehustles.com/", "title": "Homepage — indie alternatives to popular SaaS" }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free tier exists but carries a stated 8-10 week review queue",
+    "Priority review within 48 hours costs $9"
+  ],
+  "requirements": [
+    "Product should be an indie-built alternative to a popular SaaS — listings are displayed as 'X alternative to [popular tools]'",
+    "Categories: AI, Analytics, CRM, Design Tools, Dev Tools, Email, Forms, Marketing, Productivity, Project Management, Website Builder, Other"
+  ],
+  "preparation": [
+    "Submitter name, email, and Twitter/X handle (shown on the product's founder card)",
+    "Product name, website URL, category, tagline",
+    "Comma-separated list of popular alternatives the product replaces (e.g. 'Mailchimp, Sendgrid, Brevo')",
+    "Logo (products display with a logo on cards)"
+  ],
+  "workflow": [
+    "Open https://indiehustles.com/submit",
+    "Fill Your Information (name, email, X handle) and Product Information (name, website, category, tagline, popular alternatives)",
+    "Choose plan: Free $0 (8-10 week standard queue) or Priority $9 (48h review)",
+    "Submit — 'Submit & Pay $9' when Priority is selected"
+  ],
+  "watchFor": [
+    "8-10 weeks is an unusually long free queue — the $9 priority upsell is the intended nudge",
+    "The submit button label changes to 'Submit & Pay $9' when Priority is chosen — verify the selected plan before clicking",
+    "Twitter/X handle is public-facing on the founder card"
+  ],
+  "countsAsLive": "Product has a page under indiehustles.com/product/<uuid> and appears in the alternatives grid",
+  "unknowns": [
+    "Whether free-tier submissions are ever rejected rather than just queued",
+    "Dofollow status of listing links"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "devresourc.es",
+  "name": "Dev Resources",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://devresourc.es/",
+      "title": "Dev Resources homepage — collaborative list of 800+ developer resources"
+    },
+    { "url": "https://github.com/marcelscruz/dev-resources", "title": "Backing GitHub repository" },
+    {
+      "url": "https://github.com/marcelscruz/dev-resources/blob/main/CONTRIBUTING.md",
+      "title": "CONTRIBUTING.md — resource format and eligibility rules"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Only resources 'highly or exclusively related to programming and development' are accepted",
+    "No duplicates — search the README first",
+    "Contribution happens via pull request on marcelscruz/dev-resources (the site also shows a 'Submit' link and sign-in, but the canonical documented path is the repo)",
+    "Resource format: name (required), description (required), up to 3 categories (required), url (required), optional keywords"
+  ],
+  "preparation": [
+    "A GitHub account",
+    "Resource name, URL (must start with http(s)), description (metatags.io suggested for pulling it), category picks (max 3), optional keywords",
+    "Check the README/­/resources folder that the resource isn't already listed"
+  ],
+  "workflow": [
+    "Fork github.com/marcelscruz/dev-resources",
+    "Locate the alphabetically correct file in /resources based on the resource's name property",
+    "Add a resource object (name, description, categories, url, keywords) preserving alphabetical order",
+    "Open a PR against main and complete the PR template checklist",
+    "Maintainer review merges; the site regenerates (README and /db are auto-generated — do not edit them)"
+  ],
+  "watchFor": [
+    "README.md and /db are auto-generated — editing them is explicitly banned and wastes the PR",
+    "Marketing-flavored or tangential products are out of scope — dev-tooling relevance is the gate",
+    "Site 'Submit' button exists but the documented, authoritative path is the GitHub PR",
+    "If TypeScript is a barrier, CONTRIBUTING says to open an issue with the resource's info instead"
+  ],
+  "countsAsLive": "The resource card appears in a category listing on devresourc.es and in the repo's generated README",
+  "unknowns": [
+    "Whether the on-site Submit form (behind sign-in) is equivalent to the PR route",
+    "Typical PR review turnaround",
+    "Whether outbound links are dofollow (favicon-list style entries)"
+  ]
+}

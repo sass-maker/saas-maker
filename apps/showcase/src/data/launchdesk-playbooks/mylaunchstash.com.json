@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "mylaunchstash.com",
+  "name": "My Launch Stash",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://mylaunchstash.com/",
+      "title": "My Launch Stash homepage — product launch directory for SaaS/app launches"
+    },
+    {
+      "url": "https://mylaunchstash.com/submit",
+      "title": "Submit page — 'Log in to Submit' wall with Google sign-in"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "unknown",
+  "conditions": [],
+  "requirements": [
+    "Products in scope: SaaS launches, app launches, early-stage software releases",
+    "Account mandatory: /submit shows 'Log in to Submit' — Google sign-in or account creation"
+  ],
+  "preparation": [
+    "Product name, URL, description",
+    "Logo tile (listings display logos)",
+    "Category from their shared taxonomy (AI Assistants, Dev Tools, Marketing, etc.) and a pricing label",
+    "A Google account or email for signup"
+  ],
+  "workflow": [
+    "Create an account at /signup or log in with Google (/api/auth/google?redirect=/submit)",
+    "Open /submit (nav 'Submit' routes to /get-started)",
+    "Complete the submission form (behind login)",
+    "Await review/publication"
+  ],
+  "watchFor": [
+    "Same template family as goodaitools.com and launchclash.com (identical category footer and submitsaas.com ad banner) — treat the third-party '140+ directories' ad as a separate paid service",
+    "No public pricing, review, or backlink terms found on reachable pages"
+  ],
+  "countsAsLive": "A product detail page on mylaunchstash.com linked from Latest or the Explore/category listing",
+  "unknowns": [
+    "Free vs paid submission terms — not visible publicly",
+    "Form fields and whether a badge/backlink is required",
+    "Review timeline",
+    "Whether links are dofollow"
+  ]
+}

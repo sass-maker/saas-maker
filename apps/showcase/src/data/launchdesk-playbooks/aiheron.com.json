@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aiheron.com",
+  "name": "AI Heron",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.aiheron.com/promote",
+      "title": "Promote / submit page (Chinese-language UI)"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free submission requires placing an AiHeron link on your homepage: <a href=\"https://www.aiheron.com/\" title=\"智鹭AI导航\">AiHeron</a> - the free form asks for the backlink URL ('反链地址')",
+    "Paid alternative: $6.99 (promo, normally $12.99) covers up to 3 links, 1-hour review, 7-day featured ad slot, permanent link with no backlink required"
+  ],
+  "requirements": [
+    "Tool must use AI - 'not using AI technology' is a stated rejection reason",
+    "No adult/inappropriate content",
+    "Free route requires contact info, the product URL, and the URL where your backlink to AiHeron is placed"
+  ],
+  "preparation": [
+    "Contact detail (the form asks for 联系方式 / contact info)",
+    "Product URL (访问地址)",
+    "For free submit: add the AiHeron anchor to your homepage first and note its URL",
+    "Site UI is Chinese; use the EN locale switch or a translator"
+  ],
+  "workflow": [
+    "Open https://www.aiheron.com/promote",
+    "Choose 免费提交 (free) or 付费提交 (paid)",
+    "Free: enter contact, product URL, and your backlink URL; Paid: enter contact + URL and pay $6.99",
+    "Paid claims review within 1 hour and 7 days of featured placement; general FAQ says tools are listed within 24 hours"
+  ],
+  "watchFor": [
+    "Interface is primarily Chinese - field labels are 联系方式 (contact), 访问地址 (URL), 反链地址 (backlink URL)",
+    "Free listings require the homepage backlink; expect delisting risk if removed",
+    "FAQ promises dofollow links and permanent listing ('your listing will never expire')",
+    "Paid tier allows submitting up to 3 links under one payment"
+  ],
+  "countsAsLive": "The tool appears in the aiheron.com directory/new-listing section with a link to your site.",
+  "unknowns": [
+    "Whether free-tier links are also dofollow",
+    "Review time for the free tier specifically (24h claim may apply to paid)",
+    "Whether backlink presence is re-verified over time"
+  ]
+}

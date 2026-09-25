@@ -1,0 +1,43 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "livejournal.com",
+  "name": "LiveJournal",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "community",
+  "zeroCostRoute": "free",
+  "sources": [
+    {
+      "url": "https://www.livejournal.com/create",
+      "title": "LiveJournal account creation page — username/email/password, birthday, social login options"
+    }
+  ],
+  "requirements": [
+    "Email, username, password meeting complexity rules (8–30 ASCII chars, >=4 distinct symbols, at least 1 number + 1 special + 1 upper + 1 lower, not based on username/email)",
+    "Birthday field is required ('required by law'; only month/day displayed by default)",
+    "Social login alternatives: Google, VKontakte, Rambler, Mail.ru, Twitter/X, OpenID, Sber ID"
+  ],
+  "preparation": [
+    "Email for verification",
+    "Username for the journal (<username>.livejournal.com)",
+    "Content plan — a real introductory post linking the product"
+  ],
+  "workflow": [
+    "Open livejournal.com/create and fill username/email/password/birthday/gender, or use a social login",
+    "Verify the email",
+    "Create the first post ('Create First Post' is offered post-signup) introducing/linking the product",
+    "Confirm the journal is public at <username>.livejournal.com"
+  ],
+  "watchFor": [
+    "LiveJournal is a legacy blogging community owned via Mail.ru ecosystem — social logins offered include Russian providers (VKontakte, Mail.ru, Sber ID); choose credentials you control",
+    "Password rules are unusually strict for 2026 — generate a compliant ASCII password",
+    "This is a blogging platform, not a directory — the listing is the journal itself and its public posts",
+    "Birthday year dropdown is required and public-by-default for month/day only"
+  ],
+  "countsAsLive": "The journal is publicly reachable at <username>.livejournal.com and the product post is visible to logged-out visitors",
+  "unknowns": [
+    "Whether outbound post links are dofollow",
+    "Whether new accounts face post rate limits or link filtering",
+    "Whether journals get indexed in LiveJournal's public browse without community engagement"
+  ]
+}

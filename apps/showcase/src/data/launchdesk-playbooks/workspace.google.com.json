@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "workspace.google.com",
+  "name": "Google Workspace Marketplace",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "sources": [
+    {
+      "url": "https://developers.google.com/workspace/marketplace/how-to-publish",
+      "title": "Google Workspace Marketplace — 'Publish apps to the Google Workspace Marketplace' guide (updated 2026-09-03)"
+    }
+  ],
+  "requirements": [
+    "The app must extend at least one Google Workspace application (Gmail, Calendar, Chat, Docs, Drive, Sheets, Slides, Meet, etc.)",
+    "Public apps must comply with Marketplace terms/policies and pass the Marketplace review criteria",
+    "A Google Cloud project is required to configure and manage the listing",
+    "Public vs private audience must be chosen before publishing — the setting cannot be changed afterwards"
+  ],
+  "preparation": [
+    "A working app/add-on that extends a Workspace app",
+    "A Google Cloud project",
+    "OAuth consent configuration (public apps may need a separate OAuth review)",
+    "App website URL and logo (required listing assets)",
+    "Store listing copy: description, categories, screenshots/icons per the 'Create a store listing' guide"
+  ],
+  "workflow": [
+    "Create/select a Google Cloud project for the app",
+    "Configure OAuth for the app (submit for OAuth review if public and scopes require it)",
+    "Test the app against the Marketplace review criteria",
+    "Enable the Google Workspace Marketplace SDK and configure visibility, installation settings, and the Workspace apps it extends",
+    "Create the store listing",
+    "Submit for publishing — public apps undergo Google review; private apps go live inside your organization immediately",
+    "Monitor publication status; after approval the listing is available to all Marketplace users"
+  ],
+  "watchFor": [
+    "Public vs private is irrevocable after publishing — decide carefully",
+    "App installation settings (admin-only vs all users) affect reach regardless of public/private",
+    "Some organizations allowlist apps — listing alone doesn't guarantee installability inside enterprise domains",
+    "Publishing is free, but OAuth verification for sensitive/restricted scopes can take days-weeks and is the usual bottleneck"
+  ],
+  "countsAsLive": "The app listing page is publicly visible in the Google Workspace Marketplace (workspace.google.com/marketplace) and installable by external users",
+  "unknowns": [
+    "Current average review turnaround for public Marketplace apps (not stated on the fetched page)",
+    "Whether the Marketplace listing link to the developer site is dofollow"
+  ]
+}

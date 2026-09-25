@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "callupcontact.com",
+  "name": "Callupcontact",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.callupcontact.com/",
+      "title": "Callupcontact homepage (returned empty body to fetcher — JS-rendered)"
+    },
+    {
+      "url": "https://www.submission.directory/site/callupcontact",
+      "title": "Submission.Directory profile: business listing directory, free profile, dofollow, freemium"
+    },
+    {
+      "url": "https://marketing.femaleswitch.com/callupcontact",
+      "title": "F/MS guide describing 'Add Your Business' flow and listing verification"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Business listing directory — accepts company listings with contact details, not limited to software",
+    "Third-party sources describe a free 'List Your Business' / 'Add Your Business' flow",
+    "A verification step is described (confirming business/location details) but the exact mechanism is not visible from static pages"
+  ],
+  "preparation": [
+    "Business name, address/location, phone and contact email",
+    "Website URL",
+    "Business description of services/products",
+    "Relevant business category",
+    "Business hours and images are recommended by third-party guides for a stronger listing"
+  ],
+  "workflow": [
+    "Open https://www.callupcontact.com/ and locate 'Add Your Business' / 'List Your Business' (site is JS-rendered — use a browser, the bare HTML is empty)",
+    "Create the free profile with business name, contact details, website, and description",
+    "Complete the verification step (details per third-party guides: confirm location/business details)",
+    "Check the listing appears in the directory search"
+  ],
+  "watchFor": [
+    "Site is JavaScript-rendered — plain HTTP fetches return an empty page; automation needs a real browser",
+    "Freemium model — expect paid upgrade prompts around enhanced visibility (per third-party profiles)",
+    "Trustpilot shows an unclaimed profile with a middling score — treat as a low-touch link directory, not a review channel"
+  ],
+  "countsAsLive": "The business profile is publicly reachable on callupcontact.com and appears in on-site search results",
+  "unknowns": [
+    "Exact submission URL and form fields (site did not render without JavaScript)",
+    "Verification mechanism (email vs phone vs manual)",
+    "Whether free listings include a live dofollow website link or only a citation",
+    "Review/approval timeline"
+  ]
+}

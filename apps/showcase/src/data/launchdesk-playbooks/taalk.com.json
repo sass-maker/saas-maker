@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "taalk.com",
+  "name": "Taalk",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://taalk.com/submit-startup/",
+      "title": "Submit your Startup — Free vs INR 1999 Growth vs INR 4499 Elite plans"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free plan publishes 'only selected posts' — no guaranteed publication",
+    "Free tier is a brand mention only: no do-follow link and no standard publishing time (runs on the editorial schedule)",
+    "Guaranteed feature with a do-follow link and 3-5 day publishing requires the Growth plan at INR 1,999 (list INR 3,999); Elite is INR 4,499 (list INR 9,999)"
+  ],
+  "requirements": [
+    "Startup/business suitable for an entrepreneur-focused video magazine and startup-features site",
+    "Free submissions go through https://taalk.com/free-submmission/ (sic — misspelled slug on their own link)"
+  ],
+  "preparation": [
+    "Startup name, URL, description, founder details, logo/images",
+    "Decide between free (brand mention, maybe) vs paid Growth (guaranteed feature + dofollow) vs Elite (SEO optimization + video podcast + newsletter highlight)",
+    "Payment via Razorpay pages for paid plans"
+  ],
+  "workflow": [
+    "Open https://taalk.com/submit-startup/",
+    "Pick a plan: 'Submit now' → /free-submmission/ for the free lane, or 'Pay & Submit' → Razorpay payment pages for Growth/Elite",
+    "Fill the submission form and (for paid) complete Razorpay checkout",
+    "Editorial team reviews; paid Growth publishes within 3-5 days, free runs on the editorial schedule if selected"
+  ],
+  "watchFor": [
+    "The free tier will not give you a link at all — brand mention only, and only if your post is selected",
+    "Pricing is in INR via Razorpay — expect Indian-payment checkout flows",
+    "The free-submission URL slug is literally misspelled 'free-submmission' on their site",
+    "Elite bundles a video podcast — clarify deliverables before paying INR 4,499"
+  ],
+  "countsAsLive": "A feature post about the startup is published on taalk.com under /startups/ or the Featured Startups category",
+  "unknowns": [
+    "Acceptance rate for free submissions",
+    "Exact editorial criteria and the free form's fields"
+  ]
+}

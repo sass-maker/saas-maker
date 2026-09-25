@@ -1,0 +1,61 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "firsto.co",
+  "name": "Firsto",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://firsto.co/",
+      "title": "Homepage — 'Agent Index': product launch platform with public APIs, MCP tools and llms.txt"
+    },
+    {
+      "url": "https://firsto.co/pricing",
+      "title": "Pricing — Free (queue ~180 days, 5 slots/day, DF backlink only for Top 3 with badge), Premium $19.9 (24h), Pro $59.9 (2-week homepage feature + mini review)"
+    },
+    {
+      "url": "https://firsto.co/llms.txt",
+      "title": "llms.txt — launch types, 8:00 AM UTC daily launches, public discovery API"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free Launch exists but the queue is ~180 days with only 5 free slots daily",
+    "Free tier's dofollow backlink requires landing Top 3 AND embedding their badge",
+    "Premium $19.9 launches in 24h with a guaranteed DR59+ dofollow backlink",
+    "Account sign-up required (Sign in / Sign up on the site)",
+    "The catalogued submission URL /projects/submit returned 404 on 2026-09-25 — the live entry is the 'Submit a Project' nav link"
+  ],
+  "requirements": [
+    "Startup/SaaS/AI tool or digital product to launch",
+    "Registered account; launches happen daily at 8:00 AM UTC",
+    "Free tier badge requirement for the dofollow backlink (embed from the project page)"
+  ],
+  "preparation": [
+    "Account credentials",
+    "Product name, tagline, URL, logo, categories/tags, pricing info, description (Markdown supported)",
+    "Pick plan: Free (~180-day queue) / Premium $19.9 (24h) / Pro $59.9 (adds 2-week homepage feature + written mini-review)",
+    "Optional review add-ons: Public Review $199, Private Review $299, Full Package $399"
+  ],
+  "workflow": [
+    "Sign up at firsto.co",
+    "Use 'Submit a Project' (nav) and fill the project form",
+    "Select a launch plan and a launch date from the plan's availability",
+    "Project launches at 8:00 AM UTC and joins daily/weekly/monthly voting",
+    "Every submission gets a permanent project page at /projects/<slug> (with an /llm markdown variant) — discoverable via API and search engines"
+  ],
+  "watchFor": [
+    "Free queue is ~180 days — do not promise a date on the free plan",
+    "Free-tier dofollow link is doubly gated: Top-3 ranking AND badge embed",
+    "Premium/Pro prices are per-launch one-time fees; review packages are separate large upsells ($199–$399)",
+    "Unusually agent-friendly: public API, MCP endpoint, llms.txt — programmatic discovery is encouraged but submission itself needs an account",
+    "Note: /projects/submit 404'd at research time — use the 'Submit a Project' nav link instead"
+  ],
+  "countsAsLive": "Product has a public page at firsto.co/projects/<slug> and appears in /launches with its launch date and vote count",
+  "unknowns": [
+    "Exact form fields behind the account wall",
+    "Whether the free tier's badge is verified automatically",
+    "Refund policy for paid launches"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "shinylaunch.com",
+  "name": "ShinyLaunch",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://shinylaunch.com/",
+      "title": "ShinyLaunch homepage — daily product launches with weekly voting"
+    },
+    {
+      "url": "https://shinylaunch.com/submit",
+      "title": "ShinyLaunch submit — 'Log in to Submit', Google auth gate"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Account required — /submit redirects to a login screen; sign-in is via Google (account creation at /signup)",
+    "Every product is submitted by its creator and reviewed before going live",
+    "Products join a weekly lineup; new voting cycle starts each Monday"
+  ],
+  "preparation": [
+    "A Google account for sign-in",
+    "Product name, tagline/description, logo, category (broad taxonomy incl. Dev Tools, AI Assistants, SaaS-style categories), pricing-model tag (Free/Paid/Freemium/Free Trial)"
+  ],
+  "workflow": [
+    "Open https://shinylaunch.com/submit",
+    "Log in with Google (or create an account)",
+    "Fill the submission form",
+    "Wait for review — approved products join the weekly lineup",
+    "Community voting runs through the week; top products become weekly 'winners' in the hall of fame"
+  ],
+  "watchFor": [
+    "Submit page is a hard auth wall — nothing about form fields is visible without logging in",
+    "Homepage and submit page carry ads for a third-party 'submit to 140+ directories' service (submitsaas.com) — not a ShinyLaunch upsell",
+    "FAQ says submissions are free and 'reviewed promptly' but gives no SLA"
+  ],
+  "countsAsLive": "The product appears in the Latest feed / weekly lineup with its own detail page and vote count.",
+  "unknowns": [
+    "Exact form fields and asset requirements (behind Google auth)",
+    "Whether any paid tier exists — no pricing page was visible",
+    "Review latency"
+  ]
+}

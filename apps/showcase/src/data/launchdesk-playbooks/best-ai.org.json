@@ -1,0 +1,54 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "best-ai.org",
+  "name": "Best-AI.org",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://best-ai.org/submit-tool",
+      "title": "Best-AI.org - Submit Tool ('Free Submission', 1-2 weeks review, 'Free Forever')"
+    },
+    {
+      "url": "https://best-ai.org/methodology",
+      "title": "Best-AI.org - How We Review (linked from footer)"
+    },
+    {
+      "url": "https://best-ai.org/",
+      "title": "Best-AI.org homepage - 4,200+ AI tools, 17 categories, editorial review"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "AI tools only - the directory covers image generation, writing, code assistance, video, productivity, conversational AI, AI agents, etc.",
+    "Submission is free ('Free Submission', 'Free Forever' stated on the submit page)",
+    "Flow: 'Submit Details -> We Review -> Go Live' - the team 'verifies and enriches' listings; stated review time is 1-2 weeks",
+    "Run by BitAutor (Hannover, Germany, HRB 218756) - a real editorial operation with published methodology and editorial guidelines"
+  ],
+  "preparation": [
+    "Tool name and URL",
+    "Features list and pricing information (the submit flow asks for 'tool's info, features, and pricing')",
+    "Category fit within their ~17 AI categories",
+    "Contact email for review follow-up"
+  ],
+  "workflow": [
+    "Open https://best-ai.org/submit-tool",
+    "Fill in the tool's info, features, and pricing (form fields render on-page)",
+    "Submit - the team verifies and 'enriches' the listing editorially",
+    "Wait 1-2 weeks for review; the tool goes live in its category once approved"
+  ],
+  "watchFor": [
+    "Editorial enrichment means your copy may be rewritten/extended - provide accurate, publishable details",
+    "No paid fast lane advertised on the submit page - the free path is the only one shown",
+    "AI-assistance disclosure: some site content is 'created with AI assistance and reviewed by our editorial team' - your listing description may be partly machine-drafted",
+    "The directory pages separate 'Open Source AI', 'Top 100', and by-country views - a live listing may surface in several"
+  ],
+  "countsAsLive": "The tool has a public detail page on best-ai.org and appears in its category/search",
+  "unknowns": [
+    "Exact required fields inside the form (partially JS-rendered)",
+    "Whether account creation is required",
+    "Whether the outbound link is dofollow",
+    "Rejection criteria beyond the stated review"
+  ]
+}

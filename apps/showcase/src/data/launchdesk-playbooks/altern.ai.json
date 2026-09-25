@@ -1,0 +1,45 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "altern.ai",
+  "name": "Altern",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://altern.ai/maker/submit/start",
+      "title": "Maker submit entry (requires social sign-in)"
+    },
+    { "url": "https://altern.ai/maker", "title": "Altern for Makers" },
+    { "url": "https://altern.ai/", "title": "Altern homepage - AI index, Buildboard, Leaderboard" }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "AI-related products/resources only: tools, models, APIs, libraries, agents, datasets, etc.",
+    "Sign-in mandatory - GitHub or Google OAuth creates the account automatically ('no separate sign-up needed')",
+    "Submission lives in the maker area at /maker/submit/start"
+  ],
+  "preparation": [
+    "GitHub or Google account",
+    "AI product name, URL, description, and a fitting category (Altern has a very large category taxonomy)",
+    "Know the listing types visible on the site: AI Agent, AI Model, API, Browser Extension, CLI Tool, Desktop App, Open Source, Python Library"
+  ],
+  "workflow": [
+    "Open https://altern.ai/maker and click 'Sign in to submit' (or go straight to /maker/submit/start)",
+    "Continue with GitHub or Google - this creates the account",
+    "Complete the maker submit flow (fields behind auth)",
+    "Submitted tools can enter the weekly 'Buildboard' competition and appear under 'Recently added'"
+  ],
+  "watchFor": [
+    "No public pricing for submissions was found - assumed free, but verify inside the maker flow",
+    "Community features (votes, reviews, alternatives suggestions, weekly Buildboard rankings) influence visibility after listing",
+    "Help center documents review rules and alternative-suggestion mechanics; read them if also engaging with reviews",
+    "OAuth-only: no email/password signup"
+  ],
+  "countsAsLive": "A public AI page exists on altern.ai reachable from /ais or its category, and the tool appears in 'Recently added'.",
+  "unknowns": [
+    "Whether any paid submission/featured tier exists behind auth",
+    "Exact submit form fields and review process",
+    "Turnaround time and whether listing links are dofollow"
+  ]
+}

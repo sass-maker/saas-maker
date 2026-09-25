@@ -1,0 +1,42 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "wellfound.com",
+  "name": "Wellfound",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "profile",
+  "zeroCostRoute": "free",
+  "sources": [
+    {
+      "url": "https://wellfound.com/recruit/all-features/post-a-job",
+      "title": "Wellfound Jobs — post-a-job page: unlimited free job posts, company profile, ~4 minute setup"
+    }
+  ],
+  "requirements": [
+    "A startup/company — Wellfound is a startup recruiting marketplace, not a product directory; the durable listing asset is the company profile plus (optionally) job posts",
+    "Recruiter account via wellfound.com/onboarding/recruit"
+  ],
+  "preparation": [
+    "Company profile assets: mission/description, logo, team size, funding stage, perks, press",
+    "Job details if posting roles: title, location/remote regions, compensation range, screening questions",
+    "Optional: connect Greenhouse, Lever, Ashby, or Workable for ATS sync"
+  ],
+  "workflow": [
+    "Sign up at wellfound.com/onboarding/recruit (or Log in)",
+    "Create the company profile (~3 minutes per their FAQ)",
+    "Create a job listing (title, location, comp, description, screening questions) or keep just the profile",
+    "Publish — the listing enters Wellfound search, candidate email alerts, and is indexed by search engines",
+    "Optionally pay to promote a job (from $200/job) for top-of-results placement"
+  ],
+  "watchFor": [
+    "Job posts are free and unlimited, but the site's monetization pushes Promoted Jobs ($200+/job), Wellfound Reach (AI sourcing), and Autopilot (managed recruiting) — expect upsell prompts",
+    "Listings with comp shown, a complete company profile, and 1–2 screening questions perform better",
+    "Confidential/stealth listings are supported — company name/logo hidden until candidate intro approval",
+    "This is a hiring surface; using it purely for a backlink with a fake job risks moderation"
+  ],
+  "countsAsLive": "A public company page on wellfound.com/company/<name> and any job posts indexed at wellfound.com/jobs/<company>/<role>",
+  "unknowns": [
+    "Whether a company profile stays publicly visible with zero active job posts",
+    "Minimum requirements (if any) for company verification before posting"
+  ]
+}

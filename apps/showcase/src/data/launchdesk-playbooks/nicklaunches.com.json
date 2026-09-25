@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "nicklaunches.com",
+  "name": "Nick Launches",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://nicklaunches.com/submit",
+      "title": "Launch your product — browser form vs agent-drafted (MCP) options"
+    },
+    {
+      "url": "https://nicklaunches.com/docs/",
+      "title": "Docs introduction — MCP + REST API surface, agent cannot publish boundary"
+    },
+    {
+      "url": "https://nicklaunches.com/api-mcp/",
+      "title": "API and MCP overview (linked from submit)"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "unknown",
+  "conditions": [],
+  "requirements": [
+    "Weekly launch directory for indie builders — product must have a URL the prefill/audit can read",
+    "Account required for publishing (sign-in), and agents must connect via OAuth-style browser approval at /connect/",
+    "Human finish is mandatory: 'An agent can open a draft. It can never publish a launch' — no tool/endpoint selects a plan, picks a launch week, pays, or makes the listing public",
+    "Admin review happens before any listing goes live"
+  ],
+  "preparation": [
+    "Product URL (prefill + launch-readiness audit run from it)",
+    "Logo and screenshots (uploaded in the browser flow)",
+    "Category fit (AI Tools, Productivity Tools, Marketing Tools, Developer Tools, Communication, Analytics, Content Creation, Other)",
+    "Chosen plan and launch week — human-selected at /submit/plan/",
+    "Optional: install the backlink badge — check_launch_readiness returns the exact snippet if missing"
+  ],
+  "workflow": [
+    "Browser path: sign in → /submit/new → paste URL → let prefill fill details → upload logo/screenshots → pick plan + launch week → review and publish",
+    "Agent path: `claude mcp add --transport http nicklaunches https://nicklaunches.com/api/mcp/` → approve connection in browser → run check_launch_readiness on the URL → submit_product opens a draft → human finishes at /submit/plan/",
+    "Drafts created via API sit in 'draft' status until a human publishes; admin reviews before go-live",
+    "REST equivalent: https://nicklaunches.com/api/v1/ with OpenAPI at /api/v1/openapi.json"
+  ],
+  "watchFor": [
+    "The hard agent boundary is deliberate — automation can only prepare drafts; plan selection, launch-week picking, payment, and publishing are human-only",
+    "Reads are anonymous (catalog search, listing fetch, directory list, readiness audit) — no credentials needed for recon",
+    "check_launch_readiness detects duplicates and relaunch eligibility — run it first to avoid rejections",
+    "Pricing is not stated on the public submit/docs pages fetched — check /submit/plan/ after sign-in"
+  ],
+  "countsAsLive": "Product listing public on nicklaunches.com in its launch week after admin review (draft status alone is not live)",
+  "unknowns": [
+    "Plan names/prices (free vs paid tiers) — only 'pick a plan' is referenced publicly",
+    "Whether a free tier exists without badge",
+    "Weekly capacity and scheduling window length"
+  ]
+}

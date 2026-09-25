@@ -1,0 +1,67 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "devhunt.org",
+  "name": "DevHunt",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free launch is real but queued — the site states an average wait of about six months for a free launch.",
+    "GitHub account is the only login — it is also the credential voters use."
+  ],
+  "requirements": [
+    "Developer tools only — DevHunt removes anything not for developers (marketing tools, consumer apps, general SaaS get taken down).",
+    "GitHub authentication required to submit; voters also need GitHub logins.",
+    "Weekly launch cycles with developer voting; launch day gives 24h homepage spotlight, morning email to subscribers, and a dofollow link."
+  ],
+  "preparation": [
+    "GitHub account.",
+    "Square tool logo 220×220 (or 210×210) px.",
+    "At least 3 screenshots — the first becomes the social preview, so make it the product, not a hero banner.",
+    "Tool name, one-line slogan, website URL, optional GitHub repo URL.",
+    "A developer-focused description (API quality, docs, performance, integrations, language/framework support).",
+    "Decision: wait the ~6-month free queue or pay $49 to pick a launch week immediately."
+  ],
+  "workflow": [
+    "Sign in at devhunt.org with GitHub.",
+    "Open the new-tool form at /account/tools/new.",
+    "Fill name, slogan, website URL, optional repo URL, logo, and ≥3 screenshots.",
+    "Pick a launch week in the free queue, or pay $49 to choose a week now (includes a launch video and top spot in the launch X thread).",
+    "During your launch week, rally developers (GitHub/Discord/dev communities) to vote — votes need GitHub login.",
+    "Weekly winners get a newsletter feature, social post, winner badge, and partner perks."
+  ],
+  "watchFor": [
+    "Non-dev tools get removed — submitting a general SaaS wastes the queue slot.",
+    "Six-month average free queue is unusually long; the $49 'skip the queue' is the real product.",
+    "The new-tool page renders nothing without a GitHub session — you cannot even see the form logged out.",
+    "Open-source platform (github.com/MarsX-dev/devhunt) — community-run, led by @johnrushx.",
+    "Additional paid options reported: newsletter ad $397, homepage ad $497."
+  ],
+  "countsAsLive": "The tool appears in DevHunt's launch cycle for its scheduled week with a public tool page; during launch day it gets the homepage spotlight.",
+  "unknowns": [
+    "Exact form field list behind GitHub auth.",
+    "Whether free-queue timing is contractually bounded or just an average.",
+    "Current paid price at checkout vs the reported $49."
+  ],
+  "sources": [
+    {
+      "url": "https://devhunt.org/account/tools/new",
+      "title": "New tool form (requires GitHub sign-in — renders empty logged out)"
+    },
+    { "url": "https://devhunt.org/", "title": "DevHunt homepage" },
+    {
+      "url": "https://launchdirectories.com/directory/devhunt",
+      "title": "How to Submit to DevHunt — LaunchDirectories (DR 63, 6-month free queue, $49 skip, GitHub-only login, logo/screenshot specs)"
+    },
+    {
+      "url": "https://www.submit25.com/sites/devhunt",
+      "title": "Submit25 DevHunt guide — dev-tools-only rule, GitHub auth"
+    },
+    {
+      "url": "https://devhunt.org/blog/tools-developers-guide-launches-on-devhunt",
+      "title": "DevHunt's own launch guide"
+    },
+    { "url": "https://github.com/MarsX-dev/devhunt", "title": "DevHunt open-source repository" }
+  ]
+}

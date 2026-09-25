@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "smollaunch.com",
+  "name": "Smol Launch",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://smollaunch.com/",
+      "title": "Smol Launch homepage — weekly launch board, DR 74"
+    },
+    {
+      "url": "https://smollaunch.com/pricing",
+      "title": "Smol Launch pricing — Free Verified / Premium $19 / Premium+ $39 / Maker Pass / Launch Everywhere"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free launches require verifying the Smol Launch badge on your site ('Free Verified')",
+    "Only 50 verified free slots per week, shared platform-wide — the pricing page showed 'Next free week: Nov 2, 250 ahead of you'",
+    "Free tier covers a product's FIRST launch only; relaunches of the same product require a paid tier"
+  ],
+  "requirements": [
+    "Account/signup required (submission CTAs route to /signup; submit dashboard at /dashboard/products/new)",
+    "A site where the Smol Launch badge can be embedded (free path)",
+    "Every launch, free or paid, competes in the same weekly (Mon–Sun) public-vote ranking"
+  ],
+  "preparation": [
+    "Product name, tagline (≤60 chars for newsletter features), description, logo, categories, URL",
+    "Badge HTML ready to embed for free verification",
+    "Launch-week timing decision — launches run Monday 9:00 AM PDT to Sunday"
+  ],
+  "workflow": [
+    "Sign up at smollaunch.com/signup",
+    "Submit the product via the dashboard (/dashboard/products/new)",
+    "Choose Free Verified, Premium ($19/launch) or Premium+ ($39/launch)",
+    "Free: embed badge → verification → assigned to the next open launch week",
+    "Collect votes Monday–Sunday; listing becomes permanent on the DR 74 domain after the week ends"
+  ],
+  "watchFor": [
+    "Free queue can stretch weeks out — shared 50-slot weekly pool, not a per-maker allowance",
+    "Premium+ adds a one-week Featured Spot + newsletter feature; Maker Pass ($99/yr) covers unlimited Premium launches",
+    "'Launch Everywhere' ($99–$199) is a separate done-for-you directory-submission add-on, easy to accidentally bundle",
+    "Featured Spot ($19/wk) is an ad — marked sponsored and excluded from ranking",
+    "Site is markdown-native — every page has a .md twin"
+  ],
+  "countsAsLive": "A public product page at smollaunch.com/products/<slug> plus appearance in that week's launch board (e.g. /launches/2026-week-NN).",
+  "unknowns": [
+    "Exact submit-form fields behind signup",
+    "How badge verification is implemented (crawler vs manual check)"
+  ]
+}

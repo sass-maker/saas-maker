@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "submissionwebdirectory.com",
+  "name": "Submission Web Directory",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.submissionwebdirectory.com/submit.php",
+      "title": "Submission Web Directory - Submit Link form with rules and pricing"
+    },
+    {
+      "url": "https://www.submissionwebdirectory.com/",
+      "title": "Submission Web Directory homepage"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free 'Regular links' exist but are gated by a very long review queue: 'we get more than 500 submissions daily, it may take about 6-8 weeks for us to review regular websites links'",
+    "Paid 'Featured links' at $6.49/year skip the queue (24-48h human review) and stay above regular links on the category's first page"
+  ],
+  "requirements": [
+    "Required fields: Title (*), URL, Your Name (*), Your Email (*), Category (*)",
+    "Optional fields: Description (with a stated limit), META Keywords (comma-separated), META Description (with a stated limit)",
+    "A deep category must be picked from a large topical tree (Arts & Humanities, Business & Economy, Computers & Internet, etc.)",
+    "No account required to submit (a login/register exists but the form is open)"
+  ],
+  "preparation": [
+    "Site title, URL, description, meta keywords, meta description",
+    "Submitter name and email",
+    "The correct deep category path from the tree (the form lists hundreds of subcategories inline)"
+  ],
+  "workflow": [
+    "Open https://www.submissionwebdirectory.com/submit.php",
+    "Choose between 'Regular links' (free, 6-8 week review) and 'Featured links' ($6.49/yr, 24-48h review, top-of-category placement)",
+    "Fill Title, URL, Description, META Keywords, META Description, Your Name, Your Email",
+    "Select the deep Category from the inline tree",
+    "Submit and wait for human-editor review"
+  ],
+  "watchFor": [
+    "The 6-8 week free queue makes this a slow listing - treat it as a long-tail citation, not a launch channel",
+    "Old-school phpLD-style form: no draft saving, category tree is enormous - pick the category deliberately",
+    "Featured fee is framed as paying for editor time ('review fees ... for their time and effort'), not for guaranteed inclusion",
+    "Also offers a separate 'Submit Article' flow (article directory) - different submission type"
+  ],
+  "countsAsLive": "The link appears publicly under its chosen category (check 'Latest Links' or the category page) after editor review",
+  "unknowns": [
+    "Actual current review turnaround for free links (6-8 weeks is the stated worst case)",
+    "Whether the listing link is dofollow",
+    "Payment method for featured links (form renders PayPal-era layout; not verified)"
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "poweruptools.com",
+  "name": "Power Up Tools",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    { "url": "https://poweruptools.com/submit", "title": "Submit a Tool (login wall)" },
+    { "url": "https://poweruptools.com/", "title": "Power Up Tools homepage" }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Google sign-in (or site account) mandatory: /submit only renders 'Log in with Google' and a create-account link",
+    "AI tools directory for productivity, automation, coding, design and output-focused workflows"
+  ],
+  "preparation": [
+    "A Google account (OAuth) or create a site account at /signup",
+    "Tool name, URL, description, logo, and category"
+  ],
+  "workflow": [
+    "Open https://poweruptools.com/submit (same as /get-started)",
+    "Authenticate with Google or create an account",
+    "Complete the post-login submission form",
+    "Await review/listing (no public SLA found)"
+  ],
+  "watchFor": [
+    "Post-login form is opaque - fields, pricing, and review time are not visible publicly",
+    "Same shared template as productwing.com and trustiner.com; third-party 'submitsaas' ads appear on the page - ignore them",
+    "No public pricing page observed; catalog note says free, verify no upsell appears after login"
+  ],
+  "countsAsLive": "The tool appears under /latest or /explore with a public details page and outbound link.",
+  "unknowns": [
+    "Post-login form fields",
+    "Whether a paid tier exists behind auth",
+    "Review criteria, turnaround, and link dofollow status"
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aihustle.tools",
+  "name": "AI Hustle",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Third-party directory listings describe AI Hustle as 'free submission, with optional paid placement' and note the free queue is long while paid fast-tracks review.",
+    "The site's /submit/ page exists but rendered only the Ghost CMS chrome (title 'Submit AI tool') with no visible form to a plain fetch — the submission mechanism could not be verified firsthand."
+  ],
+  "requirements": [
+    "AI tools only — the directory is organized by AI tool tags (image, video, voice, writing, SEO, marketing, AI agent, vibe coding, NSFW AI, etc.).",
+    "Third-party source states no badge is required."
+  ],
+  "preparation": [
+    "Tool name, URL, and description.",
+    "Category fit from their tag list (e.g. /tag/ai-agent/, /tag/seo/).",
+    "Possibly an account: the site runs Ghost with Sign up / Sign in / Subscribe portal links."
+  ],
+  "workflow": [
+    "Open https://aihustle.tools/submit/ — the page is titled 'Submit AI tool' but the body content did not render to a plain fetcher; a browser may be required.",
+    "If no form is visible, sign up / sign in via the Ghost portal (/#/portal/) or contact via the site's listed channels.",
+    "Third-party guidance: free submission queue is long; a paid fast-track option exists."
+  ],
+  "watchFor": [
+    "Submit page body is empty/members-only on a plain fetch — verify in a real browser before assuming a self-serve form exists.",
+    "Ghost portal subscribe/signup modals may intercept the flow.",
+    "Third-party claims (dofollow, DR 38, no badge, freemium cost) are not confirmed on the site itself."
+  ],
+  "countsAsLive": "A dedicated tool page under aihustle.tools (e.g. /aitools/<slug> or a tagged listing) is publicly reachable and linked from the AI Tools index.",
+  "unknowns": [
+    "Whether /submit/ contains a real form or requires a paid Ghost membership.",
+    "Exact price of the paid fast-track placement.",
+    "Review timeline for free submissions.",
+    "Whether a reciprocal link or account is truly required."
+  ],
+  "sources": [
+    {
+      "url": "https://aihustle.tools/submit/",
+      "title": "Submit AI tool — page title only, body did not render"
+    },
+    {
+      "url": "https://aihustle.tools/",
+      "title": "AI Hustle homepage — AI tools directory on Ghost"
+    },
+    {
+      "url": "https://www.submission.directory/site/ai-hustle",
+      "title": "AI Hustle · Submission.Directory — free submission, optional paid placement, dofollow, no badge, DR 38 (third-party)"
+    }
+  ]
+}

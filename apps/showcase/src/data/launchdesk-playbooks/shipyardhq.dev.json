@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "shipyardhq.dev",
+  "name": "ShipYard HQ",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://shipyardhq.dev/",
+      "title": "Shipyard HQ — product launch directory and discovery platform (entity/llms.txt page)"
+    },
+    {
+      "url": "https://shipyardhq.dev/pricing",
+      "title": "Pricing page — listing and promotion plans (referenced)"
+    },
+    { "url": "https://shipyardhq.dev/llms.txt", "title": "Agent retrieval guide" }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Account required: 'A maker creates or signs into a Shipyard HQ account' then submits via the member product submission flow",
+    "Product types accepted: apps, SaaS tools, APIs, AI products, developer tools, startup projects",
+    "Optional paid visibility plans exist (featured/sponsored/priority/spotlight/analytics placement) but a base listing is part of the standard flow"
+  ],
+  "preparation": [
+    "Account on shipyardhq.dev",
+    "Name, tagline, description, logo, website URL",
+    "Category, use cases, keywords/tags, supported platforms, product type, pricing model, starting price",
+    "The site exposes markdown twins and an API catalog (.well-known/api-catalog) — agents can use structured endpoints"
+  ],
+  "workflow": [
+    "Create/sign into a Shipyard HQ account",
+    "Submit the product through the member submission flow",
+    "Fill listing metadata: name, tagline, description, logo, URL, category, use cases, platforms, product type, pricing model",
+    "After publication the product gets a canonical /products/<slug> page and appears in /browse, /categories, /tags, /platforms, /pricing, /product-types, /use-cases surfaces",
+    "Optionally buy a visibility plan for featured/sponsored/spotlight placement"
+  ],
+  "watchFor": [
+    "Unusually agent-friendly: site publishes llms.txt, sitemap, API catalog and markdown content negotiation (Accept: text/markdown or /index.md paths)",
+    "Paid 'verification'/promotion signals exist — an unverified free listing may rank lower on leaderboards",
+    "Votes/visits/analytics drive leaderboard position — a bare listing may get little surface exposure",
+    "Site is new/low-DR — treat the listing as a minor citation"
+  ],
+  "countsAsLive": "A public product page at shipyardhq.dev/products/<slug> appearing in /browse and category listings",
+  "unknowns": [
+    "Whether the free listing is dofollow",
+    "Whether there's a review queue or instant publish",
+    "Paid plan pricing specifics (pricing page referenced but amounts not captured)",
+    "Verification badge requirements"
+  ]
+}

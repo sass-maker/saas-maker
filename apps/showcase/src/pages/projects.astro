@@ -12,16 +12,7 @@ import {
   type DirectoryProject,
 } from '../data/directory';
 import Layout from '../layouts/Layout.astro';
-
-const formatDate = (date: string | null) =>
-  date
-    ? new Intl.DateTimeFormat('en', {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-        timeZone: 'UTC',
-      }).format(new Date(`${date}T00:00:00Z`))
-    : 'Not retained';
+import { formatDirectoryDate } from '../data/format-directory-date';
 
 const deploymentLabel = (project: DirectoryProject) => {
   if (project.group === 'past' && project.deployed) return 'Live archive';
@@ -163,11 +154,16 @@ const projectProfilePath = (project: DirectoryProject) =>
                 >
                   <summary class="directory-summary" aria-label={`Open evidence for ${project.name}`}>
                     <h3 class="directory-identity">
-                      <span class="directory-row-heading">
-                        <span class="directory-project-name">{project.name}</span>
-                      </span>
-                      <span class="directory-identity-description">
-                        {project.description}
+                      {project.logoUrl && (
+                        <img class="directory-project-logo" src={project.logoUrl} alt="" width="48" height="48" loading="lazy" />
+                      )}
+                      <span class="directory-identity-copy">
+                        <span class="directory-row-heading">
+                          <span class="directory-project-name">{project.name}</span>
+                        </span>
+                        <span class="directory-identity-description">
+                          {project.description}
+                        </span>
                       </span>
                     </h3>
 
@@ -254,11 +250,11 @@ const projectProfilePath = (project: DirectoryProject) =>
                       </div>
                       <div>
                         <dt>First retained commit</dt>
-                        <dd>{formatDate(project.firstCommitAt)}</dd>
+                        <dd>{project.firstCommitAt ? <time datetime={project.firstCommitAt}>{formatDirectoryDate(project.firstCommitAt)}</time> : 'Not retained'}</dd>
                       </div>
                       <div>
                         <dt>Latest retained commit</dt>
-                        <dd>{formatDate(project.latestCommitAt)}</dd>
+                        <dd>{project.latestCommitAt ? <time datetime={project.latestCommitAt}>{formatDirectoryDate(project.latestCommitAt)}</time> : 'Not retained'}</dd>
                       </div>
                     </dl>
                   </div>
@@ -691,10 +687,24 @@ const projectProfilePath = (project: DirectoryProject) =>
   }
 
   .directory-identity {
-    display: grid;
-    align-content: center;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
     font: inherit;
     font-weight: 400;
+  }
+
+  .directory-identity-copy {
+    min-width: 0;
+  }
+
+  .directory-project-logo {
+    flex: 0 0 3rem;
+    width: 3rem;
+    height: 3rem;
+    border: 1px solid var(--directory-line);
+    border-radius: 0.75rem;
+    object-fit: cover;
   }
 
   .directory-row-heading {

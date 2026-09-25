@@ -1,0 +1,41 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "microsaasexamples.com",
+  "name": "Micro SaaS Examples",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.microsaasexamples.com/submit",
+      "title": "Submit page — form plus Basic $3 / Featured $29 / Sponsored $147 tiers"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Product should be a micro SaaS; every submission is manually reviewed before publishing",
+    "Cheapest tier (Basic, $3) requires embedding a permanent backlink badge on your landing page",
+    "Featured ($29) and Sponsored ($147) tiers do not require a badge"
+  ],
+  "preparation": [
+    "Product name, contact email, product URL (the only form fields)",
+    "Ability to paste the provided badge code onto your landing page if choosing Basic"
+  ],
+  "workflow": [
+    "Open https://www.microsaasexamples.com/submit",
+    "Fill product name, contact email, and product URL",
+    "Pick a tier: Basic $3 (permanent listing, reviewed within 7 days, backlink badge required), Featured $29 (no backlink, one do-follow link), or Sponsored $147 (24h review, 30-day homepage/category feature, 2 newsletter mentions)",
+    "If Basic: copy the badge code onto your landing page",
+    "Pay and await review/publication"
+  ],
+  "watchFor": [
+    "There is no $0 lane — even the $3 Basic tier is paid AND demands a permanent backlink badge",
+    "Badge/backlink requirement is enforced on Basic; removing it presumably risks delisting",
+    "Sponsored tier's 'featured for one month' window is the only expiring benefit"
+  ],
+  "countsAsLive": "Product appears on the /p index and relevant category page with a do-follow link",
+  "unknowns": [
+    "Refund policy if a submission is rejected",
+    "Precise definition of 'micro SaaS' used for eligibility"
+  ]
+}

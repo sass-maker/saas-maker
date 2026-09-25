@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "saashub.com",
+  "name": "SaaSHub",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.saashub.com/services/submit",
+      "title": "SaaSHub Submit a Product — guidelines and acceptance rules"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Product must be released — unreleased products are rejected immediately",
+    "Must run on its own domain — free subdomains (e.g. my-cool-app.vercel.com, myproduct.saasify.com) are not accepted",
+    "Product must be in English",
+    "Not accepted: software development agencies, waitlist/landing pages with just an email form",
+    "Accepted: SaaS/IaaS/PaaS, most software products and apps, mobile apps with decent websites, niche-leading sites",
+    "Submissions by email are not accepted — use the form only",
+    "All submissions go through an approval process; approved products can still be removed later"
+  ],
+  "preparation": [
+    "Product website URL (own domain)",
+    "A few relevant categories — check competitors' category choices for inspiration",
+    "A competitor list — submissions without listed competitors are deprioritized to the bottom of the queue",
+    "An email address on the product's domain for optional verification (grants higher priority)"
+  ],
+  "workflow": [
+    "Read the guidelines at https://www.saashub.com/services/submit",
+    "Submit the product URL and details via the form",
+    "Add categories and competitors",
+    "Optionally verify the product with a domain email for higher queue priority",
+    "Wait for the approval process to complete"
+  ],
+  "watchFor": [
+    "Skipping the competitors field silently slows the submission to the bottom of the queue",
+    "Verification is optional but materially improves priority — needs a mailbox on the product domain",
+    "SaaSHub reserves the right to remove products even after approval",
+    "Separate 'Feature My Product' paid promotion exists but is not required to list"
+  ],
+  "countsAsLive": "A dedicated product page on saashub.com that also appears as an alternative on competitor product pages.",
+  "unknowns": [
+    "Current review/approval latency",
+    "Whether an account is required for submission or only for management",
+    "Which parts of the profile (logo, screenshots) are required vs optional in the form"
+  ]
+}

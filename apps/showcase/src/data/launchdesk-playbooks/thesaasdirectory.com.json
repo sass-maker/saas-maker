@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "thesaasdirectory.com",
+  "name": "TheSaaSDirectory",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "sources": [
+    {
+      "url": "https://thesaasdirectory.com/",
+      "title": "TheSaaSDirectory homepage — SaaS-only categories, 'Create Listing' entry point"
+    },
+    {
+      "url": "https://thesaasdirectory.com/create-listing/",
+      "title": "Create Listing page — requires login/registration before submitting"
+    },
+    {
+      "url": "https://thesaasdirectory.com/register/",
+      "title": "Register page — 'this directory is for SaaS/PE/VC only', manual review notice"
+    }
+  ],
+  "requirements": [
+    "SaaS company (or PE/VC entity) only — 'please don't bother posting spam or unrelated businesses'",
+    "All new listings are manually reviewed",
+    "Account registration required before the listing form is accessible"
+  ],
+  "preparation": [
+    "Account (username, email, password)",
+    "SaaS company details for the listing form: name, description, website, category",
+    "Featured listing spots exist — featured status may be editorial or paid (not documented on fetched pages)"
+  ],
+  "workflow": [
+    "Register at thesaasdirectory.com/register/",
+    "Log in, then open /create-listing/",
+    "Complete the listing form and submit",
+    "Wait for manual review",
+    "Confirm the listing appears under /listings/ in the appropriate category"
+  ],
+  "watchFor": [
+    "The submissionUrl in the batch (/submit) returns 404 — the real path is /create-listing/ after login",
+    "No paid listing tiers were visible on public pages, but 'Featured Listings' exist on the homepage — featured placement mechanics are undocumented",
+    "Listing detail pages are long-form — prepare a substantial company description, not just a tagline"
+  ],
+  "countsAsLive": "A public listing page under thesaasdirectory.com/listings/ in the chosen SaaS category, reachable without login",
+  "unknowns": [
+    "Review turnaround time",
+    "Whether featured placement is paid or editorial, and its cost",
+    "Whether listing links to the company site are dofollow"
+  ]
+}

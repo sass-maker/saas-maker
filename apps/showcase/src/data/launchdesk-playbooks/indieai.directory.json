@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "indieai.directory",
+  "name": "IndieAI",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://indieai.directory/",
+      "title": "IndieAI homepage — includes full submission pricing table"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free $0 submission requires badge verification — the IndieAI badge must stay on your site permanently; they 'check regularly & unpublish if removed'",
+    "Free listings are 'Reviewed within 30 days' and include no customer support"
+  ],
+  "requirements": [
+    "AI tools built by indie developers (site's stated curation focus)",
+    "Badge embed required for the free tier"
+  ],
+  "preparation": [
+    "Tool name, URL, description, AI category (AI Image Generation, AI Coding, AI Productivity, etc.)",
+    "Logo/screenshot asset",
+    "Pricing model label (Free/Freemium/Paid/Free Trial style used across listings)",
+    "Badge placed on the site for the free route; otherwise pick Fast Track $19 / Premium $39 / Unlimited $69"
+  ],
+  "workflow": [
+    "Click Submit in nav → choose a package on the pricing section",
+    "Free: 'Get Started' → submit details → place badge → wait up to 30 days for review",
+    "Paid: 'Submit Now' → pay one-time → 'Go live instantly' with permanent listing and no badge requirement",
+    "Premium adds 7 days homepage featured; Unlimited adds top banner + site-wide exposure for 7 days + blog post opportunity"
+  ],
+  "watchFor": [
+    "The free badge is checked on an ongoing basis, not once — removing it later gets the listing unpublished",
+    "Fast Track ($19) explicitly has 'No featured placement' — homepage exposure needs Premium ($39) or Unlimited ($69)",
+    "All paid tiers are one-time payments; do not confuse 'Featured on homepage for 7 days' with permanent placement"
+  ],
+  "countsAsLive": "Tool page reachable under indieai.directory and the tool listed in its category/Latest AI Tools section",
+  "unknowns": [
+    "Exact badge markup and verification method",
+    "Whether free-tier links are dofollow",
+    "Account requirement for submission (not stated on the homepage pricing block)"
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "thedevtoolsdir.com",
+  "name": "TheDevToolsDir",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://thedevtoolsdir.com/submit/",
+      "title": "TheDevToolsDir submit form — 4-step flow with badge verification"
+    },
+    {
+      "url": "https://thedevtoolsdir.com/",
+      "title": "TheDevToolsDir homepage — curated developer tools directory"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free plan requires embedding their dofollow badge HTML on your site and passing the in-form 'Verify Badge' check"
+  ],
+  "requirements": [
+    "Developer-tool products — categories are dev-infra-specific (CI/CD, Observability, Databases, APIs, Auth, Testing, Containers, etc.)",
+    "No account needed — the form is anonymous and asks only for an email 'for listing updates only'",
+    "Up to 3 categories per product"
+  ],
+  "preparation": [
+    "Product URL (form has an auto-fill step that scrapes details)",
+    "Product name, tagline, description, screenshot, tags (comma-separated)",
+    "An email address for listing updates",
+    "Badge snippet deployed on the site — must be rel=\"dofollow\": <a href=\"https://thedevtoolsdir.com/product/<your-product>?ref=badge\" rel=\"dofollow\"><img src=\"https://thedevtoolsdir.com/badge/your-product.svg\"></a> — the snippet updates with your product URL after submission"
+  ],
+  "workflow": [
+    "Open https://thedevtoolsdir.com/submit/ (?tier=free preselects the free plan)",
+    "Step 1: enter the product URL and run auto-fill",
+    "Step 2: confirm name/tagline/description, screenshot, ≤3 categories, tags, email",
+    "Step 3: choose Free / Paid $19 / Multiple Listings $29",
+    "Step 4 (free only): embed the badge and click 'Verify Badge', then Submit Product"
+  ],
+  "watchFor": [
+    "Honeypot field at the top — 'Leave this field empty'; filling it likely fails the submission",
+    "Badge verification happens INSIDE the form — the badge must be deployed before you finish submitting",
+    "The badge link must be dofollow (explicit rel=\"dofollow\") — a nofollow badge won't verify",
+    "Multiple Listings ($29) cross-posts to sister directory TheSaaSDir for one price; Paid ($19) gives 3 dofollow links + featured, no badge"
+  ],
+  "countsAsLive": "A public product page at thedevtoolsdir.com/product/<slug>/ listed under its chosen categories.",
+  "unknowns": [
+    "Whether free-tier outbound links are dofollow immediately or only after badge verification",
+    "Human review latency if any",
+    "Whether paid plans also undergo review before going live"
+  ]
+}

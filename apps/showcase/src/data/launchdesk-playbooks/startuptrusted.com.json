@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startuptrusted.com",
+  "name": "StartupTrusted",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://startuptrusted.com/pricing",
+      "title": "StartupTrusted pricing — Free (badge) / Pro $11 / Featured $19"
+    },
+    {
+      "url": "https://startuptrusted.com/submit",
+      "title": "StartupTrusted submit — 'Join StartupTrusted', Google or email sign-in"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free listing requires adding the StartupTrusted badge to your website — automatic badge verification runs before submission",
+    "Free listings are approved only after manual review"
+  ],
+  "requirements": [
+    "Sign-in required — Google OAuth or email",
+    "A site that can carry the badge (free path)",
+    "Startup/business suitable for a 'verified startups' database"
+  ],
+  "preparation": [
+    "Google or email credentials",
+    "Startup name, URL, description, logo, category",
+    "Badge HTML deployed to the site before submitting (verification happens before the submission is accepted)"
+  ],
+  "workflow": [
+    "Open https://startuptrusted.com/submit",
+    "Continue with Google or sign in with email",
+    "Add the StartupTrusted badge to your site (free path)",
+    "Pass the automatic badge verification, then complete the submission",
+    "Manual review approves the listing; Pro ($11 one-time) or Featured ($19) skip badge + review wait with instant approval"
+  ],
+  "watchFor": [
+    "Badge verification is a pre-submission gate, not a post-publish check — you cannot even file the free form without it",
+    "Pro/Featured are one-time payments with 'permanent' dofollow links; Featured pins above all homepage listings",
+    "Same operator runs sister projects (LaunchIgniter, SaaSGrow, outdr.lol, MacIgniter) — expect cross-promotion",
+    "Manual review means the free path can reject or delay"
+  ],
+  "countsAsLive": "The startup appears in the StartupTrusted database/category listings with a detail entry.",
+  "unknowns": [
+    "Manual review duration for the free tier",
+    "Submit-form fields behind the auth wall",
+    "Whether free listings carry dofollow or nofollow links"
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "toolpilot.ai",
+  "name": "ToolPilot",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "A link back to toolpilot.ai is mandatory for all free listings — you must place one of their badges or logos on your site and then fill in the badge URL or email them to confirm",
+    "The badge requirement 'will help prioritize your submission' — i.e., free listings without it may not be processed"
+  ],
+  "sources": [
+    {
+      "url": "https://www.toolpilot.ai/pages/submit-your-ai-tool",
+      "title": "ToolPilot 'Submit Your AI Tool' page — mandatory backlink notice and submission form"
+    },
+    {
+      "url": "https://www.toolpilot.ai/pages/brand-guidelines",
+      "title": "ToolPilot brand guidelines — badge downloads, footer badge instructions, contact form fields"
+    },
+    { "url": "https://www.toolpilot.ai/", "title": "ToolPilot homepage — AI tools directory" }
+  ],
+  "requirements": [
+    "Product must be an AI-powered tool",
+    "Free listings must carry the 'Powered by ToolPilot.ai' or 'Featured on ToolPilot' badge linking back to toolpilot.ai",
+    "Contact/submit form fields: Name, Email, Name of AI Tool, Company/Organization Name, Website, AI Tool Description, Comment"
+  ],
+  "preparation": [
+    "Badge asset from https://www.toolpilot.ai/pages/brand-guidelines (featured badge black/white, or logo pack)",
+    "A footer/site location where the badge can link to toolpilot.ai or your ToolPilot listing page",
+    "Tool name, company name, website URL, and a written tool description",
+    "A contact email for the confirmation step"
+  ],
+  "workflow": [
+    "Add the ToolPilot badge/logo to your site footer first (required before or alongside the free submission)",
+    "Open https://www.toolpilot.ai/pages/submit-your-ai-tool and complete the form",
+    "Include the URL of the page where your badge is placed, or email contact@toolpilot.ai to confirm the badge",
+    "Wait for the ToolPilot team to review and create the listing"
+  ],
+  "watchFor": [
+    "The site is Shopify-based; the submit page shows a 'Pricing Table' heading whose contents did not render in fetched HTML — paid tiers/featured options exist but amounts are unverified",
+    "Badge should link 'to ToolPilot.ai, or directly to your page on our site' per brand guidelines",
+    "The badge verification is manual — you must tell them the URL or email them; forgetting this step stalls the free listing"
+  ],
+  "countsAsLive": "A public product page at toolpilot.ai/products/<handle> appearing in collections such as 'New AI Tools' or a category listing",
+  "unknowns": [
+    "Exact paid pricing tiers — the pricing table on the submit page did not render its content",
+    "Review timeline for free listings",
+    "Whether a Shopify customer account (Login link) is required to complete the submit form"
+  ]
+}

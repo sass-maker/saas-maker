@@ -1,0 +1,56 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "geekwire.com",
+  "name": "GeekWire Startup List",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "sources": [
+    {
+      "url": "https://www.geekwire.com/submit-startup/",
+      "title": "GeekWire 'Submit Startup' form (returned 403 to automated fetch — details corroborated via GeekWire's own articles)"
+    },
+    {
+      "url": "https://www.geekwire.com/2012/introducing-geekwires-startup-list-500-seattlearea-startups-growing/",
+      "title": "GeekWire article — Startup List scope, optional founding/employee/revenue fields on the form"
+    },
+    {
+      "url": "https://www.geekwire.com/submit-listings/",
+      "title": "GeekWire 'Submit Startup Resource Listings' — free and paid listings for PNW startup service providers"
+    },
+    {
+      "url": "https://www.geekwire.com/2024/geekwire-200-shakeup-reveals-major-shifts-in-pacific-northwest-startup-landscape/",
+      "title": "GeekWire 200 article — eligibility requires being on the Startup List; HQ in WA/OR/ID/BC"
+    }
+  ],
+  "requirements": [
+    "Tech startup headquartered in the Pacific Northwest — Washington, Oregon, Idaho, or British Columbia — to be on the GeekWire Startup List",
+    "Being on the Startup List is the prerequisite for GeekWire 200 ranking eligibility; no separate submission needed for that",
+    "The submit-startup form also accepts updates to existing listings",
+    "Optional fields include founding date, employee count, annual revenue — used for the ranked index, not required for inclusion"
+  ],
+  "preparation": [
+    "Startup name, website, category, HQ location (must be PNW)",
+    "Optional: founding date, employee count, revenue for ranking purposes",
+    "A company description the editors can publish"
+  ],
+  "workflow": [
+    "Check whether the startup is already on the GeekWire Startup List",
+    "Open geekwire.com/submit-startup/ (in a normal browser — the page 403s automated fetchers) and complete the form",
+    "Submit and wait for editorial inclusion",
+    "Verify the startup appears on the Startup List; GeekWire 200 inclusion then happens automatically via their ranking"
+  ],
+  "watchFor": [
+    "Geographic eligibility is hard — non-PNW startups don't belong here",
+    "Separate surface: 'Submit Startup Resource Listings' (geekwire.com/submit-listings/) is for service providers to startups, with both free and paid/Featured options — don't confuse it with the Startup List",
+    "The submit page blocks bots — an agent will need a real-browser route or manual step",
+    "This is editorial review, not instant publish"
+  ],
+  "countsAsLive": "The startup appears as an entry on the public GeekWire Startup List (geekwire.com/startup-list/) and is eligible for GeekWire 200 ranking",
+  "unknowns": [
+    "Exact form fields and review SLA — the submit page refused automated access (403)",
+    "Whether Startup List entries link dofollow to company sites",
+    "Whether a company profile page beyond the list row is created"
+  ]
+}

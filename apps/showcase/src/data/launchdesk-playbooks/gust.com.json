@@ -1,0 +1,56 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "gust.com",
+  "name": "Gust",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://gust.helpscoutdocs.com/article/211-publishing-your-profile",
+      "title": "Gust Support - Publishing your profile"
+    },
+    {
+      "url": "https://gust.com/signup/entrepreneurs",
+      "title": "Gust - entrepreneur sign up (name, startup name, incorporation status, stage, city)"
+    },
+    {
+      "url": "https://gust.com/signup",
+      "title": "Gust - sign up role chooser (entrepreneur / investment org / accelerator)"
+    },
+    {
+      "url": "https://gust.com/",
+      "title": "Gust homepage - 'Get started for free', Company Profile pitch"
+    }
+  ],
+  "category": "profile",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free account as an entrepreneur/founder at gust.com/signup/entrepreneurs",
+    "Signup asks for startup name, whether the startup is incorporated, how far along it is, and the city where it's located",
+    "Publishing is optional: an unpublished private profile can still be submitted directly to investors; publishing is what creates the public directory listing"
+  ],
+  "preparation": [
+    "Founder name and account email",
+    "Startup name, incorporation status, stage, and city",
+    "Company profile content: executive summary, team info, pitch materials (kept private by default)",
+    "Decide deliberately whether to publish - publishing exposes a limited public view and is Google-indexed"
+  ],
+  "workflow": [
+    "Sign up at https://gust.com/signup/entrepreneurs and complete the startup questions",
+    "Build the Gust Company Profile (story, progress, diligence materials)",
+    "Use the publish option on the profile to list it in Gust's public company directory",
+    "Optionally submit the profile directly to investor groups from their Gust profile pages"
+  ],
+  "watchFor": [
+    "Published profiles ARE indexed by Google - company name, founder names, and management team names can surface in search",
+    "Only a limited public view is shown (contact info, executive summary, documents, financials, pitch deck stay private) - but investors in Gust's Group Investor Platform can request full access",
+    "Companies located in Boston, New York, or London are additionally surfaced on Gust-powered hub sites (starthub.org, digital.nyc, tech.london)",
+    "Publishing is not required to use Gust - don't publish if the goal is only a directory listing and you want minimal exposure"
+  ],
+  "countsAsLive": "The company appears in Gust's public directory at gust.com/search and its limited public profile page is viewable without login",
+  "unknowns": [
+    "Current field-level requirements for a 'complete' published profile",
+    "Whether publishing requires a completeness threshold or manual approval",
+    "Any current paid tier affecting directory visibility"
+  ]
+}

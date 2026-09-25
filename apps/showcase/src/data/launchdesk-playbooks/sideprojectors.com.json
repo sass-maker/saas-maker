@@ -1,0 +1,58 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "sideprojectors.com",
+  "name": "SideProjectors",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.sideprojectors.com/submit/type",
+      "title": "SideProjectors submit — intent picker (sell / co-founder / showcase / sold)"
+    },
+    {
+      "url": "https://www.sideprojectors.com/",
+      "title": "SideProjectors homepage — marketplace for side projects"
+    },
+    {
+      "url": "https://help.sideprojectors.com/about",
+      "title": "SideProjectors help — free submissions, no commission on sales"
+    },
+    {
+      "url": "https://submitmap.com/platform/sideprojectors/",
+      "title": "Third-party submission walkthrough of the SideProjectors flow"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Account required — sign in via Google, GitHub, GitLab, Product Hunt, LinkedIn, or email/password",
+    "First choice is listing intent: sell, find a co-founder, showcase, or record a sale — it determines what the project page becomes",
+    "Categories: SaaS, Ecommerce/Shop, Blog, Website, Mobile, Desktop, Browser extension, Domain",
+    "All projects go through a review process before approval"
+  ],
+  "preparation": [
+    "Project name, description and category",
+    "Images/screenshots and optionally a demo",
+    "For sale listings: asking price plus revenue and user metrics, tech stack",
+    "Decide the intent upfront — 'Sell' puts a for-sale badge on the listing"
+  ],
+  "workflow": [
+    "Open /submit (or /submit/type) and pick the listing intent",
+    "Sign in with an OAuth provider or email",
+    "Fill project details (name, description, category, images; price for sale listings)",
+    "Publish — project pages live at /project/<id> with an assigned numeric id",
+    "Listing appears in Latest Side Projects / category pages after review"
+  ],
+  "watchFor": [
+    "Listing is free and sales carry no commission, but paid memberships ($3/$6/$9 per month) ration marketplace outreach — free tier allows only ~3 owner contacts and 2 DMs/day, aimed at buyers not listers",
+    "Free tier is ad-supported with large sponsor panels",
+    "Picking the wrong intent changes how the project is badged — 'Showcase' is the directory-equivalent path for a live product",
+    "Submit pages render listing content publicly but the actual form requires login"
+  ],
+  "countsAsLive": "A public project page at sideprojectors.com/project/<id> appearing in Latest Side Projects or its type/category listing.",
+  "unknowns": [
+    "Review/approval latency for new listings",
+    "Whether showcase listings get dofollow outbound links",
+    "Exact required fields per intent (form is behind auth)"
+  ]
+}

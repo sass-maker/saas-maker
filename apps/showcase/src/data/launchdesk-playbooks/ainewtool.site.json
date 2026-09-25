@@ -1,0 +1,57 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "ainewtool.site",
+  "name": "AINewTool",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://ainewtool.site/",
+      "title": "AINewTool homepage - AI tool directory ('Where AI Rising Stars Get Discovered')"
+    },
+    {
+      "url": "https://ainewtool.site/pricing",
+      "title": "AINewTool - Pricing (free badge-gated plan, Pro $9.9 one-time, Sponsor $19.9/mo)"
+    },
+    {
+      "url": "https://ainewtool.site/auth/register",
+      "title": "AINewTool - registration page (JS-rendered app)"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free plan ($0) gives 1 dofollow link but REQUIRES badge verification: you must embed the AINewTool badge on your site and 'keep badge permanently - check regularly & unpublish if removed'",
+    "Free submissions are 'reviewed within 30 days'",
+    "Pro plan ($9.9 one-time) removes the backlink requirement and lists immediately ('List right now, publish whenever you want'), with >=3 dofollow links, featured placement, and newsletter/social sharing; Sponsor ($19.9/mo) adds site-wide banner promotion"
+  ],
+  "requirements": [
+    "AI tool / startup directory - submit via /submit after registering at /auth/register (registration page is a JS app; sign-in appeared on the submit flow)",
+    "For the free tier: embed their badge/backlink on the submitted website and keep it live permanently",
+    "Product fields typical of this directory family: name, URL, description, categories/tags (the site organizes by categories like AI, Productivity, Development, etc.)"
+  ],
+  "preparation": [
+    "Account email (and possibly Google/GitHub OAuth - sister sites on the same stack offer these)",
+    "Product name, URL, description, category picks",
+    "Placement spot for their badge/backlink on your site if taking the free route",
+    "Pro plan decision upfront if you don't want the permanent badge obligation"
+  ],
+  "workflow": [
+    "Register an account at https://ainewtool.site/auth/register",
+    "Go to https://ainewtool.site/submit and fill the product form",
+    "Choose the free plan (add their badge to your site before/after submitting; they verify it) or pay Pro $9.9 for badge-free instant listing",
+    "Free route: wait for review within 30 days; keep the badge live - 'check regularly & unpublish if removed' means they re-crawl and delist if the badge disappears"
+  ],
+  "watchFor": [
+    "Badge obligation is permanent and monitored - removing the badge gets the listing unpublished",
+    "Promo banner: '50% OFF for PRO & SPONSOR ... EB50 ... Only 4/5 left' - a scarcity-style upsell",
+    "Registration/submit pages are JS-rendered - text-only fetches return empty shells",
+    "Sister-stack pattern: ainewtool.site shares its layout/badge model with newtool.site and similar directories - same traps apply"
+  ],
+  "countsAsLive": "The tool has a public detail page on ainewtool.site and appears in Latest Products/category browsing",
+  "unknowns": [
+    "Exact badge HTML/placement requirements",
+    "Whether free-tier review ever exceeds 30 days",
+    "Whether the account supports OAuth providers"
+  ]
+}

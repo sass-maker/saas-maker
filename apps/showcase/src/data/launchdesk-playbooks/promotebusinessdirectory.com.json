@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "promotebusinessdirectory.com",
+  "name": "Directory Web Promotion",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.promotebusinessdirectory.com/submit.php",
+      "title": "Directory Web Promotion - Submit Link (Step One: Choose a Category)"
+    },
+    {
+      "url": "https://promotebusinessdirectory.com/",
+      "title": "Directory Web Promotion homepage - business-focused web directory with articles"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Legacy phpLD-style directory: 'Submit Link' starts with 'Step One: Choose a Category' from a very large topical tree (Automobile Parts, Blogs and Diaries, Business & Economy, Computers & Internet, ...)",
+    "Site is active - 'Latest Website Added' list shows 2026-dated entries",
+    "Optional account: Register / 'I forgot my password' widgets exist on the page, but the submit form is reachable without login",
+    "Separate 'Submit Article' flow exists for article submissions"
+  ],
+  "preparation": [
+    "Site URL, title, description, and meta keywords/description (standard fields for this directory family)",
+    "Submitter name and email",
+    "Pre-pick the deep category - the tree is long and the form gives no draft saving"
+  ],
+  "workflow": [
+    "Open https://www.promotebusinessdirectory.com/submit.php",
+    "Step 1: select the deep category from the tree",
+    "Step 2: fill the listing details (title, URL, description, meta fields, name, email) and submit",
+    "Wait for review; verify via 'Latest Links' or the category page"
+  ],
+  "watchFor": [
+    "No pricing was visible on the step-1 page - sibling directories on the same engine show a paid 'featured' tier on the details step; decline if staying free (catalog note marks this site 'free', unverified for a paid option)",
+    "Legacy UX: no drafts, huge inline category list",
+    "Site footer is 'Copyright 2009' with statcounter tracking - an old property, but submissions are being listed (2026 entries visible)",
+    "Cross-linked with sister directory sites (e.g. qualityinternetdirectory.com in footer) - submit only where relevant"
+  ],
+  "countsAsLive": "The link is publicly listed under its category (verify via 'Latest Links' or the category detail page)",
+  "unknowns": [
+    "Whether a paid/featured tier appears on the details step",
+    "Review turnaround",
+    "Whether listing links are dofollow"
+  ]
+}

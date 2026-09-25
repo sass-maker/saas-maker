@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "earlyhunt.com",
+  "name": "EarlyHunt",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free Launch ($0) requires the EarlyHunt badge on your site.",
+    "Free-tier outbound links are nofollow by default — only Top-3 daily winners can earn dofollow."
+  ],
+  "requirements": [
+    "Product/startup launches; a daily launch board in the Aura++/IndieHunt family of launch platforms.",
+    "Badge on your site for the free tier."
+  ],
+  "preparation": [
+    "Project name, URL, tagline, description, logo, category.",
+    "EarlyHunt badge embed for free tier.",
+    "Plan choice: Free (badge, nofollow, top-3 earns dofollow) / Premium $19 one-time (guaranteed dofollow, site-wide ad slots for 7 live days, Launch Kit graphics, launch blog post, social promotion, skip queue)."
+  ],
+  "workflow": [
+    "Open https://earlyhunt.com/submit.",
+    "Choose Free or Premium ($19) launch tier.",
+    "Free: install the badge, submit, and compete in the daily ranking — Top 3 earns the dofollow link.",
+    "Premium: guaranteed dofollow plus 7 days of site-wide ad slots and launch assets."
+  ],
+  "watchFor": [
+    "Free tier is nofollow unless you rank Top-3 — the 'free dofollow' is competitive, not guaranteed.",
+    "Premium's real perks are the guaranteed dofollow + skip queue + ad slots; evaluate vs $19.",
+    "Launch Kit graphics / launch blog are content upsells.",
+    "The submit/pricing pages expose an AI-friendly .md mirror — clean source of truth."
+  ],
+  "countsAsLive": "The product appears on earlyhunt.com's daily launch ranking for its launch date with a public listing page.",
+  "unknowns": [
+    "Whether an account is required (submit page didn't expose auth state).",
+    "Exact submit form fields.",
+    "Free queue length / how far out launches can be scheduled.",
+    "Whether badge verification is automated."
+  ],
+  "sources": [
+    {
+      "url": "https://earlyhunt.com/submit",
+      "title": "Submit a Project — Free (badge, nofollow, top-3 dofollow) vs Premium $19"
+    },
+    { "url": "https://earlyhunt.com/pricing", "title": "EarlyHunt Pricing — plan comparison" }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "brouseai.com",
+  "name": "BroUseAI",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    { "url": "https://brouseai.com/", "title": "BroUseAI homepage - AI tools directory" },
+    {
+      "url": "https://www.brouseai.com/submission/ai",
+      "title": "BroUseAI Submit AI form with Basic ($0) and Premium ($29) plans"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free 'Basic' plan ($0) exists but joins a waiting queue with no stated review time",
+    "On the Basic plan, updating the AI page later costs $19 per update",
+    "Paid Premium ($29 one-time + VAT, via Dodo Payments license key) skips the queue with listing within 48 hours, free forever updates, a checkmark badge, and 30-day featured eligibility"
+  ],
+  "requirements": [
+    "Submission is for AI tools only (form is 'Submit AI')",
+    "Strict content policy: no explicit sexual content/nudity, NSFW or offensive material, gambling/betting, extreme violence or gore, discriminatory content or hate speech, illegal activities or substance abuse, or harmful misinformation",
+    "Violating applications are rejected immediately and content can be removed even after listing",
+    "A captcha-style 'Let us know you're human' check is part of the form"
+  ],
+  "preparation": [
+    "Contact email (used for accept/reject notification)",
+    "AI name, URL, and tagline",
+    "Pricing model for the tool",
+    "AI overview/description",
+    "Core features list",
+    "Use cases list",
+    "Optional FAQ entries — can be left empty and BroUseAI will generate them with AI",
+    "License key field is on the form — leave empty for Basic, or paste the Dodo Payments key after buying Premium"
+  ],
+  "workflow": [
+    "Go to https://www.brouseai.com/submission/ai (linked as 'Submit' / 'Submit Your AI Free' from the homepage)",
+    "Choose 'Submit AI' on the submission-type selector",
+    "Enter email, AI name, URL, tagline, and pricing",
+    "Fill the overview, core features, and use cases fields; optionally add FAQs",
+    "Choose a plan: Basic $0 (queue) or Premium $29 one-time + VAT (48-hour listing, dofollow link, free updates, checkmark, featured eligibility)",
+    "If Premium, buy a license key via the Dodo Payments checkout link and paste it into the License Key field",
+    "Complete the human verification and click 'Submit AI'",
+    "Basic: wait in the queue; Premium: expect listing within 48 hours; accept/reject is sent by email"
+  ],
+  "watchFor": [
+    "Premium is presented as 'RECOMMENDED' with a struck-through $59 price ($29 + VAT) — the free Basic plan is easy to miss below it",
+    "The License Key field appears on the form regardless of plan; it is only needed for Premium",
+    "Free-plan listings charge $19 for any later page update — get the copy right the first time",
+    "FAQ field can be left blank; the site will AI-generate FAQs, which may not match your positioning",
+    "Acceptance/rejection notification is by email only"
+  ],
+  "countsAsLive": "The tool has a public page at brouseai.com/ai/<slug> and appears in the New AIs or category listings",
+  "unknowns": [
+    "Length of the free Basic queue",
+    "Whether the Basic-plan link is dofollow (Premium is explicitly promised a dofollow link; Basic is only promised 'a valuable dofollow link' too, but unverified in practice)",
+    "Whether the AI name field requires a logo upload or it is auto-fetched"
+  ]
+}

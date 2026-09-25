@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "betakit.com",
+  "name": "BetaKit",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://betakit.com/",
+      "title": "BetaKit homepage — Canadian tech & startup news publication"
+    },
+    {
+      "url": "https://betakit.com/about-us/",
+      "title": "About page with pitch, tip, freelance and partnership routes"
+    },
+    { "url": "https://betakit.com/tips", "title": "Submit a tip to BetaKit" },
+    {
+      "url": "https://betakit.com/write-for-betakit/",
+      "title": "Freelance submission guide (linked from about page)"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Canadian tech/startup focus — BetaKit is the publication of record for Canadian tech; stories need a Canadian angle",
+    "Editorial coverage only: there is no self-serve directory or listing",
+    "Newsworthiness required — funding, launches, layoffs, notable milestones"
+  ],
+  "preparation": [
+    "A concise pitch: what the company does, the Canadian connection, why now",
+    "For funding news: amount, investors, stage, founders, use of funds",
+    "Embargo timing and exclusivity preference if applicable",
+    "Relevant vertical (AI, FinTech, SaaS, cleantech, etc.) and region tags they publish under"
+  ],
+  "workflow": [
+    "Choose the right channel from the About page: 'Pitch your story' (contact form), 'Submit a tip' (/tips), or 'Write for BetaKit' (freelance guide)",
+    "Send the pitch or tip via the form at https://betakit.com/contact-us/ or https://betakit.com/tips",
+    "Wait for an editor response; follow up once if no reply in ~1-2 weeks",
+    "Coverage appears as an article on betakit.com if accepted"
+  ],
+  "watchFor": [
+    "This is earned media — no payment buys news coverage; the paid 'Partner with us' / Innovation Leaders programs are sponsorships, not listings",
+    "Non-Canadian startups are unlikely to be covered",
+    "Don't pitch pure SEO/marketing copy; reporters ignore it",
+    "Paid partnership content is labeled and separate from editorial"
+  ],
+  "countsAsLive": "A published BetaKit article (betakit.com URL) covering or mentioning the company",
+  "unknowns": [
+    "Whether the tips/pitch forms guarantee any response",
+    "Typical editorial response time",
+    "Whether company links in articles are dofollow"
+  ]
+}

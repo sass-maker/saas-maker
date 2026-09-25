@@ -1,0 +1,58 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "saasworthy.com",
+  "name": "SaaSworthy",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.saasworthy.com/offerings",
+      "title": "SaaSworthy offerings — vendor listing and promotion options"
+    },
+    {
+      "url": "https://www.saasworthy.us/faq",
+      "title": "SaaSworthy FAQ — free promotion, featuring, verification"
+    },
+    {
+      "url": "https://www.saasworthy.us/site/product_verification",
+      "title": "SaaSworthy product verification process"
+    },
+    {
+      "url": "https://ideaproof.io/launch-directories/saasworthy",
+      "title": "Third-party submission guide for SaaSworthy (DR72, free + paid)"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Listing is exclusively for SaaS products",
+    "Vendor portal access is granted via a secure link emailed after the initial form",
+    "Team reviews the submission and approves on validation"
+  ],
+  "preparation": [
+    "Product name, URL, description, logo, screenshots, pricing model and category",
+    "Company details including funding status (form asks about funding/funds received)",
+    "A company-domain email, or ability to place an HTML snippet on the site, for product verification",
+    "Contact: business@saasworthy.com for assistance"
+  ],
+  "workflow": [
+    "Open https://www.saasworthy.com/addproduct and complete the initial form",
+    "Watch for the emailed secure link to the vendor portal (check spam)",
+    "Complete all required profile details in the portal and submit for verification",
+    "Team reviews and approves the listing",
+    "Optionally verify the product (free) via company email or HTML snippet — verified listings unlock featuring eligibility",
+    "Re-confirm details quarterly when the reminder email arrives to keep verification"
+  ],
+  "watchFor": [
+    "Verification is free but recurring — a quarterly email asks you to re-confirm details or the verified state lapses",
+    "Homepage 'Curated Collections' featuring is a paid/sponsored promotion, not part of the free listing",
+    "Main site returned 403 to automated fetches — use .us mirror pages (saasworthy.us) for docs if blocked",
+    "Getting featured requires being approved, verified, and listing competitors the product could replace"
+  ],
+  "countsAsLive": "An approved product profile page on saasworthy.com reachable via category/search listings.",
+  "unknowns": [
+    "Exact fields on the /addproduct form (main site blocked automated reads)",
+    "Approval latency",
+    "Whether free listings carry dofollow links (third-party guides claim dofollow; not confirmed on-site)"
+  ]
+}

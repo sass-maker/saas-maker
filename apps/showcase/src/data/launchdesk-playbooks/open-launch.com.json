@@ -1,0 +1,60 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "open-launch.com",
+  "name": "Open Launch",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://open-launch.com/pricing",
+      "title": "Pricing — Free tier fully booked into 2027; Premium $12/launch; SEO Growth Package $59 (marked down from $199)"
+    },
+    {
+      "url": "https://open-launch.com/projects/submit/",
+      "title": "Submit Project — login wall (Google / GitHub / email)"
+    },
+    {
+      "url": "https://open-launch.com/",
+      "title": "Homepage — open-source launch platform by Simon Gingras"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free launches exist but are 'fully booked into 2027' — effectively unavailable; you can join an email waitlist by starting a launch",
+    "Free tier's dofollow backlink requires BOTH ranking top-3 daily AND displaying their attribution badge on your site",
+    "Premium $12/launch is 'the only way to launch right now' — launch tomorrow, guaranteed dofollow backlink, capped at 10 premium slots/day",
+    "Account required (Google, GitHub, or email/password sign-up)"
+  ],
+  "requirements": [
+    "A tech product/project to launch; all launches happen at 8:00 AM UTC",
+    "Account registration before reaching the submit form",
+    "For the free tier's dofollow link: top-3 daily ranking + their badge displayed on your site"
+  ],
+  "preparation": [
+    "Account credentials",
+    "Project name, URL, tagline, description, logo/screenshots, category",
+    "$12 for Premium launch if you need a date this year",
+    "Optional: $59 SEO Growth Package adds a dedicated review article plus the Premium launch"
+  ],
+  "workflow": [
+    "Sign up/sign in at open-launch.com (Google/GitHub/email)",
+    "Open /projects/submit and fill the launch form",
+    "Choose Free (waitlist, booked into 2027) or Premium $12 for next-day launch",
+    "Launch happens at 8:00 AM UTC; homepage featuring included in both tiers",
+    "Premium guarantees the dofollow backlink from a DR-71 domain"
+  ],
+  "watchFor": [
+    "Free tier is effectively closed — booked into 2027; don't count on it",
+    "Free-tier backlink is conditional (top-3 rank AND badge) — plan for Premium if the link matters",
+    "Premium slots are capped at 10/day with scarcity framing ('9 of 10 slots left')",
+    "SEO Growth Package is a Stripe payment-link upsell ($59, struck from $199) — separate from the launch flow",
+    "Site is an open-source project (github.com/openlaunch-org/Open-Launch) run by an indie maker"
+  ],
+  "countsAsLive": "Project appears on the homepage launch list on its launch day at 8:00 AM UTC with a public project page",
+  "unknowns": [
+    "Exact fields in the authenticated submission form",
+    "Whether free-tier badges are verified programmatically",
+    "Refund policy for Premium launches"
+  ]
+}

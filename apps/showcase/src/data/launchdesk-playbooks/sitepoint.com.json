@@ -1,0 +1,56 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "sitepoint.com",
+  "name": "SitePoint Forums",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "community",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free account, but self-promotion is heavily gated: no signatures (fake signatures get one warning, then a ban), no links or promotional text in posts or 'About Me' (removed on sight), all outgoing links are nofollow, and signature privileges historically required ~90 days of membership",
+    "A site review is only acceptable as a discussion-worthy request in the appropriate category — a bare 'please review my site' link post gets deleted"
+  ],
+  "sources": [
+    {
+      "url": "https://www.sitepoint.com/community/t/having-trouble-navigating-the-rules-for-signature/266581",
+      "title": "SitePoint Forums thread — 'THE RULES AT A GLANCE': zero-tolerance spam, no signatures, no self-promotion, nofollow links"
+    },
+    {
+      "url": "https://www.sitepoint.com/community/t/can-anyone-post-here-or-only-sitepoint-members-somehow/208577",
+      "title": "SitePoint Forums thread — how to request a site/code review the right way"
+    },
+    {
+      "url": "https://www.sitepoint.com/community/signup",
+      "title": "SitePoint community signup (403 to automated fetch — registration exists via Discourse)"
+    }
+  ],
+  "requirements": [
+    "A community account (Discourse-based forum at sitepoint.com/community)",
+    "Participation mindset — the FAQ expects members to give reviews, not only request them",
+    "Review requests must be posted in the matching category (Design & UX, HTML & CSS, PHP, Marketing, etc.) with substantive context"
+  ],
+  "preparation": [
+    "Account creation",
+    "One profile link in the 'Web Site' profile field — the single allowed promotional link",
+    "A thoughtful review-request post: what you built, what you like/dislike, what feedback you need",
+    "Willingness to review other members' work in return"
+  ],
+  "workflow": [
+    "Create an account at sitepoint.com/community/signup (expect bot-blocking — 403 to automated fetch)",
+    "Read the community FAQ/rules",
+    "Put your product URL in the profile 'Web Site' field only",
+    "Contribute in a relevant category first; then post a substantive review request using the 'site-review' style of topic",
+    "The 'listing' outcome here is a public forum thread + profile, not a directory entry"
+  ],
+  "watchFor": [
+    "Zero-tolerance spam policy: 'Do it once and you're out' — no second chances for blatant promotion",
+    "All outgoing links are nofollow — SEO value is nil; the value is genuine feedback",
+    "Akismet spam filtering is aggressive per moderators — new accounts' posts can get zapped",
+    "Marketplace/Job Board categories exist for commercial posts — promotion outside them is deleted"
+  ],
+  "countsAsLive": "Your account profile is public with the single 'Web Site' link, and any review-request thread is publicly visible in its forum category",
+  "unknowns": [
+    "Current signature/link privilege thresholds for new accounts (rules pages were only partially accessible)",
+    "Whether registration is instant or moderated for new members"
+  ]
+}

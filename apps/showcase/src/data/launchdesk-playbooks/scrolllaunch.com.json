@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "scrolllaunch.com",
+  "name": "ScrollLaunch",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.scrolllaunch.com/pricing",
+      "title": "ScrollLaunch pricing — free launch, Premium $19, Premium+ $39, ads, newsletter, directory submission"
+    },
+    {
+      "url": "https://www.scrolllaunch.com/faq",
+      "title": "ScrollLaunch FAQ — launching, backlinks, AI-agent surfaces"
+    },
+    {
+      "url": "https://www.scrolllaunch.com/",
+      "title": "ScrollLaunch homepage — weekly launch leaderboard"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free launch is $0 forever, but the product-page backlink stays dofollow only while the ScrollLaunch badge remains on your site (re-checked weekly)",
+    "Each ISO week has only 20 free launch slots; when a week fills you pick a later week or upgrade"
+  ],
+  "requirements": [
+    "A free account is required (submit happens from the dashboard at /dashboard/products/new)",
+    "Product joins a weekly (ISO week) leaderboard ranked by upvotes"
+  ],
+  "preparation": [
+    "Account credentials",
+    "Product name, tagline, description, website URL, categories, logo (AI prefill available)",
+    "Badge HTML to keep on the site if staying on the free tier"
+  ],
+  "workflow": [
+    "Create a free account on scrolllaunch.com",
+    "Open /dashboard/products/new and submit the product (AI prefill assists)",
+    "Pick an open launch week (max 20 free products/week; Premium skips the cap)",
+    "Product goes live on the weekly leaderboard and gets a permanent /products/<slug> page",
+    "Keep the badge live on your site to preserve the dofollow link"
+  ],
+  "watchFor": [
+    "Badge removal pauses the dofollow link AND any homepage ads / newsletter / X shoutouts on the free listing",
+    "Discovery surfaces (feed, archive) are nofollow on every tier — only the product page is dofollow",
+    "Premium is instant and permanent but non-refundable (transferable to another product you own)",
+    "Upsells: Premium $19, Premium+ $39 (adds ~1,800-word AI blog post with 4+ dofollow links), sidebar/center ads $19-29/week, newsletter sponsor $49/issue, done-for-you directory submissions $99-199",
+    "Exceptionally agent-friendly: llms.txt, read-only MCP server (no API key), /api/ai snapshot, OpenAPI spec, and markdown twins via .md suffix or Accept: text/markdown — do NOT scrape HTML per their ai.txt"
+  ],
+  "countsAsLive": "The product has a public /products/<slug> page and appears on the current week's leaderboard (/week/<year>/<week> after it ends).",
+  "unknowns": [
+    "Whether free submissions are human-reviewed before going live",
+    "Exact signup methods supported (email/OAuth providers)"
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "sumodir.com",
+  "name": "Sumodir",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://sumodir.com/pricing",
+      "title": "SumoDir pricing — Free (backlink required, 2-week review) / Premium $15 / Review Article $49"
+    },
+    {
+      "url": "https://sumodir.com/",
+      "title": "SumoDir homepage — business directory for startups, SaaS, local businesses, apps"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free listing requires a backlink to sumodir.com on your site",
+    "Free listings are reviewed and listed within ~2 weeks"
+  ],
+  "requirements": [
+    "Broad eligibility: startups, SaaS companies, local businesses, and apps",
+    "Prohibited: cryptocurrency, adult content, gambling, or illegal services — removed without refund",
+    "Free tier description limited to ~1,500 characters"
+  ],
+  "preparation": [
+    "Website URL, name, description (≤1,500 chars free / ≤2,500 premium), logo, categories/tags",
+    "A page where the SumoDir backlink can be placed (free path)",
+    "Decide Free vs Premium ($15 one-time) vs Review Article ($49 one-time)"
+  ],
+  "workflow": [
+    "Open https://sumodir.com/submit",
+    "Choose the Free Listing plan",
+    "Fill business/product details and categories",
+    "Place the required backlink to sumodir.com",
+    "Manual review lists the site within ~2 weeks; Premium skips the queue instantly"
+  ],
+  "watchFor": [
+    "Premium ($15) buys instant approval, 3 dofollow links, and an AI-written 2,500-char description with no backlink requirement",
+    "$49 Review Article add-on generates a 1,500–2,500-word AI review post with dofollow links",
+    "'Promote Your Brand' ad slots ($30/30 days) were marked sold out at fetch time",
+    "Checkout via Polar; content-policy removals carry no refund even on paid plans",
+    "Cross-promotes a LaunchDirectories done-for-you submission service"
+  ],
+  "countsAsLive": "A public item page at sumodir.com/item/<slug> reachable from its category listing.",
+  "unknowns": [
+    "Exact submit-form fields",
+    "Whether the free listing's outbound link is dofollow only after their backlink is detected",
+    "Whether an account is required"
+  ]
+}

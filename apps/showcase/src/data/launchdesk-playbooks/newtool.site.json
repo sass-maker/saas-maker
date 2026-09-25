@@ -1,0 +1,61 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "newtool.site",
+  "name": "NewTool",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://newtool.site/submit",
+      "title": "NewTool - Submit (renders a login wall: email/password, Google and GitHub OAuth)"
+    },
+    {
+      "url": "https://newtool.site/pricing",
+      "title": "NewTool - Pricing (free badge-gated plan, Pro $9.9 one-time, Sponsor $19.9/mo)"
+    },
+    {
+      "url": "https://newtool.site/",
+      "title": "NewTool homepage - 'Rising Star Tools Directory'"
+    },
+    {
+      "url": "https://newtool.site/auth/register",
+      "title": "NewTool - registration (linked from login wall)"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free plan ($0): 'Get 1 dofollow link' but 'Badge verification required - keep badge permanently, check regularly & unpublish if removed'",
+    "Free submissions are 'reviewed within 30 days'",
+    "Pro ($9.9 one-time): 'list right now', permanent link with NO backlink required, >=3 dofollow links, featured homepage/category placement; Sponsor ($19.9/mo): site-wide top-banner placement (max 3 sponsor slots)"
+  ],
+  "requirements": [
+    "Account is mandatory: /submit renders a login wall - email/password plus 'Login with Google' and 'Login with GitHub'; register at /auth/register",
+    "For the free tier: embed the NewTool badge on the submitted site and keep it permanently",
+    "Product details: name, URL, description, categories/tags (directory covers tools and startups, not only AI)"
+  ],
+  "preparation": [
+    "An account (email signup or Google/GitHub OAuth)",
+    "Product name, URL, description, category",
+    "A permanent spot for their badge/backlink if using the free plan",
+    "Or $9.9 for the Pro one-time plan to skip the badge and the 30-day queue"
+  ],
+  "workflow": [
+    "Register/sign in at newtool.site (email, Google, or GitHub)",
+    "Open https://newtool.site/submit and complete the product form",
+    "Pick free (badge verification + up to 30-day review) or Pro $9.9 (immediate listing, no badge)",
+    "If free: place the NewTool badge on your site and keep it - they re-check and unpublish if removed"
+  ],
+  "watchFor": [
+    "Permanent monitored badge requirement on the free tier - the dofollow link is contingent on keeping theirs",
+    "30-day free review window vs 'list right now' on the $9.9 plan",
+    "Sponsor slots are capped at 3 and sold monthly - ignore unless site-wide placement is wanted",
+    "The whole flow sits behind auth - no anonymous submission"
+  ],
+  "countsAsLive": "The product has a public detail page on newtool.site and appears under Latest Products/its category",
+  "unknowns": [
+    "Exact badge code/placement rules",
+    "Whether the '1 dofollow link' on free points to the submitted URL on the detail page",
+    "Any rejection criteria beyond badge verification"
+  ]
+}

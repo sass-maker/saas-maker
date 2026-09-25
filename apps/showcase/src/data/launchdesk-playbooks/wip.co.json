@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "wip.co",
+  "name": "WIP",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://wip.co/join",
+      "title": "Join page — $199/year or $29/month membership, account creation then checkout"
+    },
+    {
+      "url": "https://wip.co/projects",
+      "title": "Projects directory — 4,986 projects; 'Add your Project' links to /settings/projects/new behind membership"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Paid membership is required to add a project — $199/year (advertised as 5 months free vs monthly) or $29/month, credit card only",
+    "Project submission lives in account settings (/settings/projects/new) — only reachable after paid signup",
+    "WIP is a build-in-public accountability community — projects gain visibility through daily todos/streaks, not a one-shot listing",
+    "Membership is described as curated — 'Members are invited by existing members' on the public blurb, though the join page sells directly"
+  ],
+  "preparation": [
+    "Email, username (becomes wip.co/@handle), password",
+    "Credit card for $199/yr or $29/mo",
+    "Project name, URL, icon and topic tags (Developers, AI, Marketing, etc.)",
+    "A plan to post todos/updates — the project's visibility on WIP is driven by your activity streak, not the listing alone"
+  ],
+  "workflow": [
+    "Open https://wip.co/join, create account (email + username + password), complete checkout",
+    "Go to /settings/projects/new ('Add your Project') and fill project details with topic tags",
+    "Post daily todos/progress — each update feeds the project page and community feed",
+    "Project appears under /projects and its topic tag pages; 'Recently launched' surfaces new projects"
+  ],
+  "watchFor": [
+    "This is a membership community, not a directory drop — a listing without activity gets little exposure",
+    "No free tier and no lifetime membership ('One price for everyone, worldwide' — no PPP discounts)",
+    "Cancel-anytime monthly vs annual tradeoff; paying is the only entry route",
+    "The community value (feedback, streaks) requires ongoing participation — budget time, not just money"
+  ],
+  "countsAsLive": "Project has a public page on wip.co linked from your @handle profile and appears under /projects and topic tag pages",
+  "unknowns": [
+    "Whether projects are ever pruned for inactivity",
+    "Exact project form fields (behind paid membership)",
+    "How 'Recently launched' placement is determined"
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "whatisaitools.com",
+  "name": "WhatIsAITools",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    { "url": "https://whatisaitools.com/submit", "title": "Submit AI Tools - WhatIsAiTools.com" }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free submission requires adding their link to your website homepage BEFORE submitting: <a href=\"https://whatisaitools.com/\" title=\"What Is Ai Tools\">What Is Ai Tools</a> - 'and then you can submit your website successfully for free'"
+  ],
+  "requirements": [
+    "AI tools directory - submitted product should be an AI tool",
+    "Form fields are minimal: Website Name + Website URL",
+    "Homepage backlink is a hard precondition of the free path",
+    "A Login link exists; whether submission also needs an account is unclear"
+  ],
+  "preparation": [
+    "Website name and URL",
+    "Add the WhatIsAITools anchor to your homepage first and verify it renders",
+    "Check /pricing and /contact for any paid expedited option if the backlink is a problem"
+  ],
+  "workflow": [
+    "Place the required backlink on your homepage",
+    "Open https://whatisaitools.com/submit",
+    "Enter Website Name and Website URL; click Submit",
+    "Await inclusion in the directory (no stated review time)"
+  ],
+  "watchFor": [
+    "The copy literally says you 'can submit your website successfully for free' only after the backlink is live - expect automated verification",
+    "A Pricing link exists in the footer, suggesting paid options may exist (freemium per catalog metadata)",
+    "Part of a network of near-identical AI directory templates (DokeyAI 'FRIENDS' links to it)",
+    "No stated review SLA"
+  ],
+  "countsAsLive": "The tool appears in the whatisaitools.com directory (discover/category pages) with a link back to your site.",
+  "unknowns": [
+    "Review turnaround",
+    "Paid tier contents/pricing on /pricing",
+    "Whether an account is required in addition to the backlink",
+    "DoFollow status of the listing link"
+  ]
+}

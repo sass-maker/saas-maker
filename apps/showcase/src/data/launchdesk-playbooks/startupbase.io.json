@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startupbase.io",
+  "name": "StartupBase",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    { "url": "https://startupbase.io/submit", "title": "StartupBase submit — OAuth login wall" },
+    {
+      "url": "https://startupbase.io/",
+      "title": "StartupBase homepage — daily launches, DR 74+ backlink pitch"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Account required — new accounts are created via Google, LinkedIn, or X OAuth only; email sign-in is restricted to existing accounts and cannot create one",
+    "Products launch daily ('New launches every day at 12:00 AM PDT')",
+    "Some listings carry a 'Premium' badge — a paid tier exists but pricing was not visible on public pages"
+  ],
+  "preparation": [
+    "A Google, LinkedIn or X account (email-only signup is not supported)",
+    "Product name, tagline/description, logo, categories (broad taxonomy e.g. B2B, AI Tools, Marketplaces)",
+    "Optional discount/promo text — some listings display offers like '30% off for 3 months'"
+  ],
+  "workflow": [
+    "Open startupbase.io/submit or the 'Launch' nav item",
+    "Continue with Google, LinkedIn, or X (account is created automatically)",
+    "Complete the product submission form in the dashboard",
+    "Product is queued for a daily launch (12:00 AM PDT drops)",
+    "Listing appears on the Today board and keeps a permanent page"
+  ],
+  "watchFor": [
+    "Email field is a trap for new users — it only sends sign-in codes to EXISTING accounts; use OAuth",
+    "A 'Premium' marker on some listings implies a paid route whose price/terms are not published on public pages",
+    "Homepage pitch is 'earn a DR 74+ backlink' — whether the free tier's link is dofollow is not stated",
+    "Advertise page exists for paid placements"
+  ],
+  "countsAsLive": "The product appears on the daily 'Today' board with its own detail page after its launch date.",
+  "unknowns": [
+    "Premium tier pricing and exact benefits",
+    "Whether free listings are human-reviewed and on what timeline",
+    "Whether the free listing's outbound link is dofollow",
+    "Exact submit-form fields (behind OAuth)"
+  ]
+}

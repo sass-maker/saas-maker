@@ -1,0 +1,61 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aidepot.co",
+  "name": "AI Depot",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://aidepot.co/",
+      "title": "Homepage — AI tools directory (4,829 tools), 'Submit Tool' nav link to /submit/start"
+    },
+    {
+      "url": "https://aidepot.co/submit/start",
+      "title": "Submit flow — JavaScript-only app, fields not visible to a plain fetch"
+    },
+    {
+      "url": "https://aidepot.co/about",
+      "title": "About — invites AI companies to submit for inclusion"
+    },
+    {
+      "url": "https://www.toolmage.com/en/tool/aidepot/",
+      "title": "ToolMage profile — documents free basic (1–3 month waitlist), Premium $199/yr (24h listing), Platinum $999/yr"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free 'Basic' listing exists but sits on a waiting list reported at roughly 1–3 months due to demand",
+    "Paid tiers bypass the wait: Premium $199/year lists within 24 hours with homepage feature and newsletter inclusion; Platinum $999/year adds ~3 months site-wide sponsorship",
+    "A site account (Login link present) is likely required for the JS submit app"
+  ],
+  "requirements": [
+    "Product must be an AI tool/company",
+    "Submission goes through the JS app at https://aidepot.co/submit/start — fields are not publicly visible",
+    "Third-party coverage describes a two-track model: free-with-waitlist vs paid fast lanes"
+  ],
+  "preparation": [
+    "Tool name, URL, description, logo and category",
+    "An account on aidepot.co if the submit app requires login",
+    "Decision on free waitlist vs Premium ($199/yr) or Platinum ($999/yr)"
+  ],
+  "workflow": [
+    "Open https://aidepot.co/submit/start in a JS-capable browser",
+    "Complete the multi-step submission (plan choice → tool details)",
+    "Free: join the waiting list; paid: checkout and expect listing within ~24 hours",
+    "Verify the tool appears on aidepot.co with its own profile page and outbound link"
+  ],
+  "watchFor": [
+    "The submit app is entirely client-side rendered — no public view of the form fields",
+    "Free listings may wait months; do not promise a date on the free tier",
+    "Paid tiers are annual fees ($199/$999 per year), not one-time",
+    "The site also sells directory-submission services and data lists — expect upsell prompts",
+    "Pricing comes from third-party coverage; confirm live prices inside the submit flow before paying"
+  ],
+  "countsAsLive": "Tool has a public profile page on aidepot.co (e.g. aidepot.co/<slug>) with an outbound link, appearing in the directory pagination",
+  "unknowns": [
+    "Exact form fields and whether login is mandatory",
+    "Current live prices inside the submit app (third-party figures may be stale)",
+    "Whether the free tier requires a reciprocal backlink"
+  ]
+}

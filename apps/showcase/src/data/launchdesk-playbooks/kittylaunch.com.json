@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "kittylaunch.com",
+  "name": "KittyLaunch",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://kittylaunch.com/",
+      "title": "KittyLaunch homepage + FAQ — 100% free launch, weekly Monday cycles, deals, archive"
+    },
+    {
+      "url": "https://kittylaunch.com/superkitty",
+      "title": "SuperKitty — one-time per-product upgrade (skip the line, 7 dofollow backlinks, Spotlight ticket, bundled tools)"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "free",
+  "conditions": [],
+  "requirements": [
+    "Indie makers, SaaS founders, solo builders and small product teams",
+    "Account required (Log In / Sign Up)",
+    "Products launch in weekly cycles starting Monday (UTC); you can publish immediately or schedule a future date"
+  ],
+  "preparation": [
+    "Product name, tagline, category (SaaS, AI/ML, Marketing, Productivity, E-commerce, Finance, Developer Tools, etc.), logo and screenshots",
+    "Optional deal/promo code to attach (deals are shown on the homepage and Deals page)",
+    "Choice between publishing immediately or scheduling into a future week",
+    "Optional: SuperKitty one-time upgrade decision — removes 'Similar products' competitor section, skips weekly capacity limits, instant badge approval, 7 dofollow backlinks, a Spotlight homepage ticket, review if top 3, plus bundled tools (feedback portal, waitlist, reviews widget, KittyPilot marketing kit, uptime monitoring)"
+  ],
+  "workflow": [
+    "Sign up free",
+    "Go to /new/product and create the listing",
+    "Publish immediately or schedule for a future launch week",
+    "Collect community upvotes during the launch week; top 3 earn winner badges and a Weekly Archive spot"
+  ],
+  "watchFor": [
+    "Standard product pages include a 'Similar Products' section recommending competitor apps — SuperKitty removes it",
+    "Weekly launch capacity is limited — free launches may wait if a week is full; SuperKitty skips the line",
+    "SuperKitty price shows as early-bird and renders dynamically (price not stated in fetched text)",
+    "Dofollow backlink is tied to earning a 'verified badge' per the FAQ",
+    "Featured/Spot Sponsored launch slots are paid add-ons"
+  ],
+  "countsAsLive": "Product page at /p/<slug> publicly reachable and appearing in Latest Launches / its category with an upvote count",
+  "unknowns": [
+    "Exact SuperKitty and Featured placement prices (page renders prices client-side)",
+    "How the verified badge/dofollow is granted on free launches (manual review vs automatic)",
+    "Whether every free launch also gets a dofollow link or only verified/top products"
+  ]
+}

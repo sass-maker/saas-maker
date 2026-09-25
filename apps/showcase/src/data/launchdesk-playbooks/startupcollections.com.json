@@ -1,0 +1,43 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startupcollections.com",
+  "name": "Startup Collections",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://startupcollections.com/submit-product/",
+      "title": "Submit Product page — form renders 'Loading…' behind an imunify bot check"
+    },
+    {
+      "url": "http://startupcollections.com/",
+      "title": "Homepage — curated resources/tools for starters"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "Site collects 'great tools and resources for starters' across ~45 curated collections (dev tools, productivity, design, crypto, marketing, SEO, etc.)",
+    "Submission form is JS-rendered and gated by an imunify bot-check, so fields could not be inspected"
+  ],
+  "preparation": [
+    "Product/tool name, URL, description, and the best-fit 'collection' (category) from their list",
+    "JavaScript-capable browser — the form does not render to plain fetchers"
+  ],
+  "workflow": [
+    "Open https://startupcollections.com/submit-product/ in a real browser and clear the bot check",
+    "Choose the relevant collection and fill the submit form",
+    "Submit and await manual inclusion"
+  ],
+  "watchFor": [
+    "Form is hidden behind JavaScript and an imunify-bot-check interstitial — automated/text-only submission is unlikely to work",
+    "An 'Advertise on Startup Collections' page exists separately — advertising is distinct from a free listing",
+    "Site looks lightly maintained; pricing/free status of listings is not published"
+  ],
+  "countsAsLive": "The tool appears inside the relevant collection page on startupcollections.com",
+  "unknowns": [
+    "Whether submission is free or paid",
+    "Form fields and review turnaround",
+    "Whether the site is still actively curating submissions"
+  ]
+}

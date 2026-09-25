@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "producthunt.com",
+  "name": "Product Hunt",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.producthunt.com/launch",
+      "title": "Product Hunt Launch Guide — how to launch, FAQ, rules (free, no company accounts, 12:01am PT)"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "free",
+  "conditions": [],
+  "requirements": [
+    "Personal account required — company accounts are prohibited",
+    "A real, tryable product; makers are encouraged to hunt their own products (no advantage to a third-party hunter)",
+    "Relaunches allowed only for significant new product iterations",
+    "Strict anti-vote-solicitation rule: you may share the launch link but cannot ask people to upvote — ask for visits/comments instead"
+  ],
+  "preparation": [
+    "Product URL to start the submit flow",
+    "Launch assets per the official content checklist: name, tagline, description, logo, gallery images/video, first comment",
+    "A maker comment ready for launch day and a plan to answer comments all day",
+    "Chosen launch day — guide suggests 12:01am Pacific Time for maximum voting window, 'best day is the day you're most prepared'"
+  ],
+  "workflow": [
+    "Log in, click Submit (top right) → 'New Product'",
+    "Enter the product URL first, then complete the product flow (tagline, description, media, topics)",
+    "Schedule or launch; products compete on the daily homepage leaderboard for Product of the Day",
+    "Spend launch day responding to comments; promote via the launch link without soliciting upvotes"
+  ],
+  "watchFor": [
+    "Asking directly for upvotes violates the rules — frame outreach as 'check it out / leave feedback'",
+    "If someone else already hunted your product, contact PH support ASAP rather than duplicating",
+    "Spam-flagged accounts lose the ability to launch — review the community guidelines first",
+    "Launch Guide chapters: /launch/how-product-hunt-works plus content checklist and marketing strategy pages",
+    "High-effort launch: the platform rewards day-long engagement, not drive-by submissions"
+  ],
+  "countsAsLive": "The product page is public on producthunt.com and appears on the daily leaderboard for its launch date with upvotes/comments enabled",
+  "unknowns": [
+    "Featured-vs-newest placement mechanics (editorial featuring is not documented on the launch page)",
+    "Exact minimum account age/activity thresholds for launching"
+  ]
+}

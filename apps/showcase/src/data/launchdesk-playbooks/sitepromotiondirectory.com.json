@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "sitepromotiondirectory.com",
+  "name": "Site Promotion Directory",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.sitepromotiondirectory.com/submit.php",
+      "title": "Submit Link - Site Promotion Directory"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Regular free links: ~4-6 month review (700+ submissions/day backlog); listing not guaranteed",
+    "Regular free links WITH reciprocal link on your home/index page: ~1-2 months review",
+    "Featured links $8.96: guaranteed approval, reviewed in 24-48 hours (non-refundable review fee)"
+  ],
+  "requirements": [
+    "Quality sites only; worldwide business sites incl. hosting/VPS explicitly welcome",
+    "Required form fields: Title, URL, Your Name, Your Email, Category",
+    "Optional: Description (has a character limit), META keywords (comma-separated), META description",
+    "Editors may move your site to a more appropriate category"
+  ],
+  "preparation": [
+    "Title, URL, short description, META keywords, META description, your name and email",
+    "Choose the correct leaf category from a very large tree (13 top categories, ~687 subcategories)",
+    "If going the reciprocal route: put their link on your home/index page first",
+    "Decide free vs $8.96 featured (guaranteed 1-2 day approval)"
+  ],
+  "workflow": [
+    "Open https://www.sitepromotiondirectory.com/submit.php",
+    "Fill Title, URL, Description, META keywords/description, name, email",
+    "Pick the most specific suitable category in the huge category selector",
+    "Choose link type: regular (free, 4-6 mo), reciprocal (free, ~2 mo), or featured ($8.96, 1-2 days)",
+    "Submit; human editor reviews"
+  ],
+  "watchFor": [
+    "Classic phpLD-style directory with a massive category dropdown - selecting a wrong/too-broad category invites moves or rejection",
+    "Free review can take 4-6 months; the stats bar showed ~198k pending links vs ~7k active - approval odds on free are low",
+    "Featured fee is a non-refundable 'review fee' even though approval is advertised as guaranteed",
+    "Reciprocal link must sit on your home/index page to qualify for the faster free queue"
+  ],
+  "countsAsLive": "The site appears as an active link under its chosen category (and in Latest Links) on sitepromotiondirectory.com.",
+  "unknowns": [
+    "Whether account registration is needed (login/register links exist on the site)",
+    "Character limits on description fields",
+    "Whether links are dofollow"
+  ]
+}

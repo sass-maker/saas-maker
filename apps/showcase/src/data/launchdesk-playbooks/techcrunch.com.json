@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "techcrunch.com",
+  "name": "TechCrunch",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://techcrunch.com/contact-us/",
+      "title": "Contact Us — tips@techcrunch.com; 'We do not accept pitches or guest post submissions'"
+    },
+    {
+      "url": "https://techcrunch.com/got-a-tip/",
+      "title": "How to tip TechCrunch — Signal/WhatsApp +1 415-320-7755, username techcrunch.01; SecureDrop paused"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Not a directory — coverage is earned editorial. There is no submission form or listing product",
+    "News tips go to tips@techcrunch.com; discreet/secure tips via Signal or WhatsApp (+1 415-320-7755, username techcrunch.01); SecureDrop currently paused",
+    "The contact page explicitly states TechCrunch does not accept pitches or guest post submissions — the old Extra Crunch guest column program is discontinued",
+    "Realistic path: be a credible source for staff reporters covering your beat (funding, launches, pivots, exec hires, partnerships)"
+  ],
+  "preparation": [
+    "A genuinely newsworthy hook: funding round, product launch, pivot, key hire, partnership",
+    "Three-to-four-sentence tip: the claim, supporting evidence, why it matters now",
+    "Know which reporter covers your category and target them, not a generic blast"
+  ],
+  "workflow": [
+    "Identify the reporter(s) covering your space",
+    "Send the tip to tips@techcrunch.com (or the reporter directly); for sensitive material use Signal/WhatsApp",
+    "For embargoes: first ask whether the writer accepts embargoes, then send details — an uninvited embargoed email is on the record",
+    "Coverage, if it happens, is a staff-written article — no listing page is created"
+  ],
+  "watchFor": [
+    "A reporter's inbox is on-the-record — anything sent can be published",
+    "Do not send guest posts or generic 'please write about us' pitches — explicitly not accepted",
+    "Mass-blasting all reporters hurts credibility; target narrowly",
+    "Anyone selling 'guaranteed TechCrunch coverage' is not selling a real submission route"
+  ],
+  "countsAsLive": "A TechCrunch article mentioning or profiling the product/company is published at techcrunch.com",
+  "unknowns": ["No listing exists to verify — publication is purely at editorial discretion"]
+}

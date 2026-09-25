@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aifindy.com",
+  "name": "AI Findy",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://aifindy.com/",
+      "title": "AIFINDY homepage - Spanish-language free AI tools directory, updated daily"
+    },
+    {
+      "url": "https://aifindy.com/contacto/publica-tu-ia-en-aifindy",
+      "title": "Publica tu IA en AIFINDY - free listing plus Basic 49€/mo and Business 149€/mo promotion plans"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "AI tools directory — submission page is in Spanish ('Publica tu IA en AIFINDY')",
+    "Free listing includes a card ('ficha') with description, web link, price, and tags",
+    "Listings do not expire ('los listings no caducan')"
+  ],
+  "preparation": [
+    "Tool name, URL, description, price, and tags",
+    "Spanish-language copy likely preferred — the directory audience is Spanish-speaking",
+    "Contact email: imperiallifegroup@gmail.com (published on the page) or via /contacto"
+  ],
+  "workflow": [
+    "Go to https://aifindy.com/contacto/publica-tu-ia-en-aifindy ('Publicar nueva IA' in the footer)",
+    "Choose the free 'Publica tu IA en AIFINDY' option — card with description, web link, price, tags",
+    "Optionally pick Basic Plan (49€/month or 199€/year) for top category positions, or Business Plan (149€/month or 999€/year) adding verification, a completed full listing, a monthly blog post and social posts",
+    "Submit via the contact path and wait for the listing to appear in the directory"
+  ],
+  "watchFor": [
+    "No visible self-serve form fields on the publish page — the flow appears contact-driven; the exact submission mechanism is unclear",
+    "Paid plans are recurring subscriptions (monthly/yearly), not one-time",
+    "Audience claims (50k daily page views, 150k monthly uniques) are self-reported Google Analytics figures",
+    "All copy is Spanish — submission and support are in Spanish"
+  ],
+  "countsAsLive": "The tool appears in the directory (directorio en galería/lista) under its categories with a ficha containing description, link, price and tags",
+  "unknowns": [
+    "Exact submission form/flow (the page describes plans but the entry mechanism is not rendered)",
+    "Review timeline for free listings",
+    "Whether the listing link is dofollow (catalog note says follow; unconfirmed)"
+  ]
+}

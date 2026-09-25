@@ -1,0 +1,43 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "indiehacker.tools",
+  "name": "Indie Hacker Tools",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    { "url": "https://www.indiehacker.tools/list-indie-tool", "title": "List your tool for free" },
+    { "url": "https://indiehacker.tools/", "title": "The repo of tools made by indie hackers" },
+    {
+      "url": "https://www.indiehackers.com/post/how-to-promote-your-projects-for-free-7e39e048f1",
+      "title": "Founder post: listing is completely free and always will be"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Tools must be made by indie hackers (apps, books, courses, newsletters, etc.)",
+    "First-time submitters create a maker profile; returning submitters skip that step",
+    "Listing is explicitly free per the founder and the site ('List your tool for free')"
+  ],
+  "preparation": [
+    "Tool name, URL, short description, and logo (per third-party guides)",
+    "Maker/indie-hacker identity details for the profile step (first-time listers)",
+    "Pick the right badge/status: listings show states like 'Launched', 'Generating revenue', 'Work in progress'"
+  ],
+  "workflow": [
+    "Open https://www.indiehacker.tools/list-indie-tool",
+    "Choose 'It's my first time listing a tool' (goes to /list-tool, includes profile creation) or 'I have listed a tool before' (goes to /list)",
+    "Fill the tool listing form and submit for review"
+  ],
+  "watchFor": [
+    "The form pages (/list-tool, /list) are JS-rendered and did not expose fields to a plain fetch - inspect in a browser before automating",
+    "The catalog's canonical /submit URL 404s; the real entry point is /list-indie-tool",
+    "Site is a small indie project - review turnaround is unknown"
+  ],
+  "countsAsLive": "The tool appears as a card on indiehacker.tools homepage/browse with a status badge and outbound link.",
+  "unknowns": [
+    "Exact form fields and whether an account system or magic-link email is used",
+    "Review time and rejection criteria",
+    "Whether outbound links are dofollow (third-party sources disagree: backlinkbot says dofollow, catalog DR differs)"
+  ]
+}

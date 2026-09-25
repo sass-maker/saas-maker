@@ -13,13 +13,21 @@ import Nav from '../components/Nav.astro';
 import launchdeskData from '../data/launchdesk.json';
 import Layout from '../layouts/Layout.astro';
 
-type Claim = { source: string | null; dr: number | null; link: string | null; pricing: string | null };
+type Claim = {
+  source: string | null;
+  dr: number | null;
+  link: string | null;
+  pricing: string | null;
+  type?: string | null;
+};
 type Destination = {
   name: string;
   domain: string;
   website: string;
   submissionUrl: string | null;
+  exampleUrl: string | null;
   category: string;
+  type: string | null;
   pricing: string;
   dr: number | null;
   link: string;
@@ -33,6 +41,13 @@ type Destination = {
   quarantined: boolean;
   claims: Claim[];
 };
+
+const playbookModules = import.meta.glob('../data/launchdesk-playbooks/*.json');
+const playbookDomains = new Set(
+  Object.keys(playbookModules)
+    .map((path) => path.split('/').pop()?.replace(/\.json$/, ''))
+    .filter((domain): domain is string => Boolean(domain) && domain !== '_schema')
+);
 
 const allDestinations = launchdeskData.destinations as Destination[];
 const destinations = allDestinations.filter((row) => !row.quarantined);
@@ -70,6 +85,8 @@ const PRICING_LABELS: Record<string, string> = {
         <p>
           {destinations.length} submission destinations with their metrics left on the source's
           name tag. DR is reported, not measured — read the history before you trust a row.
+          Rows with a <em>Submission playbook</em> link open a free agent-executable
+          submission guide; the whole workflow ships as <a href="/launchkit">Launchkit</a>.
         </p>
       </div>
       <dl class="launchdesk-summary" aria-label="Catalog summary">
@@ -163,6 +180,7 @@ const PRICING_LABELS: Record<string, string> = {
             <option value="dr:desc">Reported DR, high to low</option>
             <option value="name:asc">Name, A–Z</option>
             <option value="category:asc">Category, A–Z</option>
+            <option value="type:asc">Type, A–Z</option>
             <option value="link:asc">Link type, A–Z</option>
           </select>
         </label>
@@ -194,6 +212,9 @@ const PRICING_LABELS: Record<string, string> = {
               <th scope="col" data-sort-heading="category">
                 <button type="button" data-sort="category">Category</button>
               </th>
+              <th scope="col" data-sort-heading="type">
+                <button type="button" data-sort="type">Type</button>
+              </th>
               <th scope="col">Price</th>
               <th scope="col">Route</th>
             </tr>
@@ -207,6 +228,7 @@ const PRICING_LABELS: Record<string, string> = {
                 data-namekey={row.name.toLowerCase()}
                 data-link={row.link}
                 data-category={row.category}
+                data-type={row.type ?? ''}
                 data-pricing={row.pricing}
                 data-route={row.submissionUrl ? '1' : '0'}
               >
@@ -223,7 +245,19 @@ const PRICING_LABELS: Record<string, string> = {
                       <p>
                         <a href={row.website} target="_blank" rel="noopener noreferrer">{row.website}</a>
                       </p>
+                      {row.exampleUrl && (
+                        <p>
+                          <a href={row.exampleUrl} target="_blank" rel="noopener noreferrer">
+                            Example listing ↗
+                          </a>
+                        </p>
+                      )}
                       {row.eligibility && <p>{row.eligibility}</p>}
+                      {playbookDomains.has(row.domain) && (
+                        <p>
+                          <a href={`/launchdesk/${row.domain}`}>Submission playbook →</a>
+                        </p>
+                      )}
                       {row.provider && <p class="ld-provider">Metric provenance: {row.provider}</p>}
                       {row.claims.length > 1 && (
                         <p class="ld-provider">
@@ -236,6 +270,7 @@ const PRICING_LABELS: Record<string, string> = {
                             <code>{claim.source}</code>
                             <span>
                               {claim.dr != null ? 'DR ' + claim.dr : 'DR unreported'} · {claim.link} · {claim.pricing}
+                              {claim.type ? ` · ${claim.type}` : ''}
                             </span>
                           </li>
                         ))}
@@ -251,6 +286,9 @@ const PRICING_LABELS: Record<string, string> = {
                   <span class={`ld-pill ld-pill--${row.link}`}>{LINK_LABELS[row.link] ?? row.link}</span>
                 </td>
                 <td class="ld-tag" data-label="Category">{row.category}</td>
+                <td class="ld-tag" data-label="Type">
+                  {row.type ?? <span class="ld-blank" title="Not reported by the source">—</span>}
+                </td>
                 <td class="ld-tag" data-label="Price">
                   <span class={`ld-pill ld-pill--price-${row.pricing}`}>{PRICING_LABELS[row.pricing] ?? row.pricing}</span>
                 </td>

@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "awesome.tools",
+  "name": "Awesome Tools",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://awesome.tools/",
+      "title": "Awesome Tools homepage — app reviews and comparisons"
+    },
+    {
+      "url": "https://awesome.tools/submit",
+      "title": "Submit your tool — form and listing requirements"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Listing gate: Domain Rating 30+ OR 1,000+ monthly visitors — the submit page checks your domain for eligibility",
+    "Sign-in exists on the site; the displayed form itself asks only for URL, product name, your name, email and a note"
+  ],
+  "requirements": [
+    "DR 30+ or 1,000+ monthly visitors, verified via a domain check built into the page",
+    "Tool/software product fit across their categories (AI, dev tools, productivity, design, marketing, SEO, no-code, etc.)",
+    "Form fields: Website URL, Product Name, Your Name, Your Email, Note; optional newsletter opt-in checkbox"
+  ],
+  "preparation": [
+    "Confirm your DR (Ahrefs) is 30+ or analytics show 1,000+ monthly visitors before submitting",
+    "Website URL, product name, your name, email, and a short note",
+    "Have a clean homepage/product page — the site publishes research-based reviews, so expect editorial scrutiny"
+  ],
+  "workflow": [
+    "Open https://awesome.tools/submit",
+    "Enter your domain in the eligibility checker if unsure about DR/traffic",
+    "Fill Website URL, Product Name, Your Name, Your Email, Note",
+    "Submit; the team evaluates and (if accepted) produces a review/listing on awesome.tools/apps/<slug>"
+  ],
+  "watchFor": [
+    "Hard DR 30+ / traffic floor — most early-stage products will fail the gate; the page upsells 'Outrank' (DR-increase service) and 'Effortless Backlinks' to help you qualify",
+    "Listings are research-based reviews written by the site — you cannot control the verdict",
+    "Affiliate disclosure page exists; reviews may carry affiliate economics",
+    "Contact for sales questions: sales@awesome.tools"
+  ],
+  "countsAsLive": "A public review/app page at awesome.tools/apps/<slug> and presence in the relevant /best category lists",
+  "unknowns": [
+    "Whether submission itself is free (no price shown on the submit form, but a review-based model may gate on selection)",
+    "Whether outbound links are dofollow",
+    "Review turnaround time",
+    "Whether a sign-in is required to submit the form"
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "softwareworld.co",
+  "name": "SoftwareWorld",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.softwareworld.co/",
+      "title": "SoftwareWorld homepage - B2B software & services review platform (returned 403 to automated fetcher)"
+    },
+    {
+      "url": "http://www.c38s.com/index-124.html",
+      "title": "Mirror of SoftwareWorld 'Sponsorship Packages' page describing Free / Featured / Sponsored vendor plans"
+    },
+    {
+      "url": "https://marketing.femaleswitch.com/softwareworld",
+      "title": "F/MS guide: listing flow involves showcasing the SoftwareWorld badge and contacting andy@softwareworld.co"
+    },
+    {
+      "url": "https://stackrater.io/free-tools/directory-finder/",
+      "title": "StackRater directory finder listing Software World as a free review platform"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "A free vendor plan exists (basic profile creation, collect/respond to reviews, basic badges) per the published sponsorship-package breakdown",
+    "Third-party guidance says the listing process asks you to place the SoftwareWorld badge on your website and initiate contact by email (andy@softwareworld.co)",
+    "Ranking eligibility is tiered: free listings have 'limited visibility and ranking eligibility' — top-50 category ranking needs the Featured plan, top-5 needs Sponsored"
+  ],
+  "requirements": [
+    "B2B software and services companies — it is a review/ranking marketplace, not a general directory",
+    "Listings are 'evaluated by SoftwareWorld's unbiased review team' on user satisfaction, social media buzz, and online presence",
+    "The site blocks automated fetching (403 on homepage and subpages), so any submission flow must be done in a real browser"
+  ],
+  "preparation": [
+    "Company/product profile: name, website, description, logo, category",
+    "Willingness to embed the SoftwareWorld badge/widget on your site (per third-party guidance)",
+    "Review-collection readiness — the model is built around collecting customer reviews on your profile",
+    "Contact email for the listing request"
+  ],
+  "workflow": [
+    "Attempt to open https://www.softwareworld.co/ in a browser (automated fetches get 403)",
+    "Per third-party guidance: place the SoftwareWorld badge on your website, then email andy@softwareworld.co to initiate the listing",
+    "Alternatively look for a 'Get Listed' / vendor signup path on the live site (exact current URL unverified)",
+    "Wait for the review team's evaluation and profile creation"
+  ],
+  "watchFor": [
+    "Domain-wide 403 for non-browser clients — do not trust automated checks of submission success; verify in a browser",
+    "Heavy tiered upsell structure (Free / Featured / Sponsored plans): top placement, CEO interviews, PR mentions, and priority review are all paid features",
+    "Badge-display expectation reported by third-party guides — confirm current requirement directly, it may have changed",
+    "Directory-quality signals are thin: rankings are pay-influenced via sponsorship tiers"
+  ],
+  "countsAsLive": "A public vendor/product profile page exists on softwareworld.co under the relevant software category with reviews enabled",
+  "unknowns": [
+    "Current submission URL — the site could not be fetched (403); third-party guides describe an email-based process",
+    "Whether the badge requirement is still enforced",
+    "Review/approval timeline",
+    "Whether free listings carry a dofollow link (catalog note says follow; unconfirmed on site)"
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "trustiner.com",
+  "name": "Trustiner",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    { "url": "https://trustiner.com/submit", "title": "Submit (login wall)" },
+    { "url": "https://trustiner.com/", "title": "Trustiner homepage" }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Google sign-in (or site account) mandatory: /submit only renders 'Log in with Google' and a create-account link",
+    "Directory for 'trusted SaaS, business software, and reliable digital products for careful comparison'"
+  ],
+  "preparation": [
+    "A Google account (OAuth) or create a site account at /signup",
+    "Product name, URL, description, logo, and category"
+  ],
+  "workflow": [
+    "Open https://trustiner.com/submit (also reachable as /get-started)",
+    "Authenticate with Google or create an account",
+    "Complete the post-login submission form",
+    "Await review/listing (no public SLA found)"
+  ],
+  "watchFor": [
+    "Post-login form is opaque - fields, pricing, and review time are not visible publicly",
+    "Same shared template as productwing.com and poweruptools.com; third-party 'submitsaas' ads shown on the page are not part of the site's flow",
+    "No public pricing page observed; catalog note says free, verify no upsell appears after login"
+  ],
+  "countsAsLive": "The product appears under /explore or /latest with a public details page and outbound link.",
+  "unknowns": [
+    "Post-login form fields",
+    "Whether a paid tier exists behind auth",
+    "Review criteria, turnaround, and link dofollow status"
+  ]
+}

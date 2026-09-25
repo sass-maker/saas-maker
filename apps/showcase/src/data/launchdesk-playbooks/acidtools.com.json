@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "acidtools.com",
+  "name": "acidtools.com",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://acidtools.com/submit",
+      "title": "Submit — 'Log in to Submit': Google OAuth or account creation required"
+    },
+    {
+      "url": "https://acidtools.com/",
+      "title": "Homepage — AI tools directory for automation-heavy work, AI writing, visual creation, productivity"
+    },
+    { "url": "https://acidtools.com/get-started", "title": "Get started / submit entry point" }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "AI tool to submit — the directory covers AI assistants, APIs, automation, chatbots, dev tools, etc.",
+    "Login mandatory: 'Please sign in to submit your AI tool' — Google OAuth at /api/auth/google or email account at /signup",
+    "Submission form itself is behind auth and not publicly visible"
+  ],
+  "preparation": [
+    "Google account or an acidtools.com account",
+    "Tool name, URL, description, category, logo/screenshots"
+  ],
+  "workflow": [
+    "Open https://acidtools.com/submit",
+    "Sign in with Google or create an account",
+    "Complete the gated submission form",
+    "Await review — terms and SLA not published publicly"
+  ],
+  "watchFor": [
+    "The submit form is fully behind authentication — fields and any pricing are invisible until you log in",
+    "An ad banner at the top promotes a paid third-party 'submit to 140+ directories' service (submitsaas.com) — unrelated upsell, ignore it",
+    "Whether listing is free or paid could not be confirmed from public pages",
+    "Review criteria and turnaround are not published"
+  ],
+  "countsAsLive": "Tool has a public page on acidtools.com reachable from /latest or /explore category listings",
+  "unknowns": [
+    "Whether submission is free or paid",
+    "Form fields and required assets behind the login wall",
+    "Review timeline and rejection criteria"
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "sooperarticles.com",
+  "name": "Sooper Articles",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://sooperarticles.com/p/author-guidelines",
+      "title": "Sooper Articles - Author Guidelines (full requirements and rejection rules)"
+    },
+    {
+      "url": "https://sooperarticles.com/p/faq",
+      "title": "Sooper Articles - FAQ (account rules, link limits, review time)"
+    },
+    {
+      "url": "https://sooperarticles.com/write",
+      "title": "Sooper Articles - Write for us (free publishing, 1-2 week review)"
+    },
+    {
+      "url": "https://www.sooperarticles.com/author-signup.php",
+      "title": "Sooper Articles - author signup (returned 403 to automated fetch)"
+    },
+    {
+      "url": "https://sooperarticles.com/p/terms-of-service",
+      "title": "Sooper Articles - Terms of Service"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "This is an ARTICLE directory, not a listing form - the 'listing' is a published article containing your link(s)",
+    "Free author account required: valid email + password; strict ONE account per author (multiple accounts = permanent ban); real names only (no company/promotional names); up to 10 pen names allowed under one account",
+    "Article rules: English only; 850-6,000 words (1,200-2,500 recommended); original content you own rights to; NO AI-generated content (permanent ban); no promotional/advertorial content; title <=100 chars in Title Case",
+    "Link rules: NO links in the first two paragraphs; up to 10 links in the body + 1 in the author signature; ALL links are nofollow; new authors (<10 posts) get external links 'redirected'",
+    "Images JPG only via their media manager; max 3 revisions per article; max 3% keyword density; max 20% bold text"
+  ],
+  "preparation": [
+    "A genuinely original, non-promotional English article of 850+ words related to your product's domain",
+    "Real author name and email for the account",
+    "Your target link placed after paragraph two and in the author signature (all nofollow regardless)",
+    "Optional JPG images for the media manager"
+  ],
+  "workflow": [
+    "Register a free author account at https://www.sooperarticles.com/author-signup.php (activate via email if prompted)",
+    "Submit the article through the author dashboard, following the word count, formatting, and link-placement rules",
+    "Editorial review takes 1-2 weeks; they email on publication or with revision requests (max 3 revisions)",
+    "Article goes live with your nofollow links and author signature"
+  ],
+  "watchFor": [
+    "Hard bans: AI-generated content, plagiarized content, advertorials, multiple accounts, <850 words, or links in the first two paragraphs cause immediate rejection or permanent bans",
+    "All links are nofollow AND new authors' external links are 'redirected' until ~10 posts - SEO value is limited; value is referral/authority, not link equity",
+    "ToS grants Sooper Articles a perpetual, royalty-free license to reproduce and distribute your content to partner sites",
+    "Age requirement 16+; content may be republished elsewhere with 'Article Source: www.sooperarticles.com' attribution",
+    "Premium 'publishing packages' are mentioned for promotional content - separate paid route via contact"
+  ],
+  "countsAsLive": "The article is published at a public sooperarticles.com URL under the author byline, with the author signature link",
+  "unknowns": [
+    "Whether signup requires email activation before first submission",
+    "Current price of the premium publishing packages for promotional content",
+    "Whether article pages still pass any link value (all links documented as nofollow)"
+  ]
+}

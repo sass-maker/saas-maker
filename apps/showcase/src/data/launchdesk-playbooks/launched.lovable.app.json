@@ -1,0 +1,57 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "launched.lovable.app",
+  "name": "Launched by Lovable",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://launched.lovable.app/",
+      "title": "Lovable Launched — SPA shell (returned 404/empty to text fetcher)"
+    },
+    {
+      "url": "https://lovable.dev/blog/2025-01-30-how-to-launch-and-get-traffic-to-an-app-built-with-lovable",
+      "title": "Lovable blog — official announcement and submission guidance"
+    },
+    {
+      "url": "https://ideaproof.io/launch-directories/launched-by-lovable",
+      "title": "IdeaProof profile — free, dofollow, required field list"
+    },
+    {
+      "url": "https://www.hunted.space/product/lovable/launches/lovable-launched",
+      "title": "Product Hunt launch page for Lovable Launched — platform context"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Built for apps made with Lovable — 'like Product Hunt but for apps built with Lovable' (official launch framing); non-Lovable products are likely out of scope",
+    "Account required to submit and to vote",
+    "Third-party field list: product name, live URL, 60-character tagline, 250-character description, square logo ≥512px, 2-3 screenshots, pricing model — all required"
+  ],
+  "preparation": [
+    "A live Lovable-built app URL",
+    "Product name, ≤60-char tagline, ≤250-char description",
+    "Square logo ≥512px and 2-3 screenshots",
+    "Pricing model selection",
+    "Plan to drive upvotes — visibility on the board is engagement-driven"
+  ],
+  "workflow": [
+    "Open https://launched.lovable.app/ in a real browser (SPA — no useful HTML to fetchers)",
+    "Sign in / create an account",
+    "Submit the project with the prepared fields",
+    "Promote the launched page for upvotes; engagement drives ranking and discovery"
+  ],
+  "watchFor": [
+    "Platform scope is Lovable-built apps — submitting a non-Lovable product is probably a waste or a rejection",
+    "Early submitters hit a backend 'slug violates not-null constraint' bug (per the launch LinkedIn thread) — verify the form actually persists your project",
+    "Form reportedly rarely saves drafts — have every field ready before starting",
+    "Visibility depends on upvotes; plan an amplification push"
+  ],
+  "countsAsLive": "The app has a public project page on launched.lovable.app and appears in the discovery feed with vote counts",
+  "unknowns": [
+    "Whether non-Lovable apps are technically accepted",
+    "Current field validation — details came from a third-party guide, not the live form",
+    "Whether the site is still actively maintained"
+  ]
+}

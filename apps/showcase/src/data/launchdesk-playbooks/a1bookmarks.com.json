@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "a1bookmarks.com",
+  "name": "A1 Bookmarks",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.a1bookmarks.com/",
+      "title": "A1 Bookmarks homepage - social bookmarking / business listing site"
+    },
+    {
+      "url": "https://www.a1bookmarks.com/pricing-plans/",
+      "title": "Pricing Plans - Pay as you go ₹29.99/post/month and Network Bundle ₹19.99/site/month across 123 sites"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "No free listing tier is published — the only plans are Pay-as-you-go ₹29.99 INR per post per month, or the Network Bundle at ₹19.99 INR per site per month (choose from 123 network sites)",
+    "Account/login required (Submit Article and Payment Ledger are member features)",
+    "Content is human-moderated under a content policy; spam and prohibited niches rejected",
+    "Payments processed in INR via Razorpay; international customers can pay via PayPal by mentioning it when contacting"
+  ],
+  "preparation": [
+    "Account registration",
+    "Business name, website URL, phone, email, and address (listings use LocalBusiness schema)",
+    "Title and description — the service says AI crafts unique content per post, but supply clean source copy",
+    "Payment method: INR card via Razorpay, or PayPal for non-India customers"
+  ],
+  "workflow": [
+    "Create an account / log in on a1bookmarks.com",
+    "Use 'Submit Article' / 'Submit Story' to create the post",
+    "Pay ₹29.99 per post per month (direct charge, no subscription) — each payment keeps the post published for one month",
+    "Optionally request the Network Bundle (₹19.99/site/month across chosen network sites) via the logged-in request flow",
+    "Track charges in the 'Payment Ledger' page; approval is described as same-day for paid posts"
+  ],
+  "watchFor": [
+    "Not free — the catalog's freemium assumption does not hold on the public pricing page; every plan is paid per post per month",
+    "Backlinks are explicitly published with the 'sponsored' attribute — the site itself describes them as 'Google-safe branded backlinks', so do NOT expect a dofollow link despite the catalog note 'link=follow'",
+    "Listings expire if the monthly per-post payment lapses ('each payment keeps your post published for one month')",
+    "This is one node of a 123-site network of near-identical bookmark directories (bookmarkdiary.com, businessdocker.com, etc.) — link-farm character; assess SEO value accordingly",
+    "Analytics/updates are sent over WhatsApp — expect a WhatsApp contact request"
+  ],
+  "countsAsLive": "The submitted story/article appears as a public page on a1bookmarks.com and on the homepage story feed",
+  "unknowns": [
+    "Whether any unlisted free submission path exists",
+    "Whether stopping payment removes the listing or just demotes it",
+    "Review turnaround for the 'human-moderated' check on paid posts (same-day claimed)"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "remote.tools",
+  "name": "Remote Tools",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.remote.tools/",
+      "title": "Remote Tools homepage — now a how-to/guides blog for social platforms, powered by Flexiple"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "No submission path exists on the current site — it has pivoted to a content blog (Discord/Instagram/TikTok guides, name ideas, AI generators)",
+    "The historical remote-tools directory listing appears retired; only legacy pages (remote jobs, tech resources, startup stories links) remain in the footer"
+  ],
+  "preparation": [
+    "None identifiable — no public submit form, guidelines or contact email for listings was found"
+  ],
+  "workflow": [
+    "No verified workflow. If pursuing this domain, the only path is to find a contact route on the site or via its parent (Flexiple) and ask whether listings are still accepted"
+  ],
+  "watchFor": [
+    "Site is live but repurposed — do not assume the old 'remote tools directory' still accepts submissions",
+    "Footer links (startup stories, remote work community) are legacy content, not active submission products",
+    "Powered by Flexiple — any inquiry would route through the operator, not a listing product"
+  ],
+  "countsAsLive": "N/A — no listing product could be confirmed on the current site",
+  "unknowns": [
+    "Whether any submission/listing mechanism still exists at all",
+    "Whether legacy directory pages still accept entries",
+    "Who to contact for a listing request"
+  ]
+}

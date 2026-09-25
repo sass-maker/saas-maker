@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "goodaitools.com",
+  "name": "Good AI Tools",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://goodaitools.com/",
+      "title": "Good AI Tools homepage — AI tools directory with Submit nav link"
+    },
+    {
+      "url": "https://goodaitools.com/submit",
+      "title": "Submit page — redirects to login wall ('Log in to Submit')"
+    },
+    {
+      "url": "https://goodaitools.com/get-started",
+      "title": "Get Started page — sign-in required before submitting"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "unknown",
+  "conditions": [],
+  "requirements": [
+    "Product should be an AI tool (directory is organised entirely around AI categories)",
+    "An account is mandatory: /submit shows 'Log in to Submit' with Google sign-in or email account creation"
+  ],
+  "preparation": [
+    "Product name, website URL, tagline/description",
+    "Logo image (all listings show a logo tile)",
+    "Pricing model label used on the site: Free, Freemium, Free Trial, or Paid",
+    "Best-fit category from their taxonomy (AI Assistants, Dev Tools, Content Creation, etc.)",
+    "A Google account or email for registration"
+  ],
+  "workflow": [
+    "Create an account via /signup or 'Log in with Google' (/api/auth/google?redirect=/submit)",
+    "Open /submit (nav 'Submit' routes through /get-started)",
+    "Fill the submission form (fields not visible without an account)",
+    "Submit and wait for the listing to be reviewed/published"
+  ],
+  "watchFor": [
+    "The 'Submit' nav link and /submit URL both land on a login wall — no guest submission",
+    "A persistent third-party ad banner ('We Submit Your SaaS to 140+ Directories' → submitsaas.com) is a paid directory-submission service, not part of this site",
+    "No public pricing or review-time information was found on reachable pages"
+  ],
+  "countsAsLive": "A dedicated tool page under goodaitools.com with the product name, logo, description, category tag and a Visit link, visible in Latest or its category listing",
+  "unknowns": [
+    "Whether submission is free, freemium, or paid — no pricing page was reachable",
+    "Form fields behind the login wall",
+    "Review timeline and approval criteria",
+    "Whether a badge/backlink is required"
+  ]
+}

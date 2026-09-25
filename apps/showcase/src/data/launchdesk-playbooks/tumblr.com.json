@@ -1,0 +1,41 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "tumblr.com",
+  "name": "Tumblr",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "community",
+  "zeroCostRoute": "free",
+  "sources": [
+    {
+      "url": "https://www.tumblr.com/register",
+      "title": "Tumblr registration page — email signup or Google/Apple OAuth"
+    }
+  ],
+  "requirements": [
+    "A Tumblr account (email or Google/Apple sign-in)",
+    "Content must follow Tumblr's community policy"
+  ],
+  "preparation": [
+    "Email address or Google/Apple credentials",
+    "Username/blog name and avatar/header assets",
+    "A post introducing the product with the product URL"
+  ],
+  "workflow": [
+    "Open tumblr.com/register and sign up (email, Google, or Apple)",
+    "Name the blog (creates <name>.tumblr.com)",
+    "Customize the blog appearance minimally (avatar, title, description with product link)",
+    "Publish a post announcing/linking to the product, tagged appropriately",
+    "Verify the blog renders publicly while logged out"
+  ],
+  "watchFor": [
+    "Tumblr is a social blogging community, not a directory — reach depends on tags/reblogs, not listing pages",
+    "New accounts posting nothing but outbound product links read as spam; a real post with context performs better",
+    "The register page rendered only the OAuth buttons in fetched HTML — email-signup field behavior not verified"
+  ],
+  "countsAsLive": "The blog is publicly reachable at <name>.tumblr.com and the product post is visible to logged-out visitors",
+  "unknowns": [
+    "Whether outbound post links are dofollow",
+    "Any new-account restrictions (rate limits, link filters) not visible on the registration page"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startupfa.st",
+  "name": "Startup Fast",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.startupfa.st/submit",
+      "title": "Startup Fast submit/pricing — Free vs Premium launch tiers"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free launch requires displaying their badge on your website",
+    "Free queue: only 5 slots/day, launches can take up to 90 days",
+    "The free tier's dofollow backlink is conditional: must rank Top 3 on launch day AND keep the badge displayed"
+  ],
+  "requirements": [
+    "Sign-in required (Sign in / Sign up links; submit routes to /projects/submit)",
+    "All launches go live at 8:00 AM UTC",
+    "Site is built on the open-source Open Launch platform"
+  ],
+  "preparation": [
+    "Account credentials",
+    "Product name, tagline, description, logo, category",
+    "Badge HTML for the free path (badge options at /legal/badges)",
+    "A plan for launch-day votes if you want the free tier's dofollow link (Top-3 requirement)"
+  ],
+  "workflow": [
+    "Sign in and open /projects/submit",
+    "Choose Free Launch ($0, up to ~90 days out) or Premium ($19/launch, within ~30 days, 12 daily slots)",
+    "Schedule into an available launch day (8:00 AM UTC drops)",
+    "On free: display the badge and push for Top-3 votes on launch day to earn the dofollow link",
+    "Premium guarantees the dofollow backlink with no badge"
+  ],
+  "watchFor": [
+    "The free 'dofollow backlink' is a competition prize, not a guarantee — Top 3 on launch day plus the badge; most free launches likely earn neither",
+    "Free vs Premium is the badge + queue + guaranteed-link trade; sponsorships ($49/mo or $399/yr, capped at 5 slots/month) are separate",
+    "Official agent path exists: 'npx skills add https://github.com/zreren/startupfast-publish' — install the publish skill before an agent-driven submission",
+    "Stripe Climate badge indicates Stripe checkout"
+  ],
+  "countsAsLive": "The product appears on the homepage/directory on its scheduled 8:00 AM UTC launch day with its own project page.",
+  "unknowns": [
+    "Exact submit-form fields behind sign-in",
+    "How ties/rank for the Top-3 dofollow condition are decided",
+    "Whether failed-to-rank free listings keep any link (likely nofollow — not stated)"
+  ]
+}

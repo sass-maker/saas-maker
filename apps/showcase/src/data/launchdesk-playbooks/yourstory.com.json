@@ -1,0 +1,59 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "yourstory.com",
+  "name": "YourStory",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://yourstory.com/companies",
+      "title": "Companies section — startup profiles on India's largest startup-media platform"
+    },
+    {
+      "url": "https://docs.google.com/forms/d/e/1FAIpQLSetnejE9KBrZoqrnqR3Ts4Pd3eN3MjB-honhmImL59HPu14Eg/viewform",
+      "title": "Catalogued submission URL — a Google Form (returns auth-required to non-JS fetches)"
+    },
+    {
+      "url": "https://backmit.com/site/yourstory-com",
+      "title": "Backmit profile — asks for account, company name, live website URL"
+    },
+    {
+      "url": "https://idea-spark-success-ai.lovable.app/launch-directories/yourstory",
+      "title": "Third-party guide — claims free submission; fields: name, URL, 60-char tagline, 250-char description, 512px+ square logo, 2–3 screenshots, pricing model"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "Startup/company profile for YourStory's companies directory — India-focused startup media",
+    "Submission goes through a Google Form — a Google account may be required to fill it",
+    "Third-party sources list required assets: product name, live URL, ~60-char tagline, ~250-char description, square logo >=512px, 2–3 screenshots, pricing model",
+    "Editorial selection applies — this is a media property, not a guaranteed listing"
+  ],
+  "preparation": [
+    "Google account for the form",
+    "Company/product name, live website URL",
+    "Tagline (~60 chars), description (~250 chars), square logo >=512px, 2–3 screenshots, pricing model",
+    "Founder details and India-relevance angle if applicable"
+  ],
+  "workflow": [
+    "Open the catalogued Google Form URL in a signed-in browser",
+    "Complete all fields (reported as all-required; the form rarely saves drafts — have everything ready)",
+    "Submit and wait for editorial review — no stated SLA",
+    "If accepted, a company profile appears under yourstory.com/companies"
+  ],
+  "watchFor": [
+    "The form is Google-Forms-hosted — needs a browser and possibly a Google login; it 401s to automated fetches",
+    "Sources conflict on cost (one says free, another says paid listing) — treat pricing as unverified",
+    "Link type conflicts across sources (dofollow vs nofollow) — don't count on the SEO value",
+    "Editorial gate: YourStory is a media outlet, so boring/non-Indian-market submissions may simply go unanswered",
+    "Don't confuse this with Tech30/brand-partnership programs, which are separate application paths"
+  ],
+  "countsAsLive": "Company profile page exists under yourstory.com/companies/<slug> with description and link",
+  "unknowns": [
+    "Whether submission is currently free or paid — sources conflict",
+    "Whether the profile link is dofollow or nofollow — sources conflict",
+    "Review timeline and acceptance criteria",
+    "Whether non-Indian startups are accepted"
+  ]
+}

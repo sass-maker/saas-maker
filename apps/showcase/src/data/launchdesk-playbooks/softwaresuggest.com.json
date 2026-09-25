@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "softwaresuggest.com",
+  "name": "SoftwareSuggest",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.softwaresuggest.com/vendors",
+      "title": "SoftwareSuggest vendor page — Create a Free Listing form and value-added services"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Consumer email providers are not supported — you must register with a business-domain email (gmail.com, outlook.com, hotmail.com etc. are rejected)"
+  ],
+  "requirements": [
+    "Vendor listing for a real software product or software service",
+    "Form requires: company head office, number of employees (banded: Freelancer to 10,000+), number of customers (banded: 1-25 to 500+), and a software/service category",
+    "Account setup is completed via an emailed link after the initial form"
+  ],
+  "preparation": [
+    "A work email on the company domain",
+    "Company head-office location, employee band, customer-count band",
+    "Correct product category from their ~1,500-category taxonomy",
+    "Product collateral for the full profile (features, pricing, screenshots) once portal access arrives"
+  ],
+  "workflow": [
+    "Open https://www.softwaresuggest.com/vendors",
+    "Fill 'List Your Product — It's Free': company head office, employee count, customer count, category, business email",
+    "Submit; an email with a link completes account setup",
+    "Log into the vendor portal and complete the product profile for listing",
+    "Listing goes live after their review/onboarding process"
+  ],
+  "watchFor": [
+    "Business-email gate is enforced at the form level — consumer mailboxes fail immediately",
+    "The vendor page heavily promotes paid 'Value Added Services' (PPC, Marketing Qualified Leads, Premium Listing, branded content, sponsorships) and pushes 'Request a Call Back' — expect sales outreach after listing",
+    "Separate User Login vs Vendor Login — use the vendor path"
+  ],
+  "countsAsLive": "The product appears in SoftwareSuggest's category listings with a profile page users can review and compare.",
+  "unknowns": [
+    "Review/approval latency for new vendor listings",
+    "Whether outbound vendor links are dofollow",
+    "Whether any geography restrictions apply"
+  ]
+}

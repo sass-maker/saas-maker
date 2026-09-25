@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "easywithai.com",
+  "name": "Easy With AI",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://easywithai.com/submit-tool/",
+      "title": "Submit a Tool — '$125 one-time listing fee', listed forever; page itself 403s to non-browser fetches"
+    },
+    {
+      "url": "https://easywithai.com/featured-listing/",
+      "title": "Featured Listing — $299 for 7 days of homepage/search-priority placement, includes a free standard listing"
+    },
+    {
+      "url": "https://letslaunch.today/directories/easy-with-ai",
+      "title": "LetsLaunch profile — one-time payment, reviewed and published within about a day"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "AI-related tools only — the directory spans 50+ AI categories",
+    "$125 one-time listing fee; once listed the tool 'will be listed forever' (older sources quoted $79.99 — the current submit page states $125)",
+    "Featured listing upgrade: $299 for 7 days of homepage + search-priority placement, renewable, and includes a free standard listing",
+    "Review and publication reported within ~24 hours by third-party coverage",
+    "Edits after listing go through emailing the site admin — no self-serve editing"
+  ],
+  "preparation": [
+    "Tool name, URL, category choice, description",
+    "Logo and screenshots",
+    "$125 payment for the standard listing (or $299 for featured)",
+    "An email you'll monitor — post-listing edits are handled by emailing the admin"
+  ],
+  "workflow": [
+    "Open https://easywithai.com/submit-tool/ in a browser (the page 403s automated fetches — WAF-protected)",
+    "Fill the tool submission form and pay the $125 listing fee",
+    "Optionally buy the $299 featured package for 7 days of homepage/search priority",
+    "Await review — reported within ~24h; listing then appears in the relevant category permanently"
+  ],
+  "watchFor": [
+    "No free route at all — budget $125 minimum",
+    "Price has risen over time ($79.99 → $125 per older vs current sources) — confirm at checkout",
+    "Featured placement is time-boxed (7 days) and renewable only by repurchasing",
+    "The site is bot-protected (403 to plain fetches) — submission needs a real browser",
+    "Their FAQ covers NSFW policy and common rejection reasons — read it before paying"
+  ],
+  "countsAsLive": "Tool appears with its own listing page on easywithai.com under its category",
+  "unknowns": [
+    "Exact form fields (page is bot-blocked)",
+    "Rejection refund policy",
+    "Whether the standard listing ever lapses without renewal"
+  ]
+}

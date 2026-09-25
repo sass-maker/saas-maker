@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "posteezy.com",
+  "name": "Posteezy",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://posteezy.com/node/add/post",
+      "title": "Posteezy - Create Post form (anonymous microblog/link-sharing)"
+    },
+    {
+      "url": "https://posteezy.com/",
+      "title": "Posteezy homepage - 'post anything with no login. Free, anonymous and SEO friendly'"
+    },
+    {
+      "url": "https://posteezy.com/post-plus",
+      "title": "Posteezy - Post+ promoted post ('Get Started for $7')"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free anonymous posting: Posteezy bills itself as 'a microblogging and link sharing startup that lets you post anything with no login'",
+    "The form itself says 'You must have JavaScript enabled to use this form' - a JS-capable browser is required",
+    "Fields: Title, Body (restricted HTML), Image (one file, png/gif/jpg/jpeg, 512MB limit), comma-separated Tags",
+    "Optional Register/Login links exist for account-based posting"
+  ],
+  "preparation": [
+    "Post title and body copy - restricted HTML only: a, em, strong, cite, blockquote, code, ul/ol/li, dl/dt/dd, h2-h6 allowed; URLs/emails auto-link",
+    "Optional one image (png/gif/jpg/jpeg)",
+    "Comma-separated tags for categorization",
+    "Decide free anonymous post vs $7 Post+ promoted post"
+  ],
+  "workflow": [
+    "Open https://posteezy.com/node/add/post with JavaScript enabled",
+    "Fill Title, Body (restricted HTML), optional Image, and Tags",
+    "Submit - anonymous posting is allowed; alternatively register/login first for an account-bound post",
+    "Optionally use 'Boost Your Post' or 'Post+' ($7) for promotion; 'Guest Post' links out to collaborator.pro (third-party paid placement)"
+  ],
+  "watchFor": [
+    "Form requires JavaScript - headless/scripted fetches see an empty shell",
+    "Post+ ($7) and 'Guest Post' (external collaborator.pro link) are paid promotion routes - the free post is unaffected",
+    "Anonymous posts still get public URLs - the listing is a user post, not a curated directory entry",
+    "HTML whitelist is narrow - links work but rich formatting is limited"
+  ],
+  "countsAsLive": "The post is publicly reachable at a posteezy.com/node/<id> URL and appears in the site's post stream",
+  "unknowns": [
+    "Whether anonymous posts are moderated before appearing, or appear instantly",
+    "Whether links in free posts are dofollow ('SEO friendly' is claimed by the site itself)",
+    "Whether anonymous posts expire or can be edited/deleted later without an account"
+  ]
+}

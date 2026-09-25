@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "postmake.io",
+  "name": "Postmake",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://postmake.io/submit",
+      "title": "Submit Your Business — Standard $79 / Premium $119 / Promoted $199 plus free badge option"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Paid is the default: 'Getting listed is paid' — Standard $79, Premium $119, Promoted $199 (all permanent listings)",
+    "Free route exists via badge: add a Postmake badge to your site and they feature the listing once it's live (instructions at /submit-badge-listing)"
+  ],
+  "requirements": [
+    "Focus on business tools and services — manual review checks directory fit",
+    "Misfit paid submissions are cancelled and refunded",
+    "New submissions processed within 'a couple of business days'"
+  ],
+  "preparation": [
+    "Business/tool details and URL appropriate to the directory's categories (design, development, marketing, launch tools)",
+    "Badge embed for the free route, or a Stripe checkout payment for a paid listing ($79/$119/$199)",
+    "Newsletter-worthy angle — paid tiers promise a feature to 1,700+ subscribers"
+  ],
+  "workflow": [
+    "Choose free badge listing (/submit-badge-listing instructions) or a paid tier via Stripe buy links",
+    "Submit the business details",
+    "Manual fit review — rejected paid submissions are refunded",
+    "Permanent listing goes live on a dedicated page linked across the directory; promoted tiers get 'What's New' featuring and 1 month of directory promotion"
+  ],
+  "watchFor": [
+    "The three paid tiers display identical bullet lists on the submit page — price ladder differences are not spelled out; assume escalating promotion",
+    "Free badge route exists but is buried at the bottom of the submit page — easy to miss",
+    "Backlinks cited as '45 DR' — modest authority",
+    "Some outbound links are affiliate links per the site's own footer"
+  ],
+  "countsAsLive": "Permanent dedicated listing page on postmake.io linked from the directory (and 'What's New' section for fresh/promoted listings)",
+  "unknowns": [
+    "Concrete differences between Standard/Premium/Promoted tiers beyond the headline descriptions",
+    "Whether the free badge listing is dofollow and how quickly it is reviewed",
+    "Whether account creation is needed or submission is email/form-based"
+  ]
+}

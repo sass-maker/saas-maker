@@ -1,0 +1,59 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "antdirectory.com",
+  "name": "Ant Directory",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://antdirectory.com/",
+      "title": "Ant Directory homepage - tools directory with category/tag browsing"
+    },
+    {
+      "url": "https://antdirectory.com/pricing",
+      "title": "Pricing - Free $0 (180+ day wait, backlink maintenance) vs Listing $9.9 vs Featured $19.9"
+    },
+    {
+      "url": "https://antdirectory.com/submit",
+      "title": "Submit page - requires Google or GitHub login"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free tier requires 'backlink maintenance' — you must keep a reciprocal backlink to Ant Directory live; paid tiers state 'no backlink required'",
+    "Free queue is extremely long: '180+ days wait at current pace', and free submissions 'may be rejected due to limited free slots'",
+    "Login (Google or GitHub) is required before the submit form renders",
+    "Paid: Listing $9.9 (immediate, ≥3 dofollow links) or Featured $19.9 (also 7 days at top of directory)"
+  ],
+  "requirements": [
+    "General tools directory (AI-heavy but categories include Business, Productivity, Development, Design, etc.)",
+    "Account required — Google or GitHub OAuth on /submit",
+    "Free tier: reciprocal backlink kept live (implied by 'backlink maintenance' vs paid 'no backlink required')"
+  ],
+  "preparation": [
+    "Google or GitHub account",
+    "Product name, URL, description, category, tags, logo/screenshots",
+    "A page on your site for the reciprocal backlink (free tier)",
+    "Payment if choosing Listing ($9.9) or Featured ($19.9)"
+  ],
+  "workflow": [
+    "Go to https://antdirectory.com/submit and sign in with Google or GitHub",
+    "Choose the tier on https://antdirectory.com/pricing (Free / Listing $9.9 / Featured $19.9)",
+    "Complete the listing form with product details",
+    "Free: add the reciprocal backlink and wait 180+ days; Paid: 'list your product right now, no waiting'",
+    "Listing appears under /item/<slug> in category and tag pages"
+  ],
+  "watchFor": [
+    "The 'free' tier is effectively a link exchange AND a ~6-month queue — weak value unless patience is fine",
+    "Free slots are limited and 'may be rejected' — the free path is not a sure thing",
+    "Paid tiers promise '≥3 dofollow links' — the free tier's dofollow promise (3 links) is conditioned on backlink maintenance",
+    "OAuth-only login — no email signup visible"
+  ],
+  "countsAsLive": "A public item page exists at antdirectory.com/item/<slug> and appears in category/tag listings",
+  "unknowns": [
+    "Exact form fields behind OAuth",
+    "How backlink maintenance is verified on the free tier",
+    "Whether the catalog 'link=follow' holds on free listings (site says free includes '3 dofollow links' but conditioned on maintaining your backlink to them)"
+  ]
+}

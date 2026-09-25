@@ -1,0 +1,58 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "slack.com",
+  "name": "Slack App Directory (Slack Marketplace)",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "sources": [
+    {
+      "url": "https://api.slack.com/apps",
+      "title": "Slack API 'Your Apps' dashboard — app creation entry point (requires sign-in)"
+    },
+    {
+      "url": "https://api.slack.com/start/distributing",
+      "title": "Slack docs — 'App lifecycle & distribution': unlisted vs listed distribution, public distribution checklist, Marketplace review"
+    },
+    {
+      "url": "https://slack.com/marketplace",
+      "title": "Slack Marketplace (listing surface; page was JS-gated at fetch)"
+    }
+  ],
+  "requirements": [
+    "A real Slack app built at api.slack.com/apps",
+    "For any distribution beyond your own workspace: an OAuth 2.0 install flow that issues tokens per workspace/user",
+    "All external endpoints must support SSL: OAuth redirect URLs, request URLs for interactions/actions/slash commands, options-load URLs, Events API URLs",
+    "Apps listed in the Slack Marketplace must pass review against Slack's app guidelines and requirements",
+    "Only request the scopes the app actually needs — admins screen requested permissions"
+  ],
+  "preparation": [
+    "Slack account and a workspace to build in",
+    "A deployed HTTPS app backend able to handle OAuth redirects, Events API, and interactivity",
+    "Onboarding flow for new workspaces (reviewed for quality)",
+    "Listing assets for the Marketplace page (name, descriptions, icon, screenshots) once approved for listing",
+    "Enterprise-org awareness if you want large-workspace installs"
+  ],
+  "workflow": [
+    "Create the app at api.slack.com/apps and install it to your associated workspace",
+    "Implement OAuth 2.0 install flow and ensure all request URLs are HTTPS",
+    "In the app dashboard, complete the checklist under 'Manage Distribution' > 'Share Your App with Other Workspaces' and click 'Activate Public Distribution'",
+    "Option A (unlisted): share the install URL/Add to Slack button — no Slack review, but not publicly listed",
+    "Option B (listed): submit to the Slack Marketplace from the app dashboard; Slack reviews against the Marketplace guidelines",
+    "After approval, the app's listing page is created in the Slack Marketplace and supports direct installs"
+  ],
+  "watchFor": [
+    "There are two distinct end-states — 'public distribution enabled' is NOT the same as a Marketplace listing; only the latter is publicly browsable",
+    "Deactivating distribution removes the app from every workspace except the original",
+    "Once Marketplace-listed you can't simply deactivate public distribution — you must discontinue the listing",
+    "Apps using broad scopes get auto-uninstalled when the installing user leaves the workspace or becomes a guest",
+    "Some workspaces restrict installs to admins or to Marketplace-listed apps only — unlisted distribution won't reach them"
+  ],
+  "countsAsLive": "The app has a public listing page in the Slack Marketplace (slack.com/marketplace) that any Slack user can find and install from",
+  "unknowns": [
+    "Current Marketplace review turnaround time",
+    "Whether Slack charges any fee for Marketplace listing (none was stated on the fetched pages — historically free)",
+    "Whether the listing's website link is dofollow"
+  ]
+}

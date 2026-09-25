@@ -1,0 +1,60 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "uneed.best",
+  "name": "Uneed",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free 'Join the line' launch: Uneed assigns your launch date, up to 5 months out",
+    "The launch must reach an upvote score of 10 to stay published, and 20 for the do-follow backlink (upvotes weighted by each voter's multiplier)",
+    "Account required to save the product — the submit page scrapes your URL first, then asks you to sign up"
+  ],
+  "sources": [
+    {
+      "url": "https://www.uneed.best/submit-a-tool",
+      "title": "Uneed submit page — 'robots gather your product data', name + URL entry, signup-to-save"
+    },
+    {
+      "url": "https://www.uneed.best/pricing",
+      "title": "Uneed pricing — free line vs Skip the line $29.99 / Fast-track $14.99 / Relaunch $15, upvote thresholds"
+    },
+    {
+      "url": "https://www.uneed.best/",
+      "title": "Uneed homepage — social launchpad positioning, 75DR do-follow backlink claims"
+    }
+  ],
+  "requirements": [
+    "Tech product / indie product — categories: development, design, marketing, business, personal life, products-for-sale",
+    "A public product URL the scraper can read",
+    "For the free route: enough launch-day upvotes (score 10 to stay published, 20 for do-follow backlink)"
+  ],
+  "preparation": [
+    "Product name and URL (the site auto-scrapes product data — make sure your landing page has good OG meta, logo, and copy)",
+    "An account (signup happens mid-flow, after the scrape)",
+    "A plan to mobilize upvotes on launch day — free launches can be unpublished if the upvote threshold isn't met",
+    "Optional budget: Skip the line $29.99 (choose launch date, guaranteed do-follow), Fast-track $14.99 (slot in ~14 days, do-follow at score 10), Relaunch $15 for existing products"
+  ],
+  "workflow": [
+    "Open https://www.uneed.best/submit-a-tool",
+    "Enter product name and product address; click 'Preview my product' so their scraper pulls page data",
+    "Create/sign into an account to save the submission",
+    "Choose 'Join the line' (free) or a paid option",
+    "For the free line: wait for the assigned launch date (up to ~5 months), then drive upvotes on launch day",
+    "Verify the product page is live under uneed.best/tool/<name> and whether the do-follow backlink threshold was met"
+  ],
+  "watchFor": [
+    "Free launches can be unpublished if they miss the upvote score — the free path is genuinely gated by community performance, not just a queue",
+    "Vote multiplier mechanics mean votes from established/Pro members count more",
+    "Heavy paid upsell surface: ads ($197–399/mo), newsletter sponsorship $399, $249 auto-submit-to-100-directories, public product review $147",
+    "'Early bird' Pro subscription $99/year — early bird spots showed as sold out at fetch time",
+    "Anti-cheating enforcement is advertised (Thomas removes vote manipulation)"
+  ],
+  "countsAsLive": "A public product page at uneed.best/tool/<name> that survived launch day (score >=10), appearing in category/tag listings; do-follow backlink active once score >=20 or paid option used",
+  "unknowns": [
+    "Exact weighting rules for the voter multiplier",
+    "Current free-queue wait (stated ceiling is 5 months)",
+    "Whether the scraped preview can be edited before saving"
+  ]
+}

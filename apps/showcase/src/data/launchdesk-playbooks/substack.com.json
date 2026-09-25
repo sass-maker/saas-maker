@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "substack.com",
+  "name": "Substack",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "profile",
+  "zeroCostRoute": "free",
+  "sources": [
+    {
+      "url": "https://substack.com/signup",
+      "title": "Substack signup page (JS-gated; renders account creation)"
+    },
+    {
+      "url": "https://support.substack.com/hc/en-us/articles/360037607131-How-much-does-Substack-cost",
+      "title": "Substack Help — 'Publishing is free on Substack'; 10% fee applies only to paid subscriptions"
+    },
+    {
+      "url": "https://substack.com/pa",
+      "title": "Substack Publisher Agreement — revenue share terms"
+    }
+  ],
+  "requirements": [
+    "A Substack creator account (signup at substack.com/signup)",
+    "Publisher Agreement applies if you enable paid subscriptions (10% revenue share + Stripe fees)"
+  ],
+  "preparation": [
+    "Publication name, subdomain (<name>.substack.com), logo/cover, description",
+    "An initial launch post describing the product with your links",
+    "Decide free-only vs paid subscriptions (optional — free publishing is full-featured)"
+  ],
+  "workflow": [
+    "Sign up at substack.com/signup",
+    "Create a publication: name, subdomain, description, logo",
+    "Optionally import an email list",
+    "Publish the launch post introducing the product",
+    "Verify the publication is live at <name>.substack.com"
+  ],
+  "watchFor": [
+    "Signup page is fully JS-rendered — automated agents need a JS-capable flow",
+    "Substack is a newsletter platform, not a directory: the durable asset is the publication subdomain + posts",
+    "Don't enable paid subscriptions just for the listing — that triggers the 10% revenue share and Stripe onboarding",
+    "Substack also surfaces publications via recommendations/Notes — some initial engagement helps discovery"
+  ],
+  "countsAsLive": "The publication is publicly reachable at <name>.substack.com with the launch post visible to logged-out visitors",
+  "unknowns": [
+    "Whether post outbound links are dofollow",
+    "Whether brand-new publications appear in Substack's public browse/search without subscribers"
+  ]
+}

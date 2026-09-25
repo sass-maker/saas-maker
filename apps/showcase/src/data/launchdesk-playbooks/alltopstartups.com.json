@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "alltopstartups.com",
+  "name": "AllTopStartups",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://alltopstartups.com/submit-startup/",
+      "title": "Submit Your Startup page — directory and premium options"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Free listings are explicitly SUSPENDED: 'Getting featured is free but we have currently suspended free listings. We are reviewing backlog of hundreds of startup submissions.'",
+    "Business and technology related products/services only — 'We don't accept all types of startups'",
+    "Option 1 — Directory Listing: listing within 48 hours, verified green badge, 1 week homepage feature, DA-73 backlink",
+    "Option 2 — Premium: adds a written review on the blog, 1-month homepage feature, promotion to ~70K Twitter followers"
+  ],
+  "preparation": [
+    "Startup name, URL, description, logo",
+    "Payment method — Stripe or PayPal (Visa/Mastercard/Amex accepted)",
+    "For the premium tier: material for a full written review (story, differentiators, screenshots)"
+  ],
+  "workflow": [
+    "Open https://alltopstartups.com/submit-startup/",
+    "Choose Option 1 (directory listing) or Option 2 (premium listing + review)",
+    "Submit the form and pay via Stripe/PayPal",
+    "Listing/review publishes within 48 hours per the page's promise",
+    "Verify the green-badge listing appears in /directory and on the homepage for the stated window"
+  ],
+  "watchFor": [
+    "Free route is closed with an open-ended backlog — do not submit expecting a free listing",
+    "Prices are not printed on the page — shown during/after the form",
+    "Page contains typos ('It takes time, money, and effort to punish and maintain listings') — small-operator site; keep records of payment and promised deliverables",
+    "A separate 'Submit Your Startup Story' (/success-story/) route exists for founder stories"
+  ],
+  "countsAsLive": "A verified green-badge entry visible in the AllTopStartups /directory (and a review post if the premium option was purchased)",
+  "unknowns": [
+    "Current prices for Option 1 and Option 2",
+    "Whether the backlink is dofollow (claimed 'DA 73 backlink' without rel detail)",
+    "If/when free submissions reopen",
+    "Refund policy"
+  ]
+}

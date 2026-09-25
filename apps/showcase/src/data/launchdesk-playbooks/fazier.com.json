@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "fazier.com",
+  "name": "Fazier",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Basic free tier requires a backlink to fazier.com on your homepage or footer.",
+    "Free listings are 'reviewed & listed within 30 days' — a month-long queue; homepage featuring only 'if selected'."
+  ],
+  "requirements": [
+    "Product launches; daily launch board with leaderboard, reviews, and categories.",
+    "Sign In / Join present — account likely required for submission.",
+    "Free tier requires the backlink placed on homepage or footer."
+  ],
+  "preparation": [
+    "Account (Join / Sign In).",
+    "Product name, URL, tagline, description, logo, category.",
+    "Backlink to fazier.com on homepage or footer for the free tier.",
+    "Plan choice: Basic free (backlink, ~30d review) / Lite $29 (publish now or schedule, no backlink, top-3 daily gets high-authority backlink) / Premium $49 (DR 83+ guaranteed dofollow, 15-day promotion, premium badge, PH launch checklist) / Super $99 (top-of-homepage placement)."
+  ],
+  "workflow": [
+    "Join/sign in at fazier.com, then open /submit.",
+    "Choose Basic (free with badge) or a paid tier.",
+    "Fill the product submission.",
+    "Free: keep the backlink live; expect review/listing within 30 days.",
+    "Paid: publish immediately or schedule; Lite's backlink is conditional on Top-3 daily, Premium's is guaranteed."
+  ],
+  "watchFor": [
+    "Lite tier's 'high-authority backlink' is Top-3-conditional — only Premium guarantees the DR 83+ dofollow.",
+    "Strike-through pricing ($39→$29, $69→$49, $139→$99) is promotional framing.",
+    "Bundled 'Product Hunt Launch Checklist (value $39)' is an upsell sweetener.",
+    "Owner upsells a separate '100+ Directories Submission Service' (submitbro.com) — not required.",
+    "Help Center and Launch Guide are external Notion pages."
+  ],
+  "countsAsLive": "A public product page on fazier.com/launches/<slug> (or product page) appearing in the daily launch list and leaderboard.",
+  "unknowns": [
+    "Exact submit form fields behind sign-in.",
+    "Whether the free-tier backlink is re-verified after listing.",
+    "Whether the promotional prices are permanent."
+  ],
+  "sources": [
+    {
+      "url": "https://fazier.com/submit",
+      "title": "Fazier submit page — Basic free (backlink, 30-day review), Lite $29, Premium $49, Super $99"
+    },
+    { "url": "https://fazier.com/", "title": "Fazier homepage — daily product launch platform" }
+  ]
+}

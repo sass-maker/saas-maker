@@ -1,0 +1,56 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aitoolsmarketer.com",
+  "name": "AI Tools Marketer",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://aitoolsmarketer.com/",
+      "title": "AI Tools for Marketers directory - 59 tools filed by marketing job"
+    },
+    {
+      "url": "https://aitoolsmarketer.com/submit/",
+      "title": "Submit Your AI Tool Free or Featured - 5-field form, badge-required free tier, $75/$145 paid tiers"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free listing requires keeping a badge or text link to aitoolsmarketer.com live on your site; the entry publishes once the badge is verified",
+    "Free entries publish 'when the queue reaches it' — no committed timeline; paid tiers ($75 Featured, $145 Featured+YouTube) are written up within two working days and need no badge"
+  ],
+  "requirements": [
+    "Must be a released AI tool that 'a working marketer would pay for', with published pricing and claims checkable against the vendor's own pages",
+    "Must fit one of the listed marketing jobs: AI Search & GEO, Content & Copy, Ad Creative, Media Buying, Video & Image, Social Media, CRO & Personalization, Automation & Lifecycle, Research & Intelligence",
+    "Developer tooling, consumer apps, and general business software are explicitly declined even when good",
+    "Do not send passwords, API keys, or trial credentials — everything needed must be publicly linkable"
+  ],
+  "preparation": [
+    "Tool URL, tool name, 'what it does' (60 chars max), marketing job category, contact email",
+    "A place on your site to embed the badge/text link (free tier)",
+    "Published pricing page — entries cite entry price and plan limits from your own pages",
+    "Decide on tier: Free (badge), $75 Featured (adds zplatform.ai profile + review, everyany.one pricing page, saasaffiliate.net listing if you run an affiliate program, founder interview), or $145 Featured video (adds YouTube review)"
+  ],
+  "workflow": [
+    "Open https://aitoolsmarketer.com/submit/ ('Submit a Tool' in nav)",
+    "Fill the five fields: Tool URL, Tool name, What it does (0/60), Marketing job dropdown, Email",
+    "Choose a listing tier: Free (badge required), Featured $75 one-time, or Featured video $145 one-time",
+    "Free: place the badge/link on your site — the entry publishes after the queue reaches it and the badge is verified",
+    "Paid: checkout via Dodo Payments; write-up starts within two working days; declined paid submissions are refunded in full",
+    "You receive an email with the live link either way"
+  ],
+  "watchFor": [
+    "ALL outbound links are nofollow on every tier including paid — this directory gives zero link equity despite the catalog 'link=follow' note; the value is the dated editorial entry",
+    "Paying changes speed and distribution, never the entry content — no editorial control at any tier",
+    "The free tier's badge obligation is ongoing ('kept live'); removing it presumably risks the listing",
+    "A declined submission is told which check it missed; paid declines are fully refunded",
+    "Nothing is ranked — the homepage table orders by when facts were last checked"
+  ],
+  "countsAsLive": "A public entry page exists at aitoolsmarketer.com/<slug>/ with cited pricing, plus rows in the homepage table, the marketing-job category page, /llms.txt, rss.xml and sitemap",
+  "unknowns": [
+    "Free-tier queue length ('when the queue reaches it')",
+    "What happens to a published listing if the badge is later removed",
+    "Exact badge code/placement requirements"
+  ]
+}

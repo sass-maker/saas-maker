@@ -1,0 +1,57 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "chromewebstore.google.com",
+  "name": "Chrome Web Store",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://developer.chrome.com/docs/webstore/publish",
+      "title": "Publish in the Chrome Web Store — official publishing guide"
+    },
+    {
+      "url": "https://chrome.google.com/webstore/devconsole",
+      "title": "Chrome Web Store Developer Dashboard — upload and manage items"
+    },
+    {
+      "url": "https://developer.chrome.com/docs/webstore/register",
+      "title": "Register your developer account — one-time $5 registration fee"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "You must ship an actual extension/theme packaged as a valid ZIP with a valid manifest — max package size 2 GB",
+    "A Google account registered as a Chrome Web Store developer — one-time $5 registration fee",
+    "New publishers are limited to a maximum of two published extensions until they request and receive a limit increase",
+    "Listing requires declaring the extension's single purpose, privacy/data-handling disclosures, distribution countries, and visibility",
+    "All submissions go through Google's review process before publishing"
+  ],
+  "preparation": [
+    "ZIP package of the extension with a valid manifest.json",
+    "Store listing copy: name, summary, description, category, language",
+    "Promo images and a small tile/icon set per the Supplying Images doc",
+    "Privacy declarations: single purpose statement, permission justifications, data handling disclosures",
+    "Test instructions/credentials if reviewers need an account to exercise the extension",
+    "$5 card payment for developer registration"
+  ],
+  "workflow": [
+    "Register a developer account at the Chrome Web Store Developer Dashboard ($5 one-time)",
+    "Click 'Add new item' and upload the extension ZIP",
+    "Fill the Store Listing, Privacy, Distribution and (if needed) Test instructions tabs",
+    "Click 'Submit for Review' — optionally uncheck auto-publish for deferred publishing",
+    "Wait for review; after approval you have 30 days to publish (or it auto-publishes unless deferred)"
+  ],
+  "watchFor": [
+    "New publishers start capped at 2 published extensions — request a limit increase early if you plan more",
+    "A deferred-publish window expires after 30 days: an approved-but-unpublished item reverts to draft and needs re-review",
+    "Privacy tab misstatements (permissions vs actual behavior) are the most common rejection cause — declare honestly",
+    "The dashboard offers 'Skip review for eligible changes' for minor edits — but not for first publish",
+    "Developer-account deletion and enterprise publishing are separate flows — pick correctly at registration"
+  ],
+  "countsAsLive": "Item status in the Developer Dashboard shows Published and the listing resolves at chromewebstore.google.com/detail/<id>",
+  "unknowns": [
+    "Exact review duration — docs say it 'depends on the nature of your item'",
+    "Current item-limit criteria for increases beyond tenure and engagement signals"
+  ]
+}

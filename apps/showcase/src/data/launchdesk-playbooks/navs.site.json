@@ -1,0 +1,57 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "navs.site",
+  "name": "Navs Site",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    { "url": "https://navs.site/", "title": "Navs Site homepage - curated AI tools directory" },
+    {
+      "url": "https://navs.site/submit",
+      "title": "Submit a tool - 7-step editorial submission wizard"
+    },
+    {
+      "url": "https://navs.site/pricing",
+      "title": "Pricing - Free plan $0 with automatic publication, no dofollow links; paid Standard/Pro plans"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "AI tools directory — a 'Non-AI Tools' category exists but the catalog is AI-focused",
+    "Free plan ($0): 'Automatic publication without review', website submissions only, no API access, no featured placement, and NO dofollow links",
+    "The submission is a 7-step wizard: Basics, Media, Features & FAQs, Pricing, Details, Alternatives, Review",
+    "Required fields include website URL, tool name, one-line description, AI type, platforms, 1-3 product screenshots, ≥1 key feature, pricing model, primary keyword (≤25 chars), tagline, markdown detailed description, tags, and at least one similar published tool as 'alternatives'"
+  ],
+  "preparation": [
+    "Official website URL, tool name (≤160 chars), one-line description (≤160), tagline (≤250)",
+    "Detailed description up to 2500 chars (Markdown supported)",
+    "1-3 real product screenshots with concise titles for image SEO; square logo PNG/JPG/WebP up to 1MB (recommended)",
+    "Up to 5 categories, AI type, platforms (Web preselected), up to 20 interface languages",
+    "Key features (1-10; 3-5 ideal) with names ≤120 chars and descriptions ≤500",
+    "Pricing model, pricing details, pricing page URL, free-trial flag",
+    "Primary keyword (≤25 chars), up to 10 tags, up to 8 FAQs",
+    "At least one already-published similar tool to select as an alternative",
+    "Optional: public support email, FAQ/help center URLs, YouTube demo link, private note to reviewer, 'who is it for' audiences"
+  ],
+  "workflow": [
+    "Open https://navs.site/submit ('Submit a tool' in nav)",
+    "Complete the 7 steps: 01 Basics → 02 Media → 03 Features & FAQs → 04 Pricing → 05 Details → 06 Alternatives → 07 Review",
+    "Tick the confirmation checkbox ('information is accurate and I have permission to share the images')",
+    "Send the listing for review — on the Free plan the listing auto-publishes without review",
+    "For API/bulk submissions or editorial services see /docs/api and /pricing paid plans"
+  ],
+  "watchFor": [
+    "Free-plan listings get NO dofollow link — do not count this submission for dofollow-link goals despite the catalog 'link=follow' note",
+    "'Automatic publication without review' on the free tier means whatever you submit goes live as-is — errors publish publicly",
+    "Character limits are enforced inline (name 160, one-liner 160, keyword 25, description 2500, tags 10 max)",
+    "Alternatives step is required — you must select at least one competing published tool",
+    "Launch pricing banner means paid tiers (Standard/Pro) may change; FAQ accordions did not render their answers in static HTML"
+  ],
+  "countsAsLive": "The tool page exists at navs.site/website/<slug> (search preview shows 'navs.site › website › your-tool') and appears under Latest additions / category pages",
+  "unknowns": [
+    "Standard and Pro plan prices and their dofollow/featured benefits (FAQ answers not rendered)",
+    "Whether free auto-publication is permanent or 'may not always be available' per the FAQ title",
+    "Whether login is required to complete the wizard"
+  ]
+}

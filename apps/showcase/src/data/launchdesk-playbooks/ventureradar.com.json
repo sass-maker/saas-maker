@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "ventureradar.com",
+  "name": "VentureRadar",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.ventureradar.com/add_company",
+      "title": "Create your VentureRadar profile (multi-step form, fully rendered)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "A free VentureRadar account is required before creating a company profile",
+    "Free submissions enter manual verification: 'typically reviewed within 21 days' (stated as 21 business days elsewhere on the page)",
+    "Fast Track alternative: Premium Profile $75 (advertised as '50% lifetime discount') for immediate approval"
+  ],
+  "requirements": [
+    "Company profile: company name, website, LinkedIn URL, company type (Privately Held / Publicly Traded / Non Profit / Research Institute / Subsidiary / Acquired-Merged / University / None), founded year, HQ country",
+    "Company activity description (an AI Analyst can generate a suggestion from draft text)",
+    "Short descriptor under 250 characters",
+    "Up to 6 sectors/keywords, max 30 characters each",
+    "Cookies must be enabled; account creation gated by a 'not a robot' check"
+  ],
+  "preparation": [
+    "Register a free VentureRadar account (email sign-up; cookies required)",
+    "Company LinkedIn URL, founded year, HQ country, company type",
+    "A polished company description and a <250-char descriptor, plus up to 6 sector keywords"
+  ],
+  "workflow": [
+    "Create a free account via 'Free Sign-up' on ventureradar.com",
+    "Open https://www.ventureradar.com/add_company (also linked as /submitcompany)",
+    "Step through the wizard: basic details → company type/founded/HQ → AI-assisted activity description → short descriptor + sectors/keywords",
+    "Choose route: 'Normal' (free, ~21-day review) or 'Fast Track' Premium $75 (immediate approval)",
+    "On approval you get an email; employees can then 'claim' the company to make ongoing updates"
+  ],
+  "watchFor": [
+    "The add_company flow is a multi-step JS wizard - budget for several screens, not one form",
+    "Site pushes a paid 'Full Access' plan (from $60/mo) for search/export limits - unrelated to listing; do not mistake it for a required fee",
+    "Approval email grants a live profile; claiming the company later requires proving you work there",
+    "Premium/fast-track pricing shown as $75 with a '50% lifetime discount' framing"
+  ],
+  "countsAsLive": "An approval email arrives and the company profile page is publicly visible in the VentureRadar company directory.",
+  "unknowns": [
+    "Exact acceptance criteria used during the 21-day verification",
+    "Whether the free listing link is dofollow",
+    "Whether profiles can be submitted for companies you do not work at (claiming is a separate later step)"
+  ]
+}

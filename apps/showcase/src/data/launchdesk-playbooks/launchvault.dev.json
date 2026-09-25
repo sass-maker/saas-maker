@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "launchvault.dev",
+  "name": "LaunchVault",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.launchvault.dev/",
+      "title": "Launch Vault homepage — launch platform with daily launch board and Umami-verified stats"
+    },
+    {
+      "url": "https://www.launchvault.dev/pricing",
+      "title": "Pricing — Free (verified dofollow backlink required) vs Premium $19.99 (marked down to $9.99)"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free launch requires adding a verified dofollow backlink to LaunchVault on your site — 'Verify in one click, then pick your launch date'",
+    "Premium $19.99/launch (displayed struck-through to $9.99) removes the backlink requirement, skips the free queue, and guarantees a permanent DR46 dofollow backlink"
+  ],
+  "requirements": [
+    "Sign in/sign up required",
+    "Launches happen at 8:00 AM UTC in daily batches ('limited number of projects each day')",
+    "Free-tier verification is a real dofollow link, one-click verified"
+  ],
+  "preparation": [
+    "Project name, URL, description, categories (very broad taxonomy incl. SaaS, AI, dev tools, edtech, fintech, health)",
+    "Logo and long description (launches display multi-paragraph copy)",
+    "Dofollow link to launchvault.dev placed on your site for the free route, or $9.99–19.99 for Premium"
+  ],
+  "workflow": [
+    "Sign up, then open /projects/submit",
+    "Choose Free (place + verify the dofollow backlink) or Premium (pay, skip queue)",
+    "Save the project privately before launch if desired",
+    "Pick a launch date; the project goes live at 8:00 AM UTC on the homepage board"
+  ],
+  "watchFor": [
+    "Free plan demands a *dofollow* backlink to them — stronger than a badge image; the link must pass their checker",
+    "Premium price shown as '$9.99 $19.99' — strike-through sale pricing, treat the real charge as shown at checkout",
+    "Sponsor slots (Hero $79/mo, Sidebar $39/mo) are separate paid upsells",
+    "Site is 'Powered by Open-Launch' — same engine family as several other boards, expect similar mechanics",
+    "Pricing copy leans hard on FOMO ('Every week you wait is a week of search traffic')"
+  ],
+  "countsAsLive": "Project appears in 'Top Projects Launching Today' on launchvault.dev on its launch date with its own listing page Google can index",
+  "unknowns": [
+    "Length of the free queue ('launch in days, not months' for paid implies the free queue is long)",
+    "Whether free listings persist permanently like paid ones",
+    "Refund policy"
+  ]
+}

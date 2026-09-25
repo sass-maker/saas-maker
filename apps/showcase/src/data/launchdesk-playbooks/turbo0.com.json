@@ -1,0 +1,58 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "turbo0.com",
+  "name": "Turbo0",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free plan requires a backlink to turbo0.com on your site",
+    "Free submissions are 'reviewed and listed within 2 weeks'",
+    "An account is required — /submit renders a login/signup form (email, Google, or GitHub)"
+  ],
+  "sources": [
+    {
+      "url": "https://turbo0.com/pricing",
+      "title": "Turbo0 pricing — Free/Basic/Pro/Review Blog plans and backlink requirements"
+    },
+    {
+      "url": "https://turbo0.com/submit",
+      "title": "Turbo0 submit page — redirects to login/signup"
+    },
+    {
+      "url": "https://turbo0.com/",
+      "title": "Turbo0 homepage — content-creator tools directory with collections"
+    }
+  ],
+  "requirements": [
+    "Product aimed at content creators — Turbo0's positioning is 'a curated hub of efficient tools and resources for content creators' (video/audio editing, image, copywriting, website creation, note-taking, management, growth)",
+    "Backlink to turbo0.com required on the free plan",
+    "Working product with a live URL"
+  ],
+  "preparation": [
+    "Account on turbo0.com",
+    "Product name, URL, description, logo/screenshot",
+    "A place on your site to host the required backlink for the free plan",
+    "Decide free vs paid: Basic $29.9 (was $49.9) one-time — backlink optional, listed immediately, 3 customizable dofollow links; Pro $99.9 (was $149.9) — 5+1 dofollow links, featured border, priority support"
+  ],
+  "workflow": [
+    "Create an account and open https://turbo0.com/submit",
+    "Complete the submission form and choose the plan",
+    "For free: add the turbo0.com backlink to your site",
+    "Wait for review (advertised as within 2 weeks for free listings)",
+    "Confirm the listing renders publicly on turbo0.com"
+  ],
+  "watchFor": [
+    "FAQ on the pricing page includes 'Why wasn't my tool listed?' — rejections happen; content-creator fit matters",
+    "Paid plans are one-time payments, not subscriptions (struck-through prices suggest a standing sale)",
+    "Review Blog upsell ($199–249) is a separate editorial product, not a listing",
+    "Free plan FAQ notes listings may be unlisted; keep the backlink in place"
+  ],
+  "countsAsLive": "A public product detail page on turbo0.com linked from category/collection pages with a 'Visit Website' outbound link",
+  "unknowns": [
+    "Exact form fields behind the login gate",
+    "Whether the free-plan backlink is re-verified and what triggers delisting",
+    "Current real wait time for the free queue"
+  ]
+}

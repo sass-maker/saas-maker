@@ -1,0 +1,58 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "ailib.ru",
+  "name": "ailib.ru",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://ailib.ru/",
+      "title": "ailib.ru homepage — Russian AI-tools catalog (3,000+ tools), 'Добавить AI' nav link"
+    },
+    {
+      "url": "https://ailib.ru/add-ai/",
+      "title": "Add a neural network — plan picker showing 'Стандарт / Бесплатно / Обычное размещение' (Standard / Free / Regular placement)"
+    },
+    {
+      "url": "https://ailib.ru/add-ai/free/",
+      "title": "Free placement form — E-mail, name, site link, description, application sphere (multi-select), task (multi-select)"
+    },
+    {
+      "url": "https://ailib.ru/ads/",
+      "title": "Advertising page — paid placement contact pr@ailib.ru / t.me/fozzepe"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Product must be an AI / neural-network tool (site is a catalog of нейросети)",
+    "Tool must have a public website URL",
+    "Form is in Russian; English version of the site exists at ailib.ru/en/ (add-ai page has an /en/ equivalent)"
+  ],
+  "preparation": [
+    "Contact e-mail address",
+    "Tool name and website URL",
+    "Russian-language description of the tool (site is RU-first; prepare a translation)",
+    "Pick application sphere(s) from a fixed list — multi-select via Ctrl (Дизайн, Бизнес, Реклама и SMM, Разработка, SEO, Музыка, Образование, etc.)",
+    "Pick task(s) the tool performs from a long fixed list — also Ctrl multi-select"
+  ],
+  "workflow": [
+    "Open https://ailib.ru/add-ai/ (or nav link 'Добавить AI')",
+    "Choose the free 'Стандарт' plan ('Выбрать план' → /add-ai/free/)",
+    "Fill E-mail, tool name, site link, description",
+    "Select one or more application spheres and tasks (hold Ctrl to multi-select)",
+    "Submit and wait for manual catalog inclusion"
+  ],
+  "watchFor": [
+    "No account system — the free form is a plain contact-style form, so there is no dashboard to edit the listing later",
+    "Paid promotion/placement is handled only via e-mail (pr@ailib.ru) or Telegram (t.me/fozzepe) — no self-serve checkout",
+    "Sphere and task lists are very long fixed taxonomies; choosing vague categories may hurt placement",
+    "Review turnaround time is not stated anywhere public"
+  ],
+  "countsAsLive": "Tool appears in the public catalog at ailib.ru/ai/ with its own detail page and is findable via site search",
+  "unknowns": [
+    "Whether paid tiers beyond 'Стандарт' exist on /add-ai/ — only the free plan rendered on the public page",
+    "Review time and rejection criteria are not published",
+    "Whether a reciprocal backlink is required for the free listing"
+  ]
+}

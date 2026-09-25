@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "dev.to",
+  "name": "DEV Community",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "community",
+  "zeroCostRoute": "free",
+  "sources": [
+    {
+      "url": "https://dev.to/faq",
+      "title": "DEV Community FAQ/nav — 'Create account', organizations, code of conduct"
+    },
+    {
+      "url": "https://dev.to/",
+      "title": "DEV Community homepage — software-development community built on open-source Forem"
+    }
+  ],
+  "requirements": [
+    "A DEV account (create via dev.to/enter or the 'Create account' button; GitHub/email sign-in)",
+    "Content should be relevant to software development; posts are governed by the Code of Conduct and Terms of Use",
+    "For a company presence, Organization Accounts exist at dev.to/organizations"
+  ],
+  "preparation": [
+    "Account + user profile (bio, links)",
+    "A substantive launch/technical post — e.g., 'how we built X' performs far better than pure promotion",
+    "Decide individual post vs Organization account for ongoing product content"
+  ],
+  "workflow": [
+    "Create an account (dev.to/enter?state=new-user or 'Create account')",
+    "Fill the profile (name, bio, website link — the profile itself is a durable backlink surface)",
+    "Write a post at dev.to/new: title, markdown body, tags, cover image; include the product link with context",
+    "Publish and confirm the post renders publicly at dev.to/<user>/<slug>",
+    "Optionally create an Organization to publish under the product's brand"
+  ],
+  "watchFor": [
+    "DEV is a community, not a directory — thin 'check out my tool' posts get flagged/downweighted; lead with the technical story",
+    "Canonical URL field exists for syndicated posts — use it to avoid duplicate-content issues",
+    "DEV++ is a paid membership tier; it is not required for posting",
+    "All content on dev.to; outbound links' follow status is not documented on fetched pages"
+  ],
+  "countsAsLive": "The post is publicly reachable at dev.to/<username>/<slug> and your profile page shows the website link to logged-out visitors",
+  "unknowns": [
+    "Whether post/profile outbound links are dofollow",
+    "Any new-account throttling (post frequency limits) not shown on public pages"
+  ]
+}

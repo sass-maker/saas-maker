@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "versily.com",
+  "name": "Versily",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://versily.com/start/product",
+      "title": "Start/product route — redirects toward login (SPA, no content to fetcher)"
+    },
+    {
+      "url": "https://versily.com/llms.txt",
+      "title": "Versily llms.txt — platform structure: products, ideation, stories, workspaces"
+    },
+    {
+      "url": "https://versily.com/about",
+      "title": "About — 'social network for digital product creators'"
+    },
+    {
+      "url": "https://submitmap.com/platform/versily/",
+      "title": "Submitmap profile — account options and publish-to-community flow"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Account required: Google, X, GitHub, LinkedIn, or email+password",
+    "Versily is a project workspace first (projects, docs, tasks) — a listing is a one-click 'publish to community' on a project you create inside the platform, not a standalone form",
+    "Product needs a name, live URL, one-line description, and up to three categories; logo optional"
+  ],
+  "preparation": [
+    "Account (OAuth or email)",
+    "Product name, live URL, one-line description, ≤3 category choices, optional logo",
+    "Expect to set up a lightweight project/workspace rather than a single form"
+  ],
+  "workflow": [
+    "Open https://versily.com/start/product — redirects to /login",
+    "Sign in via Google, X, GitHub, LinkedIn, or email",
+    "Create the project in the workspace",
+    "Publish it to the community ('launch to our community with one click')",
+    "Product lands in the /products feed and the 'Just Released' section (filterable All Products / AI Products), with a score and up to 3 category tags"
+  ],
+  "watchFor": [
+    "Not a pure directory: the value comes from using the build-in-public workspace — a bare link-drop listing is possible but the platform is structured around projects",
+    "SPA — no usable HTML without JavaScript",
+    "No paid submission tier was found on public pages, but visibility mechanics (score, feed position) are not documented"
+  ],
+  "countsAsLive": "A public product page exists under versily.com/products/<slug> and the product appears in the Just Released feed",
+  "unknowns": [
+    "Whether any review/moderation step exists before publishing",
+    "Whether outbound links are dofollow",
+    "Any paid promotion options"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "expify.ai",
+  "name": "Expify",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://expify.ai/",
+      "title": "Homepage — returned empty to a non-JS fetch on 2026-09-25 (likely client-side rendered)"
+    },
+    {
+      "url": "https://github.com/kherona/expify.ai",
+      "title": "Project README — describes Expify.ai as 'the largest AI tools directory' with top-100/top-1000 lists"
+    },
+    {
+      "url": "https://expifyai.webflow.io/",
+      "title": "Webflow staging mirror describing the directory's categories, search filters and reviews"
+    },
+    {
+      "url": "https://opentools.ai/tools/expifyai",
+      "title": "OpenTools listing — notes a 'Submit a Tool' page exists subject to team review"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "Product should be an AI tool (site is an AI-tools directory)",
+    "A 'Submit a Tool' / 'Submit AI Tool' feature exists per third-party coverage, subject to review by the Expify team"
+  ],
+  "preparation": [
+    "Tool name, URL, category, description, pricing model",
+    "Logo/screenshots likely required (typical for this directory family) — not verified"
+  ],
+  "workflow": [
+    "Open https://www.expify.ai in a JS-capable browser (the page renders nothing to plain fetches)",
+    "Locate the 'Submit AI Tool' entry point in the site nav",
+    "Complete the submission form and await team review"
+  ],
+  "watchFor": [
+    "The site did not render any content to a non-JavaScript fetch at retrieval time — verify it is up before planning a submission",
+    "Whether submission is free, paid, or freemium could not be confirmed from public sources",
+    "Review criteria and turnaround are not published on reachable pages"
+  ],
+  "countsAsLive": "Tool has a public detail page under expify.ai/ai-tools/ and appears in category or 'newly added' listings",
+  "unknowns": [
+    "The exact submission URL, form fields, and whether an account is required",
+    "Whether a free tier exists or listing is paid",
+    "Whether the site is actively maintained — the canonical domain returned an empty body on 2026-09-25"
+  ]
+}

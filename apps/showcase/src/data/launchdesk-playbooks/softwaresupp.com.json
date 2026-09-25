@@ -1,0 +1,58 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "softwaresupp.com",
+  "name": "SoftwareSupp",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://softwaresupp.com/softwaresupp-expert",
+      "title": "Apply as freelancer — registration profile submission details"
+    },
+    {
+      "url": "https://softwaresupp.com/blog/identity-verification-process",
+      "title": "Identity verification via Stripe required to submit offers"
+    },
+    {
+      "url": "https://softwaresupp.com/pricing",
+      "title": "Pricing page — services/freelance marketplace"
+    }
+  ],
+  "category": "profile",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free to register an expert/freelancer profile, but activation requires their certification process (examination + technical interview) and Stripe-based identity verification",
+    "Identity verification is limited to 31 supported countries; others must invoice manually"
+  ],
+  "requirements": [
+    "This is a freelancer/expert marketplace (CRM, e-commerce, web, automation services) — not a product launch directory",
+    "Profile must include experience, number of realized projects, skills, LinkedIn, website and portfolio links",
+    "Certification exam and technical interview required before receiving projects",
+    "Stripe identity verification (residence country + bank account) required to bid on projects"
+  ],
+  "preparation": [
+    "LinkedIn profile, personal website, portfolio links",
+    "Skills/certifications in supported platforms (Pipedrive, Zoho, HubSpot, Salesforce, Shopify, WooCommerce, Webflow, WordPress, Zapier, Klaviyo, etc.)",
+    "Bank account in one of the 31 supported countries (or be ready to invoice manually)",
+    "Availability for a technical interview"
+  ],
+  "workflow": [
+    "Register via the 'Apply as freelancer' / dedicated submission form on softwaresupp.com",
+    "Complete the profile: experience, project count, skills, LinkedIn/website/portfolio",
+    "Pass the certification examination and technical interview",
+    "Complete Stripe identity verification",
+    "Once verified and certified, profile is active and eligible for project offers"
+  ],
+  "watchFor": [
+    "Wrong fit for product-launch purposes — this lists *people/services*, not products; only relevant if the goal is a consultant profile backlink",
+    "Certification + interview is a real time investment, not a form-fill",
+    "Stripe verification asks for sensitive data (residence, ID scans, bank details)",
+    "Unsupported-country freelancers fall back to manual invoicing"
+  ],
+  "countsAsLive": "An approved expert profile visible/active in the SoftwareSupp expert network after certification and identity verification",
+  "unknowns": [
+    "Whether expert profiles get a public indexable page with an outbound link",
+    "Whether listing without taking projects is allowed",
+    "Current certification exam format"
+  ]
+}

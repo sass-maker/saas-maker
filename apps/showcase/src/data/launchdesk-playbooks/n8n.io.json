@@ -1,0 +1,54 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "n8n.io",
+  "name": "n8n Integrations (community nodes)",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "sources": [
+    {
+      "url": "https://docs.n8n.io/integrations/community-nodes/building-community-nodes.md",
+      "title": "n8n docs — 'Building community nodes': npm publishing standards and Creator Portal verification"
+    },
+    {
+      "url": "https://docs.n8n.io/integrations/community-nodes.md",
+      "title": "n8n docs — community nodes index (installation, risks, blocklist, usage)"
+    },
+    {
+      "url": "https://docs.n8n.io/integrations/creating-nodes/deploy/submit-community-nodes/",
+      "title": "Batched URL — now a 404; the docs moved to the community-nodes path"
+    }
+  ],
+  "requirements": [
+    "The 'listing' is an npm package implementing an n8n community node — package name must start with 'n8n-nodes-' or '@<scope>/n8n-nodes-' and include the keyword 'n8n-community-node-package'",
+    "Nodes and credentials must be declared in the package.json 'n8n' attribute",
+    "Recommended: build with the 'n8n-node' CLI scaffolding and pass 'npm run lint' plus local testing",
+    "For optional verified status (shown in the n8n nodes panel): submit via the n8n Creator Portal (creators.n8n.io/nodes); since May 1 2026 the package must be published via GitHub Actions with an npm provenance statement; verified nodes may not use any run-time dependencies",
+    "n8n reserves the right to reject nodes that compete with n8n paid features, especially enterprise functionality"
+  ],
+  "preparation": [
+    "A working n8n node package (start from 'npm create @n8n/node' scaffolding)",
+    "npm account; for verification: configure npm Trusted Publishers for your GitHub repo's publish.yml workflow (or an NPM_TOKEN secret)",
+    "README documentation in the npm package or public repo",
+    "Compliance pass against n8n verification technical guidelines and UX guidelines"
+  ],
+  "workflow": [
+    "Build the node with the n8n-node CLI tool; lint (npm run lint) and test (npm run dev)",
+    "Name the package n8n-nodes-* and add the 'n8n-community-node-package' keyword plus the n8n nodes/credentials entries in package.json",
+    "Publish to npm — if you want verification, publish via the GitHub Actions publish.yml workflow so the package carries a provenance statement",
+    "Unverified route: done — the node is installable/discoverable as a community node from npm",
+    "Verified route: sign into creators.n8n.io/nodes and submit the node for vetting; n8n fetches it from npm for final review"
+  ],
+  "watchFor": [
+    "The submission URL in the launch catalog (docs.n8n.io/integrations/creating-nodes/deploy/submit-community-nodes/) is now a 404 — the docs moved under /integrations/community-nodes/",
+    "Verification now rejects locally-published packages — GitHub Actions + provenance is mandatory since May 1 2026",
+    "Verified nodes can't have run-time dependencies — a real architectural constraint, not paperwork",
+    "Nodes competing with n8n's paid/enterprise features can be rejected outright"
+  ],
+  "countsAsLive": "Unverified: the package is published on npm with the community-node keyword and installable in self-hosted n8n via community nodes. Verified: the node appears in the n8n nodes panel for users to discover and install",
+  "unknowns": [
+    "Current verification review turnaround in the Creator Portal",
+    "Whether unverified community nodes are browsable on a public n8n integrations page or only inside the app/npm search"
+  ]
+}

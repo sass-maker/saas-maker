@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "secure.linkcentre.com",
+  "name": "Link Centre",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://secure.linkcentre.com/signup/basic/?from=addurl",
+      "title": "LinkCentre - Create Your Free Account (signup step of the Add URL flow)"
+    },
+    {
+      "url": "https://secure.linkcentre.com/pricing/",
+      "title": "LinkCentre - Upgrade/Pricing entry point (redirects to sign-in)"
+    },
+    {
+      "url": "https://www.linkcentre.com/addurl/",
+      "title": "LinkCentre - Submit Website (linked from signup flow)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "A free LinkCentre account is required: the getting-started flow is Account -> Verify Email -> Submit Listing -> Explore Dashboard",
+    "Signup fields: first name, last name, email, optional username, password, business name (optional), country; Google sign-in offered",
+    "Every listing is checked by a human editor, not a bot (stated on the signup page; LinkCentre has run since 1996)"
+  ],
+  "preparation": [
+    "Account details: name, email, password, country (and optional username/business name)",
+    "Website URL, title, description, and category choice for the listing step after email verification",
+    "Email access - the Verify Email step gates listing submission"
+  ],
+  "workflow": [
+    "Open https://secure.linkcentre.com/signup/basic/?from=addurl (or 'Continue with Google')",
+    "Complete the signup form and submit - the progress tracker shows 'Create Account -> Verify Email -> Submit Listing -> Explore Dashboard'",
+    "Verify the email address via the link sent to the inbox",
+    "Submit the website listing (URL, title, description, category) from the dashboard / addurl flow",
+    "Wait for human-editor review; manage the listing afterwards from 'My Account'"
+  ],
+  "watchFor": [
+    "Paid tiers (Plus, Pro, Premium) are promoted for 'featured placement' during signup and on /upgrade/ - the free tier already includes listing submission, so skip the upsell unless featured placement is wanted",
+    "Marketing-opt-in checkbox on signup ('Keep me updated with tips, features, and special offers') is optional - untick to avoid promo email",
+    "Review is human and editorial; no public SLA was stated for free listings"
+  ],
+  "countsAsLive": "The website listing appears on linkcentre.com in its category/profile page after editor approval",
+  "unknowns": [
+    "Review time for free listings",
+    "Exact prices/benefits of Plus, Pro, Premium tiers (the pricing page required sign-in)",
+    "Whether free listings carry dofollow links"
+  ]
+}

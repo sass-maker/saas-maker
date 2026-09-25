@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "indiehub.best",
+  "name": "IndieHub",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://indiehub.best/",
+      "title": "IndieHub homepage — all-in-one directory for indie makers"
+    },
+    {
+      "url": "https://indiehub.best/pricing",
+      "title": "Pricing — Basic $4.9, Pro $9.9, Sponsor $19.9/week"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "No free plan shown on the pricing page — cheapest entry is Basic $4.9 (one-time)",
+    "Basic: 3 dofollow links, immediate listing, publish when you want, permanent link, no backlink required",
+    "Pro $9.9: 3+ dofollow links, immediate listing, featured placement at top of listings, social share to 7K+ followers",
+    "Sponsor $19.9/week: everything in Pro plus promotion on almost every page; one sponsor per period",
+    "Sign-in required to submit (Mkdirs-built directory)"
+  ],
+  "preparation": [
+    "Account on indiehub.best",
+    "Product name, tagline, description, URL, logo, categories/tags",
+    "$4.9-$9.9 budget for a listing plan"
+  ],
+  "workflow": [
+    "Sign in and open /submit",
+    "Choose Basic, Pro, or Sponsor on the pricing page ('Go Submit')",
+    "Pay and fill the product form",
+    "Listing publishes immediately (no queue on paid plans)"
+  ],
+  "watchFor": [
+    "All listing tiers are paid — treat third-party 'free listing' claims for this site as stale",
+    "Dofollow links are the selling point; '3 dofollow links' suggests multiple outbound placements per listing",
+    "Tiny prices suggest Stripe-style one-time checkout; keep the receipt for link-lifetime disputes",
+    "Site is a demo/showcase of the operator's Mkdirs boilerplate — assess longevity before paying"
+  ],
+  "countsAsLive": "A public product page at indiehub.best/app/<slug> appearing in Products listings",
+  "unknowns": [
+    "Exact submit-form fields (behind sign-in)",
+    "Whether a free tier ever existed or is offered on request",
+    "Refund policy",
+    "Whether 'permanent' is contractually guaranteed"
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "itqlick.com",
+  "name": "ITQlick",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.itqlick.com/",
+      "title": "ITQlick homepage — 24,658+ business software & AI tools comparison"
+    },
+    {
+      "url": "https://www.itqlick.com/About",
+      "title": "About — 'not by accepting payment for placement'; vendors pay only on buyer connections"
+    },
+    {
+      "url": "https://www.mypresences.com/service/itqlick/",
+      "title": "Third-party listing guide — manual listing management for vendors"
+    },
+    {
+      "url": "https://backlinkbot.ai/directories/itqlick",
+      "title": "Third-party report describing itqlick as a paid dofollow listing"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Vendors can list products on the ITQlick marketplace and create a portfolio, but the public vendor-signup path is not clearly documented — account/contact required",
+    "Monetization is lead-gen: 'we're paid by vendors only when we help connect them with the right buyer' — listings may be free while vendor leads cost money",
+    "Third-party sources conflict: one reports it as a paid dofollow listing, the About page says placement cannot be bought"
+  ],
+  "requirements": [
+    "Business software product (B2B categories: accounting, CRM, PM, HR, VoIP, AI tools etc.)",
+    "Listings are evaluated against structured criteria: pricing transparency, feature depth, vendor stability, user limits, integration support",
+    "Vendor must be willing to maintain/claim a manual listing (no sync support per myPresences)"
+  ],
+  "preparation": [
+    "Company and product details: name, description, category, pricing info, features, screenshots/logo",
+    "Published pricing data — their scoring tracks public pricing transparency",
+    "Vendor contact email (info@ITQlick.com is the published corporate contact)"
+  ],
+  "workflow": [
+    "Search itqlick.com for your product — it may already exist in their 24,658+ product database",
+    "If absent, contact info@ITQlick.com or locate the vendor/marketplace signup to add the product",
+    "If present, claim/manage the listing manually and enrich the profile",
+    "Listing is scored 0-100 under their methodology and shown in category comparisons"
+  ],
+  "watchFor": [
+    "Homepage/product pages 403 to automated fetches — JS/bot protection; use a real browser",
+    "Conflicting third-party claims about whether a paid listing exists — the site's own line is 'we do not accept payment for placement'",
+    "Vendor monetization is lead-based; expect outreach about lead-gen packages once listed",
+    "No public vendor-submission URL verified at retrieval"
+  ],
+  "countsAsLive": "A product profile page on itqlick.com with a score, appearing in its category's comparison lists",
+  "unknowns": [
+    "The actual vendor signup/listing URL",
+    "Whether a listing itself costs anything vs only lead connections",
+    "Whether outbound vendor links are dofollow",
+    "Review/verification turnaround for new products"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "nocodedevs.com",
+  "name": "NoCodeDevs",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://nocodedevs.com/",
+      "title": "Site now brands as 'MakerThrive' — video-first SaaS distribution/partnership service"
+    },
+    { "url": "https://nocodedevs.com/media-kit", "title": "Media kit route" },
+    { "url": "https://nocodedevs.com/partner", "title": "Partnership booking route" }
+  ],
+  "category": "other",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "The former NoCodeDevs community/directory has rebranded to MakerThrive, a paid distribution service: dedicated YouTube breakdown + newsletter + social amplification",
+    "Target customer is a SaaS/tool maker wanting exposure to 'high-intent builders'; claims 10K+ YouTube subs, 13K+ newsletter readers, 56K+ X followers, ~40K avg views/video",
+    "No self-serve listing — everything runs through a booked partnership"
+  ],
+  "preparation": [
+    "Budget for a sponsored feature (pricing in the media kit, not captured)",
+    "A tactical angle: how your tool fits a builder workflow — they produce in-depth 'we build with it' breakdowns, not banner ads",
+    "Product access/demo materials for the production team"
+  ],
+  "workflow": [
+    "Review the media kit at nocodedevs.com/media-kit",
+    "Book a partnership slot via /partner",
+    "Align on a tactical narrative/angle with their team",
+    "They produce a dedicated video breakdown",
+    "Distribution across YouTube, X and the newsletter; content stays evergreen"
+  ],
+  "watchFor": [
+    "The 'NoCodeDevs' directory/community listed in the catalog no longer exists as a submission destination — do not expect a free listing",
+    "This is an influencer-style paid feature, not a directory; deliverables are content, not a permanent listing entry",
+    "Pricing only via media kit/booking — nothing public",
+    "SaaS fit required; they decline to 'just read your landing page' — expect production lead time"
+  ],
+  "countsAsLive": "A published MakerThrive video breakdown and associated social/newsletter distribution featuring the product",
+  "unknowns": [
+    "Partnership pricing",
+    "Whether any remnant of the old no-code tools directory accepts submissions",
+    "Whether web properties (vs video) still get any listing",
+    "Lead time from booking to publish"
+  ]
+}

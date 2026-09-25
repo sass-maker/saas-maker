@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "boingboing.net",
+  "name": "Boing Boing",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://boingboing.net/",
+      "title": "Boing Boing homepage — long-running culture/tech blog"
+    },
+    {
+      "url": "https://boingboing.net/contact",
+      "title": "Contact page — help@boingboing.net for editors, inquiries@boingboing.net for ads"
+    },
+    {
+      "url": "https://bbs.boingboing.net/t/what-happened-to-the-submit-a-link-link/192981",
+      "title": "BBS thread — submit-a-link / Submitterator retired due to spam abuse"
+    },
+    {
+      "url": "https://boingboing.net/2005/02/17/howto-get-something.html",
+      "title": "Historic 'how to get posted' guide — form-only, describe the link, include email and URL"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Editorial blog — coverage is a curated post, not a directory listing",
+    "The old public submission form ('Submitterator' / suggest-a-link) was retired because human spam overwhelmed it",
+    "Current realistic routes: email the editors at help@boingboing.net, or engage on the BBS community (bbs.boingboing.net)",
+    "Advertising inquiries go to inquiries@boingboing.net — a separate paid channel"
+  ],
+  "preparation": [
+    "A link genuinely interesting to BB's culture/tech/weird-news sensibility — they post 'anomalies, curiosities, and eyebrow-raisers', not launch announcements",
+    "A short, descriptive note explaining what the link is and why it matters",
+    "Your email and the URL you want credited"
+  ],
+  "workflow": [
+    "Draft a concise tip describing the link and why it fits Boing Boing",
+    "Email help@boingboing.net (editorial contact per the current contact page)",
+    "Do not send follow-up reminder emails — historic guidance explicitly says not to",
+    "Alternatively share in the BBS community where editors participate"
+  ],
+  "watchFor": [
+    "Don't look for a submit form — it was killed by spam; only contact/BBS routes remain",
+    "Historic guidance said email submissions were never posted when a form existed; the situation has now inverted to email-only — expectations should be modest",
+    "Product-launch pitches are a poor fit; BB covers culture-worthy things, not standard SaaS launches",
+    "No paid-placement-for-coverage route exists (ads are display advertising only)"
+  ],
+  "countsAsLive": "A Boing Boing post linking to or covering the product is published on boingboing.net",
+  "unknowns": [
+    "Whether editors still act on help@ tips for product submissions",
+    "Any current formal submission channel — none was found on the site"
+  ]
+}

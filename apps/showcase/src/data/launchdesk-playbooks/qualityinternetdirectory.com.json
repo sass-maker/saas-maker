@@ -1,0 +1,54 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "qualityinternetdirectory.com",
+  "name": "Quality Internet Directory",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.qualityinternetdirectory.com/submit.php",
+      "title": "Submit Link - Quality Internet Directory"
+    },
+    {
+      "url": "https://qualityinternetdirectory.com/",
+      "title": "Quality Internet Directory homepage"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Regular free links: reviewed in ~2-3 months, listing NOT guaranteed",
+    "Regular free links with reciprocal link on your HOME page: usually reviewed in ~2 weeks",
+    "Featured links $5.79 for 1 year: guaranteed listing in 1-2 days"
+  ],
+  "requirements": [
+    "Editor reviews submissions manually; site must be 'properly designed' with no pages under construction",
+    "Required form fields: Title, URL, Your Name, Your Email, Category",
+    "Optional fields: Description (limit), META keywords (comma-separated), META description (limit)",
+    "Broad acceptance: 'All sort of business including Web hosting, Hotels and other are welcome'"
+  ],
+  "preparation": [
+    "Title, URL, description, META keywords, META description, name, email",
+    "Pick the most specific leaf category from the 13 top-level categories",
+    "For the reciprocal fast lane: place their link on your home page first",
+    "Decide free vs $5.79/yr featured"
+  ],
+  "workflow": [
+    "Open https://www.qualityinternetdirectory.com/submit.php (the catalog's /submit URL 404s; use submit.php)",
+    "Fill the link-submission form",
+    "Choose regular / reciprocal / featured link type",
+    "Submit and wait for manual editorial review"
+  ],
+  "watchFor": [
+    "phpLD-style directory; a large flat category selector - choose a specific subcategory, not [Top]",
+    "Free review is slow (~2-3 months) and not guaranteed; reciprocal on the HOME page cuts it to ~2 weeks",
+    "Featured $5.79 is per year, not lifetime",
+    "The submit page cross-promotes another directory (siteswebdirectory.com) - do not mistake it for part of this site"
+  ],
+  "countsAsLive": "The site appears under its category page and in 'Latest links' on qualityinternetdirectory.com (detail page like /detail/<slug>-<id>.htm).",
+  "unknowns": [
+    "Whether account registration (profile.php register) is required to submit",
+    "DoFollow status of regular vs featured links",
+    "Exact character limits on description/META fields"
+  ]
+}

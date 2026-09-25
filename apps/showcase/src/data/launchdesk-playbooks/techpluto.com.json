@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "techpluto.com",
+  "name": "TechPluto",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.techpluto.com/submit-startup/",
+      "title": "Submit startup page — exists in nav but renders 'Loading…' (JS form)"
+    },
+    {
+      "url": "https://www.techpluto.com/advertise/",
+      "title": "Advertise page — invites tips on 'disruptive startups, innovative products' via email"
+    },
+    {
+      "url": "https://www.techpluto.com/",
+      "title": "TechPluto homepage — startup and tech news publication"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "Editorial startup/tech news site — coverage is a news feature, not a self-serve directory listing",
+    "Advertise page invites tips on 'disruptive startups, innovative products' by email"
+  ],
+  "preparation": [
+    "A concise pitch: what the startup does, why it is newsworthy, founder/company details, URL",
+    "Contact email is published on the advertise page (Cloudflare-obfuscated) — retrieve it via the contact page in a browser"
+  ],
+  "workflow": [
+    "Try https://www.techpluto.com/submit-startup/ in a JavaScript-capable browser — the form body loads client-side ('Loading…' to plain fetchers)",
+    "Alternatively, email a startup tip via the address given on /advertise/ or the contact form at /contact-us/",
+    "If accepted, TechPluto publishes a feature/review-style post (examples: 'Featured Startups' category)"
+  ],
+  "watchFor": [
+    "The batch-supplied submission URL /submit-tool/ returns 404; the correct slug is /submit-startup/",
+    "Site is ad-heavy WordPress; paid advertising is separate from editorial submission — do not confuse an ad buy with coverage",
+    "No published price for a submission; the JS form's fields could not be inspected"
+  ],
+  "countsAsLive": "A post profiling the startup is published on techpluto.com (typically under Featured Startups or Startup categories)",
+  "unknowns": [
+    "Whether submitting via /submit-startup/ is free or leads to a paid offer",
+    "The JS form's fields and review turnaround",
+    "The working tip/pitch email address (obfuscated)"
+  ]
+}

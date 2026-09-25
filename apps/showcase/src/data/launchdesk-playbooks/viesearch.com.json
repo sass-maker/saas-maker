@@ -1,0 +1,57 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "viesearch.com",
+  "name": "Viesearch",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://viesearch.com/submit",
+      "title": "Viesearch - Submit a URL form"
+    },
+    {
+      "url": "https://viesearch.com/guidelines",
+      "title": "Viesearch - Submission Guidelines (last updated Aug 23, 2026)"
+    },
+    {
+      "url": "https://viesearch.com/api",
+      "title": "Viesearch - public API docs (submissions can be automated via REST endpoints)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free URL submission; only Website URL and a valid Email Address are required - Title, Description, and Category can be left blank to auto-fetch/auto-categorize",
+    "Submitter must be 18+ (or 16+ with parental consent); site must be fully accessible without registration",
+    "Site must have its OWN domain - no free hosting subdomains",
+    "Valid active email required - disposable/temporary email domains are 'strictly prohibited', and an email hard bounce later PURGES the account and all associated submissions permanently",
+    "Content must be original, primarily in the declared language; SSL strongly recommended; prohibited: adult, gambling, CSAM, hate speech, excessive affiliate schemes, and 'sites primarily consisting of AI-generated content'",
+    "Editorial review 'typically takes 1-2 business days'"
+  ],
+  "preparation": [
+    "Website URL on its own domain (https recommended)",
+    "A real, monitored email address (non-disposable) - bounces delete your listings",
+    "Title, description, and category if you want control (otherwise auto-fetched)",
+    "Optional: create an account to manage listings; a public REST API exists for programmatic submission"
+  ],
+  "workflow": [
+    "Open https://viesearch.com/submit",
+    "Enter Website URL and Email Address; optionally set Title, Description, and Category (or let auto-categorization handle it - 'Suggest a New Category' also exists)",
+    "Submit; editorial review takes ~1-2 business days",
+    "Optional: add a link to Viesearch on your site - their bot detects the referer and grants 'Reciprocal'/'Verified' status (site source must contain the string 'Viesearch' or 'viesearch.com'); removing it revokes the status",
+    "Optional: register an account to manage listings, or use the documented REST API for automated submission"
+  ],
+  "watchFor": [
+    "Hard-bounce trap: if their outbound email hard-bounces, your account AND all submissions/likes/votes are 'automatically and permanently purged' - keep the email deliverable",
+    "AI-generated-content sites are explicitly prohibited - an AI-content-heavy product page may be rejected",
+    "Reciprocal 'Verified' status requires keeping their link/string on your site permanently - their bot re-validates and revokes it",
+    "Rejected submissions can be resubmitted after fixing the stated issues",
+    "The catalog note says 'freemium' - a Featured surface exists (Random Featured) but no paywall blocks basic submission"
+  ],
+  "countsAsLive": "The site appears in Viesearch's public listings/search after editorial approval (browseable under its category; newest listings visible at /newest)",
+  "unknowns": [
+    "What 'Featured' placement costs or requires (not priced on public pages fetched)",
+    "Whether the listing link is dofollow",
+    "Whether the API submission path requires an account/API key"
+  ]
+}

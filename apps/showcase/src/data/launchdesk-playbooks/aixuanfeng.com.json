@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aixuanfeng.com",
+  "name": "AIxuanfeng",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.aixuanfeng.com/",
+      "title": "AI旋风 homepage — Chinese AI-tools navigation directory"
+    },
+    {
+      "url": "https://www.aixuanfeng.com/links/",
+      "title": "友情链接 (friendly links) page — the only documented application path: leave a comment with site name, link and description"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "No self-serve submit form was found; the public route is the friendly-link (友链) application — leave a comment on /links/ with your site name, URL and description",
+    "Applicant is expected to add AI旋风's link to their own site first ('可先做好本站链接并此处留言') — reciprocal backlink expected",
+    "Site must be a legitimate, regularly updated site with normal Baidu and Google indexing; low-original-content or long-unmaintained sites are refused"
+  ],
+  "requirements": [
+    "AI-related or content-adjacent Chinese website preferred ('优先招同类原创、内容相近的博客或网站')",
+    "Normal inclusion in Baidu and Google with a recent Baidu snapshot",
+    "No content violating Chinese law; no TB-affiliate or spam sites",
+    "Reciprocal link to https://www.aixuanfeng.com expected before applying (site name: AI旋风; icon URL provided on the links page)"
+  ],
+  "preparation": [
+    "Your site name, URL and a short description in Chinese",
+    "AI旋风's link already placed on your site (name: AI旋风, URL: https://www.aixuanfeng.com, icon: https://www.aixuanfeng.com/wp-content/uploads/2023/08/AI.png)",
+    "Evidence the site is live, indexed and regularly updated"
+  ],
+  "workflow": [
+    "Add the AI旋风 friendly link to your own site",
+    "Open https://www.aixuanfeng.com/links/",
+    "Leave a comment containing your site name, URL and related description",
+    "Wait for the site owner to reply in the comment thread ('我将尽快答复')"
+  ],
+  "watchFor": [
+    "This is a friend-link exchange, not a catalog submission — a tool listing in the main directory may not be obtainable through this route",
+    "The site is China-hosted (Alibaba Cloud, Hangzhou) and Chinese-language only; tools unreachable from China may be declined",
+    "Comments asking for a homepage link without the required quality criteria are explicitly refused",
+    "Domain registration shows expiry in August 2026 — verify the site is still maintained before investing effort"
+  ],
+  "countsAsLive": "Your site appears either as a friend link on aixuanfeng.com/links/ or as an entry in the tool navigation listings",
+  "unknowns": [
+    "Whether a dedicated tool-submission channel exists beyond the friend-link comment route — none was found on public pages",
+    "Whether English-language tools are accepted into the main directory",
+    "Review turnaround time for friend-link applications"
+  ]
+}

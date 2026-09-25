@@ -1,0 +1,58 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "lowcodeplatforms.org",
+  "name": "LowCodePlatforms",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://lowcodeplatforms.org/",
+      "title": "All Low Code Platforms directory homepage"
+    },
+    {
+      "url": "https://lowcodeplatforms.org/tools/lowcode-platform/",
+      "title": "Tool page showing the submit/boost contact instructions"
+    },
+    {
+      "url": "https://tinyhunt.dev/projects/submit-platform",
+      "title": "TinyHunt listing describing free vs $49 paid submission"
+    },
+    {
+      "url": "https://lowcodeplatforms.org/categories/business-process-management/",
+      "title": "Category page showing submission response copy"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free submission: 'Approximately, we add new tools within three months' and the link is published as NO-FOLLOW",
+    "Paid option ($49 per third-party listings): immediate publication with a 'forever do-follow link'"
+  ],
+  "requirements": [
+    "Curated directory of low-code / no-code platforms, run by @johnrush (John Rush, MarsX)",
+    "Submission is via the 'Submit Platform' entry on the site; post-submit the site shows 'Our team will contact you soon' and routes paid boosts through direct contact with @johnrushx on X/Twitter"
+  ],
+  "preparation": [
+    "Platform name, URL, and short description",
+    "Willingness to wait ~3 months for a free nofollow listing, or $49 for immediate dofollow",
+    "For boosts: message @johnrushx including 'gpt url', the boost type and its price, and when you want it"
+  ],
+  "workflow": [
+    "Open https://lowcodeplatforms.org/ and use the 'Submit Platform' link in the nav",
+    "Fill the submission form with the platform's details",
+    "Await the 'Our team will contact you soon' response (~3 months for free, nofollow)",
+    "For paid: contact @johnrushx on X with your URL and desired boost type/price"
+  ],
+  "watchFor": [
+    "Free listings are explicitly NO-FOLLOW - unusual for directories marketed for SEO value",
+    "The $49 dofollow option is arranged manually via Twitter DM, not a checkout page",
+    "Directory also publishes blog content promoting John Rush's ListingBott service - expect related upsells",
+    "Listings observed include some off-topic entries (blogs, quizzes), so curation is loose"
+  ],
+  "countsAsLive": "The platform appears as a card on lowcodeplatforms.org under its category with a link to your site.",
+  "unknowns": [
+    "Exact submit form fields and URL (form endpoint not isolated in fetches)",
+    "Whether the $49 paid path is still current or price has changed",
+    "Editorial acceptance criteria"
+  ]
+}

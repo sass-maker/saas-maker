@@ -1,0 +1,45 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "marketplace.visualstudio.com",
+  "name": "Visual Studio Marketplace",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "sources": [
+    {
+      "url": "https://code.visualstudio.com/api/working-with-extensions/publishing-extension",
+      "title": "VS Code docs — 'Publishing Extensions': vsce CLI, publisher registration, packaging constraints, PAT retirement"
+    }
+  ],
+  "requirements": [
+    "A built VS Code extension (or an item publishable via vsce)",
+    "A publisher identity on the Visual Studio Marketplace, backed by Azure DevOps",
+    "Extension icon in package.json cannot be SVG; badge images must come from trusted badge providers; README/CHANGELOG images must be HTTPS and non-SVG (except trusted badges)",
+    "Publishing is free — vsce (npm i -g @vscode/vsce) handles packaging/publishing"
+  ],
+  "preparation": [
+    "Node.js + vsce CLI (npm install -g @vscode/vsce)",
+    "Azure DevOps organization + a registered publisher ID",
+    "Authentication: global Personal Access Tokens in Azure DevOps are retired December 1, 2026 — set up Microsoft Entra ID workload identity federation / managed identity ('vsce publish --azure-credential') or a PAT until retirement",
+    "Extension package.json with icon, categories, README, CHANGELOG"
+  ],
+  "workflow": [
+    "Develop and test the extension; verify package.json metadata (icon non-SVG, https image URLs)",
+    "Create an Azure DevOps organization and register a publisher on the Marketplace",
+    "Package with 'vsce package' to produce the .vsix",
+    "Publish with 'vsce publish' (or via CI using managed identity per the docs' sample YAML)",
+    "Confirm the extension page is live on marketplace.visualstudio.com and installable in VS Code"
+  ],
+  "watchFor": [
+    "PAT-based publishing dies Dec 1, 2026 — pipelines need the Entra ID managed-identity setup (8 documented steps: service connection, managed identity, federated credentials, pipeline access, resource ID, marketplace authorization, CI config, publish)",
+    "vsce refuses extensions containing user-provided SVGs — audit icon and badge URLs before publishing",
+    "README images must resolve over https at publish time or packaging fails",
+    "Unpublishing ('vsce unpublish') exists but is discouraged for mature extensions — prefer deprecating versions"
+  ],
+  "countsAsLive": "The extension has a public page at marketplace.visualstudio.com/items?itemName=<publisher>.<name> and installs via the VS Code Extensions view",
+  "unknowns": [
+    "Whether there is human review for new publishers/extensions (the doc describes automated packaging checks, not a review SLA)",
+    "Whether the marketplace listing backlink to the project site is dofollow"
+  ]
+}

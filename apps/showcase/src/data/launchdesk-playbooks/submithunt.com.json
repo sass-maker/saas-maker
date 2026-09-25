@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "submithunt.com",
+  "name": "SubmitHunt",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.submithunt.com/",
+      "title": "SubmitHunt homepage — rendered nearly empty (JS-only) with two sponsor links"
+    },
+    {
+      "url": "https://alldirectories.org/directory/submithunt/",
+      "title": "AllDirectories field report — login required, two-step submit form, free plan queued"
+    },
+    {
+      "url": "https://smollaunch.com/directories",
+      "title": "Smol Launch directory list — SubmitHunt listed as Free + Dofollow"
+    },
+    {
+      "url": "https://launchdirectories.com/directory/submithunt",
+      "title": "LaunchDirectories profile — SubmitHunt free submissions, dofollow"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Account/login required — the submit form is only reachable while signed in",
+    "Two-step form: (1) basic product info — name, URL, slug, description, category, X username; (2) launch plan selection + launch date picker",
+    "No logo/screenshot upload and no long-description or tags fields in the form per the third-party field report"
+  ],
+  "preparation": [
+    "Account credentials",
+    "Product name, URL, preferred slug, description, category, X/Twitter username",
+    "A target launch date"
+  ],
+  "workflow": [
+    "Sign up / log in on submithunt.com",
+    "Open the submit form",
+    "Step 1: enter name, URL, slug, description, category, X username",
+    "Step 2: pick the launch plan (Free) and a launch date",
+    "Submit — confirmation reads 'Startup Submitted Successfully! ... added to the queue and will be featured soon'"
+  ],
+  "watchFor": [
+    "The homepage renders almost nothing to non-JS fetches — only sponsor links; the app is client-rendered, so verify pages in a real browser",
+    "Third-party sources conflict on cost: Smol Launch and LaunchDirectories list it as Free + Dofollow, while SaaSCity's directory list marks it 'Paid' and AllDirectories calls it a 'paid directory' with a described free plan — treat pricing as unstable",
+    "Choosing a non-free launch plan in step 2 may add charges — confirm the selected plan before submitting"
+  ],
+  "countsAsLive": "The product is featured on the SubmitHunt home page / launch listing after its queued launch date.",
+  "unknowns": [
+    "Whether a real free tier still exists (directory aggregators disagree)",
+    "Launch queue length and review process",
+    "Whether outbound links are dofollow on the free plan"
+  ]
+}

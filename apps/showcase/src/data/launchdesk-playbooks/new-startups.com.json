@@ -1,0 +1,57 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "new-startups.com",
+  "name": "New Startups",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://new-startups.com/",
+      "title": "New Startups homepage — 'launchpad for new startups' (browser-check walled)"
+    },
+    {
+      "url": "https://launchpointzero.com/launchsites/new_startups",
+      "title": "Third-party profile: paid $50 submission, no longer free"
+    },
+    {
+      "url": "https://marketing.femaleswitch.com/new-startups",
+      "title": "Third-party guide: $50 express / $100 express+social packages"
+    },
+    {
+      "url": "https://letslaunch.today/directories/new-startups",
+      "title": "Third-party note: site behind browser-verification wall"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Free submissions are no longer accepted per third-party trackers ('costs $50')",
+    "Reported packages: Express Submission $50 (review + publish, minimum 30-day homepage presence) and Express + Social Media Promotion $100 (Twitter/Facebook promotion to 18K+ followers)",
+    "Startup gallery/peer-review model — submission is a written profile reviewed within a stated ~48 hours"
+  ],
+  "preparation": [
+    "Startup details and thoughtful answers to the submission questionnaire (narrative quality affects the published post)",
+    "Logo and imagery",
+    "Payment method for the $50/$100 package"
+  ],
+  "workflow": [
+    "Open https://www.new-startups.com/ (expect a browser-verification interstitial — automation blocked)",
+    "Navigate to the submission page (historically /promote-your-startup-company/ or a 'submit' path)",
+    "Complete the startup questionnaire",
+    "Choose Express ($50) or Express + Social ($100) and pay on the redirect to the payment page",
+    "Site reviews and publishes within ~48 hours per third-party guides"
+  ],
+  "watchFor": [
+    "Site sits behind a browser-verification wall — headless submissions will fail; use a real browser session",
+    "No free tier currently — any 'free submission' guides are stale",
+    "Homepage presence is time-boxed (~30 days), then the post persists as a gallery entry",
+    "Verify the actual submit URL in-session; older documented paths may have changed"
+  ],
+  "countsAsLive": "A published startup profile/review post on new-startups.com (and homepage placement during the paid window)",
+  "unknowns": [
+    "Exact current submission URL and form fields",
+    "Whether outbound links are dofollow",
+    "Refund policy if rejected",
+    "Whether prices remain $50/$100 (figures are from third-party sources)"
+  ]
+}

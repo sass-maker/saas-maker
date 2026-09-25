@@ -1,0 +1,66 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "nxgntools.com",
+  "name": "NextGen Tools",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.nxgntools.com/",
+      "title": "Homepage — weekly launch competition, 'Launch Your Tool Today, Get a Badge & 70+ DR Backlink', 4,003+ tools in launch queue"
+    },
+    {
+      "url": "https://www.nxgntools.com/how-it-works",
+      "title": "How it works — submission fields, badge-based verification, 70 launches/week, voting rules, karma/streaks, bids"
+    },
+    {
+      "url": "https://www.nxgntools.com/pricing",
+      "title": "Pricing — Basic free; Premium $29 one-time; TikTok+Blog feature $199; Featured Spots and Submission Service upsells"
+    },
+    {
+      "url": "https://www.nxgntools.com/~/my-tools",
+      "title": "My tools — submission/management entry behind account"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Basic Launch is free forever but joins a queue — 4,003+ tools waiting; ~70 tools launch per week",
+    "Free-tier dofollow backlink only for weekly Top 3 winners AND requires embedding their badge for verification",
+    "Verified checkmark requires embedding the tool's badge on the submitted website — auto-verified when the badge loads on the matching URL",
+    "Premium $29 skips the queue, guarantees 2 permanent DR70+ dofollow backlinks, 1 week featured placement"
+  ],
+  "requirements": [
+    "Account required; submission form needs: tool name, tagline, website URL, logo image, one or more categories, pricing model",
+    "Any registered user can upvote; self-upvoting/vote manipulation is prohibited and can cancel the launch",
+    "Launches run on a weekly competition cycle (Mon–Sun); top 3 get badges, backlink, +1 extra week featured"
+  ],
+  "preparation": [
+    "Account credentials",
+    "Tool name, tagline, URL, logo, categories, pricing model",
+    "Badge embed code ready (from the tool page's 'Embed Badge') for verification + Top-3 backlink eligibility",
+    "Decision: free queue vs $29 Premium vs $199 TikTok+Blog feature"
+  ],
+  "workflow": [
+    "Create an account on nxgntools.com",
+    "Open the launch submission (~/my-tools / 'Launch your tool') and fill name, tagline, URL, logo, categories, pricing model",
+    "Choose Basic (free, queue) or Premium ($29, skip queue)",
+    "Embed the badge on your site to earn the verified checkmark",
+    "Compete in the weekly ranking; Top 3 win badges + dofollow backlink + an extra featured week",
+    "Optional upsells: homepage bid auction (from $1, outbid to lose), Featured Spot monthly subscription, $199 TikTok+Blog feature, directory submission service"
+  ],
+  "watchFor": [
+    "Queue is deep — 4,003+ tools waiting at ~70/week means a multi-month wait on the free plan",
+    "Dofollow backlink on free tier is gated behind Top-3 finish AND badge embed — most free launches get neither",
+    "Vote manipulation (including self-upvoting) can cancel your launch — don't game it",
+    "Homepage Bids are non-refundable: being outbid leaves you nothing, no credit, no refund",
+    "Long streak rewards exist (14-day streak = 25% off Premium; 180-day = 75% off) if you'll engage anyway",
+    "Many upsell surfaces: Featured Spots, bids, TikTok package, submission service"
+  ],
+  "countsAsLive": "Tool has a public page at nxgntools.com/tools/<slug> and appears in 'This week's launches' during its competition week",
+  "unknowns": [
+    "Whether Premium's 'unlimited SEO-optimized articles' are self-serve or editorial",
+    "Exact queue position mechanics for free launches",
+    "How Featured Spot's '$1 CPC until outbid' accounting works in practice"
+  ]
+}

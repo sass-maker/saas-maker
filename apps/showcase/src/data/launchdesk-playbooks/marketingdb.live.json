@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "marketingdb.live",
+  "name": "MarketingDB",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://marketingdb.live/",
+      "title": "MarketingDB homepage — weekly launch board, 'Dofollow backlink while your badge stays live', sign-in gated submit"
+    },
+    {
+      "url": "https://marketingdb.live/llms.txt",
+      "title": "llms.txt — 734 approved products, /project/{slug} pages with schema.org data and .md twins"
+    },
+    {
+      "url": "https://marketingdb.live/submit",
+      "title": "Submit page (returned empty body — form is client-side/sign-in gated)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free listing requires keeping the MarketingDB badge live — the dofollow backlink exists 'while your badge stays live' (or with Premium)",
+    "Sign in required to see drafts, products in review, and live listings"
+  ],
+  "requirements": [
+    "SaaS and startup-tool products across ~23 categories",
+    "Account/sign-in required for submission",
+    "Listings are curated — 'approved listing' language implies a review step"
+  ],
+  "preparation": [
+    "Product name, tagline, category (SaaS, Tool/Utility, Marketing, AI & ML, Productivity, Design, Mobile App, Chrome Extension, E-commerce, Development, etc.), tags, and pricing label (Free/Freemium/Premium/Demo/Free trial)",
+    "Badge embed for the dofollow benefit on the free route",
+    "Optional 'Done for you' packages (Starter 30+ / Pro 60+ / Premium 100+ directories) — a paid submission service, not needed for a self listing"
+  ],
+  "workflow": [
+    "Sign in, then open Submit",
+    "Fill the listing form and submit for review",
+    "Track drafts/in-review/live status from the signed-in 'Your listings' area",
+    "Keep the badge live to retain the dofollow backlink"
+  ],
+  "watchFor": [
+    "Badge is an ongoing condition — removing it removes the dofollow",
+    "Weekly launch framing (Week 36–42 board tabs) plus permanent indexed listing — dual mechanic",
+    "Heavy upsell surface: $39/mo partner ad slots and the done-for-you directory submission packages",
+    "Every listing gets a plain-markdown twin at URL + .md — useful for verification by agents"
+  ],
+  "countsAsLive": "A /project/<slug> page resolves (and /project/<slug>.md returns the markdown twin), and the product shows in its category listing",
+  "unknowns": [
+    "Free vs Premium plan specifics and Premium pricing (submit page did not render publicly)",
+    "Review timeline",
+    "Whether the free listing without badge is nofollow or unpublished"
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "eu-startups.com",
+  "name": "EU-Startups",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.eu-startups.com/directory/",
+      "title": "EU-Startups Database (startup directory)"
+    },
+    {
+      "url": "https://www.eu-startups.com/directory/?wpbdp_view=submit_listing",
+      "title": "Submit listing view (per launchpointzero.com directory profile)"
+    },
+    {
+      "url": "https://launchpointzero.com/launchsites/eu-startups",
+      "title": "Third-party profile noting free submission and European focus"
+    },
+    {
+      "url": "https://backlinkbot.ai/directories/eu-startups",
+      "title": "Third-party profile describing account + free submission flow"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "European startup focus — the directory is for companies based in / operating in Europe",
+    "A working product/company site with a name, URL, short description and logo",
+    "Site blocks automated access (Cloudflare-style protection) — expect an interactive browser session"
+  ],
+  "preparation": [
+    "Account credentials for eu-startups.com (account creation is part of the flow per third-party guides)",
+    "Startup name, website URL, short description, logo image",
+    "Correct category selection"
+  ],
+  "workflow": [
+    "Open https://www.eu-startups.com/directory/?wpbdp_view=submit_listing",
+    "Create an account / log in on eu-startups.com",
+    "Fill in the listing form: name, URL, description, logo, category",
+    "Submit and wait for manual review",
+    "Verify the listing appears in the EU-Startups Database once approved"
+  ],
+  "watchFor": [
+    "The directory page 403s to non-browser fetchers — do not assume the site is down",
+    "Free listings are hand-reviewed; third-party sources report days-to-weeks delay",
+    "Eligibility is European startups — non-EU companies have been reported rejected",
+    "Renamed from 'directory' to 'Startup Database'; older submit links may redirect"
+  ],
+  "countsAsLive": "The startup's profile page is publicly visible in the EU-Startups Database under /directory/ and searchable/browsable by category",
+  "unknowns": [
+    "Exact list of form fields on the current submit flow",
+    "Whether free listings are dofollow (third-party sources claim dofollow; not verified on a live listing)",
+    "Current review turnaround time",
+    "Whether paid/sponsored tiers exist alongside the free listing"
+  ]
+}

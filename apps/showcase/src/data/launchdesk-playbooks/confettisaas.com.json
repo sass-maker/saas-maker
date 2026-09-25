@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "confettisaas.com",
+  "name": "ConfettiSaaS",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://confettisaas.com/submit",
+      "title": "Submit page — URL-driven builder plus MCP-server submission for coding agents"
+    },
+    {
+      "url": "https://confettisaas.com/",
+      "title": "Homepage — 'permanent do-follow links' promise, 353+ listed startups"
+    },
+    {
+      "url": "https://confettisaas.com/sponsoring",
+      "title": "Sponsoring — Starter $50 / Premium $70 homepage placements"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free submission is available, but the documented agent flow includes the agent 'installs the badge' on your site — a ConfettiSaaS badge embed is part of the listing pipeline",
+    "An email approve-link must be opened for the listing to land in your account"
+  ],
+  "requirements": [
+    "A SaaS/startup product with a public homepage the site (or MCP agent flow) can read",
+    "Every field is AI-generated from your homepage and fully editable — 'Nothing goes live until you review it'"
+  ],
+  "preparation": [
+    "Website URL only for the basic path — the builder reads the landing page and drafts the listing",
+    "For the agent path: add the MCP server https://confettisaas.com/mcp to Claude Code/Codex/Cursor/Windsurf or a Claude.ai/ChatGPT custom connector (no auth)",
+    "Access to the email inbox that receives the approve link",
+    "Ability to install a badge on the product site"
+  ],
+  "workflow": [
+    "Manual path: open https://confettisaas.com/submit, paste the homepage URL, let it draft the listing, edit fields, review, submit",
+    "Agent path: register the MCP server, then ask 'Submit https://yourproduct.com to ConfettiSaaS' — the agent writes the listing, installs the badge, and triggers an approve email",
+    "Open the emailed approve link to attach the listing to your account",
+    "Optionally buy sponsorship ($50 for 2 weeks / $70 for 4 weeks premium placement + newsletter feature)"
+  ],
+  "watchFor": [
+    "Badge installation is baked into the agent submission flow — decide before submitting whether you'll keep it",
+    "Sponsorship is an optional upsell; the base listing markets itself as permanent with do-follow links",
+    "AI-drafted copy needs human review — the site explicitly supports editing before anything goes live"
+  ],
+  "countsAsLive": "A listing page exists under confettisaas.com/saas/<slug> and the product appears in Listed products / Latest Submissions",
+  "unknowns": [
+    "Whether the badge is strictly mandatory on the manual (non-MCP) path",
+    "Review/moderation turnaround time"
+  ]
+}

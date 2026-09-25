@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "eliteai.tools",
+  "name": "EliteAI Tools",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://eliteai.tools/",
+      "title": "EliteAI.tools homepage - AI tools directory with 'Launch Your Tool' CTA"
+    },
+    {
+      "url": "https://eliteai.tools/tool/submit-new-tool",
+      "title": "Submit new tool page - requires login; form body not rendered without auth"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Submission requires an account — login via Google, GitHub, or email is enforced before the submit form renders",
+    "No public pricing for the base listing was visible; separate paid 'Promote Your Tool' and 'Guest Post' tabs exist at /tool/submit-new-tool?tab=promote"
+  ],
+  "requirements": [
+    "AI tools only — 'exclusively featuring high-quality, useful, and thoroughly tested tools' per the site",
+    "Account required (Google / GitHub / email auth)",
+    "Curated directory — submissions are reviewed, not auto-published"
+  ],
+  "preparation": [
+    "A Google/GitHub/email account for login",
+    "Tool name, URL, description, pricing model, logo/screenshots",
+    "Relevant tags (directory organizes by 50+ tag pages like image-generation, video-creation) and profession fit"
+  ],
+  "workflow": [
+    "Go to https://eliteai.tools/tool/submit-new-tool ('Launch Your Tool' / 'Submit Your Tool' buttons)",
+    "Log in or sign up (Google, GitHub, or email)",
+    "Complete the submit-new-tool form (fields not publicly visible without auth)",
+    "Submit for review and wait for the curated listing",
+    "Optional paid routes: 'Promote Your Tool' tab and 'Guest Post' sub-tab on the same page"
+  ],
+  "watchFor": [
+    "Entire submit flow is behind authentication — cannot be completed or even previewed without an account",
+    "Separate paid promotion surface (?tab=promote) plus a guest-post upsell (?sub_tab=guest-blog-post) live inside the submit page",
+    "Site claims 'thoroughly tested tools' — thin or non-functional products may be rejected"
+  ],
+  "countsAsLive": "The tool appears on its tag/profession pages and is searchable via the site's AI-powered search",
+  "unknowns": [
+    "Whether a free listing tier exists or all listings are paid (freemium per catalog note, unconfirmed on site)",
+    "Form fields behind the auth wall",
+    "Review timeline and whether the listing link is dofollow",
+    "Pricing for Promote Your Tool / Guest Post options"
+  ]
+}

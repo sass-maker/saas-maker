@@ -1,0 +1,66 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "land-book.com",
+  "name": "Landbook",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://land-book.com/submission-guidelines",
+      "title": "Landbook - Website Submission Guidelines"
+    },
+    {
+      "url": "https://land-book.com/guidelines",
+      "title": "Landbook - community guidelines (no spam, no plagiarism)"
+    },
+    {
+      "url": "https://land-book.com/terms-of-service",
+      "title": "Landbook - Terms of Service, Website Submissions section"
+    },
+    {
+      "url": "https://land-book.com/pro",
+      "title": "Landbook - PRO page / FAQ on getting featured"
+    },
+    {
+      "url": "https://submitmap.com/platform/land-book/",
+      "title": "submitmap - Landbook submission walkthrough (independent guide)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free submission is gated by a curated editorial review - Landbook 'carefully picks' featured websites and most submissions are not accepted",
+    "Review takes from a few days up to one month depending on queue; silence for a month IS the rejection - no negative notification is sent",
+    "A free Landbook account is required to submit (submissions attach to a profile)"
+  ],
+  "requirements": [
+    "Live website URL - submissions are judged on current design trends, aesthetics, usability, accessibility, and content quality",
+    "Free Landbook account (sign up, verify account) - the submit control lives in the logged-in interface, not at a public URL",
+    "If submitting your own work, tick 'I'm the author of this website' - authored sites appear under your profile's 'Made' tab once the profile is public",
+    "You may submit sites you did not create (inspiration submissions appear without author attribution; the rightful creator can later claim them)"
+  ],
+  "preparation": [
+    "A website whose visual design can survive hand curation - functional but ordinary sites are declined",
+    "Confirmed rights: ticking the author box asserts you own the site or have explicit permission",
+    "Optional: pick a page type/category from their list",
+    "Nothing else - 'Landbook does not charge any money for submission'"
+  ],
+  "workflow": [
+    "Create a free account on land-book.com and verify it",
+    "In the logged-in interface, add the website (there is no public /submit URL - an independent guide notes /submit 404s)",
+    "Tick 'I'm the author of this website' if it is your own work",
+    "Wait up to one month; if featured, Landbook emails a heads-up; silence = rejection"
+  ],
+  "watchFor": [
+    "Rejection is silent - there is no status page or rejection email; a month without contact means 'not featured'",
+    "Spamming submissions violates the ToS and can get the account removed",
+    "Submitting someone else's site without ticking the author box is allowed, but the true creator can claim it later",
+    "A PRO tier exists but is not required for submission"
+  ],
+  "countsAsLive": "The website appears as a featured entry in the Landbook gallery (homepage/category pages) and, if authored, under your profile's 'Made' tab",
+  "unknowns": [
+    "Current acceptance rate and exact queue length",
+    "Whether PRO members get any review priority",
+    "Whether the featured entry carries a dofollow link"
+  ]
+}

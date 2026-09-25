@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "pitchwall.co",
+  "name": "PitchWall",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://pitchwall.co/submit",
+      "title": "Submit your product — Free vs Pro $49 vs Premium $99 plan table"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free Launch exists but carries a minimum 30-day waiting period and only 1-day homepage visibility; newsletter mention is 'not guaranteed' on free",
+    "All tiers include a DR 70 do-follow backlink and a tweet from Pitchwall's X account"
+  ],
+  "requirements": [
+    "Product suitable for a launch/feature listing (site claims DR 70, 500k+ monthly visitors, 65,000+ products published since 2015)",
+    "Plan selection up front: /product/submit?plan=free | pro | premium"
+  ],
+  "preparation": [
+    "Product details, URL, logo/screenshots (form at /product/submit?plan=…)",
+    "Plan choice: Free $0 (1-day homepage, ≥30-day wait) / Pro $49 (2-day homepage, 2-week wait, guaranteed newsletter mention) / Premium $99 (2-day homepage, your chosen date or as early as tomorrow)",
+    "Launch date preference if paying Premium"
+  ],
+  "workflow": [
+    "Open /submit, choose a plan (Free / Pro / Premium)",
+    "Fill the product submission form",
+    "Free: wait ≥30 days; Pro: ~2-week wait; Premium: featured on your chosen date",
+    "Product gets its homepage window + do-follow link + tweet; newsletter mention guaranteed on paid only"
+  ],
+  "watchFor": [
+    "Free tier's newsletter mention is explicitly NOT guaranteed — the guaranteed newsletter slot starts at $49",
+    "'Minimum 30-day waiting period' means the free wait can be longer",
+    "Traffic stats (500k visitors, 50k newsletter subs) are self-reported on the submit page",
+    "Guest post and advertise channels exist as separate paid surfaces"
+  ],
+  "countsAsLive": "Product featured on pitchwall.co homepage for its paid/free window with a permanent product page containing the do-follow backlink",
+  "unknowns": [
+    "Whether an account is required before the plan form",
+    "Exact review/approval step",
+    "How long listings persist after the homepage window"
+  ]
+}

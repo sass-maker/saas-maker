@@ -1,0 +1,54 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "publishyoursaas.com",
+  "name": "PublishYourSaaS",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://publishyoursaas.com/",
+      "title": "Homepage — 'List Your SaaS Today', DR-47 backlink pitch, 238k monthly page views (Cloudflare-measured)"
+    },
+    {
+      "url": "https://publishyoursaas.com/pricing",
+      "title": "Pricing — Free (nofollow unless badge verified, checked every 24h) / Starter $9.99 / Advanced $49.99"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free listing is NOFOLLOW by default; the PublishYourSaaS badge must be verified to activate the dofollow link — badge is re-checked every 24 hours and removing it removes the dofollow",
+    "Free listings wait for manual staff review: 2–3 weeks; one free launch per product (free relaunches allowed)"
+  ],
+  "requirements": [
+    "SaaS product listing",
+    "Sign in required — Google or GitHub for dashboard access and listing management",
+    "Paid tiers activate only after confirmed payment"
+  ],
+  "preparation": [
+    "SaaS name, URL, description, categories, logo/screenshot",
+    "Badge embed if using free + wanting dofollow (and keep it permanently)",
+    "Plan: Free $0 / Starter $9.99 one-time (3 permanent dofollow, immediate publish, 30-day Premium Partners homepage visibility, relaunches $5.99) / Advanced $49.99 one-time (4 dofollow, newsletter feature, up to 3 dofollow guest posts, SEO title/meta/keywords, relaunches $19.99)",
+    "Banner advertises '40% off on all plans using promocode DISCOUNT_CODE' — literal placeholder code shown on site"
+  ],
+  "workflow": [
+    "Sign in with Google or GitHub",
+    "Go to Submit your SaaS (/dashboard/listings/new)",
+    "Fill the listing and pick a plan",
+    "Free: wait 2–3 weeks for manual approval; keep the badge live for dofollow",
+    "Paid: activates immediately after checkout confirms"
+  ],
+  "watchFor": [
+    "The free dofollow is conditional forever — badge is re-verified every 24 hours, not once",
+    "Relaunches are free on the free plan but cost extra on paid plans ($5.99 / $19.99 each)",
+    "Discount banner shows a literal 'DISCOUNT_CODE' placeholder — try it, but don't count on it",
+    "Daily 'boost' gamification ranks products within their plan; paid placement stays protected — free listings can never outrank paid",
+    "'Claim a Listing' exists for pre-listed products"
+  ],
+  "countsAsLive": "Listing page on publishyoursaas.com/browse-all and the /tech-products directory with its plan label (Free/Starter/Advanced) and domain link",
+  "unknowns": [
+    "Exact badge markup location",
+    "Whether free listings are searchable/indexed equally with paid",
+    "Review rejection criteria"
+  ]
+}

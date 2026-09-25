@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "highrankdirectory.com",
+  "name": "High Rank Directory",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://highrankdirectory.com/submit.php",
+      "title": "High Rank Directory - Submit Link form with pricing table"
+    },
+    {
+      "url": "https://www.highrankdirectory.com/",
+      "title": "High Rank Directory homepage"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free 'Regular links' are gated by a stated 2-3 MONTH human-editor review queue ('We appreciate your patience but we have to review every listing ahead in the queue')",
+    "Paid 'Featured links' at $9.99/year are reviewed within 48 hours by a human editor (fee framed as covering 'an Urgent Manual Review')"
+  ],
+  "requirements": [
+    "Required fields: Title (*), Your Name (*), Your Email (*), Category (*)",
+    "Optional: URL field present, Description (limited), META Keywords (comma-separated), META Description (limited)",
+    "Deep category selection from a large topical tree (Arts & Humanities, Business & Economy, Computers & Internet, Health And Medical, etc.)",
+    "Login/register box exists on the page but the submit form itself is open"
+  ],
+  "preparation": [
+    "Site title, URL, description, meta keywords/description",
+    "Submitter name and email",
+    "Chosen deep category from the inline tree"
+  ],
+  "workflow": [
+    "Open https://highrankdirectory.com/submit.php",
+    "Pick 'Regular links' (free, 2-3 month queue) or 'Featured links' ($9.99/yr, 48h review)",
+    "Complete Title, URL, Description, META fields, Name, Email",
+    "Select the deep Category",
+    "Submit and wait for the human-editor review"
+  ],
+  "watchFor": [
+    "The free path's 2-3 month queue is among the longest documented - plan accordingly",
+    "Same phpLD-era form family as other legacy directories: no drafts, giant inline category tree",
+    "The featured fee is explicitly for faster human review and first-page placement, not guaranteed acceptance",
+    "Separate 'Submit Article' endpoint exists for article submissions"
+  ],
+  "countsAsLive": "The link renders publicly under its category (verify via 'Latest Links' or the category page) after editor review",
+  "unknowns": [
+    "Actual free-queue turnaround vs the stated 2-3 months",
+    "Whether links are dofollow",
+    "Whether featured placement is permanent or annual-renewal only ('1 Year' duration is stated)"
+  ]
+}

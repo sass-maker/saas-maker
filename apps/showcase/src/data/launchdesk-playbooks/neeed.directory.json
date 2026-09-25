@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "neeed.directory",
+  "name": "Neeed Directory",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://neeed.directory/submit",
+      "title": "Submit your product — Free (badge) vs Premium $19 one-time, plus listing guidelines"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free listing is live right away after an automatic check, and the backlink becomes dofollow once the neeed badge on your site is verified",
+    "Without the verified badge the free link is not dofollow"
+  ],
+  "requirements": [
+    "Accepted: software (web/mobile apps, SaaS, dev tools, extensions, APIs) and digital products (templates, design assets, courses, ebooks, kits)",
+    "Not accepted: adult content, and local service businesses (trades, salons, clinics, single-area agencies)",
+    "Every submission passes an automatic check; out-of-scope listings are not published",
+    "Sign-in required to fill the form (/sign-in?callbackURL=/submit?plan=free|premium)"
+  ],
+  "preparation": [
+    "Product name, URL, description, category (large taxonomy incl. AI, Developer Tools, SaaS, Marketing Tools, etc.)",
+    "neeed badge placed on your site for the free dofollow conversion",
+    "Optional $19 one-time Premium: permanent dofollow without badge, enhanced profile (highlights, who-it's-for, FAQ), FAQ schema, 7 days in 'Just launched' homepage + top-of-category, Premium page feature"
+  ],
+  "workflow": [
+    "Pick Free or Premium on /submit, then sign in",
+    "Fill the listing form",
+    "Free: pass the automatic check → live immediately; add badge → dofollow once verified",
+    "Premium: pay $19 once → permanent dofollow + enhanced profile + 7-day 'Just launched' placement"
+  ],
+  "watchFor": [
+    "Free listing goes live before the badge check completes — dofollow conversion depends on verification succeeding afterwards",
+    "Scope rules are enforced by an automatic gate — local service businesses are explicitly excluded",
+    "Both tiers are one-time, neither is a subscription",
+    "Site exposes llms.txt/llms-full.txt and an API — machine-verifiable once live"
+  ],
+  "countsAsLive": "Product page on neeed.directory live immediately after the automatic check, appearing in its category and (for Premium) in 'Just launched' and /premium",
+  "unknowns": [
+    "Whether free listings lose dofollow if the badge is removed later (verification appears ongoing)",
+    "Exact badge markup",
+    "What the automatic check validates beyond content scope"
+  ]
+}

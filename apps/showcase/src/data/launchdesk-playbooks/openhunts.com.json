@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "openhunts.com",
+  "name": "OpenHunts",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://openhunts.com/pricing",
+      "title": "Pricing — Free (20 slots/wk, ~60-week queue or badge skip), Premium $19, Highlight demand-priced"
+    },
+    {
+      "url": "https://openhunts.com/projects/submit",
+      "title": "Submit page — sign-in wall (Google/GitHub/email)"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free Launch: 20 slots weekly and a stated queue time of ~60 weeks — OR add the OpenHunts badge to skip the queue (badge-verification shortcut documented in their blog)",
+    "Free tier dofollow backlink only if the launch finishes top 3; Twitter/newsletter shoutout only if #1"
+  ],
+  "requirements": [
+    "Account required: Google, GitHub, or email sign-in before /projects/submit",
+    "Weekly launch format: all launches go live Monday 8:00 AM UTC, featured on homepage for 7 days"
+  ],
+  "preparation": [
+    "Project name, URL, description, categories",
+    "Badge embedded if using the free queue-skip",
+    "Plan choice: Free $0 / Premium $19 per launch (skip wait, choose week, guaranteed dofollow, no badge) / Highlight $20–$59 per week demand-priced (instant launch, highlighted in feed, NEW ARRIVAL carousel, guaranteed shoutout)"
+  ],
+  "workflow": [
+    "Sign in at /projects/submit",
+    "Choose plan, enter project details",
+    "Free: join the queue or verify the badge to skip; Premium/Highlight: pay and pick/confirm the launch week",
+    "Launch Monday 8:00 AM UTC; community voting determines top-3/#1 outcomes"
+  ],
+  "watchFor": [
+    "~60-week free queue is effectively a pay-or-badge wall — the badge is the only zero-cost accelerator",
+    "Prices shown with strike-throughs ($9.9→$19 Premium; $20→$59 Highlight 'demand-based rates') — actual charge is what checkout shows",
+    "Premium does NOT include the NEW ARRIVAL carousel — that's Highlight-only",
+    "One launch per scheduling choice; only top-3 gets amplified"
+  ],
+  "countsAsLive": "Project live on the OpenHunts homepage/trending for its 7-day window starting Monday 8:00 AM UTC, with its AI/GEO-optimized detail page public",
+  "unknowns": [
+    "Exact badge markup and verification mechanics",
+    "Whether free-queue submissions still get a nofollow listing immediately or wait the full ~60 weeks",
+    "Refund policy"
+  ]
+}

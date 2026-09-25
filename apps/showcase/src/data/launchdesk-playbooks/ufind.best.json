@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "ufind.best",
+  "name": "ufind.best",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://ufind.best/submit.md",
+      "title": "Listing a tool on ufind.best (plain-text docs for AI agents)"
+    },
+    { "url": "https://ufind.best/products/create", "title": "Add your tool (requires login)" },
+    { "url": "https://ufind.best/pricing", "title": "ufind.best pricing" }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free tier joins a queue and is assigned the next open weekly cohort (launch weeks start Monday)",
+    "Requires displaying the ufind.best badge on your own site; they check for it, and a listing whose badge disappears is unpublished after 7 days",
+    "Free listings get a dofollow link only if the tool finishes in the week's Top 3; all other free listings stay nofollow",
+    "Free profile is basic: no AI-written summary, highlights, audiences or FAQ"
+  ],
+  "requirements": [
+    "An account is required (GitHub, Google, or email registration)",
+    "Submissions are reviewed and not all are accepted",
+    "Listings run in weekly cohorts starting Monday"
+  ],
+  "preparation": [
+    "Register an account on ufind.best",
+    "Product name, URL, and basic description",
+    "Decide placement for the ufind.best badge on your own site (required for the free tier)",
+    "For Premium ($19 one-time): fuller profile assets - summary, highlights, ideal-for audiences, FAQ, full description"
+  ],
+  "workflow": [
+    "Create an account at https://ufind.best/register (GitHub/Google/email)",
+    "Open https://ufind.best/products/create",
+    "Choose Free (queue + badge) or Premium ($19, choose any open week, permanent dofollow, no badge)",
+    "Fill in the listing fields and submit",
+    "If free: embed the badge on your site and keep it live; vote performance in your cohort week determines whether the link becomes dofollow"
+  ],
+  "watchFor": [
+    "Badge is verified continuously - removing it unpublishes the free listing after 7 days",
+    "Free listings are nofollow unless the tool reaches Top 3 of its cohort week",
+    "Premium ($19) changes placement and page richness but NOT ranking/voting; paying does not improve how the tool is scored",
+    "Growth add-on ($6.99/mo) only keeps SEO reports current; it does not affect ranking",
+    "There is an MCP server and submit.md aimed at AI agents - the canonical submission page is /submit-a-product"
+  ],
+  "countsAsLive": "A public product page on ufind.best visible within your assigned cohort week, votable, and (for paid or Top-3 free listings) carrying a dofollow link.",
+  "unknowns": [
+    "Current queue length / how far out the next free cohort week is",
+    "Exact acceptance criteria used in review"
+  ]
+}

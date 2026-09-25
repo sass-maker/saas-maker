@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "spiff.store",
+  "name": "Spiff.store",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    { "url": "https://spiff.store/", "title": "Spiff.store homepage - curated AI tools directory" },
+    {
+      "url": "https://spiff.store/submit-tool",
+      "title": "Submit Your AI Tool - Free (2-month wait, nofollow) vs Fastlane $15 (2 days, dofollow)"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free listing exists but has a stated 2-month waiting time and only 1 NO-FOLLOW backlink",
+    "Fastlane Listing ($15 one-time) lists within ~2 business days with do-follow backlinks, homepage + sitewide feature, listing on 10+ sister sites, blog mention, and social shares"
+  ],
+  "requirements": [
+    "AI tools directory — curated collection",
+    "FAQ: any website displaying sexual or violent content is not allowed",
+    "Both tiers promise a dedicated listing page"
+  ],
+  "preparation": [
+    "Tool name, URL, description, category fit",
+    "Decision between free queue (2 months) and $15 Fastlane (2 days)"
+  ],
+  "workflow": [
+    "Go to https://spiff.store/submit-tool ('Submit Tool' in nav)",
+    "Choose 'Free Listing' ($0, ~2 months, nofollow link) or 'Fastlane Listing' ($15, ~2 days, dofollow)",
+    "Click 'Submit AI Tool' under the chosen plan and complete the form",
+    "Wait for the listing to publish; a 'Visit Website' outbound link appears on the listing card"
+  ],
+  "watchFor": [
+    "Free tier is explicitly NOFOLLOW — the catalog 'link=follow' note applies only to the paid Fastlane tier",
+    "Fastlane promises '100+ do-follow backlinks' via 10+ sister sites — a link-network pattern; footer sister sites include backlinksforsale.com, a paid-link shop",
+    "Marketing copy claims 'Increased Domain Authority / boost in SEO traffic' — treat as sales language, not guarantees",
+    "The submit page brands the site 'AITools Directory' in the footer — sister-site network"
+  ],
+  "countsAsLive": "A tool card with a 'Visit Website' link appears on spiff.store (homepage grid and category pages)",
+  "unknowns": [
+    "Exact form fields after clicking 'Submit AI Tool'",
+    "Whether the 2-month free queue is enforced or shorter in practice",
+    "Rejection criteria beyond the sexual/violent content ban"
+  ]
+}

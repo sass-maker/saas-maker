@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "prolaunch.net",
+  "name": "Pro Launch",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://prolaunch.net/pricing",
+      "title": "Pricing — Free (badge→dofollow) / Startup $7.99 / Premium $39.99 with SEO article; add-ons listed"
+    },
+    {
+      "url": "https://prolaunch.net/projects/submit",
+      "title": "Submit page — sign-in wall (Google/GitHub/email)"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free Launch is nofollow — adding the Pro Launch badge to your site converts it to a dofollow backlink at no cost",
+    "25 free slots weekly, standard launch queue"
+  ],
+  "requirements": [
+    "Account required: Google, GitHub, or email sign-in before /projects/submit",
+    "Launches happen at 8:00 AM UTC in weekly batches"
+  ],
+  "preparation": [
+    "Project name, URL, description, category, logo",
+    "Badge on your site if you want free-tier dofollow",
+    "Plan: Free $0 / Startup $7.99 per launch (guaranteed dofollow, earlier dates, up to 90-day scheduling, 1 relaunch after 30-day cooldown) / Premium $39.99 (dedicated '[Product] review' SEO article, premium spotlight, 5 relaunches that keep upvotes/comments/ranking)",
+    "Optional add-ons: Sponsored Listing $59.99/month, guest post $29.99 one-time"
+  ],
+  "workflow": [
+    "Sign in, open /projects/submit",
+    "Choose plan and pick a launch date (up to 90 days out on paid)",
+    "Free: place the badge so the listing earns dofollow",
+    "Launch in the 8:00 AM UTC batch; homepage feature + community engagement"
+  ],
+  "watchFor": [
+    "Free tier is nofollow WITHOUT the badge — the badge is doing the SEO work",
+    "Premium's headline value is the dedicated SEO article; check the published review examples for quality",
+    "Relaunch economics: Startup gets 1 relaunch (30-day cooldown), Premium gets 5 with preserved engagement",
+    "Badge Terms page exists (/legal/badges) — read it for removal conditions",
+    "Footer is saturated with reciprocal directory badges — typical badge-network profile"
+  ],
+  "countsAsLive": "Project page on prolaunch.net live from its scheduled 8:00 AM UTC launch, listed in All Projects and featured on the homepage",
+  "unknowns": [
+    "Badge markup and verification mechanics",
+    "Free queue length / scheduling window for free tier",
+    "Refund policy details"
+  ]
+}

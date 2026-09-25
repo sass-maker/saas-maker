@@ -1,0 +1,285 @@
+---
+/**
+ * THESIS: A playbook row is evidence, not advice — every claim names the page it came
+ * from and the day it was read. Researched means public docs, not a finished submission.
+ * OWN-WORLD: Same workshop interior as /launchdesk; the playbook renders as one pane
+ * per job-to-do inside the operator ledger.
+ * STORY: Route verdict first, then what to prepare, the steps, the traps, what counts
+ * as live, and what nobody could confirm.
+ * FIRST VIEWPORT: Identity, route verdict, provenance line, then the requirement list.
+ */
+import Footer from '../../components/Footer.astro';
+import Nav from '../../components/Nav.astro';
+import Layout from '../../layouts/Layout.astro';
+
+type PlaybookSource = { url: string; title?: string };
+type Playbook = {
+  domain: string;
+  name: string;
+  grade: 'researched' | 'observed';
+  retrieved: string;
+  sources: PlaybookSource[];
+  category?: string;
+  zeroCostRoute: 'free' | 'conditional' | 'paid' | 'unknown';
+  conditions?: string[];
+  requirements: string[];
+  preparation: string[];
+  workflow: string[];
+  watchFor: string[];
+  countsAsLive: string;
+  unknowns: string[];
+};
+
+export function getStaticPaths() {
+  const modules = import.meta.glob('../../data/launchdesk-playbooks/*.json', { eager: true });
+  return Object.values(modules)
+    .map((mod) => (mod as { default?: Playbook }).default ?? (mod as Playbook))
+    .filter((p) => p && p.domain)
+    .map((playbook) => ({
+      params: { domain: playbook.domain },
+      props: { playbook },
+    }));
+}
+
+interface Props {
+  playbook: Playbook;
+}
+
+const { playbook } = Astro.props as Props;
+
+const ROUTE_LABELS: Record<string, string> = {
+  free: 'Free route',
+  conditional: 'Conditional free route',
+  paid: 'Paid only',
+  unknown: 'Route unverified',
+};
+const GRADE_LABELS: Record<string, string> = {
+  researched: 'Researched from public pages — no submission was run',
+  observed: 'Observed during a real submission run',
+};
+---
+
+<Layout
+  title={`${playbook.name} launch playbook — SaaS Maker launch catalog`}
+  description={`Submission playbook for ${playbook.name} (${playbook.domain}): requirements, workflow, traps, and what counts as live. ${GRADE_LABELS[playbook.grade]}.`}
+>
+  <div class="workshop-world interior-world launchdesk-playbook-world">
+    <Nav />
+    <main id="main-content" class="playbook-page">
+      <header class="playbook-hero">
+        <p class="playbook-kicker">
+          <a href="/launchdesk">Launch catalog</a> / Playbook
+        </p>
+        <h1>{playbook.name}</h1>
+        <p class="playbook-domain">
+          <a href={`https://${playbook.domain}`} target="_blank" rel="noopener noreferrer">
+            {playbook.domain} ↗
+          </a>
+        </p>
+        <div class="playbook-verdict">
+          <span class={`playbook-pill playbook-pill--${playbook.zeroCostRoute}`}>
+            {ROUTE_LABELS[playbook.zeroCostRoute] ?? playbook.zeroCostRoute}
+          </span>
+          {playbook.category && <span class="playbook-pill playbook-pill--plain">{playbook.category}</span>}
+        </div>
+        <p class="playbook-provenance">
+          {GRADE_LABELS[playbook.grade]} · sources read {playbook.retrieved}. Rules change —
+          recheck the platform's own pages before submitting.
+        </p>
+      </header>
+
+      {playbook.conditions && playbook.conditions.length > 0 && (
+        <section class="playbook-pane">
+          <h2>What the free route requires</h2>
+          <ul>
+            {playbook.conditions.map((item) => <li>{item}</li>)}
+          </ul>
+        </section>
+      )}
+
+      <section class="playbook-pane">
+        <h2>Requirements</h2>
+        <ul>
+          {playbook.requirements.map((item) => <li>{item}</li>)}
+        </ul>
+      </section>
+
+      <section class="playbook-pane">
+        <h2>Prepare before opening the form</h2>
+        <ul>
+          {playbook.preparation.map((item) => <li>{item}</li>)}
+        </ul>
+      </section>
+
+      <section class="playbook-pane">
+        <h2>Workflow</h2>
+        <ol>
+          {playbook.workflow.map((item) => <li>{item}</li>)}
+        </ol>
+      </section>
+
+      <section class="playbook-pane playbook-pane--warn">
+        <h2>Watch for</h2>
+        <ul>
+          {playbook.watchFor.map((item) => <li>{item}</li>)}
+        </ul>
+      </section>
+
+      <section class="playbook-pane">
+        <h2>What counts as live</h2>
+        <p>{playbook.countsAsLive}</p>
+      </section>
+
+      {playbook.unknowns.length > 0 && (
+        <section class="playbook-pane playbook-pane--unknown">
+          <h2>Not verified</h2>
+          <ul>
+            {playbook.unknowns.map((item) => <li>{item}</li>)}
+          </ul>
+        </section>
+      )}
+
+      <section class="playbook-pane">
+        <h2>Sources</h2>
+        <ul class="playbook-sources">
+          {playbook.sources.map((source) => (
+            <li>
+              <a href={source.url} target="_blank" rel="noopener noreferrer">
+                {source.title ?? source.url} ↗
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <p class="playbook-back">
+        <a href="/launchdesk">← Back to the launch catalog</a>
+      </p>
+    </main>
+    <Footer />
+  </div>
+</Layout>
+
+<style>
+  .playbook-page {
+    max-width: 52rem;
+    margin: 0 auto;
+    padding: 2rem 1.25rem 4rem;
+    color: var(--ink);
+  }
+  .playbook-kicker {
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .playbook-kicker a {
+    color: var(--ink-muted);
+    text-decoration: none;
+  }
+  .playbook-kicker a:hover {
+    color: var(--copper);
+  }
+  .playbook-hero h1 {
+    margin: 0.35rem 0 0.15rem;
+    font-size: 2.1rem;
+  }
+  .playbook-domain {
+    margin: 0;
+    font-size: 0.95rem;
+  }
+  .playbook-domain a {
+    color: var(--ink-soft);
+  }
+  .playbook-verdict {
+    display: flex;
+    gap: 0.5rem;
+    margin: 0.9rem 0 0.5rem;
+    flex-wrap: wrap;
+  }
+  .playbook-pill {
+    display: inline-block;
+    padding: 0.2rem 0.65rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .playbook-pill--free {
+    border-color: var(--workshop-cobalt);
+    color: var(--workshop-cobalt);
+  }
+  .playbook-pill--conditional {
+    border-color: var(--workshop-amber);
+    color: var(--workshop-amber);
+  }
+  .playbook-pill--paid {
+    border-color: var(--workshop-oxblood);
+    color: var(--workshop-oxblood);
+  }
+  .playbook-pill--unknown,
+  .playbook-pill--plain {
+    color: var(--ink-muted);
+  }
+  .playbook-provenance {
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+    border-top: 1px solid var(--line);
+    padding-top: 0.75rem;
+  }
+  .playbook-pane {
+    margin-top: 1.4rem;
+    padding: 1rem 1.15rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+  }
+  .playbook-pane h2 {
+    margin: 0 0 0.6rem;
+    font-size: 0.85rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .playbook-pane ul,
+  .playbook-pane ol {
+    margin: 0;
+    padding-left: 1.2rem;
+    display: grid;
+    gap: 0.45rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  .playbook-pane p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+  .playbook-pane--warn {
+    border-color: var(--workshop-amber);
+  }
+  .playbook-pane--warn h2 {
+    color: var(--workshop-amber);
+  }
+  .playbook-pane--unknown {
+    border-style: dashed;
+  }
+  .playbook-pane--unknown h2 {
+    color: var(--ink-muted);
+  }
+  .playbook-sources a {
+    color: var(--workshop-cobalt);
+    word-break: break-all;
+  }
+  .playbook-back {
+    margin-top: 2rem;
+  }
+  .playbook-back a {
+    color: var(--ink-soft);
+    text-decoration: none;
+  }
+  .playbook-back a:hover {
+    color: var(--copper);
+  }
+</style>

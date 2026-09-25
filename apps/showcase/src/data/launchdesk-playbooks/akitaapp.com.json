@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "akitaapp.com",
+  "name": "Akita SaaS Directory",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://akitaapp.com/directory",
+      "title": "Akita Integrations Directory — SaaS apps that integrate with Akita"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "This is Akita's *integrations* directory — to be listed your product must actually integrate with the Akita customer-success platform (100+ SaaS integrations)",
+    "Route is a request by email, not a form: 'Email your integration request to hello@akitaapp.com'"
+  ],
+  "requirements": [
+    "A SaaS product in one of their integration categories (CRM, support, surveys, billing, analytics, etc.)",
+    "A working or planned technical integration with Akita (they expose an API/docs at docs.akitaapp.com and akitaapp.com/api)",
+    "B2B fit — categories are all business software"
+  ],
+  "preparation": [
+    "Product name, URL, category fit against their 19 integration categories",
+    "Integration feasibility: review Akita's API docs before requesting",
+    "An email to hello@akitaapp.com proposing the integration (or support@akitaapp.com for the 'can't find app' route)"
+  ],
+  "workflow": [
+    "Confirm your product fits an existing category in /directory",
+    "Email hello@akitaapp.com requesting the integration/listing",
+    "Work with Akita on the actual integration",
+    "Once integrated, your product appears in the integrations directory"
+  ],
+  "watchFor": [
+    "Not a launch directory — a listing without a real integration is unlikely",
+    "This is a partnership/integration request, not a marketing submission; expect a product/engineering conversation",
+    "Stale catalog note: the directory lists long-dead products (Desk.com, Basecamp Classic) suggesting slow curation",
+    "No pricing is discussed — but the real 'cost' is building and maintaining the integration"
+  ],
+  "countsAsLive": "Your product's name/logo appears in the Akita integrations directory under a category",
+  "unknowns": [
+    "Whether Akita accepts listings for planned (not yet built) integrations",
+    "Whether listing links are dofollow",
+    "Whether there is a formal partner program vs ad-hoc email",
+    "Whether Akita (the CS platform) is still actively maintained — directory looks dated"
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "$schema": "fleet.launchkit-tracker.schema.v1",
+  "description": "Submission tracker for a launchkit run. One entry per planned route. States are evidence-based: 'prepared' means assets are drafted but nothing was sent; 'submitted' means the platform acknowledged intake (draft under review counts here only if the platform accepted it for review); 'scheduled' means the platform confirmed a future date/slot; 'live' means a public listing URL resolves in a logged-out browser; 'rejected' means the platform refused; 'blocked' means a gate stopped work (login, CAPTCHA, payment, unmet condition); 'skipped' means deliberately not attempted.",
+  "file": "tracker.json",
+  "required": ["$schema", "version", "product", "entries"],
+  "fields": {
+    "$schema": "literal 'fleet.launchkit-tracker.v1'",
+    "version": "integer, currently 1",
+    "product": {"name": "string", "url": "string"},
+    "entries": [
+      {
+        "domain": "registrable domain of the destination",
+        "state": "planned | prepared | submitted | scheduled | live | rejected | blocked | skipped",
+        "evidence": "public listing URL, confirmation reference, or null — required for submitted/scheduled/live",
+        "notes": "free text: what happened, queue position, review window, blockers",
+        "updated": "ISO 8601 datetime of last state change",
+        "attempts": "integer count of work sessions on this route"
+      }
+    ]
+  },
+  "stateRules": {
+    "prepared": "Legal maximum for saved drafts that were never sent.",
+    "submitted": "Requires evidence of platform intake acknowledgement.",
+    "scheduled": "Requires evidence the platform confirmed a date or slot.",
+    "live": "Requires a resolving public URL recorded in evidence.",
+    "blocked": "Must record the blocking condition in notes."
+  }
+}

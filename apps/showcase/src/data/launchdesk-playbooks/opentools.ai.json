@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "opentools.ai",
+  "name": "OpenTools",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://opentools.ai/friends/launch-tool",
+      "title": "Launch tool page — 'Tool submissions require a paid listing subscription'; sign-in then checkout"
+    },
+    {
+      "url": "https://opentools.ai/",
+      "title": "OpenTools homepage — AI tools directory and newsletter"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "AI tool product aimed at an AI-enthusiast audience",
+    "Paid listing subscription is mandatory — the page states tool submissions require payment",
+    "Sign-in is required before entering tool details and continuing to checkout",
+    "Package includes: listing on the site (dofollow backlink), 4 days on the homepage, and launch posts on OpenTools' X/Twitter (23k) and LinkedIn (5k)"
+  ],
+  "preparation": [
+    "Account credentials for opentools.ai",
+    "Tool name, URL, description, logo/screenshots for the listing and social posts",
+    "Budget for the paid listing subscription (price shown only after sign-in)",
+    "Launch window preference — the package runs as a coordinated launch (homepage days + social posts)"
+  ],
+  "workflow": [
+    "Open https://opentools.ai/friends/launch-tool",
+    "Click 'Sign In to Continue' and authenticate",
+    "Enter tool details in the gated form",
+    "Continue to checkout and pay the listing subscription",
+    "Coordinate launch timing with the OpenTools team (their testimonials describe a hands-on, communicative process)",
+    "Tool appears on the site, 4 days on homepage, plus launch posts on X and LinkedIn"
+  ],
+  "watchFor": [
+    "Price is not shown publicly — it only appears after sign-in",
+    "It is a 'listing subscription', i.e. recurring — check billing terms inside checkout before paying",
+    "The page is heavy on testimonials and traffic claims (782.89k uniques/mo, DA 70) — treat metrics as marketing",
+    "Newsletter exposure is mentioned in stats but the base package lists website + social posts; confirm what's included at checkout"
+  ],
+  "countsAsLive": "Tool has a public listing page on opentools.ai and appears on the homepage during its 4-day feature window",
+  "unknowns": [
+    "Exact subscription price and billing period (behind sign-in)",
+    "Whether newsletter inclusion is part of the base package or an upsell",
+    "What happens to the listing if the subscription lapses"
+  ]
+}

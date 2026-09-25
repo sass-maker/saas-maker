@@ -1,0 +1,39 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "productwing.com",
+  "name": "Product Wing",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    { "url": "https://productwing.com/submit", "title": "Submit a Product (login wall)" },
+    { "url": "https://productwing.com/get-started", "title": "Get Started (login wall)" },
+    { "url": "https://productwing.com/", "title": "Product Wing homepage" }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Google account sign-in is mandatory - /submit only offers 'Log in with Google' (or create an account at /signup)",
+    "Directory for 'promising SaaS, business software, and digital products worth evaluating'"
+  ],
+  "preparation": [
+    "A Google account (or create a site account)",
+    "Product name, URL, description, logo, and a fitting category (broad taxonomy from AI Assistants to HR & Recruiting)"
+  ],
+  "workflow": [
+    "Open https://productwing.com/submit",
+    "Authenticate via 'Log in with Google' (OAuth redirect) or /signup",
+    "Complete the post-login submission form",
+    "Await review/listing (no public SLA found)"
+  ],
+  "watchFor": [
+    "Everything past the login wall is opaque - form fields, cost, and review time are not visible on public pages",
+    "Homepage carries third-party submission-service ads ('We Submit Your SaaS to 140+ Directories') - do not confuse the ad with the site's own flow",
+    "No public pricing page observed; batch metadata marks it free, but confirm no upsell appears post-login"
+  ],
+  "countsAsLive": "The product has a public page reachable from /explore or /latest and its category page.",
+  "unknowns": [
+    "Post-login form fields and whether any paid tier exists",
+    "Review criteria and turnaround time",
+    "Whether outbound links are dofollow"
+  ]
+}

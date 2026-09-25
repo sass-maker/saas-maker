@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aitop10.tools",
+  "name": "AITOP10",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Submission is currently free, but the site's own FAQ states: 'you should share a backlink to AITOP10 directory' — a reciprocal-link expectation on the free path."
+  ],
+  "requirements": [
+    "AI tools only — directory covers AI chatbots, GPT tools, rewriting assistants, audio editing, video production, writing, drawing, and image processing.",
+    "A submit page exists at https://aitop10.tools/submit."
+  ],
+  "preparation": [
+    "Tool name, URL, description, and category.",
+    "A backlink to aitop10.tools ready to place on your site.",
+    "Fallback contact per a third-party profile: support@aitop10.tools."
+  ],
+  "workflow": [
+    "Open https://aitop10.tools/submit (linked as 'Submit' in site nav).",
+    "Submit the tool details; place the reciprocal backlink to AITOP10.",
+    "If the form is unreachable, email support@aitop10.tools per the site's contact guidance."
+  ],
+  "watchFor": [
+    "The homepage timed out twice during research — site may be slow or intermittently unreachable; verify availability before planning around it.",
+    "Backlink 'should' wording is soft but is the stated condition for free submission — treat it as required.",
+    "No pricing tiers or review timeline are published."
+  ],
+  "countsAsLive": "The tool appears in the aitop10.tools explore/directory listing with a detail page linking out to your site.",
+  "unknowns": [
+    "Exact form fields — the submit page was not directly fetched (site timed out for the fetcher; content confirmed via indexed copies).",
+    "Whether an account is required.",
+    "Review timeline and whether the backlink requirement is enforced or honorary."
+  ],
+  "sources": [
+    {
+      "url": "https://aitop10.tools/submit",
+      "title": "Submit Your AI Tool and Get Traffic — 'submission is currently free. But you should share a backlink to AITOP10 directory!'"
+    },
+    {
+      "url": "https://aitop10.tools/",
+      "title": "AITOP10 — AI tools directory (site timed out during direct fetch; content via search index)"
+    },
+    {
+      "url": "https://tap4.ai/ai/aitop10-tools/",
+      "title": "Third-party profile noting submissions via support@aitop10.tools"
+    }
+  ]
+}

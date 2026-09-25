@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startupplug.com.ng",
+  "name": "Startup Plug",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://startupplug.com.ng/",
+      "title": "Startup Plug homepage - 1000+ curated startup resources"
+    },
+    {
+      "url": "https://thestartupplug.typeform.com/to/QdP01b",
+      "title": "Submit resource Typeform (JS-rendered)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Curated resource library for startups organized by stage: Idea, Validate, MVP, Business (registration), Team, Funding, Growth, Support",
+    "Accepts resources across types: Tools, Blogs/Articles, Podcasts, Books, More - not just products",
+    "Submission is a Typeform at thestartupplug.typeform.com/to/QdP01b linked from every 'Submit resource' button",
+    "No payment is indicated anywhere on the site"
+  ],
+  "preparation": [
+    "Resource title, URL, and the startup stage it best serves",
+    "Resource type (tool/article/podcast/book/other)",
+    "A short pitch on why the resource helps founders; audience skews Nigerian/African startups but resources are global"
+  ],
+  "workflow": [
+    "Open the Typeform: https://thestartupplug.typeform.com/to/QdP01b (linked as '+ Submit resource' in the nav/footer)",
+    "Complete the Typeform questions (JS-rendered, not fetchable)",
+    "Submit; curation is manual - contact emails listed: info@startupplug.com.ng, thestartupplug@gmail.com"
+  ],
+  "watchFor": [
+    "Submission channel is entirely Typeform - there is no on-site listing form or account system",
+    "Site's latest content is dated (most recent articles ~2023-2024); curation activity level is uncertain",
+    "This is a resource library - a listing means being included as a recommended tool/content for a startup stage, not a product profile page",
+    "Nigerian (.com.ng) focus - tailor the pitch to early-stage founders"
+  ],
+  "countsAsLive": "The resource appears as a card under the relevant stage section (e.g. /build-mvp/, /raise-funds/) or Trending Tools on startupplug.com.ng.",
+  "unknowns": [
+    "Typeform questions/fields (not renderable without JS)",
+    "Review turnaround and acceptance criteria",
+    "Whether outbound links are dofollow"
+  ]
+}

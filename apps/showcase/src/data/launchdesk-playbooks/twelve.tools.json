@@ -1,0 +1,57 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "twelve.tools",
+  "name": "Twelve Tools",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://twelve.tools/submit",
+      "title": "Submit your Website — Free $0 (1 dofollow link, 72h review, backlink required) vs Pro $36 one-time ($25.20 with FROGDR)"
+    },
+    {
+      "url": "https://twelve.tools/",
+      "title": "Homepage — 'Twelve new tools a day', curated directory"
+    },
+    {
+      "url": "https://twelve.tools/badge",
+      "title": "Badge page — badges required for the free tier"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free listing requires placing a Twelve Tools backlink/badge on your homepage or footer",
+    "Free tier is reviewed within 72 hours and gives 1 dofollow link — no homepage featuring",
+    "Pro ($36 one-time, $25.20 with auto-applied FROGDR code) removes the backlink requirement, reviews within 24h, gives 3 dofollow links and homepage featuring"
+  ],
+  "requirements": [
+    "A live website/tool to submit (general directory — 140+ categories)",
+    "For free tier: ability to embed the badge/backlink on your homepage or footer",
+    "Stripe checkout for the Pro tier"
+  ],
+  "preparation": [
+    "Website URL, name, description, category choice",
+    "Badge code snippet for the free route (badges shown on the submit page)",
+    "Decide free-with-backlink vs $36 Pro (FROGDR coupon auto-applied at checkout)"
+  ],
+  "workflow": [
+    "Open https://twelve.tools/submit",
+    "Choose 'Continue — it's free' (/submit-your-tool) or 'Get featured' (/submit-your-tool?plan=paid)",
+    "Complete the tool submission form",
+    "Free route: install the backlink/badge before or as part of submission, wait up to 72h for review",
+    "Pro route: pay via Stripe (FROGDR code pre-applied → $25.20), listed within 24h with homepage featuring"
+  ],
+  "watchFor": [
+    "Free tier's backlink is mandatory and presumably verified — removing it risks delisting",
+    "FROGDR 30% coupon is pre-applied at checkout — the 'real' price is effectively $25.20, not $36",
+    "Free tier gets only 1 dofollow link vs 3 for Pro — category/tag choices may matter",
+    "Site is part of a maker network (Ramen Tools, Wired Business, FrogDR, 500.Tools) — expect cross-promotion"
+  ],
+  "countsAsLive": "Tool appears with a public page in its category listing at twelve.tools/c/<category> and the outbound link is dofollow",
+  "unknowns": [
+    "Exact fields on /submit-your-tool (the plan picker page itself is the public part)",
+    "Whether the free-tier backlink is checked automatically",
+    "Rejection/refund policy if a submission is declined"
+  ]
+}

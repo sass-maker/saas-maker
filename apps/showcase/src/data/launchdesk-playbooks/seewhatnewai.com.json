@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "seewhatnewai.com",
+  "name": "See What New AI",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    { "url": "https://www.seewhatnewai.com/submit", "title": "Submit Your Tool - SeeWhatNewAI" },
+    { "url": "https://www.seewhatnewai.com/pricing", "title": "Pricing - SeeWhatNewAI" }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free submit requires placing their backlink tag on your website ('Need to exchange backlink')",
+    "Free tier is reviewed in about 3 months; listing stays 'until removed'",
+    "Paid 'Basic' $10 one-time: no backlink needed, reviewed in ~1 week, consumes 1 credit"
+  ],
+  "requirements": [
+    "Sign-in required to access the submit form",
+    "AI tools only: 'AI must be a meaningful part of the product's user-facing functionality or core workflow'",
+    "Not accepted: NSFW, violent/gore, illegal, scams, phishing, or tools that misuse personal data",
+    "Site needs a proper favicon (they use automated capture) and should be publicly accessible - forced logins/aggressive bot detection slow review"
+  ],
+  "preparation": [
+    "Create an account (sign-in gates the form)",
+    "Website name and URL",
+    "For free: place the SeeWhatNewAI anchor tag on your site and note where",
+    "Ensure a favicon exists and the homepage renders without login walls"
+  ],
+  "workflow": [
+    "Sign in at https://www.seewhatnewai.com (or /sign-up)",
+    "Open /submit",
+    "Enter Website Name + Website URL and choose plan: Free (backlink, ~3 months) or Basic $10 (1 credit, ~1 week)",
+    "Free: paste the provided backlink tag on your site; Paid: pay and the credit is consumed per submission",
+    "Review queue applies; updates to a live listing go via email (support@seewhatnewai.com)"
+  ],
+  "watchFor": [
+    "Credit model: paid submissions consume 1 credit each; publication is 'not guaranteed' even when paid - refunds via email if rejected",
+    "Cross-promo banner inside the form pitches a different directory ('Pikkai') - ignore unless desired",
+    "The catalog's listed submissionUrl (/sign-up) is just the account page; the real form is /submit behind login",
+    "Free-tier listing persists 'until removed' - backlink removal likely invalidates it",
+    "They explicitly warn that dofollow link indexing/DR impact is not guaranteed"
+  ],
+  "countsAsLive": "The tool appears in the seewhatnewai.com directory/explore pages with a dofollow outbound link.",
+  "unknowns": [
+    "Whether free submissions without a backlink are ever approved",
+    "Exact account creation flow fields",
+    "Re-verification of the required backlink after approval"
+  ]
+}

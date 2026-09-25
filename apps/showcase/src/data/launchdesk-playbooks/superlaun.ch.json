@@ -1,0 +1,63 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "superlaun.ch",
+  "name": "Super Launch",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.superlaun.ch/",
+      "title": "Homepage — 'Every product gets 7 days on our front page', leaderboard and categories"
+    },
+    {
+      "url": "https://www.superlaun.ch/dashboard/submit",
+      "title": "Submit — auth-gated (403 to anonymous fetches)"
+    },
+    {
+      "url": "https://www.superlaun.ch/advertise",
+      "title": "Advertise — $49 for 30-day rotating ad across home/category/product/dashboard pages, 10 slots/month"
+    },
+    {
+      "url": "https://submitmap.com/platform/superlaunch/",
+      "title": "Submitmap field report — Premium $19 is PRESELECTED on the form; free plan's link is nofollow; badge only speeds the queue"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free launch exists but the outbound link is NOFOLLOW on the free plan regardless of wait time",
+    "After submitting free, a dialog offers embedding their badge as the route to faster/immediate approval — 'Skip for Now' keeps you in queue",
+    "Premium $19 one-time: 2 dofollow backlinks, chosen launch date, no badge required, no ads on the product page, immediate approval",
+    "Account required — Google via Clerk dialog or email"
+  ],
+  "requirements": [
+    "A software product with name, tagline, website URL, category (fixed list), rich-text description and logo — all required before the form submits",
+    "Optional details section: founder name, X handle, etc.",
+    "Sign-in via Google or email before the form is reachable"
+  ],
+  "preparation": [
+    "Account (Google or email)",
+    "Product name, tagline, URL, category, logo file, rich-text description",
+    "Decide Free (nofollow link, queue, badge for speed) vs Premium $19 (dofollow, date pick, instant approval)"
+  ],
+  "workflow": [
+    "Open https://www.superlaun.ch/dashboard/submit and sign in",
+    "Fill the product form — note Premium ($19) is preselected; actively switch to the Free card if you want the free route (button changes from 'Continue to Payment' to 'Submit for Review')",
+    "Submit; on free you'll be offered the badge shortcut — add it for faster approval or skip",
+    "Launched products get a product page and 7 days of front-page rotation",
+    "Optional: $49/mo ad slot (10/month cap) for cross-page visibility"
+  ],
+  "watchFor": [
+    "Premium $19 is preselected — the payment button is the default action; you must actively choose Free",
+    "Free-tier backlink is nofollow forever — the badge only buys queue position, not link equity",
+    "Badge requirement appears post-submit as an 'immediate approval' offer — easy to mistake for mandatory",
+    "Weekly launch cadence shown via countdown timer on the homepage",
+    "Separate $49/30-day advertising product — don't confuse with the launch listing"
+  ],
+  "countsAsLive": "Product appears on the superlaun.ch front page during its 7-day window with a public product page and ranking position",
+  "unknowns": [
+    "Free-queue length when the badge is skipped",
+    "Whether the badge is verified automatically",
+    "Refund policy for Premium launches"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "sourceforge.net",
+  "name": "SourceForge",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://sourceforge.net/p/add_project",
+      "title": "SourceForge 'Create a Project' page — name, URL slug, tool selection, ToS"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "A SourceForge account is required ('Login Required' gate on the create page; registration at /user/registration)",
+    "Aimed at open-source projects — Git/Mercurial/Subversion, tickets, wiki, forums, mailing lists, file-release mirrors, web hosting",
+    "Must agree to Slashdot Media Terms of Use; non-compliant projects are removed",
+    "Business-software listings are a separate surface (sourceforge.net/software/vendors)"
+  ],
+  "preparation": [
+    "Account credentials",
+    "Project name and a desired short URL name (project lives at sourceforge.net/p/<slug>)",
+    "Which tools to enable: Git/Hg/SVN, file downloads + stats via the mirror network, tickets, wiki, forums, blog, mailing lists, free web hosting at a sourceforge.io subdomain or custom domain",
+    "Alternatively: a GitHub repo to import wholesale via /p/import_project/github/ (Bitbucket/GitLab via the project's Import page after creation)"
+  ],
+  "workflow": [
+    "Register / log in to SourceForge",
+    "Open https://sourceforge.net/p/add_project (or /create)",
+    "Enter project name and URL slug",
+    "Select the tools the project needs",
+    "Check the Terms of Use box and submit",
+    "Optionally run the GitHub importer or configure the project's Import page for other forges"
+  ],
+  "watchFor": [
+    "Two honeypot fields on the form ('You seem to have CSS turned off. Please don't fill out this field.') — automated submitters must leave them empty",
+    "The open-source project forge and the business-software directory are different products — a SaaS listing belongs on the /software/ vendor side, not as a /p/ project",
+    "Project URL names are a global namespace — first-come slug",
+    "ToS compliance is enforced with removal"
+  ],
+  "countsAsLive": "The project page at sourceforge.net/p/<slug> (or /projects/<name>) resolves publicly and accepts tool configuration.",
+  "unknowns": [
+    "Whether new projects undergo any manual review before appearing in directory/search pages",
+    "Whether the business-software vendor listing (separate flow) has a cost"
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "scoutforge.net",
+  "name": "ScoutForge",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://scoutforge.net/",
+      "title": "Homepage — 'Listing is free and gets you a score'; credit-based human testing exchange"
+    },
+    {
+      "url": "https://scoutforge.net/app-register",
+      "title": "Submit Your App — registration page (sign-in required; form behind account)"
+    },
+    {
+      "url": "https://scoutforge.net/how-we-handle-reviews",
+      "title": "Review rules — reviews publish instantly, developer cannot edit/delay/remove, paid reviews labelled"
+    },
+    {
+      "url": "https://scoutforge.net/methodology",
+      "title": "How we score — Scout score methodology"
+    },
+    {
+      "url": "https://scoutforge.net/promotion-store",
+      "title": "Promotion Store — paid promotion options"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Web or mobile app — the platform reviews 'emerging web and mobile applications'",
+    "Sign-in / account required to reach the app registration form",
+    "Free listing automatically receives a 'Scout score'; a human test/review requires credits",
+    "Credits are earned by testing other members' apps (~30 min each) or bought/spent via the Promotion Store"
+  ],
+  "preparation": [
+    "Account credentials for scoutforge.net",
+    "App name, URL, description, category (Productivity, Development & Engineering, Design & Creativity, Social & Community, etc.)",
+    "Decide whether to only list (free score) or also request human tests (credits or paid promotion)"
+  ],
+  "workflow": [
+    "Sign in at https://scoutforge.net/sign-in",
+    "Open https://scoutforge.net/app-register ('Submit Your App')",
+    "Register the app — listing is free and immediately gets a Scout score",
+    "Optionally open a test request: a member tries the app for ~30 minutes and writes what they found",
+    "Earn credits by testing other apps (or use the Promotion Store) to fund the request",
+    "Listing appears under 'Recently published'; tested apps move to 'Recently tested' with a public written review"
+  ],
+  "watchFor": [
+    "Reviews go live instantly on submission and CANNOT be edited, delayed, or taken down by the developer — even negative ones; this is stated policy",
+    "Developer-funded reviews are publicly labelled as paid",
+    "A developer can dispute a reviewer's payment — the dispute reason is shown publicly on the page",
+    "The app-register form itself is behind auth — exact fields are not publicly visible",
+    "Promotion Store offers paid featuring; featured cards are marked 'Featured'"
+  ],
+  "countsAsLive": "App appears in Scout Forge's 'Recently published' / apps listing with a visible Scout score and a public app page",
+  "unknowns": [
+    "Exact fields on the authenticated app registration form",
+    "Credit pricing inside the Promotion Store (page referenced but contents not captured)",
+    "How the initial free Scout score is computed for untested apps"
+  ]
+}

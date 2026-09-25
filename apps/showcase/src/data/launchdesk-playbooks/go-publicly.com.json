@@ -1,0 +1,32 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "go-publicly.com",
+  "name": "go-publicly.com",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "other",
+  "zeroCostRoute": "unknown",
+  "requirements": [],
+  "preparation": [
+    "Verify the site is back up before preparing anything — go-publicly.com returned HTTP 402 (Payment Required) on repeated fetches, indicating a suspended/expired hosting account rather than a live directory."
+  ],
+  "workflow": [
+    "No verified submission workflow — the site did not load.",
+    "Re-check https://go-publicly.com/ in a browser at a later date; an HTTP 402 from the platform typically means the operator's hosting bill is unpaid and the site may return or be permanently dead."
+  ],
+  "watchFor": [
+    "HTTP 402 suggests the operator let hosting lapse — any listing submitted near a lapse could disappear.",
+    "Do not enter credentials on a domain that may be parked or taken over later."
+  ],
+  "countsAsLive": "Not determinable — no live site observed.",
+  "unknowns": [
+    "What go-publicly.com offered (submission flow, pricing) — no archived submission data captured.",
+    "Whether the site is temporarily suspended or permanently dead."
+  ],
+  "sources": [
+    {
+      "url": "https://go-publicly.com/",
+      "title": "HTTP 402 Payment Required — site unreachable (twice)"
+    }
+  ]
+}

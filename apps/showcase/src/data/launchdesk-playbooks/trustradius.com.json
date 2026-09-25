@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "trustradius.com",
+  "name": "TrustRadius",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "review",
+  "zeroCostRoute": "free",
+  "sources": [
+    {
+      "url": "https://solutions.trustradius.com/claim-your-profile/",
+      "title": "TrustRadius 'Claim Your Profile' — Free vs Premium profile comparison, 'Claim my free profile' CTA"
+    },
+    {
+      "url": "https://solutions.trustradius.com/",
+      "title": "TrustRadius for Vendors — vendor portal, review generation, intent data products"
+    }
+  ],
+  "requirements": [
+    "A B2B software/tech product — TrustRadius is an in-depth B2B review platform (reviews are 400+ words)",
+    "The product may already have a profile generated from reviewer activity — claim it rather than creating a duplicate",
+    "Free profile: presence in front of '1M+ buyers'; Premium adds intent data, custom questions, content syndication, lead forms"
+  ],
+  "preparation": [
+    "Vendor account (Vendor Portal)",
+    "Product profile assets: description, videos/demos, features and integrations, pricing info, security info (items the claim page lists)",
+    "Customer list for review-generation outreach — the profile is populated by genuine long-form customer reviews"
+  ],
+  "workflow": [
+    "Search trustradius.com for the product to see if a profile already exists",
+    "Go to solutions.trustradius.com/claim-your-profile/ and choose 'Claim My Free Profile'",
+    "Complete the profile (features, integrations, pricing, security info)",
+    "Run review-generation campaigns to build 400+ word customer reviews",
+    "Verify the public product page is live on trustradius.com"
+  ],
+  "watchFor": [
+    "The demo funnel aggressively pushes 'Book a demo'/Premium — the Free profile is the zero-cost path and is explicitly offered",
+    "Reviews are long-form (400+ words) and moderated — expect a slower review-accumulation curve than G2/Capterra",
+    "TrustRadius was acquired by/merged with HG Insights — product branding may shift",
+    "A 'Trusted Sellers' verification program exists for vendors following review-generation best practices — a credibility badge worth pursuing after claiming"
+  ],
+  "countsAsLive": "A public product profile page on trustradius.com showing claimed status and accumulating verified customer reviews",
+  "unknowns": [
+    "Free profile feature limits vs Premium (intent data, lead capture, TrustQuotes syndication are Premium)",
+    "Whether the claimed profile's website CTA link is dofollow on the free tier",
+    "Approval turnaround for profile claims"
+  ]
+}

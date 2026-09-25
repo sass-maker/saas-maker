@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "tinystartups.com",
+  "name": "Tiny Startups",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.tinystartups.com/submit",
+      "title": "Tiny Startups submit — 6-step flow starting with URL auto-read"
+    },
+    {
+      "url": "https://www.tinystartups.com/",
+      "title": "Tiny Startups homepage — curated launch platform, hand-approved, DR 71 backlink pitch"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Log in / sign up required (nav shows 'Log in / Sign up'; 'Launch now' routes to /submit)",
+    "Curated: 'Every listing is hand-approved' by a human",
+    "Footer labels the startup submission 'Submit a Startup — Free' — no badge requirement is stated"
+  ],
+  "preparation": [
+    "Account credentials",
+    "Startup URL — step 1 asks only for the URL and they scrape the rest ('We read the rest off it. You can change anything that comes back wrong.')",
+    "Revenue and traffic figures (optional fields — can be marked pre-revenue; self-reported numbers stay labeled as such unless verified)",
+    "Optional upgrades selection on the final step"
+  ],
+  "workflow": [
+    "Log in / sign up, then open https://www.tinystartups.com/submit",
+    "Step 1 of 6: paste the startup URL — details are auto-read; correct anything wrong",
+    "Progress through Revenue, Traffic, About you, and Upgrades steps",
+    "Submit for human approval",
+    "Approved listings appear on the homepage feeds (Top picks / Newest) and earn the DR 71 do-follow backlink"
+  ],
+  "watchFor": [
+    "Step 6 'Upgrades' is an upsell step — review before accepting; adjacent paid products include Submit a Deal ($69), List a Tool ($69), advertising, and the sponsor board",
+    "Sponsors literally 'pay to rank higher' on the Spotlight board — placement is openly for sale",
+    "Revenue can optionally be verified (/revenue/submit); unverified figures show as self-reported/'Not yet verified' on the public profile",
+    "Part of a studio network (clicks.page, founder.page) — cross-product prompts are built into the flow"
+  ],
+  "countsAsLive": "The startup appears on tinystartups.com homepage listings (Top picks/Newest/Revenue leaderboard) with a profile and outbound link.",
+  "unknowns": [
+    "What the 'Upgrades' step sells and at what price (gated behind the form flow)",
+    "Approval latency and rejection criteria",
+    "Whether all approved listings get the do-follow link or only some placements"
+  ]
+}

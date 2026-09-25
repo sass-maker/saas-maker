@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "jasminedirectory.com",
+  "name": "Jasmine Directory",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.jasminedirectory.com/index.php?a=2070753691",
+      "title": "Submission form — Standard $59/yr (recurring), Express $79 one-time, Ultimate $149 one-time"
+    },
+    { "url": "https://jasminedirectory.com/", "title": "Homepage — business web directory" }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "General business/website directory — pick the category first; the submission form renders inside a chosen category (Business & Finance shown)",
+    "Three paid tiers only: Standard $59/year recurring, Express $79 one-time, Ultimate $149 one-time",
+    "Standard tier is ANNUAL RECURRING billing; Express and Ultimate are one-time permanent listings",
+    "All tiers include an editor/specialist review of the submission"
+  ],
+  "preparation": [
+    "Website URL and business details (address, phone, fax fields on Standard+)",
+    "Choose category carefully — placement ranking depends on tier within that category",
+    "Up to 5 images for the photo album, company logo (Ultimate), social profile URLs (Ultimate)",
+    "Deep link URLs if taking Express (2) or Ultimate (5)"
+  ],
+  "workflow": [
+    "Browse to your category on jasminedirectory.com and open its submission form (Submit nav link)",
+    "Enter the site URL",
+    "Pick a tier: Standard ($59/yr, listed below Express/Ultimate), Express ($79 one-time, above Standard + homepage rotation), or Ultimate ($149 one-time, always top of category)",
+    "Complete the listing fields and pay",
+    "Editors conduct a review; the listing page goes live with the tier's link structure"
+  ],
+  "watchFor": [
+    "Standard tier auto-renews annually — the one-time-fee Express tier is only $20 more and permanent",
+    "'Verified business badge' is an UPGRADE on Standard but included on Express/Ultimate",
+    "Tier determines ordering: Ultimate always tops the category, Standard sinks below all paid-one-time listings",
+    "Deep links are capped by tier (Standard: none extra; Express: 2; Ultimate: 5)",
+    "Footnotes mention an 'Editor Review' post linking to your site — read the linked terms; continuing accepts Terms of Use"
+  ],
+  "countsAsLive": "Listing page exists under the chosen category on jasminedirectory.com with a direct link to your site, ordered per tier",
+  "unknowns": [
+    "Whether rejections refund the fee",
+    "Review turnaround time",
+    "Whether any free submission option exists elsewhere on the site — none was found"
+  ]
+}

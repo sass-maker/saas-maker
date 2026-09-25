@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "unitelist.com",
+  "name": "Unite List",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://unitelist.com/submit",
+      "title": "Submit page — 'Log in to Submit' with Google OAuth only"
+    },
+    {
+      "url": "https://unitelist.com/",
+      "title": "Unite List homepage — SaaS / shared-workflow software directory"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "Directory targets SaaS, shared-workflow software, and products for connected teams",
+    "Google account sign-in is mandatory before the submission form is shown"
+  ],
+  "preparation": [
+    "Google account for OAuth sign-in",
+    "Product name, URL, description, logo, and category"
+  ],
+  "workflow": [
+    "Open https://unitelist.com/submit",
+    "Log in with Google or create an account via /signup",
+    "Complete the post-login submission form (not publicly visible)",
+    "Await listing publication"
+  ],
+  "watchFor": [
+    "No pricing or guidelines page is public; the form is entirely behind the login wall",
+    "Identical template and category taxonomy as aitechviral.com, appalist.com, weliketools.com, and aixcollection.com — likely one operator; expect SubmitSaaS cross-promotion",
+    "Whether listing is free or paid could not be verified without logging in"
+  ],
+  "countsAsLive": "Product page appears on unitelist.com under /latest or a category and is reachable without login",
+  "unknowns": [
+    "Whether submission is free or paid after login",
+    "Form fields, review process, and turnaround time",
+    "Whether a badge or backlink is required"
+  ]
+}

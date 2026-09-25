@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "ctrlalt.cc",
+  "name": "CTRL ALT",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://ctrlalt.cc/",
+      "title": "ctrlalt.cc homepage - daily product launch board with 'Launch new product' panel"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free 'Schedule free launch' exists, but the form itself warns 'the current review queue can significantly delay' your chosen launch date",
+    "Paid option: +$19 skips the queue and features the product on the homepage for a week",
+    "Login/join is required (Login and Join links in nav; the launch form sits inside an authenticated panel)"
+  ],
+  "requirements": [
+    "Daily launch board format — products are ranked #1, #2... per day with 'X today' counters",
+    "Launch form fields: Product URL, short description (1 paragraph max), launch date, and checkboxes: 'I am the maker' and 'I want to share the story behind my product'",
+    "Maker identity is asserted via checkbox — do not submit products you do not own"
+  ],
+  "preparation": [
+    "Account (Join link) — email registration",
+    "Product URL and a one-paragraph description",
+    "Preferred launch date (subject to queue delay)",
+    "Product story if opting into 'share the story behind my product'"
+  ],
+  "workflow": [
+    "Create an account via https://ctrlalt.cc/join",
+    "Open the 'Launch ✺ new product' panel on the homepage",
+    "Enter Product URL, the one-paragraph description, and pick a launch date",
+    "Tick 'I am the maker' (and optionally 'I want to share the story behind my product')",
+    "Either click 'Schedule free launch' or add the $19 'Skip queue & feature on homepage for a week' option",
+    "Site confirms 'We'll email you soon' — wait for the confirmation email"
+  ],
+  "watchFor": [
+    "Free launches are queued and 'the current review queue can significantly delay' the launch date — do not plan around a specific day on the free tier",
+    "The $19 skip-queue option both jumps the queue AND buys a 1-week homepage feature — it is the primary upsell",
+    "Daily board format means visibility decays fast after your launch day",
+    "One-paragraph description limit — keep copy tight",
+    "Community has a streaks mechanic ('make it to 66 days for a little surprise') rewarding daily engagement"
+  ],
+  "countsAsLive": "The product appears on the homepage daily board as a ranked entry (ctrlalt.cc/product/<slug>) on its launch date",
+  "unknowns": [
+    "Current queue length / typical free-launch delay",
+    "Whether the product page link is dofollow (catalog note says follow; unconfirmed)",
+    "Whether non-makers can submit ('I am the maker' checkbox vs the story option)"
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startupblink.com",
+  "name": "StartupBlink",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.startupblink.com/startups",
+      "title": "StartupBlink Global Startup Map — 120k+ startups across 1,000 cities"
+    },
+    {
+      "url": "https://www.startupblink.com/blog/identifying-the-most-promising-startups/",
+      "title": "StartupBlink blog — 'Add Startup' via map/dashboard, submissions reviewed"
+    },
+    {
+      "url": "https://abun.com/how-to-get-high-quality-backlink-for-free-from-startupblink",
+      "title": "Third-party walkthrough — free StartupBlink listing steps"
+    }
+  ],
+  "category": "profile",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free account registration is required",
+    "Real startup/company — every submission is reviewed by StartupBlink against their listing criteria before appearing on the map",
+    "Submission entry point: 'Add Startup' button on the map or dashboard (also /startups/add)"
+  ],
+  "preparation": [
+    "Account credentials",
+    "Startup name, website URL, description",
+    "Location (city/country — the map is geo-organized), industry from their 12-industry taxonomy",
+    "Founder/company metadata the profile supports"
+  ],
+  "workflow": [
+    "Register a free account at startupblink.com",
+    "Open the Startup Map / dashboard and choose 'Add Startup' (/startups/add)",
+    "Fill startup details (website, description, location, industry)",
+    "Submit — entry goes through StartupBlink's review process",
+    "On approval the startup appears on the global map and in city/country rankings"
+  ],
+  "watchFor": [
+    "The add-startup page returned 403 to automated fetch — the form likely requires a logged-in session/browser",
+    "This is an ecosystem map, not a launch board — value is a profile page + backlink + map placement, not launch traffic",
+    "Review can reject entries that don't meet their startup criteria"
+  ],
+  "countsAsLive": "The startup's profile resolves on startupblink.com and it is visible on the global startup map for its city/industry.",
+  "unknowns": [
+    "Exact form fields and required vs optional metadata (page blocked automated reads)",
+    "Review latency",
+    "Whether the outbound link is dofollow"
+  ]
+}

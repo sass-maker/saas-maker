@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "techli.com",
+  "name": "Techli",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://techli.com/",
+      "title": "Techli homepage — tech/startup news publication (Espacio media group)"
+    },
+    {
+      "url": "https://techli.com/contact",
+      "title": "Contact URL from catalog — returned 404 at retrieval"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "Editorial publication covering startups, business, technology — no public submit/listing form found",
+    "Coverage appears to include sponsored-style launch announcements alongside reported pieces",
+    "The catalog-provided /contact URL 404s and no obvious tips/pitch page was found in the nav"
+  ],
+  "preparation": [
+    "A press-ready pitch or release if an editorial contact can be located",
+    "Company boilerplate, launch/funding details, quotes"
+  ],
+  "workflow": [
+    "No verified public submission path. Practical route: locate a working contact (check the site's social profiles — Facebook, X, LinkedIn, Instagram icons are in the footer — or a valid contact page) and pitch coverage",
+    "Publication is part of the Espacio media network — contact may route through the parent company"
+  ],
+  "watchFor": [
+    "Contact URL in the catalog is dead — verify any address before sending",
+    "Mix of reported pieces and promotional launch announcements suggests paid placements may exist but are not priced publicly",
+    "Site is active (September 2026 articles) but contact plumbing appears broken"
+  ],
+  "countsAsLive": "A published article on techli.com covering the company/product",
+  "unknowns": [
+    "A working contact channel (form or email)",
+    "Whether pitches are free or pay-for-coverage",
+    "Whether any self-serve submission ever existed",
+    "Link policy (dofollow/nofollow) in published articles"
+  ]
+}

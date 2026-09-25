@@ -1,0 +1,41 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "productivity.directory",
+  "name": "Productivity Directory",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://productivity.directory/s/submit",
+      "title": "Submit page — requires Google sign-in ('free and only takes a few seconds')"
+    },
+    { "url": "https://productivity.directory/", "title": "Productivity Directory homepage" }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Product should fit the productivity taxonomy (to-do, time tracking, notes, calendar, automation, password managers, AI tools, etc.)",
+    "Google sign-in required to submit — 'To prevent spam, some actions require being signed in. It's free and only takes a few seconds.'"
+  ],
+  "preparation": [
+    "Google account",
+    "Tool name, URL, description, logo, and best-fit category from their ~50-category taxonomy"
+  ],
+  "workflow": [
+    "Open https://productivity.directory/s/submit",
+    "Continue with Google (return_to=/s/submit)",
+    "Complete the listing form shown after sign-in",
+    "Submit and await listing; manage it later from the user dashboard (/user/dash)"
+  ],
+  "watchFor": [
+    "The submit URL renders only the sign-in wall to anonymous visitors — no public form fields are visible",
+    "An Advertise page exists separately; organic listing is positioned as free",
+    "No evidence of a paid listing tier, but none is explicitly ruled out either"
+  ],
+  "countsAsLive": "Tool page exists on productivity.directory under its category (e.g. /category/note-taking-apps) and is publicly reachable",
+  "unknowns": [
+    "Post-login form fields and whether any payment step follows",
+    "Review process and turnaround",
+    "Dofollow vs nofollow on outbound links"
+  ]
+}

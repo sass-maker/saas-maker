@@ -1,0 +1,58 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "bensbites.com",
+  "name": "Ben's Bites",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://bensbites.com/",
+      "title": "Ben's Bites homepage - now a Substack newsletter landing page (171k+ subscribers)"
+    },
+    {
+      "url": "https://news.bensbites.co/",
+      "title": "Ben's Bites community board - 'Create an account and submit a post. Top voted posts get included in our daily newsletter'"
+    },
+    {
+      "url": "https://backlinkhubs.com/item/ben-s-bites",
+      "title": "Third-party description of the Ben's Bites community submit-and-upvote flow"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Submission is free but requires creating an account on the community board at news.bensbites.co",
+    "Visibility is community-gated: top-voted posts get included in the daily newsletter; a submitted post without upvotes may only live on the board",
+    "news.bensbites.co returned a 522 origin error at fetch time — the community surface may be intermittently down"
+  ],
+  "requirements": [
+    "AI-focused audience — posts should be AI tools, launches, or AI news",
+    "Account registration (email) required before posting",
+    "Community voting decides newsletter inclusion — thin self-promo posts will likely get no traction"
+  ],
+  "preparation": [
+    "Email for account registration on news.bensbites.co",
+    "Post title, description, and product URL",
+    "Relevant tags/categories for the post",
+    "A genuinely interesting angle — the newsletter audience is AI builders/investors"
+  ],
+  "workflow": [
+    "Go to https://news.bensbites.co (the community site — bensbites.com itself is only a Substack subscribe page)",
+    "Create an account / log in",
+    "Submit a post with the tool name, description, and URL",
+    "Post enters the community feed where users vote; top-voted posts are picked up for the daily newsletter (100k+ subscribers)"
+  ],
+  "watchFor": [
+    "bensbites.com and news.bensbites.co are different surfaces — the .com is a Substack newsletter signup with no submission form; the .co community board is the submit path",
+    "news.bensbites.co was returning HTTP 522 (Cloudflare origin down) during research — verify it is up before planning around it",
+    "Newsletter feature is merit-based on votes, not guaranteed by submission",
+    "Paid 'Advertise with us' option exists on the community site for guaranteed placement"
+  ],
+  "countsAsLive": "The submitted post is visible on the news.bensbites.co community feed; full success = inclusion in the daily newsletter email",
+  "unknowns": [
+    "Whether news.bensbites.co is still actively operated (522 error observed 2026-09-25)",
+    "Moderation rules for self-promotional posts",
+    "Whether the post page link is dofollow",
+    "Newsletter inclusion thresholds (vote count is not published)"
+  ]
+}

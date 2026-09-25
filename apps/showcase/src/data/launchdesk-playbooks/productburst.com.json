@@ -1,0 +1,56 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "productburst.com",
+  "name": "ProductBurst",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://productburst.com/",
+      "title": "ProductBurst homepage — Bubble-built SPA, only shell rendered to fetcher"
+    },
+    {
+      "url": "https://alldirectories.org/directory/productburst/",
+      "title": "AllDirectories profile — free submission, multi-step form details"
+    },
+    {
+      "url": "https://firsto.co/sites/productburst",
+      "title": "Firsto profile — free, no backlink required, account not required per this source"
+    },
+    {
+      "url": "https://launchdirectories.com/directory/productburst",
+      "title": "LaunchDirectories guide — free submission, dofollow, daily featured format"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Early-stage SaaS / indie product with a live website link",
+    "Third-party sources agree submission is free with dofollow links and no badge requirement",
+    "Account creation appears to be required (AllDirectories reports a login wall); one source claims otherwise — conflicting"
+  ],
+  "preparation": [
+    "Live website URL",
+    "Product description (rich-text editor, max ~2000 characters per AllDirectories)",
+    "Category selections (multi-select), logo and optional screenshots",
+    "Founder story per LaunchDirectories guidance"
+  ],
+  "workflow": [
+    "Open https://productburst.com/ (or /pre-launch) — the site is a Bubble SPA; JS required",
+    "Create an account if prompted",
+    "Complete the multi-step form (Details / Extras / Payment tabs reported; payment tab likely optional upsell)",
+    "Submit and wait for review — third-party reports approval within a few days",
+    "Product is featured in the daily selection once approved"
+  ],
+  "watchFor": [
+    "Site is a Bubble app — pages return almost no HTML to plain fetchers; use a real browser",
+    "A 'Payment' tab exists in the multi-step form — do not click submit/pay without confirming it is optional",
+    "Sources conflict on whether an account is required"
+  ],
+  "countsAsLive": "Product has a page under productburst.com/product/<slug> and appears in the daily featured rotation",
+  "unknowns": [
+    "First-party submission terms — the SPA did not render form content to a text fetcher",
+    "Whether the Payment tab is a required step or an optional boost",
+    "Current review turnaround"
+  ]
+}

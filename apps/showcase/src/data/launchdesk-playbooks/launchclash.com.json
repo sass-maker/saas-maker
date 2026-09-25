@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "launchclash.com",
+  "name": "LaunchClash",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://launchclash.com/",
+      "title": "LaunchClash homepage — weekly launch showcase with voting grid and Winners hall of fame"
+    },
+    {
+      "url": "https://launchclash.com/submit",
+      "title": "Submit page — login wall ('Log in to Submit')"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "free",
+  "conditions": [],
+  "requirements": [
+    "Account required: /submit shows 'Log in to Submit' with Google sign-in or account creation",
+    "Submissions are reviewed and added to the current or next weekly lineup (manual review)",
+    "Weekly competition: fresh batch each week, community votes, winners earn a 'Winners' hall-of-fame spot"
+  ],
+  "preparation": [
+    "Product name, URL, tagline/description",
+    "Logo (all entries show a logo tile)",
+    "Category tags and pricing label (Free, Freemium, Free Trial, Paid)",
+    "A Google account or email for registration"
+  ],
+  "workflow": [
+    "Create an account at /signup or log in with Google (/api/auth/google?redirect=/submit)",
+    "Click Submit in the nav",
+    "Fill the product submission form (fields behind login)",
+    "Product is reviewed and placed into the current or next weekly lineup",
+    "Community votes via a pixel-based grid; top-voted products reach the Winners section at week's end"
+  ],
+  "watchFor": [
+    "Same platform template as Good AI Tools / My Launch Stash (shared footer taxonomy and a third-party 'We Submit Your SaaS to 140+ Directories' ad banner) — the ad is a paid external service, not this site's offer",
+    "FAQ says submission is 'completely free' but form fields and dofollow status are not publicly visible",
+    "Voting is the whole visibility mechanic — a launch with no votes sits at 0 on the board"
+  ],
+  "countsAsLive": "Product appears in the current week's 'Launched This Week' grid on launchclash.com with its logo, categories and a vote count",
+  "unknowns": [
+    "Form fields and badge requirements behind the login wall",
+    "Whether listings are dofollow",
+    "Whether paid/featured tiers exist (Featured products section exists but pricing is not public)",
+    "Review timeline before entering the weekly lineup"
+  ]
+}

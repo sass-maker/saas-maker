@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "softpedia.com",
+  "name": "Softpedia",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "sources": [
+    {
+      "url": "https://www.softpedia.com/user/help.shtml",
+      "title": "Softpedia User Help — 'Software Submission': full form or PAD-file URL submission"
+    },
+    {
+      "url": "https://www.softpedia.com/user/submit.shtml",
+      "title": "Softpedia Submit Program page (403 to automated fetch; linked from site menubar)"
+    },
+    {
+      "url": "https://en.wikipedia.org/wiki/Softpedia.com",
+      "title": "Wikipedia — Softpedia overview: software download portal, editor-reviewed listings, PUP flagging"
+    }
+  ],
+  "requirements": [
+    "A downloadable software product (Windows, Mac, Linux, Mobile, Games — separate submit sections per platform)",
+    "Check via site search that the product isn't already listed before submitting",
+    "Two submission modes: fill the full form, or provide a PAD-file URL (preferred — Softpedia's automated monitoring picks up new versions from the PAD quickly)"
+  ],
+  "preparation": [
+    "Product name, download URL, short + long descriptions, category, publisher/contact email",
+    "Ideally a hosted PAD (Portable Application Description) XML file — submit once and updates propagate automatically",
+    "A clean installer — Softpedia flags adware/spyware/tie-in bundles as potentially unwanted and marks products accordingly",
+    "Screenshots/icon per the form"
+  ],
+  "workflow": [
+    "Search Softpedia to confirm the product isn't already listed",
+    "Open the Submit Program page (menubar link or /user/submit.shtml) — pick the right platform section",
+    "Either complete the full form or submit the PAD-file URL",
+    "Wait for editorial processing — third-party submit trackers report ~14 days; you get an email when published",
+    "Verify the product page is live in the correct Softpedia section"
+  ],
+  "watchFor": [
+    "Submit pages are per-platform — submitting a Windows app via the wrong section wastes the review cycle",
+    "Softpedia hosts binaries on its own servers and tests them; bundled offers/adware get your product marked as a PUP",
+    "The submit page 403s automated fetchers — use a real browser or submit the PAD URL",
+    "Registration is optional for downloads but the submission flow uses the publisher form"
+  ],
+  "countsAsLive": "A public product page under the relevant softpedia.com section (win/mac/linux/mobile/games) with download links and editor-tested status",
+  "unknowns": [
+    "Exact review SLA for non-PAD submissions",
+    "Whether SaaS/web-only products without a downloadable binary are accepted (Softpedia historically lists web apps in some categories — unverified)",
+    "Whether the listing's developer-site link is dofollow"
+  ]
+}

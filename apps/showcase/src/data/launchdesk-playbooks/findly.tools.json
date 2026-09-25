@@ -1,0 +1,75 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "findly.tools",
+  "name": "Findly.tools",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free lane requires their badge in your site's footer — the listing stays 'Not Published' until their checker finds the badge.",
+    "Free listing = 1 dofollow link (while badge stays) and a 1,000-character description cap."
+  ],
+  "requirements": [
+    "Account required: Google, GitHub, or email/password behind a Cloudflare Turnstile.",
+    "A logo file — marked required on the form.",
+    "The form asks for tool name, website URL, one category, logo; optional app image plus toggles for promo code and marketplace listing.",
+    "Description is AI-written from a scrape of your site — you review it on a post-submit review page (1,000-char budget free; 2,500 Premium)."
+  ],
+  "preparation": [
+    "Account (Google/GitHub/email).",
+    "Logo file (required).",
+    "Tool name, website URL, one category.",
+    "Badge in your footer BEFORE finishing — 'Verify badge now' is what publishes the listing.",
+    "Plan choice: Free (badge, 1 dofollow, 1000-char description) / Premium $19–29 one-time (instant publish, 4 dofollow, no badge; price varies between sources — confirm in form).",
+    "Optional upsells: Directory Submissions from $59 (30–100 hand-filled submissions incl. Findly + DailyPings Premium) and Product Review $79."
+  ],
+  "workflow": [
+    "Sign in at findly.tools/sign-in (Google/GitHub/email; Turnstile runs on the page).",
+    "Open /submit — plan cards sit BESIDE the form, not after it; the Premium card arrives preselected.",
+    "To take the free lane, click the Free card first — this flips the button from 'Continue to Payment' to 'Continue to Review (Free)'.",
+    "Fill name, URL, category, logo; submit.",
+    "Review the AI-generated description on the review page; save.",
+    "The tool shows 'Not Published' on your profile until you click 'Verify badge now' with the badge live in your footer."
+  ],
+  "watchFor": [
+    "Premium is PRESELECTED — clicking through defaults you to a paid checkout; explicitly select the free card.",
+    "The listing is created but held ('Not Published') until badge detection — a 'Publish instantly for $19' link sits beside it as the conversion nudge.",
+    "Premium price reported as both $19 and $29 across sources — confirm at the form.",
+    "Free description is AI-scraped text with a 1,000-char cap — review it before saving.",
+    "Turnstile runs on the sign-in page — automated agents may need to solve it.",
+    "Directory Submissions packs ($59–139) bundle Findly Premium + DailyPings Premium — cross-sold service, not a listing requirement."
+  ],
+  "countsAsLive": "The tool's public page on findly.tools is live (no 'Not Published' state) and linked from its category; badge verified on free lane.",
+  "unknowns": [
+    "Current Premium price ($19 vs $29 conflict).",
+    "How frequently the badge is re-checked after publication.",
+    "Whether review happens before or after badge verification on free."
+  ],
+  "sources": [
+    {
+      "url": "https://findly.tools/about",
+      "title": "Findly About — free-with-badge vs Premium $29, Directory Submissions, Product Review $79"
+    },
+    {
+      "url": "https://findly.tools/submit",
+      "title": "Submit — redirects to sign-in (Google/GitHub/email + Turnstile)"
+    },
+    {
+      "url": "https://findly.tools/",
+      "title": "Findly.tools homepage — 3,848+ tools directory, DR 81 claim"
+    },
+    {
+      "url": "https://submitmap.com/platform/findly-tools/",
+      "title": "Findly submission guide — SubmitMap (preselected $19 card, badge-gated publishing, 'Not Published' state)"
+    },
+    {
+      "url": "https://findly.tools/directories/submit",
+      "title": "Directory submission service — from $59, includes Findly + DailyPings Premium"
+    },
+    {
+      "url": "https://dailypings.com/reviews/findly-tools-review",
+      "title": "DailyPings review of Findly — pricing breakdown and 3–5 day free review"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aiwith.me",
+  "name": "AI With Me",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    { "url": "https://aiwith.me/submit/", "title": "Submit Your AI Tools Here - AI With Me" },
+    { "url": "https://aiwith.me/pricing/", "title": "Launching Your Tools on AI With Me - pricing" }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Product must be an AI tool; sites that 'don't meet the characteristics of the AI tool' are not included",
+    "Submitted website must be publicly accessible; inaccessible sites are rejected",
+    "Site appears to operate paid-only: the submit form only offers 'One-time submit' $19.9 and 'Unlimited submit AI' $29.9/mo tiers"
+  ],
+  "preparation": [
+    "Website name and website URL (the form only asks these two fields)",
+    "Payment method for $19.9 one-time (or $29.9/mo unlimited) listing",
+    "Ensure the site has crawlable landing content: AI With Me generates the listing page, description and screenshot by crawling your URL"
+  ],
+  "workflow": [
+    "Open https://aiwith.me/submit/",
+    "Enter website name and website URL",
+    "Select submit type: One-time submit ($19.9) or Unlimited submit AI ($29.9/mo)",
+    "Pay; AI With Me crawls the site and auto-generates the tool page within ~48 hours for one-time (24h for unlimited)",
+    "Optional: generate an API key at /my/api-keys/ for bulk/programmatic submission"
+  ],
+  "watchFor": [
+    "The FAQ still references 'free submissions' with longer waits, but no free option is presented on the submit or pricing pages as of retrieval",
+    "Updating an AI-generated listing after publication costs extra unless you hold the unlimited plan",
+    "Paid sponsors get sticky homepage placement; one-time listings can sink below the fold as new tools arrive",
+    "Refund only if the product is not included after paid submission",
+    "Guest posts / link insert and 'Update AI' are separate paid products - do not confuse them with a listing"
+  ],
+  "countsAsLive": "A generated tool page on aiwith.me (built from the crawled site) is publicly reachable and the tool appears in the directory listing.",
+  "unknowns": [
+    "Whether any free submission tier still exists (FAQ mentions it, but the current submit form shows only paid options)",
+    "Exact review/approval criteria beyond 'must be an AI tool' and 'site must be accessible'"
+  ]
+}

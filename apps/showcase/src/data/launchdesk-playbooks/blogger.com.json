@@ -1,0 +1,40 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "blogger.com",
+  "name": "Blogger",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "profile",
+  "zeroCostRoute": "free",
+  "sources": [
+    {
+      "url": "https://www.blogger.com/start",
+      "title": "Blogger start page — create a blog, free blogspot.com domain, AdSense monetization"
+    }
+  ],
+  "requirements": [
+    "A Google account — Blogger is Google's free blogging platform",
+    "Content must comply with Blogger's Content Policy"
+  ],
+  "preparation": [
+    "Google account",
+    "Blog title and desired blogspot.com subdomain",
+    "Launch-content plan — a post announcing the product with links back to your site"
+  ],
+  "workflow": [
+    "Go to blogger.com/start or blogger.com/go/createyourblog and sign in with a Google account",
+    "Create the blog: pick a title and a free blogspot.com address (or buy a custom domain through Google)",
+    "Choose a template/design",
+    "Publish a post about the product (e.g., launch announcement) containing the product URL",
+    "Confirm the blog is publicly reachable at <name>.blogspot.com"
+  ],
+  "watchFor": [
+    "This is a content platform, not a directory — value comes from a live public blog, not a profile listing",
+    "Inactive/spammy blogs risk removal under the Content Policy",
+    "AdSense monetization prompts are built into the funnel — optional, ignore for listing purposes"
+  ],
+  "countsAsLive": "The blog is publicly accessible at <name>.blogspot.com and the launch post with your product link renders to anonymous visitors",
+  "unknowns": [
+    "Whether outbound links in Blogger posts are dofollow (not stated on the start page)"
+  ]
+}

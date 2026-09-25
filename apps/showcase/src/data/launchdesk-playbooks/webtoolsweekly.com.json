@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "webtoolsweekly.com",
+  "name": "Web Tools Weekly",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://webtoolsweekly.com/submit",
+      "title": "Suggest a Tool — submission via X/Bluesky DM"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Front-end developer tool fit: libraries, frameworks, plugins, scripts, web/desktop/mobile apps, APIs/services, editors/IDEs",
+    "Explicitly NOT accepted: articles and tutorials",
+    "Productivity tools go to the curator's other newsletter, Tech Productivity (techproductivity.co)",
+    "Submission channel is a DM/chat to the curator, Louis Lazaris — @LouisLazaris on X (DMs open) or @LouisLazaris.com on Bluesky (chats open)"
+  ],
+  "preparation": [
+    "An X or Bluesky account to send the DM/chat",
+    "Tool name, URL, one-line description of what it does for front-end devs",
+    "Confirm it isn't already covered — browse webtoolsweekly.com/archive"
+  ],
+  "workflow": [
+    "Open https://webtoolsweekly.com/submit to confirm current instructions",
+    "DM @LouisLazaris on X or open a Bluesky chat with @LouisLazaris.com",
+    "Send the tool name, link and short pitch",
+    "If picked, the tool is included in a future Web Tools Weekly newsletter issue and the online archive"
+  ],
+  "watchFor": [
+    "No form and no guaranteed inclusion — it's a curated newsletter, not a directory; acceptance is one person's call",
+    "Newsletter-cadence timing means publication can lag submission by weeks",
+    "Separate 'sponsor' route exists at /sponsor if you want guaranteed placement (paid)",
+    "Wrong-category submissions (articles/tutorials) are explicitly ignored"
+  ],
+  "countsAsLive": "The tool appears in a Web Tools Weekly issue and in the site's archive at webtoolsweekly.com/archive",
+  "unknowns": [
+    "Whether archive entries carry outbound links (likely yes, newsletter style — unverified)",
+    "Response/acceptance rate for cold DMs",
+    "Sponsor pricing on /sponsor"
+  ]
+}

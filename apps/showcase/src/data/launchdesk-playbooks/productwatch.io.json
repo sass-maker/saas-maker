@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "productwatch.io",
+  "name": "Product Watch",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://productwatch.io/pricing",
+      "title": "Pricing — Free (30-day queue or badge skip) vs Priority Pass vs Promoted (custom)"
+    },
+    {
+      "url": "https://productwatch.io/product/create",
+      "title": "Product create entry (sign-in required surface)"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free launch sits in a 30-day queue — OR embed the ProductWatch badge on your website to skip the queue AND get a featured spot on launch day",
+    "Free tier includes a permanent 72 DR do-follow backlink"
+  ],
+  "requirements": [
+    "Account sign-in required ('+ Submit your product' → sign in)",
+    "Product fits categories like AI, Productivity, SaaS, Web App, Developer Tools, Marketing, Design Tools, API"
+  ],
+  "preparation": [
+    "Product details, URL, category, logo/screenshots",
+    "ProductWatch badge embedded if you want the free queue-skip + featured spot",
+    "Paid options: Priority Pass (price not shown in fetched text, '/launch' one-time) → instant go-live, top featured spot, 5-upvote head start, 2x upvote multiplier, newsletter features; Promoted = custom sponsored placement via email contact"
+  ],
+  "workflow": [
+    "Sign in, then open '+ Submit your product' (/product/create)",
+    "Complete product details",
+    "Free: wait 30 days in queue, or verify the badge to launch immediately with a featured spot",
+    "Priority Pass: pay once to go live instantly with the upvote multiplier and newsletter features"
+  ],
+  "watchFor": [
+    "Badge on free = queue skip AND featured spot — unusually strong free-tier perk if you accept the badge",
+    "Priority Pass grants a 5-upvote advantage and 2x multiplier — paid launches are structurally favoured in rankings",
+    "Priority Pass price was not rendered in the fetched page text",
+    "Daily/weekly/monthly 'Award Winners' leaderboards exist — ranking matters for extra visibility"
+  ],
+  "countsAsLive": "Product appears under /products/<slug> and in Launches (/launches/day) on its launch day with upvotes/comments active",
+  "unknowns": [
+    "Priority Pass price (rendered client-side)",
+    "Badge markup and verification method",
+    "Whether badge-free free listings still get the dofollow link after the 30-day wait (page implies yes: 'Free … permanent 72 DR do-follow backlink')"
+  ]
+}

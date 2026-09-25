@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aihuntlist.com",
+  "name": "AIHuntList",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free $0 listing requires an AIHuntList badge or text link on your site to verify submission eligibility.",
+    "Free submissions wait in a queue — 'currently about 1 week' per the pricing page; FAQ states approximately 72 hours to 1 week."
+  ],
+  "requirements": [
+    "Product must be an AI product/tool/app for the AI tools directory.",
+    "Content policy: explicit adult content, nudity, deepfakes, illegal material, or gambling are strictly prohibited.",
+    "Account required — /submission/new shows a login page (email sign-in, Google, GitHub) before the form."
+  ],
+  "preparation": [
+    "Account (email, Google, or GitHub).",
+    "Product name, URL, description, category.",
+    "For free submission: AIHuntList badge or text link already placed on your site.",
+    "Pricing decision: Free (badge + ~1 week queue) / Fastpass $6.9 (skip queue, 24h review, no backlink) / Featured $9.9 (featured placement ≥1 month) / Sponsored $69.9 (blog coverage)."
+  ],
+  "workflow": [
+    "Go to https://aihuntlist.com/submission/new and sign in (email, Google, or GitHub).",
+    "Complete the submission form with product details.",
+    "Choose plan on /pricing: Go Submit for Free (badge required) or a paid tier.",
+    "Free: wait in the review queue (about 1 week). Paid: expedited editorial review normally within 24 hours.",
+    "Listing is published as a permanent directory profile after editorial review."
+  ],
+  "watchFor": [
+    "Free plan requires the backlink/badge — it is used 'to verify submission eligibility'; paid plans make the backlink optional.",
+    "Paid purchases are a 'one-off digital service'; once a listing passes review and publishes it is non-refundable (rejection under content policy gets 100% refund).",
+    "No guarantee of traffic or rankings is made — do not over-promise SEO value.",
+    "Sale pricing shown ($6.9 struck from $29.9, etc.) is promotional; base prices may differ.",
+    "Sponsored tier bundles blog editorial coverage — an upsell, not needed for a basic listing."
+  ],
+  "countsAsLive": "A permanent product profile page exists under aihuntlist.com/tool/<slug> and appears in its category listing.",
+  "unknowns": [
+    "Exact form fields behind the login wall.",
+    "Whether badge/link verification is automated or manual.",
+    "Whether the discounted prices are permanent or time-limited promotions."
+  ],
+  "sources": [
+    {
+      "url": "https://aihuntlist.com/pricing",
+      "title": "AIHuntList Pricing — Free (badge + ~1wk queue), Fastpass $6.9, Featured $9.9, Sponsored $69.9, with content policy and refund FAQ"
+    },
+    {
+      "url": "https://aihuntlist.com/submission/new",
+      "title": "Submit AI Tool — login wall (email, Google, GitHub)"
+    },
+    { "url": "https://aihuntlist.com/", "title": "AIHuntList homepage" }
+  ]
+}

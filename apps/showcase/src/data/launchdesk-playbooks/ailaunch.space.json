@@ -1,0 +1,60 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "ailaunch.space",
+  "name": "AI Launch Space",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free Standard listing requires adding the AI Launch Space badge to your site; it is verified automatically and only then does your listing carry a dofollow backlink.",
+    "Free listings go through admin review of 24–48 hours before appearing in the directory."
+  ],
+  "requirements": [
+    "Legitimate, digitally delivered products only: SaaS, web/mobile apps, AI tools, developer tools, no-code/low-code platforms and templates, productivity/marketing/design/business software.",
+    "Must be a working, publicly accessible product — no placeholder, teaser, waitlist, or 'coming soon' pages.",
+    "Must be owned by you or submitted with the owner's authorization; accurate info and a functioning website.",
+    "Prohibited: adult/NSFW (incl. AI companions), deepfakes/impersonation, IP-infringement & piracy (watermark removers, AI-detection evaders), fake engagement/spam/scraping tools, gambling/chance mechanics, crypto & unlicensed financial products, regulated health/pharma/wellness, physical goods & manual services (freelancing/agency), illegal or harmful products."
+  ],
+  "preparation": [
+    "Working public product URL — waitlist/coming-soon pages are rejected.",
+    "Badge embed ready on your site if taking the free route (verified automatically).",
+    "Project name, tagline, description, category, pricing model (Free/Freemium/Paid shown on listings).",
+    "Plan choice: Standard free (badge, 24–48h review) / Premium $4.99 per launch (no badge, featured, priority) / Sponsor $29/mo / Promote ads from $9/mo."
+  ],
+  "workflow": [
+    "Go to https://ailaunch.space/submit (Submit Project in nav/footer) — a client-side form on the DirectoryLaunch boilerplate.",
+    "Fill project details and submit for review.",
+    "Free tier: install the badge so automated verification passes; admin review takes 24–48h.",
+    "If rejected, they email the reason and you may fix and resubmit.",
+    "Premium $4.99/launch skips the queue, drops the badge requirement, and adds featured placement plus newsletter featuring."
+  ],
+  "watchFor": [
+    "Strict content policy mirrors payment-provider acceptable-use — borderline categories (AI companions, trading signals, supplements, scrapers) will be rejected or later removed.",
+    "Approved listings can be removed later if they fall out of compliance.",
+    "Free listing's dofollow link exists only while the badge is verified.",
+    "Submit page body did not render to a plain fetch (JS form) — expect a browser-driven form.",
+    "Directory is run by a solo operator ('Made by Alex Osso') and cross-links a family of sister sites."
+  ],
+  "countsAsLive": "The project has a public page at ailaunch.space/project/<slug> appearing in the Browse/Latest Projects grid.",
+  "unknowns": [
+    "Exact submit-form fields (JS-rendered).",
+    "Whether an account is required to submit.",
+    "Whether badge reverification is periodic and what happens on removal (delisting vs nofollow)."
+  ],
+  "sources": [
+    {
+      "url": "https://ailaunch.space/pricing",
+      "title": "Pricing & Plans — Standard free with badge-verified dofollow, Premium $4.99/launch, Sponsor $29/mo, ads from $9/mo"
+    },
+    {
+      "url": "https://ailaunch.space/submission-policy",
+      "title": "Submission & Content Policy — eligibility, prohibited categories, review/moderation"
+    },
+    {
+      "url": "https://ailaunch.space/",
+      "title": "AI Launch Space homepage — directory of AI tools by indie founders"
+    },
+    { "url": "https://ailaunch.space/submit", "title": "Submit Project page (JS form)" }
+  ]
+}

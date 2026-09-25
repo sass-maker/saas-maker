@@ -1,0 +1,54 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "saaspirate.com",
+  "name": "SaaSPirate",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://saaspirate.com/submit-saas/",
+      "title": "Submit Your SaaS — contact-style form (First Name, Email, Text Input, optional Affiliate Program URL, Message)"
+    },
+    {
+      "url": "https://saaspirate.com/submit-a-deal/",
+      "title": "Submit a Deal — the deals-oriented submission entry linked in nav"
+    },
+    {
+      "url": "https://saaspirate.com/",
+      "title": "Homepage — SaaS deals/reviews site running since 2019, 1,561+ verified deals"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "SaaS/software product; preferred categories include AI & automation tools, WordPress, cloud, marketing, design, business automation, productivity",
+    "Submission is a contact form: First Name, Email, a 'Text Input' field, optional Affiliate Program URL, and a message",
+    "Site suggests preparing complete product info, simple pricing, high-quality images, an update plan, and support docs",
+    "Separate form exists for Black Friday deals (/blackfriday-submit/)"
+  ],
+  "preparation": [
+    "Product name, URL, pricing details, key features, target users",
+    "Deal/discount details if you can offer one — the site centers on deals and lifetime offers",
+    "Affiliate program URL if you have one (optional field)",
+    "High-quality product images and support documentation references"
+  ],
+  "workflow": [
+    "Open https://saaspirate.com/submit-saas/ (or /submit-a-deal/ for deal submissions)",
+    "Fill the contact form: name, email, product info in Text Input, optional affiliate URL, message",
+    "Submit and wait — their stated flow is 'get verified and added' after contact",
+    "If accepted, expect listing plus exposure via their newsletter and 7,100-member Facebook group"
+  ],
+  "watchFor": [
+    "Form is a generic contact form — there is no structured listing builder, so include full product details in the message",
+    "No pricing is stated for listing — pitch-style submission; any fees would be negotiated by email",
+    "Site is deals-oriented (lifetime deals, discounts) — submissions without a deal angle may be lower priority",
+    "Separate 'Submit a Deal' and Black Friday forms exist — pick the one matching your offer",
+    "Audience-supported site with affiliate disclosure — listings may carry affiliate framing"
+  ],
+  "countsAsLive": "Product appears as a deal/review page under saaspirate.com/deals/<slug> or is covered in a blog/interview post",
+  "unknowns": [
+    "Whether listing is free or paid — not stated on public pages",
+    "Review timeline and acceptance criteria",
+    "What the unlabeled 'Text Input' field expects (likely product name or URL)"
+  ]
+}

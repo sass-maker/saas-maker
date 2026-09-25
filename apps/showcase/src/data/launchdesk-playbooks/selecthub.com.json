@@ -1,0 +1,57 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "selecthub.com",
+  "name": "SelectHub",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://pmo.selecthub.com/claim-your-product/",
+      "title": "SelectHub - Claim your product page (returned 403 to automated fetch)"
+    },
+    {
+      "url": "https://www.selecthub.com/",
+      "title": "SelectHub homepage - 'claiming your product profile' vendor CTA"
+    },
+    {
+      "url": "https://www.selecthub.com/seller/",
+      "title": "SelectHub - Seller Programs (Analyst Program, enhanced profiles, lead gen)"
+    },
+    {
+      "url": "https://ideaproof.io/launch-directories/selecthub",
+      "title": "ideaproof - SelectHub submission profile (free, account required)"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Aimed at vendors of enterprise/B2B software - SelectHub is a software selection and comparison platform for buyers",
+    "Vendors claim an existing product profile (or create one) via the 'claim your product' portal",
+    "Claiming the product profile is free; SelectHub separately sells vendor programs (Analyst Program, enhanced profiles, MQL/HQL lead generation)"
+  ],
+  "preparation": [
+    "Product name and product website URL",
+    "Work email matching the vendor domain (claim flows typically verify vendor affiliation - verify on the claim form)",
+    "Short product description, category fit, and positioning",
+    "Logo and product collateral if the claim form requests assets"
+  ],
+  "workflow": [
+    "Open https://pmo.selecthub.com/claim-your-product/",
+    "Search/claim your product profile and complete the vendor claim form",
+    "Verify vendor affiliation as instructed (exact mechanism not public - likely email domain check)",
+    "Once approved, maintain the product profile so it surfaces when buyers' requirements match"
+  ],
+  "watchFor": [
+    "The claim page returned HTTP 403 to automated fetch - complete in a real browser",
+    "Strong upsell environment: SelectHub's Seller Programs (analyst engagement, enhanced profiles, lead-gen MQLs/HQLs) are the paid layer - a free claim does not include them",
+    "Inbound contact from SelectHub sales after claiming is likely; budget expectation accordingly",
+    "SelectHub matches products to buyers via its selection platform - an incomplete profile may never surface in comparisons"
+  ],
+  "countsAsLive": "The product has a public profile page on selecthub.com and appears in the relevant software category for buyer comparisons",
+  "unknowns": [
+    "Exact claim-verification mechanism (the claim page did not render publicly)",
+    "Whether products not already in SelectHub's database can be submitted cold, or only claimed",
+    "Review/approval SLA for claimed profiles",
+    "Whether the outbound vendor link is follow or nofollow (one third-party source says nofollow)"
+  ]
+}

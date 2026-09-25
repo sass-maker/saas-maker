@@ -1,0 +1,58 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "somuch.com",
+  "name": "SoMuch",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://somuch.com/submit-links/submit-link",
+      "title": "SoMuch - Enter Your Link Information (submit form)"
+    },
+    {
+      "url": "https://somuch.com/faq.asp",
+      "title": "SoMuch - FAQ (linked from nav)"
+    },
+    {
+      "url": "https://somuch.com/",
+      "title": "SoMuch homepage - topic link directory"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free submission enters a first-in-first-out content-review queue: 'could take anywhere from a few hours to a couple of weeks'",
+    "Email verification is required - 'Links won't show until verified by email you are sent and approved by SoMuch.com'",
+    "Right after submitting you are offered a paid upgrade 'for quicker approval or better placement'"
+  ],
+  "requirements": [
+    "Fields: domain/URL, site title/name, email address, Topic + Category (two-level picker), description (max 255 characters)",
+    "No account required",
+    "Description cap is tight: 255 characters max"
+  ],
+  "preparation": [
+    "Domain/URL, site title, and a <=255-character description",
+    "Email address you can access for the verification message",
+    "The right Topic -> Category pair from their picker (Business, Web Site Development, Internet, Computing, etc.)"
+  ],
+  "workflow": [
+    "Open https://somuch.com/submit-links/submit-link",
+    "Enter domain/URL, site title, email, pick Topic then Category, and write a <=255-char description",
+    "Click 'Submit Link'",
+    "On the post-submit screen, either accept the paid upgrade for quicker approval/placement or continue free",
+    "Click the verification link in the confirmation email - the link won't appear until verified AND approved",
+    "A 'Delete your Link' page exists at /link-delete.asp for removal"
+  ],
+  "watchFor": [
+    "Two approval layers: email verification AND SoMuch.com approval - the email alone is not enough",
+    "Post-submit upsell for faster approval/placement - decline cleanly if staying free",
+    "Queue time is indeterminate (hours to weeks)",
+    "A Rakuten 'ebates' cashback promo is embedded on the page - ignore it"
+  ],
+  "countsAsLive": "The link is publicly visible in its chosen Topic/Category listing on somuch.com after email verification and approval",
+  "unknowns": [
+    "What the paid upgrade costs (offered only after submission)",
+    "Whether the listing link is dofollow",
+    "Rejection criteria beyond the FIFO review"
+  ]
+}

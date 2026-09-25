@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "showmysites.com",
+  "name": "ShowMySites",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://showmysites.com/",
+      "title": "ShowMySites homepage — directory + launch platform, DR71+ backlink pitch"
+    },
+    {
+      "url": "https://showmysites.com/pricing",
+      "title": "ShowMySites pricing — Free (reciprocal link/badge) vs $10 Premium"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free listings stay nofollow until a reciprocal link to ShowMySites or their badge is detected on your site",
+    "An account (signup) is required to add websites"
+  ],
+  "requirements": [
+    "Any website/project type accepted: SaaS, blogs, marketplaces, AI tools, apps",
+    "Up to 25 active listings per account on both Free and Premium",
+    "A page on your site where you can place a link or badge (free path)"
+  ],
+  "preparation": [
+    "Account credentials (signup at /accounts/signup/)",
+    "Site name, URL, description, category and language for each listing",
+    "Reciprocal link or badge HTML ready to deploy"
+  ],
+  "workflow": [
+    "Sign up at showmysites.com/accounts/signup/",
+    "Add the website via /my-websites/create/ ('Join & Add Your Website')",
+    "Place a link to ShowMySites or embed their badge on your site",
+    "Their verification detects the link/badge and flips your outbound link to dofollow",
+    "Listing appears in the /directory/ and on the launch platform"
+  ],
+  "watchFor": [
+    "Without the reciprocal link/badge the outbound link is nofollow — the 'free dofollow' is explicitly a link exchange",
+    "Premium is $10 one-time per ACCOUNT (not per site) and removes the link/badge requirement for all 25 listings",
+    "Payments via Paddle; 30-day money-back guarantee",
+    "Directory contains low-signal listings (gambling/spam-adjacent entries observed), which dilutes link quality"
+  ],
+  "countsAsLive": "The site has a public detail page in showmysites.com/directory/ and appears in 'Recently Launched'; the outbound link flips to dofollow once the badge/link is verified.",
+  "unknowns": [
+    "How often the reciprocal-link check re-runs (and whether delisting follows removal)",
+    "Any manual review step before publication",
+    "Whether the 25-listing cap can be raised"
+  ]
+}

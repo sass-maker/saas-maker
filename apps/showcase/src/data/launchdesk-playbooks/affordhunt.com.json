@@ -1,0 +1,66 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "affordhunt.com",
+  "name": "AffordHunt",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://affordhunt.com/",
+      "title": "AffordHunt homepage - returned empty body (JS-rendered)"
+    },
+    {
+      "url": "https://www.affordhunt.com/submit",
+      "title": "AffordHunt submit page - returned empty body (JS-rendered)"
+    },
+    {
+      "url": "https://launchpointzero.com/launchsites/afford_hunt",
+      "title": "Launch Point Zero profile citing submit URL https://www.affordhunt.com/submit"
+    },
+    {
+      "url": "https://navifyai.com/link/affordhunt",
+      "title": "NavifyAI profile: paid submission (~$199, or $99 fast-track with code), 30-60 day review"
+    },
+    {
+      "url": "https://launchpedia.co/places-to-promote/affordhunt/",
+      "title": "LaunchPedia: 'directory of affordable alternatives to popular AI and SaaS tools... 1000 best tools, vetted by humans'"
+    },
+    {
+      "url": "https://www.producthunt.com/products/affordhunt",
+      "title": "AffordHunt Product Hunt page - launched Aug 2023, curated platform for budget-friendly tool alternatives"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Positioning: a curated directory of AFFORDABLE alternatives to popular AI/SaaS tools — the product should be pitched as a budget-friendly competitor to a known tool",
+    "Site is JS-rendered — both homepage and /submit return empty bodies to plain fetchers",
+    "Third-party sources report a submission fee around $199 with a ~$99 'premium/fast-track' option via discount code, and a 30-60 day review window (fast-track ~1 week)",
+    "Copy angle expected: 'share how you are better when compared to your competitor'"
+  ],
+  "preparation": [
+    "Product URL, name, and a comparison pitch naming the expensive incumbent you undercut",
+    "Clear low pricing — affordability is the directory's premise",
+    "Payment for the submission fee (figure unverified on first-party page)",
+    "A browser — the site cannot be driven by static HTML fetches"
+  ],
+  "workflow": [
+    "Open https://www.affordhunt.com/submit in a browser",
+    "Complete the submission form, positioning the product as an affordable alternative to a named tool",
+    "Pay the submission fee and wait through the stated review window (30-60 days per third-party sources)",
+    "Verify the listing appears in the tools index"
+  ],
+  "watchFor": [
+    "Conflicting fee reports ($199 vs $99-with-code vs 'fast-track $99') — read the live submit page before paying",
+    "Positioning trap: the directory is specifically about CHEAP alternatives — a premium-priced product does not fit the premise",
+    "Site renders nothing without JavaScript — cannot be audited statically",
+    "Third-party copy suggests the same operator runs a 'submit to 150+ directories' service — the submission may funnel into a paid distribution service rather than a simple listing"
+  ],
+  "countsAsLive": "The product appears as a card in the AffordHunt tools directory",
+  "unknowns": [
+    "Exact form fields and current fee (page is JS-rendered)",
+    "Whether any free tier exists",
+    "Whether the listing link is dofollow (catalog note says follow; unconfirmed)",
+    "Real review timeline"
+  ]
+}

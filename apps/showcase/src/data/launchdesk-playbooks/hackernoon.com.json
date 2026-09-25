@@ -1,0 +1,66 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "hackernoon.com",
+  "name": "HackerNoon",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    { "url": "https://hackernoon.com/", "title": "HackerNoon homepage" },
+    {
+      "url": "https://help.hackernoon.com/how-do-i-get-published",
+      "title": "Help — how to get published (write, tag, submit for editorial review)"
+    },
+    {
+      "url": "https://hackernoon.com/how-to-contribute-a-story-to-hacker-noon-1536c2587063",
+      "title": "How to contribute — individuals publish free, brands pay"
+    },
+    {
+      "url": "https://hackernoon.com/from-desk-to-hackernoon-your-ultimate-guide-on-how-to-publish-a-story",
+      "title": "Step-by-step publish checklist (8 tags, feature image, disclosures)"
+    },
+    {
+      "url": "https://help.hackernoon.com/your-complete-guide-to-writing-for-hacker-noon",
+      "title": "Editorial guidelines — tech topics, first person OK, headline rules"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free publishing only for individual human authors — 'Individuals can publish for free, and brands will pay to publish'",
+    "Brand-as-author posts carry a fee; to stay free, author the piece as a named human tech leader",
+    "All submissions pass human editorial review (~3 business days target) and can be rejected"
+  ],
+  "requirements": [
+    "Original tech-related story you own the rights to; republishing elsewhere is allowed (non-exclusive license)",
+    "All vested interests in companies mentioned must be disclosed",
+    "Story needs: title, feature image, 8 tags, meta description; headline should be ≤80 chars and accurate",
+    "Zero tolerance for violence/hate; constructive community norms",
+    "A product 'listing' here = a published story (e.g. a launch post, technical deep-dive, or founder narrative) authored by a person"
+  ],
+  "preparation": [
+    "A full article draft — not a product listing blurb",
+    "Author identity: a real human byline (free) rather than a brand account (paid)",
+    "Feature image, 8 tags, meta description",
+    "Disclosure of any vested interest in companies mentioned"
+  ],
+  "workflow": [
+    "Create an account and log in at hackernoon.com/login",
+    "Click 'Start Writing' and write or upload the story in the editor",
+    "Open Story Settings: add 8 tags, upload the feature image, enter the meta description",
+    "Confirm content rights and vested-interest disclosures",
+    "Click 'Submit Story for Review' — a confirmation email follows",
+    "A staff editor reviews within ~3 business days; respond to improvement emails if sent",
+    "If accepted, the story is published and distributed"
+  ],
+  "watchFor": [
+    "Submitting as a brand triggers the paid tier — keep authorship individual",
+    "Purely promotional product announcements risk rejection; the article needs real substance or a unique point of view",
+    "If no response in ~a week, use the help channel 'my story is not reviewed' rather than resubmitting",
+    "Contributors keep ownership (non-exclusive license) but grant HackerNoon edit/publish/distribute rights"
+  ],
+  "countsAsLive": "The story is published at hackernoon.com/<slug> with your author byline and is publicly readable",
+  "unknowns": [
+    "Current price of brand-as-author publishing",
+    "Whether links inside published stories are dofollow"
+  ]
+}

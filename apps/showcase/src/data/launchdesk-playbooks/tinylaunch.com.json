@@ -1,0 +1,57 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "tinylaunch.com",
+  "name": "TinyLaunch",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.tinylaunch.com/",
+      "title": "TinyLaunch homepage — launch board with daily ranking"
+    },
+    {
+      "url": "https://www.tinylaunch.com/pricing",
+      "title": "TinyLaunch pricing — Standard free vs Premium $39, submission service $279, featured spots"
+    },
+    {
+      "url": "https://www.tinylaunch.com/agents",
+      "title": "TinyLaunch for agents — JSON API, OTP email login, llms.txt, OpenAPI, agents.json"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Standard free launch uses the standard queue; the badge and 'high authority backlink' are awarded only to Top-3 ranking products",
+    "The dofollow backlink is granted only when you embed the TinyLaunch badge with a dofollow link back to tinylaunch.com on your landing page"
+  ],
+  "requirements": [
+    "Sign-in required (Submit Product routes through auth; dashboard at /dashboard/startups/new)",
+    "Product competes in a launch period for upvotes — Top 3 receives exclusive badges",
+    "Agent-native alternative: full JSON API with OAuth-style OTP email login — no API keys; documented at /agents, /llms.txt, /openapi.json, /.well-known/agents.json"
+  ],
+  "preparation": [
+    "Account credentials (or OTP email login for agent-driven launches)",
+    "Product name, tagline, description, logo, category",
+    "Badge embed plan — the dofollow badge requirement points BACK to tinylaunch.com",
+    "Vote-getting plan if relying on the free tier's Top-3 badge/backlink"
+  ],
+  "workflow": [
+    "Sign in and submit via 'Submit Product' (/dashboard/startups/new) — or drive it end-to-end via the JSON API documented at /agents",
+    "Choose Standard (free) or Premium ($39/launch)",
+    "Product enters a launch period and collects upvotes",
+    "Top-3 finishers get badges; embedding the badge with a dofollow link to tinylaunch.com grants the high-authority backlink",
+    "Premium guarantees the backlink and skips the queue"
+  ],
+  "watchFor": [
+    "Circular link trade: the 'free' dofollow backlink only materializes if you rank Top 3 AND place a dofollow link to them — most free launches get neither",
+    "Premium launches are 'frequently showcased between 3rd and 4th place' — paid placement inside the ranking area",
+    "Upsells: AI Visibility Audit $9, Featured Spots $15–$30/week, done-for-you Submission Service $279 for ~110 directories",
+    "The /agents page explicitly invites AI submissions via API — this is the intended agent path, not form scraping"
+  ],
+  "countsAsLive": "A launch page at tinylaunch.com/launch/<id>-<slug> visible during its launch period and in the launch archive afterward.",
+  "unknowns": [
+    "Standard queue length / scheduling latency for free launches",
+    "Whether non-Top-3 free listings keep any link at all",
+    "Exact API write endpoints for launching (OpenAPI spec at /openapi.json lists them — not exhaustively reviewed here)"
+  ]
+}

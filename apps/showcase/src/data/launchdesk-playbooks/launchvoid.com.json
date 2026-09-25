@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "launchvoid.com",
+  "name": "LaunchVoid",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://launchvoid.com/",
+      "title": "LaunchVoid homepage — 'The Void Where Great Startups Launch'"
+    },
+    {
+      "url": "https://launchvoid.com/submit",
+      "title": "Submit page — server-rendered content identical to homepage (form appears JS-gated)"
+    },
+    {
+      "url": "https://launchvoid.com/pricing",
+      "title": "Pricing page — server-rendered content identical to homepage (no plan details visible without JS)"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "unknown",
+  "conditions": [],
+  "requirements": [
+    "Positions itself as a startup launch platform for SaaS, developer tools, and consumer apps",
+    "Submit Startup (/submit) and Pricing (/pricing) routes exist but render the same shell as the homepage — the actual form and prices load client-side or behind auth"
+  ],
+  "preparation": [
+    "Product name, URL, and description (inferred — form fields not publicly visible)",
+    "Expect an account or JS-enabled browser flow; have logo/screenshots ready"
+  ],
+  "workflow": [
+    "Open https://launchvoid.com/submit in a JS-capable browser session",
+    "Complete whatever plan selection and form the client-side app exposes",
+    "Confirm the listing appears on the site"
+  ],
+  "watchFor": [
+    "Site footer is carpeted with reciprocal directory badges (Fazier, Turbo0, TinyLaunch, StartupFame, etc.) — typical badge-network launch board",
+    "No pricing or review terms are publicly readable without executing the app — do not assume free",
+    "Mentions a 'LaunchForge AI' tool for landing pages/pitch decks — possible bundled upsell"
+  ],
+  "countsAsLive": "A public startup listing page on launchvoid.com reachable from the site (exact URL pattern not verifiable from static pages)",
+  "unknowns": [
+    "Whether submission is free or paid (pricing page content did not render)",
+    "Form fields, account requirement, badge/backlink conditions",
+    "Review process and launch cadence",
+    "Whether the site is actively maintained (footer says © 2025)"
+  ]
+}

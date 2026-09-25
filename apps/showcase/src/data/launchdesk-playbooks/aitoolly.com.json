@@ -1,0 +1,54 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aitoolly.com",
+  "name": "AIToolly",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://aitoolly.com/submit",
+      "title": "AIToolly - Submit your product (paid listing form, Stripe checkout)"
+    },
+    {
+      "url": "https://aitoolly.com/pricing",
+      "title": "AIToolly - Pricing page (linked from nav)"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "NO FREE ROUTE observed: the submit form offers only two paid packages - 'Listing' $29.99 (marked down from $49.99) or 'Listing + Video' $49.99 (from $69.99), paid via Stripe Checkout",
+    "This contradicts the launchdesk catalog note 'pricing=free' - the live form has no free option",
+    "Required fields: tool name, category (dropdown), product URL, pricing status ('No public pricing / Free only / Free trial / Freemium / Paid only' - required, published verbatim; AIToolly 'does not infer missing prices automatically')",
+    "Optional: product brief (English, max 2,000 chars - may be published on the English product page alongside AIToolly's own source-checked content), up to 8 suggested keywords"
+  ],
+  "preparation": [
+    "Tool name, product URL, and the correct category (their hint: AI APIs/model routers/SDKs go to 'Code & IT'; task/workflow tools usually to 'Productivity')",
+    "The product's current pricing status - required and published from your answer",
+    "An English product brief <=2,000 chars written for publication (your wording may appear on the product page)",
+    "Up to 8 keyword suggestions, comma- or newline-separated",
+    "Payment card for Stripe Checkout",
+    "For the +Video package: an English launch video to add after publication"
+  ],
+  "workflow": [
+    "Open https://aitoolly.com/submit and pick a package: Listing $29.99 or Listing + Video $49.99",
+    "Enter tool name, choose category, paste product URL",
+    "Fill the 'Editorial context' section in English (optional brief <=2,000 chars)",
+    "Select the required pricing status and add up to 8 optional keyword suggestions",
+    "Click 'Continue to payment' - one-time payment, final amount reviewed in Stripe Checkout",
+    "Package includes 'priority review by the next business day', a permanent product page, 7 days of featured placement, and Domain Search access"
+  ],
+  "watchFor": [
+    "Everything on this route is paid - no free or badge-gated tier exists on the form",
+    "Pricing status is a required published field; you cannot leave it blank or have it inferred",
+    "Your brief/keywords 'may appear' verbatim on the English page - write for publication, not for the editor",
+    "Delivery target stated as 1 business day; 'priority review' implies editorial review still applies",
+    "Sponsor banners and partner links surround the form - ignore upsells"
+  ],
+  "countsAsLive": "A permanent AIToolly product page exists for the tool (plus 7-day featured placement) after payment and review",
+  "unknowns": [
+    "Whether any free listing path exists elsewhere on the site (none found on submit or pricing pages)",
+    "Whether rejection after payment is possible and what the refund terms are",
+    "Whether the product-page outbound link is dofollow"
+  ]
+}

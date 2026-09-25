@@ -1,0 +1,68 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "auraplusplus.com",
+  "name": "Aura++",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free $0 launch requires the Aura++ badge live on your site AND finishing Top 3 on launch day to earn a dofollow backlink; there is also a free 'No-Follow' tier with no badge that never earns a followed link.",
+    "Free launches sit in a waiting queue; paid tiers skip it. Scheduling window: FAQ says free can schedule up to 365 days ahead, Premium up to 60 days, Premium Plus up to 14 days (a repo README says 90 days for free — sources conflict)."
+  ],
+  "requirements": [
+    "Account required — the submission is a 5-step wizard ending on a 'Backlink' step.",
+    "Product description has a hard floor of 200 words (400+ recommended) in a rich-text editor.",
+    "Choose up to 3 categories and schedule a launch date; launches go live 8:00 AM UTC.",
+    "An AI Autofill button beside the website field can prefill the project info."
+  ],
+  "preparation": [
+    "Account on auraplusplus.com.",
+    "Square logo, 2–3 screenshots or demo GIF, 150–300+ word human-first description.",
+    "One-sentence pitch, website URL, GitHub and social links.",
+    "Badge embed decision made BEFORE the wizard: the Launch Date step picks the plan (Free-with-badge / No-Follow free / Premium / Premium Plus).",
+    "UTM-tagged analytics ready for launch day."
+  ],
+  "workflow": [
+    "Sign up / log in, then open the Submit Project flow (5-step wizard: Project Info → media/details → Launch Date → plan → Backlink).",
+    "Fill project info (name, URL, optional affiliate URL, ≥200-word rich description); AI Autofill can assist.",
+    "Choose launch plan and schedule the date; free enters the queue, paid picks sooner slots.",
+    "Free-with-badge: embed the badge and keep it live; finish Top 3 on launch day for the dofollow.",
+    "Engage on launch day (reply to comments within ~2h) and monitor upvotes."
+  ],
+  "watchFor": [
+    "Two different $0 tiers — 'Free' (badge + Top-3 → dofollow) vs 'No-Follow' (no badge, never followed). Pick deliberately; the wrong free tier wastes the listing's SEO value.",
+    "Conflicting scheduling windows across sources (365 vs 90 days for free) — confirm in the wizard.",
+    "Conflicting premium prices across sources ($29/$69 on-site pricing vs $17/$34 reported by a third-party crawl) — verify at checkout.",
+    "NOTE: the batch-listed URL /projects/submit currently renders a published project page for a tool literally named 'Submit' — the real flow is the logged-in Submit Project wizard, reached via nav after auth.",
+    "Re-launches: 10 user re-launches with a 14-day cooldown on paid tiers."
+  ],
+  "countsAsLive": "A public project page at auraplusplus.com/projects/<slug> with status 'live' on the chosen launch date (the observed example page carried fields: status, upvotes, launched date, categories, maker).",
+  "unknowns": [
+    "Exact current prices (site marketing pages returned only a summary; third-party reports differ).",
+    "Whether badge verification is automated or manual.",
+    "Exact free-tier queue length."
+  ],
+  "sources": [
+    {
+      "url": "https://auraplusplus.com/faq",
+      "title": "Aura++ FAQ — tiers (Free/Premium $29/Premium Plus $69), scheduling windows, badge→Top-3 dofollow"
+    },
+    {
+      "url": "https://auraplusplus.com/launch-guide",
+      "title": "Aura++ launch guide — asset prep, 8:00 AM UTC go-live, partner stacking"
+    },
+    {
+      "url": "https://auraplusplus.com/pricing",
+      "title": "Launch Pricing — Free, Premium ($29), Premium Plus ($69) tiers (summary only)"
+    },
+    {
+      "url": "https://submitator.com/submit-to-auraplusplus",
+      "title": "Submitator guide — 5-step wizard ending on Backlink, two $0 tiers, 200-word floor, reported $17/$34 paid tiers"
+    },
+    {
+      "url": "https://github.com/Praneetbrar/auraplusplus",
+      "title": "Project README — submit flow: sign up, submit, choose launch type, schedule"
+    }
+  ]
+}

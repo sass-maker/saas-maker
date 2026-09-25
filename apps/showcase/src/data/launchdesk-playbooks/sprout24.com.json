@@ -1,0 +1,63 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "sprout24.com",
+  "name": "Sprout24",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://sprout24.com/",
+      "title": "Sprout24 homepage - email marketing / MarTech review and comparison site"
+    },
+    {
+      "url": "https://sprout24.com/submit/",
+      "title": "Request for MarTech and Email Marketing Tools Review at Sprout24"
+    },
+    {
+      "url": "https://sprout24.com/strategy/sprout-score-strategy/",
+      "title": "About Sprout Score - scoring thresholds controlling category-page visibility"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Reviews are free and never sponsored ('We never place sponsored reviews'), but acceptance is gated on fit signals: email marketing / MarTech / customer-platform vendors are prioritized",
+    "Preferred vendors show clear ICP and pricing transparency for SMB/mid-market, an active roadmap with quarterly releases, 50+ active users per quarter, available security/compliance details, and sandbox/trial/demo access",
+    "Only products scoring a Sprout Score of 6+ are listed on Sprout24 primary category pages — a low-scoring product still gets a context page but not main-directory visibility"
+  ],
+  "requirements": [
+    "Product should be an email marketing, MarTech, or customer-engagement platform (emerging tools may still get roundup/matrix inclusion)",
+    "Must provide sandbox credentials, a demo video, or a guided walkthrough for hands-on analyst testing",
+    "Expect a short intake call to gather context and access credentials",
+    "Security posture evidence valued: SSO, data residency, audit logs, compliance artifacts"
+  ],
+  "preparation": [
+    "Product URL, positioning, ICP, and transparent pricing details",
+    "Sandbox/trial account credentials or a demo video/walkthrough",
+    "Security, privacy, and compliance documentation",
+    "Evidence of 50+ quarterly active users and an active release cadence",
+    "Relevant categories you want to be included in (for roundup/matrix requests)"
+  ],
+  "workflow": [
+    "Open https://sprout24.com/submit/ ('Request for the Product Review' in the footer)",
+    "Complete the request form — or email reviewrequest@sprout24.com directly",
+    "Receive an access confirmation and timeline from the editorial operations team; join the short context/access call",
+    "Provide sandbox credentials / demo materials for hands-on testing",
+    "Analysts test onboarding, integrations, deliverability, pricing, support, and security (standard review takes 10–15 business days after access approval)",
+    "Verify factual checkpoints (screenshots, pricing, feature names) when shared before publication",
+    "Review publishes with a Sprout Score/Rating on a dedicated Product Context Page; score ≥6 gets primary category-page listing"
+  ],
+  "watchFor": [
+    "You cannot buy coverage — no sponsored reviews; only 'Marketing Solutions' exist downstream for products scoring >8 with 100+ user reviews",
+    "A Sprout Score below 6 means the product page exists but is excluded from primary category pages — a bad review is still public",
+    "Editorial opinions, scores, and comparisons stay independent; vendors can only correct factual checkpoints",
+    "The form asks for real access credentials — be ready to provision a sandbox; credentials are stated to be removed after testing",
+    "Non-MarTech products are deprioritized; expect roundup inclusion at best"
+  ],
+  "countsAsLive": "A Product Context Page exists at sprout24.com/hub/<product-slug>/ showing the Sprout Score and review; if score ≥6 the product also appears on the primary category page",
+  "unknowns": [
+    "Whether the product page carries a dofollow outbound link (catalog note says follow; not confirmed on site)",
+    "Whether scores below 6 can be re-reviewed later",
+    "Exact fields in the request form (form body not fully rendered in fetch)"
+  ]
+}

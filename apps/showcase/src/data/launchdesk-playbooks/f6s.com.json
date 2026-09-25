@@ -1,0 +1,60 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "f6s.com",
+  "name": "F6S",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "profile",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Account required — everything on the site sits behind one; signup offers Google, email, and behind 'Continue another way' LinkedIn and Facebook.",
+    "Creating a company page takes just two fields — name and website — and the page publishes immediately with no review.",
+    "Outbound links are rel=\"noopener noreferrer nofollow\" — the value is the profile plus access to accelerator/deal feeds, not SEO link equity."
+  ],
+  "preparation": [
+    "Account (Google, email, LinkedIn, or Facebook).",
+    "Company name and live website URL — the two fields that create the page.",
+    "One-line description; location and founding year.",
+    "Markets: a closed-vocabulary picker that rejects invented phrases and adds a parent category per pick — they ask for 5+.",
+    "Team members (invitable, can claim the profile), investors, decks/media, traction data.",
+    "Optional: software pricing/features section that unlocks reviews."
+  ],
+  "workflow": [
+    "Create an F6S account.",
+    "Add your company: name + website — page exists immediately; skip the optional team-invite screen if unneeded.",
+    "Work through the 'Complete page' editor's nine left-rail sections: Overview, Investors, Page Info, Team, Decks and Media, Product, Traction, Recommendations, Advanced — it autosaves (no save button).",
+    "Fill the markets picker with 5+ valid entries; a profile-strength meter pushes completeness.",
+    "Keep the page current — complete profiles rank better on F6S's startup/company collection pages."
+  ],
+  "watchFor": [
+    "No anonymous submission exists — the account is the whole gate.",
+    "Links are nofollow — don't count this as a backlink source.",
+    "Autosave editor with no save button — trust it, but verify fields persisted.",
+    "Markets picker uses a closed vocabulary — invented phrases get rejected.",
+    "Premium plans exist for enhanced features/deal access — not needed for a basic profile.",
+    "Homepage returned HTTP 405 to a plain fetcher — expect a real browser session to be necessary."
+  ],
+  "countsAsLive": "A public company page at f6s.com/company/<slug> (or /p/) reachable while logged out, populated via the nine-section editor.",
+  "unknowns": [
+    "Whether profile completeness affects any approval (reported: no review at all).",
+    "Current premium-plan pricing."
+  ],
+  "sources": [
+    {
+      "url": "https://f6s.helpscoutdocs.com/category/23-pages-for-startups",
+      "title": "F6S Knowledge Base — Pages for Startups"
+    },
+    {
+      "url": "https://f6s.helpscoutdocs.com/article/225-how-to-get-ranked-on-startup-and-company-list-collection-pages",
+      "title": "F6S — how to get ranked on collection pages (complete profile guidance)"
+    },
+    {
+      "url": "https://submitmap.com/platform/f6s/",
+      "title": "How to submit to F6S — SubmitMap (account gate, instant publish, nofollow links, 9-section editor, markets picker)"
+    },
+    {
+      "url": "https://www.effortlessbacklinks.com/directory/f6s",
+      "title": "F6S Directory Guide — free to list, complete-profile ranking"
+    }
+  ]
+}

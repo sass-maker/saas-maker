@@ -1,0 +1,62 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aitools.fyi",
+  "name": "AI Tools FYI",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://aitools.fyi/",
+      "title": "AI Tools FYI homepage — Submit links exit to boostmytool.com"
+    },
+    {
+      "url": "https://aitools.fyi/submit",
+      "title": "Submit URL — renders the 'Boost My Tool Submission' form"
+    },
+    {
+      "url": "https://boostmytool.com/submit-my-tool",
+      "title": "BoostMyTool submission form (the current submit target)"
+    },
+    {
+      "url": "https://submitator.com/submit-to-aitools-fyi",
+      "title": "Third-party report: submit route redirects to a Tally form with a required $37 fee"
+    },
+    {
+      "url": "https://aitools.fyi/fr/terms",
+      "title": "aitools.fyi terms — paid listing services, approval/denial rights"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "AI tool required — the directory lists AI-powered products across categories",
+    "The 'Submit a tool' button now exits to boostmytool.com/submit-my-tool, a paid third-party submission service (reported $37 fee) that submits to 'up to 3 high-quality directories'",
+    "Form asks: email, tool link, tool name, tool description, pricing model, additional info; offers a bonus of 'up to 2 additional free directories'",
+    "Site terms reserve the right to 'approve, deny or cancel any service purchased... including free services'; prohibited content (harmful, sexual, violent) is banned"
+  ],
+  "preparation": [
+    "Tool name, URL, description, pricing model",
+    "Contact email",
+    "Payment for the BoostMyTool fee (reported ~$37)",
+    "Sponsor/advertise route exists separately at /advertise ('Get Featured')"
+  ],
+  "workflow": [
+    "Click 'Submit a tool' on aitools.fyi — you are taken off-site to boostmytool.com/submit-my-tool (a Tally form)",
+    "Fill in tool details and pay the submission fee",
+    "BoostMyTool submits on your behalf to 'up to 3' unnamed directories",
+    "Alternatively, use /advertise on aitools.fyi for a direct paid feature"
+  ],
+  "watchFor": [
+    "MAJOR caveat (per third-party audit): the $37 payment does not guarantee a listing on aitools.fyi itself — it buys submission to up to 3 unnamed directories, non-refundable, no acceptance or timeline guarantee",
+    "Historical free submission and a $30 fast-track existed as of early 2026 — both appear gone",
+    "aitools.fyi's own terms contradict the processor's on refunds — read both before paying",
+    "A 'Submit a blog post' Tally form (tally.so/r/3jb99x) exists in the footer as a separate route"
+  ],
+  "countsAsLive": "A dedicated tool page at aitools.fyi/<slug> appearing in the directory/category listings",
+  "unknowns": [
+    "Whether any free self-serve listing route still exists",
+    "Which directories BoostMyTool actually submits to and whether aitools.fyi is among them",
+    "Whether organic editorial additions happen without payment",
+    "Whether listing links are dofollow"
+  ]
+}

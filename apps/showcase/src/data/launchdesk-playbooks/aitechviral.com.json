@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aitechviral.com",
+  "name": "AI Tech Viral",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://aitechviral.com/submit",
+      "title": "Submit page — renders 'Log in to Submit' with Google OAuth only"
+    },
+    {
+      "url": "https://aitechviral.com/",
+      "title": "AI Tech Viral homepage — trending AI tools directory"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "AI tools directory — product should be an AI tool",
+    "Google account sign-in is mandatory before the submission form is shown"
+  ],
+  "preparation": [
+    "Google account for OAuth sign-in",
+    "Tool name, URL, description, logo, and category"
+  ],
+  "workflow": [
+    "Open https://aitechviral.com/submit",
+    "Log in with Google (redirect /api/auth/google?redirect=/submit) or create an account via /signup",
+    "Complete the post-login submission form (not publicly visible)",
+    "Await listing publication"
+  ],
+  "watchFor": [
+    "No pricing or guidelines page is public; the form is entirely behind the login wall",
+    "Site shares an identical template/category set with several sister directories (unitelist.com, appalist.com, weliketools.com, aixcollection.com) and runs a SubmitSaaS ad — expect cross-site upsells",
+    "Whether listing is free or paid could not be verified without logging in"
+  ],
+  "countsAsLive": "Tool page appears on aitechviral.com under /latest or its category and is reachable without login",
+  "unknowns": [
+    "Whether submission is free or paid after login",
+    "Form fields, review process, and turnaround time",
+    "Whether a badge or backlink is required"
+  ]
+}

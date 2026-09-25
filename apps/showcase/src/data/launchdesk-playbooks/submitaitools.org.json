@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "submitaitools.org",
+  "name": "SubmitAITools",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://submitaitools.org/",
+      "title": "Submit AI Tools homepage — 'List Your Tool Free', category directory"
+    },
+    {
+      "url": "https://submitaitools.org/submit-your-ai-tool/",
+      "title": "Submit page — gated by color-click human verification"
+    },
+    {
+      "url": "https://submitaitools.org/promote/",
+      "title": "Promote page — also gated by the same verification"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "AI tool product only — the directory is organized purely around AI-tool categories (Productivity, Education, Marketing, Code & IT, Image, Video, Voice, Github Repos, etc.)",
+    "Must pass a client-side 'human verification' color-click challenge before the submit form renders",
+    "A Login link exists — an account may be required at the actual form (unverified)"
+  ],
+  "preparation": [
+    "Tool name, URL, description, category, logo",
+    "Be ready for an interactive verification step that needs rendered-DOM clicking (headless fetches only see the challenge)"
+  ],
+  "workflow": [
+    "Open https://submitaitools.org/submit-your-ai-tool/ (or 'List Your Tool Free' / Submit)",
+    "Complete the human-verification challenge — e.g. 'Click the button with the red color' (color varies per load)",
+    "Fill the revealed submit form",
+    "Tool appears in its category and the Recent tools list once accepted"
+  ],
+  "watchFor": [
+    "The color-click gate guards BOTH the submit and promote pages — the actual form fields were not visible to automated reading",
+    "Homepage shows paid 'Featured/Ad' slots and a Promote page — free listing exists alongside paid placement, but promote pricing is behind the same verification",
+    "Verification answers are interpreted literally — pick the exact named color"
+  ],
+  "countsAsLive": "The tool has a detail card/page on submitaitools.org listed under its category and/or the 'Recent AI Tools' feed.",
+  "unknowns": [
+    "Submit-form fields, account requirement, and review latency — all behind the verification wall",
+    "Promote/featured pricing",
+    "Whether outbound links are dofollow"
+  ]
+}

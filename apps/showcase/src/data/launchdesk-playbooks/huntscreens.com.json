@@ -1,0 +1,57 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "huntscreens.com",
+  "name": "HuntScreens",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://huntscreens.com/",
+      "title": "HuntScreens homepage - daily product/AI tool launch board"
+    },
+    {
+      "url": "https://huntscreens.com/submit",
+      "title": "Launch Your Product - $0 queue (~30 days) vs $10 VIP 24h, plus $79 dofollow backlink and sidebar-ad add-ons"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free 'Queue' tier exists at $0 but review takes ~30 days",
+    "'VIP Pass' ($10, Stripe) skips the line with 24-hour review",
+    "A permanent DOFOLLOW backlink is only the $79 add-on — the free/base listing link type is not promised as dofollow",
+    "Login appears required (Log in button on the submit page)"
+  ],
+  "requirements": [
+    "Daily product board — new products are grouped under 'Today'/'Yesterday' with logo, name, and description",
+    "Refund policy acknowledged in the form: rejected products get a full refund; once published, no refunds",
+    "Product URL is the core field of step 3 of the submit flow"
+  ],
+  "preparation": [
+    "Product URL, name, one-line description, and logo",
+    "Account for login",
+    "Decide between free queue (~30 days) and $10 VIP (24h)",
+    "Optional add-ons: $79 permanent dofollow backlink, sidebar ads ($29/7d, $99/30d), bundles (Launch Pack $99, Growth Pack $159)"
+  ],
+  "workflow": [
+    "Go to https://huntscreens.com/submit ('Submit' in nav)",
+    "Step 1: choose speed — 'Queue' ($0, ~30 days) or 'VIP Pass' ($10, 24h review)",
+    "Step 2: pick optional add-ons (dofollow backlink $79, sidebar ads, bundles) or skip",
+    "Step 3: enter the product URL and complete the product details; acknowledge the refund policy",
+    "Pay via Stripe if a paid option was chosen, submit, and wait for review",
+    "Published products appear on the daily board under /products/<slug>"
+  ],
+  "watchFor": [
+    "The page is an upsell ladder: base fee, then backlink add-on, sidebar ads, and 'bundle' framing — the free option exists but is visually de-emphasized ('VIP Pass Recommended')",
+    "The dofollow link is a $79 paid add-on — do not assume the free listing is dofollow",
+    "Guest posts are a separate paid product ($99, refunded if not accepted)",
+    "Site is open source (github.com/daimajia/huntscreens) — a Product Hunt-style clone; authority claims (DR 50+, 300K monthly visitors) are self-reported",
+    "Once published, no refunds even if the listing underperforms"
+  ],
+  "countsAsLive": "The product appears on the 'Today' board and has a public page at huntscreens.com/products/<slug>",
+  "unknowns": [
+    "Whether the free-queue listing link is dofollow (catalog note says follow; the paid add-on language implies otherwise)",
+    "Current real queue depth for the free tier",
+    "Whether review checks product quality or just payment"
+  ]
+}

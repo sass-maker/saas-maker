@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "news.ycombinator.com",
+  "name": "Hacker News",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://news.ycombinator.com/newsguidelines.html",
+      "title": "Hacker News Guidelines — what to submit, title rules, no solicitation"
+    },
+    {
+      "url": "https://news.ycombinator.com/showhn.html",
+      "title": "Show HN rules — for things people can try out"
+    },
+    { "url": "https://news.ycombinator.com/submit", "title": "Submit page (requires HN account)" }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "conditions": [],
+  "requirements": [
+    "A Hacker News account is required to submit (the submit form is behind login)",
+    "On-topic = 'anything that gratifies intellectual curiosity'; most politics/crime/sports/celebrity stories are off-topic",
+    "Show HN is for something you made that people can actually try out — no landing pages, sign-up pages, newsletters, or fundraisers",
+    "Do not use HN primarily for promotion: 'It's ok to post your own stuff part of the time'",
+    "Never solicit upvotes/comments; don't delete-and-repost"
+  ],
+  "preparation": [
+    "A working product URL that users can try without barriers (Show HN) or a substantive canonical article",
+    "A clean title: use the original title, no clickbait, no site name, strip gratuitous numbers ('10 Ways to X' → 'How to Do X'), append [video]/[pdf] when relevant",
+    "For Show HN: title starts with 'Show HN', and be present to answer questions in the thread",
+    "An account with some normal community history is de facto safer than a fresh promo-only account"
+  ],
+  "workflow": [
+    "Create/verify an HN account",
+    "For a product launch use a 'Show HN: <Product Name>' title and the product's tryable URL via /submit; otherwise submit the canonical article URL",
+    "Stay in the thread answering questions thoughtfully",
+    "Show HN posts appear on /shownew immediately and reach /show after clearing a small points threshold"
+  ],
+  "watchFor": [
+    "Vote-ring detection is aggressive — do not ask friends to upvote or share a direct link for votes",
+    "Brand-new accounts submitting marketing links are commonly flagged/killed",
+    "Minor version releases ('Foo 1.3.1 is out') are not substantive enough for Show HN; major overhauls are ok",
+    "Don't editorialise the title — the title field is the single biggest rejection/edit trigger",
+    "HN is hostile to obviously AI-generated copy in the thread — write comments yourself"
+  ],
+  "countsAsLive": "The submission is public at /item?id=<id> and visible on /newest (or /shownew for Show HN) — frontpage placement is ranking-dependent, not guaranteed",
+  "unknowns": [
+    "Exact karma/account-age thresholds for submission ranking (undocumented)",
+    "Whether a domain is banned/deprioritised until moderators respond to hn@ycombinator.com"
+  ]
+}

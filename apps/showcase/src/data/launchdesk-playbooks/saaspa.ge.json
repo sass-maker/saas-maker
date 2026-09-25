@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "saaspa.ge",
+  "name": "Saaspa.ge",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    { "url": "https://www.saaspa.ge/submit", "title": "Submit product page (sign-in gate)" },
+    {
+      "url": "https://www.saaspa.ge/promote-now",
+      "title": "Launch pricing — Free / Lite $19 / Pro $39 / Spotlight $149 / Max $29/mo"
+    },
+    {
+      "url": "https://www.saaspa.ge/guidelines",
+      "title": "Community & product submission guidelines"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free tier joins the next weekly launch batch — you wait for the launch week",
+    "Free tier gives only a 'standard' backlink; a permanent dofollow backlink requires a paid one-time boost AND displaying the Saaspa.ge badge",
+    "Ranking on the weekly board is driven by upvotes you drive yourself",
+    "Sign-in required to submit"
+  ],
+  "requirements": [
+    "Accepted: software/web services, mobile/desktop apps, browser extensions, dev tools, SaaS, APIs, indie projects and prototypes",
+    "Rejected: illegal/harmful products, spam/scams, NSFW, copy-cat clones with no original value",
+    "Clear accurate description, high-quality logo and images, working product URL, correct category and tags"
+  ],
+  "preparation": [
+    "Product name, tagline, full description, working URL",
+    "Logo and quality screenshots/images",
+    "Category and tags",
+    "Account credentials; optionally budget for Lite ($19, 48h top-pin + permanent dofollow with badge), Pro ($39, week-long pin + newsletter + social), or Spotlight ($149, 30-day homepage pin, 1/month)"
+  ],
+  "workflow": [
+    "Sign in at https://www.saaspa.ge/submit",
+    "Fill the product form; choose Free or attach a one-time boost (Lite/Pro/Spotlight)",
+    "Free launches wait for the next weekly batch; paid boosts launch this week",
+    "Drive upvotes during your launch week to climb the board"
+  ],
+  "watchFor": [
+    "Badge requirement: permanent dofollow backlinks on all paid tiers say 'with our badge'",
+    "Max membership ($29/mo or $199/yr) is a recurring upsell — one-time boosts are repeatable and may be the better buy",
+    "Vote manipulation (alt accounts) is explicitly banned and enforced"
+  ],
+  "countsAsLive": "Product has a lifetime page under /product/<slug> and appears in the current or past weekly launch batch",
+  "unknowns": [
+    "Whether free-tier 'standard' backlinks are nofollow",
+    "Manual-review turnaround for free submissions"
+  ]
+}

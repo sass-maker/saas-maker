@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "nocodefounders.com",
+  "name": "No Code Founders",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.nocodefounders.com/list-your-tool",
+      "title": "List your tool — $500 lifetime paid listing form"
+    },
+    {
+      "url": "https://nocodefounders.com/",
+      "title": "Homepage — newsletter + tools/deals directory for 38,000+ no-code founders"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Listing is a one-time $500 payment — 'This is a paid listing. You will be charged $500 on submission.'",
+    "Audience fit: tools for no-code / low-code / AI founders",
+    "Includes permanent listing, 30-day featured placement, and a newsletter mention"
+  ],
+  "preparation": [
+    "Tool name, one-line description (120 chars max), full description, website URL",
+    "Logo URL (optional — auto-fetched from your site if blank)",
+    "Category: Builders, Database, Automation, Design, Auth, Payments, Email, Marketing, Analytics, AI, or Other",
+    "Your name, email, and role",
+    "Optional exclusive deal/discount for members",
+    "Partner code if you have one (field exists on the form)"
+  ],
+  "workflow": [
+    "Open https://www.nocodefounders.com/list-your-tool",
+    "Fill tool details + your details (+ optional deal)",
+    "Pay $500 on submission",
+    "Listing goes live with 30-day featured placement and a newsletter mention"
+  ],
+  "watchFor": [
+    "Payment is charged on submission — there is no free tier",
+    "Optional add-on: a dedicated newsletter feature costs an extra $1,500",
+    "One-line description is hard-capped at 120 characters"
+  ],
+  "countsAsLive": "Tool page exists under nocodefounders.com/tools/<slug> and appears in the tools directory",
+  "unknowns": [
+    "Review criteria and whether rejected submissions are refunded",
+    "What a partner code discounts to"
+  ]
+}

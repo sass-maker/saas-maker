@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "siteswebdirectory.com",
+  "name": "Site Web Directory",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.siteswebdirectory.com/submit.php",
+      "title": "Sites Web Directory - Submit Link (Step One: Choose a Category)"
+    },
+    {
+      "url": "https://siteswebdirectory.com/",
+      "title": "Sites Web Directory homepage - 'Find and List your URLS'"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Legacy phpLD-style web directory: submission starts with 'Step One: Choose a Category' from a huge topical tree (Arts, Business and Trade, Computers and Internet, ..., Real Estate)",
+    "The submit flow is multi-step: category selection first, then listing details on a following step (fields not visible on step 1)",
+    "Open submission form - a login/register widget exists on the page but is not required to reach the form",
+    "Also has a separate 'Submit Article' article-directory flow"
+  ],
+  "preparation": [
+    "Site URL, title, and description (standard fields on the details step)",
+    "The correct deep category - pre-pick it; the tree is very long",
+    "Submitter name and email for the details step"
+  ],
+  "workflow": [
+    "Open https://www.siteswebdirectory.com/submit.php",
+    "Step 1: drill into and select the right category from the tree",
+    "Step 2 (after category selection): complete the listing details form and submit",
+    "Wait for review; check 'Latest Links' for the listing to appear"
+  ],
+  "watchFor": [
+    "Whether a paid 'featured' tier appears on step 2 is unverified - similar sibling directories (submissionwebdirectory, highrankdirectory) show a paid fast-review tier at this stage; proceed through the form and decline if offered",
+    "No stated review time on the submit page",
+    "Site is active (recent listings shown) but has legacy UX - no draft saving"
+  ],
+  "countsAsLive": "The URL is listed publicly under its chosen category (verify via 'Latest Links' or the category page)",
+  "unknowns": [
+    "Whether a paid/featured option is presented on step 2 of the form",
+    "Review turnaround time",
+    "Whether links are dofollow",
+    "Whether an account is required on a later step"
+  ]
+}

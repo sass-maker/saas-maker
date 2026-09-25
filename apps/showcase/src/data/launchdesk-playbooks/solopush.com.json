@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "solopush.com",
+  "name": "SoloPush",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://solopush.com/",
+      "title": "SoloPush homepage — 'Product Hunt alternative for indie makers'"
+    },
+    {
+      "url": "https://solopush.com/submit",
+      "title": "Submit Product route (SPA — same chrome as homepage)"
+    },
+    { "url": "https://solopush.com/ads", "title": "Advertise / Get Featured route" }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Indie/solo-built product focus: 'solo-built tools that actually ship'",
+    "Account required — 'Sign In' sits next to 'Submit Product' in the nav",
+    "Daily launch format: products enter 'Today's Launches'; top 3 products earn recognition badges",
+    "Real user reviews are part of the model — 'No hype. Real user reviews and fresh launches every day'"
+  ],
+  "preparation": [
+    "A SoloPush account",
+    "Product name, tagline, description, URL, logo/icon, category",
+    "Launch-day timing awareness — launches roll in daily cohorts with a visible countdown"
+  ],
+  "workflow": [
+    "Create an account / sign in at solopush.com",
+    "Open 'Submit Product'",
+    "Fill in the product listing form (fields behind auth — not publicly visible)",
+    "Product joins a daily 'Today's Launches' cohort; community votes/reviews determine the top 3 badges",
+    "Optional: paid 'Get Featured' / ads for premium placement"
+  ],
+  "watchFor": [
+    "Submit form is behind authentication — field list not publicly visible",
+    "Sponsored 'Premium Products' section exists — don't confuse paid placement with organic launch",
+    "Daily cohort mechanic means visibility is time-boxed; badges only go to the top 3",
+    "Site is a small SPA; little public documentation of rules"
+  ],
+  "countsAsLive": "The product appears in a 'Today's Launches' cohort / product list with its own public page on solopush.com",
+  "unknowns": [
+    "Exact submission form fields",
+    "Whether there is a review queue or launches are instant after scheduling",
+    "Whether outbound links are dofollow",
+    "Pricing for the featured/ads option"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "killerstartups.com",
+  "name": "KillerStartups",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://killerstartups.com/",
+      "title": "KillerStartups homepage — general startup/finance news publication"
+    },
+    {
+      "url": "https://killerstartups.com/contact-us/",
+      "title": "Contact page — advertising inquiries to info@killerstartups.com"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "No self-serve submission or directory exists — the site is an editorial publication (startups, finance, stocks, mindset)",
+    "The contact page only advertises 'advertising to a large audience of startup founders' via info@killerstartups.com",
+    "Much of the current content reads as staff-written or contributed news coverage"
+  ],
+  "preparation": [
+    "An email pitch describing the startup and why it merits coverage, or an advertising/sponsored-post inquiry",
+    "Company boilerplate, launch metrics, founder names and quotes ready to share"
+  ],
+  "workflow": [
+    "Email info@killerstartups.com with either a press/coverage pitch or an advertising inquiry",
+    "Negotiate scope — the site only publicly offers an advertising contact, so clarify whether editorial coverage or a paid placement is on the table",
+    "If accepted, the piece is published as an article on killerstartups.com"
+  ],
+  "watchFor": [
+    "Historically KillerStartups ran a startup-review feature; the current site shows no submission form — the old route appears retired",
+    "The only published contact is framed around advertising — expect paid-placement offers",
+    "No public pricing; rates are negotiated over email",
+    "Content quality on the site is mixed/SEO-flavored — assess brand fit before paying"
+  ],
+  "countsAsLive": "A published article on killerstartups.com profiling or mentioning the startup",
+  "unknowns": [
+    "Whether any free editorial coverage route still exists",
+    "Advertising/sponsored post pricing",
+    "Whether outbound links in posts are dofollow",
+    "Whether the historical 'submit your startup' review product is still offered on request"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "stork.ai",
+  "name": "Stork.AI",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.stork.ai/submit",
+      "title": "Stork.AI submit — step 1 of 3, URL-driven auto-built listing, $49 or badge"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "The $49 one-time fee is waived entirely if you place the Stork.AI badge on your site — both paths produce the identical listing"
+  ],
+  "requirements": [
+    "AI tool with a live site, GitHub repo, or npm package — all three work as the submission seed",
+    "No manual copywriting needed: they scrape the URL, write the copy, pick the logo, and build listings in 8 languages (EN/FR/ES/DE/JA/KO/PT/RU)",
+    "You review and edit the auto-generated listing before choosing the payment path"
+  ],
+  "preparation": [
+    "A single URL: product site, GitHub repo, or npm package",
+    "Badge placement ability for the free path",
+    "Review time — check the AI-generated copy/logo before confirming"
+  ],
+  "workflow": [
+    "Open https://www.stork.ai/submit (3-step flow, 'save & exit' supported)",
+    "Paste the tool URL/repo/package and hit 'analyze' — listing is auto-built in 8 languages",
+    "Review and edit anything that looks off",
+    "Pick a path at the end: pay $49 once (Stripe) or add the site badge for a free identical listing",
+    "Listing goes live 'within the hour' per the submit page"
+  ],
+  "watchFor": [
+    "Nothing is charged until you pick a path at the review step — but the free path still costs you a badge embed",
+    "Auto-generated copy across 8 locales can contain scrape errors — review each field before confirming",
+    "'Featured' slots exist as a separate, always-labeled paid product; the browse grid itself is newest-first and cannot be bought",
+    "Listings are exposed to coding agents (Cursor, Claude Code, VS Code, Windsurf, Zed) via Stork's MCP server"
+  ],
+  "countsAsLive": "A public listing page at stork.ai/en/<slug> (plus 7 locale twins) appearing in the /browse grid.",
+  "unknowns": [
+    "Badge HTML spec and verification mechanics",
+    "Whether an account is required or the flow is session-based",
+    "Whether the badge path delays the 'live within the hour' promise pending verification"
+  ]
+}

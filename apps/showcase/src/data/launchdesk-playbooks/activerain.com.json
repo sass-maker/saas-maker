@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "activerain.com",
+  "name": "ActiveRain",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://activerain.com/join",
+      "title": "ActiveRain - Join Now (free registration form)"
+    },
+    {
+      "url": "https://activerain.com/",
+      "title": "ActiveRain homepage - real estate professional community"
+    },
+    {
+      "url": "https://activerain.com/culture/community_guidelines",
+      "title": "ActiveRain - Community Guidelines (linked from footer)"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Real-estate-industry only: the join form requires selecting a role - Real Estate Agent, Commercial Agent, Managing Broker, Appraiser, Home Stager, Home Inspector, Home Builder, Mortgage/Lending, Broker/Owner, Title Insurance, Real Estate Attorney, Property Manager, 'Services for Real Estate Pros', 'Industry Observer', 'Real Estate Technology', etc.",
+    "Free membership: 'Join Now - It's Free!'; ~309,000 members",
+    "Fields: first name, last name, username, password, email, role; must accept Terms of Service, Privacy Policy, and Cancellation Policy",
+    "The batch URL /users/new 404s - the live join URL is https://activerain.com/join"
+  ],
+  "preparation": [
+    "Real estate professional identity and role - this is a professional community, not a general product directory",
+    "Name, desired username, email, password",
+    "Profile materials for afterwards: headshot, brokerage/service area, bio (ActiveRain profiles rank in search and feed the referral network)",
+    "A product submission makes sense only if the product serves real-estate professionals (e.g. via 'Real Estate Technology' role and product reviews section)"
+  ],
+  "workflow": [
+    "Open https://activerain.com/join (the catalogued /users/new URL is dead)",
+    "Fill first/last name, username, password, email, and pick your real-estate role",
+    "Agree to ToS/Privacy/Cancellation Policy and click 'Join Now'",
+    "Complete the member profile; visibility comes from the public profile, blog posts, Q&A, and the referral network"
+  ],
+  "watchFor": [
+    "This is a vertical community, not a launch directory - a generic SaaS listing is off-topic unless the product genuinely serves real-estate pros",
+    "Community Guidelines govern promotion; spammy self-promotion is likely moderated",
+    "Profile pages are public and indexed; treat the profile itself as the listing",
+    "Paid advertising exists (/action/default/advertising) separate from free membership"
+  ],
+  "countsAsLive": "A public member profile at activerain.com/profile/<username> is viewable without login and the member appears in the roster",
+  "unknowns": [
+    "Whether email verification is required before the profile is public",
+    "Whether profile outbound links are dofollow",
+    "Moderation queue for new accounts"
+  ]
+}

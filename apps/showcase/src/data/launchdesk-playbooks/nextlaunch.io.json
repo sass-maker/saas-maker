@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "nextlaunch.io",
+  "name": "Next Launch",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://nextlaunch.io/",
+      "title": "Next Launch homepage — daily 'Top Projects Launching Today' board"
+    },
+    {
+      "url": "https://nextlaunch.io/pricing",
+      "title": "Pricing — Free vs Premium $9/launch vs SEO Growth Package $149–199"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free Launch gets standard queue + homepage feature, but a dofollow backlink only if BOTH: (1) top-3 daily ranking AND (2) their badge displayed on your site",
+    "5 free slots available daily; up to 180-day scheduling window"
+  ],
+  "requirements": [
+    "Sign in/sign up required; submit at /projects/submit",
+    "All launches go live at 8:00 AM UTC in daily batches"
+  ],
+  "preparation": [
+    "Project name, URL, tagline, long description (board entries show full paragraphs), logo, categories",
+    "Badge on your site if you want the free-tier dofollow to be possible",
+    "Plan: Free $0 / Premium $9 per launch (skip queue, guaranteed dofollow, 10 premium slots daily) / SEO Growth Package $149–199 (dedicated '[Product] review' SEO article + premium launch)"
+  ],
+  "workflow": [
+    "Sign up, open /projects/submit",
+    "Choose Free or Premium and pick a launch date within the window",
+    "Free listings wait in the standard queue for a daily 8:00 AM UTC slot",
+    "During launch day, community voting decides top-3 ranking"
+  ],
+  "watchFor": [
+    "Free-tier dofollow requires BOTH top-3 ranking AND the badge — worst-case you give them a badge and get a nofollow link",
+    "Premium is $9 per launch, not per product permanently",
+    "SEO Growth Package is marked 'Coming Soon' with $149 struck to $199 — pricing/availability unstable",
+    "Site is 'Powered by Open Launch' — same engine family as launchvault.dev/prolaunch.net, expect identical mechanics and shared template"
+  ],
+  "countsAsLive": "Product appears in 'Top Projects Launching Today' on nextlaunch.io at 8:00 AM UTC on the scheduled date with its own listing page",
+  "unknowns": [
+    "Badge markup and verification method",
+    "Whether free listings without top-3 still keep a nofollow link permanently",
+    "Refund policy"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "awwwards.com",
+  "name": "Awwwards",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.awwwards.com/submit/",
+      "title": "Submit your website — Standard Submission $65/website; plans with submission discounts"
+    },
+    {
+      "url": "https://www.awwwards.com/",
+      "title": "Homepage — design awards community (SOTD/SOTM/SOTY, Honorable Mentions, Developer Award)"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Submission is paid only: Standard Submission is $65 per website",
+    "Account sign-up required to submit (Log in / Sign Up in nav)",
+    "Submission makes the site eligible for jury evaluation toward SOTD, SOTM, SOTY, Honorable Mention or Developer Award — acceptance into the visible nominees pool is juried, not guaranteed",
+    "Awwwards is a design-excellence community — the site submitted should be a real, live website with strong design/craft"
+  ],
+  "preparation": [
+    "Awwwards account",
+    "Live website URL, project title, categories/technologies to tag",
+    "$65 per website for Standard Submission (or a Professional plan at $13.8/mo billed annually which includes one annual free submission + 30% off further submissions)",
+    "Basic plan $6.7/mo (10% off submissions) or International plan $324/mo (50% off, featured placement) if submitting regularly"
+  ],
+  "workflow": [
+    "Create an account / log in at awwwards.com",
+    "Go to https://www.awwwards.com/submit/ and buy a Standard Submission ($65) or use a plan's included submission",
+    "Enter the website URL and metadata, choose categories",
+    "Site is evaluated by the community/jury; if selected it appears as a Nominee and can win SOTD etc.",
+    "Track scoring/status from your account profile"
+  ],
+  "watchFor": [
+    "No free submission route — even the cheapest membership only discounts submissions",
+    "The Professional plan's 'annual free submission' is once per year; additional submissions cost 30%-discounted fees",
+    "Paying the $65 does NOT guarantee publication — sites are juried; rejected/ignored submissions are possible",
+    "Plan prices shown are 'billed annually' effective monthly rates — monthly billing is higher",
+    "Upsells everywhere: directory membership, Academy courses, Market — keep to the submission flow if that's the goal"
+  ],
+  "countsAsLive": "Website appears as a scored Nominee under awwwards.com/websites/nominees/ with a public page and jury/community votes",
+  "unknowns": [
+    "Exact jury timeline from submission to nominee decision",
+    "Whether rejected submissions receive any feedback",
+    "Refund policy for submissions that never get featured"
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "betalist.com",
+  "name": "BetaList",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://betalist.com/faq",
+      "title": "BetaList FAQ/Support — all submissions are paid; full refund if not selected; own-domain rule"
+    },
+    {
+      "url": "https://betalist.com/submit",
+      "title": "Submit Startup — requires sign-in (X OAuth or magic link)"
+    },
+    {
+      "url": "https://betalist.com/criteria",
+      "title": "Submission guidelines referenced by the FAQ"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "All submissions are paid — 'There is no free submission option' (free submissions were discontinued)",
+    "Startup must be pre-launch or recently launched with a clear value proposition, good design, and an innovative idea",
+    "Must have its own domain — free hosting subdomains (vercel.app, netlify.app, herokuapp.com) and direct app-store links are rejected",
+    "Account sign-in required (X/Twitter OAuth or email magic link)",
+    "If not selected, the payment is refunded in full automatically (5–10 business days to appear)"
+  ],
+  "preparation": [
+    "BetaList account (X login or magic-link email)",
+    "Startup name, own-domain URL, tagline, description, logo/screenshot",
+    "Choose a plan at the end of the submission form — plans differ by featuring speed and guaranteed newsletter inclusion",
+    "Polish the landing page — value proposition, design, novelty are the stated selection criteria"
+  ],
+  "workflow": [
+    "Sign up / sign in at betalist.com (X OAuth or email magic link)",
+    "Open https://betalist.com/submit and complete the startup form",
+    "Pick a plan and pay at checkout — charge happens at checkout, before review",
+    "Editorial team reviews; decision arrives by email",
+    "If accepted: featured on the timeline per plan; do-follow 'Visit Site' link via 301 redirect with ref=betalist and UTM parameters",
+    "If rejected: automatic full refund; resubmission allowed after improvements",
+    "Track status in /dashboard; upgrades to faster plans possible from the dashboard"
+  ],
+  "watchFor": [
+    "Payment is charged upfront before editorial review — the refund only comes if not selected",
+    "No individual feedback on rejections — 'we're not able to provide specific feedback'",
+    "Each startup is generally featured once; the only exception is pre-launch startups re-featured at launch",
+    "Edits after featuring go through the team via dashboard link — no self-serve editing",
+    "Newsletter inclusion is only guaranteed on certain plans — check your confirmation email",
+    "Expect sales/spam email after featuring — scrapers harvest contact info from featured sites"
+  ],
+  "countsAsLive": "Startup appears on the BetaList browse/timeline pages with a public listing page and a working 'Visit Site' redirect link",
+  "unknowns": [
+    "Current plan prices — shown only at the end of the signed-in submission form",
+    "Exact review SLA per plan",
+    "Trending Startups algorithm details (deliberately undisclosed)"
+  ]
+}

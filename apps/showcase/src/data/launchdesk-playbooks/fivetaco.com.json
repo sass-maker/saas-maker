@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "fivetaco.com",
+  "name": "FiveTaco",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    { "url": "https://fivetaco.com/", "title": "FiveTaco - How solopreneurs find software" },
+    { "url": "https://submitmap.com/platform/fivetaco/", "title": "FiveTaco teardown (SubmitMap)" },
+    {
+      "url": "https://submitator.com/submit-to-fivetaco",
+      "title": "Submit to FiveTaco (Submitator teardown)"
+    },
+    {
+      "url": "https://www.submission.directory/site/fivetaco",
+      "title": "FiveTaco on Submission.Directory"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Software/tools aimed at solopreneurs; ~10 categories (marketing, productivity, ecommerce, etc.)",
+    "Account required before submitting (per teardowns; the /submit page is JS-gated)",
+    "The form is a single field: paste your product URL - 'we'll start collecting all the goods' (they scrape the rest)"
+  ],
+  "preparation": [
+    "Polish your site's title, meta description, and Open Graph image - those become the listing",
+    "A clean product URL to paste (no other fields to prepare)",
+    "An account on fivetaco.com"
+  ],
+  "workflow": [
+    "Create an account / log in on fivetaco.com",
+    "Open https://fivetaco.com/submit",
+    "Paste the product URL into the single input and press 'Submit product'",
+    "Note the UX quirk: the page gives no visible confirmation - no redirect, no message (per SubmitMap teardown)"
+  ],
+  "watchFor": [
+    "The form silently clears after submit - no success state; verify later by checking whether the product page exists",
+    "Listings carry three outbound links with ?ref=fivetaco appended (rel=noopener noreferrer, followed)",
+    "Community mechanics exist (daily like/login/submit streaks, leaderboard, reviews page per product)",
+    "Third-party data marks it 'freemium' - paid featured options may exist, but no paid tier was observed in the submit flow"
+  ],
+  "countsAsLive": "A public product page exists at fivetaco.com/products/<slug> with up to three followed links back to your site.",
+  "unknowns": [
+    "Review/approval time (site states nothing; third parties estimate 3-7 days)",
+    "Whether any paid tier exists",
+    "Whether rejected/duplicate URLs produce any feedback"
+  ]
+}

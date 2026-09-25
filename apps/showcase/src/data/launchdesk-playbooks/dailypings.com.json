@@ -1,0 +1,61 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "dailypings.com",
+  "name": "DailyPings",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free listing requires the DailyPings badge on your homepage — 'the listing appears the moment their check passes', so the badge must be live BEFORE submitting.",
+    "Badge is checked daily; removing it unfeatures/delists the free listing ('remove it, you're unfeatured').",
+    "Free tier's dofollow backlink lasts only while the badge stays up."
+  ],
+  "requirements": [
+    "A live product URL — they read your site and pre-fill name, tagline, and thumbnail.",
+    "An account: email/password plus GitHub, Google, or X provider buttons (icons are unlabelled under an 'or' divider).",
+    "No content bar is published — the free tier's only stated condition is the badge."
+  ],
+  "preparation": [
+    "Live product URL (auto-scraped for name/tagline/thumbnail — review the pre-fill).",
+    "Badge embed on your homepage ready before submitting on free.",
+    "Account (GitHub/Google/X or email+password).",
+    "Plan choice: Free with badge vs Premium one-time (~$9–$19 reported; verify on /pricing) — Premium is no-badge, lifetime dofollow, 7 days in 'Newly launched', newsletter mention, full page with FAQ."
+  ],
+  "workflow": [
+    "Sign in at dailypings.com/sign-in (email/password or the unlabelled GitHub/Google/X icons).",
+    "Paste your product URL — the site pre-fills name, tagline, thumbnail; edit before publishing.",
+    "Choose Free (badge) or Premium (one-time payment).",
+    "Free: with the badge already on your homepage, the listing publishes as soon as their checker detects it.",
+    "Premium: publishes on the spot, no badge needed."
+  ],
+  "watchFor": [
+    "Badge must be installed BEFORE submission on the free lane — the listing is gated on detection.",
+    "Daily badge re-check: removing the badge unfeatures the listing; free dofollow survives only while the badge does.",
+    "OAuth providers render as unlabelled icons — easy to miss that GitHub/Google/X sign-in exists.",
+    "Reported Premium price varies between sources ($9 vs $19) — confirm on /pricing.",
+    "'No refunds once published' policy per their terms (per third-party).",
+    "Direct fetch of the site returned 403 (bot protection) — details largely verified via their indexed pages and third-party reviews."
+  ],
+  "countsAsLive": "A permanent product page on dailypings.com/p/<slug> plus appearance in 'Newly launched' (24h free / 7 days Premium).",
+  "unknowns": [
+    "Exact Premium price on the current /pricing page ($9 vs $19 conflict across sources).",
+    "Whether the site 403 was bot protection or regional blocking.",
+    "Sponsorship pricing details ($19.67/wk site slots, $49 newsletter — per third-party)."
+  ],
+  "sources": [
+    {
+      "url": "https://dailypings.com/pricing",
+      "title": "DailyPings Pricing — 'pay with a badge on your homepage or once, with money'"
+    },
+    { "url": "https://dailypings.com/faq", "title": "DailyPings FAQ" },
+    {
+      "url": "https://submitmap.com/platform/dailypings/",
+      "title": "DailyPings submission guide — SubmitMap (badge-first free lane, account providers, instant publish on detection)"
+    },
+    {
+      "url": "https://submitator.com/submit-to-dailypings",
+      "title": "Submit to DailyPings — Submitator (free with badge vs $19 Premium comparison)"
+    }
+  ]
+}

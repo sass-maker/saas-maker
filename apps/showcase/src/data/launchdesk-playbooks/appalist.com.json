@@ -1,0 +1,41 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "appalist.com",
+  "name": "AppaList",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://appalist.com/submit",
+      "title": "Submit page — 'Log in to Submit' with Google OAuth only"
+    },
+    { "url": "https://appalist.com/", "title": "AppaList homepage — AI apps directory" }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "Directory focuses on practical AI work apps (writing, design, marketing, automation, productivity)",
+    "Google account sign-in is mandatory before the submission form is shown"
+  ],
+  "preparation": [
+    "Google account for OAuth sign-in",
+    "Tool name, URL, description, logo, and category"
+  ],
+  "workflow": [
+    "Open https://appalist.com/submit",
+    "Log in with Google or create an account via /signup",
+    "Complete the post-login submission form (not publicly visible)",
+    "Await listing publication"
+  ],
+  "watchFor": [
+    "No pricing or guidelines page is public; the form is entirely behind the login wall",
+    "Identical template and categories as aitechviral.com, unitelist.com, weliketools.com, aixcollection.com — same likely operator; SubmitSaaS ad present",
+    "Whether listing is free or paid could not be verified without logging in"
+  ],
+  "countsAsLive": "Tool page appears on appalist.com under /latest or a category and is reachable without login",
+  "unknowns": [
+    "Whether submission is free or paid after login",
+    "Form fields, review process, and turnaround time",
+    "Whether a badge or backlink is required"
+  ]
+}

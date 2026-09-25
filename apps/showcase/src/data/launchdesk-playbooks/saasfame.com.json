@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "saasfame.com",
+  "name": "SaaSFame",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://saasfame.com/pricing",
+      "title": "SaaSFame pricing — free/basic/pro/guest-post/sponsor/directory-submission plans"
+    },
+    {
+      "url": "https://saasfame.com/submit",
+      "title": "SaaSFame submit — redirects to login (email, Google, GitHub)"
+    },
+    { "url": "https://saasfame.com/", "title": "SaaSFame homepage — SaaS hall of fame directory" }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free plan requires the SaaSFame badge displayed permanently on your site, enforced by automated re-checks (listing is unpublished without warning if the badge disappears)",
+    "Free queue is very long — the pricing page shows 874 tools waiting and review 'within 180 days', with rejection possible"
+  ],
+  "requirements": [
+    "Account required — /submit redirects to login (email/password, Google or GitHub)",
+    "SaaS/software product with a live site to host the badge (free path)"
+  ],
+  "preparation": [
+    "Account credentials (or OAuth via Google/GitHub)",
+    "Product details: name, URL, description, categories/tags, logo, screenshots",
+    "Badge HTML ready to embed permanently for the free plan",
+    "Decide between Free, Basic ($14.9 one-time), or Pro ($49.9 one-time) before submitting"
+  ],
+  "workflow": [
+    "Register or sign in at saasfame.com",
+    "Open /submit and pick a plan (free listed behind the paid options)",
+    "Complete the product form",
+    "On free: install the badge and wait up to ~180 days for review",
+    "On paid: listing is published immediately with 3 (Basic) or 5 (Pro) dofollow links"
+  ],
+  "watchFor": [
+    "Badge removal triggers automated checks that unpublish free listings with no warning — restoring requires upgrading to paid",
+    "Paid upsells stacked at checkout: Guest Post $79.9, Sponsor $79.9/30d, Directory Submissions $149 (100+ directories, 'DR 0 to 15+' claim)",
+    "Free listing can still be rejected after the wait",
+    "Operator runs sibling directories (toolfame.com, directoryfame.com, aitoolfame.com) — cross-promotion likely"
+  ],
+  "countsAsLive": "A product detail page on saasfame.com reachable from its category/tag listing pages.",
+  "unknowns": [
+    "Exact submit-form fields (behind authentication)",
+    "Real-world wait time vs the stated 180-day maximum",
+    "Whether free listings are nofollow or dofollow before badge verification"
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "trustmrr.com",
+  "name": "TrustMRR",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Listing requires connecting a supported payment provider (Stripe, Lemon Squeezy, Polar, Paddle, RevenueCat, Superwall, Dodo Payments, Creem, Whop, or Shopify) with an API key or OAuth so revenue is verified — products without real verifiable revenue cannot be listed",
+    "RevenueCat connections need a V2 secret key with Projects Configuration and Charts Configuration set to read-only"
+  ],
+  "sources": [
+    {
+      "url": "https://trustmrr.com/llms.txt",
+      "title": "TrustMRR llms.txt — verification model, supported providers, listing tiers, API/MCP endpoints"
+    },
+    {
+      "url": "https://trustmrr.com/",
+      "title": "TrustMRR homepage — marketplace, leaderboard, 'Add startup' entry point"
+    },
+    { "url": "https://trustmrr.com/dashboard", "title": "TrustMRR dashboard (login-gated)" }
+  ],
+  "requirements": [
+    "A real startup, SaaS, mobile app, or digital business with verifiable revenue through a supported payment provider",
+    "Owner-authorized API credential (API key or OAuth) granting read access to payment records",
+    "Optional additional verification: Google Analytics/DataFast for traffic, Google Search Console for search impressions, GitHub for commit activity",
+    "Founder-provided profile data: value proposition, problem, target audience, B2B/B2C positioning, category, tech stack, marketing channels"
+  ],
+  "preparation": [
+    "API credentials for your payment provider (e.g., Stripe restricted key)",
+    "Decide listing tier — public API exposes tiers: free, starter, pro, premium (pricing details not on fetched pages)",
+    "Product description, logo, website URL, founder identity (anonymous/'stealth' listings are supported)",
+    "Optional: GA/DataFast, Search Console, and GitHub credentials for richer verified metrics"
+  ],
+  "workflow": [
+    "Sign up / log in at trustmrr.com",
+    "Click 'Add startup' from the homepage or dashboard",
+    "Connect the payment provider API key/OAuth so TrustMRR computes revenue, MRR, customers, subscriptions and churn",
+    "Complete the founder-provided profile fields (positioning, category, stack, channels)",
+    "Choose whether to also list the startup for sale on the acquisition marketplace",
+    "Confirm the public startup page is live at trustmrr.com/startup/<slug> (a Markdown mirror exists at /startup/<slug>.md)"
+  ],
+  "watchFor": [
+    "This is not a casual backlink directory — it is a verified-revenue marketplace; self-reported numbers are not accepted",
+    "Listings can be anonymous ('Stealth Company' / 'Hidden Business' entries exist) if you want the metrics public but not the name",
+    "Everything you write in descriptions/founder messages is public user-provided content",
+    "Grant only read-only keys where the provider supports it (RevenueCat V2 explicitly requires read-only)"
+  ],
+  "countsAsLive": "A public startup page at trustmrr.com/startup/<slug> showing verified revenue/MRR and appearing in Recently Added / category listings",
+  "unknowns": [
+    "Pricing for starter/pro/premium listing tiers (tier names appear in the public API but not prices)",
+    "Whether a minimum revenue threshold exists to be listed",
+    "Review/moderation turnaround time after adding a startup"
+  ]
+}

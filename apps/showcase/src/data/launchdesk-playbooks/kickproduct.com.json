@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "kickproduct.com",
+  "name": "Kick Product",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://kickproduct.com/",
+      "title": "Kick Product homepage — 'Free Forever' launch platform, 3-step launch process"
+    },
+    {
+      "url": "https://kickproduct.com/advertise",
+      "title": "Advertise page — Product of the Month $20/mo, Review Blog Post $30, Custom campaigns"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "free",
+  "conditions": [],
+  "requirements": [
+    "SaaS product focus ('Launch Your SaaS Product')",
+    "Free account required — sign up, no credit card per homepage"
+  ],
+  "preparation": [
+    "Product name, URL, description, category and pricing",
+    "Logo/screenshots for the product page",
+    "Founder profile details (products are linked to founder profiles)"
+  ],
+  "workflow": [
+    "Sign up free at /auth/signup ('no credit card required')",
+    "Launch the product from your dashboard",
+    "Share the generated product page and profile page links",
+    "Track views/votes/engagement via the built-in launch analytics"
+  ],
+  "watchFor": [
+    "Homepage displays '40% OFF Advertising Packages — LAUNCH40' promo and paid placements ($20/mo Product of the Month, $30 review blog post) — all optional upsells, listing itself is free",
+    "Advertising checkout goes through Polar (buy.polar.sh) links",
+    "Marketing claims ('10,000+ founders', testimonials) are self-reported on the site — moderate expectations for reach"
+  ],
+  "countsAsLive": "Product page live on kickproduct.com, reachable from the Products listing, with view/vote analytics accruing in the dashboard",
+  "unknowns": [
+    "Whether launches are manually reviewed before going live",
+    "Whether free listings get a dofollow backlink",
+    "Any weekly launch cadence vs instant publish (not stated on public pages)"
+  ]
+}

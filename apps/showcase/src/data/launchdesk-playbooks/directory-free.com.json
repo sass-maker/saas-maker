@@ -1,0 +1,56 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "directory-free.com",
+  "name": "Directory-Free",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.directory-free.com/",
+      "title": "Directory-Free homepage - 'The Oldest Active Web Directory In The World' (est. 2005)"
+    },
+    {
+      "url": "https://www.directory-free.com/submit/submit.php",
+      "title": "Submit page - Regular free listing vs Featured listing $4.95 one-time"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free 'Regular listing' exists but inclusion is NOT guaranteed and review happens 'as and when a reviewer has time'",
+    "Free listings appear below all featured listings, get no thumbnail, and carry ads on the listing page",
+    "Featured listing ($4.95 one-time) gets 24h approval, dofollow links on category and details pages, top-of-category placement, thumbnail, no ads, and 'Premium Sites' inclusion — refunded if not accepted"
+  ],
+  "requirements": [
+    "General web directory (not software-specific) — pick the most specific category/sub-category (e.g. Software, Computers/Developers, Internet/SEO Services)",
+    "Regular listing: site must be in English; deep links are not allowed (homepage URL only)",
+    "Featured listing: site NOT accepted if it is an Escorts, Tobacco, Nicotine, Health or Games site",
+    "The featured-listing rules contain an apparent typo: 'The site should not be in English' — likely intended as a language requirement consistent with the regular rules; verify before relying on it"
+  ],
+  "preparation": [
+    "Homepage URL (no deep links for free submissions)",
+    "Title and description",
+    "Best-fit category/sub-category",
+    "$4.95 if choosing featured (payment mechanism shown on the submit page)"
+  ],
+  "workflow": [
+    "Go to https://www.directory-free.com/submit/submit.php ('SUBMIT SITE' in nav)",
+    "Choose Regular (free) or Featured ($4.95 one-time) listing block",
+    "Select the category/sub-category from the long list",
+    "Enter site details and submit",
+    "Free: wait for an editor to get to it (no SLA). Featured: approval within 24 hours, full refund if rejected"
+  ],
+  "watchFor": [
+    "Inclusion is explicitly not guaranteed on the free tier — the listing may never be reviewed",
+    "Ads appear on the listing page for free listings; featured pages are ad-free",
+    "Deep links rejected on free tier — submit the homepage",
+    "Contradictory language rule on the featured block ('should not be in English') — probably a copy error, but non-English sites should verify first",
+    "Old-school directory UI (table layout, PHP pages) — functional but dated; link equity is modest despite the 'oldest directory' claim"
+  ],
+  "countsAsLive": "The site appears in its category page listing and gets a view-<slug>-<id>.html details page",
+  "unknowns": [
+    "Whether free listings' links are dofollow (catalog note says follow; featured is confirmed dofollow, free unstated)",
+    "Actual free-tier review latency",
+    "Whether an account is needed (submit.php appears to be an open form)"
+  ]
+}

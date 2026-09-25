@@ -1,0 +1,59 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "foundrlist.com",
+  "name": "FoundrList",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.foundrlist.com/pricing",
+      "title": "Pricing — Free listing $0; 7-day featured $29; 14-day featured $39; feed ad $49/wk; sidebar ad $79/wk; directory submission service $179–$279"
+    },
+    {
+      "url": "https://www.foundrlist.com/submit",
+      "title": "Submit — JS app; 'Requirements' page for launch materials"
+    },
+    {
+      "url": "https://foundrlist.com/",
+      "title": "Homepage — 'the next social network for founders and builders'"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free tier gives a public listing discoverable in search/categories with community votes and comments — but no featured placement, no verified badges, and no guaranteed dofollow backlink",
+    "Verified product + user badges come with paid featured plans ($29/7d, $39/14d) — free listings appear to need 'badge verification' the paid tiers waive",
+    "Account creation is required (Get started / Profile / Analytics flows)"
+  ],
+  "requirements": [
+    "A startup/product to launch; community voting and comments drive visibility",
+    "Account required; the submit flow is a JS app at /submit (option=standard in the 'Launch' nav link)",
+    "Paid tiers add: instant publish, verified badges, top-of-home placement, guaranteed DR73+ dofollow backlink"
+  ],
+  "preparation": [
+    "Account credentials",
+    "Product name, tagline, URL, logo, description, category",
+    "Decide free listing vs $29 (7-day featured) vs $39 (14-day featured)",
+    "Optional: $49/wk home feed ad (~80k impressions) or $79/wk sidebar ad (~200k impressions)"
+  ],
+  "workflow": [
+    "Sign up / get started at foundrlist.com",
+    "Open the Launch/Submit flow (/submit?option=standard)",
+    "Complete the 'Requirements' step — product details and media",
+    "Free: listing goes live in search/categories; paid: instant publish + verified badges + homepage featuring",
+    "Track performance from the built-in /analytics page"
+  ],
+  "watchFor": [
+    "Free listing lacks the verified badges and guaranteed dofollow backlink — the paid plans explicitly bundle them",
+    "Every plan card is labelled 'Most Picked' — the badges are marketing decoration, not a real signal",
+    "Directory submission service ($179/50 dirs, $279/100 dirs) is a separate upsell from the listing itself",
+    "The submit page is a JS app — field details beyond 'Requirements' aren't publicly rendered",
+    "Platform positions itself as a social network (feed, chat, analytics) — engagement affects visibility"
+  ],
+  "countsAsLive": "Product has a public profile page on foundrlist.com discoverable via /search and categories, with votes/comments enabled",
+  "unknowns": [
+    "Whether the free tier needs any badge/backlink verification to publish",
+    "Free-tier review time",
+    "Exact submission form fields behind the JS app"
+  ]
+}

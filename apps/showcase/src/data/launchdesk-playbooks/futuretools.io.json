@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "futuretools.io",
+  "name": "Future Tools",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "AI tools only — Matt Wolfe's curated AI tools database; submissions are personally reviewed ('Submit it below and Matt will review it').",
+    "No account required — a single public form at /submit-a-tool.",
+    "CAPTCHA must be solved to submit (a 'Loading CAPTCHA...' widget sits above the submit button)."
+  ],
+  "preparation": [
+    "Your name and email.",
+    "Tool name, tool URL, short description.",
+    "Category from their fixed list (Chat, Generative Art, Generative Video, Generative Code, Text-To-Speech, Search Engines, Productivity, Marketing, Design, Writing, Music, Research, Education, Finance, Healthcare, Legal, Sales, Customer Support, Other).",
+    "Pricing model selection: Free / Freemium / Paid / Open Source."
+  ],
+  "workflow": [
+    "Open https://futuretools.io/submit-a-tool.",
+    "Fill Your Name, Tool Name, Tool URL, Short Description, Category, Pricing, Your Email.",
+    "Optionally tick the Future Tools newsletter opt-in (optional checkbox).",
+    "Solve the CAPTCHA and hit Submit Tool.",
+    "Wait for manual review — Matt Wolfe curates the database personally."
+  ],
+  "watchFor": [
+    "CAPTCHA gate blocks pure-API submission — needs a browser.",
+    "It's a one-person editorial review — no published SLA; curation is selective, not a guaranteed listing.",
+    "Newsletter opt-in is a checkbox beside submit — optional, verify its state before sending.",
+    "No badge, account, or payment requirement — genuinely free."
+  ],
+  "countsAsLive": "The tool appears under futuretools.io/tools (and 'Newly Added Tools') with a listing card linking to the tool URL.",
+  "unknowns": [
+    "Review turnaround time (not published).",
+    "Acceptance criteria beyond editor discretion.",
+    "Whether submitters are notified on acceptance."
+  ],
+  "sources": [
+    {
+      "url": "https://futuretools.io/submit-a-tool",
+      "title": "Future Tools — Submit a Tool form (fields, categories, CAPTCHA)"
+    },
+    {
+      "url": "https://www.futuretools.io/",
+      "title": "Future Tools homepage — Matt Wolfe's AI tools database"
+    }
+  ]
+}

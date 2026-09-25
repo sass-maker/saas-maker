@@ -1,0 +1,30 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "submithunt.io",
+  "name": "submithunt.io",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://submithunt.io/",
+      "title": "Unreachable — connection failed on 2026-09-25 (no HTTP response on https/http, apex or www)"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "unknown",
+  "requirements": [],
+  "preparation": [],
+  "workflow": [
+    "No submission path available — the domain did not respond to HTTP/HTTPS requests (connection failure) and returned no content to web fetches on 2026-09-25"
+  ],
+  "watchFor": [
+    "Do not confuse with submithunt.com, which is a separate, live launch-board product — the .io domain appears dead",
+    "If the site later comes back, re-research before submitting anything"
+  ],
+  "countsAsLive": "N/A — the platform is unreachable; no listing state can exist or be verified.",
+  "unknowns": [
+    "Whether the site is permanently dead or temporarily down",
+    "What product (if any) operated at this domain",
+    "Any submission flow, pricing, or requirements — none could be retrieved"
+  ]
+}

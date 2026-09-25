@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "featuredtool.com",
+  "name": "FeaturedTool",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://featuredtool.com/",
+      "title": "Homepage — 'curated list of the best online tools' with Submit nav link"
+    },
+    {
+      "url": "https://featuredtool.com/pricing",
+      "title": "Pricing — free (180+ day queue), $9.9 listing, $19.9 featured"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free plan requires signing in (the site exposes a Sign In flow; submit is gated)",
+    "Free submissions join a queue with a stated '180+ days wait at current pace'",
+    "Free listings 'may be rejected due to limited free slots'",
+    "Free plan grants a permanent link only 'with backlink maintenance' — a reciprocal backlink appears to be required to keep it"
+  ],
+  "requirements": [
+    "Online tool/website to list; directory is general-purpose (3D, AI, Business, Productivity, Development, Design, etc.)",
+    "Account sign-in before the submission form is reachable",
+    "Free tier advertises '3 dofollow links' — category/tag choices affect link count"
+  ],
+  "preparation": [
+    "Sign-in credentials for the site",
+    "Product name, URL, description, logo/screenshot",
+    "Category and tag selections from the site taxonomy",
+    "A backlink placement plan if using the free tier (backlink maintenance clause)"
+  ],
+  "workflow": [
+    "Open https://featuredtool.com/submit (Sign In first)",
+    "Choose plan: free (queue) / $9.9 listing (instant) / $19.9 featured (instant + 7 days top placement)",
+    "Complete the submission form in the signed-in area",
+    "Free route: wait in queue (180+ days stated); paid route: immediate publication"
+  ],
+  "watchFor": [
+    "The submit form sits behind authentication — field list not publicly visible",
+    "Free tier warns of 180+ day wait and possible rejection; $9.9 buys instant publishing",
+    "'Backlink maintenance' on the free plan implies an ongoing reciprocal-link requirement",
+    "Strike-through prices ($14.9→$9.9, $39.9→$19.9) are perpetual-sale framing",
+    "Same operator/template as 600.tools and dirs.cc (shared @blankwebdev X handle) — identical pricing structure"
+  ],
+  "countsAsLive": "Product has a public item page at featuredtool.com/item/<slug> appearing in category/tag listings",
+  "unknowns": [
+    "Exact fields on the authenticated submission form",
+    "Whether the free tier formally requires a reciprocal backlink",
+    "Rejection criteria and notification process for free submissions"
+  ]
+}

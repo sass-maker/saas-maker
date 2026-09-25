@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "diigo.com",
+  "name": "Diigo",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "community",
+  "zeroCostRoute": "free",
+  "sources": [
+    {
+      "url": "https://www.diigo.com/",
+      "title": "Diigo homepage — free signup, social bookmarking/annotation platform, 9M+ users"
+    },
+    {
+      "url": "https://www.diigo.com/sign-up",
+      "title": "Diigo signup (JS-rendered; returned empty HTML at fetch)"
+    },
+    {
+      "url": "https://www.diigo.com/premium",
+      "title": "Diigo Pricing & Plans (linked from footer)"
+    }
+  ],
+  "requirements": [
+    "A free Diigo account ('Try it free Now')",
+    "Diigo is a social bookmarking/research platform — the 'listing' is a public bookmark of your product URL with tags and annotations"
+  ],
+  "preparation": [
+    "Account credentials",
+    "Product URL plus a set of relevant tags",
+    "A short annotation/description for the bookmark"
+  ],
+  "workflow": [
+    "Sign up at diigo.com/sign-up (JS-rendered — needs a JS-capable agent or manual step)",
+    "Optionally install the Diigo browser extension from diigo.com/tools",
+    "Bookmark the product URL publicly, add tags and a description/annotation",
+    "Optionally add the link to a public Group or Outliner collection",
+    "Verify the public bookmark/profile page renders to logged-out visitors"
+  ],
+  "watchFor": [
+    "This is a bookmarking surface, not a curated directory — a single bare bookmark has minimal discovery value; Groups and tags drive visibility",
+    "Premium features exist (e.g., archived web pages is a paid feature); the free tier is enough for the bookmark",
+    "Signup page is JS-only — direct POST automation may be needed",
+    "Spam-looking bulk bookmarking risks account action"
+  ],
+  "countsAsLive": "The public bookmark appears on your public Diigo profile/library (and in tag/group pages) reachable without login",
+  "unknowns": [
+    "Whether Diigo profile/bookmark outbound links are dofollow",
+    "Whether new accounts' bookmarks are publicly indexable immediately"
+  ]
+}

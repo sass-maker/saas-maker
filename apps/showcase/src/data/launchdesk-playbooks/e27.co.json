@@ -1,0 +1,61 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "e27.co",
+  "name": "e27",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://e27.co/startup/create/profile/",
+      "title": "e27 - create startup profile page (returned 403 to automated fetch)"
+    },
+    {
+      "url": "https://help.e27.co/",
+      "title": "e27 Knowledge Base - 'How do I create a company or startup profile?'"
+    },
+    {
+      "url": "https://e27.co/startups/",
+      "title": "e27 startups directory (shows email-verification banner and live listings)"
+    },
+    {
+      "url": "https://abun.com/how-to-get-free-backlinks-from-e27-dr-79",
+      "title": "Abun - How to Get Free Backlinks from e27 (field-by-field walkthrough)"
+    },
+    {
+      "url": "https://ideaproof.io/launch-directories/e27",
+      "title": "ideaproof - e27 submission profile (free, dofollow)"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "An e27 account is required (sign up via Google, LinkedIn, Facebook, or email)",
+    "The account contact email must be verified before the startup profile can go live (e27 shows a 'Verify Your Email Address' banner until done)",
+    "Startup profiles are the unit of listing - e27 is a Southeast Asia / Asia startup ecosystem platform"
+  ],
+  "preparation": [
+    "Startup name and website URL",
+    "Headquarters location/city",
+    "Square logo (guide suggests ~100x100 PNG minimum; a 512px+ square logo is the safe default)",
+    "Short description (~200 chars max) and long description (up to ~2,000 chars) covering story, value proposition, traction",
+    "Team members and funding/rounds information",
+    "Social links: LinkedIn, X, Facebook, Instagram"
+  ],
+  "workflow": [
+    "Sign up at e27.co and verify the account email address",
+    "Navigate to 'Add Your Startup' / https://e27.co/startup/create/profile/",
+    "Fill in General Information (name, website, HQ, logo), Startup Details (short + long description), Team & Funding, and social links",
+    "Submit; e27 shows a completion state ('Your startup profile is 100% complete!') - then click 'View Company Profile' to confirm the public page"
+  ],
+  "watchFor": [
+    "The create-profile endpoint returned HTTP 403 to automated fetch - complete the flow in a real browser",
+    "Unverified email blocks visibility - check inbox (and spam) for the e27 verification link",
+    "The launchdesk note says 'free' but field-level paywalls may exist for some profile features; third-party listing guides flag certain fields as paid-plan only - complete all free fields first"
+  ],
+  "countsAsLive": "The company profile page is publicly reachable on e27.co and the startup surfaces in the /startups/ directory/search",
+  "unknowns": [
+    "Whether all profile fields are available on the free plan (third-party guides mark some fields as paid)",
+    "Whether e27 editorially approves profiles before public display or they publish instantly after email verification",
+    "Current Pro-tier pricing and whether it gates the outbound link"
+  ]
+}

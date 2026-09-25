@@ -1,0 +1,60 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "sideprojects.net",
+  "name": "SideProjects",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://sideprojects.net/",
+      "title": "Homepage — daily launchpad for indie makers, 'Submit your project — it's free'"
+    },
+    {
+      "url": "https://sideprojects.net/pricing",
+      "title": "Pricing — Free queue launch, $29 Skip-the-line, $15 Relaunch, $8/mo Pro, sponsor options"
+    },
+    {
+      "url": "https://sideprojects.net/projects/submit",
+      "title": "Submit project — requires account; unauthenticated visitors get a login/register wall"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free launch requires a registered account (email + password at /register)",
+    "Free launches go into a queue and go live 'when a slot opens, usually within a few weeks' — no date control",
+    "Only paid Skip-the-line ($29) lets you pick an exact launch date and guarantees newsletter inclusion"
+  ],
+  "requirements": [
+    "A real side project / indie product to launch",
+    "Account registration is mandatory before the submit form is reachable",
+    "Project is placed into a daily launch list; top 3 by unique reactions win a badge at midnight"
+  ],
+  "preparation": [
+    "Account credentials (email + password)",
+    "Project name, tagline/one-liner, and URL",
+    "Category selection (AI, Developer tools, Productivity, Design, Marketing, Writing, Health, Audio, Community, Games, etc.)",
+    "Decide free queue vs $29 Skip-the-line vs $15 Relaunch for an existing project"
+  ],
+  "workflow": [
+    "Register at https://sideprojects.net/register",
+    "Open https://sideprojects.net/projects/submit",
+    "Fill the project submission form (name, URL, tagline, categories)",
+    "Free route: join the queue and wait for an open launch slot",
+    "Paid route: pick a date via Skip-the-line ($29, Stripe checkout)",
+    "On launch day the project appears in 'Launching today' and collects emoji reactions/comments; top 3 win a badge"
+  ],
+  "watchFor": [
+    "Submit URL redirects unauthenticated users to /login — account creation is unavoidable",
+    "Free tier explicitly warns of multi-week queue time; Do not promise a launch date on the free plan",
+    "Upsells at checkout-adjacent pages: $99/week featured spot, $150 newsletter sponsor, $120 written review",
+    "Relaunch ($15) only applies to a project already launched once",
+    "Reactions count for the daily top-3 badge; engagement on launch day affects visibility"
+  ],
+  "countsAsLive": "Project appears on the homepage 'Launching today' list on its launch day and has a permanent /projects/<slug> page accepting reactions and comments",
+  "unknowns": [
+    "Exact queue length / wait time for free launches beyond 'a few weeks'",
+    "Whether submissions can be rejected and on what grounds",
+    "What fields beyond name/URL/tagline/categories the logged-in submit form contains"
+  ]
+}

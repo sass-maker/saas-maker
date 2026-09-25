@@ -1,0 +1,32 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "vibecoding.com",
+  "name": "vibecoding.com",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "other",
+  "zeroCostRoute": "unknown",
+  "sources": [
+    {
+      "url": "https://vibecoding.com/",
+      "title": "vibecoding.com — redirects to a LinkedIn post by Dharmesh Shah about buying the premium domain"
+    }
+  ],
+  "requirements": [
+    "None identifiable — the domain is not a functioning directory or launch platform"
+  ],
+  "preparation": [],
+  "workflow": [
+    "Do not plan a submission. Fetching https://vibecoding.com/ on 2026-09-25 served a LinkedIn post in which HubSpot co-founder Dharmesh Shah describes paying 'six figures' for the domain as a possible future community/marketplace for vibe coders",
+    "If the domain later becomes a real destination, re-research before adding to a submission route"
+  ],
+  "watchFor": [
+    "Any 'vibecoding' listing services referencing this domain are not connected to a real submission flow",
+    "The LinkedIn post describes a hypothetical paid-help community — an idea, not a launched product"
+  ],
+  "countsAsLive": "N/A — there is no listing surface; the domain redirects to a LinkedIn post",
+  "unknowns": [
+    "Whether Dharmesh Shah has since launched a real product on the domain (as of retrieval it redirected to the LinkedIn announcement post)",
+    "Whether the launchdesk entry intended a different 'vibe coding' destination"
+  ]
+}

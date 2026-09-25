@@ -1,0 +1,29 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "superlaunch.com",
+  "name": "superlaunch.com",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://superlaunch.com/",
+      "title": "Parked domain — 'SUPERLAUNCH.COM is available for sale or other proposals' via Grails.com"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "unknown",
+  "requirements": [],
+  "preparation": [],
+  "workflow": [
+    "No submission path exists — the domain is parked and listed for sale through Grails.com as of 2026-09-25"
+  ],
+  "watchFor": [
+    "Any catalog entry pointing submitters here is stale — the launch platform that may have existed is gone",
+    "Do not enter product details or payment info; the only live content is a domain-sale pitch"
+  ],
+  "countsAsLive": "N/A — no product platform is operating at this domain.",
+  "unknowns": [
+    "Whether a launch directory previously operated here",
+    "Whether the domain will be redeveloped after sale"
+  ]
+}

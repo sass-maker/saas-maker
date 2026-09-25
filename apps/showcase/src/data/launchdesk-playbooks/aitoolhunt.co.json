@@ -1,0 +1,57 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aitoolhunt.co",
+  "name": "AIToolHunt",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free launch requires adding the AIToolHunt badge/link to your homepage ('Free with badge verification').",
+    "Free listings are reviewed and listed within 30 days — a long queue relative to peers."
+  ],
+  "requirements": [
+    "AI tools; profile pages carry categories, tags, FAQ content, related tools, and your website link.",
+    "Account required — /submit redirects to a login page (email/password plus Google and GitHub OAuth).",
+    "Directory advertises DR 40+ on Ahrefs for its outbound links."
+  ],
+  "preparation": [
+    "Account (email, Google, or GitHub).",
+    "Badge/link to aitoolhunt.co placed on your homepage if using the free plan.",
+    "Product name, URL, description, category, tags, and FAQ content for the SEO-friendly profile.",
+    "Plan choice: Free (badge, ~30 days) / Basic $15 instant / Pro $39 featured 15 days / Sponsor $79 for 15-day homepage showcase."
+  ],
+  "workflow": [
+    "Open https://aitoolhunt.co/submit — log in or register first.",
+    "Select a plan (free/basic/pro/sponsor) per /pricing.",
+    "Complete the product form.",
+    "Free: keep the homepage badge live; expect review within 30 days. Paid plans: instant publishing after checkout verification."
+  ],
+  "watchFor": [
+    "Submit is behind a login wall — the form is not visible until you register.",
+    "The 30-day free review window is much slower than paid 'instant publishing'.",
+    "Pro/Sponsor prices shown struck-through ($39/$195, $79/$395) — promotional framing.",
+    "Sponsor's 'complimentary Guest Post' is explicitly not guaranteed.",
+    "Site provides its own DR checker and 'Agent Readiness' tools — upsell-adjacent features, not requirements."
+  ],
+  "countsAsLive": "A public product page at aitoolhunt.co/item/<slug> reachable while logged out and listed under Recently published / categories.",
+  "unknowns": [
+    "Exact form fields behind login.",
+    "Whether the free-tier badge is re-checked after publication and what removal triggers.",
+    "Whether the struck-through prices ever apply."
+  ],
+  "sources": [
+    {
+      "url": "https://aitoolhunt.co/pricing",
+      "title": "Launch plans — Free (homepage badge, ~30 days), Basic $15, Pro $39, Sponsor $79"
+    },
+    {
+      "url": "https://aitoolhunt.co/submit",
+      "title": "Submit AI Tool — login wall (email, Google, GitHub)"
+    },
+    {
+      "url": "https://aitoolhunt.co/",
+      "title": "AIToolHunt homepage — launch & discover AI tools, DR 40+"
+    }
+  ]
+}

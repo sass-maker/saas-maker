@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "promoteproject.com",
+  "name": "PromoteProject",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.promoteproject.com/submit-startup",
+      "title": "Submit startup — resolves to login/registration wall"
+    },
+    {
+      "url": "https://www.promoteproject.com/help",
+      "title": "Help/About page — voting mechanics, duplicate rules, content prohibitions"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "conditions": [],
+  "requirements": [
+    "Registration required — Google sign-in or email registration before submitting",
+    "Duplicate articles are not allowed, but 'an unlimited number of submissions can be made'",
+    "Prohibited content: sexual, violent, defamatory material and links related to illegal activities",
+    "Site mixes startup directory listings, articles, jobs, and a forum — link submissions are user-voted"
+  ],
+  "preparation": [
+    "Startup name, URL, description and category for the directory listing",
+    "Separate article/link submissions if using the voted-links surface",
+    "Account credentials (Google or email register)"
+  ],
+  "workflow": [
+    "Register at /register or sign in with Google",
+    "Use 'Submit startup' to add the startup to the directory",
+    "Optionally post article/link submissions — users vote via icons on each entry",
+    "Follow other users and use favourites; visibility is vote-driven"
+  ],
+  "watchFor": [
+    "Submit URL drops straight to a login wall — no guest or anonymous path",
+    "Site is a link-voting community more than a curated launch board — visibility depends on votes, not editorial featuring",
+    "Small team based in Madrid; light-touch moderation is implied by the rules page",
+    "No pricing page found — appears fully free"
+  ],
+  "countsAsLive": "Startup appears in the /startups directory listing and/or submitted links appear on the main voted-links feed",
+  "unknowns": [
+    "Whether directory listings are manually reviewed before appearing",
+    "Dofollow status of listing links",
+    "Whether there is any paid promotion tier (none found on public pages)"
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startupdope.com",
+  "name": "Startup Dope",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://startupdope.com/submit-news/",
+      "title": "Submit News — early-stage startup coverage form and 'new Submission Center'"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Early-stage startup or product seeking editorial coverage — it's a news site, not a directory",
+    "Keep the pitch short: 'Tell us a Little (We really mean it, please keep it short) about you and your Startup'",
+    "A newer 'Submission Center' flow is offered as the preferred experience ('Submit your Product (New Flow)')"
+  ],
+  "preparation": [
+    "A short pitch: who you are and what the startup does — brevity is explicitly demanded",
+    "Availability for follow-up: 'We'll reach out to you to get more details'",
+    "For press releases instead: email sales@startupdope.com (likely paid newswire route)"
+  ],
+  "workflow": [
+    "Open https://startupdope.com/submit-news/",
+    "Use the embedded form or the newer 'Submission Center' link ('Submit Now')",
+    "Provide a brief description of you and your startup",
+    "Editorial team reviews and reaches out for more details if interested",
+    "Coverage publishes as a news/interview article on startupdope.com"
+  ],
+  "watchFor": [
+    "Two parallel flows exist — the legacy form and a newer Submission Center; use the newer one",
+    "Press-release publishing goes through sales@startupdope.com and is likely a paid product — don't conflate it with the free editorial form",
+    "Site monetizes with side services (directory-submission services, ads setup, content writing) — expect upsell pitches",
+    "No submission fee is stated for the news form, but coverage is not guaranteed"
+  ],
+  "countsAsLive": "A news article or interview about the startup published on startupdope.com",
+  "unknowns": [
+    "Whether the Submission Center requires an account",
+    "Whether article links are dofollow",
+    "Editorial response time and acceptance rate",
+    "Whether a paid option exists inside the Submission Center"
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "agenthunter.io",
+  "name": "AgentHunter",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.agenthunter.io/",
+      "title": "AgentHunter — AI agents directory (3,414 agents listed)"
+    },
+    {
+      "url": "https://www.agenthunter.io/submit",
+      "title": "Submit page (JS-rendered; plan selection entry point)"
+    },
+    {
+      "url": "https://www.agenthunter.io/pricing",
+      "title": "Pricing page detailing free/Listing/Sponsor plans"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free plan requires placing a backlink to AgentHunter on your site",
+    "Free plan link is nofollow and sits in a manual review queue of typically 14 days"
+  ],
+  "requirements": [
+    "AI agents only — directory of 'AI agents'; product must be an AI agent or agentic tool",
+    "Free tier: permanent listing, full agent profile with logo/screenshots/description, publish date of your choice, nofollow link, ~14-day manual review, reciprocal backlink required, no support",
+    "Listing plan ($79-99 one-time): dofollow link, reviewed within 72 hours, no backlink required, higher placement, lifetime listing",
+    "Sponsor plan ($249/week): everything in Listing plus a week-long featured banner, pinned homepage/category placement, one slot in the weekly digest; only one sponsor per period"
+  ],
+  "preparation": [
+    "Agent name, website URL, short and long description",
+    "Logo and screenshots",
+    "Category/industry/pricing-type/access-type classification",
+    "If using the free plan: a page on your site where the AgentHunter backlink will live"
+  ],
+  "workflow": [
+    "Go to https://www.agenthunter.io/submit",
+    "Choose a plan (free / Listing / Sponsor) via 'Go Submit'",
+    "Sign in (account required)",
+    "Fill the product submission form with name, URL, description, logo, screenshots, categories",
+    "Free plan: place the required AgentHunter backlink, then wait through the ~14-day manual review",
+    "Paid Listing: pay one-time fee, reviewed within 72 hours"
+  ],
+  "watchFor": [
+    "The free plan's backlink requirement is a hard gate — plan where the badge/link goes before submitting",
+    "Free-plan outbound link is nofollow; only paid plans get dofollow",
+    "Listing price displayed as $99 struck through to $79 — price may fluctuate",
+    "Removing the reciprocal backlink later may jeopardize the free listing (requirement is ongoing)"
+  ],
+  "countsAsLive": "The agent's public profile page is reachable under agenthunter.io and appears in directory/category listings",
+  "unknowns": [
+    "Exact fields on the submit form (page is JS-rendered and returned no content to a text fetch)",
+    "Whether removing the reciprocal backlink triggers delisting",
+    "Rejection criteria for the manual review"
+  ]
+}

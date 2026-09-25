@@ -1,0 +1,58 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startupstash.com",
+  "name": "Startup Stash",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://startupstash.com/add-listing/",
+      "title": "Add a Listing — page shell renders an embedded Typeform; contact Hello@startupstash.com"
+    },
+    {
+      "url": "https://wheretosubmit.org/sites/startupstash-com",
+      "title": "Where To Submit profile — submit path is an embedded Typeform, no confirmation, no published price"
+    },
+    {
+      "url": "https://buttondown.com/where-to-post/archive/startup-directory-with-600k-visits/",
+      "title": "Operator email — 12-question form: product name, short desc (160 chars), long desc (500 chars), URL, category"
+    },
+    {
+      "url": "https://startupstash.com/global-startup-news-and-directory-tools/",
+      "title": "Editorial policy — 'A paid listing does not buy a place on a shortlist'"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "Tool/resource relevant to startups — Startup Stash is a directory of tools and resources for entrepreneurs",
+    "Submission is an embedded Typeform at /add-listing/ (JS-required; the form does not render to plain fetches)",
+    "Third-party coverage describes ~12 questions: product name, short description (max 160 chars), long description (max 500 chars), product URL, category",
+    "No confirmation is sent after submitting — you wait for a reply by email"
+  ],
+  "preparation": [
+    "Product name, URL, category",
+    "Short description capped at 160 characters",
+    "Long description capped at 500 characters",
+    "A monitored contact email — replies come back manually"
+  ],
+  "workflow": [
+    "Open https://startupstash.com/add-listing/ in a JS-capable browser",
+    "Complete the embedded Typeform (~12 questions)",
+    "Alternatively email answers to Hello@startupstash.com — the operator has offered to fill the form for you",
+    "Wait for manual review; there is no automated confirmation or dashboard",
+    "If listed, the tool appears on the relevant category page under startupstash.com"
+  ],
+  "watchFor": [
+    "No visible price on the page — third parties report it as free, but confirm by email before planning",
+    "No post-submit confirmation; keep your own record of what you sent",
+    "A paid listing does NOT buy a place on their editorial 'Top Tools' shortlists — those are written independently",
+    "The Typeform may not render with aggressive script blocking"
+  ],
+  "countsAsLive": "Product appears on a Startup Stash category page with its description and outbound link",
+  "unknowns": [
+    "Whether listing is currently free or paid",
+    "Review timeline and rejection criteria",
+    "Whether the 12-question form is still the live intake (page last modified 2021 per schema data)"
+  ]
+}

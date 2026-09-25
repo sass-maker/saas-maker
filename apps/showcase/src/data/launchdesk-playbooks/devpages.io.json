@@ -1,0 +1,38 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "devpages.io",
+  "name": "Dev Pages",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://devpages.io/submit-a-tool",
+      "title": "Submit a Developer Tool — free hand-reviewed form"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Must be a developer tool — directory categories span DevOps, cloud, observability, APIs, frameworks, databases, security, testing, AI/ML, etc.",
+    "Every submission is read by hand; listings are free"
+  ],
+  "preparation": [
+    "Tool name, description, website URL",
+    "Category from their list (Generative AI, AI/ML, DevOps, Cloud Infrastructure, Observability, APIs, Frameworks, Databases, Security, Finance Tools, Learning, Design, No-Code, Productivity, Testing, Mobile, Data & Analytics, CMS, Version Control, Documentation, AI Agents)",
+    "Pricing model, GitHub URL (optional), comma-separated tags",
+    "Your email (used only to notify acceptance)"
+  ],
+  "workflow": [
+    "Open https://devpages.io/submit-a-tool",
+    "Fill all required fields (name, description, URL, category, pricing, email)",
+    "Leave the honeypot field empty ('Leave this field empty' / 'If you are human, leave this field blank')",
+    "Submit and wait for manual review and an email verdict"
+  ],
+  "watchFor": [
+    "Honeypot field: any content in it likely flags the submission as bot spam",
+    "GitHub URL is optional — the rest of the required fields must all be filled",
+    "No account needed; no payment anywhere on the form"
+  ],
+  "countsAsLive": "Tool appears on devpages.io under its category page and in Explore",
+  "unknowns": ["Review turnaround time", "Whether outbound links are dofollow"]
+}

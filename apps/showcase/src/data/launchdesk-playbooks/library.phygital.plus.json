@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "library.phygital.plus",
+  "name": "AI Library",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://library.phygital.plus/tool-submission/",
+      "title": "Tool submission page (empty to automated fetch)"
+    },
+    {
+      "url": "https://library.phygital.plus/",
+      "title": "AI Library homepage (empty to automated fetch)"
+    },
+    {
+      "url": "https://submitator.com/submit-to-phygital-library",
+      "title": "How to Submit to the Phygital+ AI Library (Submitator teardown)"
+    },
+    {
+      "url": "https://www.submission.directory/site/phygital-library",
+      "title": "Phygital+ Library on Submission.Directory"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "AI tools aimed at graphics/design/art/creative work; run by the Phygital+ (PHYGITALISM Inc.) team",
+    "No account and no fee: the submission page is a ~3-field form that posts to an Airtable base",
+    "No name or email is collected by the form per the third-party teardown"
+  ],
+  "preparation": [
+    "Tool name, URL, and description (three text boxes per the teardown)",
+    "Expect no confirmation email - the form shows only an on-page thank-you"
+  ],
+  "workflow": [
+    "Open https://library.phygital.plus/tool-submission/ in a real browser (JS-rendered; empty to plain fetch)",
+    "Fill the three text boxes and press Send",
+    "On-page thank-you appears; there is no further notification"
+  ],
+  "watchFor": [
+    "Freshness doubt: third-party analysis dated the newest third-party tool entry around Feb 2025 - the library may be barely maintained",
+    "Outbound links on entries are inserted by JavaScript (not in server HTML), so crawler credit for the link is uncertain even though no nofollow was observed",
+    "Do not confuse with phygital.plus accounts; no login is needed here",
+    "Some third-party listings claim 'account required' or 'nofollow' - the detailed teardown contradicts both; treat those claims as wrong"
+  ],
+  "countsAsLive": "A new entry page exists in the library under library.phygital.plus and links out to the submitted tool.",
+  "unknowns": [
+    "Whether submissions are still being reviewed/published (last dated third-party entry ~Feb 2025)",
+    "Exact field labels (page did not render to automated fetch)",
+    "Review turnaround"
+  ]
+}

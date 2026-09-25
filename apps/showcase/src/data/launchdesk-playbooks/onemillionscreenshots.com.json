@@ -1,0 +1,64 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "onemillionscreenshots.com",
+  "name": "One Million Screenshots",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://onemillionscreenshots.com/",
+      "title": "Homepage — zoomable grid of ~1M homepage screenshots"
+    },
+    {
+      "url": "https://onemillionscreenshots.com/add",
+      "title": "Suggest a Site — enter your email and the site you'd like to see added"
+    },
+    {
+      "url": "https://onemillionscreenshots.com/faq",
+      "title": "FAQ — 'Can I add my website? Not yet. But we might expand in future months'; suggestion box offered"
+    },
+    {
+      "url": "https://onemillionscreenshots.com/docs",
+      "title": "API docs — free homepage-screenshot API requiring attribution link back"
+    },
+    {
+      "url": "https://flowingdata.com/2024/08/16/one-million-screenshots/",
+      "title": "FlowingData coverage — sites chosen by rank in the Common Crawl web graph; screenshots retaken monthly"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "There is no guaranteed inclusion path — sites are chosen by rank in the Common Crawl web graph",
+    "The only self-serve route is the 'Suggest a Site' form at /add (email + site URL), which is explicitly a suggestion, not a listing guarantee",
+    "FAQ states 'Can I add my website? Not yet' — suggestions may be acted on in future monthly crawls"
+  ],
+  "requirements": [
+    "A public homepage that can be screenshotted",
+    "High enough web-graph rank (Common Crawl) to be included organically, or acceptance of a manual suggestion",
+    "An e-mail address for the suggestion form"
+  ],
+  "preparation": [
+    "Your site's URL and a contact e-mail",
+    "Ensure the homepage renders a meaningful screenshot without login or heavy JS gating",
+    "Improve general web presence/Common Crawl rank — inclusion is rank-driven"
+  ],
+  "workflow": [
+    "Check whether your site is already in the grid via the homepage search (⌘K)",
+    "If absent, open https://onemillionscreenshots.com/add",
+    "Enter your e-mail and the site URL and submit the suggestion",
+    "Wait — the FAQ suggests checking back monthly; screenshots are refreshed on the first of each month"
+  ],
+  "watchFor": [
+    "This is not a conventional directory — there is no paid listing tier and no guaranteed acceptance",
+    "The suggestion form does not promise inclusion; FAQ explicitly says additions are not open yet",
+    "Only homepages are captured — no deep pages or custom screenshots",
+    "If you use their screenshot API elsewhere, attribution link-back at >=12pt legible font is required (separate product)"
+  ],
+  "countsAsLive": "Your homepage appears as a tile in the zoomable grid at onemillionscreenshots.com and is findable via site search",
+  "unknowns": [
+    "Whether suggestions are reviewed manually or just folded into the next Common Crawl-ranked capture",
+    "Any minimum rank threshold for inclusion",
+    "Whether suggested sites get a confirmation e-mail when added"
+  ]
+}

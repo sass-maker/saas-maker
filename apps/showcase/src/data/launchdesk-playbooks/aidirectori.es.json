@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aidirectori.es",
+  "name": "AI Directories",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.aidirectori.es/",
+      "title": "AI Directories homepage - 'We manually submit your startup to 100+ directories'"
+    },
+    {
+      "url": "https://www.aidirectori.es/pricing",
+      "title": "AI Directories - Pricing (Starter $99, Pro $149, Premium $199 one-time plans)"
+    },
+    {
+      "url": "https://www.aidirectori.es/submit-ai-tool",
+      "title": "AI Directories - Submit AI Tool page (JS-rendered; returned only 'Loading...')"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "Caution: aidirectori.es is primarily a paid done-for-you submission SERVICE ('We manually submit your startup to 100+ directories'), not a normal self-serve directory",
+    "Paid plans (one-time): Starter $99 - manual submission to 30+ AI directories (free/medium-DR only); Pro $149 - 60+ directories incl. ~$59 of paid-directory fees; Premium $199 - 100+ directories incl. ~$173 of paid fees; all include a report and 'Listed on AI Directories Tools'",
+    "A self-serve 'Submit' nav link points to /submit-ai-tool, but the page is a client-rendered app that never presented a form to a text fetch - whether a free self-listing route exists could not be verified",
+    "FAQ says the service works for non-AI tools too; multiple tools can be submitted with bulk discounts on request"
+  ],
+  "preparation": [
+    "If buying the service: startup name, URL, descriptions, logo, category - the team contacts you after checkout to kick off submissions",
+    "If attempting the self-serve submit: a JS-capable browser to render /submit-ai-tool"
+  ],
+  "workflow": [
+    "Decide which product you want: (a) the paid done-for-you directory-submission packages, or (b) a direct listing in the site's own AI-tools directory",
+    "For (a): pick a plan on /pricing and check out; AI Directories' team then performs the manual submissions and delivers a report (confirmation links or success messages per directory)",
+    "For (b): open /submit-ai-tool in a real browser and inspect the rendered form - its fields and cost could not be verified from the public HTML"
+  ],
+  "watchFor": [
+    "Do not mistake this for a free directory: the launchdesk note says 'free', but the site's monetization is the paid submission packages; only 'Listed on AI Directories Tools' is bundled into every paid plan",
+    "The self-serve submit page did not render without JS - its terms (free/paid, requirements) are unverified",
+    "Cheapest plan covers only free/medium-DR directories; paid-directory fees are included only in Pro/Premium",
+    "Satisfaction guarantee mentioned in FAQ, no formal SLA stated"
+  ],
+  "countsAsLive": "Unverified. For the paid service: the delivery report listing per-directory confirmations. For a direct listing: a public page under aidirectori.es/ai-tools/<slug>",
+  "unknowns": [
+    "Whether a free self-serve listing route exists at /submit-ai-tool (JS-rendered page, contents not retrievable)",
+    "Pricing/terms of a direct directory listing vs the done-for-you packages",
+    "Review criteria and turnaround for a self-submitted tool"
+  ]
+}

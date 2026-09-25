@@ -4,6 +4,7 @@ import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
 import GitHubIcon from '../../components/GitHubIcon.astro';
 import { DIRECTORY_PROJECTS, type DirectoryProject } from '../../data/directory';
+import { formatDirectoryDate } from '../../data/format-directory-date';
 
 export function getStaticPaths() {
   return DIRECTORY_PROJECTS.filter((product) => product.id !== 'saas-maker').map((product) => ({
@@ -51,15 +52,6 @@ const deploymentLabel = product.deployed
   : product.lifecycle === 'local-only' || product.platforms.includes('Local')
     ? 'Local only'
     : 'Not deployed';
-const formatDate = (date: string | null) =>
-  date
-    ? new Intl.DateTimeFormat('en', {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-        timeZone: 'UTC',
-      }).format(new Date(`${date}T00:00:00Z`))
-    : 'Not retained';
 const hasPublicEvidence = publicLinks.length > 0;
 const productSummary = product.description;
 const productJsonLd = {
@@ -99,8 +91,11 @@ const productJsonLd = {
         </div>
 
         <header class="project-hero">
-          <div class="project-identity">
+          <div class:list={['project-identity', { 'project-identity--with-logo': product.logoUrl }]}>
             <p class="project-folio">SaaS Maker directory</p>
+            {product.logoUrl && (
+              <img class="project-logo" src={product.logoUrl} alt="" width="96" height="96" />
+            )}
             <h1>{product.name}</h1>
             <p class="project-summary">{productSummary}</p>
           </div>
@@ -158,8 +153,8 @@ const productJsonLd = {
               <dd>{deploymentLabel}</dd>
               {product.deploymentProviders.length > 0 && <small>{product.deploymentProviders.join(' · ')}</small>}
             </div>
-            <div><dt>First retained commit</dt><dd>{formatDate(product.firstCommitAt)}</dd></div>
-            <div><dt>Latest retained commit</dt><dd>{formatDate(product.latestCommitAt)}</dd></div>
+            <div><dt>First retained commit</dt><dd>{product.firstCommitAt ? <time datetime={product.firstCommitAt}>{formatDirectoryDate(product.firstCommitAt)}</time> : 'Not retained'}</dd></div>
+            <div><dt>Latest retained commit</dt><dd>{product.latestCommitAt ? <time datetime={product.latestCommitAt}>{formatDirectoryDate(product.latestCommitAt)}</time> : 'Not retained'}</dd></div>
           </dl>
         </section>
 
@@ -300,6 +295,19 @@ const productJsonLd = {
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
+  }
+
+  .project-logo {
+    width: 6rem;
+    height: 6rem;
+    margin-top: clamp(1.5rem, 4vh, 3rem);
+    border: 1px solid rgba(20, 21, 17, 0.2);
+    border-radius: 1.5rem;
+    object-fit: cover;
+  }
+
+  .project-identity--with-logo h1 {
+    margin-top: 1.25rem;
   }
 
   h1 {

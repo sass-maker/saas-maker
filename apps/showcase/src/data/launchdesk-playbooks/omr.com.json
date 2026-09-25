@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "omr.com",
+  "name": "OMR Reviews",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://omr.com/",
+      "title": "OMR homepage — media company; Reviews is the software/services comparison arm"
+    },
+    {
+      "url": "https://omr.com/en/reviews",
+      "title": "OMR Reviews — 80,000+ verified reviews; 'Suggest software or service' and 'Information for software providers' links"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "unknown",
+  "conditions": [],
+  "requirements": [
+    "B2B software products or agencies/service providers — the directory covers software categories (HR, CRM, SEO, AI, project management, etc.) plus agency/service categories",
+    "Entry path is the 'Suggest software or service' form on /en/reviews; providers have a dedicated 'Information for software providers' page",
+    "Review ecosystem is verified-review based (German-origin, English locale available at /en/)"
+  ],
+  "preparation": [
+    "Product/company name, website, best-fit software or service category",
+    "Company/provider details for the suggestion form",
+    "Longer-term: a review-generation plan — rankings/badges (Leader, Top Rated, Top 100) are driven by verified review volume"
+  ],
+  "workflow": [
+    "Open https://omr.com/en/reviews and click 'Suggest software or service' (providers: 'Information for software providers')",
+    "Complete the suggestion/provider form",
+    "Await OMR review team's acceptance and profile creation",
+    "Once listed, drive verified user reviews to qualify for category rankings/badges"
+  ],
+  "watchFor": [
+    "This is not a self-serve launch board — the 'suggest' route means OMR editorially controls whether a profile is created",
+    "Site is primarily German; use /en/ locale links",
+    "Ranking badges are earned via verified reviews — a bare listing has near-zero visibility without them",
+    "Provider pricing/monetisation terms were not visible on the public pages fetched"
+  ],
+  "countsAsLive": "A product profile exists under OMR Reviews with a review count and 'See reviews' link, reachable from its category page",
+  "unknowns": [
+    "Whether provider listings are free or paid ('Information for software providers' content not fetched)",
+    "Form fields on the suggest-software flow",
+    "Acceptance criteria and timeline for suggested products"
+  ]
+}

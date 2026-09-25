@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "openalternative.co",
+  "name": "OpenAlternative",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    { "url": "https://openalternative.co/submit", "title": "Submit page (redirects to sign-in)" },
+    {
+      "url": "https://openalternative.co/",
+      "title": "OpenAlternative homepage — open source alternatives directory"
+    },
+    {
+      "url": "https://openalternative.co/advertise",
+      "title": "Advertise page — paid ad tiers ($147/$297/$597 per month)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Product must be open source — the directory only lists open-source alternatives to proprietary software",
+    "Sign-in required before the submit form is shown (email magic link, Google, or GitHub OAuth)",
+    "Listings are framed as alternatives to named proprietary tools and display GitHub stars, last-commit date, and license"
+  ],
+  "preparation": [
+    "Product name, website URL, and public GitHub repository URL",
+    "Open-source license identifier (e.g. MIT, AGPL-3.0)",
+    "Short description and the list of proprietary products it replaces",
+    "Relevant categories/tags; logo/favicon is auto-fetched or uploaded in dashboard"
+  ],
+  "workflow": [
+    "Open https://openalternative.co/submit — you are redirected to the sign-in screen",
+    "Create an account via magic link, Google, or GitHub to reach the submission dashboard",
+    "Submit the tool with repo URL and metadata from the dashboard",
+    "Await manual review; the tool page appears under the directory once approved"
+  ],
+  "watchFor": [
+    "The /submit URL renders a sign-in wall — there is no anonymous submission form",
+    "Paid tiers on /advertise are site ads/sponsorships, not required for a listing — do not buy them expecting a listing",
+    "Closed-source or proprietary products do not belong here"
+  ],
+  "countsAsLive": "A public tool page exists on openalternative.co (reachable without login) showing stars, license, and 'Open Source Alternative to' links",
+  "unknowns": [
+    "Exact review criteria and turnaround time — the submission form sits behind login and was not inspected",
+    "Whether any paid listing tier exists; only advertising packages are published"
+  ]
+}

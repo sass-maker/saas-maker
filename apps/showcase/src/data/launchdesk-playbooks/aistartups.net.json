@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aistartups.net",
+  "name": "AI Startups",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://aistartups.net/",
+      "title": "AI Startups homepage - returned HTTP 401 to automated fetcher"
+    },
+    {
+      "url": "https://www.signalhire.com/companies/ai-startups",
+      "title": "SignalHire profile: AI Startups, Portland OR, founded 2023, internet/AI resource directory"
+    },
+    {
+      "url": "https://tracxn.com/d/companies/ai-startups/__L7MTSR3yvGiBxG6fd8bwVEJjhmVRto4Cebng4eE5pCU",
+      "title": "Tracxn profile: platform offering a directory of AI tools for businesses"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "Site could not be fetched — https://aistartups.net/ returns HTTP 401 (auth wall or bot block) to automated clients",
+    "Third-party profiles describe it as a directory of AI tools/startups for businesses, operated from Portland, OR"
+  ],
+  "preparation": [
+    "Verify the site loads in a real browser before planning a submission",
+    "Standard listing kit: product name, URL, description, category"
+  ],
+  "workflow": [
+    "Open https://aistartups.net/ in a browser (automated fetches get 401)",
+    "Locate any submit/list-your-startup path on the live site — none was discoverable from public pages during research"
+  ],
+  "watchFor": [
+    "Domain-wide 401 — the site may be behind authentication, geo/bot-blocking, or effectively unmaintained",
+    "Third-party profiles are thin and mostly auto-generated (SignalHire, Tracxn, local business listings) — treat the directory's authority with skepticism",
+    "No public submission page or guidelines could be located"
+  ],
+  "countsAsLive": "Unknown — would be a public profile/listing page on aistartups.net, but no example URL pattern could be verified",
+  "unknowns": [
+    "Whether the site is operational at all for anonymous visitors",
+    "Whether a self-serve submission flow exists or listing is editorial/contact-based",
+    "Pricing (catalog note says freemium — unverified)",
+    "Link type of any listing (catalog note says follow — unverified)"
+  ]
+}

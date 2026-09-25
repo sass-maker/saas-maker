@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "trustpilot.com",
+  "name": "Trustpilot",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "review",
+  "zeroCostRoute": "free",
+  "sources": [
+    {
+      "url": "https://business.trustpilot.com/",
+      "title": "Trustpilot for Business homepage — 'Create free account' entry point"
+    },
+    {
+      "url": "https://business.trustpilot.com/pricing",
+      "title": "Trustpilot pricing — Free plan and paid tiers (Starter from $99/mo, annual commitment)"
+    },
+    {
+      "url": "https://signup.business.trustpilot.com/create-account",
+      "title": "Trustpilot business signup (linked from 'Create free account')"
+    }
+  ],
+  "requirements": [
+    "A business with a live domain/website to claim a Trustpilot profile for",
+    "A business account — created free via the signup portal",
+    "Reviews come from customers; the business itself cannot write its own reviews"
+  ],
+  "preparation": [
+    "Business email and the domain to claim",
+    "Company details for the public profile (name, logo, description, categories)",
+    "Plan for collecting organic reviews — the free tier includes 50 automated review invitations/month"
+  ],
+  "workflow": [
+    "Check your domain's existing TrustScore/profile on trustpilot.com (profiles can exist before you claim them)",
+    "Go to business.trustpilot.com and click 'Create free account' / 'Start for free'",
+    "Complete signup at signup.business.trustpilot.com",
+    "Claim/verify your domain and fill in the business profile",
+    "Optionally send review invitations (50/month on Free) and reply to reviews from the dashboard"
+  ],
+  "watchFor": [
+    "All paid contracts are a 12-month commitment billed annually — Starter from $99/mo, Plus from $319/mo, Premium from $799/mo; don't 'upgrade to see pricing'",
+    "Per-domain pricing — each domain in a plan is priced separately",
+    "Paid tiers mainly buy invitation volume, widgets, and customization; the free tier already gives a public profile, review collection, and replies",
+    "Do not incentivize or fake reviews — Trustpilot enforces company guidelines and removes fake reviews (7.8m removed in 2025 per their homepage)"
+  ],
+  "countsAsLive": "A public business profile page at trustpilot.com/review/<domain> showing claimed status and collecting reviews/TrustScore",
+  "unknowns": [
+    "Exact verification method for claiming a domain (email/domain verification flow not documented on the fetched pages)",
+    "Whether free-tier profiles appear in Trustpilot category browsing or only via direct search"
+  ]
+}

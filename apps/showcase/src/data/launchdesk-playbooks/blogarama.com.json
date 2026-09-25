@@ -1,0 +1,57 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "blogarama.com",
+  "name": "Blogarama",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.blogarama.com/site-tools/add-your-blog",
+      "title": "Blogarama - Submit your blog ('free', moderated listings, Premium/Business upsell)"
+    },
+    {
+      "url": "https://www.blogarama.com/add-a-site/",
+      "title": "Blogarama - add-a-site endpoint (renders a login wall: email + password required)"
+    },
+    {
+      "url": "https://www.blogarama.com/members/register",
+      "title": "Blogarama - member registration"
+    },
+    {
+      "url": "https://blogarama.com/",
+      "title": "Blogarama homepage - 'The Oldest Blog Directory', 163k+ moderated listings"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Blog directory only - the submission unit is a blog (with an RSS feed), not a product landing page",
+    "Account required: the 'Submit Your Blog' /add-a-site/ endpoint renders a login form (email + password); register at /members/register first",
+    "Free submission is advertised ('Submit your blog for free'); listings are 'active and moderated'"
+  ],
+  "preparation": [
+    "A real blog with an RSS feed - Blogarama syndicates posts into its directory feed",
+    "Registration email and password (activation/resend-activation links exist on the login page)",
+    "Blog title, URL, RSS feed URL, category, and description",
+    "Optional: their pitch includes 'free advertisement of each of your posts' - posts auto-appear once listed"
+  ],
+  "workflow": [
+    "Register at https://www.blogarama.com/members/register (login is email-based; activation email may be required - a 'Resend activation' link exists)",
+    "Log in, then go to 'Submit Your Blog' (/add-a-site/ or /site-tools/add-your-blog)",
+    "Enter blog details (URL/feed, category, description) and submit for moderation",
+    "After approval the blog is listed and its posts are syndicated into Blogarama's category feeds"
+  ],
+  "watchFor": [
+    "Blog-only: submitting a product page or marketing site without a real blog/RSS will fail moderation",
+    "Heavy upsell: 'Upgrade To A Business Listing' banners and Premium/Business packages surround the free flow",
+    "The site mixes a blog directory with a busy news/aggregator homepage - verify your blog lands in the directory, not just the feed",
+    "Account activation by email may be required before the add-site form opens"
+  ],
+  "countsAsLive": "The blog has a public listing page on blogarama.com and its latest posts appear in the relevant category feed",
+  "unknowns": [
+    "Whether the free listing requires adding a Blogarama link/badge back to the blog",
+    "Moderation SLA for new submissions",
+    "Whether the outbound link on live listings is dofollow",
+    "Premium/Business package pricing (advertised but not price-listed on public pages fetched)"
+  ]
+}

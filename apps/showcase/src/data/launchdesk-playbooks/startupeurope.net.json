@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startupeurope.net",
+  "name": "Startup Europe",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "http://startupeurope.net/",
+      "title": "Startup Europe homepage — 'biggest EU Directory for Innovative Startups', free signup"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "European startups — 'an online directory that lists all European Startup Companies'",
+    "Free signup and listing: 'Sign up for Free and list your startup, improve your SEO, get notifications about EU competitions'",
+    "Account required: Submit a startup routes to users/join.php; dashboard at /dashboard"
+  ],
+  "preparation": [
+    "Account registration at users/join.php",
+    "Startup name, country, category, description, website URL, logo",
+    "Complete the profile fully — a 'certification badge' for your website is earned by filling in the profile"
+  ],
+  "workflow": [
+    "Open startupeurope.net and click 'Submit a startup' or 'Sign Up'",
+    "Register a free account",
+    "Complete the startup profile (country, category, description, URL, logo)",
+    "Profile appears in the directory's country/category listings; earn the certified badge by completing the profile"
+  ],
+  "watchFor": [
+    "Site is plain HTTP-era styling and dated (© 2021 footer, contact via Greek address info@ied.eu) — verify it's still maintained before relying on it",
+    "Email notifications about 'EU events and surveys' are part of the deal — expect mailing-list additions",
+    "Badge is positioned as an earned certification — keep it only if the listing stays live",
+    "Low-visibility directory; treat as a minor backlink/citation"
+  ],
+  "countsAsLive": "The startup's public profile appears in startupeurope.net's country/category listings",
+  "unknowns": [
+    "Whether outbound links are dofollow ('precious backlinks' claimed but rel not verified)",
+    "Whether there's any manual review or instant publish",
+    "Whether the site is actively maintained in 2026",
+    "Exact profile fields behind the signup"
+  ]
+}

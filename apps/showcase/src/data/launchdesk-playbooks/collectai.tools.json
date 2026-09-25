@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "collectai.tools",
+  "name": "CollectAI",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free $0 plan requires a backlink to collectai.tools on your site.",
+    "Free listings are 'reviewed and listed within 72 hours' and offer scheduled publish dates; 'Permanent link with backlink maintenance' implies ongoing checks."
+  ],
+  "requirements": [
+    "AI tools; directory categories include Writing & Content, Image & Design, Video & Audio, Development, Business, Productivity, Data & Research, Education.",
+    "Sign In present beside Submit — account likely required."
+  ],
+  "preparation": [
+    "Product name, URL, description, category/tags.",
+    "Reciprocal backlink to collectai.tools live on your site for the free plan.",
+    "Plan choice: free $0 (backlink, 72h) / pro $9.9 (no backlink, featured top placement, social+newsletter share) / sponsor $19.9/week (site-wide promotion)."
+  ],
+  "workflow": [
+    "Go to https://collectai.tools/submit (sign in if prompted).",
+    "Choose plan per /pricing.",
+    "Fill the tool submission form.",
+    "Free: backlink live first, then expect review/listing within 72 hours."
+  ],
+  "watchFor": [
+    "'Permanent link with backlink maintenance' — the free listing depends on the backlink persisting.",
+    "Sponsor is $19.9 per WEEK recurring — not one-time.",
+    "Same Luolink/Mkdirs boilerplate wording as aibesttop.com and dayslaunch.com — generic plan text.",
+    "Sponsor slot limit ('only one advertisement per period') is scarcity marketing."
+  ],
+  "countsAsLive": "A public item page at collectai.tools/item/<slug> visible in search/category listings.",
+  "unknowns": [
+    "Exact submit form fields (submit page not separately fetched; sign-in gate likely).",
+    "Whether badge verification is automated."
+  ],
+  "sources": [
+    {
+      "url": "https://collectai.tools/pricing",
+      "title": "CollectAI Pricing — free $0 (backlink required, 72h), pro $9.9, sponsor $19.9/week"
+    },
+    {
+      "url": "https://collectai.tools/",
+      "title": "CollectAI homepage — curated AI tools directory"
+    }
+  ]
+}

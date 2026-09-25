@@ -1,0 +1,45 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "genify.dev",
+  "name": "Genify",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    { "url": "https://genify.dev/pricing", "title": "Genify pricing" },
+    { "url": "https://genify.dev/submit", "title": "Submit page (login wall)" },
+    { "url": "https://genify.dev/", "title": "Genify - directory for generation tools" }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free plan requires a backlink to genify.dev on your site",
+    "Free listings are 'Reviewed and listed within 72 hours' per pricing",
+    "Pro plan $4.9 one-time removes the backlink requirement, adds featured placement and social/newsletter sharing"
+  ],
+  "requirements": [
+    "Directory focus is 'generation tools' (AI text/image/voice/video generation and adjacent tools); listed items span a broad range",
+    "Account required: /submit shows login (email, Google, GitHub) via /auth/register"
+  ],
+  "preparation": [
+    "Register an account",
+    "Product name, URL, description, images, category/tags",
+    "For free tier: a live backlink to genify.dev on your site before/around submission"
+  ],
+  "workflow": [
+    "Create an account at /auth/register",
+    "Add the genify.dev backlink to your site if using the free plan",
+    "Open /submit, choose free or pro ($4.9)",
+    "Complete the product form; free tier reviewed within ~72 hours"
+  ],
+  "watchFor": [
+    "'Permanent link with backlink maintenance' wording implies the free listing depends on keeping the backlink live",
+    "Mkdirs-style directory; submit form fields are behind the auth wall",
+    "Pro is cheap ($4.9) and skips the backlink - weigh the cost of a footer link vs. paying"
+  ],
+  "countsAsLive": "The tool appears as a card on genify.dev with an /item/<slug> details page and 'Visit Website' outbound link.",
+  "unknowns": [
+    "Exact post-login form fields",
+    "How many dofollow links a listing carries ('>= 3' claimed for paid)",
+    "Whether free-tier backlink compliance is re-verified"
+  ]
+}

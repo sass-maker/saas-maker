@@ -1,0 +1,57 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "peerpush.net",
+  "name": "PeerPush",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://peerpush.net/",
+      "title": "PeerPush homepage including FAQ (submission flow, free queue, paid plans)"
+    },
+    {
+      "url": "https://peerpush.net/pricing",
+      "title": "PeerPush - Pricing (linked from footer; plan details quoted in homepage FAQ)"
+    },
+    {
+      "url": "https://peerpush.net/rules",
+      "title": "PeerPush - Rules (linked from footer)"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free submissions are real but 'join a publishing queue' - timing on the free path is not specified",
+    "Instant publishing requires a paid plan: Basic $39, Boosted $89, Max-Boosted $229 (one-time prices quoted in the site FAQ)"
+  ],
+  "requirements": [
+    "A free PeerPush account is required ('create a free account and click Submit Your Product')",
+    "Submit a product URL - PeerPush can auto-fill product details with AI, or fields can be completed manually",
+    "Structured product data: use cases, target audiences, platforms, pricing, alternatives, screenshots, description"
+  ],
+  "preparation": [
+    "Product URL (used for AI auto-fill)",
+    "Description, screenshots, pricing model, platform tags, alternative products",
+    "Account email for signup",
+    "Decide free-queue vs paid instant publishing before submitting"
+  ],
+  "workflow": [
+    "Create a free account at peerpush.net ('Sign up' / 'Join 48,000+ builders')",
+    "Click 'Submit Your Product' and paste the product URL for AI auto-fill (or enter details manually)",
+    "Complete the structured fields - use cases, audiences, platforms, pricing, alternatives, screenshots",
+    "Free tier: submit and wait in the publishing queue; paid tiers (Basic $39 / Boosted $89 / Max-Boosted $229) publish instantly and add promotion",
+    "After publishing, engage with the community - the PeerPush score (upvotes, comments, mutual support) drives visibility and Product of the Day/Week/Month awards"
+  ],
+  "watchFor": [
+    "Free-queue wait time is undocumented - if launch timing matters, the paid Basic tier is the instant path",
+    "PeerPush also sells a separate 'Submit to 100 directories' service - don't confuse it with the on-site listing",
+    "Visibility compounds with community engagement (PeerPush score), not just the listing itself",
+    "The site advertises AI-assistant discoverability (MCP server, public API, crawler-friendly) - listing copy should be written for machine readability"
+  ],
+  "countsAsLive": "The product has a public PeerPush page (visible in Browse/Top/Recent) after clearing the free publishing queue or via instant paid publishing",
+  "unknowns": [
+    "Length of the free publishing queue",
+    "Exact moderation criteria applied before a queued free listing goes live",
+    "Whether the outbound link is dofollow on live product pages"
+  ]
+}

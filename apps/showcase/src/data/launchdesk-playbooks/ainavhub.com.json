@@ -1,0 +1,37 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "ainavhub.com",
+  "name": "AI NavHub",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [{ "url": "https://ainavhub.com/submit", "title": "Submit Your AI Tool - AI NavHub" }],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "AI tools only (writing, coding, video, SEO, design, education, etc. - 300+ tools directory)",
+    "Form fields: Website Name, Website URL, Email",
+    "Free submission per FAQ: 'submission is free. We encourage tool creators to include a backlink to AI NavHub' (encouraged, not required)"
+  ],
+  "preparation": [
+    "Website name, URL, and a contact email",
+    "Optional: a backlink to ainavhub.com on your site (encouraged but not mandatory)",
+    "Optional: 'Buy Me A Coffee' donation for the 'quick submission' tier (24h review, homepage + featured ad placement for 14 days, dofollow)"
+  ],
+  "workflow": [
+    "Open https://ainavhub.com/submit",
+    "Fill Website Name, Website URL, Email and hit Submit",
+    "For the paid quick route: donate via buymeacoffee.com/ainavhub, then email lyqtzs@gmail.com with your site details - handled within 24 hours"
+  ],
+  "watchFor": [
+    "The 'quick submission' path is informal: pay via Buy Me A Coffee, then EMAIL the details - there is no integrated checkout",
+    "Paid perks are time-boxed (14 days homepage + featured styles); the permanent listing is the base result",
+    "FAQ says the backlink is 'encouraged' - the free form may still rank/delay listings without one (unspecified)",
+    "Site lists some NSFW-adjacent tools; check brand-safety fit of the neighborhood"
+  ],
+  "countsAsLive": "The tool appears on ainavhub.com under /ai/<slug> and shows in its category listing (and homepage for paid quick submissions).",
+  "unknowns": [
+    "Free-tier review turnaround (only the paid 24h SLA is stated)",
+    "Whether free links are dofollow (paid copy says all backlinks are dofollow, ambiguous for free)",
+    "Coffee donation amount"
+  ]
+}

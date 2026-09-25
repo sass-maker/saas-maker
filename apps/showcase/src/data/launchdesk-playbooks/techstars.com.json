@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "techstars.com",
+  "name": "Techstars",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "other",
+  "zeroCostRoute": "free",
+  "sources": [
+    {
+      "url": "https://www.techstars.com/accelerators",
+      "title": "Techstars Accelerators page — program list, 'Apply Today' to apply.techstars.com"
+    },
+    {
+      "url": "https://apply.techstars.com/",
+      "title": "Techstars application portal (JS-rendered; returned empty HTML at fetch)"
+    }
+  ],
+  "requirements": [
+    "An early-stage startup — Techstars is a 3-month mentorship-driven accelerator, not a listing directory; 'applying' is the only submission surface",
+    "You apply to a specific accelerator program (verticals: Health, Finance, Space & Defense, Critical Infrastructure; plus city programs like Anywhere, Boston, Boulder, Chicago, London, NYC, Tokyo, USC)"
+  ],
+  "preparation": [
+    "Founder and company details, pitch materials, traction data for the application",
+    "Choose the program(s) that fit your vertical/geography — each has its own application window"
+  ],
+  "workflow": [
+    "Review program options at techstars.com/accelerators",
+    "Open apply.techstars.com (JS-rendered — needs a real browser) and complete the application",
+    "Submit before the program's deadline",
+    "If accepted, the outcome is program participation (capital, mentorship), not a directory listing"
+  ],
+  "watchFor": [
+    "This entry is an accelerator application — it belongs in the catalog only as a launch-path destination, not a backlink directory",
+    "Applications are competitive and deadline-bound; check the program page for open windows",
+    "Equity/terms are not stated on the fetched pages — verify current deal terms before treating this as 'free distribution'"
+  ],
+  "countsAsLive": "Not a listing — observable success is an accepted application / program offer from Techstars",
+  "unknowns": [
+    "Current standard deal terms (equity/investment amount) — not stated on fetched pages",
+    "Application form fields and deadlines — apply.techstars.com is JS-gated",
+    "Whether Techstars maintains any public startup directory of applicants/portfolio entries"
+  ]
+}

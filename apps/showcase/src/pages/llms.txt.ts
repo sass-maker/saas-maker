@@ -47,6 +47,8 @@ export function GET() {
     `- [Shareable project directory](https://sassmaker.com/projects): ${publicCatalog.directory.length} working public experiments and reference projects`,
     '- [Scored ideas](https://sassmaker.com/ideas): 140 tech-heavy product ideas with transparent Money, Fun, feasibility, competition, source, and customer context',
     `- [Reusable tooling](https://sassmaker.com/tools): ${TOOLING_CAPABILITIES.length} public skills, scripts, templates, and guides`,
+    '- [Launchkit](https://sassmaker.com/launchkit): free agent-executable launch toolkit — product brief, truthful run planner, per-platform submission playbooks, evidence tracker',
+    '- [Launch catalog](https://sassmaker.com/launchdesk): provenance-honest directory of launch and submission destinations',
     '- [Learnings](https://sassmaker.com/learnings): first-party notes from building products and agent workflows',
     ...LEARNINGS.map(
       (learning) =>
@@ -66,6 +68,10 @@ export function GET() {
     '- https://sassmaker.com/ideas.json',
     '- https://sassmaker.com/ideas.md',
     '- https://sassmaker.com/tools.json',
+    '- https://sassmaker.com/launchkit.json',
+    '- https://sassmaker.com/launchdesk.json',
+    '- https://sassmaker.com/launchdesk-playbooks.json',
+    '- https://sassmaker.com/launchdesk/<domain>.json',
     '- https://sassmaker.com/projects.md',
     '- https://sassmaker.com/index.md',
     '- https://sassmaker.com/llms-full.txt',

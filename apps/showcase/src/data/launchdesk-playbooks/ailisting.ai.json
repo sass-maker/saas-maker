@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "ailisting.ai",
+  "name": "AI Listing",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://ailisting.ai/",
+      "title": "AIlisting.ai homepage - 'Search 1544 AI Tools and 87 Categories' (returned HTTP 429 rate-limit to fetcher)"
+    },
+    {
+      "url": "https://ailisting.ai/submit-tool/",
+      "title": "Submit Your Tool page - 'Contribute Your AI Tools' + 'Showcase and Advertise with Us'"
+    },
+    { "url": "https://ailisting.ai/contact-us/", "title": "Contact page with feedback form" }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "A dedicated submit page exists at /submit-tool/ but the page mixes 'Submit Your Tool' with 'Showcase and Advertise with Us' — a paid advertising route is co-located and the free path's specifics are not visible (site rate-limited automated fetches)",
+    "Catalog note says freemium — consistent with a free submission plus paid showcase/advertising"
+  ],
+  "requirements": [
+    "AI tools only — curated directory across 87 categories",
+    "Submissions are curated ('contribute your AI tools'), not auto-published"
+  ],
+  "preparation": [
+    "Tool name, URL, description, category, logo/screenshots, pricing",
+    "Contact email for follow-up"
+  ],
+  "workflow": [
+    "Open https://ailisting.ai/submit-tool/ in a browser (the site returned 429 to automated fetching — space requests or use a real browser)",
+    "Complete the submission form",
+    "Optionally explore the 'Showcase and Advertise with Us' paid placements",
+    "Watch for the listing in the directory (1544+ tools, searchable on the homepage)"
+  ],
+  "watchFor": [
+    "Site aggressively rate-limits (HTTP 429) — automated agents should throttle or use a browser",
+    "The submit page doubles as an advertising pitch — expect a paid upsell mid-flow",
+    "Marketing copy is heavy on enthusiasm, light on concrete rules — no published eligibility or timeline"
+  ],
+  "countsAsLive": "The tool is searchable/browsable on ailisting.ai within its category",
+  "unknowns": [
+    "Exact form fields and whether account signup is required",
+    "Whether a free listing is dofollow (catalog note says follow; unconfirmed)",
+    "Review timeline and rejection criteria",
+    "Pricing of the 'Showcase and Advertise' options"
+  ]
+}

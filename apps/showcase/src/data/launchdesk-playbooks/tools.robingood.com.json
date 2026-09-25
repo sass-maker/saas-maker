@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "tools.robingood.com",
+  "name": "Robin Good",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "http://tools.robingood.com/",
+      "title": "Homepage — returned empty content on 2026-09-25; site may be down or fully client-side"
+    },
+    {
+      "url": "http://tools.robingood.com/content/new/387",
+      "title": "Catalogued submission URL — also returned empty content"
+    },
+    {
+      "url": "https://www.submission.directory/site/robin-good-tools",
+      "title": "Submission.Directory profile — 'Submit for free, with paid tiers for extra exposure'; freemium, dofollow, no badge required"
+    },
+    {
+      "url": "https://marketing.femaleswitch.com/robin-good",
+      "title": "Third-party guide — submission via the 'Contact me' link on the homepage"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "Per third-party profiles: free submission exists with paid tiers for extra exposure (freemium, dofollow link, no badge requirement)",
+    "Site did not render to fetches — cannot confirm the live submission path",
+    "Historically a curated directory of tools for indie entrepreneurs maintained by Robin Good"
+  ],
+  "preparation": [
+    "Product name, URL, description, and category",
+    "A contact email — third-party coverage describes a 'Contact me' submission route rather than a self-serve form"
+  ],
+  "workflow": [
+    "Try https://tools.robingood.com/ in a JS-capable browser (plain fetches return empty)",
+    "If the site is alive, look for a submit/contact link; otherwise the catalogued path /content/new/387 is the documented entry",
+    "If unreachable, treat the destination as defunct for this launch run"
+  ],
+  "watchFor": [
+    "Both the homepage and the catalogued submission URL returned empty content at retrieval — site may be dead, parked, or fully JS-rendered",
+    "Third-party data (free + paid tiers) could not be verified on-site",
+    "Do not pay anyone claiming guaranteed Robin Good placement — verify the site is operational first"
+  ],
+  "countsAsLive": "Product appears as an entry on tools.robingood.com with an outbound link",
+  "unknowns": [
+    "Whether the site is still operational — pages returned empty on 2026-09-25",
+    "Current pricing tiers and whether free submission still exists",
+    "The real submission mechanism (form vs email contact)"
+  ]
+}

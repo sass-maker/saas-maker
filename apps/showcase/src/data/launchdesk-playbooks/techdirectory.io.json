@@ -1,0 +1,54 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "techdirectory.io",
+  "name": "Tech Directory",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.techdirectory.io/get-listed",
+      "title": "Get Listed page (returned 403 to fetcher; indexed copy confirms listing flow)"
+    },
+    {
+      "url": "https://www.techdirectory.io/checkout/basic",
+      "title": "Basic Account Secure Signup — free account creation page"
+    },
+    {
+      "url": "https://www.techdirectory.io/products/premium-services-on-techdirectory-230",
+      "title": "Premium listing product page — $50 upgrade details"
+    },
+    {
+      "url": "https://backlinkbot.ai/directories/techdirectory",
+      "title": "BacklinkBot profile — free submission, dofollow link"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Tech businesses/products for a general tech business directory",
+    "Create a free Basic account, then add the company/product listing",
+    "Third-party profile confirms free submission with a dofollow link"
+  ],
+  "preparation": [
+    "Account signup details for the Basic (free) account",
+    "Company/product name, URL, short description, logo",
+    "Category and location info for the business listing"
+  ],
+  "workflow": [
+    "Open https://www.techdirectory.io/get-listed (site may 403 some fetchers/bots — use a normal browser)",
+    "Create a Basic account at /checkout/basic",
+    "List the business/product with name, URL, description, and logo",
+    "Optionally upgrade to the $50 'Premium listing' product for first-in-search placement, homepage feature (30 days), unlimited articles/events/classifieds/videos, and social profiles"
+  ],
+  "watchFor": [
+    "Site returns 403 to non-browser fetchers — automation may be blocked",
+    "The $50 Premium listing is a product in their store — an upsell, not a requirement",
+    "Free basic listing details vs premium perks are split across /checkout/basic and the store product page"
+  ],
+  "countsAsLive": "The business/product listing is publicly searchable on techdirectory.io with a link to your site",
+  "unknowns": [
+    "Whether free-tier links are dofollow first-party (only third-party claim)",
+    "Review/moderation turnaround for new listings",
+    "Whether the get-listed flow includes additional steps behind the 403 wall"
+  ]
+}

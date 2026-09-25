@@ -1,0 +1,62 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "anyfp.com",
+  "name": "ANYFP",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://anyfp.com/",
+      "title": "Homepage — 'The human-checked AI index', 6,523 tools, 'Listing is free and reviewed by a human'"
+    },
+    {
+      "url": "https://anyfp.com/submit",
+      "title": "Submit your tool — free listing, 3-step form (Basics / About the tool / Media)"
+    },
+    {
+      "url": "https://anyfp.com/for-makers",
+      "title": "For makers — how listing works (linked from homepage and submit page)"
+    },
+    {
+      "url": "https://anyfp.com/badge",
+      "title": "Badge page (verified badge for claimed listings)"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Product must be an AI tool; every submission is reviewed by a person before publishing",
+    "Working website URL required",
+    "Full description must be at least 100 characters",
+    "At least one screenshot is mandatory (up to 4); logo upload required (PNG/JPG/WebP, up to 5 MB)",
+    "Key features list required — one per line, up to 8"
+  ],
+  "preparation": [
+    "Tool name, website URL, and one-line description",
+    "Category choice from 13 fixed options (Assistant, Audio, Business, Code, Design, Education, Gaming, Image, Lifestyle, Other, Productivity, Video, Writing)",
+    "Pricing model (Free / Freemium / Paid) and optional price note",
+    "Platform checkboxes (Web, iOS, Android, Desktop, API, Browser extension)",
+    "Logo file under 5 MB and 1–4 screenshots; optional YouTube demo URL",
+    "A contact e-mail (never published)"
+  ],
+  "workflow": [
+    "Open https://anyfp.com/submit (optionally use the 'Draft with AI' helper at /ai-draft first)",
+    "Step 1 Basics: name, URL, category, e-mail",
+    "Step 2 About the tool: one-line description, full description (>=100 chars), audience, problem solved, pricing, platforms, key features",
+    "Step 3 Media: upload logo and >=1 screenshot, optional video",
+    "Submit; human review 'usually within a couple of days'",
+    "After publication, claim the listing to edit anytime and display a Verified badge; owner can reply to reviews"
+  ],
+  "watchFor": [
+    "The submit page explicitly says 'no pay-to-rank' — there is no paid fast lane to accept instead",
+    "Full description field enforces a 100-character minimum client-side",
+    "E-mail field is required but never published — use an address you monitor for the review outcome",
+    "'Featured' placement exists on the site but how tools get featured is not explained on public pages"
+  ],
+  "countsAsLive": "Tool has a public detail page on anyfp.com (e.g. anyfp.com/<slug>) and appears in 'Recently verified' or its category listing",
+  "unknowns": [
+    "Exact review SLA beyond 'usually within a couple of days'",
+    "Whether rejection reasons are communicated by e-mail",
+    "How the Featured slot is granted (editorial vs paid)"
+  ]
+}

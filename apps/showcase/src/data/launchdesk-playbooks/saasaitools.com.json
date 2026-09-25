@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "saasaitools.com",
+  "name": "SaaS AI Tools",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://saasaitools.com/submit-listing-2/",
+      "title": "Submit a listing - SaaS AI Tools"
+    },
+    { "url": "https://saasaitools.com/", "title": "SaaS AI Tools homepage" }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "AI/SaaS tools only; form requires choosing one category from a fixed list (AI Detectors, Chatbots, Image & Art Generation, Writing, etc.)",
+    "Search the site first - duplicates are not wanted",
+    "No affiliate links, no newsletter or directory links",
+    "No automated submissions ('we do not accept submissions made through automated methods')",
+    "No bulk/spam submissions - a large volume of tools in a short period results in non-approval",
+    "All listings are human-reviewed before publishing"
+  ],
+  "preparation": [
+    "Product name, tagline, overview & description, URL",
+    "Payment type of the product: Free / Freemium / Paid",
+    "Key features and use cases (form fields)",
+    "Pick the correct category from their fixed taxonomy (incl. an NSFW category)"
+  ],
+  "workflow": [
+    "Search saasaitools.com to confirm the tool is not already listed",
+    "Open https://saasaitools.com/submit-listing-2/",
+    "Fill Listing Details (name, category, tagline, description, URL) and Additional Details (payment type, key features, use cases)",
+    "Click 'Submit for Review'",
+    "Wait for staff review; listing is published once approved"
+  ],
+  "watchFor": [
+    "Explicit anti-automation rule - fill the form like a human, one listing at a time",
+    "A paid 'Get Featured' upsell exists (via saasgems.agencyhandy.com checkout) - it is separate from the free listing",
+    "Cross-promotion nudge to also post on AI Forums (aiforums.co)",
+    "The submit URL /submit redirects toward a listing-type selector; the working form is /submit-listing-2/"
+  ],
+  "countsAsLive": "The tool's listing page exists under saasaitools.com and appears in its listing-category archive.",
+  "unknowns": [
+    "Review turnaround time",
+    "Whether the listing link is dofollow",
+    "Whether an account (Login/Sign Up links exist) is required to submit"
+  ]
+}

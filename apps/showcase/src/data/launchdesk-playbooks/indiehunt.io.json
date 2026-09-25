@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "indiehunt.io",
+  "name": "IndieHunt",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    { "url": "https://indiehunt.io/submit", "title": "Submit a Project — 5-step submission flow" },
+    { "url": "https://indiehunt.io/pricing", "title": "IndieHunt Pricing — Free vs Premium $19" },
+    { "url": "https://indiehunt.io/launch-guide", "title": "IndieHunt Launch Guide checklist" }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free Launch shares a pool of 15 slots per week — pick a launch week early",
+    "Free tier requires the IndieHunt badge on your website (verification step in the flow)",
+    "Free project link is nofollow by default; only top-3 weekly winners on Free can earn dofollow"
+  ],
+  "requirements": [
+    "AI tool or indie SaaS positioning",
+    "Sign-in required (email, Google, or GitHub)",
+    "Weekly competition format: launches go live Monday 8:00 AM UTC for a 7-day competition"
+  ],
+  "preparation": [
+    "Project details, website URL, and categories",
+    "Polished landing page and screenshots",
+    "IndieHunt badge embedded if using Free",
+    "Chosen launch week aligned with your marketing plan",
+    "Community ready for launch-week upvotes and comments (ranking is upvote-driven; top 3 earn Hall of Fame badges)"
+  ],
+  "workflow": [
+    "Sign in with email, Google, or GitHub",
+    "Add project details, website URL, and categories",
+    "Choose Free or Premium ($19 one-time)",
+    "Pick a launch week and complete badge verification or payment",
+    "Go live Monday 8:00 AM UTC for a 7-day competition"
+  ],
+  "watchFor": [
+    "Only 15 free slots per week — the week you want may be full; Premium is unlimited",
+    "Free links are nofollow — if the backlink is the goal, a $19 Premium is guaranteed dofollow",
+    "Premium includes site-wide ad slots, an SEO launch blog post, and 9 launch-kit PNGs",
+    "'Premium Launcher' partner licence exists for bulk launches across the Hunt network"
+  ],
+  "countsAsLive": "Project appears on the IndieHunt homepage/launch listing for its chosen week starting Monday 8:00 AM UTC with upvote/comment controls active",
+  "unknowns": [
+    "Exact badge markup/verification mechanics",
+    "Whether free submissions get a manual quality review before scheduling",
+    "Refund policy"
+  ]
+}

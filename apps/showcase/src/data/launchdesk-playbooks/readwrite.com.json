@@ -1,0 +1,56 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "readwrite.com",
+  "name": "ReadWrite",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://readwriteweb.submittable.com/submit",
+      "title": "ReadWrite Submission Manager (Submittable) — currently no open calls"
+    },
+    {
+      "url": "https://marketing.femaleswitch.com/readwrite",
+      "title": "Third-party guide describing ReadWrite guest vs expert contributor routes"
+    },
+    {
+      "url": "https://thecconnects.com/get-featured-on-readwrite/",
+      "title": "Third-party guide on pitching ReadWrite editorially"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free guest-contributor pitches go through editorial review only when a call for submissions is open; the Submittable portal showed no open calls at retrieval time",
+    "A paid 'expert contributor' route (annual fee) with faster review has been described by third parties"
+  ],
+  "requirements": [
+    "ReadWrite is now an editorial publication (tech/gaming/iGaming focus), not a directory — there is no self-serve listing",
+    "Contributions must be expert-led, data-rich articles; shallow promotional pitches are rejected",
+    "Byline credibility matters: pitch as a practitioner with a concrete angle tied to their current coverage"
+  ],
+  "preparation": [
+    "A specific article pitch or draft (roughly 800-1,500 words per third-party guidance) with data or exclusive insight",
+    "Author bio and credentials establishing expertise",
+    "Suggested visuals (charts/infographics) to strengthen the pitch"
+  ],
+  "workflow": [
+    "Check https://readwriteweb.submittable.com/submit for an open call for submissions",
+    "If a call is open, submit the pitch/draft through the Submittable form",
+    "If no call is open, pitch directly via editorial contact (tips@readwrite.com / editorial@readwrite.com per third-party directories — unverified)",
+    "For the paid route, inquire about the expert contributor program via the site's contact/advertise channels"
+  ],
+  "watchFor": [
+    "Submittable showed 'no open calls for submissions' — the free route may be closed indefinitely",
+    "Direct-email addresses come from third-party write-ups, not the site itself — verify before relying on them",
+    "ReadWrite's current focus leans toward gaming/betting content; a B2B SaaS pitch may not fit",
+    "Do not submit promotional product-announcement copy; it will be rejected"
+  ],
+  "countsAsLive": "A published article on readwrite.com carrying your byline or citing your product with a link",
+  "unknowns": [
+    "Whether the free contributor program is currently accepting pitches at all",
+    "Current price of the expert contributor annual fee",
+    "Whether tips@/editorial@ addresses are still monitored",
+    "Whether links in contributed articles are dofollow"
+  ]
+}

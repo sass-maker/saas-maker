@@ -1,0 +1,54 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "spotsaas.com",
+  "name": "Spot SaaS",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.spotsaas.com/get-listed",
+      "title": "Spotsaas - Get Your Software Listed (criteria, process, free to list)"
+    },
+    {
+      "url": "https://partners.spotsaas.com/listing/new",
+      "title": "Spotsaas - listing application form (partner portal)"
+    },
+    {
+      "url": "https://www.spotsaas.com/buyer-intent/claim-profile",
+      "title": "Spotsaas - claim your free profile (linked from get-listed page)"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "B2B ONLY: 'Genuine B2B use case - consumer apps, internal tools, and white-label reskins are not eligible'",
+    "Active commercial product: 'live, maintained, and available for purchase or trial' - no abandoned projects or vaporware",
+    "Verified company behind it: real website, real contact information, accountable owner - 'we verify before we list'",
+    "Unique original product (no duplicates or near-identical forks); accurate complete info (features, pricing structure, category fit); must fit one of their 419 defined categories",
+    "Free to list, no credit card required; manual review of every submission"
+  ],
+  "preparation": [
+    "Product name, category, and a brief description (application takes ~5 minutes per the site)",
+    "Company verification details: real website, contact information, accountable owner",
+    "Honest pricing structure and feature list - 'misleading or incomplete submissions are rejected'"
+  ],
+  "workflow": [
+    "Open https://www.spotsaas.com/get-listed and click 'Apply to get listed' (goes to partners.spotsaas.com/listing/new)",
+    "Fill the application form: product name, category, brief description",
+    "Wait for manual review - 'new listings are reviewed within 2 weeks - usually faster'",
+    "Once approved the listing goes live across Spotsaas (buyer discovery, AI-search indexing, review collection)",
+    "Optional afterwards: 'claim your free profile' for buyer-intent features; growth/managed plans are a separate paid track"
+  ],
+  "watchFor": [
+    "This is a curated marketplace, not an aggregator - ineligible products (consumer/internal/white-label) are rejected outright",
+    "Review takes up to 2 weeks; there is no instant path advertised for the basic listing",
+    "A 'Book a strategy call' (Calendly) CTA and managed growth plans exist - optional upsell, not required for listing",
+    "Phone number and US address are published on the site if you need to chase a review"
+  ],
+  "countsAsLive": "The product has a public listing page on spotsaas.com, appears in its software category, and is open to verified reviews",
+  "unknowns": [
+    "Exact fields inside the partner-portal application (partners.spotsaas.com is a separate app)",
+    "Whether an account is required for the application itself",
+    "Whether listing outbound links are dofollow"
+  ]
+}

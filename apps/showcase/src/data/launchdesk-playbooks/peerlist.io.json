@@ -1,0 +1,62 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "peerlist.io",
+  "name": "Peerlist",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://peerlist.io/launchpad",
+      "title": "Launchpad landing page (403 to fetch; launch mechanics from help centre)"
+    },
+    {
+      "url": "https://help.peerlist.io/individual/launchpad/how-to-launch-a-project-on-peerlist-launchpad",
+      "title": "Peerlist help: How to launch a project on Launchpad — verified profile required, project must be 100% complete, Monday launches"
+    },
+    {
+      "url": "https://help.peerlist.io/individual/launchpad/frequently-asked-questions-about-spotlight-by-peerlist",
+      "title": "Peerlist Launchpad FAQ — launch window, eligible project types, removal reasons"
+    },
+    {
+      "url": "https://submitmap.com/platform/peerlist/",
+      "title": "SubmitMap Peerlist playbook — verification is government ID or workplace; free weekly launch"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free to launch, but requires a VERIFIED Peerlist profile — identity verification via government-issued ID or workplace verification",
+    "Only individual profiles (valid name + profile picture) may launch — company/non-personal profiles are disallowed",
+    "The project added to your profile must reach 100% completion status before it is eligible"
+  ],
+  "requirements": [
+    "Launchable: coding projects (dev tools, extensions, libraries), design projects, digital products (ebooks, Notion templates, UI kits), etc.",
+    "Not launchable: unsafe products, copies/ripoffs, products you don't own, NSFW/gambling/betting — violations can suspend the profile",
+    "Launch window opens Mondays; each launch runs for a week with upvotes/ratings/comments"
+  ],
+  "preparation": [
+    "A personal account with first name, last name, username, 120-character bio, and profile picture",
+    "Identity verification (government ID or workplace) completed in advance",
+    "Project added under profile Work tab with ALL fields: name (max 45 chars), tagline (max 60), up to 3 categories, up to 10 tech tags, logo (500x500, ≤15MB), 1–4 screenshots (1200x630, ≤15MB each), description (≤5k chars), valid demo link",
+    "An engaged network beforehand — upvotes from active streak-holding users count more"
+  ],
+  "workflow": [
+    "Create account at /login (email+password or Google)",
+    "Complete the profile, then get verified (ID or workplace)",
+    "Add the project under your profile's Work tab and reach 100% completion",
+    "On a Monday launch window, click 'Launch →', select the eligible project, and confirm",
+    "Engage in comments through the launch week; ranking is upvote/comment driven"
+  ],
+  "watchFor": [
+    "The identity-verification gate is the hard wall — an agent cannot complete government-ID verification; a human owner must do it",
+    "Incomplete projects fail at launch time — check 100% completion before Monday",
+    "Launch cadence is weekly; relaunches are allowed for new versions (more flexible than Product Hunt's cooldown, per third-party guides)",
+    "Peerlist skews to career/builder audience — good credibility, modest buyer intent"
+  ],
+  "countsAsLive": "Project appears in the current week's Launchpad cohort (/launchpad/<year>/week/<nn>) with upvotes, ratings and comments enabled",
+  "unknowns": [
+    "Current weekly slot caps or competition level",
+    "Whether dofollow links are included on launched project pages",
+    "Launchpad page itself was 403 to fetch — some details rely on help-centre and third-party docs"
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "hashnode.com",
+  "name": "Hashnode",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "community",
+  "zeroCostRoute": "free",
+  "sources": [
+    {
+      "url": "https://hashnode.com/",
+      "title": "Hashnode homepage — free developer blogging platform, custom domains, GraphQL API, GitHub sync"
+    },
+    { "url": "https://hashnode.com/login", "title": "Hashnode login/'Get started' entry point" }
+  ],
+  "requirements": [
+    "A Hashnode account (sign-in via hashnode.com/login)",
+    "Developer/technical orientation — 'the blogging platform for developers and engineers'"
+  ],
+  "preparation": [
+    "Account; a blog name/subdomain (or a custom domain — Hashnode handles the certificate)",
+    "A launch post written as a technical/dev story (markdown editor, syntax highlighting, LaTeX supported)",
+    "Optional: connect a GitHub repo — every post/draft mirrors to GitHub"
+  ],
+  "workflow": [
+    "Sign in / 'Get started' at hashnode.com",
+    "Create a blog — free at <name>.hashnode.dev or your own custom domain",
+    "Write and publish the launch post with product links",
+    "Posts enter the Hashnode feed and are reachable on your blog subdomain",
+    "Optionally publish programmatically via the GraphQL API (a gql-skill exists for AI agents)"
+  ],
+  "watchFor": [
+    "Hashnode is a blogging platform — the durable asset is your blog + posts, not a directory row",
+    "There's a 'Pro' tier — not needed to publish",
+    "Pure promotional posts underperform; frame the launch as a technical write-up",
+    "Canonical/custom-domain setup matters if you also publish the same post on your own site"
+  ],
+  "countsAsLive": "The blog is public at <name>.hashnode.dev (or custom domain) and the launch post renders to logged-out visitors and in the Hashnode feed",
+  "unknowns": [
+    "Whether post outbound links are dofollow",
+    "Whether new blogs appear in the public feed automatically or need engagement signals"
+  ]
+}

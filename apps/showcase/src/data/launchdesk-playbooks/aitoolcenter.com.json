@@ -1,0 +1,60 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aitoolcenter.com",
+  "name": "AI Tool Center",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://aitoolcenter.com/submit",
+      "title": "AI Tool Center - Submit Tool (free requires footer backlink; Google login + captcha)"
+    },
+    {
+      "url": "https://aitoolcenter.com/pricing",
+      "title": "AI Tool Center - Pricing (Free $0 w/ backlink, Starter $9.9 one-time, Pro $29.9/mo)"
+    },
+    {
+      "url": "https://aitoolcenter.com/",
+      "title": "AI Tool Center homepage - AI tools directory, 2000+ listings"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free plan ($0): review in 5-7 days and a 'DR:51 dofollow link' - but ONLY 'as long as you maintain our backlink': you must add their link (<a href=\"https://aitoolcenter.com/\" title=\"AI Tool Center\">AI Tool Center</a>) to your site's footer and keep it",
+    "Starter plan ($9.9 one-time): review in 36 hours, dofollow link, NO backlink required",
+    "Pro plan ($29.9/mo): homepage + site-wide footer placement and multiple dofollow links"
+  ],
+  "requirements": [
+    "AI tools/products only (directory of 2,000+ AI websites/tools)",
+    "Sign-in required: 'Please continue by logging in' with Google - and the login only works in Chrome, Edge, or Safari per the page's own warning",
+    "Submit form fields: Tool Name, Tool URL, Your Email, plus a captcha",
+    "Free tier explicitly requires embedding their footer backlink code before/after submitting ('To get a free dofollow link, you need to add and keep a backlink to aitoolcenter.com on your website')"
+  ],
+  "preparation": [
+    "A Google account usable in Chrome/Edge/Safari for login",
+    "Tool name, URL, and email",
+    "The footer backlink snippet ready to place on your site if taking the free plan",
+    "Or a payment method for Starter $9.9 (one-time) to skip the backlink"
+  ],
+  "workflow": [
+    "Open https://aitoolcenter.com/submit in Chrome, Edge, or Safari",
+    "Sign in with Google (the page insists other browsers won't work for login)",
+    "Fill Tool Name, Tool URL, Your Email, and complete the captcha",
+    "For free: paste their footer link code onto your site, acknowledge 'I Understand', submit, and keep the link - review in 5-7 days",
+    "For paid: use 'Submit Pack' / pricing (Starter $9.9 one-time, Pro $29.9/mo) for faster/no-backlink listing"
+  ],
+  "watchFor": [
+    "Reciprocal-link condition: the dofollow backlink lasts only 'as long as you maintain our backlink' - removing it forfeits the listing's value",
+    "Browser-locked Google login - the site itself says to use 'Chrome', 'Edge', or 'Safari'",
+    "Captcha gate on the form",
+    "Footer spam-links galore ('Friends' link swaps) - typical of this directory family; no extra requirements implied",
+    "Pro plan is a subscription ($29.9/mo) while Starter is one-time ($9.9) - pick deliberately"
+  ],
+  "countsAsLive": "The tool has a public detail page on aitoolcenter.com after review (5-7 days free / 36h paid)",
+  "unknowns": [
+    "Whether the backlink is verified automatically or manually, and how often re-checked",
+    "Whether the captcha/login is enforced on the paid path too",
+    "Rejection criteria beyond the backlink check"
+  ]
+}

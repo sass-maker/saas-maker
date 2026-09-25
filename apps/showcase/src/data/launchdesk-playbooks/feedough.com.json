@@ -1,0 +1,56 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "feedough.com",
+  "name": "Feedough",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.feedough.com/submit-your-startup/",
+      "title": "Submit Your Startup — questionnaire for the Startup Discovery review"
+    },
+    {
+      "url": "https://www.feedough.com/startup-discovery/",
+      "title": "Startup Discovery section — states reviews are a paid premium service"
+    },
+    {
+      "url": "https://www.feedough.com/editorial-standards-policies/",
+      "title": "Editorial standards — describes the Startup Discovery review process"
+    },
+    {
+      "url": "https://www.feedough.com/partner-with-feedough/",
+      "title": "Partnership/media kit page — startup reviews as an ad product"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Startup Discovery reviews are a paid service: 'this is a premium service and we charge for it' per the section's own disclaimer",
+    "Selective even when paid: startup must be 'disruptive', with genuine value and innovation — they reserve the right to reject",
+    "Review articles are custom-written by Feedough's team and promoted via email, social and push notifications"
+  ],
+  "preparation": [
+    "Answers for the submission questionnaire at /submit-your-startup/ (company story, product, traction)",
+    "Evidence the venture is disruptive/innovative — that's the stated bar",
+    "Budget for the review fee (amount not public)"
+  ],
+  "workflow": [
+    "Open https://www.feedough.com/submit-your-startup/",
+    "Fill in the questionnaire describing your startup and why it's disruptive",
+    "Feedough's editorial team evaluates; if accepted they quote pricing",
+    "Their team writes the review; it publishes in the Startup Discovery section and is distributed to subscribers/social/push"
+  ],
+  "watchFor": [
+    "The old '/submit-' batch URL is dead — correct page is /submit-your-startup/",
+    "This is pay-for-coverage, not a directory listing; the site discloses it as premium",
+    "Rejection is possible even when paying — 'disruptive enough' is the stated filter",
+    "Price is not published — expect a quote after questionnaire review"
+  ],
+  "countsAsLive": "A review article about the startup published in Feedough's Startup Discovery section",
+  "unknowns": [
+    "Review fee amount",
+    "Whether links in the review are dofollow",
+    "Turnaround time from questionnaire to publication",
+    "Whether unpaid/free editorial pitches are ever accepted"
+  ]
+}

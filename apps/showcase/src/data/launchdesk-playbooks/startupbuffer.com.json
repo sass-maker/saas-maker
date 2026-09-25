@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startupbuffer.com",
+  "name": "Startup Buffer",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://startupbuffer.com/site/submit",
+      "title": "Startup Buffer submission form (returned 403 to automated fetch; fields documented by third parties)"
+    },
+    {
+      "url": "https://startupbuffer.com/",
+      "title": "Startup Buffer homepage — premium startup directory"
+    },
+    {
+      "url": "https://submitmap.com/platform/startup-buffer/",
+      "title": "Third-party field-level walkthrough of the Startup Buffer submission"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "No account is created — the form is anonymous; a private edit link is emailed to the address you enter",
+    "Required: startup name, live URL, a business email you actually read, a one-sentence pitch, a description of at least 3-4 sentences, and a screenshot under 500KB",
+    "Optional: country, city, primary category, tags, video, social links — used to place the profile on market/location pages",
+    "Site operating since 2015; outbound product link is a plain rel=\"noopener\" followed link"
+  ],
+  "preparation": [
+    "A screenshot compressed under 500KB — the form's only hard limit and a common failure (a normal full-width screenshot exceeds it)",
+    "One-sentence pitch plus a 3-4+ sentence description",
+    "The right business email — it is the ONLY way back to edit the listing later",
+    "Category/tags/country/city for discovery placement"
+  ],
+  "workflow": [
+    "Open https://startupbuffer.com/site/submit",
+    "Fill mandatory fields (name, URL, email, pitch, description) and optional discovery fields",
+    "Upload the <500KB screenshot at the end of the form",
+    "Submit — you land on a promotion page confirming the submission is in review",
+    "Save the private edit link that arrives by email"
+  ],
+  "watchFor": [
+    "Post-submit redirect lands on a paid promotion upsell — submission itself is already in; no payment needed",
+    "Screenshot cap is strictly 500KB — compress before uploading",
+    "Losing the emailed edit link means losing edit access permanently (no account recovery)",
+    "Free vs premium listing exists — premium buys featured placement, but pricing was not visible on public pages",
+    "Submit page returned 403 to an automated reader — may block non-browser agents"
+  ],
+  "countsAsLive": "A startup profile page on startupbuffer.com carrying the pitch, description, screenshot, category/tags and country — cross-linked from market and location pages.",
+  "unknowns": [
+    "Review duration before the listing goes live",
+    "Premium listing pricing",
+    "Whether the profile link is dofollow on all listings or only approved ones"
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "g2.com",
+  "name": "G2",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "review",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "B2B only — 'G2 does not accept business-to-consumer (B2C) products or products that are currently in the alpha or beta stage of development.'",
+    "Submit via the Product Submission Form at g2.com/products/new; G2's research team verifies eligibility and categorization (~3-5 business days) before placing it.",
+    "After the profile is live, claim it ('Unclaimed' → 'Claim this profile'); claim review takes 1–3 business days.",
+    "One G2 listing per product for software companies; service providers get one profile per vendor. Profile names must be the real product/company name — no descriptions, marketing language, or symbols."
+  ],
+  "preparation": [
+    "Check whether G2 already auto-created a listing under a different name first.",
+    "Official product name (exact; no taglines/symbols).",
+    "Product description, key features, customer value text (up to ~500 words for Profile Details).",
+    "Logo file; screenshots and video for a complete profile.",
+    "Packages/pricing info.",
+    "my.G2 access via LinkedIn, Facebook, Google, or business email."
+  ],
+  "workflow": [
+    "Search g2.com for the product — claim it if already listed.",
+    "Otherwise fill https://www.g2.com/products/new (Product Submission Form).",
+    "Wait for the research team's conditional approval (~3-5 business days) — the profile goes live and is claimable.",
+    "Claim the profile (1-3 business days for final approval).",
+    "Complete the profile in my.G2 → Product Profile → Product Information (logo, details, screenshots, pricing); optionally 'Optimize for SEO' AI-enhanced text.",
+    "Collect reviews; consider paid Seller plans only if needed (profile itself is free)."
+  ],
+  "watchFor": [
+    "Alpha/beta and B2C products are refused outright — don't submit pre-launch.",
+    "Claiming is a second review gate after profile creation.",
+    "Category placement is decided by G2's research team — you propose, they dispose.",
+    "my.G2 upsells (badges, analytics, buyer intent) are paid — a free profile is fully sufficient for a listing.",
+    "Post-2026 acquisition, Capterra/GetApp/Software Advice are managed from a separate G2 Digital Markets cabinet — different portal, not shared with G2."
+  ],
+  "countsAsLive": "A public g2.com/products/<slug> page marked Claimed (or Unclaimed but visible) with reviews capability — verified once the research team approves and the profile resolves publicly.",
+  "unknowns": [
+    "Whether products in public beta-with-pricing edge cases pass review.",
+    "Exact conditional-approval criteria beyond B2B/not-alpha-beta."
+  ],
+  "sources": [
+    {
+      "url": "https://documentation.g2.com/help/docs/finding-or-listing-a-product-on-g2",
+      "title": "G2 docs — Adding a product listing & claiming a profile"
+    },
+    {
+      "url": "https://sell.g2.com/create-a-profile",
+      "title": "Sell.G2 — Create a Profile (conditional approval 3-5 days, claim 1-3 days, free)"
+    },
+    {
+      "url": "https://research.g2.com/methodology/research-faq",
+      "title": "G2 Research FAQ — one listing per product, naming rules"
+    },
+    {
+      "url": "https://documentation.g2.com/docs/product-information",
+      "title": "G2 docs — Product Information tab (logo, ~500-word details, SEO optimize)"
+    }
+  ]
+}

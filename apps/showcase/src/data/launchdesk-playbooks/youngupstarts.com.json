@@ -1,0 +1,54 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "youngupstarts.com",
+  "name": "Young Upstarts",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://www.youngupstarts.com/",
+      "title": "Young Upstarts homepage — business/entrepreneurship publication"
+    },
+    {
+      "url": "https://www.youngupstarts.com/contact/guidelines-for-guest-post-submissions/",
+      "title": "Guidelines For Guest Post Submissions"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free guest posts only from subject-matter experts writing under their own name — freelance/ghostwritten content is explicitly not wanted",
+    "Editorial assessment applies; articles that don't meet requirements are steered to paid options"
+  ],
+  "requirements": [
+    "Audience fit: small business owners, new/aspiring entrepreneurs, recent grads, tech/education/social-media/marketing professionals; global focus preferred (US, Singapore, UK, India)",
+    "600-800 words preferred; up to 2,000 if excellent",
+    "Largely non self-promotional; product mentions only when directly relevant",
+    "Byline author must have relevant background/expertise; include full bio, real profile photo (no avatars) and a LinkedIn link",
+    "One single non-commercial link allowed in the article, subject to review; no gambling/porn/dating etc."
+  ],
+  "preparation": [
+    "A 600-800 word draft on an entrepreneurship/business topic with genuine insight",
+    "Author bio, headshot photo, LinkedIn profile URL",
+    "One relevant non-commercial link to include"
+  ],
+  "workflow": [
+    "Read the guidelines at /contact/guidelines-for-guest-post-submissions/",
+    "Email the submission (contact page / administrator@youngupstarts.com) with draft, bio, photo and LinkedIn link",
+    "Editorial team assesses against the criteria",
+    "If accepted, the post is published under the Contributor byline; they may edit for brevity/style"
+  ],
+  "watchFor": [
+    "Site adds its own affiliate and PAID links inside guest posts to offset costs — use the sponsored-post option if you want a clean article",
+    "No freelance writers, content mills or ghostwriters — the named author must be the real expert",
+    "Submissions failing the guidelines are routed to 'paid post options' (email for media kit)",
+    "They reserve the right to remove posts found to contravene guidelines later"
+  ],
+  "countsAsLive": "A published article on youngupstarts.com carrying the contributor's byline/bio",
+  "unknowns": [
+    "Exact submission email vs contact-form preference",
+    "Sponsored post pricing (media kit by email)",
+    "Whether the allowed link is dofollow",
+    "Typical review turnaround"
+  ]
+}

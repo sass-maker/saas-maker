@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "public-apis.io",
+  "name": "Public APIs",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "sources": [
+    {
+      "url": "https://publicapis.io/submit",
+      "title": "PublicAPIs.io submit page — Pro plan form and FAQ"
+    },
+    {
+      "url": "https://public-apis.io/",
+      "title": "Catalog domain from batch — returns a JS-required shell"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "A free plan exists but carries a 4-5 week review queue ('Start with the free plan and upgrade to Pro anytime' per the submit-page FAQ)",
+    "Pro plan ($99 one-time) skips the queue: 24-hour review, live within 72 hours, dedicated detail page, priority support"
+  ],
+  "requirements": [
+    "Product must be a public API: legit, documented, 'not obvious spam or scam'; they reserve the right to reject low-quality submissions",
+    "Form requires: API name, website/docs URL, category, 1-2 line plain-English description, contact email"
+  ],
+  "preparation": [
+    "API name and public documentation URL",
+    "1-2 line plain-English description",
+    "Best-fit category from their ~45-option list",
+    "Contact email for approvals/sponsor info",
+    "Payment method if taking the Pro route"
+  ],
+  "workflow": [
+    "Open https://publicapis.io/submit (the batch's public-apis.io domain rendered only a JS shell; the operational site is publicapis.io)",
+    "Select the free plan or Pro plan on the form",
+    "Fill API name, docs URL, category, description, contact email",
+    "Free: wait in the 4-5 week queue. Pro: complete $99 payment, ~24h review, live within 72h",
+    "Verify listing appears in the /apis directory"
+  ],
+  "watchFor": [
+    "Domain discrepancy: the catalog entry is public-apis.io (JS-only render) while the working directory and submit form live at publicapis.io — treat them as the same property but verify",
+    "The submit page defaults to the Pro plan UI — look for the free-plan option before paying",
+    "Pro payment is 'secure redirect' based; 30-day money-back guarantee stated",
+    "Do not confuse this with the unrelated github.com/public-apis/public-apis GitHub list, which has its own PR-based contribution rules"
+  ],
+  "countsAsLive": "The API appears in the publicapis.io API directory under its category (Pro listings additionally get a dedicated detail page)",
+  "unknowns": [
+    "Whether public-apis.io and publicapis.io are officially the same operation or a redirect/alias",
+    "Whether the free plan listing is dofollow",
+    "Whether the free tier gets any detail page or just a row entry"
+  ]
+}

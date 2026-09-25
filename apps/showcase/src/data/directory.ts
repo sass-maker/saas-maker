@@ -16,6 +16,7 @@ export interface DirectoryProject {
   name: string;
   description: string;
   makerNote: string;
+  logoUrl?: string;
   purposeContract?: PurposeContract;
   kind: 'product' | 'platform' | 'experiment';
   category: 'utility' | 'media' | 'experimental';

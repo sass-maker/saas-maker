@@ -1,0 +1,197 @@
+---
+/**
+ * THESIS: The kit is the honest middle between "a spreadsheet of directories" and a
+ * €100 zip file — the brief, the planner, the playbooks, and the ledger are all here,
+ * free, and the evidence grades say exactly how much to trust each row.
+ * OWN-WORLD: Same workshop interior as /launchdesk; this is the kit's workbench card.
+ * STORY: What it is → the five pieces → the quickstart → why the states are honest.
+ * FIRST VIEWPORT: Kicker, one-line promise, quickstart block visible without scroll.
+ */
+import Footer from '../components/Footer.astro';
+import Nav from '../components/Nav.astro';
+import launchdeskData from '../data/launchdesk.json';
+import Layout from '../layouts/Layout.astro';
+
+const playbookModules = import.meta.glob('../data/launchdesk-playbooks/*.json');
+const playbookCount = Object.keys(playbookModules).filter(
+  (path) => !path.endsWith('/_schema.json')
+).length;
+---
+
+<Layout
+  title="Launchkit — a free agent-executable launch toolkit"
+  description={`A free launch toolkit for AI agents: one product brief, a truthful run planner, ${playbookCount} per-platform submission playbooks, an evidence-based tracker, and a run prompt. No paywall, no account.`}
+>
+  <div class="workshop-world interior-world launchkit-world">
+    <Nav />
+    <main id="main-content" class="launchkit-page">
+      <header class="launchkit-hero">
+        <p class="launchkit-kicker">SaaS Maker / Launchkit</p>
+        <h1>Your agent launches the product. Free.</h1>
+        <p class="launchkit-lede">
+          Paid launch kits sell a git repo of directory guides for around €100. This is the same
+          shape — a product brief, a run planner, {playbookCount} per-platform submission
+          playbooks, an evidence tracker, and a run prompt — built on the public
+          <a href="/launchdesk">launch catalog</a> of {launchdeskData.destinations.length}
+          destinations. No account, no payment, no upsell.
+        </p>
+      </header>
+
+      <section class="launchkit-pane">
+        <h2>Quickstart</h2>
+        <pre><code>git clone --depth 1 https://github.com/sass-maker/saas-maker.git
+cd saas-maker
+cp tooling/launchkit/brief.template.md brief.md   # fill once
+
+node tooling/launchkit/scripts/plan-run.mjs --brief brief.md --n 10 --out run-plan.json
+# paste tooling/launchkit/prompts/run.prompt.md into your agent
+node tooling/launchkit/scripts/report.mjs --tracker tracker.json</code></pre>
+      </section>
+
+      <section class="launchkit-pane">
+        <h2>The five pieces</h2>
+        <dl class="launchkit-pieces">
+          <dt>Product brief</dt>
+          <dd>Facts, approved claims, assets, and agent permissions — written once, reused every run.</dd>
+          <dt>Run planner</dt>
+          <dd>
+            Picks ≤N suitable routes, free before conditional, DR-ranked. When fewer routes honestly
+            fit, the target shrinks — it never pads with paid or unverified routes.
+          </dd>
+          <dt>Playbooks</dt>
+          <dd>
+            {playbookCount} per-platform guides: requirements, preparation, workflow, watch-fors,
+            and what counts as live — every claim citing the public page it came from.
+          </dd>
+          <dt>Tracker</dt>
+          <dd>
+            A saved draft is <code>prepared</code>, a confirmed date is <code>scheduled</code>, a
+            resolving public URL is <code>live</code>. States carry evidence or they don't count.
+          </dd>
+          <dt>Run prompt</dt>
+          <dd>
+            Paste-ready instructions that make the agent stop for logins, CAPTCHAs, payments, and
+            any permission the brief didn't grant.
+          </dd>
+        </dl>
+      </section>
+
+      <section class="launchkit-pane launchkit-pane--machine">
+        <h2>For agents</h2>
+        <p>Everything is machine-readable without cloning:</p>
+        <ul>
+          <li><a href="/launchkit.json">/launchkit.json</a> — the kit manifest</li>
+          <li><a href="/launchdesk.json">/launchdesk.json</a> — the full destination catalog</li>
+          <li>
+            <a href="/launchdesk-playbooks.json">/launchdesk-playbooks.json</a> — playbook index;
+            each playbook also at <code>/launchdesk/&lt;domain&gt;.json</code>
+          </li>
+          <li><a href="/llms.txt">/llms.txt</a> — site-level index</li>
+        </ul>
+        <p class="launchkit-honest">
+          Honest grade: playbooks are <em>researched</em> from cited public pages, not observed
+          submission runs. The schema says so on every file, and the tracker keeps your own run's
+          evidence separate from research.
+        </p>
+      </section>
+
+      <p class="launchkit-back">
+        <a href="/launchdesk">Browse the launch catalog →</a>
+      </p>
+    </main>
+    <Footer />
+  </div>
+</Layout>
+
+<style>
+  .launchkit-page {
+    max-width: 52rem;
+    margin: 0 auto;
+    padding: 2rem 1.25rem 4rem;
+    color: var(--ink);
+  }
+  .launchkit-kicker {
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .launchkit-hero h1 {
+    margin: 0.35rem 0 0.6rem;
+    font-size: 2.1rem;
+  }
+  .launchkit-lede {
+    font-size: 1.02rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+  .launchkit-lede a {
+    color: var(--workshop-cobalt);
+  }
+  .launchkit-pane {
+    margin-top: 1.4rem;
+    padding: 1rem 1.15rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+  }
+  .launchkit-pane h2 {
+    margin: 0 0 0.6rem;
+    font-size: 0.85rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .launchkit-pane pre {
+    margin: 0;
+    overflow-x: auto;
+    font-size: 0.82rem;
+    line-height: 1.55;
+  }
+  .launchkit-pane ul {
+    margin: 0;
+    padding-left: 1.2rem;
+    display: grid;
+    gap: 0.4rem;
+    font-size: 0.95rem;
+  }
+  .launchkit-pane a {
+    color: var(--workshop-cobalt);
+  }
+  .launchkit-pieces {
+    margin: 0;
+    display: grid;
+    gap: 0.5rem;
+  }
+  .launchkit-pieces dt {
+    font-weight: 600;
+  }
+  .launchkit-pieces dd {
+    margin: 0 0 0.4rem;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  .launchkit-pane--machine {
+    border-color: var(--workshop-cobalt);
+  }
+  .launchkit-pane--machine p {
+    margin: 0 0 0.6rem;
+    font-size: 0.95rem;
+  }
+  .launchkit-honest {
+    border-top: 1px solid var(--line);
+    padding-top: 0.7rem;
+    color: var(--ink-muted);
+  }
+  .launchkit-back {
+    margin-top: 2rem;
+  }
+  .launchkit-back a {
+    color: var(--ink-soft);
+    text-decoration: none;
+  }
+  .launchkit-back a:hover {
+    color: var(--copper);
+  }
+</style>

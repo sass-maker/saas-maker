@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aitooltrek.com",
+  "name": "AI Tool Trek",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free Pack ($0) requires adding their partner link — <a href='https://aitooltrek.com'>AI Tool Trek</a> — to your homepage for submission approval.",
+    "Free submissions are reviewed within 72 hours and listed within 15 days.",
+    "The listing is removed if the backlink is removed ('Your submission will be removed once the backlink is removed')."
+  ],
+  "requirements": [
+    "AI tools; the directory lists 3500+ AI websites and tools across categories like Text & Writing, Image, Chatbot, Coding, and NSFW.",
+    "The on-page submission form asks only for Website Name and Website URL at the top level."
+  ],
+  "preparation": [
+    "Website name and URL.",
+    "The backlink <a href='https://aitooltrek.com'>AI Tool Trek</a> live on your homepage before submitting on the Free Pack.",
+    "Plan decision: Free (backlink, 72h review / listed within 15 days) / Fast Track $19.9 (listed within 24h, 5+ dofollow backlinks, featured badge, one update within 7 days, lifetime) / Unlimited Pack $39.9/mo (unlimited submissions for agencies)."
+  ],
+  "workflow": [
+    "Open https://aitooltrek.com/submit.",
+    "Pick the submission lane (Free / Fast Track / Unlimited).",
+    "Fill Website Name and Website URL and submit.",
+    "Free: add the partner link to your homepage first, then wait for 72h review and listing within 15 days.",
+    "Paid: checkout, then the listing goes live within 24 hours."
+  ],
+  "watchFor": [
+    "Explicit clawback: 'Your submission will be removed once the backlink is removed' — the free listing is permanently conditional.",
+    "Contact email is Cloudflare-obfuscated ([email protected] pattern).",
+    "Unlimited Pack is a $39.9/mo recurring subscription aimed at agencies — not needed for a single product.",
+    "DR 52 'certified' claim links to an Ahrefs checker — self-reported marketing metric.",
+    "Sponsored placements (e.g. GPTScribe) occupy the top of the submit page."
+  ],
+  "countsAsLive": "The tool appears in the aitooltrek.com directory under its category with a reachable detail page and outbound link.",
+  "unknowns": [
+    "Whether the minimal Website Name/URL form expands after the first step (only two fields were visible).",
+    "Whether an account is required.",
+    "How the backlink is re-verified over time."
+  ],
+  "sources": [
+    {
+      "url": "https://aitooltrek.com/submit",
+      "title": "Submit Your AI Tool — Free Pack (homepage backlink), Fast Track $19.9, Unlimited $39.9/mo"
+    },
+    {
+      "url": "https://aitooltrek.com/",
+      "title": "AI Tool Trek homepage — 3500+ AI tools directory"
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aibesttop.com",
+  "name": "AIBestTop",
+  "grade": "researched",
+  "retrieved": "2026-09-25",
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free $0 listing requires a backlink to aibesttop.com on your site (pricing page: 'Backlink to our site is required').",
+    "Free listings are 'reviewed and listed within 72 hours' and offer 'publish your product the day you want'."
+  ],
+  "requirements": [
+    "AI tool or service; directory is organized by user-category (e.g. SaaS Builders, Indie Hackers, Designers) and tags.",
+    "Account required: /submit redirects to a login page offering email/password plus Google and GitHub OAuth."
+  ],
+  "preparation": [
+    "Account credentials (email, Google, or GitHub sign-in).",
+    "Product name, URL, description, category/tags.",
+    "A reciprocal backlink to aibesttop.com placed on your site before submitting on the free plan.",
+    "Decide plan: free (backlink, 72h review), Pro $9.9 (no backlink, featured placement, instant listing), or Sponsor $19.9/week (advertisement across pages)."
+  ],
+  "workflow": [
+    "Go to https://aibesttop.com/submit — you will be asked to log in or register first.",
+    "Choose a pricing plan on /pricing (free / pro / sponsor).",
+    "Fill the listing form (name, URL, description, category, tags).",
+    "On free, ensure the backlink is already live; expect review within 72 hours.",
+    "On Pro ($9.9), the listing publishes immediately and can be scheduled."
+  ],
+  "watchFor": [
+    "Submit page is a bare login wall — you cannot see the form until you create an account.",
+    "Free plan promises '3 dofollow links' but requires your reciprocal backlink; removing it likely delists you (standard for this boilerplate, though not stated verbatim).",
+    "Sponsor plan is $19.9 per week recurring — do not confuse with the one-time Pro.",
+    "Built with the same Luolink/Mkdirs directory boilerplate as several other directories — identical plan wording appears on collectai.tools and dayslaunch.com."
+  ],
+  "countsAsLive": "The tool has a public item page at aibesttop.com/item/<slug> reachable while logged out, appearing in category/search listings.",
+  "unknowns": [
+    "Exact form fields behind the login wall.",
+    "Whether badge removal is policed automatically.",
+    "Review queue length beyond 'within 72 hours'."
+  ],
+  "sources": [
+    {
+      "url": "https://aibesttop.com/pricing",
+      "title": "AIBestTop Pricing — free $0 (backlink required, 72h review), Pro $9.9, Sponsor $19.9/week"
+    },
+    {
+      "url": "https://aibesttop.com/submit",
+      "title": "Submit page — redirects to login (email, Google, GitHub)"
+    },
+    { "url": "https://aibesttop.com/", "title": "AIBestTop homepage — curated AI tools directory" }
+  ]
+}
