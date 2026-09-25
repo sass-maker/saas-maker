@@ -24,7 +24,7 @@ class ReleasePreflightTests(unittest.TestCase):
     def git(self, *arguments):
         return subprocess.run(["git", "-C", str(self.root), *arguments], check=True, capture_output=True, text=True)
 
-    def test_accepts_tag_reachable_from_main(self):
+    def test_accepts_tag_at_current_main(self):
         receipt = inspect_tag(self.app, self.repository, self.root, "v1.2.3-4")
         self.assertEqual(receipt["state"], "release-source-preflight-passed")
         self.assertEqual(receipt["sourceSha"], receipt["mainShaAtCheck"])
@@ -44,6 +44,12 @@ class ReleasePreflightTests(unittest.TestCase):
         self.git("checkout", "main")
         with self.assertRaisesRegex(ValueError, "not reachable"):
             inspect_tag(self.app, self.repository, self.root, "v1.2.4-5")
+
+    def test_rejects_older_reachable_tag(self):
+        (self.root / "source.txt").write_text("new main\n")
+        self.git("commit", "-am", "new main")
+        with self.assertRaisesRegex(ValueError, "current main"):
+            inspect_tag(self.app, self.repository, self.root, "v1.2.3-4")
 
     def test_rejects_dirty_tracked_checkout(self):
         (self.root / "source.txt").write_text("changed\n")

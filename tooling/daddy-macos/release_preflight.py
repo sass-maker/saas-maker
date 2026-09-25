@@ -34,6 +34,8 @@ def inspect_tag(app: str, repository: str, root: Path, tag: str) -> dict:
     ancestor = subprocess.run(["git", "-C", str(root), "merge-base", "--is-ancestor", source_sha, main_sha], check=False)
     if ancestor.returncode != 0:
         raise ValueError("Release tag commit is not reachable from main")
+    if source_sha != main_sha:
+        raise ValueError("Release tag must point to the current main commit")
     return {
         "schemaVersion": 1,
         "state": "release-source-preflight-passed",
