@@ -48,7 +48,7 @@ def build_products(root: Path, architecture: str) -> Path:
     command = ["swift", "build", "-c", "release", "--triple", triple, "--scratch-path", str(scratch)]
     subprocess.run(command, cwd=root, check=True)
     bin_path = Path(subprocess.check_output(command + ["--show-bin-path"], cwd=root, text=True).strip())
-    if bin_path.name != "Release" or not bin_path.is_dir():
+    if bin_path.name.lower() != "release" or not bin_path.is_dir():
         raise ValueError(f"SwiftPM did not produce a Release products directory: {bin_path}")
     return bin_path
 
