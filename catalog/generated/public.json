@@ -15,8 +15,8 @@
         "audience": "Developers and teams shipping code produced with AI agents.",
         "outcome": "Higher confidence that an agent completed the requested change correctly and safely.",
         "mechanism": "Local-first review combines repository context, executable checks, targeted evaluation, and inspectable verification receipts.",
-        "proof": "Published macOS 1.13.9 is signed and notarized. Its CLI has verified real Codex review, passing and failing executable checks, and persisted receipts on a bounded Node fixture.",
-        "nextAction": "Try the developer preview on a small local repository. Use the documented manual update path; in-app updating and other review providers remain unqualified."
+        "proof": "Published macOS 1.14.3 is signed and notarized; its DMG hash and local installation were verified. An earlier bounded CLI fixture demonstrated real Codex review, pass/fail checks and persisted receipts.",
+        "nextAction": "Try the current Mac release on a small local repository. Use the documented manual update path until in-app installation is qualified."
       },
       "kind": "product",
       "category": "utility",
@@ -46,7 +46,7 @@
       "changelogUrl": "https://codevetter.com/changelog",
       "roadmapUrl": "https://github.com/Codevetter/codevetter/issues",
       "firstCommitAt": "2025-11-30",
-      "latestCommitAt": "2026-09-09"
+      "latestCommitAt": "2026-09-23"
     },
     {
       "id": "pace",
@@ -89,7 +89,7 @@
       "changelogUrl": "https://heypace.app/changelog",
       "roadmapUrl": "https://github.com/HeyPace/pace/issues",
       "firstCommitAt": "2026-07-13",
-      "latestCommitAt": "2026-09-09"
+      "latestCommitAt": "2026-09-18"
     },
     {
       "id": "posttrainllm",
@@ -132,7 +132,7 @@
       "changelogUrl": "https://posttrainllm.com/changelog",
       "roadmapUrl": "https://github.com/PostTrainLLM/posttrainllm/issues",
       "firstCommitAt": "2026-05-21",
-      "latestCommitAt": "2026-09-07"
+      "latestCommitAt": "2026-09-23"
     },
     {
       "id": "live",
@@ -174,19 +174,19 @@
       "changelogUrl": "https://live.significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/live/issues",
       "firstCommitAt": "2026-03-01",
-      "latestCommitAt": "2026-09-09"
+      "latestCommitAt": "2026-09-22"
     },
     {
       "id": "saas-maker",
       "name": "SaaS Maker",
-      "description": "A public directory of working experiments, reference projects and reusable tooling.",
-      "makerNote": "I use SaaS Maker as the public home for Fleet and as a workshop for reusable feedback, workflow, and automation tools.",
+      "description": "A public directory of working experiments, launch destinations, reference projects and reusable tooling.",
+      "makerNote": "I use SaaS Maker as the public home for Fleet and as a workshop for launch research, reusable feedback, workflow, and automation tools.",
       "purposeContract": {
         "purpose": "SaaS Maker is the public product studio and reusable tooling workshop for the Fleet portfolio.",
         "audience": "Visitors exploring Sarthak’s products and builders consuming the studio’s public packages, workflows, and evidence.",
-        "outcome": "Understand the body of work and reuse the tools that have earned a stable place across its products.",
-        "mechanism": "A generated public directory sits beside shared feedback, UI, workflow, skill, and automation tooling maintained through real Fleet use.",
-        "proof": "It publishes the canonical privacy-safe project directory and houses packages and tooling used by multiple independent repositories.",
+        "outcome": "Understand the body of work, research source-attributed launch destinations, and reuse the tools that have earned a stable place across its products.",
+        "mechanism": "A generated public directory and native launch-destination catalog sit beside shared feedback, UI, workflow, skill, and automation tooling maintained through real Fleet use.",
+        "proof": "It publishes the canonical privacy-safe project directory, serves the provenance-bearing /launchdesk catalog, and houses packages and tooling used by multiple independent repositories.",
         "nextAction": "Explore the complete directory or open the public tooling catalogue; product-specific work continues in each owning repository."
       },
       "kind": "product",
@@ -218,7 +218,7 @@
       "changelogUrl": "https://sassmaker.com/changelog",
       "roadmapUrl": "https://github.com/sass-maker/saas-maker/issues",
       "firstCommitAt": "2026-02-26",
-      "latestCommitAt": "2026-09-09"
+      "latestCommitAt": "2026-09-22"
     },
     {
       "id": "gitstat",
@@ -260,7 +260,7 @@
       "changelogUrl": "https://git.significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/sass-maker/gitstat/issues",
       "firstCommitAt": "2026-08-21",
-      "latestCommitAt": "2026-09-06"
+      "latestCommitAt": "2026-09-12"
     },
     {
       "id": "email-manager",
@@ -303,7 +303,7 @@
       "changelogUrl": "https://mail.significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/email-manager/issues",
       "firstCommitAt": "2026-02-24",
-      "latestCommitAt": "2026-09-09"
+      "latestCommitAt": "2026-09-10"
     },
     {
       "id": "chatgpt-memory-insights",
@@ -344,7 +344,7 @@
       "changelogUrl": "https://chatgpt.significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/chatgpt-memory-insights/issues",
       "firstCommitAt": "2026-07-28",
-      "latestCommitAt": "2026-09-07"
+      "latestCommitAt": "2026-09-19"
     },
     {
       "id": "free-ai",
@@ -387,7 +387,7 @@
       "changelogUrl": "https://ai-gateway.sassmaker.com/changelog",
       "roadmapUrl": "https://github.com/sass-maker/free-ai/issues",
       "firstCommitAt": "2026-02-15",
-      "latestCommitAt": "2026-09-09"
+      "latestCommitAt": "2026-09-20"
     },
     {
       "id": "high-signal",
@@ -430,7 +430,7 @@
       "changelogUrl": "https://highsignal.app/changelog",
       "roadmapUrl": "https://github.com/High-Signal-App/high-signal/issues",
       "firstCommitAt": "2026-04-25",
-      "latestCommitAt": "2026-09-12"
+      "latestCommitAt": "2026-09-22"
     },
     {
       "id": "on-record",
@@ -472,7 +472,7 @@
       "repositoryUrl": "https://github.com/Significant-Hobbies/on-record",
       "roadmapUrl": "https://github.com/Significant-Hobbies/on-record/issues",
       "firstCommitAt": "2026-08-24",
-      "latestCommitAt": "2026-09-07"
+      "latestCommitAt": "2026-09-22"
     },
     {
       "id": "issue-pages",
@@ -555,7 +555,7 @@
       "repositoryUrl": "https://github.com/High-Signal-App/research-papers",
       "roadmapUrl": "https://github.com/High-Signal-App/research-papers/issues",
       "firstCommitAt": "2026-05-30",
-      "latestCommitAt": "2026-09-06"
+      "latestCommitAt": "2026-09-10"
     },
     {
       "id": "materia",
@@ -641,7 +641,7 @@
       "changelogUrl": "https://knowledgebase.sassmaker.com/changelog",
       "roadmapUrl": "https://github.com/sass-maker/knowledge-base/issues",
       "firstCommitAt": "2026-05-27",
-      "latestCommitAt": "2026-09-09"
+      "latestCommitAt": "2026-09-19"
     },
     {
       "id": "significanthobbies",
@@ -685,7 +685,7 @@
       "changelogUrl": "https://significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/significanthobbies/issues",
       "firstCommitAt": "2026-03-01",
-      "latestCommitAt": "2026-09-09"
+      "latestCommitAt": "2026-09-22"
     },
     {
       "id": "anime-list",
@@ -729,7 +729,7 @@
       "changelogUrl": "https://anime.significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/anime-list/issues",
       "firstCommitAt": "2025-02-16",
-      "latestCommitAt": "2026-09-08"
+      "latestCommitAt": "2026-09-22"
     },
     {
       "id": "looptv",
@@ -814,7 +814,7 @@
       "changelogUrl": "https://learn.significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/swe-interview-prep/issues",
       "firstCommitAt": "2026-02-08",
-      "latestCommitAt": "2026-09-08"
+      "latestCommitAt": "2026-09-20"
     },
     {
       "id": "calorie",
@@ -858,7 +858,7 @@
       "changelogUrl": "https://calorie.significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/calorie/issues",
       "firstCommitAt": "2026-07-25",
-      "latestCommitAt": "2026-09-09"
+      "latestCommitAt": "2026-09-22"
     },
     {
       "id": "setline",
@@ -900,7 +900,7 @@
       "changelogUrl": "https://setline.significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/setline/issues",
       "firstCommitAt": "2026-07-27",
-      "latestCommitAt": "2026-09-09"
+      "latestCommitAt": "2026-09-22"
     },
     {
       "id": "kith",
@@ -942,7 +942,7 @@
       "changelogUrl": "https://kith.significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/kith/issues",
       "firstCommitAt": "2026-08-16",
-      "latestCommitAt": "2026-09-09"
+      "latestCommitAt": "2026-09-19"
     },
     {
       "id": "rolepatch",
@@ -985,7 +985,7 @@
       "changelogUrl": "https://rolepatch.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/rolepatch/issues",
       "firstCommitAt": "2026-02-23",
-      "latestCommitAt": "2026-09-07"
+      "latestCommitAt": "2026-09-22"
     },
     {
       "id": "karte",
@@ -1029,7 +1029,7 @@
       "changelogUrl": "https://karte.cc/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/karte/issues",
       "firstCommitAt": "2026-03-05",
-      "latestCommitAt": "2026-09-07"
+      "latestCommitAt": "2026-09-22"
     },
     {
       "id": "starboard",
@@ -1072,7 +1072,7 @@
       "changelogUrl": "https://starboard.codevetter.com/changelog",
       "roadmapUrl": "https://github.com/Codevetter/starboard/issues",
       "firstCommitAt": "2026-02-22",
-      "latestCommitAt": "2026-09-07"
+      "latestCommitAt": "2026-09-22"
     },
     {
       "id": "app-health",
@@ -1116,7 +1116,7 @@
       "changelogUrl": "https://health.sassmaker.com/changelog",
       "roadmapUrl": "https://github.com/sass-maker/app-health/issues",
       "firstCommitAt": "2026-07-20",
-      "latestCommitAt": "2026-09-12"
+      "latestCommitAt": "2026-09-19"
     },
     {
       "id": "mashup",
@@ -1279,7 +1279,7 @@
       "changelogUrl": "https://paths.significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/what-it-takes-to-win/issues",
       "firstCommitAt": "2026-07-21",
-      "latestCommitAt": "2026-09-07"
+      "latestCommitAt": "2026-09-22"
     },
     {
       "id": "sarthakagrawal-personal",
@@ -1321,7 +1321,7 @@
       "changelogUrl": "https://sarthakagrawal.dev/changelog",
       "roadmapUrl": "https://github.com/sarthakagrawal927/portfolio/issues",
       "firstCommitAt": "2026-05-22",
-      "latestCommitAt": "2026-09-07"
+      "latestCommitAt": "2026-09-19"
     },
     {
       "id": "reddit-insights",
@@ -1363,7 +1363,7 @@
       "repositoryUrl": "https://github.com/High-Signal-App/research-subreddit",
       "roadmapUrl": "https://github.com/High-Signal-App/research-subreddit/issues",
       "firstCommitAt": "2026-08-07",
-      "latestCommitAt": "2026-09-07"
+      "latestCommitAt": "2026-09-18"
     },
     {
       "id": "anchor",
@@ -1375,7 +1375,7 @@
         "audience": "A person moving between Mac, iPhone, and Apple Watch who wants a deliberate day rather than another task list.",
         "outcome": "Make more realistic plans, recover from interruptions, and protect activities that genuinely matter without moralizing imperfect adherence.",
         "mechanism": "Native apps combine schedule blocks, recurring routines, wall-clock focus sessions, interruption evidence, and an end-of-day divergence review.",
-        "proof": "The maintained successor to Indulge and Habits has signed native builds and an integrated schedule → focus → interruption → review loop under dogfooding.",
+        "proof": "Public notarized Mac build 20 remains available; local build 25 has passed a bounded personal workflow but Gatekeeper rejects it as unnotarized, so it is not a public update.",
         "nextAction": "Use Anchor through a real day and review the divergence evidence; let repeated lived patterns decide the next change."
       },
       "kind": "product",
@@ -1409,7 +1409,7 @@
       "changelogUrl": "https://anchor.significanthobbies.com/changelog",
       "roadmapUrl": "https://github.com/Significant-Hobbies/anchor/issues",
       "firstCommitAt": "2026-08-16",
-      "latestCommitAt": "2026-09-09"
+      "latestCommitAt": "2026-09-18"
     },
     {
       "id": "nomad-data-adventure",
@@ -1450,8 +1450,8 @@
       "url": "https://nomad.significanthobbies.com/",
       "repositoryUrl": "https://github.com/sarthakagrawal927/nomad-data-adventure",
       "roadmapUrl": "https://github.com/sarthakagrawal927/nomad-data-adventure/issues",
-      "firstCommitAt": null,
-      "latestCommitAt": null
+      "firstCommitAt": "2026-09-12",
+      "latestCommitAt": "2026-09-22"
     },
     {
       "id": "storagedaddy",
@@ -1463,8 +1463,8 @@
         "audience": "Developers whose Mac builds, dependencies, caches and AI session histories consume storage.",
         "outcome": "Find large storage consumers and review what to archive or move to Trash.",
         "mechanism": "A local SwiftUI and AppKit scanner provides visual exploration, developer insights, reviewed cache cleanup and compact AI conversation exports. Sparkle provides signed macOS update checks.",
-        "proof": "MIT-licensed source, signed and notarized macOS 14+ Apple-silicon beta, tested scanner and archive cleanup, and a publicly downloaded DMG with matching checksum.",
-        "nextAction": "Download during free early access at storagedaddy.significanthobbies.com, scan a folder, and review what to archive or move to Trash."
+        "proof": "The public signed Sparkle feed and download serve notarized macOS 0.1.3 build108 with matching DMG bytes; an installed update and native scan for this build remain unverified.",
+        "nextAction": "Download during free early access at storage.daddyrad.com, scan a folder, and review what to archive or move to Trash."
       },
       "kind": "experiment",
       "category": "utility",
@@ -1488,13 +1488,14 @@
         "Cloudflare Workers"
       ],
       "domains": [
+        "storage.daddyrad.com",
         "storagedaddy.significanthobbies.com"
       ],
-      "url": "https://storagedaddy.significanthobbies.com/",
+      "url": "https://storage.daddyrad.com/",
       "repositoryUrl": "https://github.com/sarthakagrawal927/storagedaddy",
       "roadmapUrl": "https://github.com/sarthakagrawal927/storagedaddy/issues",
       "firstCommitAt": "2026-09-13",
-      "latestCommitAt": "2026-09-13"
+      "latestCommitAt": "2026-09-20"
     },
     {
       "id": "browserdaddy",
@@ -1506,8 +1507,8 @@
         "audience": "Mac users who want a unified, inspectable record of browsing and attention.",
         "outcome": "Review browsing history and attention without sending the archive to a hosted service.",
         "mechanism": "A native local Mac app extracts browser archives, watches focus and classifies topics only after explicit opt-in.",
-        "proof": "Private native macOS repository and local-first product surface; public distribution is not claimed yet.",
-        "nextAction": "Read the public BrowserDaddy landing and release status; no native download is available."
+        "proof": "The public signed Sparkle feed and download serve notarized 0.3.1 build5 with matching DMG bytes. The owner Mac has a separate local 0.4.0 build5, so this public update has not been installed there.",
+        "nextAction": "Download the current public Mac build or use the signed update feed from an older public installation; private-window filtering remains unqualified."
       },
       "kind": "experiment",
       "category": "utility",
@@ -1527,12 +1528,16 @@
       "shareable": true,
       "deployed": true,
       "deploymentProviders": [
-        "Cloudflare Pages"
+        "Cloudflare Pages",
+        "Cloudflare Workers"
       ],
       "domains": [
+        "browser.daddyrad.com",
         "browserdaddy.significanthobbies.com"
       ],
-      "url": "https://browserdaddy.significanthobbies.com/"
+      "url": "https://browser.daddyrad.com/",
+      "firstCommitAt": "2026-09-19",
+      "latestCommitAt": "2026-09-22"
     },
     {
       "id": "performancedaddy",
@@ -1544,8 +1549,8 @@
         "audience": "Developers running local servers, coding agents and other moving parts on a Mac.",
         "outcome": "Find the process or port evidence behind a slowdown and choose the next check deliberately.",
         "mechanism": "A native local Mac app records bounded CPU, memory, thermal, process and socket observations with reviewed stop controls.",
-        "proof": "Private native macOS repository and local preview surface; no public download or guaranteed root-cause diagnosis is claimed.",
-        "nextAction": "Read the public PerformanceDaddy landing and release status; no native download is available."
+        "proof": "The public signed Sparkle feed and download serve notarized 0.2.3 build4 with matching DMG bytes; the locally installed build3 has not yet been updated through Sparkle.",
+        "nextAction": "Read the public landing and use the current GitHub release for a Mac install; review measured evidence before acting on a diagnosis."
       },
       "kind": "experiment",
       "category": "utility",
@@ -1565,12 +1570,143 @@
       "shareable": true,
       "deployed": true,
       "deploymentProviders": [
-        "Cloudflare Pages"
+        "Cloudflare Pages",
+        "Cloudflare Workers"
       ],
       "domains": [
+        "performance.daddyrad.com",
         "performancedaddy.significanthobbies.com"
       ],
-      "url": "https://performancedaddy.significanthobbies.com/"
+      "url": "https://performance.daddyrad.com/",
+      "repositoryUrl": "https://github.com/sarthakagrawal927/performancedaddy",
+      "roadmapUrl": "https://github.com/sarthakagrawal927/performancedaddy/issues",
+      "firstCommitAt": "2026-09-20",
+      "latestCommitAt": "2026-09-23"
+    },
+    {
+      "id": "agent-testing",
+      "name": "Browser Agent Testing",
+      "description": "A completed local web and iOS experiment comparing browser-agent strategies with independent verification.",
+      "makerNote": "I ran Browser Agent Testing to compare automation by verified feedback time, not by how quickly a driver can finish clicks.",
+      "purposeContract": {
+        "purpose": "Browser Agent Testing compares local web and native UI automation with reproducible, product-owned verification.",
+        "audience": "Coding agents and maintainers comparing local browser and native UI testing tools.",
+        "outcome": "Choose faster and cheaper test strategies without silently losing functional or visual defect detection.",
+        "mechanism": "Bounded manifests and receipts run saved or adaptive workflows, then independent product verifiers check UI, persistence, process and visual outcomes.",
+        "proof": "The completed experiment publishes a sourced 79-tool catalogue, 26 measured journey arms with 118 verified completions across 129 attempts, seven additional probes, ten retained experiment records, exact observed pins and a live agent-first guide. The measured evidence retains Playwright and Maestro as baselines.",
+        "nextAction": "Explore the finished experiment or clone the public repository; replay a documented arm only when a concrete product change justifies it."
+      },
+      "kind": "experiment",
+      "category": "experimental",
+      "form": "Completed benchmark and static guide",
+      "platforms": [
+        "Web",
+        "iOS",
+        "CLI"
+      ],
+      "technologies": [
+        "Node.js",
+        "Cloudflare Workers",
+        "Playwright",
+        "Maestro"
+      ],
+      "group": "past",
+      "lifecycle": "inactive",
+      "shareable": true,
+      "deployed": true,
+      "deploymentProviders": [
+        "Cloudflare Workers"
+      ],
+      "domains": [
+        "browser-agents.sarthakagrawal.dev"
+      ],
+      "url": "https://browser-agents.sarthakagrawal.dev/",
+      "repositoryUrl": "https://github.com/sarthakagrawal927/agent-testing",
+      "roadmapUrl": "https://github.com/sarthakagrawal927/agent-testing/issues",
+      "firstCommitAt": "2026-09-20",
+      "latestCommitAt": "2026-09-20"
+    },
+    {
+      "id": "contextdaddy",
+      "name": "ContextDaddy",
+      "description": "A read-only native Mac app for coding-agent context: per-runtime skill access, project context inventory, local usage history and verified OpenTelemetry signals.",
+      "makerNote": "ContextDaddy is supposed to handle all things AI agents locally (context, skills, usage, otel etc) to help debug/speed up",
+      "purposeContract": {
+        "purpose": "Help developers inspect coding-agent context, skill exposure, usage, and available local telemetry.",
+        "audience": "Developers using multiple coding agents on a Mac.",
+        "outcome": "Find actionable context and usage problems with evidence and explicit measurement limits.",
+        "mechanism": "A native read-only Mac app combines bounded skill discovery, offline usage history, and local OpenTelemetry views.",
+        "proof": "The public 0.1.0 build2 DMG is Developer ID signed, notarized, stapled, and served byte for byte at /download. Discovery evidence still does not prove live prompt use.",
+        "nextAction": "Read the public landing and install the signed 0.1.0 beta; new builds are manual downloads until an updater ships."
+      },
+      "kind": "product",
+      "category": "utility",
+      "form": "macOS app",
+      "platforms": [
+        "macOS",
+        "Web"
+      ],
+      "technologies": [
+        "SwiftUI",
+        "Astro",
+        "Cloudflare Pages",
+        "Cloudflare Workers"
+      ],
+      "group": "current",
+      "lifecycle": "active",
+      "shareable": true,
+      "deployed": true,
+      "deploymentProviders": [
+        "Cloudflare Pages",
+        "Cloudflare Workers"
+      ],
+      "domains": [
+        "context.daddyrad.com"
+      ],
+      "url": "https://context.daddyrad.com/",
+      "repositoryUrl": "https://github.com/sarthakagrawal927/contextdaddy",
+      "roadmapUrl": "https://github.com/sarthakagrawal927/contextdaddy/issues",
+      "firstCommitAt": "2026-09-13",
+      "latestCommitAt": "2026-09-23"
+    },
+    {
+      "id": "daddyrad",
+      "name": "DaddyRad",
+      "description": "Umbrella landing for the daddy series of native Mac utilities.",
+      "makerNote": "I moved the daddy series onto its own domain so the apps read as one family.",
+      "purposeContract": {
+        "purpose": "DaddyRad is the umbrella home for the daddy series of native macOS utilities.",
+        "audience": "Mac users and developers discovering the daddy-series apps.",
+        "outcome": "One domain introduces all four apps and routes to each product's site.",
+        "mechanism": "A small Cloudflare Worker serves a static landing on the apex and redirects www; each app repository owns its subdomain.",
+        "proof": "HTTPS 200 at daddyrad.com and public routes for all four app subdomains verified 2026-09-25.",
+        "nextAction": "Visit daddyrad.com and pick an app."
+      },
+      "kind": "platform",
+      "category": "utility",
+      "form": "website",
+      "platforms": [
+        "Web"
+      ],
+      "technologies": [
+        "Cloudflare Workers"
+      ],
+      "group": "current",
+      "lifecycle": "active",
+      "shareable": true,
+      "deployed": true,
+      "deploymentProviders": [
+        "Cloudflare Workers"
+      ],
+      "domains": [
+        "daddyrad.com",
+        "www.daddyrad.com"
+      ],
+      "url": "https://daddyrad.com/",
+      "repositoryUrl": "https://github.com/sarthakagrawal927/daddyrad",
+      "roadmapUrl": "https://github.com/sarthakagrawal927/daddyrad/issues",
+      "firstCommitAt": "2026-09-25",
+      "latestCommitAt": "2026-09-25"
     },
     {
       "id": "ai-badges",
@@ -1729,8 +1865,8 @@
         "audience": "Developers and teams shipping code produced with AI agents.",
         "outcome": "Higher confidence that an agent completed the requested change correctly and safely.",
         "mechanism": "Local-first review combines repository context, executable checks, targeted evaluation, and inspectable verification receipts.",
-        "proof": "Published macOS 1.13.9 is signed and notarized. Its CLI has verified real Codex review, passing and failing executable checks, and persisted receipts on a bounded Node fixture.",
-        "nextAction": "Try the developer preview on a small local repository. Use the documented manual update path; in-app updating and other review providers remain unqualified."
+        "proof": "Published macOS 1.14.3 is signed and notarized; its DMG hash and local installation were verified. An earlier bounded CLI fixture demonstrated real Codex review, pass/fail checks and persisted receipts.",
+        "nextAction": "Try the current Mac release on a small local repository. Use the documented manual update path until in-app installation is qualified."
       }
     },
     {
@@ -1777,7 +1913,7 @@
         "audience": "A person moving between Mac, iPhone, and Apple Watch who wants a deliberate day rather than another task list.",
         "outcome": "Make more realistic plans, recover from interruptions, and protect activities that genuinely matter without moralizing imperfect adherence.",
         "mechanism": "Native apps combine schedule blocks, recurring routines, wall-clock focus sessions, interruption evidence, and an end-of-day divergence review.",
-        "proof": "The maintained successor to Indulge and Habits has signed native builds and an integrated schedule → focus → interruption → review loop under dogfooding.",
+        "proof": "Public notarized Mac build 20 remains available; local build 25 has passed a bounded personal workflow but Gatekeeper rejects it as unnotarized, so it is not a public update.",
         "nextAction": "Use Anchor through a real day and review the divergence evidence; let repeated lived patterns decide the next change."
       }
     },
@@ -1835,7 +1971,7 @@
       "id": "browserdaddy",
       "name": "BrowserDaddy",
       "description": "A local-first Mac browsing intelligence app for a unified history archive and real attention tracking.",
-      "url": "https://browserdaddy.significanthobbies.com/",
+      "url": "https://browser.daddyrad.com/",
       "tier": "active",
       "category": "utility",
       "priority": "P2",
@@ -1849,8 +1985,8 @@
         "audience": "Mac users who want a unified, inspectable record of browsing and attention.",
         "outcome": "Review browsing history and attention without sending the archive to a hosted service.",
         "mechanism": "A native local Mac app extracts browser archives, watches focus and classifies topics only after explicit opt-in.",
-        "proof": "Private native macOS repository and local-first product surface; public distribution is not claimed yet.",
-        "nextAction": "Read the public BrowserDaddy landing and release status; no native download is available."
+        "proof": "The public signed Sparkle feed and download serve notarized 0.3.1 build5 with matching DMG bytes. The owner Mac has a separate local 0.4.0 build5, so this public update has not been installed there.",
+        "nextAction": "Download the current public Mac build or use the signed update feed from an older public installation; private-window filtering remains unqualified."
       }
     },
     {
@@ -1876,6 +2012,49 @@
         "mechanism": "A local-first iPhone journal records food and four core nutrients, applies visible formulas, and offers optional private sync.",
         "proof": "The maintained app is functionally complete, connected to the Hub family, and designed so recommendations trace to visible rules.",
         "nextAction": "Log a meal or daily measurement in the app; change the product only when repeated use reveals a concrete gap."
+      }
+    },
+    {
+      "id": "contextdaddy",
+      "name": "ContextDaddy",
+      "description": "A local Mac desk for agent context, skills, usage, and observed telemetry.",
+      "url": "https://context.daddyrad.com/",
+      "tier": "active",
+      "category": "utility",
+      "spotlight": false,
+      "lifecycle": "active",
+      "shareable": true,
+      "maturity": "beta",
+      "pillarId": "build",
+      "purposeContract": {
+        "purpose": "Help developers inspect coding-agent context, skill exposure, usage, and available local telemetry.",
+        "audience": "Developers using multiple coding agents on a Mac.",
+        "outcome": "Find actionable context and usage problems with evidence and explicit measurement limits.",
+        "mechanism": "A native read-only Mac app combines bounded skill discovery, offline usage history, and local OpenTelemetry views.",
+        "proof": "The public 0.1.0 build2 DMG is Developer ID signed, notarized, stapled, and served byte for byte at /download. Discovery evidence still does not prove live prompt use.",
+        "nextAction": "Read the public landing and install the signed 0.1.0 beta; new builds are manual downloads until an updater ships."
+      }
+    },
+    {
+      "id": "daddyrad",
+      "name": "DaddyRad",
+      "description": "Umbrella landing for the daddy series: native Mac utilities for performance evidence, storage cleanup, browsing attention and agent context.",
+      "url": "https://daddyrad.com/",
+      "tier": "active",
+      "category": "utility",
+      "priority": "P3",
+      "spotlight": false,
+      "lifecycle": "active",
+      "shareable": true,
+      "maturity": "beta",
+      "pillarId": "build",
+      "purposeContract": {
+        "purpose": "DaddyRad is the umbrella home for the daddy series of native macOS utilities.",
+        "audience": "Mac users and developers discovering the daddy-series apps.",
+        "outcome": "One domain introduces all four apps and routes to each product's site.",
+        "mechanism": "A small Cloudflare Worker serves a static landing on the apex and redirects www; each app repository owns its subdomain.",
+        "proof": "HTTPS 200 at daddyrad.com and public routes for all four app subdomains verified 2026-09-25.",
+        "nextAction": "Visit daddyrad.com and pick an app."
       }
     },
     {
@@ -1935,7 +2114,7 @@
       "url": "https://heypace.app",
       "tier": "core",
       "category": "experimental",
-      "priority": "P1",
+      "priority": "P4",
       "spotlight": false,
       "lifecycle": "active",
       "shareable": true,
@@ -2206,7 +2385,7 @@
       "id": "performancedaddy",
       "name": "PerformanceDaddy",
       "description": "A local Mac performance investigator for background apps, helpers and developer workloads, with measured evidence and reviewed actions.",
-      "url": "https://performancedaddy.significanthobbies.com/",
+      "url": "https://performance.daddyrad.com/",
       "tier": "active",
       "category": "utility",
       "priority": "P2",
@@ -2220,8 +2399,8 @@
         "audience": "Developers running local servers, coding agents and other moving parts on a Mac.",
         "outcome": "Find the process or port evidence behind a slowdown and choose the next check deliberately.",
         "mechanism": "A native local Mac app records bounded CPU, memory, thermal, process and socket observations with reviewed stop controls.",
-        "proof": "Private native macOS repository and local preview surface; no public download or guaranteed root-cause diagnosis is claimed.",
-        "nextAction": "Read the public PerformanceDaddy landing and release status; no native download is available."
+        "proof": "The public signed Sparkle feed and download serve notarized 0.2.3 build4 with matching DMG bytes; the locally installed build3 has not yet been updated through Sparkle.",
+        "nextAction": "Read the public landing and use the current GitHub release for a Mac install; review measured evidence before acting on a diagnosis."
       }
     },
     {
@@ -2276,7 +2455,7 @@
     {
       "id": "saas-maker",
       "name": "SaaS Maker",
-      "description": "A public directory of working experiments, reference projects and reusable tooling.",
+      "description": "A public directory of working experiments, launch destinations, reference projects and reusable tooling.",
       "url": "https://sassmaker.com",
       "tier": "active",
       "category": "media",
@@ -2292,9 +2471,9 @@
       "purposeContract": {
         "purpose": "SaaS Maker is the public product studio and reusable tooling workshop for the Fleet portfolio.",
         "audience": "Visitors exploring Sarthak’s products and builders consuming the studio’s public packages, workflows, and evidence.",
-        "outcome": "Understand the body of work and reuse the tools that have earned a stable place across its products.",
-        "mechanism": "A generated public directory sits beside shared feedback, UI, workflow, skill, and automation tooling maintained through real Fleet use.",
-        "proof": "It publishes the canonical privacy-safe project directory and houses packages and tooling used by multiple independent repositories.",
+        "outcome": "Understand the body of work, research source-attributed launch destinations, and reuse the tools that have earned a stable place across its products.",
+        "mechanism": "A generated public directory and native launch-destination catalog sit beside shared feedback, UI, workflow, skill, and automation tooling maintained through real Fleet use.",
+        "proof": "It publishes the canonical privacy-safe project directory, serves the provenance-bearing /launchdesk catalog, and houses packages and tooling used by multiple independent repositories.",
         "nextAction": "Explore the complete directory or open the public tooling catalogue; product-specific work continues in each owning repository."
       }
     },
@@ -2402,7 +2581,7 @@
       "id": "storagedaddy",
       "name": "storagedaddy",
       "description": "An open-source native Mac storage analyzer for developer caches, builds, dependencies and AI session archives, with reviewed cleanup. Free during early access.",
-      "url": "https://storagedaddy.significanthobbies.com/",
+      "url": "https://storage.daddyrad.com/",
       "tier": "active",
       "category": "utility",
       "priority": "P2",
@@ -2416,8 +2595,8 @@
         "audience": "Developers whose Mac builds, dependencies, caches and AI session histories consume storage.",
         "outcome": "Find large storage consumers and review what to archive or move to Trash.",
         "mechanism": "A local SwiftUI and AppKit scanner provides visual exploration, developer insights, reviewed cache cleanup and compact AI conversation exports. Sparkle provides signed macOS update checks.",
-        "proof": "MIT-licensed source, signed and notarized macOS 14+ Apple-silicon beta, tested scanner and archive cleanup, and a publicly downloaded DMG with matching checksum.",
-        "nextAction": "Download during free early access at storagedaddy.significanthobbies.com, scan a folder, and review what to archive or move to Trash."
+        "proof": "The public signed Sparkle feed and download serve notarized macOS 0.1.3 build108 with matching DMG bytes; an installed update and native scan for this build remain unverified.",
+        "nextAction": "Download during free early access at storage.daddyrad.com, scan a folder, and review what to archive or move to Trash."
       }
     },
     {
@@ -2463,6 +2642,23 @@
         "nextAction": "Copy a documented badge example into a README."
       },
       "lifecycle": "inactive"
+    },
+    {
+      "id": "agent-testing",
+      "name": "Browser Agent Testing",
+      "description": "A completed local web and iOS experiment comparing browser-agent speed, cost, reliability and defect detection against independent verification.",
+      "lifecycle": "inactive",
+      "category": "experimental",
+      "shareable": true,
+      "repositoryUrl": "https://github.com/sarthakagrawal927/agent-testing",
+      "purposeContract": {
+        "purpose": "Browser Agent Testing compares local web and native UI automation with reproducible, product-owned verification.",
+        "audience": "Coding agents and maintainers comparing local browser and native UI testing tools.",
+        "outcome": "Choose faster and cheaper test strategies without silently losing functional or visual defect detection.",
+        "mechanism": "Bounded manifests and receipts run saved or adaptive workflows, then independent product verifiers check UI, persistence, process and visual outcomes.",
+        "proof": "The completed experiment publishes a sourced 79-tool catalogue, 26 measured journey arms with 118 verified completions across 129 attempts, seven additional probes, ten retained experiment records, exact observed pins and a live agent-first guide. The measured evidence retains Playwright and Maestro as baselines.",
+        "nextAction": "Explore the finished experiment or clone the public repository; replay a documented arm only when a concrete product change justifies it."
+      }
     },
     {
       "id": "on-record",
