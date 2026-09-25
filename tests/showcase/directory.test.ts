@@ -45,7 +45,7 @@ describe('verified public Fleet directory', () => {
       category: 'utility',
       group: 'current',
       form: 'macOS app',
-      url: 'https://storagedaddy.significanthobbies.com/',
+      url: 'https://storage.daddyrad.com/',
     });
     // StorageDaddy is intentionally MIT open-source: its public repository
     // link is shareable anatomy, not private state.
