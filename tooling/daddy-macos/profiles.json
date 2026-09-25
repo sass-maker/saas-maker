@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "apps": {
+    "storagedaddy": {
+      "repository": "sarthakagrawal927/storagedaddy",
+      "executable": "StorageDaddy",
+      "bundleId": "local.fleet.storagedaddy",
+      "testArguments": [],
+      "sparkleTests": true,
+      "workerTests": false,
+      "developerDir": "/Applications/Xcode_26.6.app/Contents/Developer",
+      "updateMode": "sparkle",
+      "updateBaseUrl": "https://storage.daddyrad.com/updates/"
+    },
+    "performancedaddy": {
+      "repository": "sarthakagrawal927/performancedaddy",
+      "executable": "PerformanceDaddy",
+      "bundleId": "com.significanthobbies.performancedaddy",
+      "testArguments": [],
+      "sparkleTests": true,
+      "workerTests": true,
+      "developerDir": null,
+      "updateMode": "sparkle",
+      "updateBaseUrl": "https://performance.daddyrad.com/updates/"
+    },
+    "browserdaddy": {
+      "repository": "sarthakagrawal927/browserdaddy",
+      "executable": "BrowserDaddy",
+      "bundleId": "com.significanthobbies.browserdaddy",
+      "testArguments": [],
+      "sparkleTests": true,
+      "workerTests": true,
+      "developerDir": null,
+      "updateMode": "sparkle",
+      "updateBaseUrl": "https://browser.daddyrad.com/updates/"
+    },
+    "contextdaddy": {
+      "repository": "sarthakagrawal927/contextdaddy",
+      "executable": "ContextDaddy",
+      "bundleId": "com.significanthobbies.contextdaddy",
+      "testArguments": ["--skip", "DesignSnapshotTests"],
+      "sparkleTests": false,
+      "workerTests": false,
+      "developerDir": "/Applications/Xcode_26.6.app/Contents/Developer",
+      "updateMode": "manual",
+      "updateBaseUrl": null
+    }
+  }
+}

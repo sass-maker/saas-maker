@@ -1,0 +1,49 @@
+name: Daddy macOS candidate
+
+on:
+  workflow_call:
+    inputs:
+      app:
+        required: true
+        type: string
+      tooling-ref:
+        description: Reviewed full commit SHA of sass-maker/saas-maker, matching this workflow pin
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  candidate:
+    runs-on: macos-26
+    timeout-minutes: 35
+    steps:
+      - name: Check out caller
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - name: Require immutable tooling revision
+        env:
+          TOOLING_REF: ${{ inputs.tooling-ref }}
+        run: |
+          if [[ ! "$TOOLING_REF" =~ ^[0-9a-f]{40}$ ]]; then
+            echo 'tooling-ref must be a full commit SHA' >&2
+            exit 1
+          fi
+      - name: Check out public candidate runner
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          repository: sass-maker/saas-maker
+          ref: ${{ inputs.tooling-ref }}
+          path: .daddy-tooling
+          persist-credentials: false
+      - name: Test and build candidate
+        env:
+          DADDY_APP: ${{ inputs.app }}
+          CALLER_REPOSITORY: ${{ github.repository }}
+        run: |
+          python3 .daddy-tooling/tooling/daddy-macos/candidate.py \
+            --app "$DADDY_APP" \
+            --repository "$CALLER_REPOSITORY" \
+            --root . \
+            --receipt candidate-receipt.json
+          cat candidate-receipt.json >> "$GITHUB_STEP_SUMMARY"
