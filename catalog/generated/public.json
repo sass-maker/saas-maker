@@ -1467,7 +1467,7 @@
         "audience": "Developers whose Mac builds, dependencies, caches and AI session histories consume storage.",
         "outcome": "Find large storage consumers and review what to archive or move to Trash.",
         "mechanism": "A local SwiftUI and AppKit scanner provides visual exploration, developer insights, reviewed cache cleanup and compact AI conversation exports. Sparkle provides signed macOS update checks.",
-        "proof": "The public signed feed advertises macOS 0.1.2 build80, matching the locally installed notarized app; earlier scanner and reviewed-cleanup qualification remains bounded to its recorded release.",
+        "proof": "The public signed Sparkle feed and download serve notarized macOS 0.1.3 build108 with matching DMG bytes; an installed update and native scan for this build remain unverified.",
         "nextAction": "Download during free early access at storage.daddyrad.com, scan a folder, and review what to archive or move to Trash."
       },
       "kind": "experiment",
@@ -1511,8 +1511,8 @@
         "audience": "Mac users who want a unified, inspectable record of browsing and attention.",
         "outcome": "Review browsing history and attention without sending the archive to a hosted service.",
         "mechanism": "A native local Mac app extracts browser archives, watches focus and classifies topics only after explicit opt-in.",
-        "proof": "Native 0.3.1 build4 is signed, notarized and installed locally; the public Sparkle feed matches it. The GitHub release is private and the public landing does not link a first-install DMG.",
-        "nextAction": "Read the public landing; an existing installation can use the live update feed. First-install distribution remains private."
+        "proof": "The public signed Sparkle feed and download serve notarized 0.3.1 build5 with matching DMG bytes. The owner Mac has a separate local 0.4.0 build5, so this public update has not been installed there.",
+        "nextAction": "Download the current public Mac build or use the signed update feed from an older public installation; private-window filtering remains unqualified."
       },
       "kind": "experiment",
       "category": "utility",
@@ -1553,7 +1553,7 @@
         "audience": "Developers running local servers, coding agents and other moving parts on a Mac.",
         "outcome": "Find the process or port evidence behind a slowdown and choose the next check deliberately.",
         "mechanism": "A native local Mac app records bounded CPU, memory, thermal, process and socket observations with reviewed stop controls.",
-        "proof": "The public 0.2.3 build3 native release is signed and notarized; the installed app matches its live Sparkle feed. This does not prove a particular slowdown diagnosis.",
+        "proof": "The public signed Sparkle feed and download serve notarized 0.2.3 build4 with matching DMG bytes; the locally installed build3 has not yet been updated through Sparkle.",
         "nextAction": "Read the public landing and use the current GitHub release for a Mac install; review measured evidence before acting on a diagnosis."
       },
       "kind": "experiment",
@@ -1640,7 +1640,7 @@
         "audience": "Developers using multiple coding agents on a Mac.",
         "outcome": "Find actionable context and usage problems with evidence and explicit measurement limits.",
         "mechanism": "A native read-only Mac app combines bounded skill discovery, offline usage history, and local OpenTelemetry views.",
-        "proof": "The public 0.1.0 build1 DMG is Developer ID signed, notarized and stapled; /download on context.daddyrad.com serves the exact receipt checksum. Discovery evidence still does not prove live prompt use.",
+        "proof": "The public 0.1.0 build2 DMG is Developer ID signed, notarized, stapled, and served byte for byte at /download. Discovery evidence still does not prove live prompt use.",
         "nextAction": "Read the public landing and install the signed 0.1.0 beta; new builds are manual downloads until an updater ships."
       },
       "kind": "product",
@@ -1682,8 +1682,8 @@
         "purpose": "DaddyRad is the umbrella home for the daddy series of native macOS utilities.",
         "audience": "Mac users and developers discovering the daddy-series apps.",
         "outcome": "One domain introduces all four apps and routes to each product's site.",
-        "mechanism": "A small Cloudflare Worker serves a static landing on the apex and redirects www and context subdomains.",
-        "proof": "HTTPS 200 at daddyrad.com with 301s from www and context.daddyrad.com verified 2026-09-25.",
+        "mechanism": "A small Cloudflare Worker serves a static landing on the apex and redirects www; each app repository owns its subdomain.",
+        "proof": "HTTPS 200 at daddyrad.com and public routes for all four app subdomains verified 2026-09-25.",
         "nextAction": "Visit daddyrad.com and pick an app."
       },
       "kind": "platform",
@@ -1704,10 +1704,11 @@
       ],
       "domains": [
         "daddyrad.com",
-        "www.daddyrad.com",
-        "context.daddyrad.com"
+        "www.daddyrad.com"
       ],
       "url": "https://daddyrad.com/",
+      "repositoryUrl": "https://github.com/sarthakagrawal927/daddyrad",
+      "roadmapUrl": "https://github.com/sarthakagrawal927/daddyrad/issues",
       "firstCommitAt": "2026-09-25",
       "latestCommitAt": "2026-09-25"
     },
@@ -1988,8 +1989,8 @@
         "audience": "Mac users who want a unified, inspectable record of browsing and attention.",
         "outcome": "Review browsing history and attention without sending the archive to a hosted service.",
         "mechanism": "A native local Mac app extracts browser archives, watches focus and classifies topics only after explicit opt-in.",
-        "proof": "Native 0.3.1 build4 is signed, notarized and installed locally; the public Sparkle feed matches it. The GitHub release is private and the public landing does not link a first-install DMG.",
-        "nextAction": "Read the public landing; an existing installation can use the live update feed. First-install distribution remains private."
+        "proof": "The public signed Sparkle feed and download serve notarized 0.3.1 build5 with matching DMG bytes. The owner Mac has a separate local 0.4.0 build5, so this public update has not been installed there.",
+        "nextAction": "Download the current public Mac build or use the signed update feed from an older public installation; private-window filtering remains unqualified."
       }
     },
     {
@@ -2034,7 +2035,7 @@
         "audience": "Developers using multiple coding agents on a Mac.",
         "outcome": "Find actionable context and usage problems with evidence and explicit measurement limits.",
         "mechanism": "A native read-only Mac app combines bounded skill discovery, offline usage history, and local OpenTelemetry views.",
-        "proof": "The public 0.1.0 build1 DMG is Developer ID signed, notarized and stapled; /download on context.daddyrad.com serves the exact receipt checksum. Discovery evidence still does not prove live prompt use.",
+        "proof": "The public 0.1.0 build2 DMG is Developer ID signed, notarized, stapled, and served byte for byte at /download. Discovery evidence still does not prove live prompt use.",
         "nextAction": "Read the public landing and install the signed 0.1.0 beta; new builds are manual downloads until an updater ships."
       }
     },
@@ -2055,8 +2056,8 @@
         "purpose": "DaddyRad is the umbrella home for the daddy series of native macOS utilities.",
         "audience": "Mac users and developers discovering the daddy-series apps.",
         "outcome": "One domain introduces all four apps and routes to each product's site.",
-        "mechanism": "A small Cloudflare Worker serves a static landing on the apex and redirects www and context subdomains.",
-        "proof": "HTTPS 200 at daddyrad.com with 301s from www and context.daddyrad.com verified 2026-09-25.",
+        "mechanism": "A small Cloudflare Worker serves a static landing on the apex and redirects www; each app repository owns its subdomain.",
+        "proof": "HTTPS 200 at daddyrad.com and public routes for all four app subdomains verified 2026-09-25.",
         "nextAction": "Visit daddyrad.com and pick an app."
       }
     },
@@ -2402,7 +2403,7 @@
         "audience": "Developers running local servers, coding agents and other moving parts on a Mac.",
         "outcome": "Find the process or port evidence behind a slowdown and choose the next check deliberately.",
         "mechanism": "A native local Mac app records bounded CPU, memory, thermal, process and socket observations with reviewed stop controls.",
-        "proof": "The public 0.2.3 build3 native release is signed and notarized; the installed app matches its live Sparkle feed. This does not prove a particular slowdown diagnosis.",
+        "proof": "The public signed Sparkle feed and download serve notarized 0.2.3 build4 with matching DMG bytes; the locally installed build3 has not yet been updated through Sparkle.",
         "nextAction": "Read the public landing and use the current GitHub release for a Mac install; review measured evidence before acting on a diagnosis."
       }
     },
@@ -2598,7 +2599,7 @@
         "audience": "Developers whose Mac builds, dependencies, caches and AI session histories consume storage.",
         "outcome": "Find large storage consumers and review what to archive or move to Trash.",
         "mechanism": "A local SwiftUI and AppKit scanner provides visual exploration, developer insights, reviewed cache cleanup and compact AI conversation exports. Sparkle provides signed macOS update checks.",
-        "proof": "The public signed feed advertises macOS 0.1.2 build80, matching the locally installed notarized app; earlier scanner and reviewed-cleanup qualification remains bounded to its recorded release.",
+        "proof": "The public signed Sparkle feed and download serve notarized macOS 0.1.3 build108 with matching DMG bytes; an installed update and native scan for this build remain unverified.",
         "nextAction": "Download during free early access at storage.daddyrad.com, scan a folder, and review what to archive or move to Trash."
       }
     },
