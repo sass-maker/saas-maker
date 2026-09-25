@@ -17,12 +17,14 @@ Each app's manual `.github/workflows/release.yml` uses a `production-release` en
 - `APPLE_NOTARY_KEY_ID`
 - `APPLE_NOTARY_ISSUER_ID`
 - `SPARKLE_ED25519_PRIVATE_KEY` (StorageDaddy, PerformanceDaddy, and BrowserDaddy only)
-- `CLOUDFLARE_API_TOKEN` (a narrowly scoped Workers deploy token)
+- `CLOUDFLARE_API_TOKEN` (an account token with Editor limited to the four Daddy Workers, account Workers Metadata Read-Only, and Workers Routes Write limited to `daddyrad.com` and `significanthobbies.com`)
 - `CLOUDFLARE_ACCOUNT_ID`
 
 Configure the values directly in each app's GitHub `production-release` environment. An ordinary push runs candidate CI only. A manual dispatch on `main` with an existing exact release tag waits for environment approval, verifies that tag points to the current `main`, builds its source, signs and notarizes the DMG, staples it, checks Gatekeeper and the post-staple checksum, and retains a qualified artifact. The three Sparkle apps also prepare a signed appcast. The ContextDaddy job verifies a checksum-pinned helper recovered from its prior public release. The job then stages the qualified assets in the app's existing Worker site, runs its checked-in site checks and Wrangler deploy, verifies the public download and feed bytes, and records the small site metadata change on `main`. PerformanceDaddy, BrowserDaddy, and ContextDaddy create a GitHub release from the qualified artifact; StorageDaddy retains website-only distribution. No job installs the app. The shared `release_contract.py` validates metadata only; it does not prove the Sparkle signature matches the app's public key.
 
 `publish_site.py` and `verify_live.py` are credential-free. They reject receipt identity or checksum drift, wrong DMG filenames, older or conflicting site builds, and live byte mismatches. The app-owned workflows alone receive Cloudflare and GitHub publication authority. Cloudflare's hosted Wrangler deployment needs both protected inputs above; do not copy a local Wrangler login into GitHub. The publication commit uses the workflow's short-lived GitHub token after the live check. If `main` moves while a manual release is building, publication stops before deployment and must be restarted from a fresh tag.
+
+Renew the one-year Cloudflare token before its September 26, 2027 expiration. Per-Worker Editor alone allowed the asset upload but caused Wrangler's account subdomain lookup to fail; the metadata and zone-route policies above completed the existing-site deployment.
 
 ## Maintained copies
 
