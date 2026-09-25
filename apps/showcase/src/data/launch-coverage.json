@@ -2,12 +2,7 @@
   "$schema": "fleet.launch-coverage.v1",
   "updated": "2026-09-25",
   "note": "Public projection of the owner-local submission ledger. Agents mark destinations here as submissions are posted; private receipts stay in tooling/config/directory-submissions/.",
-  "coveredStates": [
-    "submitted",
-    "scheduled",
-    "queued",
-    "live"
-  ],
+  "coveredStates": ["submitted", "scheduled", "queued", "live"],
   "denominator": {
     "destinations": 907
   },
