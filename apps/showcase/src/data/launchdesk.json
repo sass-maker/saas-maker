@@ -5,7 +5,7 @@
       "name": "10 Words",
       "domain": "10words.io",
       "website": "https://10words.io/",
-      "submissionUrl": "https://portal.10words.io/submission",
+      "submissionUrl": "https://app.10words.io/submit",
       "exampleUrl": null,
       "category": "Directory",
       "type": "Directory / Tool",
@@ -36,6 +36,12 @@
           "pricing": "free",
           "type": "Directory / Tool",
           "submissionUrl": "https://portal.10words.io/submission"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "submissionUrl": "https://app.10words.io/submit",
+          "note": "catalog submit URL corrected; previous was 'https://portal.10words.io/submission'"
         }
       ]
     },
@@ -85,9 +91,11 @@
       "type": null,
       "pricing": "freemium",
       "dr": 50,
-      "link": "follow",
+      "link": "nofollow",
       "eligibility": null,
-      "flags": [],
+      "flags": [
+        "link corrected follow->nofollow: free listing is explicitly nofollow; only the $9.99 fast lane is dofollow"
+      ],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -100,6 +108,12 @@
           "dr": 50,
           "link": "follow",
           "pricing": "freemium"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "link": "nofollow",
+          "note": "free listing is explicitly nofollow; only the $9.99 fast lane is dofollow"
         }
       ]
     },
@@ -606,9 +620,11 @@
       "type": null,
       "pricing": "unknown",
       "dr": 60,
-      "link": "follow",
+      "link": "nofollow",
       "eligibility": null,
-      "flags": [],
+      "flags": [
+        "link corrected follow->nofollow: free-plan outbound link is nofollow; only paid plans are dofollow"
+      ],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -627,6 +643,12 @@
           "dr": null,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "link": "nofollow",
+          "note": "free-plan outbound link is nofollow; only paid plans are dofollow"
         }
       ]
     },
@@ -2339,11 +2361,13 @@
       "exampleUrl": null,
       "category": "AI",
       "type": null,
-      "pricing": "unknown",
+      "pricing": "paid",
       "dr": 46,
       "link": "follow",
       "eligibility": null,
-      "flags": [],
+      "flags": [
+        "pricing corrected unknown->paid: submit routes through a Tally form with a required $37 fee"
+      ],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -2356,6 +2380,12 @@
           "dr": 46,
           "link": "follow",
           "pricing": "unknown"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "pricing": "paid",
+          "note": "submit routes through a Tally form with a required $37 fee"
         }
       ]
     },
@@ -2507,9 +2537,11 @@
       "type": null,
       "pricing": "freemium",
       "dr": 37,
-      "link": "follow",
+      "link": "nofollow",
       "eligibility": null,
-      "flags": [],
+      "flags": [
+        "link corrected follow->nofollow: all outbound links are nofollow on every tier including paid"
+      ],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -2528,6 +2560,12 @@
           "dr": null,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "link": "nofollow",
+          "note": "all outbound links are nofollow on every tier including paid"
         }
       ]
     },
@@ -2745,12 +2783,13 @@
       "exampleUrl": null,
       "category": "AI",
       "type": null,
-      "pricing": "free",
+      "pricing": "paid",
       "dr": 58,
       "link": "follow",
       "eligibility": "Source-reported route and metrics. Review current eligibility, terms, pricing, and the exact published backlink.",
       "flags": [
-        "DR sources disagree"
+        "DR sources disagree",
+        "pricing corrected free->paid: submit form offers only paid tiers ($19.9 one-time and up)"
       ],
       "route": "source-reported",
       "provider": "Ahrefs (source-reported)",
@@ -2776,6 +2815,12 @@
           "dr": 58,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "pricing": "paid",
+          "note": "submit form offers only paid tiers ($19.9 one-time and up)"
         }
       ]
     },
@@ -4094,11 +4139,12 @@
       "type": "Directory / Review",
       "pricing": "unknown",
       "dr": 79,
-      "link": "follow",
+      "link": "nofollow",
       "eligibility": null,
       "flags": [
         "DR sources disagree",
-        "Submission routes disagree"
+        "Submission routes disagree",
+        "link corrected follow->nofollow: most outbound links are nofollow per third-party crawl analysis"
       ],
       "route": "source-reported",
       "provider": "Unverified; source describes Ahrefs-style DR",
@@ -4126,6 +4172,12 @@
           "pricing": "free",
           "type": "Directory / Review",
           "submissionUrl": "https://alternativeto.net/software/new/"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "link": "nofollow",
+          "note": "most outbound links are nofollow per third-party crawl analysis"
         }
       ]
     },
@@ -7412,7 +7464,7 @@
       "name": "Capterra",
       "domain": "capterra.com",
       "website": "https://www.capterra.com/",
-      "submissionUrl": "https://app.g2digitalmarkets.com/get-listed/start",
+      "submissionUrl": "https://app.g2digitalmarkets.com/",
       "exampleUrl": null,
       "category": "Review",
       "type": "Directory / Review",
@@ -7451,6 +7503,12 @@
           "pricing": "free",
           "type": "Directory / Review",
           "submissionUrl": "https://www.capterra.com/vendors/"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "submissionUrl": "https://app.g2digitalmarkets.com/",
+          "note": "catalog submit URL corrected; previous was 'https://app.g2digitalmarkets.com/get-listed/start'"
         }
       ]
     },
@@ -8254,9 +8312,11 @@
       "type": null,
       "pricing": "unknown",
       "dr": null,
-      "link": "unknown",
+      "link": "nofollow",
       "eligibility": "Listed in the LaunchRepo directory catalog (observed 2026-09-25); acceptance, pricing, and current requirements need checking.",
-      "flags": [],
+      "flags": [
+        "link corrected unknown->nofollow: outbound link reported nofollow on ~97% of listings"
+      ],
       "route": "needs-research",
       "provider": "Not supplied by source",
       "sourceUrl": "https://launchrepo.dev/directories/",
@@ -8269,6 +8329,12 @@
           "dr": null,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "link": "nofollow",
+          "note": "outbound link reported nofollow on ~97% of listings"
         }
       ]
     },
@@ -10929,7 +10995,7 @@
       "name": "Feedough",
       "domain": "feedough.com",
       "website": "https://www.feedough.com/submit-'",
-      "submissionUrl": null,
+      "submissionUrl": "https://feedough.com/submit-your-startup/",
       "exampleUrl": null,
       "category": "Directory",
       "type": null,
@@ -10953,6 +11019,12 @@
           "dr": 48,
           "link": "follow",
           "pricing": "unknown"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "submissionUrl": "https://feedough.com/submit-your-startup/",
+          "note": "catalog submit URL corrected; previous was None"
         }
       ]
     },
@@ -12514,19 +12586,27 @@
       "dr": null,
       "link": "unknown",
       "eligibility": "Listed in the LaunchRepo directory catalog (observed 2026-09-25); acceptance, pricing, and current requirements need checking.",
-      "flags": [],
+      "flags": [
+        "quarantined: HTTP 402 — hosting lapsed"
+      ],
       "route": "needs-research",
       "provider": "Not supplied by source",
       "sourceUrl": "https://launchrepo.dev/directories/",
       "retrieved": "2026-09-25",
       "measured": null,
-      "quarantined": false,
+      "quarantined": true,
       "claims": [
         {
           "source": "launchrepo-catalog",
           "dr": null,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "quarantined": true,
+          "note": "HTTP 402 — hosting lapsed"
         }
       ]
     },
@@ -14825,7 +14905,7 @@
       "name": "KillerStartups",
       "domain": "killerstartups.com",
       "website": "http://www.killerstartups.com/",
-      "submissionUrl": null,
+      "submissionUrl": "https://killerstartups.com/submit-startup/",
       "exampleUrl": null,
       "category": "Directory",
       "type": null,
@@ -14848,6 +14928,12 @@
           "dr": 62,
           "link": "follow",
           "pricing": "unknown"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "submissionUrl": "https://killerstartups.com/submit-startup/",
+          "note": "catalog submit URL corrected; previous was None"
         }
       ]
     },
@@ -15152,12 +15238,13 @@
       "exampleUrl": null,
       "category": "AI",
       "type": null,
-      "pricing": "unknown",
+      "pricing": "freemium",
       "dr": 45,
       "link": "follow",
       "eligibility": null,
       "flags": [
-        "DR sources disagree"
+        "DR sources disagree",
+        "pricing corrected unknown->freemium: free queue exists but guaranteed dofollow link is paid-only"
       ],
       "route": "source-reported",
       "provider": "Unverified; source describes Ahrefs-style DR",
@@ -15177,6 +15264,12 @@
           "dr": 56,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "pricing": "freemium",
+          "note": "free queue exists but guaranteed dofollow link is paid-only"
         }
       ]
     },
@@ -21796,19 +21889,27 @@
       "dr": 48,
       "link": "follow",
       "eligibility": null,
-      "flags": [],
+      "flags": [
+        "quarantined: repurposed to a Flexiple content blog; /submit-tool 404s, no submission path"
+      ],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
       "retrieved": "2026-09-18",
       "measured": "2026-09-22",
-      "quarantined": false,
+      "quarantined": true,
       "claims": [
         {
           "source": "brandfactory",
           "dr": 48,
           "link": "follow",
           "pricing": "unknown"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "quarantined": true,
+          "note": "repurposed to a Flexiple content blog; /submit-tool 404s, no submission path"
         }
       ]
     },
@@ -22046,9 +22147,11 @@
       "type": null,
       "pricing": "unknown",
       "dr": null,
-      "link": "unknown",
+      "link": "nofollow",
       "eligibility": "Listed in the LaunchRepo directory catalog (observed 2026-09-25); acceptance, pricing, and current requirements need checking.",
-      "flags": [],
+      "flags": [
+        "link corrected unknown->nofollow: outbound links reported nofollow by third-party launch guides"
+      ],
       "route": "needs-research",
       "provider": "Not supplied by source",
       "sourceUrl": "https://launchrepo.dev/directories/",
@@ -22061,6 +22164,12 @@
           "dr": null,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "link": "nofollow",
+          "note": "outbound links reported nofollow by third-party launch guides"
         }
       ]
     },
@@ -22310,7 +22419,9 @@
       "dr": 38,
       "link": "follow",
       "eligibility": null,
-      "flags": [],
+      "flags": [
+        "documented submit URL dead at retrieval; live submission path unknown"
+      ],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -22323,6 +22434,11 @@
           "dr": 38,
           "link": "follow",
           "pricing": "free"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "note": "submit URL (add-ai-tool) dead; path may have moved"
         }
       ]
     },
@@ -22701,10 +22817,11 @@
       "type": null,
       "pricing": "free",
       "dr": 57,
-      "link": "follow",
+      "link": "nofollow",
       "eligibility": "Submit an original live design or appropriate design resource for editorial review.",
       "flags": [
-        "DR sources disagree"
+        "DR sources disagree",
+        "link corrected follow->nofollow: third-party data lists the link as nofollow"
       ],
       "route": "source-reported",
       "provider": "Ahrefs (source-reported)",
@@ -22724,6 +22841,12 @@
           "dr": 57,
           "link": "unknown",
           "pricing": "free"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "link": "nofollow",
+          "note": "third-party data lists the link as nofollow"
         }
       ]
     },
@@ -22951,9 +23074,11 @@
       "type": null,
       "pricing": "unknown",
       "dr": 70,
-      "link": "unknown",
+      "link": "nofollow",
       "eligibility": "Source lists this route; acceptance, pricing, and current requirements need checking.",
-      "flags": [],
+      "flags": [
+        "link corrected unknown->nofollow: feed/archive links are nofollow on every tier; only the product page is dofollow"
+      ],
       "route": "source-reported",
       "provider": "Source-reported DR; provider not independently verified",
       "sourceUrl": "https://github.com/theshubh77/awesome-saas-directories",
@@ -22966,6 +23091,12 @@
           "dr": 70,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "link": "nofollow",
+          "note": "feed/archive links are nofollow on every tier; only the product page is dofollow"
         }
       ]
     },
@@ -23368,9 +23499,11 @@
       "type": null,
       "pricing": "unknown",
       "dr": null,
-      "link": "unknown",
+      "link": "nofollow",
       "eligibility": "Listed in the LaunchRepo directory catalog (observed 2026-09-25); acceptance, pricing, and current requirements need checking.",
-      "flags": [],
+      "flags": [
+        "link corrected unknown->nofollow: free listing stays nofollow until a reciprocal link/badge is detected"
+      ],
       "route": "needs-research",
       "provider": "Not supplied by source",
       "sourceUrl": "https://launchrepo.dev/directories/",
@@ -23383,6 +23516,12 @@
           "dr": null,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "link": "nofollow",
+          "note": "free listing stays nofollow until a reciprocal link/badge is detected"
         }
       ]
     },
@@ -23806,9 +23945,11 @@
       "type": null,
       "pricing": "free",
       "dr": 86,
-      "link": "follow",
+      "link": "nofollow",
       "eligibility": "Community participation; inspect rules before linking your product.",
-      "flags": [],
+      "flags": [
+        "link corrected follow->nofollow: all outgoing community links are nofollow; self-promotion banned"
+      ],
       "route": "source-reported",
       "provider": "Ahrefs (source-reported)",
       "sourceUrl": "https://github.com/alvinunreal/awesome-submitlist/blob/main/data/destinations.json",
@@ -23821,6 +23962,12 @@
           "dr": 86,
           "link": "follow",
           "pricing": "free"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "link": "nofollow",
+          "note": "all outgoing community links are nofollow; self-promotion banned"
         }
       ]
     },
@@ -24603,9 +24750,11 @@
       "type": null,
       "pricing": "freemium",
       "dr": 33,
-      "link": "follow",
+      "link": "nofollow",
       "eligibility": null,
-      "flags": [],
+      "flags": [
+        "link corrected follow->nofollow: free tier is explicitly nofollow; Fastlane $15 is dofollow"
+      ],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
@@ -24618,6 +24767,12 @@
           "dr": 33,
           "link": "follow",
           "pricing": "freemium"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "link": "nofollow",
+          "note": "free tier is explicitly nofollow; Fastlane $15 is dofollow"
         }
       ]
     },
@@ -26303,20 +26458,27 @@
       "link": "follow",
       "eligibility": null,
       "flags": [
-        "Domain redirects elsewhere"
+        "Domain redirects elsewhere",
+        "quarantined: returns 404 via Bubble domain_not_supported — decommissioned"
       ],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
       "retrieved": "2026-09-18",
       "measured": "2026-09-22",
-      "quarantined": false,
+      "quarantined": true,
       "claims": [
         {
           "source": "brandfactory",
           "dr": 34,
           "link": "follow",
           "pricing": "freemium"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "quarantined": true,
+          "note": "returns 404 via Bubble domain_not_supported — decommissioned"
         }
       ]
     },
@@ -27312,10 +27474,11 @@
       "type": null,
       "pricing": "unknown",
       "dr": 57,
-      "link": "follow",
+      "link": "nofollow",
       "eligibility": null,
       "flags": [
-        "DR sources disagree"
+        "DR sources disagree",
+        "link corrected follow->nofollow: free-plan outbound link is nofollow regardless of wait time"
       ],
       "route": "source-reported",
       "provider": "Unverified; source describes Ahrefs-style DR",
@@ -27335,6 +27498,12 @@
           "dr": 62,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "link": "nofollow",
+          "note": "free-plan outbound link is nofollow regardless of wait time"
         }
       ]
     },
@@ -27985,20 +28154,27 @@
       "link": "follow",
       "eligibility": "Editorial/media prospect, not a guaranteed submission form. Find a relevant angle and the current pitch policy.",
       "flags": [
-        "Source path requires review"
+        "Source path requires review",
+        "quarantined: no submission surface; catalog contact URL 404s and no pitch page exists"
       ],
       "route": "needs-research",
       "provider": "Unverified; source describes Ahrefs-style DR",
       "sourceUrl": "https://github.com/mezmer90/saas-directories/blob/main/saas-directories.csv",
       "retrieved": "2026-09-18",
       "measured": "2026-09-22",
-      "quarantined": false,
+      "quarantined": true,
       "claims": [
         {
           "source": "brandfactory",
           "dr": 42,
           "link": "follow",
           "pricing": "unknown"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "quarantined": true,
+          "note": "no submission surface; catalog contact URL 404s and no pitch page exists"
         }
       ]
     },
@@ -28042,7 +28218,7 @@
       "name": "TechPluto",
       "domain": "techpluto.com",
       "website": "https://www.techpluto.com/submit-a-star",
-      "submissionUrl": "https://www.techpluto.com/submit-tool/",
+      "submissionUrl": "https://techpluto.com/submit-startup/",
       "exampleUrl": null,
       "category": "Press",
       "type": "Publishing / Blog",
@@ -28076,6 +28252,12 @@
           "pricing": "free",
           "type": "Publishing / Blog",
           "submissionUrl": "https://www.techpluto.com/submit-tool/"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "submissionUrl": "https://techpluto.com/submit-startup/",
+          "note": "catalog submit URL corrected; previous was 'https://www.techpluto.com/submit-tool/'"
         }
       ]
     },
@@ -31552,19 +31734,27 @@
       "dr": null,
       "link": "unknown",
       "eligibility": "Listed in the LaunchRepo directory catalog (observed 2026-09-25); acceptance, pricing, and current requirements need checking.",
-      "flags": [],
+      "flags": [
+        "quarantined: redirects to a LinkedIn post — no listing surface exists"
+      ],
       "route": "needs-research",
       "provider": "Not supplied by source",
       "sourceUrl": "https://launchrepo.dev/directories/",
       "retrieved": "2026-09-25",
       "measured": null,
-      "quarantined": false,
+      "quarantined": true,
       "claims": [
         {
           "source": "launchrepo-catalog",
           "dr": null,
           "link": "unknown",
           "pricing": "unknown"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "quarantined": true,
+          "note": "redirects to a LinkedIn post — no listing surface exists"
         }
       ]
     },
@@ -33042,7 +33232,7 @@
       "name": "TheSaaSDirectory",
       "domain": "thesaasdirectory.com",
       "website": "https://thesaasdirectory.com/",
-      "submissionUrl": "https://thesaasdirectory.com/submit",
+      "submissionUrl": "https://thesaasdirectory.com/create-listing/",
       "exampleUrl": null,
       "category": "Directory",
       "type": "Directory / SaaS",
@@ -33067,6 +33257,12 @@
           "pricing": "free",
           "type": "Directory / SaaS",
           "submissionUrl": "https://thesaasdirectory.com/submit"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "submissionUrl": "https://thesaasdirectory.com/create-listing/",
+          "note": "catalog submit URL corrected; previous was 'https://thesaasdirectory.com/submit'"
         }
       ]
     },
@@ -33104,7 +33300,7 @@
       "name": "Pearltrees",
       "domain": "pearltrees.com",
       "website": "https://pearltrees.com/",
-      "submissionUrl": "https://www.pearltrees.com/s/register",
+      "submissionUrl": "https://www.pearltrees.com/",
       "exampleUrl": null,
       "category": "Directory",
       "type": "Curation / Bookmark",
@@ -33127,6 +33323,12 @@
           "pricing": "free",
           "type": "Curation / Bookmark",
           "submissionUrl": "https://www.pearltrees.com/s/register"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "submissionUrl": "https://www.pearltrees.com/",
+          "note": "catalog submit URL corrected; previous was 'https://www.pearltrees.com/s/register'"
         }
       ]
     },
@@ -33134,7 +33336,7 @@
       "name": "Link Centre",
       "domain": "secure.linkcentre.com",
       "website": "https://secure.linkcentre.com/",
-      "submissionUrl": "https://secure.linkcentre.com/signup/basic/?from=addurl",
+      "submissionUrl": "https://www.linkcentre.com/addurl/",
       "exampleUrl": null,
       "category": "Directory",
       "type": "Directory / Submit",
@@ -33157,6 +33359,12 @@
           "pricing": "free",
           "type": "Directory / Submit",
           "submissionUrl": "https://secure.linkcentre.com/signup/basic/?from=addurl"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "submissionUrl": "https://www.linkcentre.com/addurl/",
+          "note": "catalog submit URL corrected; previous was 'https://secure.linkcentre.com/signup/basic/?from=addurl'"
         }
       ]
     },
@@ -33196,7 +33404,7 @@
       "name": "ActiveRain",
       "domain": "activerain.com",
       "website": "https://activerain.com/",
-      "submissionUrl": "https://activerain.com/users/new",
+      "submissionUrl": "https://activerain.com/join",
       "exampleUrl": null,
       "category": "Community",
       "type": "Profile / Community",
@@ -33221,6 +33429,12 @@
           "pricing": "free",
           "type": "Profile / Community",
           "submissionUrl": "https://activerain.com/users/new"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "submissionUrl": "https://activerain.com/join",
+          "note": "catalog submit URL corrected; previous was 'https://activerain.com/users/new'"
         }
       ]
     },
@@ -33232,11 +33446,13 @@
       "exampleUrl": null,
       "category": "AI",
       "type": "Directory / AI tools",
-      "pricing": "free",
+      "pricing": "paid",
       "dr": 69,
       "link": "follow",
       "eligibility": null,
-      "flags": [],
+      "flags": [
+        "pricing corrected free->paid: submit form offers only paid packages ($29.99+)"
+      ],
       "route": "source-reported",
       "provider": "Source-reported DR; provider not independently verified",
       "sourceUrl": "https://dofollowback.link/",
@@ -33251,6 +33467,12 @@
           "pricing": "free",
           "type": "Directory / AI tools",
           "submissionUrl": "https://aitoolly.com/submit"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "pricing": "paid",
+          "note": "submit form offers only paid packages ($29.99+)"
         }
       ]
     },
@@ -33384,9 +33606,11 @@
       "type": "Article submission",
       "pricing": "free",
       "dr": 60,
-      "link": "follow",
+      "link": "nofollow",
       "eligibility": null,
-      "flags": [],
+      "flags": [
+        "link corrected follow->nofollow: all article links are nofollow"
+      ],
       "route": "source-reported",
       "provider": "Source-reported DR; provider not independently verified",
       "sourceUrl": "https://dofollowback.link/",
@@ -33401,6 +33625,12 @@
           "pricing": "free",
           "type": "Article submission",
           "submissionUrl": "https://www.sooperarticles.com/author-signup.php"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "link": "nofollow",
+          "note": "all article links are nofollow"
         }
       ]
     },
@@ -33624,9 +33854,11 @@
       "type": "Directory / Submit",
       "pricing": "free",
       "dr": 58,
-      "link": "follow",
+      "link": "nofollow",
       "eligibility": null,
-      "flags": [],
+      "flags": [
+        "link corrected follow->nofollow: free listings are nofollow unless the tool reaches Top 3 of its cohort week"
+      ],
       "route": "source-reported",
       "provider": "Source-reported DR; provider not independently verified",
       "sourceUrl": "https://dofollowback.link/",
@@ -33641,6 +33873,12 @@
           "pricing": "free",
           "type": "Directory / Submit",
           "submissionUrl": "https://ufind.best/products/create"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "link": "nofollow",
+          "note": "free listings are nofollow unless the tool reaches Top 3 of its cohort week"
         }
       ]
     },
@@ -33802,7 +34040,7 @@
       "name": "AI Generation",
       "domain": "theaigeneration.com",
       "website": "https://theaigeneration.com/",
-      "submissionUrl": "https://www.theaigeneration.com/submit",
+      "submissionUrl": "https://theaigeneration.com/add/",
       "exampleUrl": null,
       "category": "AI",
       "type": "Directory / AI tools",
@@ -33827,6 +34065,12 @@
           "pricing": "free",
           "type": "Directory / AI tools",
           "submissionUrl": "https://www.theaigeneration.com/submit"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "submissionUrl": "https://theaigeneration.com/add/",
+          "note": "catalog submit URL corrected; previous was 'https://www.theaigeneration.com/submit'"
         }
       ]
     },
@@ -33894,16 +34138,17 @@
       "name": "New SaaSly",
       "domain": "newsaasly.com",
       "website": "https://newsaasly.com/",
-      "submissionUrl": "https://newsaasly.com/submit",
+      "submissionUrl": "https://newsaasly.com/pricing",
       "exampleUrl": null,
       "category": "Directory",
       "type": "Directory / SaaS",
-      "pricing": "free",
+      "pricing": "paid",
       "dr": 52,
       "link": "follow",
       "eligibility": null,
       "flags": [
-        "Submission route broken"
+        "Submission route broken",
+        "pricing corrected free->paid: only a $20 one-time Gallery Listing tier exists"
       ],
       "route": "source-reported",
       "provider": "Source-reported DR; provider not independently verified",
@@ -33919,6 +34164,18 @@
           "pricing": "free",
           "type": "Directory / SaaS",
           "submissionUrl": "https://newsaasly.com/submit"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "submissionUrl": "https://newsaasly.com/pricing",
+          "note": "catalog submit URL corrected; previous was 'https://newsaasly.com/submit'"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "pricing": "paid",
+          "note": "only a $20 one-time Gallery Listing tier exists"
         }
       ]
     },
@@ -34140,7 +34397,7 @@
       "name": "Semfirms",
       "domain": "semfirms.com",
       "website": "https://semfirms.com/",
-      "submissionUrl": "https://www.semfirms.com/submit-a-listing",
+      "submissionUrl": "https://www.semfirms.com/add-user/",
       "exampleUrl": null,
       "category": "Directory",
       "type": "Directory / Agency",
@@ -34165,6 +34422,12 @@
           "pricing": "free",
           "type": "Directory / Agency",
           "submissionUrl": "https://www.semfirms.com/submit-a-listing"
+        },
+        {
+          "source": "playbook-research",
+          "retrieved": "2026-10-02",
+          "submissionUrl": "https://www.semfirms.com/add-user/",
+          "note": "catalog submit URL corrected; previous was 'https://www.semfirms.com/submit-a-listing'"
         }
       ]
     },
