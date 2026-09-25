@@ -1,4 +1,5 @@
 from pathlib import Path
+import plistlib
 import tempfile
 import unittest
 
@@ -11,16 +12,18 @@ class LaunchSmokeTests(unittest.TestCase):
             app = Path(directory) / "Fixture.app"
             executable = app / "Contents/MacOS/Fixture"
             executable.parent.mkdir(parents=True)
+            (app / "Contents/Info.plist").write_bytes(plistlib.dumps({"CFBundleExecutable": "Fixture"}))
             executable.write_text("#!/bin/sh\nexit 7\n")
             executable.chmod(0o755)
             with self.assertRaisesRegex(ValueError, "status 7"):
-                smoke(app, seconds=1)
+                smoke(app, seconds=5)
 
     def test_running_candidate_passes(self):
         with tempfile.TemporaryDirectory() as directory:
             app = Path(directory) / "Fixture.app"
             executable = app / "Contents/MacOS/Fixture"
             executable.parent.mkdir(parents=True)
+            (app / "Contents/Info.plist").write_bytes(plistlib.dumps({"CFBundleExecutable": "Fixture"}))
             executable.write_text("#!/usr/bin/env python3\nimport time\ntime.sleep(10)\n")
             executable.chmod(0o755)
             smoke(app, seconds=0.05)

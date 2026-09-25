@@ -5,13 +5,18 @@ from __future__ import annotations
 
 import argparse
 from pathlib import Path
+import plistlib
 import subprocess
 import sys
 import tempfile
 
 
 def smoke(app: Path, seconds: float = 4.0) -> None:
-    executable = app / "Contents/MacOS" / app.stem
+    info = plistlib.loads((app / "Contents/Info.plist").read_bytes())
+    executable_name = info.get("CFBundleExecutable")
+    if not isinstance(executable_name, str) or Path(executable_name).name != executable_name:
+        raise ValueError("Invalid CFBundleExecutable")
+    executable = app / "Contents/MacOS" / executable_name
     if not executable.is_file():
         raise ValueError(f"Missing app executable: {executable}")
     with tempfile.TemporaryFile(mode="w+t") as output:
