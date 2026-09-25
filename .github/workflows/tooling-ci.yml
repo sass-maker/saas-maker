@@ -29,7 +29,7 @@ jobs:
         run: node --test test/*.test.mjs
       - name: Test Daddy macOS contracts
         working-directory: tooling/daddy-macos
-        run: python3 -m unittest test_candidate test_release_contract test_add_shadow_ci
+        run: python3 -m unittest test_candidate test_release_contract test_release_preflight test_add_shadow_ci
       - name: Validate scripts and skills
         working-directory: tooling
         run: node scripts/validate-tooling.mjs
