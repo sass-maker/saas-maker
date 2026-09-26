@@ -1,0 +1,7 @@
+{
+  "schema": "fleet.skill-execution-profile.v1",
+  "recommended": { "intelligence": "frontier", "reasoning": "high" },
+  "minimum": { "intelligence": "balanced", "reasoning": "high" },
+  "degradation": "ask",
+  "rationale": "Grading a transcript against a rubric and pinning each defect to the exact missing sentence is judgment work; a weak pass rubber-stamps broken skills."
+}
