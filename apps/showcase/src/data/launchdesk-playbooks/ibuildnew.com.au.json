@@ -1,0 +1,42 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "ibuildnew.com.au",
+  "name": "iBuildNew",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.ibuildnew.com.au/register",
+      "title": "Register route — renders marketing page for Australian home builders/developers/land estates; 'Book a demo' leads to contact form"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Extremely narrow eligibility: Australian home builders, land estates, and knock-down-rebuild specialists only — not a software directory",
+    "No self-serve listing — 'Book a demo' routes to /help-pages/contact (a sales conversation)",
+    "Positioned as an 'accountable marketing (and sales) partner' — commercial lead-gen relationship, priced per marketing package"
+  ],
+  "preparation": [
+    "Proof you're an Australian builder/developer/estate with designs or packages to list",
+    "Marketing budget and sales contact",
+    "Homes/design/estate assets (plans, imagery, pricing) for the listing"
+  ],
+  "workflow": [
+    "Go to https://www.ibuildnew.com.au/help-pages/contact (Book a demo)",
+    "Request listing/onboarding via the contact form or phone",
+    "Negotiate the marketing package; they publish listings for buyers to compare and enquire"
+  ],
+  "watchFor": [
+    "The cataloged 'Directory / Referral — free' framing is misleading: this is a niche AU property marketplace with sales-led onboarding",
+    "A SaaS/AI product cannot be listed here — only physical home builders and land estates",
+    "No published pricing; testimonials describe paid marketing ROI",
+    "They also upsell 'Conversion Assist' lead-response tooling"
+  ],
+  "countsAsLive": "The builder/estate's listings appear on ibuildnew.com.au search/compare pages with enquiry forms",
+  "unknowns": [
+    "Listing pricing and contract terms",
+    "Whether any free/basic listing tier exists behind the demo request",
+    "Whether a SaaS tool for builders could partner differently (e.g. integration)"
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aimatch.pro",
+  "name": "AiMatch Pro",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://aimatch.pro/",
+      "title": "Homepage — live AI tools directory (~6,000+ tools across 45 categories)"
+    },
+    {
+      "url": "https://aimatch.pro/list",
+      "title": "List your tool — $29 one-time launch listing via Stripe: permanent page + 30-day sponsored category position"
+    },
+    {
+      "url": "https://aimatch.pro/contact",
+      "title": "Contact — 'Want to list your tool, suggest an update…' mailto fallback for suggestions"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "AI tools only — 45 categories",
+    "$29 one-time payment via Stripe for a launch listing",
+    "Ownership verification via the submission email; sponsored placement is labeled 'sponsored' for 30 days",
+    "Editors verify final title, category, and listing details before publishing"
+  ],
+  "preparation": [
+    "Company name and website URL",
+    "Contact email — gets the receipt and listing access (not published)",
+    "Optional: preferred display name and category; notes",
+    "$29 budget"
+  ],
+  "workflow": [
+    "Open https://aimatch.pro/list ('List your tool' in nav)",
+    "Enter company name, website, contact email, optional name/category/notes",
+    "Continue to Stripe checkout and pay $29",
+    "Editors verify details, then email the live listing link",
+    "Sponsored position runs 30 days; the permanent tool page stays live afterward"
+  ],
+  "watchFor": [
+    "No free listing path — the only documented route is the $29 launch listing",
+    "Sponsored placement is explicitly labeled — buyers see it as an ad for 30 days",
+    "No traffic or sales guarantee stated on the page",
+    "A free 'suggest an update' path exists via /contact for already-listed tools, not new listings",
+    "Directory appears aggregator-style (auto-generated tool profiles); editorial depth unknown"
+  ],
+  "countsAsLive": "A permanent /tool/name/<slug> page exists on aimatch.pro and the tool occupies a labeled sponsored slot in its category for the first 30 days",
+  "unknowns": [
+    "Whether the outbound link on the permanent page is dofollow",
+    "Verification turnaround after payment",
+    "Whether unpaid organic additions happen — no public free submission found"
+  ]
+}

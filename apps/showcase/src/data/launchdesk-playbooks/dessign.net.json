@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "dessign.net",
+  "name": "Dessign",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://dessign.net/",
+      "title": "Homepage — curated AI tools directory (est. 2010, WordPress-powered), claims ~50k monthly visitors"
+    },
+    {
+      "url": "https://dessign.net/submit-tool/",
+      "title": "Submit page — paid only: $69 Featured listing or $399 Pro (newsletter+social+blog post); 'We are no longer offering free submissions'"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "AI tool or software product fitting their categories (AI agents, design, dev tools, SaaS, SEO, video, writing, etc.)",
+    "Paid only: $69 one-time Featured listing (was $129) or $399 one-time Pro (adds newsletter feature to 40k subscribers, 1500-word blog post, listicle, social posts)",
+    "No NSFW/adult sites accepted",
+    "Payment via Stripe payment links on the submit page"
+  ],
+  "preparation": [
+    "Product name, URL, description, and target category",
+    "Stripe payment for $69 or $399",
+    "For Pro: assets for the newsletter feature and social posts"
+  ],
+  "workflow": [
+    "Open https://dessign.net/submit-tool/",
+    "Click 'Submit – $69' or 'Submit – $399' (Stripe checkout links)",
+    "Provide product details; listing goes live in 1-2 business days (1 day for Pro)",
+    "Full refund if the product isn't published"
+  ],
+  "watchFor": [
+    "Free submissions are discontinued — any older doc claiming a free route is stale",
+    "DR80/50k-visitor/40k-subscriber figures are site self-claims; verify value before paying $399",
+    "Listings are permanent ('never expire') per FAQ",
+    "Newsletter is monthly, sent at the start of each month — Pro feature timing depends on that cycle"
+  ],
+  "countsAsLive": "The product has a public page under dessign.net/<slug>/ linked from a category listing",
+  "unknowns": [
+    "What information the post-payment intake collects (form behind Stripe checkout)",
+    "Whether the dofollow link is site-wide or per-page",
+    "Real traffic/DR verification"
+  ]
+}

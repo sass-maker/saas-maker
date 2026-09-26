@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "rapidapi.com",
+  "name": "RapidAPI Hub",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://docs.rapidapi.com/v2.0/docs/add-an-api-basics",
+      "title": "Add an API — Provider Dashboard > 'Add New API'; UI definition or OpenAPI upload; then overview page for description/website/terms/logo (content read via search result)"
+    },
+    {
+      "url": "https://docs.rapidapi.com/docs/add-api-getting-started",
+      "title": "Getting started — rapidapi.com/studio or 'My APIs' in the Hub header; Hub Listing tab in Studio manages listing details (content read via search result)"
+    },
+    {
+      "url": "https://docs.rapidapi.com/docs/hub-listing-overview",
+      "title": "Hub Listing — manage logo, category, descriptions, website, terms, visibility, tags, base URLs, health check; Monetize tab configures subscription plans (content read via search result)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Only relevant if the product IS or HAS a public API — this is an API marketplace, not a startup directory",
+    "Free RapidAPI account",
+    "A working API: either define it in the RapidAPI UI or upload an OpenAPI spec",
+    "Listing fields: logo, category, short + long description, website URL, terms of use, tags, base URLs",
+    "Visibility is set to public on the Hub Listing; consumers subscribe to a plan before use",
+    "Monetization is optional — plans (BASIC/PRO) can be free or paid"
+  ],
+  "preparation": [
+    "A live, documented HTTP API with an OpenAPI spec (preferred) or endpoints to define manually",
+    "Logo, category, descriptions, terms-of-use URL",
+    "Decide plan structure (free tier + paid tiers if monetizing)"
+  ],
+  "workflow": [
+    "Sign up at rapidapi.com and open Studio (rapidapi.com/studio) or 'My APIs'",
+    "Click 'Add New API' in the Provider Dashboard",
+    "Define the API via the UI or upload an OpenAPI file",
+    "Complete the Hub Listing tab: logo, category, descriptions, website, terms, tags, base URLs",
+    "Configure plans on the Monetize tab (even a free listing needs a plan consumers subscribe to)",
+    "Set visibility to public — the API then appears on the RapidAPI Hub"
+  ],
+  "watchFor": [
+    "Listing requires an actual API product — a SaaS without a public API cannot list",
+    "RapidAPI proxies calls — your API traffic flows through their gateway and they take a revenue share on paid plans",
+    "Every API needs at least one plan defined before consumers can subscribe",
+    "rapidapi.com returned an empty/JS-only response to plain fetch — details verified via docs.rapidapi.com"
+  ],
+  "countsAsLive": "The API appears publicly on the RapidAPI Hub at rapidapi.com/<org>/api/<api-name>",
+  "unknowns": [
+    "RapidAPI's revenue-share percentage on paid plans — not confirmed this session",
+    "Whether there is any editorial review before a public listing goes live"
+  ]
+}

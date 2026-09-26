@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "bbb.org",
+  "name": "Better Business Bureau",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.bbb.org/get-listed",
+      "title": "Submit a business to the BBB directory — request a free BBB Business Profile"
+    },
+    {
+      "url": "https://www.bbb.org/all/business/get-noticed",
+      "title": "BBB 'Get noticed' page — three paths: free listing, explore Accreditation, apply for Accreditation"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Must be a real, operating business — BBB serves businesses in the US/Canada/Mexico; a pure online SaaS can qualify but should have a real address on record",
+    "BBB Accreditation is a separate paid application with eligibility standards (e.g. operating history, complaint record) — NOT required for the free Business Profile",
+    "Per third-party guides, you pick up to three business categories from BBB's fixed taxonomy — no custom categories"
+  ],
+  "preparation": [
+    "Legal business name, address, phone, and website URL",
+    "1-3 BBB business categories that fit (e.g. 'Internet Marketing Services', 'Software Developers')",
+    "A reachable business phone — BBB may call to verify the listing before publishing",
+    "Consistent NAP data matching your other citations"
+  ],
+  "workflow": [
+    "Go to https://www.bbb.org/get-listed and search for the business by name + city/state/zip",
+    "If not found, click 'Add it now' and fill the business details form (name, address, phone, website, categories)",
+    "Submit via 'Add my Business to the Directory'; accept any address correction BBB suggests if accurate",
+    "Expect a verification call from a BBB representative before the profile publishes",
+    "Optionally create a bbb.org account (set your location first — profiles are managed by local BBB offices) to manage reviews and the profile"
+  ],
+  "watchFor": [
+    "The site steers toward paid Accreditation — the free listing path is separate; don't buy accreditation just for a link",
+    "BBB may phone-verify the business; unreachable phones can stall the listing",
+    "Some profile features are restricted to Accredited Businesses only",
+    "Profiles are handled by the local BBB office for your geography — processing time varies by office"
+  ],
+  "countsAsLive": "The business has a public BBB Business Profile page on bbb.org reachable via directory search, showing address, website, and reviews section",
+  "unknowns": [
+    "Exact turnaround from submission to published profile",
+    "Whether unaccredited profiles display a website link and whether it is follow or nofollow",
+    "Whether a fully-remote SaaS with no storefront is accepted in every BBB region"
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startups.co.uk",
+  "name": "Startups.co.uk",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://startups.co.uk/contact-us/",
+      "title": "Contact us — hello@startups.co.uk for press releases/news; commercial@startups.co.uk for partnerships; su100@startups.co.uk for the free Startups 100 index (UK businesses <5 years old); thought-leadership guest posts accepted, paid guest posts/link insertions explicitly rejected"
+    }
+  ],
+  "category": "press",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "UK small-business/startup focus",
+    "Press releases and news queries: hello@startups.co.uk",
+    "Startups 100 index: su100@startups.co.uk — free to apply, UK business launched within the past 5 years; applications open periodically ('we'll announce when applications open')",
+    "Guest posts: genuine thought-leadership pitches accepted — paid guest posts and link insertions are explicitly refused and ignored",
+    "Commercial partnerships: commercial@startups.co.uk or the publisher's partner form"
+  ],
+  "preparation": [
+    "UK relevance — the site is the UK's small-business resource",
+    "For Startups 100: a UK business <5 years old with a compelling story",
+    "For editorial: a genuine small-business news angle"
+  ],
+  "workflow": [
+    "Send press/news to hello@startups.co.uk",
+    "For the Startups 100 list, email su100@startups.co.uk when applications are open (free)",
+    "Pitch thought-leadership guest posts through the contact channel — never offer payment",
+    "Commercial/lead-gen opportunities via commercial@startups.co.uk"
+  ],
+  "watchFor": [
+    "Explicit 'no paid guest posts or link insertions' policy — do not pitch link schemes; emails asking won't get a response",
+    "Startups 100 applications open on a cycle — check timing",
+    "UK-only relevance",
+    "Reviews/comparisons on the site carry affiliate economics (Marketing VF Ltd publisher model)"
+  ],
+  "countsAsLive": "The business appears in a Startups.co.uk article or the annual Startups 100 index",
+  "unknowns": [
+    "Guest-post acceptance criteria beyond 'thought leadership'",
+    "Next Startups 100 application window"
+  ]
+}

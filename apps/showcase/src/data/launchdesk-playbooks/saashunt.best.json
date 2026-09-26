@@ -1,0 +1,39 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "saashunt.best",
+  "name": "SaaSHunt",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://saashunt.best/",
+      "title": "SaaSHunt — live PH-alternative; 'Submit Project', 'Launch from $10' pricing page, Outbid auction slots for top positions, 'Featured Premium Plus', sign up/in; promises a badge & 'High DR Backlink'"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Submission exists but the visible economy is paid — 'Launch from $10' tiers, 'Outbid' auctions for top-8 slots, Featured Premium Plus placements; a free/basic submit path likely exists behind 'Submit Project' but paid placement dominates"
+  ],
+  "requirements": [
+    "Account signup ('Sign up' in nav)",
+    "'Submit Project' flow; launch tiers from $10; Outbid lets you buy the daily top-8 slots ($16-$35 observed)",
+    "Badge + backlink marketing — 'Earn a Badge & High DR Backlink'"
+  ],
+  "preparation": [
+    "Project name, tagline, description, categories, logo",
+    "Budget for launch tier/outbid if free visibility is insufficient"
+  ],
+  "workflow": [
+    "Sign up, click 'Submit Project'",
+    "Choose launch tier (from $10) or compete via Outbid for top positions",
+    "Listing gets a product page and daily-launch placement"
+  ],
+  "watchFor": [
+    "Low-quality directory economics — most 'top' placements are bought; one listing observed advertising 'invisible AI for proctored exams' — questionable content vetting",
+    "Claimed backlink value is marketing copy",
+    "Young directory — real reach unknown"
+  ],
+  "countsAsLive": "The project has a listing page on saashunt.best",
+  "unknowns": ["Whether a genuinely free tier exists", "Actual traffic"]
+}

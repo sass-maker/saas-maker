@@ -1,0 +1,60 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "findthatsoftware.com",
+  "name": "FindThatSoftware (FTS)",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://findthatsoftware.com/vendors",
+      "title": "Vendor page — 'List your software for Indian buyers'; free to apply, editorial floor: a buyer must be able to try and evaluate the product today (content read via search index; direct fetch returned HTTP 429)"
+    },
+    {
+      "url": "https://findthatsoftware.com/about",
+      "title": "About — vendors submit or correct listings on the vendor page; corrections free; monetized by affiliate links and labelled paid placements"
+    },
+    {
+      "url": "https://findthatsoftware.com/",
+      "title": "Homepage — 296 tools across 41 categories; source-backed listings with verified India pricing"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free to apply, but listings are editorially reviewed — 'we only ever feature tools we would genuinely recommend'",
+    "Hard floor: 'a buyer must be able to try and evaluate your product today' — a public trial/free tier or evaluable product",
+    "Pricing must be discoverable (published or clearly obtainable) — they compute an all-in India cost",
+    "The vendor site must be 'source-backable': enough public feature/pricing/support detail to cite"
+  ],
+  "requirements": [
+    "Software products evaluable by Indian buyers — 296 tools across 41 categories indexed",
+    "Early independent makers explicitly welcome — 'no traction, funding, or big brand needed'",
+    "Real published/obtainable pricing required for the all-in India cost calculation",
+    "Public site must substantiate claims — listings carry visible source URLs and last-checked dates"
+  ],
+  "preparation": [
+    "Product name, URL, and a working public trial/free tier or demo",
+    "Public pricing page or clearly stated price",
+    "Feature, pricing, and support documentation the editors can cite",
+    "India-relevant notes if applicable (INR pricing, GST handling, regional availability)"
+  ],
+  "workflow": [
+    "Open https://findthatsoftware.com/vendors ('List your software for Indian buyers')",
+    "Submit or correct the listing via the vendor page — corrections are always free and never affect rankings",
+    "Editors compile a source-backed listing with verified India pricing",
+    "Paid vendor placements exist but are labelled and do not buy rankings"
+  ],
+  "watchFor": [
+    "Direct fetches returned HTTP 429 repeatedly — the site rate-limits automated access; use a real browser and expect blocks",
+    "India-buyer focus — listings emphasize 'all-in India cost'; a product with no India story may get less value",
+    "Editorial bar is real: 'if we would not recommend a tool to a buyer regardless of pay, it does not get listed'",
+    "Corrections go through the vendor page; buyer-side issues through the buying-help form"
+  ],
+  "countsAsLive": "The product appears in the findthatsoftware.com catalog under its category with a source-backed listing showing India pricing and a last-checked date",
+  "unknowns": [
+    "Exact submission form fields — direct fetch was blocked by 429 on every attempt",
+    "Review turnaround",
+    "Whether rejection is communicated",
+    "Pricing for the labelled paid placements"
+  ]
+}

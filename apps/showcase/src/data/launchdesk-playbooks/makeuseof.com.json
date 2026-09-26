@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "makeuseof.com",
+  "name": "MakeUseOf",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.makeuseof.com/contributor",
+      "title": "MakeUseOf Contribution Program — paid contributor application form; 'we do not accept any guest posts at the moment'"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "The only contribution path is the paid contributor program — writers are hired and paid; there is no free 'submit a post' route and guest posts are explicitly not accepted"
+  ],
+  "requirements": [
+    "This is a paid-writing application, not a listing: the form asks for name, email, location, a 150–250-word 'why you' pitch, up to three published links, and three proposed content ideas",
+    "All form fields are required; content type choice (News/Features/List)",
+    "Guest posts are explicitly not accepted ('we do not accept any guest posts at the moment')",
+    "Coverage of a product happens via staff/contributor reviews and news tips — there's a 'Have a News Tip?' link in the footer leading to /contact/",
+    "Part of Valnet Publishing Group"
+  ],
+  "preparation": [
+    "For coverage: a consumer-tech angle (apps, software, productivity) sent via the contact/news-tip path — no dedicated PR inbox was listed",
+    "For the contributor program: 150–250-word pitch, three published clips, three story ideas",
+    "A SaaS 'launch announcement' fits neither path — think app review or how-to coverage"
+  ],
+  "workflow": [
+    "For earned coverage: use the contact page ('Have a News Tip?') to pitch the editorial team",
+    "For writing: apply via the /contributor form with your pitch, links, and content ideas",
+    "Coverage, if it happens, is a staff-written article or review — no listing page is created"
+  ],
+  "watchFor": [
+    "Do not pitch a guest post — the program rejects them outright",
+    "The contributor program is a job application (paid writing), not a promotional route for your product",
+    "Valnet-owned network site; the same editorial operation runs sister brands — cross-posting pitches across them may be seen as spam",
+    "The catalog's stored path /contributor is correct but describes writer recruitment, not product submission"
+  ],
+  "countsAsLive": "A MakeUseOf article/review mentioning the product is published at makeuseof.com (or a hired contributor's byline appears)",
+  "unknowns": [
+    "Which inbox handles product pitches — only a generic contact page was found",
+    "Whether product samples/review units have a dedicated intake (none listed)"
+  ]
+}

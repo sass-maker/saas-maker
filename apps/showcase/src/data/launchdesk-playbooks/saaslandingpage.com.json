@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "saaslandingpage.com",
+  "name": "SaaS Landing Page",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://saaslandingpage.com/",
+      "title": "Homepage — curated gallery of 840 SaaS landing page examples by Davide Pacilio; sponsored cards marked 'Sponsored'; Advertise → slpads.framer.website"
+    },
+    {
+      "url": "https://slpads.framer.website/contact",
+      "title": "Advertise on SaaS Landing Page — 'Submit your product, and we'll be in touch within 24-48 hours'; sponsorship inquiry form"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "No self-serve free submission — the gallery is editor-curated; the only inbound route is the sponsorship contact form",
+    "Fit: a SaaS with a genuinely well-designed landing page; entries are page-level showcases (landing, pricing, about, features, blog, testimonials, FAQ, contact pages)",
+    "Sponsorship = paid placement ('Sponsored' tag shown on paid entries like Mobbin, Humblytics)"
+  ],
+  "preparation": [
+    "Your live SaaS landing page URL",
+    "A short pitch of the product for the contact form",
+    "Budget for a sponsorship slot — pricing is discussed off-page (24-48h reply promise)"
+  ],
+  "workflow": [
+    "Open https://slpads.framer.website/contact (linked as 'Advertise' site-wide)",
+    "Submit the product details via the sponsorship form",
+    "Wait for their reply (24-48h) with sponsorship options and pricing",
+    "If featured, your site gets a gallery card + detail page at saaslandingpage.com/<slug>/"
+  ],
+  "watchFor": [
+    "This is an editorial design gallery — there is no free 'submit your site' form",
+    "Sponsored entries are labeled 'Sponsored' — the backlink is a sponsorship artifact",
+    "The contact form lives on a Framer-hosted subdomain (slpads.framer.website), not the main domain",
+    "Organic curation happens without submission — if your page is exceptional they may feature it on their own"
+  ],
+  "countsAsLive": "Your site appears as a gallery card with a detail page on saaslandingpage.com (marked 'Sponsored' if paid)",
+  "unknowns": [
+    "Sponsorship pricing and placement options",
+    "Whether they accept unsolicited free submissions via the form",
+    "Dofollow status of gallery outbound links"
+  ]
+}

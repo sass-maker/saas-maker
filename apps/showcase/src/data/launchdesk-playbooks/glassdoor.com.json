@@ -1,0 +1,43 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "glassdoor.com",
+  "name": "Glassdoor",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.glassdoor.com/employers/sign-up/",
+      "title": "Claim Your Free Employer Profile — Glassdoor employer signup"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Must be an employer claiming a company profile — this is an employer-branding product, not a software/product directory",
+    "Free employer account gives access to the employer profile, review responses, review requests, and basic analytics",
+    "Enhanced Profile and employer branding features are paid upgrades"
+  ],
+  "preparation": [
+    "Work email and company details to claim the employer profile",
+    "Company logo, mission statement, and company-update content for profile customization",
+    "A real company with employees — profiles exist around employer reviews"
+  ],
+  "workflow": [
+    "Open glassdoor.com/employers/sign-up/ and sign up to claim the free employer profile",
+    "Verify company association (work email/domain verification typical for employer claims)",
+    "Complete the profile: logo, mission, company updates",
+    "Optionally request and respond to employee reviews"
+  ],
+  "watchFor": [
+    "Only appropriate for companies with actual employees/reviews — a shell product has nothing to claim",
+    "Batch eligibility claim confirmed: employer profile, not a product listing",
+    "Upsell pressure toward Enhanced Profile paid plans ('Getting started for free only scratches the surface')",
+    "Glassdoor requires claim verification; unverified claims don't go live"
+  ],
+  "countsAsLive": "The company's Glassdoor employer profile shows claimed status with populated branding fields",
+  "unknowns": [
+    "Exact verification mechanism for claiming a profile",
+    "Whether the profile website link is followed",
+    "Free vs Enhanced feature boundary details on the pricing page"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startuptracker.io",
+  "name": "Startup Tracker",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://startuptracker.io/",
+      "title": "Homepage — 'Discover and track startups from MVP to IPO'; 'Get Started — it's Free'; nav links 'Add startup' to /crowdsourcing/"
+    },
+    {
+      "url": "https://startuptracker.io/crowdsourcing/",
+      "title": "Add-startup (crowdsourcing) route — renders an empty JS app shell to plain fetches; also accessible as in-app 'Add startup' nav item"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free product ('Get Started — it's Free') but adding a startup requires signing in to the web app; the crowdsourcing form is JS-rendered and not publicly documented"
+  ],
+  "requirements": [
+    "Company must be a startup — the dataset spans MVP-to-IPO companies, aggregated from Crunchbase, Product Hunt, Beta List and crowdsourced additions",
+    "Sign-up/login required before the Add startup form works",
+    "Site also accepts correction requests: 'Missing profile or profile missing some info? Let us know' via hello@startuptracker.io"
+  ],
+  "preparation": [
+    "Startup name, website URL, and canonical social profiles (data merges with Crunchbase/PH records)",
+    "Founding/funding facts if known — profiles are 'one pagers' with summary info and links",
+    "An email address for the free account"
+  ],
+  "workflow": [
+    "Create a free account at startuptracker.io/home",
+    "Inside the app use 'Add startup' (routes to /crowdsourcing/) and submit the startup's details",
+    "Alternatively email hello@startuptracker.io to request a missing profile be added or corrected",
+    "Confirm the profile resolves at startuptracker.io/startups/<slug>"
+  ],
+  "watchFor": [
+    "/crowdsourcing returns 'Not Found' without the trailing slash and an empty shell to non-JS fetches — must be done in a real browser session",
+    "Profiles are crowdsourced + aggregated; a listing here is a tracking profile, not a promotional launch post",
+    "Site footer is dated 2020 — confirm the app still ingests new startups before investing effort",
+    "hello@startuptracker.io is a fallback route if the in-app form fails"
+  ],
+  "countsAsLive": "A public profile page exists at startuptracker.io/startups/<slug> viewable without login",
+  "unknowns": [
+    "Exact fields on the add-startup form (JS-gated)",
+    "Moderation/review delay for crowdsourced additions",
+    "Whether listing links are followed"
+  ]
+}

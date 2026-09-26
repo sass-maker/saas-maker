@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "zjnav.com",
+  "name": "Zjnav (终极导航)",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.zjnav.com/tougao",
+      "title": "投稿须知 / 网站提交 — Chinese submission rules page; reciprocal link required, login required, 7-15 day review"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Must first add a reciprocal link to 终极导航 (https://www.zjnav.com/) on your site — '无本站链接不会收录' (no link back = not included)",
+    "Login required: the submission form is behind '需要登录才能访问' — an account on zjnav.com is needed",
+    "Rule 6 says high-quality sites may be exempted from the reciprocal link at editor discretion"
+  ],
+  "requirements": [
+    "Site must load normally — '不收录在正常情况下无法正常连接或打开时间太长的网站'",
+    "Site must have substantive content — no under-construction or empty sites",
+    "Must pick the correct category (there is an AI工具/AI导航 section); wrong category = automatic rejection",
+    "Chinese-language directory — primary audience is mainland China (ICP备案 site); English-only SaaS may still be accepted but evaluate audience fit",
+    "They periodically re-check listings and remove sites violating standards"
+  ],
+  "preparation": [
+    "Add their friend link first: name '终极导航', URL https://www.zjnav.com/, description '实用的资源网址导航收藏夹', icon https://www.zjnav.com/wp-content/uploads/2022/08/1660466052-ico.png",
+    "A registered zjnav.com account",
+    "Site name, URL, description, logo — presumably in Chinese",
+    "Pick the right category (AI工具/AI导航 for AI products)"
+  ],
+  "workflow": [
+    "Place the reciprocal link on your site",
+    "Register/log in at zjnav.com",
+    "Open https://www.zjnav.com/tougao (网站提交) and fill the submission form with correct category",
+    "Wait — published review window is 7-15 days",
+    "Keep the reciprocal link live — they re-check periodically"
+  ],
+  "watchFor": [
+    "Free path is a link exchange — removing their badge later risks delisting",
+    "Old 'reviewed daily at 22:00' note is struck through; real queue is now 7-15 days",
+    "Submission UI and rules are Chinese-only — need translation for an agent",
+    "China-hosted site; latency/accessibility for non-CN visitors is a consideration"
+  ],
+  "countsAsLive": "The site appears as a listed entry under the chosen zjnav.com category page (e.g. AI导航) with a working outbound link",
+  "unknowns": [
+    "Whether reciprocal-link exemption ('优质的网站') is applied proactively or by request",
+    "Link attribute on outbound listing links",
+    "Whether non-Chinese sites are routinely accepted"
+  ]
+}

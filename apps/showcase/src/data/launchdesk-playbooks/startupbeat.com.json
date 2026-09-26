@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startupbeat.com",
+  "name": "StartupBeat",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://startupbeat.com/get-featured",
+      "title": "Get featured — paid route via 'Publicize Originals': journalist interview + sponsored article published on 6 publications including StartUp Beat; contact info@startupbeat.com / +1 (646) 480-0356"
+    },
+    {
+      "url": "https://startupbeat.com/contact/",
+      "title": "Contact — 'To pitch a story about your startup, or to submit a guest article to StartupBeat, please contact' the editor email (Cloudflare-obfuscated); staff list: editor Jim Glade, writer Stiven Cartagena"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free route is an editorial email pitch (story idea or guest article) — acceptance is at the editor's discretion",
+    "The advertised 'Get featured' route is PAID: a Publicize Originals sponsored-article package across 6 publications"
+  ],
+  "requirements": [
+    "A newsworthy startup story or a guest article — the site runs funding news, founder stories, advice pieces",
+    "For the paid route: budget for Publicize Originals (interview → 1 sponsored article → 6 publications)",
+    "Email access — the pitch inbox is Cloudflare email-obfuscated on the contact page (info@startupbeat.com also appears on the get-featured page for PR/media support)"
+  ],
+  "preparation": [
+    "A story pitch: funding round, launch milestone, or founder angle",
+    "For a guest article: a finished draft on a startup-adjacent topic",
+    "Company boilerplate and contact details"
+  ],
+  "workflow": [
+    "Choose the route: free editorial pitch vs paid Publicize Originals",
+    "Free: email the editorial contact listed on startupbeat.com/contact/ (or info@startupbeat.com) with the pitch",
+    "Paid: sign up at publicize.co/originals, complete the journalist interview, and include StartUp Beat among the 6 target publications",
+    "Follow up once if no reply — no tracking exists"
+  ],
+  "watchFor": [
+    "The 'Get featured' page leads with the paid sponsored-article product — don't mistake it for a free submission form",
+    "Editorial pitch email is obfuscated; use the contact page or info@startupbeat.com",
+    "Sponsored articles are labeled as such ('Publicize Originals' writes sponsored content) — paid coverage is disclosed",
+    "Site is active (recent funding stories) but the pitch funnel is email-only"
+  ],
+  "countsAsLive": "An article about the startup or by the founder is published on startupbeat.com (news, startup pitches, perspective, or advice sections)",
+  "unknowns": [
+    "Editorial response rate on cold pitches",
+    "Publicize Originals pricing (external service)",
+    "Whether guest articles carry a dofollow link to the company"
+  ]
+}

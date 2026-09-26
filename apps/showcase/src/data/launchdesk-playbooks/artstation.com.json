@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "artstation.com",
+  "name": "ArtStation",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.artstation.com/about",
+      "title": "ArtStation for Artists — free edition always available: portfolio, free website, prints, learning"
+    },
+    {
+      "url": "https://help.artstation.com/en/articles/16155273-what-s-the-difference-between-my-community-profile-and-my-website-why-are-there-2-profiles",
+      "title": "ArtStation Help — every account gets artstation.com/username community profile plus username.artstation.com website"
+    }
+  ],
+  "category": "profile",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free account ('there will always be a free edition') — register at artstation.com; the /register URL 403'd to automated fetch but signup is the standard account flow",
+    "Content is artwork/media: images, video, Marmoset/Sketchfab 3D, 360 panos — a 'listing' means publishing artwork to a portfolio, so it fits only if you have genuine visual/design work",
+    "Artwork must be your own; ArtStation is a professional art community with strong norms against spam/AI-scraped content"
+  ],
+  "preparation": [
+    "Original artwork assets (project images, renders, process shots)",
+    "Artist/company display name and bio; website link for the profile",
+    "Decide which work to publish first — the community profile and the free portfolio site both populate from posted artwork"
+  ],
+  "workflow": [
+    "Sign up for a free ArtStation account",
+    "Complete the community profile (name, bio, website, social links)",
+    "Upload artwork via 'Add artwork'/portfolio tools — each post supports images, video, 3D embeds, breakdowns",
+    "Publish — the artwork appears on the community profile artstation.com/<username> and the free site <username>.artstation.com",
+    "Optionally add work/production experience to the profile"
+  ],
+  "watchFor": [
+    "Not a product-launch venue — posting a SaaS landing page screenshot as 'artwork' is off-norm; suitable for design/visual products or branding showcases only",
+    "artstation.com/register returns 403 to non-browser fetches — expect bot protection on signup",
+    "Premium subscription is an upsell (custom domain, more website themes) but not required for the free profile+site",
+    "Community is sensitive to generative-AI art; check current AI-content policy before posting AI imagery"
+  ],
+  "countsAsLive": "Profile artstation.com/<username> and site <username>.artstation.com are public and display at least one published artwork",
+  "unknowns": [
+    "Whether profile website links are follow or nofollow",
+    "Current policy on AI-generated artwork disclosures",
+    "Any new-account review before artwork appears publicly"
+  ]
+}

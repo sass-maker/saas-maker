@@ -1,0 +1,43 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "beingguru.com",
+  "name": "Being Guru",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://beingguru.com/submit-startup/",
+      "title": "Submit Your Idea — form with Startup Title, Startup Details, Startup Image, Full Name, Website, Email, Phone"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "No stated eligibility rules, pricing, or editorial criteria on the submit page",
+    "Site is Hisham Sarwar's Pakistani freelancing/tech blog; submissions land under the Startups category",
+    "Form asks for a phone number — a real contactable identity is expected"
+  ],
+  "preparation": [
+    "Startup title and a details/description blurb",
+    "A startup image (the form has an image upload field)",
+    "Full name, website URL, email, and phone number"
+  ],
+  "workflow": [
+    "Open https://beingguru.com/submit-startup/",
+    "Fill Startup Title, Startup Details, upload a Startup Image",
+    "Enter Full Name, Website, Email, Phone and submit",
+    "Submissions are reviewed editorially; accepted startups appear under the site's Startups category"
+  ],
+  "watchFor": [
+    "The batch's /submit-startu URL was truncated — the live route is /submit-startup/",
+    "This is a personal blog's contact-style form, not a structured directory; no public listing criteria or turnaround is stated",
+    "The site heavily promotes freelancing courses and hosting affiliates; the startups feature is a side channel",
+    "Don't expect a canonical 'directory listing' — acceptance likely means a blog post or category mention"
+  ],
+  "countsAsLive": "A post or entry naming the submitted startup appears under https://beingguru.com/category/startups/",
+  "unknowns": [
+    "Whether submissions get a dedicated post or just a mention",
+    "Editorial turnaround and acceptance rate",
+    "Whether published mentions include a followed link back to the startup's website"
+  ]
+}

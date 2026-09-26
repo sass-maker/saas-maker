@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "etsy.com",
+  "name": "Etsy (shop link)",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.etsy.com/sell",
+      "title": "Etsy — Sell on Etsy (fees, shop setup, Creativity Standards)"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Everything listed must be 'made, designed, handpicked, or sourced by a seller' per Etsy's Creativity Standards and Seller Policy — a pure SaaS product is not a natural fit; digital templates/tools a maker designed may qualify",
+    "A shop requires an Etsy account, shop location/currency, shop name, at least one listing, a payment method (Etsy Payments), and a billing method",
+    "A one-time shop set-up fee may be charged — the amount is shown before final setup completion",
+    "Each listing costs $0.20 USD and stays active four months; 6.5% transaction + 3% + $0.25 payment processing on sales; optional/mandatory-off-threshold Offsite Ads take 15% of attributed sales"
+  ],
+  "preparation": [
+    "A sellable digital or physical item — for a software product this means a compliant digital good (e.g. a template, preset pack, or download the seller designed), not just a signup link",
+    "Shop name, location, currency, bank details for Etsy Payments, and a card for billing",
+    "Listing assets: photos/mockups, title, description, price, delivery method for digital items"
+  ],
+  "workflow": [
+    "Open https://www.etsy.com/sell and click 'Open your Etsy shop'",
+    "Create/sign into an Etsy account, set shop location and currency, choose a shop name",
+    "Note the one-time shop set-up fee shown before final step (if applicable)",
+    "Create the first listing ($0.20 fee), set payment method (how you get paid) and billing method (how fees are paid)",
+    "Publish — the listing is live for four months and links to the shop, which can carry a website URL in the shop profile"
+  ],
+  "watchFor": [
+    "Fee stack is real: set-up fee + $0.20/listing + 6.5% transaction + payment processing + possible 15% Offsite Ads fee (mandatory above a sales threshold)",
+    "The 'free' pricing claim in seed data is wrong — listings cost $0.20 each and a set-up fee may apply",
+    "Listing a thin 'link to my SaaS' item violates the Creativity Standards; only list a genuine sellable digital good",
+    "Listing fees auto-renew; listings expire after four months or on sale"
+  ],
+  "countsAsLive": "The shop is public at etsy.com/shop/<name> and at least one listing page is published and purchasable",
+  "unknowns": [
+    "Whether a SaaS-adjacent digital product survives Etsy review in practice",
+    "Whether the shop's external website field produces a followed link"
+  ]
+}

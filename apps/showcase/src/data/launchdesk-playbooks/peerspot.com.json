@@ -1,0 +1,56 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "peerspot.com",
+  "name": "PeerSpot",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://getreviews.peerspot.com/",
+      "title": "PeerAnalyst free review program — 'Not Listed? Getting Listed Is Easy': request a listing and PeerSpot sets up the product profile at no cost"
+    },
+    {
+      "url": "https://company.peerspot.com/why-peerspot/for-vendors",
+      "title": "Vendor page — sales-led programs (review capture, content, demand gen); PeerSpot is the validated review provider for AWS and Google Cloud Marketplaces"
+    },
+    {
+      "url": "https://www.peerspot.com/",
+      "title": "Review site homepage — enterprise-tech categories (security, cloud, data, dev tools, CRM, etc.)"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Product profile creation is free — request a listing at getreviews.peerspot.com and the PeerSpot team sets it up at no cost",
+    "The platform is built for enterprise/B2B technology products reviewed by verified practitioners — consumer apps and non-tech products don't fit the category catalog",
+    "Vendor-paid programs (review acceleration, content, demand gen) exist but are not required for the basic profile"
+  ],
+  "requirements": [
+    "A B2B/enterprise technology product that maps to a PeerSpot category (cybersecurity, cloud, data management, dev tools, enterprise apps, networking, etc.)",
+    "Reviews are 'validated' — real practitioners with verifiable product experience; the free PeerAnalyst flow (peerspot.com/interviews/new) walks a real customer through a 5–10 min AI-guided review",
+    "Vendor contact route is sales-led (book a demo / talk to the team) for the paid programs"
+  ],
+  "preparation": [
+    "Product name, category fit within PeerSpot's enterprise taxonomy",
+    "2+ real customers willing to spend 5–10 minutes on a verified review (PeerAnalyst link or voice AI 'Samantha')",
+    "Company contact email for the listing request"
+  ],
+  "workflow": [
+    "Check whether the product already has a peerspot.com profile",
+    "If not, request a listing via getreviews.peerspot.com — PeerSpot creates the profile free",
+    "Once live, invite identified customers through the PeerAnalyst review link (peerspot.com/interviews/new)",
+    "Verified reviews build out the public profile; paid vendor programs are optional upgrades"
+  ],
+  "watchFor": [
+    "Enterprise taxonomy — a generic consumer SaaS may have no category; check category fit first",
+    "Reviews require real practitioners — fabricating reviews violates the verification model and is easily flagged",
+    "The batch's submission URL (company.peerspot.com) is the sales-led vendor marketing site, not a submit form",
+    "Third-party sources claim manual review in ~3–7 days; not confirmed on PeerSpot's own pages"
+  ],
+  "countsAsLive": "The product has a public profile page on peerspot.com under its category, reachable from category browse/search",
+  "unknowns": [
+    "Exact listing-request form URL/turnaround (the 'Request a Listing' mechanism on getreviews.peerspot.com)",
+    "Whether a profile with zero reviews stays live and indexable",
+    "Link treatment on live product pages"
+  ]
+}

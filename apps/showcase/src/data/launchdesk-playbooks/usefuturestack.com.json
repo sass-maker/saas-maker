@@ -1,0 +1,57 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "usefuturestack.com",
+  "name": "FutureStack",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.usefuturestack.com/",
+      "title": "Homepage — community-driven AI tools directory (500+ verified tools); 'Submit an AI Tool: Free to list. No paid placements.'"
+    },
+    {
+      "url": "https://www.usefuturestack.com/submit",
+      "title": "Submit page — rendered as a JS shell (nav only); form loads client-side"
+    },
+    {
+      "url": "https://www.usefuturestack.com/llms.txt",
+      "title": "llms.txt — documents MCP server, OpenAPI spec, and markdown content negotiation (read APIs)"
+    },
+    {
+      "url": "https://www.usefuturestack.com/agent-instructions.txt",
+      "title": "agent-instructions.txt — documents GET-only REST/MCP read surface; no write/submit endpoint listed"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "AI software tools only — directory is explicitly 'artificial intelligence software' across 11 categories",
+    "Homepage states 'Free to list. No paid placements' and 'free forever for users and creators'",
+    "Listings include verified pricing models, role tags, killer features, pros & cons — expect data-verification style review"
+  ],
+  "preparation": [
+    "Tool name, URL, and description",
+    "Category pick (coding, ai-agents, writing, image-gen, video-tools, marketing, productivity, design, research, chatbots, voice-ai)",
+    "Role tags (developer, student, marketer, founder, designer, content-creator, freelancer)",
+    "Pricing model (Free / Freemium / Paid / Free Trial) with accurate details — pricing is 'verified'",
+    "Killer features plus honest pros & cons"
+  ],
+  "workflow": [
+    "Open https://www.usefuturestack.com/submit — page is client-rendered; use a real browser",
+    "Complete the submission form (site claims listing is free)",
+    "Submitted tools appear on /tools/[slug] pages and in category/role listings after review"
+  ],
+  "watchFor": [
+    "The /submit page returned only nav chrome to a text fetcher — the form is JS-only; an automated agent needs browser rendering or DOM inspection to complete it",
+    "Documented MCP/OpenAPI surface is read-only — no public API submission endpoint is published",
+    "Possibly account-gated: nav shows notifications/subscribe elements; sign-in requirement unverified",
+    "Community upvotes drive ranking; a fresh listing starts at zero"
+  ],
+  "countsAsLive": "A /tools/<slug> page exists for the product on usefuturestack.com and it appears in its category listing",
+  "unknowns": [
+    "Exact form fields on /submit (JS-rendered, not readable as text)",
+    "Whether an account is required to submit",
+    "Review process and turnaround",
+    "Whether an undocumented write API exists beyond the published read-only MCP methods"
+  ]
+}

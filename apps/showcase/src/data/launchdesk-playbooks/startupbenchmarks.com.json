@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startupbenchmarks.com",
+  "name": "Startup Benchmarks",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://startupbenchmarks.com/submit",
+      "title": "Submit — login wall: 'Please sign in to submit your AI tool to our directory'; Google OAuth + email signup"
+    },
+    {
+      "url": "https://startupbenchmarks.com/get-started",
+      "title": "Get started — same login gate; site footer describes it as 'a startup software directory for operations, growth, collaboration, and day-to-day execution'"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "An account is required before the submission form is reachable — 'Log in to Submit' gates everything (Google OAuth at /api/auth/google or email signup at /signup)"
+  ],
+  "requirements": [
+    "Software/startup products across ~55 categories (AI assistants, dev tools, productivity, marketing, finance, etc.)",
+    "Account registration is mandatory to submit",
+    "Self-described scope: 'startup software for operations, growth, collaboration, and day-to-day execution'"
+  ],
+  "preparation": [
+    "Account (Google sign-in or email + password at /signup)",
+    "Product name, URL, description, category fit, logo/screenshot",
+    "Check post-login whether a free tier exists — pricing is not visible before login"
+  ],
+  "workflow": [
+    "Sign up/log in at https://startupbenchmarks.com/login or /api/auth/google",
+    "Open /submit (or 'Submit' in nav → /get-started)",
+    "Fill the product submission form, pick a category, submit",
+    "Verify the listing on /explore or /latest"
+  ],
+  "watchFor": [
+    "The submit form is entirely behind auth — you cannot preview requirements or pricing without an account",
+    "Persistent top ad links to submitsaas.com (paid 140+ directory submission service) — likely the operator's upsell; don't confuse it with the site's own free route",
+    "Login copy says 'submit your AI tool' though the directory is broader — the site was probably templated from an AI-directory codebase",
+    "Post-login there may be a paid/priority tier — unknown until inside"
+  ],
+  "countsAsLive": "The product appears on https://startupbenchmarks.com/explore or /latest with its own listing page and outbound link",
+  "unknowns": [
+    "Whether a free tier exists behind the login wall",
+    "Form fields and review process",
+    "Whether links are dofollow"
+  ]
+}

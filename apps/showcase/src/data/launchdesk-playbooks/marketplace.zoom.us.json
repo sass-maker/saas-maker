@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "marketplace.zoom.us",
+  "name": "Zoom App Marketplace",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://developers.zoom.us/docs/distribute/",
+      "title": "Zoom Developers — App distribution / Marketplace submission overview"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Only applicable if the product is a genuine Zoom integration/app built in the Zoom developer platform — not a generic listing",
+    "All public apps must pass the App Submission Review: phase 1 reviews metadata, usability and compliance; phase 2 is a security audit with a focused security test on Zoom scopes",
+    "Published apps must provide Terms of Use, Privacy Policy, self-serve documentation and a Support URL under the Zoom Marketplace Developer Agreement",
+    "Ongoing user support obligations apply after publishing",
+    "Alternatives exist that skip public listing: Unlisted apps, Beta apps (shareable via authorization URL), Private apps for your own Zoom account"
+  ],
+  "preparation": [
+    "A built Zoom app in the Marketplace build flow (OAuth credentials, scopes configured, event subscriptions if needed)",
+    "A Zoom account with developer access",
+    "Hosted support pages: Terms of Use, Privacy Policy, support URL, and user documentation",
+    "Listing metadata: app name, descriptions, icon/screenshots, categories, scopes justification"
+  ],
+  "workflow": [
+    "Create/configure the app at marketplace.zoom.us / developers.zoom.us build flow",
+    "Develop and test the app against the 'Before you build' prerequisites",
+    "Decide audience: external Zoom users (full Marketplace review) vs users within your Zoom account (no Marketplace review)",
+    "Submit the app for App Submission Review and respond to the Marketplace Operations team's compliance feedback",
+    "Pass the security audit/security test on scopes",
+    "App is published to marketplace.zoom.us and becomes installable by external users"
+  ],
+  "watchFor": [
+    "Two-phase review means real lead time — metadata/compliance iteration plus a security audit",
+    "Only request the Zoom scopes the app truly needs; the security test focuses on scopes",
+    "Missing ToS/Privacy/Support URLs block submission — they are agreement requirements, not optional polish",
+    "If a public listing is not needed, an Unlisted or Private app avoids the review entirely"
+  ],
+  "countsAsLive": "The app appears on marketplace.zoom.us with a public app page and can be installed by external Zoom users",
+  "unknowns": [
+    "Current review cycle time and rejection rates",
+    "Any fees for marketplace programs (listing itself documented as part of the developer program)"
+  ]
+}

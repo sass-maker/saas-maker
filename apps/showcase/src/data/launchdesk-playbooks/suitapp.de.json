@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "suitapp.de",
+  "name": "suitApp",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://suitapp.de/",
+      "title": "Homepage — German DACH business-software comparison site, 1,321+ tools, 80+ categories, 50,000+ user reviews"
+    },
+    {
+      "url": "https://suitapp.de/contact",
+      "title": "Kontakt — contact form + team@suitapp.de; FAQ: 'Kann ich mein Unternehmen auf suitApp listen? Ja, gerne! Kontaktieren Sie uns...'"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "Business software products only — a DACH-focused comparison directory (German-language site, German user reviews, hosting-location data)",
+    "No self-serve submission exists: the FAQ says to contact them with details about your software and they 'discuss the possibilities of inclusion'",
+    "Site is funded 'über Partnerschaften mit Software-Anbietern' (partnerships with software vendors) — vendor listing may be tied to a partnership/affiliate arrangement",
+    "Contact route: /contact form (Anfragetyp options: Allgemeine Frage, Partnerschaft, Business-Anfrage, Presse, Support) or team@suitapp.de; replies claimed within 24h"
+  ],
+  "preparation": [
+    "Software details: name, URL, category, pricing model, hosting location (DE/EU hosting is a tracked comparison axis)",
+    "German-language pitch preferred — the entire site and audience is DACH",
+    "Decide your ask: plain listing vs 'Partnerschaft' — use Anfragetyp 'Business-Anfrage' or 'Partnerschaft'",
+    "DSGVO/Datenschutz stance helps — the site emphasizes data residency"
+  ],
+  "workflow": [
+    "Open https://suitapp.de/contact (or email team@suitapp.de)",
+    "Fill name, email, company; choose 'Business-Anfrage' (or 'Partnerschaft')",
+    "Send software details and ask to be listed in the appropriate category",
+    "If listed, the product appears as a detail page under /software/<slug>/ within its /kategorien category"
+  ],
+  "watchFor": [
+    "No published pricing or guaranteed-free listing — 'we discuss possibilities' implies terms are negotiated; expect an affiliate/partnership angle",
+    "Site is German-first; English-only vendors targeting non-DACH users are a weak fit",
+    "Operator is a sole proprietor in Dresden (Max Benz, per imprint) — a small curated operation",
+    "Listings carry editorial-comparison depth (pricing, hosting location, integrations) — inaccurate data will surface in review"
+  ],
+  "countsAsLive": "A detail page for the product exists at https://suitapp.de/software/<slug>/ and is reachable from its category page",
+  "unknowns": [
+    "Whether a plain (non-partnership) listing is free",
+    "Listing criteria and editorial process",
+    "Whether user reviews are solicited or licensed from a third party"
+  ]
+}

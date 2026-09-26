@@ -1,0 +1,59 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "locanto.com",
+  "name": "Locanto",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.locanto.com/",
+      "title": "Homepage (search-indexed) — free local classifieds across US cities; categories Jobs, Vehicles, Real Estate, Buy & Sell, Services, Personals; phone-verified badges"
+    },
+    {
+      "url": "https://locanto.co.com/page/faq",
+      "title": "FAQ — 'Post free Ads' button; publication 100% free; listings auto-deactivate after 3 months unless renewed"
+    },
+    {
+      "url": "https://locanto.co.com/posts/create",
+      "title": "Ad creation form — requires selecting a city and category; tips: brief title/description, photos, reasonable price"
+    },
+    {
+      "url": "https://www.locanto.com/User/Register/",
+      "title": "Batch-provided signup URL — returned HTTP 403 (bot-blocked)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Posting ads is 100% free, but ads are local classifieds tied to a city — a SaaS product can only be posted as a service/business ad in a chosen city, not as a product listing",
+    "Listings auto-deactivate after ~3 months and must be renewed from the account"
+  ],
+  "requirements": [
+    "Account registration (email) — plus optional phone verification for a trust badge",
+    "Pick a city and correct category (Services/Buy & Sell are the closest fit for software)",
+    "Ad title, description, photos; reasonable pricing info where applicable"
+  ],
+  "preparation": [
+    "Decide target city/region and category",
+    "Short ad copy + images",
+    "Account email; phone number if seeking the verified badge"
+  ],
+  "workflow": [
+    "Register/login at locanto.com (browser — site 403s automated fetches)",
+    "Click 'Post free ad' → /posts/create",
+    "Select city and category, enter title/description/photos, publish",
+    "Ad goes live within minutes; log in and renew before the ~3-month deactivation"
+  ],
+  "watchFor": [
+    "This is a local classifieds board — generic SaaS announcements can read as spam; frame as a real service offering in a specific city",
+    "Ads expire after ~3 months (email warnings at 1 week and day-of)",
+    "Personals/community categories carry scam risk — keep the ad professional",
+    "Site 403s automated fetches — browser required"
+  ],
+  "countsAsLive": "The ad is publicly visible on the Locanto city category page and reachable via search",
+  "unknowns": [
+    "Whether outbound links/URLs are allowed in ad text and their follow treatment",
+    "Moderation turnaround for flagged categories",
+    "Whether repeated city postings of the same service get blocked as duplicates"
+  ]
+}

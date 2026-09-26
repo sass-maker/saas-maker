@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "thataicollection.com",
+  "name": "That AI Collection",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://thataicollection.com/submit/",
+      "title": "Submit page — 'publish for only $19, or promotion plan from $10'; do-follow link + indexed page promised; explicit rejected categories; AI-draft submission option"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "AI tools only — hand-checked AI directory (4,000+ tools)",
+    "Publishing costs $19 or a promotion plan starting at $10 — no free route",
+    "Hard rejections: NSFW/AI companions, face-swap/deepfakes, voice cloning, watermark removal, bulk scraping/lead harvesting/spam automation, academic cheating, surveillance/stalkerware",
+    "Paid listing includes: dedicated indexed page, do-follow link, 'Latest Additions' homepage + GitHub feature, and ability to publish a product-review blog post"
+  ],
+  "preparation": [
+    "AI tool URL — 'Submit with AI' can auto-draft the listing from the URL",
+    "Details, pricing plans info, images for the 4-step form (Details → Additional Information → Pricing Plans → Finish)",
+    "$19 payment (or $10+ promotion plan)",
+    "Contact pavel@ai-collection.org for multi-app discounts or fixes"
+  ],
+  "workflow": [
+    "Open https://thataicollection.com/submit/",
+    "Optionally use 'Submit with AI' (paste URL, AI drafts the listing — review/edit every field) or fill manually",
+    "Complete the 4-step wizard; progress persists in localStorage so you can resume",
+    "Pay $19 (or pick a promotion plan) on the payment step",
+    "Listing publishes as an indexed tool page; appears in 'Latest Additions'"
+  ],
+  "watchFor": [
+    "Seed 'pricing: paid' confirmed — there is no zero-cost option",
+    "Don't try to sneak banned categories under other labels — they check every submission",
+    "Edits go through email (pavel@ai-collection.org); self-serve editing is only 'on the roadmap'",
+    "Promotion plans are sold separately from/after the base listing"
+  ],
+  "countsAsLive": "The tool has a dedicated indexed page on thataicollection.com and appears in 'Latest Additions' on the homepage/GitHub",
+  "unknowns": [
+    "Exact promotion-plan tiers and prices (revealed on payment page post-submission)",
+    "Turnaround between payment and publish",
+    "Whether the 'AI Collection' GitHub repo listing is automatic"
+  ]
+}

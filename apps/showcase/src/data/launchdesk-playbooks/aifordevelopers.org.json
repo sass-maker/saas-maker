@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aifordevelopers.org",
+  "name": "AI for Developers",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://aifordevelopers.org/",
+      "title": "Homepage — live curated directory of AI agents, SDKs, coding copilots, and dev-first tools"
+    },
+    {
+      "url": "https://aifordevelopers.org/page/contribute",
+      "title": "Contribute — suggest a tool via GitHub issue at tokyo-dal/awesome-ai-coding-tools, or email for creator features/collaboration"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Dev-first AI tools only: agents, SDKs, coding copilots, IDE assistants, app builders, frameworks, models",
+    "Suggestions go through a GitHub issue on the awesome-ai-coding-tools repo, or corrections the same way",
+    "Creators seeking a feature can email the editors (address is Cloudflare-obfuscated on /page/contribute)",
+    "Editorial curation — no self-serve instant listing"
+  ],
+  "preparation": [
+    "Tool name, URL, and a one-line pitch of why it belongs",
+    "Category fit (IDE Assistants, App Builders, Coding Agents, Frameworks, Models, Open Source)",
+    "GitHub account to open the suggestion issue",
+    "If the creator: an email pitch for featuring/collaboration"
+  ],
+  "workflow": [
+    "Check the tool isn't already listed (search /tool/<slug> pages or category lists)",
+    "Open an issue at github.com/tokyo-dal/awesome-ai-coding-tools suggesting the tool",
+    "Or email the contact address (deobfuscate on /page/contribute) as the product's creator requesting a feature",
+    "Editors add accepted tools to /tool/<slug> pages and category lists"
+  ],
+  "watchFor": [
+    "No self-serve submission form — it's suggestion-then-editorial-review",
+    "The GitHub suggestion route is an 'awesome list' style repo, not a form with fields — write a concise, factual pitch",
+    "Separate /advertise page exists for paid placement",
+    "Free-tools and open-source filters exist on the listing — being genuinely dev-focused matters more than polish"
+  ],
+  "countsAsLive": "The tool appears on a /tool/<slug> page on aifordevelopers.org and in its category's 'See all' list",
+  "unknowns": [
+    "Acceptance criteria and turnaround for GitHub suggestions",
+    "Whether being 'featured' via email implies paid placement or editorial choice",
+    "Exact contact email (Cloudflare-protected on the page)"
+  ]
+}

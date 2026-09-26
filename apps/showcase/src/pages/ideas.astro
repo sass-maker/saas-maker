@@ -8,29 +8,10 @@
  */
 import Footer from '../components/Footer.astro';
 import Nav from '../components/Nav.astro';
-import ideasData from '../data/ideas.json';
+import { IDEA_ENTRIES, type Idea } from '../data/ideas';
 import Layout from '../layouts/Layout.astro';
 
-type Idea = {
-  adj: number;
-  best_bet: boolean;
-  best_bet_why: string;
-  c: number;
-  customer: 'b2b-tech' | 'dev' | 'non-dev';
-  f: number;
-  f_feas: number;
-  f_feas_why: string;
-  fun: number;
-  idea: string;
-  m: number;
-  m_eff: number;
-  money: number;
-  source: string;
-  t: number;
-};
-
-const allIdeas = ideasData as Idea[];
-const ideas = allIdeas.filter((idea) => idea.source !== 'starterstory');
+const ideas = IDEA_ENTRIES.map((entry) => entry.idea);
 const sources = [...new Set(ideas.map((idea) => idea.source))].sort();
 const bestBetCount = ideas.filter((idea) => idea.best_bet).length;
 
@@ -204,7 +185,7 @@ function customerLabel(value: Idea['customer']): string {
             </tr>
           </thead>
           <tbody data-ideas-body>
-            {ideas.map((idea) => (
+            {IDEA_ENTRIES.map(({ idea, slug }) => (
               <tr
                 data-idea-row
                 data-best={idea.best_bet ? '1' : '0'}
@@ -231,6 +212,9 @@ function customerLabel(value: Idea['customer']): string {
                   <details class="idea-copy-disclosure" data-idea-disclosure open>
                     <summary>{ideaTitle(idea.idea)}</summary>
                     <div class="idea-copy-full" set:html={renderIdea(idea.idea)} />
+                    <p class="idea-permalink">
+                      <a href={`/ideas/${slug}`}>Idea page →</a>
+                    </p>
                     <details class="idea-reasoning">
                       <summary>Score breakdown</summary>
                       <p>{scoreTitle(idea)}</p>
@@ -753,6 +737,19 @@ function customerLabel(value: Idea['customer']): string {
 
   .idea-copy-disclosure > summary {
     display: none;
+  }
+
+  .idea-permalink {
+    margin-top: 0.75rem;
+    font-size: 0.82rem;
+  }
+
+  .idea-permalink a {
+    color: var(--copper-hi);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
   }
 
   .idea-reasoning {

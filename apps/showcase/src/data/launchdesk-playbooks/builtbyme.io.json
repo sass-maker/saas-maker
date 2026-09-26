@@ -1,0 +1,54 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "builtbyme.io",
+  "name": "BuiltByMe",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://builtbyme.io/",
+      "title": "Homepage — live indie maker directory with weekly upvote competition and leaderboard"
+    },
+    {
+      "url": "https://builtbyme.io/pricing",
+      "title": "Pricing — Free $0/launch (5 weekly slots, nofollow), Launch $9 (dofollow + instant), Sponsor $19, Directory Boost add-ons"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free plan is limited to 5 submission slots per week — queue applies when full",
+    "Free listings get a NoFollow link only; DoFollow requires the $9 Launch plan",
+    "Free launches still get a permanent listing and compete in the weekly leaderboard"
+  ],
+  "requirements": [
+    "Indie-built product — 'a home for those who build on their own'",
+    "Products compete in a weekly upvote leaderboard; #1 wins a newsletter feature + X shoutout",
+    "Paid tiers: Launch $9/launch (instant, dofollow, free review blog post), Sponsor $19/30 days sidebar"
+  ],
+  "preparation": [
+    "Product name, URL, tagline/description, and category (AI tools, SaaS, dev tools, productivity, marketing, design, analytics)",
+    "Account registration (Sign In link present)",
+    "Decide free vs $9 Launch — free still enters the weekly competition",
+    "If timing matters, check whether the week's 5 free slots are taken"
+  ],
+  "workflow": [
+    "Open https://builtbyme.io/submit?plan=free (or /submit and pick a plan)",
+    "Create/sign in to an account and fill in product details",
+    "Free plan waits for a weekly slot; Launch $9 publishes instantly",
+    "Product appears in Current Rankings for the week and accrues community upvotes",
+    "Weekly #1 gets the newsletter feature and X shoutout regardless of plan"
+  ],
+  "watchFor": [
+    "Free-plan links are NoFollow — limited SEO value; dofollow is the $9 paid tier's main selling point",
+    "Free slots cap at 5/week — submit early in the week (competition week runs Mon–Sun, e.g. Sep 21–27)",
+    "Directory Boost ($49-$119 'guaranteed DR') is a separate paid submission service, not needed for a listing",
+    "Low overall scale (~18k visits YTD per its own Umami stats) — treat as a community/competition play, not a traffic source"
+  ],
+  "countsAsLive": "The product has a public /products/<slug> page on builtbyme.io and appears in the current week rankings or all-time listings",
+  "unknowns": [
+    "Exact fields on the submit form (not fetched; behind sign-in)",
+    "Whether free submissions are manually reviewed before appearing",
+    "How ties/upvote fraud are handled on the weekly leaderboard"
+  ]
+}

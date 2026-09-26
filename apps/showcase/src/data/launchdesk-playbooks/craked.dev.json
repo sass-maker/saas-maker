@@ -1,0 +1,56 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "craked.dev",
+  "name": "craked.dev",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://craked.dev/",
+      "title": "Homepage — live builder leaderboard scoring GitHub shipping velocity, stars, and products built"
+    },
+    {
+      "url": "https://www.craked.dev/products",
+      "title": "Products — 'Products Built by Developers' directory with a 'Ship a Product' entry point; showed 0 shipped at fetch time"
+    },
+    {
+      "url": "https://craked.dev/how-it-works",
+      "title": "How Cracked Score Works — products are added via Settings and domain-verified for +100 pts each"
+    }
+  ],
+  "category": "profile",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Requires signing in with GitHub — the score and product listing are built on a verified GitHub identity",
+    "Products must pass domain verification (matching GitHub profiles, portfolio links, or DNS TXT records)"
+  ],
+  "requirements": [
+    "A GitHub account — sign-in is GitHub OAuth ('Sign in with GitHub and claim your builder card')",
+    "Product must have a live domain that can be verified via GitHub profile links, portfolio links, or DNS TXT record",
+    "The platform scores builders, not products directly — a product is attached to the maker's verified profile"
+  ],
+  "preparation": [
+    "GitHub account with real public activity (commits, PRs, stars feed the score)",
+    "Live product domain you control — be ready to add a DNS TXT record or link it from your GitHub profile",
+    "Product category for the directory (AI/ML, SaaS, DevTools, Open Source, Web3, Mobile, Design, TypeScript, Rust, Python)"
+  ],
+  "workflow": [
+    "Sign in with GitHub via /auth/login or the 'Get started' / 'Get Scored' buttons",
+    "A builder profile is created and scored from public repo metadata (commits, PRs, stars, followers)",
+    "Go to Settings and add the product URL",
+    "Verify ownership — crawler checks GitHub profile match, portfolio links, or DNS TXT (+100 pts per verified domain, +40 for a reachable link)",
+    "Product then appears in the /products directory via 'Ship a Product' and on the builder profile"
+  ],
+  "watchFor": [
+    "Products directory showed '0 Shipped' — the platform is very early; low traffic is likely",
+    "This is a builder-score leaderboard, not a launch board — value is the profile + verified product listing, not a launch-day spike",
+    "Score uses public repo metadata only; private-repo-only builders will score low",
+    "Part of a cross-promoted launch network: badges for Startup Fame, Startup Fast, FoundrList, ScrollLaunch, neeed.directory, MarketingDB"
+  ],
+  "countsAsLive": "The product appears on craked.dev/products and on the builder's profile page with a verified-domain marker",
+  "unknowns": [
+    "Whether 'Ship a Product' adds the product immediately or after re-verification",
+    "Moderation/rejection policy for listings",
+    "Whether an unverified product still appears in the directory"
+  ]
+}

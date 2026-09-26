@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "kaggle.com",
+  "name": "Kaggle",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.kaggle.com/account/login?phase=startRegisterTab",
+      "title": "Kaggle Login or Register — 'Register with Google' / 'Register with Email' (content read via search index; direct fetch returns a JS-only shell)"
+    },
+    {
+      "url": "https://www.kaggle.com/docs",
+      "title": "Getting Started on Kaggle — platform docs (via search index)"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free account — register with Google or with Email",
+    "Kaggle is an ML community: public value comes from a profile, public datasets, notebooks, and discussion posts — there is no product-listing form",
+    "New accounts have a progression track (run a notebook, join a conversation, upvote, make a competition submission) that unlocks full participation"
+  ],
+  "preparation": [
+    "Email or Google account for registration",
+    "Profile details: display name, bio, website/URL field",
+    "A relevant public dataset or notebook if publishing content rather than just a profile"
+  ],
+  "workflow": [
+    "Open kaggle.com/account/login?phase=startRegisterTab (JS-rendered — needs a real browser)",
+    "Register with Google or Email and complete profile setup",
+    "Add the product/company URL to the profile website field and fill the bio",
+    "Optionally publish a public dataset/notebook referencing the product to create an indexable artifact",
+    "Complete beginner tasks (notebook run, discussion comment, upvote, competition submission) to unlock full account standing"
+  ],
+  "watchFor": [
+    "Site is fully JS-rendered — direct fetch returns empty; browser automation required",
+    "This is a profile/community route, not a directory — don't expect a product listing page",
+    "Spammy self-promotion in discussions/notebooks violates community norms; keep the link to profile fields and genuinely useful artifacts",
+    "Link attribute on profile/dataset outbound links unverified"
+  ],
+  "countsAsLive": "A public kaggle.com/<username> profile with the website field populated (and any published datasets/notebooks visible)",
+  "unknowns": [
+    "Whether profile website links are followed or nofollow",
+    "Exact new-account restrictions before full posting is unlocked",
+    "Whether phone verification is required at registration"
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aijourney.so",
+  "name": "AI Journey",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://aijourney.so/",
+      "title": "Homepage — AI tools directory with featured listings, reviews, and newsletter"
+    },
+    {
+      "url": "https://aijourney.so/submit-ai-tool",
+      "title": "Submit AI Tool — paid plans only: Basic $29/listing, Advanced $99/listing, FAQ"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Tool must be AI-powered (automation, ML, NLP, computer vision, or other AI tasks)",
+    "No free tier shown — cheapest listing is Basic at $29 one-time",
+    "Tools reviewed for innovation, functionality, relevance, and user experience"
+  ],
+  "preparation": [
+    "Tool name, concise description, key features, use case",
+    "Link to the tool (repository or demo mentioned as acceptable supporting material)",
+    "Optional self-written long-form content and FAQ section (included if provided)",
+    "Payment: $29 Basic (published within 7 business days) or $99 Advanced (2 business days, homepage placement 90 days, 9 do-follow links, newsletter feature, guest post to AI Academy)"
+  ],
+  "workflow": [
+    "Open https://aijourney.so/submit-ai-tool and click Get Started / Book Now to reach the form (#form anchor)",
+    "Choose Basic or Advanced plan and pay",
+    "Submit tool details; team reviews for relevance/functionality/innovation",
+    "Listing goes live within 2-7 business days depending on tier; notification via email"
+  ],
+  "watchFor": [
+    "Paid-only destination — no zero-cost route on the submit page",
+    "Marketing copy claims '6 high-quality dofollow links' and '48 hours' while the FAQ says review takes 3-7 business days and plan cards say 2-7 business days — timelines are inconsistent",
+    "Dollar 'values' next to included items ($50 verified check, $130 long review) are inflated value anchors, not real costs",
+    "Separate 'Submit Guest Article' and Passionfroot sponsorship routes exist but are also promotional",
+    "Site lists some NSFW-adjacent tools (e.g. clothoff.net review) despite no stated content policy"
+  ],
+  "countsAsLive": "The tool has a public /tool/<slug> page on aijourney.so, indexed on Google, and appears in category listings",
+  "unknowns": [
+    "Whether the $29 Basic tier ever gets rejected/refunded",
+    "Exact form fields (form anchored at /submit-ai-tool#form did not render fields in fetched text)",
+    "Whether listings links are dofollow as advertised"
+  ]
+}

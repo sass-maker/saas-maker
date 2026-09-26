@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "folkd.com",
+  "name": "Folkd",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://folkd.com/?filter_content=news&pagenum=1",
+      "title": "Homepage — 'Since 2006, over 8 million users'; free join; content via search snippet (direct fetch 403, Cloudflare bot-block)"
+    },
+    {
+      "url": "https://meeksguide.com/folkd-register/",
+      "title": "Third-party registration walkthrough — username, email, password, captcha, email verification steps"
+    },
+    {
+      "url": "https://urlscan.io/result/97856ced-6622-430b-9b5d-3eec96b39c3a",
+      "title": "urlscan record showing folkd.com/submit/<url> submit route pattern and Cloudflare protection"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free account required: unique username, email, password, 'I'm not a robot' captcha, accept T&C",
+    "Email verification required to activate the account before bookmarking",
+    "This is a general social bookmarking service — 'submission' means bookmarking a URL, not an editorial listing"
+  ],
+  "preparation": [
+    "An email address for account verification",
+    "The product URL to bookmark, plus tags/keywords",
+    "A real browser — the site sits behind Cloudflare and returns 403 to plain fetches"
+  ],
+  "workflow": [
+    "Register at https://www.folkd.com/register (username, email, password, captcha, accept terms)",
+    "Click the verification link in the activation email",
+    "Log in and bookmark the product URL — the legacy route pattern is folkd.com/submit/<target-url>",
+    "Add title, description, and tags so the bookmark is discoverable in Folkd's social search"
+  ],
+  "watchFor": [
+    "Cloudflare bot-check blocks automated fetches (403) — browser automation needs to pass the challenge",
+    "Legacy bookmarking site since 2006; value is a cheap profile/bookmark link, not launch traffic",
+    "Don't spam multiple bookmarks — social bookmarking sites ban accounts for self-promotion patterns",
+    "©2023 footer suggests the site is maintained but low-velocity"
+  ],
+  "countsAsLive": "The bookmark is publicly visible on your Folkd profile and appears under its tags/search",
+  "unknowns": [
+    "Whether outbound bookmark links are dofollow",
+    "Current moderation stance on self-submitted commercial links",
+    "Whether the /submit/<url> pattern still works or registration-gated UI changed"
+  ]
+}

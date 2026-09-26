@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "500px.com",
+  "name": "500px",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://500px.com/signup",
+      "title": "500px signup — returned empty JS shell to automated fetch; account creation requires JavaScript"
+    }
+  ],
+  "category": "profile",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "500px is a photography community/marketplace — only photography-portfolio profiles are native; a SaaS product has no listing surface beyond a branded account",
+    "Free account tier exists; paid tiers add portfolio features and licensing options (not required for a basic profile)",
+    "Signup page is a JS app shell — must be driven in a real browser"
+  ],
+  "preparation": [
+    "Email for the account",
+    "Display name and avatar",
+    "A small set of quality photos to upload — an empty profile has no presence value",
+    "Website URL for the profile link field"
+  ],
+  "workflow": [
+    "Open https://500px.com/signup in a JS-capable browser and create the account",
+    "Complete the profile: display name, avatar, bio, website link",
+    "Upload representative images so the profile is not empty",
+    "Verify the public profile at 500px.com/p/<user> renders for logged-out viewers"
+  ],
+  "watchFor": [
+    "Very weak fit for a SaaS launch — only useful as a branded profile citation, and only if photography content is relevant to the product",
+    "Profile outbound links are likely nofollow (not verified on-site)",
+    "Site is JS-heavy; automated verification of profile fields was not possible in this research pass",
+    "Do not upload marketing screenshots as 'photography' — mismatched content can be reported"
+  ],
+  "countsAsLive": "A public photographer profile page on 500px.com renders logged-out showing uploads and the website link",
+  "unknowns": [
+    "Whether profile website links are follow or nofollow",
+    "Free-tier upload limits",
+    "Whether brand/product accounts are permitted or restricted to photographers"
+  ]
+}

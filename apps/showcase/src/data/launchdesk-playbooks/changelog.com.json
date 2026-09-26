@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "changelog.com",
+  "name": "Changelog",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://changelog.com/news/submit",
+      "title": "Submit News — free submission requires sign-in; URL + title + 'what's interesting' (markdown); explicit rejections: how-tos/tutorials, commercial products/services ('Sponsorship is your path'), reader-hostile sites; submitters emailed if published"
+    },
+    {
+      "url": "https://changelog.com/sponsor/pricing",
+      "title": "Sponsorship pricing — the catalog's stored URL; Changelog $3,000/wk (2 episodes, 4wk min), Changelog News $1,500/wk, Practical AI $1,200/ep, Fallthrough $200/ep; adam@changelog.com"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free Changelog account (sign in/up) — the submission form needs a profile for attribution/notification",
+    "Submit News takes: URL, title, and 'What's interesting about it?' (markdown)",
+    "Explicitly rejected: how-to/tutorials, commercial products/services (use Sponsorship), reader-hostile websites, podcast suggestions (use /request)",
+    "Developer-news audience — 'if your fellow devs will find it interesting, submit it'; submitting your own work is allowed and encouraged",
+    "Paid sponsorship is separate and substantial ($200–$3,000/wk depending on show)"
+  ],
+  "preparation": [
+    "A genuinely interesting dev-facing link — OSS release, technical writeup, dev tool of substance",
+    "A free account",
+    "A compelling 'what's interesting' pitch — they get a lot of submissions"
+  ],
+  "workflow": [
+    "Sign in/up at changelog.com",
+    "Open changelog.com/news/submit",
+    "Submit URL + title + 'what's interesting' (markdown supported)",
+    "If published you're notified by email — no response means not picked",
+    "For commercial promotion use the Sponsorship page instead (adam@changelog.com)"
+  ],
+  "watchFor": [
+    "Commercial product promotion in Submit News is explicitly rejected — pure product pitches will be declined; open-source/dev-interest angles only",
+    "The catalog's stored URL was the sponsor-pricing page — the free editorial route is /news/submit",
+    "High volume — no notification unless published",
+    "The Changelog network also runs podcasts; 'Request Episode' is a different form at /request"
+  ],
+  "countsAsLive": "The submission is published on Changelog News (changelog.com/news) and you're emailed",
+  "unknowns": [
+    "Editorial review time for news submissions",
+    "Whether Changelog++ membership affects submission consideration"
+  ]
+}

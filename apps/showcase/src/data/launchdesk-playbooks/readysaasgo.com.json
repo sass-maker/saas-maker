@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "readysaasgo.com",
+  "name": "Ready SaaS Go",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "http://readysaasgo.com/",
+      "title": "Homepage — old SaaS directory (featured listings ~2014-era: Whisbi, BannerFlow, Pica9) with injected spam links (casino, OnlyFans directories, bank-statement tools)"
+    },
+    {
+      "url": "http://readysaasgo.com/submit-information-screenshots/",
+      "title": "Add Your Listing — form fields: company name, website, description, short description, screenshots, logo, email"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "SaaS products across a fixed taxonomy (BI & Analytics, Marketing, CRM, Security, Dev Tools, etc.)",
+    "Submission form at /submit-information-screenshots/ asks: company name, website, description, short description, screenshots, logo, email (email 'will not appear on website')",
+    "No payment is requested on the form — but no confirmation of active review either"
+  ],
+  "preparation": [
+    "Company name, website URL",
+    "Long + short description",
+    "Logo and screenshots",
+    "Contact email"
+  ],
+  "workflow": [
+    "Open http://readysaasgo.com/submit-information-screenshots/",
+    "Complete the listing form and upload logo/screenshots",
+    "Submit — there is no visible payment step, but also no stated review process or turnaround"
+  ],
+  "watchFor": [
+    "Site appears unmaintained: homepage copy is injected with off-topic spam links (Portuguese casino leon90.bet, 'free onlyfans' directories, bankstatementmaker.com) — a compromised/abandoned-installation signal",
+    "Featured listings are all ~2014-era companies — submissions may not be processed at all",
+    "HTTP only, no HTTPS",
+    "If the listing does go live it may sit next to injected spam — reputation value is near zero"
+  ],
+  "countsAsLive": "A company profile page at readysaasgo.com/<slug>/ exists and is reachable from a category page — verify manually since review is unconfirmed",
+  "unknowns": [
+    "Whether submissions are still reviewed/published (site looks abandoned since ~2015)",
+    "Whether the site is compromised vs. deliberately monetized with spam placements"
+  ]
+}

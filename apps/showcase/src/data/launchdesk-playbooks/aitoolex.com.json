@@ -1,0 +1,54 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aitoolex.com",
+  "name": "AIToolex",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://aitoolex.com/",
+      "title": "Homepage — live AI tool directory (33+ pages of listings, 20+ categories)"
+    },
+    {
+      "url": "https://aitoolex.com/submit-ai-tool",
+      "title": "Submit Your AI Tool — 'Free submission for a limited time': $0, 3 dofollow links, review within one week; backlink submissions prioritized"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free is a limited-time offer during the site's 'domain authority building phase' — premium placement may replace it later",
+    "Submissions that include a reciprocal AIToolex backlink are 'prioritized for review' — a soft gate",
+    "Account sign-in likely required (Sign In in nav; 'Update Anytime' implies a managed listing)"
+  ],
+  "requirements": [
+    "AI tools only — 20+ categories",
+    "$0 free tier: 3 dofollow links, 'permanent link with backlink maintenance', reviewed within one week",
+    "Publish-on-chosen-day option offered"
+  ],
+  "preparation": [
+    "Tool name, URL, description, category and tags",
+    "Logo/screenshot",
+    "A page on your site to place the AIToolex backlink if you want priority review",
+    "Account (sign-in for submission and future edits)"
+  ],
+  "workflow": [
+    "Open https://aitoolex.com/submit-ai-tool and click 'Go Submit' (leads to /submit)",
+    "Sign in / create an account if prompted",
+    "Fill the listing form and submit",
+    "Optionally add the AIToolex backlink for prioritized review",
+    "Listing goes live within one week as an /item/<slug> page"
+  ],
+  "watchFor": [
+    "'Free submission for a limited time' — the free route may not persist",
+    "Backlink-exchange flavor: 'permanent link with backlink maintenance' suggests the link stays only while your backlink does",
+    "Part of a badge-exchange directory network (Twelve Tools, Startup Fame, Turbo0, Dofollow.Tools, etc.)",
+    "The actual /submit form fields weren't visible without account sign-in"
+  ],
+  "countsAsLive": "The tool appears on an aitoolex.com/item/<slug> page and in the 'New' listing feed",
+  "unknowns": [
+    "Exact form fields and whether sign-in is mandatory",
+    "Whether the backlink is strictly required or only prioritized",
+    "When the free phase ends and what paid tiers will cost"
+  ]
+}

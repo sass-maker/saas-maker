@@ -1,0 +1,56 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "buildzoom.com",
+  "name": "BuildZoom",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.buildzoom.com/help_center_topics/3",
+      "title": "Contractor help (search-indexed) — profiles and leads are free; active license verified against state/regulatory data required; referral fee only on signed contracts"
+    },
+    {
+      "url": "https://www.buildzoom.com/blog/how-it-works/professionals",
+      "title": "For Contractors (search-indexed) — create a business profile, set job preferences, agree to referral agreement; ~2.5% referral fee when hired"
+    },
+    {
+      "url": "https://www.buildzoom.com/contractor_join",
+      "title": "Batch-provided signup URL — returned HTTP 403 (bot-blocked)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Profiles and leads are free, but the platform requires an active contractor license verifiable via state/licensing-board data — licensed contractors start with a BZ score of 90",
+    "Not applicable to SaaS/software — BuildZoom lists general contractors, remodelers and home builders; skip unless the 'product' is a licensed contracting business",
+    "A 2.5% referral fee applies to contracts won through the platform"
+  ],
+  "requirements": [
+    "Active contractor license that BuildZoom can verify against public license-board data",
+    "Business name + zip code for the claim/add lookup — many contractors are pre-listed from public data",
+    "Referral agreement acceptance"
+  ],
+  "preparation": [
+    "License number and state",
+    "Business name, zip code, service radius, services offered",
+    "Portfolio photos and client reviews to build the BZ score"
+  ],
+  "workflow": [
+    "Open buildzoom.com in a browser and click 'Contractor Sign Up' (site 403s automated fetches)",
+    "Search business name + zip: 'Claim this business' if pre-listed, else 'Add your business to BuildZoom'",
+    "Enter email to join; verify contact info; add license details and portfolio",
+    "Maintain the profile — BZ score (license status, reviews, responsiveness) drives lead flow"
+  ],
+  "watchFor": [
+    "No SaaS/software listing surface — licensed trades only",
+    "Unlicensed or lapsed-license businesses show a BZ score below 90 or can't be listed",
+    "Optional paid upgrades (~$99/mo advertising tier per third-party sources) exist but aren't required",
+    "The referral fee triggers only on signed contracts sourced via BuildZoom"
+  ],
+  "countsAsLive": "A claimed public contractor profile on buildzoom.com showing license status and BZ score",
+  "unknowns": [
+    "Verification turnaround for new adds without pre-seeded license data",
+    "Whether profile website links are present/dofollow",
+    "Current upgrade plan pricing (only a third-party ~$99/mo figure seen)"
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "stripe.com",
+  "name": "Stripe Directory",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://docs.stripe.com/directory",
+      "title": "Stripe Docs — Stripe Directory (preview): indexes Stripe Apps, Stripe Projects providers, MPP endpoints, and the Stripe business network"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "There is no public submit form — a business appears in the Directory by existing inside the Stripe ecosystem: a published Stripe App on marketplace.stripe.com, a Stripe Projects provider, a machine-payments (mpp.dev) endpoint, or a Stripe business-network profile",
+    "Each of those paths requires a real Stripe account and its own approval/build process"
+  ],
+  "requirements": [
+    "The Directory is a preview feature queried via the Stripe CLI ('stripe directory search') — it returns provider entries for developers and AI agents, not a browsable SEO listing",
+    "For a SaaS product the realistic presence is a published Stripe App (requires building an app and passing Stripe review) or a Stripe business profile tied to a live Stripe account"
+  ],
+  "preparation": [
+    "A verified Stripe account for the business",
+    "If pursuing the App route: a working Stripe App built against the apps SDK, ready for marketplace review",
+    "If pursuing the MPP route: a documented pay-per-call payment workflow on mpp.dev"
+  ],
+  "workflow": [
+    "Confirm the business has a live Stripe account and public Stripe profile (stripe.com/@handle)",
+    "Choose the strongest surface: publish a Stripe App via the marketplace review, become a Stripe Projects provider, or expose an MPP endpoint",
+    "Verify presence by running 'stripe directory search \"<brand>\" --format json' after the listing/app is approved"
+  ],
+  "watchFor": [
+    "The batch-listed link type is 'nofollow' but there is no classic public listing page to inspect — the Directory surface is CLI/agent output",
+    "Feedback channel is directory@stripe.com per the docs — there is no documented 'request inclusion' form on the page read",
+    "Do not treat this as a quick citation: every route in is gated on real Stripe integration work"
+  ],
+  "countsAsLive": "The business/app/provider is returned by 'stripe directory search' results with its profile handle or listing data",
+  "unknowns": [
+    "Exact criteria for inclusion in the 'Stripe business network' index — the docs do not describe an enrollment step",
+    "Whether any free/fast path exists for a business that uses Stripe only for payments",
+    "Link attribute of any public-facing profile page (stripe.com/@handle) — not documented on the fetched page"
+  ]
+}

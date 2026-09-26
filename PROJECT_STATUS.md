@@ -25,6 +25,18 @@ Cockpit, CodeVetter, and App Health remain independent repositories.
 
 ## Timeline
 
+- **2026-09-26 — Launchdesk research backlog burn-down continued.** New
+  `playbook-research` batches covered DR 48 through DR 32 of the
+  `needs-research` queue: ~70 new per-platform playbooks this cycle plus
+  earlier batches, each appended as a `playbook-research` claim in
+  `launchdesk.json` without touching prior source claims. New quarantines:
+  `bootstrappers.io` (placeholder), `collaborizm.com` (repurposed to a
+  Substack pointer), `yourstack.com` (offline since ~2022), joining earlier
+  `in.pcmag.com`, `designernews.co`, `vator.tv`, `valuer.ai`. Pay-to-list
+  surfaces documented honestly (`nextbigwhat.com` $39–$79, `startups.fm`
+  $49, `saashunt.best` auction slots, `press.farm` $279/yr); gated or
+  unverifiable flows marked `conditional`/`unknown`. Changes uncommitted.
+
 - **2026-09-25 — Launchkit shipped: free agent-executable launch toolkit.**
   `tooling/launchkit/` (product brief, truthful run planner, evidence tracker,
   run prompt, report script) plus 330 researched per-platform submission

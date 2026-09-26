@@ -1,0 +1,58 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "fastcompany.com",
+  "name": "Fast Company",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.fastcompany.com/3008467/guidelines-submitting-contributed-articles-fast-company-and-tips-getting-published",
+      "title": "Fast Company contributor guidelines — Work Life section accepts complete unpublished drafts; 'no pitches, abstracts, outlines, press releases, or interview offers'"
+    },
+    {
+      "url": "https://fastcompany.zendesk.com/hc/en-us/articles/360054198912-Impact-Council-What-membership-benefits-does-the-Impact-Council-include",
+      "title": "Fast Company Help Center — Impact Council members can submit thought-leadership pieces working with an editor (paid membership route)"
+    },
+    {
+      "url": "https://www.fastcompany.com/fast-company-editorial-guidelines-and-ai-use-policy",
+      "title": "Fast Company Editorial Guidelines and AI Use Policy (identified via search result)"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free path exists but is selective: the Work Life section accepts contributed articles as complete drafts only — editors choose what to publish",
+    "A paid membership route (Impact Council) lets members work with an editor to submit thought-leadership pieces"
+  ],
+  "requirements": [
+    "Contributed pieces go to the Work Life section (productivity, creativity, career development, hiring, work culture, entrepreneurship, DEI, innovation)",
+    "Send a complete unpublished draft — pitches, abstracts, outlines, press releases, and interview offers are explicitly rejected",
+    "Written by a person, not a PR department; over-the-top self-promotion kills the piece",
+    "Secondary coverage reports submissions go to submissions@fastcompany.com, ~700–1,000 words, with ~5 business days as the move-on window and 24h exclusivity after publication",
+    "Contributors are unpaid but retain copyright (per editor guidance found in search results)"
+  ],
+  "preparation": [
+    "A finished, polished ~700–1,000-word op-ed-style article — not a product announcement",
+    "A leadership/workplace/innovation thesis with original ideas; anecdotes plus research",
+    "Author bio establishing credibility in the industry covered",
+    "If pursuing paid recognition instead: Most Innovative Companies applications (micapplications@fastcompany.com) or Impact Council membership"
+  ],
+  "workflow": [
+    "Read the contributor guidelines article on fastcompany.com",
+    "Write a complete draft matching the Work Life voice — op-ed, not content marketing",
+    "Submit the full draft to the submissions inbox (submissions@fastcompany.com per secondary sources) or the current Work Life editor",
+    "Wait roughly five business days; no reply means move on — they ask you not to follow up",
+    "If published, keep it exclusive to Fast Company for 24 hours, then repost with a link to the original"
+  ],
+  "watchFor": [
+    "Do not send a pitch or outline — only complete drafts are considered",
+    "Self-promotional content about your own company/product is a stated disqualifier — a SaaS launch does not fit this format",
+    "Multiple editor emails exist (section editors change); verify the current Work Life editor before sending",
+    "Impact Council and awards (MIC) are paid/application routes — different products, do not confuse with earned coverage"
+  ],
+  "countsAsLive": "A contributed article is published under the Work Life section at fastcompany.com/section/contributed-content",
+  "unknowns": [
+    "Current Work Life section editor and whether the submissions@fastcompany.com inbox is still the intake",
+    "Acceptance rate for cold contributed drafts"
+  ]
+}

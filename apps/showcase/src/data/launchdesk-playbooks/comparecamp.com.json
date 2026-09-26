@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "comparecamp.com",
+  "name": "CompareCamp",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://comparecamp.com/request-a-review/",
+      "title": "Request a Review page (site nav link confirmed via search index) — direct fetch returned HTTP 403"
+    },
+    {
+      "url": "https://comparecamp.com/the-ultimate-guide-to-saas-product-reviews/",
+      "title": "CompareCamp editorial (search-indexed) — 'You can attract software buyers by requesting a product review on Comparecamp'"
+    },
+    {
+      "url": "https://www.mypresences.com/service/comparecamp/",
+      "title": "Third-party listing guide — CompareCamp covers SaaS reviews/comparisons; listings can be claimed; relevant to software businesses in specific industries"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "The public route is 'Request a Review' — an editorial review request, not a guaranteed listing; acceptance and timing are at the editorial team's discretion",
+    "CompareCamp is part of the FinancesOnline group of software review sites — paid marketing packages and lead-gen campaigns are the monetization; basic editorial listing is free but not guaranteed"
+  ],
+  "requirements": [
+    "A SaaS/software product that fits their reviewed categories (project management, CRM, accounting, HR, marketing, etc.)",
+    "Willingness to have the product editorially reviewed — pros AND cons are published; the review is not vendor-controlled",
+    "Complete product info for the request: what it does, target users, pricing"
+  ],
+  "preparation": [
+    "Product name, URL, category fit, description, pricing model",
+    "Differentiators and a demo/access path for the review team if requested",
+    "Awareness that the sister site FinancesOnline sells premium review/lead packages — decide upfront whether free editorial coverage is the goal"
+  ],
+  "workflow": [
+    "Open https://comparecamp.com/request-a-review/ in a browser (site 403s automated fetches)",
+    "Submit the product details via the request form",
+    "The editorial team decides whether to review; respond to follow-up questions/access requests",
+    "If published, the product gets a review page and appears in category comparisons; claim/manage the listing where supported"
+  ],
+  "watchFor": [
+    "Site blocks automated fetches (403) — verify the form in a browser",
+    "Editorial review means honest pros/cons — there is no approval over the published verdict",
+    "Expect lead-gen upsell offers (premium marketing packages, awards programs) tied to the FinancesOnline network",
+    "No guarantee or timeline for review publication"
+  ],
+  "countsAsLive": "A published review/profile page for the product exists on comparecamp.com and appears in its software-category listing",
+  "unknowns": [
+    "Whether un-reviewed products can get a bare listing without editorial review",
+    "Review turnaround",
+    "Outbound link treatment on published profiles"
+  ]
+}

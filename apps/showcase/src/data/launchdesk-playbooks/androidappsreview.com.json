@@ -1,0 +1,41 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "androidappsreview.com",
+  "name": "Android Apps Review",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.androidappsreview.com/",
+      "title": "AndroidAppsReview.com — live Android app review blog; 'Submit Your Android App' nav link; reviews through Dec 2023; staff-written reviews (Jimbo, Sarah Hanlon)"
+    },
+    {
+      "url": "https://www.androidappsreview.com/submit-app-for-review/",
+      "title": "Submit path 404s — the nav's 'Submit Your Android App' points elsewhere or the form moved"
+    }
+  ],
+  "category": "press",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "Android apps only — staff-written reviews of Android apps/games",
+    "Submit route exists in nav but the catalog path 404s — find the working link in a browser",
+    "Latest reviews Dec 2023 — semi-active; some content is AI/guest-written",
+    "Historically charged for expedited reviews (common model — unverified today)"
+  ],
+  "preparation": [
+    "An Android app with Play Store link",
+    "Review assets: promo code if paid, screenshots, description"
+  ],
+  "workflow": [
+    "Locate the working 'Submit Your Android App' route from the nav",
+    "Submit the app; a staff reviewer may cover it",
+    "Coverage is a written review with rating"
+  ],
+  "watchFor": [
+    "The catalog's submit path is dead — use the nav link",
+    "Review cadence has slowed (a few posts/month vs daily at peak)",
+    "Paid-review model common on these sites — check the form's terms"
+  ],
+  "countsAsLive": "A published AndroidAppsReview staff review of the app",
+  "unknowns": ["Whether submission is free or paid", "Current review turnaround"]
+}

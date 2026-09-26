@@ -1,0 +1,56 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "hotfrog.com",
+  "name": "Hotfrog",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.hotfrog.com/add-a-business",
+      "title": "Add-a-business page — returned HTTP 403 (bot-blocked)"
+    },
+    {
+      "url": "https://www.yext.com/integrations/publishers/hotfrog",
+      "title": "Yext publisher spec — Hotfrog operates in 38 countries; required fields: name, address, main phone; supports website URL, logo, categories, photos"
+    },
+    {
+      "url": "https://synup.com/fr/how-to/claim-add-hotfrog-listing/",
+      "title": "Synup how-to — 'Add your Business' on the homepage → register, then complete the business profile; existing listings are claimed via customer service"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Adding a business is free after registering a Hotfrog account",
+    "Required fields are a real business name, address and phone — the directory is local-business oriented (44+ countries per Yext), so an online-only SaaS is a marginal fit unless it has a listed business presence",
+    "If the business is already listed, claiming goes through customer service, not self-serve"
+  ],
+  "requirements": [
+    "Registered Hotfrog account",
+    "Business name, address and main phone (required per the publisher spec)",
+    "Supported-country presence (US, UK, AU, CA, IN and ~40 others)"
+  ],
+  "preparation": [
+    "Consistent NAP (name, address, phone) matching other citations",
+    "Website URL, business categories/keywords, description, logo, photos",
+    "Search Hotfrog first for an existing listing to claim"
+  ],
+  "workflow": [
+    "Open hotfrog.com in a browser and click 'Add your Business' (site 403s automated fetches)",
+    "Register an account, then complete the business profile (address, contacts, categories, keywords, website)",
+    "If the business already appears in search, contact Hotfrog customer service to claim it",
+    "Listing updates propagate in real time per the Yext spec"
+  ],
+  "watchFor": [
+    "Site blocks automated fetches (403) — browser needed",
+    "Claiming an existing listing is manual via customer service — slow path",
+    "SaaS/online-only products are not the intended entity type — listing one without a real business address may be removed",
+    "Hotfrog sells Google Ads management services — expect upsell contact"
+  ],
+  "countsAsLive": "The business profile page is publicly visible in Hotfrog search with NAP details and website link",
+  "unknowns": [
+    "Whether website links on live profiles are dofollow",
+    "Verification method (phone/postcard/none) for new adds",
+    "Whether online-only businesses are accepted"
+  ]
+}

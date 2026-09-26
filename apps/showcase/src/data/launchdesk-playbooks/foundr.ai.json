@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "foundr.ai",
+  "name": "Foundr",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://foundr.ai/",
+      "title": "Homepage — 'curated directory of AI tools. Browse, search, and submit your own'"
+    },
+    {
+      "url": "https://foundr.ai/submit",
+      "title": "Submit route — auth-gated; sign in via Google or email magic link to 'manage your submitted tools'"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "AI tool — curated AI tools directory with categories, tags, leaderboard, and Collections (Latest/Featured/Coming Soon)",
+    "Account required before the submit form is shown: Google OAuth or email magic link",
+    "Dashboard exists to 'manage your submitted tools' — listings can be edited post-submission"
+  ],
+  "preparation": [
+    "Google account or email for magic-link sign-in",
+    "Product name, URL, description, logo, category/tags"
+  ],
+  "workflow": [
+    "Open https://foundr.ai/submit",
+    "Sign in via Google or email magic link",
+    "Complete the tool submission form in the dashboard",
+    "Listing appears in the directory and is eligible for the leaderboard/collections"
+  ],
+  "watchFor": [
+    "Not to be confused with foundr.com (entrepreneur media company) — this is a separate AI-tools directory",
+    "Pricing not visible before sign-in — paid 'Advertise' banner slots exist separately",
+    "Leaderboard and 'Coming Soon' collection suggest staged/scheduled listing states",
+    "Submit UI fully behind auth — agent must complete OAuth/magic-link interactively"
+  ],
+  "countsAsLive": "The tool has a public page on foundr.ai listed under its category/tags and Latest collection",
+  "unknowns": [
+    "Whether organic submission is free or has a paid tier",
+    "Review process and turnaround",
+    "What 'Coming Soon' gating means for new listings"
+  ]
+}

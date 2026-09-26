@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "github.com",
+  "name": "GitHub Topics",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/classifying-your-repository-with-topics",
+      "title": "GitHub Docs — Classifying your repository with topics"
+    },
+    {
+      "url": "https://github.com/AdamXweb/awesome-aussie",
+      "title": "Awesome Aussie awesome-list repo (second batch entry on this domain — PR-based route)"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "You need admin access to the repository — topics can only be added to repos you administer, not to other people's projects",
+    "Topics must be lowercase letters, numbers, and hyphens; 50 chars max; no more than 20 topics per repository",
+    "Topics should describe the project's purpose, subject area, community, or language — accurate classification, not keyword stuffing",
+    "For the second catalog entry on this domain (AdamXweb/awesome-aussie): submission is a pull request to the awesome-list repo; the project must fit the list's scope (Australian-built repos/projects) and the list's contribution rules"
+  ],
+  "preparation": [
+    "A public GitHub repository for the product (open-source repo, example app, or SDK)",
+    "A shortlist of accurate topics — check github.com/topics/ and competitor repos for the canonical topic names",
+    "For awesome-list routes: read the target repo's CONTRIBUTING.md / PR template and existing entry format before opening a PR"
+  ],
+  "workflow": [
+    "Open the repository's main page on GitHub",
+    "Click the gear icon next to 'About' in the top-right (Edit repository metadata)",
+    "Under 'Topics', type and select/add relevant topics; accept or decline GitHub's suggested topics",
+    "Click 'Save changes' — the repo is then indexed under each topic page (github.com/topics/<topic>)",
+    "For the Awesome Aussie entry: fork the repo, add the project in the list's established format, and open a pull request"
+  ],
+  "watchFor": [
+    "This is classification of your own repo, not a listing submission — there is no review queue for topics",
+    "Topic names are public even when added from a private repository",
+    "Two batch entries share this domain: 'GitHub Topics' (metadata route) and 'Awesome Aussie' (awesome-list PR route) — both are covered here",
+    "Awesome-list maintainers reject self-promotional PRs that don't fit scope or ignore the contribution format"
+  ],
+  "countsAsLive": "The repository's topics appear under its About section and the repo is listed on github.com/topics/<topic>; for the awesome-list route, the PR is merged and the entry renders in the list README",
+  "unknowns": [
+    "How quickly topic pages re-index a newly tagged repo",
+    "Whether AdamXweb/awesome-aussie is actively maintained (PR review responsiveness)"
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "thatsmy.ai",
+  "name": "ThatsMyAI",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://thatsmy.ai/",
+      "title": "Homepage — curated AI tools directory with categories, use cases, and Submit Tool nav"
+    },
+    {
+      "url": "https://thatsmy.ai/submit-tool",
+      "title": "Submit page — full plan table and form fields: Free (≤90-day queue), Premium $49.99 (≤7 days), Priority $99.99 (immediate approval)"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free plan exists but carries up to a 90-day waiting period, standard search placement, max 3 tags, and no social promotion; paid tiers ($49.99/$99.99) jump to ≤7-day or immediate review"
+  ],
+  "requirements": [
+    "AI tools only — directory of AI apps across ~10 categories (chatbots, image, video, audio, code, productivity, agents, SEO/marketing, data, other)",
+    "Form fields: Tool Name, Website URL, Short Description, Category, Primary Use Case, Listing Plan, Tool Pricing Model, Contact Email, Logo (200x200px min, PNG/JPG, ≤2MB)",
+    "'Manually Reviewed / Quality-First / No Spam Tools' — low-quality submissions are rejected",
+    "No account wall visible — the form is self-serve with email notification"
+  ],
+  "preparation": [
+    "Logo file at least 200×200px, PNG or JPG, under 2MB",
+    "Tool name, canonical URL, short description (concise value prop)",
+    "Category + primary use case picks, and the tool's pricing model",
+    "Contact email for listing notifications",
+    "Decide tier: Free ($0, ≤90d), Premium ($49.99, ≤7d), Priority ($99.99, immediate)"
+  ],
+  "workflow": [
+    "Open https://thatsmy.ai/submit-tool",
+    "Fill Basic Information (name, URL, short description), Classification (category, use case), Visibility & Pricing (plan + tool pricing model), Contact Email, upload logo",
+    "Submit Your Tool — notification goes to the contact email when reviewed",
+    "Free listings wait up to 90 days; Priority gets immediate approval with dedicated support"
+  ],
+  "watchFor": [
+    "The free tier's 90-day queue is the real cost — plan accordingly",
+    "Claims of '1M+ monthly impressions / 100K+ active users' are unverified marketing",
+    "Premium/Priority are one-time payments per the plan table (verify at checkout)",
+    "Promoted listings are acknowledged in the FAQ — paid placement influences visibility, though marked as promotional",
+    "Homepage marketing claims 'we find, test, review' daily — but FAQ says they don't guarantee performance"
+  ],
+  "countsAsLive": "The tool appears on a thatsmy.ai listing page under its category/use-case after manual review",
+  "unknowns": [
+    "Whether the free-tier backlink is dofollow (advertised as 'permanent SEO backlink')",
+    "Actual free-queue wait vs the 90-day maximum",
+    "Traffic/audience claims"
+  ]
+}

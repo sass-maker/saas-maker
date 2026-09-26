@@ -1,0 +1,45 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aitools.neilpatel.com",
+  "name": "AI Tools by Neil Patel",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://aitools.neilpatel.com/submit/",
+      "title": "Former submit URL now renders Ubersuggest 'Apps & Integrations' page — the standalone AI-tools directory is gone"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "The old aitools.neilpatel.com directory appears retired; the live equivalent is Ubersuggest's 'Apps & Integrations' catalog",
+    "The only intake found is 'Suggest an Integration' linking to ubersuggest.feedbear.com feature-requests board — a suggestion queue, not a guaranteed listing"
+  ],
+  "requirements": [
+    "To appear in the Apps & Integrations catalog a product should plausibly integrate with or complement Ubersuggest (SEO/marketing tooling)",
+    "Submissions go through a Feedbear feature-request board — community voting likely influences adoption; no published acceptance criteria"
+  ],
+  "preparation": [
+    "A concrete integration pitch: what the product does and why it belongs in Ubersuggest's apps catalog",
+    "Product name, URL, logo, and a short description ready to paste into the Feedbear request"
+  ],
+  "workflow": [
+    "Open https://aitools.neilpatel.com/ — confirm it now serves Ubersuggest's Apps & Integrations page",
+    "Click 'Suggest an Integration' (links to https://ubersuggest.feedbear.com/boards/feature-requests)",
+    "Post a feature request describing the product/integration and why Ubersuggest users benefit",
+    "Track the request; a listing only materializes if Ubersuggest adds it to the catalog"
+  ],
+  "watchFor": [
+    "The original submit page no longer exists — the catalog's submissionUrl is stale",
+    "Feedbear suggestions are not guaranteed or reviewed on a schedule — this can sit indefinitely",
+    "Fit matters: a generic SaaS with no SEO/marketing tie-in is unlikely to be added to an Ubersuggest integrations catalog",
+    "No pricing/fee info found because there is no formal listing product"
+  ],
+  "countsAsLive": "The product appears as a card on the Ubersuggest Apps & Integrations page (aitools.neilpatel.com / ubersuggest apps catalog) with a link",
+  "unknowns": [
+    "Whether Ubersuggest accepts third-party tool listings at all outside formal partnerships",
+    "Review cadence or owner of the Feedbear board",
+    "Whether any paid partnership route exists for inclusion"
+  ]
+}

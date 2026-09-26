@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "betterlaunch.co",
+  "name": "Better Launch",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.betterlaunch.co/submit",
+      "title": "Submit page — requires account sign-in before the form"
+    },
+    {
+      "url": "https://www.betterlaunch.co/pricing",
+      "title": "Pricing — Free ($0, Monday-only 30+ days out, nofollow) vs Starter $19 / Pro $49 / Ultra $159 / Bundle $219"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free plan launches only on a Monday you pick at least 30 days out — a real queue/wait",
+    "Free-plan backlink is nofollow; it becomes dofollow only if you add their badge to your site or win the weekly ranking",
+    "Skip-the-line for $9, or paid plans ($19-$159) launch any day with a lifetime dofollow link"
+  ],
+  "requirements": [
+    "Account required — /submit shows only a sign-in/create-account wall to anonymous visitors",
+    "A real product to launch; listed on homepage for 7 days under the free plan",
+    "Public product page and profile created as part of the launch"
+  ],
+  "preparation": [
+    "Product name, URL, description, logo/assets for the product page",
+    "A launch-date plan: free tier = pick a Monday ≥30 days out",
+    "Optional: their badge HTML if you want the free link upgraded to dofollow"
+  ],
+  "workflow": [
+    "Create an account / sign in at betterlaunch.co",
+    "Open /submit and pick a plan (Free, Starter $19, Pro $49, Ultra $159, or $219 bundle with 120+ directory submissions done for you)",
+    "Fill product details and schedule/launch",
+    "Free tier: wait for the scheduled Monday; paid: launch instantly or any day",
+    "Add their badge or win the week to convert the free nofollow link to dofollow"
+  ],
+  "watchFor": [
+    "Free tier's 30+ day Monday-only scheduling is a long wait — plan around it",
+    "Nofollow link on free tier unless badge added or weekly win",
+    "Heavy featured/pinned upsell ladder ($19→$159) plus a done-for-you directory bundle",
+    "Self-reported 'DR 61+' claim for the dofollow link — not independently verified"
+  ],
+  "countsAsLive": "The product has a public product page on betterlaunch.co and appears in the homepage launch list on its scheduled day",
+  "unknowns": [
+    "How the weekly 'win' is determined (upvotes? editorial?)",
+    "Whether free launches get any newsletter exposure (newsletter is Pro+)",
+    "Badge requirements/placement for the dofollow upgrade"
+  ]
+}

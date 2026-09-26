@@ -1,0 +1,38 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "netted.net",
+  "name": "Netted",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.netted.net/",
+      "title": "Netted — Webby Awards team's 'best sites, apps, and connected products' newsletter; 1,837-article archive; 'Advertise with us' and 'Contact us' links; most recent content observed was 2024/early-2025"
+    }
+  ],
+  "category": "press",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Editorial curation only — Netted is the Webbys team's hand-picked app/site newsletter; no submission form",
+    "Products covered: 'the best sites, apps, and connected products' — consumer-facing tools with a delight factor",
+    "Contact route: the 'Contact us' page; advertising is separate"
+  ],
+  "preparation": [
+    "A genuinely delightful consumer product — Netted's taste runs to clever/beautiful/useful",
+    "A pitch via the contact page"
+  ],
+  "workflow": [
+    "Pitch the editorial team via netted.net/contact-us",
+    "Coverage is a newsletter feature/short review — no profile page"
+  ],
+  "watchFor": [
+    "Low cadence — newest content observed was months old; the newsletter may be semi-dormant",
+    "Single-editor curation — acceptance is taste-driven and rare",
+    "Footer copyright is stale (2015-2017)"
+  ],
+  "countsAsLive": "A Netted newsletter feature or article mentioning the product",
+  "unknowns": [
+    "Whether the newsletter still publishes regularly",
+    "Editorial contact responsiveness"
+  ]
+}

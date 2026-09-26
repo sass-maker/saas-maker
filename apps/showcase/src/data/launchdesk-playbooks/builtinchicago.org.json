@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "builtinchicago.org",
+  "name": "Built In Chicago",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://builtinchicago.org/",
+      "title": "Built In Chicago homepage — Chicago tech hub of Built In; 'Join'/'Log In', company profiles, 'For Employers' flows"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Company profiles are for tech companies/employers in the Chicago market — claiming/creating a profile requires an employer account on the Built In platform",
+    "The knowledgebase claim article (knowledgebase.builtin.com/s/article/How-do-I-claim-my-company-profile) rendered only a CSS-error shell during research — the exact claim flow is unverified"
+  ],
+  "requirements": [
+    "A real technology company with a Chicago (or Built In hub city) presence — Built In profiles companies as employers (jobs, benefits, tech stack), not standalone products",
+    "The site is a regional skin of builtin.com — 'BuiltIn.com is the global destination for tech professionals'; account flows are shared with the parent platform"
+  ],
+  "preparation": [
+    "Official company email/domain to claim or create the employer profile",
+    "Company assets: logo, description, jobs feed, tech stack, benefits info",
+    "Check whether a company page already exists under builtinchicago.org (or builtin.com/company/<slug>) before creating a new one"
+  ],
+  "workflow": [
+    "Open https://builtinchicago.org/ and use 'Join' to create an account, or search the companies directory for an existing company page",
+    "If a profile exists, claim it via the employer/company claim flow (per Built In knowledgebase; verify in a real browser — the KB page failed to render to automated fetch)",
+    "Complete the profile (logo, description, jobs) and publish",
+    "Optionally explore 'For Employers / Post a Job' paid packages for visibility"
+  ],
+  "watchFor": [
+    "Employer branding on Built In has paid tiers — the free claim may be limited in features/visibility",
+    "Profiles are employer-centric; a product without a hiring company behind it is a poor fit",
+    "knowledgebase.builtin.com did not render during research — do not assume the exact claim steps without browser verification",
+    "Duplicate submission risk: this hub shares builtin.com's company database — do not create a second listing if the builtin.com playbook was already executed"
+  ],
+  "countsAsLive": "A public company profile page exists on builtinchicago.org (or builtin.com/company/<slug>) showing the company's logo, description, and links",
+  "unknowns": [
+    "Whether a fully free claim tier exists vs paid employer packages",
+    "Whether profile website links are follow or nofollow",
+    "Whether a company can appear on multiple Built In city hubs from one claim"
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "elocal.com",
+  "name": "eLocal",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://elocal.com/sign-up",
+      "title": "Business sign-up — 'Join Our Marketplace' pay-per-call lead program; form asks type + name of business"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "NOT a free citation directory — eLocal is a pay-per-call lead-generation marketplace ('pay for performance' phone leads)",
+    "Fit: local service businesses (pest control, roofing, legal, HVAC — their testimonials) wanting inbound phone calls/form leads",
+    "Sign-up form starts with 'Type of Business' and 'Name of Business' (2-step flow)",
+    "Account login exists at /business_users/login; advertiser terms at /information#advertiser_terms"
+  ],
+  "preparation": [
+    "Business type/category and name",
+    "Service area and hours (they credit calls outside your hours/area)",
+    "Budget for per-lead/per-call charges — pricing not shown on the page"
+  ],
+  "workflow": [
+    "Open https://elocal.com/sign-up and complete 'Join Our Marketplace' (type of business → business name → contact details)",
+    "Configure service area and lead preferences in the dashboard",
+    "Pay for qualified calls/form leads as they arrive"
+  ],
+  "watchFor": [
+    "Source-claimed 'free directory listing' is wrong — this is paid lead-gen; there is no free listing product visible",
+    "Poor fit for a SaaS launch: leads are homeowner/local-service phone calls",
+    "Pricing is not published — expect sales contact or per-call rates revealed after signup",
+    "BBB accreditation badge shown; advertiser terms live under /information"
+  ],
+  "countsAsLive": "Your business account is active in their marketplace and receiving/routing calls or form leads",
+  "unknowns": [
+    "Per-call/per-lead pricing",
+    "Whether any public-facing profile/backlink exists at all",
+    "Minimum spend or contract terms (they claim 'no-commitment')"
+  ]
+}

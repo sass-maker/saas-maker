@@ -1,0 +1,37 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "rankinpublic.xyz",
+  "name": "RankInPublic",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://rankinpublic.xyz/",
+      "title": "RankInPublic — live 'launch tournament' platform; free launch ('Submit your product to the tournament and get listed instantly'); 55+ DR backlink pitch; paid Directory Submissions service also offered"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free launch — submit to the 'tournament' and get listed instantly; products compete in community 1v1 matchups",
+    "Login/account for participation",
+    "Separate paid service: 'Directory Submissions' (they submit your product to directories for you)",
+    "Marketing promises a '55+ DR backlink'"
+  ],
+  "preparation": [
+    "Product details for the launch listing",
+    "Expect a competition mechanic — community votes in matchups"
+  ],
+  "workflow": [
+    "Launch free on rankinpublic.xyz",
+    "Product enters 1v1 community matchups; winners get featured",
+    "Optional: pay for the directory-submission service"
+  ],
+  "watchFor": [
+    "Tournament mechanic means visibility depends on community voting — thin audience possible",
+    "'55+ DR backlink' is a selling point — verify link type",
+    "Young platform, founder-driven (@AntonioEscudero)"
+  ],
+  "countsAsLive": "The product has a listing and competes in RankInPublic matchups",
+  "unknowns": ["Community size/actual reach", "Directory-submission service pricing"]
+}

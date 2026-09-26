@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "tools.launchllama.co",
+  "name": "Launch Llama",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://tools.launchllama.co/",
+      "title": "Launch Llama directory — free AI-tools/startup directory claiming 55,000+ founders; Submit button -> /submit; FAQ documents free listings, paid Featured plan, Instant Launch add-on, weekly newsletter features, upvotes, REST API + MCP for agents (/developers)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free submission via the 'Submit' button -> /submit — 'Once reviewed, your tool will be listed… completely free. No hidden fees or paywalls'",
+    "Product should fit the AI-tools/startup directory audience",
+    "Dedicated product page (hero images, FAQs, similar tools, comments) requires 7+ community upvotes and a thumbnail",
+    "Paid options: 'Featured' membership (badge + priority placement) and 'Instant Launch' one-time add-on to skip the free review wait — see /pricing",
+    "Optional newsletter feature to 55k+ subs is earned via engagement/editorial fit, or paid via /newsletter-ads",
+    "REST API + MCP server exist for agents (search catalog, launch-readiness audit, open a listing draft) — agents can't publish; founders finish at /submit"
+  ],
+  "preparation": [
+    "Product name, tagline, description, URL, thumbnail",
+    "Plan to drive early upvotes — 7+ upvotes + thumbnail unlock the full product page"
+  ],
+  "workflow": [
+    "Click Submit -> tools.launchllama.co/submit and fill the form",
+    "Free listing goes through review on a rolling basis (site says daily updates); Instant Launch skips the wait",
+    "Once live, drive upvotes/comments to qualify for the dedicated product page and potential free newsletter feature",
+    "Optional: buy Featured placement or a newsletter ad"
+  ],
+  "watchFor": [
+    "Self-described 'world's first full-stack distribution channel' — marketing claims (55k founders, DA72 backlink, GEO/AEO) are unverified; modest actual authority likely",
+    "Free newsletter features are editorial picks, not guaranteed",
+    "Featured/Instant Launch pricing lives on /pricing — not captured in detail",
+    "Young independent product ('by Tom Otto') — treat as a small directory, not a major launch venue"
+  ],
+  "countsAsLive": "The tool appears in the directory at tools.launchllama.co/products/<slug>",
+  "unknowns": [
+    "Actual reach/newsletter engagement — claims unverified",
+    "Review turnaround on free submissions"
+  ]
+}

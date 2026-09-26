@@ -1,0 +1,42 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "merchantmaverick.com",
+  "name": "Merchant Maverick",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://merchantmaverick.com/",
+      "title": "Merchant Maverick — small-business software reviews (POS, payments, payroll, accounting); affiliate review model"
+    }
+  ],
+  "category": "press",
+  "zeroCostRoute": "unknown",
+  "conditions": [
+    "No public submission flow documented — Merchant Maverick is an affiliate review site for small-business software (POS, merchant services, payroll, accounting); reviews are staff-written"
+  ],
+  "requirements": [
+    "Product must fit small-business software categories — point of sale, payment processing, payroll, accounting, ecommerce",
+    "Reviews are editorially driven with affiliate economics; contact via the site's contact page",
+    "merchantmaverick.com/about-us/ returned 404 this session; the site otherwise resolves normally"
+  ],
+  "preparation": [
+    "Product in a covered SMB-software category with pricing/details ready",
+    "Pitch via the contact page — no public submit form found"
+  ],
+  "workflow": [
+    "Contact the editorial team via the site contact page",
+    "Offer review access and product details",
+    "Coverage, if it happens, is a staff-written review or inclusion in a best-of roundup"
+  ],
+  "watchFor": [
+    "Affiliate-review economics — coverage slots correlate with partner programs; treat 'reviews' accordingly",
+    "SMB-vertical only — dev tools and enterprise SaaS are off-beat",
+    "No documented submission SLA"
+  ],
+  "countsAsLive": "The product appears in a Merchant Maverick review or comparison",
+  "unknowns": [
+    "Whether review inclusion can be initiated without a commercial relationship",
+    "Current contact responsiveness"
+  ]
+}

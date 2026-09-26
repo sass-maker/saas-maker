@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aitoolsaver.com",
+  "name": "AI Tools Saver",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.aitoolsaver.com/submit-ai-tool",
+      "title": "Submit page — 'Submit your AI tool and reach thousands of AI users. We offer a 50% OFF for the first 1000 companies' (page serves a summarized markdown rendition to agents)"
+    },
+    {
+      "url": "https://www.aitoolsaver.com/",
+      "title": "Homepage — curated AI tools directory with verified discounts/deals; every tool page lists vendor website, pricing model, categories and active deals"
+    },
+    {
+      "url": "https://submify.app/directory-submission-sites",
+      "title": "Third-party directory table — aitoolsaver.com marked 'Paid' (observed Aug 2026)"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "AI tool with a live website; directory focus is tools with deals/discounts/promo codes",
+    "A deal or discount is the editorial angle — tool pages highlight active deals",
+    "Submission appears to be paid: '50% OFF for the first 1000 companies' implies a standard listing fee; third-party directories corroborate 'Paid'"
+  ],
+  "preparation": [
+    "Tool name, vendor website URL, pricing model, and category",
+    "A deal/promo code or discount to feature — core value proposition of this directory",
+    "Contact: support@aitoolsaver.com for pre-submit questions"
+  ],
+  "workflow": [
+    "Open aitoolsaver.com/submit-ai-tool in a real browser (the markdown rendition omits the form and payment details)",
+    "Complete the submission form and pay the discounted listing fee if applicable",
+    "Provide deal details so the tool page can list an active discount",
+    "Confirm the tool page appears under the relevant category"
+  ],
+  "watchFor": [
+    "Exact fee not visible in agent-friendly rendition — confirm the real price in-browser before paying",
+    "'50% off first 1000 companies' is a urgency promo — verify it still applies",
+    "Site is deal-aggregator themed; a listing without a real discount underuses the format",
+    "Affiliate marketing disclosed on the site"
+  ],
+  "countsAsLive": "A dedicated tool page on aitoolsaver.com lists the vendor website, pricing model, categories and deal",
+  "unknowns": [
+    "Actual listing price (pre- and post-promo)",
+    "Whether listing links are followed",
+    "Review criteria and turnaround"
+  ]
+}

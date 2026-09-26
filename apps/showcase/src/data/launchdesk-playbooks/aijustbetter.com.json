@@ -1,0 +1,62 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aijustbetter.com",
+  "name": "AI Just Better",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://aijustbetter.com/submit",
+      "title": "Submit URL — returned HTTP 429 (rate-limited) to our fetcher; details verified via third-party walkthrough"
+    },
+    {
+      "url": "https://submitmap.com/platform/aijustbetter/",
+      "title": "SubmitMap walkthrough — login via Google/GitHub/email; form fields; free tier requires their badge live on your homepage/footer, verified and periodically re-checked"
+    },
+    {
+      "url": "https://hunt0.com/products/ai-just-better",
+      "title": "HUNT0 profile — curated AI tools directory across 460+ categories; /pricing page exists for sponsorship"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free plan requires embedding the AI Just Better badge in your site's served HTML (homepage/footer) and passing their 'Verify Backlink Badge' check",
+    "Badge is permanently monitored — periodic automated checks; removing it delists you",
+    "Account required: Google, GitHub, or email login before the submit form"
+  ],
+  "requirements": [
+    "AI tools, SaaS products, marketing tools, developer tools",
+    "Product link, name, up to 3 categories and 3 tags from their searchable lists",
+    "Short description plus a markdown introduction capped at 25,000 characters",
+    "Two image uploads",
+    "Pressing Submit only creates a draft (Status: Submitting, not published) — it goes live only after badge verification or a paid plan"
+  ],
+  "preparation": [
+    "Product URL, name, one-line description, and a markdown-formatted intro",
+    "Two product images/screenshots",
+    "Category/tag shortlist (max 3 each)",
+    "Ability to embed their badge on your homepage or footer before submitting",
+    "A Google, GitHub, or email account for signup"
+  ],
+  "workflow": [
+    "Sign in at aijustbetter.com (Google/GitHub/email)",
+    "Open the submit form and fill link, name, categories, tags, short description, markdown intro, upload 2 images",
+    "Submit — creates a draft in 'Submitting' status",
+    "Choose the $0 plan; embed the badge snippet in your served HTML",
+    "Click 'Verify Backlink Badge' in their panel — once verified the listing queues for publish",
+    "Keep the badge live permanently"
+  ],
+  "watchFor": [
+    "Badge is a permanent commitment — 'subject to periodic automated checks'; removal = delisting",
+    "Submit button does NOT publish — nothing goes live until badge verifies or payment",
+    "Site rate-limits bots (429) — pace requests",
+    "Paid plans exist as the alternative to the badge (pricing page at /pricing not fetched)"
+  ],
+  "countsAsLive": "The product appears as a public item page at aijustbetter.com/item/<slug> and surfaces in category browsing",
+  "unknowns": [
+    "Paid plan prices (page not fetched due to 429)",
+    "Whether free-tier outbound links are dofollow",
+    "Post-verification queue length before publish"
+  ]
+}

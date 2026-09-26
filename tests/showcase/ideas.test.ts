@@ -21,12 +21,13 @@ describe('integrated ideas catalog', () => {
   });
 
   it('publishes human, JSON, Markdown, navigation, and agent discovery surfaces', async () => {
-    const [page, jsonRoute, nav, routes, llms] = await Promise.all([
+    const [page, jsonRoute, nav, routes, llms, data] = await Promise.all([
       readRepository('apps/showcase/src/pages/ideas.astro'),
       readRepository('apps/showcase/src/pages/ideas.json.ts'),
       readRepository('apps/showcase/src/components/Nav.astro'),
       readRepository('apps/showcase/src/data/publicRoutes.ts'),
       readRepository('apps/showcase/src/pages/llms.txt.ts'),
+      readRepository('apps/showcase/src/data/ideas.ts'),
     ]);
 
     expect(page).toMatch(/data-idea-query/);
@@ -36,7 +37,8 @@ describe('integrated ideas catalog', () => {
     expect(page).toMatch(/data-idea-fun/);
     expect(page).toMatch(/data-idea-best/);
     expect(page).toMatch(/data-sort=/);
-    expect(page).toMatch(/source !== 'starterstory'/);
+    expect(data).toMatch(/source !== 'starterstory'/);
+    expect(data).toMatch(/IDEA_ENTRIES/);
     expect(jsonRoute).toMatch(/JSON\.stringify\(ideas\)/);
     expect(nav).toMatch(/href="\/ideas"/);
     expect(routes).toMatch(/path: '\/ideas'/);

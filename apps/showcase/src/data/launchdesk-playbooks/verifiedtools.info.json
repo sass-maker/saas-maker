@@ -1,0 +1,54 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "verifiedtools.info",
+  "name": "Verified Tools",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.verifiedtools.info/submit",
+      "title": "Submit your tool — full public form with all fields and 4 plans (Free $0 7-9wk queue / Starter $12 / Pro $129 / Premium $249)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free tier: 7-9 week review queue (~889 tools ahead), nofollow link — dofollow only if you embed their badge",
+    "$12 Starter skips the queue (24h) with a permanent dofollow link — effectively the practical route",
+    "A claim link is emailed post-submit; you must sign in with the SAME email to manage the listing"
+  ],
+  "requirements": [
+    "Name (≤60 chars), slug (≤64), website URL",
+    "Tagline ≤100 chars, short description ≤160, full description ≤1000",
+    "Category + pricing model (Free/Freemium/Paid/Trial)",
+    "Logo: SVG/PNG preferred, max 512×512px, auto-compressed over 200KB",
+    "1-3 screenshots REQUIRED: 16:9 aspect, max 1600px width; first image becomes the featured image",
+    "Optional: YouTube demo URL, social links, affiliate-program checkbox (appears on their SaaS affiliate pages)"
+  ],
+  "preparation": [
+    "Tight copy: ≤60-char name, ≤100-char tagline, ≤160-char short desc, ≤1000-char description",
+    "Square-ish logo ≤512×512px",
+    "1-3 sixteen-nine screenshots at ≤1600px width",
+    "The email you'll use to sign in — the claim link binds to it",
+    "Decide plan: free (7-9wk, nofollow) vs $12 (24h, dofollow) vs $129/$249 featured tiers"
+  ],
+  "workflow": [
+    "Open https://www.verifiedtools.info/submit",
+    "Fill all required fields and upload logo + screenshots",
+    "Select a plan (Free/Starter/Pro/Premium)",
+    "Submit; claim link goes to the email given — sign in with that email to manage",
+    "Free: wait ~7-9 weeks; paid: reviewed within 24h"
+  ],
+  "watchFor": [
+    "Free queue is honest but long (889 tools deep as of Sept 2026)",
+    "Free link is nofollow — dofollow requires badge embed or any paid plan",
+    "The claim email must match your sign-in email or 'you won't see your submission'",
+    "$129/$249 tiers add homepage featuring, full review with images, X posts, and a 5-min YouTube review (Premium)"
+  ],
+  "countsAsLive": "The tool has a public page on verifiedtools.info reachable from the directory/tools index",
+  "unknowns": [
+    "Whether the badge-embed dofollow upgrade is verified automatically",
+    "Rejection rate and criteria",
+    "What 'monitoring' (nav item) covers for listed tools"
+  ]
+}

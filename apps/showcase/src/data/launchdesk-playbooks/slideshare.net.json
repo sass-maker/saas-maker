@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "slideshare.net",
+  "name": "SlideShare",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.slideshare.net/signup",
+      "title": "SlideShare sign-in/sign-up — Continue with Scribd, LinkedIn, or Email"
+    },
+    {
+      "url": "https://www.slideshare.net/upload",
+      "title": "SlideShare upload page — supported file types and uploader agreement"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Account required: sign up with Scribd, LinkedIn, or Email",
+    "Supported upload formats: PowerPoint (PPT, PPTX, PPSX, POTX), PDF, Word (DOC, DOCX)",
+    "Uploader must agree to the Slideshare Uploader Agreement; only upload work you created — DMCA-compliant 'three-strikes' infringement policy terminates repeat infringers",
+    "SlideShare is operated by Scribd (copyright © 2026 'Slideshare from Scribd')"
+  ],
+  "preparation": [
+    "A presentation/deck about the product (e.g. pitch deck, feature overview) as PPTX or PDF",
+    "Account credentials (email or LinkedIn/Scribd sign-in)",
+    "Title, description, and category for the upload",
+    "Landing URL to embed inside the deck — the deck itself is the distribution asset"
+  ],
+  "workflow": [
+    "Create an account at slideshare.net/signup (Scribd, LinkedIn, or Email)",
+    "Go to slideshare.net/upload and drag-and-drop or select the deck (cloud import from Google Drive, Box, OneDrive available)",
+    "Add title/description/category and publish",
+    "Share/embed the public Slideshare page — uploads are indexed by Google per the upload page"
+  ],
+  "watchFor": [
+    "This is document sharing, not a product directory — value is an indexable hosted deck, not a profile listing",
+    "Strict IP enforcement ('three-strikes'); only upload original material",
+    "Signup page renders a sign-in form first — the /signup link is the registration entry",
+    "Link attribute (dofollow/nofollow) of URLs inside decks is unverified"
+  ],
+  "countsAsLive": "A public slideshare.net/<user>/<deck> URL serving the uploaded presentation",
+  "unknowns": [
+    "Whether links inside decks/profile are followed",
+    "Moderation turnaround for new uploads"
+  ]
+}

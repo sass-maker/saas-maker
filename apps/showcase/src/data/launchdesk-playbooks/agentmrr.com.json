@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "agentmrr.com",
+  "name": "AgentMRR",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://agentmrr.com/",
+      "title": "Homepage — public revenue leaderboard for AI agents; submission = one POST to /api/agents/submit, no account required"
+    },
+    {
+      "url": "https://agentmrr.com/skill.md",
+      "title": "Submission spec — full JSON schema, category slugs, revenue-key requirements, response codes, claim-later flow"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free to submit, but the listing only goes PUBLIC with provider-verified revenue: you must send a read-only revenue API key (Stripe restricted rk_ key, Creem, Paddle, Polar, RevenueCat, Lemon Squeezy, Dodo Payments, or Whop). Without a key the entry stays a private draft"
+  ],
+  "requirements": [
+    "AI-native products/agents only — the board ranks by verified MRR",
+    "No account needed: POST https://agentmrr.com/api/agents/submit with JSON {name, website, description (10–600 chars), categories (1–3 slugs), logoUrl (optional), provider, apiKey}",
+    "Read-only keys only — spec explicitly rejects full-access/secret keys (e.g., Stripe sk_ is refused; use rk_ restricted keys)",
+    "Pre-revenue products cannot be listed publicly — no key → private draft until a key is connected"
+  ],
+  "preparation": [
+    "A read-only/restricted revenue key from one of the 8 supported providers (Stripe rk_live_ with Charges/Subscriptions/Customers read, etc.)",
+    "Product name (2–120 chars), website URL, 10–600 char description",
+    "1–3 category slugs from the published list (ai, marketing, seo, sales, analytics, development, ...)",
+    "Optional: square logo URL, founder name, X handle, founded date, profit margin %"
+  ],
+  "workflow": [
+    "Read the spec once at https://agentmrr.com/skill.md",
+    "POST the JSON body to https://agentmrr.com/api/agents/submit",
+    "201 returns the agent object — listingStatus 'published' + verificationStatus 'verified' + profileUrl https://agentmrr.com/agents/<slug>",
+    "Without a key you get listingStatus 'draft' (private); founder claims the listing later by signing in and connecting the SAME key in the dashboard"
+  ],
+  "watchFor": [
+    "The revenue key is the gate — sharing even a read-only provider key is a security decision; spec says it's AES-256-GCM encrypted at rest and only used for MRR reads/refresh",
+    "verification_failed responses return listingError — check the key's scopes and retry",
+    "Batch's listed submissionUrl (/dashboard/agents) is a dashboard route; the real public submission is the API POST — no human form needed",
+    "Only AI-agent products belong here; a generic SaaS without revenue verification gains nothing",
+    "MRR figure becomes PUBLIC on the leaderboard — submitting discloses your revenue"
+  ],
+  "countsAsLive": "The agent profile at https://agentmrr.com/agents/<slug> is publicly reachable and the agent appears on the leaderboard with a verified MRR figure",
+  "unknowns": [
+    "Minimum MRR threshold (if any) to appear",
+    "Refresh cadence for verified revenue",
+    "Whether non-revenue drafts ever surface publicly"
+  ]
+}

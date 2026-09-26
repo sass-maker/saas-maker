@@ -1,0 +1,43 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "productschool.com",
+  "name": "Product School Community",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://productschool.com/slack-community/",
+      "title": "Slack community landing — 100k+ PMs, free join via email; channel list includes #11_product-launches"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free — join with an email address (or 'Get started free' account at app.productschool.com)",
+    "Audience is product managers — the pitch must be relevant to PMs",
+    "Self-promotion belongs in designated channels — #11_product-launches exists for launches; spamming other channels violates community norms"
+  ],
+  "preparation": [
+    "Email for the Slack invite",
+    "A short launch message tailored to product managers for #11_product-launches",
+    "Product link and any PM-relevant angle (roadmap, feedback, beta invites)"
+  ],
+  "workflow": [
+    "Open https://productschool.com/slack-community/ and submit your email",
+    "Accept the Slack invite and join product-school.slack.com",
+    "Post the launch in #11_product-launches; engage in AMAs/feedback channels for real reach",
+    "Optional: #10_feedback-n-surveys for feedback asks, local channels for networking"
+  ],
+  "watchFor": [
+    "No public/indexable web surface — Slack posts are not a backlink and not crawlable",
+    "Counts-as-live is only verifiable inside the Slack workspace",
+    "The community is PM-centric; off-topic products will get no traction",
+    "Slack free-tier message history limits may bury a launch post quickly"
+  ],
+  "countsAsLive": "The launch post exists in #11_product-launches inside the product-school.slack.com workspace — not publicly verifiable",
+  "unknowns": [
+    "Current moderation/self-promotion rules inside the Slack",
+    "Whether an approval step sits between email signup and the Slack invite",
+    "Actual activity level of #11_product-launches"
+  ]
+}

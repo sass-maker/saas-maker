@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "yellowpagesdirectory.com",
+  "name": "Yellow Pages Directory (formerly YellowPagesGoesGreen.org)",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://en.wikipedia.org/wiki/YellowPagesGoesGreen.Org",
+      "title": "Wikipedia — YellowPagesGoesGreen.org rebranded to YellowPagesDirectory.com, owned by Yellow Pages Directory Inc., East Northport NY"
+    },
+    {
+      "url": "https://www.yellowpagesdirectory.com/premium_package",
+      "title": "Premium Package page — describes free business listings and a paid premium upgrade (found via search; page indexed with 'Add Business' nav)"
+    },
+    {
+      "url": "https://www.strategicrevenue.com/yellow-pages-goes-green-yellow-pages-directory-inc-makes-additional-top-100-list/",
+      "title": "Third-party coverage — paid plans starting around $49.95/yr; free consumer directory positioning"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free business listing exists but is gated to real US local businesses with verifiable NAP (name, address, phone) data; site pushes an annual premium package for extra categories and verified perks"
+  ],
+  "requirements": [
+    "US business with a real street address and phone number — this is a Yellow Pages/White Pages citation directory, not a SaaS launch board",
+    "Batch domain yellowpagesgoesgreen.org is the former brand; the live site is yellowpagesdirectory.com",
+    "Online-only SaaS products without a local business address do not fit the directory model"
+  ],
+  "preparation": [
+    "Canonical NAP: business name, physical address, local phone number — must match other citations",
+    "Business category selection and a short plain-text description",
+    "Decide whether the listing is claimed as an existing record or added new"
+  ],
+  "workflow": [
+    "Go to yellowpagesdirectory.com and use the 'Add Business' nav entry",
+    "Search for an existing listing first; claim it if present, otherwise create a new free listing",
+    "Submit NAP + category + description; expect verification before the listing is confirmed",
+    "Decline the premium package upsell if only a citation is wanted"
+  ],
+  "watchFor": [
+    "Site 403-blocks automated fetches — verify form fields manually in a browser",
+    "Aggressive premium-package upsell (~$49.95+/yr per third-party reporting); the free tier exists but is positioned as a lead-in",
+    "Pure-SaaS products without a US local presence will not produce a meaningful citation"
+  ],
+  "countsAsLive": "The business listing resolves on a public yellowpagesdirectory.com listing page via the site's search or browse-by-listing-id",
+  "unknowns": [
+    "Exact free-tier field set and verification method (phone/postcard) — official pages bot-blocked during research",
+    "Current turnaround time for free listings",
+    "Whether outbound website links on free listings are followed"
+  ]
+}

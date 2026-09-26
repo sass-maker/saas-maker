@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aitoollist.org",
+  "name": "AI Tool List",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://aitoollist.org/",
+      "title": "Homepage — small live static AI tools list (GitHub-backed, categories: Chat & Text, Image & Art, Audio & Speech, Productivity, Writing, Finance)"
+    },
+    {
+      "url": "https://aitoollist.org/submit-a-tool",
+      "title": "Submit a Tool — fork github.com/aitoollist/awesome-ai-tool-list, add tool to README.md, open a PR"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "AI tools only",
+    "GitHub workflow: fork the awesome-ai-tool-list repo, add the tool to the right category in README.md, open a pull request",
+    "Listings show name, description, tags, pricing, and optional X/Twitter contact handle"
+  ],
+  "preparation": [
+    "GitHub account",
+    "Tool name, URL, 1-2 sentence description, tags, and pricing model",
+    "Appropriate category placement per the README structure",
+    "Optional Twitter/X handle for the 'Contact' field"
+  ],
+  "workflow": [
+    "Fork https://github.com/aitoollist/awesome-ai-tool-list",
+    "Add the tool entry to the correct category section in README.md following the existing entry format",
+    "Open a pull request describing the addition",
+    "On merge, the tool appears on aitoollist.org under its category"
+  ],
+  "watchFor": [
+    "PR-based curation — acceptance depends on maintainer review; no SLA",
+    "Tiny directory (3 pages of listings, © 2025) — modest traffic expected",
+    "Follow the existing README format exactly or the PR likely stalls",
+    "Site is a static GitHub-pages-style mirror of the repo — the repo is the source of truth"
+  ],
+  "countsAsLive": "The tool's entry appears on aitoollist.org in its category after the PR merges",
+  "unknowns": [
+    "Maintainer activity / PR review turnaround",
+    "Whether the site auto-deploys from the repo or is manually updated",
+    "Link type (dofollow/nofollow) on outbound tool links"
+  ]
+}

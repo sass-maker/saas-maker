@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "owwly.com",
+  "name": "Owwly",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://owwly.com/products/all",
+      "title": "Product index — Angular SPA ('Owwly - Ultimate AI tools list'), Stripe.js loaded for paid promotion"
+    },
+    {
+      "url": "https://owwly.com/assets/pdfs/how_to_promote.pdf",
+      "title": "Promotion PDF — paid options: newsletter feature $29, 'land on the top' $179/wk–$659/mo, promo day $99–$129"
+    },
+    {
+      "url": "https://backlinks.fyi/directories/owwly",
+      "title": "Third-party submission guide — free submission, account registration required, manual review ~3–7 days, no backlink or CAPTCHA"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free submission exists but requires account registration; third-party reports manual review of ~3–7 days"
+  ],
+  "requirements": [
+    "AI tools and indie products — 'everyone can contribute to our AI tools list. Simply add your product'",
+    "Account registration required before submitting",
+    "Free tier is a plain listing; paid promotion (featured day, newsletter slot, top placement) is a separate menu"
+  ],
+  "preparation": [
+    "Account on owwly.com",
+    "Product name, short description, category (site uses playful category tags like 🦄 AI, 🏀 Illustrations, 🍎 Apple)",
+    "Cover image (JPG/GIF options mentioned for promos)",
+    "Product URL"
+  ],
+  "workflow": [
+    "Register on owwly.com (JS app — needs a real browser)",
+    "Add your product via the submission flow",
+    "Free listing waits for manual review (~3–7 days per third-party guide)",
+    "Paid options if wanted: newsletter feature ~$29, 'land on the top' $179–$659, promo day ~$99–$129"
+  ],
+  "watchFor": [
+    "Site is fully JS-rendered — no plain-HTML form; automation needs a browser",
+    "Stripe is integrated — expect paid upsells inside the submit flow",
+    "Marketing is indie-hacker flavored ('land on the top'); paid placements are the business model, so free listings may be deprioritized",
+    "Third-party reports no backlink requirement and no CAPTCHA"
+  ],
+  "countsAsLive": "The product appears in https://owwly.com/products/all or its category with a /product/<slug>-<id> detail page",
+  "unknowns": [
+    "Whether free listings still get approved promptly (review-staff dependency)",
+    "Whether outbound links are dofollow (third-party claims dofollow)",
+    "Exact free-form field list inside the app"
+  ]
+}

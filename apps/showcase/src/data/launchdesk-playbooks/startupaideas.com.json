@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startupaideas.com",
+  "name": "Startup AIdeas",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://startupaideas.com/",
+      "title": "Homepage — live AI tools directory for founders with Latest/Explore/Submit nav and recent 2026 listings"
+    },
+    {
+      "url": "https://startupaideas.com/submit",
+      "title": "Submit page — redirects to login gate: 'Log in to Submit', Google OAuth or account creation required"
+    },
+    {
+      "url": "https://startupaideas.com/get-started",
+      "title": "Get Started page — same login gate; canonical submit entry in nav"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "Product should be an AI tool or AI-adjacent SaaS — directory positioning is 'AI tools for founders, startup research, and growth work'",
+    "An account is mandatory: submission sits behind login (Google OAuth via /api/auth/google or /signup)",
+    "Pricing model tag must be chosen at submission (site labels tools Free / Freemium / Free Trial / Paid)"
+  ],
+  "preparation": [
+    "Tool name, URL, and square logo (all listings display a logo)",
+    "1–2 sentence plain description — cards show truncated descriptions",
+    "Correct category pick from ~40 categories (AI Assistants, APIs, Automation, Dev Tools, SEO, etc.)",
+    "Pricing-model label for the product"
+  ],
+  "workflow": [
+    "Create an account at startupaideas.com/signup or use 'Log in with Google'",
+    "Open Submit (nav links to /get-started, which forwards to the submit flow once authenticated)",
+    "Fill the tool submission form and choose the best-fit category",
+    "Verify the listing appears under /explore or /latest after any review period"
+  ],
+  "watchFor": [
+    "Submit URL in the batch (startupaideas.com/submit) bounces unauthenticated users to a login wall — sign up first",
+    "Homepage carries ads for third-party submission services (submitsaas.com) — ignore, they are not the site's own flow",
+    "Whether a free tier exists was not stated on the public submit/login pages — confirm inside the authenticated form before paying anything"
+  ],
+  "countsAsLive": "The tool's card resolves on startupaideas.com (under /latest, /explore, or its category page) with logo, description, and a Visit link",
+  "unknowns": [
+    "Whether listing is free, freemium, or paid — no pricing page was reachable pre-login",
+    "Review turnaround and rejection criteria",
+    "Link type (dofollow/nofollow) on the Visit button"
+  ]
+}

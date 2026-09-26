@@ -1,0 +1,36 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "darkmodedesign.com",
+  "name": "Dark Mode Design",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://darkmodedesign.com/",
+      "title": "Dark Mode Design — curated gallery of dark-mode websites; 'Submit a site' is a mailto:hello@darkmodedesign.com?subject=Site%20Submission; cards link out to the featured sites"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "The site must genuinely use a dark-mode design — this is a single-theme design showcase",
+    "Submission is email: hello@darkmodedesign.com with subject 'Site Submission' (the 'Submit a site' link is a mailto)",
+    "Curated — the maintainer picks what appears; each card links out to the site",
+    "Sponsored slots exist (a Mobbin card marked 'Sponsored')"
+  ],
+  "preparation": [
+    "A dark-mode-first site worth screenshotting",
+    "Email ready for hello@darkmodedesign.com"
+  ],
+  "workflow": [
+    "Email hello@darkmodedesign.com with subject 'Site Submission' and the URL",
+    "If selected, a screenshot card appears in the gallery linking to your site"
+  ],
+  "watchFor": [
+    "Single-theme curation — light-themed products don't belong",
+    "Hand-maintained — slow and selective",
+    "Niche value: a design-community backlink, not a launch audience"
+  ],
+  "countsAsLive": "A card for the site appears in the Dark Mode Design gallery",
+  "unknowns": ["Curation cadence", "Whether links are followed"]
+}

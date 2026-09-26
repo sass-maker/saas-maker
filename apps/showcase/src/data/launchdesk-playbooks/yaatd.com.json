@@ -1,0 +1,45 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "yaatd.com",
+  "name": "YAATD (Yet Another AI Tools Directory)",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://yaatd.com/",
+      "title": "Homepage \u2014 live SvelteKit SPA, dark/light theme, JS-rendered directory"
+    },
+    {
+      "url": "https://yaatd.com/submit/",
+      "title": "'Submit your AI tool' \u2014 multi-step wizard (Fill the form \u2192 review \u2192 publish)"
+    },
+    {
+      "url": "https://yaatd.com/sitemap.xml",
+      "title": "Sitemap \u2014 confirms /submit/ and per-tool /t/<slug>/ listing pages"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "AI tools only \u2014 directory is organized into /t/<slug>/ tool pages and /categories/",
+    "Submission is a multi-step wizard at /submit/ ('Start submission \u2192 Fill the form \u2014 Title, link, description')",
+    "Entire site is JS-rendered SvelteKit \u2014 the wizard requires a JS-capable client"
+  ],
+  "preparation": ["Tool title", "Tool URL", "Description text", "Category selection"],
+  "workflow": [
+    "Open https://yaatd.com/submit/ in a JS-capable browser",
+    "Step through the wizard: fill title, link, description, category",
+    "Review and publish"
+  ],
+  "watchFor": [
+    "SPA-only \u2014 no SSR fallback; curl/static fetches return an empty shell",
+    "Pricing/free status could not be determined from the static shell \u2014 verify inside the wizard before assuming free",
+    "Young-looking directory (low DR in seed data) \u2014 treat reach expectations accordingly"
+  ],
+  "countsAsLive": "The tool appears at yaatd.com/t/<slug>/ and in its category listing",
+  "unknowns": [
+    "Whether listing is free or paid \u2014 wizard is JS-gated",
+    "Moderation/approval lag",
+    "Link type (dofollow vs nofollow) on published listings"
+  ]
+}

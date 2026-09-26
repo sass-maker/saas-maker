@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "askaiforit.com",
+  "name": "Ask AI For IT",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://askaiforit.com/",
+      "title": "Homepage — SaaS & AI tools directory with featured listings"
+    },
+    {
+      "url": "https://askaiforit.com/pricing",
+      "title": "Pricing — single plan: Featured Listing $9.99 one-time, 48h manual review, dofollow link"
+    },
+    {
+      "url": "https://askaiforit.com/submit/continue",
+      "title": "Submit entry — redirects to Google sign-in"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "No adult content or illegal services (stated on pricing page)",
+    "Google account required — 'Submit Tool' leads to a sign-in wall with 'Continue with Google' as the only visible option",
+    "Listing costs $9.99 one-time; no free plan is shown"
+  ],
+  "preparation": [
+    "Google account for login",
+    "Tool name, URL, description, category, pricing model (listings display 'Free trial from $X' style price labels)",
+    "$9.99 payment"
+  ],
+  "workflow": [
+    "Open https://askaiforit.com/submit/continue and sign in with Google",
+    "Select the Featured Listing plan at /select-plan/4 ($9.99) or reach it via the pricing page",
+    "Complete the tool details form (behind login — fields not publicly visible)",
+    "Manual review within 48 hours; listing goes live featured at the top of the homepage"
+  ],
+  "watchFor": [
+    "No free route — the only plan advertised is the $9.99 featured listing",
+    "Google OAuth is the only visible login method",
+    "Promises 'permanent dofollow link' — verify rel attributes after publish",
+    "Small directory; every homepage item is 'Featured', suggesting low organic volume"
+  ],
+  "countsAsLive": "The tool has a public /tools/<slug> page on askaiforit.com and appears under Recently added picks / category pages",
+  "unknowns": [
+    "Form fields after login",
+    "Whether a free submission exists for logged-in users (none advertised)",
+    "Review turnaround in practice"
+  ]
+}

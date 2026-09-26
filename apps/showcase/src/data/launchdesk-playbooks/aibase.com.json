@@ -1,0 +1,56 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aibase.com",
+  "name": "AIBase",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://app.aibase.com/",
+      "title": "AI tools directory — '20,382+ of the best AI products and tools, updated daily'"
+    },
+    {
+      "url": "https://app.aibase.com/submission",
+      "title": "Submission route — returned HTTP 429 (rate-limited) at fetch time; path exists per batch source but form contents unverified"
+    },
+    {
+      "url": "https://www.aibase.com/partnership",
+      "title": "Business Cooperation page — 'Submit your product and let more people know about it'; contact is via a QR code (WeChat-era flow)"
+    },
+    {
+      "url": "https://www.aibase.com/",
+      "title": "Main site — Chinese AI news + tools platform (aibase.cn origin); EN version available"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "AI product/tool — the directory is exclusively AI products across rankings and categories",
+    "The submission app lives at app.aibase.com — account likely required ('Join Now' links to /vip membership page)",
+    "Business/promotion inquiries route through a QR-code contact on /partnership — primarily WeChat, which may be awkward for non-Chinese vendors"
+  ],
+  "preparation": [
+    "Product name, URL, English description, logo, category",
+    "Account on aibase.com if the submission form requires login",
+    "For partnership/promotion: a way to scan and use the WeChat QR contact"
+  ],
+  "workflow": [
+    "Open https://app.aibase.com/submission in a browser (429 rate-limits hit automated fetches — retry slowly)",
+    "If the form is login-gated, register via 'Join Now'",
+    "Submit product details; products appear as /details/<id> pages in the app.aibase.com catalog",
+    "For paid promotion/media cooperation, use the QR contact on aibase.com/partnership"
+  ],
+  "watchFor": [
+    "Rate-limiting (429) on app.aibase.com — space out requests",
+    "The platform is Chinese (aibase.cn origin) — the EN UI exists but review/contact may be China-timezone and WeChat-based",
+    "Pricing/cost for listing is not publicly stated — could not confirm whether the free tier exists",
+    "The 'Join Now' link goes to a /vip page — membership may be paid"
+  ],
+  "countsAsLive": "The product gets a public detail page at app.aibase.com/details/<id> appearing in the tools catalog/rankings",
+  "unknowns": [
+    "Exact submission form fields and whether listing is free or paid",
+    "Review turnaround",
+    "Whether product-page outbound links are dofollow",
+    "Whether non-Chinese products are routinely accepted"
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "appleinsider.com",
+  "name": "AppleInsider",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://appleinsider.com/contact",
+      "title": "Contact AppleInsider — news@appleinsider.com; anonymous tip form; Signal/SecureDrop/Wickr/PGP options; editor emails in bios (content read via search result; direct fetch blocked 403)"
+    },
+    {
+      "url": "https://appleinsider.com/help/ethics",
+      "title": "AppleInsider Ethics Policy — deals group contact deals@appleinsider.com (content read via search result)"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Not a directory — earned editorial only; no listing product",
+    "News tips go to news@appleinsider.com or the anonymous tip form on the contact page",
+    "Individual editors can be emailed directly — addresses are in their author bios",
+    "Secure channels available: PGP (keys.openpgp.org fingerprint published), Signal, SecureDrop, Wickr (AppleInsider), plus postal mail to Quiller Media, Mamaroneck NY",
+    "Apple-ecosystem focus: apps, Apple devices, accessories, deals — a SaaS product needs an Apple/Mac/iOS angle"
+  ],
+  "preparation": [
+    "An Apple-ecosystem angle — Mac/iOS app launch, accessory, or Apple-adjacent service",
+    "Concise tip for news@appleinsider.com or the anonymous form",
+    "Editor emails found in their bio pages for targeted pitches"
+  ],
+  "workflow": [
+    "Send the tip/press release to news@appleinsider.com (or a specific editor from their bio)",
+    "For anonymous or sensitive material use the tip form, Signal, SecureDrop, or Wickr",
+    "Deals/commerce feedback goes to deals@appleinsider.com",
+    "Coverage, if it happens, is a staff-written article — no listing page is created"
+  ],
+  "watchFor": [
+    "PGP encrypts content but not your sender address — use the anonymous channels if identity protection matters",
+    "Apple-ecosystem remit only — generic SaaS pitches are off-beat",
+    "Writing for the site is a hiring process (jobs@appleinsider.com), not a guest-post route",
+    "appleinsider.com blocked automated fetch (403) this session — details verified via search results"
+  ],
+  "countsAsLive": "An AppleInsider article mentioning the product is published at appleinsider.com",
+  "unknowns": [
+    "Review-unit intake process — not documented on the contact page",
+    "Whether sponsored content exists as a product separate from display advertising"
+  ]
+}

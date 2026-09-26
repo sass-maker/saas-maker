@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "dang.ai",
+  "name": "Dang.ai",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://dang.ai/",
+      "title": "Dang.ai — live AI tools directory since 2022; 'Submit a tool' nav + footer links; NSFW section exists behind an 18 marker"
+    },
+    {
+      "url": "https://dang.ai/pricing",
+      "title": "Listing packages — Free $0 (requires verified crawlable backlink to dang.ai, 1 category, up to 4-week review); Basic $49 (no backlink, 4-day review, 2 categories, featured badge); Pro $30 + $19/mo (4 categories, ranking boost, newsletter feature, hide alternatives); NSFW submissions use /pricing?content=adult"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free tier exists but requires a crawlable dofollow backlink to dang.ai that must stay live for the listing to remain active, 1 category, and up to 4-week review — the backlink requirement makes it reciprocal, not clean-free"
+  ],
+  "requirements": [
+    "An AI-adjacent product (the directory is AI tools and services; NSFW tools have a separate submission track)",
+    "An account (all package CTAs route through /login?next=/pricing)",
+    "Free tier: crawlable backlink to dang.ai on your site; Basic $49 or Pro $30+$19/mo via Stripe for no-backlink listings",
+    "Intake form unlocks only after the first step (backlink verification or Stripe checkout)",
+    "Review times: free up to 4 weeks, Basic 4 days, Pro 2 days"
+  ],
+  "preparation": [
+    "Tool name, URL, description, category selection (1/2/4 categories by tier)",
+    "For the free tier: place a crawlable backlink to dang.ai on your site BEFORE submitting — it is verified",
+    "NSFW products use the /pricing?content=adult track"
+  ],
+  "workflow": [
+    "Click 'Submit'/'Submit a tool' — this routes to /pricing",
+    "Choose Free (backlink verification), Basic, or Pro; create an account",
+    "Free path: pass backlink verification, then the intake form unlocks",
+    "Paid path: complete Stripe checkout, then the intake form unlocks",
+    "Fill the intake form and wait for review (4 weeks free / 4 days Basic / 2 days Pro)"
+  ],
+  "watchFor": [
+    "Free listing is conditional on a live backlink — if the backlink is removed the listing deactivates",
+    "Do not submit a non-AI product — the entire catalog is AI tools",
+    "NSFW content goes through the adult track, not the standard form",
+    "The 'Submit' nav link lands on /login — you must create an account before the intake form unlocks"
+  ],
+  "countsAsLive": "The tool appears as a listing page at dang.ai/tool/<slug> and in its category",
+  "unknowns": [
+    "Rejection criteria beyond category fit",
+    "Whether free-tier listings can later upgrade to paid"
+  ]
+}

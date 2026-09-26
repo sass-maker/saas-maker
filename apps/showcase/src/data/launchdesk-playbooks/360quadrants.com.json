@@ -1,0 +1,42 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "360quadrants.com",
+  "name": "360Quadrants",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://360quadrants.com/",
+      "title": "360Quadrants — MarketsandMarkets analyst quadrant platform; 'analyst-verified insights' across 7,000+ micro-markets, 96,000+ companies; 'Purchase Request'/'Request Sample Report' CTAs; contact info@360quadrants.com / +1 888 600 6441"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "unknown",
+  "conditions": [
+    "No submission route — company placement in quadrants is analyst-driven (MarketsandMarkets methodology); vendors can't self-list"
+  ],
+  "requirements": [
+    "B2B/emerging-tech market presence — quadrants map vendors in micro-markets (AI, cybersecurity, GPUaaS, knowledge graphs, etc.)",
+    "Analyst evaluation — positions come from MarketsandMarkets' evaluation journey, not submissions",
+    "The commercial model is report sales + vendor engagement — a 'Companies' directory exists but profiles are analyst-curated",
+    "Contact route: info@360quadrants.com or the LiveChat widget"
+  ],
+  "preparation": [
+    "Analyst-relations approach — materials a MnM analyst could use (product docs, customer evidence, market positioning)"
+  ],
+  "workflow": [
+    "Contact 360Quadrants/MarketsandMarkets via info@360quadrants.com or the on-site LiveChat",
+    "Ask about inclusion criteria for the relevant micro-market quadrant",
+    "Commercial briefing/relationship likely required for evaluation"
+  ],
+  "watchFor": [
+    "Analyst-firm model — quadrant placement typically follows briefings/engagement, not a form",
+    "Vendor-profile claims may exist via the signup system, but curation is theirs",
+    "This is B2B procurement research — consumer/startup-launch fit is weak"
+  ],
+  "countsAsLive": "The company appears as a vendor in a 360Quadrants micro-market quadrant",
+  "unknowns": [
+    "Whether vendors can claim/update their own profiles",
+    "Cost of analyst engagement/briefings"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "builtatlightspeed.com",
+  "name": "Built At Lightspeed",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.builtatlightspeed.com/submit/opensource",
+      "title": "Submit Your Listing — $79 one-time per listing, instant publish, dofollow link; account via email or Google"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Templates, themes, UI kits, boilerplates for the modern stack ONLY (Next.js, Astro, React, Vue, Tailwind, Webflow, etc.) — a SaaS product that isn't a template/theme doesn't fit",
+    "$79 one-time per listing — 'no commission, no monthly fee, no charge to keep a published listing online'",
+    "Account required (email or Google); creating a brand is free",
+    "Exception: if they already seeded your product, claiming the listing is FREE and transfers the whole brand"
+  ],
+  "preparation": [
+    "Title, description, screenshots",
+    "The stack it's built on (Next.js/Astro/Tailwind etc.)",
+    "Two links: demo URL and buy/sales page URL",
+    "Account email or Google login"
+  ],
+  "workflow": [
+    "Check if your product is already seeded — if so, claim it free instead of paying",
+    "Create an account (email or Google), create a brand",
+    "Draft the listing — AI-assisted: enter your URL and it drafts the listing with screenshots",
+    "Pay $79 once and publish — instant, no review queue",
+    "Edit/update the listing anytime from the account"
+  ],
+  "watchFor": [
+    "Batch seed path /submit/opensource works but the generic route is /submit",
+    "Niche fit: only for themes/templates/UI kits/boilerplates — don't submit a general SaaS",
+    "They don't process sales — the dofollow link points to YOUR sell page",
+    "New listings get top placement on homepage and category pages ordered by publish date"
+  ],
+  "countsAsLive": "The listing page is immediately public and appears at the top of the homepage and its category (ordered by published date)",
+  "unknowns": [
+    "Whether unsuitable listings get refunded/removed post-publish",
+    "Traffic levels beyond 'strong traffic' marketing copy",
+    "Refund policy if the listing doesn't fit"
+  ]
+}

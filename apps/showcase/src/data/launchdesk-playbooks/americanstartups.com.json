@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "americanstartups.com",
+  "name": "American Startups",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://americanstartups.com/",
+      "title": "Homepage — US entrepreneur content site (Ideas, News, AI sections); latest news items dated June 2025, some content from 2018 — semi-active"
+    },
+    {
+      "url": "https://americanstartups.com/share-your-story/",
+      "title": "Share Your Story — 'Tell Us A Few Words About Your Case'; embeds Ninja Form id=2 (doesn't render server-side) + contact email (Cloudflare-obfuscated)"
+    },
+    {
+      "url": "https://americanstartups.com/advertise-with-us/",
+      "title": "Advertise With Us — linked in footer; indicates a paid channel exists"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free route is a story pitch via the Ninja Form on /share-your-story/ or the contact email — publication is editorial and there's no self-serve listing",
+    "A paid 'Advertise With Us' channel exists as the alternative"
+  ],
+  "requirements": [
+    "A startup story angle — the site covers US entrepreneurship: startup stories, funding news, success keys, tools",
+    "US-focus implied by the brand ('Empowering U.S. entrepreneurs')",
+    "The Ninja Form requires a working JavaScript render; email is the fallback"
+  ],
+  "preparation": [
+    "Founder/startup story narrative",
+    "Company details, website, founding info",
+    "Contact email (site shows it obfuscated; also reachable via the form or /contact-us/)"
+  ],
+  "workflow": [
+    "Open https://americanstartups.com/share-your-story/ in a real browser so the Ninja Form renders",
+    "Submit the story pitch through the form",
+    "Fallback: use the /contact-us/ page or the published email",
+    "Await editorial reply — no tracking exists"
+  ],
+  "watchFor": [
+    "Freshness is mixed: latest news June 2025, but evergreen content dates to 2018 — editorial may be sporadic",
+    "The form is JS-only — verify it actually submits",
+    "Expect a sponsorship counter-offer given the prominent Advertise page",
+    "Low-value destination overall; don't pay for placement here"
+  ],
+  "countsAsLive": "A story/article mentioning the startup is published on americanstartups.com",
+  "unknowns": [
+    "Editorial response rate — site may be minimally maintained",
+    "Form fields (Ninja Form doesn't render to non-JS fetches)",
+    "Advertising rates"
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "techjury.net",
+  "name": "TechJury",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://techjury.net/",
+      "title": "Homepage — SaaS coupons + 'data-backed' product reviews site (25,751+ coupons, 138 categories)"
+    },
+    {
+      "url": "https://techjury.net/contact-us/",
+      "title": "Contact page — 'If you're a company interested in seeing your products or services reviewed on our pages, let's talk!'"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "No self-serve submission — coverage is editorial. Companies request a review via the contact form or email",
+    "Fit: software/SaaS products they can test — 'Our team thoroughly tests every software subscription before recommending it'",
+    "Site also runs exclusive coupons/deals — a discount offer improves odds of a deal listing",
+    "Affiliate-supported ('we may earn a commission') — expect affiliate-link economics to matter for commercial placement"
+  ],
+  "preparation": [
+    "A pitch explaining what the product does and why it merits a data-backed review",
+    "Product access for their testing team (account/license)",
+    "Optional: an exclusive coupon/deal for their audience (their primary content format is deals + reviews)",
+    "Contact via the form at https://techjury.net/contact-us/"
+  ],
+  "workflow": [
+    "Open https://techjury.net/contact-us/ and use the contact form (or the listed email)",
+    "Request a product review and/or propose an exclusive coupon deal",
+    "If accepted, their team tests the software and publishes a review/deal listing"
+  ],
+  "watchFor": [
+    "Review is not guaranteed — editorial discretion; no public review criteria or SLA",
+    "Site blocks simple bots (403 on plain fetches) — use a real browser UA",
+    "The site is primarily a coupons/affiliate engine now — a review without a deal or affiliate program may be deprioritized",
+    "Operator is IMPROV MEDIA - FZCO (Dubai) — portfolio media site, not an indie community"
+  ],
+  "countsAsLive": "A review article under /product-analysis/ or a coupon/deal page featuring your product is published on techjury.net",
+  "unknowns": [
+    "Whether reviews are ever paid/sponsored and on what terms",
+    "Response rate to cold review requests",
+    "Whether product links in reviews are dofollow or affiliate-wrapped"
+  ]
+}

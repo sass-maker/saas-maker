@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "apps.microsoft.com",
+  "name": "Microsoft Store",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/apps/publish/partner-center/open-a-developer-account",
+      "title": "Steps to open a Microsoft Store developer account in Partner Center - Microsoft Learn"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "No registration fee under the new onboarding flow started at https://storedeveloper.microsoft.com (entry via Partner Center/Xbox/Visual Studio shows the legacy paid flow instead)",
+    "Individual accounts require government-issued ID + selfie identity verification on a mobile device",
+    "Company accounts require business verification: a DUNS number (fast, automated) or official incorporation/registration documents routed to manual review, plus a work email on the organization's domain (mismatched domain triggers extra domain-ownership documentation)"
+  ],
+  "requirements": [
+    "This is an app-store listing, not a backlink submission — you need a real Windows/MSIX-packaged app or game to publish via Partner Center",
+    "Individual account is for publishing not in relation to a business/trade/profession; Company account for anyone publishing commercially — switching Individual→Company is not supported, choose correctly up front",
+    "Microsoft account (MSA) required; Company accounts may sign in with a Microsoft Entra ID work account, which onboards the whole tenant"
+  ],
+  "preparation": [
+    "Government-issued photo ID and a phone camera for the selfie/ID verification step",
+    "For Company: DUNS number or official business registration document, and a work email on the company domain",
+    "A buildable/packaged app (MSIX) and store listing assets ready in Partner Center",
+    "Publisher display name and support/contact details for the listing"
+  ],
+  "workflow": [
+    "Go to https://storedeveloper.microsoft.com and click 'Get started for free'",
+    "Select Individual developer or Company account",
+    "Sign in with a Microsoft account (personal MSA, or Entra ID work account for Company)",
+    "Complete identity verification (ID + selfie for Individual; business docs/DUNS for Company)",
+    "Finish profile details and click 'Go to Partner Center dashboard'",
+    "On the Apps & Games overview page, create a new app submission and complete the Store listing (name, description, screenshots, pricing, age ratings)",
+    "Submit for certification; after approval the app appears on apps.microsoft.com"
+  ],
+  "watchFor": [
+    "The zero-fee flow only starts at storedeveloper.microsoft.com — other entry points show the legacy flow",
+    "Individual→Company conversion is not supported; a wrong choice means creating a new account",
+    "Company verification without a DUNS number goes to slower manual review",
+    "After account setup it can take ~5 minutes for the Apps & Games tile to appear in Partner Center"
+  ],
+  "countsAsLive": "The app's public listing page is reachable at apps.microsoft.com/detail/<id> (or via Store search) after certification approval",
+  "unknowns": [
+    "Certification review turnaround time for a new app submission",
+    "Whether Microsoft Store web listing links are dofollow for the developer website field",
+    "Exact policy for non-packaged PWA/web submissions under the new flow"
+  ]
+}

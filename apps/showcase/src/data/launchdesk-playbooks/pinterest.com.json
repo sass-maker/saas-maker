@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "pinterest.com",
+  "name": "Pinterest",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://help.pinterest.com/en/business/article/get-a-business-account",
+      "title": "Pinterest Help — Get a business account (create new or convert personal)"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Business account is free; sign-up email must not already be tied to an existing Pinterest account",
+    "New business accounts can only be created from a desktop device (per Help article)",
+    "Converting a personal account requires it to be public — private accounts must switch to public first, and linked accounts must be unlinked",
+    "Creating an account means accepting Pinterest's Business Terms of Service and Privacy Policy"
+  ],
+  "preparation": [
+    "A business email not already used on Pinterest",
+    "Business description details for the 'Build your profile' and 'Describe your business' steps",
+    "Product website URL (optional profile field)",
+    "Pin-worthy original visual assets — this is a content platform, not a directory; the 'listing' is Pins/boards on a public profile"
+  ],
+  "workflow": [
+    "On desktop, go to pinterest.com, click Sign up, then 'Create a business account' (or convert an existing personal account via Settings > Account management > Convert to a business account)",
+    "Enter email, password, age and create the account",
+    "Complete 'Build your profile' and 'Describe your business' fields, including the website URL",
+    "Publish boards and Pins that link back to the product site — Pins carry the destination URL"
+  ],
+  "watchFor": [
+    "New business account creation is desktop-only per the Help article",
+    "This is a social/content platform: the payoff is a public profile + Pins, not a directory listing — catalog 'link' value comes from Pin destination links and the profile website field",
+    "Ads upsell during onboarding ('Select if you want to run ads') — skippable",
+    "Batch claim 'link=nofollow' is plausible for Pin links but was not verified on the fetched page"
+  ],
+  "countsAsLive": "A public business profile at pinterest.com/<handle> with the website field set and published Pins linking to the product URL",
+  "unknowns": [
+    "Whether outbound Pin/profile links are followed or nofollow (not stated on the fetched page)",
+    "Any review/holding period for new business profiles"
+  ]
+}

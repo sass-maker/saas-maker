@@ -1,0 +1,45 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "spacebandits.io",
+  "name": "Space Bandits",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.spacebandits.io/startups",
+      "title": "Startups directory — 206 hand-picked space companies, pre-seed to Series B, filterable by industry/country/stage"
+    },
+    {
+      "url": "https://www.spacebandits.io/about",
+      "title": "About — 'If you're building a space startup and want to be listed... email hello@spacebandits.io. It's free, and listings are never pay-to-play'"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Space startups ONLY — sectors include launch, satellites, propulsion, earth observation, in-space manufacturing, space software, etc.",
+    "Pre-seed to Series B scope — 'the companies that might become giants'; no defence primes, no space tourism",
+    "Free, explicitly 'never pay-to-play' — no placements, stages, or statuses can be bought",
+    "Curated: every entry is hand-verified against the public record (see /how-we-verify)"
+  ],
+  "preparation": [
+    "A genuine space-economy product — a generic SaaS will not be listed",
+    "Pitch email: what the company does, sector fit, founding year, HQ country",
+    "Publicly verifiable funding/stage info — every figure on the site carries a source link",
+    "Optional: founder availability for a written interview (27 published)"
+  ],
+  "workflow": [
+    "Email hello@spacebandits.io requesting a listing (or an interview)",
+    "Provide sector, country, founding year, stage, and source-able funding details",
+    "The maintainer (Sarwech Shar) hand-curates — expect verification against public record before the entry goes live",
+    "Listed companies get a profile card in the /startups directory; there's a free 'Get the badge' option for founders (/badge)"
+  ],
+  "watchFor": [
+    "Narrow fit: only space-industry startups — do not pitch a general SaaS",
+    "Statuses are honest, not flattering: entries are marked Acquired, Shut down, Dormant, or Graduated from the public record — a status cannot be bought or hidden",
+    "Solo-curated since 2019 — turnaround depends on one maintainer",
+    "Sponsorships exist but are 'clearly labeled' and separate from listings"
+  ],
+  "countsAsLive": "A company card for the startup appears in the /startups directory with sector, country, founding year, and stage",
+  "unknowns": ["Turnaround time for listing requests", "Whether outbound links are dofollow"]
+}

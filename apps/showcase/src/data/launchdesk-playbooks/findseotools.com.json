@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "findseotools.com",
+  "name": "Find SEO Tools",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://findseotools.com/",
+      "title": "Homepage — 'The place to find SEO tools', 240+ tools across categories; '+ Submit Tool' links to /submit"
+    },
+    {
+      "url": "https://findseotools.com/submit",
+      "title": "Submit a tool — Webflow-style form for new tools or updates to already-published tools"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Tool must be relevant to SEOs / digital marketers (categories: Technical SEO, Content, Backlinks, Monitoring & Reporting, Keyword, Tool Suites, platform-specific SEO, training courses)",
+    "No pricing or fee is mentioned on the submit form — submission is free",
+    "Submissions are reviewed for category fit ('Your tool will be reviewed to see if it fits into other categories')",
+    "Non-SEO products would not fit the directory's scope"
+  ],
+  "preparation": [
+    "Tool name and a ≤9-word value description",
+    "Best-fit category plus pricing model: Paid / Free / Free Options (Free Options = permanently free tier, not a trial)",
+    "One-or-two-paragraph description starting with the tool name",
+    "Website URL, Twitter/X account, launch year",
+    "Image URL representing the tool (1280×800 or 8:5); a site screenshot is used as fallback",
+    "Submitter name + email; note whether you are the founder/creator"
+  ],
+  "workflow": [
+    "Open https://findseotools.com/submit",
+    "Choose 'New Tool' (or 'Already Published' for updates)",
+    "Fill tool name, ≤9-word pitch, category, pricing model, website, description, Twitter, launch year, image URL",
+    "Add submitter details and submit — success shows 'Thank you! Your submission has been received!'",
+    "Fallback if the form fails: email submit@findseotools.com"
+  ],
+  "watchFor": [
+    "The ≤9-word tagline is a hard format constraint — draft it first",
+    "'Free Options' specifically means a permanent free tier; don't misclassify a free trial",
+    "Founder/creators get an extra opt-in ('we'd love to hear a little about you') — likely used for editorial depth",
+    "Form is an embedded Webflow/Airtable-style embed; errors surface inline only"
+  ],
+  "countsAsLive": "The tool appears as a card on https://findseotools.com/all-tools or under its category page with website link, pricing badge, and key features",
+  "unknowns": [
+    "Review turnaround time",
+    "Whether listings include a followed outbound link",
+    "Criteria for 'Featured Tool' badges"
+  ]
+}

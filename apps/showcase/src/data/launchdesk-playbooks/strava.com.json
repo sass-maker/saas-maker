@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "strava.com",
+  "name": "Strava Clubs",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.strava.com/register",
+      "title": "Strava sign-up — free account via Google, Apple, or email"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free personal account — sign up with Google, Apple, or email (email + country fields shown)",
+    "Strava is a fitness community; the catalog entry's 'listing' is really a profile or a Club — there is no product-directory submission",
+    "Club creation requires an existing account; clubs can be brand-related but are community entities, not listings"
+  ],
+  "preparation": [
+    "Email or Google/Apple credentials",
+    "Country (required registration field)",
+    "Brand name, logo, and website for a Club profile if creating one",
+    "A legitimate fitness/athletic angle — Strava clubs are for sports communities; an unrelated SaaS promo club would be off-norm"
+  ],
+  "workflow": [
+    "Register free at strava.com/register (Google, Apple, or email + country)",
+    "Complete the profile (website field if available)",
+    "Create a Club for the brand/product community and set its website/description",
+    "Post club content; club pages are public and indexable"
+  ],
+  "watchFor": [
+    "Poor product-directory fit — this is an athlete community; treat only if the product has a genuine fitness/sport angle",
+    "Club creation flow details were not verified (requires logged-in account)",
+    "Subscription upsell exists but is not required for signup or clubs",
+    "Outbound link attributes unverified"
+  ],
+  "countsAsLive": "A public strava.com/clubs/<club-name> page (or profile) rendering the brand description and website link",
+  "unknowns": [
+    "Club creation requirements (account age, activity minimums)",
+    "Whether club website links are followed",
+    "Whether club creation is restricted to certain club types (e.g., brand vs. local)"
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "buzzfeednews.com",
+  "name": "BuzzFeed News",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.buzzfeednews.com/",
+      "title": "BuzzFeed News homepage — still resolving and publishing, but front page leads with 'A Final Editor's Note' and an oral history of the newsroom (division shuttered in 2023)"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "Not a directory — historical coverage was earned editorial; no submission form or listing product exists",
+    "The newsroom was wound down (the homepage still features 'A Final Editor's Note' and 'The Ultimate Oral History Of BuzzFeed News'); the domain continues to serve fresh entertainment/celebrity content that appears to be syndicated BuzzFeed/HuffPost material",
+    "No public pitch, tip, or submission page was found on the current site"
+  ],
+  "preparation": [
+    "Verify whether any editorial operation still reads inbound pitches before investing effort — the dedicated news division is closed",
+    "If pursuing BuzzFeed-brand coverage, treat buzzfeed.com (commerce/lifestyle side, still operating) as the live property instead"
+  ],
+  "workflow": [
+    "No live submission flow identified — site renders sections and fresh-dated articles but the originating newsroom is gone",
+    "If attempting anyway, pitch via BuzzFeed's general contact channels and expect the buzzfeednews.com domain to be a legacy shell"
+  ],
+  "watchFor": [
+    "Article timestamps on the homepage are fresh, which makes the site look alive — but the featured pieces are farewell posts and the bylines map to HuffPost/BuzzFeed staff, suggesting syndicated content",
+    "Anyone selling 'BuzzFeed News placement' is likely reselling guest-post spam on a defunct-newsroom domain",
+    "A link from this domain is not the editorial endorsement it once was"
+  ],
+  "countsAsLive": "N/A — no listing surface; only earned-media articles, and the newsroom that produced them is closed",
+  "unknowns": [
+    "Whether any editorial staff still accepts pitches for content on this domain",
+    "Whether the current content pipeline is automated syndication or staffed"
+  ]
+}

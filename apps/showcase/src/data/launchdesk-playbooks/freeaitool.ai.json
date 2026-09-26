@@ -1,0 +1,42 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "freeaitool.ai",
+  "name": "Free AI Tool",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://freeaitool.ai/",
+      "title": "Homepage — live curated directory of free AI tools; FAQ says the team curates tools; contact email andy@freeaitool.ai in footer"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Only free AI tools are listed ('the best free AI tools... at zero cost'); freemium entries exist but the positioning is no-cost tools",
+    "No public submission form — curation is done by their team; the only intake is the footer contact email andy@freeaitool.ai",
+    "Listing pages show monthly-visit estimates and a pricing tag (100% Free / Freemium / Free Trial)"
+  ],
+  "preparation": [
+    "Product name, URL, short description, and the free-tier story",
+    "A concise pitch email to andy@freeaitool.ai explaining the free offering",
+    "Fitting category (writing, image, video, code, voice, marketing, chatbot, etc.)"
+  ],
+  "workflow": [
+    "Draft a pitch email to andy@freeaitool.ai with product name, URL, description, and free-tier details",
+    "Reference the directory's format (tool pages carry tagline, description, pricing tag, monthly visits)",
+    "Follow up once if no response — no SLA exists"
+  ],
+  "watchFor": [
+    "Paid-only or primarily-paid products are off-positioning — the directory is 'free AI tools'",
+    "No self-serve intake; listing is entirely at the curator's discretion",
+    "Some listed tools are thinly veiled wrappers; bar appears low but thematic fit matters",
+    "NSFW-adjacent categories exist (face swap, baby generator) — check category adjacency"
+  ],
+  "countsAsLive": "The tool has a public /tool/<slug> page on freeaitool.ai appearing in New Added or its category",
+  "unknowns": [
+    "Whether they charge for listings — no pricing mentioned anywhere",
+    "Response rate for email pitches",
+    "Review criteria beyond free-tier availability"
+  ]
+}

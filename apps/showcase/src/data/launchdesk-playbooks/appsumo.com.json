@@ -1,0 +1,58 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "appsumo.com",
+  "name": "AppSumo",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://partners.appsumo.com/self-submission",
+      "title": "Partner self-submission portal — browser-rendered; points AI assistants to the listing brief docs"
+    },
+    {
+      "url": "https://partners.appsumo.com/docs/listing-brief.md",
+      "title": "Official listing brief — every field, limits, approval rules, pricing/deal structure, media specs, and MCP agent setup"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Listing a deal costs nothing up front, but the deal itself is a lifetime deal (LTD): buyers pay once for lifetime access, typically ~70%+ off regular pricing — the 'cost' is the deal economics, not a fee",
+    "Submission must pass AppSumo review before it goes live"
+  ],
+  "requirements": [
+    "A real software/digital product that can be sold as a lifetime deal via codes (redemption codes CSV) or licensing (webhook + redirect URLs that pass live tests)",
+    "Entry tier recommended at $49 or less with ~70%+ discount vs regular price; deals above that convert worse and are less likely to be accepted",
+    "Every image must be an accurate representation of the real product UI — no invented screens or implied capabilities",
+    "Dropdown fields (category, alternative-to, integrations, best-for, team size, stage, funding) must pick existing options — invented values are dropped at approval",
+    "Copy rules: sentence case, no emoji/exclamation marks/em dashes, banned marketing vocabulary (seamless, robust, leverage, etc.); never mention monthly/annual pricing or trials — it is a lifetime deal",
+    "Required before submit: product name (3–50 chars), category, tagline (3–100), secondary tagline, USP (15–40 chars), exactly-2 TL;DR bullets (≤128 chars each), alternative-to (≤3), integrations (≤5), best-for (≤3), media, pricing tiers (1–10), founder narrative, FAQ (6–8 pairs), support email and redemption instructions"
+  ],
+  "preparation": [
+    "Lifetime-deal economics decision: tiers (1–10), entry tier ideally ≤$49, ~70% off, scope limits by volume not core value",
+    "Redemption mechanism ready: codes deal = redeem URL + CSV of codes (header row, one per line); licensing deal = webhook + redirect URLs that pass AppSumo's live tests",
+    "Media shot list: 512×512 logo mark (no wordmark), ≥960×540 hero image of real UI, one gallery screenshot per feature story — missing images are the #1 stall reason",
+    "Company facts: founded date (YYYY-MM-DD), HQ, team size bracket, stage, funding stage",
+    "60-day refund window applies to buyers; support email required"
+  ],
+  "workflow": [
+    "Open https://partners.appsumo.com/self-submission and start a listing from the product URL",
+    "Fill every section in the editor: basic info, media, highlighted features (2–4 stories), pricing tiers + redemption, product story, FAQ",
+    "Optionally use the AppSumo MCP server (setup at /docs/agent-setup.md) to draft and fill fields via an assistant — it cannot submit without partner approval",
+    "Review the buyer-facing preview, fix anything the form flags (e.g. entry tier >$49), then submit for review",
+    "On approval the deal page goes live on appsumo.com"
+  ],
+  "watchFor": [
+    "Self-submission page is a JS app — it renders in a browser; the /docs/listing-brief.md spec is the authoritative field list",
+    "Invented dropdown values are silently dropped at approval — use the closest existing option",
+    "The editor reads the draft once on open — reload before reviewing edits",
+    "Lifetime access is a real commitment: plan feature/data limits and migration/export answers before listing",
+    "AppSumo buyers expect support; 60-day refund window means churned refunds if the product under-delivers"
+  ],
+  "countsAsLive": "The deal has a public product page on appsumo.com that buyers can purchase (not a draft or pending-review state in the partner portal)",
+  "unknowns": [
+    "Review turnaround and acceptance rate for self-submitted deals",
+    "AppSumo's revenue share on each sale (not stated on the pages fetched)",
+    "Whether marketplace listing alone yields an indexable public product page before any sales"
+  ]
+}

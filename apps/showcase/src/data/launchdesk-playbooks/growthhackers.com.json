@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "growthhackers.com",
+  "name": "GrowthHackers",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://growthhackers.com/",
+      "title": "Homepage — community join is via 'Apply to Join' (Tally form t.co/w8drRr) or community.growthhackers.com/signup"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Membership is by application ('Apply to Join' leads to a Tally form) — acceptance is gated, not instant signup",
+    "The old self-serve /signup URL returns 404; the live member portal is community.growthhackers.com/signup"
+  ],
+  "requirements": [
+    "Positioned for founders, heads of growth, marketers, product managers, and innovators — participation should be genuine growth/marketing discourse, not drop-a-link promotion",
+    "Community membership required before posting/participating"
+  ],
+  "preparation": [
+    "A credible growth/marketing profile or reason to join (the apply form vets applicants)",
+    "Product story framed as growth learnings if you later share it — the community values methodology over promotion"
+  ],
+  "workflow": [
+    "Go to https://growthhackers.com/ and click 'Apply to Join' (or open community.growthhackers.com/signup directly)",
+    "Complete the application (Tally form) and wait for acceptance",
+    "Once inside community.growthhackers.com, participate in discussions/AMAs and share the product only where self-promotion fits"
+  ],
+  "watchFor": [
+    "Not a launch directory — there is no 'submit your product' route; value is community participation",
+    "The old growthhackers.com/signup route is dead (404) — use the community subdomain",
+    "The site also sells services, university courses, and sponsorships — expect upsell surfaces",
+    "Spam/link-dropping in a curated expert community risks removal"
+  ],
+  "countsAsLive": "A member account on community.growthhackers.com is active and any posted thread/profile is publicly visible",
+  "unknowns": [
+    "Application acceptance criteria and turnaround",
+    "Whether profile/website links are follow or nofollow",
+    "Whether a product-specific listing feature exists inside the member portal"
+  ]
+}

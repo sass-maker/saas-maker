@@ -1,0 +1,42 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "designspiration.com",
+  "name": "Designspiration",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://designspiration.com/",
+      "title": "Designspiration homepage — 'Save & explore ideas that inspire your creativity'; signup/login, Get Pro tier, browser extension for saving images/links/notes/screenshots"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free account at designspiration.com/signup",
+    "Content is saved ('saves' at /save/<id>) — images, colors, links, notes, screenshots — via the browser extension or uploads",
+    "A paid 'Pro' tier exists (Get Pro) — scope of free vs pro features not fully documented publicly",
+    "The site is visual-inspiration focused — it fits design-studio/visual work, not a generic SaaS listing"
+  ],
+  "preparation": [
+    "Visual assets worth saving — screenshots, brand boards, imagery a designer audience would collect",
+    "A free account"
+  ],
+  "workflow": [
+    "Sign up at designspiration.com/signup",
+    "Install the browser extension or use on-site saving to post images/links",
+    "Saved items get public /save/ URLs and appear in the explore feed",
+    "Discovery is by visual similarity/color search — there is no product-profile page"
+  ],
+  "watchFor": [
+    "Weak catalog fit — it's a visual bookmarking community, not a startup directory; a SaaS landing page only makes sense as design-inspiration content",
+    "The site is JS-heavy; without JavaScript it renders almost nothing",
+    "Outbound link value is incidental — saves link back to source pages",
+    "Traffic/community activity appeared modest in this session's fetch"
+  ],
+  "countsAsLive": "Saved items appear publicly at designspiration.com/save/<id> and in explore feeds",
+  "unknowns": [
+    "What Pro adds over the free tier",
+    "Whether saves are meaningfully indexed by search engines"
+  ]
+}

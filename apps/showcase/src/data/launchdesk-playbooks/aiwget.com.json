@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aiwget.com",
+  "name": "AIWget",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://aiwget.com/submit",
+      "title": "Submit page — 'Paid submission'; form asks only tool name, website URL, contact email; one-time $19.90 or Unlimited $29.90/mo; Stripe/PayPal"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "AI-related tools only — FAQ: 'We do not include websites that are inaccessible, unrelated to AI, duplicate another listing, or fail review'",
+    "Payment upfront: $19.90 one-time ($26.90 list) or $29.90/mo Unlimited for multiple tools; card via Stripe or PayPal",
+    "Website must be accessible for review",
+    "Only three fields needed: tool name, website URL, contact email — AIWget writes the listing copy itself"
+  ],
+  "preparation": [
+    "Confirm the product is genuinely an AI tool",
+    "Tool name, canonical website URL, contact email",
+    "Payment method (Stripe card or PayPal)",
+    "A good public landing page — AIWget 'prepares a clear, search-friendly tool page using information available on your website', so your own copy is the listing source"
+  ],
+  "workflow": [
+    "Open https://aiwget.com/submit",
+    "Enter tool name, website URL, contact email",
+    "Choose one-time ($19.90) or Unlimited ($29.90/mo) submit type",
+    "Pay via Stripe/PayPal, then submit",
+    "One-time submissions reviewed within 48h; Unlimited members get a 24h window; refund issued if a paid one-time submission is not approved"
+  ],
+  "watchFor": [
+    "No free tier at all — the page is labeled 'Paid submission'",
+    "Dofollow link is a selling point, which makes this primarily a paid-link play; weigh SEO value of a paid dofollow directory link",
+    "Homepage placement is NOT permanent even though the listing page is — 'homepage placement changes as new tools are added'",
+    "Unlimited plan renews monthly until canceled — set a reminder to cancel",
+    "Published listings are non-refundable for traffic/performance; only rejected submissions get refunded",
+    "Login exists but the submit flow is pay-then-submit, so no account is strictly needed for a one-time listing"
+  ],
+  "countsAsLive": "A tool page is published on aiwget.com (browseable under /explore or a category page) with a link to your site",
+  "unknowns": [
+    "Actual traffic the directory drives",
+    "Whether the $19.90 vs $26.90 'list' pricing is permanent or a promo display",
+    "Review rejection rate — rejection reasons listed are access, AI-relevance, duplicates"
+  ]
+}

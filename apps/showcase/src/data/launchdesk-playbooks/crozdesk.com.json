@@ -1,0 +1,59 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "crozdesk.com",
+  "name": "Crozdesk",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://crozdesk.com/",
+      "title": "Homepage — 'List your product on Crozdesk / Apply to list your software'; free listing CTA plus Vendor links (Become a Vendor, Vendor Login, Claim a Listing, Vendor Policy)"
+    },
+    {
+      "url": "https://crozdesk.com/about-us",
+      "title": "About — 'List your software products on Crozdesk free of charge'; Vendor Portal; Apply to List / Claim a Listing paths"
+    },
+    {
+      "url": "https://blog.crozdesk.com/promote-saas-product/",
+      "title": "Crozdesk blog — vendor application flow: apply, verify, vendor account created, complete listing in portal, reviewed and approved usually within 48 hours"
+    },
+    {
+      "url": "https://crozdesk.com/claims/new",
+      "title": "Claim a Listing — claim an existing unmanaged listing; asks for a professional email, ideally on the same domain as the listing"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "B2B/business software products — the directory spans ~384 business software categories",
+    "Vendor must apply for a listing; the Crozdesk team verifies the application and creates a vendor account",
+    "If a listing already exists, use 'Claim a Listing' with a professional email — ideally on the same domain as the software listing",
+    "Listing is free; paid promotion campaigns exist as an optional add-on in the vendor portal"
+  ],
+  "preparation": [
+    "Product name and live public URL",
+    "Software category / business function mapping for the ~384 categories",
+    "Product description, logo, and screenshots (not strictly required but recommended)",
+    "Professional/work email — preferably matching the product domain"
+  ],
+  "workflow": [
+    "Check whether the product already has a listing; if yes use https://crozdesk.com/claims/new instead",
+    "Otherwise open the vendor application page (Apply to list your software — vendor portal at vendors.crozdesk.com) and complete the short application form",
+    "Wait for the team to verify the application and create the vendor account",
+    "Log in to the vendor portal, complete the listing with full product information, and submit",
+    "Team reviews and approves — usually within ~48 hours per the Crozdesk blog",
+    "Manage the listing afterwards via the vendor portal"
+  ],
+  "watchFor": [
+    "The batch's submission URL (vendor.revleads.com) does not match the current vendor portal (vendors.crozdesk.com) — use the crozdesk.com 'Apply to list your software' entry point",
+    "Paid 'promote your software' campaigns are offered inside the portal — the listing itself is free",
+    "Claim flow requires proving authority over an existing listing; use a matching-domain email",
+    "The batch's link claim was nofollow; actual link type on a live listing was not verified"
+  ],
+  "countsAsLive": "A public product profile page exists on crozdesk.com in a software category, indexed in the directory with user review capability",
+  "unknowns": [
+    "Exact fields of the vendor application form",
+    "Whether free listings' outbound links are dofollow",
+    "Whether verification ever rejects applicants and on what grounds"
+  ]
+}

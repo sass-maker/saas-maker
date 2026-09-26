@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "findanaitools.com",
+  "name": "There's an AI",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://findanaitools.com/",
+      "title": "Homepage — live 'There's an AI' curated AI tools directory with many categories and a Submit link"
+    },
+    {
+      "url": "https://findanaitools.com/s/submit",
+      "title": "Submit route — gated by sign-in: 'To prevent spam, some actions require being signed in' (Google OAuth, free)"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "AI tool — directory is AI-only across ~70 categories (audio, image, video, dev tools, SEO, dating, face-swap, etc.)",
+    "Free Google sign-in required before the submit form is shown",
+    "Sponsored 'Ad' slots exist on the homepage, separate from organic listing"
+  ],
+  "preparation": [
+    "Google account for OAuth sign-in",
+    "Product name, URL, tagline, description, logo, and best-fit category"
+  ],
+  "workflow": [
+    "Open https://findanaitools.com/s/submit",
+    "Sign in with Google (free)",
+    "Complete the tool submission form",
+    "Listing appears under the chosen category once approved"
+  ],
+  "watchFor": [
+    "Submit page is fully behind OAuth — form fields cannot be inspected without signing in",
+    "Domain branding is 'There's an AI' (theresanai.com for the newsletter); the findanaitools.com domain is the live directory",
+    "Site footer says © 2024 and top list says '2024' — freshness is uncertain despite live ads",
+    "Paid 'Ad' placements interleave with organic listings on the homepage"
+  ],
+  "countsAsLive": "The tool appears on a findanaitools.com category page and/or has a dedicated tool card linking out",
+  "unknowns": [
+    "Exact form fields and whether review is manual or instant (form behind OAuth)",
+    "Whether organic listings cost anything after sign-in",
+    "Review turnaround"
+  ]
+}

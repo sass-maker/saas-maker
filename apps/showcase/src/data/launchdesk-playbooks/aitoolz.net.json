@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aitoolz.net",
+  "name": "AI Toolz",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.saashub.com/aitoolz-net",
+      "title": "SaaSHub profile — describes Aitoolz.net as an 8,000+ tool AI directory; 'you can signup and share your own AI tools and Prompts for free'"
+    },
+    {
+      "url": "https://aitoolz.net/",
+      "title": "Homepage — returned HTTP 403 to the fetcher on every path tried; not directly readable"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Product should be an AI tool or AI-related resource — directory is AI-only",
+    "Free submission path: sign up for an account, then share your own AI tools and prompts (per SaaSHub listing)",
+    "Site supports upvotes, favorites, and user-curated public collections"
+  ],
+  "preparation": [
+    "Product name, URL, and a short description",
+    "Category selection (image generation, text, coding assistants, productivity, etc.)",
+    "Optional: prompts/copy-prompt text if listing a prompt-based tool",
+    "An email address for account signup"
+  ],
+  "workflow": [
+    "Open https://aitoolz.net/ and register an account (signup is free)",
+    "Use the site's share/submit flow to add the AI tool with name, URL, description, and category",
+    "Listing becomes eligible for community upvotes, favorites, and inclusion in user collections"
+  ],
+  "watchFor": [
+    "The site 403s automated fetches (Cloudflare-style block) — submission likely requires an interactive browser session",
+    "aitoolz.net is distinct from aitoolzdir.com and aitoolz.ai, which are separate paid-submit directories — do not confuse them",
+    "Low-DR community directory; value is a listing page, not meaningful traffic"
+  ],
+  "countsAsLive": "The tool has a public detail page on aitoolz.net reachable while logged out, appearing in its category listing",
+  "unknowns": [
+    "Exact submission URL and form fields — the site blocked all direct fetches",
+    "Moderation/review turnaround after submission",
+    "Whether account creation requires email verification or social login"
+  ]
+}

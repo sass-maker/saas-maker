@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "digitaltrends.com",
+  "name": "Digital Trends",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.digitaltrends.com/contact-us/",
+      "title": "Digital Trends Contact Us — editorial@digitaltrends.com for suggestions/press releases; 'does not accept third-party article submissions' (content read via search result; direct fetch blocked 403)"
+    },
+    {
+      "url": "https://www.dtmg.co/contact-us",
+      "title": "Digital Trends Media Group contact — reviews@digitaltrends.com for product samples, pr@digitaltrends.com for PR, bizdev@digitaltrends.com (content read via search result)"
+    },
+    {
+      "url": "https://www.digitaltrends.com/about/",
+      "title": "About Digital Trends — part of Digital Trends Media Group, Portland OR (content read via search result)"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Not a directory — earned editorial only; Digital Trends explicitly 'does not accept third-party article submissions'",
+    "Press releases and news stories go to editorial@digitaltrends.com",
+    "Product review samples: reviews@digitaltrends.com (send requests before shipping to Portland HQ)",
+    "PR inquiries: pr@digitaltrends.com; business development: bizdev@digitaltrends.com",
+    "Consumer-tech focus — a SaaS product needs a consumer-facing angle or a reviewable app/device"
+  ],
+  "preparation": [
+    "A consumer-tech hook — product launch, app, or gadget with mainstream appeal",
+    "Press release or concise pitch for the editorial inbox",
+    "If seeking a review: product sample logistics arranged via reviews@digitaltrends.com first"
+  ],
+  "workflow": [
+    "Send the press release/pitch to editorial@digitaltrends.com (or pr@digitaltrends.com for PR contact)",
+    "For review coverage, coordinate a product sample via reviews@digitaltrends.com",
+    "Coverage, if it happens, is a staff-written article or review — no listing page is created",
+    "Do not send pre-written articles — third-party submissions are not accepted"
+  ],
+  "watchFor": [
+    "Guest posts/third-party articles are explicitly refused — this is a pitch-your-story outlet, not a contributor platform",
+    "digitaltrends.com and the Spanish edition (es.digitaltrends.com) share the same editorial inbox",
+    "Direct fetch of the contact page 403'd — inbox details verified via the DTMG corporate contact page and search results"
+  ],
+  "countsAsLive": "A Digital Trends article or review mentioning the product is published at digitaltrends.com",
+  "unknowns": [
+    "Response expectations for the editorial inbox",
+    "Whether any sponsored-content product exists separate from advertising"
+  ]
+}

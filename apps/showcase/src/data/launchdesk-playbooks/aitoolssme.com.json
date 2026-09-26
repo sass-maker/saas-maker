@@ -1,0 +1,45 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aitoolssme.com",
+  "name": "AI Tools SME",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.aitoolssme.com/submit-your-tool",
+      "title": "Submit Your Tool — six paid packages (A-F) from 50€ to 900€, PayPal checkout"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Paid only — cheapest entry is Package-A 'AI Tool List Placement' at 50€ (dofollow link card under filters)",
+    "Higher tiers: Comparison Feature 250€, Premium Comparison (image/video/presentation categories) 500€, Detailed Review 500€, bundles 700€/900€",
+    "Form requires Name, Email, Tool Name, full business address (street, post code, city, country), Website, AI Tool Category",
+    "Payment via PayPal; review happens after payment ('Once your payment is confirmed, we'll review your submission')"
+  ],
+  "preparation": [
+    "Tool name, website URL, category",
+    "Full business address (required — not just email)",
+    "PayPal-compatible payment method and budget (50€ minimum)"
+  ],
+  "workflow": [
+    "Open https://www.aitoolssme.com/submit-your-tool",
+    "Pick a package (A listing / B-C comparison / D review / E-F bundles)",
+    "Fill the form fields including business address",
+    "Submit → redirected to PayPal payment page",
+    "After payment confirmation, they review and contact you if more info is needed"
+  ],
+  "watchFor": [
+    "No free tier at all — every package goes through PayPal checkout",
+    "Review is post-payment; rejection/refund policy not stated on the form",
+    "Business address is required — GDPR-style data collection, consent text included",
+    "Premium categories (image/video/presentation) cost double (500€ vs 250€)"
+  ],
+  "countsAsLive": "The tool appears as a card with a dofollow link in the AI Tools List under its category filters",
+  "unknowns": [
+    "Refund/rejection policy if they decline the tool after payment",
+    "Listing duration (permanent vs annual) — not stated",
+    "Whether Package-A's dofollow link persists without renewal"
+  ]
+}

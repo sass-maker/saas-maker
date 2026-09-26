@@ -1,0 +1,58 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "justia.com",
+  "name": "Justia",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://lawyers.justia.com/new-profile",
+      "title": "Create your Justia Lawyer Directory profile — free, requires attorney's law-firm email, moderation period"
+    },
+    {
+      "url": "https://lawyers.justia.com/faq",
+      "title": "Justia Lawyer Directory FAQ — free full-featured profiles for licensed US attorneys; claim by email/phone/photo"
+    },
+    {
+      "url": "https://www.justia.com/marketing/lawyer-directory/",
+      "title": "Justia marketing page — free professional attorney profiles; paid Premium/Platinum placements exist"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free listing exists but requires being a licensed US attorney — the profile must be tied to the attorney's personal law-firm email address, verified in a moderation period",
+    "Claim-by-email / claim-by-phone / claim-by-photo verification for existing auto-created profiles"
+  ],
+  "requirements": [
+    "Only relevant for legal products/services where a licensed US attorney is the profile subject — not a general product launch directory",
+    "Each profile must have unique login credentials tied to the attorney's own law firm email; Justia revokes profiles registered under mismatched emails",
+    "Marketing managers creating profiles for clients must use a separate documented flow",
+    "Paid Premium/Platinum placements exist but are optional upgrades on top of the free full-featured profile"
+  ],
+  "preparation": [
+    "Attorney name, bar details, law-firm email address (personal @firm domain, not generic)",
+    "Photo, bio, education/experience, practice areas, website/blog and social links",
+    "Check if a profile already exists — search the directory first and use the 'click here to claim your profile for free' link"
+  ],
+  "workflow": [
+    "Search lawyers.justia.com for an existing auto-generated profile; if found, click the claim link on the profile page",
+    "Otherwise go to https://lawyers.justia.com/new-profile ('Get Listed') and fill out the form",
+    "Verify identity via Claim by Email / Phone / Photo as applicable",
+    "Complete the profile (photo, bio, practice areas, links)",
+    "Pass the moderation period — Justia reviews that the account email corresponds to the attorney's law-firm address"
+  ],
+  "watchFor": [
+    "Eligibility wall: US-licensed attorneys only — for a SaaS product this destination is only usable if the founder/company identity fits a legal-services listing",
+    "Profiles created under non-matching emails get revoked during moderation",
+    "No master logins — one credential set per profile",
+    "Upsell: Premium/Platinum placements (paid) compete with free listings for visibility",
+    "lawyers.justia.com/register returned 403 to automated fetch — use new-profile / the 'Get Listed' link"
+  ],
+  "countsAsLive": "The attorney profile page on lawyers.justia.com is publicly reachable and shows completed profile data past the moderation period",
+  "unknowns": [
+    "Moderation turnaround time",
+    "Whether website links in free profiles are follow or nofollow",
+    "Whether non-attorney legal-tech businesses can be listed (appears attorney-only)"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "pocketgamer.com",
+  "name": "Pocket Gamer",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.pocketgamer.com/pages/contact-us/",
+      "title": "Pocket Gamer Contact Us — reviews@pocketgamer.co.uk (send info + promo code/APK + assets), news@pocketgamer.co.uk, competitions@, advertising@; PR best-practices; embargoes honored until material is public"
+    }
+  ],
+  "category": "press",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Mobile games only — Pocket Gamer covers iOS/Android/handheld games; a SaaS product does not fit",
+    "Reviews: email reviews@pocketgamer.co.uk with game info, a promo code (or APK for Android), and assets",
+    "News/previews: news@pocketgamer.co.uk",
+    "Send codes BEFORE App Store launch — they prep reviews for launch day; don't ask whether they want one, just send it",
+    "Include trailers, screenshots, and relevant info; name-drop notable industry experience; prior coverage links help",
+    "Embargoes honored but considered void once material is public anywhere; reviews may publish the moment a game is live",
+    "Other desks: competitions@pocketgamer.co.uk (giveaways), advertising@pocketgamer.co.uk, individual writer contacts on the About page"
+  ],
+  "preparation": [
+    "A mobile game with a promo code or APK ready before launch",
+    "Trailer, screenshots, press info",
+    "Relevant team/industry background worth name-dropping"
+  ],
+  "workflow": [
+    "Email reviews@pocketgamer.co.uk with the game info + promo code/APK + assets ahead of launch",
+    "Email news@pocketgamer.co.uk for pre-launch news/previews",
+    "Alternatively submit trailers via the free 'SM Business Network' service mentioned on the contact page",
+    "Coverage is earned editorial — reviews, news, features — no listing page is created"
+  ],
+  "watchFor": [
+    "Hard vertical restriction — mobile games only; non-game SaaS is off-beat",
+    "They reserve the right to publish a review as soon as the game is publicly available",
+    "Embargo breaks by anyone = embargo void for that material",
+    "Steel Media network also runs PocketGamer.biz (B2B) and events — different contact surface for industry-facing pitches"
+  ],
+  "countsAsLive": "A Pocket Gamer review, news story, or feature covering the game is published at pocketgamer.com",
+  "unknowns": [
+    "How the 'SM Business Network' trailer-submission service works in practice",
+    "Current review-response rate"
+  ]
+}

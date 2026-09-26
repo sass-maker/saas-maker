@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "stellarlaunch.org",
+  "name": "Stellar Launch",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://stellarlaunch.org/",
+      "title": "Homepage — daily launch board 'Top Projects Launching Today'; ~2,989 visitors/30 days self-reported; sign-in/up required"
+    },
+    {
+      "url": "https://stellarlaunch.org/pricing",
+      "title": "Pricing — Free $0 (5 slots/day, up to 180-day scheduling, dofollow only for top-3 daily), Basic $6.49 (guaranteed dofollow, 90-day window), Premium $34.99 (7-day feature + SEO article), Domain Booster $99.99 (reviews across 4-site network)"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free Launch exists but is queue-limited (5 slots/day, schedule up to 180 days out) and only the top-3 daily-ranked launches earn a dofollow backlink",
+    "Account sign-up required to submit",
+    "Paid tiers ($6.49-$99.99) guarantee the dofollow link, earlier dates, featured placement, or a written SEO review"
+  ],
+  "requirements": [
+    "Account registration (sign-in/sign-up in nav)",
+    "A shippable product — launches are scheduled to go live at 8:00 AM UTC on the chosen day",
+    "Product page details: name, tagline/description, logo, categories (AI, SaaS, Productivity, Marketing Tools, Design Tools are the largest)"
+  ],
+  "preparation": [
+    "Product name, tagline, description, logo",
+    "Category selection",
+    "Pick launch method: free queue vs $6.49 guaranteed-dofollow vs higher tiers",
+    "If chasing the top-3 dofollow, plan upvote support on launch day"
+  ],
+  "workflow": [
+    "Sign up at stellarlaunch.org",
+    "Open /projects/submit ('Launch Now' / 'Submit Project')",
+    "Complete the project form and select the launch plan/date (free slots book out ~180 days)",
+    "Launch goes live 8:00 AM UTC on the scheduled day",
+    "Top-3 daily rank → dofollow backlink; otherwise the listing stays as a project page"
+  ],
+  "watchFor": [
+    "Free queue is very long (up to 180 days out, 5/day) — plan months ahead or pay $6.49",
+    "Dofollow on the free tier is conditional on ranking top-3 for the day; vote counts on the board are tiny (0-2 votes typical), so a handful of votes may suffice — still a gamble",
+    "'Domain Booster' reviews are written by their team across a 4-site network (direct2app.com, webspot.app, launchpad.ms, stellarlaunch.org) — the same operator runs multiple directories in this catalog",
+    "Self-reported traffic is small (~3k visitors/30 days)",
+    "Sponsored slots (Direct2App) appear inside ranked lists — paid placement mixes with organic"
+  ],
+  "countsAsLive": "A project page exists at stellarlaunch.org/projects/<slug> and the launch appears in the daily board for its scheduled date",
+  "unknowns": [
+    "Exact submission form fields (gated behind sign-in)",
+    "Whether non-top-3 free listings get nofollow links or none",
+    "Whether scheduling dates beyond 180 days wait for a later window"
+  ]
+}

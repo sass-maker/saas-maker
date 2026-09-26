@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "cloudbooklet.net",
+  "name": "Cloudbooklet",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://cloudbooklet.net/",
+      "title": "cloudbooklet.net serves the same 'Free AI Chat' shell as cloudbooklet.com — the .net domain mirrors/redirects to the .com product"
+    },
+    {
+      "url": "https://www.cloudbooklet.com/contact",
+      "title": "Contact page — email + Facebook/Twitter only; no public 'submit a tool' form"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "No public submission form exists — cloudbooklet.net (and cloudbooklet.com) is primarily a free AI chat/image/story tool that also runs a large AI tools section (/ai-tools/<slug>)",
+    "The only stated contact channel is email (listed on /contact, address is Cloudflare-obfuscated) plus Facebook/Twitter",
+    "Existing tool pages have a 'Suggest an update' form, but that edits existing listings — it is not a new-tool intake"
+  ],
+  "preparation": [
+    "Product name, URL, short description, pricing model, launch date — matching the fields shown on their existing /ai-tools/ pages",
+    "A pitch email explaining why the tool fits their AI directory"
+  ],
+  "workflow": [
+    "Open https://www.cloudbooklet.com/contact",
+    "Email the listed address (or message via Facebook/Twitter) requesting a new AI-tool listing with product details",
+    "If the product is already listed, use the 'Suggest an update' box on its tool page instead"
+  ],
+  "watchFor": [
+    "The batch listed cloudbooklet.net, but the real product/domain is cloudbooklet.com — .net serves the same shell; submit against .com",
+    "No documented intake: listings may be editorially sourced rather than community-submitted",
+    "Site is ad/affiliate-heavy (e.g. 'recommended' links to partner tools) — expect slow or no response"
+  ],
+  "countsAsLive": "The product has a dedicated page under cloudbooklet.com/ai-tools/<slug> with description, pricing, and launch-date fields",
+  "unknowns": [
+    "Whether they accept unsolicited submissions at all — no form or policy page found",
+    "Whether listing is free or paid/sponsored",
+    "Review turnaround"
+  ]
+}

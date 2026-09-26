@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "godofprompt.ai",
+  "name": "God of Prompt",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://godofprompt.ai/",
+      "title": "Homepage — commercial prompt library/AI products site (Robert Youssef); 20k+ customers, 100k+ subscribers claimed"
+    },
+    {
+      "url": "https://godofprompt.ai/best-ai-tools",
+      "title": "Best AI Tools — editorially curated list of ~63 major tools ('the AI tools we actually use and recommend'); no submit form, partnerships email in footer"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "No public submission form — the 'Best AI Tools' list is hand-curated ('the AI tools we actually use and recommend')",
+    "Listings skew to established tools (ChatGPT, Claude, Cursor, n8n, Figma) paired with God of Prompt prompt resources",
+    "Only stated inbound channel: partnerships@ email shown in the site footer"
+  ],
+  "preparation": [
+    "A pitch to the partnerships email explaining the tool and why their prompt-library audience cares",
+    "Ideally a prompt resource angle — the list exists to drive prompt usage, so a tool that pairs well with their prompts/skills/MCP pages has the best fit"
+  ],
+  "workflow": [
+    "Email the partnerships contact (listed as [email protected] on the site footer) proposing inclusion in the Best AI Tools directory",
+    "Offer something useful to their audience (compatible prompts, a guide, affiliate/referral terms) — the site is commercially driven",
+    "If accepted, the tool appears on /best-ai-tools with an editorial description"
+  ],
+  "watchFor": [
+    "This is a commercial product site first — directory inclusion likely favors partners/affiliates, not free community submissions",
+    "The audience they claim (100k+ subscribers) is real reach, but the curated list is small (~63 tools) — acceptance odds are low",
+    "No SLA or stated review process for inbound pitches"
+  ],
+  "countsAsLive": "The product appears as a card on godofprompt.ai/best-ai-tools with an editorial write-up",
+  "unknowns": [
+    "Whether inclusion is free, affiliate-based, or paid",
+    "Response time on partnership emails",
+    "Whether smaller/indie tools are ever accepted"
+  ]
+}

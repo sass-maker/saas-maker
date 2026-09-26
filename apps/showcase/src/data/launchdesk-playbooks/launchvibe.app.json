@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "launchvibe.app",
+  "name": "LaunchVibe",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.launchvibe.app/",
+      "title": "Homepage — live launch board ('Launch Your Product. Get Featured. Grow Faster'), client-rendered SPA"
+    },
+    {
+      "url": "https://submitmap.com/platform/launchvibe/",
+      "title": "SubmitMap field report — verified: free email+password account (no OAuth), must upvote 3 products to unlock the form, instant publish, free links are nofollow, $29 Product Sponsor is the only dofollow route"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free listing requires an email+password account (no Google/GitHub sign-in) AND upvoting at least 3 other products on the homepage before the launch form renders — votes are public under your name"
+  ],
+  "requirements": [
+    "Accepts SaaS, AI tools, dev tools, open source, side projects — a live product URL is required",
+    "Form fields: product name, URL, description, category (13 to pick from), tags (each must be committed as a chip with Enter or it doesn't count)",
+    "No review: publishing is instant; no published submission guidelines exist"
+  ],
+  "preparation": [
+    "A real password — email+password only, no OAuth",
+    "Product name, URL, description, category choice, tag list",
+    "Be ready to upvote 3 existing products (public, under your account name)",
+    "Optionally $29 for Product Sponsor (30 days: sitewide sidebar, above-leaderboard placement, shoutout to their claimed 35k followers, and the only dofollow link)"
+  ],
+  "workflow": [
+    "Create an account at https://www.launchvibe.app/signup (free, no credit card)",
+    "Upvote 3 products on the homepage — this unlocks the submit form",
+    "Fill the launch form (name, URL, description, category, tags-as-chips) and publish — it goes live instantly, no review",
+    "Listing gets overview/discussion/feedback tabs and sits on the all-time upvote leaderboard (~1,200 launches)",
+    "Optional: buy the $29 Product Sponsor slot for 30 days of sitewide placement + the only dofollow link"
+  ],
+  "watchFor": [
+    "Free listing links are NOFOLLOW (verified: rel=noopener noreferrer nofollow) despite 'quality backlinks' marketing — only the $29 sponsor is dofollow",
+    "Ranking is lifetime upvotes with no time window — a new launch competes with all ~1,200 past launches; daily/weekly boards are promised but not shipped",
+    "The 3-upvote gate is a traffic scheme, not quality control",
+    "Tag list is unmoderated junk (opens with '##', '#.', '#.97') — your product gets filed among that",
+    "Tag field quirk: each tag must be committed as a chip with Enter — uncommitted text silently doesn't count"
+  ],
+  "countsAsLive": "The launch page is reachable on launchvibe.app with its overview/discussion/feedback tabs and appears on the upvote leaderboard",
+  "unknowns": [
+    "Whether the promised daily/weekly leaderboards shipped after the field report",
+    "Actual traffic delivered to listings",
+    "Sponsor slot current price/availability beyond $29/30d"
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "flowtools.co",
+  "name": "flowtools",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://flowtools.co/",
+      "title": "Homepage — curated directory of 300+ AI tools, updated weekly, run by Michał Śnieżyński"
+    },
+    {
+      "url": "https://flowtools.co/submit",
+      "title": "Submit page — 'Add a free listing'; simple form (name, email, tool name, website URL, note)"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free listing — 'Add a free listing' with no paid gate shown",
+    "Curation bar: 'We only list high-quality tools' — acceptance is editorial",
+    "Form fields: Your Name, Your Email, product Name, Website URL, Note, optional newsletter opt-in",
+    "AI tool fit — directory is AI-focused (video, image, agents, marketing, coding, automation, etc.)"
+  ],
+  "preparation": [
+    "Product name and URL",
+    "A short Note explaining why the tool is high-quality and which category fits",
+    "Contact name and email"
+  ],
+  "workflow": [
+    "Open https://flowtools.co/submit",
+    "Fill the five-field form and submit",
+    "Curator reviews; no stated turnaround — directory is 'updated weekly'",
+    "Check the relevant category page for the listing"
+  ],
+  "watchFor": [
+    "Small curated site (~78-member community) — editorial, not instant",
+    "Site contains affiliate links and a Skool community — the directory is a side project; response times may vary",
+    "Note field is the only pitch space — make the case for inclusion there",
+    "An 'Advertise' page exists for paid placement if the free listing isn't accepted"
+  ],
+  "countsAsLive": "The tool has a public detail page on flowtools.co reachable from a category page",
+  "unknowns": [
+    "Review turnaround and notification policy",
+    "Whether outbound links are dofollow",
+    "Whether a paid/advertise route guarantees listing"
+  ]
+}

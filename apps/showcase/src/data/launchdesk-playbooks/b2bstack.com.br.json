@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "b2bstack.com.br",
+  "name": "B2B Stack",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.b2bstack.com.br/produto/novo-item",
+      "title": "'Cadastre uma solução' product-registration page — renders login wall requiring LinkedIn or Google OAuth"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Account required — registration is OAuth-only: 'Registre-se com LinkedIn' or 'Registre-se com Google' (no email form visible)",
+    "Brazilian B2B software review/comparison platform (G2-style); product must be a B2B software/SaaS",
+    "Portuguese-language site; huge category taxonomy (ERP, marketing, vendas, RH, etc.) — pick the right one"
+  ],
+  "preparation": [
+    "A LinkedIn or Google account you can OAuth with",
+    "Product name, website, description (Portuguese preferred for fit), logo",
+    "Correct category from their taxonomy (/categorias)",
+    "Company details — vendor portal lives at stack-manager.b2bstack.com.br"
+  ],
+  "workflow": [
+    "Open https://www.b2bstack.com.br/produto/novo-item ('Cadastre uma solução')",
+    "Register/sign in via LinkedIn or Google OAuth",
+    "Fill the product form: name, URL, category, description",
+    "Submit for review — listing becomes a product page eligible for user reviews",
+    "Vendors can manage the listing via stack-manager.b2bstack.com.br (separate 'Vender' portal)"
+  ],
+  "watchFor": [
+    "Entirely Brazilian-market focused — an English-only SaaS may be a weak fit but not rejected",
+    "OAuth-only signup; no standalone email registration seen",
+    "Vendor/seller features at stack-manager.b2bstack.com.br likely push paid lead-gen plans — the free listing exists alongside",
+    "Contact route for the listing team is a Google Form"
+  ],
+  "countsAsLive": "The product has a public page on b2bstack.com.br under its category, open to reviews and comparison listings",
+  "unknowns": [
+    "Review/approval turnaround for new product submissions",
+    "Whether non-Brazilian vendors are accepted",
+    "Dofollow status of the product website link",
+    "What paid vendor plans cost and whether they gate the listing"
+  ]
+}

@@ -4,13 +4,13 @@ const catalog = JSON.stringify(portfolioProjects)
   .replaceAll('\u2028', '\\u2028')
   .replaceAll('\u2029', '\\u2029');
 
-const source = String.raw`(() => {
+const source = `(() => {
   'use strict';
 
   const CATALOG_URL = 'https://sassmaker.com/projects.json';
   const INITIAL_PROJECTS = ${catalog};
   const REQUEST_TIMEOUT_MS = 800;
-  const css = ${JSON.stringify(String.raw`
+  const css = ${JSON.stringify(`
     :host {
       --portfolio-strip-bg: color-mix(in srgb, currentColor 3%, transparent);
       --portfolio-strip-text: currentColor;

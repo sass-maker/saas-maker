@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "mossai.org",
+  "name": "MossAI",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://mossai.org/",
+      "title": "Homepage — '3000+ curated AI tools', categories from writing to code, active listings"
+    },
+    {
+      "url": "https://mossai.org/submit",
+      "title": "Submit page — free submission requires linking back to mossai.org first; login required; manual review"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free submission requires adding a link to MossAI Tools on your website first — 'The submitted website must link to our website (Step 1 of the submission process)'"
+  ],
+  "requirements": [
+    "AI-related product only",
+    "Practical, user-friendly product with an informative website, designed for end-users/consumers",
+    "Not related to cryptocurrency — explicitly disqualifying",
+    "Reciprocal link: the submitted site must link to mossai.org",
+    "Login required before submitting ('We need to verify your identity to ensure the authenticity of the submission')",
+    "Manual review — 'Submitting a tool does not guarantee publication'"
+  ],
+  "preparation": [
+    "A link/badge to https://mossai.org already live on your site (title 'MossAI Tools')",
+    "Tool name, URL, description emphasizing practical features and end-user benefits",
+    "An account on mossai.org for the submission login"
+  ],
+  "workflow": [
+    "Add a link to https://mossai.org (anchor 'MossAI Tools') on your website",
+    "Log in at https://mossai.org/submit",
+    "Fill the submission form with the tool's details",
+    "Wait for manual review — approved tools are published to the directory"
+  ],
+  "watchFor": [
+    "Reciprocal-link gate is enforced at review — missing backlink = disapproval",
+    "Crypto-adjacent products are auto-disqualified",
+    "Review tips say to highlight practical features and avoid hype",
+    "Directory carries 'Friends' link exchanges and DR-score marketing — typical low-mid tier AI directory"
+  ],
+  "countsAsLive": "The tool appears as an entry/detail page in the MossAI directory under its category after manual approval",
+  "unknowns": [
+    "Review turnaround time",
+    "Whether the listing link is dofollow (likely, given the reciprocal-link requirement)",
+    "What login providers are supported (sign-in wall blocks inspection)"
+  ]
+}

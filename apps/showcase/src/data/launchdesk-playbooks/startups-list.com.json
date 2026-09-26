@@ -1,0 +1,36 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startups-list.com",
+  "name": "Startups List",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.startups-list.com/",
+      "title": "Startups List — live network of ~75 city-specific startup directories (city.startups-list.com subdomains + partner domains); per-city lists of startups"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "City-scoped — you list under your city's subdomain (e.g., sanfrancisco.startups-list.com)",
+    "Each city site historically had an 'add your startup' flow; main page is a city selector",
+    "Free listing model historically — verify on the city subdomain"
+  ],
+  "preparation": [
+    "A startup HQ'd in (or associated with) one of the ~75 covered cities",
+    "Basic company details"
+  ],
+  "workflow": [
+    "Pick your city subdomain from startups-list.com",
+    "Use the city's add/claim flow to list the startup",
+    "Listing appears on the city page"
+  ],
+  "watchFor": [
+    "City coverage is finite — if your city isn't listed, no fit",
+    "Some city links go to separate partner domains (nycstartups.net, builtinmtl.com) with their own rules",
+    "Network maintenance varies by city"
+  ],
+  "countsAsLive": "The startup appears on its city's startups-list page",
+  "unknowns": ["Current submission method per city", "Moderation/update cadence"]
+}

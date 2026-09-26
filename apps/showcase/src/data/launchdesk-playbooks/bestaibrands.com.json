@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "bestaibrands.com",
+  "name": "Best AI Brands",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://bestaibrands.com/",
+      "title": "Homepage — rendered empty to the fetcher; search index describes a curated AI/SaaS/vibe-coded products directory"
+    },
+    {
+      "url": "https://bestaibrands.com/submit",
+      "title": "Submit page — rendered empty to the fetcher; search index shows paid manual-review submission starting at $5 ('buy a coffee')"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "AI tool, SaaS product, or 'vibe coded' product — curated directory",
+    "Submissions are not free: pricing starts at $5 framed as 'buy 1 coffee'; every submission manually reviewed",
+    "Dofollow SEO backlink appears to require a separate email request to hey@bestaibrands.com"
+  ],
+  "preparation": [
+    "Product name, URL, description, and category",
+    "Payment for the ~$5 minimum submission fee",
+    "Email draft to hey@bestaibrands.com if a dofollow link is required"
+  ],
+  "workflow": [
+    "Open https://bestaibrands.com/submit",
+    "Pay the submission fee (from $5) and fill in the tool details",
+    "Manual review follows; approved tools are listed in the directory"
+  ],
+  "watchFor": [
+    "Homepage meta copy says 'Submit yours for free' while the submit page says 'Submissions are not free' — the $5 minimum appears to be the real policy",
+    "Site renders an empty body to automated fetches (JS-only) — submission needs an interactive browser session",
+    "Whether the default link is nofollow vs dofollow is unclear — dofollow seems to need a separate email"
+  ],
+  "countsAsLive": "The tool has a public listing page on bestaibrands.com reachable from the directory browse pages",
+  "unknowns": [
+    "Exact form fields and payment mechanism (page is JS-rendered)",
+    "Full price tiers above the $5 minimum",
+    "Review turnaround time",
+    "Whether free submission genuinely exists despite 'not free' copy"
+  ]
+}

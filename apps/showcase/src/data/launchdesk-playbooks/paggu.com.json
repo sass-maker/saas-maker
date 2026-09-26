@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "paggu.com",
+  "name": "Paggu",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.paggu.com/",
+      "title": "Homepage — blog with 'Submit' menu containing 'Submit StartUp/SaaS Product' and 'Submit Guest Post'"
+    },
+    {
+      "url": "https://www.paggu.com/submit-your-startup/",
+      "title": "Submit Your StartUp/SaaS Product — 'submit your details below... we would write a review for it if it matches our criteria'; free with optional paid fast-track"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "New startup or SaaS product — the editor visits your website and writes a review 'if it matches our criteria'",
+    "Submission is free; a 'small fee' can jump the queue for an immediate review",
+    "Alternative channel: message the owner on LinkedIn (linkedin.com/in/eamitabh/)",
+    "Guest-column route is separate: exhaustive, 100%-unique articles ≥1200 words in Entrepreneurship, Startups, or Digital Marketing"
+  ],
+  "preparation": [
+    "Product name, URL, and a short description of what the startup/SaaS does",
+    "A few paragraphs of write-up if pitching a startup story (helps the editor publish faster)",
+    "Live, presentable website — the editor reviews the actual site before deciding"
+  ],
+  "workflow": [
+    "Open https://www.paggu.com/submit-your-startup/",
+    "Submit the startup details via the comment form at the bottom of that page (the page instructs 'submit your details below' and the only on-page form is the reply box)",
+    "Optionally send the same pitch via the owner's LinkedIn as a follow-up",
+    "Wait for editorial review — accepted products get a review article in the Website Reviews category"
+  ],
+  "watchFor": [
+    "Submission mechanism is informal — a WordPress comment box, not a structured form; keep the pitch self-contained",
+    "Editorial discretion: no guarantee of publication; criteria are unstated",
+    "Optional paid 'jump the line' upsell mentioned on-page",
+    "Site is a small personal blog (Amitabh Shukla); recent posts date to 2026 so it is still active"
+  ],
+  "countsAsLive": "A review article about the product is published on paggu.com (typically under /website-reviews/)",
+  "unknowns": [
+    "What criteria the editor applies when deciding to review a submission",
+    "Review turnaround time and the size of the 'small fee' for expedited review",
+    "Whether links in published reviews are follow or nofollow"
+  ]
+}

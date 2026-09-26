@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "techendo.com",
+  "name": "Techendo",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "http://techendo.com/beta",
+      "title": "Startups section — 'a place to share either your betas or betas of services you find interesting'; active listing pages with 'Add beta' button"
+    },
+    {
+      "url": "https://techendo.com/auth/register",
+      "title": "Registration — username, group (Company/Person), email, password, about, city selector"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free, but requires a registered account (Sign Up at /auth/register); the 'Add beta' flow sits behind login"
+  ],
+  "requirements": [
+    "Pitch is to the 'Startups' section: 'share either your betas or betas of services you find interesting. Any new site is welcome'",
+    "Registration requires username, group (Company or Person), email, password, About, and city",
+    "Community norms stated: 'You can get feedback, hold conversations... Be awesome to one another'",
+    "Listing fields visible on cards: product name, country, status ('Recently Launched'), categories (Mobile, SaaS, Cloud, Blockchain, Web Development, etc.), review count"
+  ],
+  "preparation": [
+    "Account credentials (register first)",
+    "Product name, country, categories, a logo/screenshot and description for the profile page",
+    "A live product URL — entries get 'View profile' pages at /beta/<slug>.html"
+  ],
+  "workflow": [
+    "Register at https://techendo.com/auth/register (choose Company for a product entity)",
+    "Log in, open https://techendo.com/beta and use 'Add beta'",
+    "Fill the product profile (name, categories, country, description, link)",
+    "Published entries appear on /beta with 'Recently launched' status and a profile page"
+  ],
+  "watchFor": [
+    "The 'Add beta' button renders with a PHP template notice ('Undefined variable: href') — the link may be broken or login-gated; if it fails, use /auth/register then retry or use /pages/contact.html",
+    "Site shows unpatched PHP notices — an aging custom codebase",
+    "Section also accepts sharing 'betas of services you find interesting', so not every lister is the founder",
+    "Techendo is a broad IT content site; the beta board is a small community feature, not a high-traffic launchpad"
+  ],
+  "countsAsLive": "The product appears on https://techendo.com/beta with its own /beta/<slug>.html profile page showing status and categories",
+  "unknowns": [
+    "Whether 'Add beta' is currently functional given the template bug",
+    "Moderation/approval step after submitting",
+    "Whether profile pages link out with a followed URL"
+  ]
+}

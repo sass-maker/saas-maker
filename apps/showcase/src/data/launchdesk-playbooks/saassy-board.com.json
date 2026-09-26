@@ -1,0 +1,45 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "saassy-board.com",
+  "name": "Saassy Board",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://saassy-board.com/",
+      "title": "Homepage — 'List your SaaS and Get paid': revenue-verified leaderboard competition; $10 one-time entry; 50% of revenue to ShareTheMeal charity, 30% to monthly top-3 founders; currently 37 projects, $251 paid out"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "A SaaS product you can 'connect' — the leaderboard ranks monthly revenue, so verifiable revenue data is the core mechanic",
+    "$10 one-time competition entry (includes 6 donated meals)",
+    "Founder identity — entries link SaaS to founder name/X handle"
+  ],
+  "preparation": [
+    "SaaS name, URL, logo",
+    "Revenue data connection details (how revenue is verified is not shown on public pages — expect Stripe/LemonSqueezy-style read access or manual verification)",
+    "X/Twitter handle for the Sunday mentions and leaderboard display",
+    "$10 payment"
+  ],
+  "workflow": [
+    "Open saassy-board.com and click 'Start Earning Now' / join",
+    "Pay the $10 one-time entry",
+    "Connect your SaaS revenue source",
+    "Revenue growth earns points each month; top-3 monthly scorers win cash (13%/10%/7% of pool), leaderboard is public"
+  ],
+  "watchFor": [
+    "Requires sharing revenue data — a real privacy/disclosure decision, not just a listing",
+    "Tiny board (37 projects) — the $10 buys leaderboard visibility in a very small pond; ~500 monthly visitors claimed",
+    "Prize pool math is modest — 'earn $6.50 for first place' was advertised at research time; payouts scale with platform revenue",
+    "Public revenue numbers persist on the leaderboard — competitors can see your MRR",
+    "Early-stage side project by two makers; polished but small"
+  ],
+  "countsAsLive": "The SaaS appears on the public leaderboard at saassy-board.com with its name, founder, and monthly revenue",
+  "unknowns": [
+    "How revenue verification/connect actually works (no public docs found)",
+    "Whether a $0-revenue product can list and still get the backlink",
+    "Link type on leaderboard entries"
+  ]
+}

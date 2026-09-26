@@ -1,0 +1,45 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "discovercloud.com",
+  "name": "DiscoverCloud",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.discovercloud.com/",
+      "title": "DiscoverCloud — live business software directory, 3,100 tools/119 categories; 'Become a vendor', 'Get featured - NEW', 'Advertise - NEW', 'Register as an expert - NEW'; account system with Vendor zone"
+    },
+    {
+      "url": "https://discovercloud.com/",
+      "title": "Apex domain — connection timed out (IPv4 137.117.88.228:443); only the www subdomain serves"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Live business-software directory (3,100 tools, 119 categories) — vendors can register ('Become a vendor'), but monetization pushes 'Get featured', 'Advertise', 'Register as an expert' (all marked NEW); base listing terms unclear"
+  ],
+  "requirements": [
+    "B2B software product — the directory covers CRM, PM, analytics, HR, finance, security, etc.",
+    "Account signup; 'Become a vendor' route to add a product",
+    "'Get featured'/'Advertise'/'Register as an expert' are new paid surfaces",
+    "IMPORTANT: apex discovercloud.com times out — use www.discovercloud.com only"
+  ],
+  "preparation": [
+    "Vendor account on www.discovercloud.com",
+    "Product description, category fit, pricing info"
+  ],
+  "workflow": [
+    "Sign up at www.discovercloud.com (not the apex — it doesn't respond)",
+    "Use 'Become a vendor' / Vendor zone to add the product",
+    "Optionally buy featured/advertising placement",
+    "Product appears in category search/compare results"
+  ],
+  "watchFor": [
+    "Apex domain is broken — always use the www subdomain; consider fixing the catalog URL",
+    "Angular-era app renders raw {{templates}} to fetchers — JS required",
+    "New monetization push suggests paid features will gate visibility"
+  ],
+  "countsAsLive": "The product has a DiscoverCloud profile appearing in category search",
+  "unknowns": ["Whether base vendor listing is free", "Featured/advertising pricing"]
+}

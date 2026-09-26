@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "sitejabber.com",
+  "name": "Sitejabber (SmartCustomer)",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.sitejabber.com/",
+      "title": "Homepage — consumer review platform ('Browse millions of reviews'); business CTA now points to smartcustomer.com"
+    },
+    {
+      "url": "https://www.smartcustomer.com/business",
+      "title": "SmartCustomer for Business — 'Claim your free profile' via biz.smartcustomer.com/register; Google Review Partner"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "A consumer-facing business with customers who can review it — this is a reviews platform, not a product launch board",
+    "Free entry point: 'Claim your free profile' at biz.smartcustomer.com/register — claim or create your business page",
+    "Paid 'Plans' exist for review-collection tooling, Google Seller Rating syndication, and distribution",
+    "Sitejabber has rebranded its business side to SmartCustomer — the Sitejabber consumer review pages still exist and feed it"
+  ],
+  "preparation": [
+    "Business name, website URL, and contact details",
+    "Work email for the biz.smartcustomer.com account",
+    "Check whether a Sitejabber page for your domain already exists (they accumulate user-submitted reviews) before creating one",
+    "A review-generation plan — the listing is only useful once real customers review you"
+  ],
+  "workflow": [
+    "Search sitejabber.com for your domain/business name to find an existing page",
+    "Register at https://biz.smartcustomer.com/register to claim the free profile",
+    "Complete the business profile details",
+    "Invite real customers to review; optionally evaluate paid plans for review-collection automation and Google Seller Rating push"
+  ],
+  "watchFor": [
+    "Rebrand in progress — sitejabber.com consumer side persists, but business tooling moved to smartcustomer.com; don't be confused by two brands",
+    "Reviews are user-generated — a claimed page with zero reviews does nothing; and bad reviews are public and persistent",
+    "Never solicit fake reviews — the platform's whole value is verified-authentic reviews and it's a Google Review Partner",
+    "Paid plans are the monetization — expect sales outreach after claiming"
+  ],
+  "countsAsLive": "A public business profile page exists on sitejabber.com (findable via search) and shows claimed/managed status with your business details",
+  "unknowns": [
+    "Free-plan feature limits vs paid plans (pricing page not fetched)",
+    "Whether profile pages link dofollow to the business site",
+    "Review-volume thresholds needed before a rating displays"
+  ]
+}

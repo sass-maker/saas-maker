@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startupworld.com",
+  "name": "StartupWorld",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.startupworld.com/",
+      "title": "Homepage — despite the name, now a coupon/deals site: '258,304 verified coupons from 14,470 stores'; stores get <store>.startupworld.com landing pages; Submit menu offers +Coupon/+Deal/+Review"
+    },
+    {
+      "url": "https://startupworld.com/submit/deal",
+      "title": "Submit a Deal form — store name, deal URL (opt), title ≤255 chars, description ≥20 chars, expiry (opt), accuracy agreement; 'reviewed by our team before publishing'. Footer also exposes an 'Add Your Store' modal (store name, URL, affiliate signup URL optional, about optional)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "The product must be able to offer a deal — this is a coupon/deals community site, not a startup news outlet (the 'Press' categorization in the source data is stale)",
+    "Deal submissions require: store name, deal title (≤255 chars), description (20-2,000 chars); deal URL and expiry optional",
+    "You must agree the deal 'is accurate and I have permission to share it'",
+    "An 'Add Your Store' form exists for store listing (store name, URL, optional affiliate signup URL)",
+    "Login/signup appears available but the deal form itself shows no auth requirement"
+  ],
+  "preparation": [
+    "A real discount or offer for the product (e.g., an extended trial, % off, lifetime deal)",
+    "Store name, website URL, deal title and description",
+    "Optionally an affiliate signup URL if the product runs an affiliate program"
+  ],
+  "workflow": [
+    "First get the store listed: use the 'Add Your Store' modal (footer link) with store name, URL, about text",
+    "Then open https://startupworld.com/submit/deal and submit the offer details",
+    "Wait for team review before the deal publishes",
+    "Optionally also submit via /submit/coupon if the offer has a code"
+  ],
+  "watchFor": [
+    "Name is misleading — this is a coupon aggregator (formerly a startup magazine); value is a store landing page + deal listing, not editorial coverage",
+    "Fake or unverifiable deals will fail review — the site advertises 'AI-tested' codes and shopper confirmations",
+    "Site earns affiliate commissions on links ('We may earn a commission') — expect affiliate-URL substitution on your deal links",
+    "Startup-friendly angle exists ('exclusive startup deals' tagline) and SaaS stores (Lovable, Manychat, Doola, Helium 10) are already listed"
+  ],
+  "countsAsLive": "The store has a public <store>.startupworld.com landing page and the deal/coupon appears in the deals feed",
+  "unknowns": [
+    "Review turnaround and acceptance criteria for stores/deals",
+    "Whether a store page can be listed without an affiliate program",
+    "Link type and whether deal links get affiliate-wrapped"
+  ]
+}

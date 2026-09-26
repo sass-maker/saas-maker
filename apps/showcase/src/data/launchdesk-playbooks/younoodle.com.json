@@ -1,0 +1,43 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "younoodle.com",
+  "name": "YouNoodle",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://younoodle.com/",
+      "title": "YouNoodle — 'Launch better startup competitions, faster'; application/evaluation/community management for program organizers; 'Trusted by 6,000+ programs and 400K+ entrepreneurs'; apply portal at apply.younoodle.com"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Pivoted — YouNoodle is now a competition/program-management platform (application, judging, community management for accelerators/governments/corporations); startups engage by applying to programs hosted on it (apply.younoodle.com), not by listing a product"
+  ],
+  "requirements": [
+    "For startups: an account on apply.younoodle.com, then applications to specific programs/competitions hosted there",
+    "For organizers: a paid platform license (Pricing page + Book a Demo)",
+    "SOC 2 certified enterprise platform — 15+ years, used by AWS Imagine Grant etc.",
+    "No product-listing surface — the catalog's 'directory' categorization reflects its old startup-network incarnation"
+  ],
+  "preparation": [
+    "For founders: browse apply.younoodle.com/showcase for open programs",
+    "Founder profile details for applications"
+  ],
+  "workflow": [
+    "Create an account on apply.younoodle.com",
+    "Apply to relevant open competitions/programs",
+    "Judging is run by the program organizers — YouNoodle is the infrastructure"
+  ],
+  "watchFor": [
+    "Purpose drift — this is competition infrastructure, not a launch directory",
+    "Program deadlines and eligibility vary per organizer",
+    "No backlink/listing value on the main domain"
+  ],
+  "countsAsLive": "A submitted application in a YouNoodle-hosted program — no public listing is produced",
+  "unknowns": [
+    "Whether any public-facing startup profiles still exist",
+    "Program organizer pricing"
+  ]
+}

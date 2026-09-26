@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "infoworld.com",
+  "name": "InfoWorld",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.infoworld.com/contact-us/",
+      "title": "InfoWorld Contact Us — 'To submit story ideas... contact editors via the link in their bylines'; Expert Contributor Network pointer (content read via search result)"
+    },
+    {
+      "url": "https://www.infoworld.com/expert-contributor-network/",
+      "title": "Foundry Expert Contributor Network — 1,200-1,500-word practitioner articles; register interest via form; contact edward.murray@foundryco.com (content read via search result)"
+    },
+    {
+      "url": "https://www.infoworld.com/about-us/",
+      "title": "InfoWorld About Us — product reviews coordinated via Executive Editor Doug Dineley (doug_dineley@foundryco.com); reviews written by hired independent experts (content read via search result)"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Not a directory — earned editorial and a documented contributor program (Foundry Expert Contributor Network)",
+    "Contributor Network seeks IT leaders/practitioners for 1,200-1,500-word articles on AI, cloud, data management, enterprise apps, emerging tech — published across CIO, Computerworld, CSO, InfoWorld, Network World",
+    "Contributors sign a Writer Agreement; editors help build the post",
+    "Story ideas go to individual editors via byline links — no central pitch inbox",
+    "Product reviews are written by hired independent experts — contact Doug Dineley (doug_dineley@foundryco.com) to discuss a review"
+  ],
+  "preparation": [
+    "For the contributor network: a working title/topic plus a few sentences synopsis; hands-on practitioner credibility",
+    "For coverage: identify the editor/writer covering your beat via article bylines",
+    "Enterprise-developer/IT-leadership angle — consumer SaaS is a weak fit"
+  ],
+  "workflow": [
+    "For bylined coverage: read recent InfoWorld stories, pick the relevant writer, pitch via the byline contact link",
+    "For a product review: email doug_dineley@foundryco.com",
+    "For contributed articles: register interest on the Expert Contributor Network form or email edward.murray@foundryco.com, then pitch a topic synopsis",
+    "Publication, if it happens, is a staff-written article, a commissioned review, or your contributed article under your byline"
+  ],
+  "watchFor": [
+    "A product announcement is not a contribution pitch — the network wants practitioner insight articles, not launches",
+    "Reviews are commissioned by InfoWorld's editors, not submitted — offer the product for review, don't write it yourself",
+    "Foundry (ex-IDG) runs multiple brands — the same contributed piece may appear on CIO/Computerworld/CSO/Network World",
+    "Contact pages were verified via search results; direct fetch returned 404 on an old URL"
+  ],
+  "countsAsLive": "An InfoWorld article/review mentioning the product is published at infoworld.com (or your contributed article appears under your byline)",
+  "unknowns": [
+    "Contributor pay/compensation terms — not stated on the network page",
+    "Current acceptance rate for cold contributor applications"
+  ]
+}

@@ -2,7 +2,7 @@
 import { CORE } from '../data/projects';
 import { STUDIO_PROFILE } from '../data/studio';
 
-const PANE_TONES = ['cobalt', 'seeded', 'amber', 'oxblood'];
+const PLAQUE_TONES = ['cobalt', 'oxblood', 'amber'];
 ---
 
 <header class="studio-hero" aria-labelledby="studio-title">
@@ -19,29 +19,34 @@ const PANE_TONES = ['cobalt', 'seeded', 'amber', 'oxblood'];
     />
   </div>
 
-  <div class="studio-hero-copy glass-pane">
+  <div class="studio-hero-head">
     <p class="studio-kicker">{STUDIO_PROFILE.eyebrow}</p>
     <h1 id="studio-title">{STUDIO_PROFILE.headline}</h1>
-    <p class="studio-intro">{STUDIO_PROFILE.oneLine}</p>
-    <a class="studio-thesis-link" href="/projects">
-      Explore the complete directory <span aria-hidden="true">→</span>
-    </a>
-    <p class="studio-status">
-      <span aria-hidden="true"></span>
-      Directory, packages, and tooling · kept current
-    </p>
+    <div class="studio-hero-aside">
+      <p class="studio-intro">{STUDIO_PROFILE.oneLine}</p>
+      <a class="studio-thesis-link" href="/projects">
+        Explore the complete directory <span aria-hidden="true">→</span>
+      </a>
+      <p class="studio-status">
+        <span aria-hidden="true"></span>
+        Directory, packages, and tooling · kept current
+      </p>
+    </div>
   </div>
 
-  <ol class="featured-panes" aria-label="Products in focus">
+  <ol class="product-ledger" aria-label="Products in focus">
     {CORE.map((project, index) => (
-      <li class={`featured-pane featured-pane--${PANE_TONES[index]}`}>
-        <a href={project.href}>
-          <span class="featured-count">{String(index + 1).padStart(2, '0')}</span>
+      <li>
+        <a
+          class={`ledger-plaque ledger-plaque--${PLAQUE_TONES[index % PLAQUE_TONES.length]}`}
+          href={project.href}
+        >
+          <span class="ledger-count">{String(index + 1).padStart(2, '0')}</span>
           <strong>{project.name}</strong>
-          <span class="featured-description">{project.desc}</span>
-          <span class="featured-foot">
-            <span>{project.tag}</span>
-            <span aria-hidden="true">→</span>
+          <span class="ledger-description">{project.desc}</span>
+          <span class="ledger-dest">
+            <span class="ledger-domain">{project.tag}</span>
+            <span class="ledger-cta">Details <span aria-hidden="true">→</span></span>
           </span>
         </a>
       </li>

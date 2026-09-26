@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "surges.co",
+  "name": "Surges",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.surges.co/",
+      "title": "Homepage — '100% Honest Marketing Tool Reviews', 180+ tools; leaderboard, deals, Meet the Makers interviews"
+    },
+    {
+      "url": "https://www.surges.co/about/",
+      "title": "About — solo-run by marketer Stuart Goulden; reader-funded via affiliate links; 'shout if you spot a tool worthy of a bigger audience'"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "Narrow fit: marketing SaaS/tools only — the site's entire premise is matching marketers with marketing tools",
+    "No submission form or 'submit a tool' page; coverage is editorial and hand-picked by a single reviewer",
+    "Reviews are claimed impartial and firsthand; affiliate income is disclosed but 'never influences scores'"
+  ],
+  "preparation": [
+    "Confirm the product is a marketing tool (SEO, email, automation, conversion, content)",
+    "One-paragraph pitch: what it does, price, why it deserves review",
+    "A free trial or review account — the reviewer tests tools firsthand",
+    "Optional: offer a reader deal/discount code — the site runs a deals section (e.g. '20% off first 3 months')"
+  ],
+  "workflow": [
+    "There is no submission route — pitch Stuart Goulden via Twitter/X @stugoulden (the about page links his handle for suggestions)",
+    "Alternatively engage via the site's newsletter/contact surfaces",
+    "If accepted, coverage appears as a scored review under /ourreviews/<tool>/ and possibly a 'Meet the Makers' founder interview"
+  ],
+  "watchFor": [
+    "Editorial filter is the value proposition ('antidote to fake reviews') — do not offer payment for a review; affiliate/deal arrangements are the disclosed monetization",
+    "Site is a one-person operation — slow turnaround is likely",
+    "A review is honest-scored, not guaranteed positive; negative write-ups are possible",
+    "Recent content includes non-marketing health topics (biomarker testing, telehealth) — editorial scope is drifting"
+  ],
+  "countsAsLive": "A review page under /ourreviews/<product>/ exists on surges.co, or the tool appears on the leaderboard",
+  "unknowns": [
+    "Whether tool suggestions from vendors are accepted at all (no formal intake)",
+    "Whether a review requires an affiliate program or reader deal",
+    "Current activity level — footer shows © 2025 and the newsletter claims only ~370 subscribers"
+  ]
+}

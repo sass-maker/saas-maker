@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "dribbble.com",
+  "name": "Dribbble",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://dribbble.com/pro",
+      "title": "Dribbble Pro pricing — Free $0 plan exists; Lite $4/mo, Standard $8/mo, Plus $99/mo (billed yearly); shot upload limits per plan"
+    },
+    {
+      "url": "https://dribbble.com/signup/new",
+      "title": "Dribbble signup — community for designers; shots, services, project briefs"
+    },
+    {
+      "url": "https://dribbble.com/about",
+      "title": "Dribbble About — 'world's leading platform for discovering top designers'"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free $0 account can upload and publish Shots — the Pro page lists 'Upload & publish Shots' in the Free plan",
+    "Free plan has a per-day shot upload limit (10/day; paid tiers raise it to 15/25/50)",
+    "Content must be design work — shots, case studies, UI/branding/product design; not a generic product listing",
+    "Hiring-side features (Project Briefs, Services, InstantMatch) are gated behind Pro plans"
+  ],
+  "preparation": [
+    "Dribbble account (free tier suffices for posting shots)",
+    "Shot artwork — a single visual (UI screenshot, brand board, animation) is the atomic unit",
+    "Title, description, and tags for each shot",
+    "Frame a SaaS launch as design output: product UI screens, brand identity, landing page design — a raw URL drop does not fit the format"
+  ],
+  "workflow": [
+    "Sign up at dribbble.com/signup/new",
+    "Upload a shot via the upload flow (shot image, title, description, tags)",
+    "Publish — the shot appears on your public profile and in feeds/search",
+    "Optionally attach a service or portfolio site if you want client leads (Pro features)",
+    "Repeat within your plan's daily upload limit"
+  ],
+  "watchFor": [
+    "The productized side (leads, services, project briefs, boosted shots) is the paid tier — don't confuse 'listed on Dribbble' with getting client leads",
+    "10 shots/day cap on Free — pace portfolio uploads",
+    "Audience is designers hiring designers; a SaaS 'launch announcement' with no design artifact will underperform",
+    "Pro pricing: Lite $4/mo, Standard $8/mo, Plus $99/mo (billed yearly) — monthly billing costs more"
+  ],
+  "countsAsLive": "The shot is published on the public Dribbble profile (dribbble.com/<username>) and visible in feeds/search",
+  "unknowns": [
+    "Whether free accounts still need an invitation or application to post shots — the Pro page mentions 'Skip designer application process' as a Plus perk, implying a review step may exist for new posters",
+    "Discoverability differences between Free and Pro beyond the stated ranking boosts"
+  ]
+}

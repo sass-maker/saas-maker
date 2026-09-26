@@ -19,6 +19,11 @@ SaaS Maker owns only:
   checked-in `apps/showcase/src/data/launchdesk.json` snapshot. This is a SaaS
   Maker feature, not a standalone Fleet product. Preserve the dataset's source
   claims and unknown-vs-zero semantics when updating it.
+- the funding and accelerator directory at `/funding`, rendered natively from
+  the checked-in `apps/showcase/src/data/funding.json` snapshot (one-time
+  import, not a live sync). Preserve per-row evidence quality, uncertainty,
+  and the assessment-vs-fact distinction; assessments are portfolio judgment,
+  not the programs' claims.
 
 SaaS Maker Tooling owns shared schedules, skills, and host automation. Site
 Health owns portfolio operations and reads the SaaS Maker catalog through a

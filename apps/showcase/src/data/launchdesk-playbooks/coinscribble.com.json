@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "coinscribble.com",
+  "name": "Coin Scribble / Mintfunnel",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://coinscribble.com/",
+      "title": "Homepage — now branded 'Mintfunnel', a self-serve Web3 marketing platform (native ads + PR distribution + analytics); © 2026 CB Platforms LLC"
+    },
+    {
+      "url": "http://coinscribble.com/contact",
+      "title": "Batch-provided contact URL — returns 404"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Site pivoted from 'Coin Scribble' to Mintfunnel: a paid crypto/Web3 marketing platform, not a directory",
+    "PR distribution starts at $99 per release with tiered pricing by number of publications",
+    "Native ad network runs on a CPC model from $0.25/click with no minimum budget ($10 suggested start)",
+    "Audience is crypto/Web3 only (DeFi, tokens, NFTs, chains, exchanges, DAOs) — a non-crypto SaaS is a poor fit",
+    "Free tier exists only for Mintfunnel Analytics (site-side tracking) — it produces no public listing"
+  ],
+  "preparation": [
+    "A crypto/Web3-relevant product announcement — the publisher network is crypto media only",
+    "Press release copy (or use their free PR generator tool)",
+    "Budget: ≥$99 for PR distribution or a CPC budget for native ads",
+    "Account at app.mintfunnel.co (email signup, no credit card claimed for the free analytics tier)"
+  ],
+  "workflow": [
+    "Sign up at https://app.mintfunnel.co/auth/register",
+    "Choose PR Distribution (≥$99/release, tiered by outlet count) or Ad Network (CPC, from $0.25)",
+    "Write/upload the release or ad creative in the guided flow",
+    "Submit — campaigns reportedly go live within minutes with no approval queue",
+    "Track placements/clicks in the dashboard; guaranteed pickups are stated per PR tier"
+  ],
+  "watchFor": [
+    "This is no longer a listing directory — catalog entry should be treated as a paid PR/ads channel",
+    "Batch URL /contact is dead; there is no free submission path",
+    "Crypto-only publisher network; general SaaS products will not fit the audience",
+    "The 'free' analytics plan does not get your product published anywhere"
+  ],
+  "countsAsLive": "The dashboard shows the press release 'Published' with live pickups across named crypto outlets, or the ad campaign shows live impressions/clicks",
+  "unknowns": [
+    "Whether 'Coin Scribble' branding or a legacy editorial/contact route still exists anywhere on the domain",
+    "Exact per-tier publication lists for PR distribution",
+    "Whether a non-crypto product would be rejected or merely ineffective"
+  ]
+}

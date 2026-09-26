@@ -1,0 +1,66 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "trust-revenue.com",
+  "name": "Trust Revenue",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://trust-revenue.com/",
+      "title": "Homepage — 'From launch to exit' verified startup marketplace with revenue-backed discovery (JS-rendered; text from indexed copy)"
+    },
+    {
+      "url": "https://trust-revenue.com/pricing",
+      "title": "Plans — free basic listing; paid $19/mo or $99/yr adds verified revenue badge, homepage spotlight, instant go-live"
+    },
+    {
+      "url": "https://trust-revenue.com/llms.txt",
+      "title": "llms.txt — submission model: name, tagline, URL, category, MRR, payment provider; profiles at /startups/{slug}"
+    },
+    {
+      "url": "https://trust-revenue.com/faq",
+      "title": "FAQ — account required to add or claim a startup; marketplace success fee applies to acquisitions"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free basic listing requires an account and creating a listing via the dashboard (/dashboard/startup)",
+    "Free tier queues — paid 'For founders ready to sell fast' tier advertises 'Instant go-live — no queue'"
+  ],
+  "requirements": [
+    "Real startup with traction signals — the marketplace centers on revenue/MRR data",
+    "Founders submit name, tagline, URL, category, MRR, and payment provider",
+    "Revenue verification is done by connecting live payment-provider API keys (read-only); verified badge is a paid feature",
+    "Optional GA + Search Console connection supported on the free tier",
+    "Listings can optionally be marked 'open for acquisition' with seller guidance pricing"
+  ],
+  "preparation": [
+    "Startup name, tagline, URL, and category (SaaS, AI Tools, E-commerce, Infrastructure, Marketplace, DevTools)",
+    "MRR figure and the payment provider used (Stripe etc.) — read-only API key if pursuing the verified revenue badge",
+    "Google Analytics / Search Console access if connecting traffic metrics",
+    "Founder profile info for the founder directory",
+    "Decide whether the listing should be marked 'For Sell' / open for acquisition"
+  ],
+  "workflow": [
+    "Create an account on trust-revenue.com",
+    "Open the dashboard and add a startup (batch-provided path: /dashboard/startup)",
+    "Enter name, tagline, URL, category, MRR, and payment provider; optionally connect GA/Search Console and read-only payment keys",
+    "Publish the free listing (queued) or subscribe $19/mo / $99/yr for instant go-live, verified badge, and homepage spotlight",
+    "Listing goes live at /startups/{slug} with metrics, founder info, tech stack, gallery, and discussion"
+  ],
+  "watchFor": [
+    "Pages are JS-rendered — plain HTTP fetches return empty; a real browser is needed",
+    "Free tier has no verified revenue badge, no homepage spotlight, no priority boost — visibility is limited",
+    "Marketplace acquisition success fee applies if a sale happens through the platform — see /fees",
+    "Claiming an existing listing vs creating a new one are separate flows (FAQ mentions 'add or claim')",
+    "Revenue verification requires handing over read-only payment-provider API keys — a trust decision, not just a form"
+  ],
+  "countsAsLive": "The startup has a public profile at trust-revenue.com/startups/<slug> and appears in /browse or its category page",
+  "unknowns": [
+    "Free-tier queue length / review turnaround",
+    "Exact form fields inside the dashboard (JS-only pages)",
+    "Whether revenue fields can be hidden while staying listed (FAQ suggests yes: 'Can I hide revenue but stay listed?')",
+    "Success-fee percentage on acquisitions (referenced but amount not captured)"
+  ]
+}

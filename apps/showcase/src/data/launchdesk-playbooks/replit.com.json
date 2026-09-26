@@ -1,0 +1,56 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "replit.com",
+  "name": "Replit",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://docs.replit.com/llms.txt",
+      "title": "Replit docs index — publish flows, Replit Apps, Free Mode, cloud services"
+    },
+    {
+      "url": "https://docs.replit.com/",
+      "title": "Replit documentation home"
+    },
+    {
+      "url": "https://replit.com/signup",
+      "title": "Batch-provided signup URL — replit.com returns 403 to non-browser fetchers"
+    }
+  ],
+  "category": "profile",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Account creation is free and a Free Mode allowance exists for building",
+    "Publishing an app to a live public URL is a 'publish/deploy' action — docs cover release settings and monitoring; ongoing hosting may consume plan credits or require a paid tier (not fully verifiable from fetched pages)"
+  ],
+  "requirements": [
+    "A Replit account (replit.com/signup — 403 to automated fetches, use a browser)",
+    "The 'listing' is a public Replit profile plus published Apps/sites — there is no directory submission form",
+    "Docs describe a publish workflow: build with Agent or import a project, choose release settings, publish, verify the live version"
+  ],
+  "preparation": [
+    "Email/sign-in method for account creation",
+    "A small public app or project to publish (landing page, demo tool) — an empty profile has no launch value",
+    "Display name/bio and website URL for the public profile"
+  ],
+  "workflow": [
+    "Sign up at https://replit.com/signup in a browser",
+    "Complete the public profile (bio, website)",
+    "Create a Project (import code or build with Agent in Free Mode)",
+    "Use the publish flow (docs.replit.com/build/publish-your-app): pick release settings, publish, verify the live URL",
+    "The published app's replit.app URL and the public profile together form the destination footprint"
+  ],
+  "watchFor": [
+    "replit.com blocks automated fetches (403) — signup and pricing pages could not be verified directly",
+    "Replit has pivoted toward an agent/build product; older 'community gallery' assumptions may not hold",
+    "Publishing/deploying can incur cloud costs — check plan limits before promising a free listing",
+    "Do not represent an unpublished draft project as live"
+  ],
+  "countsAsLive": "A public app URL (replit.app domain or connected domain) serves the published build, and the owner's public Replit profile shows the project",
+  "unknowns": [
+    "Whether a permanent free published-URL tier exists under current (Aug 2026) cloud billing",
+    "Link attribute of profile/app pages",
+    "Whether Replit still operates a browsable public gallery/directory"
+  ]
+}

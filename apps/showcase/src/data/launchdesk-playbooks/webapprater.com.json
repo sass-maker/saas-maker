@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "webapprater.com",
+  "name": "WebAppRater",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://webapprater.com/",
+      "title": "Homepage — active WordPress review blog (posts through Sep 2026); 'Submit App' nav link"
+    },
+    {
+      "url": "https://webapprater.com/submit-your-web-application-for-review-html/",
+      "title": "Submit your app for review — Featured Review and Network Review options; submission is a Wufoo form"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Accepts web apps and mobile apps; also explicitly interested in pre-release and beta versions",
+    "Two offerings: 'Featured Review' (guaranteed review, posted forever, sticky on homepage for at least 30 days) and 'Network Review' (unique reviews published across partner sites AppsTimes.in, AppsMirror.com, AppsListo.com, AppsThunder.com)",
+    "Actual intake is a Wufoo form embedded on the submit page"
+  ],
+  "preparation": [
+    "App name, URL, and platform (web/mobile)",
+    "Short product description and screenshots for the reviewer",
+    "Contact email — the form likely leads to a pricing quote since no price is published",
+    "Decide whether you want a single review or the multi-site Network Review package"
+  ],
+  "workflow": [
+    "Open https://webapprater.com/submit-your-web-application-for-review-html/",
+    "Fill out the embedded Wufoo form (amp2.wufoo.com/forms/m155yblq03stsxk)",
+    "Expect a follow-up email with review pricing — 'guaranteed review' language indicates this is a paid-review service",
+    "After acceptance, the review publishes as a post under category/reviews and may be stickied on the homepage for 30 days"
+  ],
+  "watchFor": [
+    "No pricing published on the page — treat as a paid review service and expect a sales follow-up",
+    "The 'guaranteed review' framing means this is pay-for-coverage, not editorial listing; don't report it as earned coverage",
+    "Site footer says 'Promoted by AppMarketingPlus' — the submit page is a lead-gen funnel for an app-marketing agency",
+    "Homepage mixes app reviews with off-topic sponsored articles (peptides, clenbuterol, teeth whitening, MLM software) — low editorial signal"
+  ],
+  "countsAsLive": "A review post about the product is published on webapprater.com (visible under /category/reviews or the homepage sticky area)",
+  "unknowns": [
+    "Exact pricing for Featured and Network reviews",
+    "Whether any free submission path exists — none is offered on the page",
+    "Turnaround time from form submission to published review"
+  ]
+}

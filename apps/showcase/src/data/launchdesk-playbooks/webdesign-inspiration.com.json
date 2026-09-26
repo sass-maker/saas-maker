@@ -1,0 +1,56 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "webdesign-inspiration.com",
+  "name": "Webdesign Inspiration",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.webdesign-inspiration.com/web-design-site/submit",
+      "title": "Submit a website — form fields and $50 express option captured via search snippet; direct fetch returned 403 (bot-blocked)"
+    },
+    {
+      "url": "https://www.webdesign-inspiration.com/en/submit",
+      "title": "Alternate submit URL (/en/submit) shown in search results; direct fetch 403"
+    },
+    {
+      "url": "https://www.the-web-makers.com/inspirations/submit-a-website/",
+      "title": "Sister-site submission page describing shared editorial review; direct fetch 403, snippet only"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free submissions enter an editorial queue the site itself describes as taking 'a few months'; a $50 express option publishes in under 48 hours and upgrades the link from nofollow to dofollow"
+  ],
+  "requirements": [
+    "Site must be a live website with clean design and strong UX — this is a design gallery, not a general directory",
+    "Website title max 70 characters",
+    "Website description max 150 characters",
+    "Optional private message field for a note to the editors"
+  ],
+  "preparation": [
+    "Live website URL",
+    "Site title trimmed to ≤70 chars",
+    "A ≤150-char description — plan the copy in advance, it is very short",
+    "Optional short note for the 'Private Message' field"
+  ],
+  "workflow": [
+    "Open https://www.webdesign-inspiration.com/web-design-site/submit (or /submit or /en/submit)",
+    "Fill the website URL, title (≤70 chars), description (≤150 chars), and optional private message",
+    "Submit the free form — site says 'we will review it quickly' but sets expectations of a few months",
+    "Optional: choose the $50 Express Review for <48h publication and a dofollow instead of nofollow link; payment instructions arrive in the success message"
+  ],
+  "watchFor": [
+    "Direct fetches are bot-blocked (403) — use a real browser or expect automation friction",
+    "Free-tier link is nofollow; dofollow only comes with the $50 express route",
+    "Free editorial wait is described as months, not days",
+    "Domain also answers at /submit, /en/submit and /fr/web-design-site/submit — same form"
+  ],
+  "countsAsLive": "The site appears as an entry/screenshot card on webdesign-inspiration.com gallery pages and is reachable from its category",
+  "unknowns": [
+    "Whether a user account is needed to submit (form fields were visible in snippets but auth requirements were not)",
+    "Current actual review turnaround for free submissions",
+    "Whether the $50 express fee changed since the snippet was indexed"
+  ]
+}

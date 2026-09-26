@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "bizmaker.org",
+  "name": "BizMaker",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://bizmaker.org/",
+      "title": "Homepage — generic B2B/local business directory; 'Join For Free'; part of a 16-site 'FREE Listing Sites' network"
+    },
+    {
+      "url": "https://www.bizmaker.org/join",
+      "title": "Join page — 'Join For Free', continues to /checkout/1; member login and free account creation links"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free member account (email + password); 'Join For Free' / 'Create Free User Account'",
+    "Generic business directory with category + location structure — any business fits, including SaaS",
+    "Join flow routes through /checkout/1 despite the 'free' claim — a $0 checkout or paid upsell step may appear"
+  ],
+  "preparation": [
+    "Email and password for a member account",
+    "Business name, category, location, description, website URL",
+    "Logo/image if the listing form asks"
+  ],
+  "workflow": [
+    "Open https://www.bizmaker.org/join ('Join For Free' → CONTINUE)",
+    "Create the free member account",
+    "Proceed to 'Add Your Company' / checkout step and fill the business listing fields",
+    "Listing appears under city/category paths (e.g. /<city>/<category>/<company>)"
+  ],
+  "watchFor": [
+    "Part of an obvious link-farm network ('Our Family of FREE Listing Sites' — 16 sibling directories); SEO value is low and footprints like this can look spammy",
+    "The 'Join For Free' CTA lands on /checkout/1 — watch for a paid upsell inside the checkout flow",
+    "Newest member articles are syndicated spam-adjacent content (Olympics tickets, Umrah packages) — low editorial quality",
+    "Newest members include non-US locations; it's not US-local-only despite appearances"
+  ],
+  "countsAsLive": "A public member listing page exists at bizmaker.org/<location>/<category>/<company> and appears in 'Newest Members'/category browsing",
+  "unknowns": [
+    "Whether /checkout/1 charges anything or is a $0 free checkout",
+    "Dofollow status of listing links",
+    "Whether listings require manual approval"
+  ]
+}

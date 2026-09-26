@@ -1,0 +1,45 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aipulse.fyi",
+  "name": "AI Pulse",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.aipulse.fyi/submit",
+      "title": "Submit Your App — 'Submit your AI tool for review. We'll review it and add it to our directory if it meets our criteria.'"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "AI tools only — an AI tools directory with categorized reviews",
+    "Submission is editorially reviewed ('add it to our directory if it meets our criteria') — criteria not published",
+    "No fee mentioned on the submit page"
+  ],
+  "preparation": [
+    "App name, description, website URL",
+    "Category pick from the dropdown",
+    "Pricing facts: has free plan, has free trial, starting price in USD/mo (can be left empty if unavailable)",
+    "Up to 10 key features (chips added via Enter/+)",
+    "A contact email — 'We'll contact you if we need more information'"
+  ],
+  "workflow": [
+    "Open https://www.aipulse.fyi/submit",
+    "Fill app name, description, URL, category, pricing flags, up-to-10 key features, email",
+    "Submit for review and wait — contact happens only if they need more info",
+    "Accepted tools appear under /reviews or the AI Tools index"
+  ],
+  "watchFor": [
+    "No stated review timeline or criteria — opaque editorial process",
+    "A real monitored email is worth giving since follow-up questions go there",
+    "Pricing fields are structured (free plan/free trial flags + USD starting price) — have accurate numbers",
+    "Feature list is capped at 10"
+  ],
+  "countsAsLive": "The tool appears as a review/listing page on aipulse.fyi (reachable from the AI Tools index or its category)",
+  "unknowns": [
+    "Review turnaround and acceptance criteria",
+    "Whether listings include a followed link",
+    "Site operator identity"
+  ]
+}

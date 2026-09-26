@@ -1,0 +1,58 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "cybo.com",
+  "name": "Cybo",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://support.cybo.com/hc/en-us/articles/9974685260045-How-do-I-Claim-my-Business",
+      "title": "Claim help (search-indexed) — free account required; claim via check-mark icon on the listing page or the Edit Business flow; duplicates already claimed need a support ticket"
+    },
+    {
+      "url": "https://www.cybo.com/canada/",
+      "title": "Country directory page (search-indexed) — confirms public 'Add a Business' route at cybo.com/add-business"
+    },
+    {
+      "url": "https://support.cybo.com/hc/en-us/articles/8725672371469-How-do-I-Add-a-Business",
+      "title": "Batch-provided submission URL — returned HTTP 403 (Zendesk bot-blocked)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Adding/claiming a business is free ('There is no charge') but requires a registered account",
+    "It is a local-business yellow-pages directory — the listing needs a real business with an address/phone; a purely online SaaS without a local presence is a marginal fit",
+    "Many businesses are already listed from data feeds — claim the existing listing instead of creating a duplicate"
+  ],
+  "requirements": [
+    "Cybo account (free)",
+    "Real business details: name, address, phone, category, website",
+    "If a listing already exists and is unclaimed, claim it via the listing page check-mark icon or the Edit Business button; if it was claimed by another account, contact support@cybo.com"
+  ],
+  "preparation": [
+    "Search cybo.com for the business first (data-feed listings are common)",
+    "Consistent NAP: business name, address, phone",
+    "Website URL and business category",
+    "Email for the free account"
+  ],
+  "workflow": [
+    "Register a free account at cybo.com/register",
+    "Search for the business; if found unclaimed, use the check-mark 'claim' icon or 'Edit Business' on the listing page",
+    "If not found, use cybo.com/add-business to create the listing",
+    "Accept the Terms & Conditions step to submit",
+    "Verify the public listing page is live with the correct details"
+  ],
+  "watchFor": [
+    "cybo.com and its Zendesk support site 403 automated fetches — use a browser",
+    "Duplicate/feed-sourced listings are common — check carefully before adding a new one",
+    "US/local-business orientation; global online-only products may look out of place",
+    "Claimed-by-another-account conflicts require a manual support ticket"
+  ],
+  "countsAsLive": "The business listing page on cybo.com is publicly viewable and shows as claimed/associated with the account, with correct NAP and website link",
+  "unknowns": [
+    "Whether listing website links are dofollow",
+    "Review/verification step for new business adds",
+    "Whether online-only businesses are accepted or removed"
+  ]
+}

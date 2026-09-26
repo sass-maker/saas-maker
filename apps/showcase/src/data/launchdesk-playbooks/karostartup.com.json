@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "karostartup.com",
+  "name": "KaroStartup",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://karostartup.com/",
+      "title": "Homepage — active Indian startup newsroom; dozens of stories dated 2026-09-24/25/26 incl. founder profiles and clearly sponsored-style PR posts"
+    },
+    {
+      "url": "https://www.karostartup.com/contact",
+      "title": "Get in touch — 'Promote your startup, send us a tip, advertise...' form with inquiry-type tabs and direct emails"
+    },
+    {
+      "url": "https://karostartup.com/advertise-with-us",
+      "title": "Batch-provided URL — 404/redirects away; the live contact hub is /contact"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "Indian startup/business angle strongly preferred — the newsroom covers Indian startups, funding, founders, fintech, D2C",
+    "Submission channels on /contact: tabs for 'Promote Your Startup', 'Advertise', 'Send a Tip', 'PR / Press', 'Partnership', 'Careers', 'General'",
+    "No published rate card on the contact page — 'promotion inquiries hear back within 24 hours', so promotion is a sales conversation",
+    "Direct emails: info@karostartup.com (general), business@karostartup.com (business, <24h response)"
+  ],
+  "preparation": [
+    "A press-release-ready story: company, what launched/raised, location, quotes, dates — the site publishes verbatim-style PR posts",
+    "Founder name/photo and company details for founder-profile pitches",
+    "Decide the lane: free 'Send a Tip' for editorial coverage vs paid 'Promote Your Startup'/'Advertise'",
+    "Contact form needs name, email, phone, subject, ≥30-char message (max 2000)"
+  ],
+  "workflow": [
+    "Open https://www.karostartup.com/contact",
+    "Pick the right tab: 'Send a Tip' for a free editorial shot, 'Promote Your Startup'/'Advertise' for paid placement, 'PR / Press' for release distribution",
+    "Submit the form or email business@karostartup.com directly",
+    "If accepted, the story appears as a dated article on karostartup.com like the daily feed"
+  ],
+  "watchFor": [
+    "Batch URL /advertise-with-us is dead — everything routes through /contact",
+    "The feed mixes editorial with obvious paid PR ('ITPracticeTests.com Offers 50% OFF...', app-review promos) — placement may be paid-only in practice",
+    "No rate card published; pricing is negotiated per inquiry",
+    "Non-India products are a weaker fit but the PR stream is broad"
+  ],
+  "countsAsLive": "A dated article about the startup/product appears on karostartup.com's article feed with its own permalink",
+  "unknowns": [
+    "Whether 'Send a Tip' yields unpaid coverage or all placements are paid",
+    "Rate card / pricing tiers",
+    "Whether articles include a followed link to the company"
+  ]
+}

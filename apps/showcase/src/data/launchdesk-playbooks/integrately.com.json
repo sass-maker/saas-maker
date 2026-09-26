@@ -1,0 +1,40 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "integrately.com",
+  "name": "Integrately",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://integrately.com/",
+      "title": "Integrately — automation platform (Zapier alternative) with a 1,500+ app integrations directory; footer 'SaaS Partners' links: 'Integrate Your Own SaaS' and 'Embed Automation On Your Website'"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "The directory is Integrately's own integrations catalog — listing means building a real Integrately integration/partnership ('Integrate Your Own SaaS' partner route), not a generic listing"
+  ],
+  "requirements": [
+    "A SaaS product with an API worth integrating — the app directory is a feature of the automation platform",
+    "'Integrate Your Own SaaS' partner link in the footer under 'SaaS Partners' — partnership, not self-serve listing",
+    "Alternatively 'Request Integrations' suggests demand-driven requests",
+    "Each app entry is an integrations page (e.g., /integrations/<app>) showing ready automations"
+  ],
+  "preparation": [
+    "A public API or integration endpoints Integrately can wire automations around",
+    "Partner contact via the SaaS Partners link"
+  ],
+  "workflow": [
+    "Use footer 'Integrate Your Own SaaS' to start a partnership",
+    "Work with their team to build the app's triggers/actions",
+    "Once live, the app appears at integrately.com/integrations/<app> with ready automations"
+  ],
+  "watchFor": [
+    "Not a launch directory — a SaaS without integratable workflows has no reason to list",
+    "Partner onboarding is a business conversation, not a form",
+    "The directory's SEO value is real for integration-seeking traffic (e.g., 'X integrations')"
+  ],
+  "countsAsLive": "The app has a public integrations page at integrately.com/integrations/<app>",
+  "unknowns": ["Partnership requirements/costs — not public", "Minimum API capabilities needed"]
+}

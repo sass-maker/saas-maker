@@ -1,0 +1,61 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startup.sx",
+  "name": "Startup.sx",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.startup.sx/submit",
+      "title": "Batch-provided submit URL — returned HTTP 429 (rate-limited) to automated fetches on repeated tries"
+    },
+    {
+      "url": "https://www.startup.sx/product/chatgpt",
+      "title": "Live product page (via search index) — shows 'Verified' badge, launch date, upvotes, category, maker profile, promoted slots, discussion"
+    },
+    {
+      "url": "https://firsto.co/sites/startupsx",
+      "title": "Firsto directory profile of Startup.sx — community-curated launch platform; free submission with manual review, account required, $9.99 paid promotion (instant publish, homepage feature, dofollow backlink)"
+    },
+    {
+      "url": "https://smollaunch.com/directories",
+      "title": "Smol Launch 410+ directory list — lists Startup.sx as a submission destination"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free submission exists but requires creating an account and passing manual review before the listing appears",
+    "Paid $9.99 option skips the queue: instant publish, homepage feature, dofollow backlink (per Firsto's profile)"
+  ],
+  "requirements": [
+    "Account registration required before submitting",
+    "Product/startup fit — platform is positioned as a minimalist Product Hunt alternative for indie makers; listings have launch date, category (e.g., 'ai tools'), maker profile",
+    "Manual review for the free tier; no mandatory backlink/badge for free listings per third-party profiles"
+  ],
+  "preparation": [
+    "Product name, tagline, full description, category",
+    "Logo/thumbnail and website URL",
+    "Maker profile details (products carry a 'Maker' section)",
+    "An account on startup.sx"
+  ],
+  "workflow": [
+    "Register an account on startup.sx",
+    "Open https://www.startup.sx/submit (site rate-limits bots — use a normal browser session)",
+    "Fill in product details and choose the free submission path",
+    "Wait for manual review; listing appears on the site with upvote/discussion features once approved"
+  ],
+  "watchFor": [
+    "Site aggressively rate-limits automated fetches (HTTP 429) — do not hammer it; submit via a real browser",
+    "Free listings sit in a review queue while $9.99 buys instant publish — don't pay if the queue is the only difference you need",
+    "Third-party profiles disagree slightly on DR (29-32); treat 'dofollow' claims for paid tier as unverified",
+    "'Promoted' section shows paid placements mixed into product pages"
+  ],
+  "countsAsLive": "A product page exists at startup.sx/product/<slug> with launch date, upvote count, and category — publicly browsable without login",
+  "unknowns": [
+    "Exact form fields (submit page could not be fetched — persistent 429)",
+    "Manual review turnaround time",
+    "Whether free listings get dofollow or nofollow links",
+    "How large/active the community voting actually is"
+  ]
+}

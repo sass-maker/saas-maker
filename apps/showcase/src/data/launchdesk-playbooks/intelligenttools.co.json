@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "intelligenttools.co",
+  "name": "Intelligent Tools",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://intelligenttools.co/",
+      "title": "Homepage — 600+ tools across 18 categories, active newest-additions feed"
+    },
+    {
+      "url": "https://intelligenttools.co/submit",
+      "title": "Submit page — Free listing ($0, reviewed within 7 days) and Featured ($19/mo or $189/yr) forms with full field list"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "AI tools / software tools across 18 categories (AI Agents, Code Generation, Image, Video, Writing, Productivity, etc.)",
+    "Free form fields: Tool Name, Website URL, Tagline (max 100 chars), Description (min 100 chars), Category, Pricing Model (Free/Freemium/Paid Only/Open Source), Your Email",
+    "No account and no card required for the free listing",
+    "Manual review — 'reviewed by hand' within 7 days; accuracy agreement on submit"
+  ],
+  "preparation": [
+    "Tool name and canonical URL",
+    "Tagline ≤100 characters",
+    "Description ≥100 characters",
+    "Pricing model classification and contact email",
+    "Optional: PayPal/card for Featured upgrade"
+  ],
+  "workflow": [
+    "Open https://intelligenttools.co/submit",
+    "Fill the 'Submit your free listing' form (name, URL, tagline, description, category, pricing model, email)",
+    "Submit Tool for Review — notification arrives by email once the listing is live",
+    "Optional: use the Featured form ($19/month or $189/year via PayPal/card) for a verified badge, priority placement, and 24-hour turnaround"
+  ],
+  "watchFor": [
+    "Featured is a recurring subscription, not one-time — cancel by emailing boki@intelligenttools.co",
+    "Free tier is a 'basic tool profile' — featured section contains affiliate links, so placement quality differs",
+    "Tagline is capped at 100 chars and description has a 100-char minimum — write to the limits",
+    "Upgrade path is manual (email) — no self-serve upgrade button"
+  ],
+  "countsAsLive": "Confirmation email arrives and the tool page appears under intelligenttools.co/tools and its category page",
+  "unknowns": [
+    "Whether free listing links are dofollow",
+    "Rejection criteria beyond accuracy — no published editorial bar",
+    "Actual review time within the stated 7-day window"
+  ]
+}

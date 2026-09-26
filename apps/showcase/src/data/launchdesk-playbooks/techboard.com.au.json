@@ -1,0 +1,37 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "techboard.com.au",
+  "name": "Techboard",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://techboard.com.au/",
+      "title": "Techboard — live Australian startup/tech data platform; 'Add a Company/Claim ownership' at /get-listed/add-a-company/; Listing Rules page; Company Announcements feed; Report a Funding Event; paid data subscriptions on the research side"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Australian startup/tech companies — Techboard covers the Aussie ecosystem",
+    "Register/login then 'Add a Company/Claim ownership' under Techboard Directory",
+    "Listing Rules apply (dedicated page); Company Announcements surface gives listed companies a news feed",
+    "Funding data subscriptions are the paid research product — separate from directory listing"
+  ],
+  "preparation": [
+    "Australian company details matching the Listing Rules",
+    "Account on techboard.com.au"
+  ],
+  "workflow": [
+    "Register at techboard.com.au/my-dashboard/my-account/",
+    "Add a Company (or claim an existing profile) via /get-listed/add-a-company/",
+    "Post Company Announcements and report funding events for visibility"
+  ],
+  "watchFor": [
+    "Australian ecosystem only",
+    "WordPress-era site — functional but dated",
+    "Listing Rules may restrict to genuine Aussie tech companies"
+  ],
+  "countsAsLive": "A company profile in the Techboard directory (+ optional announcements)",
+  "unknowns": ["Whether company listing itself is free vs member-gated", "Listing Rules specifics"]
+}

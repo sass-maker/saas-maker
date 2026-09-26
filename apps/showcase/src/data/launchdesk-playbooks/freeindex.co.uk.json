@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "freeindex.co.uk",
+  "name": "FreeIndex",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://freeindex.co.uk/",
+      "title": "Homepage — active UK business directory (450k+ reviews, live quote-request feed); 'Advertise for FREE' → /advertise.htm"
+    },
+    {
+      "url": "https://www.freeindex.co.uk/add_business.htm",
+      "title": "Batch-provided submit URL — 404; real routes are /signup.htm and /advertise.htm"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "UK business required — 'Run a UK business? Get leads, build a brilliant business profile'",
+    "Free basic listing ('Advertise for FREE'); FreeIndex Premium exists as a paid upgrade (/premium.htm)",
+    "Register at /signup.htm or via /advertise.htm; review collection is core to the listing"
+  ],
+  "preparation": [
+    "UK business details: name, address/location, phone, website",
+    "Category pick from their taxonomy (trades, professional services, web designers, etc.)",
+    "Business description for the public profile"
+  ],
+  "workflow": [
+    "Open https://freeindex.co.uk/advertise.htm or /signup.htm",
+    "Create the business account and fill the profile (location, category, contact details)",
+    "Listing goes live as a /profile(<slug>)_<id>.htm page",
+    "Collect customer reviews and optionally respond to 'quote requests' leads",
+    "Optional: Premium upgrade for extra visibility"
+  ],
+  "watchFor": [
+    "UK-only — no value for a SaaS without a UK business presence; adding one without a UK operation would be dishonest",
+    "Batch seed URL /add_business.htm is dead",
+    "Premium upsell exists; review-verification rules apply (/reviews.htm policy)",
+    "Listing is lead-gen oriented (quote requests) — expect customer inquiries, not just a link"
+  ],
+  "countsAsLive": "The business has a public freeindex.co.uk/profile(<slug>)_<id>.htm page indexed under its category and location",
+  "unknowns": [
+    "Whether the website link on profiles is dofollow",
+    "Approval/verification steps for new businesses",
+    "Premium tier pricing"
+  ]
+}

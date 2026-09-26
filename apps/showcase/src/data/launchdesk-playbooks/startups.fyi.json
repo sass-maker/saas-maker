@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startups.fyi",
+  "name": "Startups.fyi",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://startups.fyi/",
+      "title": "Homepage — startup-discovery newsletter (claimed 15,592 subscribers); every visible listing card is tagged 'Sponsored'; 'Share your project' links to a Tally form"
+    },
+    {
+      "url": "https://tally.so/r/3lOGLk",
+      "title": "Tally 'Feature Your Startup' form — Featured Listings start at $29, include permanent directory listing + backlink, ~5 min, manual review; 'listing is not complete until payment has been successfully received'"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Payment required — Featured Listings start at $29; the form explicitly warns unpaid submissions are never published",
+    "Manual review: 'Every project is reviewed by a real person to ensure it meets our basic content and quality guidelines'",
+    "Form spans 5 pages of fields (page 1 is intro/email); email required for follow-up"
+  ],
+  "preparation": [
+    "Startup name, URL, description, revenue/MRR figure (listing cards display revenue claims)",
+    "Logo/assets for the listing",
+    "Payment method — at least $29"
+  ],
+  "workflow": [
+    "Open the 'Share your project' link on startups.fyi → Tally form tally.so/r/3lOGLk",
+    "Complete the 5-page form",
+    "Pay (Featured Listing, from $29)",
+    "Listing is reviewed by a human, then published in the searchable directory with a backlink"
+  ],
+  "watchFor": [
+    "No free route — the entire homepage inventory is sponsored content; organic submissions aren't a thing here",
+    "Revenue figures on cards appear self-reported ('Undisclosed', '$650K Pre-revenue' style badges)",
+    "Subscriber numbers are self-reported (15.5-15.8k); verify value before paying",
+    "Site also sells $49 database access and $199 growth calls — expect upsell collateral",
+    "Same operator contact (jr@startups.fyi) appears on Insanely Cool Tools — one person's directory network"
+  ],
+  "countsAsLive": "A sponsored product card appears on startups.fyi with a /product/<slug> page and outbound link",
+  "unknowns": [
+    "Exact price tiers above the $29 minimum (form pages 2-5 not fetched)",
+    "How long featured placement lasts vs the 'permanent' directory listing",
+    "Link type and whether newsletter inclusion is automatic or a separate add-on"
+  ]
+}

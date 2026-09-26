@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "moddb.com",
+  "name": "ModDB",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.moddb.com/tutorials/getting-the-first-impressions-right",
+      "title": "ModDB tutorial — mod/game profile pages are auto-created when you register a mod; control panel manages news, gallery, team lists (content read via search result)"
+    },
+    {
+      "url": "https://web.archive.org/web/20180509054812/www.moddb.com/games/add",
+      "title": "'Register a game' — members-only; account shared across IndieDB/VRDB/SlideDB (Wayback capture; live page 403 to fetchers)"
+    },
+    {
+      "url": "https://www.indiedb.com/tutorials/designing-and-customizing-your-modgame-profiles",
+      "title": "IndieDB tutorial — ModDB/IndieDB profile customization; staff-approved CSS via support@moddb.com (content read via search result)"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Games and game mods only — ModDB is a database of mods, indie games, addons, and downloads; a SaaS does not fit",
+    "Free member account — registration is members-only; account is shared with IndieDB, VRDB, and SlideDB",
+    "Register a game/mod/addon from the members area; a public profile page is created automatically",
+    "Profile includes About description, gallery, news posts, team list; customization possible (historically staff-approved CSS via support@moddb.com)",
+    "moddb.com blocked automated fetch (403) — flow verified via official tutorials and archived pages"
+  ],
+  "preparation": [
+    "An actual game or mod project with media (screenshots/videos) and files to host",
+    "A member account",
+    "Profile copy: About description written for the audience"
+  ],
+  "workflow": [
+    "Register at moddb.com (or sign in via IndieDB/VRDB/SlideDB)",
+    "From the members area, register the game/mod — the profile page is generated",
+    "Fill the profile: About, gallery images, team members, news posts",
+    "Upload files/addons through the members-only upload flow",
+    "Engage via news posts — they surface to followers and the site feed"
+  ],
+  "watchFor": [
+    "Hard vertical restriction — games/mods only",
+    "All submission surfaces are login-gated; nothing public without an account",
+    "Some editing features may be buggy/archived per community threads — a dev 'group' may be needed to manage a profile",
+    "The network (IndieDB especially) is the better-known surface for indie games"
+  ],
+  "countsAsLive": "The game/mod has a public profile page at moddb.com/<type>/<slug> with description, gallery, and downloads",
+  "unknowns": [
+    "Current moderation queue for new profiles",
+    "Whether custom-CSS approval is still staffed"
+  ]
+}

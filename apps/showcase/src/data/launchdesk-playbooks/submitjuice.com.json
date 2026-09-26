@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "submitjuice.com",
+  "name": "Submit Juice",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://submitjuice.com/",
+      "title": "Homepage — done-for-you startup directory submission service; pricing tiers Classic $197 / Premium $297 / Premium Plus $983, plus a $0 DIY tier with their 152+ directory list"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free 'DIY' tier: access to their list of 152+ directories for self-submission at $0",
+    "Paid tiers are a service, not a listing: Classic $197 (submits to ~20 directories), Premium $297 (~50 directories, DA 20+ guarantee), Premium Plus $983 (works until DA 40+, SaaS/software only)",
+    "Service is for software startups (SaaS, no-code, etc.); recently extended to local businesses; no illegal/NSFW/alcohol/weapons/drugs",
+    "Submissions are manual by their team over 5–7 days; coverage is NOT guaranteed — 'we can only guarantee our submissions'"
+  ],
+  "preparation": [
+    "For DIY: just grab the free directory list (airtable) and submit yourself",
+    "For paid: budget, a completed onboarding questionnaire, your pitch copy, and approval of their generated target-site list",
+    "Optional add-ons: Press Bundle (+$293, AP News/FOX/etc. syndication) and Graphics Bundle (+$298)"
+  ],
+  "workflow": [
+    "Free path: open the site, take the 'View now' DIY option to get the 152+ directories list and track submissions yourself in their Airtable",
+    "Paid path: buy a package, complete the questionnaire, review/approve their custom site list, they manually submit over ~a week",
+    "You receive a listing report with links to live listings in a personal Airtable"
+  ],
+  "watchFor": [
+    "This is a service, not a destination — your product doesn't get 'listed on submitjuice'; they submit elsewhere for you",
+    "Urgency marketing: 'raising prices this week', discount codes (ENDOFSUMMER for $100 off) — verify current pricing",
+    "DA guarantees are only on Premium tiers and apply to software sites",
+    "Press-bundle pickups 'depend on the nature of the news' — paid syndication networks, not earned coverage",
+    "Refund logic is 'pay nothing' only on the DA guarantee tiers; base service is delivered once proof of submission is provided"
+  ],
+  "countsAsLive": "Not a listing site — success is the Airtable submission report showing live third-party listings (verify each claimed link)",
+  "unknowns": [
+    "Quality/exact contents of the 152+ directory list without signing up",
+    "Whether the free Airtable requires account creation",
+    "Actual listing acceptance rate across the directories they submit to"
+  ]
+}

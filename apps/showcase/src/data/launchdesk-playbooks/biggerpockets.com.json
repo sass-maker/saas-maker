@@ -1,0 +1,58 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "biggerpockets.com",
+  "name": "BiggerPockets",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.biggerpockets.com/rules",
+      "title": "Community/forum rules — read via search index because direct fetch returned 403; prohibits contact info/links in posts, affiliate links anywhere, and promotion outside designated forums"
+    },
+    {
+      "url": "https://www.biggerpockets.com/forums/55/topics/974091-hello-and-welcome-to-biggerpockets",
+      "title": "Welcome thread (search-indexed) — self-promotion allowed only in designated forums; members are asked to introduce themselves"
+    },
+    {
+      "url": "https://www.biggerpockets.com/signup",
+      "title": "Signup page — returned HTTP 403 (bot-blocked)"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free basic membership exists, but any company/product mention is treated as advertising and is confined to signatures and designated areas (Marketplace/Classifieds, member blogs, intro thread)",
+    "Only relevant for real-estate-adjacent products — the community is exclusively real-estate investing"
+  ],
+  "requirements": [
+    "Real-estate investing relevance — generic SaaS promotion has no home here",
+    "No contact information (email, phone, social handles, website links) in forum posts — it must go in the signature instead",
+    "No affiliate links anywhere on the site including signatures, blogs, messages",
+    "Basic members may only private-message colleagues; PMs may never contain solicitations or links to your site",
+    "Posts advertising your company, services or website outside the designated areas are edited/removed by moderators"
+  ],
+  "preparation": [
+    "Profile photo and a genuine intro post (location, investing goals)",
+    "Signature with website link — the only sanctioned place for it",
+    "Real-estate-relevant value to contribute (deal analysis, market knowledge) before any promotion"
+  ],
+  "workflow": [
+    "Register a free account at biggerpockets.com/signup (use a browser — the site 403s automated fetches)",
+    "Upload a profile picture and post an introduction in the welcome forum",
+    "Set website/contact info in the signature, not in posts",
+    "Contribute to real-estate threads; if the product is relevant to investors, promote only in the Marketplace/Classifieds or via member blog posts",
+    "Paid tiers (Pro/Plus) expand private-messaging reach but do not relax the promotion rules"
+  ],
+  "watchFor": [
+    "Aggressive moderation — posts with links/contact info are edited without notice",
+    "PM solicitation rules are enforced even for Pro members — cold outreach with links can get messaging blocked",
+    "Mentioning your company or what it does can itself be classified as advertising outside permitted areas",
+    "Site blocks automated fetches — verify current rules in a browser before participating"
+  ],
+  "countsAsLive": "A public member profile exists at biggerpockets.com/users/<name> with signature link set and at least one published post",
+  "unknowns": [
+    "Whether member profile pages are indexable / whether profile links are nofollow",
+    "Current Pro/Plus pricing",
+    "Which marketplace sub-forums accept software/service ads specifically"
+  ]
+}

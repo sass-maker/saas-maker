@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "softonic.com",
+  "name": "Softonic",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://publishing-center.softonic.com/home",
+      "title": "Softonic Publishing Center — 'publish your app for free'; create version, submit for review, goes live on Softonic.com (406 to automated fetch; verified via help docs)"
+    },
+    {
+      "url": "https://help-publishing-center.softonic.com/",
+      "title": "Softonic Publishing Center help hub — create & publish your app documentation"
+    },
+    {
+      "url": "https://hello.softonic.com/faqs/?ct=61",
+      "title": "Softonic corporate FAQ — free publishing via Publishing Center; catalog health rules"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Publishes downloadable software/apps (desktop, mobile) — a pure web SaaS without a distributable app/binary is likely a poor fit",
+    "All submissions pass a review pipeline: automated checks, AI-assisted content analysis, and manual review",
+    "Submissions must meet content and technical standards; failing submissions are rejected with a reason",
+    "You can claim an existing Softonic listing for your software instead of creating a new one",
+    "Catalog hygiene: titles with zero sessions in six months are auto-removed; files flagged corrupt/unsafe are removed"
+  ],
+  "preparation": [
+    "A distributable app (installer/binary or store presence) plus version metadata",
+    "App name, description, category, screenshots, icon/logo",
+    "A clean, non-corrupt installer file — security scanning is part of review",
+    "Developer account on the Softonic Publishing Center"
+  ],
+  "workflow": [
+    "Open https://publishing-center.softonic.com/home and create a free Publishing Center account",
+    "Upload your app (or claim it if Softonic already lists it)",
+    "Create a version entry: fill required details (name, description, category, screenshots, file)",
+    "Submit for review — review covers catalog eligibility, content quality, and file security",
+    "Track status: Accepted (publishes automatically on Softonic.com), Pending Review, or Rejected (fix and resubmit for content issues)"
+  ],
+  "watchFor": [
+    "publishing-center.softonic.com returned 406 to a plain fetch — use a real browser",
+    "Rejected for catalog eligibility may not be fixable (e.g. category not accepted); content-quality rejections are correctable",
+    "Zero-traffic listings get removed after six months — maintain the listing or it disappears",
+    "Web-only SaaS without a downloadable artifact may fail eligibility"
+  ],
+  "countsAsLive": "A public program page exists on Softonic.com (softonic.com/<app-slug>) with download/details, reached from the catalog",
+  "unknowns": [
+    "Exact eligible-app taxonomy (the compliance standards page was flagged 'under construction')",
+    "Review turnaround time",
+    "Whether web apps/PWAs without binaries are accepted as new listings"
+  ]
+}

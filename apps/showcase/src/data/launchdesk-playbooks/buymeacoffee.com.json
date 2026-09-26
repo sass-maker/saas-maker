@@ -1,0 +1,42 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "buymeacoffee.com",
+  "name": "Buy Me a Coffee",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.buymeacoffee.com/",
+      "title": "Buy Me a Coffee homepage — creator funding platform with 'Start my page' (free, <1 minute), 'Search creators', Memberships and Shop features"
+    }
+  ],
+  "category": "profile",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Creator-oriented page ('Designed for creators, not for businesses') — accepts supporters, memberships, shop items, and posts",
+    "Sign-up at buymeacoffee.com/signup ('Start my page'); the batch's www.buymeacoffee.com/sign-up URL returned 404",
+    "Payments to the creator require a payout setup (bank account) — the page itself is free"
+  ],
+  "preparation": [
+    "Creator/page name and slug choice (pages live at buymeacoffee.com/<slug>)",
+    "Profile image, short bio, and the website/project URL to link",
+    "Optional: membership tiers, shop items (ebooks, 1:1 calls), and posts if using those features"
+  ],
+  "workflow": [
+    "Go to https://buymeacoffee.com/signup and create an account / 'Start my page'",
+    "Set the page slug, profile, description, and link to the product site",
+    "Publish posts or enable memberships/shop if desired",
+    "Share the public buymeacoffee.com/<slug> URL — it is indexable and appears in the site's creator search"
+  ],
+  "watchFor": [
+    "This is a creator-support profile, not a product directory — the SEO value is a profile page, not a categorized listing",
+    "BMC takes a platform fee on supporter payments (fund your work); not needed if the page is used purely as a profile",
+    "Pages are searchable via 'Search creators' but there's no curated launch board"
+  ],
+  "countsAsLive": "The public page at buymeacoffee.com/<slug> loads and is findable via the site's creator search",
+  "unknowns": [
+    "Exact platform fee percentage and payout requirements",
+    "Whether external links on the page are followed/nofollowed",
+    "Whether inactive pages are ever removed"
+  ]
+}

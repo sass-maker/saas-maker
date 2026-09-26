@@ -1,0 +1,65 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "openpr.com",
+  "name": "openPR",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.openpr.com/news/submit.html",
+      "title": "Submit form spec (search-indexed) — 1 free release per 30 days; free-email addresses rejected; full postal address mandatory; image min 1200×900 for Google News pickup; business-hours activation"
+    },
+    {
+      "url": "https://www.openpr.com/news/about.html",
+      "title": "FAQ (search-indexed) — free route is /news/submit.html; releases go live Mon–Fri only, not immediately; credits for extra releases"
+    },
+    {
+      "url": "https://www.openpr.com/news/terms.html",
+      "title": "GTC (search-indexed) — free publication limited to 1/month; credit points for additional releases; provider may exclude applications"
+    },
+    {
+      "url": "https://www.openpr.com/user/register.html",
+      "title": "Batch-provided submission URL — returned HTTP 403 (bot-blocked); real submit is /news/submit.html"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free tier is capped at 1 press release per 30 days; additional releases need paid credit points",
+    "Free email providers (Gmail etc.) are rejected — a company-domain email is required",
+    "Full postal address and complete press-contact details are mandatory — 'just an email address or URLs' is explicitly insufficient"
+  ],
+  "requirements": [
+    "A real press release — news-style copy (headline ≤110 chars, ≥80 words of coherent text), not a product ad",
+    "Complete contact block: company name, full postal address, press contact",
+    "Company-domain email (no Gmail/free providers — releases from them are deleted)",
+    "Image recommended: JPG/GIF min 1200×900, max 2000×2000, 1MB — 'without an image the press release WILL NOT be listed by Google News'",
+    "Link limits in text — submit page says max 5 intext backlinks; the FAQ says up to 3 links (keep to 3 to be safe)"
+  ],
+  "preparation": [
+    "Press-release copy announcing a real launch/news event",
+    "Company postal address, press contact name, company-domain email",
+    "A ≥1200×900 image (logo graphic or product shot)",
+    "Optional: paid credits if more than 1 release per 30 days is needed"
+  ],
+  "workflow": [
+    "Open https://www.openpr.com/news/submit.html (browser — the site 403s automated fetches)",
+    "Fill headline (≤110 chars), body, company portrait, full postal address, press contact, company-domain email",
+    "Attach the image; enter a credits code only if using paid volume",
+    "Submit — releases are activated during business hours Mon–Fri 9:00–17:00 CET; off-hours submissions sit in a waiting loop",
+    "Verify indexing with a site:openpr.com Google search on the release title"
+  ],
+  "watchFor": [
+    "Batch URL /user/register.html is not the submit route — use /news/submit.html",
+    "Duplicate/repeated releases, spam, and automated submission software get deleted",
+    "Adult, supplements and trademark-infringing content banned",
+    "Conflicting link limits across pages (3 vs 5) — stay ≤3",
+    "No same-day publication; only business days"
+  ],
+  "countsAsLive": "The press release page resolves at an openpr.com/news/... URL and is findable via site:openpr.com search",
+  "unknowns": [
+    "Whether outbound links in releases are follow/nofollow on live pages",
+    "Current credit-point pricing (price list page not fetched)",
+    "Whether German openPR.de's free tier (2 releases/yr) differs from openpr.com's 1/month"
+  ]
+}

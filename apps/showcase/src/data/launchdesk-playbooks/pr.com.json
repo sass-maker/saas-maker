@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "pr.com",
+  "name": "PR.com",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.pr.com/",
+      "title": "PR.com homepage — business directory + press-release distribution; 'Join Now' → admin.pr.com/create-account"
+    },
+    {
+      "url": "https://www.pr.com/press-release-pricing",
+      "title": "Press Release Distribution Pricing — $60/$100/$300 tiers; a Free package with reduced distribution exists; '$29.95 per link' noted"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free account + free business-profile posting in the business directory ('Post Your Profile', 'Create Free Account')",
+    "Press-release distribution has a Free package but with 'reduced distribution to general search engines, in PR.com, some 3rd party and news websites, and RSS feeds' — real reach starts at $60 and the pricing page shows a '$29.95 per link' note"
+  ],
+  "requirements": [
+    "Account creation at admin.pr.com/create-account (the batch-provided pr.com/pr-signup.php URL returned 404 — real signup lives on the admin subdomain)",
+    "Two distinct products: (1) free business directory profile with products & services listings; (2) paid press-release distribution",
+    "Company profile supports full descriptions, images, specifications, editable any time"
+  ],
+  "preparation": [
+    "Company name, description, industry category, logo/images",
+    "Products/services descriptions for the products-services directory",
+    "If using press release: a written release (headline, body, contact info, image)"
+  ],
+  "workflow": [
+    "Create a free account at https://admin.pr.com/create-account",
+    "Post the business profile (Post Your Profile → /business-profiles) — this is the free directory listing",
+    "Add products & services entries under the profile",
+    "Optionally submit a press release via admin.pr.com/info_press_item.php — choose the free package or a paid tier ($60/$100/$300)",
+    "Verify the profile appears in the business directory"
+  ],
+  "watchFor": [
+    "Batch's pr-signup.php URL is dead — signup is on admin.pr.com",
+    "The free press-release tier is heavily reduced-distribution; the paid-tier upsell is the core business model",
+    "'$29.95 per link' note on the pricing page suggests per-link charges in releases — check before submitting a link-heavy release",
+    "Directory and press release are separate flows; a business profile does not publish a press release"
+  ],
+  "countsAsLive": "The company profile is publicly visible in the PR.com business directory at a pr.com/... URL, or the press release appears under /press-release/<id>",
+  "unknowns": [
+    "Whether free business-profile website links are dofollow",
+    "Approval turnaround for new profiles and free-tier press releases",
+    "What the '$29.95 per link' fee applies to exactly"
+  ]
+}

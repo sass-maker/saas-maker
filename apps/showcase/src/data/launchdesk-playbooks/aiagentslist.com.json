@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aiagentslist.com",
+  "name": "AI Agents List",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://aiagentslist.com/",
+      "title": "Homepage — live AI agents directory (600+ tools, 25,000+ monthly visitors claimed), MCP servers, blog"
+    },
+    {
+      "url": "https://aiagentslist.com/submit",
+      "title": "Submit — free eligibility check; paid listing $29 Lifetime or $49 Launch Boost, one-time, refund if rejected"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Working AI agent or agent-focused tool with a public website that clearly explains the product",
+    "Generic agencies, unrelated software, and inaccessible sites may not qualify",
+    "Free eligibility check (no card) screens the URL before payment; account created during the flow",
+    "Payment only after the site passes the check: $29 Lifetime Listing or $49 Launch Boost, one-time via Stripe"
+  ],
+  "preparation": [
+    "Website URL (the eligibility check is the first step)",
+    "Account sign-in during the flow",
+    "Product details for the structured profile (description, capabilities/tags, category)",
+    "$29 or $49 budget — Launch Boost adds a permanent dofollow link plus 28 days of featured placement"
+  ],
+  "workflow": [
+    "Open https://aiagentslist.com/submit and paste the website URL",
+    "Run the free eligibility check (saved to your account)",
+    "Pass the check, sign in, add product details",
+    "Pick Lifetime ($29, 48h review) or Launch Boost ($49, 24h review) and pay via Stripe",
+    "Editor publishes; you can update the listing anytime after publication"
+  ],
+  "watchFor": [
+    "No free listing tier — 'check eligibility free' only screens; accepted submissions are paid",
+    "Only Launch Boost ($49) includes a dofollow link; Lifetime's link is standard (likely nofollow/unspecified)",
+    "Full refund promised if a paid submission fails editorial review",
+    "Self-reported stats (DR 40, 25k visitors) — independent verification not done",
+    "Site cross-promotes its own services ('Build with Us' agency work, Compound Context course)"
+  ],
+  "countsAsLive": "The tool appears at aiagentslist.com/agents/<slug> with a profile page and is browsable under its category",
+  "unknowns": [
+    "Eligibility-check criteria (automated checks vs manual)",
+    "Whether the standard Lifetime link is dofollow — only Launch Boost explicitly says dofollow"
+  ]
+}

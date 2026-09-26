@@ -1,0 +1,57 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "ainave.com",
+  "name": "AINave",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://ainave.com/",
+      "title": "Homepage — 'The OS for AI builders', product discovery + tech news"
+    },
+    {
+      "url": "https://ainave.com/pricing",
+      "title": "Pricing — Free $0 tier (public listing, do-follow backlink) and Verified $5 one-time"
+    },
+    {
+      "url": "https://ainave.com/help/products-guidelines",
+      "title": "Product Submission Guidelines — acceptance criteria and review process"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Functional software product, actively built — MVPs and active-beta products OK if core functionality is live",
+    "Rejected: courses/ebooks, physical products, non-functional demos, services/agencies without a software product, NSFW, clones without differentiation",
+    "Must meet a reasonable quality bar — no critical bugs, usable UI; dev tools need docs/README; mobile apps need a live store listing or functional web version",
+    "Pricing model must be stated honestly — 'free' must have a genuinely free tier",
+    "Submitter must own the product or be authorized to list it",
+    "Must provide a support contact path"
+  ],
+  "preparation": [
+    "Account on ainave.com (submission goes through /dashboard/products/submit)",
+    "Clear description: what it does, who it's for, why it matters",
+    "Categories/tags/keywords for discovery",
+    "Screenshots, demo video, or live preview (strongly encouraged)",
+    "Pricing model, Terms/Privacy links if the product collects user data"
+  ],
+  "workflow": [
+    "Sign up / log in on ainave.com",
+    "Go to /dashboard/products/submit and fill the submission form",
+    "Review is claimed to be 'almost instant' — if still pending after 30 minutes email ramit@ainave.com",
+    "Free tier gives public listing + community discovery; optional $5 one-time Verified adds verified badge, do-follow backlink, higher visibility, future Launchpad eligibility"
+  ],
+  "watchFor": [
+    "Pricing page lists 'Verified badge' and 'Do-follow backlink' under BOTH the Free tier and the $5 Verified tier — the badge/backlink difference between tiers is ambiguous",
+    "Payment handled by Dodo Payments for the $5 tier",
+    "Products found by the team's own scouting may already be listed — claim via ramit@ainave.com from a company email",
+    "Review 'almost instantly' likely means automated/low-friction — the listing may publish fast; ensure details are right before submitting",
+    "Solo-maintainer site (built by Ramit) — durability depends on one operator"
+  ],
+  "countsAsLive": "The product has a public /products/<slug> page on ainave.com and appears in /products browse or category/tag feeds",
+  "unknowns": [
+    "Exact form fields behind the dashboard login",
+    "Whether the free-tier backlink is actually do-follow (both tiers claim it)",
+    "Launchpad program details (marked 'Soon')"
+  ]
+}

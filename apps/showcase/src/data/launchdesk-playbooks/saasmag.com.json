@@ -1,0 +1,60 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "saasmag.com",
+  "name": "SaaS Mag",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://saasmag.com/",
+      "title": "Homepage — active SaaS industry publication; sections include SaaS Spotlight (founder interviews), SaaS Founders, Growth Hacks; 'Contribute to SaaSMag' in nav"
+    },
+    {
+      "url": "https://www.saasmag.com/contributions/",
+      "title": "Contribute page — external contributor form: name, email, company, company bio, position, article file upload (txt/docx/pdf ≤100MB), images, preferred publish date, 'why is your submission valuable'"
+    },
+    {
+      "url": "https://www.saasmag.com/submission-guidelines/",
+      "title": "Full style/content guidelines linked from the contribution form (not fetched)"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free route is contributing an article — you supply publishable editorial content; there is no product-listing or 'submit your startup' form",
+    "Secondary route: founder/CEO interview features ('SaaS Spotlight', 'CEO Insights') — pitch via the contact form, acceptance is editorial"
+  ],
+  "requirements": [
+    "A written article as a file upload (txt, docx, or pdf, max 100MB)",
+    "Prefers new unique content; will accept pieces previously published only on the writer's own personal blog — NOT pieces run on other business/enterprise blogs",
+    "Author details: name, email, company, company bio, position",
+    "A justification of why the piece is valuable to SaaS entrepreneurs",
+    "Read the full submission-guidelines page before drafting — non-compliance is grounds for rejection"
+  ],
+  "preparation": [
+    "A finished article draft in txt/docx/pdf on a SaaS-business topic (growth, pricing, metrics — not a product advert)",
+    "Company bio and author position for the byline",
+    "Accompanying images (jpg/jpeg/png ≤100MB) if any",
+    "A preferred publish date",
+    "For interview angles: founder availability + a story hook"
+  ],
+  "workflow": [
+    "Read https://www.saasmag.com/submission-guidelines/ for style rules",
+    "Write the article to spec and export as docx/txt/pdf",
+    "Open https://www.saasmag.com/contributions/ and complete the form including the file upload",
+    "For a founder-feature instead of an article, pitch via https://www.saasmag.com/contact-us/",
+    "Wait for editorial review; no tracking is provided"
+  ],
+  "watchFor": [
+    "This is a publication, not a directory — 'getting listed' means getting an article or interview published",
+    "Content rule: pieces that ran on other business blogs are rejected; only personal-blog republication is allowed",
+    "Overt product promotion will likely be rejected — write for their audience of SaaS operators",
+    "Copyright footer says 2024 but content is current (2026 articles live) — site is active despite the stale footer"
+  ],
+  "countsAsLive": "The contributed article or interview is published on saasmag.com under a topic section (Business, SaaS Spotlight, Growth Hacks, etc.) with the company mentioned in the byline/content",
+  "unknowns": [
+    "Review turnaround and whether they notify on rejection",
+    "Whether contributor articles carry dofollow links",
+    "Whether SaaS Spotlight interviews are editorial-only or can be sponsored"
+  ]
+}

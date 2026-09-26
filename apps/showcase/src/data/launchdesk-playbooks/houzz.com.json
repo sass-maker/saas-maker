@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "houzz.com",
+  "name": "Houzz",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.houzz.com/professionals",
+      "title": "Houzz Professionals directory — 'Join as a Pro' entry point; categories are all home design/remodeling/services trades"
+    },
+    {
+      "url": "https://www.houzz.com/pro-services/signUp",
+      "title": "Batch-provided signup URL — returned 404"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Pro profiles can be created via 'Join as a Pro', but the directory is gated to home design/remodeling/service professionals — a SaaS product does not qualify",
+    "The batch-provided pro-services/signUp URL 404s; the live entry point is the 'Join as a Pro' link on houzz.com/professionals"
+  ],
+  "requirements": [
+    "Business must be a home-industry professional: architects, interior designers, contractors, remodelers, landscapers, home services, etc. — categories on the directory are exclusively these trades",
+    "Requires a real business name, location/service area, phone/contact details and portfolio photos",
+    "Not applicable to pure software/SaaS products"
+  ],
+  "preparation": [
+    "Verify the product is actually a home-industry business (otherwise skip Houzz entirely)",
+    "Business name, address/service area, phone, website",
+    "Portfolio photos of completed work",
+    "Professional license info where applicable (Verified License badge exists)"
+  ],
+  "workflow": [
+    "Open houzz.com/professionals and click 'Join as a Pro'",
+    "Complete the pro registration with business category, location, and contact details",
+    "Build the profile with project photos, description, and services",
+    "Profile becomes discoverable in the Find Pros directory after review"
+  ],
+  "watchFor": [
+    "This is a wrong fit for SaaS — do not submit a software product; only a genuine home-services business belongs here",
+    "Houzz heavily upsells Houzz Pro (project management, CRM, payments) during onboarding",
+    "The sourced signup URL (pro-services/signUp) is dead; use the Join as a Pro flow from /professionals"
+  ],
+  "countsAsLive": "A public pro profile page appears in the Houzz professional directory under the chosen trade and metro area",
+  "unknowns": [
+    "Exact fields/steps inside the Join as a Pro flow",
+    "Whether free-tier profiles still get full directory placement vs Houzz Pro subscribers"
+  ]
+}

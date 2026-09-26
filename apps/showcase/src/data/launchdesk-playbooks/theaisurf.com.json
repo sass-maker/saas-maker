@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "theaisurf.com",
+  "name": "AI Surf",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://theaisurf.com/",
+      "title": "Homepage \u2014 'Submit Tool' + 'Add Listing' nav links; 'Free Featured Badge' offer"
+    },
+    {
+      "url": "https://theaisurf.com/submit-tool/",
+      "title": "Guessed submit path \u2014 returned 404 (WordPress site)"
+    },
+    {
+      "url": "https://theaisurf.com/add-listing/",
+      "title": "Guessed listing path \u2014 returned 404"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free path appears badge-linked \u2014 homepage offers a 'Free Featured Badge' that developers add to their own site; whether badge display is required for a free listing is unconfirmed"
+  ],
+  "requirements": [
+    "AI tools only \u2014 the directory is organized into ~30 AI categories (Art, Audio, Business, Chatbots, Code, etc.)",
+    "Submission requires a listing form reached via 'Submit Tool'/'Add Listing' nav links; guessed direct paths 404",
+    "Site runs WordPress + WPForms; submission form is JS-rendered behind the nav links"
+  ],
+  "preparation": [
+    "Tool name, URL, and category choice",
+    "Short description for the listing",
+    "Logo/screenshot likely requested by the WPForms listing form"
+  ],
+  "workflow": [
+    "Open https://theaisurf.com/ and click 'Submit Tool' (or 'Add Listing') in the header",
+    "Complete the JS-rendered listing form (WordPress/WPForms)",
+    "Optionally add the 'Free Featured Badge' to the product site to qualify for featured placement"
+  ],
+  "watchFor": [
+    "Direct guessable submit URLs (/submit-tool/, /add-listing/) return 404 \u2014 entry is only via the nav links",
+    "Cloudflare challenge scripts are embedded site-wide; automated submission may be blocked",
+    "Free Featured Badge suggests a reciprocal-badge mechanic \u2014 verify whether it's required or optional before assuming a free dofollow listing"
+  ],
+  "countsAsLive": "The tool appears in a category listing on theaisurf.com under 'Just Added' or its category page",
+  "unknowns": [
+    "Whether the free tier requires the badge",
+    "Review turnaround and moderation process",
+    "Whether the submit form is reachable for unauthenticated visitors end-to-end"
+  ]
+}

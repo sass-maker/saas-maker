@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "funneldirectory.com",
+  "name": "FunnelDirectory",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://funneldirectory.com/submit",
+      "title": "List Your Tool — $19 one-time listing: 30-day homepage feature, permanent directory entry, dedicated review page, up to 2 comparison pages, 4 category placements; Gumroad or Tally; 12–48h turnaround"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Fit: funnel builders, email marketing, landing page tools, CRM, checkout, analytics, marketing automation and adjacent categories (~21 category checkboxes on the form)",
+    "$19 one-time payment via Gumroad (basit313.gumroad.com/l/funnel-directory-featured-listing); alternative submission via Tally form (tally.so/r/obK4LV)",
+    "Form fields: tool name, email, tool link, categories, full details (Hero Title, Hero Description, Best For, Features, Pros, Cons, Pricing), competitive positioning ('Your Edge')"
+  ],
+  "preparation": [
+    "Tool name, URL, contact email",
+    "Write-up: hero title/description, best-for, features, pros/cons, pricing tiers",
+    "Competitive positioning: 1–2 competitor tools in the directory to be compared against",
+    "$19 via Gumroad",
+    "Optional: affiliate URL — the form asks for it"
+  ],
+  "workflow": [
+    "Open https://funneldirectory.com/submit and fill the form (or the Tally alternative)",
+    "Complete the $19 Gumroad purchase — note says 'Once Approved, pay on Gumroad to complete your listing'",
+    "Editorial team reviews and publishes within 12–48 hours; you receive the live URL by email",
+    "Listing: 30 days featured on homepage, then permanent in the directory; includes dedicated SEO review page, up to 2 comparison pages, up to 4 category placements",
+    "Updates later: email funneldirectory02@gmail.com — free within 24 hours"
+  ],
+  "watchFor": [
+    "Niche directory — only funnel/marketing tools; general SaaS doesn't fit",
+    "Young site ('Vol. 1 • Est. 2026', '30+ Tools Listed') — small audience, value is mostly the niche backlink/coverage",
+    "No recurring fees is a plus; updates are free via email",
+    "Contact is a gmail address — solo-operator scale"
+  ],
+  "countsAsLive": "A dedicated tool page at funneldirectory.com/funnel-builders/<slug> (or category placement) exists and the tool appears in the directory/homepage featured section",
+  "unknowns": [
+    "Whether outbound links are dofollow",
+    "Whether affiliate URLs get preferential placement",
+    "Refund policy if rejected"
+  ]
+}

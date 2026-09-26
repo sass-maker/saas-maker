@@ -1,0 +1,58 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "seller.indiamart.com",
+  "name": "IndiaMART Seller",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://seller.indiamart.com/",
+      "title": "Sell on IndiaMART — 'Free Registration on India's Largest Online Marketplace' (homepage blocked to fetchers, confirmed via search result)"
+    },
+    {
+      "url": "https://help.indiamart.com/knowledge-base/create-free-catalog/",
+      "title": "IndiaMART help: create a free seller account — mobile OTP, company details, min 3 products, up to 7 days for free listing to appear (content read via search result)"
+    },
+    {
+      "url": "https://help.indiamart.com/knowledge-base/registration-fee-for-indiamart/",
+      "title": "IndiaMART help: registration is free; paid subscription services exist for better listing and added benefits (content read via search result)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free seller registration exists but requires a mobile number (OTP-verified), Indian business details, and a catalog of at least 3 products",
+    "This is a B2B product-goods marketplace — a pure SaaS product does not fit the catalog model"
+  ],
+  "requirements": [
+    "10-digit mobile number for OTP verification (Indian business context)",
+    "Company name, email, city/PIN, business address; GST number is optional but expected",
+    "Minimum 3 products with images to complete registration",
+    "Free listings can take up to 7 days to appear",
+    "Paid subscription tiers ('Paid Services') provide better listing placement and more inquiries"
+  ],
+  "preparation": [
+    "Indian business details: company name, GST number (optional), address, PIN code",
+    "Mobile number able to receive OTP",
+    "At least 3 product listings with images — physical goods/B2B catalog items"
+  ],
+  "workflow": [
+    "Open seller.indiamart.com and click 'Create Free Seller Account'",
+    "Enter mobile number and verify with OTP",
+    "Fill basic details: name, company name, email, city, PIN, GST (optional)",
+    "Add at least 3 products to the catalog",
+    "Enter business address and click 'Start Selling'",
+    "Free listing goes live within ~7 days in the IndiaMART directory"
+  ],
+  "watchFor": [
+    "India-centric — the OTP flow expects an Indian mobile number and business address; a foreign SaaS is a poor fit",
+    "Free tier exists but IndiaMART heavily upsells 'Paid Services' subscriptions",
+    "seller.indiamart.com blocked automated fetch (403) — details verified via IndiaMART help-center pages",
+    "Registration requires review before the listing appears"
+  ],
+  "countsAsLive": "The company profile and product catalog appear publicly on indiamart.com (searchable supplier storefront)",
+  "unknowns": [
+    "Whether non-Indian businesses can register at all",
+    "Paid plan pricing — only accessible inside the seller dashboard"
+  ]
+}

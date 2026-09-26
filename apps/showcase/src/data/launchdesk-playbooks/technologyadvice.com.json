@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "technologyadvice.com",
+  "name": "Technology Advice",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://solutions.technologyadvice.com/list-your-product/",
+      "title": "List Your Product & Technology Company on TechnologyAdvice — vendor intake page (fetched via search snippet; direct fetch returned 403 bot-block). Describes free product profile + paid PPC 'Intent Clicks' + 'Traction' dashboard"
+    },
+    {
+      "url": "https://solutions.technologyadvice.com/solutions-overview/lead-generation-solutions/",
+      "title": "B2B lead-gen overview (via search) — 'Get started with a free product profile on TechnologyAdvice.com ... Pay-per-click model, no up-front costs'"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "A free product profile on TechnologyAdvice.com is offered ('Get started with a free product profile'), but the vendor program is built around paid PPC 'Intent Clicks' campaigns and partnered review campaigns — expect sales-led onboarding rather than instant self-serve"
+  ],
+  "requirements": [
+    "B2B technology product/company — TechnologyAdvice is a B2B software review/comparison marketplace",
+    "Vendor intake goes through solutions.technologyadvice.com/list-your-product/ (form or live chat)",
+    "Listings are managed in 'Traction', TechnologyAdvice's vendor dashboard"
+  ],
+  "preparation": [
+    "Product name, category fit (they feature products 'across multiple categories'), website URL",
+    "Marketing copy and a custom header image for the branded profile",
+    "Target page to drive traffic to (site, trial, or demo page)",
+    "Contact details for the vendor team — onboarding appears sales-assisted"
+  ],
+  "workflow": [
+    "Open https://solutions.technologyadvice.com/list-your-product/",
+    "Submit the vendor form or use live chat to request the free product profile",
+    "Work with their team to publish the profile in the right categories on TechnologyAdvice.com",
+    "Optionally activate Intent Clicks PPC or a partnered review campaign (paid add-ons)"
+  ],
+  "watchFor": [
+    "Direct fetch of the vendor page 403s for bots — expect the form to be JS/CRM-backed; a human or full browser may be needed",
+    "Heavy lead-gen orientation: the funnel's purpose is selling PPC and review campaigns, so expect sales contact after submitting",
+    "B2B-only fit — consumer apps do not belong here",
+    "Confirm whether the free profile alone yields a public product page before spending effort"
+  ],
+  "countsAsLive": "A public product profile page exists on technologyadvice.com in the relevant software category, with branding and a link back to the product site",
+  "unknowns": [
+    "Whether the free profile can be published fully self-serve or always requires sales contact",
+    "rel attributes on the product profile's outbound link",
+    "Review-collection mechanics on the free tier vs. paid partnered campaigns"
+  ]
+}

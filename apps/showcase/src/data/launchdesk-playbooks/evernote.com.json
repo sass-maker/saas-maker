@@ -1,0 +1,39 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "evernote.com",
+  "name": "Evernote Public",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://evernote.com/",
+      "title": "Evernote homepage — free signup via accounts.evernote.com/registration; collaboration/sharing features listed"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "A free Evernote account (registration at https://accounts.evernote.com/registration; the batch's /signup URL returned 404)",
+    "The 'launch asset' is a publicly shared note, not a directory listing — Evernote has no product directory; value comes from a shared public note link"
+  ],
+  "preparation": [
+    "A note worth sharing publicly (guide, checklist, resource doc) containing the product link",
+    "Free account credentials"
+  ],
+  "workflow": [
+    "Register a free account at https://accounts.evernote.com/registration (linked from evernote.com 'Start for free'/'Sign up for free')",
+    "Create the note in the Evernote web client (www.evernote.com/client/web)",
+    "Use the note's Share option to generate a public link",
+    "Verify the link renders without login"
+  ],
+  "watchFor": [
+    "Evernote's current v11 product emphasizes private/collaborative notes — the durability and indexability of public note links is unverified; treat this as a weak destination",
+    "The batch's /signup path 404'd; registration lives on accounts.evernote.com",
+    "Do not expect directory traffic — there is no browsable public catalog of notes"
+  ],
+  "countsAsLive": "A public share URL for the note loads in a logged-out browser",
+  "unknowns": [
+    "Whether public note links are still offered in the current Evernote client and whether they are indexable by search engines",
+    "Link handling (nofollow) inside shared notes"
+  ]
+}

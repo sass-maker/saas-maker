@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "mixcloud.com",
+  "name": "Mixcloud",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.mixcloud.com/signup/",
+      "title": "Mixcloud sign-up — email signup, 'Upload for free', Pro for creators upsell ($3.08/mo annual)"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free account can upload shows ('Upload for free') but with limits — unlimited uploads, live streaming without takedowns, and customization require Pro for Creators ($3.08/mo billed annually)"
+  ],
+  "requirements": [
+    "Email signup at mixcloud.com/signup",
+    "Content must be audio — shows, mixes, podcasts; Mixcloud is an audio platform, not a product directory",
+    "Relevant only if the product can legitimately produce audio content (podcast episode, founder interview, product-adjacent mix)"
+  ],
+  "preparation": [
+    "An audio file worth publishing (e.g. a podcast episode discussing the product problem space)",
+    "Show title, description with the product URL, tags, and artwork",
+    "Creator profile name = brand handle"
+  ],
+  "workflow": [
+    "Sign up at https://www.mixcloud.com/signup/ with email",
+    "Complete the creator profile (bio, links)",
+    "Go to /upload/ and publish the show with description + link",
+    "Public show page lives at mixcloud.com/<profile>/<show-slug>/"
+  ],
+  "watchFor": [
+    "Free tier has upload limits — the 'Pro for Creators' upsell is prominent throughout signup",
+    "Mixcloud licenses music legally; pure spoken/podcast content is fine but this is not a backlink farm — low-quality promo shows will not perform",
+    "Profile/show links may be nofollow"
+  ],
+  "countsAsLive": "A public creator profile and at least one public show page exist on mixcloud.com",
+  "unknowns": [
+    "Exact free-tier upload cap (minutes/shows)",
+    "rel attributes on profile and description links"
+  ]
+}

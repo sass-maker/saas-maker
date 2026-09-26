@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aicorner.net",
+  "name": "AI Corner",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://aicorner.net/",
+      "title": "Homepage — live AI tools marketplace/directory (claims 10k+ tools, categories, deals, reviews)"
+    },
+    {
+      "url": "https://aicorner.net/submit-tool",
+      "title": "Submit Tool — plan table: Free Listing $0/forever (14-day approval, nofollow), Pro $29/mo, Business $99/mo (dofollow), Enterprise custom; portal banner says 'Under Progress'"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "AI tools only",
+    "Free Listing tier exists: standard directory listing, basic analytics, 1 team member — approval ~14 days",
+    "All listings claim manual review ('100% Human Reviewed')"
+  ],
+  "preparation": [
+    "Tool name, URL, category, description, logo",
+    "Sign-in may be required (Sign In link in nav; 'Submit Your AI Tool Dashboard' referenced)",
+    "Choose tier: Free / Pro $29/mo / Business $99/mo — only Business+ gets dofollow backlinks"
+  ],
+  "workflow": [
+    "Open https://aicorner.net/submit-tool",
+    "Pick 'Free Listing' ($0/forever) for the zero-cost route and submit tool details",
+    "Expect ~14-day approval on the free tier",
+    "Listing appears under /categories/<cat> and /ai-tools/<slug>"
+  ],
+  "watchFor": [
+    "Page banner: 'Tool Submission Portal Under Active Development' — the submit flow may be partially unfinished",
+    "Free tier is nofollow-only; dofollow backlinks start at Business ($99/mo)",
+    "Heavy upsell density: marketing plans $399–999/mo plus paid placements ($99–799)",
+    "Inflated marketing claims on the page (1M+/2M+ monthly visitors, 96% approval rate) — unverified self-reported stats",
+    "Inconsistent stats across the page (500k+ vs 2M+ monthly visitors) — treat numbers skeptically",
+    "7-day money-back guarantee cited for paid promotion"
+  ],
+  "countsAsLive": "The tool has a profile page at aicorner.net/ai-tools/<slug> and appears in its category listing",
+  "unknowns": [
+    "Whether the free submission form is fully functional given the 'Under Progress' banner",
+    "Actual review criteria",
+    "Real traffic — self-reported visitor figures conflict"
+  ]
+}

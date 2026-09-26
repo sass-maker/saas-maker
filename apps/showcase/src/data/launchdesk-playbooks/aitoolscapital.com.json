@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aitoolscapital.com",
+  "name": "AI Tools Capital",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://aitoolscapital.com/submit-tool",
+      "title": "Submit page — live form with Free $0 / Featured $49 / Premium $129 plans, field list, and submission guidelines"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Tool must be publicly accessible",
+    "AI/ML-focused tools only",
+    "Duplicate submissions are ignored",
+    "Free tier advertised with ~24h review; paid upgrades ($49 Featured badge+boost, $129 Premium editorial review) are optional"
+  ],
+  "preparation": [
+    "Submitter name and email",
+    "Tool name, website URL, category, and pricing model (Free/Freemium/Paid/Enterprise)",
+    "Square logo PNG/JPG/WEBP/SVG ≤3 MB — optional, can submit without it",
+    "A 10–500 character 'Why should we review it?' pitch; optional 'What makes it special?' (≤500 chars)",
+    "Optional: name of the founder who referred you (earns them a Contributor badge)"
+  ],
+  "workflow": [
+    "Open aitoolscapital.com/submit-tool",
+    "Optionally paste the tool URL into 'Auto-fill with AI' to prefill name/category/description, then review",
+    "Fill required fields, choose the Free plan unless paying for Featured/Premium",
+    "Submit — the tool joins that week's 'The Capital' leaderboard immediately; top-3 voted tools get a homepage podium spot each Monday",
+    "Use the emailed share kit to rally votes (one vote per person per tool; voting closes Sunday 23:59 UTC)"
+  ],
+  "watchFor": [
+    "Every submission auto-enters a weekly voting leaderboard — plan a small vote push if podium exposure matters",
+    "Paid tiers are upsells, not required for a listing",
+    "Site is small ('50+ hand-reviewed AI tools') despite the name — expect modest traffic",
+    "Affiliate disclosure present; editorial coverage tied to Premium tier"
+  ],
+  "countsAsLive": "The tool appears in the 'Recently submitted' section / its category page on aitoolscapital.com and on the week's leaderboard",
+  "unknowns": [
+    "Whether the Free-tier listing page links dofollow",
+    "Exact review criteria beyond 'AI/ML focused' and 'publicly accessible'",
+    "Whether approved free listings are permanent"
+  ]
+}

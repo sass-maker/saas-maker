@@ -1,0 +1,62 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "insanelycooltools.com",
+  "name": "Insanely Cool Tools",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://insanelycooltools.com/",
+      "title": "Homepage — returns an empty JS shell to automated fetch; site is JavaScript-rendered"
+    },
+    {
+      "url": "https://insanelycooltools.com/submit-tool",
+      "title": "Submit route — resolves (200) but renders no content to non-JS fetches; submission form is client-side"
+    },
+    {
+      "url": "https://newsletter.insanelycooltools.com/p/insanely-cool-tools",
+      "title": "Newsletter issue (search-indexed; Substack blocks direct fetch) — 'Get YOUR project featured! Click here to submit your project… in-front of 20,000+ startup founders, indie-makers and creators'"
+    },
+    {
+      "url": "https://navifyai.com/link/www-insanelycooltools-com",
+      "title": "NavifyAI profile — submission is free, <1 minute, 3-5 tools featured per weekly email; contact jr@startups.fyi"
+    },
+    {
+      "url": "https://launchpedia.co/best-betalist-alternatives/",
+      "title": "LaunchPedia — free submission, featured plans available to skip queue; ~20k newsletter subs, 40% open rate, 10k+ monthly visitors (their figures)"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Submission itself is free, but the payoff — being one of the 3-5 tools in the weekly newsletter — is editorially gated; paid 'featured plans' exist to skip the queue"
+  ],
+  "requirements": [
+    "Product must be a tool/app/website that fits a 'cool tools' curation for founders and indie makers",
+    "Account creation required per BacklinkBot's submission guide",
+    "Newsletter feature is selective — only 3-5 tools per weekly issue"
+  ],
+  "preparation": [
+    "Product name, URL, short description, logo",
+    "A one-line 'why it's insanely cool' angle — this is a curation, not a database dump"
+  ],
+  "workflow": [
+    "Open https://insanelycooltools.com/submit-tool in a JS-capable browser (the form does not render without JavaScript)",
+    "Create an account, enter product name, URL, description, logo",
+    "Submit for free; the listing joins the directory and the editorial queue for the weekly newsletter",
+    "Optionally take a featured plan to skip the queue"
+  ],
+  "watchFor": [
+    "Site is JS-rendered and the Substack newsletter subdomain blocks bots — verify the form in a real browser before assuming it works",
+    "Free listing ≠ newsletter feature; the 20k-subscriber email is the actual reach, and only a handful of tools make each issue",
+    "Featured/queue-skip upsells exist — confirm what the free tier actually includes before paying",
+    "Operated by the same person as startups.fyi (jr@startups.fyi listed as contact)"
+  ],
+  "countsAsLive": "The tool has a public listing page on insanelycooltools.com, and the stronger proof is appearing as a featured tool in a weekly Insanely Cool Tools newsletter issue",
+  "unknowns": [
+    "Exact form fields (form is JS-rendered and could not be inspected)",
+    "Review turnaround and acceptance rate for free submissions",
+    "Featured plan pricing",
+    "Whether directory links are dofollow (third-party lists claim yes, unverified)"
+  ]
+}

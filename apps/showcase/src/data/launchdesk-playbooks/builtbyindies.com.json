@@ -1,0 +1,57 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "builtbyindies.com",
+  "name": "BuiltByIndies (SaaSSpace)",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://builtbyindies.com/submit",
+      "title": "Submit route — JS-rendered app shell; nav shows weekly Launchpad, Karma, Stories, Chat"
+    },
+    {
+      "url": "https://submitmap.com/platform/builtbyindies/",
+      "title": "SubmitMap walkthrough — free lane costs 10 karma and queues ~5 weeks out; Premium $9 one-time: pick the week, instant publish, dofollow; free tier links nofollow except week's top 3"
+    },
+    {
+      "url": "https://builtbyindies.com/get-karma",
+      "title": "Get Karma page — karma earned via milestones/upvotes (index snippet)"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free launch requires 10 karma earned by completing profile + upvoting other products; the free queue also fills weeks ahead (reported ~5 weeks out)",
+    "Premium $9 one-time bypasses karma and queue: pick any open week, instant publish, dofollow link"
+  ],
+  "requirements": [
+    "Indie SaaS/maker product — community launchpad for indie founders",
+    "Account required; submission is a weekly launch, not a static listing",
+    "Form completion meter must hit 100% before Submit Product enables (name ≤45 chars, URL, tagline ≤60, up to 3 categories, pricing model, optional collaborators/open-source flag, 'Built with', rich description ≤5000 chars, 500×500 logo, 3–4 covers 1200×630, optional demo video)"
+  ],
+  "preparation": [
+    "500×500 logo and 3–4 cover images at 1200×630",
+    "Tagline ≤60 chars and description ≤5000 chars — or use the 'Prefill with AI' feature (paste URL, it drafts the form)",
+    "Decide launch week strategy: grind 10 karma for free queue vs $9 premium",
+    "If going free: plan ~1 week of upvoting to earn karma, then expect several weeks of queue wait"
+  ],
+  "workflow": [
+    "Sign up on builtbyindies.com",
+    "Earn karma via Karma Center milestones (profile completion, upvotes) OR skip with $9 Premium",
+    "Fill the product form to 100% completion; Submit Product creates the product and opens /upgrade",
+    "Choose Free Launch (spend 10 karma, join queue, pick an open week) or Premium ($9, instant)",
+    "Launch runs during its weekly batch — rally upvotes; the week's top 3 get dofollow links"
+  ],
+  "watchFor": [
+    "Free links are nofollow per the plan card; only top-3 weekly products get dofollow — free tier is a visibility play, not SEO",
+    "Queue scarcity is real: free weeks can be booked 4–5 weeks out",
+    "Submit page is JS-only — must run in a real browser with an authenticated session",
+    "Karma must be claimed manually on the Karma Center per the third-party walkthrough"
+  ],
+  "countsAsLive": "The product has a page under builtbyindies.com/products/<slug> and appears in its launch week at /launch/<year>/week/<n> with vote count",
+  "unknowns": [
+    "Current queue depth at any given time",
+    "Whether premium placements affect ranking fairness",
+    "Retention of listing after launch week ends"
+  ]
+}

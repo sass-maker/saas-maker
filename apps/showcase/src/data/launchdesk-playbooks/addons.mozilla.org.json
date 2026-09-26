@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "addons.mozilla.org",
+  "name": "Firefox Add-ons (AMO)",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://extensionworkshop.com/documentation/publish/submitting-an-add-on/",
+      "title": "Extension Workshop — 'Submitting an add-on' doc hub (Listing on AMO vs self-distribution)"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Only applicable if the product ships a real Firefox extension/theme — this is a browser add-on store, not a web-app directory",
+    "Extension must be packaged as a zip/xpi and pass Mozilla's automated validation and signing",
+    "Listed submissions are reviewed against the Add-on Policies (Submission Guidelines, content, data-collection disclosure, monetization rules)",
+    "Two distribution paths: 'Listing on AMO' (public directory listing) or self-distribution (signed but unlisted, hosted on your own site)"
+  ],
+  "preparation": [
+    "A working WebExtension (manifest.json, packaged .zip) — use web-ext build/lint first",
+    "A Firefox Account for the AMO Developer Hub",
+    "Listing assets: name, icon, summary, description, screenshots, category, keywords/tags",
+    "Source code upload ready if the extension uses minified/obfuscated code (source code submission rules)",
+    "Decision on listed (AMO public page) vs unlisted/self-distributed signing"
+  ],
+  "workflow": [
+    "Register/sign in to the AMO Developer Hub at addons.mozilla.org with a Firefox Account",
+    "Choose 'Submit a New Add-on' and pick On this site (listed) vs self-distribution",
+    "Upload the packaged add-on; wait for automated validation/signing checks",
+    "Fill the listing metadata (name, summary, description, categories, screenshots, support links)",
+    "Submit for review; fix any reviewer-reported policy issues",
+    "After approval the public AMO listing page goes live"
+  ],
+  "watchFor": [
+    "Manual review required for listed add-ons — obfuscated or bundled third-party code triggers source-code requests",
+    "Requesting broad/unnecessary permissions slows review; justify permissions in review notes",
+    "A rejected submission can leave the add-on signed-but-unlisted; check Developer Hub status, not just the upload receipt",
+    "AMO outbound links are nofollow — treat this as a distribution channel, not an SEO link"
+  ],
+  "countsAsLive": "The add-on has a public, indexable listing page on addons.mozilla.org with an 'Add to Firefox' install button",
+  "unknowns": [
+    "Current review turnaround time",
+    "Whether a SaaS without a browser extension has any valid route (none found — extension required)"
+  ]
+}

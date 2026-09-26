@@ -1,0 +1,37 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startups.watch",
+  "name": "Startups.watch",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://startups.watch/",
+      "title": "Startups.watch — live Turkish startup database (20,000+ startups); Tools > For Startups > 'Add Startup'; claimed profiles; investor/accelerator programs, demo days; free signup"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Turkish ecosystem focus — 'Comprehensive data covering Türkiye and Turkish-founded startups across the globe'",
+    "Free signup; Tools menu > For Startups > 'Add Startup'",
+    "Claimed Profile(s) feature for existing records",
+    "Investor-facing tools (deal flow, programs, demo days) mean profiles should be funding-ready"
+  ],
+  "preparation": [
+    "Turkish-founded or Turkey-based company",
+    "Startup details: description, category, founding year, HQ, people, funding data"
+  ],
+  "workflow": [
+    "Sign up at startups.watch",
+    "Tools > For Startups > 'Add Startup' (or claim an existing profile)",
+    "Profile joins the 20k-startup database browsed by investors/accelerators"
+  ],
+  "watchFor": [
+    "Turkey-only relevance — no fit for startups outside the Turkish ecosystem",
+    "Audience is investors/ecosystem actors, not consumers",
+    "Investor features are paid/premium-tiered presumably — startup side appears free"
+  ],
+  "countsAsLive": "The startup has a public profile in the startups.watch database",
+  "unknowns": ["Whether submissions are moderated", "Premium features' pricing"]
+}
