@@ -1,7 +1,7 @@
 ---
 import Footer from '../components/Footer.astro';
 import Nav from '../components/Nav.astro';
-import { SEARCH_INDEX, SEARCH_TYPES } from '../data/searchIndex';
+import { SEARCH_INDEX, SEARCH_TYPES, type SearchEntry } from '../data/searchIndex';
 import Layout from '../layouts/Layout.astro';
 
 const TYPE_LABELS: Record<string, string> = {
@@ -14,6 +14,15 @@ const TYPE_LABELS: Record<string, string> = {
   tool: 'Tools',
   learning: 'Learnings',
 };
+
+const groups = SEARCH_TYPES.map((type) => ({
+  type,
+  label: TYPE_LABELS[type] ?? type,
+  entries: SEARCH_INDEX.filter((entry) => entry.type === type),
+}));
+
+const haystack = (entry: SearchEntry) =>
+  `${entry.title} ${entry.summary} ${entry.keywords}`.toLowerCase();
 ---
 
 <Layout
@@ -45,23 +54,34 @@ const TYPE_LABELS: Record<string, string> = {
           aria-label="Search the site"
         />
         <div class="search-types" id="search-types" role="group" aria-label="Filter by type">
-          {SEARCH_TYPES.map((type) => (
-            <button type="button" data-type={type} class="type-chip">
-              {TYPE_LABELS[type] ?? type}
+          {groups.map((group) => (
+            <button type="button" data-type={group.type} class="type-chip">
+              {group.label} <span>{group.entries.length}</span>
             </button>
           ))}
         </div>
       </div>
 
-      <p id="search-count" class="search-count" role="status" aria-live="polite"></p>
-      <ol id="search-results" class="search-results"></ol>
+      <p id="search-count" class="search-count" role="status" aria-live="polite">
+        {SEARCH_INDEX.length} entries — filter above or browse below.
+      </p>
 
-      <noscript>
-        <p class="search-count">
-          Search needs JavaScript — the full index is available as
-          <a href="/search.json">/search.json</a>.
-        </p>
-      </noscript>
+      {groups.map((group) => (
+        <section class="search-group" data-group={group.type}>
+          <h2 class="group-head">{group.label} <span>{group.entries.length}</span></h2>
+          <ol class="search-results">
+            {group.entries.map((entry) => (
+              <li data-hay={haystack(entry)}>
+                <a href={entry.url}>
+                  <span class="result-title">{entry.title}</span>
+                  <span class="result-url">{entry.url}</span>
+                  {entry.summary && <span class="result-summary">{entry.summary}</span>}
+                </a>
+              </li>
+            ))}
+          </ol>
+        </section>
+      ))}
     </main>
     <Footer />
   </div>
@@ -79,6 +99,11 @@ const TYPE_LABELS: Record<string, string> = {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    padding-block: 0.75rem;
+    background: var(--bg);
   }
 
   #search-input {
@@ -117,6 +142,11 @@ const TYPE_LABELS: Record<string, string> = {
     cursor: pointer;
   }
 
+  .type-chip span {
+    color: var(--ink-muted);
+    margin-left: 0.25rem;
+  }
+
   .type-chip[aria-pressed='true'] {
     color: var(--surface);
     background: var(--ink);
@@ -129,8 +159,29 @@ const TYPE_LABELS: Record<string, string> = {
     color: var(--ink-muted);
   }
 
+  .search-group {
+    margin-top: 2rem;
+  }
+
+  .search-group[hidden] {
+    display: none;
+  }
+
+  .group-head {
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .group-head span {
+    color: var(--ink-soft);
+    font-weight: 400;
+  }
+
   .search-results {
-    margin: 1rem 0 0;
+    margin: 0;
     padding: 0;
     list-style: none;
     border: 1px solid var(--line);
@@ -139,15 +190,19 @@ const TYPE_LABELS: Record<string, string> = {
     overflow: hidden;
   }
 
+  .search-results li[hidden] {
+    display: none;
+  }
+
   .search-results li + li {
     border-top: 1px solid var(--line);
   }
 
   .search-results a {
     display: grid;
-    grid-template-columns: 7rem 1fr;
-    gap: 0.5rem 1.25rem;
-    padding: 0.75rem 1.1rem;
+    grid-template-columns: minmax(0, 22rem) minmax(0, 1fr);
+    gap: 0.25rem 1.25rem;
+    padding: 0.6rem 1.1rem;
     color: var(--ink);
     text-decoration: none;
   }
@@ -156,60 +211,48 @@ const TYPE_LABELS: Record<string, string> = {
     background: color-mix(in srgb, var(--ink) 4%, var(--surface));
   }
 
-  .result-type {
-    font-size: 0.7rem;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    color: var(--ink-muted);
-    padding-top: 0.2rem;
-  }
-
   .result-title {
     font-weight: 600;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .result-url {
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    align-self: center;
   }
 
   .result-summary {
-    grid-column: 2;
+    grid-column: 1 / -1;
     font-size: 0.82rem;
     color: var(--ink-soft);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   @media (max-width: 560px) {
     .search-results a {
       grid-template-columns: 1fr;
     }
-    .result-type {
-      padding-top: 0;
-    }
-    .result-summary {
-      grid-column: 1;
-    }
   }
 </style>
 
 <script>
   const input = document.getElementById('search-input') as HTMLInputElement;
-  const list = document.getElementById('search-results') as HTMLOListElement;
   const count = document.getElementById('search-count') as HTMLElement;
   const chips = [...document.querySelectorAll<HTMLButtonElement>('.type-chip')];
-
-  const TYPE_LABELS: Record<string, string> = {
-    page: 'Pages', product: 'Products', idea: 'Ideas', funding: 'Funding',
-    doc: 'Docs', launchdesk: 'Launch catalog', tool: 'Tools', learning: 'Learnings',
-  };
-
-  let index: { type: string; title: string; url: string; summary: string; keywords: string }[] = [];
+  const groups = [...document.querySelectorAll<HTMLElement>('.search-group')];
+  const rows = [...document.querySelectorAll<HTMLLIElement>('.search-results li')];
   const activeTypes = new Set<string>();
-
-  fetch('/search.json')
-    .then((r) => r.json())
-    .then((data) => {
-      index = data.index;
-      run();
-    })
-    .catch(() => {
-      count.textContent = 'Search index failed to load — try /search.json directly.';
-    });
 
   const params = new URLSearchParams(location.search);
   const q = params.get('q');
@@ -222,34 +265,24 @@ const TYPE_LABELS: Record<string, string> = {
 
   function run() {
     const terms = input.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
-    const hits = index.filter((entry) => {
-      if (activeTypes.size && !activeTypes.has(entry.type)) return false;
-      if (!terms.length) return false;
-      const hay = `${entry.title} ${entry.summary} ${entry.keywords}`.toLowerCase();
-      return terms.every((term) => hay.includes(term));
-    });
+    let visible = 0;
+    for (const row of rows) {
+      const groupType = row.closest('.search-group')!.getAttribute('data-group')!;
+      const show =
+        (!activeTypes.size || activeTypes.has(groupType)) &&
+        (!terms.length || terms.every((term) => row.dataset.hay!.includes(term)));
+      row.hidden = !show;
+      if (show) visible++;
+    }
+    for (const group of groups) {
+      const type = group.getAttribute('data-group')!;
+      const typeAllowed = !activeTypes.size || activeTypes.has(type);
+      const hasVisible = !!group.querySelector('li:not([hidden])');
+      group.hidden = !typeAllowed || !hasVisible;
+    }
     count.textContent = terms.length
-      ? `${hits.length} result${hits.length === 1 ? '' : 's'}`
-      : 'Type to search the full index.';
-    list.replaceChildren(
-      ...hits.slice(0, 200).map((entry) => {
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-        a.href = entry.url;
-        const type = document.createElement('span');
-        type.className = 'result-type';
-        type.textContent = TYPE_LABELS[entry.type] ?? entry.type;
-        const title = document.createElement('span');
-        title.className = 'result-title';
-        title.textContent = entry.title;
-        const summary = document.createElement('span');
-        summary.className = 'result-summary';
-        summary.textContent = entry.summary;
-        a.append(type, title, summary);
-        li.append(a);
-        return li;
-      })
-    );
+      ? `${visible} result${visible === 1 ? '' : 's'}`
+      : `${visible} entries — filter above or browse below.`;
   }
 
   input.addEventListener('input', run);
@@ -264,4 +297,5 @@ const TYPE_LABELS: Record<string, string> = {
       run();
     })
   );
+  run();
 </script>
