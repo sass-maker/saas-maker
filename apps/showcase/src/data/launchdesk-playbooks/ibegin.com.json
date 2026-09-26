@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "ibegin.com",
+  "name": "iBegin",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.ibegin.com/",
+      "title": "Homepage — active local business directory covering USA, Canada, UK, New Zealand; 'Submit your Business' links live"
+    },
+    {
+      "url": "https://www.ibegin.com/account/signup",
+      "title": "Account page — free account creation ('Create one for free'), login wall"
+    },
+    {
+      "url": "https://www.ibegin.com/business-center/submit/",
+      "title": "Submit Business endpoint — exists but returned 403 to fetcher (likely requires logged-in session)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free account required — register at /account/register/ before accessing the submit flow",
+    "LOCAL business directory only: listings are structured by country → state → city → street address (covers US, CA, UK, NZ)",
+    "Also accepts blog submissions via /account/blogs/add/"
+  ],
+  "preparation": [
+    "Email for a free account",
+    "Business name, physical street address, city/state/ZIP, phone",
+    "Category and tags (site supports tag search like 'Free Wi-Fi', '24-Hour service')",
+    "Website URL"
+  ],
+  "workflow": [
+    "Register a free account at /account/register/",
+    "Log in, then open 'Submit Your Business' → /business-center/submit/",
+    "Fill the business fields (name, address, phone, website, category)",
+    "Submit; the listing appears under /directory/<country>/<state>/<city>/<slug>/"
+  ],
+  "watchFor": [
+    "/business-center/submit/ 403s to anonymous fetchers — must be logged in, and possibly behind bot protection",
+    "Online-only SaaS without a physical address is a poor fit — this is a citation-style local directory",
+    "Old-school directory (©2005-2026); value is a citation link, not launch traffic",
+    "Batch's stated URL /account/signup just leads to the generic account wall — real route is /business-center/submit/"
+  ],
+  "countsAsLive": "A public business listing page exists at ibegin.com/directory/<country>/<state>/<city>/<business-slug>/ and shows in the city directory",
+  "unknowns": [
+    "Whether listings are reviewed manually or auto-published",
+    "Dofollow status of the website link",
+    "Whether there's a paid/featured upgrade"
+  ]
+}

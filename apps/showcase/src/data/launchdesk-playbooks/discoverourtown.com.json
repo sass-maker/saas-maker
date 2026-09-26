@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "discoverourtown.com",
+  "name": "Discover Our Town",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "http://www.discoverourtown.com/add",
+      "title": "Add Your Listing form — name/email, business name, category (lodging/dining/attractions/shops/events/business directory/etc.), full address, phone, website, Facebook, Twitter, optional promo code, description"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "US local-business fit — categories are lodging, dining, attractions, specialty shops, artists, entertainment/events, recreation, organizations, business directory, transportation, relocation, real estate, health & wellness",
+    "Physical NAP details required: street address, city, state, zip, phone — a map marker must be placed/dragged to the business location",
+    "A 'Promo Code (if applicable)' field hints a paid/premium tier exists, but the base form has no payment step"
+  ],
+  "preparation": [
+    "Business name, address, city/state/zip, phone, toll-free number",
+    "Website URL, Facebook page, Twitter handle",
+    "Short description",
+    "The correct category/subcategory"
+  ],
+  "workflow": [
+    "Open http://www.discoverourtown.com/add",
+    "Fill all required fields and drag the map marker onto the business location",
+    "Pick the best category ('Business Directory' may be the only vaguely plausible slot for non-local products — but forcing a SaaS here is a stretch)",
+    "Submit; expect manual review typical of legacy directories"
+  ],
+  "watchFor": [
+    "HTTP-only form (no TLS) — don't submit anything sensitive through it",
+    "Promo-code field suggests hidden paid tiers; the free listing is the default path",
+    "Legacy site design — unclear how actively it is maintained",
+    "A remote software product with no US physical location does not belong here; forcing it produces a junk citation"
+  ],
+  "countsAsLive": "The business appears browsable/searchable on discoverourtown.com in its city/state category",
+  "unknowns": [
+    "Whether submissions are still reviewed — site shows legacy-era design",
+    "What the promo code unlocks (likely enhanced placement)",
+    "Review turnaround"
+  ]
+}

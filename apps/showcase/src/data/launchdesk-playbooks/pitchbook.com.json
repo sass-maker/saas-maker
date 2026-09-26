@@ -1,0 +1,62 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "pitchbook.com",
+  "name": "PitchBook",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://pitchbook.com/research-process-faqs",
+      "title": "PitchBook research-process FAQs — profile updates are free; Public Profile Preview 'Update this profile' button; survey@pitchbook.com (content read via search result)"
+    },
+    {
+      "url": "https://pitchbook.com/help/how-to-request-research-submit-data-feedback-or-update-your-profile",
+      "title": "'Request Research' tool adds new entities/deals; 'Data Feedback' tool corrects existing profiles — both go to the Data Operations team (content read via search result)"
+    },
+    {
+      "url": "https://pitchbook.com/request-your-pitchbook-profile",
+      "title": "Request Your PitchBook Profile — claim/update flow to showcase activity to platform subscribers (content read via search result)"
+    },
+    {
+      "url": "https://pitchbook.com/help/update-your-profile",
+      "title": "Profile Update Tool — secure external platform for firm data + supporting files; reviewed by Data Operations (content read via search result)"
+    }
+  ],
+  "category": "profile",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Updating/correcting your firm's profile is explicitly free ('updating your firm's profile is free, and can be done at any time') — but a profile only exists if PitchBook's research process already tracks the entity (companies, investors, deals within their scope)",
+    "Getting a NEW profile created requires the 'Request Research' tool inside the platform or the public request flow — no self-serve directory submission",
+    "The catalog's stored URL (/sponsorship) is the advertising product, unrelated to profile presence"
+  ],
+  "requirements": [
+    "Entity must be within PitchBook's tracking scope (private companies, investors, deals — a bootstrapped SaaS may not qualify until it raises funding or hits notability)",
+    "For existing profiles: 'Update this profile' button on the Public Profile Preview (verification required) or the in-platform Profile Update Tool",
+    "For missing entities: 'Request Research' (in-platform) asks the Data Operations team to research and add it",
+    "Corrections to existing data use the 'Data Feedback' button on the profile page",
+    "survey@pitchbook.com is the published direct-assist email"
+  ],
+  "preparation": [
+    "Check whether a Public Profile Preview already exists for the company at pitchbook.com/profiles",
+    "Firm facts to submit: funding rounds, investors, employees, office locations, website, description — with supporting files (financials/quarterly reports welcome)",
+    "If no profile exists: assemble evidence of funding/deal activity — PitchBook profiles are research-driven, not self-published"
+  ],
+  "workflow": [
+    "Search the company on PitchBook's public profile previews",
+    "If a preview exists: click 'Update this profile', complete verification, submit updates via the Profile Update Tool",
+    "If no preview: use 'Request Research' (or pitchbook.com/request-your-pitchbook-profile) to ask Data Operations to create the profile",
+    "Provide supporting documentation; Data Operations reviews and applies changes",
+    "Track submission status in the profile dashboard (Profile Completion Score)"
+  ],
+  "watchFor": [
+    "Not a launch directory — PitchBook is a paid data platform; a profile is created/maintained by their research team, not by submission",
+    "Data sourced from reliable public sources generally won't be removed at your request",
+    "Full profile access is subscriber-only — the free tier is just updating your own data",
+    "Sponsorship/advertising pages (the catalog's stored URL) are a separate paid product"
+  ],
+  "countsAsLive": "The company has a PitchBook profile (public preview visible at pitchbook.com/profiles/<company>)",
+  "unknowns": [
+    "Minimum tracking-scope criteria for a pre-revenue SaaS to get a new profile",
+    "Turnaround on Request Research submissions"
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "groupify.ai",
+  "name": "GroupifyAI",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://groupify.ai/",
+      "title": "Homepage — live AI tools & courses directory (claims 10k+ tools, 30–40 added daily); 'Submit New Tool' in nav"
+    },
+    {
+      "url": "https://groupify.ai/new-tool-form",
+      "title": "Submit New Tool — full listing form (tool details, category, functions, description, FAQs, pricing model, social links, tags)"
+    },
+    {
+      "url": "https://groupify.ai/pricing",
+      "title": "Pricing — Basic Listing $29, Featured Listing, Promoted Listing (newsletter to 10K+), Enterprise Partnership; no free tier shown"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "paid",
+  "conditions": [
+    "Pricing page lists only paid plans — Basic Listing from $29 (48h homepage visibility, verified badge, do-follow link, dedicated tool page)",
+    "No free listing tier is advertised; the submission form exists but the pricing page frames listing as a paid service"
+  ],
+  "requirements": [
+    "Submission form at /new-tool-form: your name, company email, designation, tool name, tool URL, one category, up to 3 functions/departments",
+    "Short one-line keyword-rich description, long feature description, use cases, top 3 FAQs",
+    "Pricing model (free/freemium/paid) plus link to pricing page",
+    "At least one social media link, 3–10 relevant tags",
+    "Listings reviewed before publication per their terms; updates processed within 2 business days",
+    "Tools must comply with their ethical-AI content guidelines"
+  ],
+  "preparation": [
+    "Company email address (form asks specifically for 'Company Email ID')",
+    "Ready-to-paste short + long descriptions, use cases, 3 FAQs",
+    "Pricing page URL and at least one social link",
+    "Budget for at least the $29 Basic Listing if no free option appears at checkout"
+  ],
+  "workflow": [
+    "Open https://groupify.ai/new-tool-form and select 'Submit a new tool to GroupifyAI'",
+    "Fill basic info, tool details, category, functions, descriptions, use cases, FAQs, pricing, social links, tags",
+    "Submit and pay for a plan (Basic $29 / Featured / Promoted / Enterprise via /pricing)",
+    "Their team reviews; verified badge granted at their discretion; updates go live within 2 business days",
+    "For changes, use the same form's 'Update an existing tool' option"
+  ],
+  "watchFor": [
+    "Pricing page advertises '16,000+ users / 5,000+ tools' while homepage claims '20,000+ users / 10,000+ tools' — inconsistent self-reported stats",
+    "All purchases final; refunds only if service not delivered",
+    "Homepage visibility is time-boxed (48h on Basic) — long-tail value is the dedicated tool page and do-follow link",
+    "Cancellations for campaigns must go to info@groupify.ai ≥2 days before the scheduled run"
+  ],
+  "countsAsLive": "The tool has a dedicated page on groupify.ai reachable from a category page (e.g. /ai-productivity-tools), with description, tags, and do-follow link",
+  "unknowns": [
+    "Whether any unpaid listing path exists via the form despite the paid-only pricing page",
+    "Review turnaround for the initial listing",
+    "Featured/Promoted listing prices (not displayed on the page)"
+  ]
+}

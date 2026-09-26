@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aisotools.com",
+  "name": "AISO Tools",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://aisotools.com/submit",
+      "title": "Submit Your AI Tool — free tier with autofill-from-URL form; ~90% auto-publish under a minute; $149 Verified (badge + dofollow + AI-visibility scan); Featured plans from $19/mo"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "AI tools across 27 categories (Writing, Image Gen, Coding, Marketing & SEO, AI Agent Infrastructure, LLM APIs, etc.)",
+    "Free listing is permanent with a tool page + backlink — but the free link carries rel=\"nofollow\" (stated explicitly; dofollow is a paid feature)",
+    "Form: Website URL (with 'Autofill from my website' that drafts name/category/description/features/pricing), tool name, category, optional description/pricing/features overrides, contact email",
+    "Most free listings auto-publish within ~a minute; the rest go to hand review (median <1 hour; small tail up to ~6 days shown live on page)",
+    "$149 one-time Verified: 🛡️ badge on page + browse grids, dofollow link, skips review, includes the $9 12-point AI-visibility scan"
+  ],
+  "preparation": [
+    "Website URL (the autofill reads your site to draft the listing — make sure the homepage metadata is clean first)",
+    "Tool name, best-fit category from the 27 options",
+    "A working contact email — your live listing URL is emailed there",
+    "Optional: own description, pricing model/details, comma-separated key features if overriding autofill",
+    "Decide free-vs-$149 upfront: the paid tier's real buys are the badge, dofollow, and instant publish"
+  ],
+  "workflow": [
+    "Open https://aisotools.com/submit",
+    "Enter the website URL and hit 'Autofill from my website'; review/correct the drafted fields",
+    "Add contact email, choose Free (or Verified $149)",
+    "Free listings usually auto-publish in under a minute — the live URL is emailed to you",
+    "Optionally run the free ChatGPT visibility check offered post-submit"
+  ],
+  "watchFor": [
+    "Free link is nofollow by explicit policy — expect referral/AI-citation value, not link equity",
+    "The former $39 'skip the queue' tier was retired 2026-08-19 — Verified is now the only queue bypass",
+    "Hand-review tail exists (page shows live queue depth, e.g. 25 waiting, oldest 6 days)",
+    "Featured placement is a separate monthly product ($19+/mo) — not needed for a listing",
+    "Autofill can misread sites — always review drafted fields"
+  ],
+  "countsAsLive": "The tool has a public page on aisotools.com (emailed to you) and appears in its category/newest-tool grids",
+  "unknowns": [
+    "What triggers hand review vs auto-publish",
+    "Refund/appeal policy specifics (page references one; truncated)",
+    "Whether free listings can later upgrade to Verified"
+  ]
+}

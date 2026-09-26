@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "opensourceprojects.cc",
+  "name": "OpenSourceProjects",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://opensourceprojects.cc/",
+      "title": "Homepage — live directory of 10,000+ open source projects and alternatives to 740+ commercial products"
+    },
+    {
+      "url": "https://opensourceprojects.cc/submit",
+      "title": "Submit an open source project — free, no waitlist fees; hand-reviewed"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Genuinely open source — public repository plus a recognized license",
+    "Actively maintained — recent commits, not abandoned",
+    "Useful to developers; ideally an alternative to a commercial tool or self-hostable",
+    "Submission does not guarantee inclusion — every entry is hand-reviewed"
+  ],
+  "preparation": [
+    "GitHub repository URL (required)",
+    "Project name (required)",
+    "Short description, max 200 characters (required)",
+    "Optional: project website, what it 'Replaces' (commercial product), category, email for follow-up"
+  ],
+  "workflow": [
+    "Open https://opensourceprojects.cc/submit",
+    "Fill GitHub repo URL, project name, and a ≤200-char description",
+    "Optionally add website, 'Replaces' target, category, and email; newsletter opt-in checkbox present",
+    "Click 'Submit project' and wait for manual review"
+  ],
+  "watchFor": [
+    "Only meaningful if the product is open source — closed-source SaaS does not qualify",
+    "Description is hard-capped at 200 characters",
+    "Footer shows 'Powered by Startup Fast' and cross-promo badges (Startup Fame, Wired Business) — a network of related launch sites",
+    "Email field is optional; leaving it blank means no notification path"
+  ],
+  "countsAsLive": "The project appears on opensourceprojects.cc under its category and/or in the alternatives list for the commercial product it replaces",
+  "unknowns": [
+    "Review turnaround time",
+    "Whether rejected submissions receive a response",
+    "Minimum repo maturity (stars/age) — not stated"
+  ]
+}

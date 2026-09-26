@@ -1,0 +1,42 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "androidauthority.com",
+  "name": "Android Authority",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.androidauthority.com/contact/",
+      "title": "Android Authority Contact — news@androidauthority.com (leaks/press releases/news), licensing@, sales@, contact@; ad/sponsorship via Authority Media"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Not a directory — earned editorial only; no submission form or listing product",
+    "Leaks, press releases, and news go to news@androidauthority.com",
+    "General enquiries: contact@androidauthority.com; licensing: licensing@androidauthority.com; ads/sponsorship: sales@androidauthority.com",
+    "Android-ecosystem focus: apps, Android devices, mobile tech — a SaaS product needs an Android/mobile app angle"
+  ],
+  "preparation": [
+    "A mobile/Android angle — an Android app launch, mobile software news, or a device story",
+    "Press release or concise news pitch for news@androidauthority.com",
+    "App listing assets (Play Store link, screenshots) if pitching an app"
+  ],
+  "workflow": [
+    "Send the press release or tip to news@androidauthority.com",
+    "For review coverage, pitch the app/device to the editorial team via the same inbox or the site's interactive contact form",
+    "Coverage, if it happens, is a staff-written news article or review — no listing page is created",
+    "For guaranteed placement, the paid route is advertising via sales@androidauthority.com / authoritymedia.com/services"
+  ],
+  "watchFor": [
+    "Consumer mobile focus — pure B2B SaaS pitches will likely be ignored",
+    "Separate paid and earned channels: sales@ is advertising; editorial coverage is not pay-to-play",
+    "No guest-post/contributed-article program is advertised on the contact page"
+  ],
+  "countsAsLive": "An Android Authority article or review mentioning the product is published at androidauthority.com",
+  "unknowns": [
+    "Review-sample logistics and embargoes process — not documented on the contact page",
+    "Whether contributed op-eds are ever accepted — no program found"
+  ]
+}

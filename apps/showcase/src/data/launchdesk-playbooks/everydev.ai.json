@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "everydev.ai",
+  "name": "EveryDev.ai",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://everydev.ai/",
+      "title": "Homepage — AI developer social network + directory of 2,100+ tools; 'Submit a Tool' at /create/tool"
+    },
+    {
+      "url": "https://www.everydev.ai/create/tool",
+      "title": "Submit-a-tool route — auth-gated; 'It's all free' sign-in via GitHub or Google"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free account required — sign in with GitHub or Google to access /create/tool",
+    "Tool should serve AI developers: categories span coding assistants, agent frameworks, MCP servers, prompt tools, vibe-coding, design, database, testing, LLM evals",
+    "Directory has community reviews/ratings and per-tool discussion threads — expect public feedback"
+  ],
+  "preparation": [
+    "GitHub or Google account for sign-in",
+    "Tool name, URL, description, topic/category fit",
+    "Optionally plan follow-ups: a Build showcase (/create/build), discussion, or blog post amplifies the listing"
+  ],
+  "workflow": [
+    "Sign in at https://www.everydev.ai/ (GitHub or Google OAuth)",
+    "Open https://www.everydev.ai/create/tool and submit the tool details",
+    "Once listed, the tool gets a directory page eligible for community ratings, reviews, and discussion threads",
+    "Optionally create a Build post to showcase the product in the community feed"
+  ],
+  "watchFor": [
+    "This is a community platform, not just a form dump — low-effort listings without engagement will sit unrated",
+    "An 'Advertise' program exists separately for paid reach",
+    "Community reviews are 'hands-on experiences, not marketing copy' — expect scrutiny of overclaimed features",
+    "Form fields not visible without signing in"
+  ],
+  "countsAsLive": "The tool appears in the everydev.ai/tools directory with a public detail page open to community reviews",
+  "unknowns": [
+    "Whether submissions undergo manual review before appearing",
+    "Exact submission form fields (behind OAuth)",
+    "Turnaround between submission and public listing"
+  ]
+}

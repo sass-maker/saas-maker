@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "saasalliance.io",
+  "name": "SaaS Alliance",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://saasalliance.io/",
+      "title": "Homepage — SaaS professional community (The Alliance network / futureofsaas.io); membership, articles, podcasts"
+    },
+    {
+      "url": "https://saasalliance.io/contributor-guide",
+      "title": "Create & Contribute — write-for-us rules (800+ words, no product promotion), podcast/event/report contribution routes"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "This is NOT a product listing directory — the free route is contributing non-promotional content (articles ≥800 words), podcast guesting, event speaking, or report contributions",
+    "'Individual contributions shouldn't promote your company's products or services. For that sort of stuff, we have sponsorship opportunities' — product marketing is paid sponsorship only",
+    "Contributor needs: royalty-free images, a profile photo, ≤200-char bio",
+    "Content topics: SaaS marketing, customer advocacy, growth, metrics, onboarding, GTM, SaaS+AI"
+  ],
+  "preparation": [
+    "A subject pitch (step 1 is submitting your topic BEFORE writing)",
+    "An ≥800-word article draft once the topic is accepted, with royalty-free images",
+    "Headshot + ≤200-char bio for the contributor profile",
+    "Author contact: email Anthony (anthony@futureofsaas.io) or Sophie — or Slack if already in the community"
+  ],
+  "workflow": [
+    "Open https://saasalliance.io/contributor-guide",
+    "Email the subject pitch before writing",
+    "After acceptance, send the article link/attachment with profile pic + bio",
+    "Republished-elsewhere pieces are accepted via custom canonical links",
+    "For direct product exposure, the only routes are paid sponsorship (events, articles, reports, podcasts, webinars) via /partner/"
+  ],
+  "watchFor": [
+    "Do not pitch a product listing — there is no directory; pitching your product in an article violates their rules",
+    "Syndication policy: they may reuse contributed content across social/media",
+    "Many articles are members-only gated — exposure is to the 6k-member community, not open web",
+    "Site is part of The Alliance; contact emails live on futureofsaas.io / pmmalliance.com domains"
+  ],
+  "countsAsLive": "Your article appears under /articles or the blog feed with a bylined contributor profile (or your name in a podcast/report credit)",
+  "unknowns": [
+    "Acceptance rate and editorial turnaround",
+    "Whether contributor articles can include a contextual link back to the author's product (link policy allows relevant contextual links, but promotion is barred)",
+    "Sponsorship pricing"
+  ]
+}

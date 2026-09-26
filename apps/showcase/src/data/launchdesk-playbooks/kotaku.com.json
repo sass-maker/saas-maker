@@ -1,0 +1,39 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "kotaku.com",
+  "name": "Kotaku",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://kotaku.com/",
+      "title": "Kotaku homepage — live gaming publication (reviews, news, tips); footer 'Send us a Tip!' link is a Cloudflare-obfuscated email resolving to tips@kotaku.com"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Not a directory — earned editorial only; no listing product",
+    "Kotaku covers video games and gaming culture — a SaaS product is essentially out of scope unless it is a game or game-adjacent tool",
+    "News tips go to tips@kotaku.com (obfuscated 'Send us a Tip!' email link in the site footer)",
+    "Recent Kotaku articles actively solicit tips at tips@kotaku.com (referenced in 2026 coverage of Epic layoffs)"
+  ],
+  "preparation": [
+    "A gaming-industry hook — game launch, studio news, industry leak — not a generic SaaS announcement",
+    "Concise tip: claim, evidence, why it matters to Kotaku's audience"
+  ],
+  "workflow": [
+    "Send the tip or press release to tips@kotaku.com",
+    "Coverage, if it happens, is a staff-written article — no listing page is created"
+  ],
+  "watchFor": [
+    "Weak fit for SaaS launches — Kotaku's remit is games and gamer culture; a productivity tool will be ignored",
+    "tips@ is read by reporters — anything sent may be published",
+    "Part of the ex-G/O Media network (Kotaku USA LLC); sister sites share sensibilities but have separate inboxes"
+  ],
+  "countsAsLive": "A Kotaku article mentioning the product/game is published at kotaku.com",
+  "unknowns": [
+    "Review-copy intake process for indie games — not documented on public pages",
+    "Whether freelance pitches are accepted — no contributor guidelines page found"
+  ]
+}

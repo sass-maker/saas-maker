@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "spectacle.is",
+  "name": "Spectacle (Startup Videos)",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://spectacle.is/",
+      "title": "Homepage — 'The best startup and product videos, hand-picked'; curated library of marketing/brand/launch films, active (2026 videos incl. OpenAI, HubSpot, Framer)"
+    },
+    {
+      "url": "https://spectacle.is/submit",
+      "title": "Submit / Add a Video — gated by login: email+password or 'Continue with Google'; signup at /auth/signup?redirectTo=/submit"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Requires a free account (email or Google sign-in) before the Add a Video form is accessible",
+    "The library is hand-picked — submission is subject to curation; only videos meeting the site's quality bar get in"
+  ],
+  "requirements": [
+    "You need a VIDEO — this is a curated library of startup/product marketing, brand, and launch films, not a product listing",
+    "Videos are tagged by production style (live action, animation, screencast, mixed media), length, mood, and industry",
+    "Fit: launch films, product explainers, brand videos — the kind 'worth studying'"
+  ],
+  "preparation": [
+    "A finished product/launch video (hosted URL, e.g. YouTube/Vimeo)",
+    "Account email or Google login",
+    "Likely metadata: title, brand/company name, production style, industry, mood tags",
+    "Studio credit if a production studio made it (there's a separate Featured Studios section)"
+  ],
+  "workflow": [
+    "Create an account at https://spectacle.is/auth/signup?redirectTo=/submit (Google or email)",
+    "Open /submit ('Add a Video') and enter the video URL plus metadata",
+    "Submission is curated — accepted videos appear in Latest Videos and relevant category/collection pages"
+  ],
+  "watchFor": [
+    "Requires a polished video asset — without one, this destination is unusable",
+    "Curation bar is high (the library features OpenAI, Apple, PostHog-grade work); a low-effort screen recording will likely be rejected",
+    "Site is made by video studio Thinkmojo — the directory also funnels work to featured studios",
+    "A video listing links to the video, not necessarily a product page — value is showcase/inspiration traffic"
+  ],
+  "countsAsLive": "The submitted video appears in the Latest Videos feed and is playable from its spectacle.is detail page",
+  "unknowns": [
+    "Whether acceptance criteria or turnaround are stated post-login",
+    "Whether the listing links out to the product site as dofollow",
+    "Whether a 'Sponsor' route offers paid placement"
+  ]
+}

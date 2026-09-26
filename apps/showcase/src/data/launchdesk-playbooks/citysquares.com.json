@@ -1,0 +1,57 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "citysquares.com",
+  "name": "CitySquares",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://citysquares.com/add_business",
+      "title": "Add Your Business page — free add/claim flow, sign in or sign up to begin (via search snippet; site 403s direct fetches)"
+    },
+    {
+      "url": "https://www.synup.com/es/how-to/add-your-business-listing-citysquares",
+      "title": "Synup walkthrough — account creation, 'Find my business', form fields, ~24h review"
+    },
+    {
+      "url": "https://www.yext.com/integrations/publishers/citysquares",
+      "title": "Yext publisher page — US-only, required fields: Name, Address, Categories, Main Phone"
+    },
+    {
+      "url": "https://citysquares.com/api_partner",
+      "title": "API Partner Plan — $0.12/listing/mo ($20 min) for API-managed enhanced listings (via search snippet)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "US local business only (Yext lists supported country as United States)",
+    "Free account (name, email, password) — 'Sign in or Sign up to begin'",
+    "Required fields: business name, categories, address, main phone",
+    "If the business already exists in their database, claim it instead of duplicating"
+  ],
+  "preparation": [
+    "Business name, US street address, main phone, website",
+    "Category, short description, hours, photos (supported fields)",
+    "Email for the account"
+  ],
+  "workflow": [
+    "Open https://citysquares.com/add_business",
+    "Sign up for a free account",
+    "Enter business name + location and click 'Find my business' — claim if present",
+    "Otherwise fill the form (name, category, address, phone, website, description), accept T&C, 'Create Listing'",
+    "CitySquares reviews before publishing — reportedly up to 24 hours"
+  ],
+  "watchFor": [
+    "Site 403s automated fetches — use a real browser",
+    "Local-business fit only: an online SaaS without a US location doesn't belong",
+    "Paid Enhanced Listings and an API Partner Program ($0.12/listing/mo) exist — free tier is basic",
+    "Listings are SEO-optimized profile pages; link value is a citation, not a launch"
+  ],
+  "countsAsLive": "The business profile page is publicly reachable on citysquares.com and appears in its city/category search",
+  "unknowns": [
+    "Dofollow status of the website link",
+    "Enhanced listing pricing for a single business (non-API)",
+    "Whether review can exceed 24h"
+  ]
+}

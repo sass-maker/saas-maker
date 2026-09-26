@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startupsoflondon.com",
+  "name": "Startups of London",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://startupsoflondon.com/",
+      "title": "Homepage — editorial site covering UK/London startups; nav has curated startup lists, SOL Podcast, Partners, Contact"
+    },
+    {
+      "url": "https://startupsoflondon.com/contact/",
+      "title": "Contact page — JS contact form (Name, Email, Subject, Message); footer lists 'Be a Guest Author' and 'Become a SOL Partner' collaboration routes"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "No public 'submit your startup' form exists — the free path is an editorial pitch via the /contact/ form (or podcast-guest / guest-author routes), and inclusion is at the editorial team's discretion",
+    "Coverage is scoped to London / UK startups and scale-ups; a non-UK product has no realistic fit"
+  ],
+  "requirements": [
+    "Editorial fit: the site curates lists like 'Startups & Scale-ups in London', 'FinTech Startups & Scaleups in London', 'AI Startups and Companies in London' — the product must plausibly belong in a UK/London startup list",
+    "Pitch via the JS contact form (requires JavaScript enabled in browser)",
+    "Alternative free routes: 'Be a Guest Author' (contribute an article) or 'Be a Podcast Guest' (SOL Podcast)"
+  ],
+  "preparation": [
+    "A short pitch explaining what the startup does and its London/UK connection",
+    "Which existing list/category the company fits (fintech, AI, legal tech, edtech, insurtech, health, etc.)",
+    "Founder availability if pitching a podcast-guest angle",
+    "Site URL, founding year, and headline metric that makes the inclusion worthwhile"
+  ],
+  "workflow": [
+    "Decide the angle: inclusion in a curated UK-startup list, a guest-authored article, or a podcast appearance",
+    "Open https://startupsoflondon.com/contact/ and submit the contact form with the pitch (JavaScript required)",
+    "If pitching list inclusion, name the specific list page the startup belongs on",
+    "Follow up via the same channel; there is no status tracker"
+  ],
+  "watchFor": [
+    "This is an editorial publication, not a self-serve directory — there is no guaranteed listing",
+    "The 'Register' flow on site is a Candidate/Employer jobs signup, unrelated to startup listings",
+    "Footer 'Be a Guest Author' link 404'd at research time — the contact form is the reliable route",
+    "The site is monetized with ads and pushes its own AISA product; expect slow or no replies on weak pitches"
+  ],
+  "countsAsLive": "The startup appears on a curated list page (e.g., /top-ai-startups-and-companies-in-london/) or a published article/podcast episode on startupsoflondon.com",
+  "unknowns": [
+    "Editorial response time and whether cold pitches get answered",
+    "Whether list inclusion is ever pay-to-play (the /partners/ page exists for commercial partnerships)",
+    "Whether the guest-author program is still active (its link 404s)"
+  ]
+}

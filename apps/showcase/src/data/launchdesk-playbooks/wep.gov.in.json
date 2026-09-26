@@ -1,0 +1,40 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "wep.gov.in",
+  "name": "Women Entrepreneurship Platform (India)",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://wep.gov.in/",
+      "title": "WEP — Government of India (NITI Aayog) Women Entrepreneurship Platform; site resolves (200) but flagged our fetcher's content as 'potentially suspicious'"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Women entrepreneurs in India only — WEP is a NITI Aayog government platform",
+    "Registration on the platform gives access to the knowledge bank, community, schemes, and partner services",
+    "The knowledge-bank/blog surface exists but content is member-facing; no public 'submit a listing' surface was reachable",
+    "wep.gov.in blocked automated content fetch ('suspicious content' notice) — details limited to homepage structure"
+  ],
+  "preparation": [
+    "Eligibility: a woman founder/entrepreneur operating in India",
+    "Registration details for the platform"
+  ],
+  "workflow": [
+    "Register at wep.gov.in",
+    "Use the knowledge bank, community features, scheme finders",
+    "No public product listing is generated — value is resources/community, not exposure"
+  ],
+  "watchFor": [
+    "Very weak catalog fit — a government support platform, not a launch directory; nothing here produces a public listing or backlink",
+    "Demographic + geographic eligibility restricts most submitters",
+    "Site actively blocks automated browsing"
+  ],
+  "countsAsLive": "A registered WEP member account — no public listing is produced",
+  "unknowns": [
+    "Whether any public-facing business directory exists inside",
+    "Current platform activity level"
+  ]
+}

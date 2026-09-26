@@ -1,0 +1,37 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "webdesignernews.com",
+  "name": "WebDesignerNews",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://webdesignernews.com/",
+      "title": "WebDesignerNews — live curated design/dev news feed; 'Submit an article' form on the homepage: Title + URL, 'Free Submission', 'no homepage submissions, no spammy affiliate links'; 'We will review it and approve it if relevant'"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free 'Submit an article' form on the homepage — Title + URL only, no account needed",
+    "Topics: web design/development, UX, apps, graphic design",
+    "Explicit rejections: homepage submissions and spammy affiliate links",
+    "Editorial review — 'we will review it and approve it if relevant'"
+  ],
+  "preparation": [
+    "A URL worth linking — a tool page, article, or resource a web designer would care about (not a bare homepage)",
+    "A descriptive title"
+  ],
+  "workflow": [
+    "Fill the 'Submit an article' form on the homepage (Title + URL)",
+    "Wait for editorial review — approved links appear in the feed as story cards with outbound links"
+  ],
+  "watchFor": [
+    "Design/dev topicality only",
+    "Submit the tool/resource page, not the homepage — homepages are explicitly rejected",
+    "Cadence is slow — latest stories were 2-4 months old at fetch time; modest traffic",
+    "No account system — pure editorial curation"
+  ],
+  "countsAsLive": "The submission appears as a story card in the WebDesignerNews feed",
+  "unknowns": ["Review turnaround", "Whether links are followed"]
+}

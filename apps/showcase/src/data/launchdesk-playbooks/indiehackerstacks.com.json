@@ -1,0 +1,37 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "indiehackerstacks.com",
+  "name": "Indie Hacker Stacks",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://indiehackerstacks.com/",
+      "title": "Indie Hacker Stacks — live 'discover tools indie hackers use' directory; nav 'Add your product'/'Add your product stack'; Log in; Pricing page; products listed with their build-tool stacks"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Account ('Log in' → signup) then 'Add your product' or 'Add your product stack'",
+    "Indie-hacker/maker products — the format is product + the tools it's built with",
+    "Free submission path evident; a Pricing page exists (likely premium features)",
+    "Active — fresh 2025-era product listings visible"
+  ],
+  "preparation": [
+    "Product name, URL, description, logo",
+    "Your build-stack tools (Next.js, Stripe, Cloudflare…) — the distinctive field here"
+  ],
+  "workflow": [
+    "Sign up / log in at indiehackerstacks.com",
+    "'Add your product' with details + tech stack",
+    "Product appears in the directory with stack tags; makers directory also exists"
+  ],
+  "watchFor": [
+    "Stack field is the differentiator — list real tools honestly",
+    "Pricing page suggests some features may be paid",
+    "Niche indie audience — small but relevant reach"
+  ],
+  "countsAsLive": "The product appears in the Indie Hacker Stacks directory with its tool stack",
+  "unknowns": ["What the paid tier includes", "Moderation of submissions"]
+}

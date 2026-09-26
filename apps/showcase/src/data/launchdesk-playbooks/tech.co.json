@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "tech.co",
+  "name": "Tech.co",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://tech.co/contact",
+      "title": "Contact page — press@tech.co for tech press releases/news announcements; commercial@tech.co for sponsored posts; partnerships via MVF 'Become a Partner'"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "There is no submission form or listing — the free route is pitching press@tech.co with a genuinely newsworthy tech announcement; coverage is editorially decided and never guaranteed",
+    "Guaranteed presence requires paid routes: sponsored posts via commercial@tech.co or partnership/lead-gen via MVF Global"
+  ],
+  "requirements": [
+    "A real news angle — product news, funding, data, or a story relevant to Tech.co's beats (AI, cybersecurity, business software, logistics, hospitality tech)",
+    "Press contact email pitch; no form fields"
+  ],
+  "preparation": [
+    "A newsworthy announcement with a concrete angle (launch with traction numbers, funding, original research)",
+    "Short pitch email — subject line, 2–3 sentence story, link to press kit/site",
+    "Founder availability for follow-up questions"
+  ],
+  "workflow": [
+    "Email the announcement to press@tech.co",
+    "For a paid/sponsored route, contact commercial@tech.co",
+    "For software-review/partnership coverage, apply via the MVF 'Become a Partner' link",
+    "Follow up once after ~a week if no response"
+  ],
+  "watchFor": [
+    "Batch 'submissionUrl' is just the contact page — there is no self-serve listing",
+    "Press inboxes are high-volume; a generic 'we launched' pitch is usually ignored",
+    "Tech.co is an MVF property — affiliate/lead-gen commercial model; editorial reviews of business software may favor partner products",
+    "Sponsored posts are labeled and cost money — don't confuse with editorial coverage"
+  ],
+  "countsAsLive": "A Tech.co article or review mentioning/linking the product is published at a tech.co URL",
+  "unknowns": [
+    "Sponsored post pricing",
+    "Response rate on press pitches",
+    "Whether editorial mentions link dofollow"
+  ]
+}

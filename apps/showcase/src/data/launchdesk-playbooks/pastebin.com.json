@@ -1,0 +1,42 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "pastebin.com",
+  "name": "Pastebin",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://pastebin.com/",
+      "title": "Pastebin homepage — guest 'New Paste' form with exposure options (Public/Unlisted/Private) and signup prompts"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Pastebin is a text/code-paste host, not a product directory — there is no 'submit product' flow",
+    "Guests can create pastes without an account, but guest pastes cannot be edited or deleted later",
+    "Paste exposure choices: Public (listed in the public archive), Unlisted, or Private (members-only folders exist)",
+    "PRO membership exists (Markdown syntax highlighting is PRO-only, among other perks)"
+  ],
+  "preparation": [
+    "Text content for the paste (a product description, changelog, or code snippet containing the product URL)",
+    "Decide exposure: Public is the only exposure that surfaces in the public archive"
+  ],
+  "workflow": [
+    "Open pastebin.com — the New Paste form is on the homepage",
+    "Paste content, optionally pick a category, syntax highlighting, expiration, and set Paste Exposure to Public",
+    "Create the paste; note the URL — guests lose all edit/delete control",
+    "Alternatively sign up (email or Facebook/Twitter/Google OAuth) to retain edit/delete and use folders"
+  ],
+  "watchFor": [
+    "Guest pastes are permanent and uneditable — never paste anything sensitive",
+    "Public archive spam is heavily abused; links in pastes carry little to no SEO value and may be nofollowed",
+    "Burn-after-read and expiration options can silently kill the listing — pick 'Never' if persistence matters",
+    "Not a real launch destination; only useful as a supporting citation at best"
+  ],
+  "countsAsLive": "The paste URL resolves publicly and appears in pastebin.com/archive (Public exposure only)",
+  "unknowns": [
+    "Link attribute (dofollow/nofollow) on paste content",
+    "Whether public pastes remain indexed by search engines at all"
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aiagentslive.com",
+  "name": "AI Agents Live",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://aiagentslive.com/",
+      "title": "Homepage — live AI agents directory with reviews/ratings, 50+ categories, recent activity Sep 2026"
+    },
+    {
+      "url": "https://aiagentslive.com/agents/products/new",
+      "title": "Submit an AI Agent — 4-step form; step 1 asks website URL, email, name; 'We only accept AI agents and AI platform listings. NSFW content is not allowed'"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "Only AI agents and AI platform listings accepted",
+    "NSFW content is rejected",
+    "4-step submission flow starting with website URL, email, and name (no sign-in required at step 1)"
+  ],
+  "preparation": [
+    "Website URL, contact email (listing updates go there), and your name",
+    "Likely in later steps: description, category pick from ~50 categories, logo",
+    "Product must genuinely be an AI agent or AI platform"
+  ],
+  "workflow": [
+    "Open https://aiagentslive.com/agents/products/new ('Submit Your AI Agent' in nav)",
+    "Step 1: enter website URL, email, and name",
+    "Complete steps 2–4 (product details; not visible without proceeding)",
+    "Listing goes live at /agents/<id>.<slug> after review and can collect user ratings/reviews"
+  ],
+  "watchFor": [
+    "Only step 1 of the form is publicly visible — pricing/free status and later fields are unverified",
+    "Listings carry public ratings and reviews — live products can accumulate scores",
+    "Outbound links are utm-tagged referral links (utm_source=aiagentslive.com) — link-juice value unclear",
+    "Site also sells services ('talk to us' Calendly) — distinguish listing from consulting upsell"
+  ],
+  "countsAsLive": "The agent has a public page at aiagentslive.com/agents/<id>.<slug> reachable from a category page",
+  "unknowns": [
+    "Whether the listing is free or paid — nothing about cost before step 2",
+    "What steps 2-4 require",
+    "Review criteria and turnaround",
+    "Whether outbound links are dofollow"
+  ]
+}

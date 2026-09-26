@@ -1,0 +1,58 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "reddit.com",
+  "name": "Reddit",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://support.reddithelp.com/hc/en-us/articles/360060422572-How-do-I-post-and-comment-on-Reddit",
+      "title": "Reddit Help: How do I post and comment on Reddit (direct fetch blocked with 403; content read via search result)"
+    },
+    {
+      "url": "https://support.reddithelp.com/hc/en-us/articles/360043044012-How-do-I-create-a-community",
+      "title": "Reddit Help: How do I create a community (direct fetch blocked with 403; content read via search result)"
+    },
+    {
+      "url": "https://redditinc.com/",
+      "title": "Reddit Inc corporate site — links to help center, Reddit rules, public content policy"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Requires a Reddit account; posting is free but each subreddit sets its own gates — many enforce minimum account age, karma thresholds, verified email, or flair requirements",
+    "Self-promotion is regulated per-community; many subreddits ban or restrict product promotion outright"
+  ],
+  "requirements": [
+    "A Reddit account in good standing",
+    "Post must go into a specific community (subreddit); not all communities allow all post types (Post, Images & Video, Link, Poll)",
+    "Each community's rules (sidebar / About tab) govern format, self-promotion, and required flair — check them before posting",
+    "Creating a new community has an informal trust gate (account age, karma, verified email) per Reddit help documentation"
+  ],
+  "preparation": [
+    "Identify 2-3 relevant subreddits (e.g. r/SaaS, r/startups, niche communities) and read their rules and recent posts",
+    "Account with some history/karma — brand-new accounts posting links get filtered or removed",
+    "Post copy that fits each subreddit's format and tone; launch-day megathreads (e.g. 'Feedback Friday') exist in some subs",
+    "Product URL, short honest description, and any required flair"
+  ],
+  "workflow": [
+    "Create/verify a Reddit account and spend time participating in target communities",
+    "Read the target subreddit's rules (sidebar on desktop, About tab on mobile)",
+    "Click Create (top right) or 'Create a post' on the community page, choose post type (usually Link or Post)",
+    "Add a descriptive title and body, apply required flair/tags, mark NSFW/spoiler if applicable",
+    "Click Post; respond to comments promptly — engagement keeps the post visible",
+    "Optionally cross-post or create your own subreddit for the product via reddit.com/subreddits/create"
+  ],
+  "watchFor": [
+    "Karma/account-age filters silently remove posts from new accounts — 'Why can't I see my post?' is a common failure mode",
+    "Aggressive self-promotion gets accounts flagged sitewide; Reddit's spam detection disfavors accounts that only post links to one domain",
+    "Moderators can remove posts without notice; some subs require pre-approval via modmail for promos",
+    "Links from Reddit are community-voted — a badly received launch post gets downvoted into invisibility, not just ignored"
+  ],
+  "countsAsLive": "The post is publicly visible on the subreddit's listing (r/<sub>/new) and has its own permalink comments page",
+  "unknowns": [
+    "Exact karma/age thresholds per subreddit — moderators set these and they are not published",
+    "Whether a given subreddit's moderators will treat a product post as spam — judgement call, varies by community"
+  ]
+}

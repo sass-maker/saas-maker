@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "blackhatworld.com",
+  "name": "BlackHatWorld",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://support.blackhatworld.com/support/solutions/articles/48000717881-how-can-i-sell-my-service-on-bhw-",
+      "title": "BHW Support — selling requires Jr VIP ($147/yr, needs 60 days + 100 posts) or Marketplace Seller ($749/yr, instant); threads cost $30 each after moderator approval"
+    },
+    {
+      "url": "https://support.blackhatworld.com/support/solutions/articles/48000803496-how-do-i-advertise-on-bhw-",
+      "title": "BHW Support (search-indexed) — signatures require a paid membership; marketplace threads renew at $30/yr"
+    },
+    {
+      "url": "https://www.blackhatworld.com/register/",
+      "title": "Registration page — returned HTTP 403 (bot-blocked)"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "paid",
+  "conditions": [],
+  "requirements": [
+    "No free promotion route: signatures are a paid-membership feature (Premium $97/yr minimum) and marketplace sales threads require Jr VIP or Marketplace Seller",
+    "Jr VIP path: 60 days of membership + 100 posts + $147/yr; Marketplace Seller path: $749/yr with no waiting requirements",
+    "Every marketplace thread is reviewed by a moderator before going live and costs $30 per thread ($30/yr to keep it live)",
+    "Account must be free of active warnings during thread review",
+    "Sales threads must include pricing, contact details, refund policy, CTA and turnaround time"
+  ],
+  "preparation": [
+    "Decide the route: organic free participation only (no links), or paid seller path",
+    "For selling: budget $749/yr Marketplace Seller (immediate) or $147/yr Jr VIP after building 100 posts over 60+ days, plus $30 per sales thread",
+    "Sales thread copy with pricing, refund policy, contact details, turnaround time"
+  ],
+  "workflow": [
+    "Register a free account at blackhatworld.com (site 403s automated fetches — use a browser)",
+    "Free accounts can participate in discussion forums only — no signature, no marketplace",
+    "To sell: upgrade at /account/upgrades to Jr VIP (requires 60 days + 100 posts) or Marketplace Seller ($749 immediate)",
+    "Draft the marketplace thread in the appropriate section; a moderator reviews it",
+    "On approval, pay the $30 listing fee to publish; renew annually to keep it live"
+  ],
+  "watchFor": [
+    "The batch's 'free + register' framing is wrong for promotion — every promotional route on BHW is paid",
+    "Forum is an SEO/marketing community — a SaaS launch post outside the marketplace reads as spam and can earn warnings that block marketplace eligibility",
+    "Marketplace Seller is $749/yr — a serious spend for what is a forum sales thread",
+    "Warnings must be expired before thread review — keep the account clean"
+  ],
+  "countsAsLive": "An approved marketplace sales thread is publicly visible in a BHW Marketplace section, or (for the minimal case) a paid signature link renders under the member's posts",
+  "unknowns": [
+    "Whether profile pages are publicly indexable",
+    "Link treatment (dofollow/nofollow) on signatures and marketplace threads",
+    "Moderator approval rate/turnaround for sales threads"
+  ]
+}

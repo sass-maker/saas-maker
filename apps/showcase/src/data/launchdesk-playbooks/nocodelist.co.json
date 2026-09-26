@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "nocodelist.co",
+  "name": "NoCodeList",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://nocodelist.co/",
+      "title": "Homepage — Bubble-built 'Book of NoCode' catalogue, 300+ tools; page renders only with JS"
+    },
+    {
+      "url": "https://submitmap.com/platform/nocodelist/",
+      "title": "SubmitMap platform walkthrough — submission types, account requirement, dofollow confirmation, DR 37"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "No-code angle required — catalogue is exclusively no-code tools, agencies, resources, and product stacks; a general SaaS with no no-code relevance is a rejection risk",
+    "Account required: 'To Submit, you have to be Logged In' — sign-up is email-link or email+password only; NO Google/GitHub SSO",
+    "Choose one of four submission types first (NoCode Software, NoCode Agency, NoCode Resource, NoCode Product Stack) — they are different forms, wrong choice means restarting",
+    "Product URL and a category from their ~100-category list"
+  ],
+  "preparation": [
+    "Email address for account creation (no SSO available — an agent cannot sign in with Google)",
+    "Decide the submission type up front",
+    "Product URL, name, description, logo",
+    "Category pick that fits the no-code taxonomy"
+  ],
+  "workflow": [
+    "Open https://nocodelist.co/submit (Bubble SPA — needs a real browser/JS)",
+    "Pick the submission type (Software / Agency / Resource / Product Stack)",
+    "Create an account via email link or password",
+    "Fill the type-specific form (name, URL, category, description, logo)",
+    "Submit for review; contact stefan@nocodelist.co for issues"
+  ],
+  "watchFor": [
+    "No single sign-on — account creation is email-based only",
+    "Listing links are plain anchors with ?ref=nocodelist appended — dofollow confirmed by third parties (DR ~37)",
+    "A 2023 third-party report noted broken signup/signin code — verify account creation works before investing in form details",
+    "Separate /sponsor route sells paid placement — listing itself is free",
+    "Site is a JS-only Bubble app — curl/fetch shows an empty shell"
+  ],
+  "countsAsLive": "The product appears as a card in the relevant nocodelist.co category with a link to the product domain",
+  "unknowns": [
+    "Approval turnaround — not published",
+    "Whether signup is currently functional (a 2023 report flagged it broken)",
+    "Sponsor pricing (client-rendered, not readable)"
+  ]
+}

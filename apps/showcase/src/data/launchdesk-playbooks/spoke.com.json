@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "spoke.com",
+  "name": "Spoke",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.tribelocal.com/add-free-business-spoke/",
+      "title": "Third-party walkthrough — create account (or social login), sign in, 'ADD COMPANY' dropdown, fill 'New Office' details, save (content read via search result; site 403 to fetchers but 200 to curl)"
+    },
+    {
+      "url": "https://web.archive.org/web/20170313183452/http://www.spoke.com/",
+      "title": "Archived Spoke homepage — 'Add Company/Add Person/Add Topic' behind registration; business-information directory (content read via search result)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free account (or Facebook/Twitter/LinkedIn login), email confirmation",
+    "'Add Company' flow inside the account — company/office details",
+    "Legacy business directory — aggregated from public sources plus member uploads",
+    "spoke.com blocked our fetcher (403) but returned 200 to curl — alive but gated"
+  ],
+  "preparation": [
+    "Company details (name, address, industry, contacts)",
+    "An account or social login"
+  ],
+  "workflow": [
+    "Sign up at spoke.com (email confirm + captcha)",
+    "Sign in and use the 'Add Company' dropdown/page",
+    "Fill the company/office details and save — the profile goes into the directory"
+  ],
+  "watchFor": [
+    "Legacy/low-activity directory — expect minimal referral value; a backlink play at best",
+    "Independent reviews of Spoke flag data-quality issues — your business may already be listed with stale data (claim and correct)",
+    "Site partially blocks automated access"
+  ],
+  "countsAsLive": "A company profile page exists on spoke.com",
+  "unknowns": [
+    "Whether submissions are still moderated/accepted at all",
+    "Current indexation value"
+  ]
+}

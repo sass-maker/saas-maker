@@ -1,0 +1,65 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "hot100.ai",
+  "name": "Hot100.ai",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.hot100.ai/",
+      "title": "Homepage — weekly chart of trending AI projects; JS-rendered (empty to non-JS fetch)"
+    },
+    {
+      "url": "https://www.hot100.ai/rules",
+      "title": "Rules & Scoring (search-indexed) — pipeline: Submit → Admin Review → 7-day Launchpad voting → Flambo AI judges → weekly Top 100 (AI score ≥7.0); Final Score = (AI Score × 10) + (Votes × 0.5); max 4 weeks on chart then archive"
+    },
+    {
+      "url": "https://www.hot100.ai/about",
+      "title": "About — discovery/ranking/index layer for AI projects; weekly Monday chart refresh"
+    },
+    {
+      "url": "https://submitmap.com/platform/hot100-ai/",
+      "title": "SubmitMap walkthrough — verified form details: Google sign-in required, submitter-role dropdown includes 'agent or automated submission', title ≤100 chars, summary ≤200, builder-stack pickers, security-practices tick; outbound links followed; ~1,000 projects compete for 100 slots; $19 tier buys discovery, not ranking"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Submission is free but requires Google sign-in and passes an admin review",
+    "Chart visibility is merit-gated: only projects with Flambo AI score ≥7.0 plus community votes make the weekly Top 100; ~1,000 projects compete for 100 slots",
+    "A $19 paid tier exists for extra discovery — their copy says it buys discovery, not ranking"
+  ],
+  "requirements": [
+    "Google account sign-in (the SUBMIT button does nothing signed out; /submit bounces back to the chart)",
+    "AI-built project fit — the form asks which model, which coding agent/IDE, and which stack/hosting built it",
+    "Required: who-is-submitting dropdown (founder/team, on behalf of founder, community member, or 'agent or automated submission' — agents are explicitly allowed but must be declared), title ≤100 chars, summary ≤200 chars, security-best-practices confirmation tick",
+    "Optional: thumbnail (PNG/JPEG), stage dropdown, GitHub/website/X/LinkedIn links, up-to-2 picks each for model, IDE/agent, hosting"
+  ],
+  "preparation": [
+    "A ≤100-char title and ≤200-char summary",
+    "Your honest builder stack: model/provider, IDE/coding agent, hosting (the chart's differentiator)",
+    "Thumbnail image",
+    "Google account",
+    "If submitting via an agent: declare it in the role dropdown — honesty is a form field"
+  ],
+  "workflow": [
+    "Sign in with Google on hot100.ai",
+    "Open /submit and declare who is submitting",
+    "Fill title, URL, summary, builder-stack pickers, thumbnail, stage, links, security tick",
+    "Submit → redirects to a builder project page showing 'Awaiting Review'",
+    "On admin approval: 7 days in the Launchpad collecting votes → Flambo AI judges → chart entry if AI score ≥7.0; archives after 4 weeks"
+  ],
+  "watchFor": [
+    "Submission does not equal chart placement — most approved projects sit in the Launchpad/archive without cracking the Top 100",
+    "Outbound links are followed per SubmitMap's check, but only if the listing goes live",
+    "Do not impersonate 'founder' if submitting as an agent — the form has an explicit honest option for automated submissions",
+    "$19 tier only buys discovery; the ranking formula (AI score + votes) is not purchasable per their own claims",
+    "Site is JS-rendered — use a real browser for the whole flow"
+  ],
+  "countsAsLive": "The project has a public page on hot100.ai (Launchpad or archive); the strong signal is appearing in the weekly Top-100 chart rows with rank movement indicators",
+  "unknowns": [
+    "Admin review turnaround",
+    "What the $19 discovery tier concretely adds",
+    "Vote-weighting/anti-gaming details beyond the published formula"
+  ]
+}

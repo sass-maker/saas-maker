@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "podcastguests.com",
+  "name": "PodcastGuests.com",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://podcastguests.com/",
+      "title": "Homepage — podcast guest matching service; free newsletter with 10 guest opportunities 2x/week, 47k+ users"
+    },
+    {
+      "url": "https://podcastguests.com/join/",
+      "title": "Get Listed — Basic $15/mo annual ($20 monthly), Premium $33.25/mo annual ($45 monthly) expert directory profiles"
+    }
+  ],
+  "category": "profile",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free path = the newsletter: sign up with name + email and receive 2 emails/week with ~10 podcasts seeking guests; apply via form to pitch yourself. The persistent expert-directory profile ('Get Listed') is paid-only"
+  ],
+  "requirements": [
+    "This lists PEOPLE as expert podcast guests, not products — you appear as a founder/expert with a 'one sheet' profile (bio, topics, 10 interview questions, photo, media appearances)",
+    "Newsletter join form is just Full Name + Email — free",
+    "Directory listing requires a paid plan: Basic ($15/mo billed annually, $20 monthly) or Premium ($33.25/mo annually, $45 monthly) with newsletter rotation and featured placement"
+  ],
+  "preparation": [
+    "Name and email for the free newsletter",
+    "For a paid profile: bio, list of topics you can discuss, 10 example interview questions, photo, social links, website link(s), list of previous media appearances",
+    "A guest pitch angle tied to your product/expertise"
+  ],
+  "workflow": [
+    "Free: fill the homepage join form → receive 2 emails/week listing podcasts seeking guests → apply via each listing's form (your email stays hidden)",
+    "Paid: go to https://podcastguests.com/join/ → pick Basic or Premium → register at /register/basic/ or /register/premium/ → build the one-sheet profile at /expert/<slug>",
+    "Podcasters contact you through the profile form"
+  ],
+  "watchFor": [
+    "Not a product directory — there is no product-listing surface; value is personal PR leading to podcast appearances",
+    "Annual pricing is the headline — monthly billing costs ~33% more",
+    "Premium members 'get significantly MORE invitations' per site copy — Basic visibility is weaker",
+    "No self-serve free directory listing"
+  ],
+  "countsAsLive": "Free route: guest-opportunity emails arrive and your applications reach podcasters. Paid route: a public /expert/<slug> profile page exists in the guest directory",
+  "unknowns": [
+    "Directory link is to your site but dofollow status unverified",
+    "Response rate of podcasters to applications"
+  ]
+}

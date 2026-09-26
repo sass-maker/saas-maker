@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "saasplace.io",
+  "name": "SaaS Place",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://saasplace.io/",
+      "title": "Homepage — 'A quiet shelf for good software', hand-edited SaaS directory (very new: 1 tool indexed at fetch time)"
+    },
+    {
+      "url": "https://saasplace.io/submit/",
+      "title": "Submit a tool — 'We review every submission by hand within 3 business days. Free, no strings.'"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Submission is free; every entry is hand-reviewed within a stated 3 business days",
+    "SaaS/software tools only, categorized into AI & ML, Productivity, Design, Developer Tools, Marketing, Analytics & Data, No-Code, Finance & Ops, Communication",
+    "Tagline max 60 characters; superlatives like 'the best' and 'AI-powered' reduce the chance of being featured",
+    "Submitter identifies their role: maker/founder, team member, or happy user"
+  ],
+  "preparation": [
+    "Product name, website URL, ≤60-char tagline (no superlatives, no 'AI-powered')",
+    "2–3 sentence description",
+    "Up to 2 categories and a pricing model: Free / Freemium / Paid <$20/mo / Paid >$20/mo / one-time",
+    "Optional extra context in 'Anything else?'"
+  ],
+  "workflow": [
+    "Open https://saasplace.io/submit/",
+    "Fill product name, website, tagline, description; pick ≤2 categories and pricing",
+    "Select your role, submit — review is manual within ~3 business days",
+    "Accepted tools appear on /browse/, their category page, and can surface under /launches/"
+  ],
+  "watchFor": [
+    "Extremely young directory (1 indexed tool at fetch time) — low traffic but clean, curated; listing is cheap to get",
+    "The anti-superlative rule is stated as a featuring criterion — write a plain factual tagline",
+    "Agreeing to Terms + Privacy is part of submission",
+    "Editor's pick/Featured placement is discretionary"
+  ],
+  "countsAsLive": "The tool appears on https://saasplace.io/browse/ or its category page as a product card linking to a /product/<slug>/ page",
+  "unknowns": [
+    "Whether product pages link out with a followed link",
+    "Whether listings decay or require re-verification",
+    "Who operates the site"
+  ]
+}

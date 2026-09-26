@@ -1,0 +1,1104 @@
+---
+/**
+ * THESIS: The funding directory is working material, like the launch catalog — the
+ * value is comparing fit, terms, and evidence, not scrolling a list of logos.
+ * OWN-WORLD: Same workshop interior as /launchdesk; programs render as an operator
+ * ledger with the workspace's own decision views as presets.
+ * STORY: See the honest counts, pick a decision view or narrow by fit, then open a
+ * program's full record before trusting its assessment.
+ * FIRST VIEWPORT: Studio navigation, identity bay with counts, then the controls and ledger.
+ * FORM: Operator ledger within the established workshop wall; no new visual world.
+ */
+import Footer from '../components/Footer.astro';
+import Nav from '../components/Nav.astro';
+import {
+  FUNDING,
+  FUNDING_CATEGORIES,
+  FUNDING_DOCS,
+  FUNDING_FITS,
+  FUNDING_PRIORITIES,
+  FUNDING_PROGRAMS_SORTED,
+  FUNDING_VIEW_ORDER,
+  FUNDING_VIEWS,
+  field,
+} from '../data/funding';
+import Layout from '../layouts/Layout.astro';
+
+const programs = FUNDING_PROGRAMS_SORTED;
+
+const viewMembership = new Map(
+  programs.map((program) => [
+    program.slug,
+    FUNDING_VIEWS.filter((view) => view.slugs.includes(program.slug)).map((view) => view.key),
+  ])
+);
+
+const shortlist = FUNDING_VIEWS.find((view) => view.key === 'current-shortlist');
+
+const deadlineText = (program: (typeof programs)[number]) =>
+  (field(program, 'Deadline') as string | null) ?? null;
+---
+
+<Layout
+  title={`Funding directory — ${programs.length} programs with honest evidence | SaaS Maker`}
+  description={`${programs.length} accelerators, residencies, funds, credit schemes, and resources across ${FUNDING_CATEGORIES.length} categories — with fit, terms, deadlines, and evidence quality preserved per row.`}
+>
+  <div class="workshop-world interior-world funding-world">
+    <Nav />
+    <main id="main-content" class="funding-page">
+      <header class="funding-hero">
+        <div class="funding-identity">
+          <p class="funding-kicker">SaaS Maker / Funding directory</p>
+          <h1>Every program, honestly graded.</h1>
+          <p>
+            {programs.length} accelerators, residencies, funds, credits, and resources —
+            one row per specific program, with uncertainty preserved instead of smoothed
+            away. Originally the Funding &amp; Accelerators workspace; now it lives here.
+          </p>
+        </div>
+        <dl class="funding-summary" aria-label="Directory summary">
+          <div>
+            <dt>Programs</dt>
+            <dd>{programs.length}</dd>
+          </div>
+          <div>
+            <dt>Current shortlist</dt>
+            <dd>{shortlist?.slugs.length ?? 0}</dd>
+          </div>
+          <div>
+            <dt>Categories</dt>
+            <dd>{FUNDING_CATEGORIES.length}</dd>
+          </div>
+        </dl>
+      </header>
+
+      <section class="funding-workbench" aria-labelledby="funding-directory-title">
+        <div class="funding-intro">
+          <div>
+            <p class="funding-kicker">Decision views</p>
+            <h2 id="funding-directory-title">Same sixteen cuts the workspace used.</h2>
+          </div>
+          <details>
+            <summary>How to read the rows</summary>
+            <p>
+              <strong>Priority</strong> and <strong>Fit</strong> are assessed for this
+              portfolio's stage — they are judgment, not the program's own claim.
+              <strong>Evidence</strong> records where each row's facts came from;
+              "unresolved" means nobody could confirm it.
+            </p>
+            <p>
+              Decision views reproduce the original workspace's filters and ordering
+              exactly. Pick one, then narrow further with the controls. Workspace
+              rebuilt {FUNDING.workspaceRebuilt}; per-row verification dates ship in
+              each program's record.
+            </p>
+          </details>
+        </div>
+
+        <form class="funding-controls" data-fd-controls>
+          <label class="funding-search">
+            <span>Search programs</span>
+            <input
+              type="search"
+              name="query"
+              placeholder="Program or organization…"
+              autocomplete="off"
+              data-fd-query
+            />
+          </label>
+
+          <label>
+            <span>Decision view</span>
+            <select name="view" data-fd-view>
+              <option value="">All opportunities</option>
+              {FUNDING_VIEWS.map((view) => (
+                <option value={view.key}>
+                  {view.label} ({view.slugs.length})
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label>
+            <span>Category</span>
+            <select name="category" data-fd-category>
+              <option value="">All categories</option>
+              {FUNDING_CATEGORIES.map((category) => <option value={category}>{category}</option>)}
+            </select>
+          </label>
+
+          <label>
+            <span>Priority</span>
+            <select name="priority" data-fd-priority>
+              <option value="">Any priority</option>
+              {FUNDING_PRIORITIES.map((priority) => <option value={priority}>{priority}</option>)}
+            </select>
+          </label>
+
+          <label>
+            <span>Fit</span>
+            <select name="fit" data-fd-fit>
+              <option value="">Any fit</option>
+              {FUNDING_FITS.map((fit) => <option value={fit}>{fit}</option>)}
+            </select>
+          </label>
+
+          <label class="funding-sort-mobile">
+            <span>Sort</span>
+            <select name="sort" data-fd-sort>
+              <option value="priority:asc">Priority, high to low</option>
+              <option value="name:asc">Program, A–Z</option>
+              <option value="category:asc">Category, A–Z</option>
+              <option value="deadline:asc">Deadline, soonest</option>
+            </select>
+          </label>
+
+          <div class="funding-result-line">
+            <output data-fd-count aria-live="polite">Showing all {programs.length} programs</output>
+            <button type="reset" data-fd-reset>Reset</button>
+          </div>
+        </form>
+
+        <div class="funding-table-wrap">
+          <table class="funding-table">
+            <thead>
+              <tr>
+                <th scope="col" data-sort-heading="priority" aria-sort="ascending">
+                  <button type="button" data-sort="priority">Priority</button>
+                </th>
+                <th scope="col" data-sort-heading="name">
+                  <button type="button" data-sort="name">Program</button>
+                </th>
+                <th scope="col" data-sort-heading="category">
+                  <button type="button" data-sort="category">Category</button>
+                </th>
+                <th scope="col" data-sort-heading="fit">
+                  <button type="button" data-sort="fit">Fit now</button>
+                </th>
+                <th scope="col" data-sort-heading="deadline">
+                  <button type="button" data-sort="deadline">Deadline</button>
+                </th>
+                <th scope="col">Source</th>
+              </tr>
+            </thead>
+            <tbody data-fd-body>
+              {programs.map((program) => {
+                const org = field(program, 'Organization') as string | null;
+                const category = (field(program, 'Category') as string | null) ?? '';
+                const priority = (field(program, 'Priority') as string | null) ?? '';
+                const fit = (field(program, 'Fit for Current Stage') as string | null) ?? '';
+                const deadline = deadlineText(program);
+                const officialUrl = field(program, 'Official URL') as string | null;
+                const nextAction = field(program, 'Next Action') as string | null;
+                const terms = field(program, 'Investment Terms') as string | null;
+                const priorityKey = priority.split(' ')[0].toLowerCase();
+                return (
+                  <tr
+                    data-fd-row
+                    data-slug={program.slug}
+                    data-name={`${program.name} ${org ?? ''}`.toLowerCase()}
+                    data-namekey={program.name.toLowerCase()}
+                    data-category={category}
+                    data-priority={priority}
+                    data-fit={fit}
+                    data-deadline={deadline ?? '9999'}
+                    data-views={(viewMembership.get(program.slug) ?? []).join(',')}
+                  >
+                    <td class="fd-priority" data-label="Priority">
+                      {priority ? (
+                        <span class={`fd-pill fd-pill--${priorityKey}`}>{priority}</span>
+                      ) : (
+                        <span class="fd-blank" title="Not assessed">—</span>
+                      )}
+                    </td>
+                    <td class="fd-program" data-label="Program">
+                      <details class="fd-disclosure">
+                        <summary>
+                          <span class="fd-name">{program.name}</span>
+                          <span class="fd-org">{org ?? '—'}</span>
+                        </summary>
+                        <div class="fd-detail">
+                          {nextAction && <p><strong>Next action:</strong> {nextAction}</p>}
+                          {terms && <p>{terms}</p>}
+                          <p>
+                            <a href={`/funding/${program.slug}`}>Full record →</a>
+                            {' · '}
+                            <a href={`/funding/${program.slug}.json`}>JSON</a>
+                          </p>
+                        </div>
+                      </details>
+                    </td>
+                    <td class="fd-tag" data-label="Category">
+                      {category || <span class="fd-blank">—</span>}
+                    </td>
+                    <td class="fd-tag" data-label="Fit now">
+                      {fit || <span class="fd-blank">—</span>}
+                    </td>
+                    <td class="fd-tag fd-deadline" data-label="Deadline">
+                      {deadline ? (
+                        <time datetime={deadline}>{deadline.replace('→', ' → ')}</time>
+                      ) : (
+                        <span class="fd-blank" title="No deadline recorded">—</span>
+                      )}
+                    </td>
+                    <td class="fd-source" data-label="Source">
+                      {officialUrl ? (
+                        <a href={officialUrl} target="_blank" rel="noopener noreferrer" class="fd-route-link">
+                          Official ↗
+                        </a>
+                      ) : (
+                        <span class="fd-blank">unresolved</span>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="funding-empty" data-fd-empty hidden>
+          <strong>No programs match this cut.</strong>
+          <p>Reset the controls to return to the complete directory.</p>
+          <button type="button" data-fd-empty-reset>Show all programs</button>
+        </div>
+      </section>
+
+      <section class="funding-docs" aria-labelledby="funding-docs-title">
+        <div class="funding-intro">
+          <div>
+            <p class="funding-kicker">Behind the directory</p>
+            <h2 id="funding-docs-title">The workspace around the rows.</h2>
+          </div>
+        </div>
+        <div class="funding-docs-grid">
+          {FUNDING_DOCS.map((doc) => (
+            <a class="funding-doc" href={`/funding/docs/${doc.slug}`}>
+              <strong>{doc.title}</strong>
+              <span>{doc.description}</span>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <aside class="funding-method" aria-labelledby="funding-method-title">
+        <div>
+          <p class="funding-kicker">Provenance</p>
+          <h2 id="funding-method-title">One row per program, uncertainty kept.</h2>
+        </div>
+        <div>
+          <p>
+            This directory was imported from a maintained workspace rebuilt
+            {' '}{FUNDING.workspaceRebuilt}. Organizations are split when programs
+            materially differ; stale, niche, and unresolved items stay searchable
+            rather than being deleted or presented as fact. Assessments — fit,
+            priority, recommendation — are this portfolio's judgment, not the
+            programs' claims.
+          </p>
+          <a href="/funding.json">Open the complete JSON dataset <span aria-hidden="true">→</span></a>
+          <a href="https://github.com/sass-maker/saas-maker" target="_blank" rel="noopener noreferrer">
+            SaaS Maker source <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </aside>
+    </main>
+    <Footer />
+  </div>
+</Layout>
+
+<script type="application/json" data-fd-view-order set:html={JSON.stringify(FUNDING_VIEW_ORDER)} />
+
+<script>
+  const controls = document.querySelector('[data-fd-controls]');
+  const body = document.querySelector('[data-fd-body]');
+  const rows = Array.from(document.querySelectorAll('[data-fd-row]'));
+  const query = document.querySelector('[data-fd-query]');
+  const view = document.querySelector('[data-fd-view]');
+  const category = document.querySelector('[data-fd-category]');
+  const priority = document.querySelector('[data-fd-priority]');
+  const fit = document.querySelector('[data-fd-fit]');
+  const mobileSort = document.querySelector('[data-fd-sort]');
+  const count = document.querySelector('[data-fd-count]');
+  const empty = document.querySelector('[data-fd-empty]');
+  const viewOrderEl = document.querySelector('[data-fd-view-order]');
+  const viewOrder = viewOrderEl ? JSON.parse(viewOrderEl.textContent || '{}') : {};
+  const PRIORITY_RANK = { p0: 0, p1: 1, p2: 2, monitor: 3, skip: 4, archive: 5 };
+  let sortKey = 'priority';
+  let sortDirection = 'asc';
+
+  function valueFor(row, key) {
+    if (key === 'priority') {
+      const bucket = (row.dataset.priority || '').split(' ')[0].toLowerCase();
+      return PRIORITY_RANK[bucket] ?? 9;
+    }
+    if (key === 'name') return row.dataset.namekey ?? '';
+    return row.dataset[key] ?? '';
+  }
+
+  function applyRows() {
+    if (!body || !count || !empty) return;
+    const search = query?.value.trim().toLowerCase() ?? '';
+    const viewKey = view?.value ?? '';
+    const orderIndex = viewKey && viewOrder[viewKey]
+      ? new Map(viewOrder[viewKey].map((slug, index) => [slug, index]))
+      : null;
+
+    const ordered = orderIndex
+      ? rows.toSorted(
+          (a, b) => (orderIndex.get(a.dataset.slug) ?? 9999) - (orderIndex.get(b.dataset.slug) ?? 9999)
+        )
+      : rows.toSorted((left, right) => {
+          const leftValue = valueFor(left, sortKey);
+          const rightValue = valueFor(right, sortKey);
+          const comparison =
+            typeof leftValue === 'number' && typeof rightValue === 'number'
+              ? leftValue - rightValue
+              : String(leftValue).localeCompare(String(rightValue));
+          return sortDirection === 'desc' ? -comparison : comparison;
+        });
+
+    let visibleCount = 0;
+    for (const row of ordered) {
+      const inView = !viewKey || (row.dataset.views ?? '').split(',').includes(viewKey);
+      const matches =
+        inView &&
+        (!category?.value || row.dataset.category === category.value) &&
+        (!priority?.value || row.dataset.priority === priority.value) &&
+        (!fit?.value || row.dataset.fit === fit.value) &&
+        (!search || row.dataset.name?.includes(search));
+      row.hidden = !matches;
+      if (matches) visibleCount += 1;
+      body.append(row);
+    }
+
+    count.textContent =
+      visibleCount === rows.length
+        ? `Showing all ${rows.length} programs`
+        : `Showing ${visibleCount} of ${rows.length} programs`;
+    empty.hidden = visibleCount > 0;
+
+    document.querySelectorAll('[data-sort-heading]').forEach((heading) => {
+      if (!orderIndex && heading.dataset.sortHeading === sortKey) {
+        heading.setAttribute('aria-sort', sortDirection === 'desc' ? 'descending' : 'ascending');
+      } else {
+        heading.removeAttribute('aria-sort');
+      }
+    });
+  }
+
+  controls?.addEventListener('input', applyRows);
+  controls?.addEventListener('change', applyRows);
+  controls?.addEventListener('reset', () => {
+    sortKey = 'priority';
+    sortDirection = 'asc';
+    requestAnimationFrame(applyRows);
+  });
+
+  document.querySelectorAll('[data-sort]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const nextKey = button.dataset.sort;
+      if (!nextKey) return;
+      if (nextKey === sortKey) sortDirection = sortDirection === 'desc' ? 'asc' : 'desc';
+      else {
+        sortKey = nextKey;
+        sortDirection = 'desc';
+      }
+      if (mobileSort) mobileSort.value = `${sortKey}:${sortDirection}`;
+      if (view) view.value = '';
+      applyRows();
+    });
+  });
+
+  mobileSort?.addEventListener('change', () => {
+    [sortKey, sortDirection] = mobileSort.value.split(':');
+    if (view) view.value = '';
+    applyRows();
+  });
+
+  document.querySelector('[data-fd-empty-reset]')?.addEventListener('click', () => {
+    controls?.reset();
+    sortKey = 'priority';
+    sortDirection = 'asc';
+    applyRows();
+    query?.focus();
+  });
+</script>
+
+<style>
+  .funding-page {
+    width: var(--workshop-frame-width);
+    margin-inline: auto;
+    padding-bottom: clamp(5rem, 9vw, 8rem);
+  }
+
+  .funding-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(19rem, 0.7fr);
+    gap: 0.375rem;
+    padding: 0.375rem;
+    padding-top: 0;
+    background: var(--workshop-steel);
+  }
+
+  .funding-identity,
+  .funding-summary {
+    border: 0;
+    background: var(--surface);
+  }
+
+  .funding-identity {
+    padding: clamp(3rem, 6vw, 6rem);
+  }
+
+  .funding-kicker {
+    color: var(--copper-hi);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .funding-identity h1 {
+    max-width: 11ch;
+    margin-top: 1.25rem;
+    font-size: clamp(3.5rem, 7vw, 6.5rem);
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    line-height: 0.96;
+    text-wrap: balance;
+  }
+
+  .funding-identity > p:last-child {
+    max-width: 42rem;
+    margin-top: clamp(1.5rem, 3vw, 2.5rem);
+    color: var(--ink-soft);
+    font-size: clamp(1rem, 1.7vw, 1.25rem);
+  }
+
+  .funding-summary {
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    list-style: none;
+  }
+
+  .funding-summary > div {
+    min-height: 8.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1.5rem;
+    border-bottom: 0.375rem solid var(--workshop-steel);
+  }
+
+  .funding-summary > div:nth-child(2) {
+    background: var(--workshop-seeded);
+  }
+
+  .funding-summary > div:last-child {
+    border-bottom: 0;
+    background: var(--workshop-cobalt);
+    color: #fff;
+  }
+
+  .funding-summary dt {
+    color: var(--ink-muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .funding-summary > div:last-child dt {
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  .funding-summary dd {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+
+  .funding-workbench,
+  .funding-docs {
+    width: min(86rem, calc(100% - 3rem));
+    margin-inline: auto;
+    padding-top: clamp(4rem, 8vw, 7rem);
+  }
+
+  .funding-intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.55fr);
+    gap: clamp(2rem, 6vw, 6rem);
+    align-items: end;
+    margin-bottom: 2rem;
+  }
+
+  .funding-intro h2,
+  .funding-method h2 {
+    max-width: 16ch;
+    margin-top: 0.75rem;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    line-height: 1.02;
+    text-wrap: balance;
+  }
+
+  .funding-intro details {
+    border-block: 1px solid var(--line-strong);
+  }
+
+  .funding-intro summary {
+    min-height: 3.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    color: var(--ink-soft);
+    font-weight: 600;
+  }
+
+  .funding-intro summary::after {
+    content: '+';
+    color: var(--copper-hi);
+    font-size: 1.25rem;
+  }
+
+  .funding-intro details[open] summary::after {
+    content: '−';
+  }
+
+  .funding-intro details p {
+    margin-bottom: 1rem;
+    color: var(--ink-muted);
+    font-size: 0.9rem;
+  }
+
+  .funding-controls {
+    display: grid;
+    grid-template-columns: minmax(14rem, 1.4fr) repeat(4, minmax(9rem, 0.8fr));
+    border: 1px solid var(--line-strong);
+    background: var(--surface);
+  }
+
+  .funding-controls label {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    padding: 1rem;
+    border-right: 1px solid var(--line);
+  }
+
+  .funding-controls label > span {
+    color: var(--ink-muted);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+
+  .funding-controls input,
+  .funding-controls select,
+  .funding-controls button,
+  .funding-empty button {
+    min-height: 2.75rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: inherit;
+  }
+
+  .funding-controls input,
+  .funding-controls select {
+    width: 100%;
+    padding: 0.65rem 0.75rem;
+  }
+
+  .funding-controls input::placeholder {
+    color: var(--ink-muted);
+  }
+
+  .funding-sort-mobile {
+    display: none !important;
+  }
+
+  .funding-result-line {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1.25rem;
+    padding: 0.75rem 1rem;
+    color: var(--ink-muted);
+    font-size: 0.82rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .funding-result-line button,
+  .funding-empty button {
+    padding: 0.55rem 0.9rem;
+    cursor: pointer;
+    color: var(--copper-hi);
+    font-weight: 600;
+  }
+
+  .funding-table-wrap {
+    overflow-x: auto;
+    border-inline: 1px solid var(--line-strong);
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  .funding-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+
+  .funding-table th,
+  .funding-table td {
+    padding: 0.85rem 1rem;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+
+  .funding-table th:last-child,
+  .funding-table td:last-child {
+    border-right: 0;
+  }
+
+  .funding-table th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: var(--bg);
+    text-align: left;
+  }
+
+  .funding-table th button {
+    min-height: 2.75rem;
+    border: 0;
+    background: transparent;
+    color: var(--ink-muted);
+    font: inherit;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .funding-table th[aria-sort] button {
+    color: var(--copper-hi);
+  }
+
+  .funding-table th[aria-sort='ascending'] button::after {
+    content: ' ↑';
+  }
+
+  .funding-table th[aria-sort='descending'] button::after {
+    content: ' ↓';
+  }
+
+  .funding-table tbody tr {
+    background: var(--bg);
+    transition: background 160ms ease;
+  }
+
+  .funding-table tbody tr[hidden] {
+    display: none !important;
+  }
+
+  .funding-table tbody tr:hover {
+    background: var(--surface);
+  }
+
+  .fd-priority {
+    width: 9rem;
+  }
+
+  .fd-pill {
+    display: inline-block;
+    padding: 0.15rem 0.55rem;
+    border: 1px solid var(--line-strong);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+
+  .fd-pill--p0 {
+    background: var(--workshop-oxblood);
+    border-color: var(--workshop-oxblood);
+    color: #fff;
+  }
+
+  .fd-pill--p1 {
+    background: var(--workshop-amber);
+    border-color: var(--workshop-amber);
+    color: #17130c;
+  }
+
+  .fd-pill--p2 {
+    background: var(--workshop-seeded);
+    color: var(--workshop-ink);
+  }
+
+  .fd-blank {
+    color: var(--ink-muted);
+    font-weight: 400;
+  }
+
+  .fd-program {
+    min-width: 20rem;
+    max-width: 36rem;
+  }
+
+  .fd-disclosure > summary {
+    min-height: 2.75rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .fd-disclosure > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .fd-name {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .fd-disclosure > summary .fd-name::after {
+    content: ' +';
+    color: var(--copper-hi);
+    font-weight: 400;
+  }
+
+  .fd-disclosure[open] > summary .fd-name::after {
+    content: ' −';
+  }
+
+  .fd-org {
+    display: block;
+    color: var(--ink-muted);
+    font-size: 0.78rem;
+  }
+
+  .fd-detail {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--line);
+    color: var(--ink-muted);
+    font-size: 0.82rem;
+    line-height: 1.6;
+  }
+
+  .fd-detail a {
+    color: var(--copper-hi);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+
+  .fd-tag {
+    width: 9rem;
+    color: var(--ink-soft);
+  }
+
+  .fd-deadline {
+    width: 8rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .fd-source {
+    width: 7rem;
+  }
+
+  .fd-route-link {
+    color: var(--copper-hi);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+
+  .funding-empty {
+    padding: 4rem 1.5rem;
+    border: 1px solid var(--line-strong);
+    border-top: 0;
+    text-align: center;
+  }
+
+  .funding-empty p {
+    margin: 0.5rem 0 1.25rem;
+    color: var(--ink-muted);
+  }
+
+  .funding-docs-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border: 1px solid var(--line-strong);
+    background: var(--workshop-steel);
+    gap: 1px;
+  }
+
+  .funding-doc {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    min-height: 11rem;
+    padding: 1.5rem;
+    background: var(--surface);
+    color: var(--ink);
+    text-decoration: none;
+    transition: background 160ms ease;
+  }
+
+  .funding-doc:hover {
+    background: var(--workshop-seeded);
+  }
+
+  .funding-doc strong {
+    font-size: 1.15rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .funding-doc span {
+    color: var(--ink-muted);
+    font-size: 0.88rem;
+    line-height: 1.55;
+  }
+
+  .funding-method {
+    width: min(86rem, calc(100% - 3rem));
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.7fr);
+    gap: clamp(2rem, 7vw, 7rem);
+    margin: clamp(4rem, 9vw, 8rem) auto 0;
+    padding: clamp(2rem, 5vw, 4rem);
+    border: 1px solid var(--line-strong);
+    background: var(--surface);
+  }
+
+  .funding-method > div:last-child {
+    align-self: end;
+  }
+
+  .funding-method > div:last-child p {
+    color: var(--ink-muted);
+  }
+
+  .funding-method a {
+    min-height: 2.75rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    margin-right: 1.5rem;
+    color: var(--copper-hi);
+    font-weight: 600;
+  }
+
+  @media (max-width: 62rem) {
+    .funding-controls {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .funding-search,
+    .funding-result-line {
+      grid-column: 1 / -1;
+    }
+
+    .funding-docs-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 47.99rem) {
+    .funding-page {
+      width: 100%;
+    }
+
+    .funding-hero,
+    .funding-intro,
+    .funding-method {
+      grid-template-columns: 1fr;
+    }
+
+    .funding-hero {
+      gap: 0.375rem;
+    }
+
+    .funding-identity h1 {
+      margin-top: 1rem;
+      font-size: clamp(2.75rem, 13vw, 4.5rem);
+    }
+
+    .funding-identity {
+      padding: 2.25rem 1.5rem;
+    }
+
+    .funding-identity > p:last-child {
+      margin-top: 1.25rem;
+    }
+
+    .funding-workbench {
+      padding-top: 2.5rem;
+    }
+
+    .funding-intro {
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .funding-summary {
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: 1fr;
+    }
+
+    .funding-summary > div {
+      min-height: 7rem;
+      padding: 1rem;
+      border-right: 0.375rem solid var(--workshop-steel);
+      border-bottom: 0;
+    }
+
+    .funding-summary > div:last-child {
+      border-right: 0;
+    }
+
+    .funding-controls {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .funding-search,
+    .funding-sort-mobile,
+    .funding-result-line {
+      grid-column: 1 / -1;
+    }
+
+    .funding-sort-mobile {
+      display: flex !important;
+    }
+
+    .funding-result-line {
+      justify-content: space-between;
+    }
+
+    .funding-table-wrap {
+      overflow: visible;
+      border-inline: 0;
+    }
+
+    .funding-table,
+    .funding-table tbody {
+      display: block;
+    }
+
+    .funding-table thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .funding-table tbody {
+      padding-top: 0.75rem;
+    }
+
+    .funding-table tbody tr {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-bottom: 0.75rem;
+      border: 1px solid var(--line-strong);
+    }
+
+    .funding-table tbody tr:hover {
+      background: var(--bg);
+    }
+
+    .funding-table td,
+    .fd-priority,
+    .fd-tag,
+    .fd-deadline,
+    .fd-source,
+    .fd-program {
+      width: auto;
+      min-width: 0;
+      max-width: none;
+      padding: 0.8rem;
+      border-right: 1px solid var(--line);
+      text-align: left;
+    }
+
+    .funding-table td::before {
+      content: attr(data-label);
+      display: block;
+      margin-bottom: 0.25rem;
+      color: var(--ink-muted);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    .fd-program {
+      grid-column: 1 / -1;
+      grid-row: 1;
+      border-right: 0 !important;
+      border-bottom: 1px solid var(--line);
+      font-size: 0.98rem;
+    }
+
+    .funding-workbench,
+    .funding-docs,
+    .funding-method {
+      width: min(100% - 1.5rem, 86rem);
+    }
+
+    .funding-method {
+      padding: 1.5rem;
+    }
+  }
+
+  @media (max-width: 31rem) {
+    .funding-controls {
+      grid-template-columns: 1fr;
+    }
+
+    .funding-controls label,
+    .funding-search,
+    .funding-sort-mobile,
+    .funding-result-line {
+      grid-column: 1;
+    }
+
+    .funding-docs-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .funding-summary dd {
+      font-size: 1.75rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .funding-table tbody tr,
+    .funding-doc {
+      transition: none;
+    }
+  }
+</style>

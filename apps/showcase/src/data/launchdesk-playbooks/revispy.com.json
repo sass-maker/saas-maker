@@ -1,0 +1,57 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "revispy.com",
+  "name": "Revispy Launchpad",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.revispy.com/",
+      "title": "Homepage — review community platform: reviews, discussions, product/service catalogs, company profiles, Launchpad; 'Claim your company' flow for brands"
+    },
+    {
+      "url": "https://www.revispy.com/launchpad",
+      "title": "Launchpad — weekly launch board (Week 39, Sep 21-27 2026 live) with upvote countdown and a 'Launch Now' button; catalog empty for anonymous viewers"
+    },
+    {
+      "url": "https://www.revispy.com/launchpad/create",
+      "title": "Batch-provided create URL — returned 404; the live route is the 'Launch Now' button on /launchpad"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Launching requires a Revispy account/profile — 'Create profile' (signup) precedes any launch",
+    "Whether the launch itself is free could not be confirmed behind the login wall — an /advertise page exists, so paid placement may be pushed"
+  ],
+  "requirements": [
+    "Account registration and profile creation",
+    "Product must fit the catalog model — products, services, companies are first-class entities on the platform",
+    "Weekly cadence: launches are ranked per UTC week with a voting window"
+  ],
+  "preparation": [
+    "Product name, URL, description, category, logo/screenshots",
+    "A Revispy profile (username claimed during signup)",
+    "Optionally claim/create the company profile so the launch attaches to a brand page"
+  ],
+  "workflow": [
+    "Sign up at https://www.revispy.com/signup and complete the reviewer/company profile",
+    "Open /launchpad and click 'Launch Now'",
+    "Fill the launch form and pick the launch week",
+    "Drive upvotes during the ~7-day voting window before rankings lock"
+  ],
+  "watchFor": [
+    "Very young platform — homepage hero claims '50K+ reviews' but the live counters render '0+'; treat marketing numbers as aspirational",
+    "The batch's /launchpad/create deep link 404s — enter through /launchpad → Launch Now",
+    "Catalog appears empty to logged-out visitors; actual community size is probably small",
+    "Advertise page exists — expect paid-promotion offers alongside the free launch",
+    "Several features (company analytics, AI insights) are marked 'coming soon' / preview-only"
+  ],
+  "countsAsLive": "The launch appears in the Launchpad catalog for its scheduled week with a public page others can upvote/discuss",
+  "unknowns": [
+    "Whether launching is free or paid (flow gated behind login)",
+    "Exact form fields and any review/approval step",
+    "Actual user base — published counters suggest the platform is nearly empty",
+    "Link type on launch pages"
+  ]
+}

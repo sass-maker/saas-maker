@@ -1,0 +1,45 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "tapscape.com",
+  "name": "Tapscape",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.tapscape.com/submit-app-review/",
+      "title": "Submit Your App — iOS/Android/Mac app review service; $99 expedited written review via PayPal, or email details to support@tapscape.com"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "App must be iOS, iPad, Mac, or Android — this is an app review blog, not a web SaaS directory",
+    "Guaranteed review costs $99 (expedited, 7-day turnaround, home-page featured) via PayPal or invoice",
+    "Free pitch path exists only as emailing details to support@tapscape.com — no guarantee of coverage",
+    "Paid fee does not guarantee a positive review; disclosure is added to expedited reviews"
+  ],
+  "preparation": [
+    "iTunes/App Store link + valid promo code for paid apps (iOS/Mac), or Google Play link (Android)",
+    "Company URL",
+    "Optional: YouTube video — every review includes links to store, website, and video",
+    "PayPal account or email address for invoicing"
+  ],
+  "workflow": [
+    "Option A (free, no guarantee): email support@tapscape.com with app details and store link",
+    "Option B ($99): click the 'Buy Now' PayPal button on /submit-app-review/ or email for a PayPal invoice with the required details",
+    "Review is written by their staff with standardized scoring; includes social promotion to ~25K Twitter followers",
+    "Expect ~7-day turnaround for the paid expedited review"
+  ],
+  "watchFor": [
+    "Site banner warns of a scam email impersonating Tapscape (jannetwilson2021@gmail.com) — only trust support@tapscape.com",
+    "Payment does not buy a positive review — paid expedited reviews carry disclosure",
+    "Web/SaaS products without a mobile/desktop app are out of scope",
+    "Recent posts skew to generic sponsored tech content — editorial quality may have slipped since its 'Top 100 Gadget blog' era"
+  ],
+  "countsAsLive": "A review article for the app is published on tapscape.com (paid tier: home-page featured) with links to store listing and company site",
+  "unknowns": [
+    "Whether free email submissions ever result in a published review",
+    "Whether links in reviews are dofollow",
+    "Whether the site still actively reviews vs. mostly runs sponsored posts"
+  ]
+}

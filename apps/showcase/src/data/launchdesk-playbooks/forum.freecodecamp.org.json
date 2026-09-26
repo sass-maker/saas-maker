@@ -1,0 +1,43 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "forum.freecodecamp.org",
+  "name": "freeCodeCamp Project Feedback",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://forum.freecodecamp.org/c/project-feedback/409",
+      "title": "Forum category — currently titled 'I Built This'; active threads showcasing projects with feedback requests"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "A free Discourse forum account",
+    "Post must be a genuine project seeking feedback — the category is 'I Built This' (formerly project feedback); pure promotion/advertising violates community norms",
+    "Expect Discourse trust-level friction for brand-new accounts (link/image limits on first posts)"
+  ],
+  "preparation": [
+    "A working project (live demo URL or repo) to share",
+    "A feedback-oriented write-up: what you built, the stack, and specific questions for reviewers",
+    "An account created ahead of time to clear new-user restrictions"
+  ],
+  "workflow": [
+    "Register at forum.freecodecamp.org and complete any required email confirmation",
+    "Read the 'About the I Built This category' pinned post for current rules",
+    "Create a new topic in category c/project-feedback/409 ('I Built This')",
+    "Title it with what you built; body should ask for concrete feedback, include the live link/repo",
+    "Reply to commenters — engagement is part of the community norm"
+  ],
+  "watchFor": [
+    "New Discourse accounts are rate-limited and may be blocked from posting multiple links — post once, cleanly",
+    "Drive-by marketing posts get flagged/removed; frame as a feedback request",
+    "Batch claims link=nofollow — unverified, assume nofollow in a forum context",
+    "Moderators are active; the category slug still works but displays as 'I Built This'"
+  ],
+  "countsAsLive": "The topic is publicly visible under https://forum.freecodecamp.org/c/project-feedback/409 without a login",
+  "unknowns": [
+    "Exact trust-level thresholds for posting links as a new user",
+    "Whether links in posts are nofollow"
+  ]
+}

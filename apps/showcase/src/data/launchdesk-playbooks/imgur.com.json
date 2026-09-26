@@ -1,0 +1,43 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "imgur.com",
+  "name": "Imgur",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://imgur.com/register",
+      "title": "Imgur registration page — sign-up only via Continue with Google / Continue with Apple"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Posting is free, but account creation now routes exclusively through Google or Apple OAuth — no standalone email signup shown on the register page"
+  ],
+  "requirements": [
+    "Imgur is an image-hosting/community site, not a product directory — the only 'listing' is a public image post or a profile",
+    "Public posts are subject to community rules and voting; overt self-promotion is commonly downvoted/removed"
+  ],
+  "preparation": [
+    "A Google or Apple account to register with (no email/password option visible)",
+    "Image/GIF assets of the product worth posting",
+    "A post title and description; optional tags"
+  ],
+  "workflow": [
+    "Register at imgur.com/register via Google or Apple",
+    "Upload images via 'New post' and set the post to public",
+    "Add title, description (can include the product URL), and tags",
+    "Optionally complete the account profile with a bio and website link"
+  ],
+  "watchFor": [
+    "Imgur actively deprioritizes/removes spammy promotional posts — treat it as a community, not a directory",
+    "Hidden (unlisted) images don't appear publicly; only public posts and profile links are indexable",
+    "Registration is OAuth-only (Google/Apple) — credential-based signup was not offered on the fetched page"
+  ],
+  "countsAsLive": "A public Imgur post URL resolves and is visible without login, or the profile page shows the website link",
+  "unknowns": [
+    "Whether profile/post outbound links are followed or nofollow (not verifiable from the register page)",
+    "Current moderation stance on brand accounts"
+  ]
+}

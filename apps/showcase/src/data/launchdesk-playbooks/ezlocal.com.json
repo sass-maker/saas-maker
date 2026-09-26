@@ -1,0 +1,58 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "ezlocal.com",
+  "name": "EZlocal",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://ezlocal.com/",
+      "title": "Homepage — bot-blocked (403) to our fetcher; Google snippet confirms 'Join over 15 million businesses by creating a FREE listing'"
+    },
+    {
+      "url": "https://ezlocal.com/free-business-listing/",
+      "title": "Free Business Listing page (via search index) — claim a free US business listing in under 60 seconds; SMS/phone/email verification"
+    },
+    {
+      "url": "https://ezlocal.com/help",
+      "title": "Help Center — 'To claim or create a new business listing, go to: dash.ezlocal.com/newlisting/'"
+    },
+    {
+      "url": "https://dash.ezlocal.com/",
+      "title": "EZlocal Dash (via search index) — free listing; Listing Sync Pro $39/mo, Premium $89/mo upsells for 40+/300+ directory distribution"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "US local business listing directory — needs a real business name, address, and phone number (NAP citation), not a pure online-SaaS play",
+    "Free listing requires verification via text message (SMS), phone call, or email",
+    "Business description must be 200+ characters for maximum directory distribution",
+    "Primary category, website URL, and operating hours required"
+  ],
+  "preparation": [
+    "Exact business name, US address, primary phone (used to locate existing listing to claim)",
+    "Website URL, primary category, operating hours",
+    "200+ character business description with services and USPs",
+    "Email for account creation; a phone that can receive SMS/calls for verification"
+  ],
+  "workflow": [
+    "Go to https://ezlocal.com/free-business-listing/ (help center also points to dash.ezlocal.com/newlisting/)",
+    "Enter phone number + business name to check for an existing listing to claim",
+    "Create an account with email; fill NAP, category, hours, website, description",
+    "Verify via SMS, phone call, or email",
+    "Free listing publishes on ezlocal.com; sync to 40+ or 300+ other directories requires paid Dash tiers ($39/$89/mo)"
+  ],
+  "watchFor": [
+    "Official site returns 403 to non-browser fetchers — verify interactively",
+    "Free tier is only the ezlocal.com listing; broad distribution is a paid upsell (Listing Sync $39-89/mo, 14-day trial pushed during signup)",
+    "SaaS products with no physical US presence don't fit — this is a citation site",
+    "Verification requires a real phone number tied to the business"
+  ],
+  "countsAsLive": "The business has a public ezlocal.com listing page (searchable by name/phone) with NAP, website link, and description",
+  "unknowns": [
+    "Link attribute on the free listing's website link",
+    "How long the free listing takes to appear post-verification",
+    "Whether free listings decay or get suppressed without a Dash subscription"
+  ]
+}

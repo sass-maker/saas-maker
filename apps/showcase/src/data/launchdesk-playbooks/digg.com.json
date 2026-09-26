@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "digg.com",
+  "name": "Digg",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://digg.com/about",
+      "title": "About Digg — relaunched as a curated tech-news aggregator watching 'a ranked network of technology voices' on X; 'feed is free and needs no account'"
+    },
+    {
+      "url": "https://digg.com/",
+      "title": "Digg homepage — topic feeds (tech, gaming, AI, etc.) aggregating source posts from X accounts"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "No submission form — the relaunched Digg (Digg Inc. / Basic Intelligence) auto-aggregates what 'credible people in tech and AI' post on X",
+    "There is no direct way to submit a link; stories enter the feed when accounts in Digg's ranked network post/discuss them",
+    "Accounts on digg.com are 'for taking part, not for getting in' — the feed is free and read-only without one",
+    "A /contact page exists for reaching the operators"
+  ],
+  "preparation": [
+    "The realistic route is indirect: get people in the tech/AI X network talking about the product — Digg picks up the signal",
+    "A story on a credible publication or a post from a followed account is the raw material"
+  ],
+  "workflow": [
+    "There is no submission step — publish/post the news where Digg's watched network will see it (X posts by credible tech accounts)",
+    "Optionally reach the operators via https://digg.com/contact to flag the product",
+    "If a story about the product trends among the tracked voices, it appears on digg.com topic pages"
+  ],
+  "watchFor": [
+    "This is NOT the old submit-and-vote Digg — no user submissions exist in the current product",
+    "Appearing on Digg is a side effect of traction elsewhere, not a launch destination action",
+    "Public ranking/feed data is available at digg.com/llms.txt for verification"
+  ],
+  "countsAsLive": "A story about the product appears as a story page on digg.com/<topic>/<id> with linked source posts",
+  "unknowns": [
+    "How to get added to Digg's ranked network of watched accounts",
+    "Whether the /contact page accepts story suggestions"
+  ]
+}

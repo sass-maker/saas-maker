@@ -1,0 +1,45 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "forg.to",
+  "name": "Forg",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://forg.to/",
+      "title": "Homepage — 'Share your first project in seconds'; free to post; weekly Launchpad; Pro adds cross-posting/scheduling; Premium adds verification + announcement"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Account/profile required — 'Create Profile' routes through /login; founder profile lives at forg.to/@you",
+    "Free tier covers posting updates, articles, and launching a project on the weekly Launchpad",
+    "Pro features: scheduling + cross-posting to X/LinkedIn/Bluesky; 'Premium' adds project verification and announcement",
+    "Audience is builders/founders — positioned as a build-in-public network, not a pure directory"
+  ],
+  "preparation": [
+    "Product name, URL, logo, short description",
+    "Founder profile details (stack, links, build history)",
+    "First project update/launch post content",
+    "Optional RSS hookup if you want your Forg timeline on your own changelog page"
+  ],
+  "workflow": [
+    "Create a profile via https://forg.to/login ('Create Profile' → forg.to/@you)",
+    "Use 'Add Product' to share the project",
+    "Publish updates/articles; weekly Launchpad gives launch-week feedback",
+    "Optionally upgrade to Pro for cross-posting or Premium for verification"
+  ],
+  "watchFor": [
+    "The batch's /product/new URL was not verified — entry point is 'Add Product' after login",
+    "Visibility is activity-driven ('the more you ship, the more visible you become') — a single dormant listing has little value",
+    "Ads product exists ('Introducing Forg Ads') — paid placements compete in feed",
+    "~2k active users — small community compared to Product Hunt"
+  ],
+  "countsAsLive": "The project appears under forg.to /projects (or on your @you profile) with a public project page",
+  "unknowns": [
+    "Premium/verification pricing",
+    "Whether profile/project outbound links are dofollow",
+    "Launchpad selection criteria (weekly cohort mechanics)"
+  ]
+}

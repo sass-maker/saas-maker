@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aiagentstore.ai",
+  "name": "AI Agent Store",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://aiagentstore.ai/",
+      "title": "Homepage — live AI agent marketplace & directory (1,409 listings, 24 categories) plus agent-teams and paid-task marketplace"
+    },
+    {
+      "url": "https://aiagentstore.ai/new-agent",
+      "title": "List Your AI Agent — entry point asks only for the agent's URL; Login/Sign up nav suggests account flow"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "AI agents, tools, and frameworks — 24 categories including development frameworks, observability, coding agents, marketing agents",
+    "Submission starts with just the agent's URL at /new-agent",
+    "Login/sign-up exists in nav — deeper form steps likely require an account"
+  ],
+  "preparation": [
+    "Public URL of the AI agent",
+    "Account on aiagentstore.ai (Login/Sign up in nav)",
+    "Likely: name, description, category, pricing — not visible before the URL step"
+  ],
+  "workflow": [
+    "Open https://aiagentstore.ai/new-agent",
+    "Enter the AI agent URL and click Continue",
+    "Complete the subsequent listing steps (account login/sign-up expected)",
+    "Listing joins the /ai-agents-directory under one of 24 categories"
+  ],
+  "watchFor": [
+    "Only the first step (URL input) is publicly visible — fields, pricing, and gating beyond it are unverified",
+    "Site is a full ecosystem (Agent Teams, Claw Earn paid-task marketplace, Token, starter-kit marketplace) — distinguish the free directory listing from marketplace/crypto features",
+    "Separate 'Share My Starter Kit' route (/claw-setup-files/submit) for setup files, and /advertise for paid placement",
+    "USDC-on-Base crypto payments power the Claw Earn marketplace — unrelated to directory listing but prominent"
+  ],
+  "countsAsLive": "The agent appears in the aiagentstore.ai/ai-agents-directory under its category",
+  "unknowns": [
+    "Whether the listing itself is free — no pricing shown before login",
+    "Full submission form fields after the URL step",
+    "Review/moderation process and turnaround",
+    "Whether the product must literally be an agent or broader AI tools qualify (categories include tools and frameworks)"
+  ]
+}

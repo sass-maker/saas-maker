@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "wired.business",
+  "name": "Wired Business",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://wired.business/submit",
+      "title": "Submit your Website — Free (badge backlink required, 72h review) vs Pro $29 one-time instant publish; ~2,100 sites listed"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free plan requires placing a Wired Business badge/backlink on your homepage or footer",
+    "Free listings are reviewed and listed within 72 hours",
+    "Pro ($29 one-time, advertised 30% off with code FROGDR → $20.30) publishes instantly, is permanent, and needs no reciprocal backlink"
+  ],
+  "requirements": [
+    "A live website to list — directory advertises a 'permanent DR 77 dofollow backlink'",
+    "Free tier requires the badge/backlink placed before the 72-hour review completes",
+    "Same operator network as Ramen Tools, 500 Tools, Twelve Tools (linked in the footer)"
+  ],
+  "preparation": [
+    "Product name, URL, description, and category",
+    "Ability to add the Wired Business badge/backlink to the site's homepage or footer (free route)",
+    "Choose the screenshot to represent the site (editable later via the edit link)"
+  ],
+  "workflow": [
+    "Open wired.business/submit and choose Free ('Continue') or Pro ('?plan=paid')",
+    "Fill in website details and submit",
+    "Free path: add the badge/backlink to the site, wait up to 72h for review and the 'website is live' email",
+    "Pro path: pay one-time $29; listing publishes immediately",
+    "Keep the edit link from the confirmation email for future updates"
+  ],
+  "watchFor": [
+    "The badge/backlink requirement is the price of the free tier — removing it presumably voids the listing",
+    "Reciprocal-badge directories are link schemes in Google's eyes; weigh the DR77 dofollow claim accordingly",
+    "Edit link arrives only via the confirmation email/success page — save it",
+    "Part of a cluster of near-identical directories (Ramen/500/Twelve Tools) — submissions may be cross-posted"
+  ],
+  "countsAsLive": "The listing appears publicly on wired.business (category page) and a 'your website is live' confirmation email arrives",
+  "unknowns": [
+    "Whether the free link is actually dofollow as advertised once live",
+    "Rejection criteria during the 72-hour review",
+    "What happens to free listings if the badge is later removed"
+  ]
+}

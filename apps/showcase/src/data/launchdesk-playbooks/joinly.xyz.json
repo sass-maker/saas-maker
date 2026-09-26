@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "joinly.xyz",
+  "name": "Joinly",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.joinly.xyz/",
+      "title": "Homepage — active startup launch board with Featured/Trending entries dated daily through Sep 26, 2026"
+    },
+    {
+      "url": "https://www.joinly.xyz/submit-startup",
+      "title": "Submit your startup or product — free public form with field specs (headline ≤80 chars, thumbnail 256×256 ≤200KB, up to 3 gallery images)"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Startup or product name and main website URL — 'only the main domain or subdomain without any additional parameters, paths, or directories'",
+    "Contact email (not published)",
+    "Headline: one line, up to 80 characters; optional long description",
+    "Country of the startup (required dropdown)",
+    "Thumbnail image 256×256px (1:1), max 200KB — required; up to 3 gallery images 1024×768 (4:3), max 400KB each",
+    "Must agree to T&C/privacy — data processed by Thomas Kraits United Kingdom Limited including marketing emails"
+  ],
+  "preparation": [
+    "Product name and root domain URL",
+    "≤80-char headline plus a longer description",
+    "256×256 square thumbnail ≤200KB and up to 3 screenshots 1024×768 ≤400KB",
+    "Country of operation, contact email"
+  ],
+  "workflow": [
+    "Open https://www.joinly.xyz/submit-startup",
+    "Fill name, URL, email, headline, description, country; upload thumbnail and gallery images",
+    "Accept the terms checkbox and submit",
+    "Approved entries appear in the Trending feed with a /startups/<domain-slug> detail page and a Visit website link"
+  ],
+  "watchFor": [
+    "No price is mentioned anywhere — appears genuinely free; no premium upsell visible on the form",
+    "The T&C consent includes marketing emails from Thomas Kraits UK Ltd",
+    "Listing quality is mixed — the feed includes adult-adjacent entries (Spicy Ranks AI, LiveJasmin stats), so the neighborhood is unfiltered",
+    "Review/approval criteria and turnaround are not stated"
+  ],
+  "countsAsLive": "A detail page at joinly.xyz/startups/<domain-slug> exists and the product appears in the homepage Trending/Startups feed with its Visit link",
+  "unknowns": [
+    "Editorial review time and acceptance criteria",
+    "Whether outbound links are dofollow",
+    "Whether featured placement is purchasable"
+  ]
+}

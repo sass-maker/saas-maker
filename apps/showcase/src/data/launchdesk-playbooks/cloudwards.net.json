@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "cloudwards.net",
+  "name": "Cloudwards",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.cloudwards.net/objective-testing/",
+      "title": "Cloudwards methodology — hands-on testing by dedicated writers/testers; human-written only, no AI content (content read via search result; site 403 to fetchers)"
+    },
+    {
+      "url": "https://ideaproof.io/launch-directories/cloudwards",
+      "title": "Third-party directory guide claiming a free standard submission form with product details (status 'pending re-verification' — treat as unconfirmed) (content read via search result)"
+    }
+  ],
+  "category": "press",
+  "zeroCostRoute": "unknown",
+  "conditions": [
+    "Primarily earned editorial — Cloudwards commissions its own reviews via in-house testers; a third-party aggregator claims a free submission form exists but this could not be verified (site blocked fetchers)"
+  ],
+  "requirements": [
+    "Review coverage in cloud storage, VPN, backup, password managers, cloud apps/security — products outside these categories are off-beat",
+    "Reviews are hands-on by Cloudwards' own testers — expect to provide full product access",
+    "A claimed 'submission form' (per a third-party guide) wants: product name, live URL, 60-char tagline, 250-char description, 512px+ square logo, 2-3 screenshots, pricing model — unverified",
+    "cloudwards.net blocked automated fetch (403) — editorial pages verified via search, submission surface unconfirmed"
+  ],
+  "preparation": [
+    "Product in a covered category (VPN, cloud storage, backup, password manager, cloud apps)",
+    "Review access for their testers, product details kit",
+    "Contact route: site contact page or the editorial team"
+  ],
+  "workflow": [
+    "Try the submission form if findable (third-party guides reference one) — otherwise contact the editorial team",
+    "Provide product access for their hands-on testing",
+    "Coverage is a staff-written review or inclusion in a best-of comparison — affiliate-linked"
+  ],
+  "watchFor": [
+    "Heavy affiliate-review economics — rankings are commercial-influenced (standard for the genre); 'reviews' are earned only in the sense that they choose what to test",
+    "The claimed free submission form is unverified — treat as unknown",
+    "Human-written-only editorial policy — expect real scrutiny",
+    "Berlin-based independent site — modest team"
+  ],
+  "countsAsLive": "The product appears in a Cloudwards review or comparison article",
+  "unknowns": [
+    "Whether a public submission form actually exists today",
+    "Whether review placement can be bought (affiliate relationships are standard in this niche)"
+  ]
+}

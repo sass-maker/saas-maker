@@ -1,6 +1,12 @@
 import publicCatalog from '../../../../catalog/generated/public.json';
 import tokenWorld from './tokenWorld.json';
 import { CHANGELOG } from './changelog';
+import { FUNDING, FUNDING_DOCS, FUNDING_VIEWS } from './funding';
+import archiveMd from './funding-docs/archive.md?raw';
+import materialsMd from './funding-docs/materials.md?raw';
+import methodologyMd from './funding-docs/methodology.md?raw';
+import strategyMd from './funding-docs/strategy.md?raw';
+import { DOMAIN_RANKS, RANKS_UPDATED } from './domainRanks';
 import { LEARNINGS } from './learnings';
 import ideas from './ideas.json';
 import { CORE } from './projects';
@@ -386,6 +392,70 @@ const fixedRoutes: PublicRoute[] = [
     ].join('\n'),
   },
   {
+    id: 'funding',
+    path: '/funding',
+    description: 'Funding and accelerator directory — 184 programs with per-row evidence grading',
+    kind: 'collection',
+    markdown: [
+      '# SaaS Maker funding directory',
+      '',
+      `${FUNDING.count} accelerators, residencies, funds, credit schemes, and resources — one row per specific program, with fit, terms, deadlines, and evidence quality preserved per row.`,
+      '',
+      `Imported from the Funding & Accelerators workspace rebuilt ${FUNDING.workspaceRebuilt}. Assessments — fit, priority, recommendation — are the portfolio's judgment, not the programs' claims. Stale, niche, and unresolved items stay searchable rather than being deleted or presented as fact.`,
+      '',
+      `- Directory: ${SITE_URL}/funding`,
+      `- JSON: ${SITE_URL}/funding.json`,
+      `- Per-program records: ${SITE_URL}/funding/<slug>`,
+      `- Docs: ${FUNDING_DOCS.map((doc) => `${SITE_URL}/funding/docs/${doc.slug}`).join(', ')}`,
+      '',
+      '## Decision views',
+      '',
+      ...FUNDING_VIEWS.map(
+        (view) => `- ${view.label} — ${view.slugs.length} programs (original workspace ordering)`
+      ),
+      '',
+    ].join('\n'),
+  },
+  {
+    id: 'search',
+    path: '/search',
+    description: 'Unified search across every public SaaS Maker surface',
+    kind: 'collection',
+    markdown: [
+      '# SaaS Maker search',
+      '',
+      'One index across products, ideas, funding programs, launch destinations, tools, learnings, docs, and pages.',
+      '',
+      `- Human search: ${SITE_URL}/search?q=<query>`,
+      `- Full machine index: ${SITE_URL}/search.json — fetch once, filter on title+summary+keywords`,
+      '',
+    ].join('\n'),
+  },
+  {
+    id: 'ranks',
+    path: '/ranks',
+    description: 'Provider-reported Ahrefs DR board for all owned Fleet domains',
+    kind: 'collection',
+    markdown: [
+      '# SaaS Maker domain ranks',
+      '',
+      `Provider-reported Ahrefs Domain Rating for ${DOMAIN_RANKS.length} owned Fleet domains. Snapshot of ${RANKS_UPDATED}; a missing rating means "not reported", never zero.`,
+      '',
+      `- Human board: ${SITE_URL}/ranks`,
+      `- JSON: ${SITE_URL}/ranks.json`,
+      '',
+      ...DOMAIN_RANKS.map(
+        (rank) =>
+          `- ${rank.domain}: DR ${rank.current === null ? 'not reported' : rank.current}${
+            rank.delta !== null && rank.delta !== 0
+              ? ` (${rank.delta > 0 ? '+' : ''}${rank.delta.toFixed(1)})`
+              : ''
+          }${rank.tracked ? '' : ' — history only'}`
+      ),
+      '',
+    ].join('\n'),
+  },
+  {
     id: 'privacy',
     path: '/privacy',
     description: 'Privacy policy for the SaaS Maker product directory',
@@ -484,6 +554,21 @@ const learningRoutes: PublicRoute[] = LEARNINGS.map((learning) => ({
   markdown: learning.markdown,
 }));
 
+const fundingDocMarkdown: Record<string, string> = {
+  strategy: strategyMd,
+  materials: materialsMd,
+  methodology: methodologyMd,
+  archive: archiveMd,
+};
+
+const fundingDocRoutes: PublicRoute[] = FUNDING_DOCS.map((doc) => ({
+  id: `funding-doc-${doc.slug}`,
+  path: `/funding/docs/${doc.slug}`,
+  description: doc.description,
+  kind: 'article',
+  markdown: fundingDocMarkdown[doc.slug],
+}));
+
 const productRoutes: PublicRoute[] = DIRECTORY_PROJECTS.filter(
   (product) => product.id !== 'saas-maker'
 ).map((product) => ({
@@ -494,7 +579,12 @@ const productRoutes: PublicRoute[] = DIRECTORY_PROJECTS.filter(
   markdown: productMarkdown(product),
 }));
 
-export const PUBLIC_ROUTES = [...fixedRoutes, ...learningRoutes, ...productRoutes];
+export const PUBLIC_ROUTES = [
+  ...fixedRoutes,
+  ...fundingDocRoutes,
+  ...learningRoutes,
+  ...productRoutes,
+];
 
 export function publicRouteUrl(route: PublicRoute): string {
   return new URL(route.path, SITE_URL).toString();

@@ -1,0 +1,54 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aitoolshunt.com",
+  "name": "AI Tools Hunt",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://aitoolshunt.com/",
+      "title": "Homepage — live AI tools directory claiming 4,200+ tools, 140+ categories, weekly updates"
+    },
+    {
+      "url": "https://aitoolshunt.com/submit-ai-tool/",
+      "title": "Submit Your AI Tool — form with two options: 'Get Priority Review — $15' or 'Free Listing – $0 – Not Guaranteed'"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "A $0 'Free Listing' option exists on the form but is explicitly labeled 'Not Guaranteed' — the guaranteed path is $15 priority review"
+  ],
+  "requirements": [
+    "AI tools only; pick one AI Tool Category on the form",
+    "Required fields: tool name, website URL, category, description, logo/favicon URL, your name, email, consent checkbox",
+    "Optional: company/founder name, LinkedIn or X URL",
+    "Consent: 'I confirm that I am authorized to submit this tool' — submit as owner or authorized agent",
+    "Manual review implied by the priority/free split"
+  ],
+  "preparation": [
+    "Tool name, website URL, category, description",
+    "Public logo or favicon URL",
+    "Submitter name, email, company/founder name, LinkedIn/X URL",
+    "$15 if priority review is wanted"
+  ],
+  "workflow": [
+    "Open https://aitoolshunt.com/submit-ai-tool/",
+    "Fill the required fields including logo/favicon URL",
+    "Choose 'Free Listing – $0 – Not Guaranteed' or 'Get Priority Review — $15'",
+    "Tick the authorization consent and Submit",
+    "Listing appears in the directory under the chosen category if approved"
+  ],
+  "watchFor": [
+    "Free tier has no guarantee — it may never be reviewed/published",
+    "Small WordPress directory despite the '4,200+ tools, 140+ categories' claims — self-reported numbers",
+    "Refund Policy page exists — read it before paying the $15",
+    "Form fields are mostly text + URLs — no file upload; the logo must already be hosted"
+  ],
+  "countsAsLive": "The tool appears in the aitoolshunt.com directory under its category with a View link",
+  "unknowns": [
+    "Free-tier review turnaround (or whether it happens at all)",
+    "Whether outbound links are dofollow",
+    "What 'priority review' turnaround is — no SLA stated"
+  ]
+}

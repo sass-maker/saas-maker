@@ -1,0 +1,56 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "apsense.com",
+  "name": "APSense",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.apsense.com/",
+      "title": "Homepage (search-indexed) — free account creation, 1M+ digital marketers; verified business profile, content publishing, brand tools"
+    },
+    {
+      "url": "https://www.apsense.com/question/how-to-create-brand-page-in-apsense",
+      "title": "Community Q&A — Brand Page creation via Brand Marketing Center: business name, description, website, logo, category, keywords"
+    },
+    {
+      "url": "https://www.apsense.com/article/836257-navigating-apsense-for-beginners.html",
+      "title": "Beginner guide — sign up with email, username reflecting brand, complete profile with photo, bio and website/social links"
+    },
+    {
+      "url": "https://www.apsense.com/profile/create",
+      "title": "Batch-provided signup URL — returned HTTP 403 (bot-blocked)"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free account registration (email, brand-appropriate username) — 'Free to join • No credit card required'",
+    "Brand Page for the product/company via the Brand Marketing Center (business name, website, logo, description, category, keywords)",
+    "Community skews to digital marketers/affiliate marketers — the site tolerates promotion but low-quality spam gets no traction"
+  ],
+  "preparation": [
+    "Email for registration + verification",
+    "Brand assets: logo (JPEG/GIF/PNG), business description, website URL, category, keywords",
+    "Optional content for articles/reviews — APSense distributes member content"
+  ],
+  "workflow": [
+    "Register a free account at apsense.com (browser — site 403s automated fetches)",
+    "Complete the member profile (photo, bio, website/social links)",
+    "Open the Brand Marketing Center and create a Brand Page with business details, logo and keywords",
+    "Publish content (articles/reviews) referencing the product to build presence and traffic",
+    "Keep the page updated — stale pages get little reach"
+  ],
+  "watchFor": [
+    "Site 403s automated fetches — use a browser",
+    "Community has a strong affiliate/MLM flavor — listings compete with heavy self-promotion noise",
+    "Email verification required before full access",
+    "Username is public-facing — pick the brand name deliberately"
+  ],
+  "countsAsLive": "The Brand Page is publicly reachable at an apsense.com URL and the member profile shows website links",
+  "unknowns": [
+    "Whether brand-page outbound links are dofollow",
+    "Moderation rules for promotional content",
+    "Whether 'verified business profile' involves a review step"
+  ]
+}

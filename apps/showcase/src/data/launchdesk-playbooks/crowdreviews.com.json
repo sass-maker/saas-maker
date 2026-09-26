@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "crowdreviews.com",
+  "name": "CrowdReviews",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.crowdreviews.com/verify/get-started",
+      "title": "Get Started — online sign-up form for a vendor campaign: 'Generate leads for $3/click'"
+    },
+    {
+      "url": "https://www.crowdreviews.com/verify/costs",
+      "title": "Costs — cost-per-click model, $3/click, optional daily budget (~$20/day typical), no contract"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Vendor signup is a paid traffic campaign, not a free listing: you pay $3 per click to your landing page",
+    "Sign-up form requires first/last name, email, phone number, and website URL",
+    "You configure a budget and a landing page for the campaign; both are editable after setup",
+    "Free phone support / call scheduling available (1-800-874-2458) as an alternative to online signup"
+  ],
+  "preparation": [
+    "Landing page URL to send paid clicks to",
+    "Daily budget decision (site suggests ~$20/day to start)",
+    "Credit card (Visa, MasterCard, or Amex accepted) for the online payment step",
+    "Contact details: name, email, phone"
+  ],
+  "workflow": [
+    "Open https://www.crowdreviews.com/verify/get-started",
+    "Fill the signup form (name, email, phone, website) and create the account",
+    "CrowdReviews connects with you to finish setup; set your budget and landing page in the interface",
+    "Link a credit card to activate the $3/click campaign",
+    "Monitor real-time click reports; adjust budget or landing page as needed"
+  ],
+  "watchFor": [
+    "This is a paid lead-gen channel, not a free directory listing — rankings rise 'for willing to be transparent', i.e. paying vendors rank",
+    "Any organic/free vendor presence was not visible on the pages fetched — assume paid unless a free claim route is found",
+    "30-day money-back guarantee is advertised",
+    "Buyers-guide positioning means placement depends on client reviews, which you may need to solicit"
+  ],
+  "countsAsLive": "The vendor appears in the relevant CrowdReviews buyers-guide category and the click campaign begins reporting traffic",
+  "unknowns": [
+    "Whether a free/basic listing exists without the $3/click campaign",
+    "How rankings are computed and whether paying vendors are labeled",
+    "Whether outbound vendor links are follow or nofollow"
+  ]
+}

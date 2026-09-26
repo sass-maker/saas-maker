@@ -1,0 +1,60 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "hunt0.com",
+  "name": "HUNT0",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://hunt0.com/",
+      "title": "Homepage — 'Ship Early. Hunt Early.' community-ranked weekly launch leaderboard; active weekly board with dozens of products"
+    },
+    {
+      "url": "https://hunt0.com/submit",
+      "title": "Submit page — 6-step form (product info, description, media, categories/tags, launch schedule, social links); three launch methods: Free community queue (70 slots/week), Badge Launch ($0 with badge verification), Premium $16.90 one-time; sign-in required"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free Launch queues into a weekly community board capped at 70 slots — the earliest free week shown was ~3 months out ('skip up to 91 days of waiting' on paid tiers), and dofollow links only go to the weekly top 20",
+    "Badge Launch is also $0 and skips the queue with a guaranteed dofollow backlink — but requires displaying/verifying HUNT0's badge on your domain (eligible domains only)",
+    "Account sign-in required to submit"
+  ],
+  "requirements": [
+    "Sign-in required at the end of the submit flow",
+    "Full product package: name, tagline, pricing, markdown description, square logo, 1-9 gallery images (PNG/JPG/WebP ≤10MB), up to 3 categories, up to 10 tags",
+    "At least one social link (X, GitHub, LinkedIn, Bluesky, YouTube) plus contact email",
+    "For Badge Launch: ability to place their badge on your site for verification"
+  ],
+  "preparation": [
+    "Logo (square) and 1-9 screenshots",
+    "Tagline + markdown description",
+    "Pick ≤3 categories and ≤10 tags",
+    "Contact email and at least one social URL",
+    "Decide free-queue vs badge vs premium: free waits ~3 months; $0 badge needs badge placement; $16.90 skips everything"
+  ],
+  "workflow": [
+    "Open https://hunt0.com/submit",
+    "Step 1: product name, tagline, link (AI Autofill available), pricing",
+    "Step 2: markdown description",
+    "Step 3: upload logo and gallery images",
+    "Step 4: pick categories and tags",
+    "Step 5: choose launch method (Free queue / Badge / Premium) and launch week",
+    "Step 6: add social links + contact email, then sign in to submit"
+  ],
+  "watchFor": [
+    "The free queue is long — ~91 days to the earliest open week; treat this as a slow-burn listing, not a launch-day channel",
+    "Free listings only earn a dofollow link if they reach the weekly top 20 — most won't",
+    "Badge Launch is the smarter $0 route if you're willing to host their badge",
+    "Premium price shown as $16.90 marked down from $29.90 — pricing may fluctuate",
+    "Board is AI-tool-heavy with low vote counts (0-8 votes typical) — community reach is small"
+  ],
+  "countsAsLive": "The product appears on the HUNT0 weekly leaderboard for its scheduled launch week and has a public product page",
+  "unknowns": [
+    "What 'eligible domains' means for Badge Launch verification",
+    "Whether free listings that miss top-20 get nofollow links or no link at all",
+    "How long listings persist after their launch week",
+    "Sign-in mechanism (OAuth provider unspecified)"
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startuplist.ing",
+  "name": "Startup Listing",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://startuplist.ing/",
+      "title": "Homepage — curated directory of SaaS/micro-SaaS/side projects (790+ products, 3,737+ builders); 'Submit your startup' → /products/new"
+    },
+    {
+      "url": "https://startuplist.ing/pricing",
+      "title": "Pricing — 'Listing Fee: $4.00 → FREE'; 'Start with our free plan'; Featured upgrade $3/day ($21/7 days)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Sign in required — /products/new is behind /signin",
+    "SaaS tools, micro-SaaS, indie side projects — broad fit",
+    "Base listing is free ($4.00 fee waived per pricing page); 'Featured' placement is paid at $3/day",
+    "Listings appear as /p/<id> product pages"
+  ],
+  "preparation": [
+    "Account (sign-in at startuplist.ing/signin)",
+    "Product name, URL, tagline/description, category (SaaS & Tools, AI & ML, Developer Tools, etc.)",
+    "Logo/image for the product card",
+    "Optional deal/coupon if you want a 'Top Deals' slot"
+  ],
+  "workflow": [
+    "Sign in at https://startuplist.ing/signin",
+    "Open 'Submit your startup' (/products/new) and fill the product form",
+    "Choose the free listing (skip the $3/day Featured upgrade)",
+    "Product publishes as a /p/<id> page; supports reviews, categories, tags, leaderboard"
+  ],
+  "watchFor": [
+    "Pricing page mixes free + paid in one checkout-style UI — don't accidentally buy Featured days",
+    "Upgrade is per-product (FAQ: 'separate plans for multiple products')",
+    "'Get Backlinks Now' CTA on homepage — likely badge/featured upsell",
+    "Typical reciprocal-badge ecosystem in footer; low-moderation vibe (mixed-quality listings visible)"
+  ],
+  "countsAsLive": "The product has a public startuplist.ing/p/<id> page and appears in 'All Products' / its category listing",
+  "unknowns": [
+    "Whether free listing links are dofollow (seed says nofollow)",
+    "Review/approval time for new submissions",
+    "Deal submission mechanics (Top Deals section)"
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startups.fm",
+  "name": "Startups.fm",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://startups.fm/",
+      "title": "Startups.fm — live startup directory (1,989 startups); 'Submit your startup — $49 one-off · listed in 48 hours'; DR-49 backlink pitch; free newsletter; part of Tiny Startup Studio family"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Paid only — $49 one-off, listed within 48 hours",
+    "Submission at startups.fm/submit",
+    "Output: a directory page on a DR-49 domain (their claim), category/country/city browsing",
+    "Ecosystem of sister sites (Tiny Startups, Founder Page, etc.)"
+  ],
+  "preparation": ["Product name, description, category, country/city", "$49 payment"],
+  "workflow": [
+    "Submit at startups.fm/submit and pay $49",
+    "Listing goes live within ~48 hours in the directory and 'New launches' feed"
+  ],
+  "watchFor": [
+    "Pay-to-list — no free tier visible",
+    "Backlink value is the pitch — single-directory SEO impact is limited",
+    "Small indie directory; reach unknown"
+  ],
+  "countsAsLive": "A startup page on startups.fm in the directory",
+  "unknowns": ["Whether the link is dofollow", "Traffic"]
+}

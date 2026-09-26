@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "in.mashable.com",
+  "name": "Mashable India",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://in.mashable.com/",
+      "title": "Mashable India homepage — live and publishing daily (tech, entertainment, science, deals)"
+    },
+    {
+      "url": "https://in.mashable.com/website-information/479/advertise",
+      "title": "Mashable India Advertise page — advertising contact teammashable.india@forkmediagroup.com (content read via search result)"
+    },
+    {
+      "url": "https://mashable.com/about/contact-us",
+      "title": "Mashable global Contact Us — news submissions go to news@... editorial address; 'the only Mashable address that reaches our editorial team' (content read via search result)"
+    },
+    {
+      "url": "https://in.mashable.com/website-information/477/about",
+      "title": "Mashable India About — 'obsessed with culture and tech' (content read via search result)"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Not a directory — coverage is earned editorial; no submission form or listing product",
+    "India edition operated under license (Fork Media Group); pitches must be India-relevant or use the global Mashable news inbox",
+    "Global Mashable contact page routes tips/press releases to a news@ editorial address — the only address that reaches the editorial team",
+    "Advertising inquiries for India go to teammashable.india@forkmediagroup.com — that is a paid-placement route, not editorial"
+  ],
+  "preparation": [
+    "A story angle that fits Mashable's verticals: tech, digital culture, entertainment, science — India angle preferred for this edition",
+    "Short pitch with the hook, evidence, and why now; press release if available",
+    "Decide editorial vs paid: editorial pitch (news inbox) vs sponsored content (advertise page)"
+  ],
+  "workflow": [
+    "Draft a concise pitch aimed at Mashable's editorial coverage areas",
+    "Send news/press-release submissions to the Mashable news editorial address listed on mashable.com/about/contact-us",
+    "For India-specific pitches or sponsored placements, use the Mashable India advertise contact (teammashable.india@forkmediagroup.com) — but label sponsored inquiries honestly",
+    "Coverage, if it happens, is a staff-written article — no listing page is created"
+  ],
+  "watchFor": [
+    "The catalog's stored URL (in.mashable.com/website-informati) is a truncated path — the real pages live under /website-information/<id>/<slug>",
+    "The India 'contact' surfaced on the advertise page is a sales inbox — do not send editorial pitches expecting earned coverage there",
+    "Two different operators: global Mashable (Ziff Davis) vs India licensee (Fork Media) — pitch routing differs",
+    "SaaS launch news is a weak fit for Mashable's consumer-culture editorial mix unless there is a strong India or consumer-tech hook"
+  ],
+  "countsAsLive": "A Mashable India article mentioning the product is published at in.mashable.com",
+  "unknowns": [
+    "A dedicated India editorial/tips inbox — only the advertising address was found for the India edition",
+    "Whether global editorial forwards India-relevant pitches to the India team"
+  ]
+}

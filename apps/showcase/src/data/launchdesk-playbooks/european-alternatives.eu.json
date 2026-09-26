@@ -1,0 +1,54 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "european-alternatives.eu",
+  "name": "European Alternatives",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://european-alternatives.eu/",
+      "title": "Homepage — 'Sign up for an account to suggest changes or new products'"
+    },
+    {
+      "url": "https://european-alternatives.eu/about",
+      "title": "About — listing conditions (EU/EEA/EFTA/DCFTA/UK-based company), suggestion-tool workflow"
+    },
+    {
+      "url": "https://european-alternatives.eu/register",
+      "title": "Register — account creation endpoint for the suggestion tool (returned no readable content)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Company must be based in an EU, EEA, EFTA, or DCFTA member country or in the UK — this includes any parent/holding company",
+    "Hosting providers may not simply resell/sub-host on infrastructure of a non-EU/EFTA company (e.g. configuring servers on AWS does not qualify)",
+    "Open-source projects that can be self-hosted are also listed; the geography criteria do not apply to them but the product must be reasonably easy to self-host",
+    "Suggestions are only accepted through the site's suggestion tool after registering an account — the site explicitly says product/category suggestions sent via chat or email will not be processed"
+  ],
+  "preparation": [
+    "Evidence the company (and any parent company) is based in EU/EEA/EFTA/DCFTA/UK",
+    "Which existing category the product fits — new categories cannot currently be suggested",
+    "Product name, URL, and description for the suggestion tool",
+    "An account: register at european-alternatives.eu/register"
+  ],
+  "workflow": [
+    "Register an account at https://european-alternatives.eu/register",
+    "Sign in and use the suggestion tool to submit the product as a new entry for an existing category (or a change to an existing product)",
+    "Do NOT submit via the chat bubble or email — those channels are explicitly not processed",
+    "Wait for editorial review; the site researches each product before adding it"
+  ],
+  "watchFor": [
+    "Strict geography rule — a US-headquartered product (or one with a US parent) does not qualify",
+    "The optional 'EU hosted' label has its own stricter criteria (core services hosted in the EU by EU-based companies; US-owned CDNs/DDoS providers on the critical path break eligibility)",
+    "This is a suggestion queue, not instant listing — editorial research gates publication",
+    "A tool to suggest new categories is 'being worked on' — only existing categories can receive product suggestions",
+    "Affiliate links exist on the site but the about page says they get no preferential treatment"
+  ],
+  "countsAsLive": "The product appears as a public entry on european-alternatives.eu under its category, linking to the product website",
+  "unknowns": [
+    "Review turnaround time for suggestions",
+    "Whether outbound links are dofollow",
+    "The exact fields in the suggestion tool (it is behind account registration)"
+  ]
+}

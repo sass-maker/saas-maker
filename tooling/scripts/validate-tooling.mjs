@@ -19,6 +19,7 @@ const preservedScriptsRoot = join(
 const allowedFrontmatterKeys = new Set([
   'allowed-tools',
   'description',
+  'disable-model-invocation',
   'license',
   'metadata',
   'name',
@@ -78,6 +79,11 @@ function validateSkills() {
       if (!allowedFrontmatterKeys.has(key)) {
         failures.push(`skills/${entry.name}: unsupported frontmatter key ${key}`);
       }
+    }
+
+    if (values['disable-model-invocation'] !== undefined &&
+        !/^(true|false)$/.test(values['disable-model-invocation'])) {
+      failures.push(`skills/${entry.name}: disable-model-invocation must be true or false`);
     }
 
     for (const match of source.matchAll(/\[[^\]]*\]\(([^)]+)\)/g)) {

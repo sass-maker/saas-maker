@@ -1,0 +1,36 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "similarsitesearch.com",
+  "name": "SimilarSiteSearch",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://similarsitesearch.com/",
+      "title": "SimilarSiteSearch — live similar-websites engine; Popular/Trending/Topics pages; Login/Sign up; © 2023"
+    },
+    {
+      "url": "http://similarsitesearch.com/webmasters",
+      "title": "Catalog's stored webmaster path 404s — no submission surface found this session"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "No public submission flow found — sites appear in the similarity index without an evident submit form; catalog's /webmasters path 404s",
+    "Login/signup exists for users (voting/favorites presumably)",
+    "© 2023 footer — maintenance level unclear"
+  ],
+  "preparation": ["Check whether an account unlocks any 'suggest a site' feature"],
+  "workflow": [
+    "No verified route — create an account to check for a suggest/site-submission feature, or use the Contact page",
+    "Sites are indexed as alternatives to existing entries — presence is engine-determined"
+  ],
+  "watchFor": [
+    "Not a launch directory — it maps site similarity; inclusion doesn't equal exposure",
+    "The catalog's submission URL is dead",
+    "Low evident maintenance"
+  ],
+  "countsAsLive": "The site appears as an alternative in SimilarSiteSearch results (not self-serve)",
+  "unknowns": ["Any submission/suggestion channel", "How sites get indexed"]
+}

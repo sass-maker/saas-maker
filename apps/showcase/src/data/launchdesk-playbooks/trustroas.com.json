@@ -1,0 +1,54 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "trustroas.com",
+  "name": "TrustRoas",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://trustroas.com/",
+      "title": "Homepage — 'database of verified ad spend & revenue' leaderboard for stores, agencies, and freelancers"
+    },
+    {
+      "url": "https://trustroas.com/add-store",
+      "title": "Add Store — sign-in gate (Continue with Google / Continue with Twitter)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free listing requires sign-in (Google or Twitter OAuth) at /add-store",
+    "Fit gate: only e-commerce stores, media-buying agencies, or freelance media buyers — verification needs Facebook Ads API and Shopify API access"
+  ],
+  "requirements": [
+    "Entity types: store, agency, or freelancer in the media-buying / DTC space",
+    "Ad spend is verified through the Facebook Ads API — needs a real ad account",
+    "Revenue is verified via the Shopify API — needs a real Shopify store",
+    "Account sign-in via Google or Twitter is mandatory"
+  ],
+  "preparation": [
+    "A Shopify store and/or Meta (Facebook) ad account with real spend",
+    "Google or Twitter account for OAuth sign-in",
+    "Entity type decision (store / agency / freelancer) and a category (Fashion, Beauty, Electronics, SaaS, etc.)",
+    "Founder profile handle — leaderboard rows link to /profile/<handle>"
+  ],
+  "workflow": [
+    "Open https://trustroas.com/add-store",
+    "Sign in with Google or Twitter",
+    "Add the entity and connect the Facebook Ads API (ad spend) and Shopify API (revenue)",
+    "The entity joins the public leaderboard at /store/<slug>, ranked by verified ad spend"
+  ],
+  "watchFor": [
+    "Wrong fit for pure SaaS with no e-commerce store or paid-ads operation — there is a /category/saas but verification still assumes ad spend + Shopify revenue",
+    "Connecting Facebook Ads and Shopify APIs means granting real account access — a security decision",
+    "Visible leaderboard rows include demo-looking data ('Demo Fashion Store', N/P ROAS) — platform appears early",
+    "Listings can be marked private (row #2 shows '***Private***') — privacy option exists",
+    "Sponsored cards ('Advertise — 14/20 spots left') are a paid upsell separate from listing"
+  ],
+  "countsAsLive": "The entity appears as a row on the trustroas.com leaderboard with a /store/<slug> page showing verified ad spend",
+  "unknowns": [
+    "Whether a listing is possible without connecting both APIs (store with no ads, or agency with no Shopify)",
+    "Pricing for the listing itself — /add-store is gated behind sign-in; only the /advertise upsell is public",
+    "Whether SaaS products without Shopify are genuinely accepted"
+  ]
+}

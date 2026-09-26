@@ -1,0 +1,330 @@
+---
+/**
+ * THESIS: One idea, its full text and score reasoning — the ledger entry as a page.
+ * OWN-WORLD: Same workshop interior as /ideas; scores read as panes, not badges.
+ * STORY: Title and verdict chips first, then the full text, then the reasoning.
+ * FORM: Single record pane, deliberately quiet.
+ */
+import Footer from '../../components/Footer.astro';
+import Nav from '../../components/Nav.astro';
+import { IDEA_ENTRIES, ideaTitle, type Idea } from '../../data/ideas';
+import Layout from '../../layouts/Layout.astro';
+
+export function getStaticPaths() {
+  return IDEA_ENTRIES.map((entry) => ({ params: { slug: entry.slug }, props: { entry } }));
+}
+
+interface Props {
+  entry: (typeof IDEA_ENTRIES)[number];
+}
+
+const { entry } = Astro.props as Props;
+const idea = entry.idea;
+const title = ideaTitle(idea);
+
+function escapeHtml(value: string): string {
+  return value
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;');
+}
+
+function renderIdea(value: string): string {
+  return escapeHtml(value)
+    .replace(/&lt;br\s*\/?&gt;/gi, '<br />')
+    .replace(
+      /\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g,
+      '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>'
+    )
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em>$1</em>')
+    .replace(/`([^`]+)`/g, '<code>$1</code>');
+}
+
+function customerLabel(value: Idea['customer']): string {
+  if (value === 'b2b-tech') return 'B2B technology';
+  if (value === 'non-dev') return 'Non-developer';
+  return 'Individual developer';
+}
+
+const scores = [
+  { label: 'Money', value: idea.money, detail: `M${idea.m} + Feas${idea.f_feas} − C${idea.c}` },
+  { label: 'Fun', value: idea.fun, detail: `F${idea.f} + T${idea.t}` },
+  { label: 'Adjusted', value: idea.adj, detail: 'money + fun balance' },
+];
+const description = `${title}. Money ${idea.money}, fun ${idea.fun}, solo feasibility ${idea.f_feas}/10 — scored idea from the SaaS Maker ledger.`;
+---
+
+<Layout title={`${title} — SaaS Maker ideas`} description={description}>
+  <div class="workshop-world interior-world">
+    <Nav />
+    <main id="main-content" class="idea-detail">
+      <nav class="idea-breadcrumb" aria-label="Breadcrumb">
+        <a href="/ideas">Ideas</a>
+        <span aria-hidden="true">/</span>
+        <span>{title}</span>
+      </nav>
+
+      <header class="idea-head">
+        <div class="idea-head-main">
+          <p class="idea-kicker">
+            Idea · {idea.source}
+            {idea.best_bet ? ' · ★ Best bet' : ''}
+          </p>
+          <h1>{title}</h1>
+          <ul class="idea-chips">
+            <li class="idea-chip">{customerLabel(idea.customer)}</li>
+            <li class="idea-chip">Solo feasibility {idea.f_feas}/10</li>
+          </ul>
+        </div>
+        <dl class="idea-scores">
+          {scores.map((score) => (
+            <div>
+              <dt title={score.detail}>{score.label}</dt>
+              <dd>{score.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </header>
+
+      <section class="idea-body">
+        <h2>The idea</h2>
+        <div class="idea-text" set:html={renderIdea(idea.idea)} />
+      </section>
+
+      <section class="idea-body">
+        <h2>Score reasoning</h2>
+        <dl class="idea-reason-list">
+          <div>
+            <dt>Feasibility — {idea.f_feas}/10</dt>
+            <dd>{idea.f_feas_why}</dd>
+          </div>
+          {idea.best_bet && (
+            <div>
+              <dt>Best bet</dt>
+              <dd>{idea.best_bet_why}</dd>
+            </div>
+          )}
+          <div>
+            <dt>Raw scores</dt>
+            <dd>
+              Fun {idea.f} + Tech {idea.t} = {idea.fun} · Money {idea.m} + Feasibility{' '}
+              {idea.f_feas} − Competition {idea.c} = {idea.money} · Source: {idea.source}
+            </dd>
+          </div>
+        </dl>
+      </section>
+
+      <p class="idea-back">
+        <a href="/ideas">Back to the scored ledger →</a>
+      </p>
+    </main>
+    <Footer />
+  </div>
+</Layout>
+
+<style>
+  .idea-detail {
+    width: min(86rem, calc(100% - 3rem));
+    margin-inline: auto;
+    padding: clamp(2rem, 4vw, 3rem) 0 clamp(5rem, 9vw, 8rem);
+  }
+
+  .idea-breadcrumb {
+    display: flex;
+    gap: 0.6rem;
+    margin-bottom: 2rem;
+    color: var(--ink-muted);
+    font-size: 0.85rem;
+  }
+
+  .idea-breadcrumb a {
+    color: var(--copper-hi);
+  }
+
+  .idea-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(16rem, 0.6fr);
+    gap: 0.375rem;
+    padding: 0.375rem;
+    background: var(--workshop-steel);
+  }
+
+  .idea-head-main,
+  .idea-scores {
+    background: var(--surface);
+    padding: clamp(2rem, 4vw, 3.5rem);
+  }
+
+  .idea-kicker {
+    color: var(--copper-hi);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .idea-head h1 {
+    margin-top: 0.75rem;
+    font-size: clamp(2.25rem, 4.5vw, 4rem);
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    line-height: 1.02;
+    text-wrap: balance;
+  }
+
+  .idea-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .idea-chip {
+    padding: 0.25rem 0.7rem;
+    border: 1px solid var(--line-strong);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+  }
+
+  .idea-scores {
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    gap: 0.375rem;
+    padding: 0.375rem;
+    background: var(--workshop-steel);
+  }
+
+  .idea-scores > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 6rem;
+    padding: 1.25rem;
+    background: var(--surface);
+  }
+
+  .idea-scores > div:nth-child(2) {
+    background: var(--workshop-seeded);
+  }
+
+  .idea-scores > div:last-child {
+    background: var(--workshop-amber);
+    color: #17130c;
+  }
+
+  .idea-scores dt {
+    color: var(--ink-muted);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .idea-scores > div:last-child dt {
+    color: #17130c;
+  }
+
+  .idea-scores dd {
+    font-size: clamp(1.75rem, 3.5vw, 3rem);
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+
+  .idea-body {
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+    border: 1px solid var(--line-strong);
+    background: var(--surface);
+  }
+
+  .idea-body h2 {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--copper-hi);
+  }
+
+  .idea-text {
+    margin-top: 1.25rem;
+    max-width: 46rem;
+    color: var(--ink-soft);
+    font-size: 1.05rem;
+    line-height: 1.7;
+  }
+
+  .idea-text a {
+    color: var(--copper-hi);
+    text-decoration: underline;
+  }
+
+  .idea-text code {
+    padding: 0.08rem 0.3rem;
+    background: var(--bg);
+    font-size: 0.9em;
+  }
+
+  .idea-reason-list {
+    margin-top: 1.25rem;
+  }
+
+  .idea-reason-list > div {
+    display: grid;
+    grid-template-columns: minmax(10rem, 0.4fr) minmax(0, 1fr);
+    gap: 1rem;
+    padding: 0.7rem 0;
+    border-bottom: 1px dashed var(--line);
+  }
+
+  .idea-reason-list > div:last-child {
+    border-bottom: 0;
+  }
+
+  .idea-reason-list dt {
+    color: var(--ink-muted);
+    font-weight: 600;
+    font-size: 0.88rem;
+  }
+
+  .idea-reason-list dd {
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  .idea-back {
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  .idea-back a {
+    color: var(--copper-hi);
+    font-weight: 600;
+  }
+
+  @media (max-width: 47.99rem) {
+    .idea-detail {
+      width: min(100% - 1.5rem, 86rem);
+    }
+
+    .idea-head {
+      grid-template-columns: 1fr;
+    }
+
+    .idea-scores {
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: 1fr;
+    }
+
+    .idea-reason-list > div {
+      grid-template-columns: 1fr;
+      gap: 0.25rem;
+    }
+  }
+</style>

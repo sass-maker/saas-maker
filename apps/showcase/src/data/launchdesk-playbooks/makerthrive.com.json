@@ -1,0 +1,45 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "makerthrive.com",
+  "name": "MakerThrive",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://makerthrive.com/submit",
+      "title": "Batch-provided submit URL — returns 'this page took a wrong turn' (dead route)"
+    },
+    {
+      "url": "https://makerthrive.com/",
+      "title": "Homepage — now a paid 'distribution engine for SaaS tools': YouTube features, newsletter, social amplification; CTA is 'Book a Partnership'"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "No free submission route — /submit is dead and the site only offers paid partnerships ('Book a Partnership', 'Partner with us', media kit)",
+    "Product should be a SaaS/AI/dev tool targeting marketers, founders, teams, or developers",
+    "Deliverable is a produced video breakdown + newsletter + social distribution, not a directory listing"
+  ],
+  "preparation": [
+    "Budget for a sponsored content partnership",
+    "Product narrative/angle — they 'align on a tactical narrative' rather than reading your landing page",
+    "Media kit review at /media-kit before booking"
+  ],
+  "workflow": [
+    "Review https://makerthrive.com/media-kit for formats and audience stats (10K+ YouTube subs, 13K+ newsletter, 56K+ X)",
+    "Book via /partner ('Book a spot' / 'Start a Partnership')",
+    "Align on angle; they produce a dedicated breakdown video and distribute across YouTube, X, newsletter"
+  ],
+  "watchFor": [
+    "Source-claimed /submit directory route no longer exists — this is a sponsorship channel, not a directory",
+    "Banner says 'MakerThrive's Community is evolving' — site is mid-pivot; older directory-style listings may be gone",
+    "No pricing published on the homepage — cost is revealed via the partnership flow"
+  ],
+  "countsAsLive": "A dedicated MakerThrive video/feature about the product is published on their YouTube channel and referenced from makerthrive.com",
+  "unknowns": [
+    "Exact partnership pricing and tiers",
+    "Whether any free community listing still exists post-pivot",
+    "Whether a link on makerthrive.com itself (vs. just YouTube description) is included"
+  ]
+}

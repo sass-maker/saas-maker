@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "scribd.com",
+  "name": "Scribd",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.scribd.com/upload-document",
+      "title": "Scribd upload page — 'Contribute to the collection', free uploads, 140M+ audience"
+    },
+    {
+      "url": "https://support.scribd.com/hc/en-us/articles/210134786-Uploading-a-document-to-Scribd",
+      "title": "Scribd Help Center — how to upload: required title/description, 100MB max, public vs private visibility"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Must upload a real document you own the copyright to (pdf, txt, doc, ppt, xls, docx, etc.; max 100MB) — governed by the Scribd Uploader Agreement",
+    "Title and description are required fields",
+    "Uploading is only supported on the website, not the Scribd app",
+    "Requires a Scribd account (sign-up at scribd.com/oauth/signup); the batch's /register URL returned HTTP 410 — use the upload flow instead"
+  ],
+  "preparation": [
+    "A genuinely useful document (deck, whitepaper, guide) — thinly-veiled ads risk rejection under the Uploader Agreement",
+    "Title and description copy optimized for discovery (Scribd indexes uploads for search)",
+    "A Scribd account (free to create)"
+  ],
+  "workflow": [
+    "Create a free Scribd account",
+    "Go to https://www.scribd.com/upload-document (or click Upload in the header)",
+    "Select the document file, fill in required Title and Description",
+    "Leave 'Make this document private' unchecked to publish publicly; adjust advanced settings",
+    "Click Done; use the provided view link / share link as the live artifact"
+  ],
+  "watchFor": [
+    "The batch-listed /register endpoint returned 410 — go through /upload-document which handles account creation",
+    "Public documents are indexed by search engines, but embedded links inside the doc are the SEO asset, not a profile backlink",
+    "Content must be owned/licensed — DMCA enforcement is active",
+    "Uploading your own original content can also unlock download access for the uploader (upload-benefit exchange)"
+  ],
+  "countsAsLive": "The uploaded document has a public scribd.com/document/<id>/<slug> page viewable without login",
+  "unknowns": [
+    "Whether links inside uploaded documents are followed/indexed for link equity",
+    "Moderation review timing or rejection rate for promotional docs"
+  ]
+}

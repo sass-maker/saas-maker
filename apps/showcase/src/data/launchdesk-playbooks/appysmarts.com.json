@@ -1,0 +1,56 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "appysmarts.com",
+  "name": "AppySmarts",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.appysmarts.com/",
+      "title": "Homepage — editor-reviewed catalog of 3,139 kids' apps (iOS/Android) scored on graphics, play length, educational value"
+    },
+    {
+      "url": "https://www.appysmarts.com/suggest.php",
+      "title": "Suggest an App form — name, email, app name, ≤400-char description, promocode required for paid apps, image captcha; 'We reserve the right to respond only to selected review requests'"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free submission via the Suggest an App form, but the product must be a kids'/educational iOS or Android app — general SaaS does not fit",
+    "Paid apps must include a promo code so editors can download for review",
+    "Editors respond only to selected requests — most submissions likely get no reply"
+  ],
+  "requirements": [
+    "An app for children — the entire catalog is kids' games, books, and educational apps scored on educational value",
+    "iOS or Android app (web-only products are out of scope)",
+    "≤400-character one-sentence app description",
+    "Promo code if the app is paid",
+    "Image captcha on the form"
+  ],
+  "preparation": [
+    "App name and store link",
+    "A tight ≤400-char description emphasizing educational content",
+    "Promo code for paid apps",
+    "Contact name and email"
+  ],
+  "workflow": [
+    "Open https://www.appysmarts.com/suggest.php",
+    "Choose between 'submit to database and newsletter' vs 'submit for free evaluation' (the evaluation is their review path)",
+    "Fill name, email, app name, description, promo code, comments",
+    "Solve the image captcha and send",
+    "Wait — they only reply to selected submissions"
+  ],
+  "watchFor": [
+    "Niche gate: if the product isn't a kids' app, don't submit — it's outside their catalog entirely",
+    "Low-scored apps still get listed (the homepage shows 20-40/100 reviews) — a review is not an endorsement; a poor score could hurt",
+    "No guaranteed response or timeline",
+    "Batch's 'nofollow' hint is plausible — links likely don't pass much value anyway on an editorial review site"
+  ],
+  "countsAsLive": "The app gets a scored review page under /application/<slug>,id_<n>.php and appears in the catalog/newsletter",
+  "unknowns": [
+    "Editorial selection rate and review turnaround",
+    "Whether database-only submissions (no review) are accepted more often than evaluation requests",
+    "Link type on review pages"
+  ]
+}

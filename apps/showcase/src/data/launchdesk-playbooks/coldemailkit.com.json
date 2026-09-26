@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "coldemailkit.com",
+  "name": "ColdEmailKit",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://coldemailkit.com/submit",
+      "title": "Submit your Cold Email Tool — open form (name, email, tool name, website URL, 'suggest an alternative'); review criteria listed"
+    },
+    {
+      "url": "https://coldemailkit.com/",
+      "title": "Homepage — directory of 50+ cold email tools with reviews, trust scores, alternatives and compare pages; has Advertise link"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Product must be a cold email tool — narrowly scoped directory (inbox rotation, deliverability, sequencing, lead data for outreach)",
+    "Tool must be actively maintained",
+    "Should position as an 'alternative to' an existing tool — the form includes a 'Suggest an alternative' field",
+    "'Submission alone does not guarantee a feature' — editorial review applies",
+    "Form fields: your name, your email, tool name, website URL, alternative suggestion, newsletter opt-in checkbox"
+  ],
+  "preparation": [
+    "Tool name and website URL",
+    "The incumbent tool(s) yours is an alternative to (Apollo, Instantly, Lemlist, etc.)",
+    "Submitter name and email",
+    "A short positioning line — listings show 'Free Alternative to: X' cards with starting price"
+  ],
+  "workflow": [
+    "Open https://coldemailkit.com/submit",
+    "Fill the five fields (no account required for the form itself — 'Sign In' exists but submit form is open)",
+    "Submit and wait for editorial review",
+    "If listed, the tool gets a profile card with trust score, reviews, pricing, and 'alternative to' mapping"
+  ],
+  "watchFor": [
+    "Very niche — only cold-email/outreach tools qualify; a general SaaS will be rejected",
+    "Listings carry editorial content ('we review warm-up, A/B testing...') — they write reviews, your listing copy isn't fully yours",
+    "Trust Score metric displayed prominently; a brand-new tool starts near 0%",
+    "Paid 'Advertise' placements exist alongside organic listings"
+  ],
+  "countsAsLive": "The tool appears as a card/profile on coldemailkit.com (e.g. under /alternatives or category pages) with its own detail page",
+  "unknowns": [
+    "Review turnaround and rejection rate",
+    "Whether the listing link is dofollow",
+    "Whether signing in unlocks additional submission fields"
+  ]
+}

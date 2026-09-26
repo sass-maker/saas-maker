@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aistage.net",
+  "name": "AIStage",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://aistage.net/",
+      "title": "Homepage — live AI tools directory (4,000+ tools, 230+ categories), 'Submit AI' nav link → /submit, 'Featured' and 'Just Launched' sections"
+    },
+    {
+      "url": "https://aistage.net/pricing",
+      "title": "Pricing page (search-indexed) — Basic Submit $9.9 (was $19.9), Featured Submit $19.9, Unlimited Submit $59.9/mo; all advertise 'DR 70+ dofollow backlinks' and 48h review"
+    },
+    {
+      "url": "https://submitator.com/submit-to-aistage",
+      "title": "Third-party analysis — the free badge-for-listing tier was removed in Aug 2025; cheapest route is now $9.9 one-time"
+    },
+    {
+      "url": "https://aistage.net/submit",
+      "title": "Submit page — returned HTTP 403 (bot-blocked)"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "AI tool/website only — directory is exclusively AI products across 230+ categories",
+    "No free tier anymore: Basic Submit $9.9 one-time (listing + 'dofollow backlink' claim), Featured $19.9 one-time (homepage/featured placement 14 days), Unlimited $59.9/mo",
+    "48-hour review window advertised"
+  ],
+  "preparation": [
+    "Product name, URL, short description, logo/icon, pricing model tag (Free/Freemium/Free Trial/Paid)",
+    "Category choice across their AI taxonomy",
+    "Payment method — no free path verified"
+  ],
+  "workflow": [
+    "Open https://aistage.net/submit in a browser (403 to automated fetches)",
+    "Choose a tier — Basic $9.9 vs Featured $19.9 vs Unlimited $59.9/mo (prices per the indexed pricing page; verify live)",
+    "Fill product details and pay",
+    "Review completes in ~48h; the listing gets a detail page on aistage.net"
+  ],
+  "watchFor": [
+    "Free tier was removed (Aug 2025 per third-party record) — don't trust old 'free submit' articles",
+    "Crossed-out anchor prices ($19.9→$9.9) are discount marketing; verify at checkout",
+    "'DR 70+ dofollow backlinks' is their claim, not independently verified",
+    "Unlimited tier is a subscription — cancel to avoid repeat billing"
+  ],
+  "countsAsLive": "The tool has a public detail page on aistage.net reachable from category/search and (for Featured) homepage placement",
+  "unknowns": [
+    "Exact submission form fields (submit page bot-blocked)",
+    "Whether links are actually dofollow on live pages",
+    "Editorial rejection criteria"
+  ]
+}

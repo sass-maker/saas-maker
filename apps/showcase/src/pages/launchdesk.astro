@@ -276,11 +276,13 @@ const coverageRows = DIRECTORY_PROJECTS.map((project) => {
                         </p>
                       )}
                       {row.eligibility && <p>{row.eligibility}</p>}
-                      {playbookDomains.has(row.domain) && (
-                        <p>
-                          <a href={`/launchdesk/${row.domain}`}>Submission playbook →</a>
-                        </p>
-                      )}
+                      <p>
+                        <a href={`/launchdesk/${row.domain}`}>
+                          {playbookDomains.has(row.domain)
+                            ? 'Submission playbook →'
+                            : 'Catalog record →'}
+                        </a>
+                      </p>
                       {row.provider && <p class="ld-provider">Metric provenance: {row.provider}</p>}
                       {row.claims.length > 1 && (
                         <p class="ld-provider">
@@ -390,7 +392,7 @@ const coverageRows = DIRECTORY_PROJECTS.map((project) => {
               return (
                 <tr>
                   <td class="coverage-project" data-label="Project">
-                    <a href={`/p/${row.id}`}>{row.name}</a>
+                    <a href={row.id === 'saas-maker' ? '/' : `/p/${row.id}`}>{row.name}</a>
                   </td>
                   <td class="ld-tag" data-label="Covered">{row.covered}</td>
                   <td class="ld-tag" data-label="Attempted">{row.attempted}</td>

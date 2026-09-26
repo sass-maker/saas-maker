@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "insidr.ai",
+  "name": "Insidr.ai",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://insidr.ai/",
+      "title": "Homepage — AI tools directory ('500+ AI tools in 78+ categories') with 'Submit AI Tool' links"
+    },
+    {
+      "url": "https://www.insidr.ai/submit-tools/",
+      "title": "Submit AI Tools page — Elementor form; 'Submit new AI tools that we should include. If approved, we will add it to our AI Tools directory.'"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "AI tools only — directory covers 78+ AI categories",
+    "Suggestion-style submission: 'If approved, we will add it' — editorial approval required, listing not guaranteed",
+    "Form fields observed: link to the AI tool (they ask for an affiliate-signup link 'if possible'), tool category, and a message"
+  ],
+  "preparation": [
+    "Tool URL — ideally including an affiliate signup link (the field explicitly asks for one)",
+    "Tool category matching their taxonomy (AI for Business, Marketing, SEO, Video, Image & Art, Chatbots, etc.)",
+    "Short pitch/message describing the tool"
+  ],
+  "workflow": [
+    "Open https://www.insidr.ai/submit-tools/ (linked as 'Submit AI Tool' throughout the site)",
+    "Fill the Elementor form: tool link, category, message",
+    "Submit — no account required; the form is a plain POST form",
+    "If approved, the tool is added to the AI Tools Directory"
+  ],
+  "watchFor": [
+    "Field labels are mismatched with placeholders (a 'name' field asks for the tool link, an 'email' field asks for category) — fill by placeholder intent",
+    "Paid promotion exists separately ('Want to Promote your AI Tool? Contact us' — directory, newsletter, social media sponsorship)",
+    "WordPress/Elementor site — form is simple but heavy pages load slowly",
+    "Separate 'Submit AI News' form at /submit-news/ is for news, not listings"
+  ],
+  "countsAsLive": "The tool appears as a page/entry in the Insidr.ai AI Tools Directory under a relevant category",
+  "unknowns": [
+    "Review turnaround and acceptance criteria beyond 'if approved'",
+    "Whether free listings get a dedicated page vs a link-row, and link type (dofollow/nofollow)",
+    "Whether an affiliate link materially improves acceptance odds"
+  ]
+}

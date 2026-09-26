@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "similarlabs.com",
+  "name": "SimilarLabs",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://similarlabs.com/submit",
+      "title": "Submit Your Product — three submission routes (X-post free, backlink badge, $9.99 paid) with full terms"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free route 1 ('Verify with an X post'): publish a short public X/Twitter post introducing the product; manual review, no dofollow backlink",
+    "Free route 2 ('Backlink Submission'): place the SimilarLabs badge/backlink on the product homepage and keep it there; manual review, 1 dofollow link after approval",
+    "Both free routes are reviewed manually (site says usually within 7 days); only the $9.99 paid route skips verification"
+  ],
+  "requirements": [
+    "Submission starts from a single product homepage URL — they prefill listing details from it",
+    "Every route produces the same product page: logo, description, screenshots, categories, pricing, website link",
+    "Badge must remain on the homepage for the backlink route",
+    "Rejected paid submissions are refunded per their FAQ"
+  ],
+  "preparation": [
+    "Product homepage URL",
+    "Logo, description, screenshots, pricing model text for the listing",
+    "X/Twitter account able to post a public intro (for the X-post free route), OR ability to add a badge to the homepage (backlink route)"
+  ],
+  "workflow": [
+    "Open https://similarlabs.com/submit and paste the product URL",
+    "Choose a route: free X-post verification, free backlink-badge submission, or $9.99 paid instant",
+    "Complete the chosen verification (post on X / add badge / pay)",
+    "Manual review for free routes (usually ≤7 days); paid goes live immediately",
+    "Optionally upgrade a pending free submission to paid later"
+  ],
+  "watchFor": [
+    "Free X-post route yields NO dofollow backlink; only the badge route (1 link) and paid route (6+ links) do",
+    "Promotion slots (10 fixed side-rail positions) are a separate purchase — not included in any submission tier",
+    "Sign In / Launch account flow exists; expect account creation before or during submission",
+    "Hall of Fame placement is earned by votes, not automatic with submission"
+  ],
+  "countsAsLive": "The product has its own similarlabs.com product page and appears in the homepage 'New Launches' feed or the daily/weekly/monthly Launches lists",
+  "unknowns": [
+    "Exact review rejection criteria",
+    "Whether the X-post verification checks post content or just existence",
+    "Whether free-tier listings can be edited after publication"
+  ]
+}

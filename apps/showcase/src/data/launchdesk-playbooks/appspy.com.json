@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "appspy.com",
+  "name": "AppSpy",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.appspy.com/pages/contact-us/",
+      "title": "AppSpy Contact Us — 'For game and hardware review requests, contact reviews@appspy.com… include a promo code if it's an iOS game, screens, trailers and all relevant information' (content read via search result; site 403 to fetchers)"
+    },
+    {
+      "url": "https://www.pocketgamer.com/features/developers-how-to-tell-pocket-gamer-and-appspy-about-your-game/",
+      "title": "Steel Media pitch guide — per-editor emails (peter.willington@steelmedia.co.uk for AppSpy); send promo code/APK/TestFlight builds (content read via search result)"
+    }
+  ],
+  "category": "press",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Mobile games/apps focus — AppSpy is Steel Media's video-first app review site",
+    "reviews@appspy.com with: promo code (iOS), screens, trailers, relevant info",
+    "Steel Media editors take pitches by individual email (listed in the PG pitch guide); Twitter pitches okay for some",
+    "Same Steel Media family as Pocket Gamer — reviews may publish once the app is live regardless of embargo"
+  ],
+  "preparation": [
+    "An iOS/Android game or notable app with a promo code/TestFlight build",
+    "Screens, trailer, concise pitch"
+  ],
+  "workflow": [
+    "Email reviews@appspy.com with promo code + assets",
+    "Or pitch an AppSpy editor directly (steelmedia.co.uk addresses from the PG guide)",
+    "Coverage is video/written editorial — no listing page"
+  ],
+  "watchFor": [
+    "Hard vertical restriction — mobile games/apps only",
+    "appspy.com blocked automated fetch (403) — verified via Steel Media network pages",
+    "Cadence has declined vs. its peak — check recency in a browser"
+  ],
+  "countsAsLive": "An AppSpy video/written review or feature covering the app",
+  "unknowns": [
+    "Current publication cadence",
+    "Whether AppSpy still takes the same review flow vs routing through Pocket Gamer"
+  ]
+}

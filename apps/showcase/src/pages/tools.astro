@@ -4,8 +4,8 @@ import Nav from '../components/Nav.astro';
 import { TOOLING_CAPABILITIES, TOOLING_GROUPS } from '../data/tooling';
 import Layout from '../layouts/Layout.astro';
 
-const sourceUrl = (path: string) =>
-  `https://github.com/sass-maker/saas-maker/blob/main/tooling/${path}`;
+const toolSlug = (id: string) =>
+  id.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 ---
 
 <Layout
@@ -47,13 +47,13 @@ const sourceUrl = (path: string) =>
           <ol>
             {group.items.map((item) => (
               <li>
-                <a href={sourceUrl(item.path)} target="_blank" rel="noopener noreferrer">
+                <a href={`/tools/${toolSlug(item.id)}`}>
                   <span>
                     <strong>{item.name}</strong>
                     <code>{item.id}</code>
                   </span>
                   <p>{item.summary}</p>
-                  <small>{item.path} ↗</small>
+                  <small>{item.path} →</small>
                 </a>
               </li>
             ))}

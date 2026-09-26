@@ -1,0 +1,58 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startup88.com",
+  "name": "Startup88",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://startup88.com/",
+      "title": "Homepage — active startup pitch blog; new 'Pitch your Startup' posts dated Sep 21, 2026; submission links to Typeform"
+    },
+    {
+      "url": "https://startup88.typeform.com/to/CRjWqM",
+      "title": "'Pitch Your Startup' Typeform — field list read from embedded form JSON, including $9.95 express-review payment question"
+    },
+    {
+      "url": "https://startup88.com/category/star",
+      "title": "Batch-provided URL (truncated) — 404; real category is /category/startups"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free submission joins the normal editorial queue (form notes 'we normally get 200+ pitches a month'); a $9.95 express option buys front-page-for-24hr + express review/publication + social media posting to their ~12,000 followers"
+  ],
+  "requirements": [
+    "Startup/product pitch suitable for the site's 'Pitch your Startup' category",
+    "Form requires a non-generic founder email ('Please do not provide generic email addresses')",
+    "'Not all businesses are suitable for Startup88.com & we reserve the right not to publish' — rejected paid submissions are refunded within 48hrs",
+    "Elevator pitch should stay ~2 paragraphs"
+  ],
+  "preparation": [
+    "Startup name, tag line, website URL",
+    "Founder name + a real (non-generic) founder email, Twitter handle (include the @)",
+    "Elevator pitch (~2 paragraphs), target market, monetization model ('How will you make money?')",
+    "Capital raised (approx USD), city/country",
+    "Product image or website screenshot to upload"
+  ],
+  "workflow": [
+    "Open https://startup88.com/ and click 'Pitch Your Startup' → Typeform at startup88.typeform.com/to/CRjWqM",
+    "Complete all fields including founder verification and image upload",
+    "Choose the free queue or pay $9.95 for express review + 24hr front page + social posting",
+    "Published pitches appear as posts under /category/startups (e.g. /startups/2026/09/21/<slug>/)"
+  ],
+  "watchFor": [
+    "Batch's /category/star URL was truncated — real listing category is /category/startups",
+    "The Typeform is the only submission channel — no email pitch route is published",
+    "Free-queue wait is unstated and volume is high (200+/month); express is $9.95",
+    "This is editorial writeup format (author bylines like 'Sachin'), not a self-serve listing",
+    "Content protection script blocks right-click/copy on site"
+  ],
+  "countsAsLive": "A post titled with your startup appears under https://startup88.com/category/startups or homepage with its own /startups/<date>/<slug>/<id> permalink",
+  "unknowns": [
+    "Free-queue turnaround time",
+    "Whether published pitches link out with a followed URL",
+    "Whether 'Featured' category placement costs extra beyond the $9.95 express"
+  ]
+}

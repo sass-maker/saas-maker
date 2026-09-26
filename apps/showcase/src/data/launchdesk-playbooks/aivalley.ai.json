@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aivalley.ai",
+  "name": "AI Valley",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://aivalley.ai/submit-tool/",
+      "title": "Submit Tool page — live form: Name, Email, Tool Name, Tool URL, optional descriptions, category picker; no payment mentioned"
+    },
+    {
+      "url": "https://aivalley.ai/",
+      "title": "Homepage (implied via nav) — directory of 1780+ AI tools and 390+ prompts"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "AI tool with a working URL — directory spans ~50 categories from AI Assistant to Video Generator",
+    "No payment or plan selector on the submit form — submission appears free",
+    "Form fields: Name*, Email*, Tool Name*, Tool URL*, optional tool description + short description, category"
+  ],
+  "preparation": [
+    "Submitter name and email",
+    "Tool name and URL",
+    "A short description (for cards) and a longer description (optional)",
+    "Correct category pick (AI Tools, Code Assistant, Startup Tools, etc.)"
+  ],
+  "workflow": [
+    "Open aivalley.ai/submit-tool/",
+    "Fill the form and choose a category",
+    "Submit and wait for manual review — no account needed"
+  ],
+  "watchFor": [
+    "No stated review SLA or confirmation of acceptance on the form — monitor email",
+    "Large undifferentiated directory (1780+ tools) — expect low per-listing traffic",
+    "Unclear whether a rejected submission gets any notification"
+  ],
+  "countsAsLive": "A dedicated tool entry resolves under the chosen category on aivalley.ai/aitools/ listing pages",
+  "unknowns": [
+    "Review turnaround and acceptance criteria",
+    "Link type (dofollow/nofollow)",
+    "Whether submissions without a deal or logo still get listed"
+  ]
+}

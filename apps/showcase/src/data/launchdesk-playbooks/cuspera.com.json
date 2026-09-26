@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "cuspera.com",
+  "name": "Cuspera",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.cuspera.com/vendors",
+      "title": "Vendor page — 'Listing on Cuspera and traffic will always be FREE'; List Software is a Google Form; banner says 'we are in beta and unable to process all requests'"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free listing is offered ('always be FREE') but the site states it is 'in beta and unable to process all the requests' — submissions go into a queue they resume later",
+    "First check whether your software is already listed (AI-curated profiles are auto-generated from reviews/blogs/customer stories)"
+  ],
+  "requirements": [
+    "B2B/business software — Cuspera matches software to business teams' needs via AI",
+    "Submission is via an external Google Form (linked 'LIST SOFTWARE' button)",
+    "Enrichment path: submit industry use-cases, case studies, testimonials via a second Google Form ('Submit your customer proof points')"
+  ],
+  "preparation": [
+    "Software name, website, company details for the Google Form",
+    "Case studies and customer testimonials as 'proof points' — the AI recommends on these, not keyword categories",
+    "Google account may be needed to fill the form"
+  ],
+  "workflow": [
+    "Open https://www.cuspera.com/vendors",
+    "Use the 'Check whether your software is already listed' search first — claim/update via 'UPDATE YOUR LISTING' form if present",
+    "If not listed, click 'LIST SOFTWARE' → Google Form submission",
+    "Submit customer proof points (case studies/testimonials) via the second form to improve matching",
+    "Wait — beta notice says they respond once request processing resumes"
+  ],
+  "watchFor": [
+    "Beta hold: 'unable to process all the requests' — timeline for listing is undefined",
+    "Forms are Google Forms — external dependency, fields may change",
+    "Upsell context: they also sell an AI advisor widget for your site (demo-request lead gen) — expect a sales follow-up",
+    "Profiles are AI-generated 360° pages — check accuracy of any auto-created listing"
+  ],
+  "countsAsLive": "The software has a public profile page on cuspera.com/products (or appears in category Buyer's Guides and search)",
+  "unknowns": [
+    "When beta processing will resume / real turnaround",
+    "Link attribute on listing pages",
+    "Whether 'always free' listing has stayed true post-beta"
+  ]
+}

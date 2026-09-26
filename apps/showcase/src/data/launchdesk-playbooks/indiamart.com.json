@@ -1,0 +1,58 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "indiamart.com",
+  "name": "IndiaMART",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.indiamart.com/",
+      "title": "IndiaMART homepage — 'Get a free listing in 3 simple steps' on India's largest B2B marketplace"
+    },
+    {
+      "url": "https://indiamart.com/seller/",
+      "title": "Sell on IndiaMART — free seller registration landing page"
+    },
+    {
+      "url": "https://help.indiamart.com/knowledge-base/registration-fee-for-indiamart/",
+      "title": "IndiaMART help — basic seller registration is free; paid subscriptions add benefits"
+    },
+    {
+      "url": "https://help.indiamart.com/knowledge-base/add-products-on-indiamart/",
+      "title": "IndiaMART help — add products via Seller Panel after registering with business details"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Geared to Indian B2B suppliers/manufacturers/exporters — seller registration asks for business details and document verification (e.g., CIN, electricity bill, invoice are cited in help docs)",
+    "Register with a mobile number or email; OTP-style verification typical of the flow",
+    "Products are added to the catalog from the Seller Panel at seller.indiamart.com after registration",
+    "Free registration = basic profile + product listing + responding to buyer inquiries; paid subscriptions improve visibility"
+  ],
+  "preparation": [
+    "Business name, address, and category",
+    "Indian mobile number for verification (strongly India-centric marketplace)",
+    "Business verification documents (company/CIN, address proof) — verification is part of the trust flow",
+    "Product/service names, descriptions, and images for the catalog"
+  ],
+  "workflow": [
+    "Open https://indiamart.com/seller/ (or the 'Get a free listing in 3 simple steps' flow on indiamart.com)",
+    "Register with mobile/email and fill business details",
+    "Log into https://seller.indiamart.com/ Seller Panel and add products to the catalog",
+    "Optionally complete document verification for the verified/trust badge",
+    "The company profile and product pages then appear in IndiaMART search"
+  ],
+  "watchFor": [
+    "seller.indiamart.com blocks automated fetching (403) — expect anti-bot protection; needs a real browser",
+    "Heavy paid-service upsell (paid plans for ranking/leads) — free tier is real but deliberately limited",
+    "India-focused: a non-Indian online-only SaaS is a poor fit and may fail verification",
+    "Phone-verification and KYC-style document checks are part of the legitimate flow — do not fabricate business details"
+  ],
+  "countsAsLive": "A public company profile and product listings appear on indiamart.com and are reachable via site search",
+  "unknowns": [
+    "Whether a non-Indian business can complete seller registration",
+    "Exact verification documents required per business type",
+    "Link attributes (follow/nofollow) on the public profile"
+  ]
+}

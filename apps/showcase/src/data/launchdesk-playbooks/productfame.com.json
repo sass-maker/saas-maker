@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "productfame.com",
+  "name": "ProductFame",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://productfame.com/products/submit",
+      "title": "Submit page — 4-step flow behind sign-in; Free Launch = standard queue; Basic adds earlier scheduling + guaranteed dofollow; Pro adds top priority + homepage feature; add-ons: Guest Post, Directory Submissions, Sponsor"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Account required — submission starts at /sign-in?redirect=/products/submit (account creation is free)",
+    "Free Launch goes in the standard queue — paid Basic/Pro tiers get earlier scheduling and priority",
+    "Guaranteed dofollow backlink only comes with Basic Launch and up"
+  ],
+  "requirements": [
+    "Live website URL, product name, positioning/description, categories, pricing model, social links",
+    "Logo and product image uploads",
+    "You pick an available launch date during step 3",
+    "Review-and-confirm step before processing — submissions go through processing before publish"
+  ],
+  "preparation": [
+    "Product name, URL, concise description, category (many options: AI, SaaS, Dev Tools, etc.)",
+    "Pricing model of your product",
+    "Logo and product image",
+    "Social/marketing links",
+    "Preferred launch date (free tier gets standard queue dates)"
+  ],
+  "workflow": [
+    "Create a free account at productfame.com/sign-up",
+    "Open /products/submit — step 1: product info (name, site, description, categories, pricing model, links)",
+    "Step 2: upload logo + product image, review generated listing",
+    "Step 3: choose Free/Basic/Pro plan + available launch date + optional add-ons (guest post, directory submissions, sponsor)",
+    "Step 4: review and submit for processing; launch goes live on the chosen date"
+  ],
+  "watchFor": [
+    "Free tier's link attribute is not stated — only Basic+ guarantees dofollow",
+    "Queue position depends on tier — free launches get whatever dates remain",
+    "Sibling sites (ToolFame, SaaSFame, AIToolFame) cross-promote — likely same operator; don't double-pay for the same audience",
+    "Upsell add-ons (guest post, directory submissions, sponsorship) during step 3"
+  ],
+  "countsAsLive": "The product appears on productfame.com under Trending/launches for its scheduled date with a public product page",
+  "unknowns": [
+    "Exact Basic/Pro prices (pricing page not fetched)",
+    "Free-tier queue length",
+    "Whether free listings carry nofollow links"
+  ]
+}

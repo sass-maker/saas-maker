@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "soundcloud.com",
+  "name": "SoundCloud",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://soundcloud.com/signup",
+      "title": "SoundCloud signup — JS-only app shell; account creation requires JavaScript"
+    },
+    {
+      "url": "https://soundcloud.com/pages/contact",
+      "title": "SoundCloud company contact page — confirms platform is music/audio streaming for artists and fans"
+    }
+  ],
+  "category": "profile",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Platform is for music/audio creators and fans — a SaaS product has no native listing surface; the play is a branded profile page with a bio link",
+    "Account creation happens entirely in the JavaScript app at soundcloud.com/signup — no server-rendered form",
+    "Free tier ('Go' listener / basic artist account) suffices for a profile; paid Next/Go+ plans are for upload limits and distribution, not required for presence"
+  ],
+  "preparation": [
+    "Email address for the account",
+    "Display name / artist name for the product or company",
+    "Square avatar image and header/banner image",
+    "Short bio and the product website URL for the profile links section"
+  ],
+  "workflow": [
+    "Open https://soundcloud.com/signup in a JS-capable browser and create an account",
+    "Complete the profile: upload avatar and banner, write bio, add website URL under profile links",
+    "Optionally upload one piece of audio (e.g. a podcast/audio teaser) so the profile is not empty",
+    "Verify the public profile URL renders at soundcloud.com/<handle> with the website link visible"
+  ],
+  "watchFor": [
+    "No directory or 'submit a product' flow exists — this is a profile/citation play, not a launch listing",
+    "Profile bio/links may be nofollow — do not assume a followed backlink",
+    "A bare profile with no audio and a marketing-only bio can look like spam; add at least one upload",
+    "Signup page is a JS app shell — automation must drive a real browser"
+  ],
+  "countsAsLive": "Public profile page at soundcloud.com/<handle> loads for a logged-out visitor and shows the bio plus outbound website link",
+  "unknowns": [
+    "Whether profile website links are follow or nofollow",
+    "Current free-plan upload limits (plan details live behind the JS app)",
+    "Whether SoundCloud moderates or removes brand-only accounts"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "techinasia.com",
+  "name": "Tech in Asia",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://help.techinasia.com/support/solutions/articles/17000014713-how-do-i-list-my-startup-or-company-in-your-database-",
+      "title": "TIA help: list a company — login > Jobs menu > 'Create Company'; claim existing profile or 'Add New Company'; success@techinasia.com for problems (content read via search result)"
+    },
+    {
+      "url": "https://help.techinasia.com/support/solutions/articles/17000012882-how-do-i-get-covered-by-tech-in-asia-",
+      "title": "TIA help: pitches to editors@techinasia.com; contributed content via community@techinasia.com with content guidelines; branded content team for paid campaigns (content read via search result)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Two surfaces: (1) the company database — free, login > Jobs > Create Company, claim an existing profile or 'Add New Company'; (2) editorial coverage — pitches to editors@techinasia.com",
+    "Asia focus — the database and editorial cover Asia's tech ecosystem; a non-Asia startup is off-beat",
+    "Company profiles are primarily built around the Jobs product — the company profile powers job postings",
+    "Contributed articles go to community@techinasia.com subject to content guidelines",
+    "Paid branded-content campaigns are a separate product",
+    "techinasia.com/submit-startup returned 403 to automated fetch — details verified via the official help center"
+  ],
+  "preparation": [
+    "A Tech in Asia account",
+    "Company details for the profile (name, description, logo, jobs context)",
+    "Asia relevance — market presence, funding, or operations in Asia"
+  ],
+  "workflow": [
+    "Create/login to a Tech in Asia account",
+    "Go to the Jobs menu > 'Create Company'",
+    "If the profile exists, claim it; otherwise 'Add New Company' and fill details",
+    "For press coverage, pitch editors@techinasia.com (or individual writers)",
+    "For contributed content, submit to community@techinasia.com per guidelines"
+  ],
+  "watchFor": [
+    "Database listing is free but anchored to the Jobs product — a company profile exists to post jobs",
+    "Editorial is Asia-focused; 'get covered' criteria emphasize regional significance",
+    "Third-party 'submit startup' guides point to techinasia.com/companies/create — reachable only after login",
+    "Subscription content: much of TIA editorial sits behind a paywall"
+  ],
+  "countsAsLive": "The company has a public profile in the Tech in Asia database (visible under Companies search)",
+  "unknowns": [
+    "Whether the free company profile requires posting a job to be publicly visible",
+    "Current state of the /submit-startup landing flow"
+  ]
+}

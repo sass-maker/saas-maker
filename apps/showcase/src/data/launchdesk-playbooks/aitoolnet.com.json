@@ -1,0 +1,60 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aitoolnet.com",
+  "name": "Aitoolnet",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.aitoolnet.com/submit",
+      "title": "Submit Your AI Tools — Free (30-day queue), $9.9 fast-track (24h), $49.9 featured; content via search snippet, direct fetch 403 (Cloudflare)"
+    },
+    {
+      "url": "https://submitator.com/submit-to-aitoolnet",
+      "title": "Submitator's third-party writeup — 8-field form, PayPro Global checkout, free route on /finish needs a reciprocal link, dofollow observed on sampled listings"
+    },
+    {
+      "url": "https://letslaunch.today/directories/ai-tool-net",
+      "title": "LetsLaunch entry — confirms free tier exists; site blocks automated requests with Cloudflare"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free tier exists but sits in a 30-60 day manual-review queue",
+    "Per Submitator's read of /finish, the free route asks for a reciprocal link back to aitoolnet.com",
+    "$9.9 one-time skips the queue entirely (24h listing); $49.9 adds 7 days of homepage/category featuring"
+  ],
+  "requirements": [
+    "AI tools only — 'not newsletters or directories'; those links are rejected",
+    "Search the site first — duplicates must not be resubmitted",
+    "Manual review of every tool; they reserve the right to remove even approved products",
+    "~8-field submission form; paid tier checks out via PayPro Global"
+  ],
+  "preparation": [
+    "Tool name, URL, logo, description, category",
+    "Check aitoolnet.com search to confirm the tool isn't already listed",
+    "For free route: willingness to place a reciprocal link; for paid: card/PayPro Global checkout",
+    "A real browser — the site is behind Cloudflare and 403s plain fetches"
+  ],
+  "workflow": [
+    "Search the site for your tool first (duplicate check)",
+    "Open https://www.aitoolnet.com/submit in a browser",
+    "Fill the ~8-field form",
+    "Choose free (30-60 day queue, reciprocal link) or pay $9.9 for 24h listing / $49.9 for featured",
+    "Paid submissions complete PayPro Global checkout; listing goes live within ~24h",
+    "Verify the next day by finding the tool page on the site"
+  ],
+  "watchFor": [
+    "Cloudflare challenge blocks automated fetches — submission needs a real/headed browser",
+    "Free queue is long (30-60 days) and may require a reciprocal link per /finish",
+    "FAQ promises a refund but Submitator notes it's absent from the Terms — treat paid refunds as unguaranteed",
+    "Sampled listings had plain links with no rel=nofollow (dofollow in practice), but that can change"
+  ],
+  "countsAsLive": "The tool has its own indexable aitoolnet.com page (with an /alternative twin) reachable via search/categories",
+  "unknowns": [
+    "Whether the reciprocal-link requirement applies to all free submissions or is optional",
+    "Exact free-tier field list behind the Cloudflare wall",
+    "Whether nofollow is applied to any tier"
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "mrfreetools.com",
+  "name": "Mr. Free Tools",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://mrfreetools.com/",
+      "title": "Homepage — directory of 'the best free software, apps, and tools'; returns 403 to automated fetch; content confirmed via search index"
+    },
+    {
+      "url": "https://mrfreetools.com/description/",
+      "title": "Description guidelines (search-indexed; page 403s to bots) — required structure: excerpt ≤240 chars starting '{tool name} is a…', plus 80-120-word objective description"
+    },
+    {
+      "url": "https://mrfreetools.com/contact/",
+      "title": "Contact page — 'A problem, question, idea, something else? Feel free to reach out' (search-indexed)"
+    },
+    {
+      "url": "https://mrfreetools.com/write-for-us/",
+      "title": "Write For Us — free article contribution via Google Doc link, no signup needed (search-indexed)"
+    },
+    {
+      "url": "https://launchpointzero.com/launchsites/mr_free_tools",
+      "title": "Launch Point Zero profile — 'Cannot figure out how to submit to this site'; status not_submittable"
+    },
+    {
+      "url": "https://backlinkbot.ai/directories/mr-free-tools",
+      "title": "BacklinkBot entry — claims account creation + free submission with dofollow link (unverified)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Only tools with a free, freemium, or free-trial tier are eligible — pure paid products are out of scope",
+    "No public submission form is discoverable — the route is likely the contact page/email or an account flow; a third-party tracker lists the site as 'not_submittable'"
+  ],
+  "requirements": [
+    "Tool must offer a free/freemium/free-trial license",
+    "Submissions must follow their strict copy format: ≤240-char excerpt starting '{tool name} is a…' and an objective 80-120-word description",
+    "Possible account requirement per BacklinkBot's guide (could not be verified)"
+  ],
+  "preparation": [
+    "Tool name, URL, logo",
+    "A ≤240-char excerpt in their house style ('{tool name} is a…')",
+    "An 80-120-word objective description",
+    "Clarity on which free tier the tool offers (free / freemium / free trial)"
+  ],
+  "workflow": [
+    "Prepare the excerpt and description per the /description/ guidelines",
+    "Find the submission route: try the contact page (mrfreetools.com/contact/) or look for an account/submit option on the live site in a real browser — the site 403s bots",
+    "Alternatively pitch an article via /write-for-us/ (Google Doc link, no account) and reference the tool editorially",
+    "Submit and await editorial review"
+  ],
+  "watchFor": [
+    "Site hard-blocks automated fetches (403 on every page) — all findings are from search-indexed copies",
+    "The exact submission mechanism is unconfirmed; Launch Point Zero flagged it as not submittable",
+    "Content guidelines are unusually strict — non-conforming copy likely stalls review",
+    "Write-for-us is a real free route but produces an article, not a directory listing"
+  ],
+  "countsAsLive": "The tool gets a dedicated page on mrfreetools.com appearing in directory search results",
+  "unknowns": [
+    "Where the actual submission form lives (or whether submission is by email only)",
+    "Account requirement, review time, link type",
+    "Whether the directory is still actively accepting additions"
+  ]
+}

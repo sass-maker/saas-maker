@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "quora.com",
+  "name": "Quora Business Profile",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.quora.com/business/create",
+      "title": "Batch-provided business-create URL — returned 403 to automated fetch; not verifiable"
+    },
+    {
+      "url": "https://business.quora.com/",
+      "title": "Quora for Business — advertising portal (Quora Ads), not a free listing route"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "The free path is a regular Quora user account with a filled-out profile (bio, credentials, website link) plus genuine Q&A participation",
+    "The dedicated 'business profile' creation page could not be verified — it returned 403; it may require login, a specific region, or no longer exist"
+  ],
+  "requirements": [
+    "A Quora user account (email or Google/Facebook login) is required for any presence",
+    "Quora enforces real-name policy on profiles — brand impersonation accounts can be flagged",
+    "business.quora.com is the paid Quora Ads portal — do not confuse ad account creation with an organic listing"
+  ],
+  "preparation": [
+    "Email for the Quora account (use a person/founder name, not just a brand name)",
+    "Profile bio, credentials line ('Founder at X'), and the product URL for the profile",
+    "5-10 relevant questions/topics where the product is a genuinely useful answer"
+  ],
+  "workflow": [
+    "Create a Quora account at quora.com (signup is gated behind login wall)",
+    "Complete the profile: photo, credentials, bio containing the product and its URL",
+    "Attempt https://www.quora.com/business/create while logged in to check whether a business-profile flow exists for the account",
+    "Answer relevant questions substantively; link to the product only where it is directly responsive"
+  ],
+  "watchFor": [
+    "quora.com/business/create 403'd to automated fetch — verify manually logged-in before relying on it",
+    "Quora aggressively collapses promotional answers and link-drops; accounts can be edit-banned",
+    "Quora links are nofollow — value is referral traffic and entity presence, not link equity",
+    "Do not run paid Quora Ads expecting an organic listing — the two are unrelated"
+  ],
+  "countsAsLive": "The public Quora profile page (quora.com/profile/<name>) renders for a logged-out viewer with bio and credentials; any business-profile page, if the flow exists, is publicly reachable",
+  "unknowns": [
+    "Whether a dedicated free 'business profile' creation flow still exists (page 403'd)",
+    "Whether profile website links are exposed to logged-out viewers",
+    "Review/moderation criteria for brand accounts"
+  ]
+}

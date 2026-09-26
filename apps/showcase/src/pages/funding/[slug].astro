@@ -1,0 +1,335 @@
+---
+/**
+ * THESIS: One program, its complete record — every imported field shown,
+ * grouped so assessment stays distinct from fact.
+ * OWN-WORLD: Same interior-pane language as the launchdesk detail pages.
+ * STORY: Name, organization, and assessment up top; the grouped record below;
+ * JSON one click from HTML.
+ * FORM: Record panes, not a long form.
+ */
+import Footer from '../../components/Footer.astro';
+import Nav from '../../components/Nav.astro';
+import {
+  FUNDING,
+  FUNDING_FIELD_GROUPS,
+  FUNDING_PROGRAMS,
+  FUNDING_VIEWS,
+  field,
+} from '../../data/funding';
+import Layout from '../../layouts/Layout.astro';
+
+export function getStaticPaths() {
+  return FUNDING_PROGRAMS.map((program) => ({ params: { slug: program.slug } }));
+}
+
+const { slug } = Astro.params;
+const program = FUNDING_PROGRAMS.find((entry) => entry.slug === slug);
+if (!program) throw new Error(`Unknown funding program: ${slug}`);
+
+const display = (value: unknown): string | null => {
+  if (value === null || value === undefined || value === '') return null;
+  if (Array.isArray(value)) return value.join(', ');
+  if (typeof value === 'boolean') return value ? 'Yes' : 'No';
+  return String(value);
+};
+
+const organization = display(field(program, 'Organization'));
+const category = display(field(program, 'Category'));
+const priority = display(field(program, 'Priority'));
+const fit = display(field(program, 'Fit for Current Stage'));
+const recommendation = display(field(program, 'Recommendation'));
+const officialUrl = display(field(program, 'Official URL'));
+const evidence = display(field(program, 'Evidence Quality'));
+const websiteStatus = display(field(program, 'Website Status'));
+const memberViews = FUNDING_VIEWS.filter((view) => view.slugs.includes(program.slug));
+
+const groups = FUNDING_FIELD_GROUPS.map((group) => ({
+  title: group.title,
+  rows: group.fields
+    .map((name) => {
+      const value = display(field(program, name));
+      return value ? { name, value } : null;
+    })
+    .filter((row): row is { name: string; value: string } => row !== null),
+}));
+---
+
+<Layout
+  title={`${program.name} — SaaS Maker funding directory`}
+  description={`${program.name} (${organization ?? 'organization unresolved'}) — ${category ?? 'program'} assessed ${priority ?? 'ungraded'} for this portfolio. Part of the SaaS Maker funding directory.`}
+>
+  <div class="workshop-world interior-world funding-world">
+    <Nav />
+    <main id="main-content" class="funding-detail">
+      <nav class="funding-breadcrumb" aria-label="Breadcrumb">
+        <a href="/funding">Funding directory</a>
+        <span aria-hidden="true">/</span>
+        <span>{program.name}</span>
+      </nav>
+
+      <header class="funding-head">
+        <div class="funding-head-main">
+          <p class="funding-kicker">{category ?? 'Program'}{organization ? ` · ${organization}` : ''}</p>
+          <h1>{program.name}</h1>
+          <ul class="funding-chips">
+            {priority && <li class="fd-chip fd-chip--priority">{priority}</li>}
+            {fit && <li class="fd-chip">{fit}</li>}
+            {recommendation && <li class="fd-chip">{recommendation}</li>}
+          </ul>
+        </div>
+        <div class="funding-head-side">
+          {officialUrl && (
+            <a href={officialUrl} target="_blank" rel="noopener noreferrer" class="funding-cta">
+              Official site <span aria-hidden="true">↗</span>
+            </a>
+          )}
+          <p class="funding-evidence">
+            Evidence: {evidence ?? 'ungraded'}
+            {websiteStatus ? ` · ${websiteStatus}` : ''}
+          </p>
+          <p class="funding-evidence">
+            <a href={`/funding/${program.slug}.json`}>Machine-readable JSON →</a>
+          </p>
+        </div>
+      </header>
+
+      <div class="funding-grid">
+        {groups
+          .filter((group) => group.rows.length > 0)
+          .map((group) => (
+            <section class="funding-pane">
+              <h2>{group.title}</h2>
+              <dl>
+                {group.rows.map((row) => (
+                  <div>
+                    <dt>{row.name}</dt>
+                    <dd>
+                      {row.value.startsWith('http') ? (
+                        <a href={row.value} target="_blank" rel="noopener noreferrer">{row.value}</a>
+                      ) : (
+                        row.value
+                      )}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
+          ))}
+      </div>
+
+      {memberViews.length > 0 && (
+        <section class="funding-pane funding-pane--views">
+          <h2>Appears in decision views</h2>
+          <p>
+            {memberViews.map((view) => view.name).join(' · ')}
+          </p>
+          <p class="funding-evidence">
+            <a href="/funding">Back to the directory →</a>
+          </p>
+        </section>
+      )}
+
+      <p class="funding-import-note">
+        Imported {FUNDING.exportedAt.slice(0, 10)} from the Funding &amp; Accelerators
+        workspace (rebuilt {FUNDING.workspaceRebuilt}). Assessments are this
+        portfolio's judgment, not the program's claims; verify against the official
+        source before relying on them.
+      </p>
+    </main>
+    <Footer />
+  </div>
+</Layout>
+
+<style>
+  .funding-detail {
+    width: min(86rem, calc(100% - 3rem));
+    margin-inline: auto;
+    padding: clamp(2rem, 4vw, 3rem) 0 clamp(5rem, 9vw, 8rem);
+  }
+
+  .funding-breadcrumb {
+    display: flex;
+    gap: 0.6rem;
+    margin-bottom: 2rem;
+    color: var(--ink-muted);
+    font-size: 0.85rem;
+  }
+
+  .funding-breadcrumb a {
+    color: var(--copper-hi);
+  }
+
+  .funding-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(16rem, 0.6fr);
+    gap: 0.375rem;
+    padding: 0.375rem;
+    background: var(--workshop-steel);
+  }
+
+  .funding-head-main,
+  .funding-head-side {
+    background: var(--surface);
+    padding: clamp(2rem, 4vw, 3.5rem);
+  }
+
+  .funding-kicker {
+    color: var(--copper-hi);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .funding-head h1 {
+    margin-top: 0.75rem;
+    font-size: clamp(2.25rem, 4.5vw, 4rem);
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    text-wrap: balance;
+  }
+
+  .funding-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .fd-chip {
+    padding: 0.25rem 0.7rem;
+    border: 1px solid var(--line-strong);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+  }
+
+  .fd-chip--priority {
+    background: var(--workshop-amber);
+    border-color: var(--workshop-amber);
+    color: #17130c;
+  }
+
+  .funding-head-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+
+  .funding-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 3rem;
+    padding: 0.75rem 1.25rem;
+    background: var(--workshop-ink);
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .funding-cta:hover {
+    background: var(--workshop-cobalt);
+  }
+
+  .funding-evidence {
+    color: var(--ink-muted);
+    font-size: 0.85rem;
+  }
+
+  .funding-evidence a {
+    color: var(--copper-hi);
+  }
+
+  .funding-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+    border: 1px solid var(--line-strong);
+    background: var(--workshop-steel);
+  }
+
+  .funding-pane {
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+    background: var(--surface);
+  }
+
+  .funding-pane--views {
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+    border: 1px solid var(--line-strong);
+  }
+
+  .funding-pane h2 {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--copper-hi);
+  }
+
+  .funding-pane--views p {
+    margin-top: 0.75rem;
+    color: var(--ink-soft);
+  }
+
+  .funding-pane dl {
+    margin-top: 1.25rem;
+  }
+
+  .funding-pane dl > div {
+    display: grid;
+    grid-template-columns: minmax(8rem, 0.45fr) minmax(0, 1fr);
+    gap: 1rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px dashed var(--line);
+    font-size: 0.88rem;
+  }
+
+  .funding-pane dl > div:last-child {
+    border-bottom: 0;
+  }
+
+  .funding-pane dt {
+    color: var(--ink-muted);
+    font-weight: 600;
+  }
+
+  .funding-pane dd {
+    color: var(--ink-soft);
+    line-height: 1.55;
+    word-break: break-word;
+  }
+
+  .funding-pane dd a {
+    color: var(--copper-hi);
+    word-break: break-all;
+  }
+
+  .funding-import-note {
+    max-width: 46rem;
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+    color: var(--ink-muted);
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 47.99rem) {
+    .funding-detail {
+      width: min(100% - 1.5rem, 86rem);
+    }
+
+    .funding-head {
+      grid-template-columns: 1fr;
+    }
+
+    .funding-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

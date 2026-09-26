@@ -1,0 +1,45 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "disqus.com",
+  "name": "Disqus",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://disqus.com/profile/signup/",
+      "title": "Disqus account signup — social or email registration; 18+ acknowledgment required"
+    }
+  ],
+  "category": "profile",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Account creation requires name, email, password (or Google/Facebook/X/Microsoft/Apple social login)",
+    "Signup form requires acknowledging you are 18 or older",
+    "Signup consent includes broad data-sharing/marketing terms — read before agreeing",
+    "No product-directory exists; the launchdesk value is a profile page with a website link plus real commenting participation"
+  ],
+  "preparation": [
+    "Name, email, password (or decide which social account to use)",
+    "Avatar image",
+    "Product/company website URL to place in the profile's website field",
+    "A handful of relevant communities where genuine comments can be left — profile-only accounts have near-zero value"
+  ],
+  "workflow": [
+    "Open https://disqus.com/profile/signup/ and register via email or a social provider",
+    "Check the 18+ acknowledgment and submit",
+    "Confirm the email if prompted",
+    "Edit the profile at disqus.com/home/settings/profile: avatar, bio, and website URL",
+    "Leave a few substantive comments on relevant sites using the account so the profile has real activity"
+  ],
+  "watchFor": [
+    "Aggressive data-consent language at signup (sharing/selling info for advertising) — a privacy consideration for the account email used",
+    "Disqus profile links are believed nofollow; treat this as a citation/entity signal, not link equity",
+    "Empty profiles that only exist for a backlink are low-value and may trip spam filters on other sites' comment sections",
+    "Comments linking back to your own product get flagged as spam on most moderated Disqus communities"
+  ],
+  "countsAsLive": "The public profile at disqus.com/by/<username>/ loads logged-out and displays bio + website link",
+  "unknowns": [
+    "Whether the profile website link is rendered as follow or nofollow (not stated on the signup page)",
+    "Whether profile pages are still indexed/rendered publicly for logged-out users (Disqus has changed profile visibility before)"
+  ]
+}

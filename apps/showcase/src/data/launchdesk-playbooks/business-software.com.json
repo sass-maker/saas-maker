@@ -1,0 +1,45 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "business-software.com",
+  "name": "Business-Software.com",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.business-software.com/add-your-product/",
+      "title": "Add Your Product — 'Submit your software solution for free... There is no cost involved'; they contact you within 2 business days"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Product must be business software fitting one of their categories (Accounting, ERP, CRM, HR, BI, etc.)",
+    "Submission is explicitly free: 'There is no cost involved in submitting your product to our database'",
+    "Submitting grants Business-Software.com and affiliates rights to use your info, logo/trademark, and links in their marketing materials (opt out in writing)",
+    "CAPTCHA on the form — manual submission likely required"
+  ],
+  "preparation": [
+    "Company name, product name, contact name, email, phone, job title",
+    "A short message describing the product",
+    "Marketing assets for distribution: white papers, brochures, videos (they offer content distribution)",
+    "Logo/trademark you are comfortable having republished on their site and affiliates"
+  ],
+  "workflow": [
+    "Open https://www.business-software.com/add-your-product/",
+    "Fill the contact-style form (name, email, company, product name, phone, job title, message) and solve the CAPTCHA",
+    "Submit — they state they will contact you within 2 business days to complete the submission",
+    "Respond to their outreach to finalize the listing"
+  ],
+  "watchFor": [
+    "Not self-serve: the form is an inquiry; a human completes the listing after their outreach",
+    "Broad IP consent in the disclaimer — they may reuse your marketing copy and logo on affiliated sites",
+    "Phone number is optional but listed; expect a sales-adjacent follow-up",
+    "No account creation needed for the initial form"
+  ],
+  "countsAsLive": "The product has a public page under business-software.com/product/<slug>/ (e.g. /product/striven/) and appears in 'Recently Added Products' / category browse",
+  "unknowns": [
+    "What the completed listing includes (they mention editor reviews and user community reviews exist)",
+    "Whether listings can be declined and on what grounds",
+    "Link attribute (dofollow vs nofollow) on published product pages"
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "siliconangle.com",
+  "name": "SiliconANGLE",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://siliconangle.com/",
+      "title": "SiliconANGLE homepage — live enterprise/emerging-tech newsroom (theCUBE); footer exposes 'Send us a News tip' modal with a Type-of-Pitch dropdown (Enterprise / Startup News / Emerging Technology), name, email, story text, file upload up to 244 MB, CAPTCHA; separate 'Contact us' modal has a guest-post inquiry option"
+    }
+  ],
+  "category": "press",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Earned editorial — the 'Send us a News tip' modal takes name, email, pitch type (Enterprise / Startup News / Emerging Technology), story text, and an optional file (max 244 MB), plus CAPTCHA",
+    "Guest posts have a dedicated inquiry path in the Contact modal ('Inquire about guest posts')",
+    "Coverage is enterprise/emerging tech: AI, cloud, security, infra, big data, policy — consumer SaaS is off-beat",
+    "theCUBE video coverage is event/interview-driven — no self-serve booking",
+    "Sponsorship/partnership route exists ('Partner with us' modal)"
+  ],
+  "preparation": [
+    "An enterprise-tech story angle — funding, product with enterprise relevance, emerging tech",
+    "Pick the right pitch-type bucket in the tip form (Startup News fits a launch)",
+    "Supporting material to attach (the form accepts files up to 244 MB)"
+  ],
+  "workflow": [
+    "Open siliconangle.com and use footer 'Send us a News tip'",
+    "Fill the form: name, email, pitch type, story, optional file; pass the CAPTCHA",
+    "For contributed analysis, use 'Contact us' > 'Inquire about guest posts'",
+    "Coverage, if picked up, is staff-written news — no profile or listing page is created"
+  ],
+  "watchFor": [
+    "Enterprise remit — consumer apps and indie tools are off-beat",
+    "Tip form has CAPTCHA — human submission only",
+    "Guest columns do appear ('Guest column' bylines) but go through the inquiry path, not the tip form",
+    "SiliconANGLE 120 and awards are separate commercial products"
+  ],
+  "countsAsLive": "A SiliconANGLE article mentioning the company/product is published at siliconangle.com",
+  "unknowns": [
+    "Guest-post acceptance criteria and whether they're paid/earned",
+    "Tip-response SLA — none stated"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "dynamite-ai.com",
+  "name": "Dynamite AI",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://dynamite-ai.com/",
+      "title": "Homepage — live AI tools directory (self-reported DR 31), categories with live counts, 'Submit tool' nav"
+    },
+    {
+      "url": "https://dynamite-ai.com/submit",
+      "title": "Submit page — 3-step wizard (tool details / choose plan / get listed); 'Free to list — or fast-track the review down to 24 hours'"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "AI-powered tool; categories include Productivity, SaaS, Dev Tools, Marketing, Chatbot, Generative Art, Video/Image generators, Finance, Education",
+    "Listing includes a permanent tool page with a dofollow link and a spot on the category page",
+    "Free listing is the default; a paid fast-track shortens review to ~24h (featured spots sold separately via Gumroad)"
+  ],
+  "preparation": [
+    "Tool name, email, website URL, description, a representative image, category, and pricing model (free/freemium/paid)",
+    "Optional: their embeddable badge (created via /badge after submitting)"
+  ],
+  "workflow": [
+    "Open https://dynamite-ai.com/submit",
+    "Step 1: fill Tool Name, Email, Website, Description, Image, Category, Pricing",
+    "Step 2: choose the free plan or the paid fast-track",
+    "Step 3: submit and wait for review — free queue duration unstated, fast-track is ~24h",
+    "After listing, optionally generate a custom badge at /badge"
+  ],
+  "watchFor": [
+    "Free-tier review turnaround is unstated — only the paid 24h fast-track is promised",
+    "DR 31 is a self-reported Ahrefs badge — modest SEO value",
+    "Featured 'this week' slots are a separate Gumroad purchase, not part of the submit flow",
+    "Directory is small (hundreds of tools); expect niche exposure"
+  ],
+  "countsAsLive": "The tool has a public /tools/<slug> page on dynamite-ai.com linked from its category page",
+  "unknowns": [
+    "Free-queue turnaround time",
+    "Fast-track price (plan step not rendered without input)",
+    "Whether listings can be edited after publication"
+  ]
+}

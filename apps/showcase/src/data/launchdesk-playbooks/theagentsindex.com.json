@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "theagentsindex.com",
+  "name": "Agents·Index",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://theagentsindex.com/submit",
+      "title": "Submit a listing — 'Sign in or create a free account, then share your website for review'; 131 agents indexed; separate /claim route for already-listed products"
+    },
+    {
+      "url": "https://theagentsindex.com/pricing",
+      "title": "Pricing — 'Get listed free'; paid extras: Featured $12/mo, Premium $25/mo, Website link $99/yr (the only dofollow link), Primary Source $49 one-time, commission a brief $349"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Listing itself is free but requires creating a free account (no card) and passes a quality gate — 'researched listings' with editorial review; not a self-serve instant publish",
+    "If the product is already in the index, use /claim and verify a connection to its domain instead of submitting"
+  ],
+  "requirements": [
+    "AI agents and the agent stack only: coding, support, sales/marketing, research/data, voice, legal agents, agent frameworks, platforms, tools/infrastructure, and agencies/build partners",
+    "A generic SaaS that is not an AI agent does not fit — categories are agent-specific",
+    "Account required; submission is reviewed ('share your website for review')"
+  ],
+  "preparation": [
+    "Account email for signup",
+    "Product URL and description; pick the right agent category (10 defined categories)",
+    "If already indexed: claim via /claim with domain verification",
+    "Optional budget for extras: Featured $12/mo (category placement), Premium $25/mo (homepage+picks), Website link $99/yr (single dofollow link on your listing), Primary Source $49 one-time (publish 32 answered questions in your own words)"
+  ],
+  "workflow": [
+    "Create a free account at https://theagentsindex.com/submit",
+    "Share the product website for review (or claim an existing listing via /claim)",
+    "Wait for editorial review — the index is curated ('datasheet' style: specs, price, whether it holds under load)",
+    "Once published, optionally buy placement or the Website link upgrade; claimers see listing analytics (views, clicks, referrals)"
+  ],
+  "watchFor": [
+    "Placement links are rel='sponsored nofollow' — the ONLY dofollow option is the $99/yr Website link on your own listing",
+    "Paying never changes inclusion, organic ordering, or editorial assessment — ads are labeled Advertisement",
+    "Editorial standards mean a listing includes honest cons — coverage is not guaranteed positive",
+    "Small index (131 agents) but actively maintained (updated Sep 26, 2026)"
+  ],
+  "countsAsLive": "A published listing page for the agent exists on theagentsindex.com under its category with specs/pricing datasheet fields",
+  "unknowns": [
+    "Review turnaround time for free submissions",
+    "Whether the free listing's outbound link is nofollow (paid Website link suggests default is not followed)",
+    "Traffic volume"
+  ]
+}

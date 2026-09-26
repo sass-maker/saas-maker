@@ -1,0 +1,42 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "techhive.com",
+  "name": "TechHive",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.techhive.com/",
+      "title": "TechHive homepage — live Foundry (ex-IDG) consumer-tech publication; categories include Personal Software, Smart Home, Cord-Cutter Confidential; footer has Contact Us and Advertise links"
+    }
+  ],
+  "category": "press",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Not a directory — earned editorial only; staff-written reviews, deals, how-tos, and 'Smart Answers' Q&A",
+    "Pitches go through the Contact Us page (techhive.com/about — 'Contact Us' footer link)",
+    "Consumer-tech remit: smart home, streaming/cord-cutting, personal software, Windows, security/privacy products",
+    "Physical review products historically mattered more than SaaS — a consumer-software angle is the realistic pitch",
+    "Foundry also runs 'BrandPosts' — clearly-labeled client content via the Advertise link (paid)"
+  ],
+  "preparation": [
+    "A consumer-facing angle: smart home device/service, streaming tool, personal software, privacy/security app",
+    "Pitch via the Contact Us page; brand-content inquiries via the Advertise link"
+  ],
+  "workflow": [
+    "Open the footer 'Contact Us' page and pitch the relevant editor/desk",
+    "For reviews, expect to supply review access; for deals coverage, a live consumer deal",
+    "Paid alternative: Foundry 'BrandPosts' client-content program via Advertise",
+    "Coverage, if it happens, is a staff-written article or inclusion in a roundup"
+  ],
+  "watchFor": [
+    "Smart-home/streaming heritage — pure B2B SaaS is off-beat",
+    "BrandPosts are paid labeled content, not earned coverage — don't conflate the two",
+    "Part of Foundry (formerly IDG) — same editorial family as PCWorld/Macworld/Tech Advisor; a pitch can be routed across sibling sites"
+  ],
+  "countsAsLive": "A TechHive article, review, or roundup entry mentioning the product is published at techhive.com",
+  "unknowns": [
+    "Editor-by-editor contact details — the contact page wasn't fully captured this session",
+    "Review-unit policies for software vs hardware"
+  ]
+}

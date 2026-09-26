@@ -1,0 +1,33 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "redferret.net",
+  "name": "The Red Ferret",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.redferret.net/",
+      "title": "The Red Ferret — long-running tech blog (since 2000); homepage 200 to curl but 403 to the content fetcher; /contact-us path 404'd"
+    }
+  ],
+  "category": "press",
+  "zeroCostRoute": "unknown",
+  "conditions": [
+    "Effectively dormant — the blog's public surface is stale and its contact page 404s; treat as an earned-editorial long shot at best"
+  ],
+  "requirements": [
+    "Gadget/quirky-tech angle — Red Ferret's remit was gadgets, freeware, cool sites",
+    "No submission form found — historic contact methods were email-based"
+  ],
+  "preparation": ["A quirky gadget/tech story"],
+  "workflow": [
+    "Verify the site state in a real browser — automated access is blocked and the contact page 404s",
+    "If a contact route works, pitch the gadget/tech angle"
+  ],
+  "watchFor": [
+    "Site health is poor — contact path broken; publication cadence unclear",
+    "Legacy blog from a single-editor era — expectations low"
+  ],
+  "countsAsLive": "A Red Ferret post covering the product",
+  "unknowns": ["Whether the site is still actively maintained", "Any working contact route"]
+}

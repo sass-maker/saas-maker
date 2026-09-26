@@ -1,0 +1,63 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "appexchange.salesforce.com",
+  "name": "AppExchange",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://partners.salesforce.com/s/education/general/AppExchange%5FListing",
+      "title": "AppExchange Listing FAQ — $150 annual listing fee for paid apps; $2,550 one-time security review fee; free apps and consulting listings pay no fee (content read via search result)"
+    },
+    {
+      "url": "https://developer.salesforce.com/docs/atlas.en-us.packagingGuide.meta/packagingGuide/security_review_submit_solution.htm",
+      "title": "Submit Your Solution for Security Review — ISVforce Guide; Partner Console > Publishing > Start Review; up to 4 weeks"
+    },
+    {
+      "url": "https://developer.salesforce.com/docs/atlas.en-us.packagingGuide.meta/packagingGuide/appexchange_listing_approvals.htm",
+      "title": "Get Your Listing Approved — brand/policy review plus Partner Application Distribution Agreement (PADA) required"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free listings exist but only for free apps and consulting-partner listings; paid apps pay a $150 annual listing fee plus a security-review fee (reported as $2,550 one-time on the partner FAQ; the ISVforce guide cites $999 per paid-solution review attempt — figures differ by program/version, confirm in the Partner Console)",
+    "You must be enrolled in the Salesforce ISV Partner Program with a distribution agreement"
+  ],
+  "requirements": [
+    "A real packaged Salesforce solution (managed package, API solution, etc.) — not a listing-only directory",
+    "Enrollment in the ISV Partner Program plus a signed distribution agreement",
+    "Connect the packaging org (Dev Hub) to the Partner Console (Publishing > Organizations > Connect Organization)",
+    "Pass the security review — a Developer Edition test environment with the solution installed is required; review takes up to ~4 weeks",
+    "Listing itself must pass brand-guideline/policy approval and requires signing a PADA before publish",
+    "'Manage Listings' permission in the Partner Community"
+  ],
+  "preparation": [
+    "Built, packaged Salesforce app (2GP managed package or API solution)",
+    "ISV partner enrollment and distribution agreement in place",
+    "A configured Developer Edition test org with the solution installed for the review team",
+    "Listing content via the Partner Console Listing Builder: basics, pricing model, marketing assets",
+    "Budget for security review and (for paid apps) the $150/yr listing fee"
+  ],
+  "workflow": [
+    "Join the Salesforce Partner Community and get 'Manage Listings' permission",
+    "Connect your packaging org under Publishing > Organizations",
+    "Create the listing in the Listing Builder (Fill in the Basics, Price Your Solution, Link Your Solution)",
+    "Submit the listing for approval AND submit the solution for security review (they can run in parallel)",
+    "Pay the applicable security review fee; track status in the Partner Console overview",
+    "Sign the PADA (clickthrough for Checkout listings, offline for other paid/freemium)",
+    "Publish once both listing approval and security review pass"
+  ],
+  "watchFor": [
+    "Fee figures differ across docs — $2,550 one-time (partner FAQ) vs $999 per attempt (ISVforce guide); each failed resubmission is a new attempt",
+    "Review can take up to 4 weeks — book the technical office-hours slot ~3-4 weeks out when submitting",
+    "Security re-review can be requested at any time post-approval (typically yearly)",
+    "New package versions do NOT need re-review — just an attestation on the listing",
+    "This is enterprise-grade app distribution — months of effort, not a directory submission"
+  ],
+  "countsAsLive": "The listing is published and visible on appexchange.salesforce.com with 'Get It Now' install paths",
+  "unknowns": [
+    "Current exact fee schedule (docs conflict between $2,550 one-time and $999 per attempt)",
+    "Whether 'AgentExchange' naming fully replaced 'AppExchange' in the current console"
+  ]
+}

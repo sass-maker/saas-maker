@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "cnet.com",
+  "name": "CNET",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.cnet.com/about/",
+      "title": "About CNET — consumer-tech reviews publication; press team contact press@cnet.com; affiliate/marketing contacts listed"
+    },
+    {
+      "url": "https://www.cnet.com/contact/",
+      "title": "CNET contact URL — resolves to the About page (no public submission form)"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Not a directory — coverage is earned editorial; there is no submission form or paid listing product on the public site",
+    "CNET is a consumer-tech reviews/news publication (Ziff Davis family); staff select and test the products they cover",
+    "Press/media inquiries route to press@cnet.com; affiliate partnerships and marketing have separate contact paths on the About page",
+    "Realistic path for a SaaS: get reviewed — pitch the editorial team with a consumer-relevant product, or become an affiliate partner if the product fits their commerce model"
+  ],
+  "preparation": [
+    "A consumer-facing tech angle — CNET covers consumer electronics, software/services, home internet, streaming, AI tools",
+    "Press kit: what the product does, pricing, screenshots, review access credentials, launch date",
+    "A named editor/reporter covering your category (meet-the-experts page lists staff beats)"
+  ],
+  "workflow": [
+    "Identify the relevant CNET beat and reporter from the About/experts pages",
+    "Send the pitch or press release to press@cnet.com or the reporter directly",
+    "For review coverage, offer hands-on access — CNET Labs does hands-on testing",
+    "Coverage, if it happens, is a staff-written article or review — no listing page is created",
+    "Alternative route: affiliate partnership inquiry via the 'Contact us' links on the About page if the product suits deals/reviews commerce content"
+  ],
+  "watchFor": [
+    "press@cnet.com is framed for expert commentary requests — a pure launch announcement may land better with a specific beat reporter",
+    "Affiliate/commerce coverage is commission-driven; editorial reviews are not pay-to-play",
+    "No self-serve listing exists — anyone selling a 'CNET listing' is not offering a real route",
+    "Embargo norms: agree on embargo terms before sending details"
+  ],
+  "countsAsLive": "A CNET article/review mentioning the product is published at cnet.com",
+  "unknowns": [
+    "Which individual inbox is best for product-launch pitches — no dedicated tips address was found",
+    "Whether CNET still runs any contributed-content program — none found on public pages"
+  ]
+}

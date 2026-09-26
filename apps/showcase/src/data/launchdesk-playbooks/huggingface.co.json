@@ -1,0 +1,57 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "huggingface.co",
+  "name": "Hugging Face Spaces",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://huggingface.co/new-space",
+      "title": "Create new Space — redirects to login; requires a Hugging Face account"
+    },
+    {
+      "url": "https://huggingface.co/docs/hub/spaces-overview",
+      "title": "Spaces Overview doc — SDK options, visibility, hardware pricing"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Static HTML Spaces are free for everyone",
+    "Gradio and Docker Spaces run on compute and require a paid plan (PRO for personal accounts, Team/Enterprise for orgs)",
+    "Exception: free personal accounts in good standing can host up to 2 Gradio Spaces running on ZeroGPU",
+    "Requires a Hugging Face account — /new-space redirects to login/signup"
+  ],
+  "requirements": [
+    "Must publish a real ML-powered demo or app — a Space is a deployed application backed by a git repo, not a promotional listing",
+    "Choose an SDK at creation: Gradio, Docker, or static HTML",
+    "Space code lives in a public (or protected/private) git repo on the Hub — public Spaces expose source code to everyone",
+    "Outbound network requests are limited to ports 80, 443 and 8080"
+  ],
+  "preparation": [
+    "A Hugging Face account (free signup at huggingface.co/join)",
+    "Working app code for the chosen SDK (app.py for Gradio, Dockerfile, or static index.html)",
+    "License choice and a public-visibility decision — public Spaces are fully open and clonable",
+    "Secrets/variables to set in Space Settings (never hard-code keys; a secrets scanner flags them)"
+  ],
+  "workflow": [
+    "Sign in and open huggingface.co/new-space (or 'Create new Space' on huggingface.co/spaces)",
+    "Name the Space, pick the SDK (static HTML is the free path), set visibility to Public",
+    "Push code to the Space's git repo — each commit triggers a rebuild and restart",
+    "Set any required variables/secrets in Settings",
+    "Verify the Space runs (free CPU Basic sleeps after inactivity)",
+    "The public Space appears at huggingface.co/spaces/<user>/<name> and the app at <space>.hf.space"
+  ],
+  "watchFor": [
+    "Plan gate: as of the docs read, Gradio/Docker Spaces need a paid plan — only static Spaces (and ≤2 ZeroGPU Gradio Spaces) are free",
+    "Free CPU Basic hardware sleeps when unused — the app may appear down until it wakes",
+    "Public Spaces publish source code and are clonable — do not ship anything you can't open-source",
+    "A 'protected' visibility (app public, source hidden) requires PRO/Team plans",
+    "A pure marketing page with no working app invites takedowns; this is a hosting platform, not a directory"
+  ],
+  "countsAsLive": "A public Space page exists at huggingface.co/spaces/<owner>/<name> and the running app responds on its embed URL",
+  "unknowns": [
+    "Whether a SaaS product without an ML demo has any legitimate fit (likely none — Spaces are for deployed apps)",
+    "Current PRO price needed for non-static Spaces"
+  ]
+}

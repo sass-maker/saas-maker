@@ -1,0 +1,40 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "euroalternative.co",
+  "name": "EuroAlternative",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://euroalternative.co/",
+      "title": "EuroAlternative — live directory of European alternatives to big-tech products; 'Submit' nav link; listings tagged by EU country + what they replace; 'Advertise' link; built with Dirstarter"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "European digital services only — companies must be European (each listing shows the EU country flag)",
+    "'Submit' route in the nav; 'Advertise' for paid placements",
+    "Directory format: product card + which big-tech product it's an alternative to",
+    "Collections exist: DeGoogle, GDPR Compliant, Open Source, Sovereign Cloud"
+  ],
+  "preparation": [
+    "European company/product eligibility",
+    "Which big-tech product you replace — that's the listing frame"
+  ],
+  "workflow": [
+    "Use the Submit link on euroalternative.co",
+    "Provide product details + country + the alternative-you-replace mapping",
+    "Listing appears in category/country/collection browsing"
+  ],
+  "watchFor": [
+    "Hard geographic constraint — EU/European companies only",
+    "Sovereignty/privacy framing — generic SaaS without that angle is off-beat",
+    "Young directory (~1.1K subscribers)"
+  ],
+  "countsAsLive": "A listing card on euroalternative.co linking to the product",
+  "unknowns": [
+    "Submission review time",
+    "Whether submit is free vs paid (Advertise exists for paid)"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "dodomrr.com",
+  "name": "DodoMRR",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.dodomrr.com/",
+      "title": "Homepage — 'Database of verified Dodo startup revenues' with live listings and a '+ Add Startup' control"
+    },
+    {
+      "url": "https://www.dodomrr.com/add",
+      "title": "Guessed add-startup path — returned 404"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "Extreme niche fit: the database indexes startups whose revenue is verified via Dodo Payments — a product must process payments through Dodo Payments for the listing to be meaningful",
+    "'Verified' premise implies connecting payment-provider credentials (read-only API key pattern used by sibling MRR directories)",
+    "'+ Add Startup' control exists on the homepage but its target did not render as a static link"
+  ],
+  "preparation": [
+    "A live product that bills through Dodo Payments",
+    "Dodo Payments account access / read-only API key",
+    "Product name, URL, and description for the card"
+  ],
+  "workflow": [
+    "Open https://www.dodomrr.com/ and click '+ Add Startup'",
+    "Complete whatever account/provider-connection flow the control opens (JS-driven; not visible to plain fetch)",
+    "Verify revenue, then the startup appears as a card in the database"
+  ],
+  "watchFor": [
+    "Only worth attempting if the product actually uses Dodo Payments — otherwise skip this destination entirely",
+    "Site is a small indie directory 'Built by Abhishek' — expect limited traffic and informal review",
+    "Paid 'Advertise' slots exist on the homepage — distinguish listing from advertising",
+    "Guessed /add path 404s; the add flow is behind the JS button"
+  ],
+  "countsAsLive": "The startup appears as a revenue-verified card on the dodomrr.com homepage database",
+  "unknowns": [
+    "Whether listing is free or paid — no pricing page found",
+    "Exact verification mechanism (Dodo API key vs OAuth)",
+    "Review turnaround and rejection policy",
+    "Whether non-Dodo-payment startups are accepted at all"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "ai-hunter.io",
+  "name": "AI-Hunter.io",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://ai-hunter.io/submit-a-tool/",
+      "title": "Submit Your AI Tool For Free — full field list and FAQ (free, review takes 1–2 weeks, description 'must be unique content')"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Submission is explicitly free ('there is no cost... completely free of charge')",
+    "AI tools (plus a 'Non AI Tools' category exists); ~60 category options",
+    "AI Tool Description 'must be unique content' — copied marketing text risks rejection",
+    "Review evaluates functionality, performance, uniqueness, and relevance; typical review takes 1–2 weeks"
+  ],
+  "preparation": [
+    "First name + email",
+    "AI tool name, website URL",
+    "One category from the long list (3D, Code Assistant, Copywriting, Productivity, SEO, ... Non AI Tools)",
+    "Pricing model: Free / Freemium / Open Source / Paid / Contact for Pricing",
+    "A unique, originally written tool description (do not paste site copy)"
+  ],
+  "workflow": [
+    "Open https://ai-hunter.io/submit-a-tool/",
+    "Fill the form (name, email, tool name/URL/category/pricing, unique description)",
+    "Submit — 'Submit Your AI Tool Now!' button",
+    "Wait 1–2 weeks for review; notification of acceptance per FAQ"
+  ],
+  "watchFor": [
+    "Inflated marketing claims on page ('millions of AI users', '0M+ page views' placeholders) — temper traffic expectations",
+    "Unique-content requirement is the main rejection risk — write fresh copy",
+    "The submit page serves compressed/binary content to plain fetches; use a browser",
+    "Category list is huge — pick the most specific fit"
+  ],
+  "countsAsLive": "The tool has a published detail page on ai-hunter.io under its chosen category",
+  "unknowns": [
+    "Whether accepted listings get a dofollow link",
+    "Whether rejected submissions get any notification",
+    "Actual review rigor vs auto-approval"
+  ]
+}

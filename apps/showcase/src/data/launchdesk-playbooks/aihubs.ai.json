@@ -1,0 +1,57 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aihubs.ai",
+  "name": "AI Hubs",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://aihubs.ai/",
+      "title": "Homepage — live AI tools directory (15+ pages of listings, 13 categories)"
+    },
+    {
+      "url": "https://aihubs.ai/submit",
+      "title": "Submit — redirects to login/register wall (email + Google sign-in)"
+    },
+    {
+      "url": "https://aihubs.ai/pricing",
+      "title": "Pricing — Pro $4.9 and Pro Plus $9.9 one-time-style listings (permanent link, ≥3 dofollow links, featured placement); FAQ references Free vs Pro plans but answers collapsed"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Account registration (email or Google) is required before the submission form is reachable — /submit lands on a login wall",
+    "Paid tiers dominate the pricing page ($4.9 Pro / $9.9 Pro Plus); a Free plan is implied by the FAQ ('differences between Free and Pro plans', 'Do I need to provide a backlink?') but its terms were not visible — free route may require a reciprocal backlink"
+  ],
+  "requirements": [
+    "AI tools only — categories: Images, Video, Voice, Marketing, Text&Writing, Design, Code, Education, Productivity, Music, Lifestyle, Open source, Chatbot",
+    "Registered account required to submit",
+    "Paid plans promise ≥3 dofollow links, permanent link with no backlink required, featured placement"
+  ],
+  "preparation": [
+    "Account on aihubs.ai",
+    "Tool name, URL, description, category and tags",
+    "Logo/screenshot image",
+    "Decide free vs Pro ($4.9) vs Pro Plus ($9.9 — adds free manual submission to uneed.best)"
+  ],
+  "workflow": [
+    "Open https://aihubs.ai/submit and register/sign in",
+    "Complete the submission form behind the account wall",
+    "Choose free (if offered at checkout) or a paid plan",
+    "Listing appears as an /item/<slug> page under the chosen categories"
+  ],
+  "watchFor": [
+    "Submission form is fully behind login — fields could not be verified",
+    "Pro Plus advertises cross-posting to uneed.best — part of a directory network (Startup Fame, Twelve Tools, Turbo0, ufind.best badges)",
+    "'Only 30 spots left' pressure copy on Pro plan",
+    "Free-tier terms are unconfirmed — the FAQ entries exist but answers were not rendered"
+  ],
+  "countsAsLive": "The tool has an aihubs.ai/item/<slug> page visible in category listings",
+  "unknowns": [
+    "Whether a genuinely free listing exists and whether it requires a reciprocal backlink",
+    "Whether paid prices are one-time or recurring — copy says 'permanent link' implying one-time",
+    "Submission form fields behind login",
+    "Review turnaround"
+  ]
+}

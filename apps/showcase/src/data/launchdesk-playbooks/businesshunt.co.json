@@ -1,0 +1,59 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "businesshunt.co",
+  "name": "BusinessHunt",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://businesshunt.co/",
+      "title": "Homepage — returned empty body to our fetcher (JS-rendered); verified via third-party walkthroughs"
+    },
+    {
+      "url": "https://businesshunt.co/businesses/add",
+      "title": "Add Business — account-gated submission (confirmed in search index)"
+    },
+    {
+      "url": "https://submitmap.com/platform/businesshunt/",
+      "title": "SubmitMap walkthrough — signup via magic link or email+password; listing page goes live after step 1 free; step 2 Premium Launch $39 (preselected) buys a launch event, not the page; links rel=noopener noreferrer without nofollow"
+    },
+    {
+      "url": "https://backlinks.fyi/directories/businesshunt",
+      "title": "backlinks.fyi — 'freemium dofollow target'; daily launch window; top-3 per day earn spotlight badges + newsletter"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Account required — magic link or email+password signup at /businesses/add",
+    "Fields: product name, tagline, website, location, description, industry (long LinkedIn-style list), optional square logo under 1MB",
+    "Listing goes live immediately after step 1 ('Business added successfully') — free",
+    "Step 2 'Launch Plan' offers only Premium Launch $39 (marked down from $99): launch scheduling, newsletter feature to ~13k subscribers, guest post with permanent backlink — optional, capped at 5 spots/week",
+    "Sponsor slot: $5/day"
+  ],
+  "preparation": [
+    "Product name, tagline, website URL, location, description",
+    "Industry pick from their list",
+    "Optional square logo <1MB",
+    "Email for account creation"
+  ],
+  "workflow": [
+    "Go to https://businesshunt.co/businesses/add and sign up (magic link or email+password)",
+    "Fill product info step (name, tagline, website, location, description, industry, logo)",
+    "Press Next — 'Business added successfully' means the /businesses/<slug> page is live",
+    "On step 2, decline the preselected $39 Premium Launch unless you want the launch event",
+    "Verify under 'Businesses You Manage' in the dashboard"
+  ],
+  "watchFor": [
+    "Step 2 presents Premium $39 preselected with no free alternative shown on that step — easy to mistake for required; the listing itself is already free and live",
+    "Homepage didn't render to our fetcher (empty body) — SPA; verify interactively",
+    "Top-3 daily spotlight badges + newsletter features are competitive",
+    "Listing links appear dofollow (noopener noreferrer, no nofollow) per third-party inspection"
+  ],
+  "countsAsLive": "The business has a public page under businesshunt.co/businesses/ with a 'Visit Website' button and shows in 'Businesses You Manage'",
+  "unknowns": [
+    "Whether free listings get any promotion without the $39 launch",
+    "Editorial review — is anything rejected post-publish",
+    "Long-term listing persistence"
+  ]
+}

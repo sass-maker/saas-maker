@@ -1,0 +1,45 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "inc42.com",
+  "name": "Inc42",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://inc42.com/startup-submission/",
+      "title": "Inc42 'Get Your Startup Discovered' — 'Submit Your Startup' CTA on a BrandLabs-branded page selling exposure (25M+ monthly reach claims); sibling links: Startup Spotlight, Guest Posts, Advertise; 'Startup Booster Packages' marketed on the same page"
+    }
+  ],
+  "category": "press",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "The 'Submit Your Startup' page is part of Inc42's BrandLabs commercial offering — featured-startup coverage is sold as 'Startup Spotlight'/'Startup Booster Packages'; earned editorial exists separately but there is no free guaranteed listing"
+  ],
+  "requirements": [
+    "Indian startup ecosystem focus — Inc42 covers India's tech/startup economy",
+    "Paid route: Submit Your Startup / Startup Spotlight / Startup Booster Packages via BrandLabs",
+    "Earned route: editorial coverage of funding/news in the Indian ecosystem; guest-post route exists as a labeled nav item",
+    "Inc42 Plus is a paid reader subscription — unrelated to submissions"
+  ],
+  "preparation": [
+    "India relevance — the readership is the Indian startup ecosystem",
+    "For paid features: budget for a BrandLabs package (pricing not public on the page)",
+    "For earned coverage: a funding round, launch, or trend story with India significance"
+  ],
+  "workflow": [
+    "Open inc42.com/startup-submission and use 'Submit Your Startup' — expect this to route into the paid BrandLabs flow",
+    "For earned coverage, pitch the newsroom via Contact Us with an India-ecosystem story",
+    "Guest Posts and Advertise are separate nav items under 'Partner with Inc42'"
+  ],
+  "watchFor": [
+    "The submission page reads as marketing for paid packages — do not assume free coverage",
+    "India-only relevance — a SaaS with no India angle won't fit either route",
+    "'Recently Featured Startups' mix editorial and BrandLabs content — check the label",
+    "Inc42 runs paid courses/events — the site has many commercial surfaces"
+  ],
+  "countsAsLive": "The startup is featured in an Inc42 article (earned or labeled BrandLabs feature)",
+  "unknowns": [
+    "Startup Booster/Spotlight pricing — not published on the page",
+    "Whether the Submit form itself is free or paywalled at the end"
+  ]
+}

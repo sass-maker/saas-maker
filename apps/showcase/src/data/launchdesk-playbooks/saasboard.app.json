@@ -1,0 +1,45 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "saasboard.app",
+  "name": "SaaSBoard",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://saasboard.app/",
+      "title": "Homepage — live visual grid directory (692 live listings, 9,242 tiles available) with pricing and how-it-works sections"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Any startup, website, or app — no stated niche restriction",
+    "A single 1×1 tile is free, no card required; larger blocks (2×2+) cost $10/tile/month or $100/tile/year via Stripe",
+    "Sign-in required to claim tiles and manage the listing (dashboard)"
+  ],
+  "preparation": [
+    "Logo image (uploaded; displayed on the grid)",
+    "Startup name, short description, and destination URL",
+    "Category pick for the listings index",
+    "Account to access the dashboard (sign-in link at /auth)"
+  ],
+  "workflow": [
+    "Open https://saasboard.app/ and sign in",
+    "Click-and-drag on the 100×100 grid to select position and size — a single 1×1 tile is free",
+    "Upload the logo and enter name, description, and destination URL",
+    "Confirm — free tile locks on instantly; larger blocks go through Stripe checkout",
+    "Manage listing, edit details, and view click analytics in the dashboard"
+  ],
+  "watchFor": [
+    "The free route is only a 1×1 tile — tiny visual footprint; anything larger is paid",
+    "Grid placement is permanent position-wise but larger blocks require an active subscription — canceling likely removes the block",
+    "Million-dollar-homepage style gimmick; traffic is modest (claims 700+ daily visitors, 8,543 total clicks)",
+    "Free Discord promotion offered for listed startups"
+  ],
+  "countsAsLive": "The startup's logo tile is visible and clickable on the saasboard.app grid and appears in the 'Startups listed' index",
+  "unknowns": [
+    "What happens to paid blocks on cancellation (removed vs shrunk to 1×1) — FAQ question exists but answer text did not render",
+    "Whether free tiles can be reclaimed/repositioned",
+    "Content moderation policy"
+  ]
+}

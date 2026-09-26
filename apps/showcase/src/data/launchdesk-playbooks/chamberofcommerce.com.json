@@ -1,0 +1,58 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "chamberofcommerce.com",
+  "name": "ChamberofCommerce.com",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.chamberofcommerce.com/getlisted",
+      "title": "Batch-provided submission URL — returned HTTP 403 (bot-blocked)"
+    },
+    {
+      "url": "https://www.chamberofcommerce.com/faq",
+      "title": "FAQ (search-indexed) — claim an existing listing via 'Claim This Business' on the profile page, or use the Add Your Business page; paid Premium tier advertised at $399"
+    },
+    {
+      "url": "https://www.altftool.com/backlinks/chamberofcommerce-com",
+      "title": "Third-party guide — free basic listing with paid upgrades; ~45 min; requires genuine US business presence plus website/business verification; cites chamberofcommerce.com/faq"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free basic listing exists but the business may already be auto-listed from data-provider feeds — the free route is 'Claim This Business' on the existing profile or the Add Your Business form",
+    "Requires a genuine US business presence with verifiable business details — an online-only SaaS without a US business address/phone may not fit",
+    "Free listing shows competitor ads on your page; Premium (~$399, per site FAQ) removes ads and adds placement/website link prominence"
+  ],
+  "requirements": [
+    "US business presence; business name, address, phone, category, website",
+    "Verification of website and business details during claim/add",
+    "Unclaimed data-feed listings 'receive the lowest priority' until claimed"
+  ],
+  "preparation": [
+    "Search the directory first for the business — claim rather than duplicate",
+    "Consistent NAP (name, address, phone) matching other citations",
+    "Business categories (up to 5 additional categories is a paid feature)",
+    "Website URL and verification method access"
+  ],
+  "workflow": [
+    "Search chamberofcommerce.com for the business name",
+    "If listed: open the profile and click 'Claim This Business'; if not: use the Add Your Business page",
+    "Complete business details and verify website/ownership",
+    "Wait for review; decline the Premium upsell unless ad removal/top placement is wanted",
+    "Confirm the live profile page and website link treatment"
+  ],
+  "watchFor": [
+    "Site 403s automated fetches — use a browser",
+    "Free listings display ads and competitor businesses on your own profile page",
+    "Not affiliated with local chambers of commerce — it is a private directory despite the name",
+    "Data-feed duplicates are common; claim the canonical record rather than adding a new one"
+  ],
+  "countsAsLive": "A claimed business profile page is publicly viewable on chamberofcommerce.com with the correct name, address, phone, category and website link",
+  "unknowns": [
+    "Whether the free tier's website link is dofollow or even shown (link prominence may be a premium feature)",
+    "Current review turnaround and verification method",
+    "Whether purely online SaaS businesses without a local presence are accepted"
+  ]
+}

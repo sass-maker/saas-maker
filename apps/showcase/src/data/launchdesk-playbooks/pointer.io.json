@@ -1,0 +1,45 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "pointer.io",
+  "name": "Pointer",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://pointer.io/",
+      "title": "Homepage — engineering-leadership newsletter, 60,574 subscribers, 726 issues, twice-weekly 5-min briefings"
+    },
+    {
+      "url": "https://pointer.io/sponsorship",
+      "title": "Sponsorship page — enquiry form + email contact; audience = experienced engineering managers at top-tier tech companies"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "This is a curated newsletter, not a directory — there is no product submission form",
+    "Only verified submission surface is paid sponsorship (form or email on /sponsorship)",
+    "Organic inclusion is editorial: the editor hand-picks articles on engineering management, industry news, trends, and guides — a product launch alone is not the format; a strong engineering-leadership article is"
+  ],
+  "preparation": [
+    "For sponsorship: name, email, and the message/creative to run in an issue",
+    "For editorial coverage: a genuinely strong blog post on engineering management/leadership — the newsletter summarizes articles, so the article (not the product) is the pitch unit",
+    "Contact: the sponsorship page's form or the listed email address"
+  ],
+  "workflow": [
+    "Paid: open https://pointer.io/sponsorship, complete the enquiry form or email the address listed",
+    "Editorial: publish a high-quality engineering-management article and make it discoverable — the editor curates from public writing; you may email the contact address to flag it, but no pitch form exists",
+    "Sponsorship delivers an 'integrated message' slot in an issue"
+  ],
+  "watchFor": [
+    "No launch listing exists — do not treat as a directory",
+    "Audience is senior engineering leadership at companies like Google, Stripe, AWS — consumer/growth pitches are a mismatch",
+    "Anti-spam protection on forms (Cloudflare email obfuscation) — use the rendered page, not scraped text",
+    "Sponsorship pricing is not published — enquire"
+  ],
+  "countsAsLive": "Your sponsored message or article appears in a sent Pointer issue (newsletter archive/email)",
+  "unknowns": [
+    "Sponsorship pricing and slot availability",
+    "Whether the editor accepts pitched articles proactively"
+  ]
+}

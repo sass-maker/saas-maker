@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "zapier.com",
+  "name": "Zapier App Directory",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://platform.zapier.com/",
+      "title": "Zapier integration builder docs — build via Visual Builder or CLI, then deploy/test/promote to the app marketplace"
+    },
+    {
+      "url": "https://developer.zapier.com/",
+      "title": "Zapier Integration Builder entry point (requires JavaScript to load)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "No fee to build or publish an integration, but a public App Directory listing requires building a real working integration and passing Zapier's app review",
+    "The product must expose a usable API for triggers/actions — this is an integration marketplace, not a generic listing"
+  ],
+  "requirements": [
+    "A SaaS/product with a public API that can support Zapier triggers, actions, or searches",
+    "Working authentication (API key, OAuth, etc.) for the integration",
+    "Completion of the integration review before the app is public in the directory"
+  ],
+  "preparation": [
+    "Decide build tool: Visual Builder (developer.zapier.com, no-code) vs Zapier CLI for custom code",
+    "API docs, auth method, and at least one working trigger/action/search",
+    "App name, description, logo, and category for the directory listing",
+    "A handful of real users/testers helps the review go smoothly"
+  ],
+  "workflow": [
+    "Sign in at https://developer.zapier.com (JS-required dashboard) to create an integration",
+    "Build the integration in the Visual Builder or via the Zapier CLI (auth, triggers, actions)",
+    "Test the integration end-to-end inside Zapier",
+    "Submit the app version for publication review to become listed in the Zapier App Directory",
+    "After approval, maintain the integration and respond to Zapier's quality/monitoring requirements"
+  ],
+  "watchFor": [
+    "developer.zapier.com is a JS app — automation must handle the dashboard flow, not raw HTML forms",
+    "Public listing requires ongoing quality; Zapier can contact/delist integrations that break",
+    "Batch claims link=nofollow — plausible but not verified on the directory page itself",
+    "This is a multi-week engineering+review effort, not a quick directory drop"
+  ],
+  "countsAsLive": "A public app page exists at zapier.com/apps/<slug>/integrations (or the app appears in the App Directory search) after review approval",
+  "unknowns": [
+    "Current app-review turnaround and minimum user-count requirements for public listing",
+    "Whether the directory listing's website link is nofollow",
+    "Zapier's current partner/pricing tiers for promoted placement"
+  ]
+}

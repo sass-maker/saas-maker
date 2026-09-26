@@ -1,0 +1,41 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "addictivetips.com",
+  "name": "AddictiveTips",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.addictivetips.com/tip-us/",
+      "title": "AddictiveTips 'Tip Us' page — stored catalog URL; page returned 405 to automated fetch this session"
+    },
+    {
+      "url": "https://www.technoworldnews.com/250-best-app-review-sites-to-submit-your-mobile-apps/",
+      "title": "Third-party app-review site list citing tips@addictivetips.com as the tip address (content read via search result)"
+    }
+  ],
+  "category": "press",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Not a directory — earned editorial only; AddictiveTips is a software/apps how-to and review site",
+    "Tip route: tips@addictivetips.com (cited by third-party app-review lists) and the /tip-us/ page",
+    "Coverage is apps/software tips and reviews — desktop software, mobile apps, web tools with a consumer angle",
+    "No listing product, no profile page"
+  ],
+  "preparation": [
+    "A consumer-facing app/software pitch — utility apps, web tools, mobile apps",
+    "Product URL, what it does, what makes it tip-worthy"
+  ],
+  "workflow": [
+    "Email tips@addictivetips.com (or the /tip-us/ form) with the product, link, and hook",
+    "Coverage, if picked up, is a staff-written review/tips article",
+    "No account, no listing — pure earned editorial"
+  ],
+  "watchFor": [
+    "The /tip-us/ page returned 405 to automated fetch — verify the form in a real browser before relying on it; the tips@ email is the fallback",
+    "Consumer-software tone — enterprise SaaS is off-beat",
+    "Site traffic has declined from its peak era — modest upside"
+  ],
+  "countsAsLive": "An AddictiveTips article reviewing or featuring the product is published",
+  "unknowns": ["Whether the tip-us form is functional in a real browser", "Editorial response rate"]
+}

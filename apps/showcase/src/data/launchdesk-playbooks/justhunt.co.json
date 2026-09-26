@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "justhunt.co",
+  "name": "JustHunt",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://justhunt.co/",
+      "title": "Homepage — weekly launch cohorts (787 products scheduled), 'FREE DR 45+ backlink', 50k+ founders claim"
+    },
+    {
+      "url": "https://justhunt.co/submit",
+      "title": "Submit page — 3-step wizard (URL → Details → Launch); auto-fetches product title, description, logo"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free submission marketed as taking ~45 seconds; products are queued into weekly launch cohorts (UTC weeks)",
+    "Products go through an approval step — 'Approved products for the current UTC week will appear here automatically'",
+    "Website URL is the entry point — the wizard auto-fetches title, description, and logo from the site",
+    "Sign-in link present; an account is likely required to manage/track the submission"
+  ],
+  "preparation": [
+    "Canonical product URL with good OpenGraph metadata — the wizard scrapes title, description, and logo automatically",
+    "Corrected title/description ready in case auto-fetch grabs the wrong text",
+    "Product logo and category choice (SaaS & Tools, AI & ML, Developer Tools, etc.)"
+  ],
+  "workflow": [
+    "Open https://justhunt.co/submit and enter the product's website URL (step 1 auto-fetches metadata)",
+    "Complete the Details step (verify/edit fetched title, description, logo, category)",
+    "Confirm the Launch step — the product is scheduled into an upcoming weekly cohort",
+    "Once approved, the product appears in 'Upcoming Startup Launches' and competes in its launch week (top-3 weekly winners get prizes)"
+  ],
+  "watchFor": [
+    "Weekly-cohort model: approval schedules you for a future week — 787 products were queued, so launch week may be weeks out",
+    "Heavy upsell surface: 'Boost DR' directory-submission service, Ads pricing page, Launch Boost — the core listing is free but promotions are pushed",
+    "Products can be submitted 'by Anonymous' — auth may be optional for basic submission",
+    "Marketing claims (DR 45+ backlink, 50k founders) are unverified — treat as promotional"
+  ],
+  "countsAsLive": "The product appears under 'Upcoming Startup Launches' with a scheduled date, then moves into 'Launching This Week' and gets a /startups/<slug> page during its cohort week",
+  "unknowns": [
+    "Whether an account is strictly required (sign-in exists but anonymous submissions appear in the queue)",
+    "Approval criteria and rejection rate",
+    "Whether the promised backlink is dofollow once live"
+  ]
+}

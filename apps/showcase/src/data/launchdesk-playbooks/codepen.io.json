@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "codepen.io",
+  "name": "CodePen",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://blog.codepen.io/documentation/",
+      "title": "CodePen documentation index — pens, collections, profile features, PRO tiers, topics/challenges"
+    },
+    {
+      "url": "https://codepen.io/accounts/signup",
+      "title": "Batch-provided signup URL — codepen.io returns 403 to non-browser fetchers"
+    }
+  ],
+  "category": "profile",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free account creation at codepen.io/accounts/signup (codepen.io blocks non-browser fetchers with 403 — use a real browser)",
+    "This is a front-end playground/community, not a directory: the 'listing' is a public profile plus published Pens",
+    "Value comes from a completed profile (display name, bio, website link) and real public Pens — empty profiles carry little weight",
+    "Email verification is a documented step (see 'Email Verification' doc)"
+  ],
+  "preparation": [
+    "Username (check CodePen's Inactive Username Policy if reclaiming a name), email, display name",
+    "Profile website URL, bio, avatar",
+    "At least one polished demo Pen showcasing the product's UI/interaction — 'Picked Pens' are curated by staff for homepage exposure",
+    "Relevant tags for the Pens (CodePen supports tags and topics pages)"
+  ],
+  "workflow": [
+    "Sign up at https://codepen.io/accounts/signup in a browser (page 403s for automated fetches)",
+    "Verify the account email",
+    "Complete the profile: website link, bio, avatar",
+    "Create and publish one or more public Pens demonstrating the product's front-end",
+    "Tag Pens and organize into Collections; optionally join Challenges/Topics for discovery"
+  ],
+  "watchFor": [
+    "codepen.io hard-blocks automated fetches (403 on homepage and signup) — cannot verify current signup form fields; docs at blog.codepen.io are accessible",
+    "'Picked Pens' editorial selection is curated, not submittable — don't assume homepage placement",
+    "PRO tier adds privacy/asset hosting but is not needed for a public profile backlink",
+    "Private Pens require PRO — keep showcase Pens public"
+  ],
+  "countsAsLive": "The public profile at codepen.io/<username> renders with a website link and at least one published public Pen",
+  "unknowns": [
+    "Whether profile website links are followed or nofollow",
+    "Current signup form specifics (OAuth options, CAPTCHA) — page not fetchable"
+  ]
+}

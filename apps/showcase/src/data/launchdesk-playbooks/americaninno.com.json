@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "americaninno.com",
+  "name": "American Inno",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://launchpointzero.com/launchsites/12",
+      "title": "Third-party profile — 'post-a-startup' form submits to the Inno Pages directory for review; site forwards to bizjournals.com/inno (Biz Journals ownership); questions to info@americaninno.com (content read via search result; site 403 to fetchers)"
+    },
+    {
+      "url": "https://marketing.femaleswitch.com/american-inno",
+      "title": "Third-party guide — submission via americaninno.com/post-a-startup across 40+ local markets (content read via search result)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Submission form at americaninno.com/post-a-startup/ — 'submit a startup for consideration to the Inno Pages; the Inno team will review the submission and publish it to the directory if applicable'",
+    "Local-market structure — Inno operates ~40 local markets (americaninno.com/<city>/post-a-startup); pick your market",
+    "Editorial review — submission is 'for consideration', not guaranteed listing",
+    "americaninno.com blocked automated fetch (403) — flow verified via third-party documentation; questions to info@americaninno.com"
+  ],
+  "preparation": [
+    "Company details for the Inno Pages directory",
+    "Pick the relevant local Inno market — the directories are city-based",
+    "Local relevance matters — Inno is a local-startup-ecosystem publication"
+  ],
+  "workflow": [
+    "Open americaninno.com/post-a-startup/ (or the city-specific variant)",
+    "Fill the startup submission form",
+    "The Inno team reviews and publishes to the directory 'if applicable'",
+    "Questions go to info@americaninno.com"
+  ],
+  "watchFor": [
+    "The site now forwards much of its content to bizjournals.com/inno — the destination is a shadow of the original local-innovation network",
+    "Review-based directory — submission doesn't guarantee listing",
+    "Local-market fit required — a startup with no presence in a covered city is off-beat",
+    "Site blocked automated fetch — verify the form works in a real browser"
+  ],
+  "countsAsLive": "The startup appears in the relevant local Inno Pages directory",
+  "unknowns": [
+    "Whether the post-a-startup form still functions post-bizjournals consolidation",
+    "Current directory maintenance level"
+  ]
+}

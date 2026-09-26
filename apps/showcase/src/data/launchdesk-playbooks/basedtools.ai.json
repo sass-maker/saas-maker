@@ -1,0 +1,54 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "basedtools.ai",
+  "name": "BasedTools",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://basedtools.ai/",
+      "title": "Homepage — live AI tools directory with 'Submit Product' in nav"
+    },
+    {
+      "url": "https://basedtools.ai/submit",
+      "title": "Submit page — Free Track ($0, requires backlink + DR>15) and Premium Track ($9.99/mo)"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free Track requires embedding a follow link to https://www.basedtools.ai/ on your homepage (anchor 'Based Tools AI')",
+    "Tool's domain must have DR > 15 to qualify for the free track",
+    "Listing is removed if the reciprocal backlink is removed"
+  ],
+  "requirements": [
+    "AI tool or AI-adjacent product",
+    "Free track: DR > 15 and a reciprocal homepage backlink",
+    "Paid Premium Track ($9.99/mo, listed as 'most popular', claims DR 47) has no queue and skips the backlink requirement",
+    "Form fields: Tool Name, Website URL, Short Description (AI-generated if skipped), Description, and one document/image upload (max 10MB)"
+  ],
+  "preparation": [
+    "Product name and website URL",
+    "Short and long descriptions (optional — the site AI-generates missing copy)",
+    "Logo or representative image/document under 10MB",
+    "For the free track: ability to add an HTML backlink snippet to the product homepage and evidence of DR > 15"
+  ],
+  "workflow": [
+    "Open https://basedtools.ai/submit",
+    "Choose Free Track (add the backlink code first) or Premium Track ($9.99/mo)",
+    "Fill Tool Name, Website URL, descriptions, and upload an image/doc",
+    "Submit; free-track listings are reviewed within ~24 hours, premium goes live in seconds"
+  ],
+  "watchFor": [
+    "Free listing is contingent on keeping the reciprocal backlink live — removal delists the tool",
+    "DR > 15 floor means brand-new domains do not qualify for free",
+    "Heavy NSFW/adult category mix on the directory — consider brand adjacency before listing",
+    "Premium is a subscription; cancelling removes the listing",
+    "Descriptions left blank are AI-generated — supply your own copy to control positioning"
+  ],
+  "countsAsLive": "The tool has a public detail page on basedtools.ai and appears in its category listing",
+  "unknowns": [
+    "Whether the free track checks the DR floor automatically or at manual review",
+    "Whether an account is required (a Sign In link exists but the submit form renders without auth)"
+  ]
+}

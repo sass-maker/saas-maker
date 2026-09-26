@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "proofstories.io",
+  "name": "ProofStories",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://proofstories.io/",
+      "title": "Homepage — indie startup directory (est. 2026), weekly launch waves on Wednesdays 09:00 UTC, upvote counts on listings"
+    },
+    {
+      "url": "https://proofstories.io/plans/",
+      "title": "Plans — Standard Launch Free (queue + homepage for days), Sponsored $9.99/launch (skip queue), Premium $39.99/launch (newsletter + social)"
+    },
+    {
+      "url": "https://proofstories.io/submit",
+      "title": "Submit route — JS-rendered, requires 'Login with Google'"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Indie startup / maker product — directory self-describes as 'the indie startup directory' with verified-MRR positioning",
+    "Google login required to submit",
+    "Free Standard Launch goes into a queue and ships in a weekly launch wave (next wave Wednesday 09:00 UTC)",
+    "Paid options exist purely for speed/placement: Sponsored $9.99 skips queue, Premium $39.99 adds newsletter + social"
+  ],
+  "preparation": [
+    "Product name, URL, one-line description, and category (listings show category chips like 'AI & Machine Learning', 'Developer Tools')",
+    "MRR figure if willing to share — site tracks 'verified MRR' across the directory",
+    "Google account for login"
+  ],
+  "workflow": [
+    "Sign in with Google on proofstories.io",
+    "Open /submit and fill the product form",
+    "Choose Standard (free, queued) — or Sponsored/Premium if speed matters",
+    "Free launches go live in the Wednesday 09:00 UTC wave; top-3 ranked products get a badge",
+    "Promote the listing during its homepage days — upvotes (▲) drive ranking"
+  ],
+  "watchFor": [
+    "Weekly-batch launch model: free submissions wait for the next wave — submit early in the week",
+    "Sponsored slots are clearly labelled; paying doesn't fake organic rank",
+    "Young directory (est. 2026, ~777 startups claimed) — modest but real launch-wave mechanics",
+    "Verified-MRR positioning may mean revenue claims get checked — don't inflate"
+  ],
+  "countsAsLive": "A product page resolves at proofstories.io/directory/products/<slug>/ with upvote count, category, and View link",
+  "unknowns": [
+    "How long the free queue actually takes (wave cadence is weekly)",
+    "Whether directory outbound links are followed",
+    "What 'verified MRR' verification entails"
+  ]
+}

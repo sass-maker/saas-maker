@@ -1,0 +1,56 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "topfreeaitools.com",
+  "name": "TopFreeAITools",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://topfreeaitools.com/",
+      "title": "Homepage — AI tools directory; renders empty to plain fetchers (JS-only SPA)"
+    },
+    {
+      "url": "https://topfreeaitools.com/profile?nav=aitool",
+      "title": "Batch-provided submit URL — profile/ai-tool section; empty render without JS session"
+    },
+    {
+      "url": "https://wheretosubmit.org/sites/topfreeaitools-com",
+      "title": "Where To Submit entry — marks it DR 54, Free, Dofollow AI-tools directory"
+    },
+    {
+      "url": "https://topfreeaitools.com/ai/aidirhub",
+      "title": "Sample listing page (via search snippet) — 'Submit Tool' and 'Login' nav links; support@topfreeaitools.com"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "AI tools only",
+    "Account/login required — 'Submit Tool' and 'Login' appear in the nav; the submit form lives in the profile area (/profile?nav=aitool)",
+    "Site is a JS-rendered SPA — no anonymous form fields visible to fetches",
+    "Third-party marks the listing as free with a dofollow link"
+  ],
+  "preparation": [
+    "Account registration on the site",
+    "Tool name, URL, description, icon/logo, category",
+    "A real browser — HTTP fetches return empty shells"
+  ],
+  "workflow": [
+    "Open topfreeaitools.com in a browser and register/log in",
+    "Go to profile → AI tool section (/profile?nav=aitool) or 'Submit Tool'",
+    "Fill the tool details and submit",
+    "Listing appears under /ai/<slug> pages in its category"
+  ],
+  "watchFor": [
+    "Fully JS-rendered — automation needs a headless browser",
+    "Tagline is 'Find AI Tools for every day tasks' with 'No spam, Only AI Tools' — editorial stance unknown",
+    "Support contact: support@topfreeaitools.com",
+    "Dofollow claim is third-party (wheretosubmit.org), not verified on their pages"
+  ],
+  "countsAsLive": "The tool has a public topfreeaitools.com/ai/<slug> listing page under its category",
+  "unknowns": [
+    "Exact form fields and whether any payment/premium tier exists",
+    "Review/approval turnaround",
+    "Whether dofollow applies to all listings"
+  ]
+}

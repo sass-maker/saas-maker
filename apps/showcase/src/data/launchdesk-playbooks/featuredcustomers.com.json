@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "featuredcustomers.com",
+  "name": "FeaturedCustomers",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://featuredcustomers.com/vendor-solutions",
+      "title": "For Vendors — free Verified Vendor profile vs Premium Vendor upgrade; Add Your Company / Verify Your Profile / Upgrade forms"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "B2B business software or service vendors only — the platform is a customer-reference directory (reviews, case studies, success stories, testimonials, videos)",
+    "Free 'Verified Vendor' profile includes updating company info, managing branding, sample customer references, and consideration for Customer Success Reports",
+    "'Add Your Company' is a contact form (name, company, email, phone) — the team follows up; it says 'Contact us today for pricing options' for adding customer references"
+  ],
+  "preparation": [
+    "Company name, business email, phone number for the contact form",
+    "Company info and branding assets (logo, description) for the verified profile",
+    "Customer references/case studies if you want the profile to carry content"
+  ],
+  "workflow": [
+    "Open https://featuredcustomers.com/vendor-solutions",
+    "Choose the free path: 'Get Verified for Free' (claim/verify an existing profile) or 'Add Your Company' (new company) — both open contact forms",
+    "Submit the form (First/Last name, Company, Email, Phone) and wait for a service specialist to respond",
+    "Complete verification to take control of the profile, then update company info and branding"
+  ],
+  "watchFor": [
+    "Not an instant self-serve listing — every path funnels into a contact form followed by human follow-up",
+    "'Add your company' page mentions 'pricing options' — references/content features may be gated behind Premium even though basic verification is free",
+    "Premium Vendor upgrade sells competitor-info removal, multi-category placement, unlimited references, profile analytics",
+    "Platform is about customer references — a vendor profile with no customer success content has limited value"
+  ],
+  "countsAsLive": "A public vendor profile page exists on featuredcustomers.com under a software/service category and shows as verified/managed",
+  "unknowns": [
+    "Whether a free Verified Vendor profile is always granted or depends on existing customer references on the platform",
+    "Cost of the Premium tier",
+    "Whether outbound links from the profile are dofollow",
+    "Turnaround time after the contact form"
+  ]
+}

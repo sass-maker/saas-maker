@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "merchantcircle.com",
+  "name": "MerchantCircle",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.merchantcircle.com/corporate/help/help-popular.html",
+      "title": "MerchantCircle help — 'free to join'; 14M+ pre-created business listings; claim existing listing or create a new one; paid packages optional (content read via search result)"
+    },
+    {
+      "url": "https://branddoneforyou.com/what-is-merchantcircle-com-and-how-do-i-list-my-business/",
+      "title": "Third-party signup walkthrough — plan picker pushes Premium ($360-$480/yr); 'Your listing will not be created until credit card information is verified' on some flows; basic free plan exists at the bottom of the plan page (content read via search result)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "A free basic listing exists but the signup flow pushes paid plans ($360–$480/yr) and at least one flow demands credit-card verification before creating the listing — friction is real",
+    "Local/US business directory — a SaaS without a local-business presence is a poor fit"
+  ],
+  "requirements": [
+    "A US local-business identity — MerchantCircle is a local merchant directory (14M+ listings)",
+    "merchantcircle.com/signup — account, then claim an existing listing or 'Add your Business'",
+    "Plan selection step: Starter/Professional/Ultimate paid plans promoted; basic free plan is available (scroll to bottom per third-party docs)",
+    "Email verification to complete signup",
+    "merchantcircle.com/signup returned 403 to automated fetch — flow verified via help docs and third-party walkthroughs"
+  ],
+  "preparation": [
+    "Business name, address/phone (NAP), category, website",
+    "Decide upfront: free basic plan vs paid — the plan picker defaults to paid options"
+  ],
+  "workflow": [
+    "Sign up at merchantcircle.com/signup",
+    "Search for an existing auto-created listing and claim it ('Claim this listing!'), else add the business",
+    "Choose the free/basic plan if you don't want to pay",
+    "Verify the email, then complete the listing: description, hours, photos, website link"
+  ],
+  "watchFor": [
+    "Plan screen pushes paid tiers and at least one flow requires credit-card verification — read carefully before entering payment info",
+    "Local-business directory — no fit for a location-independent SaaS",
+    "Legacy directory — traffic value is modest and mostly SEO/brand-search",
+    "Listing may already exist unclaimed — check first"
+  ],
+  "countsAsLive": "The claimed business listing is live at merchantcircle.com with your details",
+  "unknowns": [
+    "Whether credit-card verification is now mandatory on all plans",
+    "Current free-tier feature limits"
+  ]
+}

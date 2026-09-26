@@ -1,6 +1,6 @@
 {
   "$schema": "fleet.launch-coverage.v1",
-  "updated": "2026-09-25",
+  "updated": "2026-09-26",
   "note": "Public projection of the owner-local submission ledger. Agents mark destinations here as submissions are posted; private receipts stay in tooling/config/directory-submissions/.",
   "coveredStates": ["submitted", "scheduled", "queued", "live"],
   "denominator": {
@@ -22,32 +22,6 @@
           "recordedAt": "2026-09-22T19:24:53Z"
         },
         "startupcollections.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        }
-      }
-    },
-    "ai-badges": {
-      "destinations": {
-        "activesearchresults.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "directorywebpromotion.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "qualityinternetdirectory.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "startupcollections.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        }
-      },
-      "externalTargets": {
-        "github.com/chetanraj/awesome-github-badges": {
           "state": "submitted",
           "recordedAt": "2026-09-22T19:24:53Z"
         }
@@ -1126,26 +1100,6 @@
         }
       }
     },
-    "materia": {
-      "destinations": {
-        "activesearchresults.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "directorywebpromotion.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "qualityinternetdirectory.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "startupcollections.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        }
-      }
-    },
     "nomad-data-adventure": {
       "destinations": {
         "activesearchresults.com": {
@@ -1370,83 +1324,6 @@
           "state": "skipped",
           "recordedAt": "2026-09-22T19:24:53Z",
           "reason": "email_verification_serial_gate"
-        }
-      }
-    },
-    "ph-catalog": {
-      "destinations": {
-        "activesearchresults.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "directorywebpromotion.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "qualityinternetdirectory.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "startupcollections.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "viesearch.com": {
-          "state": "skipped",
-          "recordedAt": "2026-09-22T19:24:53Z",
-          "reason": "email_verification_serial_gate"
-        }
-      },
-      "externalTargets": {
-        "github.com/davidgasquez/awesome-duckdb": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        }
-      }
-    },
-    "pinpoint": {
-      "destinations": {
-        "activesearchresults.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "directorywebpromotion.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "qualityinternetdirectory.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "startupcollections.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        }
-      }
-    },
-    "port-whisperer": {
-      "destinations": {
-        "activesearchresults.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "directorywebpromotion.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "qualityinternetdirectory.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "startupcollections.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        }
-      },
-      "externalTargets": {
-        "github.com/toolleeo/awesome-cli-apps-in-a-csv": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
         }
       }
     },
@@ -1841,32 +1718,6 @@
           "state": "skipped",
           "recordedAt": "2026-09-22T19:24:53Z",
           "reason": "email_verification_serial_gate"
-        }
-      }
-    },
-    "society-relay": {
-      "destinations": {
-        "activesearchresults.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "directorywebpromotion.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "qualityinternetdirectory.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        },
-        "startupcollections.com": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
-        }
-      },
-      "externalTargets": {
-        "github.com/cagataycali/awesome-strands-agents": {
-          "state": "submitted",
-          "recordedAt": "2026-09-22T19:24:53Z"
         }
       }
     },

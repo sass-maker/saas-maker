@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "emojilaunch.com",
+  "name": "Emoji Launch",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://emojilaunch.com/",
+      "title": "Homepage — minimal launch board listing products with emoji, tagline, and launch date"
+    },
+    {
+      "url": "https://emojilaunch.com/submit",
+      "title": "Submit — 'Purchase a launch code on Gumroad, then enter it below'; single-use codes; fields and rules listed"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Must be a product: app, tool, site, or hardware project",
+    "Must be ready to use — 'no waitlists, or coming soon pages'",
+    "No spam, adult, or misleading content",
+    "Requires a single-use launch code purchased on Gumroad (smithlabs.gumroad.com/l/opqqjo) — code is verified automatically at submission"
+  ],
+  "preparation": [
+    "Product name (max 40 chars), tagline (max 60 chars)",
+    "One representative emoji for the listing",
+    "Product URL and contact email",
+    "A chosen launch date — 'Your product will be listed on your launch day'",
+    "Gumroad purchase for the launch code (price not stated on the submit page)"
+  ],
+  "workflow": [
+    "Buy a launch code via the Gumroad link on https://emojilaunch.com/submit",
+    "Enter the launch code plus product details (name, tagline, emoji, URL, launch date, email)",
+    "Click 'Schedule Launch!' — the listing goes live on the selected launch day on the homepage 'Latest' feed"
+  ],
+  "watchFor": [
+    "No free route — every submission requires a paid single-use code",
+    "Launch code price is not shown until Gumroad checkout",
+    "Small site: listings are one line each (emoji + tagline + link with ?ref=emojilaunch); the latest entry shown was Aug 4, 2026 — modest volume",
+    "Listing dates appear user-scheduled, so homepage visibility depends on chosen launch date"
+  ],
+  "countsAsLive": "The product appears in the emojilaunch.com Latest feed with emoji, tagline, and outbound link on/after the scheduled launch date",
+  "unknowns": [
+    "Launch code price at Gumroad checkout",
+    "Whether listings stay permanently or roll off after a period",
+    "Traffic volume — the board is extremely minimal with no categories or voting detail beyond small numbers"
+  ]
+}

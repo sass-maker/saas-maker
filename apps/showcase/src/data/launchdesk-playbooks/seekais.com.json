@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "seekais.com",
+  "name": "SeekAIs",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://seekais.com/submit",
+      "title": "Submit Your Tool — 'Please log in to submit your tool'; displays 'DR33'"
+    },
+    {
+      "url": "https://seekais.com/",
+      "title": "Homepage — active AI directory with Featured and Latest tool listings"
+    },
+    {
+      "url": "https://seekais.com/refund-policy",
+      "title": "Refund Policy — covers 'virtual goods' purchases (14-day window); implies a paid component exists"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "Account required — /submit gates on login ('Please log in to submit your tool')",
+    "AI tools only — this is an AI-tools directory",
+    "A refund policy for 'virtual goods' exists, implying purchases happen somewhere in the flow — cost of submission not publicly shown"
+  ],
+  "preparation": [
+    "Account registration (email or OAuth — login method not verified)",
+    "Tool name, URL, description, logo, category from their taxonomy (AI Writer, AI Dev Tools, LLM Platform, etc.)"
+  ],
+  "workflow": [
+    "Create an account / log in at seekais.com",
+    "Open /submit and complete the tool submission form (fields behind the login wall)",
+    "Await review; listing appears under /explore categories and 'Latest'"
+  ],
+  "watchFor": [
+    "Self-reported 'DR33' on the submit page — much lower than the source-claimed DR55; recheck metrics before prioritizing",
+    "Everything meaningful sits behind login — can't verify pricing or required fields anonymously",
+    "Refund policy exists but is generic boilerplate for 'virtual goods'",
+    "Multilingual site (10 languages); listings show large view counts — authenticity unverified"
+  ],
+  "countsAsLive": "The tool appears on a public seekais.com detail page and in the Latest/explore listings",
+  "unknowns": [
+    "Whether submission is free or paid",
+    "Form fields and review turnaround",
+    "Dofollow status of listing links"
+  ]
+}

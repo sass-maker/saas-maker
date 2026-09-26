@@ -1,0 +1,191 @@
+---
+import Footer from '../components/Footer.astro';
+import Nav from '../components/Nav.astro';
+import { DOMAIN_RANKS, RANKS_UPDATED } from '../data/domainRanks';
+import Layout from '../layouts/Layout.astro';
+
+const updatedLabel = new Date(RANKS_UPDATED).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+const withReading = DOMAIN_RANKS.filter((d) => d.current !== null);
+const median =
+  withReading.length > 0 ? withReading[Math.floor(withReading.length / 2)].current : null;
+---
+
+<Layout
+  title="Domain ranks — SaaS Maker"
+  description={`Provider-reported Ahrefs Domain Rating for ${DOMAIN_RANKS.length} Fleet domains, refreshed weekly. Snapshot of ${updatedLabel}.`}
+>
+  <div class="workshop-world interior-world tooling-world">
+    <Nav />
+    <main id="main-content" class="ranks-shell">
+      <header class="tooling-intro">
+        <div class="tooling-intro-copy">
+          <p class="directory-kicker">Domain strength board</p>
+          <h1>Every domain, ranked by DR.</h1>
+          <p>
+            Ahrefs Domain Rating history for all owned Fleet domains, collected by the archived
+            drank app and refreshed weekly by a scheduled job. Ratings are provider-reported —
+            a missing value means "not reported", never zero.
+          </p>
+        </div>
+        <div class="tooling-count" aria-label={`${DOMAIN_RANKS.length} tracked domains`}>
+          <strong>{DOMAIN_RANKS.length}</strong>
+          <span>domains · snapshot {updatedLabel}</span>
+        </div>
+      </header>
+
+      <nav class="tooling-jump" aria-label="Ranks data">
+        <a href="/ranks.json">JSON <span>API</span></a>
+        <a href="https://domains.sassmaker.com" rel="external">live tracker ↗</a>
+      </nav>
+
+      <section class="rank-table-wrap" aria-label="Domain rating table">
+        <table class="rank-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Domain</th>
+              <th>DR</th>
+              <th>Change</th>
+              <th>Readings</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {DOMAIN_RANKS.map((rank, i) => (
+              <tr>
+                <td class="rank-num">{String(i + 1).padStart(2, '0')}</td>
+                <td class="rank-domain">
+                  <a href={`https://${rank.domain}`} rel="external noopener">{rank.domain}</a>
+                </td>
+                <td class="rank-dr">
+                  {rank.current !== null ? <strong>{rank.current}</strong> : <em>—</em>}
+                </td>
+                <td class="rank-delta">
+                  {rank.delta === null
+                    ? '—'
+                    : rank.delta > 0
+                      ? `▲ +${rank.delta.toFixed(1)}`
+                      : rank.delta < 0
+                        ? `▼ ${rank.delta.toFixed(1)}`
+                        : '· flat'}
+                </td>
+                <td class="rank-readings">{rank.readings}</td>
+                <td class="rank-status">
+                  {rank.tracked ? 'tracked' : 'history only'}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+
+      <p class="rank-footnote">
+        Median reported DR: {median !== null ? median : 'unknown'} across {withReading.length}
+        {' '}domains with a reading. Source: Ahrefs free public DR endpoint via the drank
+        collector; last refresh {updatedLabel}.
+      </p>
+    </main>
+    <Footer />
+  </div>
+</Layout>
+
+<style>
+  .ranks-shell {
+    width: min(86rem, calc(100% - 3rem));
+    margin-inline: auto;
+    padding: clamp(2rem, 4vw, 3rem) 0 clamp(5rem, 9vw, 8rem);
+  }
+
+  .rank-table-wrap {
+    margin-top: 2rem;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--surface);
+    overflow-x: auto;
+  }
+
+  .rank-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+
+  .rank-table th,
+  .rank-table td {
+    padding: 0.65rem 0.9rem;
+    text-align: left;
+    border-bottom: 1px solid var(--line);
+    white-space: nowrap;
+  }
+
+  .rank-table thead th {
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    background: color-mix(in srgb, var(--ink) 4%, var(--surface));
+  }
+
+  .rank-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  .rank-num {
+    color: var(--ink-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .rank-domain a {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .rank-dr strong {
+    font-variant-numeric: tabular-nums;
+    font-size: 1rem;
+  }
+
+  .rank-dr em {
+    color: var(--ink-muted);
+    font-style: normal;
+  }
+
+  .rank-delta {
+    font-variant-numeric: tabular-nums;
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+  }
+
+  .rank-readings {
+    color: var(--ink-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .rank-status {
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+
+  .rank-footnote {
+    margin-top: 1.25rem;
+    font-size: 0.8rem;
+    color: var(--ink-muted);
+    max-width: 60ch;
+  }
+
+  @media (max-width: 560px) {
+    .rank-table {
+      font-size: 0.8rem;
+    }
+    .rank-table th,
+    .rank-table td {
+      padding: 0.5rem 0.6rem;
+    }
+  }
+</style>

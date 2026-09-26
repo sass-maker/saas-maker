@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "opensaas.directory",
+  "name": "Open SaaS Directory",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://opensaas.directory/",
+      "title": "Homepage — 'Free, self-hosted alternatives to the SaaS you already pay for'; 105+ curated open-source projects"
+    },
+    {
+      "url": "https://opensaas.directory/projects/new",
+      "title": "Submit a Project page — 'Submit your open-source SaaS project to the directory' (client-rendered form)"
+    },
+    {
+      "url": "https://github.com/open-saas-directory/awesome-saas-directory",
+      "title": "Companion GitHub repo — awesome list synced from the directory database"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Open-source, self-hostable SaaS only — every listing is a 'free, self-hosted alternative to the SaaS you already pay for'",
+    "Entries show GitHub stats (stars, contributors, license, last-commit) — a public GitHub repo is effectively required",
+    "Closed-source SaaS products do not fit this directory",
+    "Sponsorship slots exist separately ('Become a sponsor')"
+  ],
+  "preparation": [
+    "Public GitHub repository URL (stars/license data is pulled automatically)",
+    "Project name, description, and which paid SaaS product(s) it replaces",
+    "Category pick (web analytics, CRM, billing, project management, etc.)",
+    "Contact email (a you@email.com field is present on the form)"
+  ],
+  "workflow": [
+    "Open https://opensaas.directory/projects/new",
+    "Fill the submission form — the page previews the directory listing live as you type",
+    "Submit for review; the directory is 'curated and updated regularly'"
+  ],
+  "watchFor": [
+    "Strict scope: open-source + self-hostable only — a proprietary SaaS submission will not fit",
+    "The submit form is client-rendered — needs JS; field list could not be fully verified statically",
+    "Listings are synced into a public GitHub awesome-list — your repo stats are republished there",
+    "Small directory (105+ projects) run by a solo builder (Mohsen)"
+  ],
+  "countsAsLive": "The project gets a /projects/<slug> page with GitHub stats and appears in category/alternatives listings",
+  "unknowns": [
+    "Exact form fields and whether review is manual or automated",
+    "Review turnaround",
+    "Sponsor pricing"
+  ]
+}

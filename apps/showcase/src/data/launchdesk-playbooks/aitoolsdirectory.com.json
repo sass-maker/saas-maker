@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aitoolsdirectory.com",
+  "name": "AI Tools Directory",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://aitoolsdirectory.com/submit-tool",
+      "title": "Submit AI Tool — free Paperform submission, manual review, strict content rules; Fast Track paid option via /ads"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "AI tools ONLY — 'we only list AI-related tools. Non-AI submissions won't be approved'",
+    "Product must be self-explanatory: 'If regular people can't figure it out in 5 seconds, it's not going on the directory'",
+    "UNIQUE description required — copied or AI-written descriptions 'will be detected and discarded' or pushed to the bottom of the queue",
+    "Transparent public pricing — no hidden fees, no call-for-pricing, no waitlists",
+    "Consumer/end-user friendly, no excessive jargon",
+    "NO crypto-related products",
+    "Manual review; submission is not a guarantee of publication"
+  ],
+  "preparation": [
+    "Tool name, URL, logo/screenshots",
+    "A hand-written, unique description — do NOT paste site copy or AI-generate it",
+    "Public pricing page (must be visible without sales contact)",
+    "Category fit"
+  ],
+  "workflow": [
+    "Open https://aitoolsdirectory.com/submit-tool",
+    "Fill the embedded form (or open it directly at https://aitool.paperform.co/)",
+    "Submit — joins the manual-review queue; published 'as soon as possible'",
+    "Optional: Fast Track via /ads skips the queue ('3 days or less'), or buy the Featured Tool homepage spot"
+  ],
+  "watchFor": [
+    "AI-generated descriptions are explicitly detected and discarded — write it yourself",
+    "Crypto products are hard-banned",
+    "Hidden pricing or waitlist = automatic rejection",
+    "Form is hosted on Paperform (external domain aitool.paperform.co)",
+    "Site disclaims affiliation with aitoolsdirectory.net — a lookalike domain"
+  ],
+  "countsAsLive": "The tool appears on a public aitoolsdirectory.com listing page in the curated directory after manual review",
+  "unknowns": [
+    "Free-queue turnaround (only the paid '3 days or less' is stated)",
+    "Dofollow status of listing links",
+    "Fast Track and Featured spot pricing (behind /ads)"
+  ]
+}

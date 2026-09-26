@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aichief.com",
+  "name": "AIChief",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://aichief.com/submit-ai-tool/",
+      "title": "Submit Your AI Tool — pricing tiers ($0 Free / $99 Verified / $149 Featured / Gold $200+), submission rules, FAQ"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Only AI tools accepted — the product must have AI features",
+    "No beta or waitlist tools ('we are not entertaining submissions for Beta or Waitlist AI tools right now')",
+    "No NSFW/adult tools — directory is explicitly brand-safe",
+    "Functional, publicly accessible product that a human reviewer can test hands-on",
+    "Original description required — copied content is deprioritized or rejected",
+    "Product purpose must be understandable within ~5 seconds of reading the description"
+  ],
+  "preparation": [
+    "Tool name, URL, and an original plain-language description",
+    "Category pick from their ~600 category tree",
+    "Paid tiers add: company website link, social links, pricing info, media gallery, pros & cons, FAQs",
+    "Account/contact email for the verification email and support channel (support@aichief.com)"
+  ],
+  "workflow": [
+    "Open https://aichief.com/submit-ai-tool/",
+    "Pick a tier — Free Listing $0 enters the standard manual review queue; $99 Verified and $149 Featured get priority 24-hour review plus badges and richer listing fields",
+    "Fill in tool URL and details (~5 min per the site's own estimate)",
+    "Editorial team reviews hands-on (quality, brand safety, originality)",
+    "On approval the listing goes live permanently; verification email is sent after submission"
+  ],
+  "watchFor": [
+    "Site 403-blocks non-Googlebot user agents — normal browser fetches may fail; a real browser session should still work",
+    "Heavy upsell surface: paid tiers, a la carte 'build your own' mix, Gold badge at $200+, campaigns — the free path is real but surrounded by upsells",
+    "Free tier only includes 'Basic Tool Information' — media gallery, social links, pricing info are paid-only fields",
+    "Free submissions have no stated turnaround; 24-hour review applies to paid priority",
+    "Updates to paid listings take 2-3 business days via an update form"
+  ],
+  "countsAsLive": "The tool has a public page on aichief.com under its chosen category, reachable from site search/category browse, showing the listing tier's fields",
+  "unknowns": [
+    "Free-tier review turnaround (only paid 24h is stated)",
+    "Free-tier acceptance rate",
+    "Exact free-form fields — the embedded form did not render in fetched text"
+  ]
+}

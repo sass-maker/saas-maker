@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "makermove.com",
+  "name": "MakerMove",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://makermove.com/",
+      "title": "Homepage — live React app ('The ultimate dashboard of resources for makers & founders'); nav includes Books/Directories/Investors/Tools/Promote/Pro; no server-rendered content"
+    },
+    {
+      "url": "https://launchpointzero.com/launchsites/maker_move",
+      "title": "Launch Point Zero profile — submit URL makermove.com/promote, 'Pay to submit: true', ~$9, 'no free option', status active (record updated 2024-09-11)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Submission route is https://www.makermove.com/promote ('Promote' nav item)",
+    "Third-party reporting says submission is paid (~$9) with no free plan — the promote page itself is client-rendered and could not be read directly",
+    "Site is a resource dashboard (books, directories, investors, journalists, podcasts, tools) plus a 'Pro' tier"
+  ],
+  "preparation": [
+    "Product name, URL, short description",
+    "Payment for the promote fee (~$9 reported; confirm at checkout)",
+    "A browser is required — the site is a client-side SPA, so form fields must be inspected live"
+  ],
+  "workflow": [
+    "Open https://www.makermove.com/promote in a JS-capable browser",
+    "Select a promotion package and fill the startup details (description, features, links)",
+    "Pay to activate the listing",
+    "Listing appears within the MakerMove dashboard sections"
+  ],
+  "watchFor": [
+    "Client-rendered SPA — nothing is verifiable without a browser; current pricing/packages could not be confirmed firsthand",
+    "Third-party reviewer rated it 'Should you launch here? No' — decent-looking but unverifiable traffic",
+    "Reported price (~$9) dates from Sep 2024 — may have changed"
+  ],
+  "countsAsLive": "The product appears in a MakerMove section (e.g. promoted/feature listing) reachable from the live app",
+  "unknowns": [
+    "Current promote pricing and package tiers — page did not render without JavaScript",
+    "Whether links are dofollow",
+    "Traffic volume — could not be verified by third-party review either"
+  ]
+}

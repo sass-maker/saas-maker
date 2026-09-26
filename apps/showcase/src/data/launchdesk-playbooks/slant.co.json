@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "slant.co",
+  "name": "Slant",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.slant.co/versus/9156/9158/~slant_vs_alternativeto",
+      "title": "Slant's own comparison page — 'not financially tied to any products'; questions/options/pros-cons added and edited by users; community can flag/edit false claims (content read via search result; site 403 to fetchers)"
+    },
+    {
+      "url": "https://backlinks.fyi/directories/slant",
+      "title": "Third-party guide — add your product as an option on relevant 'What is the best X?' questions; account required, no backlink, instant community approval (content read via search result)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free Slant account",
+    "Products appear as 'options' under community questions ('What is the best X?') — add your product as an option on relevant existing questions, or create a new question",
+    "Options need pros/cons written by the community — thin or fake pros/cons get flagged and edited out",
+    "No payment path to placement — Slant states it isn't financially tied to listed products and paid 'favorable reviews' don't exist",
+    "slant.co blocked automated fetch (403) — verified via Slant's own content and third-party guides"
+  ],
+  "preparation": [
+    "List the questions where your product is a legitimate answer (e.g., 'What is the best X for Y?')",
+    "Honest pros/cons — the community edits false claims",
+    "Account credibility: contribute to unrelated questions before adding your own product"
+  ],
+  "workflow": [
+    "Register a Slant account",
+    "Find relevant 'What is the best…' questions and add your product as an option with genuine pros/cons",
+    "Build credibility by contributing to other questions first — fresh accounts self-promoting get flagged",
+    "Rankings are community-driven (votes/quality of recommendations)"
+  ],
+  "watchFor": [
+    "Self-promotion is policed by the community — false pros/cons get edited or flagged; astroturfing damages the listing",
+    "Outbound links are nofollow (per third-party guides) — audience play, not link equity",
+    "Answers must fit an existing question — a product nobody asks about won't surface",
+    "Site health appeared degraded in this session (403 to fetchers); community activity level uncertain"
+  ],
+  "countsAsLive": "The product appears as an option on one or more Slant question pages",
+  "unknowns": [
+    "Current community activity/moderation level",
+    "Whether the site still actively maintains the platform"
+  ]
+}

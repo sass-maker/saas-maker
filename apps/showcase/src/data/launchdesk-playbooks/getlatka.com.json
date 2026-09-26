@@ -1,0 +1,43 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "getlatka.com",
+  "name": "GetLatka",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://getlatka.com/",
+      "title": "GetLatka — Nathan Latka's SaaS revenue-data platform + CEO-interview podcast; 72,000+ company database; free account for access; paid $49-99/mo; company pages at /companies/<slug> carry revenue/growth metrics"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "There is no public submit form — companies enter the database through Latka's data operation (scraped metrics + CEO interviews); the route to being featured is the interview pipeline or their data collection"
+  ],
+  "requirements": [
+    "SaaS company with real metrics — the database is built on CEO-confirmed revenue data",
+    "Being featured means a Nathan Latka interview ('revenue confirmed on camera') or inclusion via their data collection",
+    "Reader access: free account; full data $49-99/mo",
+    "No submission form observed on the public site"
+  ],
+  "preparation": [
+    "Real revenue/growth numbers you can defend — Latka interviews press for specifics",
+    "A pitch for the podcast/interview format"
+  ],
+  "workflow": [
+    "Pitch an interview via Latka's channels (podcast guest route)",
+    "If interviewed, a company page and interview post are published with the disclosed metrics",
+    "Alternatively the company may enter the database automatically via their data ops"
+  ],
+  "watchFor": [
+    "The interview format demands transparency — revenue figures are published publicly",
+    "Not a launch directory — the database values companies by metrics, not launches",
+    "Claiming/updating a company page isn't documented publicly"
+  ],
+  "countsAsLive": "The company has a page at getlatka.com/companies/<slug> with metrics/interview",
+  "unknowns": [
+    "How to request a new company entry absent an interview",
+    "Whether company data can be corrected by the company itself"
+  ]
+}

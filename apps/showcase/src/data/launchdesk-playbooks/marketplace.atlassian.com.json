@@ -1,0 +1,59 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "marketplace.atlassian.com",
+  "name": "Atlassian Marketplace",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://developer.atlassian.com/platform/marketplace/",
+      "title": "Atlassian Marketplace developer docs — onboarding guide: plan, build, launch, grow"
+    },
+    {
+      "url": "https://developer.atlassian.com/platform/marketplace/become-a-partner/",
+      "title": "Become a partner — three partner types; partner account created at marketplace.atlassian.com/manage/vendor/create"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Listing requires a real working app/integration built on an Atlassian platform (Forge or Connect for cloud, or a Data Center app) — this is not a listing-only directory",
+    "Partner registration is free, but cloud apps must meet security requirements and pass app review; paid apps are revenue-shared via Atlassian"
+  ],
+  "requirements": [
+    "An Atlassian account, then a partner account created at https://marketplace.atlassian.com/manage/vendor/create with company details",
+    "A functioning app: Forge or Connect cloud app, or Data Center/Server app package — a SaaS marketing page alone is not listable",
+    "Cloud apps must satisfy security requirements and may face security questionnaires, identity/business verification, and scanning (Ecoscanner)",
+    "Listings go through Atlassian app review ('Submit for review' in the onboarding guide); editing a listing is locked during review",
+    "Partner contacts need assigned roles (primary, support, licensing/finance, security, engineering, etc.)"
+  ],
+  "preparation": [
+    "Built and tested Forge/Connect/DC app deployed at stable URLs",
+    "Partner profile (company details) and contact roles assigned",
+    "Pricing/licensing model decision (free vs paid-via-Atlassian)",
+    "Branding, support, privacy, and security documentation per the pre-launch checklist",
+    "Marketing assets for the listing per app approval guidelines"
+  ],
+  "workflow": [
+    "Create an Atlassian account and log into marketplace.atlassian.com",
+    "Create a partner account at marketplace.atlassian.com/manage/vendor/create",
+    "Follow the partner onboarding guide: define product, build with Forge tooling, test on developer instances",
+    "Decide pricing and licensing; prepare branding, support, privacy, and security artifacts",
+    "Create the Marketplace listing and link the app",
+    "Submit for review; respond to reviewer questions; go live and market the app",
+    "Post-launch: track customers/revenue, respond to reviews, maintain security posture"
+  ],
+  "watchFor": [
+    "This is a build-an-app marketplace — weeks of real engineering, not a 10-minute directory submission",
+    "Listing cannot be edited while under review",
+    "Cloud apps face security scans and can be unlisted under the Security Enforcement Policy",
+    "Only 'paid via Atlassian' apps get some partner perks (e.g. free support-tools licenses)",
+    "Server apps are end-of-sale — only cloud and Data Center paths matter now"
+  ],
+  "countsAsLive": "The app has a public, approved listing on marketplace.atlassian.com reachable from Marketplace search (not hidden/draft)",
+  "unknowns": [
+    "Exact review turnaround time",
+    "Revenue-share percentage for paid-via-Atlassian apps (partner agreement terms not read this session)",
+    "Whether a free listing of a paid-elsewhere app is allowed under current terms"
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "sololaunches.com",
+  "name": "Solo Launches",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://sololaunches.com/",
+      "title": "Homepage — weekly launch board for solo founders, live 'Launching now' cohort and winners archive"
+    },
+    {
+      "url": "https://sololaunches.com/pricing",
+      "title": "Pricing — Free Launch (queue, top-3 earns dofollow), Premium $9 (guaranteed slot + dofollow), Featured $19/week, Featured+SEO $39"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free launch is real but queue-limited (up to 5 launches/day) and only earns a dofollow backlink if the product ranks top 3 in its week; $9 Premium guarantees the slot + dofollow regardless of rank"
+  ],
+  "requirements": [
+    "Aimed at solo founders / indie hackers launching SaaS and indie products",
+    "Sign-in required — 'Submit Product' goes through /sign-in to /app/startups/new",
+    "Free tier: standard queue (≤5 launches/day), homepage exposure for multiple days",
+    "Paid options: Premium $9 one-time (guaranteed next-week slot, dofollow link, 24–48h indexing), Featured $19/week, Featured + SEO Boost $39 one-time (2 lifetime dofollow blog backlinks)"
+  ],
+  "preparation": [
+    "Product name, URL, tagline, logo, category, description",
+    "An account (sign-in at /sign-in)",
+    "Optional: decide whether the guaranteed dofollow ($9) is worth skipping the top-3 gamble"
+  ],
+  "workflow": [
+    "Sign in at https://sololaunches.com/sign-in",
+    "Submit via /app/startups/new (or pick a paid tier from /pricing)",
+    "Free submissions enter the standard queue and launch in an upcoming week",
+    "During launch week the product appears in 'Launching now' with voting/comments; top 3 get winner badges + dofollow backlinks",
+    "Listing persists in the launch archive at /startups/<slug>"
+  ],
+  "watchFor": [
+    "Dofollow backlink is only guaranteed on the $9 Premium tier — free tier earns it only with a top-3 weekly rank",
+    "Content quality varies — the live board includes NSFW/spammy entries (e.g., OnlyFans-adjacent products); brand adjacency is weak",
+    "Queue depth unknown — with 5/day cap, free launches may wait",
+    "Recurring $19/week Featured is a subscription — cancel anytime",
+    "Aggressive festive-offer banner upsell"
+  ],
+  "countsAsLive": "The product appears under 'Launching now' during its week, then in 'Past launches' with a public /startups/<slug> page",
+  "unknowns": [
+    "Current queue depth / how far out free launches land",
+    "How votes are counted and whether they can be gamed",
+    "Refund policy specifics for paid tiers (a /refund page exists but wasn't read)"
+  ]
+}

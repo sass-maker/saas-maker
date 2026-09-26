@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "desifounder.com",
+  "name": "Desifounder",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://desifounder.com/",
+      "title": "Homepage — founder community: 2,600+ founders, 2,400+ launches; free signup; Spotlight Launchpad for weekly launches"
+    },
+    {
+      "url": "https://desifounder.com/spotlight",
+      "title": "Spotlight page — live weekly launch board + FAQ: free forever, manual screening, entries go live Mondays, one launch per product (30-day cooldown for major updates)"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Must register a free Desifounder account to apply",
+    "Any founder/maker can apply — solo, team, student, indie hacker",
+    "Manual screening for quality/relevance/spam before inclusion",
+    "Same product can only launch once; reapply after a 30-day cooldown only for a significant update/redesign"
+  ],
+  "preparation": [
+    "Account on desifounder.com",
+    "Product name, one-line description, URL, and category (categories include SaaS, AI/ML, Productivity, E-commerce, Marketing, Development Tools, Finance, etc.)",
+    "Timing: submit during the week; approved entries launch publicly every Monday"
+  ],
+  "workflow": [
+    "Sign up free at https://desifounder.com/signup",
+    "Submit the product to Spotlight any day of the week",
+    "Manual review; if approved, it appears in the next Monday Spotlight lineup",
+    "Earn community upvotes; featured placements can include community newsletters/posts"
+  ],
+  "watchFor": [
+    "Launches batch to Monday — submission timing does not change go-live day",
+    "One-shot per product; don't waste it on a premature listing (30-day cooldown for relaunch)",
+    "Community skews Desi/Indian founder ecosystem though open to all",
+    "'Premium features free during beta' — pricing may be introduced later",
+    "Low vote counts visible on current entries — modest audience, mainly a feedback/discovery play"
+  ],
+  "countsAsLive": "The product appears in the public Spotlight lineup at desifounder.com/spotlight after a Monday launch batch",
+  "unknowns": [
+    "Exact submission form fields (behind login)",
+    "Approval rate and how far in advance of Monday to submit",
+    "Whether upvotes confer any lasting ranking after the launch week"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "howtobuysaas.com",
+  "name": "HowToBuySaaS",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.howtobuysaas.com/",
+      "title": "Homepage — full-lifecycle SaaS marketplace: discovery, vendor growth, private deal flow"
+    },
+    {
+      "url": "https://www.howtobuysaas.com/list-your-saas/",
+      "title": "List Your SaaS — public marketplace listing plans: Growth $29 lifetime, Enterprise $199 lifetime, Stripe checkout"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Product must be a SaaS; vendors provide factual product info HTBS reviews before publication ('may request corrections, clarification, or additional information')",
+    "Public listing plans are one-time lifetime purchases: Growth $29 (profile, overview, one category, logo/visuals, website CTA) or Enterprise $199 (richer profile, more categories, vendor update access, priority corrections)",
+    "Site explicitly disclaims: a paid listing does NOT buy a favorable review, ranking, dofollow backlink, or guaranteed traffic"
+  ],
+  "preparation": [
+    "Product name, logo, core visuals/screenshots",
+    "Factual description: what it does, target users, key capabilities, use cases, integrations",
+    "Official product URL for the listing CTA",
+    "Stripe payment ($29 or $199)",
+    "Check whether a profile already exists — there's a separate 'Claim Your SaaS Profile' route"
+  ],
+  "workflow": [
+    "Open https://www.howtobuysaas.com/list-your-saas/",
+    "Choose Growth ($29) or Enterprise ($199) and pay via Stripe",
+    "Submit product information and assets for HTBS review",
+    "Respond to any correction/clarification requests",
+    "Listing publishes as a public product profile under a relevant category"
+  ],
+  "watchFor": [
+    "No free tier — cheapest entry is $29",
+    "Separate private marketplace (sell/raise/buy SaaS) uses monthly subscriptions — don't confuse the two funnels",
+    "Upsell surface is large: launch spotlight, newsletter sponsorship, ads, sponsored content, growth services — all separate paid products",
+    "Link benefit is explicitly disclaimed; this is a buyer-facing profile, not an SEO play"
+  ],
+  "countsAsLive": "A public product profile page for the SaaS exists on howtobuysaas.com under its category",
+  "unknowns": [
+    "Whether links in profiles are dofollow (site disclaims selling dofollow links)",
+    "Review turnaround time before publication",
+    "Whether rejected submissions are refunded"
+  ]
+}

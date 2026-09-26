@@ -1,0 +1,262 @@
+---
+/**
+ * THESIS: One reusable capability, its contract and source — the register entry as a page.
+ * OWN-WORLD: Same interior-pane language as /tools and the funding records.
+ * STORY: Name, type, summary, execution profile if declared, then the canonical source link.
+ * FORM: Single record pane, quiet and linkable.
+ */
+import Footer from '../../components/Footer.astro';
+import Nav from '../../components/Nav.astro';
+import { TOOLING_CAPABILITIES, type ToolingCapability } from '../../data/tooling';
+import Layout from '../../layouts/Layout.astro';
+
+// getStaticPaths runs in its own module context, so everything it uses must
+// be imported or declared inside the function.
+export function getStaticPaths() {
+  const slug = (id: string) =>
+    id.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  return TOOLING_CAPABILITIES.map((capability) => ({
+    params: { id: slug(capability.id) },
+    props: { capability },
+  }));
+}
+
+interface Props {
+  capability: ToolingCapability;
+}
+
+const { capability } = Astro.props as Props;
+const sourceUrl = `https://github.com/sass-maker/saas-maker/blob/main/tooling/${capability.path}`;
+const typeLabel =
+  { skill: 'Agent skill', script: 'Operator script', template: 'Template', doc: 'Guide' }[
+    capability.type
+  ] ?? capability.type;
+---
+
+<Layout
+  title={`${capability.name} — SaaS Maker tools`}
+  description={`${capability.summary} (${typeLabel} in the SaaS Maker reusable capability register.)`}
+>
+  <div class="workshop-world interior-world">
+    <Nav />
+    <main id="main-content" class="tool-detail">
+      <nav class="tool-breadcrumb" aria-label="Breadcrumb">
+        <a href="/tools">Tools</a>
+        <span aria-hidden="true">/</span>
+        <span>{capability.name}</span>
+      </nav>
+
+      <header class="tool-head">
+        <div class="tool-head-main">
+          <p class="tool-kicker">{typeLabel}</p>
+          <h1>{capability.name}</h1>
+          <p class="tool-summary">{capability.summary}</p>
+        </div>
+        <div class="tool-head-side">
+          <a href={sourceUrl} target="_blank" rel="noopener noreferrer" class="tool-cta">
+            Source on GitHub <span aria-hidden="true">↗</span>
+          </a>
+          <p class="tool-meta">
+            <code>{capability.id}</code>
+            <br />
+            <code>{capability.path}</code>
+          </p>
+        </div>
+      </header>
+
+      {capability.executionProfile && (
+        <section class="tool-pane">
+          <h2>Execution profile</h2>
+          <dl class="tool-reason-list">
+            <div>
+              <dt>Recommended</dt>
+              <dd>
+                {capability.executionProfile.recommended.intelligence} ·{' '}
+                {capability.executionProfile.recommended.reasoning}
+              </dd>
+            </div>
+            <div>
+              <dt>Minimum</dt>
+              <dd>
+                {capability.executionProfile.minimum.intelligence} ·{' '}
+                {capability.executionProfile.minimum.reasoning}
+              </dd>
+            </div>
+            <div>
+              <dt>Degradation</dt>
+              <dd>{capability.executionProfile.degradation}</dd>
+            </div>
+          </dl>
+        </section>
+      )}
+
+      <p class="tool-back">
+        <a href="/tools">Back to the capability register →</a>
+      </p>
+    </main>
+    <Footer />
+  </div>
+</Layout>
+
+<style>
+  .tool-detail {
+    width: min(86rem, calc(100% - 3rem));
+    margin-inline: auto;
+    padding: clamp(2rem, 4vw, 3rem) 0 clamp(5rem, 9vw, 8rem);
+  }
+
+  .tool-breadcrumb {
+    display: flex;
+    gap: 0.6rem;
+    margin-bottom: 2rem;
+    color: var(--ink-muted);
+    font-size: 0.85rem;
+  }
+
+  .tool-breadcrumb a {
+    color: var(--copper-hi);
+  }
+
+  .tool-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(16rem, 0.6fr);
+    gap: 0.375rem;
+    padding: 0.375rem;
+    background: var(--workshop-steel);
+  }
+
+  .tool-head-main,
+  .tool-head-side {
+    background: var(--surface);
+    padding: clamp(2rem, 4vw, 3.5rem);
+  }
+
+  .tool-kicker {
+    color: var(--copper-hi);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .tool-head h1 {
+    margin-top: 0.75rem;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    line-height: 1.02;
+    text-wrap: balance;
+  }
+
+  .tool-summary {
+    max-width: 44rem;
+    margin-top: 1.25rem;
+    color: var(--ink-soft);
+    font-size: 1.05rem;
+    line-height: 1.65;
+  }
+
+  .tool-head-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .tool-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 3rem;
+    padding: 0.75rem 1.25rem;
+    background: var(--workshop-ink);
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .tool-cta:hover {
+    background: var(--workshop-cobalt);
+  }
+
+  .tool-meta {
+    color: var(--ink-muted);
+    font-size: 0.8rem;
+    line-height: 1.8;
+    word-break: break-all;
+  }
+
+  .tool-meta code {
+    padding: 0.08rem 0.3rem;
+    background: var(--bg);
+    font-size: 0.9em;
+  }
+
+  .tool-pane {
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+    border: 1px solid var(--line-strong);
+    background: var(--surface);
+  }
+
+  .tool-pane h2 {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--copper-hi);
+  }
+
+  .tool-reason-list {
+    margin-top: 1.25rem;
+  }
+
+  .tool-reason-list > div {
+    display: grid;
+    grid-template-columns: minmax(10rem, 0.4fr) minmax(0, 1fr);
+    gap: 1rem;
+    padding: 0.7rem 0;
+    border-bottom: 1px dashed var(--line);
+  }
+
+  .tool-reason-list > div:last-child {
+    border-bottom: 0;
+  }
+
+  .tool-reason-list dt {
+    color: var(--ink-muted);
+    font-weight: 600;
+    font-size: 0.88rem;
+  }
+
+  .tool-reason-list dd {
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  .tool-back {
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  .tool-back a {
+    color: var(--copper-hi);
+    font-weight: 600;
+  }
+
+  @media (max-width: 47.99rem) {
+    .tool-detail {
+      width: min(100% - 1.5rem, 86rem);
+    }
+
+    .tool-head {
+      grid-template-columns: 1fr;
+    }
+
+    .tool-reason-list > div {
+      grid-template-columns: 1fr;
+      gap: 0.25rem;
+    }
+  }
+</style>

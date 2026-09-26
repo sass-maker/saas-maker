@@ -1,0 +1,45 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "itcentralstation.com",
+  "name": "IT Central Station (PeerSpot)",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://itcentralstation.com/",
+      "title": "Domain now serves PeerSpot (the IT Central Station rebrand) — live enterprise tech review platform with deep category taxonomy and comparisons; 'Samantha' voice AI agent for reviews promoted on homepage"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Vendor listing on PeerSpot is possible but the platform is driven by enterprise peer reviews — a product gets a profile, then needs verified enterprise users to review it; review sourcing is the actual bottleneck"
+  ],
+  "requirements": [
+    "Enterprise-tech product fit — PeerSpot's taxonomy is cybersecurity, cloud, data, IT management, enterprise apps, networking, storage, comms, sales/marketing tech",
+    "Vendor product page on peerspot.com (itcentralstation.com serves the PeerSpot platform)",
+    "Reviews come from verified enterprise professionals — PeerSpot vets reviewer identity; fake/incentivized reviews are the thing the platform exists to prevent",
+    "Vendor programs exist to get reviews sourced/managed — commercial relationship accelerates coverage"
+  ],
+  "preparation": [
+    "An enterprise-grade B2B product with real deployable customers",
+    "A pool of enterprise users willing to write verified reviews",
+    "Vendor contact with PeerSpot to establish the product profile"
+  ],
+  "workflow": [
+    "Contact PeerSpot to get the product listed (vendor onboarding)",
+    "Seed verified customer reviews — organic or via PeerSpot's review-sourcing programs",
+    "The product page accrues reviews and appears in category rankings/comparisons"
+  ],
+  "watchFor": [
+    "itcentralstation.com is the legacy brand — current product is PeerSpot; the catalog domain still resolves to it",
+    "Enterprise-only taxonomy — a dev tool or consumer SaaS doesn't fit",
+    "Without reviews the product page is thin — the listing's value is proportional to verified-review volume",
+    "Vendor programs are commercial — 'organic' presence alone is slow"
+  ],
+  "countsAsLive": "The product has a PeerSpot page with verified reviews (reachable via itcentralstation.com URLs)",
+  "unknowns": [
+    "Vendor onboarding cost/requirements — commercial terms not public",
+    "Whether itcentralstation.com will eventually hard-redirect to peerspot.com"
+  ]
+}

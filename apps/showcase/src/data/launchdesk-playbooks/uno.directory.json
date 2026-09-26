@@ -1,0 +1,59 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "uno.directory",
+  "name": "Uno Directory",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://uno.directory/submit",
+      "title": "Submit Listing — redirects to sign-in (Google or email) before the form"
+    },
+    {
+      "url": "https://uno.directory/pricing",
+      "title": "Pricing — $10 one-time per listing; FAQ confirms free route via backlink verification"
+    },
+    {
+      "url": "https://uno.directory/submit-tool",
+      "title": "How to Submit — full requirements, free-vs-paid options, badge verification steps"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free listing requires placing an HTML verification badge on your site's homepage (<a href=\"https://uno.directory\">Listed on uno directory</a>) and passing their automated verify check",
+    "An account (email or Google sign-in) is required for either route"
+  ],
+  "requirements": [
+    "Account sign-in required before the submission form loads (/submit redirects to /api/auth/signin)",
+    "Tool must be functional and legitimate; no adult content, scams, IP violations, malware, or duplicate submissions",
+    "Accurate info and working URLs; descriptions should be original and non-spammy",
+    "Free route: badge must be visible on the homepage at verification time"
+  ],
+  "preparation": [
+    "Tool name and website URL",
+    "Tagline plus a long description — 600-800 words recommended",
+    "Featured image, minimum 1200x630px recommended (OG image or screenshot)",
+    "Category/subcategory choice and tags",
+    "For the free route: ability to edit the product homepage to add their badge HTML"
+  ],
+  "workflow": [
+    "Create an account or sign in at /auth/signup or /api/auth/signin (email or Google)",
+    "Open /submit and choose Free or Paid ($10 one-time) listing",
+    "Fill the form: name, URL, tagline, description, category/subcategory, tags, featured image",
+    "Free route: paste the badge code on the homepage, then click verify in the form",
+    "Submit — review is described as instant/automatic; paid listings activate after the $10 payment, free listings after backlink verification"
+  ],
+  "watchFor": [
+    "/submit shows only a sign-in wall until authenticated",
+    "Free listing is gated on a followed backlink badge — treat as conditional, not fully free",
+    "Site cross-promotes a Premium Launcher subscription covering partner platforms (Aura++, EarlyHunt, IndieHunt, MakerHunt, SideHunt) — ignore the upsell",
+    "Badge presumably must remain on the homepage; removing it may risk the listing"
+  ],
+  "countsAsLive": "The tool appears on a public listing page under uno.directory/listings/... and is reachable from its category listing",
+  "unknowns": [
+    "Whether the 'instant' automated review ever rejects listings manually afterward",
+    "Whether the badge can be removed post-approval without delisting",
+    "Actual DR value of the listing link (dofollow vs tracked redirect)"
+  ]
+}

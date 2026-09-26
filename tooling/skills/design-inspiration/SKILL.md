@@ -1,6 +1,7 @@
 ---
 name: design-inspiration
 description: Use explicitly when external design references, comparative visual directions, or a requested brand-direction board are needed for a Fleet project. Produces attributable principles and design-workflow evidence without copying another product's brand, content, assets, or proprietary implementation. It does not own UI implementation or completion.
+disable-model-invocation: true
 ---
 
 # Design inspiration

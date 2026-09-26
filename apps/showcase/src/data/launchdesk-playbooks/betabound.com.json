@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "betabound.com",
+  "name": "Betabound (by Centercode)",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://betabound.com/signup",
+      "title": "Betabound signup — creates a TESTER account (Google OAuth or email); powered by Centercode; this is the tester side, not a product submission"
+    },
+    {
+      "url": "https://www.centercode.com/",
+      "title": "Centercode homepage — the underlying beta-testing platform; 'Start for free, scale as your program grows'"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "There is no 'submit your product to Betabound' form — exposure to Betabound's tester community happens by running a beta test through Centercode, the platform that powers it",
+    "Centercode offers a free start tier (signup.centercode.com) but meaningful tester recruitment and scale are paid/managed services",
+    "You need a genuinely testable pre-release product and capacity to run a structured test"
+  ],
+  "requirements": [
+    "A real product ready for external user testing (beta/field test)",
+    "A Centercode account (free tier exists at signup.centercode.com; paid plans scale)",
+    "Betabound tester accounts are for TESTERS only — creating one does not list a product",
+    "Structured test: plan, recruitment criteria, feedback collection"
+  ],
+  "preparation": [
+    "A beta-ready product build",
+    "Test plan: goals, target tester profile, duration",
+    "NDA/legal posture for pre-release testing",
+    "Centercode account (start free) or budget for managed testing services"
+  ],
+  "workflow": [
+    "Do NOT sign up at betabound.com/signup to promote — that creates a tester account",
+    "Instead start a Centercode account at signup.centercode.com or schedule a demo",
+    "Build the test project (plan, recruit criteria, activities)",
+    "Recruit testers — Centercode's tester community is the Betabound audience",
+    "Run the test; the 'listing' is ephemeral — testers see your product inside their test portal"
+  ],
+  "watchFor": [
+    "Category confusion: Betabound is a tester community, not a launch directory — no public product listing or backlink results",
+    "Real work required: running a beta test is a program, not a submission",
+    "Managed services/recruitment are the paid levers Centercode sells",
+    "Value is feedback and beta users, not SEO"
+  ],
+  "countsAsLive": "Your beta test is live inside Centercode/Betabound with testers applying to participate — there is no public listing page",
+  "unknowns": [
+    "Centercode pricing tiers beyond the free start",
+    "How much Betabound community exposure a free-tier project actually gets",
+    "Whether tests can recruit purely from Betabound or require your own testers"
+  ]
+}

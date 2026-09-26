@@ -1,0 +1,42 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "pocket-lint.com",
+  "name": "Pocket-lint",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.pocket-lint.com/contact/",
+      "title": "Pocket-lint Contact — categorized inquiry form: Editorial (topic ideas, feedback), Events & PR (media inquiries), Partnership, Advertising; part of Valnet Publishing Group"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Not a directory — earned editorial only; no submission form or listing product",
+    "The /contact page routes by inquiry type: 'Editorial Inquiries' for topic ideas/feedback, 'Events & PR' for media inquiries, 'Partnership' for commercial opportunities",
+    "Consumer-tech focus (devices, apps, entertainment, car tech) — a SaaS product needs a consumer-app angle",
+    "Valnet Publishing Group property — same operator as MakeUseOf and other network sites"
+  ],
+  "preparation": [
+    "A consumer-tech angle — app, gadget, or software story",
+    "Press release or concise pitch routed through the 'Editorial Inquiries' or 'Events & PR' category on the contact form"
+  ],
+  "workflow": [
+    "Open https://www.pocket-lint.com/contact/",
+    "Choose the right inquiry category (Editorial for pitches, Events & PR for media relations)",
+    "Submit the pitch/press release via the interactive form",
+    "Coverage, if it happens, is a staff-written article or review — no listing page is created"
+  ],
+  "watchFor": [
+    "The contact page is a categorized form, not a published inbox — expect no direct email address",
+    "Valnet sites share infrastructure — identical pitches across the network may read as spam",
+    "No guest-post or contributed-content program is advertised",
+    "Reviews are staff-produced ('Our Review Methodology' page exists)"
+  ],
+  "countsAsLive": "A Pocket-lint article or review mentioning the product is published at pocket-lint.com",
+  "unknowns": [
+    "Response times for the editorial inquiry category",
+    "Whether review-sample logistics have a separate intake"
+  ]
+}

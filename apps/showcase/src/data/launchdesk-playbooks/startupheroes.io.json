@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startupheroes.io",
+  "name": "Startup Heroes",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://startupheroes.io/",
+      "title": "Homepage — live but Cloudflare-challenge-protected (403 for non-browser fetch); indexed tagline: 'The startup directory for future unicorns'"
+    },
+    {
+      "url": "https://startupheroes.io/submit/",
+      "title": "Submit page — 403 Cloudflare challenge on direct fetch; indexed content shows $10 one-time submission, FAQ on review/refunds"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "$10 one-time submission fee — 'Pay once, list forever' (per the site's indexed submit-page FAQ)",
+    "No account needed to submit — small form with mission/product details (per their own blog post '28 Hot New Startup Directories')",
+    "Automated checks after payment: screenshot generation and a software-stack test of your website, then manual review against Community Guidelines",
+    "Rejected submissions are refunded"
+  ],
+  "preparation": [
+    "Product name, URL, short mission/product description",
+    "A live, working website — their automation screenshots and stack-tests it",
+    "$10 payment",
+    "A browser that passes Cloudflare challenge — the site is behind bot protection"
+  ],
+  "workflow": [
+    "Open https://startupheroes.io/submit/ in a normal browser (Cloudflare-protected)",
+    "Fill the startup form and pay the $10 one-time fee",
+    "Their automation screenshots the site and checks the tech stack; a human reviews against Community Guidelines",
+    "Listing claimed live in ~30 minutes for straightforward submissions; confirmation email on publish; refund if rejected"
+  ],
+  "watchFor": [
+    "Site is Cloudflare-challenge-protected — automated/agent submission may be blocked; use a real browser",
+    "The site is explicitly 'profit-first' — 'You have to PAY to list your Startup' (founder's launch post); directory doubles as a CSS/design gallery that auto-enriches entries with stack data (Wappalyzer/ThisRuns-style lookups)",
+    "Detail couldn't be fully verified firsthand due to bot protection — specifics come from the site's own indexed pages, not independent confirmation"
+  ],
+  "countsAsLive": "A startup entry appears in the Startup Heroes index with auto-generated screenshot and stack data, confirmed by their 'startup went live' email",
+  "unknowns": [
+    "Exact current form fields (submit page blocked to fetchers)",
+    "Whether outbound links are dofollow",
+    "Current review volume/turnaround beyond the claimed ~30 min"
+  ]
+}

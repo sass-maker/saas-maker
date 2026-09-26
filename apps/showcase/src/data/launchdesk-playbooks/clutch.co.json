@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "clutch.co",
+  "name": "Clutch",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://help.clutch.co/en/knowledge/get-listed-on-clutch",
+      "title": "Clutch Help Center — How Do I Get My Company Listed on Clutch? (3-step process, free Basic profile)"
+    },
+    {
+      "url": "https://clutch.co/get-listed",
+      "title": "Batch-provided get-listed URL — returned 403 to the fetcher; steps verified via Clutch Help Center"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Clutch lists B2B companies that provide services to other businesses (development, IT services, design, marketing, business services) — a pure product/SaaS without a services arm is a weak fit",
+    "Profile requires a verifiable business: company name, tagline, employee count, minimum project size, average hourly rate, website URL, location(s), contact info, company overview, service focus",
+    "Sign-in is via LinkedIn, Google, or a company email address",
+    "Clutch reviews the submitted website and online presence before publishing — the profile goes to their team for review, not instant live"
+  ],
+  "preparation": [
+    "Confirm the company qualifies as a B2B service provider; product-only companies should skip or position the services/implementation arm",
+    "Company details: employee count band, minimum project size, hourly rate, locations, contact email",
+    "A company overview paragraph and service-focus breakdown",
+    "Client references ready to submit for first reviews (vendor.clutch.co/vendor/reference/create) — reviews are the ranking currency"
+  ],
+  "workflow": [
+    "Open https://clutch.co/get-listed",
+    "Select a Profile Offering — Basic (free), Verified, or Advertiser",
+    "Sign in with LinkedIn, Google, or company email",
+    "Complete the company profile fields (name, tagline, size, rates, locations, overview, service focus)",
+    "Submit — profile goes to Clutch's team for review and publishing",
+    "After publishing, submit client references to collect verified reviews",
+    "If a profile already exists unclaimed, use the 'Claim Profile' button on it instead of creating a duplicate"
+  ],
+  "watchFor": [
+    "Profile tiers at step 1 include paid Verified and Advertiser offerings — the free Basic tier is selectable",
+    "Some profile fields (social links, featured reviews, custom/tracking URLs) are locked behind Clutch Verified or paid products — they show a lock icon in the profile editor",
+    "Seed data says link=nofollow — free Basic profile links should be treated as nofollow",
+    "Do not create a second profile if the company is already listed; claim it instead",
+    "clutch.co pages return 403 to non-browser fetchers; the help center (help.clutch.co) is readable"
+  ],
+  "countsAsLive": "The company profile is publicly reachable on clutch.co/profile/<slug> (not 'Unclaimed'/draft) and appears in its category directory pages",
+  "unknowns": [
+    "Review turnaround time for a new Basic profile",
+    "Whether the Basic-tier website URL field renders a nofollow link in all cases",
+    "Whether a SaaS-only vendor with no services passes Clutch's B2B-services review"
+  ]
+}

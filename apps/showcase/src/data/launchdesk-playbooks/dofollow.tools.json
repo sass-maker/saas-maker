@@ -1,0 +1,61 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "dofollow.tools",
+  "name": "Dofollow.Tools",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://dofollow.tools/",
+      "title": "Homepage — live AI/SaaS directory (~950 listings), shows own traffic: ~3.2k visitors/30 days"
+    },
+    {
+      "url": "https://dofollow.tools/submit",
+      "title": "Submit form — 2-step wizard; URL auto-fill, tagline ≤160 chars, description ≥500 chars markdown, logo upload, up to 4 screenshots, ≤3 categories"
+    },
+    {
+      "url": "https://dofollow.tools/pricing",
+      "title": "Pricing — Free (badge + 7-day queue + 5 slots/day), Pro $19 lifetime, Dual $25.90 (with firstlook.tools), Featured $99"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free listing requires embedding a 'Featured on Dofollow.Tools' badge on your site and keeping it live",
+    "Badge is re-checked regularly — removing it downgrades your link to nofollow",
+    "Free submissions wait 7 days in a review queue, capped at 5 free slots per day site-wide",
+    "Account sign-in required to submit"
+  ],
+  "requirements": [
+    "Tool URL (form has AI auto-fill), Tool Name, Tagline ≤160 chars, Description ≥500 chars in markdown",
+    "Logo file (PNG/JPG/WEBP/SVG, max 500KB) and up to 4 screenshots (<5MB each)",
+    "Pick up to 3 categories, pricing model, and platforms",
+    "Optional fields: discount code, founded year, YouTube demo, GitHub repo, founder Twitter, affiliate program",
+    "Paid tiers: Pro $19 lifetime (skip queue, permanent dofollow), Dual $25.90 (also lists on firstlook.tools), Featured $99"
+  ],
+  "preparation": [
+    "Write a 500+ character markdown description and a ≤160-char tagline",
+    "Prepare logo and up to 4 screenshots",
+    "For free tier: ability to embed their badge (dark/light/transparent embeds provided)",
+    "An account (Sign In) to access the submit wizard"
+  ],
+  "workflow": [
+    "Sign in, then open https://dofollow.tools/submit",
+    "Step 1: paste tool URL, click the AI auto-fill button, then refine name/tagline/description, upload logo + screenshots, pick ≤3 categories, pricing model, platforms",
+    "Step 2: choose submission type — Free (badge + queue) or a paid lifetime tier",
+    "Free listings go live after the ~7-day queue; paid go live in minutes"
+  ],
+  "watchFor": [
+    "Free link is dofollow only while the badge stays up — they re-crawl for it",
+    "5 free slots/day cap means the free queue can stall; not a same-day play",
+    "Description minimum is 500 chars — thin copy gets rejected at the form",
+    "Self-reported traffic is small (~3.2k visits/30d) — this is a backlink play, not an audience",
+    "Built on the Nexty.dev directory template — many sister sites share the same mechanics"
+  ],
+  "countsAsLive": "The tool has a public detail page on dofollow.tools appearing in its category and the Latest/Explore listings",
+  "unknowns": [
+    "Whether the badge placement is verified before the 7-day queue starts",
+    "DR claim (70+) is self-reported via a FrogDR badge",
+    "Whether featured listings' '1000+ page' dofollow claim refers to tag/category page propagation"
+  ]
+}

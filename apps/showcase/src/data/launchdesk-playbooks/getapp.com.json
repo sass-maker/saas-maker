@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "getapp.com",
+  "name": "GetApp",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.getapp.com/as/vendors/",
+      "title": "Vendor page — returned HTTP 403 (bot-blocked)"
+    },
+    {
+      "url": "https://www.effortlessbacklinks.com/directory/getapp",
+      "title": "Third-party directory guide — GetApp is part of the Digital Markets network with Capterra and Software Advice; free listing via the vendor portal; listings may auto-populate from Capterra"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Basic listing is free, but vendors must be accepted through the Digital Markets vendor portal (fit review, vendor verification) rather than instant self-publish",
+    "A product already listed on Capterra may auto-populate onto GetApp — claim the existing profile instead of creating a duplicate"
+  ],
+  "requirements": [
+    "B2B software aimed at small and mid-sized businesses (SaaS, cloud software, mobile business apps, industry-specific software)",
+    "Vendor account with company details, contact info, and product description; vendor verification may be required",
+    "Complete profile: categories, feature list, pricing info, screenshots"
+  ],
+  "preparation": [
+    "Check whether the product already appears on GetApp (auto-populated from Capterra) — claim rather than duplicate",
+    "Product description, screenshots, pricing details, feature list, correct category selection",
+    "Company and contact details for the vendor account"
+  ],
+  "workflow": [
+    "Search getapp.com for the product; if a profile exists, claim it",
+    "Otherwise create a vendor account via the 'Get listed' vendor flow (vendor portal shared across the Digital Markets network; getapp.com pages 403'd automated fetches)",
+    "Fill in the product profile: description, screenshots, pricing, categories, integrations",
+    "Submit for review; once live, maintain the listing and collect verified reviews to qualify for Category Leader badges"
+  ],
+  "watchFor": [
+    "getapp.com 403s automated fetches — use a browser",
+    "Paid PPC/pay-per-lead advertising upsells exist; the basic listing itself is free",
+    "Keep the description distinct-but-consistent with Capterra/Software Advice profiles — same network, editorial cross-checks",
+    "Ranking/Category Leader methodology rewards review recency and volume — a bare listing will sit low"
+  ],
+  "countsAsLive": "The product has a public profile page on getapp.com reachable from category search",
+  "unknowns": [
+    "Current vendor intake URL (site is bot-blocked to automated fetches; network recently rebranded from Gartner Digital Markets)",
+    "Review turnaround and verification steps",
+    "Whether the profile link is dofollow or nofollow on the live page"
+  ]
+}

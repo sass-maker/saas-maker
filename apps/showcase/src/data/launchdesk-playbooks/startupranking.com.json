@@ -1,0 +1,58 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startupranking.com",
+  "name": "Startup Ranking",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://submitmap.com/platform/startupranking/",
+      "title": "Third-party flow documentation — submit starts at /startup/create/url-validation (URL check precedes the form); social login (Google/Facebook/LinkedIn/X); fields incl. name, legal name, 60-char slogan, country+state, URL, founding date, business type, industry, tags, description, socials, email, phone; free queue >80 days; $25/$49 faster approval in 24h (content read via search result; homepage behind bot check)"
+    },
+    {
+      "url": "https://abun.com/how-to-get-free-backlink-from-startupranking-com-dr-71",
+      "title": "Third-party guide — ownership verification via HTML file upload, tweet from official handle, or domain email; 'Claim Startup' to publish (content read via search result)"
+    },
+    {
+      "url": "https://www.startupranking.com/corp/terms-of-service",
+      "title": "ToS — paid services: SR Booster, SR Pro, SR Advertising (content read via search result)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free submission exists but joins an approval queue the site itself describes as 80+ days — $25 (Basic) or $49 (Premium) buys 24-hour approval plus New Startups placement and newsletter exposure"
+  ],
+  "requirements": [
+    "Social login only — Google, Facebook, LinkedIn, or X (site says it takes name, email, picture)",
+    "Submission flow starts at /startup/create/url-validation — the URL is validated before the form appears; /startup/submit is a 404",
+    "Fields: startup name, legal name, 60-char slogan, country AND state/region (both required and public), URL, founding date, business type, industry, tags, description, socials, contact email, phone",
+    "Ownership verification required: HTML file upload, tweet from the official handle, or domain email",
+    "Paid upgrades: faster approval ($25/$49), SR Booster, SR Pro, SR Advertising",
+    "Site sits behind a security interstitial/bot check on first visit"
+  ],
+  "preparation": [
+    "A social account to log in with",
+    "Region info — both country and state/region are required and shown publicly",
+    "Verification route ready (HTML file to your server is fastest)",
+    "Patience for the ~80-day free queue, or budget for the $25 skip"
+  ],
+  "workflow": [
+    "Log in with a social account at startupranking.com",
+    "Click Create Startup -> /startup/create/url-validation and validate the URL",
+    "Fill the registration form",
+    "Verify ownership (HTML file / tweet / domain email) and claim",
+    "Wait for approval — ~80+ days free, or pay for 24-hour review"
+  ],
+  "watchFor": [
+    "Free queue is exceptionally long (~80 days per the site's own page) — plan accordingly",
+    "State/region is mandatory and public — a con for founders wanting location privacy",
+    "Conflicting third-party claims on dofollow vs nofollow links — treat as unknown",
+    "Ranking metrics are based on web/social presence — a profile exists on their own terms"
+  ],
+  "countsAsLive": "The startup profile is approved and public at startupranking.com with a link back to the site",
+  "unknowns": [
+    "Whether outbound links are dofollow (sources conflict)",
+    "Actual current queue length"
+  ]
+}

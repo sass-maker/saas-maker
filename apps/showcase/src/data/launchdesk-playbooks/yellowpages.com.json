@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "yellowpages.com",
+  "name": "Yellow Pages",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.yellowpages.com/claim-your-listing",
+      "title": "Claim Your Yellow Pages Business Listing — free listing claim page (403 to automated fetch; verified via search results)"
+    },
+    {
+      "url": "https://www.yellowpages.com/",
+      "title": "YellowPages.com homepage — 'Manage your free listing' entry point"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "US local business with a real address and phone number — YP is a local-business citation directory, not a SaaS launch board",
+    "Phone verification is required: YP calls the business phone to confirm the claim — you must be able to answer that line",
+    "Use a business-domain email for the claim form per third-party guides"
+  ],
+  "preparation": [
+    "Consistent NAP: business name, street address, local phone, website URL",
+    "A person able to answer the business phone for the verification call",
+    "Business category, hours, and a short description"
+  ],
+  "workflow": [
+    "Open https://www.yellowpages.com/claim-your-listing and search the business by name + phone/location",
+    "If the business exists, claim it ('Claim that Business'); if absent, create a new listing",
+    "Register a YP account and accept the terms; fill profile fields (website URL, hours, category, social links)",
+    "Complete the phone verification call from YP",
+    "Confirm the listing appears on yellowpages.com search"
+  ],
+  "watchFor": [
+    "yellowpages.com blocks automated fetches (403) — use a real browser session",
+    "YP/Thryv will upsell paid advertising after the claim — the free listing needs no purchase",
+    "Phone verification is mandatory; virtual/SaaS businesses without a local number may fail",
+    "A purely online SaaS with no address/phone is a weak fit — this is a local-citation play"
+  ],
+  "countsAsLive": "The business profile page appears in yellowpages.com search results with NAP details and website link visible to anonymous visitors",
+  "unknowns": [
+    "Whether the website link on a free listing is follow or nofollow",
+    "Listing-review turnaround after phone verification",
+    "Whether fully-remote businesses with no storefront are accepted"
+  ]
+}

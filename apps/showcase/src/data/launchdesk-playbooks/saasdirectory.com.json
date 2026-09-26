@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "saasdirectory.com",
+  "name": "SaaS Directory",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.saasdirectory.com/",
+      "title": "Homepage — categorized SaaS/PaaS/IaaS directory with 'Suggest an app', registration, and user reviews"
+    },
+    {
+      "url": "https://www.saasdirectory.com/suggest-an-app.php",
+      "title": "Suggest an app — returned only the site shell when fetched anonymously; likely requires login"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free suggestion route exists ('Suggest an app') but the page rendered an empty shell to an anonymous visitor — a registered account (register-saas-directory.php) is almost certainly required, and editorial acceptance decides whether the app is listed"
+  ],
+  "requirements": [
+    "Product must be a SaaS/PaaS/IaaS app — directory is organized into categories like Online CRM, Project Management, eCommerce, Backup and Storage",
+    "User accounts exist (Login/Registration in nav); reviewers can leave public comments/ratings on listings",
+    "Site also sells sponsored/advertising slots ('Advertise here')"
+  ],
+  "preparation": [
+    "Product name, URL, and a one-paragraph description",
+    "Best-fit category from the taxonomy (Business & Trade, Cloud Computing, Utilities and Services, or App)",
+    "An email for account registration"
+  ],
+  "workflow": [
+    "Create an account at https://www.saasdirectory.com/register-saas-directory.php and log in",
+    "Open https://www.saasdirectory.com/suggest-an-app.php and submit the app details",
+    "Wait for editorial review; accepted apps appear in the chosen category and on the homepage 'Latest applications' list"
+  ],
+  "watchFor": [
+    "Suggest-an-app page renders empty without a session — register first",
+    "Old-school directory (Spanish origin; en/es/eu locales); listing quality and link attributes unverified",
+    "Paid advertising exists — do not confuse 'Advertise here' with the free suggestion route",
+    "Recent comments look like promotional reviews; avoid soliciting fake reviews"
+  ],
+  "countsAsLive": "The product appears as a listing page under its category on saasdirectory.com and shows in 'Latest applications added'",
+  "unknowns": [
+    "Whether the free suggestion route is still actively reviewed (site design is dated)",
+    "Exact form fields behind the login wall",
+    "Whether listing links are follow or nofollow"
+  ]
+}

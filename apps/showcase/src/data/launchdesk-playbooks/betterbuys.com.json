@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "betterbuys.com",
+  "name": "BetterBuys",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://betterbuys.com/about/",
+      "title": "BetterBuys About — repositioned as a B2B AI-discovery portal; published scoring formula (35% category fit, 20% use-case, 15% buyer/industry, 10% integration, 10% evidence, 5% pricing transparency, 5% freshness); sponsored placements labeled and never affect ranking (content read via search result; site 403 to fetchers)"
+    },
+    {
+      "url": "https://betterbuys.com/",
+      "title": "Homepage — 'Building an AI solution? Get found by buyers… contact@betterbuys.com' (content read via search result)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "AI products for business only — BetterBuys is now a B2B AI-tool discovery portal, no longer general business-software reviews",
+    "Listing route is email: contact@betterbuys.com ('Get your AI listed where buyers are comparing tools')",
+    "Products are scored on a published formula — expect them to evaluate category fit, use-case fit, integrations, evidence quality, pricing transparency",
+    "Sponsored placements exist but are labeled and don't affect organic ranking",
+    "betterbuys.com blocked automated fetch (403) — verified via About and homepage snippets"
+  ],
+  "preparation": [
+    "An AI product aimed at business buyers with clear use cases and transparent pricing",
+    "Listing details ready: category, use cases, integrations, evidence (case studies), pricing"
+  ],
+  "workflow": [
+    "Email contact@betterbuys.com with the product and its business use cases",
+    "If accepted, the product gets a scored product page in the AI-discovery portal",
+    "Optional: labeled sponsored placement (doesn't change ranking)"
+  ],
+  "watchFor": [
+    "Repositioned product — the old business-software review coverage is gone; AI-only now",
+    "Traffic is modest (third-party data suggests ~1k monthly visits) — small upside",
+    "Site blocked automated fetch — verify current state in a real browser",
+    "Public scoring formula means product pages are re-evaluated; stale pages show 'last verified' dates"
+  ],
+  "countsAsLive": "The product has a scored page in the BetterBuys AI directory",
+  "unknowns": [
+    "Listing turnaround and criteria beyond the scoring rubric",
+    "Whether the 'contact@' listing route charges a fee"
+  ]
+}

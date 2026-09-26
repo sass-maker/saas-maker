@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "zdnet.com",
+  "name": "ZDNet",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.zdnet.com/about/",
+      "title": "About ZDNET — Ziff Davis tech publication; 'meet the team' links to named writers; advertise-with-us and media kit routes; 'our opinions are not for sale'"
+    },
+    {
+      "url": "https://www.zdnet.com/contact/",
+      "title": "zdnet.com/contact resolves to an old article, not a contact page — no public submission form found"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Not a directory — coverage is earned editorial; no submission form or listing product found on public pages",
+    "ZDNET (Ziff Davis) covers enterprise + consumer tech: software/services, business, security, AI, reviews",
+    "Pitch route is individual writers — the About page links to 'meet the team' with named contributing writers and their beats",
+    "Paid visibility exists only as advertising ('advertise with us' / media kit) — editorial opinions explicitly 'not for sale'"
+  ],
+  "preparation": [
+    "A B2B/enterprise-tech or consumer-tech angle — ZDNET skews IT decision-makers and early adopters",
+    "Identify the right writer from the team page rather than a generic inbox",
+    "Press kit or review access if pitching a product review"
+  ],
+  "workflow": [
+    "Open https://www.zdnet.com/about/ and follow 'meet the team' to find the writer covering your beat",
+    "Pitch that writer directly — ZDNET author pages list bios and contact/social links",
+    "For paid routes, use the 'advertise with us' link — but that is media buying, not editorial coverage",
+    "Coverage, if it happens, is a staff/contributor-written article — no listing page is created"
+  ],
+  "watchFor": [
+    "zdnet.com/contact is not a contact page — it resolves to a 2009 article; do not trust stale 'contact' URLs from source lists",
+    "The catalog's stored website path (/blog) is also stale — use zdnet.com directly",
+    "Contributed-article options were not found on public pages — do not assume a guest-post program exists",
+    "Review coverage requires a real product; 'best X' listicles are staff-curated, not submitted"
+  ],
+  "countsAsLive": "A ZDNET article or review mentioning the product is published at zdnet.com",
+  "unknowns": [
+    "A central tips/press inbox — none surfaced on public pages",
+    "Whether ZDNET accepts contributed op-eds under current Ziff Davis policy"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "mydentify.com",
+  "name": "Mydentify",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://mydentify.com/submit",
+      "title": "List your product — 4-step flow (paste URL → review draft → select solutions → publish); free listing needs a public Mydentify badge/link before they publish the followed link; paid skips the badge wait"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free listings require a public Mydentify link or badge on your site BEFORE the followed link is published",
+    "Sign-in is required at the publish step (not needed to start the draft)",
+    "Paid profile option skips the badge wait — editorial accuracy still applies"
+  ],
+  "requirements": [
+    "Product is matched to user pain points ('solutions'), not just a category label — pick the solution(s) the product solves",
+    "Draft is auto-generated from facts on your site — you review name, URL, category, pricing, description before publish",
+    "Followed (dofollow) link is explicit for published listings; they disclaim no guaranteed DR/ranking gains",
+    "Positioned as a lasting reviewed profile, not a 24-hour launch spike"
+  ],
+  "preparation": [
+    "Product homepage URL — the draft is generated from what's on your site, so accurate public copy/pricing matters",
+    "Ability to add a Mydentify badge/link to your site for the free route",
+    "Account for sign-in at publish time",
+    "Which 'solutions'/use-case labels fit the product"
+  ],
+  "workflow": [
+    "Open https://mydentify.com/submit and paste the product URL (no login needed yet)",
+    "Review the auto-generated draft; fix mismatches",
+    "Select the solution(s) the product addresses",
+    "Choose publish path: free (add badge/link first) or paid (skip the badge wait)",
+    "Sign in to finalize; listing publishes as a public product page"
+  ],
+  "watchFor": [
+    "Free path is a reciprocal-badge deal — verify their badge requirements at /listing-badge",
+    "Draft accuracy depends on your site's public copy — clean up homepage claims first",
+    "Honest copy: they explicitly do NOT promise traffic, votes, DR gains, or rankings",
+    "Rankings on their leaderboards are activity-based and not guaranteed"
+  ],
+  "countsAsLive": "The product has a stable public page on mydentify.com (visible in /products and solution/category views) with a followed outbound link",
+  "unknowns": [
+    "Paid listing price (pricing page not fetched)",
+    "Editorial review turnaround",
+    "Badge placement rules (page scope/size)"
+  ]
+}

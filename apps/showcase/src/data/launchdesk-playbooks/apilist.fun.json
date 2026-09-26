@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "apilist.fun",
+  "name": "API List",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://apilist.fun/",
+      "title": "Homepage — API directory run by apilayer"
+    },
+    {
+      "url": "https://apilist.fun/new",
+      "title": "Add an API — submission form, 'reviewed within 24 hours'"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Must be an actual API — the form asks for SSL support, authentication model, request/response formats, 'Official API?' yes/no",
+    "URL to the API's official site or documentation",
+    "Non-official/community APIs appear acceptable ('Is this an official API?' is a form field, not a gate)",
+    "No payment required; 'Sponsor Us' is a separate optional route"
+  ],
+  "preparation": [
+    "API name (short, e.g. 'Stripe')",
+    "URL to official site or docs",
+    "Logo upload (auto-generated via Clearbit from URL+title, or upload manually)",
+    "Markdown-capable description",
+    "Main category + optional comma-separated category suggestions",
+    "Company GitHub and Twitter handles",
+    "Technical facts: SSL support, auth model (API keys?), supported request/response formats (e.g. JSON)",
+    "Email (optional — used for approval notification and blog invites)"
+  ],
+  "workflow": [
+    "Open https://apilist.fun/new (nav 'Add API')",
+    "Fill the form — name, URL, logo, description, categories, GitHub/Twitter, API technical details",
+    "Submit; the site says APIs are reviewed within 24 hours",
+    "Approved APIs appear in category listings and the 'best APIs' newsletter rotation"
+  ],
+  "watchFor": [
+    "Fit is narrow: this lists APIs, not SaaS products generally — a SaaS without a public API doesn't belong",
+    "Site footer © 2019 — old codebase; the 24-hour review claim may be stale",
+    "Markdown in the description field — keep formatting simple",
+    "Registration exists (/register) but the add form itself doesn't appear to require an account"
+  ],
+  "countsAsLive": "The API appears as a listing card in apilist.fun category pages with a 'Read More' detail view and outbound link to the API site",
+  "unknowns": [
+    "Whether submissions are still actively reviewed (site is apilayer-owned but dated)",
+    "Whether outbound links are dofollow",
+    "Whether an account is actually required at submit time"
+  ]
+}

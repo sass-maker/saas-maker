@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "superbcrew.com",
+  "name": "SuperbCrew",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.superbcrew.com/about",
+      "title": "About page — 'business news website covering innovative companies'; editor-in-chief publishes pitch contact editor@superbcrew.com; site actively runs funding news and founder interviews"
+    },
+    {
+      "url": "https://superbcrew.com/join-us/",
+      "title": "Join us — hiring page (WordPress webmaster, growth hacker), not a contributor/submission route; contact hello@superbcrew.com"
+    },
+    {
+      "url": "https://superbcrew.com/advertise/",
+      "title": "Advertise — linked in main nav; indicates a paid promotion channel exists alongside editorial"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free path is a cold editorial pitch to editor@superbcrew.com — coverage is at the editor's discretion; there is no submission form guaranteeing a listing",
+    "A paid /advertise/ channel exists, so sponsored coverage may be offered instead of free editorial"
+  ],
+  "requirements": [
+    "Newsworthy angle: the front page is dominated by funding announcements ($Xm raises), founder/CEO interviews, and product launches — a plain 'we exist' pitch will not land",
+    "Tech/business innovation fit; the site covers companies 'from the tech and business world'",
+    "Interview pitches should name the founder/executive available"
+  ],
+  "preparation": [
+    "A press-ready news hook: funding round, launch milestone, notable metric, or founder story",
+    "Company boilerplate, founder name/title, website URL",
+    "Optional: interview-ready founder with quotable angles (site runs a heavy interview format)"
+  ],
+  "workflow": [
+    "Draft a short pitch with the news hook in the subject line",
+    "Email editor@superbcrew.com (published on the About page)",
+    "Propose either a news write-up or the site's standard founder-interview format",
+    "If no reply, one polite follow-up; do not expect a tracking system or acknowledgment"
+  ],
+  "watchFor": [
+    "Editorial site, not a directory — there is no form and no guaranteed placement",
+    "'Join us' page is job hiring, not a contributor route — do not pitch it as a submission form",
+    "Paid /advertise/ exists; an offered 'partnership' reply may turn out to be a rate card — keep the ask clearly editorial if you want free",
+    "Recent stories skew toward large funding rounds; a small bootstrapped product may need a strong human-interest angle"
+  ],
+  "countsAsLive": "An article or interview mentioning the company is published and visible on superbcrew.com (news, interviews, or companies-to-watch sections)",
+  "unknowns": [
+    "Response rate on cold pitches",
+    "Whether 'Companies To Watch' entries are editorial picks or paid placements",
+    "Advertise page pricing (not fetched)"
+  ]
+}

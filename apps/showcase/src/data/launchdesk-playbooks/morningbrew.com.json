@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "morningbrew.com",
+  "name": "Morning Brew",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.morningbrew.com/faq",
+      "title": "Morning Brew FAQ — advertising goes through the partnership request form; brand partnerships team responds 'if it seems like a good fit' (content read via search result; homepage 403)"
+    },
+    {
+      "url": "https://morningbrewinc.com/contact",
+      "title": "Morning Brew Inc contact — hello@morningbrew.com for general inquiries; advertising form matches you with an account manager (content read via search result)"
+    }
+  ],
+  "category": "press",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "No listing/submission product at all — Morning Brew is a newsletter media company; the only documented public routes are the contact form (hello@morningbrew.com) and paid advertising via the partnership form"
+  ],
+  "requirements": [
+    "Earned coverage route: pitch hello@morningbrew.com or the contact form — the Brew covers business/tech news it finds interesting, there is no tips desk documented",
+    "Paid route: partnership request form → brand partnerships team",
+    "Newsletter-native voice — sponsored content is produced in Morning Brew's style",
+    "Audience is business-news readers, not product hunters"
+  ],
+  "preparation": [
+    "A genuinely newsworthy business story (funding, trend, quirky data) for the earned route",
+    "A budget and brand brief for the advertising route"
+  ],
+  "workflow": [
+    "Earned: send a concise pitch to hello@morningbrew.com or via morningbrewinc.com/contact",
+    "Paid: fill the partnership request form; an account manager responds if it's a fit",
+    "There is no self-serve listing — everything is editorial or sales-mediated"
+  ],
+  "watchFor": [
+    "morningbrew.com blocked automated fetch (403) — details verified via the FAQ and Morning Brew Inc. pages",
+    "The old '60 Second Startup' pitch-to-Alex-Lieberman segment is historical — don't rely on it",
+    "Massive audience — a cold pitch needs a real story, not a launch announcement"
+  ],
+  "countsAsLive": "A Morning Brew story or sponsored segment mentioning the product runs in the newsletter/site",
+  "unknowns": [
+    "Whether the newsroom accepts unsolicited pitches at a separate editorial address",
+    "Advertising pricing — quote-based only"
+  ]
+}

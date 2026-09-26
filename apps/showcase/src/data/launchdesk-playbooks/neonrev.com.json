@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "neonrev.com",
+  "name": "NeonRev",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://neonrev.com/",
+      "title": "Homepage — AI tools directory ('curated AI solutions'), Featured/Most Popular/New Arrivals sections"
+    },
+    {
+      "url": "https://www.neonrev.com/advertise/",
+      "title": "Advertise/Submit page — packages: Forever Listing $30, 7 Day Spotlight $80, 1 Month Premium $300; submission form on page"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "AI tools only — directory of AI solutions for productivity, marketing, content generation, coding, design",
+    "No free listing found — the only submission path is the paid 'Advertise Your AI Tool' packages: Forever Listing $30 (permanent + do-follow link), 7 Day Spotlight $80 (top placement + newsletter mention), 1 Month Premium $300 (blog feature + premium spotlight + social mention)",
+    "Form asks: Your Name, Your Email, Tool Name, Tool Website, and selected package",
+    "All submissions reviewed; live within ~24h of payment confirmation per FAQ"
+  ],
+  "preparation": [
+    "Tool name, website URL, contact name and email",
+    "Pick a package ($30/$80/$300) before submitting — the form requires 'Selected Package'",
+    "Payment method — submission is payment-gated"
+  ],
+  "workflow": [
+    "Open https://www.neonrev.com/advertise/ (the only submission surface; there is no free /submit page in the sitemap)",
+    "Select a package, fill Your Name / Email / Tool Name / Tool Website",
+    "Submit Application — team responds 'typically within 12 hours'",
+    "After payment confirmation, listing goes live within ~24 hours"
+  ],
+  "watchFor": [
+    "Marketing claims (25K monthly visitors, 7000+ tools, 'first 1,000 users') are unverified",
+    "Cheapest permanent option is $30 — the $80/$300 tiers are time-boxed spotlights",
+    "Site runs Google Ads + Posthog; typical affiliate/ads AI directory",
+    "Separate 'List Agent' / 'List Course' flows for AI agents and courses"
+  ],
+  "countsAsLive": "The tool appears on neonrev.com tool/category pages (with do-follow link per package terms) after payment + review",
+  "unknowns": [
+    "Whether any free/basic listing exists behind login (auth routes exist but no submit link is public)",
+    "Refund policy if rejected after payment",
+    "Real traffic numbers"
+  ]
+}

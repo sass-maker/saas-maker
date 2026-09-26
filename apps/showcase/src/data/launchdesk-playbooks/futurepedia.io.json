@@ -1,0 +1,56 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "futurepedia.io",
+  "name": "Futurepedia",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.futurepedia.io/submit-tool",
+      "title": "Batch-provided submission URL — returned HTTP 404 (route removed)"
+    },
+    {
+      "url": "https://www.futurepedia.io/",
+      "title": "Homepage — AI tool directory (~4,000+ tools per site), newsletter, courses; no public free submit link in nav/footer"
+    },
+    {
+      "url": "https://www.futurepedia.io/update-a-tool",
+      "title": "Update a Tool — editorial-team form for updating existing listings (the only public tool-request form found)"
+    },
+    {
+      "url": "https://blog.superlaunch.io/futurepedia-alternatives/",
+      "title": "Third-party report (2026) — listings are paid-only: $247 basic verified listing (often sold out) or $497 verified listing with 1,000-click guarantee"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "AI tool that fits the directory's categories (image, business, automation, productivity, video, art, text, audio, code)",
+    "Third-party reporting says the free tier was dropped — listing runs $247 one-time (basic, frequently sold out) or $497 verified with editorial review and a click guarantee",
+    "Every submission is editorially reviewed; listed tools get a product page under /tool/<slug>"
+  ],
+  "preparation": [
+    "Square logo (256×256+), tagline under ~60 chars, ~100-word benefit-led description",
+    "3–5 screenshots (~1280×800), pricing details, demo video link if available",
+    "Correct category choice across Futurepedia's taxonomy",
+    "Budget approval for the paid listing tier"
+  ],
+  "workflow": [
+    "There is no public free submit form — start from futurepedia.io/contact or the paid-listing flow reached via their contact/advertise route (old /submit-tool 404s)",
+    "Choose a listing tier ($247 basic or $497 verified per third-party reports — confirm current pricing on the form)",
+    "Submit product details + media; editorial team reviews",
+    "Existing listings can be updated via /update-a-tool"
+  ],
+  "watchFor": [
+    "The batch's free/'submit-tool' claim is stale — the route is gone and third parties report paid-only since 2026",
+    "Outbound links from listings are reported as nofollow — value is the audience/newsletter, not link equity",
+    "$247 tier is frequently 'sold out' — the real entry price may effectively be $497",
+    "Advertiser disclosure on the site notes compensated links — editorial listings still get reviewed"
+  ],
+  "countsAsLive": "The tool has a public page at futurepedia.io/tool/<slug> appearing in its category and site search",
+  "unknowns": [
+    "Current exact pricing — not published on a public page (contact form required)",
+    "Editorial acceptance criteria and turnaround",
+    "Whether the Update a Tool form can be used to request a new listing"
+  ]
+}

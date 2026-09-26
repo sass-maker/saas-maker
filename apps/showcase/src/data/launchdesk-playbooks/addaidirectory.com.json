@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "addaidirectory.com",
+  "name": "Add AI Directory",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://addaidirectory.com/",
+      "title": "Homepage — live AI agents directory (100+ verified agents, new additions weekly)"
+    },
+    {
+      "url": "https://addaidirectory.com/submit-ai-agent",
+      "title": "Submit Your AI Agent — free editorial submission via prefilled email to info@addaidirectory.com"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Product must be an AI agent — 'acts autonomously on a user's behalf' — with a clear practical use",
+    "Official public website that accurately explains the product",
+    "Currently available, in a documented waitlist/beta, or with a verifiable launch plan",
+    "Claims, pricing, ownership, and access requirements must be verifiable against reliable sources",
+    "No listing fee — 'no paid placement, no sponsored positions'; editorial merit only"
+  ],
+  "preparation": [
+    "Square product logo, min 200×200 px, PNG or SVG preferred (attach to the email — required)",
+    "Optional hero image 1200×400 px",
+    "Agent name, official website, one-sentence description, detailed overview",
+    "Primary category (Agent Tools, Data Science, Sales, Agentic Browsers, Audio, Content Creation, Defi, Finance, Image, No Code, SEO, Video)",
+    "Pricing model + verified starting price, availability status",
+    "Documentation, pricing, privacy policy, and terms URLs",
+    "Key features, known limitations, submitter name/work email/relationship to the product"
+  ],
+  "workflow": [
+    "Open https://addaidirectory.com/submit-ai-agent",
+    "Click 'Submit by Email' — opens a prefilled template to info@addaidirectory.com",
+    "Attach the square logo (and optional hero image) to the email",
+    "Fill every template field (agent details, access/pricing, official sources, editorial info, submitter)",
+    "Send; initial response targeted within 7 business days, full review may take longer"
+  ],
+  "watchFor": [
+    "Email-only submission — no web form; forgetting the logo attachment stalls the listing",
+    "Editors may rewrite, shorten, verify, or reject; submission wording is a starting point, not the final copy",
+    "Repeat submissions do not accelerate review",
+    "Do not send passwords, API keys, or confidential data — use a dedicated test account if offering review access",
+    "Corrections require official-source evidence; providers cannot pay to soften accurate limitations"
+  ],
+  "countsAsLive": "The agent appears on an addaidirectory.com/agents/<slug> page inside its primary category",
+  "unknowns": [
+    "Whether non-agent AI tools (pure copilots/utilities) are accepted — eligibility says 'AI agent' specifically",
+    "Exact total review duration beyond the 7-business-day initial response",
+    "Traffic/reach of the directory"
+  ]
+}

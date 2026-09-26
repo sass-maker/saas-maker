@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "techdirt.com",
+  "name": "Techdirt",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.techdirt.com/contact/",
+      "title": "Contact Techdirt — Floor64 contact form with 'Op-Ed Requests' topic option; Media Kit link for sponsorship (content read via search result)"
+    },
+    {
+      "url": "http://www.techdirt.com/2009/12/14/submitting-post-ideas-or-news-to-techdirt/",
+      "title": "Techdirt on story submissions — use the story submission page; include a title and why it's interesting (content read via search result)"
+    },
+    {
+      "url": "https://www.techdirt.com/1999/09/29/submissions-explanation/",
+      "title": "Submissions policy — NO press releases; submit links to interesting articles with commentary; recent news only (content read via search result)"
+    }
+  ],
+  "category": "press",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Not a directory — earned editorial via story submissions plus a real 'Op-Ed' route through the contact form",
+    "Story submission page on the site (registered-community feature; account signup at techdirt.com)",
+    "Submission rules from Techdirt itself: descriptive title, link to an article (NOT a press release), brief explanation of why it's interesting, and it must be recent",
+    "Op-Ed requests are an explicit topic on the contact form — Techdirt historically ran the 'Insider Shop'/copia op-ed program",
+    "Sponsorship exists via the Media Kit (paid, separate from editorial)"
+  ],
+  "preparation": [
+    "A story link worth submitting — third-party coverage of your launch, not your own press release",
+    "Or a genuine op-ed pitch on tech policy/innovation topics via the contact form",
+    "Techdirt's beat is tech policy, IP, innovation economics — a plain product launch is off-beat"
+  ],
+  "workflow": [
+    "Create a Techdirt account and use the story submission page for news links",
+    "For an original op-ed, use the contact form and select 'Op-Ed Requests'",
+    "Or email via the contact form's 'Media/Public Relations' topic for press inquiries",
+    "Accept that most submissions are not covered — Techdirt gets ~3x more submissions than it can write up"
+  ],
+  "watchFor": [
+    "Explicitly does NOT want press releases — submit a link to someone else's coverage of you instead",
+    "Very old policy post but confirmed by a 2009 follow-up still pointing at the submission page",
+    "techdirt.com blocked automated fetch (403) this session — details verified via Techdirt's own posts and contact-page snippet",
+    "The submission page may require login — it's a community feature"
+  ],
+  "countsAsLive": "A submitted story or op-ed is published on techdirt.com",
+  "unknowns": [
+    "Whether the story submission page is still live behind the nav (blocked to fetchers)",
+    "Whether the op-ed program still accepts outside submissions at the same volume"
+  ]
+}

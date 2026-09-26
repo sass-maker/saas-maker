@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "microfounder.com",
+  "name": "MicroFounder",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://microfounder.com/",
+      "title": "Homepage — curated directory of solo/near-solo founders' startups showing MRR figures"
+    },
+    {
+      "url": "https://microfounder.com/join",
+      "title": "Join page — 'Join MicroFounder $199 $99 one-time payment'; membership includes startup profile"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Positioned for solo and near-solo founders (microfounders) building 'real internet businesses' — curated, not open",
+    "Listing is gated behind membership: 'Join MicroFounder' is a $99 one-time payment (marked down from $199)",
+    "Startup profiles display public MRR figures — be prepared to share revenue"
+  ],
+  "preparation": [
+    "$99 one-time membership payment",
+    "Startup name, URL, description, and logo",
+    "Revenue/MRR figure you are willing to display publicly (listings show e.g. '$10k/mo')",
+    "Founder profile details — members get listed in a founders directory too"
+  ],
+  "workflow": [
+    "Open https://microfounder.com/join and pay the $99 one-time membership",
+    "Log in and create the startup profile (name, URL, description, MRR)",
+    "Profile appears in the Startups directory, founders list, and 'New members' section"
+  ],
+  "watchFor": [
+    "No free submission route found — this is a paid community/listing hybrid",
+    "Public revenue display is the site's signature — skip if you don't want MRR shown",
+    "Curated positioning — membership may still be reviewed despite payment",
+    "No self-serve free 'submit' endpoint anywhere on the site"
+  ],
+  "countsAsLive": "The startup gets a public page under microfounder.com/startups/<slug> and the founder appears in the members/founders lists",
+  "unknowns": [
+    "Whether listings are dofollow",
+    "Whether membership can be rejected/refunded after payment",
+    "Whether free-tier listing ever existed (pricing may change)"
+  ]
+}

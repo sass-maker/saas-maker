@@ -1,0 +1,34 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "rankyourai.com",
+  "name": "RankYourAI",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://rankyourai.com/",
+      "title": "RankYourAI — live AI-tools directory, 'Submit Tool' nav and 'Submit your AI Tool' CTA; featured listings and category pages; SEO-flavored copy throughout"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "AI tools only — directory spans AI writing, SEO, companions, code assistants, etc.",
+    "'Submit Tool' route exists (nav); the form's pricing/terms weren't captured this session",
+    "Heavy 'featured' placement pattern suggests paid promotion options",
+    "Directory quality varies — includes AI companions etc."
+  ],
+  "preparation": ["An AI tool with clear category fit", "Tool name, URL, description, logo"],
+  "workflow": [
+    "Use 'Submit Tool' on rankyourai.com",
+    "Complete the submission; check whether free or paid",
+    "Listing appears in category pages; 'featured' placements presumably paid"
+  ],
+  "watchFor": [
+    "SEO-farm texture — copy is keyword-stuffed; value is a backlink at best",
+    "Featured slots dominate the front page",
+    "Submission terms unverified — check the form in a browser"
+  ],
+  "countsAsLive": "The tool has a listing page in the RankYourAI directory",
+  "unknowns": ["Submission pricing", "Review/moderation process"]
+}

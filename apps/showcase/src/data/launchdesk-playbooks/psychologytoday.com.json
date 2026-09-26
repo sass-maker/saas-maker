@@ -1,0 +1,43 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "psychologytoday.com",
+  "name": "Psychology Today",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.psychologytoday.com/us",
+      "title": "Psychology Today homepage — 'Sign Up & Get Listed' entry for Therapists under member.psychologytoday.com"
+    },
+    {
+      "url": "https://member.psychologytoday.com/us/registration",
+      "title": "Batch-provided registration URL — returned an empty page / 403 to the fetcher"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "This is a professional directory for licensed mental-health providers — therapists, psychiatrists, treatment centers, support groups; the site's own nav only offers listing to 'Therapists'",
+    "Not a fit for general software/SaaS — only relevant if the product is a licensed clinician or treatment provider's practice"
+  ],
+  "preparation": [
+    "Professional credentials/licensure details for a mental-health practice",
+    "Practice details: location, specialties, insurance accepted, profile photo, bio",
+    "Payment method — the listing is a paid subscription"
+  ],
+  "workflow": [
+    "From psychologytoday.com, use the 'Therapists: Sign Up & Get Listed' link (member.psychologytoday.com)",
+    "Complete registration with licensure and practice details",
+    "Pay the listing subscription to activate the public profile"
+  ],
+  "watchFor": [
+    "member.psychologytoday.com registration page returned no content to automated fetch — verify manually in a browser",
+    "Do not list a software product here; misclassified listings on a licensed-professional directory are spam",
+    "Seed pricing claim 'paid' is consistent with a subscription listing model"
+  ],
+  "countsAsLive": "A public therapist/practice profile is published under psychologytoday.com/us/therapists/... and marked 'Verified by Psychology Today'",
+  "unknowns": [
+    "Exact current subscription price — the pricing page could not be fetched",
+    "Verification requirements (license number checks) inside the registration flow"
+  ]
+}

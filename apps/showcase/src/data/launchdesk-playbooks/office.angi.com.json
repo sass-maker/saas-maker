@@ -1,0 +1,56 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "office.angi.com",
+  "name": "Angi (for Pros)",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.angi.com/landing/faq",
+      "title": "Angi FAQ — 'set up a free Angi business profile'; pros can upgrade to advertise; unclaimed businesses don't appear in results (content read via search result)"
+    },
+    {
+      "url": "https://localiq.com/blog/angi-business-listing/",
+      "title": "How to add/claim an Angi listing — register at angi.com/app/join/registration: service + zip > contact info > credentials > check for existing listing > description > service categories > service areas (content read via search result)"
+    },
+    {
+      "url": "https://intercom.help/angi/en/articles/11165674-getting-started-as-a-pro-on-angi",
+      "title": "Angi Pro onboarding — Angi for Pros app, notifications, leads (content read via search result)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free business profile exists BUT Angi is exclusively a home-services marketplace (contractors, plumbers, cleaners) — a SaaS product cannot meaningfully list"
+  ],
+  "requirements": [
+    "A real home-services business — service category + zip code are the first fields",
+    "Registration at angi.com/app/join/registration (office.angi.com/app/join equivalent)",
+    "Business contact info, account credentials, business description, service categories, service areas",
+    "Unclaimed profiles don't show in consumer results — the business must claim/complete the profile",
+    "Paid advertising/subscription tiers exist ('pros can upgrade to advertise'); leads flow through the Angi for Pros app"
+  ],
+  "preparation": [
+    "Only relevant for local-service businesses — skip entirely for SaaS",
+    "If applicable: service categories, service areas, business description, licensing info"
+  ],
+  "workflow": [
+    "Go to angi.com/app/join/registration (or office.angi.com/app/join)",
+    "Choose primary service + zip code, continue through the prompts",
+    "Enter business contact info and create credentials",
+    "Check for an existing listing to claim, else 'Continue Adding Business'",
+    "Complete the profile: description, service categories, service areas",
+    "Manage leads via the Angi for Pros app/site"
+  ],
+  "watchFor": [
+    "Catalog fit: essentially none for software products — keep as a documented dead end",
+    "Free profile exists but Angi's model pushes paid lead-gen aggressively",
+    "office.angi.com/app/join/registration returned 403 to fetchers — verified via Angi FAQ and third-party onboarding docs",
+    "Consumer-facing Angi pages only surface CLAIMED profiles"
+  ],
+  "countsAsLive": "A claimed, completed business profile visible in Angi consumer search",
+  "unknowns": [
+    "Whether any non-home-service category exists in registration",
+    "Lead pricing for paid tiers"
+  ]
+}

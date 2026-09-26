@@ -1,0 +1,45 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "nextbigwhat.com",
+  "name": "NextBigWhat",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://nextbigwhat.com/",
+      "title": "NextBigWhat — live India-origin tech/AI news site; 'Submit your product' → submit.nextbigwhat.com"
+    },
+    {
+      "url": "https://submit.nextbigwhat.com/",
+      "title": "Paid launch platform — Pro $79 one-time (5-day promo: homepage discovery, newsletter, permanent product page); Lite $39 one-time (2-day promo); Stripe checkout; 'published within 24 hours'; no free tier shown"
+    }
+  ],
+  "category": "press",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Paid only — Lite $39 or Pro $79 one-time via Stripe (submit.nextbigwhat.com)",
+    "Both tiers: permanent product page, homepage discovery window, newsletter promotion, direct link; published within 24 hours",
+    "Editorial reserves the right to edit unsupported superlatives ('world's #1' etc.)",
+    "Separate 'Submit PR' route exists for press releases",
+    "Audience: founders, operators, investors — India-rooted but global AI/startup coverage"
+  ],
+  "preparation": [
+    "Product name, tagline (no unsupported superlatives), description, link, image",
+    "Stripe payment"
+  ],
+  "workflow": [
+    "Choose Pro ($79) or Lite ($39) on submit.nextbigwhat.com",
+    "Pay via Stripe, then submit product details on the post-checkout form",
+    "Product page publishes within 24 hours with the plan's promo window"
+  ],
+  "watchFor": [
+    "No free route — this is a paid listing + visibility package, not earned coverage",
+    "Paid placement ≠ endorsement — their own FAQ says so",
+    "The 'latest products' feed mixes paid launches with editorial"
+  ],
+  "countsAsLive": "A permanent product page on nextbigwhat.com plus the paid homepage/newsletter promo window",
+  "unknowns": [
+    "Whether editorial coverage (unpaid) is separately attainable via tips",
+    "Newsletter reach"
+  ]
+}

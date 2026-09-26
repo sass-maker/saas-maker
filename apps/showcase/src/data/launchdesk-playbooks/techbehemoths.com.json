@@ -1,0 +1,57 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "techbehemoths.com",
+  "name": "TechBehemoths",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://techbehemoths.com/faq",
+      "title": "FAQ (search-indexed) — 'Get Listed' → type company name → claim existing or register; corporate email required (Gmail/Yahoo rejected); platform is 100% free"
+    },
+    {
+      "url": "https://techbehemoths.com/terms",
+      "title": "Terms & Conditions (search-indexed) — listings can be removed at sole discretion; submissions become their property"
+    },
+    {
+      "url": "https://techbehemoths.com/companies/get-listed",
+      "title": "Get-listed page — returned HTTP 403 (bot-blocked)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Listing is free, but it is a directory of IT service companies/agencies — a SaaS product fits only if registered as its company (e.g. software development company profile), not as a product listing",
+    "Claiming a profile requires a corporate email on the company domain — Gmail/Yahoo/etc. are rejected"
+  ],
+  "requirements": [
+    "An IT services/software company (the directory matches clients with IT service providers, not standalone products)",
+    "Company name check first — many companies are pre-listed and must be claimed rather than re-registered",
+    "Corporate email address on the company domain for verification",
+    "Complete profile drives ranking: portfolio, reviews, contacts, descriptions"
+  ],
+  "preparation": [
+    "Check whether the company is already listed on TechBehemoths (they pre-populate profiles)",
+    "Corporate email access for the confirmation email",
+    "Company profile material: services, portfolio items, location, contacts, descriptions"
+  ],
+  "workflow": [
+    "Click 'Get Listed' (top right) on techbehemoths.com — use a browser, the site 403s automated fetches",
+    "Type the company name; if a managed profile exists, click 'Claim Now'; otherwise register new",
+    "Enter a corporate email and confirm via the automated email",
+    "Complete the profile (portfolio, services, reviews, contacts) — detail level affects search ranking",
+    "Profile goes live and can receive client inquiries"
+  ],
+  "watchFor": [
+    "Site 403s automated fetches — browser required",
+    "Product-only SaaS has no product-listing surface; the entity listed is the company",
+    "Terms allow removal of listings at sole discretion and claim ownership of submitted content",
+    "Third-party backlink services describe it as a dofollow listing — verify link treatment on the live page"
+  ],
+  "countsAsLive": "A claimed/registered company profile is publicly viewable in TechBehemoths search results with services, location and website link",
+  "unknowns": [
+    "Verification turnaround after corporate-email confirmation",
+    "Whether listing links are dofollow (third-party claims, not verified)",
+    "Whether non-agency SaaS companies are accepted"
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startups.com",
+  "name": "Startups.com",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://help.startups.com/knowledge/how-do-i-view-my-startups.com-profile",
+      "title": "Help — profile visibility settings (Public/Private/Hidden) and the unique public profile URL live under Manage Account > Personal Profile"
+    },
+    {
+      "url": "https://www.startups.com/signup/register",
+      "title": "Registration page (search-indexed) — name, email or phone, password"
+    },
+    {
+      "url": "https://www.startups.com/",
+      "title": "Homepage (search-indexed) — online startup accelerator; 'Requests' roadmap, investor matching, community forums; returned HTTP 429 to direct fetch"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Account creation and a startup profile are free, but the startup profile's public discoverability depends on the Profile Visibility setting (Public/Private/Hidden)",
+    "This is an accelerator/founder community — the value is the program (advisors, courses, investor matching), and much of that is paid membership; the public profile is a side artifact, not a launch listing"
+  ],
+  "requirements": [
+    "Register at startups.com/signup/register (name + email or phone + password, or Google on the accelerator form)",
+    "Startup profile data: company name, industry, team size, funding stage, logo",
+    "Set Profile Visibility to Public for an externally viewable profile URL"
+  ],
+  "preparation": [
+    "Founder name, email, password (or phone signup)",
+    "Startup details: name, industry, stage, logo",
+    "Expect onboarding into the accelerator funnel (Requests/roadmap prompts)"
+  ],
+  "workflow": [
+    "Register at https://www.startups.com/signup/register (site rate-limited automated fetches — use a browser)",
+    "Complete the startup profile under /account/startup (name, industry, team size, funding stage, logo)",
+    "Set Personal Profile visibility to Public and copy the unique profile URL",
+    "Optionally explore the community, Requests roadmap, investor matching and workshops (membership tiers apply)"
+  ],
+  "watchFor": [
+    "429 rate-limiting observed on direct fetches — use a browser",
+    "Not a public launch directory — a 'Public' profile URL exists but there is no browsable public launch feed guarantee",
+    "Accelerator upsell: advisor calls, courses, investor matching are the paid product",
+    "Same family as Fundable, Clarity.fm, Bizplan, Launchrock — expect cross-product marketing"
+  ],
+  "countsAsLive": "The personal/startup profile resolves at its unique startups.com URL with visibility set to Public",
+  "unknowns": [
+    "Whether public profiles are indexable or render a website link (and follow treatment)",
+    "Free-tier limits on the accelerator/community features",
+    "Whether startup profiles have a public directory page"
+  ]
+}

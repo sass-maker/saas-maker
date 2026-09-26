@@ -1,0 +1,43 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "businesswith.com",
+  "name": "BusinessWith",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://hub.businesswith.com/",
+      "title": "Vendor hub — 'Largest marketplace for SaaS Buyers in Europe'; 'LIST YOUR SAAS' CTA leads to contact-us; no self-serve submission form"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "B2B SaaS vendors only — marketplace matching European software buyers to suppliers",
+    "No self-serve listing: 'List your SaaS' and 'Get in touch' both route to /contact-us/ — listing happens through a sales conversation",
+    "Partner/lead-gen model (testimonials cite 'ROI of around 4x our invested capital' — implies paid engagement)"
+  ],
+  "preparation": [
+    "SaaS product details, target buyer profile, category positioning",
+    "Marketing contact for the vendor conversation",
+    "Budget expectation — no free listing path is published"
+  ],
+  "workflow": [
+    "Open https://hub.businesswith.com/ and click 'LIST YOUR SAAS' / 'GET IN TOUCH'",
+    "Submit the contact form (or reach out via /contact-us/)",
+    "Discuss listing + lead-gen package with their team",
+    "Optionally adopt extras they promote: Review Widget for your own site, LLM Tracker visibility"
+  ],
+  "watchFor": [
+    "European focus — site network is businesswith.{com,uk,de,dk,es,fi,nl,no,se}; strongest fit for EU/Nordic SaaS",
+    "25K+ visitors/month claimed — modest scale vs. large review platforms",
+    "No published pricing — expect a sales call before knowing cost",
+    "Vendor testimonials are lead-gen oriented, not a neutral directory listing"
+  ],
+  "countsAsLive": "A public software profile exists on businesswith.com (or regional site) visible to buyers in category searches",
+  "unknowns": [
+    "Whether any free-tier listing exists behind the sales flow",
+    "Pricing structure for vendor listings",
+    "Link attribute on published profiles"
+  ]
+}

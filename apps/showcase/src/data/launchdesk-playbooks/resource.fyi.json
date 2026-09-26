@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "resource.fyi",
+  "name": "Resource FYI",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://resource.fyi/",
+      "title": "Homepage — curated directory of tools/resources for devs, designers, marketers; 'submit products or tools for free to get listed'; active 'Latest Resources' feed shows frequent new approvals"
+    },
+    {
+      "url": "https://resource.fyi/account/submit",
+      "title": "Submit page — gates behind social login: 'Sign in with Google / Sign in with Github… social login is here to fight spam'"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Submission is free but requires signing in with a Google or GitHub social account — there is no email-signup or anonymous path",
+    "Listings go through an approval step ('Recently submitted & approved' phrasing on the latest feed)"
+  ],
+  "requirements": [
+    "Google or GitHub account for social login (anti-spam gate; site pledges not to post to your profile)",
+    "Product must fit one of the site's categories (AI, developer tools, design tools, no-code, productivity, marketing, web dev, etc.)",
+    "Editorial approval before the listing appears publicly"
+  ],
+  "preparation": [
+    "A Google or GitHub account you're willing to OAuth",
+    "Product name, URL, description, thumbnail/screenshot",
+    "The best-fit category from their list"
+  ],
+  "workflow": [
+    "Open https://resource.fyi/account/submit",
+    "Sign in with Google or GitHub",
+    "Fill the submit form (resource name, URL, description, category, thumbnail)",
+    "Wait for approval — approved items appear in the 'Latest Resources' feed and their category page"
+  ],
+  "watchFor": [
+    "Social-login gate is mandatory — an OAuth consent screen will appear; use an account appropriate for a public maker profile",
+    "Ads are present on pages; don't confuse ad slots for site content",
+    "The batch's 'nofollow' link hint is plausible but unverified — check the live listing's rel attribute if link type matters",
+    "Free-tier visibility is a standard listing; 'Featured' slots on the homepage are likely promotional"
+  ],
+  "countsAsLive": "The resource appears publicly in 'Latest Resources' or its category page on resource.fyi with a 'Visit Site' link",
+  "unknowns": [
+    "Approval turnaround time and rejection criteria",
+    "Whether listing links are dofollow or nofollow",
+    "Cost/requirements of 'Featured' placement"
+  ]
+}

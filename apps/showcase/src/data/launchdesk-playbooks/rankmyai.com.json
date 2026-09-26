@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "rankmyai.com",
+  "name": "RankmyAI",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.rankmyai.com/tool-addition",
+      "title": "Tool addition form — free inclusion, full field list, 'Tools must have a dedicated website or subdomain and a significant AI component'; review up to 7 days"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Tool must have a dedicated website or subdomain",
+    "Tool must have a significant AI component",
+    "Inclusion is at their discretion — this is a ranked database (overall/traffic/investment/review rankings), not an open posting board",
+    "Requires company details: legal name, HQ address (country/state/city/street/postal), founding year, employee count"
+  ],
+  "preparation": [
+    "Submitter name and email",
+    "Tool name, dedicated website/subdomain URL",
+    "Use cases ≤300 chars and a short description ≤400 chars",
+    "Product Hunt profile link if one exists (optional field)",
+    "Company data: legal name, company website, LinkedIn URL, year founded, employee count, full HQ address",
+    "Pricing label (Paid/Freemium/Free, ≤15 chars), pricing page URL, API availability (Yes/No)"
+  ],
+  "workflow": [
+    "Open rankmyai.com/tool-addition",
+    "Fill all required fields plus optional company/Product Hunt details — richer data feeds their ranking and map features",
+    "Submit and wait; the form states 'Review may take up to 7 days. You'll always hear from us.'",
+    "After inclusion, the tool appears in the database and becomes eligible for category and top-100 rankings"
+  ],
+  "watchFor": [
+    "Deep company-data ask (full HQ street address) unusual for a free listing — share only accurate public company info",
+    "Dutch academic-affiliated project (part of HvA, CC BY 4.0 licensed data) — listings feed research, not marketing pages",
+    "Ranking placement is data-driven; a bare listing may rank low without traffic/review signals"
+  ],
+  "countsAsLive": "The tool has a profile in the RankmyAI database and is discoverable via their rankings/maps/search",
+  "unknowns": [
+    "Whether tool profiles carry outbound followed links",
+    "How rankings weight newly added tools with no traffic history",
+    "Whether there is any paid fast-track (none was visible on the form)"
+  ]
+}

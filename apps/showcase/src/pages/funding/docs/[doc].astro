@@ -1,0 +1,101 @@
+---
+import type { AstroComponentFactory, GetStaticPaths } from 'astro';
+import Footer from '../../../components/Footer.astro';
+import Nav from '../../../components/Nav.astro';
+import { FUNDING, FUNDING_DOCS, type FundingDoc } from '../../../data/funding';
+import Layout from '../../../layouts/Layout.astro';
+
+type DocModule = { Content: AstroComponentFactory };
+
+// getStaticPaths runs in its own module context, so everything it uses must
+// be imported or declared inside the function.
+export const getStaticPaths = (() =>
+  FUNDING_DOCS.map((doc) => ({ params: { doc: doc.slug }, props: { doc } }))) satisfies GetStaticPaths;
+
+interface Props {
+  doc: FundingDoc;
+}
+
+const docModules = import.meta.glob<DocModule>('../../../data/funding-docs/*.md', {
+  eager: true,
+});
+
+const { doc } = Astro.props;
+const module = docModules[`../../../data/funding-docs/${doc.slug}.md`];
+if (!module?.Content) {
+  throw new Error(
+    `Missing markdown mirror for funding doc "${doc.slug}". ` +
+      `Available keys: ${Object.keys(docModules).join(', ')}`
+  );
+}
+const Content = module.Content;
+---
+
+<Layout title={`${doc.title} — SaaS Maker funding directory`} description={doc.description}>
+  <div class="workshop-world interior-world funding-world">
+    <Nav />
+    <main class="learning-article" id="main-content">
+      <article>
+        <header class="article-hero generated-hero">
+          <div class="article-intro">
+            <p class="eyebrow">Funding directory</p>
+            <h1>{doc.title}</h1>
+            <p class="article-deck">{doc.description}</p>
+            <div class="article-byline">
+              <span>SaaS Maker</span>
+              <span>
+                Imported {FUNDING.exportedAt.slice(0, 10)} · workspace rebuilt{' '}
+                {FUNDING.workspaceRebuilt}
+              </span>
+            </div>
+          </div>
+        </header>
+
+        <nav class="funding-doc-nav" aria-label="Funding directory docs">
+          <a href="/funding">Directory</a>
+          {FUNDING_DOCS.map((entry) => (
+            <a href={`/funding/docs/${entry.slug}`} aria-current={entry.slug === doc.slug ? 'page' : undefined}>
+              {entry.title}
+            </a>
+          ))}
+        </nav>
+
+        <div class="generated-body prose">
+          <Content />
+        </div>
+      </article>
+    </main>
+    <Footer />
+  </div>
+</Layout>
+
+<style>
+  .funding-doc-nav {
+    width: min(46rem, calc(100% - 3rem));
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0 auto 2.5rem;
+    padding: 0;
+  }
+
+  .funding-doc-nav a {
+    padding: 0.35rem 0.8rem;
+    border: 1px solid var(--line-strong);
+    color: var(--ink-soft);
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .funding-doc-nav a:hover {
+    color: var(--copper-hi);
+    border-color: var(--copper-hi);
+  }
+
+  .funding-doc-nav a[aria-current='page'] {
+    background: var(--workshop-seeded);
+    color: var(--workshop-ink);
+    border-color: var(--workshop-seeded);
+  }
+</style>

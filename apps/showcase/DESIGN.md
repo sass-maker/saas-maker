@@ -47,10 +47,14 @@ derivation is written out in the comment next to them.
 
 Compose public product discovery as a wall elevation. Matte-black mullions
 separate unevenly proportioned panes; each pane carries one statement or
-destination. The homepage first viewport pairs one large studio pane with four
-featured product panes. It does not repeat the catalog: one directory gateway
-points to `/projects`, where supporting and past work become disciplined
-specimen rows rather than cards.
+destination. The homepage first viewport is one clear editorial pane: a wide
+headline sits beside the intro, status, and a masked glimpse of the atelier
+photograph, and the spotlighted products arrive as a steel-mullioned ledger of
+quiet plaques that flood with saturated pane color on hover and focus. The
+ledger scales honestly to however many products are spotlighted — two read as
+two commissioned entries, never as an unfinished grid. It does not repeat the
+catalog: one directory gateway points to `/projects`, where supporting and past
+work become disciplined specimen rows rather than cards.
 
 Product detail pages inherit the same workshop world: one clear identity pane
 shares a steel frame with a saturated canonical-product action, while public
@@ -74,6 +78,8 @@ and decorative glass blur.
 
 ## Motion
 
-The wall arrives once: clear panes brighten, then the saturated panes settle
-into full color. Hover and focus backlight one pane without translating the
-layout. Disable nonessential motion under `prefers-reduced-motion`.
+The wall arrives once: the editorial pane brightens, then the ledger plaques
+settle in sequence. On the homepage, hover and focus flood a whole plaque with
+its product's saturated color; elsewhere they backlight a pane without
+translating the layout. Disable nonessential motion under
+`prefers-reduced-motion`.

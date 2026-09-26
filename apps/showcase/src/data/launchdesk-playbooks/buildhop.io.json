@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "buildhop.io",
+  "name": "BuildHop",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://buildhop.io/",
+      "title": "Homepage — 'Startup Distribution Platform for Founders'; submit links point to /auth/sign-up?next=/app/create"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Account signup required — all 'Submit your product' links route through /auth/sign-up?next=/app/create; no guest submission"
+  ],
+  "requirements": [
+    "Active account on BuildHop (email or OAuth — signup page not fetched)",
+    "Product must be a real startup/indie product for discovery; listings feed leaderboards and 'Live Signal' browsing",
+    "Site shows active moderation language: 'Freshly approved products stay eligible for this leaderboard for seven full days' — submissions go through approval"
+  ],
+  "preparation": [
+    "Product name, URL, one-line tagline (leaderboard cards show a short description)",
+    "Logo/avatar image (cards display product logos)",
+    "Founder profile details — founder spotlights and feeds are part of the platform"
+  ],
+  "workflow": [
+    "Create an account at https://buildhop.io/auth/sign-up (or log in)",
+    "After auth you'll land on /app/create — fill the product submission form",
+    "Wait for approval; approved products appear in Discover, leaderboards (7-day window for new products), and founder feeds",
+    "Engage with the platform — discovery is ranked by real browsing activity ('Hops')"
+  ],
+  "watchFor": [
+    "No public 'is it free' statement on the homepage — pricing of submission is unverified; site emphasizes 'free lead discovery' for browsing, not submission cost",
+    "Leaderboard ranking is engagement-based (Hops, upvotes, completion %, momentum) — passive listings decay",
+    "Heavy badge/SEO churn ecosystem around it (many reciprocal directory badges in footer)",
+    "JS-heavy SPA — the batch URL /app/create renders nothing without login"
+  ],
+  "countsAsLive": "The product appears under buildhop.io/discover/<slug> or /products with its own detail card and shows on the 7-day or all-time leaderboard",
+  "unknowns": [
+    "Whether paid tiers exist or submissions can be paid-boosted (ads exist — 'Bid $44 to take 8 ads' auction visible on homepage)",
+    "Approval criteria and turnaround time",
+    "Link attribute on product pages"
+  ]
+}

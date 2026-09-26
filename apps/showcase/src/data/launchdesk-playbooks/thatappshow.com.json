@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "thatappshow.com",
+  "name": "That App Show",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://thatappshow.com/",
+      "title": "Homepage — active software product directory; FAQ confirms 'submit your own product through the submission page, reviewed before added'"
+    },
+    {
+      "url": "https://thatappshow.com/get-started",
+      "title": "Submit route — 'Log in to Get Started. Please sign in to submit your product' (Google sign-in or account creation)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Submission requires a free account — Google sign-in or email signup via /get-started",
+    "Whether the listing itself costs money is not visible before login — no public pricing for submissions"
+  ],
+  "requirements": [
+    "Software products: apps, SaaS tools, digital products across ~50 categories (AI assistants, dev tools, marketing, etc.)",
+    "Account required before the submit form is shown ('Please sign in to submit your product')",
+    "Submissions are reviewed before being added to the directory"
+  ],
+  "preparation": [
+    "Google account or email for signup",
+    "Product name, URL, short description, pricing model (Free/Freemium/Paid/Free Trial — these appear as listing badges)",
+    "Category pick from their taxonomy; a square logo/thumbnail appears on listing cards"
+  ],
+  "workflow": [
+    "Open https://thatappshow.com/get-started and sign in (Google or create account)",
+    "Complete the product submission form (name, URL, description, categories, pricing model)",
+    "Wait for editorial review — FAQ says submissions are reviewed before publication",
+    "Live listings appear under /explore, /latest, and the chosen /category/<slug>/ pages"
+  ],
+  "watchFor": [
+    "Post-login submission pricing (if any) is not publicly disclosed — check for a paywall inside",
+    "A persistent 'We Submit Your SaaS to 140+ Directories' ad (submitsaas.com) runs on the site — do not confuse the paid submission service with the directory's own free route",
+    "'Featured Products' carousel at top likely involves paid placement — standard listing is the default"
+  ],
+  "countsAsLive": "The product's own listing page on thatappshow.com exists and appears under /explore or /category/<slug>/ with a Visit link",
+  "unknowns": [
+    "Whether a paid tier exists behind the login for submission/featured placement",
+    "Review turnaround time",
+    "Whether outbound links are dofollow"
+  ]
+}

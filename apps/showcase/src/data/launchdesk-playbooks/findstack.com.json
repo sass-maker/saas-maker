@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "findstack.com",
+  "name": "Findstack",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://findstack.com/get-listed",
+      "title": "Get listed page — renders a vendor account signup (professional email + password, or Google)"
+    },
+    {
+      "url": "https://findstack.com/faq",
+      "title": "FAQ — 'I run a software company, how can I get my product listed?' → 'Head across to our Get listed page and submit the product details'"
+    },
+    {
+      "url": "https://findstack.com/resources/how-we-select-software",
+      "title": "How We Select Software (search-indexed) — 'use this form to submit or claim your software listing'; happy to list tools in a relevant category even if not a 'Best Of' pick"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Software product that fits a B2B software category (directory covers 300+ categories)",
+    "Vendor account on findstack.com — signup with professional email (or Google) is the gate before the product submission form",
+    "Revenue model is vendor-funded (leads, deals, premium listings) but basic listing is free — 'We include every vendor in our listings, not just those who compensate us'"
+  ],
+  "preparation": [
+    "Professional email for the vendor account",
+    "Product name, URL, category fit, description, pricing details, feature list, integrations",
+    "Logo and screenshots for the profile",
+    "For a Deal listing instead: contact via /about#contact"
+  ],
+  "workflow": [
+    "Open https://findstack.com/get-listed and create the vendor account (professional email or Google)",
+    "Submit product details via the listing form after signup (or claim the listing if the product already exists in the catalog)",
+    "Wait for Findstack review/publication — the listing publishes as a product page plus structured data/Markdown (the catalog is machine-readable via public API and MCP)",
+    "Optionally pursue a Deal listing by contacting them separately"
+  ],
+  "watchFor": [
+    "The /get-listed page looks like a generic signup — it is the vendor gate; the product form comes after account creation",
+    "Premium listing upsell exists (enhanced profile media, contact options) — not required for the basic listing",
+    "Listings publish as structured data and Markdown readable by AI assistants — copy should be factual, not hype",
+    "Premium membership $49/yr mentioned in the FAQ is for BUYERS of deals, not vendors — don't confuse the two"
+  ],
+  "countsAsLive": "The product page is publicly reachable at findstack.com/products/<slug> or appears via the public API /api/v1/products search",
+  "unknowns": [
+    "Exact review turnaround after submission",
+    "Whether the vendor signup leads directly to a product form or a claim-existing-listing flow first",
+    "Link treatment (dofollow/nofollow) on live product pages"
+  ]
+}

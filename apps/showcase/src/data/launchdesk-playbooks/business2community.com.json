@@ -1,0 +1,40 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "business2community.com",
+  "name": "Business 2 Community",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.business2community.com/",
+      "title": "Business2Community — live business/marketing news site ('500K+ monthly readers', '1K+ articles'); contributor model ('we only work with the best writers… carefully vetted'); Contact Us and Editors links in footer"
+    }
+  ],
+  "category": "press",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Contributor/earned-editorial model — historically a community-contributed article platform; the current site frames writers as 'carefully vetted' experts",
+    "No self-serve submit page on the current homepage — contributor applications go through Contact Us / the editorial team",
+    "Content remit: business news, marketing, small business, AI — plus a conspicuous crypto/affiliate content layer",
+    "No listing/profile product"
+  ],
+  "preparation": [
+    "A contributed-article pitch in business/marketing/tech aimed at SMB readers",
+    "Writing samples for the contributor vetting"
+  ],
+  "workflow": [
+    "Contact the editorial team via the footer Contact Us page to apply as a contributor",
+    "Alternatively pitch a story angle to the Editors",
+    "If accepted, articles are published under your byline — B2C is a bylined-article model"
+  ],
+  "watchFor": [
+    "The site mixes editorial with aggressive affiliate/crypto content ('Best Crypto', 'Bitcoin Casino') — brand-adjacency risk",
+    "Historically an open contributor platform; the current vetting bar and whether new contributors are still onboarded is unclear",
+    "A pure product-announcement post is unlikely to be accepted — thought-leadership framing required"
+  ],
+  "countsAsLive": "A bylined article is published at business2community.com",
+  "unknowns": [
+    "Whether new-contributor applications are still open and what the criteria are",
+    "Whether paid placement exists"
+  ]
+}

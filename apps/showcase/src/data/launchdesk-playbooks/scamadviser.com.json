@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "scamadviser.com",
+  "name": "ScamAdviser",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.scamadviser.com/check-website/amazon.com",
+      "title": "Example trust-score report — auto-generated analysis from 40+ data sources (Tranco rank, SSL, domain age, DNSFilter, reviews) (content read via search result)"
+    },
+    {
+      "url": "https://www.getsafeonline.org/checkawebsite/",
+      "title": "Get Safe Online 'Check a Website' — confirms ScamAdviser is the algorithm provider; trust score computed automatically, no manual submission (content read via search result)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "unknown",
+  "conditions": [
+    "Not a launch destination in any real sense — there is no submission flow; a trust-score page for a domain is auto-generated when anyone checks it"
+  ],
+  "requirements": [
+    "No submission form: typing a domain into the checker generates a report page at scamadviser.com/check-website/<domain>",
+    "The trust score is computed from external signals (SSL, domain age, Tranco rank, hosting, blacklist checks, user reviews) — you cannot control it directly",
+    "Site owners can respond to user reviews on their page; a 'claim' style flow exists via contact but is not a documented listing product",
+    "Young domains inherently score worse — a freshly launched SaaS will look suspicious by design"
+  ],
+  "preparation": [
+    "Make sure real-world trust signals are in place: valid SSL, public WHOIS or clean WHOIS, contact info on site, domain age",
+    "Accept that the page is auto-generated — do not treat 'being on ScamAdviser' as an achievement"
+  ],
+  "workflow": [
+    "Enter the domain at scamadviser.com (the checker generates the report page automatically)",
+    "If the score is unfairly low, use their contact/dispute channels — there is no self-serve edit",
+    "Optionally respond to user reviews on the generated page"
+  ],
+  "watchFor": [
+    "catalog fit is questionable — this is a scam-detection database, not a launch directory; presence is automatic, not earned",
+    "A brand-new domain will likely get a mediocre trust score — the page may hurt more than help at launch",
+    "scamadviser.com blocked automated fetch (403) this session — details verified via cached report pages and partner documentation",
+    "User reviews on the report page are unmoderated-looking and can include fake reviews, which ScamAdviser itself warns about"
+  ],
+  "countsAsLive": "A trust-score report page exists at scamadviser.com/check-website/<domain>",
+  "unknowns": [
+    "Whether a formal claim/verification flow for site owners exists",
+    "How to appeal a low algorithmic score beyond the contact form"
+  ]
+}

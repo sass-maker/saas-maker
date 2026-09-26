@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "opencollective.com",
+  "name": "Open Collective",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://opencollective.com/",
+      "title": "Homepage — collaborative money management; splits sign-up by legally incorporated vs unincorporated projects"
+    },
+    {
+      "url": "https://opencollective.com/collectives",
+      "title": "For Collectives — 'Create a Collective' links to /signup/collective; explains fiscal hosting requirement"
+    },
+    {
+      "url": "https://opencollective.com/create",
+      "title": "Batch-provided submission URL — rendered only a nav shell, no form"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Creating a collective is free, but to receive money the collective must be accepted by a fiscal host (e.g. Open Source Collective, Open Collective Europe, Gift Collective) — each host has its own mission scope, geography, acceptance criteria and fees",
+    "This is a fundraising/fiscal-hosting platform, not a launch directory — only appropriate for products/projects that genuinely want to accept donations or sponsorships transparently"
+  ],
+  "requirements": [
+    "Project fits a fiscal host's mission scope (e.g. open source projects → Open Source Collective 501(c)(6); European groups → Open Collective Europe; charitable NZ groups → Gift Collective)",
+    "Collective pages are financially transparent by design — balances, contributions and expenses are public",
+    "Commercial SaaS looking for a backlink/launch listing is not the intended use"
+  ],
+  "preparation": [
+    "Decide which fiscal host matches the project's mission, location and currency",
+    "Project name, description, public repo/community links",
+    "Admin real-name identity — finances are publicly attributed",
+    "Planned contribution tiers (tip jar, monthly goals, memberships) if fundraising is the goal"
+  ],
+  "workflow": [
+    "Open https://opencollective.com/signup/collective (linked from 'Create a Collective' on /collectives)",
+    "Create the collective profile (name, mission, links)",
+    "Apply to a suitable fiscal host from the collective dashboard — hosts review against their acceptance criteria",
+    "After host approval, the public collective page at opencollective.com/<slug> is live and can accept contributions"
+  ],
+  "watchFor": [
+    "Batch submission URL /create renders an empty nav shell — the real route is /signup/collective",
+    "Fiscal host review is a gate: rejection leaves the page without money features",
+    "All finances are public — do not use for a product that shouldn't disclose revenue",
+    "Host fees differ per host (typically a % of funds raised) — 'free' refers to page creation"
+  ],
+  "countsAsLive": "The collective page is publicly reachable at opencollective.com/<slug> and, once host-approved, shows an active 'Contribute' option",
+  "unknowns": [
+    "Exact acceptance criteria and turnaround per fiscal host",
+    "Whether a purely commercial SaaS product would be accepted by any host"
+  ]
+}

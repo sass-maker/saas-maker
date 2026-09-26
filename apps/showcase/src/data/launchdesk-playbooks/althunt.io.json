@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "althunt.io",
+  "name": "Alt Hunt",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://althunt.io/new",
+      "title": "'Create alternative' workspace — 'Be the alternative they find': publish comparison pages that show up when people search your competitor's name"
+    },
+    {
+      "url": "https://althunt.io/pricing",
+      "title": "Pricing — Free $0 (1 comparison page, badge verification required, 1 edit); Pro $19 one-time (5 pages, unlimited edits, remove badge)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free tier limits: 1 comparison page per product, 'Badge verification required' (an Alt Hunt badge on your site), max 2 images <2MB, 1 video embed, 1 code snippet, 1 CTA block, only 1 edit post-publish. Pro $19 one-time removes limits and the badge"
+  ],
+  "requirements": [
+    "Not a classic listing — you publish a '[competitor] alternative' comparison page that positions your product as the alternative ('Someone is searching your competitor's name right now')",
+    "Free tier requires displaying an Alt Hunt badge (verification)",
+    "Account/workspace model — submission happens from /new inside 'Your workspace'",
+    "SaaS/AI products; site also hosts a 1,300+ startup directories catalog and an AI tools directory"
+  ],
+  "preparation": [
+    "Pick the competitor(s) your page will target — the SEO play is competitor-name searches",
+    "Comparison content: features, pricing, reasons-to-switch copy (AI draft generation is built in)",
+    "Media assets: up to 2 images <2MB, 1 video embed, 1 code snippet, 1 CTA on free tier",
+    "A place on your site for the Alt Hunt verification badge (free tier)"
+  ],
+  "workflow": [
+    "Sign up and open https://althunt.io/new ('Create alternative')",
+    "Use the AI draft generation + Notion-style block editor to build the comparison page",
+    "Publish — add the verification badge to your site on the free tier",
+    "Page appears in the Alt Hunt feed/comparisons and targets Google/AI-answer visibility for '[competitor] alternative' queries"
+  ],
+  "watchFor": [
+    "One edit only post-publish on free — get it right before publishing (Pro unlocks unlimited edits)",
+    "The 'listing' is a comparison page, so it competes on your rival's brand terms — write fair, factual comparisons",
+    "Badge requirement is effectively a backlink-for-listing exchange on the free tier",
+    "Sidebar ad slots and the directories catalog are separate products — don't confuse them with your page"
+  ],
+  "countsAsLive": "The comparison page is published on althunt.io, reachable from the feed/comparisons section, with the Alt Hunt badge live on your site (free tier)",
+  "unknowns": [
+    "Whether free-tier pages get indexed/ranked well enough to matter",
+    "Whether outbound links from the page are dofollow",
+    "Moderation standards for comparison claims"
+  ]
+}

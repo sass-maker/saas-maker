@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aixploria.com",
+  "name": "AIxploria",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.aixploria.com/en/add-ai/",
+      "title": "Submit an AI Tool — page renders nav/footer only; form body is JS-gated"
+    },
+    {
+      "url": "https://www.aixploria.com/en/submit-ai-tool-or-feature-company/",
+      "title": "Batch-provided submit URL — same JS-rendered shell; real route is /en/add-ai/"
+    },
+    {
+      "url": "https://www.aixploria.com/en/featured-on-aixploria/",
+      "title": "Feature your tool ★ — paid featuring/advertising page exists (body JS-rendered, prices not visible)"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "AI tool/product only — this is a large multilingual AI directory",
+    "Submit route is /en/add-ai/ (also reachable via 'Submit an AI' in nav and 'Submit an AI Tool' in footer)",
+    "Form content is JS-rendered — could not capture field list or any cost shown inside the form",
+    "Separate paid 'Feature your tool ★' and 'Advertise' routes exist regardless of the basic submission cost"
+  ],
+  "preparation": [
+    "Tool name, URL, description, logo",
+    "Category pick from their AI taxonomy",
+    "A real browser — the site is heavily JS-rendered and cookie-consent gated"
+  ],
+  "workflow": [
+    "Open https://www.aixploria.com/en/add-ai/ in a real browser",
+    "Complete the submission form (fields not verifiable via fetch)",
+    "Submit and await editorial review",
+    "Optional: paid featuring via /en/featured-on-aixploria/"
+  ],
+  "watchFor": [
+    "All page bodies are JS-rendered — automation needs a headless browser, not HTTP fetches",
+    "Batch seed URL /en/submit-ai-tool-or-feature-company/ is a redirect-style alias; canonical submit is /en/add-ai/",
+    "Third-party comparison says the site is free to browse with paid featuring — whether the base listing itself is free is unconfirmed",
+    "'Update your tool' page exists at /en/update-ai-tool-website-aixploria/ for post-listing edits"
+  ],
+  "countsAsLive": "The tool appears on a public aixploria.com listing page reachable via 'Full List'/'New AI Tools' and its AI category",
+  "unknowns": [
+    "Whether the base submission is free or paid (form never rendered)",
+    "Form fields and any backlink/badge requirement",
+    "Review turnaround",
+    "Featured/advertising price points"
+  ]
+}

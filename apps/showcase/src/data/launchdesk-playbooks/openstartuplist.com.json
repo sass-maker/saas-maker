@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "openstartuplist.com",
+  "name": "Open Startup List",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://openstartuplist.com/",
+      "title": "Homepage — directory of 'open startups' that share metrics publicly; contact form doubles as 'Submit your open startup'"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Your product must already operate as an 'open startup': it publicly shares metrics (revenue, users, traffic) — typically via an /open page, Indie Hackers product page, or verified metrics through Stripe / ChartMogul / Simple Analytics / Google Analytics"
+  ],
+  "requirements": [
+    "The site defines an Open Startup as 'a company that shares its metrics publicly — visitor analytics, marketing experiments, even revenue'",
+    "Revenue verification expected via Stripe, Indie Hackers, or ChartMogul; traffic via Simple Analytics or Google Analytics; uptime via Anyuptime; status page via Hosted Status Page",
+    "No dedicated submission form exists — 'Submit your open startup' points to the generic contact form (Full Name, Email, Message)",
+    "No fee mentioned; advertising slots exist as a separate paid option"
+  ],
+  "preparation": [
+    "A live public metrics page or Indie Hackers product page showing revenue/users/traffic",
+    "Which verifications you already have (Stripe/ChartMogul revenue, GA/Simple Analytics traffic)",
+    "Short description of the startup plus links to the public metrics in the contact-form message"
+  ],
+  "workflow": [
+    "Set up public metrics sharing first (this is the gate — e.g., Indie Hackers verified revenue or an /open page)",
+    "Open https://openstartuplist.com/ and scroll to 'Submit your open startup' / Contact Us form",
+    "Send name, email, and a message with the startup name, URL, and links to its public metrics",
+    "If accepted, the startup is added to the 'Our Heroes' list with a one-line description"
+  ],
+  "watchFor": [
+    "Site footer says Copyright 2020 — the directory may be dormant; confirm your listing actually goes up before counting it",
+    "Many listed startups link out to Indie Hackers interviews rather than to the product itself",
+    "Do not submit a non-transparent product — the entire premise is public metrics",
+    "There is a paid 'Advertise' pitch in the same contact area; a listing itself is not advertising"
+  ],
+  "countsAsLive": "The startup appears as a named card in the 'Our Heroes' section of openstartuplist.com",
+  "unknowns": [
+    "Whether the contact form is still monitored (site content is dated)",
+    "Exact review criteria beyond public metrics",
+    "Whether new listings still get added"
+  ]
+}

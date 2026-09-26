@@ -1,0 +1,65 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "marketplace.pipedrive.com",
+  "name": "Pipedrive Marketplace",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://marketplace.pipedrive.com/",
+      "title": "Pipedrive Marketplace — live app catalog browsable by revenue-cycle stage"
+    },
+    {
+      "url": "https://pipedrive.readme.io/docs/marketplace-registering-the-app",
+      "title": "Registering a public app — Developer Hub inside a developer sandbox account (content read via search result)"
+    },
+    {
+      "url": "https://pipedrive.readme.io/docs/marketplace-app-approval-process",
+      "title": "App approval process — sandbox account > Developer Hub > register app > install & test > 'Send to review' > approved apps publish manually (content read via search result)"
+    },
+    {
+      "url": "https://pipedrive.readme.io/docs/marketplace-creating-a-proper-app",
+      "title": "Public app requirements — OAuth 2.0, mandatory install/uninstall flows, app approval process (content read via search result)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free to list but requires building a real OAuth-enabled integration app and passing Pipedrive's app approval process — not a listing-only directory"
+  ],
+  "requirements": [
+    "A developer sandbox account (free signup) — required to see Developer Hub",
+    "A working app implementing OAuth 2.0 (client_id/client_secret come from Developer Hub)",
+    "Mandatory pre-defined installation and uninstallation flows must work",
+    "Full listing form in Developer Hub (seven tabs: basic info, OAuth scopes, listing content, support/legal info, etc.)",
+    "App must pass the Marketplace team's approval process; a reachable contact email is required for reviewer questions",
+    "Public apps get a public listing page visible to users and search crawlers"
+  ],
+  "preparation": [
+    "Working integration app with OAuth flow implemented",
+    "Developer sandbox account",
+    "Listing assets: app name, description, icons, category, support/legal info",
+    "Tested install and uninstall flows"
+  ],
+  "workflow": [
+    "Sign up for a developer sandbox account",
+    "In the sandbox: Settings > (company name) Developer Hub",
+    "Click 'Create an app' > 'Create public app'; fill the registration form",
+    "Click 'Install & test' to verify the app in the sandbox",
+    "Preview the listing page via the Preview button in Developer Hub",
+    "Click 'Send to review'; answer reviewer questions via email",
+    "On approval, the app is UNLISTED by default — click '...' next to the app name and 'Publish' to go live"
+  ],
+  "watchFor": [
+    "Approved does not mean live — you must manually hit Publish after approval",
+    "Private apps never reach the Marketplace (they install via unlisted link) — choose 'public app'",
+    "Reviewer questions go to the app's main contact email — monitor it",
+    "Onboarding-guide edits post-approval don't need re-review, but app changes may",
+    "Listing quality (grammar, technical correctness, working flows) is part of review criteria"
+  ],
+  "countsAsLive": "The app has a public listing page at pipedrive.com/en/marketplace/app/<slug>/<id> visible without login",
+  "unknowns": [
+    "Review turnaround time — not stated in public docs",
+    "Whether paid-via-Pipedrive billing is supported or listings always link out"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "stacklist.com",
+  "name": "Stacklist",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://stacklist.com/",
+      "title": "Homepage — link-hub product ('Stop sending links. Send your resource hub.'); free signup at stacklist.com/register"
+    },
+    {
+      "url": "https://stacklistdirectory.com/",
+      "title": "Stacklist Directory — curated 'top curators' profiles (184 listed); 'Interested in getting a profile setup? We'll build it for you for free' → Claim Your Profile → stacklist.app/register"
+    }
+  ],
+  "category": "profile",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Building a hub on Stacklist is free (register at stacklist.com/register); a directory profile on stacklistdirectory.com is curated — 'Claim Your Profile' goes through stacklist.app/register and the team builds the profile, so directory inclusion is at their discretion"
+  ],
+  "requirements": [
+    "Not a product directory — it is a resource-hub tool (cards/stacks/hubs) plus a curated directory of 'curators' (people and brands who share collections)",
+    "Directory profiles highlight a curator's favorite products and recommendations across categories (tech, lifestyle, entrepreneurship...); a SaaS would appear as a branded hub/profile, not a listing in a tool catalog",
+    "Directory profiles are explicitly framed for AI-engine discoverability ('designed so AI engines can easily surface expert backed lists')"
+  ],
+  "preparation": [
+    "Account email for stacklist.app/register",
+    "Brand name, logo/avatar, and a short curator bio",
+    "Set of links/resources to organize into cards and stacks (product site, docs, launch posts, socials)",
+    "A few 'recommendation' items if positioning as a curator sharing favorite tools"
+  ],
+  "workflow": [
+    "Register at https://stacklist.com/register (or stacklist.app/register)",
+    "Create cards (link + notes + tags) and organize them into stacks inside a branded hub",
+    "Publish the hub — it lives at a public stacklist.com/<slug> URL",
+    "For directory inclusion: use 'Claim Your Profile' on stacklistdirectory.com — the team says they will build the profile for free"
+  ],
+  "watchFor": [
+    "The old Stacklist startup-tools directory no longer exists — do not expect a 'submit your SaaS' form",
+    "Directory is invite/claim-based and small (184 curators); acceptance is not self-serve",
+    "A self-made hub page is live immediately but is just a link collection — SEO value is unproven"
+  ],
+  "countsAsLive": "A public hub URL (stacklist.com/<slug>) resolves and shows the stacks/cards; for the directory, the profile appears among the listed curators on stacklistdirectory.com",
+  "unknowns": [
+    "Criteria the team uses to accept 'Claim Your Profile' requests",
+    "Whether hub links are dofollow",
+    "Whether business plans affect public-page branding"
+  ]
+}

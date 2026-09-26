@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "tech.eu",
+  "name": "Tech.eu",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://tech.eu/",
+      "title": "Tech.eu homepage — live European tech publication; nav exposes 'Pitch Your Startup', 'Contribute', 'Contact', 'Advertise'; Funding Explorer open data product"
+    },
+    {
+      "url": "https://tech.eu/startup-form/",
+      "title": "'Pitch Your Startup' — 'Do you want Tech.eu readers to hear about your startup? Use the form below' (per search result; page fetch 404'd but the nav link exists)"
+    }
+  ],
+  "category": "press",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "European tech/startup ecosystem focus — funding rounds, acquisitions, expansion, product news",
+    "'Pitch Your Startup' form at tech.eu/startup-form (nav: Tech.eu > Pitch Your Startup)",
+    "A 'Contribute' route also exists in nav",
+    "Earned editorial — staff-written coverage of European tech; no listing product",
+    "Separate surfaces: Tech.eu Summit (startup-stage pitch applications, free tickets for early-stage), podcasts ('leave us a voicemail'), Funding Explorer"
+  ],
+  "preparation": [
+    "A European angle — HQ, funding round, or market significance in Europe",
+    "Concise pitch for the startup form: what it is, traction, why now"
+  ],
+  "workflow": [
+    "Submit via tech.eu/startup-form ('Pitch Your Startup')",
+    "For event visibility, apply to pitch at the Tech.eu Summit startup stage (free tickets for early-stage companies)",
+    "Coverage, if picked up, is a staff-written news/funding article",
+    "Advertising is a separate nav item"
+  ],
+  "watchFor": [
+    "Europe-first remit — non-European startups are off-beat",
+    "The startup-form page fetch returned 404 even though the nav link is present — verify in a real browser; the Contact page is the fallback",
+    "Much coverage is funding-driven — unfunded launches compete poorly"
+  ],
+  "countsAsLive": "A Tech.eu article covering the startup is published at tech.eu",
+  "unknowns": [
+    "Whether the startup-form page is temporarily broken or moved",
+    "Contribute-route guidelines"
+  ]
+}

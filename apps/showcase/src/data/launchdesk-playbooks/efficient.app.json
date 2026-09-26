@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "efficient.app",
+  "name": "Efficient App",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://stacks.efficient.app/submit",
+      "title": "Submit Your App on App Stacks — two-step flow ending in a one-time evaluation fee; 'we can't guarantee that your product will get selected'; response in 5–7 business days"
+    },
+    {
+      "url": "https://efficient.app/about",
+      "title": "About — heavy curation: hands-on testing, interviews founders, only lists apps they'd 'proudly recommend'"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Submission is really a paid evaluation: a one-time fee buys deep evaluation, NOT a guaranteed listing",
+    "App must pass editorial bar — they test firsthand and only list tools that fit the quality of existing picks",
+    "Better odds if existing listed apps already integrate/serve your customers",
+    "B2B/team software focus (software stacks for teams)"
+  ],
+  "preparation": [
+    "Product must be genuinely good — this site stakes its brand on recommendations",
+    "Step 1 asks for product basics + contact email ('used to contact you if your product gets selected')",
+    "Payment method for the one-time evaluation fee (amount not shown in indexed snippet — confirm on page)",
+    "Evidence of quality: customer logos, integrations with tools already on the site"
+  ],
+  "workflow": [
+    "Go to stacks.efficient.app/submit",
+    "Complete Step 1 (product info + contact email)",
+    "Step 2: pay the one-time evaluation fee",
+    "Wait 5–7 business days for the team's decision",
+    "If selected, the app appears in relevant stack/category pages; other teams can add it to their tool stacks"
+  ],
+  "watchFor": [
+    "Payment does NOT buy a listing — it buys evaluation. Rejected fees may not be refunded (policy unstated)",
+    "Highly curated — most submissions likely rejected; treat as a long-shot credibility play, not a bulk directory",
+    "Efficient.app homepage rate-limited automated fetches (429) during research",
+    "Listing benefit is endorsement + stack inclusion, more credibility than raw traffic"
+  ],
+  "countsAsLive": "The app appears on efficient.app / stacks.efficient.app app pages or within category stacks after editorial selection",
+  "unknowns": [
+    "Exact evaluation fee amount (page indexed but price not captured)",
+    "Refund policy on rejected evaluations",
+    "Whether listed apps get followed outbound links"
+  ]
+}

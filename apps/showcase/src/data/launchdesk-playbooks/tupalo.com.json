@@ -1,0 +1,58 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "tupalo.com",
+  "name": "Tupalo",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://new.tupalo.biz/faq",
+      "title": "Tupalo Business FAQ — basic listing free but verification costs 12 EUR / 5 years; Premium upgrade exists"
+    },
+    {
+      "url": "https://tupalo.com/en/bizusers/sign_up",
+      "title": "Business owner sign-up page linking to 'Add your business' spot flow (via search snippet; tupalo.com 403s direct fetches)"
+    },
+    {
+      "url": "https://www.yext.com/integrations/publishers/tupalo-com",
+      "title": "Yext publisher page — required fields: Address, Categories, Main Phone, Name; Europe-focused local review community"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Basic business listing is free but 'needs to be verified' — verification carries a 12 EUR / 5-year fee per the FAQ",
+    "Community members can add 'spots' for free without verification, but that is an unclaimed user-added spot, not an owner listing",
+    "Business owner account required for the managed-listing route (tupalo.com/en/bizusers/sign_up)"
+  ],
+  "requirements": [
+    "This is a LOCAL business directory (Europe-heavy): required fields per Yext integration are Name, Address, Categories, Main Phone — a pure online SaaS with no physical location is a poor fit",
+    "Real address with map pin (their add flow places a marker on a map)",
+    "Phone number"
+  ],
+  "preparation": [
+    "Business name, street address, postal code, city",
+    "Main phone number and website URL",
+    "Categories, hours, description, photos (supported fields)",
+    "Business owner account email"
+  ],
+  "workflow": [
+    "Sign up for a Tupalo Business Owner account at /en/bizusers/sign_up",
+    "Use 'Add your business' (/en/api/v5/spot/new or the spot add flow) and drop the map pin on the address",
+    "Fill required fields: name, address, categories, main phone",
+    "Submit; listing appears as a 'spot' page",
+    "Optionally pay 12 EUR/5yr verification or upgrade to Premium for extra features"
+  ],
+  "watchFor": [
+    "tupalo.com 403s automated fetches — expect bot friction",
+    "Two interfaces: consumer site (tupalo.com) vs business portal (tupalo.biz) — links cross between them",
+    "Verification is a small recurring fee, not truly free",
+    "Adding a HQ-less SaaS as a 'local business' may be rejected or look spammy — fit is genuinely local-business only"
+  ],
+  "countsAsLive": "The business appears as a public spot page on tupalo.com with address, phone, and category, searchable in its city",
+  "unknowns": [
+    "Whether unverified free listings stay live indefinitely",
+    "Dofollow status of the website field",
+    "Whether virtual/online-only businesses are accepted"
+  ]
+}

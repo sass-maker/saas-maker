@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "thankjohn.com",
+  "name": "Thank John",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://thankjohn.com/",
+      "title": "Homepage — '#1 Database of AI Tools', active Latest AI Tools feed, category browsing"
+    },
+    {
+      "url": "https://thankjohn.com/get-started",
+      "title": "Get Listed → Choose Your Plan — Free $0: 1 dofollow link, forever listing, backlink required, ~2-day review"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free listing requires a backlink to thankjohn.com on your site ('Backlink to our site is required')"
+  ],
+  "requirements": [
+    "AI tools only — the directory is exclusively AI products",
+    "Reciprocal link to thankjohn.com required for the free plan",
+    "Free plan gets: 1 dofollow link, permanent listing, ~2-day review; no featured placement, no customer support",
+    "Only the Free plan was visible on /get-started at fetch time"
+  ],
+  "preparation": [
+    "A link back to https://thankjohn.com/ placed on your website before submitting",
+    "Tool name, URL, description, logo/screenshot, category, pricing model (Free/Freemium/Paid/One-Time/Usage-Based/Free Trial/Contact)"
+  ],
+  "workflow": [
+    "Add the backlink to your site",
+    "Open https://thankjohn.com/get-started and choose the Free plan → SUBMIT",
+    "Fill the submission details",
+    "Reviewed and listed within ~2 days if approved"
+  ],
+  "watchFor": [
+    "Backlink requirement is explicit — remove it and the listing may be pulled",
+    "Directory contains low-quality/NSFW-adjacent entries (e.g., OnlyGFs.ai) — brand adjacency is weak",
+    "No featured option shown on the free plan card",
+    "Site is named after John McCarthy (father of AI) — indie directory, unknown operator"
+  ],
+  "countsAsLive": "The tool appears in Latest AI Tools / its category page on thankjohn.com with a dofollow link",
+  "unknowns": [
+    "Exact submission form fields (SUBMIT leads to a form not fully rendered in fetch)",
+    "Whether paid/featured plans exist beyond the free card",
+    "Whether the reciprocal link is verified before or after listing"
+  ]
+}

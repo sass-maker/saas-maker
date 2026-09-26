@@ -1,0 +1,45 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "insanelyusefulwebsites.com",
+  "name": "Insanely Useful Websites",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://insanelyusefulwebsites.com/",
+      "title": "Homepage — newsletter archive of featured sites (numbered issues); only CTAs are Subscribe and Sponsor Us; no submit form found"
+    },
+    {
+      "url": "https://www.indiehackers.com/post/8k-visits-in-24-hours-heres-how-i-did-it-eaed2372c3",
+      "title": "Founder (Jaisal Rathee) post — newsletter launched 2022 via Hacker News"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "No public submission form exists — sites get featured by editorial selection in the newsletter",
+    "The realistic free path is pitching the founder (Jaisal Rathee) a genuinely novel/useful website",
+    "A 'Sponsor Us' slot exists for paid placement"
+  ],
+  "preparation": [
+    "A website that is actually 'insanely useful' — featured picks skew toward quirky free tools, directories, and clever utilities",
+    "A one-paragraph pitch in the newsletter's breezy editorial voice",
+    "Founder contact via newsletter reply or socials (no public pitch form found)"
+  ],
+  "workflow": [
+    "Review the archive to confirm your site fits the featured-site style",
+    "Pitch the founder directly (reply to a newsletter issue or reach Jaisal Rathee via socials)",
+    "Alternatively enquire about the Sponsor Us placement for a guaranteed slot"
+  ],
+  "watchFor": [
+    "Editorial pitch, not a form — low conversion odds; don't mass-submit",
+    "Newsletter cadence may be dormant — newest featured issue numbers should be checked for recency",
+    "No public rate card found for sponsorship"
+  ],
+  "countsAsLive": "The site is written up in a numbered Insanely Useful Websites issue and listed on the homepage featured grid with a Visit Site link",
+  "unknowns": [
+    "Whether the newsletter is still actively publishing",
+    "Sponsorship pricing",
+    "Best current pitch channel (email vs social)"
+  ]
+}

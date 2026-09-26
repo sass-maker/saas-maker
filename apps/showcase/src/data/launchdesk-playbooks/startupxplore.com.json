@@ -1,0 +1,40 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startupxplore.com",
+  "name": "Startupxplore",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://startupxplore.com/en/startup-registration",
+      "title": "Startupxplore — CNMV-authorized Spanish equity-crowdfunding platform ('participatory financing platform authorized by CNMV, Registration No. 18'); 'LOOKING FOR FUNDING?' → /en/startups-funding; register/login for investors"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Not a directory — this is a regulated equity-crowdfunding platform; 'submitting' means applying to raise an investment round through them, which is a fundraising process with fees, not a listing"
+  ],
+  "requirements": [
+    "A fundable high-growth startup, primarily European/Spanish",
+    "Application via 'Looking for funding?' → /en/startups-funding",
+    "Regulated process — CNMV authorization (Spain) means KYC/company documentation, an investment committee filter, and campaign terms",
+    "Fundraising through the platform involves platform fees on successful rounds"
+  ],
+  "preparation": [
+    "Fundraising-ready materials: metrics trends (they 'invest in lines, not dots'), deck, financials",
+    "Legal readiness for a public equity campaign in Spain"
+  ],
+  "workflow": [
+    "Apply via /en/startups-funding",
+    "Pass their investment selection",
+    "Run a public syndicate/round on the platform if selected"
+  ],
+  "watchFor": [
+    "Wrong tool for launch PR — this is for raising a priced round, not listing a product",
+    "Geographic tilt: Spanish/European companies and investors",
+    "A failed or unfinished campaign is visible — don't apply casually"
+  ],
+  "countsAsLive": "The startup has a live fundraising campaign on Startupxplore",
+  "unknowns": ["Platform fee schedule for successful raises", "Selection rate"]
+}

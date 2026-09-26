@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "bufferapps.com",
+  "name": "BufferApps",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://bufferapps.com/",
+      "title": "Homepage — software products directory with 'Recently Added Products', weekly curated newsletter, + Submit nav"
+    },
+    {
+      "url": "https://bufferapps.com/submit-product",
+      "title": "Submit your product — 3-step wizard (Product Info / Extra / Images & FAQs): name, tagline, URL, description, open-source flag"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Software products; an open-source flag is offered in the form",
+    "3-step submission wizard — 'it only takes a couple of minutes'; no price shown anywhere on the flow",
+    "Community/launch framing ('Share what you built with the community', 'most-clapped launches')"
+  ],
+  "preparation": [
+    "Product name (displayed on homepage), short tagline, live product URL",
+    "Product description",
+    "Step 2 'Extra' and step 3 'Images & FAQs' — prepare screenshots/images and Q&A content",
+    "Whether the product is open source (checkbox)"
+  ],
+  "workflow": [
+    "Open https://bufferapps.com/submit-product",
+    "Step 1: product name, tagline, website URL, description, open-source flag",
+    "Step 2: extra details; Step 3: images & FAQs",
+    "Submit; accepted products appear in 'Recently Added Products' and can be picked for the weekly newsletter"
+  ],
+  "watchFor": [
+    "Form content beyond step 1 wasn't fully previewable — expect category/maker fields in 'Extra'",
+    "A separate 'Join Beta' route exists for beta products — check which lane fits before submitting",
+    "'Advertise with Us' exists — homepage visibility may favor paid promotion",
+    "No published review criteria or timeline"
+  ],
+  "countsAsLive": "The product appears in BufferApps' 'Recently Added Products' / category listings with its own product page",
+  "unknowns": [
+    "Review process and turnaround",
+    "Whether listing links are dofollow",
+    "Cost/status of 'Join Beta' and advertising options"
+  ]
+}
