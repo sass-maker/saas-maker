@@ -51,6 +51,10 @@ const keywords = (entry: SearchEntry) => {
             <code>title + summary + keywords</code>.
           </p>
         </div>
+        <div class="tooling-count" aria-label={`${SEARCH_INDEX.length} indexed entries`}>
+          <strong>{SEARCH_INDEX.length}</strong>
+          <span>entries · {SEARCH_TYPES.length} types</span>
+        </div>
       </header>
 
       <div class="search-controls">
