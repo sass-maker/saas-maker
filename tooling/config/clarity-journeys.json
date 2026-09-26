@@ -374,22 +374,6 @@
       }
     },
     {
-      "id": "journal",
-      "state": "ready",
-      "event": {
-        "name": "testflight_status_opened",
-        "text": "See TestFlight status",
-        "href": "/testflight/"
-      },
-      "funnel": {
-        "name": "discover_to_beta",
-        "steps": [
-          "page:/",
-          "event:testflight_status_opened"
-        ]
-      }
-    },
-    {
       "id": "kith",
       "state": "ready",
       "event": {

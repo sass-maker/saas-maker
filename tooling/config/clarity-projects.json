@@ -539,17 +539,9 @@
       "repo": "journal",
       "clarityId": "ybcifeb3uv",
       "hostname": "journal.significanthobbies.com",
-      "tag": "journal",
-      "wiredFiles": [
-        "ios-landings/src/lib/clarity.ts"
-      ],
-      "surfaceOwner": "ios-landings",
-      "browserSurfaces": [
-        {
-          "kind": "landing",
-          "file": "ios-landings/src/lib/clarity.ts"
-        }
-      ]
+      "wiredFiles": [],
+      "reason": "Intentionally unwired: journal.significanthobbies.com decommissioned 2026-09-27 (Pages deployment removed at owner request); Clarity identity retained for historical data only.",
+      "browserSurfaces": []
     },
     {
       "id": "kith",
