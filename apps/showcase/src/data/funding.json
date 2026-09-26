@@ -3298,8 +3298,8 @@
     },
     {
       "id": "3af45538-6139-81c4-8555-dc21535374d6",
-      "slug": "regolo-ai-http-regolo-ai-builder-startup-access",
-      "name": "Regolo.ai|http://Regolo.ai Builder / Startup Access",
+      "slug": "regolo-ai-builder-startup-access",
+      "name": "Regolo.ai Builder / Startup Access",
       "fields": {
         ":>?A": "Remote",
         ";EPi": "Approximately sixty days of enhanced/unlimited access plus credits; exact current limits should be confirmed",
@@ -4198,8 +4198,8 @@
     },
     {
       "id": "3af45538-6139-8106-a6d7-cf3faad8240e",
-      "slug": "connects-vc-http-connects-vc",
-      "name": "Connects.vc|http://Connects.vc",
+      "slug": "connects-vc",
+      "name": "Connects.vc",
       "fields": {
         ":>?A": "Remote",
         ";EPi": "No funding; product pricing/activity unclear",
@@ -5658,8 +5658,8 @@
     },
     {
       "id": "3af45538-6139-81e2-8e1e-d429251be958",
-      "slug": "100x-vc-http-100x-vc-class-homerun",
-      "name": "100X.VC|http://100X.VC — Class / HomeRun",
+      "slug": "100x-vc-class-homerun",
+      "name": "100X.VC — Class / HomeRun",
       "fields": {
         ":>?A": "Hybrid",
         ";EPi": "Standard public offer: INR 1.25Cr for 15% through iSAFE; exact class terms should be reconfirmed before signing",
