@@ -48,3 +48,8 @@ project-idea-dump.md
 /catalog/projects.json
 /catalog/generated/operations.json
 /catalog/generated/repository-classifications.md
+
+# Owner-local launch ledger and private receipts (local evidence paths).
+/tooling/config/directory-submissions/submissions.json
+/tooling/config/directory-submissions/receipts.jsonl
+/tooling/config/directory-submissions/awesome-lists.json
