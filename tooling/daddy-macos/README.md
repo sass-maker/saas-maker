@@ -33,16 +33,17 @@ The `shared/` files are the canonical sources. App copies keep local packaging i
 | Canonical file | App copies |
 | --- | --- |
 | `shared/sparkle_core.py` | `storagedaddy`, `performancedaddy`, `browserdaddy`: `scripts/sparkle_core.py` |
+| `shared/appcast_core.py` | `storagedaddy`, `performancedaddy`, `browserdaddy`: `scripts/appcast_core.py` |
 | `shared/prepare-memory-pack.py` | `storagedaddy`: `scripts/prepare-memory-pack.py`; ContextDaddy's current local feature branch also has this copy, but public `main` does not |
 | `shared/worker-core.mjs` | `performancedaddy`, `browserdaddy`: `site/worker-core.mjs` |
 
-When changing a canonical file, copy it into the listed apps and run `python3 -m unittest test_candidate test_release_contract test_release_preflight` here, the affected app's smallest test, and the four-app copy check. The candidate workflow rejects a diverged copy. The app's wrapper, key, hostname, helper inputs, and product tests remain app-owned.
+When changing a canonical file, copy it into the listed apps and run `python3 -m unittest test_appcast_core test_candidate test_release_contract test_release_preflight` here, the affected app's smallest test, and the four-app copy check. The candidate workflow rejects a diverged copy. The appcast core stages a checksum-verified DMG and validates the exact signed enclosure; each app wrapper still owns Apple qualification policy, key handling, account, hostname, and product tests.
 
 ## Local checks
 
 ```bash
 cd tooling/daddy-macos
-python3 -m unittest test_candidate test_release_contract test_release_preflight test_publish_site
+python3 -m unittest test_appcast_core test_candidate test_release_contract test_release_preflight test_publish_site
 python3 check_copies.py --fleet-root /path/to/fleet
 ```
 

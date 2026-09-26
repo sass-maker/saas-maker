@@ -13,9 +13,9 @@ import sys
 PROFILES = Path(__file__).with_name("profiles.json")
 FIELDS = {"repository", "executable", "bundleId", "testArguments", "sparkleTests", "workerTests", "developerDir", "updateMode", "updateBaseUrl"}
 SHARED_COPIES = {
-    "storagedaddy": [("prepare-memory-pack.py", "scripts/prepare-memory-pack.py"), ("sparkle_core.py", "scripts/sparkle_core.py")],
-    "performancedaddy": [("worker-core.mjs", "site/worker-core.mjs"), ("sparkle_core.py", "scripts/sparkle_core.py")],
-    "browserdaddy": [("worker-core.mjs", "site/worker-core.mjs"), ("sparkle_core.py", "scripts/sparkle_core.py")],
+    "storagedaddy": [("prepare-memory-pack.py", "scripts/prepare-memory-pack.py"), ("sparkle_core.py", "scripts/sparkle_core.py"), ("appcast_core.py", "scripts/appcast_core.py")],
+    "performancedaddy": [("worker-core.mjs", "site/worker-core.mjs"), ("sparkle_core.py", "scripts/sparkle_core.py"), ("appcast_core.py", "scripts/appcast_core.py")],
+    "browserdaddy": [("worker-core.mjs", "site/worker-core.mjs"), ("sparkle_core.py", "scripts/sparkle_core.py"), ("appcast_core.py", "scripts/appcast_core.py")],
     "contextdaddy": [],
 }
 
@@ -78,10 +78,11 @@ def run_candidate(app: str, repository: str, root: Path, receipt: Path) -> None:
     steps = [["swift", "test", *profile["testArguments"]], ["swift", "build", "-c", "release"]]
     if profile["sparkleTests"]:
         steps.append([sys.executable, "-m", "unittest", "test_sparkle_support"])
+        steps.append([sys.executable, "prepare-appcast.py", "--help"])
     if profile["workerTests"]:
         steps.append(["node", "--test", "worker.test.mjs"])
     for command in steps:
-        cwd = root / ("scripts" if "test_sparkle_support" in command else "site" if "worker.test.mjs" in command else "")
+        cwd = root / ("scripts" if "test_sparkle_support" in command or "prepare-appcast.py" in command else "site" if "worker.test.mjs" in command else "")
         if not cwd.is_dir():
             raise ValueError(f"Required test directory is absent: {cwd}")
         print(f"Checking {app}: {' '.join(command)}", flush=True)
