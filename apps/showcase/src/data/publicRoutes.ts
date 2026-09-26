@@ -417,6 +417,21 @@ const fixedRoutes: PublicRoute[] = [
     ].join('\n'),
   },
   {
+    id: 'search',
+    path: '/search',
+    description: 'Unified search across every public SaaS Maker surface',
+    kind: 'collection',
+    markdown: [
+      '# SaaS Maker search',
+      '',
+      'One index across products, ideas, funding programs, launch destinations, tools, learnings, docs, and pages.',
+      '',
+      `- Human search: ${SITE_URL}/search?q=<query>`,
+      `- Full machine index: ${SITE_URL}/search.json — fetch once, filter on title+summary+keywords`,
+      '',
+    ].join('\n'),
+  },
+  {
     id: 'ranks',
     path: '/ranks',
     description: 'Provider-reported Ahrefs DR board for all owned Fleet domains',

@@ -51,6 +51,7 @@ export function GET() {
     '- [Launch catalog](https://sassmaker.com/launchdesk): provenance-honest directory of launch and submission destinations',
     '- [Funding directory](https://sassmaker.com/funding): 184 accelerators, residencies, funds, credits, and resources with per-row evidence grading and decision views',
     '- [Domain ranks](https://sassmaker.com/ranks): provider-reported Ahrefs DR board for all owned Fleet domains, weekly snapshot',
+    '- [Search](https://sassmaker.com/search): unified index across every surface — humans use ?q=, agents fetch /search.json once',
     '- [Learnings](https://sassmaker.com/learnings): first-party notes from building products and agent workflows',
     ...LEARNINGS.map(
       (learning) =>
@@ -77,6 +78,7 @@ export function GET() {
     '- https://sassmaker.com/funding.json',
     '- https://sassmaker.com/funding/<slug>.json',
     '- https://sassmaker.com/ranks.json',
+    '- https://sassmaker.com/search.json',
     '- https://sassmaker.com/projects.md',
     '- https://sassmaker.com/index.md',
     '- https://sassmaker.com/llms-full.txt',

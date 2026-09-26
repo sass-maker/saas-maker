@@ -10,6 +10,18 @@ export const CHANGELOG: ChangelogEntry[] = [
   {
     date: '2026-09-26',
     label: 'September 26, 2026',
+    title: 'One search box for the whole site',
+    summary:
+      'A unified index spanning all 1,250 public entries — products, ideas, funding programs, launch destinations, tools, learnings, and docs.',
+    changes: [
+      'Added /search: client-side search with per-type filter chips and ?q= / ?type= deep links.',
+      'Added /search.json: the same index as a machine endpoint — agents fetch once and filter on title+summary+keywords.',
+      'Search joins the primary nav; /search.md, sitemap, llms.txt, and /api/ai register it for crawlers and agents.',
+    ],
+  },
+  {
+    date: '2026-09-26',
+    label: 'September 26, 2026',
     title: 'Public domain-rank board and the drank skill',
     summary:
       "The archived drank tracker's DR history became a public board at /ranks, and drank itself joined the capability register as a credential-free skill.",

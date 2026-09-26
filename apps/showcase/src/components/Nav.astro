@@ -9,6 +9,7 @@ const isIdeas = Astro.url.pathname.startsWith('/ideas');
 const isLaunchDesk = Astro.url.pathname.startsWith('/launchdesk');
 const isFunding = Astro.url.pathname.startsWith('/funding');
 const isTools = Astro.url.pathname.startsWith('/tools');
+const isSearch = Astro.url.pathname.startsWith('/search');
 ---
 <nav class="nav" aria-label="Primary navigation">
   <a href="/" class="brand" aria-label="SaaS Maker home">
@@ -22,6 +23,7 @@ const isTools = Astro.url.pathname.startsWith('/tools');
     <a href="/funding" aria-current={isFunding ? 'page' : undefined}>Funding</a>
     <a href="/tools" aria-current={isTools ? 'page' : undefined}>Tools</a>
     <a href="/learnings" aria-current={isLearnings ? 'page' : undefined}>Learnings</a>
+    <a href="/search" aria-current={isSearch ? 'page' : undefined}>Search</a>
     <a
       class="nav-source"
       href={GITHUB_REPO_URL}
