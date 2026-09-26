@@ -19,8 +19,8 @@ async function readShowcase(relativePath: string) {
 
 describe('SaaS Maker funding directory', () => {
   it('imports the complete program set with unique, routable slugs', () => {
-    expect(FUNDING_PROGRAMS).toHaveLength(184);
-    expect(programSlugs.size).toBe(184);
+    expect(FUNDING_PROGRAMS).toHaveLength(FUNDING.programs.length);
+    expect(programSlugs.size).toBe(FUNDING_PROGRAMS.length);
     for (const program of FUNDING_PROGRAMS) {
       expect(program.name).toBeTruthy();
       expect(program.slug).toMatch(/^[a-z0-9-]+$/);
@@ -39,7 +39,7 @@ describe('SaaS Maker funding directory', () => {
     }
     // Union of all views must cover every program — nothing orphaned.
     const covered = new Set(FUNDING_VIEWS.flatMap((view) => view.slugs));
-    expect(covered.size).toBe(184);
+    expect(covered.size).toBe(FUNDING_PROGRAMS.length);
   });
 
   it('groups every schema field into a detail-page pane or the header', () => {

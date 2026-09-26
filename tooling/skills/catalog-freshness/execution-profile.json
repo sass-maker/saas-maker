@@ -1,0 +1,7 @@
+{
+  "schema": "fleet.skill-execution-profile.v1",
+  "recommended": { "intelligence": "economy", "reasoning": "low" },
+  "minimum": { "intelligence": "economy", "reasoning": "low" },
+  "degradation": "allow",
+  "rationale": "Deterministic date comparisons plus optional fetch-and-classify probes; verdicts are heuristic-flagged for operator review, no reasoning required."
+}

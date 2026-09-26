@@ -10,6 +10,18 @@ export const CHANGELOG: ChangelogEntry[] = [
   {
     date: '2026-09-26',
     label: 'September 26, 2026',
+    title: 'A freshness pipeline for the catalogs',
+    summary:
+      'catalog-freshness reports expired funding deadlines, stale verifications, and — on request — probes every launch destination for death, redirects, and hijacks.',
+    changes: [
+      'Added tooling/scripts/catalog-freshness.mjs: offline staleness report plus an opt-in --probe liveness sweep; findings are a report, never a mutation.',
+      'First run caught six funding programs still marked "Open now" with passed deadlines — now correctly "Next cohort or waitlist".',
+      'Added the catalog-freshness skill so the refresh loop is a documented capability, not institutional memory.',
+    ],
+  },
+  {
+    date: '2026-09-26',
+    label: 'September 26, 2026',
     title: 'One search box for the whole site',
     summary:
       'A unified index spanning all 1,250 public entries — products, ideas, funding programs, launch destinations, tools, learnings, and docs.',

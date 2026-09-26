@@ -1,6 +1,7 @@
 ---
 name: glyph-art
 description: Create archival, specimen, and object-collage treatments of an existing logo or glyph, with optional aligned-frame motion planning. Use for material-based logo art or glyph prompt packs, not logo redesign, UI styling, or ordinary texture fills.
+disable-model-invocation: true
 ---
 
 # Glyph art
