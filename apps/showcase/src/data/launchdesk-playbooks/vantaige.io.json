@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "vantaige.io",
+  "name": "Vantaige",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://vantaige.io/list-your-ai-tool",
+      "title": "List Your AI Tool — full pricing ladder: free queue ($0, badge+backlink required, 2–4wk), Verified $25, Featured $49/30d or $99/90d, Spotlight $189; manual review 3–5 business days"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free basic listing exists but requires embedding the 'Featured on Vantaige' badge + backlink on your public site footer — verified before approval; free queue review takes 2–4 weeks"
+  ],
+  "requirements": [
+    "AI tools across all categories (writing, image, coding, video, audio, marketing, agents) — 'If it uses AI, it belongs here'",
+    "Tool must be 'live, functional, and genuinely useful' — they verify the website works, the description is accurate, and the category is correct",
+    "Free path: add the Vantaige badge snippet to the tool's website footer; paid paths (Verified $25, Featured $49–99, Spotlight $189) skip the badge requirement and get DoFollow links + priority 1–4 day review"
+  ],
+  "preparation": [
+    "Tool name, URL, logo, accurate description, category",
+    "Decide free vs paid: free needs the badge snippet live on your site before review",
+    "For paid: $25 (Verified badge, one-time) up to $189 (Spotlight: category + homepage rail + sponsored story)",
+    "Signup/account likely required (nav shows Log in / Sign up)"
+  ],
+  "workflow": [
+    "Open https://vantaige.io/list-your-ai-tool and pick a listing path (free queue or paid)",
+    "If free: embed the badge code from /badge on your tool's footer first",
+    "Submit tool details via the 3-step submit flow",
+    "Manual review: 3–5 business days standard, 1–4 days priority for paid, 2–4 weeks for the free queue",
+    "Confirmation email when live; listing page carries the Verified badge on paid paths"
+  ],
+  "watchFor": [
+    "The 'free' listing is not costless — it requires a permanent badge+backlink on your site",
+    "Site self-reports ~20K monthly visitors with +300% MoM growth (GA4, Jul–Sep 2026) — unverified third-party",
+    "Paid placements buy 'inventory and speed, not approval' — listings can still be rejected",
+    "Updates currently require contacting support (self-serve portal 'in progress')"
+  ],
+  "countsAsLive": "A tool detail page exists under vantaige.io/ai-tools with the product's name, logo, category, and a link out — confirmed by their 'tool is live' email",
+  "unknowns": [
+    "Whether free-path outbound links are dofollow (paid paths explicitly are)",
+    "Refund terms for rejected paid listings (a /listing-refund-policy page exists but was not read)",
+    "Whether non-AI SaaS is accepted — copy says AI tools only"
+  ]
+}

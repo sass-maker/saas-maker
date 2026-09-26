@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "bestofai.io",
+  "name": "Best of AI",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://bestofai.io/submit",
+      "title": "Submit page — free hand-reviewed listing; approved tools propagate to category/profession/alternatives pages, newsletter, and GitHub awesome list"
+    },
+    {
+      "url": "https://submit.bestofai.io",
+      "title": "Submit portal — 'pick a plan including a free one', paid plans via PayPal, account required to track status"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "AI tool that actually works: 'the site has to load, the AI feature has to be real, and it has to do roughly what the landing page claims'",
+    "Wrapper apps are acceptable if they add value; a pure reskin is rejected",
+    "Closed-beta/waitlist tools may be submitted but are only listed once publicly open",
+    "Pick a plan at submission — a free plan exists; paid plans via PayPal"
+  ],
+  "preparation": [
+    "App name, tagline, description",
+    "Logo and a few screenshots",
+    "Category pick from 143 categories (closest match; they fix mis-categorization)",
+    "A free account on submit.bestofai.io to track submission status",
+    "Site URL that loads reliably for review"
+  ],
+  "workflow": [
+    "Open https://bestofai.io/submit or https://submit.bestofai.io/submit",
+    "Drop in the site URL — details are pulled automatically once signed in",
+    "Fill name, tagline, description, logo, screenshots (~5 minutes claimed)",
+    "Choose the free plan (paid plans pay via PayPal)",
+    "Team reviews by hand; once approved the listing deploys to category, profession, and alternatives pages plus the newsletter and GitHub awesome list (best-of-ai/best-of-ai)",
+    "Track status on the My Submissions page"
+  ],
+  "watchFor": [
+    "Two different surfaces: bestofai.io/submit (info page) vs submit.bestofai.io (the actual portal)",
+    "Paid plans and an 'Advertise' upsell exist — free plan is sufficient for a permanent listing",
+    "Rejection is usually for a dead site, fake AI feature, or no category fit; resubmission is unlimited after fixing",
+    "Listing goes live 'with the next site deploy' — approval does not mean instant publication",
+    "Optional GitHub star on best-of-ai/best-of-ai is solicited during review but not stated as required"
+  ],
+  "countsAsLive": "The tool appears on its bestofai.io category page / Recently Added, with a direct-follow link to the product site",
+  "unknowns": [
+    "What the paid plan tiers cost (prices not shown on fetched pages)",
+    "Exact review turnaround — 'a few days' is the only claim",
+    "Whether the free plan limits placement vs paid plans"
+  ]
+}

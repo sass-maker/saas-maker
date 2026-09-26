@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "slate.com",
+  "name": "Slate",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://slate.com/pitch",
+      "title": "How to Pitch Slate — full pitch guidelines plus per-section editor emails (business/tech: tony.tran@slate.com, etc.)"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Not a directory — freelance/contributor pitches only; no listing product",
+    "Pitch goes to the section editor by email — Business & Technology editor Tony Ho Tran (tony.tran@slate.com); other sections have their own editors listed on /pitch",
+    "Slate wants surprising arguments and fresh ideas — opinion/analysis and reported pieces; Google your idea first to avoid the familiar",
+    "Distill the idea into a pitch even if a full draft exists (attach the draft, but still pitch in the email body)",
+    "Include a 1-2 sentence bio and links to published work (blog posts acceptable)",
+    "Disclose simultaneous submissions; wait ~a week before taking a non-timely pitch elsewhere"
+  ],
+  "preparation": [
+    "An argument-driven story idea, not a product announcement — Slate publishes opinion, analysis, and reported features",
+    "Research showing the idea is fresh (not covered by Slate or elsewhere)",
+    "Short bio + links to prior published writing",
+    "The right section: Business/Technology is the natural fit for a SaaS-angle piece"
+  ],
+  "workflow": [
+    "Read https://slate.com/pitch and study recent pieces in the target section",
+    "Write a concise pitch email (claim + evidence + why it fits Slate's voice) to the section editor's named address",
+    "Attach a full draft if one exists, but keep the pitch in the body",
+    "Wait ~a week; one follow-up max — silence means take it elsewhere",
+    "If published, the piece appears as a Slate article under your byline"
+  ],
+  "watchFor": [
+    "Do not pitch the same idea to a second Slate editor after a pass — editors coordinate internally",
+    "No more than one follow-up email",
+    "This is freelance writing, not a product listing — a SaaS 'launch' does not fit; you need a genuine argument or reported story",
+    "Also has a /tips page for news tips (separate from pitches)"
+  ],
+  "countsAsLive": "A pitched article is published at slate.com under the contributor's byline",
+  "unknowns": [
+    "Pay rates for accepted freelance pieces",
+    "Whether the business/tech editor still actively commissions outside pitches"
+  ]
+}

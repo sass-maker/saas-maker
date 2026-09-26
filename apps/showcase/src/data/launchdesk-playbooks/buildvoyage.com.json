@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "buildvoyage.com",
+  "name": "BuildVoyage",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://buildvoyage.com/submit",
+      "title": "Submission desk — 'Free 48h review, manual curation. No account needed — we email you one link to confirm.' Multi-step form: product info, tech stack (min 2 technologies), review"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Micro-SaaS / product fit — the site is 'a curated directory of micro-SaaS' with manual curation and 48h review",
+    "Product Name, Tagline (10-80 chars), Description (min 50 chars, supports bold/italic/headings/lists), Website, your email",
+    "Category pick from their list (AI, dev tools, productivity, marketing, etc.)",
+    "Tech stack: minimum 2 technologies requested (frameworks, languages, databases, infra, APIs, payments, AI/ML) — though the form also notes listings can go live without them",
+    "Confirmation via a single email link — no account or password needed",
+    "Rights/agreement checkbox: 'I have the right to share this content' + Terms/Privacy"
+  ],
+  "preparation": [
+    "Tagline (10-80 chars) and a ≥50-char formatted description",
+    "Category and pricing model info",
+    "At least two real technologies the product runs on",
+    "Square logo (256px+) and screenshots — uploaded AFTER confirming the email link, not in the form itself",
+    "An email inbox you control — the confirmation link completes the submission"
+  ],
+  "workflow": [
+    "Open https://buildvoyage.com/submit",
+    "Step 1: fill product name, tagline, description, website, email, category, optional pricing",
+    "Step 2: add at least two tech-stack entries",
+    "Step 3: review and submit, agreeing to terms",
+    "Click the confirmation link in the email — it takes you straight to the listing to upload logo/screenshots",
+    "Listing goes through manual review (~48h) then appears in the directory and rotates through homepage spotlight"
+  ],
+  "watchFor": [
+    "Do NOT skip the email confirmation — the submission isn't complete until the link is clicked; that's also when media gets attached",
+    "The form's tech-stack requirement text is contradictory (required/min-2 vs 'can add later') — fill two entries to be safe",
+    "A 'security check blocked' notice may appear under aggressive privacy extensions — submission still works but whitelisting helps",
+    "Optional checkbox subscribes you to a weekly roundup email — uncheck if unwanted",
+    "Sponsored banner slots and a /sponsor page exist — advertising is separate from the free listing"
+  ],
+  "countsAsLive": "The product page is publicly listed in the BuildVoyage directory (/products) and can rotate through the homepage spotlight",
+  "unknowns": [
+    "Whether listings carry dofollow or nofollow links",
+    "Rejection rate of the manual 48h review",
+    "Whether the tech-stack requirement is enforced server-side"
+  ]
+}

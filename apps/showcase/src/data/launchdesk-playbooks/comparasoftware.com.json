@@ -1,0 +1,37 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "comparasoftware.com",
+  "name": "ComparaSoftware",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.comparasoftware.com/",
+      "title": "ComparaSoftware — live LatAm software review/comparison platform (Mexico HQ; country sites across LATAM + Spain); 'Registrarse en ComparaSoftware es gratuito'; 'Regístrate como Fabricante' → /panel-usuario/register, partner registration at /panel-usuario/partner-register"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free vendor registration — 'Regístrate como Fabricante' (Register as a Manufacturer) at /panel-usuario/register",
+    "Spanish-language, Latin-American audience — Mexico, Argentina, Chile, Brazil, Colombia, Spain, etc.",
+    "Vendor perks listed: reach potential users, collect reviews, position vs. competitors, verify the product",
+    "The platform itself is free for users because vendors pay per lead contact — so paid lead-gen options exist behind the free listing"
+  ],
+  "preparation": [
+    "Product description in Spanish ideally, category fit within their software taxonomy",
+    "Pricing/feature details for the comparison engine"
+  ],
+  "workflow": [
+    "Register at comparasoftware.com/panel-usuario/register",
+    "Create the product profile with features/pricing",
+    "Product appears in category listings and the comparison tool; user reviews accrue over time"
+  ],
+  "watchFor": [
+    "LatAm/Spanish market — a product without Spanish support has weak fit",
+    "Lead-gen economics — advisors refer buyers to vendors who pay per contact; expect sales outreach",
+    "Reviews are team-moderated individually"
+  ],
+  "countsAsLive": "The product has a profile page and appears in ComparaSoftware category listings",
+  "unknowns": ["Vendor verification steps", "Whether non-LatAm vendors are accepted"]
+}

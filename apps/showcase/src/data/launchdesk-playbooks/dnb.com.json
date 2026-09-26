@@ -1,0 +1,59 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "dnb.com",
+  "name": "Dun & Bradstreet",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.dnb.com/en-us/smb/duns/get-a-duns.html",
+      "title": "How to Get a D-U-N-S Number — free application steps (page content read via search index; direct fetch returned HTTP 403 bot block)"
+    },
+    {
+      "url": "https://www.dnb.com/en-us/smb/duns/get-a-duns-form.html",
+      "title": "Submit a Request for a D-U-N-S Number — lookup-first intake form (via search index; direct fetch blocked)"
+    },
+    {
+      "url": "https://www.dnb.com/en-us/smb/duns.html",
+      "title": "D-U-N-S Number hub — 'Getting a D-U-N-S Number is free' (via search index; direct fetch blocked)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free, but requires a real registered business entity with verifiable legal name, address, phone, and owner/officer — D&B validates the information and may call to verify",
+    "Standard processing takes up to 30 business days; an optional paid expedite (≈8 business days) is offered at checkout but not required"
+  ],
+  "requirements": [
+    "Must be an actual business entity — legal name, business address (separate D-U-N-S per location), phone, owner/president/CEO name, legal structure, founding year, primary industry, employee count",
+    "First run the D-U-N-S Number Lookup to check the business isn't already in the database",
+    "Applicant picks a track: US-based business, Canada-based business, Apple developer, FDA UFI, or Google Developer"
+  ],
+  "preparation": [
+    "Legal business name, address, and phone",
+    "Owner/CEO name and legal structure",
+    "Founding year, primary industry, total employees",
+    "Expect a possible verification call from a D&B representative"
+  ],
+  "workflow": [
+    "Use the D-U-N-S Number Lookup tool to confirm no existing record",
+    "Open https://www.dnb.com/en-us/smb/duns/get-a-duns-form.html and choose the applicable company type",
+    "Fill out the business information fields and submit the request",
+    "Decline the expedite upsell unless faster turnaround is needed — the number itself is free",
+    "Respond to any D&B verification contact; the D-U-N-S Number arrives by email once authenticated",
+    "After issuance, use the free D-U-N-S Manager to view/update the company profile"
+  ],
+  "watchFor": [
+    "dnb.com returns HTTP 403 to automated fetches — form interaction likely needs a real browser/session",
+    "Expedite upsell during checkout — explicitly optional ('This is not required')",
+    "This is a business-identity registry (citation/credit listing), not a product directory — the outcome is a D&B company profile, not a launch listing",
+    "Up to 30 business days for the free path",
+    "A solo/fake entity will fail validation — do not submit fabricated businesses"
+  ],
+  "countsAsLive": "The business has an assigned D-U-N-S Number and a viewable D&B company profile (verifiable via D-U-N-S Lookup / D-U-N-S Manager)",
+  "unknowns": [
+    "Exact fields and session flow of the form (403-blocked to automation)",
+    "Whether the public D&B profile exposes a followed link to the company website",
+    "Current expedite price"
+  ]
+}

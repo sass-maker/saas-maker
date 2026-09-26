@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aitoolsguide.com",
+  "name": "AI Tools Guide",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://aitoolsguide.com/submit",
+      "title": "Submit page (search-indexed snapshot) — 4-field form: tool name, website URL, category, 'why should it be listed'; direct fetch returned HTTP 503"
+    },
+    {
+      "url": "https://submitator.com/submit-to-aitoolsguide",
+      "title": "Third-party submission guide — no signup/captcha; category defaults to 'Writing' (change it); published blurb traces to the site's meta description; outbound link is a noindex/nofollow redirect"
+    },
+    {
+      "url": "https://aitoolsguide.com/contact",
+      "title": "Batch-provided submission URL — a feedback form, not the listing route; also 503 on direct fetch"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "AI tool with a working website",
+    "No account, no captcha — a single 4-field form at /submit",
+    "Submissions are reviewed weekly; links are validated before inclusion"
+  ],
+  "preparation": [
+    "Fix your homepage meta description first — the published listing blurb is reproduced from it almost verbatim",
+    "Root homepage URL (strip UTM/affiliate params)",
+    "Correct category (the picker defaults to 'Writing' — the top failure mode)",
+    "A short 'why should it be listed' note read by a human reviewer; makers should include use cases and pricing details"
+  ],
+  "workflow": [
+    "Open https://aitoolsguide.com/submit (note: the site returned HTTP 503 to automated fetches at research time — verify it is up in a browser)",
+    "Fill tool name, website URL, pick the correct category, and write the why-list note",
+    "Submit — no account needed",
+    "Wait for the weekly review cycle; the published page reproduces your meta description as the blurb"
+  ],
+  "watchFor": [
+    "Batch submission URL /contact is a feedback form — the real route is /submit",
+    "Category picker defaults to 'Writing' — failing to change it mislists the tool",
+    "Outbound links are redirects marked noindex/nofollow per a third-party analysis — SEO value is minimal; value is listing presence",
+    "Site health is questionable — all pages returned 503 during research; confirm it is accepting submissions before investing effort"
+  ],
+  "countsAsLive": "The tool appears in an aitoolsguide.com category listing with its name, description and outbound link",
+  "unknowns": [
+    "Whether the site is currently operational (503s on every route fetched)",
+    "Review turnaround beyond 'weekly'",
+    "Whether makers can later edit or claim their listing"
+  ]
+}

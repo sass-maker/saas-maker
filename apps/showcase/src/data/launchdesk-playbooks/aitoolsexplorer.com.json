@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aitoolsexplorer.com",
+  "name": "AI Tools Explorer",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://aitoolsexplorer.com/submit-ai-tool/",
+      "title": "Submit AI Tool page (via search index; direct fetch 403-blocked) — two paid tiers: AI Visa $49 one-time, AI Passport $129 one-time, published within 24h"
+    },
+    {
+      "url": "https://aitoolsexplorer.com/faq/",
+      "title": "FAQ — 'Make sure your AI tool is fully operational, including its website. NSFW tools are not accepted.'"
+    },
+    {
+      "url": "https://backlinkbot.ai/directories/ai-tools-explorer",
+      "title": "Third-party listing — reports paid-only submission, dofollow link"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "AI tool must be fully operational with a functional website and clearly defined pricing",
+    "SFW only — NSFW tools not accepted",
+    "Generic names rejected (e.g. 'Free AI image generator', 'Best AI tool')",
+    "No free tier: AI Visa $49 one-time (editorial page, 1 direct link) or AI Passport $129 one-time (2 direct links, video embed, filter-page placement, homepage promotion, free profile updates)"
+  ],
+  "preparation": [
+    "Tool name (distinctive, not generic), URL, pricing model",
+    "Feature list, specific use cases, integrations, AI models used, compliance certifications — the editorial team writes your profile from this",
+    "Featured image/logo assets",
+    "Decide Visa vs Passport: Passport adds a second link, video embed, placement across matching filter pages (integrations/models/platforms/audience), and free future profile updates (Visa updates cost ~$25)"
+  ],
+  "workflow": [
+    "Open aitoolsexplorer.com/submit-ai-tool/ and fill the form (features, use cases, integrations, differentiators)",
+    "Choose AI Visa ($49) or AI Passport ($129) and pay",
+    "Editorial team builds the 'AI Passport/Visa' profile page; published within 24 hours",
+    "Verify the dedicated profile page is live and placed on relevant category/filter pages"
+  ],
+  "watchFor": [
+    "Site 403-blocks automated fetches — form must be driven in a real browser",
+    "This is a paid-only destination; do not assume a free listing exists",
+    "AI Visa profile updates cost extra later; Passport includes them",
+    "Affiliate program pays 35% — expect affiliate-driven 'reviews' of the directory elsewhere"
+  ],
+  "countsAsLive": "A dedicated editorial profile page for the tool resolves on aitoolsexplorer.com with direct link button(s) to the product site",
+  "unknowns": [
+    "Refund/rejection policy if a paid submission fails review",
+    "Direct confirmation that Visa/Passport links are dofollow (third-party reports yes)"
+  ]
+}

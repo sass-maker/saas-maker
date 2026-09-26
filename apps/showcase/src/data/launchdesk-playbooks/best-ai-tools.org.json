@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "best-ai-tools.org",
+  "name": "Best-AI.org",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://best-ai-tools.org/",
+      "title": "Homepage — live directory of 4,200+ reviewed AI tools, 17 categories, run by BitAutor (Hannover, Germany)"
+    },
+    {
+      "url": "https://best-ai-tools.org/submit-tool",
+      "title": "Submit Tool page — 'Free Submission', 3-step flow (Submit Details / We Review / Go Live), 'Free Forever', 1-2 week review time"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "AI tool — directory is limited to AI products across 17 categories",
+    "Submission itself is free ('Free Submission', 'Free Forever')",
+    "Editorial review takes 1-2 weeks; team 'verifies and enriches' the listing"
+  ],
+  "preparation": [
+    "Tool name, URL, and description",
+    "Feature list and pricing model details (form asks for 'info, features, and pricing')",
+    "Category fit within the 17 listed categories"
+  ],
+  "workflow": [
+    "Open https://best-ai-tools.org/submit-tool",
+    "Fill in the tool's info, features, and pricing in the submission form",
+    "Submit; the editorial team reviews over ~1-2 weeks",
+    "Once approved, the tool is listed and becomes discoverable in search, categories, and Top-100 voting"
+  ],
+  "watchFor": [
+    "The submit page's form fields are JS-rendered and did not appear in a static fetch — an interactive browser session may be needed",
+    "Default sort is stated as 'no pay-to-rank'; paid 'Place your AI tool here' advertising slots exist but are separate from organic listing",
+    "Site claims community voting influences ranking — listing position is not guaranteed"
+  ],
+  "countsAsLive": "The tool has a public detail page under best-ai-tools.org/tools/ and appears in its category listing/search",
+  "unknowns": [
+    "Exact form fields and whether an account is required (form is client-rendered)",
+    "Rejection criteria beyond AI-tool fit",
+    "Whether listings can be updated or claimed after publication"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "appsmirror.com",
+  "name": "AppsMirror",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://appsmirror.com/",
+      "title": "Homepage — active app review/news blog (posts through Sep 2026), iPhone/Android/Web App sections"
+    },
+    {
+      "url": "https://appsmirror.com/submit-your-app-for-review",
+      "title": "Submit Your App For Review — mentions 'Free App Review and Featured App Review' sections; Wufoo form; $249 10-blog Network Review"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Submit page references a 'Free App Review' section and a 'Free Review' offer via AppMarketingPlus, but the page's promoted packages (Featured review, $249 Network Review across 10 blogs) are paid — a purely free publication is not guaranteed"
+  ],
+  "requirements": [
+    "Focus is mobile apps: iPhone/iPad, Android; a Web App category also exists",
+    "Intake is a Wufoo form embedded on the submit page (amp2.wufoo.com/forms/w1acnr940byz9va)",
+    "Part of the AppMarketingPlus review network — same operator ring as appiod.com, apps400.com, webapprater.com, appsthunder.com, appslisto.com, apps4review.com, game400.com, gadget400.com, appsmamma.com, appstimes.in"
+  ],
+  "preparation": [
+    "App name, store link or web app URL",
+    "Short description, screenshots, contact email",
+    "Decide free vs paid path: free review offer vs Featured review vs $249 Network Review (10 sites)"
+  ],
+  "workflow": [
+    "Open https://appsmirror.com/submit-your-app-for-review",
+    "Fill the embedded Wufoo form with app details",
+    "For the free route, use the AppMarketingPlus 'Free Review' link — a marketing-agency lead-gen flow",
+    "Paid: Network Review is $249 for reviews on 10 partner blogs; Featured App Review pricing is unpublished",
+    "Published reviews appear under /category/reviews or the platform sections"
+  ],
+  "watchFor": [
+    "Paid-review farm ring run by AppMarketingPlus/GegoSoft — 'free review' is a lead magnet; expect upsell email",
+    "Do not treat resulting coverage as earned editorial",
+    "Same network as several other batch domains (appiod.com, apps400.com, webapprater.com) — network placement is one package, not independent placements",
+    "Site sells ad placements and 'Work with us' freelance-review writing — reviews are produced by freelancers"
+  ],
+  "countsAsLive": "A review post naming the product is published on appsmirror.com under a category (iPhone/Android/Web App/Reviews)",
+  "unknowns": [
+    "Whether the unpaid Wufoo submission alone produces a published review",
+    "Featured App Review price",
+    "Turnaround time"
+  ]
+}

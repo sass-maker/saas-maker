@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "a1.gallery",
+  "name": "A1 Gallery",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.a1.gallery/submit",
+      "title": "Submit a site — 'If we like it too, we'll feature it. Current wait time for free submission is 3–4 weeks'"
+    },
+    {
+      "url": "https://www.a1.gallery/pricing",
+      "title": "Pricing — Free plan includes 'Submit sites for review and track their status'; Pro ($84/yr) adds prioritised submissions + analytics"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free submissions enter a 3–4 week editorial review queue and are only featured 'if we like it too' — curation is the gate",
+    "Pro membership ($7/mo or $84/yr) gives prioritised submissions and per-site analytics but not guaranteed inclusion"
+  ],
+  "requirements": [
+    "This is a web-design inspiration gallery — the submitted asset is the product's WEBSITE design, not the product itself; only visually strong sites get featured",
+    "Account required: 'Log in or sign up' to submit and track status",
+    "Accepts websites and templates; entries get tagged by type, category, style, technology, and colour"
+  ],
+  "preparation": [
+    "A polished, distinctive marketing site or product UI — the design is what is judged",
+    "Site URL; A1 generates screenshots/taxonomy itself",
+    "Optional: submit from the account you want analytics on — 'that's how A1 knows it's yours'"
+  ],
+  "workflow": [
+    "Create a free account at a1.gallery/login",
+    "Open /submit and submit the site URL",
+    "Free tier: wait 3–4 weeks for editorial review; Pro tier: prioritised review",
+    "If accepted, the site appears in the gallery with filter tags; Pro unlocks impression/click analytics"
+  ],
+  "watchFor": [
+    "Rejection is normal — heavy curation ('if we like it too'); don't resubmit unchanged sites",
+    "Value is designer-audience referral traffic (4,350+ newsletter subscribers), not SEO — outbound links likely unfollowed",
+    "If your site is already listed by someone else, email hello@a1.gallery to link it to your account",
+    "No-refund policy on Pro"
+  ],
+  "countsAsLive": "The site has a dedicated page at a1.gallery/website/<slug> browseable via gallery filters",
+  "unknowns": [
+    "Acceptance rate for free submissions",
+    "Whether featured sites get followed outbound links",
+    "Newsletter inclusion criteria beyond gallery acceptance"
+  ]
+}

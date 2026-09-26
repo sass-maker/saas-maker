@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "dark.design",
+  "name": "Dark",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://dark.design/",
+      "title": "Homepage — 'Handpicked websites from the dark side': curated gallery of dark-themed sites (Agency/AI/Culture/Education/Hardware/Personal/Software/Web3)"
+    },
+    {
+      "url": "https://www.dark.design/submit",
+      "title": "Submit route — shell page; submission requires account (/auth/login or /auth/signup)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Account required — /auth/signup before submitting",
+    "Editorial curation — 'handpicked' gallery; acceptance is not guaranteed"
+  ],
+  "requirements": [
+    "Site must have a dark aesthetic — this is a dark-design showcase gallery",
+    "Original live website (categories: Agency, AI, Culture, Education, Hardware, Personal, Software, Web3)",
+    "Free submission is implied (no pricing on submit page); a 'Sponsor' slot exists separately"
+  ],
+  "preparation": [
+    "A live site with a polished dark UI — gallery-grade design is the bar (listed sites: Linear, Raycast, Vercel-class aesthetics)",
+    "Site name, URL, category",
+    "Account at /auth/signup",
+    "Screenshot/thumbnail may be auto-generated or requested"
+  ],
+  "workflow": [
+    "Create an account at https://www.dark.design/auth/signup",
+    "Open Submit (nav) and enter site details",
+    "Editors curate — accepted sites appear in the gallery grid under their category"
+  ],
+  "watchFor": [
+    "High editorial bar — this is a showcase for exceptional dark design, not a general listing; mediocre sites likely skipped",
+    "Benefit is design-community visibility, not a product-launch spike",
+    "Submit form fields not visible without auth — verify interactively",
+    "Separate paid 'Sponsor' placement exists"
+  ],
+  "countsAsLive": "The site appears as a card in the dark.design gallery grid with name + category (e.g. 'Name · Software')",
+  "unknowns": [
+    "Exact submission fields and whether there's any fee",
+    "Review turnaround / rejection communication",
+    "Link attribute on gallery cards"
+  ]
+}

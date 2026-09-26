@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "heyaiworld.com",
+  "name": "heyAIworld",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://web.archive.org/web/20250812125109/https://heyaiworld.com/submit",
+      "title": "Wayback capture of /submit — 'Suggest AI Tool' form: Tool Name*, Website URL*, Description"
+    },
+    {
+      "url": "https://heyaiworld.com/",
+      "title": "Homepage — live site, but all pages gated behind Anubis anti-bot proof-of-work challenge (403 'Oh noes!' to non-JS clients)"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "AI-powered tools only — directory positions itself as 'a curated collection of the leading AI-powered tools, handpicked by humans'",
+    "Submission form fields: Tool Name (required), Website URL (required), Description",
+    "Curation implies editorial review; 'handpicked by humans' means acceptance is not guaranteed"
+  ],
+  "preparation": [
+    "Tool name and canonical website URL",
+    "A clear description of what the tool does and its main benefits",
+    "A real browser — the site runs Anubis proof-of-work anti-bot, so headless/automated form posts will fail"
+  ],
+  "workflow": [
+    "Open https://heyaiworld.com/ in a full browser and pass the Anubis challenge",
+    "Use the 'Submit' / 'Suggest new tool' nav link (https://heyaiworld.com/submit)",
+    "Fill Tool Name, Website URL, and Description; submit the suggestion",
+    "No account wall was visible on the archived form"
+  ],
+  "watchFor": [
+    "Anubis anti-bot gate on every page — scripted submissions cannot reach the form",
+    "This is a suggestion ('Suggest AI Tool'), not a guaranteed listing — editorial pick",
+    "Third-party directory trackers noted the operator asked not to be included in auto-submission lists; submit manually and respectfully",
+    "Small solo-run site (footer credits Mateusz Tylec); review cadence may be slow"
+  ],
+  "countsAsLive": "The tool appears in the heyAIworld tools listing / tag pages reachable from the public directory",
+  "unknowns": [
+    "Whether the submit form or backend has changed since the Aug 2025 capture",
+    "Review turnaround and notification behavior",
+    "Whether listings are dofollow"
+  ]
+}

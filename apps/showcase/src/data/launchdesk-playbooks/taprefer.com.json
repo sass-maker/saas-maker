@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "taprefer.com",
+  "name": "TapRefer",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://taprefer.com/",
+      "title": "Homepage — affiliate programs directory for creators, 10,400+ programs, ~4k users"
+    },
+    {
+      "url": "https://taprefer.com/submit",
+      "title": "Submit page — affiliate-program submission guide; sign-in required (Google OAuth); review within 48h"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "This lists AFFILIATE/REFERRAL PROGRAMS, not plain products — you need a working affiliate signup page, a clear commission structure, and referral tracking",
+    "Sign-in required to submit ('Sign in to Submit' → Google OAuth popup)",
+    "Accepted types: SaaS, AI tools, ecommerce, courses, digital products, agencies with referral programs, subscription products, etc.",
+    "Incomplete info, broken links, unclear terms, or unsuitable offers are rejected; review within ~48 hours",
+    "Required listing info: brand name, square logo, product type, short description, category, commission rate, cookie duration, affiliate program URL, product website, contact email"
+  ],
+  "preparation": [
+    "A live public affiliate/referral signup page",
+    "Commission rate, cookie duration, and tracking details",
+    "Square-format product logo",
+    "Short product description and category",
+    "Accurate contact email — they may follow up for missing info"
+  ],
+  "workflow": [
+    "Open https://taprefer.com/submit (form at /submit-affiliate-program-online/)",
+    "Sign in with Google",
+    "Fill program details: name, website, affiliate signup URL, commission, cookie duration, category, contact",
+    "Submit — reviewed within ~48 hours; incomplete submissions take longer",
+    "On approval the program appears in the directory for creators to discover and apply"
+  ],
+  "watchFor": [
+    "It's an affiliate-program directory — submitting a product without an affiliate program will be rejected",
+    "The whole site pushes TapRefer Pro ($49 lifetime) for SEARCHING programs — irrelevant to listing your own program",
+    "Paid /featured placement exists for promotion",
+    "Aggressive countdown/flash-sale marketing ('20 left') — cosmetic urgency",
+    "Updates to commission/cookie/URL require contacting them — no self-serve edit mentioned"
+  ],
+  "countsAsLive": "The affiliate program appears as a listing in taprefer.com's programs directory with an 'Apply now' link to your signup page",
+  "unknowns": [
+    "Whether listing links are dofollow",
+    "Whether paid featured placement affects editorial approval",
+    "Any fee for listing itself — none was shown on the submit page, but confirm in the form"
+  ]
+}

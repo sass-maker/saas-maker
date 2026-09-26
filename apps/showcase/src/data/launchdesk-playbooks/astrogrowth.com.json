@@ -1,0 +1,45 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "astrogrowth.com",
+  "name": "AstroGrowth",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.astrogrowth.com/",
+      "title": "Homepage — e-commerce tool review/strategy blog ('impartial reviews'), active Sep 2026; no submit link"
+    },
+    {
+      "url": "https://www.astrogrowth.com/contact-us/",
+      "title": "Contact Us — contact form plus contact@ / feedback@ / products@ email addresses; no product-submission form"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "Narrow fit: the site only reviews e-commerce and Amazon/Shopify seller tools — a general SaaS is out of scope",
+    "No public submission form or 'get listed' page exists anywhere in nav or footer; only a generic contact form and email addresses",
+    "Amazon affiliate + earnings disclaimers indicate monetization is affiliate-driven, not a pay-to-list directory"
+  ],
+  "preparation": [
+    "Confirm the product is an e-commerce / seller tool — otherwise do not pitch",
+    "One-paragraph pitch: what the tool does, pricing model, affiliate program (if any — likely helps since site is affiliate-monetized)",
+    "Product URL, screenshots, and a contact name"
+  ],
+  "workflow": [
+    "There is no submission route — pitch by emailing products@astrogrowth.com (listed for 'product concerns') or contact@astrogrowth.com",
+    "Alternatively use the form on https://www.astrogrowth.com/contact-us/",
+    "Offer an affiliate arrangement or review copy; an accepted pitch would appear as a tool review under /categories/ or a blog post"
+  ],
+  "watchFor": [
+    "No published acceptance criteria, turnaround, or listing format — this is a cold editorial pitch, not a directory submission",
+    "Content is heavily SEO/affiliate oriented ('Questioning X tools' skeptic-angle posts); coverage is not guaranteed to be positive",
+    "Sister-site email leak on contact page (feedback@veganliftz.com) suggests a small affiliate-blog network"
+  ],
+  "countsAsLive": "A review or category page for the product exists on astrogrowth.com and links to the product site",
+  "unknowns": [
+    "Whether unsolicited pitches are accepted at all",
+    "Whether placement requires an affiliate deal or payment",
+    "Whether the site is still actively adding new tool reviews"
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "apps400.com",
+  "name": "Apps400",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://apps400.com/",
+      "title": "Homepage — active app-review blog; footer states 'Paid reviews from $49. Network placement across 12 sites, $349. Published within 7–10 working days.'"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Covers iOS, Android, web apps and SaaS tools ('Independent app reviews since 2010')",
+    "Site states pricing up front: paid reviews from $49; network placement across 12 sites for $349; publication within 7–10 working days",
+    "Submit page linked in nav: https://apps400.com/submit-your-application-for-review"
+  ],
+  "preparation": [
+    "App/product name, store or web URL, description and screenshots",
+    "Budget: minimum $49 for a single review; $349 for the 12-site network package",
+    "Contact email for the order"
+  ],
+  "workflow": [
+    "Open https://apps400.com/submit-your-application-for-review and complete the submission form",
+    "Pay the review fee (from $49) or the $349 network package",
+    "Review publishes within the stated 7–10 working days"
+  ],
+  "watchFor": [
+    "Explicitly a paid-review site — no free route is offered; do not count coverage as earned media",
+    "Same AppMarketingPlus network as appiod.com, webapprater.com, appsmirror.com etc. — network placements across these sites are one package, not independent wins",
+    "Homepage mixes reviews with off-topic sponsored posts (mattresses, MLM software) — low editorial signal",
+    "Sells sidebar ad slots ($40/mo) — the whole site is monetized placement"
+  ],
+  "countsAsLive": "A review post naming the product is published on apps400.com under its category (e.g. /web-apps/, /iphone-apps/, /android-apps/)",
+  "unknowns": [
+    "Exact single-review price within the 'from $49' range and what tiers exist",
+    "Which 12 sites comprise the current network package"
+  ]
+}

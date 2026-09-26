@@ -1,0 +1,59 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "bibsonomy.org",
+  "name": "BibSonomy",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.bibsonomy.org/signup",
+      "title": "Signup page — loads behind a JS browser-verification challenge ('Verifying your browser')"
+    },
+    {
+      "url": "https://www.bibsonomy.org/editBookmark",
+      "title": "Add bookmark form (search-indexed) — enter URL, then metadata; bookmarklet/add-on alternative"
+    },
+    {
+      "url": "https://www.bibsonomy.org/register_success",
+      "title": "Registration confirmation (search-indexed) — activation email link must be clicked within 24 hours"
+    },
+    {
+      "url": "https://blog.bibsonomy.org/2010/05/",
+      "title": "BibSonomy blog — tags are a required field; posts can be public/private/friends/group visibility"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free account, but this is an academic social-bookmarking/publication-sharing system — a SaaS product page only fits as a bookmark post, which is marginal and can be seen as spam by the research community",
+    "Posts must be set to 'public' visibility to be indexable; tags are a required field"
+  ],
+  "requirements": [
+    "Registered account with email activation (activation link valid 24 hours)",
+    "Bookmark URL plus required tags describing it",
+    "Choose 'public' visibility — private/friends/group posts are not publicly visible"
+  ],
+  "preparation": [
+    "Email for registration + activation",
+    "Product URL and a set of meaningful tags (tag recommenders suggest existing vocabulary)",
+    "Optional: a description/comment for the bookmark"
+  ],
+  "workflow": [
+    "Register at bibsonomy.org/signup and activate via the email link within 24h (site sits behind a JS browser check — use a real browser)",
+    "Go to /editBookmark, enter the product URL, then fill metadata and tags",
+    "Set visibility to 'public' and save",
+    "The bookmark appears on your public user page and in tag listings"
+  ],
+  "watchFor": [
+    "JS anti-bot challenge on every page — automation will fail; use a browser",
+    "Academic community — pure marketing bookmarks are off-culture and may draw abuse flags",
+    "Bookmark value is weak SEO at best; the platform is for citation/bookmark sharing",
+    "Registration link expires after 24 hours"
+  ],
+  "countsAsLive": "The bookmark is visible on the public BibSonomy user/tag pages (bibsonomy.org/user/<name> or tag listings)",
+  "unknowns": [
+    "Whether outbound bookmark links are dofollow",
+    "Anti-spam moderation threshold",
+    "Current site activity level"
+  ]
+}

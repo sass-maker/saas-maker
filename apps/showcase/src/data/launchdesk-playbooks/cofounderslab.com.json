@@ -1,0 +1,43 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "cofounderslab.com",
+  "name": "CoFoundersLab",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://cofounderslab.com/",
+      "title": "Homepage — 'largest startup community', 700k+ members, 'Join for free', optional /premium tier"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Account registration required; joining is free ('Join for free'), with an optional Premium tier at /premium",
+    "This is a founder/advisor networking community — there is no product-submission form; presence = member profile + startup profile + posts in the feed",
+    "Fit: real founders/advisors; profile fields ask about skills, interests, location"
+  ],
+  "preparation": [
+    "Founder profile basics: name, photo, role, skills, location",
+    "Startup description/stage for the startup profile",
+    "Email for account verification"
+  ],
+  "workflow": [
+    "Sign up at cofounderslab.com ('Join for free' / Login)",
+    "Complete the member profile (skills, interests, location, what you're looking for)",
+    "Add/claim your startup profile if the flow offers it",
+    "Post an intro in the community feed (batch-listed route cofounderslab.com/feed) linking the product where contextually allowed"
+  ],
+  "watchFor": [
+    "Not a directory — don't expect a crawlable product listing page; value is profile + feed presence",
+    "Premium upsell (/premium) gates some networking features",
+    "Link placement rules unknown — drive-by link drops in feeds often get flagged in founder communities",
+    "700k claimed members but feed engagement level unverified"
+  ],
+  "countsAsLive": "Your member/startup profile is publicly viewable at its cofounderslab.com URL and any feed post is visible to the community",
+  "unknowns": [
+    "Whether profiles expose a dofollow website link",
+    "Premium tier pricing and which features it unlocks",
+    "Moderation policy for self-promotional feed posts"
+  ]
+}

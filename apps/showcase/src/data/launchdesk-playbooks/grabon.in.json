@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "grabon.in",
+  "name": "GrabOn",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://grabon.in/",
+      "title": "Homepage — India's coupons & deals marketplace (6.5M+ monthly visitors claimed); 'Submit Coupon / Merchant' modal in nav"
+    },
+    {
+      "url": "https://www.grabon.in/partnership/",
+      "title": "Partner With Us — B2B affiliate/merchant partnership program with dedicated relationship managers"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "The free path is submitting a coupon/deal via the 'Submit Coupon / Merchant' modal — requires the product to actually offer a discount or coupon code",
+    "A product without a couponable offer has no natural listing; merchant onboarding goes through the affiliate partnership program instead",
+    "Audience is India-first (also US/UAE/CA editions) — deal-hunting consumers, not software buyers"
+  ],
+  "requirements": [
+    "A genuine coupon code, deal, or discount the product can honor",
+    "Coupon submissions go through a site modal (JS-rendered; likely requires a free login via Google)",
+    "Merchant-level presence (own store page) requires the partnership program — affiliate/CPA terms negotiated with their team",
+    "They claim 3.5K+ merchant partners, 10M+ newsletter subscribers"
+  ],
+  "preparation": [
+    "A discount code for the product (e.g. launch promo) and its terms",
+    "A Google account for site login if the submit modal requires it",
+    "For partnership: affiliate commission capability (CPA) and merchant contact details"
+  ],
+  "workflow": [
+    "Open https://grabon.in/ and use the Submit → 'Submit Coupon / Merchant' modal (JS-only, use an interactive browser)",
+    "Submit the coupon with code, discount terms, and expiry",
+    "Alternatively, for a store page: apply via https://www.grabon.in/partnership/ or contact@grabon.in",
+    "SaaS deals appear under relevant coupon pages; GrabOn also runs an 'AI Tools' specialty deals section"
+  ],
+  "watchFor": [
+    "Not a launch directory — this is a coupon marketplace; only works if you can offer a real discount",
+    "Submit modal is JS-driven (javascript:void triggers); no static form",
+    "Affiliate CPA model means merchant partnerships are commercial agreements, not free listings",
+    "India-centric consumer audience — poor fit for B2B SaaS exposure unless the deal appeals to consumers"
+  ],
+  "countsAsLive": "The coupon/deal appears on a GrabOn store or category page, or the merchant has its own /stores/<name> page",
+  "unknowns": [
+    "Whether user-submitted coupons are reviewed before appearing",
+    "Partnership program minimums and CPA terms",
+    "Whether merchant store pages can be obtained without the affiliate program"
+  ]
+}

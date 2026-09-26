@@ -1,0 +1,43 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "engadget.com",
+  "name": "Engadget",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.engadget.com/about/contact/",
+      "title": "About Engadget — owned by Static Media since 2026; lists editors/writers by name; phone (908) 514-8038, Static Media Fishers IN address; no tips inbox shown"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Not a directory — coverage is earned editorial; no submission form or listing product",
+    "Engadget covers consumer tech: gadgets, apps, AI, computing, mobile, EVs, gaming, entertainment",
+    "All content is staff/contribution-written by named humans — site states a No-AI Writing Policy and that corporate sponsorships are never accepted for coverage",
+    "The catalog's stored website path (/about/advertist) is truncated — the working page is /about/contact/"
+  ],
+  "preparation": [
+    "A consumer-tech angle: a gadget, app, or consumer-facing AI/software story — B2B SaaS is a weak fit",
+    "Identify the editor/writer covering your beat from the masthead on the About page",
+    "Press kit with product details, images, pricing, availability; review unit or demo access if hardware/app"
+  ],
+  "workflow": [
+    "Pick the relevant editor or writer from https://www.engadget.com/about/contact/",
+    "Pitch them directly with a concise, newsworthy hook",
+    "Alternatively reach the newsroom via the Static Media contact channels (phone/address listed)",
+    "Coverage, if it happens, is a staff-written article — no listing page is created"
+  ],
+  "watchFor": [
+    "Ownership changed to Static Media in 2026 — historical tips@engadget.com conventions may no longer apply",
+    "No tips email is published on the contact page; only a phone number and licensing/jobs links",
+    "They explicitly never accept sponsorship for coverage — do not offer paid placement",
+    "Contributor pitches must be human-written; AI-generated articles are rejected per policy"
+  ],
+  "countsAsLive": "An Engadget article mentioning or reviewing the product is published at engadget.com",
+  "unknowns": [
+    "A current tips/news inbox — none is listed on the about page",
+    "Whether guest/contributed pieces are still accepted under Static Media ownership"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "teacherspayteachers.com",
+  "name": "TeachersPayTeachers",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.teacherspayteachers.com/become-a-seller",
+      "title": "Become a Seller — Basic $29 one-time fee, Premium $59.95/yr; payout rates 55%/80%"
+    },
+    {
+      "url": "https://help.teacherspayteachers.com/hc/en-us/articles/360041266191-How-do-I-sign-up-as-a-Seller",
+      "title": "TPT help: sign up as a Seller — free Buyer account first, then Basic/Premium upgrade"
+    }
+  ],
+  "category": "profile",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Marketplace for educational resources — sellers must upload original teaching materials; a SaaS product cannot be listed as a product",
+    "Seller path requires first a free Buyer account, then a paid seller tier: Basic Seller is a one-time non-refundable $29 USD; Premium is $59.95 USD/year",
+    "TPT requires the first uploaded resource be free ('Primary Free' resource)",
+    "Seller payout: Basic earns 55% with $0.30/resource fee; Premium earns 80% with $0.15 fee under $3 orders"
+  ],
+  "preparation": [
+    "An educational resource relevant to the product (e.g. a printable, lesson, or template) that can be offered free as the Primary Free resource",
+    "Free Buyer account first (name, email, password)",
+    "$29 for the Basic Seller upgrade (or $59.95/yr Premium)",
+    "Store name, profile blurb, logo; Hyperwallet payout setup if selling"
+  ],
+  "workflow": [
+    "Create a free Buyer account via the Sign Up button on teacherspayteachers.com",
+    "From the logged-in account, open the Basic Seller upgrade page and click 'Join Now'",
+    "Pay the $29 fee via PayPal ('Continue to payment')",
+    "Set up the store profile (store name, logo, description with website reference)",
+    "Upload the required Primary Free resource first, then additional resources"
+  ],
+  "watchFor": [
+    "Not a SaaS directory — only viable if the product can produce a genuinely educational resource; treat as marketing channel, not a listing",
+    "The $29 Basic fee is non-refundable and does NOT credit toward a later Premium upgrade",
+    "First resource MUST be free — plan the Primary Free asset before paying",
+    "teacherspayteachers.com/Signup returned 403 to automated fetch — use a real browser"
+  ],
+  "countsAsLive": "A public TPT store page (teacherspayteachers.com/Store/<store-name>) exists with at least the free resource published",
+  "unknowns": [
+    "Whether store profiles expose an external website link (and its follow status)",
+    "Whether non-teacher brand accounts are tolerated",
+    "Review moderation process for uploaded resources"
+  ]
+}

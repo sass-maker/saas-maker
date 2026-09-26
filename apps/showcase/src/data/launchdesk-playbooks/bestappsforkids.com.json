@@ -1,0 +1,39 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "bestappsforkids.com",
+  "name": "Best Apps for Kids",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.bestappsforkids.com/submit-app-for-review/",
+      "title": "The stored submit path currently renders a '30 Best Kids' Apps' article — no submission form visible on it this session"
+    }
+  ],
+  "category": "press",
+  "zeroCostRoute": "unknown",
+  "conditions": [
+    "Kids'-apps review blog only; the /submit-app-for-review/ path resolved to a roundup article rather than a form — the actual review-request route couldn't be confirmed"
+  ],
+  "requirements": [
+    "A children's app only — the site reviews kids' educational/entertainment apps with hands-on testing notes",
+    "The submit URL in the catalog shows article content — the form may have moved or been removed",
+    "Affiliate monetization on the site (Amazon Associates) — review-blog model"
+  ],
+  "preparation": [
+    "A kids' app with store links and promo access",
+    "Locate the actual review-request route (check the site in a real browser — the catalog URL didn't show a form)"
+  ],
+  "workflow": [
+    "Find the working submit/contact route on bestappsforkids.com",
+    "Submit the app for editorial review consideration",
+    "If covered, a staff-written review or inclusion in a best-of roundup"
+  ],
+  "watchFor": [
+    "The cataloged submit path shows an article — treat the submission flow as unverified",
+    "Single-author blog (reviews by 'Rhys') — small operation",
+    "Kids-app only — nothing else fits"
+  ],
+  "countsAsLive": "The app appears in a Best Apps for Kids review or roundup",
+  "unknowns": ["Whether a working submit form exists today", "Whether reviews are paid"]
+}

@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "submitmatic.com",
+  "name": "SubmitMatic",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://submitmatic.com/submit",
+      "title": "Submit page — 'Log in to Submit… Log in with Google'; submitting a tool to the directory requires a Google sign-in"
+    },
+    {
+      "url": "https://submitmatic.com/tools",
+      "title": "Directory — 165+ tools across 40 categories; listings show name, blurb, category, pricing model"
+    },
+    {
+      "url": "https://submitmatic.com/pricing",
+      "title": "Pricing — done-for-you service: $60 (60+ dirs) / $100 (100+) / $140 (140+), 2-business-day turnaround, Google Sheet report"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Listing your tool on submitmatic.com's own directory requires signing in with a Google account — no anonymous/email path",
+    "Whether the self-directory listing is free could not be fully verified past the login wall — the site's prominent paid offer is a separate done-for-you submission service ($60-$140)"
+  ],
+  "requirements": [
+    "Google account sign-in to access the submit form",
+    "Tool/startup fit for their category taxonomy (Productivity, AI Assistants, Software, Marketing, SEO, Dev Tools, etc.)",
+    "Site's main business is paid directory submission — expect upsell, but a direct listing likely exists behind login"
+  ],
+  "preparation": [
+    "A Google account for OAuth",
+    "Tool name, URL, short blurb, category, pricing model (listings carry Free/Freemium/Free Trial/Paid tags)",
+    "Logo/preview image"
+  ],
+  "workflow": [
+    "Open https://submitmatic.com/submit and sign in with Google",
+    "Complete the tool submission form (fields hidden behind login — inspect in browser)",
+    "Verify the listing lands under /tool/<slug> in the directory",
+    "Ignore the $60-$140 '140+ directories' DFY pitch unless you actually want their done-for-you service"
+  ],
+  "watchFor": [
+    "Two different offers share this domain: the directory listing (the launchdesk target) vs a paid done-for-you submission service — don't conflate them",
+    "Payment links go through dodopayments.com checkout; anything priced $60/$100/$140 is the DFY service, not the listing",
+    "Their FAQ admits they use 'smart automation' for submissions and a shared Google account for some sign-ins — irrelevant for a self-listing but relevant if you ever buy the service",
+    "Listings include some NSFW-adjacent tools — assess neighbor quality"
+  ],
+  "countsAsLive": "A public /tool/<slug> page exists on submitmatic.com and the tool is searchable in the /tools directory",
+  "unknowns": [
+    "Whether the directory listing itself costs money (form is behind login)",
+    "Link type (dofollow/nofollow) on listing pages",
+    "Review process and approval time for direct submissions"
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "sulekha.com",
+  "name": "Sulekha",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.sulekha.com/list-your-business",
+      "title": "List Your Business — free listing flow starts with a mandatory +91 mobile number; 20,000+ businesses; paid lead/ads model"
+    },
+    {
+      "url": "https://www.sulekha.com/",
+      "title": "Homepage — 'List Your Business FREE'; India-focused local services/education directory with some US cities"
+    },
+    {
+      "url": "https://businesses.sulekha.com/signup",
+      "title": "Batch-provided submission URL — returned HTTP 404 (dead route)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Business listing is free, but signup requires a +91 Indian mobile number (mandatory, presumably OTP-verified) — effectively gates out non-Indian businesses",
+    "Categories are local services and education/training (tuitions, coaching, home services, consultants) — a SaaS product listing only fits if positioned as an India-based service business",
+    "Enquiries/leads are monetized — lead pricing varies by service type and location (per site FAQ); listing itself is free"
+  ],
+  "requirements": [
+    "Indian mobile number (+91) for mandatory verification",
+    "A service business that fits one of 1000+ categories (India cities primarily; some US city pages exist)",
+    "Business name, service area, service offerings, profile description"
+  ],
+  "preparation": [
+    "Working +91 mobile number able to receive OTP/SMS",
+    "Business details: name, city/locality, categories, service list",
+    "Photos/portfolio for an 'enriched' profile"
+  ],
+  "workflow": [
+    "Open https://www.sulekha.com/list-your-business (the batch's businesses.sulekha.com/signup URL 404s)",
+    "Enter the +91 mobile number and complete verification",
+    "Create the business profile: categories, locality preferences, service offerings",
+    "Manage via the Sulekha Business app — respond to enquiries and reviews; pause lead flow as needed"
+  ],
+  "watchFor": [
+    "+91 mobile is mandatory — no non-Indian signup path visible on the listing page",
+    "This is a lead-gen marketplace: expect contact from Sulekha sales about paid leads/ads after signup",
+    "SaaS products are not a category — only service businesses; shoehorning a software product risks removal",
+    "Lead pricing varies by category/city — check inside the Business app before buying leads"
+  ],
+  "countsAsLive": "The business profile appears in Sulekha category/city search with name, locality, services and reviews section",
+  "unknowns": [
+    "Whether non-Indian businesses can list on the US city pages (the form only offered +91)",
+    "Verification steps beyond mobile OTP (GST/business proof?)",
+    "Website link presence and follow/nofollow on the public profile"
+  ]
+}

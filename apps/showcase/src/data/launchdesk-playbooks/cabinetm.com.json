@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "cabinetm.com",
+  "name": "CabinetM",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://content.cabinetm.com/directories-and-landscapes",
+      "title": "CabinetM — 15,000-16,000 MarTech products across 500+ categories in its technology management platform (content read via search result)"
+    },
+    {
+      "url": "https://martech.org/startup-cabinetm-unveils-its-directory-of-marketing-tools/",
+      "title": "MarTech.org on CabinetM's model — vendor takeover of product profiles planned at $500-$1,000/mo (2015-era pricing); CabinetM curates baseline profiles (content read via search result)"
+    },
+    {
+      "url": "https://www.cabinetm.com/product/cabinetm/agency-managed",
+      "title": "CabinetM 'for Technology Vendors' — vendor program exists (content read via search result)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "MarTech products only, and the meaningful presence is paid — CabinetM curates baseline profiles itself while 'CabinetM for Technology Vendors' is a commercial program (historically ~$500–$1,000/mo for profile control); vendors can contact for inclusion but full profile control is the paid product"
+  ],
+  "requirements": [
+    "A marketing-technology product — the directory is exclusively MarTech",
+    "Baseline profiles are CabinetM-curated (a product may already exist in the library)",
+    "Vendor takeover/management of profiles is the paid vendor program",
+    "Contact route via cabinetm.com for vendor inquiries"
+  ],
+  "preparation": [
+    "MarTech product details, category fit within their 500+ categories",
+    "Budget for the vendor program if profile control matters"
+  ],
+  "workflow": [
+    "Check whether a CabinetM-curated profile already exists",
+    "Contact CabinetM about the vendor program to claim/manage the profile",
+    "Alternatively stay as a curated entry — no free self-serve submission"
+  ],
+  "watchFor": [
+    "Vendor program is a subscription commercial product — the 'free' presence is whatever CabinetM curated",
+    "cabinetm.com returned minimal content to fetchers this session — site may be JS-gated or declining",
+    "MarTech-only — non-marketing tools don't fit"
+  ],
+  "countsAsLive": "The product has a profile in CabinetM's MarTech library",
+  "unknowns": [
+    "Current vendor-program pricing",
+    "Whether free vendor-verified profiles exist today"
+  ]
+}

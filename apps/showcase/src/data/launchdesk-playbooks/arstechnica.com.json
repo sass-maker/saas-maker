@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "arstechnica.com",
+  "name": "Ars Technica",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://arstechnica.com/contact-us",
+      "title": "Ars Technica Contact Us page — direct fetch blocked (403); submission form for tips/press releases exists here per secondary coverage"
+    },
+    {
+      "url": "https://arstechnica.com/staff/2005/09/1112/",
+      "title": "'Contacting Ken, a primer' — news tips go to news@arstechnica.com, forum moderation to mods@arstechnica.com (content read via search result)"
+    },
+    {
+      "url": "https://arstechnica.com/staff/2009/11/want-to-freelance-for-ars-technica/",
+      "title": "Freelance interest inbox: freelance@arstechnica.com with subject 'freelancer interest' (content read via search result)"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Not a directory — coverage is earned editorial; no listing product",
+    "News tips go to news@arstechnica.com; press releases to press@arstechnica.com; the contact page also hosts a tips submission form",
+    "Confidential material: PGP-encrypted email is supported (Mailvelope/Enigmail); some staff list PGP keys on the site",
+    "Freelance pitches go to freelance@arstechnica.com with subject 'freelancer interest'",
+    "Ars covers deep tech/science/IT policy — a SaaS launch needs a real technology or policy angle"
+  ],
+  "preparation": [
+    "A substantive tech/science/policy hook — Ars readers expect technical depth, not marketing copy",
+    "Concise tip email for news@arstechnica.com, or a press release for press@arstechnica.com",
+    "PGP setup (Mailvelope/Enigmail) if the material is sensitive"
+  ],
+  "workflow": [
+    "Decide the channel: news tip (news@arstechnica.com or the contact-page form), press release (press@arstechnica.com), or freelance pitch (freelance@arstechnica.com, subject 'freelancer interest')",
+    "Send a concise, technically literate tip — claim, evidence, why it matters",
+    "Coverage, if it happens, is a staff-written article — no listing page is created"
+  ],
+  "watchFor": [
+    "arstechnica.com blocks automated fetches (403) — the contact page itself could not be read directly this session",
+    "The inboxes documented on the site are old but still referenced; editors' direct emails exist but should not be mass-mailed",
+    "Freelance inbox historically receives too much mail to answer — silence is normal",
+    "A SaaS launch announcement alone is unlikely to earn coverage; Ars favors technically interesting stories"
+  ],
+  "countsAsLive": "An Ars Technica article mentioning or covering the product is published at arstechnica.com",
+  "unknowns": [
+    "Whether the news@/press@ inboxes are still actively monitored under current Condé Nast operations",
+    "Whether the contact-page tips form still functions (page blocked to fetchers)"
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "fark.com",
+  "name": "Fark",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.fark.com/farq/submit/",
+      "title": "FAQ: Submitting Links (search-indexed) — free account required; custom headline written by submitter; admins hand-pick a small % for the main page; all submissions are visible to TotalFark subscribers"
+    },
+    {
+      "url": "https://m.fark.com/submit",
+      "title": "Mobile submit page (search-indexed) — login required to submit links"
+    },
+    {
+      "url": "https://www.fark.com/submit/",
+      "title": "Submit page — returned HTTP 403 (bot-blocked)"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Submission is free with a registered account, but admins hand-pick a small percentage of links for the main page — there is no guaranteed placement",
+    "All submissions appear in the TotalFark (paid subscriber) queue view regardless of approval",
+    "Fark is a funny/weird news aggregator — the link must be genuinely newsworthy or amusing with a witty custom headline; a SaaS launch announcement will almost never qualify"
+  ],
+  "requirements": [
+    "Registered Fark account (email confirmation required before submitting)",
+    "A link that fits Fark's editorial mix: weird, funny, or notable news — not product promotion",
+    "A custom headline written by the submitter — the headline IS the listing"
+  ],
+  "preparation": [
+    "Confirmed Fark account",
+    "A genuinely newsworthy/amusing link (e.g. odd press coverage), plus a Fark-style witty headline",
+    "Review Fark's posting rules before submitting"
+  ],
+  "workflow": [
+    "Register and confirm an account at fark.com (site 403s automated fetches — use a browser)",
+    "Click 'Submit a Link' and enter the URL plus the custom headline and a tag/category",
+    "Submissions go to the queue visible to TotalFark subscribers; admins pick a small % for the public main page",
+    "Resubmissions of rejected links with better headlines are a normal part of the culture"
+  ],
+  "watchFor": [
+    "Not a startup directory — a self-promotional product URL has near-zero approval odds and can flag the account",
+    "You don't need a paid TotalFark subscription to get approved, but paid users see all submissions",
+    "Link exposure is the linked story itself — Fark main-page links go to the external URL",
+    "Email confirmation is required before the submit form works"
+  ],
+  "countsAsLive": "The submitted link with its custom headline appears on the Fark main page or a category page (admins' pick); weaker proof: visible in the TotalFark submissions queue",
+  "unknowns": [
+    "Current approval rate and volume",
+    "Whether main-page outbound links are follow/nofollow",
+    "Account-age or karma requirements beyond email confirmation"
+  ]
+}

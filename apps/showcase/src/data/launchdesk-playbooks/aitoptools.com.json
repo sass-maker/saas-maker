@@ -1,0 +1,60 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aitoptools.com",
+  "name": "AITopTools",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://aitoptools.com/claim-your-tool/",
+      "title": "Submit/Claim page — 2-step flow: enter tool URL + email → AI generates listing draft; fields include category, logo ≤5MB, 300-char short desc, 10k-char description, 3 use cases, pricing model"
+    },
+    {
+      "url": "https://aitoptools.com/help/",
+      "title": "FAQ — 'our team will review it, usually within a few days. Paid options are available for faster approval' (via search snippet)"
+    },
+    {
+      "url": "https://submitator.com/submit-to-aitoptools",
+      "title": "Submitator writeup — $59 one-time publish ($99 struck through), $9.99/mo alt, $299 tier adds 100+ directory submissions; dofollow verified on 400 sampled listings"
+    },
+    {
+      "url": "https://aitoptools.com/refund-policy/",
+      "title": "Refund Policy — paid listings are final once published; refund only within 3 days if they reject before publication (via search snippet)"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "AI tools only — large AI-tool directory (11k+ listings, self-claimed DR 54-55)",
+    "Publishing is paid: $59 one-time (also offered as $9.99/mo); $299 tier adds done-for-you submission to 100+ other directories; $49 newsletter add-on; $628/mo recurring featured placement",
+    "Two-step flow: enter tool URL + email → AI builds a draft → review/edit → pick publish option (price revealed at the final step)",
+    "Listing fields: name, category (huge taxonomy), logo/screenshot (JPEG/PNG/WebP/GIF ≤5MB, square best), short description ≤300 chars, full description ≤10k chars, 3 use cases, pricing model"
+  ],
+  "preparation": [
+    "Tool URL and contact email",
+    "Square logo ≤5MB",
+    "≤300-char tagline + up to 10k-char description with practical use-case examples",
+    "3 use-case lines, pricing model (Freemium/Free/Paid/Free Trial/Contact)",
+    "Budget: $59 one-time for the base listing"
+  ],
+  "workflow": [
+    "Open https://aitoptools.com/claim-your-tool/",
+    "Enter tool URL + email → 'Create My Listing' generates an AI draft",
+    "Review/edit the listing (name, category, logo, descriptions, use cases, pricing)",
+    "Choose publish option at the final step ($59 one-time or $9.99/mo; optional upgrades)",
+    "Standard review 2-5 business days per FAQ; paid featured reviewed within 24h"
+  ],
+  "watchFor": [
+    "Price only appears at the last step — don't assume free despite FAQ's vague 'review within a few days'",
+    "$299 bundle covers their listing + 100 unnamed directories (list disclosed after payment) — a competitor (Submitator) wrote this up; evaluate skeptically",
+    "Once a paid listing is published, sale is final — refund only within 3 days of a pre-publication rejection",
+    "Owner entity: MK INTERNET INVESTMENTS LLC (Florida); cancellations via email to michael@aitoptools.com",
+    "Listing includes a dashboard for views + review management and an X announcement — perks beyond a backlink"
+  ],
+  "countsAsLive": "The tool has a public aitoptools.com listing page (canonical, followed link to your site) browsable under its category and 'New Additions'",
+  "unknowns": [
+    "Whether a genuinely free publish option exists behind step 2 (FAQ hints at review without payment, Submitator says publishing costs $59)",
+    "Whether the free/lower tiers get the same dofollow link treatment as paid",
+    "Exact newsletter/featured pricing beyond $49 and $628/mo"
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "indiedev.tools",
+  "name": "Indie Dev Tools",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://indiedev.tools/",
+      "title": "Homepage — 'hand-curated collection of highly-useful tools for independent developers and solopreneurs'; 'Add your tool' nav button, /login link"
+    },
+    {
+      "url": "https://indiedev.tools/add-tool",
+      "title": "Add-tool route — Vue SPA; unauthenticated visitors are redirected to /login by the 'Add your tool' handler"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Tools must be useful to independent developers / solopreneurs — on-form notice: 'Every added tool will be reviewed before being published. Please make sure the tool is helpful to the indie dev community!'",
+    "Account required: the Add-your-tool handler sends logged-out users to /login; registration at /register",
+    "Listings are manually reviewed before publication — no instant listing"
+  ],
+  "preparation": [
+    "Tool name and URL (placeholder format https://tool.com)",
+    "Short description and long description (separate form fields)",
+    "Logo image and a large/screenshot image (form has logo + largeImage uploads)",
+    "Tags (free-input tag field) and a category pick from ~15 categories (AI, Development, SEO, Marketing, Launch, etc.)"
+  ],
+  "workflow": [
+    "Register / log in at https://indiedev.tools/login",
+    "Click 'Add your tool' (goes to https://indiedev.tools/add-tool once authenticated)",
+    "Fill name, URL, short + long description, upload logo and large image, set tags and category",
+    "Submit; on success the site confirms 'Tool added successfully. It will be reviewed before being published.'",
+    "Track the listing under /my-tools and /edit-tool/:id once published"
+  ],
+  "watchFor": [
+    "Submissions can be temporarily closed — the form has an isSubmissionClosed state that hides the submit UI",
+    "Hand-curated directory: low-fit or low-quality tools likely rejected",
+    "Form is client-rendered (Vue) — needs JS; the /add-tool URL alone shows homepage content to logged-out crawlers"
+  ],
+  "countsAsLive": "The tool gets a public /tool/<slug> page on indiedev.tools and appears in category listings after review",
+  "unknowns": [
+    "Review turnaround time",
+    "Whether outbound links are dofollow (cards use ?ref=indiedev.tools redirect-style links)",
+    "Any paid/feature options — none found in the submit flow"
+  ]
+}

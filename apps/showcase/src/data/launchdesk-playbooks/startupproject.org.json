@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startupproject.org",
+  "name": "The Startup Project",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://startupproject.org/submit-startup/",
+      "title": "Submit Your Startup — free listing form; 'All we ask is a backlink to your listing'; review within a few business days"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free listing, but a link back to your Startup Project listing from your own website is REQUIRED to maintain the listing ('I understand that a link back to my listing from my website is required to maintain the listing')"
+  ],
+  "requirements": [
+    "Reciprocal link requirement — a 'Featured on The Startup Project' badge/backlink must sit on your site or the listing is removed",
+    "Submission does not guarantee publication; review takes a few business days",
+    "Form fields: founder name, email, company name, website, tagline, industry (SaaS/AI-ML/dev tools/etc.), stage (pre-launch→scaling), monthly revenue range, team size, 'What does your startup do?', traction & milestones",
+    "You consent to the listing terms in the checkbox"
+  ],
+  "preparation": [
+    "Founder name + email, company name, website URL, tagline",
+    "Industry, stage, monthly-revenue bucket, team size",
+    "A 'what does your startup do' description plus traction/milestones notes",
+    "A plan for where the reciprocal 'Featured' badge/link will live on your site"
+  ],
+  "workflow": [
+    "Open https://startupproject.org/submit-startup/",
+    "Complete the form (~2 minutes per their copy) and agree to the backlink term",
+    "Wait for the review email (a few business days)",
+    "Once live, add the 'Featured on The Startup Project' badge linking back to your listing page in /startups/"
+  ],
+  "watchFor": [
+    "This is a link-exchange arrangement — the free listing is contingent on keeping a followed backlink on YOUR site; dropping it forfeits the listing",
+    "The badge also serves their SEO: you're endorsing their directory",
+    "Revenue data is self-reported in ranges, not verified",
+    "Site is a founder-resources content site (learning paths, templates); the directory is one feature"
+  ],
+  "countsAsLive": "The startup has a dedicated profile page under https://startupproject.org/startups/ indexed with structured data and linking to your site",
+  "unknowns": [
+    "Editorial bar for acceptance beyond the form fields",
+    "Whether the directory page itself is well-trafficked",
+    "Exactly how backlink compliance is checked"
+  ]
+}

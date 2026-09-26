@@ -14,6 +14,7 @@ cloudflare.targets.json
 # Build artifacts
 apps/showcase/out/
 out/
+artifacts/
 
 # Local tooling
 .claude/

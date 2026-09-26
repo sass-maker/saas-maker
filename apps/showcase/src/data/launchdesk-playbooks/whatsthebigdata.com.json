@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "whatsthebigdata.com",
+  "name": "What's the Big Data",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://whatsthebigdata.com/submit-new-ai-tool/",
+      "title": "Submit Your AI Tool — form fields, $599 Basic / $799 Featured packages, free-via-badge option, terms and FAQ"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free listing requires adding the 'Featured on Whatsthebigdata' badge (provided embed code) to your homepage or footer and emailing tool details + badge URL to the listed contact; verified and published in 2-3 business days",
+    "The badge must remain publicly visible for the listing to stay active",
+    "Paid path: Basic $599 or Featured $799 one-time (NSFW tools +$100), Stripe payment required before review"
+  ],
+  "requirements": [
+    "AI tools only — 'Get your AI tool featured'",
+    "Tool must be functional and accessible with a clear value proposition; no spam or misleading content",
+    "All submissions pass manual review (2-3 business days typical)",
+    "NSFW tools must be declared and cost +$100",
+    "Submitter must own or license all submitted content",
+    "Full refund if a paid tool is rejected"
+  ],
+  "preparation": [
+    "Tool name, URL, detailed description, key features",
+    "Logo URL (200x200 PNG/JPG recommended) and screenshot URLs (1200x800, one per line)",
+    "Contact name, contact email, company name",
+    "For the free route: ability to embed their badge on the homepage/footer and an email ready to send"
+  ],
+  "workflow": [
+    "Open whatsthebigdata.com/submit-new-ai-tool/",
+    "Either: fill the form (tool info, media, contact) and pick Basic $599 or Featured $799, then pay via Stripe",
+    "Or for free: copy a badge embed code, place it on the homepage/footer, and email the listed address with tool details + the live badge URL",
+    "Wait for manual review (2-3 business days); an email confirms approval",
+    "Updates: contact support — minor updates free, major changes may re-review"
+  ],
+  "watchFor": [
+    "Form requires package selection to continue — the free path is email-based, not through the form",
+    "Payment is taken before review (full refund on rejection, so low risk)",
+    "Badge-based free listing dies if the badge is removed — they check for it",
+    "The site carries NSFW tool categories — assess brand adjacency before listing"
+  ],
+  "countsAsLive": "The tool appears on a public listing page in the /ai-tools/ directory after the review/verification email",
+  "unknowns": [
+    "Whether the free (badge) listing renders identically to paid Basic listings",
+    "Whether outbound links are dofollow for free listings",
+    "Actual review rejection rate"
+  ]
+}

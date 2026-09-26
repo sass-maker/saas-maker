@@ -1,0 +1,59 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "publicapis.dev",
+  "name": "Public APIs (publicapis.dev)",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://publicapis.dev/",
+      "title": "Homepage — 'A Collaborative List Of 1400+ Public APIs For Developers'; Submit + Sign in links in nav"
+    },
+    {
+      "url": "https://publicapis.dev/submit",
+      "title": "Submit route — renders the SPA shell; form is client-side behind 'Sign in'"
+    },
+    {
+      "url": "https://github.com/marcelscruz/public-apis/blob/main/CONTRIBUTING.md",
+      "title": "marcelscruz/public-apis CONTRIBUTING.md — PR-based submission rules: self-serve public APIs only, README table format, 'Add X API' PR title"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Product must expose a PUBLIC API — self-serve (no waitlists, betas, 'contact sales' gates); a stranger must reach a working API call from the docs alone",
+    "Free, freemium, or paid APIs all welcome — 'public' means anyone can sign up and call it",
+    "Must be a product in its own right on a custom domain (no vercel.app/github.io-style shared subdomains)",
+    "Docs must state Auth and CORS behaviour — unverifiable Auth/CORS disqualifies",
+    "https:// URLs only, no query params, link to the API homepage (not deep docs links)",
+    "Two routes: (a) GitHub PR to marcelscruz/public-apis editing README.md (never /db — auto-generated), or (b) the site's own Submit button after sign-in",
+    "Websites/SDKs/CLIs with no connectable API belong in devresourc.es instead"
+  ],
+  "preparation": [
+    "API homepage URL (https, custom domain, no query string)",
+    "One-line description",
+    "Correct Auth value: OAuth | apiKey | X-Mashape-Key | No | User-Agent",
+    "CORS value: Yes | No | Unknown",
+    "Best-fit category from their list (e.g. Development, AI, Data Validation)",
+    "GitHub account for the PR route"
+  ],
+  "workflow": [
+    "GitHub route: fork marcelscruz/public-apis, add your row to README.md in the right category keeping alphabetical order, column padding, format '| [Name](https://url) | Description | Auth | CORS |'",
+    "PR title format 'Add <Name> API'; one link per PR; don't include the TLD in the name",
+    "An automated reviewer bot may comment/approve/close; maintainer does final merge",
+    "Merged PRs surface on publicapis.dev (site screenshot generated from the linked homepage)",
+    "Alternative: sign in on publicapis.dev and use the Submit nav button (client-side form — details unverified)"
+  ],
+  "watchFor": [
+    "Strict 'no billboard' rule — pure marketing PRs are closed; the API must be real and connectable",
+    "Never edit the /db folder — auto-generated; changes belong in README.md",
+    "Duplicate/relisted APIs rejected — search closed PRs and issues first",
+    "This is an API directory, not a product launch board — SaaS without a public API doesn't fit"
+  ],
+  "countsAsLive": "The API appears as a row in the public-apis README.md table and/or a card on publicapis.dev under its category with name, description, Auth, and CORS fields",
+  "unknowns": [
+    "Whether the on-site Submit form (behind sign-in) is the preferred current route vs. the GitHub PR",
+    "Whether listing links on publicapis.dev are dofollow",
+    "Review turnaround time for PRs"
+  ]
+}

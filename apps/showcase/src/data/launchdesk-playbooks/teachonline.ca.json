@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "teachonline.ca",
+  "name": "TeachOnline (Contact North)",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://teachonline.ca/tools-trends/searchable-directory-vendors-online-learning-products-and-services",
+      "title": "Searchable Directory of 3,200+ online-learning vendors — 'Get Your Company Listed: share the details with Dr. McIntosh' (compiled by Contact North research associate Dr. Don McIntosh) (content read via search result)"
+    },
+    {
+      "url": "https://teachonline.ca/contact-us/",
+      "title": "Contact page — Thunder Bay, Ontario; contact form + phone (content read via search result)"
+    },
+    {
+      "url": "https://teachonline.ca/tools-trends/searchable-directories/edtech-startups-directory/",
+      "title": "EdTech startups directory — 'If you know of a start-up that should be on this list… share the details' (content read via search result)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "EdTech/online-learning vendors only — the directory covers products and services for online learning (3,200+ vendors)",
+    "Listing is manual: 'share the details with Dr. McIntosh' — email/contact form, not a self-serve form",
+    "Separate EdTech startups directory accepts suggested additions ('share the details')",
+    "TeachOnline is Contact North | Contact Nord — an Ontario publicly-funded education org"
+  ],
+  "preparation": [
+    "Product must be an online-learning/edtech tool or service",
+    "Company details + product description to email the maintainer"
+  ],
+  "workflow": [
+    "Open the vendor directory page and use the 'Get Your Company Listed' prompt (details to Dr. McIntosh)",
+    "Or use the contact form with company name, product, and learning-relevance",
+    "Listing is added manually — no public submission form"
+  ],
+  "watchFor": [
+    "EdTech-only — no fit for general SaaS",
+    "Single-maintainer directory — slow updates possible",
+    "The stored catalog URL path 404'd; the live directory is under /tools-trends/searchable-directory-vendors-online-learning-products-and-services",
+    "Canadian education audience — visibility is with institutions, not consumers"
+  ],
+  "countsAsLive": "The company appears in the TeachOnline vendor directory",
+  "unknowns": ["Listing turnaround", "Whether listings are ever removed"]
+}

@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "navtools.ai",
+  "name": "NavTools AI",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://navtools.ai/",
+      "title": "Homepage — daily-updated AI directory with Featured/Sponsored band and rankings"
+    },
+    {
+      "url": "https://navtools.ai/submit",
+      "title": "Submit page — Basic $0 (30–90 day review), Fast Track $29.9 (48h + 7-day homepage feature), Growth Pro $149 (24h + 15-day placements)"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free Basic tier exists but carries a 30–90 day review queue; paid tiers ($29.9 / $149 one-time) jump to 48h / 24h review plus featured placements"
+  ],
+  "requirements": [
+    "AI-powered tools and services 'that provide genuine value to users' — chatbots, image generators, writing assistants, productivity tools, etc.",
+    "Quick Submit needs only Tool Name (2–50 chars), Website URL, and Contact Email — NavTools generates the listing content for you",
+    "'Add Details Yourself' mode lets you write the listing copy when exact wording matters",
+    "Manual review for all tiers; priority goes to paid plans"
+  ],
+  "preparation": [
+    "Tool name, website URL, and contact email (minimum viable submission)",
+    "If writing your own listing: description, category, pricing details, logo/screenshots",
+    "Decision on tier: free (30–90d) vs $29.9 Fast Track vs $149 Growth Pro"
+  ],
+  "workflow": [
+    "Open https://navtools.ai/submit",
+    "Choose Submission Type: Basic ($0), Fast Track ($29.9 one-time), or Growth Pro ($149 one-time)",
+    "Choose Quick Submit (3 fields; they generate content) or Add Details Yourself",
+    "Submit and wait for the review window of the chosen tier",
+    "Approved tools get a directory listing; paid tiers get labelled featured placement"
+  ],
+  "watchFor": [
+    "The free 30–90 day queue is long — paid tiers exist primarily to skip it",
+    "Quick Submit lets them write your listing — check the generated copy for accuracy after it goes live",
+    "Featured placements are labelled 'Sponsored' — organic and paid sections are distinct",
+    "Directory includes NSFW categories (AI Girlfriend, Dirty Talking) — consider brand adjacency",
+    "Login link exists but Quick Submit appears to not require an account"
+  ],
+  "countsAsLive": "The tool appears as a detail page in the NavTools directory and category listing after the chosen tier's review window",
+  "unknowns": [
+    "Whether Basic-tier listing links are dofollow",
+    "Rejection criteria beyond 'quality standards'",
+    "Whether the generated listing can be edited after publication without paying"
+  ]
+}

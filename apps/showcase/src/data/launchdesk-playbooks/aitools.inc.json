@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aitools.inc",
+  "name": "AI Tools (aitools.inc)",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://aitools.inc/submit",
+      "title": "Submit Tool page — Free Listing $0 (30–90 day queue, no guaranteed placement) and Fast Lane $129 one-time (24–48h, guaranteed placement or refund); both routes are Typeform forms"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free listing exists but enters a 30–90 day queue with NO guaranteed placement — the tool can simply never be listed",
+    "Fast Lane ($129 one-time) skips the queue with 24–48h placement, a verified listing page, category features, Newly Launched inclusion and newsletter eligibility — full refund if the tool doesn't meet listing standards"
+  ],
+  "requirements": [
+    "An AI tool — the directory covers AI categories (image, sales, copywriting, developer, marketing, business, video, art, audio)",
+    "Submission via Typeform (free form: loxr142exnq.typeform.com/to/RB6ZnEf2; fast lane: .../Y22Kfelk)",
+    "Tools must meet unstated 'listing standards' — fast-lane submissions get a refund if declined"
+  ],
+  "preparation": [
+    "Product name, URL, description, logo, category, pricing model",
+    "Decide free queue vs $129 fast lane based on launch timing (30–90 days is too slow for a launch-day push)",
+    "Founder contact for follow-up (team contact route exists on the page FAQ)"
+  ],
+  "workflow": [
+    "Open https://aitools.inc/submit",
+    "Choose 'Submit Now' under Free Listing or Fast Lane — both open Typeform forms",
+    "Complete the Typeform with product details",
+    "Free: wait 30–90 days with no guarantee; Fast Lane: pay $129 for 24–48h guaranteed placement (or refund if declined)",
+    "Verify the tool's listing page under aitools.inc/tools or its category page"
+  ],
+  "watchFor": [
+    "Free tier explicitly has 'No guaranteed placement' and a 30–90 day queue — treat it as a lottery ticket, not a launch channel",
+    "The Typeform links are external — verify the form asks only reasonable product data",
+    "Listing standards are not published — decline = refund only on the paid tier",
+    "Batch 'pricing: free' claim is half-true: free exists but is non-committal"
+  ],
+  "countsAsLive": "The tool has a public listing page on aitools.inc appearing under its category (Fast Lane also shows on Newly Launched/category features)",
+  "unknowns": [
+    "Exact Typeform fields (form not opened)",
+    "What 'listing standards' disqualify",
+    "Outbound link follow treatment on listing pages"
+  ]
+}

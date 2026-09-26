@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "behance.net",
+  "name": "Behance",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://help.behance.net/hc/en-us/articles/204483684-Guide-Create-Publish-A-Project",
+      "title": "Behance Helpcenter: Guide — Create & Publish A Project (direct fetch blocked; content read via search result)"
+    },
+    {
+      "url": "https://help.behance.net/hc/en-us/articles/204483894-Guide-Intro-to-Behance",
+      "title": "Behance Helpcenter: Guide — Intro to Behance ('Is Behance Free? Yes!')"
+    },
+    {
+      "url": "https://help.behance.net/hc/en-us/articles/204483534-FAQ-I-m-unable-to-publish-what-should-I-do",
+      "title": "Behance Helpcenter: FAQ — unable to publish (Creative Fields required, private projects)"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Behance is free — 'no restrictions on the number of projects a member can create' and no upload limits (per Behance Helpcenter)",
+    "Projects must be original creative work — the community is for showcasing creative process, not generic link dumps",
+    "To publish: project needs content plus the required Settings fields — Cover Image, Project Title, and Creative Fields",
+    "Project must not be set to private to appear publicly"
+  ],
+  "preparation": [
+    "Behance account (Adobe ID)",
+    "Project assets: images, videos, embedded media, or text arranged as a case-study-style project",
+    "Cover image, project title, creative field selection, and (recommended) tags and tools used",
+    "A SaaS launch fits only if framed as design/product work — e.g. UI case study, brand identity, product design process"
+  ],
+  "workflow": [
+    "Log in to your Behance profile",
+    "Click 'Share Your Work' at the top of the page and select Project",
+    "Add content via the Add Content panel (upload files, embed media, add text, or import from Lightroom); reorder as needed",
+    "Click Continue, then upload/select a Cover Image, enter a Project Title, select Creative Fields, and add Project Tags",
+    "Optionally set co-owners, credits, copyright/license, and adult-content flag",
+    "Click Publish (Save keeps it as a draft)",
+    "Promote the published project URL to social channels via the Promote option on the project"
+  ],
+  "watchFor": [
+    "Publish fails silently if required fields are missing — empty Content or missing Creative Fields blocks publishing",
+    "A project marked private never appears publicly — check Privacy Options if the project seems invisible",
+    "This is a portfolio community: a plain 'we launched a SaaS' post without design work reads as spam",
+    "Each project gets a unique URL plus View/Appreciation counters — those metrics are the traction signal"
+  ],
+  "countsAsLive": "The project is published (not a draft, not private) and reachable at its public behance.net/gallery/... URL with View/Appreciation counters",
+  "unknowns": [
+    "Whether free accounts face any discoverability limits vs paid Adobe portfolio tools",
+    "Moderation/curation criteria for getting a project featured in a gallery"
+  ]
+}

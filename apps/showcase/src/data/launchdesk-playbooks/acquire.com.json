@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "acquire.com",
+  "name": "Acquire.com",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://acquire.com/sellers",
+      "title": "Sell your business — 3-step seller flow, 'Join now' goes to app.acquire.com/signup"
+    },
+    {
+      "url": "https://acquire.com/seller-pricing/",
+      "title": "Seller pricing — monthly listing fee plus 6-8% closing fee scaled by asking price"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "This is a marketplace for SELLING an operating business, not a product-launch directory — only usable when the project itself is being sold",
+    "Seller listing flow: describe the business, explain why you're selling, and sync your metrics (web, customer, and financial data connections)",
+    "'Guided by Acquire' advisory tier is restricted to profitable SaaS startups with $100k+ revenue"
+  ],
+  "preparation": [
+    "Business financials and metrics ready to sync (analytics, revenue, customer metrics integrations)",
+    "Asking price and reason for selling",
+    "Listing copy: business description, growth details, assets included",
+    "Budget for the monthly listing fee ($25/mo under $250k asking, $50/mo for $250k-$1M, $100/mo above $1M) plus 6-8% closing fee if it sells"
+  ],
+  "workflow": [
+    "Go to https://acquire.com/sellers and click 'Join now' (leads to app.acquire.com/signup)",
+    "Create a seller account, then 'List Your Startup' — enter basic details, describe the business, explain why you're selling",
+    "Sync web, customer, and financial metrics so buyers see verified data",
+    "Pay the monthly listing fee to publish; work with the assigned customer-success/expert advisor to optimize the listing",
+    "Field vetted buyers, negotiate, and close via the included escrow (Escrow.com) — the 6-8% closing fee is due only on sale"
+  ],
+  "watchFor": [
+    "Not a free backlink route: listing costs $25-$100/month while live, plus a 6-8% closing fee on a completed sale",
+    "Only appropriate for a real exit — do not list a product just for exposure",
+    "Site requires JavaScript; app flows live on app.acquire.com",
+    "Automated NDAs and identity/funds vetting protect sellers — expect buyers to request verified metrics"
+  ],
+  "countsAsLive": "The business listing is published on Acquire.com and visible to its buyer base (browsable under the 'Online businesses for sale' categories)",
+  "unknowns": [
+    "Minimum eligibility thresholds for the standard (non-Guided) seller listing",
+    "Whether listings are publicly indexable or gated behind buyer accounts"
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "freeble.in",
+  "name": "Freeble",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://freeble.in/",
+      "title": "Homepage — live directory of free online tools; 'Submit any listing for free' links to /create-freeble/"
+    },
+    {
+      "url": "https://freeble.in/listing-acceptance-criteria/",
+      "title": "Acceptance Criteria — Explore listings must be free or ≥30-day trial, lesser-known, https, actively maintained; Quick Digest shows listings for 7 days"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Tool must be completely free to use OR offer a minimum 30-day free trial",
+    "Should be 'lesser known' — obscure/new tools preferred over famous ones",
+    "Service must be actively offered; site URL must use https",
+    "Not accepted: blogs, YouTube channels, Chrome extensions, company listings",
+    "Quick Digest variant: free tool, https, displayed for only 7 days"
+  ],
+  "preparation": [
+    "Product name, https URL, description emphasizing the free tier/trial",
+    "Decide between the Explore listing (durable) or Quick Digest (7-day flash)",
+    "If the product is paid-with-trial, confirm the trial is ≥30 days before submitting"
+  ],
+  "workflow": [
+    "For a durable listing: use the 'Create' CTA → https://freeble.in/get-started-now/ (may require account creation)",
+    "For a 7-day flash listing: https://freeble.in/add-quick-digest",
+    "Listings stay on Explore 'until their services/tools are free to use' — remove the free tier and the listing can be dropped"
+  ],
+  "watchFor": [
+    "No paid products without a real ≥30-day free trial — the free usage requirement is enforced",
+    "Quick Digest entries vanish after 7 days by design",
+    "Company listings (as opposed to individual tools) are explicitly rejected",
+    "Site is WordPress-based with light editorial; expect manual review"
+  ],
+  "countsAsLive": "The tool appears on freeble.in's Explore page (durable) or Quick Digest (7-day) with an outbound link",
+  "unknowns": [
+    "Whether /get-started-now/ requires an account and its exact form fields",
+    "Review turnaround",
+    "Whether outbound links are dofollow"
+  ]
+}

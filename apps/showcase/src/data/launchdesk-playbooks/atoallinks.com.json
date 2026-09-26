@@ -1,0 +1,57 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "atoallinks.com",
+  "name": "AtoAllinks",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.atoallinks.com/guidelines/",
+      "title": "AtoAllinks Guidelines — posting rules (fetched via search index; direct fetch 403-blocked)"
+    },
+    {
+      "url": "https://www.atoallinks.com/",
+      "title": "Homepage — 'Guest Posting | High Quality BackLinks'; recent guest posts listed (direct fetch 403-blocked, content via search index)"
+    },
+    {
+      "url": "https://wheretosubmit.org/sites/atoallinks-com",
+      "title": "Where To Submit — third-party entry confirming a direct submission link exists"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free account registration is required before posting",
+    "Article format: this is a guest-post/article site, not a product listing — you publish an article that can carry backlinks",
+    "Title max 85 characters; description/body 250-1000 characters per guidelines",
+    "Max 3 categories and 5 tags per post; max 3 do-follow backlinks per post",
+    "Rate limit: 1 post per day by default; higher limits require contacting the admin",
+    "Wrong category or bare backlink dumps get the post deleted",
+    "Third-party seller notes indicate no casino/betting/pharma/dating/essay/CBD/vaping content"
+  ],
+  "preparation": [
+    "An article (not just a pitch) — write a genuine post relevant to one of the site's categories (business, tech, marketing, etc.)",
+    "A ≤85-character keyword-relevant title",
+    "Up to 3 target URLs to link from the article body",
+    "Category and up to 5 tags chosen to match the article"
+  ],
+  "workflow": [
+    "Register at https://www.atoallinks.com/register/ and sign in",
+    "In the member dashboard, open Blog Posts → Add New",
+    "Enter title, pick up to 3 matching categories, write the 250-1000 character description/body",
+    "Embed up to 3 do-follow links inside the article content (not as the whole post)",
+    "Add up to 5 tags and publish; do not post more than once per day"
+  ],
+  "watchFor": [
+    "Site 403-blocks automated fetches — perform registration and posting in a real browser",
+    "Link-farm reputation: listed on guest-post marketplaces; SEO value is questionable and the article is the product, not a profile page",
+    "Posts in wrong categories or >1/day are deleted per guidelines",
+    "Paid guest-post brokers resell placements — the direct route itself is free"
+  ],
+  "countsAsLive": "The article appears publicly under its category and on the author's byline page on atoallinks.com",
+  "unknowns": [
+    "Whether new posts are moderated before going live or publish immediately",
+    "Whether the free registration flow still works (site bot-blocks made verification impossible)",
+    "Current indexing/crawl treatment by Google given the site's link-farm character"
+  ]
+}

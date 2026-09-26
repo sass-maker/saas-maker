@@ -1,0 +1,40 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startupslab.site",
+  "name": "Startups Lab",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://startupslab.site/",
+      "title": "Startups Lab — live weekly launch platform; 'Submit your product… no algorithms, no manual review, no waiting'; free listing ('Get my free listing', no credit card), weekly Monday batches, permanent product pages, Top-3 community vote earns a DR-56 dofollow backlink; paid plans guarantee dofollow day one + placement; spotlight slots $29/30d; advertising from $59/30d"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free submission — name, URL, description, screenshots ('5 minutes or less'); no credit card",
+    "Weekly launch cycle — batches publish every Monday 00:00 UTC; submit before Sunday midnight",
+    "Free launches are 'scheduled automatically'; paid plans pick a specific date or boosted placement",
+    "Permanent product page at /product/<slug> for every listing",
+    "Dofollow backlink: guaranteed on paid plans; free listings earn it by finishing Top 3 in the weekly vote",
+    "Extras: spotlight slots $29/30 days, in-feed advertising from $59/30 days"
+  ],
+  "preparation": [
+    "Name, URL, description, screenshots",
+    "Plan for upvotes — community voting determines Top 3 and the free dofollow backlink"
+  ],
+  "workflow": [
+    "Click 'Get my free listing'/'Submit product' -> submit form",
+    "Product joins the next Monday batch (or a chosen slot on paid plans)",
+    "Drive votes during launch week; Top 3 earns the dofollow backlink and badges",
+    "Product page persists permanently after launch week"
+  ],
+  "watchFor": [
+    "Young independent directory — '2,000+ founders', '877 products', DR 56 are site-reported; treat as a small launch venue",
+    "Free dofollow is conditional on Top-3 finish — otherwise the free link is presumably nofollow",
+    "Paid placement options are prominent (spotlight, ads, premium scheduling)"
+  ],
+  "countsAsLive": "The product has a permanent page at startupslab.site/product/<slug>",
+  "unknowns": ["Paid plan pricing detail beyond spotlight/ad slots", "Real referral traffic volume"]
+}

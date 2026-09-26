@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "builtin.com",
+  "name": "Built In",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://builtin.com/expert-contributors",
+      "title": "Built In Expert Contributor Network — editorial pitch route to [email protected]"
+    },
+    {
+      "url": "https://knowledgebase.builtin.com/s/article/How-do-I-create-a-company-profile",
+      "title": "Built In knowledgebase 'How do I create a company profile' — page shell loaded with CSS error, content unreadable"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Company profiles are for tech companies/employers — claiming or creating a profile requires an employer account; the knowledgebase article describing the process failed to render during research",
+    "A second free path exists via the Expert Contributor program (article pitch to [email protected]) — editorial, not a directory listing"
+  ],
+  "requirements": [
+    "A real technology company with hiring presence — Built In profiles companies as employers (jobs, benefits, tech stack), not products",
+    "For the contributor path: a solutions-oriented tech story pitch with suggested headline, trend-focused topic (not a company ad — 'we will not accept features that focus on a specific tech or company'), summary, and author credentials",
+    "Knowledgebase page is JS-rendered and did not load for automated fetch — the exact claim-profile flow is unverified"
+  ],
+  "preparation": [
+    "For company profile: official company email/domain to claim or create the employer profile, logo, company description, jobs feed",
+    "For contributor route: a paragraph pitch — headline, tech trend topic, why readers care, author credentials"
+  ],
+  "workflow": [
+    "Company profile route: create an employer account on builtin.com and claim/create the company profile (process described in knowledgebase article 'How do I create a company profile' — verify in a browser since the KB page didn't render)",
+    "Contributor route: email a pitch paragraph to [email protected] per the Expert Contributors page, then work with Built In's editors if greenlit",
+    "Company profiles become public company pages on builtin.com; contributor pieces publish as articles under the byline"
+  ],
+  "watchFor": [
+    "knowledgebase.builtin.com failed to render (CSS error shell) — don't assume the claim flow works as described without checking in a browser",
+    "Built In explicitly rejects pitches that are thinly-veiled company promotion — the contributor path cannot be a product launch",
+    "Employer branding on Built In has paid tiers; the free claim may be limited",
+    "Batch claims link=nofollow for profile links — plausible, unverified"
+  ],
+  "countsAsLive": "A public company profile page exists on builtin.com/company/<slug>, or a bylined article is published on builtin.com",
+  "unknowns": [
+    "Exact self-serve claim flow and whether a free tier exists vs paid employer packages",
+    "Whether company profile website links are nofollow",
+    "Response time for the [email protected] pitch inbox"
+  ]
+}

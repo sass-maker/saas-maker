@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "builtwith.com",
+  "name": "BuiltWith",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://kb.builtwith.com/general-questions/how-to-add-a-technology-to-builtwith.md",
+      "title": "KB: How to Add a Technology to BuiltWith — points to the Technology Suggestion Form at builtwith.com/suggest"
+    },
+    {
+      "url": "https://builtwith.com/",
+      "title": "Homepage — returned compressed/binary content to the fetcher; site is a web technology profiler, not a launch board"
+    }
+  ],
+  "category": "profile",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "BuiltWith is not a directory submission site — it profiles what technologies websites use",
+    "The free route is the Technology Suggestion Form at https://builtwith.com/suggest to get your product tracked as a detectable technology",
+    "Best odds: supply example sites where the technology is already in use, plus detection hints (JS filenames, cookies, meta tags) in the comment box",
+    "Check whether the technology is already tracked before suggesting"
+  ],
+  "preparation": [
+    "Technology/product name and vendor URL",
+    "A list of live sites already using the technology",
+    "Detection signature details — JS paths, cookie names, DNS, HTML markers",
+    "Confirmation the tech isn't already in BuiltWith's 126k+ technology database"
+  ],
+  "workflow": [
+    "Open https://builtwith.com/suggest",
+    "Submit the technology with example sites and detection comments",
+    "BuiltWith adds technologies 'as a priority'; once tracked, your tech gets a profile page and appears in usage lists of sites running it"
+  ],
+  "watchFor": [
+    "This only makes sense if the product is itself a website technology (widget, script, SaaS with a detectable footprint) — a pure content/product listing does not exist",
+    "Getting tracked requires real deployments — a brand-new product with no installs has nothing to detect",
+    "The paid products on the site are lead-generation/list tools, unrelated to getting your tech listed",
+    "Homepage serves compressed responses that some fetchers can't decode"
+  ],
+  "countsAsLive": "The technology appears in BuiltWith's technology index (e.g. a /t/<tech> or technology profile page) and shows sites detected using it",
+  "unknowns": [
+    "Turnaround time for suggestion review",
+    "Whether the suggestion form requires an account",
+    "Minimum install footprint needed before a technology is tracked"
+  ]
+}

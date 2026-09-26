@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "bitbucket.org",
+  "name": "Bitbucket",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://bitbucket.org/",
+      "title": "Bitbucket homepage — 'Get it Free' signup for Bitbucket Cloud"
+    },
+    {
+      "url": "https://id.atlassian.com/signup",
+      "title": "Atlassian ID signup (batch-provided URL) — JS-rendered, returned no readable content"
+    }
+  ],
+  "category": "profile",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free Atlassian/Bitbucket Cloud account ('Get it Free' on bitbucket.org)",
+    "Bitbucket is a code host — a 'listing' means a public workspace profile, public repository, and README linking to the product"
+  ],
+  "preparation": [
+    "Email for the Atlassian ID",
+    "Workspace name and public repo name",
+    "README content with the product URL and description",
+    "Profile website field for the workspace/user profile"
+  ],
+  "workflow": [
+    "From bitbucket.org click 'Get it Free' / 'Try it now' to create an Atlassian account (id.atlassian.com/signup)",
+    "Create a workspace, then a public repository for the product (or a profile/landing repo)",
+    "Commit a README that describes the product and links to its site",
+    "Fill the workspace/profile website field"
+  ],
+  "watchFor": [
+    "id.atlassian.com/signup is JS-rendered — headless fetching returns an empty shell; use a real browser",
+    "Value is a public repo + profile, not a directory listing; set repository visibility to public explicitly",
+    "Bitbucket no longer supports Mercurial; Git only",
+    "Unknown whether profile/repo links are dofollow"
+  ],
+  "countsAsLive": "A publicly accessible bitbucket.org/<workspace>/<repo> URL whose README links to the product, plus a profile website link",
+  "unknowns": [
+    "Link attributes on profile and README outbound links",
+    "Whether Atlassian signup requires email verification before public repos are visible"
+  ]
+}

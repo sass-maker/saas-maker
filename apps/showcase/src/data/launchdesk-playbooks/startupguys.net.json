@@ -1,0 +1,45 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startupguys.net",
+  "name": "Startup Guys",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.startupguys.net/submit-startup/",
+      "title": "Submit Startup page — paid 'startup promotion packages': Basic $49, Standard $99, Premium $349; reviews published in 7-10 working days; claimed stats 80k monthly pageviews, 8k newsletter subs"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Payment required — no free submission option is offered on the page",
+    "Tiers: Basic $49 (350+ word review, social share, 5k push subscribers); Standard $99 (500+ word review + 8k newsletter send); Premium $349 (adds promo video + send to '1000+ investors')",
+    "The deliverable is a sponsored review article, not a directory listing"
+  ],
+  "preparation": [
+    "Startup description and key facts — they write the review, but accurate source material helps",
+    "Product URL, logo/screenshots",
+    "Payment method (the page embeds a payment dropdown in USD)",
+    "For Premium: willingness to have them produce a promo video"
+  ],
+  "workflow": [
+    "Open https://www.startupguys.net/submit-startup/",
+    "Select a package in the payment dropdown ($49/$99/$349)",
+    "Pay, then supply the startup details they request",
+    "Review is published in 7-10 working days per the page"
+  ],
+  "watchFor": [
+    "This is pay-for-coverage — a purchased review, not earned media; the resulting article is effectively sponsored content",
+    "Audience claims (80k pageviews/mo, 8k newsletter, 75k social followers) are self-reported and unverified",
+    "'Sent to 1000+ investors' on Premium is a marketing claim — no investor list is evidenced",
+    "No free route exists; if zero-cost coverage matters, skip this destination entirely",
+    "Site is a WordPress blog; pricing labels are inconsistent ('Standard $49 / Plus $99 / Pro $349' in dropdown vs Basic/Standard/Premium headings)"
+  ],
+  "countsAsLive": "A review article about the startup is published on startupguys.net under the Startup Spotlight category",
+  "unknowns": [
+    "Actual traffic/subscriber numbers behind the claimed stats",
+    "Whether purchased reviews are labeled as sponsored (paid placement disclosure)",
+    "Refund policy if the review never publishes"
+  ]
+}

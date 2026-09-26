@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "lawyers.com",
+  "name": "Lawyers.com",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.lawyers.com/for-attorneys/",
+      "title": "For-attorneys page — returned HTTP 403 (bot-blocked)"
+    },
+    {
+      "url": "https://jurisdigital.com/guides/is-lawyers-dot-com-worth-it/",
+      "title": "Third-party case study — Lawyers.com is owned by Martindale-Avvo; paid listings (~$277/mo example) bundle a martindale.com profile; intake is a phone/sales-rep flow"
+    },
+    {
+      "url": "https://www.finduslawyers.org/top-free-lawyers-law-firm-directories-list/",
+      "title": "Third-party directory guide — Lawyers.com offers a free basic attorney profile claim alongside Avvo, Justia, Nolo"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free basic profiles exist but are auto-populated from public bar data — they are for licensed attorneys only, claimed and completed by the attorney",
+    "A SaaS product has no listing surface here at all — this is only relevant if the 'product' is a law firm or a founder is an attorney; skip for software launches",
+    "Paid preferred-placement listings exist (~$99–$499/mo per third-party reports, bundled with a martindale.com profile) sold via sales reps"
+  ],
+  "requirements": [
+    "Licensed attorney with a verifiable bar record — profiles are populated from public bar data",
+    "Claim + complete the free profile: practice areas, bio, contact info, website link"
+  ],
+  "preparation": [
+    "Bar admission details matching public records (name, state, bar number)",
+    "Bio, practice areas, firm contact info, website URL",
+    "Existing Martindale-Avvo account — Lawyers.com profiles can be linked to/populated from a Martindale profile (same parent company)"
+  ],
+  "workflow": [
+    "Search lawyers.com for the attorney name — a basic profile likely already exists from bar data",
+    "Claim the profile via the for-attorneys flow (site 403s automated fetches; use a browser or the Martindale-Avvo attorney portal)",
+    "Complete practice areas, bio, photo, contact and website fields",
+    "Decline or evaluate the paid 'Preferred Placement' upsell sold by reps"
+  ],
+  "watchFor": [
+    "Not applicable to SaaS/software products — no product-listing surface; only attorney/firm profiles",
+    "Site blocks automated fetches (403)",
+    "Sales reps push paid placement; the free profile is sufficient for the citation",
+    "Same parent company as Avvo/Martindale/Nolo — data can propagate across those properties"
+  ],
+  "countsAsLive": "The claimed attorney profile is publicly viewable on lawyers.com with practice areas, bio and website link filled in",
+  "unknowns": [
+    "Exact claim flow (for-attorneys page was bot-blocked)",
+    "Whether unclaimed-but-listed profiles show a website link",
+    "Current paid listing pricing (third-party quotes vary, ~$99–$499/mo)"
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "growthinreverse.com",
+  "name": "Growth in Reverse",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://growthinreverse.com/",
+      "title": "Homepage — weekly newsletter with deep growth breakdowns of creators with 50k+ subscribers; ~35,856 subscribers claimed"
+    },
+    {
+      "url": "https://growthinreverse.com/sponsor/",
+      "title": "Sponsorships — multi-page application form starting with name/email"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "paid",
+  "conditions": [
+    "No free listing or directory exists — the only inbound route is a paid newsletter sponsorship",
+    "Not a launch board: the site is a creator-growth newsletter; exposure means a sponsored placement in a weekly edition",
+    "Audience is newsletter/creator-economy operators — fit depends on the product being relevant to that crowd"
+  ],
+  "requirements": [
+    "Sponsorship application form at /sponsor/ (multi-page; name and email on page 1 of 3)",
+    "A product relevant to newsletter creators and growth-focused operators",
+    "Sponsorship budget — pricing not published on the site"
+  ],
+  "preparation": [
+    "A short pitch describing the product and the value to ~35k newsletter-growth subscribers",
+    "Landing page or offer appropriate for a creator/operator audience"
+  ],
+  "workflow": [
+    "Open https://growthinreverse.com/sponsor/ and complete the multi-page sponsorship form",
+    "Wait for a reply with pricing, placement options, and scheduling",
+    "If terms are agreed, the sponsorship runs in a weekly Sunday edition"
+  ],
+  "watchFor": [
+    "This is advertising, not a directory listing — the placement expires with the edition",
+    "Newsletter positioning ('40+ hours breaking down a creator's growth') means the audience expects tactical growth content — generic product ads may underperform",
+    "Pricing and availability are negotiated per-sponsor, not published"
+  ],
+  "countsAsLive": "The product appears as a sponsored block inside a Growth in Reverse newsletter edition (visible in the archive at growthinreverse.com/recent/)",
+  "unknowns": [
+    "Sponsorship pricing and slot availability",
+    "Whether non-newsletter products are accepted",
+    "Response time on sponsorship applications"
+  ]
+}

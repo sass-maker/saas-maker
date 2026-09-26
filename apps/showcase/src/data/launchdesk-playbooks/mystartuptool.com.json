@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "mystartuptool.com",
+  "name": "myStartupTool",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://mystartuptool.com/",
+      "title": "Homepage — directory-submission service: free account unlocks a 183-directory list plus one free submission by them; paid done-for-you packages"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free registration gives access to the curated 183-directory list (free+paid directories, 'updated monthly') plus a single free submission done by their team; the actual multi-directory submission service is paid"
+  ],
+  "requirements": [
+    "This is a submission SERVICE, not a destination directory — it does not list your product on mystartuptool.com; it submits to other directories for you",
+    "Free tier requires registration (users/register_login.php)",
+    "Covers SaaS, mobile app, and beta startups per their copy",
+    "Claims manual submission ('We are NOT using automated tools')"
+  ],
+  "preparation": [
+    "Account email for free registration",
+    "Standard submission kit: product name, URL, descriptions (short + long), logo, screenshots, category, founder details — reusable across all 183 directories",
+    "For paid: a package selection on /pricing"
+  ],
+  "workflow": [
+    "Register free at https://mystartuptool.com/users/register_login.php",
+    "Either use their directory list to submit yourself, or claim the single free submission they perform for you",
+    "For the paid route: pick a package on /pricing and they submit manually on your behalf"
+  ],
+  "watchFor": [
+    "Not a launch destination itself — the outcome is listings on OTHER directories, which you could also do directly",
+    "Directory lists of this type contain many dead/spammy targets — verify each destination before paying for bulk submission",
+    "© 2024 footer and Cyprus address; low-key service, blog is a .php page — modest upkeep signal",
+    "A 'free submission' is a lead-in for the paid packages"
+  ],
+  "countsAsLive": "For this service, 'live' means the third-party directory listings they submit on your behalf are published — verify each one individually; there is no mystartuptool.com listing to check",
+  "unknowns": [
+    "Paid package prices — pricing page not fetched",
+    "Which of the 183 directories are currently live and worthwhile",
+    "Quality/placement guarantee for the free submission"
+  ]
+}

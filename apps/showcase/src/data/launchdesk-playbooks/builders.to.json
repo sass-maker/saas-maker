@@ -1,0 +1,54 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "builders.to",
+  "name": "Builders.to",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://builders.to/how-to/share-your-first-project",
+      "title": "Official how-to — sign in via Google/GitHub/X at /signin, 'Share Project' from /projects, project goes live immediately at /projects/<slug>"
+    },
+    {
+      "url": "https://builders.to/llms.txt",
+      "title": "llms.txt — free accounts share 1 project; Verified $25 one-time gets 2 projects + badge + recorded MVP review; Pro up to 5 projects"
+    },
+    {
+      "url": "https://builders.to/?ref_type=organic",
+      "title": "Homepage (search snippet) — 'permanent, indexed page with do-follow links — launch once, get found forever'; feed limited to 5 posts/day on free"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Account required — sign in with Google, GitHub, or X at builders.to/signin",
+    "Free tier: 1 project, feed posting up to 5x/day, Discord access",
+    "Projects at any stage accepted: Idea → Building → Beta → Launched → Paused → Acquired",
+    "Paid upgrades: Verified $25 one-time (badge + recorded MVP review), Pro for more projects/reach"
+  ],
+  "preparation": [
+    "Project name, short description/tagline, URL, tags",
+    "Current stage classification (Idea/Building/Beta/Launched/etc.)",
+    "Screenshots/media for the project page",
+    "Google, GitHub, or X account for sign-in"
+  ],
+  "workflow": [
+    "Sign in at builders.to/signin via Google, GitHub, or X",
+    "Go to builders.to/projects and click 'Share Project' (or quick-action in nav)",
+    "Fill name, description, stage, URL, tagline, tags; add images",
+    "Submit — project goes live immediately at /projects/<slug>, on your profile, and in the community feed",
+    "Post updates/milestones to the feed (5/day free limit) to sustain visibility"
+  ],
+  "watchFor": [
+    "Free tier caps at 1 project — pick the product that matters",
+    "Direct fetches of builders.to pages failed for us (search-index content used) — site may block non-browser clients",
+    "Community feed visibility decays without ongoing updates — 'launch once' page persists but engagement requires posting",
+    "Paid 'trending boosts' exist — organic reach may compete with paid placement"
+  ],
+  "countsAsLive": "The project has a public page at builders.to/projects/<slug> and appears on the /projects browse page and community feed",
+  "unknowns": [
+    "Whether project pages stay indexed long-term for low-activity accounts",
+    "Moderation — do projects ever get rejected/removed post-publish",
+    "Whether the batch's /projects/new URL is the live form (site was unfetchable; how-to references 'Share Project' on /projects)"
+  ]
+}

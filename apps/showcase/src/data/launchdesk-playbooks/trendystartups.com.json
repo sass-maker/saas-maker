@@ -1,0 +1,54 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "trendystartups.com",
+  "name": "Trendy Startups",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "http://trendystartups.com/register",
+      "title": "Registration — free signup to submit a startup or blog post"
+    },
+    {
+      "url": "http://trendystartups.com/faq",
+      "title": "FAQ — selection criteria, months-long free queue, paid 'expedited review' to skip it, rejected site types"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free submissions join a backlog that 'may take a few months' to review; a paid 'expedited review' skips the queue (reviewed 'in a matter of days')"
+  ],
+  "requirements": [
+    "A decent-looking landing page/website describing the product — the core selection criterion",
+    "NOT accepted: Loan Financing, Gambling, Social Networking, Video tubes, comics",
+    "Account required — register (free) before submitting a startup or blog post",
+    "Blog posts: no pictures of living things, no video, you must own the copyright"
+  ],
+  "preparation": [
+    "Polished landing page — weak sites get rejected",
+    "Account (register at /register; submission is tied to 'Members → Your Startup' page)",
+    "Startup details + check the FAQ's banned verticals first",
+    "Note: every featured startup reportedly also goes into the newsletter"
+  ],
+  "workflow": [
+    "Register at http://trendystartups.com/register (or click Submit on the homepage top-right)",
+    "Submit the startup from the members area",
+    "Track status on the 'Your Startup' member page — mention submission ID when emailing contact@trendystartups.com",
+    "Wait months in the free queue or buy the 'expedited review' for days-level review",
+    "Featured startups appear on /startups (filterable by regions and markets)"
+  ],
+  "watchFor": [
+    "Free queue is explicitly months-long — plan around it or pay for expedited",
+    "Rejected startups get no explanation beyond 'did not meet selection criteria'",
+    "'Promoted Startups' homepage section is paid promotion, separate from free featuring",
+    "You cannot change your account email; only the team can edit published posts",
+    "HTTP (not HTTPS) site; old custom codebase"
+  ],
+  "countsAsLive": "The startup appears on http://trendystartups.com/startups with its own entry and is included in the newsletter",
+  "unknowns": [
+    "Expedited-review price (advertise page holds the packages, not checked)",
+    "Current site activity level / whether the queue still moves",
+    "Whether featured entries include a followed link"
+  ]
+}

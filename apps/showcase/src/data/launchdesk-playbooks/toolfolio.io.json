@@ -1,0 +1,57 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "toolfolio.io",
+  "name": "Toolfolio",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://toolfolio.io/",
+      "title": "Homepage — active curated tool directory; 'Submit tool' nav links to /boosted-listing"
+    },
+    {
+      "url": "https://toolfolio.io/listing-guidelines",
+      "title": "Listing Guidelines — 8 editorial criteria (quality, maintained, design standards, no direct competitors)"
+    },
+    {
+      "url": "https://toolfolio.io/boosted-listing",
+      "title": "Boosted Listing — the page 'Submit tool' opens: Startup $150 one-time, Growth $250/mo or $2,500/yr, add-on boosts $400-500"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Tool must be functional, well-built, and stable — broken features or placeholder content lead to rejection",
+    "Must be actively maintained with signs of updates or engagement; abandoned tools are removed",
+    "Visual presentation must meet modern design standards (clean, mobile-friendly)",
+    "No direct competitors to Toolfolio itself (tool directories/marketplaces in the same niche rejected)",
+    "Must offer clear value — no data-harvesters, ad farms, or undifferentiated clones",
+    "Legal/ethical compliance required; misleading claims or scammy behavior rejected"
+  ],
+  "preparation": [
+    "Product name, URL, and icon/logo",
+    "1 media upload for Startup tier (up to 4 on Growth); custom thumbnail recommended — mobile shows only icon+name on unpaid visibility",
+    "YouTube embed URL if available",
+    "Category suggestions (final placement is editorial)",
+    "Budget: $150 one-time (Startup) or $250/mo–$2,500/yr (Growth); coupon codes/offers supported"
+  ],
+  "workflow": [
+    "Read the listing guidelines at /listing-guidelines and self-check the 8 criteria",
+    "Open /boosted-listing ('Submit tool' in nav) and choose Startup ($150 one-time) or Growth ($208–250/mo)",
+    "Complete checkout, then build the listing in the Toolmaker Dashboard (profile, media, YouTube embed, coupon/offer)",
+    "Editorial review takes 24–48 hours; approval notification arrives by email",
+    "Manage and edit the listing from the Toolmaker Dashboard; analytics included on all paid tiers"
+  ],
+  "watchFor": [
+    "No public free submission form found — every visible route ('Submit tool', /submit, /boosted-listing) leads to paid tiers",
+    "FAQ mentions 'free claims for tools already listed on Toolfolio' — that path only exists if editors already added the tool",
+    "All listing payments are final and non-refundable (rejection refunds 100% per the page, but FAQ says payments final — clarify before paying)",
+    "Upsells stacked on top of listing: Featured Positions $400/mo, Banner Pack $500/50K impressions",
+    "Site scans your website periodically to sync the listing"
+  ],
+  "countsAsLive": "The tool appears on toolfolio.io category/explore pages and in search after editorial approval, reachable from the Toolmaker Dashboard analytics",
+  "unknowns": [
+    "Whether any free new-submission route exists off the published pages",
+    "Exact refund behavior on rejection (page says 100% refund; FAQ says payments final)"
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "indiegamereviewer.com",
+  "name": "Indie Game Reviewer",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://indiegamereviewer.com/",
+      "title": "Homepage — active indie game review/news site (2026-dated reviews and Steam Next Fest coverage)"
+    },
+    {
+      "url": "https://indiegamereviewer.com/contact-indie-game-reviewer/",
+      "title": "Contact IGR — 'Get Reviewed' submission rules, contact form, advertising and write-for-us info"
+    },
+    {
+      "url": "https://indiegamereviewer.com/contact-ir",
+      "title": "Batch-provided URL — returns 404; real contact route is /contact-indie-game-reviewer/"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Indie games only — this is an editorial review site, not a SaaS directory",
+    "Send a non-DRM download link or 2 redemption codes",
+    "Include a trailer link and brief game description",
+    "Full games only — no demos or alphas",
+    "No crowdfunding campaigns",
+    "Submission does not guarantee coverage — reviews are editorial pick",
+    "IGR does not accept money for reviews and publishes no sponsored content"
+  ],
+  "preparation": [
+    "Non-DRM build/download link or 2 redemption codes for the released game",
+    "Trailer link and a brief game description",
+    "The contact form asks for name, email, subject, message only — put the pitch in the message",
+    "A fit check: a SaaS productivity product has no route here; only playable indie games qualify"
+  ],
+  "workflow": [
+    "Open https://indiegamereviewer.com/contact-indie-game-reviewer/",
+    "Fill the contact form with name, email, subject, and a pitch containing the game description, trailer link, and download link/codes",
+    "Submit and wait — coverage is editorial, no stated turnaround",
+    "If covered, expect a scored review under /category/reviews/ or a news/feature mention"
+  ],
+  "watchFor": [
+    "Batch URL /contact-ir is dead — use the full /contact-indie-game-reviewer/ path",
+    "IGR explicitly warns about impostors asking money to 'review on behalf of IGR' — legitimate contact comes only from the indiegamereviewer.com domain",
+    "No paid/sponsored coverage exists; do not offer payment",
+    "Non-game submissions will simply be ignored"
+  ],
+  "countsAsLive": "A review or feature article naming the game is published on indiegamereviewer.com (visible under Reviews/News or the archives)",
+  "unknowns": [
+    "Editorial response rate and turnaround",
+    "Whether the contact form is actively monitored versus email",
+    "Whether a followed link to the game's store page is included in reviews"
+  ]
+}

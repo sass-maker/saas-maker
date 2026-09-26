@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "densediscovery.com",
+  "name": "Dense Discovery",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.densediscovery.com/archive/8/",
+      "title": "Archive issue — confirms free tips route (new@densediscovery.com), paid classifieds (densediscovery.com/classified.php), and issue sponsorship"
+    },
+    {
+      "url": "https://www.densediscovery.com/",
+      "title": "Homepage — returned HTTP 403 to the fetcher (bot-blocked, site is live per archive/search index)"
+    },
+    {
+      "url": "https://www.densediscovery.com/advertise/",
+      "title": "Advertise page — 403 to fetcher; search index shows Main Sponsor slots and classified ads, next sponsor date listed as 06 Oct 2026"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free route is an editorial tip email to new@densediscovery.com — the editor (Kai Brach) hand-picks what appears; no submission guarantee",
+    "Guaranteed placement requires paid classified ad or issue sponsorship via the advertise page"
+  ],
+  "requirements": [
+    "Weekly newsletter on design, tech, sustainability, urbanism, culture — product must fit that editorial sensibility",
+    "Tips are explicitly solicited: 'Send us your suggestions for GIFs, apps, accessories, visual inspiration, etc. to new@densediscovery.com'",
+    "Paid paths: classified ads ('promote your project, advertise a job opening, find beta testers') and main issue sponsorship",
+    "~14,000+ readers, claimed 65% open rate"
+  ],
+  "preparation": [
+    "A short, non-salesy tip email: what the product is, why DD's design/tech-culture audience would care",
+    "For paid: classified ad copy and budget via densediscovery.com/classified.php",
+    "If pitching free, position as a discovery the editor would genuinely share — not a PR blast"
+  ],
+  "workflow": [
+    "Free: email new@densediscovery.com with the product suggestion",
+    "Paid: book a classified ad at https://www.densediscovery.com/classified.php or a main sponsor slot via /advertise/",
+    "Classifieds run in the weekly issue; sponsor slots book out ahead (waitlist exists for future openings)"
+  ],
+  "watchFor": [
+    "Site 403s automated fetches — browse interactively; pricing details live on the JS/bot-protected pages",
+    "The free route has no SLA — it is editorial curation, not a form",
+    "DD's own ad guidance favors 'sequence' campaigns (sponsor + spaced classifieds) over one-off blasts",
+    "Newsletter tone is deliberately anti-hype; marketing-heavy pitches are unlikely to be picked"
+  ],
+  "countsAsLive": "The product appears in a published DD issue (archive at densediscovery.com/archive/<n>) either as an editorial pick in a section or as a labeled classified/sponsor block",
+  "unknowns": [
+    "Current classified and sponsorship prices (advertise page was bot-blocked)",
+    "Editorial response rate or turnaround for tip emails",
+    "Whether links in the newsletter are tracked/redirected"
+  ]
+}

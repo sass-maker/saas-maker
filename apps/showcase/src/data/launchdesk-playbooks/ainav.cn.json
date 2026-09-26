@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "ainav.cn",
+  "name": "AInav (AI导航网)",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://ainav.cn/",
+      "title": "Homepage — large active Chinese AI navigation directory (AI导航网), daily-updated listings"
+    },
+    {
+      "url": "https://www.ainav.cn/%e6%8f%90%e4%ba%a4%e7%bd%91%e7%ab%99",
+      "title": "提交网站 (Submit Website) page — submission guidelines and live form: name, link, tags, intro, icon, category, nickname, contact"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "AI-related product required — '提交的产品是与AI相关，并有良好完整的用户体验' (AI-related with a good, complete UX)",
+    "Excluded: ChatGPT wrapper/mirror sites (套壳/镜像站) and illegal sites are not accepted",
+    "Prepare before submitting (their words): 工具名称 (name), 链接 (URL), 标签 (tags), 简介 (intro)",
+    "Form also asks for an icon (图标, with a 一键填写 auto-fetch button), category from their taxonomy, nickname and contact info (联系方式)",
+    "All-Chinese UI — submission is done in Chinese"
+  ],
+  "preparation": [
+    "Tool name and URL",
+    "Short Chinese-language description/intro — write it in advance",
+    "Comma-separated tags (标签)",
+    "Site icon/logo (form has an auto-fetch '一键填写' helper)",
+    "A contact channel (联系方式) — likely QQ/WeChat/email",
+    "Pick the right category from their deep taxonomy (AI编程, AI绘画, AI视频工具, AI智能体, etc.)"
+  ],
+  "workflow": [
+    "Open https://www.ainav.cn/提交网站 (URL-encoded path)",
+    "Fill: site URL, icon (use 一键填写 to auto-grab), category, tags, intro",
+    "Add nickname + contact info under 用户信息",
+    "Click 提交审核 (submit for review)",
+    "Manual review; no account or payment required"
+  ],
+  "watchFor": [
+    "Entirely Chinese-language site and form — non-Chinese products can submit but descriptions should be in Chinese",
+    "Rejects thin ChatGPT wrappers/mirror sites — submit only if the product has real UX depth",
+    "No stated review turnaround",
+    "Separate routes exist for 友情链接 (friend link exchanges) and 商业合作 (business cooperation) if you want more than a listing",
+    "QQ group (646315110) is their community channel"
+  ],
+  "countsAsLive": "The tool appears as a card on ainav.cn under its chosen category, reachable from the homepage sections and site search",
+  "unknowns": [
+    "Review turnaround time",
+    "Whether listings get dofollow links",
+    "Whether non-Chinese sites/apps are commonly accepted",
+    "Whether contact via QQ/WeChat is mandatory for follow-up"
+  ]
+}

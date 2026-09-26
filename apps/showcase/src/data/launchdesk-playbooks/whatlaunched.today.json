@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "whatlaunched.today",
+  "name": "What Launched Today",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://whatlaunched.today/",
+      "title": "Homepage — daily launch board ('5,109+ launches'), upvotes, daily/weekly/monthly winners; 'Launch your startup' → /auth/signup?returnUrl=/dashboard/submit; footer Pricing link → /en#pricing"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Launch submission goes through account signup → /dashboard/submit — the free/paid split wasn't visible on the rendered page (pricing section didn't render; 'Advertise — Get featured today' placements are clearly paid)",
+    "Standard launch listings appear free/self-serve; paid 'Advertise' spots (14 slots, '4/14 left') buy homepage featuring"
+  ],
+  "requirements": [
+    "An account (sign up at /auth/signup, redirected to /dashboard/submit)",
+    "A launched product: name, logo, tagline, description, website URL, tags/categories",
+    "Daily launch cycle — there's a countdown timer ('Time until next launch'); launches batch daily"
+  ],
+  "preparation": [
+    "Logo, tagline, and description (note: links inside listing descriptions render with rel=nofollow)",
+    "Website URL for the 'Visit website' button",
+    "Category + tag selection (AI, SEO, Productivity, Design, etc.)"
+  ],
+  "workflow": [
+    "Sign up at whatlaunched.today/auth/signup (return URL targets /dashboard/submit)",
+    "Complete the launch form in the dashboard",
+    "The launch enters the daily cycle; it appears under 'Just Launched'/All Launches and is eligible for Daily/Weekly/Monthly winner rankings by upvotes",
+    "Optional: buy an 'Advertise / Get featured' slot for homepage rotation"
+  ],
+  "watchFor": [
+    "Links embedded in the description are rel=nofollow — the SEO value hinges on whether 'Visit website' and profile links are followed (verify on a live page)",
+    "Account required — no anonymous submission",
+    "Small site; low upvote counts observed (single digits) — traffic expectations should be modest",
+    "Pricing page anchor exists but the section didn't render in the fetch — confirm free vs paid terms on the live form before assuming"
+  ],
+  "countsAsLive": "The launch has a public detail page on whatlaunched.today appearing in 'All Launches'/'Just Launched' with a working 'Visit website' link",
+  "unknowns": [
+    "Whether submission is fully free or gated behind a plan (pricing section failed to render)",
+    "Whether the primary outbound link is dofollow",
+    "Review/approval delay for new launches"
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aitoolsarena.com",
+  "name": "AI Tools Arena",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://aitoolsarena.com/",
+      "title": "Homepage — live WordPress AI-tools blog/curated list site (KrakatoaDigital); no submit link anywhere"
+    },
+    {
+      "url": "https://aitoolsarena.com/ai-tools-list-new",
+      "title": "AI Tools List — category index page; no submission route, only a generic Contact Us form"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "No documented submission route — the site is an editorial blog with curated AI-tools posts, not a self-serve directory",
+    "Only contact paths: a footer 'Contact Us' form (name/email/message) and a 'YouTube Advertiser Inquiry Form'"
+  ],
+  "preparation": [
+    "Product name, URL, and a short pitch — everything must fit the generic contact form",
+    "A realistic ask: coverage in a blog post or category list, not a structured directory entry"
+  ],
+  "workflow": [
+    "Open https://aitoolsarena.com/ and use the Contact Us form (name, email, message)",
+    "Pitch the tool for inclusion in the AI Tools List or a relevant category post",
+    "No defined review process — outcome depends entirely on the editor"
+  ],
+  "watchFor": [
+    "This is an affiliate-content site ('I may receive commissions') — coverage decisions may be affiliate-driven",
+    "No self-serve listing, no pricing page for listings, no stated criteria",
+    "A paid 'YouTube Advertiser Inquiry Form' exists for video promotion — separate from directory listing",
+    "Duplicated navigation items suggest a lightly maintained WordPress template"
+  ],
+  "countsAsLive": "The tool is named in an aitoolsarena.com list/blog post with a link",
+  "unknowns": [
+    "Whether the editor accepts unsolicited listing requests at all",
+    "Whether inclusion is free or paid",
+    "Any review criteria"
+  ]
+}

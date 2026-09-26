@@ -1,0 +1,42 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "onlinegeniuses.com",
+  "name": "Online Geniuses",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://onlinegeniuses.com/marketplace/",
+      "title": "Online Geniuses — 'Largest Slack Community for Marketers'; 53,000+ manually vetted members; free 'Become a member'/'Apply Today' application; marketplace, hiring channel, Q&A sessions, OG Elite paid tier"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "A marketing-professional identity — membership is manually vetted ('53,000+ manually vetted members')",
+    "Free application via 'Become a member'/sign-up (Slack community)",
+    "Channels include hiring, guest-posting, resources — a tool can be shared inside the community but there's no public listing",
+    "OG Elite is a paid tier; marketplace/talent network features exist for members"
+  ],
+  "preparation": [
+    "A genuine marketing background/role for the vetting",
+    "Plan to participate — drive-by link drops in a vetted Slack get flagged"
+  ],
+  "workflow": [
+    "Apply at onlinegeniuses.com/sign-up",
+    "Pass manual vetting into the Slack community",
+    "Participate in channels; share resources where relevant (guest-posting, tools channels)",
+    "Hiring channel can promote jobs; marketplace surfaces services"
+  ],
+  "watchFor": [
+    "Not a public directory — nothing here produces an indexable listing; value is community reach",
+    "Marketer-only vetting — a founder without a marketing angle may be rejected",
+    "Slack-based — content isn't publicly searchable",
+    "Copyright footer says 2022 — some public pages may be stale, though Q&A sessions ran into 2025"
+  ],
+  "countsAsLive": "Membership in the Slack community — no public profile or listing is produced",
+  "unknowns": [
+    "Whether vendors can list in the marketplace publicly or only inside Slack",
+    "OG Elite pricing"
+  ]
+}

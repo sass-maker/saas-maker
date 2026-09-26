@@ -1,0 +1,54 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "sbmarketingtools.com",
+  "name": "Small Business Marketing Tools",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.sbmarketingtools.com/tools-directory-listings/",
+      "title": "Tools Directory Listings page (search-indexed; site 403s automated fetches) — two listing types, Enhanced (with logo, newsletter promo, bonus listing on MarineMarketingTools.com) then Basic; editorial approval; 'payment will be requested via credit card'"
+    },
+    {
+      "url": "https://www.sbmarketingtools.com/advertise/",
+      "title": "Advertise page (search-indexed) — 'low annual rates' for directory listings; sponsored articles also offered"
+    },
+    {
+      "url": "https://www.sbmarketingtools.com/",
+      "title": "Homepage — marketing/productivity tools guide for small businesses; directory categories: advertising, branding, direct marketing, marketing plans, PR, social media, websites, small business resources (403 to bots)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Product must be a marketing or business-productivity tool aimed at small businesses (directories: Advertising, Branding & Graphics, Direct Marketing, Marketing Plans, PR, Social Media, Websites, Small Business Resources)",
+    "Editorial approval required — 'Advertiser will be notified of any necessary edits before insertion'",
+    "Payment by credit card at submission; Enhanced tier adds logo upload, monthly e-newsletter mention, and a bonus listing on sister site MarineMarketingTools.com",
+    "The site's stated theme is free or low-cost tools — expensive enterprise products likely won't fit editorially"
+  ],
+  "preparation": [
+    "Tool name, URL, description, target category",
+    "Logo (required for Enhanced tier)",
+    "Credit card for the listing fee",
+    "Positioning as 'free or low-cost' for small businesses"
+  ],
+  "workflow": [
+    "Choose the category directory that fits (e.g., Social Media tools)",
+    "Decide Basic vs Enhanced listing",
+    "Submit listing information on the tools-directory-listings page — payment is requested by credit card on submission",
+    "Respond to any editorial edits they send back",
+    "Listing goes live in the category page; Enhanced gets a newsletter mention the following month"
+  ],
+  "watchFor": [
+    "All listing types appear to cost money ('low annual rates', credit card on submit) — no free tier was found",
+    "Rank order favors Enhanced listings, then seniority — a Basic listing sits at the bottom",
+    "Site is dated (launched 2011); verify it's still maintained before paying",
+    "Site blocks bots (403) — complete the process in a normal browser"
+  ],
+  "countsAsLive": "The tool appears on its category directory page (e.g., /marketing-tools-directory/<category>-tools/) on sbmarketingtools.com",
+  "unknowns": [
+    "Exact annual price for Basic vs Enhanced (not visible in indexed content)",
+    "Current maintenance/activity level of the site",
+    "Link type on listings"
+  ]
+}

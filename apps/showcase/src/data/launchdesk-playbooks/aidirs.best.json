@@ -1,0 +1,57 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aidirs.best",
+  "name": "Aidirs",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://aidirs.best/",
+      "title": "Homepage — active curated AI tools directory (2,400+ tools) with Submit and Pricing nav"
+    },
+    {
+      "url": "https://aidirs.best/submit",
+      "title": "Submit page — rendered only hero stats to the fetcher; real options shown on /pricing"
+    },
+    {
+      "url": "https://aidirs.best/pricing",
+      "title": "Pricing — Free ($0, badge verification) through Sitewide ($79.9) plan comparison"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free $0 tier requires badge verification — their badge/backlink must be placed on your site",
+    "Free listings get 'recurring status checks' — the badge is monitored and removing it risks delisting",
+    "Free tier is queued review (no stated turnaround) vs 48h/24h for paid tiers; 'low-quality submissions rejected'"
+  ],
+  "requirements": [
+    "AI-focused product — this is a curated AI tools directory",
+    "Badge verification for the free tier; paid tiers ($9.9 Starter, $24.9 Pro, $49.9 Launch Kit, $59.9+ sponsor tiers) skip it",
+    "Quality bar applies at every tier; Stripe handles payments"
+  ],
+  "preparation": [
+    "Product name, URL, description, logo/icon, pricing model",
+    "Category/tag fit from their 300+ tags",
+    "For free tier: ability to add their badge HTML to the product site and leave it there"
+  ],
+  "workflow": [
+    "Open https://aidirs.best/submit (sign-in may be required — Sign In link is in nav)",
+    "Choose a plan: Free (badge + queued review) or a paid tier (48h/24h review, featured placement)",
+    "Fill the submission form with product details",
+    "Free tier: add badge to the site and pass verification; paid: complete Stripe checkout",
+    "Listing goes live after review; monitor via account"
+  ],
+  "watchFor": [
+    "Free tier's badge is monitored with 'recurring status checks' — it's an ongoing obligation, not one-time",
+    "Only the free tier explicitly promises 'one dofollow backlink'; paid tiers sell visibility, not more links",
+    "Sidebar/Sitewide sponsor tiers showed '0 slots available' — don't expect them",
+    "Launch Kit bundles 'Uneed launch support' — third-party cross-sell"
+  ],
+  "countsAsLive": "The product has a public profile page on aidirs.best, indexed in its categories/tags/search",
+  "unknowns": [
+    "Queued-review turnaround for the free tier",
+    "Whether free-tier listings get a full SEO product page (comparison table marks it as paid-only)",
+    "Exact badge HTML/placement requirements"
+  ]
+}

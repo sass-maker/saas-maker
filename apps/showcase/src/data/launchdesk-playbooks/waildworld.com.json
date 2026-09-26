@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "waildworld.com",
+  "name": "Waildworld",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://waildworld.com/",
+      "title": "Homepage — live AI-tools directory (3,359 tools, 30 categories, EN/DE/RU) with embedded 'Submit a tool' form and rules"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "AI tools only — directory covers 30 categories from 3D to Writing",
+    "Check the tool is not already listed before submitting ('ensure that it hasn't been already listed')",
+    "No affiliate links and no newsletter submissions",
+    "Tool aggregators are only considered with a reciprocal listing that includes wAild world",
+    "Manual review of every submission ('Our team reviews each submission manually')"
+  ],
+  "preparation": [
+    "Tool name, URL, and description",
+    "Category tags from the fixed list (3D, Art, Audio, Business, Chatbots, Code, Crypto, Design, Education, Finance, Food, Fun, Gaming, Kids, Healthcare, HR, Legal, Lifestyle, Marketing, Photo, Productivity, Sales, Security, Sport, Speech, Translation, Travel, Video, Writing)",
+    "Pricing model pick: Free / Paid / Free Trial / Freemium / Price by request / Not launched yet",
+    "Personal/contact information for the 'Personal Information' block"
+  ],
+  "workflow": [
+    "Open https://waildworld.com/ and scroll to the 'Submit a tool' section (also linked in the header)",
+    "Search the catalog first to confirm the tool is not already listed",
+    "Fill Tool Information, select product tags, and pick the pricing model",
+    "Complete Personal Information and click Submit (agrees to Terms of Service and Privacy Policy)",
+    "Wait for manual review; for collaboration or tool/job submissions the footer also lists submit@waildworld.com"
+  ],
+  "watchFor": [
+    "Reciprocal-link requirement if the submission is itself a tool aggregator/directory",
+    "Strict anti-cheat: bot or fraudulent upvoting leads to immediate disqualification",
+    "No stated review turnaround time",
+    "Footer contact split: hi@waildworld.com for collaboration, submit@waildworld.com for tool/job submissions"
+  ],
+  "countsAsLive": "The tool appears in the waildworld.com catalog under its chosen tags and is reachable via category/search pages",
+  "unknowns": [
+    "Review turnaround time",
+    "Whether the form requires an account — a login exists for favourites but the submit form's auth needs were not visible in rendered text",
+    "Exact fields inside 'Personal Information' (email vs name) — inputs did not render labels"
+  ]
+}

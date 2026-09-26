@@ -1,0 +1,45 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "patreon.com",
+  "name": "Patreon Page",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.patreon.com/",
+      "title": "Patreon homepage — 'Get Started' leads to /create; 'Starting a Patreon is free'"
+    }
+  ],
+  "category": "profile",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Starting a Patreon creator page is free — Patreon monetizes via a platform fee on earnings, not an upfront listing fee",
+    "The signup URL in the batch (/signup) returned 403 to the fetcher; the live entry point is https://www.patreon.com/create ('Get Started')"
+  ],
+  "requirements": [
+    "A creator/community angle — Patreon is a membership/community monetization platform, not a product directory; a SaaS 'listing' means launching a creator page (updates, community, perks)",
+    "Content must comply with Patreon's community guidelines and content policies",
+    "Payout details (bank/payment) required only when monetizing"
+  ],
+  "preparation": [
+    "Creator page name, profile and cover images, and a clear 'what patrons get' pitch",
+    "Decide free vs paid membership tiers (membership, digital products shop) — a free-membership-only page is a valid zero-cost presence",
+    "Website/social links to include on the public page"
+  ],
+  "workflow": [
+    "Go to https://www.patreon.com/create and sign up / log in",
+    "Set up the creator page: name, visuals, about text, tiers or free membership",
+    "Launch/publish the page — it becomes public at patreon.com/<handle>",
+    "Post an initial public post so the page isn't empty"
+  ],
+  "watchFor": [
+    "Patreon is discoverable mostly to existing fans — a page with no content has little SEO/listing value on its own",
+    "Platform fees apply on earnings (not on page creation)",
+    "The batch's https://www.patreon.com/signup URL 403'd — use /create"
+  ],
+  "countsAsLive": "A public creator page at patreon.com/<handle> loads without login and shows the launched page with at least one post/tier",
+  "unknowns": [
+    "Whether public Patreon pages pass link equity to the creator's website link",
+    "Review/verification steps, if any, before a new page is publicly listed in 'Find a Creator'"
+  ]
+}

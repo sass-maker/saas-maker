@@ -1,0 +1,33 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "zumvu.com",
+  "name": "Zumvu",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "http://zumvu.com/make-profile.zvx",
+      "title": "Zumvu Plans & Pricing — live business-marketing platform; Free tier $0 'FREE FOREVER' (500 contacts, 50 posts, basic SEO, embed code, analytics); Starter $10/mo, Basic $16/mo, Pro $22/mo"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free tier exists — signup at /signup.zvx; free plan: 500 contacts, 50 posts, basic SEO, CTA button, lists/categories, analytics integration",
+    "Paid tiers ($10–$22/mo annually) raise contact/post limits and add advanced SEO, support",
+    "Positioned as business profile + content promotion, not a curated directory"
+  ],
+  "preparation": ["Business profile details; the platform is a self-publish marketing surface"],
+  "workflow": [
+    "Sign up free at zumvu.com/signup.zvx",
+    "Create the business profile and posts",
+    "Upgrade for higher limits if needed"
+  ],
+  "watchFor": [
+    "Self-service marketing platform — the 'listing' is your own posts, not a curated entry",
+    "Value is modest; low-authority surface",
+    "HTTP (not HTTPS) on the catalog URL — check current TLS state"
+  ],
+  "countsAsLive": "A public Zumvu business profile with posts",
+  "unknowns": ["Public visibility/indexing of profiles", "Actual user base"]
+}

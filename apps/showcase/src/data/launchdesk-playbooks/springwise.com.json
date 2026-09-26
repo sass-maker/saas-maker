@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "springwise.com",
+  "name": "Springwise",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.springwise.com/",
+      "title": "Springwise — live innovation-intelligence platform; nav exposes 'Submit an Innovation' under Resources; 'Register for free' vs 'Become a member' tiers; editorially curated database (~50 verified innovations/week); contact info@springwise.com"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "'Submit an Innovation' exists as a public route, but inclusion is editorially curated — Springwise is a paid innovation-intelligence platform for corporate subscribers; submitting gets your innovation considered, not listed"
+  ],
+  "requirements": [
+    "An innovation with an impact/sustainability lens — Springwise covers 'real-world solutions shaping the future' across circular economy, clean energy, regenerative agriculture, etc.",
+    "The 'Submit an Innovation' page under Resources (submitting is free; review is editorial)",
+    "Database entries are 'editorially reviewed… not raw data dumps' — human editors have final say",
+    "Consumption side is subscription/membership — your audience is innovation professionals, not consumers"
+  ],
+  "preparation": [
+    "A pitch framed around the innovation and its impact — Springwise covers 'innovations', not product launches",
+    "Sustainability/impact angle strongly favored — every entry is 'tagged through a sustainability lens'"
+  ],
+  "workflow": [
+    "Use Resources > 'Submit an Innovation' (or contact info@springwise.com)",
+    "Provide the innovation story: what it is, who built it, the impact claim",
+    "If selected, it enters the editorially curated innovation database — visible to member subscribers"
+  ],
+  "watchFor": [
+    "Curated editorial database — most submissions won't be covered; there's no guaranteed listing",
+    "Audience is corporate innovation/R&D/sustainability teams — consumer SaaS is a poor fit",
+    "The database itself is largely member-gated — your listing's public visibility may be limited",
+    "Free reader registration exists separate from the submit route"
+  ],
+  "countsAsLive": "The innovation has a curated entry in the Springwise database (and possibly a free-to-read article)",
+  "unknowns": [
+    "How much of an innovation entry is public vs member-gated",
+    "Submission-to-coverage rate"
+  ]
+}

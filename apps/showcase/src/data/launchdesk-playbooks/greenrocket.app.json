@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "greenrocket.app",
+  "name": "GreenRocket",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://greenrocket.app/",
+      "title": "Homepage — live React SPA 'The launchpad for the next generation of tech products' (Netlify + Supabase)"
+    },
+    {
+      "url": "https://greenrocket.app/llms.txt",
+      "title": "Official llms.txt — free community launch platform: register free, submit launches at /create, upvote-ranked feed, scheduled launches go live 12:00 AM UTC on launch date, sponsor slots via Stripe are separate"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free registration for 'builders' at /register (email/password or magic link)",
+    "A launch = name, tagline, description, URL, logo, screenshots, category, launch date — submitted via the authenticated /create wizard",
+    "Community-run ranking: 'No paid placement and no promoted slots' — position comes from upvotes (per their site copy)",
+    "Scheduled launches are publicly viewable immediately with a countdown and go live 12:00 AM UTC on the launch date"
+  ],
+  "preparation": [
+    "Account (email for /register)",
+    "Product name, tagline, description, URL, logo, screenshots, category",
+    "A launch date — scheduling gets a T-24h reminder email plus a launch-day email and 'Launching Today' rail placement",
+    "Builder profile basics (bio, avatar, social links) — public profile at /@username feeds the Top Astronauts leaderboard"
+  ],
+  "workflow": [
+    "Register free at https://greenrocket.app/register",
+    "Open /create and fill the launch wizard (autosaves drafts for 14 days)",
+    "Pick a launch date — the launch goes live at 12:00 AM UTC that day; scheduled pages are publicly viewable beforehand with a countdown",
+    "Engage on launch day: reply to discussions, share via the multi-platform share menu",
+    "Track views/clicks/shares/bookmarks at /launch/stats/:slug"
+  ],
+  "watchFor": [
+    "Upvote-driven ranking means a dead launch day = dead listing — coordinate supporters for launch-day votes",
+    "Sponsor slots exist (/sponsors-ad, Stripe) but site copy says launches themselves are not pay-for-placement — don't pay expecting ranking",
+    "A Peerlist import exists (/peerlist) if your product is already on Peerlist — syncs projects + screenshot galleries",
+    "Cross-platform sync can push the launch to SoloStack.Space",
+    "SPA — forms require a JS-capable flow"
+  ],
+  "countsAsLive": "A public launch page at greenrocket.app/launch/<slug> exists (countdown if scheduled, LIVE NOW on launch day) and the launch appears on the /launches feed",
+  "unknowns": [
+    "Whether outbound links are dofollow (search snippets claim 'real dofollow backlink' — unverified firsthand)",
+    "Community size / expected upvote counts",
+    "Moderation rules for what counts as a launch"
+  ]
+}

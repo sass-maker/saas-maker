@@ -1,0 +1,56 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "resellerratings.com",
+  "name": "ResellerRatings",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.resellerratings.com/",
+      "title": "Homepage — 'Store Ratings & Reviews', long-running merchant review platform"
+    },
+    {
+      "url": "https://learn.resellerratings.com/en/knowledge/claim-your-company-profile",
+      "title": "Docs — claim existing store page or create a profile via /merchantsignup; free-mail addresses not accepted for merchant signup"
+    },
+    {
+      "url": "https://learn.resellerratings.com/en/knowledge/adding-your-company-to-resellerratings",
+      "title": "Docs — new stores are added by customers or via merchant sales team; all submissions reviewed"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "You need a real business with customers who can review it — it's a merchant review platform, not a launch board",
+    "Merchant signup at /merchantsignup does NOT accept Gmail/free-mail accounts — use a work domain email (or contact support@resellerratings.com)",
+    "Two routes: claim an existing store page (search the site → 'Claim Your Business Profile' → verification) or submit business info at /merchantsignup for review",
+    "All store submissions are reviewed and approved by their team",
+    "Only customers can submit a new store directly on-site; merchants without an existing page go through merchant signup/sales"
+  ],
+  "preparation": [
+    "Work-domain email (not Gmail/Hotmail) for the merchant account",
+    "Business details: name, URL, address, hours, contact info — 'the more information you add, the more credible you appear'",
+    "Logo to replace the auto-generated thumbnail on the store page",
+    "A plan to drive real customer reviews (they do not add stores proactively — customer evaluations create listings)"
+  ],
+  "workflow": [
+    "Search resellerratings.com for your store to see if a page already exists",
+    "If yes: click 'Claim Your Business Profile' and complete verification",
+    "If no: submit business info at https://www.resellerratings.com/merchantsignup (or ask customers to submit the store)",
+    "Wait for approval, then complete the store profile (logo, details)",
+    "Invite customers to leave reviews — the store page ranks in search once reviews accumulate"
+  ],
+  "watchFor": [
+    "Free-mail rejection at merchant signup is the biggest self-serve blocker",
+    "Never fake reviews — users are '100% legally liable' for their evaluations and the platform is strict",
+    "They will NOT remove a company page once listed ('we do not remove companies from the site')",
+    "Free tier exists for new/small businesses but scope is limited; fuller merchant tools are paid (contact sales)",
+    "Merchant rebuttals/flagging require a merchant member account"
+  ],
+  "countsAsLive": "A public /store/<your-domain> page exists showing your company with a star rating once the first verified customer review is posted",
+  "unknowns": [
+    "Approval turnaround for new merchant submissions",
+    "Exact free-tier limits vs paid merchant plans",
+    "Whether profile links are dofollow"
+  ]
+}

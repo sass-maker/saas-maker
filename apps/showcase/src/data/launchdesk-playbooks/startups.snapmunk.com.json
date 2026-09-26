@@ -1,0 +1,63 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startups.snapmunk.com",
+  "name": "Snapmunk Startup Directory",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://startups.snapmunk.com/join",
+      "title": "Join SnapMunk | Startup Directory — tier grid (Free / Premium $19.99 mo / Gold $39.99 mo); returned 403 to automated fetch, content confirmed via search index"
+    },
+    {
+      "url": "https://startups.snapmunk.com/checkout/5",
+      "title": "Claim Account Secure Signup — 'New Sign Ups Are Currently Unavailable. Please Contact the Website Admin' (via search index; page 403s to bots)"
+    },
+    {
+      "url": "https://www.snapmunk.com/submit-your-startup/",
+      "title": "Submit Your Startup | SnapMunk — editorial pitch page 'Startup Stories Are Awesome, and We'd Love to Tell Yours' (403 to automated fetch)"
+    },
+    {
+      "url": "https://launchpointzero.com/launchsites/snapmunk",
+      "title": "Launch Point Zero profile — notes last blog post March 2024, directory possibly abandoned, free option with paid upgrades"
+    },
+    {
+      "url": "https://backlinks.fyi/directories/snapmunk",
+      "title": "backlinks.fyi directory entry — free submission, manual review 5-10 days, no account/backlink/CAPTCHA needed (not independently verified)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "A 'Free to Join' tier is advertised on the join page, but the directory checkout currently states 'New Sign Ups Are Currently Unavailable' — free listing may be gated behind manual admin contact",
+    "Separate editorial route: www.snapmunk.com/submit-your-startup/ accepts free startup story pitches, but editorial acceptance is at the newsroom's discretion"
+  ],
+  "requirements": [
+    "Directory: company must be a startup; free tier allows 1 category and up to 3 search locations, no photos/videos/website link",
+    "Editorial story: newsworthy startup pitch — site positions itself as telling startup stories, so a real narrative angle matters",
+    "Free tier does NOT include a link to your website per the tier grid (link is a paid feature) — SEO value of the free listing is limited"
+  ],
+  "preparation": [
+    "Startup name, tagline/description, category choice, locations to be listed under",
+    "For editorial pitch: a story angle and founding narrative",
+    "For directory signup issues: contact@snapmunk.com is published as the contact email"
+  ],
+  "workflow": [
+    "Editorial route (likely more alive): open https://www.snapmunk.com/submit-your-startup/ and submit the story form",
+    "Directory route: open https://startups.snapmunk.com/join, choose the Free tier, click CREATE LISTING",
+    "If checkout reports signups unavailable, email contact@snapmunk.com asking to be listed",
+    "Complete profile fields and submit for review"
+  ],
+  "watchFor": [
+    "Site appears dormant — third parties note last blog post March 2024 and suspect abandonment; do not expect fast review",
+    "Free tier is deliberately stripped: no website link, no photos — verify whether the listing still includes a clickable company mention",
+    "Checkout page explicitly says new sign ups are currently unavailable; the free route may be dead in practice",
+    "Do not pay for Premium/Gold tiers on a dormant directory"
+  ],
+  "countsAsLive": "Company profile is searchable/browsable on startups.snapmunk.com, or the startup story is published on snapmunk.com",
+  "unknowns": [
+    "Whether any human still reviews submissions — site may be abandoned",
+    "Whether the join flow can actually complete given the 'sign ups unavailable' notice",
+    "Whether the free editorial form at /submit-your-startup/ still accepts submissions (page bot-blocked to automated fetches)"
+  ]
+}

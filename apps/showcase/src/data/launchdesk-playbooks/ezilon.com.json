@@ -1,0 +1,54 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "ezilon.com",
+  "name": "Ezilon Regional Directory",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.ezilon.com/general_url_submission.htm",
+      "title": "Submission guidelines — free tier only for non-commercial sites; commercial listings paid (refunded if declined); regional-category routing"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free listing is restricted to NON-commercial sites: government, NGOs, trade associations, charities, research institutes, schools/universities",
+    "Commercial websites (any business/SaaS) pay — 'we will refund payment if listing is declined' confirms a fee; amount not stated on this page",
+    "Must submit through a specific regional category (USA, Canada, Europe, UK, Australia, NZ, Asia, Africa, etc.)"
+  ],
+  "requirements": [
+    "Human-editor review; 'quality website with good contents' only",
+    "No under-construction sites, no duplicate/similar content, no redirecting URLs",
+    "No hate/violence/copyright-infringing/sex/illegal content",
+    "Site must be in English or have an English version",
+    "Site must stay active before and after inclusion",
+    "Use a contactable non-free email (they warn against free webmail)"
+  ],
+  "preparation": [
+    "Correct regional category (submit to the region matching your content/location)",
+    "Title, description, keywords for the listing",
+    "A non-free (domain) email address",
+    "Payment method if commercial (fee amount revealed in the regional submit flow)"
+  ],
+  "workflow": [
+    "Open https://www.ezilon.com/general_url_submission.htm",
+    "Pick the matching regional submission link (e.g. USA → search.ezilon.com/united_states/)",
+    "Navigate to the right category and use the 'Site Submit' link at top of category",
+    "Fill title, description, keywords; commercial listings proceed through payment",
+    "Human editors review; payment refunded if declined"
+  ],
+  "watchFor": [
+    "Old-school directory network (©2011 submission program) — legacy UX, per-region subdomains",
+    "A commercial SaaS does NOT qualify for the free tier — don't misclassify",
+    "Fee amount isn't shown on the guidelines page — appears inside the regional flow",
+    "Reciprocal link explicitly NOT required ('Link is not required!')",
+    "They accept multiple sites under one email confirmation"
+  ],
+  "countsAsLive": "The site appears on its regional category page in the Ezilon directory and in Ezilon search results",
+  "unknowns": [
+    "Commercial listing price",
+    "Review turnaround",
+    "Whether the directory still actively publishes (legacy site, unclear velocity)"
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "press.farm",
+  "name": "Pressfarm",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://press.farm/",
+      "title": "Pressfarm — paid digital PR agency + journalist database; packages incl. Campaign plan $279/yr (feature article on their blog + Medium + social to 155k followers + newsletter to 20k); journalist-contact database; no free listing"
+    }
+  ],
+  "category": "service",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Paid service only — packages for PR campaigns, press-release writing/distribution, media kits, journalist outreach",
+    "Campaign plan: $279/yr includes a 1,500-word feature on their blog + syndication",
+    "Journalist contact database is the DIY tier",
+    "This is a PR vendor, not a directory — 'catalog fit' is as a paid press channel"
+  ],
+  "preparation": [
+    "PR budget and a story worth pitching",
+    "Decide DIY-database vs. agency packages"
+  ],
+  "workflow": [
+    "Choose a package on press.farm/pricing or sign up for database access",
+    "For Campaign plan: their team writes/publishes the feature and distributes it",
+    "For database: search journalists by category and pitch yourself"
+  ],
+  "watchFor": [
+    "Paid placement — coverage on their own blog/Medium is bought, not earned",
+    "Claims of 6,000+ company customers and large follower counts are marketing",
+    "Real earned coverage still requires pitching actual journalists"
+  ],
+  "countsAsLive": "A purchased Pressfarm feature article or a PR campaign deliverable",
+  "unknowns": ["Full pricing tiers beyond the $279/yr Campaign plan", "Database access pricing"]
+}

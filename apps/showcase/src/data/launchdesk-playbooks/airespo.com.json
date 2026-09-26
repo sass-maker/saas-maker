@@ -1,0 +1,54 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "airespo.com",
+  "name": "AI Respo",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://airespo.com/",
+      "title": "Homepage — live AI tools directory with categories, reviews, and blog (~400+ tools)"
+    },
+    {
+      "url": "https://airespo.com/submit-tool/",
+      "title": "Submit AI Tool For Free — login-required form; manual review; published within 30 days; acceptance criteria listed"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free submission requires a registered account — form is behind login ('Login Required to Submit'; Google sign-in or free registration)"
+  ],
+  "requirements": [
+    "AI tools only",
+    "Must be a standalone product (not a feature), with its own pricing, preferably a dedicated website",
+    "Authentic website — no impersonation, no domain squatting",
+    "Secure HTTPS URL pointing to the tool's homepage; functional, malware-free site",
+    "No shortened or affiliate URLs",
+    "Manual review; approval within 30 days"
+  ],
+  "preparation": [
+    "Account on airespo.com (email registration or Continue with Google)",
+    "Tool name, homepage URL, clear description ('informative and well-crafted descriptions attract interest')",
+    "Category fit (Business, Communication/Chat, Content Creation, Development, Education, Entertainment, Health, etc.)"
+  ],
+  "workflow": [
+    "Register or log in at airespo.com (free account)",
+    "Open https://airespo.com/submit-tool/ and complete all required fields",
+    "Submit — manual review follows; approved tools are listed within 30 days",
+    "To manage an existing listing, claim it first, then edit directly; or email support with the tool name and changes"
+  ],
+  "watchFor": [
+    "30-day review horizon — not a fast launch channel",
+    "No paid featured listings or sponsorships exist — featured picks are editorial discretion only",
+    "All form fields are required; nothing about the form is optional per the page",
+    "Claim-first model: if the tool is already listed, claim it before editing",
+    "WordPress-style site — do not expect high domain authority"
+  ],
+  "countsAsLive": "The tool appears at airespo.com/ai-tools/<slug>/ inside a category, visible in the directory index",
+  "unknowns": [
+    "Exact submission form fields (behind login)",
+    "Whether rejections are notified",
+    "Whether outbound links are dofollow"
+  ]
+}

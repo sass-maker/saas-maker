@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "ontoplist.com",
+  "name": "OnToplist",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://ontoplist.com/",
+      "title": "Homepage — active blog + US business directory; plan picker shows Standard $29.99/yr or $109.99 one-time and Business $39.99/yr or $149.99 one-time"
+    },
+    {
+      "url": "https://www.ontoplist.com/add_website/",
+      "title": "Batch-provided submit URL — returns 404; real routes are /join/ and /add-your-business-listing/"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "No free tier visible: Standard Listing $29.99/yr or $109.99 one-time (social links, RSS feed, analytics); Business Listing $39.99/yr or $149.99 one-time (adds Google Maps, detailed contact info)",
+    "Account registration required at /join/",
+    "'Every submission is reviewed by real people' — human-reviewed, not auto-published",
+    "Two listing types: blog/site listings vs US local-business listings (name, address, contact info)"
+  ],
+  "preparation": [
+    "Decide listing type: Standard (site/blog) vs Business (US local business with Google Maps)",
+    "Site URL, title, description, category choice",
+    "For Business listing: address, phone, contact details",
+    "Payment method for the listing fee"
+  ],
+  "workflow": [
+    "Register an account at https://www.ontoplist.com/join/",
+    "Pick a plan — Standard Listing or Business Listing at /add-your-business-listing/",
+    "Pay ($29.99-39.99/yr or $109.99-149.99 one-time)",
+    "Fill listing details (category, description, links)",
+    "Wait for human review; listing appears under its category page"
+  ],
+  "watchFor": [
+    "Batch seed URL /add_website/ is 404 — use /join/ or /add-your-business-listing/",
+    "Source claimed 'free' — wrong; only paid tiers shown",
+    "US-local-business focus for the Business tier; Standard tier covers blogs/sites generally",
+    "Annual vs one-time pricing — one-time is better value for a permanent listing"
+  ],
+  "countsAsLive": "The listing appears on an ontoplist.com category page (blog directory or business directory) with a public detail page",
+  "unknowns": [
+    "Review turnaround and rejection rate",
+    "Dofollow status of listing links",
+    "Whether a free tier exists behind the registration wall"
+  ]
+}

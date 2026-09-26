@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "maxibestof.one",
+  "name": "MaxiBestOf",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://maxibestof.one/submit",
+      "title": "Submit a Website — free, login required; fields: website URL, comments, optional profile link"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Login required — 'You need to be logged in to submit a website'",
+    "Design-quality bar: it's a curated design showcase ('Curating the internet's finest'); every submission is personally reviewed by the owner",
+    "Form is minimal: website URL + optional comments + optional creator profile",
+    "You can submit sites you worked on or admire (profiles are claimable via /directory)"
+  ],
+  "preparation": [
+    "An account on maxibestof.one",
+    "The live website URL with strong visual design",
+    "Optional: create/claim a creator profile in their directory to attribute your work",
+    "A short comment if you want to add context for the curator"
+  ],
+  "workflow": [
+    "Sign in at https://maxibestof.one/submit",
+    "Optionally create a profile first so the work can be attributed",
+    "Enter the website URL + any comments, hit Submit",
+    "Owner manually reviews — 'no need to submit it multiple times'",
+    "If selected, the site is featured on maxibestof.one"
+  ],
+  "watchFor": [
+    "Personal curation by one person — rejection/silence is normal; no guaranteed listing",
+    "Minimal form means the design must speak for itself — no fields to sell a mediocre page",
+    "FAQ exists for selection/notification but answers weren't rendered (JS dl elements)",
+    "Don't resubmit duplicates — explicitly discouraged"
+  ],
+  "countsAsLive": "The website appears as a featured card/detail on maxibestof.one with credit to your profile (if linked)",
+  "unknowns": [
+    "Review turnaround and whether rejection is notified (FAQ text exists but answers didn't render)",
+    "Dofollow status of featured links",
+    "Volume/selectivity rate"
+  ]
+}

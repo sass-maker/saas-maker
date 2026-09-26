@@ -13,6 +13,7 @@ const activeScripts = new Set([
   'apply-clarity-id.sh',
   'audit.mjs',
   'campaign-manifest.mjs',
+  'catalog-freshness.mjs',
   'check-github-actions-policy.mjs',
   'clarity-audit.mjs',
   'credential-guard.mjs',

@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "allmenus.com",
+  "name": "AllMenus",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.allmenus.com/faq/",
+      "title": "Allmenus FAQ — free listing/maintenance for restaurants; updates via Restaurant Center; menus accepted by email/fax/mail/website"
+    },
+    {
+      "url": "https://www.allmenus.com/for_restaurants/",
+      "title": "Batch-provided restaurant submission URL — returned 404"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Listing is free ('Absolutely nothing' per FAQ) but the site is a US restaurant menu guide — only restaurants with a menu qualify; part of the Grubhub portfolio since 2011"
+  ],
+  "requirements": [
+    "A real US restaurant with a menu — not applicable to SaaS/software products",
+    "Menus accepted via email, fax, mail, or an online source (restaurant website)",
+    "Updates/corrections go through the Restaurant Center request flow"
+  ],
+  "preparation": [
+    "Current menu (file or URL on the restaurant website)",
+    "Restaurant name, address, phone, categories/cuisine",
+    "Online menu URL if available — Allmenus can pull from it"
+  ],
+  "workflow": [
+    "Go to the Allmenus Restaurant Center (linked from the FAQ — the batch's /for_restaurants/ URL 404'd)",
+    "Submit the restaurant + menu via the Restaurant Center update/add request, or send the menu by email/fax/mail per the FAQ",
+    "Alternatively, listings can be pushed via listing-sync providers (e.g., Yext lists Allmenus as a publisher)",
+    "Wait for Allmenus to publish/maintain the listing at no cost"
+  ],
+  "watchFor": [
+    "Vertical mismatch: restaurants only — a SaaS launch cannot use this legitimately",
+    "The batch submission URL /for_restaurants/ 404'd; the live route is the Restaurant Center linked from /faq/",
+    "Homepage returned compressed/binary content to the fetcher — expect bot protection",
+    "Distribution is managed (Allmenus aggregates from data providers too) — turnaround unknown"
+  ],
+  "countsAsLive": "The restaurant's public page exists on allmenus.com with its menu and details",
+  "unknowns": [
+    "Exact Restaurant Center submission form fields and turnaround",
+    "Whether a direct 'add new restaurant' form still exists vs update-only requests"
+  ]
+}

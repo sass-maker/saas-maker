@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "forums.digitalpoint.com",
+  "name": "Digital Point Forums",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.digitalpoint.com/help/established",
+      "title": "Established Members help — signature/link privileges unlock 48h after registration plus 3 'Likes' from existing established members; all member links are nofollow"
+    },
+    {
+      "url": "https://forums.digitalpoint.com/",
+      "title": "Forum index — returned HTTP 403 (bot-blocked)"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Registration is free, but link/signature privileges require 'established member' status: 48 hours after registration AND 3 different existing established members liking a post you wrote",
+    "Alternative paid gate: premium membership lets you start sale threads immediately, but still does NOT grant signatures/links early — all member links are nofollow regardless"
+  ],
+  "requirements": [
+    "Genuine participation expected — asking for Likes publicly or privately gets you banned",
+    "Signature links allowed only for established members; affiliate links may be in signatures but not in post bodies; links placed in post bodies as pseudo-signatures are not allowed",
+    "Buy/Sell/Trade marketplace threads require established status or premium membership; some areas are premium-only"
+  ],
+  "preparation": [
+    "Account registration (email or Facebook login)",
+    "A plan for 3+ genuinely useful posts that can earn Likes from established members",
+    "A signature link and homepage URL to set once established"
+  ],
+  "workflow": [
+    "Register an account at forums.digitalpoint.com",
+    "Participate genuinely in relevant forums (SEO, marketing, web development topics) for at least 48 hours",
+    "After 3 established-member Likes, the account is promoted (hourly batch process — allow up to an hour)",
+    "Set signature + homepage links (all nofollow); post in the marketplace if selling a product/service"
+  ],
+  "watchFor": [
+    "All user links are nofollow — value is referral/community, not link equity",
+    "Directing users to your signature link in posts is prohibited",
+    "Site blocks automated fetches (403) — use a normal browser",
+    "Forum skews heavily SEO/webmaster — a generic SaaS promo post will read as spam"
+  ],
+  "countsAsLive": "Public profile page exists with homepage link set, and/or a marketplace thread is published in Buy, Sell or Trade",
+  "unknowns": [
+    "Premium membership price (help page did not show it)",
+    "Whether non-logged-in visitors can see signatures (nofollow regardless)",
+    "Current moderation strictness for product announcements outside the marketplace"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aiheadshothub.com",
+  "name": "AI Headshot Hub",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://aiheadshothub.com/",
+      "title": "Homepage — small live niche directory comparing AI headshot generators (~8 listings, category filters)"
+    },
+    {
+      "url": "https://aiheadshothub.com/listings/create/",
+      "title": "Submit a Listing — open form: contact info, listing name/URL, description, categories, logo, cover image, social links"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Extreme niche: AI headshot generators / professional-headshot tools only (App, Editing Tools, Free Trial, Style Packs, Teams categories)",
+    "Required fields: user email, user name, listing name, listing URL",
+    "Optional: description, content, categories, logo upload or URL, cover image or URL, social links",
+    "No login required to submit — separate 'Business login' exists for managing listings"
+  ],
+  "preparation": [
+    "Listing name and URL",
+    "Description and longer content for the listing page",
+    "Logo file or logo URL; cover image or image URL",
+    "Category picks (App / Editing Tools / Free Trial / Style Packs / Teams)",
+    "Comma-separated social links"
+  ],
+  "workflow": [
+    "Open https://aiheadshothub.com/listings/create/ ('Submit your listing' in nav)",
+    "Fill contact info (email, name) and basic info (listing name, URL, description, content)",
+    "Attach logo and cover image or paste their URLs",
+    "Pick categories, add social links, and click 'Submit your listing'",
+    "Listing appears under /listings/<slug>/ after review"
+  ],
+  "watchFor": [
+    "Tiny directory — only ~8 listings; expect minimal referral traffic",
+    "Only useful if the product is literally an AI headshot/portrait generator — other AI tools do not fit",
+    "Homepage says 'Best AI Headshot Generators 2025' — content may be stale (© 2025)",
+    "Footer links twelve.tools — likely part of a small network of micro-directories"
+  ],
+  "countsAsLive": "The product has a page at aiheadshothub.com/listings/<slug>/ and shows in the homepage/category grids",
+  "unknowns": [
+    "Review turnaround and whether submissions are moderated",
+    "Whether listing is always free — no pricing mentioned on the form"
+  ]
+}

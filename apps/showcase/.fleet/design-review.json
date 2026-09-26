@@ -2,55 +2,79 @@
   "$schema": "fleet.design-review.v1",
   "version": 1,
   "project": "showcase",
-  "target": "Shared Fleet footer extension with project strip and Ask AI",
-  "surfaceMode": "operate",
-  "mode": "preserve",
-  "register": "product",
+  "target": "homepage hero",
+  "surfaceMode": "persuade",
+  "mode": "overhaul",
+  "register": "brand",
   "context": {
     "product": "PRODUCT.md",
     "design": "DESIGN.md"
   },
   "direction": {
     "references": [],
-    "probes": [],
-    "selected": "existing-design",
-    "approval": "delegated",
-    "before": "artifacts/design/footer-before-1440.png",
+    "probes": [
+      {
+        "id": "a-monumental-pair",
+        "path": "artifacts/design/probes/a-monumental-pair.html"
+      },
+      {
+        "id": "b-plaque-ledger",
+        "path": "artifacts/design/probes/b-plaque-ledger.html"
+      },
+      {
+        "id": "c-ghost-panes",
+        "path": "artifacts/design/probes/c-ghost-panes.html"
+      }
+    ],
+    "selected": "b-plaque-ledger",
+    "approval": "approved",
+    "before": "",
+    "library": {
+      "strategy": "upstream-first",
+      "primary": "existing-project-system",
+      "sources": [],
+      "runtime": "existing",
+      "customReplacement": {
+        "used": false,
+        "authorization": "not-required",
+        "reason": ""
+      }
+    },
     "contract": {
-      "purpose": "Give product visitors one compact way to ask their preferred AI about the current product and discover related public work.",
-      "purposeSource": "packages/ai-chat-footer/PRODUCT.md and packages/portfolio-project-strip/PRODUCT.md",
-      "canonicalPurpose": "The shared footer helps a visitor understand the current product through a pre-filled AI handoff and continue into related public projects without another account or backend.",
+      "purpose": "Give a first-time visitor an immediate, accurate read of what SaaS Maker is and which products are spotlighted, within one viewport.",
+      "purposeSource": "apps/showcase/PRODUCT.md",
+      "canonicalPurpose": "SaaS Maker helps visitors evaluating Sarthak Agrawal's public products find the canonical product or source link by publishing a precise, durable, generated directory of maintained work.",
       "purposeAlignment": "match",
       "driftNote": "",
-      "audience": "Visitors who have reached the end of a Fleet product page and want either a concise explanation or another relevant project.",
-      "job": "Preserve the authored footer, then offer one clear AI handoff and one quiet portfolio discovery path.",
-      "thesis": "A restrained utility dock and colophon should feel inherited from the host, not like a second marketing footer.",
-      "system": "CurrentColor surfaces and borders, host typography, a compact split row above 760px, stacked groups below it, 44px AI actions, and a reduced-motion-safe project rail.",
-      "signature": "The product-specific Ask AI dock sits beside a living, self-excluding strip of the maker's other projects.",
-      "risk": "Two global surfaces can become repetitive or visually overpower the host, so the composition is bounded to one shallow extension with a single outer boundary."
+      "audience": "Visitors evaluating the public products, existing users looking for canonical links, and search or AI agents discovering the portfolio.",
+      "job": "State what the product is and who it serves, show the spotlighted products, and offer the next action — a product page or the complete directory — within seconds.",
+      "thesis": "Ledger instead of grid: the spotlight becomes a ruled index where saturated pane color is earned on interaction, so two products read as two commissioned entries rather than a half-empty wall.",
+      "system": "One clear editorial pane carrying a wide headline beside a floating intro pane; the atelier photograph appears only as a masked glimpse at the right edge; product plaques are quiet clear panes separated by steel mullions that flood cobalt, oxblood, or amber on hover and focus.",
+      "signature": "Plaques flood with each product's saturated pane color on intent — the workshop's accent panes own the interaction state rather than sitting as static decoration.",
+      "risk": "Departing from the four-pane wall weakens the original wall-elevation metaphor; mitigated by keeping the steel frame, mullions, pane materials, Schibsted typography, and the one-arrival motion language."
     }
   },
   "evidence": {
     "screenshots": [
       {
         "width": 390,
-        "path": "artifacts/design/footer-after-390.png"
+        "path": "artifacts/design/hero-ledger-390.png"
       },
       {
         "width": 768,
-        "path": "artifacts/design/footer-after-768.png"
+        "path": "artifacts/design/hero-ledger-768.png"
       },
       {
         "width": 1440,
-        "path": "artifacts/design/footer-after-1440.png"
+        "path": "artifacts/design/hero-ledger-1440.png"
       }
     ],
     "projectCheck": {
-      "command": "pnpm exec vitest run tests/showcase/public-surface.test.ts && pnpm build:showcase && git diff --check",
+      "command": "pnpm build:showcase",
       "status": "pass"
     },
     "critique": {
-      "score": 38,
+      "score": 34,
       "maximum": 40
     },
     "audit": {
@@ -64,34 +88,34 @@
     "detector": {
       "posture": "advisory",
       "findings": [
-        "The horizontally clipped project sequence is intentional on touch layouts and remains scrollable; it is not document overflow."
+        "detect.mjs returned zero findings on Hero.astro and index.astro; note .astro files go through the regex engine only, so layout CSS was verified manually."
       ]
     },
     "comprehension": {
-      "status": "not-applicable",
-      "reviewer": "",
+      "status": "pass",
+      "reviewer": "independent design-review subagent (Assessment A) reading the rendered surface",
       "answers": {
-        "product": "",
-        "audience": "",
-        "value": "",
-        "mechanism": "",
-        "proof": "",
-        "nextAction": ""
+        "product": "SaaS Maker — the public directory of Fleet products plus the shared packages, skills, templates, and feedback layer behind them.",
+        "audience": "Visitors evaluating the builder's public products and existing users looking for canonical links; implied rather than stated outright.",
+        "value": "A precise, maintained map of real products with honest destinations — inspectable rather than marketing-inflated.",
+        "mechanism": "A generated directory: spotlighted products as ledger plaques, the complete register at /projects, real domains as proof.",
+        "proof": "Two real products with real domains and honest descriptions; the directory count and 'kept current' status line.",
+        "nextAction": "Open a product's details page from a plaque, or explore the complete directory."
       },
       "purposeScore": {
-        "product": 0,
-        "audience": 0,
-        "value": 0,
-        "mechanism": 0,
-        "proof": 0,
-        "nextAction": 0,
-        "total": 0
+        "product": 25,
+        "audience": 12,
+        "value": 13,
+        "mechanism": 14,
+        "proof": 15,
+        "nextAction": 15,
+        "total": 94
       },
       "mismatches": []
     }
   },
   "ownerFeedback": {
-    "decision": "delegated",
-    "note": "The owner required both footer surfaces on every applicable project and explicitly delegated implementation without feedback pauses."
+    "decision": "keep",
+    "note": "Owner reviewed three live direction probes (monumental pair, plaque ledger, ghost panes) and selected B — plaque ledger."
   }
 }

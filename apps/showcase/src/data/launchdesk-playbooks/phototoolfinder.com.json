@@ -1,0 +1,58 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "phototoolfinder.com",
+  "name": "PhotoToolFinder",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://phototoolfinder.com/",
+      "title": "Homepage — curated directory of online photo editing tools (357 tools, 38 categories)"
+    },
+    {
+      "url": "https://phototoolfinder.com/submit",
+      "title": "Suggest a tool — full submission form; free review (months) or priority review within 7 days"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free review exists but 'can take up to a few months'; priority review completes within 7 days and is paid (refunded if rejected)",
+    "All listings go through human review — paying only speeds up the queue"
+  ],
+  "requirements": [
+    "Photo editing niche only: tool must edit/change/compress/convert images — 'can the user upload an image?' is the litmus test",
+    "Must have at least one web version — 'Web' is a mandatory platform checkbox",
+    "No pure generators and no video-first tools",
+    "Single-model AI frontends rejected unless they expose multiple models",
+    "Website claims must be true — 'not obviously false'"
+  ],
+  "preparation": [
+    "Tool name and URL of the web version",
+    "One-line description, min 20 characters",
+    "Best-fit category from the 38 listed (e.g. AI-First Photo Editors, Background Removers)",
+    "Overview, min 300 characters, plain prose only — no HTML or links",
+    "At least 3 key features as short phrases",
+    "Pricing model (Free/Freemium/Paid), learning curve, platforms, alternatives already in the index, contact email"
+  ],
+  "workflow": [
+    "Open https://phototoolfinder.com/submit ('Suggest a Tool' in nav)",
+    "Choose Free review or paid Priority review (7 days, refunded on rejection)",
+    "Fill Basics, What it does, and Details sections; add alternatives from existing listings",
+    "Tick the human-review acknowledgement and click 'Submit tool'",
+    "Listing appears under the chosen category after independent research by the editor"
+  ],
+  "watchFor": [
+    "Strict niche — only photo/image editing tools; a general SaaS product will be declined",
+    "Reviewers may rewrite/edit submitted copy during independent research",
+    "Free queue can take months — only the priority tier has a defined SLA",
+    "IP address is stored with the submission",
+    "A stale priority-submission session may linger ('You started a priority submission…') — 'Start a new submission' resets it"
+  ],
+  "countsAsLive": "The tool appears on phototoolfinder.com inside its chosen category with a Details page",
+  "unknowns": [
+    "Priority review price — the payment amount was not shown on the rendered page",
+    "Whether the free review guarantees eventual inclusion or can silently lapse",
+    "Notification flow beyond the contact email"
+  ]
+}

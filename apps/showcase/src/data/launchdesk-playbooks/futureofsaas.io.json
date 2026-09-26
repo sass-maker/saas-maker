@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "futureofsaas.io",
+  "name": "Future of SaaS (SaaS Alliance)",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.futureofsaas.io/",
+      "title": "Homepage — rebranded as 'SaaS Alliance', membership community for SaaS professionals; blog content is largely members-only"
+    },
+    {
+      "url": "https://futureofsaas.io/contributor-guide",
+      "title": "Create & Contribute — write-for-us: pitch subject first, articles ≥800 words, royalty-free images, ≤200-char bio, no product promotion (sponsorship instead); contacts anthony@futureofsaas.io, Sophie"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "No product listing exists — the free route is contributing an article (or podcast guesting, event speaking, report quotes), and submissions are editorially reviewed",
+    "Contributions explicitly cannot promote your product — 'For that sort of stuff, we have sponsorship opportunities'; company exposure is limited to your bio",
+    "Much of the site's content is members-only, so even a published piece may sit behind the membership wall for some readers"
+  ],
+  "requirements": [
+    "Pitch the subject BEFORE writing — 'drop us a line and let us know what you want to write about'",
+    "Articles ≥800 words on SaaS topics (marketing, GTM, metrics, onboarding, customer success, SaaS+AI, funding)",
+    "Royalty-free images only; a contributor profile picture; bio ≤200 characters",
+    "Previously published pieces are acceptable — they support custom canonical links"
+  ],
+  "preparation": [
+    "A topic pitch aligned to their popular topics list",
+    "Contributor headshot and ≤200-char bio",
+    "The 800+ word article (if past pitching stage) with properly cited links",
+    "Author contact route: message Anthony or Sophie on Slack or by email (anthony@futureofsaas.io)"
+  ],
+  "workflow": [
+    "Email anthony@futureofsaas.io (or Sophie) with the proposed article subject",
+    "On approval, write the piece to their rules (≥800 words, royalty-free images, cited links, no product promo)",
+    "Send the article plus profile pic and bio by email/Slack",
+    "Alternative free routes: podcast guest (anthony@futureofsaas.io), event speaking (Typeform on the page), report contribution (headshot + 200-word bio + a quote)"
+  ],
+  "watchFor": [
+    "This is a thought-leadership play, not a launch listing — the payoff is a byline and bio mention, not a product page",
+    "Blatant product promotion gets redirected to paid sponsorship",
+    "Syndication policy: they can reuse your content in full or in part across social/blogs/newsletters and cross-post to Medium/LinkedIn",
+    "Canonical-link support means you can republish existing posts — cheaper than writing fresh",
+    "Site reports ~20k visitors/year — modest reach for the effort"
+  ],
+  "countsAsLive": "The contributed article is published on futureofsaas.io under the author's contributor profile with their bio",
+  "unknowns": [
+    "Editorial response rate and turnaround on subject pitches",
+    "Whether published articles are public or members-only",
+    "Whether bio links are dofollow"
+  ]
+}

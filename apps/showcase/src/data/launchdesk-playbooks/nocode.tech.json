@@ -1,0 +1,36 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "nocode.tech",
+  "name": "NoCode.Tech",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.nocode.tech/tools",
+      "title": "NoCode.Tech Tools directory — 'Every legit no-code tool that's out there, and which we rate' (content read via search result; site rate-limited fetchers 429)"
+    },
+    {
+      "url": "https://www.submission.directory/site/nocode-tech",
+      "title": "Third-party directory entry — free tool listing, dofollow link, category placement, no badge required (content read via search result)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "No-code tools only — the directory rates and lists no-code products",
+    "Free listing per third-party sources, dofollow link",
+    "nocode.tech rate-limited automated fetch (429) — the exact submit URL wasn't captured; likely a form reachable from /tools"
+  ],
+  "preparation": ["A no-code tool or a product legitimately positioned in the no-code space"],
+  "workflow": [
+    "Find the tool-submission route from nocode.tech/tools (rate-limited to fetchers — check in a browser)",
+    "Submit the tool details; listings get a dofollow link and category placement"
+  ],
+  "watchFor": [
+    "Vertical restriction — non-no-code products don't fit",
+    "Site throttles automated access — use a real browser",
+    "The directory is curated ('legit tools… which we rate') — inclusion isn't guaranteed"
+  ],
+  "countsAsLive": "The tool has a page in the NoCode.Tech tools directory",
+  "unknowns": ["Exact submission form URL", "Review timeline"]
+}

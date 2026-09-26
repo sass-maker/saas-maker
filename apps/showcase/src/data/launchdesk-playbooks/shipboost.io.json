@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "shipboost.io",
+  "name": "ShipBoost",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://shipboost.io/",
+      "title": "Homepage — weekly launch board + permanent listings; 'Submit your product' links to signup flow"
+    },
+    {
+      "url": "https://shipboost.io/pricing",
+      "title": "Pricing — Free Launch $0 forever (one week on launchboard, permanent listing, 'Verified ShipBoost badge required'); Premium $9-19/launch adds editorial article + guaranteed dofollow"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free Launch requires displaying a 'Verified ShipBoost badge' on your site (reciprocal badge gate)",
+    "Sign-in required — 'Sign in' in nav; submission flow is behind an account"
+  ],
+  "requirements": [
+    "Bootstrapped SaaS / product launches — positioned for founders",
+    "Free tier: one week on the launchboard plus a permanent public listing indexed in category and tag pages",
+    "Premium ($9-19/launch one-time): reserved launch week, featured placement, hand-written editorial article, guaranteed dofollow links",
+    "'Approved tools only' noted on pricing page — submissions are reviewed"
+  ],
+  "preparation": [
+    "Product name, URL, one-line tagline, category (Marketing/Sales/Analytics/Support/Productivity/Development/AI/Commerce/Product)",
+    "Logo image for the product card",
+    "Ability to embed their 'Verified ShipBoost badge' on your site for the free tier",
+    "Account email for signup"
+  ],
+  "workflow": [
+    "Create an account / sign in at shipboost.io",
+    "Open 'Submit your product' (/submit), complete the listing form with logo, tagline, category",
+    "For the free tier, add the required Verified ShipBoost badge to your site",
+    "After approval the product enters the weekly Launch Pad board and gets a permanent listing",
+    "Optional: upgrade to Premium for a reserved week + editorial article + dofollow"
+  ],
+  "watchFor": [
+    "Free listing's dofollow status is not promised — only Premium guarantees dofollow",
+    "Badge requirement makes 'free' effectively a link exchange",
+    "Heavy reciprocal-badge ecosystem — evaluate whether association fits brand",
+    "Aggressive ad upsells ($29-$59/30 days) and a paid directory-submission partner offer",
+    "Founding Premium price ($9) is seat-limited (50 spots)"
+  ],
+  "countsAsLive": "Product appears on shipboost.io Launch Pad board or a /products/<slug> listing page linked from category/tag indexes",
+  "unknowns": [
+    "Approval turnaround and rejection criteria",
+    "Whether free listings are nofollow by default",
+    "Badge verification mechanics (do they crawl for it?)"
+  ]
+}

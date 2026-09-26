@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "findyouragent.ai",
+  "name": "Find Your Agent",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://findyouragent.ai/",
+      "title": "Homepage — live directory of 200+ AI agents by category; prominent banner: 'findyouragent.ai is looking for a new owner — Make an offer'"
+    },
+    {
+      "url": "https://findyouragent.ai/agents/new",
+      "title": "Submit Agent route — auth-gated sign-in page (Google OAuth or email/password)"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Account required: sign up via Google OAuth or email/password at /users/sign_up",
+    "Directory is for AI agents/assistants — categories include content creation, design, productivity, dev tools, marketing, BI, e-commerce, personal assistant",
+    "No paid listing option observed; submission appears free"
+  ],
+  "preparation": [
+    "An account (Google or email)",
+    "Agent name, URL, description, category, tags, and pricing model (listings show 'Free + from $X/month' format)"
+  ],
+  "workflow": [
+    "Register or sign in at https://findyouragent.ai/users/sign_in",
+    "Open https://findyouragent.ai/agents/new and fill in the agent details",
+    "Agent appears under Browse Agents and its category once live"
+  ],
+  "watchFor": [
+    "The site is actively FOR SALE ('looking for a new owner') — continuity of listings and maintenance is uncertain",
+    "Submit form fields not visible without auth",
+    "Low-barrier catalog with many thin listings; modest quality signal"
+  ],
+  "countsAsLive": "The agent has a public detail page under findyouragent.ai/agents/ visible in its category",
+  "unknowns": [
+    "Whether submissions are reviewed before publishing",
+    "Who operates the site during the ownership transition",
+    "Whether the directory will persist under a new owner"
+  ]
+}

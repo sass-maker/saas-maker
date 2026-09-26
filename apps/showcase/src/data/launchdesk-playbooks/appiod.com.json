@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "appiod.com",
+  "name": "Appiod",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://appiod.com/",
+      "title": "Homepage — active app-review blog (posts through Sep 2026), iPhone/Android focus"
+    },
+    {
+      "url": "https://appiod.com/submit-app-for-review/",
+      "title": "Submit App for Review — Wufoo intake form plus paid Network Review offer ($249 for 10 blogs)"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "A free review is nominally possible via the Wufoo form / the AppMarketingPlus 'complimentary review' lead-gen offer; the prominently marketed path is the paid $249 Network Review across 10 blogs"
+  ],
+  "requirements": [
+    "Focus is mobile apps: iPhone/iPad apps and games, Android apps and games; a Web Applications category exists but is thin",
+    "Submission intake is a Wufoo form (amp2.wufoo.com/forms/w1jhochl1h88713) embedded on the submit page",
+    "Part of the AppMarketingPlus review network — same operator ring as apps400.com, appsmirror.com, webapprater.com, appsthunder.com, appslisto.com, apps4review.com, game400.com, gadget400.com, appsmamma.com, appstimes.in"
+  ],
+  "preparation": [
+    "App name, store link (App Store / Google Play) or web app URL",
+    "Short description and key features for the reviewer",
+    "Contact email",
+    "Budget decision: free single review vs $249 Network Review (10 sites, 'widespread exposure')"
+  ],
+  "workflow": [
+    "Open https://appiod.com/submit-app-for-review/",
+    "Fill the embedded Wufoo form with app details",
+    "For the free route, follow the AppMarketingPlus 'complimentary review' link (appmarketingplus.com/promote-your-app-free-review-service/) — it is a lead-gen flow for a marketing agency",
+    "For paid: the Network Review is $249 and posts unique reviews on 10 partner blogs including appiod.com",
+    "Published reviews appear under the matching category (e.g. /category/iphone-ipad-app-reviews/)"
+  ],
+  "watchFor": [
+    "This is a paid-review farm ring — the 'free review' is a lead magnet for AppMarketingPlus; expect upsell email",
+    "Do not treat a resulting review as earned/editorial coverage",
+    "Recent posts are formulaic 'Top 5 apps' listicles — review depth is limited",
+    "Same review network as several other batch domains (apps400.com, appsmirror.com, webapprater.com) — do not count each site as an independent placement"
+  ],
+  "countsAsLive": "A review post naming the product is published on appiod.com under one of the review categories",
+  "unknowns": [
+    "Whether the unpaid Wufoo submission alone results in a published review without engaging AppMarketingPlus",
+    "Price of a single (non-network) review — only the $249 10-site package is stated",
+    "Turnaround time"
+  ]
+}

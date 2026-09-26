@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "calameo.com",
+  "name": "Calameo",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.calameo.com/",
+      "title": "Calaméo homepage — digital publishing platform, 'transform your documents into interactive content instantly and for free'"
+    },
+    {
+      "url": "https://www.calameo.com/account/new",
+      "title": "Batch-provided signup URL — returned 404"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free account tier exists — homepage explicitly says publishing is possible 'instantly and for free'",
+    "Content must be a document (magazine, catalog, brochure, deck) — Calaméo is a digital publishing platform, not a product directory",
+    "The batch-provided signup URL (calameo.com/account/new) is dead — registration entry point is from the homepage/pricing page"
+  ],
+  "preparation": [
+    "A PDF document to publish — e.g. a product one-pager, catalog, or launch deck",
+    "Publication title, description, and category",
+    "Email for account registration"
+  ],
+  "workflow": [
+    "Open calameo.com and create a free account (signup via homepage CTA or /upgrade page where the free plan is listed)",
+    "Upload the PDF; Calaméo converts it to an interactive publication",
+    "Set title/description/category and publish publicly",
+    "Publication gets a public page on calameo.com readable without login"
+  ],
+  "watchFor": [
+    "Batch submission URL 404s — do not rely on it; find current signup from the homepage",
+    "'Link detection' feature activates links inside documents — embedded links in the PDF may become clickable in the viewer",
+    "Paid plans (/upgrade) add personalization, statistics, subscribers — not required for a public publication",
+    "Not a launch directory; value is an indexed publication page + embeddable viewer"
+  ],
+  "countsAsLive": "The uploaded publication is publicly readable at a calameo.com/read/... URL and appears on the public account page",
+  "unknowns": [
+    "Current free-plan limits (number of publications, storage)",
+    "rel attributes on in-document links after link detection",
+    "Exact current signup URL (homepage did not expose it statically)"
+  ]
+}

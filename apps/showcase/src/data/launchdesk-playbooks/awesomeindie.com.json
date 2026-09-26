@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "awesomeindie.com",
+  "name": "Awesome Indie",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://awesomeindie.com/",
+      "title": "Homepage — rebuilt daily indie launch board, ~10,375 makers, 15-25 products/day, community comments/makers feed; 'Add product' in nav"
+    },
+    {
+      "url": "https://awesomeindie.com/pricing",
+      "title": "Pricing — 'Launching is free. Everything else is optional.' Free launch takes next queue slot (dofollow at 20 upvotes); paid: Skip the Line $9.99, Boost $29.99, Premium $49.99, Pro $49.99/yr, Sponsor $99.99/mo; Polar is merchant of record"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Launching is genuinely free, but: free accounts are capped at 1 product lifetime (streaks raise this to 5), launches take the next queue slot rather than a chosen day, and a dofollow link is only earned at 20 upvotes",
+    "Account required — Google, GitHub, or X sign-in (no password flow)"
+  ],
+  "requirements": [
+    "Account via Google/GitHub/X OAuth",
+    "Indie-product fit — board skews to solo founders, micro-SaaS, tools; AI moderation plus human review for paid tiers",
+    "For the dofollow link: 20 upvotes on launch day",
+    "Free account limits: 1 product lifetime, 3 upvotes/day"
+  ],
+  "preparation": [
+    "Product name, tagline, description, categories (148 available)",
+    "Logo/screenshots for the product page",
+    "An OAuth account (Google/GitHub/X) — consider warming a login streak if you'll submit more than one product",
+    "A plan to drive ~20 upvotes on launch day if the dofollow link matters"
+  ],
+  "workflow": [
+    "Sign in via Google, GitHub, or X",
+    "Click 'Add product' / /submit and complete the product form",
+    "Free tier: accept the next queue slot; paid tiers let you pick a day",
+    "Product launches on its day, ranked purely by upvotes",
+    "Product page + maker profile are permanent; paid boosts (flame badge) last only the launch day"
+  ],
+  "watchFor": [
+    "The free tier's real cost is queue time — 'Skip the Line' ($9.99) is the only thing that buys an earlier day",
+    "Ranking is honest: upvotes only, paying never changes rank position (boosts are flame-labeled)",
+    "20-upvote dofollow threshold: daily traffic is small — top products get ~150 views, 0-5 votes; you may need to bring your own voters",
+    "Free account = 1 product lifetime — don't burn it on a half-finished listing",
+    "Streaks (daily visits) raise submission/upvote caps — a genuine engagement mechanic",
+    "Advertising content bans: no gambling, crypto, adult, get-rich-quick"
+  ],
+  "countsAsLive": "The product appears on awesomeindie.com's launch-day board with a public product page and maker profile",
+  "unknowns": [
+    "Current queue depth for free launches (not shown publicly)",
+    "Whether sub-20-upvote links are nofollow or absent"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "ebay.com",
+  "name": "eBay Stores",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.ebay.com/sl/sell",
+      "title": "eBay selling landing page — list an item, fees FAQ, business selling tools"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Account creation and listing are free for the first 250 listings per month; $0.35 insertion fee per listing after that",
+    "A 10-15% final value fee is charged when an item sells — listing itself is free but the platform is fee-on-sale",
+    "Selling requires verifying the account and setting up payment/payout details during the first listing flow"
+  ],
+  "requirements": [
+    "A physical/digital good to sell — eBay is a marketplace for items, not a product-launch directory; a SaaS product listing would need to fit eBay's allowed item categories",
+    "Phone verification (call or text) during account setup for new sellers",
+    "Payout method (bank account) to receive payments"
+  ],
+  "preparation": [
+    "Item title with searchable keywords (brand, model, size), photos from multiple angles, condition notes",
+    "Pricing decision: Auction vs Buy It Now, plus optional Best Offer",
+    "Shipping plan (carrier choice, eBay discounted label, or Local Pickup)",
+    "Phone for verification and bank details for payouts"
+  ],
+  "workflow": [
+    "Go to https://www.ebay.com/sl/sell and click 'Sell now' / 'List an item'",
+    "Create/verify an eBay account (phone call or text verification) and set up payment information during the first listing",
+    "Use the quick listing flow — enter what you're selling, accept/refine AI-suggested category, title, price",
+    "Choose format (Auction or Buy It Now), set shipping, and publish the listing",
+    "For a persistent brand presence, look at Business selling tools / eBay Stores subscription via 'Learn more' under 'Selling as a business'"
+  ],
+  "watchFor": [
+    "Fee model: free to list (up to 250/mo) but 10-15% of final value on sale — a 'launch listing' here only makes sense for something actually sellable",
+    "Listings are transactional and expire; not a durable directory profile unless running an eBay Store",
+    "Prohibited/restricted items and IP rules apply",
+    "An eBay Store subscription is a separate paid product — the free route is individual listings"
+  ],
+  "countsAsLive": "A public item listing at ebay.com/itm/<id> (or a public Store page at ebay.com/str/<store>) reachable without login",
+  "unknowns": [
+    "Whether a digital/SaaS product can be listed compliantly and in which category",
+    "eBay Store subscription pricing for a persistent storefront page",
+    "Whether listing/profile links carry nofollow"
+  ]
+}

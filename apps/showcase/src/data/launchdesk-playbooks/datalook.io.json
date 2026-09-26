@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "datalook.io",
+  "name": "DataLook.io",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://datalook.io/",
+      "title": "Homepage — live directory but dominated by NSFW AI-girlfriend/companion affiliate listings"
+    },
+    {
+      "url": "https://datalook.io/submit-tool",
+      "title": "Submit Tool — paid-only: Basic $199, Featured $399, +$100 NSFW surcharge; Stripe payment before review"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "AI tool; must be functional with a clear value proposition, no spam/misleading content",
+    "Payment is required BEFORE review: Basic $199 (standard placement) or Featured $399 (homepage + top placement + social/newsletter)",
+    "NSFW tools pay a +$100 surcharge and must be flagged via the NSFW checkbox",
+    "No illegal/hate/harmful content; submitter must own or license submitted materials",
+    "Form fields: Tool Name, Tool URL, Detailed Description, Key Features, Logo URL (200x200), Screenshot URLs (1200x800), Contact Name/Email, Company Name"
+  ],
+  "preparation": [
+    "Hosted logo URL (200x200 PNG/JPG) and screenshot URLs (1200x800) — the form takes URLs, not uploads",
+    "Contact name, email, company name",
+    "$199-$499 budget depending on tier + NSFW flag",
+    "Stripe-compatible payment method"
+  ],
+  "workflow": [
+    "Open https://datalook.io/submit-tool",
+    "Fill Tool Information, Media & Assets, and Contact Information",
+    "Select Basic or Featured package, tick NSFW if applicable",
+    "Pay via Stripe, then the manual review runs (claimed 2-3 business days)",
+    "Rejected tools are fully refunded"
+  ],
+  "watchFor": [
+    "The directory is overwhelmingly adult-content affiliate listings — brand adjacency risk for mainstream SaaS",
+    "Pay-before-review model; refund promised on rejection but trust is on the site operator",
+    "'Minor updates free; major changes may require re-review' — edits can trigger another review cycle",
+    "Low-quality inventory (duplicate tool entries on homepage); the claimed 'thousands of data professionals' audience is dubious for a mainstream product",
+    "Sitemap shows most non-adult categories have 0 tools — thin directory outside the NSFW niche"
+  ],
+  "countsAsLive": "The tool has a public detail page under datalook.io/ai-tools/ reachable from category listings",
+  "unknowns": [
+    "Actual reviewer rigor — categories are mostly empty outside adult niches",
+    "Whether links are dofollow",
+    "Real traffic/audience numbers"
+  ]
+}

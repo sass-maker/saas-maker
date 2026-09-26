@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "devpost.com",
+  "name": "Devpost",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://devpost.com/software",
+      "title": "Devpost Projects gallery — 'Add your project' button links to /software/new?flow[name]=add_software"
+    },
+    {
+      "url": "https://devpost.com/software/new",
+      "title": "Add-software flow — redirects to login; OAuth via GitHub/Facebook/Google/LinkedIn or email"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free to add a project, but requires a Devpost account — /software/new redirects to the login/register page"
+  ],
+  "requirements": [
+    "Publish a real software project — the Projects gallery is for things you built (hackathon entries and portfolio projects)",
+    "Account creation via GitHub, Facebook, Google, LinkedIn OAuth, or email at secure.devpost.com/users/register",
+    "Hackathon submissions are a separate flow governed by each hackathon's rules and deadlines"
+  ],
+  "preparation": [
+    "A Devpost account",
+    "Project name, tagline/description, story text",
+    "Links: repo URL, live/demo URL, video demo",
+    "Built-with tags (the gallery is browsable by tech like python, react, flutter, gemini)",
+    "Screenshots/thumbnail image"
+  ],
+  "workflow": [
+    "Sign up or log in (OAuth or email)",
+    "From devpost.com/software click 'Add your project' (goes to /software/new?flow[name]=add_software)",
+    "Fill project name, description/story, built-with tags, repo and demo links, images/video",
+    "Publish — the project appears in the Projects gallery and on your portfolio",
+    "Optionally attach it to a hackathon submission via that hackathon's own flow"
+  ],
+  "watchFor": [
+    "The software gallery skews to hackathon projects — a polished commercial SaaS can look out of place; frame it as a project",
+    "Outbound links are nofollow per prior source data — value is developer-community exposure, not link equity",
+    "Project pages rank via Devpost's own featured/tags system; weak built-with tags bury the entry"
+  ],
+  "countsAsLive": "A public project page exists at devpost.com/software/<slug> and appears in the Projects gallery/profile",
+  "unknowns": [
+    "Exact form fields inside the logged-in add-software flow",
+    "Whether moderation removes non-hackathon commercial products"
+  ]
+}

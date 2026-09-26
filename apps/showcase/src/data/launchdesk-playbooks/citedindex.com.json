@@ -1,0 +1,54 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "citedindex.com",
+  "name": "CitedIndex",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://citedindex.com/",
+      "title": "Homepage — live 'neutral index of AI-visibility & GEO tools' (117 tools indexed, updated 26 Sep 2026)"
+    },
+    {
+      "url": "https://citedindex.com/submit",
+      "title": "Submit a listing — 'Sign in or create a free account, then share your website for review'; free account, no card required"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free submission requires creating a free account (no card required), then sharing the website for review",
+    "Niche gate: only AI-visibility monitoring, AI rank tracking, GEO/content optimization tools, and citation/GEO agencies fit the index"
+  ],
+  "requirements": [
+    "Product must fit one of four categories: AI visibility monitoring, AI rank tracking, GEO & content optimization, or citation services (agencies)",
+    "Account required before the website can be shared for review",
+    "Listings carry 'sources and qualifications on every record' — expect editorial fact-checking of claims"
+  ],
+  "preparation": [
+    "Email for a free account",
+    "Website URL to submit for review",
+    "Pricing facts (the index displays per-tool price, e.g. 'Free, then $99', 'From $39/month')",
+    "Category fit: decide which of the four index categories the tool belongs to",
+    "If the tool is already indexed, use /claim instead and verify domain ownership"
+  ],
+  "workflow": [
+    "Open https://citedindex.com/submit",
+    "Create a free account (or sign in) — no card required",
+    "Share the website for review through the account flow",
+    "If the tool is already listed, use 'Find your listing to claim' (/claim) and verify connection to its domain",
+    "After acceptance the listing shows recorded views, visit clicks and referral sources in the account dashboard"
+  ],
+  "watchFor": [
+    "Very narrow niche — general SaaS/AI tools that are not about AI-search visibility will not fit",
+    "The submit page is account-gated; the actual form fields are behind sign-in and were not visible",
+    "Every record lists sources and qualifications — inflated claims likely get flagged",
+    "Separate /advertise and /pricing pages exist — paid placement is an upsell, not required for a basic listing"
+  ],
+  "countsAsLive": "The tool appears in the citedindex.com index (search or its category page) with a price and 'Checked' date, and the account dashboard shows its view/click stats",
+  "unknowns": [
+    "Review criteria and turnaround after account creation",
+    "Exact submission form fields behind sign-in",
+    "Whether rejected submissions get notified"
+  ]
+}

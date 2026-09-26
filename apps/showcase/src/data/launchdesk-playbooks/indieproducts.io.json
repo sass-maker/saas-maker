@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "indieproducts.io",
+  "name": "IndieProducts.io",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.indieproducts.io/",
+      "title": "Homepage — 'Submit your SaaS, Newsletter, Extension, App or Agency'; Next.js app, Google sign-in gate"
+    },
+    {
+      "url": "https://www.indieproducts.io/faq",
+      "title": "FAQ — manual verification of niche/category; NSFW listings rejected"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Accepts SaaS, newsletters, extensions, apps, and agencies",
+    "Google sign-in required — 'Get Started by Signing In!' with 'Sign in with Google'",
+    "Manual review: submissions go live only after the team verifies niche, category, and details",
+    "NSFW niches are rejected"
+  ],
+  "preparation": [
+    "Product name, URL, and description",
+    "Niche/category classification for the product",
+    "A Google account for sign-in",
+    "Optional: a square/tile image — the site runs a 'Million Dot Homepage' mechanic ('claim your square')"
+  ],
+  "workflow": [
+    "Open https://www.indieproducts.io/ and sign in with Google",
+    "Use the on-page submit flow to enter product details",
+    "Submission shows 'Product submitted successfully' and enters the manual verification queue",
+    "Listing goes live after the niche/category/details check passes"
+  ],
+  "watchFor": [
+    "Site is low-maintenance (footer 'Copyright © 2023') — review turnaround may be slow",
+    "Low domain authority (third-party lists cite DA ~3) — SEO value modest",
+    "'For advertising and collaboration dm @' on Twitter — some placements may be pay-to-play via DM",
+    "Client-rendered Next.js app — needs JS for the submit form"
+  ],
+  "countsAsLive": "The product appears on the IndieProducts listing/grid (and Million Dot Homepage square) after manual verification",
+  "unknowns": [
+    "Exact form fields beyond product name/URL — the form is behind Google sign-in",
+    "Review turnaround time",
+    "Whether listing links are dofollow"
+  ]
+}

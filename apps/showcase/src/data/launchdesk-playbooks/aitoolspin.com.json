@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aitoolspin.com",
+  "name": "AI Tools Pin",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://aitoolspin.com/",
+      "title": "Homepage — AI tools directory; nav links to Submit Tool and Advertise"
+    },
+    {
+      "url": "https://aitoolspin.com/submit-tool.html",
+      "title": "Submit Your AI Tool — required JSON field format, manual review, 3-5 business day response"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Tool must be functional and publicly accessible",
+    "Submitter must have the right to submit the tool",
+    "Submissions accepted only in the exact JSON format shown on the page (id, name, image, category, price, description, features, use_cases, likes, dislikes, tags, url)",
+    "Category must match one of the site's existing categories (Advertising, AI Assistants, Code, SEO, Writing, etc.)",
+    "Price must be exactly one of: Free, Freemium, Paid",
+    "Manual review before listing; page states both '48 hours' review and '3-5 business days' response"
+  ],
+  "preparation": [
+    "Tool name, URL, and a unique lowercase-hyphenated id",
+    "2-3 sentence description of purpose and benefits",
+    "5-10 key features and 5-10 use cases as arrays",
+    "Logo/icon image (PNG preferred) and an interface screenshot",
+    "Matching category from the site's fixed list"
+  ],
+  "workflow": [
+    "Compose the tool record in the exact JSON schema published on submit-tool.html",
+    "Open https://aitoolspin.com/submit-tool.html and use the embedded submission form (renders via 'Loading submission form...' widget)",
+    "Wait for manual review; the site says it contacts you within 3-5 business days"
+  ],
+  "watchFor": [
+    "Directory is very small (homepage shows only ~15 tools) — likely a low-traffic side project",
+    "Contradictory review windows on the same page (48 hours vs 3-5 business days)",
+    "Field names in 'Required JSON Format' and 'Field Requirements' sections disagree (features vs key_features, use_cases counts) — follow the JSON example literally",
+    "Embedded form did not render in the fetched text — the actual form endpoint is unverified",
+    "Separate 'Advertise' page exists; paid promotion is distinct from the free listing route"
+  ],
+  "countsAsLive": "The tool appears in the directory grid on aitoolspin.com with its card (name, category, price tag) and its URL is reachable from the listing",
+  "unknowns": [
+    "Underlying form provider and whether the embedded form still works",
+    "Actual review turnaround and acceptance rate",
+    "Whether listings include a dofollow link"
+  ]
+}

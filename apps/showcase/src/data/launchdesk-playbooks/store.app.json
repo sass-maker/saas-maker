@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "store.app",
+  "name": "Store.app",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://store.app/",
+      "title": "Homepage — 'The Everything App Store' by PWA Labs; live catalog (Duolingo, Linear, Cursor, etc.); 'Have an app? Get Listed' → /list"
+    },
+    {
+      "url": "https://store.app/list",
+      "title": "Get Listed submission page — returned 502 on two attempts (transient outage or JS/bot gating)"
+    },
+    {
+      "url": "https://wheretosubmit.org/guides/post-pwa-app-for-free",
+      "title": "Third-party PWA submission guide — confirms Store.app is alive with a 'Get Listed' flow; 'the one that feels like a real store'"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "An actual app — catalog covers Web, iOS, Android, macOS categories; PWA-leaning store by PWA Labs",
+    "Get Listed route is https://store.app/list (502'd during research — form fields unverified)",
+    "Contact fallback: mailto:support@store.app"
+  ],
+  "preparation": [
+    "App URL (likely a web/PWA URL given the operator)",
+    "App name, description, icon — PWA manifest fields are the likely source (name, icons, description, start_url)",
+    "Category pick (AI, Productivity, Dev Tools, etc.)"
+  ],
+  "workflow": [
+    "Open https://store.app/list ('Have an app? Get Listed' in the header)",
+    "If the page still errors, retry later or email support@store.app",
+    "Submit the app URL; presumably metadata is pulled from the web app manifest",
+    "Listing appears under /browse with an app card and 'Get' install/open action"
+  ],
+  "watchFor": [
+    "/list returned HTTP 502 twice — submission may be temporarily broken; verify in a real browser",
+    "Probably optimized for installable PWAs — a plain marketing site may not qualify",
+    "No pricing info found — cost of listing unknown",
+    "Ratings/reviews exist on listings (community feedback surface)"
+  ],
+  "countsAsLive": "The app has a public store.app listing page with icon, description, ratings, and a 'Get' button, browsable under its category",
+  "unknowns": [
+    "Whether listing is free or paid",
+    "Exact form fields and whether a PWA manifest is mandatory",
+    "Review process and turnaround",
+    "Why /list and /about both 502'd — may be transient"
+  ]
+}

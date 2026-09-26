@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "brofindai.com",
+  "name": "Bro Find AI",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://brofindai.com/submit",
+      "title": "Submit/Launch page — AI tool, agent, or MCP server launch: Free $0 launches go live ~3 months out (20 spots/week, hidden until Monday 00:00 UTC); Premium $17 one-time goes live immediately with always-dofollow link; free links nofollow unless the Bro Find AI badge is embedded"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free launch is real but gated twice: (1) a ~3-month queue — 20 free spots per week, hidden until your scheduled Monday 00:00 UTC; (2) free listing links are nofollow unless you embed the Bro Find AI badge on your site, which upgrades to dofollow while the badge stays up"
+  ],
+  "requirements": [
+    "Scope: AI tools, AI agents, and MCP servers only (700+ tools directory)",
+    "Sign-in required to submit ('Sign in and launch')",
+    "Required fields: site URL (icon pulled as logo), product name, tagline ≤80 chars, description ≤2000 chars",
+    "Optional: category, pricing, audience, tech details; FAQ/alternatives block for search/AI answers; a launch story"
+  ],
+  "preparation": [
+    "Account for sign-in",
+    "Product URL, name, ≤80-char tagline, ≤2000-char description",
+    "Decide free vs Premium ($17 one-time: live today, next week's board, gold ring, always-dofollow)",
+    "If staying free: be ready to wait ~3 months and optionally embed their badge for the dofollow upgrade",
+    "Optional streaks program: a comment or 3 upvotes daily — day 15 gets 50% off Premium, day 30 earns Premium free"
+  ],
+  "workflow": [
+    "Open https://brofindai.com/submit and pick launch type (AI tool / AI agent / MCP server)",
+    "Paste the site URL (duplicate check + auto logo), fill name/tagline/description, optional detail blocks",
+    "Choose Free (scheduled ~3 months out, countdown in My Dashboard) or Premium $17 (live immediately on next week's board)",
+    "Sign in and launch; edit/remove anytime from My Dashboard",
+    "Upvotes across the week pick the top 3 (winner medals); Premium pins above standard but can't buy rank"
+  ],
+  "watchFor": [
+    "The 'free' listing publishes months later — if you need launch-day timing, it's effectively $17",
+    "Free links are nofollow by default; the dofollow upgrade requires keeping their badge live on your site",
+    "Paid Premium does not buy ranking — pinned above standard but medals/rank still come from upvotes",
+    "Homepage ad spots are a separate product (/promote#ads)",
+    "Operator is a small India-based directory (contact is a gmail address)"
+  ],
+  "countsAsLive": "The launch goes live on the weekly leaderboard at the scheduled Monday 00:00 UTC (or immediately for Premium) and the product page exists on brofindai.com",
+  "unknowns": [
+    "Actual free-queue wait beyond the ~3 months shown at time of check (depends on spot demand)",
+    "Traffic volume and upvote counts needed for the weekly top 3"
+  ]
+}

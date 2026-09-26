@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "apprater.net",
+  "name": "AppRater",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://apprater.net/",
+      "title": "Homepage — 'independent app archive since 2011', 11,074 apps listed; submission form lives at the /#submit anchor; leaderboard runs $5-per-bid promotion"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "App/software product on a named platform: Web, iOS, Android, Windows, MacOS, or Other",
+    "Every submission is human-reviewed before it appears in the archive",
+    "Form fields: app name, platform, app or store URL, 'what makes it useful?' description, optional comma-separated tags, optional image URL, your name, email, optional X username, website field (likely honeypot)"
+  ],
+  "preparation": [
+    "App name and platform",
+    "App URL or app-store URL",
+    "A substantive 'what makes it useful' paragraph — thin listings do get published but quality copy improves the entry",
+    "Tags, a direct image/logo URL, contact email, optional X handle (they tag you when the app is announced)"
+  ],
+  "workflow": [
+    "Open https://apprater.net/ and scroll to the 'Put your product in front of curious people' form (or use the /#submit anchor)",
+    "Fill app name, platform, URL, description, tags, image URL, name, email, X username",
+    "Leave the 'Website' field empty — it reads like a honeypot",
+    "Click 'Submit for review' and wait for editorial review",
+    "Optionally buy $5 bids later to climb the leaderboard (each payment = 1 bid on an approved app)"
+  ],
+  "watchFor": [
+    "Form is at the bottom of the homepage — /add, /submit, /submit-app all 404; /#submit is the only route",
+    "Leaderboard ranking is pay-to-bid ($5 per bid, newest bid wins ties) — organic listings rank low by default",
+    "'✦ Promoted' tags mark paid placements in the archive",
+    "Archive is a mixed bag (many thin or AI-generated descriptions); this is a low-bar index, not a curated showcase"
+  ],
+  "countsAsLive": "The app appears in the AppRater archive at apprater.net/a/<slug> and shows in browse/search with its description",
+  "unknowns": [
+    "Review turnaround time and rejection rate",
+    "Whether the email provided gets a notification on approval",
+    "Link type on listings (dofollow vs nofollow)",
+    "Whether 'Website' is a honeypot field — left empty to be safe"
+  ]
+}

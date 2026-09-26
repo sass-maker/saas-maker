@@ -1,0 +1,40 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "betatesting.com",
+  "name": "BetaTesting",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://betatesting.com/",
+      "title": "BetaTesting (ErliBird Nest, Inc.) — commercial beta-testing/user-research platform; 'Get Started' > /signup; Pricing page exists; ID-verified tester pool; SOC2/GDPR badges; G2 Leader"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "paid",
+  "conditions": [
+    "Not a directory — this is a paid beta-testing service; you pay to recruit ID-verified testers for your product; a Pricing page exists and 'Get Started' leads to /signup, but it produces no listing"
+  ],
+  "requirements": [
+    "A product in testable shape and a testing budget",
+    "Signup at betatesting.com/signup; paid plans (Professional includes test-planning assistance; fully managed services available)",
+    "Test types: single-session, multi-day/journal, IHUT, global QA (200+ countries), load tests, game playtesting, AI human feedback",
+    "Tester side is separate: 'Join as Beta Tester' recruits participants"
+  ],
+  "preparation": [
+    "Test plan: what to test, target tester demographics, duration",
+    "Budget — this is a paid service"
+  ],
+  "workflow": [
+    "Sign up and configure a test (or schedule a call for managed service)",
+    "Recruit from the vetted tester pool with targeting criteria",
+    "Collect structured feedback, usability videos, QA reports"
+  ],
+  "watchFor": [
+    "Catalog fit is a stretch — this produces user research, not a public listing or backlink",
+    "Pricing is sales/plan-based — check /pricing",
+    "Useful pre-launch (real feedback), but counts as zero 'launch coverage'"
+  ],
+  "countsAsLive": "Nothing public is created — this yields private testing feedback, not a listing",
+  "unknowns": ["Entry-level test pricing", "Whether any free tier exists"]
+}

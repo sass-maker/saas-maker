@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "9sites.net",
+  "name": "9Sites Web Directory",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.9sites.net/addurl.php",
+      "title": "Add URL page — submission rules + form: listing type (Premium $15.95 one-time / Regular free), category tree, Web URL ≤200 chars, Title ≤70, Description ≤250, name, email; 'Full refund if link is declined and no refund once listed'"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Editorial rules: English only, proper case (no ALL-CAPS or all-lower), good grammar — sloppy copy delays or kills approval",
+    "No affiliate-only sites, mirror sites, porn, under-construction sites, or redirect URLs — submit the direct link",
+    "Homepage and inner pages both accepted if put in an appropriate category",
+    "Category choice from a deep DMOZ-style tree (Business, Computers, Shopping, Sports, etc.)",
+    "All form fields required; approval is by a human editor"
+  ],
+  "preparation": [
+    "Site URL (direct, no redirects)",
+    "Title ≤70 chars in proper case",
+    "Description ≤250 chars in proper-sentence English",
+    "The right category/subcategory",
+    "Name and email (used for editor correspondence)"
+  ],
+  "workflow": [
+    "Open https://www.9sites.net/addurl.php and read the rules",
+    "Pick 'Regular Links (free)' or Premium $15.95",
+    "Choose the most specific fitting category",
+    "Fill URL, title, description, name, email and submit for editorial review"
+  ],
+  "watchFor": [
+    "Legacy directory value — this is a 2006-era general web directory; SEO benefit is modest",
+    "Free regular links sit below premium ones; premium is a one-time $15.95 and permanent",
+    "Strict formatting rules (proper case, grammar) — most rejections come from slapdash copy",
+    "Refund policy only covers declined links — no refund once listed",
+    "Site is HTTPS and functional but dated; approval timing is unknown"
+  ],
+  "countsAsLive": "The site appears as a link entry in the chosen category on 9sites.net",
+  "unknowns": [
+    "Editorial turnaround and whether free submissions still get reviewed promptly",
+    "Link type on regular vs premium listings",
+    "Whether the directory still receives submissions actively"
+  ]
+}

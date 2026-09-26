@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "mostpopularaitools.com",
+  "name": "Most Popular AI Tools",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://mostpopularaitools.com/",
+      "title": "Homepage — curated AI directory, 'hand-checked listings', Submit Tool nav, sponsored section labelled"
+    },
+    {
+      "url": "https://mostpopularaitools.com/submit",
+      "title": "Submit page — 'List your AI tool'; form is JS-rendered, plans match the pricing page"
+    },
+    {
+      "url": "https://mostpopularaitools.com/pricing",
+      "title": "Pricing — Basic $10 one-time, Growth $39 one-time, Pro custom; all one-time payments with dofollow backlinks"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "AI tools only; every submission is 'hand-tested' — the team signs up, verifies pricing, and confirms free tiers actually work without a card",
+    "All listing tiers are paid one-time: Basic $10 (name, description, link, category, dofollow backlink, ~5 business days), Growth $39 (detailed profile, logo, 1 screenshot, ~7 business days), Pro custom (full profile, homepage feature 7 days, up to 5 screenshots/video, 24–48h priority)",
+    "Dead sites, abandoned products, and broken links are rejected"
+  ],
+  "preparation": [
+    "Tool name, URL, description, category, pricing model",
+    "Logo and screenshots (Growth: logo + 1 screenshot; Pro: up to 5 screenshots + video demos)",
+    "Social profile links (Pro tier links X/LinkedIn/GitHub)",
+    "A working free tier or accurate pricing — they verify claims by signing up",
+    "Payment method for the $10/$39/custom one-time fee"
+  ],
+  "workflow": [
+    "Open https://mostpopularaitools.com/submit (or /pricing — same plans)",
+    "Pick Basic, Growth, or Pro and fill the short form (name, description, features, screenshots, pricing)",
+    "Pay the one-time fee",
+    "Team tests core features and verifies pricing; they email if anything needs clarifying",
+    "Listing goes live with a verified badge after review"
+  ],
+  "watchFor": [
+    "No free tier — even the Basic listing costs $10",
+    "Growth's 7-day review is slower than Basic's 5 days despite costing more — odd ordering on the pricing table",
+    "Featured & Sponsored placements exist — organic ranking is claimed to be real-traffic based",
+    "Affiliate disclosure site-wide: outbound links may be affiliate-wrapped",
+    "Small directory (~26 tools in FAQ count vs category counts — young site)"
+  ],
+  "countsAsLive": "The tool gets a public page under mostpopularaitools.com/tools (or category pages) with a verified badge after review",
+  "unknowns": [
+    "Exact form fields behind the JS-rendered submit form",
+    "Refund policy if a submission is rejected after payment",
+    "Whether a login (Sign In link exists) is required to submit"
+  ]
+}

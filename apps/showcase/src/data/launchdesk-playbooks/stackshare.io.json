@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "stackshare.io",
+  "name": "StackShare",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://stackshare.io/stacks",
+      "title": "StackShare stacks directory — live platform of tech stacks and tools (content read via search result)"
+    },
+    {
+      "url": "https://favors.dev/startup-launch-directories/stackshare",
+      "title": "Third-party listing guide — 'List a Tool' flow behind account signup; name, live URL, tagline, description, category; review before publish (content read via search result)"
+    },
+    {
+      "url": "https://backlinkhubs.com/item/stackshare",
+      "title": "Third-party listing guide — 'Claim This Tool' on existing pages; verification via official-domain email or GitHub repo (content read via search result)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "A developer-facing tool — StackShare's ~148k-tool catalog covers languages, frameworks, dev tools, infrastructure, and SaaS used in software stacks",
+    "A free StackShare account",
+    "If a page for the tool already exists, click 'Claim This Tool' — verification via official-domain email or the tool's GitHub repo",
+    "If no page exists, use the 'List a Tool' flow: name, live public URL, tagline, short description, category; logo optional but recommended",
+    "New listings go through a review/categorization step before publishing"
+  ],
+  "preparation": [
+    "Tool name, live URL, one-line tagline, short description, logo",
+    "Decide the right category/tier (Application & Data, Utilities, DevOps, Business Tools, AI)",
+    "Verification route: official-domain email or GitHub repo access",
+    "Bonus: create your company's public stack and Stack Decisions to give the tool authentic usage signal"
+  ],
+  "workflow": [
+    "Create a StackShare account",
+    "Search for the tool — if a page exists, 'Claim This Tool' and verify ownership (domain email or GitHub)",
+    "Otherwise use 'List a Tool' and submit name/URL/tagline/description/category",
+    "Wait for the review/categorization step",
+    "Once live, the tool page accrues followers, votes, and 'used in stack' citations as companies add it to public stacks"
+  ],
+  "watchFor": [
+    "Claiming an existing auto-generated page is usually faster than creating a fresh listing",
+    "StackShare's value is social proof — a bare listing with no stacks citing it is weak; get your own company stack public first",
+    "Invited teammates get FULL permissions on the company profile — invite carefully",
+    "stackshare.io rate-limited automated fetch (429) this session — details verified via third-party guides and StackShare's own posts",
+    "Best fit is dev tools/infrastructure; a marketing-SaaS tool will exist but gets little traction"
+  ],
+  "countsAsLive": "The tool has a public page at stackshare.io/<tool-slug>",
+  "unknowns": [
+    "Current length of the review step for new listings",
+    "Whether paid vendor features (enhanced profiles) still exist post-relaunch"
+  ]
+}

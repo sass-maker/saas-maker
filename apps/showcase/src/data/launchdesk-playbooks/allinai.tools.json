@@ -1,0 +1,58 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "allinai.tools",
+  "name": "All in AI Tools",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://allinai.tools/",
+      "title": "Homepage — multilingual AI tools directory (20,000+ tools claimed)"
+    },
+    {
+      "url": "https://allinai.tools/ai-tool-submit",
+      "title": "Submit page — Free (reciprocal link + 90-day queue), Basic $49 fast-track, 3-credit pack $120, Sponsor $199.90/mo"
+    },
+    {
+      "url": "https://allinai.tools/pricing",
+      "title": "Pricing/credits page — confirms paid review 2-6h vs free up to 90 days"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free submission requires adding their backlink code on your website homepage: <a title=\"All The Best AI Tools\" href=\"https://allinai.tools\">All in AI Tools</a>",
+    "Free path only accepts domains 6+ months old",
+    "Free review/inclusion can take up to 90 days"
+  ],
+  "requirements": [
+    "AI tool/product (directory is AI-tools-focused; has category tree including platforms like web/mac/iOS/chrome extensions)",
+    "Domain must be 6+ months old for the free tier",
+    "Reciprocal homepage link for free submissions (form has 'I added the All in AI website code' confirmation step)",
+    "Paid fast-track submissions skip the reciprocal-link requirement"
+  ],
+  "preparation": [
+    "Tool name, website URL, email (the free form's only fields)",
+    "For free tier: ability to place an HTML anchor on the product homepage",
+    "Decide tier: Free (link exchange, ≤90 days) vs Basic $49/site (2-6h review, dofollow detail page) vs 3-site credit pack $120 vs Sponsor $199.90/mo"
+  ],
+  "workflow": [
+    "Open https://allinai.tools/ai-tool-submit",
+    "Free route: place the required anchor tag on your homepage, tick 'I added the All in AI website code', submit tool name + URL + email, wait up to 90 days",
+    "Paid route: choose Basic/3-credit/Sponsor, pay via Stripe, submit details from the account dashboard; review ~2-6 hours",
+    "Contact: support@allinai.tools"
+  ],
+  "watchFor": [
+    "Free tier is a link-exchange — verify the reciprocal-link requirement is acceptable before using it; removal of the badge may jeopardize the listing",
+    "Countdown-style 'Price returns to original soon' urgency pricing on paid tiers — standard directory pressure tactic",
+    "Directory includes an 'AI NSFW Tools' category — check brand-safety comfort",
+    "Aggressive partner upsell on the submit page (100Backlinks $499 package with discount code)",
+    "Submission credits lock website info after submission per FAQ"
+  ],
+  "countsAsLive": "The tool has a public detail page under allinai.tools/tools/<slug> or appears in its category listing, and shows on the homepage for free-tier inclusions per plan",
+  "unknowns": [
+    "Whether free-tier listings actually get a dofollow link (only paid Basic explicitly promises 'dofollow detail page')",
+    "Free-tier acceptance rate",
+    "Whether homepage link placement is re-verified over time"
+  ]
+}

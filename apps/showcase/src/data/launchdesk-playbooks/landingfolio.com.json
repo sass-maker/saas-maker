@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "landingfolio.com",
+  "name": "Landingfolio",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://landingfolio.com/submit",
+      "title": "Submit page — submissions are a member perk; $1.99/week or $59 lifetime membership required"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Submissions require a paid Landingfolio membership ($1.99/week or $59 one-time 'forever') — 'Submissions are a member perk'",
+    "Curated gallery: 'A curator reviews every submission. Most don't make it in.'",
+    "Accepted: a live page for a real product with strong typography, colour and layout; loads fast; works on mobile; your own work or a page you admire",
+    "Rejected: template demos, placeholder copy, broken or under-construction pages"
+  ],
+  "preparation": [
+    "Live landing page URL (yours or one you admire — third-party nominations allowed)",
+    "Paid membership purchase before submitting",
+    "Confidence the page passes a design bar: typography, colour, layout, speed, mobile"
+  ],
+  "workflow": [
+    "Buy a membership at /pricing ($1.99/week or $59 forever)",
+    "Open /submit and paste the live landing page URL",
+    "Automated pre-filter screenshots the page, then a human curator approves or rejects",
+    "Approved pages go live in the gallery; you get an email and can track submissions from your profile"
+  ],
+  "watchFor": [
+    "Source-claimed 'paid' pricing is confirmed — there is no free submission path",
+    "Membership also unlocks the Tailwind/Webflow/Figma component library, so the fee isn't purely a listing fee",
+    "Automated pre-filter may fail on JS-heavy or bot-blocking pages",
+    "Rejection is common — this is an editorial gallery, not a guaranteed listing"
+  ],
+  "countsAsLive": "The landing page appears as an entry in the Landingfolio inspiration gallery (reachable via /inspiration/landing-page browsing) and the confirmation email arrives",
+  "unknowns": [
+    "Whether the listing link is dofollow",
+    "Review turnaround time",
+    "Whether you can submit a page you don't own without the owner's involvement (site says 'a page you admire' is acceptable)"
+  ]
+}

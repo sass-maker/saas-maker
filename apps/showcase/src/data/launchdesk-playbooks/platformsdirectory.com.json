@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "platformsdirectory.com",
+  "name": "Platforms Directory",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://platformsdirectory.com/",
+      "title": "Homepage — software/app directory across 30 categories, 'Registered Users 788'"
+    },
+    {
+      "url": "https://platformsdirectory.com/signin.php",
+      "title": "Sign-in/listing page — OTP email login, 'up to 5 free product listings', moderated listings, paid boosts"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Register a company/freelancer account first — 'List or Manage Product' links to signin.php",
+    "Sign-in is email + OTP (no password, no OAuth); Microsoft 365 addresses (Outlook/Hotmail) may fail OTP delivery — they recommend Gmail or non-Microsoft email",
+    "Check the product isn't already listed before registering; if it is, use claim-company.php to claim the existing listing",
+    "Free tier: up to 5 product listings; listings are moderated",
+    "Digital products only: software, web apps, extensions"
+  ],
+  "preparation": [
+    "A non-Microsoft email for reliable OTP delivery",
+    "Product name, URL, description, logo/screenshots, category, price type (Free/Freemium/Subscription/Perpetual/Paid/Tiered/Pay-As-You-Go)",
+    "Company/freelancer name for the account"
+  ],
+  "workflow": [
+    "Open https://platformsdirectory.com/signin.php and sign in with email OTP",
+    "From the dashboard, list the product (up to 5 free listings)",
+    "Listing enters moderation before going live",
+    "Optional paid upgrades: feature products at top, analytics, lead generation, more than 5 listings"
+  ],
+  "watchFor": [
+    "PHP/.php-era site (index.php, signin.php) with Mod_Security — plain curl gets 406 'Not Acceptable!'",
+    "OTP-only auth — no OAuth; corporate/Exchange inboxes may silently drop the OTP",
+    "Paid 'Boost' and lead-gen upgrades are the monetization — expect upsell prompts",
+    "Duplicate-listing rule: register/claim, don't double-list"
+  ],
+  "countsAsLive": "The product gets a public product.php?s=<slug> page in its category after moderation",
+  "unknowns": [
+    "Moderation turnaround",
+    "Whether listing links are dofollow",
+    "Pricing for boost/leads upgrades (not public on the pages fetched)"
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "wefunder.com",
+  "name": "Wefunder",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://help.wefunder.com/article/0a9eb1a9-eligibility-requirements",
+      "title": "Eligibility & requirements — US-registered entities only (C-Corp, LLC, or Public Benefit Corp); restricted industries; Reg CF use-of-proceeds rule"
+    },
+    {
+      "url": "https://help.wefunder.com/article/5b44b54b-getting-started.md",
+      "title": "Getting started (search-indexed) — start a raise at wefunder.com/raise; review before going live; Private Rounds are free for founders"
+    },
+    {
+      "url": "https://help.wefunder.com/article/6510d773-wefunder-pricing",
+      "title": "Pricing (search-indexed) — Private Rounds free for founders; invited investors pay no fees; Wefunder-introduced investors pay 5% management fees + 10% carry"
+    },
+    {
+      "url": "https://wefunder.com/raise",
+      "title": "Raise start page — returned HTTP 403 (bot-blocked)"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Creating a raise is free for founders, but this is regulated equity crowdfunding — the 'listing' is a live securities offering requiring SEC Form C filing, not a directory entry",
+    "Only appropriate if the product is actually raising investment; the batch's 'signup' route is for investors — founders go to wefunder.com/raise",
+    "Only US-registered entities (C-Corp, LLC, Public Benefit Corp); ~half of Reg CF proceeds must be spent in the US"
+  ],
+  "requirements": [
+    "US legal entity (Delaware C-Corp typical) with EIN; foreign founders must notarize a Form C Power of Attorney",
+    "Restricted industries excluded (cannabis, adult, gambling, pawn brokers, others per banking partners)",
+    "Accurate campaign sections (Part 1–3) that generate the Form C filed with the SEC — errors delay launch",
+    "Wefunder recommends launching only when investors are already willing to invest; 'Warmup' mode exists to build followers first"
+  ],
+  "preparation": [
+    "US entity details: legal name, EIN, formation docs",
+    "Investment terms, fundraise goal, pitch deck",
+    "Decide Community Round (Reg CF, anyone can invest, $5M/yr cap) vs Private Round (Reg D, accredited investors only, no public solicitation by default)",
+    "Founder identity verification documents; for foreign founders a notarized POA"
+  ],
+  "workflow": [
+    "Go to wefunder.com/raise and sign up the company (use a browser — site 403s automated fetches)",
+    "Fill campaign sections Parts 1–3 — this data generates the SEC Form C",
+    "Wefunder team reviews the submission and contacts you for next steps",
+    "Optionally run a Warmup campaign to collect followers before going live",
+    "Push live; a Community Round page becomes publicly visible at wefunder.com/<company>"
+  ],
+  "watchFor": [
+    "This is a securities offering — every statement on the page is a regulated disclosure; no marketing hyperbole",
+    "A live Reg CF page is public and indexable, but it exists to take investments — don't launch one just for exposure",
+    "Reg D 506(b) private rounds cannot be publicly advertised at all",
+    "Batch signup URL (wefunder.com/users/sign_up) is the investor account flow, not the founder raise flow"
+  ],
+  "countsAsLive": "A public raise page exists at wefunder.com/<company> accepting investments (Community Round) — or for Warmup, a follower page is live",
+  "unknowns": [
+    "Review turnaround before a raise can go live",
+    "Whether profile pages for non-raising companies can exist publicly",
+    "Current fee split for Reg CF community rounds (only Private Round pricing was verified)"
+  ]
+}

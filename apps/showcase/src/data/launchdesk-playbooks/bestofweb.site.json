@@ -1,0 +1,33 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "bestofweb.site",
+  "name": "Best of Web",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.bestofweb.site/",
+      "title": "bestofweb.site — returns HTTP 200 but renders an empty shell to fetchers (fully JS-gated); content unverified"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "Site is JS-gated — no server-rendered content; the submission flow could not be observed",
+    "Domain pattern suggests a links/directory service; details unverified"
+  ],
+  "preparation": [
+    "Verify the site renders and identify its submit route in a real browser before investing effort"
+  ],
+  "workflow": [
+    "Open bestofweb.site in a browser (JS required)",
+    "Locate any submission/listing route",
+    "Treat evidence as weak until confirmed"
+  ],
+  "watchFor": [
+    "Fully client-rendered — may be a thin or abandoned directory",
+    "No verifiable submission flow this session"
+  ],
+  "countsAsLive": "Unverified — a listing in the site's directory if it exists",
+  "unknowns": ["What the site actually contains", "Submission route and pricing"]
+}

@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aitoolsmagazine.com",
+  "name": "AI Tools Magazine",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://aitoolsmagazine.com/",
+      "title": "Homepage — live curated AI tools directory (200+ tools, 'Submit Your AI Tool' CTA)"
+    },
+    {
+      "url": "https://aitoolsmagazine.com/submit-listing/details/",
+      "title": "Submit Listing — redirects to sign-in modal (Google OAuth or email register); form behind auth"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Account required — /submit-listing/details/ bounces to sign-in (Google sign-in or email registration)"
+  ],
+  "requirements": [
+    "AI tools only — ~40 fine-grained categories (AI Agents, AI Image Generators, AI SEO Tools, etc.)",
+    "Homepage promotes 'Free & Paid Tools' — the directory lists both, but whether submission itself is free is behind the auth wall",
+    "Registration via Google OAuth or email+password"
+  ],
+  "preparation": [
+    "Google account or email for registration",
+    "Tool name, URL, category, description, pricing model",
+    "Logo/screenshot likely required for the listing card"
+  ],
+  "workflow": [
+    "Open https://aitoolsmagazine.com/ and click 'Submit Your AI Tool' (goes to /submit-listing/details/)",
+    "Sign in with Google or register with email",
+    "Complete the listing details form after auth",
+    "Accepted listings appear at /listing/<slug>/ under a /listing-category/<cat>/ page"
+  ],
+  "watchFor": [
+    "Entire submission flow is behind login — fields and any fees could not be verified",
+    "Relatively small catalog (~200 listings; several categories have 0-1 tools)",
+    "Many 'Added on July 2025' dates — site may be stale; verify activity before investing effort",
+    "Site has an 'AI Tool Badge Generator' — likely badge/link exchange mechanics",
+    "Affiliate Disclosure present — some listings may be affiliate-linked"
+  ],
+  "countsAsLive": "The tool has a aitoolsmagazine.com/listing/<slug>/ page linked from its listing-category page",
+  "unknowns": [
+    "Whether listing is free or paid — pricing not visible before sign-in",
+    "Submission form fields behind auth",
+    "Review criteria and turnaround",
+    "Outbound link type"
+  ]
+}

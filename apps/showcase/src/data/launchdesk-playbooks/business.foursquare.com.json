@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "business.foursquare.com",
+  "name": "Foursquare Listings",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://business.foursquare.com/",
+      "title": "Foursquare for Business — 'Search for your business on Foursquare' / 'Claim your listing' landing page"
+    },
+    {
+      "url": "https://business.foursquare.com/claim",
+      "title": "Claim flow — JS/Auth0-driven, returned no readable content to a plain fetch"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Claiming and managing a listing is free, but the flow is gated behind an Auth0 account login",
+    "Only meaningful for a real physical/local venue — the claim flow starts by searching for an existing venue by name/location"
+  ],
+  "requirements": [
+    "The business must exist (or be addable) as a Foursquare venue with a real-world location — this is a local-business directory, not a SaaS/product directory",
+    "Claim requires signing into a Foursquare account (Auth0-based auth on business.foursquare.com)",
+    "Verification/ownership checks apply to manage a venue listing"
+  ],
+  "preparation": [
+    "Business name, address, phone, category, and hours",
+    "A Foursquare/Auth0 account",
+    "Proof of association with the venue if ownership is challenged"
+  ],
+  "workflow": [
+    "Open https://business.foursquare.com/ and use 'Search for your business on Foursquare' to find the venue",
+    "If the venue exists, click through to claim it and sign in",
+    "If the venue does not exist, add it via the consumer-side add-venue flow (foursquare.com app/site) first",
+    "Complete the claim and manage listing details from the business dashboard"
+  ],
+  "watchFor": [
+    "business.foursquare.com is a JS/Auth0 SPA — plain fetches return empty or 'auth0-spa-js must run on a secure origin' errors; requires a real browser session",
+    "Poor fit for online-only SaaS: the catalog is venues (bars, restaurants, boutiques), so claiming a software product is not a legitimate route",
+    "Paid upsells (Foursquare ads/promoted placement) exist but are not required to claim"
+  ],
+  "countsAsLive": "The venue's public Foursquare page shows claimed/verified status and the managed details are visible to consumers",
+  "unknowns": [
+    "Exact verification method and review turnaround for claims",
+    "Whether new venues can be added directly from business.foursquare.com or only via the consumer app",
+    "Whether listing edits propagate to Foursquare City Guide immediately"
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "notion.so",
+  "name": "Notion Marketplace",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.notion.com/marketplace",
+      "title": "Notion Marketplace page — JS-only shell, confirms marketplace exists"
+    },
+    {
+      "url": "https://developers.notion.com/guides/get-started/marketplace-listing",
+      "title": "Notion docs: List on the Marketplace — listing dashboard, review process, scope requirements"
+    },
+    {
+      "url": "https://developers.notion.com/guides/get-started/public-connections",
+      "title": "Notion docs: Public connections — 'Any workspace' scope required for Marketplace eligibility"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Listing is free but gated: you must first build a real public Notion connection (OAuth integration) with installation scope 'Any workspace'",
+    "The connection must pass a Notion security review before Marketplace listing",
+    "Internal connections and 'Selected workspaces only' connections are not eligible — scope is fixed at creation and cannot be changed later"
+  ],
+  "requirements": [
+    "A functional public integration using the Notion API — this is not a generic product listing; there must be a working OAuth connection",
+    "Installation scope set to 'Any workspace' at connection creation",
+    "Listing name, description, category, tags, logo, and listing images",
+    "Notion team review and approval before the listing appears"
+  ],
+  "preparation": [
+    "A built, working Notion public connection (OAuth client, redirect URIs, capabilities configured)",
+    "A Notion developer workspace to own the connection",
+    "Marketplace assets: square logo, listing images/screenshots, short + long descriptions, category, tags",
+    "Evidence for the security review (the connection will be exercised)"
+  ],
+  "workflow": [
+    "Create a public connection in the Notion integrations dashboard with scope 'Any workspace' (this choice is permanent)",
+    "Complete any required verification/security review for public connections",
+    "Open the Marketplace listing dashboard > Listings > Connections > 'Start a new connection listing'",
+    "Fill name, description, category, tags, images, and associate the public connection; save as draft",
+    "Submit for review; track status under the 'Submitted' section until approved"
+  ],
+  "watchFor": [
+    "This is an integration marketplace — a SaaS with no Notion integration cannot be listed",
+    "Scope is irreversible: picking 'Selected workspaces only' permanently disqualifies that connection; create a new one",
+    "Review is manual by the Notion team; no published SLA on the page fetched",
+    "app.notion.com/profile/connections (batch URL) is the connections management area, not a public submit page"
+  ],
+  "countsAsLive": "The connection listing is publicly visible on notion.com/marketplace with an install/connect button pointing at the product's OAuth flow",
+  "unknowns": [
+    "Review timeline (Notion FAQ referenced but not fetched)",
+    "Whether templates (non-integration listings) have a separate submission flow under the same marketplace",
+    "Rejection criteria beyond security review"
+  ]
+}

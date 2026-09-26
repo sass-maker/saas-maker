@@ -1,0 +1,36 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "coindoo.com",
+  "name": "Coindoo",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://coindoo.com/submit-press-release/",
+      "title": "Coindoo 'Submit a Press Release' — live crypto news site (© 2010-2026); Submit PR nav link; the form itself renders client-side"
+    }
+  ],
+  "category": "press",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Crypto/blockchain/fintech press releases only — Coindoo is a crypto news outlet",
+    "Submit-PR route exists; crypto-media PR submissions are typically paid placements — pricing not visible on the rendered page",
+    "Editorial side: news coverage across Bitcoin/altcoins/regulations/fintech; 'Corrections Policy' and 'Writing Methodology' pages indicate real editorial ops"
+  ],
+  "preparation": [
+    "A crypto/blockchain-relevant press release",
+    "Contact via coindoo.com/contact for terms"
+  ],
+  "workflow": [
+    "Use coindoo.com/submit-press-release/ (or contact) to submit the PR",
+    "Expect a paid-placement flow typical of crypto media",
+    "Earned coverage is separate — pitch news tips via contact"
+  ],
+  "watchFor": [
+    "Crypto vertical only",
+    "PR-submission pages on crypto media are usually pay-to-publish — assume cost until confirmed",
+    "Form didn't render to fetchers — check in a browser"
+  ],
+  "countsAsLive": "The press release is published under coindoo.com/category/press-release/",
+  "unknowns": ["PR publication pricing", "Whether any free submission tier exists"]
+}

@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "justlaunched.fyi",
+  "name": "JustLaunched",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://justlaunched.fyi/submit",
+      "title": "Submit your SaaS — 2-step form (Details → Plan & Pay); $9 one-time or $29 with dofollow backlink + 30-day top-of-feed + priority review; 'no free plan'"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Live SaaS/software product with a working landing page, clear tagline, and description of who it's for",
+    "$9 one-time submission fee; $29 tier adds dofollow backlink, 30-day top-of-feed placement, priority review, newsletter feature",
+    "Every listing is reviewed before going live — approval required",
+    "Form fields: startup name, tagline (≤120 chars), description (50-1000 chars), website URL, category, optional logo ≤5MB, up to 5 screenshots ≤8MB each, Twitter/LinkedIn URLs, submitter name + email"
+  ],
+  "preparation": [
+    "Tagline (≤120 chars) and description (50-1000 chars)",
+    "Website URL and category (AI & ML, Analytics, Dev Tools, E-Commerce, Education, Finance, Health, HR, Marketing, Productivity, Sales & CRM, Security, Social, Other)",
+    "Logo (PNG/JPG/WEBP ≤5MB) and up to 5 screenshots (≤8MB each)",
+    "Twitter/X and LinkedIn URLs, contact name + email",
+    "Payment for $9 or $29 tier"
+  ],
+  "workflow": [
+    "Open https://justlaunched.fyi/submit",
+    "Fill step 1 (Details) fields",
+    "'Continue to choose plan' → pick $9 standard or $29 promoted, pay",
+    "Review: standard within 3 business days, promoted within ~1 day; listing publishes on approval",
+    "Optional: upgrade later to promoted without resubmitting; optional 'Featured on JustLaunched' badge embed emailed post-launch"
+  ],
+  "watchFor": [
+    "No free plan — payment is required in step 2 before submission completes",
+    "One-time payment, permanent listing — but confirm 'permanently' claim holds",
+    "Badge is optional, not required — no reciprocal-link gate",
+    "'Directory Blast' nav item suggests a separate paid mass-submission upsell"
+  ],
+  "countsAsLive": "The startup appears in the JustLaunched feed/categories with its own listing page after review approval",
+  "unknowns": [
+    "Whether the $9 tier link is nofollow (dofollow is advertised as the $29 add-on)",
+    "Rejection/refund policy for declined submissions",
+    "Current listing volume vs. 'thousands of early adopters' claim"
+  ]
+}

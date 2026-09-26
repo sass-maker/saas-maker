@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "beyondaitools.com",
+  "name": "Beyond AI Tools",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://beyondaitools.com/",
+      "title": "Homepage — live multilingual AI tools directory with Submit nav"
+    },
+    {
+      "url": "https://beyondaitools.com/product/submit",
+      "title": "Submit/pricing page — Basic $9.9 one-submit, Standard $29.9 one-submit; no free tier"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "AI-related products only; must meet editorial and legal standards",
+    "No NSFW/adult content; no products infringing third-party IP",
+    "Payment required: Basic $9.9 one-time (listing, ~3-day turnaround) or Standard $29.9 one-time (adds 2-week site-wide promotion)",
+    "Submission needs product name, category, and a valid URL",
+    "Payments via Stripe (cards, PayPal, Apple Pay)"
+  ],
+  "preparation": [
+    "Product name, category, and live URL",
+    "Stripe-compatible payment method for the one-time fee",
+    "Marketing copy — Basic tier advertises a 'fine crafted introduction' written by them"
+  ],
+  "workflow": [
+    "Open https://beyondaitools.com/product/submit",
+    "Pick Basic ($9.9) or Standard ($29.9) and hit Submit Now",
+    "Provide product name, category, and URL; pay via Stripe",
+    "Manual review; listing is published within ~3 days of receiving complete information",
+    "Rejected submissions are auto-refunded in full"
+  ],
+  "watchFor": [
+    "No free submission tier at all — both plans are paid one-time fees",
+    "The 3-day clock only starts once they have 'complete and accurate' info — incomplete submissions stall the timeline",
+    "Claims of '10 valuable dofollow backlinks' come via dedicated pages in 10 languages — verify the language pages actually link out",
+    "Sponsored top banners on every page are paid placements (utm_source=paid_referral)",
+    "Listings never expire but can be removed for policy violations"
+  ],
+  "countsAsLive": "The product has a public detail page on beyondaitools.com (and its language variants) linked from category pages",
+  "unknowns": [
+    "Whether the '10+ dofollow backlinks' are all same-domain language variants or external",
+    "Exact editorial criteria beyond NSFW/IP exclusions",
+    "Whether an account is needed to submit (a Log in link exists)"
+  ]
+}

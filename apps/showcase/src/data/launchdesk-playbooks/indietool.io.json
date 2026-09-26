@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "indietool.io",
+  "name": "IndieTool",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://indietool.io/",
+      "title": "Homepage — indie-founder directory; Standard plan $29.99 one-time: lifetime listing, dofollow backlink (claimed DR 49), newsletter blast to 1,500+ subs, live in 60s"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Standard listing: $29.99 one-time via Stripe (was $54)",
+    "Includes: permanent listing, do-follow backlink, no reciprocal badge required, newsletter blast to 1,500+ subscribers, claimed live-in-60-seconds automated indexing",
+    "Signup path: /user/signup?accountType=indietool-standard"
+  ],
+  "preparation": [
+    "Product name, URL, short description, logo",
+    "Account email for signup",
+    "$29.99 Stripe payment",
+    "Category selection for the listing"
+  ],
+  "workflow": [
+    "Open https://indietool.io/ and click Get Standard Listing (or /user/signup?accountType=indietool-standard)",
+    "Create account, pay $29.99 via Stripe",
+    "Fill the listing (name, URL, description, logo, category)",
+    "Listing claimed to be live within ~60 seconds and blasted to the newsletter"
+  ],
+  "watchFor": [
+    "The pitch is explicitly a backlink/DR play ('Launch Today, Get DR 49+ Backlink') — value is SEO, not audience",
+    "Claimed DR 49 is the site's self-reported number",
+    "Heavy ad slots and sponsor spots across the page — the product directory doubles as ad inventory",
+    "Solo-operator site (run by 'Dhang'); testimonial-driven marketing"
+  ],
+  "countsAsLive": "A product page at indietool.io/indietool/<slug> exists and the product appears in the apps/explore listing",
+  "unknowns": [
+    "Actual newsletter engagement (1,500+ claimed subscribers)",
+    "Whether featured/trending placement is a separate purchase",
+    "Refund/rejection policy"
+  ]
+}

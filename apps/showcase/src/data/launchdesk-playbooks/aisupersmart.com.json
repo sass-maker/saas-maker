@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aisupersmart.com",
+  "name": "AiSuperSmart",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.aisupersmart.com/about-us/",
+      "title": "About Us — live Indian WordPress AI tool directory (1000+ tools); nav shows Submit Tool link to /submit-tool/"
+    },
+    {
+      "url": "https://www.aisupersmart.com/submit-tool/",
+      "title": "Submit Tool — returned a JS verification interstitial ('Please wait while your request is being verified'); form not readable"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Submission is advertised as free ('Submit your Ai Tool On Our Site For Free')",
+    "The submit page is gated by a JS bot-verification challenge and likely requires an account — Login/Register (Google sign-in) appears in the nav and popup"
+  ],
+  "requirements": [
+    "AI tools only — directory covers 1000+ tools across use-case categories",
+    "Free submission per the site's own marketing (LinkedIn and directory copy)",
+    "Account likely required — login popup and /sign-up/ exist"
+  ],
+  "preparation": [
+    "A browser that passes the JS verification challenge — plain fetches get the 'Please wait' interstitial",
+    "Account registration (Google sign-in supported)",
+    "Tool name, URL, category, description, logo"
+  ],
+  "workflow": [
+    "Open https://www.aisupersmart.com/submit-tool/ in a real browser and pass the verification",
+    "Register/log in if prompted",
+    "Complete the submission form (fields not visible to text fetch)",
+    "Listing appears under /ai-tools-directory/<slug>/ after review"
+  ],
+  "watchFor": [
+    "Aggressive bot-check on many routes — automated submission needs a real browser",
+    "Several nav links are malformed (double-domain URLs like /aisupersmart.com/submit-tool/) — use the clean /submit-tool/ path",
+    "Small WordPress directory run by a two-person Indian team — expect informal review",
+    "Site mixes its own AI tools, blog, and directory — distinguish the directory listing from their 'Our Tools' features"
+  ],
+  "countsAsLive": "The tool has a page under aisupersmart.com/ai-tools-directory/<slug>/ or appears in the homepage tool grid",
+  "unknowns": [
+    "Exact submission form fields behind the JS check",
+    "Whether an account is strictly required",
+    "Review process and turnaround",
+    "Whether outbound links are dofollow"
+  ]
+}

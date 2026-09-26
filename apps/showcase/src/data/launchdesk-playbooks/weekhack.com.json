@@ -1,0 +1,57 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "weekhack.com",
+  "name": "WeekHack",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.weekhack.com/pricing",
+      "title": "Pricing — Free Launch $0 (product page + voting; dofollow only if top-3; next available week 'a few weeks to a couple of months'); Premium $19 one-time guarantees dofollow + chosen week"
+    },
+    {
+      "url": "https://www.weekhack.com/launches/submit",
+      "title": "Submit route — behind sign-in (Google, GitHub, or email account required)"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Account required (Google/GitHub/email)",
+    "Free launches go into the 'next available week' queue — 'a few weeks to a couple of months' depending on demand",
+    "Free listings only earn a dofollow backlink by finishing top-3 in their week — otherwise the link is nofollow",
+    "Free relaunch cooldown is 1 year (Premium: 30 days)"
+  ],
+  "requirements": [
+    "A shippable product/side project — weekly launch board for makers",
+    "Free: product listing page, community voting/comments, next-available-week slot",
+    "Premium $19 one-time: pick launch week, skip review queue, homepage feature, guaranteed permanent dofollow",
+    "Optional power-ups during submission: 50+ directory submissions $99, expert review article $99, social promo $199",
+    "AI-assisted import: paste website or Product Hunt link to prefill the launch form"
+  ],
+  "preparation": [
+    "Website or Product Hunt URL for the AI prefill",
+    "Screenshots and product details to fine-tune the listing",
+    "Account on weekhack.com",
+    "Decide free vs $19 Premium (dofollow guarantee) before submitting"
+  ],
+  "workflow": [
+    "Sign in at https://www.weekhack.com/launches/submit",
+    "Paste site/PH URL to prefill; edit screenshots and details",
+    "Choose Free (queue) or Premium ($19, pick your week)",
+    "Review → published in your launch week; community voting opens",
+    "Free tier: finish top-3 to earn the dofollow link"
+  ],
+  "watchFor": [
+    "Free-link value is performance-dependent — most free listings will end up nofollow",
+    "Queue delay for free tier can be months — plan launch timing accordingly",
+    "No refunds once a launch week is confirmed",
+    "Upsell-heavy flow (directory-submission and promo add-ons up to $199)"
+  ],
+  "countsAsLive": "The product appears on weekhack.com/launches with a dedicated page, open community voting, and a launch-week slot",
+  "unknowns": [
+    "Review criteria / what gets rejected in the free queue",
+    "How many products compete per weekly cohort",
+    "Newsletter inclusion rules for launches"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "shipordie.club",
+  "name": "SHIP OR DIE",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://shipordie.club/",
+      "title": "Homepage — 'Stop building. Start shipping. Public accountability platform for indie hackers to ship, track, and grow their projects.' (client-rendered SPA, Supabase)"
+    },
+    {
+      "url": "https://shipordie.club/leaderboard",
+      "title": "Leaderboard — batch-provided submission URL; renders the same SPA shell, content not readable without JS"
+    },
+    {
+      "url": "https://firsto.co/sites?category=productivity",
+      "title": "Firsto launch-sites listing — describes SHIP OR DIE as 'subscription-based accountability platform... requiring a paid membership' (DR 11, ~18.6K visits/mo)"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Not a listing directory — it is a public accountability platform where indie hackers ship, track, and grow projects (leaderboard, project tracking, 'roast my startup' feature at /roast/startup)",
+    "Third-party reports membership is paid subscription — the model is intentionally gated to keep the community serious",
+    "SPA requires JavaScript; account creation is presumably via Supabase auth"
+  ],
+  "preparation": [
+    "An account (signup flow inside the SPA)",
+    "A project to register/track — name, URL, description, shipping milestones",
+    "Paid membership per third-party reporting (price unverifiable without rendering the app)"
+  ],
+  "workflow": [
+    "Open https://shipordie.club/ in a JS-capable browser and create an account",
+    "Register the project, pay any membership fee shown",
+    "Post shipping updates/milestones — public accountability feed and leaderboard placement is the 'listing'",
+    "Optional: use the /roast/startup feature for an AI roast of the startup (observed in third-party coverage)"
+  ],
+  "watchFor": [
+    "This is an accountability community, not exposure infrastructure — value is public building-in-public proof, not a backlink",
+    "Entire app is client-rendered; membership pricing and submit mechanics could not be verified firsthand",
+    "Batch-reported 'submissionUrl' (/leaderboard) is just the public leaderboard route, not a submission form",
+    "Small DR-11 site; audience is fellow indie hackers"
+  ],
+  "countsAsLive": "The project appears on the public shipordie.club leaderboard/feed with its shipping updates",
+  "unknowns": [
+    "Exact membership price and whether any free tier exists",
+    "Whether projects get dofollow outbound links",
+    "Activity level — member counts and posting volume are not publicly readable"
+  ]
+}

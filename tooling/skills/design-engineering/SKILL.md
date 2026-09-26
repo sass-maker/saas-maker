@@ -1,6 +1,7 @@
 ---
 name: design-engineering
-description: "Use explicitly for isolated design-engineering mechanics that do not need end-to-end visual direction: Tailwind canonicalization, semantic markup reconstruction, or routing a specialized 3D, effects, component-pattern, or evidence-interface task. Meaningful UI implementation and visual direction belong to design-workflow."
+description: 'Use explicitly for isolated design-engineering mechanics that do not need end-to-end visual direction: Tailwind canonicalization, semantic markup reconstruction, or routing a specialized 3D, effects, component-pattern, or evidence-interface task. Meaningful UI implementation and visual direction belong to design-workflow.'
+disable-model-invocation: true
 ---
 
 # Design engineering

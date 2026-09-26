@@ -1,0 +1,57 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "direct2app.com",
+  "name": "Direct2App",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://direct2app.com/",
+      "title": "Homepage — live SaaS & AI tools directory with categories/tags, featured and latest listings"
+    },
+    {
+      "url": "https://direct2app.com/pricing",
+      "title": "Pricing — Free $0 (dofollow but requires reciprocal backlink, ~30-day review), Pro $7.99, Premium $29.99"
+    },
+    {
+      "url": "https://direct2app.com/submit",
+      "title": "Submit URL — redirects to a login/register wall (email, Google, or GitHub auth)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free plan requires a backlink to direct2app.com from your site (badge/link verification offered on the pricing page)",
+    "Free listings sit in a queue — 'reviewed and listed within 30 days'",
+    "Account registration required (email, Google, or GitHub)"
+  ],
+  "requirements": [
+    "SaaS/AI/software product — directory categories span AI, SaaS, dev tools, SEO, marketing, fintech, hosting, etc.",
+    "Free: reciprocal backlink + up to 30-day wait, no support; Pro $7.99 removes the backlink and publishes immediately; Premium $29.99 adds featured placement + badge",
+    "All tiers claim a permanent/lifetime listing"
+  ],
+  "preparation": [
+    "Account credentials (or Google/GitHub OAuth)",
+    "Product name, URL, description, icon/logo, category and tag selections",
+    "For free plan: add their backlink/badge to your site before submitting so verification passes"
+  ],
+  "workflow": [
+    "Register or sign in at https://direct2app.com/submit",
+    "Choose Free / Pro / Premium",
+    "Fill product details, categories, and tags",
+    "Free: wait up to ~30 days for review; Pro/Premium: publishes immediately",
+    "Verify the listing appears under /search and its category page"
+  ],
+  "watchFor": [
+    "Free tier's 'dofollow' benefit is contingent on keeping the reciprocal backlink live",
+    "30-day review lag on the free plan — not usable for a timed launch",
+    "Direct 'Visit Website' outbound button is Premium-only; lower tiers link through the item detail page",
+    "Watch for the Domain Rating badge/verify widget requirement — an unverified backlink may stall the listing"
+  ],
+  "countsAsLive": "The product has a public /item/<slug> page on direct2app.com, searchable and linked from category/tag pages",
+  "unknowns": [
+    "Exact form fields behind the auth wall",
+    "Whether the free plan's backlink is re-checked periodically",
+    "Review rejection criteria"
+  ]
+}

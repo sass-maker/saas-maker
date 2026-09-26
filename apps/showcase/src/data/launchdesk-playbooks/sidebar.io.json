@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "sidebar.io",
+  "name": "Sidebar",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://sidebar.io/submit",
+      "title": "Submit a Link — requires log in or sign up first"
+    },
+    {
+      "url": "https://sidebar.io/about",
+      "title": "About + Submission Guidelines — curated 'five best design links, every weekday'; maintained by Fabricio Teixeira since 2012"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Account required — /submit redirects to /log-in?redirect=/submit",
+    "You submit a LINK, not a product listing: articles, portfolios, CodePen demos, case studies",
+    "High-effort content only — case studies, tutorials; cookie-cutter listicles and link-through posts discouraged",
+    "New content only — links older than a few months won't make the cut",
+    "No paid products unless they offer a free/demo tier that's useful standalone; case studies ABOUT paid products are fine",
+    "No heavy downloads, app-store links, PDFs; videos rarely featured",
+    "Self-promotion is allowed ('posting your own content is fine') if it follows the guidelines"
+  ],
+  "preparation": [
+    "A Sidebar account",
+    "A genuinely high-effort design-relevant link — ideally a case study or tutorial about/around your product, not the product homepage",
+    "Freshness: content published within the last ~2-3 months"
+  ],
+  "workflow": [
+    "Create an account / log in at sidebar.io/log-in",
+    "Submit the link at /submit",
+    "Editors pick 5 links per weekday — no notification guarantee",
+    "Check /archives to see if your link made it"
+  ],
+  "watchFor": [
+    "A bare product page is unlikely to be featured — wrap it in a valuable story (design process, case study)",
+    "Audience is designers/makers — irrelevant links waste the attempt",
+    "Paid sponsorship route exists via UX Collective (sponsor link → uxdesigncc Medium post) if editorial doesn't fit",
+    "5 slots/day means heavy competition; don't resubmit"
+  ],
+  "countsAsLive": "Your link appears on sidebar.io's homepage/archives as one of the day's five curated links",
+  "unknowns": [
+    "Whether accepted submitters get notified",
+    "Backlink attribute on featured links",
+    "Sponsorship pricing (goes through UX Collective/uxdesign.cc contact)"
+  ]
+}

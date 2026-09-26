@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "lobste.rs",
+  "name": "Lobsters",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://lobste.rs/about",
+      "title": "Lobsters About/Guidelines — invitation-tree signup, 70-day new-user restrictions (cannot submit links to previously-unseen domains, can't use show/announce/job/ask/meta tags), self-promo must stay under ~25% of activity, strict computing topicality, marketing-analytics domains banned and utm params stripped"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free but invitation-gated — you must be invited by an existing user (public invite tree; chat room is the suggested route), and new accounts face a 70-day probation with real submission limits"
+  ],
+  "requirements": [
+    "An invitation from an existing Lobsters user (the tree is public; reaching out in the IRC/chat room is the documented path)",
+    "New users (<70 days) cannot submit links to domains the site hasn't seen before, cannot use the show/announce/job/ask/meta tags, cannot flag or resubmit",
+    "Self-promotion must be less than a quarter of your stories and comments — write-only product promotion is explicitly banned",
+    "Strict topicality: computing/programming content; entrepreneurship and product announcements are off-topic",
+    "Spam flag covers content 'designed to promote a commercial service' — product launches get flagged"
+  ],
+  "preparation": [
+    "Get invited (chat room or a contact on the invite tree)",
+    "Plan to participate genuinely for 70+ days before your own domain can be submitted — and even then keep self-promo under 25%",
+    "The realistic launch angle: someone else submits your technical content, or you share genuinely technical writing"
+  ],
+  "workflow": [
+    "Obtain an invitation (lobste.rs/chat, or ask a member)",
+    "Participate in discussions; build a normal usage pattern",
+    "After the new-user period, submit genuinely technical stories — tags must come from the predefined list",
+    "Never submit your own marketing landing page — it will be flagged as spam"
+  ],
+  "watchFor": [
+    "This is NOT a launch channel — the community actively resists product promotion; a drive-by launch submission will be flagged and can get the account (and your inviter's invite ability) burned",
+    "utm_* tracking parameters are stripped automatically; marketing-analytics domains are banned outright",
+    "New-user domain restriction means your fresh domain literally cannot be submitted by a new account",
+    "Moderation is fully transparent and public"
+  ],
+  "countsAsLive": "A submitted story appears on lobste.rs with its tag set and discussion thread",
+  "unknowns": [
+    "Typical wait for an invitation",
+    "Whether the 70-day new-domain restriction has exceptions"
+  ]
+}

@@ -10,6 +10,7 @@
  */
 import Footer from '../../components/Footer.astro';
 import Nav from '../../components/Nav.astro';
+import launchdeskData from '../../data/launchdesk.json';
 import Layout from '../../layouts/Layout.astro';
 
 type PlaybookSource = { url: string; title?: string };
@@ -30,22 +31,79 @@ type Playbook = {
   unknowns: string[];
 };
 
+type Claim = {
+  source: string | null;
+  dr: number | null;
+  link: string | null;
+  pricing: string | null;
+  type?: string | null;
+};
+type Destination = {
+  name: string;
+  domain: string;
+  website: string;
+  submissionUrl: string | null;
+  exampleUrl: string | null;
+  category: string;
+  type: string | null;
+  pricing: string;
+  dr: number | null;
+  link: string;
+  eligibility: string | null;
+  flags: string[];
+  route: string;
+  provider: string | null;
+  sourceUrl: string | null;
+  retrieved: string | null;
+  measured: string | null;
+  quarantined: boolean;
+  claims: Claim[];
+};
+
 export function getStaticPaths() {
   const modules = import.meta.glob('../../data/launchdesk-playbooks/*.json', { eager: true });
-  return Object.values(modules)
-    .map((mod) => (mod as { default?: Playbook }).default ?? (mod as Playbook))
-    .filter((p) => p && p.domain)
-    .map((playbook) => ({
-      params: { domain: playbook.domain },
-      props: { playbook },
-    }));
+  const playbooks = new Map<string, Playbook>();
+  for (const mod of Object.values(modules)) {
+    const playbook = (mod as { default?: Playbook }).default ?? (mod as Playbook);
+    if (playbook?.domain) playbooks.set(playbook.domain, playbook);
+  }
+
+  // One page per unique domain; rows sharing a domain merge their claims.
+  const byDomain = new Map<string, Destination>();
+  for (const row of launchdeskData.destinations as Destination[]) {
+    if (row.quarantined || !row.domain) continue;
+    const existing = byDomain.get(row.domain);
+    if (!existing) {
+      byDomain.set(row.domain, { ...row, claims: [...row.claims] });
+    } else {
+      existing.claims.push(...row.claims);
+      if (existing.dr == null && row.dr != null) existing.dr = row.dr;
+      if (!existing.submissionUrl && row.submissionUrl)
+        existing.submissionUrl = row.submissionUrl;
+    }
+  }
+
+  const paths = [...byDomain.values()].map((destination) => ({
+    params: { domain: destination.domain },
+    props: { playbook: playbooks.get(destination.domain) ?? null, destination },
+  }));
+  const covered = new Set(byDomain.keys());
+  for (const playbook of playbooks.values()) {
+    if (covered.has(playbook.domain)) continue;
+    paths.push({ params: { domain: playbook.domain }, props: { playbook, destination: null } });
+  }
+  return paths;
 }
 
 interface Props {
-  playbook: Playbook;
+  playbook: Playbook | null;
+  destination: Destination | null;
 }
 
-const { playbook } = Astro.props as Props;
+const { playbook, destination } = Astro.props as Props;
+
+const pageName = playbook?.name ?? destination?.name ?? Astro.params.domain;
+const pageDomain = playbook?.domain ?? destination?.domain ?? Astro.params.domain;
 
 const ROUTE_LABELS: Record<string, string> = {
   free: 'Free route',
@@ -60,12 +118,119 @@ const GRADE_LABELS: Record<string, string> = {
 ---
 
 <Layout
-  title={`${playbook.name} launch playbook — SaaS Maker launch catalog`}
-  description={`Submission playbook for ${playbook.name} (${playbook.domain}): requirements, workflow, traps, and what counts as live. ${GRADE_LABELS[playbook.grade]}.`}
+  title={
+    playbook
+      ? `${pageName} launch playbook — SaaS Maker launch catalog`
+      : `${pageName} — SaaS Maker launch catalog`
+  }
+  description={
+    playbook
+      ? `Submission playbook for ${pageName} (${pageDomain}): requirements, workflow, traps, and what counts as live. ${GRADE_LABELS[playbook.grade]}.`
+      : `Catalog record for ${pageName} (${pageDomain}) — source-attributed metrics and submission route status in the SaaS Maker launch catalog.`
+  }
 >
   <div class="workshop-world interior-world launchdesk-playbook-world">
     <Nav />
     <main id="main-content" class="playbook-page">
+      {!playbook && destination && (
+        <>
+          <header class="playbook-hero">
+            <p class="playbook-kicker">
+              <a href="/launchdesk">Launch catalog</a> / Catalog record
+            </p>
+            <h1>{destination.name}</h1>
+            <p class="playbook-domain">
+              <a href={destination.website} target="_blank" rel="noopener noreferrer">
+                {destination.domain} ↗
+              </a>
+            </p>
+            <div class="playbook-verdict">
+              <span class="playbook-pill playbook-pill--plain">{destination.category}</span>
+              {destination.type && (
+                <span class="playbook-pill playbook-pill--plain">{destination.type}</span>
+              )}
+              <span class={`playbook-pill playbook-pill--${destination.link}`}>
+                {destination.link === 'unknown' ? 'link unreported' : `${destination.link} link`}
+              </span>
+              <span class={`playbook-pill playbook-pill--${destination.pricing}`}>
+                {destination.pricing === 'unknown' ? 'pricing unreported' : destination.pricing}
+              </span>
+            </div>
+            <p class="playbook-provenance">
+              {destination.dr != null ? `Reported DR ${destination.dr}` : 'DR unreported'}
+              {destination.provider ? ` · metric provenance: ${destination.provider}` : ''}
+              {destination.retrieved ? ` · retrieved ${destination.retrieved}` : ''}
+              {destination.measured ? ` · measured ${destination.measured}` : ''}
+            </p>
+          </header>
+
+          <section class="playbook-pane">
+            <h2>Submission route</h2>
+            {destination.submissionUrl ? (
+              <p>
+                <a href={destination.submissionUrl} target="_blank" rel="noopener noreferrer">
+                  {destination.submissionUrl} ↗
+                </a>
+              </p>
+            ) : (
+              <p>No verified submission route on file — research needed.</p>
+            )}
+            {destination.exampleUrl && (
+              <p>
+                Example listing:{' '}
+                <a href={destination.exampleUrl} target="_blank" rel="noopener noreferrer">
+                  {destination.exampleUrl} ↗
+                </a>
+              </p>
+            )}
+            {destination.eligibility && <p>Eligibility: {destination.eligibility}</p>}
+            {destination.flags.length > 0 && (
+              <p>Flags: {destination.flags.join(' · ')}</p>
+            )}
+          </section>
+
+          <section class="playbook-pane">
+            <h2>Source claims</h2>
+            <p>
+              Metrics below are source-reported and may disagree between providers — they are
+              kept verbatim rather than smoothed away.
+            </p>
+            <ul>
+              {destination.claims.map((claim) => (
+                <li>
+                  {claim.source ? `${claim.source}: ` : ''}
+                  {claim.dr != null ? `DR ${claim.dr}` : 'DR unreported'}
+                  {claim.link ? ` · ${claim.link}` : ''}
+                  {claim.pricing ? ` · ${claim.pricing}` : ''}
+                  {claim.type ? ` · ${claim.type}` : ''}
+                </li>
+              ))}
+            </ul>
+            {destination.sourceUrl && (
+              <p>
+                Source data:{' '}
+                <a href={destination.sourceUrl} target="_blank" rel="noopener noreferrer">
+                  {destination.sourceUrl} ↗
+                </a>
+              </p>
+            )}
+          </section>
+
+          <section class="playbook-pane">
+            <h2>Playbook status</h2>
+            <p>
+              No researched playbook exists for this destination yet. Researched playbooks are
+              added in authority order; the route and claims above are the honest current record.
+            </p>
+          </section>
+
+          <p class="playbook-back">
+            <a href="/launchdesk">← Back to the launch catalog</a>
+          </p>
+        </>
+      )}
+      {playbook && (
+      <>
       <header class="playbook-hero">
         <p class="playbook-kicker">
           <a href="/launchdesk">Launch catalog</a> / Playbook
@@ -155,6 +320,8 @@ const GRADE_LABELS: Record<string, string> = {
       <p class="playbook-back">
         <a href="/launchdesk">← Back to the launch catalog</a>
       </p>
+      </>
+      )}
     </main>
     <Footer />
   </div>

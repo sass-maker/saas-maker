@@ -1,0 +1,57 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "softwareadvice.com",
+  "name": "Software Advice",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://app.g2digitalmarkets.com/get-listed/start",
+      "title": "Batch-provided submission URL — returned HTTP 403 (bot-blocked)"
+    },
+    {
+      "url": "https://www.softwareadvice.com/vendors/",
+      "title": "Vendor page — returned HTTP 403 (bot-blocked)"
+    },
+    {
+      "url": "https://abun.com/how-to-get-free-backlinks-from-softwareadvice-com-dr-86",
+      "title": "Third-party guide (July 2025) — Software Advice is part of the Gartner Digital Markets network with GetApp and Capterra; listing intake is a contact/onboarding-rep flow"
+    }
+  ],
+  "category": "review",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free basic listings exist but only after Software Advice determines the product is a fit for the site — intake is a contact form routed to a business-development/onboarding rep, not a self-serve publish",
+    "Paid 'Highly Qualified Leads' (HQL) program is the monetized tier; free listing is offered when the product fits but the vendor isn't ready for HQL"
+  ],
+  "requirements": [
+    "B2B software product matching a category Software Advice covers",
+    "Pricing information must be provided — it is not displayed publicly but is used to assign a $–$$$$$ range, and is required for listing",
+    "Real company contact details: work email and phone number — the flow routes to a human rep and may schedule a call"
+  ],
+  "preparation": [
+    "Product description consistent with any existing Capterra/GetApp profiles (same Digital Markets network; editorial cross-checks)",
+    "Pricing model details (not shown publicly, but required)",
+    "Company size, industry, work email, phone number",
+    "Prepared answers about product category, target users, differentiators, business model"
+  ],
+  "workflow": [
+    "Open the vendor information/get-listed intake (vendor portal is run by the Digital Markets network; the batch URL app.g2digitalmarkets.com/get-listed/start was bot-blocked to the fetcher but is plausibly the current intake host)",
+    "Provide contact details and brief product info",
+    "A business-development rep responds; they may schedule a call and qualify the product",
+    "Request the free basic listing if not joining the paid HQL program",
+    "Once approved, manage the profile via the Digital Markets vendor portal listings tab"
+  ],
+  "watchFor": [
+    "softwareadvice.com and g2digitalmarkets.com both 403 automated fetches — browser access needed to confirm the live form",
+    "This is a lead-gen business: expect upsell contact for the paid HQL program",
+    "The public 'Get Advice' flow on the homepage is the BUYER funnel — the vendor intake is the vendor information page / vendor portal, don't confuse them",
+    "Requires a phone number and likely a real sales conversation — not a quick directory submit"
+  ],
+  "countsAsLive": "A public product profile page exists on softwareadvice.com showing the product name, description and $–$$$$$ price range",
+  "unknowns": [
+    "Whether app.g2digitalmarkets.com is the current canonical vendor intake (network appears rebranded from Gartner Digital Markets — verify in browser)",
+    "Review turnaround time",
+    "Exact fit criteria used by the qualification rep"
+  ]
+}

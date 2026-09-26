@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "openfuture.ai",
+  "name": "OpenFuture AI",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://openfuture.ai/submit-tool",
+      "title": "Submit Tool page (search-indexed snapshot) — 'You Need To Log In To Submit A Tool'; login via Google or Discord; direct fetch returned 403"
+    },
+    {
+      "url": "https://backlinks.fyi/directories/openfuture",
+      "title": "Third-party guide — free dofollow listing, manual review ~3–7 days"
+    },
+    {
+      "url": "https://bestaizap.com/ai-tool-directories/openfuture",
+      "title": "Third-party directory review — ~400 tools listed, free submission alongside a premium option"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Submission is free but login-gated — sign in with Google or Discord before the submit form opens",
+    "Third parties report a premium submission option alongside the free tier; details unverified (site blocked fetches)"
+  ],
+  "requirements": [
+    "AI tool only — 'All AI Tools In One Place' directory",
+    "Google or Discord account for login",
+    "Ad blocker must be disabled for the site to 'function optimally' (on-page warning)"
+  ],
+  "preparation": [
+    "Google or Discord account",
+    "Product name, URL, description, logo, category and pricing type (Free/Paid/Freemium browsing facets exist)",
+    "Disable ad blocker on openfuture.ai before starting"
+  ],
+  "workflow": [
+    "Open https://openfuture.ai/submit-tool in a browser (automated fetches get 403)",
+    "Log in via Google or Discord",
+    "Complete the submit form with product details",
+    "Manual review — third-party estimate is 3–7 days; the tool then appears in category/new-tools listings"
+  ],
+  "watchFor": [
+    "Site 403s automated fetches — browser required",
+    "Ad-blocker wall: the site warns functionality degrades with an ad blocker",
+    "Premium submission option exists per third-party reviews — confirm whether free listings are deprioritized",
+    "Batch 'freemium' claim is consistent with third-party reports but not verified on-site"
+  ],
+  "countsAsLive": "The tool appears in the OpenFuture catalog (New AI Tools / category listing) with a public detail page",
+  "unknowns": [
+    "Submit form fields and whether the free tier is still offered",
+    "Premium tier pricing",
+    "Whether listing links are dofollow (third-party claim only)"
+  ]
+}

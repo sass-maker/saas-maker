@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "whatsnewonthenet.com",
+  "name": "What's New on the Net",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.whatsnewonthenet.com/",
+      "title": "Homepage — 'whatsnew.' tech news site, relaunched ('We are back'); daily AI/software/start-ups coverage dated through Sept 26, 2026"
+    },
+    {
+      "url": "https://www.whatsnewonthenet.com/contact",
+      "title": "Contact — routed inboxes on newsdefused.com: tips@, editorial@, publisher@; PR/pitch expectations stated"
+    },
+    {
+      "url": "https://www.whatsnewonthenet.com/conti",
+      "title": "Batch-provided URL (truncated) — 404"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "This is an editorial tech publication, not a directory — the only free route is a news tip/PR pitch to tips@newsdefused.com",
+    "Coverage focuses on AI, software, hardware, semiconductors, emerging tech — with a Start-ups topic",
+    "Effective pitches per their own guidance: genuinely newsworthy developments, embargo/exclusive where relevant, access to engineers/researchers not just spokespeople, supporting docs/data/benchmarks",
+    "No guarantee of coverage; editorial independence is explicit ('We don't accept off-the-record commercial pitches dressed up as feedback')"
+  ],
+  "preparation": [
+    "A genuinely newsworthy angle — a plain 'we launched a SaaS' pitch is weak; funding, technical novelty, or data is stronger",
+    "Supporting documentation/benchmarks for claims",
+    "Contact info for verification; state confidentiality needs upfront if any"
+  ],
+  "workflow": [
+    "Email tips@newsdefused.com with the pitch (or editorial@newsdefused.com for coverage suggestions)",
+    "Expect review of every tip but a reply only for promising ones, usually within 3–5 business days",
+    "If covered, the story appears in the relevant topic feed (e.g., Start-ups, Web Tools) with a dated article permalink"
+  ],
+  "watchFor": [
+    "Contact emails live on a different domain — newsdefused.com — not whatsnewonthenet.com",
+    "This is a small operation (publisher Jamie Ashcroft, Creamery Media Ltd); 'We can't guarantee coverage of pitches or tips'",
+    "No submission form, no listing page, no paid-placement mention — advertising is handled by publisher@newsdefused.com and kept separate from editorial",
+    "Batch's /conti URL is dead — nothing else on the domain accepts submissions"
+  ],
+  "countsAsLive": "A dated article about the product/company appears on whatsnewonthenet.com under a topic feed (e.g., Start-ups) with its own permalink",
+  "unknowns": [
+    "Actual pickup rate for cold PR pitches",
+    "Whether articles link out with followed links",
+    "Advertising/sponsorship rates"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "growjo.com",
+  "name": "Growjo",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://growjo.com/add-your-company",
+      "title": "Growjo 'Add Your Company' — submission form for company data (content read via search result; site 403 to fetchers)"
+    },
+    {
+      "url": "https://growjo.com/join",
+      "title": "Growjo Join — 'It's Free! Currently there is no cost to join'; 'You must have an email address that matches the company to claim a profile' (content read via search result)"
+    },
+    {
+      "url": "https://growjo.com/aboutus",
+      "title": "Growjo About — 'no submission necessary' rankings of companies with 15-1,000 employees; top-10K lists by growth metrics; free CSV exports (content read via search result)"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free — 'currently no cost to join'",
+    "Add-your-company form at growjo.com/add-your-company; submissions include revenue (past 12 months), employee counts (now vs 1 year ago), industry, keywords, funding",
+    "Claiming an existing profile requires an email on the company domain",
+    "Ranked lists (top-10K) only cover companies with 15-1,000 employees — tiny teams get a profile but not ranking",
+    "growjo.com blocked automated fetch (403) — verified via the site's own help pages"
+  ],
+  "preparation": [
+    "Company-domain email for profile claiming",
+    "Growth metrics to submit: revenue, headcount now vs a year ago, funding, industry, keywords"
+  ],
+  "workflow": [
+    "Check if a profile already exists (Growjo scrapes data) — claim it with a domain-matching email",
+    "Otherwise submit via growjo.com/add-your-company with growth data",
+    "Profiles feed Growjo's fastest-growing lists; members can export CSVs free"
+  ],
+  "watchFor": [
+    "Data points requested (revenue, headcount) become public — only share what's comfortable",
+    "The ranking lists exclude sub-15-employee companies",
+    "Site claims 1M monthly visits — the real audience is data browsers, not product hunters",
+    "Outbound link value is incidental"
+  ],
+  "countsAsLive": "The company has a public Growjo profile page",
+  "unknowns": ["How submitted data is verified", "Whether profiles rank without 15+ employees"]
+}

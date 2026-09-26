@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "indietools.app",
+  "name": "IndieTools",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://indietools.app/",
+      "title": "Homepage — 'human-reviewed indie tools and startup directory'; 'free to join and free to stay', ~1100+ products"
+    },
+    {
+      "url": "https://indietools.app/submit",
+      "title": "Submit page — requirements list, review process, Free vs Authority ($30 one-time) tiers; form lives at /dashboard/products/new"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Accepts SaaS products, apps, developer tools, online services, courses, and other digital products",
+    "Product must be 'live enough for somebody outside your team to open, understand, and try or buy' — a live, publicly reachable website required",
+    "Accurate founder, category, platform, and technology details; logo plus product images/screenshots",
+    "Working links, no misleading claims or impersonation; duplicate listings are rejected in review",
+    "Account required — submission flow sits behind sign-in at /dashboard/products/new"
+  ],
+  "preparation": [
+    "Product URL, concise problem statement, and description",
+    "Founder name/details, category, platforms, and technology stack",
+    "Product logo and screenshots/images",
+    "Optional: $30 one-time 'Authority' upgrade adds a permanent followed link, SEO/GEO controls, a reviewed article, and a labelled 30-day Featured period"
+  ],
+  "workflow": [
+    "Sign in at https://indietools.app/signin",
+    "Open https://indietools.app/submit → 'Start your submission' (goes to /dashboard/products/new)",
+    "Fill the product record: URL, description, category, founder details, tech stack, images",
+    "Send to the review queue; manual review verifies the product is live/usable and may correct category, type, pricing, or copy",
+    "On approval the product gets a permanent public page; owners can edit the listing later"
+  ],
+  "watchFor": [
+    "Payment never influences approval — same review boundary for free and paid",
+    "Featured/ads are labelled placements and don't change organic ranking",
+    "Free tier link may be nofollow — the paid Authority tier is what advertises a 'permanent followed website link'",
+    "Dashboard URLs require auth — direct /dashboard/products/new without a session redirects to /signin"
+  ],
+  "countsAsLive": "The product has a public page under indietools.app/products and appears in category/discovery listings after review",
+  "unknowns": [
+    "Review turnaround time",
+    "Whether the free tier's outbound link is nofollow (implied but not stated verbatim)"
+  ]
+}

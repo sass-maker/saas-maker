@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "tailkits.com",
+  "name": "Tailkits",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://tailkits.com/submit-product/",
+      "title": "Submit your product — Free tier (14+ day wait, no dedicated page) via Tally form; Booster $19-29 (2-day publish, dedicated page, HOT badge); Partner $199-279; Sponsored review $499; strict Tailwind-only FAQ"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free listing queue is '14+ business days' for review and free listings get NO dedicated page",
+    "Manual quality review applies to every tier — clean code, professional design/UX, full responsiveness required"
+  ],
+  "requirements": [
+    "Tailwind CSS products ONLY — UI kits, templates (Astro/Next.js/React/Vue), Tailwind utilities; Bootstrap/other frameworks rejected outright",
+    "Working public live demo URL required — 'coming soon' pages or broken links = immediate rejection",
+    "Unique brand name required — keyword-stuffed names like 'Free Tailwind Dashboard' rejected",
+    "Design-only assets (Figma/Sketch) rejected unless shipped with production-ready Tailwind code",
+    "Free submission is via Tally form (https://tally.so/r/wAlEZD)"
+  ],
+  "preparation": [
+    "Live demo URL of the Tailwind product",
+    "Branded (non-generic) product name",
+    "Product details for the Tally form; screenshots for listing",
+    "Decide tier: Free (14+ day review, no dedicated page) vs Booster $19-29 vs Partner $199-279 vs Sponsored review $499"
+  ],
+  "workflow": [
+    "Open https://tailkits.com/submit-product/",
+    "Free route: click 'Submit product' under Free → fills Tally form wAlEZD",
+    "Wait up to 14+ business days for manual review",
+    "If rejected from a paid tier, full refund is promised",
+    "Updates to an existing listing go through their support team"
+  ],
+  "watchFor": [
+    "Free tier is deliberately thin — 14+ day wait and no dedicated page means limited SEO value",
+    "Non-Tailwind products are auto-rejected — check stack fit first",
+    "Paid-tier rejections get refunds, but free-tier rejections just don't list",
+    "Audience is Tailwind developers (140k visitors/6mo, 42.93% Tier-1)"
+  ],
+  "countsAsLive": "The product appears in Tailkits' templates/components/tools listings (paid tiers get a dedicated detail page and badges)",
+  "unknowns": [
+    "Whether free-tier listings include a dofollow link (only paid 'Sponsored Post' explicitly promises dofollow)",
+    "Exact Tally form fields",
+    "Free-tier real review turnaround vs. the stated 14 days"
+  ]
+}

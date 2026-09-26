@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "productcool.com",
+  "name": "ProductCool",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://productcool.com/",
+      "title": "Homepage — active directory, 'Latest Submissions' dated today; Submit Product nav"
+    },
+    {
+      "url": "https://productcool.com/submit",
+      "title": "Submit route — client-rendered form behind sign-in (/auth/signin?callbackUrl=/submit)"
+    },
+    {
+      "url": "https://submit.productcool.com/",
+      "title": "submit.productcool.com resolves to DirSubmit — a paid done-for-you service ($59/$99/$199 one-time, 60-240+ directory submissions)"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Account required — 'Submit Product' redirects to /auth/signin?callbackUrl=/submit",
+    "Broad scope: tools, products, apps, repos across many categories (Productivity, Developer Tools, AI, Extensions, etc.)",
+    "Listings show a submission date and a score; 'Featured' slots exist as a paid/promoted band"
+  ],
+  "preparation": [
+    "An account on productcool.com (auth providers not verified statically)",
+    "Product name, URL, tagline, description, logo, category/tags",
+    "Good landing-page metadata — many entries appear metadata-scraped (GitHub repos listed directly)"
+  ],
+  "workflow": [
+    "Open https://productcool.com/ → 'Submit Product' → sign in",
+    "Complete the submission form at /submit",
+    "Approved entries land in 'Latest Submissions' with a dated listing and score; Featured band is separate"
+  ],
+  "watchFor": [
+    "The top banner and submit.productcool.com subdomain push DirSubmit, a paid mass-submission service ($59–$199) — don't confuse it with the free on-site listing",
+    "Site is JS-heavy (submit page renders 'Loading…' without JS)",
+    "Directory contains scraped-looking entries (e.g., tensorflow, vscode auto-listed) — editorial bar is low",
+    "Simplified-Chinese UI strings in page shell — small indie operation"
+  ],
+  "countsAsLive": "The product appears under Latest Submissions / category pages with a public product page on productcool.com",
+  "unknowns": [
+    "Sign-in providers offered (page is client-rendered)",
+    "Whether any payment is required inside the submit form itself",
+    "Whether listing links are dofollow"
+  ]
+}

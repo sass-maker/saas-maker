@@ -1,0 +1,57 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "webspot.app",
+  "name": "Webspot",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://webspot.app/",
+      "title": "Homepage — active web discovery directory; categories, upvotes, Featured/Top Voted/Latest sections; pitches 'one listing puts your site in front of Google, ChatGPT, Claude, Gemini, Perplexity'"
+    },
+    {
+      "url": "https://webspot.app/pricing",
+      "title": "Pricing — Free $0 (3 dofollow links, requires backlink to Webspot, 30-day review), Growth $12.99 one-time (immediate), Premium $44.99 (badge + featured)"
+    },
+    {
+      "url": "https://webspot.app/submit",
+      "title": "Submit route — renders an account login wall (email/password, Google, GitHub); account required before submitting"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free tier requires a reciprocal backlink to Webspot (a 'featured badge' linking back to your listing) verified by them",
+    "Free listings sit in a 30-day review queue; paying $12.99 skips it",
+    "An account (email, Google, or GitHub) is required before the submit form opens"
+  ],
+  "requirements": [
+    "Account registration (email/password or Google/GitHub OAuth)",
+    "For the free plan: place Webspot's badge/backlink on your site — they run a 'Verify backlink' check",
+    "Free plan: expect up to 30 days for review and listing"
+  ],
+  "preparation": [
+    "Product name, URL, description, categories/tags (they have a deep tag taxonomy)",
+    "A page where the Webspot badge/backlink can live if using the free tier",
+    "Logo/screenshot for the listing card"
+  ],
+  "workflow": [
+    "Register an account at webspot.app/submit",
+    "Complete the submission form (fields gated behind login)",
+    "Choose plan: Free (add their backlink/badge first, then wait ≤30 days) or pay $12.99 for immediate listing",
+    "If free: add the featured badge to your site and use their 'Verify backlink' step",
+    "Listing appears as a details page with upvotes and a 'Visit Website' link"
+  ],
+  "watchFor": [
+    "The free tier's cost is a reciprocal link — decide whether a 'Featured on Webspot' badge fits your site",
+    "Free review can take up to 30 days and comes with 'no customer support'",
+    "'3 dofollow links' is the headline promise — treat AI-assistant-visibility claims ('show up in ChatGPT/Claude answers') as marketing",
+    "Listings carry upvote counts; engagement appears modest (top items show single-digit votes)"
+  ],
+  "countsAsLive": "A public details page exists on webspot.app for the site, browsable via search/category/tag pages, with a Visit Website link",
+  "unknowns": [
+    "Exact submission form fields (gated behind account creation)",
+    "How strictly the reciprocal-backlink requirement is enforced/re-checked over time",
+    "Real referral traffic — vote counts suggest low community activity"
+  ]
+}

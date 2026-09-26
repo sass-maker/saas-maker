@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "trillionagent.com",
+  "name": "TrillionAgent",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://trillionagent.com/",
+      "title": "Homepage \u2014 'AI Agents Marketplace'; 'Free to list your agent'"
+    },
+    {
+      "url": "https://trillionagent.com/register-agent/",
+      "title": "Registration form \u2014 'Listing is free'; fields: contact email, agent name, provider, category, role, description, cost, address"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Product must be an AI agent or AI-agent-adjacent service (categorized across 300+ human-equivalent roles)",
+    "Homepage states listing is free; registration form fields: Contact Email, Agent Name, Provider, Category, Role, Description, Cost, Address",
+    "Form page noted 'Failed to load form data' during fetch \u2014 category/role dropdowns populate dynamically"
+  ],
+  "preparation": [
+    "Agent name, provider name, contact email",
+    "Category + role selection from the site's role taxonomy",
+    "Description and pricing/cost text",
+    "Address field exists on the form"
+  ],
+  "workflow": [
+    "Open https://trillionagent.com/register-agent/",
+    "Fill the registration form (email, name, provider, category, role, description, cost, address)",
+    "Submit \u2014 listing appears in the marketplace directory"
+  ],
+  "watchFor": [
+    "Form is JS-driven ('Failed to load form data. Please refresh the page.' observed) \u2014 a headless submitter needs JS rendering",
+    "Site claims 'world's largest marketplace' \u2014 treat reach claims as marketing",
+    "Employer/agent duality: the product gets listed as a hireable agent, not a SaaS launch post"
+  ],
+  "countsAsLive": "The agent profile appears in the trillionagent.com directory under its category/role",
+  "unknowns": [
+    "Approval/moderation process",
+    "Whether an 'Address' field implies business-verification requirements",
+    "Whether paid promotion tiers exist beyond the free listing"
+  ]
+}

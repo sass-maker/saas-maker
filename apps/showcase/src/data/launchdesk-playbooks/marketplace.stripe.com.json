@@ -1,0 +1,58 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "marketplace.stripe.com",
+  "name": "Stripe App Marketplace",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://docs.stripe.com/stripe-apps",
+      "title": "Stripe Apps docs — develop and distribute apps privately or publish on the Stripe App Marketplace"
+    },
+    {
+      "url": "https://docs.stripe.com/stripe-apps/publish-app",
+      "title": "How to publish an app to the Stripe App Marketplace — requirements, review steps, listing fields"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Listing requires a real Stripe App built with the Stripe Apps framework (manifest, permissions, upload via CLI) — not a listing-only directory",
+    "Only one app per Stripe account; English-language listings only; business must not be on Stripe's Prohibited and Restricted Businesses list"
+  ],
+  "requirements": [
+    "Activated Stripe account",
+    "An app built with Stripe Apps (stripe-app.json manifest, distribution_type 'public', required permissions granted via CLI)",
+    "Upload via `stripe apps upload`; listing written in Dashboard (name ≤35 chars without 'Stripe'/'app'/'free'/'paid' etc., icon ≥300x300 PNG/JPG under 10MB matching the manifest logo, subtitle ≤80 chars, about ≤1000 chars)",
+    "OAuth apps must submit the Live-mode Public Install URL (marketplace.stripe.com/oauth/v2/authorize?client_id=...) — the External Test URL is not valid for review",
+    "allowed_redirect_uris must not contain localhost or dummy URLs",
+    "App review takes ~4 business days; resubmission required after changes"
+  ],
+  "preparation": [
+    "Working Stripe App (data integration or UI extension) built and tested — sandbox_install_compatible recommended",
+    "Stripe CLI installed; manifest set to distribution public",
+    "Logo (≥300x300, square PNG/JPG), app name, subtitle, about copy, category choice",
+    "Live-mode Public Install URL for OAuth apps; third-party OAuth providers fully verified"
+  ],
+  "workflow": [
+    "Create and build the app via the Stripe Dashboard / Stripe Apps CLI",
+    "Set distribution to public (`stripe apps set distribution public`) and grant needed permissions",
+    "Upload the app (`stripe apps upload`) and select the version on Dashboard > Developers > Apps",
+    "Write the marketplace listing (value proposition section + use-case sections, required fields above)",
+    "Submit for review — wait ~4 business days; respond to change requests",
+    "On approval the app is published and discoverable at marketplace.stripe.com",
+    "After publishing, partner with Stripe via the promote-app docs for more discoverability"
+  ],
+  "watchFor": [
+    "Only ONE app per account — a second product needs a second Stripe account",
+    "Listing is locked while under review; changes require resubmission and re-review",
+    "Connect-based auth is deprecated — use OAuth 2.0 with the public install link",
+    "Subscription upgrade buttons must route to your own site first before Stripe Checkout",
+    "Removing an app requires contacting Stripe — no self-serve unpublish noted"
+  ],
+  "countsAsLive": "The app has a public listing page at marketplace.stripe.com/apps/<app> discoverable via Marketplace search",
+  "unknowns": [
+    "Whether listing involves any fee — the publish docs describe review but no listing fee was seen",
+    "Exact discoverability/ranking factors beyond the promote-app partnership program"
+  ]
+}

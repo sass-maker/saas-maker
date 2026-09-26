@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "havnai.com",
+  "name": "Havnai",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://havnai.com/",
+      "title": "Homepage — 'Havnai - AI Tool Marketplace', React SPA with /submit route"
+    },
+    {
+      "url": "https://havnai.com/refund-policy",
+      "title": "Refund policy — confirms premium paid listings (7-day refund window)"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free submission requires embedding the 'Featured on Havnai' badge on your website within 24 hours of tool approval, or the listing is deactivated"
+  ],
+  "requirements": [
+    "AI tools only — site is an AI tool marketplace/directory",
+    "Account required: the submit flow checks for a session and redirects to /signin ('Please sign in to submit a tool'); Google sign-in offered",
+    "Free-tier submissions are 'pending review' after submit — approval is not instant",
+    "Free listing requires the badge embed within 24h; premium ($9 one-time) makes badge optional"
+  ],
+  "preparation": [
+    "Tool name, URL, description, category, and logo/image",
+    "Pricing model for the tool: Free / Paid / Freemium / Free Trial (form has minimum-cost, maximum-cost, and free-trial-detail fields)",
+    "Ability to add an embed badge (HTML or React snippet) to your site footer/sidebar if using the free tier",
+    "$9 one-time payment if choosing premium (audio description + Instagram reel promotion)"
+  ],
+  "workflow": [
+    "Create an account / sign in at https://havnai.com/signin (Google OAuth available)",
+    "Open https://havnai.com/submit and fill the tool-submission form (name, URL, description, category, pricing details, logo)",
+    "Leave the premium toggle off for the free submission, or enable 'Premium Submission ($9)' for the paid tier",
+    "After submit, the tool is 'pending review'; copy the badge embed code from Profile → Embed Badge tab (/profile?tab=embed)",
+    "Add the badge to your site within 24 hours of approval to keep a free listing active"
+  ],
+  "watchFor": [
+    "Site is a client-side React SPA — submission pages render empty without JavaScript",
+    "Free listing deactivation risk: missing the 24-hour badge window kills the listing",
+    "Premium upsell toggle in the form ($9 one-time) — it triggers a payment redirect on submit",
+    "Small/new directory (Indian operator, founded 2024); traffic value likely low"
+  ],
+  "countsAsLive": "The tool appears on havnai.com tools/category pages after review and the listing is not deactivated for a missing badge",
+  "unknowns": [
+    "Review turnaround time and acceptance criteria",
+    "Whether free listings get dofollow links",
+    "Actual traffic/audience size"
+  ]
+}

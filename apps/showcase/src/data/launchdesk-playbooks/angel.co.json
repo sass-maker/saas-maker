@@ -1,0 +1,44 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "angel.co",
+  "name": "AngelList / Wellfound",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://angel.co/",
+      "title": "angel.co now serves Wellfound — 'AI recruiting platform for startups'; post jobs free; company signup at wellfound.com/onboarding/recruit"
+    }
+  ],
+  "category": "profile",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "angel.co resolves to Wellfound (the former AngelList Talent product) — the original AngelList startup-profile directory is now the Wellfound recruiting platform",
+    "Free tier: 'Unlimited jobs, unlimited applicants, and a built-in ATS are $0 forever' — creating a company profile and posting jobs is free",
+    "Paid options: promoting a job for visibility, Wellfound Reach (AI sourcing), and Autopilot (managed recruiting)",
+    "Company signup path: wellfound.com/onboarding/recruit (or 'Sign up' → 'I'm looking to hire')",
+    "The value for a SaaS launch is a public startup profile on wellfound.com — the old angel.co/company/<name> profile convention is gone"
+  ],
+  "preparation": [
+    "Company details for the Wellfound profile: name, logo, description, website, size, funding status",
+    "At least one job posting to activate the recruiting side (optional but the platform's core loop)",
+    "Founder/hiring account on wellfound.com"
+  ],
+  "workflow": [
+    "Open angel.co (resolves to Wellfound) or wellfound.com directly",
+    "Sign up and choose 'I'm looking to hire' → onboarding/recruit",
+    "Create the company profile and optionally post a free job",
+    "The public company page appears at wellfound.com/company/<name>",
+    "Optionally upgrade for promoted jobs, Reach AI sourcing, or Autopilot recruiting"
+  ],
+  "watchFor": [
+    "The catalog flag 'Domain redirects elsewhere' is real — angel.co is now entirely Wellfound-branded; fundraising/AngelList VC functions moved to angel.co/venture under a different product surface",
+    "This is a recruiting marketplace — the startup profile is a byproduct of hiring, not a launch listing; profiles without jobs are thin",
+    "Wellfound profiles historically ranked well in search ('AngelList <startup>'), which is the SEO value here"
+  ],
+  "countsAsLive": "A public company profile exists at wellfound.com/company/<name> with jobs/details visible",
+  "unknowns": [
+    "Whether a company profile can be created without posting a job",
+    "What happened to legacy angel.co profile pages — redirect vs removal"
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startfa.st",
+  "name": "StartFast",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://startfa.st/",
+      "title": "Homepage — live curated directory of AI tools & tech products for founders (13+ categories, collections, newsletter)"
+    },
+    {
+      "url": "https://startfa.st/submit",
+      "title": "Add your product — simple form: name, email, product name, website URL, note; no sign-in required"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "AI tools, apps, and tech products aimed at founders, makers, and startups",
+    "Directory is 'curated for quality' — expect editorial review before listing",
+    "No account needed — the form only asks for contact name/email plus product name, URL, and a note"
+  ],
+  "preparation": [
+    "Submitter name and email",
+    "Product name and website URL",
+    "A short note pitching the product (the 'Note' field is the only free-text space — make it count)",
+    "Category in mind (Development Tools, AI Products, Productivity, Marketing, AI Agents, etc.)"
+  ],
+  "workflow": [
+    "Open https://startfa.st/submit",
+    "Fill Your Name, Your Email, product Name, Website URL, and Note",
+    "Optionally tick the newsletter checkbox and click Submit",
+    "Await editorial review; listings appear in /categories and tool pages"
+  ],
+  "watchFor": [
+    "No stated review turnaround or acceptance criteria beyond 'curated for quality'",
+    "Very light form — no fields for logo, pricing, or description beyond the note; editors likely enrich listings themselves",
+    "Site carries affiliate links and paid /advertise placements — the free listing competes with sponsored spots",
+    "Part of a small indie network (footer links GitHub awesome-micro-saas; sibling sites power other directories)"
+  ],
+  "countsAsLive": "The product appears on startfa.st under a category page and as a tool entry with its tagline",
+  "unknowns": [
+    "Review turnaround time and notification",
+    "Whether the 'Note' is published verbatim or used only for review",
+    "Whether paid placement affects organic listing order"
+  ]
+}

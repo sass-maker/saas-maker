@@ -1,0 +1,37 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "breakoutlist.com",
+  "name": "Breakout List",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://breakoutlist.com/",
+      "title": "Breakout List — 'Great startups to join' curated by @chrisbarber; 15 investors picked 92 startups; filters by headcount band, raised ≤$150M, portfolio vs non-portfolio picks"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Purely curated — inclusion requires an investor in Chris Barber's network to pick the startup as a great place to work; there is no submission form"
+  ],
+  "requirements": [
+    "No submission — the list is compiled from named investors' picks (Aashay Sanghvi, Elad Gil, Keith Rabois, Sonya Huang, etc.)",
+    "Profile: high-growth startups, mostly SF/LA, curated by headcount band — the list exists for job-seekers",
+    "The only lever is reaching the curator (@chrisbarber) or the participating investors"
+  ],
+  "preparation": [
+    "A genuinely breakout trajectory — investor-picked companies are typically funded/high-growth"
+  ],
+  "workflow": [
+    "No public flow — the route is being nominated by one of the participating investors or persuading the curator",
+    "Alternatively build the profile that earns a pick (growth, talent magnetism)"
+  ],
+  "watchFor": [
+    "Not a launch destination — it's a jobs-discovery list",
+    "Inclusion is a network effect, not a form",
+    "Solo-maintained — update cadence is the curator's"
+  ],
+  "countsAsLive": "The company appears in the Breakout List table with founders/HQ",
+  "unknowns": ["Whether the curator accepts inbound requests", "List refresh cadence"]
+}

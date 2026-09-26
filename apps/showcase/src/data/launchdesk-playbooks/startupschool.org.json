@@ -1,0 +1,41 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startupschool.org",
+  "name": "Y Combinator Startup School",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.startupschool.org/",
+      "title": "Startup School homepage — free online course from YC (~7 weeks, 1-2 hrs/week); includes co-founder matching and a weekly update tool; signup at startupschool.org"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Not a launch directory — Startup School is a free YC course/community; there is no public product-listing surface",
+    "Free signup at startupschool.org (single YC-family account)",
+    "Members get: the course curriculum, a weekly progress-update tool, and Co-Founder Matching (100k+ matches claimed)",
+    "Historically Startup School had a 'companies' browse of participating startups, but the current public site does not expose a browsable directory — community surfaces are login-gated"
+  ],
+  "preparation": [
+    "Just an account — the course is self-paced and free",
+    "If using co-founder matching: a founder profile with interests, skills, location preferences"
+  ],
+  "workflow": [
+    "Sign up at startupschool.org",
+    "Work through the YC curriculum and use the weekly update tool",
+    "Optionally create a co-founder-matching profile",
+    "Visibility to other founders happens inside the login-gated community — there is no public listing to claim"
+  ],
+  "watchFor": [
+    "Weak catalog fit — this is an education/community product; the 'launch' value is indirect (accountability, co-founder search, YC-application prep)",
+    "No public-facing listing is generated — don't count it as a backlink/launch-post destination",
+    "The community surfaces require login — nothing is indexed publicly"
+  ],
+  "countsAsLive": "An active Startup School account with a founder profile — but no public listing is produced",
+  "unknowns": [
+    "Whether the old public companies/browse directory still exists behind login",
+    "Whether active participation feeds into YC application review"
+  ]
+}

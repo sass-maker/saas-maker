@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startupgrind.com",
+  "name": "Startup Grind",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://startup.startupgrind.com/apply/",
+      "title": "Startup membership application — application-based; tech-driven startups from MVP to Series A only; agencies/services rejected; working website mandatory"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Application is free to submit but membership is vetted — 'Once you apply, our team will review your application and get back to you via email with next steps'",
+    "Accepted members get investor matching, mentorship, exposure opportunities, software discounts and a member-only Slack — there is no public self-serve directory listing",
+    "Whether accepted membership itself carries a fee is not stated on the application page"
+  ],
+  "requirements": [
+    "Tech-driven startup between MVP and Series A stage — agencies, consultancies, services and non-tech businesses 'are not a good fit and will not be considered'",
+    "A working website is mandatory to apply",
+    "Real founding team willing to participate in the community (mentorship, events, Slack)"
+  ],
+  "preparation": [
+    "Working product website",
+    "Company stage, team and traction details for the application",
+    "Founder contact email for next-steps correspondence"
+  ],
+  "workflow": [
+    "Open https://startup.startupgrind.com/apply/ and complete the membership application",
+    "Wait for the team's review — next steps arrive by email",
+    "If accepted, complete whatever onboarding/membership step the email specifies",
+    "Value comes from the member Slack, events, mentorship and investor matching — not a public listing page"
+  ],
+  "watchFor": [
+    "Not a directory — acceptance does not automatically produce an indexable public profile page",
+    "The main startupgrind.com site is the events/chapter network; the startup application lives on the startup.startupgrind.com subdomain",
+    "Stage filter is explicit: pre-MVP idea-stage or post-Series A companies are outside scope",
+    "Do not pitch this as a backlink source — it is a vetted membership community"
+  ],
+  "countsAsLive": "An acceptance email with membership access (Slack invite / member account at startupgrind.com/accounts/login) — there is no public 'listed' state to verify",
+  "unknowns": [
+    "Whether membership has a fee after acceptance",
+    "Application review time and acceptance rate",
+    "Whether any member directory/profile pages are publicly visible"
+  ]
+}

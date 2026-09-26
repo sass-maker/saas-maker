@@ -1,0 +1,43 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "womenmake.com",
+  "name": "Women Make",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://womenmake.com/",
+      "title": "Homepage \u2014 community feed with Article/Question/Launch/Event/Discussion post types"
+    },
+    {
+      "url": "https://womenmake.com/guidelines",
+      "title": "Community guidelines link in footer"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Community for women entrepreneurs and makers \u2014 a launch post is only a fit if the founder is a woman; posting requires an account"
+  ],
+  "requirements": [
+    "Community is explicitly 'a safe space for women entrepreneurs and makers'",
+    "Account required \u2014 login is via Telegram bot (@WomenMakeBot), no email/password flow",
+    "Launch posts are one of six post types (Article, Question, Launch, Event, Discussion, AMAs & Interviews)"
+  ],
+  "preparation": [
+    "Telegram account to authenticate via @WomenMakeBot",
+    "Launch post copy consistent with community tone (narrative journey posts perform better than pure promos)"
+  ],
+  "workflow": [
+    "Send /login to @WomenMakeBot on Telegram to authenticate",
+    "Create a post with type 'Launch' linking the product",
+    "Engage in comments \u2014 community norms favor participation"
+  ],
+  "watchFor": [
+    "Audience-restricted community \u2014 posting as a non-member demographic would violate the space's intent",
+    "Telegram-bot login is the only auth \u2014 no web signup form",
+    "Founding-membership and sponsorship links exist in the footer (paid channels for visibility)"
+  ],
+  "countsAsLive": "The launch post appears in the community feed under the Launch category",
+  "unknowns": ["Whether launches from non-member accounts are moderated out", "Sponsorship pricing"]
+}

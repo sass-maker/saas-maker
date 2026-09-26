@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "theverge.com",
+  "name": "The Verge",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.theverge.com/contact",
+      "title": "The Verge Contact — form with reason picker including 'editorial tip' and 'pitch a story'; tip fields: one-sentence summary, details, anonymity option"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Not a directory — coverage is earned editorial; no listing product",
+    "The /contact page has a reason picker: editorial tip, pitch a story, technical support, advertising, press inquiry, security issue, moderators",
+    "The tip form asks for: one-sentence summary, detailed explanation, optional anonymity, name, email",
+    "A dedicated tip page exists at theverge.com/c/tech/22579076/how-to-tip-the-verge-email-signal-and-more (email + Signal options)",
+    "The Verge is part of Penske Media (PMX Global) — formerly Vox Media"
+  ],
+  "preparation": [
+    "A newsworthy consumer-tech hook — The Verge covers tech, AI, reviews, policy, entertainment, gadgets",
+    "One-sentence tip summary plus detailed explanation (the form requires both)",
+    "Name and email — anonymity is offered but they may need to contact you to verify",
+    "For a product launch, pitch a story with an embargoed press kit or review unit offer"
+  ],
+  "workflow": [
+    "Open https://www.theverge.com/contact",
+    "Pick 'I have an editorial tip' for news tips or 'I want to pitch a story' for pitches",
+    "Fill the one-sentence summary, details, name, and email; check 'Keep me anonymous' only if needed",
+    "For sensitive material use the Signal/email options documented on the Tip Us page",
+    "Coverage, if it happens, is a staff-written article — no listing page is created"
+  ],
+  "watchFor": [
+    "Anything submitted may be published — the tip form is on the record",
+    "Form submissions agree to Vox Media community guidelines",
+    "A raw 'we launched' pitch with no news angle will likely be ignored — lead with what is newsworthy",
+    "Anonymous tips still require enough detail to verify"
+  ],
+  "countsAsLive": "A Verge article mentioning or profiling the product is published at theverge.com",
+  "unknowns": [
+    "Response expectations or SLA on the pitch form — none stated",
+    "Whether freelance contributed pieces are accepted via 'pitch a story' vs staff-only coverage"
+  ]
+}

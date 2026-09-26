@@ -1,0 +1,46 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startuplibrary.net",
+  "name": "StartupLibrary",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://startuplibrary.net/submit",
+      "title": "Submit page — pay-what-you-want launch from $1 one-time; $15+ skips the queue and picks launch date; every approved launch earns a permanent DR 33 dofollow backlink"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Startup/product launch — community-driven directory + leaderboard",
+    "Minimum $1 one-time payment ('choose your own price'); every $1 = 1 leaderboard point",
+    "Under $15 joins the queue; $15+ lets you pick your launch date before checkout",
+    "Sign-in required to submit",
+    "Submissions are approved launches — there is an approval step"
+  ],
+  "preparation": [
+    "Product name, URL, tagline/description and imagery for the product page",
+    "Budget decision: $1 minimum queues you; $15+ schedules the launch; ~299 points (~$299) to open at top of trending",
+    "Account email for sign-in"
+  ],
+  "workflow": [
+    "Open startuplibrary.net/submit and sign in",
+    "Click 'Start my submission' and fill the product details",
+    "Choose amount: $1+ (queue) or $15+ (pick launch date)",
+    "Pay once — listing is 'forever' with a permanent dofollow backlink",
+    "Earn additional points from views/product-page visits; top 5 weekly get newsletter feature"
+  ],
+  "watchFor": [
+    "No true free tier — minimum spend is $1",
+    "Leaderboard is pay-per-point plus engagement; top of trending was ~299 points",
+    "Dofollow claim is self-reported (DR 33) — verify the link after launch",
+    "Site carries 'featured on' badge spam typical of new launch boards"
+  ],
+  "countsAsLive": "A product page resolves on startuplibrary.net with a working outbound link and the startup appears on the leaderboard/discover pages",
+  "unknowns": [
+    "Queue length for sub-$15 submissions",
+    "Approval criteria detail",
+    "Newsletter feature criteria for top-5"
+  ]
+}

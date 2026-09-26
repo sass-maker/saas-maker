@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startuptile.com",
+  "name": "StartupTile",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://startuptile.com/",
+      "title": "Homepage — daily startup launch board; mixes Product Hunt API imports with direct listings; 'Submit-$1', 'Get Featured - $19', Sponsor links in nav"
+    },
+    {
+      "url": "https://startuptile.com/payg/pay",
+      "title": "Pay page — Standard Listing $1.99 one-time, Featured 7-Days $19, Featured 30-Days $35 ('lifetime backlink'); form: name, email, startup URL, optional note; Dodo Payments checkout"
+    }
+  ],
+  "category": "launch-board",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Payment required — cheapest entry is $1.99 one-time for a standard listing",
+    "Only fields needed: full name, email, startup URL, optional note — the listing itself is just name + one-liner on a daily board",
+    "Featured tiers ($19/7d, $35/30d) add top-section placement and a 'lifetime backlink'"
+  ],
+  "preparation": [
+    "Startup URL and a one-line description",
+    "Name, email, payment method (Dodo Payments checkout)"
+  ],
+  "workflow": [
+    "Open https://startuptile.com/payg/pay",
+    "Choose Standard ($1.99) or a Featured tier ($19/$35)",
+    "Fill name, email, startup URL, optional note",
+    "Proceed to Dodo Payments checkout; listing appears on the daily board after payment/review"
+  ],
+  "watchFor": [
+    "No free tier — even the standard listing costs $1.99",
+    "Most daily tiles are auto-imported from the Product Hunt API — a $1.99 listing buys a permanent archived page, not prominence",
+    "Featured placement is what actually shows above the fold",
+    "'Lifetime backlink' claim on featured tiers is marketing; check whether the link is dofollow if that matters",
+    "Single-operator side project (@v2s2c on Twitter) — low but real traffic expectations"
+  ],
+  "countsAsLive": "The startup appears as a tile on the startuptile.com daily board and retains an archived listing page",
+  "unknowns": [
+    "Whether listings get individual permalink pages or only daily-board entries",
+    "Link type (dofollow/nofollow) and whether utm_source params are appended",
+    "Review/approval step after payment, if any"
+  ]
+}

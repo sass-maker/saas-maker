@@ -585,7 +585,7 @@
       "group": "past",
       "lifecycle": "inactive",
       "shareable": true,
-      "deployed": true,
+      "deployed": false,
       "deploymentProviders": [
         "Cloudflare Pages"
       ],
@@ -593,8 +593,8 @@
         "materia.significanthobbies.com"
       ],
       "url": "https://materia.significanthobbies.com",
-      "repositoryUrl": "https://github.com/Significant-Hobbies/materia",
-      "roadmapUrl": "https://github.com/Significant-Hobbies/materia/issues",
+      "repositoryUrl": "https://github.com/sarthakagrawal927/materia",
+      "roadmapUrl": "https://github.com/sarthakagrawal927/materia/issues",
       "firstCommitAt": "2026-06-21",
       "latestCommitAt": "2026-09-06"
     },
@@ -804,7 +804,8 @@
       "shareable": true,
       "deployed": true,
       "deploymentProviders": [
-        "Cloudflare Pages"
+        "Cloudflare Pages",
+        "Cloudflare Workers"
       ],
       "domains": [
         "learn.significanthobbies.com"
@@ -1637,15 +1638,15 @@
     {
       "id": "contextdaddy",
       "name": "ContextDaddy",
-      "description": "A read-only native Mac app for coding-agent context: per-runtime skill access, project context inventory, local usage history and verified OpenTelemetry signals.",
+      "description": "A native Mac workspace for coding-agent skills, context, usage and telemetry, with a unified skill library, explicit local changes, and recovery history.",
       "makerNote": "ContextDaddy is supposed to handle all things AI agents locally (context, skills, usage, otel etc) to help debug/speed up",
       "purposeContract": {
         "purpose": "Help developers inspect coding-agent context, skill exposure, usage, and available local telemetry.",
         "audience": "Developers using multiple coding agents on a Mac.",
         "outcome": "Find actionable context and usage problems with evidence and explicit measurement limits.",
-        "mechanism": "A native read-only Mac app combines bounded skill discovery, offline usage history, and local OpenTelemetry views.",
-        "proof": "The public 0.1.0 build5 DMG is signed, notarized, stapled, and served byte for byte at context.daddyrad.com/download; an earlier isolated build2 manual install passed a native journey. Discovery evidence still does not prove live prompt use.",
-        "nextAction": "Read the public landing and install the signed 0.1.0 beta; new builds are manual downloads until an updater ships."
+        "mechanism": "A native Mac app combines bounded discovery, previewed local skill management with recovery, offline usage history, and local OpenTelemetry views.",
+        "proof": "Public 0.2.1 build 10 verified at https://context.daddyrad.com/download and GitHub release v0.2.1-10. SHA-256 e43afdb396041f0abb6bdbcad718eb74c09745612574124adb49088331e36940 matches the Developer ID signed, Apple notarized DMG from protected release run 36259190197, source b04f3c423341a8ec421933835569c3019c3355ba. Installed to /Applications/ContextDaddy.app and launched; Gatekeeper accepted the notarized app. Guided Skills onboarding, bounded scrolling including legacy scrollbars, and Devin in unified Local History. Manual updates only. Discovery does not prove live prompt use. Installed Skills library populated; rescan and guided selection passed. Discovery retains explicit entry/depth coverage limits.",
+        "nextAction": "Download the signed 0.2.1 beta; open Skills and follow Guide. Updates are manual downloads."
       },
       "kind": "product",
       "category": "utility",
@@ -1674,7 +1675,7 @@
       "repositoryUrl": "https://github.com/sarthakagrawal927/contextdaddy",
       "roadmapUrl": "https://github.com/sarthakagrawal927/contextdaddy/issues",
       "firstCommitAt": "2026-09-13",
-      "latestCommitAt": "2026-09-23"
+      "latestCommitAt": "2026-09-26"
     },
     {
       "id": "daddyrad",
@@ -2037,9 +2038,9 @@
         "purpose": "Help developers inspect coding-agent context, skill exposure, usage, and available local telemetry.",
         "audience": "Developers using multiple coding agents on a Mac.",
         "outcome": "Find actionable context and usage problems with evidence and explicit measurement limits.",
-        "mechanism": "A native read-only Mac app combines bounded skill discovery, offline usage history, and local OpenTelemetry views.",
-        "proof": "The public 0.1.0 build5 DMG is signed, notarized, stapled, and served byte for byte at context.daddyrad.com/download; an earlier isolated build2 manual install passed a native journey. Discovery evidence still does not prove live prompt use.",
-        "nextAction": "Read the public landing and install the signed 0.1.0 beta; new builds are manual downloads until an updater ships."
+        "mechanism": "A native Mac app combines bounded discovery, previewed local skill management with recovery, offline usage history, and local OpenTelemetry views.",
+        "proof": "Public 0.2.1 build 10 verified at https://context.daddyrad.com/download and GitHub release v0.2.1-10. SHA-256 e43afdb396041f0abb6bdbcad718eb74c09745612574124adb49088331e36940 matches the Developer ID signed, Apple notarized DMG from protected release run 36259190197, source b04f3c423341a8ec421933835569c3019c3355ba. Installed to /Applications/ContextDaddy.app and launched; Gatekeeper accepted the notarized app. Guided Skills onboarding, bounded scrolling including legacy scrollbars, and Devin in unified Local History. Manual updates only. Discovery does not prove live prompt use. Installed Skills library populated; rescan and guided selection passed. Discovery retains explicit entry/depth coverage limits.",
+        "nextAction": "Download the signed 0.2.1 beta; open Skills and follow Guide. Updates are manual downloads."
       }
     },
     {
@@ -2725,7 +2726,7 @@
       "lifecycle": "inactive",
       "category": "experimental",
       "shareable": true,
-      "repositoryUrl": "https://github.com/Significant-Hobbies/materia",
+      "repositoryUrl": "https://github.com/sarthakagrawal927/materia",
       "purposeContract": {
         "purpose": "Materia explores an anatomy-led, evidence-graded reference for understanding body concerns, treatments, and remedies.",
         "audience": "People seeking a clearer educational map from a body concern to bounded, source-backed information.",

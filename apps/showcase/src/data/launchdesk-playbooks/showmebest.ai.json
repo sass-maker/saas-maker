@@ -1,0 +1,43 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "showmebest.ai",
+  "name": "ShowMeBestAI",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://showmebest.ai/submit",
+      "title": "Submit your AI Tool — pricing page with FREE ($0), BASIC ($9.99) and PRO ($49.99) listing tiers"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "AI tools only — the site is a dedicated AI tools directory",
+    "Free listing tier exists ('FREE Listing $0') alongside paid BASIC ($9.99) and PRO ($49.99) tiers",
+    "Free tier claims a dofollow backlink, basic AI tool page, limited category/search visibility, review in 24 hours"
+  ],
+  "preparation": [
+    "AI tool name, URL, and description",
+    "Category selection for the directory",
+    "Payment details only if choosing the $9.99 Basic or $49.99 Pro upgrade"
+  ],
+  "workflow": [
+    "Open https://showmebest.ai/submit",
+    "Choose the FREE listing tier ('Submit Now' under FREE $0) unless paid visibility is wanted",
+    "Complete the submission form for the tool",
+    "Await the stated 24-hour review"
+  ],
+  "watchFor": [
+    "Two paid upsell tiers sit next to the free option — BASIC ($9.99, 1 dofollow backlink, listing forever) and PRO ($49.99, 5+ dofollow backlinks, featured for 6 months)",
+    "PRO 'featured' placement is time-limited (6 months) despite the one-time fee framing",
+    "Free tier offers 'limited' visibility in categories and search results",
+    "Guest Post tab exists alongside Listing — confirm you are on the Listing tab"
+  ],
+  "countsAsLive": "The tool appears as a public listing page on showmebest.ai and shows up in its category/search",
+  "unknowns": [
+    "Exact submission form fields (the submit page shows pricing tiers; the form itself is behind 'Submit Now')",
+    "Whether the free tier's claimed dofollow backlink holds in practice",
+    "Review/rejection criteria beyond the 24-hour review claim"
+  ]
+}

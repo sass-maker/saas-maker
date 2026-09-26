@@ -1,0 +1,48 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "1000.tools",
+  "name": "1000.tools",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://1000.tools/my/tools/create",
+      "title": "Submit flow — paid listing: $1 first month then $5.99/mo, or $59.99/yr; 'You'll only be charged once your tool has been reviewed and accepted'"
+    },
+    {
+      "url": "https://1000.tools/",
+      "title": "Homepage — 'An exclusive list of the 1000 best tools. Carefully vetted and maintained by humans'; '6 spots left' scarcity banner"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "Checklist gates: tool is functional, delivers what it promises, and is not an infoproduct",
+    "Subscription listing: $5.99/mo (first month $1) or $59.99/yr — charged only after human review accepts the tool",
+    "Account/login required to complete submission",
+    "Directory is capped at 1000 entries with a visible spots counter — acceptance implies an open slot"
+  ],
+  "preparation": [
+    "Tool website URL, name, logo, and a one-line description in the site's terse card style",
+    "Best-fit category from their extensive taxonomy (AI, SEO, dev tools, Mac, iOS, etc.)",
+    "A payment method — billing starts only after acceptance"
+  ],
+  "workflow": [
+    "Go to 1000.tools and hit Submit tool (routes to /my/tools/create)",
+    "Enter website URL and tool details; confirm the functional/delivers/not-infoproduct checklist",
+    "Log in or create an account, pick monthly or yearly pricing",
+    "Wait for human review — no charge unless accepted"
+  ],
+  "watchFor": [
+    "Recurring subscription, not a one-time fee — cancelling may remove the listing (unverified)",
+    "'6 spots left' suggests the 1000-cap is real; slots may open and close",
+    "Batch-listed as nofollow in source data — listing is a traffic/brand play more than an SEO link",
+    "Strong maker-community testimonials (Papermark, LocalPortal) claim real referral traffic — value is plausible but niche"
+  ],
+  "countsAsLive": "A tool card with logo and one-line description appears on 1000.tools under its category, linking out to the product",
+  "unknowns": [
+    "Whether cancelling the subscription removes the listing",
+    "Review turnaround time",
+    "Confirmed link type (follow vs nofollow) on listing cards"
+  ]
+}

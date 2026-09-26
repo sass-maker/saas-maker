@@ -1,0 +1,45 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "discover.events.com",
+  "name": "Events.com Discover",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://discover.events.com/",
+      "title": "Discover homepage — 186M+ events worldwide; 'Create an event' links to promote.events.com organizer flow"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "This is an events marketplace, NOT a product directory — the only listing type is an actual event (online events/webinars count)",
+    "Organizer account on Events.com (Log In / Sign Up on discover.events.com, event creation via promote.events.com/user/organize/draft)",
+    "A real event with date, location/virtual format, description — fake 'product launch' spam events risk removal"
+  ],
+  "preparation": [
+    "A legitimate event concept tied to the product (launch webinar, demo day, AMA)",
+    "Event title, date/time, timezone, virtual or physical location",
+    "Event description, cover image, ticket type (free tickets avoid platform fee questions)",
+    "Organizer name/brand details"
+  ],
+  "workflow": [
+    "Create an Events.com organizer account via the Log In / Sign Up flow",
+    "Open 'Create an event' → promote.events.com/user/organize/draft",
+    "Fill event details (title, date, virtual/physical, description, image)",
+    "Configure free tickets/registration",
+    "Publish — the event is indexed on discover.events.com by city and category (Music, Business, etc.)"
+  ],
+  "watchFor": [
+    "Only useful if the launch includes a real event — a SaaS product with no event has nothing to list",
+    "Paid-ticket events may carry platform fees (not verified); free events are the safe route",
+    "Batch seed 'discover.events.com' submission URL just points at events.com main site — the real route is the organizer dashboard",
+    "Event listings expire after the event date"
+  ],
+  "countsAsLive": "The event page is publicly reachable on discover.events.com and appears in its city/category listings before the event date",
+  "unknowns": [
+    "Ticketing fee structure for paid tickets",
+    "Whether event pages carry dofollow external links",
+    "Moderation rules on promotional/online-only events"
+  ]
+}

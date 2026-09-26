@@ -1,0 +1,54 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "spiceworks.com",
+  "name": "Spiceworks Community",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.spiceworks.com/",
+      "title": "Spiceworks homepage — live IT community + news/insights; Join/Login via accounts.spiceworks.com; Vendors link to community.spiceworks.com/vendors/directory"
+    },
+    {
+      "url": "https://community.spiceworks.com/vendors/directory",
+      "title": "Spiceworks Vendor Page Directory — 800+ tech brands; page is JS-rendered (Discourse)"
+    },
+    {
+      "url": "https://community.spiceworks.com/t/new-spiceworks-features-live-easily-find-vendors-make-your-business-case/969252",
+      "title": "Community post confirming the revamped Vendor Page Directory and vendor following (content read via search result)"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "A free community account exists and vendors historically could create/manage a Vendor Page, but vendor pages today are tightly tied to Spiceworks' commercial partnership program — the organic route is joining the community as a vendor rep ('Green Guy/Gal') and participating"
+  ],
+  "requirements": [
+    "Free account at accounts.spiceworks.com/join",
+    "Vendor participation requires identifying as a vendor rep — Spiceworks assigns 'vendor' status and brand association",
+    "Vendor Pages live in the community vendor directory; community posts say vendors can create a page via community.spiceworks.com/pages (historic flow) — full-fledged vendor pages are typically part of a paid partnership",
+    "The community audience is IT professionals — the product must be relevant to IT pros"
+  ],
+  "preparation": [
+    "A real IT-relevant product and a person willing to participate as the vendor rep",
+    "Company details and branding assets if pursuing a Vendor Page",
+    "Read community guidelines — overt self-promotion is discouraged; helping in threads builds the rep"
+  ],
+  "workflow": [
+    "Join at accounts.spiceworks.com/join",
+    "Contact Spiceworks or post in the community to get vendor/brand status (historic route: community.spiceworks.com/pages to create a vendor page)",
+    "Participate in community forums answering questions (the canonical way vendors earn attention)",
+    "For full vendor-page features and campaigns, talk to Spiceworks sales — partnership is paid"
+  ],
+  "watchFor": [
+    "Vendor status is verified — a fake-consumer account promoting a product violates guidelines",
+    "Vendor Pages and advertising are commercial products; free organic reach is community participation only",
+    "The vendor directory page is JS-rendered and unverifiable to fetchers",
+    "Audience is IT pros — consumer SaaS is a poor fit"
+  ],
+  "countsAsLive": "A brand/vendor page exists in the Spiceworks Community vendor directory, or the vendor rep account is active and identified in forums",
+  "unknowns": [
+    "Current self-serve flow for creating a basic vendor page (community moved to Discourse; historic /pages flow may be retired)",
+    "Partnership pricing — only via sales"
+  ]
+}

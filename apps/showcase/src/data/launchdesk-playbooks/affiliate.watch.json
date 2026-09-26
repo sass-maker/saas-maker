@@ -1,0 +1,57 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "affiliate.watch",
+  "name": "Affiliate.Watch",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://affiliate.watch/submit-affiliate-program",
+      "title": "Submit Affiliate Program — empty render (JS-gated), but localized copies show the full form"
+    },
+    {
+      "url": "https://affiliate.watch/zh/submit-affiliate-program",
+      "title": "Chinese-localized submit page (via search snippet) — submission guidelines + full field list: pitch, commission structure, launch year, payout, cookie days, 2-tier, account details"
+    },
+    {
+      "url": "https://affiliate.watch/launch",
+      "title": "Launch page — their free affiliate software; every Launch program gets a free directory listing (via search snippet)"
+    },
+    {
+      "url": "https://submitator.com/submit-to-affiliate-directory",
+      "title": "Submitator affiliate-directory comparison — Affiliate.Watch listed as 'Free + upgrades', link likely nofollow"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Your product must run a REAL affiliate/referral program — this is a directory of affiliate programs, not products",
+    "Rejected: gambling/betting, traditional MLM/pyramid (standard 2-tier is fine), adult, get-rich-quick schemes, companies with no active customers/real usage",
+    "Account created inline on the form (name, account email, password)",
+    "Form fields: company pitch (short description), commission structure, launch year, payment methods, minimum payout, cookie duration (days), 2-tier commission toggle, contact info, social links"
+  ],
+  "preparation": [
+    "A live affiliate program with published terms",
+    "Commission structure details (% or flat, recurring vs one-time), cookie window, payout method + minimum threshold",
+    "Program launch year, affiliate signup URL, social links",
+    "Logo/hero image; contact email for the account"
+  ],
+  "workflow": [
+    "Open https://affiliate.watch/submit-affiliate-program",
+    "Fill program details (pitch, commission, cookie days, payout, 2-tier) plus account name/email/password",
+    "Submit — editorial review; ineligible programs are rejected",
+    "Optionally adopt their free 'Launch' affiliate software which auto-includes a directory listing"
+  ],
+  "watchFor": [
+    "Only worth it if you actually operate an affiliate program — a bare SaaS with none gets rejected",
+    "Outbound link is likely nofollow per third-party analysis",
+    "Paid upgrades exist (exact tiers not verified); 'Launch' software is free but they become a 2-tier affiliate on marketplace-recruited partners",
+    "JS-rendered site — fetches return empty; use a browser"
+  ],
+  "countsAsLive": "Your affiliate program appears as a public listing on affiliate.watch under its category, visible to affiliate marketers browsing the directory",
+  "unknowns": [
+    "Review turnaround time",
+    "Exact paid upgrade tiers and prices",
+    "Whether the listing link is dofollow for paid tiers"
+  ]
+}

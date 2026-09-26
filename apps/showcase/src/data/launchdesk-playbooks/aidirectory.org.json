@@ -1,0 +1,50 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aidirectory.org",
+  "name": "AI Directory",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://aidirectory.org/",
+      "title": "Homepage — 'Database of Artificial Intelligence & Machine Learning Companies', table of companies by category/city/country"
+    },
+    {
+      "url": "https://www.aidirectory.org/user-submit/",
+      "title": "User submit — WordPress front-end submission form for adding an AI company"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Directory is for AI and machine learning companies, not generic SaaS",
+    "Required form fields: Post Title, Category (from fixed list), Company Name, Website address, Phone Number, Email",
+    "Optional: Street, City, State, Zip Code, Country, Description",
+    "No payment is mentioned anywhere on the submission page"
+  ],
+  "preparation": [
+    "Company name and website URL",
+    "Category pick from their list (e.g. Agentic AI / AI Agents, SaaS, NLP, Generative AI)",
+    "Phone number and email (both required)",
+    "Optional address fields and a short company description",
+    "A 'Post Title' — likely the company/product headline shown in the table"
+  ],
+  "workflow": [
+    "Open https://www.aidirectory.org/user-submit/ (linked as 'SUBMIT YOUR AI COMPANY' in the nav)",
+    "Fill the form: post title, category, company name, website, phone, email, optional address/description",
+    "Submit and await moderation — the form is a front-end WordPress post submission, so approval is presumably manual"
+  ],
+  "watchFor": [
+    "Site is dated (footer © 2022; articles last updated 2024) — moderation may be slow or absent",
+    "Phone number is a required field — unusual for a directory, decide what number to give",
+    "The bare domain aidirectory.org works but the submit form lives on the www subdomain",
+    "Listings are displayed in a big table — no dedicated product page implied",
+    "No stated review SLA or confirmation flow"
+  ],
+  "countsAsLive": "The company appears as a row in the sortable directory table on aidirectory.org under its AI category",
+  "unknowns": [
+    "Whether submissions are still reviewed (site appears lightly maintained)",
+    "Whether the website address renders as a dofollow link",
+    "Confirmation/notification flow after submission"
+  ]
+}

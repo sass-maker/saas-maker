@@ -1,0 +1,55 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "startupinspire.com",
+  "name": "Startup Inspire",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://startupinspire.com/startups",
+      "title": "Batch-provided URL — Angular SPA shell; site is live and calls api.startupinspire.com"
+    },
+    {
+      "url": "https://startupinspire.com/pricing",
+      "title": "Pricing (via search index) — Free: 1 startup, instant approval, permanent listing; Standard €19 lifetime for 5; Premium €49 lifetime unlimited"
+    },
+    {
+      "url": "https://startupinspire.com/faq-frequently-asked-questions",
+      "title": "FAQ (via search index) — submission asks for business model, target market, value proposition; team reviews each startup"
+    },
+    {
+      "url": "https://www.startupinspire.com/support",
+      "title": "Support page — contact form plus hello@startupinspire.com"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Free tier: submit 1 startup with instant approval and a permanent listing",
+    "Paid tiers: Standard €19/lifetime (up to 5 startups), Premium €49/lifetime (unlimited, promo banner, featured homepage header, 30-day boost)",
+    "Submission asks for business model, target market, and unique value proposition",
+    "Account required — submission flow is behind the dashboard (Google sign-in is wired into the app)"
+  ],
+  "preparation": [
+    "Account (register or Google sign-in at startupinspire.com)",
+    "Startup name, URL, logo/screenshot, description covering business model + target market + value proposition",
+    "Decide free vs paid before submitting — paid adds featured placement and promotion"
+  ],
+  "workflow": [
+    "Register/sign in at startupinspire.com",
+    "Open the dashboard create route (https://startupinspire.com/dashboard/startup/create)",
+    "Fill startup details and submit — free tier reports instant approval",
+    "Verify the permanent descriptive page and homepage/category visibility"
+  ],
+  "watchFor": [
+    "Claims '15,000+ startups submitted' — a high-volume gallery; individual visibility may be thin on the free tier",
+    "Paid tiers are lifetime (one-time) fees, not subscriptions",
+    "FAQ says submissions are 'reviewed by our team' while pricing says 'Instant Approval' — the free listing likely auto-publishes",
+    "Site is JS-rendered; a plain HTTP fetch shows only the app shell — use a real browser flow"
+  ],
+  "countsAsLive": "The startup has a public descriptive page on startupinspire.com and appears in the startups gallery/homepage rotation",
+  "unknowns": [
+    "Whether free listings get a followed link to the startup site",
+    "Actual editorial review rigor given 'instant approval' on free tier"
+  ]
+}

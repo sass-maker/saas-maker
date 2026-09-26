@@ -1,0 +1,53 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "foundr.com",
+  "name": "Foundr",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://foundr.com/",
+      "title": "Homepage — global entrepreneur media/education company (magazine, podcast, courses; claims 3M+ audience)"
+    },
+    {
+      "url": "https://foundr.com/get-featured",
+      "title": "Get Featured — application for editorial interview features across magazine, podcast, blog, and social"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free editorial application, but acceptance is highly selective — '40-50+ pitches per day' and 'we cannot respond to every request'",
+    "Only real practitioners: founders who have actually built a business; 'practitioners not gurus'",
+    "Preference for innovative/market-leading companies — often top-3 brands in their niche with products that 'impacted millions'"
+  ],
+  "requirements": [
+    "Apply via the form behind the 'Apply Now' buttons on /get-featured",
+    "Must be a founder with a real operating business and a story worth an interview",
+    "Interview format: ~30-45 min Skype audio call or in-person video",
+    "Selected interviews produce a magazine spread, podcast episode, blog post, and social features"
+  ],
+  "preparation": [
+    "A founder story with concrete traction — revenue, impact, lessons learned",
+    "Willigness to do a recorded interview",
+    "Pitch that emphasizes actionable lessons for other founders, not product promotion"
+  ],
+  "workflow": [
+    "Open https://foundr.com/get-featured",
+    "Click 'Apply Now' and complete the application form",
+    "If selected, the team reaches out and schedules a 30-45 min interview",
+    "Interview is repurposed into magazine spread, podcast, blog post, and social posts"
+  ],
+  "watchFor": [
+    "This is earned media, not a directory listing — most applicants never get a reply",
+    "Not to be confused with foundr.ai (a separate AI-tools directory)",
+    "Products 'should have impacted millions' — early-stage SaaS without traction is unlikely to qualify",
+    "No self-serve listing exists anywhere on the site"
+  ],
+  "countsAsLive": "A published Foundr magazine/podcast/blog feature about the founder/company appears on foundr.com",
+  "unknowns": [
+    "Exact application form fields",
+    "Current acceptance criteria weighting and response time",
+    "Whether payment is ever involved for features (page presents it as editorial)"
+  ]
+}

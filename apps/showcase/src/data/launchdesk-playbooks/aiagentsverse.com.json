@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "aiagentsverse.com",
+  "name": "AI Agents Verse",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://aiagentsverse.com/submit-ai-agent/",
+      "title": "Submit AI Agent page — direct fetch returned 403 (bot-blocked); indexed content shows a submission form with a 'Pricing Model' field (Free / Freemium / Paid)"
+    },
+    {
+      "url": "https://aiagentsverse.com/",
+      "title": "Homepage — direct fetch returned 403; search index confirms live AI agents directory"
+    },
+    {
+      "url": "https://aiagentsverse.com/about-us/",
+      "title": "About page (via search index) — describes curated AI agents directory bridging AI solutions and businesses"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "Product must be an AI agent — directory is specifically for AI agents, not generic software",
+    "Submission form includes a required 'Pricing Model' field with options Free / Freemium / Paid",
+    "Whether the listing itself costs money could not be confirmed — the site's own pages are bot-blocked"
+  ],
+  "preparation": [
+    "Agent name, URL, and description",
+    "Pricing model classification (Free / Freemium / Paid)",
+    "Category selection — site organizes agents by industry/task categories",
+    "Contact email for the listing owner"
+  ],
+  "workflow": [
+    "Open https://aiagentsverse.com/submit-ai-agent/ in a real browser (automated fetches get 403)",
+    "Fill the submission form: agent details plus required Pricing Model field",
+    "Submit and await review — directory describes itself as curated, so expect manual approval",
+    "Follow up via info@aiagentsverse.com (published contact) if no response"
+  ],
+  "watchFor": [
+    "Site returns 403 to non-browser fetches — verification and submission likely need a real browser session",
+    "'Curated directory' language implies editorial review; not every submission is published",
+    "No public evidence of turnaround time or whether paid promotion is bundled into the form"
+  ],
+  "countsAsLive": "The agent appears in a category listing on aiagentsverse.com/agents_categories/ or is reachable via site search",
+  "unknowns": [
+    "Whether submission is free or paid — the Pricing Model field refers to the agent's own pricing, not listing cost",
+    "Review turnaround and acceptance criteria",
+    "Full form field list — page could not be fetched directly"
+  ]
+}

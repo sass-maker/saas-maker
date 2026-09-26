@@ -1,0 +1,58 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "airtable.com",
+  "name": "Airtable Marketplace",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://airtable.com/developers/extensions/guides/submit-to-marketplace",
+      "title": "Submitting your extension to the Airtable Marketplace — `block submit` CLI flow plus listing-info form (content read via search result)"
+    },
+    {
+      "url": "https://airtable.com/developers/extensions/guides/app-review-process",
+      "title": "Extension review process — four sequential reviews; failed submissions get feedback and can resubmit (content read via search result)"
+    },
+    {
+      "url": "https://airtable.com/marketplace",
+      "title": "Airtable Marketplace — JS-rendered; requires supported browser"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Listing requires building a real Airtable extension/app with the developer toolchain — not a listing-only directory",
+    "Submission is free but gated on passing Airtable's multi-stage review"
+  ],
+  "requirements": [
+    "A working extension built with @airtable/blocks-cli (block run / block release)",
+    "Latest developer tools version before submitting",
+    "Marketplace listing information prepared before submitting (the form asks for listing details after code upload)",
+    "Extension must follow the developer policy and the polishing guidelines",
+    "Review is four sequential stages; failures get feedback and can be resubmitted"
+  ],
+  "preparation": [
+    "Built and tested extension code",
+    "Marketplace listing info: name, description, category, assets",
+    "Read the developer policy, polishing guide, and review-process doc first"
+  ],
+  "workflow": [
+    "Develop the extension with blocks-cli (block init, block run, block release)",
+    "Run `block submit` from the extension's home directory to upload code for review",
+    "Complete the listing-information form via the link emailed/returned after upload",
+    "Airtable reviews sequentially; respond to feedback and resubmit if failed",
+    "On approval the extension is listed in the Marketplace and installable by all Airtable users",
+    "Updates: run `block submit` again — published updates auto-push to users on next load"
+  ],
+  "watchFor": [
+    "Review covers functionality AND security — buggy submissions fail and restart the pipeline for bigger revisions",
+    "Batch updates — 'lean towards fewer, larger updates' since each resubmit runs full review",
+    "You are responsible for ongoing maintenance of a published extension",
+    "The marketplace surface is JS-rendered — verification requires a real browser"
+  ],
+  "countsAsLive": "The extension appears in the Airtable Marketplace and is installable by other users",
+  "unknowns": [
+    "Whether non-extension 'apps' (AI agents, integrations) have a separate submission path in the current marketplace",
+    "Review turnaround time — not stated in public docs"
+  ]
+}

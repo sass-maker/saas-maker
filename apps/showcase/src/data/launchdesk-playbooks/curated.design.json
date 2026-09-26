@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "curated.design",
+  "name": "Curated.design",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://www.curated.design/submit",
+      "title": "Submit page — full flow: free queue vs $29 priority (7-day written verdict); form fields and review process documented"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free queue exists but waits 'a few weeks, sometimes more' — a real queue gate",
+    "$29 Priority review returns a written verdict within 7 days plus concrete fixes and a free resubmit if rejected",
+    "Same reviewer and same bar either way — money buys speed only"
+  ],
+  "requirements": [
+    "A website whose DESIGN is worth studying — 'a gallery designers browse for reference'; categories: Agency, AI, Design Tools, Dev Tools, E-commerce, Finance, Marketing, Portfolio, Productivity, Web Apps, etc.",
+    "Form fields: 'Product is mine' toggle (own work vs site you admire), site name, URL, email, tagline, 'What makes it worth studying?', category, styles (Minimal/Dark/Animated/Neobrutalism...)",
+    "Human review of every entry — 'the work decides the verdict'",
+    "Account/dashboard exists (/signup, /dashboard) to track submissions"
+  ],
+  "preparation": [
+    "Site name, URL, tagline",
+    "A thoughtful answer to 'What makes it worth studying?' — this is the pitch to the curator",
+    "Email for confirmation/verdict",
+    "Category + style tags ready",
+    "Decide free queue vs $29 priority"
+  ],
+  "workflow": [
+    "Open https://www.curated.design/submit (sign up/in optional but dashboard tracks submissions)",
+    "Toggle 'Product is mine' or submit a site you admire (scouting is allowed)",
+    "Fill fields and submit — free entries queue for weeks; $29 opens checkout via their billing API",
+    "Priority: written verdict within 7 days with exact fixes if rejected; resubmit free after polishing",
+    "If accepted, the site gets a dedicated page with link and full credit"
+  ],
+  "watchFor": [
+    "Paying $29 does NOT buy inclusion — only faster review; rejections happen with written feedback",
+    "Your entry is saved before checkout — closing checkout just drops you into the free queue (clever dark-ish pattern, but transparent)",
+    "Design bar is real — a plain B2B SaaS marketing page may not make the cut",
+    "They also run Curated Studio (paid design service) — soft upsell at the bottom"
+  ],
+  "countsAsLive": "The site appears in the Curated collection at curated.design with its own page, link, and maker credit",
+  "unknowns": [
+    "Whether listing links are dofollow",
+    "Actual free-queue wait time in practice",
+    "Acceptance rate"
+  ]
+}

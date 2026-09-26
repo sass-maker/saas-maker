@@ -1,0 +1,58 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "venturebeat.com",
+  "name": "VentureBeat",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://venturebeat.com/contact-2/",
+      "title": "VentureBeat contact — 'accepts guest posts', beat reporters listed (AI: Carl Franzen, Michael Nuñez, Emilia David; Data tech: Shubham Sharma); sponsored posts via sales@venturebeat.com (content read via search result; site rate-limited fetchers)"
+    },
+    {
+      "url": "https://venturebeat.com/guest-posts",
+      "title": "Guest post guidelines page — exists per VentureBeat contact page and external references (direct fetch rate-limited 429)"
+    },
+    {
+      "url": "https://venturebeat.com/datadecisionmakers/you-can-now-share-your-thoughts-in-the-venturebeat-comments",
+      "title": "Guest posting program described: 'technical experts share insights... neutral, non-vested deep dives on AI, data infrastructure, cybersecurity' (content read via search result)"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Free guest-post path exists but is selective — 'only a percentage of guest post submissions are accepted'; editorial reviews for fit",
+    "Sponsored posts are the guaranteed paid route (sales@venturebeat.com)"
+  ],
+  "requirements": [
+    "Guest posts must be technical-expert deep dives — 'neutral, non-vested' analysis of AI, data infrastructure, cybersecurity, enterprise tech",
+    "Content must be original and non-AI-generated, free of promotional bias, with data and images fully sourced (per guidelines descriptions)",
+    "A SaaS launch pitch does not fit the guest-post program — it is for practitioner expertise, not announcements",
+    "News coverage route is pitching the beat reporters listed on the contact page (AI, data tech)",
+    "GamesBeat op-eds go to Games.oped@venturebeat.com"
+  ],
+  "preparation": [
+    "A practitioner-grade deep-dive draft on AI/data/security/enterprise tech — vendor-neutral",
+    "Author credentials establishing technical expertise",
+    "Read the guest-post guidelines page before submitting (venturebeat.com/guest-posts)",
+    "For news coverage instead: a real enterprise-tech story pitch aimed at the named beat reporter"
+  ],
+  "workflow": [
+    "Read the guest-post guidelines at venturebeat.com/guest-posts",
+    "Submit the guest article per the guidelines' submission instructions",
+    "Editorial reviews; only a share of submissions are accepted",
+    "For guaranteed placement, sponsored posts go through sales@venturebeat.com — clearly a paid product, not earned media",
+    "Published guest posts appear under the author's byline on venturebeat.com"
+  ],
+  "watchFor": [
+    "The catalog's stored URL 'venturebeat.com/quest-posts' is a typo — the real path is /guest-posts",
+    "venturebeat.com rate-limits automated fetches (429) — verify guideline details in a browser before relying on specifics",
+    "Guest posts are for neutral technical content; promotional pieces will be rejected or routed to sponsored sales",
+    "Do not pitch product announcements as guest posts"
+  ],
+  "countsAsLive": "A guest article is published at venturebeat.com under the contributor's byline (or a staff article covers the product)",
+  "unknowns": [
+    "Exact word-count/formatting requirements — the guidelines page could not be fetched this session",
+    "The submission endpoint inside the guidelines page (form vs email)"
+  ]
+}

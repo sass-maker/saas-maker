@@ -1,0 +1,54 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "code.market",
+  "name": "code.market",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://code.market/",
+      "title": "Homepage — 'Curatorial Network & Digital Product Catalog' (Codemarket OÜ); top nav has 'Submit to Newsletter'"
+    },
+    {
+      "url": "https://code.market/newsletter",
+      "title": "Daily Digest page — 'A daily dose of products published on code.market... Want yours here? Just submit it.' Submit links to /newsletter/submit"
+    },
+    {
+      "url": "https://code.market/newsletter/submit",
+      "title": "Newsletter submit page — JS-rendered shell ('Loading...'); form fields not visible to static fetch"
+    },
+    {
+      "url": "https://code.market/?settings=submit-product",
+      "title": "Batch-provided submission URL — renders the standard site shell; submit UI is JS-gated behind login"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "unknown",
+  "requirements": [
+    "Catalog skews toward code products: themes, templates, app source code, plugins (WordPress/React/Flutter/Unity categories); a generic SaaS may fit only via the AI Tools category or newsletter",
+    "A Login link exists — the product-submit UI is JS-gated and likely requires a code.market account (GitHub login was historically used)",
+    "The changelog states code.market 'no longer sells third-party products, no longer processes payments on behalf of authors' — the old marketplace listing flow is deprecated; current free exposure is the newsletter/catalog"
+  ],
+  "preparation": [
+    "Product name, URL, description, and a fitting category (framework niches or AI tools)",
+    "A code.market account (GitHub auth historically supported)",
+    "Decide target: product in the catalog vs. a slot in the daily email digest"
+  ],
+  "workflow": [
+    "Open https://code.market/newsletter/submit in an interactive browser (form is client-rendered)",
+    "Alternatively sign in and use the product-submit settings (/?settings=submit-product) to add a catalog entry",
+    "Digest submissions appear in the daily email 'in random order'"
+  ],
+  "watchFor": [
+    "Site is JS-heavy — all submit surfaces render 'Loading...' to static fetches",
+    "Deprecated marketplace history: old 'sell your code for 70% commission' docs are stale; do not rely on author/sale features",
+    "Catalog taxonomy is dominated by IPTV/game/script categories — a SaaS launch may look out of place; the newsletter is the more general route",
+    "'Free Backlink Exchange' nav link is a separate reciprocal-link program, not a listing"
+  ],
+  "countsAsLive": "The product appears in a code.market catalog category page or is included in the Daily Digest email/archive",
+  "unknowns": [
+    "Whether newsletter/catalog submission is free or paid — no pricing surfaced on fetched pages",
+    "Exact form fields and auth requirements on /newsletter/submit",
+    "Review process and turnaround"
+  ]
+}

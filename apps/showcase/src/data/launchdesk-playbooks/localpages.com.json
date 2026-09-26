@@ -1,0 +1,43 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "localpages.com",
+  "name": "LocalPages",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://localpages.com/",
+      "title": "Homepage — US local business directory ('find the best places to be'); 'Claim Your Business Listing For FREE' banner notes Yext partnership covering 40+ sites; claim route at /business-listing/add"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Local-business fit — this is a US local citation directory (restaurants, hotels, services, shops); a pure SaaS/software product only fits if it operates as a local business with an address",
+    "Free claim requires signing up for an account (/signup) then using /business-listing/add",
+    "NAP data (name, address, phone) is the core listing content"
+  ],
+  "preparation": [
+    "Business name, address, phone, website, category",
+    "Business description and operating hours",
+    "An email for the account signup"
+  ],
+  "workflow": [
+    "Create an account at https://localpages.com/signup",
+    "Open https://localpages.com/business-listing/add ('Claim Your Listing')",
+    "Search for an existing listing first — claim it if present, otherwise add a new one",
+    "Submit business details; expect a verification step typical of claim flows"
+  ],
+  "watchFor": [
+    "Yext partnership means upsells — claiming '40+ other sites' through Yext is a paid syndication service, not part of the free LocalPages listing",
+    "Homepage categories template renders placeholders ('{{x.title}}') — the site looks half-maintained",
+    "Only worthwhile if the company has a real US local presence; a remote SaaS with no address does not belong",
+    "An odd 'Shop' section and matrimony/services categories suggest a generic directory script — modest value"
+  ],
+  "countsAsLive": "The business appears in LocalPages search results for its city/category with a public profile page",
+  "unknowns": [
+    "Verification method for claimed listings (phone/email/postcard — not shown publicly)",
+    "Whether edits propagate to the Yext network or stay local",
+    "Review/approval turnaround for new listings"
+  ]
+}

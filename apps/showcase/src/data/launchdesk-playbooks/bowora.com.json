@@ -1,0 +1,58 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "bowora.com",
+  "name": "Bowora",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://bowora.com/",
+      "title": "Homepage (agent markdown view) — founder network + startup directory with stars, reviews, Weekly Board"
+    },
+    {
+      "url": "https://bowora.com/register",
+      "title": "Register — Google/Apple/email signup; 'List your startup' links to /dashboard/startups?new=true behind auth"
+    },
+    {
+      "url": "https://bowora.com/llms.txt",
+      "title": "llms.txt — 'listing pricing shown in the flow is free with a Bowora badge or $1 without the badge; Verified offer $5/yr for up to 10 listings and a do-follow link'"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "Listing is free only if you display a Bowora badge on your site; otherwise $1",
+    "Account required — registration via Google, Apple, or email; submission lives at /dashboard/startups?new=true"
+  ],
+  "requirements": [
+    "One persistent startup profile per startup; can collect stars and written reviews",
+    "Weekly Board scoring: 1 star = 1 point, 1 written review = 3 points",
+    "Verified tier ($5/yr, up to 10 startups) includes a do-follow link — free/badge tier's link attribute not confirmed",
+    "Revenue verification (for MRR Board / fundraising / open-to-offers signals) via Stripe, Lemon Squeezy, or Polar"
+  ],
+  "preparation": [
+    "Startup name, URL, description, logo",
+    "Decision on badge-vs-$1 tradeoff before starting the listing flow",
+    "Founder profile info — Bowora is a founder network, profiles attach to founders",
+    "Optional: Stripe/LemonSqueezy/Polar connection if you want MRR verification"
+  ],
+  "workflow": [
+    "Register at https://bowora.com/register (Google, Apple, or email)",
+    "Go to /dashboard/startups?new=true ('List your startup')",
+    "Complete the startup profile; choose free-with-badge or $1 path",
+    "Solicit stars and written reviews from real users to climb the Weekly Board",
+    "Optionally upgrade to Verified ($5/yr) for do-follow + up to 10 listings"
+  ],
+  "watchFor": [
+    "Badge-or-$1 model — 'free' really means a reciprocal badge",
+    "Live boards (MRR, fundraising, acquisition) may be noindex per their own llms.txt — the durable SEO surface is the /startups profile",
+    "Rankings are review-driven; don't solicit fake reviews — platform positions on authenticity",
+    "llms.txt warns prices/offers change — 'confirm live details in the current product flow'"
+  ],
+  "countsAsLive": "A public startup profile exists at bowora.com/startups/<slug> (or equivalent) showing description, product link, stars/reviews",
+  "unknowns": [
+    "Whether the free/badge listing link is dofollow (only Verified explicitly promises do-follow)",
+    "Moderation/review criteria for new listings",
+    "Badge placement requirements (page scope, prominence)"
+  ]
+}

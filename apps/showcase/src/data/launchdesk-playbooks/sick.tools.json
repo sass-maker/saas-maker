@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "sick.tools",
+  "name": "Sick Tools",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://sick.tools/",
+      "title": "Homepage — Cloudflare JS challenge (403 to non-browser fetches); site is live"
+    },
+    {
+      "url": "https://tally.so/r/wvY09d",
+      "title": "'Submit Your Sick Tool' Tally form — 3 pages; starts with 'Basic Info Of Founder'; maintainer @iamrohitkadian"
+    },
+    {
+      "url": "https://www.aidirectori.es/directories/sick-tools",
+      "title": "Third-party review — free submission, dofollow links, straightforward process"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Submission is via the linked Tally form (tally.so/r/wvY09d), titled 'Submit Your Sick Tool'",
+    "No fee — third-party coverage confirms free submission with dofollow links",
+    "The form is 3 pages starting with founder basic info — founder details are part of the listing",
+    "Site is Cloudflare-challenged; browsing requires a JS-capable browser"
+  ],
+  "preparation": [
+    "Founder basic info (name/contact — page 1 of the form)",
+    "Tool name, URL, tagline/description, category — prepare before opening the 3-page Tally form",
+    "Logo/screenshot if the form asks for it (field list beyond page 1 not readable in plain fetch)",
+    "Twitter/X contact @iamrohitkadian is the published help channel"
+  ],
+  "workflow": [
+    "Open https://sick.tools/ in a real browser (Cloudflare challenge) and click the submit link, or go directly to https://tally.so/r/wvY09d",
+    "Complete the 3-page Tally form (founder info → tool details)",
+    "Wait for manual review; listing appears on sick.tools"
+  ],
+  "watchFor": [
+    "Bot protection blocks non-browser access — the Tally form is the reliable path",
+    "Very small directory (third-party review cites DR 2) — free but low link equity; useful for launch-week coverage",
+    "Site is a solo-maintained project — review speed depends on the maintainer",
+    "Verify your listing actually publishes; small directories sometimes go dormant"
+  ],
+  "countsAsLive": "The tool appears as a listing card on https://sick.tools/ (reachable via browse/search) with a link to the product",
+  "unknowns": [
+    "Full form field list beyond page 1 (Cloudflare/multi-page Tally rendering)",
+    "Review turnaround",
+    "Whether paid 'featured' options exist"
+  ]
+}

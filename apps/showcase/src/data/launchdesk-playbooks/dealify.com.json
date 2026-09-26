@@ -1,0 +1,49 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "dealify.com",
+  "name": "Dealify",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://dealify.com/pages/run-a-deal",
+      "title": "Sell on Dealify page — LTD/deal marketplace pitch, commission-based model, 'Publish your deal' CTA"
+    }
+  ],
+  "category": "other",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "No upfront listing fee shown, but you must run a real discounted deal (lifetime, annual, credit-based, or freebie) and accept their commission on sales — 'Honest & Fair commissions' is the only pricing detail given",
+    "Not a directory listing — there is no free 'just list my product' option"
+  ],
+  "requirements": [
+    "A sellable digital product (SaaS/tool) that can absorb a deal: LTD, annual deal, credits, or freebie",
+    "Ability to honor deal terms — deal buyers on LTD platforms expect lifetime/deep-discount fulfillment",
+    "Products aimed at marketers/growth hackers/founders perform best (their stated audience)"
+  ],
+  "preparation": [
+    "Deal structure decision: lifetime vs annual vs credits vs freebie",
+    "Deal pricing, redemption mechanics (codes/account provisioning)",
+    "Product assets: description, images, branding for the deal page",
+    "Support capacity for deal-driven user influx"
+  ],
+  "workflow": [
+    "Open https://dealify.com/pages/run-a-deal and use 'Publish your deal on Dealify' (JS-gated form/contact)",
+    "Pitch the product and proposed deal terms to their team",
+    "Negotiate commission and deal terms with Dealify",
+    "They run the promotion to their 50k+ customer base; you fulfill purchases"
+  ],
+  "watchFor": [
+    "Commission rate is not published — must be negotiated; 'the biggest piece of the pie is for you' is marketing language",
+    "LTD economics: lifetime deals create long-term support obligations for one-time revenue",
+    "This is a sales channel, not an SEO/listing play — backlinks are incidental",
+    "CTA buttons are '#' placeholders — actual intake is likely a JS form or email contact"
+  ],
+  "countsAsLive": "Your deal appears as a purchasable product page on dealify.com/products/<slug> under a collection",
+  "unknowns": [
+    "Exact commission percentage",
+    "Approval criteria and timeline for new deals",
+    "Whether a plain listing without a discount deal is possible",
+    "Payout schedule and refund handling (site advertises 30-day money-back to buyers)"
+  ]
+}

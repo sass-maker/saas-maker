@@ -1,0 +1,47 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "slashdot.org",
+  "name": "Slashdot",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://slashdot.org/",
+      "title": "Slashdot homepage — live 'News for nerds' with user account login; stories credited to submitters"
+    },
+    {
+      "url": "https://slashdot.org/software/",
+      "title": "Slashdot Software directory — B2B software comparisons; 'Add Your Software' links to the SourceForge vendor flow at /software/vendors/new"
+    }
+  ],
+  "category": "community",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "Two distinct surfaces: (1) the news site — users submit story links for editor selection at slashdot.org/submission (requires a free account); (2) the software directory — vendors add products via the 'Add Your Software' link which routes into the SourceForge/Slashdot Media vendor flow",
+    "Story submissions are free but editors choose what runs — 'News for nerds' tech/science angle required",
+    "Directory listings are for business software vendors; submission happens on the SourceForge side of the shared platform",
+    "slashdot.org/submission blocked automated fetch (403) — historically the submit-story form requiring login"
+  ],
+  "preparation": [
+    "For news: a Slashdot account plus a genuinely interesting tech/science story link with a neutral summary",
+    "For the software directory: vendor details for the SourceForge vendor form (the 'Add Your Software' link jumps to the SourceForge-side vendor signup)"
+  ],
+  "workflow": [
+    "News route: create a Slashdot account, open slashdot.org/submission, submit the story link + summary; editors decide",
+    "Directory route: from slashdot.org/software/, click 'Add Your Software' and complete the vendor listing flow on the SourceForge platform",
+    "Directory listing, once live, appears at slashdot.org/software/p/<product>/ with ratings/reviews",
+    "Paid option: 'Software Advertising Options' link on the software page for sponsored placement"
+  ],
+  "watchFor": [
+    "The news site and software directory are different products — don't confuse a story submission with a vendor listing",
+    "Catalog source lists slashdot.org over plain HTTP — use HTTPS",
+    "Slashdot Media shares the SourceForge back end — vendor onboarding may land you on sourceforge.net pages",
+    "Sponsored listings sort above organic ones in the directory ('Sponsored' sort default)",
+    "Story acceptance is at editor discretion — most submissions are rejected"
+  ],
+  "countsAsLive": "News: a submitted story is published on the Slashdot front page. Directory: the product appears at slashdot.org/software/p/<name>/",
+  "unknowns": [
+    "Whether the vendor listing flow is free or paid for basic listings — the pricing page lives behind the transfer link",
+    "Editorial acceptance rate for story submissions"
+  ]
+}

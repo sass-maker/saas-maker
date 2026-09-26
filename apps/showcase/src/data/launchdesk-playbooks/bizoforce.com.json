@@ -1,0 +1,52 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "bizoforce.com",
+  "name": "Bizoforce",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://bizoforce.com/",
+      "title": "Homepage — B2B marketplace for 'AI & digital solutions' vendors; vendor CTAs: 'Submit Company — Free listing', 'Add Product — SaaS & software', 'Submit AI Agent'; directory organized by specializations (AI 688+ cos, Cyber Security 265+, Blockchain 307+)"
+    },
+    {
+      "url": "https://bizoforce.com/submit/listing",
+      "title": "Submit Company route — JS-rendered, returns empty shell to non-JS fetch; labeled 'Free listing' on homepage"
+    },
+    {
+      "url": "https://bizoforce.com/submit/product",
+      "title": "Add Product route — JS-rendered empty shell; for SaaS & software products"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "free",
+  "requirements": [
+    "B2B vendor fit — the directory is for companies selling AI, cloud, DevOps, CRM, analytics, security and other digital-transformation solutions; consumer apps have no fit",
+    "Three submit paths exist: company listing (free), product listing (SaaS/software), AI-agent listing",
+    "Site runs its own 'SUGAR Quadrant' ranking/verification — a bare listing exists, but verified/vendor-scored placement may involve more"
+  ],
+  "preparation": [
+    "Company name, website, description, and the specialization category that fits (AI, cloud, cybersecurity, blockchain, DevOps, VR, big data, etc.)",
+    "For product listings: product name, description, URL",
+    "Company profile details likely include size, location, services — prepare standard vendor-profile copy"
+  ],
+  "workflow": [
+    "Pick the right route: /submit/listing (company) or /submit/product (product) or /submit/ai-agent",
+    "Open the submit page in a JS-capable browser — forms do not render without JavaScript",
+    "Complete the listing form and submit",
+    "Verify the company appears under /business-directory in the chosen specialization"
+  ],
+  "watchFor": [
+    "Submit pages are client-rendered — nothing can be inspected without JavaScript",
+    "Homepage heavily markets its own product suite (Screenly, Giglancer, Work CRM) — the directory is a lead-gen layer for their ecosystem; expect outreach/sales contact after listing",
+    "'Verified Solution Providers' and SUGAR Quadrant placement likely gate visibility behind a vetting or commercial process",
+    "URLs still carry legacy 'bizofit' slugs — the platform rebranded from Bizofit"
+  ],
+  "countsAsLive": "The company/product appears in the Bizoforce business directory under a specialization page and is searchable",
+  "unknowns": [
+    "Exact form fields and any account requirement (pages are JS-rendered)",
+    "Review/vetting process before a listing is public",
+    "Whether 'Free listing' placement is meaningfully visible vs paid/verified placements",
+    "Link type on listings"
+  ]
+}

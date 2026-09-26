@@ -1,0 +1,41 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "microacquire.com",
+  "name": "MicroAcquire (now Acquire.com)",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://microacquire.com/",
+      "title": "MicroAcquire holding page — rebranded to Acquire.com ('world's largest marketplace for buying and selling profitable online businesses'; $500M+ closed deals, 2,000+ startups sold, 500k+ entrepreneurs); 'List your startup for free' on Acquire.com; all functional links point to acquire.com"
+    }
+  ],
+  "category": "directory",
+  "zeroCostRoute": "conditional",
+  "conditions": [
+    "The destination still works but is a redirect/landing page for acquire.com — the actual listing flow happens on Acquire.com. Also, this is a marketplace for SELLING a startup, not launching one"
+  ],
+  "requirements": [
+    "An actual business to sell — Acquire.com is a startup-acquisition marketplace (SaaS, ecommerce, agencies); listing is about exiting, not launching",
+    "The listing flow lives on acquire.com — 'list your startup for free', sellers list with metrics/MRR; buyers are verified ($2B+ verified buyer funds claimed)",
+    "microacquire.com itself is just a rebrand explainer — every CTA goes to acquire.com"
+  ],
+  "preparation": [
+    "Only relevant if the goal is selling the business — revenue metrics, P&L, growth data for buyer diligence"
+  ],
+  "workflow": [
+    "Go to acquire.com (microacquire.com links there)",
+    "List the startup on the seller flow with revenue/growth metrics",
+    "Vetted buyers make offers; Acquire.com facilitates escrow/closing"
+  ],
+  "watchFor": [
+    "Wrong purpose for a launch — this is an M&A marketplace, not a launch destination; keep the catalog entry for completeness but flag it",
+    "The cataloged domain is now a static rebrand page — actual product is acquire.com",
+    "'Free' listing is marketplace-standard; success fees likely apply at closing (not verified this session)"
+  ],
+  "countsAsLive": "A sale listing exists on acquire.com (microacquire.com itself produces no listing)",
+  "unknowns": [
+    "Acquire.com success-fee structure",
+    "Whether microacquire.com URLs eventually hard-redirect"
+  ]
+}

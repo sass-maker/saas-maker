@@ -1,0 +1,51 @@
+{
+  "$schema": "fleet.launchdesk-playbook.v1",
+  "domain": "ai-bot.cn",
+  "name": "AI工具集 (AI Bot)",
+  "grade": "researched",
+  "retrieved": "2026-09-26",
+  "sources": [
+    {
+      "url": "https://ai-bot.cn/",
+      "title": "Homepage — large live Chinese AI tools directory (1000+ tools, daily updates, ICP-licensed)"
+    },
+    {
+      "url": "https://ai-bot.cn/about-us/",
+      "title": "About — documents two paid inclusion tiers: 文章收录 ¥99 (permanent article) and 网址收录 ¥399 (permanent homepage listing), 48h delivery via WeChat"
+    }
+  ],
+  "category": "ai-directory",
+  "zeroCostRoute": "paid",
+  "requirements": [
+    "AI tools and AI-related websites only — directory is all-AI categories (writing, image, video, office, agents, chatbots, coding, design, audio, search, dev platforms)",
+    "Two paid inclusion services: ¥99 article listing (permanent, in 最新AI项目) or ¥399 URL listing (permanent, on homepage 最新收录) — both include an outbound link and a written intro",
+    "Explicit rejection of low quality: '不收录套壳、镜像、低质量网站' — no wrappers, mirrors, or low-quality sites",
+    "Payment handled via WeChat — scan the QR code and reply '产品收录'; delivery within 48 hours including copywriting and publishing"
+  ],
+  "preparation": [
+    "Product materials for the editors to write the intro (name, URL, description, screenshots)",
+    "A WeChat account — payment and contact go through a WeChat QR code",
+    "¥99 or ¥399 RMB budget depending on placement",
+    "Chinese-language product description strongly recommended — audience is Chinese"
+  ],
+  "workflow": [
+    "Read the 广告合作/关于我们 pages for the inclusion terms",
+    "Scan the CakeGrowth WeChat QR code and reply '产品收录'",
+    "Pay ¥99 (article) or ¥399 (homepage URL listing) and send product materials",
+    "Editors write and publish the intro within 48 hours — article in 最新AI项目, or URL card on the homepage 最新收录 section",
+    "For unpaid suggestions, email info@ai-bot.cn — site accepts 'AI工具提交' via email but inclusion is not guaranteed"
+  ],
+  "watchFor": [
+    "Entirely Chinese-language site and workflow — WeChat payment is the only documented channel",
+    "No guaranteed free route — email submissions are welcome but paid tiers are the documented service",
+    "Site warns of copycat/imitation domains — only ai-bot.cn is official",
+    "Both tiers are 'permanent' one-time payments, not subscriptions",
+    "Non-Chinese products are accepted (directory covers 国内外 tools) but a Chinese description helps"
+  ],
+  "countsAsLive": "The tool has an intro page or card on ai-bot.cn — either in /the-latest-ai-projects/ (article tier) or the homepage 最新收录 block (URL tier)",
+  "unknowns": [
+    "Whether emailed free submissions ever get listed without payment",
+    "Exact payment channel details before scanning the QR code",
+    "Whether the outbound link is dofollow"
+  ]
+}
