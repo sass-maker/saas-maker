@@ -38,8 +38,11 @@ class DaddyCandidateProfilesTests(unittest.TestCase):
             (shared / "worker-core.mjs").write_text("original")
             (shared / "sparkle_core.py").write_text("sparkle")
             (shared / "appcast_core.py").write_text("appcast")
+            (shared / "DaddyVisualCore.swift").write_text("visual")
             (root / "scripts/sparkle_core.py").write_text("sparkle")
             (root / "scripts/appcast_core.py").write_text("appcast")
+            (root / "Sources/BrowserDaddy").mkdir(parents=True)
+            (root / "Sources/BrowserDaddy/DaddyVisualCore.swift").write_text("visual")
             with self.assertRaisesRegex(ValueError, "Missing shared Daddy utility"):
                 check_shared_copies("browserdaddy", root, shared)
             (root / "site/worker-core.mjs").write_text("changed")

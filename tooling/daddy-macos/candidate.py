@@ -13,10 +13,10 @@ import sys
 PROFILES = Path(__file__).with_name("profiles.json")
 FIELDS = {"repository", "executable", "bundleId", "testArguments", "sparkleTests", "workerTests", "developerDir", "updateMode", "updateBaseUrl"}
 SHARED_COPIES = {
-    "storagedaddy": [("prepare-memory-pack.py", "scripts/prepare-memory-pack.py"), ("sparkle_core.py", "scripts/sparkle_core.py"), ("appcast_core.py", "scripts/appcast_core.py")],
-    "performancedaddy": [("worker-core.mjs", "site/worker-core.mjs"), ("sparkle_core.py", "scripts/sparkle_core.py"), ("appcast_core.py", "scripts/appcast_core.py")],
-    "browserdaddy": [("worker-core.mjs", "site/worker-core.mjs"), ("sparkle_core.py", "scripts/sparkle_core.py"), ("appcast_core.py", "scripts/appcast_core.py")],
-    "contextdaddy": [],
+    "storagedaddy": [("prepare-memory-pack.py", "scripts/prepare-memory-pack.py"), ("sparkle_core.py", "scripts/sparkle_core.py"), ("appcast_core.py", "scripts/appcast_core.py"), ("DaddyVisualCore.swift", "Sources/StorageDaddy/DaddyVisualCore.swift")],
+    "performancedaddy": [("worker-core.mjs", "site/worker-core.mjs"), ("sparkle_core.py", "scripts/sparkle_core.py"), ("appcast_core.py", "scripts/appcast_core.py"), ("DaddyVisualCore.swift", "Sources/PerformanceDaddy/DaddyVisualCore.swift")],
+    "browserdaddy": [("worker-core.mjs", "site/worker-core.mjs"), ("sparkle_core.py", "scripts/sparkle_core.py"), ("appcast_core.py", "scripts/appcast_core.py"), ("DaddyVisualCore.swift", "Sources/BrowserDaddy/DaddyVisualCore.swift")],
+    "contextdaddy": [("DaddyVisualCore.swift", "Sources/ContextDaddy/DaddyVisualCore.swift")],
 }
 
 

@@ -36,6 +36,9 @@ The `shared/` files are the canonical sources. App copies keep local packaging i
 | `shared/appcast_core.py` | `storagedaddy`, `performancedaddy`, `browserdaddy`: `scripts/appcast_core.py` |
 | `shared/prepare-memory-pack.py` | `storagedaddy`: `scripts/prepare-memory-pack.py`; ContextDaddy's current local feature branch also has this copy, but public `main` does not |
 | `shared/worker-core.mjs` | `performancedaddy`, `browserdaddy`: `site/worker-core.mjs` |
+| `shared/DaddyVisualCore.swift` | all four: `Sources/<App>/DaddyVisualCore.swift` |
+
+The Swift copy owns the approved series palette and compact button geometry. Each app keeps its existing theme and button names as adapters, as well as its own semantic color rules, screens, and behavior. PerformanceDaddy enables its existing hover wash through `hoverFeedback`. A change to the canonical source must be copied into all four apps and pass the candidate copy check before release; it does not update installed apps by itself.
 
 When changing a canonical file, copy it into the listed apps and run `python3 -m unittest test_appcast_core test_candidate test_release_contract test_release_preflight` here, the affected app's smallest test, and the four-app copy check. The candidate workflow rejects a diverged copy. The appcast core stages a checksum-verified DMG and validates the exact signed enclosure; each app wrapper still owns Apple qualification policy, key handling, account, hostname, and product tests.
 
