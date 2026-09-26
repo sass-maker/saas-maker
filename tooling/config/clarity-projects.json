@@ -1073,6 +1073,59 @@
           "file": "every-song-is-a-website/shared/clarity.js"
         }
       ]
+    },
+    {
+      "id": "daddyrad",
+      "name": "DaddyRad",
+      "repo": "daddyrad",
+      "clarityId": "yoiee8dv98",
+      "hostname": "daddyrad.com",
+      "tag": "daddyrad",
+      "wiredFiles": [
+        "daddyrad/site/public/index.html"
+      ],
+      "browserSurfaces": [
+        {
+          "kind": "combined",
+          "file": "daddyrad/site/public/index.html"
+        }
+      ]
+    },
+    {
+      "id": "contextdaddy",
+      "name": "ContextDaddy",
+      "repo": "contextdaddy",
+      "clarityId": "yoig7ab0eb",
+      "hostname": "context.daddyrad.com",
+      "tag": "contextdaddy",
+      "wiredFiles": [
+        "ios-landings/src/lib/clarity.ts"
+      ],
+      "surfaceOwner": "ios-landings",
+      "reason": "context.daddyrad.com proxies all page traffic to the contextdaddy-landing Pages site, so the generated-landing map covers the public surface; /download serves only the DMG.",
+      "browserSurfaces": [
+        {
+          "kind": "landing",
+          "file": "ios-landings/src/lib/clarity.ts"
+        }
+      ]
+    },
+    {
+      "id": "mentionpilot",
+      "name": "MentionPilot",
+      "repo": "mentionpilot",
+      "clarityId": "yoigmcwti8",
+      "hostname": "mention.highsignal.app",
+      "tag": "mentionpilot",
+      "wiredFiles": [
+        "mentionpilot/apps/web/src/app/layout.tsx"
+      ],
+      "browserSurfaces": [
+        {
+          "kind": "combined",
+          "file": "mentionpilot/apps/web/src/app/layout.tsx"
+        }
+      ]
     }
   ]
 }

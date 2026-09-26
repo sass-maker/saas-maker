@@ -693,6 +693,54 @@
           "event:song_world_opened"
         ]
       }
+    },
+    {
+      "id": "daddyrad",
+      "state": "ready",
+      "event": {
+        "name": "app_card_opened",
+        "text": "PerformanceDaddy",
+        "href": "https://performance.daddyrad.com/"
+      },
+      "funnel": {
+        "name": "discover_to_app_card",
+        "steps": [
+          "page:/",
+          "event:app_card_opened"
+        ]
+      }
+    },
+    {
+      "id": "contextdaddy",
+      "state": "ready",
+      "event": {
+        "name": "download_opened",
+        "text": "Download for Mac",
+        "href": "https://context.daddyrad.com/download"
+      },
+      "funnel": {
+        "name": "discover_to_download",
+        "steps": [
+          "page:/",
+          "event:download_opened"
+        ]
+      }
+    },
+    {
+      "id": "mentionpilot",
+      "state": "ready",
+      "event": {
+        "name": "brand_check_opened",
+        "text": "Free brand check",
+        "href": "/check"
+      },
+      "funnel": {
+        "name": "discover_to_brand_check",
+        "steps": [
+          "page:/",
+          "event:brand_check_opened"
+        ]
+      }
     }
   ]
 }
